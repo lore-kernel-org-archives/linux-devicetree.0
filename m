@@ -1,150 +1,78 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ FW
- bindings
-Date: Tue, 19 Jun 2018 16:14:50 +0530
-Message-ID: <2d37f581-38af-872a-36df-0250b0f7e411@codeaurora.org>
-References: <1528801355-18719-1-git-send-email-tdas@codeaurora.org>
- <1528801355-18719-2-git-send-email-tdas@codeaurora.org>
- <0f3f0223-3539-dc66-5300-8f30d827445d@arm.com>
- <7abb2da6-c130-117a-5404-d07bb132d915@codeaurora.org>
- <f57f2708-28bb-dcdd-8b93-d41ade10fa18@arm.com>
- <bc6dc152-7def-fc1d-4535-11a44fd64310@codeaurora.org>
- <CAHLCerMCM1qf1MJ3bz+ZwBQMjshKSCWKXjHCiuqxJTDBdauamQ@mail.gmail.com>
- <32e8f874-a58b-8ba3-7a53-dc89cb34f7d9@codeaurora.org>
- <fad24065-bb2d-33f9-e877-425db3391e8f@arm.com>
- <514eea88-1f98-7959-2341-3d57cff6f66b@codeaurora.org>
- <f26813f1-f8da-ef92-fd86-6e648fbbf3e9@arm.com>
+From: Richard Weinberger <richard@nod.at>
+Subject: Re: [PATCH v3 1/3] mtd: rawnand: denali_dt: add more clocks based on IP datasheet
+Date: Tue, 19 Jun 2018 12:46:04 +0200
+Message-ID: <2133216.znqypcnggC@blindfold>
+References: <1529025532-22087-1-git-send-email-yamada.masahiro@socionext.com> <20180618094636.0e40c518@bbrezillon> <CAK7LNASCKhxtoOc3QdECF6p8BaBjab7Ed2y9Og+8LhvX4O83-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f26813f1-f8da-ef92-fd86-6e648fbbf3e9@arm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Amit Kucheria <amit.kucheria@verdurent.com>, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Saravana Kannan <skannan@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNASCKhxtoOc3QdECF6p8BaBjab7Ed2y9Og+8LhvX4O83-Q@mail.gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, "linux-stable #4 . 14+" <stable@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+Am Dienstag, 19. Juni 2018, 10:07:26 CEST schrieb Masahiro Yamada:
+> Hi Boris,
+> 
+> 
+> 2018-06-18 16:46 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:
+> > On Mon, 18 Jun 2018 09:09:02 +0200
+> > Richard Weinberger <richard@nod.at> wrote:
+> >
+> >> Am Freitag, 15. Juni 2018, 03:18:50 CEST schrieb Masahiro Yamada:
+> >> > According to the Denali User's Guide, this IP needs three clocks:
+> >> >
+> >> >  - clk: controller core clock
+> >> >
+> >> >  - clk_x: bus interface clock
+> >> >
+> >> >  - ecc_clk: clock at which ECC circuitry is run
+> >> >
+> >> > Currently, denali_dt.c requires a single anonymous clock and its
+> >> > frequency.  However, the driver needs to get the frequency of "clk_x"
+> >> > not "clk".  This is confusing because people tend to assume the
+> >> > anonymous clock means the core clock.  In fact, I got a report of
+> >> > SOCFPGA breakage because the timing parameters are calculated based
+> >> > on a wrong frequency.
+> >> >
+> >> > Instead of the cheesy implementation, the clocks in the real hardware
+> >> > should be represented in the driver and the DT-binding.
+> >> >
+> >> > However, adding new clocks would break the existing platforms.  For the
+> >> > backward compatibility, the driver still accepts a single clock just as
+> >> > before.  If clk_x is missing, clk_x_rate is set to a hardcoded value.
+> >> > This is fine for existing DT of Socionext UniPhier, and also fixes the
+> >> > issue of Altera (Intel) SOCFPGA because both platforms use 200 MHz for
+> >> > the bus interface clock.
+> >> >
+> >> > Fixes: 1bb88666775e ("mtd: nand: denali: handle timing parameters by setup_data_interface()")
+> >> > Cc: linux-stable <stable@vger.kernel.org> #4.14+
+> >> > Reported-by: Richard Weinberger <richard@nod.at>
+> >> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> >>
+> >> Reviewed-by: Richard Weinberger <richard@nod.at>
+> >
+> > Maybe a
+> >
+> > Tested-by: Richard Weinberger <richard@nod.at>
+> >
+> > ?
+> >
+> >> Reported-by: Philipp Rosenberger <p.rosenberger@linutronix.de>
+> >
+> > Should I replace your Reported-by by this one or simply add it?
 
+Philipp deserves the Reported-by. :)
 
-On 6/19/2018 3:04 PM, Sudeep Holla wrote:
 > 
-> 
-> On 19/06/18 08:53, Taniya Das wrote:
->>
->>
->> On 6/18/2018 2:51 PM, Sudeep Holla wrote:
->>>
->>>
->>> On 15/06/18 18:40, Taniya Das wrote:
->>>>
->>>>
->>>> On 6/15/2018 5:29 PM, Amit Kucheria wrote:
->>>
->>> [...]
->>>
->>>>> A future version of the HW engine, or more likely, a firmware
->>>>> revision, will make more functionality available. Say, this needs
->>>>> access to another register or two. This will require changing the DT
->>>>> bindings. Instead, if you map the entire address space, you can just
->>>>> add offsets to the new registers.
->>>>>
->>>>> So in this case, I think you should define the following addresses
->>>>> (size 0x1400) for the two frequency domains
->>>>>
->>>>> 0x17d43000, 0x1400 (power cluster)
->>>>> 0x17d45800, 0x1400 (perf cluster)
->>>>>
->>>>> And in the driver simply add offsets as follows:
->>>>>
->>>>> #define ENABLE_OFFSET               0x0
->>>>> #define LUT_OFFSET                      0x110
->>>>> #define PERF_DESIRED_OFFSET 0x920
->>>>>
->>>>
->>>> The offsets could vary across versions of this IP and that is the reason
->>>> to provide them through the DT and not define any such offsets.
->>>>
->>>
->>> Just get compatibles to identify the version of the hardware if it can't
->>> be probed and detected. Please don't use DT to get the addresses of each
->>> register you use in the driver. That's neither scalable nor nice
->>> solution to the problem.
->>> Hello Sudeep and Amit,
->>
->> Thanks for the comments, I am consolidating the understanding from the
->> other emails in a single one.
->>
->> I understand that you are looking for this IP to map the full region and
->> define offsets according to access them.
->>
->> But I still not sure how do you want this common driver to scale in the
->> cases where the offsets could vary across version change.
->>
-> 
-> There are plenty of drivers that you can look at as example. TBH most of
-> the drivers implementing support for multiple versions of IP do
-> something on the similar lines.
-> 
->>   DT
->> ====
->>    freq-node {
->>      reg = < X x_size>;   Where X is the start of the IP address.
->>    }
->>
->> Driver code (The below representation is just for example).
->> =============
->>
->> V1
->> #define ENABLE    0x0
->> #define LUT_V1    0x110
->> #define PERF_V1    0x920
->>
->> V2
->> #define LUT_V2    0x150
->> #define PERF_V2    0x980
->>
->> V3
->> #define LUT_V3    0x120
->> ....
->>
->> Do you want me to use "compatible" flag to
->>
->> if (compatible == v1)
->>   enable =  readl_relaxed(X + LUT_V1);
->> else if (compatible == v2)
->>   enable = readl_relaxed(X + LUT_V2);
->> else if (compatible == v3)
->>   enable = readl_relaxed(X + LUT_V2);
->>
-> 
-> These are implementation details. But you should try to use compatibles
-> only in probe and just record the version in some variable or update the
-> offsets in some device specific structure so that you can use that
-> unconditionally for any access you make on that device.
-> 
->> With the current design I do not need such compatible checks and unmap
->> the ones which are not required after probe.
-> 
-> I am not sure what you mean by unmap after probe.
-> 
->> Please let me know your comments.
->>
-> 
-> Please look at some drivers in the Linux tree for examples. Infact there
-> may be few drivers on QCOM SoC itself. What I am suggesting is the normal
-> practice in the drivers and you should see plenty of examples. Since I
-> was looking at some serial port patch, I can say you can have a look at
-> drivers/tty/serial/amba-pl011.c which supports multiple versions from
-> different vendors. I am sure there are many simpler examples but AMBA PL011
-> just stood out.
-> 
+> I think it is good to have Reported-by
+> both from Philipp and Richard.
 
-Thanks Sudeep, let me take a look at the driver to see how I can 
-associate data (offsets) based on compatible.
+Patch 1/3 unbreaks v4.14.x on my board.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+Tested-by: Richard Weinberger <richard@nod.at>
 
---
+Thanks,
+//richard
