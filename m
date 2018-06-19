@@ -1,84 +1,68 @@
-From: Can Guo <cang@codeaurora.org>
-Subject: [PATCH v7 1/4] phy: Update PHY power control sequence
-Date: Tue, 19 Jun 2018 16:36:44 +0800
-Message-ID: <20180619083647.10116-2-cang@codeaurora.org>
-References: <20180619083647.10116-1-cang@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180619083647.10116-1-cang@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Can Guo <cang@codeaurora.org>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v6 17/29] drm/mediatek: add connection from RDMA1 to DSI1
+Date: Tue, 19 Jun 2018 16:39:27 +0800
+Message-ID: <1529397567.26480.13.camel@mtksdaap41>
+References: <1529393670-26862-1-git-send-email-stu.hsieh@mediatek.com>
+ <1529393670-26862-18-git-send-email-stu.hsieh@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1529393670-26862-18-git-send-email-stu.hsieh@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stu Hsieh <stu.hsieh@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-All PHYs should be powered on before register configuration starts. And
-only PCIe PHYs need an extra power control before deasserts reset state.
-
-Signed-off-by: Can Guo <cang@codeaurora.org>
----
- drivers/phy/qualcomm/phy-qcom-qmp.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 97ef942..ccb8578 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -935,10 +935,12 @@ static void qcom_qmp_phy_configure(void __iomem *base,
- 	}
- }
- 
--static int qcom_qmp_phy_com_init(struct qcom_qmp *qmp)
-+static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
- {
-+	struct qcom_qmp *qmp = qphy->qmp;
- 	const struct qmp_phy_cfg *cfg = qmp->cfg;
- 	void __iomem *serdes = qmp->serdes;
-+	void __iomem *pcs = qphy->pcs;
- 	void __iomem *dp_com = qmp->dp_com;
- 	int ret, i;
- 
-@@ -979,10 +981,6 @@ static int qcom_qmp_phy_com_init(struct qcom_qmp *qmp)
- 		goto err_rst;
- 	}
- 
--	if (cfg->has_phy_com_ctrl)
--		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
--			     SW_PWRDN);
--
- 	if (cfg->has_phy_dp_com_ctrl) {
- 		qphy_setbits(dp_com, QPHY_V3_DP_COM_POWER_DOWN_CTRL,
- 			     SW_PWRDN);
-@@ -1000,6 +998,12 @@ static int qcom_qmp_phy_com_init(struct qcom_qmp *qmp)
- 			     SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
- 	}
- 
-+	if (cfg->has_phy_com_ctrl)
-+		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
-+			     SW_PWRDN);
-+	else
-+		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
-+
- 	/* Serdes configuration */
- 	qcom_qmp_phy_configure(serdes, cfg->regs, cfg->serdes_tbl,
- 			       cfg->serdes_tbl_num);
-@@ -1090,7 +1094,7 @@ static int qcom_qmp_phy_init(struct phy *phy)
- 
- 	dev_vdbg(qmp->dev, "Initializing QMP phy\n");
- 
--	ret = qcom_qmp_phy_com_init(qmp);
-+	ret = qcom_qmp_phy_com_init(qphy);
- 	if (ret)
- 		return ret;
- 
-@@ -1127,7 +1131,8 @@ static int qcom_qmp_phy_init(struct phy *phy)
- 	 * Pull out PHY from POWER DOWN state.
- 	 * This is active low enable signal to power-down PHY.
- 	 */
--	qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
-+	if(cfg->type == PHY_TYPE_PCIE)
-+		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
- 
- 	if (cfg->has_pwrdn_delay)
- 		usleep_range(cfg->pwrdn_delay_min, cfg->pwrdn_delay_max);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+T24gVHVlLCAyMDE4LTA2LTE5IGF0IDE1OjM0ICswODAwLCBTdHUgSHNpZWggd3JvdGU6Cj4gVGhp
+cyBwYXRjaCBhZGQgdGhlIGNvbm5lY3Rpb24gZnJvbSBSRE1BMSB0byBEU0kxCj4gCgpSZXZpZXdl
+ZC1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4KCj4gU2lnbmVkLW9mZi1ieTogU3R1IEhz
+aWVoIDxzdHUuaHNpZWhAbWVkaWF0ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvbXRrX2RybV9kZHAuYyB8IDkgKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA5IGlu
+c2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
+a19kcm1fZGRwLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwo+IGlu
+ZGV4IDEzZTkxOTAzZjQ5My4uOTAyMjhjYWQwNTFhIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fZGRwLmMKPiBAQCAtMjgsNiArMjgsNyBAQAo+ICAjZGVmaW5lIERJU1BfUkVH
+X0NPTkZJR19ESVNQX1VGT0VfTU9VVF9FTgkweDA1MAo+ICAjZGVmaW5lIERJU1BfUkVHX0NPTkZJ
+R19ESVNQX0NPTE9SMF9TRUxfSU4JMHgwODQKPiAgI2RlZmluZSBESVNQX1JFR19DT05GSUdfRElT
+UF9DT0xPUjFfU0VMX0lOCTB4MDg4Cj4gKyNkZWZpbmUgRElTUF9SRUdfQ09ORklHX0RTSU9fU0VM
+X0lOCQkweDBhOAo+ICAjZGVmaW5lIERJU1BfUkVHX0NPTkZJR19EUElfU0VMX0lOCQkweDBhYwo+
+ICAjZGVmaW5lIERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEwX1NPVVRfRU4JMHgwYzQKPiAgI2Rl
+ZmluZSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMV9TT1VUX0VOCTB4MGM4Cj4gQEAgLTg2LDgg
+Kzg3LDEwIEBACj4gICNkZWZpbmUgUkRNQTBfU09VVF9EU0kzCQkJMHg1Cj4gICNkZWZpbmUgUkRN
+QTFfU09VVF9EUEkwCQkJMHgyCj4gICNkZWZpbmUgUkRNQTFfU09VVF9EUEkxCQkJMHgzCj4gKyNk
+ZWZpbmUgUkRNQTFfU09VVF9EU0kxCQkJMHgxCj4gICNkZWZpbmUgRFBJMF9TRUxfSU5fUkRNQTEJ
+CTB4MQo+ICAjZGVmaW5lIERQSTFfU0VMX0lOX1JETUExCQkoMHgxIDw8IDgpCj4gKyNkZWZpbmUg
+RFNJMV9TRUxfSU5fUkRNQTEJCTB4MQo+ICAjZGVmaW5lIENPTE9SMV9TRUxfSU5fT1ZMMQkJMHgx
+Cj4gIAo+ICAjZGVmaW5lIE9WTF9NT1VUX0VOX1JETUEJCTB4MQo+IEBAIC0xNzAsNiArMTczLDkg
+QEAgc3RhdGljIHVuc2lnbmVkIGludCBtdGtfZGRwX21vdXRfZW4oZW51bSBtdGtfZGRwX2NvbXBf
+aWQgY3VyLAo+ICAJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMCAmJiBuZXh0
+ID09IEREUF9DT01QT05FTlRfRFNJMykgewo+ICAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJ
+U1BfUkRNQTBfU09VVF9FTjsKPiAgCQl2YWx1ZSA9IFJETUEwX1NPVVRfRFNJMzsKPiArCX0gZWxz
+ZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5U
+X0RTSTEpIHsKPiArCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUExX1NPVVRfRU47
+Cj4gKwkJdmFsdWUgPSBSRE1BMV9TT1VUX0RTSTE7Cj4gIAl9IGVsc2UgaWYgKGN1ciA9PSBERFBf
+Q09NUE9ORU5UX1JETUExICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EUEkwKSB7Cj4gIAkJKmFk
+ZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMV9TT1VUX0VOOwo+ICAJCXZhbHVlID0gUkRN
+QTFfU09VVF9EUEkwOwo+IEBAIC0xOTgsNiArMjA0LDkgQEAgc3RhdGljIHVuc2lnbmVkIGludCBt
+dGtfZGRwX3NlbF9pbihlbnVtIG10a19kZHBfY29tcF9pZCBjdXIsCj4gIAl9IGVsc2UgaWYgKGN1
+ciA9PSBERFBfQ09NUE9ORU5UX1JETUExICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EUEkxKSB7
+Cj4gIAkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRFBJX1NFTF9JTjsKPiAgCQl2YWx1ZSA9IERQ
+STFfU0VMX0lOX1JETUExOwo+ICsJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1B
+MSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMSkgewo+ICsJCSphZGRyID0gRElTUF9SRUdf
+Q09ORklHX0RTSU9fU0VMX0lOOwo+ICsJCXZhbHVlID0gRFNJMV9TRUxfSU5fUkRNQTE7Cj4gIAl9
+IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX09WTDEgJiYgbmV4dCA9PSBERFBfQ09NUE9O
+RU5UX0NPTE9SMSkgewo+ICAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfQ09MT1IxX1NF
+TF9JTjsKPiAgCQl2YWx1ZSA9IENPTE9SMV9TRUxfSU5fT1ZMMTsKCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
