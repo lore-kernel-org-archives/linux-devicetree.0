@@ -1,67 +1,80 @@
-Return-Path: <SRS0=bntt=JN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.bugwerft.de ([46.23.86.59]:50920 "EHLO mail.bugwerft.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S966004AbeF0Swt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 Jun 2018 14:52:49 -0400
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v5 5/5] leds: lt3593: update email address and switch to SPDX license header
-Date: Wed, 27 Jun 2018 20:52:37 +0200
-Message-Id: <20180627185237.24830-6-daniel@zonque.org>
-In-Reply-To: <20180627185237.24830-1-daniel@zonque.org>
-References: <20180627185237.24830-1-daniel@zonque.org>
+Return-Path: <SRS0=0B+L=JF=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-ot0-f194.google.com ([74.125.82.194]:45289 "EHLO
+        mail-ot0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753762AbeFSWqB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Jun 2018 18:46:01 -0400
+MIME-Version: 1.0
+References: <20180519204808.28899-1-aford173@gmail.com>
+In-Reply-To: <20180519204808.28899-1-aford173@gmail.com>
+From: Adam Ford <aford173@gmail.com>
+Date: Tue, 19 Jun 2018 17:45:49 -0500
+Message-ID: <CAHCN7xJ2ddUxeN=62FrhhE4VRyieNQYawXrzdfK0oHHEJocSAw@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: am3517-evm: Remove unnessary PMIC parameters
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
-To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+To: linux-omap@vger.kernel.org
+Cc: devicetree <devicetree@vger.kernel.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Derald Woods <woods.technical@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Update the email address in the module information and in the comments
-and in the module information, and drop the existing boilerplate in
-favor of a SPDX header.
+On Sat, May 19, 2018 at 3:48 PM Adam Ford <aford173@gmail.com> wrote:
+>
+> The AM3517-EVM uses a TPS65023 PMIC.  This is already defined
+> by:  compatible = "ti,tps65023"
+>
+> There doesn't seem to be a need to have each regulator in the
+> PMIC with the 'compatible = "regulator-fixed"' since each
+> regulator has a min and max setting.
+>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+>
 
-Also sync the module license information with the header.
+Gentle nudge
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- drivers/leds/leds-lt3593.c | 23 ++++-------------------
- 1 file changed, 4 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
-index 2e35a4a4c571..de3623e0d094 100644
---- a/drivers/leds/leds-lt3593.c
-+++ b/drivers/leds/leds-lt3593.c
-@@ -1,20 +1,5 @@
--/*
-- * LEDs driver for LT3593 controllers
-- *
-- * See the datasheet at http://cds.linear.com/docs/Datasheet/3593f.pdf
-- *
-- * Copyright (c) 2009 Daniel Mack <daniel@caiaq.de>
-- *
-- * Based on leds-gpio.c,
-- *
-- *   Copyright (C) 2007 8D Technologies inc.
-- *   Raphael Assenat <raph@8d.com>
-- *   Copyright (C) 2008 Freescale Semiconductor, Inc.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2009,2018 Daniel Mack <daniel@zonque.org>
- 
- #include <linux/kernel.h>
- #include <linux/platform_device.h>
-@@ -211,7 +196,7 @@ static struct platform_driver lt3593_led_driver = {
- 
- module_platform_driver(lt3593_led_driver);
- 
--MODULE_AUTHOR("Daniel Mack <daniel@caiaq.de>");
-+MODULE_AUTHOR("Daniel Mack <daniel@zonque.org>");
- MODULE_DESCRIPTION("LED driver for LT3593 controllers");
--MODULE_LICENSE("GPL");
-+MODULE_LICENSE("GPL v2");
- MODULE_ALIAS("platform:leds-lt3593");
--- 
-2.17.1
-
+adam
+> diff --git a/arch/arm/boot/dts/am3517-som.dtsi b/arch/arm/boot/dts/am3517-som.dtsi
+> index a6d5ff73c163..7ff7cd135dca 100644
+> --- a/arch/arm/boot/dts/am3517-som.dtsi
+> +++ b/arch/arm/boot/dts/am3517-som.dtsi
+> @@ -64,7 +64,6 @@
+>                 regulators {
+>                         vdd_core_reg: VDCDC1 {
+>                                 regulator-name = "vdd_core";
+> -                               compatible = "regulator-fixed";
+>                                 regulator-always-on;
+>                                 regulator-min-microvolt = <1200000>;
+>                                 regulator-max-microvolt = <1200000>;
+> @@ -72,7 +71,6 @@
+>
+>                         vdd_io_reg: VDCDC2 {
+>                                 regulator-name = "vdd_io";
+> -                               compatible = "regulator-fixed";
+>                                 regulator-always-on;
+>                                 regulator-min-microvolt = <3300000>;
+>                                 regulator-max-microvolt = <3300000>;
+> @@ -80,7 +78,6 @@
+>
+>                         vdd_1v8_reg: VDCDC3 {
+>                                 regulator-name = "vdd_1v8";
+> -                               compatible = "regulator-fixed";
+>                                 regulator-always-on;
+>                                 regulator-min-microvolt = <1800000>;
+>                                 regulator-max-microvolt = <1800000>;
+> @@ -88,7 +85,6 @@
+>
+>                         vdd_usb18_reg: LDO1 {
+>                                 regulator-name = "vdd_usb18";
+> -                               compatible = "regulator-fixed";
+>                                 regulator-always-on;
+>                                 regulator-min-microvolt = <1800000>;
+>                                 regulator-max-microvolt = <1800000>;
+> @@ -96,7 +92,6 @@
+>
+>                         vdd_usb33_reg: LDO2 {
+>                                 regulator-name = "vdd_usb33";
+> -                               compatible = "regulator-fixed";
+>                                 regulator-always-on;
+>                                 regulator-min-microvolt = <3300000>;
+>                                 regulator-max-microvolt = <3300000>;
+> --
+> 2.17.0
+>
