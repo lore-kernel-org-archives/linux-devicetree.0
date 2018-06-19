@@ -1,86 +1,215 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 5/5] RFC: ARM64: dts: Add Low-Speed Connector to ZCU100
-Date: Tue, 19 Jun 2018 08:55:10 -0600
-Message-ID: <CAL_JsqL8ZRHCwE4Mqr9qP+JZmao8fmjc34xrqOHucfopkL7pvw@mail.gmail.com>
-References: <20180618074556.6944-1-linus.walleij@linaro.org>
- <20180618074556.6944-6-linus.walleij@linaro.org>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH 15/20] dts: arm: imx7{d,s}: Update coresight binding for
+ hardware ports
+Date: Tue, 19 Jun 2018 08:57:20 -0600
+Message-ID: <CANLsYkx1LFJodeg5npiLMBg9cWf-_PLeB2+RcYErGek_rokzyA@mail.gmail.com>
+References: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
+ <1528235011-30691-16-git-send-email-suzuki.poulose@arm.com> <20180619021218.GV16091@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180618074556.6944-6-linus.walleij@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Michal Simek <michal.simek@xilinx.com>, dev@lists.96boards.org, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Andy Shevchenko <andy@infradead.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, David Gibson <david@gibson.dropbear.id.au>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180619021218.GV16091@dragon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "Suzuki K. Poulose" <suzuki.poulose@arm.com>, stefan@agner.ch, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, arm@kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Matt Sealey <matt.sealey@arm.com>, John Horley <john.horley@arm.com>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>, coresight@lists.linaro.org, devicetree@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de, fabio.estevam@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-+David G
-
-On Mon, Jun 18, 2018 at 1:45 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> This adds the low-speed connector to the ZCU100 rev C device
-> tree (also known as the Ultra96 board).
+On Mon, 18 Jun 2018 at 20:13, Shawn Guo <shawnguo@kernel.org> wrote:
 >
-> This is a proof-of-concept only, showing how it is possible
-> to populate a Secure96 board using the other patches in the
-> series.
+> Hi Stefan,
 >
-> If you comment out or delete the board {} node, you can
-> populate/depopulate the board from sysfs instead.
+> Can you take a look at the patch?  Thanks.
 >
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  .../boot/dts/xilinx/zynqmp-zcu100-revC.dts    | 27 +++++++++++++++++--
->  1 file changed, 25 insertions(+), 2 deletions(-)
+
+These bindings are still being discussed and patches related to them
+shouldn't be merged.  The next iteration of this patchset will not
+included individual modifications to device tree files, that will be
+left for a later time when bindings have been agreed upon.
+
+Thanks,
+Mathieu
+
+> Shawn
 >
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> index d62276e0e0a9..fc30497f248d 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> @@ -110,6 +110,28 @@
->                 compatible = "mmc-pwrseq-simple";
->                 reset-gpios = <&gpio 7 GPIO_ACTIVE_LOW>; /* WIFI_EN */
->         };
-> +
-> +       lscon: connector {
-> +               compatible = "96boards,low-speed-connector";
-> +               i2c0 = <&i2csw_0>;
-> +               i2c1 = <&i2csw_1>;
-> +               spi = <&spi0>;
-
-David had suggested having an aliases node here for mapping things
-like SPI and I2C. That actually seems like a good use for aliases
-compared to the usual abuse to make Linux provide fixed numbering.
-
-> +               gpios = <&gpio 36 GPIO_ACTIVE_HIGH>, /* GPIO-A */
-
-Why aren't you using gpio-map? This is what it was defined for.
-
-> +                       <&gpio 37 GPIO_ACTIVE_HIGH>, /* GPIO-B */
-> +                       <&gpio 39 GPIO_ACTIVE_HIGH>, /* GPIO-C */
-> +                       <&gpio 40 GPIO_ACTIVE_HIGH>, /* GPIO-D */
-> +                       <&gpio 44 GPIO_ACTIVE_HIGH>, /* GPIO-E */
-> +                       <&gpio 45 GPIO_ACTIVE_HIGH>, /* GPIO-F */
-> +                       <&gpio 78 GPIO_ACTIVE_HIGH>, /* GPIO-G */
-> +                       <&gpio 79 GPIO_ACTIVE_HIGH>, /* GPIO-H */
-> +                       <&gpio 80 GPIO_ACTIVE_HIGH>, /* GPIO-I */
-> +                       <&gpio 81 GPIO_ACTIVE_HIGH>, /* GPIO-J */
-> +                       <&gpio 82 GPIO_ACTIVE_HIGH>, /* GPIO-K */
-> +                       <&gpio 83 GPIO_ACTIVE_HIGH>; /* GPIO-L */
-> +               board {
-> +                       compatible = "96boards,secure96";
-
-I'm all for putting things in the kernel/drivers for things we can't
-nail down bindings for, but it really seems like you are punting all
-the problems. Plus if we fully define how to handle the different
-bindings, we'll likely end up with something different and
-incompatible with what you have here.
-
-Rob
+> On Tue, Jun 05, 2018 at 10:43:26PM +0100, Suzuki K Poulose wrote:
+> > Switch to the updated coresight bindings.
+> >
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> > Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> > Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > ---
+> >  arch/arm/boot/dts/imx7d.dtsi |  5 ++++-
+> >  arch/arm/boot/dts/imx7s.dtsi | 41 ++++++++++++++++++++++++++++++-----------
+> >  2 files changed, 34 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
+> > index 200714e..5faff17 100644
+> > --- a/arch/arm/boot/dts/imx7d.dtsi
+> > +++ b/arch/arm/boot/dts/imx7d.dtsi
+> > @@ -87,7 +87,9 @@
+> >
+> >                       port {
+> >                               etm1_out_port: endpoint {
+> > +                                     direction = <1>;
+> >                                       remote-endpoint = <&ca_funnel_in_port1>;
+> > +                                     coresight,hwid = <0>;
+> >                               };
+> >                       };
+> >               };
+> > @@ -174,8 +176,9 @@
+> >       port@1 {
+> >               reg = <1>;
+> >               ca_funnel_in_port1: endpoint {
+> > -                     slave-mode;
+> > +                     direction = <0>;
+> >                       remote-endpoint = <&etm1_out_port>;
+> > +                     coresight,hwid = <1>;
+> >               };
+> >       };
+> >  };
+> > diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+> > index 4d42335..8e90915 100644
+> > --- a/arch/arm/boot/dts/imx7s.dtsi
+> > +++ b/arch/arm/boot/dts/imx7s.dtsi
+> > @@ -151,23 +151,28 @@
+> >                       port@0 {
+> >                               reg = <0>;
+> >                               replicator_out_port0: endpoint {
+> > +                                     direction = <1>;
+> >                                       remote-endpoint = <&tpiu_in_port>;
+> > +                                     coresight,hwid = <0>;
+> >                               };
+> >                       };
+> >
+> >                       port@1 {
+> >                               reg = <1>;
+> >                               replicator_out_port1: endpoint {
+> > +                                     direction = <1>;
+> >                                       remote-endpoint = <&etr_in_port>;
+> > +                                     coresight,hwid = <1>;
+> >                               };
+> >                       };
+> >
+> >                       /* replicator input port */
+> >                       port@2 {
+> > -                             reg = <0>;
+> > +                             reg = <2>;
+> >                               replicator_in_port0: endpoint {
+> > -                                     slave-mode;
+> > +                                     direction = <0>;
+> >                                       remote-endpoint = <&etf_out_port>;
+> > +                                     coresight,hwid = <0>;
+> >                               };
+> >                       };
+> >               };
+> > @@ -203,16 +208,19 @@
+> >                               port@0 {
+> >                                       reg = <0>;
+> >                                       ca_funnel_in_port0: endpoint {
+> > -                                             slave-mode;
+> > +                                             direction = <0>;
+> >                                               remote-endpoint = <&etm0_out_port>;
+> > +                                             coresight,hwid = <0>;
+> >                                       };
+> >                               };
+> >
+> >                               /* funnel output port */
+> >                               port@2 {
+> > -                                     reg = <0>;
+> > +                                     reg = <2>;
+> >                                       ca_funnel_out_port0: endpoint {
+> > +                                             direction = <1>;
+> >                                               remote-endpoint = <&hugo_funnel_in_port0>;
+> > +                                             coresight,hwid = <0>;
+> >                                       };
+> >                               };
+> >
+> > @@ -229,7 +237,9 @@
+> >
+> >                       port {
+> >                               etm0_out_port: endpoint {
+> > +                                     direction = <1>;
+> >                                       remote-endpoint = <&ca_funnel_in_port0>;
+> > +                                     coresight,hwid = <0>;
+> >                               };
+> >                       };
+> >               };
+> > @@ -248,22 +258,26 @@
+> >                               port@0 {
+> >                                       reg = <0>;
+> >                                       hugo_funnel_in_port0: endpoint {
+> > -                                             slave-mode;
+> > +                                             direction = <0>;
+> >                                               remote-endpoint = <&ca_funnel_out_port0>;
+> > +                                             coresight,hwid = <0>;
+> >                                       };
+> >                               };
+> >
+> >                               port@1 {
+> >                                       reg = <1>;
+> >                                       hugo_funnel_in_port1: endpoint {
+> > -                                             slave-mode; /* M4 input */
+> > +                                             direction = <0>; /* M4 input */
+> > +                                             coresight,hwid = <1>;
+> >                                       };
+> >                               };
+> >
+> >                               port@2 {
+> > -                                     reg = <0>;
+> > +                                     reg = <2>;
+> >                                       hugo_funnel_out_port0: endpoint {
+> > +                                             direction = <1>;
+> >                                               remote-endpoint = <&etf_in_port>;
+> > +                                             coresight,hwid = <0>;
+> >                                       };
+> >                               };
+> >
+> > @@ -284,15 +298,18 @@
+> >                               port@0 {
+> >                                       reg = <0>;
+> >                                       etf_in_port: endpoint {
+> > -                                             slave-mode;
+> > +                                             direction = <0>;
+> >                                               remote-endpoint = <&hugo_funnel_out_port0>;
+> > +                                             coresight,hwid = <0>;
+> >                                       };
+> >                               };
+> >
+> >                               port@1 {
+> > -                                     reg = <0>;
+> > +                                     reg = <1>;
+> >                                       etf_out_port: endpoint {
+> > +                                             direction = <1>;
+> >                                               remote-endpoint = <&replicator_in_port0>;
+> > +                                             coresight,hwid = <0>;
+> >                                       };
+> >                               };
+> >                       };
+> > @@ -306,8 +323,9 @@
+> >
+> >                       port {
+> >                               etr_in_port: endpoint {
+> > -                                     slave-mode;
+> > +                                     direction = <0>;
+> >                                       remote-endpoint = <&replicator_out_port1>;
+> > +                                     coresight,hwid = <0>;
+> >                               };
+> >                       };
+> >               };
+> > @@ -320,8 +338,9 @@
+> >
+> >                       port {
+> >                               tpiu_in_port: endpoint {
+> > -                                     slave-mode;
+> > +                                     direction = <0>;
+> >                                       remote-endpoint = <&replicator_out_port1>;
+> > +                                     coresight,hwid = <0>;
+> >                               };
+> >                       };
+> >               };
+> > --
+> > 2.7.4
+> >
