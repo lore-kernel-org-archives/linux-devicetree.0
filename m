@@ -1,93 +1,58 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: misc: Aspeed coprocessor interrupt
- controller
-Date: Tue, 19 Jun 2018 16:58:54 +1000
-Message-ID: <abec6c1847f9f46c5cbd1f485ec45acc7b5af1c7.camel@kernel.crashing.org>
-References: <20180618045902.11453-1-benh@kernel.crashing.org>
- <20180618045902.11453-3-benh@kernel.crashing.org>
- <CACPK8XfCZA7m++KeJ1GyPAbBXPmyhebEkvb+R41Xy1iuGvkbLw@mail.gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [RFC PATCHv2 8/9] ARM: dts: keystone-k2g: add DSS node
+Date: Tue, 19 Jun 2018 10:09:50 +0300
+Message-ID: <6d22a705-d052-3bb2-a840-5c068d8f4a70@ti.com>
+References: <20180618132242.8673-1-tomi.valkeinen@ti.com>
+ <20180618132242.8673-9-tomi.valkeinen@ti.com>
+ <20180619061908.GV112168@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACPK8XfCZA7m++KeJ1GyPAbBXPmyhebEkvb+R41Xy1iuGvkbLw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Andrew Jeffery <andrew@aj.id.au>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180619061908.GV112168@atomide.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-06-19 at 16:26 +0930, Joel Stanley wrote:
-> On 18 June 2018 at 14:29, Benjamin Herrenschmidt
-> <benh@kernel.crashing.org> wrote:
-> > Add the device-tree binding definition for the AST2400
-> > and AST2500 coprocessor interrupt controller
-> > 
-> > Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> > ---
-> >  .../devicetree/bindings/misc/aspeed,cvic.txt  | 35 +++++++++++++++++++
-> >  1 file changed, 35 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed,cvic.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/misc/aspeed,cvic.txt b/Documentation/devicetree/bindings/misc/aspeed,cvic.txt
-> > new file mode 100644
-> > index 000000000000..2562e2991e4d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/misc/aspeed,cvic.txt
-> 
-> Is there a reason you didn't put this in bindings/interrupt-controller?
-
-Well, I don't call it interrupt-controller anymore, it's not an
-interrupt controller for the main CPU so I decided to leave it out.
-
-If you (or somebody) has strong feeling about it, I can call it
-interrupt-controller again and move it back there :)
-
-> Aside from that this looks good.
-> 
-> > @@ -0,0 +1,35 @@
-> > +* Aspeed AST2400 and AST2500 coprocessor interrupt controller
-> > +
-> > +This file describes the bindings for the interrupt controller present
-> > +in the AST2400 and AST2500 BMC SoCs which provides interrupt to the
-> > +ColdFire coprocessor.
-> > +
-> > +It is not a normal interrupt controller and it would be rather
-> > +inconvenient to create an interrupt tree for it as it somewhat shares
-> > +some of the same sources as the main ARM interrupt controller but with
-> > +different numbers.
-> > +
-> > +The AST2500 supports a SW generated interrupt
-> > +
-> > +Required properties:
-> > +- reg: address and length of the register for the device.
-> > +- compatible: "aspeed,cvic" and one of:
-> > +               "aspeed,ast2400-cvic"
-> > +             or
-> > +               "aspeed,ast2500-cvic"
-> > +
-> > +- valid-sources: One cell, bitmap of supported sources for the implementation
-> > +
-> > +Optional properties;
-> > +- copro-sw-interrupts: List of interrupt numbers that can be used as
-> > +                      SW interrupts from the ARM to the coprocessor.
-> > +                      (AST2500 only)
-> > +
-> > +Example:
-> > +
-> > +       cvic: copro-interrupt-controller@1e6c2000 {
-> > +               compatible = "aspeed,ast2500-cvic";
-> > +               valid-sources = <0xffffffff>;
-> > +               copro-sw-interrupts = <1>;
-> > +               reg = <0x1e6c2000 0x80>;
-> > +       };
-> > --
-> > 2.17.1
-> > 
+T24gMTkvMDYvMTggMDk6MTksIFRvbnkgTGluZGdyZW4gd3JvdGU6Cj4gKiBUb21pIFZhbGtlaW5l
+biA8dG9taS52YWxrZWluZW5AdGkuY29tPiBbMTgwNjE4IDEzOjI2XToKPj4gQWRkIERTUyBub2Rl
+IHRvIGsyZy5kdHNpLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBUb21pIFZhbGtlaW5lbiA8dG9taS52
+YWxrZWluZW5AdGkuY29tPgo+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPj4gLS0t
+Cj4+ICBhcmNoL2FybS9ib290L2R0cy9rZXlzdG9uZS1rMmcuZHRzaSB8IDIxICsrKysrKysrKysr
+KysrKysrKysrKwo+PiAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKykKPj4KPj4gZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2tleXN0b25lLWsyZy5kdHNpIGIvYXJjaC9hcm0v
+Ym9vdC9kdHMva2V5c3RvbmUtazJnLmR0c2kKPj4gaW5kZXggZGE3OGMwMDM0NDI3Li5kNzYxZmU3
+ZDQ2ZTcgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2tleXN0b25lLWsyZy5kdHNp
+Cj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2tleXN0b25lLWsyZy5kdHNpCj4+IEBAIC02MDks
+NSArNjA5LDI2IEBACj4+ICAJCQlyZWcgPSA8MHgyMTAxMDAwMCAweDIwMD47Cj4+ICAJCQlpbnRl
+cnJ1cHRzID0gPEdJQ19TUEkgMTIzIElSUV9UWVBFX0VER0VfUklTSU5HPjsKPj4gIAkJfTsKPj4g
+Kwo+PiArCQlkc3M6IGRzc0AwMjU0MDAwMCB7Cj4+ICsJCQljb21wYXRpYmxlID0gInRpLGsyZy1k
+c3MiOwo+PiArCj4+ICsJCQlyZWcgPSA8MHgwMjU0MDAwMCAweDQwMD4sCj4+ICsJCQkgICAgICA8
+MHgwMjU1MDAwMCAweDEwMDA+LAo+PiArCQkJICAgICAgPDB4MDI1NTcwMDAgMHgxMDAwPiwKPj4g
+KwkJCSAgICAgIDwweDAyNTVhODAwIDB4MTAwPiwKPj4gKwkJCSAgICAgIDwweDAyNTVhYzAwIDB4
+MTAwPjsKPj4gKwo+PiArCQkJcmVnLW5hbWVzID0gImNmZyIsICJjb21tb24iLCAidmlkMSIsICJv
+dnIxIiwgInZwMSI7Cj4gCj4gQ2FuIHlvdSBwbGVhc2UgY2hlY2sgdG8gbWFrZSBzdXJlIHRoZXNl
+IGFyZSBub3QgbXVsdGlwbGUKPiBzZXBhcmF0ZSBkZXZpY2VzPwo+IAo+IElmIHRoZXkgYXJlLCBm
+bHVzaGluZyBwb3N0ZWQgd3JpdGUgdG8gb25lIGRldmljZSB3aWxsIG5vdCBmbHVzaAo+IGFueXRo
+aW5nIHRvIHRoZSBvdGhlciBkZXZpY2VzLiBBbmQgdGhhdCBjYW4gbGVhZCB0byB2ZXJ5IGhhcmQK
+PiB0byB0cmFjayBkb3duIG15c3RlcmlvdXMgYnVncy4KCkkgZG9uJ3Qgc2VlIGFueXRoaW5nIGhp
+bnRpbmcgdGhhdCB0aGV5IHdvdWxkIGJlIHNlcGFyYXRlIGRldmljZXMsIGFuZCBpdAp3b3VsZG4n
+dCByZWFsbHkgbWFrZSBzZW5zZSB0byBtZSBlaXRoZXIuIFRoZXkncmUgaW50ZWdyYWwgcGFydHMg
+b2YgdGhlCkRJU1BDLiBJIGNhbiBzZWUgYSBzaW5nbGUgcG9ydCBmb3IgcmVnaXN0ZXIgYWNjZXNz
+LCBhbmQgYSBzaW5nbGUgcG9ydApmb3IgdGhlIHBpeGVsIGRhdGEgRE1BLgoKIFRvbWkKCi0tIApU
+ZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxz
+aW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2ls
+ZTogSGVsc2lua2kKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
