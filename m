@@ -1,158 +1,40 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [PATCH v7 4/4] input/power: Add driver for BD71837/BD71847 PMIC
- power button
-Date: Tue, 19 Jun 2018 13:57:09 +0300
-Message-ID: <af60857c6db5fcf14fbf0112f74719d898952459.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v3 7/9] drm/bridge: tc358764: Add DSI to LVDS bridge driver
+Date: Tue, 19 Jun 2018 19:05:06 +0800
+Message-ID: <201806191813.jof7uloL%fengguang.wu@intel.com>
+References: <1529396370-18761-8-git-send-email-m.purski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, arnd@arndb.de, dmitry.torokhov@gmail.com, sre@kernel.org, chenjh@rock-chips.com, andrew.smirnov@gmail.com, linus.walleij@linaro.org, kstewart@linuxfoundation.org, heiko@sntech.de, gregkh@linuxfoundation.org
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+In-Reply-To: <1529396370-18761-8-git-send-email-m.purski@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Maciej Purski <m.purski@samsung.com>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Seung-Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, kbuild-all@01.org
 List-Id: devicetree@vger.kernel.org
 
-ROHM BD71837 PMIC power button driver providing power-key press
-information to user-space.
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/input/misc/Kconfig          | 10 +++++
- drivers/input/misc/Makefile         |  1 +
- drivers/input/misc/bd718xx-pwrkey.c | 90 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 101 insertions(+)
- create mode 100644 drivers/input/misc/bd718xx-pwrkey.c
-
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index 572b15fa18c2..694c05d3f9fb 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -96,6 +96,16 @@ config INPUT_ATMEL_CAPTOUCH
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called atmel_captouch.
- 
-+config INPUT_BD718XX_PWRKEY
-+	tristate "ROHM BD71837/BD71847 power key support"
-+	depends on MFD_BD71837
-+	help
-+	  Say Y here if you want support for the power key usually found
-+	  on boards using a ROHM BD71837/BD71847 compatible PMIC.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called bd718xx-pwrkey.
-+
- config INPUT_BMA150
- 	tristate "BMA150/SMB380 acceleration sensor support"
- 	depends on I2C
-diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-index 72cde28649e2..ea5b81cbf2bf 100644
---- a/drivers/input/misc/Makefile
-+++ b/drivers/input/misc/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_INPUT_ATI_REMOTE2)		+= ati_remote2.o
- obj-$(CONFIG_INPUT_ATLAS_BTNS)		+= atlas_btns.o
- obj-$(CONFIG_INPUT_ATMEL_CAPTOUCH)	+= atmel_captouch.o
- obj-$(CONFIG_INPUT_BMA150)		+= bma150.o
-+obj-$(CONFIG_INPUT_BD718XX_PWRKEY)	+= bd718xx-pwrkey.o
- obj-$(CONFIG_INPUT_CM109)		+= cm109.o
- obj-$(CONFIG_INPUT_CMA3000)		+= cma3000_d0x.o
- obj-$(CONFIG_INPUT_CMA3000_I2C)		+= cma3000_d0x_i2c.o
-diff --git a/drivers/input/misc/bd718xx-pwrkey.c b/drivers/input/misc/bd718xx-pwrkey.c
-new file mode 100644
-index 000000000000..e8ac9475c3cf
---- /dev/null
-+++ b/drivers/input/misc/bd718xx-pwrkey.c
-@@ -0,0 +1,90 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2018 ROHM Semiconductors
-+// bd718xx-pwrkey.c -- ROHM BD71837MWV and BD71847 power button driver
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/errno.h>
-+#include <linux/input.h>
-+#include <linux/interrupt.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/mfd/bd71837.h>
-+
-+struct bd718xx_pwrkey {
-+	struct input_dev *idev;
-+	struct bd71837 *mfd;
-+	int irq;
-+};
-+
-+static irqreturn_t button_irq(int irq, void *_priv)
-+{
-+	struct input_dev *idev = (struct input_dev *)_priv;
-+
-+	input_report_key(idev, KEY_POWER, 1);
-+	input_sync(idev);
-+	input_report_key(idev, KEY_POWER, 0);
-+	input_sync(idev);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int bd718xx_pwr_btn_probe(struct platform_device *pdev)
-+{
-+	int err = -ENOMEM;
-+	struct bd718xx_pwrkey *pk;
-+
-+	pk = devm_kzalloc(&pdev->dev, sizeof(*pk), GFP_KERNEL);
-+	if (!pk)
-+		goto err_out;
-+
-+	pk->mfd = dev_get_drvdata(pdev->dev.parent);
-+
-+	pk->idev = devm_input_allocate_device(&pdev->dev);
-+	if (!pk->idev)
-+		goto err_out;
-+
-+	pk->idev->name = "bd718xx-pwrkey";
-+	pk->idev->phys = "bd718xx-pwrkey/input0";
-+	pk->idev->dev.parent = &pdev->dev;
-+
-+	input_set_capability(pk->idev, EV_KEY, KEY_POWER);
-+
-+	err = platform_get_irq_byname(pdev, "pwr-btn-s");
-+	if (err < 0) {
-+		dev_err(&pdev->dev, "could not get power key interrupt\n");
-+		goto err_out;
-+	}
-+
-+	pk->irq = err;
-+	err = devm_request_threaded_irq(&pdev->dev, pk->irq, NULL, &button_irq,
-+					0, "bd718xx-pwrkey", pk);
-+	if (err)
-+		goto err_out;
-+
-+	platform_set_drvdata(pdev, pk);
-+	err = regmap_update_bits(pk->mfd->regmap,
-+				 BD71837_REG_PWRONCONFIG0,
-+				 BD718XX_PWRBTN_SHORT_PRESS_MASK,
-+				 BD718XX_PWRBTN_SHORT_PRESS_10MS);
-+	if (err)
-+		goto err_out;
-+
-+	err = input_register_device(pk->idev);
-+
-+err_out:
-+
-+	return err;
-+}
-+
-+static struct platform_driver bd718xx_pwr_btn_driver = {
-+	.probe	= bd718xx_pwr_btn_probe,
-+	.driver = {
-+		.name	= "bd718xx-pwrkey",
-+	},
-+};
-+module_platform_driver(bd718xx_pwr_btn_driver);
-+MODULE_DESCRIPTION("Power button driver for buttons connected to ROHM bd71837/bd71847 PMIC");
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
-+
--- 
-2.14.3
+SGkgQW5kcnplaiwKCkkgbG92ZSB5b3VyIHBhdGNoISBQZXJoYXBzIHNvbWV0aGluZyB0byBpbXBy
+b3ZlOgoKW2F1dG8gYnVpbGQgdGVzdCBXQVJOSU5HIG9uIHY0LjE4LXJjMV0KW2Fsc28gYnVpbGQg
+dGVzdCBXQVJOSU5HIG9uIG5leHQtMjAxODA2MTldCltjYW5ub3QgYXBwbHkgdG8gZHJtLWV4eW5v
+cy9leHlub3MtZHJtL2Zvci1uZXh0IHJvYmgvZm9yLW5leHQgZHJtL2RybS1uZXh0XQpbaWYgeW91
+ciBwYXRjaCBpcyBhcHBsaWVkIHRvIHRoZSB3cm9uZyBnaXQgdHJlZSwgcGxlYXNlIGRyb3AgdXMg
+YSBub3RlIHRvIGhlbHAgaW1wcm92ZSB0aGUgc3lzdGVtXQoKdXJsOiAgICBodHRwczovL2dpdGh1
+Yi5jb20vMGRheS1jaS9saW51eC9jb21taXRzL01hY2llai1QdXJza2kvZHJtLWV4eW5vcy1yZW5h
+bWUtYnJpZGdlX25vZGUtdG8tbWljX2JyaWRnZV9ub2RlLzIwMTgwNjE5LTE3NTEzNgoKCmNvY2Np
+bmVsbGUgd2FybmluZ3M6IChuZXcgb25lcyBwcmVmaXhlZCBieSA+PikKCj4+IGRyaXZlcnMvZ3B1
+L2RybS9icmlkZ2UvdGMzNTg3NjQuYzoxNzk6NjAtNjY6IEVSUk9SOiBhcHBsaWNhdGlvbiBvZiBz
+aXplb2YgdG8gcG9pbnRlcgoKUGxlYXNlIHJldmlldyBhbmQgcG9zc2libHkgZm9sZCB0aGUgZm9s
+bG93dXAgcGF0Y2guCgotLS0KMC1EQVkga2VybmVsIHRlc3QgaW5mcmFzdHJ1Y3R1cmUgICAgICAg
+ICAgICAgICAgT3BlbiBTb3VyY2UgVGVjaG5vbG9neSBDZW50ZXIKaHR0cHM6Ly9saXN0cy4wMS5v
+cmcvcGlwZXJtYWlsL2tidWlsZC1hbGwgICAgICAgICAgICAgICAgICAgSW50ZWwgQ29ycG9yYXRp
+b24KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
