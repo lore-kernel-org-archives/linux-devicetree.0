@@ -1,215 +1,137 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH 15/20] dts: arm: imx7{d,s}: Update coresight binding for
- hardware ports
-Date: Tue, 19 Jun 2018 08:57:20 -0600
-Message-ID: <CANLsYkx1LFJodeg5npiLMBg9cWf-_PLeB2+RcYErGek_rokzyA@mail.gmail.com>
-References: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
- <1528235011-30691-16-git-send-email-suzuki.poulose@arm.com> <20180619021218.GV16091@dragon>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of/platform: add initcall_debug logs for device creates
+Date: Tue, 19 Jun 2018 08:11:12 -0700
+Message-ID: <43fca3e7-4ba5-661f-0871-fedd9ff67673@gmail.com>
+References: <20180619014608.92061-1-toddpoynor@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180619021218.GV16091@dragon>
+In-Reply-To: <20180619014608.92061-1-toddpoynor@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "Suzuki K. Poulose" <suzuki.poulose@arm.com>, stefan@agner.ch, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, arm@kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Matt Sealey <matt.sealey@arm.com>, John Horley <john.horley@arm.com>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>, coresight@lists.linaro.org, devicetree@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de, fabio.estevam@nxp.com
+To: Todd Poynor <toddpoynor@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, kernel-team@android.com, Todd Poynor <toddpoynor@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 18 Jun 2018 at 20:13, Shawn Guo <shawnguo@kernel.org> wrote:
->
-> Hi Stefan,
->
-> Can you take a look at the patch?  Thanks.
->
+Hi Todd,
 
-These bindings are still being discussed and patches related to them
-shouldn't be merged.  The next iteration of this patchset will not
-included individual modifications to device tree files, that will be
-left for a later time when bindings have been agreed upon.
+On 06/18/18 18:46, Todd Poynor wrote:
+> From: Todd Poynor <toddpoynor@google.com>
+> 
+> Add initcall_debug logs for the amount of time taken by each OF platform
+> bus device create call.  For example:
+> 
+>    of platform device create /reserved-memory/ramoops@a3800000 took
+>    3255 usecs
+> 
+> initcall_debug already reports the total of all such device creates
+> as a single entry for function of_platform_default_populate_init (or
+> similar, depending on the board).  The new logs help identify which of
+> the potentially hundreds of device inits take significant amounts of
+> time.
+> 
+> Signed-off-by: Todd Poynor <toddpoynor@google.com>
+> ---
+>  drivers/of/platform.c | 28 +++++++++++++++++++++++++++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
+> 
+> Note it's likely only a few devices take significant lengths of time to
+> init, whereas there may be hundreds of uninteresting cases also logged.
+> Adding a threshold for reporting might be desirable, although for boot
+> time sleuthing it's probably fine to generate a ton of output and narrow
+> down the points of interest with tools.
+> 
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 6925d993e1f0..eeb4c595f43c 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/amba/bus.h>
+>  #include <linux/device.h>
+>  #include <linux/dma-mapping.h>
+> +#include <linux/init.h>
+>  #include <linux/slab.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_device.h>
+> @@ -159,6 +160,19 @@ struct platform_device *of_device_alloc(struct device_node *np,
+>  }
+>  EXPORT_SYMBOL(of_device_alloc);
+>  
+> +static void of_platform_log_inittime(struct device_node *node,
+> +				     ktime_t starttime)
 
-Thanks,
-Mathieu
+Please call it pr_delta_time() instead.
 
-> Shawn
->
-> On Tue, Jun 05, 2018 at 10:43:26PM +0100, Suzuki K Poulose wrote:
-> > Switch to the updated coresight bindings.
-> >
-> > Cc: Shawn Guo <shawnguo@kernel.org>
-> > Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> > Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > ---
-> >  arch/arm/boot/dts/imx7d.dtsi |  5 ++++-
-> >  arch/arm/boot/dts/imx7s.dtsi | 41 ++++++++++++++++++++++++++++++-----------
-> >  2 files changed, 34 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
-> > index 200714e..5faff17 100644
-> > --- a/arch/arm/boot/dts/imx7d.dtsi
-> > +++ b/arch/arm/boot/dts/imx7d.dtsi
-> > @@ -87,7 +87,9 @@
-> >
-> >                       port {
-> >                               etm1_out_port: endpoint {
-> > +                                     direction = <1>;
-> >                                       remote-endpoint = <&ca_funnel_in_port1>;
-> > +                                     coresight,hwid = <0>;
-> >                               };
-> >                       };
-> >               };
-> > @@ -174,8 +176,9 @@
-> >       port@1 {
-> >               reg = <1>;
-> >               ca_funnel_in_port1: endpoint {
-> > -                     slave-mode;
-> > +                     direction = <0>;
-> >                       remote-endpoint = <&etm1_out_port>;
-> > +                     coresight,hwid = <1>;
-> >               };
-> >       };
-> >  };
-> > diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-> > index 4d42335..8e90915 100644
-> > --- a/arch/arm/boot/dts/imx7s.dtsi
-> > +++ b/arch/arm/boot/dts/imx7s.dtsi
-> > @@ -151,23 +151,28 @@
-> >                       port@0 {
-> >                               reg = <0>;
-> >                               replicator_out_port0: endpoint {
-> > +                                     direction = <1>;
-> >                                       remote-endpoint = <&tpiu_in_port>;
-> > +                                     coresight,hwid = <0>;
-> >                               };
-> >                       };
-> >
-> >                       port@1 {
-> >                               reg = <1>;
-> >                               replicator_out_port1: endpoint {
-> > +                                     direction = <1>;
-> >                                       remote-endpoint = <&etr_in_port>;
-> > +                                     coresight,hwid = <1>;
-> >                               };
-> >                       };
-> >
-> >                       /* replicator input port */
-> >                       port@2 {
-> > -                             reg = <0>;
-> > +                             reg = <2>;
-> >                               replicator_in_port0: endpoint {
-> > -                                     slave-mode;
-> > +                                     direction = <0>;
-> >                                       remote-endpoint = <&etf_out_port>;
-> > +                                     coresight,hwid = <0>;
-> >                               };
-> >                       };
-> >               };
-> > @@ -203,16 +208,19 @@
-> >                               port@0 {
-> >                                       reg = <0>;
-> >                                       ca_funnel_in_port0: endpoint {
-> > -                                             slave-mode;
-> > +                                             direction = <0>;
-> >                                               remote-endpoint = <&etm0_out_port>;
-> > +                                             coresight,hwid = <0>;
-> >                                       };
-> >                               };
-> >
-> >                               /* funnel output port */
-> >                               port@2 {
-> > -                                     reg = <0>;
-> > +                                     reg = <2>;
-> >                                       ca_funnel_out_port0: endpoint {
-> > +                                             direction = <1>;
-> >                                               remote-endpoint = <&hugo_funnel_in_port0>;
-> > +                                             coresight,hwid = <0>;
-> >                                       };
-> >                               };
-> >
-> > @@ -229,7 +237,9 @@
-> >
-> >                       port {
-> >                               etm0_out_port: endpoint {
-> > +                                     direction = <1>;
-> >                                       remote-endpoint = <&ca_funnel_in_port0>;
-> > +                                     coresight,hwid = <0>;
-> >                               };
-> >                       };
-> >               };
-> > @@ -248,22 +258,26 @@
-> >                               port@0 {
-> >                                       reg = <0>;
-> >                                       hugo_funnel_in_port0: endpoint {
-> > -                                             slave-mode;
-> > +                                             direction = <0>;
-> >                                               remote-endpoint = <&ca_funnel_out_port0>;
-> > +                                             coresight,hwid = <0>;
-> >                                       };
-> >                               };
-> >
-> >                               port@1 {
-> >                                       reg = <1>;
-> >                                       hugo_funnel_in_port1: endpoint {
-> > -                                             slave-mode; /* M4 input */
-> > +                                             direction = <0>; /* M4 input */
-> > +                                             coresight,hwid = <1>;
-> >                                       };
-> >                               };
-> >
-> >                               port@2 {
-> > -                                     reg = <0>;
-> > +                                     reg = <2>;
-> >                                       hugo_funnel_out_port0: endpoint {
-> > +                                             direction = <1>;
-> >                                               remote-endpoint = <&etf_in_port>;
-> > +                                             coresight,hwid = <0>;
-> >                                       };
-> >                               };
-> >
-> > @@ -284,15 +298,18 @@
-> >                               port@0 {
-> >                                       reg = <0>;
-> >                                       etf_in_port: endpoint {
-> > -                                             slave-mode;
-> > +                                             direction = <0>;
-> >                                               remote-endpoint = <&hugo_funnel_out_port0>;
-> > +                                             coresight,hwid = <0>;
-> >                                       };
-> >                               };
-> >
-> >                               port@1 {
-> > -                                     reg = <0>;
-> > +                                     reg = <1>;
-> >                                       etf_out_port: endpoint {
-> > +                                             direction = <1>;
-> >                                               remote-endpoint = <&replicator_in_port0>;
-> > +                                             coresight,hwid = <0>;
-> >                                       };
-> >                               };
-> >                       };
-> > @@ -306,8 +323,9 @@
-> >
-> >                       port {
-> >                               etr_in_port: endpoint {
-> > -                                     slave-mode;
-> > +                                     direction = <0>;
-> >                                       remote-endpoint = <&replicator_out_port1>;
-> > +                                     coresight,hwid = <0>;
-> >                               };
-> >                       };
-> >               };
-> > @@ -320,8 +338,9 @@
-> >
-> >                       port {
-> >                               tpiu_in_port: endpoint {
-> > -                                     slave-mode;
-> > +                                     direction = <0>;
-> >                                       remote-endpoint = <&replicator_out_port1>;
-> > +                                     coresight,hwid = <0>;
-> >                               };
-> >                       };
-> >               };
-> > --
-> > 2.7.4
-> >
+
+> +{
+> +	ktime_t delta, endtime;
+> +	unsigned long long duration;
+> +
+> +	endtime = ktime_get();
+> +	delta = ktime_sub(endtime, starttime);
+> +	duration = (unsigned long long) ktime_to_ns(delta) >> 10;
+> +	pr_debug("of platform device create %s took %lld usecs\n",
+> +		 node->full_name, duration);
+
+The device node full_name field no longer contains the full path of
+the node name.  To deal with this, use %pOF on node instead of
+%s on node->full_name  (core-api/printk-formats.rst).
+
+
+> +}
+> +
+>  /**
+>   * of_platform_device_create_pdata - Alloc, initialize and register an of_device
+>   * @np: pointer to node to create device for
+> @@ -176,6 +190,8 @@ static struct platform_device *of_platform_device_create_pdata(
+>  					struct device *parent)
+>  {
+>  	struct platform_device *dev;
+> +	ktime_t starttime = 0;
+
+I assume the initialization to zero is to silence a compiler warning.  Is my
+assumption correct?
+
+
+> +	int ret;
+>  
+>  	if (!of_device_is_available(np) ||
+>  	    of_node_test_and_set_flag(np, OF_POPULATED))
+> @@ -187,9 +203,14 @@ static struct platform_device *of_platform_device_create_pdata(
+>  
+>  	dev->dev.bus = &platform_bus_type;
+>  	dev->dev.platform_data = platform_data;
+> +	if (initcall_debug)
+> +		starttime = ktime_get();
+>  	of_msi_configure(&dev->dev, dev->dev.of_node);
+> +	ret = of_device_add(dev);
+> +	if (initcall_debug)
+> +		of_platform_log_inittime(np, starttime);
+>  
+> -	if (of_device_add(dev) != 0) {
+> +	if (ret != 0) {
+>  		platform_device_put(dev);
+>  		goto err_clear_flag;
+>  	}
+> @@ -352,6 +373,7 @@ static int of_platform_bus_create(struct device_node *bus,
+>  	struct platform_device *dev;
+>  	const char *bus_id = NULL;
+>  	void *platform_data = NULL;
+> +	ktime_t starttime = 0;
+>  	int rc = 0;
+>  
+>  	/* Make sure it has a compatible property */
+> @@ -384,7 +406,11 @@ static int of_platform_bus_create(struct device_node *bus,
+>  		 * Don't return an error here to keep compatibility with older
+>  		 * device tree files.
+>  		 */
+> +		if (initcall_debug)
+> +			starttime = ktime_get();
+>  		of_amba_device_create(bus, bus_id, platform_data, parent);
+> +		if (initcall_debug)
+> +			of_platform_log_inittime(bus, starttime);
+>  		return 0;
+>  	}
+>  
+> 
