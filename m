@@ -1,256 +1,59 @@
-From: Alex Gonzalez <alex.gonzalez@digi.com>
-Subject: [PATCH 2/2] ARM: dts: imx6ul: Add DTS for ConnectCore 6UL SBC Express
-Date: Tue, 19 Jun 2018 09:32:14 +0200
-Message-ID: <1529393534-7827-3-git-send-email-alex.gonzalez@digi.com>
-References: <1529393534-7827-1-git-send-email-alex.gonzalez@digi.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC PATCHv2 8/9] ARM: dts: keystone-k2g: add DSS node
+Date: Tue, 19 Jun 2018 00:12:34 -0700
+Message-ID: <20180619071234.GY112168@atomide.com>
+References: <20180618132242.8673-1-tomi.valkeinen@ti.com>
+ <20180618132242.8673-9-tomi.valkeinen@ti.com>
+ <20180619061908.GV112168@atomide.com>
+ <6d22a705-d052-3bb2-a840-5c068d8f4a70@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529393534-7827-1-git-send-email-alex.gonzalez@digi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <6d22a705-d052-3bb2-a840-5c068d8f4a70@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The ConnectCore 6UL Single Board Computer (SBC) Express contains the
-ConnectCore 6UL System-On-Module.
-
-Its hardware specifications are:
-
-* 256MB DDR3 memory
-* 256MB NAND flash
-* Single Ethernet
-* USB Host and USB-OTG
-* MicroSD external storage
-* Groove connectors and Raspberry Pi Hat compatible expansion header
-
-Signed-off-by: Alex Gonzalez <alex.gonzalez@digi.com>
----
- arch/arm/boot/dts/Makefile                      |   1 +
- arch/arm/boot/dts/imx6ul-ccimx6ulsbcexpress.dts | 205 ++++++++++++++++++++++++
- 2 files changed, 206 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6ul-ccimx6ulsbcexpress.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 37a3de760d40..6135d3dc381c 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -533,6 +533,7 @@ dtb-$(CONFIG_SOC_IMX6SX) += \
- 	imx6sx-udoo-neo-full.dtb
- dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-14x14-evk.dtb \
-+	imx6ul-ccimx6ulsbcexpress.dtb \
- 	imx6ul-geam.dtb \
- 	imx6ul-isiot-emmc.dtb \
- 	imx6ul-isiot-nand.dtb \
-diff --git a/arch/arm/boot/dts/imx6ul-ccimx6ulsbcexpress.dts b/arch/arm/boot/dts/imx6ul-ccimx6ulsbcexpress.dts
-new file mode 100644
-index 000000000000..1e3c4200b924
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-ccimx6ulsbcexpress.dts
-@@ -0,0 +1,205 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Digi International's ConnectCore6UL SBC Express board device tree source
-+ *
-+ * Copyright 2018 Digi International, Inc.
-+ *
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include "imx6ul.dtsi"
-+#include "imx6ul-ccimx6ulsom.dtsi"
-+
-+/ {
-+	model = "Digi International ConnectCore 6UL SBC Express.";
-+	compatible = "digi,ccimx6ulsbcexpress", "digi,ccimx6ulsom",
-+		     "fsl,imx6ul";
-+};
-+
-+&adc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc1>;
-+	adc-ch-list = <4>;
-+	status = "okay";
-+};
-+
-+&ecspi3 {
-+	fsl,spi-num-chipselects = <1>;
-+	cs-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi3_master>;
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet1>;
-+	phy-mode = "rmii";
-+	phy-handle = <&ethphy0>;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			smsc,disable-energy-detect;
-+			reg = <0>;
-+		};
-+	};
-+};
-+
-+&can1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+	xceiver-supply = <&ext_3v3>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+};
-+
-+&pwm1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm1>;
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>;
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart5>;
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	dr_mode = "host";
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&usbotg2 {
-+	dr_mode = "host";
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	broken-cd;      /* no carrier detect line (use polling) */
-+	no-1-8-v;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog>;
-+
-+	imx6ul-ccimx6ul {
-+		pinctrl_adc1: adc1grp {
-+			fsl,pins = <
-+				/* GPIO1_4/ADC1_IN4 (pin 7 of the expansion header) */
-+				MX6UL_PAD_GPIO1_IO04__GPIO1_IO04        0xb0
-+			>;
-+		};
-+
-+		pinctrl_ecspi3_master: ecspi3grp1 {
-+			fsl,pins = <
-+				MX6UL_PAD_UART2_RX_DATA__ECSPI3_SCLK	0x10b0
-+				MX6UL_PAD_UART2_CTS_B__ECSPI3_MOSI	0x10b0
-+				MX6UL_PAD_UART2_RTS_B__ECSPI3_MISO	0x10b0
-+				MX6UL_PAD_UART2_TX_DATA__GPIO1_IO20	0x10b0 /* Chip Select */
-+			>;
-+		};
-+
-+		pinctrl_ecspi3_slave: ecspi3grp2 {
-+			fsl,pins = <
-+				MX6UL_PAD_UART2_RX_DATA__ECSPI3_SCLK	0x10b0
-+				MX6UL_PAD_UART2_CTS_B__ECSPI3_MOSI	0x10b0
-+				MX6UL_PAD_UART2_RTS_B__ECSPI3_MISO	0x10b0
-+				MX6UL_PAD_UART2_TX_DATA__ECSPI3_SS0	0x10b0 /* Chip Select */
-+			>;
-+		};
-+
-+		pinctrl_enet1: enet1grp {
-+			fsl,pins = <
-+				MX6UL_PAD_GPIO1_IO07__ENET1_MDC		0x1b0b0
-+				MX6UL_PAD_GPIO1_IO06__ENET1_MDIO	0x1b0b0
-+				MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
-+				MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER	0x1b0b0
-+				MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
-+				MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
-+				MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
-+				MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
-+				MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
-+				MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x40017051
-+			>;
-+		};
-+
-+		pinctrl_flexcan1: flexcan1grp{
-+			fsl,pins = <
-+				MX6UL_PAD_LCD_DATA08__FLEXCAN1_TX	0x1b020
-+				MX6UL_PAD_LCD_DATA09__FLEXCAN1_RX	0x1b020
-+			>;
-+		};
-+
-+		pinctrl_i2c2: i2c2grp {
-+			fsl,pins = <
-+				MX6UL_PAD_GPIO1_IO00__I2C2_SCL 0x4001b8b0
-+				MX6UL_PAD_GPIO1_IO01__I2C2_SDA 0x4001b8b0
-+			>;
-+		};
-+
-+		pinctrl_pwm1: pwm1grp {
-+			fsl,pins = <
-+				MX6UL_PAD_LCD_DATA00__PWM1_OUT		0x10b0
-+			>;
-+		};
-+
-+		pinctrl_uart4: uart4grp {
-+			fsl,pins = <
-+				MX6UL_PAD_LCD_CLK__UART4_DCE_TX		0x1b0b1
-+				MX6UL_PAD_LCD_ENABLE__UART4_DCE_RX	0x1b0b1
-+			>;
-+		};
-+
-+		pinctrl_uart5: uart5grp {
-+			fsl,pins = <
-+				MX6UL_PAD_UART5_TX_DATA__UART5_DCE_TX	0x1b0b1
-+				MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX	0x1b0b1
-+			>;
-+		};
-+
-+		pinctrl_usdhc2: usdhc2grp {
-+			fsl,pins = <
-+				MX6UL_PAD_CSI_HSYNC__USDHC2_CMD		0x17059
-+				MX6UL_PAD_CSI_VSYNC__USDHC2_CLK		0x10071
-+				MX6UL_PAD_CSI_DATA00__USDHC2_DATA0	0x17059
-+				MX6UL_PAD_CSI_DATA01__USDHC2_DATA1	0x17059
-+				MX6UL_PAD_CSI_DATA02__USDHC2_DATA2	0x17059
-+				MX6UL_PAD_CSI_DATA03__USDHC2_DATA3	0x17059
-+			>;
-+		};
-+
-+		/* General purpose pinctrl */
-+		pinctrl_hog: hoggrp {
-+			fsl,pins = <
-+				/* GPIOs BANK 3 */
-+				MX6UL_PAD_LCD_RESET__GPIO3_IO04		0xf030
-+			>;
-+		};
-+
-+	};
-+};
+KiBUb21pIFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29tPiBbMTgwNjE5IDA3OjEyXToK
+PiBPbiAxOS8wNi8xOCAwOToxOSwgVG9ueSBMaW5kZ3JlbiB3cm90ZToKPiA+ICogVG9taSBWYWxr
+ZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4gWzE4MDYxOCAxMzoyNl06Cj4gPj4gQWRkIERT
+UyBub2RlIHRvIGsyZy5kdHNpLgo+ID4+Cj4gPj4gU2lnbmVkLW9mZi1ieTogVG9taSBWYWxrZWlu
+ZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4KPiA+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmcKPiA+PiAtLS0KPiA+PiAgYXJjaC9hcm0vYm9vdC9kdHMva2V5c3RvbmUtazJnLmR0c2kg
+fCAyMSArKysrKysrKysrKysrKysrKysrKysKPiA+PiAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2Vy
+dGlvbnMoKykKPiA+Pgo+ID4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9rZXlzdG9u
+ZS1rMmcuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2tleXN0b25lLWsyZy5kdHNpCj4gPj4gaW5k
+ZXggZGE3OGMwMDM0NDI3Li5kNzYxZmU3ZDQ2ZTcgMTAwNjQ0Cj4gPj4gLS0tIGEvYXJjaC9hcm0v
+Ym9vdC9kdHMva2V5c3RvbmUtazJnLmR0c2kKPiA+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9r
+ZXlzdG9uZS1rMmcuZHRzaQo+ID4+IEBAIC02MDksNSArNjA5LDI2IEBACj4gPj4gIAkJCXJlZyA9
+IDwweDIxMDEwMDAwIDB4MjAwPjsKPiA+PiAgCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDEyMyBJ
+UlFfVFlQRV9FREdFX1JJU0lORz47Cj4gPj4gIAkJfTsKPiA+PiArCj4gPj4gKwkJZHNzOiBkc3NA
+MDI1NDAwMDAgewo+ID4+ICsJCQljb21wYXRpYmxlID0gInRpLGsyZy1kc3MiOwo+ID4+ICsKPiA+
+PiArCQkJcmVnID0gPDB4MDI1NDAwMDAgMHg0MDA+LAo+ID4+ICsJCQkgICAgICA8MHgwMjU1MDAw
+MCAweDEwMDA+LAo+ID4+ICsJCQkgICAgICA8MHgwMjU1NzAwMCAweDEwMDA+LAo+ID4+ICsJCQkg
+ICAgICA8MHgwMjU1YTgwMCAweDEwMD4sCj4gPj4gKwkJCSAgICAgIDwweDAyNTVhYzAwIDB4MTAw
+PjsKPiA+PiArCj4gPj4gKwkJCXJlZy1uYW1lcyA9ICJjZmciLCAiY29tbW9uIiwgInZpZDEiLCAi
+b3ZyMSIsICJ2cDEiOwo+ID4gCj4gPiBDYW4geW91IHBsZWFzZSBjaGVjayB0byBtYWtlIHN1cmUg
+dGhlc2UgYXJlIG5vdCBtdWx0aXBsZQo+ID4gc2VwYXJhdGUgZGV2aWNlcz8KPiA+IAo+ID4gSWYg
+dGhleSBhcmUsIGZsdXNoaW5nIHBvc3RlZCB3cml0ZSB0byBvbmUgZGV2aWNlIHdpbGwgbm90IGZs
+dXNoCj4gPiBhbnl0aGluZyB0byB0aGUgb3RoZXIgZGV2aWNlcy4gQW5kIHRoYXQgY2FuIGxlYWQg
+dG8gdmVyeSBoYXJkCj4gPiB0byB0cmFjayBkb3duIG15c3RlcmlvdXMgYnVncy4KPiAKPiBJIGRv
+bid0IHNlZSBhbnl0aGluZyBoaW50aW5nIHRoYXQgdGhleSB3b3VsZCBiZSBzZXBhcmF0ZSBkZXZp
+Y2VzLCBhbmQgaXQKPiB3b3VsZG4ndCByZWFsbHkgbWFrZSBzZW5zZSB0byBtZSBlaXRoZXIuIFRo
+ZXkncmUgaW50ZWdyYWwgcGFydHMgb2YgdGhlCj4gRElTUEMuIEkgY2FuIHNlZSBhIHNpbmdsZSBw
+b3J0IGZvciByZWdpc3RlciBhY2Nlc3MsIGFuZCBhIHNpbmdsZSBwb3J0Cj4gZm9yIHRoZSBwaXhl
+bCBkYXRhIERNQS4KCk9LIHRoYW5rcyBmb3IgY2hlY2tpbmcuCgpUb255Cl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
