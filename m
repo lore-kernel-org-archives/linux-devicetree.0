@@ -1,66 +1,150 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH] dt-bindings: Fix unbalanced quotation marks
-Date: Tue, 19 Jun 2018 11:10:48 +0100
-Message-ID: <819db945-1f89-93d3-b213-365a9704e100@nvidia.com>
-References: <20180617143127.11421-1-j.neuschaefer@gmx.net>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH 2/2] cpufreq: qcom-fw: Add support for QCOM cpufreq FW
+ driver
+Date: Tue, 19 Jun 2018 15:55:01 +0530
+Message-ID: <82d0646e-8dd7-43ba-6b5d-b772e57e865d@codeaurora.org>
+References: <1528109194-16864-1-git-send-email-tdas@codeaurora.org>
+ <1528109194-16864-3-git-send-email-tdas@codeaurora.org>
+ <20180606060119.yzl24vhqff6btvrk@vireshk-i7>
+ <3cd5944b-d2ca-e7d7-f315-c3e5f230701b@codeaurora.org>
+ <20180619085407.nmos7tix77vnaqre@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180617143127.11421-1-j.neuschaefer@gmx.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180619085407.nmos7tix77vnaqre@vireshk-i7>
 Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>, devicetree@vger.kernel.org
-Cc: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Madalin Bucur <madalin.bucur@nxp.com>, "David S. Miller" <davem@davemloft.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, robh@kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, skannan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 17/06/18 15:31, Jonathan Neuschäfer wrote:
-> Multiple binding documents have various forms of unbalanced quotation
-> marks. Fix them.
+On 6/19/2018 2:24 PM, Viresh Kumar wrote:
+> Sorry for being late..
 > 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> ---
+> On 07-06-18, 12:48, Taniya Das wrote:
+>> On 6/6/2018 11:31 AM, Viresh Kumar wrote:
+>>> On 04-06-18, 16:16, Taniya Das wrote:
 > 
-> Should I split this patch so that different parts can go through different trees?
-> ---
->  .../devicetree/bindings/arm/samsung/samsung-boards.txt          | 2 +-
->  .../devicetree/bindings/gpio/nintendo,hollywood-gpio.txt        | 2 +-
->  Documentation/devicetree/bindings/input/touchscreen/hideep.txt  | 2 +-
->  .../bindings/interrupt-controller/nvidia,tegra20-ictlr.txt      | 2 +-
->  .../devicetree/bindings/interrupt-controller/st,stm32-exti.txt  | 2 +-
->  Documentation/devicetree/bindings/mips/brcm/soc.txt             | 2 +-
->  Documentation/devicetree/bindings/net/fsl-fman.txt              | 2 +-
->  Documentation/devicetree/bindings/power/power_domain.txt        | 2 +-
->  Documentation/devicetree/bindings/regulator/tps65090.txt        | 2 +-
->  Documentation/devicetree/bindings/reset/st,sti-softreset.txt    | 2 +-
->  Documentation/devicetree/bindings/sound/qcom,apq8016-sbc.txt    | 2 +-
->  Documentation/devicetree/bindings/sound/qcom,apq8096.txt        | 2 +-
->  12 files changed, 12 insertions(+), 12 deletions(-)
+>>>> +static struct cpufreq_driver cpufreq_qcom_fw_driver = {
+>>>> +	.flags		= CPUFREQ_STICKY | CPUFREQ_NEED_INITIAL_FREQ_CHECK |
+>>>> +			  CPUFREQ_HAVE_GOVERNOR_PER_POLICY,
+>>>> +	.verify		= cpufreq_generic_frequency_table_verify,
+>>>> +	.target_index	= qcom_cpufreq_fw_target_index,
+>>>> +	.get		= qcom_cpufreq_fw_get,
+>>>> +	.init		= qcom_cpufreq_fw_cpu_init,
+>>>
+>>> What about CPU hotplug ? We can still do that, right ? So what will happen if
+>>> all CPUs of a freq-domain are removed (hence cpufreq policy is removed) and then
+>>> someone calls qcom_cpufreq_fw_get() ? You should really work on cpufreq_policy
+>>> there to get 'c'.
+>>>
+>>
+>> You want the _get to do something as below.
+>> Please correct me if my understanding is wrong.
+>> ....
+>>
+>>   policy = cpufreq_cpu_get_raw(cpu);
+>>   if (!policy)
+>>      return 0;
+>>
+>>   c = policy->driver_data;
+>>
+>>   index = readl_relaxed(c->perf_base);
+>>   index = min(index, LUT_MAX_ENTRIES - 1);
+>>
+>>   return c->table[index].frequency;
+>>
+>> ....
+> 
+> Right.
+> 
+>>>> +static int qcom_read_lut(struct platform_device *pdev,
+>>>> +			 struct cpufreq_qcom *c)
+>>>> +{
+>>>> +	struct device *dev = &pdev->dev;
+>>>> +	u32 data, src, lval, i, core_count, prev_cc, prev_freq, cur_freq;
+>>>> +
+>>>> +	c->table = devm_kcalloc(dev, LUT_MAX_ENTRIES + 1,
+>>>> +				sizeof(*c->table), GFP_KERNEL);
+>>>> +	if (!c->table)
+>>>> +		return -ENOMEM;
+>>>> +
+>>>> +	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+>>>> +		data = readl_relaxed(c->lut_base + i * LUT_ROW_SIZE);
+>>>> +		src = ((data & GENMASK(31, 30)) >> 30);
+>>>> +		lval = (data & GENMASK(7, 0));
+>>>> +		core_count = CORE_COUNT_VAL(data);
+>>>> +
+>>>> +		if (!src)
+>>>> +			c->table[i].frequency = INIT_RATE / 1000;
+>>>> +		else
+>>>> +			c->table[i].frequency = XO_RATE * lval / 1000;
+>>>> +
+>>>> +		cur_freq = c->table[i].frequency;
+>>>> +
+>>>> +		dev_dbg(dev, "index=%d freq=%d, core_count %d\n",
+>>>> +			i, c->table[i].frequency, core_count);
+>>>> +
+>>>> +		if (core_count != c->max_cores)
+>>>> +			cur_freq = CPUFREQ_ENTRY_INVALID;
+>>>> +
+>>>> +		/*
+>>>> +		 * Two of the same frequencies with the same core counts means
+>>>> +		 * end of table.
+>>>> +		 */
+>>>> +		if (i > 0 && c->table[i - 1].frequency ==
+>>>> +		   c->table[i].frequency && prev_cc == core_count) {
+>>>> +			struct cpufreq_frequency_table *prev = &c->table[i - 1];
+>>>> +
+>>>> +			if (prev_freq == CPUFREQ_ENTRY_INVALID)
+>>>> +				prev->flags = CPUFREQ_BOOST_FREQ;
+>>>> +			break;
+>>>> +		}
+>>>> +		prev_cc = core_count;
+>>>> +		prev_freq = cur_freq;
+>>>> +	}
+>>>> +
+>>>> +	c->table[i].frequency = CPUFREQ_TABLE_END;
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>
+>>> Looks like there are many problems here.
+>>> - You are assigning prev_freq with cur_freq (which may be uninitialized local
+>>>     variable here).
+>>> - In this version, you never write CPUFREQ_ENTRY_INVALID to table[i].frequency,
+>>>     which looks wrong as well.
+>>>
+>>
+>> - The code to detect boost, would only enter for i > 0 and the prev_freq
+>> would be initialized with the cur_freq.
+>> - In the case where the core_count != max_cores, the cur_freq is marked
+>> INVALID, and when both prev_freq == cur_freq && prev_cc && cur_cc match,
+>> that is the time the prev table flags need to be updated. Marking the
+>> table[i].frequency as INVALID is not required as cur_freq is already marked
+>> with the same. Please correct me if you think otherwise.
+> 
+> Yeah but the value of cur_freq isn't written to the table entries now. This
+> wasn't the case in the earlier version. Have a look at that one.
+> 
 
-...
+Yes, Viresh, earlier code was updating the table frequency as I was 
+marking the table frequency INVALID.
+	if (core_count != c->max_cores)	
+		c->table[i].frequency = CPUFREQ_ENTRY_INVALID;	
 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt b/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt
-> index 1099fe0788fa..f246ccbf8838 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt
-> @@ -15,7 +15,7 @@ Required properties:
->    include "nvidia,tegra30-ictlr".	
->  - reg : Specifies base physical address and size of the registers.
->    Each controller must be described separately (Tegra20 has 4 of them,
-> -  whereas Tegra30 and later have 5"  
-> +  whereas Tegra30 and later have 5).
->  - interrupt-controller : Identifies the node as an interrupt controller.
->  - #interrupt-cells : Specifies the number of cells needed to encode an
->    interrupt source. The value must be 3.
+And thus I had to update the table frequency.
 
-For the above Tegra portion ...
-
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-
-Cheers
-Jon
+But now I have used the cur_freq instead and the table frequency is not 
+touched.
+	if (core_count != c->max_cores)
+		cur_freq = CPUFREQ_ENTRY_INVALID;
 
 -- 
-nvpublic
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
