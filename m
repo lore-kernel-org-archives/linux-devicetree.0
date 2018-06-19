@@ -1,21 +1,24 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 3/4] ARM: dts: i.MX6: imx6dl-mamoj: Add Wifi support
-Date: Tue, 19 Jun 2018 10:44:38 +0800
-Message-ID: <20180619024437.GY16091@dragon>
+Subject: Re: [PATCH v2 4/4] ARM: dts: i.MX6: imx6dl-mamoj: Add usb host and
+ device support
+Date: Tue, 19 Jun 2018 10:45:30 +0800
+Message-ID: <20180619024528.GZ16091@dragon>
 References: <20180607134748.2970-1-jagan@amarulasolutions.com>
- <20180607134748.2970-2-jagan@amarulasolutions.com>
+ <20180607134748.2970-3-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180607134748.2970-2-jagan@amarulasolutions.com>
+In-Reply-To: <20180607134748.2970-3-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jagan Teki <jagan@amarulasolutions.com>
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio maggi <fabio.mauri@bticino.it>, lamiaposta71@gmail.com, Andrea CORTESE <andrea.cortese@bticino.it>, "davide . bonfanti" <davide.bonfanti@bticino.it>, Shyam Saini <shyam.saini@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, Simone CIANNI <simone.cianni@bticino.it>, Raffaele RECALCATI <raffaele.recalcati@bticino.it>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 07, 2018 at 07:17:47PM +0530, Jagan Teki wrote:
-> Add TI WL18XX Wifi for BTicino i.MX6DL board.
+On Thu, Jun 07, 2018 at 07:17:48PM +0530, Jagan Teki wrote:
+> From: Michael Trimarchi <michael@amarulasolutions.com>
+> 
+> Add USB host and device support for BTicino i.MX6DL Mamoj board.
 > 
 > Signed-off-by: Simone CIANNI <simone.cianni@bticino.it>
 > Signed-off-by: Raffaele RECALCATI <raffaele.recalcati@bticino.it>
@@ -26,97 +29,66 @@ On Thu, Jun 07, 2018 at 07:17:47PM +0530, Jagan Teki wrote:
 > Changes for v2:
 > - collect Fabio r-w-b tag
 > 
->  arch/arm/boot/dts/imx6dl-mamoj.dts | 53 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
+>  arch/arm/boot/dts/imx6dl-mamoj.dts | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 > 
 > diff --git a/arch/arm/boot/dts/imx6dl-mamoj.dts b/arch/arm/boot/dts/imx6dl-mamoj.dts
-> index ed9050c5dbcc..5034b086035f 100644
+> index 5034b086035f..a727e1471006 100644
 > --- a/arch/arm/boot/dts/imx6dl-mamoj.dts
 > +++ b/arch/arm/boot/dts/imx6dl-mamoj.dts
-> @@ -133,6 +133,18 @@
->  		enable-active-high;
+> @@ -134,6 +134,17 @@
 >  		vin-supply = <&reg_lcd_vgl>;
 >  	};
-> +
-> +	reg_wl18xx_vmmc:  regulator-wl18xx-vmcc {
+>  
+> +	reg_usb_host: regulator-usb-vbus {
 > +		compatible = "regulator-fixed";
-> +		regulator-name = "vwl1807";
+> +		regulator-name = "usbhost-vbus";
 > +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_wlan>;
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		gpio = <&gpio6 21 GPIO_ACTIVE_HIGH>;
-> +		startup-delay-us = <70000>;
+> +		pinctrl-0 = <&pinctrl_usbhost>;
+> +		regulator-min-microvolt = <50000000>;
+> +		regulator-max-microvolt = <50000000>;
+> +		gpio = <&gpio6 6 GPIO_ACTIVE_HIGH>;
 > +		enable-active-high;
 > +	};
->  };
->  
->  &fec {
-> @@ -285,6 +297,30 @@
+> +
+>  	reg_wl18xx_vmmc:  regulator-wl18xx-vmcc {
+>  		compatible = "regulator-fixed";
+>  		regulator-name = "vwl1807";
+> @@ -297,6 +308,16 @@
 >  	status = "okay";
 >  };
 >  
-> +&usdhc1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usdhc1>;
-> +	bus-width = <4>;
-> +	vmmc-supply = <&reg_wl18xx_vmmc>;
-> +	no-1-8-v;
-> +	non-removable;
-> +	wakeup-source;
-> +	keep-power-in-suspend;
-> +	cap-power-off-card;
-> +	max-frequency = <25000000>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
+> +&usbh1 {
+> +	vbus-supply = <&reg_usb_host>;
 > +	status = "okay";
-> +
-> +	wlcore: wlcore@2 {
-> +		compatible = "ti,wl1837";
-> +		reg = <2>;
-> +		interrupt-parent = <&gpio6>;
-> +		interrupts = <23 IRQ_TYPE_LEVEL_HIGH>;
-> +		tcxo-clock-frequency = <26000000>;
-> +	};
 > +};
 > +
->  &usdhc3 {
+> +&usbotg {
+> +	dr_mode = "peripheral";
+> +	status = "okay";
+> +};
+> +
+>  &usdhc1 {
 >  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_usdhc3>;
-> @@ -392,6 +428,17 @@
+>  	pinctrl-0 = <&pinctrl_usdhc1>;
+> @@ -428,6 +449,12 @@
 >  		>;
 >  	};
 >  
-> +	pinctrl_usdhc1: usdhc1grp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_SD1_CMD__SD1_CMD    0x17069
-> +			MX6QDL_PAD_SD1_CLK__SD1_CLK    0x10079
-> +			MX6QDL_PAD_SD1_DAT0__SD1_DATA0 0x17069
-> +			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17069
-> +			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17069
-> +			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17069
-> +		>;
-> +	};
-> +
->  	pinctrl_usdhc3: usdhc3grp {
->  		fsl,pins = <
->  			MX6QDL_PAD_SD3_CMD__SD3_CMD	0x17059
-> @@ -406,4 +453,10 @@
->  			MX6QDL_PAD_SD3_DAT7__SD3_DATA7	0x17059
->  		>;
->  	};
-> +
-> +	pinctrl_wlan: wlan {
+> +	pinctrl_usbhost: usbhost {
 
-To be consistent on naming style, 'wlangrp' might be better.
+usbhostgrp.
 
 Shawn
 
 > +		fsl,pins = <
-> +			MX6QDL_PAD_RGMII_TD1__GPIO6_IO21	0x4001b0b0
+> +			MX6QDL_PAD_EIM_A23__GPIO6_IO06		0x4001b0b0
 > +		>;
 > +	};
->  };
+> +
+>  	pinctrl_usdhc1: usdhc1grp {
+>  		fsl,pins = <
+>  			MX6QDL_PAD_SD1_CMD__SD1_CMD    0x17069
 > -- 
 > 2.14.3
 > 
