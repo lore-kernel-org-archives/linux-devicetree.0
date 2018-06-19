@@ -1,56 +1,57 @@
 From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH v6 08/29] drm/mediatek: add component DSI2
-Date: Tue, 19 Jun 2018 15:34:09 +0800
-Message-ID: <1529393670-26862-9-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH v6 12/29] drm/mediatek: Update the definition of connection from RDMA1 to DPI0
+Date: Tue, 19 Jun 2018 15:34:13 +0800
+Message-ID: <1529393670-26862-13-git-send-email-stu.hsieh@mediatek.com>
 References: <1529393670-26862-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1529393670-26862-1-git-send-email-stu.hsieh@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Stu Hsieh <stu.hsieh@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Stu Hsieh <stu.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGQgdGhlIGNvbXBvbmVudCBEU0kyCgpTaWduZWQtb2ZmLWJ5OiBTdHUgSHNp
-ZWggPHN0dS5oc2llaEBtZWRpYXRlay5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
-L210a19kcm1fZGRwX2NvbXAuYyB8IDIgKysKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
-ZHJtX2RkcF9jb21wLmggfCAxICsKIDIgZmlsZXMgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCgpk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYyBi
-L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMKaW5kZXggY2M3NGIx
-YTcyNzhjLi4wNzFmOWY1YWVmZWEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
-ay9tdGtfZHJtX2RkcF9jb21wLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-cm1fZGRwX2NvbXAuYwpAQCAtMjI3LDYgKzIyNyw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRr
-X2RkcF9jb21wX21hdGNoIG10a19kZHBfbWF0Y2hlc1tERFBfQ09NUE9ORU5UX0lEX01BWF0gPSB7
-CiAJW0REUF9DT01QT05FTlRfRFBJMV0JPSB7IE1US19EUEksCQkxLCBOVUxMIH0sCiAJW0REUF9D
-T01QT05FTlRfRFNJMF0JPSB7IE1US19EU0ksCQkwLCBOVUxMIH0sCiAJW0REUF9DT01QT05FTlRf
-RFNJMV0JPSB7IE1US19EU0ksCQkxLCBOVUxMIH0sCisJW0REUF9DT01QT05FTlRfRFNJMl0JPSB7
-IE1US19EU0ksCQkyLCBOVUxMIH0sCiAJW0REUF9DT01QT05FTlRfR0FNTUFdCT0geyBNVEtfRElT
-UF9HQU1NQSwJMCwgJmRkcF9nYW1tYSB9LAogCVtERFBfQ09NUE9ORU5UX09EMF0JPSB7IE1US19E
-SVNQX09ELAkwLCAmZGRwX29kIH0sCiAJW0REUF9DT01QT05FTlRfT0QxXQk9IHsgTVRLX0RJU1Bf
-T0QsCTEsICZkZHBfb2QgfSwKQEAgLTI3OCw2ICsyNzksNyBAQCBpbnQgbXRrX2RkcF9jb21wX2lu
-aXQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUsCiAJICAgIGNv
-bXBfaWQgPT0gRERQX0NPTVBPTkVOVF9EUEkwIHx8CiAJICAgIGNvbXBfaWQgPT0gRERQX0NPTVBP
-TkVOVF9EUEkxIHx8CiAJICAgIGNvbXBfaWQgPT0gRERQX0NPTVBPTkVOVF9EU0kwIHx8CisJICAg
-IGNvbXBfaWQgPT0gRERQX0NPTVBPTkVOVF9EU0kyIHx8CiAJICAgIGNvbXBfaWQgPT0gRERQX0NP
-TVBPTkVOVF9QV00wKSB7CiAJCWNvbXAtPnJlZ3MgPSBOVUxMOwogCQljb21wLT5jbGsgPSBOVUxM
-OwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAu
-aCBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgKaW5kZXggNTRj
-OTljMTY5MDkzLi44ZDE1MmIzMzdmMTUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRp
-YXRlay9tdGtfZHJtX2RkcF9jb21wLmgKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kcm1fZGRwX2NvbXAuaApAQCAtNTAsNiArNTAsNyBAQCBlbnVtIG10a19kZHBfY29tcF9pZCB7
-CiAJRERQX0NPTVBPTkVOVF9EUEkxLAogCUREUF9DT01QT05FTlRfRFNJMCwKIAlERFBfQ09NUE9O
-RU5UX0RTSTEsCisJRERQX0NPTVBPTkVOVF9EU0kyLAogCUREUF9DT01QT05FTlRfR0FNTUEsCiAJ
-RERQX0NPTVBPTkVOVF9PRDAsCiAJRERQX0NPTVBPTkVOVF9PRDEsCi0tIAoyLjEyLjUKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+This patch update the definition of connection from RDMA1 to DPI0.
+Change the term MOUT to SOUT.
+
+Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+---
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+index 8bfc0debd2c2..977df8facb79 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+@@ -29,7 +29,7 @@
+ #define DISP_REG_CONFIG_DISP_COLOR0_SEL_IN	0x084
+ #define DISP_REG_CONFIG_DISP_COLOR1_SEL_IN	0x088
+ #define DISP_REG_CONFIG_DPI_SEL_IN		0x0ac
+-#define DISP_REG_CONFIG_DISP_RDMA1_MOUT_EN	0x0c8
++#define DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN	0x0c8
+ #define DISP_REG_CONFIG_MMSYS_CG_CON0		0x100
+ 
+ #define DISP_REG_CONFIG_DISP_OVL_MOUT_EN	0x030
+@@ -80,7 +80,7 @@
+ #define COLOR0_SEL_IN_OVL0		0x1
+ #define OVL1_MOUT_EN_COLOR1		0x1
+ #define GAMMA_MOUT_EN_RDMA1		0x1
+-#define RDMA1_MOUT_DPI0			0x2
++#define RDMA1_SOUT_DPI0			0x2
+ #define DPI0_SEL_IN_RDMA1		0x1
+ #define COLOR1_SEL_IN_OVL1		0x1
+ 
+@@ -156,8 +156,8 @@ static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
+ 		*addr = DISP_REG_CONFIG_DISP_OD_MOUT_EN;
+ 		value = OD1_MOUT_EN_RDMA1;
+ 	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
+-		*addr = DISP_REG_CONFIG_DISP_RDMA1_MOUT_EN;
+-		value = RDMA1_MOUT_DPI0;
++		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
++		value = RDMA1_SOUT_DPI0;
+ 	} else {
+ 		value = 0;
+ 	}
+-- 
+2.12.5
