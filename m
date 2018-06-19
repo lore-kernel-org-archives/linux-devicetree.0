@@ -1,125 +1,76 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [Dev] [PATCH 0/5] RFC: Mezzanine handling for 96boards
-Date: Tue, 19 Jun 2018 17:30:43 +0200
-Message-ID: <CAKv+Gu80zzaahJhoMScvZ9dS31QobMa0+JFjaOo-GxD+4XsuWQ@mail.gmail.com>
-References: <20180618074556.6944-1-linus.walleij@linaro.org>
- <CAK8P3a2KqoX-squhGc8TBuJ==8xxELsuy-H+c1+C7Fu7Z4OjDA@mail.gmail.com>
- <CAKv+Gu-gAkfRsEUOc=iyxi6Twvg9cbvWNqNHRS2HzUDZg8xUhg@mail.gmail.com>
- <CAMuUZTG0q4f2T=+HjEijUCLb7KNXok9RJHOXOKNs2iap5p7m5Q@mail.gmail.com>
- <CAKv+Gu_Dq1uY0wHRyREmCmQdSRSJbNheF1ZsrNhibKOZowvf+g@mail.gmail.com>
- <CAMuUZTHOuzQm3y-yF6cad9y1UgsK+6R2w7vSzz7MkkYCdYd3hA@mail.gmail.com>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH v2 0/4] drm/tinydrm: new dirver for ILI9341 displays
+Date: Tue, 19 Jun 2018 17:36:26 +0200
+Message-ID: <5a2bc4e7-c6cd-b270-61d3-61bfa5d9e90d@tronnes.org>
+References: <20180525193623.15533-1-david@lechnology.com>
+ <8840212b-fd46-e700-58a1-cb1b882c5771@tronnes.org>
+ <d5297fc5-94f2-edcd-5a11-95d7a9dca78d@lechnology.com>
+ <ecd75b89-14a6-12f7-0ec4-222b1f984e49@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMuUZTHOuzQm3y-yF6cad9y1UgsK+6R2w7vSzz7MkkYCdYd3hA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yang Zhang <yang.zhang@96boards.org>
-Cc: DTML <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Brown <broonie@kernel.org>, Michal Simek <michal.simek@xilinx.com>, dev <dev@lists.96boards.org>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy@infradead.org>, Frank Rowand <frowand.list@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <ecd75b89-14a6-12f7-0ec4-222b1f984e49@tronnes.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Lechner <david@lechnology.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Nitin Patil <nitin@mindsensors.com>, limor@ladyada.net, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19 June 2018 at 17:26, Yang Zhang <yang.zhang@96boards.org> wrote:
-> Yes.
->
-> https://github.com/96boards/documentation/blob/master/mezzanine/files/mezzanine-design-guidelines.pdf
->
-> Under Configuration data section
->
-
-OK, fair enough. Do any such mezzanines exist yet? Should we offer
-more guidance on how exactly this discovery should be implemented?
-
-> On 19 June 2018 at 16:25, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
->>
->> On 19 June 2018 at 17:14, Yang Zhang <yang.zhang@96boards.org> wrote:
->> >
->> >
->> > On 18 June 2018 at 14:22, Ard Biesheuvel <ard.biesheuvel@linaro.org>
->> > wrote:
->> >>
->> >> On 18 June 2018 at 14:21, Arnd Bergmann <arnd@arndb.de> wrote:
->> >> > On Mon, Jun 18, 2018 at 9:45 AM, Linus Walleij
->> >> > <linus.walleij@linaro.org> wrote:
->> >> >> This is a proposal for how to handle the non-discoverable
->> >> >> 96boards plug-in expansion boards called "mezzanines" in the
->> >> >> Linux kernel. It is a working RFC series meant for discussion
->> >> >> at the moment.
->> >> >>
->> >> >> The RFC was done on the brand new Ultra96 board from Xilinx
->> >> >> with a Secure96 mezzanine expansion board. The main part
->> >> >> is in patch 4, the rest is enabling and examples.
->> >> >>
->> >> >> The code can be obtained from here:
->> >> >>
->> >> >>
->> >> >> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-integrator.git/log/?h=ultra96
->> >> >>
->> >> >> You can for example probably augment the DTS file for any
->> >> >> upstream-supported 96board and get the Secure96 going with
->> >> >> it with minor efforts.
->> >> >
->> >> > Hi Linus,
->> >> >
->> >> > Thanks for your work on solving this long-standing problem. I've just
->> >> > read through your patches briefly and have a few thoughts:
->> >> >
->> >> > - I really like the idea of having C code deal with the mezzanine
->> >> >   connector itself, acting as an intermediate to tie a number of
->> >> >   boards to a number of add-on cards, this seems much simpler than
->> >> >   trying to do everything with overlays or one of the other more
->> >> >   generic mechanisms.
->> >> >
->> >> > - I don't like the idea of having the bus driver contain a list of
->> >> > possible
->> >> >   add-ons, this seems to go against our usual driver model. What
->> >> >   I think we want instead is to make the connector itself a proper
->> >> >   bus_type, to allow drivers to register against it as loadable
->> >> > modules,
->> >> >   and devices (maybe limited to one device) being created as probed
->> >> >   from DT or some other method as you describe.
->> >> >
->> >> > - You export symbols in the mezzanine_* namespace, which I think
->> >> >    is a bit too generic and should perhaps contain something related
->> >> >    to  96boards in its name to make it less ambiguous. I suspect we
->> >> >    would add a number of further connectors for hats, capes, lures
->> >> > etc,
->> >> >    which could all be described as mezzanines. One open question
->> >> >    is how we structure the commonality between the various
->> >> >    connectors, but we can defer that until we have more than one
->> >> >    or two of them.
->> >> >
->> >>
->> >> Hello all,
->> >>
->> >> We should also consider firmware use of the mezzanines. For instance,
->> >> the Secure96 has a RNG which UEFI may want to use so the early boot
->> >> code can access is for KASLR. It also has a TPM, which should not be
->> >> reset/reinitialized/etc by the OS if we want to make meaningful use of
->> >> it.
->> >>
->> >> Also, given that we can (and do) already describe topologies involving
->> >> mezzanines by ignoring the connector altogether (which is not entirely
->> >> unreasonable given the fact that we [as Linaro/96boards] dropped the
->> >> ball on this one and did not mandate discoverability for mezzanines).
->> >
->> >
->> > The design guideline has been reviewed by many inside/outside linaro
->> > through
->> > the mezzanine@lists.96boards.org and 96b-spec-sig
->> > <96b-spec-sig@96boards.org> published as recommended/strongly
->> > recommended
->> > item from day one. 'dropping the ball' is a strong conclusion.
->> >
->>
->> Apologies for using a term that you seem to take issue with. Are you
->> saying the spec currently recommends it?
->
->
+CkRlbiAwNS4wNi4yMDE4IDE3LjQ5LCBza3JldiBOb3JhbGYgVHLDuG5uZXM6Cj4gKGNjOiBkcm0t
+bWlzYyBtYWludGFpbmVycykKPgo+Cj4gRGVuIDA0LjA2LjIwMTggMDMuMjEsIHNrcmV2IERhdmlk
+IExlY2huZXI6Cj4+Cj4+Cj4+IE9uIDYvMy8xOCA1OjAwIFBNLCBOb3JhbGYgVHLDuG5uZXMgd3Jv
+dGU6Cj4+Pgo+Pj4gRGVuIDI1LjA1LjIwMTggMjEuMzYsIHNrcmV2IERhdmlkIExlY2huZXI6Cj4+
+Pj4gVGhpcyBzZXJpZXMgYWRkcyBhIG5ldyB0aW55ZHJtIGRyaXZlciBmb3IgdGhlIElsaXRlayBJ
+TEk5MzQxIAo+Pj4+IGNvbnRyb2xsZXIgYW5kCj4+Pj4gYSAyLjQiIGRpc3BsYXkgcGFuZWwgdGhh
+dCB1c2VzIHRoaXMgY29udHJvbGxlci4KPj4+Cj4+PiBEYXZpZCwgZG8geW91IGhhdmUgY29tbWl0
+IHJpZ2h0cyBub3c/Cj4+Cj4+IE5vLiBPcGVuZWQgYSBidWcgYSB3aGlsZSBiYWNrIHRvIHJlcXVl
+c3QgYWNjZXNzLCBidXQgSSBndWVzcyB0aGUKPj4gcmlnaHQgcGVyc29uIGRpZG4ndCBzZWUgaXQu
+Cj4+Cj4+IGh0dHBzOi8vYnVncy5mcmVlZGVza3RvcC5vcmcvc2hvd19idWcuY2dpP2lkPTEwNTE2
+Ngo+Pgo+Cj4gQ291bGQgc29tZW9uZSBwbGVhc2UgbG9vayBhdCB0aGlzPwo+CgpEYXZpZCwgbGV0
+J3Mgbm90IHN0YWxsIHRoaXMsIGlmIHlvdSByZXNlbmQgd2l0aCBmaXhlZCB1cCBjb21taXQgbWVz
+c2FnZSAKYW5kIGFja3MvcmJzLCBJJ2xsIGFwcGx5IGl0LgoKTm9yYWxmLgoKPiBOb3JhbGYuCj4K
+Pj4+Cj4+PiBOb3JhbGYuCj4+Pgo+Pj4+IEEgZmV3IHRoaW5ncyB0byBub3RlIGhlcmU6Cj4+Pj4g
+KiBUaGUgZGF0YXNoZWV0IGZvciB0aGlzIGRpc3BsYXlbMV0gZG9lc24ndCBoYXZlIGEgdmVuZG9y
+IG1lbnRpb25lZCAKPj4+PiBvbiBpdAo+Pj4+IMKgwqAgYW55d2hlcmUsIHNvIEkgaGF2ZSB1c2Vk
+ICJhZGFmcnVpdCIgYXMgdGhlIHZlbmRvciBwcmVmaXguIElmIAo+Pj4+IHNvbWVvbmUgaGFzIGEK
+Pj4+PiDCoMKgIGJldHRlciBzdWdnZXN0aW9uLCBwbGVhc2Ugc3BlYWsgdXAuCj4+Pj4gKiBUaGUg
+TUFJTlRBSU5FUlMgcGF0Y2ggZm9yIGlsaTkyMjUgaXMgaW5jbHVkZWQgc28gd2UgZG9uJ3QgZW5k
+IHVwIAo+Pj4+IHdpdGggYSBtZXJnZQo+Pj4+IMKgwqAgY29uZmxpY3QgbGF0ZXIgb24uCj4+Pj4K
+Pj4+PiB2MiBjaGFuZ2VzOgo+Pj4+ICogY2hhbmdlIHZlbmRvciBwcmVmaXggZnJvbSAibm9uYW1l
+IiB0byAiYWRhZnJ1aXQiCj4+Pj4gKiBuZXcgcGF0Y2ggZm9yICJhZGFmcnVpdCIgdmVuZG9yIHBy
+ZWZpeAo+Pj4+ICogbWlub3Igc3R5bGUgY2hhbmdlcwo+Pj4+ICogZHJvcCByZWd1bGF0b3IgZnJv
+bSBkcml2ZXIgKGluc3RlYWQgb2YgYWRkaW5nIHRvIERUIGJpbmRpbmdzKQo+Pj4+Cj4+Pj4gWzFd
+OiAKPj4+PiBodHRwczovL2Nkbi1sZWFybi5hZGFmcnVpdC5jb20vYXNzZXRzL2Fzc2V0cy8wMDAv
+MDQ2Lzg3OS9vcmlnaW5hbC9TUEVDLVlYMjQwUVYyOS1UX1Jldi5BX18xXy5wZGYgCj4+Pj4KPj4+
+Pgo+Pj4+Cj4+Pj4gRGF2aWQgTGVjaG5lciAoNCk6Cj4+Pj4gwqDCoCBNQUlOVEFJTkVSUzogZml4
+IHBhdGggdG8gaWxpdGVrLGlsaTkyMjUgZGV2aWNlIHRyZWUgYmluZGluZ3MKPj4+PiDCoMKgIGR0
+LWJpbmRpbmdzOiBBZGQgdmVuZG9yIHByZWZpeCBmb3IgQWRhZnJ1aXQKPj4+PiDCoMKgIGR0LWJp
+bmRpbmdzOiBuZXcgYmluZGluZyBmb3IgSWxpdGVrIElMSTkzNDEgZGlzcGxheSBwYW5lbHMKPj4+
+PiDCoMKgIGRybS90aW55ZHJtOiBuZXcgZHJpdmVyIGZvciBJTEk5MzQxIGRpc3BsYXkgcGFuZWxz
+Cj4+Pj4KPj4+PiDCoCAuLi4vYmluZGluZ3MvZGlzcGxheS9pbGl0ZWssaWxpOTM0MS50eHTCoMKg
+wqDCoMKgwqAgfMKgIDI3ICsrCj4+Pj4gwqAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9y
+LXByZWZpeGVzLnR4dMKgwqAgfMKgwqAgMSArCj4+Pj4gwqAgTUFJTlRBSU5FUlPCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCB8wqDCoCA4ICstCj4+Pj4gwqAgZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vS2NvbmZpZ8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgIDEwICsKPj4+PiDCoCBkcml2ZXJzL2dwdS9kcm0v
+dGlueWRybS9NYWtlZmlsZcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDEgKwo+Pj4+
+IMKgIGRyaXZlcnMvZ3B1L2RybS90aW55ZHJtL2lsaTkzNDEuY8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCB8IDIzMyAKPj4+PiArKysrKysrKysrKysrKysrKysKPj4+PiDCoCA2IGZpbGVzIGNoYW5n
+ZWQsIDI3OSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4+Pj4gwqAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IAo+Pj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ls
+aXRlayxpbGk5MzQxLnR4dAo+Pj4+IMKgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
+cm0vdGlueWRybS9pbGk5MzQxLmMKPj4+Pgo+Pj4KPgo+IF9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo+CgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
