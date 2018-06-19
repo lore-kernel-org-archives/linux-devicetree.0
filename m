@@ -1,205 +1,265 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 15/20] dts: arm: imx7{d,s}: Update coresight binding for
- hardware ports
-Date: Tue, 19 Jun 2018 10:12:20 +0800
-Message-ID: <20180619021218.GV16091@dragon>
-References: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
- <1528235011-30691-16-git-send-email-suzuki.poulose@arm.com>
+Subject: Re: [PATCH v2 2/4] ARM: dts: i.MX6: imx6dl-mamoj: Add parallel
+ display support
+Date: Tue, 19 Jun 2018 10:41:58 +0800
+Message-ID: <20180619024157.GX16091@dragon>
+References: <20180607134748.2970-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1528235011-30691-16-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <20180607134748.2970-1-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, Stefan Agner <stefan@agner.ch>
-Cc: linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org, robh@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com, sudeep.holla@arm.com, arm@kernel.org, linux-kernel@vger.kernel.org, matt.sealey@arm.com, john.horley@arm.com, charles.garcia-tobin@arm.com, coresight@lists.linaro.org, devicetree@vger.kernel.org, mike.leach@linaro.org, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio maggi <fabio.mauri@bticino.it>, lamiaposta71@gmail.com, Andrea CORTESE <andrea.cortese@bticino.it>, "davide . bonfanti" <davide.bonfanti@bticino.it>, Shyam Saini <shyam.saini@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, Simone CIANNI <simone.cianni@bticino.it>, Raffaele RECALCATI <raffaele.recalcati@bticino.it>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+On Thu, Jun 07, 2018 at 07:17:46PM +0530, Jagan Teki wrote:
+> This patch adds parallel display support for i.MX6DL Mamoj board
+> along with relevant backlight through pwm.
+> 
+> LCD power sequence is added by 'Michael Trimarchi'.
+> 
+> Signed-off-by: Simone CIANNI <simone.cianni@bticino.it>
+> Signed-off-by: Raffaele RECALCATI <raffaele.recalcati@bticino.it>
+> Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+> ---
+> Changes for v2:
+> - collect Fabio r-w-b tag
+> 
+>  arch/arm/boot/dts/imx6dl-mamoj.dts | 185 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 185 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6dl-mamoj.dts b/arch/arm/boot/dts/imx6dl-mamoj.dts
+> index 6b2d29138bed..ed9050c5dbcc 100644
+> --- a/arch/arm/boot/dts/imx6dl-mamoj.dts
+> +++ b/arch/arm/boot/dts/imx6dl-mamoj.dts
+> @@ -6,11 +6,133 @@
+>  
+>  /dts-v1/;
+>  
+> +#include <dt-bindings/gpio/gpio.h>
+>  #include "imx6dl.dtsi"
+>  
+>  / {
+>  	model = "BTicino i.MX6DL Mamoj board";
+>  	compatible = "bticino,imx6dl-mamoj", "fsl,imx6dl";
+> +
+> +	backlight_lcd: backlight-lcd {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pwm3 0 25000>; /* 25000ns -> 40kHz */
+> +		brightness-levels = <0 4 8 16 32 64 128 160 192 224 255>;
+> +		default-brightness-level = <7>;
+> +	};
+> +
+> +	lcd_display: disp0 {
 
-Can you take a look at the patch?  Thanks.
+'display' for node name.
+
+> +		compatible = "fsl,imx-parallel-display";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		interface-pix-fmt = "rgb24";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_ipu1_lcdif>;
+> +		status = "okay";
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			lcd_display_in: endpoint {
+> +				remote-endpoint = <&ipu1_di0_disp0>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +
+> +			lcd_display_out: endpoint {
+> +				remote-endpoint = <&lcd_panel_in>;
+> +			};
+> +		};
+> +	};
+> +
+> +	panel-lcd {
+> +		compatible = "rocktech,rk070er9427";
+> +		backlight = <&backlight_lcd>;
+> +		power-supply = <&reg_lcd_lr>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_lcd_power>;
+> +
+> +		port {
+> +			lcd_panel_in: endpoint {
+> +				remote-endpoint = <&lcd_display_out>;
+> +			};
+> +		};
+> +	};
+> +
+> +	reg_lcd_3v3: regulator-lcd-dvdd {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "lcd-dvdd";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&gpio3 1 0>;
+> +		enable-active-high;
+> +		startup-delay-us = <21000>;
+> +	};
+> +
+> +	reg_lcd_power: regulator-lcd-power {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "lcd-enable";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&gpio3 6 0>;
+> +		enable-active-high;
+> +		vin-supply = <&reg_lcd_3v3>;
+> +	};
+> +
+> +	reg_lcd_vgl: regulator-lcd-vgl {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "lcd-vgl";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&gpio2 20 GPIO_ACTIVE_HIGH>;
+> +		startup-delay-us = <6000>;
+> +		enable-active-high;
+> +		vin-supply = <&reg_lcd_power>;
+> +	};
+> +
+> +	reg_lcd_vgh: regulator-lcd-vgh {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "lcd-vgh";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&gpio3 31 GPIO_ACTIVE_HIGH>;
+> +		startup-delay-us = <6000>;
+> +		enable-active-high;
+> +		vin-supply = <&reg_lcd_avdd>;
+> +	};
+> +
+> +	reg_lcd_vcom: regulator-lcd-vcom {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "lcd-vcom";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&gpio4 14 GPIO_ACTIVE_HIGH>;
+> +		startup-delay-us = <11000>;
+> +		enable-active-high;
+> +		vin-supply = <&reg_lcd_vgh>;
+> +	};
+> +
+> +	reg_lcd_lr: regulator-lcd-lr {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "lcd-lr";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&gpio4 15 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +		vin-supply = <&reg_lcd_vcom>;
+> +	};
+> +
+> +	reg_lcd_avdd: regulator-lcd-avdd {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "lcd-avdd";
+> +		regulator-min-microvolt = <10280000>;
+> +		regulator-max-microvolt = <10280000>;
+> +		gpio = <&gpio2 13 GPIO_ACTIVE_HIGH>;
+> +		startup-delay-us = <6000>;
+> +		enable-active-high;
+> +		vin-supply = <&reg_lcd_vgl>;
+> +	};
+>  };
+>  
+>  &fec {
+> @@ -147,6 +269,16 @@
+>  	};
+>  };
+>  
+> +&ipu1_di0_disp0 {
+> +	remote-endpoint = <&lcd_display_in>;
+> +};
+> +
+> +&pwm3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm3>;
+> +	status = "okay";
+> +};
+> +
+>  &uart3 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_uart3>;
+> @@ -200,6 +332,59 @@
+>  		>;
+>  	};
+>  
+> +	pinctrl_ipu1_lcdif: pinctrlipu1lcdif { /* parallel port 24-bit */
+> +		fsl,pins = <
+> +			MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x10 /* VDOUT_PCLK */
+> +			MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15       0x10
+> +			MX6QDL_PAD_DI0_PIN2__IPU1_DI0_PIN02        0x10 /* VDOUT_HSYNC */
+> +			MX6QDL_PAD_DI0_PIN3__IPU1_DI0_PIN03        0x10 /* VDOUT_VSYNC */
+> +			MX6QDL_PAD_DI0_PIN4__IPU1_DI0_PIN04	   0x80000000 /* VDOUT_RESET */
+
+Use a proper configuration value rather than relying on what
+firmware/reset gives.
+
+> +			MX6QDL_PAD_DISP0_DAT0__IPU1_DISP0_DATA00   0x10
+> +			MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01   0x10
+> +			MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02   0x10
+> +			MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03   0x10
+> +			MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04   0x10
+> +			MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05   0x10
+> +			MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06   0x10
+> +			MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07   0x10
+> +			MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08   0x10
+> +			MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09   0x10
+> +			MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10  0x10
+> +			MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11  0x10
+> +			MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12  0x10
+> +			MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13  0x10
+> +			MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14  0x10
+> +			MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15  0x10
+> +			MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16  0x10
+> +			MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17  0x10
+> +			MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18  0x10
+> +			MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19  0x10
+> +			MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20  0x10
+> +			MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21  0x10
+> +			MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22  0x10
+> +			MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23  0x10
+> +		>;
+> +	};
+> +
+> +	pinctrl_lcd_power: lcd_power {
+
+The node name and above pinctrlipu1lcdif is not consistent to other
+pinctrl nodes.
 
 Shawn
 
-On Tue, Jun 05, 2018 at 10:43:26PM +0100, Suzuki K Poulose wrote:
-> Switch to the updated coresight bindings.
-> 
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  arch/arm/boot/dts/imx7d.dtsi |  5 ++++-
->  arch/arm/boot/dts/imx7s.dtsi | 41 ++++++++++++++++++++++++++++++-----------
->  2 files changed, 34 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
-> index 200714e..5faff17 100644
-> --- a/arch/arm/boot/dts/imx7d.dtsi
-> +++ b/arch/arm/boot/dts/imx7d.dtsi
-> @@ -87,7 +87,9 @@
->  
->  			port {
->  				etm1_out_port: endpoint {
-> +					direction = <1>;
->  					remote-endpoint = <&ca_funnel_in_port1>;
-> +					coresight,hwid = <0>;
->  				};
->  			};
->  		};
-> @@ -174,8 +176,9 @@
->  	port@1 {
->  		reg = <1>;
->  		ca_funnel_in_port1: endpoint {
-> -			slave-mode;
-> +			direction = <0>;
->  			remote-endpoint = <&etm1_out_port>;
-> +			coresight,hwid = <1>;
->  		};
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-> index 4d42335..8e90915 100644
-> --- a/arch/arm/boot/dts/imx7s.dtsi
-> +++ b/arch/arm/boot/dts/imx7s.dtsi
-> @@ -151,23 +151,28 @@
->  			port@0 {
->  				reg = <0>;
->  				replicator_out_port0: endpoint {
-> +					direction = <1>;
->  					remote-endpoint = <&tpiu_in_port>;
-> +					coresight,hwid = <0>;
->  				};
->  			};
->  
->  			port@1 {
->  				reg = <1>;
->  				replicator_out_port1: endpoint {
-> +					direction = <1>;
->  					remote-endpoint = <&etr_in_port>;
-> +					coresight,hwid = <1>;
->  				};
->  			};
->  
->  			/* replicator input port */
->  			port@2 {
-> -				reg = <0>;
-> +				reg = <2>;
->  				replicator_in_port0: endpoint {
-> -					slave-mode;
-> +					direction = <0>;
->  					remote-endpoint = <&etf_out_port>;
-> +					coresight,hwid = <0>;
->  				};
->  			};
->  		};
-> @@ -203,16 +208,19 @@
->  				port@0 {
->  					reg = <0>;
->  					ca_funnel_in_port0: endpoint {
-> -						slave-mode;
-> +						direction = <0>;
->  						remote-endpoint = <&etm0_out_port>;
-> +						coresight,hwid = <0>;
->  					};
->  				};
->  
->  				/* funnel output port */
->  				port@2 {
-> -					reg = <0>;
-> +					reg = <2>;
->  					ca_funnel_out_port0: endpoint {
-> +						direction = <1>;
->  						remote-endpoint = <&hugo_funnel_in_port0>;
-> +						coresight,hwid = <0>;
->  					};
->  				};
->  
-> @@ -229,7 +237,9 @@
->  
->  			port {
->  				etm0_out_port: endpoint {
-> +					direction = <1>;
->  					remote-endpoint = <&ca_funnel_in_port0>;
-> +					coresight,hwid = <0>;
->  				};
->  			};
->  		};
-> @@ -248,22 +258,26 @@
->  				port@0 {
->  					reg = <0>;
->  					hugo_funnel_in_port0: endpoint {
-> -						slave-mode;
-> +						direction = <0>;
->  						remote-endpoint = <&ca_funnel_out_port0>;
-> +						coresight,hwid = <0>;
->  					};
->  				};
->  
->  				port@1 {
->  					reg = <1>;
->  					hugo_funnel_in_port1: endpoint {
-> -						slave-mode; /* M4 input */
-> +						direction = <0>; /* M4 input */
-> +						coresight,hwid = <1>;
->  					};
->  				};
->  
->  				port@2 {
-> -					reg = <0>;
-> +					reg = <2>;
->  					hugo_funnel_out_port0: endpoint {
-> +						direction = <1>;
->  						remote-endpoint = <&etf_in_port>;
-> +						coresight,hwid = <0>;
->  					};
->  				};
->  
-> @@ -284,15 +298,18 @@
->  				port@0 {
->  					reg = <0>;
->  					etf_in_port: endpoint {
-> -						slave-mode;
-> +						direction = <0>;
->  						remote-endpoint = <&hugo_funnel_out_port0>;
-> +						coresight,hwid = <0>;
->  					};
->  				};
->  
->  				port@1 {
-> -					reg = <0>;
-> +					reg = <1>;
->  					etf_out_port: endpoint {
-> +						direction = <1>;
->  						remote-endpoint = <&replicator_in_port0>;
-> +						coresight,hwid = <0>;
->  					};
->  				};
->  			};
-> @@ -306,8 +323,9 @@
->  
->  			port {
->  				etr_in_port: endpoint {
-> -					slave-mode;
-> +					direction = <0>;
->  					remote-endpoint = <&replicator_out_port1>;
-> +					coresight,hwid = <0>;
->  				};
->  			};
->  		};
-> @@ -320,8 +338,9 @@
->  
->  			port {
->  				tpiu_in_port: endpoint {
-> -					slave-mode;
-> +					direction = <0>;
->  					remote-endpoint = <&replicator_out_port1>;
-> +					coresight,hwid = <0>;
->  				};
->  			};
->  		};
+> +		fsl,pins = <
+> +			MX6QDL_PAD_EIM_DA1__GPIO3_IO01		0x40013058 /* EN_LCD33V */
+> +			MX6QDL_PAD_SD4_DAT5__GPIO2_IO13		0x4001b0b0 /* EN_AVDD */
+> +			MX6QDL_PAD_EIM_D31__GPIO3_IO31		0x40013058 /* ENVGH */
+> +			MX6QDL_PAD_EIM_A18__GPIO2_IO20		0x40013058 /* ENVGL */
+> +			MX6QDL_PAD_EIM_DA6__GPIO3_IO06		0x40013058 /* LCD_POWER */
+> +			MX6QDL_PAD_KEY_COL4__GPIO4_IO14		0x40013058 /* EN_VCOM_LCD */
+> +			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x40013058 /* LCD_L_R */
+> +			MX6QDL_PAD_EIM_DA2__GPIO3_IO02		0x40013058 /* LCD_U_D */
+> +		>;
+> +	};
+> +
+> +	pinctrl_pwm3: pwm3grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD4_DAT1__PWM3_OUT 0x1b0b1
+> +		>;
+> +	};
+> +
+>  	pinctrl_uart3: uart3grp {
+>  		fsl,pins = <
+>  			MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
 > -- 
-> 2.7.4
+> 2.14.3
 > 
