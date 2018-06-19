@@ -1,63 +1,47 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH RFC 2/4] w1: core: match sub-nodes of bus masters in devicetree
-Date: Tue, 19 Jun 2018 23:27:42 +0200
-Message-ID: <20180619212744.794-3-daniel@zonque.org>
-References: <20180619212744.794-1-daniel@zonque.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180619212744.794-1-daniel@zonque.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: zbr@ioremap.net, robh+dt@kernel.org, mark.rutland@arm.com, szabolcs.gyurko@tlt.hu
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+From: Nick Dyer <nick@shmanahar.org>
+Subject: [PATCH v1] ARM: dts: imx51-zii-rdu1: fix touchscreen pinctrl
+Date: Tue, 19 Jun 2018 23:07:19 +0100
+Message-ID: <20180619220719.3200-1-nick@shmanahar.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>, devicetree@vger.kernel.org, Nick Dyer <nick@shmanahar.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Once a new slave device is detected, match it against all sub-nodes of the
-master bus controller. If a match is found, set the slave device's of_node
-pointer.
+The pinctrl settings were incorrect for the touchscreen interrupt line, causing
+an interrupt storm. This change has been tested with both the atmel_mxt_ts and
+RMI4 drivers on the RDU1 units.
 
-This alone can already be used by slave device implementations to obtain
-more properties from devicetree.
-
-Another use-case is introduced in the next patch.
-
-Signed-off-by: Daniel Mack <daniel@zonque.org>
+Signed-off-by: Nick Dyer <nick@shmanahar.org>
 ---
- drivers/w1/w1.c    | 3 +++
- include/linux/w1.h | 2 ++
- 2 files changed, 5 insertions(+)
+ arch/arm/boot/dts/imx51-zii-rdu1.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/w1/w1.c b/drivers/w1/w1.c
-index 80a778b02f28..dc73d8c08438 100644
---- a/drivers/w1/w1.c
-+++ b/drivers/w1/w1.c
-@@ -26,6 +26,7 @@
- #include <linux/kthread.h>
- #include <linux/freezer.h>
- #include <linux/hwmon.h>
-+#include <linux/of.h>
+diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+index df9eca94d812..4d12ba54ba15 100644
+--- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
++++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+@@ -770,8 +770,8 @@
  
- #include <linux/atomic.h>
- 
-@@ -686,6 +687,8 @@ static int __w1_attach_slave_device(struct w1_slave *sl)
- 	sl->dev.bus = &w1_bus_type;
- 	sl->dev.release = &w1_slave_release;
- 	sl->dev.groups = w1_slave_groups;
-+	sl->dev.of_node = of_find_matching_node(sl->master->dev.of_node,
-+						sl->family->of_match_table);
- 
- 	dev_set_name(&sl->dev, "%02x-%012llx",
- 		 (unsigned int) sl->reg_num.family,
-diff --git a/include/linux/w1.h b/include/linux/w1.h
-index 694101f744c7..3111585c371f 100644
---- a/include/linux/w1.h
-+++ b/include/linux/w1.h
-@@ -274,6 +274,8 @@ struct w1_family {
- 
- 	struct w1_family_ops	*fops;
- 
-+	const struct of_device_id *of_match_table;
-+
- 	atomic_t		refcnt;
- };
+ 	pinctrl_ts: tsgrp {
+ 		fsl,pins = <
+-			MX51_PAD_CSI1_D8__GPIO3_12		0x85
+-			MX51_PAD_CSI1_D9__GPIO3_13		0x85
++			MX51_PAD_CSI1_D8__GPIO3_12		4
++			MX51_PAD_CSI1_D9__GPIO3_13		(1<<16)
+ 		>;
+ 	};
  
 -- 
 2.17.1
