@@ -1,63 +1,129 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v6 24/29] drm/mediatek: add connection from RDMA2 to DSI3
-Date: Tue, 19 Jun 2018 16:47:45 +0800
-Message-ID: <1529398065.26480.20.camel@mtksdaap41>
-References: <1529393670-26862-1-git-send-email-stu.hsieh@mediatek.com>
- <1529393670-26862-25-git-send-email-stu.hsieh@mediatek.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 2/2] cpufreq: qcom-fw: Add support for QCOM cpufreq FW
+ driver
+Date: Tue, 19 Jun 2018 14:24:07 +0530
+Message-ID: <20180619085407.nmos7tix77vnaqre@vireshk-i7>
+References: <1528109194-16864-1-git-send-email-tdas@codeaurora.org>
+ <1528109194-16864-3-git-send-email-tdas@codeaurora.org>
+ <20180606060119.yzl24vhqff6btvrk@vireshk-i7>
+ <3cd5944b-d2ca-e7d7-f315-c3e5f230701b@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1529393670-26862-25-git-send-email-stu.hsieh@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stu Hsieh <stu.hsieh@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3cd5944b-d2ca-e7d7-f315-c3e5f230701b@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Taniya Das <tdas@codeaurora.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, robh@kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, skannan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE4LTA2LTE5IGF0IDE1OjM0ICswODAwLCBTdHUgSHNpZWggd3JvdGU6Cj4gVGhp
-cyBwYXRjaCBhZGQgdGhlIGNvbm5lY3Rpb24gZnJvbSBSRE1BMiB0byBEU0kzCj4gCgpSZXZpZXdl
-ZC1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4KCj4gU2lnbmVkLW9mZi1ieTogU3R1IEhz
-aWVoIDxzdHUuaHNpZWhAbWVkaWF0ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX2RybV9kZHAuYyB8IDggKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDggaW5z
-ZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2RybV9kZHAuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4gaW5k
-ZXggZTVkYjFhYjUxYzliLi4wYTFiOTY3Y2FiMWIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0
-ZWsvbXRrX2RybV9kZHAuYwo+IEBAIC05Niw2ICs5Niw3IEBACj4gICNkZWZpbmUgUkRNQTJfU09V
-VF9EUEkxCQkJMHgzCj4gICNkZWZpbmUgUkRNQTJfU09VVF9EU0kxCQkJMHgxCj4gICNkZWZpbmUg
-UkRNQTJfU09VVF9EU0kyCQkJMHg0Cj4gKyNkZWZpbmUgUkRNQTJfU09VVF9EU0kzCQkJMHg1Cj4g
-ICNkZWZpbmUgRFBJMF9TRUxfSU5fUkRNQTEJCTB4MQo+ICAjZGVmaW5lIERQSTBfU0VMX0lOX1JE
-TUEyCQkweDMKPiAgI2RlZmluZSBEUEkxX1NFTF9JTl9SRE1BMQkJKDB4MSA8PCA4KQo+IEBAIC0x
-MDUsNiArMTA2LDcgQEAKPiAgI2RlZmluZSBEU0kyX1NFTF9JTl9SRE1BMQkJKDB4MSA8PCAxNikK
-PiAgI2RlZmluZSBEU0kyX1NFTF9JTl9SRE1BMgkJKDB4NCA8PCAxNikKPiAgI2RlZmluZSBEU0kz
-X1NFTF9JTl9SRE1BMQkJKDB4MSA8PCAxNikKPiArI2RlZmluZSBEU0kzX1NFTF9JTl9SRE1BMgkJ
-KDB4NCA8PCAxNikKPiAgI2RlZmluZSBDT0xPUjFfU0VMX0lOX09WTDEJCTB4MQo+ICAKPiAgI2Rl
-ZmluZSBPVkxfTU9VVF9FTl9SRE1BCQkweDEKPiBAQCAtMjE0LDYgKzIxNiw5IEBAIHN0YXRpYyB1
-bnNpZ25lZCBpbnQgbXRrX2RkcF9tb3V0X2VuKGVudW0gbXRrX2RkcF9jb21wX2lkIGN1ciwKPiAg
-CX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTIgJiYgbmV4dCA9PSBERFBfQ09N
-UE9ORU5UX0RTSTIpIHsKPiAgCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEyX1NP
-VVQ7Cj4gIAkJdmFsdWUgPSBSRE1BMl9TT1VUX0RTSTI7Cj4gKwl9IGVsc2UgaWYgKGN1ciA9PSBE
-RFBfQ09NUE9ORU5UX1JETUEyICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kzKSB7Cj4gKwkJ
-KmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMl9TT1VUOwo+ICsJCXZhbHVlID0gUkRN
-QTJfU09VVF9EU0kzOwo+ICAJfSBlbHNlIHsKPiAgCQl2YWx1ZSA9IDA7Cj4gIAl9Cj4gQEAgLTI1
-Nyw2ICsyNjIsOSBAQCBzdGF0aWMgdW5zaWduZWQgaW50IG10a19kZHBfc2VsX2luKGVudW0gbXRr
-X2RkcF9jb21wX2lkIGN1ciwKPiAgCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRN
-QTIgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTIpIHsKPiAgCQkqYWRkciA9IERJU1BfUkVH
-X0NPTkZJR19EU0lFX1NFTF9JTjsKPiAgCQl2YWx1ZSA9IERTSTJfU0VMX0lOX1JETUEyOwo+ICsJ
-fSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMiAmJiBuZXh0ID09IEREUF9DT01Q
-T05FTlRfRFNJMykgewo+ICsJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RTSUVfU0VMX0lOOwo+
-ICsJCXZhbHVlID0gRFNJM19TRUxfSU5fUkRNQTI7Cj4gIAl9IGVsc2UgaWYgKGN1ciA9PSBERFBf
-Q09NUE9ORU5UX09WTDEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0NPTE9SMSkgewo+ICAJCSph
-ZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfQ09MT1IxX1NFTF9JTjsKPiAgCQl2YWx1ZSA9IENP
-TE9SMV9TRUxfSU5fT1ZMMTsKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+Sorry for being late..
+
+On 07-06-18, 12:48, Taniya Das wrote:
+> On 6/6/2018 11:31 AM, Viresh Kumar wrote:
+> > On 04-06-18, 16:16, Taniya Das wrote:
+
+> > > +static struct cpufreq_driver cpufreq_qcom_fw_driver = {
+> > > +	.flags		= CPUFREQ_STICKY | CPUFREQ_NEED_INITIAL_FREQ_CHECK |
+> > > +			  CPUFREQ_HAVE_GOVERNOR_PER_POLICY,
+> > > +	.verify		= cpufreq_generic_frequency_table_verify,
+> > > +	.target_index	= qcom_cpufreq_fw_target_index,
+> > > +	.get		= qcom_cpufreq_fw_get,
+> > > +	.init		= qcom_cpufreq_fw_cpu_init,
+> > 
+> > What about CPU hotplug ? We can still do that, right ? So what will happen if
+> > all CPUs of a freq-domain are removed (hence cpufreq policy is removed) and then
+> > someone calls qcom_cpufreq_fw_get() ? You should really work on cpufreq_policy
+> > there to get 'c'.
+> > 
+> 
+> You want the _get to do something as below.
+> Please correct me if my understanding is wrong.
+> ....
+> 
+>  policy = cpufreq_cpu_get_raw(cpu);
+>  if (!policy)
+>     return 0;
+> 
+>  c = policy->driver_data;
+> 
+>  index = readl_relaxed(c->perf_base);
+>  index = min(index, LUT_MAX_ENTRIES - 1);
+> 
+>  return c->table[index].frequency;
+> 
+> ....
+
+Right.
+
+> > > +static int qcom_read_lut(struct platform_device *pdev,
+> > > +			 struct cpufreq_qcom *c)
+> > > +{
+> > > +	struct device *dev = &pdev->dev;
+> > > +	u32 data, src, lval, i, core_count, prev_cc, prev_freq, cur_freq;
+> > > +
+> > > +	c->table = devm_kcalloc(dev, LUT_MAX_ENTRIES + 1,
+> > > +				sizeof(*c->table), GFP_KERNEL);
+> > > +	if (!c->table)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+> > > +		data = readl_relaxed(c->lut_base + i * LUT_ROW_SIZE);
+> > > +		src = ((data & GENMASK(31, 30)) >> 30);
+> > > +		lval = (data & GENMASK(7, 0));
+> > > +		core_count = CORE_COUNT_VAL(data);
+> > > +
+> > > +		if (!src)
+> > > +			c->table[i].frequency = INIT_RATE / 1000;
+> > > +		else
+> > > +			c->table[i].frequency = XO_RATE * lval / 1000;
+> > > +
+> > > +		cur_freq = c->table[i].frequency;
+> > > +
+> > > +		dev_dbg(dev, "index=%d freq=%d, core_count %d\n",
+> > > +			i, c->table[i].frequency, core_count);
+> > > +
+> > > +		if (core_count != c->max_cores)
+> > > +			cur_freq = CPUFREQ_ENTRY_INVALID;
+> > > +
+> > > +		/*
+> > > +		 * Two of the same frequencies with the same core counts means
+> > > +		 * end of table.
+> > > +		 */
+> > > +		if (i > 0 && c->table[i - 1].frequency ==
+> > > +		   c->table[i].frequency && prev_cc == core_count) {
+> > > +			struct cpufreq_frequency_table *prev = &c->table[i - 1];
+> > > +
+> > > +			if (prev_freq == CPUFREQ_ENTRY_INVALID)
+> > > +				prev->flags = CPUFREQ_BOOST_FREQ;
+> > > +			break;
+> > > +		}
+> > > +		prev_cc = core_count;
+> > > +		prev_freq = cur_freq;
+> > > +	}
+> > > +
+> > > +	c->table[i].frequency = CPUFREQ_TABLE_END;
+> > > +
+> > > +	return 0;
+> > > +}
+> > 
+> > Looks like there are many problems here.
+> > - You are assigning prev_freq with cur_freq (which may be uninitialized local
+> >    variable here).
+> > - In this version, you never write CPUFREQ_ENTRY_INVALID to table[i].frequency,
+> >    which looks wrong as well.
+> > 
+> 
+> - The code to detect boost, would only enter for i > 0 and the prev_freq
+> would be initialized with the cur_freq.
+> - In the case where the core_count != max_cores, the cur_freq is marked
+> INVALID, and when both prev_freq == cur_freq && prev_cc && cur_cc match,
+> that is the time the prev table flags need to be updated. Marking the
+> table[i].frequency as INVALID is not required as cur_freq is already marked
+> with the same. Please correct me if you think otherwise.
+
+Yeah but the value of cur_freq isn't written to the table entries now. This
+wasn't the case in the earlier version. Have a look at that one.
+
+-- 
+viresh
