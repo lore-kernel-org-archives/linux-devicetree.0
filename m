@@ -1,67 +1,51 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH V3 3/7] backlight: qcom-wled: Add new properties for
- PMI8998
-Date: Tue, 19 Jun 2018 16:03:51 -0700
-Message-ID: <20180619230351.GG15126@tuxbook-pro>
-References: <1529406822-15379-1-git-send-email-kgunda@codeaurora.org>
- <1529406822-15379-4-git-send-email-kgunda@codeaurora.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 1/1] arm64: dts: rockchip: correct voltage selector Firefly-RK3399
+Date: Wed, 20 Jun 2018 01:21:31 +0200
+Message-ID: <10782218.jfpm9omiT7@phil>
+References: <20180604171523.28454-1-xypron.glpk@gmx.de> <19360053.2ABrQ075F2@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1529406822-15379-4-git-send-email-kgunda@codeaurora.org>
+In-Reply-To: <19360053.2ABrQ075F2@phil>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kiran Gunda <kgunda@codeaurora.org>
-Cc: jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, Daniel Thompson <daniel.thompson@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Vagrant Cascadian <vagrant@debian.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Pierre-Hugues Husson <phh@phh.me>, Jianqun Xu <jay.xu@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 19 Jun 04:13 PDT 2018, Kiran Gunda wrote:
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
-[..]
->  - qcom,num-strings
->  	Usage:        optional
->  	Value type:   <u32>
->  	Definition:   #; number of led strings attached;
-> -		      value from 1 to 3. default: 2
-> -		      This property is supported only for PM8941.
-> +		      value: For PM8941 from 1 to 3. default: 2
-> +			     For PMI8998 from 1 to 4. default: 4
-[..]
-> +- qcom,enabled-strings
-> +	Usage:        optional
-> +	Value tyoe:   <u32 array>
-> +	Definition:   Array of the WLED strings numbered from 0 to 3. Each
-> +		      string of leds are operated individually. Specify the
-> +		      list of strings used by the device. Any combination of
-> +		      led strings can be used.
-> +		      for pm8941: Default values are [00 01].
-> +		      for pmi8998: Default values are [00 01 02 03].
+Hi Heinrich,
 
-I would suggest omitting the defaults, as we can see in several places
-in this document we end up having to update the document with new
-defaults for each platform.
+Am Donnerstag, 14. Juni 2018, 14:55:27 CEST schrieb Heiko Stuebner:
+> Am Montag, 4. Juni 2018, 19:15:23 CEST schrieb Heinrich Schuchardt:
+> > Without this patch the Firefly-RK3399 board boot process hangs after these
+> > lines:
+> > 
+> >    fan53555-regulator 0-0040: FAN53555 Option[8] Rev[1] Detected!
+> >    fan53555-reg: supplied by vcc_sys
+> >    vcc1v8_s3: supplied by vcc_1v8
+> > 
+> > Blacklisting driver fan53555 allows booting.
+> > 
+> > The device tree uses a value of fcs,suspend-voltage-selector different to
+> > any other board.
+> > 
+> > Changing this setting to the usual value is sufficient to enable booting.
+> > 
+> > Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+> 
+> applied for 4.19.
 
-Also, per the defaults of the optional qcom,num-strings these are
-already the defaults...
+and dropped again.
 
-[..]
-> +pmi8998-wled@d800 {
-> +	compatible = "qcom,pmi8998-wled";
-> +	reg = <0xd800 0xd900>;
-> +	label = "backlight";
-> +
-> +	interrupts = <3 0xd8 2 IRQ_TYPE_EDGE_RISING>,
-> +		     <3 0xd8 1 IRQ_TYPE_EDGE_RISING>;
-> +	interrupt-names = "short", "ovp";
-> +	qcom,current-limit-microamp = <25000>;
-> +	qcom,current-boost-limit = <805>;
-> +	qcom,switching-freq = <1600>;
-> +	qcom,ovp-millivolt = <29600>;
-> +	qcom,num-strings = <4>;
-> +	qcom,enabled-strings = <0x00 0x01 0x02 0x03>;
+Sadly it looks like the patch causes conflicts with at least one firefly
+board in a kernelci lab. My own is currently not ready to use, so I cannot
+look myself right now.
 
-Please omit the pmi8998 example as well, there's no real benefit of
-adding similar examples for each platform.
+The issue kernelci people described sounded quite a lot like the one
+in your commit message, so my current theory is that the
+suspend-voltage-selector must in some form corespond to the
+cpu_b_sleep_h gpio setting we're currently not handling at all, which
+would therefore depend on how the bootloader sets this up.
 
-Regards,
-Bjorn
+
+Heiko
