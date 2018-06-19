@@ -1,43 +1,71 @@
-From: Richard Weinberger <richard@nod.at>
-Subject: [PATCH] arm: dts: socfpga: denali needs nand_x_clk too
-Date: Tue, 19 Jun 2018 14:07:19 +0200
-Message-ID: <20180619120719.26921-1-richard@nod.at>
+From: Mikko Perttunen <cyndis@kapsi.fi>
+Subject: Re: [PATCH 1/8] dt-bindings: tegra186-hsp: Add shared interrupts
+Date: Tue, 19 Jun 2018 15:41:05 +0300
+Message-ID: <3b5708ef-c82f-c4b2-da50-2cb2afa3edb2@kapsi.fi>
+References: <20180508114403.14499-1-mperttunen@nvidia.com>
+ <20180508114403.14499-2-mperttunen@nvidia.com>
+ <2bed23e6-19d5-66f8-774e-d613a91b1607@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2bed23e6-19d5-66f8-774e-d613a91b1607@nvidia.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, marek.vasut@gmail.com, computersforpeace@gmail.com, dwmw2@infradead.org, miquel.raynal@bootlin.com, boris.brezillon@bootlin.com, yamada.masahiro@socionext.com, Richard Weinberger <richard@nod.at>
+To: Jon Hunter <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, robh+dt@kernel.org, mark.rutland@arm.com, jassisinghbrar@gmail.com, gregkh@linuxfoundation.org, thierry.reding@gmail.com
+Cc: araza@nvidia.com, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The denali NAND flash controller needs at least two clocks to operate,
-nand_clk and nand_x_clk.
-Since 1bb88666775e ("mtd: nand: denali: handle timing parameters by
-setup_data_interface()") nand_x_clk is used to derive timing settings.
+On 22.05.2018 18:15, Jon Hunter wrote:
+> 
+> On 08/05/18 12:43, Mikko Perttunen wrote:
+>> Non-doorbell interrupts are routed through "shared interrupts". These
+>> interrupts can be mapped to various internal interrupt lines. Add
+>> interrupt properties for shared interrupts to the tegra186-hsp device
+>> tree bindings.
+> 
+> Reading the Tegra documentation, although the doorbells have dedicated 
+> interrupts, it appears that the doorbell interrupts can also be routed 
+> via these shared interrupts.
 
-Signed-off-by: Richard Weinberger <richard@nod.at>
----
-Strictly speaking denali needs a ecc_clk too, but AFAIK such a clock
-is not present on this SoC.
-But my SoCFPGA knowledge is very limited.
+Thanks, I changed the text slightly to account for this.
+
+> 
+>> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+>> ---
+>>   Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt | 
+>> 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git 
+>> a/Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt 
+>> b/Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt
+>> index b99d25fc2f26..9edcdf82d719 100644
+>> --- a/Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt
+>> +++ b/Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt
+>> @@ -21,6 +21,8 @@ Required properties:
+>>       Contains a list of names for the interrupts described by the 
+>> interrupt
+>>       property. May contain the following entries, in any order:
+>>       - "doorbell"
+>> +    - "sharedN", where 'N' is a number from zero up to the number of
+>> +      external interrupts supported by the HSP instance minus one.
+>>       Users of this binding MUST look up entries in the interrupt 
+>> property
+>>       by name, using this interrupt-names property to do so.
+>>   - interrupts
+> 
+> How is the mapping of shared-mailboxes interrupts to the actual 
+> 'sharedN' interrupt managed?
+
+Currently the driver always uses shared0 for mailbox-full interrupt, and 
+nothing else, which is what downstream does as well. It's difficult to 
+do anything else as we can trample on some other driver's configuration..
+
+> 
+> Cheers
+> Jon
+> 
 
 Thanks,
-//richard
----
- arch/arm/boot/dts/socfpga.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 486d4e7433ed..562f7b375bbd 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -754,7 +754,8 @@
- 			reg-names = "nand_data", "denali_reg";
- 			interrupts = <0x0 0x90 0x4>;
- 			dma-mask = <0xffffffff>;
--			clocks = <&nand_clk>;
-+			clocks = <&nand_clk>, <&nand_x_clk>;
-+			clock-names = "nand", "nand_x";
- 			status = "disabled";
- 		};
- 
--- 
-2.17.1
+Mikko
