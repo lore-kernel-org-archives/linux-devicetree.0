@@ -1,42 +1,73 @@
-Return-Path: <SRS0=17fZ=JE=st.com=hugues.fruchet@kernel.org>
-From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH v2 0/3] OV5640 hflip, vflip and module orientation support
-Date: Mon, 18 Jun 2018 12:29:16 +0200
-Message-ID: <1529317759-28657-1-git-send-email-hugues.fruchet@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: Steve Longerbeam <slongerbeam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, "Mauro Carvalho Chehab  <mchehab@kernel.org>, Rob Herring" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org, "Hugues Fruchet  <hugues.fruchet@st.com>, Benjamin Gaignard" <benjamin.gaignard@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>
+Return-Path: <SRS0=0B+L=JF=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mga09.intel.com ([134.134.136.24]:28864 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753145AbeFSF6y (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 19 Jun 2018 01:58:54 -0400
+From: bingbu.cao@intel.com
+Subject: [PATCH v5 1/2] dt-bindings: Add bindings for AKM ak7375 voice coil lens
+Date: Tue, 19 Jun 2018 14:01:46 +0800
+Message-Id: <1529388107-14308-1-git-send-email-bingbu.cao@intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: sakari.ailus@linux.intel.com, tfiga@google.com, jacopo@jmondi.org, rajmohan.mani@intel.com, bingbu.cao@linux.intel.com, tian.shu.qiu@intel.com, jian.xu.zheng@intel.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch serie relates to flip and mirror at sensor level through
-registers "TIMING TC REG20/REG21".
+From: Bingbu Cao <bingbu.cao@intel.com>
 
-The first commit implements HFLIP and VFLIP V4L2 controls
-allowing V4L2 client to change horizontal and vertical flip
-before or during streaming.
+Add device tree bindings for AKM ak7375 voice coil lens
+driver. This chip is used to drive a lens in a camera module.
 
-The second & third commit allows to inform driver of the physical
-orientation of the sensor module through devicetree "rotation"
-optional properties as defined by Sakari in media/video-interfaces.txt:
-https://www.mail-archive.com/linux-media@vger.kernel.org/msg132345.html
+Signed-off-by: Tianshu Qiu <tian.shu.qiu@intel.com>
+Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-===========
-= history =
-===========
-version 2:
-  - Fix remarks from Rob Hering on devicetree part (new commit for binding
-    and reference to video-interfaces.txt common bindings):
-    https://www.spinics.net/lists/linux-media/msg136048.html
+---
+Changes since v1:
+    - add the MAINTAINERS change
+    - correct the vendor prefix from akm to asahi-kasei
 
-Hugues Fruchet (3):
-  media: ov5640: add HFLIP/VFLIP controls support
-  dt-bindings: ov5640: Add "rotation" property
-  media: ov5640: add support of module orientation
+This patch is based on Sakari's media-tree git:
+https://git.linuxtv.org/sailus/media_tree.git/log/?h=for-4.18-5
+---
+---
+ Documentation/devicetree/bindings/media/i2c/ak7375.txt | 8 ++++++++
+ MAINTAINERS                                            | 8 ++++++++
+ 2 files changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ak7375.txt
 
- .../devicetree/bindings/media/i2c/ov5640.txt       |   5 +
- drivers/media/i2c/ov5640.c                         | 127 ++++++++++++++++++---
- 2 files changed, 114 insertions(+), 18 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/media/i2c/ak7375.txt b/Documentation/devicetree/bindings/media/i2c/ak7375.txt
+new file mode 100644
+index 000000000000..aa3e24b41241
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ak7375.txt
+@@ -0,0 +1,8 @@
++Asahi Kasei Microdevices AK7375 voice coil lens driver
++
++AK7375 is a camera voice coil lens.
++
++Mandatory properties:
++
++- compatible: "asahi-kasei,ak7375"
++- reg: I2C slave address
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ea362219c4aa..ad68d75abc84 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2258,6 +2258,14 @@ L:	linux-leds@vger.kernel.org
+ S:	Maintained
+ F:	drivers/leds/leds-as3645a.c
+ 
++ASAHI KASEI AK7375 LENS VOICE COIL DRIVER
++M:	Tianshu Qiu <tian.shu.qiu@intel.com>
++L:	linux-media@vger.kernel.org
++T:	git git://linuxtv.org/media_tree.git
++S:	Maintained
++F:	drivers/media/i2c/ak7375.c
++F:	Documentation/devicetree/bindings/media/i2c/ak7375.txt
++
+ ASAHI KASEI AK8974 DRIVER
+ M:	Linus Walleij <linus.walleij@linaro.org>
+ L:	linux-iio@vger.kernel.org
 -- 
 1.9.1
+
