@@ -1,61 +1,178 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] allwinner: a64: add SRAM controller
- / system control
-Date: Tue, 19 Jun 2018 23:20:09 +0800
-Message-ID: <CAGb2v65-X6X6C0sgCom2G3dBvn5iqD9aRfh84qSCv3jf8v-C0A@mail.gmail.com>
-References: <20180614153548.9644-1-wens@csie.org> <20180615091413.pbdtrpa7txe6i4ee@flea>
- <CAGb2v64Ar+rOgiXbjtRrQojHUZteLa9N7OwM3XY7ZcpS87Qpmw@mail.gmail.com> <20180618073425.ce2dkipuvrtbqela@flea>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 2/2] clk: qcom: Add display clock controller driver for SDM845
+Date: Tue, 19 Jun 2018 08:22:09 -0700
+Message-ID: <152942172986.16708.14472226838173862978@swboyd.mtv.corp.google.com>
+References: <1528098985-3676-1-git-send-email-tdas@codeaurora.org>
+ <1528098985-3676-3-git-send-email-tdas@codeaurora.org>
+ <152879014163.16708.9093599796057889104@swboyd.mtv.corp.google.com>
+ <a397c3f9-1e4e-b6db-299b-0ecfd1726226@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBP56UTMQKGQEL2X64TQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180618073425.ce2dkipuvrtbqela@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a397c3f9-1e4e-b6db-299b-0ecfd1726226@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Taniya Das <tdas@codeaurora.org>, robh@kernel.org
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 18, 2018 at 3:34 PM, Maxime Ripard
-<maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> On Mon, Jun 18, 2018 at 10:11:20AM +0800, Chen-Yu Tsai wrote:
->> On Fri, Jun 15, 2018 at 5:14 PM, Maxime Ripard
->> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->> > On Thu, Jun 14, 2018 at 11:35:44PM +0800, Chen-Yu Tsai wrote:
->> >> Hi,
->> >>
->> >> This series is the remaining A64 syscon changes from the R40 DWMAC
->> >> series. The series aligns how the A64 system control exports a regmap
->> >> for the sun8i DWMAC driver to access with what we've done for the R40.
->> >>
->> >> Originally the A64 used the generic syscon for this bit of hardware.
->> >> But this block also contains mapping bits for the onboard SRAM, used
->> >> by various peripherals, and other vendor specific bits we may use in
->> >> the future. It is by no means generic. And we already have a device
->> >> tree binding and driver for the SRAM part.
->> >>
->> >> The first patch make the SRAM control device export a regmap, exposing
->> >> a single EMAC control register, for the DWMAC driver to consume.
->> >>
->> >> The second and third patches rename the A64 compatible string to read
->> >> "system control", which is what the block is named in the user manual.
->> >>
->> >> The last patch fixes up the device node, and also adds the lone mappable
->> >> SRAM block, which is needed by the Display Engine.
->> >
->> > For the serie:
->> > Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
->>
->> Cool. I'll apply them once you've rebased and pushed out any patches you
->> queued up during the merge window.
->
-> All should be pushed now, feel free to apply them :)
+Quoting Taniya Das (2018-06-13 02:18:59)
+> Hello Stephen,
+> =
 
-Applied. Thanks.
+> Thanks for review.
+> =
 
-ChenYu
+> On 6/12/2018 1:25 PM, Stephen Boyd wrote:
+> > Quoting Taniya Das (2018-06-04 00:56:25)
+> >> diff --git a/drivers/clk/qcom/dispcc-sdm845.c b/drivers/clk/qcom/dispc=
+c-sdm845.c
+> >> new file mode 100644
+> >> index 0000000..317ab33
+> >> --- /dev/null
+> >> +++ b/drivers/clk/qcom/dispcc-sdm845.c
+> =
+
+> >> +#include "common.h"
+> >> +#include "gdsc.h"
+> >> +#include "reset.h"
+> >> +
+> >> +#define F(f, s, h, m, n) { (f), (s), (2 * (h) - 1), (m), (n) }
+> > =
+
+> > We really need to move this into the header file.
+> > =
+
+> > $ git grep '#define F(' -- drivers/clk/qcom/ | wc -l
+> > 13
+> > =
+
+> Sure, will move this in a header and submit the patch.
+
+Thanks!
+
+> >> +
+> >> +static struct clk_alpha_pll disp_cc_pll0 =3D {
+> >> +       .offset =3D 0x0,
+> >> +       .regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_FABIA],
+> >> +       .clkr =3D {
+> >> +               .hw.init =3D &(struct clk_init_data){
+> >> +                       .name =3D "disp_cc_pll0",
+> >> +                       .parent_names =3D (const char *[]){ "bi_tcxo" =
+},
+> >> +                       .num_parents =3D 1,
+> >> +                       .ops =3D &clk_alpha_pll_fabia_ops,
+> >> +               },
+> >> +       },
+> >> +};
+> > [...]
+> >> +
+> >> +static struct clk_rcg2 disp_cc_mdss_pclk0_clk_src =3D {
+> >> +       .cmd_rcgr =3D 0x2058,
+> >> +       .mnd_width =3D 8,
+> >> +       .hid_width =3D 5,
+> >> +       .parent_map =3D disp_cc_parent_map_4,
+> >> +       .clkr.hw.init =3D &(struct clk_init_data){
+> >> +               .name =3D "disp_cc_mdss_pclk0_clk_src",
+> >> +               .parent_names =3D disp_cc_parent_names_4,
+> >> +               .num_parents =3D 4,
+> >> +               .flags =3D CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
+> > =
+
+> > Why is the nocache flag needed? Applies to all clks in this file.
+> > =
+
+> =
+
+> This flag is required for all RCGs whose PLLs are controlled outside the =
+
+> clock controller. The display code would require the recalculated rate =
+
+> always.
+
+That doesn't really answer the question. It seems to describe some sort
+of problem with the PLL being controlled outside the clk controller/clk
+framework. Please add more details and comments into the code here.
+
+> =
+
+> >> +               .ops =3D &clk_pixel_ops,
+> >> +       },
+> >> +};
+> >> +
+> >> +static struct clk_rcg2 disp_cc_mdss_pclk1_clk_src =3D {
+> >> +       .cmd_rcgr =3D 0x2070,
+> >> +       .mnd_width =3D 8,
+> >> +       .hid_width =3D 5,
+> >> +       .parent_map =3D disp_cc_parent_map_4,
+> >> +       .clkr.hw.init =3D &(struct clk_init_data){
+> > [...]
+> >> +
+> >> +static const struct regmap_config disp_cc_sdm845_regmap_config =3D {
+> >> +       .reg_bits       =3D 32,
+> >> +       .reg_stride     =3D 4,
+> >> +       .val_bits       =3D 32,
+> >> +       .max_register   =3D 0x10000,
+> > =
+
+> > This seems arbitrarily large. List the actual end?
+> > =
+
+> The actual end is larger than this :( , I have listed the range till the =
+
+> register offset are used here.
+
+Ok.
+
+> =
+
+> >> +       .fast_io        =3D true,
+> >> +};
+> >> +
+> >> +static const struct qcom_cc_desc disp_cc_sdm845_desc =3D {
+> >> +       .config =3D &disp_cc_sdm845_regmap_config,
+> >> +       .clks =3D disp_cc_sdm845_clocks,
+> >> +       .num_clks =3D ARRAY_SIZE(disp_cc_sdm845_clocks),
+> >> +       .resets =3D disp_cc_sdm845_resets,
+> >> +       .num_resets =3D ARRAY_SIZE(disp_cc_sdm845_resets),
+> >> +       .gdscs =3D disp_cc_sdm845_gdscs,
+> >> +       .num_gdscs =3D ARRAY_SIZE(disp_cc_sdm845_gdscs),
+> >> +};
+> >> +
+> >> +static const struct of_device_id disp_cc_sdm845_match_table[] =3D {
+> >> +       { .compatible =3D "qcom,sdm845-dispcc" },
+> >> +       { }
+> >> +};
+> >> +MODULE_DEVICE_TABLE(of, disp_cc_sdm845_match_table);
+> >> +
+> >> +static int disp_cc_sdm845_probe(struct platform_device *pdev)
+> >> +{
+> >> +       struct regmap *regmap;
+> >> +
+> >> +       regmap =3D qcom_cc_map(pdev, &disp_cc_sdm845_desc);
+> >> +       if (IS_ERR(regmap))
+> >> +               return PTR_ERR(regmap);
+> >> +
+> >> +       clk_fabia_pll_configure(&disp_cc_pll0, regmap, &disp_cc_pll0_c=
+onfig);
+> >> +
+> >> +       /* Enable clock gating for DSI and MDP clocks */
+> > =
+
+> > Hardware clock gating? What does this mean.
+> > =
+
+> These are used for deciding whether to enable HW based Clock gating or =
+
+> not. Setting these bit will enable HW based Clock gating.
+
+Please state it's hardware clock gating then in the comment.
+
+> =
+
+> >> +       regmap_update_bits(regmap, 0x8000, 0x7f0, 0x7f0);
+> >> +
+> >> +       return qcom_cc_really_probe(pdev, &disp_cc_sdm845_desc, regmap=
+);
+> >> +}
+>=20
