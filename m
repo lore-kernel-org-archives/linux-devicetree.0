@@ -1,78 +1,59 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v3 12/12] mfd: cros_ec: Add throttler sub-device
-Date: Tue, 19 Jun 2018 10:43:36 -0700
-Message-ID: <20180619174336.GY88063@google.com>
-References: <20180614194712.102134-1-mka@chromium.org>
- <20180614194712.102134-13-mka@chromium.org>
- <20180618232109.GB154056@rodete-desktop-imager.corp.google.com>
+From: Avi Fishman <avifishman70@gmail.com>
+Subject: Re: [PATCH v6 1/3] USB host: Add USB ehci support for nuvoton npcm7xx platform
+Date: Tue, 19 Jun 2018 20:47:54 +0300
+Message-ID: <CAKKbWA79=k-HEinMNNw7y8bCg2s2M+_S8uFDuR-sQz7A7zFSPg@mail.gmail.com>
+References: <20180619142246.104469-2-avifishman70@gmail.com> <Pine.LNX.4.44L0.1806191044530.1473-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180618232109.GB154056@rodete-desktop-imager.corp.google.com>
+In-Reply-To: <Pine.LNX.4.44L0.1806191044530.1473-100000@iolanthe.rowland.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomer Maimon <tmaimon77@gmail.com>, Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, Brendan Higgins <brendanhiggins@google.com>, mathias.nyman@linux.intel.com, bjorn.andersson@linaro.org, jhogan@kernel.org, albeu@free.fr, chunfeng.yun@mediatek.com, Tony Lindgren <tony@atomide.com>, baolu.lu@linux.intel.com, Alex Elder <elder@linaro.org>, Dmitry Osipenko <digetx@gmail.com>, Kate Stewart <kstewart@linuxfoundation.org>, hdegoede@redhat.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 18, 2018 at 04:21:10PM -0700, Brian Norris wrote:
-> Hi,
-> 
-> On Thu, Jun 14, 2018 at 12:47:12PM -0700, Matthias Kaehlcke wrote:
-> > Instantiate the CrOS EC throttler if it is enabled in the kernel
-> > configuration.
-> > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+On Tue, Jun 19, 2018 at 5:49 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Tue, 19 Jun 2018 avifishman70@gmail.com wrote:
+>
+> > From: Avi Fishman <AviFishman70@gmail.com>
+> >
+> > This patch adds support for ehci controller for the Nuvoton
+> > npcm7xx platform.
+> > Most of the code was taken from ehci-spear.c + specific initialization
+> > code
+> >
+> > Signed-off-by: Avi Fishman <AviFishman70@gmail.com>
 > > ---
-> > Changes in v3:
-> > - patch added to series
-> > 
-> >  drivers/mfd/cros_ec.c | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
-> > index 36156a41499c..5f52b6e2c21a 100644
-> > --- a/drivers/mfd/cros_ec.c
-> > +++ b/drivers/mfd/cros_ec.c
-> > @@ -91,6 +91,10 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
-> >  	return cros_ec_cmd_xfer(ec_dev, &buf.msg);
-> >  }
-> >  
-> > +static const struct mfd_cell ec_throttler_cell = {
-> > +	.name = "cros-ec-throttler",
-> > +};
-> > +
-> >  int cros_ec_register(struct cros_ec_device *ec_dev)
-> >  {
-> >  	struct device *dev = ec_dev->dev;
-> > @@ -153,6 +157,18 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
-> >  		}
-> >  	}
-> >  
-> > +	if (IS_ENABLED(CONFIG_CROS_EC_THROTTLER)) {
-> > +		err = mfd_add_devices(ec_dev->dev, PLATFORM_DEVID_AUTO,
-> > +				      &ec_throttler_cell, 1, NULL, ec_dev->irq,
-> > +				      NULL);
-> 
-> Most of this similar sub-device registration seems to have moved to
-> cros_ec_dev.c, in ec_device_probe(). Should this do the same?
+> >  drivers/usb/host/Kconfig        |   8 ++
+> >  drivers/usb/host/Makefile       |   1 +
+> >  drivers/usb/host/ehci-npcm7xx.c | 212 ++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 221 insertions(+)
+> >  create mode 100644 drivers/usb/host/ehci-npcm7xx.c
+> >
+> > diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+> > index 9f0aeb068acb..e3100b249f0f 100644
+> > --- a/drivers/usb/host/Kconfig
+> > +++ b/drivers/usb/host/Kconfig
+> > @@ -185,6 +185,14 @@ config USB_EHCI_MXC
+> >       ---help---
+> >         Variation of ARC USB block used in some Freescale chips.
+> >
+> > +config USB_EHCI_HCD_NPCM7XX
+> > +     tristate "Support for Nuvoton NPCM7XX on-chip EHCI USB controller"
+> > +     depends on (USB_EHCI_HCD && ARCH_NPCM7XX) || COMPILE_TEST
+> > +     default y
+>
+> Are you sure this is what you want?  The value defaults to Y whenever
+> COMPILE_TEST is enabled?  Will that annoy people doing compile tests?
+>
 
-Not sure about this, the only device that is registered in
-ec_device_probe() are the sensors.
+Do you recomment to change to:
+default y if (USB_EHCI_HCD && ARCH_NPCM7XX)
 
-I cc-ed Benson and Olof, the maintainers of CrOS platform stuff,
-maybe they can help to clarify what the preference is and why.
-
-> And on a similar note: is there a way to determine EC support for this
-> feature (e.g., EC_FEATURE_*)? Or do we just have to listen for
-> appropriate throttling events that may never come?
-
-To my knowledge there is no such way as of now. There is no
-EC_FEATURE_* for throttling support
-(https://chromium.googlesource.com/chromiumos/platform/ec/+/master/include/ec_commands.h#1174).
-though we could probably add one.
-
-> Also, is this very useful on non-DT systems? Does this fail gracefully?
-
-It is not useful on non-DT systems, however the throttler core has a
-dependency on CONFIG_OF, so the device wouldn't be added.
+> Aside from that one issue,
+>
+> Acked-by: Alan Stern <stern@rowland.harvard.edu>
+>
+> Alan Stern
+>
