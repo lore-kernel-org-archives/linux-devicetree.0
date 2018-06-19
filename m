@@ -1,81 +1,81 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [Dev] [PATCH 0/5] RFC: Mezzanine handling for 96boards
-Date: Tue, 19 Jun 2018 12:10:18 +0100
-Message-ID: <20180619111018.r3m35g4ei6625pqz@holly.lan>
-References: <20180618074556.6944-1-linus.walleij@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180618074556.6944-1-linus.walleij@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Frank Rowand <frowand.list@gmail.com>, Mark Brown <broonie@kernel.org>, Michal Simek <michal.simek@xilinx.com>, dev@lists.96boards.org, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-arm-kernel@lists.infradead.org
+From: Kiran Gunda <kgunda@codeaurora.org>
+Subject: [PATCH V3 1/7] backlight: qcom-wled: Rename pm8941-wled.c to qcom-wled.c
+Date: Tue, 19 Jun 2018 16:43:36 +0530
+Message-ID: <1529406822-15379-2-git-send-email-kgunda@codeaurora.org>
+References: <1529406822-15379-1-git-send-email-kgunda@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1529406822-15379-1-git-send-email-kgunda@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, Daniel Thompson <daniel.thompson@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, Kiran Gunda <kgunda@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 18, 2018 at 09:45:51AM +0200, Linus Walleij wrote:
-> This is a proposal for how to handle the non-discoverable
-> 96boards plug-in expansion boards called "mezzanines" in the
-> Linux kernel. It is a working RFC series meant for discussion
-> at the moment.
-> 
-> The RFC was done on the brand new Ultra96 board from Xilinx
-> with a Secure96 mezzanine expansion board. The main part
-> is in patch 4, the rest is enabling and examples.
-> 
-> The code can be obtained from here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-integrator.git/log/?h=ultra96
-> 
-> You can for example probably augment the DTS file for any
-> upstream-supported 96board and get the Secure96 going with
-> it with minor efforts.
+pm8941-wled.c driver is supporting the WLED peripheral
+on pm8941. Rename it to qcom-wled.c so that it can support
+WLED on multiple PMICs.
 
-Like other commenters I'm rather like using C to solve this, and your
-comments Big Upfront Design are good backup in term of convincing me.
+Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+---
+ .../bindings/leds/backlight/{pm8941-wled.txt => qcom-wled.txt}    | 2 +-
+ drivers/video/backlight/Kconfig                                   | 8 ++++----
+ drivers/video/backlight/Makefile                                  | 2 +-
+ drivers/video/backlight/{pm8941-wled.c => qcom-wled.c}            | 0
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+ rename Documentation/devicetree/bindings/leds/backlight/{pm8941-wled.txt => qcom-wled.txt} (95%)
+ rename drivers/video/backlight/{pm8941-wled.c => qcom-wled.c} (100%)
 
+diff --git a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+similarity index 95%
+rename from Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
+rename to Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+index e5b294d..fb39e32 100644
+--- a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
++++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+@@ -1,4 +1,4 @@
+-Binding for Qualcomm PM8941 WLED driver
++Binding for Qualcomm Technologies, Inc. WLED driver
  
-> TODO:
-> 
-> - Proper device tree bindings for the connector, for now
->   look at the example.
-> 
-> - Discuss whether to actually do this or just take it all and
->   flush it down the drain because the community doesn't like
->   it. I'm not one of those especially infatuated with my own code,
->   I always stay by the old programming project management mantra
->   to calculate to make one version and throw it away as stepping
->   stone to a good final design.
-> 
-> - Placement: putting this in drivers/bus is just an example.
->   drivers/platform/96boards-mezzanines is fine too, maybe better?
-> 
-> - I am especially curious about input from Andy and Mika from
->   the Intel/ACPI camp on what they have seen for non-discoverable
->   plug-in boards. Does this problem even exist in the Intel
->   world, or not...
-
-I'm also interested in the "what about ACPI" question?
-
-Using C makes describing a board in ACPI fairly easy. AFAICT allocating
-IDs to a board rather than its included components is fairly natural for
-ACPI.
-
-However I'm too ignorant to be able to figure out if the expansion
-connector itself could/should be described in the tables (e.g. if
-connector is a bus and the board is[1] a device, could the bus driver
-be instantiated in a reasonable way).
-
-
-Daniel.
-
-
-[1] ... or becomes a device, based on feedback in this thread ;-)
+ Required properties:
+ - compatible: should be "qcom,pm8941-wled"
+diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
+index 4e1d2ad..8c095e3 100644
+--- a/drivers/video/backlight/Kconfig
++++ b/drivers/video/backlight/Kconfig
+@@ -299,12 +299,12 @@ config BACKLIGHT_TOSA
+ 	  If you have an Sharp SL-6000 Zaurus say Y to enable a driver
+ 	  for its backlight
+ 
+-config BACKLIGHT_PM8941_WLED
+-	tristate "Qualcomm PM8941 WLED Driver"
++config BACKLIGHT_QCOM_WLED
++	tristate "Qualcomm PMIC WLED Driver"
+ 	select REGMAP
+ 	help
+-	  If you have the Qualcomm PM8941, say Y to enable a driver for the
+-	  WLED block.
++	  If you have the Qualcomm PMIC, say Y to enable a driver for the
++	  WLED block. Currently it supports PM8941 and PMI8998.
+ 
+ config BACKLIGHT_SAHARA
+ 	tristate "Tabletkiosk Sahara Touch-iT Backlight Driver"
+diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
+index 5e28f01..6fd76ef 100644
+--- a/drivers/video/backlight/Makefile
++++ b/drivers/video/backlight/Makefile
+@@ -49,8 +49,8 @@ obj-$(CONFIG_BACKLIGHT_OMAP1)		+= omap1_bl.o
+ obj-$(CONFIG_BACKLIGHT_OT200)		+= ot200_bl.o
+ obj-$(CONFIG_BACKLIGHT_PANDORA)		+= pandora_bl.o
+ obj-$(CONFIG_BACKLIGHT_PCF50633)	+= pcf50633-backlight.o
+-obj-$(CONFIG_BACKLIGHT_PM8941_WLED)	+= pm8941-wled.o
+ obj-$(CONFIG_BACKLIGHT_PWM)		+= pwm_bl.o
++obj-$(CONFIG_BACKLIGHT_QCOM_WLED)	+= qcom-wled.o
+ obj-$(CONFIG_BACKLIGHT_SAHARA)		+= kb3886_bl.o
+ obj-$(CONFIG_BACKLIGHT_SKY81452)	+= sky81452-backlight.o
+ obj-$(CONFIG_BACKLIGHT_TOSA)		+= tosa_bl.o
+diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/backlight/qcom-wled.c
+similarity index 100%
+rename from drivers/video/backlight/pm8941-wled.c
+rename to drivers/video/backlight/qcom-wled.c
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+ a Linux Foundation Collaborative Project
