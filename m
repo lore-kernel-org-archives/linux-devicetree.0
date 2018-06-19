@@ -1,51 +1,54 @@
 From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH v6 06/29] drm/mediatek: add ddp component PWM2
-Date: Tue, 19 Jun 2018 15:34:07 +0800
-Message-ID: <1529393670-26862-7-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH v6 26/29] drm/mediatek: add DSI2 support for mutex
+Date: Tue, 19 Jun 2018 15:34:27 +0800
+Message-ID: <1529393670-26862-27-git-send-email-stu.hsieh@mediatek.com>
 References: <1529393670-26862-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1529393670-26862-1-git-send-email-stu.hsieh@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Stu Hsieh <stu.hsieh@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Stu Hsieh <stu.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGQgY29tcG9uZW50IFBXTTIKClNpZ25lZC1vZmYtYnk6IFN0dSBIc2llaCA8
-c3R1LmhzaWVoQG1lZGlhdGVrLmNvbT4KUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRl
-ay5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYyB8
-IDEgKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCB8IDEgKwog
-MiBmaWxlcyBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlh
-dGVrL210a19kcm1fZGRwX2NvbXAuYwppbmRleCBhNWM3YWMyZDE2MmQuLjg2ZThjOWU1ZGY0MSAx
-MDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYwor
-KysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jCkBAIC0yMzMs
-NiArMjMzLDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfZGRwX2NvbXBfbWF0Y2ggbXRrX2Rk
-cF9tYXRjaGVzW0REUF9DT01QT05FTlRfSURfTUFYXSA9IHsKIAlbRERQX0NPTVBPTkVOVF9PVkwx
-XQk9IHsgTVRLX0RJU1BfT1ZMLAkxLCBOVUxMIH0sCiAJW0REUF9DT01QT05FTlRfUFdNMF0JPSB7
-IE1US19ESVNQX1BXTSwJMCwgTlVMTCB9LAogCVtERFBfQ09NUE9ORU5UX1BXTTFdCT0geyBNVEtf
-RElTUF9QV00sCTEsIE5VTEwgfSwKKwlbRERQX0NPTVBPTkVOVF9QV00yXQk9IHsgTVRLX0RJU1Bf
-UFdNLAkyLCBOVUxMIH0sCiAJW0REUF9DT01QT05FTlRfUkRNQTBdCT0geyBNVEtfRElTUF9SRE1B
-LAkwLCBOVUxMIH0sCiAJW0REUF9DT01QT05FTlRfUkRNQTFdCT0geyBNVEtfRElTUF9SRE1BLAkx
-LCBOVUxMIH0sCiAJW0REUF9DT01QT05FTlRfUkRNQTJdCT0geyBNVEtfRElTUF9SRE1BLAkyLCBO
-VUxMIH0sCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBf
-Y29tcC5oIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaAppbmRl
-eCA5YjE5ZmM0NDIzZjEuLmUwMGMyZTc5OGFiZCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaAorKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0
-ZWsvbXRrX2RybV9kZHBfY29tcC5oCkBAIC01Niw2ICs1Niw3IEBAIGVudW0gbXRrX2RkcF9jb21w
-X2lkIHsKIAlERFBfQ09NUE9ORU5UX09WTDEsCiAJRERQX0NPTVBPTkVOVF9QV00wLAogCUREUF9D
-T01QT05FTlRfUFdNMSwKKwlERFBfQ09NUE9ORU5UX1BXTTIsCiAJRERQX0NPTVBPTkVOVF9SRE1B
-MCwKIAlERFBfQ09NUE9ORU5UX1JETUExLAogCUREUF9DT01QT05FTlRfUkRNQTIsCi0tIAoyLjEy
-LjUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+This patch add the DSI2 support for mutex
+
+Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+---
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+index 4c203d013d7c..a0b526b16da1 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+@@ -77,6 +77,7 @@
+ #define MUTEX_SOF_DSI1			2
+ #define MUTEX_SOF_DPI0			3
+ #define MUTEX_SOF_DPI1			4
++#define MUTEX_SOF_DSI2			5
+ 
+ #define OVL0_MOUT_EN_COLOR0		0x1
+ #define OD_MOUT_EN_RDMA0		0x1
+@@ -383,6 +384,9 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
+ 	case DDP_COMPONENT_DSI1:
+ 		reg = MUTEX_SOF_DSI0;
+ 		break;
++	case DDP_COMPONENT_DSI2:
++		reg = MUTEX_SOF_DSI2;
++		break;
+ 	case DDP_COMPONENT_DPI0:
+ 		reg = MUTEX_SOF_DPI0;
+ 		break;
+@@ -420,6 +424,7 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
+ 	switch (id) {
+ 	case DDP_COMPONENT_DSI0:
+ 	case DDP_COMPONENT_DSI1:
++	case DDP_COMPONENT_DSI2:
+ 	case DDP_COMPONENT_DPI0:
+ 	case DDP_COMPONENT_DPI1:
+ 		writel_relaxed(MUTEX_SOF_SINGLE_MODE,
+-- 
+2.12.5
