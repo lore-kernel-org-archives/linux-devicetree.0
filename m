@@ -1,63 +1,140 @@
 From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH 1/2] Documentation: dt: keystone: ti-sci: Add optional host-id parameter
-Date: Tue, 19 Jun 2018 14:44:20 -0500
-Message-ID: <20180619194421.3432-2-nm@ti.com>
-References: <20180619194421.3432-1-nm@ti.com>
+Subject: [PATCH 5/5] arm64: dts: ti: Add support for AM654 EVM base board
+Date: Tue, 19 Jun 2018 14:42:53 -0500
+Message-ID: <20180619194253.27288-6-nm@ti.com>
+References: <20180619194253.27288-1-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180619194421.3432-1-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180619194253.27288-1-nm@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, Sudeep Holla <sudeep.holla@arm.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Texas Instrument's System Control Interface (TISCI) permits
-the ability for OSs running in virtual machines to be able to
-independently communicate with the firmware without the need going
-through an hypervisor.
+The EValuation Module(EVM) platform for AM654 consists of a
+common Base board + one or more of daughter cards, which include:
+a) "Personality Modules", which can be specific to a profile, such as
+ ICSSG enabled or Multi-media (including audio).
+b) SERDES modules, which may be 2 lane PCIe or two port PCIe + USB2
+c) Camera daughter card
+d) various display panels
 
-The "host-id" in effect is the hardware representation of the
-host (example: VMs locked to a core) as identified to the System
-Controller. Hypervisors can either fill in appropriate host-ids in dt
-used for each VM instance OR may use prebuilt blobs where the host-ids
-are pre-populated, as appropriate for the OS running in the VMs.
+Among other options. There are two basic configurations defined which
+include an "EVM" configuration and "IDK" (Industrial development kit)
+which differ in the specific combination of daughter cards that are
+used.
 
-This is introduced as an optional parameter to maintain consistency
-with legacy device tree blobs.
+To simplify support, we choose to support just the base board as the
+core device tree file and all daughter cards would be expected to be
+device tree overlays.
 
-We call this with a vendor prefix to prevent any possible confusion
-with SCSI ID (m68k) kernel option.
-
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 Signed-off-by: Nishanth Menon <nm@ti.com>
 ---
+
 Changes since RFC:
-* Commit message update to elaborate usage in VM
+* Since defaults are enabled, and uart has been spun off, dropped the
+  redundant nodes from baseboard dts
 
-RFC: https://patchwork.kernel.org/patch/10447753/
+RFC: https://patchwork.kernel.org/patch/10447741/
 
- Documentation/devicetree/bindings/arm/keystone/ti,sci.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ MAINTAINERS                                    |  1 +
+ arch/arm64/boot/dts/Makefile                   |  1 +
+ arch/arm64/boot/dts/ti/Makefile                |  9 +++++++
+ arch/arm64/boot/dts/ti/k3-am654-base-board.dts | 36 ++++++++++++++++++++++++++
+ 4 files changed, 47 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/ti/Makefile
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am654-base-board.dts
 
-diff --git a/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt b/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-index 31f5f9a104cc..b56a02c10ae6 100644
---- a/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-+++ b/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-@@ -45,11 +45,15 @@ Optional Properties:
- 	debug_messages - Map the Debug message region
- - reg:  register space corresponding to the debug_messages
- - ti,system-reboot-controller: If system reboot can be triggered by SoC reboot
-+- ti,host-id: Integer value corresponding to the host ID assigned by Firmware
-+	for identification of host processing entities such as virtual
-+	machines
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6785ceaf5b0b..e9e916d1fb52 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2093,6 +2093,7 @@ M:	Nishanth Menon <nm@ti.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Supported
+ F:	Documentation/devicetree/bindings/arm/ti/k3.txt
++F:	arch/arm64/boot/dts/ti/Makefile
+ F:	arch/arm64/boot/dts/ti/k3-*
  
- Example (K2G):
- -------------
- 	pmmc: pmmc {
- 		compatible = "ti,k2g-sci";
-+		ti,host-id = <2>;
- 		mbox-names = "rx", "tx";
- 		mboxes= <&msgmgr &msgmgr_proxy_pmmc_rx>,
- 			<&msgmgr &msgmgr_proxy_pmmc_tx>;
+ ARM/TEXAS INSTRUMENT KEYSTONE ARCHITECTURE
+diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+index 3543bc324553..4690364d584b 100644
+--- a/arch/arm64/boot/dts/Makefile
++++ b/arch/arm64/boot/dts/Makefile
+@@ -23,5 +23,6 @@ subdir-y += rockchip
+ subdir-y += socionext
+ subdir-y += sprd
+ subdir-y += synaptics
++subdir-y += ti
+ subdir-y += xilinx
+ subdir-y += zte
+diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
+new file mode 100644
+index 000000000000..63e619d0b5b8
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/Makefile
+@@ -0,0 +1,9 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Make file to build device tree binaries for boards based on
++# Texas Instruments Inc processors
++#
++# Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
++#
++
++dtb-$(CONFIG_ARCH_K3_AM6_SOC) += k3-am654-base-board.dtb
+diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+new file mode 100644
+index 000000000000..af6956fdc13f
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+@@ -0,0 +1,36 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
++ */
++
++/dts-v1/;
++
++#include "k3-am654.dtsi"
++
++/ {
++	compatible =  "ti,am654-evm", "ti,am654";
++	model = "Texas Instruments AM654 Base Board";
++
++	chosen {
++		stdout-path = "serial2:115200n8";
++		bootargs = "earlycon=ns16550a,mmio32,0x02800000";
++	};
++
++	memory@80000000 {
++		device_type = "memory";
++		/* 4G RAM */
++		reg = <0x00000000 0x80000000 0x00000000 0x80000000>,
++		      <0x00000008 0x80000000 0x00000000 0x80000000>;
++	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		secure_ddr: secure_ddr@9e800000 {
++			reg = <0 0x9e800000 0 0x01800000>; /* for OP-TEE */
++			alignment = <0x1000>;
++			no-map;
++		};
++	};
++};
 -- 
 2.15.1
