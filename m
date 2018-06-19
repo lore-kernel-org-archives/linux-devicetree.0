@@ -1,36 +1,60 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 2/2] arm64: dts: exynos: Remove unneeded DSI and DECON
- address/size cells in Exynos5433
-Date: Tue, 19 Jun 2018 09:59:04 +0200
-Message-ID: <CAJKOXPeCT3CkqqNowEZaeTw7goJd6=Nbd2S61QzTFW-nGr5AKg@mail.gmail.com>
-References: <20180618174216.24801-1-krzk@kernel.org> <CGME20180618174316epcas1p397b66c8e4e8479fce8655941a4d4279f@epcas1p3.samsung.com>
- <20180618174216.24801-2-krzk@kernel.org> <20180619072652eucas1p1943deb1b158eda52980448e41f83e5e9~5fwX6lI2o2633926339eucas1p1Q@eucas1p1.samsung.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v6 09/29] drm/mediatek: add component DSI3
+Date: Tue, 19 Jun 2018 15:59:14 +0800
+Message-ID: <1529395154.26480.2.camel@mtksdaap41>
+References: <1529393670-26862-1-git-send-email-stu.hsieh@mediatek.com>
+ <1529393670-26862-10-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180619072652eucas1p1943deb1b158eda52980448e41f83e5e9~5fwX6lI2o2633926339eucas1p1Q@eucas1p1.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1529393670-26862-10-git-send-email-stu.hsieh@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stu Hsieh <stu.hsieh@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 19 June 2018 at 09:26, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> Hi Krzysztof,
->
-> On 2018-06-18 19:42, Krzysztof Kozlowski wrote:
->> The decon, decon_tv and dsi nodes have only one child port so
->> address/size mappings are not necessary.  This fixes DTC warnings like:
->>
->>      Warning (graph_child_address): /soc/decon@13800000/ports:
->>          graph node has single child node 'port@0', #address-cells/#size-cells are not necessary
->>
->> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> Works fine with current Exynos DRM Decon/MIC/DSI drivers.
->
-> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-
-Thanks for review and testing!
-
-Best regards,
-Krzysztof
+T24gVHVlLCAyMDE4LTA2LTE5IGF0IDE1OjM0ICswODAwLCBTdHUgSHNpZWggd3JvdGU6Cj4gVGhp
+cyBwYXRjaCBhZGQgdGhlIGNvbXBvbmVudCBEU0kzCj4gCgpSZXZpZXdlZC1ieTogQ0sgSHUgPGNr
+Lmh1QG1lZGlhdGVrLmNvbT4KCj4gU2lnbmVkLW9mZi1ieTogU3R1IEhzaWVoIDxzdHUuaHNpZWhA
+bWVkaWF0ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9k
+ZHBfY29tcC5jIHwgMiArKwo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBf
+Y29tcC5oIHwgMSArCj4gIDIgZmlsZXMgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCj4gCj4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgYi9k
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jCj4gaW5kZXggMDcxZjlm
+NWFlZmVhLi4xN2I2ODE2ODY0NzEgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fZGRwX2NvbXAuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHJtX2RkcF9jb21wLmMKPiBAQCAtMjI4LDYgKzIyOCw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1
+Y3QgbXRrX2RkcF9jb21wX21hdGNoIG10a19kZHBfbWF0Y2hlc1tERFBfQ09NUE9ORU5UX0lEX01B
+WF0gPSB7Cj4gIAlbRERQX0NPTVBPTkVOVF9EU0kwXQk9IHsgTVRLX0RTSSwJCTAsIE5VTEwgfSwK
+PiAgCVtERFBfQ09NUE9ORU5UX0RTSTFdCT0geyBNVEtfRFNJLAkJMSwgTlVMTCB9LAo+ICAJW0RE
+UF9DT01QT05FTlRfRFNJMl0JPSB7IE1US19EU0ksCQkyLCBOVUxMIH0sCj4gKwlbRERQX0NPTVBP
+TkVOVF9EU0kzXQk9IHsgTVRLX0RTSSwJCTMsIE5VTEwgfSwKPiAgCVtERFBfQ09NUE9ORU5UX0dB
+TU1BXQk9IHsgTVRLX0RJU1BfR0FNTUEsCTAsICZkZHBfZ2FtbWEgfSwKPiAgCVtERFBfQ09NUE9O
+RU5UX09EMF0JPSB7IE1US19ESVNQX09ELAkwLCAmZGRwX29kIH0sCj4gIAlbRERQX0NPTVBPTkVO
+VF9PRDFdCT0geyBNVEtfRElTUF9PRCwJMSwgJmRkcF9vZCB9LAo+IEBAIC0yODAsNiArMjgxLDcg
+QEAgaW50IG10a19kZHBfY29tcF9pbml0KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmlj
+ZV9ub2RlICpub2RlLAo+ICAJICAgIGNvbXBfaWQgPT0gRERQX0NPTVBPTkVOVF9EUEkxIHx8Cj4g
+IAkgICAgY29tcF9pZCA9PSBERFBfQ09NUE9ORU5UX0RTSTAgfHwKPiAgCSAgICBjb21wX2lkID09
+IEREUF9DT01QT05FTlRfRFNJMiB8fAo+ICsJICAgIGNvbXBfaWQgPT0gRERQX0NPTVBPTkVOVF9E
+U0kzIHx8Cj4gIAkgICAgY29tcF9pZCA9PSBERFBfQ09NUE9ORU5UX1BXTTApIHsKPiAgCQljb21w
+LT5yZWdzID0gTlVMTDsKPiAgCQljb21wLT5jbGsgPSBOVUxMOwo+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oIGIvZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaAo+IGluZGV4IDhkMTUyYjMzN2YxNS4uNzQxM2Zm
+ZWIzYzlkIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
+cF9jb21wLmgKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29t
+cC5oCj4gQEAgLTUxLDYgKzUxLDcgQEAgZW51bSBtdGtfZGRwX2NvbXBfaWQgewo+ICAJRERQX0NP
+TVBPTkVOVF9EU0kwLAo+ICAJRERQX0NPTVBPTkVOVF9EU0kxLAo+ICAJRERQX0NPTVBPTkVOVF9E
+U0kyLAo+ICsJRERQX0NPTVBPTkVOVF9EU0kzLAo+ICAJRERQX0NPTVBPTkVOVF9HQU1NQSwKPiAg
+CUREUF9DT01QT05FTlRfT0QwLAo+ICAJRERQX0NPTVBPTkVOVF9PRDEsCgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
