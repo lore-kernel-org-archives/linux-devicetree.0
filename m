@@ -1,61 +1,130 @@
-From: Can Guo <cang@codeaurora.org>
-Subject: [PATCH v7 0/4] Support for Qualcomm UFS QMP PHY on SDM845
-Date: Tue, 19 Jun 2018 16:36:43 +0800
-Message-ID: <20180619083647.10116-1-cang@codeaurora.org>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH] arm64: zynqmp: Add support for Avnet Ultra96 rev1 board
+Date: Tue, 19 Jun 2018 10:36:57 +0200
+Message-ID: <dcee0f07-967a-034b-1d95-576e0b458a89@monstr.eu>
+References: <80d21c84d427cb6b4122efd3dea7f1c4ab4cf2be.1525261987.git.michal.simek@xilinx.com>
+Reply-To: monstr@monstr.eu
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="6zrnCMMaOPas4drc4d0BGaJruzJCwcT4r"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <80d21c84d427cb6b4122efd3dea7f1c4ab4cf2be.1525261987.git.michal.simek@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Can Guo <cang@codeaurora.org>
+To: Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds support for UFS QMP PHY on SDM845 and the
-compatible string for it. This patch series depends on the current
-proposed QMP V3 USB3 UNI PHY support for sdm845 driver [1], on
-the DT bindings for the QMP V3 USB3 PHYs based dirver [2], and also
-rebased on updated pipe_clk initialization sequence [3]. This series
-can only be merged once the dependent patches do.
-[1] http://lists-archives.com/linux-kernel/29071659-dt-bindings-phy-qcom-qmp-update-bindings-for-sdm845.html
-[2] http://lists-archives.com/linux-kernel/29071660-phy-qcom-qmp-add-qmp-v3-usb3-uni-phy-support-for-sdm845.html
-[3] https://patchwork.kernel.org/patch/10376551/
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--6zrnCMMaOPas4drc4d0BGaJruzJCwcT4r
+Content-Type: multipart/mixed; boundary="mwZ8ia8sao6vWVPeO1Jym8xxE6Onedmee";
+ protected-headers="v1"
+From: Michal Simek <monstr@monstr.eu>
+Reply-To: monstr@monstr.eu
+To: Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org,
+ Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>,
+ linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+ Will Deacon <will.deacon@arm.com>, Catalin Marinas
+ <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+Message-ID: <dcee0f07-967a-034b-1d95-576e0b458a89@monstr.eu>
+Subject: Re: [PATCH] arm64: zynqmp: Add support for Avnet Ultra96 rev1 board
+References: <80d21c84d427cb6b4122efd3dea7f1c4ab4cf2be.1525261987.git.michal.simek@xilinx.com>
+In-Reply-To: <80d21c84d427cb6b4122efd3dea7f1c4ab4cf2be.1525261987.git.michal.simek@xilinx.com>
 
-Changes since v6:
-- Add one new change to clean up some structs and field
-- Updates the PHY power control sequence.
-- Incorporated review comments from Vivek and Manu.
+--mwZ8ia8sao6vWVPeO1Jym8xxE6Onedmee
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Changes since v5:
-- Updates the PHY power control sequence.
-- Updates UFS PHY power on condition check.
+Hi,
 
-Changes since v4:
-- Adds 'ref_aux' clock back to SDM845 UFS PHY clock list.
-- Power on PHY before serdes configuration starts.
-- Updates the UFS PHY initialization sequence.
-- Updates a few UFS PHY registers.
-- Incorporated review comments from Vivek and Manu.
+On 2.5.2018 13:53, Michal Simek wrote:
+> Avnet Ultra96 rev1 board is commercialized Xilinx zcu100 revC/D
+> internal board. The patch is reusing zcu100 revC files but changing
+> model description and compatible strings which are used for example by
+> libmraa.
+>=20
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+>=20
+> I choose this option because there are houndreds of zcu100 boards
+> created and this will enable support both versions.
+>=20
+> Record avnet prefix was sent by separate patch.
+> ---
+>  arch/arm64/boot/dts/xilinx/Makefile           |  1 +
+>  .../boot/dts/xilinx/avnet-ultra96-rev1.dts    | 19 +++++++++++++++++++=
 
-Changes since v3:
-- Incorporated review comments from Vivek and Rob.
+>  2 files changed, 20 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/xilinx/avnet-ultra96-rev1.dts
+>=20
+> diff --git a/arch/arm64/boot/dts/xilinx/Makefile b/arch/arm64/boot/dts/=
+xilinx/Makefile
+> index d452f80e7601..60f5443f3ef4 100644
+> --- a/arch/arm64/boot/dts/xilinx/Makefile
+> +++ b/arch/arm64/boot/dts/xilinx/Makefile
+> @@ -1,4 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> +dtb-$(CONFIG_ARCH_ZYNQMP) +=3D avnet-ultra96-rev1.dtb
+>  dtb-$(CONFIG_ARCH_ZYNQMP) +=3D zynqmp-zc1232-revA.dtb
+>  dtb-$(CONFIG_ARCH_ZYNQMP) +=3D zynqmp-zc1254-revA.dtb
+>  dtb-$(CONFIG_ARCH_ZYNQMP) +=3D zynqmp-zc1275-revA.dtb
+> diff --git a/arch/arm64/boot/dts/xilinx/avnet-ultra96-rev1.dts b/arch/a=
+rm64/boot/dts/xilinx/avnet-ultra96-rev1.dts
+> new file mode 100644
+> index 000000000000..88aa06fa78a8
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/xilinx/avnet-ultra96-rev1.dts
+> @@ -0,0 +1,19 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * dts file for Avnet Ultra96 rev1
+> + *
+> + * (C) Copyright 2018, Xilinx, Inc.
+> + *
+> + * Michal Simek <michal.simek@xilinx.com>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "zynqmp-zcu100-revC.dts"
+> +
+> +/ {
+> +	model =3D "Avnet Ultra96 Rev1";
+> +	compatible =3D "avnet,ultra96-rev1", "avnet,ultra96",
+> +		     "xlnx,zynqmp-zcu100-revC", "xlnx,zynqmp-zcu100",
+> +		     "xlnx,zynqmp";
+> +};
+>=20
 
-Changes since v2:
-- Incorporated review comments from Vivek and Rob.
-- Remove "ref_aux" from sdm845 ufs phy clock list structure.
+Rob/Mark: Do you see any issue with this patch?
 
-Changes since v1:
-- Incorporated review comments from Vivek and Manu.
-- Update the commit title of patch 2.
+Thanks,
+Michal
 
-Can Guo (4):
-  phy: Update PHY power control sequence
-  phy: General struct and field cleanup
-  phy: Add QMP phy based UFS phy support for sdm845
-  dt-bindings: phy-qcom-qmp: Add UFS phy compatible string for sdm845
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP SoCs
 
- .../devicetree/bindings/phy/qcom-qmp-phy.txt       |   4 +-
- drivers/phy/qualcomm/phy-qcom-qmp.c                | 217 +++++++++++++++++++--
- drivers/phy/qualcomm/phy-qcom-qmp.h                |  15 ++
- 3 files changed, 216 insertions(+), 20 deletions(-)
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+
+--mwZ8ia8sao6vWVPeO1Jym8xxE6Onedmee--
+
+--6zrnCMMaOPas4drc4d0BGaJruzJCwcT4r
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iEYEARECAAYFAlsowKkACgkQykllyylKDCFc4QCfXdIDkzbxUIbcNV6Z0DxWCU2p
+vqIAn1pe9S1OC3T79+ojvHafVdMabd1z
+=zd4f
+-----END PGP SIGNATURE-----
+
+--6zrnCMMaOPas4drc4d0BGaJruzJCwcT4r--
