@@ -1,220 +1,150 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 15/20] dts: arm: imx7{d,s}: Update coresight binding for
- hardware ports
-Date: Tue, 19 Jun 2018 12:35:08 +0200
-Message-ID: <145043d7ed3ef7890b5fc78a59c1668a@agner.ch>
-References: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
- <1528235011-30691-16-git-send-email-suzuki.poulose@arm.com>
- <20180619021218.GV16091@dragon>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ FW
+ bindings
+Date: Tue, 19 Jun 2018 16:14:50 +0530
+Message-ID: <2d37f581-38af-872a-36df-0250b0f7e411@codeaurora.org>
+References: <1528801355-18719-1-git-send-email-tdas@codeaurora.org>
+ <1528801355-18719-2-git-send-email-tdas@codeaurora.org>
+ <0f3f0223-3539-dc66-5300-8f30d827445d@arm.com>
+ <7abb2da6-c130-117a-5404-d07bb132d915@codeaurora.org>
+ <f57f2708-28bb-dcdd-8b93-d41ade10fa18@arm.com>
+ <bc6dc152-7def-fc1d-4535-11a44fd64310@codeaurora.org>
+ <CAHLCerMCM1qf1MJ3bz+ZwBQMjshKSCWKXjHCiuqxJTDBdauamQ@mail.gmail.com>
+ <32e8f874-a58b-8ba3-7a53-dc89cb34f7d9@codeaurora.org>
+ <fad24065-bb2d-33f9-e877-425db3391e8f@arm.com>
+ <514eea88-1f98-7959-2341-3d57cff6f66b@codeaurora.org>
+ <f26813f1-f8da-ef92-fd86-6e648fbbf3e9@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180619021218.GV16091@dragon>
+In-Reply-To: <f26813f1-f8da-ef92-fd86-6e648fbbf3e9@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, mark.rutland@arm.com, robh@kernel.org, mathieu.poirier@linaro.org, devicetree@vger.kernel.org, coresight@lists.linaro.org, john.horley@arm.com, linux-kernel@vger.kernel.org, arm@kernel.org, Pengutronix Kernel Team <kernel@pengutronix.de>, sudeep.holla@arm.com, Fabio Estevam <fabio.estevam@nxp.com>, matt.sealey@arm.com, mike.leach@linaro.org, frowand.list@gmail.com, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, charles.garcia-tobin@arm.com
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Amit Kucheria <amit.kucheria@verdurent.com>, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Saravana Kannan <skannan@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19.06.2018 04:12, Shawn Guo wrote:
-> Hi Stefan,
-> 
-> Can you take a look at the patch?  Thanks.
-> 
-> Shawn
-> 
-> On Tue, Jun 05, 2018 at 10:43:26PM +0100, Suzuki K Poulose wrote:
->> Switch to the updated coresight bindings.
 
-Looks good to me.
 
-Reviewed-by: Stefan Agner <stefan@agner.ch>
+On 6/19/2018 3:04 PM, Sudeep Holla wrote:
+> 
+> 
+> On 19/06/18 08:53, Taniya Das wrote:
+>>
+>>
+>> On 6/18/2018 2:51 PM, Sudeep Holla wrote:
+>>>
+>>>
+>>> On 15/06/18 18:40, Taniya Das wrote:
+>>>>
+>>>>
+>>>> On 6/15/2018 5:29 PM, Amit Kucheria wrote:
+>>>
+>>> [...]
+>>>
+>>>>> A future version of the HW engine, or more likely, a firmware
+>>>>> revision, will make more functionality available. Say, this needs
+>>>>> access to another register or two. This will require changing the DT
+>>>>> bindings. Instead, if you map the entire address space, you can just
+>>>>> add offsets to the new registers.
+>>>>>
+>>>>> So in this case, I think you should define the following addresses
+>>>>> (size 0x1400) for the two frequency domains
+>>>>>
+>>>>> 0x17d43000, 0x1400 (power cluster)
+>>>>> 0x17d45800, 0x1400 (perf cluster)
+>>>>>
+>>>>> And in the driver simply add offsets as follows:
+>>>>>
+>>>>> #define ENABLE_OFFSET               0x0
+>>>>> #define LUT_OFFSET                      0x110
+>>>>> #define PERF_DESIRED_OFFSET 0x920
+>>>>>
+>>>>
+>>>> The offsets could vary across versions of this IP and that is the reason
+>>>> to provide them through the DT and not define any such offsets.
+>>>>
+>>>
+>>> Just get compatibles to identify the version of the hardware if it can't
+>>> be probed and detected. Please don't use DT to get the addresses of each
+>>> register you use in the driver. That's neither scalable nor nice
+>>> solution to the problem.
+>>> Hello Sudeep and Amit,
+>>
+>> Thanks for the comments, I am consolidating the understanding from the
+>> other emails in a single one.
+>>
+>> I understand that you are looking for this IP to map the full region and
+>> define offsets according to access them.
+>>
+>> But I still not sure how do you want this common driver to scale in the
+>> cases where the offsets could vary across version change.
+>>
+> 
+> There are plenty of drivers that you can look at as example. TBH most of
+> the drivers implementing support for multiple versions of IP do
+> something on the similar lines.
+> 
+>>   DT
+>> ====
+>>    freq-node {
+>>      reg = < X x_size>;   Where X is the start of the IP address.
+>>    }
+>>
+>> Driver code (The below representation is just for example).
+>> =============
+>>
+>> V1
+>> #define ENABLE    0x0
+>> #define LUT_V1    0x110
+>> #define PERF_V1    0x920
+>>
+>> V2
+>> #define LUT_V2    0x150
+>> #define PERF_V2    0x980
+>>
+>> V3
+>> #define LUT_V3    0x120
+>> ....
+>>
+>> Do you want me to use "compatible" flag to
+>>
+>> if (compatible == v1)
+>>   enable =  readl_relaxed(X + LUT_V1);
+>> else if (compatible == v2)
+>>   enable = readl_relaxed(X + LUT_V2);
+>> else if (compatible == v3)
+>>   enable = readl_relaxed(X + LUT_V2);
+>>
+> 
+> These are implementation details. But you should try to use compatibles
+> only in probe and just record the version in some variable or update the
+> offsets in some device specific structure so that you can use that
+> unconditionally for any access you make on that device.
+> 
+>> With the current design I do not need such compatible checks and unmap
+>> the ones which are not required after probe.
+> 
+> I am not sure what you mean by unmap after probe.
+> 
+>> Please let me know your comments.
+>>
+> 
+> Please look at some drivers in the Linux tree for examples. Infact there
+> may be few drivers on QCOM SoC itself. What I am suggesting is the normal
+> practice in the drivers and you should see plenty of examples. Since I
+> was looking at some serial port patch, I can say you can have a look at
+> drivers/tty/serial/amba-pl011.c which supports multiple versions from
+> different vendors. I am sure there are many simpler examples but AMBA PL011
+> just stood out.
+> 
+
+Thanks Sudeep, let me take a look at the driver to see how I can 
+associate data (offsets) based on compatible.
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
 --
-Stefan
-
->>
->> Cc: Shawn Guo <shawnguo@kernel.org>
->> Cc: Sascha Hauer <s.hauer@pengutronix.de>
->> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
->> Cc: Fabio Estevam <fabio.estevam@nxp.com>
->> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> ---
->>  arch/arm/boot/dts/imx7d.dtsi |  5 ++++-
->>  arch/arm/boot/dts/imx7s.dtsi | 41 ++++++++++++++++++++++++++++++-----------
->>  2 files changed, 34 insertions(+), 12 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
->> index 200714e..5faff17 100644
->> --- a/arch/arm/boot/dts/imx7d.dtsi
->> +++ b/arch/arm/boot/dts/imx7d.dtsi
->> @@ -87,7 +87,9 @@
->>
->>  			port {
->>  				etm1_out_port: endpoint {
->> +					direction = <1>;
->>  					remote-endpoint = <&ca_funnel_in_port1>;
->> +					coresight,hwid = <0>;
->>  				};
->>  			};
->>  		};
->> @@ -174,8 +176,9 @@
->>  	port@1 {
->>  		reg = <1>;
->>  		ca_funnel_in_port1: endpoint {
->> -			slave-mode;
->> +			direction = <0>;
->>  			remote-endpoint = <&etm1_out_port>;
->> +			coresight,hwid = <1>;
->>  		};
->>  	};
->>  };
->> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
->> index 4d42335..8e90915 100644
->> --- a/arch/arm/boot/dts/imx7s.dtsi
->> +++ b/arch/arm/boot/dts/imx7s.dtsi
->> @@ -151,23 +151,28 @@
->>  			port@0 {
->>  				reg = <0>;
->>  				replicator_out_port0: endpoint {
->> +					direction = <1>;
->>  					remote-endpoint = <&tpiu_in_port>;
->> +					coresight,hwid = <0>;
->>  				};
->>  			};
->>
->>  			port@1 {
->>  				reg = <1>;
->>  				replicator_out_port1: endpoint {
->> +					direction = <1>;
->>  					remote-endpoint = <&etr_in_port>;
->> +					coresight,hwid = <1>;
->>  				};
->>  			};
->>
->>  			/* replicator input port */
->>  			port@2 {
->> -				reg = <0>;
->> +				reg = <2>;
->>  				replicator_in_port0: endpoint {
->> -					slave-mode;
->> +					direction = <0>;
->>  					remote-endpoint = <&etf_out_port>;
->> +					coresight,hwid = <0>;
->>  				};
->>  			};
->>  		};
->> @@ -203,16 +208,19 @@
->>  				port@0 {
->>  					reg = <0>;
->>  					ca_funnel_in_port0: endpoint {
->> -						slave-mode;
->> +						direction = <0>;
->>  						remote-endpoint = <&etm0_out_port>;
->> +						coresight,hwid = <0>;
->>  					};
->>  				};
->>
->>  				/* funnel output port */
->>  				port@2 {
->> -					reg = <0>;
->> +					reg = <2>;
->>  					ca_funnel_out_port0: endpoint {
->> +						direction = <1>;
->>  						remote-endpoint = <&hugo_funnel_in_port0>;
->> +						coresight,hwid = <0>;
->>  					};
->>  				};
->>
->> @@ -229,7 +237,9 @@
->>
->>  			port {
->>  				etm0_out_port: endpoint {
->> +					direction = <1>;
->>  					remote-endpoint = <&ca_funnel_in_port0>;
->> +					coresight,hwid = <0>;
->>  				};
->>  			};
->>  		};
->> @@ -248,22 +258,26 @@
->>  				port@0 {
->>  					reg = <0>;
->>  					hugo_funnel_in_port0: endpoint {
->> -						slave-mode;
->> +						direction = <0>;
->>  						remote-endpoint = <&ca_funnel_out_port0>;
->> +						coresight,hwid = <0>;
->>  					};
->>  				};
->>
->>  				port@1 {
->>  					reg = <1>;
->>  					hugo_funnel_in_port1: endpoint {
->> -						slave-mode; /* M4 input */
->> +						direction = <0>; /* M4 input */
->> +						coresight,hwid = <1>;
->>  					};
->>  				};
->>
->>  				port@2 {
->> -					reg = <0>;
->> +					reg = <2>;
->>  					hugo_funnel_out_port0: endpoint {
->> +						direction = <1>;
->>  						remote-endpoint = <&etf_in_port>;
->> +						coresight,hwid = <0>;
->>  					};
->>  				};
->>
->> @@ -284,15 +298,18 @@
->>  				port@0 {
->>  					reg = <0>;
->>  					etf_in_port: endpoint {
->> -						slave-mode;
->> +						direction = <0>;
->>  						remote-endpoint = <&hugo_funnel_out_port0>;
->> +						coresight,hwid = <0>;
->>  					};
->>  				};
->>
->>  				port@1 {
->> -					reg = <0>;
->> +					reg = <1>;
->>  					etf_out_port: endpoint {
->> +						direction = <1>;
->>  						remote-endpoint = <&replicator_in_port0>;
->> +						coresight,hwid = <0>;
->>  					};
->>  				};
->>  			};
->> @@ -306,8 +323,9 @@
->>
->>  			port {
->>  				etr_in_port: endpoint {
->> -					slave-mode;
->> +					direction = <0>;
->>  					remote-endpoint = <&replicator_out_port1>;
->> +					coresight,hwid = <0>;
->>  				};
->>  			};
->>  		};
->> @@ -320,8 +338,9 @@
->>
->>  			port {
->>  				tpiu_in_port: endpoint {
->> -					slave-mode;
->> +					direction = <0>;
->>  					remote-endpoint = <&replicator_out_port1>;
->> +					coresight,hwid = <0>;
->>  				};
->>  			};
->>  		};
->> --
->> 2.7.4
->>
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
