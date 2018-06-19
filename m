@@ -1,98 +1,90 @@
-Return-Path: <SRS0=YCj9=JH=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v4 3/5] leds: lt3593: switch to gpiod interface
-Date: Thu, 21 Jun 2018 22:23:20 +0200
-Message-Id: <20180621202322.11581-4-daniel@zonque.org>
-In-Reply-To: <20180621202322.11581-1-daniel@zonque.org>
-References: <20180621202322.11581-1-daniel@zonque.org>
-To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=bZSF=JF=gmail.com=ctatlor97@kernel.org>
+MIME-Version: 1.0
+References: <1529415925-28915-1-git-send-email-sricharan@codeaurora.org>
+ <1529415925-28915-14-git-send-email-sricharan@codeaurora.org> <f195e30e-bef3-9352-9584-fec35631ec5e@arm.com>
+In-Reply-To: <f195e30e-bef3-9352-9584-fec35631ec5e@arm.com>
+From: Craig Tatlor <ctatlor97@gmail.com>
+Date: Tue, 19 Jun 2018 15:49:03 +0100
+Message-ID: <CAALoacqzwcZjfDENwATsaDC87UmLnksfbYsj6EZTz2t8L-=YiQ@mail.gmail.com>
+Subject: Re: [PATCH v10 13/14] cpufreq: Add module to register cpufreq on
+ Krait CPUs
+Content-Type: multipart/alternative; boundary="000000000000342194056effc973"
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Sricharan R <sricharan@codeaurora.org>, Rob Herring <robh@kernel.org>, viresh.kumar@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux@arm.linux.org.uk, thierry.escande@linaro.org
 List-ID: <devicetree@vger.kernel.org>
 
-Clean up the code a bit and transition over to the gpiod based interface.
+--000000000000342194056effc973
+Content-Type: text/plain; charset="UTF-8"
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- drivers/leds/leds-lt3593.c | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+The pvs refuse check is incorrect... With downstream it says it isn't blown
+and that it is 11, which also happens on upstream if I import it's efuse
+reading code from an older revision, or comment out the check.
 
-diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
-index 1a3dc347db21..a096ee64cbbb 100644
---- a/drivers/leds/leds-lt3593.c
-+++ b/drivers/leds/leds-lt3593.c
-@@ -21,12 +21,13 @@
- #include <linux/leds.h>
- #include <linux/delay.h>
- #include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/slab.h>
- #include <linux/module.h>
- 
- struct lt3593_led_data {
- 	struct led_classdev cdev;
--	unsigned gpio;
-+	struct gpio_desc *gpiod;
- };
- 
- static int lt3593_led_set(struct led_classdev *led_cdev,
-@@ -46,25 +47,25 @@ static int lt3593_led_set(struct led_classdev *led_cdev,
- 	 */
- 
- 	if (value == 0) {
--		gpio_set_value_cansleep(led_dat->gpio, 0);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 0);
- 		return 0;
- 	}
- 
- 	pulses = 32 - (value * 32) / 255;
- 
- 	if (pulses == 0) {
--		gpio_set_value_cansleep(led_dat->gpio, 0);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 0);
- 		mdelay(1);
--		gpio_set_value_cansleep(led_dat->gpio, 1);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 1);
- 		return 0;
- 	}
- 
--	gpio_set_value_cansleep(led_dat->gpio, 1);
-+	gpiod_set_value_cansleep(led_dat->gpiod, 1);
- 
- 	while (pulses--) {
--		gpio_set_value_cansleep(led_dat->gpio, 0);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 0);
- 		udelay(1);
--		gpio_set_value_cansleep(led_dat->gpio, 1);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 1);
- 		udelay(1);
- 	}
- 
-@@ -85,15 +86,8 @@ static struct lt3593_led_data *lt3593_led_probe_pdata(struct device *dev)
- 	if (!led_data)
- 		return ERR_PTR(-ENOMEM);
- 
--	if (!gpio_is_valid(template->gpio)) {
--		dev_info(dev, "skipping unavailable LT3593 LED at gpio "
--			 "%d (%s)\n", template->gpio, template->name);
--		return ERR_PTR(-EINVAL);
--	}
--
- 	led_data->cdev.name = template->name;
- 	led_data->cdev.default_trigger = template->default_trigger;
--	led_data->gpio = template->gpio;
- 	led_data->cdev.brightness_set_blocking = lt3593_led_set;
- 
- 	state = (template->default_state == LEDS_GPIO_DEFSTATE_ON);
-@@ -108,6 +102,10 @@ static struct lt3593_led_data *lt3593_led_probe_pdata(struct device *dev)
- 	if (ret < 0)
- 		return ERR_PTR(ret);
- 
-+	led_data->gpiod = gpio_to_desc(template->gpio);
-+	if (!led_data->gpiod)
-+		return ERR_PTR(-EPROBE_DEFER);
-+
- 	ret = devm_led_classdev_register(dev, &led_data->cdev);
- 	if (ret < 0)
- 		return ERR_PTR(ret);
--- 
-2.17.1
+Also, I'm still getting my issue about clocks above 2,147,483,647hz however
+I think this may be related to the division in the hfpll driver so I'll
+have a debug around there.
+
+On Tue, 19 Jun 2018, 14:56 Sudeep Holla, <sudeep.holla@arm.com> wrote:
+
+>
+>
+> On 19/06/18 14:45, Sricharan R wrote:
+> > From: Stephen Boyd <sboyd@codeaurora.org>
+> >
+> > Register a cpufreq-generic device whenever we detect that a
+> > "qcom,krait" compatible CPU is present in DT.
+> >
+>
+> Just curious to know how different is this from qcom kryo driver
+> that was added recently. IIRC even that gets the speedbin from nvmem.
+> Can they be merged ? I don't see need to have different driver for Krait
+> and Kryo CPUs when the code is not even remotely related to CPU type.
+>
+> Sorry if I have missed anything from previous versions, I just happen
+> to open and looked at this series first time today.
+>
+> --
+> Regards,
+> Sudeep
+>
+
+--000000000000342194056effc973
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"auto"><div>The pvs refuse check is incorrect... With downstream=
+ it says it isn&#39;t blown and that it is 11, which also happens on upstre=
+am if I import it&#39;s efuse reading code from an older revision, or comme=
+nt out the check.</div><div dir=3D"auto"><br></div><div dir=3D"auto">Also, =
+I&#39;m still getting my issue about clocks above=C2=A02,147,483,647hz howe=
+ver I think this may be related to the division in the hfpll driver so I&#3=
+9;ll have a debug around there.</div><div dir=3D"auto"><br></div><div dir=
+=3D"auto"><div class=3D"gmail_quote" dir=3D"auto"><div dir=3D"ltr">On Tue, =
+19 Jun 2018, 14:56 Sudeep Holla, &lt;<a href=3D"mailto:sudeep.holla@arm.com=
+">sudeep.holla@arm.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_q=
+uote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1e=
+x"><br>
+<br>
+On 19/06/18 14:45, Sricharan R wrote:<br>
+&gt; From: Stephen Boyd &lt;<a href=3D"mailto:sboyd@codeaurora.org" target=
+=3D"_blank" rel=3D"noreferrer">sboyd@codeaurora.org</a>&gt;<br>
+&gt; <br>
+&gt; Register a cpufreq-generic device whenever we detect that a<br>
+&gt; &quot;qcom,krait&quot; compatible CPU is present in DT.<br>
+&gt; <br>
+<br>
+Just curious to know how different is this from qcom kryo driver<br>
+that was added recently. IIRC even that gets the speedbin from nvmem.<br>
+Can they be merged ? I don&#39;t see need to have different driver for Krai=
+t<br>
+and Kryo CPUs when the code is not even remotely related to CPU type.<br>
+<br>
+Sorry if I have missed anything from previous versions, I just happen<br>
+to open and looked at this series first time today.<br>
+<br>
+-- <br>
+Regards,<br>
+Sudeep<br>
+</blockquote></div></div></div>
+
+--000000000000342194056effc973--
