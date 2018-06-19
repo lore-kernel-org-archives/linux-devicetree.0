@@ -1,59 +1,173 @@
-From: Avi Fishman <avifishman70@gmail.com>
-Subject: Re: [PATCH v6 1/3] USB host: Add USB ehci support for nuvoton npcm7xx platform
-Date: Tue, 19 Jun 2018 20:47:54 +0300
-Message-ID: <CAKKbWA79=k-HEinMNNw7y8bCg2s2M+_S8uFDuR-sQz7A7zFSPg@mail.gmail.com>
-References: <20180619142246.104469-2-avifishman70@gmail.com> <Pine.LNX.4.44L0.1806191044530.1473-100000@iolanthe.rowland.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v7 4/4] input/power: Add driver for BD71837/BD71847 PMIC
+ power button
+Date: Tue, 19 Jun 2018 10:50:28 -0700
+Message-ID: <20180619175028.GA71788@dtor-ws>
+References: <cover.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
+ <af60857c6db5fcf14fbf0112f74719d898952459.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.44L0.1806191044530.1473-100000@iolanthe.rowland.org>
+Content-Disposition: inline
+In-Reply-To: <af60857c6db5fcf14fbf0112f74719d898952459.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomer Maimon <tmaimon77@gmail.com>, Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, Brendan Higgins <brendanhiggins@google.com>, mathias.nyman@linux.intel.com, bjorn.andersson@linaro.org, jhogan@kernel.org, albeu@free.fr, chunfeng.yun@mediatek.com, Tony Lindgren <tony@atomide.com>, baolu.lu@linux.intel.com, Alex Elder <elder@linaro.org>, Dmitry Osipenko <digetx@gmail.com>, Kate Stewart <kstewart@linuxfoundation.org>, hdegoede@redhat.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, arnd@arndb.de, sre@kernel.org, chenjh@rock-chips.com, andrew.smirnov@gmail.com, linus.walleij@linaro.org, kstewart@linuxfoundation.org, heiko@sntech.de, gregkh@linuxfoundation.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 19, 2018 at 5:49 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Tue, 19 Jun 2018 avifishman70@gmail.com wrote:
->
-> > From: Avi Fishman <AviFishman70@gmail.com>
-> >
-> > This patch adds support for ehci controller for the Nuvoton
-> > npcm7xx platform.
-> > Most of the code was taken from ehci-spear.c + specific initialization
-> > code
-> >
-> > Signed-off-by: Avi Fishman <AviFishman70@gmail.com>
-> > ---
-> >  drivers/usb/host/Kconfig        |   8 ++
-> >  drivers/usb/host/Makefile       |   1 +
-> >  drivers/usb/host/ehci-npcm7xx.c | 212 ++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 221 insertions(+)
-> >  create mode 100644 drivers/usb/host/ehci-npcm7xx.c
-> >
-> > diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-> > index 9f0aeb068acb..e3100b249f0f 100644
-> > --- a/drivers/usb/host/Kconfig
-> > +++ b/drivers/usb/host/Kconfig
-> > @@ -185,6 +185,14 @@ config USB_EHCI_MXC
-> >       ---help---
-> >         Variation of ARC USB block used in some Freescale chips.
-> >
-> > +config USB_EHCI_HCD_NPCM7XX
-> > +     tristate "Support for Nuvoton NPCM7XX on-chip EHCI USB controller"
-> > +     depends on (USB_EHCI_HCD && ARCH_NPCM7XX) || COMPILE_TEST
-> > +     default y
->
-> Are you sure this is what you want?  The value defaults to Y whenever
-> COMPILE_TEST is enabled?  Will that annoy people doing compile tests?
->
+Hi Matti,
 
-Do you recomment to change to:
-default y if (USB_EHCI_HCD && ARCH_NPCM7XX)
+On Tue, Jun 19, 2018 at 01:57:09PM +0300, Matti Vaittinen wrote:
+> ROHM BD71837 PMIC power button driver providing power-key press
+> information to user-space.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+>  drivers/input/misc/Kconfig          | 10 +++++
+>  drivers/input/misc/Makefile         |  1 +
+>  drivers/input/misc/bd718xx-pwrkey.c | 90 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 101 insertions(+)
+>  create mode 100644 drivers/input/misc/bd718xx-pwrkey.c
+> 
+> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> index 572b15fa18c2..694c05d3f9fb 100644
+> --- a/drivers/input/misc/Kconfig
+> +++ b/drivers/input/misc/Kconfig
+> @@ -96,6 +96,16 @@ config INPUT_ATMEL_CAPTOUCH
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called atmel_captouch.
+>  
+> +config INPUT_BD718XX_PWRKEY
+> +	tristate "ROHM BD71837/BD71847 power key support"
+> +	depends on MFD_BD71837
+> +	help
+> +	  Say Y here if you want support for the power key usually found
+> +	  on boards using a ROHM BD71837/BD71847 compatible PMIC.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called bd718xx-pwrkey.
+> +
+>  config INPUT_BMA150
+>  	tristate "BMA150/SMB380 acceleration sensor support"
+>  	depends on I2C
+> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+> index 72cde28649e2..ea5b81cbf2bf 100644
+> --- a/drivers/input/misc/Makefile
+> +++ b/drivers/input/misc/Makefile
+> @@ -20,6 +20,7 @@ obj-$(CONFIG_INPUT_ATI_REMOTE2)		+= ati_remote2.o
+>  obj-$(CONFIG_INPUT_ATLAS_BTNS)		+= atlas_btns.o
+>  obj-$(CONFIG_INPUT_ATMEL_CAPTOUCH)	+= atmel_captouch.o
+>  obj-$(CONFIG_INPUT_BMA150)		+= bma150.o
+> +obj-$(CONFIG_INPUT_BD718XX_PWRKEY)	+= bd718xx-pwrkey.o
+>  obj-$(CONFIG_INPUT_CM109)		+= cm109.o
+>  obj-$(CONFIG_INPUT_CMA3000)		+= cma3000_d0x.o
+>  obj-$(CONFIG_INPUT_CMA3000_I2C)		+= cma3000_d0x_i2c.o
+> diff --git a/drivers/input/misc/bd718xx-pwrkey.c b/drivers/input/misc/bd718xx-pwrkey.c
+> new file mode 100644
+> index 000000000000..e8ac9475c3cf
+> --- /dev/null
+> +++ b/drivers/input/misc/bd718xx-pwrkey.c
+> @@ -0,0 +1,90 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2018 ROHM Semiconductors
+> +// bd718xx-pwrkey.c -- ROHM BD71837MWV and BD71847 power button driver
+> +
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/errno.h>
+> +#include <linux/input.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of.h>
+> +#include <linux/mfd/bd71837.h>
+> +
+> +struct bd718xx_pwrkey {
+> +	struct input_dev *idev;
+> +	struct bd71837 *mfd;
+> +	int irq;
+> +};
+> +
+> +static irqreturn_t button_irq(int irq, void *_priv)
+> +{
+> +	struct input_dev *idev = (struct input_dev *)_priv;
+> +
+> +	input_report_key(idev, KEY_POWER, 1);
+> +	input_sync(idev);
+> +	input_report_key(idev, KEY_POWER, 0);
+> +	input_sync(idev);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int bd718xx_pwr_btn_probe(struct platform_device *pdev)
+> +{
+> +	int err = -ENOMEM;
+> +	struct bd718xx_pwrkey *pk;
+> +
+> +	pk = devm_kzalloc(&pdev->dev, sizeof(*pk), GFP_KERNEL);
+> +	if (!pk)
+> +		goto err_out;
+> +
+> +	pk->mfd = dev_get_drvdata(pdev->dev.parent);
+> +
+> +	pk->idev = devm_input_allocate_device(&pdev->dev);
+> +	if (!pk->idev)
+> +		goto err_out;
+> +
+> +	pk->idev->name = "bd718xx-pwrkey";
+> +	pk->idev->phys = "bd718xx-pwrkey/input0";
+> +	pk->idev->dev.parent = &pdev->dev;
+> +
+> +	input_set_capability(pk->idev, EV_KEY, KEY_POWER);
+> +
+> +	err = platform_get_irq_byname(pdev, "pwr-btn-s");
+> +	if (err < 0) {
+> +		dev_err(&pdev->dev, "could not get power key interrupt\n");
+> +		goto err_out;
+> +	}
+> +
+> +	pk->irq = err;
+> +	err = devm_request_threaded_irq(&pdev->dev, pk->irq, NULL, &button_irq,
+> +					0, "bd718xx-pwrkey", pk);
+> +	if (err)
+> +		goto err_out;
+> +
+> +	platform_set_drvdata(pdev, pk);
+> +	err = regmap_update_bits(pk->mfd->regmap,
+> +				 BD71837_REG_PWRONCONFIG0,
+> +				 BD718XX_PWRBTN_SHORT_PRESS_MASK,
+> +				 BD718XX_PWRBTN_SHORT_PRESS_10MS);
 
-> Aside from that one issue,
->
-> Acked-by: Alan Stern <stern@rowland.harvard.edu>
->
-> Alan Stern
->
+This seems to be the only custom bit of set up in the driver, the rest I
+think can easily be handled by gpio-keys.c in interrupt-only mode. Maybe
+we could move this into MFD piece and drop this driver?
+
+> +	if (err)
+> +		goto err_out;
+> +
+> +	err = input_register_device(pk->idev);
+> +
+> +err_out:
+> +
+> +	return err;
+> +}
+> +
+> +static struct platform_driver bd718xx_pwr_btn_driver = {
+> +	.probe	= bd718xx_pwr_btn_probe,
+> +	.driver = {
+> +		.name	= "bd718xx-pwrkey",
+> +	},
+> +};
+> +module_platform_driver(bd718xx_pwr_btn_driver);
+> +MODULE_DESCRIPTION("Power button driver for buttons connected to ROHM bd71837/bd71847 PMIC");
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
+> +
+> -- 
+> 2.14.3
+> 
+
+Thanks.
+
+-- 
+Dmitry
