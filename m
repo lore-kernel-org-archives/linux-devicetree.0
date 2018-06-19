@@ -1,49 +1,47 @@
 From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH 1/2] dt-bindings: serial: 8250_omap: Add compatible for AM654 UART controller
-Date: Tue, 19 Jun 2018 14:44:49 -0500
-Message-ID: <20180619194450.6353-2-nm@ti.com>
-References: <20180619194450.6353-1-nm@ti.com>
+Subject: [PATCH 2/5] arm64: Add support for TI's K3 Multicore SoC architecture
+Date: Tue, 19 Jun 2018 14:42:50 -0500
+Message-ID: <20180619194253.27288-3-nm@ti.com>
+References: <20180619194253.27288-1-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180619194450.6353-1-nm@ti.com>
+In-Reply-To: <20180619194253.27288-1-nm@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, Nishanth Menon <nm@ti.com>, Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>, Vignesh R <vigneshr@ti.com>, Jiri Slaby <jslaby@suse.com>, Sekhar Nori <nsekhar@ti.com>
+To: Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Santosh Shilimkar <ssantosh@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-AM654 uses a UART controller that is only partially compatible with
-existing 8250 UART. UART DMA integration is substantially different
-and even a match against standard 8250 or omap4 would result in
-non-working UART once DMA is enabled by default.
+Add support for Texas Instrument's K3 Multicore SoC architecture
+processors.
 
-Introduce a specific compatible to help build up the differences in
-follow on patches.
-
-Cc: Sekhar Nori <nsekhar@ti.com>
-Cc: Vignesh R <vigneshr@ti.com>
 Signed-off-by: Nishanth Menon <nm@ti.com>
 ---
-
 Changes since RFC:
-* DT binding has been split out as it's own patch and commit message elaborated
+ * None
 
-RFC: https://patchwork.kernel.org/patch/10447641/
+RFC: https://patchwork.kernel.org/patch/10447633/
 
- Documentation/devicetree/bindings/serial/omap_serial.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/Kconfig.platforms | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/serial/omap_serial.txt b/Documentation/devicetree/bindings/serial/omap_serial.txt
-index 4b0f05adb228..c35d5ece1156 100644
---- a/Documentation/devicetree/bindings/serial/omap_serial.txt
-+++ b/Documentation/devicetree/bindings/serial/omap_serial.txt
-@@ -1,6 +1,7 @@
- OMAP UART controller
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index d5aeac351fc3..52df25bf4f8c 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -71,6 +71,13 @@ config ARCH_EXYNOS
+ 	help
+ 	  This enables support for ARMv8 based Samsung Exynos SoC family.
  
- Required properties:
-+- compatible : should be "ti,am654-uart" for AM654 controllers
- - compatible : should be "ti,omap2-uart" for OMAP2 controllers
- - compatible : should be "ti,omap3-uart" for OMAP3 controllers
- - compatible : should be "ti,omap4-uart" for OMAP4 controllers
++config ARCH_K3
++	bool "Texas Instruments Inc. K3 multicore SoC architecture"
++	select PM_GENERIC_DOMAINS if PM
++	help
++	  This enables support for Texas Instruments' K3 multicore SoC
++	  architecture.
++
+ config ARCH_LAYERSCAPE
+ 	bool "ARMv8 based Freescale Layerscape SoC family"
+ 	select EDAC_SUPPORT
 -- 
 2.15.1
