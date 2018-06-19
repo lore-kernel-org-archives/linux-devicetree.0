@@ -1,31 +1,31 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/3] ARM: dts: imx6dl: Add Engicam i.CoreM6 1.5 Quad/Dual
- MIPI starter kit support
-Date: Tue, 19 Jun 2018 10:49:31 +0800
-Message-ID: <20180619024930.GA16091@dragon>
-References: <20180607135133.3104-1-jagan@amarulasolutions.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+Subject: [PATCH 1/2] arm64: dts: uniphier: add headphone detect gpio for LD20 global board
+Date: Tue, 19 Jun 2018 13:11:52 +0900
+Message-ID: <20180619041153.6668-1-suzuki.katsuhiro@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180607135133.3104-1-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>
+To: linux-arm-kernel@lists.infradead.org, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org
+Cc: Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, linux-kernel@vger.kernel.org, Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 07, 2018 at 07:21:31PM +0530, Jagan Teki wrote:
-> i.CoreM6 1.5 is an another i.CoreM6 QDL cpu modules which can be connected
-> to EDIMM starter kit design with eMMC and MIPI-CSI interfaces suitable for
-> Android and video capture application.
-> 
-> notable features:
-> CPU                 NXP i.MX6 S/DL/D/Q, Up to 4 x Cortex-A9@800MHz
-> Memory              Up to 2 GB DDR3-1066
-> Video Interfaces    Up to 1 Parallel Up to 2 LVDS HDMI 1.4
->                     port 8 bit CSI INPUT MIPI-CSI INPUT
-> 1 x 10/100 Ethernet interface, 2 x USB, 1 x PCIe, 1 x I2S etc
-> 
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+This patch adds GPIO for headphone detection on LD20 global board.
 
-Applied all, thanks.
+Signed-off-by: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+---
+ arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts b/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
+index 6a074a20c924..38b75998e2dd 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
+@@ -60,6 +60,7 @@
+ 			&i2s_port4
+ 			&spdif_port0
+ 			&comp_spdif_port0>;
++		hp-det-gpio = <&gpio UNIPHIER_GPIO_PORT(15, 0) GPIO_ACTIVE_LOW>;
+ 	};
+ 
+ 	spdif-out {
+-- 
+2.17.1
