@@ -1,30 +1,59 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] dt-bindings: Fix unbalanced quotation marks
-Date: Tue, 19 Jun 2018 12:49:32 -0700
-Message-ID: <f5ffdbd1-d357-fa8d-9fdb-461cf2b9ad89@gmail.com>
-References: <20180617143127.11421-1-j.neuschaefer@gmx.net>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH 1/6] mailbox: ti-msgmgr: Get rid of unused structure members
+Date: Tue, 19 Jun 2018 14:43:32 -0500
+Message-ID: <20180619194337.31522-2-nm@ti.com>
+References: <20180619194337.31522-1-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180617143127.11421-1-j.neuschaefer@gmx.net>
-Content-Language: en-US
+In-Reply-To: <20180619194337.31522-1-nm@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, Ulf Hansson <ulf.hansson@linaro.org>, Madalin Bucur <madalin.bucur@nxp.com>, James Hogan <jhogan@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-samsung-soc@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, Kukjin Kim <kgene@kernel.org>, linux-input@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, Jason Cooper <jason@lakedaemon.net>, linux-pm@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Nishanth Menon <nm@ti.com>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/17/2018 07:31 AM, Jonathan Neuschäfer wrote:
-> Multiple binding documents have various forms of unbalanced quotation
-> marks. Fix them.
-> 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> ---
+Though q_proxies and q_slices do describe the hardware configuration,
+they are not necessary for operation given that the values are
+always default. Hence drop the same.
 
-[snip]
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+Changes since RFC: None
+RFC: https://patchwork.kernel.org/patch/10447665/
 
->  Documentation/devicetree/bindings/mips/brcm/soc.txt             | 2 +-
+ drivers/mailbox/ti-msgmgr.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+diff --git a/drivers/mailbox/ti-msgmgr.c b/drivers/mailbox/ti-msgmgr.c
+index 5d04738c3c8a..5fe6ce200264 100644
+--- a/drivers/mailbox/ti-msgmgr.c
++++ b/drivers/mailbox/ti-msgmgr.c
+@@ -42,8 +42,6 @@ struct ti_msgmgr_valid_queue_desc {
+  * @queue_count:	Number of Queues
+  * @max_message_size:	Message size in bytes
+  * @max_messages:	Number of messages
+- * @q_slices:		Number of queue engines
+- * @q_proxies:		Number of queue proxies per page
+  * @data_first_reg:	First data register for proxy data region
+  * @data_last_reg:	Last data register for proxy data region
+  * @tx_polled:		Do I need to use polled mechanism for tx
+@@ -58,8 +56,6 @@ struct ti_msgmgr_desc {
+ 	u8 queue_count;
+ 	u8 max_message_size;
+ 	u8 max_messages;
+-	u8 q_slices;
+-	u8 q_proxies;
+ 	u8 data_first_reg;
+ 	u8 data_last_reg;
+ 	bool tx_polled;
+@@ -494,8 +490,6 @@ static const struct ti_msgmgr_desc k2g_desc = {
+ 	.queue_count = 64,
+ 	.max_message_size = 64,
+ 	.max_messages = 128,
+-	.q_slices = 1,
+-	.q_proxies = 1,
+ 	.data_first_reg = 16,
+ 	.data_last_reg = 31,
+ 	.tx_polled = false,
 -- 
-Florian
+2.15.1
