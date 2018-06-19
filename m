@@ -1,7 +1,7 @@
 From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH 2/5] arm64: Add support for TI's K3 Multicore SoC architecture
-Date: Tue, 19 Jun 2018 14:42:50 -0500
-Message-ID: <20180619194253.27288-3-nm@ti.com>
+Subject: [PATCH 1/5] dt-bindings: arm: ti: Add bindings for AM654 SoC
+Date: Tue, 19 Jun 2018 14:42:49 -0500
+Message-ID: <20180619194253.27288-2-nm@ti.com>
 References: <20180619194253.27288-1-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,36 +12,88 @@ To: Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
 Cc: Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Santosh Shilimkar <ssantosh@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Texas Instrument's K3 Multicore SoC architecture
-processors.
+The AM654 SoC is a lead device of the K3 Multicore SoC architecture
+platform, targeted for broad market and industrial control with aim to
+meet the complex processing needs of modern embedded products.
+
+Some highlights of this SoC are:
+* Quad ARMv8 A53 cores split over two clusters
+* GICv3 compliant GIC500
+* Configurable L3 Cache and IO-coherent architecture
+* Dual lock-step capable R5F uC for safety-critical applications
+* High data throughput capable distributed DMA architecture under NAVSS
+* Three Gigabit Industrial Communication Subsystems (ICSSG), each with dual
+  PRUs and dual RTUs
+* Hardware accelerator block containing AES/DES/SHA/MD5 called SA2UL
+* Centralized System Controller for Security, Power, and Resource
+  management.
+* Dual ADCSS, eQEP/eCAP, eHRPWM, dual CAN-FD
+* Flash subsystem with OSPI and Hyperbus interfaces
+* Multimedia capability with CAL, DSS7-UL, SGX544, McASP
+* Peripheral connectivity including USB3, PCIE, MMC/SD, GPMC, I2C, SPI,
+  GPIO
+
+See AM65x Technical Reference Manual (SPRUID7, April 2018)
+for further details: http://www.ti.com/lit/pdf/spruid7
 
 Signed-off-by: Nishanth Menon <nm@ti.com>
 ---
 Changes since RFC:
- * None
+ * Dropped the generic terminology for compatibles
 
-RFC: https://patchwork.kernel.org/patch/10447633/
+previous RFC: https://patchwork.kernel.org/patch/10447643/
 
- arch/arm64/Kconfig.platforms | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/devicetree/bindings/arm/ti/k3.txt | 23 +++++++++++++++++++++++
+ MAINTAINERS                                     |  7 +++++++
+ 2 files changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/ti/k3.txt
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index d5aeac351fc3..52df25bf4f8c 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -71,6 +71,13 @@ config ARCH_EXYNOS
- 	help
- 	  This enables support for ARMv8 based Samsung Exynos SoC family.
- 
-+config ARCH_K3
-+	bool "Texas Instruments Inc. K3 multicore SoC architecture"
-+	select PM_GENERIC_DOMAINS if PM
-+	help
-+	  This enables support for Texas Instruments' K3 multicore SoC
-+	  architecture.
+diff --git a/Documentation/devicetree/bindings/arm/ti/k3.txt b/Documentation/devicetree/bindings/arm/ti/k3.txt
+new file mode 100644
+index 000000000000..6a059cabb2da
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/ti/k3.txt
+@@ -0,0 +1,23 @@
++Texas Instruments K3 Multicore SoC architecture device tree bindings
++--------------------------------------------------------------------
 +
- config ARCH_LAYERSCAPE
- 	bool "ARMv8 based Freescale Layerscape SoC family"
- 	select EDAC_SUPPORT
++Platforms based on Texas Instruments K3 Multicore SoC architecture
++shall follow the following scheme:
++
++SoCs
++----
++
++Each device tree root node must specify which exact SoC in K3 Multicore SoC
++architecture it uses, using one of the following compatible values:
++
++- AM654
++  compatible = "ti,am654";
++
++Boards
++------
++
++In addition, each device tree root node must specify which one or more
++of the following board-specific compatible values:
++
++- AM654 EVM
++  compatible = "ti,am654-evm", "ti,am654";
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9d5eeff51b5f..fbd93eee41ae 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2087,6 +2087,13 @@ L:	linux-kernel@vger.kernel.org
+ S:	Maintained
+ F:	drivers/memory/*emif*
+ 
++ARM/TEXAS INSTRUMENTS K3 ARCHITECTURE
++M:	Tero Kristo <t-kristo@ti.com>
++M:	Nishanth Menon <nm@ti.com>
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++S:	Supported
++F:	Documentation/devicetree/bindings/arm/ti/k3.txt
++
+ ARM/TEXAS INSTRUMENT KEYSTONE ARCHITECTURE
+ M:	Santosh Shilimkar <ssantosh@kernel.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
 -- 
 2.15.1
