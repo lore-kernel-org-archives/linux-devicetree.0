@@ -1,129 +1,119 @@
-From: <jan.tuerk@emtrion.com>
-Subject: [PATCH 1/3] dt-bindings: display: Document the EDT et* displays in one file.
-Date: Tue, 19 Jun 2018 11:55:43 +0200
-Message-ID: <20180619095546.24445-1-jan.tuerk@emtrion.com>
-References: <20180427132445.3458-2-jan.tuerk@emtrion.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v3 7/7] soc: qcom: rpmpd/rpmhpd: Add a max vote on all
+ corners at init
+Date: Tue, 19 Jun 2018 15:40:16 +0530
+Message-ID: <20180619101016.hbgjvev7d3h4yg7x@vireshk-i7>
+References: <20180612044052.4402-1-rnayak@codeaurora.org>
+ <20180612044052.4402-8-rnayak@codeaurora.org>
+ <414598de-00a1-9ce7-3a7e-4a95fd1bd35d@codeaurora.org>
+ <f5014664-1639-c610-a50a-db66484428dc@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180427132445.3458-2-jan.tuerk@emtrion.com>
+Content-Disposition: inline
+In-Reply-To: <f5014664-1639-c610-a50a-db66484428dc@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: David Collins <collinsd@codeaurora.org>, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jan Tuerk <jan.tuerk@emtrion.com>
+On 14-06-18, 12:05, Rajendra Nayak wrote:
+> On 06/14/2018 03:58 AM, David Collins wrote:
+> > Hello Rajendra,
+> > 
+> > On 06/11/2018 09:40 PM, Rajendra Nayak wrote:
+> >> As we move from no clients/consumers in kernel voting on corners,
+> >> to *some* voting and some not voting, we might end up in a situation
+> >> where the clients which remove votes can adversly impact others
+> > 
+> > s/adversly/adversely/
+> > 
+> >> who still don't have a way to vote.
+> >>
+> >> To avoid this situation, have a max vote on all corners at init.
+> >> This should/can be removed once we have all clients moved to
+> >> be able to vote/unvote for themselves.
+> > 
+> > This change seems like a hack.  Do you intend for it to be merged and then
+> > later reverted in Linus's tree?  Could it instead be implemented in a way
+> > that does not require reverting and instead is enabled by some DT
+> > property?  Alternatively, could this feature be added to the power domain
+> > core since it is relatively generic?
+> > 
+> > 
+> >> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> >> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> >> ---
+> >>  drivers/soc/qcom/rpmhpd.c | 12 +++++++++++-
+> >>  drivers/soc/qcom/rpmpd.c  |  9 +++++++++
+> >>  2 files changed, 20 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
+> >> index 7083ec1590ff..3c753d33aeee 100644
+> >> --- a/drivers/soc/qcom/rpmhpd.c
+> >> +++ b/drivers/soc/qcom/rpmhpd.c
+> >> @@ -329,7 +329,7 @@ static int rpmhpd_update_level_mapping(struct rpmhpd *rpmhpd)
+> >>  
+> >>  static int rpmhpd_probe(struct platform_device *pdev)
+> >>  {
+> >> -	int i, ret;
+> >> +	int i, ret, max_level;
+> >>  	size_t num;
+> >>  	struct genpd_onecell_data *data;
+> >>  	struct rpmhpd **rpmhpds;
+> >> @@ -390,6 +390,16 @@ static int rpmhpd_probe(struct platform_device *pdev)
+> >>  		pm_genpd_init(&rpmhpds[i]->pd, NULL, true);
+> >>  
+> >>  		data->domains[i] = &rpmhpds[i]->pd;
+> >> +
+> >> +		/*
+> >> +		 * Until we have all consumers voting on corners
+> >> +		 * just vote the max corner on all PDs
+> >> +		 * This should ideally be *removed* once we have
+> >> +		 * all (most) consumers being able to vote
+> >> +		 */
+> >> +		max_level = rpmhpds[i]->level_count - 1;
+> >> +		rpmhpd_set_performance(&rpmhpds[i]->pd, rpmhpds[i]->level[max_level]);
+> >> +		rpmhpd_power_on(&rpmhpds[i]->pd);
+> > 
+> > Clearly these calls will result in max level requests being sent for all
+> > power domains at probe time.  However, it isn't clear that this will
+> > actually help at runtime in these two cases:
+> > 
+> > 1. A consumer enables and then disables a power domain.
+> > 	- It seems like the PD would just be disabled in this case.
 
-Document the Emerging Display Technology Corp. (EDT) using the
-simple-panel binding in one single file.
+So instead of rpmhpd_power_on() we should be doing gepnd_power_on() or whatever
+the API is, so the user count stays at 1.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Jan Tuerk <jan.tuerk@emtrion.com>
----
- .../bindings/display/panel/edt,et-series.txt  | 39 +++++++++++++++++++
- .../display/panel/edt,et057090dhu.txt         |  7 ----
- .../display/panel/edt,et070080dh6.txt         | 10 -----
- .../display/panel/edt,etm0700g0dh6.txt        | 10 -----
- 4 files changed, 39 insertions(+), 27 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/panel/edt,et-series.txt
- delete mode 100644 Documentation/devicetree/bindings/display/panel/edt,et057090dhu.txt
- delete mode 100644 Documentation/devicetree/bindings/display/panel/edt,et070080dh6.txt
- delete mode 100644 Documentation/devicetree/bindings/display/panel/edt,etm0700g0dh6.txt
+> > 2. A consumer sets a non-max performance state of a power domain.
+> > 	- It seems like the PD would just be set to the new lower
+> > 	  performance state since the max vote isn't known to the
+> > 	  PD core for aggregation purposes.
 
-[Changes from v4 of emCON patch-series] 
- - rebased to mainline/master
- - split as requested by Shawn Guo
+Right, and that's because the patch isn't implemented properly yet. I asked to
+do a fake vote from some user with their dev structure, so the vote always
+stays.
 
-As requested by Sha
+> Yes, you are right. I certainly did not seem to have thought through this enough.
+> 
+> A need for something like this came up at a point where genpd could not deal with
+> devices with multiple power domains. So the concern at that point was that if some
+> consumers (which only need to vote on one corner) move to using this driver, while 
+> some others (which need to vote on multiple corners) cannot, we would end up breaking
+> them.
+> 
+> That does not seem to be true anymore since we do have patches from Ulf which support
+> having devices with multiple power domains attached which can be controlled individually.
+> So if some consumer voting makes some others break, they should just be fixed and patched
+> to vote as well. If all this gets handled centrally from within the clock drivers then we
+> most likely won't even end up with a situation like this.
+> 
+> I think I will just drop this one unless Stephen/Viresh still see an issue with some early
+> voters breaking others.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/edt,et-series.txt b/Documentation/devicetree/bindings/display/panel/edt,et-series.txt
-new file mode 100644
-index 000000000000..f56b99ebd9be
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/edt,et-series.txt
-@@ -0,0 +1,39 @@
-+Emerging Display Technology Corp. Displays
-+==========================================
-+
-+
-+Display bindings for EDT Display Technology Corp. Displays which are
-+compatible with the simple-panel binding, which is specified in
-+simple-panel.txt
-+
-+
-+5,7" WVGA TFT Panels
-+--------------------
-+
-++-----------------+---------------------+-------------------------------------+
-+| Identifier      | compatbile          | description                         |
-++=================+=====================+=====================================+
-+| ET057090DHU     | edt,et057090dhu     | 5.7" VGA TFT LCD panel              |
-++-----------------+---------------------+-------------------------------------+
-+
-+
-+7,0" WVGA TFT Panels
-+--------------------
-+
-++-----------------+---------------------+-------------------------------------+
-+| Identifier      | compatbile          | description                         |
-++=================+=====================+=====================================+
-+| ETM0700G0DH6    | edt,etm070080dh6    | WVGA TFT Display with capacitive    |
-+|                 |                     | Touchscreen                         |
-++-----------------+---------------------+-------------------------------------+
-+| ETM0700G0BDH6   | edt,etm070080bdh6   | Same as ETM0700G0DH6 but with       |
-+|                 |                     | inverted pixel clock.               |
-++-----------------+---------------------+-------------------------------------+
-+| ETM0700G0EDH6   | edt,etm070080edh6   | Same display as the ETM0700G0BDH6,  |
-+|                 |                     | but with changed Hardware for the   |
-+|                 |                     | backlight and the touch interface   |
-++-----------------+---------------------+-------------------------------------+
-+| ET070080DH6     | edt,etm070080dh6    | Same timings as the ETM0700G0DH6,   |
-+|                 |                     | but with resistive touch.           |
-++-----------------+---------------------+-------------------------------------+
-+
-diff --git a/Documentation/devicetree/bindings/display/panel/edt,et057090dhu.txt b/Documentation/devicetree/bindings/display/panel/edt,et057090dhu.txt
-deleted file mode 100644
-index 4903d7b1d947..000000000000
---- a/Documentation/devicetree/bindings/display/panel/edt,et057090dhu.txt
-+++ /dev/null
-@@ -1,7 +0,0 @@
--Emerging Display Technology Corp. 5.7" VGA TFT LCD panel
--
--Required properties:
--- compatible: should be "edt,et057090dhu"
--
--This binding is compatible with the simple-panel binding, which is specified
--in simple-panel.txt in this directory.
-diff --git a/Documentation/devicetree/bindings/display/panel/edt,et070080dh6.txt b/Documentation/devicetree/bindings/display/panel/edt,et070080dh6.txt
-deleted file mode 100644
-index 20cb38e836e4..000000000000
---- a/Documentation/devicetree/bindings/display/panel/edt,et070080dh6.txt
-+++ /dev/null
-@@ -1,10 +0,0 @@
--Emerging Display Technology Corp. ET070080DH6 7.0" WVGA TFT LCD panel
--
--Required properties:
--- compatible: should be "edt,et070080dh6"
--
--This panel is the same as ETM0700G0DH6 except for the touchscreen.
--ET070080DH6 is the model with resistive touch.
--
--This binding is compatible with the simple-panel binding, which is specified
--in simple-panel.txt in this directory.
-diff --git a/Documentation/devicetree/bindings/display/panel/edt,etm0700g0dh6.txt b/Documentation/devicetree/bindings/display/panel/edt,etm0700g0dh6.txt
-deleted file mode 100644
-index ee4b18053e40..000000000000
---- a/Documentation/devicetree/bindings/display/panel/edt,etm0700g0dh6.txt
-+++ /dev/null
-@@ -1,10 +0,0 @@
--Emerging Display Technology Corp. ETM0700G0DH6 7.0" WVGA TFT LCD panel
--
--Required properties:
--- compatible: should be "edt,etm0700g0dh6"
--
--This panel is the same as ET070080DH6 except for the touchscreen.
--ETM0700G0DH6 is the model with capacitive multitouch.
--
--This binding is compatible with the simple-panel binding, which is specified
--in simple-panel.txt in this directory.
+So what if the LCD/DDR/etc are getting used at boot and someone requests a lower
+vote?  Wouldn't we just break ?
+
 -- 
-2.17.1
+viresh
