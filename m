@@ -1,61 +1,43 @@
 From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH v6 22/29] drm/mediatek: add connection from RDMA2 to DSI1
-Date: Tue, 19 Jun 2018 15:34:23 +0800
-Message-ID: <1529393670-26862-23-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH v6 05/29] drm/mediatek: add ddp component PWM1
+Date: Tue, 19 Jun 2018 15:34:06 +0800
+Message-ID: <1529393670-26862-6-git-send-email-stu.hsieh@mediatek.com>
 References: <1529393670-26862-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1529393670-26862-1-git-send-email-stu.hsieh@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Stu Hsieh <stu.hsieh@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Stu Hsieh <stu.hsieh@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add the connection from RDMA2 to DSI1
-
-Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
----
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index a4b418302f32..db78fad785e3 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -94,11 +94,13 @@
- #define RDMA1_SOUT_DSI3			0x5
- #define RDMA2_SOUT_DPI0			0x2
- #define RDMA2_SOUT_DPI1			0x3
-+#define RDMA2_SOUT_DSI1			0x1
- #define DPI0_SEL_IN_RDMA1		0x1
- #define DPI0_SEL_IN_RDMA2		0x3
- #define DPI1_SEL_IN_RDMA1		(0x1 << 8)
- #define DPI1_SEL_IN_RDMA2		(0x3 << 8)
- #define DSI1_SEL_IN_RDMA1		0x1
-+#define DSI1_SEL_IN_RDMA2		0x4
- #define DSI2_SEL_IN_RDMA1		(0x1 << 16)
- #define DSI3_SEL_IN_RDMA1		(0x1 << 16)
- #define COLOR1_SEL_IN_OVL1		0x1
-@@ -204,6 +206,9 @@ static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
- 	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
- 		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
- 		value = RDMA2_SOUT_DPI1;
-+	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
-+		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-+		value = RDMA2_SOUT_DSI1;
- 	} else {
- 		value = 0;
- 	}
-@@ -241,6 +246,9 @@ static unsigned int mtk_ddp_sel_in(enum mtk_ddp_comp_id cur,
- 	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
- 		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
- 		value = DPI1_SEL_IN_RDMA2;
-+	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
-+		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
-+		value = DSI1_SEL_IN_RDMA2;
- 	} else if (cur == DDP_COMPONENT_OVL1 && next == DDP_COMPONENT_COLOR1) {
- 		*addr = DISP_REG_CONFIG_DISP_COLOR1_SEL_IN;
- 		value = COLOR1_SEL_IN_OVL1;
--- 
-2.12.5
+VGhpcyBwYXRjaCBhZGQgY29tcG9uZW50IFBXTTEgaW4gbXRrX2RkcF9tYXRjaGVzCgpTaWduZWQt
+b2ZmLWJ5OiBTdHUgSHNpZWggPHN0dS5oc2llaEBtZWRpYXRlay5jb20+ClJldmlld2VkLWJ5OiBD
+SyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHJtX2RkcF9jb21wLmMgfCAxICsKIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQoK
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMg
+Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jCmluZGV4IDg3YWNm
+NmJlODdmNi4uYTVjN2FjMmQxNjJkIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0
+ZWsvbXRrX2RybV9kZHBfY29tcC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
+ZHJtX2RkcF9jb21wLmMKQEAgLTIzMiw2ICsyMzIsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG10
+a19kZHBfY29tcF9tYXRjaCBtdGtfZGRwX21hdGNoZXNbRERQX0NPTVBPTkVOVF9JRF9NQVhdID0g
+ewogCVtERFBfQ09NUE9ORU5UX09WTDBdCT0geyBNVEtfRElTUF9PVkwsCTAsIE5VTEwgfSwKIAlb
+RERQX0NPTVBPTkVOVF9PVkwxXQk9IHsgTVRLX0RJU1BfT1ZMLAkxLCBOVUxMIH0sCiAJW0REUF9D
+T01QT05FTlRfUFdNMF0JPSB7IE1US19ESVNQX1BXTSwJMCwgTlVMTCB9LAorCVtERFBfQ09NUE9O
+RU5UX1BXTTFdCT0geyBNVEtfRElTUF9QV00sCTEsIE5VTEwgfSwKIAlbRERQX0NPTVBPTkVOVF9S
+RE1BMF0JPSB7IE1US19ESVNQX1JETUEsCTAsIE5VTEwgfSwKIAlbRERQX0NPTVBPTkVOVF9SRE1B
+MV0JPSB7IE1US19ESVNQX1JETUEsCTEsIE5VTEwgfSwKIAlbRERQX0NPTVBPTkVOVF9SRE1BMl0J
+PSB7IE1US19ESVNQX1JETUEsCTIsIE5VTEwgfSwKLS0gCjIuMTIuNQoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
