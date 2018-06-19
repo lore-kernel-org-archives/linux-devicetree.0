@@ -1,49 +1,34 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] clk: qcom: Add some missing gcc clks for msm8996
-Date: Tue, 19 Jun 2018 14:19:46 -0700
-Message-ID: <152944318698.16708.666113900436407121@swboyd.mtv.corp.google.com>
-References: <20180418000926.4998-1-bjorn.andersson@linaro.org>
- <152640754443.34267.2752714761157535255@swboyd.mtv.corp.google.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 18/20] dts: sama5d2: Update coresight bindings for
+ hardware ports
+Date: Tue, 19 Jun 2018 23:24:17 +0200
+Message-ID: <20180619212417.GB3128@piout.net>
+References: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
+ <1528235011-30691-19-git-send-email-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152640754443.34267.2752714761157535255@swboyd.mtv.corp.google.com>
+Content-Disposition: inline
+In-Reply-To: <1528235011-30691-19-git-send-email-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Michael Turquette <mturquette@baylibre.com>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org, robh@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com, sudeep.holla@arm.com, arm@kernel.org, linux-kernel@vger.kernel.org, matt.sealey@arm.com, john.horley@arm.com, charles.garcia-tobin@arm.com, coresight@lists.linaro.org, devicetree@vger.kernel.org, mike.leach@linaro.org, Nicolas Ferre <nicolas.ferre@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Stephen Boyd (2018-05-15 11:05:44)
-> Quoting Bjorn Andersson (2018-04-17 17:09:26)
-> > @@ -3350,6 +3522,7 @@ static struct clk_regmap *gcc_msm8996_clocks[] =
-=3D {
-> >         [GCC_AGGRE0_CNOC_AHB_CLK] =3D &gcc_aggre0_cnoc_ahb_clk.clkr,
-> >         [GCC_SMMU_AGGRE0_AXI_CLK] =3D &gcc_smmu_aggre0_axi_clk.clkr,
-> >         [GCC_SMMU_AGGRE0_AHB_CLK] =3D &gcc_smmu_aggre0_ahb_clk.clkr,
-> > +       [GCC_AGGRE1_PNOC_AHB_CLK] =3D &gcc_aggre1_pnoc_ahb_clk.clkr,
-> >         [GCC_AGGRE2_UFS_AXI_CLK] =3D &gcc_aggre2_ufs_axi_clk.clkr,
-> >         [GCC_AGGRE2_USB3_AXI_CLK] =3D &gcc_aggre2_usb3_axi_clk.clkr,
-> >         [GCC_QSPI_AHB_CLK] =3D &gcc_qspi_ahb_clk.clkr,
-> > @@ -3360,6 +3533,19 @@ static struct clk_regmap *gcc_msm8996_clocks[] =
-=3D {
-> >         [GCC_PCIE_CLKREF_CLK] =3D &gcc_pcie_clkref_clk.clkr,
-> >         [GCC_RX2_USB2_CLKREF_CLK] =3D &gcc_rx2_usb2_clkref_clk.clkr,
-> >         [GCC_RX1_USB2_CLKREF_CLK] =3D &gcc_rx1_usb2_clkref_clk.clkr,
-> > +       [GCC_HLOS1_VOTE_LPASS_CORE_SMMU_CLK] =3D
-> > +                                       &hlos1_vote_lpass_core_smmu_clk=
-.clkr,
-> =
+On 05/06/2018 22:43:29+0100, Suzuki K Poulose wrote:
+> Switch to the new coresight bindings for hardware ports
+> 
+> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  arch/arm/boot/dts/sama5d2.dtsi | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+Applied, thanks.
 
-> drivers/clk/qcom/gcc-msm8996.c:3512:10: warning: Initializer entry define=
-d twice
-> drivers/clk/qcom/gcc-msm8996.c:3536:10: also defined here
-> =
-
-> Resend please, or at least let me know what to do here. It looks like
-> the one you sent has the parent chain setup properly so that the bus
-> rcgs are in the chain of clks, while the one that is already there
-> doesn't have the chain setup.
-
-Reminder, this fell out as one of the patches I looked at merging for
-v4.18 but didn't make the cut because of this confusion.
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
