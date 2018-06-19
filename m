@@ -1,59 +1,109 @@
-From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH v6 19/29] drm/mediatek: add connection from RDMA1 to DSI3
-Date: Tue, 19 Jun 2018 15:34:20 +0800
-Message-ID: <1529393670-26862-20-git-send-email-stu.hsieh@mediatek.com>
-References: <1529393670-26862-1-git-send-email-stu.hsieh@mediatek.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] arm64: dts: allwinner: a64: add SRAM
+ controller device tree node
+Date: Tue, 19 Jun 2018 13:06:19 +0530
+Message-ID: <CAMty3ZCsPXh7Fhmhtd7UjTmJ9id+NeaZDVqkix1iQz7-fDqoUw@mail.gmail.com>
+References: <20180614153548.9644-1-wens@csie.org> <20180614153548.9644-5-wens@csie.org>
+ <CAMty3ZARNpBOQKvS7knH8kWE2+bvjuJoAA4cFGZK8+GzTUQ5zA@mail.gmail.com>
+ <2687631.x8iGEoiUx5@jernej-laptop> <5C14D945-0795-4100-86E2-6FBF04350715@aosc.io>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1529393670-26862-1-git-send-email-stu.hsieh@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Stu Hsieh <stu.hsieh@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB5PEULMQKGQEDMN6TGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <5C14D945-0795-4100-86E2-6FBF04350715-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGQgdGhlIGNvbm5lY3Rpb24gZnJvbSBSRE1BMSB0byBEU0kzCgpTaWduZWQt
-b2ZmLWJ5OiBTdHUgSHNpZWggPHN0dS5oc2llaEBtZWRpYXRlay5jb20+Ci0tLQogZHJpdmVycy9n
-cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgfCA4ICsrKysrKysrCiAxIGZpbGUgY2hhbmdl
-ZCwgOCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
-L210a19kcm1fZGRwLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwpp
-bmRleCA5Y2YyZmNiNDkzMmEuLmQwZDVmMzM3Y2UxNCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
-L210a19kcm1fZGRwLmMKQEAgLTkwLDEwICs5MCwxMiBAQAogI2RlZmluZSBSRE1BMV9TT1VUX0RQ
-STEJCQkweDMKICNkZWZpbmUgUkRNQTFfU09VVF9EU0kxCQkJMHgxCiAjZGVmaW5lIFJETUExX1NP
-VVRfRFNJMgkJCTB4NAorI2RlZmluZSBSRE1BMV9TT1VUX0RTSTMJCQkweDUKICNkZWZpbmUgRFBJ
-MF9TRUxfSU5fUkRNQTEJCTB4MQogI2RlZmluZSBEUEkxX1NFTF9JTl9SRE1BMQkJKDB4MSA8PCA4
-KQogI2RlZmluZSBEU0kxX1NFTF9JTl9SRE1BMQkJMHgxCiAjZGVmaW5lIERTSTJfU0VMX0lOX1JE
-TUExCQkoMHgxIDw8IDE2KQorI2RlZmluZSBEU0kzX1NFTF9JTl9SRE1BMQkJKDB4MSA8PCAxNikK
-ICNkZWZpbmUgQ09MT1IxX1NFTF9JTl9PVkwxCQkweDEKIAogI2RlZmluZSBPVkxfTU9VVF9FTl9S
-RE1BCQkweDEKQEAgLTE4Miw2ICsxODQsOSBAQCBzdGF0aWMgdW5zaWduZWQgaW50IG10a19kZHBf
-bW91dF9lbihlbnVtIG10a19kZHBfY29tcF9pZCBjdXIsCiAJfSBlbHNlIGlmIChjdXIgPT0gRERQ
-X0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMikgewogCQkqYWRk
-ciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUExX1NPVVRfRU47CiAJCXZhbHVlID0gUkRNQTFf
-U09VVF9EU0kyOworCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTEgJiYgbmV4
-dCA9PSBERFBfQ09NUE9ORU5UX0RTSTMpIHsKKwkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElT
-UF9SRE1BMV9TT1VUX0VOOworCQl2YWx1ZSA9IFJETUExX1NPVVRfRFNJMzsKIAl9IGVsc2UgaWYg
-KGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUExICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EUEkw
-KSB7CiAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTFfU09VVF9FTjsKIAkJdmFs
-dWUgPSBSRE1BMV9TT1VUX0RQSTA7CkBAIC0yMTYsNiArMjIxLDkgQEAgc3RhdGljIHVuc2lnbmVk
-IGludCBtdGtfZGRwX3NlbF9pbihlbnVtIG10a19kZHBfY29tcF9pZCBjdXIsCiAJfSBlbHNlIGlm
-IChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJ
-MikgewogCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19EU0lFX1NFTF9JTjsKIAkJdmFsdWUgPSBE
-U0kyX1NFTF9JTl9SRE1BMTsKKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEx
-ICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kzKSB7CisJCSphZGRyID0gRElTUF9SRUdfQ09O
-RklHX0RTSU9fU0VMX0lOOworCQl2YWx1ZSA9IERTSTNfU0VMX0lOX1JETUExOwogCX0gZWxzZSBp
-ZiAoY3VyID09IEREUF9DT01QT05FTlRfT1ZMMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfQ09M
-T1IxKSB7CiAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfQ09MT1IxX1NFTF9JTjsKIAkJ
-dmFsdWUgPSBDT0xPUjFfU0VMX0lOX09WTDE7Ci0tIAoyLjEyLjUKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Fri, Jun 15, 2018 at 4:39 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+>
+>
+> =E4=BA=8E 2018=E5=B9=B46=E6=9C=8815=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=88=
+1:27:21, "Jernej =C5=A0krabec" <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =E5=86=99=E5=88=
+=B0:
+>>Dne =C4=8Detrtek, 14. junij 2018 ob 19:09:56 CEST je Jagan Teki napisal(a=
+):
+>>> On Thu, Jun 14, 2018 at 9:05 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+>>> > From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>>> >
+>>> > Allwinner A64 has a SRAM controller, and in the device tree
+>>currently
+>>> > we have a syscon node to enable EMAC driver to access the EMAC
+>>clock
+>>> > register. As SRAM controller driver can now export regmap for this
+>>> > register, replace the syscon node to the SRAM controller device
+>>node,
+>>> > and let EMAC driver to acquire its EMAC clock regmap.
+>>> >
+>>> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>>> > [wens-jdAy2FN1RRM@public.gmane.org: Updated compatible string]
+>>> > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>>> > ---
+>>> >
+>>> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 19
+>>+++++++++++++++++--
+>>> >  1 file changed, 17 insertions(+), 2 deletions(-)
+>>> >
+>>> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>>> > b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi index
+>>> > 1b2ef28c42bd..87968dafe1dc 100644
+>>> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>>> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>>> > @@ -169,9 +169,24 @@
+>>> >
+>>> >                 ranges;
+>>> >
+>>> >                 syscon: syscon@1c00000 {
+>>> >
+>>> > -                       compatible =3D
+>>> > "allwinner,sun50i-a64-system-controller", -
+>>
+>>> > "syscon";
+>>> > +                       compatible =3D
+>>> > "allwinner,sun50i-a64-system-control";
+>>> >
+>>> >                         reg =3D <0x01c00000 0x1000>;
+>>> >
+>>> > +                       #address-cells =3D <1>;
+>>> > +                       #size-cells =3D <1>;
+>>> > +                       ranges;
+>>> > +
+>>> > +                       sram_c: sram@18000 {
+>>> > +                               compatible =3D "mmio-sram";
+>>> > +                               reg =3D <0x00018000 0x28000>;
+>>> > +                               #address-cells =3D <1>;
+>>> > +                               #size-cells =3D <1>;
+>>> > +                               ranges =3D <0 0x00018000 0x28000>;
+>>> > +
+>>> > +                               de2_sram: sram-section@0 {
+>>>
+>>> So, this can attach to display-engine node through allwinner,sram and
+>>> add support to claim the sram on sun4i/sun4i_drv.c, correct?
+>>
+>>Actually, it has to be added to display_clocks node and claimed in
+>>drivers/
+>>clk/sunxi-ng/ccu-sun8i-de2.c
+>
+> Sorry it's old practice.
+>
+> My new way is to add a bus driver which claims the SRAM.
+
+Are you pointing this driver[1] ? if yes do we have recent version
+patches for these changes so-that I can import.
+
+[1] https://patchwork.kernel.org/patch/10290399/
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
