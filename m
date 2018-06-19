@@ -1,184 +1,265 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v3 1/3] mtd: rawnand: denali_dt: add more clocks based
- on IP datasheet
-Date: Tue, 19 Jun 2018 13:28:11 +0200
-Message-ID: <20180619132811.45bf6454@bbrezillon>
-References: <1529025532-22087-1-git-send-email-yamada.masahiro@socionext.com>
-        <1529025532-22087-2-git-send-email-yamada.masahiro@socionext.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [RFC PATCH 3/3] sdhci: arasan: Add support to read Tap Delay
+ values from DT
+Date: Tue, 19 Jun 2018 14:38:07 +0300
+Message-ID: <6d3b2f29-fe8d-b084-3e1f-631cf20796b9@intel.com>
+References: <1528373500-24663-1-git-send-email-manish.narani@xilinx.com>
+ <1528373500-24663-3-git-send-email-manish.narani@xilinx.com>
+ <SN6PR02MB49595D9202DDF98DA16C495CC17D0@SN6PR02MB4959.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529025532-22087-2-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <SN6PR02MB49595D9202DDF98DA16C495CC17D0@SN6PR02MB4959.namprd02.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-mtd@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-kbuild@vger.kernel.org, Richard Weinberger <richard@nod.at>, "linux-stable #4 . 14+" <stable@vger.kernel.org>, devicetree@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>
+To: Manish Narani <MNARANI@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "mdf@kernel.org" <mdf@kernel.org>, "stefan.krsmanovic@aggios.com" <stefan.krsmanovic@aggios.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>
+Cc: Srinivas Goud <sgoud@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Masahiro,
+On 14/06/18 08:38, Manish Narani wrote:
+> Ping for RFC
 
-On Fri, 15 Jun 2018 10:18:50 +0900
-Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+What is eemi?  Why aren't there patches for that?
 
-> According to the Denali User's Guide, this IP needs three clocks:
 > 
->  - clk: controller core clock
+>> -----Original Message-----
+>> From: Manish Narani [mailto:manish.narani@xilinx.com]
+>> Sent: Thursday, June 7, 2018 5:42 PM
+>> To: robh+dt@kernel.org; mark.rutland@arm.com; catalin.marinas@arm.com;
+>> will.deacon@arm.com; mdf@kernel.org; stefan.krsmanovic@aggios.com;
+>> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; linux-
+>> mmc@vger.kernel.org; devicetree@vger.kernel.org;
+>> adrian.hunter@intel.com; michal.simek@xilinx.com; ulf.hansson@linaro.org
+>> Cc: Manish Narani <MNARANI@xilinx.com>
+>> Subject: [RFC PATCH 3/3] sdhci: arasan: Add support to read Tap Delay values
+>> from DT
+>>
+>> This patch adds support for reading Tap Delay values from Device Tree and
+>> write them via eemi calls. The macros containing these tap delay values are
+>> removed from the driver.
+>>
+>> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+>> ---
+>>  drivers/mmc/host/sdhci-of-arasan.c | 131
+>> +++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 131 insertions(+)
+>>
+>> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-
+>> of-arasan.c
+>> index e3332a5..fc0fd01 100644
+>> --- a/drivers/mmc/host/sdhci-of-arasan.c
+>> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+>> @@ -36,6 +36,8 @@
+>>
+>>  #define PHY_CLK_TOO_SLOW_HZ		400000
+>>
+>> +#define MMC_BANK2		0x2
+>> +
+>>  /*
+>>   * On some SoCs the syscon area has a feature where the upper 16-bits of
+>>   * each 32-bit register act as a write mask for the lower 16-bits.  This allows
+>> @@ -90,6 +92,10 @@ struct sdhci_arasan_data {
+>>  	struct sdhci_host *host;
+>>  	struct clk	*clk_ahb;
+>>  	struct phy	*phy;
+>> +	u32 mio_bank;
+>> +	u32 device_id;
+>> +	u32 itapdly[MMC_TIMING_MMC_HS400 + 1];
+>> +	u32 otapdly[MMC_TIMING_MMC_HS400 + 1];
+>>  	bool		is_phy_on;
+>>
+>>  	bool		has_cqe;
+>> @@ -160,11 +166,36 @@ static int sdhci_arasan_syscon_write(struct
+>> sdhci_host *host,
+>>  	return ret;
+>>  }
+>>
+>> +/**
+>> + * arasan_zynqmp_set_tap_delay - Program the tap delays.
+>> + * @deviceid:		Unique Id of device
+>> + * @itap_delay:		Input Tap Delay
+>> + * @oitap_delay:	Output Tap Delay
+>> + */
+>> +static void arasan_zynqmp_set_tap_delay(u8 deviceid, u8 itap_delay, u8
+>> +otap_delay) {
+>> +	const struct zynqmp_eemi_ops *eemi_ops =
+>> zynqmp_pm_get_eemi_ops();
+>> +	u32 node_id = (deviceid == 0) ? NODE_SD_0 : NODE_SD_1;
+>> +
+>> +	if (!eemi_ops || !eemi_ops->ioctl)
+>> +		return;
+>> +
+>> +	if (itap_delay)
+>> +		eemi_ops->ioctl(node_id, IOCTL_SET_SD_TAPDELAY,
+>> +				PM_TAPDELAY_INPUT, itap_delay, NULL);
+>> +
+>> +	if (otap_delay)
+>> +		eemi_ops->ioctl(node_id, IOCTL_SET_SD_TAPDELAY,
+>> +				PM_TAPDELAY_OUTPUT, otap_delay, NULL);
+>> }
+>> +
+>>  static void sdhci_arasan_set_clock(struct sdhci_host *host, unsigned int
+>> clock)  {
+>>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>>  	struct sdhci_arasan_data *sdhci_arasan =
+>> sdhci_pltfm_priv(pltfm_host);
+>>  	bool ctrl_phy = false;
+>> +	u8 itap_delay;
+>> +	u8 otap_delay;
+>>
+>>  	if (!IS_ERR(sdhci_arasan->phy)) {
+>>  		if (!sdhci_arasan->is_phy_on && clock <=
+>> PHY_CLK_TOO_SLOW_HZ) { @@ -200,6 +231,16 @@ static void
+>> sdhci_arasan_set_clock(struct sdhci_host *host, unsigned int clock)
+>>  		}
+>>  	}
+>>
+>> +	if (host->version >= SDHCI_SPEC_300) {
+>> +		if ((host->timing != MMC_TIMING_LEGACY) &&
+>> +			(host->timing != MMC_TIMING_UHS_SDR12)) {
+>> +			itap_delay = sdhci_arasan->itapdly[host->timing];
+>> +			otap_delay = sdhci_arasan->otapdly[host->timing];
+>> +			arasan_zynqmp_set_tap_delay(sdhci_arasan-
+>>> device_id,
+>> +						    itap_delay, otap_delay);
+>> +		}
+>> +	}
+>> +
+>>  	if (ctrl_phy && sdhci_arasan->is_phy_on) {
+>>  		phy_power_off(sdhci_arasan->phy);
+>>  		sdhci_arasan->is_phy_on = false;
+>> @@ -456,6 +497,7 @@ static const struct of_device_id
+>> sdhci_arasan_of_match[] = {
+>>  	{ .compatible = "arasan,sdhci-8.9a" },
+>>  	{ .compatible = "arasan,sdhci-5.1" },
+>>  	{ .compatible = "arasan,sdhci-4.9a" },
+>> +	{ .compatible = "xlnx,zynqmp-8.9a" },
+>>
+>>  	{ /* sentinel */ }
+>>  };
+>> @@ -641,6 +683,74 @@ static void sdhci_arasan_unregister_sdclk(struct
+>> device *dev)
+>>  	of_clk_del_provider(dev->of_node);
+>>  }
+>>
+>> +/**
+>> + * arasan_zynqmp_dt_parse_tap_delays - Read Tap Delay values from DT
+>> + *
+>> + * Called at initialization to parse the values of Tap Delays.
+>> + *
+>> + * @dev:		Pointer to our struct device.
+>> + */
+>> +static void arasan_zynqmp_dt_parse_tap_delays(struct device *dev) {
+>> +	struct platform_device *pdev = to_platform_device(dev);
+>> +	struct sdhci_host *host = platform_get_drvdata(pdev);
+>> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +	struct sdhci_arasan_data *sdhci_arasan =
+>> sdhci_pltfm_priv(pltfm_host);
+>> +	struct device_node *np = dev->of_node;
+>> +
+>> +	of_property_read_u32(np, "xlnx,itap_delay_sd_hsd",
+>> +			     &sdhci_arasan->itapdly[MMC_TIMING_SD_HS]);
+>> +	of_property_read_u32(np, "xlnx,otap_delay_sd_hsd",
+>> +			     &sdhci_arasan->otapdly[MMC_TIMING_SD_HS]);
+>> +	of_property_read_u32(np, "xlnx,itap_delay_sdr25",
+>> +			     &sdhci_arasan-
+>>> itapdly[MMC_TIMING_UHS_SDR25]);
+>> +	of_property_read_u32(np, "xlnx,otap_delay_sdr25",
+>> +			     &sdhci_arasan-
+>>> otapdly[MMC_TIMING_UHS_SDR25]);
+>> +	of_property_read_u32(np, "xlnx,itap_delay_sdr50",
+>> +			     &sdhci_arasan-
+>>> itapdly[MMC_TIMING_UHS_SDR50]);
+>> +	of_property_read_u32(np, "xlnx,otap_delay_sdr50",
+>> +			     &sdhci_arasan-
+>>> otapdly[MMC_TIMING_UHS_SDR50]);
+>> +	of_property_read_u32(np, "xlnx,itap_delay_sd_ddr50",
+>> +			     &sdhci_arasan-
+>>> itapdly[MMC_TIMING_UHS_DDR50]);
+>> +	of_property_read_u32(np, "xlnx,otap_delay_sd_ddr50",
+>> +			     &sdhci_arasan-
+>>> otapdly[MMC_TIMING_UHS_DDR50]);
+>> +	of_property_read_u32(np, "xlnx,itap_delay_mmc_hsd",
+>> +			     &sdhci_arasan-
+>>> itapdly[MMC_TIMING_MMC_HS]);
+>> +	of_property_read_u32(np, "xlnx,otap_delay_mmc_hsd",
+>> +			     &sdhci_arasan-
+>>> otapdly[MMC_TIMING_MMC_HS]);
+>> +	of_property_read_u32(np, "xlnx,itap_delay_mmc_ddr50",
+>> +			     &sdhci_arasan-
+>>> itapdly[MMC_TIMING_MMC_DDR52]);
+>> +	of_property_read_u32(np, "xlnx,otap_delay_mmc_ddr50",
+>> +			     &sdhci_arasan-
+>>> otapdly[MMC_TIMING_MMC_DDR52]);
+>> +	if (sdhci_arasan->mio_bank == MMC_BANK2) {
+>> +		of_property_read_u32(np,
+>> +				     "xlnx,itap_delay_sdr104_b2",
+>> +				&sdhci_arasan-
+>>> itapdly[MMC_TIMING_UHS_SDR104]);
+>> +		of_property_read_u32(np,
+>> +				     "xlnx,otap_delay_sdr104_b2",
+>> +				&sdhci_arasan-
+>>> otapdly[MMC_TIMING_UHS_SDR104]);
+>> +		of_property_read_u32(np,
+>> +				     "xlnx,itap_delay_mmc_hs200_b2",
+>> +				&sdhci_arasan-
+>>> itapdly[MMC_TIMING_MMC_HS200]);
+>> +		of_property_read_u32(np,
+>> +				     "xlnx,otap_delay_mmc_hs200_b2",
+>> +				&sdhci_arasan-
+>>> otapdly[MMC_TIMING_MMC_HS200]);
+>> +	} else {
+>> +		of_property_read_u32(np,
+>> +				     "xlnx,itap_delay_sdr104_b0",
+>> +				&sdhci_arasan-
+>>> itapdly[MMC_TIMING_UHS_SDR104]);
+>> +		of_property_read_u32(np,
+>> +				     "xlnx,otap_delay_sdr104_b0",
+>> +				&sdhci_arasan-
+>>> otapdly[MMC_TIMING_UHS_SDR104]);
+>> +		of_property_read_u32(np,
+>> +				     "xlnx,itap_delay_mmc_hs200_b0",
+>> +				&sdhci_arasan-
+>>> itapdly[MMC_TIMING_MMC_HS200]);
+>> +		of_property_read_u32(np,
+>> +				     "xlnx,otap_delay_mmc_hs200_b0",
+>> +				&sdhci_arasan-
+>>> otapdly[MMC_TIMING_MMC_HS200]);
+>> +	}
+>> +}
+>> +
+>>  static int sdhci_arasan_add_host(struct sdhci_arasan_data *sdhci_arasan)  {
+>>  	struct sdhci_host *host = sdhci_arasan->host; @@ -776,6 +886,27
+>> @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+>>  		goto unreg_clk;
+>>  	}
+>>
+>> +	if (of_device_is_compatible(pdev->dev.of_node,
+>> +				    "xlnx,zynqmp-8.9a")) {
+>> +		ret = of_property_read_u32(pdev->dev.of_node,
+>> +					   "xlnx,mio_bank",
+>> +					   &sdhci_arasan->mio_bank);
+>> +		if (ret < 0) {
+>> +			dev_err(&pdev->dev,
+>> +				"\"xlnx,mio_bank \" property is missing.\n");
+>> +			goto clk_disable_all;
+>> +		}
+>> +		ret = of_property_read_u32(pdev->dev.of_node,
+>> +					   "xlnx,device_id",
+>> +					   &sdhci_arasan->device_id);
+>> +		if (ret < 0) {
+>> +			dev_err(&pdev->dev,
+>> +				"\"xlnx,device_id \" property is missing.\n");
+>> +			goto clk_disable_all;
+>> +		}
+>> +		arasan_zynqmp_dt_parse_tap_delays(&pdev->dev);
+>> +	}
+>> +
+>>  	sdhci_arasan->phy = ERR_PTR(-ENODEV);
+>>  	if (of_device_is_compatible(pdev->dev.of_node,
+>>  				    "arasan,sdhci-5.1")) {
+>> --
+>> 2.7.4
 > 
->  - clk_x: bus interface clock
 > 
->  - ecc_clk: clock at which ECC circuitry is run
-> 
-> Currently, denali_dt.c requires a single anonymous clock and its
-> frequency.  However, the driver needs to get the frequency of "clk_x"
-> not "clk".  This is confusing because people tend to assume the
-> anonymous clock means the core clock.  In fact, I got a report of
-> SOCFPGA breakage because the timing parameters are calculated based
-> on a wrong frequency.
-> 
-> Instead of the cheesy implementation, the clocks in the real hardware
-> should be represented in the driver and the DT-binding.
-> 
-> However, adding new clocks would break the existing platforms.  For the
-> backward compatibility, the driver still accepts a single clock just as
-> before.  If clk_x is missing, clk_x_rate is set to a hardcoded value.
-> This is fine for existing DT of Socionext UniPhier, and also fixes the
-> issue of Altera (Intel) SOCFPGA because both platforms use 200 MHz for
-> the bus interface clock.
-> 
-> Fixes: 1bb88666775e ("mtd: nand: denali: handle timing parameters by setup_data_interface()")
-
-Sorry for changing my mind, but I think this patch is doing more than
-just fixing a bug. The bugfix should IMO be limited to unconditionally
-setting ->clk_x_rate to 200000000 since this is what was done before
-commit 1bb88666775e. And the remaining changes should go in nand/next.
-
-Regards,
-
-Boris
-
-> Cc: linux-stable <stable@vger.kernel.org> #4.14+
-> Reported-by: Richard Weinberger <richard@nod.at>
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
-> Changes in v3:
->   - Change the patch order so that the bug-fix one comes the first
-> 
-> Changes in v2:
->   - Split patches into sensible chunks
-> 
->  .../devicetree/bindings/mtd/denali-nand.txt        |  5 +++
->  drivers/mtd/nand/raw/denali_dt.c                   | 49 ++++++++++++++++++++--
->  2 files changed, 50 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-> index 0ee8edb..f33da87 100644
-> --- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-> @@ -8,6 +8,9 @@ Required properties:
->    - reg : should contain registers location and length for data and reg.
->    - reg-names: Should contain the reg names "nand_data" and "denali_reg"
->    - interrupts : The interrupt number.
-> +  - clocks: should contain phandle of the controller core clock, the bus
-> +    interface clock, and the ECC circuit clock.
-> +  - clock-names: should contain "nand", "nand_x", "ecc"
->  
->  Optional properties:
->    - nand-ecc-step-size: see nand.txt for details.  If present, the value must be
-> @@ -31,5 +34,7 @@ nand: nand@ff900000 {
->  	compatible = "altr,socfpga-denali-nand";
->  	reg = <0xff900000 0x20>, <0xffb80000 0x1000>;
->  	reg-names = "nand_data", "denali_reg";
-> +	clocks = <&nand_clk>, <&nand_x_clk>, <&nand_ecc_clk>;
-> +	clock-names = "nand", "nand_x", "ecc";
->  	interrupts = <0 144 4>;
->  };
-> diff --git a/drivers/mtd/nand/raw/denali_dt.c b/drivers/mtd/nand/raw/denali_dt.c
-> index cfd33e6..ce6239d 100644
-> --- a/drivers/mtd/nand/raw/denali_dt.c
-> +++ b/drivers/mtd/nand/raw/denali_dt.c
-> @@ -27,7 +27,9 @@
->  
->  struct denali_dt {
->  	struct denali_nand_info	denali;
-> -	struct clk		*clk;
-> +	struct clk *clk;	/* core clock */
-> +	struct clk *clk_x;	/* bus interface clock */
-> +	struct clk *clk_ecc;	/* ECC circuit clock */
->  };
->  
->  struct denali_dt_data {
-> @@ -114,24 +116,61 @@ static int denali_dt_probe(struct platform_device *pdev)
->  	if (IS_ERR(denali->host))
->  		return PTR_ERR(denali->host);
->  
-> -	dt->clk = devm_clk_get(&pdev->dev, NULL);
-> +	/*
-> +	 * A single anonymous clock is supported for the backward compatibility.
-> +	 * New platforms should support all the named clocks.
-> +	 */
-> +	dt->clk = devm_clk_get(&pdev->dev, "nand");
-> +	if (IS_ERR(dt->clk))
-> +		dt->clk = devm_clk_get(&pdev->dev, NULL);
->  	if (IS_ERR(dt->clk)) {
->  		dev_err(&pdev->dev, "no clk available\n");
->  		return PTR_ERR(dt->clk);
->  	}
-> +
-> +	dt->clk_x = devm_clk_get(&pdev->dev, "nand_x");
-> +	if (IS_ERR(dt->clk_x))
-> +		dt->clk_x = NULL;
-> +
-> +	dt->clk_ecc = devm_clk_get(&pdev->dev, "ecc");
-> +	if (IS_ERR(dt->clk_ecc))
-> +		dt->clk_ecc = NULL;
-> +
->  	ret = clk_prepare_enable(dt->clk);
->  	if (ret)
->  		return ret;
->  
-> -	denali->clk_x_rate = clk_get_rate(dt->clk);
-> +	ret = clk_prepare_enable(dt->clk_x);
-> +	if (ret)
-> +		goto out_disable_clk;
-> +
-> +	ret = clk_prepare_enable(dt->clk_ecc);
-> +	if (ret)
-> +		goto out_disable_clk_x;
-> +
-> +	if (dt->clk_x) {
-> +		denali->clk_x_rate = clk_get_rate(dt->clk_x);
-> +	} else {
-> +		/*
-> +		 * Hardcode the clock rates for the backward compatibility.
-> +		 * This works for both SOCFPGA and UniPhier.
-> +		 */
-> +		dev_notice(&pdev->dev,
-> +			   "necessary clock is missing. default clock rates are used.\n");
-> +		denali->clk_x_rate = 200000000;
-> +	}
->  
->  	ret = denali_init(denali);
->  	if (ret)
-> -		goto out_disable_clk;
-> +		goto out_disable_clk_ecc;
->  
->  	platform_set_drvdata(pdev, dt);
->  	return 0;
->  
-> +out_disable_clk_ecc:
-> +	clk_disable_unprepare(dt->clk_ecc);
-> +out_disable_clk_x:
-> +	clk_disable_unprepare(dt->clk_x);
->  out_disable_clk:
->  	clk_disable_unprepare(dt->clk);
->  
-> @@ -143,6 +182,8 @@ static int denali_dt_remove(struct platform_device *pdev)
->  	struct denali_dt *dt = platform_get_drvdata(pdev);
->  
->  	denali_remove(&dt->denali);
-> +	clk_disable_unprepare(dt->clk_ecc);
-> +	clk_disable_unprepare(dt->clk_x);
->  	clk_disable_unprepare(dt->clk);
->  
->  	return 0;
