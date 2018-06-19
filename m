@@ -1,171 +1,49 @@
 From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH 2/6] mailbox: ti-msgmgr: Allocate Rx channel resources only on request
-Date: Tue, 19 Jun 2018 14:43:33 -0500
-Message-ID: <20180619194337.31522-3-nm@ti.com>
-References: <20180619194337.31522-1-nm@ti.com>
+Subject: [PATCH 0/6] mailbox: ti-msgmgr: Add support for AM654 Secure Proxy
+Date: Tue, 19 Jun 2018 14:43:31 -0500
+Message-ID: <20180619194337.31522-1-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180619194337.31522-1-nm@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jassi Brar <jassisinghbrar@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 Cc: Nishanth Menon <nm@ti.com>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In a much bigger system SoCs, the number of Rx channels can be
-many and mostly unused based on the system of choice, and not all
-Rx channels need IRQs and allocating all memory at probe will be
-inefficient. Some SoCs could have total threads in the 100s and usage
-would be just 1 Rx thread.
+Hi,
+The following series enables support for Secure Proxy in newest addition in TI's SoC
+portfolio - AM654 SoC (posted previously as RFC).
 
-Thus, request and map the IRQs and allocate memory only when needed.
+The series is based on v4.18-rc1 and is available here:
+https://github.com/nmenon/linux-2.6-playground/commits/upstream/v4.18-rc1/k3-1-am6-sproxy
 
-Since these channels are requested by client drivers on need, our
-utilization will be optimal.
+There are a couple of follow on patches to be posted as well (Kconfig changes
+for K3_ARCH and actual dts node changes).
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
-Changes since RFC: None
-RFC: https://patchwork.kernel.org/patch/10447701/
+Changes since RFC are highlighted in each of the patches, but overall:
+* The K3 dependency has been broken out into a seperate series independent of
+  this.
+* Binding has been seperated out as it's own file (even though the driver is
+  reused).
 
- drivers/mailbox/ti-msgmgr.c | 91 ++++++++++++++++++++++++++++++---------------
- 1 file changed, 61 insertions(+), 30 deletions(-)
+Consolidated all patches (including all series) are available here:
+https://github.com/nmenon/linux-2.6-playground/commits/upstream/v4.18-rc1/k3-am6-integ
 
-diff --git a/drivers/mailbox/ti-msgmgr.c b/drivers/mailbox/ti-msgmgr.c
-index 5fe6ce200264..91c955979008 100644
---- a/drivers/mailbox/ti-msgmgr.c
-+++ b/drivers/mailbox/ti-msgmgr.c
-@@ -310,6 +310,51 @@ static int ti_msgmgr_send_data(struct mbox_chan *chan, void *data)
- 	return 0;
- }
- 
-+/**
-+ *  ti_msgmgr_queue_rx_irq_req() - RX IRQ request
-+ *  @dev:	device pointer
-+ *  @qinst:	Queue instance
-+ *  @chan:	Channel pointer
-+ */
-+static int ti_msgmgr_queue_rx_irq_req(struct device *dev,
-+				      struct ti_queue_inst *qinst,
-+				      struct mbox_chan *chan)
-+{
-+	int ret = 0;
-+	char of_rx_irq_name[7];
-+	struct device_node *np;
-+
-+	snprintf(of_rx_irq_name, sizeof(of_rx_irq_name),
-+		 "rx_%03d", qinst->queue_id);
-+
-+	/* Get the IRQ if not found */
-+	if (qinst->irq < 0) {
-+		np = of_node_get(dev->of_node);
-+		if (!np)
-+			return -ENODATA;
-+		qinst->irq = of_irq_get_byname(np, of_rx_irq_name);
-+		of_node_put(np);
-+
-+		if (qinst->irq < 0) {
-+			dev_err(dev,
-+				"QID %d PID %d:No IRQ[%s]: %d\n",
-+				qinst->queue_id, qinst->proxy_id,
-+				of_rx_irq_name, qinst->irq);
-+			return qinst->irq;
-+		}
-+	}
-+
-+	/* With the expectation that the IRQ might be shared in SoC */
-+	ret = request_irq(qinst->irq, ti_msgmgr_queue_rx_interrupt,
-+			  IRQF_SHARED, qinst->name, chan);
-+	if (ret) {
-+		dev_err(dev, "Unable to get IRQ %d on %s(res=%d)\n",
-+			qinst->irq, qinst->name, ret);
-+	}
-+
-+	return ret;
-+}
-+
- /**
-  * ti_msgmgr_queue_startup() - Startup queue
-  * @chan:	Channel pointer
-@@ -318,19 +363,21 @@ static int ti_msgmgr_send_data(struct mbox_chan *chan, void *data)
-  */
- static int ti_msgmgr_queue_startup(struct mbox_chan *chan)
- {
--	struct ti_queue_inst *qinst = chan->con_priv;
- 	struct device *dev = chan->mbox->dev;
-+	struct ti_msgmgr_inst *inst = dev_get_drvdata(dev);
-+	struct ti_queue_inst *qinst = chan->con_priv;
-+	const struct ti_msgmgr_desc *d = inst->desc;
- 	int ret;
- 
- 	if (!qinst->is_tx) {
--		/*
--		 * With the expectation that the IRQ might be shared in SoC
--		 */
--		ret = request_irq(qinst->irq, ti_msgmgr_queue_rx_interrupt,
--				  IRQF_SHARED, qinst->name, chan);
-+		/* Allocate usage buffer for rx */
-+		qinst->rx_buff = kzalloc(d->max_message_size, GFP_KERNEL);
-+		if (!qinst->rx_buff)
-+			return -ENOMEM;
-+		/* Request IRQ */
-+		ret = ti_msgmgr_queue_rx_irq_req(dev, qinst, chan);
- 		if (ret) {
--			dev_err(dev, "Unable to get IRQ %d on %s(res=%d)\n",
--				qinst->irq, qinst->name, ret);
-+			kfree(qinst->rx_buff);
- 			return ret;
- 		}
- 	}
-@@ -346,8 +393,10 @@ static void ti_msgmgr_queue_shutdown(struct mbox_chan *chan)
- {
- 	struct ti_queue_inst *qinst = chan->con_priv;
- 
--	if (!qinst->is_tx)
-+	if (!qinst->is_tx) {
- 		free_irq(qinst->irq, chan);
-+		kfree(qinst->rx_buff);
-+	}
- }
- 
- /**
-@@ -425,27 +474,6 @@ static int ti_msgmgr_queue_setup(int idx, struct device *dev,
- 		 dev_name(dev), qinst->is_tx ? "tx" : "rx", qinst->queue_id,
- 		 qinst->proxy_id);
- 
--	if (!qinst->is_tx) {
--		char of_rx_irq_name[7];
--
--		snprintf(of_rx_irq_name, sizeof(of_rx_irq_name),
--			 "rx_%03d", qinst->queue_id);
--
--		qinst->irq = of_irq_get_byname(np, of_rx_irq_name);
--		if (qinst->irq < 0) {
--			dev_crit(dev,
--				 "[%d]QID %d PID %d:No IRQ[%s]: %d\n",
--				 idx, qinst->queue_id, qinst->proxy_id,
--				 of_rx_irq_name, qinst->irq);
--			return qinst->irq;
--		}
--		/* Allocate usage buffer for rx */
--		qinst->rx_buff = devm_kzalloc(dev,
--					      d->max_message_size, GFP_KERNEL);
--		if (!qinst->rx_buff)
--			return -ENOMEM;
--	}
--
- 	qinst->queue_buff_start = inst->queue_proxy_region +
- 	    Q_DATA_OFFSET(qinst->proxy_id, qinst->queue_id, d->data_first_reg);
- 	qinst->queue_buff_end = inst->queue_proxy_region +
-@@ -454,6 +482,9 @@ static int ti_msgmgr_queue_setup(int idx, struct device *dev,
- 	    Q_STATE_OFFSET(qinst->queue_id);
- 	qinst->chan = chan;
- 
-+	/* Setup an error value for IRQ - Lazy allocation */
-+	qinst->irq = -EINVAL;
-+
- 	chan->con_priv = qinst;
- 
- 	dev_dbg(dev, "[%d] qidx=%d pidx=%d irq=%d q_s=%p q_e = %p\n",
+Full Boot log  on AM654 (integrated with all patch series) is available here:
+   https://pastebin.ubuntu.com/p/bBFmnzYtCd/
+
+Nishanth Menon (6):
+  mailbox: ti-msgmgr: Get rid of unused structure members
+  mailbox: ti-msgmgr: Allocate Rx channel resources only on request
+  mailbox: ti-msgmgr: Change message count mask to be descriptor based
+  mailbox: ti-msgmgr: Move the memory region name to descriptor
+  dt-bindings: mailbox: Add support for secure proxy threads
+  mailbox: ti-msgmgr: Add support for Secure Proxy
+
+ .../bindings/mailbox/ti,secure-proxy.txt           |  50 +++
+ drivers/mailbox/ti-msgmgr.c                        | 353 +++++++++++++++++----
+ 2 files changed, 336 insertions(+), 67 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/ti,secure-proxy.txt
+
 -- 
 2.15.1
