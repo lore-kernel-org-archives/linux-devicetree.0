@@ -1,99 +1,76 @@
 From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH 1/5] dt-bindings: arm: ti: Add bindings for AM654 SoC
-Date: Tue, 19 Jun 2018 14:42:49 -0500
-Message-ID: <20180619194253.27288-2-nm@ti.com>
-References: <20180619194253.27288-1-nm@ti.com>
+Subject: [PATCH 4/6] mailbox: ti-msgmgr: Move the memory region name to descriptor
+Date: Tue, 19 Jun 2018 14:43:35 -0500
+Message-ID: <20180619194337.31522-5-nm@ti.com>
+References: <20180619194337.31522-1-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180619194253.27288-1-nm@ti.com>
+In-Reply-To: <20180619194337.31522-1-nm@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Santosh Shilimkar <ssantosh@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Sudeep Holla <sudeep.holla@arm.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Nishanth Menon <nm@ti.com>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The AM654 SoC is a lead device of the K3 Multicore SoC architecture
-platform, targeted for broad market and industrial control with aim to
-meet the complex processing needs of modern embedded products.
-
-Some highlights of this SoC are:
-* Quad ARMv8 A53 cores split over two clusters
-* GICv3 compliant GIC500
-* Configurable L3 Cache and IO-coherent architecture
-* Dual lock-step capable R5F uC for safety-critical applications
-* High data throughput capable distributed DMA architecture under NAVSS
-* Three Gigabit Industrial Communication Subsystems (ICSSG), each with dual
-  PRUs and dual RTUs
-* Hardware accelerator block containing AES/DES/SHA/MD5 called SA2UL
-* Centralized System Controller for Security, Power, and Resource
-  management.
-* Dual ADCSS, eQEP/eCAP, eHRPWM, dual CAN-FD
-* Flash subsystem with OSPI and Hyperbus interfaces
-* Multimedia capability with CAL, DSS7-UL, SGX544, McASP
-* Peripheral connectivity including USB3, PCIE, MMC/SD, GPMC, I2C, SPI,
-  GPIO
-
-See AM65x Technical Reference Manual (SPRUID7, April 2018)
-for further details: http://www.ti.com/lit/pdf/spruid7
+For newer generation of the hardware, the naming of the region is
+decided at integration level and there could be additional regions
+as well. Hence move the region naming to be described from compatible
+descriptor.
 
 Signed-off-by: Nishanth Menon <nm@ti.com>
 ---
-Changes since RFC:
- * Dropped the generic terminology for compatibles
+Changes since RFC: None
+RFC: https://patchwork.kernel.org/patch/10447653/
 
-previous RFC: https://patchwork.kernel.org/patch/10447643/
+ drivers/mailbox/ti-msgmgr.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
- Documentation/devicetree/bindings/arm/ti/k3.txt | 23 +++++++++++++++++++++++
- MAINTAINERS                                     |  7 +++++++
- 2 files changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/ti/k3.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/ti/k3.txt b/Documentation/devicetree/bindings/arm/ti/k3.txt
-new file mode 100644
-index 000000000000..6a059cabb2da
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/ti/k3.txt
-@@ -0,0 +1,23 @@
-+Texas Instruments K3 Multicore SoC architecture device tree bindings
-+--------------------------------------------------------------------
-+
-+Platforms based on Texas Instruments K3 Multicore SoC architecture
-+shall follow the following scheme:
-+
-+SoCs
-+----
-+
-+Each device tree root node must specify which exact SoC in K3 Multicore SoC
-+architecture it uses, using one of the following compatible values:
-+
-+- AM654
-+  compatible = "ti,am654";
-+
-+Boards
-+------
-+
-+In addition, each device tree root node must specify which one or more
-+of the following board-specific compatible values:
-+
-+- AM654 EVM
-+  compatible = "ti,am654-evm", "ti,am654";
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9d5eeff51b5f..fbd93eee41ae 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2087,6 +2087,13 @@ L:	linux-kernel@vger.kernel.org
- S:	Maintained
- F:	drivers/memory/*emif*
+diff --git a/drivers/mailbox/ti-msgmgr.c b/drivers/mailbox/ti-msgmgr.c
+index 7d2eb4b359ba..7167cc708f44 100644
+--- a/drivers/mailbox/ti-msgmgr.c
++++ b/drivers/mailbox/ti-msgmgr.c
+@@ -48,6 +48,8 @@ struct ti_msgmgr_valid_queue_desc {
+  * @tx_polled:		Do I need to use polled mechanism for tx
+  * @tx_poll_timeout_ms: Timeout in ms if polled
+  * @valid_queues:	List of Valid queues that the processor can access
++ * @data_region_name:	Name of the proxy data region
++ * @status_region_name:	Name of the proxy status region
+  * @num_valid_queues:	Number of valid queues
+  *
+  * This structure is used in of match data to describe how integration
+@@ -63,6 +65,8 @@ struct ti_msgmgr_desc {
+ 	bool tx_polled;
+ 	int tx_poll_timeout_ms;
+ 	const struct ti_msgmgr_valid_queue_desc *valid_queues;
++	const char *data_region_name;
++	const char *status_region_name;
+ 	int num_valid_queues;
+ };
  
-+ARM/TEXAS INSTRUMENTS K3 ARCHITECTURE
-+M:	Tero Kristo <t-kristo@ti.com>
-+M:	Nishanth Menon <nm@ti.com>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Supported
-+F:	Documentation/devicetree/bindings/arm/ti/k3.txt
-+
- ARM/TEXAS INSTRUMENT KEYSTONE ARCHITECTURE
- M:	Santosh Shilimkar <ssantosh@kernel.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+@@ -531,6 +535,8 @@ static const struct ti_msgmgr_desc k2g_desc = {
+ 	.queue_count = 64,
+ 	.max_message_size = 64,
+ 	.max_messages = 128,
++	.data_region_name = "queue_proxy_region",
++	.status_region_name = "queue_state_debug_region",
+ 	.data_first_reg = 16,
+ 	.data_last_reg = 31,
+ 	.status_cnt_mask = Q_STATE_ENTRY_COUNT_MASK,
+@@ -582,13 +588,13 @@ static int ti_msgmgr_probe(struct platform_device *pdev)
+ 	inst->desc = desc;
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+-					   "queue_proxy_region");
++					   desc->data_region_name);
+ 	inst->queue_proxy_region = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(inst->queue_proxy_region))
+ 		return PTR_ERR(inst->queue_proxy_region);
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+-					   "queue_state_debug_region");
++					   desc->status_region_name);
+ 	inst->queue_state_debug_region = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(inst->queue_state_debug_region))
+ 		return PTR_ERR(inst->queue_state_debug_region);
 -- 
 2.15.1
