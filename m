@@ -1,107 +1,41 @@
 From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH 5/6] dt-bindings: mailbox: Add support for secure proxy threads
-Date: Tue, 19 Jun 2018 14:43:36 -0500
-Message-ID: <20180619194337.31522-6-nm@ti.com>
-References: <20180619194337.31522-1-nm@ti.com>
+Subject: [PATCH 0/2] serial: 8250_omap: Add compatible for AM654 UART
+Date: Tue, 19 Jun 2018 14:44:48 -0500
+Message-ID: <20180619194450.6353-1-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180619194337.31522-1-nm@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Nishanth Menon <nm@ti.com>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, Nishanth Menon <nm@ti.com>, Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>, Vignesh R <vigneshr@ti.com>, Jiri Slaby <jslaby@suse.com>, Sekhar Nori <nsekhar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Secure Proxy is another communication scheme in Texas Instrument's
-devices intended to provide an unique communication path from various
-processors in the System on Chip(SoC) to a central System Controller.
+Hi,
 
-Secure proxy is, in effect, an evolution of current generation Message
-Manager hardware block found in K2G devices. However the following
-changes have taken place:
+This series was previously send out as part of a larger AM654 UART
+support series, but was determined to create a bit of merge conflicts
+due to interdependence.
 
-Secure Proxy instance exposes "threads" or "proxies" which is
-primary representation of "a" communication channel. Each thread is
-preconfigured by System controller configuration based on SoC usage
-requirements. Secure proxy by itself represents a single "queue" of
-communication but allows the proxies to be independently operated.
+Changes since RFC are indicated in corresponding patches in the series
 
-Each Secure proxy thread can uniquely have their own error and threshold
-interrupts allowing for more fine control of IRQ handling.
+Instead this series is split out. The series itself is based off
+v4.18-rc1 and available here:
+https://github.com/nmenon/linux-2.6-playground/commits/upstream/v4.18-rc1/k3-1-am6-uart
 
-Provide an hardware description of the same for device tree
-representation.
+Consolidated all patches (including all series) are available here:
+https://github.com/nmenon/linux-2.6-playground/commits/upstream/v4.18-rc1/k3-am6-integ
 
-See AM65x Technical Reference Manual (SPRUID7, April 2018)
-for further details: http://www.ti.com/lit/pdf/spruid7
+Full Boot log (integrated of all series) is available here:
+   https://pastebin.ubuntu.com/p/bBFmnzYtCd/
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
+Nishanth Menon (2):
+  dt-bindings: serial: 8250_omap: Add compatible for AM654 UART
+    controller
+  serial: 8250_omap: Add support for AM654 UART controller
 
-Changes since RFC:
- * DT binding have been seperated into it's own file following Rob's feedback.
+ Documentation/devicetree/bindings/serial/omap_serial.txt | 1 +
+ drivers/tty/serial/8250/8250_omap.c                      | 1 +
+ 2 files changed, 2 insertions(+)
 
-RFC: https://patchwork.kernel.org/patch/10447695/
-
- .../bindings/mailbox/ti,secure-proxy.txt           | 50 ++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/ti,secure-proxy.txt
-
-diff --git a/Documentation/devicetree/bindings/mailbox/ti,secure-proxy.txt b/Documentation/devicetree/bindings/mailbox/ti,secure-proxy.txt
-new file mode 100644
-index 000000000000..ea2ccc607b35
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/ti,secure-proxy.txt
-@@ -0,0 +1,50 @@
-+Texas Instruments' Secure Proxy
-+========================================
-+
-+The Texas Instruments' secure proxy is a mailbox controller that has
-+configurable queues selectable at SoC(System on Chip) integration. The
-+Message manager is broken up into different address regions that are
-+called "threads" or "proxies" - each instance is unidirectional and is
-+instantiated at SoC integration level by system controller to indicate
-+receive or transmit path.
-+
-+Message Manager Device Node:
-+===========================
-+Required properties:
-+--------------------
-+- compatible:		Shall be "ti,am654-secure-proxy"
-+- reg-names 		target_data - Map the proxy data region
-+			rt - Map the realtime status region
-+			scfg - Map the configuration region
-+- reg:			Contains the register map per reg-names.
-+- #mbox-cells		Shall be 1 and shall refer to the transfer path
-+			called thread.
-+- interrupt-names:	Contains interrupt names matching the rx transfer path
-+			for a given SoC. Receive interrupts shall be of the
-+			format: "rx_<PID>".
-+- interrupts:		Contains the interrupt information corresponding to
-+			interrupt-names property.
-+
-+Example(AM654):
-+------------
-+
-+	secure_proxy: secure_proxy@32c00000 {
-+		compatible = "ti,am654-secure-proxy";
-+		#mbox-cells = <1>;
-+		reg-names = "target_data", "rt", "scfg";
-+		reg = <0x0 0x32c00000 0x0 0x100000>,
-+		      <0x0 0x32400000 0x0 0x100000>,
-+		      <0x0 0x32800000 0x0 0x100000>;
-+		interrupt-names = "rx_011";
-+		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	dmsc: dmsc {
-+		[...]
-+		mbox-names = "rx", "tx";
-+		# RX Thread ID is 11
-+		# TX Thread ID is 13
-+		mboxes= <&secure_proxy 11>,
-+			<&secure_proxy 13>;
-+		[...]
-+	};
 -- 
 2.15.1
