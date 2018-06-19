@@ -1,140 +1,39 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ FW
- bindings
-Date: Tue, 19 Jun 2018 10:34:55 +0100
-Message-ID: <f26813f1-f8da-ef92-fd86-6e648fbbf3e9@arm.com>
-References: <1528801355-18719-1-git-send-email-tdas@codeaurora.org>
- <1528801355-18719-2-git-send-email-tdas@codeaurora.org>
- <0f3f0223-3539-dc66-5300-8f30d827445d@arm.com>
- <7abb2da6-c130-117a-5404-d07bb132d915@codeaurora.org>
- <f57f2708-28bb-dcdd-8b93-d41ade10fa18@arm.com>
- <bc6dc152-7def-fc1d-4535-11a44fd64310@codeaurora.org>
- <CAHLCerMCM1qf1MJ3bz+ZwBQMjshKSCWKXjHCiuqxJTDBdauamQ@mail.gmail.com>
- <32e8f874-a58b-8ba3-7a53-dc89cb34f7d9@codeaurora.org>
- <fad24065-bb2d-33f9-e877-425db3391e8f@arm.com>
- <514eea88-1f98-7959-2341-3d57cff6f66b@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Vinod Koul <vinod.koul@linaro.org>
+Subject: [PATCH v2 1/2] dt-bindings: rng: Add new compatible qcom,prng-v2
+Date: Tue, 19 Jun 2018 15:24:29 +0530
+Message-ID: <20180619095430.26358-2-vkoul@kernel.org>
+References: <20180619095430.26358-1-vkoul@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <514eea88-1f98-7959-2341-3d57cff6f66b@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <20180619095430.26358-1-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: Amit Kucheria <amit.kucheria@verdurent.com>, Sudeep Holla <sudeep.holla@arm.com>, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Saravana Kannan <skannan@codeaurora.org>
+To: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>, vinod.koul@linaro.org, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Later qcom chips support v2 of the prng, so add new compatible
+qcom,prng-v2 for this.
 
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
 
-On 19/06/18 08:53, Taniya Das wrote:
-> 
-> 
-> On 6/18/2018 2:51 PM, Sudeep Holla wrote:
->>
->>
->> On 15/06/18 18:40, Taniya Das wrote:
->>>
->>>
->>> On 6/15/2018 5:29 PM, Amit Kucheria wrote:
->>
->> [...]
->>
->>>> A future version of the HW engine, or more likely, a firmware
->>>> revision, will make more functionality available. Say, this needs
->>>> access to another register or two. This will require changing the DT
->>>> bindings. Instead, if you map the entire address space, you can just
->>>> add offsets to the new registers.
->>>>
->>>> So in this case, I think you should define the following addresses
->>>> (size 0x1400) for the two frequency domains
->>>>
->>>> 0x17d43000, 0x1400 (power cluster)
->>>> 0x17d45800, 0x1400 (perf cluster)
->>>>
->>>> And in the driver simply add offsets as follows:
->>>>
->>>> #define ENABLE_OFFSET               0x0
->>>> #define LUT_OFFSET                      0x110
->>>> #define PERF_DESIRED_OFFSET 0x920
->>>>
->>>
->>> The offsets could vary across versions of this IP and that is the reason
->>> to provide them through the DT and not define any such offsets.
->>>
->>
->> Just get compatibles to identify the version of the hardware if it can't
->> be probed and detected. Please don't use DT to get the addresses of each
->> register you use in the driver. That's neither scalable nor nice
->> solution to the problem.
->> Hello Sudeep and Amit,
-> 
-> Thanks for the comments, I am consolidating the understanding from the
-> other emails in a single one.
-> 
-> I understand that you are looking for this IP to map the full region and
-> define offsets according to access them.
-> 
-> But I still not sure how do you want this common driver to scale in the
-> cases where the offsets could vary across version change.
-> 
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+ Documentation/devicetree/bindings/rng/qcom,prng.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-There are plenty of drivers that you can look at as example. TBH most of
-the drivers implementing support for multiple versions of IP do
-something on the similar lines.
-
->  DT
-> ====
->   freq-node {
->     reg = < X x_size>;   Where X is the start of the IP address.
->   }
-> 
-> Driver code (The below representation is just for example).
-> =============
-> 
-> V1
-> #define ENABLE    0x0
-> #define LUT_V1    0x110
-> #define PERF_V1    0x920
-> 
-> V2
-> #define LUT_V2    0x150
-> #define PERF_V2    0x980
-> 
-> V3
-> #define LUT_V3    0x120
-> ....
-> 
-> Do you want me to use "compatible" flag to
-> 
-> if (compatible == v1)
->  enable =  readl_relaxed(X + LUT_V1);
-> else if (compatible == v2)
->  enable = readl_relaxed(X + LUT_V2);
-> else if (compatible == v3)
->  enable = readl_relaxed(X + LUT_V2);
-> 
-
-These are implementation details. But you should try to use compatibles
-only in probe and just record the version in some variable or update the
-offsets in some device specific structure so that you can use that
-unconditionally for any access you make on that device.
-
-> With the current design I do not need such compatible checks and unmap
-> the ones which are not required after probe.
-
-I am not sure what you mean by unmap after probe.
-
-> Please let me know your comments.
-> 
-
-Please look at some drivers in the Linux tree for examples. Infact there
-may be few drivers on QCOM SoC itself. What I am suggesting is the normal
-practice in the drivers and you should see plenty of examples. Since I
-was looking at some serial port patch, I can say you can have a look at
-drivers/tty/serial/amba-pl011.c which supports multiple versions from
-different vendors. I am sure there are many simpler examples but AMBA PL011
-just stood out.
-
+diff --git a/Documentation/devicetree/bindings/rng/qcom,prng.txt b/Documentation/devicetree/bindings/rng/qcom,prng.txt
+index 8e5853c2879b..03fd218bd21a 100644
+--- a/Documentation/devicetree/bindings/rng/qcom,prng.txt
++++ b/Documentation/devicetree/bindings/rng/qcom,prng.txt
+@@ -2,7 +2,8 @@ Qualcomm MSM pseudo random number generator.
+ 
+ Required properties:
+ 
+-- compatible  : should be "qcom,prng"
++- compatible  : should be "qcom,prng" for 8916 etc
++              : should be "qcom,prng-v2" for 8996 and later
+ - reg         : specifies base physical address and size of the registers map
+ - clocks      : phandle to clock-controller plus clock-specifier pair
+ - clock-names : "core" clocks all registers, FIFO and circuits in PRNG IP block
 -- 
-Regards,
-Sudeep
+2.14.4
