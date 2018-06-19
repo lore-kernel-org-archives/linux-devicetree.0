@@ -1,130 +1,150 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH v10 06/14] clk: qcom: Add IPQ806X's HFPLLs
-Date: Tue, 19 Jun 2018 19:15:17 +0530
-Message-ID: <1529415925-28915-7-git-send-email-sricharan@codeaurora.org>
-References: <1529415925-28915-1-git-send-email-sricharan@codeaurora.org>
+From: Rohit Kumar <rohitkr@codeaurora.org>
+Subject: Re: [alsa-devel] [PATCH] ASoC: qcom: add sdm845 sound card support
+Date: Tue, 19 Jun 2018 19:20:55 +0530
+Message-ID: <8562b574-3738-8983-53e7-64366590fad4@codeaurora.org>
+References: <1529320591-22434-1-git-send-email-rohitkr@codeaurora.org>
+ <20180619050527.GR25852@vkoul-mobl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529415925-28915-1-git-send-email-sricharan@codeaurora.org>
+In-Reply-To: <20180619050527.GR25852@vkoul-mobl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org, viresh.kumar@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux@arm.linux.org.uk, thierry.escande@linaro.org, ctatlor97@gmail.com
-Cc: sricharan@codeaurora.org
+To: Vinod <vkoul@kernel.org>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, plai@codeaurora.org, bgoswami@codeaurora.org, perex@perex.cz, srinivas.kandagatla@linaro.org, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Boyd <sboyd@codeaurora.org>
+Thanks Vinod for reviewing.
 
-Describe the HFPLLs present on IPQ806X devices.
 
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
----
- drivers/clk/qcom/gcc-ipq806x.c | 82 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+On 6/19/2018 10:35 AM, Vinod wrote:
+> On 18-06-18, 16:46, Rohit kumar wrote:
+>
+>> +struct sdm845_snd_data {
+>> +	struct snd_soc_card *card;
+>> +	struct regulator *vdd_supply;
+>> +	struct snd_soc_dai_link dai_link[];
+>> +};
+>> +
+>> +static struct mutex pri_mi2s_res_lock;
+>> +static struct mutex quat_tdm_res_lock;
+> any reason why the locks can't be part of sdm845_snd_data?
+> Also why do we need two locks ?
+No specific reason, I will move it to sdm845_snd_data.
+These locks are used to protect enable/disable of bit clocks. We have 
+Primary MI2S RX/TX
+and Quaternary TDM RX/TX interfaces. For primary mi2s rx/tx, we have 
+single clock which is
+synchronized with pri_mi2s_res_lock. For Quat TDM RX/TX, we are using 
+quat_tdm_res_lock.
+We need two locks as we are protecting two different resources.
+>
+>> +static atomic_t pri_mi2s_clk_count;
+>> +static atomic_t quat_tdm_clk_count;
+> Any specific reason for using atomic variables?
+Nothing as such. As we are using mutex to synchronize, we can make it 
+non- atomic.
+Will do it in next-spin.
+>
+>> +static unsigned int tdm_slot_offset[8] = {0, 4, 8, 12, 16, 20, 24, 28};
+>> +
+>> +static int sdm845_tdm_snd_hw_params(struct snd_pcm_substream *substream,
+>> +					struct snd_pcm_hw_params *params)
+>> +{
+>> +	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+>> +	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
+>> +	int ret = 0;
+>> +	int channels, slot_width;
+>> +
+>> +	channels = params_channels(params);
+>> +	if (channels < 1 || channels > 8) {
+> I though ch = 0 would be caught by framework and IIRC ASoC doesn't
+> support more than 8 channels
 
-diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-ipq806x.c
-index 28eb200..d571cf8 100644
---- a/drivers/clk/qcom/gcc-ipq806x.c
-+++ b/drivers/clk/qcom/gcc-ipq806x.c
-@@ -30,6 +30,7 @@
- #include "clk-pll.h"
- #include "clk-rcg.h"
- #include "clk-branch.h"
-+#include "clk-hfpll.h"
- #include "reset.h"
- 
- static struct clk_pll pll0 = {
-@@ -113,6 +114,84 @@
- 	},
- };
- 
-+static struct hfpll_data hfpll0_data = {
-+	.mode_reg = 0x3200,
-+	.l_reg = 0x3208,
-+	.m_reg = 0x320c,
-+	.n_reg = 0x3210,
-+	.config_reg = 0x3204,
-+	.status_reg = 0x321c,
-+	.config_val = 0x7845c665,
-+	.droop_reg = 0x3214,
-+	.droop_val = 0x0108c000,
-+	.min_rate = 600000000UL,
-+	.max_rate = 1800000000UL,
-+};
-+
-+static struct clk_hfpll hfpll0 = {
-+	.d = &hfpll0_data,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.parent_names = (const char *[]){ "pxo" },
-+		.num_parents = 1,
-+		.name = "hfpll0",
-+		.ops = &clk_ops_hfpll,
-+		.flags = CLK_IGNORE_UNUSED,
-+	},
-+	.lock = __SPIN_LOCK_UNLOCKED(hfpll0.lock),
-+};
-+
-+static struct hfpll_data hfpll1_data = {
-+	.mode_reg = 0x3240,
-+	.l_reg = 0x3248,
-+	.m_reg = 0x324c,
-+	.n_reg = 0x3250,
-+	.config_reg = 0x3244,
-+	.status_reg = 0x325c,
-+	.config_val = 0x7845c665,
-+	.droop_reg = 0x3314,
-+	.droop_val = 0x0108c000,
-+	.min_rate = 600000000UL,
-+	.max_rate = 1800000000UL,
-+};
-+
-+static struct clk_hfpll hfpll1 = {
-+	.d = &hfpll1_data,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.parent_names = (const char *[]){ "pxo" },
-+		.num_parents = 1,
-+		.name = "hfpll1",
-+		.ops = &clk_ops_hfpll,
-+		.flags = CLK_IGNORE_UNUSED,
-+	},
-+	.lock = __SPIN_LOCK_UNLOCKED(hfpll1.lock),
-+};
-+
-+static struct hfpll_data hfpll_l2_data = {
-+	.mode_reg = 0x3300,
-+	.l_reg = 0x3308,
-+	.m_reg = 0x330c,
-+	.n_reg = 0x3310,
-+	.config_reg = 0x3304,
-+	.status_reg = 0x331c,
-+	.config_val = 0x7845c665,
-+	.droop_reg = 0x3314,
-+	.droop_val = 0x0108c000,
-+	.min_rate = 600000000UL,
-+	.max_rate = 1800000000UL,
-+};
-+
-+static struct clk_hfpll hfpll_l2 = {
-+	.d = &hfpll_l2_data,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.parent_names = (const char *[]){ "pxo" },
-+		.num_parents = 1,
-+		.name = "hfpll_l2",
-+		.ops = &clk_ops_hfpll,
-+		.flags = CLK_IGNORE_UNUSED,
-+	},
-+	.lock = __SPIN_LOCK_UNLOCKED(hfpll_l2.lock),
-+};
-+
- static struct clk_pll pll14 = {
- 	.l_reg = 0x31c4,
- 	.m_reg = 0x31c8,
-@@ -2800,6 +2879,9 @@ enum {
- 	[UBI32_CORE2_CLK_SRC] = &ubi32_core2_src_clk.clkr,
- 	[NSSTCM_CLK_SRC] = &nss_tcm_src.clkr,
- 	[NSSTCM_CLK] = &nss_tcm_clk.clkr,
-+	[PLL9] = &hfpll0.clkr,
-+	[PLL10] = &hfpll1.clkr,
-+	[PLL12] = &hfpll_l2.clkr,
- };
- 
- static const struct qcom_reset_map gcc_ipq806x_resets[] = {
+OK. Will check and remove.
+>> +		pr_err("%s: invalid param channels %d\n",
+>> +				__func__, channels);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	switch (params_format(params)) {
+>> +	case SNDRV_PCM_FORMAT_S32_LE:
+>> +	case SNDRV_PCM_FORMAT_S24_LE:
+>> +	case SNDRV_PCM_FORMAT_S16_LE:
+>> +		slot_width = 32;
+>> +		break;
+>> +	default:
+>> +		pr_err("%s: invalid param format 0x%x\n",
+>> +				__func__, params_format(params));
+> why not use dev_err, bonus you get device name printer with the logs :)
+
+Sure. Will change it.
+>> +static int sdm845_snd_startup(struct snd_pcm_substream *substream)
+>> +{
+>> +	unsigned int fmt = SND_SOC_DAIFMT_CBS_CFS;
+>> +	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+>> +	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
+>> +
+>> +	pr_debug("%s: dai_id: 0x%x\n", __func__, cpu_dai->id);
+> It is good for debug but not very useful here, so removing it would be
+> good
+
+OK
+>> +	switch (cpu_dai->id) {
+>> +	case PRIMARY_MI2S_RX:
+>> +	case PRIMARY_MI2S_TX:
+>> +		mutex_lock(&pri_mi2s_res_lock);
+>> +		if (atomic_inc_return(&pri_mi2s_clk_count) == 1) {
+>> +			snd_soc_dai_set_sysclk(cpu_dai,
+>> +				Q6AFE_LPASS_CLK_ID_MCLK_1,
+>> +				DEFAULT_MCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
+>> +			snd_soc_dai_set_sysclk(cpu_dai,
+>> +				Q6AFE_LPASS_CLK_ID_PRI_MI2S_IBIT,
+>> +				DEFAULT_BCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
+>> +		}
+>> +		mutex_unlock(&pri_mi2s_res_lock);
+> why do we need locking here? Can you please explain that.
+So, we can have two usecases: one with primary mi2s rx and other with 
+primary mi2s tx.
+Lock is required to increment  pri_mi2s_clk_count and enable clock so 
+that disable of one
+usecase does not disable the clock.
+>
+>> +		snd_soc_dai_set_fmt(cpu_dai, fmt);
+>> +		break;
+> empty line after break helps in readability
+
+Sure. Will add that change.
+>> +static int sdm845_sbc_parse_of(struct snd_soc_card *card)
+>> +{
+>> +	struct device *dev = card->dev;
+>> +	struct snd_soc_dai_link *link;
+>> +	struct device_node *np, *codec, *platform, *cpu, *node;
+>> +	int ret, num_links;
+>> +	struct sdm845_snd_data *data;
+>> +
+>> +	ret = snd_soc_of_parse_card_name(card, "qcom,model");
+>> +	if (ret) {
+>> +		dev_err(dev, "Error parsing card name: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	node = dev->of_node;
+>> +
+>> +	/* DAPM routes */
+>> +	if (of_property_read_bool(node, "qcom,audio-routing")) {
+>> +		ret = snd_soc_of_parse_audio_routing(card,
+>> +					"qcom,audio-routing");
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+> so if we dont find audio-routing, then? we seems to continue..
+Right. Its not mandatory to have qcom,audio-routing in device tree.
+
+Regards,
+Rohit
+
 -- 
-1.9.1
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
