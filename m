@@ -1,44 +1,77 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 1/1] drm/panel: Add support for Olimex LCD-OLinuXino panel
-Date: Tue, 19 Jun 2018 19:16:27 +0800
-Message-ID: <201806191954.LXKEKhCd%fengguang.wu@intel.com>
-References: <1529397260-16340-1-git-send-email-stefan@olimex.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [Dev] [PATCH 4/5] RFC: bus: 96boards Low-Speed Connector
+Date: Tue, 19 Jun 2018 12:19:34 +0100
+Message-ID: <20180619111934.ms7oc46atzzs4ern@holly.lan>
+References: <20180618074556.6944-1-linus.walleij@linaro.org>
+ <20180618074556.6944-5-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1529397260-16340-1-git-send-email-stefan@olimex.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Stefan Mavrodiev <stefan@olimex.com>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Randy Dunlap <rdunlap@infradead.org>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, kbuild-all@01.org, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>
+In-Reply-To: <20180618074556.6944-5-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Frank Rowand <frowand.list@gmail.com>, Mark Brown <broonie@kernel.org>, Michal Simek <michal.simek@xilinx.com>, dev@lists.96boards.org, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3RlZmFuLAoKSSBsb3ZlIHlvdXIgcGF0Y2ghIFBlcmhhcHMgc29tZXRoaW5nIHRvIGltcHJv
-dmU6CgpbYXV0byBidWlsZCB0ZXN0IFdBUk5JTkcgb24gdGVncmEtZHJtL2RybS90ZWdyYS9mb3It
-bmV4dF0KW2Fsc28gYnVpbGQgdGVzdCBXQVJOSU5HIG9uIHY0LjE4LXJjMSBuZXh0LTIwMTgwNjE5
-XQpbaWYgeW91ciBwYXRjaCBpcyBhcHBsaWVkIHRvIHRoZSB3cm9uZyBnaXQgdHJlZSwgcGxlYXNl
-IGRyb3AgdXMgYSBub3RlIHRvIGhlbHAgaW1wcm92ZSB0aGUgc3lzdGVtXQoKdXJsOiAgICBodHRw
-czovL2dpdGh1Yi5jb20vMGRheS1jaS9saW51eC9jb21taXRzL1N0ZWZhbi1NYXZyb2RpZXYvZHJt
-LXBhbmVsLUFkZC1zdXBwb3J0LWZvci1PbGltZXgtTENELU9MaW51WGluby1wYW5lbC8yMDE4MDYx
-OS0xODA0MjkKYmFzZTogICBnaXQ6Ly9hbm9uZ2l0LmZyZWVkZXNrdG9wLm9yZy90ZWdyYS9saW51
-eC5naXQgZHJtL3RlZ3JhL2Zvci1uZXh0CnJlcHJvZHVjZToKICAgICAgICAjIGFwdC1nZXQgaW5z
-dGFsbCBzcGFyc2UKICAgICAgICBtYWtlIEFSQ0g9eDg2XzY0IGFsbG1vZGNvbmZpZwogICAgICAg
-IG1ha2UgQz0xIENGPS1EX19DSEVDS19FTkRJQU5fXwoKCnNwYXJzZSB3YXJuaW5nczogKG5ldyBv
-bmVzIHByZWZpeGVkIGJ5ID4+KQoKPj4gZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLW9saW1l
-eC1sY2Qtb2xpbnV4aW5vLmM6MjE1OjI0OiBzcGFyc2U6IHN5bWJvbCAnbGNkX29saW51eGlub19m
-dW5jcycgd2FzIG5vdCBkZWNsYXJlZC4gU2hvdWxkIGl0IGJlIHN0YXRpYz8KClBsZWFzZSByZXZp
-ZXcgYW5kIHBvc3NpYmx5IGZvbGQgdGhlIGZvbGxvd3VwIHBhdGNoLgoKLS0tCjAtREFZIGtlcm5l
-bCB0ZXN0IGluZnJhc3RydWN0dXJlICAgICAgICAgICAgICAgIE9wZW4gU291cmNlIFRlY2hub2xv
-Z3kgQ2VudGVyCmh0dHBzOi8vbGlzdHMuMDEub3JnL3BpcGVybWFpbC9rYnVpbGQtYWxsICAgICAg
-ICAgICAgICAgICAgIEludGVsIENvcnBvcmF0aW9uCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Mon, Jun 18, 2018 at 09:45:55AM +0200, Linus Walleij wrote:
+> This illustrates my idea for using a small connector driver to
+> plug in "mezzanine boards" on the 96boards low-speed connector.
+> 
+> These "mezzanine boards" are no different than "capes", "logic
+> modules", etc. This thing, a non-discoverable connector where
+> a user can plug in a few peripherals has been reinvented a few
+> times.
+> 
+> As a proof-of-concept we add the Secure96, a quite minimal
+> mezzanine board.
+> 
+> Users can register their boards in a simple way. Either just
+> add their compatible-string in the device tree:
+> 
+> board {
+>         compatible = "96boards,secure96";
+> };
+> 
+> And if they can't even change three lines in their device tree,
+> or if they at runtime decide to plug in some board and test it,
+> they can use sysfs, as exemplified by plugging in the secure96
+> security board at runtime:
+> 
+> > cd /sys/devices/platform/connector
+> > echo 1 > secure96
+> [   61.014629] lscon connector: called mezzanine_store on secure96
+> [   61.020530] lscon connector: populate secure96
+> [   61.027081] at24 1-0050: 2048 byte 24c128 EEPROM, writable, 128 bytes/write
+> [   61.053569] atmel-ecc 1-0060: configuration zone is unlocked
+> [   61.502535] tpm_tis_spi spi0.0: 2.0 TPM (device-id 0x1B, rev-id 16)
+> (...)
+> 
+> The plug-in board can be removed from sysfs and added back
+> again multiple times like this with the devices being runtime
+> added and removed by two writes to sysfs.
+> 
+> > echo 0 > secure96
+> > echo 1 > secure96
+> > echo 0 > secure96
+> (...)
+
+Having a sysfs interface is useful (I certainly love being able to use
+sysfs to manage ad-hoc I2C chains).
+
+However it feels like the current blurring between connector device and
+mezzanine device is shining through in this interface if only because
+the look and feel is very different to instantiating an I2C device from
+user-space.
+
+
+Daniel.
