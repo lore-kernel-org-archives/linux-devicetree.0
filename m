@@ -1,45 +1,79 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v6 10/29] drm/mediatek: add the DSI1 for component init
- condition
-Date: Tue, 19 Jun 2018 16:00:45 +0800
-Message-ID: <1529395245.26480.3.camel@mtksdaap41>
-References: <1529393670-26862-1-git-send-email-stu.hsieh@mediatek.com>
- <1529393670-26862-11-git-send-email-stu.hsieh@mediatek.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v3 1/3] mtd: rawnand: denali_dt: add more clocks based on
+ IP datasheet
+Date: Tue, 19 Jun 2018 17:07:26 +0900
+Message-ID: <CAK7LNASCKhxtoOc3QdECF6p8BaBjab7Ed2y9Og+8LhvX4O83-Q@mail.gmail.com>
+References: <1529025532-22087-1-git-send-email-yamada.masahiro@socionext.com>
+ <1529025532-22087-2-git-send-email-yamada.masahiro@socionext.com>
+ <5816516.AqyscFuYxX@blindfold> <20180618094636.0e40c518@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1529393670-26862-11-git-send-email-stu.hsieh@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stu Hsieh <stu.hsieh@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180618094636.0e40c518@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Richard Weinberger <richard@nod.at>, linux-mtd <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, "linux-stable #4 . 14+" <stable@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE4LTA2LTE5IGF0IDE1OjM0ICswODAwLCBTdHUgSHNpZWggd3JvdGU6Cj4gVGhp
-cyBwYXRjaCBhZGQgdGhlIERTSTEgZm9yIGNvbXBvbmVudCBpbml0IGNvbmRpdGlvbgo+IAoKUmV2
-aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+Cgo+IFNpZ25lZC1vZmYtYnk6IFN0
-dSBIc2llaCA8c3R1LmhzaWVoQG1lZGlhdGVrLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYyB8IDEgKwo+ICAxIGZpbGUgY2hhbmdlZCwgMSBp
-bnNlcnRpb24oKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kcm1fZGRwX2NvbXAuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9j
-b21wLmMKPiBpbmRleCAxN2I2ODE2ODY0NzEuLmZmOTc0ZDgyYTRhNiAxMDA2NDQKPiAtLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jCj4gKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYwo+IEBAIC0yODAsNiArMjgwLDcg
-QEAgaW50IG10a19kZHBfY29tcF9pbml0KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmlj
-ZV9ub2RlICpub2RlLAo+ICAJICAgIGNvbXBfaWQgPT0gRERQX0NPTVBPTkVOVF9EUEkwIHx8Cj4g
-IAkgICAgY29tcF9pZCA9PSBERFBfQ09NUE9ORU5UX0RQSTEgfHwKPiAgCSAgICBjb21wX2lkID09
-IEREUF9DT01QT05FTlRfRFNJMCB8fAo+ICsJICAgIGNvbXBfaWQgPT0gRERQX0NPTVBPTkVOVF9E
-U0kxIHx8Cj4gIAkgICAgY29tcF9pZCA9PSBERFBfQ09NUE9ORU5UX0RTSTIgfHwKPiAgCSAgICBj
-b21wX2lkID09IEREUF9DT01QT05FTlRfRFNJMyB8fAo+ICAJICAgIGNvbXBfaWQgPT0gRERQX0NP
-TVBPTkVOVF9QV00wKSB7CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+Hi Boris,
+
+
+2018-06-18 16:46 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:
+> On Mon, 18 Jun 2018 09:09:02 +0200
+> Richard Weinberger <richard@nod.at> wrote:
+>
+>> Am Freitag, 15. Juni 2018, 03:18:50 CEST schrieb Masahiro Yamada:
+>> > According to the Denali User's Guide, this IP needs three clocks:
+>> >
+>> >  - clk: controller core clock
+>> >
+>> >  - clk_x: bus interface clock
+>> >
+>> >  - ecc_clk: clock at which ECC circuitry is run
+>> >
+>> > Currently, denali_dt.c requires a single anonymous clock and its
+>> > frequency.  However, the driver needs to get the frequency of "clk_x"
+>> > not "clk".  This is confusing because people tend to assume the
+>> > anonymous clock means the core clock.  In fact, I got a report of
+>> > SOCFPGA breakage because the timing parameters are calculated based
+>> > on a wrong frequency.
+>> >
+>> > Instead of the cheesy implementation, the clocks in the real hardware
+>> > should be represented in the driver and the DT-binding.
+>> >
+>> > However, adding new clocks would break the existing platforms.  For the
+>> > backward compatibility, the driver still accepts a single clock just as
+>> > before.  If clk_x is missing, clk_x_rate is set to a hardcoded value.
+>> > This is fine for existing DT of Socionext UniPhier, and also fixes the
+>> > issue of Altera (Intel) SOCFPGA because both platforms use 200 MHz for
+>> > the bus interface clock.
+>> >
+>> > Fixes: 1bb88666775e ("mtd: nand: denali: handle timing parameters by setup_data_interface()")
+>> > Cc: linux-stable <stable@vger.kernel.org> #4.14+
+>> > Reported-by: Richard Weinberger <richard@nod.at>
+>> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>>
+>> Reviewed-by: Richard Weinberger <richard@nod.at>
+>
+> Maybe a
+>
+> Tested-by: Richard Weinberger <richard@nod.at>
+>
+> ?
+>
+>> Reported-by: Philipp Rosenberger <p.rosenberger@linutronix.de>
+>
+> Should I replace your Reported-by by this one or simply add it?
+
+
+I think it is good to have Reported-by
+both from Philipp and Richard.
+
+
+Thanks.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
