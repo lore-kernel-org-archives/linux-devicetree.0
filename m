@@ -1,14 +1,15 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2] ARM: dts: imx6sx: fix irq for pcie bridge
-Date: Tue, 19 Jun 2018 14:43:34 +0800
-Message-ID: <20180619064333.GE16091@dragon>
-References: <20180615074129.16931-1-o.rempel@pengutronix.de>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH v2 2/4] dt-bindings: misc: Aspeed coprocessor interrupt
+ controller
+Date: Tue, 19 Jun 2018 16:26:25 +0930
+Message-ID: <CACPK8XfCZA7m++KeJ1GyPAbBXPmyhebEkvb+R41Xy1iuGvkbLw@mail.gmail.com>
+References: <20180618045902.11453-1-benh@kernel.crashing.org>
+ <20180618045902.11453-3-benh@kernel.crashing.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180615074129.16931-1-o.rempel@pengutronix.de>
+In-Reply-To: <20180618045902.11453-3-benh@kernel.crashing.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,21 +19,67 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Andrew Jeffery <andrew@aj.id.au>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 15, 2018 at 09:41:29AM +0200, Oleksij Rempel wrote:
-> Use the correct IRQ line for the MSI controller in the PCIe host
-> controller. Apparently a different IRQ line is used compared to other
-> i.MX6 variants. Without this change MSI IRQs aren't properly propagated
-> to the upstream interrupt controller.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+On 18 June 2018 at 14:29, Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+> Add the device-tree binding definition for the AST2400
+> and AST2500 coprocessor interrupt controller
+>
+> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> ---
+>  .../devicetree/bindings/misc/aspeed,cvic.txt  | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/aspeed,cvic.txt
+>
+> diff --git a/Documentation/devicetree/bindings/misc/aspeed,cvic.txt b/Documentation/devicetree/bindings/misc/aspeed,cvic.txt
+> new file mode 100644
+> index 000000000000..2562e2991e4d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/aspeed,cvic.txt
 
-Added the following Fixes tag and applied as a fix.
+Is there a reason you didn't put this in bindings/interrupt-controller?
 
- Fixes: b1d17f68e5c5 ("ARM: dts: imx: add initial imx6sx device tree source")
+Aside from that this looks good.
 
-Shawn
+> @@ -0,0 +1,35 @@
+> +* Aspeed AST2400 and AST2500 coprocessor interrupt controller
+> +
+> +This file describes the bindings for the interrupt controller present
+> +in the AST2400 and AST2500 BMC SoCs which provides interrupt to the
+> +ColdFire coprocessor.
+> +
+> +It is not a normal interrupt controller and it would be rather
+> +inconvenient to create an interrupt tree for it as it somewhat shares
+> +some of the same sources as the main ARM interrupt controller but with
+> +different numbers.
+> +
+> +The AST2500 supports a SW generated interrupt
+> +
+> +Required properties:
+> +- reg: address and length of the register for the device.
+> +- compatible: "aspeed,cvic" and one of:
+> +               "aspeed,ast2400-cvic"
+> +             or
+> +               "aspeed,ast2500-cvic"
+> +
+> +- valid-sources: One cell, bitmap of supported sources for the implementation
+> +
+> +Optional properties;
+> +- copro-sw-interrupts: List of interrupt numbers that can be used as
+> +                      SW interrupts from the ARM to the coprocessor.
+> +                      (AST2500 only)
+> +
+> +Example:
+> +
+> +       cvic: copro-interrupt-controller@1e6c2000 {
+> +               compatible = "aspeed,ast2500-cvic";
+> +               valid-sources = <0xffffffff>;
+> +               copro-sw-interrupts = <1>;
+> +               reg = <0x1e6c2000 0x80>;
+> +       };
+> --
+> 2.17.1
+>
