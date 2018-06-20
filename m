@@ -1,40 +1,44 @@
-From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v3 0/3] pinctrl: imx: Add driver for i.MX8MQ
-Date: Wed, 20 Jun 2018 10:24:20 +0300
-Message-ID: <1529479463-26961-1-git-send-email-abel.vesa@nxp.com>
+From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Subject: Re: [PATCH 18/20] dts: sama5d2: Update coresight bindings for
+ hardware ports
+Date: Wed, 20 Jun 2018 10:44:29 +0100
+Message-ID: <abf65bac-0956-f1de-127e-38b0f41a6233@arm.com>
+References: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
+ <1528235011-30691-19-git-send-email-suzuki.poulose@arm.com>
+ <20180619212417.GB3128@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180619212417.GB3128@piout.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>
-Cc: linux-gpio@vger.kernel.org, linux-imx@nxp.com, Shawn Guo <shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org, robh@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com, sudeep.holla@arm.com, arm@kernel.org, linux-kernel@vger.kernel.org, matt.sealey@arm.com, john.horley@arm.com, charles.garcia-tobin@arm.com, coresight@lists.linaro.org, devicetree@vger.kernel.org, mike.leach@linaro.org, Nicolas Ferre <nicolas.ferre@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-This is the third version for the patch series sent by Lucas.
+On 19/06/18 22:24, Alexandre Belloni wrote:
+> On 05/06/2018 22:43:29+0100, Suzuki K Poulose wrote:
+>> Switch to the new coresight bindings for hardware ports
+>>
+>> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+>> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> ---
+>>   arch/arm/boot/dts/sama5d2.dtsi | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+> Applied, thanks.
+> 
 
-https://www.spinics.net/lists/devicetree/msg212752.html
+Alexandre,
 
-Changes since v2:
- * switch back to the 'fsl,pins' and hardcoded the config values
-inside the dts.
- * updated documentation accordingly
+Please hold off applying this change, as we are yet to come to an
+agreement on this. Sorry for the trouble. See [0]
 
-Abel Vesa (1):
-  dt-bindings: add binding for i.MX8MQ IOMUXC
 
-Lucas Stach (2):
-  pinctrl: imx: allow to configure SION with generic pinconf
-  pinctrl: imx: add driver for i.MX8MQ
+[0] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-June/582269.html
 
- .../bindings/pinctrl/fsl,imx8mq-pinctrl.txt        |  13 +
- drivers/pinctrl/freescale/Kconfig                  |   7 +
- drivers/pinctrl/freescale/Makefile                 |   1 +
- drivers/pinctrl/freescale/pinctrl-imx.c            |  19 +-
- drivers/pinctrl/freescale/pinctrl-imx.h            |   4 +
- drivers/pinctrl/freescale/pinctrl-imx8mq.c         | 356 +++++++++++++++++++++
- 6 files changed, 388 insertions(+), 12 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
- create mode 100644 drivers/pinctrl/freescale/pinctrl-imx8mq.c
-
--- 
-2.7.4
+Kind regards
+Suzuki
