@@ -1,259 +1,129 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH V3 1/3] watchdog: stm32: add pclk feature for stm32mp1
-Date: Wed, 20 Jun 2018 15:51:36 +0200
-Message-ID: <1529502698-13263-2-git-send-email-ludovic.Barre@st.com>
-References: <1529502698-13263-1-git-send-email-ludovic.Barre@st.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] drivers: base: initcall_debug logs for driver probe times
+Date: Wed, 20 Jun 2018 08:28:57 -0600
+Message-ID: <CAL_Jsq+8J=BgrFAA2bdA1UcmpeYdZWHybwtyy+gq94bZaK8bKg@mail.gmail.com>
+References: <20180620023903.242758-1-toddpoynor@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529502698-13263-1-git-send-email-ludovic.Barre@st.com>
+In-Reply-To: <20180620023903.242758-1-toddpoynor@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
+To: Todd Poynor <toddpoynor@gmail.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>, Todd Poynor <toddpoynor@google.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+On Tue, Jun 19, 2018 at 8:39 PM, Todd Poynor <toddpoynor@gmail.com> wrote:
+> From: Todd Poynor <toddpoynor@google.com>
+>
+> Add initcall_debug logs for each driver device probe call, for example:
+>
+>    probe of a3800000.ramoops returned after 3007 usecs
+>
+> This replaces the previous code added to report times for deferred
+> probes.  It also reports OF platform bus device creates that were
+> formerly lumped together in a single entry for function
+> of_platform_default_populate_init, as well as helping to annotate other
+> initcalls that involve device probing.
+>
+> Signed-off-by: Todd Poynor <toddpoynor@google.com>
+> ---
+>  drivers/base/dd.c | 50 +++++++++++++++++++++++------------------------
+>  1 file changed, 24 insertions(+), 26 deletions(-)
+>
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index 1435d7281c66..56db446a467a 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -62,26 +62,6 @@ static bool initcalls_done;
+>   */
+>  static bool defer_all_probes;
+>
+> -/*
+> - * For initcall_debug, show the deferred probes executed in late_initcall
+> - * processing.
+> - */
+> -static void deferred_probe_debug(struct device *dev)
+> -{
+> -       ktime_t calltime, delta, rettime;
+> -       unsigned long long duration;
+> -
+> -       printk(KERN_DEBUG "deferred probe %s @ %i\n", dev_name(dev),
+> -              task_pid_nr(current));
+> -       calltime = ktime_get();
+> -       bus_probe_device(dev);
+> -       rettime = ktime_get();
+> -       delta = ktime_sub(rettime, calltime);
+> -       duration = (unsigned long long) ktime_to_ns(delta) >> 10;
+> -       printk(KERN_DEBUG "deferred probe %s returned after %lld usecs\n",
+> -              dev_name(dev), duration);
+> -}
+> -
+>  /*
+>   * deferred_probe_work_func() - Retry probing devices in the active list.
+>   */
+> @@ -125,11 +105,7 @@ static void deferred_probe_work_func(struct work_struct *work)
+>                 device_pm_move_to_tail(dev);
+>
+>                 dev_dbg(dev, "Retrying from deferred list\n");
+> -               if (initcall_debug && !initcalls_done)
+> -                       deferred_probe_debug(dev);
+> -               else
+> -                       bus_probe_device(dev);
+> -
+> +               bus_probe_device(dev);
+>                 mutex_lock(&deferred_probe_mutex);
+>
+>                 put_device(dev);
+> @@ -527,6 +503,25 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+>         return ret;
+>  }
+>
+> +/*
+> + * For initcall_debug, show the driver probe time.
+> + */
+> +static int really_probe_debug(struct device *dev, struct device_driver *drv)
+> +{
+> +       ktime_t calltime, delta, rettime;
+> +       unsigned long long duration;
 
-This patch adds config data to manage specific properties by
-compatible. Adds stm32mp1 config which requires pclk clock.
+Probably should be s64.
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- .../devicetree/bindings/watchdog/st,stm32-iwdg.txt |  21 +++-
- drivers/watchdog/stm32_iwdg.c                      | 116 +++++++++++++--------
- 2 files changed, 91 insertions(+), 46 deletions(-)
+> +       int ret;
+> +
+> +       calltime = ktime_get();
+> +       ret = really_probe(dev, drv);
+> +       rettime = ktime_get();
+> +       delta = ktime_sub(rettime, calltime);
+> +       duration = (unsigned long long) ktime_to_ns(delta) >> 10;
 
-diff --git a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
-index cc13b10a..f07f6d89 100644
---- a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
-+++ b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
-@@ -2,18 +2,31 @@ STM32 Independent WatchDoG (IWDG)
- ---------------------------------
- 
- Required properties:
--- compatible: "st,stm32-iwdg"
--- reg: physical base address and length of the registers set for the device
--- clocks: must contain a single entry describing the clock input
-+- compatible: Should be either "st,stm32-iwdg" or "st,stm32mp1-iwdg"
-+- reg: Physical base address and length of the registers set for the device
-+- clocks: Reference to the clock entry lsi. Additional pclk clock entry
-+  is required only for st,stm32mp1-iwdg.
-+- clock-names: Name of the clocks used.
-+  "lsi" for st,stm32-iwdg
-+  "pclk", "lsi" for st,stm32mp1-iwdg
- 
- Optional Properties:
- - timeout-sec: Watchdog timeout value in seconds.
- 
--Example:
-+Examples:
- 
- iwdg: watchdog@40003000 {
- 	compatible = "st,stm32-iwdg";
- 	reg = <0x40003000 0x400>;
- 	clocks = <&clk_lsi>;
-+	clock-names = "lsi";
-+	timeout-sec = <32>;
-+};
-+
-+iwdg: iwdg@5a002000 {
-+	compatible = "st,stm32mp1-iwdg";
-+	reg = <0x5a002000 0x400>;
-+	clocks = <&rcc IWDG2>, <&clk_lsi>;
-+	clock-names = "pclk", "lsi";
- 	timeout-sec = <32>;
- };
-diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
-index c97ad56..e00e3b3 100644
---- a/drivers/watchdog/stm32_iwdg.c
-+++ b/drivers/watchdog/stm32_iwdg.c
-@@ -11,12 +11,13 @@
- 
- #include <linux/clk.h>
- #include <linux/delay.h>
--#include <linux/kernel.h>
--#include <linux/module.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/watchdog.h>
- 
-@@ -54,11 +55,15 @@
- #define TIMEOUT_US	100000
- #define SLEEP_US	1000
- 
-+#define HAS_PCLK	true
-+
- struct stm32_iwdg {
- 	struct watchdog_device	wdd;
- 	void __iomem		*regs;
--	struct clk		*clk;
-+	struct clk		*clk_lsi;
-+	struct clk		*clk_pclk;
- 	unsigned int		rate;
-+	bool			has_pclk;
- };
- 
- static inline u32 reg_read(void __iomem *base, u32 reg)
-@@ -133,6 +138,44 @@ static int stm32_iwdg_set_timeout(struct watchdog_device *wdd,
- 	return 0;
- }
- 
-+static int stm32_iwdg_clk_init(struct platform_device *pdev,
-+			       struct stm32_iwdg *wdt)
-+{
-+	u32 ret;
-+
-+	wdt->clk_lsi = devm_clk_get(&pdev->dev, "lsi");
-+	if (IS_ERR(wdt->clk_lsi)) {
-+		dev_err(&pdev->dev, "Unable to get lsi clock\n");
-+		return PTR_ERR(wdt->clk_lsi);
-+	}
-+
-+	/* optional peripheral clock */
-+	if (wdt->has_pclk) {
-+		wdt->clk_pclk = devm_clk_get(&pdev->dev, "pclk");
-+		if (IS_ERR(wdt->clk_pclk)) {
-+			dev_err(&pdev->dev, "Unable to get pclk clock\n");
-+			return PTR_ERR(wdt->clk_pclk);
-+		}
-+
-+		ret = clk_prepare_enable(wdt->clk_pclk);
-+		if (ret) {
-+			dev_err(&pdev->dev, "Unable to prepare pclk clock\n");
-+			return ret;
-+		}
-+	}
-+
-+	ret = clk_prepare_enable(wdt->clk_lsi);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Unable to prepare lsi clock\n");
-+		clk_disable_unprepare(wdt->clk_pclk);
-+		return ret;
-+	}
-+
-+	wdt->rate = clk_get_rate(wdt->clk_lsi);
-+
-+	return 0;
-+}
-+
- static const struct watchdog_info stm32_iwdg_info = {
- 	.options	= WDIOF_SETTIMEOUT |
- 			  WDIOF_MAGICCLOSE |
-@@ -147,49 +190,42 @@ static const struct watchdog_ops stm32_iwdg_ops = {
- 	.set_timeout	= stm32_iwdg_set_timeout,
- };
- 
-+static const struct of_device_id stm32_iwdg_of_match[] = {
-+	{ .compatible = "st,stm32-iwdg", .data = (void *)!HAS_PCLK },
-+	{ .compatible = "st,stm32mp1-iwdg", .data = (void *)HAS_PCLK },
-+	{ /* end node */ }
-+};
-+MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
-+
- static int stm32_iwdg_probe(struct platform_device *pdev)
- {
- 	struct watchdog_device *wdd;
-+	const struct of_device_id *match;
- 	struct stm32_iwdg *wdt;
- 	struct resource *res;
--	void __iomem *regs;
--	struct clk *clk;
- 	int ret;
- 
-+	match = of_match_device(stm32_iwdg_of_match, &pdev->dev);
-+	if (!match)
-+		return -ENODEV;
-+
-+	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-+	if (!wdt)
-+		return -ENOMEM;
-+
-+	wdt->has_pclk = match->data;
-+
- 	/* This is the timer base. */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	regs = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(regs)) {
-+	wdt->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(wdt->regs)) {
- 		dev_err(&pdev->dev, "Could not get resource\n");
--		return PTR_ERR(regs);
-+		return PTR_ERR(wdt->regs);
- 	}
- 
--	clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(clk)) {
--		dev_err(&pdev->dev, "Unable to get clock\n");
--		return PTR_ERR(clk);
--	}
--
--	ret = clk_prepare_enable(clk);
--	if (ret) {
--		dev_err(&pdev->dev, "Unable to prepare clock %p\n", clk);
-+	ret = stm32_iwdg_clk_init(pdev, wdt);
-+	if (ret)
- 		return ret;
--	}
--
--	/*
--	 * Allocate our watchdog driver data, which has the
--	 * struct watchdog_device nested within it.
--	 */
--	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
--	if (!wdt) {
--		ret = -ENOMEM;
--		goto err;
--	}
--
--	/* Initialize struct stm32_iwdg. */
--	wdt->regs = regs;
--	wdt->clk = clk;
--	wdt->rate = clk_get_rate(clk);
- 
- 	/* Initialize struct watchdog_device. */
- 	wdd = &wdt->wdd;
-@@ -217,7 +253,8 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
- 
- 	return 0;
- err:
--	clk_disable_unprepare(clk);
-+	clk_disable_unprepare(wdt->clk_lsi);
-+	clk_disable_unprepare(wdt->clk_pclk);
- 
- 	return ret;
- }
-@@ -227,23 +264,18 @@ static int stm32_iwdg_remove(struct platform_device *pdev)
- 	struct stm32_iwdg *wdt = platform_get_drvdata(pdev);
- 
- 	watchdog_unregister_device(&wdt->wdd);
--	clk_disable_unprepare(wdt->clk);
-+	clk_disable_unprepare(wdt->clk_lsi);
-+	clk_disable_unprepare(wdt->clk_pclk);
- 
- 	return 0;
- }
- 
--static const struct of_device_id stm32_iwdg_of_match[] = {
--	{ .compatible = "st,stm32-iwdg" },
--	{ /* end node */ }
--};
--MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
--
- static struct platform_driver stm32_iwdg_driver = {
- 	.probe		= stm32_iwdg_probe,
- 	.remove		= stm32_iwdg_remove,
- 	.driver = {
- 		.name	= "iwdg",
--		.of_match_table = stm32_iwdg_of_match,
-+		.of_match_table = of_match_ptr(stm32_iwdg_of_match),
- 	},
- };
- module_platform_driver(stm32_iwdg_driver);
--- 
-2.7.4
+Is avoiding a divide really worth optimizing here compared to the
+flood of messages typically on the serial port? Just use ktime_to_us.
+Perhaps just get rid of duration and do the conversion in the printk
+arg.
+
+> +       printk(KERN_DEBUG "probe of %s returned after %lld usecs\n",
+> +              dev_name(dev), duration);
+
+Including the return code here too would be good.
+
+> +       return ret;
+> +}
+> +
+>  /**
+>   * driver_probe_done
+>   * Determine if the probe sequence is finished or not.
+> @@ -585,7 +580,10 @@ int driver_probe_device(struct device_driver *drv, struct device *dev)
+>                 pm_runtime_get_sync(dev->parent);
+>
+>         pm_runtime_barrier(dev);
+> -       ret = really_probe(dev, drv);
+> +       if (initcall_debug && !initcalls_done)
+> +               ret = really_probe_debug(dev, drv);
+> +       else
+> +               ret = really_probe(dev, drv);
+>         pm_request_idle(dev);
+>
+>         if (dev->parent)
+> --
+> 2.18.0.rc1.244.gcf134e6275-goog
+>
