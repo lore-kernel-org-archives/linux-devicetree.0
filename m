@@ -1,65 +1,39 @@
-Return-Path: <SRS0=5+Be=JG=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v3 1/5] dt-bindings: leds: Add bindings for lltc,lt3593
-Date: Wed, 20 Jun 2018 22:12:59 +0200
-Message-Id: <20180620201303.6272-2-daniel@zonque.org>
-In-Reply-To: <20180620201303.6272-1-daniel@zonque.org>
-References: <20180620201303.6272-1-daniel@zonque.org>
-To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=x3SR=JG=verge.net.au=horms@kernel.org>
+Date: Wed, 20 Jun 2018 10:54:41 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] arm64: dts: renesas: salvator-common: Add HSCIF1
+ device support
+Message-ID: <20180620085439.rt4jyiem4hu5er5w@verge.net.au>
+References: <20180619171401.19489-1-geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180619171401.19489-1-geert+renesas@glider.be>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Hiromitsu Yamasaki <hiromitsu.yamasaki.ym@renesas.com>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch add the bindings document for LT3593 LED drivers.
-The binding is kept consistent with other LED driver bindings in that it
-stores all the LED-specific properties in its own subnode. As the hardware
-only supports one channel, there can consequently only be one sub-node.
+On Tue, Jun 19, 2018 at 07:14:01PM +0200, Geert Uytterhoeven wrote:
+> From: Hiromitsu Yamasaki <hiromitsu.yamasaki.ym@renesas.com>
+> 
+> This patch adds pin control for HSCIF1, and supports connection with
+> Debug Serial-1 (CN26) on Salvator boards.
+> 
+> SCIF1 and HSCIF1 are sharing the pins connected to Debug Serial-1 (CN26)
+> on Salvator boards, and it is necessary to ensure that either SCIF1 or
+> HSCIF1 is enabled, not both.
+> 
+> As for the default of this DeviceTree, SCIF1 is connected.
+> 
+> Signed-off-by: Hiromitsu Yamasaki <hiromitsu.yamasaki.ym@renesas.com>
+> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> [geert: Add missing "uart-has-rtscts"]
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v2:
+>   - Drop RFC state,
+>   - Reword.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- .../devicetree/bindings/leds/leds-lt3593.txt  | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-lt3593.txt
+Thanks Geert,
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lt3593.txt b/Documentation/devicetree/bindings/leds/leds-lt3593.txt
-new file mode 100644
-index 000000000000..9e7f308404f8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-lt3593.txt
-@@ -0,0 +1,35 @@
-+Bindings for Linear Technologies LT3593 LED controller
-+
-+Required properties:
-+- compatible:	Should be "lltc,lt3593".
-+
-+The hardware supports only one LED. The properties of this LED are
-+configured in a sub-node in the device node.
-+
-+Required sub-node properties:
-+- gpios:	A handle to the GPIO that is connected to the 'CTRL'
-+		pin of the chip.
-+
-+Optional sub-node properties:
-+- label:	A label for the LED. If none is given, the LED will be
-+		named "lt3595::".
-+- linux,default-trigger: The default trigger for the LED.
-+			See Documentation/devicetree/bindings/leds/common.txt
-+- default-state:	The initial state of the LED.
-+			See Documentation/devicetree/bindings/leds/common.txt
-+
-+If multiple chips of this type are found in a design, each one needs to
-+be handled by its own device node.
-+
-+Example:
-+
-+led-controller {
-+	compatible = "lltc,lt3593";
-+
-+	led {
-+		label = "white:backlight";
-+		gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
-+		default-state = "on";
-+	};
-+};
-+
--- 
-2.17.1
+applied.
