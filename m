@@ -1,63 +1,44 @@
-From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH v7 28/29] drm/mediatek: add third ddp path
-Date: Wed, 20 Jun 2018 16:19:30 +0800
-Message-ID: <1529482771-2153-29-git-send-email-stu.hsieh@mediatek.com>
-References: <1529482771-2153-1-git-send-email-stu.hsieh@mediatek.com>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH v3 1/3] dt-bindings: add binding for i.MX8MQ IOMUXC
+Date: Wed, 20 Jun 2018 10:24:21 +0300
+Message-ID: <1529479463-26961-2-git-send-email-abel.vesa@nxp.com>
+References: <1529479463-26961-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1529482771-2153-1-git-send-email-stu.hsieh@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Stu Hsieh <stu.hsieh@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1529479463-26961-1-git-send-email-abel.vesa@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>
+Cc: linux-gpio@vger.kernel.org, linux-imx@nxp.com, Shawn Guo <shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBjcmVhdGUgdGhpcmQgY3J0YyBieSB0aGlyZCBkZHAgcGF0aAoKU2lnbmVkLW9m
-Zi1ieTogU3R1IEhzaWVoIDxzdHUuaHNpZWhAbWVkaWF0ZWsuY29tPgpSZXZpZXdlZC1ieTogQ0sg
-SHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2RybV9jcnRjLmMgfCAzICsrKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2
-LmMgIHwgNSArKysrKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmggIHwg
-NSArKysrLQogMyBmaWxlcyBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0p
-CgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jIGIv
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jCmluZGV4IDY1OGI4ZGQ0NWI4
-My4uMmQ2YWExNTBhOWZmIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2RybV9jcnRjLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5j
-CkBAIC01MzksNiArNTM5LDkgQEAgaW50IG10a19kcm1fY3J0Y19jcmVhdGUoc3RydWN0IGRybV9k
-ZXZpY2UgKmRybV9kZXYsCiAJaW50IHJldDsKIAlpbnQgaTsKIAorCWlmICghcGF0aCkKKwkJcmV0
-dXJuIDA7CisKIAlmb3IgKGkgPSAwOyBpIDwgcGF0aF9sZW47IGkrKykgewogCQllbnVtIG10a19k
-ZHBfY29tcF9pZCBjb21wX2lkID0gcGF0aFtpXTsKIAkJc3RydWN0IGRldmljZV9ub2RlICpub2Rl
-OwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMgYi9k
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYwppbmRleCAwOGQ1ZDBiNDdiZmUu
-LjNkMjc5YTI5OTM4MyAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-cm1fZHJ2LmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMKQEAg
-LTIzMiw2ICsyMzIsMTEgQEAgc3RhdGljIGludCBtdGtfZHJtX2ttc19pbml0KHN0cnVjdCBkcm1f
-ZGV2aWNlICpkcm0pCiAJaWYgKHJldCA8IDApCiAJCWdvdG8gZXJyX2NvbXBvbmVudF91bmJpbmQ7
-CiAKKwlyZXQgPSBtdGtfZHJtX2NydGNfY3JlYXRlKGRybSwgcHJpdmF0ZS0+ZGF0YS0+dGhpcmRf
-cGF0aCwKKwkJCQkgIHByaXZhdGUtPmRhdGEtPnRoaXJkX2xlbik7CisJaWYgKHJldCA8IDApCisJ
-CWdvdG8gZXJyX2NvbXBvbmVudF91bmJpbmQ7CisKIAkvKiBVc2UgT1ZMIGRldmljZSBmb3IgYWxs
-IERNQSBtZW1vcnkgYWxsb2NhdGlvbnMgKi8KIAlucCA9IHByaXZhdGUtPmNvbXBfbm9kZVtwcml2
-YXRlLT5kYXRhLT5tYWluX3BhdGhbMF1dID86CiAJICAgICBwcml2YXRlLT5jb21wX25vZGVbcHJp
-dmF0ZS0+ZGF0YS0+ZXh0X3BhdGhbMF1dOwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19kcm1fZHJ2LmggYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9k
-cnYuaAppbmRleCBjMzM3OGM0NTJjMGEuLmVjYzAwY2EzMjIxZCAxMDA2NDQKLS0tIGEvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmgKKysrIGIvZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19kcm1fZHJ2LmgKQEAgLTE3LDcgKzE3LDcgQEAKICNpbmNsdWRlIDxsaW51eC9p
-by5oPgogI2luY2x1ZGUgIm10a19kcm1fZGRwX2NvbXAuaCIKIAotI2RlZmluZSBNQVhfQ1JUQwky
-CisjZGVmaW5lIE1BWF9DUlRDCTMKICNkZWZpbmUgTUFYX0NPTk5FQ1RPUgkyCiAKIHN0cnVjdCBk
-ZXZpY2U7CkBAIC0zMyw2ICszMyw5IEBAIHN0cnVjdCBtdGtfbW1zeXNfZHJpdmVyX2RhdGEgewog
-CXVuc2lnbmVkIGludCBtYWluX2xlbjsKIAljb25zdCBlbnVtIG10a19kZHBfY29tcF9pZCAqZXh0
-X3BhdGg7CiAJdW5zaWduZWQgaW50IGV4dF9sZW47CisJY29uc3QgZW51bSBtdGtfZGRwX2NvbXBf
-aWQgKnRoaXJkX3BhdGg7CisJdW5zaWduZWQgaW50IHRoaXJkX2xlbjsKKwogCWJvb2wgc2hhZG93
-X3JlZ2lzdGVyOwogfTsKIAotLSAKMi4xMi41CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+This adds the binding for the i.MX8MQ pin controller, in the same
+fashion as earlier i.MX SoCs.
+
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+---
+ .../devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt      | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
+new file mode 100644
+index 0000000..5cf7f8a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
+@@ -0,0 +1,13 @@
++* Freescale IMX8MQ IOMUX Controller
++
++Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
++for common binding part and usage.
++
++Required properties:
++- compatible: "fsl,imx8mq-iomuxc"
++- fsl,pins: each entry consists of 6 integers and represents the mux and config
++  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
++  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
++  imx8mq-pinfunc.h under device tree source folder.  The last integer CONFIG is
++  the pad setting value like pull-up on this pin.  Please refer to i.MX8M Quad
++  Reference Manual for detailed CONFIG settings.
+-- 
+2.7.4
