@@ -1,46 +1,27 @@
-From: Nick Dyer <nick@shmanahar.org>
-Subject: [PATCH v3] ARM: dts: imx51-zii-rdu1: fix touchscreen pinctrl
-Date: Wed, 20 Jun 2018 21:20:45 +0100
-Message-ID: <20180620202045.27965-1-nick@shmanahar.org>
-References: <20180620194239.2730-1-nick@shmanahar.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180620194239.2730-1-nick@shmanahar.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Nick Dyer <nick@shmanahar.org>, stable@vger.kernel.org
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v3] ARM: dts: imx51-zii-rdu1: fix touchscreen pinctrl
+Date: Wed, 20 Jun 2018 17:31:52 -0300
+Message-ID: <CAOMZO5BTMRJmrjM7X3-7Qi1wuciOnLZhAUuWN27Dtoc0cZXVSA@mail.gmail.com>
+References: <20180620194239.2730-1-nick@shmanahar.org> <20180620202045.27965-1-nick@shmanahar.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20180620202045.27965-1-nick@shmanahar.org>
+Sender: stable-owner@vger.kernel.org
+To: Nick Dyer <nick@shmanahar.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, stable <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The pinctrl settings were incorrect for the touchscreen interrupt line, causing
-an interrupt storm. This change has been tested with both the atmel_mxt_ts and
-RMI4 drivers on the RDU1 units.
+On Wed, Jun 20, 2018 at 5:20 PM, Nick Dyer <nick@shmanahar.org> wrote:
+> The pinctrl settings were incorrect for the touchscreen interrupt line, causing
+> an interrupt storm. This change has been tested with both the atmel_mxt_ts and
+> RMI4 drivers on the RDU1 units.
+>
+> The value 0x4 comes from the value of register IOMUXC_SW_PAD_CTL_PAD_CSI1_D8
+> from the old vendor kernel.
+>
+> Signed-off-by: Nick Dyer <nick@shmanahar.org>
+> Fixes: ceef0396f367 ("ARM: dts: imx: add ZII RDU1 board")
+> Cc: <stable@vger.kernel.org> # 4.15+
 
-The value 0x4 comes from the value of register IOMUXC_SW_PAD_CTL_PAD_CSI1_D8
-from the old vendor kernel.
-
-Signed-off-by: Nick Dyer <nick@shmanahar.org>
-Fixes: ceef0396f367 ("ARM: dts: imx: add ZII RDU1 board")
-Cc: <stable@vger.kernel.org> # 4.15+
----
-Changes in v3:
-- Update commit message to add source of 0x4 value, fixes tag and CC stable
-Changes in v2:
-- Use hex, only alter IRQ line config
-
- arch/arm/boot/dts/imx51-zii-rdu1.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-index df9eca94d812..8a878687197b 100644
---- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
-+++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-@@ -770,7 +770,7 @@
- 
- 	pinctrl_ts: tsgrp {
- 		fsl,pins = <
--			MX51_PAD_CSI1_D8__GPIO3_12		0x85
-+			MX51_PAD_CSI1_D8__GPIO3_12		0x04
- 			MX51_PAD_CSI1_D9__GPIO3_13		0x85
- 		>;
- 	};
--- 
-2.17.1
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
