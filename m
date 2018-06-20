@@ -1,49 +1,99 @@
-From: Nick Dyer <nick@shmanahar.org>
-Subject: [PATCH v4] ARM: dts: imx51-zii-rdu1: fix touchscreen pinctrl
-Date: Wed, 20 Jun 2018 21:35:00 +0100
-Message-ID: <20180620203500.28309-1-nick@shmanahar.org>
-References: <CAOMZO5BTMRJmrjM7X3-7Qi1wuciOnLZhAUuWN27Dtoc0cZXVSA@mail.gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5BTMRJmrjM7X3-7Qi1wuciOnLZhAUuWN27Dtoc0cZXVSA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Nick Dyer <nick@shmanahar.org>, stable@vger.kernel.org
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v2 2/4] dt-bindings: misc: Aspeed coprocessor interrupt
+ controller
+Date: Thu, 21 Jun 2018 09:05:17 +1000
+Message-ID: <6ee0bd705178a4db464c3d2ef22fedc44b7d66b0.camel@kernel.crashing.org>
+References: <20180618045902.11453-1-benh@kernel.crashing.org>
+ <20180618045902.11453-3-benh@kernel.crashing.org>
+ <20180620194937.GA5088@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180620194937.GA5088@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Joel Stanley <joel@jms.id.au>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The pinctrl settings were incorrect for the touchscreen interrupt line, causing
-an interrupt storm. This change has been tested with both the atmel_mxt_ts and
-RMI4 drivers on the RDU1 units.
+On Wed, 2018-06-20 at 13:49 -0600, Rob Herring wrote:
+> On Mon, Jun 18, 2018 at 02:59:00PM +1000, Benjamin Herrenschmidt wrote:
+> > Add the device-tree binding definition for the AST2400
+> > and AST2500 coprocessor interrupt controller
+> > 
+> > Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > ---
+> >  .../devicetree/bindings/misc/aspeed,cvic.txt  | 35 +++++++++++++++++++
+> >  1 file changed, 35 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed,cvic.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/misc/aspeed,cvic.txt b/Documentation/devicetree/bindings/misc/aspeed,cvic.txt
+> > new file mode 100644
+> > index 000000000000..2562e2991e4d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/misc/aspeed,cvic.txt
+> > @@ -0,0 +1,35 @@
+> > +* Aspeed AST2400 and AST2500 coprocessor interrupt controller
+> > +
+> > +This file describes the bindings for the interrupt controller present
+> > +in the AST2400 and AST2500 BMC SoCs which provides interrupt to the
+> > +ColdFire coprocessor.
+> > +
+> > +It is not a normal interrupt controller and it would be rather
+> > +inconvenient to create an interrupt tree for it as it somewhat shares
+> > +some of the same sources as the main ARM interrupt controller but with
+> > +different numbers.
+> > +
+> > +The AST2500 supports a SW generated interrupt
+> > +
+> > +Required properties:
+> > +- reg: address and length of the register for the device.
+> > +- compatible: "aspeed,cvic" and one of:
+> > +		"aspeed,ast2400-cvic"
+> > +	      or
+> > +		"aspeed,ast2500-cvic"
+> > +
+> > +- valid-sources: One cell, bitmap of supported sources for the implementation
+> 
+> aspeed,valid-sources
+> 
+> This could use a better description. I thought this was which bits to 
+> use for s/w irq, but then I read the next property...
+> 
+> Alternatively, why can't this be implied by the compatible?
 
-The value 0x4 comes from the value of register IOMUXC_SW_PAD_CTL_PAD_CSI1_D8
-from the old vendor kernel.
+It could, I'm happy to drop it, I don't actually use it in SW.
 
-Signed-off-by: Nick Dyer <nick@shmanahar.org>
-Fixes: ceef0396f367 ("ARM: dts: imx: add ZII RDU1 board")
-Cc: <stable@vger.kernel.org> # 4.15+
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
----
-Changes in v4:
-- Add reviewed by Fabio
-Changes in v3:
-- Update commit message to add source of 0x4 value, fixes tag and CC stable
-Changes in v2:
-- Use hex, only alter IRQ line config
+Cheers,
+Ben.
 
- arch/arm/boot/dts/imx51-zii-rdu1.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-index df9eca94d812..8a878687197b 100644
---- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
-+++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-@@ -770,7 +770,7 @@
- 
- 	pinctrl_ts: tsgrp {
- 		fsl,pins = <
--			MX51_PAD_CSI1_D8__GPIO3_12		0x85
-+			MX51_PAD_CSI1_D8__GPIO3_12		0x04
- 			MX51_PAD_CSI1_D9__GPIO3_13		0x85
- 		>;
- 	};
--- 
-2.17.1
+> > +
+> > +Optional properties;
+> > +- copro-sw-interrupts: List of interrupt numbers that can be used as
+> > +		       SW interrupts from the ARM to the coprocessor.
+> > +		       (AST2500 only)
+> > +
+> > +Example:
+> > +
+> > +	cvic: copro-interrupt-controller@1e6c2000 {
+> > +		compatible = "aspeed,ast2500-cvic";
+> > +		valid-sources = <0xffffffff>;
+> > +		copro-sw-interrupts = <1>;
+> > +		reg = <0x1e6c2000 0x80>;
+> > +	};
+> > -- 
+> > 2.17.1
+> > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
