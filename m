@@ -1,28 +1,42 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: add bindings for px30 clock
- controller
-Date: Wed, 20 Jun 2018 12:14:11 -0600
-Message-ID: <20180620181411.GA1689@rob-hp-laptop>
-References: <1529029011-15021-1-git-send-email-zhangqing@rock-chips.com>
- <1529029011-15021-2-git-send-email-zhangqing@rock-chips.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC PATCH] of: overlay: update phandle cache on overlay apply
+ and remove
+Date: Wed, 20 Jun 2018 12:23:01 -0600
+Message-ID: <CAL_JsqJdp16D4svB8Y7jurNVdHzVgz8_pkOKBA6mFyhXkqWi6w@mail.gmail.com>
+References: <1529251416-14814-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1529029011-15021-2-git-send-email-zhangqing@rock-chips.com>
+In-Reply-To: <1529251416-14814-1-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Elaine Zhang <zhangqing@rock-chips.com>
-Cc: heiko@sntech.de, sboyd@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, cl@rock-chips.com, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Alan Tull <atull@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 15, 2018 at 10:16:48AM +0800, Elaine Zhang wrote:
-> Add devicetree bindings for Rockchip cru which found on
-> Rockchip SoCs.
-> 
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+On Sun, Jun 17, 2018 at 10:03 AM,  <frowand.list@gmail.com> wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+>
+> A comment in the review of the patch adding the phandle cache said that
+> the cache would have to be updated when modules are applied and removed.
+> This patch implements the cache updates.
+>
+> Fixes: 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of of_find_node_by_phandle()")
+> Reported-by: Alan Tull <atull@kernel.org>
+> Suggested-by: Alan Tull <atull@kernel.org>
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 > ---
->  .../bindings/clock/rockchip,px30-cru.txt           | 66 ++++++++++++++++++++++
->  1 file changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/rockchip,px30-cru.txt
+>
+> Compiles for one configuration.
+> NOT boot tested.
+> Not run through my normal process to check for new warnings, etc.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I'm assuming you will resend a non-RFC version for me to apply.
+
+I think it would be a bit better if callers didn't have to do free and
+populate themselves, but just made an invalidate call (like a normal
+cache) and re-populating the cache could happen on demand. Or if it
+was done as a single call, you could just copy the old entries to the
+new larger array. But maybe there would be a race condition in doing
+that? In any case, all that could be a subsequent patch.
+
+Rob
