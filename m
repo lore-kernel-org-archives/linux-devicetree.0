@@ -1,93 +1,64 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: misc: Aspeed coprocessor interrupt
- controller
-Date: Wed, 20 Jun 2018 13:49:37 -0600
-Message-ID: <20180620194937.GA5088@rob-hp-laptop>
-References: <20180618045902.11453-1-benh@kernel.crashing.org>
- <20180618045902.11453-3-benh@kernel.crashing.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: thermal: Add binding document for SR
+ thermal
+Date: Wed, 20 Jun 2018 13:52:14 -0600
+Message-ID: <20180620195214.GA10436@rob-hp-laptop>
+References: <1529310679-13482-1-git-send-email-srinath.mannam@broadcom.com>
+ <1529310679-13482-2-git-send-email-srinath.mannam@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180618045902.11453-3-benh@kernel.crashing.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Joel Stanley <joel@jms.id.au>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1529310679-13482-2-git-send-email-srinath.mannam@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinath Mannam <srinath.mannam@broadcom.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 18, 2018 at 02:59:00PM +1000, Benjamin Herrenschmidt wrote:
-> Add the device-tree binding definition for the AST2400
-> and AST2500 coprocessor interrupt controller
+On Mon, Jun 18, 2018 at 02:01:17PM +0530, Srinath Mannam wrote:
+> From: Pramod Kumar <pramod.kumar@broadcom.com>
 > 
-> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Add binding document for supported thermal implementation
+> in Stingray.
+> 
+> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+> Reviewed-by: Srinath Mannam <srinath.mannam@broadcom.com>
 > ---
->  .../devicetree/bindings/misc/aspeed,cvic.txt  | 35 +++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/aspeed,cvic.txt
+>  .../bindings/thermal/brcm,sr-thermal.txt           | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/misc/aspeed,cvic.txt b/Documentation/devicetree/bindings/misc/aspeed,cvic.txt
+> diff --git a/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
 > new file mode 100644
-> index 000000000000..2562e2991e4d
+> index 0000000..33f9e11
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/aspeed,cvic.txt
-> @@ -0,0 +1,35 @@
-> +* Aspeed AST2400 and AST2500 coprocessor interrupt controller
+> +++ b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+> @@ -0,0 +1,45 @@
+> +* Broadcom Stingray Thermal
 > +
-> +This file describes the bindings for the interrupt controller present
-> +in the AST2400 and AST2500 BMC SoCs which provides interrupt to the
-> +ColdFire coprocessor.
-> +
-> +It is not a normal interrupt controller and it would be rather
-> +inconvenient to create an interrupt tree for it as it somewhat shares
-> +some of the same sources as the main ARM interrupt controller but with
-> +different numbers.
-> +
-> +The AST2500 supports a SW generated interrupt
+> +This binding describes thermal sensors that is part of Stingray SoCs.
 > +
 > +Required properties:
-> +- reg: address and length of the register for the device.
-> +- compatible: "aspeed,cvic" and one of:
-> +		"aspeed,ast2400-cvic"
-> +	      or
-> +		"aspeed,ast2500-cvic"
-> +
-> +- valid-sources: One cell, bitmap of supported sources for the implementation
-
-aspeed,valid-sources
-
-This could use a better description. I thought this was which bits to 
-use for s/w irq, but then I read the next property...
-
-Alternatively, why can't this be implied by the compatible?
-
-> +
-> +Optional properties;
-> +- copro-sw-interrupts: List of interrupt numbers that can be used as
-> +		       SW interrupts from the ARM to the coprocessor.
-> +		       (AST2500 only)
+> +- compatible : Must be "brcm,sr-thermal"
+> +- reg : memory where tmon data will be available.
 > +
 > +Example:
+> +	tmons {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
 > +
-> +	cvic: copro-interrupt-controller@1e6c2000 {
-> +		compatible = "aspeed,ast2500-cvic";
-> +		valid-sources = <0xffffffff>;
-> +		copro-sw-interrupts = <1>;
-> +		reg = <0x1e6c2000 0x80>;
-> +	};
-> -- 
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> +		tmon_ihost0: thermal@8f100000 {
+> +			compatible = "brcm,sr-thermal";
+> +			reg = <0x8f100000 0x4>;
+> +		};
+
+You still haven't given me a compelling reason why you need a node per 
+register.
+
+You have a single range of registers. Make this 1 node.
+
+Rob
