@@ -1,64 +1,98 @@
-Return-Path: <SRS0=Ekl+=JQ=zonque.org=daniel@kernel.org>
+Return-Path: <SRS0=5+Be=JG=zonque.org=daniel@kernel.org>
 From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v2 6/7] mmc: pxamci: remove pxa-mmc,gpio-power from devicetree bindings
-Date: Sat, 30 Jun 2018 20:14:04 +0200
-Message-Id: <20180630181405.17630-7-daniel@zonque.org>
-In-Reply-To: <20180630181405.17630-1-daniel@zonque.org>
-References: <20180630181405.17630-1-daniel@zonque.org>
-To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: robert.jarzmik@free.fr, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Subject: [PATCH v3 3/5] leds: lt3593: switch to gpiod interface
+Date: Wed, 20 Jun 2018 22:13:01 +0200
+Message-Id: <20180620201303.6272-4-daniel@zonque.org>
+In-Reply-To: <20180620201303.6272-1-daniel@zonque.org>
+References: <20180620201303.6272-1-daniel@zonque.org>
+To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Devicetree-enabled boards should use proper regulators to control the
-power of cards, not GPIOs, so let's remove this property. The regulator
-properties are supported by the MMC core and are described in the
-generic MMC document:
-
-  Documentation/devicetree/bindings/mmc/mmc.txt
-
-Note that devicetree support for PXA platforms hasn't fully landed yet,
-so this binding does not have any users at this point.
+Clean up the code a bit and transition over to the gpiod based interface.
 
 Signed-off-by: Daniel Mack <daniel@zonque.org>
-Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
 ---
- Documentation/devicetree/bindings/mmc/pxa-mmc.txt | 2 +-
- drivers/mmc/host/pxamci.c                         | 3 ---
- 2 files changed, 1 insertion(+), 4 deletions(-)
+ drivers/leds/leds-lt3593.c | 26 ++++++++++++--------------
+ 1 file changed, 12 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/pxa-mmc.txt b/Documentation/devicetree/bindings/mmc/pxa-mmc.txt
-index f2687752597e..5f5c2bec2b8c 100644
---- a/Documentation/devicetree/bindings/mmc/pxa-mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/pxa-mmc.txt
-@@ -8,7 +8,6 @@ Required properties:
+diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
+index a99ba2741e39..a7bc1fab6584 100644
+--- a/drivers/leds/leds-lt3593.c
++++ b/drivers/leds/leds-lt3593.c
+@@ -21,12 +21,13 @@
+ #include <linux/leds.h>
+ #include <linux/delay.h>
+ #include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
  
- Optional properties:
- - marvell,detect-delay-ms: sets the detection delay timeout in ms.
--- marvell,gpio-power: GPIO spec for the card power enable pin
- 
- In addition to the properties described in this docuent, the details
- described in mmc.txt are supported.
-@@ -19,6 +18,7 @@ mmc0: mmc@41100000 {
- 	compatible = "marvell,pxa-mmc";
- 	reg = <0x41100000 0x1000>;
- 	interrupts = <23>;
-+	vmmc-supply = <&mmc_regulator>;
- 	cd-gpios = <&gpio 23 0>;
- 	wp-gpios = <&gpio 24 0>;
+ struct lt3593_led_data {
+ 	struct led_classdev cdev;
+-	unsigned gpio;
++	struct gpio_desc *gpiod;
  };
-diff --git a/drivers/mmc/host/pxamci.c b/drivers/mmc/host/pxamci.c
-index e046e684b3f9..1e7703116763 100644
---- a/drivers/mmc/host/pxamci.c
-+++ b/drivers/mmc/host/pxamci.c
-@@ -607,9 +607,6 @@ static int pxamci_of_init(struct platform_device *pdev,
- 		return -ENOMEM;
  
- 	/* pxa-mmc specific */
--	pdata->gpio_power =
--		of_get_named_gpio(np, "pxa-mmc,gpio-power", 0);
+ static int lt3593_led_set(struct led_classdev *led_cdev,
+@@ -46,25 +47,25 @@ static int lt3593_led_set(struct led_classdev *led_cdev,
+ 	 */
+ 
+ 	if (value == 0) {
+-		gpio_set_value_cansleep(led_dat->gpio, 0);
++		gpiod_set_value_cansleep(led_dat->gpiod, 0);
+ 		return 0;
+ 	}
+ 
+ 	pulses = 32 - (value * 32) / 255;
+ 
+ 	if (pulses == 0) {
+-		gpio_set_value_cansleep(led_dat->gpio, 0);
++		gpiod_set_value_cansleep(led_dat->gpiod, 0);
+ 		mdelay(1);
+-		gpio_set_value_cansleep(led_dat->gpio, 1);
++		gpiod_set_value_cansleep(led_dat->gpiod, 1);
+ 		return 0;
+ 	}
+ 
+-	gpio_set_value_cansleep(led_dat->gpio, 1);
++	gpiod_set_value_cansleep(led_dat->gpiod, 1);
+ 
+ 	while (pulses--) {
+-		gpio_set_value_cansleep(led_dat->gpio, 0);
++		gpiod_set_value_cansleep(led_dat->gpiod, 0);
+ 		udelay(1);
+-		gpio_set_value_cansleep(led_dat->gpio, 1);
++		gpiod_set_value_cansleep(led_dat->gpiod, 1);
+ 		udelay(1);
+ 	}
+ 
+@@ -85,15 +86,8 @@ static struct lt3593_led_data *lt3593_led_probe_pdata(struct device *dev)
+ 	if (!led_data)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	if (!gpio_is_valid(template->gpio)) {
+-		dev_info(dev, "skipping unavailable LT3593 LED at gpio "
+-			 "%d (%s)\n", template->gpio, template->name);
+-		return ERR_PTR(-EINVAL);
+-	}
 -
- 	if (of_property_read_u32(np, "pxa-mmc,detect-delay-ms", &tmp) == 0)
- 		pdata->detect_delay_ms = tmp;
+ 	led_data->cdev.name = template->name;
+ 	led_data->cdev.default_trigger = template->default_trigger;
+-	led_data->gpio = template->gpio;
+ 	led_data->cdev.brightness_set_blocking = lt3593_led_set;
  
+ 	state = (template->default_state == LEDS_GPIO_DEFSTATE_ON);
+@@ -108,6 +102,10 @@ static struct lt3593_led_data *lt3593_led_probe_pdata(struct device *dev)
+ 	if (ret < 0)
+ 		return ERR_PTR(ret);
+ 
++	led_data->gpiod = gpio_to_desc(template->gpio);
++	if (!led_data->gpiod)
++		return ERR_PTR(-EPROBE_DEFER);
++
+ 	ret = devm_led_classdev_register(dev, &led_data->cdev);
+ 	if (ret < 0)
+ 		return ERR_PTR(ret);
 -- 
 2.17.1
