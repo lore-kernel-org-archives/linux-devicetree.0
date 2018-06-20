@@ -1,157 +1,121 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 5/5] arm64: dts: allwinner: h6: enable AXP805 PMIC on Pine H64
-Date: Wed, 20 Jun 2018 13:15:40 +0800
-Message-ID: <20180620051540.25617-6-wens@csie.org>
-References: <20180620051540.25617-1-wens@csie.org>
+From: kgunda@codeaurora.org
+Subject: Re: [PATCH V3 1/7] backlight: qcom-wled: Rename pm8941-wled.c to
+ qcom-wled.c
+Date: Wed, 20 Jun 2018 10:53:19 +0530
+Message-ID: <b3e66f817d919b3b8a8330e7c6827ce2@codeaurora.org>
+References: <1529406822-15379-1-git-send-email-kgunda@codeaurora.org>
+ <1529406822-15379-2-git-send-email-kgunda@codeaurora.org>
+ <20180619225421.GE15126@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180620051540.25617-1-wens@csie.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Andre Przywara <andre.przywara@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180619225421.GE15126@tuxbook-pro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, Daniel Thompson <daniel.thompson@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
-
-Pine H64 board has an AXP805 PMIC on it.
-
-Enable it in the device tree.
-
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- .../boot/dts/allwinner/sun50i-h6-pine-h64.dts | 109 ++++++++++++++++++
- 1 file changed, 109 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 2e97173c9204..1673636358ef 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -44,6 +44,115 @@
- &r_i2c {
- 	status = "okay";
- 
-+	axp805: pmic@36 {
-+		compatible = "x-powers,axp805", "x-powers,axp806";
-+		reg = <0x36>;
-+		interrupt-parent = <&r_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		x-powers,self-working-mode;
-+
-+		regulators {
-+			reg_aldo1: aldo1 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc-pl";
-+			};
-+
-+			reg_aldo2: aldo2 {
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc-ac200";
-+			};
-+
-+			reg_aldo3: aldo3 {
-+				/* This regulator is connected with CLDO1 */
-+				regulator-always-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc-3v3-1";
-+			};
-+
-+			reg_bldo1: bldo1 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc-bias-pll";
-+			};
-+
-+			reg_bldo2: bldo2 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc-efuse-pcie-hdmi-io";
-+			};
-+
-+			reg_bldo3: bldo3 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc-dcxoio";
-+			};
-+
-+			bldo4 {
-+				/* unused */
-+			};
-+
-+			reg_cldo1: cldo1 {
-+				/* This regulator is connected with ALDO3 */
-+				regulator-always-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc-3v3-2";
-+			};
-+
-+			reg_cldo2: cldo2 {
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc-wifi-1";
-+			};
-+
-+			reg_cldo3: cldo3 {
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc-wifi-2";
-+			};
-+
-+			reg_dcdca: dcdca {
-+				regulator-always-on;
-+				regulator-min-microvolt = <810000>;
-+				regulator-max-microvolt = <1080000>;
-+				regulator-name = "vdd-cpu";
-+			};
-+
-+			reg_dcdcc: dcdcc {
-+				regulator-min-microvolt = <810000>;
-+				regulator-max-microvolt = <1080000>;
-+				regulator-name = "vdd-gpu";
-+			};
-+
-+			reg_dcdcd: dcdcd {
-+				regulator-always-on;
-+				regulator-min-microvolt = <960000>;
-+				regulator-max-microvolt = <960000>;
-+				regulator-name = "vdd-sys";
-+			};
-+
-+			reg_dcdce: dcdce {
-+				regulator-always-on;
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-name = "vcc-dram";
-+			};
-+
-+			sw {
-+				/* unused */
-+			};
-+		};
-+	};
-+
- 	pcf8563: rtc@51 {
- 		compatible = "nxp,pcf8563";
- 		reg = <0x51>;
--- 
-2.17.1
+On 2018-06-20 04:24, Bjorn Andersson wrote:
+> On Tue 19 Jun 04:13 PDT 2018, Kiran Gunda wrote:
+> 
+>> pm8941-wled.c driver is supporting the WLED peripheral
+>> on pm8941. Rename it to qcom-wled.c so that it can support
+>> WLED on multiple PMICs.
+>> 
+>> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> 
+> Please carry any tags acquired when reposting patches without changes
+> and please add a "Changes since v???:" list below the --- to expedite
+> the review process.
+> 
+> 
+> This is still
+> 
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> 
+> Regards,
+> Bjorn
+> 
+Thanks Bjorn for reviewing. Sure I will keep the tags when re-posting.
+I have mentioned the consolidated changes in the 0th patch. Anyways,
+I will keep it for individual patches from next time.
+>> ---
+>>  .../bindings/leds/backlight/{pm8941-wled.txt => qcom-wled.txt}    | 2 
+>> +-
+>>  drivers/video/backlight/Kconfig                                   | 8 
+>> ++++----
+>>  drivers/video/backlight/Makefile                                  | 2 
+>> +-
+>>  drivers/video/backlight/{pm8941-wled.c => qcom-wled.c}            | 0
+>>  4 files changed, 6 insertions(+), 6 deletions(-)
+>>  rename 
+>> Documentation/devicetree/bindings/leds/backlight/{pm8941-wled.txt => 
+>> qcom-wled.txt} (95%)
+>>  rename drivers/video/backlight/{pm8941-wled.c => qcom-wled.c} (100%)
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt 
+>> b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+>> similarity index 95%
+>> rename from 
+>> Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
+>> rename to 
+>> Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+>> index e5b294d..fb39e32 100644
+>> --- a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
+>> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+>> @@ -1,4 +1,4 @@
+>> -Binding for Qualcomm PM8941 WLED driver
+>> +Binding for Qualcomm Technologies, Inc. WLED driver
+>> 
+>>  Required properties:
+>>  - compatible: should be "qcom,pm8941-wled"
+>> diff --git a/drivers/video/backlight/Kconfig 
+>> b/drivers/video/backlight/Kconfig
+>> index 4e1d2ad..8c095e3 100644
+>> --- a/drivers/video/backlight/Kconfig
+>> +++ b/drivers/video/backlight/Kconfig
+>> @@ -299,12 +299,12 @@ config BACKLIGHT_TOSA
+>>  	  If you have an Sharp SL-6000 Zaurus say Y to enable a driver
+>>  	  for its backlight
+>> 
+>> -config BACKLIGHT_PM8941_WLED
+>> -	tristate "Qualcomm PM8941 WLED Driver"
+>> +config BACKLIGHT_QCOM_WLED
+>> +	tristate "Qualcomm PMIC WLED Driver"
+>>  	select REGMAP
+>>  	help
+>> -	  If you have the Qualcomm PM8941, say Y to enable a driver for the
+>> -	  WLED block.
+>> +	  If you have the Qualcomm PMIC, say Y to enable a driver for the
+>> +	  WLED block. Currently it supports PM8941 and PMI8998.
+>> 
+>>  config BACKLIGHT_SAHARA
+>>  	tristate "Tabletkiosk Sahara Touch-iT Backlight Driver"
+>> diff --git a/drivers/video/backlight/Makefile 
+>> b/drivers/video/backlight/Makefile
+>> index 5e28f01..6fd76ef 100644
+>> --- a/drivers/video/backlight/Makefile
+>> +++ b/drivers/video/backlight/Makefile
+>> @@ -49,8 +49,8 @@ obj-$(CONFIG_BACKLIGHT_OMAP1)		+= omap1_bl.o
+>>  obj-$(CONFIG_BACKLIGHT_OT200)		+= ot200_bl.o
+>>  obj-$(CONFIG_BACKLIGHT_PANDORA)		+= pandora_bl.o
+>>  obj-$(CONFIG_BACKLIGHT_PCF50633)	+= pcf50633-backlight.o
+>> -obj-$(CONFIG_BACKLIGHT_PM8941_WLED)	+= pm8941-wled.o
+>>  obj-$(CONFIG_BACKLIGHT_PWM)		+= pwm_bl.o
+>> +obj-$(CONFIG_BACKLIGHT_QCOM_WLED)	+= qcom-wled.o
+>>  obj-$(CONFIG_BACKLIGHT_SAHARA)		+= kb3886_bl.o
+>>  obj-$(CONFIG_BACKLIGHT_SKY81452)	+= sky81452-backlight.o
+>>  obj-$(CONFIG_BACKLIGHT_TOSA)		+= tosa_bl.o
+>> diff --git a/drivers/video/backlight/pm8941-wled.c 
+>> b/drivers/video/backlight/qcom-wled.c
+>> similarity index 100%
+>> rename from drivers/video/backlight/pm8941-wled.c
+>> rename to drivers/video/backlight/qcom-wled.c
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>>  a Linux Foundation Collaborative Project
+>> 
