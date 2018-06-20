@@ -1,131 +1,199 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 2/2] hwmon: npcm750: add NPCM7xx PWM and Fan driver
-Date: Wed, 20 Jun 2018 12:38:06 -0700
-Message-ID: <20180620193806.GA2054@roeck-us.net>
-References: <20180619105352.97181-1-tmaimon77@gmail.com>
- <20180619105352.97181-3-tmaimon77@gmail.com>
- <20180620164853.GA3459@roeck-us.net>
- <a6a5a21236c37cfc63329e54248d941bf6d49e3c.camel@perches.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: Re: [PATCH v2 11/27] drm/sun4i: tcon: Add support
+ for tcon-top gate
+Date: Wed, 20 Jun 2018 21:37:44 +0200
+Message-ID: <2581098.bNJirayF9O@jernej-laptop>
+References: <20180612200036.21483-1-jernej.skrabec@siol.net> <3871160.F3Km1rQkUz@jernej-laptop> <CAGb2v66Tv7876_heSve0zb+vWfz9kbwbrU8NjnpTwUHm6xOKJQ@mail.gmail.com>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a6a5a21236c37cfc63329e54248d941bf6d49e3c.camel@perches.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Tomer Maimon <tmaimon77@gmail.com>, Julia Lawall <julia.lawall@lip6.fr>, cocci <cocci@systeme.lip6.fr>, robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBVO2VLMQKGQEAJJPVMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v66Tv7876_heSve0zb+vWfz9kbwbrU8NjnpTwUHm6xOKJQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 20, 2018 at 11:25:08AM -0700, Joe Perches wrote:
-> (adding Julia Lawall and cocci mailing list)
-> 
-> On Wed, 2018-06-20 at 09:48 -0700, Guenter Roeck wrote:
-> []
-> > > +static inline void npcm7xx_fan_start_capture(struct npcm7xx_pwm_fan_data *data,
-> > > +						 u8 fan, u8 cmp)
-> > > +{
-> > > +	u8 fan_id = 0;
-> > > +	u8 reg_mode = 0;
-> > > +	u8 reg_int = 0;
-> > > +	unsigned long flags;
-> > > +
-> > > +	fan_id = NPCM7XX_FAN_INPUT(fan, cmp);
-> > > +
-> > > +	/* to check whether any fan tach is enable */
-> > > +	if (data->npcm7xx_fan[fan_id].FanStFlag != FAN_DISABLE) {
-> > > +		/* reset status */
-> > > +		spin_lock_irqsave(&data->npcm7xx_fan_lock[fan], flags);
-> > > +
-> > > +		data->npcm7xx_fan[fan_id].FanStFlag = FAN_INIT;
-> > > +		reg_int = ioread8(NPCM7XX_FAN_REG_TIEN(data->fan_base, fan));
-> > > +
-> > > +		if (cmp == NPCM7XX_FAN_CMPA) {
-> > > +			/* enable interrupt */
-> > > +			iowrite8((u8) (reg_int | (NPCM7XX_FAN_TIEN_TAIEN |
-> > > +						  NPCM7XX_FAN_TIEN_TEIEN)),
-> > 
-> > Is the (u8) typecast really necessary ? Seems unlikely.
-> 
-> The cast is not really necessary here as there would
-> be an implicit cast already.
-> 
-> Some might complain about loss of type safety and
-> "make W=123" would probably emit something here.
-> 
-I spent (wasted) some time browsing through the kernel.
-Similar typecasts are only used if there is a real type change.
-A warning here would not make sense unless NPCM7XX_FAN_TIEN_TAIEN
-or NPCM7XX_FAN_TIEN_TEIEN would be outside the u8 range, and then
-there would be one anyway.
+Dne sobota, 16. junij 2018 ob 07:48:38 CEST je Chen-Yu Tsai napisal(a):
+> On Sat, Jun 16, 2018 at 1:33 AM, Jernej =C5=A0krabec <jernej.skrabec@siol=
+.net>=20
+wrote:
+> > Dne petek, 15. junij 2018 ob 19:13:17 CEST je Chen-Yu Tsai napisal(a):
+> >> On Sat, Jun 16, 2018 at 12:41 AM, Jernej =C5=A0krabec
+> >>=20
+> >> <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
+> >> > Hi,
+> >> >=20
+> >> > Dne petek, 15. junij 2018 ob 10:31:10 CEST je Maxime Ripard napisal(=
+a):
+> >> >> Hi,
+> >> >>=20
+> >> >> On Tue, Jun 12, 2018 at 10:00:20PM +0200, Jernej Skrabec wrote:
+> >> >> > TV TCONs connected to TCON TOP have to enable additional gate in
+> >> >> > order
+> >> >> > to work.
+> >> >> >=20
+> >> >> > Add support for such TCONs.
+> >> >> >=20
+> >> >> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> >> >> > ---
+> >> >> >=20
+> >> >> >  drivers/gpu/drm/sun4i/sun4i_tcon.c | 11 +++++++++++
+> >> >> >  drivers/gpu/drm/sun4i/sun4i_tcon.h |  4 ++++
+> >> >> >  2 files changed, 15 insertions(+)
+> >> >> >=20
+> >> >> > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> >> >> > b/drivers/gpu/drm/sun4i/sun4i_tcon.c index
+> >> >> > 08747fc3ee71..0afb5a94a414
+> >> >> > 100644
+> >> >> > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> >> >> > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> >> >> > @@ -688,6 +688,16 @@ static int sun4i_tcon_init_clocks(struct dev=
+ice
+> >> >> > *dev,
+> >> >> >=20
+> >> >> >             dev_err(dev, "Couldn't get the TCON bus clock\n");
+> >> >> >             return PTR_ERR(tcon->clk);
+> >> >> >    =20
+> >> >> >     }
+> >> >> >=20
+> >> >> > +
+> >> >> > +   if (tcon->quirks->has_tcon_top_gate) {
+> >> >> > +           tcon->top_clk =3D devm_clk_get(dev, "tcon-top");
+> >> >> > +           if (IS_ERR(tcon->top_clk)) {
+> >> >> > +                   dev_err(dev, "Couldn't get the TCON TOP bus
+> >> >> > clock\n");
+> >> >> > +                   return PTR_ERR(tcon->top_clk);
+> >> >> > +           }
+> >> >> > +           clk_prepare_enable(tcon->top_clk);
+> >> >> > +   }
+> >> >> > +
+> >> >>=20
+> >> >> Is it required for the TCON itself to operate, or does the TCON
+> >> >> requires the TCON TOP, which in turn requires that clock to be
+> >> >> functional?
+> >> >>=20
+> >> >> I find it quite odd to have a clock that isn't meant for a particul=
+ar
+> >> >> device to actually be wired to another device. I'm not saying this
+> >> >> isn't the case, but it would be a first.
+> >> >=20
+> >> > Documentation doesn't say much about that gate. I did few tests and
+> >> > TCON
+> >> > registers can be read and written even if TCON TOP TV TCON gate is
+> >> > disabled. However, there is no image, as expected.
+> >>=20
+> >> The R40 manual does include it in the diagram, on page 504. There's al=
+so
+> >> a
+> >> mux to select whether the clock comes directly from the CCU or the TV
+> >> encoder (a feedback mode?). I assume this is the gate you are referrin=
+g
+> >> to
+> >> here, in which case it is not a bus clock, but rather the TCON module =
+or
+> >> channel clock, strangely routed.
+> >>=20
+> >> > More interestingly, I enabled test pattern directly in TCON to
+> >> > eliminate
+> >> > influence of the mixer. As soon as I disabled that gate, test patter=
+n
+> >> > on
+> >> > HDMI screen was gone, which suggest that this gate influences someth=
+ing
+> >> > inside TCON.
+> >> >=20
+> >> > Another test I did was that I moved enable/disable gate code to
+> >> > sun4i_tcon_channel_set_status() and it worked just as well.
+> >> >=20
+> >> > I'll ask AW engineer what that gate actually does, but from what I s=
+aw,
+> >> > I
+> >> > would say that most appropriate location to enable/disable TCON TOP =
+TV
+> >> > TCON
+> >> > gate is TCON driver. Alternatively, TCON TOP driver could check if a=
+ny
+> >> > TV
+> >> > TCON is in use and enable appropriate gate. However, that doesn't so=
+und
+> >> > right to me for some reason.
+> >>=20
+> >> If what I said above it true, then yes, the appropriate location to
+> >> enable
+> >> it is the TCON driver, but moreover, the representation of the clock t=
+ree
+> >> should be fixed such that the TCON takes the clock from the TCON TOP a=
+s
+> >> its
+> >> channel/ module clock instead. That way you don't need this patch, but
+> >> you'd add another for all the clock routing.
+> >=20
+> > Can you be more specific? I not sure what you mean here.
+>=20
+> For clock related properties in the device tree:
+>=20
+> &tcon_top {
+>     clocks =3D <&ccu CLK_BUS_TCON_TOP>,
+>              <&ccu CLK_TCON_TV0>,
+>              <&tve0>,
+>              <&ccu CLK_TCON_TV1>,
+>              <&tve1>;
+>     clock-names =3D "bus", "tcon-tv0", "tve0", "tcon-tv1", "tve1";
+>     clock-output-names =3D "tcon-top-tv0", "tcon-top-tv1";
+> };
+>=20
+> &tcon_tv0 {
+>     clocks =3D <&ccu CLK_BUS_TCON_TV0>, <&tcon_top 0>'
+>     clock-names =3D "ahb", "tcon-ch1";
+> };
+>=20
+> A diagram would look like:
+>                    | This part is TCON TOP |
+>=20
+>                    v                       v
+> CCU CLK_TCON_TV0 --|----\                  |
+>=20
+>                    |     mux ---- gate ----|-- TCON_TV0
+>=20
+> TVE0 --------------|----/                  |
+>=20
+> And the same goes for TCON_TV1 and TVE1.
+>=20
+> The user manual is a bit lacking on how TVE outputs a clock though.
 
-So, no, I am not going to accept those typecasts. They just make the code
-more difficult to read. For example, the code here could have been
-simplified to something like
+I didn't yet received any response on HW details from AW till now, but I wo=
+uld=20
+like to post new version of patches soon.
 
-	reg_int = ioread8(NPCM7XX_FAN_REG_TIEN(data->fan_base, fan));
-	reg_mode = ioread8(NPCM7XX_FAN_REG_TCKC(data->fan_base, fan));
-	if (cmp == NPCM7XX_FAN_CMPA) {
-		reg_int |= NPCM7XX_FAN_TIEN_TAIEN | NPCM7XX_FAN_TIEN_TEIEN;
-		reg_mode |= NPCM7XX_FAN_TCKC_CLK1_APB;
-	} else {
-		reg_int |= NPCM7XX_FAN_TIEN_TBIEN | NPCM7XX_FAN_TIEN_TFIEN;
-		reg_mode |= NPCM7XX_FAN_TCKC_CLK2_APB;
-	}
-	iowrite8(reg_int, NPCM7XX_FAN_REG_TIEN(data->fan_base, fan);
-	iowrite8(reg_mode, NPCM7XX_FAN_REG_TCKC(data->fan_base, fan);
+While chaining like you described could be implemented easily, I don't thin=
+k=20
+it really represents HW as it is. Tests showed that these two clocks are=20
+independent, otherwise register writes/reads wouldn't be possible with tcon=
+-
+top gate disabled. I chose tcon-top bus clock as a parent becase if it is n=
+ot=20
+enabled, it simply won't work.
 
-This, in turn, leads to the question if it is really not necessary
-to _clear_ those mask bits in the same context.
+However, if everyone feels chaining is the best way to implement it, I'll d=
+o=20
+it.
 
-Guenter
+Best regards,
+Jernej
 
-> But casts to the same type are not necessary.
-> 
-> A possible coccinelle script to find casts to the
-> same type is below, but there are some false positives
-> for things like __force and __user casts
-> 
-> Also, spatch (1.0.4) seems to have a defect for this
-> when the type is used in operations that change a
-> smaller type to int or unsigned int.
-> 
-> i.e.: (offset is u16, but offset * 2 is int)
-> 
-> While running the cocci script below:
-> 
-> HANDLING: drivers/net/ethernet/intel/igb/e1000_nvm.c
-> diff = 
-> diff -u -p a/drivers/net/drivers/net/ethernet/intel/igb/e1000_nvm.c b/drivers/net/ethernet/intel/igb/e1000_nvm.c
-> --- a/drivers/net/ethernet/intel/igb/e1000_nvm.c
-> +++ b/drivers/net/ethernet/intel/igb/e1000_nvm.c
-> @@ -335,7 +335,7 @@ s32 igb_read_nvm_spi(struct e1000_hw *hw
->  
->  	/* Send the READ command (opcode + addr) */
->  	igb_shift_out_eec_bits(hw, read_opcode, nvm->opcode_bits);
-> -	igb_shift_out_eec_bits(hw, (u16)(offset*2), nvm->address_bits);
-> +	igb_shift_out_eec_bits(hw, (offset * 2), nvm->address_bits);
->  
->  	/* Read the data.  SPI NVMs increment the address with each byte
->  	 * read and will roll over if reading beyond the end.  This allows
-> 
-> ---
-> 
-> Anyway, here's the cocci script:
-> 
-> $ cat same_typecast.cocci
-> @@
-> type T;
-> T foo;
-> @@
-> 
-> -	(T *)&foo
-> +	&foo
-> 
-> @@
-> type T;
-> T foo;
-> @@
-> 
-> -	(T)foo
-> +	foo
-> 
+
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
