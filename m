@@ -1,38 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 1/3] scsi: ufs: set the device reference clock setting
-Date: Wed, 20 Jun 2018 12:01:54 -0600
-Message-ID: <20180620180154.GA18559@rob-hp-laptop>
-References: <1528981432-23065-1-git-send-email-sayalil@codeaurora.org>
- <1528981432-23065-2-git-send-email-sayalil@codeaurora.org>
- <bf87ec58-69c0-fe59-cfa1-8dc7dc80ca46@intel.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] dt-bindings: sram: Rename A64 SRAM
+ controller compatible
+Date: Wed, 20 Jun 2018 12:04:13 -0600
+Message-ID: <20180620180413.GA22870@rob-hp-laptop>
+References: <20180614153548.9644-1-wens@csie.org>
+ <20180614153548.9644-3-wens@csie.org>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBINOVLMQKGQERC6NDCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <bf87ec58-69c0-fe59-cfa1-8dc7dc80ca46@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Sayali Lokhande <sayalil@codeaurora.org>, subhashj@codeaurora.org, cang@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, asutoshd@codeaurora.org, evgreen@chromium.org, riteshh@codeaurora.org, linux-scsi@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+In-Reply-To: <20180614153548.9644-3-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 20, 2018 at 10:26:07AM +0300, Adrian Hunter wrote:
-> On 14/06/18 16:03, Sayali Lokhande wrote:
-> > From: Subhash Jadavani <subhashj@codeaurora.org>
-> > 
-> > UFS host supplies the reference clock to UFS device and UFS device
-> > specification allows host to provide one of the 4 frequencies (19.2 MHz,
-> > 26 MHz, 38.4 MHz, 52 MHz) for reference clock. Host should set the
-> > device reference clock frequency setting in the device based on what
-> > frequency it is supplying to UFS device.
-> > 
-> > Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-> > Signed-off-by: Can Guo <cang@codeaurora.org>
-> > Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+On Thu, Jun 14, 2018 at 11:35:46PM +0800, Chen-Yu Tsai wrote:
+> The SRAM mapping controls on Allwinner SoCs is located in a block called
+> "System Controls". This block also has registers for identifying the SoC,
+> reading the state of an external boot-related pin, and on some newer SoCs,
+> glue layer controls for the EMAC Ethernet controller.
 > 
-> I have repeated my V2 comments below.  Please address these when you post
-> V4.  Also please provide a change log for each patch version.
+> The A64 variant compatible is renamed to "allwinner,a64-system-control"
+> to reflect this. The old A64 compatible is deprecated. So far we haven't
+> seen any actual use of it.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/sram/sunxi-sram.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-Do I have to repeat my V2 comments too? Please don't send a V4 until the 
-discussion on V2 is resolved.
-
-Rob
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
