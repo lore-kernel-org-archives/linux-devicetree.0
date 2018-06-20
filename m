@@ -1,83 +1,282 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 1/1] arm64: dts: rockchip: correct voltage selector
- Firefly-RK3399
-Date: Wed, 20 Jun 2018 11:15:52 +0200
-Message-ID: <6592028.l3WmXB2ndK@diego>
-References: <20180604171523.28454-1-xypron.glpk@gmx.de>
- <10782218.jfpm9omiT7@phil> <459cb125-a3e2-8f1e-b960-011020d41b3c@gmx.de>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH V2 1/3] watchdog: stm32: add pclk feature for stm32mp1
+Date: Wed, 20 Jun 2018 02:19:41 -0700
+Message-ID: <6162d701-2afd-5a22-d38f-7fb9e726cff7@roeck-us.net>
+References: <1529481238-15277-1-git-send-email-ludovic.Barre@st.com>
+ <1529481238-15277-2-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <459cb125-a3e2-8f1e-b960-011020d41b3c@gmx.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vagrant Cascadian <vagrant@debian.org>, Catalin Marinas <catalin.marinas@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Kever Yang <kever.yang@rock-chips.com>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, khilman@baylibre.com, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Pierre-Hugues Husson <phh@phh.me>, Jianqun Xu <jay.xu@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1529481238-15277-2-git-send-email-ludovic.Barre@st.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ludovic Barre <ludovic.Barre@st.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heinrich,
-
-Am Mittwoch, 20. Juni 2018, 07:59:34 CEST schrieb Heinrich Schuchardt:
-> On 06/20/2018 01:21 AM, Heiko Stuebner wrote:
-> > Am Donnerstag, 14. Juni 2018, 14:55:27 CEST schrieb Heiko Stuebner:
-> >> Am Montag, 4. Juni 2018, 19:15:23 CEST schrieb Heinrich Schuchardt:
-> >>> Without this patch the Firefly-RK3399 board boot process hangs after
-> >>> these
-> >>> 
-> >>> lines:
-> >>>    fan53555-regulator 0-0040: FAN53555 Option[8] Rev[1] Detected!
-> >>>    fan53555-reg: supplied by vcc_sys
-> >>>    vcc1v8_s3: supplied by vcc_1v8
-> >>> 
-> >>> Blacklisting driver fan53555 allows booting.
-> >>> 
-> >>> The device tree uses a value of fcs,suspend-voltage-selector different
-> >>> to
-> >>> any other board.
-> >>> 
-> >>> Changing this setting to the usual value is sufficient to enable
-> >>> booting.
-> >>> 
-> >>> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-> >> 
-> >> applied for 4.19.
-> > 
-> > and dropped again.
-> > 
-> > Sadly it looks like the patch causes conflicts with at least one firefly
-> > board in a kernelci lab. My own is currently not ready to use, so I cannot
-> > look myself right now.
-> > 
-> > The issue kernelci people described sounded quite a lot like the one
-> > in your commit message, so my current theory is that the
-> > suspend-voltage-selector must in some form corespond to the
-> > cpu_b_sleep_h gpio setting we're currently not handling at all, which
-> > would therefore depend on how the bootloader sets this up.
->
-> please, provide a link to the log displaying the issue and the contact
-> who can provide the exact setup.
+On 06/20/2018 12:53 AM, Ludovic Barre wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
 > 
-> I have been testing with U-Boot as boot loader.
+> This patch adds config data to manage specific properties by
+> compatible. Adds stm32mp1 config which requires pclk clock.
+> 
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> ---
+>   .../devicetree/bindings/watchdog/st,stm32-iwdg.txt |  21 +++-
+>   drivers/watchdog/stm32_iwdg.c                      | 132 ++++++++++++++-------
+>   2 files changed, 104 insertions(+), 49 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+> index cc13b10a..f07f6d89 100644
+> --- a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+> @@ -2,18 +2,31 @@ STM32 Independent WatchDoG (IWDG)
+>   ---------------------------------
+>   
+>   Required properties:
+> -- compatible: "st,stm32-iwdg"
+> -- reg: physical base address and length of the registers set for the device
+> -- clocks: must contain a single entry describing the clock input
+> +- compatible: Should be either "st,stm32-iwdg" or "st,stm32mp1-iwdg"
+> +- reg: Physical base address and length of the registers set for the device
+> +- clocks: Reference to the clock entry lsi. Additional pclk clock entry
+> +  is required only for st,stm32mp1-iwdg.
+> +- clock-names: Name of the clocks used.
+> +  "lsi" for st,stm32-iwdg
+> +  "pclk", "lsi" for st,stm32mp1-iwdg
+>   
+>   Optional Properties:
+>   - timeout-sec: Watchdog timeout value in seconds.
+>   
+> -Example:
+> +Examples:
+>   
+>   iwdg: watchdog@40003000 {
+>   	compatible = "st,stm32-iwdg";
+>   	reg = <0x40003000 0x400>;
+>   	clocks = <&clk_lsi>;
+> +	clock-names = "lsi";
+> +	timeout-sec = <32>;
+> +};
+> +
+> +iwdg: iwdg@5a002000 {
+> +	compatible = "st,stm32mp1-iwdg";
+> +	reg = <0x5a002000 0x400>;
+> +	clocks = <&rcc IWDG2>, <&clk_lsi>;
+> +	clock-names = "pclk", "lsi";
+>   	timeout-sec = <32>;
+>   };
+> diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
+> index c97ad56..fc96670 100644
+> --- a/drivers/watchdog/stm32_iwdg.c
+> +++ b/drivers/watchdog/stm32_iwdg.c
+> @@ -11,12 +11,13 @@
+>   
+>   #include <linux/clk.h>
+>   #include <linux/delay.h>
+> -#include <linux/kernel.h>
+> -#include <linux/module.h>
+>   #include <linux/interrupt.h>
+>   #include <linux/io.h>
+>   #include <linux/iopoll.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+>   #include <linux/of.h>
+> +#include <linux/of_device.h>
+>   #include <linux/platform_device.h>
+>   #include <linux/watchdog.h>
+>   
+> @@ -54,11 +55,17 @@
+>   #define TIMEOUT_US	100000
+>   #define SLEEP_US	1000
+>   
+> +struct stm32_iwdg_config {
+> +	bool has_pclk;
+> +};
+> +
 
-failing boot can be found on
-https://kernelci.org/boot/id/5b2a053d59b514569079a872/
+This data structure is unnecessary. Just assign the boolean directly to .data
+and ...
 
-As this board is sitting in the "lab-baylibre-seattle", I guess
-Kevin Hilman (Cc'ed now) is the one that can say a bit more about the
-board setup.
+>   struct stm32_iwdg {
+> -	struct watchdog_device	wdd;
+> -	void __iomem		*regs;
+> -	struct clk		*clk;
+> -	unsigned int		rate;
+> +	struct watchdog_device		wdd;
+> +	void __iomem			*regs;
+> +	struct stm32_iwdg_config	*config;
 
+declare bool has_pclk here.
 
-The more interesting question would be how to make sure we don't
-die with possible different bootloader versions. As I don't really thing 
-"upgrade your bootloader" is an always valid option.
-
-
-Heiko
+> +	struct clk			*clk_lsi;
+> +	struct clk			*clk_pclk;
+> +	unsigned int			rate;
+>   };
+>   
+>   static inline u32 reg_read(void __iomem *base, u32 reg)
+> @@ -133,6 +140,44 @@ static int stm32_iwdg_set_timeout(struct watchdog_device *wdd,
+>   	return 0;
+>   }
+>   
+> +static int stm32_iwdg_clk_init(struct platform_device *pdev,
+> +			       struct stm32_iwdg *wdt)
+> +{
+> +	u32 ret;
+> +
+> +	wdt->clk_lsi = devm_clk_get(&pdev->dev, "lsi");
+> +	if (IS_ERR(wdt->clk_lsi)) {
+> +		dev_err(&pdev->dev, "Unable to get lsi clock\n");
+> +		return PTR_ERR(wdt->clk_lsi);
+> +	}
+> +
+> +	/* optional peripheral clock */
+> +	if (wdt->config->has_pclk) {
+> +		wdt->clk_pclk = devm_clk_get(&pdev->dev, "pclk");
+> +		if (IS_ERR(wdt->clk_pclk)) {
+> +			dev_err(&pdev->dev, "Unable to get pclk clock\n");
+> +			return PTR_ERR(wdt->clk_pclk);
+> +		}
+> +
+> +		ret = clk_prepare_enable(wdt->clk_pclk);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "Unable to prepare pclk clock\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	ret = clk_prepare_enable(wdt->clk_lsi);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Unable to prepare lsi clock\n");
+> +		clk_disable_unprepare(wdt->clk_pclk);
+> +		return ret;
+> +	}
+> +
+> +	wdt->rate = clk_get_rate(wdt->clk_lsi);
+> +
+> +	return 0;
+> +}
+> +
+>   static const struct watchdog_info stm32_iwdg_info = {
+>   	.options	= WDIOF_SETTIMEOUT |
+>   			  WDIOF_MAGICCLOSE |
+> @@ -147,49 +192,50 @@ static const struct watchdog_ops stm32_iwdg_ops = {
+>   	.set_timeout	= stm32_iwdg_set_timeout,
+>   };
+>   
+> +static const struct stm32_iwdg_config stm32_iwdg_cfg = {
+> +	.has_pclk = false,
+> +};
+> +
+> +static const struct stm32_iwdg_config stm32mp1_iwdg_cfg = {
+> +	.has_pclk = true,
+> +};
+> +
+> +static const struct of_device_id stm32_iwdg_of_match[] = {
+> +	{ .compatible = "st,stm32-iwdg", .data = &stm32_iwdg_cfg },
+> +	{ .compatible = "st,stm32mp1-iwdg", .data = &stm32mp1_iwdg_cfg },
+> +	{ /* end node */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
+> +
+>   static int stm32_iwdg_probe(struct platform_device *pdev)
+>   {
+>   	struct watchdog_device *wdd;
+> +	const struct of_device_id *match;
+>   	struct stm32_iwdg *wdt;
+>   	struct resource *res;
+> -	void __iomem *regs;
+> -	struct clk *clk;
+>   	int ret;
+>   
+> +	match = of_match_device(stm32_iwdg_of_match, &pdev->dev);
+> +	if (!match || !match->data)
+> +		return -ENODEV;
+> +
+> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+> +	if (!wdt)
+> +		return -ENOMEM;
+> +
+> +	wdt->config = (struct stm32_iwdg_config *)match->data;
+> +
+>   	/* This is the timer base. */
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	regs = devm_ioremap_resource(&pdev->dev, res);
+> -	if (IS_ERR(regs)) {
+> +	wdt->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(wdt->regs)) {
+>   		dev_err(&pdev->dev, "Could not get resource\n");
+> -		return PTR_ERR(regs);
+> +		return PTR_ERR(wdt->regs);
+>   	}
+>   
+> -	clk = devm_clk_get(&pdev->dev, NULL);
+> -	if (IS_ERR(clk)) {
+> -		dev_err(&pdev->dev, "Unable to get clock\n");
+> -		return PTR_ERR(clk);
+> -	}
+> -
+> -	ret = clk_prepare_enable(clk);
+> -	if (ret) {
+> -		dev_err(&pdev->dev, "Unable to prepare clock %p\n", clk);
+> +	ret = stm32_iwdg_clk_init(pdev, wdt);
+> +	if (ret)
+>   		return ret;
+> -	}
+> -
+> -	/*
+> -	 * Allocate our watchdog driver data, which has the
+> -	 * struct watchdog_device nested within it.
+> -	 */
+> -	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+> -	if (!wdt) {
+> -		ret = -ENOMEM;
+> -		goto err;
+> -	}
+> -
+> -	/* Initialize struct stm32_iwdg. */
+> -	wdt->regs = regs;
+> -	wdt->clk = clk;
+> -	wdt->rate = clk_get_rate(clk);
+>   
+>   	/* Initialize struct watchdog_device. */
+>   	wdd = &wdt->wdd;
+> @@ -217,7 +263,8 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
+>   
+>   	return 0;
+>   err:
+> -	clk_disable_unprepare(clk);
+> +	clk_disable_unprepare(wdt->clk_lsi);
+> +	clk_disable_unprepare(wdt->clk_pclk);
+>   
+>   	return ret;
+>   }
+> @@ -227,23 +274,18 @@ static int stm32_iwdg_remove(struct platform_device *pdev)
+>   	struct stm32_iwdg *wdt = platform_get_drvdata(pdev);
+>   
+>   	watchdog_unregister_device(&wdt->wdd);
+> -	clk_disable_unprepare(wdt->clk);
+> +	clk_disable_unprepare(wdt->clk_lsi);
+> +	clk_disable_unprepare(wdt->clk_pclk);
+>   
+>   	return 0;
+>   }
+>   
+> -static const struct of_device_id stm32_iwdg_of_match[] = {
+> -	{ .compatible = "st,stm32-iwdg" },
+> -	{ /* end node */ }
+> -};
+> -MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
+> -
+>   static struct platform_driver stm32_iwdg_driver = {
+>   	.probe		= stm32_iwdg_probe,
+>   	.remove		= stm32_iwdg_remove,
+>   	.driver = {
+>   		.name	= "iwdg",
+> -		.of_match_table = stm32_iwdg_of_match,
+> +		.of_match_table = of_match_ptr(stm32_iwdg_of_match),
+>   	},
+>   };
+>   module_platform_driver(stm32_iwdg_driver);
+> 
