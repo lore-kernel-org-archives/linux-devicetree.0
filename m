@@ -1,35 +1,30 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 18/27] dt-bindings: display: sun4i-drm:
- Add description of A64 HDMI PHY
-Date: Wed, 20 Jun 2018 13:17:08 -0600
-Message-ID: <20180620191708.GA6846@rob-hp-laptop>
-References: <20180612200036.21483-1-jernej.skrabec@siol.net>
- <20180612200036.21483-19-jernej.skrabec@siol.net>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: Add Spreadtrum SC27XX PMICs ADC
+ controller documentation
+Date: Wed, 20 Jun 2018 13:31:24 -0600
+Message-ID: <20180620193124.GA8185@rob-hp-laptop>
+References: <9b6743bb6782041b7fec9ed0e166faf2b6456de4.1529040864.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBNWQVLMQKGQE5C52SIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180612200036.21483-19-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <9b6743bb6782041b7fec9ed0e166faf2b6456de4.1529040864.git.baolin.wang@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: jic23@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, freeman.liu@spreadtrum.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 12, 2018 at 10:00:27PM +0200, Jernej Skrabec wrote:
-> A64 HDMI PHY is similar to H3 HDMI PHY except it has two possible PLL
-> clock parents. It is compatible to other HDMI PHYs, like that found in
-> R40.
+On Fri, Jun 15, 2018 at 03:03:35PM +0800, Baolin Wang wrote:
+> This patch adds the binding documentation for Spreadtrum SC27XX series
+> PMICs ADC controller device.
 > 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 > ---
->  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> Changes since v1:
+>  - No updates.
+> ---
+>  .../bindings/iio/adc/sprd,sc27xx-adc.txt           |   36 ++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
