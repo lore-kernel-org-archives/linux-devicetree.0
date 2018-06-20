@@ -1,59 +1,85 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/5] crypto: ccree: cleanup, fixes and R-Car enabling
-Date: Wed, 20 Jun 2018 10:51:46 +0200
-Message-ID: <20180620085145.7bxfbu7bi45sftnk@verge.net.au>
-References: <1527171551-21979-1-git-send-email-gilad@benyossef.com>
- <CAMuHMdVXrppnFEBmR3xhwNu3i0N3mVE1+FJRjEcWBYpHHbsAsw@mail.gmail.com>
- <CAOtvUMc8D9DQFC6vZ+GnaVBg5uFVrQmOrnSQKz7ZPHGh4BCsZg@mail.gmail.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v2 0/4] drm/tinydrm: new dirver for ILI9341 displays
+Date: Wed, 20 Jun 2018 11:07:53 +0200
+Message-ID: <CAKMK7uF-hBjqnRG28fX7NXOJDc5YEWhq+G6s0M8usA+TXM1BKw@mail.gmail.com>
+References: <20180525193623.15533-1-david@lechnology.com>
+ <8840212b-fd46-e700-58a1-cb1b882c5771@tronnes.org>
+ <d5297fc5-94f2-edcd-5a11-95d7a9dca78d@lechnology.com>
+ <ecd75b89-14a6-12f7-0ec4-222b1f984e49@tronnes.org>
+ <5a2bc4e7-c6cd-b270-61d3-61bfa5d9e90d@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAOtvUMc8D9DQFC6vZ+GnaVBg5uFVrQmOrnSQKz7ZPHGh4BCsZg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Stephen Boyd <sboyd@kernel.org>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller" <davem@davemloft.net>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Ofir Drang <ofir.drang@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <5a2bc4e7-c6cd-b270-61d3-61bfa5d9e90d@tronnes.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, limor@ladyada.net, David Lechner <david@lechnology.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Nitin Patil <nitin@mindsensors.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 19, 2018 at 04:57:15PM +0300, Gilad Ben-Yossef wrote:
-> On Tue, Jun 19, 2018 at 3:58 PM, Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
-> > Hi Gilad,
-> >
-> > On Thu, May 24, 2018 at 4:19 PM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
-> >> The patch set enables the use of CryptoCell found in some Renesas R-Car
-> >> Salvator-X boards and fixes some driver issues uncovered that prevented
-> >> to work properly.
-> >
-> > With DEBUG enabled on R-Car H3, I see lots of
-> >
-> >     ccree e6601000.crypto: IRR includes unknown cause bits (0x00000098)
-> >     ccree e6601000.crypto: IRR includes unknown cause bits (0x000000C0)
-> >     ccree e6601000.crypto: IRR includes unknown cause bits (0x000000D0)
-> >     ccree e6601000.crypto: IRR includes unknown cause bits (0x000000D8)
-> >     ccree e6601000.crypto: IRR includes unknown cause bits (0x000000E0)
-> >     ccree e6601000.crypto: IRR includes unknown cause bits (0x000000F0)
-> >     ccree e6601000.crypto: IRR includes unknown cause bits (0x000000F8)
-> >
-> > during boot. Is that expected?
-> 
-> Yes. The condition itself it is reporting is not necessarily bad. It
-> means that driver
-> did not act on certain HW notification during interrupts and that's
-> OK, we don't act on all of them
-> depending on configuration - e.g. if you have CONFIG_FIPS enabled and
-> an active TEE module or not.
-> 
-> I can rate_limit the message if it bothers you but other than that it
-> is a harmless debug print.
-
-Rate limiting sounds like an excellent idea to me.
+T24gVHVlLCBKdW4gMTksIDIwMTggYXQgNTozNiBQTSwgTm9yYWxmIFRyw7hubmVzIDxub3JhbGZA
+dHJvbm5lcy5vcmc+IHdyb3RlOgo+Cj4gRGVuIDA1LjA2LjIwMTggMTcuNDksIHNrcmV2IE5vcmFs
+ZiBUcsO4bm5lczoKPj4KPj4gKGNjOiBkcm0tbWlzYyBtYWludGFpbmVycykKPj4KPj4KPj4gRGVu
+IDA0LjA2LjIwMTggMDMuMjEsIHNrcmV2IERhdmlkIExlY2huZXI6Cj4+Pgo+Pj4KPj4+Cj4+PiBP
+biA2LzMvMTggNTowMCBQTSwgTm9yYWxmIFRyw7hubmVzIHdyb3RlOgo+Pj4+Cj4+Pj4KPj4+PiBE
+ZW4gMjUuMDUuMjAxOCAyMS4zNiwgc2tyZXYgRGF2aWQgTGVjaG5lcjoKPj4+Pj4KPj4+Pj4gVGhp
+cyBzZXJpZXMgYWRkcyBhIG5ldyB0aW55ZHJtIGRyaXZlciBmb3IgdGhlIElsaXRlayBJTEk5MzQx
+IGNvbnRyb2xsZXIKPj4+Pj4gYW5kCj4+Pj4+IGEgMi40IiBkaXNwbGF5IHBhbmVsIHRoYXQgdXNl
+cyB0aGlzIGNvbnRyb2xsZXIuCj4+Pj4KPj4+Pgo+Pj4+IERhdmlkLCBkbyB5b3UgaGF2ZSBjb21t
+aXQgcmlnaHRzIG5vdz8KPj4+Cj4+Pgo+Pj4gTm8uIE9wZW5lZCBhIGJ1ZyBhIHdoaWxlIGJhY2sg
+dG8gcmVxdWVzdCBhY2Nlc3MsIGJ1dCBJIGd1ZXNzIHRoZQo+Pj4gcmlnaHQgcGVyc29uIGRpZG4n
+dCBzZWUgaXQuCj4+Pgo+Pj4gaHR0cHM6Ly9idWdzLmZyZWVkZXNrdG9wLm9yZy9zaG93X2J1Zy5j
+Z2k/aWQ9MTA1MTY2Cj4+Pgo+Pgo+PiBDb3VsZCBzb21lb25lIHBsZWFzZSBsb29rIGF0IHRoaXM/
+Cj4+Cj4KPiBEYXZpZCwgbGV0J3Mgbm90IHN0YWxsIHRoaXMsIGlmIHlvdSByZXNlbmQgd2l0aCBm
+aXhlZCB1cCBjb21taXQgbWVzc2FnZSBhbmQKPiBhY2tzL3JicywgSSdsbCBhcHBseSBpdC4KCkkg
+YWNrZWQgYW5kIGZvcndhcmRlZCB0aGUgYWNjb3VudCByZXF1ZXN0LCBzb3JyeSBmb3IgdGhlIGRl
+bGF5LiBOZXh0CnRpbWUgYXJvdW5kLCBwb2tpbmcgbWFpbnRhaW5lcnMgb24gaXJjIGhlbHBzIGlm
+IHRoaXMgc3R1ZmYgaXMgc3R1Y2suCi1EYW5pZWwKCj4KPiBOb3JhbGYuCj4KPgo+PiBOb3JhbGYu
+Cj4+Cj4+Pj4KPj4+PiBOb3JhbGYuCj4+Pj4KPj4+Pj4gQSBmZXcgdGhpbmdzIHRvIG5vdGUgaGVy
+ZToKPj4+Pj4gKiBUaGUgZGF0YXNoZWV0IGZvciB0aGlzIGRpc3BsYXlbMV0gZG9lc24ndCBoYXZl
+IGEgdmVuZG9yIG1lbnRpb25lZCBvbgo+Pj4+PiBpdAo+Pj4+PiAgICBhbnl3aGVyZSwgc28gSSBo
+YXZlIHVzZWQgImFkYWZydWl0IiBhcyB0aGUgdmVuZG9yIHByZWZpeC4gSWYgc29tZW9uZQo+Pj4+
+PiBoYXMgYQo+Pj4+PiAgICBiZXR0ZXIgc3VnZ2VzdGlvbiwgcGxlYXNlIHNwZWFrIHVwLgo+Pj4+
+PiAqIFRoZSBNQUlOVEFJTkVSUyBwYXRjaCBmb3IgaWxpOTIyNSBpcyBpbmNsdWRlZCBzbyB3ZSBk
+b24ndCBlbmQgdXAgd2l0aAo+Pj4+PiBhIG1lcmdlCj4+Pj4+ICAgIGNvbmZsaWN0IGxhdGVyIG9u
+Lgo+Pj4+Pgo+Pj4+PiB2MiBjaGFuZ2VzOgo+Pj4+PiAqIGNoYW5nZSB2ZW5kb3IgcHJlZml4IGZy
+b20gIm5vbmFtZSIgdG8gImFkYWZydWl0Igo+Pj4+PiAqIG5ldyBwYXRjaCBmb3IgImFkYWZydWl0
+IiB2ZW5kb3IgcHJlZml4Cj4+Pj4+ICogbWlub3Igc3R5bGUgY2hhbmdlcwo+Pj4+PiAqIGRyb3Ag
+cmVndWxhdG9yIGZyb20gZHJpdmVyIChpbnN0ZWFkIG9mIGFkZGluZyB0byBEVCBiaW5kaW5ncykK
+Pj4+Pj4KPj4+Pj4gWzFdOgo+Pj4+PiBodHRwczovL2Nkbi1sZWFybi5hZGFmcnVpdC5jb20vYXNz
+ZXRzL2Fzc2V0cy8wMDAvMDQ2Lzg3OS9vcmlnaW5hbC9TUEVDLVlYMjQwUVYyOS1UX1Jldi5BX18x
+Xy5wZGYKPj4+Pj4KPj4+Pj4KPj4+Pj4gRGF2aWQgTGVjaG5lciAoNCk6Cj4+Pj4+ICAgIE1BSU5U
+QUlORVJTOiBmaXggcGF0aCB0byBpbGl0ZWssaWxpOTIyNSBkZXZpY2UgdHJlZSBiaW5kaW5ncwo+
+Pj4+PiAgICBkdC1iaW5kaW5nczogQWRkIHZlbmRvciBwcmVmaXggZm9yIEFkYWZydWl0Cj4+Pj4+
+ICAgIGR0LWJpbmRpbmdzOiBuZXcgYmluZGluZyBmb3IgSWxpdGVrIElMSTkzNDEgZGlzcGxheSBw
+YW5lbHMKPj4+Pj4gICAgZHJtL3Rpbnlkcm06IG5ldyBkcml2ZXIgZm9yIElMSTkzNDEgZGlzcGxh
+eSBwYW5lbHMKPj4+Pj4KPj4+Pj4gICAuLi4vYmluZGluZ3MvZGlzcGxheS9pbGl0ZWssaWxpOTM0
+MS50eHQgICAgICAgfCAgMjcgKysKPj4+Pj4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5k
+b3ItcHJlZml4ZXMudHh0ICAgfCAgIDEgKwo+Pj4+PiAgIE1BSU5UQUlORVJTICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICB8ICAgOCArLQo+Pj4+PiAgIGRyaXZlcnMvZ3B1L2RybS90
+aW55ZHJtL0tjb25maWcgICAgICAgICAgICAgICB8ICAxMCArCj4+Pj4+ICAgZHJpdmVycy9ncHUv
+ZHJtL3Rpbnlkcm0vTWFrZWZpbGUgICAgICAgICAgICAgIHwgICAxICsKPj4+Pj4gICBkcml2ZXJz
+L2dwdS9kcm0vdGlueWRybS9pbGk5MzQxLmMgICAgICAgICAgICAgfCAyMzMKPj4+Pj4gKysrKysr
+KysrKysrKysrKysrCj4+Pj4+ICAgNiBmaWxlcyBjaGFuZ2VkLCAyNzkgaW5zZXJ0aW9ucygrKSwg
+MSBkZWxldGlvbigtKQo+Pj4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NAo+Pj4+PiBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbGl0ZWssaWxpOTM0MS50eHQKPj4+Pj4g
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vaWxpOTM0MS5jCj4+
+Pj4+Cj4+Pj4KPj4KPj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KPj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+PiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCj4+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVsCj4+Cj4KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwo+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKPiBkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwKCgoKLS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIElu
+dGVsIENvcnBvcmF0aW9uCis0MSAoMCkgNzkgMzY1IDU3IDQ4IC0gaHR0cDovL2Jsb2cuZmZ3bGwu
+Y2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
