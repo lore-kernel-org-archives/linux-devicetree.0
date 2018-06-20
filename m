@@ -1,82 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 1/3] watchdog: stm32: add pclk feature for stm32mp1
-Date: Wed, 20 Jun 2018 13:14:09 -0600
-Message-ID: <20180620191409.GA29934@rob-hp-laptop>
-References: <1529502698-13263-1-git-send-email-ludovic.Barre@st.com>
- <1529502698-13263-2-git-send-email-ludovic.Barre@st.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 10/27] dt-bindings: display: sun4i-drm:
+ Add R40 TV TCON description
+Date: Wed, 20 Jun 2018 13:15:53 -0600
+Message-ID: <20180620191553.GA5151@rob-hp-laptop>
+References: <20180612200036.21483-1-jernej.skrabec@siol.net>
+ <20180612200036.21483-11-jernej.skrabec@siol.net>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERB26PVLMQKGQEUWX3D6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1529502698-13263-2-git-send-email-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20180612200036.21483-11-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 20, 2018 at 03:51:36PM +0200, Ludovic Barre wrote:
-> From: Ludovic Barre <ludovic.barre@st.com>
+On Tue, Jun 12, 2018 at 10:00:19PM +0200, Jernej Skrabec wrote:
+> TCON description is expanded with R40 TV TCON compatibles. TV TCONs,
+> which are connected to TCON TOP muxes, such as those on R40 SoC, also
+> needs additional clock gate to be specified.
 > 
-> This patch adds config data to manage specific properties by
-> compatible. Adds stm32mp1 config which requires pclk clock.
-> 
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 > ---
->  .../devicetree/bindings/watchdog/st,stm32-iwdg.txt |  21 +++-
+>  .../devicetree/bindings/display/sunxi/sun4i-drm.txt          | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 
-Please split bindings to separate patch.
-
->  drivers/watchdog/stm32_iwdg.c                      | 116 +++++++++++++--------
->  2 files changed, 91 insertions(+), 46 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
-> index cc13b10a..f07f6d89 100644
-> --- a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
-> @@ -2,18 +2,31 @@ STM32 Independent WatchDoG (IWDG)
->  ---------------------------------
->  
->  Required properties:
-> -- compatible: "st,stm32-iwdg"
-> -- reg: physical base address and length of the registers set for the device
-> -- clocks: must contain a single entry describing the clock input
-> +- compatible: Should be either "st,stm32-iwdg" or "st,stm32mp1-iwdg"
-
-Please format one per line.
-
-> +- reg: Physical base address and length of the registers set for the device
-> +- clocks: Reference to the clock entry lsi. Additional pclk clock entry
-> +  is required only for st,stm32mp1-iwdg.
-> +- clock-names: Name of the clocks used.
-> +  "lsi" for st,stm32-iwdg
-> +  "pclk", "lsi" for st,stm32mp1-iwdg
-
-Put lsi 1st so it is always index 0.
-
->  
->  Optional Properties:
->  - timeout-sec: Watchdog timeout value in seconds.
->  
-> -Example:
-> +Examples:
->  
->  iwdg: watchdog@40003000 {
->  	compatible = "st,stm32-iwdg";
->  	reg = <0x40003000 0x400>;
->  	clocks = <&clk_lsi>;
-> +	clock-names = "lsi";
-> +	timeout-sec = <32>;
-> +};
-> +
-> +iwdg: iwdg@5a002000 {
-
-watchdog@...
-
-Do we really need 2 example just to show 2 clocks?
-
-> +	compatible = "st,stm32mp1-iwdg";
-> +	reg = <0x5a002000 0x400>;
-> +	clocks = <&rcc IWDG2>, <&clk_lsi>;
-> +	clock-names = "pclk", "lsi";
->  	timeout-sec = <32>;
->  };
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
