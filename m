@@ -1,68 +1,39 @@
-From: Rohit Kumar <rohitkr@codeaurora.org>
-Subject: Re: [PATCH] ASoC: qcom: add sdm845 sound card support
-Date: Wed, 20 Jun 2018 13:07:29 +0530
-Message-ID: <f7891675-4c98-7fc6-b80f-840ada9a1c5b@codeaurora.org>
-References: <1529320591-22434-1-git-send-email-rohitkr@codeaurora.org>
- <20180619050527.GR25852@vkoul-mobl>
- <8562b574-3738-8983-53e7-64366590fad4@codeaurora.org>
- <20180619162230.GF13316@vkoul-mobl>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH V2 0/3] add iwdg2 support for stm32mp157c
+Date: Wed, 20 Jun 2018 09:53:55 +0200
+Message-ID: <1529481238-15277-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180619162230.GF13316@vkoul-mobl>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Vinod <vkoul@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, srinivas.kandagatla@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gVmlub2QsCgoKT24gNi8xOS8yMDE4IDk6NTIgUE0sIFZpbm9kIHdyb3RlOgo+IEhpIFJv
-aGl0LAo+Cj4gT24gMTktMDYtMTgsIDE5OjIwLCBSb2hpdCBLdW1hciB3cm90ZToKPj4gT24gNi8x
-OS8yMDE4IDEwOjM1IEFNLCBWaW5vZCB3cm90ZToKPj4+IE9uIDE4LTA2LTE4LCAxNjo0NiwgUm9o
-aXQga3VtYXIgd3JvdGU6Cj4+Pgo+Pj4+ICtzdHJ1Y3Qgc2RtODQ1X3NuZF9kYXRhIHsKPj4+PiAr
-CXN0cnVjdCBzbmRfc29jX2NhcmQgKmNhcmQ7Cj4+Pj4gKwlzdHJ1Y3QgcmVndWxhdG9yICp2ZGRf
-c3VwcGx5Owo+Pj4+ICsJc3RydWN0IHNuZF9zb2NfZGFpX2xpbmsgZGFpX2xpbmtbXTsKPj4+PiAr
-fTsKPj4+PiArCj4+Pj4gK3N0YXRpYyBzdHJ1Y3QgbXV0ZXggcHJpX21pMnNfcmVzX2xvY2s7Cj4+
-Pj4gK3N0YXRpYyBzdHJ1Y3QgbXV0ZXggcXVhdF90ZG1fcmVzX2xvY2s7Cj4+PiBhbnkgcmVhc29u
-IHdoeSB0aGUgbG9ja3MgY2FuJ3QgYmUgcGFydCBvZiBzZG04NDVfc25kX2RhdGE/Cj4+PiBBbHNv
-IHdoeSBkbyB3ZSBuZWVkIHR3byBsb2NrcyA/Cj4+IE5vIHNwZWNpZmljIHJlYXNvbiwgSSB3aWxs
-IG1vdmUgaXQgdG8gc2RtODQ1X3NuZF9kYXRhLgo+PiBUaGVzZSBsb2NrcyBhcmUgdXNlZCB0byBw
-cm90ZWN0IGVuYWJsZS9kaXNhYmxlIG9mIGJpdCBjbG9ja3MuIFdlIGhhdmUKPj4gUHJpbWFyeSBN
-STJTIFJYL1RYCj4+IGFuZCBRdWF0ZXJuYXJ5IFRETSBSWC9UWCBpbnRlcmZhY2VzLiBGb3IgcHJp
-bWFyeSBtaTJzIHJ4L3R4LCB3ZSBoYXZlIHNpbmdsZQo+PiBjbG9jayB3aGljaCBpcwo+PiBzeW5j
-aHJvbml6ZWQgd2l0aCBwcmlfbWkyc19yZXNfbG9jay4gRm9yIFF1YXQgVERNIFJYL1RYLCB3ZSBh
-cmUgdXNpbmcKPj4gcXVhdF90ZG1fcmVzX2xvY2suCj4+IFdlIG5lZWQgdHdvIGxvY2tzIGFzIHdl
-IGFyZSBwcm90ZWN0aW5nIHR3byBkaWZmZXJlbnQgcmVzb3VyY2VzLgo+IEkgdGhpbmsgYmlnZ2Vy
-IHF1ZXN0aW9uIGlzIHdoeSBkbyB5b3UgbmVlZCBhbnkgbG9ja3M/IFdoYXQgaXMgdGhlIHJhY2UK
-PiBzY2VuYXJpbyB5b3UgZW52aXNpb24gd2hpY2ggbmVlZHMgcHJvdGVjdGlvbgo+CgpCZWxvdyBp
-cyBvbmUgb2YgdGhlIHJhY2UgY29uZGl0aW9uOgoKVGhyZWFkMcKgwqDCoCDCoMKgwqAgwqDCoMKg
-IMKgwqDCoCDCoMKgwqAgwqDCoMKgwqDCoCB8wqDCoMKgwqDCoMKgwqDCoCBUaHJlYWQyCi0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0Kc3Rh
-cnR1cCgpwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwK
-Y291bnQrKzvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-fMKgwqDCoCBzdGFydHVwKCkKcmVhZCBjb3VudCAoY291bnQgPSAxKSB8CmVuYWJsZV9jbG9jaygp
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoMKgIGNvdW50Kys7wqDCoCAvL2NvdW50
-ID0gMgpzaHV0ZG93bigpwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfApj
-b3VudC0tOy8vIGNvdW50ID0gMcKgwqDCoMKgwqAgfAogwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-fCByZWFkIGNvdW50IChjb3VudCA9IDEpCiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8IGVuYWJs
-ZV9jbG9jaygpCgpIZXJlIGNsb2NrIHdpbGwgYmUgZW5hYmxlZCB0d2ljZSBidXQgZGlzYWJsZSB3
-aWxsIGJlIGNhbGxlZCBvbmx5IG9uY2UgCndoZW4gY291bnQgPSAwLgoKVGhpcyB3aWxsIG1ha2Ug
-dGhlIGNsb2NrIGFsd2F5cyBlbmFibGVkLiBTbywgSSB0aGluayB3ZSBzaG91bGQga2VlcCAKZWl0
-aGVyIG11dGV4IGxvY2sgb3IgYXRvbWljIHZhcmlhYmxlIHRvIHN5bmNocm9uaXplIHRoaXMuCgpS
-ZWdhcmRzLApSb2hpdAoKLS0gClF1YWxjb21tIEluZGlhIFByaXZhdGUgTGltaXRlZCwgb24gYmVo
-YWxmIG9mIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuLAppcyBhIG1lbWJlciBvZiBD
-b2RlIEF1cm9yYSBGb3J1bSwgYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVj
-dC4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2Et
-ZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFp
-bG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+From: Ludovic Barre <ludovic.barre@st.com>
+
+This patch series updates stm32_iwdg driver to manage config
+by compatible. stm32mp1 config requires a pclk clock.
+
+Ludovic Barre (3):
+  watchdog: stm32: add pclk feature for stm32mp1
+  ARM: dts: stm32: add iwdg2 support for stm32mp157c
+  ARM: dts: stm32: add iwdg2 support for stm32mp157c-ed1
+
+ .../devicetree/bindings/watchdog/st,stm32-iwdg.txt |  21 +++-
+ arch/arm/boot/dts/stm32mp157c-ed1.dts              |   5 +
+ arch/arm/boot/dts/stm32mp157c.dtsi                 |   8 ++
+ drivers/watchdog/stm32_iwdg.c                      | 132 ++++++++++++++-------
+ 4 files changed, 117 insertions(+), 49 deletions(-)
+
+-- 
+2.7.4
