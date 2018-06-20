@@ -1,38 +1,87 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v11 1/5] dt-bindings: media: extend
- interface documentation for DSI and DP
-Date: Wed, 20 Jun 2018 09:41:54 -0600
-Message-ID: <20180620154154.GA30575@rob-hp-laptop>
-References: <1529045023-32165-1-git-send-email-spanda@codeaurora.org>
- <1529045023-32165-2-git-send-email-spanda@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v9 2/5] dt-bindings: clock: renesas,r9a06g032-sysctrl:
+ documentation
+Date: Wed, 20 Jun 2018 09:43:44 -0600
+Message-ID: <20180620154344.GA32205@rob-hp-laptop>
+References: <1528973829-25493-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1528973829-25493-3-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1529045023-32165-2-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+In-Reply-To: <1528973829-25493-3-git-send-email-michel.pollet@bp.renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdW4gMTUsIDIwMTggYXQgMTI6MTM6MzlQTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3
-cm90ZToKPiBQcm9wZXJ0aWVzIGxpa2UgZGF0YS1sYW5lcywgY2xvY2stbm9uY29udGludW91cyBh
-bmQgbGFuZS1wb2xhcml0aWVzCj4gYXJlIGFwcGxpY2FibGUgdG8gRFNJIGFuZCBEaXNwbGF5UG9y
-dCBpbnRlcmZhY2UgYWxzby4gU28gdXBkYXRlIHRoZQo+IGRvY3VtZW50YXRpb24gdG8gbWVudGlv
-biB0aGUgc2FtZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBTYW5kZWVwIFBhbmRhIDxzcGFuZGFAY29k
-ZWF1cm9yYS5vcmc+Cj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
-ZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dCB8IDEwICsrKysrKy0tLS0KPiAgMSBmaWxlIGNoYW5n
-ZWQsIDYgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKClJldmlld2VkLWJ5OiBSb2IgSGVy
-cmluZyA8cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9mcmVlZHJlbm8K
+On Thu, Jun 14, 2018 at 11:56:31AM +0100, Michel Pollet wrote:
+> The Renesas R9A06G032 SYSCTRL node description.
+> 
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> ---
+>  .../bindings/clock/renesas,r9a06g032-sysctrl.txt   | 44 ++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
+
+One nit, otherwise:
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt b/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
+> new file mode 100644
+> index 0000000..f6cb5e3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
+> @@ -0,0 +1,44 @@
+> +* Renesas R9A06G032 SYSCTRL
+> +
+> +Required Properties:
+> +
+> +  - compatible: Must be:
+> +    - "renesas,r9a06g032-sysctrl"
+> +  - reg: Base address and length of the SYSCTRL IO block.
+> +  - #clock-cells: Must be 1
+> +  - clocks: References to the parent clocks:
+> +	- external 40mhz crystal.
+> +	- external (optional) 32.768khz
+> +	- external (optional) jtag input
+> +	- external (optional) RGMII_REFCLK
+> +  - clock-names: Must be:
+> +        clock-names = "mclk", "rtc", "jtag", "rgmii_ref_ext";
+> +
+> +Examples
+> +--------
+> +
+> +  - SYSCTRL node:
+> +
+> +	sysctrl: system-controller@4000c000 {
+> +		compatible = "renesas,r9a06g032-sysctrl";
+> +		reg = <0x4000c000 0x1000>;
+> +		status = "okay";
+
+Don't show status in examples.
+
+> +		#clock-cells = <1>;
+> +
+> +		clocks = <&ext_mclk>, <&ext_rtc_clk>,
+> +				<&ext_jtag_clk>, <&ext_rgmii_ref>;
+> +		clock-names = "mclk", "rtc", "jtag", "rgmii_ref_ext";
+> +	};
+> +
+> +  - Other nodes can use the clocks provided by SYSCTRL as in:
+> +
+> +	#include <dt-bindings/clock/r9a06g032-sysctrl.h>
+> +	uart0: serial@40060000 {
+> +		compatible = "snps,dw-apb-uart";
+> +		reg = <0x40060000 0x400>;
+> +		interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
+> +		reg-shift = <2>;
+> +		reg-io-width = <4>;
+> +		clocks = <&sysctrl R9A06G032_CLK_UART0>;
+> +		clock-names = "baudclk";
+> +	};
+> -- 
+> 2.7.4
+> 
