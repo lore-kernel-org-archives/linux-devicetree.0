@@ -1,129 +1,59 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] drivers: base: initcall_debug logs for driver probe times
-Date: Wed, 20 Jun 2018 08:28:57 -0600
-Message-ID: <CAL_Jsq+8J=BgrFAA2bdA1UcmpeYdZWHybwtyy+gq94bZaK8bKg@mail.gmail.com>
-References: <20180620023903.242758-1-toddpoynor@gmail.com>
+From: Piotr Bugalski <bugalski.piotr@gmail.com>
+Subject: Re: [RFC PATCH 1/2] spi: Add QuadSPI driver for Atmel SAMA5D2
+Date: Wed, 20 Jun 2018 16:31:13 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1806201627330.26137@carbonite>
+References: <20180618162124.21749-1-bugalski.piotr@gmail.com> <20180618162124.21749-2-bugalski.piotr@gmail.com> <20180619151506.GG11230@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180620023903.242758-1-toddpoynor@gmail.com>
+In-Reply-To: <20180619151506.GG11230@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Todd Poynor <toddpoynor@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>, Todd Poynor <toddpoynor@google.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Piotr Bugalski <bugalski.piotr@gmail.com>, linux-spi@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Cyrille Pitchen <cyrille.pitchen@microchip.com>, Tudor Ambarus <tudor.ambarus@microchip.com>, Piotr Bugalski <pbu@cryptera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 19, 2018 at 8:39 PM, Todd Poynor <toddpoynor@gmail.com> wrote:
-> From: Todd Poynor <toddpoynor@google.com>
->
-> Add initcall_debug logs for each driver device probe call, for example:
->
->    probe of a3800000.ramoops returned after 3007 usecs
->
-> This replaces the previous code added to report times for deferred
-> probes.  It also reports OF platform bus device creates that were
-> formerly lumped together in a single entry for function
-> of_platform_default_populate_init, as well as helping to annotate other
-> initcalls that involve device probing.
->
-> Signed-off-by: Todd Poynor <toddpoynor@google.com>
-> ---
->  drivers/base/dd.c | 50 +++++++++++++++++++++++------------------------
->  1 file changed, 24 insertions(+), 26 deletions(-)
->
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index 1435d7281c66..56db446a467a 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -62,26 +62,6 @@ static bool initcalls_done;
->   */
->  static bool defer_all_probes;
->
-> -/*
-> - * For initcall_debug, show the deferred probes executed in late_initcall
-> - * processing.
-> - */
-> -static void deferred_probe_debug(struct device *dev)
-> -{
-> -       ktime_t calltime, delta, rettime;
-> -       unsigned long long duration;
-> -
-> -       printk(KERN_DEBUG "deferred probe %s @ %i\n", dev_name(dev),
-> -              task_pid_nr(current));
-> -       calltime = ktime_get();
-> -       bus_probe_device(dev);
-> -       rettime = ktime_get();
-> -       delta = ktime_sub(rettime, calltime);
-> -       duration = (unsigned long long) ktime_to_ns(delta) >> 10;
-> -       printk(KERN_DEBUG "deferred probe %s returned after %lld usecs\n",
-> -              dev_name(dev), duration);
-> -}
-> -
->  /*
->   * deferred_probe_work_func() - Retry probing devices in the active list.
->   */
-> @@ -125,11 +105,7 @@ static void deferred_probe_work_func(struct work_struct *work)
->                 device_pm_move_to_tail(dev);
->
->                 dev_dbg(dev, "Retrying from deferred list\n");
-> -               if (initcall_debug && !initcalls_done)
-> -                       deferred_probe_debug(dev);
-> -               else
-> -                       bus_probe_device(dev);
-> -
-> +               bus_probe_device(dev);
->                 mutex_lock(&deferred_probe_mutex);
->
->                 put_device(dev);
-> @@ -527,6 +503,25 @@ static int really_probe(struct device *dev, struct device_driver *drv)
->         return ret;
->  }
->
-> +/*
-> + * For initcall_debug, show the driver probe time.
-> + */
-> +static int really_probe_debug(struct device *dev, struct device_driver *drv)
-> +{
-> +       ktime_t calltime, delta, rettime;
-> +       unsigned long long duration;
+Hi Mark,
 
-Probably should be s64.
+Thank you very much for quick answer.
 
-> +       int ret;
-> +
-> +       calltime = ktime_get();
-> +       ret = really_probe(dev, drv);
-> +       rettime = ktime_get();
-> +       delta = ktime_sub(rettime, calltime);
-> +       duration = (unsigned long long) ktime_to_ns(delta) >> 10;
+On Tue, 19 Jun 2018, Mark Brown wrote:
 
-Is avoiding a divide really worth optimizing here compared to the
-flood of messages typically on the serial port? Just use ktime_to_us.
-Perhaps just get rid of duration and do the conversion in the printk
-arg.
-
-> +       printk(KERN_DEBUG "probe of %s returned after %lld usecs\n",
-> +              dev_name(dev), duration);
-
-Including the return code here too would be good.
-
-> +       return ret;
-> +}
-> +
->  /**
->   * driver_probe_done
->   * Determine if the probe sequence is finished or not.
-> @@ -585,7 +580,10 @@ int driver_probe_device(struct device_driver *drv, struct device *dev)
->                 pm_runtime_get_sync(dev->parent);
+> On Mon, Jun 18, 2018 at 06:21:23PM +0200, Piotr Bugalski wrote:
 >
->         pm_runtime_barrier(dev);
-> -       ret = really_probe(dev, drv);
-> +       if (initcall_debug && !initcalls_done)
-> +               ret = really_probe_debug(dev, drv);
-> +       else
-> +               ret = really_probe(dev, drv);
->         pm_request_idle(dev);
+>> +static int atmel_qspi_adjust_op_size(struct spi_mem *mem, struct spi_mem_op *op)
+>> +{
+>> +	return 0;
+>> +}
 >
->         if (dev->parent)
-> --
-> 2.18.0.rc1.244.gcf134e6275-goog
+> If this can be empty should we adjust the callers to allow it to just be
+> omitted?
 >
+
+If I remember well some commits ago spi-mem required even empty 
+adjust_op_size. Now it seems unnecessary, but I forgot to remove the 
+code. I will fix it in next version.
+
+>> +static int atmel_qspi_remove(struct platform_device *pdev)
+>> +{
+>> +	struct spi_controller *ctrl = platform_get_drvdata(pdev);
+>> +	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
+>> +
+>> +	qspi_writel(aq, QSPI_CR, QSPI_CR_QSPIDIS);
+>> +	clk_disable_unprepare(aq->clk);
+>> +
+>> +	spi_unregister_controller(ctrl);
+>> +
+>> +	return 0;
+>> +}
+>
+> You should unregister the controller before disabling the hardware,
+> otherwise something could come in and try to start an operation on the
+> controller (or already be running one) while the hardware is disabled
+> which might blow up.
+>
+
+Sure, deinit should be done in reverse order of init, you are perfectly 
+right, just my mistake. I'll fix it in next version.
+
+Best Regards,
+Piotr
