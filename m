@@ -1,94 +1,68 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: [PATCH v4 03/15] dt-bindings: qcom_nandc: update for ECC strength and
- step size
-Date: Wed, 20 Jun 2018 12:57:30 +0530
-Message-ID: <1529479662-4026-4-git-send-email-absahu@codeaurora.org>
-References: <1529479662-4026-1-git-send-email-absahu@codeaurora.org>
+From: Rohit Kumar <rohitkr@codeaurora.org>
+Subject: Re: [PATCH] ASoC: qcom: add sdm845 sound card support
+Date: Wed, 20 Jun 2018 13:07:29 +0530
+Message-ID: <f7891675-4c98-7fc6-b80f-840ada9a1c5b@codeaurora.org>
+References: <1529320591-22434-1-git-send-email-rohitkr@codeaurora.org>
+ <20180619050527.GR25852@vkoul-mobl>
+ <8562b574-3738-8983-53e7-64366590fad4@codeaurora.org>
+ <20180619162230.GF13316@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1529479662-4026-1-git-send-email-absahu@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Abhishek Sahu <absahu@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>, Andy Gross <andy.gross@linaro.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180619162230.GF13316@vkoul-mobl>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Vinod <vkoul@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, srinivas.kandagatla@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-1. If nand-ecc-strength specified in DT, then controller will use
-   this ECC strength otherwise ECC strength will be calculated
-   according to chip requirement and available OOB size.
-
-2. QCOM NAND controller supports only one step size (512 bytes) but
-   nand-ecc-step-size is required property in DT. This DT property
-   can be removed and ecc step size can be assigned in driver with
-   512 bytes value.
-
-Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
----
-
-* Changes from v3:
-
-1. Clubbed following 2 patches into one
-   https://patchwork.ozlabs.org/patch/920465/
-   https://patchwork.ozlabs.org/patch/920467/
-
-* Changes from v2:
-  NONE
-
-* Changes from v1:
-  NEW PATCH
-
- Documentation/devicetree/bindings/mtd/qcom_nandc.txt | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-index 73d336be..1123cc6 100644
---- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-+++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-@@ -45,11 +45,12 @@ Required properties:
- 			number (e.g., 0, 1, 2, etc.)
- - #address-cells:	see partition.txt
- - #size-cells:		see partition.txt
--- nand-ecc-strength:	see nand.txt
--- nand-ecc-step-size:	must be 512. see nand.txt for more details.
- 
- Optional properties:
- - nand-bus-width:	see nand.txt
-+- nand-ecc-strength:	see nand.txt. If not specified, then ECC strength will
-+			be used according to chip requirement and available
-+			OOB size.
- 
- Each nandcs device node may optionally contain a 'partitions' sub-node, which
- further contains sub-nodes describing the flash partition mapping. See
-@@ -77,7 +78,6 @@ nand-controller@1ac00000 {
- 		reg = <0>;
- 
- 		nand-ecc-strength = <4>;
--		nand-ecc-step-size = <512>;
- 		nand-bus-width = <8>;
- 
- 		partitions {
-@@ -117,7 +117,6 @@ nand-controller@79b0000 {
- 	nand@0 {
- 		reg = <0>;
- 		nand-ecc-strength = <4>;
--		nand-ecc-step-size = <512>;
- 		nand-bus-width = <8>;
- 
- 		partitions {
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc.
-is a member of Code Aurora Forum, hosted by The Linux Foundation
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+SGVsbG8gVmlub2QsCgoKT24gNi8xOS8yMDE4IDk6NTIgUE0sIFZpbm9kIHdyb3RlOgo+IEhpIFJv
+aGl0LAo+Cj4gT24gMTktMDYtMTgsIDE5OjIwLCBSb2hpdCBLdW1hciB3cm90ZToKPj4gT24gNi8x
+OS8yMDE4IDEwOjM1IEFNLCBWaW5vZCB3cm90ZToKPj4+IE9uIDE4LTA2LTE4LCAxNjo0NiwgUm9o
+aXQga3VtYXIgd3JvdGU6Cj4+Pgo+Pj4+ICtzdHJ1Y3Qgc2RtODQ1X3NuZF9kYXRhIHsKPj4+PiAr
+CXN0cnVjdCBzbmRfc29jX2NhcmQgKmNhcmQ7Cj4+Pj4gKwlzdHJ1Y3QgcmVndWxhdG9yICp2ZGRf
+c3VwcGx5Owo+Pj4+ICsJc3RydWN0IHNuZF9zb2NfZGFpX2xpbmsgZGFpX2xpbmtbXTsKPj4+PiAr
+fTsKPj4+PiArCj4+Pj4gK3N0YXRpYyBzdHJ1Y3QgbXV0ZXggcHJpX21pMnNfcmVzX2xvY2s7Cj4+
+Pj4gK3N0YXRpYyBzdHJ1Y3QgbXV0ZXggcXVhdF90ZG1fcmVzX2xvY2s7Cj4+PiBhbnkgcmVhc29u
+IHdoeSB0aGUgbG9ja3MgY2FuJ3QgYmUgcGFydCBvZiBzZG04NDVfc25kX2RhdGE/Cj4+PiBBbHNv
+IHdoeSBkbyB3ZSBuZWVkIHR3byBsb2NrcyA/Cj4+IE5vIHNwZWNpZmljIHJlYXNvbiwgSSB3aWxs
+IG1vdmUgaXQgdG8gc2RtODQ1X3NuZF9kYXRhLgo+PiBUaGVzZSBsb2NrcyBhcmUgdXNlZCB0byBw
+cm90ZWN0IGVuYWJsZS9kaXNhYmxlIG9mIGJpdCBjbG9ja3MuIFdlIGhhdmUKPj4gUHJpbWFyeSBN
+STJTIFJYL1RYCj4+IGFuZCBRdWF0ZXJuYXJ5IFRETSBSWC9UWCBpbnRlcmZhY2VzLiBGb3IgcHJp
+bWFyeSBtaTJzIHJ4L3R4LCB3ZSBoYXZlIHNpbmdsZQo+PiBjbG9jayB3aGljaCBpcwo+PiBzeW5j
+aHJvbml6ZWQgd2l0aCBwcmlfbWkyc19yZXNfbG9jay4gRm9yIFF1YXQgVERNIFJYL1RYLCB3ZSBh
+cmUgdXNpbmcKPj4gcXVhdF90ZG1fcmVzX2xvY2suCj4+IFdlIG5lZWQgdHdvIGxvY2tzIGFzIHdl
+IGFyZSBwcm90ZWN0aW5nIHR3byBkaWZmZXJlbnQgcmVzb3VyY2VzLgo+IEkgdGhpbmsgYmlnZ2Vy
+IHF1ZXN0aW9uIGlzIHdoeSBkbyB5b3UgbmVlZCBhbnkgbG9ja3M/IFdoYXQgaXMgdGhlIHJhY2UK
+PiBzY2VuYXJpbyB5b3UgZW52aXNpb24gd2hpY2ggbmVlZHMgcHJvdGVjdGlvbgo+CgpCZWxvdyBp
+cyBvbmUgb2YgdGhlIHJhY2UgY29uZGl0aW9uOgoKVGhyZWFkMcKgwqDCoCDCoMKgwqAgwqDCoMKg
+IMKgwqDCoCDCoMKgwqAgwqDCoMKgwqDCoCB8wqDCoMKgwqDCoMKgwqDCoCBUaHJlYWQyCi0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0Kc3Rh
+cnR1cCgpwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwK
+Y291bnQrKzvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+fMKgwqDCoCBzdGFydHVwKCkKcmVhZCBjb3VudCAoY291bnQgPSAxKSB8CmVuYWJsZV9jbG9jaygp
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoMKgIGNvdW50Kys7wqDCoCAvL2NvdW50
+ID0gMgpzaHV0ZG93bigpwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfApj
+b3VudC0tOy8vIGNvdW50ID0gMcKgwqDCoMKgwqAgfAogwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+fCByZWFkIGNvdW50IChjb3VudCA9IDEpCiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8IGVuYWJs
+ZV9jbG9jaygpCgpIZXJlIGNsb2NrIHdpbGwgYmUgZW5hYmxlZCB0d2ljZSBidXQgZGlzYWJsZSB3
+aWxsIGJlIGNhbGxlZCBvbmx5IG9uY2UgCndoZW4gY291bnQgPSAwLgoKVGhpcyB3aWxsIG1ha2Ug
+dGhlIGNsb2NrIGFsd2F5cyBlbmFibGVkLiBTbywgSSB0aGluayB3ZSBzaG91bGQga2VlcCAKZWl0
+aGVyIG11dGV4IGxvY2sgb3IgYXRvbWljIHZhcmlhYmxlIHRvIHN5bmNocm9uaXplIHRoaXMuCgpS
+ZWdhcmRzLApSb2hpdAoKLS0gClF1YWxjb21tIEluZGlhIFByaXZhdGUgTGltaXRlZCwgb24gYmVo
+YWxmIG9mIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuLAppcyBhIG1lbWJlciBvZiBD
+b2RlIEF1cm9yYSBGb3J1bSwgYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVj
+dC4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2Et
+ZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFp
+bG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
