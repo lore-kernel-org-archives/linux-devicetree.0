@@ -1,96 +1,36 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v3 2/3] pinctrl: imx: allow to configure SION with
- generic pinconf
-Date: Wed, 20 Jun 2018 10:16:42 +0200
-Message-ID: <1529482602.7211.32.camel@pengutronix.de>
-References: <1529479463-26961-1-git-send-email-abel.vesa@nxp.com>
-         <1529479463-26961-3-git-send-email-abel.vesa@nxp.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx6sll: declare src module to be compatible to imx51's src
+Date: Wed, 20 Jun 2018 16:38:37 +0800
+Message-ID: <1529483917-18057-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529479463-26961-3-git-send-email-abel.vesa@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Abel Vesa <abel.vesa@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>
-Cc: linux-gpio@vger.kernel.org, linux-imx@nxp.com, Shawn Guo <shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Abel Vesa <abelvesa@linux.com>
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Abel,
+i.MX6SLL uses same SRC module as i.MX51, add "fsl,imx51-src"
+compatible string to enable SRC driver to support setting
+CPU resume address for cpu-idle and suspend/resume.
 
-as this series switches back to using the raw padcfg values in DT
-instead of generic pinconf (which I think is the right move), we can
-drop this patch from the series.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6sll.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards,
-Lucas
-
-Am Mittwoch, den 20.06.2018, 10:24 +0300 schrieb Abel Vesa:
-> > From: Lucas Stach <l.stach@pengutronix.de>
-> 
-> The SION bit force enables the input buffer, overriding the configuration
-> driven by the muxed module. It is not located in the pad config register,
-> but in the mux register and thus needs special handling.
-> 
-> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> ---
->  drivers/pinctrl/freescale/pinctrl-imx.c | 19 +++++++------------
->  drivers/pinctrl/freescale/pinctrl-imx.h |  4 ++++
->  2 files changed, 11 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-> index 1c6bb15..335edc9 100644
-> --- a/drivers/pinctrl/freescale/pinctrl-imx.c
-> +++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-> @@ -26,10 +26,6 @@
->  #include "../pinmux.h"
->  #include "pinctrl-imx.h"
->  
-> -/* The bits in CONFIG cell defined in binding doc*/
-> > > -#define IMX_NO_PAD_CTL	0x80000000	/* no pin config need */
-> > -#define IMX_PAD_SION 0x40000000		/* set SION */
-> -
->  static inline const struct group_desc *imx_pinctrl_find_group_by_name(
-> >  				struct pinctrl_dev *pctldev,
-> >  				const char *name)
-> @@ -514,18 +510,17 @@ static int imx_pinctrl_parse_groups(struct device_node *np,
-> >  		pin->mux_mode = be32_to_cpu(*list++);
-> >  		pin->input_val = be32_to_cpu(*list++);
->  
-> > -		if (info->generic_pinconf) {
-> > +		if (info->generic_pinconf)
-> >  			/* generic pin config decoded */
-> >  			pin->config = config;
-> > -		} else {
-> > +		else
-> >  			/* legacy pin config read from devicetree */
-> > -			config = be32_to_cpu(*list++);
-> > +			pin->config = be32_to_cpu(*list++);
->  
-> > -			/* SION bit is in mux register */
-> > -			if (config & IMX_PAD_SION)
-> > -				pin->mux_mode |= IOMUXC_CONFIG_SION;
-> > -			pin->config = config & ~IMX_PAD_SION;
-> > -		}
-> > +		/* SION bit is in mux register */
-> > +		if (pin->config & IMX_PAD_SION)
-> > +			pin->mux_mode |= IOMUXC_CONFIG_SION;
-> > +		pin->config = pin->config & ~IMX_PAD_SION;
->  
-> >  		dev_dbg(ipctl->dev, "%s: 0x%x 0x%08lx", info->pins[pin_id].name,
-> >  				pin->mux_mode, pin->config);
-> diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
-> index 4b8225c..44567a6 100644
-> --- a/drivers/pinctrl/freescale/pinctrl-imx.h
-> +++ b/drivers/pinctrl/freescale/pinctrl-imx.h
-> @@ -14,6 +14,10 @@
->  #include <linux/pinctrl/pinconf-generic.h>
->  #include <linux/pinctrl/pinmux.h>
->  
-> +/* The bits in CONFIG cell defined in binding doc*/
-> > > +#define IMX_NO_PAD_CTL	0x80000000	/* no pin config need */
-> > +#define IMX_PAD_SION 0x40000000		/* set SION */
-> +
->  struct platform_device;
->  
->  extern struct pinmux_ops imx_pmx_ops;
+diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
+index c9b0ccc..000e613 100644
+--- a/arch/arm/boot/dts/imx6sll.dtsi
++++ b/arch/arm/boot/dts/imx6sll.dtsi
+@@ -548,7 +548,7 @@
+ 			};
+ 
+ 			src: reset-controller@20d8000 {
+-				compatible = "fsl,imx6sll-src";
++				compatible = "fsl,imx6sll-src", "fsl,imx51-src";
+ 				reg = <0x020d8000 0x4000>;
+ 				interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
+ 					     <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+-- 
+2.7.4
