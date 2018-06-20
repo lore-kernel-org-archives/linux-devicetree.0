@@ -1,90 +1,67 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [RFC PATCH 0/2] New QuadSPI driver for Atmel SAMA5D2
-Date: Wed, 20 Jun 2018 16:54:38 +0200
-Message-ID: <20180620165438.39608554@bbrezillon>
-References: <20180618162124.21749-1-bugalski.piotr@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v11 3/5] dt-bindings: drm/bridge: Document sn65dsi86
+ bridge bindings
+Date: Wed, 20 Jun 2018 09:25:07 -0600
+Message-ID: <20180620152507.GA9842@rob-hp-laptop>
+References: <1529045023-32165-1-git-send-email-spanda@codeaurora.org>
+ <1529045023-32165-4-git-send-email-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180618162124.21749-1-bugalski.piotr@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Piotr Bugalski <bugalski.piotr@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Cyrille Pitchen <cyrille.pitchen@microchip.com>, Tudor Ambarus <tudor.ambarus@microchip.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1529045023-32165-4-git-send-email-spanda@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sandeep Panda <spanda@codeaurora.org>
+Cc: devicetree@vger.kernel.org, ryadav@codeaurora.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, abhinavk@codeaurora.org, hoegsberg@chromium.org, freedreno@lists.freedesktop.org, chandanu@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Piotr,
-
-On Mon, 18 Jun 2018 18:21:22 +0200
-Piotr Bugalski <bugalski.piotr@gmail.com> wrote:
-
-> Hello,
-> 
-> Atmel SAMA5D2 is equipped with two QSPI interfaces. These interfaces can
-> work as in SPI-compatible mode or use two / four lines to improve
-> communication speed. At the moment there is QSPI driver strongly tied to
-> NOR-flash memory and MTD subsystem.
-> Intention of this change is to provide new driver which will not be tied
-> to MTD and allows using QSPI with NAND-flash memory or other peripherals
-> New spi-mem API provides abstraction layer which can disconnect QSPI
-> from MTD. This driver doesn't support regular SPI interface, it should
-> be used with spi-mem interface only.
-
-Glad to see that people are starting to convert their SPI NOR
-controller drivers to the SPI mem approach.
-
-> Unfortunately SAMA5D2 hardware by default supports only NOR-flash
-> memory. It allows 24- and 32-bit addressing while NAND-flash requires
-> 16-bit long. To workaround hardware limitation driver is a bit more
-> complicated.
-> 
-> Request to spi-mem contains three fiels: opcode (command), address,
-> dummy bytes. SAMA5D2 QSPI hardware supports opcode, address, dummy and
-> option byte where address field can only be 24- or 32- bytes long.
-> Handling 8-bits long addresses is done using option field. For 16-bits
-> address behaviour depends of number of requested dummy bits. If there
-> are 8 or more dummy cycles, address is shifted and sent with first dummy
-> byte. Otherwise opcode is disabled and first byte of address contains
-> command opcode (works only if opcode and address use the same buswidth).
-> The limitation is when 16-bit address is used without enough dummy
-> cycles and opcode is using different buswidth than address. Other modes
-> are supported with described workaround.
-> 
-> It looks like hardware has some limitation in performance. The same issue
-> exists in current QSPI driver (MTD/nor-flash) and soft-pack (bare-metal
-> library from Atmel). Without using DMA read speed is much worse than
-> maximum bandwidth (efficiency 30-40%). Any help with performance
-> improvement is highly welcome, especially for NAND-flash memories which
-> offers higher capacity than NOR-flash used with previous driver.
-> 
-> Best Regards,
-> Piotr
-> 
-> Piotr Bugalski (2):
->   spi: Add QuadSPI driver for Atmel SAMA5D2
->   dt-bindings: spi: QuadSPI driver for Atmel SAMA5D2 documentation
-> 
->  .../devicetree/bindings/spi/spi_atmel-qspi.txt     |  41 ++
->  drivers/spi/Kconfig                                |   9 +
->  drivers/spi/Makefile                               |   1 +
->  drivers/spi/spi-atmel-qspi.c                       | 480 +++++++++++++++++++++
-
-I'd like a solution where we remove the old driver. I definitely don't
-want to have both in parallel. Did you test the new driver with a SPI
-NOR to check if it still works correctly? If you did, then I'd suggest
-that you add a patch updating defconfigs where the SPI_ATMEL_QUADSPI is
-selected and another patch removing the old driver.
-
->  4 files changed, 531 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi_atmel-qspi.txt
-
-This should be a simple mv from
-Documentation/devicetree/bindings/mtd/atmel-quadspi.txt to
-Documentation/devicetree/bindings/spi/spi-atmel-qspi.txt
-
->  create mode 100644 drivers/spi/spi-atmel-qspi.c
-> 
-
-Thanks,
-
-Boris
+T24gRnJpLCBKdW4gMTUsIDIwMTggYXQgMTI6MTM6NDFQTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3
+cm90ZToKPiBEb2N1bWVudCB0aGUgYmluZGluZ3MgdXNlZCBmb3IgdGhlIHNuNjVkc2k4NiBEU0kg
+dG8gZURQIGJyaWRnZS4KPiAKPiBDaGFuZ2VzIGluIHYxOgo+ICAtIFJlcGhyYXNlIHRoZSBkdC1i
+aW5kaW5nIGRlc2NyaXB0aW9ucyB0byBiZSBtb3JlIGlubGluZSB3aXRoIGV4aXN0aW5nCj4gICAg
+YmluZGluZ3MgKEFuZHJ6ZWogSGFqZGEpLgo+ICAtIEFkZCBtaXNzaW5nIGR0LWJpbmRpbmcgdGhh
+dCBhcmUgcGFyc2VkIGJ5IGNvcnJlc3BvbmRpbmcgZHJpdmVyCj4gICAgKEFuZHJ6ZWogSGFqZGEp
+Lgo+IAo+IENoYW5nZXMgaW4gdjI6Cj4gIC0gUmVtb3ZlIGVkcCBwYW5lbCBzcGVjaWZpYyBkdC1i
+aW5kaW5nIGVudHJpZXMuIE9ubHkga2VlcCBicmlkZ2UKPiAgICBzcGVjaWZpYyBlbnRyaWVzIChT
+ZWFuIFBhdWwpLgo+ICAtIFJlbW92ZSBjdXN0b20tbW9kZXMgZHQgZW50cnkgc2luY2UgaXRzIHVz
+YWdlIGlzIHJlbW92ZWQgZnJvbSBkcml2ZXIgYWxzbyAoU2VhbiBQYXVsKS4KPiAgLSBSZW1vdmUg
+aXMtcGx1Z2dhYmxlIGR0IGVudHJ5IHNpbmNlIHRoaXMgd2lsbCBub3QgYmUgbmVlZGVkIGFueW1v
+cmUgKFNlYW4gUGF1bCkuCj4gCj4gQ2hhbmdlcyBpbiB2MzoKPiAgLSBSZW1vdmUgaXJxLWdwaW8g
+ZHQgZW50cnkgYW5kIGluc3RlYWQgcG9wdWxhdGUgaXMgYW4gaW50ZXJydXB0Cj4gICAgcHJvcGVy
+dHkgKFJvYiBIZXJyaW5nKS4KPiAKPiBDaGFuZ2VzIGluIHY0Ogo+ICAtIEFkZCBsaW5rIHRvIGJy
+aWRnZSBjaGlwIGRhdGFzaGVldCAoU3RlcGhlbiBCb3lkKQo+ICAtIEFkZCB2cGxsIGFuZCB2Y2Mg
+cmVndWxhdG9yIHN1cHBseSBiaW5kaW5ncyAoU3RlcGhlbiBCb3lkKQo+ICAtIEFkZCByZWYgY2xr
+IG9wdGlvbmFsIGR0IGJpbmRpbmcgKFN0ZXBoZW4gQm95ZCkKPiAgLSBBZGQgZ3Bpby1jb250cm9s
+bGVyIG9wdGlvbmFsIGR0IGJpbmRpbmcgKFN0ZXBoZW4gQm95ZCkKPiAKPiBDaGFuZ2VzIGluIHY1
+Ogo+ICAtIFVzZSBjbG9jayBwcm9wZXJ0eSB0byBzcGVjaWZ5IHRoZSBpbnB1dCByZWZjbGsgKFN0
+ZXBoZW4gQm95ZCkuCj4gIC0gVXBkYXRlIGdwaW8gY2VsbCBhbmQgcHdtIGNlbGwgbnVtYmVycyAo
+U3RlcGhlbiBCb3lkKS4KPiAKPiBDaGFuZ2VzIGluIHY2Ogo+ICAtIEFkZCBwcm9wZXJ0eSB0byBt
+ZW50aW9uIHRoZSBsYW5lIG1hcHBpbmcgc2NoZW1lIGFuZCBwb2xhcml0eSBpbnZlcnNpb24KPiAg
+ICAoU3RlcGhlbiBCb3lkKS4KPiAKPiBDaGFuZ2VzIGluIHY3Ogo+ICAtIERldGFpbCBkZXNjcmlw
+dGlvbiBvZiBsYW5lIG1hcHBpbmcgc2NoZW1lIGR0IHByb3BlcnR5IChBbmRyemVqCj4gICAgSGFq
+ZGEvIFJvYiBIZXJyaW5nKS4KPiAgLSBSZW1vdmVkIEhEUCBncGlvIGJpbmRpbmcsIHNpbmNlIHRo
+ZSBicmlkZ2UgdXNlcyBJUlEgc2lnbmFsIHRvCj4gICAgZGV0ZXJtaW5lIEhQRCwgYW5kIElSUSBw
+cm9wZXJ0eSBpcyBhbHJlYWR5IGRvY3VtZW50ZWQgaW4gYmluZGluZy4KPiAKPiBDaGFuZ2VzIGlu
+IHY4Ogo+ICAtIFJlbW92ZWQgdW5uZWNlc3NhcnkgZXhwbGFuYXRpb24gb2YgbGFuZSBtYXBwaW5n
+IGFuZCBwb2xhcml0eSBkdAo+ICAgIHByb3BlcnR5LCBzaW5jZSB0aGVzZSBhcmUgYWxyZWFkeSBl
+eHBsYWluZWQgaW4gbWVkaWEvdmlkZW8taW50ZXJmYWNlCj4gICAgZHQgYmluaWRuZyAoUm9iIEhl
+cnJpbmcpLgo+IAo+IENoYW5nZXMgaW4gdjk6Cj4gIC0gQXZvaWQgcHV0dGluZyByZS1kZWZpbml0
+aW9uIG9mIGxhbmUgbWFwcGluZyBhbmQgcG9sYXJpdHkgZHQgYmluZGluZwo+ICAgIChSb2IgSGVy
+cmluZykuCj4gCj4gU2lnbmVkLW9mZi1ieTogU2FuZGVlcCBQYW5kYSA8c3BhbmRhQGNvZGVhdXJv
+cmEub3JnPgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2
+LnR4dCAgICAgICB8IDg3ICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQs
+IDg3IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0CgpSZXZpZXdl
+ZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
