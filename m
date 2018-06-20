@@ -1,58 +1,71 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH] arm: dts: socfpga: denali needs nand_x_clk too
-Date: Wed, 20 Jun 2018 06:52:09 +0200
-Message-ID: <ba7b5ee8-c9f0-45a1-67ec-3d1f510f6c24@gmail.com>
-References: <20180619120719.26921-1-richard@nod.at>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 1/5] dt-bindings: mfd: axp20x: Add "self-working" mode for
+ AXP806
+Date: Wed, 20 Jun 2018 13:15:36 +0800
+Message-ID: <20180620051540.25617-2-wens@csie.org>
+References: <20180620051540.25617-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180619120719.26921-1-richard@nod.at>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Weinberger <richard@nod.at>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, computersforpeace@gmail.com, dwmw2@infradead.org, miquel.raynal@bootlin.com, boris.brezillon@bootlin.com, yamada.masahiro@socionext.com, "See, Chin Liang" <chin.liang.see@intel.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180620051540.25617-1-wens@csie.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On 06/19/2018 02:07 PM, Richard Weinberger wrote:
-> The denali NAND flash controller needs at least two clocks to operate,
-> nand_clk and nand_x_clk.
-> Since 1bb88666775e ("mtd: nand: denali: handle timing parameters by
-> setup_data_interface()") nand_x_clk is used to derive timing settings.
-> 
-> Signed-off-by: Richard Weinberger <richard@nod.at>
-> ---
-> Strictly speaking denali needs a ecc_clk too, but AFAIK such a clock
-> is not present on this SoC.
-> But my SoCFPGA knowledge is very limited.
-> 
-> Thanks,
-> //richard
+The AXP806 has three operation modes:
 
-It looks sane, but I cannot test it right now, since I'm on vacation.
-I hope Dinh/Chin can jump in.
+  - master mode: The PMIC is the first or only AXP PMIC in the system,
+		 but is not in charge of power management, i.e. only
+		 provides regulator functions.
 
-> ---
->  arch/arm/boot/dts/socfpga.dtsi | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index 486d4e7433ed..562f7b375bbd 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -754,7 +754,8 @@
->  			reg-names = "nand_data", "denali_reg";
->  			interrupts = <0x0 0x90 0x4>;
->  			dma-mask = <0xffffffff>;
-> -			clocks = <&nand_clk>;
-> +			clocks = <&nand_clk>, <&nand_x_clk>;
-> +			clock-names = "nand", "nand_x";
->  			status = "disabled";
->  		};
->  
-> 
+  - slave mode: The PMIC is the second AXP PMIC in the system, chained
+		to the first, or master, one.
 
+  - self-working mode: The PMIC is the only AXP PMIC in the system, and
+		       is in charge of power sequencing.
 
+The functional differences between these modes can be found in the
+"Control and Operation" chapter of the AXP806 (in Chinese) and AXP805
+(in English) datasheets. These include how the PMIC responds to external
+signals, whether it takes an external voltage reference or uses its own,
+and whether the EN/PWRON pin functions as an enable switch or power button.
+
+We already support both slave and master mode. This patch adds a property
+for describing the self-working mode, and reworks the description for
+the mode properties.
+
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ Documentation/devicetree/bindings/mfd/axp20x.txt | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+index d1762f3b30af..eaaf79c01e1e 100644
+--- a/Documentation/devicetree/bindings/mfd/axp20x.txt
++++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+@@ -45,8 +45,11 @@ Optional properties:
+ 			  board is driving OTG VBus or not.
+ 			  (axp221 / axp223 / axp803/ axp813 only)
+ 
+-- x-powers,master-mode: Boolean (axp806 only). Set this when the PMIC is
+-			wired for master mode. The default is slave mode.
++- x-powers,self-working-mode and
++  x-powers,master-mode: Boolean (axp806 only). Set either of these when the
++			PMIC is wired for self-working mode or master mode.
++			If neither is set then slave mode is assumed.
++			This corresponds to how the MODESET pin is wired.
+ 
+ - <input>-supply: a phandle to the regulator supply node. May be omitted if
+ 		  inputs are unregulated, such as using the IPSOUT output
 -- 
-Best regards,
-Marek Vasut
+2.17.1
