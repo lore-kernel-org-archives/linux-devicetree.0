@@ -1,87 +1,43 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 2/5] dt-bindings: clock: renesas,r9a06g032-sysctrl:
- documentation
-Date: Wed, 20 Jun 2018 09:43:44 -0600
-Message-ID: <20180620154344.GA32205@rob-hp-laptop>
-References: <1528973829-25493-1-git-send-email-michel.pollet@bp.renesas.com>
- <1528973829-25493-3-git-send-email-michel.pollet@bp.renesas.com>
+Subject: Re: [PATCH v5 1/5] dt-bindings: clk: at91: add an I2S
+	mux clock
+Date: Wed, 20 Jun 2018 09:47:59 -0600
+Message-ID: <20180620154759.GA4755@rob-hp-laptop>
+References: <20180618141239.10892-1-codrin.ciubotariu@microchip.com>
+ <20180618141239.10892-2-codrin.ciubotariu@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <1528973829-25493-3-git-send-email-michel.pollet@bp.renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20180618141239.10892-2-codrin.ciubotariu@microchip.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, alexandre.belloni@bootlin.com, sboyd@kernel.org, nicolas.ferre@microchip.com, linux-kernel@vger.kernel.org, boris.brezillon@bootlin.com, broonie@kernel.org, Cristian.Birsan@microchip.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 14, 2018 at 11:56:31AM +0100, Michel Pollet wrote:
-> The Renesas R9A06G032 SYSCTRL node description.
+On Mon, Jun 18, 2018 at 05:12:35PM +0300, Codrin Ciubotariu wrote:
+> The I2S mux clock can be used to select the I2S input clock. The
+> available parents are the peripheral and the generated clocks.
 > 
-> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 > ---
->  .../bindings/clock/renesas,r9a06g032-sysctrl.txt   | 44 ++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
-
-One nit, otherwise:
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt b/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
-> new file mode 100644
-> index 0000000..f6cb5e3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
-> @@ -0,0 +1,44 @@
-> +* Renesas R9A06G032 SYSCTRL
-> +
-> +Required Properties:
-> +
-> +  - compatible: Must be:
-> +    - "renesas,r9a06g032-sysctrl"
-> +  - reg: Base address and length of the SYSCTRL IO block.
-> +  - #clock-cells: Must be 1
-> +  - clocks: References to the parent clocks:
-> +	- external 40mhz crystal.
-> +	- external (optional) 32.768khz
-> +	- external (optional) jtag input
-> +	- external (optional) RGMII_REFCLK
-> +  - clock-names: Must be:
-> +        clock-names = "mclk", "rtc", "jtag", "rgmii_ref_ext";
-> +
-> +Examples
-> +--------
-> +
-> +  - SYSCTRL node:
-> +
-> +	sysctrl: system-controller@4000c000 {
-> +		compatible = "renesas,r9a06g032-sysctrl";
-> +		reg = <0x4000c000 0x1000>;
-> +		status = "okay";
-
-Don't show status in examples.
-
-> +		#clock-cells = <1>;
-> +
-> +		clocks = <&ext_mclk>, <&ext_rtc_clk>,
-> +				<&ext_jtag_clk>, <&ext_rgmii_ref>;
-> +		clock-names = "mclk", "rtc", "jtag", "rgmii_ref_ext";
-> +	};
-> +
-> +  - Other nodes can use the clocks provided by SYSCTRL as in:
-> +
-> +	#include <dt-bindings/clock/r9a06g032-sysctrl.h>
-> +	uart0: serial@40060000 {
-> +		compatible = "snps,dw-apb-uart";
-> +		reg = <0x40060000 0x400>;
-> +		interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-> +		reg-shift = <2>;
-> +		reg-io-width = <4>;
-> +		clocks = <&sysctrl R9A06G032_CLK_UART0>;
-> +		clock-names = "baudclk";
-> +	};
-> -- 
-> 2.7.4
+> Changes in v5:
+> 	- specified clock's parent;
+> 	- added a newline before adding the clock's compatible string;
 > 
+>  .../devicetree/bindings/clock/at91-clock.txt  | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+
+Well, since Alexandre promises all this is going to get re-worked soon:
+
+Acked-by: Rob Herring <robh@kernel.org>
