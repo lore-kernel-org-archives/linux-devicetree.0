@@ -1,64 +1,77 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: thermal: Add binding document for SR
- thermal
-Date: Wed, 20 Jun 2018 13:52:14 -0600
-Message-ID: <20180620195214.GA10436@rob-hp-laptop>
-References: <1529310679-13482-1-git-send-email-srinath.mannam@broadcom.com>
- <1529310679-13482-2-git-send-email-srinath.mannam@broadcom.com>
+From: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH 1/1] arm64: dts: rockchip: correct voltage selector
+ Firefly-RK3399
+Date: Wed, 20 Jun 2018 21:57:41 +0200
+Message-ID: <cd7447bc-1c3d-29ca-9671-144b1f474711@gmx.de>
+References: <20180604171523.28454-1-xypron.glpk@gmx.de>
+ <10782218.jfpm9omiT7@phil> <459cb125-a3e2-8f1e-b960-011020d41b3c@gmx.de>
+ <6592028.l3WmXB2ndK@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1529310679-13482-2-git-send-email-srinath.mannam@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinath Mannam <srinath.mannam@broadcom.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Pramod Kumar <pramod.kumar@broadcom.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <6592028.l3WmXB2ndK@diego>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Vagrant Cascadian <vagrant-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Pierre-Hugues Husson <phh-8tEavu1zA38@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 18, 2018 at 02:01:17PM +0530, Srinath Mannam wrote:
-> From: Pramod Kumar <pramod.kumar@broadcom.com>
-> 
-> Add binding document for supported thermal implementation
-> in Stingray.
-> 
-> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
-> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> Reviewed-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> ---
->  .../bindings/thermal/brcm,sr-thermal.txt           | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
-> new file mode 100644
-> index 0000000..33f9e11
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
-> @@ -0,0 +1,45 @@
-> +* Broadcom Stingray Thermal
-> +
-> +This binding describes thermal sensors that is part of Stingray SoCs.
-> +
-> +Required properties:
-> +- compatible : Must be "brcm,sr-thermal"
-> +- reg : memory where tmon data will be available.
-> +
-> +Example:
-> +	tmons {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		tmon_ihost0: thermal@8f100000 {
-> +			compatible = "brcm,sr-thermal";
-> +			reg = <0x8f100000 0x4>;
-> +		};
-
-You still haven't given me a compelling reason why you need a node per 
-register.
-
-You have a single range of registers. Make this 1 node.
-
-Rob
+T24gMDYvMjAvMjAxOCAxMToxNSBBTSwgSGVpa28gU3TDvGJuZXIgd3JvdGU6Cj4gSGkgSGVpbnJp
+Y2gsCj4gCj4gQW0gTWl0dHdvY2gsIDIwLiBKdW5pIDIwMTgsIDA3OjU5OjM0IENFU1Qgc2Nocmll
+YiBIZWlucmljaCBTY2h1Y2hhcmR0Ogo+PiBPbiAwNi8yMC8yMDE4IDAxOjIxIEFNLCBIZWlrbyBT
+dHVlYm5lciB3cm90ZToKPj4+IEFtIERvbm5lcnN0YWcsIDE0LiBKdW5pIDIwMTgsIDE0OjU1OjI3
+IENFU1Qgc2NocmllYiBIZWlrbyBTdHVlYm5lcjoKPj4+PiBBbSBNb250YWcsIDQuIEp1bmkgMjAx
+OCwgMTk6MTU6MjMgQ0VTVCBzY2hyaWViIEhlaW5yaWNoIFNjaHVjaGFyZHQ6Cj4+Pj4+IFdpdGhv
+dXQgdGhpcyBwYXRjaCB0aGUgRmlyZWZseS1SSzMzOTkgYm9hcmQgYm9vdCBwcm9jZXNzIGhhbmdz
+IGFmdGVyCj4+Pj4+IHRoZXNlCj4+Pj4+Cj4+Pj4+IGxpbmVzOgo+Pj4+PiAgICBmYW41MzU1NS1y
+ZWd1bGF0b3IgMC0wMDQwOiBGQU41MzU1NSBPcHRpb25bOF0gUmV2WzFdIERldGVjdGVkIQo+Pj4+
+PiAgICBmYW41MzU1NS1yZWc6IHN1cHBsaWVkIGJ5IHZjY19zeXMKPj4+Pj4gICAgdmNjMXY4X3Mz
+OiBzdXBwbGllZCBieSB2Y2NfMXY4Cj4+Pj4+Cj4+Pj4+IEJsYWNrbGlzdGluZyBkcml2ZXIgZmFu
+NTM1NTUgYWxsb3dzIGJvb3RpbmcuCj4+Pj4+Cj4+Pj4+IFRoZSBkZXZpY2UgdHJlZSB1c2VzIGEg
+dmFsdWUgb2YgZmNzLHN1c3BlbmQtdm9sdGFnZS1zZWxlY3RvciBkaWZmZXJlbnQKPj4+Pj4gdG8K
+Pj4+Pj4gYW55IG90aGVyIGJvYXJkLgo+Pj4+Pgo+Pj4+PiBDaGFuZ2luZyB0aGlzIHNldHRpbmcg
+dG8gdGhlIHVzdWFsIHZhbHVlIGlzIHN1ZmZpY2llbnQgdG8gZW5hYmxlCj4+Pj4+IGJvb3Rpbmcu
+Cj4+Pj4+Cj4+Pj4+IFNpZ25lZC1vZmYtYnk6IEhlaW5yaWNoIFNjaHVjaGFyZHQgPHh5cHJvbi5n
+bHBrQGdteC5kZT4KPj4+Pgo+Pj4+IGFwcGxpZWQgZm9yIDQuMTkuCj4+Pgo+Pj4gYW5kIGRyb3Bw
+ZWQgYWdhaW4uCj4+Pgo+Pj4gU2FkbHkgaXQgbG9va3MgbGlrZSB0aGUgcGF0Y2ggY2F1c2VzIGNv
+bmZsaWN0cyB3aXRoIGF0IGxlYXN0IG9uZSBmaXJlZmx5Cj4+PiBib2FyZCBpbiBhIGtlcm5lbGNp
+IGxhYi4gTXkgb3duIGlzIGN1cnJlbnRseSBub3QgcmVhZHkgdG8gdXNlLCBzbyBJIGNhbm5vdAo+
+Pj4gbG9vayBteXNlbGYgcmlnaHQgbm93Lgo+Pj4KPj4+IFRoZSBpc3N1ZSBrZXJuZWxjaSBwZW9w
+bGUgZGVzY3JpYmVkIHNvdW5kZWQgcXVpdGUgYSBsb3QgbGlrZSB0aGUgb25lCj4+PiBpbiB5b3Vy
+IGNvbW1pdCBtZXNzYWdlLCBzbyBteSBjdXJyZW50IHRoZW9yeSBpcyB0aGF0IHRoZQo+Pj4gc3Vz
+cGVuZC12b2x0YWdlLXNlbGVjdG9yIG11c3QgaW4gc29tZSBmb3JtIGNvcmVzcG9uZCB0byB0aGUK
+Pj4+IGNwdV9iX3NsZWVwX2ggZ3BpbyBzZXR0aW5nIHdlJ3JlIGN1cnJlbnRseSBub3QgaGFuZGxp
+bmcgYXQgYWxsLCB3aGljaAo+Pj4gd291bGQgdGhlcmVmb3JlIGRlcGVuZCBvbiBob3cgdGhlIGJv
+b3Rsb2FkZXIgc2V0cyB0aGlzIHVwLgo+Pgo+PiBwbGVhc2UsIHByb3ZpZGUgYSBsaW5rIHRvIHRo
+ZSBsb2cgZGlzcGxheWluZyB0aGUgaXNzdWUgYW5kIHRoZSBjb250YWN0Cj4+IHdobyBjYW4gcHJv
+dmlkZSB0aGUgZXhhY3Qgc2V0dXAuCj4+Cj4+IEkgaGF2ZSBiZWVuIHRlc3Rpbmcgd2l0aCBVLUJv
+b3QgYXMgYm9vdCBsb2FkZXIuCj4gCj4gZmFpbGluZyBib290IGNhbiBiZSBmb3VuZCBvbgo+IGh0
+dHBzOi8va2VybmVsY2kub3JnL2Jvb3QvaWQvNWIyYTA1M2Q1OWI1MTQ1NjkwNzlhODcyLwo+IAo+
+IEFzIHRoaXMgYm9hcmQgaXMgc2l0dGluZyBpbiB0aGUgImxhYi1iYXlsaWJyZS1zZWF0dGxlIiwg
+SSBndWVzcwo+IEtldmluIEhpbG1hbiAoQ2MnZWQgbm93KSBpcyB0aGUgb25lIHRoYXQgY2FuIHNh
+eSBhIGJpdCBtb3JlIGFib3V0IHRoZQo+IGJvYXJkIHNldHVwLgo+IAo+IAo+IFRoZSBtb3JlIGlu
+dGVyZXN0aW5nIHF1ZXN0aW9uIHdvdWxkIGJlIGhvdyB0byBtYWtlIHN1cmUgd2UgZG9uJ3QKPiBk
+aWUgd2l0aCBwb3NzaWJsZSBkaWZmZXJlbnQgYm9vdGxvYWRlciB2ZXJzaW9ucy4gQXMgSSBkb24n
+dCByZWFsbHkgdGhpbmcgCj4gInVwZ3JhZGUgeW91ciBib290bG9hZGVyIiBpcyBhbiBhbHdheXMg
+dmFsaWQgb3B0aW9uLgo+IAo+IAo+IEhlaWtvCj4gCgpIaSBLZXZpbiwKCnRoZSBSSzMzOTktRmly
+ZWZseSB3YXMgYm9vdGVkIG9uIGxhYi1iYXlsaWJyZS1zZWF0dGxlIHdpdGgKVS1Cb290IDIwMTcu
+MDUtcmMzLTAwMTMxLWdmNzlmZDU4ZDVmNWMtZGlydHkKCmY3OWZkNThkNWY1YyBpcyBub3QgYSBj
+b21taXQgaW4gVS1Cb290IG1hc3Rlci4KVGhlIHZlcnNpb24gbnVtYmVyIHRlbGxzIHVzIGl0IGlz
+IDEzMSBwYXRjaGVzIGFoZWFkIG9mIFUtQm9vdCAyMDE3LjA1LXJjMy4KRGlydHkgbWVhbnMgdGhl
+IHNvdXJjZSBjb250YWluZWQgdW5jb21taXR0ZWQgY2hhbmdlcy4KClVuZm9ydHVuYXRlbHkgdGhp
+cyBpcyBub3QgYSByZXByb2R1Y2libGUgdGVzdCBlbnZpcm9ubWVudC4KQ291bGQgeW91LCBwbGVh
+c2UsIHByb3ZpZGUgdGhlIGJ1aWxkIHJlY2lwZSB0byByZXByb2R1Y2UgdGhlIFUtQm9vdApCYXlM
+aWJyZSBpcyB1c2luZz8KV291bGQgaXQgYmUgcG9zc2libGUgdG8gdXNlIG1haW5saW5lIFUtQm9v
+dCBpbiBrZXJuZWxjaSBmb3IgdGhpcyBib2FyZD8KCkJlc3QgcmVnYXJkcwoKSGVpbnJpY2gKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tj
+aGlwIG1haWxpbmcgbGlzdApMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
