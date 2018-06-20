@@ -1,43 +1,97 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH] ASoC: qcom: add sdm845 sound card support
-Date: Wed, 20 Jun 2018 10:53:01 +0100
-Message-ID: <53db13d7-b4bd-0e06-4110-ce75fd0bdd3c@linaro.org>
-References: <1529320591-22434-1-git-send-email-rohitkr@codeaurora.org>
- <20180619050527.GR25852@vkoul-mobl>
- <8562b574-3738-8983-53e7-64366590fad4@codeaurora.org>
- <20180619162230.GF13316@vkoul-mobl>
- <f7891675-4c98-7fc6-b80f-840ada9a1c5b@codeaurora.org>
- <20180620093106.GI13316@vkoul-mobl>
+From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Subject: Re: [PATCH 00/20] coresight: Update device tree bindings
+Date: Wed, 20 Jun 2018 10:53:26 +0100
+Message-ID: <7b03e604-3792-7846-56dc-d3feae5410d8@arm.com>
+References: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180620093106.GI13316@vkoul-mobl>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
 Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Vinod <vkoul@kernel.org>, Rohit Kumar <rohitkr@codeaurora.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, xuwei5@hisilicon.com, lipengcheng8@huawei.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, "Ivan T . Ivanov" <ivan.ivanov@linaro.org>, Stefan Agner <stefan@agner.ch>, shawnguo@kernel.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: mathieu.poirier@linaro.org, robh@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com, sudeep.holla@arm.com, arm@kernel.org, linux-kernel@vger.kernel.org, matt.sealey@arm.com, john.horley@arm.com, charles.garcia-tobin@arm.com, coresight@lists.linaro.org, devicetree@vger.kernel.org, mike.leach@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+On 05/06/18 22:43, Suzuki K Poulose wrote:
+> Coresight uses DT graph bindings to describe the connections of the
+> components. However we have some undocumented usage of the bindings
+> to describe some of the properties of the connections.
+> 
+> The coresight driver needs to know the hardware ports invovled
+> in the connection and the direction of data flow to effectively
+> manage the trace sessions. So far we have relied on the "port"
+> address (as described by the generic graph bindings) to represent
+> the hardware port of the component for a connection.
+> 
+
+...
+
+> There were three options considered for the hardware port number scheme:
+> 
 
 
-On 20/06/18 10:31, Vinod wrote:
->> Here clock will be enabled twice but disable will be called only once when
->> count = 0.
->>
->> This will make the clock always enabled. So, I think we should keep either
->> mutex lock or atomic variable to synchronize this.
-> we are using DPCM here right?
+...
 
-We should probably model this clk as DAPM widget so we do not need to 
-handle this in machine code.
+>   3) Use explicit properties (implemented in the series) for the hardware
+>      port id and direction. We define a new property "coresight,hwid" for
+>      each endpoint in coresight devices to specify the hardware port number
+>      explicitly. Also use a separate property "direction" to specify the
+>      direction of the data flow.
+> 
+> 	e.g,
+> 
+> 	port@0{
+> 		reg = <0>;
+> 		endpoint {
+> 			direction = <1>;	// Output
+> 			coresight,hwid = <0>;	// Port # 0
+> 		}
+> 	};
+> 
+> 	port@1{
+> 		reg = <1>;
+> 		endpoint {
+> 			direction = <0>;	// Input
+> 			coresight,hwid = <0>;	// Port # 0
+> 		};
+> 	};
+> 
+>      Pros:
+>         - The bindings are formal and reader friendly, and less prone to errors.
+>      Cons:
+>         - Backward compatibility is lost.
+> 
+> 
+> This series implements Option (3) listed above and falls back to the old
+> bindings if the new bindings are not available. This allows the systems
+> with old bindings work with the new driver. The driver now issues a warning
+> (once) when it encounters the old bindings.
 
---srini
+  ....
+
+>    dts: juno: Update coresight bindings for hw port
+>    dts: hisilicon: Update coresight bindings for hw ports
+>    dts: spreadtrum: Update coresight bindings for hw ports
+>    dts: qcom: Update coresight bindings for hw ports
+>    dts: arm: hisilicon: Update coresight bindings for hardware port
+>    dts: arm: imx7{d,s}: Update coresight binding for hardware ports
+>    dts: arm: omap: Update coresight bindings for hardware ports
+>    dts: arm: qcom: Update coresight bindings for hardware ports
+>    dts: sama5d2: Update coresight bindings for hardware ports
+>    dts: ste-dbx5x0: Update coresight bindings for hardware port
+>    dts: tc2: Update coresight bindings for hardware ports
+> 
+
+All,
+
+Pleas hold on with applying the DTS changes listed above. There are
+still some on going discussions on the bindings and we are yet to
+come to a conclusion [0]. And there are high chances that these might
+change. Sorry for the inconvenience.
+
+[0] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-June/582269.html
+
+Kind regards
+Suzuki
