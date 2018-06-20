@@ -1,77 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/3] mtd: rawnand: denali_dt: add more clocks based on
- IP datasheet
-Date: Wed, 20 Jun 2018 12:12:45 -0600
-Message-ID: <20180620181245.GA30779@rob-hp-laptop>
-References: <1529025532-22087-1-git-send-email-yamada.masahiro@socionext.com>
- <1529025532-22087-2-git-send-email-yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: add bindings for px30 clock
+ controller
+Date: Wed, 20 Jun 2018 12:14:11 -0600
+Message-ID: <20180620181411.GA1689@rob-hp-laptop>
+References: <1529029011-15021-1-git-send-email-zhangqing@rock-chips.com>
+ <1529029011-15021-2-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1529025532-22087-2-git-send-email-yamada.masahiro@socionext.com>
-Sender: stable-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-mtd@lists.infradead.org, Boris Brezillon <boris.brezillon@bootlin.com>, linux-kbuild@vger.kernel.org, Richard Weinberger <richard@nod.at>, "linux-stable #4 . 14+" <stable@vger.kernel.org>, devicetree@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <1529029011-15021-2-git-send-email-zhangqing@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: heiko@sntech.de, sboyd@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, cl@rock-chips.com, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 15, 2018 at 10:18:50AM +0900, Masahiro Yamada wrote:
-> According to the Denali User's Guide, this IP needs three clocks:
+On Fri, Jun 15, 2018 at 10:16:48AM +0800, Elaine Zhang wrote:
+> Add devicetree bindings for Rockchip cru which found on
+> Rockchip SoCs.
 > 
->  - clk: controller core clock
-> 
->  - clk_x: bus interface clock
-> 
->  - ecc_clk: clock at which ECC circuitry is run
-> 
-> Currently, denali_dt.c requires a single anonymous clock and its
-> frequency.  However, the driver needs to get the frequency of "clk_x"
-> not "clk".  This is confusing because people tend to assume the
-> anonymous clock means the core clock.  In fact, I got a report of
-> SOCFPGA breakage because the timing parameters are calculated based
-> on a wrong frequency.
-> 
-> Instead of the cheesy implementation, the clocks in the real hardware
-> should be represented in the driver and the DT-binding.
-> 
-> However, adding new clocks would break the existing platforms.  For the
-> backward compatibility, the driver still accepts a single clock just as
-> before.  If clk_x is missing, clk_x_rate is set to a hardcoded value.
-> This is fine for existing DT of Socionext UniPhier, and also fixes the
-> issue of Altera (Intel) SOCFPGA because both platforms use 200 MHz for
-> the bus interface clock.
-> 
-> Fixes: 1bb88666775e ("mtd: nand: denali: handle timing parameters by setup_data_interface()")
-> Cc: linux-stable <stable@vger.kernel.org> #4.14+
-> Reported-by: Richard Weinberger <richard@nod.at>
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
 > ---
-> 
-> Changes in v3:
->   - Change the patch order so that the bug-fix one comes the first
-> 
-> Changes in v2:
->   - Split patches into sensible chunks
-> 
->  .../devicetree/bindings/mtd/denali-nand.txt        |  5 +++
->  drivers/mtd/nand/raw/denali_dt.c                   | 49 ++++++++++++++++++++--
->  2 files changed, 50 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-> index 0ee8edb..f33da87 100644
-> --- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-> @@ -8,6 +8,9 @@ Required properties:
->    - reg : should contain registers location and length for data and reg.
->    - reg-names: Should contain the reg names "nand_data" and "denali_reg"
->    - interrupts : The interrupt number.
-> +  - clocks: should contain phandle of the controller core clock, the bus
-> +    interface clock, and the ECC circuit clock.
-> +  - clock-names: should contain "nand", "nand_x", "ecc"
+>  .../bindings/clock/rockchip,px30-cru.txt           | 66 ++++++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/rockchip,px30-cru.txt
 
-The subject says "add more clocks", but it doesn't look like any clocks 
-were supported before. Or documentation was missing?
-
-Please split bindings to a separate patch.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
