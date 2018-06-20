@@ -1,7 +1,7 @@
 From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v9 08/10] firmware: xilinx: Add debugfs for query data API
-Date: Wed, 20 Jun 2018 10:40:33 -0700
-Message-ID: <1529516435-7315-9-git-send-email-jollys@xilinx.com>
+Subject: [PATCH v9 04/10] firmware: xilinx: Add query data API
+Date: Wed, 20 Jun 2018 10:40:29 -0700
+Message-ID: <1529516435-7315-5-git-send-email-jollys@xilinx.com>
 References: <1529516435-7315-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,59 +14,84 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rajan Vaja <rajanv@xilinx.com>
 
-Add debugfs file to query platform specific data from firmware
-using debugfs interface.
+Add ZynqMP firmware query data API to query platform
+specific information(clocks, pins) from firmware.
 
 Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
 Signed-off-by: Jolly Shah <jollys@xilinx.com>
 ---
- drivers/firmware/xilinx/zynqmp-debug.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ drivers/firmware/xilinx/zynqmp.c     | 14 ++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h | 20 ++++++++++++++++++++
+ 2 files changed, 34 insertions(+)
 
-diff --git a/drivers/firmware/xilinx/zynqmp-debug.c b/drivers/firmware/xilinx/zynqmp-debug.c
-index 148dbff..1cb69f7 100644
---- a/drivers/firmware/xilinx/zynqmp-debug.c
-+++ b/drivers/firmware/xilinx/zynqmp-debug.c
-@@ -33,6 +33,7 @@ static char debugfs_buf[PAGE_SIZE];
- static struct pm_api_info pm_api_list[] = {
- 	PM_API(PM_GET_API_VERSION),
- 	PM_API(PM_IOCTL),
-+	PM_API(PM_QUERY_DATA),
+diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+index 34c5ad5..86d9bb8 100644
+--- a/drivers/firmware/xilinx/zynqmp.c
++++ b/drivers/firmware/xilinx/zynqmp.c
+@@ -260,9 +260,23 @@ static int zynqmp_pm_ioctl(u32 node_id, u32 ioctl_id, u32 arg1, u32 arg2,
+ 				   arg1, arg2, out);
+ }
+ 
++/**
++ * zynqmp_pm_query_data() - Get query data from firmware
++ * @qdata:	Variable to the zynqmp_pm_query_data structure
++ * @out:	Returned output value
++ *
++ * Return: Returns status, either success or error+reason
++ */
++static int zynqmp_pm_query_data(struct zynqmp_pm_query_data qdata, u32 *out)
++{
++	return zynqmp_pm_invoke_fn(PM_QUERY_DATA, qdata.qid, qdata.arg1,
++				   qdata.arg2, qdata.arg3, out);
++}
++
+ static const struct zynqmp_eemi_ops eemi_ops = {
+ 	.get_api_version = zynqmp_pm_get_api_version,
+ 	.ioctl = zynqmp_pm_ioctl,
++	.query_data = zynqmp_pm_query_data,
  };
  
  /**
-@@ -105,6 +106,32 @@ static int process_api_request(u32 pm_id, u64 *pm_api_arg, u32 *pm_api_ret)
- 			sprintf(debugfs_buf, "IOCTL return value: %u\n",
- 				pm_api_ret[1]);
- 		break;
-+	case PM_QUERY_DATA:
-+	{
-+		struct zynqmp_pm_query_data qdata = {0};
+diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+index 2eec6e7..354385d 100644
+--- a/include/linux/firmware/xlnx-zynqmp.h
++++ b/include/linux/firmware/xlnx-zynqmp.h
+@@ -35,6 +35,7 @@
+ enum pm_api_id {
+ 	PM_GET_API_VERSION = 1,
+ 	PM_IOCTL = 34,
++	PM_QUERY_DATA,
+ };
+ 
+ /* PMU-FW return status codes */
+@@ -48,9 +49,28 @@ enum pm_ret_status {
+ 	XST_PM_ABORT_SUSPEND,
+ };
+ 
++enum pm_query_id {
++	PM_QID_INVALID,
++};
 +
-+		qdata.qid = pm_api_arg[0];
-+		qdata.arg1 = pm_api_arg[1];
-+		qdata.arg2 = pm_api_arg[2];
-+		qdata.arg3 = pm_api_arg[3];
++/**
++ * struct zynqmp_pm_query_data - PM query data structure
++ * @qid:	query ID
++ * @arg1:	Argument 1 of query data
++ * @arg2:	Argument 2 of query data
++ * @arg3:	Argument 3 of query data
++ */
++struct zynqmp_pm_query_data {
++	u32 qid;
++	u32 arg1;
++	u32 arg2;
++	u32 arg3;
++};
 +
-+		ret = eemi_ops->query_data(qdata, pm_api_ret);
-+		if (ret)
-+			break;
-+
-+		if (qdata.qid == PM_QID_CLOCK_GET_NAME)
-+			sprintf(debugfs_buf, "Clock name = %s\n",
-+				(char *)pm_api_ret);
-+		else if (qdata.qid == PM_QID_CLOCK_GET_FIXEDFACTOR_PARAMS)
-+			sprintf(debugfs_buf, "Multiplier = %d, Divider = %d\n",
-+				pm_api_ret[1], pm_api_ret[2]);
-+		else
-+			sprintf(debugfs_buf,
-+				"data[0] = 0x%08x\ndata[1] = 0x%08x\n data[2] = 0x%08x\ndata[3] = 0x%08x\n",
-+				pm_api_ret[0], pm_api_ret[1],
-+				pm_api_ret[2], pm_api_ret[3]);
-+		break;
-+	}
- 	default:
- 		sprintf(debugfs_buf, "Unsupported PM-API request\n");
- 		ret = -EINVAL;
+ struct zynqmp_eemi_ops {
+ 	int (*get_api_version)(u32 *version);
+ 	int (*ioctl)(u32 node_id, u32 ioctl_id, u32 arg1, u32 arg2, u32 *out);
++	int (*query_data)(struct zynqmp_pm_query_data qdata, u32 *out);
+ };
+ 
+ #if IS_REACHABLE(CONFIG_ARCH_ZYNQMP)
 -- 
 2.7.4
