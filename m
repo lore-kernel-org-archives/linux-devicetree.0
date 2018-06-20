@@ -1,101 +1,40 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2 2/2] hwmon: npcm750: add NPCM7xx PWM and Fan driver
-Date: Wed, 20 Jun 2018 11:25:08 -0700
-Message-ID: <a6a5a21236c37cfc63329e54248d941bf6d49e3c.camel@perches.com>
-References: <20180619105352.97181-1-tmaimon77@gmail.com>
-         <20180619105352.97181-3-tmaimon77@gmail.com>
-         <20180620164853.GA3459@roeck-us.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 6/9] dt-bindings: tc358754: add DT bindings
+Date: Wed, 20 Jun 2018 12:26:15 -0600
+Message-ID: <20180620182615.GA15792@rob-hp-laptop>
+References: <1529396370-18761-1-git-send-email-m.purski@samsung.com>
+ <CGME20180619082001eucas1p1df565ba7d1eaa320c2703e7dc019792b@eucas1p1.samsung.com>
+ <1529396370-18761-7-git-send-email-m.purski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180620164853.GA3459@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Tomer Maimon <tmaimon77@gmail.com>, Julia Lawall <julia.lawall@lip6.fr>, cocci <cocci@systeme.lip6.fr>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1529396370-18761-7-git-send-email-m.purski@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maciej Purski <m.purski@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, Seung-Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kyungmin Park <kyungmin.park@samsung.com>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-arm-kernel@lists.infradead.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-(adding Julia Lawall and cocci mailing list)
-
-On Wed, 2018-06-20 at 09:48 -0700, Guenter Roeck wrote:
-[]
-> > +static inline void npcm7xx_fan_start_capture(struct npcm7xx_pwm_fan_data *data,
-> > +						 u8 fan, u8 cmp)
-> > +{
-> > +	u8 fan_id = 0;
-> > +	u8 reg_mode = 0;
-> > +	u8 reg_int = 0;
-> > +	unsigned long flags;
-> > +
-> > +	fan_id = NPCM7XX_FAN_INPUT(fan, cmp);
-> > +
-> > +	/* to check whether any fan tach is enable */
-> > +	if (data->npcm7xx_fan[fan_id].FanStFlag != FAN_DISABLE) {
-> > +		/* reset status */
-> > +		spin_lock_irqsave(&data->npcm7xx_fan_lock[fan], flags);
-> > +
-> > +		data->npcm7xx_fan[fan_id].FanStFlag = FAN_INIT;
-> > +		reg_int = ioread8(NPCM7XX_FAN_REG_TIEN(data->fan_base, fan));
-> > +
-> > +		if (cmp == NPCM7XX_FAN_CMPA) {
-> > +			/* enable interrupt */
-> > +			iowrite8((u8) (reg_int | (NPCM7XX_FAN_TIEN_TAIEN |
-> > +						  NPCM7XX_FAN_TIEN_TEIEN)),
-> 
-> Is the (u8) typecast really necessary ? Seems unlikely.
-
-The cast is not really necessary here as there would
-be an implicit cast already.
-
-Some might complain about loss of type safety and
-"make W=123" would probably emit something here.
-
-But casts to the same type are not necessary.
-
-A possible coccinelle script to find casts to the
-same type is below, but there are some false positives
-for things like __force and __user casts
-
-Also, spatch (1.0.4) seems to have a defect for this
-when the type is used in operations that change a
-smaller type to int or unsigned int.
-
-i.e.: (offset is u16, but offset * 2 is int)
-
-While running the cocci script below:
-
-HANDLING: drivers/net/ethernet/intel/igb/e1000_nvm.c
-diff = 
-diff -u -p a/drivers/net/drivers/net/ethernet/intel/igb/e1000_nvm.c b/drivers/net/ethernet/intel/igb/e1000_nvm.c
---- a/drivers/net/ethernet/intel/igb/e1000_nvm.c
-+++ b/drivers/net/ethernet/intel/igb/e1000_nvm.c
-@@ -335,7 +335,7 @@ s32 igb_read_nvm_spi(struct e1000_hw *hw
- 
- 	/* Send the READ command (opcode + addr) */
- 	igb_shift_out_eec_bits(hw, read_opcode, nvm->opcode_bits);
--	igb_shift_out_eec_bits(hw, (u16)(offset*2), nvm->address_bits);
-+	igb_shift_out_eec_bits(hw, (offset * 2), nvm->address_bits);
- 
- 	/* Read the data.  SPI NVMs increment the address with each byte
- 	 * read and will roll over if reading beyond the end.  This allows
-
----
-
-Anyway, here's the cocci script:
-
-$ cat same_typecast.cocci
-@@
-type T;
-T foo;
-@@
-
--	(T *)&foo
-+	&foo
-
-@@
-type T;
-T foo;
-@@
-
--	(T)foo
-+	foo
+T24gVHVlLCBKdW4gMTksIDIwMTggYXQgMTA6MTk6MjdBTSArMDIwMCwgTWFjaWVqIFB1cnNraSB3
+cm90ZToKPiBGcm9tOiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgo+IAo+IFRo
+ZSBwYXRjaCBhZGRzIGJpbmRpbmdzIHRvIFRvc2hpYmEgRFNJL0xWRFMgYnJpZGdlIFRDMzU4NzY0
+Lgo+IEJpbmRpbmdzIGRlc2NyaWJlIHBvd2VyIHN1cHBsaWVzLCByZXNldCBncGlvIGFuZCB2aWRl
+byBpbnRlcmZhY2VzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFA
+c2Ftc3VuZy5jb20+Cj4gU2lnbmVkLW9mZi1ieTogTWFjaWVqIFB1cnNraSA8bS5wdXJza2lAc2Ft
+c3VuZy5jb20+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90b3NoaWJhLHRj
+MzU4NzY0LnR4dCAgIHwgMzUgKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdl
+ZCwgMzUgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Rvc2hpYmEsdGMzNTg3NjQudHh0CgpS
+ZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
