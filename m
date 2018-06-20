@@ -1,23 +1,48 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6sll: declare src module to be compatible to
- imx51's src
-Date: Wed, 20 Jun 2018 07:23:48 -0300
-Message-ID: <CAOMZO5DdLzEVqDLwk-+JGt0RCLM=VgOYwmH8GZmVzgu_Sw8MhA@mail.gmail.com>
-References: <1529483917-18057-1-git-send-email-Anson.Huang@nxp.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH] ASoC: qcom: add sdm845 sound card support
+Date: Wed, 20 Jun 2018 15:58:41 +0530
+Message-ID: <20180620102841.GJ13316@vkoul-mobl>
+References: <1529320591-22434-1-git-send-email-rohitkr@codeaurora.org>
+ <20180619050527.GR25852@vkoul-mobl>
+ <8562b574-3738-8983-53e7-64366590fad4@codeaurora.org>
+ <20180619162230.GF13316@vkoul-mobl>
+ <f7891675-4c98-7fc6-b80f-840ada9a1c5b@codeaurora.org>
+ <20180620093106.GI13316@vkoul-mobl>
+ <53db13d7-b4bd-0e06-4110-ce75fd0bdd3c@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529483917-18057-1-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, NXP Linux Team <Linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <53db13d7-b4bd-0e06-4110-ce75fd0bdd3c@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, Rohit Kumar <rohitkr@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 20, 2018 at 5:38 AM, Anson Huang <Anson.Huang@nxp.com> wrote:
-> i.MX6SLL uses same SRC module as i.MX51, add "fsl,imx51-src"
-> compatible string to enable SRC driver to support setting
-> CPU resume address for cpu-idle and suspend/resume.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On 20-06-18, 10:53, Srinivas Kandagatla wrote:
+> On 20/06/18 10:31, Vinod wrote:
+> > > Here clock will be enabled twice but disable will be called only once when
+> > > count = 0.
+> > > 
+> > > This will make the clock always enabled. So, I think we should keep either
+> > > mutex lock or atomic variable to synchronize this.
+> > we are using DPCM here right?
+> 
+> We should probably model this clk as DAPM widget so we do not need to handle
+> this in machine code.
 
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+Sure that would be even better, but my point was that we need not worry
+about .startup racing in case of DPCM as it holds a card mutex before it
+calls PCM ops.. so it is already serialized..
+
+-- 
+~Vinod
