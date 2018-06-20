@@ -1,113 +1,82 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 3/7] backlight: qcom-wled: Add new properties for
- PMI8998
-Date: Wed, 20 Jun 2018 13:05:02 -0600
-Message-ID: <20180620190502.GA20160@rob-hp-laptop>
-References: <1529406822-15379-1-git-send-email-kgunda@codeaurora.org>
- <1529406822-15379-4-git-send-email-kgunda@codeaurora.org>
+Subject: Re: [PATCH V3 1/3] watchdog: stm32: add pclk feature for stm32mp1
+Date: Wed, 20 Jun 2018 13:14:09 -0600
+Message-ID: <20180620191409.GA29934@rob-hp-laptop>
+References: <1529502698-13263-1-git-send-email-ludovic.Barre@st.com>
+ <1529502698-13263-2-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1529406822-15379-4-git-send-email-kgunda@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kiran Gunda <kgunda@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, b.zolnierkie@samsung.com, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, bjorn.andersson@linaro.org, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, linux-arm-msm@vger.kernel.org, lee.jones@linaro.org, linux-leds@vger.kernel.org
+In-Reply-To: <1529502698-13263-2-git-send-email-ludovic.Barre@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ludovic Barre <ludovic.Barre@st.com>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdW4gMTksIDIwMTggYXQgMDQ6NDM6MzhQTSArMDUzMCwgS2lyYW4gR3VuZGEgd3Jv
-dGU6Cj4gVXBkYXRlIHRoZSBiaW5kaW5ncyB3aXRoIHRoZSBuZXcgcHJvcGVydGllcyB1c2VkIGZv
-cgo+IFBNSTg5OTguCj4gCj4gU2lnbmVkLW9mZi1ieTogS2lyYW4gR3VuZGEgPGtndW5kYUBjb2Rl
-YXVyb3JhLm9yZz4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0L3Fjb20td2xl
-ZC50eHQgICAgICAgICAgfCA4NCArKysrKysrKysrKysrKysrKysrKy0tCj4gIDEgZmlsZSBjaGFu
-Z2VkLCA3NyBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvcWNvbS13bGVk
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2tsaWdodC9x
-Y29tLXdsZWQudHh0Cj4gaW5kZXggMTRmMjhmMi4uNTAzY2U4NyAxMDA2NDQKPiAtLS0gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvcWNvbS13bGVkLnR4
-dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2tsaWdo
-dC9xY29tLXdsZWQudHh0Cj4gQEAgLTQ4LDExICs0OCwxNSBAQCBwbGF0Zm9ybXMuIFRoZSBQTUlD
-IGlzIGNvbm5lY3RlZCB0byB0aGUgaG9zdCBwcm9jZXNzb3IgdmlhIFNQTUkgYnVzLgo+ICAtIHFj
-b20sY3VycmVudC1saW1pdAo+ICAJVXNhZ2U6ICAgICAgICBvcHRpb25hbAo+ICAJVmFsdWUgdHlw
-ZTogICA8dTMyPgo+IC0JRGVmaW5pdGlvbjogICBtQTsgcGVyLXN0cmluZyBjdXJyZW50IGxpbWl0
-Cj4gLQkJICAgICAgdmFsdWU6IEZvciBwbTg5NDE6IGZyb20gMCB0byAyNSB3aXRoIDUgbUEgc3Rl
-cAo+IC0JCQkgICAgIERlZmF1bHQgMjAgbUEuCj4gLQkJCSAgICAgRm9yIHBtaTg5OTg6IGZyb20g
-MCB0byAzMCB3aXRoIDUgbUEgc3RlcAo+IC0JCQkgICAgIERlZmF1bHQgMjUgbUEuCj4gKwlEZWZp
-bml0aW9uOiAgIG1BOyBwZXItc3RyaW5nIGN1cnJlbnQgbGltaXQ7IHZhbHVlIGZyb20gMCB0byAy
-NSB3aXRoCj4gKwkJICAgICAgMSBtQSBzdGVwLiBEZWZhdWx0IDIwIG1BLgo+ICsJCSAgICAgIFRo
-aXMgcHJvcGVydHkgaXMgc3VwcG9ydGVkIG9ubHkgZm9yIHBtODk0MS4KPiArCj4gKy0gcWNvbSxj
-dXJyZW50LWxpbWl0LW1pY3JvYW1wCj4gKwlVc2FnZTogICAgICAgIG9wdGlvbmFsCj4gKwlWYWx1
-ZSB0eXBlOiAgIDx1MzI+Cj4gKwlEZWZpbml0aW9uOiAgIHVBOyBwZXItc3RyaW5nIGN1cnJlbnQg
-bGltaXQ7IHZhbHVlIGZyb20gMCB0byAzMDAwMCB3aXRoCj4gKwkJICAgICAgMjUwMCB1QSBzdGVw
-LiBEZWZhdWx0IDI1MDAwIHVBLgoKVGhpcyBkb2Vzbid0IHJlYWxseSBzZWVtIHdvcnRoIGFkZGlu
-ZyBqdXN0IHRvIGFkZCAnLW1pY3JvYW1wJy4KCgo+ICAtIHFjb20sY3VycmVudC1ib29zdC1saW1p
-dAo+ICAJVXNhZ2U6ICAgICAgICBvcHRpb25hbAo+IEBAIC03OSwxMiArODMsNjEgQEAgcGxhdGZv
-cm1zLiBUaGUgUE1JQyBpcyBjb25uZWN0ZWQgdG8gdGhlIGhvc3QgcHJvY2Vzc29yIHZpYSBTUE1J
-IGJ1cy4KPiAgCQkgICAgICAyNywgMjksIDMyLCAzNS4gZGVmYXVsdDogMjlWCj4gIAkJICAgICAg
-VGhpcyBwcm9wZXJ0eSBpcyBzdXBwb3J0ZWQgb25seSBmb3IgUE04OTQxLgo+ICAKPiArLSBxY29t
-LG92cC1taWxsaXZvbHQKCklzIHRoaXMgdGhlIHNhbWUgYXMgcWNvbSxvdnA/IElmIHNvLCBzYW1l
-IGNvbW1lbnQuCgo+ICsJVXNhZ2U6ICAgICAgICBvcHRpb25hbAo+ICsJVmFsdWUgdHlwZTogICA8
-dTMyPgo+ICsJRGVmaW5pdGlvbjogICBtVjsgT3Zlci12b2x0YWdlIHByb3RlY3Rpb24gbGltaXQ7
-Cj4gKwkJICAgICAgRm9yIHBtaTg5OTg6IG9uZSBvZiAxODEwMCwgMTk2MDAsIDI5NjAwLCAzMTEw
-MAo+ICsJCSAgICAgIERlZmF1bHQ6IDI5NjAwIG1WCj4gKwkJICAgICAgSWYgdGhpcyBwcm9wZXJ0
-eSBpcyBub3Qgc3BlY2lmaWVkIGZvciBQTTg5NDEsIGl0Cj4gKwkJICAgICAgZmFsbHMgYmFjayB0
-byAicWNvbSxvdnAiIHByb3BlcnR5Lgo+ICsKPiAgLSBxY29tLG51bS1zdHJpbmdzCj4gIAlVc2Fn
-ZTogICAgICAgIG9wdGlvbmFsCj4gIAlWYWx1ZSB0eXBlOiAgIDx1MzI+Cj4gIAlEZWZpbml0aW9u
-OiAgICM7IG51bWJlciBvZiBsZWQgc3RyaW5ncyBhdHRhY2hlZDsKPiAtCQkgICAgICB2YWx1ZSBm
-cm9tIDEgdG8gMy4gZGVmYXVsdDogMgo+IC0JCSAgICAgIFRoaXMgcHJvcGVydHkgaXMgc3VwcG9y
-dGVkIG9ubHkgZm9yIFBNODk0MS4KPiArCQkgICAgICB2YWx1ZTogRm9yIFBNODk0MSBmcm9tIDEg
-dG8gMy4gZGVmYXVsdDogMgo+ICsJCQkgICAgIEZvciBQTUk4OTk4IGZyb20gMSB0byA0LiBkZWZh
-dWx0OiA0Cj4gKwo+ICstIGludGVycnVwdHMKPiArCVVzYWdlOiAgICAgICAgb3B0aW9uYWwKPiAr
-CVZhbHVlIHR5cGU6ICAgPHByb3AgZW5jb2RlZCBhcnJheT4KPiArCURlZmluaXRpb246ICAgSW50
-ZXJydXB0cyBhc3NvY2lhdGVkIHdpdGggV0xFRC4gVGhpcyBzaG91bGQgYmUKPiArCQkgICAgICAi
-c2hvcnQiIGFuZCAib3ZwIiBpbnRlcnJ1cHRzLiBJbnRlcnJ1cHRzIGNhbiBiZQo+ICsJCSAgICAg
-IHNwZWNpZmllZCBhcyBwZXIgdGhlIGVuY29kaW5nIGxpc3RlZCB1bmRlcgo+ICsJCSAgICAgIERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcG1pLwo+ICsJCSAgICAgIHFjb20sc3Bt
-aS1wbWljLWFyYi50eHQuCj4gKwo+ICstIGludGVycnVwdC1uYW1lcwo+ICsJVXNhZ2U6ICAgICAg
-ICBvcHRpb25hbAo+ICsJVmFsdWUgdHlwZTogICA8c3RyaW5nPgo+ICsJRGVmaW5pdGlvbjogICBJ
-bnRlcnJ1cHQgbmFtZXMgYXNzb2NpYXRlZCB3aXRoIHRoZSBpbnRlcnJ1cHRzLgo+ICsJCSAgICAg
-IE11c3QgYmUgInNob3J0IiBhbmQgIm92cCIuIFRoZSBzaG9ydCBjaXJjdWl0IGRldGVjdGlvbgo+
-ICsJCSAgICAgIGlzIG5vdCBzdXBwb3J0ZWQgZm9yIFBNODk0MS4KPiArCj4gKy0gcWNvbSxlbmFi
-bGVkLXN0cmluZ3MKPiArCVVzYWdlOiAgICAgICAgb3B0aW9uYWwKPiArCVZhbHVlIHR5b2U6ICAg
-PHUzMiBhcnJheT4KPiArCURlZmluaXRpb246ICAgQXJyYXkgb2YgdGhlIFdMRUQgc3RyaW5ncyBu
-dW1iZXJlZCBmcm9tIDAgdG8gMy4gRWFjaAo+ICsJCSAgICAgIHN0cmluZyBvZiBsZWRzIGFyZSBv
-cGVyYXRlZCBpbmRpdmlkdWFsbHkuIFNwZWNpZnkgdGhlCj4gKwkJICAgICAgbGlzdCBvZiBzdHJp
-bmdzIHVzZWQgYnkgdGhlIGRldmljZS4gQW55IGNvbWJpbmF0aW9uIG9mCj4gKwkJICAgICAgbGVk
-IHN0cmluZ3MgY2FuIGJlIHVzZWQuCj4gKwkJICAgICAgZm9yIHBtODk0MTogRGVmYXVsdCB2YWx1
-ZXMgYXJlIFswMCAwMV0uCj4gKwkJICAgICAgZm9yIHBtaTg5OTg6IERlZmF1bHQgdmFsdWVzIGFy
-ZSBbMDAgMDEgMDIgMDNdLgoKdTMyIG9yIHU4IGJlY2F1c2UgZHRzIHN5bnRheCBmb3IgOC1iaXQg
-YXJyYXkgaXMgW10uCgo+ICsKPiArLSBxY29tLGV4dGVybmFsLXBmZXQKPiArCVVzYWdlOiAgICAg
-ICAgb3B0aW9uYWwKPiArCVZhbHVlIHR5cGU6ICAgPGJvb2w+Cj4gKwlEZWZpbml0aW9uOiAgIFNw
-ZWNpZnkgaWYgZXh0ZXJuYWwgUEZFVCBjb250cm9sIGZvciBzaG9ydCBjaXJjdWl0Cj4gKwkJICAg
-ICAgcHJvdGVjdGlvbiBpcyB1c2VkLiBUaGlzIHByb3BlcnR5IGlzIHN1cHBvcnRlZCBvbmx5Cj4g
-KwkJICAgICAgZm9yIFBNSTg5OTguCj4gKwo+ICstIHFjb20sYXV0by1zdHJpbmctZGV0ZWN0aW9u
-Cj4gKwlVc2FnZTogICAgICAgIG9wdGlvbmFsCj4gKwlWYWx1ZSB0eXBlOiAgIDxib29sPgo+ICsJ
-RGVmaW5pdGlvbjogICBFbmFibGVzIGF1dG8tZGV0ZWN0aW9uIG9mIHRoZSBXTEVEIHN0cmluZyBj
-b25maWd1cmF0aW9uLgo+ICsJCSAgICAgIFRoaXMgZmVhdHVyZSBpcyBub3Qgc3VwcG9ydGVkIGZv
-ciBQTTg5NDEuCj4gKwo+ICAKPiAgRXhhbXBsZToKPiAgCj4gQEAgLTk5LDQgKzE1MiwyMSBAQCBw
-bTg5NDEtd2xlZEBkODAwIHsKPiAgCXFjb20sc3dpdGNoaW5nLWZyZXEgPSA8MTYwMD47Cj4gIAlx
-Y29tLG92cCA9IDwyOT47Cj4gIAlxY29tLG51bS1zdHJpbmdzID0gPDI+Owo+ICsJcWNvbSxlbmFi
-bGVkLXN0cmluZ3MgPSA8MHgwMCAweDAxPjsKPiArfTsKPiArCj4gK3BtaTg5OTgtd2xlZEBkODAw
-IHsKCmxlZC1jb250cm9sbGVyIHsKCkFuZCBuZWVkcyBhIHVuaXQtYWRkcmVzcy4KCj4gKwljb21w
-YXRpYmxlID0gInFjb20scG1pODk5OC13bGVkIjsKPiArCXJlZyA9IDwweGQ4MDAgMHhkOTAwPjsK
-PiArCWxhYmVsID0gImJhY2tsaWdodCI7Cj4gKwo+ICsJaW50ZXJydXB0cyA9IDwzIDB4ZDggMiBJ
-UlFfVFlQRV9FREdFX1JJU0lORz4sCj4gKwkJICAgICA8MyAweGQ4IDEgSVJRX1RZUEVfRURHRV9S
-SVNJTkc+Owo+ICsJaW50ZXJydXB0LW5hbWVzID0gInNob3J0IiwgIm92cCI7Cj4gKwlxY29tLGN1
-cnJlbnQtbGltaXQtbWljcm9hbXAgPSA8MjUwMDA+Owo+ICsJcWNvbSxjdXJyZW50LWJvb3N0LWxp
-bWl0ID0gPDgwNT47Cj4gKwlxY29tLHN3aXRjaGluZy1mcmVxID0gPDE2MDA+Owo+ICsJcWNvbSxv
-dnAtbWlsbGl2b2x0ID0gPDI5NjAwPjsKPiArCXFjb20sbnVtLXN0cmluZ3MgPSA8ND47Cj4gKwlx
-Y29tLGVuYWJsZWQtc3RyaW5ncyA9IDwweDAwIDB4MDEgMHgwMiAweDAzPjsKPiAgfTsKPiAtLSAK
-PiBUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgdGhl
-IENvZGUgQXVyb3JhIEZvcnVtLAo+ICBhIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQ
-cm9qZWN0Cj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Wed, Jun 20, 2018 at 03:51:36PM +0200, Ludovic Barre wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
+> 
+> This patch adds config data to manage specific properties by
+> compatible. Adds stm32mp1 config which requires pclk clock.
+> 
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> ---
+>  .../devicetree/bindings/watchdog/st,stm32-iwdg.txt |  21 +++-
+
+Please split bindings to separate patch.
+
+>  drivers/watchdog/stm32_iwdg.c                      | 116 +++++++++++++--------
+>  2 files changed, 91 insertions(+), 46 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+> index cc13b10a..f07f6d89 100644
+> --- a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+> @@ -2,18 +2,31 @@ STM32 Independent WatchDoG (IWDG)
+>  ---------------------------------
+>  
+>  Required properties:
+> -- compatible: "st,stm32-iwdg"
+> -- reg: physical base address and length of the registers set for the device
+> -- clocks: must contain a single entry describing the clock input
+> +- compatible: Should be either "st,stm32-iwdg" or "st,stm32mp1-iwdg"
+
+Please format one per line.
+
+> +- reg: Physical base address and length of the registers set for the device
+> +- clocks: Reference to the clock entry lsi. Additional pclk clock entry
+> +  is required only for st,stm32mp1-iwdg.
+> +- clock-names: Name of the clocks used.
+> +  "lsi" for st,stm32-iwdg
+> +  "pclk", "lsi" for st,stm32mp1-iwdg
+
+Put lsi 1st so it is always index 0.
+
+>  
+>  Optional Properties:
+>  - timeout-sec: Watchdog timeout value in seconds.
+>  
+> -Example:
+> +Examples:
+>  
+>  iwdg: watchdog@40003000 {
+>  	compatible = "st,stm32-iwdg";
+>  	reg = <0x40003000 0x400>;
+>  	clocks = <&clk_lsi>;
+> +	clock-names = "lsi";
+> +	timeout-sec = <32>;
+> +};
+> +
+> +iwdg: iwdg@5a002000 {
+
+watchdog@...
+
+Do we really need 2 example just to show 2 clocks?
+
+> +	compatible = "st,stm32mp1-iwdg";
+> +	reg = <0x5a002000 0x400>;
+> +	clocks = <&rcc IWDG2>, <&clk_lsi>;
+> +	clock-names = "pclk", "lsi";
+>  	timeout-sec = <32>;
+>  };
