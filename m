@@ -1,43 +1,70 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/5] dt-bindings: clk: at91: add an I2S
-	mux clock
-Date: Wed, 20 Jun 2018 09:47:59 -0600
-Message-ID: <20180620154759.GA4755@rob-hp-laptop>
-References: <20180618141239.10892-1-codrin.ciubotariu@microchip.com>
- <20180618141239.10892-2-codrin.ciubotariu@microchip.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: iio: light: add ISL29033 device
+ bindings
+Date: Wed, 20 Jun 2018 09:58:15 -0600
+Message-ID: <20180620155815.GA10569@rob-hp-laptop>
+References: <20180613140043.5802-1-borys.movchan@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180618141239.10892-2-codrin.ciubotariu@microchip.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, alexandre.belloni@bootlin.com, sboyd@kernel.org, nicolas.ferre@microchip.com, linux-kernel@vger.kernel.org, boris.brezillon@bootlin.com, broonie@kernel.org, Cristian.Birsan@microchip.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180613140043.5802-1-borys.movchan@axis.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Borys Movchan <borys.movchan@axis.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Borys Movchan <borysmn@axis.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 18, 2018 at 05:12:35PM +0300, Codrin Ciubotariu wrote:
-> The I2S mux clock can be used to select the I2S input clock. The
-> available parents are the peripheral and the generated clocks.
+On Wed, Jun 13, 2018 at 04:00:15PM +0200, Borys Movchan wrote:
+> From: Borys Movchan <borysmn@axis.com>
+
+Commit msg missing
+
 > 
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> Signed-off-by: Borys Movchan <borys.movchan@axis.com>
 > ---
+>  .../devicetree/bindings/iio/light/isl29033.txt         | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/isl29033.txt
 > 
-> Changes in v5:
-> 	- specified clock's parent;
-> 	- added a newline before adding the clock's compatible string;
+> diff --git a/Documentation/devicetree/bindings/iio/light/isl29033.txt b/Documentation/devicetree/bindings/iio/light/isl29033.txt
+> new file mode 100644
+> index 000000000000..988e40acc6ed
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/isl29033.txt
+
+Preferred name if there only one compatible is the full compatible 
+string plus '.txt'.
+
+> @@ -0,0 +1,18 @@
+> +Intersil ISL29033 Ultra-Low Lux, Low Power, Integrated Digital Ambient Light Sensor
+> +
+> +Required properties:
+> +  - compatible : Must be "isil,isl29033".
+> +  - reg: the I2C address of the device
+> +
+> +Optional properties:
+> +  - isil,rext-kohms: External resistor nominal in kOhms used for ADC
+> +    reference. If not specified, 499 kOhm value will be used.
+
+-ohms and -micro-ohms are the documented units. Please use '-ohms' 
+unless there is a compelling reason not to.
+
+> +
+> +Example:
+> +
+> +        als_sensor@44 {
+
+light-sensor is the documented node name for ALSs.
+
+> +            compatible = "isil,isl29033";
+> +            reg = <0x44>;
+> +            isil,rext-kohms = <1000>;
+> +        };
+> +
+> -- 
+> 2.11.0
 > 
->  .../devicetree/bindings/clock/at91-clock.txt  | 35 +++++++++++++++++++
->  1 file changed, 35 insertions(+)
-
-Well, since Alexandre promises all this is going to get re-worked soon:
-
-Acked-by: Rob Herring <robh@kernel.org>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
