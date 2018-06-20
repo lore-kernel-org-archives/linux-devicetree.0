@@ -1,54 +1,37 @@
-From: Mars Cheng <mars.cheng@mediatek.com>
-Subject: Re: [PATCH 2/2] arm64: dts: mediatek: add mt6765 support
-Date: Wed, 20 Jun 2018 08:18:07 +0800
-Message-ID: <1529453887.8701.0.camel@mtkswgap22>
-References: <1528843243-29782-1-git-send-email-mars.cheng@mediatek.com>
-         <1528843243-29782-3-git-send-email-mars.cheng@mediatek.com>
-         <80bca2ae-eb08-3d6c-a863-140107286b2d@gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v3 24/27] devicetree: fix a series of wrong
+	file references
+Date: Wed, 20 Jun 2018 08:42:23 +0800
+Message-ID: <CAGb2v67s29mYa+hcYFWCokmzLwi7aYyeBwDnQiTJQYxT0GxPNA@mail.gmail.com>
+References: <cover.1528990947.git.mchehab+samsung@kernel.org>
+ <bce1b59268ac2d659fd7cb37f89285ef2acc8316.1528990947.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <80bca2ae-eb08-3d6c-a863-140107286b2d@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <bce1b59268ac2d659fd7cb37f89285ef2acc8316.1528990947.git.mchehab+samsung@kernel.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Linux-ALSA <alsa-devel@alsa-project.org>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-pci@vger.kernel.org, Binghui Wang <wangbinghui@hisilicon.com>, linux-kernel <linux-kernel@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Jonathan Corbet <corbet@lwn.net>, linux-input@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, Xiaowei Song <songxiaowei@hisilicon.com>, Mauro Carvalho Chehab <mchehab@infradead.org>, Mark Brown <broonie@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Zhou Wang <wangzhou1@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias
+On Fri, Jun 15, 2018 at 12:09 AM, Mauro Carvalho Chehab
+<mchehab+samsung@kernel.org> wrote:
+> As files got renamed, their references broke.
+>
+> Manually fix a series of broken refs at the DT bindings.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
 
-On Fri, 2018-06-15 at 10:54 +0200, Matthias Brugger wrote:
-> 
-> On 13/06/18 00:40, Mars Cheng wrote:
-> > +
-> > +	uart0: serial@11002000 {
-> > +		compatible = "mediatek,mt6765-uart",
-> > +			     "mediatek,mt6577-uart";
-> > +		reg = <0 0x11002000 0 0x400>;
-> > +		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
-> > +		clocks = <&uart_clk>;
-> > +		status = "disabled";
-> > +	};
-> 
-> You need "baud" and "bus" clock. Also add clock-names please.
+>  Documentation/devicetree/bindings/mfd/sun6i-prcm.txt |  2 +-
 
-Got it, will add them in V2
-
-> 
-> > +
-> > +	uart1: serial@11003000 {
-> > +		compatible = "mediatek,mt6765-uart",
-> > +			     "mediatek,mt6577-uart";
-> > +		reg = <0 0x11003000 0 0x400>;
-> > +		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
-> > +		clocks = <&uart_clk>;
-> > +		status = "disabled";
-> 
-> Same here obviously.
-
-Will fixed in V2.
-
-Thanks.
-> 
-> Regards,
-> Matthias
+Acked-by: Chen-Yu Tsai <wens@csie.org>
