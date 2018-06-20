@@ -1,15 +1,16 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 3/4] dt-bindings: arm: fsl: add scu binding doc
-Date: Wed, 20 Jun 2018 13:44:39 -0600
-Message-ID: <20180620194438.GA3494@rob-hp-laptop>
-References: <1529239789-26849-1-git-send-email-aisheng.dong@nxp.com>
- <1529239789-26849-4-git-send-email-aisheng.dong@nxp.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: misc: Aspeed coprocessor interrupt
+ controller
+Date: Wed, 20 Jun 2018 13:49:37 -0600
+Message-ID: <20180620194937.GA5088@rob-hp-laptop>
+References: <20180618045902.11453-1-benh@kernel.crashing.org>
+ <20180618045902.11453-3-benh@kernel.crashing.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1529239789-26849-4-git-send-email-aisheng.dong@nxp.com>
+In-Reply-To: <20180618045902.11453-3-benh@kernel.crashing.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,79 +20,74 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dong Aisheng <aisheng.dong@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dongas86@gmail.com, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Joel Stanley <joel@jms.id.au>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 17, 2018 at 08:49:48PM +0800, Dong Aisheng wrote:
-> The System Controller Firmware (SCFW) is a low-level system function
-> which runs on a dedicated Cortex-M core to provide power, clock, and
-> resource management. It exists on some i.MX8 processors. e.g. i.MX8QM
-> (QM, QP), and i.MX8QX (QXP, DX).
+On Mon, Jun 18, 2018 at 02:59:00PM +1000, Benjamin Herrenschmidt wrote:
+> Add the device-tree binding definition for the AST2400
+> and AST2500 coprocessor interrupt controller
 > 
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 > ---
-> v1->v2:
->  * remove status
->  * changed to mu1
-> ---
->  .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+>  .../devicetree/bindings/misc/aspeed,cvic.txt  | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/aspeed,cvic.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> diff --git a/Documentation/devicetree/bindings/misc/aspeed,cvic.txt b/Documentation/devicetree/bindings/misc/aspeed,cvic.txt
 > new file mode 100644
-> index 0000000..9b7c9fe
+> index 000000000000..2562e2991e4d
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> @@ -0,0 +1,38 @@
-> +NXP i.MX System Controller Firmware (SCFW)
-> +--------------------------------------------------------------------
+> +++ b/Documentation/devicetree/bindings/misc/aspeed,cvic.txt
+> @@ -0,0 +1,35 @@
+> +* Aspeed AST2400 and AST2500 coprocessor interrupt controller
 > +
-> +The System Controller Firmware (SCFW) is a low-level system function
-> +which runs on a dedicated Cortex-M core to provide power, clock, and
-> +resource management. It exists on some i.MX8 processors. e.g. i.MX8QM
-> +(QM, QP), and i.MX8QX (QXP, DX).
+> +This file describes the bindings for the interrupt controller present
+> +in the AST2400 and AST2500 BMC SoCs which provides interrupt to the
+> +ColdFire coprocessor.
 > +
-> +The AP communicates with the SC using a multi-ported MU module found
-> +in the LSIO subsystem. The current definition of this MU module provides
-> +5 remote AP connections to the SC to support up to 5 execution environments
-> +(TZ, HV, standard Linux, etc.). The SC side of this MU module interfaces
-> +with the LSIO DSC IP bus. The SC firmware will communicate with this MU
-> +using the MSI bus.
+> +It is not a normal interrupt controller and it would be rather
+> +inconvenient to create an interrupt tree for it as it somewhat shares
+> +some of the same sources as the main ARM interrupt controller but with
+> +different numbers.
 > +
-> +System Controller Device Node:
-> +=============================
+> +The AST2500 supports a SW generated interrupt
 > +
 > +Required properties:
-> +-------------------
-> +- compatible: should be "fsl,imx8qxp-scu" or "fsl,imx8qm-scu"
-> +- fsl,mu: a phandle to the Message Unit used by SCU. Should be
-> +	  one of LSIO MU0~M4 for imx8qxp and imx8qm. Users need
-> +	  to make sure not use the one which is conflict with
-> +	  other execution environments. e.g. ATF.
+> +- reg: address and length of the register for the device.
+> +- compatible: "aspeed,cvic" and one of:
+> +		"aspeed,ast2400-cvic"
+> +	      or
+> +		"aspeed,ast2500-cvic"
+> +
+> +- valid-sources: One cell, bitmap of supported sources for the implementation
 
-Use the mailbox binding even if you don't use the mailbox subsystem.
+aspeed,valid-sources
+
+This could use a better description. I thought this was which bits to 
+use for s/w irq, but then I read the next property...
+
+Alternatively, why can't this be implied by the compatible?
 
 > +
-> +Examples:
-> +--------
-> +lsio_mu1: mu@5d1c0000 {
-> +	compatible = "fsl,imx8qxp-mu";
-> +	reg = <0x0 0x5d1c0000 0x0 0x10000>;
-> +	interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
-> +};
+> +Optional properties;
+> +- copro-sw-interrupts: List of interrupt numbers that can be used as
+> +		       SW interrupts from the ARM to the coprocessor.
+> +		       (AST2500 only)
 > +
-> +scu {
-> +	compatible = "fsl,imx8qxp-scu";
-> +	fsl,mu = <&lsio_mu1>;
-> +};
+> +Example:
+> +
+> +	cvic: copro-interrupt-controller@1e6c2000 {
+> +		compatible = "aspeed,ast2500-cvic";
+> +		valid-sources = <0xffffffff>;
+> +		copro-sw-interrupts = <1>;
+> +		reg = <0x1e6c2000 0x80>;
+> +	};
 > -- 
-> 2.7.4
+> 2.17.1
 > 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
