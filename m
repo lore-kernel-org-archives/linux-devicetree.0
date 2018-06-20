@@ -1,50 +1,111 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 2/5] RFC: eeprom: at24: Allow passing gpiodesc from pdata
-Date: Wed, 20 Jun 2018 03:45:01 +0300
-Message-ID: <CAHp75Vd8VeYh8KOvCW54u-ZnP3jM60aCD9AnWxKYsSBSX09Y4A@mail.gmail.com>
-References: <20180618074556.6944-1-linus.walleij@linaro.org>
- <20180618074556.6944-3-linus.walleij@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180618074556.6944-3-linus.walleij@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Brown <broonie@kernel.org>, Michal Simek <michal.simek@xilinx.com>, dev@lists.96boards.org, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Andy Shevchenko <andy@infradead.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+From: Todd Poynor <toddpoynor@gmail.com>
+Subject: [PATCH] drivers: base: initcall_debug logs for driver probe times
+Date: Tue, 19 Jun 2018 19:39:03 -0700
+Message-ID: <20180620023903.242758-1-toddpoynor@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, kernel-team@android.com, Todd Poynor <toddpoynor@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 18, 2018 at 10:45 AM, Linus Walleij
-<linus.walleij@linaro.org> wrote:
-> This makes it possible to pass an initialized GPIO descriptor
-> to the driver through platform data.
->
-> This is useful when we are dealing with EEPROMs on expansion
-> boards where the GPIO has to be looked up indirectly using a
-> connector abstraction (several systems using the same
-> connector) so the machine descriptor tables cannot be used
-> to associate the descriptor with the device and we then want
-> to pass this descriptor on to the EEPROM driver this way
-> instead.
+From: Todd Poynor <toddpoynor@google.com>
 
-How this descriptor is supposed to be created?
-Whenever we probe the device we might add properties to it (consider
-how MFD does instansiate them), I guess same way GPIO lookup tables
-work. No?
+Add initcall_debug logs for each driver device probe call, for example:
 
-P.S. I really would like to hear a _strong_ argument why it can't be
-done using other means like built-in device properties or GPIO lookup
-tables (which on my opinion have to work in the similar way at run
-time).
+   probe of a3800000.ramoops returned after 3007 usecs
 
+This replaces the previous code added to report times for deferred
+probes.  It also reports OF platform bus device creates that were
+formerly lumped together in a single entry for function
+of_platform_default_populate_init, as well as helping to annotate other
+initcalls that involve device probing.
+
+Signed-off-by: Todd Poynor <toddpoynor@google.com>
+---
+ drivers/base/dd.c | 50 +++++++++++++++++++++++------------------------
+ 1 file changed, 24 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index 1435d7281c66..56db446a467a 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -62,26 +62,6 @@ static bool initcalls_done;
+  */
+ static bool defer_all_probes;
+ 
+-/*
+- * For initcall_debug, show the deferred probes executed in late_initcall
+- * processing.
+- */
+-static void deferred_probe_debug(struct device *dev)
+-{
+-	ktime_t calltime, delta, rettime;
+-	unsigned long long duration;
+-
+-	printk(KERN_DEBUG "deferred probe %s @ %i\n", dev_name(dev),
+-	       task_pid_nr(current));
+-	calltime = ktime_get();
+-	bus_probe_device(dev);
+-	rettime = ktime_get();
+-	delta = ktime_sub(rettime, calltime);
+-	duration = (unsigned long long) ktime_to_ns(delta) >> 10;
+-	printk(KERN_DEBUG "deferred probe %s returned after %lld usecs\n",
+-	       dev_name(dev), duration);
+-}
+-
+ /*
+  * deferred_probe_work_func() - Retry probing devices in the active list.
+  */
+@@ -125,11 +105,7 @@ static void deferred_probe_work_func(struct work_struct *work)
+ 		device_pm_move_to_tail(dev);
+ 
+ 		dev_dbg(dev, "Retrying from deferred list\n");
+-		if (initcall_debug && !initcalls_done)
+-			deferred_probe_debug(dev);
+-		else
+-			bus_probe_device(dev);
+-
++		bus_probe_device(dev);
+ 		mutex_lock(&deferred_probe_mutex);
+ 
+ 		put_device(dev);
+@@ -527,6 +503,25 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+ 	return ret;
+ }
+ 
++/*
++ * For initcall_debug, show the driver probe time.
++ */
++static int really_probe_debug(struct device *dev, struct device_driver *drv)
++{
++	ktime_t calltime, delta, rettime;
++	unsigned long long duration;
++	int ret;
++
++	calltime = ktime_get();
++	ret = really_probe(dev, drv);
++	rettime = ktime_get();
++	delta = ktime_sub(rettime, calltime);
++	duration = (unsigned long long) ktime_to_ns(delta) >> 10;
++	printk(KERN_DEBUG "probe of %s returned after %lld usecs\n",
++	       dev_name(dev), duration);
++	return ret;
++}
++
+ /**
+  * driver_probe_done
+  * Determine if the probe sequence is finished or not.
+@@ -585,7 +580,10 @@ int driver_probe_device(struct device_driver *drv, struct device *dev)
+ 		pm_runtime_get_sync(dev->parent);
+ 
+ 	pm_runtime_barrier(dev);
+-	ret = really_probe(dev, drv);
++	if (initcall_debug && !initcalls_done)
++		ret = really_probe_debug(dev, drv);
++	else
++		ret = really_probe(dev, drv);
+ 	pm_request_idle(dev);
+ 
+ 	if (dev->parent)
 -- 
-With Best Regards,
-Andy Shevchenko
+2.18.0.rc1.244.gcf134e6275-goog
