@@ -1,119 +1,125 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v8 11/26] of: base: Add of_get_cpu_state_node() to get idle states for a CPU node
-Date: Wed, 20 Jun 2018 19:22:11 +0200
-Message-ID: <20180620172226.15012-12-ulf.hansson@linaro.org>
-References: <20180620172226.15012-1-ulf.hansson@linaro.org>
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH v4 1/6] Documentation: DT: Consolidate SP805 binding docs
+Date: Wed, 20 Jun 2018 10:39:16 -0700
+Message-ID: <46ca340f-4347-94ca-6463-d38bece820e2@broadcom.com>
+References: <1527530497-10392-1-git-send-email-ray.jui@broadcom.com>
+ <1527530497-10392-2-git-send-email-ray.jui@broadcom.com>
+ <20180605194124.GA26885@rob-hp-laptop>
+ <e91c75f3-f7a4-6f51-9911-7e22d5d05084@roeck-us.net>
+ <CABGGisxEvWDy16SKE2RG-vhUHBZHSCCHyfwJsPY16B1fQS-=cA@mail.gmail.com>
+ <09c870cd-0a44-6634-58d8-f57f9fcd0cb5@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180620172226.15012-1-ulf.hansson@linaro.org>
+In-Reply-To: <09c870cd-0a44-6634-58d8-f57f9fcd0cb5@broadcom.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org
-Cc: Kevin Hilman <khilman@kernel.org>, Lina Iyer <ilina@codeaurora.org>, Lina Iyer <lina.iyer@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Juri Lelli <juri.lelli@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Guenter Roeck <linux@roeck-us.net>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-The CPU's idle state nodes are currently parsed at the common cpuidle DT
-library, but also when initializing back-end data for the arch specific CPU
-operations, as in the PSCI driver case.
+Hi Guenter/Rob,
 
-To avoid open-coding, let's introduce of_get_cpu_state_node(), which takes
-the device node for the CPU and the index to the requested idle state node,
-as in-parameters. In case a corresponding idle state node is found, it
-returns the node with the refcount incremented for it, else it returns
-NULL.
+Kindly let me know how you want to proceed with this?
 
-Moreover, for ARM, there are two generic methods, to describe the CPU's
-idle states, either via the flattened description through the
-"cpu-idle-states" binding [1] or via the hierarchical layout, using the
-"power-domains" and the "domain-idle-states" bindings [2]. Hence, let's
-take both options into account.
+Thanks,
 
-[1]
-Documentation/devicetree/bindings/arm/idle-states.txt
-[2]
-Documentation/devicetree/bindings/arm/psci.txt
+Ray
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: Lina Iyer <ilina@codeaurora.org>
-Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
-Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- drivers/of/base.c  | 35 +++++++++++++++++++++++++++++++++++
- include/linux/of.h |  8 ++++++++
- 2 files changed, 43 insertions(+)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 848f549164cd..97350cce1b8e 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -399,6 +399,41 @@ int of_cpu_node_to_id(struct device_node *cpu_node)
- }
- EXPORT_SYMBOL(of_cpu_node_to_id);
- 
-+/**
-+ * of_get_cpu_state_node - Get CPU's idle state node at the given index
-+ *
-+ * @cpu_node: The device node for the CPU
-+ * @index: The index in the list of the idle states
-+ *
-+ * Two generic methods can be used to describe a CPU's idle states, either via
-+ * a flattened description through the "cpu-idle-states" binding or via the
-+ * hierarchical layout, using the "power-domains" and the "domain-idle-states"
-+ * bindings. This function check for both and returns the idle state node for
-+ * the requested index.
-+ *
-+ * In case and idle state node is found at index, the refcount incremented for
-+ * it, so call of_node_put() on it when done. Returns NULL if not found.
-+ */
-+struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
-+					  int index)
-+{
-+	struct of_phandle_args args;
-+	int err;
-+
-+	err = of_parse_phandle_with_args(cpu_node, "power-domains",
-+					"#power-domain-cells", 0, &args);
-+	if (!err) {
-+		struct device_node *state_node =
-+			of_parse_phandle(args.np, "domain-idle-states", index);
-+
-+		of_node_put(args.np);
-+		return state_node;
-+	}
-+
-+	return of_parse_phandle(cpu_node, "cpu-idle-states", index);
-+}
-+EXPORT_SYMBOL(of_get_cpu_state_node);
-+
- /**
-  * __of_device_is_compatible() - Check if the node matches given constraints
-  * @device: pointer to node
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 4d25e4f952d9..15072b10ef4d 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -348,6 +348,8 @@ extern const void *of_get_property(const struct device_node *node,
- 				const char *name,
- 				int *lenp);
- extern struct device_node *of_get_cpu_node(int cpu, unsigned int *thread);
-+extern struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
-+						 int index);
- #define for_each_property_of_node(dn, pp) \
- 	for (pp = dn->properties; pp != NULL; pp = pp->next)
- 
-@@ -733,6 +735,12 @@ static inline struct device_node *of_get_cpu_node(int cpu,
- 	return NULL;
- }
- 
-+static inline struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
-+					int index)
-+{
-+	return NULL;
-+}
-+
- static inline int of_n_addr_cells(struct device_node *np)
- {
- 	return 0;
--- 
-2.17.1
+On 6/6/2018 4:39 PM, Ray Jui wrote:
+> 
+> 
+> On 6/6/2018 9:33 AM, Rob Herring wrote:
+>> On Wed, Jun 6, 2018 at 11:19 AM, Guenter Roeck <linux@roeck-us.net> 
+>> wrote:
+>>> On 06/05/2018 12:41 PM, Rob Herring wrote:
+>>>>
+>>>> On Mon, May 28, 2018 at 11:01:32AM -0700, Ray Jui wrote:
+>>>>>
+>>>>> Consolidate two SP805 binding documents "arm,sp805.txt" and
+>>>>> "sp805-wdt.txt" into "arm,sp805.txt" that matches the naming of the
+>>>>> desired compatible string to be used
+>>>>>
+>>>>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+>>>>> ---
+>>>>>    .../devicetree/bindings/watchdog/arm,sp805.txt     | 27
+>>>>> ++++++++++++++-----
+>>>>>    .../devicetree/bindings/watchdog/sp805-wdt.txt     | 31
+>>>>> ----------------------
+>>>>>    2 files changed, 20 insertions(+), 38 deletions(-)
+>>>>>    delete mode 100644
+>>>>> Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+>>>>
+>>>>
+>>>> Would be good to get a ACK from FSL/NXP person on this. It looks to me
+>>>> like the driver fetches the wrong clock as it gets the first one and 
+>>>> the
+>>>> driver really wants 'wdog_clk'. In any case, their dts files should be
+>>>> updated.
+>>>>
+>>>
+>>> This is really confusing, since he deleted file lists apb_pclk first.
+>>> Does the watchdog driver need apb_pclk or wdog_clk ? That isn't clear 
+>>> to me.
+>>> arch/arm64/boot/dts/hisilicon/hi3660.dtsi only provides apb_pclk, or at
+>>> least
+>>> it says so.
+>>
+>> Note that that clock source is 32KHz. That is obviously a mistake
+>> because no one clocks their bus/register interface at 32KHz. Someone
+>> just filled in something that happened to work.
+>>
+>>> The fsl dts files all have apb_pclk first.
+>>
+>> It's all kind of a mess, but fortunately one we should be able to 
+>> clean-up.
+>>
+> 
+> It is indeed a mess. Note the SP805 driver only derive one clock from 
+> DT, and that's not done based on name. As a result, the first clock 
+> defined in DT will be fetched and the rate calculation will be carried 
+> out based on that clock rate.
+> 
+> I assumed the clock entries and their names defined in the binding 
+> document are just placeholders, at least for the 2nd clock.
+> 
+> Based on how the current driver is, the first clock needs to be the 
+> WDOGCLK for things to work properly.
+> 
+> According to the SP805 TRM, APB clock is the PCLK, that drives the bus 
+> for register access.
+> 
+> The relationship between WDOGCLK and PCLK is defined as:
+> 
+> - the rising edges of WDOGCLK must be synchronous and
+> balanced with a rising edge of PCLK
+> 
+> - the WDOGCLK frequency cannot be greater than the PCLK
+> frequency
+> 
+>> The compatible string changes too, but AMBA bus devices don't actually
+>> use the compatible string as they use the ID registers to match. I
+>> suppose some other OS could do things differently. Worth the risk to
+>> clean-up IMO.
+>>
+>>>
+>>> Either case, why are two clocks asked for in the first place ? Are there
+>>> situations where the second clock is actually used/useful ?
+>>
+>> For clocks, the bus needs "apb_pclk" and the driver just gets the
+>> first clock. The driver is obviously going to want the functional
+>> clock that determines the counter rate. That should
+>>
+>> Primecell peripherals are about the only ones that have clear specs
+>> WRT clock inputs. Yet we've still managed to screw them up. There are
+>> 2 clocks in the spec, so the DT has (or should have) 2 clocks.
+>>
+>> Rob
+>>
+> 
+> Let me know how you guys want to proceed with this?
+> 
+> Thanks,
+> 
+> Ray
