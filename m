@@ -1,342 +1,219 @@
-From: sricharan@codeaurora.org
-Subject: Re: [PATCH v10 13/14] cpufreq: Add module to register cpufreq on
- Krait CPUs
-Date: Wed, 20 Jun 2018 14:18:59 +0530
-Message-ID: <e986492417c0ca1f5784b651a614321d@codeaurora.org>
-References: <1529415925-28915-1-git-send-email-sricharan@codeaurora.org>
- <1529415925-28915-14-git-send-email-sricharan@codeaurora.org>
- <20180619152927.GA6139@arch>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH V3 1/3] scsi: ufs: set the device reference clock setting
+Date: Wed, 20 Jun 2018 10:26:07 +0300
+Message-ID: <bf87ec58-69c0-fe59-cfa1-8dc7dc80ca46@intel.com>
+References: <1528981432-23065-1-git-send-email-sayalil@codeaurora.org>
+ <1528981432-23065-2-git-send-email-sayalil@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180619152927.GA6139@arch>
+In-Reply-To: <1528981432-23065-2-git-send-email-sayalil@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Craig Tatlor <ctatlor97@gmail.com>
-Cc: robh@kernel.org, viresh.kumar@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux@arm.linux.org.uk, thierry.escande@linaro.org, linux-arm-msm-owner@vger.kernel.org, bjorn.andersson@linaro.org
+To: Sayali Lokhande <sayalil@codeaurora.org>, subhashj@codeaurora.org, cang@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, asutoshd@codeaurora.org, evgreen@chromium.org, riteshh@codeaurora.org
+Cc: linux-scsi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-06-19 20:59, Craig Tatlor wrote:
-> The pvs refuse check is incorrect... With downstream it says it isn't
-> blown and that it is 11, which also happens on upstream if I import 
-> it's
-> efuse reading code from an older revision, or comment out the check.
+On 14/06/18 16:03, Sayali Lokhande wrote:
+> From: Subhash Jadavani <subhashj@codeaurora.org>
 > 
-
-  ok, atleast on my ipq8064, it works the same. let me check once.
-
-> Also, I'm still getting my issue about clocks above 2,147,483,647hz
-> however I think this may be related to the division in the hfpll driver
-> so I'll have a debug around there.
+> UFS host supplies the reference clock to UFS device and UFS device
+> specification allows host to provide one of the 4 frequencies (19.2 MHz,
+> 26 MHz, 38.4 MHz, 52 MHz) for reference clock. Host should set the
+> device reference clock frequency setting in the device based on what
+> frequency it is supplying to UFS device.
 > 
+> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
 
-   hmm, atleast on ipq8064, it goes till the max frequency. As you said
-   it might be to do with the hfpll driver that runs on 8974. I will try 
-to test
-   on that hardware.
+I have repeated my V2 comments below.  Please address these when you post
+V4.  Also please provide a change log for each patch version.
 
-   That said, just realized that i missed a minor comment from Bjorn.
-   Will anyway update it.
+> ---
+>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  7 +++
+>  drivers/scsi/ufs/ufs.h                             |  9 ++++
+>  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 24 ++++++++++
+>  drivers/scsi/ufs/ufshcd.c                          | 52 ++++++++++++++++++++++
+>  drivers/scsi/ufs/ufshcd.h                          |  1 +
+>  5 files changed, 93 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> index c39dfef..4522434 100644
+> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> @@ -41,6 +41,12 @@ Optional properties:
+>  -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
+>  			  Note that it is assume same number of lanes is used both
+>  			  directions at once. If not specified, default is 2 lanes per direction.
+> +- dev-ref-clk-freq	: Specify the device reference clock frequency, must be one of the following:
+> +			  0: 19.2 MHz
+> +			  1: 26 MHz
+> +			  2: 38.4 MHz
+> +			  3: 52 MHz
+> +			  Defaults to 26 MHz if not specified.
+>  
+>  Note: If above properties are not defined it can be assumed that the supply
+>  regulators or clocks are always on.
+> @@ -66,4 +72,5 @@ Example:
+>  		freq-table-hz = <100000000 200000000>, <0 0>, <0 0>;
+>  		phys = <&ufsphy1>;
+>  		phy-names = "ufsphy";
+> +		dev-ref-clk-freq = <0>; /* reference clock freq: 19.2 MHz */
+>  	};
+> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
+> index 14e5bf7..e15deb0 100644
+> --- a/drivers/scsi/ufs/ufs.h
+> +++ b/drivers/scsi/ufs/ufs.h
+> @@ -378,6 +378,15 @@ enum query_opcode {
+>  	UPIU_QUERY_OPCODE_TOGGLE_FLAG	= 0x8,
+>  };
+>  
+> +/* bRefClkFreq attribute values */
+> +enum ref_clk_freq {
+> +	REF_CLK_FREQ_19_2_MHZ	= 0x0,
+> +	REF_CLK_FREQ_26_MHZ	= 0x1,
+> +	REF_CLK_FREQ_38_4_MHZ	= 0x2,
+> +	REF_CLK_FREQ_52_MHZ	= 0x3,
+> +	REF_CLK_FREQ_MAX	= REF_CLK_FREQ_52_MHZ,
+> +};
+> +
+>  /* Query response result code */
+>  enum {
+>  	QUERY_RESULT_SUCCESS                    = 0x00,
+> diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
+> index e82bde0..6c877f3 100644
+> --- a/drivers/scsi/ufs/ufshcd-pltfrm.c
+> +++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
+> @@ -221,6 +221,28 @@ static int ufshcd_parse_regulator_info(struct ufs_hba *hba)
+>  	return err;
+>  }
+>  
+> +static void ufshcd_parse_dev_ref_clk_freq(struct ufs_hba *hba)
+> +{
+> +	struct device *dev = hba->dev;
+> +	struct device_node *np = dev->of_node;
+> +	int ret;
+> +
+> +	if (!np)
+> +		return;
+> +
+> +	ret = of_property_read_u32(np, "dev-ref-clk-freq",
+> +				   &hba->dev_ref_clk_freq);
 
-Regards,
-  Sricharan
+This setting is useful for any UFSHC driver.  Please move it to ufshcd.c and
+use device_property_read_u32().
 
+> +	if (ret ||
+> +	    (hba->dev_ref_clk_freq < 0) ||
 
+u32 cannot be < 0
 
-> On Tue, Jun 19, 2018 at 07:15:24PM +0530, Sricharan R wrote:
->> From: Stephen Boyd <sboyd@codeaurora.org>
->> 
->> Register a cpufreq-generic device whenever we detect that a
->> "qcom,krait" compatible CPU is present in DT.
->> 
->> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
->> [Sricharan: updated to use dev_pm_opp_set_prop_name and
->> 	    nvmem apis]
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> [Thierry Escande: update to add support for opp-supported-hw]
->> Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
->> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
->> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
->> ---
->>  [v10] updated to add support for opp-supported-hw given by
->>        Thierry Escande <thierry.escande@linaro.org>
->> 
->>  drivers/cpufreq/Kconfig.arm          |  10 ++
->>  drivers/cpufreq/Makefile             |   1 +
->>  drivers/cpufreq/cpufreq-dt-platdev.c |   5 +
->>  drivers/cpufreq/qcom-cpufreq.c       | 201 
->> +++++++++++++++++++++++++++++++++++
->>  4 files changed, 217 insertions(+)
->>  create mode 100644 drivers/cpufreq/qcom-cpufreq.c
->> 
->> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
->> index 7f56fe5..87e5d8d 100644
->> --- a/drivers/cpufreq/Kconfig.arm
->> +++ b/drivers/cpufreq/Kconfig.arm
->> @@ -134,6 +134,16 @@ config ARM_OMAP2PLUS_CPUFREQ
->>  	depends on ARCH_OMAP2PLUS
->>  	default ARCH_OMAP2PLUS
->> 
->> +config ARM_QCOM_CPUFREQ
->> +	bool "CPUfreq driver for the QCOM SoCs with KRAIT processors"
->> +	depends on ARCH_QCOM
->> +	select PM_OPP
->> +	help
->> +	  This enables the CPUFreq driver for Qualcomm SoCs with
->> +	  KRAIT processors.
->> +
->> +	  If in doubt, say N.
->> +
->>  config ARM_S3C_CPUFREQ
->>  	bool
->>  	help
->> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
->> index 8d24ade..c591e1e 100644
->> --- a/drivers/cpufreq/Makefile
->> +++ b/drivers/cpufreq/Makefile
->> @@ -65,6 +65,7 @@ obj-$(CONFIG_MACH_MVEBU_V7)		+= mvebu-cpufreq.o
->>  obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)	+= omap-cpufreq.o
->>  obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
->>  obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
->> +obj-$(CONFIG_ARM_QCOM_CPUFREQ)		+= qcom-cpufreq.o
->>  obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+= s3c2410-cpufreq.o
->>  obj-$(CONFIG_ARM_S3C2412_CPUFREQ)	+= s3c2412-cpufreq.o
->>  obj-$(CONFIG_ARM_S3C2416_CPUFREQ)	+= s3c2416-cpufreq.o
->> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c 
->> b/drivers/cpufreq/cpufreq-dt-platdev.c
->> index 3b585e4..e2e9a99 100644
->> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
->> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
->> @@ -127,6 +127,11 @@
->>  	{ .compatible = "ti,am43", },
->>  	{ .compatible = "ti,dra7", },
->> 
->> +	{ .compatible = "qcom,ipq8064", },
->> +	{ .compatible = "qcom,apq8064", },
->> +	{ .compatible = "qcom,msm8974", },
->> +	{ .compatible = "qcom,msm8960", },
->> +
->>  	{ }
->>  };
->> 
->> diff --git a/drivers/cpufreq/qcom-cpufreq.c 
->> b/drivers/cpufreq/qcom-cpufreq.c
->> new file mode 100644
->> index 0000000..1d4ab54
->> --- /dev/null
->> +++ b/drivers/cpufreq/qcom-cpufreq.c
->> @@ -0,0 +1,201 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +// Copyright (c) 2018, The Linux Foundation. All rights reserved.
->> +
->> +#include <linux/cpu.h>
->> +#include <linux/module.h>
->> +#include <linux/nvmem-consumer.h>
->> +#include <linux/of.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pm_opp.h>
->> +#include <linux/slab.h>
->> +
->> +static void __init get_krait_bin_format_a(int *speed, int *pvs, int 
->> *pvs_ver,
->> +					  struct nvmem_cell *pvs_nvmem, u8 *buf)
->> +{
->> +	u32 pte_efuse;
->> +
->> +	pte_efuse = *((u32 *)buf);
->> +
->> +	*speed = pte_efuse & 0xf;
->> +	if (*speed == 0xf)
->> +		*speed = (pte_efuse >> 4) & 0xf;
->> +
->> +	if (*speed == 0xf) {
->> +		*speed = 0;
->> +		pr_warn("Speed bin: Defaulting to %d\n", *speed);
->> +	} else {
->> +		pr_info("Speed bin: %d\n", *speed);
->> +	}
->> +
->> +	*pvs = (pte_efuse >> 10) & 0x7;
->> +	if (*pvs == 0x7)
->> +		*pvs = (pte_efuse >> 13) & 0x7;
->> +
->> +	if (*pvs == 0x7) {
->> +		*pvs = 0;
->> +		pr_warn("PVS bin: Defaulting to %d\n", *pvs);
->> +	} else {
->> +		pr_info("PVS bin: %d\n", *pvs);
->> +	}
->> +
->> +	kfree(buf);
->> +}
->> +
->> +static void __init get_krait_bin_format_b(int *speed, int *pvs, int 
->> *pvs_ver,
->> +					  struct nvmem_cell *pvs_nvmem, u8 *buf)
->> +{
->> +	u32 pte_efuse, redundant_sel;
->> +
->> +	pte_efuse = *((u32 *)buf);
->> +	redundant_sel = (pte_efuse >> 24) & 0x7;
->> +	*speed = pte_efuse & 0x7;
->> +
->> +	/* 4 bits of PVS are in efuse register bits 31, 8-6. */
->> +	*pvs = ((pte_efuse >> 28) & 0x8) | ((pte_efuse >> 6) & 0x7);
->> +	*pvs_ver = (pte_efuse >> 4) & 0x3;
->> +
->> +	switch (redundant_sel) {
->> +	case 1:
->> +		*speed = (pte_efuse >> 27) & 0xf;
->> +		break;
->> +	case 2:
->> +		*pvs = (pte_efuse >> 27) & 0xf;
->> +		break;
->> +	}
->> +
->> +	/* Check SPEED_BIN_BLOW_STATUS */
->> +	if (pte_efuse & BIT(3)) {
->> +		pr_info("Speed bin: %d\n", *speed);
->> +	} else {
->> +		pr_warn("Speed bin not set. Defaulting to 0!\n");
->> +		*speed = 0;
->> +	}
->> +
->> +	/* Check PVS_BLOW_STATUS */
->> +	pte_efuse = *(((u32 *)buf) + 4);
->> +	if (pte_efuse) {
->> +		pr_info("PVS bin: %d\n", *pvs);
->> +	} else {
->> +		pr_warn("PVS bin not set. Defaulting to 0!\n");
->> +		*pvs = 0;
->> +	}
->> +
->> +	pr_info("PVS version: %d\n", *pvs_ver);
->> +	kfree(buf);
->> +}
->> +
->> +static int __init qcom_cpufreq_populate_opps(struct nvmem_cell 
->> *pvs_nvmem,
->> +					     struct opp_table **tbl1,
->> +					     struct opp_table **tbl2)
->> +{
->> +	int speed = 0, pvs = 0, pvs_ver = 0, cpu, ret;
->> +	struct device *cpu_dev;
->> +	u8 *buf;
->> +	size_t len;
->> +	char pvs_name[] = "speedXX-pvsXX-vXX";
->> +	u32 hw_version;
->> +
->> +	buf = nvmem_cell_read(pvs_nvmem, &len);
->> +	if (len == 4)
->> +		get_krait_bin_format_a(&speed, &pvs, &pvs_ver, pvs_nvmem, buf);
->> +	else if (len == 8)
->> +		get_krait_bin_format_b(&speed, &pvs, &pvs_ver, pvs_nvmem, buf);
->> +	else
->> +		pr_warn("Unable to read nvmem data. Defaulting to 0!\n");
->> +
->> +	snprintf(pvs_name, sizeof(pvs_name), "speed%d-pvs%d-v%d",
->> +		 speed, pvs, pvs_ver);
->> +
->> +	hw_version = (1 << speed);
->> +
->> +	for (cpu = 0; cpu < num_possible_cpus(); cpu++) {
->> +		cpu_dev = get_cpu_device(cpu);
->> +		if (!cpu_dev)
->> +			return -ENODEV;
->> +
->> +		tbl1[cpu] = dev_pm_opp_set_prop_name(cpu_dev, pvs_name);
->> +		if (IS_ERR(tbl1[cpu])) {
->> +			ret = PTR_ERR(tbl1[cpu]);
->> +			tbl1[cpu] = 0;
->> +			pr_warn("failed to add OPP name %s\n", pvs_name);
->> +			return ret;
->> +		}
->> +
->> +		tbl2[cpu] = dev_pm_opp_set_supported_hw(cpu_dev, &hw_version,
->> +							1);
->> +		if (IS_ERR(tbl2[cpu])) {
->> +			ret = PTR_ERR(tbl2[cpu]);
->> +			tbl2[cpu] = 0;
->> +			pr_warn("failed to set supported hw version\n");
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int __init qcom_cpufreq_driver_init(void)
->> +{
->> +	struct platform_device *pdev;
->> +	struct device *cpu_dev;
->> +	struct device_node *np;
->> +	struct nvmem_cell *pvs_nvmem;
->> +	struct opp_table *tbl1[NR_CPUS] = { NULL }, *tbl2[NR_CPUS] = { NULL 
->> };
->> +	int ret, cpu = 0;
->> +
->> +	cpu_dev = get_cpu_device(0);
->> +	if (!cpu_dev)
->> +		return -ENODEV;
->> +
->> +	np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
->> +	if (!np)
->> +		return -ENOENT;
->> +
->> +	if (!of_device_is_compatible(np, "operating-points-v2-krait-cpu")) {
->> +		ret = -ENOENT;
->> +		goto free_np;
->> +	}
->> +
->> +	pvs_nvmem = of_nvmem_cell_get(np, NULL);
->> +	if (IS_ERR(pvs_nvmem)) {
->> +		dev_err(cpu_dev, "Could not get nvmem cell\n");
->> +		ret = PTR_ERR(pvs_nvmem);
->> +		goto free_np;
->> +	}
->> +
->> +	ret = qcom_cpufreq_populate_opps(pvs_nvmem, tbl1, tbl2);
->> +	if (ret)
->> +		goto free_opp_name;
->> +
->> +	pdev = platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
->> +	if (IS_ERR(pdev)) {
->> +		ret = PTR_ERR(pdev);
->> +		goto free_opp_name;
->> +	}
->> +
->> +	of_node_put(np);
->> +
->> +	return 0;
->> +
->> +free_opp_name:
->> +	while (tbl1[cpu]) {
->> +		dev_pm_opp_put_prop_name(tbl1[cpu]);
->> +		cpu++;
->> +	}
->> +
->> +	cpu = 0;
->> +	while (tbl2[cpu]) {
->> +		dev_pm_opp_put_supported_hw(tbl2[cpu]);
->> +		cpu++;
->> +	}
->> +
->> +free_np:
->> +	of_node_put(np);
->> +
->> +	return ret;
->> +}
->> +late_initcall(qcom_cpufreq_driver_init);
->> +
->> +MODULE_DESCRIPTION("Qualcomm CPUfreq driver");
->> +MODULE_AUTHOR("Stephen Boyd <sboyd@codeaurora.org>");
->> +MODULE_LICENSE("GPL v2");
->> --
->> 1.9.1
->> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe 
-> linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	    (hba->dev_ref_clk_freq > REF_CLK_FREQ_52_MHZ)) {
+> +		dev_err(hba->dev,
+> +		"%s: invalid ref_clk setting = %d, set to default\n",
+> +		__func__, hba->dev_ref_clk_freq);
+> +		/* default setting */
+> +		hba->dev_ref_clk_freq = REF_CLK_FREQ_26_MHZ;
+
+No, the default must be to leave the value unchanged.
+
+> +	}
+> +}
+> +
+>  #ifdef CONFIG_PM
+>  /**
+>   * ufshcd_pltfrm_suspend - suspend power management function
+> @@ -343,6 +365,8 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
+>  	pm_runtime_set_active(&pdev->dev);
+>  	pm_runtime_enable(&pdev->dev);
+>  
+> +	ufshcd_parse_dev_ref_clk_freq(hba);
+> +
+>  	ufshcd_init_lanes_per_dir(hba);
+>  
+>  	err = ufshcd_init(hba, mmio_base, irq);
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index c5b1bf1..4abc7ae 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -6297,6 +6297,53 @@ static void ufshcd_def_desc_sizes(struct ufs_hba *hba)
+>  }
+>  
+>  /**
+> + * ufshcd_set_dev_ref_clk - set the device bRefClkFreq
+> + * @hba: per-adapter instance
+> + *
+> + * Read the current value of the bRefClkFreq attribute from device and update it
+> + * if host is supplying different reference clock frequency than one mentioned
+> + * in bRefClkFreq attribute.
+> + *
+> + * Returns zero on success, non-zero error value on failure.
+> + */
+> +static int ufshcd_set_dev_ref_clk(struct ufs_hba *hba)
+> +{
+> +	int err = 0;
+> +	int ref_clk = -1;
+> +	static const char * const ref_clk_freqs[] = {"19.2 MHz", "26 MHz",
+> +						     "38.4 MHz", "52 MHz"};
+> +
+> +	err = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_READ_ATTR,
+> +			QUERY_ATTR_IDN_REF_CLK_FREQ, 0, 0, &ref_clk);
+> +
+> +	if (err) {
+> +		dev_err(hba->dev, "%s: failed reading bRefClkFreq. err = %d\n",
+> +			 __func__, err);
+> +		goto out;
+> +	}
+> +
+> +	if (ref_clk == hba->dev_ref_clk_freq)
+> +		goto out; /* nothing to update */
+> +
+> +	err = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_WRITE_ATTR,
+> +			QUERY_ATTR_IDN_REF_CLK_FREQ, 0, 0,
+> +			&hba->dev_ref_clk_freq);
+> +
+> +	if (err)
+> +		dev_err(hba->dev, "%s: bRefClkFreq setting to %s failed\n",
+> +			__func__, ref_clk_freqs[hba->dev_ref_clk_freq]);
+> +	/*
+> +	 * It is good to print this out here to debug any later failures
+> +	 * related to gear switch.
+> +	 */
+> +	dev_dbg(hba->dev, "%s: bRefClkFreq setting to %s succeeded\n",
+> +			__func__, ref_clk_freqs[hba->dev_ref_clk_freq]);
+> +
+> +out:
+> +	return err;
+> +}
+> +
+> +/**
+>   * ufshcd_probe_hba - probe hba to detect device and initialize
+>   * @hba: per-adapter instance
+>   *
+> @@ -6361,6 +6408,11 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
+>  			"%s: Failed getting max supported power mode\n",
+>  			__func__);
+>  	} else {
+> +		/*
+> +		 * Set the right value to bRefClkFreq before attempting to
+> +		 * switch to HS gears.
+> +		 */
+> +		ufshcd_set_dev_ref_clk(hba);
+>  		ret = ufshcd_config_pwr_mode(hba, &hba->max_pwr_info.info);
+>  		if (ret) {
+>  			dev_err(hba->dev, "%s: Failed setting power mode, err = %d\n",
+> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> index 8110dcd..b026ad8 100644
+> --- a/drivers/scsi/ufs/ufshcd.h
+> +++ b/drivers/scsi/ufs/ufshcd.h
+> @@ -548,6 +548,7 @@ struct ufs_hba {
+>  	void *priv;
+>  	unsigned int irq;
+>  	bool is_irq_enabled;
+> +	u32 dev_ref_clk_freq;
+>  
+>  	/* Interrupt aggregation support is broken */
+>  	#define UFSHCD_QUIRK_BROKEN_INTR_AGGR			0x1
+> 
