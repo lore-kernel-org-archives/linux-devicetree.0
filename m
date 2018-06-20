@@ -1,56 +1,42 @@
-Return-Path: <SRS0=Mmip=JE=linaro.org=vinod.koul@kernel.org>
-From: Vinod Koul <vinod.koul@linaro.org>
-Subject: [PATCH 5/5] input: pm8941-pwrkey: Add resin entry
-Date: Mon, 18 Jun 2018 20:05:48 +0530
-Message-Id: <20180618143548.29900-6-vkoul@kernel.org>
-In-Reply-To: <20180618143548.29900-1-vkoul@kernel.org>
-References: <20180618143548.29900-1-vkoul@kernel.org>
-To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Return-Path: <SRS0=5+Be=JG=zonque.org=daniel@kernel.org>
+From: Daniel Mack <daniel@zonque.org>
+Subject: [PATCH v3 5/5] leds: lt3593: update email address
+Date: Wed, 20 Jun 2018 22:13:03 +0200
+Message-Id: <20180620201303.6272-6-daniel@zonque.org>
+In-Reply-To: <20180620201303.6272-1-daniel@zonque.org>
+References: <20180620201303.6272-1-daniel@zonque.org>
+To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Since handling is abstracted in this driver, we need to add resin entry
-in id table along with pwrkey_data.
+Update the email address in the module information and in the header.
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Daniel Mack <daniel@zonque.org>
 ---
- drivers/input/misc/pm8941-pwrkey.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/leds/leds-lt3593.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/misc/pm8941-pwrkey.c b/drivers/input/misc/pm8941-pwrkey.c
-index aedb6ea2b50a..913405404a92 100644
---- a/drivers/input/misc/pm8941-pwrkey.c
-+++ b/drivers/input/misc/pm8941-pwrkey.c
-@@ -29,6 +29,7 @@
+diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
+index e45c26588799..4ba633740b14 100644
+--- a/drivers/leds/leds-lt3593.c
++++ b/drivers/leds/leds-lt3593.c
+@@ -3,7 +3,7 @@
+  *
+  * See the datasheet at http://cds.linear.com/docs/Datasheet/3593f.pdf
+  *
+- * Copyright (c) 2009 Daniel Mack <daniel@caiaq.de>
++ * Copyright (c) 2009,2018 Daniel Mack <daniel@zonque.org>
+  *
+  * Based on leds-gpio.c,
+  *
+@@ -215,7 +215,7 @@ static struct platform_driver lt3593_led_driver = {
  
- #define PON_RT_STS			0x10
- #define  PON_KPDPWR_N_SET		BIT(0)
-+#define  PON_RESIN_N_SET		BIT(1)
+ module_platform_driver(lt3593_led_driver);
  
- #define PON_PS_HOLD_RST_CTL		0x5a
- #define PON_PS_HOLD_RST_CTL2		0x5b
-@@ -39,6 +40,7 @@
- 
- #define PON_PULL_CTL			0x70
- #define  PON_KPDPWR_PULL_UP		BIT(1)
-+#define  PON_RESIN_PULL_UP		BIT(0)
- 
- #define PON_DBC_CTL			0x71
- #define  PON_DBC_DELAY_MASK		0x7
-@@ -307,8 +309,14 @@ static const struct pm8941_data pwrkey_data = {
- 	.status_bit = PON_KPDPWR_N_SET,
- };
- 
-+static const struct pm8941_data resin_data = {
-+	.pull_up_bit = PON_RESIN_PULL_UP,
-+	.status_bit = PON_RESIN_N_SET,
-+};
-+
- static const struct of_device_id pm8941_pwr_key_id_table[] = {
- 	{ .compatible = "qcom,pm8941-pwrkey", .data = &pwrkey_data },
-+	{ .compatible = "qcom,pm8941-resin", .data = &resin_data },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, pm8941_pwr_key_id_table);
+-MODULE_AUTHOR("Daniel Mack <daniel@caiaq.de>");
++MODULE_AUTHOR("Daniel Mack <daniel@zonque.org>");
+ MODULE_DESCRIPTION("LED driver for LT3593 controllers");
+ MODULE_LICENSE("GPL");
+ MODULE_ALIAS("platform:leds-lt3593");
 -- 
-2.14.4
+2.17.1
