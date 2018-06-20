@@ -1,125 +1,81 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH v4 1/6] Documentation: DT: Consolidate SP805 binding docs
-Date: Wed, 20 Jun 2018 10:39:16 -0700
-Message-ID: <46ca340f-4347-94ca-6463-d38bece820e2@broadcom.com>
-References: <1527530497-10392-1-git-send-email-ray.jui@broadcom.com>
- <1527530497-10392-2-git-send-email-ray.jui@broadcom.com>
- <20180605194124.GA26885@rob-hp-laptop>
- <e91c75f3-f7a4-6f51-9911-7e22d5d05084@roeck-us.net>
- <CABGGisxEvWDy16SKE2RG-vhUHBZHSCCHyfwJsPY16B1fQS-=cA@mail.gmail.com>
- <09c870cd-0a44-6634-58d8-f57f9fcd0cb5@broadcom.com>
+From: Jolly Shah <jolly.shah@xilinx.com>
+Subject: [PATCH v9 03/10] firmware: xilinx: Add zynqmp IOCTL API for device control
+Date: Wed, 20 Jun 2018 10:40:28 -0700
+Message-ID: <1529516435-7315-4-git-send-email-jollys@xilinx.com>
+References: <1529516435-7315-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <09c870cd-0a44-6634-58d8-f57f9fcd0cb5@broadcom.com>
-Content-Language: en-US
+In-Reply-To: <1529516435-7315-1-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Guenter Roeck <linux@roeck-us.net>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+To: ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
+Cc: rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter/Rob,
+From: Rajan Vaja <rajanv@xilinx.com>
 
-Kindly let me know how you want to proceed with this?
+Add ZynqMP firmware IOCTL API to control and configure
+devices like PLLs, SD, Gem, etc.
 
-Thanks,
+Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+Signed-off-by: Jolly Shah <jollys@xilinx.com>
+---
+ drivers/firmware/xilinx/zynqmp.c     | 20 ++++++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h |  2 ++
+ 2 files changed, 22 insertions(+)
 
-Ray
-
-On 6/6/2018 4:39 PM, Ray Jui wrote:
-> 
-> 
-> On 6/6/2018 9:33 AM, Rob Herring wrote:
->> On Wed, Jun 6, 2018 at 11:19 AM, Guenter Roeck <linux@roeck-us.net> 
->> wrote:
->>> On 06/05/2018 12:41 PM, Rob Herring wrote:
->>>>
->>>> On Mon, May 28, 2018 at 11:01:32AM -0700, Ray Jui wrote:
->>>>>
->>>>> Consolidate two SP805 binding documents "arm,sp805.txt" and
->>>>> "sp805-wdt.txt" into "arm,sp805.txt" that matches the naming of the
->>>>> desired compatible string to be used
->>>>>
->>>>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
->>>>> ---
->>>>>    .../devicetree/bindings/watchdog/arm,sp805.txt     | 27
->>>>> ++++++++++++++-----
->>>>>    .../devicetree/bindings/watchdog/sp805-wdt.txt     | 31
->>>>> ----------------------
->>>>>    2 files changed, 20 insertions(+), 38 deletions(-)
->>>>>    delete mode 100644
->>>>> Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
->>>>
->>>>
->>>> Would be good to get a ACK from FSL/NXP person on this. It looks to me
->>>> like the driver fetches the wrong clock as it gets the first one and 
->>>> the
->>>> driver really wants 'wdog_clk'. In any case, their dts files should be
->>>> updated.
->>>>
->>>
->>> This is really confusing, since he deleted file lists apb_pclk first.
->>> Does the watchdog driver need apb_pclk or wdog_clk ? That isn't clear 
->>> to me.
->>> arch/arm64/boot/dts/hisilicon/hi3660.dtsi only provides apb_pclk, or at
->>> least
->>> it says so.
->>
->> Note that that clock source is 32KHz. That is obviously a mistake
->> because no one clocks their bus/register interface at 32KHz. Someone
->> just filled in something that happened to work.
->>
->>> The fsl dts files all have apb_pclk first.
->>
->> It's all kind of a mess, but fortunately one we should be able to 
->> clean-up.
->>
-> 
-> It is indeed a mess. Note the SP805 driver only derive one clock from 
-> DT, and that's not done based on name. As a result, the first clock 
-> defined in DT will be fetched and the rate calculation will be carried 
-> out based on that clock rate.
-> 
-> I assumed the clock entries and their names defined in the binding 
-> document are just placeholders, at least for the 2nd clock.
-> 
-> Based on how the current driver is, the first clock needs to be the 
-> WDOGCLK for things to work properly.
-> 
-> According to the SP805 TRM, APB clock is the PCLK, that drives the bus 
-> for register access.
-> 
-> The relationship between WDOGCLK and PCLK is defined as:
-> 
-> - the rising edges of WDOGCLK must be synchronous and
-> balanced with a rising edge of PCLK
-> 
-> - the WDOGCLK frequency cannot be greater than the PCLK
-> frequency
-> 
->> The compatible string changes too, but AMBA bus devices don't actually
->> use the compatible string as they use the ID registers to match. I
->> suppose some other OS could do things differently. Worth the risk to
->> clean-up IMO.
->>
->>>
->>> Either case, why are two clocks asked for in the first place ? Are there
->>> situations where the second clock is actually used/useful ?
->>
->> For clocks, the bus needs "apb_pclk" and the driver just gets the
->> first clock. The driver is obviously going to want the functional
->> clock that determines the counter rate. That should
->>
->> Primecell peripherals are about the only ones that have clear specs
->> WRT clock inputs. Yet we've still managed to screw them up. There are
->> 2 clocks in the spec, so the DT has (or should have) 2 clocks.
->>
->> Rob
->>
-> 
-> Let me know how you guys want to proceed with this?
-> 
-> Thanks,
-> 
-> Ray
+diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+index 70e335a..34c5ad5 100644
+--- a/drivers/firmware/xilinx/zynqmp.c
++++ b/drivers/firmware/xilinx/zynqmp.c
+@@ -241,8 +241,28 @@ static int get_set_conduit_method(struct device_node *np)
+ 	return 0;
+ }
+ 
++/**
++ * zynqmp_pm_ioctl() - PM IOCTL API for device control and configs
++ * @node_id:	Node ID of the device
++ * @ioctl_id:	ID of the requested IOCTL
++ * @arg1:	Argument 1 to requested IOCTL call
++ * @arg2:	Argument 2 to requested IOCTL call
++ * @out:	Returned output value
++ *
++ * This function calls IOCTL to firmware for device control and configuration.
++ *
++ * Return: Returns status, either success or error+reason
++ */
++static int zynqmp_pm_ioctl(u32 node_id, u32 ioctl_id, u32 arg1, u32 arg2,
++			   u32 *out)
++{
++	return zynqmp_pm_invoke_fn(PM_IOCTL, node_id, ioctl_id,
++				   arg1, arg2, out);
++}
++
+ static const struct zynqmp_eemi_ops eemi_ops = {
+ 	.get_api_version = zynqmp_pm_get_api_version,
++	.ioctl = zynqmp_pm_ioctl,
+ };
+ 
+ /**
+diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+index cb63bed..2eec6e7 100644
+--- a/include/linux/firmware/xlnx-zynqmp.h
++++ b/include/linux/firmware/xlnx-zynqmp.h
+@@ -34,6 +34,7 @@
+ 
+ enum pm_api_id {
+ 	PM_GET_API_VERSION = 1,
++	PM_IOCTL = 34,
+ };
+ 
+ /* PMU-FW return status codes */
+@@ -49,6 +50,7 @@ enum pm_ret_status {
+ 
+ struct zynqmp_eemi_ops {
+ 	int (*get_api_version)(u32 *version);
++	int (*ioctl)(u32 node_id, u32 ioctl_id, u32 arg1, u32 arg2, u32 *out);
+ };
+ 
+ #if IS_REACHABLE(CONFIG_ARCH_ZYNQMP)
+-- 
+2.7.4
