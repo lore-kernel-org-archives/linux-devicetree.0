@@ -1,202 +1,225 @@
-From: Ludovic BARRE <ludovic.barre@st.com>
-Subject: Re: [PATCH V2 1/3] watchdog: stm32: add pclk feature for stm32mp1
-Date: Wed, 20 Jun 2018 15:24:07 +0200
-Message-ID: <e9babb86-7588-5de6-93ab-4cdd8982e773@st.com>
-References: <1529481238-15277-1-git-send-email-ludovic.Barre@st.com>
- <1529481238-15277-2-git-send-email-ludovic.Barre@st.com>
- <6162d701-2afd-5a22-d38f-7fb9e726cff7@roeck-us.net>
+From: Raju P L S S S N <rplsssn@codeaurora.org>
+Subject: Re: [PATCH v12 02/10] dt-bindings: introduce RPMH RSC bindings for
+ Qualcomm SoCs
+Date: Wed, 20 Jun 2018 18:58:35 +0530
+Message-ID: <d1590d7e-5997-66c6-d0d2-834703f5f04d@codeaurora.org>
+References: <1529413893-5520-1-git-send-email-rplsssn@codeaurora.org>
+ <1529413893-5520-3-git-send-email-rplsssn@codeaurora.org>
+ <20180619225111.GD15126@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6162d701-2afd-5a22-d38f-7fb9e726cff7@roeck-us.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180619225111.GD15126@tuxbook-pro>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, ilina@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwNi8yMC8yMDE4IDExOjE5IEFNLCBHdWVudGVyIFJvZWNrIHdyb3RlOgo+IE9uIDA2LzIw
-LzIwMTggMTI6NTMgQU0sIEx1ZG92aWMgQmFycmUgd3JvdGU6Cj4+IEZyb206IEx1ZG92aWMgQmFy
-cmUgPGx1ZG92aWMuYmFycmVAc3QuY29tPgo+Pgo+PiBUaGlzIHBhdGNoIGFkZHMgY29uZmlnIGRh
-dGEgdG8gbWFuYWdlIHNwZWNpZmljIHByb3BlcnRpZXMgYnkKPj4gY29tcGF0aWJsZS4gQWRkcyBz
-dG0zMm1wMSBjb25maWcgd2hpY2ggcmVxdWlyZXMgcGNsayBjbG9jay4KPj4KPj4gU2lnbmVkLW9m
-Zi1ieTogTHVkb3ZpYyBCYXJyZSA8bHVkb3ZpYy5iYXJyZUBzdC5jb20+Cj4+IC0tLQo+PiDCoCAu
-Li4vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9zdCxzdG0zMi1pd2RnLnR4dCB8wqAgMjEg
-KysrLQo+PiDCoCBkcml2ZXJzL3dhdGNoZG9nL3N0bTMyX2l3ZGcuY8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8IDEzMiAKPj4gKysrKysrKysrKysrKystLS0tLS0t
-Cj4+IMKgIDIgZmlsZXMgY2hhbmdlZCwgMTA0IGluc2VydGlvbnMoKyksIDQ5IGRlbGV0aW9ucygt
-KQo+Pgo+PiBkaWZmIC0tZ2l0IAo+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy93YXRjaGRvZy9zdCxzdG0zMi1pd2RnLnR4dCAKPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3Mvd2F0Y2hkb2cvc3Qsc3RtMzItaXdkZy50eHQKPj4gaW5kZXggY2MxM2IxMGEu
-LmYwN2Y2ZDg5IDEwMDY0NAo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3Mvd2F0Y2hkb2cvc3Qsc3RtMzItaXdkZy50eHQKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL3N0LHN0bTMyLWl3ZGcudHh0Cj4+IEBAIC0yLDE4ICsy
-LDMxIEBAIFNUTTMyIEluZGVwZW5kZW50IFdhdGNoRG9HIChJV0RHKQo+PiDCoCAtLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4gwqAgUmVxdWlyZWQgcHJvcGVydGllczoKPj4gLS0g
-Y29tcGF0aWJsZTogInN0LHN0bTMyLWl3ZGciCj4+IC0tIHJlZzogcGh5c2ljYWwgYmFzZSBhZGRy
-ZXNzIGFuZCBsZW5ndGggb2YgdGhlIHJlZ2lzdGVycyBzZXQgZm9yIHRoZSAKPj4gZGV2aWNlCj4+
-IC0tIGNsb2NrczogbXVzdCBjb250YWluIGEgc2luZ2xlIGVudHJ5IGRlc2NyaWJpbmcgdGhlIGNs
-b2NrIGlucHV0Cj4+ICstIGNvbXBhdGlibGU6IFNob3VsZCBiZSBlaXRoZXIgInN0LHN0bTMyLWl3
-ZGciIG9yICJzdCxzdG0zMm1wMS1pd2RnIgo+PiArLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVz
-cyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlcnMgc2V0IGZvciB0aGUgCj4+IGRldmljZQo+PiAr
-LSBjbG9ja3M6IFJlZmVyZW5jZSB0byB0aGUgY2xvY2sgZW50cnkgbHNpLiBBZGRpdGlvbmFsIHBj
-bGsgY2xvY2sgZW50cnkKPj4gK8KgIGlzIHJlcXVpcmVkIG9ubHkgZm9yIHN0LHN0bTMybXAxLWl3
-ZGcuCj4+ICstIGNsb2NrLW5hbWVzOiBOYW1lIG9mIHRoZSBjbG9ja3MgdXNlZC4KPj4gK8KgICJs
-c2kiIGZvciBzdCxzdG0zMi1pd2RnCj4+ICvCoCAicGNsayIsICJsc2kiIGZvciBzdCxzdG0zMm1w
-MS1pd2RnCj4+IMKgIE9wdGlvbmFsIFByb3BlcnRpZXM6Cj4+IMKgIC0gdGltZW91dC1zZWM6IFdh
-dGNoZG9nIHRpbWVvdXQgdmFsdWUgaW4gc2Vjb25kcy4KPj4gLUV4YW1wbGU6Cj4+ICtFeGFtcGxl
-czoKPj4gwqAgaXdkZzogd2F0Y2hkb2dANDAwMDMwMDAgewo+PiDCoMKgwqDCoMKgIGNvbXBhdGli
-bGUgPSAic3Qsc3RtMzItaXdkZyI7Cj4+IMKgwqDCoMKgwqAgcmVnID0gPDB4NDAwMDMwMDAgMHg0
-MDA+Owo+PiDCoMKgwqDCoMKgIGNsb2NrcyA9IDwmY2xrX2xzaT47Cj4+ICvCoMKgwqAgY2xvY2st
-bmFtZXMgPSAibHNpIjsKPj4gK8KgwqDCoCB0aW1lb3V0LXNlYyA9IDwzMj47Cj4+ICt9Owo+PiAr
-Cj4+ICtpd2RnOiBpd2RnQDVhMDAyMDAwIHsKPj4gK8KgwqDCoCBjb21wYXRpYmxlID0gInN0LHN0
-bTMybXAxLWl3ZGciOwo+PiArwqDCoMKgIHJlZyA9IDwweDVhMDAyMDAwIDB4NDAwPjsKPj4gK8Kg
-wqDCoCBjbG9ja3MgPSA8JnJjYyBJV0RHMj4sIDwmY2xrX2xzaT47Cj4+ICvCoMKgwqAgY2xvY2st
-bmFtZXMgPSAicGNsayIsICJsc2kiOwo+PiDCoMKgwqDCoMKgIHRpbWVvdXQtc2VjID0gPDMyPjsK
-Pj4gwqAgfTsKPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvd2F0Y2hkb2cvc3RtMzJfaXdkZy5jIAo+
-PiBiL2RyaXZlcnMvd2F0Y2hkb2cvc3RtMzJfaXdkZy5jCj4+IGluZGV4IGM5N2FkNTYuLmZjOTY2
-NzAgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvd2F0Y2hkb2cvc3RtMzJfaXdkZy5jCj4+ICsrKyBi
-L2RyaXZlcnMvd2F0Y2hkb2cvc3RtMzJfaXdkZy5jCj4+IEBAIC0xMSwxMiArMTEsMTMgQEAKPj4g
-wqAgI2luY2x1ZGUgPGxpbnV4L2Nsay5oPgo+PiDCoCAjaW5jbHVkZSA8bGludXgvZGVsYXkuaD4K
-Pj4gLSNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4KPj4gLSNpbmNsdWRlIDxsaW51eC9tb2R1bGUu
-aD4KPj4gwqAgI2luY2x1ZGUgPGxpbnV4L2ludGVycnVwdC5oPgo+PiDCoCAjaW5jbHVkZSA8bGlu
-dXgvaW8uaD4KPj4gwqAgI2luY2x1ZGUgPGxpbnV4L2lvcG9sbC5oPgo+PiArI2luY2x1ZGUgPGxp
-bnV4L2tlcm5lbC5oPgo+PiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+PiDCoCAjaW5jbHVk
-ZSA8bGludXgvb2YuaD4KPj4gKyNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4KPj4gwqAgI2lu
-Y2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgo+PiDCoCAjaW5jbHVkZSA8bGludXgvd2F0
-Y2hkb2cuaD4KPj4gQEAgLTU0LDExICs1NSwxNyBAQAo+PiDCoCAjZGVmaW5lIFRJTUVPVVRfVVPC
-oMKgwqAgMTAwMDAwCj4+IMKgICNkZWZpbmUgU0xFRVBfVVPCoMKgwqAgMTAwMAo+PiArc3RydWN0
-IHN0bTMyX2l3ZGdfY29uZmlnIHsKPj4gK8KgwqDCoCBib29sIGhhc19wY2xrOwo+PiArfTsKPj4g
-Kwo+IAo+IFRoaXMgZGF0YSBzdHJ1Y3R1cmUgaXMgdW5uZWNlc3NhcnkuIEp1c3QgYXNzaWduIHRo
-ZSBib29sZWFuIGRpcmVjdGx5IHRvIAo+IC5kYXRhCj4gYW5kIC4uLgo+IAoKT2ssIEkgc2VuZCBh
-IHYzLCB3aXRoIGJvb2xlYW4gZGlyZWN0bHkgdG8gLmRhdGEKbGlrZToKCiNkZWZpbmUgTk9fUENM
-SwkJZmFsc2UKI2RlZmluZSBIQVNfUENMSwl0cnVlCi4uLgpzdGF0aWMgY29uc3Qgc3RydWN0IG9m
-X2RldmljZV9pZCBzdG0zMl9pd2RnX29mX21hdGNoW10gPSB7Cgl7IC5jb21wYXRpYmxlID0gInN0
-LHN0bTMyLWl3ZGciLCAuZGF0YSA9ICh2b2lkICopIE5PX1BDTEsgfSwKCXsgLmNvbXBhdGlibGUg
-PSAic3Qsc3RtMzJtcDEtaXdkZyIsIC5kYXRhID0gKHZvaWQgKikgSEFTX1BDTEsgfSwKCXsgLyog
-ZW5kIG5vZGUgKi8gfQp9OwoKTm90ZToKVjMsIGJlY2F1c2UgSSBzZW50IG15IG9yaWdpbmFsIHZl
-cnNpb24gd2l0aCBWMgooaXQncyBtaXN0YWtlKQoKPj4gwqAgc3RydWN0IHN0bTMyX2l3ZGcgewo+
-PiAtwqDCoMKgIHN0cnVjdCB3YXRjaGRvZ19kZXZpY2XCoMKgwqAgd2RkOwo+PiAtwqDCoMKgIHZv
-aWQgX19pb21lbcKgwqDCoMKgwqDCoMKgICpyZWdzOwo+PiAtwqDCoMKgIHN0cnVjdCBjbGvCoMKg
-wqDCoMKgwqDCoCAqY2xrOwo+PiAtwqDCoMKgIHVuc2lnbmVkIGludMKgwqDCoMKgwqDCoMKgIHJh
-dGU7Cj4+ICvCoMKgwqAgc3RydWN0IHdhdGNoZG9nX2RldmljZcKgwqDCoMKgwqDCoMKgIHdkZDsK
-Pj4gK8KgwqDCoCB2b2lkIF9faW9tZW3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgICpyZWdzOwo+PiAr
-wqDCoMKgIHN0cnVjdCBzdG0zMl9pd2RnX2NvbmZpZ8KgwqDCoCAqY29uZmlnOwo+IAo+IGRlY2xh
-cmUgYm9vbCBoYXNfcGNsayBoZXJlLgo+IAo+PiArwqDCoMKgIHN0cnVjdCBjbGvCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgICpjbGtfbHNpOwo+PiArwqDCoMKgIHN0cnVjdCBjbGvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgICpjbGtfcGNsazsKPj4gK8KgwqDCoCB1bnNpZ25lZCBpbnTCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIHJhdGU7Cj4+IMKgIH07Cj4+IMKgIHN0YXRpYyBpbmxpbmUgdTMyIHJlZ19yZWFk
-KHZvaWQgX19pb21lbSAqYmFzZSwgdTMyIHJlZykKPj4gQEAgLTEzMyw2ICsxNDAsNDQgQEAgc3Rh
-dGljIGludCBzdG0zMl9pd2RnX3NldF90aW1lb3V0KHN0cnVjdCAKPj4gd2F0Y2hkb2dfZGV2aWNl
-ICp3ZGQsCj4+IMKgwqDCoMKgwqAgcmV0dXJuIDA7Cj4+IMKgIH0KPj4gK3N0YXRpYyBpbnQgc3Rt
-MzJfaXdkZ19jbGtfaW5pdChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LAo+PiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0cnVjdCBzdG0zMl9pd2RnICp3ZHQpCj4+
-ICt7Cj4+ICvCoMKgwqAgdTMyIHJldDsKPj4gKwo+PiArwqDCoMKgIHdkdC0+Y2xrX2xzaSA9IGRl
-dm1fY2xrX2dldCgmcGRldi0+ZGV2LCAibHNpIik7Cj4+ICvCoMKgwqAgaWYgKElTX0VSUih3ZHQt
-PmNsa19sc2kpKSB7Cj4+ICvCoMKgwqDCoMKgwqDCoCBkZXZfZXJyKCZwZGV2LT5kZXYsICJVbmFi
-bGUgdG8gZ2V0IGxzaSBjbG9ja1xuIik7Cj4+ICvCoMKgwqDCoMKgwqDCoCByZXR1cm4gUFRSX0VS
-Uih3ZHQtPmNsa19sc2kpOwo+PiArwqDCoMKgIH0KPj4gKwo+PiArwqDCoMKgIC8qIG9wdGlvbmFs
-IHBlcmlwaGVyYWwgY2xvY2sgKi8KPj4gK8KgwqDCoCBpZiAod2R0LT5jb25maWctPmhhc19wY2xr
-KSB7Cj4+ICvCoMKgwqDCoMKgwqDCoCB3ZHQtPmNsa19wY2xrID0gZGV2bV9jbGtfZ2V0KCZwZGV2
-LT5kZXYsICJwY2xrIik7Cj4+ICvCoMKgwqDCoMKgwqDCoCBpZiAoSVNfRVJSKHdkdC0+Y2xrX3Bj
-bGspKSB7Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRldl9lcnIoJnBkZXYtPmRldiwgIlVu
-YWJsZSB0byBnZXQgcGNsayBjbG9ja1xuIik7Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJl
-dHVybiBQVFJfRVJSKHdkdC0+Y2xrX3BjbGspOwo+PiArwqDCoMKgwqDCoMKgwqAgfQo+PiArCj4+
-ICvCoMKgwqDCoMKgwqDCoCByZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUod2R0LT5jbGtfcGNsayk7
-Cj4+ICvCoMKgwqDCoMKgwqDCoCBpZiAocmV0KSB7Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IGRldl9lcnIoJnBkZXYtPmRldiwgIlVuYWJsZSB0byBwcmVwYXJlIHBjbGsgY2xvY2tcbiIpOwo+
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gcmV0Owo+PiArwqDCoMKgwqDCoMKgwqAg
-fQo+PiArwqDCoMKgIH0KPj4gKwo+PiArwqDCoMKgIHJldCA9IGNsa19wcmVwYXJlX2VuYWJsZSh3
-ZHQtPmNsa19sc2kpOwo+PiArwqDCoMKgIGlmIChyZXQpIHsKPj4gK8KgwqDCoMKgwqDCoMKgIGRl
-dl9lcnIoJnBkZXYtPmRldiwgIlVuYWJsZSB0byBwcmVwYXJlIGxzaSBjbG9ja1xuIik7Cj4+ICvC
-oMKgwqDCoMKgwqDCoCBjbGtfZGlzYWJsZV91bnByZXBhcmUod2R0LT5jbGtfcGNsayk7Cj4+ICvC
-oMKgwqDCoMKgwqDCoCByZXR1cm4gcmV0Owo+PiArwqDCoMKgIH0KPj4gKwo+PiArwqDCoMKgIHdk
-dC0+cmF0ZSA9IGNsa19nZXRfcmF0ZSh3ZHQtPmNsa19sc2kpOwo+PiArCj4+ICvCoMKgwqAgcmV0
-dXJuIDA7Cj4+ICt9Cj4+ICsKPj4gwqAgc3RhdGljIGNvbnN0IHN0cnVjdCB3YXRjaGRvZ19pbmZv
-IHN0bTMyX2l3ZGdfaW5mbyA9IHsKPj4gwqDCoMKgwqDCoCAub3B0aW9uc8KgwqDCoCA9IFdESU9G
-X1NFVFRJTUVPVVQgfAo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgV0RJT0ZfTUFH
-SUNDTE9TRSB8Cj4+IEBAIC0xNDcsNDkgKzE5Miw1MCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHdh
-dGNoZG9nX29wcyBzdG0zMl9pd2RnX29wcyA9IHsKPj4gwqDCoMKgwqDCoCAuc2V0X3RpbWVvdXTC
-oMKgwqAgPSBzdG0zMl9pd2RnX3NldF90aW1lb3V0LAo+PiDCoCB9Owo+PiArc3RhdGljIGNvbnN0
-IHN0cnVjdCBzdG0zMl9pd2RnX2NvbmZpZyBzdG0zMl9pd2RnX2NmZyA9IHsKPj4gK8KgwqDCoCAu
-aGFzX3BjbGsgPSBmYWxzZSwKPj4gK307Cj4+ICsKPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc3Rt
-MzJfaXdkZ19jb25maWcgc3RtMzJtcDFfaXdkZ19jZmcgPSB7Cj4+ICvCoMKgwqAgLmhhc19wY2xr
-ID0gdHJ1ZSwKPj4gK307Cj4+ICsKPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lk
-IHN0bTMyX2l3ZGdfb2ZfbWF0Y2hbXSA9IHsKPj4gK8KgwqDCoCB7IC5jb21wYXRpYmxlID0gInN0
-LHN0bTMyLWl3ZGciLCAuZGF0YSA9ICZzdG0zMl9pd2RnX2NmZyB9LAo+PiArwqDCoMKgIHsgLmNv
-bXBhdGlibGUgPSAic3Qsc3RtMzJtcDEtaXdkZyIsIC5kYXRhID0gJnN0bTMybXAxX2l3ZGdfY2Zn
-IH0sCj4+ICvCoMKgwqAgeyAvKiBlbmQgbm9kZSAqLyB9Cj4+ICt9Owo+PiArTU9EVUxFX0RFVklD
-RV9UQUJMRShvZiwgc3RtMzJfaXdkZ19vZl9tYXRjaCk7Cj4+ICsKPj4gwqAgc3RhdGljIGludCBz
-dG0zMl9pd2RnX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4+IMKgIHsKPj4g
-wqDCoMKgwqDCoCBzdHJ1Y3Qgd2F0Y2hkb2dfZGV2aWNlICp3ZGQ7Cj4+ICvCoMKgwqAgY29uc3Qg
-c3RydWN0IG9mX2RldmljZV9pZCAqbWF0Y2g7Cj4+IMKgwqDCoMKgwqAgc3RydWN0IHN0bTMyX2l3
-ZGcgKndkdDsKPj4gwqDCoMKgwqDCoCBzdHJ1Y3QgcmVzb3VyY2UgKnJlczsKPj4gLcKgwqDCoCB2
-b2lkIF9faW9tZW0gKnJlZ3M7Cj4+IC3CoMKgwqAgc3RydWN0IGNsayAqY2xrOwo+PiDCoMKgwqDC
-oMKgIGludCByZXQ7Cj4+ICvCoMKgwqAgbWF0Y2ggPSBvZl9tYXRjaF9kZXZpY2Uoc3RtMzJfaXdk
-Z19vZl9tYXRjaCwgJnBkZXYtPmRldik7Cj4+ICvCoMKgwqAgaWYgKCFtYXRjaCB8fCAhbWF0Y2gt
-PmRhdGEpCj4+ICvCoMKgwqDCoMKgwqDCoCByZXR1cm4gLUVOT0RFVjsKPj4gKwo+PiArwqDCoMKg
-IHdkdCA9IGRldm1fa3phbGxvYygmcGRldi0+ZGV2LCBzaXplb2YoKndkdCksIEdGUF9LRVJORUwp
-Owo+PiArwqDCoMKgIGlmICghd2R0KQo+PiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuIC1FTk9NRU07
-Cj4+ICsKPj4gK8KgwqDCoCB3ZHQtPmNvbmZpZyA9IChzdHJ1Y3Qgc3RtMzJfaXdkZ19jb25maWcg
-KiltYXRjaC0+ZGF0YTsKPj4gKwo+PiDCoMKgwqDCoMKgIC8qIFRoaXMgaXMgdGhlIHRpbWVyIGJh
-c2UuICovCj4+IMKgwqDCoMKgwqAgcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElP
-UkVTT1VSQ0VfTUVNLCAwKTsKPj4gLcKgwqDCoCByZWdzID0gZGV2bV9pb3JlbWFwX3Jlc291cmNl
-KCZwZGV2LT5kZXYsIHJlcyk7Cj4+IC3CoMKgwqAgaWYgKElTX0VSUihyZWdzKSkgewo+PiArwqDC
-oMKgIHdkdC0+cmVncyA9IGRldm1faW9yZW1hcF9yZXNvdXJjZSgmcGRldi0+ZGV2LCByZXMpOwo+
-PiArwqDCoMKgIGlmIChJU19FUlIod2R0LT5yZWdzKSkgewo+PiDCoMKgwqDCoMKgwqDCoMKgwqAg
-ZGV2X2VycigmcGRldi0+ZGV2LCAiQ291bGQgbm90IGdldCByZXNvdXJjZVxuIik7Cj4+IC3CoMKg
-wqDCoMKgwqDCoCByZXR1cm4gUFRSX0VSUihyZWdzKTsKPj4gK8KgwqDCoMKgwqDCoMKgIHJldHVy
-biBQVFJfRVJSKHdkdC0+cmVncyk7Cj4+IMKgwqDCoMKgwqAgfQo+PiAtwqDCoMKgIGNsayA9IGRl
-dm1fY2xrX2dldCgmcGRldi0+ZGV2LCBOVUxMKTsKPj4gLcKgwqDCoCBpZiAoSVNfRVJSKGNsaykp
-IHsKPj4gLcKgwqDCoMKgwqDCoMKgIGRldl9lcnIoJnBkZXYtPmRldiwgIlVuYWJsZSB0byBnZXQg
-Y2xvY2tcbiIpOwo+PiAtwqDCoMKgwqDCoMKgwqAgcmV0dXJuIFBUUl9FUlIoY2xrKTsKPj4gLcKg
-wqDCoCB9Cj4+IC0KPj4gLcKgwqDCoCByZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoY2xrKTsKPj4g
-LcKgwqDCoCBpZiAocmV0KSB7Cj4+IC3CoMKgwqDCoMKgwqDCoCBkZXZfZXJyKCZwZGV2LT5kZXYs
-ICJVbmFibGUgdG8gcHJlcGFyZSBjbG9jayAlcFxuIiwgY2xrKTsKPj4gK8KgwqDCoCByZXQgPSBz
-dG0zMl9pd2RnX2Nsa19pbml0KHBkZXYsIHdkdCk7Cj4+ICvCoMKgwqAgaWYgKHJldCkKPj4gwqDC
-oMKgwqDCoMKgwqDCoMKgIHJldHVybiByZXQ7Cj4+IC3CoMKgwqAgfQo+PiAtCj4+IC3CoMKgwqAg
-LyoKPj4gLcKgwqDCoMKgICogQWxsb2NhdGUgb3VyIHdhdGNoZG9nIGRyaXZlciBkYXRhLCB3aGlj
-aCBoYXMgdGhlCj4+IC3CoMKgwqDCoCAqIHN0cnVjdCB3YXRjaGRvZ19kZXZpY2UgbmVzdGVkIHdp
-dGhpbiBpdC4KPj4gLcKgwqDCoMKgICovCj4+IC3CoMKgwqAgd2R0ID0gZGV2bV9remFsbG9jKCZw
-ZGV2LT5kZXYsIHNpemVvZigqd2R0KSwgR0ZQX0tFUk5FTCk7Cj4+IC3CoMKgwqAgaWYgKCF3ZHQp
-IHsKPj4gLcKgwqDCoMKgwqDCoMKgIHJldCA9IC1FTk9NRU07Cj4+IC3CoMKgwqDCoMKgwqDCoCBn
-b3RvIGVycjsKPj4gLcKgwqDCoCB9Cj4+IC0KPj4gLcKgwqDCoCAvKiBJbml0aWFsaXplIHN0cnVj
-dCBzdG0zMl9pd2RnLiAqLwo+PiAtwqDCoMKgIHdkdC0+cmVncyA9IHJlZ3M7Cj4+IC3CoMKgwqAg
-d2R0LT5jbGsgPSBjbGs7Cj4+IC3CoMKgwqAgd2R0LT5yYXRlID0gY2xrX2dldF9yYXRlKGNsayk7
-Cj4+IMKgwqDCoMKgwqAgLyogSW5pdGlhbGl6ZSBzdHJ1Y3Qgd2F0Y2hkb2dfZGV2aWNlLiAqLwo+
-PiDCoMKgwqDCoMKgIHdkZCA9ICZ3ZHQtPndkZDsKPj4gQEAgLTIxNyw3ICsyNjMsOCBAQCBzdGF0
-aWMgaW50IHN0bTMyX2l3ZGdfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAKPj4gKnBkZXYp
-Cj4+IMKgwqDCoMKgwqAgcmV0dXJuIDA7Cj4+IMKgIGVycjoKPj4gLcKgwqDCoCBjbGtfZGlzYWJs
-ZV91bnByZXBhcmUoY2xrKTsKPj4gK8KgwqDCoCBjbGtfZGlzYWJsZV91bnByZXBhcmUod2R0LT5j
-bGtfbHNpKTsKPj4gK8KgwqDCoCBjbGtfZGlzYWJsZV91bnByZXBhcmUod2R0LT5jbGtfcGNsayk7
-Cj4+IMKgwqDCoMKgwqAgcmV0dXJuIHJldDsKPj4gwqAgfQo+PiBAQCAtMjI3LDIzICsyNzQsMTgg
-QEAgc3RhdGljIGludCBzdG0zMl9pd2RnX3JlbW92ZShzdHJ1Y3QgCj4+IHBsYXRmb3JtX2Rldmlj
-ZSAqcGRldikKPj4gwqDCoMKgwqDCoCBzdHJ1Y3Qgc3RtMzJfaXdkZyAqd2R0ID0gcGxhdGZvcm1f
-Z2V0X2RydmRhdGEocGRldik7Cj4+IMKgwqDCoMKgwqAgd2F0Y2hkb2dfdW5yZWdpc3Rlcl9kZXZp
-Y2UoJndkdC0+d2RkKTsKPj4gLcKgwqDCoCBjbGtfZGlzYWJsZV91bnByZXBhcmUod2R0LT5jbGsp
-Owo+PiArwqDCoMKgIGNsa19kaXNhYmxlX3VucHJlcGFyZSh3ZHQtPmNsa19sc2kpOwo+PiArwqDC
-oMKgIGNsa19kaXNhYmxlX3VucHJlcGFyZSh3ZHQtPmNsa19wY2xrKTsKPj4gwqDCoMKgwqDCoCBy
-ZXR1cm4gMDsKPj4gwqAgfQo+PiAtc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgc3Rt
-MzJfaXdkZ19vZl9tYXRjaFtdID0gewo+PiAtwqDCoMKgIHsgLmNvbXBhdGlibGUgPSAic3Qsc3Rt
-MzItaXdkZyIgfSwKPj4gLcKgwqDCoCB7IC8qIGVuZCBub2RlICovIH0KPj4gLX07Cj4+IC1NT0RV
-TEVfREVWSUNFX1RBQkxFKG9mLCBzdG0zMl9pd2RnX29mX21hdGNoKTsKPj4gLQo+PiDCoCBzdGF0
-aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBzdG0zMl9pd2RnX2RyaXZlciA9IHsKPj4gwqDCoMKg
-wqDCoCAucHJvYmXCoMKgwqDCoMKgwqDCoCA9IHN0bTMyX2l3ZGdfcHJvYmUsCj4+IMKgwqDCoMKg
-wqAgLnJlbW92ZcKgwqDCoMKgwqDCoMKgID0gc3RtMzJfaXdkZ19yZW1vdmUsCj4+IMKgwqDCoMKg
-wqAgLmRyaXZlciA9IHsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgIC5uYW1lwqDCoMKgID0gIml3ZGci
-LAo+PiAtwqDCoMKgwqDCoMKgwqAgLm9mX21hdGNoX3RhYmxlID0gc3RtMzJfaXdkZ19vZl9tYXRj
-aCwKPj4gK8KgwqDCoMKgwqDCoMKgIC5vZl9tYXRjaF90YWJsZSA9IG9mX21hdGNoX3B0cihzdG0z
-Ml9pd2RnX29mX21hdGNoKSwKPj4gwqDCoMKgwqDCoCB9LAo+PiDCoCB9Owo+PiDCoCBtb2R1bGVf
-cGxhdGZvcm1fZHJpdmVyKHN0bTMyX2l3ZGdfZHJpdmVyKTsKPj4KPiAKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
-ZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi,
+
+On 6/20/2018 4:21 AM, Bjorn Andersson wrote:
+> On Tue 19 Jun 06:11 PDT 2018, Raju P L S S S N wrote:
+> 
+>> From: Lina Iyer <ilina@codeaurora.org>
+>>
+>> Add device binding documentation for Qualcomm Technology Inc's RPMH RSC
+>> driver. The driver is used for communicating resource state requests for
+>> shared resources.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> [rplsssn@codeaurora.org: minor order correction for TCS type]
+> 
+> In accordance with section 11 of
+> Documentation/process/submitting-patches.rst you must to add your
+> Signed-off-by tag at the end of this list.
+> 
+> Same on patch 3.
+
+Sure Bjorn. Thanks for review.
+
+
+> 
+> Regards,
+> Bjorn
+> 
+>> ---
+>> Changes in v8:
+>> 	- Describe IRQ for all DRVs
+>>
+>> Changes in v7:
+>> 	- Fix example
+>>
+>> Changes in v6:
+>> 	- Address comments from Stephen Boyd
+>>
+>> Changes in v3:
+>> 	- Move to soc/qcom
+>> 	- Amend text per Stephen's suggestions
+>>
+>> Changes in v2:
+>> 	- Amend text to describe the registers in reg property
+>> 	- Add reg-names for the registers
+>> 	- Update examples to use GIC_SPI in interrupts instead of 0
+>> 	- Rephrase incorrect description
+>>
+>> Changes in v3:
+>> 	- Fix unwanted capitalization
+>> 	- Remove clients from the examples, this doc does not describe
+>> 	  them
+>> 	- Rephrase introductory paragraph
+>> 	- Remove hardware specifics from DT bindings
+>> ---
+>>   .../devicetree/bindings/soc/qcom/rpmh-rsc.txt      | 137 +++++++++++++++++++++
+>>   1 file changed, 137 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+>> new file mode 100644
+>> index 0000000..9b86d1e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+>> @@ -0,0 +1,137 @@
+>> +RPMH RSC:
+>> +------------
+>> +
+>> +Resource Power Manager Hardened (RPMH) is the mechanism for communicating with
+>> +the hardened resource accelerators on Qualcomm SoCs. Requests to the resources
+>> +can be written to the Trigger Command Set (TCS)  registers and using a (addr,
+>> +val) pair and triggered. Messages in the TCS are then sent in sequence over an
+>> +internal bus.
+>> +
+>> +The hardware block (Direct Resource Voter or DRV) is a part of the h/w entity
+>> +(Resource State Coordinator a.k.a RSC) that can handle multiple sleep and
+>> +active/wake resource requests. Multiple such DRVs can exist in a SoC and can
+>> +be written to from Linux. The structure of each DRV follows the same template
+>> +with a few variations that are captured by the properties here.
+>> +
+>> +A TCS may be triggered from Linux or triggered by the F/W after all the CPUs
+>> +have powered off to facilitate idle power saving. TCS could be classified as -
+>> +
+>> +	ACTIVE  /* Triggered by Linux */
+>> +	SLEEP   /* Triggered by F/W */
+>> +	WAKE    /* Triggered by F/W */
+>> +	CONTROL /* Triggered by F/W */
+>> +
+>> +The order in which they are described in the DT, should match the hardware
+>> +configuration.
+>> +
+>> +Requests can be made for the state of a resource, when the subsystem is active
+>> +or idle. When all subsystems like Modem, GPU, CPU are idle, the resource state
+>> +will be an aggregate of the sleep votes from each of those subsystems. Clients
+>> +may request a sleep value for their shared resources in addition to the active
+>> +mode requests.
+>> +
+>> +Properties:
+>> +
+>> +- compatible:
+>> +	Usage: required
+>> +	Value type: <string>
+>> +	Definition: Should be "qcom,rpmh-rsc".
+>> +
+>> +- reg:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: The first register specifies the base address of the
+>> +		    DRV(s). The number of DRVs in the dependent on the RSC.
+>> +	            The tcs-offset specifies the start address of the
+>> +	            TCS in the DRVs.
+>> +
+>> +- reg-names:
+>> +	Usage: required
+>> +	Value type: <string>
+>> +	Definition: Maps the register specified in the reg property. Must be
+>> +	            "drv-0", "drv-1", "drv-2" etc and "tcs-offset". The
+>> +
+>> +- interrupts:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-interrupt>
+>> +	Definition: The interrupt that trips when a message complete/response
+>> +	           is received for this DRV from the accelerators.
+>> +
+>> +- qcom,drv-id:
+>> +	Usage: required
+>> +	Value type: <u32>
+>> +	Definition: The id of the DRV in the RSC block that will be used by
+>> +		    this controller.
+>> +
+>> +- qcom,tcs-config:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: The tuple defining the configuration of TCS.
+>> +	            Must have 2 cells which describe each TCS type.
+>> +	            <type number_of_tcs>.
+>> +	            The order of the TCS must match the hardware
+>> +	            configuration.
+>> +	- Cell #1 (TCS Type): TCS types to be specified -
+>> +	            ACTIVE_TCS
+>> +	            SLEEP_TCS
+>> +	            WAKE_TCS
+>> +	            CONTROL_TCS
+>> +	- Cell #2 (Number of TCS): <u32>
+>> +
+>> +- label:
+>> +	Usage: optional
+>> +	Value type: <string>
+>> +	Definition: Name for the RSC. The name would be used in trace logs.
+>> +
+>> +Drivers that want to use the RSC to communicate with RPMH must specify their
+>> +bindings as child nodes of the RSC controllers they wish to communicate with.
+>> +
+>> +Example 1:
+>> +
+>> +For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id of 2, the
+>> +register offsets for DRV2 start at 0D00, the register calculations are like
+>> +this -
+>> +DRV0: 0x179C0000
+>> +DRV2: 0x179C0000 + 0x10000 = 0x179D0000
+>> +DRV2: 0x179C0000 + 0x10000 * 2 = 0x179E0000
+>> +TCS-OFFSET: 0xD00
+>> +
+>> +	apps_rsc: rsc@179c0000 {
+>> +		label = "apps_rsc";
+>> +		compatible = "qcom,rpmh-rsc";
+>> +		reg = <0x179c0000 0x10000>,
+>> +		      <0x179d0000 0x10000>,
+>> +		      <0x179e0000 0x10000>;
+>> +		reg-names = "drv-0", "drv-1", "drv-2";
+>> +		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+>> +			     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+>> +			     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+>> +		qcom,tcs-offset = <0xd00>;
+>> +		qcom,drv-id = <2>;
+>> +		qcom,tcs-config = <ACTIVE_TCS  2>,
+>> +				  <SLEEP_TCS   3>,
+>> +				  <WAKE_TCS    3>,
+>> +				  <CONTROL_TCS 1>;
+>> +	};
+>> +
+>> +Example 2:
+>> +
+>> +For a TCS whose RSC base address is 0xAF20000 and is at DRV id of 0, the
+>> +register offsets for DRV0 start at 01C00, the register calculations are like
+>> +this -
+>> +DRV0: 0xAF20000
+>> +TCS-OFFSET: 0x1C00
+>> +
+>> +	disp_rsc: rsc@af20000 {
+>> +		label = "disp_rsc";
+>> +		compatible = "qcom,rpmh-rsc";
+>> +		reg = <0xaf20000 0x10000>;
+>> +		reg-names = "drv-0";
+>> +		interrupts = <GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>;
+>> +		qcom,tcs-offset = <0x1c00>;
+>> +		qcom,drv-id = <0>;
+>> +		qcom,tcs-config = <ACTIVE_TCS  0>,
+>> +				  <SLEEP_TCS   1>,
+>> +				  <WAKE_TCS    1>,
+>> +				  <CONTROL_TCS 0>;
+>> +	};
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+>>
