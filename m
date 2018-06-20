@@ -1,16 +1,11 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 4/5] arm64: dts: allwinner: h6: Use macros for R_CCU clock
- and reset indices
-Date: Wed, 20 Jun 2018 21:46:40 +0800
-Message-ID: <CAGb2v65XQ-=oWbxOre2eT+G14T=q+E3+hKd=J1YrpoHFo47MsA@mail.gmail.com>
-References: <20180620051540.25617-1-wens@csie.org>
- <20180620051540.25617-5-wens@csie.org>
- <f17d1d31905cd3276d257053b8ed632de941494c.camel@aosc.io>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH V3 0/3] add iwdg2 support for stm32mp157c
+Date: Wed, 20 Jun 2018 15:51:35 +0200
+Message-ID: <1529502698-13263-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <f17d1d31905cd3276d257053b8ed632de941494c.camel@aosc.io>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,56 +15,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Andre Przywara <andre.przywara@arm.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gMjAsIDIwMTggYXQgOToxMSBQTSwgSWNlbm93eSBaaGVuZyA8aWNlbm93eUBh
-b3NjLmlvPiB3cm90ZToKPiDlnKggMjAxOC0wNi0yMOS4ieeahCAxMzoxNSArMDgwMO+8jENoZW4t
-WXUgVHNhaeWGmemBk++8mgo+PiBOb3cgdGhhdCB0aGUgZGV2aWNlIHRyZWUgYmluZGluZyBoZWFk
-ZXJzIGZvciB0aGUgUl9DQ1UgaGF2ZSBiZWVuCj4+IG1lcmdlZCwKPj4gd2UgY2FuIHVzZSB0aGUg
-bWFjcm9zLCBpbnN0ZWFkIG9mIHJhdyBudW1iZXJzLgo+Pgo+PiBTd2l0Y2ggdG8gUl9DQ1UgbWFj
-cm9zIGZvciBjbG9jayBhbmQgcmVzZXQgaW5kaWNlcy4KPj4KPj4gU2lnbmVkLW9mZi1ieTogQ2hl
-bi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3JnPgo+PiAtLS0KPj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMv
-YWxsd2lubmVyL3N1bjUwaS1oNi5kdHNpIHwgOSArKysrKystLS0KPj4gIDEgZmlsZSBjaGFuZ2Vk
-LCA2IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9hcmNo
-L2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5lci9zdW41MGktaDYuZHRzaQo+PiBiL2FyY2gvYXJtNjQv
-Ym9vdC9kdHMvYWxsd2lubmVyL3N1bjUwaS1oNi5kdHNpCj4+IGluZGV4IGM3MmRhOGNkOWVmNS4u
-ZDg1MDcwZjhjNGEyIDEwMDY0NAo+PiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5l
-ci9zdW41MGktaDYuZHRzaQo+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5lci9z
-dW41MGktaDYuZHRzaQo+PiBAQCAtNSw3ICs1LDkgQEAKPj4KPj4gICNpbmNsdWRlIDxkdC1iaW5k
-aW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hcm0tZ2ljLmg+Cj4+ICAjaW5jbHVkZSA8ZHQtYmlu
-ZGluZ3MvY2xvY2svc3VuNTBpLWg2LWNjdS5oPgo+PiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2Ns
-b2NrL3N1bjUwaS1oNi1yLWNjdS5oPgo+PiAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL3Jlc2V0L3N1
-bjUwaS1oNi1jY3UuaD4KPj4gKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9yZXNldC9zdW41MGktaDYt
-ci1jY3UuaD4KPj4KPj4gIC8gewo+PiAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZnaWM+Owo+
-PiBAQCAtMTk4LDcgKzIwMCw3IEBACj4+ICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgw
-NzAyMjAwMCAweDQwMD47Cj4+ICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJ
-Q19TUEkgMTA1Cj4+IElSUV9UWVBFX0xFVkVMX0hJR0g+LAo+PiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIDxHSUNfU1BJIDExMQo+PiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPj4g
-LSAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmcl9jY3UgMj4sIDwmb3NjMjRNPiwgPCZv
-c2MzMms+Owo+PiArICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZyX2NjdSBDTEtfUl9B
-UEIxPiwgPCZvc2MyNE0+LAo+PiA8Jm9zYzMyaz47Cj4+ICAgICAgICAgICAgICAgICAgICAgICBj
-bG9jay1uYW1lcyA9ICJhcGIiLCAiaG9zYyIsICJsb3NjIjsKPj4gICAgICAgICAgICAgICAgICAg
-ICAgIGdwaW8tY29udHJvbGxlcjsKPj4gICAgICAgICAgICAgICAgICAgICAgICNncGlvLWNlbGxz
-ID0gPDM+Owo+PiBAQCAtMjA4LDYgKzIxMCw3IEBACj4+ICAgICAgICAgICAgICAgICAgICAgICBy
-X2kyY19waW5zOiByLWkyYyB7Cj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBpbnMg
-PSAiUEwwIiwgIlBMMSI7Cj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZ1bmN0aW9u
-ID0gInNfaTJjIjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYmlhcy1wdWxsLXVw
-Owo+Cj4gU2hvdWxkIHRoaXMgYmUgaW5jbHVkZWQgaW4gdGhpcyBwYXRjaD8KCk9vcHMuIEknbGwg
-cmVtb3ZlIGl0IGVpdGhlciBpbiB0aGUgbmV4dCB2ZXJzaW9uLCBvciBpZiBldmVyeXRoaW5nCmVs
-c2UgY2hlY2tzIG91dCwgd2hlbiBhcHBseWluZy4KClRoYW5rcyEKQ2hlbll1Cgo+Cj4+ICAgICAg
-ICAgICAgICAgICAgICAgICB9Owo+PiAgICAgICAgICAgICAgIH07Cj4+Cj4+IEBAIC0yMTUsOCAr
-MjE4LDggQEAKPj4gICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYWxsd2lubmVy
-LHN1bjZpLWEzMS1pMmMiOwo+PiAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MDcwODE0
-MDAgMHg0MDA+Owo+PiAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJ
-IDEwNwo+PiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPj4gLSAgICAgICAgICAgICAgICAgICAgIGNs
-b2NrcyA9IDwmcl9jY3UgOD47Cj4+IC0gICAgICAgICAgICAgICAgICAgICByZXNldHMgPSA8JnJf
-Y2N1IDQ+Owo+PiArICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZyX2NjdSBDTEtfUl9B
-UEIyX0kyQz47Cj4+ICsgICAgICAgICAgICAgICAgICAgICByZXNldHMgPSA8JnJfY2N1IFJTVF9S
-X0FQQjJfSTJDPjsKPj4gICAgICAgICAgICAgICAgICAgICAgIHBpbmN0cmwtbmFtZXMgPSAiZGVm
-YXVsdCI7Cj4+ICAgICAgICAgICAgICAgICAgICAgICBwaW5jdHJsLTAgPSA8JnJfaTJjX3BpbnM+
-Owo+PiAgICAgICAgICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwg
-bWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+From: Ludovic Barre <ludovic.barre@st.com>
+
+This patch series updates stm32_iwdg driver to manage config
+by compatible. stm32mp1 config requires a pclk clock.
+
+v3:
+-remove stm32_iwdg_config structure, just assign the
+ boolean directly to .dat
+
+Ludovic Barre (3):
+  watchdog: stm32: add pclk feature for stm32mp1
+  ARM: dts: stm32: add iwdg2 support for stm32mp157c
+  ARM: dts: stm32: add iwdg2 support for stm32mp157c-ed1
+
+ .../devicetree/bindings/watchdog/st,stm32-iwdg.txt |  21 +++-
+ arch/arm/boot/dts/stm32mp157c-ed1.dts              |   5 +
+ arch/arm/boot/dts/stm32mp157c.dtsi                 |   8 ++
+ drivers/watchdog/stm32_iwdg.c                      | 116 +++++++++++++--------
+ 4 files changed, 104 insertions(+), 46 deletions(-)
+
+-- 
+2.7.4
