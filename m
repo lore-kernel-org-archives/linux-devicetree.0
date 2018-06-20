@@ -1,70 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: iio: light: add ISL29033 device
- bindings
-Date: Wed, 20 Jun 2018 09:58:15 -0600
-Message-ID: <20180620155815.GA10569@rob-hp-laptop>
-References: <20180613140043.5802-1-borys.movchan@axis.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 02/19] dt-bindings: sram: sunxi: Add A10
+ binding for the C1 SRAM region
+Date: Wed, 20 Jun 2018 09:59:33 -0600
+Message-ID: <20180620155933.GA19227@rob-hp-laptop>
+References: <20180618145843.14631-1-paul.kocialkowski@bootlin.com>
+ <20180618145843.14631-3-paul.kocialkowski@bootlin.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERB2HTVHMQKGQEIY7QAVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180613140043.5802-1-borys.movchan@axis.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Borys Movchan <borys.movchan@axis.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Borys Movchan <borysmn@axis.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+In-Reply-To: <20180618145843.14631-3-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tom Saeger <tom.saeger-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stanimir
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2018 at 04:00:15PM +0200, Borys Movchan wrote:
-> From: Borys Movchan <borysmn@axis.com>
-
-Commit msg missing
-
+On Mon, Jun 18, 2018 at 04:58:26PM +0200, Paul Kocialkowski wrote:
+> This introduces a dedicated binding for the C1 SRAM region for the A10
+> sunxi platform.
 > 
-> Signed-off-by: Borys Movchan <borys.movchan@axis.com>
-> ---
->  .../devicetree/bindings/iio/light/isl29033.txt         | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/isl29033.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/light/isl29033.txt b/Documentation/devicetree/bindings/iio/light/isl29033.txt
-> new file mode 100644
-> index 000000000000..988e40acc6ed
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/isl29033.txt
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
-Preferred name if there only one compatible is the full compatible 
-string plus '.txt'.
-
-> @@ -0,0 +1,18 @@
-> +Intersil ISL29033 Ultra-Low Lux, Low Power, Integrated Digital Ambient Light Sensor
-> +
-> +Required properties:
-> +  - compatible : Must be "isil,isl29033".
-> +  - reg: the I2C address of the device
-> +
-> +Optional properties:
-> +  - isil,rext-kohms: External resistor nominal in kOhms used for ADC
-> +    reference. If not specified, 499 kOhm value will be used.
-
--ohms and -micro-ohms are the documented units. Please use '-ohms' 
-unless there is a compelling reason not to.
-
-> +
-> +Example:
-> +
-> +        als_sensor@44 {
-
-light-sensor is the documented node name for ALSs.
-
-> +            compatible = "isil,isl29033";
-> +            reg = <0x44>;
-> +            isil,rext-kohms = <1000>;
-> +        };
-> +
-> -- 
-> 2.11.0
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
