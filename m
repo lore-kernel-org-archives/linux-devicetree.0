@@ -1,52 +1,62 @@
-From: Nick Dyer <nick@shmanahar.org>
-Subject: [PATCH v5] ARM: dts: imx51-zii-rdu1: fix touchscreen pinctrl
-Date: Thu, 21 Jun 2018 19:10:00 +0100
-Message-ID: <20180621181000.12687-1-nick@shmanahar.org>
-References: <CAFXsbZr-HJE54c0BC5=d1tStByA5ytGhSSZMirNKE03JzGCDXQ@mail.gmail.com>
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <CAFXsbZr-HJE54c0BC5=d1tStByA5ytGhSSZMirNKE03JzGCDXQ@mail.gmail.com>
-Sender: stable-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Nick Dyer <nick@shmanahar.org>, stable@vger.kernel.org
+From: Thor Thayer <thor.thayer@linux.intel.com>
+Subject: Re: [PATCH 2/2] arm64: dts: stratix10: Add SPI clocks for Stratix10
+Date: Thu, 21 Jun 2018 13:25:08 -0500
+Message-ID: <69d83030-efdc-ff16-a55c-3f0549ca29b6@linux.intel.com>
+References: <1527617612-2205-1-git-send-email-thor.thayer@linux.intel.com>
+ <1527617612-2205-2-git-send-email-thor.thayer@linux.intel.com>
+Reply-To: thor.thayer@linux.intel.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1527617612-2205-2-git-send-email-thor.thayer@linux.intel.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: dinguyen@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The pinctrl settings were incorrect for the touchscreen interrupt line, causing
-an interrupt storm. This change has been tested with both the atmel_mxt_ts and
-RMI4 drivers on the RDU1 units.
+Hi Dinh,
 
-The value 0x4 comes from the value of register IOMUXC_SW_PAD_CTL_PAD_CSI1_D8
-from the old vendor kernel.
-
-Signed-off-by: Nick Dyer <nick@shmanahar.org>
-Fixes: ceef0396f367 ("ARM: dts: imx: add ZII RDU1 board")
-Cc: <stable@vger.kernel.org> # 4.15+
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
-Tested-by: Chris Healy <cphealy@gmail.com>
----
-Changes in v5:
-- Add tested by Chris Healy
-Changes in v4:
-- Add reviewed by Fabio
-Changes in v3:
-- Update commit message to add source of 0x4 value, fixes tag and CC stable
-Changes in v2:
-- Use hex, only alter IRQ line config
-
- arch/arm/boot/dts/imx51-zii-rdu1.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-index df9eca94d812..8a878687197b 100644
---- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
-+++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-@@ -770,7 +770,7 @@
- 
- 	pinctrl_ts: tsgrp {
- 		fsl,pins = <
--			MX51_PAD_CSI1_D8__GPIO3_12		0x85
-+			MX51_PAD_CSI1_D8__GPIO3_12		0x04
- 			MX51_PAD_CSI1_D9__GPIO3_13		0x85
- 		>;
- 	};
--- 
-2.17.1
+On 05/29/2018 01:13 PM, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
+> 
+> Add the SPI clocks to the Stratix10 device tree.
+> 
+> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+> ---
+>   arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> index 47fa4b450324..34658f135daf 100644
+> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> @@ -316,6 +316,8 @@
+>   			resets = <&rst SPIM0_RESET>;
+>   			reg-io-width = <4>;
+>   			num-cs = <4>;
+> +			clocks = <&clkmgr STRATIX10_L4_MAIN_CLK>,
+> +				 <&clkmgr STRATIX10_SPI_M_CLK>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -328,6 +330,8 @@
+>   			resets = <&rst SPIM1_RESET>;
+>   			reg-io-width = <4>;
+>   			num-cs = <4>;
+> +			clocks = <&clkmgr STRATIX10_L4_MAIN_CLK>,
+> +				 <&clkmgr STRATIX10_SPI_M_CLK>;
+>   			status = "disabled";
+>   		};
+>   
+> 
+Any comments on this patch?
