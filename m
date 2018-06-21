@@ -1,48 +1,69 @@
-From: Thor Thayer <thor.thayer@linux.intel.com>
-Subject: Re: [PATCH 1/2] ARM: dts: Fix SPI node for Arria10
-Date: Thu, 21 Jun 2018 13:27:26 -0500
-Message-ID: <7dee7b62-5473-d107-dc18-b2638b7aace5@linux.intel.com>
-References: <1527617319-1936-1-git-send-email-thor.thayer@linux.intel.com>
-Reply-To: thor.thayer@linux.intel.com
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/2] drm/panel: Augment the TPO TPG110 bindings
+Date: Thu, 21 Jun 2018 20:49:41 +0200
+Message-ID: <20180621184942.26087-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1527617319-1936-1-git-send-email-thor.thayer@linux.intel.com>
-Content-Language: en-US
-Sender: stable-owner@vger.kernel.org
-To: dinguyen@kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dinh,
-
-On 05/29/2018 01:08 PM, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
-> 
-> Remove the unused bus-num node and change num-chipselect
-> to num-cs to match SPI bindings.
-> 
-> Fixes: f2d6f8f817814 ("ARM: dts: socfpga: Add SPI Master1 for Arria10 SR chip")
-> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-> Cc: stable@vger.kernel.org
-> ---
->   arch/arm/boot/dts/socfpga_arria10.dtsi | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-> index bead79e4b2aa..9138f834bad4 100644
-> --- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-> +++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-> @@ -593,8 +593,7 @@
->   			#size-cells = <0>;
->   			reg = <0xffda5000 0x100>;
->   			interrupts = <0 102 4>;
-> -			num-chipselect = <4>;
-> -			bus-num = <0>;
-> +			num-cs = <4>;
->   			/*32bit_access;*/
->   			tx-dma-channel = <&pdma 16>;
->   			rx-dma-channel = <&pdma 17>;
-> 
-Any update on this patch?
+VGhlIFRQTyBUUEcxMTAgYmluZGluZ3Mgd2VyZSB1c2luZyB0aGUgRFBJIGJpbmRpbmdzIChwb3B1
+bGFyCmluIHRoZSBmYmRldiBzdWJzeXN0ZW0pIGJ1dCB0aGlzIG1pc3NlcyB0aGUgZmluZXIgcG9p
+bnRzCmxlYXJuZWQgaW4gdGhlIERSTSBzdWJzeXN0ZW0uCgpXZSBuZWVkIHRvIGF1Z21lbnQgdGhl
+IGJpbmRpbmdzIGZvciBwcm9wZXIgRFJNIGludGVncmF0aW9uOgp0aGUgdGltaW5ncyBhcmUgZXhw
+cmVzc2VkIGJ5IHRoZSBoYXJkd2FyZSwgbm90IHB1dCBpbnRvIHRoZQpkZXZpY2UgdHJlZS4KCk9s
+ZCBkZXZpY2UgdHJlZXMgd2l0aCB0aGUgRFBJIGluZm8gd2lsbCBjb250aW51ZSB0byB3b3JrLApi
+dXQgbm8ga25vd24gZGVwbG95bWVudHMgZXhpc3QuCgpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmcKU2lnbmVkLW9mZi1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8u
+b3JnPgotLS0KIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Rwbyx0cGcxMTAudHh0ICAgICB8
+IDM0ICsrKysrKysrLS0tLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCsp
+LCAyMCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9wYW5lbC90cG8sdHBnMTEwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Rwbyx0cGcxMTAudHh0CmluZGV4IGY1ZTNj
+NmYyMDk1YS4uMGU5MTgwNzZkNTVlIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC90cG8sdHBnMTEwLnR4dAorKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC90cG8sdHBnMTEwLnR4dApAQCAt
+MSwyNiArMSwzMiBAQAogVFBPIFRQRzExMCBQYW5lbAogPT09PT09PT09PT09PT09PQogCi1UaGlz
+IGJpbmRpbmcgYnVpbGRzIG9uIHRoZSBEUEkgYmluZGluZ3MsIGFkZGluZyBhIGZldyBwcm9wZXJ0
+aWVzCi1hcyBhIHN1cGVyc2V0IG9mIGEgRFBJLiBTZWUgcGFuZWwtZHBpLnR4dCBmb3IgdGhlIHJl
+cXVpcmVkIERQSQotYmluZGluZ3MuCitUaGlzIHBhbmVsIGRyaXZlciBjYW4gZHJpdmVyIGEgdmFy
+aWV0eSBvZiBwYW5lbHMuIEl0IHJlcXVpcmVzCithIGZldyBHUElPIGxpbmVzIGZvciBjb250cm9s
+IG9mIGl0cyByZXNldCBsaW5lIGFuZCBjdXN0b20gc2VyaWFsCitwcm90b2NvbC4KIAogUmVxdWly
+ZWQgcHJvcGVydGllczoKLS0gY29tcGF0aWJsZSA6ICJ0cG8sdHBnMTEwIgorLSBjb21wYXRpYmxl
+IDogb25lIG9mOgorICAic3RlLG5vbWFkaWstbmhrMTUtZGlzcGxheSIsICJ0cG8sdHBnMTEwIgor
+ICAidHBvLHRwZzExMCIKIC0gZ3Jlc3RiLWdwaW9zIDogcGFuZWwgcmVzZXQgR1BJTwogLSBzY2Vu
+LWdwaW9zIDogc2VyaWFsIGNvbnRyb2wgZW5hYmxlIEdQSU8KIC0gc2NsLWdwaW9zIDogc2VyaWFs
+IGNvbnRyb2wgY2xvY2sgbGluZSBHUElPCiAtIHNkYS1ncGlvcyA6IHNlcmlhbCBjb250cm9sIGRh
+dGEgbGluZSBHUElPCistIHdpZHRoLW1tIDogc2VlIGRpc3BsYXkvcGFuZWwvcGFuZWwtY29tbW9u
+LnR4dAorLSBoZWlnaHQtbW0gOiBzZWUgZGlzcGxheS9wYW5lbC9wYW5lbC1jb21tb24udHh0CiAK
+LVJlcXVpcmVkIG5vZGVzOgotLSBWaWRlbyBwb3J0IGZvciBEUEkgaW5wdXQsIHNlZSBwYW5lbC1k
+cGkudHh0Ci0tIFBhbmVsIHRpbWluZyBmb3IgRFBJIHNldHVwLCBzZWUgcGFuZWwtZHBpLnR4dAor
+VGhlIGRldmljZSBub2RlIGNhbiBjb250YWluIG9uZSAncG9ydCcgY2hpbGQgbm9kZSB3aXRoIG9u
+ZSBjaGlsZAorJ2VuZHBvaW50JyBub2RlLCBhY2NvcmRpbmcgdG8gdGhlIGJpbmRpbmdzIGRlZmlu
+ZWQgaW4KK21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0LiBUaGlzIG5vZGUgc2hvdWxkIGRlc2Ny
+aWJlIHBhbmVsJ3MgdmlkZW8gYnVzLgogCiBFeGFtcGxlCiAtLS0tLS0tCiAKIHBhbmVsIHsKLQlj
+b21wYXRpYmxlID0gInRwbyx0cGcxMTAiLCAicGFuZWwtZHBpIjsKKwljb21wYXRpYmxlID0gInRw
+byx0cGcxMTAiOworCXdpZHRoLW1tID0gPDExNj47CisJaGVpZ2h0LW1tID0gPDg3PjsKIAlncmVz
+dGItZ3Bpb3MgPSA8JnN0bXBlX2dwaW80NCA1IEdQSU9fQUNUSVZFX0xPVz47CiAJc2Nlbi1ncGlv
+cyA9IDwmZ3BpbzAgNiBHUElPX0FDVElWRV9MT1c+OwogCXNjbC1ncGlvcyA9IDwmZ3BpbzAgNSBH
+UElPX0FDVElWRV9ISUdIPjsKQEAgLTMyLDE2ICszOCw0IEBAIHBhbmVsIHsKIAkJCXJlbW90ZS1l
+bmRwb2ludCA9IDwmbm9tYWRpa19jbGNkX3BhZHM+OwogCQl9OwogCX07Ci0KLQlwYW5lbC10aW1p
+bmcgewotCQljbG9jay1mcmVxdWVuY3kgPSA8MzMyMDAwMDA+OwotCQloYWN0aXZlID0gPDgwMD47
+Ci0JCWhiYWNrLXBvcmNoID0gPDIxNj47Ci0JCWhmcm9udC1wb3JjaCA9IDw0MD47Ci0JCWhzeW5j
+LWxlbiA9IDwxPjsKLQkJdmFjdGl2ZSA9IDw0ODA+OwotCQl2YmFjay1wb3JjaCA9IDwzNT47Ci0J
+CXZmcm9udC1wb3JjaCA9IDwxMD47Ci0JCXZzeW5jLWxlbiA9IDwxPjsKLQl9OwogfTsKLS0gCjIu
+MTcuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
