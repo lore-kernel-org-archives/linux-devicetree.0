@@ -1,92 +1,167 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v6 0/6] mtd: rawnand: add NVIDIA Tegra NAND flash support
-Date: Thu, 21 Jun 2018 22:31:39 +0200
-Message-ID: <20180621203145.7628-1-stefan@agner.ch>
+From: William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [PATCH v7 00/10] Introduce the Counter subsystem
+Date: Thu, 21 Jun 2018 17:06:46 -0400
+Message-ID: <cover.1529607879.git.vilhelm.gray@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com
-Cc: dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+To: gregkh@linuxfoundation.org
+Cc: jic23@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, fabrice.gasnier@st.com, benjamin.gaignard@st.com, robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, William Breathitt Gray <vilhelm.gray@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This sixth revision only removes extra OOB byte support when using
-HW ECC. The previous implementation did place the ECC bytes at a
-different location depending on whether extra OOB bytes were written.
-This does not work well with the MTD subsystem. Since UBI/UBIFS does
-not require extra OOB bytes I descided to not provide extra OOB
-support for now.
+Changes in v7:
+ - Use git-format-patch "-M" switch option to format renames properly
+   (apologies to Jonathan for reviewing delete/add pairs in past revs)
+ - Remove superfluous license boilerplate in favor of SPDX lines
+ - Rename functions to match <noun>_<action> naming convention; e.g.
+   signal_read_value_set, count_read_value_set, etc.
+ - Rename COUNT_POSITION_UNSIGNED to COUNT_POSITION, and remove
+   COUNT_POSITION_SIGNED
+ - Inline local variables that are only used once
+ - Remove COUNT_FUNCTION_QUADRATURE_X2_RISING and
+   COUNT_FUNCTION_QUADRATURE_X2_FALLING; these can be reintroduced when
+   a practical use-case is determined
+ - Explicitly free allocated attribute pointers on error in
+   counter_device_groups_prepare
+ - Remove pretty tab alignment for symbol declarations in counter.h
+ - Fix kernel-doc syntax typos ("groups_list" and "groups" missing ':')
+ - Clarify in kernel-doc comments the use of "val" parameter for the
+   signal_read, count_read, and count_write callbacks
+ - Cleanup Generic Counter attributes documentation (explain preset
+   registers, remove superfluous text, etc.)
+ - Cleanup Generic Counter driver API documentation (improve formatting
+   by reorganizing options into intended sections, fix typos, etc.)
+ - Utilize register defines to remove dependence on magic numbers in
+   104-QUAD-8 counter driver
+ - Update Kconfig description for the 104-QUAD-8 counter driver to
+   describe its Generic Counter interface
+ - Remove "mode" wording from STM32 Timer dt-bindings documentation;
+   STM32 Timer features a proper quadrature encoder counter device
+ - Fix typo in STM32 Timer documentation: IN1/IN2 pins are CH1/CH2 pins
 
---
-Stefan
+Hi Greg,
 
-Changes since v1:
-- Split controller and NAND chip structure
-- Add BCH support
-- Allow to select algorithm and strength using device tree
-- Improve HW ECC error reporting and use DEC_STATUS_BUF only
-- Use SPDX license identifier
-- Use per algorithm mtd_ooblayout_ops
-- Use setup_data_interface callback for NAND timing configuration
+This patchset is stabilizing so I hope you can take a look over it and
+advise. This patchset introduces the Counter subsystem and the Generic
+Counter driver API.
 
-Changes since v2:
-- Set clock rate using assigned-clocks
-- Use BIT() macro
-- Fix and improve timing calculation
-- Improve ECC error handling
-- Store OOB layout for tag area in Tegra chip structure
-- Update/fix bindings
-- Use more specific variable names (replace "value")
-- Introduce nand-is-boot-medium
-- Choose sensible ECC strenght automatically
-- Use wait_for_completion_timeout
-- Print register dump on completion timeout
-- Unify tegra_nand_(read|write)_page in tegra_nand_page_xfer
+Last year, the STM32 LPTimer IIO driver authored by Fabrice Gasnier
+opened up a discussion about the architecture of the IIO Counter
+interface. The IIO Counter interface was developed to provide support
+for the 104-QUAD-8 IIO driver -- several new IIO attributes were
+implemented to support the functionality of the 104-QUAD-8 device. When
+the STM32 LPTimer IIO driver was introduced, it too attempted to utilize
+the IIO Counter interface to support the counter functionality of the
+STM32 LPTimer device.
 
-Changes since v3:
-- Implement tegra_nand_(read|write)_raw using DMA
-- Implement tegra_nand_(read|write)_oob using DMA
-- Name registers according to Tegra 2 Technical Reference Manual (v02p)
-- Use wait_for_completion_io_timeout to account for IO
-- Get chip select id from device tree reg property
-- Clear interrupts and reinit wait queues in case command/DMA times out
-- Set default MTD name after nand_set_flash_node
-- Move MODULE_DEVICE_TABLE after declaration of tegra_nand_of_match
-- Make (rs|bch)_strength static
+However, there were some difficulties with the IIO Counter interface.
+For example, the 104-QUAD-8 device features a pulse-direction counter
+and quadrature encoder counter (which can be toggled via the
+quadrature_mode attribute), as well as three quadrature encoder modes
+(x1, x2, and x4) which are set via the existing IIO scale attribute.
+While this method works for the 104-QUAD-8, the STM32 LPTimer featured a
+slightly different Quadrature x2 mode with different state machine
+behavior -- as such there is ambiguity over what behavior "quadrature
+x2" represents in the IIO Counter interface.
 
-Changes since v4:
-- Pass OOB area to nand_check_erased_ecc_chunk
-- Pass algorithm specific bits_per_step to tegra_nand_get_strength
-- Store ECC layout in chip structure
-- Fix pointer assignment (use NULL)
-- Removed obsolete header delay.h
-- Fixed newlines
-- Use non-_io variant of wait_for_completion_timeout
+I decided to strip down these devices to arrive at the core essence of
+what constitutes a "counter device" and therefore design a "generic
+counter" abstraction to better represent these devices and prevent the
+ambiguity we discovered with the existing IIO Counter interface. This
+abstraction became the Generic Counter paradigm, which is explained in
+detail within the Documentation/driver-api/generic-counter.rst file
+introduced by this patchset.
 
-Changes since v5:
-- Drop extra OOB bytes support
+Initially we attempted to further extend the IIO Counter interface in
+order to integrate the Generic Counter API as part of the IIO subsystem,
+but the outcome wasn't as clean as we desired. The results of our
+efforts proved to grow increasingly complicated, sparsed with hacks, and
+more often than not fought with the IIO subsystem rather than
+complemented it. I decided to separate the Generic Counter API from the
+IIO subsystem, and give it its own Counter subsystem in which to reside.
+This allowed us to streamline development and avoid jeopardizing the
+integrity of the IIO subsystem (we no longer have to bend the IIO API to
+support our needs, but can instead implement the necessary
+functionalities in the Counter subsystem as required).
 
-Lucas Stach (1):
-  ARM: dts: tegra: add Tegra20 NAND flash controller node
+The Counter subsystem has three consuming drivers thus far: two ported
+from the IIO subsystem (104-QUAD-8 and STM32 LPTimer counter) and one
+unique to the Counter subsystem (STM32 Timer counter). In userspace, the
+Generic Counter interface is rather intuitive:
 
-Stefan Agner (5):
-  mtd: rawnand: add Reed-Solomon error correction algorithm
-  mtd: rawnand: add an option to specify NAND chip as a boot device
-  mtd: rawnand: tegra: add devicetree binding
-  mtd: rawnand: add NVIDIA Tegra NAND Flash controller driver
-  ARM: dts: tegra: enable NAND flash on Colibri T20
+    * /sys/bus/counter/devices/
+      - enumerated directories for counter devices
+    * /sys/bus/counter/devices/counterX/
+      - attributes for counterX where X is the enumeration ID
+    * /sys/bus/counter/devices/counterX/signalY
+      - attributes for signal Y where Y is the enumeration ID
+    * /sys/bus/counter/devices/counterX/countY
+      - attributes for count Y where Y is the enumeration ID
 
- .../devicetree/bindings/mtd/nand.txt          |    6 +-
- .../bindings/mtd/nvidia-tegra20-nand.txt      |   64 +
- MAINTAINERS                                   |    7 +
- arch/arm/boot/dts/tegra20-colibri-512.dtsi    |   16 +
- arch/arm/boot/dts/tegra20.dtsi                |   15 +
- drivers/mtd/nand/raw/Kconfig                  |    6 +
- drivers/mtd/nand/raw/Makefile                 |    1 +
- drivers/mtd/nand/raw/nand_base.c              |    4 +
- drivers/mtd/nand/raw/tegra_nand.c             | 1225 +++++++++++++++++
- include/linux/mtd/rawnand.h                   |    7 +
- 10 files changed, 1350 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
- create mode 100644 drivers/mtd/nand/raw/tegra_nand.c
+Although at this point the Counter subsystem is functionally separate
+from the IIO subsystem, I believe it would be prudent to merge this
+introduction patchset via the IIO tree due to the historical context of
+these counter drivers and the development of this patchset. Are there
+any additions or changes you believe I should make to this patchset
+going forward?
+
+Sincerely,
+
+William Breathitt Gray
+
+Benjamin Gaignard (2):
+  counter: Add STM32 Timer quadrature encoder
+  dt-bindings: counter: Document stm32 quadrature encoder
+
+Fabrice Gasnier (2):
+  counter: stm32-lptimer: add counter device
+  dt-bindings: counter: Adjust dt-bindings for STM32 lptimer move
+
+William Breathitt Gray (6):
+  counter: Introduce the Generic Counter interface
+  counter: Documentation: Add Generic Counter sysfs documentation
+  docs: Add Generic Counter interface documentation
+  counter: 104-quad-8: Add Generic Counter interface support
+  counter: 104-quad-8: Documentation: Add Generic Counter sysfs
+    documentation
+  iio: counter: Add deprecation markings for IIO Counter attributes
+
+ Documentation/ABI/testing/sysfs-bus-counter   |  230 +++
+ .../ABI/testing/sysfs-bus-counter-104-quad-8  |   36 +
+ Documentation/ABI/testing/sysfs-bus-iio       |    8 +
+ .../testing/sysfs-bus-iio-counter-104-quad-8  |   16 +
+ .../{iio => }/counter/stm32-lptimer-cnt.txt   |    0
+ .../bindings/counter/stm32-timer-cnt.txt      |   31 +
+ .../devicetree/bindings/mfd/stm32-lptimer.txt |    2 +-
+ .../devicetree/bindings/mfd/stm32-timers.txt  |    7 +
+ Documentation/driver-api/generic-counter.rst  |  342 ++++
+ Documentation/driver-api/index.rst            |    1 +
+ MAINTAINERS                                   |   14 +-
+ drivers/Kconfig                               |    2 +
+ drivers/Makefile                              |    1 +
+ drivers/{iio => }/counter/104-quad-8.c        |  782 ++++++++-
+ drivers/counter/Kconfig                       |   59 +
+ drivers/{iio => }/counter/Makefile            |    6 +-
+ drivers/counter/generic-counter.c             | 1519 +++++++++++++++++
+ drivers/{iio => }/counter/stm32-lptimer-cnt.c |  361 +++-
+ drivers/counter/stm32-timer-cnt.c             |  390 +++++
+ drivers/iio/Kconfig                           |    1 -
+ drivers/iio/Makefile                          |    1 -
+ drivers/iio/counter/Kconfig                   |   34 -
+ include/linux/counter.h                       |  534 ++++++
+ 23 files changed, 4292 insertions(+), 85 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-counter
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
+ rename Documentation/devicetree/bindings/{iio => }/counter/stm32-lptimer-cnt.txt (100%)
+ create mode 100644 Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+ create mode 100644 Documentation/driver-api/generic-counter.rst
+ rename drivers/{iio => }/counter/104-quad-8.c (44%)
+ create mode 100644 drivers/counter/Kconfig
+ rename drivers/{iio => }/counter/Makefile (52%)
+ create mode 100644 drivers/counter/generic-counter.c
+ rename drivers/{iio => }/counter/stm32-lptimer-cnt.c (48%)
+ create mode 100644 drivers/counter/stm32-timer-cnt.c
+ delete mode 100644 drivers/iio/counter/Kconfig
+ create mode 100644 include/linux/counter.h
 
 -- 
 2.17.1
