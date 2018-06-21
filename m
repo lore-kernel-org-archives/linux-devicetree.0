@@ -1,200 +1,90 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 0/5] RFC: Mezzanine handling for 96boards
-Date: Thu, 21 Jun 2018 06:02:44 -0700
-Message-ID: <174ecf08-7665-8183-07b4-790bdfcf5662@gmail.com>
-References: <20180618074556.6944-1-linus.walleij@linaro.org>
- <CAL_JsqK2DKPbaFvUPSU2E7oh1_pryrRXPMg8OASmK722jmznwA@mail.gmail.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH V3 1/7] backlight: qcom-wled: Rename pm8941-wled.c to
+ qcom-wled.c
+Date: Thu, 21 Jun 2018 14:05:59 +0100
+Message-ID: <20180621130559.smwwh4qsjswmrorc@holly.lan>
+References: <1529406822-15379-1-git-send-email-kgunda@codeaurora.org>
+ <1529406822-15379-2-git-send-email-kgunda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqK2DKPbaFvUPSU2E7oh1_pryrRXPMg8OASmK722jmznwA@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Michal Simek <michal.simek@xilinx.com>, dev@lists.96boards.org, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Andy Shevchenko <andy@infradead.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1529406822-15379-2-git-send-email-kgunda@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kiran Gunda <kgunda@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, b.zolnierkie@samsung.com, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, bjorn.andersson@linaro.org, Rob Herring <robh+dt@kernel.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, linux-arm-msm@vger.kernel.org, lee.jones@linaro.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/19/18 08:52, Rob Herring wrote:
-> On Mon, Jun 18, 2018 at 1:45 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
->> This is a proposal for how to handle the non-discoverable
->> 96boards plug-in expansion boards called "mezzanines" in the
->> Linux kernel. It is a working RFC series meant for discussion
->> at the moment.
->>
->> The RFC was done on the brand new Ultra96 board from Xilinx
->> with a Secure96 mezzanine expansion board. The main part
->> is in patch 4, the rest is enabling and examples.
->>
->> The code can be obtained from here:
->> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-integrator.git/log/?h=ultra96
->>
->> You can for example probably augment the DTS file for any
->> upstream-supported 96board and get the Secure96 going with
->> it with minor efforts.
->>
->> TODO:
->>
->> - Proper device tree bindings for the connector, for now
->>   look at the example.
->>
->> - Discuss whether to actually do this or just take it all and
->>   flush it down the drain because the community doesn't like
->>   it. I'm not one of those especially infatuated with my own code,
->>   I always stay by the old programming project management mantra
->>   to calculate to make one version and throw it away as stepping
->>   stone to a good final design.
->>
->> - Placement: putting this in drivers/bus is just an example.
->>   drivers/platform/96boards-mezzanines is fine too, maybe better?
->>
->> - I am especially curious about input from Andy and Mika from
->>   the Intel/ACPI camp on what they have seen for non-discoverable
->>   plug-in boards. Does this problem even exist in the Intel
->>   world, or not...
->>
->> Background:
->>
->> - These boards connect on a custom connector on this family
->>   of boards. The relationship is many-to-many with the connector
->>   as nexus. The electronic standard for the connector is specified:
->>   https://github.com/96boards/documentation/blob/master/Specifications/96Boards-CE-Specification.pdf
->>   Example mezzanines:
->>   https://www.96boards.org/documentation/mezzanine/
->>
->> - These boards have siblings on other platforms, the problem
->>   scope is similar with BeagleBone "capes":
->>   https://beagleboard.org/capes
->>   Raspberry Pi expansion boards:
->>   https://www.abelectronics.co.uk/products/18/raspberry-pi-expansion-boards
->>   Intel Edison, Galileo, Joule also have expansion boards.
->>
->> Idea: add a driver for the connector itself and tie it in to
->> the device tree with a compatible string. Since the boards
->> are non-discoverable two mechanisms are provided to discover
->> them:
->>
->> - Add a very simple device tree node with just a compatible
->>   string for the board in the node. This will be simple to
->>   add from e.g. a boot loader or as an overlay from userspace.
->>
->>   board {
->>         compatible = "96boards,secure96";
->>   };
->>
->>
->> - Echo 1 > boardname into a sysfs file to populate the
->>   board and echo 0 > boardname to depopulate it. This
->>   makes it easy to even switch out expansion boards at
->>   runtime, if allowed by the electronics.
->>
->>   > cd /sys/devices/platform/connector
->>   > echo 1 > secure96
->>   lscon connector: called mezzanine_store on secure96
->>   lscon connector: populate secure96
->>   at24 1-0050: 2048 byte 24c128 EEPROM, writable, 128 bytes/write
->>   atmel-ecc 1-0060: configuration zone is unlocked
->>   tpm_tis_spi spi0.0: 2.0 TPM (device-id 0x1B, rev-id 16)
->>   (...)
->>
->> What this patch set does not do:
->>
->> - It does not use device tree or ACPI DSDT or any other
->>   hardware decription language to model the contents of the
->>   board per se. Instead the boards buses are populated
->>   directly with platform devices.
->>
->> Predictable complaints about this design:
->>
->> Q: This is not device tree overlays. Why is it not device
->>    tree overlays?
->>
->> A1: Right tool for the job, overlays are complex and the
->>     plan to get it in place seems to be spanning years, this
->>     is a few devices on simple busses and it works today.
->>     Using this approach I can already work on shaping up
->>     drivers for the mezzanine board devices as proved by:
->>     https://marc.info/?l=linux-crypto-vger&m=152820660120590&w=2
->>     https://marc.info/?l=linux-crypto-vger&m=152820662820595&w=2
->>     (...)
->>
->>     I can work on drivers for the chips on the
->>     Secure96 mezzanine board. It's just an example of
->>     what the mezzanine community can do.
->>     Now they are hacking around in userspace instead of
->>     doing/reusing kernel drivers for their stuff:
->>     https://github.com/jbech-linaro/secure96
->>
->>     This way we can bring developers for these components
->>     into the kernel community instead of telling them to
->>     wait for some big infrastructure that comes later
->>     before they can contribute their stuff.
->>
->> A2: Overlays does not solve the problem if the system runs
->>     ACPI, and what about if the same connector[s] appear
->>     on a server board, servers use ACPI. Also notice
->>     that Intel have development boards with non-discoverable
->>     expansion boards as well. They just will not use
->>     device tree.
->>
->> A3: Overlays is Big Upfront Design.
->>     https://en.wikipedia.org/wiki/Big_Design_Up_Front
->>     This way of designing things is associated with the
->>     (pejorative term) "waterfall model" which is out of
->>     fashion as a way of doing development. I think I am not
->>     the only one slightly annoyed by the fact that device
->>     tree overlays is now starting to look like a very
->>     big very upfront design. It's just not possible to get
->>     something up and running in small iterative steps with
->>     device tree overlays. Instead huge efforts are
->>     required and it involves major possible showstoppers
->>     and uncertain outcome as indicated by Frank's TODO:
->>     https://elinux.org/Frank's_Evolving_Overlay_Thoughts
-> 
-> I don't agree. This can be broken down into various smaller mostly
-> independent problems. Overlay handling is mostly an orthogonal
-> problem. The exception is that we need to ensure bindings allow a
-> decoupling of upstream of the connector and downstream of the
-> connector so the downstream part can be a reusable overlay. Defining
-> anything while ignoring this known criteria would be a mistake.
-> 
-> The list is roughly like this:
-> 
-> - Connector node binding and probing infrastructure
-> - GPIO (already done w/ gpio-map binding)
-> - I2C
-> - SPI
-> - Pinmux
-> - clocks
-> - OF graph (displays, cameras, etc.)
-> - USB (re-use the USB connector binding for non-standard connectors)
-> - Userspace interface
-> 
-> We don't have to support every interface from the start. The bindings
-> and corresponding kernel support can be designed 1-by-1 for the most
-> part. Start with something simple like a GPIO LED on a mezzanine. Once
-> the base is functionality is there, the other parts can be worked on
-> incrementally. We can punt any overlay handling to the bootloader
-> initially. That punts all the issues around overlays like designing a
-> userspace interface, where overlays are located (filesystem, passed
-> from bootloader, built into the kernel), when they are loaded, and how
-> to specify which overlays to load. Most of Frank's list is related to
-> these issues.
-> 
-> Rob
-> 
-
-Agreeing with Rob (despite my other reply asking why the current
-devicetree mechanisms can't be used) that we do have a desire to
-have the ability to create bindings for connectors - this has been
-discussed before.
-
--Frank
+T24gVHVlLCBKdW4gMTksIDIwMTggYXQgMDQ6NDM6MzZQTSArMDUzMCwgS2lyYW4gR3VuZGEgd3Jv
+dGU6Cj4gcG04OTQxLXdsZWQuYyBkcml2ZXIgaXMgc3VwcG9ydGluZyB0aGUgV0xFRCBwZXJpcGhl
+cmFsCj4gb24gcG04OTQxLiBSZW5hbWUgaXQgdG8gcWNvbS13bGVkLmMgc28gdGhhdCBpdCBjYW4g
+c3VwcG9ydAo+IFdMRUQgb24gbXVsdGlwbGUgUE1JQ3MuCj4gCj4gU2lnbmVkLW9mZi1ieTogS2ly
+YW4gR3VuZGEgPGtndW5kYUBjb2RlYXVyb3JhLm9yZz4KCldpdGggY2hhbmdlcyBwcm9wb3NlZCBm
+b3IgdjQ6CkFja2VkLWJ5OiBEYW5pZWwgVGhvbXBzb24gPGRhbmllbC50aG9tcHNvbkBsaW5hcm8u
+b3JnPgoKPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0L3twbTg5NDEtd2xlZC50
+eHQgPT4gcWNvbS13bGVkLnR4dH0gICAgfCAyICstCj4gIGRyaXZlcnMvdmlkZW8vYmFja2xpZ2h0
+L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgOCArKysrLS0tLQo+
+ICBkcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB8IDIgKy0KPiAgZHJpdmVycy92aWRlby9iYWNrbGlnaHQve3BtODk0MS13bGVk
+LmMgPT4gcWNvbS13bGVkLmN9ICAgICAgICAgICAgfCAwCj4gIDQgZmlsZXMgY2hhbmdlZCwgNiBp
+bnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQo+ICByZW5hbWUgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0L3twbTg5NDEtd2xlZC50eHQgPT4gcWNvbS13
+bGVkLnR4dH0gKDk1JSkKPiAgcmVuYW1lIGRyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L3twbTg5NDEt
+d2xlZC5jID0+IHFjb20td2xlZC5jfSAoMTAwJSkKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvYmFja2xpZ2h0L3BtODk0MS13bGVkLnR4dCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2tsaWdodC9xY29tLXds
+ZWQudHh0Cj4gc2ltaWxhcml0eSBpbmRleCA5NSUKPiByZW5hbWUgZnJvbSBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvcG04OTQxLXdsZWQudHh0Cj4gcmVu
+YW1lIHRvIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2tsaWdodC9x
+Y29tLXdsZWQudHh0Cj4gaW5kZXggZTViMjk0ZC4uZmIzOWUzMiAxMDA2NDQKPiAtLS0gYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvcG04OTQxLXdsZWQu
+dHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvYmFja2xp
+Z2h0L3Fjb20td2xlZC50eHQKPiBAQCAtMSw0ICsxLDQgQEAKPiAtQmluZGluZyBmb3IgUXVhbGNv
+bW0gUE04OTQxIFdMRUQgZHJpdmVyCj4gK0JpbmRpbmcgZm9yIFF1YWxjb21tIFRlY2hub2xvZ2ll
+cywgSW5jLiBXTEVEIGRyaXZlcgo+ICAKPiAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAgLSBjb21w
+YXRpYmxlOiBzaG91bGQgYmUgInFjb20scG04OTQxLXdsZWQiCj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvdmlkZW8vYmFja2xpZ2h0L0tjb25maWcgYi9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9LY29u
+ZmlnCj4gaW5kZXggNGUxZDJhZC4uOGMwOTVlMyAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL3ZpZGVv
+L2JhY2tsaWdodC9LY29uZmlnCj4gKysrIGIvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvS2NvbmZp
+Zwo+IEBAIC0yOTksMTIgKzI5OSwxMiBAQCBjb25maWcgQkFDS0xJR0hUX1RPU0EKPiAgCSAgSWYg
+eW91IGhhdmUgYW4gU2hhcnAgU0wtNjAwMCBaYXVydXMgc2F5IFkgdG8gZW5hYmxlIGEgZHJpdmVy
+Cj4gIAkgIGZvciBpdHMgYmFja2xpZ2h0Cj4gIAo+IC1jb25maWcgQkFDS0xJR0hUX1BNODk0MV9X
+TEVECj4gLQl0cmlzdGF0ZSAiUXVhbGNvbW0gUE04OTQxIFdMRUQgRHJpdmVyIgo+ICtjb25maWcg
+QkFDS0xJR0hUX1FDT01fV0xFRAo+ICsJdHJpc3RhdGUgIlF1YWxjb21tIFBNSUMgV0xFRCBEcml2
+ZXIiCj4gIAlzZWxlY3QgUkVHTUFQCj4gIAloZWxwCj4gLQkgIElmIHlvdSBoYXZlIHRoZSBRdWFs
+Y29tbSBQTTg5NDEsIHNheSBZIHRvIGVuYWJsZSBhIGRyaXZlciBmb3IgdGhlCj4gLQkgIFdMRUQg
+YmxvY2suCj4gKwkgIElmIHlvdSBoYXZlIHRoZSBRdWFsY29tbSBQTUlDLCBzYXkgWSB0byBlbmFi
+bGUgYSBkcml2ZXIgZm9yIHRoZQo+ICsJICBXTEVEIGJsb2NrLiBDdXJyZW50bHkgaXQgc3VwcG9y
+dHMgUE04OTQxIGFuZCBQTUk4OTk4Lgo+ICAKPiAgY29uZmlnIEJBQ0tMSUdIVF9TQUhBUkEKPiAg
+CXRyaXN0YXRlICJUYWJsZXRraW9zayBTYWhhcmEgVG91Y2gtaVQgQmFja2xpZ2h0IERyaXZlciIK
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvTWFrZWZpbGUgYi9kcml2ZXJz
+L3ZpZGVvL2JhY2tsaWdodC9NYWtlZmlsZQo+IGluZGV4IDVlMjhmMDEuLjZmZDc2ZWYgMTAwNjQ0
+Cj4gLS0tIGEvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvTWFrZWZpbGUKPiArKysgYi9kcml2ZXJz
+L3ZpZGVvL2JhY2tsaWdodC9NYWtlZmlsZQo+IEBAIC00OSw4ICs0OSw4IEBAIG9iai0kKENPTkZJ
+R19CQUNLTElHSFRfT01BUDEpCQkrPSBvbWFwMV9ibC5vCj4gIG9iai0kKENPTkZJR19CQUNLTElH
+SFRfT1QyMDApCQkrPSBvdDIwMF9ibC5vCj4gIG9iai0kKENPTkZJR19CQUNLTElHSFRfUEFORE9S
+QSkJCSs9IHBhbmRvcmFfYmwubwo+ICBvYmotJChDT05GSUdfQkFDS0xJR0hUX1BDRjUwNjMzKQkr
+PSBwY2Y1MDYzMy1iYWNrbGlnaHQubwo+IC1vYmotJChDT05GSUdfQkFDS0xJR0hUX1BNODk0MV9X
+TEVEKQkrPSBwbTg5NDEtd2xlZC5vCj4gIG9iai0kKENPTkZJR19CQUNLTElHSFRfUFdNKQkJKz0g
+cHdtX2JsLm8KPiArb2JqLSQoQ09ORklHX0JBQ0tMSUdIVF9RQ09NX1dMRUQpCSs9IHFjb20td2xl
+ZC5vCj4gIG9iai0kKENPTkZJR19CQUNLTElHSFRfU0FIQVJBKQkJKz0ga2IzODg2X2JsLm8KPiAg
+b2JqLSQoQ09ORklHX0JBQ0tMSUdIVF9TS1k4MTQ1MikJKz0gc2t5ODE0NTItYmFja2xpZ2h0Lm8K
+PiAgb2JqLSQoQ09ORklHX0JBQ0tMSUdIVF9UT1NBKQkJKz0gdG9zYV9ibC5vCj4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L3BtODk0MS13bGVkLmMgYi9kcml2ZXJzL3ZpZGVv
+L2JhY2tsaWdodC9xY29tLXdsZWQuYwo+IHNpbWlsYXJpdHkgaW5kZXggMTAwJQo+IHJlbmFtZSBm
+cm9tIGRyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L3BtODk0MS13bGVkLmMKPiByZW5hbWUgdG8gZHJp
+dmVycy92aWRlby9iYWNrbGlnaHQvcWNvbS13bGVkLmMKPiAtLSAKPiBUaGUgUXVhbGNvbW0gSW5u
+b3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgdGhlIENvZGUgQXVyb3JhIEZvcnVt
+LAo+ICBhIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cj4gCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
