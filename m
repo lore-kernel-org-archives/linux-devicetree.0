@@ -1,235 +1,125 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH V4 2/4] watchdog: stm32: add pclk feature for stm32mp1
-Date: Thu, 21 Jun 2018 09:53:35 -0700
-Message-ID: <20180621165335.GA4563@roeck-us.net>
-References: <1529571737-3552-1-git-send-email-ludovic.Barre@st.com>
- <1529571737-3552-3-git-send-email-ludovic.Barre@st.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V2 2/4] dt-bindings: arm: fsl: add mu binding doc
+Date: Thu, 21 Jun 2018 17:11:33 +0000
+Message-ID: <AM0PR04MB4211B39D5AFAB95FC2A91F9980760@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1529239789-26849-1-git-send-email-aisheng.dong@nxp.com>
+ <1529239789-26849-3-git-send-email-aisheng.dong@nxp.com>
+ <20180620194310.GA28983@rob-hp-laptop>
+ <20180621074641.sqqvudxebt3hd43m@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1529571737-3552-3-git-send-email-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180621074641.sqqvudxebt3hd43m@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 21, 2018 at 11:02:15AM +0200, Ludovic Barre wrote:
-> From: Ludovic Barre <ludovic.barre@st.com>
-> 
-> This patch adds compatible data to manage pclk clock by
-> compatible. Adds stm32mp1 support which requires pclk clock.
-> 
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> ---
->  drivers/watchdog/stm32_iwdg.c | 116 +++++++++++++++++++++++++++---------------
->  1 file changed, 74 insertions(+), 42 deletions(-)
-> 
-> diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
-> index c97ad56..e00e3b3 100644
-> --- a/drivers/watchdog/stm32_iwdg.c
-> +++ b/drivers/watchdog/stm32_iwdg.c
-> @@ -11,12 +11,13 @@
->  
->  #include <linux/clk.h>
->  #include <linux/delay.h>
-> -#include <linux/kernel.h>
-> -#include <linux/module.h>
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
->  #include <linux/iopoll.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
->  #include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/watchdog.h>
->  
-> @@ -54,11 +55,15 @@
->  #define TIMEOUT_US	100000
->  #define SLEEP_US	1000
->  
-> +#define HAS_PCLK	true
-> +
->  struct stm32_iwdg {
->  	struct watchdog_device	wdd;
->  	void __iomem		*regs;
-> -	struct clk		*clk;
-> +	struct clk		*clk_lsi;
-> +	struct clk		*clk_pclk;
->  	unsigned int		rate;
-> +	bool			has_pclk;
->  };
->  
->  static inline u32 reg_read(void __iomem *base, u32 reg)
-> @@ -133,6 +138,44 @@ static int stm32_iwdg_set_timeout(struct watchdog_device *wdd,
->  	return 0;
->  }
->  
-> +static int stm32_iwdg_clk_init(struct platform_device *pdev,
-> +			       struct stm32_iwdg *wdt)
-> +{
-> +	u32 ret;
-> +
-> +	wdt->clk_lsi = devm_clk_get(&pdev->dev, "lsi");
+Hi Sascha,
 
-I just noticed a subtle difference: This used to be
-			devm_clk_get(&pdev->dev, NULL);
-which would always get the first clock, no matter how it is named.
-Can that cause problems with backward compatibility ?
+> -----Original Message-----
+> From: Sascha Hauer [mailto:s.hauer@pengutronix.de]
+> Sent: Thursday, June 21, 2018 3:47 PM
+> To: Rob Herring <robh@kernel.org>
+> Cc: A.s. Dong <aisheng.dong@nxp.com>; linux-arm-
+> kernel@lists.infradead.org; dongas86@gmail.com; kernel@pengutronix.de;
+> shawnguo@kernel.org; Fabio Estevam <fabio.estevam@nxp.com>; dl-linux-
+> imx <linux-imx@nxp.com>; Mark Rutland <mark.rutland@arm.com>;
+> devicetree@vger.kernel.org
+> Subject: Re: [PATCH V2 2/4] dt-bindings: arm: fsl: add mu binding doc
+> 
+> On Wed, Jun 20, 2018 at 01:43:10PM -0600, Rob Herring wrote:
+> > On Sun, Jun 17, 2018 at 08:49:47PM +0800, Dong Aisheng wrote:
+> > > The Messaging Unit module enables two processors within the SoC to
+> > > communicate and coordinate by passing messages (e.g. data, status
+> > > and control) through the MU interface.
+> > >
+> > > Cc: Shawn Guo <shawnguo@kernel.org>
+> > > Cc: Sascha Hauer <kernel@pengutronix.de>
+> > > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: devicetree@vger.kernel.org
+> > > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > > ---
+> > > v1->v2:
+> > >  * typo fixes
+> > >  * remove status property
+> > >  * remove imx6&7 compatible string which may be added later for
+> > >    the generic mailbox binding
+> > >
+> > > Note: Because MU used by SCU is not implemented as a mailbox driver,
+> > > Instead, they're provided in library calls to gain higher performance.
+> >
+> > Using a binding doesn't mean you have to use an OS's subsystem.
+> >
+> > What needs higher performance? What's the performance difference?
+> Why
+> > can't the mailbox framework be improved?
+> 
+> From what I see the performance is improved by polling the interrupt
+> registers rather than using interrupts.
+> I see no reason though why this can't be implemented with the mailbox
+> framework as is.
+> 
 
-Thanks,
-Guenter
+I thought you've agreed to not write generic MU(mailbox) driver for SCU.
+https://www.spinics.net/lists/arm-kernel/msg650217.html
+But seems it's still not quite certain...
 
-> +	if (IS_ERR(wdt->clk_lsi)) {
-> +		dev_err(&pdev->dev, "Unable to get lsi clock\n");
-> +		return PTR_ERR(wdt->clk_lsi);
-> +	}
-> +
-> +	/* optional peripheral clock */
-> +	if (wdt->has_pclk) {
-> +		wdt->clk_pclk = devm_clk_get(&pdev->dev, "pclk");
-> +		if (IS_ERR(wdt->clk_pclk)) {
-> +			dev_err(&pdev->dev, "Unable to get pclk clock\n");
-> +			return PTR_ERR(wdt->clk_pclk);
-> +		}
-> +
-> +		ret = clk_prepare_enable(wdt->clk_pclk);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "Unable to prepare pclk clock\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	ret = clk_prepare_enable(wdt->clk_lsi);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Unable to prepare lsi clock\n");
-> +		clk_disable_unprepare(wdt->clk_pclk);
-> +		return ret;
-> +	}
-> +
-> +	wdt->rate = clk_get_rate(wdt->clk_lsi);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct watchdog_info stm32_iwdg_info = {
->  	.options	= WDIOF_SETTIMEOUT |
->  			  WDIOF_MAGICCLOSE |
-> @@ -147,49 +190,42 @@ static const struct watchdog_ops stm32_iwdg_ops = {
->  	.set_timeout	= stm32_iwdg_set_timeout,
->  };
->  
-> +static const struct of_device_id stm32_iwdg_of_match[] = {
-> +	{ .compatible = "st,stm32-iwdg", .data = (void *)!HAS_PCLK },
-> +	{ .compatible = "st,stm32mp1-iwdg", .data = (void *)HAS_PCLK },
-> +	{ /* end node */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
-> +
->  static int stm32_iwdg_probe(struct platform_device *pdev)
->  {
->  	struct watchdog_device *wdd;
-> +	const struct of_device_id *match;
->  	struct stm32_iwdg *wdt;
->  	struct resource *res;
-> -	void __iomem *regs;
-> -	struct clk *clk;
->  	int ret;
->  
-> +	match = of_match_device(stm32_iwdg_of_match, &pdev->dev);
-> +	if (!match)
-> +		return -ENODEV;
-> +
-> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-> +	if (!wdt)
-> +		return -ENOMEM;
-> +
-> +	wdt->has_pclk = match->data;
-> +
->  	/* This is the timer base. */
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	regs = devm_ioremap_resource(&pdev->dev, res);
-> -	if (IS_ERR(regs)) {
-> +	wdt->regs = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(wdt->regs)) {
->  		dev_err(&pdev->dev, "Could not get resource\n");
-> -		return PTR_ERR(regs);
-> +		return PTR_ERR(wdt->regs);
->  	}
->  
-> -	clk = devm_clk_get(&pdev->dev, NULL);
-> -	if (IS_ERR(clk)) {
-> -		dev_err(&pdev->dev, "Unable to get clock\n");
-> -		return PTR_ERR(clk);
-> -	}
-> -
-> -	ret = clk_prepare_enable(clk);
-> -	if (ret) {
-> -		dev_err(&pdev->dev, "Unable to prepare clock %p\n", clk);
-> +	ret = stm32_iwdg_clk_init(pdev, wdt);
-> +	if (ret)
->  		return ret;
-> -	}
-> -
-> -	/*
-> -	 * Allocate our watchdog driver data, which has the
-> -	 * struct watchdog_device nested within it.
-> -	 */
-> -	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-> -	if (!wdt) {
-> -		ret = -ENOMEM;
-> -		goto err;
-> -	}
-> -
-> -	/* Initialize struct stm32_iwdg. */
-> -	wdt->regs = regs;
-> -	wdt->clk = clk;
-> -	wdt->rate = clk_get_rate(clk);
->  
->  	/* Initialize struct watchdog_device. */
->  	wdd = &wdt->wdd;
-> @@ -217,7 +253,8 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
->  
->  	return 0;
->  err:
-> -	clk_disable_unprepare(clk);
-> +	clk_disable_unprepare(wdt->clk_lsi);
-> +	clk_disable_unprepare(wdt->clk_pclk);
->  
->  	return ret;
->  }
-> @@ -227,23 +264,18 @@ static int stm32_iwdg_remove(struct platform_device *pdev)
->  	struct stm32_iwdg *wdt = platform_get_drvdata(pdev);
->  
->  	watchdog_unregister_device(&wdt->wdd);
-> -	clk_disable_unprepare(wdt->clk);
-> +	clk_disable_unprepare(wdt->clk_lsi);
-> +	clk_disable_unprepare(wdt->clk_pclk);
->  
->  	return 0;
->  }
->  
-> -static const struct of_device_id stm32_iwdg_of_match[] = {
-> -	{ .compatible = "st,stm32-iwdg" },
-> -	{ /* end node */ }
-> -};
-> -MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
-> -
->  static struct platform_driver stm32_iwdg_driver = {
->  	.probe		= stm32_iwdg_probe,
->  	.remove		= stm32_iwdg_remove,
->  	.driver = {
->  		.name	= "iwdg",
-> -		.of_match_table = stm32_iwdg_of_match,
-> +		.of_match_table = of_match_ptr(stm32_iwdg_of_match),
->  	},
->  };
->  module_platform_driver(stm32_iwdg_driver);
-> -- 
-> 2.7.4
+I'd like to explain some more.
+
+1) the interrupt mechanism is not quite suitable for SCU firmware protocol
+as the transfer size would be more than 4 words and the response data size
+is also undetermined (it's set by SCU firmware side during a response).
+So polling mode may be the best way to handle this as MU message
+handling usually is quite fast in a few microseconds.
+
+2) It's true that Mailbox framework is well designed and powerful.
+But it's not quite suitable for SCU MU as we don't need to use the most
+bits of it. Mailbox seems like to be more suitable for a generic MU
+mailbox driver used by various clients/servers.  But SCU MU are
+quite specific to SCU protocol and can't be used by other clients
+(MU 0~4 is fixed for SCU communication in MX8 HW design). 
+Even we write a MU Mailbox driver for SCU MU, it's still not a general
+one and can't be used by others (e.g. communication with M4).
+So I'd believe the current library way is still the best approach for SCU MU
+Using. But I'm also okay for another generic MU drivers for other common
+communications between A core and M4 side.
+
+3) We actually have tried the MU(Mailbox) internally, it increased a lot
+complexity comparing to the current library way and got a booting time
+regression issue due to extra delays introduced in handling SCU protocol
+in mailbox way.
+
+And finally a nature question to us is: 
+What the benefit we can get for SCU MU using a mailbox way?
+
+If we can't find benefits but introduce more complexities then why
+we would do that way?
+
+Regards
+Dong Aisheng
+
+> Sascha
 > 
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 |
+> https://emea01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fww
+> w.pengutronix.de%2F&data=02%7C01%7Caisheng.dong%40nxp.com%7C8ec
+> 827973f6e40d1fe1508d5d74b2471%7C686ea1d3bc2b4c6fa92cd99c5c301635%
+> 7C0%7C0%7C636651640089438560&sdata=oRARdjilF4Ve2%2FnsXVhG7fmjXip
+> H0HslgDMldbIGgY0%3D&reserved=0  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
