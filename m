@@ -1,168 +1,145 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [alsa-devel] [PATCH v2 2/2] ASoC: qcom: add sdm845 sound card
- support
-Date: Thu, 21 Jun 2018 18:05:03 +0530
-Message-ID: <20180621123503.GD27187@vkoul-mobl>
-References: <1529578399-3633-1-git-send-email-rohitkr@codeaurora.org>
- <1529578399-3633-3-git-send-email-rohitkr@codeaurora.org>
+From: Manish Narani <MNARANI@xilinx.com>
+Subject: RE: [RFC PATCH 2/3] dt: bindings: Add SD tap value properties details
+Date: Thu, 21 Jun 2018 12:41:37 +0000
+Message-ID: <SN6PR02MB49591B89BEB8DB28710023ABC1760@SN6PR02MB4959.namprd02.prod.outlook.com>
+References: <1528373500-24663-1-git-send-email-manish.narani@xilinx.com>
+ <1528373500-24663-2-git-send-email-manish.narani@xilinx.com>
+ <20180607124743.fqo7f7nxonn2k3b5@lakrids.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1529578399-3633-3-git-send-email-rohitkr@codeaurora.org>
+In-Reply-To: <20180607124743.fqo7f7nxonn2k3b5@lakrids.cambridge.arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rohit kumar <rohitkr@codeaurora.org>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, plai@codeaurora.org, bgoswami@codeaurora.org, perex@perex.cz, srinivas.kandagatla@linaro.org, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "mdf@kernel.org" <mdf@kernel.org>, "stefan.krsmanovic@aggios.com" <stefan.krsmanovic@aggios.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, Michal Simek <michals@xilinx.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rohit,
+Hi Mark,
 
-On 21-06-18, 16:23, Rohit kumar wrote:
+> -----Original Message-----
+> From: Mark Rutland [mailto:mark.rutland@arm.com]
+> Sent: Thursday, June 7, 2018 6:18 PM
+> To: Manish Narani <MNARANI@xilinx.com>
+> Cc: robh+dt@kernel.org; catalin.marinas@arm.com; will.deacon@arm.com;
+> mdf@kernel.org; stefan.krsmanovic@aggios.com; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; linux-
+> mmc@vger.kernel.org; devicetree@vger.kernel.org; adrian.hunter@intel.com;
+> michal.simek@xilinx.com; ulf.hansson@linaro.org
+> Subject: Re: [RFC PATCH 2/3] dt: bindings: Add SD tap value properties de=
+tails
+>=20
+> On Thu, Jun 07, 2018 at 05:41:39PM +0530, Manish Narani wrote:
+> > This patch adds details of SD tap value properties in device tree.
+> >
+> > Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> > ---
+> >  .../devicetree/bindings/mmc/arasan,sdhci.txt       | 26
+> ++++++++++++++++++++++
+> >  1 file changed, 26 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> > b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> > index 60481bf..0e08877 100644
+> > --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> > +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> > @@ -15,6 +15,8 @@ Required Properties:
+> >      - "arasan,sdhci-5.1": generic Arasan SDHCI 5.1 PHY
+> >      - "rockchip,rk3399-sdhci-5.1", "arasan,sdhci-5.1": rk3399 eMMC PHY
+> >        For this device it is strongly suggested to include arasan,soc-c=
+tl-syscon.
+> > +    - "xlnx,zynqmp-8.9a": Xilinx ZynqMP Arasan SDHCI 8.9a PHY
+> > +      For this device it is strongly suggested to include arasan,soc-c=
+tl-syscon.
+> >    - reg: From mmc bindings: Register location and length.
+> >    - clocks: From clock bindings: Handles to clock inputs.
+> >    - clock-names: From clock bindings: Tuple including "clk_xin" and "c=
+lk_ahb"
+> > @@ -26,6 +28,30 @@ Required Properties for "arasan,sdhci-5.1":
+> >    - phys: From PHY bindings: Phandle for the Generic PHY for arasan.
+> >    - phy-names:  MUST be "phy_arasan".
+> >
+> > +Required Properties for "xlnx,zynqmp-8.9a":
+> > +  - xlnx,mio_bank: The value will be 0/1/2 depending on MIO bank selec=
+tion.
+>=20
+> For all of these properties, please s/_/-/, folowing the usual property n=
+ame
+> conventions.
+I will correct this in the next version.
+>=20
+> It's not clear to me why you need this property. The code in patch 3 only=
+ seems
+> to use this to determine which properties to read, choosing between <prop=
+>_b0
+> or <prop>_b2. I don't see why you dont have the base <prop> alone...
+The property 'xlnx,mio_bank' will be different for various ZynqMP varients.=
+ So different ZynqMP dts files may have different values for 'xlnx,mio_bank=
+'. That's why I am maintaining _b0 and _b2 as different values
+>=20
+> Is this a HW detail, or configuration that you prefer?
+These are SD tap values which are generally used for configuring taps in SD=
+. Keeping it in device tree makes it User Configurable without changing the=
+ driver code.
+>=20
+> > +  - xlnx,device_id: Unique Id of the device, value will be 0/1.
+>=20
+> What's this used for?
+This used to identify the controller ID between two SD controllers present =
+on ZynqMP.
+>=20
+> > +  - xlnx,itap_delay_sd_hsd: Input Tap Delay for SD HS.
+>=20
+> What unit at hese delays in?
+The tap values don't have specific units. They are generally a fraction of =
+the clock cycle.
+For the SD frequency of -
+200 MHz: 30 Input taps are available
+100 MHz: 60 Input taps are available
+50 MHz: 120 Input taps are available
+200 MHz: 8 Output taps are available
+100 MHz: 15 Output taps are available
+50 MHz: 30 Output taps are available
 
-> +static struct sdm845_snd_data *sdm845_sbc_parse_of(struct snd_soc_card *card)
-> +{
-> +	struct device *dev = card->dev;
-> +	struct snd_soc_dai_link *link;
-> +	struct device_node *np, *codec, *platform, *cpu, *node;
-> +	int ret, num_links;
-> +	struct sdm845_snd_data *data;
-> +
-> +	ret = snd_soc_of_parse_card_name(card, "qcom,model");
-> +	if (ret) {
-> +		dev_err(dev, "Error parsing card name: %d\n", ret);
-> +		return ERR_PTR(ret);
-> +	}
-> +
-> +	node = dev->of_node;
-> +
-> +	/* DAPM routes */
-> +	if (of_property_read_bool(node, "qcom,audio-routing")) {
-> +		ret = snd_soc_of_parse_audio_routing(card,
-> +					"qcom,audio-routing");
-> +		if (ret)
-> +			return ERR_PTR(ret);
-> +	}
-> +
-> +	/* Populate links */
-> +	num_links = of_get_child_count(node);
-> +
-> +	/* Allocate the private data and the DAI link array */
-> +	data = kzalloc(sizeof(*data) + sizeof(*link) * num_links,
-> +			GFP_KERNEL);
-> +	if (!data)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	card->dai_link = &data->dai_link[0];
-> +	card->num_links = num_links;
-> +
-> +	link = data->dai_link;
-> +	data->card = card;
-> +
-> +	for_each_child_of_node(node, np) {
-> +		cpu = of_get_child_by_name(np, "cpu");
-> +		if (!cpu) {
-> +			dev_err(dev, "Can't find cpu DT node\n");
-> +			ret = -EINVAL;
-> +			goto fail;
-> +		}
-> +
-> +		link->cpu_of_node = of_parse_phandle(cpu, "sound-dai", 0);
-> +		if (!link->cpu_of_node) {
-> +			dev_err(card->dev, "error getting cpu phandle\n");
-> +			ret = -EINVAL;
-> +			goto fail;
-> +		}
-> +
-> +		ret = snd_soc_of_get_dai_name(cpu, &link->cpu_dai_name);
-> +		if (ret) {
-> +			dev_err(card->dev, "error getting cpu dai name\n");
-> +			goto fail;
-> +		}
-> +
-> +		platform = of_get_child_by_name(np, "platform");
-> +		codec = of_get_child_by_name(np, "codec");
-> +		if (codec && platform) {
-> +			link->platform_of_node = of_parse_phandle(platform,
-> +					"sound-dai", 0);
-> +			if (!link->platform_of_node) {
-> +				dev_err(card->dev, "error getting platform phandle\n");
-> +				ret = -EINVAL;
-> +				goto fail;
-> +			}
-> +
-> +			ret = snd_soc_of_get_dai_link_codecs(dev, codec, link);
-> +			if (ret < 0) {
-> +				dev_err(card->dev, "error getting codec dai name\n");
-> +				goto fail;
-> +			}
-> +			link->no_pcm = 1;
-> +			link->ignore_pmdown_time = 1;
-> +			link->ops = &sdm845_be_ops;
-> +			link->be_hw_params_fixup = sdm845_be_hw_params_fixup;
-> +		} else {
-> +			link->platform_of_node = link->cpu_of_node;
-> +			link->codec_dai_name = "snd-soc-dummy-dai";
-> +			link->codec_name = "snd-soc-dummy";
-> +			link->dynamic = 1;
-> +		}
-> +
-> +		link->ignore_suspend = 1;
-> +		ret = of_property_read_string(np, "link-name", &link->name);
-> +		if (ret) {
-> +			dev_err(card->dev,
-> +				"error getting codec dai_link name\n");
-> +			goto fail;
-> +		}
-> +
-> +		link->dpcm_playback = 1;
-> +		link->dpcm_capture = 1;
-> +		link->stream_name = link->name;
-> +		link++;
-> +	}
-> +	dev_set_drvdata(dev, card);
-> +	snd_soc_card_set_drvdata(card, data);
-> +
-> +	return data;
-> +fail:
-> +	kfree(data);
-> +	return ERR_PTR(ret);
-> +}
-
-this routine...
-
-> +static int add_audio_components(struct device *dev,
-> +				struct component_match **matchptr)
-> +{
-> +	struct device_node *np, *platform, *cpu, *node, *dai_node;
-> +
-> +	node = dev->of_node;
-> +
-> +	for_each_child_of_node(node, np) {
-> +		cpu = of_get_child_by_name(np, "cpu");
-> +		if (cpu) {
-> +			dai_node = of_parse_phandle(cpu, "sound-dai", 0);
-> +			of_node_get(dai_node);
-> +			component_match_add_release(dev, matchptr,
-> +					sdm845_release_of,
-> +					sdm845_compare_of,
-> +					dai_node);
-> +		}
-> +
-> +		platform = of_get_child_by_name(np, "platform");
-> +		if (platform) {
-> +			dai_node = of_parse_phandle(platform, "sound-dai", 0);
-> +			component_match_add_release(dev, matchptr,
-> +					sdm845_release_of,
-> +					sdm845_compare_of,
-> +					dai_node);
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-
-And this one is generic DT parsing and seems quite similar to one in apq8096.c
-Can we move these into a lib and use them instead of duplicating.
-
--- 
-~Vinod
+Thanks,
+Manish
+>=20
+> Please follow the conventions in
+> Documentation/devicetree/bindings/property-units.txt.
+>=20
+> > +  - xlnx,itap_delay_sdr25: Input Tap Delay for SDR25.
+> > +  - xlnx,itap_delay_sdr50: Input Tap Delay for SDR50.
+> > +  - xlnx,itap_delay_sdr104_b0: Input Tap Delay for SDR104.
+> > +  - xlnx,itap_delay_sdr104_b2: Input Tap Delay for SDR104.
+>=20
+> As above, Given you have to specify the bank, I don't see why you need mu=
+ltiple
+> properties.
+>=20
+> Thanks,
+> Mark.
+>=20
+> > +  - xlnx,itap_delay_sd_ddr50: Input Tap Delay for SD DDR50.
+> > +  - xlnx,itap_delay_mmc_hsd: Input Tap Delay for MMC HS.
+> > +  - xlnx,itap_delay_mmc_ddr50: Input Tap Delay for MMC DDR50.
+> > +  - xlnx,itap_delay_mmc_hs200_b0: Input Tap Delay for MMC HS200.
+> > +  - xlnx,itap_delay_mmc_hs200_b2: Input Tap Delay for MMC HS200.
+> > +  - xlnx,otap_delay_sd_hsd: Output Tap Delay for SD HS.
+> > +  - xlnx,otap_delay_sdr25: Output Tap Delay for SDR25.
+> > +  - xlnx,otap_delay_sdr50: Output Tap Delay for SDR50.
+> > +  - xlnx,otap_delay_sdr104_b0: Output Tap Delay for SDR104.
+> > +  - xlnx,otap_delay_sdr104_b2: Output Tap Delay for SDR104.
+> > +  - xlnx,otap_delay_sd_ddr50: Output Tap Delay for DDR50.
+> > +  - xlnx,otap_delay_mmc_hsd: Output Tap Delay for MMC HS.
+> > +  - xlnx,otap_delay_mmc_ddr50: Output Tap Delay for MMC DDR50.
+> > +  - xlnx,otap_delay_mmc_hs200_b0: Output Tap Delay for MMC HS200.
+> > +  - xlnx,otap_delay_mmc_hs200_b2: Output Tap Delay for MMC HS200.
+> > +
+> >  Optional Properties:
+> >    - arasan,soc-ctl-syscon: A phandle to a syscon device (see ../mfd/sy=
+scon.txt)
+> >      used to access core corecfg registers.  Offsets of registers in
+> > this
+> > --
+> > 2.7.4
