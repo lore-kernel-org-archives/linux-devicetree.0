@@ -1,130 +1,67 @@
 From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: [PATCH linux-next v6 05/13] ARM: dts: aspeed: peci: Add PECI node
-Date: Thu, 21 Jun 2018 12:40:34 -0700
-Message-ID: <20180621194034.20813-1-jae.hyun.yoo@linux.intel.com>
+Subject: [PATCH linux-next v6 07/13] dt-bindings: mfd: Add a document for PECI client MFD
+Date: Thu, 21 Jun 2018 12:40:54 -0700
+Message-ID: <20180621194054.20897-1-jae.hyun.yoo@linux.intel.com>
 References: <20180621193721.20588-1-jae.hyun.yoo@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180621193721.20588-1-jae.hyun.yoo@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Cc: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Ryan Chen <ryan_chen@aspeedtech.com>
+To: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Cc: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Joel Stanley <joel@jms.id.au>, Vernon Mauery <vernon.mauery@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds PECI bus/adapter node of AST24xx/AST25xx into
-aspeed-g4 and aspeed-g5.
+This commit adds a dt-bindings document for PECI client MFD.
 
 Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
-Reviewed-by: James Feist <james.feist@linux.intel.com>
-Reviewed-by: Vernon Mauery <vernon.mauery@linux.intel.com>
+Cc: Andrew Jeffery <andrew@aj.id.au>
+Cc: James Feist <james.feist@linux.intel.com>
 Cc: Jason M Biils <jason.m.bills@linux.intel.com>
-Cc: Ryan Chen <ryan_chen@aspeedtech.com>
+Cc: Joel Stanley <joel@jms.id.au>
+Cc: Vernon Mauery <vernon.mauery@linux.intel.com>
 ---
- arch/arm/boot/dts/aspeed-g4.dtsi | 26 ++++++++++++++++++++++++++
- arch/arm/boot/dts/aspeed-g5.dtsi | 26 ++++++++++++++++++++++++++
- 2 files changed, 52 insertions(+)
+ .../bindings/mfd/intel-peci-client.txt        | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/intel-peci-client.txt
 
-diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-index 75df1573380e..f7b83298e25f 100644
---- a/arch/arm/boot/dts/aspeed-g4.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-@@ -29,6 +29,7 @@
- 		serial3 = &uart4;
- 		serial4 = &uart5;
- 		serial5 = &vuart;
-+		peci0 = &peci0;
- 	};
- 
- 	cpus {
-@@ -295,6 +296,13 @@
- 				};
- 			};
- 
-+			peci: peci@1e78b000 {
-+				compatible = "simple-bus";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x1e78b000 0x60>;
-+			};
+diff --git a/Documentation/devicetree/bindings/mfd/intel-peci-client.txt b/Documentation/devicetree/bindings/mfd/intel-peci-client.txt
+new file mode 100644
+index 000000000000..cb341e363add
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/intel-peci-client.txt
+@@ -0,0 +1,34 @@
++* Intel PECI client bindings
 +
- 			uart2: serial@1e78d000 {
- 				compatible = "ns16550a";
- 				reg = <0x1e78d000 0x20>;
-@@ -338,6 +346,24 @@
- 	};
- };
- 
-+&peci {
-+	peci0: peci-bus@0 {
-+		compatible = "aspeed,ast2400-peci";
-+		reg = <0x0 0x60>;
++PECI (Platform Environment Control Interface) is a one-wire bus interface that
++provides a communication channel from PECI clients in Intel processors and
++chipset components to external monitoring or control devices. PECI is designed
++to support the following sideband functions:
++
++- Processor and DRAM thermal management
++- Platform Manageability
++- Processor Interface Tuning and Diagnostics
++- Failure Analysis
++
++Required properties:
++- compatible : Should be "intel,peci-client".
++- reg        : Should contain address of a client CPU. Address range of CPU
++	       clients starts from 0x30 based on PECI specification.
++
++Example:
++	peci-bus@0 {
++		compatible = "vendor,soc-peci";
++		reg = <0x0 0x1000>;
 +		#address-cells = <1>;
 +		#size-cells = <0>;
-+		interrupts = <15>;
-+		clocks = <&syscon ASPEED_CLK_GATE_REFCLK>;
-+		resets = <&syscon ASPEED_RESET_PECI>;
-+		clock-frequency = <24000000>;
-+		msg-timing = <1>;
-+		addr-timing = <1>;
-+		rd-sampling-point = <8>;
-+		cmd-timeout-ms = <1000>;
-+		status = "disabled";
++
++		peci-client@30 {
++			compatible = "intel,peci-client";
++			reg = <0x30>;
++		};
++
++		peci-client@31 {
++			compatible = "intel,peci-client";
++			reg = <0x31>;
++		};
 +	};
-+};
-+
- &i2c {
- 	i2c_ic: interrupt-controller@0 {
- 		#interrupt-cells = <1>;
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 17f2714d18a7..f8eccdaacedc 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -29,6 +29,7 @@
- 		serial3 = &uart4;
- 		serial4 = &uart5;
- 		serial5 = &vuart;
-+		peci0 = &peci0;
- 	};
- 
- 	cpus {
-@@ -352,6 +353,13 @@
- 				};
- 			};
- 
-+			peci: peci@1e78b000 {
-+				compatible = "simple-bus";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x1e78b000 0x60>;
-+			};
-+
- 			uart2: serial@1e78d000 {
- 				compatible = "ns16550a";
- 				reg = <0x1e78d000 0x20>;
-@@ -395,6 +403,24 @@
- 	};
- };
- 
-+&peci {
-+	peci0: peci-bus@0 {
-+		compatible = "aspeed,ast2500-peci";
-+		reg = <0x0 0x60>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interrupts = <15>;
-+		clocks = <&syscon ASPEED_CLK_GATE_REFCLK>;
-+		resets = <&syscon ASPEED_RESET_PECI>;
-+		clock-frequency = <24000000>;
-+		msg-timing = <1>;
-+		addr-timing = <1>;
-+		rd-sampling-point = <8>;
-+		cmd-timeout-ms = <1000>;
-+		status = "disabled";
-+	};
-+};
-+
- &i2c {
- 	i2c_ic: interrupt-controller@0 {
- 		#interrupt-cells = <1>;
 -- 
 2.17.1
