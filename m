@@ -1,783 +1,242 @@
-From: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
-Subject: [PATCH 1/3] ARM: dts: imx51-zii-common: create common include dtsi
-Date: Thu, 21 Jun 2018 20:44:58 +0300
-Message-ID: <1529603100-31958-2-git-send-email-andrey.gusakov@cogentembedded.com>
-References: <1529603100-31958-1-git-send-email-andrey.gusakov@cogentembedded.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529603100-31958-1-git-send-email-andrey.gusakov@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, cphealy@gmail.com, andrew.smirnov@gmail.com, l.stach@pengutronix.de
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andrey.gusakov@cogentembedded.com
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: Re: [PATCH V2 2/4] dt-bindings: arm: fsl: add mu binding doc
+Date: Thu, 21 Jun 2018 20:08:57 +0200
+Message-ID: <20180621180857.ozl7n7fcretg6rwi@pengutronix.de>
+References: <1529239789-26849-1-git-send-email-aisheng.dong@nxp.com>
+ <1529239789-26849-3-git-send-email-aisheng.dong@nxp.com>
+ <20180620194310.GA28983@rob-hp-laptop>
+ <20180621074641.sqqvudxebt3hd43m@pengutronix.de>
+ <AM0PR04MB4211B39D5AFAB95FC2A91F9980760@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============9135415002118967534=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <AM0PR04MB4211B39D5AFAB95FC2A91F9980760@AM0PR04MB4211.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Make shared include file. Move common stuff from rdu1 dts file to
-dtsi for future reuse by other imx51 based boards from ZII.
 
-Signed-off-by: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
----
- arch/arm/boot/dts/imx51-zii-common.dtsi | 317 ++++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx51-zii-rdu1.dts    | 330 +++-----------------------------
- 2 files changed, 347 insertions(+), 300 deletions(-)
- create mode 100644 arch/arm/boot/dts/imx51-zii-common.dtsi
+--===============9135415002118967534==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="klxkloccgpcekjfo"
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/imx51-zii-common.dtsi b/arch/arm/boot/dts/imx51-zii-common.dtsi
-new file mode 100644
-index 0000000..b0f0643
---- /dev/null
-+++ b/arch/arm/boot/dts/imx51-zii-common.dtsi
-@@ -0,0 +1,317 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+// Copyright (C) 2018 Zodiac Inflight Innovations
+
+--klxkloccgpcekjfo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Thu, Jun 21, 2018 at 05:11:33PM +0000, A.s. Dong wrote:
+> Hi Sascha,
+> > On Wed, Jun 20, 2018 at 01:43:10PM -0600, Rob Herring wrote:
+> > > On Sun, Jun 17, 2018 at 08:49:47PM +0800, Dong Aisheng wrote:
+> > > > The Messaging Unit module enables two processors within the SoC to
+> > > > communicate and coordinate by passing messages (e.g. data, status
+> > > > and control) through the MU interface.
+> > > >
+> > > > ---
+> > > > v1->v2:
+> > > >  * typo fixes
+> > > >  * remove status property
+> > > >  * remove imx6&7 compatible string which may be added later for
+> > > >    the generic mailbox binding
+> > > >
+> > > > Note: Because MU used by SCU is not implemented as a mailbox driver,
+> > > > Instead, they're provided in library calls to gain higher performan=
+ce.
+> > >
+> > > Using a binding doesn't mean you have to use an OS's subsystem.
+> > >
+> > > What needs higher performance? What's the performance difference?
+> > Why
+> > > can't the mailbox framework be improved?
+> >=20
+> > From what I see the performance is improved by polling the interrupt
+> > registers rather than using interrupts.
+> > I see no reason though why this can't be implemented with the mailbox
+> > framework as is.
+> >=20
+>=20
+> I thought you've agreed to not write generic MU(mailbox) driver for SCU.
+> https://www.spinics.net/lists/arm-kernel/msg650217.html
+> But seems it's still not quite certain...
+>=20
+> I'd like to explain some more.
+>=20
+> 1) the interrupt mechanism is not quite suitable for SCU firmware protocol
+> as the transfer size would be more than 4 words and the response data size
+> is also undetermined (it's set by SCU firmware side during a response).
+> So polling mode may be the best way to handle this as MU message
+> handling usually is quite fast in a few microseconds.
+>=20
+> 2) It's true that Mailbox framework is well designed and powerful.
+> But it's not quite suitable for SCU MU as we don't need to use the most
+> bits of it. Mailbox seems like to be more suitable for a generic MU
+> mailbox driver used by various clients/servers.  But SCU MU are
+> quite specific to SCU protocol and can't be used by other clients
+> (MU 0~4 is fixed for SCU communication in MX8 HW design).=20
+> Even we write a MU Mailbox driver for SCU MU, it's still not a general
+> one and can't be used by others (e.g. communication with M4).
+> So I'd believe the current library way is still the best approach for SCU=
+ MU
+> Using. But I'm also okay for another generic MU drivers for other common
+> communications between A core and M4 side.
+>=20
+> 3) We actually have tried the MU(Mailbox) internally, it increased a lot
+> complexity comparing to the current library way and got a booting time
+> regression issue due to extra delays introduced in handling SCU protocol
+> in mailbox way.
+>=20
+> And finally a nature question to us is:=20
+> What the benefit we can get for SCU MU using a mailbox way?
+>=20
+> If we can't find benefits but introduce more complexities then why
+> we would do that way?
+
+Looks like my response to same topic within my patch set is lost, so I
+repost it here:
+
+ok.. let's take some of IMX8 SCU driver code to see if there any difference:
+
+=2E.this part of the code is blocking write procedure for one
+channeler (register or what ever name you prefer) per write.. correct?
+
++void mu_send_msg(struct mu_priv *priv, uint32_t index, uint32_t msg)
++{
++	uint32_t mask =3D MU_SR_TE0_MASK >> index;
 +
-+#include "imx51.dtsi"
++	/* Wait TX register to be empty. */
++	while (!(readl_relaxed(priv->base + MU_ASR) & mask))
++		;
++	writel_relaxed(msg, priv->base + MU_ATR0  + (index * 4));
++}
++EXPORT_SYMBOL_GPL(mu_send_msg);
+
+According to documentation it is recommended to use only one status bit
+for the last register to use MU as one big 4words sized pipe.
+But, there is no way you can write to all 4 registers without checking stat=
+us
+for each of this register, because your protocol has dynamic message
+size. So you are forced to use your one channel as 4 separate channels.
+Write it part of the message separately and allow your firmware read 1
+word to understand how to behave on the rest of the message.
+
++static void sc_ipc_write(struct sc_ipc *sc_ipc, void *data)
++{
++	sc_rpc_msg_t *msg =3D (sc_rpc_msg_t *) data;
++	uint8_t count =3D 0;
 +
-+/ {
-+	chosen {
-+		stdout-path = &uart1;
-+	};
++	/* Check size */
++	if (msg->size > SC_RPC_MAX_MSG)
++		return;
 +
-+	/* Will be filled by the bootloader */
-+	memory@90000000 {
-+		reg = <0x90000000 0>;
-+	};
++	/* Write first word */
++	mu_send_msg(sc_ipc->mu_base, 0, *((uint32_t *) msg));
++	count++;
+
+=2E. in this loop you are writing to one channel/register per loop. If
+the communicate will stall for some reason, the linux system will just
+freeze here without any timeout or error message.. no idea how about the
+opposite site.
+
++	/* Write remaining words */
++	while (count < msg->size) {
++		mu_send_msg(sc_ipc->mu_base, count % MU_TR_COUNT,
++			    msg->DATA.u32[count - 1]);
++		count++;
++	}
++}
+
+
+=2E.. and here is a proof that sc_ipc_write will do in some cases 5 rounds
+(5 * 4 bytes =3D 20 bytes single message) with probable busy waiting for
+each channel
+
++sc_err_t sc_misc_seco_image_load(sc_ipc_t ipc, uint32_t addr_src,
++				 uint32_t addr_dst, uint32_t len, bool fw)
++{
++	sc_rpc_msg_t msg;
++	uint8_t result;
 +
-+	i2c_gpio: i2c-gpio {
-+		compatible = "i2c-gpio";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_swi2c>;
-+		i2c-gpio,delay-us = <50>;
-+		status = "okay";
++	RPC_VER(&msg) =3D SC_RPC_VERSION;
++	RPC_SVC(&msg) =3D (uint8_t)SC_RPC_SVC_MISC;
++	RPC_FUNC(&msg) =3D (uint8_t)MISC_FUNC_SECO_IMAGE_LOAD;
++	RPC_U32(&msg, 0) =3D addr_src;
++	RPC_U32(&msg, 4) =3D addr_dst;
++	RPC_U32(&msg, 8) =3D len;
++	RPC_U8(&msg, 12) =3D (uint8_t)fw;
++	RPC_SIZE(&msg) =3D 5;
 +
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
++	sc_call_rpc(ipc, &msg, false);
 +
-+	usb_vbus: regulator-usb-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+	};
-+};
++	result =3D RPC_R8(&msg);
++	return (sc_err_t)result;
++}
 +
-+&cpu {
-+	cpu-supply = <&sw1_reg>;
-+};
-+
-+&ecspi1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi1>;
-+	cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>,
-+		   <&gpio4 25 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+
-+	pmic@0 {
-+		compatible = "fsl,mc13892";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_pmic>;
-+		spi-max-frequency = <6000000>;
-+		spi-cs-high;
-+		reg = <0>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
-+		fsl,mc13xxx-uses-adc;
-+
-+		regulators {
-+			sw1_reg: sw1 {
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <1375000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw2_reg: sw2 {
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <1850000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3_reg: sw3 {
-+				regulator-min-microvolt = <1100000>;
-+				regulator-max-microvolt = <1850000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw4_reg: sw4 {
-+				regulator-min-microvolt = <1100000>;
-+				regulator-max-microvolt = <1850000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vpll_reg: vpll {
-+				regulator-min-microvolt = <1050000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vdig_reg: vdig {
-+				regulator-min-microvolt = <1650000>;
-+				regulator-max-microvolt = <1650000>;
-+				regulator-boot-on;
-+			};
-+
-+			vsd_reg: vsd {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3150000>;
-+			};
-+
-+			vusb_reg: vusb {
-+				regulator-always-on;
-+			};
-+
-+			vusb2_reg: vusb2 {
-+				regulator-min-microvolt = <2400000>;
-+				regulator-max-microvolt = <2775000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vvideo_reg: vvideo {
-+				regulator-min-microvolt = <2775000>;
-+				regulator-max-microvolt = <2775000>;
-+			};
-+
-+			vaudio_reg: vaudio {
-+				regulator-min-microvolt = <2300000>;
-+				regulator-max-microvolt = <3000000>;
-+			};
-+
-+			vcam_reg: vcam {
-+				regulator-min-microvolt = <2500000>;
-+				regulator-max-microvolt = <3000000>;
-+			};
-+
-+			vgen1_reg: vgen1 {
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+			};
-+
-+			vgen2_reg: vgen2 {
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3150000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen3_reg: vgen3 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <2900000>;
-+				regulator-always-on;
-+			};
-+		};
-+
-+		leds {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			led-control = <0x0 0x0 0x3f83f8 0x0>;
-+
-+			sysled3: led3@3 {
-+				reg = <3>;
-+				label = "system:red:power";
-+				linux,default-trigger = "default-on";
-+			};
-+
-+			sysled4: led4@4 {
-+				reg = <4>;
-+				label = "system:green:act";
-+				linux,default-trigger = "heartbeat";
-+			};
-+		};
-+	};
-+
-+	flash@1 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "atmel,at45", "atmel,dataflash";
-+		spi-max-frequency = <25000000>;
-+		reg = <1>;
-+	};
-+};
-+
-+&ecspi2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi2>;
-+	cs-gpios = <&gpio3 24 GPIO_ACTIVE_LOW>,
-+		   <&gpio3 28 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&esdhc1 {
-+	non-removable;
-+	no-1-8-v;
-+	no-sdio;
-+	no-sd;
-+	status = "okay";
-+};
-+
-+&esdhc4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_esdhc4>;
-+	bus-width = <4>;
-+	no-1-8-v;
-+	no-sdio;
-+	cd-gpios = <&gpio4 8 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec>;
-+	phy-mode = "mii";
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+
-+	eeprom@50 {
-+		compatible = "atmel,24c04";
-+		pagesize = <16>;
-+		reg = <0x50>;
-+	};
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart3>;
-+	status = "okay";
-+};
-+
-+&usbotg {
-+	dr_mode = "host";
-+	disable-over-current;
-+	phy_type = "utmi_wide";
-+	vbus-supply = <&usb_vbus>;
-+	status = "okay";
-+};
-+
-+&usbphy0 {
-+	vcc-supply = <&vusb2_reg>;
-+};
-+
-+&iomuxc {
-+	pinctrl_ecspi1: ecspi1grp {
-+		fsl,pins = <
-+			MX51_PAD_CSPI1_MISO__ECSPI1_MISO	0x185
-+			MX51_PAD_CSPI1_MOSI__ECSPI1_MOSI	0x185
-+			MX51_PAD_CSPI1_SCLK__ECSPI1_SCLK	0x185
-+			MX51_PAD_CSPI1_SS0__GPIO4_24		0x85
-+			MX51_PAD_CSPI1_SS1__GPIO4_25		0x85
-+		>;
-+	};
-+
-+	pinctrl_ecspi2: ecspi2grp {
-+		fsl,pins = <
-+			MX51_PAD_NANDF_RB2__ECSPI2_SCLK		0x185
-+			MX51_PAD_NANDF_RB3__ECSPI2_MISO		0x185
-+			MX51_PAD_NANDF_D15__ECSPI2_MOSI		0x185
-+			MX51_PAD_NANDF_RDY_INT__GPIO3_24	0x85
-+			MX51_PAD_NANDF_D12__GPIO3_28		0x85
-+		>;
-+	};
-+
-+	pinctrl_esdhc1_4bit: esdhc1grp_4bit {
-+		fsl,pins = <
-+			MX51_PAD_SD1_CMD__SD1_CMD		0x400020d5
-+			MX51_PAD_SD1_CLK__SD1_CLK		0x20d5
-+			MX51_PAD_SD1_DATA0__SD1_DATA0		0x20d5
-+			MX51_PAD_SD1_DATA1__SD1_DATA1		0x20d5
-+			MX51_PAD_SD1_DATA2__SD1_DATA2		0x20d5
-+			MX51_PAD_SD1_DATA3__SD1_DATA3		0x20d5
-+		>;
-+	};
-+
-+	pinctrl_esdhc1_8bit: esdhc1grp_8bit {
-+		fsl,pins = <
-+			MX51_PAD_SD2_DATA0__SD1_DAT4		0x20d5
-+			MX51_PAD_SD2_DATA1__SD1_DAT5		0x20d5
-+			MX51_PAD_SD2_DATA2__SD1_DAT6		0x20d5
-+			MX51_PAD_SD2_DATA3__SD1_DAT7		0x20d5
-+		>;
-+	};
-+
-+	pinctrl_esdhc4: esdhc4grp {
-+		fsl,pins = <
-+			MX51_PAD_NANDF_RB1__SD4_CMD		0x400020d5
-+			MX51_PAD_NANDF_CS2__SD4_CLK		0x20d5
-+			MX51_PAD_NANDF_CS3__SD4_DAT0		0x20d5
-+			MX51_PAD_NANDF_CS4__SD4_DAT1		0x20d5
-+			MX51_PAD_NANDF_CS5__SD4_DAT2		0x20d5
-+			MX51_PAD_NANDF_CS6__SD4_DAT3		0x20d5
-+			MX51_PAD_NANDF_D0__GPIO4_8		0x100
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX51_PAD_KEY_COL4__I2C2_SCL		0x400001ed
-+			MX51_PAD_KEY_COL5__I2C2_SDA		0x400001ed
-+		>;
-+	};
-+
-+	pinctrl_pmic: pmicgrp {
-+		fsl,pins = <
-+			MX51_PAD_GPIO1_4__GPIO1_4		0x85
-+			MX51_PAD_GPIO1_8__GPIO1_8		0xe5
-+		>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-index df9eca9..59a80da 100644
---- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
-+++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-@@ -1,61 +1,14 @@
--/*
-- * Copyright (C) 2017 Zodiac Inflight Innovations
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License
-- *     version 2 as published by the Free Software Foundation.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-- */
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+// Copyright (C) 2018 Zodiac Inflight Innovations
- 
- /dts-v1/;
--#include "imx51.dtsi"
-+#include "imx51-zii-common.dtsi"
- #include <dt-bindings/sound/fsl-imx-audmux.h>
- 
- / {
- 	model = "ZII RDU1 Board";
- 	compatible = "zii,imx51-rdu1", "fsl,imx51";
- 
--	chosen {
--		stdout-path = &uart1;
--	};
--
--	/* Will be filled by the bootloader */
--	memory@90000000 {
--		reg = <0x90000000 0>;
--	};
--
- 	aliases {
- 		mdio-gpio0 = &mdio_gpio;
- 		rtc0 = &ds1341;
-@@ -94,14 +47,6 @@
- 		enable-gpios = <&gpio4 26 GPIO_ACTIVE_LOW>;
- 	};
- 
--	reg_5p0v_main: regulator-5p0v-main {
--		compatible = "regulator-fixed";
--		regulator-name = "5V_MAIN";
--		regulator-min-microvolt = <5000000>;
--		regulator-max-microvolt = <5000000>;
--		regulator-always-on;
--	};
--
- 	reg_3p3v: regulator-3p3v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "3.3V";
-@@ -150,28 +95,6 @@
- 		};
- 	};
- 
--	i2c_gpio: i2c-gpio {
--		compatible = "i2c-gpio";
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_swi2c>;
--		gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>, /* sda */
--			<&gpio3 4 GPIO_ACTIVE_HIGH>; /* scl */
--		i2c-gpio,delay-us = <50>;
--		status = "okay";
--
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		sgtl5000: codec@a {
--			compatible = "fsl,sgtl5000";
--			reg = <0x0a>;
--			clocks = <&clk_26M_snd>;
--			VDDA-supply = <&vdig_reg>;
--			VDDIO-supply = <&vvideo_reg>;
--			#sound-dai-cells = <0>;
--		};
--	};
--
- 	spi_gpio: spi-gpio {
- 		compatible = "spi-gpio";
- 		#address-cells = <1>;
-@@ -315,178 +238,30 @@
- 	};
- };
- 
--&cpu {
--	cpu-supply = <&sw1_reg>;
-+&usb_vbus {
-+	regulator-always-on;
- };
- 
--&ecspi1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_ecspi1>;
--	cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>,
--		   <&gpio4 25 GPIO_ACTIVE_LOW>;
--	status = "okay";
--
--	pmic@0 {
--		compatible = "fsl,mc13892";
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_pmic>;
--		spi-max-frequency = <6000000>;
--		spi-cs-high;
--		reg = <0>;
--		interrupt-parent = <&gpio1>;
--		interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
--		fsl,mc13xxx-uses-adc;
--
--		regulators {
--			sw1_reg: sw1 {
--				regulator-min-microvolt = <600000>;
--				regulator-max-microvolt = <1375000>;
--				regulator-boot-on;
--				regulator-always-on;
--			};
--
--			sw2_reg: sw2 {
--				regulator-min-microvolt = <900000>;
--				regulator-max-microvolt = <1850000>;
--				regulator-boot-on;
--				regulator-always-on;
--			};
--
--			sw3_reg: sw3 {
--				regulator-min-microvolt = <1100000>;
--				regulator-max-microvolt = <1850000>;
--				regulator-boot-on;
--				regulator-always-on;
--			};
--
--			sw4_reg: sw4 {
--				regulator-min-microvolt = <1100000>;
--				regulator-max-microvolt = <1850000>;
--				regulator-boot-on;
--				regulator-always-on;
--			};
--
--			vpll_reg: vpll {
--				regulator-min-microvolt = <1050000>;
--				regulator-max-microvolt = <1800000>;
--				regulator-boot-on;
--				regulator-always-on;
--			};
--
--			vdig_reg: vdig {
--				regulator-min-microvolt = <1650000>;
--				regulator-max-microvolt = <1650000>;
--				regulator-boot-on;
--			};
--
--			vsd_reg: vsd {
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3150000>;
--			};
--
--			vusb_reg: vusb {
--				regulator-always-on;
--			};
--
--			vusb2_reg: vusb2 {
--				regulator-min-microvolt = <2400000>;
--				regulator-max-microvolt = <2775000>;
--				regulator-boot-on;
--				regulator-always-on;
--			};
--
--			vvideo_reg: vvideo {
--				regulator-min-microvolt = <2775000>;
--				regulator-max-microvolt = <2775000>;
--			};
--
--			vaudio_reg: vaudio {
--				regulator-min-microvolt = <2300000>;
--				regulator-max-microvolt = <3000000>;
--			};
--
--			vcam_reg: vcam {
--				regulator-min-microvolt = <2500000>;
--				regulator-max-microvolt = <3000000>;
--			};
--
--			vgen1_reg: vgen1 {
--				regulator-min-microvolt = <1200000>;
--				regulator-max-microvolt = <1200000>;
--			};
--
--			vgen2_reg: vgen2 {
--				regulator-min-microvolt = <1200000>;
--				regulator-max-microvolt = <3150000>;
--				regulator-always-on;
--			};
--
--			vgen3_reg: vgen3 {
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <2900000>;
--				regulator-always-on;
--			};
--		};
--
--		leds {
--			#address-cells = <1>;
--			#size-cells = <0>;
--			led-control = <0x0 0x0 0x3f83f8 0x0>;
--
--			sysled0@3 {
--				reg = <3>;
--				label = "system:green:status";
--				linux,default-trigger = "default-on";
--			};
--
--			sysled1@4 {
--				reg = <4>;
--				label = "system:green:act";
--				linux,default-trigger = "heartbeat";
--			};
--		};
--	};
--
--	flash@1 {
--		#address-cells = <1>;
--		#size-cells = <1>;
--		compatible = "atmel,at45db642d", "atmel,at45", "atmel,dataflash";
--		spi-max-frequency = <25000000>;
--		reg = <1>;
--	};
-+&ecspi2 {
-+	status = "disabled";
- };
- 
- &esdhc1 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_esdhc1>;
-+	pinctrl-0 = <&pinctrl_esdhc1_4bit>;
- 	bus-width = <4>;
--	no-1-8-v;
--	non-removable;
--	no-sdio;
--	no-sd;
--	status = "okay";
-+};
-+
-+&esdhc4 {
-+	status = "disabled";
- };
- 
- &fec {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_fec>;
--	phy-mode = "mii";
- 	phy-reset-gpios = <&gpio2 14 GPIO_ACTIVE_LOW>;
- 	phy-supply = <&vgen3_reg>;
--	status = "okay";
- };
- 
- &i2c2 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_i2c2>;
--	status = "okay";
--
--	eeprom@50 {
--		compatible = "atmel,24c04";
--		pagesize = <16>;
--		reg = <0x50>;
--	};
--
- 	hpa1: amp@60 {
- 		compatible = "ti,tpa6130a2";
- 		reg = <0x60>;
-@@ -550,31 +325,29 @@
- 
- };
- 
--&ipu_di0_disp1 {
--	remote-endpoint = <&display_in>;
--};
-+&i2c_gpio {
-+	gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>, /* sda */
-+		<&gpio3 4 GPIO_ACTIVE_HIGH>; /* scl */
- 
--&ssi2 {
--	status = "okay";
-+	sgtl5000: codec@a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x0a>;
-+		clocks = <&clk_26M_snd>;
-+		VDDA-supply = <&vdig_reg>;
-+		VDDIO-supply = <&vvideo_reg>;
-+		#sound-dai-cells = <0>;
-+	};
- };
- 
--&uart1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_uart1>;
--	status = "okay";
-+&ipu_di0_disp1 {
-+	remote-endpoint = <&display_in>;
- };
- 
--&uart2 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_uart2>;
-+&ssi2 {
- 	status = "okay";
- };
- 
- &uart3 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_uart3>;
--	status = "okay";
--
- 	rave-sp {
- 		compatible = "zii,rave-sp-rdu1";
- 		current-speed = <38400>;
-@@ -593,7 +366,7 @@
- 	fsl,usbphy = <&usbh1phy>;
- 	disable-over-current;
- 	maximum-speed = "full-speed";
--	vbus-supply = <&reg_5p0v_main>;
-+	vbus-supply = <&usb_vbus>;
- 	status = "okay";
- };
- 
-@@ -604,20 +377,12 @@
- 	phy_type = "ulpi";
- 	fsl,usbphy = <&usbh2phy>;
- 	disable-over-current;
--	vbus-supply = <&reg_5p0v_main>;
-+	vbus-supply = <&usb_vbus>;
- 	status = "okay";
- };
- 
--&usbphy0 {
--	vcc-supply = <&vusb_reg>;
--};
--
--&usbotg {
--	dr_mode = "host";
--	disable-over-current;
--	phy_type = "utmi_wide";
--	vbus-supply = <&reg_5p0v_main>;
--	status = "okay";
-+&sysled3 {
-+	label = "system:green:status";
- };
- 
- &iomuxc {
-@@ -642,27 +407,6 @@
- 		>;
- 	};
- 
--	pinctrl_ecspi1: ecspi1grp {
--		fsl,pins = <
--			MX51_PAD_CSPI1_MISO__ECSPI1_MISO	0x185
--			MX51_PAD_CSPI1_MOSI__ECSPI1_MOSI	0x185
--			MX51_PAD_CSPI1_SCLK__ECSPI1_SCLK	0x185
--			MX51_PAD_CSPI1_SS0__GPIO4_24		0x85
--			MX51_PAD_CSPI1_SS1__GPIO4_25		0x85
--		>;
--	};
--
--	pinctrl_esdhc1: esdhc1grp {
--		fsl,pins = <
--			MX51_PAD_SD1_CMD__SD1_CMD		0x400020d5
--			MX51_PAD_SD1_CLK__SD1_CLK		0x20d5
--			MX51_PAD_SD1_DATA0__SD1_DATA0		0x20d5
--			MX51_PAD_SD1_DATA1__SD1_DATA1		0x20d5
--			MX51_PAD_SD1_DATA2__SD1_DATA2		0x20d5
--			MX51_PAD_SD1_DATA3__SD1_DATA3		0x20d5
--		>;
--	};
--
- 	pinctrl_fec: fecgrp {
- 		fsl,pins = <
- 			MX51_PAD_EIM_EB2__FEC_MDIO		0x1f5
-@@ -696,13 +440,6 @@
- 		>;
- 	};
- 
--	pinctrl_i2c2: i2c2grp {
--		fsl,pins = <
--			MX51_PAD_KEY_COL4__I2C2_SCL		0x400001ed
--			MX51_PAD_KEY_COL5__I2C2_SDA		0x400001ed
--		>;
--	};
--
- 	pinctrl_ipu_disp1: ipudisp1grp {
- 		fsl,pins = <
- 			MX51_PAD_DISP1_DAT0__DISP1_DAT0		0x5
-@@ -741,13 +478,6 @@
- 		>;
- 	};
- 
--	pinctrl_pmic: pmicgrp {
--		fsl,pins = <
--			MX51_PAD_GPIO1_4__GPIO1_4		0x1e0
--			MX51_PAD_GPIO1_8__GPIO1_8		0x21e2
--		>;
--	};
--
- 	pinctrl_sndgate26mhz: sndgate26mhzgrp {
- 		fsl,pins = <
- 			MX51_PAD_CSPI1_RDY__GPIO4_26		0x85
--- 
-1.9.1
+
+So, the same code with mailbox framework will be some thing like this:
+1. request all 4 channels in the probe. ignore completion callback and
+set proper timeout.
+
+2. keep your old code by replacing this part.
+	/* Write remaining words */
+	while (count < msg->size) {
+		mbox_send_message(sc_ipc->mbox_chan[count % MU_TR_COUNT],
+msg->DATA.u32[count - 1]);
+		count++;
+	}
+
+The advantage of this variant. If SCU firmware will stall, the linux
+will be able to notify about it without blocking complete system.
+
+Can you please provide (if possible) your old mailbox based
+implementation. I'm curious to see why it is slow.
+
+--=20
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--klxkloccgpcekjfo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAlsr6bUACgkQdQOiSHVI
+77R2FQf/ZQVj/ITEhmt0dWtvUecQivOA7UxtCkJr12250UphWq+cX06manwOPDdG
+OTl05foSl+ctbw4U6vNPRYXdvio24qOavduy/AhslVKy+5yc4Ml9tTTSJWltRdrk
+g2DHEnTzgmIw6PKvrwr1WqussSdjvYNs827PP0e063tIzz7U5Fk15BB7ry9tKI6B
+EHRPPQOOnBvir+nmDsyf1spQiDGnu9y9YX4vQgr/mx60Lj3hd2nIUclli7M2CSfa
+Uy+Y2ZCr3p0biKXNixv3LvTRcQiF0dEk+dE5SCuHlqC/uj4sEdCn3Ke+v1EdatPW
+6lXxjx8nO7ztuepORwxJoPyXw7vyNg==
+=3WTa
+-----END PGP SIGNATURE-----
+
+--klxkloccgpcekjfo--
+
+
+--===============9135415002118967534==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============9135415002118967534==--
