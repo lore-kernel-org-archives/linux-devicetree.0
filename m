@@ -1,126 +1,53 @@
-From: "sayali" <sayalil@codeaurora.org>
-Subject: RE: [PATCH V2 1/3] scsi: ufs: set the device reference clock setting
-Date: Thu, 21 Jun 2018 14:22:04 +0530
-Message-ID: <002401d4093d$256fdc90$704f95b0$@codeaurora.org>
-References: <1528455990-24572-1-git-send-email-sayalil@codeaurora.org> <1528455990-24572-2-git-send-email-sayalil@codeaurora.org> <20180612192636.GA31725@rob-hp-laptop> <000101d403d3$87210d20$95632760$@codeaurora.org> <CAL_JsqLsdEGEjPo8yh5dGoGWTes41QxUiJ4NN0Q9qsgLBaTpjw@mail.gmail.com>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH V4 3/4] ARM: dts: stm32: add iwdg2 support for stm32mp157c
+Date: Thu, 21 Jun 2018 11:02:16 +0200
+Message-ID: <1529571737-3552-4-git-send-email-ludovic.Barre@st.com>
+References: <1529571737-3552-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLsdEGEjPo8yh5dGoGWTes41QxUiJ4NN0Q9qsgLBaTpjw@mail.gmail.com>
-Content-Language: en-us
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Rob Herring' <robh@kernel.org>
-Cc: 'Subhash Jadavani' <subhashj@codeaurora.org>, 'Can Guo' <cang@codeaurora.org>, 'Vivek Gautam' <vivek.gautam@codeaurora.org>, 'Rajendra Nayak' <rnayak@codeaurora.org>, 'Vinayak Holikatti' <vinholikatti@gmail.com>, "'James E.J. Bottomley'" <jejb@linux.vnet.ibm.com>, "'Martin K. Petersen'" <martin.petersen@oracle.com>, asutoshd@codeaurora.org, 'Evan Green' <evgreen@chromium.org>, linux-scsi@vger.kernel.org, 'Mark Rutland' <mark.rutland@arm.com>, 'Mathieu Malaterre' <malat@debian.org>, "'open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS'" <devicetree@vger.kernel.org>, 'open list' <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1529571737-3552-1-git-send-email-ludovic.Barre@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+From: Ludovic Barre <ludovic.barre@st.com>
 
-Please check my comment inline.
+This patch adds independent watchdog support for stm32mp157c.
 
-Thanks,
-Sayali
------Original Message-----
-From: Rob Herring [mailto:robh@kernel.org]=20
-Sent: Thursday, June 14, 2018 7:59 PM
-To: sayali <sayalil@codeaurora.org>
-Cc: Subhash Jadavani <subhashj@codeaurora.org>; Can Guo =
-<cang@codeaurora.org>; Vivek Gautam <vivek.gautam@codeaurora.org>; =
-Rajendra Nayak <rnayak@codeaurora.org>; Vinayak Holikatti =
-<vinholikatti@gmail.com>; James E.J. Bottomley =
-<jejb@linux.vnet.ibm.com>; Martin K. Petersen =
-<martin.petersen@oracle.com>; asutoshd@codeaurora.org; Evan Green =
-<evgreen@chromium.org>; linux-scsi@vger.kernel.org; Mark Rutland =
-<mark.rutland@arm.com>; Mathieu Malaterre <malat@debian.org>; open =
-list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS =
-<devicetree@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V2 1/3] scsi: ufs: set the device reference clock =
-setting
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+---
+ arch/arm/boot/dts/stm32mp157c.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-On Thu, Jun 14, 2018 at 5:33 AM, sayali <sayalil@codeaurora.org> wrote:
-> Comment inline.
->
-> Thanks,
-> Sayali
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Wednesday, June 13, 2018 12:57 AM
-> To: Sayali Lokhande <sayalil@codeaurora.org>
-> Cc: subhashj@codeaurora.org; cang@codeaurora.org;=20
-> vivek.gautam@codeaurora.org; rnayak@codeaurora.org;=20
-> vinholikatti@gmail.com; jejb@linux.vnet.ibm.com;=20
-> martin.petersen@oracle.com; asutoshd@codeaurora.org;=20
-> evgreen@chromium.org; linux-scsi@vger.kernel.org; Mark Rutland=20
-> <mark.rutland@arm.com>; Mathieu Malaterre <malat@debian.org>; open=20
-> list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS=20
-> <devicetree@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>
-> Subject: Re: [PATCH V2 1/3] scsi: ufs: set the device reference clock=20
-> setting
->
-> On Fri, Jun 08, 2018 at 04:36:28PM +0530, Sayali Lokhande wrote:
->> From: Subhash Jadavani <subhashj@codeaurora.org>
->>
->> UFS host supplies the reference clock to UFS device and UFS device=20
->> specification allows host to provide one of the 4 frequencies (19.2=20
->> MHz,
->> 26 MHz, 38.4 MHz, 52 MHz) for reference clock. Host should set the=20
->> device reference clock frequency setting in the device based on what=20
->> frequency it is supplying to UFS device.
->>
->> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
->> Signed-off-by: Can Guo <cang@codeaurora.org>
->> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
->> ---
->>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  7 +++
->>  drivers/scsi/ufs/ufs.h                             |  9 ++++
->>  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 24 ++++++++++
->>  drivers/scsi/ufs/ufshcd.c                          | 52
-> ++++++++++++++++++++++
->>  drivers/scsi/ufs/ufshcd.h                          |  1 +
->>  5 files changed, 93 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
->> b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
->> index c39dfef..4522434 100644
->> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
->> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
->> @@ -41,6 +41,12 @@ Optional properties:
->>  -lanes-per-direction : number of lanes available per direction -=20
->> either 1
-> or 2.
->>                         Note that it is assume same number of lanes=20
->> is
-> used both
->>                         directions at once. If not specified, default =
-
->> is 2
-> lanes per direction.
->> +- dev-ref-clk-freq   : Specify the device reference clock frequency, =
-must
-> be one of the following:
->> +                       0: 19.2 MHz
->> +                       1: 26 MHz
->> +                       2: 38.4 MHz
->> +                       3: 52 MHz
->> +                       Defaults to 26 MHz if not specified.
->
-> I must have misunderstood your last response. I thought you could=20
-> handle things without DT. If not, my question remains.
-> [Sayali]: Ref clk frequency setting could vary from=20
-> platfrom-to-platform(vendor specific). Hence we need to pass it via =
-DT.
->         Currently in DT we do not set/mention any ref clk frequency=20
-> parameter. Hence I have added one new DT entry to configure
->         required ref clk freq.
-
-The clocks property contains "ref_clk". Is that not the same clock?
-Why can't you read what that frequency is? Or you need to be able to =
-change it to a specific frequency? These all look like typical =
-oscillator frequencies, so I wouldn't expect you could change them =
-(other than divide by 2 maybe).
-[Sayali] : It is the same "ref_clk", but we need to be able to change it =
-to a specific frequency as per requirement. Thus, we need new DT entry =
-to specify/override reference clock frequency as per need.
-
-Rob
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index 7d17538..95cc166 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -784,6 +784,14 @@
+ 			status = "disabled";
+ 		};
+ 
++		iwdg2: watchdog@5a002000 {
++			compatible = "st,stm32mp1-iwdg";
++			reg = <0x5a002000 0x400>;
++			clocks = <&rcc IWDG2>, <&rcc CK_LSI>;
++			clock-names = "pclk", "lsi";
++			status = "disabled";
++		};
++
+ 		usbphyc: usbphyc@5a006000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-- 
+2.7.4
