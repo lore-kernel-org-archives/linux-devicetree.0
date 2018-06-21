@@ -1,111 +1,172 @@
-From: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH v2 2/2] hwmon: npcm750: add NPCM7xx PWM and Fan driver
-Date: Thu, 21 Jun 2018 15:17:26 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1806211515060.3774@hadrien>
-References: <20180619105352.97181-1-tmaimon77@gmail.com>  <20180619105352.97181-3-tmaimon77@gmail.com>  <20180620164853.GA3459@roeck-us.net> <a6a5a21236c37cfc63329e54248d941bf6d49e3c.camel@perches.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+From: Randy Li <ayaka@soulik.info>
+Subject: [PATCH v2] ARM64: dts: rockchip: add some pins to rk3399
+Date: Thu, 21 Jun 2018 21:32:10 +0800
+Message-ID: <20180621133210.9359-1-ayaka@soulik.info>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a6a5a21236c37cfc63329e54248d941bf6d49e3c.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, Tomer Maimon <tmaimon77@gmail.com>, cocci <cocci@systeme.lip6.fr>, robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org
+To: linux-rockchip@lists.infradead.org
+Cc: Randy Li <ayaka@soulik.info>, shawn.lin@rock-chips.com, klaus.goger@theobroma-systems.com, mark.rutland@arm.com, devicetree@vger.kernel.org, heiko@sntech.de, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Those pins would be used by many boards.
 
+Signed-off-by: Randy Li <ayaka@soulik.info>
+---
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 87 +++++++++++++++++++++++++++-----
+ 1 file changed, 73 insertions(+), 14 deletions(-)
 
-On Wed, 20 Jun 2018, Joe Perches wrote:
-
-> (adding Julia Lawall and cocci mailing list)
->
-> On Wed, 2018-06-20 at 09:48 -0700, Guenter Roeck wrote:
-> []
-> > > +static inline void npcm7xx_fan_start_capture(struct npcm7xx_pwm_fan_data *data,
-> > > +						 u8 fan, u8 cmp)
-> > > +{
-> > > +	u8 fan_id = 0;
-> > > +	u8 reg_mode = 0;
-> > > +	u8 reg_int = 0;
-> > > +	unsigned long flags;
-> > > +
-> > > +	fan_id = NPCM7XX_FAN_INPUT(fan, cmp);
-> > > +
-> > > +	/* to check whether any fan tach is enable */
-> > > +	if (data->npcm7xx_fan[fan_id].FanStFlag != FAN_DISABLE) {
-> > > +		/* reset status */
-> > > +		spin_lock_irqsave(&data->npcm7xx_fan_lock[fan], flags);
-> > > +
-> > > +		data->npcm7xx_fan[fan_id].FanStFlag = FAN_INIT;
-> > > +		reg_int = ioread8(NPCM7XX_FAN_REG_TIEN(data->fan_base, fan));
-> > > +
-> > > +		if (cmp == NPCM7XX_FAN_CMPA) {
-> > > +			/* enable interrupt */
-> > > +			iowrite8((u8) (reg_int | (NPCM7XX_FAN_TIEN_TAIEN |
-> > > +						  NPCM7XX_FAN_TIEN_TEIEN)),
-> >
-> > Is the (u8) typecast really necessary ? Seems unlikely.
->
-> The cast is not really necessary here as there would
-> be an implicit cast already.
->
-> Some might complain about loss of type safety and
-> "make W=123" would probably emit something here.
->
-> But casts to the same type are not necessary.
->
-> A possible coccinelle script to find casts to the
-> same type is below, but there are some false positives
-> for things like __force and __user casts
->
-> Also, spatch (1.0.4) seems to have a defect for this
-> when the type is used in operations that change a
-> smaller type to int or unsigned int.
->
-> i.e.: (offset is u16, but offset * 2 is int)
-
-Ah.  The rule is that the result type is always the larger one?
-Unfortunately, Coccinelle doesn't know the size of any type.  I could add
-some special cases, but that may be more confusing than helpful.
-
-julia
-
->
-> While running the cocci script below:
->
-> HANDLING: drivers/net/ethernet/intel/igb/e1000_nvm.c
-> diff =
-> diff -u -p a/drivers/net/drivers/net/ethernet/intel/igb/e1000_nvm.c b/drivers/net/ethernet/intel/igb/e1000_nvm.c
-> --- a/drivers/net/ethernet/intel/igb/e1000_nvm.c
-> +++ b/drivers/net/ethernet/intel/igb/e1000_nvm.c
-> @@ -335,7 +335,7 @@ s32 igb_read_nvm_spi(struct e1000_hw *hw
->
->  	/* Send the READ command (opcode + addr) */
->  	igb_shift_out_eec_bits(hw, read_opcode, nvm->opcode_bits);
-> -	igb_shift_out_eec_bits(hw, (u16)(offset*2), nvm->address_bits);
-> +	igb_shift_out_eec_bits(hw, (offset * 2), nvm->address_bits);
->
->  	/* Read the data.  SPI NVMs increment the address with each byte
->  	 * read and will roll over if reading beyond the end.  This allows
->
-> ---
->
-> Anyway, here's the cocci script:
->
-> $ cat same_typecast.cocci
-> @@
-> type T;
-> T foo;
-> @@
->
-> -	(T *)&foo
-> +	&foo
->
-> @@
-> type T;
-> T foo;
-> @@
->
-> -	(T)foo
-> +	foo
->
->
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index e0040b648f43..f32d1a049550 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1936,19 +1936,49 @@
+ 			drive-strength = <12>;
+ 		};
+ 
++		pcfg_pull_none_13ma: pcfg-pull-none-13ma {
++			bias-disable;
++			drive-strength = <13>;
++		};
++
++		pcfg_pull_none_18ma: pcfg-pull-none-18ma {
++			bias-disable;
++			drive-strength = <18>;
++		};
++
++		pcfg_pull_none_20ma: pcfg-pull-none-20ma {
++			bias-disable;
++			drive-strength = <20>;
++		};
++
++		pcfg_pull_up_2ma: pcfg-pull-up-2ma {
++			bias-pull-up;
++			drive-strength = <2>;
++		};
++
+ 		pcfg_pull_up_8ma: pcfg-pull-up-8ma {
+ 			bias-pull-up;
+ 			drive-strength = <8>;
+ 		};
+ 
++		pcfg_pull_up_18ma: pcfg-pull-up-18ma {
++			bias-pull-up;
++			drive-strength = <18>;
++		};
++
++		pcfg_pull_up_20ma: pcfg-pull-up-20ma {
++			bias-pull-up;
++			drive-strength = <20>;
++		};
++
+ 		pcfg_pull_down_4ma: pcfg-pull-down-4ma {
+ 			bias-pull-down;
+ 			drive-strength = <4>;
+ 		};
+ 
+-		pcfg_pull_up_2ma: pcfg-pull-up-2ma {
+-			bias-pull-up;
+-			drive-strength = <2>;
++		pcfg_pull_down_8ma: pcfg-pull-down-8ma {
++			bias-pull-down;
++			drive-strength = <8>;
+ 		};
+ 
+ 		pcfg_pull_down_12ma: pcfg-pull-down-12ma {
+@@ -1956,9 +1986,22 @@
+ 			drive-strength = <12>;
+ 		};
+ 
+-		pcfg_pull_none_13ma: pcfg-pull-none-13ma {
+-			bias-disable;
+-			drive-strength = <13>;
++		pcfg_pull_down_18ma: pcfg-pull-down-18ma {
++			bias-pull-down;
++			drive-strength = <18>;
++		};
++
++		pcfg_pull_down_20ma: pcfg-pull-down-20ma {
++			bias-pull-down;
++			drive-strength = <20>;
++		};
++
++		pcfg_output_high: pcfg-output-high {
++			output-high;
++		};
++
++		pcfg_output_low: pcfg-output-low {
++			output-low;
+ 		};
+ 
+ 		clock {
+@@ -2481,45 +2524,61 @@
+ 		pwm0 {
+ 			pwm0_pin: pwm0-pin {
+ 				rockchip,pins =
+-					<4 18 RK_FUNC_1 &pcfg_pull_none>;
++					<4 RK_PC2 RK_FUNC_1 &pcfg_pull_none>;
++			};
++
++			pwm0_pin_pull_down: pwm0-pin-pull-down {
++				rockchip,pins =
++					<4 RK_PC2 RK_FUNC_1 &pcfg_pull_down>;
+ 			};
+ 
+ 			vop0_pwm_pin: vop0-pwm-pin {
+ 				rockchip,pins =
+-					<4 18 RK_FUNC_2 &pcfg_pull_none>;
++					<4 RK_PC2 RK_FUNC_2 &pcfg_pull_none>;
++			};
++
++			vop1_pwm_pin: vop1-pwm-pin {
++				rockchip,pins =
++					<4 RK_PC2 RK_FUNC_3 &pcfg_pull_none>;
+ 			};
++
+ 		};
+ 
+ 		pwm1 {
+ 			pwm1_pin: pwm1-pin {
+ 				rockchip,pins =
+-					<4 22 RK_FUNC_1 &pcfg_pull_none>;
++					<4 RK_PC6 RK_FUNC_1 &pcfg_pull_none>;
+ 			};
+ 
+-			vop1_pwm_pin: vop1-pwm-pin {
++			pwm1_pin_pull_down: pwm1-pin-pull-down {
+ 				rockchip,pins =
+-					<4 18 RK_FUNC_3 &pcfg_pull_none>;
++					<4 RK_PC6 RK_FUNC_1 &pcfg_pull_down>;
+ 			};
+ 		};
+ 
+ 		pwm2 {
+ 			pwm2_pin: pwm2-pin {
+ 				rockchip,pins =
+-					<1 19 RK_FUNC_1 &pcfg_pull_none>;
++					<1 RK_PC3 RK_FUNC_1 &pcfg_pull_none>;
++			};
++
++			pwm2_pin_pull_down: pwm2-pin-pull-down {
++				rockchip,pins =
++					<1 RK_PC3 RK_FUNC_1 &pcfg_pull_down>;
+ 			};
+ 		};
+ 
+ 		pwm3a {
+ 			pwm3a_pin: pwm3a-pin {
+ 				rockchip,pins =
+-					<0 6 RK_FUNC_1 &pcfg_pull_none>;
++					<0 RK_PA6 RK_FUNC_1 &pcfg_pull_none>;
+ 			};
+ 		};
+ 
+ 		pwm3b {
+ 			pwm3b_pin: pwm3b-pin {
+ 				rockchip,pins =
+-					<1 14 RK_FUNC_1 &pcfg_pull_none>;
++					<1 RK_PB6 RK_FUNC_1 &pcfg_pull_none>;
+ 			};
+ 		};
+ 
+-- 
+2.14.4
