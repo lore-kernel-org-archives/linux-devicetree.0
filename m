@@ -1,69 +1,38 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/2] drm/panel: Augment the TPO TPG110 bindings
-Date: Thu, 21 Jun 2018 20:49:41 +0200
-Message-ID: <20180621184942.26087-1-linus.walleij@linaro.org>
+From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH 0/7] Initial support for Samsung Galaxy S and Galaxy S 4G
+Date: Thu, 21 Jun 2018 21:09:52 +0200
+Message-ID: <1529608199-5583-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xc-racer2@live.ca, pawel.mikolaj.chmiel@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-VGhlIFRQTyBUUEcxMTAgYmluZGluZ3Mgd2VyZSB1c2luZyB0aGUgRFBJIGJpbmRpbmdzIChwb3B1
-bGFyCmluIHRoZSBmYmRldiBzdWJzeXN0ZW0pIGJ1dCB0aGlzIG1pc3NlcyB0aGUgZmluZXIgcG9p
-bnRzCmxlYXJuZWQgaW4gdGhlIERSTSBzdWJzeXN0ZW0uCgpXZSBuZWVkIHRvIGF1Z21lbnQgdGhl
-IGJpbmRpbmdzIGZvciBwcm9wZXIgRFJNIGludGVncmF0aW9uOgp0aGUgdGltaW5ncyBhcmUgZXhw
-cmVzc2VkIGJ5IHRoZSBoYXJkd2FyZSwgbm90IHB1dCBpbnRvIHRoZQpkZXZpY2UgdHJlZS4KCk9s
-ZCBkZXZpY2UgdHJlZXMgd2l0aCB0aGUgRFBJIGluZm8gd2lsbCBjb250aW51ZSB0byB3b3JrLApi
-dXQgbm8ga25vd24gZGVwbG95bWVudHMgZXhpc3QuCgpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmcKU2lnbmVkLW9mZi1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8u
-b3JnPgotLS0KIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Rwbyx0cGcxMTAudHh0ICAgICB8
-IDM0ICsrKysrKysrLS0tLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCsp
-LCAyMCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9wYW5lbC90cG8sdHBnMTEwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Rwbyx0cGcxMTAudHh0CmluZGV4IGY1ZTNj
-NmYyMDk1YS4uMGU5MTgwNzZkNTVlIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC90cG8sdHBnMTEwLnR4dAorKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC90cG8sdHBnMTEwLnR4dApAQCAt
-MSwyNiArMSwzMiBAQAogVFBPIFRQRzExMCBQYW5lbAogPT09PT09PT09PT09PT09PQogCi1UaGlz
-IGJpbmRpbmcgYnVpbGRzIG9uIHRoZSBEUEkgYmluZGluZ3MsIGFkZGluZyBhIGZldyBwcm9wZXJ0
-aWVzCi1hcyBhIHN1cGVyc2V0IG9mIGEgRFBJLiBTZWUgcGFuZWwtZHBpLnR4dCBmb3IgdGhlIHJl
-cXVpcmVkIERQSQotYmluZGluZ3MuCitUaGlzIHBhbmVsIGRyaXZlciBjYW4gZHJpdmVyIGEgdmFy
-aWV0eSBvZiBwYW5lbHMuIEl0IHJlcXVpcmVzCithIGZldyBHUElPIGxpbmVzIGZvciBjb250cm9s
-IG9mIGl0cyByZXNldCBsaW5lIGFuZCBjdXN0b20gc2VyaWFsCitwcm90b2NvbC4KIAogUmVxdWly
-ZWQgcHJvcGVydGllczoKLS0gY29tcGF0aWJsZSA6ICJ0cG8sdHBnMTEwIgorLSBjb21wYXRpYmxl
-IDogb25lIG9mOgorICAic3RlLG5vbWFkaWstbmhrMTUtZGlzcGxheSIsICJ0cG8sdHBnMTEwIgor
-ICAidHBvLHRwZzExMCIKIC0gZ3Jlc3RiLWdwaW9zIDogcGFuZWwgcmVzZXQgR1BJTwogLSBzY2Vu
-LWdwaW9zIDogc2VyaWFsIGNvbnRyb2wgZW5hYmxlIEdQSU8KIC0gc2NsLWdwaW9zIDogc2VyaWFs
-IGNvbnRyb2wgY2xvY2sgbGluZSBHUElPCiAtIHNkYS1ncGlvcyA6IHNlcmlhbCBjb250cm9sIGRh
-dGEgbGluZSBHUElPCistIHdpZHRoLW1tIDogc2VlIGRpc3BsYXkvcGFuZWwvcGFuZWwtY29tbW9u
-LnR4dAorLSBoZWlnaHQtbW0gOiBzZWUgZGlzcGxheS9wYW5lbC9wYW5lbC1jb21tb24udHh0CiAK
-LVJlcXVpcmVkIG5vZGVzOgotLSBWaWRlbyBwb3J0IGZvciBEUEkgaW5wdXQsIHNlZSBwYW5lbC1k
-cGkudHh0Ci0tIFBhbmVsIHRpbWluZyBmb3IgRFBJIHNldHVwLCBzZWUgcGFuZWwtZHBpLnR4dAor
-VGhlIGRldmljZSBub2RlIGNhbiBjb250YWluIG9uZSAncG9ydCcgY2hpbGQgbm9kZSB3aXRoIG9u
-ZSBjaGlsZAorJ2VuZHBvaW50JyBub2RlLCBhY2NvcmRpbmcgdG8gdGhlIGJpbmRpbmdzIGRlZmlu
-ZWQgaW4KK21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0LiBUaGlzIG5vZGUgc2hvdWxkIGRlc2Ny
-aWJlIHBhbmVsJ3MgdmlkZW8gYnVzLgogCiBFeGFtcGxlCiAtLS0tLS0tCiAKIHBhbmVsIHsKLQlj
-b21wYXRpYmxlID0gInRwbyx0cGcxMTAiLCAicGFuZWwtZHBpIjsKKwljb21wYXRpYmxlID0gInRw
-byx0cGcxMTAiOworCXdpZHRoLW1tID0gPDExNj47CisJaGVpZ2h0LW1tID0gPDg3PjsKIAlncmVz
-dGItZ3Bpb3MgPSA8JnN0bXBlX2dwaW80NCA1IEdQSU9fQUNUSVZFX0xPVz47CiAJc2Nlbi1ncGlv
-cyA9IDwmZ3BpbzAgNiBHUElPX0FDVElWRV9MT1c+OwogCXNjbC1ncGlvcyA9IDwmZ3BpbzAgNSBH
-UElPX0FDVElWRV9ISUdIPjsKQEAgLTMyLDE2ICszOCw0IEBAIHBhbmVsIHsKIAkJCXJlbW90ZS1l
-bmRwb2ludCA9IDwmbm9tYWRpa19jbGNkX3BhZHM+OwogCQl9OwogCX07Ci0KLQlwYW5lbC10aW1p
-bmcgewotCQljbG9jay1mcmVxdWVuY3kgPSA8MzMyMDAwMDA+OwotCQloYWN0aXZlID0gPDgwMD47
-Ci0JCWhiYWNrLXBvcmNoID0gPDIxNj47Ci0JCWhmcm9udC1wb3JjaCA9IDw0MD47Ci0JCWhzeW5j
-LWxlbiA9IDwxPjsKLQkJdmFjdGl2ZSA9IDw0ODA+OwotCQl2YmFjay1wb3JjaCA9IDwzNT47Ci0J
-CXZmcm9udC1wb3JjaCA9IDwxMD47Ci0JCXZzeW5jLWxlbiA9IDwxPjsKLQl9OwogfTsKLS0gCjIu
-MTcuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Jonathan Bakker (2):
+  ARM: dts: s5pv210: Add initial DTS config for SGH-T959P phone
+  dt-bindings: samsung: Document binding for SGH-T959P board
+
+Paweł Chmiel (5):
+  ARM: dts: s5pv210: Add missing interrupt-controller property to gph2
+  ARM: dts: s5pv210: Add initial DTS for Samsung Aries based phones.
+  ARM: dts: s5pv210: Add initial DTS for Samsung Galaxy S phone.
+  ARM: s5pv210_defconfig: Enable drivers for Samsung Aries based phones
+  dt-bindings: samsung: Document bindings for Samsung aries boards
+
+ .../bindings/arm/samsung/samsung-boards.txt        |   3 +
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/s5pv210-aries.dtsi               | 397 +++++++++++++++++++++
+ arch/arm/boot/dts/s5pv210-fascinate4g.dts          |  40 +++
+ arch/arm/boot/dts/s5pv210-galaxys.dts              |  72 ++++
+ arch/arm/boot/dts/s5pv210-pinctrl.dtsi             |   2 +
+ arch/arm/configs/s5pv210_defconfig                 |  49 ++-
+ 7 files changed, 562 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm/boot/dts/s5pv210-aries.dtsi
+ create mode 100644 arch/arm/boot/dts/s5pv210-fascinate4g.dts
+ create mode 100644 arch/arm/boot/dts/s5pv210-galaxys.dts
+
+-- 
+2.7.4
