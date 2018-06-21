@@ -1,57 +1,79 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [RFC PATCH] of: overlay: update phandle cache on overlay apply
- and remove
-Date: Wed, 20 Jun 2018 22:52:34 -0700
-Message-ID: <1bb4ef5c-5813-fbea-9536-48b339c1e010@gmail.com>
-References: <1529251416-14814-1-git-send-email-frowand.list@gmail.com>
- <CAL_JsqJdp16D4svB8Y7jurNVdHzVgz8_pkOKBA6mFyhXkqWi6w@mail.gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 2/2] arm64: dts: exynos: Remove unneeded DSI and DECON
+ address/size cells in Exynos5433
+Date: Thu, 21 Jun 2018 07:59:20 +0200
+Message-ID: <20180621055923eucas1p190f716475dcd44f72b24abfa4d948c82~6F2j2EPNk0295402954eucas1p1v@eucas1p1.samsung.com>
+References: <20180618174216.24801-1-krzk@kernel.org>
+        <CGME20180618174316epcas1p397b66c8e4e8479fce8655941a4d4279f@epcas1p3.samsung.com>
+        <20180618174216.24801-2-krzk@kernel.org>
+        <20180619072652eucas1p1943deb1b158eda52980448e41f83e5e9~5fwX6lI2o2633926339eucas1p1Q@eucas1p1.samsung.com>
+        <CAJKOXPeCT3CkqqNowEZaeTw7goJd6=Nbd2S61QzTFW-nGr5AKg@mail.gmail.com>
+        <20180620193407.gk5e5ecolo5bel3c@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJdp16D4svB8Y7jurNVdHzVgz8_pkOKBA6mFyhXkqWi6w@mail.gmail.com>
+In-Reply-To: <20180620193407.gk5e5ecolo5bel3c@kozik-lap>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Alan Tull <atull@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/20/18 11:23, Rob Herring wrote:
-> On Sun, Jun 17, 2018 at 10:03 AM,  <frowand.list@gmail.com> wrote:
->> From: Frank Rowand <frank.rowand@sony.com>
->>
->> A comment in the review of the patch adding the phandle cache said that
->> the cache would have to be updated when modules are applied and removed.
->> This patch implements the cache updates.
->>
->> Fixes: 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of of_find_node_by_phandle()")
->> Reported-by: Alan Tull <atull@kernel.org>
->> Suggested-by: Alan Tull <atull@kernel.org>
->> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
->> ---
->>
->> Compiles for one configuration.
->> NOT boot tested.
->> Not run through my normal process to check for new warnings, etc.
-> 
-> I'm assuming you will resend a non-RFC version for me to apply.
+On 20.06.2018 21:34, Krzysztof Kozlowski wrote:
+> On Tue, Jun 19, 2018 at 09:59:04AM +0200, Krzysztof Kozlowski wrote:
+>> On 19 June 2018 at 09:26, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+>>> Hi Krzysztof,
+>>>
+>>> On 2018-06-18 19:42, Krzysztof Kozlowski wrote:
+>>>> The decon, decon_tv and dsi nodes have only one child port so
+>>>> address/size mappings are not necessary.  This fixes DTC warnings like:
+>>>>
+>>>>      Warning (graph_child_address): /soc/decon@13800000/ports:
+>>>>          graph node has single child node 'port@0', #address-cells/#size-cells are not necessary
+>>>>
+>>>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>>> Works fine with current Exynos DRM Decon/MIC/DSI drivers.
+>>>
+>>> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>> Thanks for review and testing!
+> I have second thoughs whether this patch is correct. AFAIU, the drivers
+> get the remote endpoints by reg==0 (for example the
+> of_graph_get_remote_node() in exynos_dsi_parse_dt()). If the port shall
+> be ignored, then reg==-1 should be passed.
 
-Yes, I will.
+All this is about purity, DECON bindings says explicitly that there
+should be a port with reg=0.
+So your patch and DTC warnings are incorrect from bindings PoV.
+On the other side graph bindings are too bloated ( so many lines to
+describe one connection ) so I am happy if there are shrinking attempts :)
+Functionally nothing changes, of graph helpers assume reg=0 if it is not
+present in port/endpoint node.
 
-> 
-> I think it would be a bit better if callers didn't have to do free and
-> populate themselves, but just made an invalidate call (like a normal
-> cache) and re-populating the cache could happen on demand. Or if it
-> was done as a single call, you could just copy the old entries to the
-> new larger array. But maybe there would be a race condition in doing
-> that? In any case, all that could be a subsequent patch.
+And regarding real issues, DECON could have more ports, possible candidates:
+- GSCALER0/1/2,
+- GSD/DSD - interconnect between GSCALERs and DECONs,
+- SMIES - image enhancer (not implemented),
+- MIC0/1 - image enhancers,
+- DSIM0/1 - DSI encoders,
+- HDMI - HDMI encoder.
 
-Yes, the unspoken, underlying issue is a race condition.  I'll update
-the commit comment to explain the race issues a little bit.  And maybe
-add a code comment if I can be concise enough.
+But since all these connections can be configured dynamically, and more
+importantly are inside specific SoC I dont think they need of_graphs. In
+fact I think current of graph is also not necessary, but this is
+different story, removal is on my long TODO list :)
 
--Frank
+Regards
+Andrzej
 
-> 
-> Rob
-> 
+>
+> Best regards,
+> Krzysztof
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
+>
