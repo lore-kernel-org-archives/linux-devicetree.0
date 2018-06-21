@@ -1,337 +1,122 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: [PATCH v2 3/5] iommu/virtio: Add probe request
-Date: Thu, 21 Jun 2018 20:06:53 +0100
-Message-ID: <20180621190655.56391-4-jean-philippe.brucker@arm.com>
-References: <20180621190655.56391-1-jean-philippe.brucker@arm.com>
-Return-path: <virtio-dev-return-4475-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
-Sender: <virtio-dev@lists.oasis-open.org>
-List-Post: <mailto:virtio-dev@lists.oasis-open.org>
-List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
-List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
-List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
-In-Reply-To: <20180621190655.56391-1-jean-philippe.brucker@arm.com>
-To: iommu@lists.linux-foundation.org, kvm@vger.kernel.org, virtualization@lists.linux-foundation.org, virtio-dev@lists.oasis-open.org, devicetree@vger.kernel.org, kvmarm@lists.cs.columbia.edu
-Cc: joro@8bytes.org, alex.williamson@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, mst@redhat.com, jasowang@redhat.com, marc.zyngier@arm.com, robin.murphy@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, eric.auger@redhat.com, peterx@redhat.com, bharat.bhushan@nxp.com, tnowicki@caviumnetworks.com, jayachandran.nair@cavium.com, kevin.tian@intel.com
+From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH 4/7] ARM: s5pv210_defconfig: Enable drivers for Samsung Aries based phones
+Date: Thu, 21 Jun 2018 21:09:56 +0200
+Message-ID: <1529608199-5583-5-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+References: <1529608199-5583-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1529608199-5583-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xc-racer2@live.ca, pawel.mikolaj.chmiel@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-When the device offers the probe feature, send a probe request for each
-device managed by the IOMMU. Extract RESV_MEM information. When we
-encounter a MSI doorbell region, set it up as a IOMMU_RESV_MSI region.
-This will tell other subsystems that there is no need to map the MSI
-doorbell in the virtio-iommu, because MSIs bypass it.
+Enable config options required for Samsung Aries based phones..
+While we're here, also enable other useful options like:
+- SYSVIPC
+- CGROUPS
+- DEVTMPFS
+- networking support
+- ext4 and autofs
 
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
 ---
- drivers/iommu/virtio-iommu.c      | 149 ++++++++++++++++++++++++++++--
- include/uapi/linux/virtio_iommu.h |  37 ++++++++
- 2 files changed, 180 insertions(+), 6 deletions(-)
+ arch/arm/configs/s5pv210_defconfig | 49 +++++++++++++++++++++++++++++++++++---
+ 1 file changed, 46 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-index ea0242d8624b..29ce9f4398ef 100644
---- a/drivers/iommu/virtio-iommu.c
-+++ b/drivers/iommu/virtio-iommu.c
-@@ -48,6 +48,7 @@ struct viommu_dev {
- 	struct iommu_domain_geometry	geometry;
- 	u64				pgsize_bitmap;
- 	u8				domain_bits;
-+	u32				probe_size;
- };
- 
- struct viommu_mapping {
-@@ -69,8 +70,10 @@ struct viommu_domain {
- };
- 
- struct viommu_endpoint {
-+	struct device			*dev;
- 	struct viommu_dev		*viommu;
- 	struct viommu_domain		*vdomain;
-+	struct list_head		resv_regions;
- };
- 
- struct viommu_request {
-@@ -121,6 +124,9 @@ static off_t viommu_get_req_offset(struct viommu_dev *viommu,
- {
- 	size_t tail_size = sizeof(struct virtio_iommu_req_tail);
- 
-+	if (req->type == VIRTIO_IOMMU_T_PROBE)
-+		return len - viommu->probe_size - tail_size;
-+
- 	return len - tail_size;
- }
- 
-@@ -404,6 +410,103 @@ static int viommu_replay_mappings(struct viommu_domain *vdomain)
- 	return ret;
- }
- 
-+static int viommu_add_resv_mem(struct viommu_endpoint *vdev,
-+			       struct virtio_iommu_probe_resv_mem *mem,
-+			       size_t len)
-+{
-+	struct iommu_resv_region *region = NULL;
-+	unsigned long prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
-+
-+	u64 start = le64_to_cpu(mem->start);
-+	u64 end = le64_to_cpu(mem->end);
-+	size_t size = end - start + 1;
-+
-+	if (len < sizeof(*mem))
-+		return -EINVAL;
-+
-+	switch (mem->subtype) {
-+	default:
-+		if (mem->subtype != VIRTIO_IOMMU_RESV_MEM_T_RESERVED &&
-+		    mem->subtype != VIRTIO_IOMMU_RESV_MEM_T_MSI)
-+			dev_warn(vdev->dev, "unknown resv mem subtype 0x%x\n",
-+				 mem->subtype);
-+		/* Fall-through */
-+	case VIRTIO_IOMMU_RESV_MEM_T_RESERVED:
-+		region = iommu_alloc_resv_region(start, size, 0,
-+						 IOMMU_RESV_RESERVED);
-+		break;
-+	case VIRTIO_IOMMU_RESV_MEM_T_MSI:
-+		region = iommu_alloc_resv_region(start, size, prot,
-+						 IOMMU_RESV_MSI);
-+		break;
-+	}
-+
-+	list_add(&vdev->resv_regions, &region->list);
-+	return 0;
-+}
-+
-+static int viommu_probe_endpoint(struct viommu_dev *viommu, struct device *dev)
-+{
-+	int ret;
-+	u16 type, len;
-+	size_t cur = 0;
-+	size_t probe_len;
-+	struct virtio_iommu_req_probe *probe;
-+	struct virtio_iommu_probe_property *prop;
-+	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
-+	struct viommu_endpoint *vdev = fwspec->iommu_priv;
-+
-+	if (!fwspec->num_ids)
-+		return -EINVAL;
-+
-+	probe_len = sizeof(*probe) + viommu->probe_size +
-+		    sizeof(struct virtio_iommu_req_tail);
-+	probe = kzalloc(probe_len, GFP_KERNEL);
-+	if (!probe)
-+		return -ENOMEM;
-+
-+	probe->head.type = VIRTIO_IOMMU_T_PROBE;
-+	/*
-+	 * For now, assume that properties of an endpoint that outputs multiple
-+	 * IDs are consistent. Only probe the first one.
-+	 */
-+	probe->endpoint = cpu_to_le32(fwspec->ids[0]);
-+
-+	ret = viommu_send_req_sync(viommu, probe, probe_len);
-+	if (ret)
-+		goto out_free;
-+
-+	prop = (void *)probe->properties;
-+	type = le16_to_cpu(prop->type) & VIRTIO_IOMMU_PROBE_T_MASK;
-+
-+	while (type != VIRTIO_IOMMU_PROBE_T_NONE &&
-+	       cur < viommu->probe_size) {
-+		len = le16_to_cpu(prop->length);
-+
-+		switch (type) {
-+		case VIRTIO_IOMMU_PROBE_T_RESV_MEM:
-+			ret = viommu_add_resv_mem(vdev, (void *)prop->value, len);
-+			break;
-+		default:
-+			dev_dbg(dev, "unknown viommu prop 0x%x\n", type);
-+		}
-+
-+		if (ret)
-+			dev_err(dev, "failed to parse viommu prop 0x%x\n", type);
-+
-+		cur += sizeof(*prop) + len;
-+		if (cur >= viommu->probe_size)
-+			break;
-+
-+		prop = (void *)probe->properties + cur;
-+		type = le16_to_cpu(prop->type) & VIRTIO_IOMMU_PROBE_T_MASK;
-+	}
-+
-+out_free:
-+	kfree(probe);
-+	return ret;
-+}
-+
- /* IOMMU API */
- 
- static struct iommu_domain *viommu_domain_alloc(unsigned type)
-@@ -627,15 +730,33 @@ static void viommu_iotlb_sync(struct iommu_domain *domain)
- 
- static void viommu_get_resv_regions(struct device *dev, struct list_head *head)
- {
--	struct iommu_resv_region *region;
-+	struct iommu_resv_region *entry, *new_entry, *msi = NULL;
-+	struct viommu_endpoint *vdev = dev->iommu_fwspec->iommu_priv;
- 	int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
- 
--	region = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH, prot,
--					 IOMMU_RESV_SW_MSI);
--	if (!region)
--		return;
-+	list_for_each_entry(entry, &vdev->resv_regions, list) {
-+		/*
-+		 * If the device registered a bypass MSI windows, use it.
-+		 * Otherwise add a software-mapped region
-+		 */
-+		if (entry->type == IOMMU_RESV_MSI)
-+			msi = entry;
-+
-+		new_entry = kmemdup(entry, sizeof(*entry), GFP_KERNEL);
-+		if (!new_entry)
-+			return;
-+		list_add_tail(&new_entry->list, head);
-+	}
-+
-+	if (!msi) {
-+		msi = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH,
-+					      prot, IOMMU_RESV_SW_MSI);
-+		if (!msi)
-+			return;
-+
-+		list_add_tail(&msi->list, head);
-+	}
- 
--	list_add_tail(&region->list, head);
- 	iommu_dma_get_resv_regions(dev, head);
- }
- 
-@@ -683,9 +804,18 @@ static int viommu_add_device(struct device *dev)
- 	if (!vdev)
- 		return -ENOMEM;
- 
-+	vdev->dev = dev;
- 	vdev->viommu = viommu;
-+	INIT_LIST_HEAD(&vdev->resv_regions);
- 	fwspec->iommu_priv = vdev;
- 
-+	if (viommu->probe_size) {
-+		/* Get additional information for this endpoint */
-+		ret = viommu_probe_endpoint(viommu, dev);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	ret = iommu_device_link(&viommu->iommu, dev);
- 	if (ret)
- 		goto err_free_dev;
-@@ -708,6 +838,7 @@ static int viommu_add_device(struct device *dev)
- 	iommu_device_unlink(&viommu->iommu, dev);
- 
- err_free_dev:
-+	viommu_put_resv_regions(dev, &vdev->resv_regions);
- 	kfree(vdev);
- 
- 	return ret;
-@@ -725,6 +856,7 @@ static void viommu_remove_device(struct device *dev)
- 
- 	iommu_group_remove_device(dev);
- 	iommu_device_unlink(&vdev->viommu->iommu, dev);
-+	viommu_put_resv_regions(dev, &vdev->resv_regions);
- 	kfree(vdev);
- }
- 
-@@ -821,6 +953,10 @@ static int viommu_probe(struct virtio_device *vdev)
- 			     struct virtio_iommu_config, domain_bits,
- 			     &viommu->domain_bits);
- 
-+	virtio_cread_feature(vdev, VIRTIO_IOMMU_F_PROBE,
-+			     struct virtio_iommu_config, probe_size,
-+			     &viommu->probe_size);
-+
- 	viommu->geometry = (struct iommu_domain_geometry) {
- 		.aperture_start	= input_start,
- 		.aperture_end	= input_end,
-@@ -902,6 +1038,7 @@ static unsigned int features[] = {
- 	VIRTIO_IOMMU_F_MAP_UNMAP,
- 	VIRTIO_IOMMU_F_DOMAIN_BITS,
- 	VIRTIO_IOMMU_F_INPUT_RANGE,
-+	VIRTIO_IOMMU_F_PROBE,
- };
- 
- static struct virtio_device_id id_table[] = {
-diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
-index f4fafa0b41a7..2fd802a860cd 100644
---- a/include/uapi/linux/virtio_iommu.h
-+++ b/include/uapi/linux/virtio_iommu.h
-@@ -14,6 +14,7 @@
- #define VIRTIO_IOMMU_F_DOMAIN_BITS		1
- #define VIRTIO_IOMMU_F_MAP_UNMAP		2
- #define VIRTIO_IOMMU_F_BYPASS			3
-+#define VIRTIO_IOMMU_F_PROBE			4
- 
- struct virtio_iommu_config {
- 	/* Supported page sizes */
-@@ -25,6 +26,9 @@ struct virtio_iommu_config {
- 	} input_range;
- 	/* Max domain ID size */
- 	__u8					domain_bits;
-+	__u8					padding[3];
-+	/* Probe buffer size */
-+	__u32					probe_size;
- } __packed;
- 
- /* Request types */
-@@ -32,6 +36,7 @@ struct virtio_iommu_config {
- #define VIRTIO_IOMMU_T_DETACH			0x02
- #define VIRTIO_IOMMU_T_MAP			0x03
- #define VIRTIO_IOMMU_T_UNMAP			0x04
-+#define VIRTIO_IOMMU_T_PROBE			0x05
- 
- /* Status types */
- #define VIRTIO_IOMMU_S_OK			0x00
-@@ -105,6 +110,37 @@ struct virtio_iommu_req_unmap {
- 	struct virtio_iommu_req_tail		tail;
- } __packed;
- 
-+#define VIRTIO_IOMMU_RESV_MEM_T_RESERVED	0
-+#define VIRTIO_IOMMU_RESV_MEM_T_MSI		1
-+
-+struct virtio_iommu_probe_resv_mem {
-+	__u8					subtype;
-+	__u8					reserved[3];
-+	__le64					start;
-+	__le64					end;
-+} __packed;
-+
-+#define VIRTIO_IOMMU_PROBE_T_NONE		0
-+#define VIRTIO_IOMMU_PROBE_T_RESV_MEM		1
-+
-+#define VIRTIO_IOMMU_PROBE_T_MASK		0xfff
-+
-+struct virtio_iommu_probe_property {
-+	__le16					type;
-+	__le16					length;
-+	__u8					value[];
-+} __packed;
-+
-+struct virtio_iommu_req_probe {
-+	struct virtio_iommu_req_head		head;
-+	__le32					endpoint;
-+	__u8					reserved[64];
-+
-+	__u8					properties[];
-+
-+	/* Tail follows the variable-length properties array (no padding) */
-+} __packed;
-+
- union virtio_iommu_req {
- 	struct virtio_iommu_req_head		head;
- 
-@@ -112,6 +148,7 @@ union virtio_iommu_req {
- 	struct virtio_iommu_req_detach		detach;
- 	struct virtio_iommu_req_map		map;
- 	struct virtio_iommu_req_unmap		unmap;
-+	struct virtio_iommu_req_probe		probe;
- };
- 
- #endif
+diff --git a/arch/arm/configs/s5pv210_defconfig b/arch/arm/configs/s5pv210_defconfig
+index 09b5a7386414..a077597369f1 100644
+--- a/arch/arm/configs/s5pv210_defconfig
++++ b/arch/arm/configs/s5pv210_defconfig
+@@ -1,5 +1,7 @@
++CONFIG_SYSVIPC=y
+ CONFIG_NO_HZ=y
+ CONFIG_HIGH_RES_TIMERS=y
++CONFIG_CGROUPS=y
+ CONFIG_SYSFS_DEPRECATED=y
+ CONFIG_SYSFS_DEPRECATED_V2=y
+ CONFIG_BLK_DEV_INITRD=y
+@@ -13,28 +15,68 @@ CONFIG_SOLARIS_X86_PARTITION=y
+ CONFIG_ARCH_S5PV210=y
+ CONFIG_VMSPLIT_2G=y
+ CONFIG_PREEMPT=y
+-CONFIG_AEABI=y
++CONFIG_ARM_APPENDED_DTB=y
+ CONFIG_CMDLINE="root=/dev/ram0 rw ramdisk=8192 initrd=0x20800000,8M console=ttySAC1,115200 init=/linuxrc"
+ CONFIG_VFP=y
+ CONFIG_NEON=y
++CONFIG_NET=y
++CONFIG_PACKET=y
++CONFIG_UNIX=y
++CONFIG_INET=y
++CONFIG_IP_PNP=y
++CONFIG_IP_PNP_DHCP=y
++CONFIG_IP_PNP_BOOTP=y
++CONFIG_IP_PNP_RARP=y
++CONFIG_CFG80211=m
++CONFIG_MAC80211=m
+ CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
++CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
+ CONFIG_BLK_DEV_LOOP=y
+ CONFIG_BLK_DEV_RAM=y
+ CONFIG_BLK_DEV_RAM_SIZE=8192
+ CONFIG_SCSI=y
+ CONFIG_BLK_DEV_SD=y
+ CONFIG_CHR_DEV_SG=y
++CONFIG_NETDEVICES=y
++CONFIG_BRCMFMAC=m
+ CONFIG_INPUT_EVDEV=y
+-# CONFIG_INPUT_KEYBOARD is not set
++CONFIG_KEYBOARD_GPIO=y
+ # CONFIG_INPUT_MOUSE is not set
+ CONFIG_INPUT_TOUCHSCREEN=y
+ CONFIG_SERIAL_8250=y
+ CONFIG_SERIAL_SAMSUNG=y
+ CONFIG_SERIAL_SAMSUNG_CONSOLE=y
+ CONFIG_HW_RANDOM=y
++CONFIG_I2C_GPIO=y
++CONFIG_POWER_SUPPLY=y
++CONFIG_BATTERY_MAX17040=y
+ # CONFIG_HWMON is not set
+-# CONFIG_USB_SUPPORT is not set
++CONFIG_MFD_MAX8998=y
++CONFIG_REGULATOR=y
++CONFIG_REGULATOR_MAX8998=y
++CONFIG_DRM=y
++CONFIG_DRM_EXYNOS=y
++CONFIG_DRM_EXYNOS_FIMD=y
++CONFIG_DRM_EXYNOS_DPI=y
++CONFIG_USB=y
++CONFIG_USB_OTG=y
++CONFIG_USB_EHCI_HCD=y
++CONFIG_USB_EHCI_EXYNOS=y
++CONFIG_USB_OHCI_HCD=y
++CONFIG_USB_OHCI_EXYNOS=y
++CONFIG_USB_DWC2=y
++CONFIG_MMC=y
++CONFIG_MMC_SDHCI=y
++CONFIG_MMC_SDHCI_S3C=y
++CONFIG_MMC_SDHCI_S3C_DMA=y
++CONFIG_RTC_CLASS=y
++CONFIG_RTC_DRV_MAX8998=m
++CONFIG_PHY_SAMSUNG_USB2=m
++CONFIG_PHY_S5PV210_USB2=y
+ CONFIG_EXT2_FS=y
++CONFIG_EXT4_FS=y
++CONFIG_AUTOFS4_FS=y
+ CONFIG_MSDOS_FS=y
+ CONFIG_VFAT_FS=y
+ CONFIG_TMPFS=y
+@@ -44,6 +86,7 @@ CONFIG_ROMFS_FS=y
+ CONFIG_NLS_CODEPAGE_437=y
+ CONFIG_NLS_ASCII=y
+ CONFIG_NLS_ISO8859_1=y
++CONFIG_NLS_UTF8=y
+ CONFIG_DEBUG_INFO=y
+ CONFIG_MAGIC_SYSRQ=y
+ CONFIG_DEBUG_KERNEL=y
 -- 
-2.17.0
+2.7.4
