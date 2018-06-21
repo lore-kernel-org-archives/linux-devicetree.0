@@ -1,64 +1,174 @@
-Return-Path: <SRS0=qqtW=JO=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 00/21] TVP5150 fixes and new features
-Date: Thu, 28 Jun 2018 18:20:32 +0200
-Message-Id: <20180628162054.25613-1-m.felsch@pengutronix.de>
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: p.zabel@pengutronix.de, afshin.nasser@gmail.com, javierm@redhat.com, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Return-Path: <SRS0=YCj9=JH=zonque.org=daniel@kernel.org>
+From: Daniel Mack <daniel@zonque.org>
+Subject: [PATCH v4 2/5] leds: lt3593: merge functions and clean up code
+Date: Thu, 21 Jun 2018 22:23:19 +0200
+Message-Id: <20180621202322.11581-3-daniel@zonque.org>
+In-Reply-To: <20180621202322.11581-1-daniel@zonque.org>
+References: <20180621202322.11581-1-daniel@zonque.org>
+To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
 List-ID: <devicetree@vger.kernel.org>
 
-First some fixes were made which may possibly interesting for other
-kernel versions.
+In preparation to DT probe functionality, merge create_lt3593_led() into
+its only call-site. The DT based setup code will be quite different, so this
+internal helper function is of no help.
 
-Then I picked most of the patches from Philipp [1] and ported them
-to the recent media_tree master branch [3].
+This also changes the way the driver works by only handling one entry inside
+'struct gpio_led_platform_data'. If multiple devices of the same type are
+found in a design, there should be a platform device for each of them. The
+only mainline user of this driver is not affected by this change.
 
-But the main purpose of this series is to convert the proprietary
-connector DT property into the generic input port property. I picked commit
-('partial revert of "[media] tvp5150: add HW input connectors support"')
-to have a clean working base and used the results of the discussion [2].
+Last, use devm_led_classdev_register() instead of
+led_classdev_register(), so the driver's remove callback can go away.
 
-[1] https://patchwork.linuxtv.org/patch/33464/
-[2] https://patchwork.linuxtv.org/patch/33852/
-[3] https://git.linuxtv.org/media_tree.git/log/
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+---
+ drivers/leds/leds-lt3593.c | 103 +++++++++++++------------------------
+ 1 file changed, 35 insertions(+), 68 deletions(-)
 
-Javier Martinez Canillas (1):
-  partial revert of "[media] tvp5150: add HW input connectors support"
-
-Marco Felsch (10):
-  [media] tvp5150: fix width alignment during set_selection()
-  [media] tvp5150: fix switch exit in set control handler
-  [media] tvp5150: make use of regmap_update_bits
-  [media] v4l2-rect.h: add position and equal helpers
-  [media] tvp5150: add FORMAT_TRY support for get/set selection handlers
-  [media] tvp5150: add default format helper
-  [media] tvp5150: add g_std callback
-  [media] tvp5150: add input source selection of_graph support
-  [media] tvp5150: Add input port connectors DT bindings
-  [media] tvp5150: Change default input source selection behaviour
-
-Michael Tretter (1):
-  [media] tvp5150: initialize subdev before parsing device tree
-
-Philipp Zabel (10):
-  [media] tvp5150: convert register access to regmap
-  [media] tvp5150: trigger autodetection on subdev open to reset
-    cropping
-  [media] tvp5150: fix standard autodetection
-  [media] tvp5150: split reset/enable routine
-  [media] tvp5150: remove pin configuration from initialization tables
-  [media] tvp5150: Add sync lock interrupt handling
-  [media] tvp5150: disable output while signal not locked
-  [media] tvp5150: issue source change events
-  [media] tvp5150: add sync lock/loss signal debug messages
-  [media] tvp5150: add querystd
-
- .../devicetree/bindings/media/i2c/tvp5150.txt | 118 ++-
- drivers/media/i2c/tvp5150.c                   | 959 ++++++++++++------
- drivers/media/i2c/tvp5150_reg.h               |   3 +
- include/dt-bindings/media/tvp5150.h           |   2 -
- include/media/v4l2-rect.h                     |  27 +
- 5 files changed, 812 insertions(+), 297 deletions(-)
-
+diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
+index 5ec730a31b65..1a3dc347db21 100644
+--- a/drivers/leds/leds-lt3593.c
++++ b/drivers/leds/leds-lt3593.c
+@@ -71,104 +71,71 @@ static int lt3593_led_set(struct led_classdev *led_cdev,
+ 	return 0;
+ }
+ 
+-static int create_lt3593_led(const struct gpio_led *template,
+-	struct lt3593_led_data *led_dat, struct device *parent)
++static struct lt3593_led_data *lt3593_led_probe_pdata(struct device *dev)
+ {
++	struct gpio_led_platform_data *pdata = dev_get_platdata(dev);
++	const struct gpio_led *template = &pdata->leds[0];
++	struct lt3593_led_data *led_data;
+ 	int ret, state;
+ 
+-	/* skip leds on GPIOs that aren't available */
++	if (pdata->num_leds != 1)
++		return ERR_PTR(-EINVAL);
++
++	led_data = devm_kzalloc(dev, sizeof(*led_data), GFP_KERNEL);
++	if (!led_data)
++		return ERR_PTR(-ENOMEM);
++
+ 	if (!gpio_is_valid(template->gpio)) {
+-		dev_info(parent, "%s: skipping unavailable LT3593 LED at gpio %d (%s)\n",
+-				KBUILD_MODNAME, template->gpio, template->name);
+-		return 0;
++		dev_info(dev, "skipping unavailable LT3593 LED at gpio "
++			 "%d (%s)\n", template->gpio, template->name);
++		return ERR_PTR(-EINVAL);
+ 	}
+ 
+-	led_dat->cdev.name = template->name;
+-	led_dat->cdev.default_trigger = template->default_trigger;
+-	led_dat->gpio = template->gpio;
+-
+-	led_dat->cdev.brightness_set_blocking = lt3593_led_set;
++	led_data->cdev.name = template->name;
++	led_data->cdev.default_trigger = template->default_trigger;
++	led_data->gpio = template->gpio;
++	led_data->cdev.brightness_set_blocking = lt3593_led_set;
+ 
+ 	state = (template->default_state == LEDS_GPIO_DEFSTATE_ON);
+-	led_dat->cdev.brightness = state ? LED_FULL : LED_OFF;
++	led_data->cdev.brightness = state ? LED_FULL : LED_OFF;
+ 
+ 	if (!template->retain_state_suspended)
+-		led_dat->cdev.flags |= LED_CORE_SUSPENDRESUME;
++		led_data->cdev.flags |= LED_CORE_SUSPENDRESUME;
+ 
+-	ret = devm_gpio_request_one(parent, template->gpio, state ?
++	ret = devm_gpio_request_one(dev, template->gpio, state ?
+ 				    GPIOF_OUT_INIT_HIGH : GPIOF_OUT_INIT_LOW,
+ 				    template->name);
+ 	if (ret < 0)
+-		return ret;
++		return ERR_PTR(ret);
+ 
+-	ret = led_classdev_register(parent, &led_dat->cdev);
++	ret = devm_led_classdev_register(dev, &led_data->cdev);
+ 	if (ret < 0)
+-		return ret;
+-
+-	dev_info(parent, "%s: registered LT3593 LED '%s' at GPIO %d\n",
+-		KBUILD_MODNAME, template->name, template->gpio);
++		return ERR_PTR(ret);
+ 
+-	return 0;
+-}
++	dev_info(dev, "registered LT3593 LED '%s' at GPIO %d\n",
++		 template->name, template->gpio);
+ 
+-static void delete_lt3593_led(struct lt3593_led_data *led)
+-{
+-	if (!gpio_is_valid(led->gpio))
+-		return;
+-
+-	led_classdev_unregister(&led->cdev);
++	return led_data;
+ }
+ 
+ static int lt3593_led_probe(struct platform_device *pdev)
+ {
+-	struct gpio_led_platform_data *pdata = dev_get_platdata(&pdev->dev);
+-	struct lt3593_led_data *leds_data;
+-	int i, ret = 0;
+-
+-	if (!pdata)
+-		return -EBUSY;
+-
+-	leds_data = devm_kcalloc(&pdev->dev,
+-			pdata->num_leds, sizeof(struct lt3593_led_data),
+-			GFP_KERNEL);
+-	if (!leds_data)
+-		return -ENOMEM;
+-
+-	for (i = 0; i < pdata->num_leds; i++) {
+-		ret = create_lt3593_led(&pdata->leds[i], &leds_data[i],
+-				      &pdev->dev);
+-		if (ret < 0)
+-			goto err;
+-	}
++	struct device *dev = &pdev->dev;
++	struct lt3593_led_data *led_data;
+ 
+-	platform_set_drvdata(pdev, leds_data);
+-
+-	return 0;
+-
+-err:
+-	for (i = i - 1; i >= 0; i--)
+-		delete_lt3593_led(&leds_data[i]);
+-
+-	return ret;
+-}
+-
+-static int lt3593_led_remove(struct platform_device *pdev)
+-{
+-	int i;
+-	struct gpio_led_platform_data *pdata = dev_get_platdata(&pdev->dev);
+-	struct lt3593_led_data *leds_data;
+-
+-	leds_data = platform_get_drvdata(pdev);
++	if (dev_get_platdata(dev)) {
++		led_data = lt3593_led_probe_pdata(dev);
++		if (IS_ERR(led_data))
++			return PTR_ERR(led_data);
++	}
+ 
+-	for (i = 0; i < pdata->num_leds; i++)
+-		delete_lt3593_led(&leds_data[i]);
++	platform_set_drvdata(pdev, led_data);
+ 
+ 	return 0;
+ }
+ 
+ static struct platform_driver lt3593_led_driver = {
+ 	.probe		= lt3593_led_probe,
+-	.remove		= lt3593_led_remove,
+ 	.driver		= {
+ 		.name	= "leds-lt3593",
+ 	},
 -- 
 2.17.1
