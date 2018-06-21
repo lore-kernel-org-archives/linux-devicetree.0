@@ -1,84 +1,38 @@
-Return-Path: <SRS0=1b4G=JP=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 5/7] mmc: pxamci: call mmc_of_parse()
-Date: Fri, 29 Jun 2018 16:47:36 +0200
-Message-Id: <20180629144738.446-6-daniel@zonque.org>
-In-Reply-To: <20180629144738.446-1-daniel@zonque.org>
-References: <20180629144738.446-1-daniel@zonque.org>
-To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: robert.jarzmik@free.fr, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=/Wm/=JH=martin.sperl.org=kernel@kernel.org>
+Content-Type: text/plain;
+	charset=us-ascii
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH V4 0/3] Microchip mcp25xxfd can controller driver
+From: Martin Sperl <kernel@martin.sperl.org>
+In-Reply-To: <d031e6a0-e8e0-5946-7ef6-63a1a5541209@grandegger.com>
+Date: Thu, 21 Jun 2018 17:46:19 +0200
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C13E12AB-7D98-4A2B-B3FD-A6D3897F5831@martin.sperl.org>
+References: <20180514160313.29597-1-kernel@martin.sperl.org> <6C9DAC2E-F20A-4FCE-A585-6DBCEEF97D08@martin.sperl.org> <4682a3b2-a924-0231-673c-566373cca412@grandegger.com> <51FF051D-FB8D-43B4-ADD8-7FEA380E6DEF@martin.sperl.org> <d031e6a0-e8e0-5946-7ef6-63a1a5541209@grandegger.com>
+To: Wolfgang Grandegger <wg@grandegger.com>
+Cc: linux-can@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcel Birthelmer <Marcel.Birthelmer@microchip.com>, Sukkin Pang <skp@skpang.co.uk>, Gerhard Bertelsmann <info@gerhard-bertelsmann.de>
 List-ID: <devicetree@vger.kernel.org>
 
-Call into mmc_of_parse() from pxamci_of_init(). As it needs a pointer to a
-struct mmc_host, refactor the code a bit.
 
-This allows all generic MMC properties to be set that are described in
-Documentation/devicetree/bindings/mmc/mmc.txt.
+> On 21.06.2018, at 09:38, Wolfgang Grandegger <wg@grandegger.com> wrote:
+>=20
+> Hello Martin, all,
+>=20
+> I recently sent a review for:
+>=20
+> [PATCH V3 2/3] can: mcp25xxfd: Add Microchip mcp25xxfd CAN FD driver
+>=20
+> but it did not show up on the linux-can ml. I also cannot find the
+> original patch. Patch 2/3 from your V3 and V4 series is missing in the
+> archive. Is there a size limitation?
+>=20
+I have experienced something similar - it shows up in the dt archive but not=
+ in the can-archive...
+Version 1 and 2 were less than 128k and were accepted and archived.
+That was one of the reasons why I wanted to split the patches themselves and=
+ not the file...
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- drivers/mmc/host/pxamci.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+Still I have received your comments and I shall incorporate them hopefully t=
+his weekend.
 
-diff --git a/drivers/mmc/host/pxamci.c b/drivers/mmc/host/pxamci.c
-index 3df60c7babce..e15708aa77a2 100644
---- a/drivers/mmc/host/pxamci.c
-+++ b/drivers/mmc/host/pxamci.c
-@@ -591,11 +591,13 @@ static const struct of_device_id pxa_mmc_dt_ids[] = {
- 
- MODULE_DEVICE_TABLE(of, pxa_mmc_dt_ids);
- 
--static int pxamci_of_init(struct platform_device *pdev)
-+static int pxamci_of_init(struct platform_device *pdev,
-+			  struct mmc_host *mmc)
- {
- 	struct device_node *np = pdev->dev.of_node;
- 	struct pxamci_platform_data *pdata;
- 	u32 tmp;
-+	int ret;
- 
- 	if (!np)
- 		return 0;
-@@ -616,12 +618,17 @@ static int pxamci_of_init(struct platform_device *pdev)
- 	if (of_property_read_u32(np, "pxa-mmc,detect-delay-ms", &tmp) == 0)
- 		pdata->detect_delay_ms = tmp;
- 
-+	ret = mmc_of_parse(mmc);
-+	if (ret < 0)
-+		return ret;
-+
- 	pdev->dev.platform_data = pdata;
- 
- 	return 0;
- }
- #else
--static int pxamci_of_init(struct platform_device *pdev)
-+static int pxamci_of_init(struct platform_device *pdev,
-+			  struct mmc_host *mmc)
- {
-         return 0;
- }
-@@ -634,10 +641,6 @@ static int pxamci_probe(struct platform_device *pdev)
- 	struct resource *r;
- 	int ret, irq, gpio_cd = -1, gpio_ro = -1, gpio_power = -1;
- 
--	ret = pxamci_of_init(pdev);
--	if (ret)
--		return ret;
--
- 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0)
-@@ -672,6 +675,10 @@ static int pxamci_probe(struct platform_device *pdev)
- 	 */
- 	mmc->max_blk_count = 65535;
- 
-+	ret = pxamci_of_init(pdev, mmc);
-+	if (ret)
-+		return ret;
-+
- 	host = mmc_priv(mmc);
- 	host->mmc = mmc;
- 	host->pdata = pdev->dev.platform_data;
--- 
-2.17.1
+Martin=
