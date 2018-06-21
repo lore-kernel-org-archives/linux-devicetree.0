@@ -1,61 +1,168 @@
-From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v12 5/5] dt-bindings: drm/panel: Document
- Innolux TV123WAM panel bindings
-Date: Thu, 21 Jun 2018 18:02:09 +0530
-Message-ID: <1529584329-632-6-git-send-email-spanda@codeaurora.org>
-References: <1529584329-632-1-git-send-email-spanda@codeaurora.org>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [alsa-devel] [PATCH v2 2/2] ASoC: qcom: add sdm845 sound card
+ support
+Date: Thu, 21 Jun 2018 18:05:03 +0530
+Message-ID: <20180621123503.GD27187@vkoul-mobl>
+References: <1529578399-3633-1-git-send-email-rohitkr@codeaurora.org>
+ <1529578399-3633-3-git-send-email-rohitkr@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1529584329-632-1-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1529578399-3633-3-git-send-email-rohitkr@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rohit kumar <rohitkr@codeaurora.org>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, plai@codeaurora.org, bgoswami@codeaurora.org, perex@perex.cz, srinivas.kandagatla@linaro.org, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SW5ub2x1eCBUVjEyM1dBTSBpcyBhIDEyLjMiIGVEUCBkaXNwbGF5IHBhbmVsIHdpdGgKMjE2MHgx
-NDQwIHJlc29sdXRpb24sIHdoaWNoIGNhbiBiZSBzdXBwb3J0ZWQgYnkgc2ltcGxlCnBhbmVsIGRy
-aXZlci4KCkNoYW5nZXMgaW4gdjE6CiAtIE1ha2UgdXNlIG9mIHNpbXBsZSBwYW5lbCBkcml2ZXIg
-aW5zdGVhZCBvZiBjcmVhdGluZwogICBhIG5ldyBkcml2ZXIgZm9yIHRoaXMgcGFuZWwgKFNlYW4g
-UGF1bCkuCiAtIENvbWJpbmUgZHQtYmluZGluZyBhbmQgZHJpdmVyIGNoYW5nZXMgaW50byBvbmUg
-cGF0Y2gKICAgYXMgZG9uZSBieSBvdGhlciBleGlzdGluZyBwYW5lbCBzdXBwb3J0IGNoYW5nZXMu
-CgpDaGFuZ2VzIGluIHYyOgogLSBTZXBhcmF0ZSBkcml2ZXIgY2hhbmdlIGZyb20gZHQtYmluZGlu
-ZyBkb2N1bWVudGF0aW9uIChSb2IgSGVycmluZykuCiAtIEFkZCB0aGUgcHJvcGVydGllcyBmcm9t
-IHNpbXBsZS1wYW5lbCBiaW5kaW5nIHRoYXQgYXJlIGFwcGxpY2FibGUgdG8KICAgdGhpcyBwYW5l
-bCAoUm9iIEhlcnJpbmcpLgoKU2lnbmVkLW9mZi1ieTogU2FuZGVlcCBQYW5kYSA8c3BhbmRhQGNv
-ZGVhdXJvcmEub3JnPgpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4K
-LS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2FtLnR4dCAgICAg
-IHwgMjAgKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25z
-KCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2Ft
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lu
-bm9sdXgsdHYxMjN3YW0udHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAw
-MC4uYTliMzUyNjVmYTEzCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQKQEAgLTAsMCAr
-MSwyMCBAQAorSW5ub2x1eCBUVjEyM1dBTSAxMi4zIGluY2ggZURQIDJLIGRpc3BsYXkgcGFuZWwK
-KworVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRp
-bmcsIHdoaWNoIGlzIHNwZWNpZmllZAoraW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlzIGRpcmVj
-dG9yeS4KKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJp
-bm5vbHV4LHR2MTIzd2FtIgorLSBwb3dlci1zdXBwbHk6IHJlZ3VsYXRvciB0byBwcm92aWRlIHRo
-ZSBzdXBwbHkgdm9sdGFnZQorCitPcHRpb25hbCBwcm9wZXJ0aWVzOgorLSBlbmFibGUtZ3Bpb3M6
-IEdQSU8gcGluIHRvIGVuYWJsZSBvciBkaXNhYmxlIHRoZSBwYW5lbAorLSBiYWNrbGlnaHQ6IHBo
-YW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQgdG8gdGhlIHBhbmVsCisKK0V4
-YW1wbGU6CisJcGFuZWxfZWRwOiBwYW5lbC1lZHAgeworCQljb21wYXRpYmxlID0gImlubm9sdXgs
-dHYxMjN3YW0iOworCQllbmFibGUtZ3Bpb3MgPSA8Jm1zbWdwaW8gMzEgR1BJT19BQ1RJVkVfTE9X
-PjsKKwkJcG93ZXItc3VwcGx5ID0gPCZwbTg5MTZfbDI+OworCQliYWNrbGlnaHQgPSA8JmJhY2ts
-aWdodD47CisJfTsKLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBh
-IG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xs
-YWJvcmF0aXZlIFByb2plY3QKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Zy
-ZWVkcmVubwo=
+Hi Rohit,
+
+On 21-06-18, 16:23, Rohit kumar wrote:
+
+> +static struct sdm845_snd_data *sdm845_sbc_parse_of(struct snd_soc_card *card)
+> +{
+> +	struct device *dev = card->dev;
+> +	struct snd_soc_dai_link *link;
+> +	struct device_node *np, *codec, *platform, *cpu, *node;
+> +	int ret, num_links;
+> +	struct sdm845_snd_data *data;
+> +
+> +	ret = snd_soc_of_parse_card_name(card, "qcom,model");
+> +	if (ret) {
+> +		dev_err(dev, "Error parsing card name: %d\n", ret);
+> +		return ERR_PTR(ret);
+> +	}
+> +
+> +	node = dev->of_node;
+> +
+> +	/* DAPM routes */
+> +	if (of_property_read_bool(node, "qcom,audio-routing")) {
+> +		ret = snd_soc_of_parse_audio_routing(card,
+> +					"qcom,audio-routing");
+> +		if (ret)
+> +			return ERR_PTR(ret);
+> +	}
+> +
+> +	/* Populate links */
+> +	num_links = of_get_child_count(node);
+> +
+> +	/* Allocate the private data and the DAI link array */
+> +	data = kzalloc(sizeof(*data) + sizeof(*link) * num_links,
+> +			GFP_KERNEL);
+> +	if (!data)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	card->dai_link = &data->dai_link[0];
+> +	card->num_links = num_links;
+> +
+> +	link = data->dai_link;
+> +	data->card = card;
+> +
+> +	for_each_child_of_node(node, np) {
+> +		cpu = of_get_child_by_name(np, "cpu");
+> +		if (!cpu) {
+> +			dev_err(dev, "Can't find cpu DT node\n");
+> +			ret = -EINVAL;
+> +			goto fail;
+> +		}
+> +
+> +		link->cpu_of_node = of_parse_phandle(cpu, "sound-dai", 0);
+> +		if (!link->cpu_of_node) {
+> +			dev_err(card->dev, "error getting cpu phandle\n");
+> +			ret = -EINVAL;
+> +			goto fail;
+> +		}
+> +
+> +		ret = snd_soc_of_get_dai_name(cpu, &link->cpu_dai_name);
+> +		if (ret) {
+> +			dev_err(card->dev, "error getting cpu dai name\n");
+> +			goto fail;
+> +		}
+> +
+> +		platform = of_get_child_by_name(np, "platform");
+> +		codec = of_get_child_by_name(np, "codec");
+> +		if (codec && platform) {
+> +			link->platform_of_node = of_parse_phandle(platform,
+> +					"sound-dai", 0);
+> +			if (!link->platform_of_node) {
+> +				dev_err(card->dev, "error getting platform phandle\n");
+> +				ret = -EINVAL;
+> +				goto fail;
+> +			}
+> +
+> +			ret = snd_soc_of_get_dai_link_codecs(dev, codec, link);
+> +			if (ret < 0) {
+> +				dev_err(card->dev, "error getting codec dai name\n");
+> +				goto fail;
+> +			}
+> +			link->no_pcm = 1;
+> +			link->ignore_pmdown_time = 1;
+> +			link->ops = &sdm845_be_ops;
+> +			link->be_hw_params_fixup = sdm845_be_hw_params_fixup;
+> +		} else {
+> +			link->platform_of_node = link->cpu_of_node;
+> +			link->codec_dai_name = "snd-soc-dummy-dai";
+> +			link->codec_name = "snd-soc-dummy";
+> +			link->dynamic = 1;
+> +		}
+> +
+> +		link->ignore_suspend = 1;
+> +		ret = of_property_read_string(np, "link-name", &link->name);
+> +		if (ret) {
+> +			dev_err(card->dev,
+> +				"error getting codec dai_link name\n");
+> +			goto fail;
+> +		}
+> +
+> +		link->dpcm_playback = 1;
+> +		link->dpcm_capture = 1;
+> +		link->stream_name = link->name;
+> +		link++;
+> +	}
+> +	dev_set_drvdata(dev, card);
+> +	snd_soc_card_set_drvdata(card, data);
+> +
+> +	return data;
+> +fail:
+> +	kfree(data);
+> +	return ERR_PTR(ret);
+> +}
+
+this routine...
+
+> +static int add_audio_components(struct device *dev,
+> +				struct component_match **matchptr)
+> +{
+> +	struct device_node *np, *platform, *cpu, *node, *dai_node;
+> +
+> +	node = dev->of_node;
+> +
+> +	for_each_child_of_node(node, np) {
+> +		cpu = of_get_child_by_name(np, "cpu");
+> +		if (cpu) {
+> +			dai_node = of_parse_phandle(cpu, "sound-dai", 0);
+> +			of_node_get(dai_node);
+> +			component_match_add_release(dev, matchptr,
+> +					sdm845_release_of,
+> +					sdm845_compare_of,
+> +					dai_node);
+> +		}
+> +
+> +		platform = of_get_child_by_name(np, "platform");
+> +		if (platform) {
+> +			dai_node = of_parse_phandle(platform, "sound-dai", 0);
+> +			component_match_add_release(dev, matchptr,
+> +					sdm845_release_of,
+> +					sdm845_compare_of,
+> +					dai_node);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+
+And this one is generic DT parsing and seems quite similar to one in apq8096.c
+Can we move these into a lib and use them instead of duplicating.
+
+-- 
+~Vinod
