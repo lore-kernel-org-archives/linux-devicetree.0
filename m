@@ -1,13 +1,17 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v7 1/4] remoteproc/davinci: use the reset framework
-Date: Thu, 21 Jun 2018 09:37:03 +0200
-Message-ID: <20180621073706.22812-2-brgl@bgdev.pl>
-References: <20180621073706.22812-1-brgl@bgdev.pl>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH V2 3/4] dt-bindings: arm: fsl: add scu binding doc
+Date: Thu, 21 Jun 2018 09:37:28 +0200
+Message-ID: <20180621073728.wmxb4jkn3ek4n2vt@pengutronix.de>
+References: <1529239789-26849-1-git-send-email-aisheng.dong@nxp.com>
+ <1529239789-26849-4-git-send-email-aisheng.dong@nxp.com>
+ <20180620194438.GA3494@rob-hp-laptop>
+ <AM0PR04MB4211C2A376E6C74C7C4AC37880760@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180621073706.22812-1-brgl@bgdev.pl>
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB4211C2A376E6C74C7C4AC37880760@AM0PR04MB4211.eurprd04.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,130 +21,115 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Thu, Jun 21, 2018 at 03:38:30AM +0000, A.s. Dong wrote:
+> Hi Rob,
+> 
+> > -----Original Message-----
+> > From: Rob Herring [mailto:robh@kernel.org]
+> > Sent: Thursday, June 21, 2018 3:45 AM
+> > To: A.s. Dong <aisheng.dong@nxp.com>
+> > Cc: linux-arm-kernel@lists.infradead.org; dongas86@gmail.com;
+> > kernel@pengutronix.de; shawnguo@kernel.org; Fabio Estevam
+> > <fabio.estevam@nxp.com>; dl-linux-imx <linux-imx@nxp.com>; Mark
+> > Rutland <mark.rutland@arm.com>; devicetree@vger.kernel.org
+> > Subject: Re: [PATCH V2 3/4] dt-bindings: arm: fsl: add scu binding doc
+> > 
+> > On Sun, Jun 17, 2018 at 08:49:48PM +0800, Dong Aisheng wrote:
+> > > The System Controller Firmware (SCFW) is a low-level system function
+> > > which runs on a dedicated Cortex-M core to provide power, clock, and
+> > > resource management. It exists on some i.MX8 processors. e.g. i.MX8QM
+> > > (QM, QP), and i.MX8QX (QXP, DX).
+> > >
+> > > Cc: Shawn Guo <shawnguo@kernel.org>
+> > > Cc: Sascha Hauer <kernel@pengutronix.de>
+> > > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: devicetree@vger.kernel.org
+> > > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > > ---
+> > > v1->v2:
+> > >  * remove status
+> > >  * changed to mu1
+> > > ---
+> > >  .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 38
+> > > ++++++++++++++++++++++
+> > >  1 file changed, 38 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > new file mode 100644
+> > > index 0000000..9b7c9fe
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > @@ -0,0 +1,38 @@
+> > > +NXP i.MX System Controller Firmware (SCFW)
+> > > +--------------------------------------------------------------------
+> > > +
+> > > +The System Controller Firmware (SCFW) is a low-level system function
+> > > +which runs on a dedicated Cortex-M core to provide power, clock, and
+> > > +resource management. It exists on some i.MX8 processors. e.g. i.MX8QM
+> > > +(QM, QP), and i.MX8QX (QXP, DX).
+> > > +
+> > > +The AP communicates with the SC using a multi-ported MU module found
+> > > +in the LSIO subsystem. The current definition of this MU module
+> > > +provides
+> > > +5 remote AP connections to the SC to support up to 5 execution
+> > > +environments (TZ, HV, standard Linux, etc.). The SC side of this MU
+> > > +module interfaces with the LSIO DSC IP bus. The SC firmware will
+> > > +communicate with this MU using the MSI bus.
+> > > +
+> > > +System Controller Device Node:
+> > > +=============================
+> > > +
+> > > +Required properties:
+> > > +-------------------
+> > > +- compatible: should be "fsl,imx8qxp-scu" or "fsl,imx8qm-scu"
+> > > +- fsl,mu: a phandle to the Message Unit used by SCU. Should be
+> > > +	  one of LSIO MU0~M4 for imx8qxp and imx8qm. Users need
+> > > +	  to make sure not use the one which is conflict with
+> > > +	  other execution environments. e.g. ATF.
+> > 
+> > Use the mailbox binding even if you don't use the mailbox subsystem.
+> > 
+> 
+> Looks reasonable. Will change it.
+> 
+> BTW as I said before, the current mailbox binding fixed #mbox-cells to be
+> at least 1 which is not suitable for i.MX SCU MU as it has only one physical
+> channel.
 
-Switch to using the reset framework instead of handcoded reset routines
-we used so far.
+Why is that not suitable? If we use #mbox-cells = 1 we can encode the
+channel into the second cell. Furthermore, the SCU mode which uses all
+channels in a funny way could be another channel id the mu driver could
+use to distinguish the different channel/modes. i.e.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Sekhar Nori <nsekhar@ti.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- drivers/remoteproc/da8xx_remoteproc.c | 34 +++++++++++++++++++++++----
- 1 file changed, 29 insertions(+), 5 deletions(-)
+#define MU_CHANNEL_0	0
+#define MU_CHANNEL_1    1
+#define MU_CHANNEL_2    2
+#define MU_CHANNEL_3    3
+#define MU_CHANNEL_SCU	4
 
-diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
-index b668e32996e2..76c06b70a1c6 100644
---- a/drivers/remoteproc/da8xx_remoteproc.c
-+++ b/drivers/remoteproc/da8xx_remoteproc.c
-@@ -10,6 +10,7 @@
- 
- #include <linux/bitops.h>
- #include <linux/clk.h>
-+#include <linux/reset.h>
- #include <linux/err.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-@@ -20,8 +21,6 @@
- #include <linux/platform_device.h>
- #include <linux/remoteproc.h>
- 
--#include <mach/clock.h>   /* for davinci_clk_reset_assert/deassert() */
--
- #include "remoteproc_internal.h"
- 
- static char *da8xx_fw_name;
-@@ -72,6 +71,7 @@ struct da8xx_rproc {
- 	struct da8xx_rproc_mem *mem;
- 	int num_mems;
- 	struct clk *dsp_clk;
-+	struct reset_control *dsp_reset;
- 	void (*ack_fxn)(struct irq_data *data);
- 	struct irq_data *irq_data;
- 	void __iomem *chipsig;
-@@ -138,6 +138,7 @@ static int da8xx_rproc_start(struct rproc *rproc)
- 	struct device *dev = rproc->dev.parent;
- 	struct da8xx_rproc *drproc = (struct da8xx_rproc *)rproc->priv;
- 	struct clk *dsp_clk = drproc->dsp_clk;
-+	struct reset_control *dsp_reset = drproc->dsp_reset;
- 	int ret;
- 
- 	/* hw requires the start (boot) address be on 1KB boundary */
-@@ -155,7 +156,12 @@ static int da8xx_rproc_start(struct rproc *rproc)
- 		return ret;
- 	}
- 
--	davinci_clk_reset_deassert(dsp_clk);
-+	ret = reset_control_deassert(dsp_reset);
-+	if (ret) {
-+		dev_err(dev, "reset_control_deassert() failed: %d\n", ret);
-+		clk_disable_unprepare(dsp_clk);
-+		return ret;
-+	}
- 
- 	return 0;
- }
-@@ -163,8 +169,15 @@ static int da8xx_rproc_start(struct rproc *rproc)
- static int da8xx_rproc_stop(struct rproc *rproc)
- {
- 	struct da8xx_rproc *drproc = rproc->priv;
-+	struct device *dev = rproc->dev.parent;
-+	int ret;
-+
-+	ret = reset_control_assert(drproc->dsp_reset);
-+	if (ret) {
-+		dev_err(dev, "reset_control_assert() failed: %d\n", ret);
-+		return ret;
-+	}
- 
--	davinci_clk_reset_assert(drproc->dsp_clk);
- 	clk_disable_unprepare(drproc->dsp_clk);
- 
- 	return 0;
-@@ -232,6 +245,7 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
- 	struct resource *bootreg_res;
- 	struct resource *chipsig_res;
- 	struct clk *dsp_clk;
-+	struct reset_control *dsp_reset;
- 	void __iomem *chipsig;
- 	void __iomem *bootreg;
- 	int irq;
-@@ -268,6 +282,15 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
- 		return PTR_ERR(dsp_clk);
- 	}
- 
-+	dsp_reset = devm_reset_control_get_exclusive(dev, NULL);
-+	if (IS_ERR(dsp_reset)) {
-+		if (PTR_ERR(dsp_reset) != -EPROBE_DEFER)
-+			dev_err(dev, "unable to get reset control: %ld\n",
-+				PTR_ERR(dsp_reset));
-+
-+		return PTR_ERR(dsp_reset);
-+	}
-+
- 	if (dev->of_node) {
- 		ret = of_reserved_mem_device_init(dev);
- 		if (ret) {
-@@ -287,6 +310,7 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
- 	drproc = rproc->priv;
- 	drproc->rproc = rproc;
- 	drproc->dsp_clk = dsp_clk;
-+	drproc->dsp_reset = dsp_reset;
- 	rproc->has_iommu = false;
- 
- 	ret = da8xx_rproc_get_internal_memories(pdev, drproc);
-@@ -309,7 +333,7 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
- 	 * *not* in reset, but da8xx_rproc_start() needs the DSP to be
- 	 * held in reset at the time it is called.
- 	 */
--	ret = davinci_clk_reset_assert(drproc->dsp_clk);
-+	ret = reset_control_assert(dsp_reset);
- 	if (ret)
- 		goto free_rproc;
- 
+
+scu {
+       compatible = "fsl,imx8qxp-scu";
+       fsl,mu = <&lsio_mu1 MU_CHANNEL_SCU>;
+};
+
+This would also allow to the MU-SCU-mode driver to coexist with the
+regular MU driver for which Oleksij posted a driver.
+
+Sascha
+
 -- 
-2.17.1
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
