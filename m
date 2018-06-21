@@ -1,7 +1,7 @@
 From: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
-Subject: [PATCH 2/3] ARM: dts: imx: add ZII SCU2 ESB board
-Date: Thu, 21 Jun 2018 20:44:59 +0300
-Message-ID: <1529603100-31958-3-git-send-email-andrey.gusakov@cogentembedded.com>
+Subject: [PATCH 3/3] ARM: dts: imx: add ZII SCU2 Mezz board
+Date: Thu, 21 Jun 2018 20:45:00 +0300
+Message-ID: <1529603100-31958-4-git-send-email-andrey.gusakov@cogentembedded.com>
 References: <1529603100-31958-1-git-send-email-andrey.gusakov@cogentembedded.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1529603100-31958-1-git-send-email-andrey.gusakov@cogentembedded.com>
@@ -10,36 +10,36 @@ To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Peng
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andrey.gusakov@cogentembedded.com
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the Zodiac Inflight Innovations SCU2 Ethernet
-Switch Board, which is based on the i.MX51.
+This adds support for the Zodiac Inflight Innovations SCU2 Mezz
+board, which is based on the i.MX51.
 
 Signed-off-by: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
 ---
- arch/arm/boot/dts/Makefile               |   3 +-
- arch/arm/boot/dts/imx51-zii-scu2-esb.dts | 178 +++++++++++++++++++++++++++++++
- 2 files changed, 180 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/imx51-zii-scu2-esb.dts
+ arch/arm/boot/dts/Makefile                |   3 +-
+ arch/arm/boot/dts/imx51-zii-scu2-mezz.dts | 190 ++++++++++++++++++++++++++++++
+ 2 files changed, 192 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/imx51-zii-scu2-mezz.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 37a3de7..d8900f4 100644
+index d8900f4..e0dc187 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -358,7 +358,8 @@ dtb-$(CONFIG_SOC_IMX51) += \
- 	imx51-digi-connectcore-jsk.dtb \
+@@ -359,7 +359,8 @@ dtb-$(CONFIG_SOC_IMX51) += \
  	imx51-eukrea-mbimxsd51-baseboard.dtb \
  	imx51-ts4800.dtb \
--	imx51-zii-rdu1.dtb
-+	imx51-zii-rdu1.dtb \
-+	imx51-zii-scu2-esb.dtb
+ 	imx51-zii-rdu1.dtb \
+-	imx51-zii-scu2-esb.dtb
++	imx51-zii-scu2-esb.dtb \
++	imx51-zii-scu2-mezz.dtb
  dtb-$(CONFIG_SOC_IMX53) += \
  	imx53-ard.dtb \
  	imx53-cx9020.dtb \
-diff --git a/arch/arm/boot/dts/imx51-zii-scu2-esb.dts b/arch/arm/boot/dts/imx51-zii-scu2-esb.dts
+diff --git a/arch/arm/boot/dts/imx51-zii-scu2-mezz.dts b/arch/arm/boot/dts/imx51-zii-scu2-mezz.dts
 new file mode 100644
-index 0000000..e052133
+index 0000000..f58572a
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx51-zii-scu2-esb.dts
-@@ -0,0 +1,178 @@
++++ b/arch/arm/boot/dts/imx51-zii-scu2-mezz.dts
+@@ -0,0 +1,190 @@
 +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
 +// Copyright (C) 2018 Zodiac Inflight Innovations
 +
@@ -47,36 +47,30 @@ index 0000000..e052133
 +#include "imx51-zii-common.dtsi"
 +
 +/ {
-+	model = "ZII SCU2 ESB board";
-+	compatible = "zii,imx51-scu2-esb", "fsl,imx51";
-+};
++	model = "ZII SCU2 Mezz Board";
++	compatible = "zii,imx51-scu2-mezz", "fsl,imx51";
 +
-+&esdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_esdhc1_4bit &pinctrl_esdhc1_8bit>;
-+	bus-width = <8>;
-+};
-+
-+&fec {
-+	phy-reset-gpios = <&gpio4 21 GPIO_ACTIVE_LOW>;
-+
-+	fixed-link {
-+		speed = <100>;
-+		full-duplex;
++	aliases {
++		mdio-gpio0 = &mdio_gpio;
 +	};
 +
-+	fec_mdio: mdio {
++	mdio_gpio: mdio-gpio {
++		compatible = "virtual,mdio-gpio";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_swmdio>;
++		gpios = <&gpio2 7 GPIO_ACTIVE_HIGH>, /* mdc */
++			<&gpio2 6 GPIO_ACTIVE_HIGH>; /* mdio */
++
 +		#address-cells = <1>;
 +		#size-cells = <0>;
-+		status = "okay";
 +
 +		switch@0 {
 +			compatible = "marvell,mv88e6085";
 +			reg = <0>;
 +			dsa,member = <0 0>;
 +			eeprom-length = <512>;
-+			interrupt-parent = <&gpio4>;
-+			interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-parent = <&gpio1>;
++			interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
 +			interrupt-controller;
 +			#interrupt-cells = <2>;
 +
@@ -86,46 +80,41 @@ index 0000000..e052133
 +
 +				port@0 {
 +					reg = <0>;
-+					label = "port1";
++					label = "port4";
 +				};
 +
 +				port@1 {
 +					reg = <1>;
-+					label = "port2";
++					label = "port5";
 +				};
 +
 +				port@2 {
 +					reg = <2>;
-+					label = "port3";
++					label = "port6";
 +				};
 +
 +				port@3 {
 +					reg = <3>;
-+					label = "scu2scu";
++					label = "port7";
 +				};
 +
 +				port@4 {
 +					reg = <4>;
-+					label = "esb2host";
-+				};
-+				port@5 {
-+					reg = <5>;
-+					label = "esb2mezz";
-+					phy-mode = "sgmii";
-+
-+					fixed-link {
-+						speed = <1000>;
-+						full-duplex;
-+					};
-+				};
-+				port@6 {
-+					reg = <6>;
 +					label = "cpu";
-+					phy-mode = "mii";
 +					ethernet = <&fec>;
 +
 +					fixed-link {
 +						speed = <100>;
++						full-duplex;
++					};
++				};
++
++				port@5 {
++					reg = <5>;
++					label = "mezz2esb";
++					phy-mode = "sgmii";
++					fixed-link {
++						speed = <1000>;
 +						full-duplex;
 +					};
 +				};
@@ -134,27 +123,48 @@ index 0000000..e052133
 +	};
 +};
 +
-+&i2c2 {
-+	lm75@48 {
-+		compatible = "national,lm75";
-+		reg = <0x48>;
-+	};
-+};
-+
-+&i2c_gpio {
-+	gpios = <&gpio3 1 GPIO_ACTIVE_HIGH>, /* sda */
-+		<&gpio3 0 GPIO_ACTIVE_HIGH>; /* scl */
-+};
-+
-+&ipu {
-+	status = "disabled";
-+};
-+
 +&usb_vbus {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&pinctrl_usb_mmc_reset>;
-+	gpio = <&gpio4 19 GPIO_ACTIVE_LOW>;
++	gpio = <&gpio3 13 GPIO_ACTIVE_LOW>;
 +	startup-delay-us = <150000>;
++};
++
++&esdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_esdhc1_4bit &pinctrl_esdhc1_8bit>;
++	bus-width = <8>;
++};
++
++&fec {
++	phy-reset-gpios = <&gpio2 14 GPIO_ACTIVE_LOW>;
++	phy-reset-duration = <1>;
++	phy-supply = <&vgen3_reg>;
++	phy-handle = <&ethphy>;
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethphy: ethernet-phy@0 {
++			reg = <0>;
++			max-speed = <100>;
++		};
++	};
++};
++
++
++&i2c_gpio {
++	gpios = <&gpio3 2 GPIO_ACTIVE_HIGH>, /* sda */
++		<&gpio3 1 GPIO_ACTIVE_HIGH>; /* scl */
++};
++
++&uart2 {
++	status = "disabled";
++};
++
++&vsd_reg {
++	regulator-always-on;
 +};
 +
 +&iomuxc {
@@ -168,7 +178,9 @@ index 0000000..e052133
 +			MX51_PAD_DISP2_DAT10__FEC_COL		0x0180
 +			MX51_PAD_DISP2_DAT11__FEC_RX_CLK	0x0180
 +			MX51_PAD_DISP2_DAT12__FEC_RX_DV		0x20a4
++			MX51_PAD_DISP2_DAT1__FEC_RX_ER		0x20a4
 +			MX51_PAD_DISP2_DAT13__FEC_TX_CLK	0x2180
++			MX51_PAD_DI_GP3__FEC_TX_ER		0x2004
 +			MX51_PAD_DISP2_DAT14__FEC_RDATA0	0x2180
 +			MX51_PAD_DI2_DISP_CLK__FEC_RDATA1	0x0085
 +			MX51_PAD_DI_GP4__FEC_RDATA2		0x0085
@@ -176,14 +188,8 @@ index 0000000..e052133
 +			MX51_PAD_DI2_PIN2__FEC_MDC		0x2004
 +			MX51_PAD_DI2_PIN3__FEC_MDIO		0x01f5
 +			MX51_PAD_DI2_PIN4__FEC_CRS		0x0180
-+			MX51_PAD_AUD3_BB_FS__GPIO4_21		0x0000
-+		>;
-+	};
-+
-+	pinctrl_swi2c: swi2cgrp {
-+		fsl,pins = <
-+			MX51_PAD_DI1_PIN11__GPIO3_0		0x100
-+			MX51_PAD_DI1_PIN12__GPIO3_1		0x100
++			MX51_PAD_EIM_A20__GPIO2_14		0x0085
++			MX51_PAD_EIM_A21__GPIO2_15		0x00e5
 +		>;
 +	};
 +
@@ -191,18 +197,10 @@ index 0000000..e052133
 +		fsl,pins = <
 +			MX51_PAD_UART1_RXD__UART1_RXD		0x1c5
 +			MX51_PAD_UART1_TXD__UART1_TXD		0x1c5
-+			MX51_PAD_UART1_RTS__UART1_RTS		0x1c5
-+			MX51_PAD_UART1_CTS__UART1_CTS		0x1c5
 +		>;
 +	};
 +
 +	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			MX51_PAD_UART2_RXD__UART2_RXD		0x1c5
-+			MX51_PAD_UART2_TXD__UART2_TXD		0x1c5
-+			MX51_PAD_USBH1_DATA0__UART2_CTS		0x1c5
-+			MX51_PAD_USBH1_DATA3__UART2_RTS		0x1c5
-+		>;
 +	};
 +
 +	pinctrl_uart3: uart3grp {
@@ -214,7 +212,21 @@ index 0000000..e052133
 +
 +	pinctrl_usb_mmc_reset: usbmmcgrp {
 +		fsl,pins = <
-+			MX51_PAD_AUD3_BB_RXD__GPIO4_19		0x100
++			MX51_PAD_CSI1_D9__GPIO3_13		0x85
++		>;
++	};
++
++	pinctrl_swmdio: swmdiogrp {
++		fsl,pins = <
++			MX51_PAD_EIM_D22__GPIO2_6		0x100
++			MX51_PAD_EIM_D23__GPIO2_7		0x100
++		>;
++	};
++
++	pinctrl_swi2c: swi2cgrp {
++		fsl,pins = <
++			MX51_PAD_DI1_PIN12__GPIO3_1		0x100
++			MX51_PAD_DI1_PIN13__GPIO3_2		0x100
 +		>;
 +	};
 +};
