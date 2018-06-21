@@ -1,114 +1,220 @@
-From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH 3/7] ARM: dts: s5pv210: Add initial DTS for Samsung Galaxy S phone.
-Date: Thu, 21 Jun 2018 21:09:55 +0200
-Message-ID: <1529608199-5583-4-git-send-email-pawel.mikolaj.chmiel@gmail.com>
-References: <1529608199-5583-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529608199-5583-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xc-racer2@live.ca, pawel.mikolaj.chmiel@gmail.com
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: [PATCH v2 4/5] iommu/virtio: Add event queue
+Date: Thu, 21 Jun 2018 20:06:54 +0100
+Message-ID: <20180621190655.56391-5-jean-philippe.brucker@arm.com>
+References: <20180621190655.56391-1-jean-philippe.brucker@arm.com>
+Return-path: <virtio-dev-return-4473-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
+Sender: <virtio-dev@lists.oasis-open.org>
+List-Post: <mailto:virtio-dev@lists.oasis-open.org>
+List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
+List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
+List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
+In-Reply-To: <20180621190655.56391-1-jean-philippe.brucker@arm.com>
+To: iommu@lists.linux-foundation.org, kvm@vger.kernel.org, virtualization@lists.linux-foundation.org, virtio-dev@lists.oasis-open.org, devicetree@vger.kernel.org, kvmarm@lists.cs.columbia.edu
+Cc: joro@8bytes.org, alex.williamson@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, mst@redhat.com, jasowang@redhat.com, marc.zyngier@arm.com, robin.murphy@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, eric.auger@redhat.com, peterx@redhat.com, bharat.bhushan@nxp.com, tnowicki@caviumnetworks.com, jayachandran.nair@cavium.com, kevin.tian@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
----
- arch/arm/boot/dts/Makefile            |  1 +
- arch/arm/boot/dts/s5pv210-galaxys.dts | 72 +++++++++++++++++++++++++++++++++++
- 2 files changed, 73 insertions(+)
- create mode 100644 arch/arm/boot/dts/s5pv210-galaxys.dts
+The event queue offers a way for the device to report access faults from
+endpoints. It is implemented on virtqueue #1. Whenever the host needs to
+signal a fault, it fills one of the buffers offered by the guest and
+interrupts it.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 7e2424957809..522ebdca1d3d 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -846,6 +846,7 @@ dtb-$(CONFIG_ARCH_S3C64XX) += \
- 	s3c6410-smdk6410.dtb
- dtb-$(CONFIG_ARCH_S5PV210) += \
- 	s5pv210-aquila.dtb \
-+	s5pv210-galaxys.dtb \
- 	s5pv210-goni.dtb \
- 	s5pv210-smdkc110.dtb \
- 	s5pv210-smdkv210.dtb \
-diff --git a/arch/arm/boot/dts/s5pv210-galaxys.dts b/arch/arm/boot/dts/s5pv210-galaxys.dts
-new file mode 100644
-index 000000000000..d435032541a9
---- /dev/null
-+++ b/arch/arm/boot/dts/s5pv210-galaxys.dts
-@@ -0,0 +1,72 @@
-+// SPDX-License-Identifier: GPL-2.0
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+---
+ drivers/iommu/virtio-iommu.c      | 116 +++++++++++++++++++++++++++---
+ include/uapi/linux/virtio_iommu.h |  18 +++++
+ 2 files changed, 125 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
+index 29ce9f4398ef..c075404e97d6 100644
+--- a/drivers/iommu/virtio-iommu.c
++++ b/drivers/iommu/virtio-iommu.c
+@@ -29,7 +29,8 @@
+ #define MSI_IOVA_LENGTH			0x100000
+ 
+ #define VIOMMU_REQUEST_VQ		0
+-#define VIOMMU_NR_VQS			1
++#define VIOMMU_EVENT_VQ			1
++#define VIOMMU_NR_VQS			2
+ 
+ #define VIOMMU_REQUEST_TIMEOUT		10000 /* 10s */
+ 
+@@ -43,6 +44,7 @@ struct viommu_dev {
+ 	struct virtqueue		*vqs[VIOMMU_NR_VQS];
+ 	spinlock_t			request_lock;
+ 	struct list_head		requests;
++	void				*evts;
+ 
+ 	/* Device configuration */
+ 	struct iommu_domain_geometry	geometry;
+@@ -84,6 +86,15 @@ struct viommu_request {
+ 	char				buf[];
+ };
+ 
++#define VIOMMU_FAULT_RESV_MASK		0xffffff00
 +
-+/dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include "s5pv210-aries.dtsi"
-+
-+/ {
-+	model = "Samsung Galaxy S1 (GT-I9000) based on S5PV210";
-+	compatible = "samsung,galaxys", "samsung,aries", "samsung,s5pv210";
-+
-+	chosen {
-+		bootargs = "console=ttySAC2,115200n8 root=/dev/mmcblk2p1 rw rootwait ignore_loglevel earlyprintk";
-+	};
-+
-+	nand_pwrseq: nand-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpj2 7 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&massmemory_en>;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		power {
-+			label = "power";
-+			gpios = <&gph2 6 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_POWER>;
-+			wakeup-source;
-+		};
-+
-+		vol-down {
-+			label = "volume_down";
-+			gpios = <&gph3 1 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+		};
-+
-+		vol-up {
-+			label = "volume_up";
-+			gpios = <&gph3 2 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEUP>;
-+		};
-+
-+		home {
-+			label = "home";
-+			gpios = <&gph3 5 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_HOME>;
-+			wakeup-source;
-+		};
++struct viommu_event {
++	union {
++		u32			head;
++		struct virtio_iommu_fault fault;
 +	};
 +};
 +
-+&pinctrl0 {
-+	massmemory_en: massmemory-en {
-+		samsung,pins = "gpj2-7";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-+		samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-+	};
-+};
+ #define to_viommu_domain(domain)	\
+ 	container_of(domain, struct viommu_domain, domain)
+ 
+@@ -507,6 +518,69 @@ static int viommu_probe_endpoint(struct viommu_dev *viommu, struct device *dev)
+ 	return ret;
+ }
+ 
++static int viommu_fault_handler(struct viommu_dev *viommu,
++				struct virtio_iommu_fault *fault)
++{
++	char *reason_str;
 +
-+&sdhci0 {
-+	bus-width = <4>;
-+	non-removable;
-+	mmc-pwrseq = <&nand_pwrseq>;
-+	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
++	u8 reason	= fault->reason;
++	u32 flags	= le32_to_cpu(fault->flags);
++	u32 endpoint	= le32_to_cpu(fault->endpoint);
++	u64 address	= le64_to_cpu(fault->address);
++
++	switch (reason) {
++	case VIRTIO_IOMMU_FAULT_R_DOMAIN:
++		reason_str = "domain";
++		break;
++	case VIRTIO_IOMMU_FAULT_R_MAPPING:
++		reason_str = "page";
++		break;
++	case VIRTIO_IOMMU_FAULT_R_UNKNOWN:
++	default:
++		reason_str = "unknown";
++		break;
++	}
++
++	/* TODO: find EP by ID and report_iommu_fault */
++	if (flags & VIRTIO_IOMMU_FAULT_F_ADDRESS)
++		dev_err_ratelimited(viommu->dev, "%s fault from EP %u at %#llx [%s%s%s]\n",
++				    reason_str, endpoint, address,
++				    flags & VIRTIO_IOMMU_FAULT_F_READ ? "R" : "",
++				    flags & VIRTIO_IOMMU_FAULT_F_WRITE ? "W" : "",
++				    flags & VIRTIO_IOMMU_FAULT_F_EXEC ? "X" : "");
++	else
++		dev_err_ratelimited(viommu->dev, "%s fault from EP %u\n",
++				    reason_str, endpoint);
++	return 0;
++}
++
++static void viommu_event_handler(struct virtqueue *vq)
++{
++	int ret;
++	unsigned int len;
++	struct scatterlist sg[1];
++	struct viommu_event *evt;
++	struct viommu_dev *viommu = vq->vdev->priv;
++
++	while ((evt = virtqueue_get_buf(vq, &len)) != NULL) {
++		if (len > sizeof(*evt)) {
++			dev_err(viommu->dev,
++				"invalid event buffer (len %u != %zu)\n",
++				len, sizeof(*evt));
++		} else if (!(evt->head & VIOMMU_FAULT_RESV_MASK)) {
++			viommu_fault_handler(viommu, &evt->fault);
++		}
++
++		sg_init_one(sg, evt, sizeof(*evt));
++		ret = virtqueue_add_inbuf(vq, sg, 1, evt, GFP_ATOMIC);
++		if (ret)
++			dev_err(viommu->dev, "could not add event buffer\n");
++	}
++
++	if (!virtqueue_kick(vq))
++		dev_err(viommu->dev, "kick failed\n");
++}
++
+ /* IOMMU API */
+ 
+ static struct iommu_domain *viommu_domain_alloc(unsigned type)
+@@ -893,16 +967,35 @@ static struct iommu_ops viommu_ops = {
+ static int viommu_init_vqs(struct viommu_dev *viommu)
+ {
+ 	struct virtio_device *vdev = dev_to_virtio(viommu->dev);
+-	const char *name = "request";
+-	void *ret;
++	const char *names[] = { "request", "event" };
++	vq_callback_t *callbacks[] = {
++		NULL, /* No async requests */
++		viommu_event_handler,
++	};
+ 
+-	ret = virtio_find_single_vq(vdev, NULL, name);
+-	if (IS_ERR(ret)) {
+-		dev_err(viommu->dev, "cannot find VQ\n");
+-		return PTR_ERR(ret);
+-	}
++	return virtio_find_vqs(vdev, VIOMMU_NR_VQS, viommu->vqs, callbacks,
++			       names, NULL);
++}
+ 
+-	viommu->vqs[VIOMMU_REQUEST_VQ] = ret;
++static int viommu_fill_evtq(struct viommu_dev *viommu)
++{
++	int i, ret;
++	struct scatterlist sg[1];
++	struct viommu_event *evts;
++	struct virtqueue *vq = viommu->vqs[VIOMMU_EVENT_VQ];
++	size_t nr_evts = vq->num_free;
++
++	viommu->evts = evts = devm_kmalloc_array(viommu->dev, nr_evts,
++						 sizeof(*evts), GFP_KERNEL);
++	if (!evts)
++		return -ENOMEM;
++
++	for (i = 0; i < nr_evts; i++) {
++		sg_init_one(sg, &evts[i], sizeof(*evts));
++		ret = virtqueue_add_inbuf(vq, sg, 1, &evts[i], GFP_KERNEL);
++		if (ret)
++			return ret;
++	}
+ 
+ 	return 0;
+ }
+@@ -967,6 +1060,11 @@ static int viommu_probe(struct virtio_device *vdev)
+ 
+ 	virtio_device_ready(vdev);
+ 
++	/* Populate the event queue with buffers */
++	ret = viommu_fill_evtq(viommu);
++	if (ret)
++		goto err_free_vqs;
++
+ 	ret = iommu_device_sysfs_add(&viommu->iommu, dev, NULL, "%s",
+ 				     virtio_bus_name(vdev));
+ 	if (ret)
+diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
+index 2fd802a860cd..4e501d34267a 100644
+--- a/include/uapi/linux/virtio_iommu.h
++++ b/include/uapi/linux/virtio_iommu.h
+@@ -151,4 +151,22 @@ union virtio_iommu_req {
+ 	struct virtio_iommu_req_probe		probe;
+ };
+ 
++/* Fault types */
++#define VIRTIO_IOMMU_FAULT_R_UNKNOWN		0
++#define VIRTIO_IOMMU_FAULT_R_DOMAIN		1
++#define VIRTIO_IOMMU_FAULT_R_MAPPING		2
++
++#define VIRTIO_IOMMU_FAULT_F_READ		(1 << 0)
++#define VIRTIO_IOMMU_FAULT_F_WRITE		(1 << 1)
++#define VIRTIO_IOMMU_FAULT_F_EXEC		(1 << 2)
++#define VIRTIO_IOMMU_FAULT_F_ADDRESS		(1 << 8)
++
++struct virtio_iommu_fault {
++	__u8					reason;
++	__u8					padding[3];
++	__le32					flags;
++	__le32					endpoint;
++	__le64					address;
++} __packed;
++
+ #endif
 -- 
-2.7.4
+2.17.0
