@@ -1,33 +1,109 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v7 0/4] mfd/regulator/clk/input: bd71837: ROHM BD71837
- PMIC driver
-Date: Thu, 21 Jun 2018 13:34:00 +0300
-Message-ID: <20180621103400.GB6076@localhost.localdomain>
-References: <cover.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
+From: Piotr Bugalski <bugalski.piotr@gmail.com>
+Subject: Re: [RFC PATCH 0/2] New QuadSPI driver for Atmel SAMA5D2
+Date: Thu, 21 Jun 2018 12:52:07 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1806211239590.28763@carbonite>
+References: <20180618162124.21749-1-bugalski.piotr@gmail.com> <20180620165438.39608554@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <20180620165438.39608554@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, arnd@arndb.de, dmitry.torokhov@gmail.com, sre@kernel.org, chenjh@rock-chips.com, andrew.smirnov@gmail.com, linus.walleij@linaro.org, kstewart@linuxfoundation.org, heiko@sntech.de, gregkh@linuxfoundation.org
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Piotr Bugalski <bugalski.piotr@gmail.com>, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Cyrille Pitchen <cyrille.pitchen@microchip.com>, Tudor Ambarus <tudor.ambarus@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 19, 2018 at 01:55:31PM +0300, Matti Vaittinen wrote:
-> Patch series adding support for ROHM BD71837 PMIC.
-> 
-What is the preferred way when I send updated patches:
 
-1. always resend _all_ unapplied patches even if there is no changes to
-   some of them. (patch-vN mail thread contains _all_ unapplied patches)
-2. only resend changed patches (patch-vN mail thread contains only
-   patches that were changed from patch-vN-1)
+Hi Boris,
 
-I have currently used approach 1 - so that no patches would be
-accidentally forgotten - but downside is that people need to check if
-they have already reviewed some of the patches. I'd rather not caused
-any extra work. What is the most convenient way for you guys?
+Thank you very much for quick response.
 
-Br,
-    Matti Vaittinen
+On Wed, 20 Jun 2018, Boris Brezillon wrote:
+
+> Hi Piotr,
+>
+> On Mon, 18 Jun 2018 18:21:22 +0200
+> Piotr Bugalski <bugalski.piotr@gmail.com> wrote:
+>
+>> Hello,
+>>
+>> Atmel SAMA5D2 is equipped with two QSPI interfaces. These interfaces can
+>> work as in SPI-compatible mode or use two / four lines to improve
+>> communication speed. At the moment there is QSPI driver strongly tied to
+>> NOR-flash memory and MTD subsystem.
+>> Intention of this change is to provide new driver which will not be tied
+>> to MTD and allows using QSPI with NAND-flash memory or other peripherals
+>> New spi-mem API provides abstraction layer which can disconnect QSPI
+>> from MTD. This driver doesn't support regular SPI interface, it should
+>> be used with spi-mem interface only.
+>
+> Glad to see that people are starting to convert their SPI NOR
+> controller drivers to the SPI mem approach.
+>
+>> Unfortunately SAMA5D2 hardware by default supports only NOR-flash
+>> memory. It allows 24- and 32-bit addressing while NAND-flash requires
+>> 16-bit long. To workaround hardware limitation driver is a bit more
+>> complicated.
+>>
+>> Request to spi-mem contains three fiels: opcode (command), address,
+>> dummy bytes. SAMA5D2 QSPI hardware supports opcode, address, dummy and
+>> option byte where address field can only be 24- or 32- bytes long.
+>> Handling 8-bits long addresses is done using option field. For 16-bits
+>> address behaviour depends of number of requested dummy bits. If there
+>> are 8 or more dummy cycles, address is shifted and sent with first dummy
+>> byte. Otherwise opcode is disabled and first byte of address contains
+>> command opcode (works only if opcode and address use the same buswidth).
+>> The limitation is when 16-bit address is used without enough dummy
+>> cycles and opcode is using different buswidth than address. Other modes
+>> are supported with described workaround.
+>>
+>> It looks like hardware has some limitation in performance. The same issue
+>> exists in current QSPI driver (MTD/nor-flash) and soft-pack (bare-metal
+>> library from Atmel). Without using DMA read speed is much worse than
+>> maximum bandwidth (efficiency 30-40%). Any help with performance
+>> improvement is highly welcome, especially for NAND-flash memories which
+>> offers higher capacity than NOR-flash used with previous driver.
+>>
+>> Best Regards,
+>> Piotr
+>>
+>> Piotr Bugalski (2):
+>>   spi: Add QuadSPI driver for Atmel SAMA5D2
+>>   dt-bindings: spi: QuadSPI driver for Atmel SAMA5D2 documentation
+>>
+>>  .../devicetree/bindings/spi/spi_atmel-qspi.txt     |  41 ++
+>>  drivers/spi/Kconfig                                |   9 +
+>>  drivers/spi/Makefile                               |   1 +
+>>  drivers/spi/spi-atmel-qspi.c                       | 480 +++++++++++++++++++++
+>
+> I'd like a solution where we remove the old driver. I definitely don't
+> want to have both in parallel. Did you test the new driver with a SPI
+> NOR to check if it still works correctly? If you did, then I'd suggest
+> that you add a patch updating defconfigs where the SPI_ATMEL_QUADSPI is
+> selected and another patch removing the old driver.
+>
+
+I misunderstood a bit your idea. My main concern was NAND-flash with
+QSPI interface and I expected original nor-flash driver to stay
+untouched - at least now. However idea of replacement older driver
+with spi-mem approach makes a lot of sense to me.
+I'll test nor-flash with new driver first, it should work but I prefer
+to be sure. In next version I'll follow your suggestion and replace
+old nor-flash driver.
+
+>>  4 files changed, 531 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/spi/spi_atmel-qspi.txt
+>
+> This should be a simple mv from
+> Documentation/devicetree/bindings/mtd/atmel-quadspi.txt to
+> Documentation/devicetree/bindings/spi/spi-atmel-qspi.txt
+>
+>>  create mode 100644 drivers/spi/spi-atmel-qspi.c
+>>
+>
+> Thanks,
+>
+> Boris
+>
+
+Thank you for comments,
+Piotr
