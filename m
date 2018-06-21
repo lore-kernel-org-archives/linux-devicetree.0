@@ -1,65 +1,116 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v6 4/6] mtd: rawnand: add NVIDIA Tegra NAND Flash
- controller driver
-Date: Fri, 22 Jun 2018 00:01:28 +0200
-Message-ID: <20180622000128.3ea45ef7@bbrezillon>
-References: <20180621203145.7628-1-stefan@agner.ch>
-        <20180621203145.7628-5-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v3 1/2] dt-binding: hwmon: Add NPCM7xx PWM and Fan controller documentation
+Date: Fri, 22 Jun 2018 01:09:56 +0300
+Message-ID: <20180621220957.206638-2-tmaimon77@gmail.com>
+References: <20180621220957.206638-1-tmaimon77@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180621203145.7628-5-stefan@agner.ch>
+In-Reply-To: <20180621220957.206638-1-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, linux@roeck-us.net, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+Added device tree binding documentation for Nuvoton BMC
+NPCM7xx Pulse Width Modulation (PWM)  and Fan tach controller.
+The PWM controller can support upto 8 PWM output ports.
+The Fan tach controller can support upto 16 tachometer inputs.
 
-On Thu, 21 Jun 2018 22:31:43 +0200
-Stefan Agner <stefan@agner.ch> wrote:
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ .../devicetree/bindings/hwmon/npcm750-pwm-fan.txt  | 84 ++++++++++++++++++++++
+ 1 file changed, 84 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
 
-> Add support for the NAND flash controller found on NVIDIA
-> Tegra 2 SoCs. This implementation does not make use of the
-> command queue feature. Regular operations using ->exec_op()
-> use PIO mode for data transfers. Raw, ECC and OOB read/writes
-> make use of the DMA mode for data transfer.
-> 
-> Signed-off-by: Lucas Stach <dev@lynxeye.de>
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  MAINTAINERS                       |    7 +
->  drivers/mtd/nand/raw/Kconfig      |    6 +
->  drivers/mtd/nand/raw/Makefile     |    1 +
->  drivers/mtd/nand/raw/tegra_nand.c | 1225 +++++++++++++++++++++++++++++
->  4 files changed, 1239 insertions(+)
->  create mode 100644 drivers/mtd/nand/raw/tegra_nand.c
-
-I think we're almost good. No big issues spotted in this version.
-Can you fix the CHECKs/WARNINGs reported by checkpatch --strict (most
-of them are valid)?
-
-> +
-> +static int tegra_nand_remove(struct platform_device *pdev)
-> +{
-> +	struct tegra_nand_controller *ctrl = platform_get_drvdata(pdev);
-> +
-> +	nand_release(nand_to_mtd(ctrl->chip));
-
-Use mtd_device_unregister() + nand_cleanup() instead of nand_release().
-nand_release() is broken in that it does not check the return code of
-mtd_device_unregister() before calling nand_cleanup(), and does not
-propagate mtd_device_unregister() ret code to its caller. 
-
-> +
-> +	clk_disable_unprepare(ctrl->clk);
-> +
-> +	return 0;
-> +}
-
-Thanks for the great work you've done! Yay, another driver implementing
-->exec_op()!
-
-Boris
+diff --git a/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt b/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
+new file mode 100644
+index 000000000000..a9eacda34f92
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
+@@ -0,0 +1,84 @@
++Nuvoton NPCM7xx PWM and Fan Tacho controller device driver
++
++The NPCM7xx has two identical Pulse-width modulation (PWM) controller modules,
++Each PWM module has four PWM controller outputs, Totally 8 PWM controller outputs.
++
++The NPCM7xx has eight identical Fan tachometer controller modules,
++Each Fan module has two Fan controller inputs, Totally 16 Fan controller inputs.
++
++Required properties for pwm-fan node:
++- compatible	: "nuvoton,npcm750-pwm-fan" for Poleg NPCM7XX.
++- reg 			: specifies physical base address and size of the registers.
++- reg-names 	: must contain:
++					* "pwm-base" for the PWM registers.
++ 					* "fan-base" for the Fan registers.
++- clocks		: phandle of reference clocks.
++- clock-names	: must contain
++					* "clk_apb3" for clock of PWM controller.
++ 					* "clk_apb4" for clock of Fan controller.
++- interrupts	: contain the Fan interrupts with flags for falling edge.
++- pinctrl-names	: a pinctrl state named "default" must be defined.
++- pinctrl-0 	: phandle referencing pin configuration of the PWM and Fan
++					controller ports.
++
++pwm subnode format:
++===================
++Under pwm subnode can be upto 8 child nodes, each child node representing a PWM channel.
++Each pwm subnode must have one PWM channel and atleast one Fan tach channel.
++
++For PWM channel can be configured cooling-levels to create cooling device.
++Cooling device could be bound to a thermal zone for the thermal control.
++
++Required properties for each child node:
++- pwm-ch : specify the PWM output channel.
++			integer value in the range 0 through 7, that represent
++			the PWM channel number that used.
++
++- fan-ch : specify the Fan input channel.
++			integer value in the range 0 through 15, that represent
++			the Fan channel number that used.
++
++			At least one Fan tach input channel is required
++
++Optional property for each child node:
++- cooling-levels: PWM duty cycle values in a range from 0 to 255
++                  which correspond to thermal cooling states.
++
++Examples:
++
++pwm_fan:pwm_fan_controller@103000 {
++	compatible = "nuvoton,npcm750-pwm-fan";
++	reg = <0x103000 0x2000>,
++		<0x180000 0x8000>;
++	reg-names = "pwm_base", "fan_base";
++	clocks = <&clk NPCM7XX_CLK_APB3>,
++		<&clk NPCM7XX_CLK_APB4>;
++	clock-names = "clk_apb3","clk_apb4";
++	interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm0_pins &pwm1_pins &pwm2_pins
++			&fanin0_pins &fanin1_pins &fanin2_pins
++			&fanin3_pins &fanin4_pins>;
++
++			pwm@0 {
++				pwm-ch = /bits/ 8 <0x00>;
++				fan-ch = /bits/ 8 <0x00 0x01>;
++				cooling-levels = <127 255>;
++				};
++			pwm@1 {
++				pwm-ch = /bits/ 8 <0x01>;
++				fan-ch = /bits/ 8 <0x02 0x03>;
++				};
++			pwm@2 {
++				pwm-ch = /bits/ 8 <0x02>;
++				fan-ch = /bits/ 8 <0x04>;
++				};
++
++};
+\ No newline at end of file
+-- 
+2.14.1
