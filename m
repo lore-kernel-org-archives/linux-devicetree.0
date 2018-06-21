@@ -1,111 +1,111 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH V3 2/7] backlight: qcom-wled: restructure the qcom-wled
- bindings
-Date: Thu, 21 Jun 2018 14:12:57 +0100
-Message-ID: <20180621131257.bql555n5vgwamtlu@holly.lan>
-References: <1529406822-15379-1-git-send-email-kgunda@codeaurora.org>
- <1529406822-15379-3-git-send-email-kgunda@codeaurora.org>
+From: Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH v2 2/2] hwmon: npcm750: add NPCM7xx PWM and Fan driver
+Date: Thu, 21 Jun 2018 15:17:26 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1806211515060.3774@hadrien>
+References: <20180619105352.97181-1-tmaimon77@gmail.com>  <20180619105352.97181-3-tmaimon77@gmail.com>  <20180620164853.GA3459@roeck-us.net> <a6a5a21236c37cfc63329e54248d941bf6d49e3c.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1529406822-15379-3-git-send-email-kgunda@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kiran Gunda <kgunda@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, bjorn.andersson@linaro.org, Rob Herring <robh+dt@kernel.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, linux-arm-msm@vger.kernel.org, lee.jones@linaro.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a6a5a21236c37cfc63329e54248d941bf6d49e3c.camel@perches.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, Tomer Maimon <tmaimon77@gmail.com>, cocci <cocci@systeme.lip6.fr>, robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdW4gMTksIDIwMTggYXQgMDQ6NDM6MzdQTSArMDUzMCwgS2lyYW4gR3VuZGEgd3Jv
-dGU6Cj4gUmVzdHJ1Y3R1cmUgdGhlIHFjb20td2xlZCBiaW5kaW5ncyBmb3IgdGhlIGJldHRlciBy
-ZWFkYWJpbGl0eS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBLaXJhbiBHdW5kYSA8a2d1bmRhQGNvZGVh
-dXJvcmEub3JnPgoKQWNrZWQtYnk6IERhbmllbCBUaG9tcHNvbiA8ZGFuaWVsLnRob21wc29uQGxp
-bmFyby5vcmc+Cgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvcWNvbS13bGVk
-LnR4dCAgICAgICAgICB8IDExMCArKysrKysrKysrKysrKysrLS0tLS0KPiAgMSBmaWxlIGNoYW5n
-ZWQsIDg1IGluc2VydGlvbnMoKyksIDI1IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvcWNvbS13bGVk
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2tsaWdodC9x
-Y29tLXdsZWQudHh0Cj4gaW5kZXggZmIzOWUzMi4uMTRmMjhmMiAxMDA2NDQKPiAtLS0gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvcWNvbS13bGVkLnR4
-dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2JhY2tsaWdo
-dC9xY29tLXdsZWQudHh0Cj4gQEAgLTEsMzAgKzEsOTAgQEAKPiAgQmluZGluZyBmb3IgUXVhbGNv
-bW0gVGVjaG5vbG9naWVzLCBJbmMuIFdMRUQgZHJpdmVyCj4gIAo+IC1SZXF1aXJlZCBwcm9wZXJ0
-aWVzOgo+IC0tIGNvbXBhdGlibGU6IHNob3VsZCBiZSAicWNvbSxwbTg5NDEtd2xlZCIKPiAtLSBy
-ZWc6IHNsYXZlIGFkZHJlc3MKPiAtCj4gLU9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gLS0gZGVmYXVs
-dC1icmlnaHRuZXNzOiBicmlnaHRuZXNzIHZhbHVlIG9uIGJvb3QsIHZhbHVlIGZyb206IDAtNDA5
-NQo+IC0JZGVmYXVsdDogMjA0OAo+IC0tIGxhYmVsOiBUaGUgbmFtZSBvZiB0aGUgYmFja2xpZ2h0
-IGRldmljZQo+IC0tIHFjb20sY3Mtb3V0OiBib29sOyBlbmFibGUgY3VycmVudCBzaW5rIG91dHB1
-dAo+IC0tIHFjb20sY2FiYzogYm9vbDsgZW5hYmxlIGNvbnRlbnQgYWRhcHRpdmUgYmFja2xpZ2h0
-IGNvbnRyb2wKPiAtLSBxY29tLGV4dC1nZW46IGJvb2w7IHVzZSBleHRlcm5hbGx5IGdlbmVyYXRl
-ZCBtb2R1bGF0b3Igc2lnbmFsIHRvIGRpbQo+IC0tIHFjb20sY3VycmVudC1saW1pdDogbUE7IHBl
-ci1zdHJpbmcgY3VycmVudCBsaW1pdDsgdmFsdWUgZnJvbSAwIHRvIDI1Cj4gLQlkZWZhdWx0OiAy
-MG1BCj4gLS0gcWNvbSxjdXJyZW50LWJvb3N0LWxpbWl0OiBtQTsgYm9vc3QgY3VycmVudCBsaW1p
-dDsgb25lIG9mOgo+IC0JMTA1LCAzODUsIDUyNSwgODA1LCA5ODAsIDEyNjAsIDE0MDAsIDE2ODAK
-PiAtCWRlZmF1bHQ6IDgwNW1BCj4gLS0gcWNvbSxzd2l0Y2hpbmctZnJlcToga0h6OyBzd2l0Y2hp
-bmcgZnJlcXVlbmN5OyBvbmUgb2Y6Cj4gLQk2MDAsIDY0MCwgNjg1LCA3MzgsIDgwMCwgODcyLCA5
-NjAsIDEwNjYsIDEyMDAsIDEzNzEsCj4gLQkxNjAwLCAxOTIwLCAyNDAwLCAzMjAwLCA0ODAwLCA5
-NjAwLAo+IC0JZGVmYXVsdDogMTYwMGtIego+IC0tIHFjb20sb3ZwOiBWOyBPdmVyLXZvbHRhZ2Ug
-cHJvdGVjdGlvbiBsaW1pdDsgb25lIG9mOgo+IC0JMjcsIDI5LCAzMiwgMzUKPiAtCWRlZmF1bHQ6
-IDI5Vgo+IC0tIHFjb20sbnVtLXN0cmluZ3M6ICM7IG51bWJlciBvZiBsZWQgc3RyaW5ncyBhdHRh
-Y2hlZDsgdmFsdWUgZnJvbSAxIHRvIDMKPiAtCWRlZmF1bHQ6IDIKPiArV0xFRCAoV2hpdGUgTGln
-aHQgRW1pdHRpbmcgRGlvZGUpIGRyaXZlciBpcyB1c2VkIGZvciBjb250cm9sbGluZyBkaXNwbGF5
-Cj4gK2JhY2tsaWdodCB0aGF0IGlzIHBhcnQgb2YgUE1JQyBvbiBRdWFsY29tbSBUZWNobm9sb2dp
-ZXMsIEluYy4gcmVmZXJlbmNlCj4gK3BsYXRmb3Jtcy4gVGhlIFBNSUMgaXMgY29ubmVjdGVkIHRv
-IHRoZSBob3N0IHByb2Nlc3NvciB2aWEgU1BNSSBidXMuCj4gKwo+ICstIGNvbXBhdGlibGUKPiAr
-CVVzYWdlOiAgICAgICAgcmVxdWlyZWQKPiArCVZhbHVlIHR5cGU6ICAgPHN0cmluZz4KPiArCURl
-ZmluaXRpb246ICAgc2hvdWxkIGJlIG9uZSBvZjoKPiArCQkJInFjb20scG04OTQxLXdsZWQiCj4g
-KwkJCSJxY29tLHBtaTg5OTgtd2xlZCIKPiArCQkJInFjb20scG02NjBsLXdsZWQiCj4gKwo+ICst
-IHJlZwo+ICsJVXNhZ2U6ICAgICAgICByZXF1aXJlZAo+ICsJVmFsdWUgdHlwZTogICA8cHJvcCBl
-bmNvZGVkIGFycmF5Pgo+ICsJRGVmaW5pdGlvbjogICBCYXNlIGFkZHJlc3Mgb2YgdGhlIFdMRUQg
-bW9kdWxlcy4KPiArCj4gKy0gZGVmYXVsdC1icmlnaHRuZXNzCj4gKwlVc2FnZTogICAgICAgIG9w
-dGlvbmFsCj4gKwlWYWx1ZSB0eXBlOiAgIDx1MzI+Cj4gKwlEZWZpbml0aW9uOiAgIGJyaWdodG5l
-c3MgdmFsdWUgb24gYm9vdCwgdmFsdWUgZnJvbTogMC00MDk1Cj4gKwkJICAgICAgRGVmYXVsdDog
-MjA0OAo+ICsKPiArLSBsYWJlbAo+ICsJVXNhZ2U6ICAgICAgICByZXF1aXJlZAo+ICsJVmFsdWUg
-dHlwZTogICA8c3RyaW5nPgo+ICsJRGVmaW5pdGlvbjogICBUaGUgbmFtZSBvZiB0aGUgYmFja2xp
-Z2h0IGRldmljZQo+ICsKPiArLSBxY29tLGNzLW91dAo+ICsJVXNhZ2U6ICAgICAgICBvcHRpb25h
-bAo+ICsJVmFsdWUgdHlwZTogICA8Ym9vbD4KPiArCURlZmluaXRpb246ICAgZW5hYmxlIGN1cnJl
-bnQgc2luayBvdXRwdXQuCj4gKwkJICAgICAgVGhpcyBwcm9wZXJ0eSBpcyBzdXBwb3J0ZWQgb25s
-eSBmb3IgUE04OTQxLgo+ICsKPiArLSBxY29tLGNhYmMKPiArCVVzYWdlOiAgICAgICAgb3B0aW9u
-YWwKPiArCVZhbHVlIHR5cGU6ICAgPGJvb2w+Cj4gKwlEZWZpbml0aW9uOiAgIGVuYWJsZSBjb250
-ZW50IGFkYXB0aXZlIGJhY2tsaWdodCBjb250cm9sLgo+ICsKPiArLSBxY29tLGV4dC1nZW4KPiAr
-CVVzYWdlOiAgICAgICAgb3B0aW9uYWwKPiArCVZhbHVlIHR5cGU6ICAgPGJvb2w+Cj4gKwlEZWZp
-bml0aW9uOiAgIHVzZSBleHRlcm5hbGx5IGdlbmVyYXRlZCBtb2R1bGF0b3Igc2lnbmFsIHRvIGRp
-bS4KPiArCQkgICAgICBUaGlzIHByb3BlcnR5IGlzIHN1cHBvcnRlZCBvbmx5IGZvciBQTTg5NDEu
-Cj4gKwo+ICstIHFjb20sY3VycmVudC1saW1pdAo+ICsJVXNhZ2U6ICAgICAgICBvcHRpb25hbAo+
-ICsJVmFsdWUgdHlwZTogICA8dTMyPgo+ICsJRGVmaW5pdGlvbjogICBtQTsgcGVyLXN0cmluZyBj
-dXJyZW50IGxpbWl0Cj4gKwkJICAgICAgdmFsdWU6IEZvciBwbTg5NDE6IGZyb20gMCB0byAyNSB3
-aXRoIDUgbUEgc3RlcAo+ICsJCQkgICAgIERlZmF1bHQgMjAgbUEuCj4gKwkJCSAgICAgRm9yIHBt
-aTg5OTg6IGZyb20gMCB0byAzMCB3aXRoIDUgbUEgc3RlcAo+ICsJCQkgICAgIERlZmF1bHQgMjUg
-bUEuCj4gKwo+ICstIHFjb20sY3VycmVudC1ib29zdC1saW1pdAo+ICsJVXNhZ2U6ICAgICAgICBv
-cHRpb25hbAo+ICsJVmFsdWUgdHlwZTogICA8dTMyPgo+ICsJRGVmaW5pdGlvbjogICBtQTsgYm9v
-c3QgY3VycmVudCBsaW1pdC4KPiArCQkgICAgICBGb3IgcG04OTQxOiBvbmUgb2Y6IDEwNSwgMzg1
-LCA1MjUsIDgwNSwgOTgwLCAxMjYwLCAxNDAwLAo+ICsJCSAgICAgIDE2ODAuIERlZmF1bHQ6IDgw
-NSBtQQo+ICsJCSAgICAgIEZvciBwbWk4OTk4OiBvbmUgb2Y6IDEwNSwgMjgwLCA0NTAsIDYyMCwg
-OTcwLCAxMTUwLCAxMzAwLAo+ICsJCSAgICAgIDE1MDAuIERlZmF1bHQ6IDk3MCBtQQo+ICsKPiAr
-LSBxY29tLHN3aXRjaGluZy1mcmVxCj4gKwlVc2FnZTogICAgICAgIG9wdGlvbmFsCj4gKwlWYWx1
-ZSB0eXBlOiAgIDx1MzI+Cj4gKwkgRGVmaW5pdGlvbjogICBrSHo7IHN3aXRjaGluZyBmcmVxdWVu
-Y3k7IG9uZSBvZjogNjAwLCA2NDAsIDY4NSwgNzM4LAo+ICsJCSAgICAgICA4MDAsIDg3MiwgOTYw
-LCAxMDY2LCAxMjAwLCAxMzcxLCAxNjAwLCAxOTIwLCAyNDAwLCAzMjAwLAo+ICsJCSAgICAgICA0
-ODAwLCA5NjAwLgo+ICsJCSAgICAgICBEZWZhdWx0OiBmb3IgcG04OTQxOiAxNjAwIGtIego+ICsJ
-CQkJZm9yIHBtaTg5OTg6IDgwMCBrSHoKPiArCj4gKy0gcWNvbSxvdnAKPiArCVVzYWdlOiAgICAg
-ICAgb3B0aW9uYWwKPiArCVZhbHVlIHR5cGU6ICAgPHUzMj4KPiArCURlZmluaXRpb246ICAgVjsg
-T3Zlci12b2x0YWdlIHByb3RlY3Rpb24gbGltaXQ7IG9uZSBvZjoKPiArCQkgICAgICAyNywgMjks
-IDMyLCAzNS4gZGVmYXVsdDogMjlWCj4gKwkJICAgICAgVGhpcyBwcm9wZXJ0eSBpcyBzdXBwb3J0
-ZWQgb25seSBmb3IgUE04OTQxLgo+ICsKPiArLSBxY29tLG51bS1zdHJpbmdzCj4gKwlVc2FnZTog
-ICAgICAgIG9wdGlvbmFsCj4gKwlWYWx1ZSB0eXBlOiAgIDx1MzI+Cj4gKwlEZWZpbml0aW9uOiAg
-ICM7IG51bWJlciBvZiBsZWQgc3RyaW5ncyBhdHRhY2hlZDsKPiArCQkgICAgICB2YWx1ZSBmcm9t
-IDEgdG8gMy4gZGVmYXVsdDogMgo+ICsJCSAgICAgIFRoaXMgcHJvcGVydHkgaXMgc3VwcG9ydGVk
-IG9ubHkgZm9yIFBNODk0MS4KPiAgCj4gIEV4YW1wbGU6Cj4gIAo+IC0tIAo+IFRoZSBRdWFsY29t
-bSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEg
-Rm9ydW0sCj4gIGEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKPiAKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+
+On Wed, 20 Jun 2018, Joe Perches wrote:
+
+> (adding Julia Lawall and cocci mailing list)
+>
+> On Wed, 2018-06-20 at 09:48 -0700, Guenter Roeck wrote:
+> []
+> > > +static inline void npcm7xx_fan_start_capture(struct npcm7xx_pwm_fan_data *data,
+> > > +						 u8 fan, u8 cmp)
+> > > +{
+> > > +	u8 fan_id = 0;
+> > > +	u8 reg_mode = 0;
+> > > +	u8 reg_int = 0;
+> > > +	unsigned long flags;
+> > > +
+> > > +	fan_id = NPCM7XX_FAN_INPUT(fan, cmp);
+> > > +
+> > > +	/* to check whether any fan tach is enable */
+> > > +	if (data->npcm7xx_fan[fan_id].FanStFlag != FAN_DISABLE) {
+> > > +		/* reset status */
+> > > +		spin_lock_irqsave(&data->npcm7xx_fan_lock[fan], flags);
+> > > +
+> > > +		data->npcm7xx_fan[fan_id].FanStFlag = FAN_INIT;
+> > > +		reg_int = ioread8(NPCM7XX_FAN_REG_TIEN(data->fan_base, fan));
+> > > +
+> > > +		if (cmp == NPCM7XX_FAN_CMPA) {
+> > > +			/* enable interrupt */
+> > > +			iowrite8((u8) (reg_int | (NPCM7XX_FAN_TIEN_TAIEN |
+> > > +						  NPCM7XX_FAN_TIEN_TEIEN)),
+> >
+> > Is the (u8) typecast really necessary ? Seems unlikely.
+>
+> The cast is not really necessary here as there would
+> be an implicit cast already.
+>
+> Some might complain about loss of type safety and
+> "make W=123" would probably emit something here.
+>
+> But casts to the same type are not necessary.
+>
+> A possible coccinelle script to find casts to the
+> same type is below, but there are some false positives
+> for things like __force and __user casts
+>
+> Also, spatch (1.0.4) seems to have a defect for this
+> when the type is used in operations that change a
+> smaller type to int or unsigned int.
+>
+> i.e.: (offset is u16, but offset * 2 is int)
+
+Ah.  The rule is that the result type is always the larger one?
+Unfortunately, Coccinelle doesn't know the size of any type.  I could add
+some special cases, but that may be more confusing than helpful.
+
+julia
+
+>
+> While running the cocci script below:
+>
+> HANDLING: drivers/net/ethernet/intel/igb/e1000_nvm.c
+> diff =
+> diff -u -p a/drivers/net/drivers/net/ethernet/intel/igb/e1000_nvm.c b/drivers/net/ethernet/intel/igb/e1000_nvm.c
+> --- a/drivers/net/ethernet/intel/igb/e1000_nvm.c
+> +++ b/drivers/net/ethernet/intel/igb/e1000_nvm.c
+> @@ -335,7 +335,7 @@ s32 igb_read_nvm_spi(struct e1000_hw *hw
+>
+>  	/* Send the READ command (opcode + addr) */
+>  	igb_shift_out_eec_bits(hw, read_opcode, nvm->opcode_bits);
+> -	igb_shift_out_eec_bits(hw, (u16)(offset*2), nvm->address_bits);
+> +	igb_shift_out_eec_bits(hw, (offset * 2), nvm->address_bits);
+>
+>  	/* Read the data.  SPI NVMs increment the address with each byte
+>  	 * read and will roll over if reading beyond the end.  This allows
+>
+> ---
+>
+> Anyway, here's the cocci script:
+>
+> $ cat same_typecast.cocci
+> @@
+> type T;
+> T foo;
+> @@
+>
+> -	(T *)&foo
+> +	&foo
+>
+> @@
+> type T;
+> T foo;
+> @@
+>
+> -	(T)foo
+> +	foo
+>
+>
