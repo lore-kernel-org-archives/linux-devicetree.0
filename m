@@ -1,41 +1,110 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v2 2/2] leds: Add Spreadtrum SC27xx breathing light
- controller driver
-Date: Thu, 21 Jun 2018 15:25:07 +0800
-Message-ID: <CAMz4kuJh+H_5XkeO=FpmHXdusMqPu9=NUfr1YOgumMh2mPsoJA@mail.gmail.com>
-References: <f393ca5a99059e7086307b99fc435777fe09018b.1525757122.git.baolin.wang@linaro.org>
- <9a2a07b8eb313ae3ba64af911337ee7ff7c9ad43.1525757122.git.baolin.wang@linaro.org>
- <20180509142539.GB25131@amd> <bddc1f89-8c2c-ba6e-3c7e-d89710ed5424@gmail.com>
- <20180510113749.GG6977@amd> <6289571e-7224-ca5e-1acf-5b099be57302@gmail.com>
- <20180512083559.GB8944@amd> <7c9d5eec-4e6b-9b26-470c-f8002cca5f27@gmail.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH V3 1/3] watchdog: stm32: add pclk feature for stm32mp1
+Date: Thu, 21 Jun 2018 09:25:18 +0200
+Message-ID: <618bcde6-0a41-9341-c55c-6e1d0ee8e51d@st.com>
+References: <1529502698-13263-1-git-send-email-ludovic.Barre@st.com>
+ <1529502698-13263-2-git-send-email-ludovic.Barre@st.com>
+ <20180620191409.GA29934@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7c9d5eec-4e6b-9b26-470c-f8002cca5f27@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, linux-leds@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180620191409.GA29934@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, linux-arm-kernel@lists.infradead.org, Alexandre Torgue <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek and Bjorn,
 
-> OK, I've revised the discussion under Qualcomm LPG patch set and
-> it seems that we have almost ready solution in [0], except the
-> pattern_repeat file you mention in [1]. So probably Baolin could
-> address your remarks from [1] and add pattern_repeat file to the
-> patch that begins thread [0].
->
-> [0] https://lkml.org/lkml/2017/11/15/27
-> [1] https://lkml.org/lkml/2017/12/8/470
 
-I did not see Bjorn's patch introducing the 'pattern' and
-'pattern_repeat' interfaces was resend, but we have some requirements
-depend on this patch for Spreadtrum LED controller.
+On 06/20/2018 09:14 PM, Rob Herring wrote:
+> On Wed, Jun 20, 2018 at 03:51:36PM +0200, Ludovic Barre wrote:
+>> From: Ludovic Barre <ludovic.barre@st.com>
+>>
+>> This patch adds config data to manage specific properties by
+>> compatible. Adds stm32mp1 config which requires pclk clock.
+>>
+>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>> ---
+>>   .../devicetree/bindings/watchdog/st,stm32-iwdg.txt |  21 +++-
+> 
+> Please split bindings to separate patch.
 
-Bjorn, will you resend your patchset? and I will help to test it. Or
-can I help to resend the patch with keeping your authorization?
-Thanks.
+OK
 
--- 
-Baolin.wang
-Best Regards
+> 
+>>   drivers/watchdog/stm32_iwdg.c                      | 116 +++++++++++++--------
+>>   2 files changed, 91 insertions(+), 46 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+>> index cc13b10a..f07f6d89 100644
+>> --- a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+>> +++ b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+>> @@ -2,18 +2,31 @@ STM32 Independent WatchDoG (IWDG)
+>>   ---------------------------------
+>>   
+>>   Required properties:
+>> -- compatible: "st,stm32-iwdg"
+>> -- reg: physical base address and length of the registers set for the device
+>> -- clocks: must contain a single entry describing the clock input
+>> +- compatible: Should be either "st,stm32-iwdg" or "st,stm32mp1-iwdg"
+> 
+> Please format one per line.
+
+OK
+
+> 
+>> +- reg: Physical base address and length of the registers set for the device
+>> +- clocks: Reference to the clock entry lsi. Additional pclk clock entry
+>> +  is required only for st,stm32mp1-iwdg.
+>> +- clock-names: Name of the clocks used.
+>> +  "lsi" for st,stm32-iwdg
+>> +  "pclk", "lsi" for st,stm32mp1-iwdg
+> 
+> Put lsi 1st so it is always index 0.
+
+OK
+
+> 
+>>   
+>>   Optional Properties:
+>>   - timeout-sec: Watchdog timeout value in seconds.
+>>   
+>> -Example:
+>> +Examples:
+>>   
+>>   iwdg: watchdog@40003000 {
+>>   	compatible = "st,stm32-iwdg";
+>>   	reg = <0x40003000 0x400>;
+>>   	clocks = <&clk_lsi>;
+>> +	clock-names = "lsi";
+>> +	timeout-sec = <32>;
+>> +};
+>> +
+>> +iwdg: iwdg@5a002000 {
+> 
+> watchdog@...
+
+sorry, I forget this occurrence.
+
+> 
+> Do we really need 2 example just to show 2 clocks?
+
+No, I could keep only one
+
+> 
+>> +	compatible = "st,stm32mp1-iwdg";
+>> +	reg = <0x5a002000 0x400>;
+>> +	clocks = <&rcc IWDG2>, <&clk_lsi>;
+>> +	clock-names = "pclk", "lsi";
+>>   	timeout-sec = <32>;
+>>   };
