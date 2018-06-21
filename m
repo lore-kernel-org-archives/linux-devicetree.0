@@ -1,44 +1,188 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v7 0/4] ARM: davinci: complete the conversion to using the
- reset framework
-Date: Thu, 21 Jun 2018 13:41:26 +0200
-Message-ID: <CAMRc=Me1JTuw40tMWaai2oKMxmc_ktN2OKBhF8tmGt0cQ6magg@mail.gmail.com>
-References: <20180621073706.22812-1-brgl@bgdev.pl> <9ec10627-49a5-07ad-8c9d-5ac873096cc0@ti.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V2 3/4] dt-bindings: arm: fsl: add scu binding doc
+Date: Thu, 21 Jun 2018 12:05:18 +0000
+Message-ID: <AM0PR04MB42115CCB6D7121E16D25122880760@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1529239789-26849-1-git-send-email-aisheng.dong@nxp.com>
+ <1529239789-26849-4-git-send-email-aisheng.dong@nxp.com>
+ <20180620194438.GA3494@rob-hp-laptop>
+ <AM0PR04MB4211C2A376E6C74C7C4AC37880760@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <20180621073728.wmxb4jkn3ek4n2vt@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9ec10627-49a5-07ad-8c9d-5ac873096cc0@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180621073728.wmxb4jkn3ek4n2vt@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-2018-06-21 12:52 GMT+02:00 Sekhar Nori <nsekhar@ti.com>:
-> Hi Bartosz,
->
-> On Thursday 21 June 2018 01:07 PM, Bartosz Golaszewski wrote:
->> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>
->> These are the remaining patches that still need to be merged in order
->> to complete the conversion of the davinci dsp driver to using the reset
->> framework.
->>
->> They apply on top of v4.18-rc1 with David Lechner's remaining patches
->> merged.
->
-> Series looks good to me.
->
-> To preserve bisect, shouldn't the order of applying be patch #3, #4, #1
-> and #2 ?
->
-> Given the dependencies and to preserve bisect its easiest if I take the
-> series with acks from remoteproc and clock maintainers.
->
-> Open to other suggestions as well.
->
-> Thanks,
-> Sekhar
+> -----Original Message-----
+> From: Sascha Hauer [mailto:s.hauer@pengutronix.de]
+> Sent: Thursday, June 21, 2018 3:37 PM
+> To: A.s. Dong <aisheng.dong@nxp.com>
+> Cc: Rob Herring <robh@kernel.org>; Mark Rutland
+> <mark.rutland@arm.com>; devicetree@vger.kernel.org;
+> dongas86@gmail.com; dl-linux-imx <linux-imx@nxp.com>;
+> kernel@pengutronix.de; Fabio Estevam <fabio.estevam@nxp.com>;
+> shawnguo@kernel.org; linux-arm-kernel@lists.infradead.org
+> Subject: Re: [PATCH V2 3/4] dt-bindings: arm: fsl: add scu binding doc
+> 
+> On Thu, Jun 21, 2018 at 03:38:30AM +0000, A.s. Dong wrote:
+> > Hi Rob,
+> >
+> > > -----Original Message-----
+> > > From: Rob Herring [mailto:robh@kernel.org]
+> > > Sent: Thursday, June 21, 2018 3:45 AM
+> > > To: A.s. Dong <aisheng.dong@nxp.com>
+> > > Cc: linux-arm-kernel@lists.infradead.org; dongas86@gmail.com;
+> > > kernel@pengutronix.de; shawnguo@kernel.org; Fabio Estevam
+> > > <fabio.estevam@nxp.com>; dl-linux-imx <linux-imx@nxp.com>; Mark
+> > > Rutland <mark.rutland@arm.com>; devicetree@vger.kernel.org
+> > > Subject: Re: [PATCH V2 3/4] dt-bindings: arm: fsl: add scu binding
+> > > doc
+> > >
+> > > On Sun, Jun 17, 2018 at 08:49:48PM +0800, Dong Aisheng wrote:
+> > > > The System Controller Firmware (SCFW) is a low-level system
+> > > > function which runs on a dedicated Cortex-M core to provide power,
+> > > > clock, and resource management. It exists on some i.MX8
+> > > > processors. e.g. i.MX8QM (QM, QP), and i.MX8QX (QXP, DX).
+> > > >
+> > > > Cc: Shawn Guo <shawnguo@kernel.org>
+> > > > Cc: Sascha Hauer <kernel@pengutronix.de>
+> > > > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > > Cc: devicetree@vger.kernel.org
+> > > > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > > > ---
+> > > > v1->v2:
+> > > >  * remove status
+> > > >  * changed to mu1
+> > > > ---
+> > > >  .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 38
+> > > > ++++++++++++++++++++++
+> > > >  1 file changed, 38 insertions(+)
+> > > >  create mode 100644
+> > > > Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > >
+> > > > diff --git
+> > > > a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > > b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > > new file mode 100644
+> > > > index 0000000..9b7c9fe
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > > @@ -0,0 +1,38 @@
+> > > > +NXP i.MX System Controller Firmware (SCFW)
+> > > > +-----------------------------------------------------------------
+> > > > +---
+> > > > +
+> > > > +The System Controller Firmware (SCFW) is a low-level system
+> > > > +function which runs on a dedicated Cortex-M core to provide
+> > > > +power, clock, and resource management. It exists on some i.MX8
+> > > > +processors. e.g. i.MX8QM (QM, QP), and i.MX8QX (QXP, DX).
+> > > > +
+> > > > +The AP communicates with the SC using a multi-ported MU module
+> > > > +found in the LSIO subsystem. The current definition of this MU
+> > > > +module provides
+> > > > +5 remote AP connections to the SC to support up to 5 execution
+> > > > +environments (TZ, HV, standard Linux, etc.). The SC side of this
+> > > > +MU module interfaces with the LSIO DSC IP bus. The SC firmware
+> > > > +will communicate with this MU using the MSI bus.
+> > > > +
+> > > > +System Controller Device Node:
+> > > > +=============================
+> > > > +
+> > > > +Required properties:
+> > > > +-------------------
+> > > > +- compatible: should be "fsl,imx8qxp-scu" or "fsl,imx8qm-scu"
+> > > > +- fsl,mu: a phandle to the Message Unit used by SCU. Should be
+> > > > +	  one of LSIO MU0~M4 for imx8qxp and imx8qm. Users need
+> > > > +	  to make sure not use the one which is conflict with
+> > > > +	  other execution environments. e.g. ATF.
+> > >
+> > > Use the mailbox binding even if you don't use the mailbox subsystem.
+> > >
+> >
+> > Looks reasonable. Will change it.
+> >
+> > BTW as I said before, the current mailbox binding fixed #mbox-cells to
+> > be at least 1 which is not suitable for i.MX SCU MU as it has only one
+> > physical channel.
+> 
+> Why is that not suitable? If we use #mbox-cells = 1 we can encode the
+> channel into the second cell. Furthermore, the SCU mode which uses all
+> channels in a funny way could be another channel id the mu driver could use
+> to distinguish the different channel/modes. i.e.
+> 
+> #define MU_CHANNEL_0	0
+> #define MU_CHANNEL_1    1
+> #define MU_CHANNEL_2    2
+> #define MU_CHANNEL_3    3
+> #define MU_CHANNEL_SCU	4
+> 
 
-Oops you're right about the order. Do you want me to resend?
+That's a bit confusing.
+The 'channel' here actually are abstract virtual channels implemented by driver,
+not hardware. MU itself does not have multi channels. (For example, you can't
+grep a 'channel' word in the MU chapter in RM).
 
-Bart
+Yes, it has 4 Read/Write Data register pairs, but it's not originally designed for
+separate channels, they're defined to send multi words.
+
+See:
+42.3.3.2 Messaging Examples
+The following are messaging examples:
+* Passing short messages: Transmit register(s) can be used to pass short messages
+from one to four words in length. For example, when a four-word message is desired,
+only one of the registers needs to have its corresponding interrupt enable bit set at the
+receiver side; the message's first three words are written to the registers whose
+interrupt is masked, and the fourth word is written to the other register (which
+triggers an interrupt at the receiver side).
+
+Abstracting them into individual channels mean we lose the HW capability to send
+multi words during one transfer. However, I'm not object to it if we have no
+special requirent of it. But for SCU, we need use the four data read/write register
+at the same time which seems Mailbox driver can't support.
+
+And MU_CHANNEL_SCU seems a bit more confuse. It is really one
+channel from HW point of view but transfer multi works at one time.
+
+Do you really want us to do that way?
+
+And by greping mbox-cells in device tree, there's indeed someone using 0.
+arch/arm/boot/dts/bcm283x.dtsi:145:			#mbox-cells = <0>;
+
+Regards
+Dong Aisheng
+
+> 
+> scu {
+>        compatible = "fsl,imx8qxp-scu";
+>        fsl,mu = <&lsio_mu1 MU_CHANNEL_SCU>; };
+> 
+> This would also allow to the MU-SCU-mode driver to coexist with the regular
+> MU driver for which Oleksij posted a driver.
+> 
+> Sascha
+> 
+> --
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 |
+> https://emea01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fww
+> w.pengutronix.de%2F&data=02%7C01%7Caisheng.dong%40nxp.com%7C17a
+> 33ebbb3ef437fe76b08d5d749da3c%7C686ea1d3bc2b4c6fa92cd99c5c301635%
+> 7C0%7C0%7C636651634553051648&sdata=YqJD%2FOcQvywtUtG6tpzdOxlnM
+> tPRZP17ftjYP3gwynU%3D&reserved=0  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
