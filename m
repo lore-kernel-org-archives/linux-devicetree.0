@@ -1,58 +1,68 @@
-Return-Path: <SRS0=78dS=JJ=zonque.org=daniel@kernel.org>
+Return-Path: <SRS0=YCj9=JH=zonque.org=daniel@kernel.org>
 From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v2 1/4] dt-bindings: input: touchscreen: add bindings for eeti touchscreen controller
-Date: Sat, 23 Jun 2018 17:45:30 +0200
-Message-Id: <20180623154533.26901-2-daniel@zonque.org>
-In-Reply-To: <20180623154533.26901-1-daniel@zonque.org>
-References: <20180623154533.26901-1-daniel@zonque.org>
-To: dmitry.torokhov@gmail.com, robh+dt@kernel.org
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Subject: [PATCH v4 0/5] leds: add devicetree functionality to lltc,lt3593 driver
+Date: Thu, 21 Jun 2018 22:23:17 +0200
+Message-Id: <20180621202322.11581-1-daniel@zonque.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Describe the bindings for EETI touchscreen controllers.
+This is v4 of the series that brings devicetree support for the
+lltc,lt3593 LED driver.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- .../bindings/input/touchscreen/eeti.txt       | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/eeti.txt
+Before this series, the driver supported controlling multiple LEDs
+through an array in the platform data. IOW, a single instance of the
+driver was able to control multiple hardware chips.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/eeti.txt b/Documentation/devicetree/bindings/input/touchscreen/eeti.txt
-new file mode 100644
-index 000000000000..69c32c286ec7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/eeti.txt
-@@ -0,0 +1,31 @@
-+Bindings for EETI touchscreen controller
-+
-+Required properties:
-+- compatible:	should be "eeti,exc3000-i2c"
-+- reg:		I2C address of the chip. Should be set to <0xa>
-+- interrupts:	interrupt to which the chip is connected
-+
-+Optional properties:
-+- attn-gpios:	A handle to a GPIO to check whether interrupt is still
-+		latched. This is necessary for platforms that lack
-+		support for level-triggered IRQs.
-+
-+The following optional properties described in touchscreen.txt are
-+also supported:
-+
-+- touchscreen-inverted-x
-+- touchscreen-inverted-y
-+- touchscreen-swapped-x-y
-+
-+Example:
-+
-+i2c-master {
-+	touchscreen@a {
-+		compatible = "eeti,exc3000-i2c";
-+		reg = <0xa>;
-+		interrupt-parent = <&gpio>;
-+		interrupts = <123 IRQ_TYPE_EDGE_RISING>;
-+		attn-gpios = <&gpio 123 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
+This series changes that, and requires a distinct platform device to
+be set up for each of them, if a board has multiple of these hardware
+chips. The reason is that in DT, nodes should represent hardware, and
+it's much cleaner this way.
+
+As stated earlier in the thread for v1, the driver currently only has
+one user in mainline (the Raumfeld platform) which is soon to be
+replaced by a devicetree file. This user only uses one LED via pdata, so
+the change mentioned above does not cause a regression.
+
+Once the platform is fully ported to DT, I'll send another patch that
+removes pdata handling from this driver completely, but it's kept around
+as legacy bridge for now.
+
+
+Changelog:
+
+v3 → v4:
+
+* Fixed a mishap that slipped in during rebase which caused a compile
+  error
+* Removed empty line at end of the DT documentaion file
+* Switched to SPDX license header in the driver
+
+v2 → v3:
+
+* Fixed a typo in the commit log of 1/5
+* Rebased onto 4.18-rc1
+
+v1 → v2:
+
+* Moved LED-specific properties into a sub-node in DT, as requested by
+  Jacek Anaszewski.
+
+
+Daniel Mack (5):
+  dt-bindings: leds: Add bindings for lltc,lt3593
+  leds: lt3593: merge functions and clean up code
+  leds: lt3593: switch to gpiod interface
+  leds: lt3593: Add device tree probing glue
+  leds: lt3593: update email address and switch to SPDX license header
+
+ .../devicetree/bindings/leds/leds-lt3593.txt  |  34 ++++
+ drivers/leds/leds-lt3593.c                    | 192 ++++++++++--------
+ 2 files changed, 142 insertions(+), 84 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lt3593.txt
+
 -- 
 2.17.1
