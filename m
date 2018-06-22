@@ -1,32 +1,242 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [alsa-devel] [PATCH v2 2/2] ASoC: qcom: add sdm845 sound card
- support
-Date: Fri, 22 Jun 2018 13:32:06 +0100
-Message-ID: <ba90c267-2bca-469e-f41f-df46ed4421b5@linaro.org>
-References: <1529578399-3633-1-git-send-email-rohitkr@codeaurora.org>
- <1529578399-3633-3-git-send-email-rohitkr@codeaurora.org>
- <20180621123503.GD27187@vkoul-mobl>
- <46f1a6af-a180-2568-d203-87323379c2fd@linaro.org>
- <58db39ee-d2a7-1cdf-c7e2-eea020c8a2c6@codeaurora.org>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: [PATCH v9 3/6] mtd: spinand: Add initial support for Micron
+ MT29F2G01ABAGD
+Date: Fri, 22 Jun 2018 14:28:25 +0200
+Message-ID: <20180622122828.12939-4-boris.brezillon@bootlin.com>
+References: <20180622122828.12939-1-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <58db39ee-d2a7-1cdf-c7e2-eea020c8a2c6@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rohit Kumar <rohitkr@codeaurora.org>, Vinod <vkoul@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180622122828.12939-1-boris.brezillon@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Cc: Piotr Bugalski <Piotr.Bugalski@cryptera.com>, Peter Pan <peterpandong@micron.com>, Peter Pan <peterpansjtu@gmail.com>, Julien Su <juliensu@mxic.com.tw>, Frieder Schrempf <frieder.schrempf@exceet.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Mason Yang <masonccyang@mxic.com.tw>, zhengxunli@mxic.com.tw
 List-Id: devicetree@vger.kernel.org
 
+From: Peter Pan <peterpandong@micron.com>
+
+Add a basic driver for Micron SPI NANDs. Only one device is supported
+right now, but the driver will be extended to support more devices
+afterwards.
+
+Signed-off-by: Peter Pan <peterpandong@micron.com>
+Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+---
+Changes in v8:
+- Changed the subject prefix
+---
+ drivers/mtd/nand/spi/Makefile |   2 +-
+ drivers/mtd/nand/spi/core.c   |  17 ++++++
+ drivers/mtd/nand/spi/micron.c | 133 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mtd/spinand.h   |   3 +
+ 4 files changed, 154 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/mtd/nand/spi/micron.c
+
+diff --git a/drivers/mtd/nand/spi/Makefile b/drivers/mtd/nand/spi/Makefile
+index 2c473b765027..a1df25398f20 100644
+--- a/drivers/mtd/nand/spi/Makefile
++++ b/drivers/mtd/nand/spi/Makefile
+@@ -1,3 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
+-spinand-objs := core.o
++spinand-objs := core.o micron.o
+ obj-$(CONFIG_MTD_SPI_NAND) += spinand.o
+diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+index 425570f1b0c8..3b7b4dd21d44 100644
+--- a/drivers/mtd/nand/spi/core.c
++++ b/drivers/mtd/nand/spi/core.c
+@@ -778,8 +778,25 @@ static const struct nand_ops spinand_ops = {
+ 	.isbad = spinand_isbad,
+ };
+ 
++static const struct spinand_manufacturer *spinand_manufacturers[] = {
++	&micron_spinand_manufacturer,
++};
++
+ static int spinand_manufacturer_detect(struct spinand_device *spinand)
+ {
++	unsigned int i;
++	int ret;
++
++	for (i = 0; i < ARRAY_SIZE(spinand_manufacturers); i++) {
++		ret = spinand_manufacturers[i]->ops->detect(spinand);
++		if (ret > 0) {
++			spinand->manufacturer = spinand_manufacturers[i];
++			return 0;
++		} else if (ret < 0) {
++			return ret;
++		}
++	}
++
+ 	return -ENOTSUPP;
+ }
+ 
+diff --git a/drivers/mtd/nand/spi/micron.c b/drivers/mtd/nand/spi/micron.c
+new file mode 100644
+index 000000000000..9c4381d6847b
+--- /dev/null
++++ b/drivers/mtd/nand/spi/micron.c
+@@ -0,0 +1,133 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2016-2017 Micron Technology, Inc.
++ *
++ * Authors:
++ *	Peter Pan <peterpandong@micron.com>
++ */
++
++#include <linux/device.h>
++#include <linux/kernel.h>
++#include <linux/mtd/spinand.h>
++
++#define SPINAND_MFR_MICRON		0x2c
++
++#define MICRON_STATUS_ECC_MASK		GENMASK(7, 4)
++#define MICRON_STATUS_ECC_NO_BITFLIPS	(0 << 4)
++#define MICRON_STATUS_ECC_1TO3_BITFLIPS	(1 << 4)
++#define MICRON_STATUS_ECC_4TO6_BITFLIPS	(3 << 4)
++#define MICRON_STATUS_ECC_7TO8_BITFLIPS	(5 << 4)
++
++static SPINAND_OP_VARIANTS(read_cache_variants,
++		SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(0, 2, NULL, 0),
++		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
++		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 1, NULL, 0),
++		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
++		SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
++		SPINAND_PAGE_READ_FROM_CACHE_OP(false, 0, 1, NULL, 0));
++
++static SPINAND_OP_VARIANTS(write_cache_variants,
++		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
++		SPINAND_PROG_LOAD(true, 0, NULL, 0));
++
++static SPINAND_OP_VARIANTS(update_cache_variants,
++		SPINAND_PROG_LOAD_X4(false, 0, NULL, 0),
++		SPINAND_PROG_LOAD(false, 0, NULL, 0));
++
++static int mt29f2g01abagd_ooblayout_ecc(struct mtd_info *mtd, int section,
++					struct mtd_oob_region *region)
++{
++	if (section)
++		return -ERANGE;
++
++	region->offset = 64;
++	region->length = 64;
++
++	return 0;
++}
++
++static int mt29f2g01abagd_ooblayout_free(struct mtd_info *mtd, int section,
++					 struct mtd_oob_region *region)
++{
++	if (section)
++		return -ERANGE;
++
++	/* Reserve 2 bytes for the BBM. */
++	region->offset = 2;
++	region->length = 62;
++
++	return 0;
++}
++
++static const struct mtd_ooblayout_ops mt29f2g01abagd_ooblayout = {
++	.ecc = mt29f2g01abagd_ooblayout_ecc,
++	.free = mt29f2g01abagd_ooblayout_free,
++};
++
++static int mt29f2g01abagd_ecc_get_status(struct spinand_device *spinand,
++					 u8 status)
++{
++	switch (status & MICRON_STATUS_ECC_MASK) {
++	case STATUS_ECC_NO_BITFLIPS:
++		return 0;
++
++	case STATUS_ECC_UNCOR_ERROR:
++		return -EBADMSG;
++
++	case MICRON_STATUS_ECC_1TO3_BITFLIPS:
++		return 3;
++
++	case MICRON_STATUS_ECC_4TO6_BITFLIPS:
++		return 6;
++
++	case MICRON_STATUS_ECC_7TO8_BITFLIPS:
++		return 8;
++
++	default:
++		break;
++	}
++
++	return -EINVAL;
++}
++
++static const struct spinand_info micron_spinand_table[] = {
++	SPINAND_INFO("MT29F2G01ABAGD", 0x24,
++		     NAND_MEMORG(1, 2048, 128, 64, 2048, 2, 1, 1),
++		     NAND_ECCREQ(8, 512),
++		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
++					      &write_cache_variants,
++					      &update_cache_variants),
++		     0,
++		     SPINAND_ECCINFO(&mt29f2g01abagd_ooblayout,
++				     mt29f2g01abagd_ecc_get_status)),
++};
++
++static int micron_spinand_detect(struct spinand_device *spinand)
++{
++	u8 *id = spinand->id.data;
++	int ret;
++
++	/*
++	 * Micron SPI NAND read ID need a dummy byte,
++	 * so the first byte in raw_id is dummy.
++	 */
++	if (id[1] != SPINAND_MFR_MICRON)
++		return 0;
++
++	ret = spinand_match_and_init(spinand, micron_spinand_table,
++				     ARRAY_SIZE(micron_spinand_table), id[2]);
++	if (ret)
++		return ret;
++
++	return 1;
++}
++
++static const struct spinand_manufacturer_ops micron_spinand_manuf_ops = {
++	.detect = micron_spinand_detect,
++};
++
++const struct spinand_manufacturer micron_spinand_manufacturer = {
++	.id = SPINAND_MFR_MICRON,
++	.name = "Micron",
++	.ops = &micron_spinand_manuf_ops,
++};
+diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
+index d3efe62dc9de..717b272940f1 100644
+--- a/include/linux/mtd/spinand.h
++++ b/include/linux/mtd/spinand.h
+@@ -193,6 +193,9 @@ struct spinand_manufacturer {
+ 	const struct spinand_manufacturer_ops *ops;
+ };
+ 
++/* SPI NAND manufacturers */
++extern const struct spinand_manufacturer micron_spinand_manufacturer;
++
+ /**
+  * struct spinand_op_variants - SPI NAND operation variants
+  * @ops: the list of variants for a given operation
+-- 
+2.14.1
 
 
-On 22/06/18 11:36, Rohit Kumar wrote:
->>
-> Sure, I will add a new file, qcom_snd_common.c, which will have these 
-> common functions and will update apq8096 and sdm845 machine driver to use
-> APIs exposed by qcom_snd_common.c
-Just name it as "common.c" no need to prefix this as is going to live in 
-sound/soc/qcom anyway.
-
---srini
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
