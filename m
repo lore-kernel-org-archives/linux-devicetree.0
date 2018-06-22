@@ -1,7 +1,8 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 10/17] irqchip/irq-mvebu-sei: add new driver for Marvell SEI
-Date: Fri, 22 Jun 2018 17:14:25 +0200
-Message-ID: <20180622151432.1566-11-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 16/17] arm64: dts: marvell: use new bindings for CP110
+ interrupts
+Date: Fri, 22 Jun 2018 17:14:31 +0200
+Message-ID: <20180622151432.1566-17-miquel.raynal@bootlin.com>
 References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,501 +22,302 @@ To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, M
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haim Boot <hayim@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Hanna Hawa <hannah@marvell.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is a cascaded interrupt controller in the AP806 GIC that collapses
-SEIs (System Error Interrupt) coming from the AP and the CPs (through
-the ICU).
+Create an ICU subnode for the NSR interrupts. This subnode becomes the
+CP110 interrupt parent, removing the need for the ICU_GRP_NSR parameter.
+Move all DT110 nodes to use these new bindings.
 
-The SEI handles up to 64 interrupts. The first 21 interrupts are wired
-from the AP. The next 43 interrupts are from the CPs and are triggered
-through MSI messages. To handle this complexity, the driver has to
-declare to the upper layer: one IRQ domain for the wired interrupts,
-one IRQ domain for the MSIs; and acts as a MSI controller ('parent')
-by declaring an MSI domain.
-
-Suggested-by: Haim Boot <hayim@marvell.com>
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/irqchip/Kconfig         |   3 +
- drivers/irqchip/Makefile        |   1 +
- drivers/irqchip/irq-mvebu-sei.c | 444 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 448 insertions(+)
- create mode 100644 drivers/irqchip/irq-mvebu-sei.c
+ arch/arm64/boot/dts/marvell/armada-cp110.dtsi | 117 ++++++++++++++------------
+ 1 file changed, 62 insertions(+), 55 deletions(-)
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index e9233db16e03..922e2a919cf3 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -310,6 +310,9 @@ config MVEBU_ODMI
- config MVEBU_PIC
- 	bool
+diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+index 1c6ff8197a88..823953e207e7 100644
+--- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+@@ -25,7 +25,7 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 	compatible = "simple-bus";
+-	interrupt-parent = <&CP110_LABEL(icu)>;
++	interrupt-parent = <&CP110_LABEL(icu_nsr)>;
+ 	ranges;
  
-+config MVEBU_SEI
-+        bool
-+
- config LS_SCFG_MSI
- 	def_bool y if SOC_LS1021A || ARCH_LAYERSCAPE
- 	depends on PCI && PCI_MSI
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 15f268f646bf..69d2ccb454ef 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -76,6 +76,7 @@ obj-$(CONFIG_MVEBU_GICP)		+= irq-mvebu-gicp.o
- obj-$(CONFIG_MVEBU_ICU)			+= irq-mvebu-icu.o
- obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
- obj-$(CONFIG_MVEBU_PIC)			+= irq-mvebu-pic.o
-+obj-$(CONFIG_MVEBU_SEI)			+= irq-mvebu-sei.o
- obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
- obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
- obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o irq-aspeed-i2c-ic.o
-diff --git a/drivers/irqchip/irq-mvebu-sei.c b/drivers/irqchip/irq-mvebu-sei.c
-new file mode 100644
-index 000000000000..4a62cd2385d7
---- /dev/null
-+++ b/drivers/irqchip/irq-mvebu-sei.c
-@@ -0,0 +1,444 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#define pr_fmt(fmt) "mvebu-sei: " fmt
-+
-+#include <linux/irq.h>
-+#include <linux/interrupt.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/kernel.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/msi.h>
-+#include <linux/platform_device.h>
-+#include <linux/irqchip.h>
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/* Cause register */
-+#define GICP_SECR(idx)		(0x0  + ((idx) * 0x4))
-+/* Mask register */
-+#define GICP_SEMR(idx)		(0x20 + ((idx) * 0x4))
-+#define GICP_SET_SEI_OFFSET	0x30
-+
-+#define SEI_IRQ_COUNT_PER_REG	32
-+#define SEI_IRQ_REG_COUNT	2
-+#define SEI_IRQ_COUNT		(SEI_IRQ_COUNT_PER_REG * SEI_IRQ_REG_COUNT)
-+#define SEI_IRQ_REG_IDX(irq_id)	((irq_id) / SEI_IRQ_COUNT_PER_REG)
-+#define SEI_IRQ_REG_BIT(irq_id)	((irq_id) % SEI_IRQ_COUNT_PER_REG)
-+
-+struct mvebu_sei_interrupt_range {
-+	u32 first;
-+	u32 number;
-+};
-+
-+struct mvebu_sei {
-+	struct device *dev;
-+	void __iomem *base;
-+	struct resource *res;
-+	struct irq_domain *ap_domain;
-+	struct irq_domain *cp_domain;
-+	struct mvebu_sei_interrupt_range ap_interrupts;
-+	struct mvebu_sei_interrupt_range cp_interrupts;
-+	/* Lock on MSI allocations/releases */
-+	struct mutex cp_msi_lock;
-+	DECLARE_BITMAP(cp_msi_bitmap, SEI_IRQ_COUNT);
-+};
-+
-+static int mvebu_sei_domain_to_sei_irq(struct mvebu_sei *sei,
-+				       struct irq_domain *domain,
-+				       irq_hw_number_t hwirq)
-+{
-+	if (domain == sei->ap_domain)
-+		return sei->ap_interrupts.first + hwirq;
-+	else
-+		return sei->cp_interrupts.first + hwirq;
-+}
-+
-+static void mvebu_sei_reset(struct mvebu_sei *sei)
-+{
-+	u32 reg_idx;
-+
-+	/* Clear IRQ cause registers */
-+	for (reg_idx = 0; reg_idx < SEI_IRQ_REG_COUNT; reg_idx++)
-+		writel(0xFFFFFFFF, sei->base + GICP_SECR(reg_idx));
-+}
-+
-+static void mvebu_sei_mask_irq(struct irq_data *d)
-+{
-+	struct mvebu_sei *sei = irq_data_get_irq_chip_data(d);
-+	u32 sei_irq = mvebu_sei_domain_to_sei_irq(sei, d->domain, d->hwirq);
-+	u32 reg_idx = SEI_IRQ_REG_IDX(sei_irq);
-+	u32 reg;
-+
-+	/* 1 disables the interrupt */
-+	reg = readl(sei->base + GICP_SEMR(reg_idx));
-+	reg |= BIT(SEI_IRQ_REG_BIT(sei_irq));
-+	writel(reg, sei->base + GICP_SEMR(reg_idx));
-+}
-+
-+static void mvebu_sei_unmask_irq(struct irq_data *d)
-+{
-+	struct mvebu_sei *sei = irq_data_get_irq_chip_data(d);
-+	u32 sei_irq = mvebu_sei_domain_to_sei_irq(sei, d->domain, d->hwirq);
-+	u32 reg_idx = SEI_IRQ_REG_IDX(sei_irq);
-+	u32 reg;
-+
-+	/* 0 enables the interrupt */
-+	reg = readl(sei->base + GICP_SEMR(reg_idx));
-+	reg &= ~BIT(SEI_IRQ_REG_BIT(sei_irq));
-+	writel(reg, sei->base + GICP_SEMR(reg_idx));
-+}
-+
-+static void mvebu_sei_compose_msi_msg(struct irq_data *data,
-+				      struct msi_msg *msg)
-+{
-+	struct mvebu_sei *sei = data->chip_data;
-+	phys_addr_t set = sei->res->start + GICP_SET_SEI_OFFSET;
-+
-+	msg->data = mvebu_sei_domain_to_sei_irq(sei, data->domain, data->hwirq);
-+	msg->address_lo = lower_32_bits(set);
-+	msg->address_hi = upper_32_bits(set);
-+}
-+
-+static int mvebu_sei_ap_set_type(struct irq_data *data, unsigned int type)
-+{
-+	if (!(type & IRQ_TYPE_LEVEL_HIGH))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int mvebu_sei_cp_set_type(struct irq_data *data, unsigned int type)
-+{
-+	if (!(type & IRQ_TYPE_EDGE_RISING))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static struct irq_chip mvebu_sei_ap_wired_irq_chip = {
-+	.name			= "AP wired SEI",
-+	.irq_mask		= mvebu_sei_mask_irq,
-+	.irq_unmask		= mvebu_sei_unmask_irq,
-+	.irq_eoi		= irq_chip_eoi_parent,
-+	.irq_set_affinity	= irq_chip_set_affinity_parent,
-+	.irq_set_type		= mvebu_sei_ap_set_type,
-+};
-+
-+static struct irq_chip mvebu_sei_cp_msi_irq_chip = {
-+	.name			= "CP MSI SEI",
-+	.irq_mask		= mvebu_sei_mask_irq,
-+	.irq_unmask		= mvebu_sei_unmask_irq,
-+	.irq_eoi		= irq_chip_eoi_parent,
-+	.irq_set_affinity	= irq_chip_set_affinity_parent,
-+	.irq_set_type		= mvebu_sei_cp_set_type,
-+	.irq_compose_msi_msg	= mvebu_sei_compose_msi_msg,
-+};
-+
-+static int mvebu_sei_irq_domain_alloc(struct irq_domain *domain,
-+				      unsigned int virq, unsigned int nr_irqs,
-+				      void *args)
-+{
-+	struct mvebu_sei *sei = domain->host_data;
-+	struct irq_fwspec *fwspec = args;
-+	struct irq_chip *irq_chip;
-+	int sei_hwirq, hwirq;
-+	int ret;
-+
-+	/* The software only supports single allocations for now */
-+	if (nr_irqs != 1)
-+		return -ENOTSUPP;
-+
-+	if (domain == sei->ap_domain) {
-+		irq_chip = &mvebu_sei_ap_wired_irq_chip;
-+		hwirq = fwspec->param[0];
-+	} else {
-+		irq_chip = &mvebu_sei_cp_msi_irq_chip;
-+		mutex_lock(&sei->cp_msi_lock);
-+		hwirq = bitmap_find_free_region(sei->cp_msi_bitmap,
-+						sei->cp_interrupts.number, 0);
-+		mutex_unlock(&sei->cp_msi_lock);
-+		if (hwirq < 0)
-+			return -ENOSPC;
-+	}
-+
-+	sei_hwirq = mvebu_sei_domain_to_sei_irq(sei, domain, hwirq);
-+
-+	fwspec->fwnode = domain->parent->fwnode;
-+	fwspec->param_count = 3;
-+	fwspec->param[0] = GIC_SPI;
-+	fwspec->param[1] = sei_hwirq;
-+	fwspec->param[2] = IRQ_TYPE_EDGE_RISING;
-+
-+	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, fwspec);
-+	if (ret)
-+		goto release_region;
-+
-+	ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq, irq_chip, sei);
-+	if (ret)
-+		goto free_irq_parents;
-+
-+	return 0;
-+
-+free_irq_parents:
-+	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
-+release_region:
-+	if (domain == sei->cp_domain) {
-+		mutex_lock(&sei->cp_msi_lock);
-+		bitmap_release_region(sei->cp_msi_bitmap, hwirq, 0);
-+		mutex_unlock(&sei->cp_msi_lock);
-+	}
-+
-+	return ret;
-+}
-+
-+static void mvebu_sei_irq_domain_free(struct irq_domain *domain,
-+				      unsigned int virq, unsigned int nr_irqs)
-+{
-+	struct mvebu_sei *sei = domain->host_data;
-+	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
-+	u32 irq_nb = sei->ap_interrupts.number + sei->cp_interrupts.number;
-+
-+	if (nr_irqs != 1 || d->hwirq >= irq_nb) {
-+		dev_err(sei->dev, "Invalid hwirq %lu\n", d->hwirq);
-+		return;
-+	}
-+
-+	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
-+
-+	mutex_lock(&sei->cp_msi_lock);
-+	bitmap_release_region(sei->cp_msi_bitmap, d->hwirq, 0);
-+	mutex_unlock(&sei->cp_msi_lock);
-+}
-+
-+static int mvebu_sei_ap_match(struct irq_domain *d, struct device_node *node,
-+			      enum irq_domain_bus_token bus_token)
-+{
-+	struct mvebu_sei *sei = d->host_data;
-+
-+	if (!sei)
-+		return 0;
-+
-+	if (sei->dev->of_node != node)
-+		return 0;
-+
-+	if (!d || !sei->ap_domain)
-+		return 0;
-+
-+	if (d == sei->ap_domain)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops mvebu_sei_ap_domain_ops = {
-+	.match = mvebu_sei_ap_match,
-+	.xlate = irq_domain_xlate_onecell,
-+	.alloc = mvebu_sei_irq_domain_alloc,
-+	.free = mvebu_sei_irq_domain_free,
-+};
-+
-+static const struct irq_domain_ops mvebu_sei_cp_domain_ops = {
-+	.alloc = mvebu_sei_irq_domain_alloc,
-+	.free = mvebu_sei_irq_domain_free,
-+};
-+
-+static struct irq_chip mvebu_sei_msi_irq_chip = {
-+	.name		= "SEI MSI controller",
-+	.irq_set_type	= mvebu_sei_cp_set_type,
-+};
-+
-+static struct msi_domain_ops mvebu_sei_msi_ops = {
-+};
-+
-+static struct msi_domain_info mvebu_sei_msi_domain_info = {
-+	.flags	= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS,
-+	.ops	= &mvebu_sei_msi_ops,
-+	.chip	= &mvebu_sei_msi_irq_chip,
-+};
-+
-+static void mvebu_sei_handle_cascade_irq(struct irq_desc *desc)
-+{
-+	struct mvebu_sei *sei = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	unsigned long irqmap, irq_bit;
-+	u32 reg_idx, virq, irqn;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	/* Read both SEI cause registers (64 bits) */
-+	for (reg_idx = 0; reg_idx < SEI_IRQ_REG_COUNT; reg_idx++) {
-+		irqmap = readl_relaxed(sei->base + GICP_SECR(reg_idx));
-+
-+		/* Call handler for each set bit */
-+		for_each_set_bit(irq_bit, &irqmap, SEI_IRQ_COUNT_PER_REG) {
-+			/* Cause Register gives the SEI number */
-+			irqn = irq_bit + reg_idx * SEI_IRQ_COUNT_PER_REG;
-+			/*
-+			 * Finding Linux mapping (virq) needs the right domain
-+			 * and the relative hwirq (which start at 0 in both
-+			 * cases, while irqn is relative to all SEI interrupts).
-+			 */
-+			if (irqn < sei->ap_interrupts.number) {
-+				virq = irq_find_mapping(sei->ap_domain, irqn);
-+			} else {
-+				irqn -= sei->ap_interrupts.number;
-+				virq = irq_find_mapping(sei->cp_domain, irqn);
-+			}
-+
-+			/* Call IRQ handler */
-+			generic_handle_irq(virq);
-+		}
-+
-+		/* Clear interrupt indication by writing 1 to it */
-+		writel(irqmap, sei->base + GICP_SECR(reg_idx));
-+	}
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static int mvebu_sei_probe(struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node, *parent;
-+	struct irq_domain *parent_domain, *plat_domain;
-+	struct mvebu_sei *sei;
-+	const __be32 *property;
-+	u32 parent_irq, size;
-+	int ret;
-+
-+	sei = devm_kzalloc(&pdev->dev, sizeof(*sei), GFP_KERNEL);
-+	if (!sei)
-+		return -ENOMEM;
-+
-+	sei->dev = &pdev->dev;
-+
-+	mutex_init(&sei->cp_msi_lock);
-+
-+	sei->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	sei->base = devm_ioremap_resource(sei->dev, sei->res);
-+	if (!sei->base) {
-+		dev_err(sei->dev, "Failed to remap SEI resource\n");
-+		return -ENODEV;
-+	}
-+
-+	mvebu_sei_reset(sei);
-+
-+	/*
-+	 * Reserve the single (top-level) parent SPI IRQ from which all the
-+	 * interrupts handled by this driver will be signaled.
-+	 */
-+	parent_irq = irq_of_parse_and_map(node, 0);
-+	if (parent_irq <= 0) {
-+		dev_err(sei->dev, "Failed to retrieve top-level SPI IRQ\n");
-+		return -ENODEV;
-+	}
-+
-+	irq_set_chained_handler(parent_irq, mvebu_sei_handle_cascade_irq);
-+	irq_set_handler_data(parent_irq, sei);
-+
-+	/*
-+	 * SEIs can be triggered from the AP through wired interrupts and from
-+	 * the CPs through MSIs.
-+	 */
-+
-+	/* Get a reference to the parent domain to create a hierarchy */
-+	parent = of_irq_find_parent(node);
-+	if (!parent) {
-+		dev_err(sei->dev, "Failed to find parent IRQ node\n");
-+		ret = -ENODEV;
-+		goto dispose_irq;
-+	}
-+
-+	parent_domain = irq_find_host(parent);
-+	if (!parent_domain) {
-+		dev_err(sei->dev, "Failed to find parent IRQ domain\n");
-+		ret = -ENODEV;
-+		goto dispose_irq;
-+	}
-+
-+	/*
-+	 * Retrieve the IRQ organization (AP/CP): the index of the first one and
-+	 * the number of them for each domain.
-+	 */
-+	property = of_get_property(node, "marvell,sei-ap-ranges", &size);
-+	if (!property || (size != (2 * sizeof(u32)))) {
-+		dev_err(sei->dev, "Missing 'marvell,sei-ap-ranges' property\n");
-+		ret = -ENODEV;
-+		goto dispose_irq;
-+	}
-+
-+	sei->ap_interrupts.first = be32_to_cpu(property[0]);
-+	sei->ap_interrupts.number = be32_to_cpu(property[1]);
-+
-+	property = of_get_property(node, "marvell,sei-cp-ranges", &size);
-+	if (!property || (size != (2 * sizeof(u32)))) {
-+		dev_err(sei->dev, "Missing 'marvell,sei-cp-ranges' property\n");
-+		ret = -ENODEV;
-+		goto dispose_irq;
-+	}
-+
-+	sei->cp_interrupts.first = be32_to_cpu(property[0]);
-+	sei->cp_interrupts.number = be32_to_cpu(property[1]);
-+
-+	/* Create the 'wired' hierarchy */
-+	sei->ap_domain = irq_domain_create_hierarchy(parent_domain, 0,
-+						     sei->ap_interrupts.number,
-+						     of_node_to_fwnode(node),
-+						     &mvebu_sei_ap_domain_ops,
-+						     sei);
-+	if (!sei->ap_domain) {
-+		dev_err(sei->dev, "Failed to create AP IRQ domain\n");
-+		ret = -ENOMEM;
-+		goto dispose_irq;
-+	}
-+
-+	/* Create the 'MSI' hierarchy */
-+	sei->cp_domain = irq_domain_create_hierarchy(parent_domain, 0,
-+						     sei->cp_interrupts.number,
-+						     of_node_to_fwnode(node),
-+						     &mvebu_sei_cp_domain_ops,
-+						     sei);
-+	if (!sei->cp_domain) {
-+		pr_err("Failed to create CPs IRQ domain\n");
-+		ret = -ENOMEM;
-+		goto remove_ap_domain;
-+	}
-+
-+	plat_domain = platform_msi_create_irq_domain(of_node_to_fwnode(node),
-+						     &mvebu_sei_msi_domain_info,
-+						     sei->cp_domain);
-+	if (!plat_domain) {
-+		pr_err("Failed to create CPs MSI domain\n");
-+		ret = -ENOMEM;
-+		goto remove_cp_domain;
-+	}
-+
-+	platform_set_drvdata(pdev, sei);
-+
-+	return 0;
-+
-+remove_cp_domain:
-+	irq_domain_remove(sei->cp_domain);
-+remove_ap_domain:
-+	irq_domain_remove(sei->ap_domain);
-+dispose_irq:
-+	irq_dispose_mapping(parent_irq);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id mvebu_sei_of_match[] = {
-+	{ .compatible = "marvell,armada-8k-sei", },
-+	{},
-+};
-+
-+static struct platform_driver mvebu_sei_driver = {
-+	.probe  = mvebu_sei_probe,
-+	.driver = {
-+		.name = "mvebu-sei",
-+		.of_match_table = mvebu_sei_of_match,
-+	},
-+};
-+builtin_platform_driver(mvebu_sei_driver);
+ 	config-space@CP110_BASE {
+@@ -47,12 +47,12 @@
+ 			dma-coherent;
+ 
+ 			CP110_LABEL(eth0): eth0 {
+-				interrupts = <ICU_GRP_NSR 39 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 43 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 47 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 51 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 55 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 129 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <39 IRQ_TYPE_LEVEL_HIGH>,
++					     <43 IRQ_TYPE_LEVEL_HIGH>,
++					     <47 IRQ_TYPE_LEVEL_HIGH>,
++					     <51 IRQ_TYPE_LEVEL_HIGH>,
++					     <55 IRQ_TYPE_LEVEL_HIGH>,
++					     <129 IRQ_TYPE_LEVEL_HIGH>;
+ 				interrupt-names = "tx-cpu0", "tx-cpu1", "tx-cpu2",
+ 					"tx-cpu3", "rx-shared", "link";
+ 				port-id = <0>;
+@@ -61,12 +61,12 @@
+ 			};
+ 
+ 			CP110_LABEL(eth1): eth1 {
+-				interrupts = <ICU_GRP_NSR 40 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 44 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 48 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 52 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 56 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 128 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <40 IRQ_TYPE_LEVEL_HIGH>,
++					     <44 IRQ_TYPE_LEVEL_HIGH>,
++					     <48 IRQ_TYPE_LEVEL_HIGH>,
++					     <52 IRQ_TYPE_LEVEL_HIGH>,
++					     <56 IRQ_TYPE_LEVEL_HIGH>,
++					     <128 IRQ_TYPE_LEVEL_HIGH>;
+ 				interrupt-names = "tx-cpu0", "tx-cpu1", "tx-cpu2",
+ 					"tx-cpu3", "rx-shared", "link";
+ 				port-id = <1>;
+@@ -75,12 +75,12 @@
+ 			};
+ 
+ 			CP110_LABEL(eth2): eth2 {
+-				interrupts = <ICU_GRP_NSR 41 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 45 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 49 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 53 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 57 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 127 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <41 IRQ_TYPE_LEVEL_HIGH>,
++					     <45 IRQ_TYPE_LEVEL_HIGH>,
++					     <49 IRQ_TYPE_LEVEL_HIGH>,
++					     <53 IRQ_TYPE_LEVEL_HIGH>,
++					     <57 IRQ_TYPE_LEVEL_HIGH>,
++					     <127 IRQ_TYPE_LEVEL_HIGH>;
+ 				interrupt-names = "tx-cpu0", "tx-cpu1", "tx-cpu2",
+ 					"tx-cpu3", "rx-shared", "link";
+ 				port-id = <2>;
+@@ -150,16 +150,23 @@
+ 		CP110_LABEL(icu): interrupt-controller@1e0000 {
+ 			compatible = "marvell,cp110-icu";
+ 			reg = <0x1e0000 0x440>;
+-			#interrupt-cells = <3>;
+-			interrupt-controller;
+-			msi-parent = <&gicp>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			CP110_LABEL(icu_nsr): interrupt-controller@10 {
++				compatible = "marvell,cp110-icu-nsr";
++				reg = <0x10 0x20>;
++				#interrupt-cells = <2>;
++				interrupt-controller;
++				msi-parent = <&gicp>;
++			};
+ 		};
+ 
+ 		CP110_LABEL(rtc): rtc@284000 {
+ 			compatible = "marvell,armada-8k-rtc";
+ 			reg = <0x284000 0x20>, <0x284080 0x24>;
+ 			reg-names = "rtc", "rtc-soc";
+-			interrupts = <ICU_GRP_NSR 77 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <77 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
+ 		CP110_LABEL(thermal): thermal@400078 {
+@@ -185,10 +192,10 @@
+ 				#gpio-cells = <2>;
+ 				gpio-ranges = <&CP110_LABEL(pinctrl) 0 0 32>;
+ 				interrupt-controller;
+-				interrupts = <ICU_GRP_NSR 86 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 85 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 84 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 83 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <86 IRQ_TYPE_LEVEL_HIGH>,
++					     <85 IRQ_TYPE_LEVEL_HIGH>,
++					     <84 IRQ_TYPE_LEVEL_HIGH>,
++					     <83 IRQ_TYPE_LEVEL_HIGH>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -200,10 +207,10 @@
+ 				#gpio-cells = <2>;
+ 				gpio-ranges = <&CP110_LABEL(pinctrl) 0 32 31>;
+ 				interrupt-controller;
+-				interrupts = <ICU_GRP_NSR 82 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 81 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 80 IRQ_TYPE_LEVEL_HIGH>,
+-					<ICU_GRP_NSR 79 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <82 IRQ_TYPE_LEVEL_HIGH>,
++					     <81 IRQ_TYPE_LEVEL_HIGH>,
++					     <80 IRQ_TYPE_LEVEL_HIGH>,
++					     <79 IRQ_TYPE_LEVEL_HIGH>;
+ 				status = "disabled";
+ 			};
+ 		};
+@@ -213,7 +220,7 @@
+ 			"generic-xhci";
+ 			reg = <0x500000 0x4000>;
+ 			dma-coherent;
+-			interrupts = <ICU_GRP_NSR 106 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <106 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "core", "reg";
+ 			clocks = <&CP110_LABEL(clk) 1 22>,
+ 				 <&CP110_LABEL(clk) 1 16>;
+@@ -225,7 +232,7 @@
+ 			"generic-xhci";
+ 			reg = <0x510000 0x4000>;
+ 			dma-coherent;
+-			interrupts = <ICU_GRP_NSR 105 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <105 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "core", "reg";
+ 			clocks = <&CP110_LABEL(clk) 1 23>,
+ 				 <&CP110_LABEL(clk) 1 16>;
+@@ -237,7 +244,7 @@
+ 			"generic-ahci";
+ 			reg = <0x540000 0x30000>;
+ 			dma-coherent;
+-			interrupts = <ICU_GRP_NSR 107 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <107 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&CP110_LABEL(clk) 1 15>,
+ 				 <&CP110_LABEL(clk) 1 16>;
+ 			status = "disabled";
+@@ -290,7 +297,7 @@
+ 			reg = <0x701000 0x20>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-			interrupts = <ICU_GRP_NSR 120 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <120 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "core", "reg";
+ 			clocks = <&CP110_LABEL(clk) 1 21>,
+ 				 <&CP110_LABEL(clk) 1 17>;
+@@ -302,7 +309,7 @@
+ 			reg = <0x701100 0x20>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-			interrupts = <ICU_GRP_NSR 121 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <121 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "core", "reg";
+ 			clocks = <&CP110_LABEL(clk) 1 21>,
+ 				 <&CP110_LABEL(clk) 1 17>;
+@@ -313,7 +320,7 @@
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x702000 0x100>;
+ 			reg-shift = <2>;
+-			interrupts = <ICU_GRP_NSR 122 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <122 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-io-width = <1>;
+ 			clock-names = "baudclk", "apb_pclk";
+ 			clocks = <&CP110_LABEL(clk) 1 21>,
+@@ -325,7 +332,7 @@
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x702100 0x100>;
+ 			reg-shift = <2>;
+-			interrupts = <ICU_GRP_NSR 123 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <123 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-io-width = <1>;
+ 			clock-names = "baudclk", "apb_pclk";
+ 			clocks = <&CP110_LABEL(clk) 1 21>,
+@@ -337,7 +344,7 @@
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x702200 0x100>;
+ 			reg-shift = <2>;
+-			interrupts = <ICU_GRP_NSR 124 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <124 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-io-width = <1>;
+ 			clock-names = "baudclk", "apb_pclk";
+ 			clocks = <&CP110_LABEL(clk) 1 21>,
+@@ -349,7 +356,7 @@
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x702300 0x100>;
+ 			reg-shift = <2>;
+-			interrupts = <ICU_GRP_NSR 125 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <125 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-io-width = <1>;
+ 			clock-names = "baudclk", "apb_pclk";
+ 			clocks = <&CP110_LABEL(clk) 1 21>,
+@@ -368,7 +375,7 @@
+ 			reg = <0x720000 0x54>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-			interrupts = <ICU_GRP_NSR 115 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <115 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "core", "reg";
+ 			clocks = <&CP110_LABEL(clk) 1 2>,
+ 				 <&CP110_LABEL(clk) 1 17>;
+@@ -380,7 +387,7 @@
+ 			compatible = "marvell,armada-8k-rng",
+ 			"inside-secure,safexcel-eip76";
+ 			reg = <0x760000 0x7d>;
+-			interrupts = <ICU_GRP_NSR 95 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <95 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "core", "reg";
+ 			clocks = <&CP110_LABEL(clk) 1 25>,
+ 				 <&CP110_LABEL(clk) 1 17>;
+@@ -390,7 +397,7 @@
+ 		CP110_LABEL(sdhci0): sdhci@780000 {
+ 			compatible = "marvell,armada-cp110-sdhci";
+ 			reg = <0x780000 0x300>;
+-			interrupts = <ICU_GRP_NSR 27 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <27 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "core", "axi";
+ 			clocks = <&CP110_LABEL(clk) 1 4>, <&CP110_LABEL(clk) 1 18>;
+ 			dma-coherent;
+@@ -400,12 +407,12 @@
+ 		CP110_LABEL(crypto): crypto@800000 {
+ 			compatible = "inside-secure,safexcel-eip197";
+ 			reg = <0x800000 0x200000>;
+-			interrupts = <ICU_GRP_NSR 87 IRQ_TYPE_LEVEL_HIGH>,
+-				<ICU_GRP_NSR 88 IRQ_TYPE_LEVEL_HIGH>,
+-				<ICU_GRP_NSR 89 IRQ_TYPE_LEVEL_HIGH>,
+-				<ICU_GRP_NSR 90 IRQ_TYPE_LEVEL_HIGH>,
+-				<ICU_GRP_NSR 91 IRQ_TYPE_LEVEL_HIGH>,
+-				<ICU_GRP_NSR 92 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <87 IRQ_TYPE_LEVEL_HIGH>,
++				     <88 IRQ_TYPE_LEVEL_HIGH>,
++				     <89 IRQ_TYPE_LEVEL_HIGH>,
++				     <90 IRQ_TYPE_LEVEL_HIGH>,
++				     <91 IRQ_TYPE_LEVEL_HIGH>,
++				     <92 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "mem", "ring0", "ring1",
+ 				"ring2", "ring3", "eip";
+ 			clock-names = "core", "reg";
+@@ -434,8 +441,8 @@
+ 		/* non-prefetchable memory */
+ 		0x82000000 0 CP110_PCIEx_MEM_BASE(0) 0  CP110_PCIEx_MEM_BASE(0) 0 0xf00000>;
+ 		interrupt-map-mask = <0 0 0 0>;
+-		interrupt-map = <0 0 0 0 &CP110_LABEL(icu) ICU_GRP_NSR 22 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupts = <ICU_GRP_NSR 22 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-map = <0 0 0 0 &CP110_LABEL(icu_nsr) 22 IRQ_TYPE_LEVEL_HIGH>;
++		interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
+ 		num-lanes = <1>;
+ 		clock-names = "core", "reg";
+ 		clocks = <&CP110_LABEL(clk) 1 13>, <&CP110_LABEL(clk) 1 14>;
+@@ -461,8 +468,8 @@
+ 		/* non-prefetchable memory */
+ 		0x82000000 0 CP110_PCIEx_MEM_BASE(1) 0  CP110_PCIEx_MEM_BASE(1) 0 0xf00000>;
+ 		interrupt-map-mask = <0 0 0 0>;
+-		interrupt-map = <0 0 0 0 &CP110_LABEL(icu) ICU_GRP_NSR 24 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupts = <ICU_GRP_NSR 24 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-map = <0 0 0 0 &CP110_LABEL(icu_nsr) 24 IRQ_TYPE_LEVEL_HIGH>;
++		interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 		num-lanes = <1>;
+ 		clock-names = "core", "reg";
+@@ -489,8 +496,8 @@
+ 		/* non-prefetchable memory */
+ 		0x82000000 0 CP110_PCIEx_MEM_BASE(2) 0  CP110_PCIEx_MEM_BASE(2) 0 0xf00000>;
+ 		interrupt-map-mask = <0 0 0 0>;
+-		interrupt-map = <0 0 0 0 &CP110_LABEL(icu) ICU_GRP_NSR 23 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupts = <ICU_GRP_NSR 23 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-map = <0 0 0 0 &CP110_LABEL(icu_nsr) 23 IRQ_TYPE_LEVEL_HIGH>;
++		interrupts = <23 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 		num-lanes = <1>;
+ 		clock-names = "core", "reg";
 -- 
 2.14.1
