@@ -1,43 +1,67 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v2 0/6] clk: meson: axg: add audio clock controller
- support
-Date: Fri, 22 Jun 2018 13:34:06 +0200
-Message-ID: <1529667246.2900.6.camel@baylibre.com>
-References: <20180522163457.13834-1-jbrunet@baylibre.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v3 1/3] mtd: rawnand: denali_dt: add more clocks based
+ on IP datasheet
+Date: Fri, 22 Jun 2018 13:42:35 +0200
+Message-ID: <20180622134235.5ab76325@bbrezillon>
+References: <1529025532-22087-1-git-send-email-yamada.masahiro@socionext.com>
+        <1529025532-22087-2-git-send-email-yamada.masahiro@socionext.com>
+        <20180619132811.45bf6454@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180522163457.13834-1-jbrunet@baylibre.com>
+In-Reply-To: <20180619132811.45bf6454@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, David Woodhouse <dwmw2@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, "linux-stable #4 . 14+" <stable@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-05-22 at 18:34 +0200, Jerome Brunet wrote:
-> The purpose of this patchset is to add support for the clock controller
-> dedicated to the audio subsystem found on A113 based SoCs
-> 
-> The series depends on the CLK_MUX_ROUND_CLOSEST fixes [merged in clk-next]
-> and the duty cycle support [1] making their way into CCF.
-> 
-> First patch is a clean-up of the meson clk Kconfig.
-> Then, there is 3 clock provider drivers for clocks found in the audio
-> The last 3 are for the clock controller itself.
-> 
-> Changes since v1: [2]
->  * Rebase clk-meson's next/drivers
->  * Correct typo in documentation and squash DT patches
-> 
-> [1]: https://lkml.kernel.org/r/20180420211141.28929-1-jbrunet@baylibre.com
-> [2]: https://lkml.kernel.org/r/20180425163304.10852-1-jbrunet@baylibre.com
-> 
-> Jerome Brunet (6):
->   clk: meson: clean-up meson clock configuration
->   clk: meson: add clk-phase clock driver
->   clk: meson: add triple phase clock driver
->   clk: meson: add axg audio sclk divider driver
->   dt-bindings: clock: add meson axg audio clock controller bindings
->   clk: meson: axg: add the audio clock controller driver
+Hi Masahiro,
 
-Applied for next on top of mike's clk-core-duty-cycle branch.
+On Tue, 19 Jun 2018 13:28:11 +0200
+Boris Brezillon <boris.brezillon@bootlin.com> wrote:
+
+> Hi Masahiro,
+> 
+> On Fri, 15 Jun 2018 10:18:50 +0900
+> Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+> 
+> > According to the Denali User's Guide, this IP needs three clocks:
+> > 
+> >  - clk: controller core clock
+> > 
+> >  - clk_x: bus interface clock
+> > 
+> >  - ecc_clk: clock at which ECC circuitry is run
+> > 
+> > Currently, denali_dt.c requires a single anonymous clock and its
+> > frequency.  However, the driver needs to get the frequency of "clk_x"
+> > not "clk".  This is confusing because people tend to assume the
+> > anonymous clock means the core clock.  In fact, I got a report of
+> > SOCFPGA breakage because the timing parameters are calculated based
+> > on a wrong frequency.
+> > 
+> > Instead of the cheesy implementation, the clocks in the real hardware
+> > should be represented in the driver and the DT-binding.
+> > 
+> > However, adding new clocks would break the existing platforms.  For the
+> > backward compatibility, the driver still accepts a single clock just as
+> > before.  If clk_x is missing, clk_x_rate is set to a hardcoded value.
+> > This is fine for existing DT of Socionext UniPhier, and also fixes the
+> > issue of Altera (Intel) SOCFPGA because both platforms use 200 MHz for
+> > the bus interface clock.
+> > 
+> > Fixes: 1bb88666775e ("mtd: nand: denali: handle timing parameters by setup_data_interface()")  
+> 
+> Sorry for changing my mind, but I think this patch is doing more than
+> just fixing a bug. The bugfix should IMO be limited to unconditionally
+> setting ->clk_x_rate to 200000000 since this is what was done before
+> commit 1bb88666775e. And the remaining changes should go in nand/next.
+
+Do you want me to write this patch? Note that I can't really take this
+patch since Rob asked for a new version with DT bindings changes placed
+in a separate patch.
+
+Regards,
+
+Boris
