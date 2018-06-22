@@ -1,48 +1,81 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 2/2] usb: core: phy: fix return value checking about devm_of_phy_get_by_index()
-Date: Fri, 22 Jun 2018 14:33:06 +0800
-Message-ID: <644d00edd2932c1a0d0a1bf368dd25427d1d9f64.1529647619.git.chunfeng.yun@mediatek.com>
-References: <4c338a129ab14ab41949da5e3c21aed0d77dff8d.1529647619.git.chunfeng.yun@mediatek.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH 1/2] clk: imx6sll: add GPIO LPCGs
+Date: Fri, 22 Jun 2018 14:32:33 +0800
+Message-ID: <1529649154-5724-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4c338a129ab14ab41949da5e3c21aed0d77dff8d.1529647619.git.chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, aisheng.dong@nxp.com, ping.bai@nxp.com
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-1. use IS_ERR() but not IS_ERR_OR_NULL() because devm_of_phy_get_by_index()
-    never return NULL value;
-2. devm_of_phy_get_by_index() should not fail for a valid index
+According to Reference Manual Rev.0, 06/2017,
+there are GPIO LPCGs defined in CCM CCGRs,
+add them into clock tree.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/usb/core/phy.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ drivers/clk/imx/clk-imx6sll.c             | 6 ++++++
+ include/dt-bindings/clock/imx6sll-clock.h | 9 ++++++++-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
-index 9879767..0f972e1 100644
---- a/drivers/usb/core/phy.c
-+++ b/drivers/usb/core/phy.c
-@@ -23,14 +23,11 @@ static int usb_phy_roothub_add_phy(struct device *dev, int index,
- 				   struct list_head *list)
- {
- 	struct usb_phy_roothub *roothub_entry;
--	struct phy *phy = devm_of_phy_get_by_index(dev, dev->of_node, index);
-+	struct phy *phy;
+diff --git a/drivers/clk/imx/clk-imx6sll.c b/drivers/clk/imx/clk-imx6sll.c
+index 3651c77..6270645 100644
+--- a/drivers/clk/imx/clk-imx6sll.c
++++ b/drivers/clk/imx/clk-imx6sll.c
+@@ -253,6 +253,7 @@ static void __init imx6sll_clocks_init(struct device_node *ccm_node)
+ 	clks[IMX6SLL_CLK_DCP]		= imx_clk_gate2("dcp", "ahb", base + 0x68, 10);
+ 	clks[IMX6SLL_CLK_UART2_IPG]	= imx_clk_gate2("uart2_ipg", "ipg", base + 0x68, 28);
+ 	clks[IMX6SLL_CLK_UART2_SERIAL]	= imx_clk_gate2("uart2_serial",	"uart_podf", base + 0x68, 28);
++	clks[IMX6SLL_CLK_GPIO2]		= imx_clk_gate2("gpio2", "ipg", base + 0x68, 30);
  
--	if (IS_ERR_OR_NULL(phy)) {
--		if (!phy || PTR_ERR(phy) == -ENODEV)
--			return 0;
--		else
--			return PTR_ERR(phy);
--	}
-+	phy = devm_of_phy_get_by_index(dev, dev->of_node, index);
-+	if (IS_ERR(phy))
-+		return PTR_ERR(phy);
+ 	/* CCGR1 */
+ 	clks[IMX6SLL_CLK_ECSPI1]	= imx_clk_gate2("ecspi1",	"ecspi_podf", base + 0x6c, 0);
+@@ -267,13 +268,17 @@ static void __init imx6sll_clocks_init(struct device_node *ccm_node)
+ 	clks[IMX6SLL_CLK_GPT_SERIAL]	= imx_clk_gate2("gpt1_serial",	"perclk", base + 0x6c, 22);
+ 	clks[IMX6SLL_CLK_UART4_IPG]	= imx_clk_gate2("uart4_ipg",	"ipg", base + 0x6c, 24);
+ 	clks[IMX6SLL_CLK_UART4_SERIAL]	= imx_clk_gate2("uart4_serail",	"uart_podf", base + 0x6c, 24);
++	clks[IMX6SLL_CLK_GPIO1]		= imx_clk_gate2("gpio1",	"ipg", base + 0x6c, 26);
++	clks[IMX6SLL_CLK_GPIO5]		= imx_clk_gate2("gpio5",	"ipg", base + 0x6c, 30);
  
- 	roothub_entry = devm_kzalloc(dev, sizeof(*roothub_entry), GFP_KERNEL);
- 	if (!roothub_entry)
+ 	/* CCGR2 */
++	clks[IMX6SLL_CLK_GPIO6]		= imx_clk_gate2("gpio6",	"ipg",    base + 0x70, 0);
+ 	clks[IMX6SLL_CLK_CSI]		= imx_clk_gate2("csi",		"axi",    base + 0x70,	2);
+ 	clks[IMX6SLL_CLK_I2C1]		= imx_clk_gate2("i2c1",		"perclk", base + 0x70,	6);
+ 	clks[IMX6SLL_CLK_I2C2]		= imx_clk_gate2("i2c2",		"perclk", base + 0x70,	8);
+ 	clks[IMX6SLL_CLK_I2C3]		= imx_clk_gate2("i2c3",		"perclk", base + 0x70,	10);
+ 	clks[IMX6SLL_CLK_OCOTP]		= imx_clk_gate2("ocotp",	"ipg",    base + 0x70,	12);
++	clks[IMX6SLL_CLK_GPIO3]		= imx_clk_gate2("gpio3",	"ipg",    base + 0x70,	26);
+ 	clks[IMX6SLL_CLK_LCDIF_APB]	= imx_clk_gate2("lcdif_apb",	"axi",    base + 0x70,	28);
+ 	clks[IMX6SLL_CLK_PXP]		= imx_clk_gate2("pxp",		"axi",    base + 0x70,	30);
+ 
+@@ -283,6 +288,7 @@ static void __init imx6sll_clocks_init(struct device_node *ccm_node)
+ 	clks[IMX6SLL_CLK_EPDC_AXI]	= imx_clk_gate2("epdc_aclk",	"axi",		base + 0x74, 4);
+ 	clks[IMX6SLL_CLK_EPDC_PIX]	= imx_clk_gate2("epdc_pix",	"epdc_podf",	base + 0x74, 4);
+ 	clks[IMX6SLL_CLK_LCDIF_PIX]	= imx_clk_gate2("lcdif_pix",	"lcdif_podf",	base + 0x74, 10);
++	clks[IMX6SLL_CLK_GPIO4]		= imx_clk_gate2("gpio4",	"ipg",		base + 0x74, 12);
+ 	clks[IMX6SLL_CLK_WDOG1]		= imx_clk_gate2("wdog1",	"ipg",		base + 0x74, 16);
+ 	clks[IMX6SLL_CLK_MMDC_P0_FAST]	= imx_clk_gate_flags("mmdc_p0_fast", "mmdc_podf",  base + 0x74,	20, CLK_IS_CRITICAL);
+ 	clks[IMX6SLL_CLK_MMDC_P0_IPG]	= imx_clk_gate2_flags("mmdc_p0_ipg", "ipg",	   base + 0x74,	24, CLK_IS_CRITICAL);
+diff --git a/include/dt-bindings/clock/imx6sll-clock.h b/include/dt-bindings/clock/imx6sll-clock.h
+index 151111e..1036475 100644
+--- a/include/dt-bindings/clock/imx6sll-clock.h
++++ b/include/dt-bindings/clock/imx6sll-clock.h
+@@ -197,6 +197,13 @@
+ #define IMX6SLL_CLK_EXTERN_AUDIO_PODF   171
+ #define IMX6SLL_CLK_EXTERN_AUDIO        172
+ 
+-#define IMX6SLL_CLK_END			173
++#define IMX6SLL_CLK_GPIO1               173
++#define IMX6SLL_CLK_GPIO2               174
++#define IMX6SLL_CLK_GPIO3               175
++#define IMX6SLL_CLK_GPIO4               176
++#define IMX6SLL_CLK_GPIO5               177
++#define IMX6SLL_CLK_GPIO6               178
++
++#define IMX6SLL_CLK_END			179
+ 
+ #endif /* __DT_BINDINGS_CLOCK_IMX6SLL_H */
 -- 
-1.9.1
+2.7.4
