@@ -1,166 +1,65 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v2 7/7] arm64: allwinner: a64: add HDMI
- regulator to all DTs' simplefb_hdmi
-Date: Fri, 22 Jun 2018 21:05:24 +0800
-Message-ID: <20180622130524.57131-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [Dev] [PATCH 0/5] RFC: Mezzanine handling for 96boards
+Date: Fri, 22 Jun 2018 15:08:25 +0200
+Message-ID: <616e99d3-b43e-58ca-aa82-eaf41f618682@xilinx.com>
+References: <20180618074556.6944-1-linus.walleij@linaro.org>
+ <CAK8P3a2KqoX-squhGc8TBuJ==8xxELsuy-H+c1+C7Fu7Z4OjDA@mail.gmail.com>
+ <CAKv+Gu-gAkfRsEUOc=iyxi6Twvg9cbvWNqNHRS2HzUDZg8xUhg@mail.gmail.com>
+ <CAMuUZTG0q4f2T=+HjEijUCLb7KNXok9RJHOXOKNs2iap5p7m5Q@mail.gmail.com>
+ <CAKv+Gu_Dq1uY0wHRyREmCmQdSRSJbNheF1ZsrNhibKOZowvf+g@mail.gmail.com>
+ <CAMuUZTHOuzQm3y-yF6cad9y1UgsK+6R2w7vSzz7MkkYCdYd3hA@mail.gmail.com>
+ <CAKv+Gu80zzaahJhoMScvZ9dS31QobMa0+JFjaOo-GxD+4XsuWQ@mail.gmail.com>
+ <CAMuUZTH8wXhoBSKwsCFBRBzAvvBBTUTnkmwKEpq=56=URo7kjQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBOXIWPMQKGQEEOZCLXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAMuUZTH8wXhoBSKwsCFBRBzAvvBBTUTnkmwKEpq=56=URo7kjQ@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Yang Zhang <yang.zhang@96boards.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: DTML <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Brown <broonie@kernel.org>, Michal Simek <michal.simek@xilinx.com>, dev <dev@lists.96boards.org>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy@infradead.org>, Frank Rowand <frowand.list@gmail.com>, rubini@gnudd.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On usual A64 board design the power of HDMI controller is connected to
-DLDO1 of the AXP803 PMIC. If this regulator is shut down, the HDMI
-output will be blank. Therefore the simplefb driver should keep this
-regulator on.
+On 19.6.2018 17:32, Yang Zhang wrote:
+> On 19 June 2018 at 16:30, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> 
+>> On 19 June 2018 at 17:26, Yang Zhang <yang.zhang@96boards.org> wrote:
+>>> Yes.
+>>>
+>>> https://github.com/96boards/documentation/blob/master/
+>> mezzanine/files/mezzanine-design-guidelines.pdf
+>>>
+>>> Under Configuration data section
+>>>
+>>
+>> OK, fair enough. Do any such mezzanines exist yet? Should we offer
+>> more guidance on how exactly this discovery should be implemented?
+>>
+>>
+> I can't be sure, could look into it - I know there were couple of from
+> Arrow and ST were supporting this.
+> 
+> Yes, more details guidance of "How to" is always welcome :-).
 
-Add the regulator to all currently available A64 boards' simplefb_hdmi
-device node, if the board is capable of outputing HDMI.
+Unfortunately this is not saying i2c address and also how to handle
+stacked solution.
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
-Changes in v2:
-- Added HDMI regulator configuration on two A64 laptops (Pinebook and
-  TERES-I).
+I have told to Linus what Xilinx is using for FMC connector present on
+the most of xilinx development boards.
+These on board FMC eeproms contain information in FRU format.
+Also there incomplete support fmc support in the kernel in drivers/fmc
+which was added by Alessandro Rubini in 2013.
 
- arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts     | 4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts       | 4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts        | 4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts     | 4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts           | 4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts         | 4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts | 4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts          | 4 ++++
- 8 files changed, 32 insertions(+)
+At least these eeprom could reuse FRU data format.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index 0716b1441187..094cfed13df9 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -296,6 +296,10 @@
- 	regulator-name = "vcc-rtc";
- };
- 
-+&simplefb_hdmi {
-+	vcc-hdmi-supply = <&reg_dldo1>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-index e2dce48fa29a..98dbff19f5cc 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-@@ -195,6 +195,10 @@
- 	regulator-name = "vcc-rtc";
- };
- 
-+&simplefb_hdmi {
-+	vcc-hdmi-supply = <&reg_dldo1>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-index 3b3081b10ecb..3f531393eaee 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-@@ -214,6 +214,10 @@
- 	regulator-name = "vcc-rtc";
- };
- 
-+&simplefb_hdmi {
-+	vcc-hdmi-supply = <&reg_dldo1>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-index bf42690a3361..1221764f5719 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -191,6 +191,10 @@
- 	regulator-name = "vcc-rtc";
- };
- 
-+&simplefb_hdmi {
-+	vcc-hdmi-supply = <&reg_dldo1>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index a75825798a71..1b9b92e541d2 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -229,6 +229,10 @@
- 	regulator-name = "vcc-rtc";
- };
- 
-+&simplefb_hdmi {
-+	vcc-hdmi-supply = <&reg_dldo1>;
-+};
-+
- /* On Euler connector */
- &spdif {
- 	status = "disabled";
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-index 58253d6f9be1..104f8a6c6ca8 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-@@ -263,6 +263,10 @@
- 	regulator-name = "vcc-rtc";
- };
- 
-+&simplefb_hdmi {
-+	vcc-hdmi-supply = <&reg_dldo1>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index abe179de35d7..c21f2331add6 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -134,6 +134,10 @@
- 	regulator-name = "vcc-wifi";
- };
- 
-+&simplefb_hdmi {
-+	vcc-hdmi-supply = <&reg_dldo1>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-index d9baab3dc96b..9065f30a758e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-@@ -253,6 +253,10 @@
- 	regulator-name = "vcc-rtc";
- };
- 
-+&simplefb_hdmi {
-+	vcc-hdmi-supply = <&reg_dldo1>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
--- 
-2.17.1
+Thanks,
+Michal
