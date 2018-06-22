@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 05/19] dt-bindings: sram: sunxi: Add A33
- binding for the C1 SRAM region
-Date: Fri, 22 Jun 2018 16:19:41 +0200
-Message-ID: <20180622141941.ckap4ydxqbihai6m@flea>
+Subject: Re: [PATCH v4 12/19] ARM: sun8i-a33: Add SRAM
+ controller node and C1 SRAM region
+Date: Fri, 22 Jun 2018 16:20:21 +0200
+Message-ID: <20180622142021.fatrwqqsdjxv2cbq@flea>
 References: <20180618145843.14631-1-paul.kocialkowski@bootlin.com>
- <20180618145843.14631-6-paul.kocialkowski@bootlin.com>
+ <20180618145843.14631-13-paul.kocialkowski@bootlin.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="o332dmtqsa3phzof"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBCMLWTMQKGQEAOBAW3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="hvpbg5zut62467ge"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNMLWTMQKGQEB3LCAUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180618145843.14631-6-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20180618145843.14631-13-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,36 +24,31 @@ Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY7
 List-Id: devicetree@vger.kernel.org
 
 
---o332dmtqsa3phzof
+--hvpbg5zut62467ge
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Mon, Jun 18, 2018 at 04:58:29PM +0200, Paul Kocialkowski wrote:
-> This introduces a dedicated binding for the C1 SRAM region for the A33
-> sunxi platform.
+On Mon, Jun 18, 2018 at 04:58:36PM +0200, Paul Kocialkowski wrote:
+> From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 > 
+> This adds a SRAM controller node for the A33, with support for the C1
+> SRAM region that is shared between the Video Engine and the CPU.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 > 
-> diff --git a/Documentation/devicetree/bindings/sram/sunxi-sram.txt b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-> index 221fa7b42c18..d8d1aac0840b 100644
-> --- a/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-> +++ b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-> @@ -38,6 +38,9 @@ The valid sections compatible for A13 are:
->  The valid sections compatible for A20 are:
->      - allwinner,sun7i-a20-sram-c1
->  
-> +The valid sections compatible for A33 are:
-> +    - allwinner,sun8i-a33-sram-c1
-> +
+> diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
+> index a21f2ed07a52..97a976b3b1ef 100644
+> --- a/arch/arm/boot/dts/sun8i-a33.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-a33.dtsi
 
-This is just a detail, but that got introduced with the A23, not the
-A33, so it should be the A23 in the compatible instead. It applies for
-the SRAM controller compatible too.
+This should be in the common DTSI between the A23 and A33.
 
+Thnaks!
 Maxime
 
 -- 
 Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
---o332dmtqsa3phzof--
+--hvpbg5zut62467ge--
