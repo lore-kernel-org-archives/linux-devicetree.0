@@ -1,106 +1,168 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v4 09/10] gpio: Add a driver for Cadence I3C GPIO
- expander
-Date: Fri, 22 Jun 2018 10:24:41 +0200
-Message-ID: <20180622102441.35856a50@bbrezillon>
-References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
-        <20180330074751.25987-10-boris.brezillon@bootlin.com>
-        <CACRpkdY_7mi8GPiopZ9Yg4Y0-AV_SriZe=1yN5is6eH6FUm6Qg@mail.gmail.com>
+From: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Subject: Re: [PATCH 3/7] ARM: dts: s5pv210: Add initial DTS for Samsung Galaxy S phone.
+Date: Fri, 22 Jun 2018 10:42:22 +0200
+Message-ID: <1851346.itd6mG8ZId@acerlaptop>
+References: <1529608199-5583-1-git-send-email-pawel.mikolaj.chmiel@gmail.com> <1529608199-5583-4-git-send-email-pawel.mikolaj.chmiel@gmail.com> <CAJKOXPf8cpJ-pivG9j1sCM3aB_-i2n73MoeQKOd4oXxz976EVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdY_7mi8GPiopZ9Yg4Y0-AV_SriZe=1yN5is6eH6FUm6Qg@mail.gmail.com>
+In-Reply-To: <CAJKOXPf8cpJ-pivG9j1sCM3aB_-i2n73MoeQKOd4oXxz976EVw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xc-racer2@live.ca
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-I realize I never replied to this review.
-
-On Thu, 26 Apr 2018 10:44:26 +0200
-Linus Walleij <linus.walleij@linaro.org> wrote:
-
-> On Fri, Mar 30, 2018 at 9:47 AM, Boris Brezillon
-> <boris.brezillon@bootlin.com> wrote:
-> 
-> > Add a driver for Cadence I3C GPIO expander.
+On Friday, June 22, 2018 9:49:42 AM CEST Krzysztof Kozlowski wrote:
+> On 21 June 2018 at 21:09, Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.c=
+om> wrote:
+> > Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
+>=20
+> Please add commit message. This can be something as simple as "Add
+> Samsung Galaxy S DTS which is a commercial phone based on Aries
+> family." or something more (e.g. describe what is working).
+>=20
+> > ---
+> >  arch/arm/boot/dts/Makefile            |  1 +
+> >  arch/arm/boot/dts/s5pv210-galaxys.dts | 72 +++++++++++++++++++++++++++=
+++++++++
+> >  2 files changed, 73 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/s5pv210-galaxys.dts
 > >
-> > Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>  
-> 
-> This is pretty much OK, and I don't want to raise the bar
-> even higher for you to get this code into the kernel, so:
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index 7e2424957809..522ebdca1d3d 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -846,6 +846,7 @@ dtb-$(CONFIG_ARCH_S3C64XX) +=3D \
+> >         s3c6410-smdk6410.dtb
+> >  dtb-$(CONFIG_ARCH_S5PV210) +=3D \
+> >         s5pv210-aquila.dtb \
+> > +       s5pv210-galaxys.dtb \
+> >         s5pv210-goni.dtb \
+> >         s5pv210-smdkc110.dtb \
+> >         s5pv210-smdkv210.dtb \
+> > diff --git a/arch/arm/boot/dts/s5pv210-galaxys.dts b/arch/arm/boot/dts/=
+s5pv210-galaxys.dts
+> > new file mode 100644
+> > index 000000000000..d435032541a9
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/s5pv210-galaxys.dts
+> > @@ -0,0 +1,72 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +/dts-v1/;
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +#include <dt-bindings/input/input.h>
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+>=20
+> Duplicated inclusion.
+>=20
+> > +#include "s5pv210-aries.dtsi"
+> > +
+> > +/ {
+> > +       model =3D "Samsung Galaxy S1 (GT-I9000) based on S5PV210";
+> > +       compatible =3D "samsung,galaxys", "samsung,aries", "samsung,s5p=
+v210";
+> > +
+> > +       chosen {
+> > +               bootargs =3D "console=3DttySAC2,115200n8 root=3D/dev/mm=
+cblk2p1 rw rootwait ignore_loglevel earlyprintk";
+>=20
+> stdout-path =3D "serial2:115200n8";
+>=20
+> Rest of bootargs should not be here (they are not HW dependent) unless
+> you cannot configure them through bootloader?
+>=20
+Stock (proprietary) bootloader is little problematic for me:
+=2D to access it, You need to build special cable.
+=2D i wasn't able to boot any kernel newer than 2.6.35/3.0 on it, without f=
+ollowing hack/patch
+https://github.com/tom3q/linux/commit/af96ebcba03b607ab93bd5778301890feb038=
+479.patch
 
-Thanks.
+I would like to leave those bootargs for now, so anyone can easly test this=
+ kernel (just with that one patch),
+without breaking booting existing software, so they could easly go back to =
+stock software by just flashing old kernel.
+Later it'll be removed because there is initial port of mainline u-boot sta=
+rted for both devices
+=2D currently it can be flashed to device, instead of kernel and boot kerne=
+ls from onenand/sdcard.
+In this way migration from old kernel to new one will be much easier to use=
+rs (and won't require special tools/cables/etc).
 
-> 
-> The following is an observation for future improvement:
-> 
-> > +static int cdns_i3c_gpio_read_reg(struct cdns_i3c_gpio *gpioc, u8 reg,
-> > +                                 u8 *val)
-> > +{
-> > +       struct i3c_priv_xfer xfers[] = {
-> > +               {
-> > +                       .len = sizeof(reg),
-> > +                       .data.out = &reg,
-> > +               },
-> > +               {
-> > +                       .rnw = true,
-> > +                       .len = sizeof(*val),
-> > +                       .data.in = val,
-> > +               },
+
 > > +       };
 > > +
-> > +       return i3c_device_do_priv_xfers(gpioc->i3cdev, xfers,
-> > +                                       ARRAY_SIZE(xfers));
-> > +}
-> > +
-> > +static int cdns_i3c_gpio_write_reg(struct cdns_i3c_gpio *gpioc, u8 reg,
-> > +                                  u8 val)
-> > +{
-> > +       struct i3c_priv_xfer xfers[] = {
-> > +               {
-> > +                       .len = sizeof(reg),
-> > +                       .data.out = &reg,
-> > +               },
-> > +               {
-> > +                       .len = sizeof(val),
-> > +                       .data.out = &val,
-> > +               },
+> > +       nand_pwrseq: nand-pwrseq {
+> > +               compatible =3D "mmc-pwrseq-simple";
+> > +               reset-gpios =3D <&gpj2 7 GPIO_ACTIVE_LOW>;
+> > +               pinctrl-names =3D "default";
+> > +               pinctrl-0 =3D <&massmemory_en>;
+>=20
+> massmemory_en is used only here, so please move it from aries.dtsi.
+> The same applies to all other possible properties if they are not used
+> in other DTSes including aries.
+>=20
 > > +       };
 > > +
-> > +       return i3c_device_do_priv_xfers(gpioc->i3cdev, xfers,
-> > +                                       ARRAY_SIZE(xfers));
-> > +}  
-> 
-> This is starting to resemble
-> drivers/base/regmap/regmap-i2c.c
-> 
-> Maybe we should very quickly add regmap-i3c.c as this
-> infrastructre has had a great positive effect on may kernel
-> subsystems.
-
-Yes I considered that too, I was just waiting for at least one
-other user before adding this regmap-i3c implementation.
-
-> 
-> > +static int cdns_i3c_gpio_get_direction(struct gpio_chip *g, unsigned offset)
-> > +{
-> > +       struct cdns_i3c_gpio *gpioc = gpioc_to_cdns_gpioc(g);
+> > +       gpio-keys {
+> > +               compatible =3D "gpio-keys";
 > > +
-> > +       return gpioc->dir & BIT(offset);  
-> 
-> I would:
-> 
-> return !!(gpioc->dir & BIT(offset));
-> 
-> So you clamp it to bit 0.
-
-Will fix that in my v5.
-
-Thanks for your review.
-
-Boris
+> > +               power {
+> > +                       label =3D "power";
+> > +                       gpios =3D <&gph2 6 GPIO_ACTIVE_LOW>;
+> > +                       linux,code =3D <KEY_POWER>;
+> > +                       wakeup-source;
+> > +               };
+> > +
+> > +               vol-down {
+> > +                       label =3D "volume_down";
+> > +                       gpios =3D <&gph3 1 GPIO_ACTIVE_LOW>;
+> > +                       linux,code =3D <KEY_VOLUMEDOWN>;
+> > +               };
+> > +
+> > +               vol-up {
+> > +                       label =3D "volume_up";
+> > +                       gpios =3D <&gph3 2 GPIO_ACTIVE_LOW>;
+> > +                       linux,code =3D <KEY_VOLUMEUP>;
+> > +               };
+> > +
+> > +               home {
+> > +                       label =3D "home";
+> > +                       gpios =3D <&gph3 5 GPIO_ACTIVE_LOW>;
+> > +                       linux,code =3D <KEY_HOME>;
+> > +                       wakeup-source;
+> > +               };
+> > +       };
+> > +};
+> > +
+> > +&pinctrl0 {
+> > +       massmemory_en: massmemory-en {
+>=20
+> Oh wait, I see massmemory_en here... so there is no need of such in aries=
+=2Edtsi.
+>=20
+> Best regards,
+> Krzysztof
+>=20
+> > +               samsung,pins =3D "gpj2-7";
+> > +               samsung,pin-function =3D <EXYNOS_PIN_FUNC_OUTPUT>;
+> > +               samsung,pin-pud =3D <S3C64XX_PIN_PULL_NONE>;
+> > +               samsung,pin-drv =3D <EXYNOS4_PIN_DRV_LV1>;
+> > +       };
+> > +};
+> > +
+> > +&sdhci0 {
+> > +       bus-width =3D <4>;
+> > +       non-removable;
+> > +       mmc-pwrseq =3D <&nand_pwrseq>;
+> > +       pinctrl-0 =3D <&sd0_clk &sd0_cmd &sd0_bus4>;
+> > +       pinctrl-names =3D "default";
+> > +       status =3D "okay";
+> > +};
+> > --
+> > 2.7.4
+> >
+>=20
