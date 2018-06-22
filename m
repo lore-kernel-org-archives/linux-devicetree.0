@@ -1,132 +1,47 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V2 2/4] dt-bindings: arm: fsl: add mu binding doc
-Date: Fri, 22 Jun 2018 06:04:33 +0000
-Message-ID: <AM0PR04MB42118587B7A0E0518EFE21F080750@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1529239789-26849-1-git-send-email-aisheng.dong@nxp.com>
- <1529239789-26849-3-git-send-email-aisheng.dong@nxp.com>
- <20180620194310.GA28983@rob-hp-laptop>
- <20180621074641.sqqvudxebt3hd43m@pengutronix.de>
- <AM0PR04MB4211B39D5AFAB95FC2A91F9980760@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <20180622054932.ysqve7o7pvdnlp5k@pengutronix.de>
+From: Abhishek Sahu <absahu@codeaurora.org>
+Subject: Re: [PATCH] arm: dts: qcom: Fix 'interrupts = <>' property to use
+ proper  macros
+Date: Fri, 22 Jun 2018 11:39:50 +0530
+Message-ID: <e15ea4689014ff69eed0c0b93552c4da@codeaurora.org>
+References: <1529486619-443-1-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180622054932.ysqve7o7pvdnlp5k@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1529486619-443-1-git-send-email-sricharan@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Sascha Hauer [mailto:s.hauer@pengutronix.de]
-> Sent: Friday, June 22, 2018 1:50 PM
-> To: A.s. Dong <aisheng.dong@nxp.com>
-> Cc: Rob Herring <robh@kernel.org>; linux-arm-kernel@lists.infradead.org;
-> dongas86@gmail.com; kernel@pengutronix.de; shawnguo@kernel.org;
-> Fabio Estevam <fabio.estevam@nxp.com>; dl-linux-imx <linux-
-> imx@nxp.com>; Mark Rutland <mark.rutland@arm.com>;
-> devicetree@vger.kernel.org
-> Subject: Re: [PATCH V2 2/4] dt-bindings: arm: fsl: add mu binding doc
-> 
-> On Thu, Jun 21, 2018 at 05:11:33PM +0000, A.s. Dong wrote:
-> > Hi Sascha,
-> >
-> > > -----Original Message-----
-> > > From: Sascha Hauer [mailto:s.hauer@pengutronix.de]
-> > > Sent: Thursday, June 21, 2018 3:47 PM
-> > > To: Rob Herring <robh@kernel.org>
-> > > Cc: A.s. Dong <aisheng.dong@nxp.com>; linux-arm-
-> > > kernel@lists.infradead.org; dongas86@gmail.com;
-> > > kernel@pengutronix.de; shawnguo@kernel.org; Fabio Estevam
-> > > <fabio.estevam@nxp.com>; dl-linux- imx <linux-imx@nxp.com>; Mark
-> > > Rutland <mark.rutland@arm.com>; devicetree@vger.kernel.org
-> > > Subject: Re: [PATCH V2 2/4] dt-bindings: arm: fsl: add mu binding
-> > > doc
-> > >
-> > > On Wed, Jun 20, 2018 at 01:43:10PM -0600, Rob Herring wrote:
-> > > > On Sun, Jun 17, 2018 at 08:49:47PM +0800, Dong Aisheng wrote:
-> > > > > The Messaging Unit module enables two processors within the SoC
-> > > > > to communicate and coordinate by passing messages (e.g. data,
-> > > > > status and control) through the MU interface.
-> > > > >
-> > > > > Cc: Shawn Guo <shawnguo@kernel.org>
-> > > > > Cc: Sascha Hauer <kernel@pengutronix.de>
-> > > > > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > > > Cc: devicetree@vger.kernel.org
-> > > > > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> > > > > ---
-> > > > > v1->v2:
-> > > > >  * typo fixes
-> > > > >  * remove status property
-> > > > >  * remove imx6&7 compatible string which may be added later for
-> > > > >    the generic mailbox binding
-> > > > >
-> > > > > Note: Because MU used by SCU is not implemented as a mailbox
-> > > > > driver, Instead, they're provided in library calls to gain higher
-> performance.
-> > > >
-> > > > Using a binding doesn't mean you have to use an OS's subsystem.
-> > > >
-> > > > What needs higher performance? What's the performance difference?
-> > > Why
-> > > > can't the mailbox framework be improved?
-> > >
-> > > From what I see the performance is improved by polling the interrupt
-> > > registers rather than using interrupts.
-> > > I see no reason though why this can't be implemented with the
-> > > mailbox framework as is.
-> > >
-> >
-> > I thought you've agreed to not write generic MU(mailbox) driver for SCU.
-> >
-> https://emea01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fw
-> ww
-> > .spinics.net%2Flists%2Farm-
-> kernel%2Fmsg650217.html&data=02%7C01%7Caish
-> >
-> eng.dong%40nxp.com%7Cfb1c9e5d6eff453207a908d5d803f139%7C686ea1d3
-> bc2b4c
-> >
-> 6fa92cd99c5c301635%7C0%7C0%7C636652433808619368&sdata=vOFbr%2BSJ
-> 1tkY5F
-> > 8ha1wrxk3RMVxI4lzKkidD9cK%2Bl9A%3D&reserved=0
-> > But seems it's still not quite certain...
-> 
-> My suggestion was that we change the compatible of the MU unit to
-> something that the SCU driver matches. But since we do not do that and
-> instead use a fsl,imx8qxp-mu compatible for the MU we have to come up
-> with a MU driver that handles both the SCU case and the regular usecase.
-> Otherwise we'll end up with a generic driver attaching to the device you are
-> using under the hoods.
-> 
+On 2018-06-20 14:53, Sricharan R wrote:
+> Fix all nodes to use proper GIC_* macros for the interrupt type and the
+> interrupt trigger settings to avoid the boot warnings.
 
-Do you think checking mbox-cells can work?
-E.g. SCU MU mbox-cells should be 0 while general purpose MU are 1.
+  Thanks Sricharan for fixing these warnings.
 
-Regards
-Dong Aisheng
+  Applied over 4.18 rc1 and tested in IPQ8064 AP148 board.
+  No backtraces are coming during boottime and IRQ seems OK.
 
-> Sascha
+  root@OpenWrt:/# cat /proc/interrupts
+            CPU0       CPU1
+  16:       2602       4750     GIC-0  18 Edge      gp_timer
+  17:          0          0     GIC-0  26 Level     arm-pmu
+  23:         19          0     GIC-0 241 Level     ahci[29000000.sata]
+  24:        912          0     GIC-0 184 Level     msm_serial0
+  25:        113          0     GIC-0 185 Level     i2c_qup
+  26:          6          0     GIC-0 187 Level     1a280000.spi
+IPI0:          0          0  CPU wakeup interrupts
+IPI1:          0          0  Timer broadcast interrupts
+IPI2:       2045       1713  Rescheduling interrupts
+IPI3:          1          4  Function call interrupts
+IPI4:          0          0  CPU stop interrupts
+IPI5:          0          0  IRQ work interrupts
+IPI6:          0          0  completion interrupts
+Err:          0
+
 > 
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 |
-> https://emea01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fww
-> w.pengutronix.de%2F&data=02%7C01%7Caisheng.dong%40nxp.com%7Cfb1
-> c9e5d6eff453207a908d5d803f139%7C686ea1d3bc2b4c6fa92cd99c5c301635%7
-> C0%7C0%7C636652433808619368&sdata=AYkDI3ubpKuxfKvmsvM8d65suEAkf
-> 3h9Tq5KZdJxoNY%3D&reserved=0  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+
+Tested-by: Abhishek Sahu <absahu@codeaurora.org>
