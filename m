@@ -1,47 +1,30 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 3/5] venus: add check to make scm calls
-Date: Fri, 22 Jun 2018 16:19:34 -0700
-Message-ID: <20180622231934.GO3402@tuxbook-pro>
-References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
- <1527884768-22392-4-git-send-email-vgarodia@codeaurora.org>
- <CAAFQd5BSgB0OoqUFckJLXto9FNMYCTQ8ubDftaC-LvFm+A-gxA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Palmer Dabbelt <palmer@sifive.com>
+Subject: Driver for the RISC-V Interrupt Controller
+Date: Fri, 22 Jun 2018 16:20:03 -0700
+Message-ID: <20180622232006.12158-1-palmer@sifive.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAFQd5BSgB0OoqUFckJLXto9FNMYCTQ8ubDftaC-LvFm+A-gxA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tfiga@chromium.org>
-Cc: vgarodia@codeaurora.org, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, andy.gross@linaro.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>
+To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Palmer Dabbelt <palmer@sifive.com>, aou@eecs.berkeley.edu, shorne@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 04 Jun 05:58 PDT 2018, Tomasz Figa wrote:
+The RISC-V ISA mandantes the presence of a simple, per-hart (hardware
+thread) interrupt controller availiable to supervisor mode.  This patch
+set adds a driver for this interrupt controller.
 
-> Hi Vikash,
-> 
-> On Sat, Jun 2, 2018 at 5:27 AM Vikash Garodia <vgarodia@codeaurora.org> wrote:
-> [snip]
-> > +int venus_boot(struct venus_core *core)
-> > +{
-> > +       phys_addr_t mem_phys;
-> > +       size_t mem_size;
-> > +       int ret;
-> > +       struct device *dev;
-> > +
-> > +       if (!IS_ENABLED(CONFIG_QCOM_MDT_LOADER))
-> > +               return -EPROBE_DEFER;
-> 
-> Why are we deferring probe here? The option will not magically become
-> enabled after probe is retried.
-> 
+The patch set itself has been around in various flavors for a while, but
+as far as I remember it's never been properly cleaned up and submitted
+before.  As it currently stands it's essentially three seperate patches,
+but as they're all intertwined I'm keeping them together.  Sorry if
+that's the wrong thing to do.
 
-The original code should have read:
+The patches are:
 
-	if (IS_ENABLED(CONFIG_QCOM_MDT_LOADER) && !qcom_scm_is_available())
-		return -EPROBE_DEFER;
-
-The code does depend on CONFIG_QCOM_MDT_LOADER regardless of it using
-scm for firmware verification.
-
-Regards,
-Bjorn
+* A cleanup to arch/riscv to remove a bit of the old initialization
+  mechanism that snuck in to our arch port.  This patch is trivial, so
+  unless there's any feedback on it specificly I'll include it in my
+  next pull request.
+* The addition of device tree bindings to describe "riscv,cpu-intc".
+* The actual irqchip driver.  If this gets merged before the arch/riscv
+  patch then it'll cause our build to fail, but I'm assuming this will
+  be targeted at the next merge window so we should be safe.
