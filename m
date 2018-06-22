@@ -1,22 +1,19 @@
 Return-Path: <SRS0=pxWX=JI=gmail.com=festevam@kernel.org>
 From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH v2 1/2] dt-bindings: fsl-imx-sahara: Add i.MX51 as a supported SoC
-Date: Fri, 22 Jun 2018 15:45:28 -0300
-Message-Id: <1529693129-29817-1-git-send-email-festevam@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: fsl-imx-sahara: Add i.MX51 as a supported SoC
+Date: Fri, 22 Jun 2018 13:21:26 -0300
+Message-Id: <1529684487-5025-1-git-send-email-festevam@gmail.com>
 To: herbert@gondor.apana.org.au
 Cc: robh+dt@kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, horia.geanta@nxp.com, Fabio Estevam <fabio.estevam@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
 From: Fabio Estevam <fabio.estevam@nxp.com>
 
-i.MX51 and i.MX53 share the same sahara IP block version, so add
+i.MX51 and i.MX51 share the same sahara IP block version, so add
 i.MX51 in the list of supported SoCs.
 
 Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
 ---
-Changes since v1:
-- Fix typo in commit log "i.MX51 and i.MX53"
-
  Documentation/devicetree/bindings/crypto/fsl-imx-sahara.txt | 5 +++--
  1 file changed, 3 insertions(+), 2 deletions(-)
 
