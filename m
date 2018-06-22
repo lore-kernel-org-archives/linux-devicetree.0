@@ -1,57 +1,74 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v2 6/7] arm64: allwinner: a64: add device tree
- node for HDMI simplefb
-Date: Fri, 22 Jun 2018 20:45:39 +0800
-Message-ID: <20180622124540.56203-5-icenowy@aosc.io>
-References: <20180622124540.56203-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Corey Minyard <minyard@acm.org>
+Subject: Re: [PATCH v4] MAINTAINERS: Add file patterns
+ for ipmi device tree bindings
+Date: Fri, 22 Jun 2018 08:04:19 -0500
+Message-ID: <307ab976-6e1c-275d-8fb7-cd9b99255115@acm.org>
+References: <20180622100815.29221-1-geert@linux-m68k.org>
+Reply-To: minyard@acm.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBF7CWPMQKGQEJAH4IGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180622124540.56203-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <openipmi-developer-bounces@lists.sourceforge.net>
+In-Reply-To: <20180622100815.29221-1-geert@linux-m68k.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/openipmi-developer>,
+ <mailto:openipmi-developer-request@lists.sourceforge.net?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=openipmi-developer>
+List-Post: <mailto:openipmi-developer@lists.sourceforge.net>
+List-Help: <mailto:openipmi-developer-request@lists.sourceforge.net?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/openipmi-developer>,
+ <mailto:openipmi-developer-request@lists.sourceforge.net?subject=subscribe>
+Errors-To: openipmi-developer-bounces@lists.sourceforge.net
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, openipmi-developer@lists.sourceforge.net, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-As the U-Boot bootloader now is also capable of initialize the HDMI on
-A64 boards, add a simplefb device tree node for accessing the HDMI
-framebuffer initialized by the bootloader.
+On 06/22/2018 05:08 AM, Geert Uytterhoeven wrote:
+> Submitters of device tree binding documentation may forget to CC
+> the subsystem maintainer if this is missing.
+>
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> ---
+> v3:
+>    - Update for next-20180622,
+>
+> v2:
+>    - New.
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
-Changes in v2:
-- Dropped LCD SimpleFB as it's already added. LCD SimpleFB needs some
-  fix but the fix is present when adding DE2 CCU.
+Thanks, I have this queue.
 
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+-corey
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 318c4ba8ae9f..840753432ea5 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -68,6 +68,15 @@
- 				 <&display_clocks CLK_MIXER0>;
- 			status = "disabled";
- 		};
-+
-+		simplefb_hdmi: framebuffer-hdmi {
-+			compatible = "allwinner,simple-framebuffer",
-+				     "simple-framebuffer";
-+			allwinner,pipeline = "mixer1-lcd1-hdmi";
-+			clocks = <&display_clocks CLK_MIXER1>,
-+				 <&ccu CLK_TCON1>, <&ccu CLK_HDMI>;
-+			status = "disabled";
-+		};
- 	};
- 
- 	cpus {
--- 
-2.17.1
+> Impact on "scripts/get_maintainer.pl -f Documentation/devicetree/bindings/ipmi/":
+>
+> +Corey Minyard <minyard@acm.org> (supporter:IPMI SUBSYSTEM)
+>   Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+>   Mark Rutland <mark.rutland@arm.com> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+> -Corey Minyard <cminyard@mvista.com> (commit_signer:2/2=100%)
+> -Haiyue Wang <haiyue.wang@linux.intel.com> (commit_signer:2/2=100%,authored:2/2=100%)
+> -Avi Fishman <avifishman70@gmail.com> (commit_signer:1/2=50%)
+> +openipmi-developer@lists.sourceforge.net (moderated list:IPMI SUBSYSTEM)
+>   devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+>   linux-kernel@vger.kernel.org (open list)
+> ---
+>   MAINTAINERS | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 76b5dd65291f9650..321fbaa7e7d273a2 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7463,6 +7463,7 @@ M:	Corey Minyard <minyard@acm.org>
+>   L:	openipmi-developer@lists.sourceforge.net (moderated for non-subscribers)
+>   W:	http://openipmi.sourceforge.net/
+>   S:	Supported
+> +F:	Documentation/devicetree/bindings/ipmi/
+>   F:	Documentation/IPMI.txt
+>   F:	drivers/char/ipmi/
+>   F:	include/linux/ipmi*
+
+
+
+------------------------------------------------------------------------------
+Check out the vibrant tech community on one of the world's most
+engaging tech sites, Slashdot.org! http://sdm.link/slashdot
