@@ -1,167 +1,264 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH v2] display: panel: Add KOE tx14d24vm1bpa display
- support (320x240)
-Date: Fri, 22 Jun 2018 10:56:05 +0200
-Message-ID: <20180622105605.3018453c@jawa>
-References: <20180412143715.6828-1-lukma@denx.de>
-        <20180529150528.22136-1-lukma@denx.de>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH V4 2/4] watchdog: stm32: add pclk feature for stm32mp1
+Date: Fri, 22 Jun 2018 11:15:19 +0200
+Message-ID: <0bfe0082-2134-2d3b-322f-cd6c193a9974@st.com>
+References: <1529571737-3552-1-git-send-email-ludovic.Barre@st.com>
+ <1529571737-3552-3-git-send-email-ludovic.Barre@st.com>
+ <20180621165335.GA4563@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/ve=Gn5zIf4rJpd+mqZ9Yc51"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180529150528.22136-1-lukma@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180621165335.GA4563@roeck-us.net>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, linux-arm-kernel@lists.infradead.org, Alexandre Torgue <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/ve=Gn5zIf4rJpd+mqZ9Yc51
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-Hi Thierry,
-
-> This commit adds support for KOE's 5.7" display.
->=20
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes for v2:
-> - Add Reviewed-by tag
-
-Could you apply this patch to your tree?
-
-Thanks in advance,
-=C5=81ukasz
-
->=20
-> ---
->  .../bindings/display/panel/koe,tx14d24vm1bpa.txt   | 42
-> ++++++++++++++++++++++
-> drivers/gpu/drm/panel/panel-simple.c               | 26
-> ++++++++++++++ 2 files changed, 68 insertions(+) create mode 100644
-> Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
->=20
-> diff --git
-> a/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
-> b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
-> new file mode 100644 index 000000000000..be7ac666807b --- /dev/null
-> +++
-> b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
-> @@ -0,0 +1,42 @@ +Kaohsiung Opto-Electronics Inc. 5.7" QVGA (320 x
-> 240) TFT LCD panel +
-> +Required properties:
-> +- compatible: should be "koe,tx14d24vm1bpa"
-> +- backlight: phandle of the backlight device attached to the panel
-> +- power-supply: single regulator to provide the supply voltage
-> +
-> +Required nodes:
-> +- port: Parallel port mapping to connect this display
-> +
-> +This panel needs single power supply voltage. Its backlight is
-> conntrolled +via PWM signal.
-> +
-> +Example:
-> +--------
-> +
-> +Example device-tree definition when connected to iMX53 based board
-> +
-> +	lcd_panel: lcd-panel {
-> +		compatible =3D "koe,tx14d24vm1bpa";
-> +		backlight =3D <&backlight_lcd>;
-> +		power-supply =3D <&reg_3v3>;
-> +
-> +		port {
-> +			lcd_panel_in: endpoint {
-> +				remote-endpoint =3D <&lcd_display_out>;
-> +			};
-> +		};
-> +	};
-> +
-> +Then one needs to extend the dispX node:
-> +
-> +	lcd_display: disp1 {
-> +
-> +		port@1 {
-> +			reg =3D <1>;
-> +
-> +			lcd_display_out: endpoint {
-> +				remote-endpoint =3D <&lcd_panel_in>;
-> +			};
-> +		};
-> +	};
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c
-> b/drivers/gpu/drm/panel/panel-simple.c index
-> d9984bdb5bb5..103b43ce7dee 100644 ---
-> a/drivers/gpu/drm/panel/panel-simple.c +++
-> b/drivers/gpu/drm/panel/panel-simple.c @@ -1268,6 +1268,29 @@ static
-> const struct panel_desc innolux_zj070na_01p =3D { },
->  };
-> =20
-> +static const struct display_timing koe_tx14d24vm1bpa_timing =3D {
-> +	.pixelclock =3D { 5580000, 5850000, 6200000 },
-> +	.hactive =3D { 320, 320, 320 },
-> +	.hfront_porch =3D { 30, 30, 30 },
-> +	.hback_porch =3D { 30, 30, 30 },
-> +	.hsync_len =3D { 1, 5, 17 },
-> +	.vactive =3D { 240, 240, 240 },
-> +	.vfront_porch =3D { 6, 6, 6 },
-> +	.vback_porch =3D { 5, 5, 5 },
-> +	.vsync_len =3D { 1, 2, 11 },
-> +	.flags =3D DISPLAY_FLAGS_DE_HIGH,
-> +};
-> +
-> +static const struct panel_desc koe_tx14d24vm1bpa =3D {
-> +	.timings =3D &koe_tx14d24vm1bpa_timing,
-> +	.num_timings =3D 1,
-> +	.bpc =3D 6,
-> +	.size =3D {
-> +		.width =3D 115,
-> +		.height =3D 86,
-> +	},
-> +};
-> +
->  static const struct display_timing koe_tx31d200vm0baa_timing =3D {
->  	.pixelclock =3D { 39600000, 43200000, 48000000 },
->  	.hactive =3D { 1280, 1280, 1280 },
-> @@ -2204,6 +2227,9 @@ static const struct of_device_id
-> platform_of_match[] =3D { .compatible =3D "innolux,zj070na-01p",
->  		.data =3D &innolux_zj070na_01p,
->  	}, {
-> +		.compatible =3D "koe,tx14d24vm1bpa",
-> +		.data =3D &koe_tx14d24vm1bpa,
-> +	}, {
->  		.compatible =3D "koe,tx31d200vm0baa",
->  		.data =3D &koe_tx31d200vm0baa,
->  	}, {
 
 
+On 06/21/2018 06:53 PM, Guenter Roeck wrote:
+> On Thu, Jun 21, 2018 at 11:02:15AM +0200, Ludovic Barre wrote:
+>> From: Ludovic Barre <ludovic.barre@st.com>
+>>
+>> This patch adds compatible data to manage pclk clock by
+>> compatible. Adds stm32mp1 support which requires pclk clock.
+>>
+>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>> ---
+>>   drivers/watchdog/stm32_iwdg.c | 116 +++++++++++++++++++++++++++---------------
+>>   1 file changed, 74 insertions(+), 42 deletions(-)
+>>
+>> diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
+>> index c97ad56..e00e3b3 100644
+>> --- a/drivers/watchdog/stm32_iwdg.c
+>> +++ b/drivers/watchdog/stm32_iwdg.c
+>> @@ -11,12 +11,13 @@
+>>   
+>>   #include <linux/clk.h>
+>>   #include <linux/delay.h>
+>> -#include <linux/kernel.h>
+>> -#include <linux/module.h>
+>>   #include <linux/interrupt.h>
+>>   #include <linux/io.h>
+>>   #include <linux/iopoll.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>>   #include <linux/of.h>
+>> +#include <linux/of_device.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/watchdog.h>
+>>   
+>> @@ -54,11 +55,15 @@
+>>   #define TIMEOUT_US	100000
+>>   #define SLEEP_US	1000
+>>   
+>> +#define HAS_PCLK	true
+>> +
+>>   struct stm32_iwdg {
+>>   	struct watchdog_device	wdd;
+>>   	void __iomem		*regs;
+>> -	struct clk		*clk;
+>> +	struct clk		*clk_lsi;
+>> +	struct clk		*clk_pclk;
+>>   	unsigned int		rate;
+>> +	bool			has_pclk;
+>>   };
+>>   
+>>   static inline u32 reg_read(void __iomem *base, u32 reg)
+>> @@ -133,6 +138,44 @@ static int stm32_iwdg_set_timeout(struct watchdog_device *wdd,
+>>   	return 0;
+>>   }
+>>   
+>> +static int stm32_iwdg_clk_init(struct platform_device *pdev,
+>> +			       struct stm32_iwdg *wdt)
+>> +{
+>> +	u32 ret;
+>> +
+>> +	wdt->clk_lsi = devm_clk_get(&pdev->dev, "lsi");
+> 
+> I just noticed a subtle difference: This used to be
+> 			devm_clk_get(&pdev->dev, NULL);
+> which would always get the first clock, no matter how it is named.
+> Can that cause problems with backward compatibility ?
 
+You are right Guenter.
 
-Best regards,
+When there are multiple clocks, I prefer to use name interface.
+I find it easier to use, and avoid misunderstanding.
 
-Lukasz Majewski
+Today, only one "dtsi" define the watchdog and it's disabled
+(stm32f429.dtsi). I think it's good moment to move to clock named
+(before it is used anymore).
 
---
+But you are right I forgot to change stm32f429.dtsi.
+If I add a commit for stm32f429.dtsi, it's Ok for you ?
 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+BR
+Ludo
 
---Sig_/ve=Gn5zIf4rJpd+mqZ9Yc51
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlssuaUACgkQAR8vZIA0
-zr1B8AgAgQ9gEpUy+yOfpgwF+O5MBD9fJkSXUwJf34Eae3SXVeUjdkRXi5794FBV
-8HaqddGXris9dLQk1I3mbKlgAu0bUctJB73e88ZECaXeOtR+H7teAwkDEJhGkG88
-PZGRvA5Sf7z8efPfJzXLCjLYWje/6cP12162xQKuS+lDl0qKC+0kl1RMtWA4S9uC
-S+gSN8doTyjg4SGrukKIsN734zHYpqo7GAkEgc3jMRcn63kFBbEMAg3dngOXpuN7
-aGUuHi7AjwOSK+J6EdB06BC53hiFWkRkZMtZCwFbKjmoast3YRhDeaBwj2ey5/2F
-m/C91SMvdIJhN7YAcDWQZ+QzeM3TCA==
-=CQCq
------END PGP SIGNATURE-----
-
---Sig_/ve=Gn5zIf4rJpd+mqZ9Yc51--
+> 
+> Thanks,
+> Guenter
+> 
+>> +	if (IS_ERR(wdt->clk_lsi)) {
+>> +		dev_err(&pdev->dev, "Unable to get lsi clock\n");
+>> +		return PTR_ERR(wdt->clk_lsi);
+>> +	}
+>> +
+>> +	/* optional peripheral clock */
+>> +	if (wdt->has_pclk) {
+>> +		wdt->clk_pclk = devm_clk_get(&pdev->dev, "pclk");
+>> +		if (IS_ERR(wdt->clk_pclk)) {
+>> +			dev_err(&pdev->dev, "Unable to get pclk clock\n");
+>> +			return PTR_ERR(wdt->clk_pclk);
+>> +		}
+>> +
+>> +		ret = clk_prepare_enable(wdt->clk_pclk);
+>> +		if (ret) {
+>> +			dev_err(&pdev->dev, "Unable to prepare pclk clock\n");
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+>> +	ret = clk_prepare_enable(wdt->clk_lsi);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "Unable to prepare lsi clock\n");
+>> +		clk_disable_unprepare(wdt->clk_pclk);
+>> +		return ret;
+>> +	}
+>> +
+>> +	wdt->rate = clk_get_rate(wdt->clk_lsi);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static const struct watchdog_info stm32_iwdg_info = {
+>>   	.options	= WDIOF_SETTIMEOUT |
+>>   			  WDIOF_MAGICCLOSE |
+>> @@ -147,49 +190,42 @@ static const struct watchdog_ops stm32_iwdg_ops = {
+>>   	.set_timeout	= stm32_iwdg_set_timeout,
+>>   };
+>>   
+>> +static const struct of_device_id stm32_iwdg_of_match[] = {
+>> +	{ .compatible = "st,stm32-iwdg", .data = (void *)!HAS_PCLK },
+>> +	{ .compatible = "st,stm32mp1-iwdg", .data = (void *)HAS_PCLK },
+>> +	{ /* end node */ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
+>> +
+>>   static int stm32_iwdg_probe(struct platform_device *pdev)
+>>   {
+>>   	struct watchdog_device *wdd;
+>> +	const struct of_device_id *match;
+>>   	struct stm32_iwdg *wdt;
+>>   	struct resource *res;
+>> -	void __iomem *regs;
+>> -	struct clk *clk;
+>>   	int ret;
+>>   
+>> +	match = of_match_device(stm32_iwdg_of_match, &pdev->dev);
+>> +	if (!match)
+>> +		return -ENODEV;
+>> +
+>> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+>> +	if (!wdt)
+>> +		return -ENOMEM;
+>> +
+>> +	wdt->has_pclk = match->data;
+>> +
+>>   	/* This is the timer base. */
+>>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> -	regs = devm_ioremap_resource(&pdev->dev, res);
+>> -	if (IS_ERR(regs)) {
+>> +	wdt->regs = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (IS_ERR(wdt->regs)) {
+>>   		dev_err(&pdev->dev, "Could not get resource\n");
+>> -		return PTR_ERR(regs);
+>> +		return PTR_ERR(wdt->regs);
+>>   	}
+>>   
+>> -	clk = devm_clk_get(&pdev->dev, NULL);
+>> -	if (IS_ERR(clk)) {
+>> -		dev_err(&pdev->dev, "Unable to get clock\n");
+>> -		return PTR_ERR(clk);
+>> -	}
+>> -
+>> -	ret = clk_prepare_enable(clk);
+>> -	if (ret) {
+>> -		dev_err(&pdev->dev, "Unable to prepare clock %p\n", clk);
+>> +	ret = stm32_iwdg_clk_init(pdev, wdt);
+>> +	if (ret)
+>>   		return ret;
+>> -	}
+>> -
+>> -	/*
+>> -	 * Allocate our watchdog driver data, which has the
+>> -	 * struct watchdog_device nested within it.
+>> -	 */
+>> -	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+>> -	if (!wdt) {
+>> -		ret = -ENOMEM;
+>> -		goto err;
+>> -	}
+>> -
+>> -	/* Initialize struct stm32_iwdg. */
+>> -	wdt->regs = regs;
+>> -	wdt->clk = clk;
+>> -	wdt->rate = clk_get_rate(clk);
+>>   
+>>   	/* Initialize struct watchdog_device. */
+>>   	wdd = &wdt->wdd;
+>> @@ -217,7 +253,8 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
+>>   
+>>   	return 0;
+>>   err:
+>> -	clk_disable_unprepare(clk);
+>> +	clk_disable_unprepare(wdt->clk_lsi);
+>> +	clk_disable_unprepare(wdt->clk_pclk);
+>>   
+>>   	return ret;
+>>   }
+>> @@ -227,23 +264,18 @@ static int stm32_iwdg_remove(struct platform_device *pdev)
+>>   	struct stm32_iwdg *wdt = platform_get_drvdata(pdev);
+>>   
+>>   	watchdog_unregister_device(&wdt->wdd);
+>> -	clk_disable_unprepare(wdt->clk);
+>> +	clk_disable_unprepare(wdt->clk_lsi);
+>> +	clk_disable_unprepare(wdt->clk_pclk);
+>>   
+>>   	return 0;
+>>   }
+>>   
+>> -static const struct of_device_id stm32_iwdg_of_match[] = {
+>> -	{ .compatible = "st,stm32-iwdg" },
+>> -	{ /* end node */ }
+>> -};
+>> -MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
+>> -
+>>   static struct platform_driver stm32_iwdg_driver = {
+>>   	.probe		= stm32_iwdg_probe,
+>>   	.remove		= stm32_iwdg_remove,
+>>   	.driver = {
+>>   		.name	= "iwdg",
+>> -		.of_match_table = stm32_iwdg_of_match,
+>> +		.of_match_table = of_match_ptr(stm32_iwdg_of_match),
+>>   	},
+>>   };
+>>   module_platform_driver(stm32_iwdg_driver);
+>> -- 
+>> 2.7.4
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
