@@ -1,8 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 14/17] dt-bindings/interrupt-controller: add documentation
- for Marvell SEI controller
-Date: Fri, 22 Jun 2018 17:14:29 +0200
-Message-ID: <20180622151432.1566-15-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 11/17] arm64: marvell: enable SEI driver
+Date: Fri, 22 Jun 2018 17:14:26 +0200
+Message-ID: <20180622151432.1566-12-miquel.raynal@bootlin.com>
 References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,61 +21,27 @@ To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, M
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haim Boot <hayim@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Hanna Hawa <hannah@marvell.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Describe the System Error Interrupt (SEI) controller. It aggregates two
-types of interrupts, wired and MSIs from respectively the AP and the
-CPs, into a single SPI interrupt.
+Enable the newly introduced Marvell SEI driver for the 64-bit Marvell
+EBU platforms.
 
 Suggested-by: Haim Boot <hayim@marvell.com>
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
- .../bindings/interrupt-controller/marvell,sei.txt  | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,sei.txt
+ arch/arm64/Kconfig.platforms | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,sei.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,sei.txt
-new file mode 100644
-index 000000000000..9aee3820f1a8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,sei.txt
-@@ -0,0 +1,39 @@
-+Marvell SEI (System Error Interrupt) Controller
-+-----------------------------------------------
-+
-+Marvell SEI (System Error Interrupt) controller is an interrupt
-+aggregator. It receives interrupts from several sources and aggregates
-+them to a single interrupt line (an SPI) on the parent interrupt
-+controller.
-+
-+This interrupt controller can handle up to 64 SEIs, a set comes from the
-+AP and is wired while a second set comes from the CPs by the mean of
-+MSIs. Each 'domain' is represented as a subnode.
-+
-+Required properties:
-+
-+- compatible: should be "marvell,armada-8k-sei".
-+- reg: SEI registers location and length.
-+- interrupts: identifies the parent IRQ that will be triggered.
-+- marvell,sei-ranges: two ranges, the first one describe wired
-+                      interrupts coming from the AP, the second one
-+                      non-wired interrupts (MSI) from the CPs.
-+- #interrupt-cells: number of cells to define an SEI wired interrupt
-+                    coming from the AP, should be 1. The cell is the IRQ
-+                    number.
-+- interrupt-controller: identifies the node as an interrupt controller
-+                        (AP only).
-+- msi-controller: identifies the node as an MSI controller (CPs only).
-+
-+Example:
-+
-+        sei: interrupt-controller@3f0200 {
-+                compatible = "marvell,armada-8k-sei";
-+                reg = <0x3f0200 0x40>;
-+                interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-+                marvell,sei-ap-ranges = <0 21>;
-+                marvell,sei-cp-ranges = <21 43>;
-+                #interrupt-cells = <1>;
-+                interrupt-controller;
-+                msi-controller;
-+        };
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index d5aeac351fc3..67086a8a8307 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -121,6 +121,7 @@ config ARCH_MVEBU
+ 	select MVEBU_ICU
+ 	select MVEBU_ODMI
+ 	select MVEBU_PIC
++	select MVEBU_SEI
+ 	select OF_GPIO
+ 	select PINCTRL
+ 	select PINCTRL_ARMADA_37XX
 -- 
 2.14.1
