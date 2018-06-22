@@ -1,8 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 02/17] dt-bindings/interrupt-controller: fix Marvell ICU
- length in the example
-Date: Fri, 22 Jun 2018 17:14:17 +0200
-Message-ID: <20180622151432.1566-3-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 15/17] arm64: dts: marvell: add AP806 SEI subnode
+Date: Fri, 22 Jun 2018 17:14:30 +0200
+Message-ID: <20180622151432.1566-16-miquel.raynal@bootlin.com>
 References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,28 +21,36 @@ To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, M
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haim Boot <hayim@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Hanna Hawa <hannah@marvell.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-ICU size in CP110 is not 0x10 but at least 0x440 bytes long (from the
-specification).
+Add the System Error Interrupt node, representing an IRQ chip which is
+part of the GIC. The SEI node has two subnodes, one for each interrupt
+domain: wired (from the AP) and not-wired (MSIs from the CPs).
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 ---
- Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
-index aa8bf2ec8905..649b7ec9d9b1 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
-@@ -39,7 +39,7 @@ Example:
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+index 176e38d54872..4f2a704615b0 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+@@ -124,6 +124,17 @@
+ 				interrupts = <GIC_PPI 15 IRQ_TYPE_LEVEL_HIGH>;
+ 			};
  
- icu: interrupt-controller@1e0000 {
- 	compatible = "marvell,cp110-icu";
--	reg = <0x1e0000 0x10>;
-+	reg = <0x1e0000 0x440>;
- 	#interrupt-cells = <3>;
- 	interrupt-controller;
- 	msi-parent = <&gicp>;
++			sei: interrupt-controller@3f0200 {
++				compatible = "marvell,armada-8k-sei";
++				reg = <0x3f0200 0x40>;
++				interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
++				marvell,sei-ap-ranges = <0 21>;
++				marvell,sei-cp-ranges = <21 43>;
++				#interrupt-cells = <1>;
++				interrupt-controller;
++				msi-controller;
++			};
++
+ 			xor@400000 {
+ 				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
+ 				reg = <0x400000 0x1000>,
 -- 
 2.14.1
