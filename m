@@ -1,45 +1,58 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 1/2] arm64: allwinner: a64: change TERES-I
- DLDO3's name to start with "vdd"
-Date: Sat, 23 Jun 2018 00:06:30 +0800
-Message-ID: <20180622160631.8578-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v4 0/5] mtd: rawnand: denali: add new clocks and improve
+ setup_data_interface
+Date: Sat, 23 Jun 2018 01:06:33 +0900
+Message-ID: <1529683598-25783-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBRF5WTMQKGQE5LKBQAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: linux-mtd@lists.infradead.org, Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Originally the name of the DLDO3 regulator on TERES-I is "eDP12", which
-is not consistent with other regulator names.
 
-Change it to "vdd-edp", in order to make it more consistent.
+The ->setup_data_interface() hook needs to know the clock frequency.
+In fact, this IP needs three clocks, but the current driver does not
+represent it.  Thus, it is hard to understand what is the correct
+clock frequency.
+(at least, clock property is not described in the DT-binding at all.)
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This series adds more clocks based on the IP datasheet, and document
+it in the DT binding.
+In the new binding, three clocks are required: core clock, bus interface
+clock, ECC engine clock.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-index d9baab3dc96b..02fecc42440c 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-@@ -210,7 +210,7 @@
- &reg_dldo3 {
- 	regulator-min-microvolt = <1200000>;
- 	regulator-max-microvolt = <1200000>;
--	regulator-name = "eDP12";
-+	regulator-name = "vdd-edp";
- };
- 
- &reg_dldo4 {
+1/5 is a backport candidate to fix SOCFPGA.
+
+
+Masahiro Yamada (5):
+  mtd: rawnand: denali_dt: set clk_x_rate to 200 MHz unconditionally
+  mtd: rawnand: denali_dt: use dev as a shorthand of &pdev->dev
+  dt-binding: mtd: denali_dt: document clock property
+  mtd: rawnand: denali_dt: add more clocks based on IP datasheet
+  mtd: rawnand: denali: optimize timing parameters for data interface
+
+ .../devicetree/bindings/mtd/denali-nand.txt        |  5 ++
+ drivers/mtd/nand/raw/denali.c                      | 49 ++++++++--------
+ drivers/mtd/nand/raw/denali.h                      |  1 +
+ drivers/mtd/nand/raw/denali_dt.c                   | 66 ++++++++++++++++++----
+ drivers/mtd/nand/raw/denali_pci.c                  |  1 +
+ 5 files changed, 86 insertions(+), 36 deletions(-)
+
 -- 
-2.17.1
+2.7.4
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
