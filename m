@@ -1,65 +1,33 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [Dev] [PATCH 0/5] RFC: Mezzanine handling for 96boards
-Date: Fri, 22 Jun 2018 15:08:25 +0200
-Message-ID: <616e99d3-b43e-58ca-aa82-eaf41f618682@xilinx.com>
-References: <20180618074556.6944-1-linus.walleij@linaro.org>
- <CAK8P3a2KqoX-squhGc8TBuJ==8xxELsuy-H+c1+C7Fu7Z4OjDA@mail.gmail.com>
- <CAKv+Gu-gAkfRsEUOc=iyxi6Twvg9cbvWNqNHRS2HzUDZg8xUhg@mail.gmail.com>
- <CAMuUZTG0q4f2T=+HjEijUCLb7KNXok9RJHOXOKNs2iap5p7m5Q@mail.gmail.com>
- <CAKv+Gu_Dq1uY0wHRyREmCmQdSRSJbNheF1ZsrNhibKOZowvf+g@mail.gmail.com>
- <CAMuUZTHOuzQm3y-yF6cad9y1UgsK+6R2w7vSzz7MkkYCdYd3hA@mail.gmail.com>
- <CAKv+Gu80zzaahJhoMScvZ9dS31QobMa0+JFjaOo-GxD+4XsuWQ@mail.gmail.com>
- <CAMuUZTH8wXhoBSKwsCFBRBzAvvBBTUTnkmwKEpq=56=URo7kjQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v9 1/5] dt-bindings: Add the r9a06g032-sysctrl.h file
+Date: Fri, 22 Jun 2018 15:21:47 +0200
+Message-ID: <CAMuHMdUr+PT540D+MK5kuAsZW+4MRu5KE+kid6QZkMacRjAsXw@mail.gmail.com>
+References: <1528973829-25493-1-git-send-email-michel.pollet@bp.renesas.com> <1528973829-25493-2-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMuUZTH8wXhoBSKwsCFBRBzAvvBBTUTnkmwKEpq=56=URo7kjQ@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yang Zhang <yang.zhang@96boards.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: DTML <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Brown <broonie@kernel.org>, Michal Simek <michal.simek@xilinx.com>, dev <dev@lists.96boards.org>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy@infradead.org>, Frank Rowand <frowand.list@gmail.com>, rubini@gnudd.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1528973829-25493-2-git-send-email-michel.pollet@bp.renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19.6.2018 17:32, Yang Zhang wrote:
-> On 19 June 2018 at 16:30, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
-> 
->> On 19 June 2018 at 17:26, Yang Zhang <yang.zhang@96boards.org> wrote:
->>> Yes.
->>>
->>> https://github.com/96boards/documentation/blob/master/
->> mezzanine/files/mezzanine-design-guidelines.pdf
->>>
->>> Under Configuration data section
->>>
->>
->> OK, fair enough. Do any such mezzanines exist yet? Should we offer
->> more guidance on how exactly this discovery should be implemented?
->>
->>
-> I can't be sure, could look into it - I know there were couple of from
-> Arrow and ST were supporting this.
-> 
-> Yes, more details guidance of "How to" is always welcome :-).
+On Thu, Jun 14, 2018 at 1:02 PM Michel Pollet
+<michel.pollet@bp.renesas.com> wrote:
+> This adds the constants necessary to use the renesas,r9a06g032-sysctrl node.
+>
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Unfortunately this is not saying i2c address and also how to handle
-stacked solution.
+Thanks, queuing in clk-renesas-for-v4.19.
 
-I have told to Linus what Xilinx is using for FMC connector present on
-the most of xilinx development boards.
-These on board FMC eeproms contain information in FRU format.
-Also there incomplete support fmc support in the kernel in drivers/fmc
-which was added by Alessandro Rubini in 2013.
+Gr{oetje,eeting}s,
 
-At least these eeprom could reuse FRU data format.
+                        Geert
 
-Thanks,
-Michal
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
