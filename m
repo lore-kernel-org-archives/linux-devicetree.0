@@ -1,69 +1,84 @@
-Return-Path: <vkoul@kernel.org>
-Date: Sat, 23 Jun 2018 10:02:58 +0530
-From: Vinod <vkoul@kernel.org>
+Return-Path: <SRS0=/LiY=JI=linaro.org=bjorn.andersson@kernel.org>
+Date: Fri, 22 Jun 2018 14:10:05 -0700
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 Subject: Re: [PATCH 4/5] input: pm8941-pwrkey: Abstract register offsets and
  event code
-Message-ID: <20180623043258.GT27187@vkoul-mobl>
+Message-ID: <20180622211005.GI3402@tuxbook-pro>
 References: <20180618143548.29900-1-vkoul@kernel.org>
  <20180618143548.29900-5-vkoul@kernel.org>
- <20180622185236.GD92912@dtor-ws>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20180622185236.GD92912@dtor-ws>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <20180618143548.29900-5-vkoul@kernel.org>
+To: Vinod Koul <vinod.koul@linaro.org>
+Cc: linux-input@vger.kernel.org, linux-pm@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 22-06-18, 11:52, Dmitry Torokhov wrote:
+On Mon 18 Jun 07:35 PDT 2018, Vinod Koul wrote:
+> diff --git a/drivers/input/misc/pm8941-pwrkey.c b/drivers/input/misc/pm8941-pwrkey.c
+[..]
+>  struct pm8941_pwrkey {
+>  	struct device *dev;
+> @@ -52,6 +57,9 @@ struct pm8941_pwrkey {
+>  
+>  	unsigned int revision;
+>  	struct notifier_block reboot_notifier;
+> +
+> +	unsigned int code;
 
-> >  static int pm8941_reboot_notify(struct notifier_block *nb,
-> > @@ -124,7 +132,8 @@ static irqreturn_t pm8941_pwrkey_irq(int irq, void *_data)
-> >  	if (error)
-> >  		return IRQ_HANDLED;
-> >  
-> > -	input_report_key(pwrkey->input, KEY_POWER, !!(sts & PON_KPDPWR_N_SET));
-> > +	input_report_key(pwrkey->input, pwrkey->code,
-> > +			 !!(sts & pwrkey->data->status_bit));
-> 
-> Since we are changing this: input core will normalize the value for you,
-> no need for doing double negation here.
+pwrkey->code is passed into of_property_read_u32(), so make it u32 here
+instead.
 
-Okay will do, since this "should" be explained that input core handles
-it, do you recommend and separate patch for that?
+> +	const struct pm8941_data *data;
+>  };
+>  
+[..]
+> @@ -175,11 +185,20 @@ static int pm8941_pwrkey_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  
+>  	pwrkey->dev = &pdev->dev;
+> +	pwrkey->data = of_device_get_match_data(&pdev->dev);
+>  
+> -	pwrkey->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	parent = pdev->dev.parent;
+> +	pwrkey->regmap = dev_get_regmap(parent, NULL);
+>  	if (!pwrkey->regmap) {
+> -		dev_err(&pdev->dev, "failed to locate regmap\n");
+> -		return -ENODEV;
+> +		/*
+> +		 * we failed to get regmap for parent, check if
+> +		 * parent->parent has it (device would be child of pon)
+> +		 */
+> +		pwrkey->regmap = dev_get_regmap(parent->parent, NULL);
+> +		if (!pwrkey->regmap) {
+> +			dev_err(&pdev->dev, "failed to locate regmap\n");
+> +			return -ENODEV;
+> +		}
+>  	}
+>  
+>  	pwrkey->irq = platform_get_irq(pdev, 0);
+> @@ -190,8 +209,13 @@ static int pm8941_pwrkey_probe(struct platform_device *pdev)
+>  
+>  	error = of_property_read_u32(pdev->dev.of_node, "reg",
+>  				     &pwrkey->baseaddr);
+> -	if (error)
+> -		return error;
+> +	if (error) {
 
-> > @@ -190,8 +209,13 @@ static int pm8941_pwrkey_probe(struct platform_device *pdev)
-> >  
-> >  	error = of_property_read_u32(pdev->dev.of_node, "reg",
-> >  				     &pwrkey->baseaddr);
-> > -	if (error)
-> > -		return error;
-> > +	if (error) {
-> > +		/* check if parent has reg before bailing */
-> > +		error = of_property_read_u32(pdev->dev.parent->of_node,
-> > +					     "reg", &pwrkey->baseaddr);
-> > +		if (error)
-> > +			return error;
-> 
-> I do not want us blindly look up into parent for individual properties.
-> We need to decide early on if we are dealing with subnode or older
-> binding and stick to it.
+I agree with Dmitry's comment here.
 
-okay will do.
+The order of these operations are not significant, so you can easily
+move this into above "fallback" and read "reg" from the dev itself in
+and else block.
 
-> >  	error = regmap_read(pwrkey->regmap, pwrkey->baseaddr + PON_REV2,
-> >  			    &pwrkey->revision);
-> > @@ -200,13 +224,20 @@ static int pm8941_pwrkey_probe(struct platform_device *pdev)
-> >  		return error;
-> >  	}
-> >  
-> > +	error = of_property_read_u32(pdev->dev.of_node, "linux,code",
-> > +				     &pwrkey->code);
-> > +	if (error) {
-> > +		dev_err(&pdev->dev, "no linux,code assuming power%d\n", error);
-> 
-> This is not an error. dev_dbg or dev_info at most.
+> +		/* check if parent has reg before bailing */
+> +		error = of_property_read_u32(pdev->dev.parent->of_node,
+> +					     "reg", &pwrkey->baseaddr);
+> +		if (error)
+> +			return error;
+> +	}
 
-okay will change
--- 
-~Vinod
+Apart from this the patch looks good.
+
+Regards,
+Bjorn
