@@ -1,66 +1,73 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v4] MAINTAINERS: Add file patterns for dsa device tree bindings
-Date: Fri, 22 Jun 2018 12:08:13 +0200
-Message-ID: <20180622100813.29122-1-geert@linux-m68k.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 0/3] K2G: mmc: Update mmc dt node to use sdhci-omap
+Date: Fri, 22 Jun 2018 15:42:15 +0530
+Message-ID: <8b13f8df-c6bd-cdca-c339-8cd3cda04e89@ti.com>
+References: <20180425132746.13911-1-kishon@ti.com>
+ <fc5f3498-62fd-15d3-90df-206c51649cb4@oracle.com>
+ <0481f6f0-539e-4809-63cd-1134367a7b78@ti.com>
+ <de0bd46a-21d4-14de-9695-9b0f3996dacb@oracle.com>
+ <e4b70bab-d3bd-7071-aefa-2934c20a3e30@ti.com>
+ <d7ec2aed-028f-4d0d-fc31-ecc798b0ef14@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d7ec2aed-028f-4d0d-fc31-ecc798b0ef14@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
+To: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-Submitters of device tree binding documentation may forget to CC
-the subsystem maintainer if this is missing.
+Hi Santosh,
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
-v3:
-  - Update for next-20180622,
+On Friday 04 May 2018 09:16 PM, santosh.shilimkar@oracle.com wrote:
+> On 5/4/18 1:06 AM, Kishon Vijay Abraham I wrote:
+>> Hi Santosh,
+>>
+>> On Friday 04 May 2018 12:22 AM, santosh.shilimkar@oracle.com wrote:
+>>> On 5/3/18 4:57 AM, Kishon Vijay Abraham I wrote:
+>>>> Hi Santosh,
+>>>>
+>>>> On Wednesday 25 April 2018 11:10 PM, Santosh Shilimkar wrote:
+>>>>> On 4/25/2018 6:27 AM, Kishon Vijay Abraham I wrote:
+>>>>>> Update mmc dt node to use sdhci-omap binding instead of omap_hsmmc
+>>>>>> binding.
+>>>>>>
+>>>>>> I've also updated keystone_defconfig to enable CONFIG_MMC_SDHCI_OMAP.
+>>>>>> Everyone who use a custom .config should also enable
+>>>>>> CONFIG_MMC_SDHCI_OMAP for MMC to work.
+>>>>>>
+>>>>>> This series should be merged only after [1]
+>>>>>> [1] -> https://marc.info/?l=linux-kernel&m=152465820531802&w=2
+>>>>>>
+>>>>> Keep me posted once the dependency gets merged.
+>>>>
+>>>> Ulf has merged the sdhci part and has shared an immutable branch
+>>>>
+>>>> git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git sdhci_omap
+>>>> with his signed tag sdhci-omap-v4.17-rc3.
+>>>>
+>>>> Can you use it as a base for merging this series?
+>>>>
+>>> How about I apply only DTS patches and exlude config file update ?
+>>> You can send the config patch after the merge window. Are the DTS
+>>> changes also going to break anything without basing of this sdhci
+>>> branch ?
+>>
+>> Yes, the bindings has changed for sdhci-omap.
+>> It should also be fine if this entire series can be merged during the 4.18 -rc
+>> cycle since the dependent patches would have been already merged then.
+>>
+> I see. In that, lets wait for 4.18-rcx for all the dependencies to make
+> it. This series won't qualify for fixes but at least we can get that
+> into next early in the cycle so that it becomes usable.
+> 
+> Thanks for followup Kishon !!
 
-v2.1:
-  - Moved pattern to "NETWORKING [DSA]",
+All the dependent patches has got merged. This series applies on latest linus
+-master as is without any conflicts. I've also verified MMC works with this series.
 
-v2:
-  - Rebased on top of commit 0d3cd4b6b49865e8 ("net: dsa: mv88e6xxx:
-    move driver in its own folder").
+This should be good to get merged. Let me know if you want me to repost the series.
 
-Impact on "scripts/get_maintainer.pl -f Documentation/devicetree/bindings/net/dsa/":
-
--"David S. Miller" <davem@davemloft.net> (odd fixer:NETWORKING DRIVERS,commit_signer:6/8=75%)
--Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS,commit_signer:3/8=38%,authored:1/8=12%)
-+Andrew Lunn <andrew@lunn.ch> (maintainer:NETWORKING [DSA])
-+Vivien Didelot <vivien.didelot@savoirfairelinux.com> (maintainer:NETWORKING [DSA])
-+Florian Fainelli <f.fainelli@gmail.com> (maintainer:NETWORKING [DSA])
-+"David S. Miller" <davem@davemloft.net> (odd fixer:NETWORKING DRIVERS)
-+Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
- Mark Rutland <mark.rutland@arm.com> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
--Andrew Lunn <andrew@lunn.ch> (commit_signer:3/8=38%)
--Florian Fainelli <f.fainelli@gmail.com> (commit_signer:3/8=38%)
--Brandon Streiff <brandon.streiff@ni.com> (commit_signer:1/8=12%)
--Egil Hjelmeland <privat@egil-hjelmeland.no> (authored:1/8=12%)
--Fabio Estevam <fabio.estevam@nxp.com> (authored:1/8=12%)
--"Damien Thébault" <damien.thebault@vitec.com> (authored:1/8=12%)
--"Michal Vokáč" <vokac.m@gmail.com> (authored:1/8=12%)
- netdev@vger.kernel.org (open list:NETWORKING DRIVERS)
- devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
- linux-kernel@vger.kernel.org (open list)
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e5db502df5afdd8b..07a4927b1e7aada4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9884,6 +9884,7 @@ M:	Andrew Lunn <andrew@lunn.ch>
- M:	Vivien Didelot <vivien.didelot@savoirfairelinux.com>
- M:	Florian Fainelli <f.fainelli@gmail.com>
- S:	Maintained
-+F:	Documentation/devicetree/bindings/net/dsa/
- F:	net/dsa/
- F:	include/net/dsa.h
- F:	include/linux/dsa/
--- 
-2.17.1
+Thanks
+Kishon
