@@ -1,399 +1,393 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH V2 2/4] dt-bindings: arm: fsl: add mu binding doc
-Date: Fri, 22 Jun 2018 08:48:52 +0200
-Message-ID: <20180622064852.hzlvgptffrer5udt@pengutronix.de>
-References: <1529239789-26849-1-git-send-email-aisheng.dong@nxp.com>
- <1529239789-26849-3-git-send-email-aisheng.dong@nxp.com>
- <20180620194310.GA28983@rob-hp-laptop>
- <20180621074641.sqqvudxebt3hd43m@pengutronix.de>
- <AM0PR04MB4211B39D5AFAB95FC2A91F9980760@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <20180621180857.ozl7n7fcretg6rwi@pengutronix.de>
- <AM0PR04MB42118D2D4B426CF1000964BF80750@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <20180622045904.pbklt4mjo54dknxy@pengutronix.de>
- <AM0PR04MB4211DDFF003C572F8B439C8C80750@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [RFC PATCH 1/2] spi: Add QuadSPI driver for Atmel SAMA5D2
+Date: Fri, 22 Jun 2018 09:39:05 +0200
+Message-ID: <20180622093905.62a3b936@bbrezillon>
+References: <20180618162124.21749-1-bugalski.piotr@gmail.com>
+        <20180618162124.21749-2-bugalski.piotr@gmail.com>
+        <20180621233321.0f25f572@bbrezillon>
+        <alpine.DEB.2.20.1806220719190.21824@carbonite>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0810991667328056628=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM0PR04MB4211DDFF003C572F8B439C8C80750@AM0PR04MB4211.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.20.1806220719190.21824@carbonite>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Piotr Bugalski <bugalski.piotr@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Cyrille Pitchen <cyrille.pitchen@microchip.com>, Tudor Ambarus <tudor.ambarus@microchip.com>, Piotr Bugalski <pbu@cryptera.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Piotr,
 
---===============0810991667328056628==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hkfcfbptz6hmc3ua"
-Content-Disposition: inline
+On Fri, 22 Jun 2018 07:57:10 +0200 (CEST)
+Piotr Bugalski <bugalski.piotr@gmail.com> wrote:
 
+> Hi Boris,
+> 
+> I'm a bit allergic to personal preferences in coding style,
 
---hkfcfbptz6hmc3ua
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm just pointing things that are common kernel coding style practices.
+You might not like coding style rules of a particular project, but when
+you contribute to this project you should do your best to follow those
+rules and keep the coding style consistent.
 
-On Fri, Jun 22, 2018 at 05:59:30AM +0000, A.s. Dong wrote:
-> Hi Oleksij,
->=20
-> > -----Original Message-----
-> > From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
-> > Sent: Friday, June 22, 2018 12:59 PM
-> > To: A.s. Dong <aisheng.dong@nxp.com>
-> > Cc: Sascha Hauer <s.hauer@pengutronix.de>; Rob Herring
-> > <robh@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
-> > devicetree@vger.kernel.org; dongas86@gmail.com; dl-linux-imx <linux-
-> > imx@nxp.com>; kernel@pengutronix.de; Fabio Estevam
-> > <fabio.estevam@nxp.com>; shawnguo@kernel.org; linux-arm-
-> > kernel@lists.infradead.org
-> > Subject: Re: [PATCH V2 2/4] dt-bindings: arm: fsl: add mu binding doc
-> >=20
-> > On Fri, Jun 22, 2018 at 03:31:11AM +0000, A.s. Dong wrote:
-> > > > -----Original Message-----
-> > > > From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
-> > > > Sent: Friday, June 22, 2018 2:09 AM
-> > > > To: A.s. Dong <aisheng.dong@nxp.com>
-> > > > Cc: Sascha Hauer <s.hauer@pengutronix.de>; Rob Herring
-> > > > <robh@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
-> > > > devicetree@vger.kernel.org; dongas86@gmail.com; dl-linux-imx <linux-
-> > > > imx@nxp.com>; kernel@pengutronix.de; Fabio Estevam
-> > > > <fabio.estevam@nxp.com>; shawnguo@kernel.org; linux-arm-
-> > > > kernel@lists.infradead.org
-> > > > Subject: Re: [PATCH V2 2/4] dt-bindings: arm: fsl: add mu binding
-> > > > doc
-> > > >
-> > > > Hi,
-> > > >
-> > > > On Thu, Jun 21, 2018 at 05:11:33PM +0000, A.s. Dong wrote:
-> > > > > Hi Sascha,
-> > > > > > On Wed, Jun 20, 2018 at 01:43:10PM -0600, Rob Herring wrote:
-> > > > > > > On Sun, Jun 17, 2018 at 08:49:47PM +0800, Dong Aisheng wrote:
-> > > > > > > > The Messaging Unit module enables two processors within the
-> > > > > > > > SoC to communicate and coordinate by passing messages (e.g.
-> > > > > > > > data, status and control) through the MU interface.
-> > > > > > > >
-> > > > > > > > ---
-> > > > > > > > v1->v2:
-> > > > > > > >  * typo fixes
-> > > > > > > >  * remove status property
-> > > > > > > >  * remove imx6&7 compatible string which may be added later=
- for
-> > > > > > > >    the generic mailbox binding
-> > > > > > > >
-> > > > > > > > Note: Because MU used by SCU is not implemented as a mailbox
-> > > > > > > > driver, Instead, they're provided in library calls to gain
-> > > > > > > > higher
-> > > > performance.
-> > > > > > >
-> > > > > > > Using a binding doesn't mean you have to use an OS's subsyste=
-m.
-> > > > > > >
-> > > > > > > What needs higher performance? What's the performance
-> > difference?
-> > > > > > Why
-> > > > > > > can't the mailbox framework be improved?
-> > > > > >
-> > > > > > From what I see the performance is improved by polling the
-> > > > > > interrupt registers rather than using interrupts.
-> > > > > > I see no reason though why this can't be implemented with the
-> > > > > > mailbox framework as is.
-> > > > > >
-> > > > >
-> > > > > I thought you've agreed to not write generic MU(mailbox) driver f=
-or
-> > SCU.
-> > > > > https://www.spinics.net/lists/arm-kernel/msg650217.html
-> > > > > But seems it's still not quite certain...
-> > > > >
-> > > > > I'd like to explain some more.
-> > > > >
-> > > > > 1) the interrupt mechanism is not quite suitable for SCU firmware
-> > > > > protocol as the transfer size would be more than 4 words and the
-> > > > > response data size is also undetermined (it's set by SCU firmware
-> > > > > side
-> > > > during a response).
-> > > > > So polling mode may be the best way to handle this as MU message
-> > > > > handling usually is quite fast in a few microseconds.
-> > > > >
-> > > > > 2) It's true that Mailbox framework is well designed and powerful.
-> > > > > But it's not quite suitable for SCU MU as we don't need to use the
-> > > > > most bits of it. Mailbox seems like to be more suitable for a
-> > > > > generic MU mailbox driver used by various clients/servers.  But
-> > > > > SCU MU are quite specific to SCU protocol and can't be used by
-> > > > > other clients (MU
-> > > > > 0~4 is fixed for SCU communication in MX8 HW design).
-> > > > > Even we write a MU Mailbox driver for SCU MU, it's still not a
-> > > > > general one and can't be used by others (e.g. communication with =
-M4).
-> > > > > So I'd believe the current library way is still the best approach
-> > > > > for SCU MU Using. But I'm also okay for another generic MU drivers
-> > > > > for other common communications between A core and M4 side.
-> > > > >
-> > > > > 3) We actually have tried the MU(Mailbox) internally, it increased
-> > > > > a lot complexity comparing to the current library way and got a
-> > > > > booting time regression issue due to extra delays introduced in
-> > > > > handling SCU protocol in mailbox way.
-> > > > >
-> > > > > And finally a nature question to us is:
-> > > > > What the benefit we can get for SCU MU using a mailbox way?
-> > > > >
-> > > > > If we can't find benefits but introduce more complexities then why
-> > > > > we would do that way?
-> > > >
-> > > > Looks like my response to same topic within my patch set is lost, so
-> > > > I repost it
-> > > > here:
-> > > >
-> > > > ok.. let's take some of IMX8 SCU driver code to see if there any
-> > difference:
-> > > >
-> > > > ..this part of the code is blocking write procedure for one
-> > > > channeler (register or what ever name you prefer) per write.. corre=
-ct?
-> > > >
-> > > > +void mu_send_msg(struct mu_priv *priv, uint32_t index, uint32_t ms=
-g)
-> > {
-> > > > +	uint32_t mask =3D MU_SR_TE0_MASK >> index;
-> > > > +
-> > > > +	/* Wait TX register to be empty. */
-> > > > +	while (!(readl_relaxed(priv->base + MU_ASR) & mask))
-> > > > +		;
-> > > > +	writel_relaxed(msg, priv->base + MU_ATR0  + (index * 4)); }
-> > > > +EXPORT_SYMBOL_GPL(mu_send_msg);
-> > > >
-> > > > According to documentation it is recommended to use only one status
-> > > > bit for the last register to use MU as one big 4words sized pipe.
-> > > > But, there is no way you can write to all 4 registers without
-> > > > checking status for each of this register, because your protocol has
-> > > > dynamic message size. So you are forced to use your one channel as 4
-> > separate channels.
-> > > > Write it part of the message separately and allow your firmware read
-> > > > 1 word to understand how to behave on the rest of the message.
-> > > >
-> > > > +static void sc_ipc_write(struct sc_ipc *sc_ipc, void *data) {
-> > > > +	sc_rpc_msg_t *msg =3D (sc_rpc_msg_t *) data;
-> > > > +	uint8_t count =3D 0;
-> > > > +
-> > > > +	/* Check size */
-> > > > +	if (msg->size > SC_RPC_MAX_MSG)
-> > > > +		return;
-> > > > +
-> > > > +	/* Write first word */
-> > > > +	mu_send_msg(sc_ipc->mu_base, 0, *((uint32_t *) msg));
-> > > > +	count++;
-> > > >
-> > > > .. in this loop you are writing to one channel/register per loop. If
-> > > > the communicate will stall for some reason, the linux system will
-> > > > just freeze here without any timeout or error message.. no idea how
-> > about the opposite site.
-> > > >
-> > > > +	/* Write remaining words */
-> > > > +	while (count < msg->size) {
-> > > > +		mu_send_msg(sc_ipc->mu_base, count % MU_TR_COUNT,
-> > > > +			    msg->DATA.u32[count - 1]);
-> > > > +		count++;
-> > > > +	}
-> > > > +}
-> > > >
-> > > >
-> > > > ... and here is a proof that sc_ipc_write will do in some cases 5
-> > > > rounds
-> > > > (5 * 4 bytes =3D 20 bytes single message) with probable busy waiting
-> > > > for each channel
-> > > >
-> > > > +sc_err_t sc_misc_seco_image_load(sc_ipc_t ipc, uint32_t addr_src,
-> > > > +				 uint32_t addr_dst, uint32_t len, bool fw) {
-> > > > +	sc_rpc_msg_t msg;
-> > > > +	uint8_t result;
-> > > > +
-> > > > +	RPC_VER(&msg) =3D SC_RPC_VERSION;
-> > > > +	RPC_SVC(&msg) =3D (uint8_t)SC_RPC_SVC_MISC;
-> > > > +	RPC_FUNC(&msg) =3D (uint8_t)MISC_FUNC_SECO_IMAGE_LOAD;
-> > > > +	RPC_U32(&msg, 0) =3D addr_src;
-> > > > +	RPC_U32(&msg, 4) =3D addr_dst;
-> > > > +	RPC_U32(&msg, 8) =3D len;
-> > > > +	RPC_U8(&msg, 12) =3D (uint8_t)fw;
-> > > > +	RPC_SIZE(&msg) =3D 5;
-> > > > +
-> > > > +	sc_call_rpc(ipc, &msg, false);
-> > > > +
-> > > > +	result =3D RPC_R8(&msg);
-> > > > +	return (sc_err_t)result;
-> > > > +}
-> > > > +
-> > > >
-> > > > So, the same code with mailbox framework will be some thing like th=
-is:
-> > > > 1. request all 4 channels in the probe. ignore completion callback
-> > > > and set proper timeout.
-> > > >
-> > >
-> > > That looks a bit strange. As I said in another email, MU physical does
-> > > not have multi Channels (here you mean are virtual channels).  And one
-> > > whole MU instance is Exclusively used by SCU, why we need abstract
-> > > them into 4 channels to use separately with extra unnecessary resource
-> > hold and code path executed.
-> >=20
-> > OK, so this MU should configured to use all 4 registers as one channel.
-> > I have nothing against it to do in generic driver.
-> >=20
-> > > > 2. keep your old code by replacing this part.
-> > > > 	/* Write remaining words */
-> > > > 	while (count < msg->size) {
-> > > > 		mbox_send_message(sc_ipc->mbox_chan[count %
-> > MU_TR_COUNT],
-> > > > msg->DATA.u32[count - 1]);
-> > > > 		count++;
-> > > > 	}
-> > > >
-> > > > The advantage of this variant. If SCU firmware will stall, the linux
-> > > > will be able to notify about it without blocking complete system.
-> > > >
-> > >
-> > > This part of code has been used for a long time and we've never met
-> > > the stall Issue which means SCU firmware guarantee it well. But I
-> > > agree a timeout mechanism Is better. However,  if only for this
-> > > reason, we can simply add a timeout mechanism in MU library function
-> > > as well, but still is far from a strong enough reason to switch to a =
-more
-> > complexed mailbox one.
-> >=20
-> > At this point a have absolutely zero tolerance. At the end I was one on=
- poor
-> > devs hunting similar kind of stalls.
-> > Believe me, what can theoretically with 1% probability happen in the la=
-b, will
-> > end with days/months of bug hunting work and thousands of field returns.
-> >=20
->=20
-> Yeah, so I think a timeout mechanism is worthy to add.
->=20
-> > > > Can you please provide (if possible) your old mailbox based
-> > implementation.
-> > > > I'm curious to see why it is slow.
-> > >
-> > > In our implementation:
-> > > 1) One channel per MU
-> > > 2) Tx using the same way to send msg as sc_ipc_write() in polling mode
-> > > 3) Rx enables the first word interrupt and polling for the rest of
-> > > them in a hrtimer.
-> > >
-> > > The possible extra cost comparing to simple polling way:
-> > > 1) Extra unnecessary code execution path of mailbox which is not used
-> > > by SCU MU
-> > > 2) Interrupt latency
-> > > 3) Extra memory copy handling RX message separately.
-> > > 4) Extra schedule of hrtimer polling
-> > >
-> > > Some of them probably could be optimized. However, besides the slow
-> > > problem, the extra unnecessary complexity and can't be generic
-> > > (specific to SCU) are also important ones.
-> > >
-> > > And the MU general purpose interrupt feature and general purpose flags
-> > > feature may also not supported by mailbox well.
-> >=20
-> > Ok, I give up.
-> > Can we at least try to provide one device tree binding documentation for
-> > that?
->=20
-> I will update the binding doc to use mailbox way as suggested by Rob.
-> But I still need to change mbox-cells to allow 0 which actually already e=
-xist
-> In kernel. So we may have too options for MU binding for users.
-> For SCU MU, mbox-cells =3D <0>
-> For General MU, mbox-cells =3D <1>
+> anyway
+> thank you for comments and some important findings.
+> 
 
-ok. cool.
+[...]
 
-> > At the end, it is one and the same HW IP block spread in one SoC (or
-> > different SoCs) an be used in different way. How exactly it will be use=
-d is the
-> > choice of the developer/customer/user...
-> > even if it will be described withing mailbox section dos not mean you a=
-re
-> > forced to use mailbox framework.
-> >=20
-> > Lets imagine worst case scenario and all of MU on i.MX8 are used by
-> > different drivers. In my mailbox binding I suggest to use <vendor>,<soc=
->-
-> > mu-<mu side>. On i.MX7 there is only one MU, so it looks like "fsl,imx7=
-s-mu-
-> > a" and "fsl,imx7s-mu-b". i.MX8 has multiple MU so it should be enumerat=
-ed.
-> > Probably it will look like: "fsl,imx8x-mu0-a".
-> > Do it make sense for you? Can we find and agreement here? :)
-> >=20
->=20
-> IMHO one possible concern may be that results in creating two much compat=
-ibles
-> strings. For example, each SoC have two (fsl, <soc>-mu-<a or b>).
-> Now with MU supported SoCs, we have mx6sx, mx7ulp, Mx7d, mx8qm,
-> mx8x, mx8mq and etc...
->=20
-> My question is that if it's really worthy to create a separate side b com=
-patible
-> string instread of distinguish it by a property?
->=20
-> And for general purpose MUs to communicate with M4. Both side can be used=
- by
-> either A core and M core. If we're doing this way, once users wants A cor=
-e to access
-> B side, users need to change the compatible string, that seems more like =
-an unusual
-> way compared to changing properties.
->=20
-> How do you think?
+> >> +/*
+> >> + * Atmel SAMA5D2 QuadSPI driver.
+> >> + *
+> >> + * Copyright (C) 2018 Cryptera A/S  
+> >
+> > A non-negligible portion of this code has been copied from the existing
+> > driver. Please keep the existing copyright (you can still add Cryptera's
+> > one).
+> >  
+> 
+> Technically this driver were written from scratch, with spi-fsl-qspi
+> as example of new interface. Hence the name and code structure.
+> But it's the same peripheral as Atmel's driver uses so code looks
+> similar. I can unify the code to make comparsion even simpler and
+> then update copyright.
 
-My current use case is Linux with DT running on all CPUs of one SoC. On i.M=
-X7
-there is only one MU and I use same mailbox driver on both sides. In
-this case it is enough to have same compatible with extra parameter to
-see the difference between A and B side.=20
-Just imagine, you'll use DT in your firmware on i.MX8. Will you use same
-driver on both sides of MU? If yes, I'm OK to exclude A and B from
-compatible.
+Hm, ok. Some constructs really looked like they were copied
+from the old driver, hence my comment. I'll let Nicolas give his
+opinion on this aspect.
 
---=20
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> >> + */
+> >> +
+> >> +#include <linux/kernel.h>
+> >> +#include <linux/module.h>
+> >> +#include <linux/platform_device.h>
+> >> +#include <linux/of_device.h>
+> >> +#include <linux/clk.h>
+> >> +#include <linux/interrupt.h>
+> >> +#include <linux/io.h>
+> >> +#include <linux/spi/spi-mem.h>
+> >> +#include <linux/delay.h>
+> >> +
+> >> +#define QSPI_CR         0x0000
+> >> +#define QSPI_MR         0x0004
+> >> +#define QSPI_RDR        0x0008
+> >> +#define QSPI_TDR        0x000c
+> >> +#define QSPI_SR         0x0010
+> >> +#define QSPI_IER        0x0014
+> >> +#define QSPI_IDR        0x0018
+> >> +#define QSPI_IMR        0x001c
+> >> +#define QSPI_SCR        0x0020
+> >> +
+> >> +#define QSPI_IAR        0x0030
+> >> +#define QSPI_ICR        0x0034
+> >> +#define QSPI_IFR        0x0038
+> >> +
+> >> +#define QSPI_WPMR       0x00e4
+> >> +#define QSPI_WPSR       0x00e8
+> >> +
+> >> +/* Bitfields in QSPI_CR (Control Register) */  
+> >
+> > I personally prefer when reg offsets are declared next to the reg fields.  
+> 
+> I don't. But it may not be good place to discuss personal preferences.
+> I can change it.
 
---hkfcfbptz6hmc3ua
-Content-Type: application/pgp-signature; name="signature.asc"
+This one is actually not defined in the coding style rules, hence the
+"I personally prefer". The reasoning behind this approach is that it's
+easier for readers to identify the fields of a specific reg when they're
+defined next to each other.
 
------BEGIN PGP SIGNATURE-----
+> 
+> >  
+> >> +#define QSPI_CR_QSPIEN                  BIT(0)
+> >> +#define QSPI_CR_QSPIDIS                 BIT(1)
+> >> +#define QSPI_CR_SWRST                   BIT(7)
+> >> +#define QSPI_CR_LASTXFER                BIT(24)
+> >> +
+> >> +/* Bitfields in QSPI_ICR (Instruction Code Register) */
+> >> +#define QSPI_ICR_INST_MASK              GENMASK(7, 0)
+> >> +#define QSPI_ICR_INST(inst)             (((inst) << 0) & QSPI_ICR_INST_MASK)
+> >> +#define QSPI_ICR_OPT_MASK               GENMASK(23, 16)
+> >> +#define QSPI_ICR_OPT(opt)               (((opt) << 16) & QSPI_ICR_OPT_MASK)
+> >> +
+> >> +/* Bitfields in QSPI_MR (Mode Register) */
+> >> +#define QSPI_MR_SMM                     BIT(0)
+> >> +#define QSPI_MR_LLB                     BIT(1)
+> >> +#define QSPI_MR_WDRBT                   BIT(2)
+> >> +#define QSPI_MR_SMRM                    BIT(3)
+> >> +#define QSPI_MR_CSMODE_MASK             GENMASK(5, 4)
+> >> +#define QSPI_MR_CSMODE_NOT_RELOADED     (0 << 4)
+> >> +#define QSPI_MR_CSMODE_LASTXFER         (1 << 4)
+> >> +#define QSPI_MR_CSMODE_SYSTEMATICALLY   (2 << 4)
+> >> +#define QSPI_MR_NBBITS_MASK             GENMASK(11, 8)
+> >> +#define QSPI_MR_NBBITS(n)               ((((n) - 8) << 8) & QSPI_MR_NBBITS_MASK)
+> >> +#define QSPI_MR_DLYBCT_MASK             GENMASK(23, 16)
+> >> +#define QSPI_MR_DLYBCT(n)               (((n) << 16) & QSPI_MR_DLYBCT_MASK)
+> >> +#define QSPI_MR_DLYCS_MASK              GENMASK(31, 24)
+> >> +#define QSPI_MR_DLYCS(n)                (((n) << 24) & QSPI_MR_DLYCS_MASK)
+> >> +
+> >> +/* Bitfields in QSPI_IFR (Instruction Frame Register) */
+> >> +#define QSPI_IFR_WIDTH_MASK             GENMASK(2, 0)
+> >> +#define QSPI_IFR_WIDTH_SINGLE_BIT_SPI   (0 << 0)
+> >> +#define QSPI_IFR_WIDTH_DUAL_OUTPUT      (1 << 0)
+> >> +#define QSPI_IFR_WIDTH_QUAD_OUTPUT      (2 << 0)
+> >> +#define QSPI_IFR_WIDTH_DUAL_IO          (3 << 0)
+> >> +#define QSPI_IFR_WIDTH_QUAD_IO          (4 << 0)
+> >> +#define QSPI_IFR_WIDTH_DUAL_CMD         (5 << 0)
+> >> +#define QSPI_IFR_WIDTH_QUAD_CMD         (6 << 0)
+> >> +#define QSPI_IFR_INSTEN                 BIT(4)
+> >> +#define QSPI_IFR_ADDREN                 BIT(5)
+> >> +#define QSPI_IFR_OPTEN                  BIT(6)
+> >> +#define QSPI_IFR_DATAEN                 BIT(7)
+> >> +#define QSPI_IFR_OPTL_MASK              GENMASK(9, 8)
+> >> +#define QSPI_IFR_OPTL_1BIT              (0 << 8)
+> >> +#define QSPI_IFR_OPTL_2BIT              (1 << 8)
+> >> +#define QSPI_IFR_OPTL_4BIT              (2 << 8)
+> >> +#define QSPI_IFR_OPTL_8BIT              (3 << 8)
+> >> +#define QSPI_IFR_ADDRL                  BIT(10)
+> >> +#define QSPI_IFR_TFRTYP_MASK            GENMASK(13, 12)
+> >> +#define QSPI_IFR_TFRTYP_TRSFR_READ      (0 << 12)
+> >> +#define QSPI_IFR_TFRTYP_TRSFR_READ_MEM  (1 << 12)
+> >> +#define QSPI_IFR_TFRTYP_TRSFR_WRITE     (2 << 12)
+> >> +#define QSPI_IFR_TFRTYP_TRSFR_WRITE_MEM (3 << 13)
+> >> +#define QSPI_IFR_CRM                    BIT(14)
+> >> +#define QSPI_IFR_NBDUM_MASK             GENMASK(20, 16)
+> >> +#define QSPI_IFR_NBDUM(n)               (((n) << 16) & QSPI_IFR_NBDUM_MASK)
+> >> +
+> >> +/* Bitfields in QSPI_SR/QSPI_IER/QSPI_IDR/QSPI_IMR  */
+> >> +#define QSPI_SR_RDRF                    BIT(0)
+> >> +#define QSPI_SR_TDRE                    BIT(1)
+> >> +#define QSPI_SR_TXEMPTY                 BIT(2)
+> >> +#define QSPI_SR_OVRES                   BIT(3)
+> >> +#define QSPI_SR_CSR                     BIT(8)
+> >> +#define QSPI_SR_CSS                     BIT(9)
+> >> +#define QSPI_SR_INSTRE                  BIT(10)
+> >> +#define QSPI_SR_QSPIENS                 BIT(24)
+> >> +
+> >> +#define QSPI_SR_CMD_COMPLETED           (QSPI_SR_INSTRE | QSPI_SR_CSR)  
+> >
+> > Do you really to wait for both INSTRE and CSR to consider the command
+> > as complete?
+> >  
+> 
+> This part were really copied from Atmel driver. I wasn't sure so I
+> used tested solution.
 
-iQEzBAABCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAlssm9EACgkQdQOiSHVI
-77S3aAf9FCOerXOPXE13tKJeLZqE58ZNCsciSyCejEmzXaW29gPLyO/MPqf9IOaO
-QK43HDykqtznEi/FQVRwkW6CykENNMTIcwar9JM8AssjMHd7hPsVmgshczFjTpWQ
-BEuJzrWwYzou2fGb0NXZUNa7RhY9rv84qWT5ubbdX6KydoYNpKYizjkO+FTItEed
-YsUZ3cVUMO/D5GuafucIoFQ7ewbj+yWrkTgEubNS+D2gdSzzXAJBNQxUreKMQeuI
-PgTCPz5ZoxIGQTz0HXxMw4PIQCDRi5P7imetKegD/Utld/vmDgM847jKASfm9erF
-GejmlpVkBILkQ1P1bsuGhC7gKZhZeQ==
-=0E3j
------END PGP SIGNATURE-----
+Okay. I guess that's a question for Cyrille and/or Tudor then.
 
---hkfcfbptz6hmc3ua--
+> >> +
+> >> +static inline u32 qspi_readl(struct atmel_qspi *aq, u32 reg)
+> >> +{
+> >> +	return readl_relaxed(aq->iobase + reg);
+> >> +}
+> >> +
+> >> +static inline void qspi_writel(struct atmel_qspi *aq, u32 reg, u32 value)
+> >> +{
+> >> +	writel_relaxed(value, aq->iobase + reg);
+> >> +}  
+> >
+> > Please drop those wrappers and use readl/write_relaxed() directly.  
+> 
+> I like these wrappers, the same pattern were used in spi-fsl-qspi and
+> atmel-quadspi drivers. Functions are inlined so why to remove nice
+> looking code?
+
+It's not really about code optimization (gcc is good at determining
+when to inline simple functions). Kernel devs like to know when
+_relaxed() versions of IO accessors are used, and by providing those
+wrappers you kind of hide that fact.
+
+> 
+> >  
+> >> +
+> >> +static int atmel_qspi_init(struct atmel_qspi *aq)
+> >> +{
+> >> +	unsigned long rate;
+> >> +	u32 scbr;
+> >> +
+> >> +	qspi_writel(aq, QSPI_WPMR, QSPI_WPMR_WPKEY_PASSWD);
+> >> +
+> >> +	/* software reset */
+> >> +	qspi_writel(aq, QSPI_CR, QSPI_CR_SWRST);
+> >> +
+> >> +	/* set QSPI mode */
+> >> +	qspi_writel(aq, QSPI_MR, QSPI_MR_SMM);  
+> >
+> > It's already done in ->exec_op(), I think you can remove it here.
+> >  
+> 
+> I prefer initialize peripheral before first use. Single register write
+> is not big effort.
+
+I'm fine with that, but then, why should we initialize the IP in SMM
+mode? Can't you write 0 to this _MR reg?
+
+> 
+> >> +
+> >> +	rate = clk_get_rate(aq->clk);
+> >> +	if (!rate)
+> >> +		return -EINVAL;
+> >> +
+> >> +	/* set baudrate */
+> >> +	scbr = DIV_ROUND_UP(rate, aq->clk_rate);
+> >> +	if (scbr > 0)
+> >> +		scbr--;  
+> >
+> > Add a blank line here.
+> >  
+> >> +	qspi_writel(aq, QSPI_SCR, QSPI_SCR_SCBR(scbr));  
+> >
+> > The baudrate setting should be done in an spi_controller->setup() hook,
+> > and the expected rate is available in spi_device->max_speed_hz.
+> >  
+> 
+> Ok, I'll change it.
+> 
+> >> +
+> >> +	/* enable qspi controller */
+> >> +	qspi_writel(aq, QSPI_CR, QSPI_CR_QSPIEN);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int atmel_qspi_adjust_op_size(struct spi_mem *mem, struct spi_mem_op *op)
+> >> +{
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static inline bool is_compatible(const struct spi_mem_op *op,
+> >> +				 const struct qspi_mode *mode)
+> >> +{
+> >> +	if (op->cmd.buswidth != mode->cmd_buswidth)
+> >> +		return false;  
+> >
+> > Add a blank line here  
+> 
+> Looks like personal preferences again... I hate too personalized code.
+
+It's mainly about being able to quickly identify different if() blocks.
+
+> Maybe I'll just merge these three if-s into one horrible large.
+> 
+> >  
+> >> +	if (op->addr.nbytes && op->addr.buswidth != mode->addr_buswidth)
+> >> +		return false;  
+> >
+> > here
+> >  
+> >> +	if (op->data.nbytes && op->data.buswidth != mode->data_buswidth)
+> >> +		return false;  
+> >
+> > and here.
+> >  
+> >> +	return true;
 
 
---===============0810991667328056628==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> >> +
+> >> +static bool atmel_qspi_supports_op(struct spi_mem *mem,
+> >> +				   const struct spi_mem_op *op)
+> >> +{
+> >> +	if (find_mode(op) < 0)
+> >> +		return false;
+> >> +
+> >> +	// special case not supported by hardware  
+> >
+> > We try to avoid using C++ style comments in the kernel.
+> >  
+> 
+> Sure, my mistake.
+> 
+> >> +	if ((op->addr.nbytes == 2) && (op->cmd.buswidth != op->addr.buswidth) &&  
+> >
+> > You don't need those extra parenthesis around each test.
+> >  
+> 
+> It's just convention. Some people prefer to have extra bracket to make
+> code easier to read, while other think opposite.
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Except it's not even consistent in this file, see the
 
---===============0810991667328056628==--
+	if (op->addr.nbytes && op->addr.buswidth != mode->addr_buswidth)
+
+test above.
+
+> I don't really know
+> which option is better.
+
+We try to avoid those parens when doing simple '2 operands' operations
+
+	if (a == b && c == d)
+
+but add them in case one of the operand results from another operation
+
+	if (a == (b * c) && c == d)
+
+> >> +
+> >> +	qspi_writel(aq, QSPI_IAR, addr);
+> >> +	qspi_writel(aq, QSPI_ICR, icr);
+> >> +	qspi_writel(aq, QSPI_IFR, ifr);  
+> >
+> > You should probably read the _SR register before starting a new operation
+> > to make sure all status flags have been cleared.
+> >  
+> 
+> I'm not sure about it, but there was SR read in Atmel's driver.
+> I can put it here.
+
+It's probably safer, otherwise you might get status from previous
+operations.
+
+> >> +static int atmel_qspi_probe(struct platform_device *pdev)
+> >> +{
+> >> +	struct spi_controller *ctrl;
+> >> +	struct atmel_qspi *aq;
+> >> +	struct device_node *np = pdev->dev.of_node;
+> >> +	struct device_node *child;
+> >> +	struct resource *res;
+> >> +	int irq, err = 0;
+> >> +
+> >> +	ctrl = spi_alloc_master(&pdev->dev, sizeof(*aq));
+> >> +	if (!ctrl)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	ctrl->mode_bits = SPI_RX_DUAL | SPI_RX_QUAD | SPI_TX_DUAL | SPI_TX_QUAD;
+> >> +	ctrl->bus_num = -1;
+> >> +	ctrl->mem_ops = &atmel_qspi_mem_ops;
+> >> +	ctrl->num_chipselect = 1;
+> >> +	ctrl->dev.of_node = pdev->dev.of_node;
+> >> +	platform_set_drvdata(pdev, ctrl);
+> >> +
+> >> +	aq = spi_controller_get_devdata(ctrl);
+> >> +
+> >> +	if (of_get_child_count(np) != 1)
+> >> +		return -ENODEV;  
+> >
+> > Hm, I think the core already complains if there are more children than  
+> > ->num_chipselect, so I'd say this is useless. Also, you can have a  
+> > controller without any devices under, so, nchildren == 0 is a valid
+> > case.
+> >  
+> 
+> This trick were inspired by atmel-quadspi code. If clk frequency can
+> be taken from spi_device, all this of-child related ugliness can be
+> removed.
+
+Yep.
+
+> >> +static struct platform_driver atmel_qspi_driver = {
+> >> +	.driver = {
+> >> +		.name = "atmel_spi_qspi",  
+> >
+> > 			"atmel-qspi",
+> >  
+> 
+> I expected new driver to exists in parallel with atmel-qspi.
+> If it's replacement, then re-use name makes sense.
+
+I think the old driver name was "atmel_qspi", but I prefer dashes to
+underscores :-). Anyway, _spi_qspi seems redundant, since qspi already
+implies spi.
+
+Regards,
+
+Boris
