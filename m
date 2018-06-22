@@ -1,138 +1,49 @@
-From: Todor Tomov <todor.tomov@linaro.org>
-Subject: [PATCH 15/32] media: dt-bindings: media: qcom,camss: Add 8996 bindings
-Date: Fri, 22 Jun 2018 18:33:24 +0300
-Message-ID: <1529681621-9682-16-git-send-email-todor.tomov@linaro.org>
-References: <1529681621-9682-1-git-send-email-todor.tomov@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529681621-9682-1-git-send-email-todor.tomov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, linux-media@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v3 02/17] dt-bindings/interrupt-controller: fix Marvell ICU
+ length in the example
+Date: Fri, 22 Jun 2018 17:14:17 +0200
+Message-ID: <20180622151432.1566-3-miquel.raynal@bootlin.com>
+References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180622151432.1566-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haim Boot <hayim@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Hanna Hawa <hannah@marvell.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Update binding document for MSM8996.
+ICU size in CP110 is not 0x10 but at least 0x440 bytes long (from the
+specification).
 
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: devicetree@vger.kernel.org
-Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 ---
- .../devicetree/bindings/media/qcom,camss.txt       | 44 +++++++++++++++++++---
- 1 file changed, 38 insertions(+), 6 deletions(-)
+ Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
-index e938eb0..09eb6ed 100644
---- a/Documentation/devicetree/bindings/media/qcom,camss.txt
-+++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
-@@ -5,8 +5,9 @@ Qualcomm Camera Subsystem
- - compatible:
- 	Usage: required
- 	Value type: <stringlist>
--	Definition: Should contain:
-+	Definition: Should contain one of:
- 		- "qcom,msm8916-camss"
-+		- "qcom,msm8996-camss"
- - reg:
- 	Usage: required
- 	Value type: <prop-encoded-array>
-@@ -19,11 +20,16 @@ Qualcomm Camera Subsystem
- 		- "csiphy0_clk_mux"
- 		- "csiphy1"
- 		- "csiphy1_clk_mux"
-+		- "csiphy2"		(8996 only)
-+		- "csiphy2_clk_mux"	(8996 only)
- 		- "csid0"
- 		- "csid1"
-+		- "csid2"		(8996 only)
-+		- "csid3"		(8996 only)
- 		- "ispif"
- 		- "csi_clk_mux"
- 		- "vfe0"
-+		- "vfe1"		(8996 only)
- - interrupts:
- 	Usage: required
- 	Value type: <prop-encoded-array>
-@@ -34,10 +40,14 @@ Qualcomm Camera Subsystem
- 	Definition: Should contain the following entries:
- 		- "csiphy0"
- 		- "csiphy1"
-+		- "csiphy2"		(8996 only)
- 		- "csid0"
- 		- "csid1"
-+		- "csid2"		(8996 only)
-+		- "csid3"		(8996 only)
- 		- "ispif"
- 		- "vfe0"
-+		- "vfe1"		(8996 only)
- - power-domains:
- 	Usage: required
- 	Value type: <prop-encoded-array>
-@@ -57,6 +67,7 @@ Qualcomm Camera Subsystem
- 		- "ispif_ahb"
- 		- "csiphy0_timer"
- 		- "csiphy1_timer"
-+		- "csiphy2_timer"	(8996 only)
- 		- "csi0_ahb"
- 		- "csi0"
- 		- "csi0_phy"
-@@ -67,9 +78,25 @@ Qualcomm Camera Subsystem
- 		- "csi1_phy"
- 		- "csi1_pix"
- 		- "csi1_rdi"
-+		- "csi2_ahb"		(8996 only)
-+		- "csi2"		(8996 only)
-+		- "csi2_phy"		(8996 only)
-+		- "csi2_pix"		(8996 only)
-+		- "csi2_rdi"		(8996 only)
-+		- "csi3_ahb"		(8996 only)
-+		- "csi3"		(8996 only)
-+		- "csi3_phy"		(8996 only)
-+		- "csi3_pix"		(8996 only)
-+		- "csi3_rdi"		(8996 only)
- 		- "ahb"
- 		- "vfe0"
- 		- "csi_vfe0"
-+		- "vfe0_ahb",		(8996 only)
-+		- "vfe0_stream",	(8996 only)
-+		- "vfe1",		(8996 only)
-+		- "csi_vfe1",		(8996 only)
-+		- "vfe1_ahb",		(8996 only)
-+		- "vfe1_stream",	(8996 only)
- 		- "vfe_ahb"
- 		- "vfe_axi"
- - vdda-supply:
-@@ -90,14 +117,18 @@ Qualcomm Camera Subsystem
- 		- reg:
- 			Usage: required
- 			Value type: <u32>
--			Definition: Selects CSI2 PHY interface - PHY0 or PHY1.
-+			Definition: Selects CSI2 PHY interface - PHY0, PHY1
-+				    or PHY2 (8996 only)
- 	Endpoint node properties:
- 		- clock-lanes:
- 			Usage: required
- 			Value type: <u32>
--			Definition: The physical clock lane index. The value
--				    must always be <1> as the physical clock
--				    lane is lane 1.
-+			Definition: The physical clock lane index. On 8916
-+				    the value must always be <1> as the physical
-+				    clock lane is lane 1. On 8996 the value must
-+				    always be <7> as the hardware supports D-PHY
-+				    and C-PHY, indexes are in a common set and
-+				    D-PHY physical clock lane is labeled as 7.
- 		- data-lanes:
- 			Usage: required
- 			Value type: <prop-encoded-array>
-@@ -105,7 +136,8 @@ Qualcomm Camera Subsystem
- 				    Position of an entry determines the logical
- 				    lane number, while the value of an entry
- 				    indicates physical lane index. Lane swapping
--				    is supported.
-+				    is supported. Physical lane indexes for
-+				    8916: 0, 2, 3, 4; for 8996: 0, 1, 2, 3.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+index aa8bf2ec8905..649b7ec9d9b1 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+@@ -39,7 +39,7 @@ Example:
  
- * An Example
- 
+ icu: interrupt-controller@1e0000 {
+ 	compatible = "marvell,cp110-icu";
+-	reg = <0x1e0000 0x10>;
++	reg = <0x1e0000 0x440>;
+ 	#interrupt-cells = <3>;
+ 	interrupt-controller;
+ 	msi-parent = <&gicp>;
 -- 
-2.7.4
+2.14.1
