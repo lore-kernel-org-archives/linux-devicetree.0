@@ -1,48 +1,48 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 01/17] platform-msi: allow creation of MSI domain without
- interrupt number
-Date: Fri, 22 Jun 2018 17:14:16 +0200
-Message-ID: <20180622151432.1566-2-miquel.raynal@bootlin.com>
-References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH v5 0/2] pinctrl: imx: Add driver for i.MX8MQ
+Date: Fri, 22 Jun 2018 18:15:47 +0300
+Message-ID: <1529680549-22079-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180622151432.1566-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haim Boot <hayim@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Hanna Hawa <hannah@marvell.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>
+Cc: linux-gpio@vger.kernel.org, linux-imx@nxp.com, Shawn Guo <shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-platform_msi_alloc_priv_data() checks that a number of interrupts is
-always given. This extra-check has no real impact and just prevents
-uselessly the user to create an MSI tree domain: remove it.
+This is the fifth version for the patch series sent by Lucas.
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/base/platform-msi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://www.spinics.net/lists/devicetree/msg212752.html
 
-diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
-index 60d6cc618f1c..9f001f4ccc0f 100644
---- a/drivers/base/platform-msi.c
-+++ b/drivers/base/platform-msi.c
-@@ -203,7 +203,7 @@ platform_msi_alloc_priv_data(struct device *dev, unsigned int nvec,
- 	 * accordingly (which would impact the max number of MSI
- 	 * capable devices).
- 	 */
--	if (!dev->msi_domain || !write_msi_msg || !nvec || nvec > MAX_DEV_MSIS)
-+	if (!dev->msi_domain || !write_msi_msg || nvec > MAX_DEV_MSIS)
- 		return ERR_PTR(-EINVAL);
- 
- 	if (dev->msi_domain->bus_token != DOMAIN_BUS_PLATFORM_MSI) {
+Fourth version can be found here:
+
+https://lkml.org/lkml/2018/6/20/478
+
+Changes since v4:
+ * implemented all Aisheng's review comments
+
+Changes since v3:
+ * dropped the SION generic pinconf changes
+ * added examples to the bindings doc
+
+Changes since v2:
+ * switch back to the 'fsl,pins' and hardcoded the config values
+inside the dts.
+ * updated documentation accordingly
+
+Abel Vesa (1):
+  dt-bindings: add binding for i.MX8MQ IOMUXC
+
+Lucas Stach (1):
+  pinctrl: imx: add driver for i.MX8MQ
+
+ .../bindings/pinctrl/fsl,imx8mq-pinctrl.txt        |  32 ++
+ drivers/pinctrl/freescale/Kconfig                  |   7 +
+ drivers/pinctrl/freescale/Makefile                 |   1 +
+ drivers/pinctrl/freescale/pinctrl-imx8mq.c         | 351 +++++++++++++++++++++
+ 4 files changed, 391 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
+ create mode 100644 drivers/pinctrl/freescale/pinctrl-imx8mq.c
+
 -- 
-2.14.1
+2.7.4
