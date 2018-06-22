@@ -1,74 +1,45 @@
-From: Richard Weinberger <richard@nod.at>
-Subject: Re: [PATCH] arm: dts: socfpga: denali needs nand_x_clk too
-Date: Fri, 22 Jun 2018 17:58:46 +0200
-Message-ID: <3320422.EJ8D6C0VHL@blindfold>
-References: <20180619120719.26921-1-richard@nod.at> <CAK7LNASgPa4D0Siyo3mvK_AJ2zaECDXGaMEn-iNzQ9PFXFir+w@mail.gmail.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v5 09/10] gpio: Add a driver for Cadence I3C GPIO expander
+Date: Fri, 22 Jun 2018 09:04:47 -0700
+Message-ID: <27aae5b0-f8eb-bed7-9d14-5c739769977a@infradead.org>
+References: <20180622104930.32050-1-boris.brezillon@bootlin.com>
+ <20180622104930.32050-10-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNASgPa4D0Siyo3mvK_AJ2zaECDXGaMEn-iNzQ9PFXFir+w@mail.gmail.com>
+In-Reply-To: <20180622104930.32050-10-boris.brezillon@bootlin.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek =?utf-8?B?VmHFoXV0?= <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus
 List-Id: devicetree@vger.kernel.org
 
-Masahiro,
+Hi,
 
-Am Freitag, 22. Juni 2018, 16:37:21 CEST schrieb Masahiro Yamada:
-> Hi Richard,
-> 
-> 
-> 2018-06-19 21:07 GMT+09:00 Richard Weinberger <richard@nod.at>:
-> > The denali NAND flash controller needs at least two clocks to operate,
-> > nand_clk and nand_x_clk.
-> > Since 1bb88666775e ("mtd: nand: denali: handle timing parameters by
-> > setup_data_interface()") nand_x_clk is used to derive timing settings.
-> >
-> > Signed-off-by: Richard Weinberger <richard@nod.at>
-> > ---
-> > Strictly speaking denali needs a ecc_clk too, but AFAIK such a clock
-> > is not present on this SoC.
-> > But my SoCFPGA knowledge is very limited.
-> >
-> > Thanks,
-> > //richard
-> > ---
-> >  arch/arm/boot/dts/socfpga.dtsi | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> > index 486d4e7433ed..562f7b375bbd 100644
-> > --- a/arch/arm/boot/dts/socfpga.dtsi
-> > +++ b/arch/arm/boot/dts/socfpga.dtsi
-> > @@ -754,7 +754,8 @@
-> >                         reg-names = "nand_data", "denali_reg";
-> >                         interrupts = <0x0 0x90 0x4>;
-> >                         dma-mask = <0xffffffff>;
-> > -                       clocks = <&nand_clk>;
-> > +                       clocks = <&nand_clk>, <&nand_x_clk>;
-> > +                       clock-names = "nand", "nand_x";
-> 
-> 
-> IMHO, this should be
-> 
->                           clocks = <&nand_clk>, <&nand_x_clk>, <&nand_x_clk>;
->                           clock-names = "nand", "nand_x", "ecc";
-> 
-> 
-> 
-> A clock consumer (Denali in this case) should generally
-> take the same number of clocks across SoCs.
-> 
-> It is just some SoCs tie clocks together.
-> 
-> It is the case for my UniPhier platform;
-> "nand_x" and "ecc" are tied up because they are both 200MHz.
-> 
-> 
-> SOCFPGA supports HW ECC correction, thus it surely needs ecc clock.
+On 06/22/2018 03:49 AM, Boris Brezillon wrote:
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 71c0ab46f216..19ed6006aea1 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -898,6 +898,17 @@ config GPIO_TS4900
+>  
+>  endmenu
+>  
+> +menu "I3C GPIO expanders"
+> +	depends on I3C
+> +
+> +config GPIO_CDNS_I3C
+> +	tristate "Cadence I3C GPIO expander"
+> +	select GPIOLIB_IRQCHIP
+> +	help
+> +	  Say yes here to enabled the driver for Cadence I3C GPIO expander.
 
-Good point!
+	               to enable the driver
 
-Thanks,
-//richard
+> +
+> +endmenu
+
+
+-- 
+~Randy
