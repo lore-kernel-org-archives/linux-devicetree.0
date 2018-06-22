@@ -1,242 +1,78 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: [PATCH v9 3/6] mtd: spinand: Add initial support for Micron
- MT29F2G01ABAGD
-Date: Fri, 22 Jun 2018 14:28:25 +0200
-Message-ID: <20180622122828.12939-4-boris.brezillon@bootlin.com>
-References: <20180622122828.12939-1-boris.brezillon@bootlin.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v2 2/7] dt-bindings: add binding for the
+ Allwinner A64 DE2 bus
+Date: Fri, 22 Jun 2018 20:45:35 +0800
+Message-ID: <20180622124540.56203-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180622122828.12939-1-boris.brezillon@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
-Cc: Piotr Bugalski <Piotr.Bugalski@cryptera.com>, Peter Pan <peterpandong@micron.com>, Peter Pan <peterpansjtu@gmail.com>, Julien Su <juliensu@mxic.com.tw>, Frieder Schrempf <frieder.schrempf@exceet.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Mason Yang <masonccyang@mxic.com.tw>, zhengxunli@mxic.com.tw
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBWO7WPMQKGQEOED7FFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Pan <peterpandong@micron.com>
+All the sub-blocks of Allwinner A64 DE2 needs the SRAM C on A64 SoC to
+be claimed, otherwise the whole DE2 space is inaccessible.
 
-Add a basic driver for Micron SPI NANDs. Only one device is supported
-right now, but the driver will be extended to support more devices
-afterwards.
+Add a device tree binding of the DE2 part as a sub-bus.
 
-Signed-off-by: Peter Pan <peterpandong@micron.com>
-Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
-Changes in v8:
-- Changed the subject prefix
----
- drivers/mtd/nand/spi/Makefile |   2 +-
- drivers/mtd/nand/spi/core.c   |  17 ++++++
- drivers/mtd/nand/spi/micron.c | 133 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/mtd/spinand.h   |   3 +
- 4 files changed, 154 insertions(+), 1 deletion(-)
- create mode 100644 drivers/mtd/nand/spi/micron.c
+No changes since v1.
 
-diff --git a/drivers/mtd/nand/spi/Makefile b/drivers/mtd/nand/spi/Makefile
-index 2c473b765027..a1df25398f20 100644
---- a/drivers/mtd/nand/spi/Makefile
-+++ b/drivers/mtd/nand/spi/Makefile
-@@ -1,3 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
--spinand-objs := core.o
-+spinand-objs := core.o micron.o
- obj-$(CONFIG_MTD_SPI_NAND) += spinand.o
-diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-index 425570f1b0c8..3b7b4dd21d44 100644
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -778,8 +778,25 @@ static const struct nand_ops spinand_ops = {
- 	.isbad = spinand_isbad,
- };
- 
-+static const struct spinand_manufacturer *spinand_manufacturers[] = {
-+	&micron_spinand_manufacturer,
-+};
-+
- static int spinand_manufacturer_detect(struct spinand_device *spinand)
- {
-+	unsigned int i;
-+	int ret;
-+
-+	for (i = 0; i < ARRAY_SIZE(spinand_manufacturers); i++) {
-+		ret = spinand_manufacturers[i]->ops->detect(spinand);
-+		if (ret > 0) {
-+			spinand->manufacturer = spinand_manufacturers[i];
-+			return 0;
-+		} else if (ret < 0) {
-+			return ret;
-+		}
-+	}
-+
- 	return -ENOTSUPP;
- }
- 
-diff --git a/drivers/mtd/nand/spi/micron.c b/drivers/mtd/nand/spi/micron.c
+ .../bindings/bus/sun50i-de2-bus.txt           | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/sun50i-de2-bus.txt
+
+diff --git a/Documentation/devicetree/bindings/bus/sun50i-de2-bus.txt b/Documentation/devicetree/bindings/bus/sun50i-de2-bus.txt
 new file mode 100644
-index 000000000000..9c4381d6847b
+index 000000000000..87dfb33fb3be
 --- /dev/null
-+++ b/drivers/mtd/nand/spi/micron.c
-@@ -0,0 +1,133 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2016-2017 Micron Technology, Inc.
-+ *
-+ * Authors:
-+ *	Peter Pan <peterpandong@micron.com>
-+ */
++++ b/Documentation/devicetree/bindings/bus/sun50i-de2-bus.txt
+@@ -0,0 +1,37 @@
++Device tree bindings for Allwinner A64 DE2 bus
 +
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/mtd/spinand.h>
++The Allwinner A64 DE2 is on a special bus, which needs a SRAM region (SRAM C)
++to be claimed for enabling the access.
 +
-+#define SPINAND_MFR_MICRON		0x2c
++Required properties:
 +
-+#define MICRON_STATUS_ECC_MASK		GENMASK(7, 4)
-+#define MICRON_STATUS_ECC_NO_BITFLIPS	(0 << 4)
-+#define MICRON_STATUS_ECC_1TO3_BITFLIPS	(1 << 4)
-+#define MICRON_STATUS_ECC_4TO6_BITFLIPS	(3 << 4)
-+#define MICRON_STATUS_ECC_7TO8_BITFLIPS	(5 << 4)
++ - compatible:		Should contain "allwinner,sun50i-a64-de2"
++ - reg:			A resource specifier for the register space
++ - #address-cells:	Must be set to 1
++ - #size-cells:		Must be set to 1
++ - ranges:		Must be set up to map the address space inside the
++			DE2, for the sub-blocks of DE2.
++ - allwinner,sram:	the SRAM that needs to be claimed
 +
-+static SPINAND_OP_VARIANTS(read_cache_variants,
-+		SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(0, 2, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_OP(false, 0, 1, NULL, 0));
++Example:
 +
-+static SPINAND_OP_VARIANTS(write_cache_variants,
-+		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
-+		SPINAND_PROG_LOAD(true, 0, NULL, 0));
++	de2@1000000 {
++		compatible = "allwinner,sun50i-a64-de2";
++		reg = <0x1000000 0x400000>;
++		allwinner,sram = <&de2_sram 1>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x1000000 0x400000>;
 +
-+static SPINAND_OP_VARIANTS(update_cache_variants,
-+		SPINAND_PROG_LOAD_X4(false, 0, NULL, 0),
-+		SPINAND_PROG_LOAD(false, 0, NULL, 0));
-+
-+static int mt29f2g01abagd_ooblayout_ecc(struct mtd_info *mtd, int section,
-+					struct mtd_oob_region *region)
-+{
-+	if (section)
-+		return -ERANGE;
-+
-+	region->offset = 64;
-+	region->length = 64;
-+
-+	return 0;
-+}
-+
-+static int mt29f2g01abagd_ooblayout_free(struct mtd_info *mtd, int section,
-+					 struct mtd_oob_region *region)
-+{
-+	if (section)
-+		return -ERANGE;
-+
-+	/* Reserve 2 bytes for the BBM. */
-+	region->offset = 2;
-+	region->length = 62;
-+
-+	return 0;
-+}
-+
-+static const struct mtd_ooblayout_ops mt29f2g01abagd_ooblayout = {
-+	.ecc = mt29f2g01abagd_ooblayout_ecc,
-+	.free = mt29f2g01abagd_ooblayout_free,
-+};
-+
-+static int mt29f2g01abagd_ecc_get_status(struct spinand_device *spinand,
-+					 u8 status)
-+{
-+	switch (status & MICRON_STATUS_ECC_MASK) {
-+	case STATUS_ECC_NO_BITFLIPS:
-+		return 0;
-+
-+	case STATUS_ECC_UNCOR_ERROR:
-+		return -EBADMSG;
-+
-+	case MICRON_STATUS_ECC_1TO3_BITFLIPS:
-+		return 3;
-+
-+	case MICRON_STATUS_ECC_4TO6_BITFLIPS:
-+		return 6;
-+
-+	case MICRON_STATUS_ECC_7TO8_BITFLIPS:
-+		return 8;
-+
-+	default:
-+		break;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static const struct spinand_info micron_spinand_table[] = {
-+	SPINAND_INFO("MT29F2G01ABAGD", 0x24,
-+		     NAND_MEMORG(1, 2048, 128, 64, 2048, 2, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     0,
-+		     SPINAND_ECCINFO(&mt29f2g01abagd_ooblayout,
-+				     mt29f2g01abagd_ecc_get_status)),
-+};
-+
-+static int micron_spinand_detect(struct spinand_device *spinand)
-+{
-+	u8 *id = spinand->id.data;
-+	int ret;
-+
-+	/*
-+	 * Micron SPI NAND read ID need a dummy byte,
-+	 * so the first byte in raw_id is dummy.
-+	 */
-+	if (id[1] != SPINAND_MFR_MICRON)
-+		return 0;
-+
-+	ret = spinand_match_and_init(spinand, micron_spinand_table,
-+				     ARRAY_SIZE(micron_spinand_table), id[2]);
-+	if (ret)
-+		return ret;
-+
-+	return 1;
-+}
-+
-+static const struct spinand_manufacturer_ops micron_spinand_manuf_ops = {
-+	.detect = micron_spinand_detect,
-+};
-+
-+const struct spinand_manufacturer micron_spinand_manufacturer = {
-+	.id = SPINAND_MFR_MICRON,
-+	.name = "Micron",
-+	.ops = &micron_spinand_manuf_ops,
-+};
-diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
-index d3efe62dc9de..717b272940f1 100644
---- a/include/linux/mtd/spinand.h
-+++ b/include/linux/mtd/spinand.h
-@@ -193,6 +193,9 @@ struct spinand_manufacturer {
- 	const struct spinand_manufacturer_ops *ops;
- };
- 
-+/* SPI NAND manufacturers */
-+extern const struct spinand_manufacturer micron_spinand_manufacturer;
-+
- /**
-  * struct spinand_op_variants - SPI NAND operation variants
-  * @ops: the list of variants for a given operation
++		display_clocks: clock@0 {
++			compatible = "allwinner,sun50i-a64-de2-clk";
++			reg = <0x0 0x100000>;
++			clocks = <&ccu CLK_DE>,
++				 <&ccu CLK_BUS_DE>;
++			clock-names = "mod",
++				      "bus";
++			resets = <&ccu RST_BUS_DE>;
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++		};
++	};
 -- 
-2.14.1
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+2.17.1
