@@ -1,54 +1,49 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4] MAINTAINERS: Add file patterns for x86 device tree bindings
-Date: Fri, 22 Jun 2018 22:14:40 +0200
-Message-ID: <CAMuHMdVkg3gOkykbZOzW2CpCd+WRdyKqehs9_WKQ8nbtSgwVgw@mail.gmail.com>
-References: <20180622100820.29616-1-geert@linux-m68k.org> <alpine.DEB.2.21.1806221753560.2402@nanos.tec.linutronix.de>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v5 01/10] i3c: Add core I3C infrastructure
+Date: Fri, 22 Jun 2018 23:35:34 +0200
+Message-ID: <ed1add9b-ba21-d3d3-64c4-44d18af3d133@axentia.se>
+References: <20180622104930.32050-1-boris.brezillon@bootlin.com>
+ <20180622104930.32050-2-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.1806221753560.2402@nanos.tec.linutronix.de>
+In-Reply-To: <20180622104930.32050-2-boris.brezillon@bootlin.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, the arch/x86 maintainers <x86@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+On 2018-06-22 12:49, Boris Brezillon wrote:
+> Add core infrastructure to support I3C in Linux and document it.
+> 
+> This infrastructure is not complete yet and will be extended over
+> time.
+> 
+> There are a few design choices that are worth mentioning because they
+> impact the way I3C device drivers can interact with their devices:
+> 
+> - all functions used to send I3C/I2C frames must be called in
+>   non-atomic context. Mainly done this way to ease implementation, but
+>   this is still open to discussion. Please let me know if you think
+>   it's worth considering an asynchronous model here
+> - the bus element is a separate object and is not implicitly described
+>   by the master (as done in I2C). The reason is that I want to be able
+>   to handle multiple master connected to the same bus and visible to
+>   Linux.
+>   In this situation, we should only have one instance of the device and
+>   not one per master, and sharing the bus object would be part of the
+>   solution to gracefully handle this case.
+>   I'm not sure we will ever need to deal with multiple masters
+>   controlling the same bus and exposed under Linux, but separating the
+>   bus and master concept is pretty easy, hence the decision to do it
+>   like that.
+>   The other benefit of separating the bus and master concepts is that
+>   master devices appear under the bus directory in sysfs.
 
-On Fri, Jun 22, 2018 at 5:57 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> On Fri, 22 Jun 2018, Geert Uytterhoeven wrote:
-> > Submitters of device tree binding documentation may forget to CC
-> > the subsystem maintainer if this is missing.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > ---
-> > v3:
-> >   - Update for next-20180622,
-> >
-> > v2:
-> >   - No changes.
-> >
-> > Impact on "scripts/get_maintainer.pl -f Documentation/devicetree/bindings/x86/":
-> >
-> > -Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS,commit_signer:1/1=100%)
-> > +Thomas Gleixner <tglx@linutronix.de> (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
->
-> I assume there is no way to make sure that Rob and the device tree folks
-> are on top of that list? While it's somehow x86 related most of the
-> devicetree details are way over my head. :)
+Are bus multiplexers relevant to I3C? The locking needed for handling
+muxes for I2C is, well, convoluted...
 
-I think the order is from most-specific to least-specific.
-
-> I'll pick it up nevertheless
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Cheers,
+Peter
