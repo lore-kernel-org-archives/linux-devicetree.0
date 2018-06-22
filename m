@@ -1,134 +1,95 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: [RFC PATCH 02/14] fsi: Move code around to avoid forward declaration
-Date: Fri, 22 Jun 2018 14:31:22 +1000
-Message-ID: <20180622043134.18238-3-benh@kernel.crashing.org>
-References: <20180622043134.18238-1-benh@kernel.crashing.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180622043134.18238-1-benh@kernel.crashing.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: openbmc@lists.ozlabs.org
-Cc: linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH V2 2/4] dt-bindings: arm: fsl: add mu binding doc
+Date: Fri, 22 Jun 2018 07:49:32 +0200
+Message-ID: <20180622054932.ysqve7o7pvdnlp5k@pengutronix.de>
+References: <1529239789-26849-1-git-send-email-aisheng.dong@nxp.com>
+ <1529239789-26849-3-git-send-email-aisheng.dong@nxp.com>
+ <20180620194310.GA28983@rob-hp-laptop>
+ <20180621074641.sqqvudxebt3hd43m@pengutronix.de>
+ <AM0PR04MB4211B39D5AFAB95FC2A91F9980760@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB4211B39D5AFAB95FC2A91F9980760@AM0PR04MB4211.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Move fsi_slave_set_smode() and its helpers to before it's
-first user and remove the corresponding forward declaration.
+On Thu, Jun 21, 2018 at 05:11:33PM +0000, A.s. Dong wrote:
+> Hi Sascha,
+> 
+> > -----Original Message-----
+> > From: Sascha Hauer [mailto:s.hauer@pengutronix.de]
+> > Sent: Thursday, June 21, 2018 3:47 PM
+> > To: Rob Herring <robh@kernel.org>
+> > Cc: A.s. Dong <aisheng.dong@nxp.com>; linux-arm-
+> > kernel@lists.infradead.org; dongas86@gmail.com; kernel@pengutronix.de;
+> > shawnguo@kernel.org; Fabio Estevam <fabio.estevam@nxp.com>; dl-linux-
+> > imx <linux-imx@nxp.com>; Mark Rutland <mark.rutland@arm.com>;
+> > devicetree@vger.kernel.org
+> > Subject: Re: [PATCH V2 2/4] dt-bindings: arm: fsl: add mu binding doc
+> > 
+> > On Wed, Jun 20, 2018 at 01:43:10PM -0600, Rob Herring wrote:
+> > > On Sun, Jun 17, 2018 at 08:49:47PM +0800, Dong Aisheng wrote:
+> > > > The Messaging Unit module enables two processors within the SoC to
+> > > > communicate and coordinate by passing messages (e.g. data, status
+> > > > and control) through the MU interface.
+> > > >
+> > > > Cc: Shawn Guo <shawnguo@kernel.org>
+> > > > Cc: Sascha Hauer <kernel@pengutronix.de>
+> > > > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > > Cc: devicetree@vger.kernel.org
+> > > > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > > > ---
+> > > > v1->v2:
+> > > >  * typo fixes
+> > > >  * remove status property
+> > > >  * remove imx6&7 compatible string which may be added later for
+> > > >    the generic mailbox binding
+> > > >
+> > > > Note: Because MU used by SCU is not implemented as a mailbox driver,
+> > > > Instead, they're provided in library calls to gain higher performance.
+> > >
+> > > Using a binding doesn't mean you have to use an OS's subsystem.
+> > >
+> > > What needs higher performance? What's the performance difference?
+> > Why
+> > > can't the mailbox framework be improved?
+> > 
+> > From what I see the performance is improved by polling the interrupt
+> > registers rather than using interrupts.
+> > I see no reason though why this can't be implemented with the mailbox
+> > framework as is.
+> > 
+> 
+> I thought you've agreed to not write generic MU(mailbox) driver for SCU.
+> https://www.spinics.net/lists/arm-kernel/msg650217.html
+> But seems it's still not quite certain...
 
-Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
----
- drivers/fsi/fsi-core.c | 94 +++++++++++++++++++++---------------------
- 1 file changed, 46 insertions(+), 48 deletions(-)
+My suggestion was that we change the compatible of the MU unit to
+something that the SCU driver matches. But since we do not do that and
+instead use a fsl,imx8qxp-mu compatible for the MU we have to come up
+with a MU driver that handles both the SCU case and the regular usecase.
+Otherwise we'll end up with a generic driver attaching to the device you
+are using under the hoods.
 
-diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 565218872635..2f6f9b8c75e4 100644
---- a/drivers/fsi/fsi-core.c
-+++ b/drivers/fsi/fsi-core.c
-@@ -215,7 +215,52 @@ static int fsi_slave_report_and_clear_errors(struct fsi_slave *slave)
- 			&irq, sizeof(irq));
- }
- 
--static int fsi_slave_set_smode(struct fsi_master *master, int link, int id);
-+/* Encode slave local bus echo delay */
-+static inline uint32_t fsi_smode_echodly(int x)
-+{
-+	return (x & FSI_SMODE_ED_MASK) << FSI_SMODE_ED_SHIFT;
-+}
-+
-+/* Encode slave local bus send delay */
-+static inline uint32_t fsi_smode_senddly(int x)
-+{
-+	return (x & FSI_SMODE_SD_MASK) << FSI_SMODE_SD_SHIFT;
-+}
-+
-+/* Encode slave local bus clock rate ratio */
-+static inline uint32_t fsi_smode_lbcrr(int x)
-+{
-+	return (x & FSI_SMODE_LBCRR_MASK) << FSI_SMODE_LBCRR_SHIFT;
-+}
-+
-+/* Encode slave ID */
-+static inline uint32_t fsi_smode_sid(int x)
-+{
-+	return (x & FSI_SMODE_SID_MASK) << FSI_SMODE_SID_SHIFT;
-+}
-+
-+static uint32_t fsi_slave_smode(int id)
-+{
-+	return FSI_SMODE_WSC | FSI_SMODE_ECRC
-+		| fsi_smode_sid(id)
-+		| fsi_smode_echodly(0xf) | fsi_smode_senddly(0xf)
-+		| fsi_smode_lbcrr(0x8);
-+}
-+
-+static int fsi_slave_set_smode(struct fsi_master *master, int link, int id)
-+{
-+	uint32_t smode;
-+	__be32 data;
-+
-+	/* set our smode register with the slave ID field to 0; this enables
-+	 * extended slave addressing
-+	 */
-+	smode = fsi_slave_smode(id);
-+	data = cpu_to_be32(smode);
-+
-+	return fsi_master_write(master, link, id, FSI_SLAVE_BASE + FSI_SMODE,
-+			&data, sizeof(data));
-+}
- 
- static int fsi_slave_handle_error(struct fsi_slave *slave, bool write,
- 				  uint32_t addr, size_t size)
-@@ -569,53 +614,6 @@ static const struct bin_attribute fsi_slave_term_attr = {
- 	.write = fsi_slave_sysfs_term_write,
- };
- 
--/* Encode slave local bus echo delay */
--static inline uint32_t fsi_smode_echodly(int x)
--{
--	return (x & FSI_SMODE_ED_MASK) << FSI_SMODE_ED_SHIFT;
--}
--
--/* Encode slave local bus send delay */
--static inline uint32_t fsi_smode_senddly(int x)
--{
--	return (x & FSI_SMODE_SD_MASK) << FSI_SMODE_SD_SHIFT;
--}
--
--/* Encode slave local bus clock rate ratio */
--static inline uint32_t fsi_smode_lbcrr(int x)
--{
--	return (x & FSI_SMODE_LBCRR_MASK) << FSI_SMODE_LBCRR_SHIFT;
--}
--
--/* Encode slave ID */
--static inline uint32_t fsi_smode_sid(int x)
--{
--	return (x & FSI_SMODE_SID_MASK) << FSI_SMODE_SID_SHIFT;
--}
--
--static uint32_t fsi_slave_smode(int id)
--{
--	return FSI_SMODE_WSC | FSI_SMODE_ECRC
--		| fsi_smode_sid(id)
--		| fsi_smode_echodly(0xf) | fsi_smode_senddly(0xf)
--		| fsi_smode_lbcrr(0x8);
--}
--
--static int fsi_slave_set_smode(struct fsi_master *master, int link, int id)
--{
--	uint32_t smode;
--	__be32 data;
--
--	/* set our smode register with the slave ID field to 0; this enables
--	 * extended slave addressing
--	 */
--	smode = fsi_slave_smode(id);
--	data = cpu_to_be32(smode);
--
--	return fsi_master_write(master, link, id, FSI_SLAVE_BASE + FSI_SMODE,
--			&data, sizeof(data));
--}
--
- static void fsi_slave_release(struct device *dev)
- {
- 	struct fsi_slave *slave = to_fsi_slave(dev);
+Sascha
+
 -- 
-2.17.1
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
