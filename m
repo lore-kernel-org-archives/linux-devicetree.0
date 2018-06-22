@@ -1,76 +1,75 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] base: fix order of OF initialization
-Date: Thu, 21 Jun 2018 18:05:49 -0700
-Message-ID: <ed030f7c-ba4d-e20a-352e-aaad45cda792@gmail.com>
-References: <20180621133737.14397-1-hch@lst.de>
+From: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v12 3/5] dt-bindings: drm/bridge: Document
+ sn65dsi86 bridge bindings
+Date: Thu, 21 Jun 2018 18:12:13 -0700
+Message-ID: <152962993355.16708.2310695895490918997@swboyd.mtv.corp.google.com>
+References: <1529584329-632-1-git-send-email-spanda@codeaurora.org>
+ <1529584329-632-4-git-send-email-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180621133737.14397-1-hch@lst.de>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@lst.de>, gregkh@linuxfoundation.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Wesley W. Terpstra" <wesley@sifive.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <1529584329-632-4-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/21/18 06:37, Christoph Hellwig wrote:
-> From: "Wesley W. Terpstra" <wesley@sifive.com>
-> 
-> This fixes: [    0.010000] cpu cpu0: Error -2 creating of_node link
-> ... which you get for every CPU on all architectures that use
-> CONFIG_GENERIC_CPU_DEVICES.
-> 
-> In that case, driver_init() calls cpu_dev_init() before calling
-> of_core_init(). Then we get the callchain:
-> 
->   cpu_dev_init()
->     -> cpu_dev_register_generic()
->     -> register_cpu(cpu, i)
->     -> device_register(&cpu->dev)
->     -> device_add(dev)
->     -> device_add_class_symlinks(dev)
-> 
-> ... in device_add_class_symlinks, we we dev->of_node, and call
-> sysfs_create_link(), which fails because we haven't called
-> of_core_init() to register the sysfs devicetree directory yet.
-> 
-> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-> [hch: updated the changelog based on review feedback]
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
-> Acked-by: Frank Rowand <frowand.list@gmail.com>
-> ---
-> 
-> In case anyone is wondering why I send out this patch - I'm digging
-> through the RISC-V tree and trying to the patches required to let
-> a RISC-V kernel boot on qemu upstream.  I also got the previously
-> missing signoff from Wes offlist.
-> 
->  drivers/base/init.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/base/init.c b/drivers/base/init.c
-> index dd85b05a6a16..908e6520e804 100644
-> --- a/drivers/base/init.c
-> +++ b/drivers/base/init.c
-> @@ -30,9 +30,9 @@ void __init driver_init(void)
->  	/* These are also core pieces, but must come after the
->  	 * core core pieces.
->  	 */
-> +	of_core_init();
->  	platform_bus_init();
->  	cpu_dev_init();
->  	memory_dev_init();
->  	container_dev_init();
-> -	of_core_init();
->  }
-> 
-
-The updated patch comment looks good.  It would be good to get this into
--next while we are still early in the release cycle.
-
-For those trying to find the previous version of this patch, it was cced
-to the devicetree list on 06/07/17.
-
--Frank
+UXVvdGluZyBTYW5kZWVwIFBhbmRhICgyMDE4LTA2LTIxIDA1OjMyOjA3KQo+IGRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242
+NWRzaTg2LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
+aWRnZS90aSxzbjY1ZHNpODYudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAw
+MDAwMDAwMDAuLmM4YjhmMDE4MzU2Zgo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dAo+
+IEBAIC0wLDAgKzEsODYgQEAKPiArU042NURTSTg2IERTSSB0byBlRFAgYnJpZGdlIGNoaXAKPiAr
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1RoaXMgaXMgdGhlIGJpbmRp
+bmcgZm9yIFRleGFzIEluc3RydW1lbnRzIFNONjVEU0k4NiBicmlkZ2UuCj4gK2h0dHA6Ly93d3cu
+dGkuY29tL2dlbmVyYWwvZG9jcy9saXQvZ2V0bGl0ZXJhdHVyZS50c3A/Z2VuZXJpY1BhcnROdW1i
+ZXI9c242NWRzaTg2JmZpbGVUeXBlPXBkZgo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiAr
+LSBjb21wYXRpYmxlOiBNdXN0IGJlICJ0aSxzbjY1ZHNpODYiCj4gKy0gcmVnOiBpMmMgYWRkcmVz
+cyBvZiB0aGUgY2hpcCwgMHgyZCBhcyBwZXIgZGF0YXNoZWV0Cj4gKy0gZW5hYmxlLWdwaW9zOiBP
+RiBkZXZpY2UtdHJlZSBncGlvIHNwZWNpZmljYXRpb24gZm9yIGJyaWRnZV9lbiBwaW4gKGFjdGl2
+ZSBoaWdoKQo+ICsKPiArLSB2Y2Npby1zdXBwbHk6IEEgMS44ViBzdXBwbHkgdGhhdCBwb3dlcnMg
+dXAgdGhlIGRpZ2l0YWwgSU9zLgo+ICstIHZwbGwtc3VwcGx5OiBBIDEuOFYgc3VwcGx5IHRoYXQg
+cG93ZXJzIHVwIHRoZSBkaXNwbGF5cG9ydCBQTEwuCj4gKy0gdmNjYS1zdXBwbHk6IEEgMS4yViBz
+dXBwbHkgdGhhdCBwb3dlcnMgdXAgdGhlIGFuYWxvZyBjaXJjdWl0cy4KPiArLSB2Y2Mtc3VwcGx5
+OiBBIDEuMlYgc3VwcGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBkaWdpdGFsIGNvcmUuCj4gKwo+ICtP
+cHRpb25hbCBwcm9wZXJ0aWVzOgo+ICstIGludGVycnVwdHMtZXh0ZW5kZWQ6IFNwZWNpZmllciBm
+b3IgdGhlIFNONjVEU0k4NiBpbnRlcnJ1cHQgbGluZS4KPiArCj4gKy0gZGRjLWkyYy1idXM6IHBo
+YW5kbGUgb2YgdGhlIEkyQyBjb250cm9sbGVyIHVzZWQgZm9yIEREQyBFRElEIHByb2JpbmcKPiAr
+Cj4gKy0gZ3Bpby1jb250cm9sbGVyOiBNYXJrcyB0aGUgZGV2aWNlIGhhcyBhIEdQSU8gY29udHJv
+bGxlci4KPiArLSAjZ3Bpby1jZWxscyAgICA6IFNob3VsZCBiZSB0d28uIFRoZSBmaXJzdCBjZWxs
+IGlzIHRoZSBwaW4gbnVtYmVyIGFuZAo+ICsgICAgICAgICAgICAgICAgICAgdGhlIHNlY29uZCBj
+ZWxsIGlzIHVzZWQgdG8gc3BlY2lmeSBmbGFncy4KPiArICAgICAgICAgICAgICAgICAgIFNlZSAu
+Li8uLi9ncGlvL2dwaW8udHh0IGZvciBtb3JlIGluZm9ybWF0aW9uLgo+ICstICNwd20tY2VsbHMg
+OiBTaG91bGQgYmUgb25lLiBTZWUgLi4vLi4vcHdtL3B3bS50eHQgZm9yIGRlc2NyaXB0aW9uIG9m
+Cj4gKyAgICAgICAgICAgICAgIHRoZSBjZWxsIGZvcm1hdHMuCj4gKwo+ICstIGNsb2NrLW5hbWVz
+OiBzaG91bGQgYmUgInJlZmNsayIKPiArLSBjbG9ja3M6IFNwZWNpZmljYXRpb24gZm9yIGlucHV0
+IHJlZmVyZW5jZSBjbG9jay4gVGhlIHJlZmVyZW5jZQo+ICsgICAgICAgICBjbG9jayByYXRlIG11
+c3QgYmUgMTIgTUh6LCAxOS4yIE1IeiwgMjYgTUh6LCAyNyBNSHogb3IgMzguNCBNSHouCj4gKwo+
+ICstIGRhdGEtbGFuZXM6IFNlZSAuLi8uLi9tZWRpYS92aWRlby1pbnRlcmZhY2UudHh0Cj4gKy0g
+bGFuZS1wb2xhcml0aWVzOiBTZWUgLi4vLi4vbWVkaWEvdmlkZW8taW50ZXJmYWNlLnR4dAoKV2Ug
+bmVlZCBhbm90aGVyIHByb3BlcnR5IGZvciBzdXNwZW5kLWdwaW9zIGZ1bmN0aW9uIG9mIEdQSU8x
+LiBJIHN1cHBvc2UKZm9yIHRoZSBvdGhlciBHUElPcyB3ZSBkb24ndCBuZWVkIGFueXRoaW5nIGxp
+a2UgdGhpcyBiZWNhdXNlIHRoZXkncmUKb3V0cHV0IGZ1bmN0aW9ucyBvbmx5PyBHUElPNCBjYW4g
+ZG8gUFdNIGFuZCBJIGd1ZXNzIGlmIHB3bSBpcyB1c2VkIGluIERUCmZyb20gaGVyZSB0aGVuIHRo
+ZSBkcml2ZXIgY2FuIG11eCB0aGF0IG91dCBvZiBncGlvNCBwcm9wZXJseS4gSSBoYXZlIG5vCmlk
+ZWEgaG93IHRoZSBoc3luYyBhbmQgdnN5bmMgR1BJT3Mgd291bGQgd29yayB0aG91Z2guIEkgc2Vl
+IHRoYXQgR1BJTzMKY2FuIGRvIERTSUEgaHN5bmMgb3IgdnN5bmMgYW5kIEdQSU8yIGNhbiBkbyBE
+U0lBIHZzeW5jIGFuZCBJIHdvdWxkIGd1ZXNzCnRob3NlIGFyZSBpbiBvdXRwdXQgbW9kZSBvbmx5
+LiBNYXliZSB0aGF0J3MganVzdCBhbm90aGVyIHByb3BlcnR5IG9uCnRoaXMgbm9kZSB0byBpbmRp
+Y2F0ZSBpZiB3ZSBzaG91bGQgbXV4IG91dCB0aGUgZnVuY3Rpb24gb3Igbm90LiBVc3VhbGx5CnRo
+YXQncyBkb25lIGZyb20gcGluY3RybCB0aG91Z2guIEkgZG9uJ3QgaGF2ZSBhIHVzZSBjYXNlIGZv
+ciB0aG9zZQpmdW5jdGlvbnMgYnV0IEkgZG8gY2FyZSBhYm91dCBzdXNwZW5kIGdwaW9zIHNvIGF0
+IGxlYXN0IGFkZCB0aGF0IG9uZQpwbGVhc2UuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9mcmVlZHJlbm8K
