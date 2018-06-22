@@ -1,54 +1,47 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 1/5] media: venus: add a routine to reset ARM9
-Date: Fri, 22 Jun 2018 16:15:03 -0700
-Message-ID: <20180622231503.GN3402@tuxbook-pro>
+Subject: Re: [PATCH v2 3/5] venus: add check to make scm calls
+Date: Fri, 22 Jun 2018 16:19:34 -0700
+Message-ID: <20180622231934.GO3402@tuxbook-pro>
 References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
- <1527884768-22392-2-git-send-email-vgarodia@codeaurora.org>
+ <1527884768-22392-4-git-send-email-vgarodia@codeaurora.org>
+ <CAAFQd5BSgB0OoqUFckJLXto9FNMYCTQ8ubDftaC-LvFm+A-gxA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1527884768-22392-2-git-send-email-vgarodia@codeaurora.org>
+In-Reply-To: <CAAFQd5BSgB0OoqUFckJLXto9FNMYCTQ8ubDftaC-LvFm+A-gxA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vikash Garodia <vgarodia@codeaurora.org>
-Cc: hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, stanimir.varbanov@linaro.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: vgarodia@codeaurora.org, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, andy.gross@linaro.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 01 Jun 13:26 PDT 2018, Vikash Garodia wrote:
-> +static void venus_reset_hw(struct venus_core *core)
-> +{
-> +	void __iomem *reg_base = core->base;
-> +
-> +	writel(0, reg_base + WRAPPER_FW_START_ADDR);
-> +	writel(VENUS_FW_MEM_SIZE, reg_base + WRAPPER_FW_END_ADDR);
-> +	writel(0, reg_base + WRAPPER_CPA_START_ADDR);
-> +	writel(VENUS_FW_MEM_SIZE, reg_base + WRAPPER_CPA_END_ADDR);
-> +	writel(0x0, reg_base + WRAPPER_CPU_CGC_DIS);
-> +	writel(0x0, reg_base + WRAPPER_CPU_CLOCK_CONFIG);
-> +
-> +	/* Make sure all register writes are committed. */
-> +	mb();
+On Mon 04 Jun 05:58 PDT 2018, Tomasz Figa wrote:
 
-wmb() doesn't wait until the writes are completed, it simply ensures
-that any writes before it are performed before any writes after it.
+> Hi Vikash,
+> 
+> On Sat, Jun 2, 2018 at 5:27 AM Vikash Garodia <vgarodia@codeaurora.org> wrote:
+> [snip]
+> > +int venus_boot(struct venus_core *core)
+> > +{
+> > +       phys_addr_t mem_phys;
+> > +       size_t mem_size;
+> > +       int ret;
+> > +       struct device *dev;
+> > +
+> > +       if (!IS_ENABLED(CONFIG_QCOM_MDT_LOADER))
+> > +               return -EPROBE_DEFER;
+> 
+> Why are we deferring probe here? The option will not magically become
+> enabled after probe is retried.
+> 
 
-If you really want to ensure that these configs has hit the hardware
-before you sleep, read back the value of the WRAPPER_CPU_CLOCK_CONFIG
-register.
+The original code should have read:
 
-> +
-> +	/*
-> +	 * Need to wait 10 cycles of internal clocks before bringing ARM9
-> +	 * out of reset.
-> +	 */
-> +	udelay(1);
-> +
-> +	/* Bring Arm9 out of reset */
-> +	writel_relaxed(0, reg_base + WRAPPER_A9SS_SW_RESET);
+	if (IS_ENABLED(CONFIG_QCOM_MDT_LOADER) && !qcom_scm_is_available())
+		return -EPROBE_DEFER;
 
-There's no harm in using writel() here...
-
-> +}
+The code does depend on CONFIG_QCOM_MDT_LOADER regardless of it using
+scm for firmware verification.
 
 Regards,
 Bjorn
