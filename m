@@ -1,95 +1,77 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH 5/5] RFC: ARM64: dts: Add Low-Speed Connector to ZCU100
-Date: Fri, 22 Jun 2018 15:22:31 +0200
-Message-ID: <6c73bcf5-3847-adb2-ac71-5f2700fa72f8@xilinx.com>
-References: <20180618074556.6944-1-linus.walleij@linaro.org>
- <20180618074556.6944-6-linus.walleij@linaro.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v3 1/3] mtd: rawnand: denali_dt: add more clocks based on
+ IP datasheet
+Date: Fri, 22 Jun 2018 22:24:56 +0900
+Message-ID: <CAK7LNAQdfEF3j69DnmpwTMnuBQJ+f4x-1Di9TZ1f5hvVmPDwmw@mail.gmail.com>
+References: <1529025532-22087-1-git-send-email-yamada.masahiro@socionext.com>
+ <1529025532-22087-2-git-send-email-yamada.masahiro@socionext.com>
+ <20180619132811.45bf6454@bbrezillon> <20180622134235.5ab76325@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180618074556.6944-6-linus.walleij@linaro.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dev@lists.96boards.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Andy Shevchenko <andy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180622134235.5ab76325@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: linux-mtd <linux-mtd@lists.infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Richard Weinberger <richard@nod.at>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-stable #4 . 14+" <stable@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 18.6.2018 09:45, Linus Walleij wrote:
-> This adds the low-speed connector to the ZCU100 rev C device
-> tree (also known as the Ultra96 board).
-> 
-> This is a proof-of-concept only, showing how it is possible
-> to populate a Secure96 board using the other patches in the
-> series.
-> 
-> If you comment out or delete the board {} node, you can
-> populate/depopulate the board from sysfs instead.
-> 
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  .../boot/dts/xilinx/zynqmp-zcu100-revC.dts    | 27 +++++++++++++++++--
->  1 file changed, 25 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> index d62276e0e0a9..fc30497f248d 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> @@ -110,6 +110,28 @@
->  		compatible = "mmc-pwrseq-simple";
->  		reset-gpios = <&gpio 7 GPIO_ACTIVE_LOW>; /* WIFI_EN */
->  	};
-> +
-> +	lscon: connector {
-> +		compatible = "96boards,low-speed-connector";
-> +		i2c0 = <&i2csw_0>;
-> +		i2c1 = <&i2csw_1>;
-> +		spi = <&spi0>;
-> +		gpios = <&gpio 36 GPIO_ACTIVE_HIGH>, /* GPIO-A */
-> +		        <&gpio 37 GPIO_ACTIVE_HIGH>, /* GPIO-B */
-> +			<&gpio 39 GPIO_ACTIVE_HIGH>, /* GPIO-C */
-> +			<&gpio 40 GPIO_ACTIVE_HIGH>, /* GPIO-D */
-> +			<&gpio 44 GPIO_ACTIVE_HIGH>, /* GPIO-E */
-> +			<&gpio 45 GPIO_ACTIVE_HIGH>, /* GPIO-F */
-> +			<&gpio 78 GPIO_ACTIVE_HIGH>, /* GPIO-G */
-> +			<&gpio 79 GPIO_ACTIVE_HIGH>, /* GPIO-H */
-> +			<&gpio 80 GPIO_ACTIVE_HIGH>, /* GPIO-I */
-> +			<&gpio 81 GPIO_ACTIVE_HIGH>, /* GPIO-J */
-> +			<&gpio 82 GPIO_ACTIVE_HIGH>, /* GPIO-K */
-> +			<&gpio 83 GPIO_ACTIVE_HIGH>; /* GPIO-L */
+2018-06-22 20:42 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:
+> Hi Masahiro,
+>
+> On Tue, 19 Jun 2018 13:28:11 +0200
+> Boris Brezillon <boris.brezillon@bootlin.com> wrote:
+>
+>> Hi Masahiro,
+>>
+>> On Fri, 15 Jun 2018 10:18:50 +0900
+>> Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+>>
+>> > According to the Denali User's Guide, this IP needs three clocks:
+>> >
+>> >  - clk: controller core clock
+>> >
+>> >  - clk_x: bus interface clock
+>> >
+>> >  - ecc_clk: clock at which ECC circuitry is run
+>> >
+>> > Currently, denali_dt.c requires a single anonymous clock and its
+>> > frequency.  However, the driver needs to get the frequency of "clk_x"
+>> > not "clk".  This is confusing because people tend to assume the
+>> > anonymous clock means the core clock.  In fact, I got a report of
+>> > SOCFPGA breakage because the timing parameters are calculated based
+>> > on a wrong frequency.
+>> >
+>> > Instead of the cheesy implementation, the clocks in the real hardware
+>> > should be represented in the driver and the DT-binding.
+>> >
+>> > However, adding new clocks would break the existing platforms.  For the
+>> > backward compatibility, the driver still accepts a single clock just as
+>> > before.  If clk_x is missing, clk_x_rate is set to a hardcoded value.
+>> > This is fine for existing DT of Socionext UniPhier, and also fixes the
+>> > issue of Altera (Intel) SOCFPGA because both platforms use 200 MHz for
+>> > the bus interface clock.
+>> >
+>> > Fixes: 1bb88666775e ("mtd: nand: denali: handle timing parameters by setup_data_interface()")
+>>
+>> Sorry for changing my mind, but I think this patch is doing more than
+>> just fixing a bug. The bugfix should IMO be limited to unconditionally
+>> setting ->clk_x_rate to 200000000 since this is what was done before
+>> commit 1bb88666775e. And the remaining changes should go in nand/next.
+>
+> Do you want me to write this patch? Note that I can't really take this
+> patch since Rob asked for a new version with DT bindings changes placed
+> in a separate patch.
 
 
-This connector has also 2 uarts which you should have here too.
+Sorry for the delay.  I was traveling.
 
-Thanks,
-Michal
+Now I am back home, and started to flush my TODO queue.
+
+V4 will be soon.
 
 
-> +		board {
-> +			compatible = "96boards,secure96";
-> +		};
-> +	};
->  };
->  
->  &dcc {
-> @@ -134,8 +156,9 @@
->  			  "USB1_DIR", "USB1_DATA2", "USB1_NXT", "USB1_DATA0", "USB1_DATA1",
->  			  "USB1_STP", "USB1_DATA3", "USB1_DATA4", "USB1_DATA5", "USB1_DATA6",
->  			  "USB_DATA7", "WLAN_IRQ", "PMIC_IRQ", /* MIO end and EMIO start */
-> -			  "", "",
-> -			  "", "", "", "", "", "", "", "", "", "",
-> +			  "GPIO-G", "GPIO-H",
-> +			  "GPIO-I", "GPIO-J", "GPIO-K", "GPIO-L",
-> +			  "", "", "", "", "", "",
->  			  "", "", "", "", "", "", "", "", "", "",
->  			  "", "", "", "", "", "", "", "", "", "",
->  			  "", "", "", "", "", "", "", "", "", "",
-> 
+
+
+-- 
+Best Regards
+Masahiro Yamada
