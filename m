@@ -1,720 +1,515 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v8 2/2] drivers: soc: Add LLCC driver
-Date: Fri, 22 Jun 2018 10:13:54 -0700
-Message-ID: <20180622171354.GI10336@builder>
-References: <1527122121-31452-1-git-send-email-rishabhb@codeaurora.org>
- <1527122121-31452-3-git-send-email-rishabhb@codeaurora.org>
+From: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [DPU PATCH 09/11] drm/msm/dpu: Remove unused code
+ and move the header
+Date: Fri, 22 Jun 2018 23:09:05 +0530
+Message-ID: <93d40d67c43f54156d306f3f3c5312ca@codeaurora.org>
+References: <1527691788-9350-1-git-send-email-ryadav@codeaurora.org>
+ <1527691788-9350-10-git-send-email-ryadav@codeaurora.org>
+ <CAOw6vbLXWojrjXUQq62+n-BDbtQsyBLq_xYGe0RSqnsxo2Ep5Q@mail.gmail.com>
+ <20180622153352.GE24526@jcrouse-lnx.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1527122121-31452-3-git-send-email-rishabhb@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm@lists.infradead.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, evgreen@chromium.org, robh@kernel.org, andy.shevchenko@gmail.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180622153352.GE24526-9PYrDHPZ2Orvke4nUoYGnHL1okKdlPRT@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 23 May 17:35 PDT 2018, Rishabh Bhatnagar wrote:
-
-> LLCC (Last Level Cache Controller) provides additional cache memory
-> in the system. LLCC is partitioned into multiple slices and each
-> slice gets its own priority, size, ID and other config parameters.
-> LLCC driver programs these parameters for each slice. Clients that
-> are assigned to use LLCC need to get information such size & ID of the
-> slice they get and activate or deactivate the slice as needed. LLCC driver
-> provides API for the clients to perform these operations.
-> 
-> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
-> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> Reviewed-by: Evan Green <evgreen@chromium.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> ---
->  drivers/soc/qcom/Kconfig           |  17 ++
->  drivers/soc/qcom/Makefile          |   2 +
->  drivers/soc/qcom/llcc-sdm845.c     |  94 +++++++++++
->  drivers/soc/qcom/llcc-slice.c      | 335 +++++++++++++++++++++++++++++++++++++
->  include/linux/soc/qcom/llcc-qcom.h | 180 ++++++++++++++++++++
->  5 files changed, 628 insertions(+)
->  create mode 100644 drivers/soc/qcom/llcc-sdm845.c
->  create mode 100644 drivers/soc/qcom/llcc-slice.c
->  create mode 100644 include/linux/soc/qcom/llcc-qcom.h
-> 
-> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-> index e050eb8..0b550f9 100644
-> --- a/drivers/soc/qcom/Kconfig
-> +++ b/drivers/soc/qcom/Kconfig
-> @@ -21,6 +21,23 @@ config QCOM_GSBI
->            functions for connecting the underlying serial UART, SPI, and I2C
->            devices to the output pins.
->  
-> +config QCOM_LLCC
-> +	tristate "Qualcomm Technologies, Inc. LLCC driver"
-> +	depends on ARCH_QCOM
-> +	help
-> +	  Qualcomm Technologies, Inc. platform specific
-> +	  Last Level Cache Controller(LLCC) driver. This provides interfaces
-> +	  to clients that use the LLCC. Say yes here to enable LLCC slice
-> +	  driver.
-> +
-> +config QCOM_SDM845_LLCC
-> +	tristate "Qualcomm Technologies, Inc. SDM845 LLCC driver"
-> +	depends on QCOM_LLCC
-> +	help
-> +	  Say yes here to enable the LLCC driver for SDM845. This provides
-> +	  data required to configure LLCC so that clients can start using the
-> +	  LLCC slices.
-> +
->  config QCOM_MDT_LOADER
->  	tristate
->  	select QCOM_SCM
-> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-> index dcebf28..e16d6a2 100644
-> --- a/drivers/soc/qcom/Makefile
-> +++ b/drivers/soc/qcom/Makefile
-> @@ -12,3 +12,5 @@ obj-$(CONFIG_QCOM_SMEM_STATE) += smem_state.o
->  obj-$(CONFIG_QCOM_SMP2P)	+= smp2p.o
->  obj-$(CONFIG_QCOM_SMSM)	+= smsm.o
->  obj-$(CONFIG_QCOM_WCNSS_CTRL) += wcnss_ctrl.o
-> +obj-$(CONFIG_QCOM_LLCC) += llcc-slice.o
-> +obj-$(CONFIG_QCOM_SDM845_LLCC) += llcc-sdm845.o
-> diff --git a/drivers/soc/qcom/llcc-sdm845.c b/drivers/soc/qcom/llcc-sdm845.c
-> new file mode 100644
-> index 0000000..2e1e4f0
-> --- /dev/null
-> +++ b/drivers/soc/qcom/llcc-sdm845.c
-> @@ -0,0 +1,94 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-> + *
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/soc/qcom/llcc-qcom.h>
-> +
-> +/*
-> + * SCT(System Cache Table) entry contains of the following members:
-> + * usecase_id: Unique id for the client's use case
-> + * slice_id: llcc slice id for each client
-> + * max_cap: The maximum capacity of the cache slice provided in KB
-> + * priority: Priority of the client used to select victim line for replacement
-> + * fixed_size: Boolean indicating if the slice has a fixed capacity
-> + * bonus_ways: Bonus ways are additional ways to be used for any slice,
-> + *		if client ends up using more than reserved cache ways. Bonus
-> + *		ways are allocated only if they are not reserved for some
-> + *		other client.
-> + * res_ways: Reserved ways for the cache slice, the reserved ways cannot
-> + *		be used by any other client than the one its assigned to.
-> + * cache_mode: Each slice operates as a cache, this controls the mode of the
-> + *             slice: normal or TCM(Tightly Coupled Memory)
-> + * probe_target_ways: Determines what ways to probe for access hit. When
-> + *                    configured to 1 only bonus and reserved ways are probed.
-> + *                    When configured to 0 all ways in llcc are probed.
-> + * dis_cap_alloc: Disable capacity based allocation for a client
-> + * retain_on_pc: If this bit is set and client has maintained active vote
-> + *               then the ways assigned to this client are not flushed on power
-> + *               collapse.
-> + * activate_on_init: Activate the slice immediately after the SCT is programmed
-> + */
-> +#define SCT_ENTRY(uid, sid, mc, p, fs, bway, rway, cmod, ptw, dca, rp, a) \
-> +	{					\
-> +		.usecase_id = uid,		\
-> +		.slice_id = sid,		\
-> +		.max_cap = mc,			\
-> +		.priority = p,			\
-> +		.fixed_size = fs,		\
-> +		.bonus_ways = bway,		\
-> +		.res_ways = rway,		\
-> +		.cache_mode = cmod,		\
-> +		.probe_target_ways = ptw,	\
-> +		.dis_cap_alloc = dca,		\
-> +		.retain_on_pc = rp,		\
-> +		.activate_on_init = a,		\
-> +	}
-> +
-> +static struct llcc_slice_config sdm845_data[] =  {
-> +	SCT_ENTRY(LLCC_CPUSS,    1,  2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 1),
-> +	SCT_ENTRY(LLCC_VIDSC0,   2,  512,  2, 1, 0x0,   0x0f0, 0, 0, 1, 1, 0),
-> +	SCT_ENTRY(LLCC_VIDSC1,   3,  512,  2, 1, 0x0,   0x0f0, 0, 0, 1, 1, 0),
-> +	SCT_ENTRY(LLCC_ROTATOR,  4,  563,  2, 1, 0x0,   0x00e, 2, 0, 1, 1, 0),
-> +	SCT_ENTRY(LLCC_VOICE,    5,  2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 0),
-> +	SCT_ENTRY(LLCC_AUDIO,    6,  2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 0),
-> +	SCT_ENTRY(LLCC_MDMHPGRW, 7,  1024, 2, 0, 0xfc,  0xf00, 0, 0, 1, 1, 0),
-> +	SCT_ENTRY(LLCC_MDM,      8,  2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 0),
-> +	SCT_ENTRY(LLCC_CMPT,     10, 2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 0),
-> +	SCT_ENTRY(LLCC_GPUHTW,   11, 512,  1, 1, 0xc,   0x0,   0, 0, 1, 1, 0),
-> +	SCT_ENTRY(LLCC_GPU,      12, 2304, 1, 0, 0xff0, 0x2,   0, 0, 1, 1, 0),
-> +	SCT_ENTRY(LLCC_MMUHWT,   13, 256,  2, 0, 0x0,   0x1,   0, 0, 1, 0, 1),
-> +	SCT_ENTRY(LLCC_CMPTDMA,  15, 2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 0),
-> +	SCT_ENTRY(LLCC_DISP,     16, 2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 0),
-> +	SCT_ENTRY(LLCC_VIDFW,    17, 2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 0),
-> +	SCT_ENTRY(LLCC_MDMHPFX,  20, 1024, 2, 1, 0x0,   0xf00, 0, 0, 1, 1, 0),
-> +	SCT_ENTRY(LLCC_MDMPNG,   21, 1024, 0, 1, 0x1e,  0x0,   0, 0, 1, 1, 0),
-> +	SCT_ENTRY(LLCC_AUDHW,    22, 1024, 1, 1, 0xffc, 0x2,   0, 0, 1, 1, 0),
-> +};
-> +
-> +static int sdm845_qcom_llcc_probe(struct platform_device *pdev)
-> +{
-> +	return qcom_llcc_probe(pdev, sdm845_data, ARRAY_SIZE(sdm845_data));
-> +}
-> +
-> +static const struct of_device_id sdm845_qcom_llcc_of_match[] = {
-> +	{ .compatible = "qcom,sdm845-llcc", },
-> +	{ }
-> +};
-> +
-> +static struct platform_driver sdm845_qcom_llcc_driver = {
-> +	.driver = {
-> +		.name = "sdm845-llcc",
-> +		.of_match_table = sdm845_qcom_llcc_of_match,
-> +	},
-> +	.probe = sdm845_qcom_llcc_probe,
-> +};
-> +module_platform_driver(sdm845_qcom_llcc_driver);
-> +
-> +MODULE_DESCRIPTION("QCOM sdm845 LLCC driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/soc/qcom/llcc-slice.c b/drivers/soc/qcom/llcc-slice.c
-> new file mode 100644
-> index 0000000..fcaad1a
-> --- /dev/null
-> +++ b/drivers/soc/qcom/llcc-slice.c
-> @@ -0,0 +1,335 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-> + *
-> + */
-> +
-> +#include <linux/bitmap.h>
-> +#include <linux/bitops.h>
-> +#include <linux/device.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +#include <linux/soc/qcom/llcc-qcom.h>
-> +
-> +#define ACTIVATE                      BIT(0)
-> +#define DEACTIVATE                    BIT(1)
-> +#define ACT_CTRL_OPCODE_ACTIVATE      BIT(0)
-> +#define ACT_CTRL_OPCODE_DEACTIVATE    BIT(1)
-> +#define ACT_CTRL_ACT_TRIG             BIT(0)
-> +#define ACT_CTRL_OPCODE_SHIFT         0x01
-> +#define ATTR1_PROBE_TARGET_WAYS_SHIFT 0x02
-> +#define ATTR1_FIXED_SIZE_SHIFT        0x03
-> +#define ATTR1_PRIORITY_SHIFT          0x04
-> +#define ATTR1_MAX_CAP_SHIFT           0x10
-> +#define ATTR0_RES_WAYS_MASK           GENMASK(11, 0)
-> +#define ATTR0_BONUS_WAYS_MASK         GENMASK(27, 16)
-> +#define ATTR0_BONUS_WAYS_SHIFT        0x10
-> +#define LLCC_STATUS_READ_DELAY        100
-> +
-> +#define CACHE_LINE_SIZE_SHIFT         6
-> +
-> +#define LLCC_COMMON_STATUS0           0x0003000c
-> +#define LLCC_LB_CNT_MASK              GENMASK(31, 28)
-> +#define LLCC_LB_CNT_SHIFT             28
-> +
-> +#define MAX_CAP_TO_BYTES(n)           (n * SZ_1K)
-> +#define LLCC_TRP_ACT_CTRLn(n)         (n * SZ_4K)
-> +#define LLCC_TRP_STATUSn(n)           (4 + n * SZ_4K)
-> +#define LLCC_TRP_ATTR0_CFGn(n)        (0x21000 + SZ_8 * n)
-> +#define LLCC_TRP_ATTR1_CFGn(n)        (0x21004 + SZ_8 * n)
-> +
-> +#define BANK_OFFSET_STRIDE	      0x80000
-> +
-> +static struct llcc_drv_data *drv_data;
-> +
-> +static const struct regmap_config llcc_regmap_config = {
-> +	.reg_bits = 32,
-> +	.reg_stride = 4,
-> +	.val_bits = 32,
-> +	.fast_io = true,
-> +};
-> +
-> +/**
-> + * llcc_slice_getd - get llcc slice descriptor
-> + * @uid: usecase_id for the client
-> + *
-> + * A pointer to llcc slice descriptor will be returned on success and
-> + * and error pointer is returned on failure
-> + */
-> +struct llcc_slice_desc *llcc_slice_getd(u32 uid)
-> +{
-> +	const struct llcc_slice_config *cfg;
-> +	struct llcc_slice_desc *desc;
-> +	u32 sz, count;
-> +
-> +	cfg = drv_data->cfg;
-> +	sz = drv_data->cfg_size;
-> +
-> +	for (count = 0; cfg && count < sz; count++, cfg++)
-> +		if (cfg->usecase_id == uid)
-> +			break;
-> +
-> +	if (count == sz || !cfg)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	desc = kzalloc(sizeof(*desc), GFP_KERNEL);
-> +	if (!desc)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	desc->slice_id = cfg->slice_id;
-> +	desc->slice_size = cfg->max_cap;
-> +
-> +	return desc;
-> +}
-> +EXPORT_SYMBOL_GPL(llcc_slice_getd);
-> +
-> +/**
-> + * llcc_slice_putd - llcc slice descritpor
-> + * @desc: Pointer to llcc slice descriptor
-> + */
-> +void llcc_slice_putd(struct llcc_slice_desc *desc)
-> +{
-> +	kfree(desc);
-> +}
-> +EXPORT_SYMBOL_GPL(llcc_slice_putd);
-> +
-> +static int llcc_update_act_ctrl(u32 sid,
-> +				u32 act_ctrl_reg_val, u32 status)
-> +{
-> +	u32 act_ctrl_reg;
-> +	u32 status_reg;
-> +	u32 slice_status;
-> +	int ret;
-> +
-> +	act_ctrl_reg = drv_data->bcast_off + LLCC_TRP_ACT_CTRLn(sid);
-> +	status_reg = drv_data->bcast_off + LLCC_TRP_STATUSn(sid);
-> +
-> +	/* Set the ACTIVE trigger */
-> +	act_ctrl_reg_val |= ACT_CTRL_ACT_TRIG;
-> +	ret = regmap_write(drv_data->regmap, act_ctrl_reg, act_ctrl_reg_val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Clear the ACTIVE trigger */
-> +	act_ctrl_reg_val &= ~ACT_CTRL_ACT_TRIG;
-> +	ret = regmap_write(drv_data->regmap, act_ctrl_reg, act_ctrl_reg_val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_read_poll_timeout(drv_data->regmap, status_reg,
-> +				      slice_status, !(slice_status & status),
-> +				      0, LLCC_STATUS_READ_DELAY);
-> +	return ret;
-> +}
-> +
-> +/**
-> + * llcc_slice_activate - Activate the llcc slice
-> + * @desc: Pointer to llcc slice descriptor
-> + *
-> + * A value of zero will be returned on success and a negative errno will
-> + * be returned in error cases
-> + */
-> +int llcc_slice_activate(struct llcc_slice_desc *desc)
-> +{
-> +	int ret;
-> +	u32 act_ctrl_val;
-> +
-> +	mutex_lock(&drv_data->lock);
-> +	if (test_bit(desc->slice_id, drv_data->bitmap)) {
-> +		mutex_unlock(&drv_data->lock);
-> +		return 0;
-> +	}
-> +
-> +	act_ctrl_val = ACT_CTRL_OPCODE_ACTIVATE << ACT_CTRL_OPCODE_SHIFT;
-> +
-> +	ret = llcc_update_act_ctrl(desc->slice_id, act_ctrl_val,
-> +				  DEACTIVATE);
-> +	if (ret) {
-> +		mutex_unlock(&drv_data->lock);
-> +		return ret;
-> +	}
-> +
-> +	__set_bit(desc->slice_id, drv_data->bitmap);
-> +	mutex_unlock(&drv_data->lock);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(llcc_slice_activate);
-> +
-> +/**
-> + * llcc_slice_deactivate - Deactivate the llcc slice
-> + * @desc: Pointer to llcc slice descriptor
-> + *
-> + * A value of zero will be returned on success and a negative errno will
-> + * be returned in error cases
-> + */
-> +int llcc_slice_deactivate(struct llcc_slice_desc *desc)
-> +{
-> +	u32 act_ctrl_val;
-> +	int ret;
-> +
-> +	mutex_lock(&drv_data->lock);
-> +	if (!test_bit(desc->slice_id, drv_data->bitmap)) {
-> +		mutex_unlock(&drv_data->lock);
-> +		return 0;
-> +	}
-> +	act_ctrl_val = ACT_CTRL_OPCODE_DEACTIVATE << ACT_CTRL_OPCODE_SHIFT;
-> +
-> +	ret = llcc_update_act_ctrl(desc->slice_id, act_ctrl_val,
-> +				  ACTIVATE);
-> +	if (ret) {
-> +		mutex_unlock(&drv_data->lock);
-> +		return ret;
-> +	}
-> +
-> +	__clear_bit(desc->slice_id, drv_data->bitmap);
-> +	mutex_unlock(&drv_data->lock);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(llcc_slice_deactivate);
-> +
-> +/**
-> + * llcc_get_slice_id - return the slice id
-> + * @desc: Pointer to llcc slice descriptor
-> + */
-> +int llcc_get_slice_id(struct llcc_slice_desc *desc)
-> +{
-> +	return desc->slice_id;
-> +}
-> +EXPORT_SYMBOL_GPL(llcc_get_slice_id);
-> +
-> +/**
-> + * llcc_get_slice_size - return the slice id
-> + * @desc: Pointer to llcc slice descriptor
-> + */
-> +size_t llcc_get_slice_size(struct llcc_slice_desc *desc)
-> +{
-> +	return desc->slice_size;
-> +}
-> +EXPORT_SYMBOL_GPL(llcc_get_slice_size);
-> +
-> +static int qcom_llcc_cfg_program(struct platform_device *pdev)
-> +{
-> +	int i;
-> +	u32 attr1_cfg;
-> +	u32 attr0_cfg;
-> +	u32 attr1_val;
-> +	u32 attr0_val;
-> +	u32 max_cap_cacheline;
-> +	u32 sz;
-> +	int ret;
-> +	const struct llcc_slice_config *llcc_table;
-> +	struct llcc_slice_desc desc;
-> +	u32 bcast_off = drv_data->bcast_off;
-> +
-> +	sz = drv_data->cfg_size;
-> +	llcc_table = drv_data->cfg;
-> +
-> +	for (i = 0; i < sz; i++) {
-> +		attr1_cfg = bcast_off +
-> +				LLCC_TRP_ATTR1_CFGn(llcc_table[i].slice_id);
-> +		attr0_cfg = bcast_off +
-> +				LLCC_TRP_ATTR0_CFGn(llcc_table[i].slice_id);
-> +
-> +		attr1_val = llcc_table[i].cache_mode;
-> +		attr1_val |= llcc_table[i].probe_target_ways <<
-> +				ATTR1_PROBE_TARGET_WAYS_SHIFT;
-> +		attr1_val |= llcc_table[i].fixed_size <<
-> +				ATTR1_FIXED_SIZE_SHIFT;
-> +		attr1_val |= llcc_table[i].priority <<
-> +				ATTR1_PRIORITY_SHIFT;
-> +
-> +		max_cap_cacheline = MAX_CAP_TO_BYTES(llcc_table[i].max_cap);
-> +
-> +		/* LLCC instances can vary for each target.
-> +		 * The SW writes to broadcast register which gets propagated
-> +		 * to each llcc instace (llcc0,.. llccN).
-> +		 * Since the size of the memory is divided equally amongst the
-> +		 * llcc instances, we need to configure the max cap accordingly.
-> +		 */
-> +		max_cap_cacheline = max_cap_cacheline / drv_data->num_banks;
-> +		max_cap_cacheline >>= CACHE_LINE_SIZE_SHIFT;
-> +		attr1_val |= max_cap_cacheline << ATTR1_MAX_CAP_SHIFT;
-> +
-> +		attr0_val = llcc_table[i].res_ways & ATTR0_RES_WAYS_MASK;
-> +		attr0_val |= llcc_table[i].bonus_ways << ATTR0_BONUS_WAYS_SHIFT;
-> +
-> +		ret = regmap_write(drv_data->regmap, attr1_cfg, attr1_val);
-> +		if (ret)
-> +			return ret;
-> +		ret = regmap_write(drv_data->regmap, attr0_cfg, attr0_val);
-> +		if (ret)
-> +			return ret;
-> +		if (llcc_table[i].activate_on_init) {
-> +			desc.slice_id = llcc_table[i].slice_id;
-> +			ret = llcc_slice_activate(&desc);
-> +		}
-> +	}
-> +	return ret;
-> +}
-> +
-> +int qcom_llcc_probe(struct platform_device *pdev,
-> +		      const struct llcc_slice_config *llcc_cfg, u32 sz)
-> +{
-> +	u32 num_banks;
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	void __iomem *base;
-> +	int ret, i;
-> +
-> +	drv_data = devm_kzalloc(dev, sizeof(*drv_data), GFP_KERNEL);
-> +	if (!drv_data)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	drv_data->regmap = devm_regmap_init_mmio(dev, base,
-> +					&llcc_regmap_config);
-> +	if (IS_ERR(drv_data->regmap))
-> +		return PTR_ERR(drv_data->regmap);
-> +
-> +	ret = regmap_read(drv_data->regmap, LLCC_COMMON_STATUS0,
-> +						&num_banks);
-> +	if (ret)
-> +		return ret;
-> +
-> +	num_banks &= LLCC_LB_CNT_MASK;
-> +	num_banks >>= LLCC_LB_CNT_SHIFT;
-> +	drv_data->num_banks = num_banks;
-> +
-> +	for (i = 0; i < sz; i++)
-> +		if (llcc_cfg[i].slice_id > drv_data->max_slices)
-> +			drv_data->max_slices = llcc_cfg[i].slice_id;
-> +
-> +	drv_data->offsets = devm_kcalloc(dev, num_banks, sizeof(u32),
-> +							GFP_KERNEL);
-> +	if (!drv_data->offsets)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < num_banks; i++)
-> +		drv_data->offsets[i] = i * BANK_OFFSET_STRIDE;
-> +
-> +	drv_data->bcast_off = num_banks * BANK_OFFSET_STRIDE;
-> +
-> +	drv_data->bitmap = devm_kcalloc(dev,
-> +	BITS_TO_LONGS(drv_data->max_slices), sizeof(unsigned long),
-> +						GFP_KERNEL);
-> +	if (!drv_data->bitmap)
-> +		return -ENOMEM;
-> +
-> +	drv_data->cfg = llcc_cfg;
-> +	drv_data->cfg_size = sz;
-> +	mutex_init(&drv_data->lock);
-> +	platform_set_drvdata(pdev, drv_data);
-> +
-> +	return qcom_llcc_cfg_program(pdev);
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_llcc_probe);
-> diff --git a/include/linux/soc/qcom/llcc-qcom.h b/include/linux/soc/qcom/llcc-qcom.h
-> new file mode 100644
-> index 0000000..7e3b9c6
-> --- /dev/null
-> +++ b/include/linux/soc/qcom/llcc-qcom.h
-> @@ -0,0 +1,180 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-> + *
-> + */
-> +
-> +#include <linux/platform_device.h>
-> +#ifndef __LLCC_QCOM__
-> +#define __LLCC_QCOM__
-> +
-> +#define LLCC_CPUSS       1
-> +#define LLCC_VIDSC0      2
-> +#define LLCC_VIDSC1      3
-> +#define LLCC_ROTATOR     4
-> +#define LLCC_VOICE       5
-> +#define LLCC_AUDIO       6
-> +#define LLCC_MDMHPGRW    7
-> +#define LLCC_MDM         8
-> +#define LLCC_CMPT        10
-> +#define LLCC_GPUHTW      11
-> +#define LLCC_GPU         12
-> +#define LLCC_MMUHWT      13
-> +#define LLCC_CMPTDMA     15
-> +#define LLCC_DISP        16
-> +#define LLCC_VIDFW       17
-> +#define LLCC_MDMHPFX     20
-> +#define LLCC_MDMPNG      21
-> +#define LLCC_AUDHW       22
-> +
-> +/**
-> + * llcc_slice_desc - Cache slice descriptor
-> + * @slice_id: llcc slice id
-> + * @slice_size: Size allocated for the llcc slice
-> + */
-> +struct llcc_slice_desc {
-> +	u32 slice_id;
-> +	size_t slice_size;
-> +};
-> +
-> +/**
-> + * llcc_slice_config - Data associated with the llcc slice
-> + * @usecase_id: usecase id for which the llcc slice is used
-> + * @slice_id: llcc slice id assigned to each slice
-> + * @max_cap: maximum capacity of the llcc slice
-> + * @priority: priority of the llcc slice
-> + * @fixed_size: whether the llcc slice can grow beyond its size
-> + * @bonus_ways: bonus ways associated with llcc slice
-> + * @res_ways: reserved ways associated with llcc slice
-> + * @cache_mode: mode of the llcc slice
-> + * @probe_target_ways: Probe only reserved and bonus ways on a cache miss
-> + * @dis_cap_alloc: Disable capacity based allocation
-> + * @retain_on_pc: Retain through power collapse
-> + * @activate_on_init: activate the slice on init
-> + */
-> +struct llcc_slice_config {
-> +	u32 usecase_id;
-> +	u32 slice_id;
-> +	u32 max_cap;
-> +	u32 priority;
-> +	bool fixed_size;
-> +	u32 bonus_ways;
-> +	u32 res_ways;
-> +	u32 cache_mode;
-> +	u32 probe_target_ways;
-> +	bool dis_cap_alloc;
-> +	bool retain_on_pc;
-> +	bool activate_on_init;
-> +};
-> +
-> +/**
-> + * llcc_drv_data - Data associated with the llcc driver
-> + * @regmap: regmap associated with the llcc device
-> + * @cfg: pointer to the data structure for slice configuration
-> + * @lock: mutex associated with each slice
-> + * @cfg_size: size of the config data table
-> + * @max_slices: max slices as read from device tree
-> + * @bcast_off: Offset of the broadcast bank
-> + * @num_banks: Number of llcc banks
-> + * @bitmap: Bit map to track the active slice ids
-> + * @offsets: Pointer to the bank offsets array
-> + */
-> +struct llcc_drv_data {
-> +	struct regmap *regmap;
-> +	const struct llcc_slice_config *cfg;
-> +	struct mutex lock;
-> +	u32 cfg_size;
-> +	u32 max_slices;
-> +	u32 bcast_off;
-> +	u32 num_banks;
-> +	unsigned long *bitmap;
-> +	u32 *offsets;
-> +};
-> +
-> +#if IS_ENABLED(CONFIG_QCOM_LLCC)
-> +/**
-> + * llcc_slice_getd - get llcc slice descriptor
-> + * @uid: usecase_id of the client
-> + */
-> +struct llcc_slice_desc *llcc_slice_getd(u32 uid);
-> +
-> +/**
-> + * llcc_slice_putd - llcc slice descritpor
-> + * @desc: Pointer to llcc slice descriptor
-> + */
-> +void llcc_slice_putd(struct llcc_slice_desc *desc);
-> +
-> +/**
-> + * llcc_get_slice_id - get slice id
-> + * @desc: Pointer to llcc slice descriptor
-> + */
-> +int llcc_get_slice_id(struct llcc_slice_desc *desc);
-> +
-> +/**
-> + * llcc_get_slice_size - llcc slice size
-> + * @desc: Pointer to llcc slice descriptor
-> + */
-> +size_t llcc_get_slice_size(struct llcc_slice_desc *desc);
-> +
-> +/**
-> + * llcc_slice_activate - Activate the llcc slice
-> + * @desc: Pointer to llcc slice descriptor
-> + */
-> +int llcc_slice_activate(struct llcc_slice_desc *desc);
-> +
-> +/**
-> + * llcc_slice_deactivate - Deactivate the llcc slice
-> + * @desc: Pointer to llcc slice descriptor
-> + */
-> +int llcc_slice_deactivate(struct llcc_slice_desc *desc);
-> +
-> +/**
-> + * qcom_llcc_probe - program the sct table
-> + * @pdev: platform device pointer
-> + * @table: soc sct table
-> + * @sz: Size of the config table
-> + */
-> +int qcom_llcc_probe(struct platform_device *pdev,
-> +		      const struct llcc_slice_config *table, u32 sz);
-> +#else
-> +static inline struct llcc_slice_desc *llcc_slice_getd(u32 uid)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline void llcc_slice_putd(struct llcc_slice_desc *desc)
-> +{
-> +
-> +};
-> +
-> +static inline int llcc_get_slice_id(struct llcc_slice_desc *desc)
-> +{
-> +	return -EINVAL;
-> +}
-> +
-> +static inline size_t llcc_get_slice_size(struct llcc_slice_desc *desc)
-> +{
-> +	return 0;
-> +}
-> +static inline int llcc_slice_activate(struct llcc_slice_desc *desc)
-> +{
-> +	return -EINVAL;
-> +}
-> +
-> +static inline int llcc_slice_deactivate(struct llcc_slice_desc *desc)
-> +{
-> +	return -EINVAL;
-> +}
-> +static inline int qcom_llcc_probe(struct platform_device *pdev,
-> +		      const struct llcc_slice_config *table, u32 sz)
-> +{
-> +	return -ENODEV;
-> +}
-> +
-> +static inline int qcom_llcc_remove(struct platform_device *pdev)
-> +{
-> +	return -ENODEV;
-> +}
-> +#endif
-> +
-> +#endif
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMjAxOC0wNi0yMiAyMTowMywgSm9yZGFuIENyb3VzZSB3cm90ZToKPiBPbiBGcmksIEp1biAy
+MiwgMjAxOCBhdCAwOTo1MToyOEFNIC0wNDAwLCBTZWFuIFBhdWwgd3JvdGU6Cj4+IE9uIFdlZCwg
+TWF5IDMwLCAyMDE4IGF0IDEwOjUwIEFNIFJhamVzaCBZYWRhdiA8cnlhZGF2QGNvZGVhdXJvcmEu
+b3JnPiAKPj4gd3JvdGU6Cj4+ID4KPj4gPiBGcm9tOiBKb3JkYW4gQ3JvdXNlIDxqY3JvdXNlQGNv
+ZGVhdXJvcmEub3JnPgo+PiA+Cj4+ID4gUmVtb3ZlIHVudXNlZCBjb2RlIGZyb20gZHB1X2lvX3V0
+aWwuYy4gIFRoZSBmdW5jdGlvbnMgYXJlIG9ubHkKPj4gPiB1c2VkIGluc2lkZSBvZiB0aGUgbXNt
+IGRyaXZlciBzbyByZW1vdmUgdGhlIEVYUE9SVF9TWU1CT0wKPj4gPiB0YWdzIGFuZCBtb3ZlIHRo
+ZSBoZWFkZXIgZHB1X2lvX3V0aWwuaCBmcm9tIGluY2x1ZGUvbGludXguCj4+ID4KPj4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBKb3JkYW4gQ3JvdXNlIDxqY3JvdXNlQGNvZGVhdXJvcmEub3JnPgo+PiA+IFty
+eWFkYXZAY29kZWF1cm9yYS5vcmc6IHJlYmFzZWQgYW5kIHJlbW92ZWQgc29tZSBleHRyYSB1bnVz
+ZWQgY29kZV0KPj4gPiBTaWduZWQtb2ZmLWJ5OiBSYWplc2ggWWFkYXYgPHJ5YWRhdkBjb2RlYXVy
+b3JhLm9yZz4KPj4gCj4+IEhpIFJhamVzaCBhbmQgSm9yZGFuLAo+PiBJJ20gYmFja3BvcnRpbmcg
+dGhpcyBzZXJpZXMgZm9yIHRlc3RpbmcsIGFuZCBoYXZlIGZvdW5kIHRoYXQgdGhlCj4+IG1kc3Mt
+cGxsIGRyaXZlciB1c2VzIGJvdGggZHB1X2lvX3V0aWwgYW5kIGEgYnVuY2ggb2YgZnVuY3Rpb25z
+L3N0cnVjdAo+PiBtZW1iZXJzIHJlbW92ZWQgaW4gdGhpcyBwYXRjaHNldC4gRG8gd2UgYW50aWNp
+cGF0ZSBoYXZpbmcgdG8gYWRkIHRob3NlCj4+IGJhY2sgZm9yIG1kc3MtcGxsPwo+IAo+IEF0IHNv
+bWUgcG9pbnQgaW4gdGhlIGRpc3RhbnQgcGFzdCBzb21lIG9mIHRoZSBkb3duc3RyZWFtIGZvbGtz
+IAo+IGRpc2NvdmVyZWQgdGhhdAo+IHRoZXkgd2VyZSB1c2luZyByZWxhdGl2ZWx5IHNpbWlsYXIg
+ZnVuY3Rpb25zIHNvIHRoZXkgZGVjaWRlZCB0byBzaGFyZSAKPiB0aGUgY29kZS4KPiBUaGUgY29k
+ZSBvcmlnaW5hbGx5IGxpdmVkIGluIHRoZSBkaXNwbGF5IGRyaXZlciBzbyBpdCBoYXBwZW5lZCB0
+aGF0IHRoZSAKPiBleHBvcnRlZAo+IGNvZGUgY29udGludWVkIHRvIGJlIGhvc3RlZCB0aGVyZS4K
+PiAKPiBJJ20gbm90IHN1cmUgd2hhdCB0aGUgdXBzdHJlYW0gc3RhdHVzIG9mIHRoZSBtZHNzLXBs
+bCBjb2RlIGlzIGJ1dCBJIAo+IGNhbid0Cj4gaW1hZ2luZSB0aGF0IHNoYXJpbmcgdGhpcyBjb2Rl
+IHdvdWxkIGJlIGluIHRoZSBsb25nIHRlcm0gcGxhbiBhbmQgZXZlbiAKPiBpZiBpdAo+IHdhcyBi
+YXNpYyBtb2R1bGUgZ3VpZGVsaW5lcyB3b3VsZCBkaWN0YXRlIHRoYXQgaXQgd291bGQgbGl2ZSB3
+aXRoIAo+IG1kc3MtcGxsCj4gd2hpY2ggd291bGQgYmUgbW9yZSBsaWtlbHkgdG8gYmUgZWl0aGVy
+IGJlIGJ1aWx0IGluIG9yIGFjdCBhcyBhIAo+IGRlcGVuZGVuY3kgZm9yCj4gRFBVLgo+IAo+IEpv
+cmRhbgoKSGkgU2VhbiwKZHJpdmVycy9jbGsvcWNvbS9tZHNzIHdhcyBuZWVkZWQgZm9yIGRzaS1z
+dGFnaW5nIGRyaXZlciBhbmQgY2FuIGJlIApzYWZlbHkgZHJvcHBlZCBzaW5jZSB3ZSBzd2l0Y2hl
+ZCB0byB1cHN0cmVhbSBEU0kgZHJpdmVyLgpQbGVhc2UgZHJvcCB0aGUgZm9sbG93aW5nIGNoYW5n
+ZSB0byBhZGRyZXNzIHRoaXMgaXNzdWUgKGV4Y2VwdCBmb3IgdGhlIApkcml2ZXIvZ3B1L2RybS9t
+c20vS2NvbmZpZyk6Cmh0dHBzOi8vZ2l0bGFiLmZyZWVkZXNrdG9wLm9yZy9zZWFucGF1bC9kcHUt
+c3RhZ2luZy9jb21taXQvMmU0MzNiNTY0ODliM2U1M2I5ZDg5Y2U3YmZhMTVmYjQ2OThjOGM1OApJ
+IGhhZCB0ZXN0ZWQgaXQgb24gbXkgc2lkZS4KClRoYW5rcywKUmFqZXNoCgo+IAo+PiA+IC0tLQo+
+PiA+ICBkcml2ZXJzL2dwdS9kcm0vbXNtL2RwdV9pb191dGlsLmMgfCAzODAgKy0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4gPiAgZHJpdmVycy9ncHUvZHJtL21zbS9kcHVf
+aW9fdXRpbC5oIHwgIDYxICsrKysrKwo+PiA+ICBkcml2ZXJzL2dwdS9kcm0vbXNtL21zbV9kcnYu
+aCAgICAgfCAgIDEgLQo+PiA+ICBpbmNsdWRlL2xpbnV4L2RwdV9pb191dGlsLmggICAgICAgfCAx
+MTUgLS0tLS0tLS0tLS0tCj4+ID4gIDQgZmlsZXMgY2hhbmdlZCwgNjYgaW5zZXJ0aW9ucygrKSwg
+NDkxIGRlbGV0aW9ucygtKQo+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
+L21zbS9kcHVfaW9fdXRpbC5oCj4+ID4gIGRlbGV0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4
+L2RwdV9pb191dGlsLmgKPj4gPgo+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbXNt
+L2RwdV9pb191dGlsLmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2RwdV9pb191dGlsLmMKPj4gPiBp
+bmRleCBlY2MyOTdjLi5mN2NhZWMzIDEwMDY0NAo+PiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9t
+c20vZHB1X2lvX3V0aWwuYwo+PiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZHB1X2lvX3V0
+aWwuYwo+PiA+IEBAIC0xMywzMTggKzEzLDkgQEAKPj4gPgo+PiA+ICAjaW5jbHVkZSA8bGludXgv
+Y2xrLmg+Cj4+ID4gICNpbmNsdWRlIDxsaW51eC9lcnIuaD4KPj4gPiAtI2luY2x1ZGUgPGxpbnV4
+L2lvLmg+Cj4+ID4gLSNpbmNsdWRlIDxsaW51eC9yZWd1bGF0b3IvY29uc3VtZXIuaD4KPj4gPiAg
+I2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+Cj4+ID4gLSNpbmNsdWRlIDxsaW51eC9kcHVfaW9fdXRp
+bC5oPgo+PiA+Cj4+ID4gLSNkZWZpbmUgTUFYX0kyQ19DTURTICAxNgo+PiA+IC12b2lkIGRzc19y
+ZWdfdyhzdHJ1Y3QgZHNzX2lvX2RhdGEgKmlvLCB1MzIgb2Zmc2V0LCB1MzIgdmFsdWUsIHUzMiBk
+ZWJ1ZykKPj4gPiAtewo+PiA+IC0gICAgICAgdTMyIGluX3ZhbDsKPj4gPiAtCj4+ID4gLSAgICAg
+ICBpZiAoIWlvIHx8ICFpby0+YmFzZSkgewo+PiA+IC0gICAgICAgICAgICAgICBERVZfRVJSKCIl
+cFMtPiVzOiBpbnZhbGlkIGlucHV0XG4iLAo+PiA+IC0gICAgICAgICAgICAgICAgICAgICAgIF9f
+YnVpbHRpbl9yZXR1cm5fYWRkcmVzcygwKSwgX19mdW5jX18pOwo+PiA+IC0gICAgICAgICAgICAg
+ICByZXR1cm47Cj4+ID4gLSAgICAgICB9Cj4+ID4gLQo+PiA+IC0gICAgICAgaWYgKG9mZnNldCA+
+IGlvLT5sZW4pIHsKPj4gPiAtICAgICAgICAgICAgICAgREVWX0VSUigiJXBTLT4lczogb2Zmc2V0
+IG91dCBvZiByYW5nZVxuIiwKPj4gPiAtICAgICAgICAgICAgICAgICAgICAgICBfX2J1aWx0aW5f
+cmV0dXJuX2FkZHJlc3MoMCksIF9fZnVuY19fKTsKPj4gPiAtICAgICAgICAgICAgICAgcmV0dXJu
+Owo+PiA+IC0gICAgICAgfQo+PiA+IC0KPj4gPiAtICAgICAgIHdyaXRlbF9yZWxheGVkKHZhbHVl
+LCBpby0+YmFzZSArIG9mZnNldCk7Cj4+ID4gLSAgICAgICBpZiAoZGVidWcpIHsKPj4gPiAtICAg
+ICAgICAgICAgICAgaW5fdmFsID0gcmVhZGxfcmVsYXhlZChpby0+YmFzZSArIG9mZnNldCk7Cj4+
+ID4gLSAgICAgICAgICAgICAgIERFVl9EQkcoIlslMDh4XSA9PiAlMDh4IFslMDh4XVxuIiwKPj4g
+PiAtICAgICAgICAgICAgICAgICAgICAgICAodTMyKSh1bnNpZ25lZCBsb25nKShpby0+YmFzZSAr
+IG9mZnNldCksCj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgdmFsdWUsIGluX3ZhbCk7Cj4+
+ID4gLSAgICAgICB9Cj4+ID4gLX0gLyogZHNzX3JlZ193ICovCj4+ID4gLUVYUE9SVF9TWU1CT0wo
+ZHNzX3JlZ193KTsKPj4gPiAtCj4+ID4gLXUzMiBkc3NfcmVnX3Ioc3RydWN0IGRzc19pb19kYXRh
+ICppbywgdTMyIG9mZnNldCwgdTMyIGRlYnVnKQo+PiA+IC17Cj4+ID4gLSAgICAgICB1MzIgdmFs
+dWU7Cj4+ID4gLQo+PiA+IC0gICAgICAgaWYgKCFpbyB8fCAhaW8tPmJhc2UpIHsKPj4gPiAtICAg
+ICAgICAgICAgICAgREVWX0VSUigiJXBTLT4lczogaW52YWxpZCBpbnB1dFxuIiwKPj4gPiAtICAg
+ICAgICAgICAgICAgICAgICAgICBfX2J1aWx0aW5fcmV0dXJuX2FkZHJlc3MoMCksIF9fZnVuY19f
+KTsKPj4gPiAtICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7Cj4+ID4gLSAgICAgICB9Cj4+
+ID4gLQo+PiA+IC0gICAgICAgaWYgKG9mZnNldCA+IGlvLT5sZW4pIHsKPj4gPiAtICAgICAgICAg
+ICAgICAgREVWX0VSUigiJXBTLT4lczogb2Zmc2V0IG91dCBvZiByYW5nZVxuIiwKPj4gPiAtICAg
+ICAgICAgICAgICAgICAgICAgICBfX2J1aWx0aW5fcmV0dXJuX2FkZHJlc3MoMCksIF9fZnVuY19f
+KTsKPj4gPiAtICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7Cj4+ID4gLSAgICAgICB9Cj4+
+ID4gLQo+PiA+IC0gICAgICAgdmFsdWUgPSByZWFkbF9yZWxheGVkKGlvLT5iYXNlICsgb2Zmc2V0
+KTsKPj4gPiAtICAgICAgIGlmIChkZWJ1ZykKPj4gPiAtICAgICAgICAgICAgICAgREVWX0RCRygi
+WyUwOHhdIDw9ICUwOHhcbiIsCj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgKHUzMikodW5z
+aWduZWQgbG9uZykoaW8tPmJhc2UgKyBvZmZzZXQpLCB2YWx1ZSk7Cj4+ID4gLQo+PiA+IC0gICAg
+ICAgcmV0dXJuIHZhbHVlOwo+PiA+IC19IC8qIGRzc19yZWdfciAqLwo+PiA+IC1FWFBPUlRfU1lN
+Qk9MKGRzc19yZWdfcik7Cj4+ID4gLQo+PiA+IC12b2lkIGRzc19yZWdfZHVtcCh2b2lkIF9faW9t
+ZW0gKmJhc2UsIHUzMiBsZW5ndGgsIGNvbnN0IGNoYXIgKnByZWZpeCwKPj4gPiAtICAgICAgIHUz
+MiBkZWJ1ZykKPj4gPiAtewo+PiA+IC0gICAgICAgaWYgKGRlYnVnKQo+PiA+IC0gICAgICAgICAg
+ICAgICBwcmludF9oZXhfZHVtcChLRVJOX0lORk8sIHByZWZpeCwgRFVNUF9QUkVGSVhfT0ZGU0VU
+LCAzMiwgNCwKPj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAodm9pZCAqKWJhc2UsIGxlbmd0
+aCwgZmFsc2UpOwo+PiA+IC19IC8qIGRzc19yZWdfZHVtcCAqLwo+PiA+IC1FWFBPUlRfU1lNQk9M
+KGRzc19yZWdfZHVtcCk7Cj4+ID4gLQo+PiA+IC1zdGF0aWMgc3RydWN0IHJlc291cmNlICptc21f
+ZHNzX2dldF9yZXNfYnluYW1lKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsCj4+ID4gLSAg
+ICAgICB1bnNpZ25lZCBpbnQgdHlwZSwgY29uc3QgY2hhciAqbmFtZSkKPj4gPiAtewo+PiA+IC0g
+ICAgICAgc3RydWN0IHJlc291cmNlICpyZXMgPSBOVUxMOwo+PiA+IC0KPj4gPiAtICAgICAgIHJl
+cyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZV9ieW5hbWUocGRldiwgdHlwZSwgbmFtZSk7Cj4+ID4g
+LSAgICAgICBpZiAoIXJlcykKPj4gPiAtICAgICAgICAgICAgICAgREVWX0VSUigiJXM6ICclcycg
+cmVzb3VyY2Ugbm90IGZvdW5kXG4iLCBfX2Z1bmNfXywgbmFtZSk7Cj4+ID4gLQo+PiA+IC0gICAg
+ICAgcmV0dXJuIHJlczsKPj4gPiAtfSAvKiBtc21fZHNzX2dldF9yZXNfYnluYW1lICovCj4+ID4g
+LUVYUE9SVF9TWU1CT0wobXNtX2Rzc19nZXRfcmVzX2J5bmFtZSk7Cj4+ID4gLQo+PiA+IC1pbnQg
+bXNtX2Rzc19pb3JlbWFwX2J5bmFtZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LAo+PiA+
+IC0gICAgICAgc3RydWN0IGRzc19pb19kYXRhICppb19kYXRhLCBjb25zdCBjaGFyICpuYW1lKQo+
+PiA+IC17Cj4+ID4gLSAgICAgICBzdHJ1Y3QgcmVzb3VyY2UgKnJlcyA9IE5VTEw7Cj4+ID4gLQo+
+PiA+IC0gICAgICAgaWYgKCFwZGV2IHx8ICFpb19kYXRhKSB7Cj4+ID4gLSAgICAgICAgICAgICAg
+IERFVl9FUlIoIiVwUy0+JXM6IGludmFsaWQgaW5wdXRcbiIsCj4+ID4gLSAgICAgICAgICAgICAg
+ICAgICAgICAgX19idWlsdGluX3JldHVybl9hZGRyZXNzKDApLCBfX2Z1bmNfXyk7Cj4+ID4gLSAg
+ICAgICAgICAgICAgIHJldHVybiAtRUlOVkFMOwo+PiA+IC0gICAgICAgfQo+PiA+IC0KPj4gPiAt
+ICAgICAgIHJlcyA9IG1zbV9kc3NfZ2V0X3Jlc19ieW5hbWUocGRldiwgSU9SRVNPVVJDRV9NRU0s
+IG5hbWUpOwo+PiA+IC0gICAgICAgaWYgKCFyZXMpIHsKPj4gPiAtICAgICAgICAgICAgICAgREVW
+X0VSUigiJXBTLT4lczogJyVzJyBtc21fZHNzX2dldF9yZXNfYnluYW1lIGZhaWxlZFxuIiwKPj4g
+PiAtICAgICAgICAgICAgICAgICAgICAgICBfX2J1aWx0aW5fcmV0dXJuX2FkZHJlc3MoMCksIF9f
+ZnVuY19fLCBuYW1lKTsKPj4gPiAtICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9ERVY7Cj4+ID4g
+LSAgICAgICB9Cj4+ID4gLQo+PiA+IC0gICAgICAgaW9fZGF0YS0+bGVuID0gKHUzMilyZXNvdXJj
+ZV9zaXplKHJlcyk7Cj4+ID4gLSAgICAgICBpb19kYXRhLT5iYXNlID0gaW9yZW1hcChyZXMtPnN0
+YXJ0LCBpb19kYXRhLT5sZW4pOwo+PiA+IC0gICAgICAgaWYgKCFpb19kYXRhLT5iYXNlKSB7Cj4+
+ID4gLSAgICAgICAgICAgICAgIERFVl9FUlIoIiVwUy0+JXM6ICclcycgaW9yZW1hcCBmYWlsZWRc
+biIsCj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgX19idWlsdGluX3JldHVybl9hZGRyZXNz
+KDApLCBfX2Z1bmNfXywgbmFtZSk7Cj4+ID4gLSAgICAgICAgICAgICAgIHJldHVybiAtRUlPOwo+
+PiA+IC0gICAgICAgfQo+PiA+IC0KPj4gPiAtICAgICAgIHJldHVybiAwOwo+PiA+IC19IC8qIG1z
+bV9kc3NfaW9yZW1hcF9ieW5hbWUgKi8KPj4gPiAtRVhQT1JUX1NZTUJPTChtc21fZHNzX2lvcmVt
+YXBfYnluYW1lKTsKPj4gPiAtCj4+ID4gLXZvaWQgbXNtX2Rzc19pb3VubWFwKHN0cnVjdCBkc3Nf
+aW9fZGF0YSAqaW9fZGF0YSkKPj4gPiAtewo+PiA+IC0gICAgICAgaWYgKCFpb19kYXRhKSB7Cj4+
+ID4gLSAgICAgICAgICAgICAgIERFVl9FUlIoIiVwUy0+JXM6IGludmFsaWQgaW5wdXRcbiIsCj4+
+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgX19idWlsdGluX3JldHVybl9hZGRyZXNzKDApLCBf
+X2Z1bmNfXyk7Cj4+ID4gLSAgICAgICAgICAgICAgIHJldHVybjsKPj4gPiAtICAgICAgIH0KPj4g
+PiAtCj4+ID4gLSAgICAgICBpZiAoaW9fZGF0YS0+YmFzZSkgewo+PiA+IC0gICAgICAgICAgICAg
+ICBpb3VubWFwKGlvX2RhdGEtPmJhc2UpOwo+PiA+IC0gICAgICAgICAgICAgICBpb19kYXRhLT5i
+YXNlID0gTlVMTDsKPj4gPiAtICAgICAgIH0KPj4gPiAtICAgICAgIGlvX2RhdGEtPmxlbiA9IDA7
+Cj4+ID4gLX0gLyogbXNtX2Rzc19pb3VubWFwICovCj4+ID4gLUVYUE9SVF9TWU1CT0wobXNtX2Rz
+c19pb3VubWFwKTsKPj4gPiAtCj4+ID4gLWludCBtc21fZHNzX2NvbmZpZ192cmVnKHN0cnVjdCBk
+ZXZpY2UgKmRldiwgc3RydWN0IGRzc192cmVnICppbl92cmVnLAo+PiA+IC0gICAgICAgaW50IG51
+bV92cmVnLCBpbnQgY29uZmlnKQo+PiA+IC17Cj4+ID4gLSAgICAgICBpbnQgaSA9IDAsIHJjID0g
+MDsKPj4gPiAtICAgICAgIHN0cnVjdCBkc3NfdnJlZyAqY3Vycl92cmVnID0gTlVMTDsKPj4gPiAt
+ICAgICAgIGVudW0gZHNzX3ZyZWdfdHlwZSB0eXBlOwo+PiA+IC0KPj4gPiAtICAgICAgIGlmICgh
+aW5fdnJlZyB8fCAhbnVtX3ZyZWcpCj4+ID4gLSAgICAgICAgICAgICAgIHJldHVybiByYzsKPj4g
+PiAtCj4+ID4gLSAgICAgICBpZiAoY29uZmlnKSB7Cj4+ID4gLSAgICAgICAgICAgICAgIGZvciAo
+aSA9IDA7IGkgPCBudW1fdnJlZzsgaSsrKSB7Cj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAg
+Y3Vycl92cmVnID0gJmluX3ZyZWdbaV07Cj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgY3Vy
+cl92cmVnLT52cmVnID0gcmVndWxhdG9yX2dldChkZXYsCj4+ID4gLSAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBjdXJyX3ZyZWctPnZyZWdfbmFtZSk7Cj4+ID4gLSAgICAgICAgICAgICAg
+ICAgICAgICAgcmMgPSBQVFJfUkVUKGN1cnJfdnJlZy0+dnJlZyk7Cj4+ID4gLSAgICAgICAgICAg
+ICAgICAgICAgICAgaWYgKHJjKSB7Cj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBERVZfRVJSKCIlcFMtPiVzOiAlcyBnZXQgZmFpbGVkLiByYz0lZFxuIiwKPj4gPiAtICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9fYnVpbHRpbl9yZXR1cm5fYWRkcmVz
+cygwKSwgX19mdW5jX18sCj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBjdXJyX3ZyZWctPnZyZWdfbmFtZSwgcmMpOwo+PiA+IC0gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgY3Vycl92cmVnLT52cmVnID0gTlVMTDsKPj4gPiAtICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIGdvdG8gdnJlZ19nZXRfZmFpbDsKPj4gPiAtICAgICAgICAgICAgICAg
+ICAgICAgICB9Cj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgdHlwZSA9IChyZWd1bGF0b3Jf
+Y291bnRfdm9sdGFnZXMoY3Vycl92cmVnLT52cmVnKSA+IDApCj4+ID4gLSAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgID8gRFNTX1JFR19MRE8gOiBEU1NfUkVHX1ZTOwo+PiA+
+IC0gICAgICAgICAgICAgICAgICAgICAgIGlmICh0eXBlID09IERTU19SRUdfTERPKSB7Cj4+ID4g
+LSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByYyA9IHJlZ3VsYXRvcl9zZXRfdm9sdGFn
+ZSgKPj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY3Vycl92cmVn
+LT52cmVnLAo+PiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjdXJy
+X3ZyZWctPm1pbl92b2x0YWdlLAo+PiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBjdXJyX3ZyZWctPm1heF92b2x0YWdlKTsKPj4gPiAtICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIGlmIChyYyA8IDApIHsKPj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgREVWX0VSUigiJXBTLT4lczogJXMgc2V0IHZsdGcgZmFpbFxuIiwKPj4g
+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfX2J1aWx0
+aW5fcmV0dXJuX2FkZHJlc3MoMCksCj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgX19mdW5jX18sCj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgY3Vycl92cmVnLT52cmVnX25hbWUpOwo+PiA+IC0gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBnb3RvIHZyZWdfc2V0X3ZvbHRhZ2Vf
+ZmFpbDsKPj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0KPj4gPiAtICAgICAg
+ICAgICAgICAgICAgICAgICB9Cj4+ID4gLSAgICAgICAgICAgICAgIH0KPj4gPiAtICAgICAgIH0g
+ZWxzZSB7Cj4+ID4gLSAgICAgICAgICAgICAgIGZvciAoaSA9IG51bV92cmVnLTE7IGkgPj0gMDsg
+aS0tKSB7Cj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgY3Vycl92cmVnID0gJmluX3ZyZWdb
+aV07Cj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgaWYgKGN1cnJfdnJlZy0+dnJlZykgewo+
+PiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZSA9IChyZWd1bGF0b3JfY291
+bnRfdm9sdGFnZXMoCj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IGN1cnJfdnJlZy0+dnJlZykgPiAwKQo+PiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICA/IERTU19SRUdfTERPIDogRFNTX1JFR19WUzsKPj4gPiAtICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIGlmICh0eXBlID09IERTU19SRUdfTERPKSB7Cj4+ID4gLSAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvcl9zZXRfdm9sdGFnZShj
+dXJyX3ZyZWctPnZyZWcsCj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgMCwgY3Vycl92cmVnLT5tYXhfdm9sdGFnZSk7Cj4+ID4gLSAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICB9Cj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICByZWd1bGF0b3JfcHV0KGN1cnJfdnJlZy0+dnJlZyk7Cj4+ID4gLSAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBjdXJyX3ZyZWctPnZyZWcgPSBOVUxMOwo+PiA+IC0gICAgICAgICAgICAg
+ICAgICAgICAgIH0KPj4gPiAtICAgICAgICAgICAgICAgfQo+PiA+IC0gICAgICAgfQo+PiA+IC0g
+ICAgICAgcmV0dXJuIDA7Cj4+ID4gLQo+PiA+IC12cmVnX3VuY29uZmlnOgo+PiA+IC1pZiAodHlw
+ZSA9PSBEU1NfUkVHX0xETykKPj4gPiAtICAgICAgIHJlZ3VsYXRvcl9zZXRfbG9hZChjdXJyX3Zy
+ZWctPnZyZWcsIDApOwo+PiA+IC0KPj4gPiAtdnJlZ19zZXRfdm9sdGFnZV9mYWlsOgo+PiA+IC0g
+ICAgICAgcmVndWxhdG9yX3B1dChjdXJyX3ZyZWctPnZyZWcpOwo+PiA+IC0gICAgICAgY3Vycl92
+cmVnLT52cmVnID0gTlVMTDsKPj4gPiAtCj4+ID4gLXZyZWdfZ2V0X2ZhaWw6Cj4+ID4gLSAgICAg
+ICBmb3IgKGktLTsgaSA+PSAwOyBpLS0pIHsKPj4gPiAtICAgICAgICAgICAgICAgY3Vycl92cmVn
+ID0gJmluX3ZyZWdbaV07Cj4+ID4gLSAgICAgICAgICAgICAgIHR5cGUgPSAocmVndWxhdG9yX2Nv
+dW50X3ZvbHRhZ2VzKGN1cnJfdnJlZy0+dnJlZykgPiAwKQo+PiA+IC0gICAgICAgICAgICAgICAg
+ICAgICAgID8gRFNTX1JFR19MRE8gOiBEU1NfUkVHX1ZTOwo+PiA+IC0gICAgICAgICAgICAgICBn
+b3RvIHZyZWdfdW5jb25maWc7Cj4+ID4gLSAgICAgICB9Cj4+ID4gLSAgICAgICByZXR1cm4gcmM7
+Cj4+ID4gLX0gLyogbXNtX2Rzc19jb25maWdfdnJlZyAqLwo+PiA+IC1FWFBPUlRfU1lNQk9MKG1z
+bV9kc3NfY29uZmlnX3ZyZWcpOwo+PiA+IC0KPj4gPiAtaW50IG1zbV9kc3NfZW5hYmxlX3ZyZWco
+c3RydWN0IGRzc192cmVnICppbl92cmVnLCBpbnQgbnVtX3ZyZWcsIGludCBlbmFibGUpCj4+ID4g
+LXsKPj4gPiAtICAgICAgIGludCBpID0gMCwgcmMgPSAwOwo+PiA+IC0gICAgICAgYm9vbCBuZWVk
+X3NsZWVwOwo+PiA+IC0KPj4gPiAtICAgICAgIGlmIChlbmFibGUpIHsKPj4gPiAtICAgICAgICAg
+ICAgICAgZm9yIChpID0gMDsgaSA8IG51bV92cmVnOyBpKyspIHsKPj4gPiAtICAgICAgICAgICAg
+ICAgICAgICAgICByYyA9IFBUUl9SRVQoaW5fdnJlZ1tpXS52cmVnKTsKPj4gPiAtICAgICAgICAg
+ICAgICAgICAgICAgICBpZiAocmMpIHsKPj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIERFVl9FUlIoIiVwUy0+JXM6ICVzIHJlZ3VsYXRvciBlcnJvci4gcmM9JWRcbiIsCj4+ID4g
+LSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9fYnVpbHRpbl9yZXR1cm5f
+YWRkcmVzcygwKSwgX19mdW5jX18sCj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIGluX3ZyZWdbaV0udnJlZ19uYW1lLCByYyk7Cj4+ID4gLSAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBnb3RvIHZyZWdfc2V0X29wdF9tb2RlX2ZhaWw7Cj4+ID4gLSAgICAg
+ICAgICAgICAgICAgICAgICAgfQo+PiA+IC0gICAgICAgICAgICAgICAgICAgICAgIG5lZWRfc2xl
+ZXAgPSAhcmVndWxhdG9yX2lzX2VuYWJsZWQoaW5fdnJlZ1tpXS52cmVnKTsKPj4gPiAtICAgICAg
+ICAgICAgICAgICAgICAgICBpZiAoaW5fdnJlZ1tpXS5wcmVfb25fc2xlZXAgJiYgbmVlZF9zbGVl
+cCkKPj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVzbGVlcF9yYW5nZShpbl92
+cmVnW2ldLnByZV9vbl9zbGVlcCAqIDEwMDAsCj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIGluX3ZyZWdbaV0ucHJlX29uX3NsZWVwICogMTAwMCk7Cj4+ID4gLSAg
+ICAgICAgICAgICAgICAgICAgICAgcmMgPSByZWd1bGF0b3Jfc2V0X2xvYWQoaW5fdnJlZ1tpXS52
+cmVnLAo+PiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW5fdnJlZ1tpXS5lbmFi
+bGVfbG9hZCk7Cj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgaWYgKHJjIDwgMCkgewo+PiA+
+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgREVWX0VSUigiJXBTLT4lczogJXMgc2V0
+IG9wdCBtIGZhaWxcbiIsCj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIF9fYnVpbHRpbl9yZXR1cm5fYWRkcmVzcygwKSwgX19mdW5jX18sCj4+ID4gLSAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGluX3ZyZWdbaV0udnJlZ19uYW1lKTsKPj4g
+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGdvdG8gdnJlZ19zZXRfb3B0X21vZGVf
+ZmFpbDsKPj4gPiAtICAgICAgICAgICAgICAgICAgICAgICB9Cj4+ID4gLSAgICAgICAgICAgICAg
+ICAgICAgICAgcmMgPSByZWd1bGF0b3JfZW5hYmxlKGluX3ZyZWdbaV0udnJlZyk7Cj4+ID4gLSAg
+ICAgICAgICAgICAgICAgICAgICAgaWYgKGluX3ZyZWdbaV0ucG9zdF9vbl9zbGVlcCAmJiBuZWVk
+X3NsZWVwKQo+PiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdXNsZWVwX3Jhbmdl
+KGluX3ZyZWdbaV0ucG9zdF9vbl9zbGVlcCAqIDEwMDAsCj4+ID4gLSAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIGluX3ZyZWdbaV0ucG9zdF9vbl9zbGVlcCAqIDEwMDApOwo+
+PiA+IC0gICAgICAgICAgICAgICAgICAgICAgIGlmIChyYyA8IDApIHsKPj4gPiAtICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIERFVl9FUlIoIiVwUy0+JXM6ICVzIGVuYWJsZSBmYWlsZWRc
+biIsCj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9fYnVpbHRp
+bl9yZXR1cm5fYWRkcmVzcygwKSwgX19mdW5jX18sCj4+ID4gLSAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIGluX3ZyZWdbaV0udnJlZ19uYW1lKTsKPj4gPiAtICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIGdvdG8gZGlzYWJsZV92cmVnOwo+PiA+IC0gICAgICAgICAg
+ICAgICAgICAgICAgIH0KPj4gPiAtICAgICAgICAgICAgICAgfQo+PiA+IC0gICAgICAgfSBlbHNl
+IHsKPj4gPiAtICAgICAgICAgICAgICAgZm9yIChpID0gbnVtX3ZyZWctMTsgaSA+PSAwOyBpLS0p
+IHsKPj4gPiAtICAgICAgICAgICAgICAgICAgICAgICBpZiAoaW5fdnJlZ1tpXS5wcmVfb2ZmX3Ns
+ZWVwKQo+PiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdXNsZWVwX3JhbmdlKGlu
+X3ZyZWdbaV0ucHJlX29mZl9zbGVlcCAqIDEwMDAsCj4+ID4gLSAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIGluX3ZyZWdbaV0ucHJlX29mZl9zbGVlcCAqIDEwMDApOwo+PiA+
+IC0gICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvcl9zZXRfbG9hZChpbl92cmVnW2ldLnZy
+ZWcsCj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbl92cmVnW2ldLmRpc2Fi
+bGVfbG9hZCk7Cj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yX2Rpc2FibGUo
+aW5fdnJlZ1tpXS52cmVnKTsKPj4gPiAtICAgICAgICAgICAgICAgICAgICAgICBpZiAoaW5fdnJl
+Z1tpXS5wb3N0X29mZl9zbGVlcCkKPj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHVzbGVlcF9yYW5nZShpbl92cmVnW2ldLnBvc3Rfb2ZmX3NsZWVwICogMTAwMCwKPj4gPiAtICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW5fdnJlZ1tpXS5wb3N0X29mZl9z
+bGVlcCAqIDEwMDApOwo+PiA+IC0gICAgICAgICAgICAgICB9Cj4+ID4gLSAgICAgICB9Cj4+ID4g
+LSAgICAgICByZXR1cm4gcmM7Cj4+ID4gLQo+PiA+IC1kaXNhYmxlX3ZyZWc6Cj4+ID4gLSAgICAg
+ICByZWd1bGF0b3Jfc2V0X2xvYWQoaW5fdnJlZ1tpXS52cmVnLCBpbl92cmVnW2ldLmRpc2FibGVf
+bG9hZCk7Cj4+ID4gLQo+PiA+IC12cmVnX3NldF9vcHRfbW9kZV9mYWlsOgo+PiA+IC0gICAgICAg
+Zm9yIChpLS07IGkgPj0gMDsgaS0tKSB7Cj4+ID4gLSAgICAgICAgICAgICAgIGlmIChpbl92cmVn
+W2ldLnByZV9vZmZfc2xlZXApCj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgdXNsZWVwX3Jh
+bmdlKGluX3ZyZWdbaV0ucHJlX29mZl9zbGVlcCAqIDEwMDAsCj4+ID4gLSAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBpbl92cmVnW2ldLnByZV9vZmZfc2xlZXAgKiAxMDAwKTsKPj4gPiAt
+ICAgICAgICAgICAgICAgcmVndWxhdG9yX3NldF9sb2FkKGluX3ZyZWdbaV0udnJlZywKPj4gPiAt
+ICAgICAgICAgICAgICAgICAgICAgICBpbl92cmVnW2ldLmRpc2FibGVfbG9hZCk7Cj4+ID4gLSAg
+ICAgICAgICAgICAgIHJlZ3VsYXRvcl9kaXNhYmxlKGluX3ZyZWdbaV0udnJlZyk7Cj4+ID4gLSAg
+ICAgICAgICAgICAgIGlmIChpbl92cmVnW2ldLnBvc3Rfb2ZmX3NsZWVwKQo+PiA+IC0gICAgICAg
+ICAgICAgICAgICAgICAgIHVzbGVlcF9yYW5nZShpbl92cmVnW2ldLnBvc3Rfb2ZmX3NsZWVwICog
+MTAwMCwKPj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGluX3ZyZWdbaV0ucG9z
+dF9vZmZfc2xlZXAgKiAxMDAwKTsKPj4gPiAtICAgICAgIH0KPj4gPiAtCj4+ID4gLSAgICAgICBy
+ZXR1cm4gcmM7Cj4+ID4gLX0gLyogbXNtX2Rzc19lbmFibGVfdnJlZyAqLwo+PiA+IC1FWFBPUlRf
+U1lNQk9MKG1zbV9kc3NfZW5hYmxlX3ZyZWcpOwo+PiA+IC0KPj4gPiAtaW50IG1zbV9kc3NfZW5h
+YmxlX2dwaW8oc3RydWN0IGRzc19ncGlvICppbl9ncGlvLCBpbnQgbnVtX2dwaW8sIGludCBlbmFi
+bGUpCj4+ID4gLXsKPj4gPiAtICAgICAgIGludCBpID0gMCwgcmMgPSAwOwo+PiA+IC0KPj4gPiAt
+ICAgICAgIGlmIChlbmFibGUpIHsKPj4gPiAtICAgICAgICAgICAgICAgZm9yIChpID0gMDsgaSA8
+IG51bV9ncGlvOyBpKyspIHsKPj4gPiAtICAgICAgICAgICAgICAgICAgICAgICBERVZfREJHKCIl
+cFMtPiVzOiAlcyBlbmFibGVcbiIsCj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBfX2J1aWx0aW5fcmV0dXJuX2FkZHJlc3MoMCksIF9fZnVuY19fLAo+PiA+IC0gICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgaW5fZ3Bpb1tpXS5ncGlvX25hbWUpOwo+PiA+IC0KPj4gPiAt
+ICAgICAgICAgICAgICAgICAgICAgICByYyA9IGdwaW9fcmVxdWVzdChpbl9ncGlvW2ldLmdwaW8s
+Cj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbl9ncGlvW2ldLmdwaW9fbmFt
+ZSk7Cj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgaWYgKHJjIDwgMCkgewo+PiA+IC0gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgREVWX0VSUigiJXBTLT4lczogJXMgZW5hYmxlIGZh
+aWxlZFxuIiwKPj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX19i
+dWlsdGluX3JldHVybl9hZGRyZXNzKDApLCBfX2Z1bmNfXywKPj4gPiAtICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgaW5fZ3Bpb1tpXS5ncGlvX25hbWUpOwo+PiA+IC0gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgZ290byBkaXNhYmxlX2dwaW87Cj4+ID4gLSAgICAg
+ICAgICAgICAgICAgICAgICAgfQo+PiA+IC0gICAgICAgICAgICAgICAgICAgICAgIGdwaW9fc2V0
+X3ZhbHVlKGluX2dwaW9baV0uZ3BpbywgaW5fZ3Bpb1tpXS52YWx1ZSk7Cj4+ID4gLSAgICAgICAg
+ICAgICAgIH0KPj4gPiAtICAgICAgIH0gZWxzZSB7Cj4+ID4gLSAgICAgICAgICAgICAgIGZvciAo
+aSA9IG51bV9ncGlvLTE7IGkgPj0gMDsgaS0tKSB7Cj4+ID4gLSAgICAgICAgICAgICAgICAgICAg
+ICAgREVWX0RCRygiJXBTLT4lczogJXMgZGlzYWJsZVxuIiwKPj4gPiAtICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIF9fYnVpbHRpbl9yZXR1cm5fYWRkcmVzcygwKSwgX19mdW5jX18sCj4+
+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbl9ncGlvW2ldLmdwaW9fbmFtZSk7
+Cj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgaWYgKGluX2dwaW9baV0uZ3BpbykKPj4gPiAt
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGdwaW9fZnJlZShpbl9ncGlvW2ldLmdwaW8p
+Owo+PiA+IC0gICAgICAgICAgICAgICB9Cj4+ID4gLSAgICAgICB9Cj4+ID4gLSAgICAgICByZXR1
+cm4gcmM7Cj4+ID4gLQo+PiA+IC1kaXNhYmxlX2dwaW86Cj4+ID4gLSAgICAgICBmb3IgKGktLTsg
+aSA+PSAwOyBpLS0pCj4+ID4gLSAgICAgICAgICAgICAgIGlmIChpbl9ncGlvW2ldLmdwaW8pCj4+
+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgZ3Bpb19mcmVlKGluX2dwaW9baV0uZ3Bpbyk7Cj4+
+ID4gLQo+PiA+IC0gICAgICAgcmV0dXJuIHJjOwo+PiA+IC19IC8qIG1zbV9kc3NfZW5hYmxlX2dw
+aW8gKi8KPj4gPiAtRVhQT1JUX1NZTUJPTChtc21fZHNzX2VuYWJsZV9ncGlvKTsKPj4gPiArI2lu
+Y2x1ZGUgImRwdV9pb191dGlsLmgiCj4+ID4KPj4gPiAgdm9pZCBtc21fZHNzX3B1dF9jbGsoc3Ry
+dWN0IGRzc19jbGsgKmNsa19hcnJ5LCBpbnQgbnVtX2NsaykKPj4gPiAgewo+PiA+IEBAIC0zMzUs
+OCArMjYsNyBAQCB2b2lkIG1zbV9kc3NfcHV0X2NsayhzdHJ1Y3QgZHNzX2NsayAqY2xrX2Fycnks
+IGludCBudW1fY2xrKQo+PiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGNsa19wdXQoY2xrX2Fy
+cnlbaV0uY2xrKTsKPj4gPiAgICAgICAgICAgICAgICAgY2xrX2FycnlbaV0uY2xrID0gTlVMTDsK
+Pj4gPiAgICAgICAgIH0KPj4gPiAtfSAvKiBtc21fZHNzX3B1dF9jbGsgKi8KPj4gPiAtRVhQT1JU
+X1NZTUJPTChtc21fZHNzX3B1dF9jbGspOwo+PiA+ICt9Cj4+ID4KPj4gPiAgaW50IG1zbV9kc3Nf
+Z2V0X2NsayhzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkc3NfY2xrICpjbGtfYXJyeSwgaW50
+IG51bV9jbGspCj4+ID4gIHsKPj4gPiBAQCAtMzYzLDggKzUzLDcgQEAgaW50IG1zbV9kc3NfZ2V0
+X2NsayhzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkc3NfY2xrICpjbGtfYXJyeSwgaW50IG51
+bV9jbGspCj4+ID4gICAgICAgICB9Cj4+ID4KPj4gPiAgICAgICAgIHJldHVybiByYzsKPj4gPiAt
+fSAvKiBtc21fZHNzX2dldF9jbGsgKi8KPj4gPiAtRVhQT1JUX1NZTUJPTChtc21fZHNzX2dldF9j
+bGspOwo+PiA+ICt9Cj4+ID4KPj4gPiAgaW50IG1zbV9kc3NfY2xrX3NldF9yYXRlKHN0cnVjdCBk
+c3NfY2xrICpjbGtfYXJyeSwgaW50IG51bV9jbGspCj4+ID4gIHsKPj4gPiBAQCAtMzk3LDggKzg2
+LDcgQEAgaW50IG1zbV9kc3NfY2xrX3NldF9yYXRlKHN0cnVjdCBkc3NfY2xrICpjbGtfYXJyeSwg
+aW50IG51bV9jbGspCj4+ID4gICAgICAgICB9Cj4+ID4KPj4gPiAgICAgICAgIHJldHVybiByYzsK
+Pj4gPiAtfSAvKiBtc21fZHNzX2Nsa19zZXRfcmF0ZSAqLwo+PiA+IC1FWFBPUlRfU1lNQk9MKG1z
+bV9kc3NfY2xrX3NldF9yYXRlKTsKPj4gPiArfQo+PiA+Cj4+ID4gIGludCBtc21fZHNzX2VuYWJs
+ZV9jbGsoc3RydWN0IGRzc19jbGsgKmNsa19hcnJ5LCBpbnQgbnVtX2NsaywgaW50IGVuYWJsZSkK
+Pj4gPiAgewo+PiA+IEBAIC00NDUsOCArMTMzLDcgQEAgaW50IG1zbV9kc3NfZW5hYmxlX2Nsayhz
+dHJ1Y3QgZHNzX2NsayAqY2xrX2FycnksIGludCBudW1fY2xrLCBpbnQgZW5hYmxlKQo+PiA+ICAg
+ICAgICAgfQo+PiA+Cj4+ID4gICAgICAgICByZXR1cm4gcmM7Cj4+ID4gLX0gLyogbXNtX2Rzc19l
+bmFibGVfY2xrICovCj4+ID4gLUVYUE9SVF9TWU1CT0wobXNtX2Rzc19lbmFibGVfY2xrKTsKPj4g
+PiArfQo+PiA+Cj4+ID4gIGludCBtc21fZHNzX3BhcnNlX2Nsb2NrKHN0cnVjdCBwbGF0Zm9ybV9k
+ZXZpY2UgKnBkZXYsCj4+ID4gICAgICAgICAgICAgICAgIHN0cnVjdCBkc3NfbW9kdWxlX3Bvd2Vy
+ICptcCkKPj4gPiBAQCAtNDk3LDYwICsxODQsMyBAQCBpbnQgbXNtX2Rzc19wYXJzZV9jbG9jayhz
+dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LAo+PiA+Cj4+ID4gICAgICAgICByZXR1cm4gcmM7
+Cj4+ID4gIH0KPj4gPiAtCj4+ID4gLWludCBkcHVfaTJjX2J5dGVfcmVhZChzdHJ1Y3QgaTJjX2Ns
+aWVudCAqY2xpZW50LCB1aW50OF90IHNsYXZlX2FkZHIsCj4+ID4gLSAgICAgICAgICAgICAgICAg
+ICAgICAgdWludDhfdCByZWdfb2Zmc2V0LCB1aW50OF90ICpyZWFkX2J1ZikKPj4gPiAtewo+PiA+
+IC0gICAgICAgc3RydWN0IGkyY19tc2cgbXNnc1syXTsKPj4gPiAtICAgICAgIGludCByZXQgPSAt
+MTsKPj4gPiAtCj4+ID4gLSAgICAgICBwcl9kZWJ1ZygiJXM6IHJlYWRpbmcgZnJvbSBzbGF2ZV9h
+ZGRyPVsleF0gYW5kIG9mZnNldD1bJXhdXG4iLAo+PiA+IC0gICAgICAgICAgICAgICAgX19mdW5j
+X18sIHNsYXZlX2FkZHIsIHJlZ19vZmZzZXQpOwo+PiA+IC0KPj4gPiAtICAgICAgIG1zZ3NbMF0u
+YWRkciA9IHNsYXZlX2FkZHIgPj4gMTsKPj4gPiAtICAgICAgIG1zZ3NbMF0uZmxhZ3MgPSAwOwo+
+PiA+IC0gICAgICAgbXNnc1swXS5idWYgPSAmcmVnX29mZnNldDsKPj4gPiAtICAgICAgIG1zZ3Nb
+MF0ubGVuID0gMTsKPj4gPiAtCj4+ID4gLSAgICAgICBtc2dzWzFdLmFkZHIgPSBzbGF2ZV9hZGRy
+ID4+IDE7Cj4+ID4gLSAgICAgICBtc2dzWzFdLmZsYWdzID0gSTJDX01fUkQ7Cj4+ID4gLSAgICAg
+ICBtc2dzWzFdLmJ1ZiA9IHJlYWRfYnVmOwo+PiA+IC0gICAgICAgbXNnc1sxXS5sZW4gPSAxOwo+
+PiA+IC0KPj4gPiAtICAgICAgIHJldCA9IGkyY190cmFuc2ZlcihjbGllbnQtPmFkYXB0ZXIsIG1z
+Z3MsIDIpOwo+PiA+IC0gICAgICAgaWYgKHJldCA8IDEpIHsKPj4gPiAtICAgICAgICAgICAgICAg
+cHJfZXJyKCIlczogSTJDIFJFQUQgRkFJTEVEPVslZF1cbiIsIF9fZnVuY19fLCByZXQpOwo+PiA+
+IC0gICAgICAgICAgICAgICByZXR1cm4gLUVBQ0NFUzsKPj4gPiAtICAgICAgIH0KPj4gPiAtICAg
+ICAgIHByX2RlYnVnKCIlczogaTJjIGJ1ZiBpcyBbJXhdXG4iLCBfX2Z1bmNfXywgKnJlYWRfYnVm
+KTsKPj4gPiAtICAgICAgIHJldHVybiAwOwo+PiA+IC19Cj4+ID4gLUVYUE9SVF9TWU1CT0woZHB1
+X2kyY19ieXRlX3JlYWQpOwo+PiA+IC0KPj4gPiAtaW50IGRwdV9pMmNfYnl0ZV93cml0ZShzdHJ1
+Y3QgaTJjX2NsaWVudCAqY2xpZW50LCB1aW50OF90IHNsYXZlX2FkZHIsCj4+ID4gLSAgICAgICAg
+ICAgICAgICAgICAgICAgdWludDhfdCByZWdfb2Zmc2V0LCB1aW50OF90ICp2YWx1ZSkKPj4gPiAt
+ewo+PiA+IC0gICAgICAgc3RydWN0IGkyY19tc2cgbXNnc1sxXTsKPj4gPiAtICAgICAgIHVpbnQ4
+X3QgZGF0YVsyXTsKPj4gPiAtICAgICAgIGludCBzdGF0dXMgPSAtRUFDQ0VTOwo+PiA+IC0KPj4g
+PiAtICAgICAgIHByX2RlYnVnKCIlczogd3JpdGluZyBmcm9tIHNsYXZlX2FkZHI9WyV4XSBhbmQg
+b2Zmc2V0PVsleF1cbiIsCj4+ID4gLSAgICAgICAgICAgICAgICBfX2Z1bmNfXywgc2xhdmVfYWRk
+ciwgcmVnX29mZnNldCk7Cj4+ID4gLQo+PiA+IC0gICAgICAgZGF0YVswXSA9IHJlZ19vZmZzZXQ7
+Cj4+ID4gLSAgICAgICBkYXRhWzFdID0gKnZhbHVlOwo+PiA+IC0KPj4gPiAtICAgICAgIG1zZ3Nb
+MF0uYWRkciA9IHNsYXZlX2FkZHIgPj4gMTsKPj4gPiAtICAgICAgIG1zZ3NbMF0uZmxhZ3MgPSAw
+Owo+PiA+IC0gICAgICAgbXNnc1swXS5sZW4gPSAyOwo+PiA+IC0gICAgICAgbXNnc1swXS5idWYg
+PSBkYXRhOwo+PiA+IC0KPj4gPiAtICAgICAgIHN0YXR1cyA9IGkyY190cmFuc2ZlcihjbGllbnQt
+PmFkYXB0ZXIsIG1zZ3MsIDEpOwo+PiA+IC0gICAgICAgaWYgKHN0YXR1cyA8IDEpIHsKPj4gPiAt
+ICAgICAgICAgICAgICAgcHJfZXJyKCJJMkMgV1JJVEUgRkFJTEVEPVslZF1cbiIsIHN0YXR1cyk7
+Cj4+ID4gLSAgICAgICAgICAgICAgIHJldHVybiAtRUFDQ0VTOwo+PiA+IC0gICAgICAgfQo+PiA+
+IC0gICAgICAgcHJfZGVidWcoIiVzOiBJMkMgd3JpdGUgc3RhdHVzPSV4XG4iLCBfX2Z1bmNfXywg
+c3RhdHVzKTsKPj4gPiAtICAgICAgIHJldHVybiBzdGF0dXM7Cj4+ID4gLX0KPj4gPiAtRVhQT1JU
+X1NZTUJPTChkcHVfaTJjX2J5dGVfd3JpdGUpOwo+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
+dS9kcm0vbXNtL2RwdV9pb191dGlsLmggYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2RwdV9pb191dGls
+LmgKPj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiA+IGluZGV4IDAwMDAwMDAuLjc3M2I1MmUK
+Pj4gPiAtLS0gL2Rldi9udWxsCj4+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kcHVfaW9f
+dXRpbC5oCj4+ID4gQEAgLTAsMCArMSw2MSBAQAo+PiA+ICsvKiBDb3B5cmlnaHQgKGMpIDIwMTIs
+IDIwMTctMjAxOCwgVGhlIExpbnV4IEZvdW5kYXRpb24uIEFsbCByaWdodHMgcmVzZXJ2ZWQuCj4+
+ID4gKyAqCj4+ID4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJl
+ZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5Cj4+ID4gKyAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBv
+ZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgdmVyc2lvbiAyIGFuZAo+PiA+ICsgKiBv
+bmx5IHZlcnNpb24gMiBhcyBwdWJsaXNoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlv
+bi4KPj4gPiArICoKPj4gPiArICogVGhpcyBwcm9ncmFtIGlzIGRpc3RyaWJ1dGVkIGluIHRoZSBo
+b3BlIHRoYXQgaXQgd2lsbCBiZSB1c2VmdWwsCj4+ID4gKyAqIGJ1dCBXSVRIT1VUIEFOWSBXQVJS
+QU5UWTsgd2l0aG91dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5IG9mCj4+ID4gKyAqIE1FUkNI
+QU5UQUJJTElUWSBvciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUK
+Pj4gPiArICogR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KPj4g
+PiArICovCj4+ID4gKwo+PiA+ICsjaWZuZGVmIF9fRFBVX0lPX1VUSUxfSF9fCj4+ID4gKyNkZWZp
+bmUgX19EUFVfSU9fVVRJTF9IX18KPj4gPiArCj4+ID4gKyNpbmNsdWRlIDxsaW51eC9ncGlvLmg+
+Cj4+ID4gKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KPj4gPiArI2luY2x1ZGUg
+PGxpbnV4L3R5cGVzLmg+Cj4+ID4gKwo+PiA+ICsjaWZkZWYgREVCVUcKPj4gPiArI2RlZmluZSBE
+RVZfREJHKGZtdCwgYXJncy4uLikgICBwcl9lcnIoZm10LCAjI2FyZ3MpCj4+ID4gKyNlbHNlCj4+
+ID4gKyNkZWZpbmUgREVWX0RCRyhmbXQsIGFyZ3MuLi4pICAgcHJfZGVidWcoZm10LCAjI2FyZ3Mp
+Cj4+ID4gKyNlbmRpZgo+PiA+ICsjZGVmaW5lIERFVl9JTkZPKGZtdCwgYXJncy4uLikgIHByX2lu
+Zm8oZm10LCAjI2FyZ3MpCj4+ID4gKyNkZWZpbmUgREVWX1dBUk4oZm10LCBhcmdzLi4uKSAgcHJf
+d2FybihmbXQsICMjYXJncykKPj4gPiArI2RlZmluZSBERVZfRVJSKGZtdCwgYXJncy4uLikgICBw
+cl9lcnIoZm10LCAjI2FyZ3MpCj4+ID4gKwo+PiA+ICtzdHJ1Y3QgZHNzX2dwaW8gewo+PiA+ICsg
+ICAgICAgdW5zaWduZWQgaW50IGdwaW87Cj4+ID4gKyAgICAgICB1bnNpZ25lZCBpbnQgdmFsdWU7
+Cj4+ID4gKyAgICAgICBjaGFyIGdwaW9fbmFtZVszMl07Cj4+ID4gK307Cj4+ID4gKwo+PiA+ICtl
+bnVtIGRzc19jbGtfdHlwZSB7Cj4+ID4gKyAgICAgICBEU1NfQ0xLX0FIQiwgLyogbm8gc2V0IHJh
+dGUuIHJhdGUgY29udHJvbGxlZCB0aHJvdWdoIHJwbSAqLwo+PiA+ICsgICAgICAgRFNTX0NMS19Q
+Q0xLLAo+PiA+ICt9Owo+PiA+ICsKPj4gPiArc3RydWN0IGRzc19jbGsgewo+PiA+ICsgICAgICAg
+c3RydWN0IGNsayAqY2xrOyAvKiBjbGsgaGFuZGxlICovCj4+ID4gKyAgICAgICBjaGFyIGNsa19u
+YW1lWzMyXTsKPj4gPiArICAgICAgIGVudW0gZHNzX2Nsa190eXBlIHR5cGU7Cj4+ID4gKyAgICAg
+ICB1bnNpZ25lZCBsb25nIHJhdGU7Cj4+ID4gKyAgICAgICB1bnNpZ25lZCBsb25nIG1heF9yYXRl
+Owo+PiA+ICt9Owo+PiA+ICsKPj4gPiArc3RydWN0IGRzc19tb2R1bGVfcG93ZXIgewo+PiA+ICsg
+ICAgICAgdW5zaWduZWQgaW50IG51bV9ncGlvOwo+PiA+ICsgICAgICAgc3RydWN0IGRzc19ncGlv
+ICpncGlvX2NvbmZpZzsKPj4gPiArICAgICAgIHVuc2lnbmVkIGludCBudW1fY2xrOwo+PiA+ICsg
+ICAgICAgc3RydWN0IGRzc19jbGsgKmNsa19jb25maWc7Cj4+ID4gK307Cj4+ID4gKwo+PiA+ICtp
+bnQgbXNtX2Rzc19nZXRfY2xrKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRzc19jbGsgKmNs
+a19hcnJ5LCBpbnQgbnVtX2Nsayk7Cj4+ID4gK3ZvaWQgbXNtX2Rzc19wdXRfY2xrKHN0cnVjdCBk
+c3NfY2xrICpjbGtfYXJyeSwgaW50IG51bV9jbGspOwo+PiA+ICtpbnQgbXNtX2Rzc19jbGtfc2V0
+X3JhdGUoc3RydWN0IGRzc19jbGsgKmNsa19hcnJ5LCBpbnQgbnVtX2Nsayk7Cj4+ID4gK2ludCBt
+c21fZHNzX2VuYWJsZV9jbGsoc3RydWN0IGRzc19jbGsgKmNsa19hcnJ5LCBpbnQgbnVtX2Nsaywg
+aW50IGVuYWJsZSk7Cj4+ID4gK2ludCBtc21fZHNzX3BhcnNlX2Nsb2NrKHN0cnVjdCBwbGF0Zm9y
+bV9kZXZpY2UgKnBkZXYsCj4+ID4gKyAgICAgICAgICAgICAgIHN0cnVjdCBkc3NfbW9kdWxlX3Bv
+d2VyICptcCk7Cj4+ID4gKyNlbmRpZiAvKiBfX0RQVV9JT19VVElMX0hfXyAqLwo+PiA+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbXNtL21zbV9kcnYuaCBiL2RyaXZlcnMvZ3B1L2RybS9t
+c20vbXNtX2Rydi5oCj4+ID4gaW5kZXggZDU5MzdiYS4uODExZjdkNCAxMDA2NDQKPj4gPiAtLS0g
+YS9kcml2ZXJzL2dwdS9kcm0vbXNtL21zbV9kcnYuaAo+PiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9tc20vbXNtX2Rydi5oCj4+ID4gQEAgLTMzLDcgKzMzLDYgQEAKPj4gPiAgI2luY2x1ZGUgPGxp
+bnV4L3R5cGVzLmg+Cj4+ID4gICNpbmNsdWRlIDxsaW51eC9vZl9ncmFwaC5oPgo+PiA+ICAjaW5j
+bHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+Cj4+ID4gLSNpbmNsdWRlIDxsaW51eC9kcHVfaW9fdXRp
+bC5oPgo+PiA+ICAjaW5jbHVkZSA8YXNtL3NpemVzLmg+Cj4+ID4gICNpbmNsdWRlIDxsaW51eC9r
+dGhyZWFkLmg+Cj4+ID4KPj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9kcHVfaW9fdXRp
+bC5oIGIvaW5jbHVkZS9saW51eC9kcHVfaW9fdXRpbC5oCj4+ID4gZGVsZXRlZCBmaWxlIG1vZGUg
+MTAwNjQ0Cj4+ID4gaW5kZXggNDVlNjA2Zi4uMDAwMDAwMAo+PiA+IC0tLSBhL2luY2x1ZGUvbGlu
+dXgvZHB1X2lvX3V0aWwuaAo+PiA+ICsrKyAvZGV2L251bGwKPj4gPiBAQCAtMSwxMTUgKzAsMCBA
+QAo+PiA+IC0vKiBDb3B5cmlnaHQgKGMpIDIwMTIsIDIwMTctMjAxOCwgVGhlIExpbnV4IEZvdW5k
+YXRpb24uIEFsbCByaWdodHMgcmVzZXJ2ZWQuCj4+ID4gLSAqCj4+ID4gLSAqIFRoaXMgcHJvZ3Jh
+bSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5
+Cj4+ID4gLSAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExp
+Y2Vuc2UgdmVyc2lvbiAyIGFuZAo+PiA+IC0gKiBvbmx5IHZlcnNpb24gMiBhcyBwdWJsaXNoZWQg
+YnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbi4KPj4gPiAtICoKPj4gPiAtICogVGhpcyBw
+cm9ncmFtIGlzIGRpc3RyaWJ1dGVkIGluIHRoZSBob3BlIHRoYXQgaXQgd2lsbCBiZSB1c2VmdWws
+Cj4+ID4gLSAqIGJ1dCBXSVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBldmVuIHRoZSBpbXBs
+aWVkIHdhcnJhbnR5IG9mCj4+ID4gLSAqIE1FUkNIQU5UQUJJTElUWSBvciBGSVRORVNTIEZPUiBB
+IFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUKPj4gPiAtICogR05VIEdlbmVyYWwgUHVibGlj
+IExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KPj4gPiAtICovCj4+ID4gLQo+PiA+IC0jaWZuZGVm
+IF9fRFBVX0lPX1VUSUxfSF9fCj4+ID4gLSNkZWZpbmUgX19EUFVfSU9fVVRJTF9IX18KPj4gPiAt
+Cj4+ID4gLSNpbmNsdWRlIDxsaW51eC9ncGlvLmg+Cj4+ID4gLSNpbmNsdWRlIDxsaW51eC9wbGF0
+Zm9ybV9kZXZpY2UuaD4KPj4gPiAtI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5o
+Pgo+PiA+IC0jaW5jbHVkZSA8bGludXgvaTJjLmg+Cj4+ID4gLSNpbmNsdWRlIDxsaW51eC90eXBl
+cy5oPgo+PiA+IC0KPj4gPiAtI2lmZGVmIERFQlVHCj4+ID4gLSNkZWZpbmUgREVWX0RCRyhmbXQs
+IGFyZ3MuLi4pICAgcHJfZXJyKGZtdCwgIyNhcmdzKQo+PiA+IC0jZWxzZQo+PiA+IC0jZGVmaW5l
+IERFVl9EQkcoZm10LCBhcmdzLi4uKSAgIHByX2RlYnVnKGZtdCwgIyNhcmdzKQo+PiA+IC0jZW5k
+aWYKPj4gPiAtI2RlZmluZSBERVZfSU5GTyhmbXQsIGFyZ3MuLi4pICBwcl9pbmZvKGZtdCwgIyNh
+cmdzKQo+PiA+IC0jZGVmaW5lIERFVl9XQVJOKGZtdCwgYXJncy4uLikgIHByX3dhcm4oZm10LCAj
+I2FyZ3MpCj4+ID4gLSNkZWZpbmUgREVWX0VSUihmbXQsIGFyZ3MuLi4pICAgcHJfZXJyKGZtdCwg
+IyNhcmdzKQo+PiA+IC0KPj4gPiAtc3RydWN0IGRzc19pb19kYXRhIHsKPj4gPiAtICAgICAgIHUz
+MiBsZW47Cj4+ID4gLSAgICAgICB2b2lkIF9faW9tZW0gKmJhc2U7Cj4+ID4gLX07Cj4+ID4gLQo+
+PiA+IC12b2lkIGRzc19yZWdfdyhzdHJ1Y3QgZHNzX2lvX2RhdGEgKmlvLCB1MzIgb2Zmc2V0LCB1
+MzIgdmFsdWUsIHUzMiBkZWJ1Zyk7Cj4+ID4gLXUzMiBkc3NfcmVnX3Ioc3RydWN0IGRzc19pb19k
+YXRhICppbywgdTMyIG9mZnNldCwgdTMyIGRlYnVnKTsKPj4gPiAtdm9pZCBkc3NfcmVnX2R1bXAo
+dm9pZCBfX2lvbWVtICpiYXNlLCB1MzIgbGVuLCBjb25zdCBjaGFyICpwcmVmaXgsIHUzMiBkZWJ1
+Zyk7Cj4+ID4gLQo+PiA+IC0jZGVmaW5lIERTU19SRUdfV19ORChpbywgb2Zmc2V0LCB2YWwpICBk
+c3NfcmVnX3coaW8sIG9mZnNldCwgdmFsLCBmYWxzZSkKPj4gPiAtI2RlZmluZSBEU1NfUkVHX1co
+aW8sIG9mZnNldCwgdmFsKSAgICAgZHNzX3JlZ193KGlvLCBvZmZzZXQsIHZhbCwgdHJ1ZSkKPj4g
+PiAtI2RlZmluZSBEU1NfUkVHX1JfTkQoaW8sIG9mZnNldCkgICAgICAgZHNzX3JlZ19yKGlvLCBv
+ZmZzZXQsIGZhbHNlKQo+PiA+IC0jZGVmaW5lIERTU19SRUdfUihpbywgb2Zmc2V0KSAgICAgICAg
+ICBkc3NfcmVnX3IoaW8sIG9mZnNldCwgdHJ1ZSkKPj4gPiAtCj4+ID4gLWVudW0gZHNzX3ZyZWdf
+dHlwZSB7Cj4+ID4gLSAgICAgICBEU1NfUkVHX0xETywKPj4gPiAtICAgICAgIERTU19SRUdfVlMs
+Cj4+ID4gLX07Cj4+ID4gLQo+PiA+IC1zdHJ1Y3QgZHNzX3ZyZWcgewo+PiA+IC0gICAgICAgc3Ry
+dWN0IHJlZ3VsYXRvciAqdnJlZzsgLyogdnJlZyBoYW5kbGUgKi8KPj4gPiAtICAgICAgIGNoYXIg
+dnJlZ19uYW1lWzMyXTsKPj4gPiAtICAgICAgIGludCBtaW5fdm9sdGFnZTsKPj4gPiAtICAgICAg
+IGludCBtYXhfdm9sdGFnZTsKPj4gPiAtICAgICAgIGludCBlbmFibGVfbG9hZDsKPj4gPiAtICAg
+ICAgIGludCBkaXNhYmxlX2xvYWQ7Cj4+ID4gLSAgICAgICBpbnQgcHJlX29uX3NsZWVwOwo+PiA+
+IC0gICAgICAgaW50IHBvc3Rfb25fc2xlZXA7Cj4+ID4gLSAgICAgICBpbnQgcHJlX29mZl9zbGVl
+cDsKPj4gPiAtICAgICAgIGludCBwb3N0X29mZl9zbGVlcDsKPj4gPiAtfTsKPj4gPiAtCj4+ID4g
+LXN0cnVjdCBkc3NfZ3BpbyB7Cj4+ID4gLSAgICAgICB1bnNpZ25lZCBpbnQgZ3BpbzsKPj4gPiAt
+ICAgICAgIHVuc2lnbmVkIGludCB2YWx1ZTsKPj4gPiAtICAgICAgIGNoYXIgZ3Bpb19uYW1lWzMy
+XTsKPj4gPiAtfTsKPj4gPiAtCj4+ID4gLWVudW0gZHNzX2Nsa190eXBlIHsKPj4gPiAtICAgICAg
+IERTU19DTEtfQUhCLCAvKiBubyBzZXQgcmF0ZS4gcmF0ZSBjb250cm9sbGVkIHRocm91Z2ggcnBt
+ICovCj4+ID4gLSAgICAgICBEU1NfQ0xLX1BDTEssCj4+ID4gLSAgICAgICBEU1NfQ0xLX09USEVS
+LAo+PiA+IC19Owo+PiA+IC0KPj4gPiAtc3RydWN0IGRzc19jbGsgewo+PiA+IC0gICAgICAgc3Ry
+dWN0IGNsayAqY2xrOyAvKiBjbGsgaGFuZGxlICovCj4+ID4gLSAgICAgICBjaGFyIGNsa19uYW1l
+WzMyXTsKPj4gPiAtICAgICAgIGVudW0gZHNzX2Nsa190eXBlIHR5cGU7Cj4+ID4gLSAgICAgICB1
+bnNpZ25lZCBsb25nIHJhdGU7Cj4+ID4gLSAgICAgICB1bnNpZ25lZCBsb25nIG1heF9yYXRlOwo+
+PiA+IC19Owo+PiA+IC0KPj4gPiAtc3RydWN0IGRzc19tb2R1bGVfcG93ZXIgewo+PiA+IC0gICAg
+ICAgdW5zaWduZWQgaW50IG51bV92cmVnOwo+PiA+IC0gICAgICAgc3RydWN0IGRzc192cmVnICp2
+cmVnX2NvbmZpZzsKPj4gPiAtICAgICAgIHVuc2lnbmVkIGludCBudW1fZ3BpbzsKPj4gPiAtICAg
+ICAgIHN0cnVjdCBkc3NfZ3BpbyAqZ3Bpb19jb25maWc7Cj4+ID4gLSAgICAgICB1bnNpZ25lZCBp
+bnQgbnVtX2NsazsKPj4gPiAtICAgICAgIHN0cnVjdCBkc3NfY2xrICpjbGtfY29uZmlnOwo+PiA+
+IC19Owo+PiA+IC0KPj4gPiAtaW50IG1zbV9kc3NfaW9yZW1hcF9ieW5hbWUoc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldiwKPj4gPiAtICAgICAgIHN0cnVjdCBkc3NfaW9fZGF0YSAqaW9fZGF0
+YSwgY29uc3QgY2hhciAqbmFtZSk7Cj4+ID4gLXZvaWQgbXNtX2Rzc19pb3VubWFwKHN0cnVjdCBk
+c3NfaW9fZGF0YSAqaW9fZGF0YSk7Cj4+ID4gLQo+PiA+IC1pbnQgbXNtX2Rzc19lbmFibGVfZ3Bp
+byhzdHJ1Y3QgZHNzX2dwaW8gKmluX2dwaW8sIGludCBudW1fZ3BpbywgaW50IGVuYWJsZSk7Cj4+
+ID4gLWludCBtc21fZHNzX2dwaW9fZW5hYmxlKHN0cnVjdCBkc3NfZ3BpbyAqaW5fZ3BpbywgaW50
+IG51bV9ncGlvLCBpbnQgZW5hYmxlKTsKPj4gPiAtCj4+ID4gLWludCBtc21fZHNzX2NvbmZpZ192
+cmVnKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRzc192cmVnICppbl92cmVnLAo+PiA+IC0g
+ICAgICAgaW50IG51bV92cmVnLCBpbnQgY29uZmlnKTsKPj4gPiAtaW50IG1zbV9kc3NfZW5hYmxl
+X3ZyZWcoc3RydWN0IGRzc192cmVnICppbl92cmVnLCBpbnQgbnVtX3ZyZWcsICAgICAgICBpbnQg
+ZW5hYmxlKTsKPj4gPiAtCj4+ID4gLWludCBtc21fZHNzX2dldF9jbGsoc3RydWN0IGRldmljZSAq
+ZGV2LCBzdHJ1Y3QgZHNzX2NsayAqY2xrX2FycnksIGludCBudW1fY2xrKTsKPj4gPiAtdm9pZCBt
+c21fZHNzX3B1dF9jbGsoc3RydWN0IGRzc19jbGsgKmNsa19hcnJ5LCBpbnQgbnVtX2Nsayk7Cj4+
+ID4gLWludCBtc21fZHNzX2Nsa19zZXRfcmF0ZShzdHJ1Y3QgZHNzX2NsayAqY2xrX2FycnksIGlu
+dCBudW1fY2xrKTsKPj4gPiAtaW50IG1zbV9kc3NfZW5hYmxlX2NsayhzdHJ1Y3QgZHNzX2NsayAq
+Y2xrX2FycnksIGludCBudW1fY2xrLCBpbnQgZW5hYmxlKTsKPj4gPiAtaW50IG1zbV9kc3NfcGFy
+c2VfY2xvY2soc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwKPj4gPiAtICAgICAgICAgICAg
+ICAgc3RydWN0IGRzc19tb2R1bGVfcG93ZXIgKm1wKTsKPj4gPiAtCj4+ID4gLWludCBkcHVfaTJj
+X2J5dGVfcmVhZChzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LCB1aW50OF90IHNsYXZlX2FkZHIs
+Cj4+ID4gLSAgICAgICAgICAgICAgICAgICAgICB1aW50OF90IHJlZ19vZmZzZXQsIHVpbnQ4X3Qg
+KnJlYWRfYnVmKTsKPj4gPiAtaW50IGRwdV9pMmNfYnl0ZV93cml0ZShzdHJ1Y3QgaTJjX2NsaWVu
+dCAqY2xpZW50LCB1aW50OF90IHNsYXZlX2FkZHIsCj4+ID4gLSAgICAgICAgICAgICAgICAgICAg
+ICAgdWludDhfdCByZWdfb2Zmc2V0LCB1aW50OF90ICp2YWx1ZSk7Cj4+ID4gLQo+PiA+IC0jZW5k
+aWYgLyogX19EUFVfSU9fVVRJTF9IX18gKi8KPj4gPiAtLQo+PiA+IFRoZSBRdWFsY29tbSBJbm5v
+dmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0s
+Cj4+ID4gYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdAo+PiA+Cl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWls
+aW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
