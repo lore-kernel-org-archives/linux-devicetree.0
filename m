@@ -1,45 +1,45 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v5 09/10] gpio: Add a driver for Cadence I3C GPIO expander
-Date: Fri, 22 Jun 2018 09:04:47 -0700
-Message-ID: <27aae5b0-f8eb-bed7-9d14-5c739769977a@infradead.org>
-References: <20180622104930.32050-1-boris.brezillon@bootlin.com>
- <20180622104930.32050-10-boris.brezillon@bootlin.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH 1/2] arm64: allwinner: a64: change TERES-I
+ DLDO3's name to start with "vdd"
+Date: Sat, 23 Jun 2018 00:06:30 +0800
+Message-ID: <20180622160631.8578-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180622104930.32050-10-boris.brezillon@bootlin.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBRF5WTMQKGQE5LKBQAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Originally the name of the DLDO3 regulator on TERES-I is "eDP12", which
+is not consistent with other regulator names.
 
-On 06/22/2018 03:49 AM, Boris Brezillon wrote:
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 71c0ab46f216..19ed6006aea1 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -898,6 +898,17 @@ config GPIO_TS4900
->  
->  endmenu
->  
-> +menu "I3C GPIO expanders"
-> +	depends on I3C
-> +
-> +config GPIO_CDNS_I3C
-> +	tristate "Cadence I3C GPIO expander"
-> +	select GPIOLIB_IRQCHIP
-> +	help
-> +	  Say yes here to enabled the driver for Cadence I3C GPIO expander.
+Change it to "vdd-edp", in order to make it more consistent.
 
-	               to enable the driver
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +
-> +endmenu
-
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+index d9baab3dc96b..02fecc42440c 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+@@ -210,7 +210,7 @@
+ &reg_dldo3 {
+ 	regulator-min-microvolt = <1200000>;
+ 	regulator-max-microvolt = <1200000>;
+-	regulator-name = "eDP12";
++	regulator-name = "vdd-edp";
+ };
+ 
+ &reg_dldo4 {
 -- 
-~Randy
+2.17.1
