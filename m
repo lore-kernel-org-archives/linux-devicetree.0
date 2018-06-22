@@ -1,24 +1,21 @@
 Return-Path: <SRS0=pxWX=JI=gmail.com=festevam@kernel.org>
 From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH v2 2/2] crypto: sahara - Add i.MX51 entry
-Date: Fri, 22 Jun 2018 15:45:29 -0300
-Message-Id: <1529693129-29817-2-git-send-email-festevam@gmail.com>
-In-Reply-To: <1529693129-29817-1-git-send-email-festevam@gmail.com>
-References: <1529693129-29817-1-git-send-email-festevam@gmail.com>
+Subject: [PATCH 2/2] crypto: sahara - Add i.MX51 entry
+Date: Fri, 22 Jun 2018 13:21:27 -0300
+Message-Id: <1529684487-5025-2-git-send-email-festevam@gmail.com>
+In-Reply-To: <1529684487-5025-1-git-send-email-festevam@gmail.com>
+References: <1529684487-5025-1-git-send-email-festevam@gmail.com>
 To: herbert@gondor.apana.org.au
 Cc: robh+dt@kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, horia.geanta@nxp.com, Fabio Estevam <fabio.estevam@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
 From: Fabio Estevam <fabio.estevam@nxp.com>
 
-i.MX51 and i.MX53 share the same sahara IP block version, so add
+i.MX51 and i.MX51 share the same sahara IP block version, so add
 i.MX51 in the compatible list.
 
 Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
 ---
-Changes since v1:
-- Fix typo in commit log "i.MX51 and i.MX53"
-
  drivers/crypto/sahara.c | 5 ++++-
  1 file changed, 4 insertions(+), 1 deletion(-)
 
