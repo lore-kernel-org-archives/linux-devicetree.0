@@ -1,60 +1,59 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH RESEND 2/3] ARM: dts: keystone-k2g-evm: Use sdhci-omap programming model
-Date: Fri, 22 Jun 2018 15:46:16 +0530
-Message-ID: <20180622101617.11157-3-kishon@ti.com>
-References: <20180622101617.11157-1-kishon@ti.com>
+From: Rohit Kumar <rohitkr@codeaurora.org>
+Subject: Re: [PATCH v2 2/2] ASoC: qcom: add sdm845 sound card
+ support
+Date: Fri, 22 Jun 2018 16:06:17 +0530
+Message-ID: <58db39ee-d2a7-1cdf-c7e2-eea020c8a2c6@codeaurora.org>
+References: <1529578399-3633-1-git-send-email-rohitkr@codeaurora.org>
+ <1529578399-3633-3-git-send-email-rohitkr@codeaurora.org>
+ <20180621123503.GD27187@vkoul-mobl>
+ <46f1a6af-a180-2568-d203-87323379c2fd@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180622101617.11157-1-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <ssantosh@kernel.org>, kishon@ti.com
-Cc: robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <46f1a6af-a180-2568-d203-87323379c2fd@linaro.org>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Vinod <vkoul@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, lgirdwood@gmail.com, plai@codeaurora.org, linux-kernel@vger.kernel.org, tiwai@suse.com, robh+dt@kernel.org, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Use sdhci-omap programming model based on the generic sdhci
-library for programming the MMC/SD controller.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- arch/arm/boot/dts/keystone-k2g.dtsi | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index da78c0034427..af6bf1301cf5 100644
---- a/arch/arm/boot/dts/keystone-k2g.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -391,13 +391,10 @@
- 		};
- 
- 		mmc0: mmc@23000000 {
--			compatible = "ti,k2g-hsmmc", "ti,omap4-hsmmc";
-+			compatible = "ti,k2g-sdhci";
- 			reg = <0x23000000 0x400>;
- 			interrupts = <GIC_SPI 96 IRQ_TYPE_EDGE_RISING>;
--			dmas = <&edma1 24 0>, <&edma1 25 0>;
--			dma-names = "tx", "rx";
- 			bus-width = <4>;
--			ti,needs-special-reset;
- 			no-1-8-v;
- 			max-frequency = <96000000>;
- 			power-domains = <&k2g_pds 0xb>;
-@@ -407,13 +404,12 @@
- 		};
- 
- 		mmc1: mmc@23100000 {
--			compatible = "ti,k2g-hsmmc", "ti,omap4-hsmmc";
-+			compatible = "ti,k2g-sdhci";
- 			reg = <0x23100000 0x400>;
- 			interrupts = <GIC_SPI 97 IRQ_TYPE_EDGE_RISING>;
--			dmas = <&edma1 26 0>, <&edma1 27 0>;
--			dma-names = "tx", "rx";
- 			bus-width = <8>;
--			ti,needs-special-reset;
-+			no-1-8-v;
-+			non-removable;
- 			max-frequency = <96000000>;
- 			power-domains = <&k2g_pds 0xc>;
- 			clocks = <&k2g_clks 0xc 1>, <&k2g_clks 0xc 2>;
+On 6/21/2018 8:39 PM, Srinivas Kandagatla wrote:
+>
+>
+> On 21/06/18 13:35, Vinod wrote:
+>> And this one is generic DT parsing and seems quite similar to one in 
+>> apq8096.c
+>> Can we move these into a lib and use them instead of duplicating.
+> I totally agree with Vinod, We should probably come up with a library 
+> functions something like common.c so that we do not duplicate code.
+> This code is going be exactly same for most of the SoCs using qdsp.
+>
+Sure, I will add a new file, qcom_snd_common.c, which will have these 
+common functions and will update apq8096 and sdm845 machine driver to use
+APIs exposed by qcom_snd_common.c
+
+> thanks,
+> srini
+>
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+
+Regards,
+Rohit
+
 -- 
-2.17.1
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
