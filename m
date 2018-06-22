@@ -1,11 +1,11 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v4] MAINTAINERS: Add file patterns for pps device tree bindings
-Date: Fri, 22 Jun 2018 12:07:20 +0200
-Message-ID: <20180622100720.28983-1-geert@linux-m68k.org>
+Subject: [PATCH v4] MAINTAINERS: Add file patterns for h8300 device tree bindings
+Date: Fri, 22 Jun 2018 12:08:14 +0200
+Message-ID: <20180622100814.29172-1-geert@linux-m68k.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rodolfo Giometti <giometti@enneenne.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, uclinux-h8-devel@lists.sourceforge.jp, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
 Submitters of device tree binding documentation may forget to CC
@@ -19,16 +19,12 @@ v3:
 v2:
   - No changes.
 
-Impact on "scripts/get_maintainer.pl -f Documentation/devicetree/bindings/pps/":
+Impact on "scripts/get_maintainer.pl -f Documentation/devicetree/bindings/h8300/":
 
--Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS,commit_signer:1/2=50%,authored:1/2=50%)
-+Rodolfo Giometti <giometti@enneenne.com> (maintainer:PPS SUPPORT)
-+Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
++Yoshinori Sato <ysato@users.sourceforge.jp> (maintainer:H8/300 ARCHITECTURE)
+ Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
  Mark Rutland <mark.rutland@arm.com> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
--Vinod Koul <vkoul@kernel.org> (commit_signer:1/2=50%)
--Rodolfo Giometti <giometti@enneenne.com> (commit_signer:1/2=50%)
--"Robert P. J. Day" <rpjday@crashcourse.ca> (commit_signer:1/2=50%,authored:1/2=50%)
--Andrew Morton <akpm@linux-foundation.org> (commit_signer:1/2=50%)
++uclinux-h8-devel@lists.sourceforge.jp (moderated list:H8/300 ARCHITECTURE)
  devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
  linux-kernel@vger.kernel.org (open list)
 ---
@@ -36,16 +32,16 @@ Impact on "scripts/get_maintainer.pl -f Documentation/devicetree/bindings/pps/":
  1 file changed, 1 insertion(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index dd72b804b9b8bab3..464d91879df89fce 100644
+index 07a4927b1e7aada4..76b5dd65291f9650 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -11447,6 +11447,7 @@ M:	Rodolfo Giometti <giometti@enneenne.com>
- W:	http://wiki.enneenne.com/index.php/LinuxPPS_support
- L:	linuxpps@ml.enneenne.com (subscribers-only)
+@@ -6265,6 +6265,7 @@ L:	uclinux-h8-devel@lists.sourceforge.jp (moderated for non-subscribers)
+ W:	http://uclinux-h8.sourceforge.jp
+ T:	git git://git.sourceforge.jp/gitroot/uclinux-h8/linux.git
  S:	Maintained
-+F:	Documentation/devicetree/bindings/pps/
- F:	Documentation/pps/
- F:	Documentation/devicetree/bindings/pps/pps-gpio.txt
- F:	Documentation/ABI/testing/sysfs-pps
++F:	Documentation/devicetree/bindings/h8300/
+ F:	arch/h8300/
+ F:	drivers/clocksource/h8300_*.c
+ F:	drivers/clk/h8300/
 -- 
 2.17.1
