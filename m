@@ -1,95 +1,89 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH V2 2/4] dt-bindings: arm: fsl: add mu binding doc
-Date: Fri, 22 Jun 2018 07:49:32 +0200
-Message-ID: <20180622054932.ysqve7o7pvdnlp5k@pengutronix.de>
-References: <1529239789-26849-1-git-send-email-aisheng.dong@nxp.com>
- <1529239789-26849-3-git-send-email-aisheng.dong@nxp.com>
- <20180620194310.GA28983@rob-hp-laptop>
- <20180621074641.sqqvudxebt3hd43m@pengutronix.de>
- <AM0PR04MB4211B39D5AFAB95FC2A91F9980760@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: thermal: Add binding document for SR thermal
+Date: Fri, 22 Jun 2018 11:21:41 +0530
+Message-ID: <CABe79T74ycjqCAo5gnKkdMKZfcVGSuOX-EiUuhiwZ-iMtacPzQ@mail.gmail.com>
+References: <1529310679-13482-1-git-send-email-srinath.mannam@broadcom.com>
+ <1529310679-13482-2-git-send-email-srinath.mannam@broadcom.com> <20180620195214.GA10436@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <AM0PR04MB4211B39D5AFAB95FC2A91F9980760@AM0PR04MB4211.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180620195214.GA10436@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 21, 2018 at 05:11:33PM +0000, A.s. Dong wrote:
-> Hi Sascha,
-> 
-> > -----Original Message-----
-> > From: Sascha Hauer [mailto:s.hauer@pengutronix.de]
-> > Sent: Thursday, June 21, 2018 3:47 PM
-> > To: Rob Herring <robh@kernel.org>
-> > Cc: A.s. Dong <aisheng.dong@nxp.com>; linux-arm-
-> > kernel@lists.infradead.org; dongas86@gmail.com; kernel@pengutronix.de;
-> > shawnguo@kernel.org; Fabio Estevam <fabio.estevam@nxp.com>; dl-linux-
-> > imx <linux-imx@nxp.com>; Mark Rutland <mark.rutland@arm.com>;
-> > devicetree@vger.kernel.org
-> > Subject: Re: [PATCH V2 2/4] dt-bindings: arm: fsl: add mu binding doc
-> > 
-> > On Wed, Jun 20, 2018 at 01:43:10PM -0600, Rob Herring wrote:
-> > > On Sun, Jun 17, 2018 at 08:49:47PM +0800, Dong Aisheng wrote:
-> > > > The Messaging Unit module enables two processors within the SoC to
-> > > > communicate and coordinate by passing messages (e.g. data, status
-> > > > and control) through the MU interface.
-> > > >
-> > > > Cc: Shawn Guo <shawnguo@kernel.org>
-> > > > Cc: Sascha Hauer <kernel@pengutronix.de>
-> > > > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > > Cc: devicetree@vger.kernel.org
-> > > > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> > > > ---
-> > > > v1->v2:
-> > > >  * typo fixes
-> > > >  * remove status property
-> > > >  * remove imx6&7 compatible string which may be added later for
-> > > >    the generic mailbox binding
-> > > >
-> > > > Note: Because MU used by SCU is not implemented as a mailbox driver,
-> > > > Instead, they're provided in library calls to gain higher performance.
-> > >
-> > > Using a binding doesn't mean you have to use an OS's subsystem.
-> > >
-> > > What needs higher performance? What's the performance difference?
-> > Why
-> > > can't the mailbox framework be improved?
-> > 
-> > From what I see the performance is improved by polling the interrupt
-> > registers rather than using interrupts.
-> > I see no reason though why this can't be implemented with the mailbox
-> > framework as is.
-> > 
-> 
-> I thought you've agreed to not write generic MU(mailbox) driver for SCU.
-> https://www.spinics.net/lists/arm-kernel/msg650217.html
-> But seems it's still not quite certain...
+Hi Rob,
 
-My suggestion was that we change the compatible of the MU unit to
-something that the SCU driver matches. But since we do not do that and
-instead use a fsl,imx8qxp-mu compatible for the MU we have to come up
-with a MU driver that handles both the SCU case and the regular usecase.
-Otherwise we'll end up with a generic driver attaching to the device you
-are using under the hoods.
+Please find my comments for the reason to have multiple DT nodes.
 
-Sascha
+On Thu, Jun 21, 2018 at 1:22 AM, Rob Herring <robh@kernel.org> wrote:
+> On Mon, Jun 18, 2018 at 02:01:17PM +0530, Srinath Mannam wrote:
+>> From: Pramod Kumar <pramod.kumar@broadcom.com>
+>>
+>> Add binding document for supported thermal implementation
+>> in Stingray.
+>>
+>> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+>> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+>> Reviewed-by: Srinath Mannam <srinath.mannam@broadcom.com>
+>> ---
+>>  .../bindings/thermal/brcm,sr-thermal.txt           | 45 ++++++++++++++++++++++
+>>  1 file changed, 45 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>> new file mode 100644
+>> index 0000000..33f9e11
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>> @@ -0,0 +1,45 @@
+>> +* Broadcom Stingray Thermal
+>> +
+>> +This binding describes thermal sensors that is part of Stingray SoCs.
+>> +
+>> +Required properties:
+>> +- compatible : Must be "brcm,sr-thermal"
+>> +- reg : memory where tmon data will be available.
+>> +
+>> +Example:
+>> +     tmons {
+>> +             compatible = "simple-bus";
+>> +             #address-cells = <1>;
+>> +             #size-cells = <1>;
+>> +             ranges;
+>> +
+>> +             tmon_ihost0: thermal@8f100000 {
+>> +                     compatible = "brcm,sr-thermal";
+>> +                     reg = <0x8f100000 0x4>;
+>> +             };
+>
+> You still haven't given me a compelling reason why you need a node per
+> register.
+>
+> You have a single range of registers. Make this 1 node.
+>
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+We Have two reasons to have multiple nodes..
+1. Our chip has multiple functional blocks. Each functional block has
+its own thermal zone.
+Functional blocks and their thermal zones enabled/disabled based on end product.
+Few functional blocks need to disabled for few products so thermal
+zones also need to disable.
+In that case, nodes of specific thermal zones are removed from DTS
+file of corresponding product.
+
+2. Thermal framework provides sysfs interface to configure thermal
+zones and read temperature of thermal zone.
+To configure individual thermal zone, we need to have separate DT node.
+Same to read temperature of individual thermal zone.
+Ex: To read temperature of thermal zone 0.
+         cat /sys/class/thermal/thermal_zone0/temp
+     To configure trip temperature of thermal zone 0.
+          echo 110000 > /sys/class/thermal/thermal_zone0/trip_point_0_temp
+
+Also to avoid driver source change for the multiple products it is
+clean to have multiple DT nodes.
+
+> Rob
