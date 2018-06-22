@@ -1,55 +1,42 @@
-From: "Frank Wunderlich" <FrankWu@gmx.de>
-Subject: [PATCH] [dts] fix green/blue pio-led on bananapi-r2
-Date: Fri, 22 Jun 2018 17:53:03 +0200
-Message-ID: <trinity-0d48bc23-f754-4da3-af01-c3a7abe1d34b-1529682783853@3c-app-gmx-bs42>
-References: <trinity-ae29ad25-a4fb-47f3-8d68-f6e58c875a0e-1529682447976@3c-app-gmx-bs42>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v4] MAINTAINERS: Add file patterns for x86 device tree
+ bindings
+Date: Fri, 22 Jun 2018 17:57:07 +0200 (CEST)
+Message-ID: <alpine.DEB.2.21.1806221753560.2402@nanos.tec.linutronix.de>
+References: <20180622100820.29616-1-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180622100820.29616-1-geert@linux-m68k.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogRnJhbmsgV3VuZGVybGljaCA8ZnJhbmstd0BwdWJsaWMtZmlsZXMuZGU+CkRhdGU6IFN1
-biwgMTcgSnVuIDIwMTggMTk6MTE6NTggKzAyMDAKU3ViamVjdDogW1BBVENIXSBbZHRzXSBmaXgg
-Z3JlZW4vYmx1ZSBwaW8tbGVkCsKgZ3JlZW4vYmx1ZSBwaW8tbGVkcyAobmVhciBHUElPLUhlYWRl
-cikgYXJlIHN3YXBwZWQgYW5kIExPVy1hY3RpdmUKwqB0aGlzIHBhdGNoIHJlc3RvcmUgdGhpcyBl
-eHBlY3RlZCBiZWhhdmlvdXIKwqByZWQgY2Fubm90IGJlIHN3aXRjaGVkIGFmYWlrClNpZ25lZC1v
-ZmYtYnk6IEZyYW5rIFd1bmRlcmxpY2ggPGZyYW5rLXdAcHVibGljLWZpbGVzLmRlPgotLS0KwqBh
-cmNoL2FybS9ib290L2R0cy9tdDc2MjNuLWJhbmFuYXBpLWJwaS1yMi5kdHMgfCAxNCArKysrKysr
-LS0tLS0tLQrCoDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0p
-CmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9tdDc2MjNuLWJhbmFuYXBpLWJwaS1yMi5k
-dHMgYi9hcmNoL2FybS9ib290L2R0cy9tdDc2MjNuLWJhbmFuYXBpLWJwaS1yMi5kdHMKaW5kZXgg
-NTMxZDkwNWQ5MjRmZi4uM2U4YTBmZmU4YjEzZSAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9k
-dHMvbXQ3NjIzbi1iYW5hbmFwaS1icGktcjIuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL210
-NzYyM24tYmFuYW5hcGktYnBpLXIyLmR0cwpAQCAtODksMjEgKzg5LDIxIEBACsKgwqDCoCDCoMKg
-wqAgwqBwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwrCoMKgwqAgwqDCoMKgIMKgcGluY3RybC0w
-ID0gPCZsZWRfcGluc19hPjsKwqAKLcKgwqAgwqDCoMKgIMKgYmx1ZSB7Ci3CoMKgIMKgwqDCoCDC
-oMKgwqAgwqBsYWJlbCA9ICJicGktcjI6cGlvOmJsdWUiOwotwqDCoCDCoMKgwqAgwqDCoMKgIMKg
-Z3Bpb3MgPSA8JnBpbyAyNDEgR1BJT19BQ1RJVkVfSElHSD47CivCoMKgIMKgwqDCoCDCoGdyZWVu
-IHsKK8KgwqAgwqDCoMKgIMKgwqDCoCDCoGxhYmVsID0gImJwaS1yMjpwaW86Z3JlZW4iOworwqDC
-oCDCoMKgwqAgwqDCoMKgIMKgZ3Bpb3MgPSA8JnBpbyAyNDEgR1BJT19BQ1RJVkVfTE9XPjsKwqDC
-oMKgIMKgwqDCoCDCoMKgwqAgwqBkZWZhdWx0LXN0YXRlID0gIm9mZiI7CsKgwqDCoCDCoMKgwqAg
-wqB9OwrCoAotwqDCoCDCoMKgwqAgwqBncmVlbiB7Ci3CoMKgIMKgwqDCoCDCoMKgwqAgwqBsYWJl
-bCA9ICJicGktcjI6cGlvOmdyZWVuIjsKLcKgwqAgwqDCoMKgIMKgwqDCoCDCoGdwaW9zID0gPCZw
-aW8gMjQwIEdQSU9fQUNUSVZFX0hJR0g+OworwqDCoCDCoMKgwqAgwqBibHVlIHsKK8KgwqAgwqDC
-oMKgIMKgwqDCoCDCoGxhYmVsID0gImJwaS1yMjpwaW86Ymx1ZSI7CivCoMKgIMKgwqDCoCDCoMKg
-wqAgwqBncGlvcyA9IDwmcGlvIDI0MCBHUElPX0FDVElWRV9MT1c+OwrCoMKgwqAgwqDCoMKgIMKg
-wqDCoCDCoGRlZmF1bHQtc3RhdGUgPSAib2ZmIjsKwqDCoMKgIMKgwqDCoCDCoH07CsKgCsKgwqDC
-oCDCoMKgwqAgwqByZWQgewrCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoGxhYmVsID0gImJwaS1yMjpw
-aW86cmVkIjsKLcKgwqAgwqDCoMKgIMKgwqDCoCDCoGdwaW9zID0gPCZwaW8gMjM5IEdQSU9fQUNU
-SVZFX0hJR0g+OworwqDCoCDCoMKgwqAgwqDCoMKgIMKgZ3Bpb3MgPSA8JnBpbyAyMzkgR1BJT19B
-Q1RJVkVfTE9XPjsKwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqBkZWZhdWx0LXN0YXRlID0gIm9mZiI7
-CsKgwqDCoCDCoMKgwqAgwqB9OwrCoMKgwqAgwqB9OwrCoArCoArCoAoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
-IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Fri, 22 Jun 2018, Geert Uytterhoeven wrote:
+
+> Submitters of device tree binding documentation may forget to CC
+> the subsystem maintainer if this is missing.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> ---
+> v3:
+>   - Update for next-20180622,
+> 
+> v2:
+>   - No changes.
+> 
+> Impact on "scripts/get_maintainer.pl -f Documentation/devicetree/bindings/x86/":
+> 
+> -Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS,commit_signer:1/1=100%)
+> +Thomas Gleixner <tglx@linutronix.de> (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+
+I assume there is no way to make sure that Rob and the device tree folks
+are on top of that list? While it's somehow x86 related most of the
+devicetree details are way over my head. :)
+
+I'll pick it up nevertheless
+
+Thanks,
+
+	tglx
