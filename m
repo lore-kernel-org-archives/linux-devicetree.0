@@ -1,80 +1,64 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v4 3/5] dt-binding: mtd: denali_dt: document clock property
-Date: Sat, 23 Jun 2018 01:06:36 +0900
-Message-ID: <1529683598-25783-4-git-send-email-yamada.masahiro@socionext.com>
-References: <1529683598-25783-1-git-send-email-yamada.masahiro@socionext.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH 2/2] arm64: allwinner: a64: allow laptops to
+ wake up from lid
+Date: Sat, 23 Jun 2018 00:06:31 +0800
+Message-ID: <20180622160631.8578-2-icenowy@aosc.io>
+References: <20180622160631.8578-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1529683598-25783-1-git-send-email-yamada.masahiro@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: linux-mtd@lists.infradead.org, Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRB4N5WTMQKGQEYHLREPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180622160631.8578-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit 30f9f2fb7ba0 ("mtd: denali: add a DT driver") supported the
-clock enablement, but did not document it in the DT binding.
+Currently all ARM kernels will have s2idle enabled if CONFIG_SUSPEND is
+present. In this case if the lid is closed, systemd-logind will enter
+s2idle mode by default; however there's no possible wakeup source
+defined, so the system will enter a forever idle.
 
-In addition to the existing clock, this commit adds more clocks based
-on the IP specification.
+Add the lid itself as a wakeup source, thus the system can wakeup when
+the lid is opened.
 
-According to the Denali User's Guide, this IP needs three clocks:
-
- - clk: controller core clock
-
- - clk_x: bus interface clock
-
- - ecc_clk: clock at which ECC circuitry is run
-
-The driver should accept the current single clock for the backward
-compatibility, but the DT binding should represent the real hardware,
-and future platforms must follow this.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
+This patch is not related with the first patch, and have no dependency.
 
-Changes in v4:
-  - split into a separate patch
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts | 1 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts  | 1 +
+ 2 files changed, 2 insertions(+)
 
-
- Documentation/devicetree/bindings/mtd/denali-nand.txt | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-index 0ee8edb..f33da87 100644
---- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-@@ -8,6 +8,9 @@ Required properties:
-   - reg : should contain registers location and length for data and reg.
-   - reg-names: Should contain the reg names "nand_data" and "denali_reg"
-   - interrupts : The interrupt number.
-+  - clocks: should contain phandle of the controller core clock, the bus
-+    interface clock, and the ECC circuit clock.
-+  - clock-names: should contain "nand", "nand_x", "ecc"
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+index 58253d6f9be1..e6e5bf11b759 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+@@ -49,6 +49,7 @@
+ 			linux,input-type = <EV_SW>;
+ 			linux,code = <SW_LID>;
+ 			linux,can-disable;
++			wakeup-source;
+ 		};
+ 	};
  
- Optional properties:
-   - nand-ecc-step-size: see nand.txt for details.  If present, the value must be
-@@ -31,5 +34,7 @@ nand: nand@ff900000 {
- 	compatible = "altr,socfpga-denali-nand";
- 	reg = <0xff900000 0x20>, <0xffb80000 0x1000>;
- 	reg-names = "nand_data", "denali_reg";
-+	clocks = <&nand_clk>, <&nand_x_clk>, <&nand_ecc_clk>;
-+	clock-names = "nand", "nand_x", "ecc";
- 	interrupts = <0 144 4>;
- };
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+index 02fecc42440c..33f78e745815 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+@@ -38,6 +38,7 @@
+ 			gpios = <&r_pio 0 8 GPIO_ACTIVE_LOW>; /* PL8 */
+ 			linux,input-type = <EV_SW>;
+ 			linux,code = <SW_LID>;
++			wakeup-source;
+ 		};
+ 	};
+ 
 -- 
-2.7.4
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+2.17.1
