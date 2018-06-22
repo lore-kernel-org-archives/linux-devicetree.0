@@ -1,55 +1,83 @@
-Return-Path: <SRS0=CmVI=JB=pengutronix.de=ore@kernel.org>
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v1 1/2] imx-rproc: dt: provide new remote-nodes option
-Date: Fri, 15 Jun 2018 13:57:30 +0200
-Message-Id: <20180615115731.18424-1-o.rempel@pengutronix.de>
-To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, dl-linux-imx <linux-imx@nxp.com>
+Return-Path: <SRS0=/GFF=JI=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from gate.crashing.org ([63.228.1.57]:47342 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751183AbeFVEib (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 22 Jun 2018 00:38:31 -0400
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: [PATCH 2/2] fsi: Add support for device-tree provided chip IDs
+Date: Fri, 22 Jun 2018 14:37:56 +1000
+Message-Id: <20180622043756.21158-2-benh@kernel.crashing.org>
+In-Reply-To: <20180622043756.21158-1-benh@kernel.crashing.org>
+References: <20180622043756.21158-1-benh@kernel.crashing.org>
+Sender: devicetree-owner@vger.kernel.org
+To: openbmc@lists.ozlabs.org
+Cc: linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On AMP systems we need to make sure that some device
-nodes are not used by main system and reserved for
-external system. Some of configuration should be
-maintained by main system. For example clocks and pins.
+They get retrieved from the device-tree and exposed
+as an attribute in sysfs
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 ---
- .../devicetree/bindings/remoteproc/imx-rproc.txt    | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/fsi/fsi-core.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt b/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
-index fbcefd965dc4..40bec03e094c 100644
---- a/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
-+++ b/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
-@@ -15,6 +15,7 @@ Required properties:
- Optional properties:
- - memory-region		list of phandels to the reserved memory regions.
- 			(See: ../reserved-memory/reserved-memory.txt)
-+- remote-nodes		list of device node phandels used by remote system.
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index 1ae5be31b4bf..3fe36673cb21 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -80,6 +80,7 @@ struct fsi_slave {
+ 	struct fsi_master	*master;
+ 	int			id;
+ 	int			link;
++	int			chip_id;
+ 	uint32_t		size;	/* size of slave address space */
+ 	u8			t_send_delay;
+ 	u8			t_echo_delay;
+@@ -723,6 +724,17 @@ static ssize_t slave_send_echo_store(struct device *dev,
+ static DEVICE_ATTR(send_echo_delays, 0600,
+ 		   slave_send_echo_show, slave_send_echo_store);
  
- Example:
- 	m4_reserved_sysmem1: cm4@80000000 {
-@@ -25,9 +26,21 @@ Example:
- 		reg = <0x81000000 0x80000>;
- 	};
++static ssize_t chip_id_show(struct device *dev,
++			    struct device_attribute *attr,
++			    char *buf)
++{
++	struct fsi_slave *slave = to_fsi_slave(dev);
++
++	return sprintf(buf, "%d\n", slave->chip_id);
++}
++
++static DEVICE_ATTR_RO(chip_id);
++
+ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ {
+ 	uint32_t chip_id;
+@@ -786,6 +798,14 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 	slave->t_send_delay = 16;
+ 	slave->t_echo_delay = 16;
  
-+	/* node reserved for rproc */
-+	&uart1 {
-+		assigned-clock-rates = <240000000>;
-+		status = "disabled";
-+	};
++	/* Get chip ID if any */
++	slave->chip_id = -1;
++	if (slave->dev.of_node) {
++		uint32_t prop;
++		if (!of_property_read_u32(slave->dev.of_node, "chip-id", &prop))
++			slave->chip_id = prop;
 +
-+	&gpt2 {
-+		assigned-clock-rates = <24000000>;
-+		status = "disabled";
-+	};
++	}
+ 	rc = fsi_slave_set_smode(slave);
+ 	if (rc) {
+ 		dev_warn(&master->dev,
+@@ -820,6 +840,10 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 	if (rc)
+ 		dev_warn(&slave->dev, "failed to create delay attr: %d\n", rc);
+ 
++	rc = device_create_file(&slave->dev, &dev_attr_chip_id);
++	if (rc)
++		dev_warn(&slave->dev, "failed to create chip id: %d\n", rc);
 +
- 	imx7d-cm4 {
- 		compatible	= "fsl,imx7d-cm4";
- 		memory-region	= <&m4_reserved_sysmem1>, <&m4_reserved_sysmem2>;
- 		syscon		= <&src>;
- 		clocks		= <&clks IMX7D_ARM_M4_ROOT_CLK>;
-+		remote-nodes	= <&gpt2>, <&uart1>;
- 	};
+ 	rc = fsi_slave_scan(slave);
+ 	if (rc)
+ 		dev_dbg(&master->dev, "failed during slave scan with: %d\n",
 -- 
 2.17.1
+
