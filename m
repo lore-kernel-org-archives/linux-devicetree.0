@@ -1,40 +1,40 @@
-From: Chen Zhong <chen.zhong@mediatek.com>
-Subject: [RESEND PATCH] dt-bindings: input: Add common keyboard document bindings
-Date: Fri, 22 Jun 2018 14:16:38 +0800
-Message-ID: <1529648198-14231-1-git-send-email-chen.zhong@mediatek.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx6sll-evk: make pfuze100 sw4 always on
+Date: Fri, 22 Jun 2018 14:28:52 +0800
+Message-ID: <1529648932-4832-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Chen Zhong <chen.zhong@mediatek.com>
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree binding documentation for common
-keyboard.
+On i.MX6SLL EVK board, PFuze100's SW4 is supplying
+LPDDR3, it needs to be always on. This patch fixes
+Linux kernel boot up hang caused by SW4 being turned
+off:
 
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
+[    1.693613] cfg80211: failed to load regulatory.db
+[    1.700063] SW4: disabling
+[    1.703973] SWBST: disabling
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- Documentation/devicetree/bindings/input/keys.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/keys.txt
+ arch/arm/boot/dts/imx6sll-evk.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/input/keys.txt b/Documentation/devicetree/bindings/input/keys.txt
-new file mode 100644
-index 0000000..a0ea7eb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/keys.txt
-@@ -0,0 +1,8 @@
-+General Keys Properties:
-+
-+Optional properties for Keys:
-+- power-off-time-sec: Duration in seconds which the key should be kept
-+ 	pressed for device to power off automatically. Device with key pressed
-+ 	shutdown feature can specify this property.
-+- linux,keycodes: Specifies the numeric keycode values to be used for
-+	reporting key presses.
-\ No newline at end of file
+diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-evk.dts
+index 4684ac4..2217c40 100644
+--- a/arch/arm/boot/dts/imx6sll-evk.dts
++++ b/arch/arm/boot/dts/imx6sll-evk.dts
+@@ -142,6 +142,7 @@
+ 			sw4_reg: sw4 {
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
+ 			};
+ 
+ 			swbst_reg: swbst {
 -- 
-1.8.1.1.dirty
+2.7.4
