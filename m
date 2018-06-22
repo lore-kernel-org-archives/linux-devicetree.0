@@ -1,104 +1,167 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 3/7] ARM: dts: s5pv210: Add initial DTS for Samsung Galaxy
- S phone.
-Date: Fri, 22 Jun 2018 10:51:28 +0200
-Message-ID: <CAJKOXPc+u5eazcn3sO94gjaAtWXzJWW5YUFbGsE5sjXzkfd2Dw@mail.gmail.com>
-References: <1529608199-5583-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
- <1529608199-5583-4-git-send-email-pawel.mikolaj.chmiel@gmail.com>
- <CAJKOXPf8cpJ-pivG9j1sCM3aB_-i2n73MoeQKOd4oXxz976EVw@mail.gmail.com> <1851346.itd6mG8ZId@acerlaptop>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH v2] display: panel: Add KOE tx14d24vm1bpa display
+ support (320x240)
+Date: Fri, 22 Jun 2018 10:56:05 +0200
+Message-ID: <20180622105605.3018453c@jawa>
+References: <20180412143715.6828-1-lukma@denx.de>
+        <20180529150528.22136-1-lukma@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/ve=Gn5zIf4rJpd+mqZ9Yc51"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1851346.itd6mG8ZId@acerlaptop>
+In-Reply-To: <20180529150528.22136-1-lukma@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Cc: kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xc-racer2@live.ca
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 22 June 2018 at 10:42, Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com=
-> wrote:
-> On Friday, June 22, 2018 9:49:42 AM CEST Krzysztof Kozlowski wrote:
->> On 21 June 2018 at 21:09, Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.=
-com> wrote:
->> > Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
->>
->> Please add commit message. This can be something as simple as "Add
->> Samsung Galaxy S DTS which is a commercial phone based on Aries
->> family." or something more (e.g. describe what is working).
->>
->> > ---
->> >  arch/arm/boot/dts/Makefile            |  1 +
->> >  arch/arm/boot/dts/s5pv210-galaxys.dts | 72 ++++++++++++++++++++++++++=
-+++++++++
->> >  2 files changed, 73 insertions(+)
->> >  create mode 100644 arch/arm/boot/dts/s5pv210-galaxys.dts
->> >
->> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> > index 7e2424957809..522ebdca1d3d 100644
->> > --- a/arch/arm/boot/dts/Makefile
->> > +++ b/arch/arm/boot/dts/Makefile
->> > @@ -846,6 +846,7 @@ dtb-$(CONFIG_ARCH_S3C64XX) +=3D \
->> >         s3c6410-smdk6410.dtb
->> >  dtb-$(CONFIG_ARCH_S5PV210) +=3D \
->> >         s5pv210-aquila.dtb \
->> > +       s5pv210-galaxys.dtb \
->> >         s5pv210-goni.dtb \
->> >         s5pv210-smdkc110.dtb \
->> >         s5pv210-smdkv210.dtb \
->> > diff --git a/arch/arm/boot/dts/s5pv210-galaxys.dts b/arch/arm/boot/dts=
-/s5pv210-galaxys.dts
->> > new file mode 100644
->> > index 000000000000..d435032541a9
->> > --- /dev/null
->> > +++ b/arch/arm/boot/dts/s5pv210-galaxys.dts
->> > @@ -0,0 +1,72 @@
->> > +// SPDX-License-Identifier: GPL-2.0
->> > +
->> > +/dts-v1/;
->> > +#include <dt-bindings/gpio/gpio.h>
->> > +#include <dt-bindings/interrupt-controller/irq.h>
->> > +#include <dt-bindings/input/input.h>
->> > +#include <dt-bindings/interrupt-controller/irq.h>
->>
->> Duplicated inclusion.
->>
->> > +#include "s5pv210-aries.dtsi"
->> > +
->> > +/ {
->> > +       model =3D "Samsung Galaxy S1 (GT-I9000) based on S5PV210";
->> > +       compatible =3D "samsung,galaxys", "samsung,aries", "samsung,s5=
-pv210";
->> > +
->> > +       chosen {
->> > +               bootargs =3D "console=3DttySAC2,115200n8 root=3D/dev/m=
-mcblk2p1 rw rootwait ignore_loglevel earlyprintk";
->>
->> stdout-path =3D "serial2:115200n8";
->>
->> Rest of bootargs should not be here (they are not HW dependent) unless
->> you cannot configure them through bootloader?
->>
-> Stock (proprietary) bootloader is little problematic for me:
-> - to access it, You need to build special cable.
-> - i wasn't able to boot any kernel newer than 2.6.35/3.0 on it, without f=
-ollowing hack/patch
-> https://github.com/tom3q/linux/commit/af96ebcba03b607ab93bd5778301890feb0=
-38479.patch
->
-> I would like to leave those bootargs for now, so anyone can easly test th=
-is kernel (just with that one patch),
-> without breaking booting existing software, so they could easly go back t=
-o stock software by just flashing old kernel.
-> Later it'll be removed because there is initial port of mainline u-boot s=
-tarted for both devices
-> - currently it can be flashed to device, instead of kernel and boot kerne=
-ls from onenand/sdcard.
-> In this way migration from old kernel to new one will be much easier to u=
-sers (and won't require special tools/cables/etc).
+--Sig_/ve=Gn5zIf4rJpd+mqZ9Yc51
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-OK, then move the console to stdout-path and leave the rest with a
-comment explaining why they are useful.
+Hi Thierry,
+
+> This commit adds support for KOE's 5.7" display.
+>=20
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes for v2:
+> - Add Reviewed-by tag
+
+Could you apply this patch to your tree?
+
+Thanks in advance,
+=C5=81ukasz
+
+>=20
+> ---
+>  .../bindings/display/panel/koe,tx14d24vm1bpa.txt   | 42
+> ++++++++++++++++++++++
+> drivers/gpu/drm/panel/panel-simple.c               | 26
+> ++++++++++++++ 2 files changed, 68 insertions(+) create mode 100644
+> Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+>=20
+> diff --git
+> a/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+> b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+> new file mode 100644 index 000000000000..be7ac666807b --- /dev/null
+> +++
+> b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+> @@ -0,0 +1,42 @@ +Kaohsiung Opto-Electronics Inc. 5.7" QVGA (320 x
+> 240) TFT LCD panel +
+> +Required properties:
+> +- compatible: should be "koe,tx14d24vm1bpa"
+> +- backlight: phandle of the backlight device attached to the panel
+> +- power-supply: single regulator to provide the supply voltage
+> +
+> +Required nodes:
+> +- port: Parallel port mapping to connect this display
+> +
+> +This panel needs single power supply voltage. Its backlight is
+> conntrolled +via PWM signal.
+> +
+> +Example:
+> +--------
+> +
+> +Example device-tree definition when connected to iMX53 based board
+> +
+> +	lcd_panel: lcd-panel {
+> +		compatible =3D "koe,tx14d24vm1bpa";
+> +		backlight =3D <&backlight_lcd>;
+> +		power-supply =3D <&reg_3v3>;
+> +
+> +		port {
+> +			lcd_panel_in: endpoint {
+> +				remote-endpoint =3D <&lcd_display_out>;
+> +			};
+> +		};
+> +	};
+> +
+> +Then one needs to extend the dispX node:
+> +
+> +	lcd_display: disp1 {
+> +
+> +		port@1 {
+> +			reg =3D <1>;
+> +
+> +			lcd_display_out: endpoint {
+> +				remote-endpoint =3D <&lcd_panel_in>;
+> +			};
+> +		};
+> +	};
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c
+> b/drivers/gpu/drm/panel/panel-simple.c index
+> d9984bdb5bb5..103b43ce7dee 100644 ---
+> a/drivers/gpu/drm/panel/panel-simple.c +++
+> b/drivers/gpu/drm/panel/panel-simple.c @@ -1268,6 +1268,29 @@ static
+> const struct panel_desc innolux_zj070na_01p =3D { },
+>  };
+> =20
+> +static const struct display_timing koe_tx14d24vm1bpa_timing =3D {
+> +	.pixelclock =3D { 5580000, 5850000, 6200000 },
+> +	.hactive =3D { 320, 320, 320 },
+> +	.hfront_porch =3D { 30, 30, 30 },
+> +	.hback_porch =3D { 30, 30, 30 },
+> +	.hsync_len =3D { 1, 5, 17 },
+> +	.vactive =3D { 240, 240, 240 },
+> +	.vfront_porch =3D { 6, 6, 6 },
+> +	.vback_porch =3D { 5, 5, 5 },
+> +	.vsync_len =3D { 1, 2, 11 },
+> +	.flags =3D DISPLAY_FLAGS_DE_HIGH,
+> +};
+> +
+> +static const struct panel_desc koe_tx14d24vm1bpa =3D {
+> +	.timings =3D &koe_tx14d24vm1bpa_timing,
+> +	.num_timings =3D 1,
+> +	.bpc =3D 6,
+> +	.size =3D {
+> +		.width =3D 115,
+> +		.height =3D 86,
+> +	},
+> +};
+> +
+>  static const struct display_timing koe_tx31d200vm0baa_timing =3D {
+>  	.pixelclock =3D { 39600000, 43200000, 48000000 },
+>  	.hactive =3D { 1280, 1280, 1280 },
+> @@ -2204,6 +2227,9 @@ static const struct of_device_id
+> platform_of_match[] =3D { .compatible =3D "innolux,zj070na-01p",
+>  		.data =3D &innolux_zj070na_01p,
+>  	}, {
+> +		.compatible =3D "koe,tx14d24vm1bpa",
+> +		.data =3D &koe_tx14d24vm1bpa,
+> +	}, {
+>  		.compatible =3D "koe,tx31d200vm0baa",
+>  		.data =3D &koe_tx31d200vm0baa,
+>  	}, {
+
+
+
 
 Best regards,
-Krzysztof
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+
+--Sig_/ve=Gn5zIf4rJpd+mqZ9Yc51
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlssuaUACgkQAR8vZIA0
+zr1B8AgAgQ9gEpUy+yOfpgwF+O5MBD9fJkSXUwJf34Eae3SXVeUjdkRXi5794FBV
+8HaqddGXris9dLQk1I3mbKlgAu0bUctJB73e88ZECaXeOtR+H7teAwkDEJhGkG88
+PZGRvA5Sf7z8efPfJzXLCjLYWje/6cP12162xQKuS+lDl0qKC+0kl1RMtWA4S9uC
+S+gSN8doTyjg4SGrukKIsN734zHYpqo7GAkEgc3jMRcn63kFBbEMAg3dngOXpuN7
+aGUuHi7AjwOSK+J6EdB06BC53hiFWkRkZMtZCwFbKjmoast3YRhDeaBwj2ey5/2F
+m/C91SMvdIJhN7YAcDWQZ+QzeM3TCA==
+=CQCq
+-----END PGP SIGNATURE-----
+
+--Sig_/ve=Gn5zIf4rJpd+mqZ9Yc51--
