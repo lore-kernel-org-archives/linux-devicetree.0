@@ -1,7 +1,7 @@
 From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH 2/3] k3dma: add support to reserved minimum channels
-Date: Fri, 22 Jun 2018 11:24:15 +0800
-Message-ID: <20180622032416.20133-3-guodong.xu@linaro.org>
+Subject: [PATCH 3/3] k3dma: delete axi_config
+Date: Fri, 22 Jun 2018 11:24:16 +0800
+Message-ID: <20180622032416.20133-4-guodong.xu@linaro.org>
 References: <20180622032416.20133-1-guodong.xu@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180622032416.20133-1-guodong.xu@linaro.org>
@@ -12,74 +12,38 @@ List-Id: devicetree@vger.kernel.org
 
 From: Li Yu <liyu65@hisilicon.com>
 
-On k3 series of SoC, DMA controller reserves some channels for
-other on-chip coprocessors. By adding support to dma_min_chan, kernel
-will not be able to use these reserved channels.
+Axi_config controls whether DMA resources can be accessed in non-secure
+mode, such as linux kernel. The setting is actually done in
+bootloader stage.
 
-One example is on Hi3660 platform, channel 0 is reserved to lpm3.
-
-Please also refer to Documentation/devicetree/bindings/dma/k3dma.txt
+This patch removes axi_config from k3dma driver.
 
 Signed-off-by: Li Yu <liyu65@hisilicon.com>
 Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
 ---
- drivers/dma/k3dma.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/dma/k3dma.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/drivers/dma/k3dma.c b/drivers/dma/k3dma.c
-index fa31cccbe04f..13cec12742e3 100644
+index 13cec12742e3..ddd7d1e054c0 100644
 --- a/drivers/dma/k3dma.c
 +++ b/drivers/dma/k3dma.c
-@@ -113,6 +113,7 @@ struct k3_dma_dev {
- 	struct dma_pool		*pool;
- 	u32			dma_channels;
- 	u32			dma_requests;
-+	u32			dma_min_chan;
- 	unsigned int		irq;
- };
+@@ -52,8 +52,6 @@
+ #define CX_SRC			0x814
+ #define CX_DST			0x818
+ #define CX_CFG			0x81c
+-#define AXI_CFG			0x820
+-#define AXI_CFG_DEFAULT		0x201201
  
-@@ -309,7 +310,7 @@ static void k3_dma_tasklet(unsigned long arg)
+ #define CX_LLI_CHAIN_EN		0x2
+ #define CX_CFG_EN		0x1
+@@ -158,7 +156,6 @@ static void k3_dma_set_desc(struct k3_dma_phy *phy, struct k3_desc_hw *hw)
+ 	writel_relaxed(hw->count, phy->base + CX_CNT0);
+ 	writel_relaxed(hw->saddr, phy->base + CX_SRC);
+ 	writel_relaxed(hw->daddr, phy->base + CX_DST);
+-	writel_relaxed(AXI_CFG_DEFAULT, phy->base + AXI_CFG);
+ 	writel_relaxed(hw->config, phy->base + CX_CFG);
+ }
  
- 	/* check new channel request in d->chan_pending */
- 	spin_lock_irq(&d->lock);
--	for (pch = 0; pch < d->dma_channels; pch++) {
-+	for (pch = d->dma_min_chan; pch < d->dma_channels; pch++) {
- 		p = &d->phy[pch];
- 
- 		if (p->vchan == NULL && !list_empty(&d->chan_pending)) {
-@@ -326,7 +327,7 @@ static void k3_dma_tasklet(unsigned long arg)
- 	}
- 	spin_unlock_irq(&d->lock);
- 
--	for (pch = 0; pch < d->dma_channels; pch++) {
-+	for (pch = d->dma_min_chan; pch < d->dma_channels; pch++) {
- 		if (pch_alloc & (1 << pch)) {
- 			p = &d->phy[pch];
- 			c = p->vchan;
-@@ -825,6 +826,8 @@ static int k3_dma_probe(struct platform_device *op)
- 				"dma-channels", &d->dma_channels);
- 		of_property_read_u32((&op->dev)->of_node,
- 				"dma-requests", &d->dma_requests);
-+		of_property_read_u32((&op->dev)->of_node,
-+				"dma-min-chan", &d->dma_min_chan);
- 	}
- 
- 	d->clk = devm_clk_get(&op->dev, NULL);
-@@ -848,12 +851,12 @@ static int k3_dma_probe(struct platform_device *op)
- 		return -ENOMEM;
- 
- 	/* init phy channel */
--	d->phy = devm_kcalloc(&op->dev,
--		d->dma_channels, sizeof(struct k3_dma_phy), GFP_KERNEL);
-+	d->phy = devm_kcalloc(&op->dev, (d->dma_channels - d->dma_min_chan),
-+			sizeof(struct k3_dma_phy), GFP_KERNEL);
- 	if (d->phy == NULL)
- 		return -ENOMEM;
- 
--	for (i = 0; i < d->dma_channels; i++) {
-+	for (i = d->dma_min_chan; i < d->dma_channels; i++) {
- 		struct k3_dma_phy *p = &d->phy[i];
- 
- 		p->idx = i;
 -- 
 2.17.1
