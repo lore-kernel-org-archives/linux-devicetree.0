@@ -1,7 +1,8 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 17/17] arm64: dts: marvell: add CP110 ICU SEI subnode
-Date: Fri, 22 Jun 2018 17:14:32 +0200
-Message-ID: <20180622151432.1566-18-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 05/17] irqchip/irq-mvebu-icu: clarify the reset operation
+ of configured interrupts
+Date: Fri, 22 Jun 2018 17:14:20 +0200
+Message-ID: <20180622151432.1566-6-miquel.raynal@bootlin.com>
 References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,32 +22,34 @@ To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, M
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haim Boot <hayim@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Hanna Hawa <hannah@marvell.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The ICU handles several interrupt groups, each of them being a subpart
-of the ICU node.
+Rewrite a small section to clarify the reset operation of interrupts
+already configured by ATF that we want to handle in the driver. This
+will simplify the introduction of System Error Interrupts support.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 ---
- arch/arm64/boot/dts/marvell/armada-cp110.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/irqchip/irq-mvebu-icu.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-index 823953e207e7..ab31ba20aa2a 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-@@ -160,6 +160,14 @@
- 				interrupt-controller;
- 				msi-parent = <&gicp>;
- 			};
+diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
+index a2a3acd74491..0f2655d7f19e 100644
+--- a/drivers/irqchip/irq-mvebu-icu.c
++++ b/drivers/irqchip/irq-mvebu-icu.c
+@@ -258,8 +258,12 @@ static int mvebu_icu_probe(struct platform_device *pdev)
+ 	 * avoid unpredictable SPI assignments done by firmware.
+ 	 */
+ 	for (i = 0 ; i < ICU_MAX_IRQS ; i++) {
+-		u32 icu_int = readl_relaxed(icu->base + ICU_INT_CFG(i));
+-		if ((icu_int >> ICU_GROUP_SHIFT) == ICU_GRP_NSR)
++		u32 icu_int, icu_grp;
 +
-+			CP110_LABEL(icu_sei): interrupt-controller@50 {
-+				compatible = "marvell,cp110-icu-sei";
-+				reg = <0x50 0x10>;
-+				#interrupt-cells = <2>;
-+				interrupt-controller;
-+				msi-parent = <&sei>;
-+			};
- 		};
++		icu_int = readl_relaxed(icu->base + ICU_INT_CFG(i));
++		icu_grp = icu_int >> ICU_GROUP_SHIFT;
++
++		if (icu_grp == ICU_GRP_NSR)
+ 			writel_relaxed(0x0, icu->base + ICU_INT_CFG(i));
+ 	}
  
- 		CP110_LABEL(rtc): rtc@284000 {
 -- 
 2.14.1
