@@ -1,144 +1,55 @@
-From: Todor Tomov <todor.tomov@linaro.org>
-Subject: [PATCH 14/32] media: dt-bindings: media: qcom,camss: Fix whitespaces
-Date: Fri, 22 Jun 2018 18:33:23 +0300
-Message-ID: <1529681621-9682-15-git-send-email-todor.tomov@linaro.org>
-References: <1529681621-9682-1-git-send-email-todor.tomov@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529681621-9682-1-git-send-email-todor.tomov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, linux-media@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: "Frank Wunderlich" <FrankWu@gmx.de>
+Subject: [PATCH] [dts] fix green/blue pio-led on bananapi-r2
+Date: Fri, 22 Jun 2018 17:53:03 +0200
+Message-ID: <trinity-0d48bc23-f754-4da3-af01-c3a7abe1d34b-1529682783853@3c-app-gmx-bs42>
+References: <trinity-ae29ad25-a4fb-47f3-8d68-f6e58c875a0e-1529682447976@3c-app-gmx-bs42>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Use tabs.
-
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: devicetree@vger.kernel.org
-Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
----
- .../devicetree/bindings/media/qcom,camss.txt       | 92 +++++++++++-----------
- 1 file changed, 46 insertions(+), 46 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
-index 032e8ed..e938eb0 100644
---- a/Documentation/devicetree/bindings/media/qcom,camss.txt
-+++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
-@@ -53,25 +53,25 @@ Qualcomm Camera Subsystem
- 	Usage: required
- 	Value type: <stringlist>
- 	Definition: Should contain the following entries:
--                - "top_ahb"
--                - "ispif_ahb"
--                - "csiphy0_timer"
--                - "csiphy1_timer"
--                - "csi0_ahb"
--                - "csi0"
--                - "csi0_phy"
--                - "csi0_pix"
--                - "csi0_rdi"
--                - "csi1_ahb"
--                - "csi1"
--                - "csi1_phy"
--                - "csi1_pix"
--                - "csi1_rdi"
--                - "ahb"
--                - "vfe0"
--                - "csi_vfe0"
--                - "vfe_ahb"
--                - "vfe_axi"
-+		- "top_ahb"
-+		- "ispif_ahb"
-+		- "csiphy0_timer"
-+		- "csiphy1_timer"
-+		- "csi0_ahb"
-+		- "csi0"
-+		- "csi0_phy"
-+		- "csi0_pix"
-+		- "csi0_rdi"
-+		- "csi1_ahb"
-+		- "csi1"
-+		- "csi1_phy"
-+		- "csi1_pix"
-+		- "csi1_rdi"
-+		- "ahb"
-+		- "vfe0"
-+		- "csi_vfe0"
-+		- "vfe_ahb"
-+		- "vfe_axi"
- - vdda-supply:
- 	Usage: required
- 	Value type: <phandle>
-@@ -95,17 +95,17 @@ Qualcomm Camera Subsystem
- 		- clock-lanes:
- 			Usage: required
- 			Value type: <u32>
--                        Definition: The physical clock lane index. The value
--                                    must always be <1> as the physical clock
--                                    lane is lane 1.
-+			Definition: The physical clock lane index. The value
-+				    must always be <1> as the physical clock
-+				    lane is lane 1.
- 		- data-lanes:
- 			Usage: required
- 			Value type: <prop-encoded-array>
--                        Definition: An array of physical data lanes indexes.
--                                    Position of an entry determines the logical
--                                    lane number, while the value of an entry
--                                    indicates physical lane index. Lane swapping
--                                    is supported.
-+			Definition: An array of physical data lanes indexes.
-+				    Position of an entry determines the logical
-+				    lane number, while the value of an entry
-+				    indicates physical lane index. Lane swapping
-+				    is supported.
- 
- * An Example
- 
-@@ -161,25 +161,25 @@ Qualcomm Camera Subsystem
- 			<&gcc GCC_CAMSS_CSI_VFE0_CLK>,
- 			<&gcc GCC_CAMSS_VFE_AHB_CLK>,
- 			<&gcc GCC_CAMSS_VFE_AXI_CLK>;
--                clock-names = "top_ahb",
--                        "ispif_ahb",
--                        "csiphy0_timer",
--                        "csiphy1_timer",
--                        "csi0_ahb",
--                        "csi0",
--                        "csi0_phy",
--                        "csi0_pix",
--                        "csi0_rdi",
--                        "csi1_ahb",
--                        "csi1",
--                        "csi1_phy",
--                        "csi1_pix",
--                        "csi1_rdi",
--                        "ahb",
--                        "vfe0",
--                        "csi_vfe0",
--                        "vfe_ahb",
--                        "vfe_axi";
-+		clock-names = "top_ahb",
-+			"ispif_ahb",
-+			"csiphy0_timer",
-+			"csiphy1_timer",
-+			"csi0_ahb",
-+			"csi0",
-+			"csi0_phy",
-+			"csi0_pix",
-+			"csi0_rdi",
-+			"csi1_ahb",
-+			"csi1",
-+			"csi1_phy",
-+			"csi1_pix",
-+			"csi1_rdi",
-+			"ahb",
-+			"vfe0",
-+			"csi_vfe0",
-+			"vfe_ahb",
-+			"vfe_axi";
- 		vdda-supply = <&pm8916_l2>;
- 		iommus = <&apps_iommu 3>;
- 		ports {
--- 
-2.7.4
+RnJvbTogRnJhbmsgV3VuZGVybGljaCA8ZnJhbmstd0BwdWJsaWMtZmlsZXMuZGU+CkRhdGU6IFN1
+biwgMTcgSnVuIDIwMTggMTk6MTE6NTggKzAyMDAKU3ViamVjdDogW1BBVENIXSBbZHRzXSBmaXgg
+Z3JlZW4vYmx1ZSBwaW8tbGVkCsKgZ3JlZW4vYmx1ZSBwaW8tbGVkcyAobmVhciBHUElPLUhlYWRl
+cikgYXJlIHN3YXBwZWQgYW5kIExPVy1hY3RpdmUKwqB0aGlzIHBhdGNoIHJlc3RvcmUgdGhpcyBl
+eHBlY3RlZCBiZWhhdmlvdXIKwqByZWQgY2Fubm90IGJlIHN3aXRjaGVkIGFmYWlrClNpZ25lZC1v
+ZmYtYnk6IEZyYW5rIFd1bmRlcmxpY2ggPGZyYW5rLXdAcHVibGljLWZpbGVzLmRlPgotLS0KwqBh
+cmNoL2FybS9ib290L2R0cy9tdDc2MjNuLWJhbmFuYXBpLWJwaS1yMi5kdHMgfCAxNCArKysrKysr
+LS0tLS0tLQrCoDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0p
+CmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9tdDc2MjNuLWJhbmFuYXBpLWJwaS1yMi5k
+dHMgYi9hcmNoL2FybS9ib290L2R0cy9tdDc2MjNuLWJhbmFuYXBpLWJwaS1yMi5kdHMKaW5kZXgg
+NTMxZDkwNWQ5MjRmZi4uM2U4YTBmZmU4YjEzZSAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9k
+dHMvbXQ3NjIzbi1iYW5hbmFwaS1icGktcjIuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL210
+NzYyM24tYmFuYW5hcGktYnBpLXIyLmR0cwpAQCAtODksMjEgKzg5LDIxIEBACsKgwqDCoCDCoMKg
+wqAgwqBwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwrCoMKgwqAgwqDCoMKgIMKgcGluY3RybC0w
+ID0gPCZsZWRfcGluc19hPjsKwqAKLcKgwqAgwqDCoMKgIMKgYmx1ZSB7Ci3CoMKgIMKgwqDCoCDC
+oMKgwqAgwqBsYWJlbCA9ICJicGktcjI6cGlvOmJsdWUiOwotwqDCoCDCoMKgwqAgwqDCoMKgIMKg
+Z3Bpb3MgPSA8JnBpbyAyNDEgR1BJT19BQ1RJVkVfSElHSD47CivCoMKgIMKgwqDCoCDCoGdyZWVu
+IHsKK8KgwqAgwqDCoMKgIMKgwqDCoCDCoGxhYmVsID0gImJwaS1yMjpwaW86Z3JlZW4iOworwqDC
+oCDCoMKgwqAgwqDCoMKgIMKgZ3Bpb3MgPSA8JnBpbyAyNDEgR1BJT19BQ1RJVkVfTE9XPjsKwqDC
+oMKgIMKgwqDCoCDCoMKgwqAgwqBkZWZhdWx0LXN0YXRlID0gIm9mZiI7CsKgwqDCoCDCoMKgwqAg
+wqB9OwrCoAotwqDCoCDCoMKgwqAgwqBncmVlbiB7Ci3CoMKgIMKgwqDCoCDCoMKgwqAgwqBsYWJl
+bCA9ICJicGktcjI6cGlvOmdyZWVuIjsKLcKgwqAgwqDCoMKgIMKgwqDCoCDCoGdwaW9zID0gPCZw
+aW8gMjQwIEdQSU9fQUNUSVZFX0hJR0g+OworwqDCoCDCoMKgwqAgwqBibHVlIHsKK8KgwqAgwqDC
+oMKgIMKgwqDCoCDCoGxhYmVsID0gImJwaS1yMjpwaW86Ymx1ZSI7CivCoMKgIMKgwqDCoCDCoMKg
+wqAgwqBncGlvcyA9IDwmcGlvIDI0MCBHUElPX0FDVElWRV9MT1c+OwrCoMKgwqAgwqDCoMKgIMKg
+wqDCoCDCoGRlZmF1bHQtc3RhdGUgPSAib2ZmIjsKwqDCoMKgIMKgwqDCoCDCoH07CsKgCsKgwqDC
+oCDCoMKgwqAgwqByZWQgewrCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoGxhYmVsID0gImJwaS1yMjpw
+aW86cmVkIjsKLcKgwqAgwqDCoMKgIMKgwqDCoCDCoGdwaW9zID0gPCZwaW8gMjM5IEdQSU9fQUNU
+SVZFX0hJR0g+OworwqDCoCDCoMKgwqAgwqDCoMKgIMKgZ3Bpb3MgPSA8JnBpbyAyMzkgR1BJT19B
+Q1RJVkVfTE9XPjsKwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqBkZWZhdWx0LXN0YXRlID0gIm9mZiI7
+CsKgwqDCoCDCoMKgwqAgwqB9OwrCoMKgwqAgwqB9OwrCoArCoArCoAoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
+IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
