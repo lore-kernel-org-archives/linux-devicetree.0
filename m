@@ -1,49 +1,54 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v5 01/10] i3c: Add core I3C infrastructure
-Date: Fri, 22 Jun 2018 23:35:34 +0200
-Message-ID: <ed1add9b-ba21-d3d3-64c4-44d18af3d133@axentia.se>
-References: <20180622104930.32050-1-boris.brezillon@bootlin.com>
- <20180622104930.32050-2-boris.brezillon@bootlin.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 1/5] media: venus: add a routine to reset ARM9
+Date: Fri, 22 Jun 2018 16:15:03 -0700
+Message-ID: <20180622231503.GN3402@tuxbook-pro>
+References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
+ <1527884768-22392-2-git-send-email-vgarodia@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180622104930.32050-2-boris.brezillon@bootlin.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1527884768-22392-2-git-send-email-vgarodia@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus
+To: Vikash Garodia <vgarodia@codeaurora.org>
+Cc: hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, stanimir.varbanov@linaro.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-06-22 12:49, Boris Brezillon wrote:
-> Add core infrastructure to support I3C in Linux and document it.
-> 
-> This infrastructure is not complete yet and will be extended over
-> time.
-> 
-> There are a few design choices that are worth mentioning because they
-> impact the way I3C device drivers can interact with their devices:
-> 
-> - all functions used to send I3C/I2C frames must be called in
->   non-atomic context. Mainly done this way to ease implementation, but
->   this is still open to discussion. Please let me know if you think
->   it's worth considering an asynchronous model here
-> - the bus element is a separate object and is not implicitly described
->   by the master (as done in I2C). The reason is that I want to be able
->   to handle multiple master connected to the same bus and visible to
->   Linux.
->   In this situation, we should only have one instance of the device and
->   not one per master, and sharing the bus object would be part of the
->   solution to gracefully handle this case.
->   I'm not sure we will ever need to deal with multiple masters
->   controlling the same bus and exposed under Linux, but separating the
->   bus and master concept is pretty easy, hence the decision to do it
->   like that.
->   The other benefit of separating the bus and master concepts is that
->   master devices appear under the bus directory in sysfs.
+On Fri 01 Jun 13:26 PDT 2018, Vikash Garodia wrote:
+> +static void venus_reset_hw(struct venus_core *core)
+> +{
+> +	void __iomem *reg_base = core->base;
+> +
+> +	writel(0, reg_base + WRAPPER_FW_START_ADDR);
+> +	writel(VENUS_FW_MEM_SIZE, reg_base + WRAPPER_FW_END_ADDR);
+> +	writel(0, reg_base + WRAPPER_CPA_START_ADDR);
+> +	writel(VENUS_FW_MEM_SIZE, reg_base + WRAPPER_CPA_END_ADDR);
+> +	writel(0x0, reg_base + WRAPPER_CPU_CGC_DIS);
+> +	writel(0x0, reg_base + WRAPPER_CPU_CLOCK_CONFIG);
+> +
+> +	/* Make sure all register writes are committed. */
+> +	mb();
 
-Are bus multiplexers relevant to I3C? The locking needed for handling
-muxes for I2C is, well, convoluted...
+wmb() doesn't wait until the writes are completed, it simply ensures
+that any writes before it are performed before any writes after it.
 
-Cheers,
-Peter
+If you really want to ensure that these configs has hit the hardware
+before you sleep, read back the value of the WRAPPER_CPU_CLOCK_CONFIG
+register.
+
+> +
+> +	/*
+> +	 * Need to wait 10 cycles of internal clocks before bringing ARM9
+> +	 * out of reset.
+> +	 */
+> +	udelay(1);
+> +
+> +	/* Bring Arm9 out of reset */
+> +	writel_relaxed(0, reg_base + WRAPPER_A9SS_SW_RESET);
+
+There's no harm in using writel() here...
+
+> +}
+
+Regards,
+Bjorn
