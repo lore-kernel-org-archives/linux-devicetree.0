@@ -1,62 +1,33 @@
-Return-Path: <SRS0=Dkm/=JL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr710076.outbound.protection.outlook.com ([40.107.71.76]:5857
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1754682AbeFYIbX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 Jun 2018 04:31:23 -0400
-From: Alan Douglas <adouglas@cadence.com>
-Subject: [PATCH 5/5] PCI: cadence: Add shutdown callback to host driver
-Date: Mon, 25 Jun 2018 09:30:53 +0100
-Message-ID: <1529915453-4633-6-git-send-email-adouglas@cadence.com>
-In-Reply-To: <1529915453-4633-1-git-send-email-adouglas@cadence.com>
-References: <1529915453-4633-1-git-send-email-adouglas@cadence.com>
+Return-Path: <SRS0=78dS=JJ=zonque.org=daniel@kernel.org>
+Subject: Re: [PATCH v4 5/5] leds: lt3593: update email address and switch to
+ SPDX license header
+References: <20180621202322.11581-1-daniel@zonque.org>
+ <20180621202322.11581-6-daniel@zonque.org>
+ <42bb7da0-3a5f-48e5-b12c-332307c794f3@gmail.com>
+From: Daniel Mack <daniel@zonque.org>
+Message-ID: <37153111-e1b9-f41b-6074-e1a4ddbb68c9@zonque.org>
+Date: Sat, 23 Jun 2018 21:52:18 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Alan Douglas <adouglas@cadence.com>
+In-Reply-To: <42bb7da0-3a5f-48e5-b12c-332307c794f3@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh+dt@kernel.org
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add shutdown callback to host driver which will disable PHY and
-PM runtime.
+On Friday, June 22, 2018 11:56 PM, Jacek Anaszewski wrote:
+>> -MODULE_AUTHOR("Daniel Mack <daniel@caiaq.de>");
+>> +MODULE_AUTHOR("Daniel Mack <daniel@zonque.org>");
+>>    MODULE_DESCRIPTION("LED driver for LT3593 controllers");
+>>    MODULE_LICENSE("GPL");
+> 
+> I've just noticed the pre-existing discrepancy between the license
+> message (GPL v2) and MODULE_LICENSE("GPL"). Is there a reason to keep
+> it that way?
 
-Signed-off-by: Alan Douglas <adouglas@cadence.com>
----
- drivers/pci/controller/pcie-cadence-host.c |   15 +++++++++++++++
- 1 files changed, 15 insertions(+), 0 deletions(-)
+Ah, no, that's just a mistake. I'll send a patch to update the string.
 
-diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/pcie-cadence-host.c
-index e3e9b7d..ec394f6 100644
---- a/drivers/pci/controller/pcie-cadence-host.c
-+++ b/drivers/pci/controller/pcie-cadence-host.c
-@@ -343,6 +343,20 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static void cdns_pcie_shutdown(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct cdns_pcie *pcie = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = pm_runtime_put_sync(dev);
-+	if (ret < 0)
-+		dev_dbg(dev, "pm_runtime_put_sync failed\n");
-+
-+	pm_runtime_disable(dev);
-+	cdns_pcie_disable_phy(pcie);
-+}
-+
- static struct platform_driver cdns_pcie_host_driver = {
- 	.driver = {
- 		.name = "cdns-pcie-host",
-@@ -350,5 +364,6 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
- 		.pm	= &cdns_pcie_pm_ops,
- 	},
- 	.probe = cdns_pcie_host_probe,
-+	.shutdown = cdns_pcie_shutdown,
- };
- builtin_platform_driver(cdns_pcie_host_driver);
--- 
-1.7.1
+Thanks for your reviews and all!
 
+Daniel
