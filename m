@@ -1,39 +1,41 @@
-From: Andreas Klinger <ak@it-klinger.de>
-Subject: [PATCH 3/3] iio: hx711: add maintainer for driver
-Date: Sat, 23 Jun 2018 20:55:18 +0200
-Message-ID: <20180623185518.GA17864@arbeit>
+From: Christoph Fritz <chf.fritz@googlemail.com>
+Subject: Re: [PATCH] drm/panel: simple: Add support for Innolux G070Y2-L01
+Date: Sat, 23 Jun 2018 21:24:21 +0200
+Message-ID: <1529781861.2215.1.camel@googlemail.com>
+References: <1528111008.2818.20.camel@googlemail.com>
+ <20180612205955.GA14015@rob-hp-laptop>
+Reply-To: chf.fritz@googlemail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180612205955.GA14015@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-add a maintainer for driver hx711
-
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4b65225d443a..cfb8a08777ac 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2535,6 +2535,13 @@ S:	Maintained
- F:	drivers/auxdisplay/
- F:	include/linux/cfag12864b.h
- 
-+AVIA HX711 ANALOG DIGITAL CONVERTER IIO DRIVER
-+M:	Andreas Klinger <ak@it-klinger.de>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-+F:	drivers/iio/adc/hx711.c
-+
- AX.25 NETWORK LAYER
- M:	Ralf Baechle <ralf@linux-mips.org>
- L:	linux-hams@vger.kernel.org
--- 
-2.1.4
+SGkgVGhpZXJyeQoKT24gVHVlLCAyMDE4LTA2LTEyIGF0IDE0OjU5IC0wNjAwLCBSb2IgSGVycmlu
+ZyB3cm90ZToKPiBPbiBNb24sIEp1biAwNCwgMjAxOCBhdCAwMToxNjo0OFBNICswMjAwLCBDaHJp
+c3RvcGggRnJpdHogd3JvdGU6Cj4gPiBUaGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBmb3IgSW5ub2x1
+eCBHMDcwWTItTDAxIDciIFdWR0EgKDgwMHg0ODApIFRGVCBMQ0QKPiA+IHBhbmVsLgo+ID4gCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBDaHJpc3RvcGggRnJpdHogPGNoZi5mcml0ekBnb29nbGVtYWlsLmNv
+bT4KPiA+IC0tLQo+ID4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsZzA3MHky
+LWwwMS50eHQgIHwgMTIgKysrKysrKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1z
+aW1wbGUuYyAgICAgICAgICAgICAgIHwgMzcgKysrKysrKysrKysrKysrKysrKystLQo+ID4gIDIg
+ZmlsZXMgY2hhbmdlZCwgNDcgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPiA+ICBjcmVh
+dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+cGFuZWwvaW5ub2x1eCxnMDcweTItbDAxLnR4dAo+IAo+IFJldmlld2VkLWJ5OiBSb2IgSGVycmlu
+ZyA8cm9iaEBrZXJuZWwub3JnPgoKYW55IGNoYW5jZSB0byBnZXQgdGhpcyBwYXRjaCBxdWV1ZWQ/
+CgpUaGFua3MKIC0tIENocmlzdG9waAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVsCg==
