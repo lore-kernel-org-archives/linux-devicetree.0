@@ -1,121 +1,143 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v5 01/10] i3c: Add core I3C infrastructure
-Date: Sat, 23 Jun 2018 23:40:36 +0200
-Message-ID: <d6e37e99-d0d1-bd59-c1be-f462d3086a40@axentia.se>
-References: <20180622104930.32050-1-boris.brezillon@bootlin.com>
- <20180622104930.32050-2-boris.brezillon@bootlin.com>
- <ed1add9b-ba21-d3d3-64c4-44d18af3d133@axentia.se>
- <20180623121705.1d618c5d@bbrezillon>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: nand: meson: add Amlogic NAND controller driver
+Date: Sun, 24 Jun 2018 00:46:59 +0200
+Message-ID: <CAFBinCBeyXf6LNaZzAw6WnsxzDAv8E=Yp2eem0xCPWMEUi6pnQ@mail.gmail.com>
+References: <20180613161314.14894-1-yixun.lan@amlogic.com> <20180613161314.14894-2-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180623121705.1d618c5d@bbrezillon>
-Content-Language: en-US
+In-Reply-To: <20180613161314.14894-2-yixun.lan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion>
+To: yixun.lan@amlogic.com
+Cc: linux-mtd@lists.infradead.org, robh@kernel.org, boris.brezillon@bootlin.com, richard@nod.at, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, marek.vasut@gmail.com, devicetree@vger.kernel.org, liang.yang@amlogic.com, jian.hu@amlogic.com, khilman@baylibre.com, carlo@caione.org, linux-amlogic@lists.infradead.org, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On 2018-06-23 12:17, Boris Brezillon wrote:
-> Hi Peter,
-> 
-> On Fri, 22 Jun 2018 23:35:34 +0200
-> Peter Rosin <peda@axentia.se> wrote:
-> 
->> On 2018-06-22 12:49, Boris Brezillon wrote:
->>> Add core infrastructure to support I3C in Linux and document it.
->>>
->>> This infrastructure is not complete yet and will be extended over
->>> time.
->>>
->>> There are a few design choices that are worth mentioning because they
->>> impact the way I3C device drivers can interact with their devices:
->>>
->>> - all functions used to send I3C/I2C frames must be called in
->>>   non-atomic context. Mainly done this way to ease implementation, but
->>>   this is still open to discussion. Please let me know if you think
->>>   it's worth considering an asynchronous model here
->>> - the bus element is a separate object and is not implicitly described
->>>   by the master (as done in I2C). The reason is that I want to be able
->>>   to handle multiple master connected to the same bus and visible to
->>>   Linux.
->>>   In this situation, we should only have one instance of the device and
->>>   not one per master, and sharing the bus object would be part of the
->>>   solution to gracefully handle this case.
->>>   I'm not sure we will ever need to deal with multiple masters
->>>   controlling the same bus and exposed under Linux, but separating the
->>>   bus and master concept is pretty easy, hence the decision to do it
->>>   like that.
->>>   The other benefit of separating the bus and master concepts is that
->>>   master devices appear under the bus directory in sysfs.  
->>
->> Are bus multiplexers relevant to I3C?
-> 
-> Not yet, but who knows.
-> 
->> The locking needed for handling
->> muxes for I2C is, well, convoluted...
-> 
-> Do you remember what was the problem?
-> 
-> Anyway, I'd really like to have basic support upstreamed before we
-> start considering advanced use cases that do not exist yet. Don't get
-> me wrong, I'm not against having the multiplexer/locking discussion,
-> but it should not block inclusion of the I3C subsystem.
+Hello Yixun, Hello Liang,
 
-I'm trying to avoid the unfortunate situation in I2C where there
-are two slightly incompatible locking schemes for muxes. There's
-probably nothing to worry about until the first I3C mux is added
-though. But since I2C devices are supposedly compatible with I3C
-that might be the case from day one?
+I have a few small comments inline below
+additionally I tried to explain the reason behind
+"amlogic,mmc-syscon", clkin0 and clkin1 so Rob (or the devicetree
+maintainers in general) can give feedback. feel free to correct me
+wherever I'm wrong or provide additional notes in case I missed
+something!
 
----
+On Wed, Jun 13, 2018 at 10:17 AM Yixun Lan <yixun.lan@amlogic.com> wrote:
+>
+> From: Liang Yang <liang.yang@amlogic.com>
+>
+> Add Amlogic NAND controller dt-bindings for Meson SoC,
+> Current this driver support GXBB/GXL/AXG platform.
+>
+> Signed-off-by: Liang Yang <liang.yang@amlogic.com>
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> ---
+>  .../bindings/mtd/amlogic,meson-nand.txt       | 118 ++++++++++++++++++
+>  1 file changed, 118 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+> new file mode 100644
+> index 000000000000..eac9f9433d5d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+> @@ -0,0 +1,118 @@
+> +Amlogic NAND Flash Controller (NFC) for GXBB/GXL/AXG family SoCs
+> +
+> +This file documents the properties in addition to those available in
+> +the MTD NAND bindings.
+> +
+> +Required properties:
+> +- compatible : contains one of:
+> +  - "amlogic,meson-gxl-nfc"
+> +  - "amlogic,meson-axg-nfc"
+the patch description states that GXBB/GXL/AXG are supported
+shouldn't you add a compatible string for GXBB as well?
 
-If I read your code right, I3C client drivers will typically call
-i3c_device_do_priv_xfer (instead of i2c_transfer/i2c_smbus_xfer)
-and i3c_device_do_prov_xfer will grab the i3c_bus_normaluse_lock
-during the transfer. This seems equivalent to normal use in
-I2C with i2c_transfer/i2c_smbus_xfer.
+> +- clocks     :
+> +       A list of phandle + clock-specifier pairs for the clocks listed
+> +       in clock-names.
+> +
+> +- clock-names: Should contain the following:
+> +       "core" - NFC module gate clock
+> +       "clkin0" - Parent clock of internal mux
+> +       "clkin1" - Other parent clock of internal mux
+to give the devicetree maintainers some context on clkin0 and clkin1:
 
-When muxes are thrown into the mix, you find yourself needing to
-do more than the "real" transfer with some lock held. In I2C there
-is an unlocked __i2c_transfer, and locking/unlocking is exposed.
-Muxes typically grab the lock, set the mux in the appropriate
-position, do an unlocked __i2c_transfer, optionally sets the mux
-in some default position and then lets go of the lock. See e.g.
-i2c/muxes/i2c-mux-pca954x.c
+older SoCs (Meson8, Meson8b - not supported by this binding/driver
+yet) had a dedicated NAND clock. there neither clkin0 or clkin1 would
+be used, instead we just had a "nand" or "interface" clock (I'm not
+aware of the actual naming in Amlogic's internal datasheets)
 
-However, that is the simple case. There are also muxes that are
-controlled with GPIO pins, and that gets hairy if the GPIO pins
-are controlled from the same I2C bus that is muxed. The GPIO
-driver would have to know that some GPIO pins need to use unlocked
-I2C transfers for that to work with the above locking scheme. And
-no GPIO driver does not want to know about that at all. I.e. you
-have two fundamentally different requirement depending on if the
-GPIO pins controlling the mux are controlled using the muxed bus
-or if the pins are controlled in some completely unrelated way.
-The latter case is probably the normal case, with the GPIO mux
-controlled directly from some SoC pins. In the latter case you
-also want to prevent any transfer on the bus while the GPIO pins
-for the mux are changing, i.e. the total opposite of the former
-case. It gets really really hairy if you have multiple levels
-of muxes...
+newer SoCs do NOT have a dedicated NAND "interface" clock anymore.
+instead they are sharing the clock with the "sd_emmc_c" controller (I
+*believe* the reason for this is because sd_emmc_c and the NAND
+controller use the same pads on the SoC, pinctrl muxing controls where
+these pads are routed -> NAND and sd_emmc_c cannot be used at the same
+time, so SoC designers probably decided to re-use the clock)
 
-There are a some old drivers (e.g. i2c/busses/i2c-amd756-s4882.c)
-that handles this by simply bypassing the GPIO subsystem, but
-that is not really an option if some pins are used to mux the
-I2C bus while some pins are used for other things.
+unfortunately the sd_emmc_c clock is not provided by the "main" clock
+controller on these newer SoCs
+instead the clock is part of the MMC controller's register space (see
+the SD_EMMC_CLOCK register in drivers/mmc/host/meson-gx-mmc.c)
+even worse: the SD_EMMC_CLOCK contains more than just clock settings
+(bit 25 enables the SDIO interrupt, which is currently not supported
+by the meson-gx-mmc driver though)
 
-I don't know if this affects I3C before muxes are added, but I
-suspect muxes will happen sooner rather than later, since the
-spec mentions that the bus only support 11 devices maximum. 11
-don't seem like a lot, and it seems likely that there will be
-a need to have more devices somehow...
+the SD_EMMC_CLOCK register has a mux (CLK_SRC_MASK) to choose from
+clkin0 and clkin1 which are passed here
+the "amlogic,mmc-syscon" property is used to get a phandle to the
+sd_emmc_c syscon register space
+thus there is a bit of code duplication in the MMC and NAND drivers
+with this binding (because both need to configure the SD_EMMC_CLOCK
+register)
 
-But just maybe, in order to not run into the above situation, it
-needs to be handled right from the start with preparatory and
-cleanup stages of each transfers, or something?
+> +
+> +- pins     : Select pins which NFC need.
+> +- nand_pins: Detail NAND pins information.
+> +               nand_pins: nand {
+> +                       mux {
+> +                               groups = "emmc_nand_d0",
+> +                                       "emmc_nand_d1",
+> +                                       "emmc_nand_d2",
+> +                                       "emmc_nand_d3",
+> +                                       "emmc_nand_d4",
+> +                                       "emmc_nand_d5",
+> +                                       "emmc_nand_d6",
+> +                                       "emmc_nand_d7",
+> +                                       "nand_ce0",
+> +                                       "nand_rb0",
+> +                                       "nand_ale",
+> +                                       "nand_cle",
+> +                                       "nand_wen_clk",
+> +                                       "nand_ren_wr";
+> +                               function = "nand";
+> +                       };
+> +               };
+> +
+> +- amlogic,mmc-syscon   : Required for NAND clocks, it's shared with SD/eMMC
+> +                               controller port C
+> +
+> +Optional children nodes:
+> +Children nodes represent the available nand chips.
+> +
+> +Optional properties:
+> +- meson-nand-user-mode :
+> +       only set 2 or 16 which mean the way of reading OOB bytes by NFC.
+as far as I know vendor specific properties should follow the naming
+schema "vendor,purpose"
+in this case this would be "amlogic,nand-user-mode"
 
-Cheers,
-Peter
+maybe Rob can comment on this?
+
+> +- meson-nand-ran-mode :
+> +       setting 0 or 1, means disable/enable scrambler which keeps the balence
+> +       of 0 and 1
+I assume 0 and 1 are the only possible values.
+to use of_property_read_bool in the driver the property would be either:
+- (absent) = scrambler is disabled
+- amlogic,nand-enable-scrambler (without any value - also same comment
+as above for the value) = scrambler is enabled
+
+
+Regards
+Martin
