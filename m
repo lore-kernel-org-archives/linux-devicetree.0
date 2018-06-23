@@ -1,81 +1,121 @@
-From: David Lechner <david@lechnology.com>
-Subject: (unknown)
-Date: Sat, 23 Jun 2018 16:08:02 -0500
-Message-ID: <20180623210810.21232-1-david@lechnology.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v5 01/10] i3c: Add core I3C infrastructure
+Date: Sat, 23 Jun 2018 23:40:36 +0200
+Message-ID: <d6e37e99-d0d1-bd59-c1be-f462d3086a40@axentia.se>
+References: <20180622104930.32050-1-boris.brezillon@bootlin.com>
+ <20180622104930.32050-2-boris.brezillon@bootlin.com>
+ <ed1add9b-ba21-d3d3-64c4-44d18af3d133@axentia.se>
+ <20180623121705.1d618c5d@bbrezillon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Subject: 
+In-Reply-To: <20180623121705.1d618c5d@bbrezillon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: David Lechner <david@lechnology.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion>
 List-Id: devicetree@vger.kernel.org
 
+On 2018-06-23 12:17, Boris Brezillon wrote:
+> Hi Peter,
+> 
+> On Fri, 22 Jun 2018 23:35:34 +0200
+> Peter Rosin <peda@axentia.se> wrote:
+> 
+>> On 2018-06-22 12:49, Boris Brezillon wrote:
+>>> Add core infrastructure to support I3C in Linux and document it.
+>>>
+>>> This infrastructure is not complete yet and will be extended over
+>>> time.
+>>>
+>>> There are a few design choices that are worth mentioning because they
+>>> impact the way I3C device drivers can interact with their devices:
+>>>
+>>> - all functions used to send I3C/I2C frames must be called in
+>>>   non-atomic context. Mainly done this way to ease implementation, but
+>>>   this is still open to discussion. Please let me know if you think
+>>>   it's worth considering an asynchronous model here
+>>> - the bus element is a separate object and is not implicitly described
+>>>   by the master (as done in I2C). The reason is that I want to be able
+>>>   to handle multiple master connected to the same bus and visible to
+>>>   Linux.
+>>>   In this situation, we should only have one instance of the device and
+>>>   not one per master, and sharing the bus object would be part of the
+>>>   solution to gracefully handle this case.
+>>>   I'm not sure we will ever need to deal with multiple masters
+>>>   controlling the same bus and exposed under Linux, but separating the
+>>>   bus and master concept is pretty easy, hence the decision to do it
+>>>   like that.
+>>>   The other benefit of separating the bus and master concepts is that
+>>>   master devices appear under the bus directory in sysfs.  
+>>
+>> Are bus multiplexers relevant to I3C?
+> 
+> Not yet, but who knows.
+> 
+>> The locking needed for handling
+>> muxes for I2C is, well, convoluted...
+> 
+> Do you remember what was the problem?
+> 
+> Anyway, I'd really like to have basic support upstreamed before we
+> start considering advanced use cases that do not exist yet. Don't get
+> me wrong, I'm not against having the multiplexer/locking discussion,
+> but it should not block inclusion of the I3C subsystem.
 
-Date: Sat, 23 Jun 2018 15:43:59 -0500
-Subject: [PATCH 0/8] New remoteproc driver for TI PRU
+I'm trying to avoid the unfortunate situation in I2C where there
+are two slightly incompatible locking schemes for muxes. There's
+probably nothing to worry about until the first I3C mux is added
+though. But since I2C devices are supposedly compatible with I3C
+that might be the case from day one?
 
-This series adds a new remoteproc driver for the TI Programmable Runtime Unit
-(PRU) that is present in some TI Sitara processors. This code has been tested
-working on AM1808 (LEGO MINDSTORMS EV3) and AM3358 (BeagleBone Green).
+---
 
-There are a couple of quirks that had to be worked around in order to get this
-working. The PRU units have multiple memory maps. Notably, both the instruction
-RAM and data RAM are at address 0x0. This caused the da_to_va callback to not
-work because the same address could refer to two different locations. To work
-around this, the first two patches add a "map" parameter to the da_to_va
-callbacks so that we have an extra bit of information to make this distinction.
+If I read your code right, I3C client drivers will typically call
+i3c_device_do_priv_xfer (instead of i2c_transfer/i2c_smbus_xfer)
+and i3c_device_do_prov_xfer will grab the i3c_bus_normaluse_lock
+during the transfer. This seems equivalent to normal use in
+I2C with i2c_transfer/i2c_smbus_xfer.
 
-Also, on AM38xx we have to use pdata for accessing a reset since there is not
-a reset controller. There are several other devices doing this, so the seems
-the best way for now.
+When muxes are thrown into the mix, you find yourself needing to
+do more than the "real" transfer with some lock held. In I2C there
+is an unlocked __i2c_transfer, and locking/unlocking is exposed.
+Muxes typically grab the lock, set the mux in the appropriate
+position, do an unlocked __i2c_transfer, optionally sets the mux
+in some default position and then lets go of the lock. See e.g.
+i2c/muxes/i2c-mux-pca954x.c
 
-For anyone else who would like to test, I used the rpmsg-client-sample driver.
-Just enable it in your kernel config. Then grab the appropriate firmware[1]
-and put in in /lib/firmware/. Use sysfs to start and stop the PRU:
+However, that is the simple case. There are also muxes that are
+controlled with GPIO pins, and that gets hairy if the GPIO pins
+are controlled from the same I2C bus that is muxed. The GPIO
+driver would have to know that some GPIO pins need to use unlocked
+I2C transfers for that to work with the above locking scheme. And
+no GPIO driver does not want to know about that at all. I.e. you
+have two fundamentally different requirement depending on if the
+GPIO pins controlling the mux are controlled using the muxed bus
+or if the pins are controlled in some completely unrelated way.
+The latter case is probably the normal case, with the GPIO mux
+controlled directly from some SoC pins. In the latter case you
+also want to prevent any transfer on the bus while the GPIO pins
+for the mux are changing, i.e. the total opposite of the former
+case. It gets really really hairy if you have multiple levels
+of muxes...
 
-        echo start > /sys/class/remoteproc<n>/state
-        echo stop > /sys/class/remoteproc<n>/state
+There are a some old drivers (e.g. i2c/busses/i2c-amd756-s4882.c)
+that handles this by simply bypassing the GPIO subsystem, but
+that is not really an option if some pins are used to mux the
+I2C bus while some pins are used for other things.
 
-[1]: firmware downloads:
+I don't know if this affects I3C before muxes are added, but I
+suspect muxes will happen sooner rather than later, since the
+spec mentions that the bus only support 11 devices maximum. 11
+don't seem like a lot, and it seems likely that there will be
+a need to have more devices somehow...
 
-AM18XX: https://github.com/ev3dev/ev3dev-pru-firmware/releases/download/mainline-kernel-testing/AM18xx-PRU-rpmsg-client-sample.zip
-AM335X: https://github.com/ev3dev/ev3dev-pru-firmware/releases/download/mainline-kernel-testing/AM335x-PRU-rpmsg-client-sample.zip
+But just maybe, in order to not run into the above situation, it
+needs to be handled right from the start with preparatory and
+cleanup stages of each transfers, or something?
 
-David Lechner (8):
-  remoteproc: add map parameter to da_to_va
-  remoteproc: add page lookup for TI PRU to ELF loader
-  ARM: OMAP2+: add pdata quirks for PRUSS reset
-  dt-bindings: add bindings for TI PRU as remoteproc
-  remoteproc: new driver for TI PRU
-  ARM: davinci_all_defconfig: enable PRU remoteproc module
-  ARM: dts: da850: add node for PRUSS
-  ARM: dts: am33xx: add node for PRU remoteproc
-
- .../bindings/remoteproc/ti_pru_rproc.txt      |  51 ++
- MAINTAINERS                                   |   5 +
- arch/arm/boot/dts/am33xx.dtsi                 |   9 +
- arch/arm/boot/dts/da850.dtsi                  |   8 +
- arch/arm/configs/davinci_all_defconfig        |   2 +
- arch/arm/mach-omap2/pdata-quirks.c            |   9 +
- drivers/remoteproc/Kconfig                    |   7 +
- drivers/remoteproc/Makefile                   |   1 +
- drivers/remoteproc/imx_rproc.c                |   2 +-
- drivers/remoteproc/keystone_remoteproc.c      |   3 +-
- drivers/remoteproc/qcom_adsp_pil.c            |   2 +-
- drivers/remoteproc/qcom_q6v5_pil.c            |   2 +-
- drivers/remoteproc/qcom_wcnss.c               |   2 +-
- drivers/remoteproc/remoteproc_core.c          |  10 +-
- drivers/remoteproc/remoteproc_elf_loader.c    | 117 +++-
- drivers/remoteproc/remoteproc_internal.h      |   2 +-
- drivers/remoteproc/st_slim_rproc.c            |   2 +-
- drivers/remoteproc/ti_pru_rproc.c             | 660 ++++++++++++++++++
- drivers/remoteproc/wkup_m3_rproc.c            |   3 +-
- include/linux/platform_data/ti-pruss.h        |  18 +
- include/linux/remoteproc.h                    |   2 +-
- include/uapi/linux/elf-em.h                   |   1 +
- 22 files changed, 899 insertions(+), 19 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/ti_pru_rproc.txt
- create mode 100644 drivers/remoteproc/ti_pru_rproc.c
- create mode 100644 include/linux/platform_data/ti-pruss.h
-
--- 
-2.17.1
+Cheers,
+Peter
