@@ -1,91 +1,65 @@
-Return-Path: <SRS0=bntt=JN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00079.outbound.protection.outlook.com ([40.107.0.79]:52544
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S932104AbeF0ACq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 Jun 2018 20:02:46 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v8 04/14] usb: typec: add fwnode to tcpc
-Date: Wed, 27 Jun 2018 07:45:22 +0800
-Message-Id: <1530056732-9640-5-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
-References: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
+Return-Path: <vkoul@kernel.org>
+Date: Sat, 23 Jun 2018 09:59:50 +0530
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH 1/5] dt-bindings: power: reset: Add qcom pon binding
+Message-ID: <20180623042950.GS27187@vkoul-mobl>
+References: <20180618143548.29900-1-vkoul@kernel.org>
+ <20180618143548.29900-2-vkoul@kernel.org>
+ <20180622205816.GF3402@tuxbook-pro>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: a.hajda@samsung.com, jun.li@nxp.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180622205816.GF3402@tuxbook-pro>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: linux-input@vger.kernel.org, linux-pm@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add fwnode handle to get the fwnode so we can get typec configs
-it contains.
+On 22-06-18, 13:58, Bjorn Andersson wrote:
+> On Mon 18 Jun 07:35 PDT 2018, Vinod Koul wrote:
+> 
+> > +The Power On driver for Qualcomm PM8xxx is MFD supporting pwrkey and
+> > +resin along with the Android reboot-mode.
+> > +
+> > +This DT node has pwrkey and resin as sub nodes.
+> > +
+> > +Required Properties:
+> > +-compatible: "qcom,pm8916-pon"
+> > +-reg: Specifies the physical address of the pon register
+> > +
+> > +Optional property:
+> 
+> Better call these "Optional subnodes".
 
-Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Li Jun <jun.li@nxp.com>
----
- drivers/staging/typec/tcpci.c | 7 +++++++
- drivers/usb/typec/tcpm.c      | 1 +
- include/linux/usb/tcpm.h      | 2 ++
- 3 files changed, 10 insertions(+)
+Yes will do..
 
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index dd29288..e59547a 100644
---- a/drivers/staging/typec/tcpci.c
-+++ b/drivers/staging/typec/tcpci.c
-@@ -10,6 +10,7 @@
- #include <linux/module.h>
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
-+#include <linux/property.h>
- #include <linux/regmap.h>
- #include <linux/usb/pd.h>
- #include <linux/usb/tcpm.h>
-@@ -474,6 +475,12 @@ static int tcpci_parse_config(struct tcpci *tcpci)
- 
- 	/* TODO: Populate struct tcpc_config from ACPI/device-tree */
- 	tcpci->tcpc.config = &tcpci_tcpc_config;
-+	tcpci->tcpc.fwnode = device_get_named_child_node(tcpci->dev,
-+							 "connector");
-+	if (!tcpci->tcpc.fwnode) {
-+		dev_err(tcpci->dev, "Can't find connector node.\n");
-+		return -EINVAL;
-+	}
- 
- 	return 0;
- }
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index 8a201dd..d22b37b 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -4576,6 +4576,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
- 	else
- 		port->try_role = TYPEC_NO_PREFERRED_ROLE;
- 
-+	port->typec_caps.fwnode = tcpc->fwnode;
- 	port->typec_caps.prefer_role = tcpc->config->default_role;
- 	port->typec_caps.type = tcpc->config->type;
- 	port->typec_caps.data = tcpc->config->data;
-diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
-index b231b93..193920a 100644
---- a/include/linux/usb/tcpm.h
-+++ b/include/linux/usb/tcpm.h
-@@ -110,6 +110,7 @@ enum tcpc_mux_mode {
- /**
-  * struct tcpc_dev - Port configuration and callback functions
-  * @config:	Pointer to port configuration
-+ * @fwnode:	Pointer to port fwnode
-  * @get_vbus:	Called to read current VBUS state
-  * @get_current_limit:
-  *		Optional; called by the tcpm core when configured as a snk
-@@ -138,6 +139,7 @@ enum tcpc_mux_mode {
-  */
- struct tcpc_dev {
- 	const struct tcpc_config *config;
-+	struct fwnode_handle *fwnode;
- 
- 	int (*init)(struct tcpc_dev *dev);
- 	int (*get_vbus)(struct tcpc_dev *dev);
+> > +-prwrkey: Specifies the subnode pwrkey and should follow the
+> > + qcom,pm8xxx-pwrkey.txt description.
+> > +-resin: Specifies the subnode resin and should follow the
+> > + qcom,pm8xxx-pwrkey.txt description.
+> > +
+> > +The rest of the properties should follow the generic reboot-mode description
+> > +found in reboot-mode.txt
+> > +
+> > +Example:
+> > +
+> > +	pon@800 {
+> > +		compatible = "qcom,pm8916-pon";
+> > +
+> > +		reg = <0x800>;
+> > +		mode-bootloader = <0x2>;
+> > +		mode-recovery = <0x1>;
+> > +
+> > +		pwrkey {
+> > +			compatible = "qcom,pm8941-pwrkey";
+> > +			reg = <0x800>;
+> 
+> Didn't we conclude that you could drop the "reg" of the children?
+
+Sloppy me, fixed the code & DTS but not the binding, thanks for pointing
+
+> Apart from that this looks good.
+
+Thanks :)
+
 -- 
-2.7.4
-
+~Vinod
