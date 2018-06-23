@@ -1,101 +1,61 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 5/7] arm64: allwinner: a64: add necessary
- device tree nodes for DE2 CCU
-Date: Sun, 24 Jun 2018 00:49:50 +1000
-Message-ID: <CAGRGNgUkVjEmhQS4pTezfhmiOQkCERV-w=aA+i4oLN7C8k4Vnw@mail.gmail.com>
-References: <20180622124540.56203-1-icenowy@aosc.io> <20180622124540.56203-4-icenowy@aosc.io>
- <CAGRGNgUuEjmEcvJ3OUcQ9_6bPs9fDvKzUFm_NfCsYyjxVOVw3A@mail.gmail.com> <3BDC9318-95A5-41BA-801E-6E0814249AFB@aosc.io>
-Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] dt-bindings: soc: qcom: Fix default clock-freq for
+ qcom,geni-i2c
+Date: Sun, 24 Jun 2018 00:16:06 +0900
+Message-ID: <20180623151605.kyycbeema55trj7w@ninjato>
+References: <20180613175011.217585-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDQIP76OUQLBBHN4XHMQKGQEXISJQRA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <3BDC9318-95A5-41BA-801E-6E0814249AFB-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ivrb7mvwhvohmbnu"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180613175011.217585-1-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Douglas Anderson <dianders@chromium.org>
+Cc: andy.gross@linaro.org, bjorn.andersson@linaro.org, kramasub@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Icenowy,
 
-On Sun, Jun 24, 2018 at 12:34 AM Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
->
->
->
-> =E4=BA=8E 2018=E5=B9=B46=E6=9C=8823=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
-10:06:27, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =E5=86=99=E5=88=B0:
-> >Hi Icenowy,
-> >
-> >On Fri, Jun 22, 2018 at 10:49 PM Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> >>
-> >> As we have all necessary parts to enable the DE2 CCU on the Allwinner
-> >> A64 SoC, add the needed device tree nodes, including the DE2 CCU
-> >itself
-> >> and the DE2 bus.
-> >>
-> >> The "mixer0-lcd0" simplefb device node is updated to use the DE2 CCU.
-> >>
-> >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> >> ---
-> >> Changes in v2:
-> >> - Drop SRAM controller device tree node addition (as it's already
-> >added
-> >>   as part of syscon change.)
-> >> - Fix the clock reference in LCD SimpleFB.
-> >>
-> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 30
-> >+++++++++++++++----
-> >>  1 file changed, 24 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >> index ff2ddde1e117..318c4ba8ae9f 100644
-> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >> @@ -58,17 +60,12 @@
-> >>                 #size-cells =3D <1>;
-> >>                 ranges;
-> >>
-> >> -/*
-> >> - * The pipeline mixer0-lcd0 depends on clock CLK_MIXER0 from DE2
-> >CCU.
-> >> - * However there is no support for this clock on A64 yet, so we
-> >depend
-> >> - * on the upstream clocks here to keep them (and thus CLK_MIXER0)
-> >up.
-> >> - */
-> >>                 simplefb_lcd: framebuffer-lcd {
-> >>                         compatible =3D "allwinner,simple-framebuffer",
-> >>                                      "simple-framebuffer";
-> >>                         allwinner,pipeline =3D "mixer0-lcd0";
-> >>                         clocks =3D <&ccu CLK_TCON0>,
-> >> -                                <&ccu CLK_DE>, <&ccu CLK_BUS_DE>;
-> >> +                                <&display_clocks CLK_MIXER0>;
-> >
-> >Doesn't this technically break simplefb if this DT is used with a
-> >Linux that doesn't have the display clock driver?
->
-> 1. DT doesn't care forware compatibility.
+--ivrb7mvwhvohmbnu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ah, fair enough, that answers my question.
+On Wed, Jun 13, 2018 at 10:50:11AM -0700, Douglas Anderson wrote:
+> In an early version of the I2C patch that was posted to the list the
+> default I2C frequency (if none was specified) was 400 kHz.  There was
+> debate on the list and we decided that it would be more consistent
+> with the rest of i2c if we defaulted to 100 kHz.  ...but we never
+> updated the bindings.  Let's fix this.
+>=20
+> NOTE: since the i2c driver itself hasn't actually landed yet and the
+> SoC here is very new it seems terribly unlikely that anyone was
+> relying on the old 400 kHz number, so I'll assume this is an OK
+> "incompatible" device tree change.
+>=20
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-Thanks,
+Acked-by: Wolfram Sang <wsa@the-dreams.de>
 
---=20
-Julian Calaby
 
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
+--ivrb7mvwhvohmbnu
+Content-Type: application/pgp-signature; name="signature.asc"
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlsuZDEACgkQFA3kzBSg
+Kbbhuw/7B/7/vIwCaTj1MqUvwjHVbteIrjemXNc+JPPtKQ2HHmVgoD5Vx5T45odY
+TCcCpcAARHPYE9yPFiR+kz9x6GF74tI9UV/Ej8FilSn7gcb8aZIP1uMnMmUf/QH9
+F2O5EA+ym1CawGM2Ah1t6Yv7O4QQkLf7WLCRW+KZbiuBb+rqwAvSjjubJ9QBpZbQ
+0c6ZXNY6anUOocaBB6Dz7Nd6DULruewjnn7B2kaVK3sV+59xUuNABIChZQLhVGQD
+TG3d0jXlG+ggO3BKrOlkvVdIb1aFQ1o4VjdDPMG2ydVbqVbH0fmdnL1E9CdRErmi
+LKtybI9ewySMpeerPw5Jaa+fwg1dn0colMRODwCOChuNMBYvjkuK2eTlIbwE5nU2
+ch9/GjoTKcNth44sEu/xAc6573ghgxEf/zPxD2oisInPpXMC3GfYlT5UXOtLInCu
+03xR6240Bc0CqQnHNpikEvVlR6BfVdibPgtksQ038revRoJPPF9OjUnuosysFdNm
+SLnEbPpO4mW7XJ4rBb8E4hCoHkOqp3DgKobA8Cj55IBRwq3aC42XWlsB54wfH38e
+dVYXq3dvNqd/HtIKgwcXy1HdZpFRG1q/AV4ivOF5tNBIsJjwtc903ZdisRZygxWO
+mn+a64gCIcnaabypw8Ow4prOuBpqFMxk6q8upjL9IB5Rn0qXR9w=
+=uNZX
+-----END PGP SIGNATURE-----
+
+--ivrb7mvwhvohmbnu--
