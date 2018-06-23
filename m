@@ -1,138 +1,52 @@
-Return-Path: <SRS0=pME0=JL=nxp.com=jun.li@kernel.org>
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v7 05/14] usb: typec: add API to get typec basic port power and data config
-Date: Mon, 25 Jun 2018 16:08:37 +0800
-Message-Id: <1529914126-22550-6-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
-References: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: a.hajda@samsung.com, jun.li@nxp.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
+Return-Path: <SRS0=78dS=JJ=zonque.org=daniel@kernel.org>
+From: Daniel Mack <daniel@zonque.org>
+Subject: [PATCH v2 2/4] input: touchscreen: eeti: add device tree matching table
+Date: Sat, 23 Jun 2018 17:45:31 +0200
+Message-Id: <20180623154533.26901-3-daniel@zonque.org>
+In-Reply-To: <20180623154533.26901-1-daniel@zonque.org>
+References: <20180623154533.26901-1-daniel@zonque.org>
+To: dmitry.torokhov@gmail.com, robh+dt@kernel.org
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds 3 APIs to get the typec port power and data type,
-and preferred power role by its name string.
+Provide a match table so that the driver can be used in devicetree setups.
+More properties are added in a later patch.
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
+Signed-off-by: Daniel Mack <daniel@zonque.org>
 ---
- drivers/usb/typec/class.c | 58 +++++++++++++++++++++++++++++++++++++++++++----
- include/linux/usb/typec.h |  3 +++
- 2 files changed, 57 insertions(+), 4 deletions(-)
+ drivers/input/touchscreen/eeti_ts.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-index 53df10d..6331059 100644
---- a/drivers/usb/typec/class.c
-+++ b/drivers/usb/typec/class.c
-@@ -796,12 +796,18 @@ static const char * const typec_data_roles[] = {
- 	[TYPEC_HOST]	= "host",
- };
+diff --git a/drivers/input/touchscreen/eeti_ts.c b/drivers/input/touchscreen/eeti_ts.c
+index 2facad75eb6d..cc4fd33f9d6d 100644
+--- a/drivers/input/touchscreen/eeti_ts.c
++++ b/drivers/input/touchscreen/eeti_ts.c
+@@ -32,6 +32,7 @@
+ #include <linux/i2c.h>
+ #include <linux/timer.h>
+ #include <linux/gpio/consumer.h>
++#include <linux/of.h>
+ #include <linux/slab.h>
+ #include <asm/unaligned.h>
  
--static const char * const typec_port_types[] = {
-+static const char * const typec_port_power_roles[] = {
- 	[TYPEC_PORT_SRC] = "source",
- 	[TYPEC_PORT_SNK] = "sink",
- 	[TYPEC_PORT_DRP] = "dual",
+@@ -262,10 +263,18 @@ static const struct i2c_device_id eeti_ts_id[] = {
  };
+ MODULE_DEVICE_TABLE(i2c, eeti_ts_id);
  
-+static const char * const typec_port_data_roles[] = {
-+	[TYPEC_PORT_DFP] = "host",
-+	[TYPEC_PORT_UFP] = "device",
-+	[TYPEC_PORT_DRD] = "dual",
++#ifdef CONFIG_OF
++static const struct of_device_id of_eeti_ts_match[] = {
++	{ .compatible = "eeti,exc3000-i2c", },
++	{ }
 +};
++#endif
 +
- static const char * const typec_port_types_drp[] = {
- 	[TYPEC_PORT_SRC] = "dual [source] sink",
- 	[TYPEC_PORT_SNK] = "dual source [sink]",
-@@ -932,7 +938,7 @@ static ssize_t power_role_store(struct device *dev,
- 	mutex_lock(&port->port_type_lock);
- 	if (port->port_type != TYPEC_PORT_DRP) {
- 		dev_dbg(dev, "port type fixed at \"%s\"",
--			     typec_port_types[port->port_type]);
-+			     typec_port_power_roles[port->port_type]);
- 		ret = -EOPNOTSUPP;
- 		goto unlock_and_ret;
- 	}
-@@ -973,7 +979,7 @@ port_type_store(struct device *dev, struct device_attribute *attr,
- 		return -EOPNOTSUPP;
- 	}
- 
--	ret = sysfs_match_string(typec_port_types, buf);
-+	ret = sysfs_match_string(typec_port_power_roles, buf);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -1007,7 +1013,7 @@ port_type_show(struct device *dev, struct device_attribute *attr,
- 		return sprintf(buf, "%s\n",
- 			       typec_port_types_drp[port->port_type]);
- 
--	return sprintf(buf, "[%s]\n", typec_port_types[port->cap->type]);
-+	return sprintf(buf, "[%s]\n", typec_port_power_roles[port->cap->type]);
- }
- static DEVICE_ATTR_RW(port_type);
- 
-@@ -1252,6 +1258,50 @@ void typec_set_pwr_opmode(struct typec_port *port,
- }
- EXPORT_SYMBOL_GPL(typec_set_pwr_opmode);
- 
-+/**
-+ * typec_find_port_power_role - Get the typec port power capability
-+ * @name: port power capability string
-+ *
-+ * This routine is used to find the typec_port_type by its string name.
-+ *
-+ * Returns typec_port_type if success, otherwise negative error code.
-+ */
-+int typec_find_port_power_role(const char *name)
-+{
-+	return match_string(typec_port_power_roles,
-+			    ARRAY_SIZE(typec_port_power_roles), name);
-+}
-+EXPORT_SYMBOL_GPL(typec_find_port_power_role);
-+
-+/**
-+ * typec_find_power_role - Find the typec one specific power role
-+ * @name: power role string
-+ *
-+ * This routine is used to find the typec_role by its string name.
-+ *
-+ * Returns typec_role if success, otherwise negative error code.
-+ */
-+int typec_find_power_role(const char *name)
-+{
-+	return match_string(typec_roles, ARRAY_SIZE(typec_roles), name);
-+}
-+EXPORT_SYMBOL_GPL(typec_find_power_role);
-+
-+/**
-+ * typec_find_port_data_role - Get the typec port data capability
-+ * @name: port data capability string
-+ *
-+ * This routine is used to find the typec_port_data by its string name.
-+ *
-+ * Returns typec_port_data if success, otherwise negative error code.
-+ */
-+int typec_find_port_data_role(const char *name)
-+{
-+	return match_string(typec_port_data_roles,
-+			    ARRAY_SIZE(typec_port_data_roles), name);
-+}
-+EXPORT_SYMBOL_GPL(typec_find_port_data_role);
-+
- /* ------------------------------------------ */
- /* API for Multiplexer/DeMultiplexer Switches */
- 
-diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
-index 672b39b..15f8d9a 100644
---- a/include/linux/usb/typec.h
-+++ b/include/linux/usb/typec.h
-@@ -267,4 +267,7 @@ int typec_set_orientation(struct typec_port *port,
- 			  enum typec_orientation orientation);
- int typec_set_mode(struct typec_port *port, int mode);
- 
-+int typec_find_port_power_role(const char *name);
-+int typec_find_power_role(const char *name);
-+int typec_find_port_data_role(const char *name);
- #endif /* __LINUX_USB_TYPEC_H */
+ static struct i2c_driver eeti_ts_driver = {
+ 	.driver = {
+ 		.name = "eeti_ts",
+ 		.pm = &eeti_ts_pm,
++		.of_match_table = of_match_ptr(of_eeti_ts_match),
+ 	},
+ 	.probe = eeti_ts_probe,
+ 	.id_table = eeti_ts_id,
 -- 
-2.7.4
+2.17.1
