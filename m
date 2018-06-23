@@ -1,83 +1,91 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH 3/3] irqchip: RISC-V Local Interrupt Controller Driver
-Date: Fri, 22 Jun 2018 17:08:58 -0700
-Message-ID: <1d55b6ee-2fa4-269b-4166-ffd36646f61f@infradead.org>
-References: <20180622232006.12158-1-palmer@sifive.com>
- <20180622232006.12158-4-palmer@sifive.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v5 1/8] dt-bindings: reset: Add AOSS reset bindings for
+ SDM845 SoCs
+Date: Fri, 22 Jun 2018 17:44:33 -0700
+Message-ID: <20180623004433.GQ3402@tuxbook-pro>
+References: <20180521172714.8551-1-sibis@codeaurora.org>
+ <20180521172714.8551-2-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180622232006.12158-4-palmer@sifive.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Palmer Dabbelt <palmer@sifive.com>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, Michael Clark <mjc@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, shorne@gmail.com, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180521172714.8551-2-sibis@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sibi Sankar <sibis@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>
+Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/22/2018 04:20 PM, Palmer Dabbelt wrote:
-> From: Palmer Dabbelt <palmer@dabbelt.com>
+On Mon 21 May 10:27 PDT 2018, Sibi Sankar wrote:
+
+> Add SDM845 AOSS (always on subsystem) reset controller binding
 > 
-> This patch adds a driver that manages the local interrupts on each
-> RISC-V hart, as specifiec by the RISC-V supervisor level ISA manual.
-> The local interrupt controller manages software interrupts, timer
-> interrupts, and hardware interrupts (which are routed via the
-> platform level interrupt controller).  Per-hart local interrupt
-> controllers are found on all RISC-V systems.
-> 
-> CC: Michael Clark <mjc@sifive.com>
-> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+
+I think it would be better if you made the binding represent the entire
+clock controller, rather than only the reset-related portion of it.
+
+As I can't find anything in the downstream kernel that references the
+clock part of the hardware block I think the driver can be kept as is
+(with updated compatible and adjust the offsets of the registers)
+
+
+This makes the DT better represents the hardware and it makes it
+possible to control the clocks in the future, without breaking backwards
+compatibility with existing DTBs.
+
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->  drivers/irqchip/Kconfig          |  13 +++
->  drivers/irqchip/Makefile         |   1 +
->  drivers/irqchip/irq-riscv-intc.c | 215 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 229 insertions(+)
->  create mode 100644 drivers/irqchip/irq-riscv-intc.c
+>  .../bindings/reset/qcom,aoss-reset.txt        | 52 +++++++++++++++++++
+>  include/dt-bindings/reset/qcom,sdm845-aoss.h  | 17 ++++++
+>  2 files changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+>  create mode 100644 include/dt-bindings/reset/qcom,sdm845-aoss.h
 > 
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index e9233db16e03..bf7fc86673b1 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -372,3 +372,16 @@ config QCOM_PDC
->  	  IRQs for Qualcomm Technologies Inc (QTI) mobile chips.
->  
->  endmenu
+> diff --git a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+> new file mode 100644
+> index 000000000000..cd5dcafb4ed7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+> @@ -0,0 +1,52 @@
+> +Qualcomm AOSS Reset Controller
+> +======================================
 > +
-> +config RISCV_INTC
-> +	#bool "RISC-V Interrupt Controller"
-
-Hi,
-What does the leading '#' do?
-
-
-> +	depends on RISCV
-> +	default y
-> +	help
-> +	   This enables support for the local interrupt controller found in
-> +	   standard RISC-V systems.  The local interrupt controller handles
-> +	   timer interrupts, software interrupts, and hardware interrupts.
-> +	   Without a local interrupt controller the system will be unable to
-> +	   handle any interrupts, including those passed via the PLIC.
+> +This binding describes a reset-controller found on AOSS (always on subsystem)
+> +for Qualcomm SDM845 SoCs.
 > +
-> +	   If you don't know what to do here, say Y.
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index 15f268f646bf..74e333cc274c 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -87,3 +87,4 @@ obj-$(CONFIG_MESON_IRQ_GPIO)		+= irq-meson-gpio.o
->  obj-$(CONFIG_GOLDFISH_PIC) 		+= irq-goldfish-pic.o
->  obj-$(CONFIG_NDS32)			+= irq-ativic32.o
->  obj-$(CONFIG_QCOM_PDC)			+= qcom-pdc.o
-> +obj-$(CONFIG_RISCV_INTC)		+= irq-riscv-intc.o
+> +Required properties:
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be:
+> +		    "qcom,sdm845-aoss-reset"
 
+qcom,sdm845-aoss-cc
 
--- 
-~Randy
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: must specify the base address and size of the register
+> +	            space.
+> +
+> +- #reset-cells:
+> +	Usage: required
+> +	Value type: <uint>
+> +	Definition: must be 1; cell entry represents the reset index.
+> +
+> +Example:
+> +
+> +aoss_reset: reset-controller@c2b0000 {
+> +	compatible = "qcom,sdm845-aoss-reset";
+> +	reg = <0xc2b0000 0x21000>;
+
+reg = <0xc2a0000 0x31000>;
+
+> +	#reset-cells = <1>;
+> +};
+> +
+
+Apart from this the binding looks good!
+
+Regards,
+Bjorn
