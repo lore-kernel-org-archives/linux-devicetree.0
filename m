@@ -1,68 +1,66 @@
-Return-Path: <SRS0=YCj9=JH=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v4 0/5] leds: add devicetree functionality to lltc,lt3593 driver
-Date: Thu, 21 Jun 2018 22:23:17 +0200
-Message-Id: <20180621202322.11581-1-daniel@zonque.org>
+Return-Path: <vkoul@kernel.org>
+Date: Sat, 23 Jun 2018 10:04:06 +0530
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH 4/5] input: pm8941-pwrkey: Abstract register offsets and
+ event code
+Message-ID: <20180623043406.GU27187@vkoul-mobl>
+References: <20180618143548.29900-1-vkoul@kernel.org>
+ <20180618143548.29900-5-vkoul@kernel.org>
+ <20180622211005.GI3402@tuxbook-pro>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180622211005.GI3402@tuxbook-pro>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: linux-input@vger.kernel.org, linux-pm@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This is v4 of the series that brings devicetree support for the
-lltc,lt3593 LED driver.
+On 22-06-18, 14:10, Bjorn Andersson wrote:
+> On Mon 18 Jun 07:35 PDT 2018, Vinod Koul wrote:
+> > diff --git a/drivers/input/misc/pm8941-pwrkey.c b/drivers/input/misc/pm8941-pwrkey.c
+> [..]
+> >  struct pm8941_pwrkey {
+> >  	struct device *dev;
+> > @@ -52,6 +57,9 @@ struct pm8941_pwrkey {
+> >  
+> >  	unsigned int revision;
+> >  	struct notifier_block reboot_notifier;
+> > +
+> > +	unsigned int code;
+> 
+> pwrkey->code is passed into of_property_read_u32(), so make it u32 here
+> instead.
 
-Before this series, the driver supported controlling multiple LEDs
-through an array in the platform data. IOW, a single instance of the
-driver was able to control multiple hardware chips.
+yes will do
 
-This series changes that, and requires a distinct platform device to
-be set up for each of them, if a board has multiple of these hardware
-chips. The reason is that in DT, nodes should represent hardware, and
-it's much cleaner this way.
+> >  	pwrkey->irq = platform_get_irq(pdev, 0);
+> > @@ -190,8 +209,13 @@ static int pm8941_pwrkey_probe(struct platform_device *pdev)
+> >  
+> >  	error = of_property_read_u32(pdev->dev.of_node, "reg",
+> >  				     &pwrkey->baseaddr);
+> > -	if (error)
+> > -		return error;
+> > +	if (error) {
+> 
+> I agree with Dmitry's comment here.
+> 
+> The order of these operations are not significant, so you can easily
+> move this into above "fallback" and read "reg" from the dev itself in
+> and else block.
 
-As stated earlier in the thread for v1, the driver currently only has
-one user in mainline (the Raumfeld platform) which is soon to be
-replaced by a devicetree file. This user only uses one LED via pdata, so
-the change mentioned above does not cause a regression.
+Agreed we can do in a single block and check only once
 
-Once the platform is fully ported to DT, I'll send another patch that
-removes pdata handling from this driver completely, but it's kept around
-as legacy bridge for now.
+> 
+> > +		/* check if parent has reg before bailing */
+> > +		error = of_property_read_u32(pdev->dev.parent->of_node,
+> > +					     "reg", &pwrkey->baseaddr);
+> > +		if (error)
+> > +			return error;
+> > +	}
+> 
+> Apart from this the patch looks good.
 
-
-Changelog:
-
-v3 → v4:
-
-* Fixed a mishap that slipped in during rebase which caused a compile
-  error
-* Removed empty line at end of the DT documentaion file
-* Switched to SPDX license header in the driver
-
-v2 → v3:
-
-* Fixed a typo in the commit log of 1/5
-* Rebased onto 4.18-rc1
-
-v1 → v2:
-
-* Moved LED-specific properties into a sub-node in DT, as requested by
-  Jacek Anaszewski.
-
-
-Daniel Mack (5):
-  dt-bindings: leds: Add bindings for lltc,lt3593
-  leds: lt3593: merge functions and clean up code
-  leds: lt3593: switch to gpiod interface
-  leds: lt3593: Add device tree probing glue
-  leds: lt3593: update email address and switch to SPDX license header
-
- .../devicetree/bindings/leds/leds-lt3593.txt  |  34 ++++
- drivers/leds/leds-lt3593.c                    | 192 ++++++++++--------
- 2 files changed, 142 insertions(+), 84 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-lt3593.txt
+Thanks
 
 -- 
-2.17.1
+~Vinod
