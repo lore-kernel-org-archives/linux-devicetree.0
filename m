@@ -1,57 +1,44 @@
-Return-Path: <SRS0=SxbK=JL=linaro.org=vinod.koul@kernel.org>
-From: Vinod Koul <vinod.koul@linaro.org>
-Subject: [PATCH v2 5/5] input: pm8941-pwrkey: Add resin entry
-Date: Mon, 25 Jun 2018 10:39:38 +0530
-Message-Id: <20180625050938.4700-6-vkoul@kernel.org>
-In-Reply-To: <20180625050938.4700-1-vkoul@kernel.org>
-References: <20180625050938.4700-1-vkoul@kernel.org>
-To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Return-Path: <SRS0=78dS=JJ=zonque.org=daniel@kernel.org>
+From: Daniel Mack <daniel@zonque.org>
+Subject: [PATCH v2 4/4] input: touchscreen: eeti: fix link to documentation and email address in header
+Date: Sat, 23 Jun 2018 17:45:33 +0200
+Message-Id: <20180623154533.26901-5-daniel@zonque.org>
+In-Reply-To: <20180623154533.26901-1-daniel@zonque.org>
+References: <20180623154533.26901-1-daniel@zonque.org>
+To: dmitry.torokhov@gmail.com, robh+dt@kernel.org
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Since handling is abstracted in this driver, we need to add resin entry
-in id table along with pwrkey_data.
+Keep the documentation link up-to-date in case anybody need to dive into it
+again, and update email address while at it.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Daniel Mack <daniel@zonque.org>
 ---
- drivers/input/misc/pm8941-pwrkey.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/input/touchscreen/eeti_ts.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/input/misc/pm8941-pwrkey.c b/drivers/input/misc/pm8941-pwrkey.c
-index b2c1093f7d62..e360b1bd7415 100644
---- a/drivers/input/misc/pm8941-pwrkey.c
-+++ b/drivers/input/misc/pm8941-pwrkey.c
-@@ -29,6 +29,7 @@
+diff --git a/drivers/input/touchscreen/eeti_ts.c b/drivers/input/touchscreen/eeti_ts.c
+index 84561dfde7c4..7fe41965c5d1 100644
+--- a/drivers/input/touchscreen/eeti_ts.c
++++ b/drivers/input/touchscreen/eeti_ts.c
+@@ -1,9 +1,9 @@
+ /*
+  * Touch Screen driver for EETI's I2C connected touch screen panels
+- *   Copyright (c) 2009 Daniel Mack <daniel@caiaq.de>
++ *   Copyright (c) 2009,2018 Daniel Mack <daniel@zonque.org>
+  *
+  * See EETI's software guide for the protocol specification:
+- *   http://home.eeti.com.tw/web20/eg/guide.htm
++ *   http://home.eeti.com.tw/documentation.html
+  *
+  * Based on migor_ts.c
+  *   Copyright (c) 2008 Magnus Damm
+@@ -271,5 +271,5 @@ static struct i2c_driver eeti_ts_driver = {
+ module_i2c_driver(eeti_ts_driver);
  
- #define PON_RT_STS			0x10
- #define  PON_KPDPWR_N_SET		BIT(0)
-+#define  PON_RESIN_N_SET		BIT(1)
- 
- #define PON_PS_HOLD_RST_CTL		0x5a
- #define PON_PS_HOLD_RST_CTL2		0x5b
-@@ -39,6 +40,7 @@
- 
- #define PON_PULL_CTL			0x70
- #define  PON_KPDPWR_PULL_UP		BIT(1)
-+#define  PON_RESIN_PULL_UP		BIT(0)
- 
- #define PON_DBC_CTL			0x71
- #define  PON_DBC_DELAY_MASK		0x7
-@@ -306,8 +308,14 @@ static const struct pm8941_data pwrkey_data = {
- 	.status_bit = PON_KPDPWR_N_SET,
- };
- 
-+static const struct pm8941_data resin_data = {
-+	.pull_up_bit = PON_RESIN_PULL_UP,
-+	.status_bit = PON_RESIN_N_SET,
-+};
-+
- static const struct of_device_id pm8941_pwr_key_id_table[] = {
- 	{ .compatible = "qcom,pm8941-pwrkey", .data = &pwrkey_data },
-+	{ .compatible = "qcom,pm8941-resin", .data = &resin_data },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, pm8941_pwr_key_id_table);
+ MODULE_DESCRIPTION("EETI Touchscreen driver");
+-MODULE_AUTHOR("Daniel Mack <daniel@caiaq.de>");
++MODULE_AUTHOR("Daniel Mack <daniel@zonque.org>");
+ MODULE_LICENSE("GPL");
 -- 
-2.14.4
+2.17.1
