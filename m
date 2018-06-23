@@ -1,43 +1,34 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH] ARM: dts: pxa: add label to lcd controller node
-Date: Sat, 23 Jun 2018 21:37:45 +0200
-Message-ID: <20180623193745.12605-1-daniel@zonque.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robert.jarzmik@free.fr
-Cc: devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>, linux-arm-kernel@lists.infradead.org
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH 6/8] ARM: davinci_all_defconfig: enable PRU remoteproc module
+Date: Sat, 23 Jun 2018 16:08:08 -0500
+Message-ID: <20180623210810.21232-7-david@lechnology.com>
+References: <20180623210810.21232-1-david@lechnology.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180623210810.21232-1-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: David Lechner <david@lechnology.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-So it can be referenced and filled with more details from board files.
+This enabled the remoteproc module for the PRU on DA8xx-type devices.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
+Signed-off-by: David Lechner <david@lechnology.com>
 ---
- arch/arm/boot/dts/pxa2xx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/configs/davinci_all_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/pxa2xx.dtsi b/arch/arm/boot/dts/pxa2xx.dtsi
-index e4ebcde17837..a520b4c14ea9 100644
---- a/arch/arm/boot/dts/pxa2xx.dtsi
-+++ b/arch/arm/boot/dts/pxa2xx.dtsi
-@@ -141,7 +141,7 @@
- 			interrupts = <30 31>;
- 		};
- 
--		lcd-controller@40500000 {
-+		lcdc: lcd-controller@40500000 {
- 			compatible = "marvell,pxa2xx-lcdc";
- 			reg = <0x44000000 0x10000>;
- 			interrupts = <17>;
+diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
+index a1b6e106b867..1bcc7c6a03ee 100644
+--- a/arch/arm/configs/davinci_all_defconfig
++++ b/arch/arm/configs/davinci_all_defconfig
+@@ -214,6 +214,8 @@ CONFIG_DMADEVICES=y
+ CONFIG_TI_EDMA=y
+ CONFIG_REMOTEPROC=m
+ CONFIG_DA8XX_REMOTEPROC=m
++CONFIG_TI_PRU_REMOTEPROC=m
++CONFIG_RPMSG_VIRTIO=m
+ CONFIG_MEMORY=y
+ CONFIG_TI_AEMIF=m
+ CONFIG_DA8XX_DDRCTL=y
 -- 
 2.17.1
