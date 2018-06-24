@@ -1,79 +1,53 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [RFC] Configure i.MX6 RGMII pad group control registers from
- device tree
-Date: Sun, 24 Jun 2018 04:23:34 +0000
-Message-ID: <AM0PR04MB42111E25172F6068F937ECCB804B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <f5a01de5-fc81-52c1-c2ea-edb77ecff076@ysoft.com>
- <5ab5c58a-dc44-d1bc-2132-8704d05bf1de@ysoft.com>
+From: Alexander Kurz <akurz@blala.de>
+Subject: [PATCH] ARM: dts: imx50: fix KPP pin definition typos
+Date: Sun, 24 Jun 2018 05:59:29 +0000
+Message-ID: <20180624055929.10011-1-akurz@blala.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5ab5c58a-dc44-d1bc-2132-8704d05bf1de@ysoft.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>Pengutronix Kernel Team <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Duan <fugang.duan@nxp.com>, Frank Li <frank.li@nxp.com>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Greg Ungerer <gerg@uclinux.org>, Fabio Estevam <fabio.estevam@nxp.com>, Alexander Kurz <akurz@blala.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Q29weSBBbmR5ICYgRnJhbmssDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJv
-bTogTWljaGFsIFZva8OhxI0gW21haWx0bzptaWNoYWwudm9rYWNAeXNvZnQuY29tXQ0KPiBTZW50
-OiBUdWVzZGF5LCBKdW5lIDEyLCAyMDE4IDExOjEwIFBNDQo+IFRvOiBsaW51eC1ncGlvQHZnZXIu
-a2VybmVsLm9yZw0KPiBDYzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBT
-aGF3biBHdW8NCj4gPHNoYXduZ3VvQGtlcm5lbC5vcmc+OyBTYXNjaGEgSGF1ZXIgPGtlcm5lbEBw
-ZW5ndXRyb25peC5kZT47IEZhYmlvDQo+IEVzdGV2YW0gPGZhYmlvLmVzdGV2YW1AbnhwLmNvbT47
-IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ow0KPiBkZXZpY2V0cmVlQHZnZXIua2Vy
-bmVsLm9yZzsgQS5zLiBEb25nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47IEZhYmlvDQo+IEVzdGV2
-YW0gPGZlc3RldmFtQGdtYWlsLmNvbT47IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47
-DQo+IFN0ZWZhbiBBZ25lciA8c3RlZmFuQGFnbmVyLmNoPjsgUGVuZ3V0cm9uaXggS2VybmVsIFRl
-YW0NCj4gPGtlcm5lbEBwZW5ndXRyb25peC5kZT47IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxl
-aWpAbGluYXJvLm9yZz47IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1Ympl
-Y3Q6IFJlOiBbUkZDXSBDb25maWd1cmUgaS5NWDYgUkdNSUkgcGFkIGdyb3VwIGNvbnRyb2wgcmVn
-aXN0ZXJzIGZyb20NCj4gZGV2aWNlIHRyZWUNCj4gDQo+IE9uIDExLjYuMjAxOCAxNDozNiwgTWlj
-aGFsIFZva8OhxI0gd3JvdGU6DQo+ID4gQWhvaiwNCj4gPg0KPiA+IFRvIGNvbmZpZ3VyZSBpbmRp
-dmlkdWFsIHBhZCdzIGNoYXJhY3RlcmlzdGljcyBvbiBpLk1YNiBTb0MgYSBmc2wscGlucw0KPiA+
-ID0gPFBJTl9GVU5DX0lEIENPTkZJRz4gcHJvcGVydHkgY2FuIGJlIHVzZWQuIElzIHRoZXJlIGFu
-eSBjb252ZW5pZW50DQo+ID4gd2F5IHRvIGNvbmZpZ3VyZSB0aGUgcGFkIGdyb3VwIGNvbnRyb2wg
-cmVnaXN0ZXJzPw0KPiA+DQo+ID4gVGhlIGlzc3VlIGlzIHRoYXQgc29tZSBiaXRzIChERFJfU0VM
-IGFuZCBPRFQpIGluIHRoZSBpbmRpdmlkdWFsIFJHTUlJDQo+ID4gcGFkIGNvbnRyb2wgcmVnaXN0
-ZXJzIGFyZSByZWFkLW9ubHkuIFRvIHR3ZWFrIHRob3NlIHBhcmFtZXRlcnMgKHNpZ25hbA0KPiA+
-IHZvbHRhZ2UgYW5kIHRlcm1pbmF0aW9uIHJlc2lzdG9ycykgb25lIG5lZWQgdG8gd3JpdGUgdG8g
-dGhlIHBhZCBncm91cA0KPiA+IGNvbnRyb2wgcmVnaXN0ZXJzIGZvciB0aGUgd2hvbGUgUkdNSUkg
-cGFkIGdyb3VwLiBOYW1lbHkNCj4gPiBJT01VWENfU1dfUEFEX0NUTF9HUlBfRERSX1RZUEVfUkdN
-SUkgYW5kDQo+ID4gSU9NVVhDX1NXX1BBRF9DVExfR1JQX1JHTUlJX1RFUk0uIFRoZSBncm91cCBy
-ZWdpc3RlcnMgaW4gZ2VuZXJhbA0KPiBhcmUgbm90IGFjY2Vzc2libGUgZnJvbSB0aGUgbGlzdCBp
-biBhcmNoL2FybS9ib290L2R0cy9pbXg2ZGwtcGluZnVuYy5oLg0KPiA+DQo+ID4gSSBjb3VsZCBu
-b3QgZmluZCBhbnkgb3RoZXIgd2F5IHRvIGNoYW5nZSB0aGUgZ3JvdXAgcmVnaXN0ZXJzIHRoYW4N
-Cj4gPiBoYWNraW5nLWluIHNvbWUgbGluZXMgaW50byB0aGUgaW14NnFfaW5pdF9tYWNoaW5lKHZv
-aWQpIGZ1bmN0aW9uIGluDQo+ID4gYXJjaC9hcm0vbWFjaC1pbXgvbWFjaC1pbXg2cS5jIHNvdXJj
-ZS4gQXMgSSB3b3JrIHRvd2FyZHMgdXBzdHJlYW1pbmcNCj4gPiBteSBib2FyZCB0aGlzIHNob3Vs
-ZCBiZSBkb25lIGZyb20gbXkgZGV2aWNlIHRyZWUgb3Igc29sdmVkIGluIHNvbWUNCj4gdW5pdmVy
-c2FsIHdheS4NCj4gPg0KPiA+IEFueSBoaW50cyB3aWxsIGJlIG11Y2ggYXBwcmVjaWF0ZWQuDQo+
-ID4gTWljaGFsDQo+IA0KPiBJIGZpZ3VyZWQgb3V0IHRoaXMgaXMgbW9yZSAicGluY3RybC1pbXgu
-YyIgdGhhbiAiZGV2aWNlLXRyZWUiIHJlbGF0ZWQgc28gSSBhbQ0KPiBraW5kbHkgYWRkaW5nIG1h
-aW50YWluZXJzIG9mIHRoYXQgZmlsZSBpbiBob3BlIHNvbWVib2R5IHdpbGwgc2hlZCBzb21lIGxp
-Z2h0DQo+IHRvIGl0Lg0KPiANCj4gSSBhbSBkaXZpbmcgZGVlcGVyIGludG8gdGhlIGNvZGUgYW5k
-IGl0IHNlZW1zIHRoZXJlIHJlYWxseSBpcyBubyBnZW5lcmljDQo+IG9wdGlvbiB0byBzZXQgdGhl
-IGkuTVg2IHBhZCBncm91cCBjb250cm9sIHJlZ2lzdGVycyBmcm9tIGRldmljZSB0cmVlLg0KPiBP
-ciBhbSBJIGxvb2tpbmcgYXQgdGhlIHByb2JsZW0gZnJvbSBhIHdyb25nIGFuZ2xlPw0KPiANCg0K
-WWVzLCB0aGVyZSdzIGEgZmV3IHNwZWNpYWwgcGFkIGdyb3VwIGN0cmwgcmVnaXN0ZXJzIChlLmcu
-IERSQU0gYW5kIFJHTUlJIGZvciBteDZxKQ0Kd2hpY2ggYXJlIG5vdCBhZGRlZCBJbiB0aGUgcGlu
-Y3RybCBkcml2ZXIgc3VwcG9ydC4NCg0KPiBIb3cgc2hvdWxkIHdlIGRlYWwgd2l0aCBib2FyZHMg
-dGhhdCBuZWVkIHRvIGNvbmZpZ3VyZSBzb21lIHBhZA0KPiBjaGFyYWN0ZXJpc3RpY3MgYXZhaWxh
-YmxlIG9ubHkgdGhyb3VnaCB0aGUgcGFkIGdyb3VwIGNvbnRyb2wgcmVnaXN0ZXJzPw0KPiANCg0K
-QW5keSwNCkhvdyBkbyB3ZSBoYW5kbGUgaXQgaW50ZXJuYWxseT8NCg0KPiBJIGFsc28gcmFpc2Vk
-IHRoaXMgcXVlc3Rpb24gYXQgdGhlIE5YUCBjb21tdW5pdHkgZm9ydW0gWzFdIGFuZCBnZXQgcXVp
-dGUNCj4gdW5zYXRpc2Z5aW5nIGFuc3dlciBzbyBmYXIuIEkgd291bGQgbG92ZSB0byBmaW5kL2lt
-cGxlbWVudCBhIHByb3BlciBhbmQNCj4gdW5pdmVyc2FsIHNvbHV0aW9uLg0KPiANCg0KVGhlcmUn
-cmUgcHJvYmFibHkgdHdvIHdheXMgdG8gZG8gaXQ6DQoxKSBoYW5kbGUgaXQgaW4gZmVjIGRyaXZl
-ciBieSBwYXJzaW5nIGEgc3BlY2lmaWMgcHJvcGVydHkNCjIpIEFkZCBhIG5ldyBwYWQgZ3JvdXAg
-aW50byBwaW5jdHJsIGRyaXZlciBzdXBwb3J0DQplLmcuDQpNWDZRX1BBRF9DVExfR1JQX1JHTUlJ
-X1RFUk0NCk1YNlFfUEFEX0NUTF9HUlBfRERSX1RZUEVfUkdNSUkNCg0KSSBtYXkgcHJlZmVyIHRv
-IDIpLg0KDQpSZWdhcmRzDQpEb25nIEFpc2hlbmcNCg0KPiBUaGFua3MgaW4gYWR2YW5jZSBmb3Ig
-eW91ciB0aW1lLA0KPiBNaWNoYWwNCj4gDQo+IFsxXQ0KPiBodHRwczovL2VtZWEwMS5zYWZlbGlu
-a3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGY28NCj4gbW11bml0
-eS5ueHAuY29tJTJGdGhyZWFkJTJGNDc3NDY0JmRhdGE9MDIlN0MwMSU3Q2Fpc2hlbmcuZG9uZyU0
-DQo+IDBueHAuY29tJTdDYTNlNTQ2M2ViMDZhNDdmMTEyMTAwOGQ1ZDA3NjhhMDQlN0M2ODZlYTFk
-M2JjMmI0YzZmYTkNCj4gMmNkOTljNWMzMDE2MzUlN0MwJTdDMSU3QzYzNjY0NDEyOTkxNDE2MjQ5
-NSZzZGF0YT14cXRCUzh1WCUyQlN6cQ0KPiA1bTZ0Yk5hTHpDa0I3ZXpnSFNueXU5R1EzSzEzY1c4
-JTNEJnJlc2VydmVkPTANCg==
+iMX50 pin mux options for pads KEY_COL2 and KEY_COL3 allow muxing the same
+KEY_COL instances as the pad name. Fix typos shifting KEY_COL instances.
+
+Signed-off-by: Alexander Kurz <akurz@blala.de>
+---
+ arch/arm/boot/dts/imx50-pinfunc.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx50-pinfunc.h b/arch/arm/boot/dts/imx50-pinfunc.h
+index 97e6e7f4ebdd..43863347362e 100644
+--- a/arch/arm/boot/dts/imx50-pinfunc.h
++++ b/arch/arm/boot/dts/imx50-pinfunc.h
+@@ -34,7 +34,7 @@
+ #define MX50_PAD_KEY_ROW1__EIM_NANDF_CEN_1			0x02c 0x2d8 0x000 0x2 0x0
+ #define MX50_PAD_KEY_ROW1__CTI_TRIGOUT_ACK7			0x02c 0x2d8 0x000 0x6 0x0
+ #define MX50_PAD_KEY_ROW1__USBPHY1_RXERROR			0x02c 0x2d8 0x000 0x7 0x0
+-#define MX50_PAD_KEY_COL2__KPP_COL_1				0x030 0x2dc 0x000 0x0 0x0
++#define MX50_PAD_KEY_COL2__KPP_COL_2				0x030 0x2dc 0x000 0x0 0x0
+ #define MX50_PAD_KEY_COL2__GPIO4_4				0x030 0x2dc 0x000 0x1 0x0
+ #define MX50_PAD_KEY_COL2__EIM_NANDF_CEN_2			0x030 0x2dc 0x000 0x2 0x0
+ #define MX50_PAD_KEY_COL2__CTI_TRIGOUT6				0x030 0x2dc 0x000 0x6 0x0
+@@ -44,7 +44,7 @@
+ #define MX50_PAD_KEY_ROW2__EIM_NANDF_CEN_3			0x034 0x2e0 0x000 0x2 0x0
+ #define MX50_PAD_KEY_ROW2__CTI_TRIGOUT7				0x034 0x2e0 0x000 0x6 0x0
+ #define MX50_PAD_KEY_ROW2__USBPHY1_LINESTATE_0			0x034 0x2e0 0x000 0x7 0x0
+-#define MX50_PAD_KEY_COL3__KPP_COL_2				0x038 0x2e4 0x000 0x0 0x0
++#define MX50_PAD_KEY_COL3__KPP_COL_3				0x038 0x2e4 0x000 0x0 0x0
+ #define MX50_PAD_KEY_COL3__GPIO4_6				0x038 0x2e4 0x000 0x1 0x0
+ #define MX50_PAD_KEY_COL3__EIM_NANDF_READY0			0x038 0x2e4 0x7b4 0x2 0x0
+ #define MX50_PAD_KEY_COL3__SDMA_EXT_EVENT_0			0x038 0x2e4 0x7b8 0x6 0x0
+-- 
+2.11.0
