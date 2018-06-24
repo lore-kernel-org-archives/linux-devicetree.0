@@ -1,81 +1,60 @@
-From: Alexander Kurz <akurz@blala.de>
-Subject: [PATCH] ARM: dts: imx50: remove non-existent USB instances
-Date: Sun, 24 Jun 2018 06:15:38 +0000
-Message-ID: <20180624061538.10156-1-akurz@blala.de>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v3 2/2] iio: adc: Add Spreadtrum SC27XX PMICs ADC support
+Date: Sun, 24 Jun 2018 17:13:00 +0800
+Message-ID: <CAMz4kuJUeDjTVJqNc4cNv=LwR1HkuFap4vBF7CCcrxNqnTHa-A@mail.gmail.com>
+References: <900586c7a4ce55818ab330c738f306c7452191ef.1529550463.git.baolin.wang@linaro.org>
+ <95836d610301133ffdac1efa86d7daf4cecb97b7.1529550463.git.baolin.wang@linaro.org>
+ <20180622151338.00003622@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Greg Ungerer <gerg@uclinux.org>, Fabio Estevam <fabio.estevam@nxp.com>, Alexander Kurz <akurz@blala.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180622151338.00003622@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, freeman.liu@spreadtrum.com, Mark Brown <broonie@kernel.org>, DTML <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-According to the i.MX50 Reference Manual, the SoC features one USB OTG
-and one host controller. Remove the non-existent instances from the
-DTS which probably got initially copied from the mx53 DTS.
+Hi Jonathan,
 
-Signed-off-by: Alexander Kurz <akurz@blala.de>
----
- arch/arm/boot/dts/imx50-evk.dts |  8 --------
- arch/arm/boot/dts/imx50.dtsi    | 18 ------------------
- 2 files changed, 26 deletions(-)
+On 22 June 2018 at 22:13, Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
+> On Thu, 21 Jun 2018 11:14:05 +0800
+> Baolin Wang <baolin.wang@linaro.org> wrote:
+>
+>> From: Freeman Liu <freeman.liu@spreadtrum.com>
+>>
+>> The Spreadtrum SC27XX PMICs ADC controller contains 32 channels,
+>> which is used to sample voltages with 12 bits conversion.
+>>
+>> [Baolin Wang did lots of improvements]
+>>
+>> Signed-off-by: Freeman Liu <freeman.liu@spreadtrum.com>
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>
+> One trivial missed bit of cleanup inline.  I'll sort that
+> when applying if no one else points anything out before I get back to my
+> development machine.
 
-diff --git a/arch/arm/boot/dts/imx50-evk.dts b/arch/arm/boot/dts/imx50-evk.dts
-index 98b5faa06e27..d952bd150764 100644
---- a/arch/arm/boot/dts/imx50-evk.dts
-+++ b/arch/arm/boot/dts/imx50-evk.dts
-@@ -105,14 +105,6 @@
- 	status = "okay";
- };
- 
--&usbh2 {
--	status = "okay";
--};
--
--&usbh3 {
--	status = "okay";
--};
--
- &usbotg {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/imx50.dtsi b/arch/arm/boot/dts/imx50.dtsi
-index 3747d80104f4..42b3e53e07e9 100644
---- a/arch/arm/boot/dts/imx50.dtsi
-+++ b/arch/arm/boot/dts/imx50.dtsi
-@@ -212,24 +212,6 @@
- 				status = "disabled";
- 			};
- 
--			usbh2: usb@53f80400 {
--				compatible = "fsl,imx50-usb", "fsl,imx27-usb";
--				reg = <0x53f80400 0x0200>;
--				interrupts = <16>;
--				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
--				dr_mode = "host";
--				status = "disabled";
--			};
--
--			usbh3: usb@53f80600 {
--				compatible = "fsl,imx50-usb", "fsl,imx27-usb";
--				reg = <0x53f80600 0x0200>;
--				interrupts = <17>;
--				clocks = <&clks IMX5_CLK_USBOH3_GATE>;
--				dr_mode = "host";
--				status = "disabled";
--			};
--
- 			gpio1: gpio@53f84000 {
- 				compatible = "fsl,imx50-gpio", "fsl,imx35-gpio";
- 				reg = <0x53f84000 0x4000>;
+Thanks.
+
+>> +
+>> +     indio_dev->dev.parent = &pdev->dev;
+>> +     indio_dev->name = dev_name(&pdev->dev);
+>> +     indio_dev->modes = INDIO_DIRECT_MODE;
+>> +     indio_dev->info = &sc27xx_info;
+>> +     indio_dev->channels = sc27xx_channels;
+>> +     indio_dev->num_channels = ARRAY_SIZE(sc27xx_channels);
+>> +     ret = devm_iio_device_register(&pdev->dev, indio_dev);
+>> +     if (ret) {
+>> +             dev_err(&pdev->dev, "could not register iio (ADC)");
+>> +             return ret;
+>> +     }
+>> +
+>> +     platform_set_drvdata(pdev, indio_dev);
+>
+> Why?  Looks like this is left over from when we had a remove.
+
+Sorry, I missed to remove this redundant code.
+
 -- 
-2.11.0
+Baolin Wang
+Best Regards
