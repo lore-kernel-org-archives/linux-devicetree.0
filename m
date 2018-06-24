@@ -1,188 +1,74 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH 1/2] dt-bindings: nand: meson: add Amlogic NAND
- controller driver
-Date: Sun, 24 Jun 2018 15:57:27 +0200
-Message-ID: <20180624155727.322c02b2@bbrezillon>
-References: <20180613161314.14894-1-yixun.lan@amlogic.com>
-        <20180613161314.14894-2-yixun.lan@amlogic.com>
+From: Harald Geyer <harald@ccbib.org>
+Subject: Re: [PATCHv2 5/5] arm64: allwinner: a64: Add support for TERES-I laptop
+Date: Sun, 24 Jun 2018 18:34:40 +0200
+Message-ID: <E1fX7yK-0000OC-HA@stardust.g4.wien.funkfeuer.at>
+References: <20180315162510.11669-1-harald@ccbib.org> <20180315162510.11669-6-harald@ccbib.org> <a7011fe78d171658742406bf01d50b7e3d7eaf1d.camel@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180613161314.14894-2-yixun.lan@amlogic.com>
+In-reply-to: <a7011fe78d171658742406bf01d50b7e3d7eaf1d.camel@aosc.io>
+Content-ID: <1498.1529858080.1@stardust.g4.wien.funkfeuer.at>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: linux-mtd@lists.infradead.org, Liang Yang <liang.yang@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Kalle Valo <kvalo@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, info@olimex.com, linux-wireless@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Yixun,
-
-On Wed, 13 Jun 2018 16:13:13 +0000
-Yixun Lan <yixun.lan@amlogic.com> wrote:
-
-> From: Liang Yang <liang.yang@amlogic.com>
+Icenowy Zheng writes:
+> 在 2018-03-15四的 16:25 +0000，Harald Geyer写道：
+> > +&mmc1 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&mmc1_pins>;
+> > +	vmmc-supply = <&reg_aldo2>;
+> > +	vqmmc-supply = <&reg_dldo4>;
+> > +	mmc-pwrseq = <&wifi_pwrseq>;
+> > +	bus-width = <4>;
+> > +	non-removable;
+> > +	status = "okay";
+> > +
+> > +	rtl8723bs: wifi@1 {
+> > +		reg = <1>;
+> > +		interrupt-parent = <&r_pio>;
+> > +		interrupts = <0 3 IRQ_TYPE_LEVEL_LOW>; /* PL3 */
+> > +		interrupt-names = "host-wake";
+> > +	};
 > 
-> Add Amlogic NAND controller dt-bindings for Meson SoC,
-> Current this driver support GXBB/GXL/AXG platform.
+> I think this node has some problem:
+
+Thanks for the heads up! Admittedly, I simply copied this node from
+sun50i-a64-olinuxino.dts and since it worked, didn't look into it in
+too much detail.
+
+> - This device node has no binding. The "host-wake" interrupt is part of
+>  Broadcom SDIO Wi-Fi binding, rather than a generic one.
+
+I think the general mmc and interrupts bindings apply. And the mmc binding
+clearly states that for sub-nodes a compatible string is optional.
+
+However I just realized that the 'interrupt-names' property is not part
+of the general interrupts binding, so I guess at least this property should
+be removed.
+
+> - Without the interrupt this device node isn't needed, as RTL8723BS has
+> MAC eFUSE and doesn't need a MAC in device tree.
+
+Indeed. I wasn't aware of this, but I just tested and the device probes
+fine without the subnode present. I think the devicetree is mainly for
+information which cannot be probed, so maybe the subnode should just get
+removed.
+
+> In order to solve the problems. I suggest either drop this device node
+> or make a generic "sdio-wifi" device tree binding. Personally I prefer
+> the latter, as it's more accurate device representation.
 > 
-> Signed-off-by: Liang Yang <liang.yang@amlogic.com>
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-> ---
->  .../bindings/mtd/amlogic,meson-nand.txt       | 118 ++++++++++++++++++
->  1 file changed, 118 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-> new file mode 100644
-> index 000000000000..eac9f9433d5d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-> @@ -0,0 +1,118 @@
-> +Amlogic NAND Flash Controller (NFC) for GXBB/GXL/AXG family SoCs
-> +
-> +This file documents the properties in addition to those available in
-> +the MTD NAND bindings.
-> +
-> +Required properties:
-> +- compatible : contains one of:
-> +  - "amlogic,meson-gxl-nfc"
-> +  - "amlogic,meson-axg-nfc"
-> +- clocks     :
-> +	A list of phandle + clock-specifier pairs for the clocks listed
-> +	in clock-names.
-> +
-> +- clock-names: Should contain the following:
-> +	"core" - NFC module gate clock
-> +	"clkin0" - Parent clock of internal mux
-> +	"clkin1" - Other parent clock of internal mux
-> +
-> +- pins     : Select pins which NFC need.
-> +- nand_pins: Detail NAND pins information.
-> +		nand_pins: nand {
-> +			mux {
-> +				groups = "emmc_nand_d0",
-> +					"emmc_nand_d1",
-> +					"emmc_nand_d2",
-> +					"emmc_nand_d3",
-> +					"emmc_nand_d4",
-> +					"emmc_nand_d5",
-> +					"emmc_nand_d6",
-> +					"emmc_nand_d7",
-> +					"nand_ce0",
-> +					"nand_rb0",
-> +					"nand_ale",
-> +					"nand_cle",
-> +					"nand_wen_clk",
-> +					"nand_ren_wr";
-> +				function = "nand";
-> +			};
-> +		};
+> If such a device tree binding is added, I think it should contain the
+> "host-wake" interrupt and a "local-mac-address" property. Both can be
+> ignored by the driver. (This interrupt can be needed if a more card-
+> ventor-neutral name is found.)
 
-Not sure, but I think you can drop the pinmux description.
+I don't feel qualified to comment on this. If you want to propose such
+a patch and fix above node accordingly, I won't object. Otherwise I'll
+just send a patch to remove the subnode.
 
-> +
-> +- amlogic,mmc-syscon	: Required for NAND clocks, it's shared with SD/eMMC
-> +				controller port C
-> +
-> +Optional children nodes:
-> +Children nodes represent the available nand chips.
-> +
-> +Optional properties:
-> +- meson-nand-user-mode :
-> +	only set 2 or 16 which mean the way of reading OOB bytes by NFC.
-
-I haven't checked the driver but this prop looks like a reg field value
-you're directly copying in the reg at init time. We usually avoid
-exposing such details in the DT. I'm not even sure you should have a
-property to select how you want to read OOB (need to check the driver
-before giving a definitive answer on this aspect).
-
-> +- meson-nand-ran-mode :
-> +	setting 0 or 1, means disable/enable scrambler which keeps the balence
-> +	of 0 and 1
-
-You don't need that one. The NAND chip will tell you whether it requires
-scrambling or not (see NAND_NEED_SCRAMBLING [1]).
-
-> +
-> +Other properties:
-> +see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
-> +
-> +Example demonstrate on AXG SoC:
-> +
-> +	sd_emmc_c: mmc@7000 {
-> +		compatible = "simple-bus", "syscon";
-> +		reg = <0x0 0x7000 0x0 0x800>;
-> +		status = "okay";
-> +	};
-> +
-> +	nand: nfc@7800 {
-> +		compatible = "amlogic,meson-axg-nfc";
-> +		reg = <0x0 0x7800 0x0 0x100>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
-> +		status = "disabled";
-> +		clocks = <&clkc CLKID_SD_EMMC_C>,
-> +				<&clkc CLKID_SD_EMMC_C_CLK0>,
-> +				<&clkc CLKID_FCLK_DIV2>;
-> +		clock-names = "core", "clkin0", "clkin1";
-> +		amlogic,mmc-syscon = <&sd_mmc_c>;
-> +
-> +		status = "okay";
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&nand_pins>;
-> +
-> +		nand@0 {
-> +			reg = <0>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +
-> +			nand-on-flash-bbt;
-> +			nand-ecc-mode = "hw";
-> +			nand-ecc-strength = <8>;
-> +			nand-ecc-step-size = <1024>;
-> +
-> +			meson-nand-user-mode = <2>;
-> +			meson-nand-ran-mode = <1>;
-> +
-> +			partition@0 {
-> +				label = "boot";
-> +				reg = <0x00000000 0x00200000>;
-> +				read-only;
-> +			};
-> +			partition@200000 {
-> +				label = "env";
-> +				reg = <0x00200000 0x00400000>;
-> +			};
-> +			partition@600000 {
-> +				label = "system";
-> +				reg = <0x00600000 0x00a00000>;
-> +			};
-> +			partition@1000000 {
-> +				label = "rootfs";
-> +				reg = <0x01000000 0x03000000>;
-> +			};
-> +			partition@4000000 {
-> +				label = "media";
-> +				reg = <0x04000000 0x8000000>;
-> +			};
-
-Partitions should be places in a "partitions" subnode:
-
-			partitions {
-				compatible = "fixed-partitions";
-
-				...
-			};
-
-Also, I'm not sure you need to put that in your example.
-
-> +		};
-> +	};
-
-
-Regards,
-
-Boris
+Thanks,
+Harald
