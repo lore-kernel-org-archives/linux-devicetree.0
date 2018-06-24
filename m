@@ -1,36 +1,58 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 3/4] soc: actions: sps: Add S900 power domains
-Date: Sun, 24 Jun 2018 15:07:42 +0200
-Message-ID: <5e267c76-1c71-2381-ee66-50a5bef1cfc2@suse.de>
-References: <20180411164036.8046-1-manivannan.sadhasivam@linaro.org>
- <20180411164036.8046-4-manivannan.sadhasivam@linaro.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/3] iio: hx711: add data-ready-delay-ns property in DT
+Date: Sun, 24 Jun 2018 14:10:48 +0100
+Message-ID: <20180624141048.7628eaac@archlinux>
+References: <20180623185420.GA17842@arbeit>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180411164036.8046-4-manivannan.sadhasivam@linaro.org>
-Content-Language: en-US
+In-Reply-To: <20180623185420.GA17842@arbeit>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, robh+dt@kernel.org
-Cc: liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, manivannanece23@gmail.com
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am 11.04.2018 um 18:40 schrieb Manivannan Sadhasivam:
-> Add power domains for Actions Semi S900 SoC.
+On Sat, 23 Jun 2018 20:54:21 +0200
+Andreas Klinger <ak@it-klinger.de> wrote:
+
+> add data-ready-delay-ns property for hx711 ADC
+> this is the delay after rising PD_SCK until DOUT is read and assumed to be
+> ready
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+
+One unconnected change.  I'm not sure it's wrong as such but it should not
+be in this patch.
+
 > ---
->  drivers/soc/actions/owl-sps.c | 58 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
+>  Documentation/devicetree/bindings/iio/adc/avia-hx711.txt | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+> index b3629405f568..8c9bcaa4d750 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+> @@ -8,11 +8,18 @@ Required properties:
+>  		See Documentation/devicetree/bindings/gpio/gpio.txt
+>   - avdd-supply:	Definition of the regulator used as analog supply
+>  
+> +Optional properties:
+> + - data-ready-delay-ns:	additional delay in nanoseconds between rising of
+> +			PD_SCK until DOUT is ready
+> +			should be less then maximum PD_SCK high time which
+> +			is 50000 in the datasheet
+> +
+>  Example:
+> -weight@0 {
+> +weight {
 
-Reviewed-by: Andreas Färber <afaerber@suse.de>
+Change has nothing to do with this patch...
 
-(Depends on bindings patch.)
-
-Thanks,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+>  	compatible = "avia,hx711";
+>  	sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
+>  	dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
+>  	avdd-suppy = <&avdd>;
+> +	data-ready-delay-ns = <1000>;
+>  };
+>  
