@@ -1,143 +1,79 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: nand: meson: add Amlogic NAND controller driver
-Date: Sun, 24 Jun 2018 00:46:59 +0200
-Message-ID: <CAFBinCBeyXf6LNaZzAw6WnsxzDAv8E=Yp2eem0xCPWMEUi6pnQ@mail.gmail.com>
-References: <20180613161314.14894-1-yixun.lan@amlogic.com> <20180613161314.14894-2-yixun.lan@amlogic.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [RFC] Configure i.MX6 RGMII pad group control registers from
+ device tree
+Date: Sun, 24 Jun 2018 04:23:34 +0000
+Message-ID: <AM0PR04MB42111E25172F6068F937ECCB804B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <f5a01de5-fc81-52c1-c2ea-edb77ecff076@ysoft.com>
+ <5ab5c58a-dc44-d1bc-2132-8704d05bf1de@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180613161314.14894-2-yixun.lan@amlogic.com>
+In-Reply-To: <5ab5c58a-dc44-d1bc-2132-8704d05bf1de@ysoft.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: yixun.lan@amlogic.com
-Cc: linux-mtd@lists.infradead.org, robh@kernel.org, boris.brezillon@bootlin.com, richard@nod.at, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, marek.vasut@gmail.com, devicetree@vger.kernel.org, liang.yang@amlogic.com, jian.hu@amlogic.com, khilman@baylibre.com, carlo@caione.org, linux-amlogic@lists.infradead.org, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+To: =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>Pengutronix Kernel Team <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Duan <fugang.duan@nxp.com>, Frank Li <frank.li@nxp.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Yixun, Hello Liang,
-
-I have a few small comments inline below
-additionally I tried to explain the reason behind
-"amlogic,mmc-syscon", clkin0 and clkin1 so Rob (or the devicetree
-maintainers in general) can give feedback. feel free to correct me
-wherever I'm wrong or provide additional notes in case I missed
-something!
-
-On Wed, Jun 13, 2018 at 10:17 AM Yixun Lan <yixun.lan@amlogic.com> wrote:
->
-> From: Liang Yang <liang.yang@amlogic.com>
->
-> Add Amlogic NAND controller dt-bindings for Meson SoC,
-> Current this driver support GXBB/GXL/AXG platform.
->
-> Signed-off-by: Liang Yang <liang.yang@amlogic.com>
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-> ---
->  .../bindings/mtd/amlogic,meson-nand.txt       | 118 ++++++++++++++++++
->  1 file changed, 118 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
->
-> diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-> new file mode 100644
-> index 000000000000..eac9f9433d5d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-> @@ -0,0 +1,118 @@
-> +Amlogic NAND Flash Controller (NFC) for GXBB/GXL/AXG family SoCs
-> +
-> +This file documents the properties in addition to those available in
-> +the MTD NAND bindings.
-> +
-> +Required properties:
-> +- compatible : contains one of:
-> +  - "amlogic,meson-gxl-nfc"
-> +  - "amlogic,meson-axg-nfc"
-the patch description states that GXBB/GXL/AXG are supported
-shouldn't you add a compatible string for GXBB as well?
-
-> +- clocks     :
-> +       A list of phandle + clock-specifier pairs for the clocks listed
-> +       in clock-names.
-> +
-> +- clock-names: Should contain the following:
-> +       "core" - NFC module gate clock
-> +       "clkin0" - Parent clock of internal mux
-> +       "clkin1" - Other parent clock of internal mux
-to give the devicetree maintainers some context on clkin0 and clkin1:
-
-older SoCs (Meson8, Meson8b - not supported by this binding/driver
-yet) had a dedicated NAND clock. there neither clkin0 or clkin1 would
-be used, instead we just had a "nand" or "interface" clock (I'm not
-aware of the actual naming in Amlogic's internal datasheets)
-
-newer SoCs do NOT have a dedicated NAND "interface" clock anymore.
-instead they are sharing the clock with the "sd_emmc_c" controller (I
-*believe* the reason for this is because sd_emmc_c and the NAND
-controller use the same pads on the SoC, pinctrl muxing controls where
-these pads are routed -> NAND and sd_emmc_c cannot be used at the same
-time, so SoC designers probably decided to re-use the clock)
-
-unfortunately the sd_emmc_c clock is not provided by the "main" clock
-controller on these newer SoCs
-instead the clock is part of the MMC controller's register space (see
-the SD_EMMC_CLOCK register in drivers/mmc/host/meson-gx-mmc.c)
-even worse: the SD_EMMC_CLOCK contains more than just clock settings
-(bit 25 enables the SDIO interrupt, which is currently not supported
-by the meson-gx-mmc driver though)
-
-the SD_EMMC_CLOCK register has a mux (CLK_SRC_MASK) to choose from
-clkin0 and clkin1 which are passed here
-the "amlogic,mmc-syscon" property is used to get a phandle to the
-sd_emmc_c syscon register space
-thus there is a bit of code duplication in the MMC and NAND drivers
-with this binding (because both need to configure the SD_EMMC_CLOCK
-register)
-
-> +
-> +- pins     : Select pins which NFC need.
-> +- nand_pins: Detail NAND pins information.
-> +               nand_pins: nand {
-> +                       mux {
-> +                               groups = "emmc_nand_d0",
-> +                                       "emmc_nand_d1",
-> +                                       "emmc_nand_d2",
-> +                                       "emmc_nand_d3",
-> +                                       "emmc_nand_d4",
-> +                                       "emmc_nand_d5",
-> +                                       "emmc_nand_d6",
-> +                                       "emmc_nand_d7",
-> +                                       "nand_ce0",
-> +                                       "nand_rb0",
-> +                                       "nand_ale",
-> +                                       "nand_cle",
-> +                                       "nand_wen_clk",
-> +                                       "nand_ren_wr";
-> +                               function = "nand";
-> +                       };
-> +               };
-> +
-> +- amlogic,mmc-syscon   : Required for NAND clocks, it's shared with SD/eMMC
-> +                               controller port C
-> +
-> +Optional children nodes:
-> +Children nodes represent the available nand chips.
-> +
-> +Optional properties:
-> +- meson-nand-user-mode :
-> +       only set 2 or 16 which mean the way of reading OOB bytes by NFC.
-as far as I know vendor specific properties should follow the naming
-schema "vendor,purpose"
-in this case this would be "amlogic,nand-user-mode"
-
-maybe Rob can comment on this?
-
-> +- meson-nand-ran-mode :
-> +       setting 0 or 1, means disable/enable scrambler which keeps the balence
-> +       of 0 and 1
-I assume 0 and 1 are the only possible values.
-to use of_property_read_bool in the driver the property would be either:
-- (absent) = scrambler is disabled
-- amlogic,nand-enable-scrambler (without any value - also same comment
-as above for the value) = scrambler is enabled
-
-
-Regards
-Martin
+Q29weSBBbmR5ICYgRnJhbmssDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJv
+bTogTWljaGFsIFZva8OhxI0gW21haWx0bzptaWNoYWwudm9rYWNAeXNvZnQuY29tXQ0KPiBTZW50
+OiBUdWVzZGF5LCBKdW5lIDEyLCAyMDE4IDExOjEwIFBNDQo+IFRvOiBsaW51eC1ncGlvQHZnZXIu
+a2VybmVsLm9yZw0KPiBDYzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBT
+aGF3biBHdW8NCj4gPHNoYXduZ3VvQGtlcm5lbC5vcmc+OyBTYXNjaGEgSGF1ZXIgPGtlcm5lbEBw
+ZW5ndXRyb25peC5kZT47IEZhYmlvDQo+IEVzdGV2YW0gPGZhYmlvLmVzdGV2YW1AbnhwLmNvbT47
+IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ow0KPiBkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZzsgQS5zLiBEb25nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47IEZhYmlvDQo+IEVzdGV2
+YW0gPGZlc3RldmFtQGdtYWlsLmNvbT47IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47
+DQo+IFN0ZWZhbiBBZ25lciA8c3RlZmFuQGFnbmVyLmNoPjsgUGVuZ3V0cm9uaXggS2VybmVsIFRl
+YW0NCj4gPGtlcm5lbEBwZW5ndXRyb25peC5kZT47IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxl
+aWpAbGluYXJvLm9yZz47IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1Ympl
+Y3Q6IFJlOiBbUkZDXSBDb25maWd1cmUgaS5NWDYgUkdNSUkgcGFkIGdyb3VwIGNvbnRyb2wgcmVn
+aXN0ZXJzIGZyb20NCj4gZGV2aWNlIHRyZWUNCj4gDQo+IE9uIDExLjYuMjAxOCAxNDozNiwgTWlj
+aGFsIFZva8OhxI0gd3JvdGU6DQo+ID4gQWhvaiwNCj4gPg0KPiA+IFRvIGNvbmZpZ3VyZSBpbmRp
+dmlkdWFsIHBhZCdzIGNoYXJhY3RlcmlzdGljcyBvbiBpLk1YNiBTb0MgYSBmc2wscGlucw0KPiA+
+ID0gPFBJTl9GVU5DX0lEIENPTkZJRz4gcHJvcGVydHkgY2FuIGJlIHVzZWQuIElzIHRoZXJlIGFu
+eSBjb252ZW5pZW50DQo+ID4gd2F5IHRvIGNvbmZpZ3VyZSB0aGUgcGFkIGdyb3VwIGNvbnRyb2wg
+cmVnaXN0ZXJzPw0KPiA+DQo+ID4gVGhlIGlzc3VlIGlzIHRoYXQgc29tZSBiaXRzIChERFJfU0VM
+IGFuZCBPRFQpIGluIHRoZSBpbmRpdmlkdWFsIFJHTUlJDQo+ID4gcGFkIGNvbnRyb2wgcmVnaXN0
+ZXJzIGFyZSByZWFkLW9ubHkuIFRvIHR3ZWFrIHRob3NlIHBhcmFtZXRlcnMgKHNpZ25hbA0KPiA+
+IHZvbHRhZ2UgYW5kIHRlcm1pbmF0aW9uIHJlc2lzdG9ycykgb25lIG5lZWQgdG8gd3JpdGUgdG8g
+dGhlIHBhZCBncm91cA0KPiA+IGNvbnRyb2wgcmVnaXN0ZXJzIGZvciB0aGUgd2hvbGUgUkdNSUkg
+cGFkIGdyb3VwLiBOYW1lbHkNCj4gPiBJT01VWENfU1dfUEFEX0NUTF9HUlBfRERSX1RZUEVfUkdN
+SUkgYW5kDQo+ID4gSU9NVVhDX1NXX1BBRF9DVExfR1JQX1JHTUlJX1RFUk0uIFRoZSBncm91cCBy
+ZWdpc3RlcnMgaW4gZ2VuZXJhbA0KPiBhcmUgbm90IGFjY2Vzc2libGUgZnJvbSB0aGUgbGlzdCBp
+biBhcmNoL2FybS9ib290L2R0cy9pbXg2ZGwtcGluZnVuYy5oLg0KPiA+DQo+ID4gSSBjb3VsZCBu
+b3QgZmluZCBhbnkgb3RoZXIgd2F5IHRvIGNoYW5nZSB0aGUgZ3JvdXAgcmVnaXN0ZXJzIHRoYW4N
+Cj4gPiBoYWNraW5nLWluIHNvbWUgbGluZXMgaW50byB0aGUgaW14NnFfaW5pdF9tYWNoaW5lKHZv
+aWQpIGZ1bmN0aW9uIGluDQo+ID4gYXJjaC9hcm0vbWFjaC1pbXgvbWFjaC1pbXg2cS5jIHNvdXJj
+ZS4gQXMgSSB3b3JrIHRvd2FyZHMgdXBzdHJlYW1pbmcNCj4gPiBteSBib2FyZCB0aGlzIHNob3Vs
+ZCBiZSBkb25lIGZyb20gbXkgZGV2aWNlIHRyZWUgb3Igc29sdmVkIGluIHNvbWUNCj4gdW5pdmVy
+c2FsIHdheS4NCj4gPg0KPiA+IEFueSBoaW50cyB3aWxsIGJlIG11Y2ggYXBwcmVjaWF0ZWQuDQo+
+ID4gTWljaGFsDQo+IA0KPiBJIGZpZ3VyZWQgb3V0IHRoaXMgaXMgbW9yZSAicGluY3RybC1pbXgu
+YyIgdGhhbiAiZGV2aWNlLXRyZWUiIHJlbGF0ZWQgc28gSSBhbQ0KPiBraW5kbHkgYWRkaW5nIG1h
+aW50YWluZXJzIG9mIHRoYXQgZmlsZSBpbiBob3BlIHNvbWVib2R5IHdpbGwgc2hlZCBzb21lIGxp
+Z2h0DQo+IHRvIGl0Lg0KPiANCj4gSSBhbSBkaXZpbmcgZGVlcGVyIGludG8gdGhlIGNvZGUgYW5k
+IGl0IHNlZW1zIHRoZXJlIHJlYWxseSBpcyBubyBnZW5lcmljDQo+IG9wdGlvbiB0byBzZXQgdGhl
+IGkuTVg2IHBhZCBncm91cCBjb250cm9sIHJlZ2lzdGVycyBmcm9tIGRldmljZSB0cmVlLg0KPiBP
+ciBhbSBJIGxvb2tpbmcgYXQgdGhlIHByb2JsZW0gZnJvbSBhIHdyb25nIGFuZ2xlPw0KPiANCg0K
+WWVzLCB0aGVyZSdzIGEgZmV3IHNwZWNpYWwgcGFkIGdyb3VwIGN0cmwgcmVnaXN0ZXJzIChlLmcu
+IERSQU0gYW5kIFJHTUlJIGZvciBteDZxKQ0Kd2hpY2ggYXJlIG5vdCBhZGRlZCBJbiB0aGUgcGlu
+Y3RybCBkcml2ZXIgc3VwcG9ydC4NCg0KPiBIb3cgc2hvdWxkIHdlIGRlYWwgd2l0aCBib2FyZHMg
+dGhhdCBuZWVkIHRvIGNvbmZpZ3VyZSBzb21lIHBhZA0KPiBjaGFyYWN0ZXJpc3RpY3MgYXZhaWxh
+YmxlIG9ubHkgdGhyb3VnaCB0aGUgcGFkIGdyb3VwIGNvbnRyb2wgcmVnaXN0ZXJzPw0KPiANCg0K
+QW5keSwNCkhvdyBkbyB3ZSBoYW5kbGUgaXQgaW50ZXJuYWxseT8NCg0KPiBJIGFsc28gcmFpc2Vk
+IHRoaXMgcXVlc3Rpb24gYXQgdGhlIE5YUCBjb21tdW5pdHkgZm9ydW0gWzFdIGFuZCBnZXQgcXVp
+dGUNCj4gdW5zYXRpc2Z5aW5nIGFuc3dlciBzbyBmYXIuIEkgd291bGQgbG92ZSB0byBmaW5kL2lt
+cGxlbWVudCBhIHByb3BlciBhbmQNCj4gdW5pdmVyc2FsIHNvbHV0aW9uLg0KPiANCg0KVGhlcmUn
+cmUgcHJvYmFibHkgdHdvIHdheXMgdG8gZG8gaXQ6DQoxKSBoYW5kbGUgaXQgaW4gZmVjIGRyaXZl
+ciBieSBwYXJzaW5nIGEgc3BlY2lmaWMgcHJvcGVydHkNCjIpIEFkZCBhIG5ldyBwYWQgZ3JvdXAg
+aW50byBwaW5jdHJsIGRyaXZlciBzdXBwb3J0DQplLmcuDQpNWDZRX1BBRF9DVExfR1JQX1JHTUlJ
+X1RFUk0NCk1YNlFfUEFEX0NUTF9HUlBfRERSX1RZUEVfUkdNSUkNCg0KSSBtYXkgcHJlZmVyIHRv
+IDIpLg0KDQpSZWdhcmRzDQpEb25nIEFpc2hlbmcNCg0KPiBUaGFua3MgaW4gYWR2YW5jZSBmb3Ig
+eW91ciB0aW1lLA0KPiBNaWNoYWwNCj4gDQo+IFsxXQ0KPiBodHRwczovL2VtZWEwMS5zYWZlbGlu
+a3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGY28NCj4gbW11bml0
+eS5ueHAuY29tJTJGdGhyZWFkJTJGNDc3NDY0JmRhdGE9MDIlN0MwMSU3Q2Fpc2hlbmcuZG9uZyU0
+DQo+IDBueHAuY29tJTdDYTNlNTQ2M2ViMDZhNDdmMTEyMTAwOGQ1ZDA3NjhhMDQlN0M2ODZlYTFk
+M2JjMmI0YzZmYTkNCj4gMmNkOTljNWMzMDE2MzUlN0MwJTdDMSU3QzYzNjY0NDEyOTkxNDE2MjQ5
+NSZzZGF0YT14cXRCUzh1WCUyQlN6cQ0KPiA1bTZ0Yk5hTHpDa0I3ZXpnSFNueXU5R1EzSzEzY1c4
+JTNEJnJlc2VydmVkPTANCg==
