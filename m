@@ -1,94 +1,84 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 2/3] iio: hx711: add delay until DOUT is ready
-Date: Sun, 24 Jun 2018 14:12:11 +0100
-Message-ID: <20180624141211.3765219d@archlinux>
-References: <20180623185447.GA17853@arbeit>
+Subject: Re: [PATCH v3 1/2] dt-bindings: iio: Add Spreadtrum SC27XX PMICs
+ ADC controller documentation
+Date: Sun, 24 Jun 2018 14:28:04 +0100
+Message-ID: <20180624142804.06ea3433@archlinux>
+References: <900586c7a4ce55818ab330c738f306c7452191ef.1529550463.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180623185447.GA17853@arbeit>
+In-Reply-To: <900586c7a4ce55818ab330c738f306c7452191ef.1529550463.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Klinger <ak@it-klinger.de>
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, freeman.liu@spreadtrum.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 23 Jun 2018 20:54:47 +0200
-Andreas Klinger <ak@it-klinger.de> wrote:
+On Thu, 21 Jun 2018 11:14:04 +0800
+Baolin Wang <baolin.wang@linaro.org> wrote:
 
-> On a system with parasitic capacities it turned out that DOUT is not ready
-> after 100 ns after PD_SCK has raised. A measurement showed almost 1000 ns
-> until DOUT has reached its correct value.
+> This patch adds the binding documentation for Spreadtrum SC27XX series
+> PMICs ADC controller device.
 > 
-> With this patch its now possible to wait until data is ready.
-> 
-> The wait time should not be higher than the maximum PD_SCK high time which
-> is corresponding to the datasheet 50000 ns.
-> 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-
-This looks fine to me.  Will pick up once we have a DT review for the binding.
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
 Thanks,
 
 Jonathan
 
 > ---
->  drivers/iio/adc/hx711.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+> Changes since v2:
+>  - Add reviewed tag from Rob.
 > 
-> diff --git a/drivers/iio/adc/hx711.c b/drivers/iio/adc/hx711.c
-> index 9430b54121e0..41e26ef324ee 100644
-> --- a/drivers/iio/adc/hx711.c
-> +++ b/drivers/iio/adc/hx711.c
-> @@ -97,6 +97,13 @@ struct hx711_data {
->  	 * 2x32-bit channel + 64-bit timestamp
->  	 */
->  	u32			buffer[4];
-> +	/*
-> +	 * delay after a rising edge on SCK until the data is ready DOUT
-> +	 * this is dependent on the hx711 where the datasheet tells a
-> +	 * maximum value of 100 ns
-> +	 * but also on potential parasitic capacities on the wiring
-> +	 */
-> +	u32			data_ready_delay_ns;
->  };
->  
->  static int hx711_cycle(struct hx711_data *hx711_data)
-> @@ -110,6 +117,14 @@ static int hx711_cycle(struct hx711_data *hx711_data)
->  	 */
->  	preempt_disable();
->  	gpiod_set_value(hx711_data->gpiod_pd_sck, 1);
+> Changes since v1:
+>  - No updates.
+> ---
+>  .../bindings/iio/adc/sprd,sc27xx-adc.txt           |   36 ++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt b/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
+> new file mode 100644
+> index 0000000..8aad960
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
+> @@ -0,0 +1,36 @@
+> +Spreadtrum SC27XX series PMICs ADC binding
 > +
-> +	/*
-> +	 * wait until DOUT is ready
-> +	 * it turned out that parasitic capacities are extending the time
-> +	 * until DOUT has reached it's value
-> +	 */
-> +	ndelay(hx711_data->data_ready_delay_ns);
+> +Required properties:
+> +- compatible: Should be one of the following.
+> +	"sprd,sc2720-adc"
+> +	"sprd,sc2721-adc"
+> +	"sprd,sc2723-adc"
+> +	"sprd,sc2730-adc"
+> +	"sprd,sc2731-adc"
+> +- reg: The address offset of ADC controller.
+> +- interrupt-parent: The interrupt controller.
+> +- interrupts: The interrupt number for the ADC device.
+> +- #io-channel-cells: Number of cells in an IIO specifier.
+> +- hwlocks: Reference to a phandle of a hwlock provider node.
 > +
->  	val = gpiod_get_value(hx711_data->gpiod_dout);
->  	/*
->  	 * here we are not waiting for 0.2 us as suggested by the datasheet,
-> @@ -458,6 +473,7 @@ static const struct iio_chan_spec hx711_chan_spec[] = {
->  static int hx711_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> +	struct device_node *np = dev->of_node;
->  	struct hx711_data *hx711_data;
->  	struct iio_dev *indio_dev;
->  	int ret;
-> @@ -530,6 +546,13 @@ static int hx711_probe(struct platform_device *pdev)
->  	hx711_data->gain_set = 128;
->  	hx711_data->gain_chan_a = 128;
->  
-> +	ret = of_property_read_u32(np, "data-ready-delay-ns",
-> +					&hx711_data->data_ready_delay_ns);
-> +	if (ret < 0) {
-> +		dev_warn(dev, "data-ready-delay-ns not set - assuming 0 ns\n");
-> +		hx711_data->data_ready_delay_ns = 0;
-> +	}
+> +Example:
 > +
->  	platform_set_drvdata(pdev, indio_dev);
->  
->  	indio_dev->name = "hx711";
+> +	sc2731_pmic: pmic@0 {
+> +		compatible = "sprd,sc2731";
+> +		reg = <0>;
+> +		spi-max-frequency = <26000000>;
+> +		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		pmic_adc: adc@480 {
+> +			compatible = "sprd,sc2731-adc";
+> +			reg = <0x480>;
+> +			interrupt-parent = <&sc2731_pmic>;
+> +			interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+> +			#io-channel-cells = <1>;
+> +			hwlocks = <&hwlock 4>;
+> +		};
+> +	};
