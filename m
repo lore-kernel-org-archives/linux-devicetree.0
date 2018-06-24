@@ -1,84 +1,63 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: iio: Add Spreadtrum SC27XX PMICs
- ADC controller documentation
-Date: Sun, 24 Jun 2018 14:28:04 +0100
-Message-ID: <20180624142804.06ea3433@archlinux>
-References: <900586c7a4ce55818ab330c738f306c7452191ef.1529550463.git.baolin.wang@linaro.org>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 4/4] soc: actions: Fix help text in Kconfig for
+ OWL_PM_DOMAINS
+Date: Sun, 24 Jun 2018 15:28:30 +0200
+Message-ID: <62ef1835-8db9-f1e8-53b9-4cd74b5d416d@suse.de>
+References: <20180411164036.8046-1-manivannan.sadhasivam@linaro.org>
+ <20180411164036.8046-5-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <900586c7a4ce55818ab330c738f306c7452191ef.1529550463.git.baolin.wang@linaro.org>
+In-Reply-To: <20180411164036.8046-5-manivannan.sadhasivam@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, freeman.liu@spreadtrum.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: robh+dt@kernel.org, liuwei@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, manivannanece23@gmail.com, Jeff Chen <jeff.chen@actions-semi.com>, "Thomas C. Liau" <thomas.liau@actions-semi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 21 Jun 2018 11:14:04 +0800
-Baolin Wang <baolin.wang@linaro.org> wrote:
+Hi Mani,
 
-> This patch adds the binding documentation for Spreadtrum SC27XX series
-> PMICs ADC controller device.
+Am 11.04.2018 um 18:40 schrieb Manivannan Sadhasivam:
+> OWL_PM_DOMAINS is being used by 3 SoCs of OWL family. This fixes
+> the wording to use family name OWL instead of SoC name S500.
 > 
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
-> Changes since v2:
->  - Add reviewed tag from Rob.
+>  drivers/soc/actions/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Changes since v1:
->  - No updates.
-> ---
->  .../bindings/iio/adc/sprd,sc27xx-adc.txt           |   36 ++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
+> diff --git a/drivers/soc/actions/Kconfig b/drivers/soc/actions/Kconfig
+> index 9d68b5a771c3..26c3155d3738 100644
+> --- a/drivers/soc/actions/Kconfig
+> +++ b/drivers/soc/actions/Kconfig
+> @@ -10,7 +10,7 @@ config OWL_PM_DOMAINS
+>  	select PM_GENERIC_DOMAINS
+>  	help
+>  	  Say 'y' here to enable support for Smart Power System (SPS)
+> -	  power-gating on Actions Semiconductor S500 SoC.
+> +	  power-gating on Actions Semiconductor OWL SoCs.
+
+Thanks for spotting this. However, repeating OWL from the title (which I
+think should be spelled Owl in free text, given that I also read Falcon
+as another bird for GT9 [*]) does not seem too helpful for people
+wondering whether or not to enable the driver.
+
+I would much rather do a patch updating this to "S500 and S700 SoCs"
+with Fixes and then just add S900 as part of your preceding patch.
+
+Regards,
+Andreas
+
+[*] https://androidpc.es/blog/2015/11/10/actions-gt7/
+
+>  	  If unsure, say 'n'.
+>  
+>  endif
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt b/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
-> new file mode 100644
-> index 0000000..8aad960
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
-> @@ -0,0 +1,36 @@
-> +Spreadtrum SC27XX series PMICs ADC binding
-> +
-> +Required properties:
-> +- compatible: Should be one of the following.
-> +	"sprd,sc2720-adc"
-> +	"sprd,sc2721-adc"
-> +	"sprd,sc2723-adc"
-> +	"sprd,sc2730-adc"
-> +	"sprd,sc2731-adc"
-> +- reg: The address offset of ADC controller.
-> +- interrupt-parent: The interrupt controller.
-> +- interrupts: The interrupt number for the ADC device.
-> +- #io-channel-cells: Number of cells in an IIO specifier.
-> +- hwlocks: Reference to a phandle of a hwlock provider node.
-> +
-> +Example:
-> +
-> +	sc2731_pmic: pmic@0 {
-> +		compatible = "sprd,sc2731";
-> +		reg = <0>;
-> +		spi-max-frequency = <26000000>;
-> +		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		pmic_adc: adc@480 {
-> +			compatible = "sprd,sc2731-adc";
-> +			reg = <0x480>;
-> +			interrupt-parent = <&sc2731_pmic>;
-> +			interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> +			#io-channel-cells = <1>;
-> +			hwlocks = <&hwlock 4>;
-> +		};
-> +	};
+
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
