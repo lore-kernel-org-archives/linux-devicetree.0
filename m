@@ -1,116 +1,104 @@
-From: Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v4 1/2] dt-binding: hwmon: Add NPCM7xx PWM and Fan controller documentation
-Date: Sun, 24 Jun 2018 15:41:54 +0300
-Message-ID: <20180624124155.82412-2-tmaimon77@gmail.com>
-References: <20180624124155.82412-1-tmaimon77@gmail.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 1/4] dt-bindings: power: Add Actions Semi S900 SPS
+Date: Sun, 24 Jun 2018 15:04:21 +0200
+Message-ID: <a261bae6-d2fa-a550-7232-7647ce0ac0e2@suse.de>
+References: <20180411164036.8046-1-manivannan.sadhasivam@linaro.org>
+ <20180411164036.8046-2-manivannan.sadhasivam@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180624124155.82412-1-tmaimon77@gmail.com>
+In-Reply-To: <20180411164036.8046-2-manivannan.sadhasivam@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, linux@roeck-us.net, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, robh+dt@kernel.org
+Cc: liuwei@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, manivannanece23@gmail.com, Jeff Chen <jeff.chen@actions-semi.com>, "Thomas C. Liau" <thomas.liau@actions-semi.com>
 List-Id: devicetree@vger.kernel.org
 
-Added device tree binding documentation for Nuvoton BMC
-NPCM7xx Pulse Width Modulation (PWM)  and Fan tach controller.
-The PWM controller can support upto 8 PWM output ports.
-The Fan tach controller can support upto 16 tachometer inputs.
+Hi Mani,
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- .../devicetree/bindings/hwmon/npcm750-pwm-fan.txt  | 84 ++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
+Am 11.04.2018 um 18:40 schrieb Manivannan Sadhasivam:
+> Define power domains for Actions Semi S900 SoC Smart Power System (SPS).
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  .../devicetree/bindings/power/actions,owl-sps.txt  |  2 ++
+>  include/dt-bindings/power/owl-s900-powergate.h     | 23 ++++++++++++++++++++++
+>  2 files changed, 25 insertions(+)
+>  create mode 100644 include/dt-bindings/power/owl-s900-powergate.h
+> 
+> diff --git a/Documentation/devicetree/bindings/power/actions,owl-sps.txt b/Documentation/devicetree/bindings/power/actions,owl-sps.txt
+> index 78edd63641e8..a3571937b019 100644
+> --- a/Documentation/devicetree/bindings/power/actions,owl-sps.txt
+> +++ b/Documentation/devicetree/bindings/power/actions,owl-sps.txt
+> @@ -3,11 +3,13 @@ Actions Semi Owl Smart Power System (SPS)
+>  Required properties:
+>  - compatible          :  "actions,s500-sps" for S500
+>                           "actions,s700-sps" for S700
+> +                         "actions,s900-sps" for S900
+>  - reg                 :  Offset and length of the register set for the device.
+>  - #power-domain-cells :  Must be 1.
+>                           See macros in:
+>                            include/dt-bindings/power/owl-s500-powergate.h for S500
+>                            include/dt-bindings/power/owl-s700-powergate.h for S700
+> +                          include/dt-bindings/power/owl-s900-powergate.h for S900
+>  
+>  
+>  Example:
+> diff --git a/include/dt-bindings/power/owl-s900-powergate.h b/include/dt-bindings/power/owl-s900-powergate.h
+> new file mode 100644
+> index 000000000000..f1aaf761112b
+> --- /dev/null
+> +++ b/include/dt-bindings/power/owl-s900-powergate.h
+> @@ -0,0 +1,23 @@
+> +// SPDX-License-Identifier: GPL-2.0+
 
-diff --git a/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt b/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
-new file mode 100644
-index 000000000000..a9eacda34f92
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
-@@ -0,0 +1,84 @@
-+Nuvoton NPCM7xx PWM and Fan Tacho controller device driver
-+
-+The NPCM7xx has two identical Pulse-width modulation (PWM) controller modules,
-+Each PWM module has four PWM controller outputs, Totally 8 PWM controller outputs.
-+
-+The NPCM7xx has eight identical Fan tachometer controller modules,
-+Each Fan module has two Fan controller inputs, Totally 16 Fan controller inputs.
-+
-+Required properties for pwm-fan node:
-+- compatible	: "nuvoton,npcm750-pwm-fan" for Poleg NPCM7XX.
-+- reg 			: specifies physical base address and size of the registers.
-+- reg-names 	: must contain:
-+					* "pwm-base" for the PWM registers.
-+ 					* "fan-base" for the Fan registers.
-+- clocks		: phandle of reference clocks.
-+- clock-names	: must contain
-+					* "clk_apb3" for clock of PWM controller.
-+ 					* "clk_apb4" for clock of Fan controller.
-+- interrupts	: contain the Fan interrupts with flags for falling edge.
-+- pinctrl-names	: a pinctrl state named "default" must be defined.
-+- pinctrl-0 	: phandle referencing pin configuration of the PWM and Fan
-+					controller ports.
-+
-+pwm subnode format:
-+===================
-+Under pwm subnode can be upto 8 child nodes, each child node representing a PWM channel.
-+Each pwm subnode must have one PWM channel and atleast one Fan tach channel.
-+
-+For PWM channel can be configured cooling-levels to create cooling device.
-+Cooling device could be bound to a thermal zone for the thermal control.
-+
-+Required properties for each child node:
-+- pwm-ch : specify the PWM output channel.
-+			integer value in the range 0 through 7, that represent
-+			the PWM channel number that used.
-+
-+- fan-ch : specify the Fan input channel.
-+			integer value in the range 0 through 15, that represent
-+			the Fan channel number that used.
-+
-+			At least one Fan tach input channel is required
-+
-+Optional property for each child node:
-+- cooling-levels: PWM duty cycle values in a range from 0 to 255
-+                  which correspond to thermal cooling states.
-+
-+Examples:
-+
-+pwm_fan:pwm_fan_controller@103000 {
-+	compatible = "nuvoton,npcm750-pwm-fan";
-+	reg = <0x103000 0x2000>,
-+		<0x180000 0x8000>;
-+	reg-names = "pwm_base", "fan_base";
-+	clocks = <&clk NPCM7XX_CLK_APB3>,
-+		<&clk NPCM7XX_CLK_APB4>;
-+	clock-names = "clk_apb3","clk_apb4";
-+	interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-+			<GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-+			<GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-+			<GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-+			<GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-+			<GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-+			<GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-+			<GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm0_pins &pwm1_pins &pwm2_pins
-+			&fanin0_pins &fanin1_pins &fanin2_pins
-+			&fanin3_pins &fanin4_pins>;
-+
-+			pwm@0 {
-+				pwm-ch = /bits/ 8 <0x00>;
-+				fan-ch = /bits/ 8 <0x00 0x01>;
-+				cooling-levels = <127 255>;
-+				};
-+			pwm@1 {
-+				pwm-ch = /bits/ 8 <0x01>;
-+				fan-ch = /bits/ 8 <0x02 0x03>;
-+				};
-+			pwm@2 {
-+				pwm-ch = /bits/ 8 <0x02>;
-+				fan-ch = /bits/ 8 <0x04>;
-+				};
-+
-+};
-\ No newline at end of file
+checkpatch.pl warns about this line due to not using /* ... */ syntax
+for headers. I could fix that up on my own, but it made me realize that
+you are licensing this file under GPL-2.0+ only, whereas the .dts[i] is
+supposed to be dual-licensed.
+
+Can you please give your consent to make this
+
+/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+
+like my S500 and S700 bindings?
+
+Question: Should it still be GPL-2.0+ or the new GPL-2.0-or-later?
+
+Otherwise looks fine, except that I'll need a topic branch
+(v4.19/s900-sps-bindings) if we want to merge the driver portion at the
+same time.
+
+Regards,
+Andreas
+
+> +/*
+> + * Actions Semi S900 SPS
+> + *
+> + * Copyright (c) 2018 Linaro Ltd.
+> + */
+> +#ifndef DT_BINDINGS_POWER_OWL_S900_POWERGATE_H
+> +#define DT_BINDINGS_POWER_OWL_S900_POWERGATE_H
+> +
+> +#define S900_PD_GPU_B	0
+> +#define S900_PD_VCE	1
+> +#define S900_PD_SENSOR	2
+> +#define S900_PD_VDE	3
+> +#define S900_PD_HDE	4
+> +#define S900_PD_USB3	5
+> +#define S900_PD_DDR0	6
+> +#define S900_PD_DDR1	7
+> +#define S900_PD_DE	8
+> +#define S900_PD_NAND	9
+> +#define S900_PD_USB2_H0	10
+> +#define S900_PD_USB2_H1	11
+> +
+> +#endif
+> 
+
+
 -- 
-2.14.1
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
