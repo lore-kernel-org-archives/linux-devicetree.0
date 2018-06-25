@@ -1,47 +1,50 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH V2 2/2] mtd: parsers: trx: add of_match_table with the new DT
- binding
-Date: Tue, 26 Jun 2018 00:05:08 +0200
-Message-ID: <20180625220508.21242-2-zajec5@gmail.com>
-References: <20180612104434.15232-1-zajec5@gmail.com>
- <20180625220508.21242-1-zajec5@gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v8 2/7] Bluetooth: btqca: Rename ROME specific functions
+ to Generic functions
+Date: Mon, 25 Jun 2018 16:00:50 -0700
+Message-ID: <20180625230050.GG129942@google.com>
+References: <20180625134013.19684-1-bgodavar@codeaurora.org>
+ <20180625134013.19684-3-bgodavar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180625220508.21242-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Jonas Gorski <jonas.gorski@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180625134013.19684-3-bgodavar@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKVGhpcyBhbGxvd3MgdXNp
-bmcgVFJYIHBhcnNlciB0byBmaW5kIFRSWCBwYXJ0aXRpb25zIG9uIGZsYXNoIGRldmljZQpkZXNj
-cmliZWQgaW4gRFQgdXNpbmcgYSBwcm9wZXIgYmluZGluZy4gSXQncyB1c2VmdWwgZm9yIGRldmlj
-ZXMgc3RvcmluZwpmaXJtd2FyZSBvbiBhIHNlcGFyYXRlZCBmbGFzaCBhbmQgaGF2aW5nIHJvb3Rm
-cyBwYXJ0aXRpb24gaW4gaXQuCgpTaWduZWQtb2ZmLWJ5OiBSYWZhxYIgTWnFgmVja2kgPHJhZmFs
-QG1pbGVja2kucGw+Ci0tLQpWMjogVXBkYXRlIHRvIHN1cHBvcnQgb25seSB0aGUgImJyY20sdHJ4
-IiBiaW5kaW5nCi0tLQogZHJpdmVycy9tdGQvcGFyc2Vycy9wYXJzZXJfdHJ4LmMgfCA3ICsrKysr
-KysKIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9kcml2ZXJz
-L210ZC9wYXJzZXJzL3BhcnNlcl90cnguYyBiL2RyaXZlcnMvbXRkL3BhcnNlcnMvcGFyc2VyX3Ry
-eC5jCmluZGV4IGRmMzYwYTc1ZTFlYi4uZjU4MGE0MWE1MmI4IDEwMDY0NAotLS0gYS9kcml2ZXJz
-L210ZC9wYXJzZXJzL3BhcnNlcl90cnguYworKysgYi9kcml2ZXJzL210ZC9wYXJzZXJzL3BhcnNl
-cl90cnguYwpAQCAtMTE2LDkgKzExNiwxNiBAQCBzdGF0aWMgaW50IHBhcnNlcl90cnhfcGFyc2Uo
-c3RydWN0IG10ZF9pbmZvICptdGQsCiAJcmV0dXJuIGk7CiB9OwogCitzdGF0aWMgY29uc3Qgc3Ry
-dWN0IG9mX2RldmljZV9pZCBtdGRfcGFyc2VyX3RyeF9vZl9tYXRjaF90YWJsZVtdID0geworCXsg
-LmNvbXBhdGlibGUgPSAiYnJjbSx0cngiIH0sCisJe30sCit9OworTU9EVUxFX0RFVklDRV9UQUJM
-RShvZiwgbXRkX3BhcnNlcl90cnhfb2ZfbWF0Y2hfdGFibGUpOworCiBzdGF0aWMgc3RydWN0IG10
-ZF9wYXJ0X3BhcnNlciBtdGRfcGFyc2VyX3RyeCA9IHsKIAkucGFyc2VfZm4gPSBwYXJzZXJfdHJ4
-X3BhcnNlLAogCS5uYW1lID0gInRyeCIsCisJLm9mX21hdGNoX3RhYmxlID0gbXRkX3BhcnNlcl90
-cnhfb2ZfbWF0Y2hfdGFibGUsCiB9OwogbW9kdWxlX210ZF9wYXJ0X3BhcnNlcihtdGRfcGFyc2Vy
-X3RyeCk7CiAKLS0gCjIuMTMuNwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tdGQvCg==
+Seems you have to respin anyway due to comments in other patches, so I
+squeeze in some optional improvements of the commit message.
+
+> Subject: Rename ROME specific functions to Generic functions
+
+nit: s/Generic/generic/
+
+On Mon, Jun 25, 2018 at 07:10:08PM +0530, Balakrishna Godavarthi wrote:
+> Some of the QCA BTSoC ROME functions, are used for different versions
+> or different make of BTSoC's. Instead of duplicating the same functions
+> for new chip, updating names of the functions that are used for both
+
+nit: s/updating/update/
+
+> chip's to keep this generic and would help in future when we would have
+
+nit: s/chip's/chips/
+
+> new BT SoC
+
+nit: you might want to start a new sentence here, it's a long churn to
+read :) optionally you could just say 'logs' instead of 'bt_dev_info,
+bt_dev_err and bt_dev_dbg'.
+
+> and to have generic text in bt_dev_info, bt_dev_err and
+> bt_dev_dbg updated from ROME to QCA where ever possible. This avoids
+> confusion to user, when using the future Qualcomm Bluetooth SoC's.
+> Updated BT_DBG, BT_ERR and BT_INFO with bt_dev_dbg, bt_dev_err and
+> bt_dev_info where ever applicable.
+> 
+> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
