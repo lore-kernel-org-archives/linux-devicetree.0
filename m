@@ -1,13 +1,12 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v3 22/24] drm/sun4i: DW HDMI: Expand algorithm
- for possible crtcs
-Date: Mon, 25 Jun 2018 14:03:02 +0200
-Message-ID: <20180625120304.7543-23-jernej.skrabec@siol.net>
+Subject: [PATCH v3 23/24] ARM: dts: sun8i: r40: Add HDMI pipeline
+Date: Mon, 25 Jun 2018 14:03:03 +0200
+Message-ID: <20180625120304.7543-24-jernej.skrabec@siol.net>
 References: <20180625120304.7543-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBG5VYPMQKGQEUCFBTHA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBHVVYPMQKGQE3PWFQLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180625120304.7543-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,87 +19,325 @@ To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@publ
 Cc: airlied-cv59FeDIM0c@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-drm_of_find_possible_crtcs() doesn't work when DW HDMI encoder is
-connected to TCON (crtc) through mux in TCON TOP.
+Add all entries needed for HDMI to function properly.
 
-In that case TCON TOP HDMI mux input port has to be manually traversed
-and checked if it matches any known crtc.
+Since R40 has highly configurable pipeline, both mixers and both TCON
+TVs are added. Board specific DT should then connect them together
+trough TCON TOP muxers to best fit the purpose of the board.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 46 ++++++++++++++++++++++++++-
- 1 file changed, 45 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/sun8i-r40.dtsi | 269 +++++++++++++++++++++++++++++++
+ 1 file changed, 269 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-index 9f40a44b456b..d443886e055b 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-@@ -12,6 +12,7 @@
- #include <drm/drm_crtc_helper.h>
+diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+index 173dcc1652d2..a2a75fb04caf 100644
+--- a/arch/arm/boot/dts/sun8i-r40.dtsi
++++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+@@ -42,8 +42,11 @@
+  */
  
- #include "sun8i_dw_hdmi.h"
-+#include "sun8i_tcon_top.h"
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/sun8i-de2.h>
+ #include <dt-bindings/clock/sun8i-r40-ccu.h>
++#include <dt-bindings/clock/sun8i-tcon-top.h>
+ #include <dt-bindings/reset/sun8i-r40-ccu.h>
++#include <dt-bindings/reset/sun8i-de2.h>
  
- static void sun8i_dw_hdmi_encoder_mode_set(struct drm_encoder *encoder,
- 					   struct drm_display_mode *mode,
-@@ -41,6 +42,48 @@ sun8i_dw_hdmi_mode_valid(struct drm_connector *connector,
- 	return MODE_OK;
- }
+ / {
+ 	#address-cells = <1>;
+@@ -99,12 +102,76 @@
+ 		};
+ 	};
  
-+static bool sun8i_dw_hdmi_node_is_tcon_top(struct device_node *node)
-+{
-+	return !!of_match_node(sun8i_tcon_top_of_table, node);
-+}
++	de: display-engine {
++		compatible = "allwinner,sun8i-r40-display-engine",
++			     "allwinner,sun8i-h3-display-engine";
++		allwinner,pipelines = <&mixer0>, <&mixer1>;
++		status = "disabled";
++	};
 +
-+static u32 sun8i_dw_hdmi_find_possible_crtcs(struct drm_device *drm,
-+					     struct device_node *node)
-+{
-+	struct device_node *port, *ep, *remote, *remote_port;
-+	u32 crtcs = 0;
-+
-+	port = of_graph_get_port_by_id(node, 0);
-+	if (!port)
-+		return 0;
-+
-+	ep = of_get_next_available_child(port, NULL);
-+	if (!ep)
-+		return 0;
-+
-+	remote = of_graph_get_remote_port_parent(ep);
-+	if (!remote)
-+		return 0;
-+
-+	if (sun8i_dw_hdmi_node_is_tcon_top(remote)) {
-+		port = of_graph_get_port_by_id(remote, 4);
-+		if (!port)
-+			return 0;
-+
-+		for_each_child_of_node(port, ep) {
-+			remote_port = of_graph_get_remote_port(ep);
-+			if (remote_port) {
-+				crtcs |= drm_crtc_port_mask(drm, remote_port);
-+				of_node_put(remote_port);
-+			}
-+		}
-+	} else {
-+		crtcs = drm_of_find_possible_crtcs(drm, node);
-+	}
-+
-+	return crtcs;
-+}
-+
- static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 			      void *data)
- {
-@@ -63,7 +106,8 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 	hdmi->dev = &pdev->dev;
- 	encoder = &hdmi->encoder;
+ 	soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges;
  
--	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
-+	encoder->possible_crtcs =
-+		sun8i_dw_hdmi_find_possible_crtcs(drm, dev->of_node);
- 	/*
- 	 * If we failed to find the CRTC(s) which this encoder is
- 	 * supposed to be connected to, it's because the CRTC has
++		display_clocks: clock@1000000 {
++			compatible = "allwinner,sun8i-r40-de2-clk",
++				     "allwinner,sun8i-h3-de2-clk";
++			reg = <0x01000000 0x100000>;
++			clocks = <&ccu CLK_DE>,
++				 <&ccu CLK_BUS_DE>;
++			clock-names = "mod",
++				      "bus";
++			resets = <&ccu RST_BUS_DE>;
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++		};
++
++		mixer0: mixer@1100000 {
++			compatible = "allwinner,sun8i-r40-de2-mixer-0";
++			reg = <0x01100000 0x100000>;
++			clocks = <&display_clocks CLK_BUS_MIXER0>,
++				 <&display_clocks CLK_MIXER0>;
++			clock-names = "bus",
++				      "mod";
++			resets = <&display_clocks RST_MIXER0>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				mixer0_out: port@1 {
++					reg = <1>;
++					mixer0_out_tcon_top: endpoint {
++						remote-endpoint = <&tcon_top_mixer0_in_mixer0>;
++					};
++				};
++			};
++		};
++
++		mixer1: mixer@1200000 {
++			compatible = "allwinner,sun8i-r40-de2-mixer-1";
++			reg = <0x01200000 0x100000>;
++			clocks = <&display_clocks CLK_BUS_MIXER1>,
++				 <&display_clocks CLK_MIXER1>;
++			clock-names = "bus",
++				      "mod";
++			resets = <&display_clocks RST_WB>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				mixer1_out: port@1 {
++					reg = <1>;
++					mixer1_out_tcon_top: endpoint {
++						remote-endpoint = <&tcon_top_mixer1_in_mixer1>;
++					};
++				};
++			};
++		};
++
+ 		nmi_intc: interrupt-controller@1c00030 {
+ 			compatible = "allwinner,sun7i-a20-sc-nmi";
+ 			interrupt-controller;
+@@ -451,6 +518,163 @@
+ 			#size-cells = <0>;
+ 		};
+ 
++		tcon_top: tcon-top@1c70000 {
++			compatible = "allwinner,sun8i-r40-tcon-top";
++			reg = <0x01c70000 0x1000>;
++			clocks = <&ccu CLK_BUS_TCON_TOP>,
++				 <&ccu CLK_TCON_TV0>,
++				 <&ccu CLK_TVE0>,
++				 <&ccu CLK_TCON_TV1>,
++				 <&ccu CLK_TVE1>,
++				 <&ccu CLK_DSI_DPHY>;
++			clock-names = "bus",
++				      "tcon-tv0",
++				      "tve0",
++				      "tcon-tv1",
++				      "tve1",
++				      "dsi";
++			clock-output-names = "tcon-top-tv0",
++					     "tcon-top-tv1",
++					     "tcon-top-dsi";
++			resets = <&ccu RST_BUS_TCON_TOP>;
++			#clock-cells = <1>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				tcon_top_mixer0_in: port@0 {
++					reg = <0>;
++
++					tcon_top_mixer0_in_mixer0: endpoint {
++						remote-endpoint = <&mixer0_out_tcon_top>;
++					};
++				};
++
++				tcon_top_mixer0_out: port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <1>;
++
++					tcon_top_mixer0_out_tcon_lcd0: endpoint@0 {
++						reg = <0>;
++					};
++
++					tcon_top_mixer0_out_tcon_lcd1: endpoint@1 {
++						reg = <1>;
++					};
++
++					tcon_top_mixer0_out_tcon_tv0: endpoint@2 {
++						reg = <2>;
++					};
++
++					tcon_top_mixer0_out_tcon_tv1: endpoint@3 {
++						reg = <3>;
++					};
++				};
++
++				tcon_top_mixer1_in: port@2 {
++					reg = <2>;
++
++					tcon_top_mixer1_in_mixer1: endpoint {
++						remote-endpoint = <&mixer1_out_tcon_top>;
++					};
++				};
++
++				tcon_top_mixer1_out: port@3 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <3>;
++
++					tcon_top_mixer1_out_tcon_lcd0: endpoint@0 {
++						reg = <0>;
++					};
++
++					tcon_top_mixer1_out_tcon_lcd1: endpoint@1 {
++						reg = <1>;
++					};
++
++					tcon_top_mixer1_out_tcon_tv0: endpoint@2 {
++						reg = <2>;
++					};
++
++					tcon_top_mixer1_out_tcon_tv1: endpoint@3 {
++						reg = <3>;
++					};
++				};
++
++				tcon_top_hdmi_in: port@4 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <4>;
++
++					tcon_top_hdmi_in_tcon_tv0: endpoint@0 {
++						reg = <0>;
++					};
++
++					tcon_top_hdmi_in_tcon_tv1: endpoint@1 {
++						reg = <1>;
++					};
++				};
++
++				tcon_top_hdmi_out: port@5 {
++					reg = <5>;
++
++					tcon_top_hdmi_out_hdmi: endpoint {
++						remote-endpoint = <&hdmi_in_tcon_top>;
++					};
++				};
++			};
++		};
++
++		tcon_tv0: lcd-controller@1c73000 {
++			compatible = "allwinner,sun8i-r40-tcon-tv",
++				     "allwinner,sun8i-a83t-tcon-tv";
++			reg = <0x01c73000 0x1000>;
++			interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_TCON_TV0>, <&tcon_top 0>;
++			clock-names = "ahb", "tcon-ch1";
++			resets = <&ccu RST_BUS_TCON_TV0>;
++			reset-names = "lcd";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				tcon_tv0_in: port@0 {
++					reg = <0>;
++				};
++
++				tcon_tv0_out: port@1 {
++					reg = <1>;
++				};
++			};
++		};
++
++		tcon_tv1: lcd-controller@1c74000 {
++			compatible = "allwinner,sun8i-r40-tcon-tv",
++				     "allwinner,sun8i-a83t-tcon-tv";
++			reg = <0x01c74000 0x1000>;
++			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_TCON_TV1>, <&tcon_top 1>;
++			clock-names = "ahb", "tcon-ch1";
++			resets = <&ccu RST_BUS_TCON_TV1>;
++			reset-names = "lcd";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				tcon_tv1_in: port@0 {
++					reg = <0>;
++				};
++
++				tcon_tv1_out: port@1 {
++					reg = <1>;
++				};
++			};
++		};
++
+ 		gic: interrupt-controller@1c81000 {
+ 			compatible = "arm,gic-400";
+ 			reg = <0x01c81000 0x1000>,
+@@ -461,6 +685,51 @@
+ 			#interrupt-cells = <3>;
+ 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		};
++
++		hdmi: hdmi@1ee0000 {
++			compatible = "allwinner,sun8i-r40-dw-hdmi",
++				     "allwinner,sun8i-a83t-dw-hdmi";
++			reg = <0x01ee0000 0x10000>;
++			reg-io-width = <1>;
++			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_HDMI0>, <&ccu CLK_HDMI_SLOW>,
++				 <&ccu CLK_HDMI>;
++			clock-names = "iahb", "isfr", "tmds";
++			resets = <&ccu RST_BUS_HDMI1>;
++			reset-names = "ctrl";
++			phys = <&hdmi_phy>;
++			phy-names = "hdmi-phy";
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				hdmi_in: port@0 {
++					reg = <0>;
++
++					hdmi_in_tcon_top: endpoint {
++						remote-endpoint = <&tcon_top_hdmi_out_hdmi>;
++					};
++				};
++
++				hdmi_out: port@1 {
++					reg = <1>;
++				};
++			};
++		};
++
++		hdmi_phy: hdmi-phy@1ef0000 {
++			compatible = "allwinner,sun8i-r40-hdmi-phy",
++				     "allwinner,sun50i-a64-hdmi-phy";
++			reg = <0x01ef0000 0x10000>;
++			clocks = <&ccu CLK_BUS_HDMI1>, <&ccu CLK_HDMI_SLOW>,
++				 <&ccu 7>, <&ccu 16>;
++			clock-names = "bus", "mod", "pll-0", "pll-1";
++			resets = <&ccu RST_BUS_HDMI0>;
++			reset-names = "phy";
++			#phy-cells = <0>;
++		};
+ 	};
+ 
+ 	timer {
 -- 
 2.18.0
