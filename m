@@ -1,7 +1,7 @@
 From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH V5 3/5] ARM: dts: stm32: add iwdg2 support for stm32mp157c
-Date: Mon, 25 Jun 2018 17:43:01 +0200
-Message-ID: <1529941383-8653-4-git-send-email-ludovic.Barre@st.com>
+Subject: [PATCH V5 4/5] ARM: dts: stm32: add iwdg2 support for stm32mp157c-ed1
+Date: Mon, 25 Jun 2018 17:43:02 +0200
+Message-ID: <1529941383-8653-5-git-send-email-ludovic.Barre@st.com>
 References: <1529941383-8653-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,31 +14,29 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ludovic Barre <ludovic.barre@st.com>
 
-This patch adds independent watchdog support for stm32mp157c.
+This patch activates independent watchdog support for
+stm32mp157c board.
 
 Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 ---
- arch/arm/boot/dts/stm32mp157c.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/stm32mp157c-ed1.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 7d17538..95cc166 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -784,6 +784,14 @@
- 			status = "disabled";
- 		};
+diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+index ae33653..8af263a 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+@@ -68,6 +68,11 @@
+ 	status = "okay";
+ };
  
-+		iwdg2: watchdog@5a002000 {
-+			compatible = "st,stm32mp1-iwdg";
-+			reg = <0x5a002000 0x400>;
-+			clocks = <&rcc IWDG2>, <&rcc CK_LSI>;
-+			clock-names = "pclk", "lsi";
-+			status = "disabled";
-+		};
++&iwdg2 {
++	timeout-sec = <32>;
++	status = "okay";
++};
 +
- 		usbphyc: usbphyc@5a006000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+ &uart4 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart4_pins_a>;
 -- 
 2.7.4
