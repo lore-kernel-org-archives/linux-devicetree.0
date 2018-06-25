@@ -1,68 +1,64 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 1/6] dt-bindings: gpu: mali-utgard: add
- mediatek,mt7623-mali compatible
-Date: Mon, 25 Jun 2018 17:14:32 +0200
-Message-ID: <3bd6e509-f99a-1f2d-1b66-65c414bacdbd@gmail.com>
-References: <cover.1524816502.git.sean.wang@mediatek.com>
- <7ab060c2e9ef2b220fc62913b8936b706dfaf202.1524816502.git.sean.wang@mediatek.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v2 04/23] thermal: armada: dissociate a380 and cp110 ->init()
+ hooks
+Date: Mon, 25 Jun 2018 17:12:20 +0200
+Message-ID: <20180625151239.20976-5-miquel.raynal@bootlin.com>
+References: <20180625151239.20976-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7ab060c2e9ef2b220fc62913b8936b706dfaf202.1524816502.git.sean.wang@mediatek.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com, sboyd@codeaurora.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de
-Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180625151239.20976-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Until now, Armada 380 and CP110 could share the same ->init() function
+because their use was identical.
 
+Prepare the support of multi-sensors support and overheat interrupt
+feature by separating the initialization paths before they actually
+diverge.
 
-On 27/04/18 10:14, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> The MediaTek MT7623 SoC contains a Mali-450, so add a compatible for it
-> and define its own vendor-specific properties.
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> ---
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/thermal/armada_thermal.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Hi Rob,
-
-Any comments regarding this patch?
-
-Regards,
-Matthias
-
->  Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> index 99d1c0a..656068f 100644
-> --- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> @@ -19,6 +19,7 @@ Required properties:
->        + rockchip,rk3228-mali
->        + rockchip,rk3328-mali
->        + stericsson,db8500-mali
-> +      + mediatek,mt7623-mali
->  
->    - reg: Physical base address and length of the GPU registers
->  
-> @@ -89,6 +90,14 @@ to specify one more vendor-specific compatible, among:
->        * interrupt-names and interrupts:
->          + combined: combined interrupt of all of the above lines
->  
-> +  - mediatek,mt7623-mali
-> +     Required properties:
-> +      * resets: phandle to the reset line for the GPU
-> +      * mediatek,larb: phandle pointed to the local arbiter used to control the
-> +	access to external memory on the SoC.
-> +	see Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
-> +	for details
-> +
->  Example:
->  
->  mali: gpu@1c40000 {
-> 
+diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_thermal.c
+index 3d22a6016b04..9291ea3ad2f7 100644
+--- a/drivers/thermal/armada_thermal.c
++++ b/drivers/thermal/armada_thermal.c
+@@ -200,6 +200,12 @@ static void armada_ap806_init(struct platform_device *pdev,
+ 	armada_wait_sensor_validity(priv);
+ }
+ 
++static void armada_cp110_init(struct platform_device *pdev,
++			      struct armada_thermal_priv *priv)
++{
++	armada380_init(pdev, priv);
++}
++
+ static bool armada_is_valid(struct armada_thermal_priv *priv)
+ {
+ 	u32 reg = readl_relaxed(priv->status);
+@@ -306,7 +312,7 @@ static const struct armada_thermal_data armada_ap806_data = {
+ 
+ static const struct armada_thermal_data armada_cp110_data = {
+ 	.is_valid = armada_is_valid,
+-	.init = armada380_init,
++	.init = armada_cp110_init,
+ 	.is_valid_bit = BIT(10),
+ 	.temp_shift = 0,
+ 	.temp_mask = 0x3ff,
+-- 
+2.14.1
