@@ -1,46 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 12/19] mmc: mmci: add variant property to request a reset
-Date: Mon, 25 Jun 2018 15:23:29 -0600
-Message-ID: <20180625212329.GA26557@rob-hp-laptop>
-References: <1528809280-31116-1-git-send-email-ludovic.Barre@st.com>
- <1528809280-31116-13-git-send-email-ludovic.Barre@st.com>
+From: =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
+Subject: Re: [PATCH 1/2] dt-bindings: mtd: document Broadcom's TRX firmware
+ format binding
+Date: Mon, 25 Jun 2018 23:33:05 +0200
+Message-ID: <623424b397965cea5f85ccbabdda3ef6@milecki.pl>
+References: <20180612104434.15232-1-zajec5@gmail.com>
+ <20180625212137.GA16487@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1528809280-31116-13-git-send-email-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180625212137.GA16487@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Jonas Gorski <jonas.gorski@gmail.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 12, 2018 at 03:14:33PM +0200, Ludovic Barre wrote:
-> From: Ludovic Barre <ludovic.barre@st.com>
-> 
-> Some variants could require a reset.
-> STM32 sdmmc variant needs to reset hardware block
-> during the power cycle procedure (for re-initialization)
-> 
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> ---
->  Documentation/devicetree/bindings/mmc/mmci.txt | 2 ++
->  drivers/mmc/host/mmci.c                        | 9 +++++++++
->  drivers/mmc/host/mmci.h                        | 4 ++++
->  3 files changed, 15 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
-> index 03796cf..e952707 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmci.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmci.txt
-> @@ -11,6 +11,8 @@ Required properties:
->  - compatible             : contains "arm,pl18x", "arm,primecell".
->  - vmmc-supply            : phandle to the regulator device tree node, mentioned
->                             as the VCC/VDD supply in the eMMC/SD specs.
-> +depend of variant:
-
-Just make it an optional property.
-
-> +- resets                 : phandle to internal reset line.
->  
->  Optional properties:
->  - arm,primecell-periphid : contains the PrimeCell Peripheral ID, it overrides
+T24gMjAxOC0wNi0yNSAyMzoyMSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gVHVlLCBKdW4gMTIs
+IDIwMTggYXQgMTI6NDQ6MzNQTSArMDIwMCwgUmFmYcWCIE1pxYJlY2tpIHdyb3RlOgo+PiBGcm9t
+OiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4+IAo+PiBCcm9hZGNvbSBiYXNl
+ZCBob21lIHJvdXRlciBkZXZpY2VzIHVzZSBUUlggZmlybXdhcmUgZm9ybWF0LiBJdCdzIGEKPj4g
+Y29udGFpbmVyIHRoYXQgY2FuIGhvbGQgZmV3IHBhcnRpdGlvbnMuIElmIG9wZXJhdGluZyBzeXN0
+ZW0gaXMgCj4+IGV4cGVjdGVkCj4+IHRvIGFjY2VzcyB0aGVtIGl0IGhhcyB0byB1bmRlcnN0YW5k
+IHRoYXQgZm9ybWF0IGFuZCBwYXJzZSBmbGFzaCBkYXRhCj4+IGFjY29yZGluZ2x5Lgo+PiAKPj4g
+U2lnbmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+PiAtLS0K
+Pj4gIC4uLi9iaW5kaW5ncy9tdGQvcGFydGl0aW9ucy9icmNtLHRyeC50eHQgICAgICAgICAgIHwg
+MzUgCj4+ICsrKysrKysrKysrKysrKysrKysrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCAzNSBpbnNl
+cnRpb25zKCspCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgCj4+IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9ucy9icmNtLHRyeC50eHQKPj4gCj4+IGRpZmYgLS1n
+aXQgCj4+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0aXRpb25z
+L2JyY20sdHJ4LnR4dCAKPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRk
+L3BhcnRpdGlvbnMvYnJjbSx0cngudHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4
+IDAwMDAwMDAwMDAwMC4uZTU5MGI4ODRlNWFjCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0aXRpb25zL2JyY20sdHJ4LnR4
+dAo+PiBAQCAtMCwwICsxLDM1IEBACj4+ICtCcm9hZGNvbSBUUlggQ29udGFpbmVyIFBhcnRpdGlv
+bgo+PiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KPj4gKwo+PiArVFJYIGlzIEJy
+b2FkY29tJ3Mgb2ZmaWNpYWwgZmlybXdhcmUgZm9ybWF0IGZvciB0aGUgQkNNOTQ3eHggYm9hcmRz
+LiAKPj4gSXQncyB1c2VkIGJ5Cj4+ICttb3N0IG9mIHRoZSB2ZW5kb3JzIGJ1aWxkaW5nIGRldmlj
+ZXMgYmFzZWQgb24gQnJvYWRjb20ncyBCQ000N3h4IFNvQ3MgCj4+IGFuZCBpcwo+PiArc3VwcG9y
+dGVkIGJ5IHRoZSBDRkUgYm9vdGxvYWRlci4KPj4gKwo+PiArRGVzaWduIG9mIHRoZSBUUlggZm9y
+bWF0IGlzIHZlcnkgbWluaW1hbGlzdGljLiBJdHMgaGVhZGVyIGNvbnRhaW5zCj4+ICtpZGVudGlm
+aWNhdGlvbiBmaWVsZHMsIENSQzMyIGNoZWNrc3VtIGFuZCB0aGUgbG9jYXRpb25zIG9mIGVtYmVk
+ZGVkIAo+PiBwYXJ0aXRpb25zLgo+PiArSXRzIHB1cnBvc2UgaXMgdG8gc3RvcmUgYSBmZXcgcGFy
+dGl0aW9ucyBpbiBhIGZvcm1hdCB0aGF0IGNhbiBiZSAKPj4gZGlzdHJpYnV0ZWQgYXMKPj4gK2Eg
+c3RhbmRhbG9uZSBmaWxlIGFuZCB3cml0dGVuIGluIGEgZmxhc2ggbWVtb3J5Lgo+PiArCj4+ICtD
+b250YWluZXIgY2FuIGhvbGQgdXAgdG8gNCBwYXJ0aXRpb25zLiBUaGUgZmlyc3QgcGFydGl0aW9u
+IGhhcyB0byAKPj4gY29udGFpbiBhCj4+ICtkZXZpY2UgZXhlY3V0YWJsZSBiaW5hcnkgKGUuZy4g
+YSBrZXJuZWwpIGFzIGl0J3Mgd2hhdCB0aGUgQ0ZFIAo+PiBib290bG9hZGVyIHN0YXJ0cwo+PiAr
+ZXhlY3V0aW5nLiBPdGhlciBwYXJ0aXRpb25zIGNhbiBiZSB1c2VkIGZvciBvcGVyYXRpbmcgc3lz
+dGVtIAo+PiBwdXJwb3Nlcy4gVGhpcyBpcwo+PiArdXNlZnVsIGZvciBzeXN0ZW1zIHRoYXQga2Vl
+cCBrZXJuZWwgYW5kIHJvb3RmcyBzZXBhcmF0ZWQuCj4+ICsKPj4gK1RSWCBkb2Vzbid0IGVuZm9y
+Y2UgYW55IHN0cmljdCBwYXJ0aXRpb24gYm91bmRhcmllcyBvciBzaXplIGxpbWl0cy4gCj4+IEFs
+bAo+PiArcGFydGl0aW9ucyBoYXZlIHRvIGJlIGxlc3MgdGhhbiB0aGUgNEdpQiBtYXggc2l6ZSBs
+aW1pdC4KPj4gKwo+PiArVGhlcmUgYXJlIHR3byBleGlzdGluZy9rbm93biBUUlggdmFyaWFudHM6
+Cj4+ICsxKSB2MSB3aGljaCBjb250YWlucyAzIHBhcnRpdGlvbnMKPj4gKzIpIHYyIHdoaWNoIGNv
+bnRhaW5zIDQgcGFydGl0aW9ucwo+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiArLSBj
+b21wYXRpYmxlIDogKHJlcXVpcmVkKSBtdXN0IGJlIGVpdGhlcjogImJyY20sdHJ4LXYxIiBvciAK
+Pj4gImJyY20sdHJ4LXYyIgo+PiArCWZvbGxvd2VkIGJ5ICJicmNtLHRyeCIKPiAKPiBXaGF0IGlz
+IHRoZSBwdXJwb3NlIG9mIGJyY20sdHJ4PyBFaXRoZXIgdGhhdCBhbG9uZSBpcyBlbm91Z2ggb3Ig
+eW91IAo+IG5lZWQKPiB2MS92MiB0byBkaXN0aW5ndWlzaCB0aGUgZGlmZmVyZW5jZS4gWW91IHNo
+b3VsZG4ndCBuZWVkIGJvdGguCgpJIGd1ZXNzIEkgaW5jb3JyZWN0bHkgdHJpZWQgc29tZSBwYXR0
+ZXJuIEkgc2F3IHdoZW4gc3BlY2lmeWluZyBTb0MKY29tcGF0aWJpbGl0eS4KCkNhbiBJIGhhdmUg
+eW91IGFkdmlzZSBoZXJlLCBwbGVhc2U/CgpObyBUUlggc3VwcG9ydGluZyBjb2RlIHJlYWxseSBu
+ZWVkcyBhIGhpbnQgYWJvdXQgdXNlZCBUUlggdmVyc2lvbi4gVFJYCmZvcm1hdCAoaGVhZGVyKSBj
+b250YWlucyAidmVyc2lvbiIgZmllbGQgc28gYW55IGNvZGUgZGVhbGluZyB3aXRoIFRSWApmb3Jt
+YXQgY2FuIGNoZWNrIHRoYXQgZmllbGQuIFRoZW4gaXQga25vd3Mgd2hhdCB2ZXJzaW9uIGl0J3Mg
+ZGVhbGluZwp3aXRoLgoKV2hpY2ggYmluZGluZyhzKSBzaG91bGQgSSB1c2UgaW4gdGhhdCBjYXNl
+PwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CkxpbnV4IE1URCBkaXNjdXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW10ZC8K
