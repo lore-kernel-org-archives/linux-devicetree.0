@@ -1,109 +1,56 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v8 0/6] mtd: rawnand: add NVIDIA Tegra NAND flash
- support
-Date: Mon, 25 Jun 2018 14:34:37 +0200
-Message-ID: <20180625143437.24f71e7e@xps13>
-References: <20180624212727.21672-1-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+From: Yangbo Lu <yangbo.lu@nxp.com>
+Subject: [v4, 00/10] Support DPAA PTP clock and timestamping
+Date: Mon, 25 Jun 2018 20:37:06 +0800
+Message-ID: <20180625123716.28993-1-yangbo.lu@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180624212727.21672-1-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: netdev@vger.kernel.org, madalin.bucur@nxp.com, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "David S . Miller" <davem@davemloft.net>
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+This patchset is to support DPAA FMAN PTP clock and HW timestamping.
+It had been verified on both ARM platform and PPC platform.
+- The patch #1 to patch #5 are to support DPAA FMAN 1588 timer in
+  ptp_qoriq driver.
+- The patch #6 to patch #10 are to add HW timestamping support in
+  DPAA ethernet driver.
 
-On Sun, 24 Jun 2018 23:27:21 +0200, Stefan Agner <stefan@agner.ch>
-wrote:
+Yangbo Lu (10):
+  fsl/fman: share the event interrupt
+  ptp: support DPAA FMan 1588 timer in ptp_qoriq
+  dt-binding: ptp_qoriq: add DPAA FMan support
+  powerpc/mpc85xx: move ptp timer out of fman in dts
+  arm64: dts: fsl: move ptp timer out of fman
+  fsl/fman: add set_tstamp interface
+  fsl/fman_port: support getting timestamp
+  fsl/fman: define frame description command UPD
+  dpaa_eth: add support for hardware timestamping
+  dpaa_eth: add the get_ts_info interface for ethtool
 
-> Eigth and hopefully final revision gets rid of nand_release() as
-> suggested by Boris.
-> 
-> --
-> Stefan
-> 
-> Changes since v1:
-> - Split controller and NAND chip structure
-> - Add BCH support
-> - Allow to select algorithm and strength using device tree
-> - Improve HW ECC error reporting and use DEC_STATUS_BUF only
-> - Use SPDX license identifier
-> - Use per algorithm mtd_ooblayout_ops
-> - Use setup_data_interface callback for NAND timing configuration
-> 
-> Changes since v2:
-> - Set clock rate using assigned-clocks
-> - Use BIT() macro
-> - Fix and improve timing calculation
-> - Improve ECC error handling
-> - Store OOB layout for tag area in Tegra chip structure
-> - Update/fix bindings
-> - Use more specific variable names (replace "value")
-> - Introduce nand-is-boot-medium
-> - Choose sensible ECC strenght automatically
-> - Use wait_for_completion_timeout
-> - Print register dump on completion timeout
-> - Unify tegra_nand_(read|write)_page in tegra_nand_page_xfer
-> 
-> Changes since v3:
-> - Implement tegra_nand_(read|write)_raw using DMA
-> - Implement tegra_nand_(read|write)_oob using DMA
-> - Name registers according to Tegra 2 Technical Reference Manual (v02p)
-> - Use wait_for_completion_io_timeout to account for IO
-> - Get chip select id from device tree reg property
-> - Clear interrupts and reinit wait queues in case command/DMA times out
-> - Set default MTD name after nand_set_flash_node
-> - Move MODULE_DEVICE_TABLE after declaration of tegra_nand_of_match
-> - Make (rs|bch)_strength static
-> 
-> Changes since v4:
-> - Pass OOB area to nand_check_erased_ecc_chunk
-> - Pass algorithm specific bits_per_step to tegra_nand_get_strength
-> - Store ECC layout in chip structure
-> - Fix pointer assignment (use NULL)
-> - Removed obsolete header delay.h
-> - Fixed newlines
-> - Use non-_io variant of wait_for_completion_timeout
-> 
-> Changes since v5:
-> - Drop extra OOB bytes support
-> 
-> Changes since v6:
-> - checkpatch.pl fixes
-> 
-> Changes since v7:
-> - Replace nand_release() with mtd_device_unregister() + nand_cleanup()
-> 
-> Lucas Stach (1):
->   ARM: dts: tegra: add Tegra20 NAND flash controller node
-> 
-> Stefan Agner (5):
->   mtd: rawnand: add Reed-Solomon error correction algorithm
->   mtd: rawnand: add an option to specify NAND chip as a boot device
->   mtd: rawnand: tegra: add devicetree binding
->   mtd: rawnand: add NVIDIA Tegra NAND Flash controller driver
->   ARM: dts: tegra: enable NAND flash on Colibri T20
-> 
->  .../devicetree/bindings/mtd/nand.txt          |    6 +-
->  .../bindings/mtd/nvidia-tegra20-nand.txt      |   64 +
->  MAINTAINERS                                   |    7 +
->  arch/arm/boot/dts/tegra20-colibri-512.dtsi    |   16 +
->  arch/arm/boot/dts/tegra20.dtsi                |   15 +
->  drivers/mtd/nand/raw/Kconfig                  |   10 +
->  drivers/mtd/nand/raw/Makefile                 |    1 +
->  drivers/mtd/nand/raw/nand_base.c              |    4 +
->  drivers/mtd/nand/raw/tegra_nand.c             | 1230 +++++++++++++++++
->  include/linux/mtd/rawnand.h                   |    7 +
->  10 files changed, 1359 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
->  create mode 100644 drivers/mtd/nand/raw/tegra_nand.c
-> 
-
-Series applied to nand/next. I just changed the subject of patch3/6 to
-be "dt-bindings: mtd: add tegra NAND controller binding".
-
-Thanks,
-Miquèl
+ Documentation/devicetree/bindings/net/fsl-fman.txt |   25 +-----
+ .../devicetree/bindings/ptp/ptp-qoriq.txt          |   15 +++-
+ arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi   |   14 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman-0.dtsi        |   14 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman-1.dtsi        |   14 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0.dtsi       |   14 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-1.dtsi       |   14 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3l-0.dtsi      |   14 ++-
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c     |   88 ++++++++++++++++-
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.h     |    3 +
+ drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c |   39 ++++++++
+ drivers/net/ethernet/freescale/fman/fman.c         |    3 +-
+ drivers/net/ethernet/freescale/fman/fman.h         |    1 +
+ drivers/net/ethernet/freescale/fman/fman_dtsec.c   |   27 +++++
+ drivers/net/ethernet/freescale/fman/fman_dtsec.h   |    1 +
+ drivers/net/ethernet/freescale/fman/fman_memac.c   |    5 +
+ drivers/net/ethernet/freescale/fman/fman_memac.h   |    1 +
+ drivers/net/ethernet/freescale/fman/fman_port.c    |   12 +++
+ drivers/net/ethernet/freescale/fman/fman_port.h    |    2 +
+ drivers/net/ethernet/freescale/fman/fman_tgec.c    |   21 ++++
+ drivers/net/ethernet/freescale/fman/fman_tgec.h    |    1 +
+ drivers/net/ethernet/freescale/fman/mac.c          |    3 +
+ drivers/net/ethernet/freescale/fman/mac.h          |    1 +
+ drivers/ptp/Kconfig                                |    2 +-
+ drivers/ptp/ptp_qoriq.c                            |  104 ++++++++++++-------
+ include/linux/fsl/ptp_qoriq.h                      |   38 ++++++--
+ 26 files changed, 361 insertions(+), 115 deletions(-)
