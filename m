@@ -1,33 +1,56 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: Add system timer driver for Mediatek SoCs
-Date: Mon, 25 Jun 2018 09:34:08 +0200
-Message-ID: <dd36b094-b11c-e6ef-a0fc-b039785e74f2@linaro.org>
-References: <1529910601-15005-1-git-send-email-stanley.chu@mediatek.com>
+From: Arend van Spriel <arend.vanspriel@broadcom.com>
+Subject: Re: [PATCHv2 5/5] arm64: allwinner: a64: Add support for TERES-I
+ laptop
+Date: Mon, 25 Jun 2018 09:43:51 +0200
+Message-ID: <5B309D37.80207@broadcom.com>
+References: <20180315162510.11669-1-harald@ccbib.org>
+ <20180315162510.11669-6-harald@ccbib.org>
+ <a7011fe78d171658742406bf01d50b7e3d7eaf1d.camel@aosc.io>
+ <E1fX7yK-0000OC-HA@stardust.g4.wien.funkfeuer.at>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529910601-15005-1-git-send-email-stanley.chu@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <E1fX7yK-0000OC-HA@stardust.g4.wien.funkfeuer.at>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stanley Chu <stanley.chu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
+To: Harald Geyer <harald@ccbib.org>, Icenowy Zheng <icenowy@aosc.io>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Kalle Valo <kvalo@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, info@olimex.com, linux-wireless@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/06/2018 09:09, Stanley Chu wrote:
-> This patch adds a new driver for system timer on the Mediatek SoCs.
+On 6/24/2018 6:34 PM, Harald Geyer wrote:
+> Icenowy Zheng writes:
+>> >在 2018-03-15四的 16:25 +0000，Harald Geyer写道：
+>>> > >+&mmc1 {
+>>> > >+	pinctrl-names = "default";
+>>> > >+	pinctrl-0 = <&mmc1_pins>;
+>>> > >+	vmmc-supply = <&reg_aldo2>;
+>>> > >+	vqmmc-supply = <&reg_dldo4>;
+>>> > >+	mmc-pwrseq = <&wifi_pwrseq>;
+>>> > >+	bus-width = <4>;
+>>> > >+	non-removable;
+>>> > >+	status = "okay";
+>>> > >+
+>>> > >+	rtl8723bs: wifi@1 {
+>>> > >+		reg = <1>;
+>>> > >+		interrupt-parent = <&r_pio>;
+>>> > >+		interrupts = <0 3 IRQ_TYPE_LEVEL_LOW>; /* PL3 */
+>>> > >+		interrupt-names = "host-wake";
+>>> > >+	};
 
-Please elaborate why we need yet another timer.
+[...]
 
-Is this timer present on all Mediatek platform ? Does it always co-exist
-with the existing one ?
+>> >- This device node has no binding. The "host-wake" interrupt is part of
+>> >  Broadcom SDIO Wi-Fi binding, rather than a generic one.
+> I think the general mmc and interrupts bindings apply. And the mmc binding
+> clearly states that for sub-nodes a compatible string is optional.
+>
+> However I just realized that the 'interrupt-names' property is not part
+> of the general interrupts binding, so I guess at least this property should
+> be removed.
 
+Indeed. If the device just used the SDIO interrupt this is not needed. 
+The Broadcom device can use either SDIO interrupt or a so-called 
+out-of-band host-wake interrupt, which is what the above represents.
 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Regards,
+Arend
