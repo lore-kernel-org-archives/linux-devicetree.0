@@ -1,82 +1,51 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 00/23] Add multi-channel support to Armada thermal driver
-Date: Mon, 25 Jun 2018 17:12:16 +0200
-Message-ID: <20180625151239.20976-1-miquel.raynal@bootlin.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2 1/2] arm64: dts: uniphier: add headphone detect gpio
+ for LD20 global board
+Date: Tue, 26 Jun 2018 00:46:55 +0900
+Message-ID: <CAK7LNARnMkTj3i=P80uiikhuD8xnX1wD85S9RRyFZzQ1BafpEA@mail.gmail.com>
+References: <20180625034505.1404-1-suzuki.katsuhiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180625034505.1404-1-suzuki.katsuhiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, DTML <devicetree@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIG9ubHkgY2FwYWJpbGl0eSBvZiB0aGUgQXJtYWRhIHRoZXJtYWwgZHJpdmVyIGlzIGN1cnJl
-bnRseSBqdXN0IHRvCnJlYWQgb25lIHNlbnNvciAodGhlIGRlZmF1bHQgb25lKSBwZXIgQVAgYW5k
-IG9uZSBwZXIgQ1AuIEFjdHVhbGx5LAp0aGVyZSBpcyBvbmUgc2Vuc29yIHBlciBjb3JlIGluIHRo
-ZSBBUDgwNiBwbHVzIG9uZSBzZW5zb3IgaW4gdGhlCnRoZXJtYWwgSVAgaXRzZWxmLiBUaGUgQ1Ax
-MTAganVzdCBmZWF0dXJlcyBvbmUgdGhlcm1hbCBzZW5zb3IgaW4gaXRzCm93biB0aGVybWFsIElQ
-LgoKVGhpcyBzZXJpZXMgZmlyc3QgaW1wcm92ZXMgdGhlIHJlYWRhYmlsaXR5IG9mIHRoaXMgZHJp
-dmVyLCB0aGVuIGFkZHMKc3VwcG9ydCBmb3IgbXVsdGktY2hhbm5lbCB0aGVybWFsIElQcy4gVGhl
-IGJpbmRpbmdzIGFuZCB0aGUKZGV2aWNlLXRyZWVzIGFyZSB1cGRhdGVkIGFjY29yZGluZ2x5LgoK
-RWR1YXJkbywgdGhpcyBpcyBhIGJhcmVseSBtb2RpZmllZCB2ZXJzaW9uIG9mIG15IHByZXZpb3Vz
-IHNlcmllcwphZGRpbmcgb3ZlcmhlYXQgaW50ZXJydXB0IHN1cHBvcnQuIEFsbCB0aGUgaW50ZXJy
-dXB0LXJlbGF0ZWQgcGF0Y2hlcwpoYXZlIGJlZW4gZHJvcHBlZCBmb3Igbm93LiBJdCBpcyBub3cg
-b25seSByZXdvcmRpbmcsIHJlb3JnYW5pemF0aW9uCmFuZCBtdWx0aS1zZW5zb3Igc3VwcG9ydCBi
-ZWluZyBhZGRlZCBoZXJlOyB0aGVyZSBpcyBubyBtb3JlCmRlcGVuZGVuY3kuIEFzIEkgZGlkIG5v
-dCByZWNlaXZlIGFueSBmZWVkYmFjayBzaW5jZSBBcHJpbCwgMjR0aCBJCndvdWxkIGxpa2UgaXQg
-dG8gYmUgbWVyZ2VkIGZvciA0LjE5LgoKVGhhbmsgeW91LApNaXF1w6hsCgpDaGFuZ2VzIHNpbmNl
-IHYxOgo9PT09PT09PT09PT09PT09PQoqIEFkZGVkIHJlZ2lzdGVyIHJhbmdlcyBpbiB0aGUgdGhl
-cm1hbCBub2Rlcy4KKiBBZGRlZCB0aGVzZSByYW5nZXMgaW4gdGhlIGRvY3VtZW50YXRpb24gYWxz
-by4KKiBJbiB0aGUgYmluZGluZ3MsIHVzZWQgdGhlICJNdXN0IGJlIG9uZSBvZiIgZm9ybXVsYSBi
-ZWZvcmUgbGlzdGluZyB0aGUKICBjb21wYXRpYmxlcy4KKiBSZW1vdmVkIHRoZSBvdmVyaGVhdCBp
-bnRlcnJ1cHQgc3VwcG9ydCB0aGF0IGRlcGVuZHMgb24gYW5vdGhlcgogIHNlcmllcy4gVGhpcyB3
-b3JrIGlzIGluZGVwZW5kZW50LgoqIFJlYmFzZWQgb24gdG9wIG9mIHY0LjE4LXJjMS4KCgpNaXF1
-ZWwgUmF5bmFsICgyMyk6CiAgdGhlcm1hbDogYXJtYWRhOiByZW1vdmUgdXNlbGVzcyByZWdpc3Rl
-ciBhY2Nlc3NlcwogIHRoZXJtYWw6IGFybWFkYTogcmVtb3ZlIG1pc2xlYWRpbmcgY29tbWVudHMK
-ICB0aGVybWFsOiBhcm1hZGE6IHJlbmFtZSB0aGUgaW5pdGlhbGl6YXRpb24gcm91dGluZQogIHRo
-ZXJtYWw6IGFybWFkYTogZGlzc29jaWF0ZSBhMzgwIGFuZCBjcDExMCAtPmluaXQoKSBob29rcwog
-IHRoZXJtYWw6IGFybWFkYTogYXZlcmFnZSBvdmVyIHNhbXBsZXMgdG8gYXZvaWQgZ2xpdGNoZXMK
-ICB0aGVybWFsOiBhcm1hZGE6IGNvbnZlcnQgZHJpdmVyIHRvIHN5c2NvbiByZWdpc3RlciBhY2Nl
-c3NlcwogIHRoZXJtYWw6IGFybWFkYTogdXNlIHRoZSByZXNvdXJjZSBtYW5hZ2VkIHJlZ2lzdHJh
-dGlvbiBoZWxwZXIKICAgIGFsdGVybmF0aXZlCiAgdGhlcm1hbDogYXJtYWRhOiBhZGQgbXVsdGkt
-Y2hhbm5lbCBzZW5zb3JzIHN1cHBvcnQKICB0aGVybWFsOiBhcm1hZGE6IHJlbW92ZSBzZW5zb3Jz
-IHZhbGlkaXR5IGZyb20gdGhlIElQIGluaXRpYWxpemF0aW9uCiAgdGhlcm1hbDogYXJtYWRhOiBt
-b3ZlIHZhbGlkaXR5IGNoZWNrIG91dCBvZiB0aGUgcmVhZCBmdW5jdGlvbgogIHRoZXJtYWw6IGFy
-bWFkYTogZ2V0IHJpZCBvZiB0aGUgLT5pc192YWxpZCgpIHBvaW50ZXIKICBkdC1iaW5kaW5nczog
-Y3AxMTA6IHJlbmFtZSBjcDExMCBzeXNjb24gZmlsZQogIGR0LWJpbmRpbmdzOiBhcDgwNjogcHJl
-cGFyZSB0aGUgc3lzY29uIGZpbGUgdG8gbGlzdCBvdGhlciBzeXNjb25zCiAgICBub2RlcwogIGR0
-LWJpbmRpbmdzOiBjcDExMDogcHJlcGFyZSB0aGUgc3lzY29uIGZpbGUgdG8gbGlzdCBvdGhlciBz
-eXNjb25zCiAgICBub2RlcwogIGR0LWJpbmRpbmdzOiBhcDgwNjogYWRkIHRoZSB0aGVybWFsIG5v
-ZGUgaW4gdGhlIHN5c2NvbiBmaWxlCiAgZHQtYmluZGluZ3M6IGNwMTEwOiB1cGRhdGUgZG9jdW1l
-bnRhdGlvbiBzaW5jZSBEVCBkZS1kdXBsaWNhdGlvbgogIGR0LWJpbmRpbmdzOiBjcDExMDogYWRk
-IHRoZSB0aGVybWFsIG5vZGUgaW4gdGhlIHN5c2NvbiBmaWxlCiAgZHQtYmluZGluZ3M6IHRoZXJt
-YWw6IGFybWFkYTogYWRkIHJlZmVyZW5jZSB0byBuZXcgYmluZGluZ3MKICBhcm02NDogZHRzOiBt
-YXJ2ZWxsOiByZW5hbWUgYXA4MDYgc3lzY29uIG5vZGUKICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBt
-b3ZlIEFQODA2L0NQMTEwIHRoZXJtYWwgbm9kZXMgaW50byBhIG5ldyBzeXNjb24KICBhcm02NDog
-ZHRzOiBtYXJ2ZWxsOiBhZGQgdGhlcm1hbC16b25lIG5vZGUgaW4gYXA4MDYgRFRTSSBmaWxlCiAg
-YXJtNjQ6IGR0czogbWFydmVsbDogYWRkIG1hY3JvIHRvIG1ha2UgZGlzdGluY3Rpb24gYmV0d2Vl
-biBub2RlIG5hbWVzCiAgYXJtNjQ6IGR0czogbWFydmVsbDogYWRkIHRoZXJtYWwtem9uZSBub2Rl
-IGluIGNwMTEwIERUU0kgZmlsZQoKIC4uLi9hcm0vbWFydmVsbC9hcDgwNi1zeXN0ZW0tY29udHJv
-bGxlci50eHQgICAgICAgIHwgIDUwICstCiAuLi5jb250cm9sbGVyMC50eHQgPT4gY3AxMTAtc3lz
-dGVtLWNvbnRyb2xsZXIudHh0fSB8ICA2MSArKy0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Ro
-ZXJtYWwvYXJtYWRhLXRoZXJtYWwudHh0IHwgICA1ICsKIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFy
-dmVsbC9hcm1hZGEtYXA4MDYuZHRzaSAgICAgIHwgIDc2ICsrLQogYXJjaC9hcm02NC9ib290L2R0
-cy9tYXJ2ZWxsL2FybWFkYS1jb21tb24uZHRzaSAgICAgfCAgIDEgKwogYXJjaC9hcm02NC9ib290
-L2R0cy9tYXJ2ZWxsL2FybWFkYS1jcDExMC5kdHNpICAgICAgfCAgMzcgKy0KIGRyaXZlcnMvdGhl
-cm1hbC9hcm1hZGFfdGhlcm1hbC5jICAgICAgICAgICAgICAgICAgIHwgNTEwICsrKysrKysrKysr
-KysrKy0tLS0tLQogNyBmaWxlcyBjaGFuZ2VkLCA1ODMgaW5zZXJ0aW9ucygrKSwgMTU3IGRlbGV0
-aW9ucygtKQogcmVuYW1lIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbWFy
-dmVsbC97Y3AxMTAtc3lzdGVtLWNvbnRyb2xsZXIwLnR4dCA9PiBjcDExMC1zeXN0ZW0tY29udHJv
-bGxlci50eHR9ICg4NSUpCgotLSAKMi4xNC4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+2018-06-25 12:45 GMT+09:00 Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>:
+> This patch adds GPIO for headphone detection on LD20 global board.
+>
+> Signed-off-by: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+
+Applied.  Thanks!
+
+> ---
+>  arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts b/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
+> index 6a074a20c924..8aeb59486ff2 100644
+> --- a/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
+> +++ b/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
+> @@ -60,6 +60,7 @@
+>                         &i2s_port4
+>                         &spdif_port0
+>                         &comp_spdif_port0>;
+> +               hp-det-gpio = <&gpio UNIPHIER_GPIO_IRQ(0) GPIO_ACTIVE_LOW>;
+>         };
+>
+>         spdif-out {
+> --
+> 2.18.0
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
