@@ -1,50 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: rng: Add new compatible qcom,prng-v2
-Date: Mon, 25 Jun 2018 13:06:09 -0600
-Message-ID: <20180625190609.GA3586@rob-hp-laptop>
-References: <20180619095430.26358-1-vkoul@kernel.org>
- <20180619095430.26358-2-vkoul@kernel.org>
+Subject: Re: [PATCH v2 1/8] dt-bindings: tegra186-hsp: Add shared interrupts
+Date: Mon, 25 Jun 2018 13:07:39 -0600
+Message-ID: <20180625190739.GA10143@rob-hp-laptop>
+References: <20180620122042.10950-1-mperttunen@nvidia.com>
+ <20180620122042.10950-2-mperttunen@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180619095430.26358-2-vkoul@kernel.org>
+In-Reply-To: <20180620122042.10950-2-mperttunen@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@linaro.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>, Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org
+To: Mikko Perttunen <mperttunen@nvidia.com>
+Cc: mark.rutland@arm.com, jassisinghbrar@gmail.com, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 19, 2018 at 03:24:29PM +0530, Vinod Koul wrote:
-> Later qcom chips support v2 of the prng, so add new compatible
-> qcom,prng-v2 for this.
+On Wed, Jun 20, 2018 at 03:20:35PM +0300, Mikko Perttunen wrote:
+> HSP interrupts can be routed through exposed "shared interrupts". These
+> interrupts can be mapped to various internal interrupt lines. Add
+> interrupt properties for shared interrupts to the tegra186-hsp device
+> tree bindings. At the same time, add the compatibility string for
+> tegra194-hsp, which is backwards compatible with tegra186.
 > 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
 > ---
 > 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
->  Documentation/devicetree/bindings/rng/qcom,prng.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> Notes:
+>     v2:
+>     - Edited commit message to not say that doorbell interrupts cannot be
+>       routed to shared interrupts.
+>     - Added tegra194 compatibility string.
 > 
-> diff --git a/Documentation/devicetree/bindings/rng/qcom,prng.txt b/Documentation/devicetree/bindings/rng/qcom,prng.txt
-> index 8e5853c2879b..03fd218bd21a 100644
-> --- a/Documentation/devicetree/bindings/rng/qcom,prng.txt
-> +++ b/Documentation/devicetree/bindings/rng/qcom,prng.txt
-> @@ -2,7 +2,8 @@ Qualcomm MSM pseudo random number generator.
->  
->  Required properties:
->  
-> -- compatible  : should be "qcom,prng"
-> +- compatible  : should be "qcom,prng" for 8916 etc
-> +              : should be "qcom,prng-v2" for 8996 and later
+>  Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
-Either use SoC specific compatibles or convince me 'v2' is a meaningful 
-and specific enough version. Some other QC IP has x.y.z versioning for 
-example.
-
->  - reg         : specifies base physical address and size of the registers map
->  - clocks      : phandle to clock-controller plus clock-specifier pair
->  - clock-names : "core" clocks all registers, FIFO and circuits in PRNG IP block
-> -- 
-> 2.14.4
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
