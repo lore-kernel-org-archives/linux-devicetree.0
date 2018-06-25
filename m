@@ -1,131 +1,147 @@
-Return-Path: <SRS0=oUNg=JE=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v2 4/5] leds: lt3593: Add device tree probing glue
-Date: Mon, 18 Jun 2018 21:43:00 +0200
-Message-Id: <20180618194301.5667-5-daniel@zonque.org>
-In-Reply-To: <20180618194301.5667-1-daniel@zonque.org>
-References: <20180618194301.5667-1-daniel@zonque.org>
-To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=Dkm/=JL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-db5eur01on0066.outbound.protection.outlook.com ([104.47.2.66]:20096
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751930AbeFYIZp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 Jun 2018 04:25:45 -0400
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v7 00/14] staging: typec: tcpci: move out of staging
+Date: Mon, 25 Jun 2018 16:08:32 +0800
+Message-Id: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: a.hajda@samsung.com, jun.li@nxp.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-The binding details are described in an earlier commit that adds the
-documentation.
+This patch set attempts to move the tcpci drivers out of staging by fix
+some tcpci driver issues and define typec and power delivery device
+properties, the changes are verified on NXP PTN5110, which is a standard
+tcpci typec port controller device with power delivery support, tested
+power source and sink with drp config.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- drivers/leds/leds-lt3593.c | 74 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+Changes for v7:
+- Fix export symbols mismatch in patch:
+  usb: typec: add API to get typec basic port power and data config
+  rename typec_port_types to be typec_port_power_roles.
+- Drop patch:
+  usb: typec: tcpm: set cc for drp toggling attach
+  It's arguable as it's only to address specific HW problem, and which
+  can be resolved by add try.src/snk property.
+    
+Changes for v6:
+- Change function name to be typec_find_port_power/data_role for find
+  capability, and typec_find_power_role for find one specific power role.
+- Fix rt1711h driver move missing.
+- Add one patch to improve the error checking in tcpci driver, use IS_ERR()
+  instead of PTR_ERR_OR_ZERO().
+- Add Rob's Reviewed-by for patch [2/15].
+- Misc typos fix.
+ 
+Changes for v5:
+- Use "power-role" and "data-role" for typec port power and data capability
+  property name.  
+- Use macro definition instead of cryptic numbers for readability of
+  power delivery properties(PDO).
+- Add one tcpci driver binding string to be "nxp,ptn5110" to follow binding
+  name rule "<vendor prefix>,<device>".
+- Change operating power property name to be op-sink-microwatt.
+- Add one patch(remove unused tcpci_tcpc_config) to resolve bisectablitity
+  issue of patch usb: typec: add fwnode to tcpc.
+- A minor error handling change to keep the error path and success path
+  separate in patch: register port before request irq
+- Rebase to latest Greg's tree with max_snk_* removed.
 
-diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
-index a096ee64cbbb..b9a907e9d321 100644
---- a/drivers/leds/leds-lt3593.c
-+++ b/drivers/leds/leds-lt3593.c
-@@ -24,8 +24,11 @@
- #include <linux/gpio/consumer.h>
- #include <linux/slab.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <uapi/linux/uleds.h>
- 
- struct lt3593_led_data {
-+	char name[LED_MAX_NAME_SIZE];
- 	struct led_classdev cdev;
- 	struct gpio_desc *gpiod;
- };
-@@ -120,22 +123,93 @@ static int lt3593_led_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct lt3593_led_data *led_data;
-+	struct fwnode_handle *child;
-+	int ret, state = LEDS_GPIO_DEFSTATE_OFF;
-+	enum gpiod_flags flags = GPIOD_OUT_LOW;
-+	const char *tmp;
- 
- 	if (dev_get_platdata(dev)) {
- 		led_data = lt3593_led_probe_pdata(dev);
- 		if (IS_ERR(led_data))
- 			return PTR_ERR(led_data);
-+
-+		goto out;
-+	}
-+
-+	if (!dev->of_node)
-+		return -ENODEV;
-+
-+	led_data = devm_kzalloc(dev, sizeof(*led_data), GFP_KERNEL);
-+	if (!led_data)
-+		return -ENOMEM;
-+
-+	if (device_get_child_node_count(dev) != 1) {
-+		dev_err(dev, "Device must have exactly one LED sub-node.");
-+		return -EINVAL;
-+	}
-+
-+	child = device_get_next_child_node(dev, NULL);
-+
-+	ret = fwnode_property_read_string(child, "label", &tmp);
-+	if (ret < 0)
-+		snprintf(led_data->name, sizeof(led_data->name),
-+			 "lt3593::");
-+	else
-+		snprintf(led_data->name, sizeof(led_data->name),
-+			 "lt3593:%s", tmp);
-+
-+	fwnode_property_read_string(child, "linux,default-trigger",
-+				    &led_data->cdev.default_trigger);
-+
-+	if (!fwnode_property_read_string(child, "default-state", &tmp)) {
-+		if (!strcmp(tmp, "keep")) {
-+			state = LEDS_GPIO_DEFSTATE_KEEP;
-+			flags = GPIOD_ASIS;
-+		} else if (!strcmp(tmp, "on")) {
-+			state = LEDS_GPIO_DEFSTATE_ON;
-+			flags = GPIOD_OUT_HIGH;
-+		}
- 	}
- 
-+	led_data->gpiod = devm_fwnode_get_gpiod_from_child(dev, NULL, child,
-+							   flags,
-+							   led_data->name);
-+	if (IS_ERR(led_data->gpiod)) {
-+		fwnode_handle_put(child);
-+		return PTR_ERR(led_data->gpiod);
-+	}
-+
-+	led_data->cdev.name = led_data->name;
-+	led_data->cdev.brightness_set_blocking = lt3593_led_set;
-+	led_data->cdev.brightness = state ? LED_FULL : LED_OFF;
-+
-+	ret = devm_led_classdev_register(dev, &led_data->cdev);
-+	if (ret < 0) {
-+		fwnode_handle_put(child);
-+		return ret;
-+	}
-+
-+	led_data->cdev.dev->of_node = dev->of_node;
-+
-+out:
- 	platform_set_drvdata(pdev, led_data);
- 
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id of_lt3593_leds_match[] = {
-+	{ .compatible = "lltc,lt3593", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, of_lt3593_leds_match);
-+#endif
-+
- static struct platform_driver lt3593_led_driver = {
- 	.probe		= lt3593_led_probe,
- 	.driver		= {
- 		.name	= "leds-lt3593",
-+		.of_match_table = of_match_ptr(of_lt3593_leds_match),
- 	},
- };
- 
+Changes for v4:
+- Remove max-sink-* properties as we will purge max_snk_* in tcpm,
+  see patch set[4].
+- Get typec power and data type value via name string(patch 5).
+- Move finding typec and pd properties code from tcpci to tcpm(patch 6)
+- Add a compatible string for nxp ptn5110 typec controller in tcpci driver.
+  (patch 3)
+- Add set cc for drp toggling without try.src/snk in tcpm(patch 10), then
+  patch 11 can only update CCx bits for keep disconnect cc line open.
+- Update op-sink-microwatt-hours example value to be the right value in
+  micorwatts, and accordingly divide 1000 to get its miliwatts value
+  in patch 6.
+- Add Guenter's Reviewed-by for patch(8/9/12)
+
+[4] https://www.spinics.net/lists/linux-usb/msg167261.html
+
+Changes for v3:
+- Use 2 properties to separate power and data capability of typec port:
+  "power-type" and "data-type", this is based on Heikki's typec class code
+  change[2]. use "try-power-role" to present if the typec port can support
+  Try.SNK or Try.SRC.
+- 4 sink properties(max_sink_mv/ma/mw and op_sink_mw) are kept because the
+  counterpart code is back, see revert patch[3], meanwhile I post a patch
+  to fix the reported problem of current source pdo select machinism(which
+  completely ignored those 4 sink settings), to see if we can keep current
+  code, once it was discussed and have conclusion I can update this
+  accordingly.
+- Use fwnode to get the connector node for dt setting parse.
+
+Main changes for v2:
+- Typec properties are based on general usb connector bindings[1] proposed
+  by Andrzej Hajda, use the standard unit suffixes as defined in
+  property-units.txt.
+- Add 2 infra APIs to get power sink and source config from dt.
+- Don't change the set_cc api, to keep the uncontacted cc line open,
+  set cc1/cc2 to be open in tcpci driver when set polarity.
+- Directly enable vbus detect in tcpci driver rather than add a API.
+- Details added in each patch.
+
+[1] https://patchwork.kernel.org/patch/10231447/
+[2] https://patchwork.kernel.org/patch/10276483/
+[3] https://www.spinics.net/lists/linux-usb/msg166366.html
+
+Li Jun (13):
+  dt-bindings: connector: add properties for typec
+  dt-bindings: usb: add documentation for typec port controller(TCPCI)
+  staging: typec: tcpci: add compatible string for nxp ptn5110
+  usb: typec: add fwnode to tcpc
+  usb: typec: add API to get typec basic port power and data config
+  usb: typec: tcpm: support get typec and pd config from device
+    properties
+  staging: typec: tcpci: remove unused tcpci_tcpc_config
+  staging: typec: tcpci: use IS_ERR() instead of PTR_ERR_OR_ZERO()
+  staging: typec: tcpci: enable vbus detection
+  typec: tcpm: add starting value for drp toggling
+  staging: typec: tcpci: keep the disconnected cc line open
+  staging: typec: tcpci: Only touch target bit when enable vconn
+  staging: typec: tcpci: move tcpci drivers out of staging
+
+Peter Chen (1):
+  staging: typec: tcpci: register port before request irq
+
+ .../bindings/connector/usb-connector.txt           |  44 +++++++
+ .../devicetree/bindings/usb/typec-tcpci.txt        |  49 +++++++
+ drivers/staging/Kconfig                            |   2 -
+ drivers/staging/Makefile                           |   1 -
+ drivers/staging/typec/Kconfig                      |  22 ----
+ drivers/staging/typec/Makefile                     |   2 -
+ drivers/staging/typec/TODO                         |   5 -
+ drivers/usb/typec/Kconfig                          |  15 +++
+ drivers/usb/typec/Makefile                         |   2 +
+ drivers/usb/typec/class.c                          |  58 ++++++++-
+ drivers/{staging => usb}/typec/tcpci.c             |  66 ++++++----
+ drivers/{staging => usb}/typec/tcpci.h             |   0
+ drivers/{staging => usb}/typec/tcpci_rt1711h.c     |   0
+ drivers/usb/typec/tcpm.c                           | 143 +++++++++++++++++----
+ include/dt-bindings/usb/pd.h                       |  62 +++++++++
+ include/linux/usb/tcpm.h                           |   2 +
+ include/linux/usb/typec.h                          |   3 +
+ 17 files changed, 388 insertions(+), 88 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/typec-tcpci.txt
+ delete mode 100644 drivers/staging/typec/Kconfig
+ delete mode 100644 drivers/staging/typec/Makefile
+ delete mode 100644 drivers/staging/typec/TODO
+ rename drivers/{staging => usb}/typec/tcpci.c (92%)
+ rename drivers/{staging => usb}/typec/tcpci.h (100%)
+ rename drivers/{staging => usb}/typec/tcpci_rt1711h.c (100%)
+ create mode 100644 include/dt-bindings/usb/pd.h
+
 -- 
-2.17.1
+2.7.4
+
