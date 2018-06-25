@@ -1,70 +1,74 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 03/15] arm: dts: mediatek: Add missing cooling device
- properties for CPUs
-Date: Mon, 25 Jun 2018 16:58:04 +0200
-Message-ID: <186ed0b1-e365-4b3d-5c50-613d8353708b@gmail.com>
-References: <cover.1527244200.git.viresh.kumar@linaro.org>
- <b687bb6035fbb010383f4511a206abb4006679fa.1527244201.git.viresh.kumar@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 1/7] dt-bindings: net: bluetooth: Add device tree
+ bindings for QTI chip wcn3990
+Date: Mon, 25 Jun 2018 08:58:37 -0600
+Message-ID: <20180625145837.GA21153@rob-hp-laptop>
+References: <20180625134013.19684-1-bgodavar@codeaurora.org>
+ <20180625134013.19684-2-bgodavar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b687bb6035fbb010383f4511a206abb4006679fa.1527244201.git.viresh.kumar@linaro.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180625134013.19684-2-bgodavar@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, mka@chromium.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 25/05/18 12:31, Viresh Kumar wrote:
-> The cooling device properties, like "#cooling-cells" and
-> "dynamic-power-coefficient", should either be present for all the CPUs
-> of a cluster or none. If these are present only for a subset of CPUs of
-> a cluster then things will start falling apart as soon as the CPUs are
-> brought online in a different order. For example, this will happen
-> because the operating system looks for such properties in the CPU node
-> it is trying to bring up, so that it can register a cooling device.
+On Mon, Jun 25, 2018 at 07:10:07PM +0530, Balakrishna Godavarthi wrote:
+> This patch enables regulators for the Qualcomm Bluetooth wcn3990
+> controller.
 > 
-> Add such missing properties.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-
-pushed to v4.18-next/dts32
-
-Thanks
-
+> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
 > ---
->  arch/arm/boot/dts/mt7623.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-> index d1eb123bc73b..1cdc346a05e8 100644
-> --- a/arch/arm/boot/dts/mt7623.dtsi
-> +++ b/arch/arm/boot/dts/mt7623.dtsi
-> @@ -92,6 +92,7 @@
->  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
->  			clock-names = "cpu", "intermediate";
->  			operating-points-v2 = <&cpu_opp_table>;
-> +			#cooling-cells = <2>;
->  			clock-frequency = <1300000000>;
->  		};
->  
-> @@ -103,6 +104,7 @@
->  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
->  			clock-names = "cpu", "intermediate";
->  			operating-points-v2 = <&cpu_opp_table>;
-> +			#cooling-cells = <2>;
->  			clock-frequency = <1300000000>;
->  		};
->  
-> @@ -114,6 +116,7 @@
->  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
->  			clock-names = "cpu", "intermediate";
->  			operating-points-v2 = <&cpu_opp_table>;
-> +			#cooling-cells = <2>;
->  			clock-frequency = <1300000000>;
->  		};
->  	};
+> Changes in v8:
+>     * Separated the optional entries between two chips
 > 
+> Changes in v7:
+>     * no change.
+> 
+> Changes in v6:
+> 
+>     * Changed the oper-speed to max-speed.
+> 
+> Changes in v5:
+> 
+>     * Added entry for oper-speed and init-speed.
+> 
+> ---
+>  .../bindings/net/qualcomm-bluetooth.txt       | 30 +++++++++++++++++--
+>  1 file changed, 28 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> index 0ea18a53cc29..c2b09dd2bf31 100644
+> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> @@ -10,12 +10,23 @@ device the slave device is attached to.
+>  Required properties:
+>   - compatible: should contain one of the following:
+>     * "qcom,qca6174-bt"
+> +   * "qcom,wcn3990-bt"
+> +
+> +Optional properties for compatible string qcom,qca6174-bt:
+>  
+> -Optional properties:
+>   - enable-gpios: gpio specifier used to enable chip
+>   - clocks: clock provided to the controller (SUSCLK_32KHZ)
+>  
+> -Example:
+> +Optional properties for compatible string qcom,wcn3990-bt:
+> +
+> + - vddio-supply: Bluetooth VDD IO regulator handle.
+> + - vddxtal-supply: Bluetooth VDD XTAL regulator handle.
+> + - vddpa-supply: Bluetooth VDD PA regulator handle.
+> + - vddldo-supply: Bluetooth VDD LDO regulator handle.
+> + - vddcore-supply: Bluetooth VDD CORE regulator handle.
+> + - max-speed: Maximum operating speed of the chip.
+
+This shouldn't be per compatible really. The definition here is wrong 
+too. You should know the max baud for the chip based on the compatible. 
+This property is for when the max is less than the max of either the 
+chip or host UART.
+
+Rob
