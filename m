@@ -1,86 +1,87 @@
-From: Andy Duan <fugang.duan@nxp.com>
-Subject: RE: [RFC] Configure i.MX6 RGMII pad group control registers from
- device tree
-Date: Mon, 25 Jun 2018 02:50:01 +0000
-Message-ID: <AM4PR0401MB2260FB90A3B243A60D027F46FF4A0@AM4PR0401MB2260.eurprd04.prod.outlook.com>
-References: <f5a01de5-fc81-52c1-c2ea-edb77ecff076@ysoft.com>
- <5ab5c58a-dc44-d1bc-2132-8704d05bf1de@ysoft.com>
- <AM0PR04MB42111E25172F6068F937ECCB804B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From: "Katsuhiro Suzuki" <suzuki.katsuhiro@socionext.com>
+Subject: Re: [PATCH 1/2] arm64: dts: uniphier: add headphone detect gpio for LD20 global board
+Date: Mon, 25 Jun 2018 11:59:11 +0900
+Message-ID: <001a01d40c30$7e3d3110$7ab79330$@socionext.com>
+References: <20180619041153.6668-1-suzuki.katsuhiro@socionext.com> <CAK7LNATB-oa+K47z+egfV2iSKoD3x2tyMNXQp1ukS2f1Yek54g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM0PR04MB42111E25172F6068F937ECCB804B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-Content-Language: en-US
+In-Reply-To: <CAK7LNATB-oa+K47z+egfV2iSKoD3x2tyMNXQp1ukS2f1Yek54g@mail.gmail.com>
+Content-Language: ja
 Sender: linux-kernel-owner@vger.kernel.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>, =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>Pengutronix Kernel Team <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Li <frank.li@nxp.com>, dl-linux-imx <linux-imx@nxp.com>
+To: 'Masahiro Yamada' <yamada.masahiro@socionext.com>, =?UTF-8?B?U3V6dWtpLCBLYXRzdWhpcm8v6Yi05pyoIOWLneWNmg==?= <suzuki.katsuhiro@socionext.com>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, DTML <devicetree@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogQS5zLiBEb25nIFNlbnQ6IDIwMTjlubQ25pyIMjTml6UgMTI6MjQNCj4gQ29weSBBbmR5
-ICYgRnJhbmssDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTog
-TWljaGFsIFZva8OhxI0gW21haWx0bzptaWNoYWwudm9rYWNAeXNvZnQuY29tXQ0KPiA+IFNlbnQ6
-IFR1ZXNkYXksIEp1bmUgMTIsIDIwMTggMTE6MTAgUE0NCj4gPiBUbzogbGludXgtZ3Bpb0B2Z2Vy
-Lmtlcm5lbC5vcmcNCj4gPiBDYzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-OyBTaGF3biBHdW8NCj4gPiA8c2hhd25ndW9Aa2VybmVsLm9yZz47IFNhc2NoYSBIYXVlciA8a2Vy
-bmVsQHBlbmd1dHJvbml4LmRlPjsNCj4gRmFiaW8NCj4gPiBFc3RldmFtIDxmYWJpby5lc3RldmFt
-QG54cC5jb20+OyBSb2IgSGVycmluZw0KPiA8cm9iaCtkdEBrZXJuZWwub3JnPjsNCj4gPiBkZXZp
-Y2V0cmVlQHZnZXIua2VybmVsLm9yZzsgQS5zLiBEb25nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47
-DQo+IEZhYmlvDQo+ID4gRXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPjsgU2hhd24gR3VvIDxz
-aGF3bmd1b0BrZXJuZWwub3JnPjsNCj4gU3RlZmFuDQo+ID4gQWduZXIgPHN0ZWZhbkBhZ25lci5j
-aD47IFBlbmd1dHJvbml4IEtlcm5lbCBUZWFtDQo+ID4gPGtlcm5lbEBwZW5ndXRyb25peC5kZT47
-IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz47DQo+ID4gbGludXgtIGtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gPiBTdWJqZWN0OiBSZTogW1JGQ10gQ29uZmlndXJlIGku
-TVg2IFJHTUlJIHBhZCBncm91cCBjb250cm9sIHJlZ2lzdGVycw0KPiA+IGZyb20gZGV2aWNlIHRy
-ZWUNCj4gPg0KPiA+IE9uIDExLjYuMjAxOCAxNDozNiwgTWljaGFsIFZva8OhxI0gd3JvdGU6DQo+
-ID4gPiBBaG9qLA0KPiA+ID4NCj4gPiA+IFRvIGNvbmZpZ3VyZSBpbmRpdmlkdWFsIHBhZCdzIGNo
-YXJhY3RlcmlzdGljcyBvbiBpLk1YNiBTb0MgYQ0KPiA+ID4gZnNsLHBpbnMgPSA8UElOX0ZVTkNf
-SUQgQ09ORklHPiBwcm9wZXJ0eSBjYW4gYmUgdXNlZC4gSXMgdGhlcmUgYW55DQo+ID4gPiBjb252
-ZW5pZW50IHdheSB0byBjb25maWd1cmUgdGhlIHBhZCBncm91cCBjb250cm9sIHJlZ2lzdGVycz8N
-Cj4gPiA+DQo+ID4gPiBUaGUgaXNzdWUgaXMgdGhhdCBzb21lIGJpdHMgKEREUl9TRUwgYW5kIE9E
-VCkgaW4gdGhlIGluZGl2aWR1YWwNCj4gPiA+IFJHTUlJIHBhZCBjb250cm9sIHJlZ2lzdGVycyBh
-cmUgcmVhZC1vbmx5LiBUbyB0d2VhayB0aG9zZSBwYXJhbWV0ZXJzDQo+ID4gPiAoc2lnbmFsIHZv
-bHRhZ2UgYW5kIHRlcm1pbmF0aW9uIHJlc2lzdG9ycykgb25lIG5lZWQgdG8gd3JpdGUgdG8gdGhl
-DQo+ID4gPiBwYWQgZ3JvdXAgY29udHJvbCByZWdpc3RlcnMgZm9yIHRoZSB3aG9sZSBSR01JSSBw
-YWQgZ3JvdXAuIE5hbWVseQ0KPiA+ID4gSU9NVVhDX1NXX1BBRF9DVExfR1JQX0REUl9UWVBFX1JH
-TUlJIGFuZA0KPiA+ID4gSU9NVVhDX1NXX1BBRF9DVExfR1JQX1JHTUlJX1RFUk0uIFRoZSBncm91
-cCByZWdpc3RlcnMgaW4NCj4gZ2VuZXJhbA0KPiA+IGFyZSBub3QgYWNjZXNzaWJsZSBmcm9tIHRo
-ZSBsaXN0IGluIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZkbC1waW5mdW5jLmguDQo+ID4gPg0KPiA+
-ID4gSSBjb3VsZCBub3QgZmluZCBhbnkgb3RoZXIgd2F5IHRvIGNoYW5nZSB0aGUgZ3JvdXAgcmVn
-aXN0ZXJzIHRoYW4NCj4gPiA+IGhhY2tpbmctaW4gc29tZSBsaW5lcyBpbnRvIHRoZSBpbXg2cV9p
-bml0X21hY2hpbmUodm9pZCkgZnVuY3Rpb24gaW4NCj4gPiA+IGFyY2gvYXJtL21hY2gtaW14L21h
-Y2gtaW14NnEuYyBzb3VyY2UuIEFzIEkgd29yayB0b3dhcmRzDQo+IHVwc3RyZWFtaW5nDQo+ID4g
-PiBteSBib2FyZCB0aGlzIHNob3VsZCBiZSBkb25lIGZyb20gbXkgZGV2aWNlIHRyZWUgb3Igc29s
-dmVkIGluIHNvbWUNCj4gPiB1bml2ZXJzYWwgd2F5Lg0KPiA+ID4NCj4gPiA+IEFueSBoaW50cyB3
-aWxsIGJlIG11Y2ggYXBwcmVjaWF0ZWQuDQo+ID4gPiBNaWNoYWwNCj4gPg0KPiA+IEkgZmlndXJl
-ZCBvdXQgdGhpcyBpcyBtb3JlICJwaW5jdHJsLWlteC5jIiB0aGFuICJkZXZpY2UtdHJlZSIgcmVs
-YXRlZA0KPiA+IHNvIEkgYW0ga2luZGx5IGFkZGluZyBtYWludGFpbmVycyBvZiB0aGF0IGZpbGUg
-aW4gaG9wZSBzb21lYm9keSB3aWxsDQo+ID4gc2hlZCBzb21lIGxpZ2h0IHRvIGl0Lg0KPiA+DQo+
-ID4gSSBhbSBkaXZpbmcgZGVlcGVyIGludG8gdGhlIGNvZGUgYW5kIGl0IHNlZW1zIHRoZXJlIHJl
-YWxseSBpcyBubw0KPiA+IGdlbmVyaWMgb3B0aW9uIHRvIHNldCB0aGUgaS5NWDYgcGFkIGdyb3Vw
-IGNvbnRyb2wgcmVnaXN0ZXJzIGZyb20gZGV2aWNlDQo+IHRyZWUuDQo+ID4gT3IgYW0gSSBsb29r
-aW5nIGF0IHRoZSBwcm9ibGVtIGZyb20gYSB3cm9uZyBhbmdsZT8NCj4gPg0KPiANCj4gWWVzLCB0
-aGVyZSdzIGEgZmV3IHNwZWNpYWwgcGFkIGdyb3VwIGN0cmwgcmVnaXN0ZXJzIChlLmcuIERSQU0g
-YW5kIFJHTUlJDQo+IGZvciBteDZxKSB3aGljaCBhcmUgbm90IGFkZGVkIEluIHRoZSBwaW5jdHJs
-IGRyaXZlciBzdXBwb3J0Lg0KPiANCj4gPiBIb3cgc2hvdWxkIHdlIGRlYWwgd2l0aCBib2FyZHMg
-dGhhdCBuZWVkIHRvIGNvbmZpZ3VyZSBzb21lIHBhZA0KPiA+IGNoYXJhY3RlcmlzdGljcyBhdmFp
-bGFibGUgb25seSB0aHJvdWdoIHRoZSBwYWQgZ3JvdXAgY29udHJvbCByZWdpc3RlcnM/DQo+ID4N
-Cj4gDQo+IEFuZHksDQo+IEhvdyBkbyB3ZSBoYW5kbGUgaXQgaW50ZXJuYWxseT8NCk5vLCB3ZSBk
-b24ndCBoYW5kbGUgdGhlIHBpbi4NCkkgcmVtZW1iZXJlZCBJQyBvd25lciBzYWlkIEl0IHNlZW1z
-IG9ubHkgUkdNSUkgMi41diBuZWVkIHRvIGhhbmRsZSB0aGUgcGluLg0KDQo+IA0KPiA+IEkgYWxz
-byByYWlzZWQgdGhpcyBxdWVzdGlvbiBhdCB0aGUgTlhQIGNvbW11bml0eSBmb3J1bSBbMV0gYW5k
-IGdldA0KPiA+IHF1aXRlIHVuc2F0aXNmeWluZyBhbnN3ZXIgc28gZmFyLiBJIHdvdWxkIGxvdmUg
-dG8gZmluZC9pbXBsZW1lbnQgYQ0KPiA+IHByb3BlciBhbmQgdW5pdmVyc2FsIHNvbHV0aW9uLg0K
-PiA+DQo+IA0KPiBUaGVyZSdyZSBwcm9iYWJseSB0d28gd2F5cyB0byBkbyBpdDoNCj4gMSkgaGFu
-ZGxlIGl0IGluIGZlYyBkcml2ZXIgYnkgcGFyc2luZyBhIHNwZWNpZmljIHByb3BlcnR5DQo+IDIp
-IEFkZCBhIG5ldyBwYWQgZ3JvdXAgaW50byBwaW5jdHJsIGRyaXZlciBzdXBwb3J0IGUuZy4NCj4g
-TVg2UV9QQURfQ1RMX0dSUF9SR01JSV9URVJNDQo+IE1YNlFfUEFEX0NUTF9HUlBfRERSX1RZUEVf
-UkdNSUkNCj4gDQo+IEkgbWF5IHByZWZlciB0byAyKS4NCj4gDQo+IFJlZ2FyZHMNCj4gRG9uZyBB
-aXNoZW5nDQo+IA0KPiA+IFRoYW5rcyBpbiBhZHZhbmNlIGZvciB5b3VyIHRpbWUsDQo+ID4gTWlj
-aGFsDQo+ID4NCj4gPiBbMV0NCj4gPg0KPiBodHRwczovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVj
-dGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGYw0KPiBvDQo+ID4NCj4gbW11bml0
-eS5ueHAuY29tJTJGdGhyZWFkJTJGNDc3NDY0JmRhdGE9MDIlN0MwMSU3Q2Fpc2hlbmcuZG9uZw0K
-PiAlNA0KPiA+DQo+IDBueHAuY29tJTdDYTNlNTQ2M2ViMDZhNDdmMTEyMTAwOGQ1ZDA3NjhhMDQl
-N0M2ODZlYTFkM2JjMmINCj4gNGM2ZmE5DQo+ID4NCj4gMmNkOTljNWMzMDE2MzUlN0MwJTdDMSU3
-QzYzNjY0NDEyOTkxNDE2MjQ5NSZzZGF0YT14cXRCUzh1WA0KPiAlMkJTenENCj4gPiA1bTZ0Yk5h
-THpDa0I3ZXpnSFNueXU5R1EzSzEzY1c4JTNEJnJlc2VydmVkPTANCg==
+Hello Yamada-san,
+
+> -----Original Message-----
+> From: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Sent: Saturday, June 23, 2018 12:47 PM
+> To: Suzuki, Katsuhiro/鈴木 勝博 <suzuki.katsuhiro@socionext.com>
+> Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>; DTML
+> <devicetree@vger.kernel.org>; Masami Hiramatsu <masami.hiramatsu@linaro.org>;
+> Jassi Brar <jaswinder.singh@linaro.org>; Linux Kernel Mailing List
+> <linux-kernel@vger.kernel.org>
+> Subject: Re: [PATCH 1/2] arm64: dts: uniphier: add headphone detect gpio for LD20
+> global board
+> 
+> 2018-06-19 13:11 GMT+09:00 Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>:
+> > This patch adds GPIO for headphone detection on LD20 global board.
+> >
+> > Signed-off-by: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+> > ---
+> >  arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
+> b/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
+> > index 6a074a20c924..38b75998e2dd 100644
+> > --- a/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
+> > +++ b/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
+> > @@ -60,6 +60,7 @@
+> >                         &i2s_port4
+> >                         &spdif_port0
+> >                         &comp_spdif_port0>;
+> > +               hp-det-gpio = <&gpio UNIPHIER_GPIO_PORT(15, 0) GPIO_ACTIVE_LOW>;
+> 
+> 
+> When you use irq-capable gpio pin (XIRQ0),
+> please write like follows for consistency.
+> 
+> 
+>              hp-det-gpio = <&gpio UNIPHIER_GPIO_IRQ(0) GPIO_ACTIVE_LOW>;
+> 
+> 
+> See uniphier-ld20-ref.dts for example.
+
+Thank you for reviewing!
+
+I'll fix it and post v2.
+
+Regards,
+--
+Katsuhiro Suzuki
+
+
+> 
+> 
+> 
+> >         };
+> >
+> >         spdif-out {
+> > --
+> > 2.17.1
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+> 
+> --
+> Best Regards
+> Masahiro Yamada
