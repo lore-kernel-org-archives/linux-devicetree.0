@@ -1,8 +1,8 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 11/11] ASoC: qdsp6: q6routing: add proper error
-	check
-Date: Mon, 25 Jun 2018 15:31:15 +0100
-Message-ID: <20180625143115.8346-12-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 10/11] ASoC: qcom: apq8096: remove redundant
+	owner assignment
+Date: Mon, 25 Jun 2018 15:31:14 +0100
+Message-ID: <20180625143115.8346-11-srinivas.kandagatla@linaro.org>
 References: <20180625143115.8346-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,26 +22,25 @@ To: broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.o
 Cc: rohkumar@qti.qualcomm.com, devicetree@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, srinivas.kandagatla@linaro.org, niklas.cassel@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-q6adm_open can return error pointer or a null in error cases.
-Fix this check this.
+module owner is already set in platform_driver_register(), so remove this
+redundant assignment.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- sound/soc/qcom/qdsp6/q6routing.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/qcom/apq8096.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/sound/soc/qcom/qdsp6/q6routing.c b/sound/soc/qcom/qdsp6/q6routing.c
-index caf2f847a886..c18f808c7730 100644
---- a/sound/soc/qcom/qdsp6/q6routing.c
-+++ b/sound/soc/qcom/qdsp6/q6routing.c
-@@ -310,7 +310,7 @@ int q6routing_stream_open(int fedai_id, int perf_mode,
- 			      session->channels, topology, perf_mode,
- 			      session->bits_per_sample, 0, 0);
- 
--	if (!copp) {
-+	if (IS_ERR_OR_NULL(copp)) {
- 		mutex_unlock(&routing_data->lock);
- 		return -EINVAL;
- 	}
+diff --git a/sound/soc/qcom/apq8096.c b/sound/soc/qcom/apq8096.c
+index 561cd429e6f2..6e79fec7e789 100644
+--- a/sound/soc/qcom/apq8096.c
++++ b/sound/soc/qcom/apq8096.c
+@@ -245,7 +245,6 @@ static struct platform_driver msm_snd_apq8096_driver = {
+ 	.remove = apq8096_platform_remove,
+ 	.driver = {
+ 		.name = "msm-snd-apq8096",
+-		.owner = THIS_MODULE,
+ 		.of_match_table = msm_snd_apq8096_dt_match,
+ 	},
+ };
 -- 
 2.16.2
