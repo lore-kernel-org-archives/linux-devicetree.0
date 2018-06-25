@@ -1,87 +1,83 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 15/23] dt-bindings: ap806: add the thermal node in the
- syscon file
-Date: Mon, 25 Jun 2018 17:12:31 +0200
-Message-ID: <20180625151239.20976-16-miquel.raynal@bootlin.com>
-References: <20180625151239.20976-1-miquel.raynal@bootlin.com>
+From: Andreas Klinger <ak@it-klinger.de>
+Subject: [PATCH v2 2/4] iio: hx711: add delay until DOUT is ready
+Date: Mon, 25 Jun 2018 17:18:24 +0200
+Message-ID: <20180625151824.GA6380@arbeit>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180625151239.20976-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Explain the thermal bindings now that the thermal IP is described being
-inside of a system controller. Add a reference to the thermal-zone node.
+On a system with parasitic capacities it turned out that DOUT is not ready
+after 100 ns after PD_SCK has raised. A measurement showed almost 1000 ns
+until DOUT has reached its correct value.
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+With this patch its now possible to wait until data is ready.
+
+The wait time should not be higher than the maximum PD_SCK high time which
+is corresponding to the datasheet 50000 ns.
+
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 ---
- .../arm/marvell/ap806-system-controller.txt        | 38 ++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ drivers/iio/adc/hx711.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-index a856eb9a4e05..a265f1628f36 100644
---- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-+++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-@@ -11,6 +11,9 @@ For the top level node:
-  - compatible: must be: "syscon", "simple-mfd";
-  - reg: register area of the AP806 system controller
- 
-+SYSTEM CONTROLLER 0
-+===================
-+
- Clocks:
- -------
- 
-@@ -98,3 +101,38 @@ ap_syscon: system-controller@6f4000 {
- 		gpio-ranges = <&ap_pinctrl 0 0 19>;
- 	};
+diff --git a/drivers/iio/adc/hx711.c b/drivers/iio/adc/hx711.c
+index 9430b54121e0..41e26ef324ee 100644
+--- a/drivers/iio/adc/hx711.c
++++ b/drivers/iio/adc/hx711.c
+@@ -97,6 +97,13 @@ struct hx711_data {
+ 	 * 2x32-bit channel + 64-bit timestamp
+ 	 */
+ 	u32			buffer[4];
++	/*
++	 * delay after a rising edge on SCK until the data is ready DOUT
++	 * this is dependent on the hx711 where the datasheet tells a
++	 * maximum value of 100 ns
++	 * but also on potential parasitic capacities on the wiring
++	 */
++	u32			data_ready_delay_ns;
  };
+ 
+ static int hx711_cycle(struct hx711_data *hx711_data)
+@@ -110,6 +117,14 @@ static int hx711_cycle(struct hx711_data *hx711_data)
+ 	 */
+ 	preempt_disable();
+ 	gpiod_set_value(hx711_data->gpiod_pd_sck, 1);
 +
-+SYSTEM CONTROLLER 1
-+===================
++	/*
++	 * wait until DOUT is ready
++	 * it turned out that parasitic capacities are extending the time
++	 * until DOUT has reached it's value
++	 */
++	ndelay(hx711_data->data_ready_delay_ns);
 +
-+Thermal:
-+--------
+ 	val = gpiod_get_value(hx711_data->gpiod_dout);
+ 	/*
+ 	 * here we are not waiting for 0.2 us as suggested by the datasheet,
+@@ -458,6 +473,7 @@ static const struct iio_chan_spec hx711_chan_spec[] = {
+ static int hx711_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
+ 	struct hx711_data *hx711_data;
+ 	struct iio_dev *indio_dev;
+ 	int ret;
+@@ -530,6 +546,13 @@ static int hx711_probe(struct platform_device *pdev)
+ 	hx711_data->gain_set = 128;
+ 	hx711_data->gain_chan_a = 128;
+ 
++	ret = of_property_read_u32(np, "data-ready-delay-ns",
++					&hx711_data->data_ready_delay_ns);
++	if (ret < 0) {
++		dev_warn(dev, "data-ready-delay-ns not set - assuming 0 ns\n");
++		hx711_data->data_ready_delay_ns = 0;
++	}
 +
-+For common binding part and usage, refer to
-+Documentation/devicetree/bindings/thermal/thermal.txt
-+
-+The thermal IP can probe the temperature all around the processor. It
-+may feature several channels, each of them wired to one sensor.
-+
-+Required properties:
-+- compatible: must be one of:
-+  * marvell,armada-ap806-thermal
-+- reg: register range associated with the thermal functions.
-+
-+Optional properties:
-+- #thermal-sensor-cells: shall be <1> when thermal-zones subnodes refer
-+  to this IP and represents the channel ID. There is one sensor per
-+  channel. O refers to the thermal IP internal channel, while positive
-+  IDs refer to each CPU.
-+
-+Example:
-+ap_syscon1: system-controller@6f8000 {
-+	compatible = "syscon", "simple-mfd";
-+	reg = <0x6f8000 0x1000>;
-+
-+	ap_thermal: ap-thermal@80 {
-+		compatible = "marvell,armada-ap806-thermal";
-+		reg = <0x80 0x10>;
-+		#thermal-sensor-cells = <1>;
-+	};
-+};
+ 	platform_set_drvdata(pdev, indio_dev);
+ 
+ 	indio_dev->name = "hx711";
 -- 
-2.14.1
+2.1.4
