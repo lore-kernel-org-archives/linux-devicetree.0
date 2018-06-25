@@ -1,54 +1,58 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [RfC v1 4/5] ARM64: dts: meson-gxl: add support for the S905W SoC
- and the P281 board - WiP
-Date: Mon, 25 Jun 2018 19:25:59 +0200
-Message-ID: <CAFBinCChoyoqc7f09JDLg7xJ3bGu3bJrCk88ekHO2Yfmr6AZow@mail.gmail.com>
-References: <20180624182814.31691-1-martin.blumenstingl@googlemail.com>
- <20180624182814.31691-5-martin.blumenstingl@googlemail.com>
- <fb3bfe0c-2cfc-5e92-5271-e2159f20b019@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/5] dt-bindings: dmaengine: xilinx_dma: add optional
+ xlnx,sg-length-width property
+Date: Mon, 25 Jun 2018 11:29:24 -0600
+Message-ID: <20180625172924.GA398@rob-hp-laptop>
+References: <20180625092724.22164-1-andrea.merello@gmail.com>
+ <20180625092724.22164-2-andrea.merello@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <fb3bfe0c-2cfc-5e92-5271-e2159f20b019@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@baylibre.com, yixun.lan@amlogic.com, robh+dt@kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180625092724.22164-2-andrea.merello@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrea Merello <andrea.merello@gmail.com>
+Cc: vkoul@kernel.org, dan.j.williams@intel.com, michal.simek@xilinx.com, appana.durga.rao@xilinx.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
+On Mon, Jun 25, 2018 at 11:27:21AM +0200, Andrea Merello wrote:
+> The width of the "length register" cannot be autodetected, and it is now
+> specified with a DT property. Add DOC for it.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+> Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> ---
+> Changes in v2:
+> 	- change property name
+> 	- property is now optional
+> 	- cc DT maintainer
+> Changes in v3:
+> 	- reword
+> 	- cc DT maintainerS and ML
+> ---
+>  Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> index a2b8bfaec43c..c894abe28baa 100644
+> --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> @@ -41,6 +41,7 @@ Optional properties:
+>  - xlnx,include-sg: Tells configured for Scatter-mode in
+>  	the hardware.
+>  Optional properties for AXI DMA:
+> +- xlnx,sg-length-width: Should be the width of the length register as configured in h/w.
 
-On Mon, Jun 25, 2018 at 2:51 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
-> Hi Martin, Kevin, Carlo, Jerome,
->
-> I would like to discuss how we should handle all the GXl variants, since from linux PoV, S905x, S905W and S805X are the same (S905W and S805X only has ledd IO balls, less IO available but same pinctrl interface).
->
-> At some point, meson-gxl-s905w.dtsi and meson-gxl-s805x.dtsi will be exactly the same as meson-gxl-s905x.dtsi, and maybe the same for S905Z in the Fire TV.
-like you mentioned, most things (all using the internal PHY, same GPU,
-same pinctrl interface, ...) are going to be identical, but what about
-the differences?
-- available HDMI modes are different for S905X (max. 4k60), S905W
-(max. 4k30) and S805X (max. 1080p)
-- video encoders / decoders are different for S905X (max. 4k60), S905W
-(max. 4k30) and S805X (max. 1080p)
-- CPU frequency changes are probably a no-op for us since it's handled
-by the SCPI firmware: 1.5GHz for S905X, 1.2GHz for S905W and S805X
-- according to lvrp16 the S805X SoC itself measures 11mm x 11mm
-whereas the S905X SoC measures 14mm x 14mm
-- what else did I miss?
+What are the units? What are valid values? What is the default if the 
+property is not present?
 
-at least the first two may require SoC/package specific compatible
-strings for the HDMI controller and video decoder (if these IP blocks
-don't come with a way to auto-detect the max supported resolutions)
-
-
-Regards
-Martin
+>  - xlnx,mcdma: Tells whether configured for multi-channel mode in the hardware.
+>  Optional properties for VDMA:
+>  - xlnx,flush-fsync: Tells which channel to Flush on Frame sync.
+> -- 
+> 2.17.1
+> 
