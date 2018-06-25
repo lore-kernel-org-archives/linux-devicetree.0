@@ -1,47 +1,68 @@
-Return-Path: <SRS0=SxbK=JL=linaro.org=vinod.koul@kernel.org>
-From: Vinod Koul <vinod.koul@linaro.org>
-Subject: [PATCH v2 3/5] dt-bindings: Input: Add additional property to qcom pwrkey
-Date: Mon, 25 Jun 2018 10:39:36 +0530
-Message-Id: <20180625050938.4700-4-vkoul@kernel.org>
-In-Reply-To: <20180625050938.4700-1-vkoul@kernel.org>
-References: <20180625050938.4700-1-vkoul@kernel.org>
-To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Return-Path: <SRS0=JYUX=JL=zonque.org=daniel@kernel.org>
+Subject: Re: [PATCH v4 1/5] dt-bindings: leds: Add bindings for lltc,lt3593
+References: <20180621202322.11581-1-daniel@zonque.org>
+ <20180621202322.11581-2-daniel@zonque.org>
+ <20180625155912.GA28653@rob-hp-laptop>
+From: Daniel Mack <daniel@zonque.org>
+Message-ID: <822f3b48-e322-bba3-f4ca-b9caf0722573@zonque.org>
+Date: Mon, 25 Jun 2018 22:21:02 +0200
+MIME-Version: 1.0
+In-Reply-To: <20180625155912.GA28653@rob-hp-laptop>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Rob Herring <robh@kernel.org>
+Cc: jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Pwrkey and reset have similar properties so add additional
-property for linux,code to use the code for sending events.
+Hi Rob,
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Thanks for the review!
 
-diff --git a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-index 07bf55f6e0b9..bf719396eadd 100644
---- a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-+++ b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-@@ -32,6 +32,14 @@ PROPERTIES
- 	Definition: presence of this property indicates that the KPDPWR_N pin
- 		    should be configured for pull up.
- 
-+- linux,code:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: The input key-code associated with the power key.
-+		    Use the linux event codes defined in
-+		    include/dt-bindings/input/linux-event-codes.h
-+		    When property is omitted KEY_POWER is assumed.
-+
- EXAMPLE
- 
- 	pwrkey@800 {
-@@ -40,4 +48,5 @@ EXAMPLE
- 		interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
- 		debounce = <15625>;
- 		bias-pull-up;
-+		linux,code = <KEY_POWER>;
- 	};
--- 
-2.14.4
+On 06/25/2018 05:59 PM, Rob Herring wrote:
+> On Thu, Jun 21, 2018 at 10:23:18PM +0200, Daniel Mack wrote:
+>> This patch add the bindings document for LT3593 LED drivers.
+>> The binding is kept consistent with other LED driver bindings in that it
+>> stores all the LED-specific properties in its own subnode. As the hardware
+>> only supports one channel, there can consequently only be one sub-node.
+>>
+>> Signed-off-by: Daniel Mack <daniel@zonque.org>
+>> ---
+>>  .../devicetree/bindings/leds/leds-lt3593.txt  | 34 +++++++++++++++++++
+>>  1 file changed, 34 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lt3593.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-lt3593.txt b/Documentation/devicetree/bindings/leds/leds-lt3593.txt
+>> new file mode 100644
+>> index 000000000000..b31d427448f8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/leds/leds-lt3593.txt
+>> @@ -0,0 +1,34 @@
+>> +Bindings for Linear Technologies LT3593 LED controller
+>> +
+>> +Required properties:
+>> +- compatible:	Should be "lltc,lt3593".
+>> +
+>> +The hardware supports only one LED. The properties of this LED are
+>> +configured in a sub-node in the device node.
+>> +
+>> +Required sub-node properties:
+>> +- gpios:	A handle to the GPIO that is connected to the 'CTRL'
+>> +		pin of the chip.
+> 
+> lltc,ctrl-gpios
+> 
+> Or "shutdown-gpios" as that is a standard name and seems to be its 
+> function.
+
+No, it's a control pin that receives multiple pulses to set the LED
+current (and by that, its brightness).
+
+> This also belongs in the parent node because it is a GPIO connection to 
+> the controller, not the LEDs.
+
+Okay, not a problem. I'll change that and send a patch.
+
+
+Thanks!
+Daniel
