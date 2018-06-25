@@ -1,120 +1,93 @@
 From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [v4, 03/10] dt-binding: ptp_qoriq: add DPAA FMan support
-Date: Mon, 25 Jun 2018 20:37:09 +0800
-Message-ID: <20180625123716.28993-4-yangbo.lu@nxp.com>
+Subject: [v4, 10/10] dpaa_eth: add the get_ts_info interface for ethtool
+Date: Mon, 25 Jun 2018 20:37:16 +0800
+Message-ID: <20180625123716.28993-11-yangbo.lu@nxp.com>
 References: <20180625123716.28993-1-yangbo.lu@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180625123716.28993-1-yangbo.lu@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: netdev@vger.kernel.org, madalin.bucur@nxp.com, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "David S . Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Yangbo Lu <yangbo.lu@nxp.com>
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch is to add bindings description for DPAA
-FMan 1588 timer, and also remove its description in
-fsl-fman dt-bindings document.
+Added the get_ts_info interface for ethtool to check
+the timestamping capability.
 
 Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Acked-by: Richard Cochran <richardcochran@gmail.com>
 Acked-by: Madalin Bucur <madalin.bucur@nxp.com>
 ---
 Changes for v2:
-	- None.
+	- Removed ifdef for hw timestamp.
 Changes for v3:
 	- None.
 Changes for v4:
-	- Added ACKs and review.
+	- Added ACKs.
 ---
- Documentation/devicetree/bindings/net/fsl-fman.txt |   25 +-------------------
- .../devicetree/bindings/ptp/ptp-qoriq.txt          |   15 +++++++++--
- 2 files changed, 13 insertions(+), 27 deletions(-)
+ drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c |   39 ++++++++++++++++++++
+ 1 files changed, 39 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/fsl-fman.txt b/Documentation/devicetree/bindings/net/fsl-fman.txt
-index df873d1..74603dd 100644
---- a/Documentation/devicetree/bindings/net/fsl-fman.txt
-+++ b/Documentation/devicetree/bindings/net/fsl-fman.txt
-@@ -356,30 +356,7 @@ ethernet@e0000 {
- ============================================================================
- FMan IEEE 1588 Node
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c b/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
+index 2f933b6..3184c8f 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
+@@ -32,6 +32,9 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
--DESCRIPTION
--
--The FMan interface to support IEEE 1588
--
--
--PROPERTIES
--
--- compatible
--		Usage: required
--		Value type: <stringlist>
--		Definition: A standard property.
--		Must include "fsl,fman-ptp-timer".
--
--- reg
--		Usage: required
--		Value type: <prop-encoded-array>
--		Definition: A standard property.
--
--EXAMPLE
--
--ptp-timer@fe000 {
--	compatible = "fsl,fman-ptp-timer";
--	reg = <0xfe000 0x1000>;
--};
-+Refer to Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
+ #include <linux/string.h>
++#include <linux/of_platform.h>
++#include <linux/net_tstamp.h>
++#include <linux/fsl/ptp_qoriq.h>
  
- =============================================================================
- FMan MDIO Node
-diff --git a/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt b/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
-index 0f569d8..c5d0e79 100644
---- a/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
-+++ b/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
-@@ -2,7 +2,8 @@
+ #include "dpaa_eth.h"
+ #include "mac.h"
+@@ -515,6 +518,41 @@ static int dpaa_set_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd)
+ 	return ret;
+ }
  
- General Properties:
- 
--  - compatible   Should be "fsl,etsec-ptp"
-+  - compatible   Should be "fsl,etsec-ptp" for eTSEC
-+                 Should be "fsl,fman-ptp-timer" for DPAA FMan
-   - reg          Offset and length of the register set for the device
-   - interrupts   There should be at least two interrupts. Some devices
-                  have as many as four PTP related interrupts.
-@@ -43,14 +44,22 @@ Clock Properties:
-   value, which will be directly written in those bits, that is why,
-   according to reference manual, the next clock sources can be used:
- 
-+  For eTSEC,
-   <0> - external high precision timer reference clock (TSEC_TMR_CLK
-         input is used for this purpose);
-   <1> - eTSEC system clock;
-   <2> - eTSEC1 transmit clock;
-   <3> - RTC clock input.
- 
--  When this attribute is not used, eTSEC system clock will serve as
--  IEEE 1588 timer reference clock.
-+  For DPAA FMan,
-+  <0> - external high precision timer reference clock (TMR_1588_CLK)
-+  <1> - MAC system clock (1/2 FMan clock)
-+  <2> - reserved
-+  <3> - RTC clock oscillator
++static int dpaa_get_ts_info(struct net_device *net_dev,
++			    struct ethtool_ts_info *info)
++{
++	struct device *dev = net_dev->dev.parent;
++	struct device_node *mac_node = dev->of_node;
++	struct device_node *fman_node = NULL, *ptp_node = NULL;
++	struct platform_device *ptp_dev = NULL;
++	struct qoriq_ptp *ptp = NULL;
 +
-+  When this attribute is not used, the IEEE 1588 timer reference clock
-+  will use the eTSEC system clock (for Gianfar) or the MAC system
-+  clock (for DPAA).
- 
- Example:
- 
++	info->phc_index = -1;
++
++	fman_node = of_get_parent(mac_node);
++	if (fman_node)
++		ptp_node = of_parse_phandle(fman_node, "ptimer-handle", 0);
++
++	if (ptp_node)
++		ptp_dev = of_find_device_by_node(ptp_node);
++
++	if (ptp_dev)
++		ptp = platform_get_drvdata(ptp_dev);
++
++	if (ptp)
++		info->phc_index = ptp->phc_index;
++
++	info->so_timestamping = SOF_TIMESTAMPING_TX_HARDWARE |
++				SOF_TIMESTAMPING_RX_HARDWARE |
++				SOF_TIMESTAMPING_RAW_HARDWARE;
++	info->tx_types = (1 << HWTSTAMP_TX_OFF) |
++			 (1 << HWTSTAMP_TX_ON);
++	info->rx_filters = (1 << HWTSTAMP_FILTER_NONE) |
++			   (1 << HWTSTAMP_FILTER_ALL);
++
++	return 0;
++}
++
+ const struct ethtool_ops dpaa_ethtool_ops = {
+ 	.get_drvinfo = dpaa_get_drvinfo,
+ 	.get_msglevel = dpaa_get_msglevel,
+@@ -530,4 +568,5 @@ static int dpaa_set_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd)
+ 	.set_link_ksettings = dpaa_set_link_ksettings,
+ 	.get_rxnfc = dpaa_get_rxnfc,
+ 	.set_rxnfc = dpaa_set_rxnfc,
++	.get_ts_info = dpaa_get_ts_info,
+ };
 -- 
 1.7.1
