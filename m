@@ -1,56 +1,13 @@
-From: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v12 3/5] dt-bindings: drm/bridge: Document
- sn65dsi86 bridge bindings
-Date: Mon, 25 Jun 2018 00:06:49 -0700
-Message-ID: <152991040964.16708.10837173113497426796@swboyd.mtv.corp.google.com>
-References: <1529584329-632-1-git-send-email-spanda@codeaurora.org>
- <1529584329-632-4-git-send-email-spanda@codeaurora.org>
- <152962993355.16708.2310695895490918997@swboyd.mtv.corp.google.com>
- <2110b47210e3caf6b747ae2297e24b33@codeaurora.org>
+From: Stanley Chu <stanley.chu@mediatek.com>
+Subject: Add system timer driver for Mediatek SoCs
+Date: Mon, 25 Jun 2018 15:09:59 +0800
+Message-ID: <1529910601-15005-1-git-send-email-stanley.chu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <2110b47210e3caf6b747ae2297e24b33-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBzcGFuZGFAY29kZWF1cm9yYS5vcmcgKDIwMTgtMDYtMjQgMjE6NTY6MDUpCj4gT24g
-MjAxOC0wNi0yMiAwNjo0MiwgU3RlcGhlbiBCb3lkIHdyb3RlOgo+ID4gUXVvdGluZyBTYW5kZWVw
-IFBhbmRhICgyMDE4LTA2LTIxIDA1OjMyOjA3KQo+ID4+ICsgICAgICAgICBjbG9jayByYXRlIG11
-c3QgYmUgMTIgTUh6LCAxOS4yIE1IeiwgMjYgTUh6LCAyNyBNSHogb3IgMzguNCAKPiA+PiBNSHou
-Cj4gPj4gKwo+ID4+ICstIGRhdGEtbGFuZXM6IFNlZSAuLi8uLi9tZWRpYS92aWRlby1pbnRlcmZh
-Y2UudHh0Cj4gPj4gKy0gbGFuZS1wb2xhcml0aWVzOiBTZWUgLi4vLi4vbWVkaWEvdmlkZW8taW50
-ZXJmYWNlLnR4dAo+ID4gCj4gPiBXZSBuZWVkIGFub3RoZXIgcHJvcGVydHkgZm9yIHN1c3BlbmQt
-Z3Bpb3MgZnVuY3Rpb24gb2YgR1BJTzEuIEkgc3VwcG9zZQo+ID4gZm9yIHRoZSBvdGhlciBHUElP
-cyB3ZSBkb24ndCBuZWVkIGFueXRoaW5nIGxpa2UgdGhpcyBiZWNhdXNlIHRoZXkncmUKPiA+IG91
-dHB1dCBmdW5jdGlvbnMgb25seT8gR1BJTzQgY2FuIGRvIFBXTSBhbmQgSSBndWVzcyBpZiBwd20g
-aXMgdXNlZCBpbiAKPiA+IERUCj4gPiBmcm9tIGhlcmUgdGhlbiB0aGUgZHJpdmVyIGNhbiBtdXgg
-dGhhdCBvdXQgb2YgZ3BpbzQgcHJvcGVybHkuIEkgaGF2ZSBubwo+ID4gaWRlYSBob3cgdGhlIGhz
-eW5jIGFuZCB2c3luYyBHUElPcyB3b3VsZCB3b3JrIHRob3VnaC4gSSBzZWUgdGhhdCBHUElPMwo+
-ID4gY2FuIGRvIERTSUEgaHN5bmMgb3IgdnN5bmMgYW5kIEdQSU8yIGNhbiBkbyBEU0lBIHZzeW5j
-IGFuZCBJIHdvdWxkIAo+ID4gZ3Vlc3MKPiA+IHRob3NlIGFyZSBpbiBvdXRwdXQgbW9kZSBvbmx5
-LiBNYXliZSB0aGF0J3MganVzdCBhbm90aGVyIHByb3BlcnR5IG9uCj4gPiB0aGlzIG5vZGUgdG8g
-aW5kaWNhdGUgaWYgd2Ugc2hvdWxkIG11eCBvdXQgdGhlIGZ1bmN0aW9uIG9yIG5vdC4gVXN1YWxs
-eQo+ID4gdGhhdCdzIGRvbmUgZnJvbSBwaW5jdHJsIHRob3VnaC4gSSBkb24ndCBoYXZlIGEgdXNl
-IGNhc2UgZm9yIHRob3NlCj4gPiBmdW5jdGlvbnMgYnV0IEkgZG8gY2FyZSBhYm91dCBzdXNwZW5k
-IGdwaW9zIHNvIGF0IGxlYXN0IGFkZCB0aGF0IG9uZQo+ID4gcGxlYXNlLgo+IAo+IEkgd2FzIHRo
-aW5raW5nIG9mIGFkZGluZyBncGlvMSAoc3VzcGVuZC1ncGlvKSBkb2N1bWVudGF0aW9uIHdoZW4g
-d2UgYWRkCj4gc3VwcG9ydCBmb3IgUFNSIGZlYXR1cmUuIFNpbmNlIGZvciBQU1Igd2Ugd2lsbCBi
-ZSB1c2luZyB0aGlzIAo+IHN1c3BvZW5kLWdwaW8uCj4gCgpPayBzdXJlLCBidXQgSSBkb24ndCBz
-ZWUgYW55IGhhcm0gaW4gYWRkaW5nIGl0IG5vdy4gSSdtIGZpbmUgd2l0aAp3YWl0aW5nIGZvciB0
-aGUgYmluZGluZyB1cGRhdGUgd2hlbiB0aGUgUFNSIHBhdGNoZXMgY29tZSBpZiB5b3UgZmVlbAps
-aWtlIGFkZGluZyBpdCBub3cgd2lsbCBkZWxheSBzb21ldGhpbmcuCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZy
-ZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+This patch adds a new driver for system timer on the Mediatek SoCs.
