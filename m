@@ -1,89 +1,52 @@
-From: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-Subject: [PATCH 2/2] drm/panel: simple: Add support for DataImage SCF0700C48GGU18
-Date: Mon, 25 Jun 2018 14:41:30 +0200
-Message-ID: <1529930490-11874-2-git-send-email-michal.vokac@ysoft.com>
-References: <1529930490-11874-1-git-send-email-michal.vokac@ysoft.com>
+From: Daniel Mack <daniel@zonque.org>
+Subject: Re: [PATCH 3/3] ASoC: simple-card: add support for
+ clock divider setup
+Date: Mon, 25 Jun 2018 14:57:47 +0200
+Message-ID: <14a11599-e88f-e8b6-2ebb-6e079df236b4@zonque.org>
+References: <20180528193503.18905-1-daniel@zonque.org>
+ <20180528193503.18905-4-daniel@zonque.org>
+ <20180529113509.GE23509@sirena.org.uk>
+ <d6b9da97-8c71-ccfb-07e4-353620396a31@zonque.org>
+ <20180530091011.GA6920@sirena.org.uk>
+ <ace99dbd-3480-9ac3-e5b8-4ddae73bba10@zonque.org>
+ <b006a926-09ff-59e0-2b88-6f15e3e714e9@zonque.org>
+ <20180625112440.GE9413@sirena.org.uk>
+ <f7e05fe9-c177-9a78-e09d-0f74c2427b63@zonque.org>
+ <20180625125711.GO9413@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529930490-11874-1-git-send-email-michal.vokac@ysoft.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, thierry.reding@gmail.com
-Cc: mark.rutland@arm.com, airlied@linux.ie, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180625125711.GO9413@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Robert Jarzmik <robert.jarzmik@free.fr>, lgirdwood@gmail.com, kuninori.morimoto.gx@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the DataImage SCF0700C48GGU18 7.0" WVGA (800x480)
-TFT LCD panel. The panel has 24-bit parallel interface and can be
-supported by the simple panel driver.
+On Monday, June 25, 2018 02:57 PM, Mark Brown wrote:
+> On Mon, Jun 25, 2018 at 02:55:12PM +0200, Daniel Mack wrote:
+>> On Monday, June 25, 2018 01:24 PM, Mark Brown wrote:
+> 
+>>> No, I reviewed my patch in there.  What's going on?
+> 
+>> I'd like this patch to go through your tree, if that's okay. Then I can post
+>> some more patches on top without causing a conflict in the merge window.
+> 
+>> Robert is fine with that.
+> 
+> That's fine by me.  Is the latest version v3?
+> 
 
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
----
- .../display/panel/dataimage,scf0700c48ggu18.txt    |  8 ++++++
- drivers/gpu/drm/panel/panel-simple.c               | 29 ++++++++++++++++++++++
- 2 files changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/dataimage,scf0700c48ggu18.txt
+Yes.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/dataimage,scf0700c48ggu18.txt b/Documentation/devicetree/bindings/display/panel/dataimage,scf0700c48ggu18.txt
-new file mode 100644
-index 0000000..897085e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/dataimage,scf0700c48ggu18.txt
-@@ -0,0 +1,8 @@
-+DataImage, Inc. 7" WVGA (800x480) TFT LCD panel with 24-bit parallel interface.
-+
-+Required properties:
-+- compatible: should be "dataimage,scf0700c48ggu18"
-+- power-supply: as specified in the base binding
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index cbf1ab4..796b091 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -857,6 +857,32 @@ static const struct panel_desc chunghwa_claa101wb01 = {
- 	},
- };
- 
-+static const struct drm_display_mode dataimage_scf0700c48ggu18_mode = {
-+	.clock = 33260,
-+	.hdisplay = 800,
-+	.hsync_start = 800 + 40,
-+	.hsync_end = 800 + 40 + 128,
-+	.htotal = 800 + 40 + 128 + 88,
-+	.vdisplay = 480,
-+	.vsync_start = 480 + 10,
-+	.vsync_end = 480 + 10 + 2,
-+	.vtotal = 480 + 10 + 2 + 33,
-+	.vrefresh = 60,
-+	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
-+};
-+
-+static const struct panel_desc dataimage_scf0700c48ggu18 = {
-+	.modes = &dataimage_scf0700c48ggu18_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 152,
-+		.height = 91,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE,
-+};
-+
- static const struct drm_display_mode edt_et057090dhu_mode = {
- 	.clock = 25175,
- 	.hdisplay = 640,
-@@ -2125,6 +2151,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "chunghwa,claa101wb01",
- 		.data = &chunghwa_claa101wb01
- 	}, {
-+		.compatible = "dataimage,scf0700c48ggu18",
-+		.data = &dataimage_scf0700c48ggu18,
-+	}, {
- 		.compatible = "edt,et057090dhu",
- 		.data = &edt_et057090dhu,
- 	}, {
--- 
-2.1.4
+
+Thanks!
