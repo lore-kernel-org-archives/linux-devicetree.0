@@ -1,59 +1,76 @@
-Return-Path: <SRS0=4PV1=JO=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:33854 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S967798AbeF1S32 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Jun 2018 14:29:28 -0400
-From: Siddartha Mohanadoss <smohanad@codeaurora.org>
-Subject: [PATCH v2 0/2] Add QCOM PMIC5 ADC driver
-Date: Thu, 28 Jun 2018 11:29:10 -0700
-Message-Id: <1530210550-16085-1-git-send-email-smohanad@codeaurora.org>
+Return-Path: <SRS0=Dkm/=JL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nbd.name ([46.4.11.11]:34696 "EHLO nbd.name"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1755135AbeFYRYA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 Jun 2018 13:24:00 -0400
+From: John Crispin <john@phrozen.org>
+Subject: [PATCH 12/25] dt-bindings: PCI: qcom,ar7240: adds binding doc
+Date: Mon, 25 Jun 2018 19:15:36 +0200
+Message-Id: <20180625171549.4618-13-john@phrozen.org>
+In-Reply-To: <20180625171549.4618-1-john@phrozen.org>
+References: <20180625171549.4618-1-john@phrozen.org>
 Sender: devicetree-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Siddartha Mohanadoss <smohanad@codeaurora.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>
+To: James Hogan <jhogan@kernel.org>, Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org, John Crispin <john@phrozen.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch series adds the PMIC5 ADC family of chipset
-that supports clients to measure voltage and current on
-inputs connected to the PMIC ADC AMUX. Clients include
-reading voltage phone power and on board system thermistors
-for thermal management.
+With the driver being converted from platform_data to pure OF, we need to
+also add some docs.
 
-The v2 patchset addresses most of the review comments from
-prior patchset.
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: John Crispin <john@phrozen.org>
+---
+ .../devicetree/bindings/pci/qcom,ar7240-pci.txt    | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/qcom,ar7240-pci.txt
 
-Changes since patchset v1
-* Merged DT bindings with prior PMIC family instead of a
-  seperate DT file for PMIC5 family.
-* Updated documentation for 'label' and 'value' property.
-* Updated using unique prefix adc5 for functions and defines
-  specific for this family of chipset.
-* Refactored scaling functions to use function pointer for
-  scaling lookup.
-* Added documentation comments as requested in the
-  scaling functions as applicable.
-* Added utility functions in the scaling API to avoid some of
-  the code repetitions.
-* Use consistent hex format for adc_data and use specific length
-  while assigning data.
-* Added support to determine controller version and check against
-  supported hardware settling delay values.
-* Various minor changes.
-
-Siddartha Mohanadoss (2):
-  dt-bindings: iio: adc: Add DT binding document for PMIC5 ADC
-  iio: adc: Add QCOM SPMI PMIC5 ADC driver
-
- .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  77 +-
- drivers/iio/adc/Kconfig                            |  20 +
- drivers/iio/adc/Makefile                           |   1 +
- drivers/iio/adc/qcom-spmi-adc5.c                   | 878 +++++++++++++++++++++
- drivers/iio/adc/qcom-vadc-common.c                 | 230 +++++-
- drivers/iio/adc/qcom-vadc-common.h                 |  56 ++
- include/dt-bindings/iio/qcom,spmi-vadc.h           | 115 ++-
- 7 files changed, 1352 insertions(+), 25 deletions(-)
- create mode 100644 drivers/iio/adc/qcom-spmi-adc5.c
-
+diff --git a/Documentation/devicetree/bindings/pci/qcom,ar7240-pci.txt b/Documentation/devicetree/bindings/pci/qcom,ar7240-pci.txt
+new file mode 100644
+index 000000000000..7f6ca8a0f859
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/qcom,ar7240-pci.txt
+@@ -0,0 +1,40 @@
++* Qualcomm Atheros AR724X PCI express root complex
++
++Required properties:
++- compatible: should contain "qcom,ar7240-pci" to identify the core.
++- reg: Should contain the register ranges as listed in the reg-names property.
++- reg-names: Definition: Must include the following entries
++	- "crp_base"	Configuration registers
++	- "ctrl_base"	Control registers
++	- "cfg_base"	IO Memory
++- #address-cells: set to <3>
++- #size-cells: set to <2>
++- ranges: ranges for the PCI memory and I/O regions
++- interrupt-map-mask and interrupt-map: standard PCI
++	properties to define the mapping of the PCIe interface to interrupt
++	numbers.
++- #interrupt-cells: set to <1>
++- interrupt-parent: phandle to the MIPS IRQ controller
++- interrupt-controller: define to enable the builtin IRQ cascade.
++
++* Example for qca9557
++	pcie0: pcie-controller@180c0000 {
++		compatible = "qcom,ar7240-pci";
++		#address-cells = <3>;
++		#size-cells = <2>;
++		bus-range = <0x0 0x0>;
++		reg = <0x180c0000 0x1000>,
++		      <0x180f0000 0x100>,
++		      <0x14000000 0x1000>;
++		reg-names = "crp_base", "ctrl_base", "cfg_base";
++		ranges = <0x2000000 0 0x10000000 0x10000000 0 0x04000000
++			  0x1000000 0 0x00000000 0x00000000 0 0x00000001>;
++		interrupt-parent = <&intc2>;
++		interrupts = <1>;
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++
++		interrupt-map-mask = <0 0 0 1>;
++		interrupt-map = <0 0 0 0 &pcie0 0>;
++	};
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.11.0
 
