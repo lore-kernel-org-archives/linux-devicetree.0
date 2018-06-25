@@ -1,13 +1,13 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v3 01/24] clk: sunxi-ng: r40: Add minimal rate
- for video PLLs
-Date: Mon, 25 Jun 2018 14:02:41 +0200
-Message-ID: <20180625120304.7543-2-jernej.skrabec@siol.net>
+Subject: [PATCH v3 02/24] clk: sunxi-ng: r40: Allow setting
+ parent rate to display related clocks
+Date: Mon, 25 Jun 2018 14:02:42 +0200
+Message-ID: <20180625120304.7543-3-jernej.skrabec@siol.net>
 References: <20180625120304.7543-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBXFUYPMQKGQE5U26MTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBXVUYPMQKGQEXFSYJ4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180625120304.7543-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,80 +20,53 @@ To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@publ
 Cc: airlied-cv59FeDIM0c@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-According to documentation and experience with other similar SoCs, video
-PLLs don't work stable if their output frequency is set below 192 MHz.
+Display related peripherals need precise clocks to operate correctly.
 
-Because of that, set minimal rate to both R40 video PLLs to 192 MHz.
+Allow DE2, TCONs and HDMI to set parent clock.
 
 Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun8i-r40.c | 46 +++++++++++++++-------------
- 1 file changed, 24 insertions(+), 22 deletions(-)
+ drivers/clk/sunxi-ng/ccu-sun8i-r40.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r40.c b/drivers/clk/sunxi-ng/ccu-sun8i-r40.c
-index 933f2e68f42a..c16a62a7bdbd 100644
+index c16a62a7bdbd..fa5317719684 100644
 --- a/drivers/clk/sunxi-ng/ccu-sun8i-r40.c
 +++ b/drivers/clk/sunxi-ng/ccu-sun8i-r40.c
-@@ -65,17 +65,18 @@ static SUNXI_CCU_NM_WITH_GATE_LOCK(pll_audio_base_clk, "pll-audio-base",
- 				   CLK_SET_RATE_UNGATE);
+@@ -655,7 +655,8 @@ static SUNXI_CCU_GATE(dram_deinterlace_clk,	"dram-deinterlace",	"dram",
  
- /* TODO: The result of N/M is required to be in [8, 25] range. */
--static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK(pll_video0_clk, "pll-video0",
--					"osc24M", 0x0010,
--					8, 7,		/* N */
--					0, 4,		/* M */
--					BIT(24),	/* frac enable */
--					BIT(25),	/* frac select */
--					270000000,	/* frac rate 0 */
--					297000000,	/* frac rate 1 */
--					BIT(31),	/* gate */
--					BIT(28),	/* lock */
--					CLK_SET_RATE_UNGATE);
-+static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK_MIN(pll_video0_clk, "pll-video0",
-+					    "osc24M", 0x0010,
-+					    192000000,	/* Minimum rate */
-+					    8, 7,	/* N */
-+					    0, 4,	/* M */
-+					    BIT(24),	/* frac enable */
-+					    BIT(25),	/* frac select */
-+					    270000000,	/* frac rate 0 */
-+					    297000000,	/* frac rate 1 */
-+					    BIT(31),	/* gate */
-+					    BIT(28),	/* lock */
-+					    CLK_SET_RATE_UNGATE);
+ static const char * const de_parents[] = { "pll-periph0-2x", "pll-de" };
+ static SUNXI_CCU_M_WITH_MUX_GATE(de_clk, "de", de_parents,
+-				 0x104, 0, 4, 24, 3, BIT(31), 0);
++				 0x104, 0, 4, 24, 3, BIT(31),
++				 CLK_SET_RATE_PARENT);
+ static SUNXI_CCU_M_WITH_MUX_GATE(mp_clk, "mp", de_parents,
+ 				 0x108, 0, 4, 24, 3, BIT(31), 0);
  
- /* TODO: The result of N/M is required to be in [8, 25] range. */
- static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK(pll_ve_clk, "pll-ve",
-@@ -151,17 +152,18 @@ static struct ccu_nk pll_periph1_clk = {
- };
+@@ -667,9 +668,11 @@ static SUNXI_CCU_MUX_WITH_GATE(tcon_lcd0_clk, "tcon-lcd0", tcon_parents,
+ static SUNXI_CCU_MUX_WITH_GATE(tcon_lcd1_clk, "tcon-lcd1", tcon_parents,
+ 			       0x114, 24, 3, BIT(31), CLK_SET_RATE_PARENT);
+ static SUNXI_CCU_M_WITH_MUX_GATE(tcon_tv0_clk, "tcon-tv0", tcon_parents,
+-				 0x118, 0, 4, 24, 3, BIT(31), 0);
++				 0x118, 0, 4, 24, 3, BIT(31),
++				 CLK_SET_RATE_PARENT);
+ static SUNXI_CCU_M_WITH_MUX_GATE(tcon_tv1_clk, "tcon-tv1", tcon_parents,
+-				 0x11c, 0, 4, 24, 3, BIT(31), 0);
++				 0x11c, 0, 4, 24, 3, BIT(31),
++				 CLK_SET_RATE_PARENT);
  
- /* TODO: The result of N/M is required to be in [8, 25] range. */
--static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK(pll_video1_clk, "pll-video1",
--					"osc24M", 0x030,
--					8, 7,		/* N */
--					0, 4,		/* M */
--					BIT(24),	/* frac enable */
--					BIT(25),	/* frac select */
--					270000000,	/* frac rate 0 */
--					297000000,	/* frac rate 1 */
--					BIT(31),	/* gate */
--					BIT(28),	/* lock */
--					CLK_SET_RATE_UNGATE);
-+static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK_MIN(pll_video1_clk, "pll-video1",
-+					    "osc24M", 0x030,
-+					    192000000,	/* Minimum rate */
-+					    8, 7,	/* N */
-+					    0, 4,	/* M */
-+					    BIT(24),	/* frac enable */
-+					    BIT(25),	/* frac select */
-+					    270000000,	/* frac rate 0 */
-+					    297000000,	/* frac rate 1 */
-+					    BIT(31),	/* gate */
-+					    BIT(28),	/* lock */
-+					    CLK_SET_RATE_UNGATE);
+ static const char * const deinterlace_parents[] = { "pll-periph0",
+ 						    "pll-periph1" };
+@@ -699,7 +702,8 @@ static SUNXI_CCU_GATE(avs_clk,		"avs",		"osc24M",
  
- static struct ccu_nkm pll_sata_clk = {
- 	.enable		= BIT(31),
+ static const char * const hdmi_parents[] = { "pll-video0", "pll-video1" };
+ static SUNXI_CCU_M_WITH_MUX_GATE(hdmi_clk, "hdmi", hdmi_parents,
+-				 0x150, 0, 4, 24, 2, BIT(31), 0);
++				 0x150, 0, 4, 24, 2, BIT(31),
++				 CLK_SET_RATE_PARENT);
+ 
+ static SUNXI_CCU_GATE(hdmi_slow_clk,	"hdmi-slow",	"osc24M",
+ 		      0x154, BIT(31), 0);
 -- 
 2.18.0
