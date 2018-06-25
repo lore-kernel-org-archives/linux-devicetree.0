@@ -1,76 +1,134 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v7 00/29] Add support for mediatek SOC MT2712
-Date: Mon, 25 Jun 2018 10:47:40 +0200
-Message-ID: <20180625084740.GN2958@phenom.ffwll.local>
-References: <1529482771-2153-1-git-send-email-stu.hsieh@mediatek.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 7/7] soc: qcom: rpmpd/rpmhpd: Add a max vote on all
+ corners at init
+Date: Mon, 25 Jun 2018 10:57:05 +0200
+Message-ID: <CAPDyKFpvBXbppamoDDUKcMTnD8S3U7ZTKutLgSsLYQkAU0JXZg@mail.gmail.com>
+References: <20180612044052.4402-1-rnayak@codeaurora.org> <20180612044052.4402-8-rnayak@codeaurora.org>
+ <414598de-00a1-9ce7-3a7e-4a95fd1bd35d@codeaurora.org> <f5014664-1639-c610-a50a-db66484428dc@codeaurora.org>
+ <20180619101016.hbgjvev7d3h4yg7x@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1529482771-2153-1-git-send-email-stu.hsieh@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stu Hsieh <stu.hsieh@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180619101016.hbgjvev7d3h4yg7x@vireshk-i7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>
+Cc: David Collins <collinsd@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gMjAsIDIwMTggYXQgMDQ6MTk6MDJQTSArMDgwMCwgU3R1IEhzaWVoIHdyb3Rl
-Ogo+IFRoaXMgcGF0Y2ggYWRkIHN1cHBvcnQgZm9yIHRoZSBNZWRpYXRlayBNVDI3MTIgRElTUCBz
-dWJzeXN0ZW0uCj4gTVQyNzEyIGlzIGJhc2Ugb24gTVQ4MTczLCB0aGVyZSBhcmUgc29tZSBkaWZm
-ZXJlbmNlIGFzIGZvbGxvd2luZzoKPiBNVDI3MTIgc3VwcG9ydCB0aHJlZSBkaXNwIG91dHB1dCh0
-d28gb3ZsIGFuZCBvbmUgcmRtYSkKPiAKPiBDaGFuZ2UgaW4gdjY6Cj4gLSBVcGRhdGUgY29tbWl0
-IG1lc3NhZ2UgZm9yIHRoZSBwYXRjaAo+ICAgImRybS9tZWRpYXRlazogVXBkYXRlIHRoZSBkZWZp
-bml0aW9uIG9mIGNvbm5lY3Rpb24gZnJvbSBSRE1BMSB0byBEUEkwIgoKSnVzdCBhIGRyaXZlLWJ5
-IGNvbW1lbnQgb24gdGhlIG1lZGlhdGVrIGRyaXZlcjoKCkFzIGZhciBhcyBJIGNhbiBzZWUgbXRr
-X2RybV9nZW0uYyByZWltcGxlbWVudHMgdGhlIGNtYSBoZWxwZXJzIGFzIGEKY29weXBhc3RlIGpv
-Yi4gQW55IHJlYXNvbnMgd2h5IHlvdSdyZSBub3QgdXNpbmcgdGhlIG5vcm1hbCBjbWEgaGVscGVy
-cz8KClRoYW5rcywgRGFuaWVsCj4gCj4gU3R1IEhzaWVoICgyOSk6Cj4gICBkcm0vbWVkaWF0ZWs6
-IHVwZGF0ZSBkdC1iaW5kaW5ncyBmb3IgbXQyNzEyCj4gICBkcm0vbWVkaWF0ZWs6IHN1cHBvcnQg
-bWF4aW11bSA2NCBtdXRleCBtb2QKPiAgIGRybS9tZWRpYXRlazogYWRkIGRkcCBjb21wb25lbnQg
-QUFMMQo+ICAgZHJtL21lZGlhdGVrOiBhZGQgZGRwIGNvbXBvbmVudCBPRDEKPiAgIGRybS9tZWRp
-YXRlazogYWRkIGRkcCBjb21wb25lbnQgUFdNMQo+ICAgZHJtL21lZGlhdGVrOiBhZGQgZGRwIGNv
-bXBvbmVudCBQV00yCj4gICBkcm0vbWVkaWF0ZWs6IGFkZCBjb21wb25lbnQgRFBJMQo+ICAgZHJt
-L21lZGlhdGVrOiBhZGQgY29tcG9uZW50IERTSTIKPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbXBv
-bmVudCBEU0kzCj4gICBkcm0vbWVkaWF0ZWs6IGFkZCB0aGUgRFNJMSBmb3IgY29tcG9uZW50IGlu
-aXQgY29uZGl0aW9uCj4gICBkcm0vbWVkaWF0ZWs6IGFkZCBjb25uZWN0aW9uIGZyb20gT0QxIHRv
-IFJETUExCj4gICBkcm0vbWVkaWF0ZWs6IFVwZGF0ZSB0aGUgZGVmaW5pdGlvbiBvZiBjb25uZWN0
-aW9uIGZyb20gUkRNQTEgdG8gRFBJMAo+ICAgZHJtL21lZGlhdGVrOiBhZGQgY29ubmVjdGlvbiBm
-cm9tIFJETUEwIHRvIERQSTAKPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBS
-RE1BMCB0byBEU0kyCj4gICBkcm0vbWVkaWF0ZWs6IGFkZCBjb25uZWN0aW9uIGZyb20gUkRNQTAg
-dG8gRFNJMwo+ICAgZHJtL21lZGlhdGVrOiBhZGQgY29ubmVjdGlvbiBmcm9tIFJETUExIHRvIERQ
-STEKPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBSRE1BMSB0byBEU0kxCj4g
-ICBkcm0vbWVkaWF0ZWs6IGFkZCBjb25uZWN0aW9uIGZyb20gUkRNQTEgdG8gRFNJMgo+ICAgZHJt
-L21lZGlhdGVrOiBhZGQgY29ubmVjdGlvbiBmcm9tIFJETUExIHRvIERTSTMKPiAgIGRybS9tZWRp
-YXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBSRE1BMiB0byBEUEkwCj4gICBkcm0vbWVkaWF0ZWs6
-IGFkZCBjb25uZWN0aW9uIGZyb20gUkRNQTIgdG8gRFBJMQo+ICAgZHJtL21lZGlhdGVrOiBhZGQg
-Y29ubmVjdGlvbiBmcm9tIFJETUEyIHRvIERTSTEKPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5l
-Y3Rpb24gZnJvbSBSRE1BMiB0byBEU0kyCj4gICBkcm0vbWVkaWF0ZWs6IGFkZCBjb25uZWN0aW9u
-IGZyb20gUkRNQTIgdG8gRFNJMwo+ICAgZHJtL21lZGlhdGVrOiBhZGQgRFBJMSBzdXBwb3J0IGZv
-ciBtdXRleAo+ICAgZHJtL21lZGlhdGVrOiBhZGQgRFNJMiBzdXBwb3J0IGZvciBtdXRleAo+ICAg
-ZHJtL21lZGlhdGVrOiBhZGQgRFNJMyBzdXBwb3J0IGZvciBtdXRleAo+ICAgZHJtL21lZGlhdGVr
-OiBhZGQgdGhpcmQgZGRwIHBhdGgKPiAgIGRybS9tZWRpYXRlazogQWRkIHN1cHBvcnQgZm9yIG1l
-ZGlhdGVrIFNPQyBNVDI3MTIKPiAKPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVk
-aWF0ZWssZGlzcC50eHQgICAgfCAgIDIgKy0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kcm1fY3J0Yy5jICAgICAgICAgICAgfCAgIDMgKwo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0
-ZWsvbXRrX2RybV9kZHAuYyAgICAgICAgICAgICB8IDIzNSArKysrKysrKysrKysrKysrKystLS0K
-PiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYyAgICAgICAgfCAg
-MTUgKy0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCAgICAg
-ICAgfCAgMTAgKy0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMgICAg
-ICAgICAgICAgfCAgNDcgKysrKy0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
-ZHJ2LmggICAgICAgICAgICAgfCAgIDUgKy0KPiAgNyBmaWxlcyBjaGFuZ2VkLCAyNzQgaW5zZXJ0
-aW9ucygrKSwgNDMgZGVsZXRpb25zKC0pCj4gCj4gLS0gCj4gMi4xMi41Cj4gCj4gX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCgotLSAKRGFuaWVsIFZl
-dHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3
-bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 19 June 2018 at 12:10, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> On 14-06-18, 12:05, Rajendra Nayak wrote:
+>> On 06/14/2018 03:58 AM, David Collins wrote:
+>> > Hello Rajendra,
+>> >
+>> > On 06/11/2018 09:40 PM, Rajendra Nayak wrote:
+>> >> As we move from no clients/consumers in kernel voting on corners,
+>> >> to *some* voting and some not voting, we might end up in a situation
+>> >> where the clients which remove votes can adversly impact others
+>> >
+>> > s/adversly/adversely/
+>> >
+>> >> who still don't have a way to vote.
+>> >>
+>> >> To avoid this situation, have a max vote on all corners at init.
+>> >> This should/can be removed once we have all clients moved to
+>> >> be able to vote/unvote for themselves.
+>> >
+>> > This change seems like a hack.  Do you intend for it to be merged and then
+>> > later reverted in Linus's tree?  Could it instead be implemented in a way
+>> > that does not require reverting and instead is enabled by some DT
+>> > property?  Alternatively, could this feature be added to the power domain
+>> > core since it is relatively generic?
+>> >
+>> >
+>> >> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> >> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+>> >> ---
+>> >>  drivers/soc/qcom/rpmhpd.c | 12 +++++++++++-
+>> >>  drivers/soc/qcom/rpmpd.c  |  9 +++++++++
+>> >>  2 files changed, 20 insertions(+), 1 deletion(-)
+>> >>
+>> >> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
+>> >> index 7083ec1590ff..3c753d33aeee 100644
+>> >> --- a/drivers/soc/qcom/rpmhpd.c
+>> >> +++ b/drivers/soc/qcom/rpmhpd.c
+>> >> @@ -329,7 +329,7 @@ static int rpmhpd_update_level_mapping(struct rpmhpd *rpmhpd)
+>> >>
+>> >>  static int rpmhpd_probe(struct platform_device *pdev)
+>> >>  {
+>> >> -  int i, ret;
+>> >> +  int i, ret, max_level;
+>> >>    size_t num;
+>> >>    struct genpd_onecell_data *data;
+>> >>    struct rpmhpd **rpmhpds;
+>> >> @@ -390,6 +390,16 @@ static int rpmhpd_probe(struct platform_device *pdev)
+>> >>            pm_genpd_init(&rpmhpds[i]->pd, NULL, true);
+>> >>
+>> >>            data->domains[i] = &rpmhpds[i]->pd;
+>> >> +
+>> >> +          /*
+>> >> +           * Until we have all consumers voting on corners
+>> >> +           * just vote the max corner on all PDs
+>> >> +           * This should ideally be *removed* once we have
+>> >> +           * all (most) consumers being able to vote
+>> >> +           */
+>> >> +          max_level = rpmhpds[i]->level_count - 1;
+>> >> +          rpmhpd_set_performance(&rpmhpds[i]->pd, rpmhpds[i]->level[max_level]);
+>> >> +          rpmhpd_power_on(&rpmhpds[i]->pd);
+>> >
+>> > Clearly these calls will result in max level requests being sent for all
+>> > power domains at probe time.  However, it isn't clear that this will
+>> > actually help at runtime in these two cases:
+>> >
+>> > 1. A consumer enables and then disables a power domain.
+>> >     - It seems like the PD would just be disabled in this case.
+>
+> So instead of rpmhpd_power_on() we should be doing gepnd_power_on() or whatever
+> the API is, so the user count stays at 1.
+
+There is no such API.
+
+Instead a device needs to be attached to genpd and that's it. As long
+as the device don't enables runtime PM and that the device gets
+runtime suspended, genpd will remain powered on.
+
+>
+>> > 2. A consumer sets a non-max performance state of a power domain.
+>> >     - It seems like the PD would just be set to the new lower
+>> >       performance state since the max vote isn't known to the
+>> >       PD core for aggregation purposes.
+>
+> Right, and that's because the patch isn't implemented properly yet. I asked to
+> do a fake vote from some user with their dev structure, so the vote always
+> stays.
+>
+>> Yes, you are right. I certainly did not seem to have thought through this enough.
+>>
+>> A need for something like this came up at a point where genpd could not deal with
+>> devices with multiple power domains. So the concern at that point was that if some
+>> consumers (which only need to vote on one corner) move to using this driver, while
+>> some others (which need to vote on multiple corners) cannot, we would end up breaking
+>> them.
+>>
+>> That does not seem to be true anymore since we do have patches from Ulf which support
+>> having devices with multiple power domains attached which can be controlled individually.
+>> So if some consumer voting makes some others break, they should just be fixed and patched
+>> to vote as well. If all this gets handled centrally from within the clock drivers then we
+>> most likely won't even end up with a situation like this.
+>>
+>> I think I will just drop this one unless Stephen/Viresh still see an issue with some early
+>> voters breaking others.
+>
+> So what if the LCD/DDR/etc are getting used at boot and someone requests a lower
+> vote?  Wouldn't we just break ?
+
+Sounds like we need a way to manage votes for "boot constraints
+performance levels". :-)
+
+Anyway, to deal with this via the existing genpd APIs, we need to
+attach a device to a genpd and then call
+dev_pm_genpd_set_performance_state() on it. I guess at a late
+initcall, the votes can be dropped and the device can be detached. Or
+something along these lines.
+
+Kind regards
+Uffe
