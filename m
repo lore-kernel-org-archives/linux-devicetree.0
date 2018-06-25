@@ -1,53 +1,41 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 2/2] usb: core: phy: fix return value checking about devm_of_phy_get_by_index()
-Date: Mon, 25 Jun 2018 19:32:04 +0200
-Message-ID: <CAFBinCDuGd-R1OR6h1UTTsWm2XNJC_f8iREgdE8fQQv1ph9hpQ@mail.gmail.com>
-References: <4c338a129ab14ab41949da5e3c21aed0d77dff8d.1529647619.git.chunfeng.yun@mediatek.com>
- <644d00edd2932c1a0d0a1bf368dd25427d1d9f64.1529647619.git.chunfeng.yun@mediatek.com>
- <CAFBinCBS+fpfx6jaaqD=kqFuMF6ko8GikbV1ZVwgbDh-Sn8T8w@mail.gmail.com> <1529908621.32173.27.camel@mhfsdcap03>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 04/24] dt-bindings: display: sunxi-drm: Add TCON TOP
+ description
+Date: Mon, 25 Jun 2018 11:33:17 -0600
+Message-ID: <20180625173317.GA3691@rob-hp-laptop>
+References: <20180625120304.7543-1-jernej.skrabec@siol.net>
+ <20180625120304.7543-5-jernej.skrabec@siol.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529908621.32173.27.camel@mhfsdcap03>
-Sender: linux-kernel-owner@vger.kernel.org
-To: chunfeng.yun@mediatek.com
-Cc: johan@kernel.org, gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com, matthias.bgg@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20180625120304.7543-5-jernej.skrabec@siol.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, maxime.ripard@bootlin.com, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, airlied@linux.ie, wens@csie.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chunfeng,
-
-On Mon, Jun 25, 2018 at 8:37 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
->
-> On Sun, 2018-06-24 at 20:00 +0200, Martin Blumenstingl wrote:
-> > Hello Chunfeng,
-> >
-> > thank you for the patch!
-> >
-> > On Fri, Jun 22, 2018 at 8:33 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
-> > >
-> > > 1. use IS_ERR() but not IS_ERR_OR_NULL() because devm_of_phy_get_by_index()
-> > >     never return NULL value;
-> > ACK - good catch!
-> >
-> > > 2. devm_of_phy_get_by_index() should not fail for a valid index
-> > I have learned that the PHY framework can return -ENODEV if the PHY is:
-> > 1. supposed to be handled by the legacy USB PHY framework
-> > 2. the PHY node is disabled in devicetree
-> A little confused, we can avoid this error by not using a disabled or
-> "usb-nop-xceiv" phy in host node.
-I think that would be the mid or long term goal
-
-> If ignore error of -ENODEV, we will also skip an error case which we
-> don't want it happen.
-as far as I understand the problem is that there are .dts files out
-there which specify "usb-nop-xceiv" in the "phys" property, see [0]
-(there might be even some more out-of-tree cases)
-so I think the -ENODEV check can only be removed once nothing uses
-"usb-nop-xceiv" anymore
-
-
-Regards
-Martin
-
-
-[0] https://patchwork.kernel.org/patch/10160181/
+T24gTW9uLCBKdW4gMjUsIDIwMTggYXQgMDI6MDI6NDRQTSArMDIwMCwgSmVybmVqIFNrcmFiZWMg
+d3JvdGU6Cj4gVENPTiBUT1AgbWFpbiBwdXJwb3NlIGlzIHRvIGNvbmZpZ3VyZSB3aG9sZSBkaXNw
+bGF5IHBpcGVsaW5lLiBJdAo+IGRldGVybWluZXMgcmVsYXRpb25zaGlwcyBiZXR3ZWVuIG1peGVy
+cyBhbmQgVENPTnMsIHNlbGVjdHMgc291cmNlIFRDT04KPiBmb3IgSERNSSwgbXV4ZXMgTENEIGFu
+ZCBUViBlbmNvZGVyIEdQSU8gb3V0cHV0LCBzZWxlY3RzIFRWIGVuY29kZXIKPiBjbG9jayBzb3Vy
+Y2UgYW5kIGNvbnRhaW5zIGFkZGl0aW9uYWwgVFYgVENPTiBhbmQgRFNJIGdhdGVzLgo+IAo+IFNp
+Z25lZC1vZmYtYnk6IEplcm5laiBTa3JhYmVjIDxqZXJuZWouc2tyYWJlY0BzaW9sLm5ldD4KPiAt
+LS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvc3VueGkvc3VuNGktZHJtLnR4dCAgICAgIHwgNTYg
+KysrKysrKysrKysrKysrKysrKwo+ICBpbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL3N1bjhpLXRj
+b24tdG9wLmggICAgfCAxMSArKysrCj4gIDIgZmlsZXMgY2hhbmdlZCwgNjcgaW5zZXJ0aW9ucygr
+KQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9zdW44aS10
+Y29uLXRvcC5oCgpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
