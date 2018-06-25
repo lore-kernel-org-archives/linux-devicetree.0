@@ -1,52 +1,49 @@
-Return-Path: <SRS0=ytnF=JN=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH] dt-bindings: irqchip: renesas-irqc: Document r8a77470
- support
-Date: Wed, 27 Jun 2018 08:43:30 +0000
-Message-ID: <OSBPR01MB2103FF4CF9F5477C8D47720CB8480@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1522318628-52821-1-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdUsO_jw5Lb4jDKk6H2Zn=4kJHhFp_fBArnaddkBXDQ24Q@mail.gmail.com>
-In-Reply-To: <CAMuHMdUsO_jw5Lb4jDKk6H2Zn=4kJHhFp_fBArnaddkBXDQ24Q@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=Dkm/=JL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-bl2nam02on0066.outbound.protection.outlook.com ([104.47.38.66]:56289
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1753087AbeFYIbR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 Jun 2018 04:31:17 -0400
+From: Alan Douglas <adouglas@cadence.com>
+Subject: [PATCH 0/5] PCI: cadence: Host and EP driver updates for PHY and power management
+Date: Mon, 25 Jun 2018 09:30:48 +0100
+Message-ID: <1529915453-4633-1-git-send-email-adouglas@cadence.com>
 MIME-Version: 1.0
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Alan Douglas <adouglas@cadence.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGVsbG8gTWFyYywNCg0KU29ycnkgdG8gYm90aGVyIHlvdS4gIEFyZSB5b3UgaGFwcHkgdG8gbWVy
-Z2UgdGhlIGJlbG93IHBhdGNoIHdpdGggNC4xOC1yYzM/DQpodHRwczovL3d3dy5zcGluaWNzLm5l
-dC9saXN0cy9saW51eC1yZW5lc2FzLXNvYy9tc2cyNTc4OC5odG1sDQoNCnJlZ2FyZHMsDQpCaWp1
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogZ2VlcnQudXl0dGVyaG9l
-dmVuQGdtYWlsLmNvbQ0KPiBbbWFpbHRvOmdlZXJ0LnV5dHRlcmhvZXZlbkBnbWFpbC5jb21dIE9u
-IEJlaGFsZiBPZiBHZWVydCBVeXR0ZXJob2V2ZW4NCj4gU2VudDogMzAgTWFyY2ggMjAxOCAwODo1
-Mw0KPiBUbzogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiBDYzogVGhvbWFz
-IEdsZWl4bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+OyBKYXNvbiBDb29wZXINCj4gPGphc29uQGxh
-a2VkYWVtb24ubmV0PjsgTWFyYyBaeW5naWVyIDxtYXJjLnp5bmdpZXJAYXJtLmNvbT47IFJvYg0K
-PiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFu
-ZEBhcm0uY29tPjsNCj4gR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5i
-ZT47IFNpbW9uIEhvcm1hbg0KPiA8aG9ybXNAdmVyZ2UubmV0LmF1PjsgQ2hyaXMgUGF0ZXJzb24g
-PENocmlzLlBhdGVyc29uMkByZW5lc2FzLmNvbT47DQo+IEZhYnJpemlvIENhc3RybyA8ZmFicml6
-aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPjsgb3BlbiBsaXN0Ok9QRU4NCj4gRklSTVdBUkUgQU5E
-IEZMQVRURU5FRCBERVZJQ0UgVFJFRSBCSU5ESU5HUw0KPiA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmc+OyBMaW51eC1SZW5lc2FzIDxsaW51eC1yZW5lc2FzLQ0KPiBzb2NAdmdlci5rZXJuZWwu
-b3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBkdC1iaW5kaW5nczogaXJxY2hpcDogcmVuZXNh
-cy1pcnFjOiBEb2N1bWVudCByOGE3NzQ3MA0KPiBzdXBwb3J0DQo+DQo+IE9uIFRodSwgTWFyIDI5
-LCAyMDE4IGF0IDEyOjE3IFBNLCBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+DQo+
-IHdyb3RlOg0KPiA+IFJlbmVzYXMgUlovRyBTb0MgaGF2ZSB0aGUgUi1DYXIgZ2VuMiBjb21wYXRp
-YmxlIElSUUMgaW50ZXJydXB0DQo+ID4gY29udHJvbGxlcnMuIERvY3VtZW50IFJaL0cxQyAoYWxz
-byBrbm93biBhcyBSOEE3NzQ3MCkgU29DIGJpbmRpbmdzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
-eTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBG
-YWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4NCj4gUmV2
-aWV3ZWQtYnk6IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+DQo+
-DQo+IEdye29ldGplLGVldGluZ31zLA0KPg0KPiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVy
-dA0KPg0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4
-IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LQ0KPiBtNjhrLm9yZw0KPg0KPiBJbiBwZXJzb25h
-bCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhh
-Y2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAi
-cHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmlj
-cyBFdXJvcGUgTHRkLCBEdWtlcyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBC
-dWNraW5naGFtc2hpcmUsIFNMOCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxl
-cyB1bmRlciBSZWdpc3RlcmVkIE5vLiAwNDU4NjcwOS4NCg==
+This is a series of patches for the cadence PCIe host and EP drivers, to:
+ - Add optional list of generic PHYs to host and EP drivers
+ - Add PHY bindings to devicetree
+ - Add Power Management ops, which will enable/disable PHYs if present
+ - Add shutdown handler to host driver
+ - Update cdns_pcie_writel function signature
+
+Changes in v3:
+	Use devm_phy_optional_get() to get optional PHY
+	Updated decription in DT bindings to cover use of single/multiple PHYs
+	Split patch to add shutdown callback in separate patch
+	Re-based on v4.18-rc1
+
+Changes in v2:
+	Split commit into four patches
+	Re-based on v4.17-rc1
+
+Alan Douglas (5):
+  PCI: cadence: Update cdns_pcie_writel function signature
+  PCI: cadence: Add generic PHY support to host and EP drivers
+  dt-bindings: PCI: cadence: Add DT bindings for optional PHYs
+  PCI: cadence: Add Power Management ops for host and EP
+  PCI: cadence: Add shutdown callback to host driver
+
+ .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt  |    5 +
+ .../bindings/pci/cdns,cdns-pcie-host.txt           |    6 +
+ drivers/pci/controller/pcie-cadence-ep.c           |   15 +++-
+ drivers/pci/controller/pcie-cadence-host.c         |   33 +++++
+ drivers/pci/controller/pcie-cadence.c              |  123 ++++++++++++++++++++
+ drivers/pci/controller/pcie-cadence.h              |   13 ++-
+ 6 files changed, 193 insertions(+), 2 deletions(-)
+
