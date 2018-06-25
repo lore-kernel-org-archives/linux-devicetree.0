@@ -1,41 +1,68 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v3 03/17] arm64: dts: marvell: fix CP110 ICU node size
-Date: Mon, 25 Jun 2018 17:09:34 +0200
-Message-ID: <20180625170934.4cd4319a@xps13>
-References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
-        <20180622151432.1566-4-miquel.raynal@bootlin.com>
-        <87a7ric3f1.fsf@bootlin.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: gpu: mali-utgard: add
+ mediatek,mt7623-mali compatible
+Date: Mon, 25 Jun 2018 17:14:32 +0200
+Message-ID: <3bd6e509-f99a-1f2d-1b66-65c414bacdbd@gmail.com>
+References: <cover.1524816502.git.sean.wang@mediatek.com>
+ <7ab060c2e9ef2b220fc62913b8936b706dfaf202.1524816502.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <87a7ric3f1.fsf@bootlin.com>
-Sender: stable-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Haim Boot <hayim@marvell.com>, Hanna Hawa <hannah@marvell.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7ab060c2e9ef2b220fc62913b8936b706dfaf202.1524816502.git.sean.wang@mediatek.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: sean.wang@mediatek.com, sboyd@codeaurora.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de
+Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gregory,
 
-On Mon, 25 Jun 2018 17:05:22 +0200, Gregory CLEMENT
-<gregory.clement@bootlin.com> wrote:
 
-> Hi Miquel,
+On 27/04/18 10:14, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+> 
+> The MediaTek MT7623 SoC contains a Mali-450, so add a compatible for it
+> and define its own vendor-specific properties.
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> ---
+
+Hi Rob,
+
+Any comments regarding this patch?
+
+Regards,
+Matthias
+
+>  Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+> index 99d1c0a..656068f 100644
+> --- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+> @@ -19,6 +19,7 @@ Required properties:
+>        + rockchip,rk3228-mali
+>        + rockchip,rk3328-mali
+>        + stericsson,db8500-mali
+> +      + mediatek,mt7623-mali
 >  
->  On ven., juin 22 2018, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+>    - reg: Physical base address and length of the GPU registers
+>  
+> @@ -89,6 +90,14 @@ to specify one more vendor-specific compatible, among:
+>        * interrupt-names and interrupts:
+>          + combined: combined interrupt of all of the above lines
+>  
+> +  - mediatek,mt7623-mali
+> +     Required properties:
+> +      * resets: phandle to the reset line for the GPU
+> +      * mediatek,larb: phandle pointed to the local arbiter used to control the
+> +	access to external memory on the SoC.
+> +	see Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
+> +	for details
+> +
+>  Example:
+>  
+>  mali: gpu@1c40000 {
 > 
-> > ICU size in CP110 is not 0x10 but at least 0x440 bytes long (from the
-> > specification).
-> >
-> > Fixes: 6ef84a827c37 ("arm64: dts: marvell: enable GICP and ICU on Armada 7K/8K")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>  
-> 
-> This patch was part of the last PR from arm-soc for Linus and should be
-> part of 4.18-rc3, so if there is new version you can drop it.
-> 
-
-Sure, thanks for the reminder.
-
-Miquèl
