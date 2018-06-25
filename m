@@ -1,85 +1,45 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH] [dts] fix green/blue pio-led on bananapi-r2
-Date: Mon, 25 Jun 2018 17:17:43 +0800
-Message-ID: <1529918263.29697.31.camel@mtkswgap22>
-References: <trinity-ae29ad25-a4fb-47f3-8d68-f6e58c875a0e-1529682447976@3c-app-gmx-bs42>
- <trinity-0d48bc23-f754-4da3-af01-c3a7abe1d34b-1529682783853@3c-app-gmx-bs42>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v6 2/3] arm: shmobile: Add the R9A06G032 SMP enabler driver
+Date: Mon, 25 Jun 2018 11:24:48 +0200
+Message-ID: <CAMuHMdVarwq26Jr=YN+zBDrHjQf-Q+u3L6oRNiSKh-hxuwOsrA@mail.gmail.com>
+References: <1529915110-5867-1-git-send-email-michel.pollet@bp.renesas.com> <1529915110-5867-3-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <trinity-0d48bc23-f754-4da3-af01-c3a7abe1d34b-1529682783853@3c-app-gmx-bs42>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Wunderlich <FrankWu@gmx.de>
-Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1529915110-5867-3-git-send-email-michel.pollet@bp.renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michel Pollet <michel.pollet@bp.renesas.com>, Simon Horman <horms@verge.net.au>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Rajendra Nayak <rnayak@codeaurora.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, Andy Gross <andy.gross@linaro.org>, Carlo Caione <carlo@endlessm.com>, Stefan Wahren <stefan.wahren@i2se.com>, Chen-Yu Tsai <wens@csie.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-06-22 at 17:53 +0200, Frank Wunderlich wrote:
-> From: Frank Wunderlich <frank-w@public-files.de>
-> Date: Sun, 17 Jun 2018 19:11:58 +0200
-> Subject: [PATCH] [dts] fix green/blue pio-led
->  green/blue pio-leds (near GPIO-Header) are swapped and LOW-active
->  this patch restore this expected behaviour
->  red cannot be switched afaik
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Hi Michel,
+
+On Mon, Jun 25, 2018 at 10:31 AM Michel Pollet
+<michel.pollet@bp.renesas.com> wrote:
+> The Renesas R9A06G032 second CA7 is parked in a ROM pen at boot time, it
+> requires a special enable method to get it started.
+>
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
-> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> index 531d905d924ff..3e8a0ffe8b13e 100644
-> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> @@ -89,21 +89,21 @@
->          pinctrl-names = "default";
->          pinctrl-0 = <&led_pins_a>;
->  
-> -        blue {
-> -            label = "bpi-r2:pio:blue";
-> -            gpios = <&pio 241 GPIO_ACTIVE_HIGH>;
-> +        green {
-> +            label = "bpi-r2:pio:green";
-> +            gpios = <&pio 241 GPIO_ACTIVE_LOW>;
->              default-state = "off";
->          };
->  
-> -        green {
-> -            label = "bpi-r2:pio:green";
-> -            gpios = <&pio 240 GPIO_ACTIVE_HIGH>;
-> +        blue {
-> +            label = "bpi-r2:pio:blue";
-> +            gpios = <&pio 240 GPIO_ACTIVE_LOW>;
->              default-state = "off";
->          };
->  
->          red {
->              label = "bpi-r2:pio:red";
-> -            gpios = <&pio 239 GPIO_ACTIVE_HIGH>;
-> +            gpios = <&pio 239 GPIO_ACTIVE_LOW>;
->              default-state = "off";
->          };
->      };
->  
+>  arch/arm/mach-shmobile/Makefile        |  1 +
+>  arch/arm/mach-shmobile/smp-r9a06g032.c | 96 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 97 insertions(+)
+>  create mode 100644 arch/arm/mach-shmobile/smp-r9a06g032.c
 
-Hi, Frank
+Given this doesn't depend on anything under arch/arm/mach-shmobile/,
+perhaps this should be moved to drivers/soc/renesas/ (and renamed to
+r9a06g032-smp.c for consistency) instead?
 
-Node name should be listed in alphabetic order that means you should
-keep the order and only have the fixes for its content.
+Simon: what do you think?
 
-Apart from that
-	Reviewed-by: Sean Wang <sean.wang@mediatek.com>
-	
->  
->  
-> 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
