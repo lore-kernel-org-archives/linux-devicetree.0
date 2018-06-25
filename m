@@ -1,75 +1,77 @@
-Return-Path: <SRS0=bqe9=JM=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-ve1eur01on0046.outbound.protection.outlook.com ([104.47.1.46]:4708
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751134AbeFZPBz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 Jun 2018 11:01:55 -0400
-From: Jun Li <jun.li@nxp.com>
+Return-Path: <SRS0=Dkm/=JL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.65]:3060 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S932135AbeFYKpz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 Jun 2018 06:45:55 -0400
+From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 Subject: RE: [PATCH v7 06/14] usb: typec: tcpm: support get typec and pd
  config from device properties
-Date: Tue, 26 Jun 2018 15:01:52 +0000
-Message-ID: <VI1PR0402MB3917FA4726F3BACCF7795B2389490@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+Date: Mon, 25 Jun 2018 10:45:46 +0000
+Message-ID: <2E89032DDAA8B9408CB92943514A0337014C1F47AF@SW-EX-MBX01.diasemi.com>
 References: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
  <1529914126-22550-7-git-send-email-jun.li@nxp.com>
- <2E89032DDAA8B9408CB92943514A0337014C1F47AF@SW-EX-MBX01.diasemi.com>
-In-Reply-To: <2E89032DDAA8B9408CB92943514A0337014C1F47AF@SW-EX-MBX01.diasemi.com>
+In-Reply-To: <1529914126-22550-7-git-send-email-jun.li@nxp.com>
 Content-Language: en-US
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>
-Cc: "a.hajda@samsung.com" <a.hajda@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, Peter Chen <peter.chen@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Li Jun <jun.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>
+Cc: "a.hajda@samsung.com" <a.hajda@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQWRhbSBUaG9tc29uIFtt
-YWlsdG86QWRhbS5UaG9tc29uLk9wZW5zb3VyY2VAZGlhc2VtaS5jb21dDQo+IFNlbnQ6IDIwMTjE
-6jbUwjI1yNUgMTg6NDYNCj4gVG86IEp1biBMaSA8anVuLmxpQG54cC5jb20+OyByb2JoK2R0QGtl
-cm5lbC5vcmc7IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOw0KPiBoZWlra2kua3JvZ2VydXNA
-bGludXguaW50ZWwuY29tOyBsaW51eEByb2Vjay11cy5uZXQNCj4gQ2M6IGEuaGFqZGFAc2Ftc3Vu
-Zy5jb207IGN3MDAuY2hvaUBzYW1zdW5nLmNvbTsgc2h1ZmFuX2xlZUByaWNodGVrLmNvbTsNCj4g
-UGV0ZXIgQ2hlbiA8cGV0ZXIuY2hlbkBueHAuY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7DQo+IGxpbnV4LXVzYkB2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14
-QG54cC5jb20+DQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggdjcgMDYvMTRdIHVzYjogdHlwZWM6IHRj
-cG06IHN1cHBvcnQgZ2V0IHR5cGVjIGFuZCBwZCBjb25maWcNCj4gZnJvbSBkZXZpY2UgcHJvcGVy
-dGllcw0KPiANCj4gT24gMjUgSnVuZSAyMDE4IDA5OjA5LCBMaSBKdW4gd3JvdGU6DQo+IA0KPiA+
-IFRoaXMgcGF0Y2ggYWRkcyBzdXBwb3J0IG9mIGdldCB0eXBlYyBhbmQgcG93ZXIgZGVsaXZlcnkg
-Y29uZmlnIGZyb20NCj4gPiBmaXJtd2FyZSBkZXNjcmlwdGlvbi4NCj4gPg0KPiA+IFJldmlld2Vk
-LWJ5OiBIZWlra2kgS3JvZ2VydXMgPGhlaWtraS5rcm9nZXJ1c0BsaW51eC5pbnRlbC5jb20+DQo+
-ID4gUmV2aWV3ZWQtYnk6IEd1ZW50ZXIgUm9lY2sgPGxpbnV4QHJvZWNrLXVzLm5ldD4NCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBMaSBKdW4gPGp1bi5saUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2
-ZXJzL3VzYi90eXBlYy90Y3BtLmMgfCAxMzINCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKystLS0tLQ0KPiA+IC0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTEwIGlu
-c2VydGlvbnMoKyksIDIyIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvdXNiL3R5cGVjL3RjcG0uYyBiL2RyaXZlcnMvdXNiL3R5cGVjL3RjcG0uYyBpbmRleA0KPiA+
-IGQyMmIzN2IuLjA0NTQ2NTQgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy91c2IvdHlwZWMvdGNw
-bS5jDQo+ID4gKysrIGIvZHJpdmVycy91c2IvdHlwZWMvdGNwbS5jDQo+ID4gQEAgLTQyMzYsNiAr
-NDIzNiw4MSBAQCBzdGF0aWMgaW50IHRjcG1fY29weV92ZG9zKHUzMiAqZGVzdF92ZG8sIGNvbnN0
-DQo+ID4gdTMyICpzcmNfdmRvLA0KPiA+ICAJcmV0dXJuIG5yX3ZkbzsNCj4gPiAgfQ0KPiANCj4g
-Li4uDQo+IA0KPiA+ICBzdHJ1Y3QgdGNwbV9wb3J0ICp0Y3BtX3JlZ2lzdGVyX3BvcnQoc3RydWN0
-IGRldmljZSAqZGV2LCBzdHJ1Y3QNCj4gPiB0Y3BjX2RldiAqdGNwYykgIHsNCj4gPiAgCXN0cnVj
-dCB0Y3BtX3BvcnQgKnBvcnQ7DQo+ID4gIAlpbnQgaSwgZXJyOw0KPiA+DQo+ID4gLQlpZiAoIWRl
-diB8fCAhdGNwYyB8fCAhdGNwYy0+Y29uZmlnIHx8DQo+ID4gKwlpZiAoIWRldiB8fCAhdGNwYyB8
-fA0KPiA+ICAJICAgICF0Y3BjLT5nZXRfdmJ1cyB8fCAhdGNwYy0+c2V0X2NjIHx8ICF0Y3BjLT5n
-ZXRfY2MgfHwNCj4gPiAgCSAgICAhdGNwYy0+c2V0X3BvbGFyaXR5IHx8ICF0Y3BjLT5zZXRfdmNv
-bm4gfHwgIXRjcGMtPnNldF92YnVzIHx8DQo+ID4gIAkgICAgIXRjcGMtPnNldF9wZF9yeCB8fCAh
-dGNwYy0+c2V0X3JvbGVzIHx8ICF0Y3BjLT5wZF90cmFuc21pdCkgQEANCj4gPiAtNDU1NiwzMCAr
-NDY1NSwxOSBAQCBzdHJ1Y3QgdGNwbV9wb3J0ICp0Y3BtX3JlZ2lzdGVyX3BvcnQoc3RydWN0DQo+
-ID4gZGV2aWNlICpkZXYsIHN0cnVjdCB0Y3BjX2RldiAqdGNwYykNCj4gPiAgCWluaXRfY29tcGxl
-dGlvbigmcG9ydC0+cHBzX2NvbXBsZXRlKTsNCj4gPiAgCXRjcG1fZGVidWdmc19pbml0KHBvcnQp
-Ow0KPiA+DQo+ID4gLQlpZiAodGNwbV92YWxpZGF0ZV9jYXBzKHBvcnQsIHRjcGMtPmNvbmZpZy0+
-c3JjX3BkbywNCj4gPiAtCQkJICAgICAgIHRjcGMtPmNvbmZpZy0+bnJfc3JjX3BkbykgfHwNCj4g
-PiAtCSAgICB0Y3BtX3ZhbGlkYXRlX2NhcHMocG9ydCwgdGNwYy0+Y29uZmlnLT5zbmtfcGRvLA0K
-PiA+IC0JCQkgICAgICAgdGNwYy0+Y29uZmlnLT5ucl9zbmtfcGRvKSkgew0KPiA+IC0JCWVyciA9
-IC1FSU5WQUw7DQo+ID4gKwlpZiAodGNwYy0+Y29uZmlnKQ0KPiA+ICsJCWVyciA9IHRjcG1fY29w
-eV9jYXBzKHBvcnQsIHRjcGMtPmNvbmZpZyk7DQo+ID4gKwllbHNlDQo+ID4gKwkJZXJyID0gdGNw
-bV9md19nZXRfY2Fwcyhwb3J0LCB0Y3BjLT5md25vZGUpOw0KPiA+ICsJaWYgKGVyciA8IDApDQo+
-IA0KPiBTaG91bGQgd2Ugbm90IGJlIGZhdm91cmluZyB0aGUgZ2VuZXJpYyBGVyBiYXNlZCBjYXBh
-YmlsaXRpZXMgb3ZlciB2YWx1ZXMNCj4gZGVmaW5lZCBpbiBhIFR5cGUgQyBwb3J0IGNvbnRyb2xs
-ZXIgZHJpdmVyLCBpZiB0aGUgRlcgY29uZmlnIGlzIHByZXNlbnQ/IEZvcg0KPiBleGFtcGxlDQo+
-IGZ1c2IzMDIgZHJpdmVyIGhhcyBhIGhhcmQgY29kZWQgY29uZmlnIHNvIHRoYXQgd291bGQgYWx3
-YXlzIGJlIHNlbGVjdGVkIHJhdGhlcg0KPiB0aGFuIHRoZSBGVyBiYXNlZCBjb25maWcsIHVubGVz
-cyBJJ20gbWlzc2luZyBzb21ldGhpbmcgb2J2aW91cz8NCg0KWW91IGFyZSByaWdodCwgSSB3aWxs
-IGNoYW5nZSBpdCB0byBiZSBiZWxvdzoNCmVyciA9IHRjcG1fZndfZ2V0X2NhcHMocG9ydCwgdGNw
-Yy0+Zndub2RlKTsNCmlmICgoZXJyIDwgMCkgJiYgdGNwYy0+Y29uZmlnKQ0KCWVyciA9IHRjcG1f
-Y29weV9jYXBzKHBvcnQsIHRjcGMtPmNvbmZpZyk7DQoNCnRoYW5rcw0KSnVuDQo=
+On 25 June 2018 09:09, Li Jun wrote:
+
+> This patch adds support of get typec and power delivery config from
+> firmware description.
+> 
+> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Li Jun <jun.li@nxp.com>
+> ---
+>  drivers/usb/typec/tcpm.c | 132 +++++++++++++++++++++++++++++++++++++++-----
+> ---
+>  1 file changed, 110 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
+> index d22b37b..0454654 100644
+> --- a/drivers/usb/typec/tcpm.c
+> +++ b/drivers/usb/typec/tcpm.c
+> @@ -4236,6 +4236,81 @@ static int tcpm_copy_vdos(u32 *dest_vdo, const u32
+> *src_vdo,
+>  	return nr_vdo;
+>  }
+
+...
+
+>  struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
+>  {
+>  	struct tcpm_port *port;
+>  	int i, err;
+> 
+> -	if (!dev || !tcpc || !tcpc->config ||
+> +	if (!dev || !tcpc ||
+>  	    !tcpc->get_vbus || !tcpc->set_cc || !tcpc->get_cc ||
+>  	    !tcpc->set_polarity || !tcpc->set_vconn || !tcpc->set_vbus ||
+>  	    !tcpc->set_pd_rx || !tcpc->set_roles || !tcpc->pd_transmit)
+> @@ -4556,30 +4655,19 @@ struct tcpm_port *tcpm_register_port(struct device
+> *dev, struct tcpc_dev *tcpc)
+>  	init_completion(&port->pps_complete);
+>  	tcpm_debugfs_init(port);
+> 
+> -	if (tcpm_validate_caps(port, tcpc->config->src_pdo,
+> -			       tcpc->config->nr_src_pdo) ||
+> -	    tcpm_validate_caps(port, tcpc->config->snk_pdo,
+> -			       tcpc->config->nr_snk_pdo)) {
+> -		err = -EINVAL;
+> +	if (tcpc->config)
+> +		err = tcpm_copy_caps(port, tcpc->config);
+> +	else
+> +		err = tcpm_fw_get_caps(port, tcpc->fwnode);
+> +	if (err < 0)
+
+Should we not be favouring the generic FW based capabilities over values defined
+in a Type C port controller driver, if the FW config is present? For example
+fusb302 driver has a hard coded config so that would always be selected rather
+than the FW based config, unless I'm missing something obvious?
