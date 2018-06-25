@@ -1,57 +1,79 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH] ARM64: dts: meson-axg: fix ethernet stability issue
-Date: Mon, 25 Jun 2018 14:56:53 +0200
-Message-ID: <20180625125653.3404-1-jbrunet@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/3] ASoC: simple-card: add support for
+ clock divider setup
+Date: Mon, 25 Jun 2018 13:57:11 +0100
+Message-ID: <20180625125711.GO9413@sirena.org.uk>
+References: <20180528193503.18905-1-daniel@zonque.org>
+ <20180528193503.18905-4-daniel@zonque.org>
+ <20180529113509.GE23509@sirena.org.uk>
+ <d6b9da97-8c71-ccfb-07e4-353620396a31@zonque.org>
+ <20180530091011.GA6920@sirena.org.uk>
+ <ace99dbd-3480-9ac3-e5b8-4ddae73bba10@zonque.org>
+ <b006a926-09ff-59e0-2b88-6f15e3e714e9@zonque.org>
+ <20180625112440.GE9413@sirena.org.uk>
+ <f7e05fe9-c177-9a78-e09d-0f74c2427b63@zonque.org>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============7262351106040628704=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <f7e05fe9-c177-9a78-e09d-0f74c2427b63@zonque.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Daniel Mack <daniel@zonque.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, kuninori.morimoto.gx@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-Like the odroid-c2 and wetek, the s400 uses the RTL8211F and seems to
-suffer from the kind of stability issue.
 
-Doing an iperf3 download test, we can see a significant number of LPI
-interrupts on the tx path. After a short while (5 to 15 seconds), the
-network connection dies. If using rootfs over NFS, the connection may
-also break during the boot sequence.
+--===============7262351106040628704==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="8WA4ILJSyYAmUzbY"
+Content-Disposition: inline
 
-We still don't have a real explanation for this problem so let's disable
-EEE once again.
 
-Fixes: f6f6ac914b82 ("ARM64: dts: meson-axg: enable ethernet for A113D S400 board")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+--8WA4ILJSyYAmUzbY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-index 4b3331fbfe39..dff9b15eb3c0 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-@@ -66,9 +66,22 @@
- 
- &ethmac {
- 	status = "okay";
--	phy-mode = "rgmii";
- 	pinctrl-0 = <&eth_rgmii_y_pins>;
- 	pinctrl-names = "default";
-+	phy-handle = <&eth_phy0>;
-+	phy-mode = "rgmii";
-+
-+	mdio {
-+		compatible = "snps,dwmac-mdio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		eth_phy0: ethernet-phy@0 {
-+			/* Realtek RTL8211F (0x001cc916) */
-+			reg = <0>;
-+			eee-broken-1000t;
-+		};
-+	};
- };
- 
- &uart_A {
--- 
-2.14.4
+On Mon, Jun 25, 2018 at 02:55:12PM +0200, Daniel Mack wrote:
+> On Monday, June 25, 2018 01:24 PM, Mark Brown wrote:
+
+> > No, I reviewed my patch in there.  What's going on?
+
+> I'd like this patch to go through your tree, if that's okay. Then I can post
+> some more patches on top without causing a conflict in the merge window.
+
+> Robert is fine with that.
+
+That's fine by me.  Is the latest version v3?
+
+--8WA4ILJSyYAmUzbY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsw5qcACgkQJNaLcl1U
+h9Bh7wf/ffhFO/2j6+D9VTbeZy/A4cswClpMgX3omc8d0DFgZ1UTloQaXkdYqkck
+of9ka7FmomARHBtd17IPsq0yhMra9FLpgCXdJm2P0E+kqU9ex3KyRUSuMfKlCtn7
+Oq7e3OZrNLeh2iWuFJih4Sd9U3CJyFYzyABJvPL3VRqaZ+vdl7EO8iI36zX8oeAK
+/60qgXIRdwgsOrq8TqTtl9+m7Z81nEgB24XViphQZpUqlrFtQxpyxIGxqg+QVXQ6
+0bcO9m/FueueHThxqgUieqUC4CNchBdbAOV4AaXAe+bsKA1ZcFg9olGN0qtJYGCb
+ieEGKRfK3lq9x6wcMbwBMLoa0i6LPg==
+=Bosl
+-----END PGP SIGNATURE-----
+
+--8WA4ILJSyYAmUzbY--
+
+--===============7262351106040628704==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7262351106040628704==--
