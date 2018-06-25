@@ -1,87 +1,93 @@
-From: "Katsuhiro Suzuki" <suzuki.katsuhiro@socionext.com>
-Subject: Re: [PATCH 1/2] arm64: dts: uniphier: add headphone detect gpio for LD20 global board
-Date: Mon, 25 Jun 2018 11:59:11 +0900
-Message-ID: <001a01d40c30$7e3d3110$7ab79330$@socionext.com>
-References: <20180619041153.6668-1-suzuki.katsuhiro@socionext.com> <CAK7LNATB-oa+K47z+egfV2iSKoD3x2tyMNXQp1ukS2f1Yek54g@mail.gmail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V2 2/2] ARM: dts: imx6ul: add GPIO clocks
+Date: Mon, 25 Jun 2018 03:14:39 +0000
+Message-ID: <AM3PR04MB1315D8B57E1A5D47BECBDCD3F54A0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+References: <1527990245-13619-1-git-send-email-Anson.Huang@nxp.com>
+ <1527990245-13619-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNATB-oa+K47z+egfV2iSKoD3x2tyMNXQp1ukS2f1Yek54g@mail.gmail.com>
-Content-Language: ja
+In-Reply-To: <1527990245-13619-2-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Masahiro Yamada' <yamada.masahiro@socionext.com>, =?UTF-8?B?U3V6dWtpLCBLYXRzdWhpcm8v6Yi05pyoIOWLneWNmg==?= <suzuki.katsuhiro@socionext.com>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, DTML <devicetree@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "michael@amarulasolutions.com" <michael@amarulasolutions.com>, "matteo.lisi@engicam.com" <matteo.lisi@engicam.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Yamada-san,
+Gentle Ping...
+
+Anson Huang
+Best Regards!
+
 
 > -----Original Message-----
-> From: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Sent: Saturday, June 23, 2018 12:47 PM
-> To: Suzuki, Katsuhiro/鈴木 勝博 <suzuki.katsuhiro@socionext.com>
-> Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>; DTML
-> <devicetree@vger.kernel.org>; Masami Hiramatsu <masami.hiramatsu@linaro.org>;
-> Jassi Brar <jaswinder.singh@linaro.org>; Linux Kernel Mailing List
-> <linux-kernel@vger.kernel.org>
-> Subject: Re: [PATCH 1/2] arm64: dts: uniphier: add headphone detect gpio for LD20
-> global board
-> 
-> 2018-06-19 13:11 GMT+09:00 Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>:
-> > This patch adds GPIO for headphone detection on LD20 global board.
-> >
-> > Signed-off-by: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
-> > ---
-> >  arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
-> b/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
-> > index 6a074a20c924..38b75998e2dd 100644
-> > --- a/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
-> > +++ b/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
-> > @@ -60,6 +60,7 @@
-> >                         &i2s_port4
-> >                         &spdif_port0
-> >                         &comp_spdif_port0>;
-> > +               hp-det-gpio = <&gpio UNIPHIER_GPIO_PORT(15, 0) GPIO_ACTIVE_LOW>;
-> 
-> 
-> When you use irq-capable gpio pin (XIRQ0),
-> please write like follows for consistency.
-> 
-> 
->              hp-det-gpio = <&gpio UNIPHIER_GPIO_IRQ(0) GPIO_ACTIVE_LOW>;
-> 
-> 
-> See uniphier-ld20-ref.dts for example.
-
-Thank you for reviewing!
-
-I'll fix it and post v2.
-
-Regards,
---
-Katsuhiro Suzuki
-
-
-> 
-> 
-> 
-> >         };
-> >
-> >         spdif-out {
-> > --
-> > 2.17.1
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> 
-> 
+> From: Anson Huang
+> Sent: Sunday, June 3, 2018 9:44 AM
+> To: shawnguo@kernel.org; kernel@pengutronix.de; Fabio Estevam
+> <fabio.estevam@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com;
+> mturquette@baylibre.com; sboyd@kernel.org;
+> michael@amarulasolutions.com; matteo.lisi@engicam.com
+> Cc: dl-linux-imx <linux-imx@nxp.com>; linux-arm-kernel@lists.infradead.or=
+g;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> linux-clk@vger.kernel.org
+> Subject: [PATCH V2 2/2] ARM: dts: imx6ul: add GPIO clocks
+>=20
+> i.MX6UL has GPIO clock gates in CCM CCGR, add clock property for GPIO dri=
+ver
+> to make sure all GPIO banks work as expected.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> 	no changes since V1.
+>  arch/arm/boot/dts/imx6ul.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dts=
+i
+> index 1241972..405e068 100644
+> --- a/arch/arm/boot/dts/imx6ul.dtsi
+> +++ b/arch/arm/boot/dts/imx6ul.dtsi
+> @@ -437,6 +437,7 @@
+>  				reg =3D <0x0209c000 0x4000>;
+>  				interrupts =3D <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
+>  					     <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks =3D <&clks IMX6UL_CLK_GPIO1>;
+>  				gpio-controller;
+>  				#gpio-cells =3D <2>;
+>  				interrupt-controller;
+> @@ -450,6 +451,7 @@
+>  				reg =3D <0x020a0000 0x4000>;
+>  				interrupts =3D <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
+>  					     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks =3D <&clks IMX6UL_CLK_GPIO2>;
+>  				gpio-controller;
+>  				#gpio-cells =3D <2>;
+>  				interrupt-controller;
+> @@ -462,6 +464,7 @@
+>  				reg =3D <0x020a4000 0x4000>;
+>  				interrupts =3D <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
+>  					     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks =3D <&clks IMX6UL_CLK_GPIO3>;
+>  				gpio-controller;
+>  				#gpio-cells =3D <2>;
+>  				interrupt-controller;
+> @@ -474,6 +477,7 @@
+>  				reg =3D <0x020a8000 0x4000>;
+>  				interrupts =3D <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+>  					     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks =3D <&clks IMX6UL_CLK_GPIO4>;
+>  				gpio-controller;
+>  				#gpio-cells =3D <2>;
+>  				interrupt-controller;
+> @@ -486,6 +490,7 @@
+>  				reg =3D <0x020ac000 0x4000>;
+>  				interrupts =3D <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
+>  					     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks =3D <&clks IMX6UL_CLK_GPIO5>;
+>  				gpio-controller;
+>  				#gpio-cells =3D <2>;
+>  				interrupt-controller;
 > --
-> Best Regards
-> Masahiro Yamada
+> 2.7.4
