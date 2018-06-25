@@ -1,69 +1,105 @@
-From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [v4, 05/10] arm64: dts: fsl: move ptp timer out of fman
-Date: Mon, 25 Jun 2018 20:37:11 +0800
-Message-ID: <20180625123716.28993-6-yangbo.lu@nxp.com>
-References: <20180625123716.28993-1-yangbo.lu@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180625123716.28993-1-yangbo.lu@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org, madalin.bucur@nxp.com, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "David S . Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH v4 2/2] hwmon: npcm750: add NPCM7xx PWM and Fan
+ driver
+Date: Mon, 25 Jun 2018 15:43:32 +0300
+Message-ID: <20180625124332.e7oyxezasn374w4b@mwanda>
+References: <20180624124155.82412-3-tmaimon77@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <kbuild-bounces@lists.01.org>
+Content-Disposition: inline
+In-Reply-To: <20180624124155.82412-3-tmaimon77@gmail.com>
+List-Unsubscribe: <https://lists.01.org/mailman/options/kbuild>,
+ <mailto:kbuild-request@lists.01.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/kbuild/>
+List-Post: <mailto:kbuild@lists.01.org>
+List-Help: <mailto:kbuild-request@lists.01.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/kbuild>,
+ <mailto:kbuild-request@lists.01.org?subject=subscribe>
+Errors-To: kbuild-bounces@lists.01.org
+Sender: "kbuild" <kbuild-bounces@lists.01.org>
+To: kbuild@01.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jdelvare@suse.com, Tomer Maimon <tmaimon77@gmail.com>, avifishman70@gmail.com, venture@google.com, openbmc@lists.ozlabs.org, brendanhiggins@google.com, linux-kernel@vger.kernel.org, yuenn@google.com, robh+dt@kernel.org, kbuild-all@01.org, linux-hwmon@vger.kernel.org, linux@roeck-us.net, joel@jms.id.au
 List-Id: devicetree@vger.kernel.org
 
-This patch is to move ptp timer node out of fman.
-Because ptp timer will be probed by ptp_qoriq driver,
-it should be an independent device in case of conflict
-memory mapping.
+Hi Tomer,
 
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
-Acked-by: Madalin Bucur <madalin.bucur@nxp.com>
----
-Changes for v2:
-	- Fixed address-cells for ptp-timer.
-Changes for v3:
-	- None.
-Changes for v4:
-	- Added ACKs.
----
- arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi |   14 ++++++++------
- 1 files changed, 8 insertions(+), 6 deletions(-)
+I love your patch! Perhaps something to improve:
 
-diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi
-index 4dd0676..a56a408 100644
---- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi
-+++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi
-@@ -11,13 +11,14 @@ fman0: fman@1a00000 {
- 	#size-cells = <1>;
- 	cell-index = <0>;
- 	compatible = "fsl,fman";
--	ranges = <0x0 0x0 0x1a00000 0x100000>;
--	reg = <0x0 0x1a00000 0x0 0x100000>;
-+	ranges = <0x0 0x0 0x1a00000 0xfe000>;
-+	reg = <0x0 0x1a00000 0x0 0xfe000>;
- 	interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>,
- 		     <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
- 	clocks = <&clockgen 3 0>;
- 	clock-names = "fmanclk";
- 	fsl,qman-channel-range = <0x800 0x10>;
-+	ptimer-handle = <&ptp_timer0>;
- 
- 	muram@0 {
- 		compatible = "fsl,fman-muram";
-@@ -73,9 +74,10 @@ fman0: fman@1a00000 {
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xfd000 0x1000>;
- 	};
-+};
- 
--	ptp_timer0: ptp-timer@fe000 {
--		compatible = "fsl,fman-ptp-timer";
--		reg = <0xfe000 0x1000>;
--	};
-+ptp_timer0: ptp-timer@1afe000 {
-+	compatible = "fsl,fman-ptp-timer";
-+	reg = <0x0 0x1afe000 0x0 0x1000>;
-+	interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
- };
--- 
-1.7.1
+[auto build test WARNING on hwmon/hwmon-next]
+[also build test WARNING on v4.18-rc2 next-20180622]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Tomer-Maimon/dt-binding-hwmon-Add-NPCM7xx-PWM-and-Fan-controller-documentation/20180624-205017
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
+
+New smatch warnings:
+drivers/hwmon/npcm750-pwm-fan.c:261 npcm7xx_pwm_config_set() warn: inconsistent returns 'mutex:&data->pwm_lock[module]'.
+  Locked on:   line 245
+  Unlocked on: line 261
+
+Old smatch warnings:
+drivers/hwmon/npcm750-pwm-fan.c:836 npcm7xx_pwm_cz_set_cur_state() warn: potential spectre issue 'cdev->cooling_levels'
+
+# https://github.com/0day-ci/linux/commit/5ef6a0a11de5f3f0711993a20b13820cc0884c7e
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout 5ef6a0a11de5f3f0711993a20b13820cc0884c7e
+vim +261 drivers/hwmon/npcm750-pwm-fan.c
+
+5ef6a0a1 Tomer Maimon 2018-06-24  210  
+5ef6a0a1 Tomer Maimon 2018-06-24  211  static int npcm7xx_pwm_config_set(struct npcm7xx_pwm_fan_data *data,
+5ef6a0a1 Tomer Maimon 2018-06-24  212  				  int channel, u16 val)
+5ef6a0a1 Tomer Maimon 2018-06-24  213  {
+5ef6a0a1 Tomer Maimon 2018-06-24  214  	u32 pwm_ch = (channel % NPCM7XX_PWM_MAX_CHN_NUM_IN_A_MODULE);
+5ef6a0a1 Tomer Maimon 2018-06-24  215  	u32 module = (channel / NPCM7XX_PWM_MAX_CHN_NUM_IN_A_MODULE);
+5ef6a0a1 Tomer Maimon 2018-06-24  216  	u32 tmp_buf, ctrl_en_bit, env_bit;
+5ef6a0a1 Tomer Maimon 2018-06-24  217  
+5ef6a0a1 Tomer Maimon 2018-06-24  218  	/*
+5ef6a0a1 Tomer Maimon 2018-06-24  219  	 * Config PWM Comparator register for setting duty cycle
+5ef6a0a1 Tomer Maimon 2018-06-24  220  	 */
+5ef6a0a1 Tomer Maimon 2018-06-24  221  	mutex_lock(&data->pwm_lock[module]);
+5ef6a0a1 Tomer Maimon 2018-06-24  222  
+5ef6a0a1 Tomer Maimon 2018-06-24  223  	/* write new CMR value  */
+5ef6a0a1 Tomer Maimon 2018-06-24  224  	iowrite32(val, NPCM7XX_PWM_REG_CMRx(data->pwm_base, module, pwm_ch));
+5ef6a0a1 Tomer Maimon 2018-06-24  225  	tmp_buf = ioread32(NPCM7XX_PWM_REG_CR(data->pwm_base, module));
+5ef6a0a1 Tomer Maimon 2018-06-24  226  
+5ef6a0a1 Tomer Maimon 2018-06-24  227  	switch (pwm_ch) {
+5ef6a0a1 Tomer Maimon 2018-06-24  228  	case 0:
+5ef6a0a1 Tomer Maimon 2018-06-24  229  		ctrl_en_bit = NPCM7XX_PWM_CTRL_CH0_EN_BIT;
+5ef6a0a1 Tomer Maimon 2018-06-24  230  		env_bit = NPCM7XX_PWM_CTRL_CH0_INV_BIT;
+5ef6a0a1 Tomer Maimon 2018-06-24  231  		break;
+5ef6a0a1 Tomer Maimon 2018-06-24  232  	case 1:
+5ef6a0a1 Tomer Maimon 2018-06-24  233  		ctrl_en_bit = NPCM7XX_PWM_CTRL_CH1_EN_BIT;
+5ef6a0a1 Tomer Maimon 2018-06-24  234  		env_bit = NPCM7XX_PWM_CTRL_CH1_INV_BIT;
+5ef6a0a1 Tomer Maimon 2018-06-24  235  		break;
+5ef6a0a1 Tomer Maimon 2018-06-24  236  	case 2:
+5ef6a0a1 Tomer Maimon 2018-06-24  237  		ctrl_en_bit = NPCM7XX_PWM_CTRL_CH2_EN_BIT;
+5ef6a0a1 Tomer Maimon 2018-06-24  238  		env_bit = NPCM7XX_PWM_CTRL_CH2_INV_BIT;
+5ef6a0a1 Tomer Maimon 2018-06-24  239  		break;
+5ef6a0a1 Tomer Maimon 2018-06-24  240  	case 3:
+5ef6a0a1 Tomer Maimon 2018-06-24  241  		ctrl_en_bit = NPCM7XX_PWM_CTRL_CH3_EN_BIT;
+5ef6a0a1 Tomer Maimon 2018-06-24  242  		env_bit = NPCM7XX_PWM_CTRL_CH3_INV_BIT;
+5ef6a0a1 Tomer Maimon 2018-06-24  243  		break;
+5ef6a0a1 Tomer Maimon 2018-06-24  244  	default:
+5ef6a0a1 Tomer Maimon 2018-06-24  245  		return -ENODEV;
+                                                ^^^^^^^^^^^^^^
+5ef6a0a1 Tomer Maimon 2018-06-24  246  	}
+5ef6a0a1 Tomer Maimon 2018-06-24  247  
+5ef6a0a1 Tomer Maimon 2018-06-24  248  	if (val == 0) {
+5ef6a0a1 Tomer Maimon 2018-06-24  249  		/* Disable PWM */
+5ef6a0a1 Tomer Maimon 2018-06-24  250  		tmp_buf &= ~ctrl_en_bit;
+5ef6a0a1 Tomer Maimon 2018-06-24  251  		tmp_buf |= env_bit;
+5ef6a0a1 Tomer Maimon 2018-06-24  252  	} else {
+5ef6a0a1 Tomer Maimon 2018-06-24  253  		/* Enable PWM */
+5ef6a0a1 Tomer Maimon 2018-06-24  254  		tmp_buf |= ctrl_en_bit;
+5ef6a0a1 Tomer Maimon 2018-06-24  255  		tmp_buf &= ~env_bit;
+5ef6a0a1 Tomer Maimon 2018-06-24  256  	}
+5ef6a0a1 Tomer Maimon 2018-06-24  257  
+5ef6a0a1 Tomer Maimon 2018-06-24  258  	iowrite32(tmp_buf, NPCM7XX_PWM_REG_CR(data->pwm_base, module));
+5ef6a0a1 Tomer Maimon 2018-06-24  259  	mutex_unlock(&data->pwm_lock[module]);
+5ef6a0a1 Tomer Maimon 2018-06-24  260  
+5ef6a0a1 Tomer Maimon 2018-06-24 @261  	return 0;
+5ef6a0a1 Tomer Maimon 2018-06-24  262  }
+5ef6a0a1 Tomer Maimon 2018-06-24  263  
