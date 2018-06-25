@@ -1,77 +1,190 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/2] ALSA: ac97: add bus binding for
-	codecs
-Date: Mon, 25 Jun 2018 12:23:30 +0100
-Message-ID: <20180625112330.GD9413@sirena.org.uk>
-References: <20180622192834.7797-1-robert.jarzmik@free.fr>
- <s5h36xbe1cp.wl-tiwai@suse.de>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7630951723015768665=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <s5h36xbe1cp.wl-tiwai@suse.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Robert Jarzmik <robert.jarzmik@free.fr>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH v2 2/6] coresight: Add helper device type
+Date: Mon, 25 Jun 2018 12:22:09 +0100
+Message-ID: <20180625112213.23492-3-suzuki.poulose@arm.com>
+References: <20180625112213.23492-1-suzuki.poulose@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180625112213.23492-1-suzuki.poulose@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+Add a new coresight device type, which do not belong to any
+of the existing types, i.e, source, sink, link etc. A helper
+device could be connected to a coresight device, which could
+augment the functionality of the coresight device.
 
---===============7630951723015768665==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3Gf/FFewwPeBMqCJ"
-Content-Disposition: inline
+This is intended to cover Coresight Address Translation Unit (CATU)
+devices, which provide improved Scatter Gather mechanism for TMC
+ETR. The idea is that the helper device could be controlled by
+the driver of the device it is attached to (in this case ETR),
+transparent to the generic coresight driver (and paths).
 
+The operations include enable(), disable(), both of which could
+accept a device specific "data" which the driving device and
+the helper device could share. Since they don't appear in the
+coresight "path" tracked by software, we have to ensure that
+they are powered up/down whenever the master device is turned
+on.
 
---3Gf/FFewwPeBMqCJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
+ drivers/hwtracing/coresight/coresight.c | 43 +++++++++++++++++++++++++++++++--
+ include/linux/coresight.h               | 24 ++++++++++++++++++
+ 2 files changed, 65 insertions(+), 2 deletions(-)
 
-On Mon, Jun 25, 2018 at 10:07:02AM +0200, Takashi Iwai wrote:
-> On Fri, 22 Jun 2018 21:28:33 +0200,
-> Robert Jarzmik wrote:
-> >=20
-> > Add the generic ac97 bus binding, especially for ac97 codecs discovered
-> > by ac97 hardware probing.
-> >=20
-> > Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
->=20
-> OK, now I applied both patches.
->=20
-> Mark, if you need these changes, pull topic/ac97-bus branch from my
-> tree.  It's a clean branch from 4.18-rc1.
-
-Thanks!
-
---3Gf/FFewwPeBMqCJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsw0LEACgkQJNaLcl1U
-h9DfrAf9GlxyEFEs2pxqfLQp4kmb6cd1fA5N3twtiLq0KnqFUsIX95MX0ZT37p+V
-cFSoD5v+C+bvhvjeEP0ASkFWqo+C45LsR6yh7nyAzrpahjCaKcWXscx0wh7v/A5+
-gHB4e+kb58vi49pTptg1uMhY7osfqX1UpO11Sw3xK4kUnrTRGrFh2ahxIUbySx9U
-taK4MBGBrEJnstdevxGesPRxuMXcQuv7bG5wUbAFX9e4STQIqVFpKy7pgO99XMzQ
-P8kVQAAxUP6kOf61KsnSfSCHJZAIR0uLNFNU+l1RRCjDOi4BOr/sKnF14jptTXzK
-pRq5FPsDVuOimrbmg/iqP3OPawUHMA==
-=VlxG
------END PGP SIGNATURE-----
-
---3Gf/FFewwPeBMqCJ--
-
---===============7630951723015768665==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============7630951723015768665==--
+diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+index 7f2b478..3e07fd3 100644
+--- a/drivers/hwtracing/coresight/coresight.c
++++ b/drivers/hwtracing/coresight/coresight.c
+@@ -425,6 +425,42 @@ struct coresight_device *coresight_get_enabled_sink(bool deactivate)
+ 	return dev ? to_coresight_device(dev) : NULL;
+ }
+ 
++/*
++ * coresight_grab_device - Power up this device and any of the helper
++ * devices connected to it for trace operation. Since the helper devices
++ * don't appear on the trace path, they should be handled along with the
++ * the master device.
++ */
++static void coresight_grab_device(struct coresight_device *csdev)
++{
++	int i;
++
++	for (i = 0; i < csdev->nr_outport; i++) {
++		struct coresight_device *child = csdev->conns[i].child_dev;
++
++		if (child && child->type == CORESIGHT_DEV_TYPE_HELPER)
++			pm_runtime_get_sync(child->dev.parent);
++	}
++	pm_runtime_get_sync(csdev->dev.parent);
++}
++
++/*
++ * coresight_drop_device - Release this device and any of the helper
++ * devices connected to it.
++ */
++static void coresight_drop_device(struct coresight_device *csdev)
++{
++	int i;
++
++	pm_runtime_put(csdev->dev.parent);
++	for (i = 0; i < csdev->nr_outport; i++) {
++		struct coresight_device *child = csdev->conns[i].child_dev;
++
++		if (child && child->type == CORESIGHT_DEV_TYPE_HELPER)
++			pm_runtime_put(child->dev.parent);
++	}
++}
++
+ /**
+  * _coresight_build_path - recursively build a path from a @csdev to a sink.
+  * @csdev:	The device to start from.
+@@ -473,9 +509,9 @@ static int _coresight_build_path(struct coresight_device *csdev,
+ 	if (!node)
+ 		return -ENOMEM;
+ 
++	coresight_grab_device(csdev);
+ 	node->csdev = csdev;
+ 	list_add(&node->link, path);
+-	pm_runtime_get_sync(csdev->dev.parent);
+ 
+ 	return 0;
+ }
+@@ -519,7 +555,7 @@ void coresight_release_path(struct list_head *path)
+ 	list_for_each_entry_safe(nd, next, path, link) {
+ 		csdev = nd->csdev;
+ 
+-		pm_runtime_put_sync(csdev->dev.parent);
++		coresight_drop_device(csdev);
+ 		list_del(&nd->link);
+ 		kfree(nd);
+ 	}
+@@ -770,6 +806,9 @@ static struct device_type coresight_dev_type[] = {
+ 		.name = "source",
+ 		.groups = coresight_source_groups,
+ 	},
++	{
++		.name = "helper",
++	},
+ };
+ 
+ static void coresight_device_release(struct device *dev)
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index 7c188c2..3d40a2b 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -40,6 +40,7 @@ enum coresight_dev_type {
+ 	CORESIGHT_DEV_TYPE_LINK,
+ 	CORESIGHT_DEV_TYPE_LINKSINK,
+ 	CORESIGHT_DEV_TYPE_SOURCE,
++	CORESIGHT_DEV_TYPE_HELPER,
+ };
+ 
+ enum coresight_dev_subtype_sink {
+@@ -62,6 +63,10 @@ enum coresight_dev_subtype_source {
+ 	CORESIGHT_DEV_SUBTYPE_SOURCE_SOFTWARE,
+ };
+ 
++enum coresight_dev_subtype_helper {
++	CORESIGHT_DEV_SUBTYPE_HELPER_NONE,
++};
++
+ /**
+  * union coresight_dev_subtype - further characterisation of a type
+  * @sink_subtype:	type of sink this component is, as defined
+@@ -70,6 +75,8 @@ enum coresight_dev_subtype_source {
+  *			by @coresight_dev_subtype_link.
+  * @source_subtype:	type of source this component is, as defined
+  *			by @coresight_dev_subtype_source.
++ * @helper_subtype:	type of helper this component is, as defined
++ *			by @coresight_dev_subtype_helper.
+  */
+ union coresight_dev_subtype {
+ 	/* We have some devices which acts as LINK and SINK */
+@@ -78,6 +85,7 @@ union coresight_dev_subtype {
+ 		enum coresight_dev_subtype_link link_subtype;
+ 	};
+ 	enum coresight_dev_subtype_source source_subtype;
++	enum coresight_dev_subtype_helper helper_subtype;
+ };
+ 
+ /**
+@@ -172,6 +180,7 @@ struct coresight_device {
+ #define source_ops(csdev)	csdev->ops->source_ops
+ #define sink_ops(csdev)		csdev->ops->sink_ops
+ #define link_ops(csdev)		csdev->ops->link_ops
++#define helper_ops(csdev)	csdev->ops->helper_ops
+ 
+ /**
+  * struct coresight_ops_sink - basic operations for a sink
+@@ -231,10 +240,25 @@ struct coresight_ops_source {
+ 			struct perf_event *event);
+ };
+ 
++/**
++ * struct coresight_ops_helper - Operations for a helper device.
++ *
++ * All operations could pass in a device specific data, which could
++ * help the helper device to determine what to do.
++ *
++ * @enable	: Enable the device
++ * @disable	: Disable the device
++ */
++struct coresight_ops_helper {
++	int (*enable)(struct coresight_device *csdev, void *data);
++	int (*disable)(struct coresight_device *csdev, void *data);
++};
++
+ struct coresight_ops {
+ 	const struct coresight_ops_sink *sink_ops;
+ 	const struct coresight_ops_link *link_ops;
+ 	const struct coresight_ops_source *source_ops;
++	const struct coresight_ops_helper *helper_ops;
+ };
+ 
+ #ifdef CONFIG_CORESIGHT
+-- 
+2.9.5
