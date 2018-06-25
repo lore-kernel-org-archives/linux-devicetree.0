@@ -1,190 +1,75 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v2 2/6] coresight: Add helper device type
-Date: Mon, 25 Jun 2018 12:22:09 +0100
-Message-ID: <20180625112213.23492-3-suzuki.poulose@arm.com>
-References: <20180625112213.23492-1-suzuki.poulose@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180625112213.23492-1-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/3] ASoC: simple-card: add support for
+ clock divider setup
+Date: Mon, 25 Jun 2018 12:24:40 +0100
+Message-ID: <20180625112440.GE9413@sirena.org.uk>
+References: <20180528193503.18905-1-daniel@zonque.org>
+ <20180528193503.18905-4-daniel@zonque.org>
+ <20180529113509.GE23509@sirena.org.uk>
+ <d6b9da97-8c71-ccfb-07e4-353620396a31@zonque.org>
+ <20180530091011.GA6920@sirena.org.uk>
+ <ace99dbd-3480-9ac3-e5b8-4ddae73bba10@zonque.org>
+ <b006a926-09ff-59e0-2b88-6f15e3e714e9@zonque.org>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============7427591268174346333=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <b006a926-09ff-59e0-2b88-6f15e3e714e9@zonque.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Daniel Mack <daniel@zonque.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, kuninori.morimoto.gx@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-Add a new coresight device type, which do not belong to any
-of the existing types, i.e, source, sink, link etc. A helper
-device could be connected to a coresight device, which could
-augment the functionality of the coresight device.
 
-This is intended to cover Coresight Address Translation Unit (CATU)
-devices, which provide improved Scatter Gather mechanism for TMC
-ETR. The idea is that the helper device could be controlled by
-the driver of the device it is attached to (in this case ETR),
-transparent to the generic coresight driver (and paths).
+--===============7427591268174346333==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="GxcwvYAGnODwn7V8"
+Content-Disposition: inline
 
-The operations include enable(), disable(), both of which could
-accept a device specific "data" which the driving device and
-the helper device could share. Since they don't appear in the
-coresight "path" tracked by software, we have to ensure that
-they are powered up/down whenever the master device is turned
-on.
 
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- drivers/hwtracing/coresight/coresight.c | 43 +++++++++++++++++++++++++++++++--
- include/linux/coresight.h               | 24 ++++++++++++++++++
- 2 files changed, 65 insertions(+), 2 deletions(-)
+--GxcwvYAGnODwn7V8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-index 7f2b478..3e07fd3 100644
---- a/drivers/hwtracing/coresight/coresight.c
-+++ b/drivers/hwtracing/coresight/coresight.c
-@@ -425,6 +425,42 @@ struct coresight_device *coresight_get_enabled_sink(bool deactivate)
- 	return dev ? to_coresight_device(dev) : NULL;
- }
- 
-+/*
-+ * coresight_grab_device - Power up this device and any of the helper
-+ * devices connected to it for trace operation. Since the helper devices
-+ * don't appear on the trace path, they should be handled along with the
-+ * the master device.
-+ */
-+static void coresight_grab_device(struct coresight_device *csdev)
-+{
-+	int i;
-+
-+	for (i = 0; i < csdev->nr_outport; i++) {
-+		struct coresight_device *child = csdev->conns[i].child_dev;
-+
-+		if (child && child->type == CORESIGHT_DEV_TYPE_HELPER)
-+			pm_runtime_get_sync(child->dev.parent);
-+	}
-+	pm_runtime_get_sync(csdev->dev.parent);
-+}
-+
-+/*
-+ * coresight_drop_device - Release this device and any of the helper
-+ * devices connected to it.
-+ */
-+static void coresight_drop_device(struct coresight_device *csdev)
-+{
-+	int i;
-+
-+	pm_runtime_put(csdev->dev.parent);
-+	for (i = 0; i < csdev->nr_outport; i++) {
-+		struct coresight_device *child = csdev->conns[i].child_dev;
-+
-+		if (child && child->type == CORESIGHT_DEV_TYPE_HELPER)
-+			pm_runtime_put(child->dev.parent);
-+	}
-+}
-+
- /**
-  * _coresight_build_path - recursively build a path from a @csdev to a sink.
-  * @csdev:	The device to start from.
-@@ -473,9 +509,9 @@ static int _coresight_build_path(struct coresight_device *csdev,
- 	if (!node)
- 		return -ENOMEM;
- 
-+	coresight_grab_device(csdev);
- 	node->csdev = csdev;
- 	list_add(&node->link, path);
--	pm_runtime_get_sync(csdev->dev.parent);
- 
- 	return 0;
- }
-@@ -519,7 +555,7 @@ void coresight_release_path(struct list_head *path)
- 	list_for_each_entry_safe(nd, next, path, link) {
- 		csdev = nd->csdev;
- 
--		pm_runtime_put_sync(csdev->dev.parent);
-+		coresight_drop_device(csdev);
- 		list_del(&nd->link);
- 		kfree(nd);
- 	}
-@@ -770,6 +806,9 @@ static struct device_type coresight_dev_type[] = {
- 		.name = "source",
- 		.groups = coresight_source_groups,
- 	},
-+	{
-+		.name = "helper",
-+	},
- };
- 
- static void coresight_device_release(struct device *dev)
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index 7c188c2..3d40a2b 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -40,6 +40,7 @@ enum coresight_dev_type {
- 	CORESIGHT_DEV_TYPE_LINK,
- 	CORESIGHT_DEV_TYPE_LINKSINK,
- 	CORESIGHT_DEV_TYPE_SOURCE,
-+	CORESIGHT_DEV_TYPE_HELPER,
- };
- 
- enum coresight_dev_subtype_sink {
-@@ -62,6 +63,10 @@ enum coresight_dev_subtype_source {
- 	CORESIGHT_DEV_SUBTYPE_SOURCE_SOFTWARE,
- };
- 
-+enum coresight_dev_subtype_helper {
-+	CORESIGHT_DEV_SUBTYPE_HELPER_NONE,
-+};
-+
- /**
-  * union coresight_dev_subtype - further characterisation of a type
-  * @sink_subtype:	type of sink this component is, as defined
-@@ -70,6 +75,8 @@ enum coresight_dev_subtype_source {
-  *			by @coresight_dev_subtype_link.
-  * @source_subtype:	type of source this component is, as defined
-  *			by @coresight_dev_subtype_source.
-+ * @helper_subtype:	type of helper this component is, as defined
-+ *			by @coresight_dev_subtype_helper.
-  */
- union coresight_dev_subtype {
- 	/* We have some devices which acts as LINK and SINK */
-@@ -78,6 +85,7 @@ union coresight_dev_subtype {
- 		enum coresight_dev_subtype_link link_subtype;
- 	};
- 	enum coresight_dev_subtype_source source_subtype;
-+	enum coresight_dev_subtype_helper helper_subtype;
- };
- 
- /**
-@@ -172,6 +180,7 @@ struct coresight_device {
- #define source_ops(csdev)	csdev->ops->source_ops
- #define sink_ops(csdev)		csdev->ops->sink_ops
- #define link_ops(csdev)		csdev->ops->link_ops
-+#define helper_ops(csdev)	csdev->ops->helper_ops
- 
- /**
-  * struct coresight_ops_sink - basic operations for a sink
-@@ -231,10 +240,25 @@ struct coresight_ops_source {
- 			struct perf_event *event);
- };
- 
-+/**
-+ * struct coresight_ops_helper - Operations for a helper device.
-+ *
-+ * All operations could pass in a device specific data, which could
-+ * help the helper device to determine what to do.
-+ *
-+ * @enable	: Enable the device
-+ * @disable	: Disable the device
-+ */
-+struct coresight_ops_helper {
-+	int (*enable)(struct coresight_device *csdev, void *data);
-+	int (*disable)(struct coresight_device *csdev, void *data);
-+};
-+
- struct coresight_ops {
- 	const struct coresight_ops_sink *sink_ops;
- 	const struct coresight_ops_link *link_ops;
- 	const struct coresight_ops_source *source_ops;
-+	const struct coresight_ops_helper *helper_ops;
- };
- 
- #ifdef CONFIG_CORESIGHT
--- 
-2.9.5
+On Sat, Jun 23, 2018 at 08:41:27PM +0200, Daniel Mack wrote:
+
+> I'd like to get some of this done for 4.19, but for that, I'd need Robert's
+> patch that addresses DMA compat issues in your tree.
+
+> Not sure if you've followed the thread titled '[PATCH v3 09/14] ASoC: pxa:
+> remove the dmaengine compat need' - could you chime in there?
+
+No, I reviewed my patch in there.  What's going on?
+
+--GxcwvYAGnODwn7V8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsw0PcACgkQJNaLcl1U
+h9AdSQf/RiYmfpfH/iezMbGpr2xTXZvVZ4WgXWTNsubCl6tuQLZAv+5eMQ7k68nF
+22jVkgOH7OQCwOXwZoupg/Ze1/KyyR4GBPiYac1XIOh1iOkWfV2jKuKXI5BGQCER
+zWW459vgSjy4uQUy5MNTBIMxBEyW6Hce7/nTinIwdzMbahkflA7dSivwpcbj2pZT
+3kvn9Gyrr8Inrngp/EFe+azrMi/e45/fTFNMTuz4RyCb57HjzKMuK43PAoUBNh/r
+Whc2rmTaUPGUGrbI55LQWEaXkj+eJodgjDiwR7onIgirX1BTDFrBV/Rzzo+L5tg5
+o3teFkzK8loPqm2tr0a1uS543W0VJA==
+=1Qsj
+-----END PGP SIGNATURE-----
+
+--GxcwvYAGnODwn7V8--
+
+--===============7427591268174346333==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7427591268174346333==--
