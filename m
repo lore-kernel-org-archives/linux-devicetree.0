@@ -1,71 +1,35 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 09/23] thermal: armada: remove sensors validity from the IP
- initialization
-Date: Mon, 25 Jun 2018 17:12:25 +0200
-Message-ID: <20180625151239.20976-10-miquel.raynal@bootlin.com>
-References: <20180625151239.20976-1-miquel.raynal@bootlin.com>
+From: Andreas Klinger <ak@it-klinger.de>
+Subject: [PATCH v2 0/4] iio: hx711: add data-ready-delay
+Date: Mon, 25 Jun 2018 17:17:42 +0200
+Message-ID: <20180625151742.GA6358@arbeit>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180625151239.20976-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When using new bindings with multiple sensors, sensor validity is
-checked twice because sensor selection also checks for the validity.
+This patch adds an additional property in the device tree for adjusting the
+delay between a rising edge on PD_SCK until data is ready on DOUT.
 
-Remove the redundant call from the IP initialization helper and move it
-to the legacy probe section where it is still needed.
+This is necessary because of parasitic capacities on different systems.
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/thermal/armada_thermal.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Furthermore a maintainer for this driver is added.
 
-diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_thermal.c
-index 2b11bf929b64..3d5b29133d3a 100644
---- a/drivers/thermal/armada_thermal.c
-+++ b/drivers/thermal/armada_thermal.c
-@@ -221,9 +221,6 @@ static void armada380_init(struct platform_device *pdev,
- 	reg &= ~CONTROL0_TSEN_TC_TRIM_MASK;
- 	reg |= CONTROL0_TSEN_TC_TRIM_VAL;
- 	regmap_write(priv->syscon, data->syscon_control0_off, reg);
--
--	/* Wait the sensors to be valid or the core will warn the user */
--	armada_wait_sensor_validity(priv);
- }
- 
- static void armada_ap806_init(struct platform_device *pdev,
-@@ -243,9 +240,6 @@ static void armada_ap806_init(struct platform_device *pdev,
- 	reg &= ~CONTROL0_TSEN_AVG_BYPASS;
- 
- 	regmap_write(priv->syscon, data->syscon_control0_off, reg);
--
--	/* Wait the sensors to be valid or the core will warn the user */
--	armada_wait_sensor_validity(priv);
- }
- 
- static void armada_cp110_init(struct platform_device *pdev,
-@@ -657,6 +651,9 @@ static int armada_thermal_probe(struct platform_device *pdev)
- 
- 		priv->data->init(pdev, priv);
- 
-+		/* Wait the sensors to be valid */
-+		armada_wait_sensor_validity(priv);
-+
- 		tz = thermal_zone_device_register(priv->zone_name, 0, 0, priv,
- 						  &legacy_ops, NULL, 0, 0);
- 		if (IS_ERR(tz)) {
+In the last patch there is a fix of dtc warning if someone is using the
+given example
+
+Andreas Klinger (4):
+  iio: hx711: add data-ready-delay-ns property in DT
+  iio: hx711: add delay until DOUT is ready
+  iio: hx711: add maintainer for driver
+  iio: hx711: warning in dt binding example doc
+
+ .../devicetree/bindings/iio/adc/avia-hx711.txt     |  9 ++++++++-
+ MAINTAINERS                                        |  7 +++++++
+ drivers/iio/adc/hx711.c                            | 23 ++++++++++++++++++++++
+ 3 files changed, 38 insertions(+), 1 deletion(-)
+
 -- 
-2.14.1
+2.1.4
