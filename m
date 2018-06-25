@@ -1,46 +1,62 @@
-Return-Path: <SRS0=pME0=JL=nxp.com=jun.li@kernel.org>
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v7 07/14] staging: typec: tcpci: remove unused tcpci_tcpc_config
-Date: Mon, 25 Jun 2018 16:08:39 +0800
-Message-Id: <1529914126-22550-8-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
-References: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=Dkm/=JL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr710076.outbound.protection.outlook.com ([40.107.71.76]:5857
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1754682AbeFYIbX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 Jun 2018 04:31:23 -0400
+From: Alan Douglas <adouglas@cadence.com>
+Subject: [PATCH 5/5] PCI: cadence: Add shutdown callback to host driver
+Date: Mon, 25 Jun 2018 09:30:53 +0100
+Message-ID: <1529915453-4633-6-git-send-email-adouglas@cadence.com>
+In-Reply-To: <1529915453-4633-1-git-send-email-adouglas@cadence.com>
+References: <1529915453-4633-1-git-send-email-adouglas@cadence.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: a.hajda@samsung.com, jun.li@nxp.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
+Sender: devicetree-owner@vger.kernel.org
+To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Alan Douglas <adouglas@cadence.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Since we will use config settings via device properties, so
-remove the hard code tcpci_tcpc_config.
+Add shutdown callback to host driver which will disable PHY and
+PM runtime.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Li Jun <jun.li@nxp.com>
+Signed-off-by: Alan Douglas <adouglas@cadence.com>
 ---
- drivers/staging/typec/tcpci.c | 7 -------
- 1 file changed, 7 deletions(-)
+ drivers/pci/controller/pcie-cadence-host.c |   15 +++++++++++++++
+ 1 files changed, 15 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index e59547a..076498a 100644
---- a/drivers/staging/typec/tcpci.c
-+++ b/drivers/staging/typec/tcpci.c
-@@ -464,17 +464,10 @@ static const struct regmap_config tcpci_regmap_config = {
- 	.max_register = 0x7F, /* 0x80 .. 0xFF are vendor defined */
+diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/pcie-cadence-host.c
+index e3e9b7d..ec394f6 100644
+--- a/drivers/pci/controller/pcie-cadence-host.c
++++ b/drivers/pci/controller/pcie-cadence-host.c
+@@ -343,6 +343,20 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
+ 	return ret;
+ }
+ 
++static void cdns_pcie_shutdown(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct cdns_pcie *pcie = dev_get_drvdata(dev);
++	int ret;
++
++	ret = pm_runtime_put_sync(dev);
++	if (ret < 0)
++		dev_dbg(dev, "pm_runtime_put_sync failed\n");
++
++	pm_runtime_disable(dev);
++	cdns_pcie_disable_phy(pcie);
++}
++
+ static struct platform_driver cdns_pcie_host_driver = {
+ 	.driver = {
+ 		.name = "cdns-pcie-host",
+@@ -350,5 +364,6 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
+ 		.pm	= &cdns_pcie_pm_ops,
+ 	},
+ 	.probe = cdns_pcie_host_probe,
++	.shutdown = cdns_pcie_shutdown,
  };
- 
--static const struct tcpc_config tcpci_tcpc_config = {
--	.type = TYPEC_PORT_DFP,
--	.default_role = TYPEC_SINK,
--};
--
- static int tcpci_parse_config(struct tcpci *tcpci)
- {
- 	tcpci->controls_vbus = true; /* XXX */
- 
--	/* TODO: Populate struct tcpc_config from ACPI/device-tree */
--	tcpci->tcpc.config = &tcpci_tcpc_config;
- 	tcpci->tcpc.fwnode = device_get_named_child_node(tcpci->dev,
- 							 "connector");
- 	if (!tcpci->tcpc.fwnode) {
+ builtin_platform_driver(cdns_pcie_host_driver);
 -- 
-2.7.4
+1.7.1
+
