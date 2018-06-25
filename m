@@ -1,83 +1,82 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: mtd: document Broadcom's TRX firmware
- format binding
-Date: Mon, 25 Jun 2018 15:51:07 -0600
-Message-ID: <CAL_JsqKZWrmQM9C+iDe5vjWtiYvTR3HQ_ANdUNa4kkfduzhODw@mail.gmail.com>
-References: <20180612104434.15232-1-zajec5@gmail.com>
- <20180625212137.GA16487@rob-hp-laptop>
- <623424b397965cea5f85ccbabdda3ef6@milecki.pl>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: Add mtk-systimer bindings
+Date: Mon, 25 Jun 2018 23:53:45 +0200
+Message-ID: <ad38a952-4400-984a-a7fd-aa4e6af13c13@linaro.org>
+References: <1529910601-15005-1-git-send-email-stanley.chu@mediatek.com>
+ <1529910601-15005-2-git-send-email-stanley.chu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <623424b397965cea5f85ccbabdda3ef6@milecki.pl>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jonas Gorski <jonas.gorski@gmail.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marek.vasut@gmail.com>, MTD Maling List <linux-mtd@lists.infradead.org>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1529910601-15005-2-git-send-email-stanley.chu@mediatek.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stanley Chu <stanley.chu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdW4gMjUsIDIwMTggYXQgMzo0MSBQTSBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1p
-bGVja2kucGw+IHdyb3RlOgo+Cj4gT24gMjAxOC0wNi0yNSAyMzoyMSwgUm9iIEhlcnJpbmcgd3Jv
-dGU6Cj4gPiBPbiBUdWUsIEp1biAxMiwgMjAxOCBhdCAxMjo0NDozM1BNICswMjAwLCBSYWZhxYIg
-TWnFgmVja2kgd3JvdGU6Cj4gPj4gRnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tp
-LnBsPgo+ID4+Cj4gPj4gQnJvYWRjb20gYmFzZWQgaG9tZSByb3V0ZXIgZGV2aWNlcyB1c2UgVFJY
-IGZpcm13YXJlIGZvcm1hdC4gSXQncyBhCj4gPj4gY29udGFpbmVyIHRoYXQgY2FuIGhvbGQgZmV3
-IHBhcnRpdGlvbnMuIElmIG9wZXJhdGluZyBzeXN0ZW0gaXMKPiA+PiBleHBlY3RlZAo+ID4+IHRv
-IGFjY2VzcyB0aGVtIGl0IGhhcyB0byB1bmRlcnN0YW5kIHRoYXQgZm9ybWF0IGFuZCBwYXJzZSBm
-bGFzaCBkYXRhCj4gPj4gYWNjb3JkaW5nbHkuCj4gPj4KPiA+PiBTaWduZWQtb2ZmLWJ5OiBSYWZh
-xYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4gPj4gLS0tCj4gPj4gIC4uLi9iaW5kaW5n
-cy9tdGQvcGFydGl0aW9ucy9icmNtLHRyeC50eHQgICAgICAgICAgIHwgMzUKPiA+PiArKysrKysr
-KysrKysrKysrKysrKysrCj4gPj4gIDEgZmlsZSBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspCj4g
-Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NAo+ID4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9tdGQvcGFydGl0aW9ucy9icmNtLHRyeC50eHQKPiA+Pgo+ID4+IGRpZmYgLS1naXQKPiA+
-PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9ucy9icmNt
-LHRyeC50eHQKPiA+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFy
-dGl0aW9ucy9icmNtLHRyeC50eHQKPiA+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4+IGluZGV4
-IDAwMDAwMDAwMDAwMC4uZTU5MGI4ODRlNWFjCj4gPj4gLS0tIC9kZXYvbnVsbAo+ID4+ICsrKyBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9ucy9icmNtLHRy
-eC50eHQKPiA+PiBAQCAtMCwwICsxLDM1IEBACj4gPj4gK0Jyb2FkY29tIFRSWCBDb250YWluZXIg
-UGFydGl0aW9uCj4gPj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gPj4gKwo+
-ID4+ICtUUlggaXMgQnJvYWRjb20ncyBvZmZpY2lhbCBmaXJtd2FyZSBmb3JtYXQgZm9yIHRoZSBC
-Q005NDd4eCBib2FyZHMuCj4gPj4gSXQncyB1c2VkIGJ5Cj4gPj4gK21vc3Qgb2YgdGhlIHZlbmRv
-cnMgYnVpbGRpbmcgZGV2aWNlcyBiYXNlZCBvbiBCcm9hZGNvbSdzIEJDTTQ3eHggU29Dcwo+ID4+
-IGFuZCBpcwo+ID4+ICtzdXBwb3J0ZWQgYnkgdGhlIENGRSBib290bG9hZGVyLgo+ID4+ICsKPiA+
-PiArRGVzaWduIG9mIHRoZSBUUlggZm9ybWF0IGlzIHZlcnkgbWluaW1hbGlzdGljLiBJdHMgaGVh
-ZGVyIGNvbnRhaW5zCj4gPj4gK2lkZW50aWZpY2F0aW9uIGZpZWxkcywgQ1JDMzIgY2hlY2tzdW0g
-YW5kIHRoZSBsb2NhdGlvbnMgb2YgZW1iZWRkZWQKPiA+PiBwYXJ0aXRpb25zLgo+ID4+ICtJdHMg
-cHVycG9zZSBpcyB0byBzdG9yZSBhIGZldyBwYXJ0aXRpb25zIGluIGEgZm9ybWF0IHRoYXQgY2Fu
-IGJlCj4gPj4gZGlzdHJpYnV0ZWQgYXMKPiA+PiArYSBzdGFuZGFsb25lIGZpbGUgYW5kIHdyaXR0
-ZW4gaW4gYSBmbGFzaCBtZW1vcnkuCj4gPj4gKwo+ID4+ICtDb250YWluZXIgY2FuIGhvbGQgdXAg
-dG8gNCBwYXJ0aXRpb25zLiBUaGUgZmlyc3QgcGFydGl0aW9uIGhhcyB0bwo+ID4+IGNvbnRhaW4g
-YQo+ID4+ICtkZXZpY2UgZXhlY3V0YWJsZSBiaW5hcnkgKGUuZy4gYSBrZXJuZWwpIGFzIGl0J3Mg
-d2hhdCB0aGUgQ0ZFCj4gPj4gYm9vdGxvYWRlciBzdGFydHMKPiA+PiArZXhlY3V0aW5nLiBPdGhl
-ciBwYXJ0aXRpb25zIGNhbiBiZSB1c2VkIGZvciBvcGVyYXRpbmcgc3lzdGVtCj4gPj4gcHVycG9z
-ZXMuIFRoaXMgaXMKPiA+PiArdXNlZnVsIGZvciBzeXN0ZW1zIHRoYXQga2VlcCBrZXJuZWwgYW5k
-IHJvb3RmcyBzZXBhcmF0ZWQuCj4gPj4gKwo+ID4+ICtUUlggZG9lc24ndCBlbmZvcmNlIGFueSBz
-dHJpY3QgcGFydGl0aW9uIGJvdW5kYXJpZXMgb3Igc2l6ZSBsaW1pdHMuCj4gPj4gQWxsCj4gPj4g
-K3BhcnRpdGlvbnMgaGF2ZSB0byBiZSBsZXNzIHRoYW4gdGhlIDRHaUIgbWF4IHNpemUgbGltaXQu
-Cj4gPj4gKwo+ID4+ICtUaGVyZSBhcmUgdHdvIGV4aXN0aW5nL2tub3duIFRSWCB2YXJpYW50czoK
-PiA+PiArMSkgdjEgd2hpY2ggY29udGFpbnMgMyBwYXJ0aXRpb25zCj4gPj4gKzIpIHYyIHdoaWNo
-IGNvbnRhaW5zIDQgcGFydGl0aW9ucwo+ID4+ICsKPiA+PiArUmVxdWlyZWQgcHJvcGVydGllczoK
-PiA+PiArLSBjb21wYXRpYmxlIDogKHJlcXVpcmVkKSBtdXN0IGJlIGVpdGhlcjogImJyY20sdHJ4
-LXYxIiBvcgo+ID4+ICJicmNtLHRyeC12MiIKPiA+PiArICAgIGZvbGxvd2VkIGJ5ICJicmNtLHRy
-eCIKPiA+Cj4gPiBXaGF0IGlzIHRoZSBwdXJwb3NlIG9mIGJyY20sdHJ4PyBFaXRoZXIgdGhhdCBh
-bG9uZSBpcyBlbm91Z2ggb3IgeW91Cj4gPiBuZWVkCj4gPiB2MS92MiB0byBkaXN0aW5ndWlzaCB0
-aGUgZGlmZmVyZW5jZS4gWW91IHNob3VsZG4ndCBuZWVkIGJvdGguCj4KPiBJIGd1ZXNzIEkgaW5j
-b3JyZWN0bHkgdHJpZWQgc29tZSBwYXR0ZXJuIEkgc2F3IHdoZW4gc3BlY2lmeWluZyBTb0MKPiBj
-b21wYXRpYmlsaXR5Lgo+Cj4gQ2FuIEkgaGF2ZSB5b3UgYWR2aXNlIGhlcmUsIHBsZWFzZT8KPgo+
-IE5vIFRSWCBzdXBwb3J0aW5nIGNvZGUgcmVhbGx5IG5lZWRzIGEgaGludCBhYm91dCB1c2VkIFRS
-WCB2ZXJzaW9uLiBUUlgKPiBmb3JtYXQgKGhlYWRlcikgY29udGFpbnMgInZlcnNpb24iIGZpZWxk
-IHNvIGFueSBjb2RlIGRlYWxpbmcgd2l0aCBUUlgKPiBmb3JtYXQgY2FuIGNoZWNrIHRoYXQgZmll
-bGQuIFRoZW4gaXQga25vd3Mgd2hhdCB2ZXJzaW9uIGl0J3MgZGVhbGluZwo+IHdpdGguCj4KPiBX
-aGljaCBiaW5kaW5nKHMpIHNob3VsZCBJIHVzZSBpbiB0aGF0IGNhc2U/CgpJJ2QganVzdCB1c2Ug
-ImJyY20sdHJ4IiB0aGVuLgoKUm9iCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KTGludXggTVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
+On 25/06/2018 09:10, Stanley Chu wrote:
+> Add binding documentation for the System Timer driver of
+> the Mediatek SoCs.
+> 
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
+>  .../bindings/timer/mediatek,mtk-systimer.txt       |   18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/mediatek,mtk-systimer.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-systimer.txt b/Documentation/devicetree/bindings/timer/mediatek,mtk-systimer.txt
+> new file mode 100644
+> index 0000000..735a6fd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-systimer.txt
+> @@ -0,0 +1,18 @@
+> +Mediatek System Timers
+> +----------------------
+> +
+> +Required properties:
+> +- compatible: should contain
+> +	"mediatek,sys_timer" for those platforms which support system timer.
+> +- reg: Mandatory. The location and length for system timer registers.
+> +- clock-frequency: Optional. If not assigned specifically, default
+> +	value 13000000 (means 13 MHz) would be applied.
+
+The driver tells there is an error if it is not defined, so it can't be
+optional.
+
+> +Examples:
+> +
+> +	sys_timer@10017000 {
+> +		compatible = "mediatek,sys_timer";
+> +		reg = <0 0x10017000 0 0x1000>;
+> +		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
+> +		clock-frequency = <13000000>;
+
+Replace it by a phandle to a 'fixed-clock'.
+
+eg.
+
+clocks = <&myclk>;
+
+
+> +	};
+
+myclk: myclk {
+	#clock-cells = <0>;
+	compatible = "fixed-clock";
+        clock-frequency = <13000000>;
+};
+
+Thanks
+
+  -- DAniel
+
+
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
