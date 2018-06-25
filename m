@@ -1,52 +1,59 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2 3/6] coresight: Introduce support for Coresight
- Address Translation Unit
-Date: Mon, 25 Jun 2018 09:23:51 -0700
-Message-ID: <1dab29ef47d77c2456ee2500a4636f8793b53354.camel@perches.com>
-References: <20180625112213.23492-1-suzuki.poulose@arm.com>
-         <20180625112213.23492-4-suzuki.poulose@arm.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 00/24] Add support for R40 HDMI pipeline
+Date: Mon, 25 Jun 2018 18:43:01 +0200
+Message-ID: <20180625164300.vivzyu3g52d2pjdn@flea>
+References: <20180625120304.7543-1-jernej.skrabec@siol.net>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180625112213.23492-4-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="fedf5x4px5amfvpi"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBFVXYTMQKGQEND6CFPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180625120304.7543-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-06-25 at 12:22 +0100, Suzuki K Poulose wrote:
-> Add the initial support for Coresight Address Translation Unit, which
-> augments the TMC in Coresight SoC-600 by providing an improved Scatter
-> Gather mechanism. CATU is always connected to a single TMC-ETR and
-> converts the AXI address with a translated address (from a given SG
-> table with specific format). The CATU should be programmed in pass
-> through mode and enabled even if the ETR doesn't use the translation
-> by CATU.
-[]
-> diff --git a/drivers/hwtracing/coresight/coresight-catu.h b/drivers/hwtracing/coresight/coresight-catu.h
-[]
-> +static inline bool coresight_is_catu_device(struct coresight_device *csdev)
-> +{
-> +	enum coresight_dev_subtype_helper subtype;
-> +
-> +	/* Make the checkpatch happy */
-> +	subtype = csdev->subtype.helper_subtype;
-> +
-> +	return IS_ENABLED(CONFIG_CORESIGHT_CATU) &&
-> +	       csdev->type == CORESIGHT_DEV_TYPE_HELPER &&
-> +	       subtype == CORESIGHT_DEV_SUBTYPE_HELPER_CATU;
-> +}
 
-I believe you should not make checkpatch happy here
-by using a temporary but use the most readable form.
+--fedf5x4px5amfvpi
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Probably the most readable form is:
+On Mon, Jun 25, 2018 at 02:02:40PM +0200, Jernej Skrabec wrote:
+> This series adds support for R40 HDMI pipeline. It is a bit special
+> than other already supported pipelines because it has additional unit
+> called TCON TOP responsible for relationship configuration between
+> mixers, TCONs and HDMI. Additionally, it has additional gates for DSI
+> and TV TCONs, TV encoder clock settings and pin muxing between LCD
+> and TV encoders.
+> 
+> However, it seems that TCON TOP will become a norm, since newer
+> Allwinner SoCs like H6 also have this unit.
+> 
+> I tested different possible configurations:
+> - mixer0 <> TCON-TV0 <> HDMI
+> - mixer0 <> TCON-TV1 <> HDMI
+> - mixer1 <> TCON-TV0 <> HDMI
+> - mixer1 <> TCON-TV1 <> HDMI
+> 
+> Please review.
 
-	return IS_ENABLED(CONFIG_CORESIGHT_CATU) &&
-	       csdev->type == CORESIGHT_DEV_TYPE_HELPER &&
-	       csdev->subtype.helper_subtype == CORESIGHT_DEV_SUBTYPE_HELPER_CATU;
+This looks all fine by me, thanks!
 
-where restricting line length to 80 columns is not useful
-because the identifiers are very long.  The identifiers
-are possibly longer than necessary.
+I'd still like some more review (by Chen-Yu and Rob) before applying
+it, but you can add my Acked-by for the next round if needed.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--fedf5x4px5amfvpi--
