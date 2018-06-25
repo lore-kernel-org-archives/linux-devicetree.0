@@ -1,88 +1,44 @@
-From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Subject: [PATCH v8 1/7] dt-bindings: net: bluetooth: Add device tree bindings for QTI chip wcn3990
-Date: Mon, 25 Jun 2018 19:10:07 +0530
-Message-ID: <20180625134013.19684-2-bgodavar@codeaurora.org>
-References: <20180625134013.19684-1-bgodavar@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180625134013.19684-1-bgodavar@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: marcel@holtmann.org, johan.hedberg@gmail.com, mka@chromium.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, Balakrishna Godavarthi <bgodavar@codeaurora.org>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 0/2] m_can support to stm32mp157c
+Date: Mon, 25 Jun 2018 15:58:12 +0200
+Message-ID: <8c3a8c17-fac3-480c-1489-b20de4a9e042@st.com>
+References: <1526387039-14813-1-git-send-email-erwan.leray@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1526387039-14813-1-git-send-email-erwan.leray@st.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Erwan Le Ray <erwan.leray@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: devicetree@vger.kernel.org, bich.hemon@st.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables regulators for the Qualcomm Bluetooth wcn3990
-controller.
+Hi,
 
-Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
----
+On 05/15/2018 02:23 PM, Erwan Le Ray wrote:
+> Add support for the Controller Area Network m_can to STM32MP157C SoC and
+> activation on stm32mp157c-ev1 board
+> 
+> Bich Hemon (2):
+>    ARM: dts: stm32: m_can support to stm32mp157c
+>    ARM: dts: stm32: m_can activation on stm32mp157c-ev1
+> 
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 13 +++++++++++++
+>   arch/arm/boot/dts/stm32mp157c-ev1.dts     |  6 ++++++
+>   arch/arm/boot/dts/stm32mp157c.dtsi        | 26 ++++++++++++++++++++++++++
+>   3 files changed, 45 insertions(+)
+> 
 
-Changes in v8:
-    * Separated the optional entries between two chips
+Series applied on stm32-next.
 
-Changes in v7:
-    * no change.
-
-Changes in v6:
-
-    * Changed the oper-speed to max-speed.
-
-Changes in v5:
-
-    * Added entry for oper-speed and init-speed.
-
----
- .../bindings/net/qualcomm-bluetooth.txt       | 30 +++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-index 0ea18a53cc29..c2b09dd2bf31 100644
---- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-@@ -10,12 +10,23 @@ device the slave device is attached to.
- Required properties:
-  - compatible: should contain one of the following:
-    * "qcom,qca6174-bt"
-+   * "qcom,wcn3990-bt"
-+
-+Optional properties for compatible string qcom,qca6174-bt:
- 
--Optional properties:
-  - enable-gpios: gpio specifier used to enable chip
-  - clocks: clock provided to the controller (SUSCLK_32KHZ)
- 
--Example:
-+Optional properties for compatible string qcom,wcn3990-bt:
-+
-+ - vddio-supply: Bluetooth VDD IO regulator handle.
-+ - vddxtal-supply: Bluetooth VDD XTAL regulator handle.
-+ - vddpa-supply: Bluetooth VDD PA regulator handle.
-+ - vddldo-supply: Bluetooth VDD LDO regulator handle.
-+ - vddcore-supply: Bluetooth VDD CORE regulator handle.
-+ - max-speed: Maximum operating speed of the chip.
-+
-+Examples:
- 
- serial@7570000 {
- 	label = "BT-UART";
-@@ -28,3 +39,18 @@ serial@7570000 {
- 		clocks = <&divclk4>;
- 	};
- };
-+
-+serial@898000 {
-+	label = "BT-UART";
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "qcom,wcn3990-bt";
-+		vddio-supply = <&pm8998_s3>;
-+		vddxtal-supply = <&pm8998_s5>;
-+		vddcore-supply = <&pm8998_l7>;
-+		vddpa-supply = <&pm8998_l17>;
-+		vddldo-supply = <&pm8998_l25>;
-+		max-speed = <3200000>;
-+	};
-+};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards
+Alex
