@@ -1,131 +1,26 @@
-Return-Path: <SRS0=YCj9=JH=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v4 4/5] leds: lt3593: Add device tree probing glue
-Date: Thu, 21 Jun 2018 22:23:21 +0200
-Message-Id: <20180621202322.11581-5-daniel@zonque.org>
-In-Reply-To: <20180621202322.11581-1-daniel@zonque.org>
-References: <20180621202322.11581-1-daniel@zonque.org>
-To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 25 Jun 2018 14:25:56 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: input: touchscreen: add bindings for
+ eeti touchscreen controller
+Message-ID: <20180625202556.GA28634@rob-hp-laptop>
+References: <20180623154533.26901-1-daniel@zonque.org>
+ <20180623154533.26901-2-daniel@zonque.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180623154533.26901-2-daniel@zonque.org>
+To: Daniel Mack <daniel@zonque.org>
+Cc: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The binding details are described in an earlier commit that adds the
-documentation.
+On Sat, Jun 23, 2018 at 05:45:30PM +0200, Daniel Mack wrote:
+> Describe the bindings for EETI touchscreen controllers.
+> 
+> Signed-off-by: Daniel Mack <daniel@zonque.org>
+> ---
+>  .../bindings/input/touchscreen/eeti.txt       | 31 +++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/eeti.txt
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- drivers/leds/leds-lt3593.c | 74 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
-
-diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
-index a096ee64cbbb..b9a907e9d321 100644
---- a/drivers/leds/leds-lt3593.c
-+++ b/drivers/leds/leds-lt3593.c
-@@ -24,8 +24,11 @@
- #include <linux/gpio/consumer.h>
- #include <linux/slab.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <uapi/linux/uleds.h>
- 
- struct lt3593_led_data {
-+	char name[LED_MAX_NAME_SIZE];
- 	struct led_classdev cdev;
- 	struct gpio_desc *gpiod;
- };
-@@ -120,22 +123,93 @@ static int lt3593_led_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct lt3593_led_data *led_data;
-+	struct fwnode_handle *child;
-+	int ret, state = LEDS_GPIO_DEFSTATE_OFF;
-+	enum gpiod_flags flags = GPIOD_OUT_LOW;
-+	const char *tmp;
- 
- 	if (dev_get_platdata(dev)) {
- 		led_data = lt3593_led_probe_pdata(dev);
- 		if (IS_ERR(led_data))
- 			return PTR_ERR(led_data);
-+
-+		goto out;
-+	}
-+
-+	if (!dev->of_node)
-+		return -ENODEV;
-+
-+	led_data = devm_kzalloc(dev, sizeof(*led_data), GFP_KERNEL);
-+	if (!led_data)
-+		return -ENOMEM;
-+
-+	if (device_get_child_node_count(dev) != 1) {
-+		dev_err(dev, "Device must have exactly one LED sub-node.");
-+		return -EINVAL;
-+	}
-+
-+	child = device_get_next_child_node(dev, NULL);
-+
-+	ret = fwnode_property_read_string(child, "label", &tmp);
-+	if (ret < 0)
-+		snprintf(led_data->name, sizeof(led_data->name),
-+			 "lt3593::");
-+	else
-+		snprintf(led_data->name, sizeof(led_data->name),
-+			 "lt3593:%s", tmp);
-+
-+	fwnode_property_read_string(child, "linux,default-trigger",
-+				    &led_data->cdev.default_trigger);
-+
-+	if (!fwnode_property_read_string(child, "default-state", &tmp)) {
-+		if (!strcmp(tmp, "keep")) {
-+			state = LEDS_GPIO_DEFSTATE_KEEP;
-+			flags = GPIOD_ASIS;
-+		} else if (!strcmp(tmp, "on")) {
-+			state = LEDS_GPIO_DEFSTATE_ON;
-+			flags = GPIOD_OUT_HIGH;
-+		}
- 	}
- 
-+	led_data->gpiod = devm_fwnode_get_gpiod_from_child(dev, NULL, child,
-+							   flags,
-+							   led_data->name);
-+	if (IS_ERR(led_data->gpiod)) {
-+		fwnode_handle_put(child);
-+		return PTR_ERR(led_data->gpiod);
-+	}
-+
-+	led_data->cdev.name = led_data->name;
-+	led_data->cdev.brightness_set_blocking = lt3593_led_set;
-+	led_data->cdev.brightness = state ? LED_FULL : LED_OFF;
-+
-+	ret = devm_led_classdev_register(dev, &led_data->cdev);
-+	if (ret < 0) {
-+		fwnode_handle_put(child);
-+		return ret;
-+	}
-+
-+	led_data->cdev.dev->of_node = dev->of_node;
-+
-+out:
- 	platform_set_drvdata(pdev, led_data);
- 
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id of_lt3593_leds_match[] = {
-+	{ .compatible = "lltc,lt3593", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, of_lt3593_leds_match);
-+#endif
-+
- static struct platform_driver lt3593_led_driver = {
- 	.probe		= lt3593_led_probe,
- 	.driver		= {
- 		.name	= "leds-lt3593",
-+		.of_match_table = of_match_ptr(of_lt3593_leds_match),
- 	},
- };
- 
--- 
-2.17.1
+Reviewed-by: Rob Herring <robh@kernel.org>
