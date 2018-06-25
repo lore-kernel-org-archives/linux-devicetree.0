@@ -1,156 +1,95 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] dt-binding: hwmon: Add NPCM7xx PWM and Fan
- controller documentation
-Date: Mon, 25 Jun 2018 11:14:17 -0600
-Message-ID: <20180625171417.GA16379@rob-hp-laptop>
-References: <20180624124155.82412-1-tmaimon77@gmail.com>
- <20180624124155.82412-2-tmaimon77@gmail.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v2 20/23] arm64: dts: marvell: move AP806/CP110 thermal nodes
+ into a new syscon
+Date: Mon, 25 Jun 2018 17:12:36 +0200
+Message-ID: <20180625151239.20976-21-miquel.raynal@bootlin.com>
+References: <20180625151239.20976-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180624124155.82412-2-tmaimon77@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: mark.rutland@arm.com, jdelvare@suse.com, linux@roeck-us.net, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180625151239.20976-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 24, 2018 at 03:41:54PM +0300, Tomer Maimon wrote:
-> Added device tree binding documentation for Nuvoton BMC
-> NPCM7xx Pulse Width Modulation (PWM)  and Fan tach controller.
-> The PWM controller can support upto 8 PWM output ports.
-> The Fan tach controller can support upto 16 tachometer inputs.
-> 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
->  .../devicetree/bindings/hwmon/npcm750-pwm-fan.txt  | 84 ++++++++++++++++++++++
->  1 file changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt b/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
-> new file mode 100644
-> index 000000000000..a9eacda34f92
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
-> @@ -0,0 +1,84 @@
-> +Nuvoton NPCM7xx PWM and Fan Tacho controller device driver
+New bindings impose to declare the thermal IP from within a new syscon.
 
-Bindings are for h/w, not drivers.
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 14 ++++++++++----
+ arch/arm64/boot/dts/marvell/armada-cp110.dtsi | 18 ++++++++++++------
+ 2 files changed, 22 insertions(+), 10 deletions(-)
 
-> +
-> +The NPCM7xx has two identical Pulse-width modulation (PWM) controller modules,
-> +Each PWM module has four PWM controller outputs, Totally 8 PWM controller outputs.
-> +
-> +The NPCM7xx has eight identical Fan tachometer controller modules,
-> +Each Fan module has two Fan controller inputs, Totally 16 Fan controller inputs.
-
-Have you looked at other fan ctrlr bindings?f This looks like similar 
-h/w to ASpeed. Really, I'd like to see a common doc that describes the 
-structure and common properties.
-
-> +
-> +Required properties for pwm-fan node:
-> +- compatible	: "nuvoton,npcm750-pwm-fan" for Poleg NPCM7XX.
-> +- reg 			: specifies physical base address and size of the registers.
-> +- reg-names 	: must contain:
-> +					* "pwm-base" for the PWM registers.
-> + 					* "fan-base" for the Fan registers.
-
-'-base' is redundant. And your example doesn't match.
-
-> +- clocks		: phandle of reference clocks.
-> +- clock-names	: must contain
-> +					* "clk_apb3" for clock of PWM controller.
-> + 					* "clk_apb4" for clock of Fan controller.
-> +- interrupts	: contain the Fan interrupts with flags for falling edge.
-> +- pinctrl-names	: a pinctrl state named "default" must be defined.
-> +- pinctrl-0 	: phandle referencing pin configuration of the PWM and Fan
-> +					controller ports.
-> +
-> +pwm subnode format:
-> +===================
-> +Under pwm subnode can be upto 8 child nodes, each child node representing a PWM channel.
-> +Each pwm subnode must have one PWM channel and atleast one Fan tach channel.
-> +
-> +For PWM channel can be configured cooling-levels to create cooling device.
-> +Cooling device could be bound to a thermal zone for the thermal control.
-> +
-> +Required properties for each child node:
-> +- pwm-ch : specify the PWM output channel.
-> +			integer value in the range 0 through 7, that represent
-> +			the PWM channel number that used.
-> +
-> +- fan-ch : specify the Fan input channel.
-> +			integer value in the range 0 through 15, that represent
-> +			the Fan channel number that used.
-
-This is really the tach channel.
-
-
-> +
-> +			At least one Fan tach input channel is required
-> +
-> +Optional property for each child node:
-> +- cooling-levels: PWM duty cycle values in a range from 0 to 255
-> +                  which correspond to thermal cooling states.
-> +
-> +Examples:
-> +
-> +pwm_fan:pwm_fan_controller@103000 {
-
-fan-controller@...
-
-> +	compatible = "nuvoton,npcm750-pwm-fan";
-> +	reg = <0x103000 0x2000>,
-> +		<0x180000 0x8000>;
-> +	reg-names = "pwm_base", "fan_base";
-> +	clocks = <&clk NPCM7XX_CLK_APB3>,
-> +		<&clk NPCM7XX_CLK_APB4>;
-> +	clock-names = "clk_apb3","clk_apb4";
-> +	interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-> +			<GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-> +			<GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-> +			<GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-> +			<GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-> +			<GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-> +			<GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-> +			<GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pwm0_pins &pwm1_pins &pwm2_pins
-> +			&fanin0_pins &fanin1_pins &fanin2_pins
-> +			&fanin3_pins &fanin4_pins>;
-> +
-> +			pwm@0 {
-
-The sub-nodes should be "fan" nodes.
-
-A unit-address without reg property is not valid.
-
-> +				pwm-ch = /bits/ 8 <0x00>;
-
-Use 'reg' like ASpeed binding. 
-
-> +				fan-ch = /bits/ 8 <0x00 0x01>;
-> +				cooling-levels = <127 255>;
-> +				};
-> +			pwm@1 {
-> +				pwm-ch = /bits/ 8 <0x01>;
-> +				fan-ch = /bits/ 8 <0x02 0x03>;
-> +				};
-> +			pwm@2 {
-> +				pwm-ch = /bits/ 8 <0x02>;
-> +				fan-ch = /bits/ 8 <0x04>;
-> +				};
-> +
-> +};
-> \ No newline at end of file
-
-^^^
-
-> -- 
-> 2.14.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+index 550f03b8c96f..3c6896fb96e6 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+@@ -258,10 +258,16 @@
+ 				};
+ 			};
+ 
+-			ap_thermal: thermal@6f808c {
+-				compatible = "marvell,armada-ap806-thermal";
+-				reg = <0x6f808c 0x4>,
+-				      <0x6f8084 0x8>;
++			ap_syscon1: system-controller@6f8000 {
++				compatible = "syscon", "simple-mfd";
++				reg = <0x6f8000 0x1000>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				ap_thermal: ap-thermal@80 {
++					compatible = "marvell,armada-ap806-thermal";
++					reg = <0x80 0x10>;
++				};
+ 			};
+ 		};
+ 	};
+diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+index ab31ba20aa2a..65039292b398 100644
+--- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+@@ -177,12 +177,6 @@
+ 			interrupts = <77 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
+-		CP110_LABEL(thermal): thermal@400078 {
+-			compatible = "marvell,armada-cp110-thermal";
+-			reg = <0x400078 0x4>,
+-			<0x400070 0x8>;
+-		};
+-
+ 		CP110_LABEL(syscon0): system-controller@440000 {
+ 			compatible = "syscon", "simple-mfd";
+ 			reg = <0x440000 0x2000>;
+@@ -223,6 +217,18 @@
+ 			};
+ 		};
+ 
++		CP110_LABEL(syscon1): system-controller@400000 {
++			compatible = "syscon", "simple-mfd";
++			reg = <0x400000 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			CP110_LABEL(thermal): thermal@70 {
++				compatible = "marvell,armada-cp110-thermal";
++				reg = <0x70 0x10>;
++			};
++		};
++
+ 		CP110_LABEL(usb3_0): usb3@500000 {
+ 			compatible = "marvell,armada-8k-xhci",
+ 			"generic-xhci";
+-- 
+2.14.1
