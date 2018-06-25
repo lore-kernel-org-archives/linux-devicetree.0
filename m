@@ -1,134 +1,131 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3 7/7] soc: qcom: rpmpd/rpmhpd: Add a max vote on all
- corners at init
-Date: Mon, 25 Jun 2018 10:57:05 +0200
-Message-ID: <CAPDyKFpvBXbppamoDDUKcMTnD8S3U7ZTKutLgSsLYQkAU0JXZg@mail.gmail.com>
-References: <20180612044052.4402-1-rnayak@codeaurora.org> <20180612044052.4402-8-rnayak@codeaurora.org>
- <414598de-00a1-9ce7-3a7e-4a95fd1bd35d@codeaurora.org> <f5014664-1639-c610-a50a-db66484428dc@codeaurora.org>
- <20180619101016.hbgjvev7d3h4yg7x@vireshk-i7>
+From: Appana Durga Kedareswara Rao <appanad@xilinx.com>
+Subject: RE: [PATCH 2/2] dmaengine: xilinx_dma: Enable VDMA S2MM vertical flip
+ support
+Date: Mon, 25 Jun 2018 09:05:58 +0000
+Message-ID: <SN1PR02MB16933049734FBC759F8D8F48DC4A0@SN1PR02MB1693.namprd02.prod.outlook.com>
+References: <1528875288-9140-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <1528875288-9140-3-git-send-email-radhey.shyam.pandey@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180619101016.hbgjvev7d3h4yg7x@vireshk-i7>
+In-Reply-To: <1528875288-9140-3-git-send-email-radhey.shyam.pandey@xilinx.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>
-Cc: David Collins <collinsd@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: "vkoul@kernel.org" <vkoul@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "lars@metafoo.de" <lars@metafoo.de>
+Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Radhey Shyam Pandey <radheys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 19 June 2018 at 12:10, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 14-06-18, 12:05, Rajendra Nayak wrote:
->> On 06/14/2018 03:58 AM, David Collins wrote:
->> > Hello Rajendra,
->> >
->> > On 06/11/2018 09:40 PM, Rajendra Nayak wrote:
->> >> As we move from no clients/consumers in kernel voting on corners,
->> >> to *some* voting and some not voting, we might end up in a situation
->> >> where the clients which remove votes can adversly impact others
->> >
->> > s/adversly/adversely/
->> >
->> >> who still don't have a way to vote.
->> >>
->> >> To avoid this situation, have a max vote on all corners at init.
->> >> This should/can be removed once we have all clients moved to
->> >> be able to vote/unvote for themselves.
->> >
->> > This change seems like a hack.  Do you intend for it to be merged and then
->> > later reverted in Linus's tree?  Could it instead be implemented in a way
->> > that does not require reverting and instead is enabled by some DT
->> > property?  Alternatively, could this feature be added to the power domain
->> > core since it is relatively generic?
->> >
->> >
->> >> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> >> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
->> >> ---
->> >>  drivers/soc/qcom/rpmhpd.c | 12 +++++++++++-
->> >>  drivers/soc/qcom/rpmpd.c  |  9 +++++++++
->> >>  2 files changed, 20 insertions(+), 1 deletion(-)
->> >>
->> >> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
->> >> index 7083ec1590ff..3c753d33aeee 100644
->> >> --- a/drivers/soc/qcom/rpmhpd.c
->> >> +++ b/drivers/soc/qcom/rpmhpd.c
->> >> @@ -329,7 +329,7 @@ static int rpmhpd_update_level_mapping(struct rpmhpd *rpmhpd)
->> >>
->> >>  static int rpmhpd_probe(struct platform_device *pdev)
->> >>  {
->> >> -  int i, ret;
->> >> +  int i, ret, max_level;
->> >>    size_t num;
->> >>    struct genpd_onecell_data *data;
->> >>    struct rpmhpd **rpmhpds;
->> >> @@ -390,6 +390,16 @@ static int rpmhpd_probe(struct platform_device *pdev)
->> >>            pm_genpd_init(&rpmhpds[i]->pd, NULL, true);
->> >>
->> >>            data->domains[i] = &rpmhpds[i]->pd;
->> >> +
->> >> +          /*
->> >> +           * Until we have all consumers voting on corners
->> >> +           * just vote the max corner on all PDs
->> >> +           * This should ideally be *removed* once we have
->> >> +           * all (most) consumers being able to vote
->> >> +           */
->> >> +          max_level = rpmhpds[i]->level_count - 1;
->> >> +          rpmhpd_set_performance(&rpmhpds[i]->pd, rpmhpds[i]->level[max_level]);
->> >> +          rpmhpd_power_on(&rpmhpds[i]->pd);
->> >
->> > Clearly these calls will result in max level requests being sent for all
->> > power domains at probe time.  However, it isn't clear that this will
->> > actually help at runtime in these two cases:
->> >
->> > 1. A consumer enables and then disables a power domain.
->> >     - It seems like the PD would just be disabled in this case.
->
-> So instead of rpmhpd_power_on() we should be doing gepnd_power_on() or whatever
-> the API is, so the user count stays at 1.
 
-There is no such API.
+<Snip>
+>=20
+> Vertical flip state is exported in xilinx_vdma_config and depending on IP
+> configuration(c_enable_vert_flip) vertical flip state is programmed in
+> hardware.
+>=20
+> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 
-Instead a device needs to be attached to genpd and that's it. As long
-as the device don't enables runtime PM and that the device gets
-runtime suspended, genpd will remain powered on.
+Acked-by: Kedareswara rao Appana <appanad@xilinx.com> =20
 
->
->> > 2. A consumer sets a non-max performance state of a power domain.
->> >     - It seems like the PD would just be set to the new lower
->> >       performance state since the max vote isn't known to the
->> >       PD core for aggregation purposes.
->
-> Right, and that's because the patch isn't implemented properly yet. I asked to
-> do a fake vote from some user with their dev structure, so the vote always
-> stays.
->
->> Yes, you are right. I certainly did not seem to have thought through this enough.
->>
->> A need for something like this came up at a point where genpd could not deal with
->> devices with multiple power domains. So the concern at that point was that if some
->> consumers (which only need to vote on one corner) move to using this driver, while
->> some others (which need to vote on multiple corners) cannot, we would end up breaking
->> them.
->>
->> That does not seem to be true anymore since we do have patches from Ulf which support
->> having devices with multiple power domains attached which can be controlled individually.
->> So if some consumer voting makes some others break, they should just be fixed and patched
->> to vote as well. If all this gets handled centrally from within the clock drivers then we
->> most likely won't even end up with a situation like this.
->>
->> I think I will just drop this one unless Stephen/Viresh still see an issue with some early
->> voters breaking others.
->
-> So what if the LCD/DDR/etc are getting used at boot and someone requests a lower
-> vote?  Wouldn't we just break ?
-
-Sounds like we need a way to manage votes for "boot constraints
-performance levels". :-)
-
-Anyway, to deal with this via the existing genpd APIs, we need to
-attach a device to a genpd and then call
-dev_pm_genpd_set_performance_state() on it. I guess at a late
-initcall, the votes can be dropped and the device can be detached. Or
-something along these lines.
-
-Kind regards
-Uffe
+> ---
+>  drivers/dma/xilinx/xilinx_dma.c |   22 ++++++++++++++++++++++
+>  include/linux/dma/xilinx_dma.h  |    2 ++
+>  2 files changed, 24 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/drivers/dma/xilinx/xilinx_dma.c
+> b/drivers/dma/xilinx/xilinx_dma.c index 27b5235..c124423 100644
+> --- a/drivers/dma/xilinx/xilinx_dma.c
+> +++ b/drivers/dma/xilinx/xilinx_dma.c
+> @@ -115,6 +115,9 @@
+>  #define XILINX_VDMA_REG_START_ADDRESS(n)	(0x000c + 4 * (n))
+>  #define XILINX_VDMA_REG_START_ADDRESS_64(n)	(0x000c + 8 * (n))
+>=20
+> +#define XILINX_VDMA_REG_ENABLE_VERTICAL_FLIP	0x00ec
+> +#define XILINX_VDMA_ENABLE_VERTICAL_FLIP	BIT(0)
+> +
+>  /* HW specific definitions */
+>  #define XILINX_DMA_MAX_CHANS_PER_DEVICE	0x20
+>=20
+> @@ -340,6 +343,7 @@ struct xilinx_dma_tx_descriptor {
+>   * @start_transfer: Differentiate b/w DMA IP's transfer
+>   * @stop_transfer: Differentiate b/w DMA IP's quiesce
+>   * @tdest: TDEST value for mcdma
+> + * @has_vflip: S2MM vertical flip
+>   */
+>  struct xilinx_dma_chan {
+>  	struct xilinx_dma_device *xdev;
+> @@ -376,6 +380,7 @@ struct xilinx_dma_chan {
+>  	void (*start_transfer)(struct xilinx_dma_chan *chan);
+>  	int (*stop_transfer)(struct xilinx_dma_chan *chan);
+>  	u16 tdest;
+> +	bool has_vflip;
+>  };
+>=20
+>  /**
+> @@ -1092,6 +1097,14 @@ static void xilinx_vdma_start_transfer(struct
+> xilinx_dma_chan *chan)
+>  				desc->async_tx.phys);
+>=20
+>  	/* Configure the hardware using info in the config structure */
+> +	if (chan->has_vflip) {
+> +		reg =3D dma_read(chan,
+> XILINX_VDMA_REG_ENABLE_VERTICAL_FLIP);
+> +		reg &=3D ~XILINX_VDMA_ENABLE_VERTICAL_FLIP;
+> +		reg |=3D config->vflip_en;
+> +		dma_write(chan,
+> XILINX_VDMA_REG_ENABLE_VERTICAL_FLIP,
+> +			  reg);
+> +	}
+> +
+>  	reg =3D dma_ctrl_read(chan, XILINX_DMA_REG_DMACR);
+>=20
+>  	if (config->frm_cnt_en)
+> @@ -2105,6 +2118,8 @@ int xilinx_vdma_channel_set_config(struct
+> dma_chan *dchan,
+>  	}
+>=20
+>  	chan->config.frm_cnt_en =3D cfg->frm_cnt_en;
+> +	chan->config.vflip_en =3D cfg->vflip_en;
+> +
+>  	if (cfg->park)
+>  		chan->config.park_frm =3D cfg->park_frm;
+>  	else
+> @@ -2428,6 +2443,13 @@ static int xilinx_dma_chan_probe(struct
+> xilinx_dma_device *xdev,
+>  		chan->direction =3D DMA_DEV_TO_MEM;
+>  		chan->id =3D chan_id;
+>  		chan->tdest =3D chan_id - xdev->nr_channels;
+> +		chan->has_vflip =3D of_property_read_bool(node,
+> +					"xlnx,enable-vert-flip");
+> +		if (chan->has_vflip) {
+> +			chan->config.vflip_en =3D dma_read(chan,
+> +				XILINX_VDMA_REG_ENABLE_VERTICAL_FLIP)
+> &
+> +				XILINX_VDMA_ENABLE_VERTICAL_FLIP;
+> +		}
+>=20
+>  		chan->ctrl_offset =3D XILINX_DMA_S2MM_CTRL_OFFSET;
+>  		if (xdev->dma_config->dmatype =3D=3D XDMA_TYPE_VDMA) { diff
+> --git a/include/linux/dma/xilinx_dma.h b/include/linux/dma/xilinx_dma.h
+> index 34b98f2..5b6e61e 100644
+> --- a/include/linux/dma/xilinx_dma.h
+> +++ b/include/linux/dma/xilinx_dma.h
+> @@ -27,6 +27,7 @@
+>   * @delay: Delay counter
+>   * @reset: Reset Channel
+>   * @ext_fsync: External Frame Sync source
+> + * @vflip_en:  Vertical Flip enable
+>   */
+>  struct xilinx_vdma_config {
+>  	int frm_dly;
+> @@ -39,6 +40,7 @@ struct xilinx_vdma_config {
+>  	int delay;
+>  	int reset;
+>  	int ext_fsync;
+> +	bool vflip_en;
+>  };
+>=20
+>  int xilinx_vdma_channel_set_config(struct dma_chan *dchan,
+> --
+> 1.7.1
