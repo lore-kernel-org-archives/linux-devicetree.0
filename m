@@ -1,37 +1,67 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH] arm64: dts: hikey: Define wl1835 power capabilities
-Date: Mon, 25 Jun 2018 14:56:02 -0700
-Message-ID: <CALAqxLWjJKsU+XJmANzx-aO2ruszwbBnPV2yV5WoyVStO+5K0A@mail.gmail.com>
-References: <20180613151305.17240-1-ryan@edited.us> <CANcMJZASEDRxaXwdG96nNeEDPrDm_ap5MjhXonEcg=yHZ8F=qg@mail.gmail.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH V2 1/2] dt-bindings: mtd: document Broadcom's TRX firmware
+ format binding
+Date: Tue, 26 Jun 2018 00:05:07 +0200
+Message-ID: <20180625220508.21242-1-zajec5@gmail.com>
+References: <20180612104434.15232-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANcMJZASEDRxaXwdG96nNeEDPrDm_ap5MjhXonEcg=yHZ8F=qg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ryan Grachek <ryan@edited.us>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Wei Xu <xuwei5@hisilicon.com>, Eyal Reizer <eyalr@ti.com>, Rob Herring <robh+dt@kernel.org>, Kalle Valo <kvalo@codeaurora.org>, Valentin Schneider <Valentin.Schneider@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-wireless@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180612104434.15232-1-zajec5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Jonas Gorski <jonas.gorski@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2018 at 11:30 AM, John Stultz <john.stultz@linaro.org> wrote:
-> On Wed, Jun 13, 2018 at 8:13 AM, Ryan Grachek <ryan@edited.us> wrote:
->> These properties are required for compatibility with runtime PM.
->> Without these properties, MMC host controller will not be aware
->> of power capabilities. When the wlcore driver attempts to power
->> on the device, it will erroneously fail with -EACCES.
->>
->> Signed-off-by: Ryan Grachek <ryan@edited.us>
->
-> Fixes: 60f36637bbbd ("wlcore: sdio: allow pm to handle sdio power")
-> Tested-by: John Stultz <john.stultz@linaro.org>
-> Acked-by: John Stultz <john.stultz@linaro.org>
->
-> Wei Xu: This fixes a functional regression with wifi on the HiKey
-> board that was introduced in 4.18-rc with commit 60f36637bbbd
-> ("wlcore: sdio: allow pm to handle sdio power").
-
-Wei Xu: Just wanted to follow up to make sure this wasn't missed for
-4.18-rc, as I haven't seen it upstream or in -next, and it fixes a
-recently introduced regression.
-
-thanks
--john
+RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKQnJvYWRjb20gYmFzZWQg
+aG9tZSByb3V0ZXIgZGV2aWNlcyB1c2UgVFJYIGZpcm13YXJlIGZvcm1hdC4gSXQncyBhCmNvbnRh
+aW5lciB0aGF0IGNhbiBob2xkIGZldyBwYXJ0aXRpb25zLiBJZiBvcGVyYXRpbmcgc3lzdGVtIGlz
+IGV4cGVjdGVkCnRvIGFjY2VzcyB0aGVtIGl0IGhhcyB0byB1bmRlcnN0YW5kIHRoYXQgZm9ybWF0
+IGFuZCBwYXJzZSBmbGFzaCBkYXRhCmFjY29yZGluZ2x5LgoKU2lnbmVkLW9mZi1ieTogUmFmYcWC
+IE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgotLS0KVjI6IERyb3AgdW5uZWVkZWQgImJyY20s
+dHJ4LXYxIiBhbmQgImJyY20sdHJ4LXYyIiBiaW5kaW5ncy4KLS0tCiAuLi4vYmluZGluZ3MvbXRk
+L3BhcnRpdGlvbnMvYnJjbSx0cngudHh0ICAgICAgICAgICB8IDM3ICsrKysrKysrKysrKysrKysr
+KysrKysKIDEgZmlsZSBjaGFuZ2VkLCAzNyBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0aXRpb25zL2JyY20s
+dHJ4LnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
+dGQvcGFydGl0aW9ucy9icmNtLHRyeC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbXRkL3BhcnRpdGlvbnMvYnJjbSx0cngudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0Cmlu
+ZGV4IDAwMDAwMDAwMDAwMC4uYjY3NzE0N2NhNGUxCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0aXRpb25zL2JyY20sdHJ4LnR4dApA
+QCAtMCwwICsxLDM3IEBACitCcm9hZGNvbSBUUlggQ29udGFpbmVyIFBhcnRpdGlvbgorPT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT0KKworVFJYIGlzIEJyb2FkY29tJ3Mgb2ZmaWNpYWwg
+ZmlybXdhcmUgZm9ybWF0IGZvciB0aGUgQkNNOTQ3eHggYm9hcmRzLiBJdCdzIHVzZWQgYnkKK21v
+c3Qgb2YgdGhlIHZlbmRvcnMgYnVpbGRpbmcgZGV2aWNlcyBiYXNlZCBvbiBCcm9hZGNvbSdzIEJD
+TTQ3eHggU29DcyBhbmQgaXMKK3N1cHBvcnRlZCBieSB0aGUgQ0ZFIGJvb3Rsb2FkZXIuCisKK0Rl
+c2lnbiBvZiB0aGUgVFJYIGZvcm1hdCBpcyB2ZXJ5IG1pbmltYWxpc3RpYy4gSXRzIGhlYWRlciBj
+b250YWlucworaWRlbnRpZmljYXRpb24gZmllbGRzLCBDUkMzMiBjaGVja3N1bSBhbmQgdGhlIGxv
+Y2F0aW9ucyBvZiBlbWJlZGRlZCBwYXJ0aXRpb25zLgorSXRzIHB1cnBvc2UgaXMgdG8gc3RvcmUg
+YSBmZXcgcGFydGl0aW9ucyBpbiBhIGZvcm1hdCB0aGF0IGNhbiBiZSBkaXN0cmlidXRlZCBhcwor
+YSBzdGFuZGFsb25lIGZpbGUgYW5kIHdyaXR0ZW4gaW4gYSBmbGFzaCBtZW1vcnkuCisKK0NvbnRh
+aW5lciBjYW4gaG9sZCB1cCB0byA0IHBhcnRpdGlvbnMuIFRoZSBmaXJzdCBwYXJ0aXRpb24gaGFz
+IHRvIGNvbnRhaW4gYQorZGV2aWNlIGV4ZWN1dGFibGUgYmluYXJ5IChlLmcuIGEga2VybmVsKSBh
+cyBpdCdzIHdoYXQgdGhlIENGRSBib290bG9hZGVyIHN0YXJ0cworZXhlY3V0aW5nLiBPdGhlciBw
+YXJ0aXRpb25zIGNhbiBiZSB1c2VkIGZvciBvcGVyYXRpbmcgc3lzdGVtIHB1cnBvc2VzLiBUaGlz
+IGlzCit1c2VmdWwgZm9yIHN5c3RlbXMgdGhhdCBrZWVwIGtlcm5lbCBhbmQgcm9vdGZzIHNlcGFy
+YXRlZC4KKworVFJYIGRvZXNuJ3QgZW5mb3JjZSBhbnkgc3RyaWN0IHBhcnRpdGlvbiBib3VuZGFy
+aWVzIG9yIHNpemUgbGltaXRzLiBBbGwKK3BhcnRpdGlvbnMgaGF2ZSB0byBiZSBsZXNzIHRoYW4g
+dGhlIDRHaUIgbWF4IHNpemUgbGltaXQuCisKK1RoZXJlIGFyZSB0d28gZXhpc3Rpbmcva25vd24g
+VFJYIHZhcmlhbnRzOgorMSkgdjEgd2hpY2ggY29udGFpbnMgMyBwYXJ0aXRpb25zCisyKSB2MiB3
+aGljaCBjb250YWlucyA0IHBhcnRpdGlvbnMKKworVGhlcmUgYXJlbid0IHNlcGFyYXRlZCBjb21w
+YXRpYmxlIGJpbmRpbmdzIGZvciB0aGVtIGFzIHZlcnNpb24gY2FuIGJlIHRyaXZpYWx5CitkZXRl
+Y3RlZCBieSBhIHNvZnR3YXJlIHBhcnNpbmcgVFJYIGhlYWRlci4KKworUmVxdWlyZWQgcHJvcGVy
+dGllczoKKy0gY29tcGF0aWJsZSA6IChyZXF1aXJlZCkgbXVzdCBiZSAiYnJjbSx0cngiCisKK0V4
+YW1wbGU6CisKK2ZsYXNoQDAgeworCXBhcnRpdGlvbnMgeworCQljb21wYXRpYmxlID0gImJyY20s
+dHJ4IjsKKwl9OworfTsKLS0gCjIuMTMuNwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxp
+c3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tdGQv
+Cg==
