@@ -1,95 +1,40 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 20/23] arm64: dts: marvell: move AP806/CP110 thermal nodes
- into a new syscon
-Date: Mon, 25 Jun 2018 17:12:36 +0200
-Message-ID: <20180625151239.20976-21-miquel.raynal@bootlin.com>
-References: <20180625151239.20976-1-miquel.raynal@bootlin.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/7] soc: qcom: rpmpd: Add a Power domain driver to
+ model corners
+Date: Mon, 25 Jun 2018 11:15:44 -0600
+Message-ID: <20180625171544.GA18520@rob-hp-laptop>
+References: <20180612044052.4402-1-rnayak@codeaurora.org>
+ <20180612044052.4402-3-rnayak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180625151239.20976-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180612044052.4402-3-rnayak@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-New bindings impose to declare the thermal IP from within a new syscon.
+On Tue, Jun 12, 2018 at 10:10:47AM +0530, Rajendra Nayak wrote:
+> The Power domains for corners just pass the performance state set by the
+> consumers to the RPM (Remote Power manager) which then takes care
+> of setting the appropriate voltage on the corresponding rails to
+> meet the performance needs.
+> 
+> We add all Power domain data needed on msm8996 here. This driver can easily
+> be extended by adding data for other qualcomm SoCs as well.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  drivers/soc/qcom/Kconfig               |   9 +
+>  drivers/soc/qcom/Makefile              |   1 +
+>  drivers/soc/qcom/rpmpd.c               | 301 +++++++++++++++++++++++++
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 14 ++++++++++----
- arch/arm64/boot/dts/marvell/armada-cp110.dtsi | 18 ++++++++++++------
- 2 files changed, 22 insertions(+), 10 deletions(-)
+>  include/dt-bindings/power/qcom-rpmpd.h |  16 ++
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-index 550f03b8c96f..3c6896fb96e6 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-@@ -258,10 +258,16 @@
- 				};
- 			};
- 
--			ap_thermal: thermal@6f808c {
--				compatible = "marvell,armada-ap806-thermal";
--				reg = <0x6f808c 0x4>,
--				      <0x6f8084 0x8>;
-+			ap_syscon1: system-controller@6f8000 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x6f8000 0x1000>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+
-+				ap_thermal: ap-thermal@80 {
-+					compatible = "marvell,armada-ap806-thermal";
-+					reg = <0x80 0x10>;
-+				};
- 			};
- 		};
- 	};
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-index ab31ba20aa2a..65039292b398 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-@@ -177,12 +177,6 @@
- 			interrupts = <77 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
--		CP110_LABEL(thermal): thermal@400078 {
--			compatible = "marvell,armada-cp110-thermal";
--			reg = <0x400078 0x4>,
--			<0x400070 0x8>;
--		};
--
- 		CP110_LABEL(syscon0): system-controller@440000 {
- 			compatible = "syscon", "simple-mfd";
- 			reg = <0x440000 0x2000>;
-@@ -223,6 +217,18 @@
- 			};
- 		};
- 
-+		CP110_LABEL(syscon1): system-controller@400000 {
-+			compatible = "syscon", "simple-mfd";
-+			reg = <0x400000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			CP110_LABEL(thermal): thermal@70 {
-+				compatible = "marvell,armada-cp110-thermal";
-+				reg = <0x70 0x10>;
-+			};
-+		};
-+
- 		CP110_LABEL(usb3_0): usb3@500000 {
- 			compatible = "marvell,armada-8k-xhci",
- 			"generic-xhci";
--- 
-2.14.1
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  4 files changed, 327 insertions(+)
+>  create mode 100644 drivers/soc/qcom/rpmpd.c
+>  create mode 100644 include/dt-bindings/power/qcom-rpmpd.h
