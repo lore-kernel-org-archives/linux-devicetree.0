@@ -1,10 +1,10 @@
 Return-Path: <SRS0=SxbK=JL=linaro.org=vinod.koul@kernel.org>
 From: Vinod Koul <vinod.koul@linaro.org>
-Subject: [PATCH v3 5/5] input: pm8941-pwrkey: Add resin entry
-Date: Mon, 25 Jun 2018 12:08:40 +0530
-Message-Id: <20180625063840.30173-6-vkoul@kernel.org>
-In-Reply-To: <20180625063840.30173-1-vkoul@kernel.org>
-References: <20180625063840.30173-1-vkoul@kernel.org>
+Subject: [PATCH v2 5/5] input: pm8941-pwrkey: Add resin entry
+Date: Mon, 25 Jun 2018 10:39:38 +0530
+Message-Id: <20180625050938.4700-6-vkoul@kernel.org>
+In-Reply-To: <20180625050938.4700-1-vkoul@kernel.org>
+References: <20180625050938.4700-1-vkoul@kernel.org>
 To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
@@ -19,7 +19,7 @@ Signed-off-by: Vinod Koul <vkoul@kernel.org>
  1 file changed, 8 insertions(+)
 
 diff --git a/drivers/input/misc/pm8941-pwrkey.c b/drivers/input/misc/pm8941-pwrkey.c
-index 2047e34c0982..6547a57f5222 100644
+index b2c1093f7d62..e360b1bd7415 100644
 --- a/drivers/input/misc/pm8941-pwrkey.c
 +++ b/drivers/input/misc/pm8941-pwrkey.c
 @@ -29,6 +29,7 @@
