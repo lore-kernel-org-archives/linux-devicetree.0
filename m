@@ -1,53 +1,57 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH 3/3] ASoC: simple-card: add support for
- clock divider setup
-Date: Mon, 25 Jun 2018 14:55:12 +0200
-Message-ID: <f7e05fe9-c177-9a78-e09d-0f74c2427b63@zonque.org>
-References: <20180528193503.18905-1-daniel@zonque.org>
- <20180528193503.18905-4-daniel@zonque.org>
- <20180529113509.GE23509@sirena.org.uk>
- <d6b9da97-8c71-ccfb-07e4-353620396a31@zonque.org>
- <20180530091011.GA6920@sirena.org.uk>
- <ace99dbd-3480-9ac3-e5b8-4ddae73bba10@zonque.org>
- <b006a926-09ff-59e0-2b88-6f15e3e714e9@zonque.org>
- <20180625112440.GE9413@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180625112440.GE9413@sirena.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, kuninori.morimoto.gx@renesas.com
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] ARM64: dts: meson-axg: fix ethernet stability issue
+Date: Mon, 25 Jun 2018 14:56:53 +0200
+Message-ID: <20180625125653.3404-1-jbrunet@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, June 25, 2018 01:24 PM, Mark Brown wrote:
-> On Sat, Jun 23, 2018 at 08:41:27PM +0200, Daniel Mack wrote:
-> 
->> I'd like to get some of this done for 4.19, but for that, I'd need Robert's
->> patch that addresses DMA compat issues in your tree.
-> 
->> Not sure if you've followed the thread titled '[PATCH v3 09/14] ASoC: pxa:
->> remove the dmaengine compat need' - could you chime in there?
-> 
-> No, I reviewed my patch in there.  What's going on?
-> 
+Like the odroid-c2 and wetek, the s400 uses the RTL8211F and seems to
+suffer from the kind of stability issue.
 
-I'd like this patch to go through your tree, if that's okay. Then I can 
-post some more patches on top without causing a conflict in the merge 
-window.
+Doing an iperf3 download test, we can see a significant number of LPI
+interrupts on the tx path. After a short while (5 to 15 seconds), the
+network connection dies. If using rootfs over NFS, the connection may
+also break during the boot sequence.
 
-Robert is fine with that.
+We still don't have a real explanation for this problem so let's disable
+EEE once again.
 
+Fixes: f6f6ac914b82 ("ARM64: dts: meson-axg: enable ethernet for A113D S400 board")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-Thanks,
-Daniel
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+index 4b3331fbfe39..dff9b15eb3c0 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+@@ -66,9 +66,22 @@
+ 
+ &ethmac {
+ 	status = "okay";
+-	phy-mode = "rgmii";
+ 	pinctrl-0 = <&eth_rgmii_y_pins>;
+ 	pinctrl-names = "default";
++	phy-handle = <&eth_phy0>;
++	phy-mode = "rgmii";
++
++	mdio {
++		compatible = "snps,dwmac-mdio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		eth_phy0: ethernet-phy@0 {
++			/* Realtek RTL8211F (0x001cc916) */
++			reg = <0>;
++			eee-broken-1000t;
++		};
++	};
+ };
+ 
+ &uart_A {
+-- 
+2.14.4
