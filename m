@@ -1,35 +1,27 @@
-Return-Path: <SRS0=Syxf=JG=gmail.com=festevam@kernel.org>
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH] dt-bindings: w1-gpio: Remove unneeded unit address
-Date: Wed, 20 Jun 2018 15:27:58 -0300
-Message-Id: <1529519278-7632-1-git-send-email-festevam@gmail.com>
-To: robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 25 Jun 2018 11:27:47 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 3/5] dt-bindings: Input: Add additional property to
+ qcom pwrkey
+Message-ID: <20180625172747.GA32100@rob-hp-laptop>
+References: <20180625063840.30173-1-vkoul@kernel.org>
+ <20180625063840.30173-4-vkoul@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180625063840.30173-4-vkoul@kernel.org>
+To: Vinod Koul <vinod.koul@linaro.org>
+Cc: linux-input@vger.kernel.org, linux-pm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
+On Mon, Jun 25, 2018 at 12:08:38PM +0530, Vinod Koul wrote:
+> Pwrkey and reset have similar properties so add additional
+> property for linux,code to use the code for sending events.
+> 
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 
-Remove unneeded unit address from onewire node, so that dtc does
-complains that unit address is present without a corresponding reg entry,
-when such use is made on a real dts file.
-
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
----
- Documentation/devicetree/bindings/w1/w1-gpio.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/w1/w1-gpio.txt b/Documentation/devicetree/bindings/w1/w1-gpio.txt
-index 6e09c35..3709190 100644
---- a/Documentation/devicetree/bindings/w1/w1-gpio.txt
-+++ b/Documentation/devicetree/bindings/w1/w1-gpio.txt
-@@ -15,7 +15,7 @@ Optional properties:
- 
- Examples:
- 
--	onewire@0 {
-+	onewire {
- 		compatible = "w1-gpio";
- 		gpios = <&gpio 126 0>, <&gpio 105 0>;
- 	};
--- 
-2.7.4
+Reviewed-by: Rob Herring <robh@kernel.org>
