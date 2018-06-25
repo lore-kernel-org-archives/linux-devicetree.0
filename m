@@ -1,51 +1,88 @@
-Return-Path: <SRS0=QZ+J=IY=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relmlor1.renesas.com ([210.160.252.171]:30444 "EHLO
-        relmlie4.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S932239AbeFFG5G (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Jun 2018 02:57:06 -0400
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 4/4] arm64: dts: renesas: r8a77990: ebisu: enable USB2.0 host
-Date: Wed,  6 Jun 2018 15:56:11 +0900
-Message-Id: <1528268171-19276-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1528268171-19276-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1528268171-19276-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=aW75=JL=linaro.org=bjorn.andersson@kernel.org>
+Date: Sun, 24 Jun 2018 23:08:07 -0700
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: power: reset: Add qcom pon binding
+Message-ID: <20180625060807.GA1376@tuxbook-pro>
+References: <20180625050938.4700-1-vkoul@kernel.org>
+ <20180625050938.4700-2-vkoul@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180625050938.4700-2-vkoul@kernel.org>
+To: Vinod Koul <vinod.koul@linaro.org>
+Cc: linux-input@vger.kernel.org, linux-pm@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch enables USB2.0 host (EHCI/OHCI) for r8a77990 Ebisu board.
+On Sun 24 Jun 22:09 PDT 2018, Vinod Koul wrote:
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> The Power On driver for Qcom PM 8xxx is a MFD supporting pwrkey and
+> resin along with the Android reboot-mode.
+> Add the binding describing this.
+> 
+> Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-index 1be10c9..76fa244 100644
---- a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-@@ -47,10 +47,18 @@
- 	};
- };
- 
-+&ehci0 {
-+	status = "okay";
-+};
-+
- &extal_clk {
- 	clock-frequency = <48000000>;
- };
- 
-+&ohci0 {
-+	status = "okay";
-+};
-+
- &pfc {
- 	avb_pins: avb {
- 		mux {
--- 
-1.9.1
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
+Regards,
+Bjorn
+
+> ---
+>  .../devicetree/bindings/power/reset/qcom,pon.txt   | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/reset/qcom,pon.txt b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+> new file mode 100644
+> index 000000000000..0dc24c9b93d5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+> @@ -0,0 +1,45 @@
+> +Qualcomm PON Driver
+> +
+> +The Power On driver for Qualcomm PM8xxx is MFD supporting pwrkey and
+> +resin along with the Android reboot-mode.
+> +
+> +This DT node has pwrkey and resin as sub nodes.
+> +
+> +Required Properties:
+> +-compatible: "qcom,pm8916-pon"
+> +-reg: Specifies the physical address of the pon register
+> +
+> +Optional subnodes:
+> +-prwrkey: Specifies the subnode pwrkey and should follow the
+> + qcom,pm8xxx-pwrkey.txt description.
+> +-resin: Specifies the subnode resin and should follow the
+> + qcom,pm8xxx-pwrkey.txt description.
+> +
+> +The rest of the properties should follow the generic reboot-mode description
+> +found in reboot-mode.txt
+> +
+> +Example:
+> +
+> +	pon@800 {
+> +		compatible = "qcom,pm8916-pon";
+> +
+> +		reg = <0x800>;
+> +		mode-bootloader = <0x2>;
+> +		mode-recovery = <0x1>;
+> +
+> +		pwrkey {
+> +			compatible = "qcom,pm8941-pwrkey";
+> +			interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
+> +			debounce = <15625>;
+> +			bias-pull-up;
+> +			linux,code = <KEY_POWER>;
+> +		};
+> +
+> +		resin {
+> +			compatible = "qcom,pm8941-resin";
+> +			interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
+> +			debounce = <15625>;
+> +			bias-pull-up;
+> +			linux,code = <KEY_VOLUMEDOWN>;
+> +		};
+> +	};
+> -- 
+> 2.14.4
+> 
