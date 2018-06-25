@@ -1,49 +1,51 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: allwinner: a64: allow laptops to
- wake up from lid
-Date: Mon, 25 Jun 2018 19:09:13 +0200
-Message-ID: <20180625170913.p335obgr3rfa4skt@flea>
-References: <20180622160631.8578-1-icenowy@aosc.io>
- <20180622160631.8578-2-icenowy@aosc.io>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v2 18/23] dt-bindings: thermal: armada: add reference to new
+ bindings
+Date: Mon, 25 Jun 2018 17:12:34 +0200
+Message-ID: <20180625151239.20976-19-miquel.raynal@bootlin.com>
+References: <20180625151239.20976-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ehcemc3meyriletb"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBPODYTMQKGQEJ2QZQKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180622160631.8578-2-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180625151239.20976-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+New bindings (with the syscon and the overheat interrupt) are available
+for AP806 and CP110 compatibles. Add a reference to these files from the
+original documentation.
 
---ehcemc3meyriletb
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ Documentation/devicetree/bindings/thermal/armada-thermal.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-On Sat, Jun 23, 2018 at 12:06:31AM +0800, Icenowy Zheng wrote:
-> Currently all ARM kernels will have s2idle enabled if CONFIG_SUSPEND is
-> present. In this case if the lid is closed, systemd-logind will enter
-> s2idle mode by default; however there's no possible wakeup source
-> defined, so the system will enter a forever idle.
-> 
-> Add the lid itself as a wakeup source, thus the system can wakeup when
-> the lid is opened.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-
-Applied both, thanks!
-Maxime
-
+diff --git a/Documentation/devicetree/bindings/thermal/armada-thermal.txt b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
+index e0d013a2e66d..f3b441100890 100644
+--- a/Documentation/devicetree/bindings/thermal/armada-thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
+@@ -10,6 +10,11 @@ Required properties:
+     * marvell,armada-ap806-thermal
+     * marvell,armada-cp110-thermal
+ 
++Note: these bindings are deprecated for AP806/CP110 and should instead
++follow the rules described in:
++Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
++Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt
++
+ - reg: Device's register space.
+   Two entries are expected, see the examples below. The first one points
+   to the status register (4B). The second one points to the control
 -- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---ehcemc3meyriletb--
+2.14.1
