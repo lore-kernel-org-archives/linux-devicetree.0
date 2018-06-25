@@ -1,59 +1,64 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH v2 3/5] iommu/virtio: Add probe request
-Date: Mon, 25 Jun 2018 18:52:38 +0100
-Message-ID: <72f85cc1-f899-3575-1354-c3a4854cd47e@arm.com>
-References: <20180621190655.56391-1-jean-philippe.brucker@arm.com>
-	<20180621190655.56391-4-jean-philippe.brucker@arm.com>
-	<20180622035442-mutt-send-email-mst@kernel.org>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH 01/11] ASoC: q6adm: dt-bindings: add
+ compatible string to routing
+Date: Mon, 25 Jun 2018 19:59:45 +0200
+Message-ID: <20180625175945.GA10876@centauri.lan>
+References: <20180625143115.8346-1-srinivas.kandagatla@linaro.org>
+ <20180625143115.8346-2-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <virtualization-bounces@lists.linux-foundation.org>
-In-Reply-To: <20180622035442-mutt-send-email-mst@kernel.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
-List-Post: <mailto:virtualization@lists.linux-foundation.org>
-List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
-Sender: virtualization-bounces@lists.linux-foundation.org
-Errors-To: virtualization-bounces@lists.linux-foundation.org
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jayachandran.nair@cavium.com" <jayachandran.nair@cavium.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "tnowicki@caviumnetworks.com" <tnowicki@caviumnetworks.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "virtio-dev@lists.oasis-open.org" <virtio-dev@lists.oasis-open.org>, "joro@8bytes.org" <joro@8bytes.org>, Will Deacon <Will.Deacon@arm.com>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "eric.auger@redhat.com" <eric.auger@redhat.com>, Robin Murphy <Robin.Murphy@arm.com>, "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20180625143115.8346-2-srinivas.kandagatla@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: rohkumar@qti.qualcomm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, lgirdwood@gmail.com, robh+dt@kernel.org, tiwai@suse.com, broonie@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/06/18 01:55, Michael S. Tsirkin wrote:
->> +#define VIRTIO_IOMMU_RESV_MEM_T_RESERVED	0
->> +#define VIRTIO_IOMMU_RESV_MEM_T_MSI		1
->> +
->> +struct virtio_iommu_probe_resv_mem {
->> +	__u8					subtype;
->> +	__u8					reserved[3];
->> +	__le64					start;
->> +	__le64					end;
->> +} __packed;
+Acked-by: Niklas Cassel <niklas.cassel@linaro.org>
+
+On Mon, Jun 25, 2018 at 03:31:05PM +0100, Srinivas Kandagatla wrote:
+> Add compatible string to routing so that it can support DT based module
+> autoloading.
 > 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/sound/qcom,q6adm.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> start/end are not aligned you need to pad more.
-
-The complete structure is actually the 32-bit header
-virtio_iommu_probe_property, followed by the content
-virtio_iommu_probe_resv_mem:
-
-struct {
-	le16	type
-	le16	length
-	u8	subtype
-	u8	reserved[3]
-	le64	start
-	le64	end
-};
-
-I'll redefine virtio_iommu_probe_resv_mem to include this header.
-Otherwise, without __packed, a compiler introduces padding when
-concatenating header and content.
-
-Thanks,
-Jean
+> diff --git a/Documentation/devicetree/bindings/sound/qcom,q6adm.txt b/Documentation/devicetree/bindings/sound/qcom,q6adm.txt
+> index cb709e5dbc44..bbae426cdfb1 100644
+> --- a/Documentation/devicetree/bindings/sound/qcom,q6adm.txt
+> +++ b/Documentation/devicetree/bindings/sound/qcom,q6adm.txt
+> @@ -18,6 +18,11 @@ used by the apr service device.
+>  = ADM routing
+>  "routing" subnode of the ADM node represents adm routing specific configuration
+>  
+> +- compatible:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: must be "qcom,q6adm-routing".
+> +
+>  - #sound-dai-cells
+>  	Usage: required
+>  	Value type: <u32>
+> @@ -28,6 +33,7 @@ q6adm@8 {
+>  	compatible = "qcom,q6adm";
+>  	reg = <APR_SVC_ADM>;
+>  	q6routing: routing {
+> +		compatible = "qcom,q6adm-routing";
+>  		#sound-dai-cells = <0>;
+>  	};
+>  };
+> -- 
+> 2.16.2
+> 
