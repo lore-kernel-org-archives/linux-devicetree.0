@@ -1,99 +1,38 @@
-From: Christoph =?utf-8?Q?B=C3=B6hmwalder?= <christoph@boehmwalder.at>
-Subject: Re: [PATCH 2/3] dt-bindings: interrupt-controller: RISC-V local
- interrupt controller docs
-Date: Mon, 25 Jun 2018 22:04:48 +0200
-Message-ID: <20180625200448.26fvdv2tj3etmtlp@localhost>
-References: <20180622232006.12158-1-palmer@sifive.com>
- <20180622232006.12158-3-palmer@sifive.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/7] dt-bindings: add binding for the
+ Allwinner A64 DE2 bus
+Date: Mon, 25 Jun 2018 14:18:34 -0600
+Message-ID: <20180625201834.GA14276@rob-hp-laptop>
+References: <20180622124540.56203-1-icenowy@aosc.io>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBHM4YXMQKGQEGILU64A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180622232006.12158-3-palmer@sifive.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Palmer Dabbelt <palmer@sifive.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, jason@lakedaemon.net, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Palmer Dabbelt <palmer@dabbelt.com>, shorne@gmail.com, tglx@linutronix.de, linux-riscv@lists.infradead.org
+In-Reply-To: <20180622124540.56203-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 22, 2018 at 04:20:05PM -0700, Palmer Dabbelt wrote:
-> From: Palmer Dabbelt <palmer@dabbelt.com>
+On Fri, Jun 22, 2018 at 08:45:35PM +0800, Icenowy Zheng wrote:
+> All the sub-blocks of Allwinner A64 DE2 needs the SRAM C on A64 SoC to
+> be claimed, otherwise the whole DE2 space is inaccessible.
 > 
-> This patch adds documentation on the RISC-V local interrupt controller,
-> which is a per-hart interrupt controller that manages all interrupts
-> entering a RISC-V hart.  This interrupt controller is present on all
-> RISC-V systems.
+> Add a device tree binding of the DE2 part as a sub-bus.
 > 
-> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 > ---
->  .../interrupt-controller/riscv,cpu-intc.txt        | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+> No changes since v1.
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> new file mode 100644
-> index 000000000000..61900e2e3868
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> @@ -0,0 +1,41 @@
-> +RISC-V Hart-Level Interrupt Controller (HLIC)
-> +---------------------------------------------
-> +
-> +RISC-V cores include Control Status Registers (CSRs) which are local to each
-> +hart and can be read or written by software. Some of these CSRs are used to
-> +control local interrupts connected to the core.  Every interrupt is ultimately
-> +routed through a hart's HLIC before it interrupts that hart.
-> +
-> +The RISC-V supervisor ISA manual specifies three interrupt sources that are
-> +attached to every HLIC: software interrupts, the timer interrupt, and external
-> +interrupts.  Software interrupts are used to send IPIs between cores.  The
-> +timer interrupt comes from an architecturally mandated real-time timer that is
-> +controller via SBI calls and CSR reads.  External interrupts connect all other
-> +device interrupts to the HLIC, which are routed via the platform-level
-> +interrupt controller (PLIC).
-> +
-> +All RISC-V systems that conform to the supervisor ISA specification are
-> +required to have a HLIC with these three interrupt sources present.  Since the
-> +interrupt map is defined by the ISA it's not listed in the HLIC's device tree
-> +entry, though external interrupt controllers (like the PLIC, for example) will
-> +need to define how their interrupts map to the relevant HLICs.
-> +
-> +Required properties:
-> +- compatible : "riscv,cpu-intc"
-> +- #interrupt-cells : should be <1>
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +
-> +Furthermore, this interrupt-controller MUST be embedded inside the cpu
-> +definition of the hart whose CSRs control these local interrupts.
-> +
-> +An example device tree entry for a HLIC is show below.
+>  .../bindings/bus/sun50i-de2-bus.txt           | 37 +++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/bus/sun50i-de2-bus.txt
 
-Spotted a typo here, "show" -> "shown".
-
-> +
-> +	cpu1: cpu@1 {
-> +		compatible = "riscv";
-> +		...
-> +		cpu1-intc: interrupt-controller {
-> +			#interrupt-cells = <1>;
-> +			compatible = "riscv,cpu-intc";
-> +			interrupt-controller;
-> +		};
-> +	};
-> -- 
-> 2.16.4
-
-Also, I've noticed that double spaces after punctuation are used pretty
-inconsistently throughout the document. Is that intended?
-
---
-Regards,
-Christoph
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
