@@ -1,63 +1,39 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [PATCHv2 5/5] arm64: allwinner: a64: Add support for TERES-I laptop
-Date: Mon, 25 Jun 2018 15:47:18 +0800
-Message-ID: <1CF519CD-D44E-4959-8951-27CE710E0984@aosc.io>
-References: <20180315162510.11669-1-harald@ccbib.org> <20180315162510.11669-6-harald@ccbib.org> <a7011fe78d171658742406bf01d50b7e3d7eaf1d.camel@aosc.io> <E1fX7yK-0000OC-HA@stardust.g4.wien.funkfeuer.at> <5B309D37.80207@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
+From: Marcel Ziswiler <marcel@ziswiler.com>
+Subject: [PATCH] apalis_t30: fix can2
+Date: Mon, 25 Jun 2018 09:59:48 +0200
+Message-ID: <20180625075948.32040-1-marcel@ziswiler.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5B309D37.80207@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arend van Spriel <arend.vanspriel@broadcom.com>, Harald Geyer <harald@ccbib.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Kalle Valo <kvalo@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, info@olimex.com, linux-wireless@vger.kernel.org
+To: linux-tegra@vger.kernel.org, linux-can@vger.kernel.org
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
+CAN2 currently fails on probe as follows:
 
-于 2018年6月25日 GMT+08:00 下午3:43:51, Arend van Spriel <arend.vanspriel@broadcom.com> 写到:
->On 6/24/2018 6:34 PM, Harald Geyer wrote:
->> Icenowy Zheng writes:
->>> >在 2018-03-15四的 16:25 +0000，Harald Geyer写道：
->>>> > >+&mmc1 {
->>>> > >+	pinctrl-names = "default";
->>>> > >+	pinctrl-0 = <&mmc1_pins>;
->>>> > >+	vmmc-supply = <&reg_aldo2>;
->>>> > >+	vqmmc-supply = <&reg_dldo4>;
->>>> > >+	mmc-pwrseq = <&wifi_pwrseq>;
->>>> > >+	bus-width = <4>;
->>>> > >+	non-removable;
->>>> > >+	status = "okay";
->>>> > >+
->>>> > >+	rtl8723bs: wifi@1 {
->>>> > >+		reg = <1>;
->>>> > >+		interrupt-parent = <&r_pio>;
->>>> > >+		interrupts = <0 3 IRQ_TYPE_LEVEL_LOW>; /* PL3 */
->>>> > >+		interrupt-names = "host-wake";
->>>> > >+	};
->
->[...]
->
->>> >- This device node has no binding. The "host-wake" interrupt is
->part of
->>> >  Broadcom SDIO Wi-Fi binding, rather than a generic one.
->> I think the general mmc and interrupts bindings apply. And the mmc
->binding
->> clearly states that for sub-nodes a compatible string is optional.
->>
->> However I just realized that the 'interrupt-names' property is not
->part
->> of the general interrupts binding, so I guess at least this property
->should
->> be removed.
->
->Indeed. If the device just used the SDIO interrupt this is not needed. 
->The Broadcom device can use either SDIO interrupt or a so-called 
->out-of-band host-wake interrupt, which is what the above represents.
+mcp251x spi1.1: Probe failed, err=19
 
-RTL8....S is also capable of use OOB interrupt.
+Fix this by enabling input on pin mux of resp. SPI4 pins.
 
->
->Regards,
->Arend
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+
+---
+
+ arch/arm/boot/dts/tegra30-apalis.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
+index d1d21ec2a844..9ff6aafd72b3 100644
+--- a/arch/arm/boot/dts/tegra30-apalis.dtsi
++++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
+@@ -118,6 +118,7 @@
+ 				nvidia,function = "spi4";
+ 				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
+ 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
+ 			};
+ 			/* CAN_INT2 */
+ 			spi2_cs2_n_pw3 {
+-- 
+2.14.4
