@@ -1,82 +1,37 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: Add mtk-systimer bindings
-Date: Mon, 25 Jun 2018 23:53:45 +0200
-Message-ID: <ad38a952-4400-984a-a7fd-aa4e6af13c13@linaro.org>
-References: <1529910601-15005-1-git-send-email-stanley.chu@mediatek.com>
- <1529910601-15005-2-git-send-email-stanley.chu@mediatek.com>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH] arm64: dts: hikey: Define wl1835 power capabilities
+Date: Mon, 25 Jun 2018 14:56:02 -0700
+Message-ID: <CALAqxLWjJKsU+XJmANzx-aO2ruszwbBnPV2yV5WoyVStO+5K0A@mail.gmail.com>
+References: <20180613151305.17240-1-ryan@edited.us> <CANcMJZASEDRxaXwdG96nNeEDPrDm_ap5MjhXonEcg=yHZ8F=qg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529910601-15005-2-git-send-email-stanley.chu@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <CANcMJZASEDRxaXwdG96nNeEDPrDm_ap5MjhXonEcg=yHZ8F=qg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stanley Chu <stanley.chu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
+To: Ryan Grachek <ryan@edited.us>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Wei Xu <xuwei5@hisilicon.com>, Eyal Reizer <eyalr@ti.com>, Rob Herring <robh+dt@kernel.org>, Kalle Valo <kvalo@codeaurora.org>, Valentin Schneider <Valentin.Schneider@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-wireless@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/06/2018 09:10, Stanley Chu wrote:
-> Add binding documentation for the System Timer driver of
-> the Mediatek SoCs.
-> 
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> ---
->  .../bindings/timer/mediatek,mtk-systimer.txt       |   18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/mediatek,mtk-systimer.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-systimer.txt b/Documentation/devicetree/bindings/timer/mediatek,mtk-systimer.txt
-> new file mode 100644
-> index 0000000..735a6fd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-systimer.txt
-> @@ -0,0 +1,18 @@
-> +Mediatek System Timers
-> +----------------------
-> +
-> +Required properties:
-> +- compatible: should contain
-> +	"mediatek,sys_timer" for those platforms which support system timer.
-> +- reg: Mandatory. The location and length for system timer registers.
-> +- clock-frequency: Optional. If not assigned specifically, default
-> +	value 13000000 (means 13 MHz) would be applied.
+On Wed, Jun 13, 2018 at 11:30 AM, John Stultz <john.stultz@linaro.org> wrote:
+> On Wed, Jun 13, 2018 at 8:13 AM, Ryan Grachek <ryan@edited.us> wrote:
+>> These properties are required for compatibility with runtime PM.
+>> Without these properties, MMC host controller will not be aware
+>> of power capabilities. When the wlcore driver attempts to power
+>> on the device, it will erroneously fail with -EACCES.
+>>
+>> Signed-off-by: Ryan Grachek <ryan@edited.us>
+>
+> Fixes: 60f36637bbbd ("wlcore: sdio: allow pm to handle sdio power")
+> Tested-by: John Stultz <john.stultz@linaro.org>
+> Acked-by: John Stultz <john.stultz@linaro.org>
+>
+> Wei Xu: This fixes a functional regression with wifi on the HiKey
+> board that was introduced in 4.18-rc with commit 60f36637bbbd
+> ("wlcore: sdio: allow pm to handle sdio power").
 
-The driver tells there is an error if it is not defined, so it can't be
-optional.
+Wei Xu: Just wanted to follow up to make sure this wasn't missed for
+4.18-rc, as I haven't seen it upstream or in -next, and it fixes a
+recently introduced regression.
 
-> +Examples:
-> +
-> +	sys_timer@10017000 {
-> +		compatible = "mediatek,sys_timer";
-> +		reg = <0 0x10017000 0 0x1000>;
-> +		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
-> +		clock-frequency = <13000000>;
-
-Replace it by a phandle to a 'fixed-clock'.
-
-eg.
-
-clocks = <&myclk>;
-
-
-> +	};
-
-myclk: myclk {
-	#clock-cells = <0>;
-	compatible = "fixed-clock";
-        clock-frequency = <13000000>;
-};
-
-Thanks
-
-  -- DAniel
-
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+thanks
+-john
