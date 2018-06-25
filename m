@@ -1,45 +1,66 @@
-Return-Path: <robherring2@gmail.com>
-Received: from localhost.localdomain (24-223-123-72.static.usa-companies.net. [24.223.123.72])
-        by smtp.googlemail.com with ESMTPSA id s63-v6sm4148871ywg.65.2018.06.05.15.50.05
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Jun 2018 15:50:05 -0700 (PDT)
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] dt-bindings: submitting-patches: add guidance on patch content and subject
-Date: Tue,  5 Jun 2018 16:50:04 -0600
-Message-Id: <20180605225004.3015-1-robh@kernel.org>
-To: devicetree@vger.kernel.org
+Return-Path: <SRS0=pME0=JL=nxp.com=jun.li@kernel.org>
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v7 11/14] typec: tcpm: add starting value for drp toggling
+Date: Mon, 25 Jun 2018 16:08:43 +0800
+Message-Id: <1529914126-22550-12-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
+References: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: a.hajda@samsung.com, jun.li@nxp.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Clarify that binding patches should also include include/dt-bindings/*
-as part of them. The binding doc defines the ABI and the includes are
-part of that. Add some details on the preferred subject prefix and
-contents.
+As DRP port autonomously toggles the Rp/Rd need a start value to
+begin with, so add one parameter for it in tcpm_start_drp_toggling.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- Documentation/devicetree/bindings/submitting-patches.txt | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/usb/typec/tcpm.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
-index 274058c583dd..de0d6090c0fd 100644
---- a/Documentation/devicetree/bindings/submitting-patches.txt
-+++ b/Documentation/devicetree/bindings/submitting-patches.txt
-@@ -6,7 +6,14 @@ I. For patch submitters
-   0) Normal patch submission rules from Documentation/process/submitting-patches.rst
-      applies.
+diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
+index 0454654..c80f1a4 100644
+--- a/drivers/usb/typec/tcpm.c
++++ b/drivers/usb/typec/tcpm.c
+@@ -2431,15 +2431,15 @@ static int tcpm_set_charge(struct tcpm_port *port, bool charge)
+ 	return 0;
+ }
  
--  1) The Documentation/ portion of the patch should be a separate patch.
-+  1) The Documentation/ and include/dt-bindings/ portion of the patch should
-+     be a separate patch. The preferred subject prefix for binding patches is:
-+
-+       "dt-bindings: <binding dir>: ..."
-+
-+     The 80 characters of the subject are precious. It is recommended to not
-+     use "Documentation" or "doc" because that is implied. All bindings are
-+     docs. Repeating "binding" again should also be avoided.
+-static bool tcpm_start_drp_toggling(struct tcpm_port *port)
++static bool tcpm_start_drp_toggling(struct tcpm_port *port,
++				    enum typec_cc_status cc)
+ {
+ 	int ret;
  
-   2) Submit the entire series to the devicetree mailinglist at
- 
+ 	if (port->tcpc->start_drp_toggling &&
+ 	    port->port_type == TYPEC_PORT_DRP) {
+ 		tcpm_log_force(port, "Start DRP toggling");
+-		ret = port->tcpc->start_drp_toggling(port->tcpc,
+-						     tcpm_rp_cc(port));
++		ret = port->tcpc->start_drp_toggling(port->tcpc, cc);
+ 		if (!ret)
+ 			return true;
+ 	}
+@@ -2747,7 +2747,7 @@ static void run_state_machine(struct tcpm_port *port)
+ 		if (!port->non_pd_role_swap)
+ 			tcpm_swap_complete(port, -ENOTCONN);
+ 		tcpm_src_detach(port);
+-		if (tcpm_start_drp_toggling(port)) {
++		if (tcpm_start_drp_toggling(port, tcpm_rp_cc(port))) {
+ 			tcpm_set_state(port, DRP_TOGGLING, 0);
+ 			break;
+ 		}
+@@ -2922,7 +2922,7 @@ static void run_state_machine(struct tcpm_port *port)
+ 			tcpm_swap_complete(port, -ENOTCONN);
+ 		tcpm_pps_complete(port, -ENOTCONN);
+ 		tcpm_snk_detach(port);
+-		if (tcpm_start_drp_toggling(port)) {
++		if (tcpm_start_drp_toggling(port, TYPEC_CC_RD)) {
+ 			tcpm_set_state(port, DRP_TOGGLING, 0);
+ 			break;
+ 		}
 -- 
-2.17.0
+2.7.4
