@@ -1,105 +1,98 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v4 2/2] hwmon: npcm750: add NPCM7xx PWM and Fan
- driver
-Date: Mon, 25 Jun 2018 15:43:32 +0300
-Message-ID: <20180625124332.e7oyxezasn374w4b@mwanda>
-References: <20180624124155.82412-3-tmaimon77@gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [RfC v1 4/5] ARM64: dts: meson-gxl: add support for the S905W SoC
+ and the P281 board - WiP
+Date: Mon, 25 Jun 2018 14:51:54 +0200
+Message-ID: <fb3bfe0c-2cfc-5e92-5271-e2159f20b019@baylibre.com>
+References: <20180624182814.31691-1-martin.blumenstingl@googlemail.com>
+ <20180624182814.31691-5-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <kbuild-bounces@lists.01.org>
-Content-Disposition: inline
-In-Reply-To: <20180624124155.82412-3-tmaimon77@gmail.com>
-List-Unsubscribe: <https://lists.01.org/mailman/options/kbuild>,
- <mailto:kbuild-request@lists.01.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/kbuild/>
-List-Post: <mailto:kbuild@lists.01.org>
-List-Help: <mailto:kbuild-request@lists.01.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/kbuild>,
- <mailto:kbuild-request@lists.01.org?subject=subscribe>
-Errors-To: kbuild-bounces@lists.01.org
-Sender: "kbuild" <kbuild-bounces@lists.01.org>
-To: kbuild@01.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jdelvare@suse.com, Tomer Maimon <tmaimon77@gmail.com>, avifishman70@gmail.com, venture@google.com, openbmc@lists.ozlabs.org, brendanhiggins@google.com, linux-kernel@vger.kernel.org, yuenn@google.com, robh+dt@kernel.org, kbuild-all@01.org, linux-hwmon@vger.kernel.org, linux@roeck-us.net, joel@jms.id.au
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180624182814.31691-5-martin.blumenstingl@googlemail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, carlo@caione.org, khilman@baylibre.com
+Cc: yixun.lan@amlogic.com, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomer,
+On 24/06/2018 20:28, Martin Blumenstingl wrote:
+> S905W is a new SoC from the GXL series. It is a cost-reduced version of
+> the S905X.
+> The P281 development board from Amlogic uses the same layout as the P231
+> (S905D development board). Thus the new P281 board inherits
+> meson-gx-p23x-q20x.dtsi to avoid code-duplication.
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/Makefile          |  1 +
+>  .../boot/dts/amlogic/meson-gxl-s905w-p281.dts | 22 +++++++++++++++++++
+>  .../boot/dts/amlogic/meson-gxl-s905w.dtsi     | 20 +++++++++++++++++
+>  3 files changed, 43 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905w-p281.dts
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905w.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+> index 34dd0e9b5cbb..6de2e7f5a9cc 100644
+> --- a/arch/arm64/boot/dts/amlogic/Makefile
+> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+> @@ -17,6 +17,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-nexbox-a95x.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
+> +dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-p281.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-khadas-vim2.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-nexbox-a1.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q200.dtb
 
-I love your patch! Perhaps something to improve:
+[...]
 
-[auto build test WARNING on hwmon/hwmon-next]
-[also build test WARNING on v4.18-rc2 next-20180622]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905w.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905w.dtsi
+> new file mode 100644
+> index 000000000000..a4ed586d328b
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905w.dtsi
+> @@ -0,0 +1,20 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2018 Martin Blumenstingl <martin.blumenstingl@googlemail.com>.
+> + * Based on meson-gxl-s905x.dtsi:
+> + * - Copyright (c) 2016 Endless Computers, Inc.
+> + *   Author: Carlo Caione <carlo@endlessm.com>
+> + */
+> +
+> +#include "meson-gxl.dtsi"
+> +#include "meson-gxl-mali.dtsi"
+> +
+> +/ {
+> +	compatible = "amlogic,s905w", "amlogic,meson-gxl";
+> +};
+> +
+> +/* S905W only has access to it's internal PHY */
+> +&ethmac {
+> +	phy-mode = "rmii";
+> +	phy-handle = <&internal_phy>;
+> +};
+> 
 
-url:    https://github.com/0day-ci/linux/commits/Tomer-Maimon/dt-binding-hwmon-Add-NPCM7xx-PWM-and-Fan-controller-documentation/20180624-205017
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
+Hi Martin, Kevin, Carlo, Jerome,
 
-New smatch warnings:
-drivers/hwmon/npcm750-pwm-fan.c:261 npcm7xx_pwm_config_set() warn: inconsistent returns 'mutex:&data->pwm_lock[module]'.
-  Locked on:   line 245
-  Unlocked on: line 261
+I would like to discuss how we should handle all the GXl variants, since from linux PoV, S905x, S905W and S805X are the same (S905W and S805X only has ledd IO balls, less IO available but same pinctrl interface).
 
-Old smatch warnings:
-drivers/hwmon/npcm750-pwm-fan.c:836 npcm7xx_pwm_cz_set_cur_state() warn: potential spectre issue 'cdev->cooling_levels'
+At some point, meson-gxl-s905w.dtsi and meson-gxl-s805x.dtsi will be exactly the same as meson-gxl-s905x.dtsi, and maybe the same for S905Z in the Fire TV.
 
-# https://github.com/0day-ci/linux/commit/5ef6a0a11de5f3f0711993a20b13820cc0884c7e
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout 5ef6a0a11de5f3f0711993a20b13820cc0884c7e
-vim +261 drivers/hwmon/npcm750-pwm-fan.c
+The can be multiple solution :
+- duplicate the files
+- unify all the internal-PHY-only GXL variant into a meson-gxl-sx05x.dtsi
+- use meson-gxl-s905x.dtsi and override the compatible in board dts
+- move the meson-gxl-s905x.dtsi into a separate meson-gxl-internal-phy.dtsi and include it instead of meson-gxl-s905x.dtsi and drop the intermediate package specific dtsi
 
-5ef6a0a1 Tomer Maimon 2018-06-24  210  
-5ef6a0a1 Tomer Maimon 2018-06-24  211  static int npcm7xx_pwm_config_set(struct npcm7xx_pwm_fan_data *data,
-5ef6a0a1 Tomer Maimon 2018-06-24  212  				  int channel, u16 val)
-5ef6a0a1 Tomer Maimon 2018-06-24  213  {
-5ef6a0a1 Tomer Maimon 2018-06-24  214  	u32 pwm_ch = (channel % NPCM7XX_PWM_MAX_CHN_NUM_IN_A_MODULE);
-5ef6a0a1 Tomer Maimon 2018-06-24  215  	u32 module = (channel / NPCM7XX_PWM_MAX_CHN_NUM_IN_A_MODULE);
-5ef6a0a1 Tomer Maimon 2018-06-24  216  	u32 tmp_buf, ctrl_en_bit, env_bit;
-5ef6a0a1 Tomer Maimon 2018-06-24  217  
-5ef6a0a1 Tomer Maimon 2018-06-24  218  	/*
-5ef6a0a1 Tomer Maimon 2018-06-24  219  	 * Config PWM Comparator register for setting duty cycle
-5ef6a0a1 Tomer Maimon 2018-06-24  220  	 */
-5ef6a0a1 Tomer Maimon 2018-06-24  221  	mutex_lock(&data->pwm_lock[module]);
-5ef6a0a1 Tomer Maimon 2018-06-24  222  
-5ef6a0a1 Tomer Maimon 2018-06-24  223  	/* write new CMR value  */
-5ef6a0a1 Tomer Maimon 2018-06-24  224  	iowrite32(val, NPCM7XX_PWM_REG_CMRx(data->pwm_base, module, pwm_ch));
-5ef6a0a1 Tomer Maimon 2018-06-24  225  	tmp_buf = ioread32(NPCM7XX_PWM_REG_CR(data->pwm_base, module));
-5ef6a0a1 Tomer Maimon 2018-06-24  226  
-5ef6a0a1 Tomer Maimon 2018-06-24  227  	switch (pwm_ch) {
-5ef6a0a1 Tomer Maimon 2018-06-24  228  	case 0:
-5ef6a0a1 Tomer Maimon 2018-06-24  229  		ctrl_en_bit = NPCM7XX_PWM_CTRL_CH0_EN_BIT;
-5ef6a0a1 Tomer Maimon 2018-06-24  230  		env_bit = NPCM7XX_PWM_CTRL_CH0_INV_BIT;
-5ef6a0a1 Tomer Maimon 2018-06-24  231  		break;
-5ef6a0a1 Tomer Maimon 2018-06-24  232  	case 1:
-5ef6a0a1 Tomer Maimon 2018-06-24  233  		ctrl_en_bit = NPCM7XX_PWM_CTRL_CH1_EN_BIT;
-5ef6a0a1 Tomer Maimon 2018-06-24  234  		env_bit = NPCM7XX_PWM_CTRL_CH1_INV_BIT;
-5ef6a0a1 Tomer Maimon 2018-06-24  235  		break;
-5ef6a0a1 Tomer Maimon 2018-06-24  236  	case 2:
-5ef6a0a1 Tomer Maimon 2018-06-24  237  		ctrl_en_bit = NPCM7XX_PWM_CTRL_CH2_EN_BIT;
-5ef6a0a1 Tomer Maimon 2018-06-24  238  		env_bit = NPCM7XX_PWM_CTRL_CH2_INV_BIT;
-5ef6a0a1 Tomer Maimon 2018-06-24  239  		break;
-5ef6a0a1 Tomer Maimon 2018-06-24  240  	case 3:
-5ef6a0a1 Tomer Maimon 2018-06-24  241  		ctrl_en_bit = NPCM7XX_PWM_CTRL_CH3_EN_BIT;
-5ef6a0a1 Tomer Maimon 2018-06-24  242  		env_bit = NPCM7XX_PWM_CTRL_CH3_INV_BIT;
-5ef6a0a1 Tomer Maimon 2018-06-24  243  		break;
-5ef6a0a1 Tomer Maimon 2018-06-24  244  	default:
-5ef6a0a1 Tomer Maimon 2018-06-24  245  		return -ENODEV;
-                                                ^^^^^^^^^^^^^^
-5ef6a0a1 Tomer Maimon 2018-06-24  246  	}
-5ef6a0a1 Tomer Maimon 2018-06-24  247  
-5ef6a0a1 Tomer Maimon 2018-06-24  248  	if (val == 0) {
-5ef6a0a1 Tomer Maimon 2018-06-24  249  		/* Disable PWM */
-5ef6a0a1 Tomer Maimon 2018-06-24  250  		tmp_buf &= ~ctrl_en_bit;
-5ef6a0a1 Tomer Maimon 2018-06-24  251  		tmp_buf |= env_bit;
-5ef6a0a1 Tomer Maimon 2018-06-24  252  	} else {
-5ef6a0a1 Tomer Maimon 2018-06-24  253  		/* Enable PWM */
-5ef6a0a1 Tomer Maimon 2018-06-24  254  		tmp_buf |= ctrl_en_bit;
-5ef6a0a1 Tomer Maimon 2018-06-24  255  		tmp_buf &= ~env_bit;
-5ef6a0a1 Tomer Maimon 2018-06-24  256  	}
-5ef6a0a1 Tomer Maimon 2018-06-24  257  
-5ef6a0a1 Tomer Maimon 2018-06-24  258  	iowrite32(tmp_buf, NPCM7XX_PWM_REG_CR(data->pwm_base, module));
-5ef6a0a1 Tomer Maimon 2018-06-24  259  	mutex_unlock(&data->pwm_lock[module]);
-5ef6a0a1 Tomer Maimon 2018-06-24  260  
-5ef6a0a1 Tomer Maimon 2018-06-24 @261  	return 0;
-5ef6a0a1 Tomer Maimon 2018-06-24  262  }
-5ef6a0a1 Tomer Maimon 2018-06-24  263  
+Neil
