@@ -1,67 +1,81 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 10/23] thermal: armada: move validity check out of the read
- function
-Date: Mon, 25 Jun 2018 17:12:26 +0200
-Message-ID: <20180625151239.20976-11-miquel.raynal@bootlin.com>
-References: <20180625151239.20976-1-miquel.raynal@bootlin.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: add binding for i.MX8MQ IOMUXC
+Date: Mon, 25 Jun 2018 09:17:19 -0600
+Message-ID: <20180625151719.GA16723@rob-hp-laptop>
+References: <1529680549-22079-1-git-send-email-abel.vesa@nxp.com>
+ <1529680549-22079-2-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180625151239.20976-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1529680549-22079-2-git-send-email-abel.vesa@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Abel Vesa <abel.vesa@nxp.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, linux-gpio@vger.kernel.org, linux-imx@nxp.com, Shawn Guo <shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Abel Vesa <abelvesa@linux.com>
 List-Id: devicetree@vger.kernel.org
 
-Sensor selection when using multiple sensors already checks for the
-sensor validity. Move it to the legacy ->get_temp() hook, where it is
-still needed.
+On Fri, Jun 22, 2018 at 06:15:48PM +0300, Abel Vesa wrote:
+> This adds the binding for the i.MX8MQ pin controller, in the same
+> fashion as earlier i.MX SoCs.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
+>  .../bindings/pinctrl/fsl,imx8mq-pinctrl.txt        | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
+> new file mode 100644
+> index 0000000..e1c405d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
+> @@ -0,0 +1,32 @@
+> +* Freescale IMX8MQ IOMUX Controller
+> +
+> +Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
+> +for common binding part and usage.
+> +
+> +Required properties:
+> +- compatible: "fsl,imx8mq-iomuxc"
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/thermal/armada_thermal.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+reg?
 
-diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_thermal.c
-index 3d5b29133d3a..4e9f947a0f5f 100644
---- a/drivers/thermal/armada_thermal.c
-+++ b/drivers/thermal/armada_thermal.c
-@@ -328,13 +328,6 @@ static int armada_read_sensor(struct armada_thermal_priv *priv, long *temp)
- 	u32 reg, div;
- 	s64 sample, b, m;
- 
--	/* Valid check */
--	if (priv->data->is_valid && !priv->data->is_valid(priv)) {
--		dev_err(priv->dev,
--			"Temperature sensor reading not valid\n");
--		return -EIO;
--	}
--
- 	regmap_read(priv->syscon, priv->data->syscon_status_off, &reg);
- 	reg = (reg >> priv->data->temp_shift) & priv->data->temp_mask;
- 	if (priv->data->signed_sample)
-@@ -363,6 +356,13 @@ static int armada_get_temp_legacy(struct thermal_zone_device *thermal,
- 	long temperature;
- 	int ret;
- 
-+	/* Valid check */
-+	if (priv->data->is_valid && !priv->data->is_valid(priv)) {
-+		dev_err(priv->dev,
-+			"Temperature sensor reading not valid\n");
-+		return -EIO;
-+	}
-+
- 	/* Do the actual reading */
- 	ret = armada_read_sensor(priv, &temperature);
- 	*temp = temperature;
--- 
-2.14.1
+> +- fsl,pins: each entry consists of 6 integers and represents the mux and config
+> +  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
+> +  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
+> +  imx8mq-pinfunc.h under device tree source folder.  The last integer CONFIG is
+> +  the pad setting value like pull-up on this pin.  Please refer to i.MX8M Quad
+> +  Reference Manual for detailed CONFIG settings.
+
+Needs to specify this is in sub-nodes.
+
+> +
+> +Examples:
+> +
+> +&uart1 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_uart1>;
+> +};
+> +
+> +iomuxc: iomuxc@30330000 {
+
+pinctrl@...
+
+> +        compatible = "fsl,imx8mq-iomuxc";
+> +        reg = <0x0 0x30330000 0x0 0x10000>;
+> +
+> +        pinctrl_uart1: uart1grp {
+> +                fsl,pins = <
+> +                        MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX             0x49
+> +                        MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX             0x49
+> +                >;
+> +        };
+> +};
+> -- 
+> 2.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
