@@ -1,40 +1,39 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/7] soc: qcom: rpmpd: Add a Power domain driver to
- model corners
-Date: Mon, 25 Jun 2018 11:15:44 -0600
-Message-ID: <20180625171544.GA18520@rob-hp-laptop>
-References: <20180612044052.4402-1-rnayak@codeaurora.org>
- <20180612044052.4402-3-rnayak@codeaurora.org>
+Subject: Re: [PATCH V3 1/5] dt-bindings: mailbox: allow mbox-cells to be
+ equal to 0
+Date: Mon, 25 Jun 2018 11:17:34 -0600
+Message-ID: <20180625171734.GA20153@rob-hp-laptop>
+References: <1529676720-7533-1-git-send-email-aisheng.dong@nxp.com>
+ <1529676720-7533-2-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180612044052.4402-3-rnayak@codeaurora.org>
+In-Reply-To: <1529676720-7533-2-git-send-email-aisheng.dong@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: linux-arm-kernel@lists.infradead.org, dongas86@gmail.com, kernel@pengutronix.de, shawnguo@kernel.org, fabio.estevam@nxp.com, linux-imx@nxp.com, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 12, 2018 at 10:10:47AM +0530, Rajendra Nayak wrote:
-> The Power domains for corners just pass the performance state set by the
-> consumers to the RPM (Remote Power manager) which then takes care
-> of setting the appropriate voltage on the corresponding rails to
-> meet the performance needs.
+On Fri, Jun 22, 2018 at 10:11:56PM +0800, Dong Aisheng wrote:
+> Mailbox devices may have only one channel which means the mbox-cells
+> at least 1 does not make sense for this type devices. Let's remove
+> that limitation to allow the mbox-cells to be equal to 0.
 > 
-> We add all Power domain data needed on msm8996 here. This driver can easily
-> be extended by adding data for other qualcomm SoCs as well.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 > ---
->  drivers/soc/qcom/Kconfig               |   9 +
->  drivers/soc/qcom/Makefile              |   1 +
->  drivers/soc/qcom/rpmpd.c               | 301 +++++++++++++++++++++++++
+> ChangeLog:
+>  * New patch introduced in v3 series
+>  * Actually there're already users in kernel with mbox-cells set to 0.
+>    See:
+>    arch/arm/boot/dts/bcm283x.dtsi:145: #mbox-cells = <0>;
+> ---
+>  Documentation/devicetree/bindings/mailbox/mailbox.txt | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 
->  include/dt-bindings/power/qcom-rpmpd.h |  16 ++
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  4 files changed, 327 insertions(+)
->  create mode 100644 drivers/soc/qcom/rpmpd.c
->  create mode 100644 include/dt-bindings/power/qcom-rpmpd.h
+Reviewed-by: Rob Herring <robh@kernel.org>
