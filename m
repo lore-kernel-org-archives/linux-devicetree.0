@@ -1,42 +1,46 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH V5 4/5] ARM: dts: stm32: add iwdg2 support for stm32mp157c-ed1
-Date: Mon, 25 Jun 2018 17:43:02 +0200
-Message-ID: <1529941383-8653-5-git-send-email-ludovic.Barre@st.com>
-References: <1529941383-8653-1-git-send-email-ludovic.Barre@st.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v9 2/6] dt-bindings: Add bindings for SPI NAND devices
+Date: Mon, 25 Jun 2018 08:45:41 -0600
+Message-ID: <20180625144541.GA8597@rob-hp-laptop>
+References: <20180622122828.12939-1-boris.brezillon@bootlin.com>
+ <20180622122828.12939-3-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529941383-8653-1-git-send-email-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180622122828.12939-3-boris.brezillon@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>, Julien Su <juliensu@mxic.com.tw>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Piotr Bugalski <Piotr.Bugalski@cryptera.com>, Richard Weinberger <richard@nod.at>, Kumar Gala <galak@codeaurora.org>, linux-spi@vger.kernel.org, Peter Pan <peterpansjtu@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Frieder Schrempf <frieder.schrempf@exceet.de>, Mark Brown <broonie@kernel.org>, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, zhengxunli@mxic.com.tw
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+On Fri, Jun 22, 2018 at 02:28:24PM +0200, Boris Brezillon wrote:
+> Add bindings for SPI NAND chips.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> ---
+> Changes in v9:
+> - Do not describe generic SPI device properties, and more importantly
+>   do not change their meaning
+> 
+> Changes in v8:
+> - Fixed a typo in the commit message
+> ---
+>  Documentation/devicetree/bindings/mtd/spi-nand.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/spi-nand.txt
 
-This patch activates independent watchdog support for
-stm32mp157c board.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- arch/arm/boot/dts/stm32mp157c-ed1.dts | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-index ae33653..8af263a 100644
---- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-@@ -68,6 +68,11 @@
- 	status = "okay";
- };
- 
-+&iwdg2 {
-+	timeout-sec = <32>;
-+	status = "okay";
-+};
-+
- &uart4 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart4_pins_a>;
--- 
-2.7.4
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
