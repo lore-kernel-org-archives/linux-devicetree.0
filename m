@@ -1,71 +1,60 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v1 7/7] arm64: dts: mt7622: add EINT support to pinctrl
-Date: Mon, 25 Jun 2018 17:02:28 +0200
-Message-ID: <e6747e99-78b6-ed8c-d6fa-cab2f7398fcf@gmail.com>
-References: <cover.1526835466.git.sean.wang@mediatek.com>
- <f896f79ebfa9a262c89fdeed89cf086220ca051d.1526835466.git.sean.wang@mediatek.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH v3 03/17] arm64: dts: marvell: fix CP110 ICU node size
+Date: Mon, 25 Jun 2018 17:05:22 +0200
+Message-ID: <87a7ric3f1.fsf@bootlin.com>
+References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
+        <20180622151432.1566-4-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f896f79ebfa9a262c89fdeed89cf086220ca051d.1526835466.git.sean.wang@mediatek.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20180622151432.1566-4-miquel.raynal@bootlin.com> (Miquel
+        Raynal's message of "Fri, 22 Jun 2018 17:14:18 +0200")
+Sender: stable-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Haim Boot <hayim@marvell.com>, Hanna Hawa <hannah@marvell.com>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Miquel,
+ 
+ On ven., juin 22 2018, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
+> ICU size in CP110 is not 0x10 but at least 0x440 bytes long (from the
+> specification).
+>
+> Fixes: 6ef84a827c37 ("arm64: dts: marvell: enable GICP and ICU on Armada 7K/8K")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 
-On 20/05/18 19:01, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> Add EINT support to pinctrl and set those GPIO keys as interrupt-driven
-> keys.
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+This patch was part of the last PR from arm-soc for Linus and should be
+part of 4.18-rc3, so if there is new version you can drop it.
+
+Thanks,
+
+Gregory
+
 > ---
+>  arch/arm64/boot/dts/marvell/armada-cp110.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+> index 7dabe25f6774..1c6ff8197a88 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+> @@ -149,7 +149,7 @@
+>  
+>  		CP110_LABEL(icu): interrupt-controller@1e0000 {
+>  			compatible = "marvell,cp110-icu";
+> -			reg = <0x1e0000 0x10>;
+> +			reg = <0x1e0000 0x440>;
+>  			#interrupt-cells = <3>;
+>  			interrupt-controller;
+>  			msi-parent = <&gicp>;
+> -- 
+> 2.14.1
+>
 
-Merged,
-
-Thanks!
-
->  arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 2 +-
->  arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 8 +++++++-
->  2 files changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-> index b783764..1ff003e 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-> @@ -34,7 +34,7 @@
->  	};
->  
->  	gpio-keys {
-> -		compatible = "gpio-keys-polled";
-> +		compatible = "gpio-keys";
->  		poll-interval = <100>;
->  
->  		factory {
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> index 9213c96..e2c5450 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> @@ -286,9 +286,15 @@
->  
->  	pio: pinctrl@10211000 {
->  		compatible = "mediatek,mt7622-pinctrl";
-> -		reg = <0 0x10211000 0 0x1000>;
-> +		reg = <0 0x10211000 0 0x1000>,
-> +		      <0 0x10005000 0 0x1000>;
-> +		reg-names = "base", "eint";
->  		gpio-controller;
->  		#gpio-cells = <2>;
-> +		interrupt-controller;
-> +		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-parent = <&gic>;
-> +		#interrupt-cells = <2>;
->  	};
->  
->  	watchdog: watchdog@10212000 {
-> 
+-- 
+Gregory Clement, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
