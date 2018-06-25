@@ -1,54 +1,46 @@
-Return-Path: <SRS0=78dS=JJ=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 2/2] video: fbdev: pxa3xx_gcu: add devicetree bindings
-Date: Sat, 23 Jun 2018 21:11:25 +0200
-Message-Id: <20180623191125.22965-2-daniel@zonque.org>
-In-Reply-To: <20180623191125.22965-1-daniel@zonque.org>
-References: <20180623191125.22965-1-daniel@zonque.org>
-To: robh+dt@kernel.org, airlied@linux.ie, mark.rutland@arm.com, b.zolnierkie@samsung.com
-Cc: linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, robert.jarzmik@free.fr, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=pME0=JL=nxp.com=jun.li@kernel.org>
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v7 07/14] staging: typec: tcpci: remove unused tcpci_tcpc_config
+Date: Mon, 25 Jun 2018 16:08:39 +0800
+Message-Id: <1529914126-22550-8-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
+References: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: a.hajda@samsung.com, jun.li@nxp.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add a device tree match table for this hardware graphics acceleration
-driver so it can be used by pxa3xx boards booted with a devicetree.
+Since we will use config settings via device properties, so
+remove the hard code tcpci_tcpc_config.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- drivers/video/fbdev/pxa3xx-gcu.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/staging/typec/tcpci.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/drivers/video/fbdev/pxa3xx-gcu.c b/drivers/video/fbdev/pxa3xx-gcu.c
-index 0955622a1227..3d987f4c06ad 100644
---- a/drivers/video/fbdev/pxa3xx-gcu.c
-+++ b/drivers/video/fbdev/pxa3xx-gcu.c
-@@ -44,6 +44,7 @@
- #include <linux/clk.h>
- #include <linux/fs.h>
- #include <linux/io.h>
-+#include <linux/of.h>
- 
- #include "pxa3xx-gcu.h"
- 
-@@ -703,11 +704,20 @@ static int pxa3xx_gcu_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id pxa3xx_gcu_of_match[] = {
-+	{ .compatible = "marvell,pxa3xx-gcu", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, pxa3xx_gcu_of_match);
-+#endif
-+
- static struct platform_driver pxa3xx_gcu_driver = {
- 	.probe	  = pxa3xx_gcu_probe,
- 	.remove	 = pxa3xx_gcu_remove,
- 	.driver	 = {
- 		.name   = DRV_NAME,
-+		.of_match_table = of_match_ptr(pxa3xx_gcu_of_match),
- 	},
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+index e59547a..076498a 100644
+--- a/drivers/staging/typec/tcpci.c
++++ b/drivers/staging/typec/tcpci.c
+@@ -464,17 +464,10 @@ static const struct regmap_config tcpci_regmap_config = {
+ 	.max_register = 0x7F, /* 0x80 .. 0xFF are vendor defined */
  };
  
+-static const struct tcpc_config tcpci_tcpc_config = {
+-	.type = TYPEC_PORT_DFP,
+-	.default_role = TYPEC_SINK,
+-};
+-
+ static int tcpci_parse_config(struct tcpci *tcpci)
+ {
+ 	tcpci->controls_vbus = true; /* XXX */
+ 
+-	/* TODO: Populate struct tcpc_config from ACPI/device-tree */
+-	tcpci->tcpc.config = &tcpci_tcpc_config;
+ 	tcpci->tcpc.fwnode = device_get_named_child_node(tcpci->dev,
+ 							 "connector");
+ 	if (!tcpci->tcpc.fwnode) {
 -- 
-2.17.1
+2.7.4
