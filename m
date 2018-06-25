@@ -1,70 +1,50 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH] arm: dts: socfpga: denali needs nand_x_clk too
-Date: Mon, 25 Jun 2018 09:50:18 -0500
-Message-ID: <d4fdcd1d-db20-1837-a037-0982a042d357@kernel.org>
-References: <20180619120719.26921-1-richard@nod.at>
- <CAK7LNASgPa4D0Siyo3mvK_AJ2zaECDXGaMEn-iNzQ9PFXFir+w@mail.gmail.com>
- <3320422.EJ8D6C0VHL@blindfold>
+From: "Frank Wunderlich" <frank-w-SipyoOjXbOMoAHOVJHB0wA@public.gmane.org>
+Subject: [dts] [v2] fix green/blue pio-led on bananapi-r2
+Date: Mon, 25 Jun 2018 12:05:59 +0200
+Message-ID: <trinity-28694d63-092a-48be-aade-ba680b5c4e70-1529921159405@3c-app-gmx-bs16>
+References: <trinity-ae29ad25-a4fb-47f3-8d68-f6e58c875a0e-1529682447976@3c-app-gmx-bs42>
+ <trinity-0d48bc23-f754-4da3-af01-c3a7abe1d34b-1529682783853@3c-app-gmx-bs42>
+ <1529918263.29697.31.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3320422.EJ8D6C0VHL@blindfold>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Weinberger <richard@nod.at>, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Marek_Va=c5=a1ut?= <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1529918263.29697.31.camel@mtkswgap22>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 06/22/2018 10:58 AM, Richard Weinberger wrote:
-> Masahiro,
-> 
-> Am Freitag, 22. Juni 2018, 16:37:21 CEST schrieb Masahiro Yamada:
->> Hi Richard,
->>
->>
->> 2018-06-19 21:07 GMT+09:00 Richard Weinberger <richard@nod.at>:
->>> The denali NAND flash controller needs at least two clocks to operate,
->>> nand_clk and nand_x_clk.
->>> Since 1bb88666775e ("mtd: nand: denali: handle timing parameters by
->>> setup_data_interface()") nand_x_clk is used to derive timing settings.
->>>
->>> Signed-off-by: Richard Weinberger <richard@nod.at>
->>> ---
->>> Strictly speaking denali needs a ecc_clk too, but AFAIK such a clock
->>> is not present on this SoC.
->>> But my SoCFPGA knowledge is very limited.
->>>
->>> Thanks,
->>> //richard
->>> ---
->>>  arch/arm/boot/dts/socfpga.dtsi | 3 ++-
->>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
->>> index 486d4e7433ed..562f7b375bbd 100644
->>> --- a/arch/arm/boot/dts/socfpga.dtsi
->>> +++ b/arch/arm/boot/dts/socfpga.dtsi
->>> @@ -754,7 +754,8 @@
->>>                         reg-names = "nand_data", "denali_reg";
->>>                         interrupts = <0x0 0x90 0x4>;
->>>                         dma-mask = <0xffffffff>;
->>> -                       clocks = <&nand_clk>;
->>> +                       clocks = <&nand_clk>, <&nand_x_clk>;
->>> +                       clock-names = "nand", "nand_x";
->>
->>
->> IMHO, this should be
->>
->>                           clocks = <&nand_clk>, <&nand_x_clk>, <&nand_x_clk>;
->>                           clock-names = "nand", "nand_x", "ecc";
-
-No, it should be just the nand_x and ecc.
-
-There's already a patch to use the nand_x_clk and not the nand_clk.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/dinguyen/linux.git/commit/?h=socfpga_for_next_v4.19_fixes_v1&id=1709ab58eb79b19bceb2287d111bf1bd2df1cf6d
-
-Dinh
+CkZyb206IEZyYW5rIFd1bmRlcmxpY2ggPGZyYW5rLXdAcHVibGljLWZpbGVzLmRlPgpEYXRlOiBN
+b24sIDI1IEp1biAyMDE4IDExOjU3OjEzICswMjAwClN1YmplY3Q6IFtQQVRDSF0gW2R0c10gW3Yy
+XSBmaXggZ3JlZW4vYmx1ZSBwaW8tbGVkCiBwaW8tbGVkcyAobmVhciBHUElPLUhlYWRlcikgYXJl
+IHN3YXBwZWQgYW5kIExPVy1hY3RpdmUgCiBwYXRjaCByZXN0b3JlIHRoaXMgZXhwZWN0ZWQgYmVo
+YXZpb3VyCiByZWQgY2Fubm90IGJlIHN3aXRjaGVkIGFmYWlrCgp2MjogYWxwaGFiZXRpYyBvcmRl
+cgoKU2lnbmVkLW9mZi1ieTogRnJhbmsgV3VuZGVybGljaCA8ZnJhbmstd0BwdWJsaWMtZmlsZXMu
+ZGU+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvbXQ3NjIzbi1iYW5hbmFwaS1icGktcjIuZHRzIHwg
+NiArKystLS0KIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0p
+CgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvbXQ3NjIzbi1iYW5hbmFwaS1icGktcjIu
+ZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvbXQ3NjIzbi1iYW5hbmFwaS1icGktcjIuZHRzCmluZGV4
+IDUzMWQ5MDVkOTI0ZmYuLjJiNzYwZjkwZjM4YzggMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL210NzYyM24tYmFuYW5hcGktYnBpLXIyLmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9t
+dDc2MjNuLWJhbmFuYXBpLWJwaS1yMi5kdHMKQEAgLTkxLDE5ICs5MSwxOSBAQAogCiAJCWJsdWUg
+ewogCQkJbGFiZWwgPSAiYnBpLXIyOnBpbzpibHVlIjsKLQkJCWdwaW9zID0gPCZwaW8gMjQxIEdQ
+SU9fQUNUSVZFX0hJR0g+OworCQkJZ3Bpb3MgPSA8JnBpbyAyNDAgR1BJT19BQ1RJVkVfTE9XPjsK
+IAkJCWRlZmF1bHQtc3RhdGUgPSAib2ZmIjsKIAkJfTsKIAogCQlncmVlbiB7CiAJCQlsYWJlbCA9
+ICJicGktcjI6cGlvOmdyZWVuIjsKLQkJCWdwaW9zID0gPCZwaW8gMjQwIEdQSU9fQUNUSVZFX0hJ
+R0g+OworCQkJZ3Bpb3MgPSA8JnBpbyAyNDEgR1BJT19BQ1RJVkVfTE9XPjsKIAkJCWRlZmF1bHQt
+c3RhdGUgPSAib2ZmIjsKIAkJfTsKIAogCQlyZWQgewogCQkJbGFiZWwgPSAiYnBpLXIyOnBpbzpy
+ZWQiOwotCQkJZ3Bpb3MgPSA8JnBpbyAyMzkgR1BJT19BQ1RJVkVfSElHSD47CisJCQlncGlvcyA9
+IDwmcGlvIDIzOSBHUElPX0FDVElWRV9MT1c+OwogCQkJZGVmYXVsdC1zdGF0ZSA9ICJvZmYiOwog
+CQl9OwogCX07CgrCoAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KTGludXgtbWVkaWF0ZWsgbWFpbGluZyBsaXN0CkxpbnV4LW1lZGlhdGVrQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
+aW51eC1tZWRpYXRlawo=
