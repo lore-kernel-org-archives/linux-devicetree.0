@@ -1,74 +1,71 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 1/7] dt-bindings: net: bluetooth: Add device tree
- bindings for QTI chip wcn3990
-Date: Mon, 25 Jun 2018 08:58:37 -0600
-Message-ID: <20180625145837.GA21153@rob-hp-laptop>
-References: <20180625134013.19684-1-bgodavar@codeaurora.org>
- <20180625134013.19684-2-bgodavar@codeaurora.org>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v1 7/7] arm64: dts: mt7622: add EINT support to pinctrl
+Date: Mon, 25 Jun 2018 17:02:28 +0200
+Message-ID: <e6747e99-78b6-ed8c-d6fa-cab2f7398fcf@gmail.com>
+References: <cover.1526835466.git.sean.wang@mediatek.com>
+ <f896f79ebfa9a262c89fdeed89cf086220ca051d.1526835466.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180625134013.19684-2-bgodavar@codeaurora.org>
+In-Reply-To: <f896f79ebfa9a262c89fdeed89cf086220ca051d.1526835466.git.sean.wang@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, mka@chromium.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
+To: sean.wang@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 25, 2018 at 07:10:07PM +0530, Balakrishna Godavarthi wrote:
-> This patch enables regulators for the Qualcomm Bluetooth wcn3990
-> controller.
-> 
-> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-> ---
-> 
-> Changes in v8:
->     * Separated the optional entries between two chips
-> 
-> Changes in v7:
->     * no change.
-> 
-> Changes in v6:
-> 
->     * Changed the oper-speed to max-speed.
-> 
-> Changes in v5:
-> 
->     * Added entry for oper-speed and init-speed.
-> 
-> ---
->  .../bindings/net/qualcomm-bluetooth.txt       | 30 +++++++++++++++++--
->  1 file changed, 28 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> index 0ea18a53cc29..c2b09dd2bf31 100644
-> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> @@ -10,12 +10,23 @@ device the slave device is attached to.
->  Required properties:
->   - compatible: should contain one of the following:
->     * "qcom,qca6174-bt"
-> +   * "qcom,wcn3990-bt"
-> +
-> +Optional properties for compatible string qcom,qca6174-bt:
->  
-> -Optional properties:
->   - enable-gpios: gpio specifier used to enable chip
->   - clocks: clock provided to the controller (SUSCLK_32KHZ)
->  
-> -Example:
-> +Optional properties for compatible string qcom,wcn3990-bt:
-> +
-> + - vddio-supply: Bluetooth VDD IO regulator handle.
-> + - vddxtal-supply: Bluetooth VDD XTAL regulator handle.
-> + - vddpa-supply: Bluetooth VDD PA regulator handle.
-> + - vddldo-supply: Bluetooth VDD LDO regulator handle.
-> + - vddcore-supply: Bluetooth VDD CORE regulator handle.
-> + - max-speed: Maximum operating speed of the chip.
 
-This shouldn't be per compatible really. The definition here is wrong 
-too. You should know the max baud for the chip based on the compatible. 
-This property is for when the max is less than the max of either the 
-chip or host UART.
 
-Rob
+On 20/05/18 19:01, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+> 
+> Add EINT support to pinctrl and set those GPIO keys as interrupt-driven
+> keys.
+> 
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> ---
+
+Merged,
+
+Thanks!
+
+>  arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 2 +-
+>  arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 8 +++++++-
+>  2 files changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+> index b783764..1ff003e 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+> @@ -34,7 +34,7 @@
+>  	};
+>  
+>  	gpio-keys {
+> -		compatible = "gpio-keys-polled";
+> +		compatible = "gpio-keys";
+>  		poll-interval = <100>;
+>  
+>  		factory {
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> index 9213c96..e2c5450 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> @@ -286,9 +286,15 @@
+>  
+>  	pio: pinctrl@10211000 {
+>  		compatible = "mediatek,mt7622-pinctrl";
+> -		reg = <0 0x10211000 0 0x1000>;
+> +		reg = <0 0x10211000 0 0x1000>,
+> +		      <0 0x10005000 0 0x1000>;
+> +		reg-names = "base", "eint";
+>  		gpio-controller;
+>  		#gpio-cells = <2>;
+> +		interrupt-controller;
+> +		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-parent = <&gic>;
+> +		#interrupt-cells = <2>;
+>  	};
+>  
+>  	watchdog: watchdog@10212000 {
+> 
