@@ -1,46 +1,61 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 10/11] ASoC: qcom: apq8096: remove redundant
-	owner assignment
-Date: Mon, 25 Jun 2018 15:31:14 +0100
-Message-ID: <20180625143115.8346-11-srinivas.kandagatla@linaro.org>
-References: <20180625143115.8346-1-srinivas.kandagatla@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v12 3/5] dt-bindings: drm/bridge: Document
+ sn65dsi86 bridge bindings
+Date: Mon, 25 Jun 2018 08:44:05 -0600
+Message-ID: <20180625144405.GA5864@rob-hp-laptop>
+References: <1529584329-632-1-git-send-email-spanda@codeaurora.org>
+ <1529584329-632-4-git-send-email-spanda@codeaurora.org>
+ <152962993355.16708.2310695895490918997@swboyd.mtv.corp.google.com>
+ <2110b47210e3caf6b747ae2297e24b33@codeaurora.org>
+ <152991040964.16708.10837173113497426796@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180625143115.8346-1-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, bgoswami@codeaurora.org
-Cc: rohkumar@qti.qualcomm.com, devicetree@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, srinivas.kandagatla@linaro.org, niklas.cassel@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <152991040964.16708.10837173113497426796-n1Xw8LXHxjTHt/MElyovVYaSKrA+ACpX0E9HWUfgJXw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-module owner is already set in platform_driver_register(), so remove this
-redundant assignment.
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- sound/soc/qcom/apq8096.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/sound/soc/qcom/apq8096.c b/sound/soc/qcom/apq8096.c
-index 561cd429e6f2..6e79fec7e789 100644
---- a/sound/soc/qcom/apq8096.c
-+++ b/sound/soc/qcom/apq8096.c
-@@ -245,7 +245,6 @@ static struct platform_driver msm_snd_apq8096_driver = {
- 	.remove = apq8096_platform_remove,
- 	.driver = {
- 		.name = "msm-snd-apq8096",
--		.owner = THIS_MODULE,
- 		.of_match_table = msm_snd_apq8096_dt_match,
- 	},
- };
--- 
-2.16.2
+T24gTW9uLCBKdW4gMjUsIDIwMTggYXQgMTI6MDY6NDlBTSAtMDcwMCwgU3RlcGhlbiBCb3lkIHdy
+b3RlOgo+IFF1b3Rpbmcgc3BhbmRhQGNvZGVhdXJvcmEub3JnICgyMDE4LTA2LTI0IDIxOjU2OjA1
+KQo+ID4gT24gMjAxOC0wNi0yMiAwNjo0MiwgU3RlcGhlbiBCb3lkIHdyb3RlOgo+ID4gPiBRdW90
+aW5nIFNhbmRlZXAgUGFuZGEgKDIwMTgtMDYtMjEgMDU6MzI6MDcpCj4gPiA+PiArICAgICAgICAg
+Y2xvY2sgcmF0ZSBtdXN0IGJlIDEyIE1IeiwgMTkuMiBNSHosIDI2IE1IeiwgMjcgTUh6IG9yIDM4
+LjQgCj4gPiA+PiBNSHouCj4gPiA+PiArCj4gPiA+PiArLSBkYXRhLWxhbmVzOiBTZWUgLi4vLi4v
+bWVkaWEvdmlkZW8taW50ZXJmYWNlLnR4dAo+ID4gPj4gKy0gbGFuZS1wb2xhcml0aWVzOiBTZWUg
+Li4vLi4vbWVkaWEvdmlkZW8taW50ZXJmYWNlLnR4dAo+ID4gPiAKPiA+ID4gV2UgbmVlZCBhbm90
+aGVyIHByb3BlcnR5IGZvciBzdXNwZW5kLWdwaW9zIGZ1bmN0aW9uIG9mIEdQSU8xLiBJIHN1cHBv
+c2UKPiA+ID4gZm9yIHRoZSBvdGhlciBHUElPcyB3ZSBkb24ndCBuZWVkIGFueXRoaW5nIGxpa2Ug
+dGhpcyBiZWNhdXNlIHRoZXkncmUKPiA+ID4gb3V0cHV0IGZ1bmN0aW9ucyBvbmx5PyBHUElPNCBj
+YW4gZG8gUFdNIGFuZCBJIGd1ZXNzIGlmIHB3bSBpcyB1c2VkIGluIAo+ID4gPiBEVAo+ID4gPiBm
+cm9tIGhlcmUgdGhlbiB0aGUgZHJpdmVyIGNhbiBtdXggdGhhdCBvdXQgb2YgZ3BpbzQgcHJvcGVy
+bHkuIEkgaGF2ZSBubwo+ID4gPiBpZGVhIGhvdyB0aGUgaHN5bmMgYW5kIHZzeW5jIEdQSU9zIHdv
+dWxkIHdvcmsgdGhvdWdoLiBJIHNlZSB0aGF0IEdQSU8zCj4gPiA+IGNhbiBkbyBEU0lBIGhzeW5j
+IG9yIHZzeW5jIGFuZCBHUElPMiBjYW4gZG8gRFNJQSB2c3luYyBhbmQgSSB3b3VsZCAKPiA+ID4g
+Z3Vlc3MKPiA+ID4gdGhvc2UgYXJlIGluIG91dHB1dCBtb2RlIG9ubHkuIE1heWJlIHRoYXQncyBq
+dXN0IGFub3RoZXIgcHJvcGVydHkgb24KPiA+ID4gdGhpcyBub2RlIHRvIGluZGljYXRlIGlmIHdl
+IHNob3VsZCBtdXggb3V0IHRoZSBmdW5jdGlvbiBvciBub3QuIFVzdWFsbHkKPiA+ID4gdGhhdCdz
+IGRvbmUgZnJvbSBwaW5jdHJsIHRob3VnaC4gSSBkb24ndCBoYXZlIGEgdXNlIGNhc2UgZm9yIHRo
+b3NlCj4gPiA+IGZ1bmN0aW9ucyBidXQgSSBkbyBjYXJlIGFib3V0IHN1c3BlbmQgZ3Bpb3Mgc28g
+YXQgbGVhc3QgYWRkIHRoYXQgb25lCj4gPiA+IHBsZWFzZS4KPiA+IAo+ID4gSSB3YXMgdGhpbmtp
+bmcgb2YgYWRkaW5nIGdwaW8xIChzdXNwZW5kLWdwaW8pIGRvY3VtZW50YXRpb24gd2hlbiB3ZSBh
+ZGQKPiA+IHN1cHBvcnQgZm9yIFBTUiBmZWF0dXJlLiBTaW5jZSBmb3IgUFNSIHdlIHdpbGwgYmUg
+dXNpbmcgdGhpcyAKPiA+IHN1c3BvZW5kLWdwaW8uCj4gPiAKPiAKPiBPayBzdXJlLCBidXQgSSBk
+b24ndCBzZWUgYW55IGhhcm0gaW4gYWRkaW5nIGl0IG5vdy4gSSdtIGZpbmUgd2l0aAo+IHdhaXRp
+bmcgZm9yIHRoZSBiaW5kaW5nIHVwZGF0ZSB3aGVuIHRoZSBQU1IgcGF0Y2hlcyBjb21lIGlmIHlv
+dSBmZWVsCj4gbGlrZSBhZGRpbmcgaXQgbm93IHdpbGwgZGVsYXkgc29tZXRoaW5nLgoKUGxlYXNl
+IG1ha2UgdGhlIGJpbmRpbmcgY29tcGxldGUgYXMgcG9zc2libGUgbm93LgoKUm9iCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5n
+IGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
