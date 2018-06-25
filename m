@@ -1,47 +1,58 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 3/5] dt-binding: mtd: denali_dt: document clock
- property
-Date: Mon, 25 Jun 2018 09:59:59 -0600
-Message-ID: <20180625155959.GA2820@rob-hp-laptop>
-References: <1529683598-25783-1-git-send-email-yamada.masahiro@socionext.com>
- <1529683598-25783-4-git-send-email-yamada.masahiro@socionext.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] Allwinner A64 DE2 CCU support with
+ dedicated DE2 bus driver
+Date: Mon, 25 Jun 2018 18:00:52 +0200
+Message-ID: <20180625160052.kgje2hnzwhfcm2i5@flea>
+References: <20180622122615.55836-1-icenowy@aosc.io>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="wmxasll2s52fhhq4"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBP5DYTMQKGQEDT52KUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1529683598-25783-4-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-mtd@lists.infradead.org, Boris Brezillon <boris.brezillon@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <20180622122615.55836-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 23, 2018 at 01:06:36AM +0900, Masahiro Yamada wrote:
-> Commit 30f9f2fb7ba0 ("mtd: denali: add a DT driver") supported the
-> clock enablement, but did not document it in the DT binding.
-> 
-> In addition to the existing clock, this commit adds more clocks based
-> on the IP specification.
-> 
-> According to the Denali User's Guide, this IP needs three clocks:
-> 
->  - clk: controller core clock
-> 
->  - clk_x: bus interface clock
-> 
->  - ecc_clk: clock at which ECC circuitry is run
-> 
-> The driver should accept the current single clock for the backward
-> compatibility, but the DT binding should represent the real hardware,
-> and future platforms must follow this.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
-> Changes in v4:
->   - split into a separate patch
-> 
-> 
->  Documentation/devicetree/bindings/mtd/denali-nand.txt | 5 +++++
->  1 file changed, 5 insertions(+)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+--wmxasll2s52fhhq4
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+Hi,
+
+On Fri, Jun 22, 2018 at 08:26:08PM +0800, Icenowy Zheng wrote:
+> This patchset tries to implement the Allwinner A64 DE2 as a bus driver,
+> in order to model the fact that the SRAM claim controls the access to
+> the whole DE2 memory space.
+> 
+> PATCH 1 and PATCH 4 are for the CCU part.
+> 
+> PATCH 2 is the device tree binding for the A64 DE2 bus, and PATCH 3
+> implements the bus driver.
+> 
+> PATCH 5 adds the DE2 CCU device tree node, with the DE2 bus node.
+> 
+> PATCH 6 and 7 are HDMI simplefb patches for A64. They're present as a
+> test to this patchset.
+
+Apart from the (minor) comments I made that can be fixed up while
+applying, I'm happy with those changes. I'd still like to get a review
+from Rob, so I'll wait for it to apply them.
+
+Thanks a lot for working on this,
+Maxime
+
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--wmxasll2s52fhhq4--
