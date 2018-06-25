@@ -1,30 +1,109 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 03/24] clk: sunxi-ng: r40: Export video PLLs
-Date: Mon, 25 Jun 2018 20:30:06 +0800
-Message-ID: <CAGb2v64itH+8HEE0OVx+ys4fKg31pZcS3m0WUguH=Ny-t347ww@mail.gmail.com>
-References: <20180625120304.7543-1-jernej.skrabec@siol.net> <20180625120304.7543-4-jernej.skrabec@siol.net>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v8 0/6] mtd: rawnand: add NVIDIA Tegra NAND flash
+ support
+Date: Mon, 25 Jun 2018 14:34:37 +0200
+Message-ID: <20180625143437.24f71e7e@xps13>
+References: <20180624212727.21672-1-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBZOAYPMQKGQEPSDVY3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180625120304.7543-4-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180624212727.21672-1-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 25, 2018 at 8:02 PM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> Video PLLs need to be referenced in R40 DT as possible HDMI PHY parent.
->
-> Export them.
->
-> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Hi Stefan,
 
-Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+On Sun, 24 Jun 2018 23:27:21 +0200, Stefan Agner <stefan@agner.ch>
+wrote:
+
+> Eigth and hopefully final revision gets rid of nand_release() as
+> suggested by Boris.
+> 
+> --
+> Stefan
+> 
+> Changes since v1:
+> - Split controller and NAND chip structure
+> - Add BCH support
+> - Allow to select algorithm and strength using device tree
+> - Improve HW ECC error reporting and use DEC_STATUS_BUF only
+> - Use SPDX license identifier
+> - Use per algorithm mtd_ooblayout_ops
+> - Use setup_data_interface callback for NAND timing configuration
+> 
+> Changes since v2:
+> - Set clock rate using assigned-clocks
+> - Use BIT() macro
+> - Fix and improve timing calculation
+> - Improve ECC error handling
+> - Store OOB layout for tag area in Tegra chip structure
+> - Update/fix bindings
+> - Use more specific variable names (replace "value")
+> - Introduce nand-is-boot-medium
+> - Choose sensible ECC strenght automatically
+> - Use wait_for_completion_timeout
+> - Print register dump on completion timeout
+> - Unify tegra_nand_(read|write)_page in tegra_nand_page_xfer
+> 
+> Changes since v3:
+> - Implement tegra_nand_(read|write)_raw using DMA
+> - Implement tegra_nand_(read|write)_oob using DMA
+> - Name registers according to Tegra 2 Technical Reference Manual (v02p)
+> - Use wait_for_completion_io_timeout to account for IO
+> - Get chip select id from device tree reg property
+> - Clear interrupts and reinit wait queues in case command/DMA times out
+> - Set default MTD name after nand_set_flash_node
+> - Move MODULE_DEVICE_TABLE after declaration of tegra_nand_of_match
+> - Make (rs|bch)_strength static
+> 
+> Changes since v4:
+> - Pass OOB area to nand_check_erased_ecc_chunk
+> - Pass algorithm specific bits_per_step to tegra_nand_get_strength
+> - Store ECC layout in chip structure
+> - Fix pointer assignment (use NULL)
+> - Removed obsolete header delay.h
+> - Fixed newlines
+> - Use non-_io variant of wait_for_completion_timeout
+> 
+> Changes since v5:
+> - Drop extra OOB bytes support
+> 
+> Changes since v6:
+> - checkpatch.pl fixes
+> 
+> Changes since v7:
+> - Replace nand_release() with mtd_device_unregister() + nand_cleanup()
+> 
+> Lucas Stach (1):
+>   ARM: dts: tegra: add Tegra20 NAND flash controller node
+> 
+> Stefan Agner (5):
+>   mtd: rawnand: add Reed-Solomon error correction algorithm
+>   mtd: rawnand: add an option to specify NAND chip as a boot device
+>   mtd: rawnand: tegra: add devicetree binding
+>   mtd: rawnand: add NVIDIA Tegra NAND Flash controller driver
+>   ARM: dts: tegra: enable NAND flash on Colibri T20
+> 
+>  .../devicetree/bindings/mtd/nand.txt          |    6 +-
+>  .../bindings/mtd/nvidia-tegra20-nand.txt      |   64 +
+>  MAINTAINERS                                   |    7 +
+>  arch/arm/boot/dts/tegra20-colibri-512.dtsi    |   16 +
+>  arch/arm/boot/dts/tegra20.dtsi                |   15 +
+>  drivers/mtd/nand/raw/Kconfig                  |   10 +
+>  drivers/mtd/nand/raw/Makefile                 |    1 +
+>  drivers/mtd/nand/raw/nand_base.c              |    4 +
+>  drivers/mtd/nand/raw/tegra_nand.c             | 1230 +++++++++++++++++
+>  include/linux/mtd/rawnand.h                   |    7 +
+>  10 files changed, 1359 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
+>  create mode 100644 drivers/mtd/nand/raw/tegra_nand.c
+> 
+
+Series applied to nand/next. I just changed the subject of patch3/6 to
+be "dt-bindings: mtd: add tegra NAND controller binding".
+
+Thanks,
+Miquèl
