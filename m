@@ -1,33 +1,83 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 16/19] mmc: mmci: add DT bindings for STM32 sdmmc
-Date: Mon, 25 Jun 2018 15:47:18 -0600
-Message-ID: <20180625214718.GA28647@rob-hp-laptop>
-References: <1528809280-31116-1-git-send-email-ludovic.Barre@st.com>
- <1528809280-31116-17-git-send-email-ludovic.Barre@st.com>
+Subject: Re: [PATCH 1/2] dt-bindings: mtd: document Broadcom's TRX firmware
+ format binding
+Date: Mon, 25 Jun 2018 15:51:07 -0600
+Message-ID: <CAL_JsqKZWrmQM9C+iDe5vjWtiYvTR3HQ_ANdUNa4kkfduzhODw@mail.gmail.com>
+References: <20180612104434.15232-1-zajec5@gmail.com>
+ <20180625212137.GA16487@rob-hp-laptop>
+ <623424b397965cea5f85ccbabdda3ef6@milecki.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1528809280-31116-17-git-send-email-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <623424b397965cea5f85ccbabdda3ef6@milecki.pl>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jonas Gorski <jonas.gorski@gmail.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marek.vasut@gmail.com>, MTD Maling List <linux-mtd@lists.infradead.org>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 12, 2018 at 03:14:37PM +0200, Ludovic Barre wrote:
-> From: Ludovic Barre <ludovic.barre@st.com>
-> 
-> STM32 sdmmc variant has support to:
-> -Indicate signal directions (only one property
-> for d0dir, d123dir, cmd_dir)
-> -Select command and data phase relation.
-> -Select "clock in" from an external driver.
-> 
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> ---
->  Documentation/devicetree/bindings/mmc/mmci.txt | 9 +++++++++
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/mmc/host/mmci.c                        | 6 ++++++
->  2 files changed, 15 insertions(+)
+T24gTW9uLCBKdW4gMjUsIDIwMTggYXQgMzo0MSBQTSBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1p
+bGVja2kucGw+IHdyb3RlOgo+Cj4gT24gMjAxOC0wNi0yNSAyMzoyMSwgUm9iIEhlcnJpbmcgd3Jv
+dGU6Cj4gPiBPbiBUdWUsIEp1biAxMiwgMjAxOCBhdCAxMjo0NDozM1BNICswMjAwLCBSYWZhxYIg
+TWnFgmVja2kgd3JvdGU6Cj4gPj4gRnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tp
+LnBsPgo+ID4+Cj4gPj4gQnJvYWRjb20gYmFzZWQgaG9tZSByb3V0ZXIgZGV2aWNlcyB1c2UgVFJY
+IGZpcm13YXJlIGZvcm1hdC4gSXQncyBhCj4gPj4gY29udGFpbmVyIHRoYXQgY2FuIGhvbGQgZmV3
+IHBhcnRpdGlvbnMuIElmIG9wZXJhdGluZyBzeXN0ZW0gaXMKPiA+PiBleHBlY3RlZAo+ID4+IHRv
+IGFjY2VzcyB0aGVtIGl0IGhhcyB0byB1bmRlcnN0YW5kIHRoYXQgZm9ybWF0IGFuZCBwYXJzZSBm
+bGFzaCBkYXRhCj4gPj4gYWNjb3JkaW5nbHkuCj4gPj4KPiA+PiBTaWduZWQtb2ZmLWJ5OiBSYWZh
+xYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4gPj4gLS0tCj4gPj4gIC4uLi9iaW5kaW5n
+cy9tdGQvcGFydGl0aW9ucy9icmNtLHRyeC50eHQgICAgICAgICAgIHwgMzUKPiA+PiArKysrKysr
+KysrKysrKysrKysrKysrCj4gPj4gIDEgZmlsZSBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspCj4g
+Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NAo+ID4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9tdGQvcGFydGl0aW9ucy9icmNtLHRyeC50eHQKPiA+Pgo+ID4+IGRpZmYgLS1naXQKPiA+
+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9ucy9icmNt
+LHRyeC50eHQKPiA+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFy
+dGl0aW9ucy9icmNtLHRyeC50eHQKPiA+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4+IGluZGV4
+IDAwMDAwMDAwMDAwMC4uZTU5MGI4ODRlNWFjCj4gPj4gLS0tIC9kZXYvbnVsbAo+ID4+ICsrKyBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9ucy9icmNtLHRy
+eC50eHQKPiA+PiBAQCAtMCwwICsxLDM1IEBACj4gPj4gK0Jyb2FkY29tIFRSWCBDb250YWluZXIg
+UGFydGl0aW9uCj4gPj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gPj4gKwo+
+ID4+ICtUUlggaXMgQnJvYWRjb20ncyBvZmZpY2lhbCBmaXJtd2FyZSBmb3JtYXQgZm9yIHRoZSBC
+Q005NDd4eCBib2FyZHMuCj4gPj4gSXQncyB1c2VkIGJ5Cj4gPj4gK21vc3Qgb2YgdGhlIHZlbmRv
+cnMgYnVpbGRpbmcgZGV2aWNlcyBiYXNlZCBvbiBCcm9hZGNvbSdzIEJDTTQ3eHggU29Dcwo+ID4+
+IGFuZCBpcwo+ID4+ICtzdXBwb3J0ZWQgYnkgdGhlIENGRSBib290bG9hZGVyLgo+ID4+ICsKPiA+
+PiArRGVzaWduIG9mIHRoZSBUUlggZm9ybWF0IGlzIHZlcnkgbWluaW1hbGlzdGljLiBJdHMgaGVh
+ZGVyIGNvbnRhaW5zCj4gPj4gK2lkZW50aWZpY2F0aW9uIGZpZWxkcywgQ1JDMzIgY2hlY2tzdW0g
+YW5kIHRoZSBsb2NhdGlvbnMgb2YgZW1iZWRkZWQKPiA+PiBwYXJ0aXRpb25zLgo+ID4+ICtJdHMg
+cHVycG9zZSBpcyB0byBzdG9yZSBhIGZldyBwYXJ0aXRpb25zIGluIGEgZm9ybWF0IHRoYXQgY2Fu
+IGJlCj4gPj4gZGlzdHJpYnV0ZWQgYXMKPiA+PiArYSBzdGFuZGFsb25lIGZpbGUgYW5kIHdyaXR0
+ZW4gaW4gYSBmbGFzaCBtZW1vcnkuCj4gPj4gKwo+ID4+ICtDb250YWluZXIgY2FuIGhvbGQgdXAg
+dG8gNCBwYXJ0aXRpb25zLiBUaGUgZmlyc3QgcGFydGl0aW9uIGhhcyB0bwo+ID4+IGNvbnRhaW4g
+YQo+ID4+ICtkZXZpY2UgZXhlY3V0YWJsZSBiaW5hcnkgKGUuZy4gYSBrZXJuZWwpIGFzIGl0J3Mg
+d2hhdCB0aGUgQ0ZFCj4gPj4gYm9vdGxvYWRlciBzdGFydHMKPiA+PiArZXhlY3V0aW5nLiBPdGhl
+ciBwYXJ0aXRpb25zIGNhbiBiZSB1c2VkIGZvciBvcGVyYXRpbmcgc3lzdGVtCj4gPj4gcHVycG9z
+ZXMuIFRoaXMgaXMKPiA+PiArdXNlZnVsIGZvciBzeXN0ZW1zIHRoYXQga2VlcCBrZXJuZWwgYW5k
+IHJvb3RmcyBzZXBhcmF0ZWQuCj4gPj4gKwo+ID4+ICtUUlggZG9lc24ndCBlbmZvcmNlIGFueSBz
+dHJpY3QgcGFydGl0aW9uIGJvdW5kYXJpZXMgb3Igc2l6ZSBsaW1pdHMuCj4gPj4gQWxsCj4gPj4g
+K3BhcnRpdGlvbnMgaGF2ZSB0byBiZSBsZXNzIHRoYW4gdGhlIDRHaUIgbWF4IHNpemUgbGltaXQu
+Cj4gPj4gKwo+ID4+ICtUaGVyZSBhcmUgdHdvIGV4aXN0aW5nL2tub3duIFRSWCB2YXJpYW50czoK
+PiA+PiArMSkgdjEgd2hpY2ggY29udGFpbnMgMyBwYXJ0aXRpb25zCj4gPj4gKzIpIHYyIHdoaWNo
+IGNvbnRhaW5zIDQgcGFydGl0aW9ucwo+ID4+ICsKPiA+PiArUmVxdWlyZWQgcHJvcGVydGllczoK
+PiA+PiArLSBjb21wYXRpYmxlIDogKHJlcXVpcmVkKSBtdXN0IGJlIGVpdGhlcjogImJyY20sdHJ4
+LXYxIiBvcgo+ID4+ICJicmNtLHRyeC12MiIKPiA+PiArICAgIGZvbGxvd2VkIGJ5ICJicmNtLHRy
+eCIKPiA+Cj4gPiBXaGF0IGlzIHRoZSBwdXJwb3NlIG9mIGJyY20sdHJ4PyBFaXRoZXIgdGhhdCBh
+bG9uZSBpcyBlbm91Z2ggb3IgeW91Cj4gPiBuZWVkCj4gPiB2MS92MiB0byBkaXN0aW5ndWlzaCB0
+aGUgZGlmZmVyZW5jZS4gWW91IHNob3VsZG4ndCBuZWVkIGJvdGguCj4KPiBJIGd1ZXNzIEkgaW5j
+b3JyZWN0bHkgdHJpZWQgc29tZSBwYXR0ZXJuIEkgc2F3IHdoZW4gc3BlY2lmeWluZyBTb0MKPiBj
+b21wYXRpYmlsaXR5Lgo+Cj4gQ2FuIEkgaGF2ZSB5b3UgYWR2aXNlIGhlcmUsIHBsZWFzZT8KPgo+
+IE5vIFRSWCBzdXBwb3J0aW5nIGNvZGUgcmVhbGx5IG5lZWRzIGEgaGludCBhYm91dCB1c2VkIFRS
+WCB2ZXJzaW9uLiBUUlgKPiBmb3JtYXQgKGhlYWRlcikgY29udGFpbnMgInZlcnNpb24iIGZpZWxk
+IHNvIGFueSBjb2RlIGRlYWxpbmcgd2l0aCBUUlgKPiBmb3JtYXQgY2FuIGNoZWNrIHRoYXQgZmll
+bGQuIFRoZW4gaXQga25vd3Mgd2hhdCB2ZXJzaW9uIGl0J3MgZGVhbGluZwo+IHdpdGguCj4KPiBX
+aGljaCBiaW5kaW5nKHMpIHNob3VsZCBJIHVzZSBpbiB0aGF0IGNhc2U/CgpJJ2QganVzdCB1c2Ug
+ImJyY20sdHJ4IiB0aGVuLgoKUm9iCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KTGludXggTVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
