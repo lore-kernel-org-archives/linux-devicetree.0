@@ -1,69 +1,64 @@
-From: Ley Foon Tan <ley.foon.tan@intel.com>
-Subject: Re: [PATCH v4] MAINTAINERS: Add file patterns for nios2 device tree
- bindings
-Date: Mon, 25 Jun 2018 13:53:56 +0800
-Message-ID: <1529906036.5367.1.camel@intel.com>
-References: <20180622100817.29370-1-geert@linux-m68k.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH v1] ARM: dts: imx6sl-evk: keep sw4 always on
+Date: Mon, 25 Jun 2018 05:53:59 +0000
+Message-ID: <AM3PR04MB13150F33BC062890B4E87477F54A0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+References: <1529930051-14122-1-git-send-email-yibin.gong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180622100817.29370-1-geert@linux-m68k.org>
+In-Reply-To: <1529930051-14122-1-git-send-email-yibin.gong@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Ley Foon Tan <lftan@altera.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, nios2-dev@lists.rocketboards.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Robin Gong <yibin.gong@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-06-22 at 12:08 +0200, Geert Uytterhoeven wrote:
-> Submitters of device tree binding documentation may forget to CC
-> the subsystem maintainer if this is missing.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Acked-by: Anson Huang <anson.huang@nxp.com>
+
+I also saw such issue on i.MX6SLL evk board, and also sent out patch for i.=
+MX6SLL.
+
+Anson Huang
+Best Regards!
+
+
+> -----Original Message-----
+> From: Robin Gong
+> Sent: Monday, June 25, 2018 8:34 PM
+> To: shawnguo@kernel.org; kernel@pengutronix.de; Fabio Estevam
+> <fabio.estevam@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com;
+> Anson Huang <anson.huang@nxp.com>
+> Cc: linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
+> linux-kernel@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>
+> Subject: [PATCH v1] ARM: dts: imx6sl-evk: keep sw4 always on
+>=20
+> SW4 is one power rail for LPDDR2 on i.mx6sl-evk, so it should be kept alw=
+ays on.
+> But it's disabled after switch disabled interface implemented in pfuze dr=
+iver
+> 'commit 5fe156f1cab4
+> ("regulator: pfuze100: add enable/disable for switch")'.Thus, it breaks k=
+ernel
+> bootup. Add 'regulator-always-on' for SW4.
+>=20
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 > ---
-> v3:
->   - Update for next-20180622,
-> 
-> v2:
->   - No changes.
-> 
-> Impact on "scripts/get_maintainer.pl -f
-> Documentation/devicetree/bindings/nios2/":
-> 
-> -Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND
-> FLATTENED DEVICE TREE
-> BINDINGS,commit_signer:2/2=100%,authored:1/2=50%)
-> +Ley Foon Tan <lftan@altera.com> (maintainer:NIOS2 ARCHITECTURE)
-> +Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND
-> FLATTENED DEVICE TREE BINDINGS)
->  Mark Rutland <mark.rutland@arm.com> (maintainer:OPEN FIRMWARE AND
-> FLATTENED DEVICE TREE BINDINGS)
-> -Mathieu Malaterre <malat@debian.org>
-> (commit_signer:1/2=50%,authored:1/2=50%)
-> -Thierry Reding <thierry.reding@gmail.com> (commit_signer:1/2=50%)
-> +nios2-dev@lists.rocketboards.org (moderated list:NIOS2 ARCHITECTURE)
->  devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-> DEVICE TREE BINDINGS)
->  linux-kernel@vger.kernel.org (open list)
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index baa4dc046daf9cdc..dd72b804b9b8bab3 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -10074,6 +10074,7 @@ M:      Ley Foon Tan <lftan@altera.com>
->  L:     nios2-dev@lists.rocketboards.org (moderated for non-
-> subscribers)
->  T:     git
-> git://git.kernel.org/pub/scm/linux/kernel/git/lftan/nios2.git
->  S:     Maintained
-> +F:     Documentation/devicetree/bindings/nios2/
->  F:     arch/nios2/
-> 
->  NOHZ, DYNTICKS SUPPORT
+>  arch/arm/boot/dts/imx6sl-evk.dts | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/arch/arm/boot/dts/imx6sl-evk.dts
+> b/arch/arm/boot/dts/imx6sl-evk.dts
+> index 37e792f..798df66 100644
+> --- a/arch/arm/boot/dts/imx6sl-evk.dts
+> +++ b/arch/arm/boot/dts/imx6sl-evk.dts
+> @@ -199,6 +199,7 @@
+>  			sw4_reg: sw4 {
+>  				regulator-min-microvolt =3D <800000>;
+>  				regulator-max-microvolt =3D <3300000>;
+> +				regulator-always-on;
+>  			};
+>=20
+>  			swbst_reg: swbst {
 > --
-> 2.17.1
-> 
-> 
-Reviewed-by: Ley Foon Tan <ley.foon.tan@intel.com>
+> 2.7.4
