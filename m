@@ -1,166 +1,43 @@
-Return-Path: <SRS0=Mmip=JE=linaro.org=vinod.koul@kernel.org>
-From: Vinod Koul <vinod.koul@linaro.org>
-Subject: [PATCH 4/5] input: pm8941-pwrkey: Abstract register offsets and event code
-Date: Mon, 18 Jun 2018 20:05:47 +0530
-Message-Id: <20180618143548.29900-5-vkoul@kernel.org>
-In-Reply-To: <20180618143548.29900-1-vkoul@kernel.org>
-References: <20180618143548.29900-1-vkoul@kernel.org>
-To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Return-Path: <SRS0=Dkm/=JL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-bn3nam01on0045.outbound.protection.outlook.com ([104.47.33.45]:27338
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1754067AbeFYIbS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 Jun 2018 04:31:18 -0400
+From: Alan Douglas <adouglas@cadence.com>
+Subject: [PATCH 1/5] PCI: cadence: Update cdns_pcie_writel function signature
+Date: Mon, 25 Jun 2018 09:30:49 +0100
+Message-ID: <1529915453-4633-2-git-send-email-adouglas@cadence.com>
+In-Reply-To: <1529915453-4633-1-git-send-email-adouglas@cadence.com>
+References: <1529915453-4633-1-git-send-email-adouglas@cadence.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Alan Douglas <adouglas@cadence.com>
 List-ID: <devicetree@vger.kernel.org>
 
-In order to support resin thru the pwrkey driver (they are very
-similar in nature) we need to abstract the handling in this driver.
+Change cdns_pcie_writel() signature, u16 value changed to u32, since
+this function should write a long value
 
-First we abstract pull_up_bit and status_bit along in driver data.
-The event code sent for key events is quiried from DT.
-
-Since the device can be child of pon lookup regmap and reg from
-parent if lookup fails (we are child).
-
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Alan Douglas <adouglas@cadence.com>
 ---
- drivers/input/misc/pm8941-pwrkey.c | 56 +++++++++++++++++++++++++++++++-------
- 1 file changed, 46 insertions(+), 10 deletions(-)
+ drivers/pci/controller/pcie-cadence.h |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/drivers/input/misc/pm8941-pwrkey.c b/drivers/input/misc/pm8941-pwrkey.c
-index 18ad956454f1..aedb6ea2b50a 100644
---- a/drivers/input/misc/pm8941-pwrkey.c
-+++ b/drivers/input/misc/pm8941-pwrkey.c
-@@ -20,6 +20,7 @@
- #include <linux/log2.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/reboot.h>
- #include <linux/regmap.h>
-@@ -42,6 +43,10 @@
- #define PON_DBC_CTL			0x71
- #define  PON_DBC_DELAY_MASK		0x7
- 
-+struct pm8941_data {
-+	unsigned int pull_up_bit;
-+	unsigned int status_bit;
-+};
- 
- struct pm8941_pwrkey {
- 	struct device *dev;
-@@ -52,6 +57,9 @@ struct pm8941_pwrkey {
- 
- 	unsigned int revision;
- 	struct notifier_block reboot_notifier;
-+
-+	unsigned int code;
-+	const struct pm8941_data *data;
- };
- 
- static int pm8941_reboot_notify(struct notifier_block *nb,
-@@ -124,7 +132,8 @@ static irqreturn_t pm8941_pwrkey_irq(int irq, void *_data)
- 	if (error)
- 		return IRQ_HANDLED;
- 
--	input_report_key(pwrkey->input, KEY_POWER, !!(sts & PON_KPDPWR_N_SET));
-+	input_report_key(pwrkey->input, pwrkey->code,
-+			 !!(sts & pwrkey->data->status_bit));
- 	input_sync(pwrkey->input);
- 
- 	return IRQ_HANDLED;
-@@ -157,6 +166,7 @@ static int pm8941_pwrkey_probe(struct platform_device *pdev)
- {
- 	struct pm8941_pwrkey *pwrkey;
- 	bool pull_up;
-+	struct device *parent;
- 	u32 req_delay;
- 	int error;
- 
-@@ -175,11 +185,20 @@ static int pm8941_pwrkey_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	pwrkey->dev = &pdev->dev;
-+	pwrkey->data = of_device_get_match_data(&pdev->dev);
- 
--	pwrkey->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	parent = pdev->dev.parent;
-+	pwrkey->regmap = dev_get_regmap(parent, NULL);
- 	if (!pwrkey->regmap) {
--		dev_err(&pdev->dev, "failed to locate regmap\n");
--		return -ENODEV;
-+		/*
-+		 * we failed to get regmap for parent, check if
-+		 * parent->parent has it (device would be child of pon)
-+		 */
-+		pwrkey->regmap = dev_get_regmap(parent->parent, NULL);
-+		if (!pwrkey->regmap) {
-+			dev_err(&pdev->dev, "failed to locate regmap\n");
-+			return -ENODEV;
-+		}
- 	}
- 
- 	pwrkey->irq = platform_get_irq(pdev, 0);
-@@ -190,8 +209,13 @@ static int pm8941_pwrkey_probe(struct platform_device *pdev)
- 
- 	error = of_property_read_u32(pdev->dev.of_node, "reg",
- 				     &pwrkey->baseaddr);
--	if (error)
--		return error;
-+	if (error) {
-+		/* check if parent has reg before bailing */
-+		error = of_property_read_u32(pdev->dev.parent->of_node,
-+					     "reg", &pwrkey->baseaddr);
-+		if (error)
-+			return error;
-+	}
- 
- 	error = regmap_read(pwrkey->regmap, pwrkey->baseaddr + PON_REV2,
- 			    &pwrkey->revision);
-@@ -200,13 +224,20 @@ static int pm8941_pwrkey_probe(struct platform_device *pdev)
- 		return error;
- 	}
- 
-+	error = of_property_read_u32(pdev->dev.of_node, "linux,code",
-+				     &pwrkey->code);
-+	if (error) {
-+		dev_err(&pdev->dev, "no linux,code assuming power%d\n", error);
-+		pwrkey->code = KEY_POWER;
-+	}
-+
- 	pwrkey->input = devm_input_allocate_device(&pdev->dev);
- 	if (!pwrkey->input) {
- 		dev_dbg(&pdev->dev, "unable to allocate input device\n");
- 		return -ENOMEM;
- 	}
- 
--	input_set_capability(pwrkey->input, EV_KEY, KEY_POWER);
-+	input_set_capability(pwrkey->input, EV_KEY, pwrkey->code);
- 
- 	pwrkey->input->name = "pm8941_pwrkey";
- 	pwrkey->input->phys = "pm8941_pwrkey/input0";
-@@ -225,8 +256,8 @@ static int pm8941_pwrkey_probe(struct platform_device *pdev)
- 
- 	error = regmap_update_bits(pwrkey->regmap,
- 				   pwrkey->baseaddr + PON_PULL_CTL,
--				   PON_KPDPWR_PULL_UP,
--				   pull_up ? PON_KPDPWR_PULL_UP : 0);
-+				   pwrkey->data->pull_up_bit,
-+				   pull_up ? pwrkey->data->pull_up_bit : 0);
- 	if (error) {
- 		dev_err(&pdev->dev, "failed to set pull: %d\n", error);
- 		return error;
-@@ -271,8 +302,13 @@ static int pm8941_pwrkey_remove(struct platform_device *pdev)
- 	return 0;
+diff --git a/drivers/pci/controller/pcie-cadence.h b/drivers/pci/controller/pcie-cadence.h
+index 4bb2733..ed336cc 100644
+--- a/drivers/pci/controller/pcie-cadence.h
++++ b/drivers/pci/controller/pcie-cadence.h
+@@ -279,7 +279,7 @@ static inline void cdns_pcie_ep_fn_writew(struct cdns_pcie *pcie, u8 fn,
  }
  
-+static const struct pm8941_data pwrkey_data = {
-+	.pull_up_bit = PON_KPDPWR_PULL_UP,
-+	.status_bit = PON_KPDPWR_N_SET,
-+};
-+
- static const struct of_device_id pm8941_pwr_key_id_table[] = {
--	{ .compatible = "qcom,pm8941-pwrkey" },
-+	{ .compatible = "qcom,pm8941-pwrkey", .data = &pwrkey_data },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, pm8941_pwr_key_id_table);
+ static inline void cdns_pcie_ep_fn_writel(struct cdns_pcie *pcie, u8 fn,
+-					  u32 reg, u16 value)
++					  u32 reg, u32 value)
+ {
+ 	writel(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
+ }
 -- 
-2.14.4
+1.7.1
+
