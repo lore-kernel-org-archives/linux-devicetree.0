@@ -1,477 +1,146 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 3/3] pinctrl: actions: Add interrupt support for OWL
- S900 SoC
-Date: Mon, 25 Jun 2018 12:44:26 +0300
-Message-ID: <CAHp75VdGctz_r7NnnKBGaxVvwooA+nrMpLSUzDbBNWZVXgrWAw@mail.gmail.com>
-References: <20180623045954.6729-1-manivannan.sadhasivam@linaro.org> <20180623045954.6729-4-manivannan.sadhasivam@linaro.org>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH v3 7/7] soc: qcom: rpmpd/rpmhpd: Add a max vote on all
+ corners at init
+Date: Mon, 25 Jun 2018 15:40:08 +0530
+Message-ID: <08963d3b-324e-8401-9d03-74900fe6b0ec@codeaurora.org>
+References: <20180612044052.4402-1-rnayak@codeaurora.org>
+ <20180612044052.4402-8-rnayak@codeaurora.org>
+ <414598de-00a1-9ce7-3a7e-4a95fd1bd35d@codeaurora.org>
+ <f5014664-1639-c610-a50a-db66484428dc@codeaurora.org>
+ <20180619101016.hbgjvev7d3h4yg7x@vireshk-i7>
+ <CAPDyKFpvBXbppamoDDUKcMTnD8S3U7ZTKutLgSsLYQkAU0JXZg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180623045954.6729-4-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <CAPDyKFpvBXbppamoDDUKcMTnD8S3U7ZTKutLgSsLYQkAU0JXZg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, amit.kucheria@linaro.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>, Thomas Liau <thomas.liau@actions-semi.com>, jeff.chen@actions-semi.com
+To: Ulf Hansson <ulf.hansson@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: David Collins <collinsd@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 23, 2018 at 7:59 AM, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
-> Add interrupt support for Actions Semi OWL S900 SoC.
->
-
-FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/pinctrl/actions/Kconfig        |   1 +
->  drivers/pinctrl/actions/pinctrl-owl.c  | 271 ++++++++++++++++++++++++-
->  drivers/pinctrl/actions/pinctrl-owl.h  |  22 +-
->  drivers/pinctrl/actions/pinctrl-s900.c |  31 +--
->  4 files changed, 307 insertions(+), 18 deletions(-)
->
-> diff --git a/drivers/pinctrl/actions/Kconfig b/drivers/pinctrl/actions/Kconfig
-> index 490927b4ea76..2397cb0f6011 100644
-> --- a/drivers/pinctrl/actions/Kconfig
-> +++ b/drivers/pinctrl/actions/Kconfig
-> @@ -5,6 +5,7 @@ config PINCTRL_OWL
->         select PINCONF
->         select GENERIC_PINCONF
->         select GPIOLIB
-> +       select GPIOLIB_IRQCHIP
->         help
->           Say Y here to enable Actions Semi OWL pinctrl driver
->
-> diff --git a/drivers/pinctrl/actions/pinctrl-owl.c b/drivers/pinctrl/actions/pinctrl-owl.c
-> index 76243caa08c6..ce032d71dad5 100644
-> --- a/drivers/pinctrl/actions/pinctrl-owl.c
-> +++ b/drivers/pinctrl/actions/pinctrl-owl.c
-> @@ -13,6 +13,7 @@
->  #include <linux/err.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/io.h>
-> +#include <linux/irq.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
-> @@ -45,6 +46,9 @@ struct owl_pinctrl {
->         struct clk *clk;
->         const struct owl_pinctrl_soc_data *soc;
->         void __iomem *base;
-> +       struct irq_chip irq_chip;
-> +       unsigned int num_irq;
-> +       unsigned int *irq;
->  };
->
->  static void owl_update_bits(void __iomem *base, u32 mask, u32 val)
-> @@ -701,10 +705,213 @@ static int owl_gpio_direction_output(struct gpio_chip *chip,
->         return 0;
->  }
->
-> +static void irq_set_type(struct owl_pinctrl *pctrl, int gpio, unsigned int type)
-> +{
-> +       const struct owl_gpio_port *port;
-> +       void __iomem *gpio_base;
-> +       unsigned long flags;
-> +       unsigned int offset, value, irq_type = 0;
-> +
-> +       switch (type) {
-> +       case IRQ_TYPE_EDGE_BOTH:
-> +               /*
-> +                * Since the hardware doesn't support interrupts on both edges,
-> +                * emulate it in the software by setting the single edge
-> +                * interrupt and switching to the opposite edge while ACKing
-> +                * the interrupt
-> +                */
-> +               if (owl_gpio_get(&pctrl->chip, gpio))
-> +                       irq_type = OWL_GPIO_INT_EDGE_FALLING;
-> +               else
-> +                       irq_type = OWL_GPIO_INT_EDGE_RISING;
-> +               break;
-> +
-> +       case IRQ_TYPE_EDGE_RISING:
-> +               irq_type = OWL_GPIO_INT_EDGE_RISING;
-> +               break;
-> +
-> +       case IRQ_TYPE_EDGE_FALLING:
-> +               irq_type = OWL_GPIO_INT_EDGE_FALLING;
-> +               break;
-> +
-> +       case IRQ_TYPE_LEVEL_HIGH:
-> +               irq_type = OWL_GPIO_INT_LEVEL_HIGH;
-> +               break;
-> +
-> +       case IRQ_TYPE_LEVEL_LOW:
-> +               irq_type = OWL_GPIO_INT_LEVEL_LOW;
-> +               break;
-> +
-> +       default:
-> +               break;
-> +       }
-> +
-> +       port = owl_gpio_get_port(pctrl, &gpio);
-> +       if (WARN_ON(port == NULL))
-> +               return;
-> +
-> +       gpio_base = pctrl->base + port->offset;
-> +
-> +       raw_spin_lock_irqsave(&pctrl->lock, flags);
-> +
-> +       offset = (gpio < 16) ? 4 : 0;
-> +       value = readl_relaxed(gpio_base + port->intc_type + offset);
-> +       value &= ~(OWL_GPIO_INT_MASK << ((gpio % 16) * 2));
-> +       value |= irq_type << ((gpio % 16) * 2);
-> +       writel_relaxed(value, gpio_base + port->intc_type + offset);
-> +
-> +       raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> +}
-> +
-> +static void owl_gpio_irq_mask(struct irq_data *data)
-> +{
-> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-> +       struct owl_pinctrl *pctrl = gpiochip_get_data(gc);
-> +       const struct owl_gpio_port *port;
-> +       void __iomem *gpio_base;
-> +       unsigned long flags;
-> +       unsigned int gpio = data->hwirq;
-> +       u32 val;
-> +
-> +       port = owl_gpio_get_port(pctrl, &gpio);
-> +       if (WARN_ON(port == NULL))
-> +               return;
-> +
-> +       gpio_base = pctrl->base + port->offset;
-> +
-> +       raw_spin_lock_irqsave(&pctrl->lock, flags);
-> +
-> +       owl_gpio_update_reg(gpio_base + port->intc_msk, gpio, false);
-> +
-> +       /* disable port interrupt if no interrupt pending bit is active */
-> +       val = readl_relaxed(gpio_base + port->intc_msk);
-> +       if (val == 0)
-> +               owl_gpio_update_reg(gpio_base + port->intc_ctl,
-> +                                       OWL_GPIO_CTLR_ENABLE, false);
-> +
-> +       raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> +}
-> +
-> +static void owl_gpio_irq_unmask(struct irq_data *data)
-> +{
-> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-> +       struct owl_pinctrl *pctrl = gpiochip_get_data(gc);
-> +       const struct owl_gpio_port *port;
-> +       void __iomem *gpio_base;
-> +       unsigned long flags;
-> +       unsigned int gpio = data->hwirq;
-> +       u32 value;
-> +
-> +       port = owl_gpio_get_port(pctrl, &gpio);
-> +       if (WARN_ON(port == NULL))
-> +               return;
-> +
-> +       gpio_base = pctrl->base + port->offset;
-> +       raw_spin_lock_irqsave(&pctrl->lock, flags);
-> +
-> +       /* enable port interrupt */
-> +       value = readl_relaxed(gpio_base + port->intc_ctl);
-> +       value |= BIT(OWL_GPIO_CTLR_ENABLE) | BIT(OWL_GPIO_CTLR_SAMPLE_CLK_24M);
-> +       writel_relaxed(value, gpio_base + port->intc_ctl);
-> +
-> +       /* enable GPIO interrupt */
-> +       owl_gpio_update_reg(gpio_base + port->intc_msk, gpio, true);
-> +
-> +       raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> +}
-> +
-> +static void owl_gpio_irq_ack(struct irq_data *data)
-> +{
-> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-> +       struct owl_pinctrl *pctrl = gpiochip_get_data(gc);
-> +       const struct owl_gpio_port *port;
-> +       void __iomem *gpio_base;
-> +       unsigned long flags;
-> +       unsigned int gpio = data->hwirq;
-> +
-> +       /*
-> +        * Switch the interrupt edge to the opposite edge of the interrupt
-> +        * which got triggered for the case of emulating both edges
-> +        */
-> +       if (irqd_get_trigger_type(data) == IRQ_TYPE_EDGE_BOTH) {
-> +               if (owl_gpio_get(gc, gpio))
-> +                       irq_set_type(pctrl, gpio, IRQ_TYPE_EDGE_FALLING);
-> +               else
-> +                       irq_set_type(pctrl, gpio, IRQ_TYPE_EDGE_RISING);
-> +       }
-> +
-> +       port = owl_gpio_get_port(pctrl, &gpio);
-> +       if (WARN_ON(port == NULL))
-> +               return;
-> +
-> +       gpio_base = pctrl->base + port->offset;
-> +
-> +       raw_spin_lock_irqsave(&pctrl->lock, flags);
-> +
-> +       owl_gpio_update_reg(gpio_base + port->intc_ctl,
-> +                               OWL_GPIO_CTLR_PENDING, true);
-> +
-> +       raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> +}
-> +
-> +static int owl_gpio_irq_set_type(struct irq_data *data, unsigned int type)
-> +{
-> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-> +       struct owl_pinctrl *pctrl = gpiochip_get_data(gc);
-> +
-> +       if (type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_LEVEL_HIGH))
-> +               irq_set_handler_locked(data, handle_level_irq);
-> +       else
-> +               irq_set_handler_locked(data, handle_edge_irq);
-> +
-> +       irq_set_type(pctrl, data->hwirq, type);
-> +
-> +       return 0;
-> +}
-> +
-> +static void owl_gpio_irq_handler(struct irq_desc *desc)
-> +{
-> +       struct owl_pinctrl *pctrl = irq_desc_get_handler_data(desc);
-> +       struct irq_chip *chip = irq_desc_get_chip(desc);
-> +       struct irq_domain *domain = pctrl->chip.irq.domain;
-> +       unsigned int parent = irq_desc_get_irq(desc);
-> +       const struct owl_gpio_port *port;
-> +       void __iomem *base;
-> +       unsigned int pin, irq, offset = 0, i;
-> +       unsigned long pending_irq;
-> +
-> +       chained_irq_enter(chip, desc);
-> +
-> +       for (i = 0; i < pctrl->soc->nports; i++) {
-> +               port = &pctrl->soc->ports[i];
-> +               base = pctrl->base + port->offset;
-> +
-> +               /* skip ports that are not associated with this irq */
-> +               if (parent != pctrl->irq[i])
-> +                       goto skip;
-> +
-> +               pending_irq = readl_relaxed(base + port->intc_pd);
-> +
-> +               for_each_set_bit(pin, &pending_irq, port->pins) {
-> +                       irq = irq_find_mapping(domain, offset + pin);
-> +                       generic_handle_irq(irq);
-> +
-> +                       /* clear pending interrupt */
-> +                       owl_gpio_update_reg(base + port->intc_pd, pin, true);
-> +               }
-> +
-> +skip:
-> +               offset += port->pins;
-> +       }
-> +
-> +       chained_irq_exit(chip, desc);
-> +}
-> +
->  static int owl_gpio_init(struct owl_pinctrl *pctrl)
->  {
->         struct gpio_chip *chip;
-> -       int ret;
-> +       struct gpio_irq_chip *gpio_irq;
-> +       int ret, i, j, offset;
->
->         chip = &pctrl->chip;
->         chip->base = -1;
-> @@ -714,6 +921,35 @@ static int owl_gpio_init(struct owl_pinctrl *pctrl)
->         chip->owner = THIS_MODULE;
->         chip->of_node = pctrl->dev->of_node;
->
-> +       pctrl->irq_chip.name = chip->of_node->name;
-> +       pctrl->irq_chip.irq_ack = owl_gpio_irq_ack;
-> +       pctrl->irq_chip.irq_mask = owl_gpio_irq_mask;
-> +       pctrl->irq_chip.irq_unmask = owl_gpio_irq_unmask;
-> +       pctrl->irq_chip.irq_set_type = owl_gpio_irq_set_type;
-> +
-> +       gpio_irq = &chip->irq;
-> +       gpio_irq->chip = &pctrl->irq_chip;
-> +       gpio_irq->handler = handle_simple_irq;
-> +       gpio_irq->default_type = IRQ_TYPE_NONE;
-> +       gpio_irq->parent_handler = owl_gpio_irq_handler;
-> +       gpio_irq->parent_handler_data = pctrl;
-> +       gpio_irq->num_parents = pctrl->num_irq;
-> +       gpio_irq->parents = pctrl->irq;
-> +
-> +       gpio_irq->map = devm_kcalloc(pctrl->dev, chip->ngpio,
-> +                               sizeof(*gpio_irq->map), GFP_KERNEL);
-> +       if (!gpio_irq->map)
-> +               return -ENOMEM;
-> +
-> +       for (i = 0, offset = 0; i < pctrl->soc->nports; i++) {
-> +               const struct owl_gpio_port *port = &pctrl->soc->ports[i];
-> +
-> +               for (j = 0; j < port->pins; j++)
-> +                       gpio_irq->map[offset + j] = gpio_irq->parents[i];
-> +
-> +               offset += port->pins;
-> +       }
-> +
->         ret = gpiochip_add_data(&pctrl->chip, pctrl);
->         if (ret) {
->                 dev_err(pctrl->dev, "failed to register gpiochip\n");
-> @@ -728,7 +964,7 @@ int owl_pinctrl_probe(struct platform_device *pdev,
->  {
->         struct resource *res;
->         struct owl_pinctrl *pctrl;
-> -       int ret;
-> +       int ret, i;
->
->         pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
->         if (!pctrl)
-> @@ -772,14 +1008,41 @@ int owl_pinctrl_probe(struct platform_device *pdev,
->                                         &owl_pinctrl_desc, pctrl);
->         if (IS_ERR(pctrl->pctrldev)) {
->                 dev_err(&pdev->dev, "could not register Actions OWL pinmux driver\n");
-> -               return PTR_ERR(pctrl->pctrldev);
-> +               ret = PTR_ERR(pctrl->pctrldev);
-> +               goto err_exit;
-> +       }
-> +
-> +       ret = platform_irq_count(pdev);
-> +       if (ret < 0)
-> +               goto err_exit;
-> +
-> +       pctrl->num_irq = ret;
-> +
-> +       pctrl->irq = devm_kcalloc(&pdev->dev, pctrl->num_irq,
-> +                                       sizeof(*pctrl->irq), GFP_KERNEL);
-> +       if (!pctrl->irq) {
-> +               ret = -ENOMEM;
-> +               goto err_exit;
-> +       }
-> +
-> +       for (i = 0; i < pctrl->num_irq ; i++) {
-> +               pctrl->irq[i] = platform_get_irq(pdev, i);
-> +               if (pctrl->irq[i] < 0) {
-> +                       ret = pctrl->irq[i];
-> +                       goto err_exit;
-> +               }
->         }
->
->         ret = owl_gpio_init(pctrl);
->         if (ret)
-> -               return ret;
-> +               goto err_exit;
->
->         platform_set_drvdata(pdev, pctrl);
->
->         return 0;
-> +
-> +err_exit:
-> +       clk_disable_unprepare(pctrl->clk);
-> +
-> +       return ret;
->  }
-> diff --git a/drivers/pinctrl/actions/pinctrl-owl.h b/drivers/pinctrl/actions/pinctrl-owl.h
-> index 74342378937c..a724d1d406d4 100644
-> --- a/drivers/pinctrl/actions/pinctrl-owl.h
-> +++ b/drivers/pinctrl/actions/pinctrl-owl.h
-> @@ -29,6 +29,18 @@ enum owl_pinconf_drv {
->         OWL_PINCONF_DRV_12MA,
->  };
->
-> +/* GPIO CTRL Bit Definition */
-> +#define OWL_GPIO_CTLR_PENDING          0
-> +#define OWL_GPIO_CTLR_ENABLE           1
-> +#define OWL_GPIO_CTLR_SAMPLE_CLK_24M   2
-> +
-> +/* GPIO TYPE Bit Definition */
-> +#define OWL_GPIO_INT_LEVEL_HIGH                0
-> +#define OWL_GPIO_INT_LEVEL_LOW         1
-> +#define OWL_GPIO_INT_EDGE_RISING       2
-> +#define OWL_GPIO_INT_EDGE_FALLING      3
-> +#define OWL_GPIO_INT_MASK              3
-> +
->  /**
->   * struct owl_pullctl - Actions pad pull control register
->   * @reg: offset to the pull control register
-> @@ -121,6 +133,10 @@ struct owl_pinmux_func {
->   * @outen: offset of the output enable register.
->   * @inen: offset of the input enable register.
->   * @dat: offset of the data register.
-> + * @intc_ctl: offset of the interrupt control register.
-> + * @intc_pd: offset of the interrupt pending register.
-> + * @intc_msk: offset of the interrupt mask register.
-> + * @intc_type: offset of the interrupt type register.
->   */
->  struct owl_gpio_port {
->         unsigned int offset;
-> @@ -128,6 +144,10 @@ struct owl_gpio_port {
->         unsigned int outen;
->         unsigned int inen;
->         unsigned int dat;
-> +       unsigned int intc_ctl;
-> +       unsigned int intc_pd;
-> +       unsigned int intc_msk;
-> +       unsigned int intc_type;
->  };
->
->  /**
-> @@ -140,7 +160,7 @@ struct owl_gpio_port {
->   * @ngroups: number of entries in @groups.
->   * @padinfo: array describing the pad info of this SoC.
->   * @ngpios: number of pingroups the driver should expose as GPIOs.
-> - * @port: array describing all GPIO ports of this SoC.
-> + * @ports: array describing all GPIO ports of this SoC.
->   * @nports: number of GPIO ports in this SoC.
->   */
->  struct owl_pinctrl_soc_data {
-> diff --git a/drivers/pinctrl/actions/pinctrl-s900.c b/drivers/pinctrl/actions/pinctrl-s900.c
-> index 5503c7945764..ea67b14ef93b 100644
-> --- a/drivers/pinctrl/actions/pinctrl-s900.c
-> +++ b/drivers/pinctrl/actions/pinctrl-s900.c
-> @@ -1821,22 +1821,27 @@ static struct owl_padinfo s900_padinfo[NUM_PADS] = {
->         [SGPIO3] = PAD_INFO_PULLCTL_ST(SGPIO3)
->  };
->
-> -#define OWL_GPIO_PORT(port, base, count, _outen, _inen, _dat)  \
-> -       [OWL_GPIO_PORT_##port] = {                              \
-> -               .offset = base,                                 \
-> -               .pins = count,                                  \
-> -               .outen = _outen,                                \
-> -               .inen = _inen,                                  \
-> -               .dat = _dat,                                    \
-> +#define OWL_GPIO_PORT(port, base, count, _outen, _inen, _dat,          \
-> +                       _intc_ctl, _intc_pd, _intc_msk, _intc_type)     \
-> +       [OWL_GPIO_PORT_##port] = {                                      \
-> +               .offset = base,                                         \
-> +               .pins = count,                                          \
-> +               .outen = _outen,                                        \
-> +               .inen = _inen,                                          \
-> +               .dat = _dat,                                            \
-> +               .intc_ctl = _intc_ctl,                                  \
-> +               .intc_pd = _intc_pd,                                    \
-> +               .intc_msk = _intc_msk,                                  \
-> +               .intc_type = _intc_type,                                \
->         }
->
->  static const struct owl_gpio_port s900_gpio_ports[] = {
-> -       OWL_GPIO_PORT(A, 0x0000, 32, 0x0, 0x4, 0x8),
-> -       OWL_GPIO_PORT(B, 0x000C, 32, 0x0, 0x4, 0x8),
-> -       OWL_GPIO_PORT(C, 0x0018, 12, 0x0, 0x4, 0x8),
-> -       OWL_GPIO_PORT(D, 0x0024, 30, 0x0, 0x4, 0x8),
-> -       OWL_GPIO_PORT(E, 0x0030, 32, 0x0, 0x4, 0x8),
-> -       OWL_GPIO_PORT(F, 0x00F0, 8, 0x0, 0x4, 0x8)
-> +       OWL_GPIO_PORT(A, 0x0000, 32, 0x0, 0x4, 0x8, 0x204, 0x208, 0x20C, 0x240),
-> +       OWL_GPIO_PORT(B, 0x000C, 32, 0x0, 0x4, 0x8, 0x534, 0x204, 0x208, 0x23C),
-> +       OWL_GPIO_PORT(C, 0x0018, 12, 0x0, 0x4, 0x8, 0x52C, 0x200, 0x204, 0x238),
-> +       OWL_GPIO_PORT(D, 0x0024, 30, 0x0, 0x4, 0x8, 0x524, 0x1FC, 0x200, 0x234),
-> +       OWL_GPIO_PORT(E, 0x0030, 32, 0x0, 0x4, 0x8, 0x51C, 0x1F8, 0x1FC, 0x230),
-> +       OWL_GPIO_PORT(F, 0x00F0, 8, 0x0, 0x4, 0x8, 0x460, 0x140, 0x144, 0x178)
->  };
->
->  static struct owl_pinctrl_soc_data s900_pinctrl_data = {
-> --
-> 2.17.1
->
 
 
+On 06/25/2018 02:27 PM, Ulf Hansson wrote:
+> On 19 June 2018 at 12:10, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>> On 14-06-18, 12:05, Rajendra Nayak wrote:
+>>> On 06/14/2018 03:58 AM, David Collins wrote:
+>>>> Hello Rajendra,
+>>>>
+>>>> On 06/11/2018 09:40 PM, Rajendra Nayak wrote:
+>>>>> As we move from no clients/consumers in kernel voting on corners,
+>>>>> to *some* voting and some not voting, we might end up in a situation
+>>>>> where the clients which remove votes can adversly impact others
+>>>>
+>>>> s/adversly/adversely/
+>>>>
+>>>>> who still don't have a way to vote.
+>>>>>
+>>>>> To avoid this situation, have a max vote on all corners at init.
+>>>>> This should/can be removed once we have all clients moved to
+>>>>> be able to vote/unvote for themselves.
+>>>>
+>>>> This change seems like a hack.  Do you intend for it to be merged and then
+>>>> later reverted in Linus's tree?  Could it instead be implemented in a way
+>>>> that does not require reverting and instead is enabled by some DT
+>>>> property?  Alternatively, could this feature be added to the power domain
+>>>> core since it is relatively generic?
+>>>>
+>>>>
+>>>>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>>>>> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+>>>>> ---
+>>>>>  drivers/soc/qcom/rpmhpd.c | 12 +++++++++++-
+>>>>>  drivers/soc/qcom/rpmpd.c  |  9 +++++++++
+>>>>>  2 files changed, 20 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
+>>>>> index 7083ec1590ff..3c753d33aeee 100644
+>>>>> --- a/drivers/soc/qcom/rpmhpd.c
+>>>>> +++ b/drivers/soc/qcom/rpmhpd.c
+>>>>> @@ -329,7 +329,7 @@ static int rpmhpd_update_level_mapping(struct rpmhpd *rpmhpd)
+>>>>>
+>>>>>  static int rpmhpd_probe(struct platform_device *pdev)
+>>>>>  {
+>>>>> -  int i, ret;
+>>>>> +  int i, ret, max_level;
+>>>>>    size_t num;
+>>>>>    struct genpd_onecell_data *data;
+>>>>>    struct rpmhpd **rpmhpds;
+>>>>> @@ -390,6 +390,16 @@ static int rpmhpd_probe(struct platform_device *pdev)
+>>>>>            pm_genpd_init(&rpmhpds[i]->pd, NULL, true);
+>>>>>
+>>>>>            data->domains[i] = &rpmhpds[i]->pd;
+>>>>> +
+>>>>> +          /*
+>>>>> +           * Until we have all consumers voting on corners
+>>>>> +           * just vote the max corner on all PDs
+>>>>> +           * This should ideally be *removed* once we have
+>>>>> +           * all (most) consumers being able to vote
+>>>>> +           */
+>>>>> +          max_level = rpmhpds[i]->level_count - 1;
+>>>>> +          rpmhpd_set_performance(&rpmhpds[i]->pd, rpmhpds[i]->level[max_level]);
+>>>>> +          rpmhpd_power_on(&rpmhpds[i]->pd);
+>>>>
+>>>> Clearly these calls will result in max level requests being sent for all
+>>>> power domains at probe time.  However, it isn't clear that this will
+>>>> actually help at runtime in these two cases:
+>>>>
+>>>> 1. A consumer enables and then disables a power domain.
+>>>>     - It seems like the PD would just be disabled in this case.
+>>
+>> So instead of rpmhpd_power_on() we should be doing gepnd_power_on() or whatever
+>> the API is, so the user count stays at 1.
+> 
+> There is no such API.
+> 
+> Instead a device needs to be attached to genpd and that's it. As long
+> as the device don't enables runtime PM and that the device gets
+> runtime suspended, genpd will remain powered on.
+
+Its more to do with keeping the power domains at a desired 'performance level'
+than just keeping them on.
+
+> 
+>>
+>>>> 2. A consumer sets a non-max performance state of a power domain.
+>>>>     - It seems like the PD would just be set to the new lower
+>>>>       performance state since the max vote isn't known to the
+>>>>       PD core for aggregation purposes.
+>>
+>> Right, and that's because the patch isn't implemented properly yet. I asked to
+>> do a fake vote from some user with their dev structure, so the vote always
+>> stays.
+>>
+>>> Yes, you are right. I certainly did not seem to have thought through this enough.
+>>>
+>>> A need for something like this came up at a point where genpd could not deal with
+>>> devices with multiple power domains. So the concern at that point was that if some
+>>> consumers (which only need to vote on one corner) move to using this driver, while
+>>> some others (which need to vote on multiple corners) cannot, we would end up breaking
+>>> them.
+>>>
+>>> That does not seem to be true anymore since we do have patches from Ulf which support
+>>> having devices with multiple power domains attached which can be controlled individually.
+>>> So if some consumer voting makes some others break, they should just be fixed and patched
+>>> to vote as well. If all this gets handled centrally from within the clock drivers then we
+>>> most likely won't even end up with a situation like this.
+>>>
+>>> I think I will just drop this one unless Stephen/Viresh still see an issue with some early
+>>> voters breaking others.
+>>
+>> So what if the LCD/DDR/etc are getting used at boot and someone requests a lower
+>> vote?  Wouldn't we just break ?
+> 
+> Sounds like we need a way to manage votes for "boot constraints
+> performance levels". :-)
+
+Yes, I think we are mixing up whats needed for 'boot constraints' and what this
+patch was meant to do.
+Boot constraints is a generic problem not limited to power domains alone and this patch
+isn't trying to solve that.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
