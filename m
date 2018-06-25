@@ -1,39 +1,74 @@
-Return-Path: <SRS0=1q56=IX=googlemail.com=chf.fritz@kernel.org>
-Message-ID: <1528190809.2527.5.camel@googlemail.com>
-Subject: [PATCH v2] dt-bindings: mfd: fix documentation of tps65911
-From: Christoph Fritz <chf.fritz@googlemail.com>
-Reply-To: chf.fritz@googlemail.com
-Date: Tue, 05 Jun 2018 11:26:49 +0200
-In-Reply-To: <20180605070457.GF21163@dell>
-References: <1528146863.2818.23.camel@googlemail.com>
-	 <20180605070457.GF21163@dell>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, devicetree <devicetree@vger.kernel.org>, linux-omap@vger.kernel.org
+Return-Path: <SRS0=Dkm/=JL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-cys01nam02on0043.outbound.protection.outlook.com ([104.47.37.43]:32547
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1753076AbeFYIbm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 Jun 2018 04:31:42 -0400
+From: Alan Douglas <adouglas@cadence.com>
+Subject: [PATCH 3/5] dt-bindings: PCI: cadence: Add DT bindings for optional PHYs
+Date: Mon, 25 Jun 2018 09:30:51 +0100
+Message-ID: <1529915453-4633-4-git-send-email-adouglas@cadence.com>
+In-Reply-To: <1529915453-4633-1-git-send-email-adouglas@cadence.com>
+References: <1529915453-4633-1-git-send-email-adouglas@cadence.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Alan Douglas <adouglas@cadence.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch fixes documentation of tps65911 because its list of
-compatible regulators contains wrongly vdd3 instead of vdd2.
+Update DT documentation to include optional PHYs for cadence PCIe
+host and endpoint controllers.
 
-Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
+Signed-off-by: Alan Douglas <adouglas@cadence.com>
 ---
- Documentation/devicetree/bindings/mfd/tps65910.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt  |    5 +++++
+ .../bindings/pci/cdns,cdns-pcie-host.txt           |    6 ++++++
+ 2 files changed, 11 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/tps65910.txt b/Documentation/devicetree/bindings/mfd/tps65910.txt
-index 8af1202..4f62143 100644
---- a/Documentation/devicetree/bindings/mfd/tps65910.txt
-+++ b/Documentation/devicetree/bindings/mfd/tps65910.txt
-@@ -22,7 +22,7 @@ Required properties:
-   The valid regulator-compatible values are:
-   tps65910: vrtc, vio, vdd1, vdd2, vdd3, vdig1, vdig2, vpll, vdac, vaux1,
-             vaux2, vaux33, vmmc, vbb
--  tps65911: vrtc, vio, vdd1, vdd3, vddctrl, ldo1, ldo2, ldo3, ldo4, ldo5,
-+  tps65911: vrtc, vio, vdd1, vdd2, vddctrl, ldo1, ldo2, ldo3, ldo4, ldo5,
-             ldo6, ldo7, ldo8
+diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+index 9a30523..4a0475e 100644
+--- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
++++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+@@ -9,6 +9,9 @@ Required properties:
  
- - xxx-supply: Input voltage supply regulator.
+ Optional properties:
+ - max-functions: Maximum number of functions that can be configured (default 1).
++- phys: From PHY bindings: List of Generic PHY phandles. One per lane if more
++  than one in the list.  If only one PHY listed it must manage all lanes. 
++- phy-names:  List of names to identify the PHY.
+ 
+ Example:
+ 
+@@ -19,4 +22,6 @@ pcie@fc000000 {
+ 	reg-names = "reg", "mem";
+ 	cdns,max-outbound-regions = <16>;
+ 	max-functions = /bits/ 8 <8>;
++	phys = <&ep_phy0 &ep_phy1>;
++	phy-names = "pcie-lane0","pcie-lane1";
+ };
+diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+index 20a33f3..91de69c 100644
+--- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
++++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+@@ -24,6 +24,9 @@ Optional properties:
+   translations (default 32)
+ - vendor-id: The PCI vendor ID (16 bits, default is design dependent)
+ - device-id: The PCI device ID (16 bits, default is design dependent)
++- phys: From PHY bindings: List of Generic PHY phandles. One per lane if more
++  than one in the list.  If only one PHY listed it must manage all lanes. 
++- phy-names:  List of names to identify the PHY.
+ 
+ Example:
+ 
+@@ -57,4 +60,7 @@ pcie@fb000000 {
+ 	interrupt-map-mask = <0x0 0x0 0x0  0x7>;
+ 
+ 	msi-parent = <&its_pci>;
++
++	phys = <&pcie_phy0>;
++	phy-names = "pcie-phy";
+ };
 -- 
-2.1.4
+1.7.1
+
