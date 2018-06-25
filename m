@@ -1,98 +1,52 @@
-Return-Path: <SRS0=5+Be=JG=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v3 3/5] leds: lt3593: switch to gpiod interface
-Date: Wed, 20 Jun 2018 22:13:01 +0200
-Message-Id: <20180620201303.6272-4-daniel@zonque.org>
-In-Reply-To: <20180620201303.6272-1-daniel@zonque.org>
-References: <20180620201303.6272-1-daniel@zonque.org>
-To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=SxbK=JL=linaro.org=vinod.koul@kernel.org>
+From: Vinod Koul <vinod.koul@linaro.org>
+Subject: [PATCH v3 0/5] input: pm8941-pwrkey: Add support for reboot reason
+Date: Mon, 25 Jun 2018 12:08:35 +0530
+Message-Id: <20180625063840.30173-1-vkoul@kernel.org>
+To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Clean up the code a bit and transition over to the gpiod based interface.
+To add support for reboot reason there have been some attempts [1], [2]
+in past. Based on these discussions we added a new pon driver and made
+pwrkey and resin as child nodes to pon.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- drivers/leds/leds-lt3593.c | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+Since the pwrkey and resin are similar, abstract pwrkey driver
+and then add support for resin in the same driver.
 
-diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
-index a99ba2741e39..a7bc1fab6584 100644
---- a/drivers/leds/leds-lt3593.c
-+++ b/drivers/leds/leds-lt3593.c
-@@ -21,12 +21,13 @@
- #include <linux/leds.h>
- #include <linux/delay.h>
- #include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/slab.h>
- #include <linux/module.h>
- 
- struct lt3593_led_data {
- 	struct led_classdev cdev;
--	unsigned gpio;
-+	struct gpio_desc *gpiod;
- };
- 
- static int lt3593_led_set(struct led_classdev *led_cdev,
-@@ -46,25 +47,25 @@ static int lt3593_led_set(struct led_classdev *led_cdev,
- 	 */
- 
- 	if (value == 0) {
--		gpio_set_value_cansleep(led_dat->gpio, 0);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 0);
- 		return 0;
- 	}
- 
- 	pulses = 32 - (value * 32) / 255;
- 
- 	if (pulses == 0) {
--		gpio_set_value_cansleep(led_dat->gpio, 0);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 0);
- 		mdelay(1);
--		gpio_set_value_cansleep(led_dat->gpio, 1);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 1);
- 		return 0;
- 	}
- 
--	gpio_set_value_cansleep(led_dat->gpio, 1);
-+	gpiod_set_value_cansleep(led_dat->gpiod, 1);
- 
- 	while (pulses--) {
--		gpio_set_value_cansleep(led_dat->gpio, 0);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 0);
- 		udelay(1);
--		gpio_set_value_cansleep(led_dat->gpio, 1);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 1);
- 		udelay(1);
- 	}
- 
-@@ -85,15 +86,8 @@ static struct lt3593_led_data *lt3593_led_probe_pdata(struct device *dev)
- 	if (!led_data)
- 		return ERR_PTR(-ENOMEM);
- 
--	if (!gpio_is_valid(template->gpio)) {
--		dev_info(dev, "skipping unavailable LT3593 LED at gpio "
--			 "%d (%s)\n", template->gpio, template->name);
--		return ERR_PTR(-EINVAL);
--	}
--
- 	led_data->cdev.name = template->name;
- 	led_data->cdev.default_trigger = template->default_trigger;
--	led_data->gpio = template->gpio;
- 	led_data->cdev.brightness_set_blocking = lt3593_led_set;
- 
- 	state = (template->default_state == LEDS_GPIO_DEFSTATE_ON);
-@@ -108,6 +102,10 @@ static struct lt3593_led_data *lt3593_led_probe_pdata(struct device *dev)
- 	if (ret < 0)
- 		return ERR_PTR(ret);
- 
-+	led_data->gpiod = gpio_to_desc(template->gpio);
-+	if (!led_data->gpiod)
-+		return ERR_PTR(-EPROBE_DEFER);
-+
- 	ret = devm_led_classdev_register(dev, &led_data->cdev);
- 	if (ret < 0)
- 		return ERR_PTR(ret);
+Since the patches touch reset and input subsystems, it would be nice if
+folks can ACK and we carry thru one subsystem, I would prefer that to be
+input, other way would work fine too.
+
+[1]: https://patchwork.kernel.org/patch/9751627/
+[2]: https://patchwork.kernel.org/patch/10381801/
+
+Changes in v3:
+ - Add Bjorn's ack
+ - Make variable for event code u32
+
+Changes in v2:
+ - Add Bjorn's ack
+ - Fix power binding by removing reg property
+ - Use single block for parent check in pm8941-pwrkey as suggested by
+   Dimitry
+
+Vinod Koul (5):
+  dt-bindings: power: reset: Add qcom pon binding
+  power: reset: qcom-pon: Add Qcom PON driver
+  dt-bindings: Input: Add additional property to qcom pwrkey
+  input: pm8941-pwrkey: Abstract register offsets and event code
+  input: pm8941-pwrkey: Add resin entry
+
+ .../bindings/input/qcom,pm8941-pwrkey.txt          |  9 +++
+ .../devicetree/bindings/power/reset/qcom,pon.txt   | 45 +++++++++++
+ drivers/input/misc/pm8941-pwrkey.c                 | 69 ++++++++++++----
+ drivers/power/reset/Kconfig                        |  8 ++
+ drivers/power/reset/Makefile                       |  1 +
+ drivers/power/reset/qcom-pon.c                     | 91 ++++++++++++++++++++++
+ 6 files changed, 210 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+ create mode 100644 drivers/power/reset/qcom-pon.c
+
 -- 
-2.17.1
+2.14.4
