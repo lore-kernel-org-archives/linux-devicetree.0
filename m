@@ -1,58 +1,47 @@
-Return-Path: <SRS0=YCj9=JH=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v4 5/5] leds: lt3593: update email address and switch to SPDX license header
-Date: Thu, 21 Jun 2018 22:23:22 +0200
-Message-Id: <20180621202322.11581-6-daniel@zonque.org>
-In-Reply-To: <20180621202322.11581-1-daniel@zonque.org>
-References: <20180621202322.11581-1-daniel@zonque.org>
-To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=pME0=JL=nxp.com=jun.li@kernel.org>
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v7 08/14] staging: typec: tcpci: use IS_ERR() instead of PTR_ERR_OR_ZERO()
+Date: Mon, 25 Jun 2018 16:08:40 +0800
+Message-Id: <1529914126-22550-9-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
+References: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: a.hajda@samsung.com, jun.li@nxp.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Update the email address in the module information and in the comments
-and in the module information, and drop the existing boilerplate in
-favor of a SPDX header.
+As tcpm_register_port() and tcpci_register_port() never return
+NULL and NULL is not a success in this case, use IS_ERR() to check
+the return value of both.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- drivers/leds/leds-lt3593.c | 21 +++------------------
- 1 file changed, 3 insertions(+), 18 deletions(-)
+ drivers/staging/typec/tcpci.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
-index b9a907e9d321..f6aae616242e 100644
---- a/drivers/leds/leds-lt3593.c
-+++ b/drivers/leds/leds-lt3593.c
-@@ -1,20 +1,5 @@
--/*
-- * LEDs driver for LT3593 controllers
-- *
-- * See the datasheet at http://cds.linear.com/docs/Datasheet/3593f.pdf
-- *
-- * Copyright (c) 2009 Daniel Mack <daniel@caiaq.de>
-- *
-- * Based on leds-gpio.c,
-- *
-- *   Copyright (C) 2007 8D Technologies inc.
-- *   Raphael Assenat <raph@8d.com>
-- *   Copyright (C) 2008 Freescale Semiconductor, Inc.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2009,2018 Daniel Mack <daniel@zonque.org>
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+index 076498a..b63f147 100644
+--- a/drivers/staging/typec/tcpci.c
++++ b/drivers/staging/typec/tcpci.c
+@@ -509,7 +509,7 @@ struct tcpci *tcpci_register_port(struct device *dev, struct tcpci_data *data)
+ 		return ERR_PTR(err);
  
- #include <linux/kernel.h>
- #include <linux/platform_device.h>
-@@ -215,7 +200,7 @@ static struct platform_driver lt3593_led_driver = {
+ 	tcpci->port = tcpm_register_port(tcpci->dev, &tcpci->tcpc);
+-	if (PTR_ERR_OR_ZERO(tcpci->port))
++	if (IS_ERR(tcpci->port))
+ 		return ERR_CAST(tcpci->port);
  
- module_platform_driver(lt3593_led_driver);
+ 	return tcpci;
+@@ -551,7 +551,7 @@ static int tcpci_probe(struct i2c_client *client,
+ 		return err;
  
--MODULE_AUTHOR("Daniel Mack <daniel@caiaq.de>");
-+MODULE_AUTHOR("Daniel Mack <daniel@zonque.org>");
- MODULE_DESCRIPTION("LED driver for LT3593 controllers");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS("platform:leds-lt3593");
+ 	chip->tcpci = tcpci_register_port(&client->dev, &chip->data);
+-	if (PTR_ERR_OR_ZERO(chip->tcpci))
++	if (IS_ERR(chip->tcpci))
+ 		return PTR_ERR(chip->tcpci);
+ 
+ 	i2c_set_clientdata(client, chip);
 -- 
-2.17.1
+2.7.4
