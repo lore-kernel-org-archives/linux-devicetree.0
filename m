@@ -1,7 +1,7 @@
 From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Subject: [PATCH v8 3/7] Bluetooth: btqca: Redefine qca_uart_setup() to generic function.
-Date: Mon, 25 Jun 2018 19:10:09 +0530
-Message-ID: <20180625134013.19684-4-bgodavar@codeaurora.org>
+Subject: [PATCH v8 5/7] Bluetooth: hci_qca: Enable 3.2 Mbps operating speed.
+Date: Mon, 25 Jun 2018 19:10:11 +0530
+Message-ID: <20180625134013.19684-6-bgodavar@codeaurora.org>
 References: <20180625134013.19684-1-bgodavar@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180625134013.19684-1-bgodavar@codeaurora.org>
@@ -10,138 +10,34 @@ To: marcel@holtmann.org, johan.hedberg@gmail.com, mka@chromium.org
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, Balakrishna Godavarthi <bgodavar@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Redefinition of qca_uart_setup will help future Qualcomm Bluetooth
-SoC, to use the same function instead of duplicating the function.
-Added new arguments soc_type and soc_ver to the functions.
-
-These arguments will help to decide type of firmware files
-to be loaded into Bluetooth chip.
-soc_type holds the Bluetooth chip connected to APPS processor.
-soc_ver holds the Bluetooth chip version.
-
 Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 ---
-Changes in v8:
-    * updated soc_type with enum.
+ drivers/bluetooth/hci_qca.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Changes in v7:
-    * initial patch
-    * redefined qca_uart_setup function to generic.
----
- drivers/bluetooth/btqca.c   | 23 ++++++++++++-----------
- drivers/bluetooth/btqca.h   | 13 +++++++++++--
- drivers/bluetooth/hci_qca.c |  3 ++-
- 3 files changed, 25 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-index c5cf9cab438a..3b25be1be19c 100644
---- a/drivers/bluetooth/btqca.c
-+++ b/drivers/bluetooth/btqca.c
-@@ -327,9 +327,9 @@ int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdaddr)
- }
- EXPORT_SYMBOL_GPL(qca_set_bdaddr_rome);
- 
--int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate)
-+int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
-+		   enum qca_btsoc_type soc_type, u32 soc_ver)
- {
--	u32 rome_ver = 0;
- 	struct rome_config config;
- 	int err;
- 
-@@ -337,19 +337,20 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate)
- 
- 	config.user_baud_rate = baudrate;
- 
--	/* Get QCA version information */
--	err = qca_read_soc_version(hdev, &rome_ver);
--	if (err < 0 || rome_ver == 0) {
--		bt_dev_err(hdev, "QCA Failed to get version %d", err);
--		return err;
-+	if (!soc_ver) {
-+		/* Get QCA version information */
-+		err = qca_read_soc_version(hdev, &soc_ver);
-+		if (err < 0 || soc_ver == 0) {
-+			bt_dev_err(hdev, "QCA Failed to get version (%d)", err);
-+			return err;
-+		}
-+		bt_dev_info(hdev, "QCA controller version 0x%08x", soc_ver);
- 	}
- 
--	bt_dev_info(hdev, "QCA controller version 0x%08x", rome_ver);
--
- 	/* Download rampatch file */
- 	config.type = TLV_TYPE_PATCH;
- 	snprintf(config.fwname, sizeof(config.fwname), "qca/rampatch_%08x.bin",
--		 rome_ver);
-+		 soc_ver);
- 	err = qca_download_firmware(hdev, &config);
- 	if (err < 0) {
- 		bt_dev_err(hdev, "QCA Failed to download patch (%d)", err);
-@@ -359,7 +360,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate)
- 	/* Download NVM configuration */
- 	config.type = TLV_TYPE_NVM;
- 	snprintf(config.fwname, sizeof(config.fwname), "qca/nvm_%08x.bin",
--		 rome_ver);
-+		 soc_ver);
- 	err = qca_download_firmware(hdev, &config);
- 	if (err < 0) {
- 		bt_dev_err(hdev, "QCA Failed to download NVM (%d)", err);
-diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
-index 5c9851b11838..24d6667eecf1 100644
---- a/drivers/bluetooth/btqca.h
-+++ b/drivers/bluetooth/btqca.h
-@@ -124,10 +124,18 @@ struct tlv_type_hdr {
- 	__u8   data[0];
- } __packed;
- 
-+enum qca_btsoc_type {
-+	QCA_INVALID = -1,
-+	QCA_AR3002,
-+	QCA_ROME,
-+	QCA_WCN3990
-+};
-+
- #if IS_ENABLED(CONFIG_BT_QCA)
- 
- int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdaddr);
--int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate);
-+int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
-+		   enum qca_btsoc_type soc_type, u32 soc_ver);
- int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version);
- 
- #else
-@@ -137,7 +145,8 @@ static inline int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdad
- 	return -EOPNOTSUPP;
- }
- 
--static inline int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate)
-+static inline int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
-+				 enum qca_btsoc_type soc_type, u32 soc_ver);
- {
- 	return -EOPNOTSUPP;
- }
 diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index d7b60669b656..fe62420ef838 100644
+index 38b7dbe6c897..28187a89b850 100644
 --- a/drivers/bluetooth/hci_qca.c
 +++ b/drivers/bluetooth/hci_qca.c
-@@ -929,6 +929,7 @@ static int qca_setup(struct hci_uart *hu)
- 	struct qca_data *qca = hu->priv;
- 	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
- 	int ret;
-+	int soc_ver = 0;
+@@ -877,6 +877,8 @@ static uint8_t qca_get_baudrate_value(int speed)
+ 		return QCA_BAUDRATE_2000000;
+ 	case 3000000:
+ 		return QCA_BAUDRATE_3000000;
++	case 3200000:
++		return QCA_BAUDRATE_3200000;
+ 	case 3500000:
+ 		return QCA_BAUDRATE_3500000;
+ 	default:
+@@ -891,7 +893,7 @@ static int qca_set_baudrate(struct hci_dev *hdev, uint8_t baudrate)
+ 	struct sk_buff *skb;
+ 	u8 cmd[] = { 0x01, 0x48, 0xFC, 0x01, 0x00 };
  
- 	bt_dev_info(hdev, "ROME setup");
+-	if (baudrate > QCA_BAUDRATE_3000000)
++	if (baudrate > QCA_BAUDRATE_3200000)
+ 		return -EINVAL;
  
-@@ -966,7 +967,7 @@ static int qca_setup(struct hci_uart *hu)
- 	}
- 
- 	/* Setup patch / NVM configurations */
--	ret = qca_uart_setup(hdev, qca_baudrate);
-+	ret = qca_uart_setup(hdev, qca_baudrate, QCA_ROME, soc_ver);
- 	if (!ret) {
- 		set_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
- 		qca_debugfs_init(hdev);
+ 	cmd[4] = baudrate;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
