@@ -1,91 +1,65 @@
-Return-Path: <SRS0=78dS=JJ=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v2 3/4] input: touchscreen: eeti: drop module parameters, parse DT properties
-Date: Sat, 23 Jun 2018 17:45:32 +0200
-Message-Id: <20180623154533.26901-4-daniel@zonque.org>
-In-Reply-To: <20180623154533.26901-1-daniel@zonque.org>
-References: <20180623154533.26901-1-daniel@zonque.org>
-To: dmitry.torokhov@gmail.com, robh+dt@kernel.org
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=Dkm/=JL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-db5eur01on0088.outbound.protection.outlook.com ([104.47.2.88]:4509
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1753288AbeFYI0u (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 25 Jun 2018 04:26:50 -0400
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v7 12/14] staging: typec: tcpci: keep the disconnected cc line open
+Date: Mon, 25 Jun 2018 16:08:44 +0800
+Message-Id: <1529914126-22550-13-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
+References: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: a.hajda@samsung.com, jun.li@nxp.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-The only user of this driver in mainline does not make use of the module
-parameters, so let's remove them. All properties for this driver should be
-set through DT or pdata.
+While set polarity, we should keep the disconnected cc line to be
+open.
 
-Use touchscreen_parse_properties() to automatically set some of the common
-touchscreen properties and derive the axis inversion through that.
-
-And finally, use touchscreen_report_pos() to handle the DT properties
-automatically instead of doing the inversion ourselves.
-
-Signed-off-by: Daniel Mack <daniel@zonque.org>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- drivers/input/touchscreen/eeti_ts.c | 22 +++++-----------------
- 1 file changed, 5 insertions(+), 17 deletions(-)
+ drivers/staging/typec/tcpci.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/input/touchscreen/eeti_ts.c b/drivers/input/touchscreen/eeti_ts.c
-index cc4fd33f9d6d..84561dfde7c4 100644
---- a/drivers/input/touchscreen/eeti_ts.c
-+++ b/drivers/input/touchscreen/eeti_ts.c
-@@ -25,9 +25,9 @@
-  */
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+index 4d3b0ae..11c2d37 100644
+--- a/drivers/staging/typec/tcpci.c
++++ b/drivers/staging/typec/tcpci.c
+@@ -185,15 +185,25 @@ static int tcpci_set_polarity(struct tcpc_dev *tcpc,
+ 			      enum typec_cc_polarity polarity)
+ {
+ 	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
++	unsigned int reg;
+ 	int ret;
  
- #include <linux/module.h>
--#include <linux/moduleparam.h>
- #include <linux/kernel.h>
- #include <linux/input.h>
-+#include <linux/input/touchscreen.h>
- #include <linux/interrupt.h>
- #include <linux/i2c.h>
- #include <linux/timer.h>
-@@ -36,18 +36,11 @@
- #include <linux/slab.h>
- #include <asm/unaligned.h>
+-	ret = regmap_write(tcpci->regmap, TCPC_TCPC_CTRL,
+-			   (polarity == TYPEC_POLARITY_CC2) ?
+-			   TCPC_TCPC_CTRL_ORIENTATION : 0);
++	/* Keep the disconnect cc line open */
++	ret = regmap_read(tcpci->regmap, TCPC_ROLE_CTRL, &reg);
+ 	if (ret < 0)
+ 		return ret;
  
--static bool flip_x;
--module_param(flip_x, bool, 0644);
--MODULE_PARM_DESC(flip_x, "flip x coordinate");
--
--static bool flip_y;
--module_param(flip_y, bool, 0644);
--MODULE_PARM_DESC(flip_y, "flip y coordinate");
--
- struct eeti_ts {
- 	struct i2c_client *client;
- 	struct input_dev *input;
- 	struct gpio_desc *attn_gpio;
-+	struct touchscreen_properties props;
- 	bool running;
- };
- 
-@@ -74,17 +67,10 @@ static void eeti_ts_report_event(struct eeti_ts *eeti, u8 *buf)
- 	x >>= res - EETI_TS_BITDEPTH;
- 	y >>= res - EETI_TS_BITDEPTH;
- 
--	if (flip_x)
--		x = EETI_MAXVAL - x;
--
--	if (flip_y)
--		y = EETI_MAXVAL - y;
--
- 	if (buf[0] & REPORT_BIT_HAS_PRESSURE)
- 		input_report_abs(eeti->input, ABS_PRESSURE, buf[5]);
- 
--	input_report_abs(eeti->input, ABS_X, x);
--	input_report_abs(eeti->input, ABS_Y, y);
-+	touchscreen_report_pos(eeti->input, &eeti->props, x, y, false);
- 	input_report_key(eeti->input, BTN_TOUCH, buf[0] & REPORT_BIT_PRESSED);
- 	input_sync(eeti->input);
- }
-@@ -179,6 +165,8 @@ static int eeti_ts_probe(struct i2c_client *client,
- 	input_set_abs_params(input, ABS_Y, 0, EETI_MAXVAL, 0, 0);
- 	input_set_abs_params(input, ABS_PRESSURE, 0, 0xff, 0, 0);
- 
-+	touchscreen_parse_properties(input, false, &eeti->props);
+-	return 0;
++	if (polarity == TYPEC_POLARITY_CC2)
++		reg |= TCPC_ROLE_CTRL_CC_OPEN << TCPC_ROLE_CTRL_CC1_SHIFT;
++	else
++		reg |= TCPC_ROLE_CTRL_CC_OPEN << TCPC_ROLE_CTRL_CC2_SHIFT;
++	ret = regmap_write(tcpci->regmap, TCPC_ROLE_CTRL, reg);
++	if (ret < 0)
++		return ret;
 +
- 	input->name = client->name;
- 	input->id.bustype = BUS_I2C;
- 	input->open = eeti_ts_open;
++	return regmap_write(tcpci->regmap, TCPC_TCPC_CTRL,
++			   (polarity == TYPEC_POLARITY_CC2) ?
++			   TCPC_TCPC_CTRL_ORIENTATION : 0);
+ }
+ 
+ static int tcpci_set_vconn(struct tcpc_dev *tcpc, bool enable)
 -- 
-2.17.1
+2.7.4
+
