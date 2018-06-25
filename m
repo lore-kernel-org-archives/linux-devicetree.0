@@ -1,38 +1,81 @@
-From: Robin Gong <yibin.gong@nxp.com>
-Subject: [PATCH v1] ARM: dts: imx6sl-evk: keep sw4 always on
-Date: Mon, 25 Jun 2018 20:34:11 +0800
-Message-ID: <1529930051-14122-1-git-send-email-yibin.gong@nxp.com>
+From: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [PATCH v12 3/5] dt-bindings: drm/bridge: Document
+ sn65dsi86 bridge bindings
+Date: Mon, 25 Jun 2018 10:26:05 +0530
+Message-ID: <2110b47210e3caf6b747ae2297e24b33@codeaurora.org>
+References: <1529584329-632-1-git-send-email-spanda@codeaurora.org>
+ <1529584329-632-4-git-send-email-spanda@codeaurora.org>
+ <152962993355.16708.2310695895490918997@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, anson.huang@nxp.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-imx@nxp.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <152962993355.16708.2310695895490918997-n1Xw8LXHxjTHt/MElyovVYaSKrA+ACpX0E9HWUfgJXw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SW4 is one power rail for LPDDR2 on i.mx6sl-evk, so it should
-be kept always on. But it's disabled after switch disabled
-interface implemented in pfuze driver
-'commit 5fe156f1cab4
-("regulator: pfuze100: add enable/disable for switch")'.Thus,
-it breaks kernel bootup. Add 'regulator-always-on' for SW4.
-
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
----
- arch/arm/boot/dts/imx6sl-evk.dts | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
-index 37e792f..798df66 100644
---- a/arch/arm/boot/dts/imx6sl-evk.dts
-+++ b/arch/arm/boot/dts/imx6sl-evk.dts
-@@ -199,6 +199,7 @@
- 			sw4_reg: sw4 {
- 				regulator-min-microvolt = <800000>;
- 				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
- 			};
- 
- 			swbst_reg: swbst {
--- 
-2.7.4
+T24gMjAxOC0wNi0yMiAwNjo0MiwgU3RlcGhlbiBCb3lkIHdyb3RlOgo+IFF1b3RpbmcgU2FuZGVl
+cCBQYW5kYSAoMjAxOC0wNi0yMSAwNTozMjowNykKPj4gZGlmZiAtLWdpdCAKPj4gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4
+dCAKPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
+dGksc242NWRzaTg2LnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAw
+MDAwMDAuLmM4YjhmMDE4MzU2Zgo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyAKPj4gYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4
+dAo+PiBAQCAtMCwwICsxLDg2IEBACj4+ICtTTjY1RFNJODYgRFNJIHRvIGVEUCBicmlkZ2UgY2hp
+cAo+PiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4gKwo+PiArVGhpcyBpcyB0
+aGUgYmluZGluZyBmb3IgVGV4YXMgSW5zdHJ1bWVudHMgU042NURTSTg2IGJyaWRnZS4KPj4gK2h0
+dHA6Ly93d3cudGkuY29tL2dlbmVyYWwvZG9jcy9saXQvZ2V0bGl0ZXJhdHVyZS50c3A/Z2VuZXJp
+Y1BhcnROdW1iZXI9c242NWRzaTg2JmZpbGVUeXBlPXBkZgo+PiArCj4+ICtSZXF1aXJlZCBwcm9w
+ZXJ0aWVzOgo+PiArLSBjb21wYXRpYmxlOiBNdXN0IGJlICJ0aSxzbjY1ZHNpODYiCj4+ICstIHJl
+ZzogaTJjIGFkZHJlc3Mgb2YgdGhlIGNoaXAsIDB4MmQgYXMgcGVyIGRhdGFzaGVldAo+PiArLSBl
+bmFibGUtZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgYnJpZGdl
+X2VuIHBpbiAKPj4gKGFjdGl2ZSBoaWdoKQo+PiArCj4+ICstIHZjY2lvLXN1cHBseTogQSAxLjhW
+IHN1cHBseSB0aGF0IHBvd2VycyB1cCB0aGUgZGlnaXRhbCBJT3MuCj4+ICstIHZwbGwtc3VwcGx5
+OiBBIDEuOFYgc3VwcGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBkaXNwbGF5cG9ydCBQTEwuCj4+ICst
+IHZjY2Etc3VwcGx5OiBBIDEuMlYgc3VwcGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBhbmFsb2cgY2ly
+Y3VpdHMuCj4+ICstIHZjYy1zdXBwbHk6IEEgMS4yViBzdXBwbHkgdGhhdCBwb3dlcnMgdXAgdGhl
+IGRpZ2l0YWwgY29yZS4KPj4gKwo+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPj4gKy0gaW50ZXJy
+dXB0cy1leHRlbmRlZDogU3BlY2lmaWVyIGZvciB0aGUgU042NURTSTg2IGludGVycnVwdCBsaW5l
+Lgo+PiArCj4+ICstIGRkYy1pMmMtYnVzOiBwaGFuZGxlIG9mIHRoZSBJMkMgY29udHJvbGxlciB1
+c2VkIGZvciBEREMgRURJRCAKPj4gcHJvYmluZwo+PiArCj4+ICstIGdwaW8tY29udHJvbGxlcjog
+TWFya3MgdGhlIGRldmljZSBoYXMgYSBHUElPIGNvbnRyb2xsZXIuCj4+ICstICNncGlvLWNlbGxz
+ICAgIDogU2hvdWxkIGJlIHR3by4gVGhlIGZpcnN0IGNlbGwgaXMgdGhlIHBpbiBudW1iZXIgCj4+
+IGFuZAo+PiArICAgICAgICAgICAgICAgICAgIHRoZSBzZWNvbmQgY2VsbCBpcyB1c2VkIHRvIHNw
+ZWNpZnkgZmxhZ3MuCj4+ICsgICAgICAgICAgICAgICAgICAgU2VlIC4uLy4uL2dwaW8vZ3Bpby50
+eHQgZm9yIG1vcmUgaW5mb3JtYXRpb24uCj4+ICstICNwd20tY2VsbHMgOiBTaG91bGQgYmUgb25l
+LiBTZWUgLi4vLi4vcHdtL3B3bS50eHQgZm9yIGRlc2NyaXB0aW9uIAo+PiBvZgo+PiArICAgICAg
+ICAgICAgICAgdGhlIGNlbGwgZm9ybWF0cy4KPj4gKwo+PiArLSBjbG9jay1uYW1lczogc2hvdWxk
+IGJlICJyZWZjbGsiCj4+ICstIGNsb2NrczogU3BlY2lmaWNhdGlvbiBmb3IgaW5wdXQgcmVmZXJl
+bmNlIGNsb2NrLiBUaGUgcmVmZXJlbmNlCj4+ICsgICAgICAgICBjbG9jayByYXRlIG11c3QgYmUg
+MTIgTUh6LCAxOS4yIE1IeiwgMjYgTUh6LCAyNyBNSHogb3IgMzguNCAKPj4gTUh6Lgo+PiArCj4+
+ICstIGRhdGEtbGFuZXM6IFNlZSAuLi8uLi9tZWRpYS92aWRlby1pbnRlcmZhY2UudHh0Cj4+ICst
+IGxhbmUtcG9sYXJpdGllczogU2VlIC4uLy4uL21lZGlhL3ZpZGVvLWludGVyZmFjZS50eHQKPiAK
+PiBXZSBuZWVkIGFub3RoZXIgcHJvcGVydHkgZm9yIHN1c3BlbmQtZ3Bpb3MgZnVuY3Rpb24gb2Yg
+R1BJTzEuIEkgc3VwcG9zZQo+IGZvciB0aGUgb3RoZXIgR1BJT3Mgd2UgZG9uJ3QgbmVlZCBhbnl0
+aGluZyBsaWtlIHRoaXMgYmVjYXVzZSB0aGV5J3JlCj4gb3V0cHV0IGZ1bmN0aW9ucyBvbmx5PyBH
+UElPNCBjYW4gZG8gUFdNIGFuZCBJIGd1ZXNzIGlmIHB3bSBpcyB1c2VkIGluIAo+IERUCj4gZnJv
+bSBoZXJlIHRoZW4gdGhlIGRyaXZlciBjYW4gbXV4IHRoYXQgb3V0IG9mIGdwaW80IHByb3Blcmx5
+LiBJIGhhdmUgbm8KPiBpZGVhIGhvdyB0aGUgaHN5bmMgYW5kIHZzeW5jIEdQSU9zIHdvdWxkIHdv
+cmsgdGhvdWdoLiBJIHNlZSB0aGF0IEdQSU8zCj4gY2FuIGRvIERTSUEgaHN5bmMgb3IgdnN5bmMg
+YW5kIEdQSU8yIGNhbiBkbyBEU0lBIHZzeW5jIGFuZCBJIHdvdWxkIAo+IGd1ZXNzCj4gdGhvc2Ug
+YXJlIGluIG91dHB1dCBtb2RlIG9ubHkuIE1heWJlIHRoYXQncyBqdXN0IGFub3RoZXIgcHJvcGVy
+dHkgb24KPiB0aGlzIG5vZGUgdG8gaW5kaWNhdGUgaWYgd2Ugc2hvdWxkIG11eCBvdXQgdGhlIGZ1
+bmN0aW9uIG9yIG5vdC4gVXN1YWxseQo+IHRoYXQncyBkb25lIGZyb20gcGluY3RybCB0aG91Z2gu
+IEkgZG9uJ3QgaGF2ZSBhIHVzZSBjYXNlIGZvciB0aG9zZQo+IGZ1bmN0aW9ucyBidXQgSSBkbyBj
+YXJlIGFib3V0IHN1c3BlbmQgZ3Bpb3Mgc28gYXQgbGVhc3QgYWRkIHRoYXQgb25lCj4gcGxlYXNl
+LgoKSSB3YXMgdGhpbmtpbmcgb2YgYWRkaW5nIGdwaW8xIChzdXNwZW5kLWdwaW8pIGRvY3VtZW50
+YXRpb24gd2hlbiB3ZSBhZGQKc3VwcG9ydCBmb3IgUFNSIGZlYXR1cmUuIFNpbmNlIGZvciBQU1Ig
+d2Ugd2lsbCBiZSB1c2luZyB0aGlzIApzdXNwb2VuZC1ncGlvLgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVl
+ZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
