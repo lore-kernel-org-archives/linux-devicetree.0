@@ -1,46 +1,152 @@
-Return-Path: <SRS0=pxWX=JI=gmail.com=festevam@kernel.org>
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 2/2] crypto: sahara - Add i.MX51 entry
-Date: Fri, 22 Jun 2018 13:21:27 -0300
-Message-Id: <1529684487-5025-2-git-send-email-festevam@gmail.com>
-In-Reply-To: <1529684487-5025-1-git-send-email-festevam@gmail.com>
-References: <1529684487-5025-1-git-send-email-festevam@gmail.com>
-To: herbert@gondor.apana.org.au
-Cc: robh+dt@kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, horia.geanta@nxp.com, Fabio Estevam <fabio.estevam@nxp.com>
+Return-Path: <SRS0=pME0=JL=nxp.com=jun.li@kernel.org>
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v7 14/14] staging: typec: tcpci: move tcpci drivers out of staging
+Date: Mon, 25 Jun 2018 16:08:46 +0800
+Message-Id: <1529914126-22550-15-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
+References: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: a.hajda@samsung.com, jun.li@nxp.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
+Move TCPCI(Typec port controller interface) driver and rt1711h
+driver out of staging.
 
-i.MX51 and i.MX51 share the same sahara IP block version, so add
-i.MX51 in the compatible list.
-
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- drivers/crypto/sahara.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/staging/Kconfig                        |  2 --
+ drivers/staging/Makefile                       |  1 -
+ drivers/staging/typec/Kconfig                  | 22 ----------------------
+ drivers/staging/typec/Makefile                 |  2 --
+ drivers/staging/typec/TODO                     |  5 -----
+ drivers/usb/typec/Kconfig                      | 15 +++++++++++++++
+ drivers/usb/typec/Makefile                     |  2 ++
+ drivers/{staging => usb}/typec/tcpci.c         |  0
+ drivers/{staging => usb}/typec/tcpci.h         |  0
+ drivers/{staging => usb}/typec/tcpci_rt1711h.c |  0
+ 10 files changed, 17 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/crypto/sahara.c b/drivers/crypto/sahara.c
-index 0f2245e..ce1a42c 100644
---- a/drivers/crypto/sahara.c
-+++ b/drivers/crypto/sahara.c
-@@ -1382,6 +1382,7 @@ static const struct platform_device_id sahara_platform_ids[] = {
- MODULE_DEVICE_TABLE(platform, sahara_platform_ids);
+diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
+index 75a4804..af9a82f 100644
+--- a/drivers/staging/Kconfig
++++ b/drivers/staging/Kconfig
+@@ -106,8 +106,6 @@ source "drivers/staging/greybus/Kconfig"
  
- static const struct of_device_id sahara_dt_ids[] = {
-+	{ .compatible = "fsl,imx51-sahara" },
- 	{ .compatible = "fsl,imx53-sahara" },
- 	{ .compatible = "fsl,imx27-sahara" },
- 	{ /* sentinel */ }
-@@ -1507,7 +1508,9 @@ static int sahara_probe(struct platform_device *pdev)
- 		if (version != SAHARA_VERSION_3)
- 			err = -ENODEV;
- 	} else if (of_device_is_compatible(pdev->dev.of_node,
--			"fsl,imx53-sahara")) {
-+		   "fsl,imx53-sahara") ||
-+		   of_device_is_compatible(pdev->dev.of_node,
-+		   "fsl,imx51-sahara")) {
- 		if (((version >> 8) & 0xff) != SAHARA_VERSION_4)
- 			err = -ENODEV;
- 		version = (version >> 8) & 0xff;
+ source "drivers/staging/vc04_services/Kconfig"
+ 
+-source "drivers/staging/typec/Kconfig"
+-
+ source "drivers/staging/vboxvideo/Kconfig"
+ 
+ source "drivers/staging/pi433/Kconfig"
+diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
+index e84959a..8479d47 100644
+--- a/drivers/staging/Makefile
++++ b/drivers/staging/Makefile
+@@ -2,7 +2,6 @@
+ # Makefile for staging directory
+ 
+ obj-y				+= media/
+-obj-y				+= typec/
+ obj-$(CONFIG_PRISM2_USB)	+= wlan-ng/
+ obj-$(CONFIG_COMEDI)		+= comedi/
+ obj-$(CONFIG_FB_OLPC_DCON)	+= olpc_dcon/
+diff --git a/drivers/staging/typec/Kconfig b/drivers/staging/typec/Kconfig
+deleted file mode 100644
+index 3aa981f..0000000
+--- a/drivers/staging/typec/Kconfig
++++ /dev/null
+@@ -1,22 +0,0 @@
+-menu "USB Power Delivery and Type-C drivers"
+-
+-if TYPEC_TCPM
+-
+-config TYPEC_TCPCI
+-	tristate "Type-C Port Controller Interface driver"
+-	depends on I2C
+-	select REGMAP_I2C
+-	help
+-	  Type-C Port Controller driver for TCPCI-compliant controller.
+-
+-config TYPEC_RT1711H
+-	tristate "Richtek RT1711H Type-C chip driver"
+-	select TYPEC_TCPCI
+-	help
+-	  Richtek RT1711H Type-C chip driver that works with
+-	  Type-C Port Controller Manager to provide USB PD and USB
+-	  Type-C functionalities.
+-
+-endif
+-
+-endmenu
+diff --git a/drivers/staging/typec/Makefile b/drivers/staging/typec/Makefile
+deleted file mode 100644
+index 7803d48..0000000
+--- a/drivers/staging/typec/Makefile
++++ /dev/null
+@@ -1,2 +0,0 @@
+-obj-$(CONFIG_TYPEC_TCPCI)	+= tcpci.o
+-obj-$(CONFIG_TYPEC_RT1711H)	+= tcpci_rt1711h.o
+diff --git a/drivers/staging/typec/TODO b/drivers/staging/typec/TODO
+deleted file mode 100644
+index 53fe2f7..0000000
+--- a/drivers/staging/typec/TODO
++++ /dev/null
+@@ -1,5 +0,0 @@
+-tcpci:
+-- Test with real hardware
+-
+-Please send patches to Guenter Roeck <linux@roeck-us.net> and copy
+-Heikki Krogerus <heikki.krogerus@linux.intel.com>.
+diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
+index 2c8eab1..972fd19 100644
+--- a/drivers/usb/typec/Kconfig
++++ b/drivers/usb/typec/Kconfig
+@@ -56,6 +56,21 @@ config TYPEC_TCPM
+ 
+ if TYPEC_TCPM
+ 
++config TYPEC_TCPCI
++	tristate "Type-C Port Controller Interface driver"
++	depends on I2C
++	select REGMAP_I2C
++	help
++	  Type-C Port Controller driver for TCPCI-compliant controller.
++
++config TYPEC_RT1711H
++	tristate "Richtek RT1711H Type-C chip driver"
++	select TYPEC_TCPCI
++	help
++	  Richtek RT1711H Type-C chip driver that works with
++	  Type-C Port Controller Manager to provide USB PD and USB
++	  Type-C functionalities.
++
+ source "drivers/usb/typec/fusb302/Kconfig"
+ 
+ config TYPEC_WCOVE
+diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
+index 1f599a6..46f86ee 100644
+--- a/drivers/usb/typec/Makefile
++++ b/drivers/usb/typec/Makefile
+@@ -7,3 +7,5 @@ obj-$(CONFIG_TYPEC_WCOVE)	+= typec_wcove.o
+ obj-$(CONFIG_TYPEC_UCSI)	+= ucsi/
+ obj-$(CONFIG_TYPEC_TPS6598X)	+= tps6598x.o
+ obj-$(CONFIG_TYPEC)		+= mux/
++obj-$(CONFIG_TYPEC_TCPCI)	+= tcpci.o
++obj-$(CONFIG_TYPEC_RT1711H)	+= tcpci_rt1711h.o
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/usb/typec/tcpci.c
+similarity index 100%
+rename from drivers/staging/typec/tcpci.c
+rename to drivers/usb/typec/tcpci.c
+diff --git a/drivers/staging/typec/tcpci.h b/drivers/usb/typec/tcpci.h
+similarity index 100%
+rename from drivers/staging/typec/tcpci.h
+rename to drivers/usb/typec/tcpci.h
+diff --git a/drivers/staging/typec/tcpci_rt1711h.c b/drivers/usb/typec/tcpci_rt1711h.c
+similarity index 100%
+rename from drivers/staging/typec/tcpci_rt1711h.c
+rename to drivers/usb/typec/tcpci_rt1711h.c
 -- 
 2.7.4
