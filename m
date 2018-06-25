@@ -1,64 +1,50 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCHv2 3/9] dt-bindings: display/ti: add am65x-dss bindings
-Date: Mon, 25 Jun 2018 12:59:09 -0600
-Message-ID: <20180625185909.GA8320@rob-hp-laptop>
-References: <20180618132242.8673-1-tomi.valkeinen@ti.com>
- <20180618132242.8673-4-tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: rng: Add new compatible qcom,prng-v2
+Date: Mon, 25 Jun 2018 13:06:09 -0600
+Message-ID: <20180625190609.GA3586@rob-hp-laptop>
+References: <20180619095430.26358-1-vkoul@kernel.org>
+ <20180619095430.26358-2-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180618132242.8673-4-tomi.valkeinen@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-omap@vger.kernel.org
+In-Reply-To: <20180619095430.26358-2-vkoul@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@linaro.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>, Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdW4gMTgsIDIwMTggYXQgMDQ6MjI6MzZQTSArMDMwMCwgVG9taSBWYWxrZWluZW4g
-d3JvdGU6Cj4gQWRkIERUIGJpbmRpbmdzIGZvciBUZXhhcyBJbnN0cnVtZW50cyBBTTY1eCBTb0Mg
-RGlzcGxheSBTdWJzeXN0ZW0uICBUaGUKPiBEU1M3IG9uIEFNNjV4IFNvQyBoYXMgdHdvIHZpZGVv
-IHBvcnRzIChEUEkgYW5kIE9MREkpIGFuZCB0d28gdmlkZW8KPiBwaXBlbGluZXMuCj4gCj4gU2ln
-bmVkLW9mZi1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBU
-b21pIFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29tPgo+IENjOiBkZXZpY2V0cmVlQHZn
-ZXIua2VybmVsLm9yZwo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS90aS90aSxhbTYtZHNz
-LnR4dCAgICAgICAgICAgfCAxNiArKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAx
-NiBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxhbTYtZHNzLnR4dAo+IAo+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxhbTYtZHNz
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLGFt
-Ni1kc3MudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjM0
-NjZmMDk1ZmI4NAo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxhbTYtZHNzLnR4dAo+IEBAIC0wLDAgKzEsMTYgQEAK
-PiArVGV4YXMgSW5zdHJ1bWVudHMgQU02NXggRGlzcGxheSBTdWJzeXN0ZW0KPiArPT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0
-aWVzOgo+ICstIGNvbXBhdGlibGU6ICJ0aSxhbTY1eC1kc3MiLCAidGksYW02LWRzcyIKCldoeSBk
-byB5b3UgbmVlZCAyIGNvbXBhdGlibGVzPyBXaGF0J3MgdGhlIGRpZmZlcmVuY2UgZm9yIHRoZSAn
-eCcgaW4gCidhbTY1eCc/Cgo+ICstIHJlZzogYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdp
-c3RlciBzcGFjZXMgZm9yIERTUyBzdWJtb2R1bGVzCj4gKy0gcmVnLW5hbWVzOiAiY29tbW9uIiwg
-InZpZGwxIiwgInZpZCIsICJvdnIxIiwgIm92cjIiLCAidnAxIiwgInZwMiIKPiArLSBjbG9ja3M6
-IHBoYW5kbGUgdG8gZmNsaywgdnAxLCBhbmQgdnAyIGNsb2Nrcwo+ICstIGNsb2NrLW5hbWVzOiAi
-ZmNrIiwgInZwMSIsICJ2cDIiCgpmY2sgb3IgZmNsaz8KCj4gKy0gaW50ZXJydXB0czogcGhhbmRs
-ZSB0byB0aGUgRElTUEMgaW50ZXJydXB0Cj4gKy0gc3lzY29uOiBwaGFuZGxlIHRvIHN5c2NvbiBk
-ZXZpY2UgaGFuZGxpbmcgT0xESV9QV1JETl9UWCAocGFydGl0aW9uIDEgb2YKPiArICBBTTY1NCBD
-VFJMIE1NUjApCj4gKwo+ICtUaGUgRFNTIG91dHB1dHMgYXJlIGRlc2NyaWJlZCB1c2luZyB0aGUg
-ZGV2aWNlIGdyYXBocyBhcyBkb2N1bWVudGVkIGluCj4gK0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9ncmFwaC50eHQuIEFNNiBEU1MgaGFzIGEgRFBJIG91dHB1dCBhcyBwb3J0IDAK
-PiArYW5kIGFuIE9MREkgb3V0cHV0IGFzIHBvcnQgMS4KCldoYXQncyBPTERJPwoKPiAtLSAKPiBU
-ZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxz
-aW5raS4KPiBZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWlj
-aWxlOiBIZWxzaW5raQo+IAo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNl
-bmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGRldmljZXRyZWUiIGluCj4gdGhlIGJvZHkgb2YgYSBt
-ZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9tbyBpbmZv
-IGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Jun 19, 2018 at 03:24:29PM +0530, Vinod Koul wrote:
+> Later qcom chips support v2 of the prng, so add new compatible
+> qcom,prng-v2 for this.
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+>  Documentation/devicetree/bindings/rng/qcom,prng.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/rng/qcom,prng.txt b/Documentation/devicetree/bindings/rng/qcom,prng.txt
+> index 8e5853c2879b..03fd218bd21a 100644
+> --- a/Documentation/devicetree/bindings/rng/qcom,prng.txt
+> +++ b/Documentation/devicetree/bindings/rng/qcom,prng.txt
+> @@ -2,7 +2,8 @@ Qualcomm MSM pseudo random number generator.
+>  
+>  Required properties:
+>  
+> -- compatible  : should be "qcom,prng"
+> +- compatible  : should be "qcom,prng" for 8916 etc
+> +              : should be "qcom,prng-v2" for 8996 and later
+
+Either use SoC specific compatibles or convince me 'v2' is a meaningful 
+and specific enough version. Some other QC IP has x.y.z versioning for 
+example.
+
+>  - reg         : specifies base physical address and size of the registers map
+>  - clocks      : phandle to clock-controller plus clock-specifier pair
+>  - clock-names : "core" clocks all registers, FIFO and circuits in PRNG IP block
+> -- 
+> 2.14.4
+> 
