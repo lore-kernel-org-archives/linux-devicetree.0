@@ -1,10 +1,10 @@
 Return-Path: <SRS0=SxbK=JL=linaro.org=vinod.koul@kernel.org>
 From: Vinod Koul <vinod.koul@linaro.org>
-Subject: [PATCH v3 2/5] power: reset: qcom-pon: Add Qcom PON driver
-Date: Mon, 25 Jun 2018 12:08:37 +0530
-Message-Id: <20180625063840.30173-3-vkoul@kernel.org>
-In-Reply-To: <20180625063840.30173-1-vkoul@kernel.org>
-References: <20180625063840.30173-1-vkoul@kernel.org>
+Subject: [PATCH v2 2/5] power: reset: qcom-pon: Add Qcom PON driver
+Date: Mon, 25 Jun 2018 10:39:35 +0530
+Message-Id: <20180625050938.4700-3-vkoul@kernel.org>
+In-Reply-To: <20180625050938.4700-1-vkoul@kernel.org>
+References: <20180625050938.4700-1-vkoul@kernel.org>
 To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
