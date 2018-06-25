@@ -1,38 +1,41 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH] arm: dts: pxa3xx: provide correct clk-names property for
- nand controller node
-Date: Mon, 25 Jun 2018 22:18:03 +0200
-Message-ID: <87po0emxhg.fsf@belgarion.home>
-References: <20180624174205.20648-1-daniel@zonque.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/1] drm/panel: Add support for Olimex LCD-OLinuXino
+ panel
+Date: Mon, 25 Jun 2018 14:41:19 -0600
+Message-ID: <20180625204119.GA10101@rob-hp-laptop>
+References: <1529909093-17021-1-git-send-email-stefan@olimex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180624174205.20648-1-daniel@zonque.org> (Daniel Mack's message
- of "Sun, 24 Jun 2018 19:42:05 +0200")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Mack <daniel@zonque.org>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, haojian.zhuang@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1529909093-17021-1-git-send-email-stefan@olimex.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Mavrodiev <stefan@olimex.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Daniel Mack <daniel@zonque.org> writes:
+On Mon, Jun 25, 2018 at 09:44:35AM +0300, Stefan Mavrodiev wrote:
+> This patch adds Olimex Ltd. LCD-OLinuXino bridge panel driver. The
+> panel is used with different LCDs (currently from 480x272 to 1280x800).
+> Small EEPROM chip is used for identification, which holds some
+> factory data and timing requirements.
+> 
+> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+> ---
+> Changes for v2:
+>     - Changed lcd_olinuxino_funcs to static const
+> 
+>  .../display/panel/olimex,lcd-olinuxino.txt         |  42 +++
 
-> The NAND driver looks for a clock named "core" and falls back to a pdev
-> clock that has a wrong rate if not set.
->
-> Signed-off-by: Daniel Mack <daniel@zonque.org>
-Applied to pxa/dt with a small "line swap", ie. clock-names is one line below
-"clocks" line.
+If there are further changes, please split to a separate patch. 
+Otherwise,
 
-Cheers.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
--- 
-Robert
+>  MAINTAINERS                                        |   6 +
+>  drivers/gpu/drm/panel/Kconfig                      |  10 +
+>  drivers/gpu/drm/panel/Makefile                     |   1 +
+>  drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c | 360 +++++++++++++++++++++
+>  5 files changed, 419 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt
+>  create mode 100644 drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c
