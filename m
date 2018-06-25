@@ -1,46 +1,87 @@
-From: Andreas Klinger <ak@it-klinger.de>
-Subject: [PATCH v2 1/4] iio: hx711: add data-ready-delay-ns property in DT
-Date: Mon, 25 Jun 2018 17:18:02 +0200
-Message-ID: <20180625151802.GA6369@arbeit>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v2 15/23] dt-bindings: ap806: add the thermal node in the
+ syscon file
+Date: Mon, 25 Jun 2018 17:12:31 +0200
+Message-ID: <20180625151239.20976-16-miquel.raynal@bootlin.com>
+References: <20180625151239.20976-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180625151239.20976-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-add data-ready-delay-ns property for hx711 ADC
-this is the delay after rising PD_SCK until DOUT is read and assumed to be
-ready
+Explain the thermal bindings now that the thermal IP is described being
+inside of a system controller. Add a reference to the thermal-zone node.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- Documentation/devicetree/bindings/iio/adc/avia-hx711.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .../arm/marvell/ap806-system-controller.txt        | 38 ++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-index b3629405f568..d0c066e3df69 100644
---- a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-@@ -8,11 +8,18 @@ Required properties:
- 		See Documentation/devicetree/bindings/gpio/gpio.txt
-  - avdd-supply:	Definition of the regulator used as analog supply
+diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+index a856eb9a4e05..a265f1628f36 100644
+--- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
++++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+@@ -11,6 +11,9 @@ For the top level node:
+  - compatible: must be: "syscon", "simple-mfd";
+  - reg: register area of the AP806 system controller
  
-+Optional properties:
-+ - data-ready-delay-ns:	additional delay in nanoseconds between rising of
-+			PD_SCK until DOUT is ready
-+			should be less then maximum PD_SCK high time which
-+			is 50000 in the datasheet
++SYSTEM CONTROLLER 0
++===================
 +
- Example:
- weight@0 {
- 	compatible = "avia,hx711";
- 	sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
- 	dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
- 	avdd-suppy = <&avdd>;
-+	data-ready-delay-ns = <1000>;
- };
+ Clocks:
+ -------
  
+@@ -98,3 +101,38 @@ ap_syscon: system-controller@6f4000 {
+ 		gpio-ranges = <&ap_pinctrl 0 0 19>;
+ 	};
+ };
++
++SYSTEM CONTROLLER 1
++===================
++
++Thermal:
++--------
++
++For common binding part and usage, refer to
++Documentation/devicetree/bindings/thermal/thermal.txt
++
++The thermal IP can probe the temperature all around the processor. It
++may feature several channels, each of them wired to one sensor.
++
++Required properties:
++- compatible: must be one of:
++  * marvell,armada-ap806-thermal
++- reg: register range associated with the thermal functions.
++
++Optional properties:
++- #thermal-sensor-cells: shall be <1> when thermal-zones subnodes refer
++  to this IP and represents the channel ID. There is one sensor per
++  channel. O refers to the thermal IP internal channel, while positive
++  IDs refer to each CPU.
++
++Example:
++ap_syscon1: system-controller@6f8000 {
++	compatible = "syscon", "simple-mfd";
++	reg = <0x6f8000 0x1000>;
++
++	ap_thermal: ap-thermal@80 {
++		compatible = "marvell,armada-ap806-thermal";
++		reg = <0x80 0x10>;
++		#thermal-sensor-cells = <1>;
++	};
++};
 -- 
-2.1.4
+2.14.1
