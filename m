@@ -1,52 +1,56 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH 3/3] ASoC: simple-card: add support for
- clock divider setup
-Date: Mon, 25 Jun 2018 14:57:47 +0200
-Message-ID: <14a11599-e88f-e8b6-2ebb-6e079df236b4@zonque.org>
-References: <20180528193503.18905-1-daniel@zonque.org>
- <20180528193503.18905-4-daniel@zonque.org>
- <20180529113509.GE23509@sirena.org.uk>
- <d6b9da97-8c71-ccfb-07e4-353620396a31@zonque.org>
- <20180530091011.GA6920@sirena.org.uk>
- <ace99dbd-3480-9ac3-e5b8-4ddae73bba10@zonque.org>
- <b006a926-09ff-59e0-2b88-6f15e3e714e9@zonque.org>
- <20180625112440.GE9413@sirena.org.uk>
- <f7e05fe9-c177-9a78-e09d-0f74c2427b63@zonque.org>
- <20180625125711.GO9413@sirena.org.uk>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH V4 2/4] watchdog: stm32: add pclk feature for stm32mp1
+Date: Mon, 25 Jun 2018 06:15:35 -0700
+Message-ID: <d92ec883-09ae-271f-69dd-156df17c3e98@roeck-us.net>
+References: <1529571737-3552-1-git-send-email-ludovic.Barre@st.com>
+ <1529571737-3552-3-git-send-email-ludovic.Barre@st.com>
+ <20180621165335.GA4563@roeck-us.net>
+ <0bfe0082-2134-2d3b-322f-cd6c193a9974@st.com>
+ <3f65a889-f625-9521-ea09-bcf7b5b24927@roeck-us.net>
+ <b5f62568-ff2f-4a04-212e-a952bf009c88@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180625125711.GO9413@sirena.org.uk>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b5f62568-ff2f-4a04-212e-a952bf009c88@st.com>
 Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Robert Jarzmik <robert.jarzmik@free.fr>, lgirdwood@gmail.com, kuninori.morimoto.gx@renesas.com
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexandre Torgue <alexandre.torgue@st.com>, Ludovic BARRE <ludovic.barre@st.com>
+Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, June 25, 2018 02:57 PM, Mark Brown wrote:
-> On Mon, Jun 25, 2018 at 02:55:12PM +0200, Daniel Mack wrote:
->> On Monday, June 25, 2018 01:24 PM, Mark Brown wrote:
+On 06/25/2018 05:52 AM, Alexandre Torgue wrote:
+> Hi Guenter,
 > 
->>> No, I reviewed my patch in there.  What's going on?
 > 
->> I'd like this patch to go through your tree, if that's okay. Then I can post
->> some more patches on top without causing a conflict in the merge window.
+>>> But you are right I forgot to change stm32f429.dtsi.
+>>> If I add a commit for stm32f429.dtsi, it's Ok for you ?
+>>>
+>>
+>> Not really. You are imposing a personal preference on others,
+>> and you would make stm32f429.dtsi inconsistent since it doesn't
+>> use clock names for anything else.This in turn means that people
+>> will have an endless source of irritation since they will need
+>> a clock name for this node but not for others.
 > 
->> Robert is fine with that.
+> Why? This kind of implementation depends on each driver. Isn't ?
 > 
-> That's fine by me.  Is the latest version v3?
+> Or do you mean that if iwdg driver uses this implementation (clock name usage) all nodes inside stm32f429.dtsi should follow the same implementation ?
+> 
+>>
+>> You will have to get the arm and DT maintainers to agree on this change.
+> 
+> As this patch makes easier integration of new platform, I agree with Ludovic proposition.
 > 
 
-Yes.
+Please provide a formal Acked-by:.
 
-
-Thanks!
+Guenter
