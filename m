@@ -1,88 +1,64 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v8 2/2] regulator: add QCOM RPMh regulator driver
-Date: Mon, 25 Jun 2018 11:50:52 -0700
-Message-ID: <CAD=FV=XVEEPgjBXxR+-46RgxLOq63Xvq-jtruoaCxccmMoKUuA@mail.gmail.com>
-References: <cover.1529712888.git.collinsd@codeaurora.org> <35c4ea70cdf5caba560fb6f40e866ee8bc456d93.1529712888.git.collinsd@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCHv2 3/9] dt-bindings: display/ti: add am65x-dss bindings
+Date: Mon, 25 Jun 2018 12:59:09 -0600
+Message-ID: <20180625185909.GA8320@rob-hp-laptop>
+References: <20180618132242.8673-1-tomi.valkeinen@ti.com>
+ <20180618132242.8673-4-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <35c4ea70cdf5caba560fb6f40e866ee8bc456d93.1529712888.git.collinsd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20180618132242.8673-4-tomi.valkeinen@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, Jun 22, 2018 at 5:46 PM, David Collins <collinsd@codeaurora.org> wrote:
-> Add the QCOM RPMh regulator driver to manage PMIC regulators
-> which are controlled via RPMh on some Qualcomm Technologies, Inc.
-> SoCs.  RPMh is a hardware block which contains several
-> accelerators which are used to manage various hardware resources
-> that are shared between the processors of the SoC.  The final
-> hardware state of a regulator is determined within RPMh by
-> performing max aggregation of the requests made by all of the
-> processors.
->
-> Add support for PMIC regulator control via the voltage regulator
-> manager (VRM) and oscillator buffer (XOB) RPMh accelerators.
-> VRM supports manipulation of enable state, voltage, and mode.
-> XOB supports manipulation of enable state.
->
-> Signed-off-by: David Collins <collinsd@codeaurora.org>
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  drivers/regulator/Kconfig               |   9 +
->  drivers/regulator/Makefile              |   1 +
->  drivers/regulator/qcom-rpmh-regulator.c | 746 ++++++++++++++++++++++++++++++++
->  3 files changed, 756 insertions(+)
-
-I've been working with David's v7 patch series for a bit of time now
-and things have been working well.  v8 looks good.  Feel free to add:
-
-Tested-by: Douglas Anderson <dianders@chromium.org>
-
-...to this patch.  Speaking of which it might be getting very close to
-time for this series to land along with David's other series, AKA:
-
-* [1/2] regulator: of: add property for allowed modes specification
-  https://patchwork.kernel.org/patch/10395731/
-
-* [2/2] regulator: of: add support for allowed modes configuration
-  https://patchwork.kernel.org/patch/10395725/
-
-
-Specifically I think we are mostly waiting for RPMh to land.  This is
-on Andy's plate right now but I think it's happy and just waiting for
-the actual push from Andy.
-
-
-NOTE: I don't know if there anything special we need to do for landing
-this and RPMh across two git repositories.  Offline Stephen Boyd
-mentioned to me that maybe it was fine to land this in Mark's tree
-without the RPMh code since it depends on "QCOM_RPMH", but the "||
-COMPILE_TEST" worries me and makes me think auto-builders will start
-yelling.  Andy and Mark: what do you think?
-
-
-If it's helpful to have a link to the latest RPMh, here are patchwork
-IDs on linux-arm-msm:
-
-10477501 [v13,01/10] drivers: qcom: rpmh-rsc: add RPMH controller for QCOM SoCs
-10477559 [v13,02/10] dt-bindings: introduce RPMH RSC bindings for Qualcomm SoCs
-10477545 [v13,03/10] drivers: qcom: rpmh-rsc: log RPMH requests in FTRACE
-10477543 [v13,04/10] drivers: qcom: rpmh: add RPMH helper functions
-10477537 [v13,05/10] drivers: qcom: rpmh-rsc: write sleep/wake requests to TCS
-10477539 [v13,06/10] drivers: qcom: rpmh-rsc: allow invalidation of
-sleep/wake TCS
-10477533 [v13,07/10] drivers: qcom: rpmh: cache sleep/wake state requests
-10477529 [v13,08/10] drivers: qcom: rpmh: allow requests to be sent
-asynchronously
-10477525 [v13,09/10] drivers: qcom: rpmh: add support for batch RPMH request
-10477519 [v13,10/10] drivers: qcom: rpmh-rsc: allow active requests
-from wake TCS
-
-
-
--Doug
+T24gTW9uLCBKdW4gMTgsIDIwMTggYXQgMDQ6MjI6MzZQTSArMDMwMCwgVG9taSBWYWxrZWluZW4g
+d3JvdGU6Cj4gQWRkIERUIGJpbmRpbmdzIGZvciBUZXhhcyBJbnN0cnVtZW50cyBBTTY1eCBTb0Mg
+RGlzcGxheSBTdWJzeXN0ZW0uICBUaGUKPiBEU1M3IG9uIEFNNjV4IFNvQyBoYXMgdHdvIHZpZGVv
+IHBvcnRzIChEUEkgYW5kIE9MREkpIGFuZCB0d28gdmlkZW8KPiBwaXBlbGluZXMuCj4gCj4gU2ln
+bmVkLW9mZi1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBU
+b21pIFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29tPgo+IENjOiBkZXZpY2V0cmVlQHZn
+ZXIua2VybmVsLm9yZwo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS90aS90aSxhbTYtZHNz
+LnR4dCAgICAgICAgICAgfCAxNiArKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAx
+NiBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxhbTYtZHNzLnR4dAo+IAo+IGRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxhbTYtZHNz
+LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLGFt
+Ni1kc3MudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjM0
+NjZmMDk1ZmI4NAo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxhbTYtZHNzLnR4dAo+IEBAIC0wLDAgKzEsMTYgQEAK
+PiArVGV4YXMgSW5zdHJ1bWVudHMgQU02NXggRGlzcGxheSBTdWJzeXN0ZW0KPiArPT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0
+aWVzOgo+ICstIGNvbXBhdGlibGU6ICJ0aSxhbTY1eC1kc3MiLCAidGksYW02LWRzcyIKCldoeSBk
+byB5b3UgbmVlZCAyIGNvbXBhdGlibGVzPyBXaGF0J3MgdGhlIGRpZmZlcmVuY2UgZm9yIHRoZSAn
+eCcgaW4gCidhbTY1eCc/Cgo+ICstIHJlZzogYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdp
+c3RlciBzcGFjZXMgZm9yIERTUyBzdWJtb2R1bGVzCj4gKy0gcmVnLW5hbWVzOiAiY29tbW9uIiwg
+InZpZGwxIiwgInZpZCIsICJvdnIxIiwgIm92cjIiLCAidnAxIiwgInZwMiIKPiArLSBjbG9ja3M6
+IHBoYW5kbGUgdG8gZmNsaywgdnAxLCBhbmQgdnAyIGNsb2Nrcwo+ICstIGNsb2NrLW5hbWVzOiAi
+ZmNrIiwgInZwMSIsICJ2cDIiCgpmY2sgb3IgZmNsaz8KCj4gKy0gaW50ZXJydXB0czogcGhhbmRs
+ZSB0byB0aGUgRElTUEMgaW50ZXJydXB0Cj4gKy0gc3lzY29uOiBwaGFuZGxlIHRvIHN5c2NvbiBk
+ZXZpY2UgaGFuZGxpbmcgT0xESV9QV1JETl9UWCAocGFydGl0aW9uIDEgb2YKPiArICBBTTY1NCBD
+VFJMIE1NUjApCj4gKwo+ICtUaGUgRFNTIG91dHB1dHMgYXJlIGRlc2NyaWJlZCB1c2luZyB0aGUg
+ZGV2aWNlIGdyYXBocyBhcyBkb2N1bWVudGVkIGluCj4gK0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9ncmFwaC50eHQuIEFNNiBEU1MgaGFzIGEgRFBJIG91dHB1dCBhcyBwb3J0IDAK
+PiArYW5kIGFuIE9MREkgb3V0cHV0IGFzIHBvcnQgMS4KCldoYXQncyBPTERJPwoKPiAtLSAKPiBU
+ZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxz
+aW5raS4KPiBZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWlj
+aWxlOiBIZWxzaW5raQo+IAo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNl
+bmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGRldmljZXRyZWUiIGluCj4gdGhlIGJvZHkgb2YgYSBt
+ZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9tbyBpbmZv
+IGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
