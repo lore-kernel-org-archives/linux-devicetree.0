@@ -1,89 +1,88 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v4 09/12] dt-bindings: PM / OPP: add opp-throttlers
- property
-Date: Mon, 25 Jun 2018 11:50:37 -0700
-Message-ID: <20180625185037.GE129942@google.com>
-References: <20180621015237.100100-1-mka@chromium.org>
- <20180621015237.100100-10-mka@chromium.org>
- <20180625153341.GB23270@rob-hp-laptop>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v8 2/2] regulator: add QCOM RPMh regulator driver
+Date: Mon, 25 Jun 2018 11:50:52 -0700
+Message-ID: <CAD=FV=XVEEPgjBXxR+-46RgxLOq63Xvq-jtruoaCxccmMoKUuA@mail.gmail.com>
+References: <cover.1529712888.git.collinsd@codeaurora.org> <35c4ea70cdf5caba560fb6f40e866ee8bc456d93.1529712888.git.collinsd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180625153341.GB23270@rob-hp-laptop>
+In-Reply-To: <35c4ea70cdf5caba560fb6f40e866ee8bc456d93.1529712888.git.collinsd@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
+To: David Collins <collinsd@codeaurora.org>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi,
 
-On Mon, Jun 25, 2018 at 09:33:41AM -0600, Rob Herring wrote:
-> On Wed, Jun 20, 2018 at 06:52:34PM -0700, Matthias Kaehlcke wrote:
-> > The optional opp-throttlers property is used to configure the throttlers
-> > (see drivers/misc/throttler/*) that use a given OPP to throttle the
-> > corresponding device(s).
-> > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > Reviewed-by: Brian Norris <briannorris@chromium.org>
-> > ---
-> > Changes in v4:
-> > - added 'Reviewed-by: Brian Norris <briannorris@chromium.org>' tag
-> > 
-> > Changes in v3:
-> > - none
-> > 
-> > Changes in v2:
-> > - patch added to series
-> > ---
-> >  Documentation/devicetree/bindings/opp/opp.txt | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> > index c396c4c0af92..747e79740c75 100644
-> > --- a/Documentation/devicetree/bindings/opp/opp.txt
-> > +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> > @@ -170,6 +170,9 @@ Optional properties:
-> >    functioning of the current device at the current OPP (where this property is
-> >    present).
-> >  
-> > +- opp-throttlers: Array with phandles of throttlers that use this OPP to
-> > +  throttle the corresponding device(s).
-> > +
-> 
-> I think it would be better to make this a boolean for each OPP entry and 
-> then add "operating-points-v2" property to the EC node to point to the 
-> OPP table.
+On Fri, Jun 22, 2018 at 5:46 PM, David Collins <collinsd@codeaurora.org> wrote:
+> Add the QCOM RPMh regulator driver to manage PMIC regulators
+> which are controlled via RPMh on some Qualcomm Technologies, Inc.
+> SoCs.  RPMh is a hardware block which contains several
+> accelerators which are used to manage various hardware resources
+> that are shared between the processors of the SoC.  The final
+> hardware state of a regulator is determined within RPMh by
+> performing max aggregation of the requests made by all of the
+> processors.
+>
+> Add support for PMIC regulator control via the voltage regulator
+> manager (VRM) and oscillator buffer (XOB) RPMh accelerators.
+> VRM supports manipulation of enable state, voltage, and mode.
+> XOB supports manipulation of enable state.
+>
+> Signed-off-by: David Collins <collinsd@codeaurora.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>  drivers/regulator/Kconfig               |   9 +
+>  drivers/regulator/Makefile              |   1 +
+>  drivers/regulator/qcom-rpmh-regulator.c | 746 ++++++++++++++++++++++++++++++++
+>  3 files changed, 756 insertions(+)
 
-Thanks for your suggestion. "operating-points-v2" would have to be an
-array of phandles, a single thottler can have multiple throttling
-devices.
+I've been working with David's v7 patch series for a bit of time now
+and things have been working well.  v8 looks good.  Feel free to add:
 
-> Unless there is some need for a different throttler for each OPP entry?
+Tested-by: Douglas Anderson <dianders@chromium.org>
 
-Having the option to use different OPPs per throttler would be my
-preference. E.g. there could be configurations where one throttler
-only interacts with certain throttling devices and another one
-with others.
+...to this patch.  Speaking of which it might be getting very close to
+time for this series to land along with David's other series, AKA:
 
-I see another option to achieve this, if you don't like the reference
-to the throttlers in the OPPs. The throttler could have a list of OPPs
-(as phandles, not frequencies as in v1). The main inconvenient I see
-here is that the used OPPs would need a label, which they usually
-don't have. Maybe this is no soooo bad, since the label could be added
-at device level, only on devices that use a throttler, so it wouldn't
-clutter the platform .dts files.
+* [1/2] regulator: of: add property for allowed modes specification
+  https://patchwork.kernel.org/patch/10395731/
 
-This could be a single array with all OPPs from different devices,
-or multiple arrays, one for each throttling device:
+* [2/2] regulator: of: add support for allowed modes configuration
+  https://patchwork.kernel.org/patch/10395725/
 
-throttler-opps-0 = <&cpu0_opp_03 &cpu0_opp_05>;
-throttler-opps-1 = <&gpu_opp_02 &gpu_opp_04>;
 
-My preference would be multiple arrays, because it's easier to read.
+Specifically I think we are mostly waiting for RPMh to land.  This is
+on Andy's plate right now but I think it's happy and just waiting for
+the actual push from Andy.
 
-What do you think?
 
-Thanks
+NOTE: I don't know if there anything special we need to do for landing
+this and RPMh across two git repositories.  Offline Stephen Boyd
+mentioned to me that maybe it was fine to land this in Mark's tree
+without the RPMh code since it depends on "QCOM_RPMH", but the "||
+COMPILE_TEST" worries me and makes me think auto-builders will start
+yelling.  Andy and Mark: what do you think?
 
-Matthias
+
+If it's helpful to have a link to the latest RPMh, here are patchwork
+IDs on linux-arm-msm:
+
+10477501 [v13,01/10] drivers: qcom: rpmh-rsc: add RPMH controller for QCOM SoCs
+10477559 [v13,02/10] dt-bindings: introduce RPMH RSC bindings for Qualcomm SoCs
+10477545 [v13,03/10] drivers: qcom: rpmh-rsc: log RPMH requests in FTRACE
+10477543 [v13,04/10] drivers: qcom: rpmh: add RPMH helper functions
+10477537 [v13,05/10] drivers: qcom: rpmh-rsc: write sleep/wake requests to TCS
+10477539 [v13,06/10] drivers: qcom: rpmh-rsc: allow invalidation of
+sleep/wake TCS
+10477533 [v13,07/10] drivers: qcom: rpmh: cache sleep/wake state requests
+10477529 [v13,08/10] drivers: qcom: rpmh: allow requests to be sent
+asynchronously
+10477525 [v13,09/10] drivers: qcom: rpmh: add support for batch RPMH request
+10477519 [v13,10/10] drivers: qcom: rpmh-rsc: allow active requests
+from wake TCS
+
+
+
+-Doug
