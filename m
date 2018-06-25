@@ -1,69 +1,46 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: mtd: document Broadcom's TRX firmware
- format binding
-Date: Mon, 25 Jun 2018 15:21:37 -0600
-Message-ID: <20180625212137.GA16487@rob-hp-laptop>
-References: <20180612104434.15232-1-zajec5@gmail.com>
+Subject: Re: [PATCH 12/19] mmc: mmci: add variant property to request a reset
+Date: Mon, 25 Jun 2018 15:23:29 -0600
+Message-ID: <20180625212329.GA26557@rob-hp-laptop>
+References: <1528809280-31116-1-git-send-email-ludovic.Barre@st.com>
+ <1528809280-31116-13-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180612104434.15232-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Jonas Gorski <jonas.gorski@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+In-Reply-To: <1528809280-31116-13-git-send-email-ludovic.Barre@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ludovic Barre <ludovic.Barre@st.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdW4gMTIsIDIwMTggYXQgMTI6NDQ6MzNQTSArMDIwMCwgUmFmYcWCIE1pxYJlY2tp
-IHdyb3RlOgo+IEZyb206IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPiAKPiBC
-cm9hZGNvbSBiYXNlZCBob21lIHJvdXRlciBkZXZpY2VzIHVzZSBUUlggZmlybXdhcmUgZm9ybWF0
-LiBJdCdzIGEKPiBjb250YWluZXIgdGhhdCBjYW4gaG9sZCBmZXcgcGFydGl0aW9ucy4gSWYgb3Bl
-cmF0aW5nIHN5c3RlbSBpcyBleHBlY3RlZAo+IHRvIGFjY2VzcyB0aGVtIGl0IGhhcyB0byB1bmRl
-cnN0YW5kIHRoYXQgZm9ybWF0IGFuZCBwYXJzZSBmbGFzaCBkYXRhCj4gYWNjb3JkaW5nbHkuCj4g
-Cj4gU2lnbmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+IC0t
-LQo+ICAuLi4vYmluZGluZ3MvbXRkL3BhcnRpdGlvbnMvYnJjbSx0cngudHh0ICAgICAgICAgICB8
-IDM1ICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDM1IGluc2VydGlv
-bnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9tdGQvcGFydGl0aW9ucy9icmNtLHRyeC50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0aXRpb25zL2JyY20sdHJ4LnR4dCBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9ucy9icmNtLHRy
-eC50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uZTU5MGI4
-ODRlNWFjCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tdGQvcGFydGl0aW9ucy9icmNtLHRyeC50eHQKPiBAQCAtMCwwICsxLDM1IEBACj4g
-K0Jyb2FkY29tIFRSWCBDb250YWluZXIgUGFydGl0aW9uCj4gKz09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09Cj4gKwo+ICtUUlggaXMgQnJvYWRjb20ncyBvZmZpY2lhbCBmaXJtd2FyZSBm
-b3JtYXQgZm9yIHRoZSBCQ005NDd4eCBib2FyZHMuIEl0J3MgdXNlZCBieQo+ICttb3N0IG9mIHRo
-ZSB2ZW5kb3JzIGJ1aWxkaW5nIGRldmljZXMgYmFzZWQgb24gQnJvYWRjb20ncyBCQ000N3h4IFNv
-Q3MgYW5kIGlzCj4gK3N1cHBvcnRlZCBieSB0aGUgQ0ZFIGJvb3Rsb2FkZXIuCj4gKwo+ICtEZXNp
-Z24gb2YgdGhlIFRSWCBmb3JtYXQgaXMgdmVyeSBtaW5pbWFsaXN0aWMuIEl0cyBoZWFkZXIgY29u
-dGFpbnMKPiAraWRlbnRpZmljYXRpb24gZmllbGRzLCBDUkMzMiBjaGVja3N1bSBhbmQgdGhlIGxv
-Y2F0aW9ucyBvZiBlbWJlZGRlZCBwYXJ0aXRpb25zLgo+ICtJdHMgcHVycG9zZSBpcyB0byBzdG9y
-ZSBhIGZldyBwYXJ0aXRpb25zIGluIGEgZm9ybWF0IHRoYXQgY2FuIGJlIGRpc3RyaWJ1dGVkIGFz
-Cj4gK2Egc3RhbmRhbG9uZSBmaWxlIGFuZCB3cml0dGVuIGluIGEgZmxhc2ggbWVtb3J5Lgo+ICsK
-PiArQ29udGFpbmVyIGNhbiBob2xkIHVwIHRvIDQgcGFydGl0aW9ucy4gVGhlIGZpcnN0IHBhcnRp
-dGlvbiBoYXMgdG8gY29udGFpbiBhCj4gK2RldmljZSBleGVjdXRhYmxlIGJpbmFyeSAoZS5nLiBh
-IGtlcm5lbCkgYXMgaXQncyB3aGF0IHRoZSBDRkUgYm9vdGxvYWRlciBzdGFydHMKPiArZXhlY3V0
-aW5nLiBPdGhlciBwYXJ0aXRpb25zIGNhbiBiZSB1c2VkIGZvciBvcGVyYXRpbmcgc3lzdGVtIHB1
-cnBvc2VzLiBUaGlzIGlzCj4gK3VzZWZ1bCBmb3Igc3lzdGVtcyB0aGF0IGtlZXAga2VybmVsIGFu
-ZCByb290ZnMgc2VwYXJhdGVkLgo+ICsKPiArVFJYIGRvZXNuJ3QgZW5mb3JjZSBhbnkgc3RyaWN0
-IHBhcnRpdGlvbiBib3VuZGFyaWVzIG9yIHNpemUgbGltaXRzLiBBbGwKPiArcGFydGl0aW9ucyBo
-YXZlIHRvIGJlIGxlc3MgdGhhbiB0aGUgNEdpQiBtYXggc2l6ZSBsaW1pdC4KPiArCj4gK1RoZXJl
-IGFyZSB0d28gZXhpc3Rpbmcva25vd24gVFJYIHZhcmlhbnRzOgo+ICsxKSB2MSB3aGljaCBjb250
-YWlucyAzIHBhcnRpdGlvbnMKPiArMikgdjIgd2hpY2ggY29udGFpbnMgNCBwYXJ0aXRpb25zCj4g
-Kwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGUgOiAocmVxdWlyZWQpIG11
-c3QgYmUgZWl0aGVyOiAiYnJjbSx0cngtdjEiIG9yICJicmNtLHRyeC12MiIKPiArCWZvbGxvd2Vk
-IGJ5ICJicmNtLHRyeCIKCldoYXQgaXMgdGhlIHB1cnBvc2Ugb2YgYnJjbSx0cng/IEVpdGhlciB0
-aGF0IGFsb25lIGlzIGVub3VnaCBvciB5b3UgbmVlZCAKdjEvdjIgdG8gZGlzdGluZ3Vpc2ggdGhl
-IGRpZmZlcmVuY2UuIFlvdSBzaG91bGRuJ3QgbmVlZCBib3RoLgoKUm9iCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXggTVREIGRpc2N1
-c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8vbGludXgtbXRkLwo=
+On Tue, Jun 12, 2018 at 03:14:33PM +0200, Ludovic Barre wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
+> 
+> Some variants could require a reset.
+> STM32 sdmmc variant needs to reset hardware block
+> during the power cycle procedure (for re-initialization)
+> 
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/mmci.txt | 2 ++
+>  drivers/mmc/host/mmci.c                        | 9 +++++++++
+>  drivers/mmc/host/mmci.h                        | 4 ++++
+>  3 files changed, 15 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
+> index 03796cf..e952707 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmci.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmci.txt
+> @@ -11,6 +11,8 @@ Required properties:
+>  - compatible             : contains "arm,pl18x", "arm,primecell".
+>  - vmmc-supply            : phandle to the regulator device tree node, mentioned
+>                             as the VCC/VDD supply in the eMMC/SD specs.
+> +depend of variant:
+
+Just make it an optional property.
+
+> +- resets                 : phandle to internal reset line.
+>  
+>  Optional properties:
+>  - arm,primecell-periphid : contains the PrimeCell Peripheral ID, it overrides
