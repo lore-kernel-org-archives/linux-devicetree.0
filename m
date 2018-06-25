@@ -1,46 +1,38 @@
-Return-Path: <SRS0=Mmip=JE=linaro.org=vinod.koul@kernel.org>
-From: Vinod Koul <vinod.koul@linaro.org>
-Subject: [PATCH 3/5] dt-bindings: Input: Add additional property to qcom pwrkey
-Date: Mon, 18 Jun 2018 20:05:46 +0530
-Message-Id: <20180618143548.29900-4-vkoul@kernel.org>
-In-Reply-To: <20180618143548.29900-1-vkoul@kernel.org>
-References: <20180618143548.29900-1-vkoul@kernel.org>
-To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Return-Path: <vkoul@kernel.org>
+Date: Mon, 25 Jun 2018 11:44:17 +0530
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH v2 4/5] input: pm8941-pwrkey: Abstract register offsets
+ and event code
+Message-ID: <20180625061417.GB2404@vkoul-mobl>
+References: <20180625050938.4700-1-vkoul@kernel.org>
+ <20180625050938.4700-5-vkoul@kernel.org>
+ <20180625061152.GB1376@tuxbook-pro>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180625061152.GB1376@tuxbook-pro>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: linux-input@vger.kernel.org, linux-pm@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Pwrkey and reset have similar properties so add additional
-property for linux,code to use the code for sending events.
+On 24-06-18, 23:11, Bjorn Andersson wrote:
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> >  struct pm8941_pwrkey {
+> >  	struct device *dev;
+> > @@ -52,6 +57,9 @@ struct pm8941_pwrkey {
+> >  
+> >  	unsigned int revision;
+> >  	struct notifier_block reboot_notifier;
+> > +
+> > +	unsigned int code;
+> 
+> I still would like this to be a u32, as you pass it by reference to a
+> function taking a u32.
 
-diff --git a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-index 07bf55f6e0b9..bf719396eadd 100644
---- a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-+++ b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-@@ -32,6 +32,14 @@ PROPERTIES
- 	Definition: presence of this property indicates that the KPDPWR_N pin
- 		    should be configured for pull up.
- 
-+- linux,code:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: The input key-code associated with the power key.
-+		    Use the linux event codes defined in
-+		    include/dt-bindings/input/linux-event-codes.h
-+		    When property is omitted KEY_POWER is assumed.
-+
- EXAMPLE
- 
- 	pwrkey@800 {
-@@ -40,4 +48,5 @@ EXAMPLE
- 		interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
- 		debounce = <15625>;
- 		bias-pull-up;
-+		linux,code = <KEY_POWER>;
- 	};
+somehow missed this one, will update and send v3 with your ACK
+
+> Apart from that, this looks good and you have my:
+> 
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 -- 
-2.14.4
+~Vinod
