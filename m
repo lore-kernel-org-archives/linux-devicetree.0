@@ -1,56 +1,69 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RfC v1 3/5] dt-bindings: arm: amlogic: Add support for the
- Oranth Tanix TX3 Mini
-Date: Mon, 25 Jun 2018 15:03:57 -0600
-Message-ID: <20180625210357.GA6694@rob-hp-laptop>
-References: <20180624182814.31691-1-martin.blumenstingl@googlemail.com>
- <20180624182814.31691-4-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: mtd: document Broadcom's TRX firmware
+ format binding
+Date: Mon, 25 Jun 2018 15:21:37 -0600
+Message-ID: <20180625212137.GA16487@rob-hp-laptop>
+References: <20180612104434.15232-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180624182814.31691-4-martin.blumenstingl@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, narmstrong@baylibre.com, khilman@baylibre.com, yixun.lan@amlogic.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+In-Reply-To: <20180612104434.15232-1-zajec5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Jonas Gorski <jonas.gorski@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 24, 2018 at 08:28:12PM +0200, Martin Blumenstingl wrote:
-> The Tanix TX3 Mini is a TV box based on the Amlogic S905W chipset. It
-> comes with:
-> - 1 GiB or 2 GiB of DDR3 memory depending on the model
-> - 8 GB or 16 GB eMMC flash depending on the model
-> - 802.11 b/g/n wifi (Silicon Valley Microelectronics SSV6051, does not
->   support Bluetooth, not supported by any mailine driver)
-> - an LED 7 segment display with an FD628 controller (not supported by
->   any mainline driver)
-> - HDMI and AV (CVBS) output
-> - 2x USB (utilizing both USB ports provided by the SoC)
-> - micro SD card slot
-> 
-> The board seems to be very similar to the P23x and Q20x reference
-> boards:
-> - eMMC reset routed to BOOT_9
-> - the SDIO wifi chip's reset line is routed to GPIOX_6 and the reference
->   clock is 32.768KHz on PWM_E
-> - SD card detection is routed to CARD_6
-> - vqmmc of all MMC controllers is hard-wired to 1.8V (VDDIO_BOOT)
-> - uart_AO can be accessed after opening the case and soldering RX, TX
->   and GND lines onto the exposed solder points (marked with RX, TX and
->   GND)
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  Documentation/devicetree/bindings/arm/amlogic.txt | 1 +
->  1 file changed, 1 insertion(+)
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+T24gVHVlLCBKdW4gMTIsIDIwMTggYXQgMTI6NDQ6MzNQTSArMDIwMCwgUmFmYcWCIE1pxYJlY2tp
+IHdyb3RlOgo+IEZyb206IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPiAKPiBC
+cm9hZGNvbSBiYXNlZCBob21lIHJvdXRlciBkZXZpY2VzIHVzZSBUUlggZmlybXdhcmUgZm9ybWF0
+LiBJdCdzIGEKPiBjb250YWluZXIgdGhhdCBjYW4gaG9sZCBmZXcgcGFydGl0aW9ucy4gSWYgb3Bl
+cmF0aW5nIHN5c3RlbSBpcyBleHBlY3RlZAo+IHRvIGFjY2VzcyB0aGVtIGl0IGhhcyB0byB1bmRl
+cnN0YW5kIHRoYXQgZm9ybWF0IGFuZCBwYXJzZSBmbGFzaCBkYXRhCj4gYWNjb3JkaW5nbHkuCj4g
+Cj4gU2lnbmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+IC0t
+LQo+ICAuLi4vYmluZGluZ3MvbXRkL3BhcnRpdGlvbnMvYnJjbSx0cngudHh0ICAgICAgICAgICB8
+IDM1ICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDM1IGluc2VydGlv
+bnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9tdGQvcGFydGl0aW9ucy9icmNtLHRyeC50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0aXRpb25zL2JyY20sdHJ4LnR4dCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9ucy9icmNtLHRy
+eC50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uZTU5MGI4
+ODRlNWFjCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tdGQvcGFydGl0aW9ucy9icmNtLHRyeC50eHQKPiBAQCAtMCwwICsxLDM1IEBACj4g
+K0Jyb2FkY29tIFRSWCBDb250YWluZXIgUGFydGl0aW9uCj4gKz09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09Cj4gKwo+ICtUUlggaXMgQnJvYWRjb20ncyBvZmZpY2lhbCBmaXJtd2FyZSBm
+b3JtYXQgZm9yIHRoZSBCQ005NDd4eCBib2FyZHMuIEl0J3MgdXNlZCBieQo+ICttb3N0IG9mIHRo
+ZSB2ZW5kb3JzIGJ1aWxkaW5nIGRldmljZXMgYmFzZWQgb24gQnJvYWRjb20ncyBCQ000N3h4IFNv
+Q3MgYW5kIGlzCj4gK3N1cHBvcnRlZCBieSB0aGUgQ0ZFIGJvb3Rsb2FkZXIuCj4gKwo+ICtEZXNp
+Z24gb2YgdGhlIFRSWCBmb3JtYXQgaXMgdmVyeSBtaW5pbWFsaXN0aWMuIEl0cyBoZWFkZXIgY29u
+dGFpbnMKPiAraWRlbnRpZmljYXRpb24gZmllbGRzLCBDUkMzMiBjaGVja3N1bSBhbmQgdGhlIGxv
+Y2F0aW9ucyBvZiBlbWJlZGRlZCBwYXJ0aXRpb25zLgo+ICtJdHMgcHVycG9zZSBpcyB0byBzdG9y
+ZSBhIGZldyBwYXJ0aXRpb25zIGluIGEgZm9ybWF0IHRoYXQgY2FuIGJlIGRpc3RyaWJ1dGVkIGFz
+Cj4gK2Egc3RhbmRhbG9uZSBmaWxlIGFuZCB3cml0dGVuIGluIGEgZmxhc2ggbWVtb3J5Lgo+ICsK
+PiArQ29udGFpbmVyIGNhbiBob2xkIHVwIHRvIDQgcGFydGl0aW9ucy4gVGhlIGZpcnN0IHBhcnRp
+dGlvbiBoYXMgdG8gY29udGFpbiBhCj4gK2RldmljZSBleGVjdXRhYmxlIGJpbmFyeSAoZS5nLiBh
+IGtlcm5lbCkgYXMgaXQncyB3aGF0IHRoZSBDRkUgYm9vdGxvYWRlciBzdGFydHMKPiArZXhlY3V0
+aW5nLiBPdGhlciBwYXJ0aXRpb25zIGNhbiBiZSB1c2VkIGZvciBvcGVyYXRpbmcgc3lzdGVtIHB1
+cnBvc2VzLiBUaGlzIGlzCj4gK3VzZWZ1bCBmb3Igc3lzdGVtcyB0aGF0IGtlZXAga2VybmVsIGFu
+ZCByb290ZnMgc2VwYXJhdGVkLgo+ICsKPiArVFJYIGRvZXNuJ3QgZW5mb3JjZSBhbnkgc3RyaWN0
+IHBhcnRpdGlvbiBib3VuZGFyaWVzIG9yIHNpemUgbGltaXRzLiBBbGwKPiArcGFydGl0aW9ucyBo
+YXZlIHRvIGJlIGxlc3MgdGhhbiB0aGUgNEdpQiBtYXggc2l6ZSBsaW1pdC4KPiArCj4gK1RoZXJl
+IGFyZSB0d28gZXhpc3Rpbmcva25vd24gVFJYIHZhcmlhbnRzOgo+ICsxKSB2MSB3aGljaCBjb250
+YWlucyAzIHBhcnRpdGlvbnMKPiArMikgdjIgd2hpY2ggY29udGFpbnMgNCBwYXJ0aXRpb25zCj4g
+Kwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGUgOiAocmVxdWlyZWQpIG11
+c3QgYmUgZWl0aGVyOiAiYnJjbSx0cngtdjEiIG9yICJicmNtLHRyeC12MiIKPiArCWZvbGxvd2Vk
+IGJ5ICJicmNtLHRyeCIKCldoYXQgaXMgdGhlIHB1cnBvc2Ugb2YgYnJjbSx0cng/IEVpdGhlciB0
+aGF0IGFsb25lIGlzIGVub3VnaCBvciB5b3UgbmVlZCAKdjEvdjIgdG8gZGlzdGluZ3Vpc2ggdGhl
+IGRpZmZlcmVuY2UuIFlvdSBzaG91bGRuJ3QgbmVlZCBib3RoLgoKUm9iCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXggTVREIGRpc2N1
+c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8vbGludXgtbXRkLwo=
