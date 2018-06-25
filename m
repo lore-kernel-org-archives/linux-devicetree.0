@@ -1,38 +1,38 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/7] dt-bindings: add binding for the
- Allwinner A64 DE2 bus
-Date: Mon, 25 Jun 2018 14:18:34 -0600
-Message-ID: <20180625201834.GA14276@rob-hp-laptop>
-References: <20180622124540.56203-1-icenowy@aosc.io>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH] arm: dts: pxa3xx: provide correct clk-names property for
+ nand controller node
+Date: Mon, 25 Jun 2018 22:18:03 +0200
+Message-ID: <87po0emxhg.fsf@belgarion.home>
+References: <20180624174205.20648-1-daniel@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBHM4YXMQKGQEGILU64A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180622124540.56203-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180624174205.20648-1-daniel@zonque.org> (Daniel Mack's message
+ of "Sun, 24 Jun 2018 19:42:05 +0200")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Mack <daniel@zonque.org>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, haojian.zhuang@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 22, 2018 at 08:45:35PM +0800, Icenowy Zheng wrote:
-> All the sub-blocks of Allwinner A64 DE2 needs the SRAM C on A64 SoC to
-> be claimed, otherwise the whole DE2 space is inaccessible.
-> 
-> Add a device tree binding of the DE2 part as a sub-bus.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
-> No changes since v1.
-> 
->  .../bindings/bus/sun50i-de2-bus.txt           | 37 +++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/sun50i-de2-bus.txt
+Daniel Mack <daniel@zonque.org> writes:
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> The NAND driver looks for a clock named "core" and falls back to a pdev
+> clock that has a wrong rate if not set.
+>
+> Signed-off-by: Daniel Mack <daniel@zonque.org>
+Applied to pxa/dt with a small "line swap", ie. clock-names is one line below
+"clocks" line.
+
+Cheers.
+
+-- 
+Robert
