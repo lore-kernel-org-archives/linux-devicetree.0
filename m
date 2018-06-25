@@ -1,45 +1,59 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v7 3/3] MAINTAINERS: add subfolders for nuvoton *npcm*
-Date: Mon, 25 Jun 2018 21:59:53 +0800
-Message-ID: <20180625135953.GA3999@kroah.com>
-References: <20180620063306.134820-1-avifishman70@gmail.com>
- <20180620063306.134820-4-avifishman70@gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 00/11] ASoC: qdsp6: Fix dt based module loading
+Date: Mon, 25 Jun 2018 15:31:04 +0100
+Message-ID: <20180625143115.8346-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180620063306.134820-4-avifishman70@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: avifishman70@gmail.com
-Cc: stern@rowland.harvard.edu, tmaimon77@gmail.com, venture@google.com, yuenn@google.com, brendanhiggins@google.com, mathias.nyman@linux.intel.com, bjorn.andersson@linaro.org, jhogan@kernel.org, albeu@free.fr, chunfeng.yun@mediatek.com, tony@atomide.com, baolu.lu@linux.intel.com, elder@linaro.org, digetx@gmail.com, kstewart@linuxfoundation.org, hdegoede@redhat.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, openbmc@lists.ozlabs.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, bgoswami@codeaurora.org
+Cc: rohkumar@qti.qualcomm.com, devicetree@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, srinivas.kandagatla@linaro.org, niklas.cassel@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 20, 2018 at 09:33:06AM +0300, avifishman70@gmail.com wrote:
-> From: Avi Fishman <AviFishman70@gmail.com>
-> 
-> Signed-off-by: Avi Fishman <AviFishman70@gmail.com>
+Recent discussion on https://lkml.org/lkml/2018/6/18/1282 suggested
+that qdsp6 code is using less common of_platform apis which would
+not give dt based module loading support.
 
-No changelog text?
+Suggestion from Rob was to add compatible strings to the dais nodes
+This patchset adds this. Also this patchset has 2 trivial fixes which
+is removing redundant owner and fix a error check in q6routing.
 
-> ---
->  MAINTAINERS | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e0ce3c5f32e5..23c450adad44 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1727,7 +1727,10 @@ F:	arch/arm/mach-npcm/
->  F:	arch/arm/boot/dts/nuvoton-npcm*
->  F:	include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
->  F:	drivers/*/*npcm*
-> +F:	drivers/*/*/*npcm*
->  F:	Documentation/*/*npcm*
-> +F:	Documentation/*/*/*npcm*
-> +F:	Documentation/*/*/*/*npcm*
+Thanks,
+srini
 
-Patch does not apply to 4.18-rc2 :(
+Srinivas Kandagatla (11):
+  ASoC: q6adm: dt-bindings: add compatible string to routing
+  ASoC: q6asm: dt-bindings: add compatible string to dais
+  ASoC: q6afe: dt-bindings: add compatible string to dais
+  ASoC: qdsp6: q6adm: use of_platform_populate/depopulate()
+  ASoC: qdsp6: q6asm: use of_platform_populate/depopulate()
+  ASoC: qdsp6: q6afe: use of_platform_populate/depopulate()
+  ASoC: qdsp6: q6afe-dai: support dt based module loading
+  ASoC: qdsp6: q6asm-dai: support dt based module loading
+  ASoC: qdsp6: q6routing: support dt based module loading
+  ASoC: qcom: apq8096: remove redundant owner assignment
+  ASoC: qdsp6: q6routing: add proper error check
 
-thanks,
+ Documentation/devicetree/bindings/sound/qcom,q6adm.txt |  6 ++++++
+ Documentation/devicetree/bindings/sound/qcom,q6afe.txt |  6 ++++++
+ Documentation/devicetree/bindings/sound/qcom,q6asm.txt |  6 ++++++
+ sound/soc/qcom/apq8096.c                               |  1 -
+ sound/soc/qcom/qdsp6/q6adm.c                           | 15 ++-------------
+ sound/soc/qcom/qdsp6/q6afe-dai.c                       |  8 ++++++++
+ sound/soc/qcom/qdsp6/q6afe.c                           | 16 ++--------------
+ sound/soc/qcom/qdsp6/q6asm-dai.c                       |  8 ++++++++
+ sound/soc/qcom/qdsp6/q6asm.c                           | 17 ++---------------
+ sound/soc/qcom/qdsp6/q6routing.c                       | 10 +++++++++-
+ 10 files changed, 49 insertions(+), 44 deletions(-)
 
-greg k-h
+-- 
+2.16.2
