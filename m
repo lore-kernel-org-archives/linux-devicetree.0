@@ -1,36 +1,76 @@
-From: Michel Pollet <michel.pollet@bp.renesas.com>
-Subject: [PATCH v6 3/3] ARM: dts: Renesas R9A06G032 SMP enable method
-Date: Mon, 25 Jun 2018 09:25:06 +0100
-Message-ID: <1529915110-5867-4-git-send-email-michel.pollet@bp.renesas.com>
-References: <1529915110-5867-1-git-send-email-michel.pollet@bp.renesas.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529915110-5867-1-git-send-email-michel.pollet@bp.renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
-Cc: phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chen-Yu Tsai <wens@csie.org>, Douglas Anderson <dianders@chromium.org>, Carlo Caione <carlo@endlessm.com>, Florian Fainelli <f.fainelli@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v7 00/29] Add support for mediatek SOC MT2712
+Date: Mon, 25 Jun 2018 10:47:40 +0200
+Message-ID: <20180625084740.GN2958@phenom.ffwll.local>
+References: <1529482771-2153-1-git-send-email-stu.hsieh@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1529482771-2153-1-git-send-email-stu.hsieh@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stu Hsieh <stu.hsieh@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add a special enable method for the second CA7 of the R9A06G032
-as well as the default value for the "cpu-release-addr" property.
-
-Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm/boot/dts/r9a06g032.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r9a06g032.dtsi b/arch/arm/boot/dts/r9a06g032.dtsi
-index 353e06f..3e45375 100644
---- a/arch/arm/boot/dts/r9a06g032.dtsi
-+++ b/arch/arm/boot/dts/r9a06g032.dtsi
-@@ -30,6 +30,8 @@
- 			compatible = "arm,cortex-a7";
- 			reg = <1>;
- 			clocks = <&sysctrl R9A06G032_CLK_A7MP>;
-+			enable-method = "renesas,r9a06g032-smp";
-+			cpu-release-addr = <0 0x4000c204>;
- 		};
- 	};
- 
--- 
-2.7.4
+T24gV2VkLCBKdW4gMjAsIDIwMTggYXQgMDQ6MTk6MDJQTSArMDgwMCwgU3R1IEhzaWVoIHdyb3Rl
+Ogo+IFRoaXMgcGF0Y2ggYWRkIHN1cHBvcnQgZm9yIHRoZSBNZWRpYXRlayBNVDI3MTIgRElTUCBz
+dWJzeXN0ZW0uCj4gTVQyNzEyIGlzIGJhc2Ugb24gTVQ4MTczLCB0aGVyZSBhcmUgc29tZSBkaWZm
+ZXJlbmNlIGFzIGZvbGxvd2luZzoKPiBNVDI3MTIgc3VwcG9ydCB0aHJlZSBkaXNwIG91dHB1dCh0
+d28gb3ZsIGFuZCBvbmUgcmRtYSkKPiAKPiBDaGFuZ2UgaW4gdjY6Cj4gLSBVcGRhdGUgY29tbWl0
+IG1lc3NhZ2UgZm9yIHRoZSBwYXRjaAo+ICAgImRybS9tZWRpYXRlazogVXBkYXRlIHRoZSBkZWZp
+bml0aW9uIG9mIGNvbm5lY3Rpb24gZnJvbSBSRE1BMSB0byBEUEkwIgoKSnVzdCBhIGRyaXZlLWJ5
+IGNvbW1lbnQgb24gdGhlIG1lZGlhdGVrIGRyaXZlcjoKCkFzIGZhciBhcyBJIGNhbiBzZWUgbXRr
+X2RybV9nZW0uYyByZWltcGxlbWVudHMgdGhlIGNtYSBoZWxwZXJzIGFzIGEKY29weXBhc3RlIGpv
+Yi4gQW55IHJlYXNvbnMgd2h5IHlvdSdyZSBub3QgdXNpbmcgdGhlIG5vcm1hbCBjbWEgaGVscGVy
+cz8KClRoYW5rcywgRGFuaWVsCj4gCj4gU3R1IEhzaWVoICgyOSk6Cj4gICBkcm0vbWVkaWF0ZWs6
+IHVwZGF0ZSBkdC1iaW5kaW5ncyBmb3IgbXQyNzEyCj4gICBkcm0vbWVkaWF0ZWs6IHN1cHBvcnQg
+bWF4aW11bSA2NCBtdXRleCBtb2QKPiAgIGRybS9tZWRpYXRlazogYWRkIGRkcCBjb21wb25lbnQg
+QUFMMQo+ICAgZHJtL21lZGlhdGVrOiBhZGQgZGRwIGNvbXBvbmVudCBPRDEKPiAgIGRybS9tZWRp
+YXRlazogYWRkIGRkcCBjb21wb25lbnQgUFdNMQo+ICAgZHJtL21lZGlhdGVrOiBhZGQgZGRwIGNv
+bXBvbmVudCBQV00yCj4gICBkcm0vbWVkaWF0ZWs6IGFkZCBjb21wb25lbnQgRFBJMQo+ICAgZHJt
+L21lZGlhdGVrOiBhZGQgY29tcG9uZW50IERTSTIKPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbXBv
+bmVudCBEU0kzCj4gICBkcm0vbWVkaWF0ZWs6IGFkZCB0aGUgRFNJMSBmb3IgY29tcG9uZW50IGlu
+aXQgY29uZGl0aW9uCj4gICBkcm0vbWVkaWF0ZWs6IGFkZCBjb25uZWN0aW9uIGZyb20gT0QxIHRv
+IFJETUExCj4gICBkcm0vbWVkaWF0ZWs6IFVwZGF0ZSB0aGUgZGVmaW5pdGlvbiBvZiBjb25uZWN0
+aW9uIGZyb20gUkRNQTEgdG8gRFBJMAo+ICAgZHJtL21lZGlhdGVrOiBhZGQgY29ubmVjdGlvbiBm
+cm9tIFJETUEwIHRvIERQSTAKPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBS
+RE1BMCB0byBEU0kyCj4gICBkcm0vbWVkaWF0ZWs6IGFkZCBjb25uZWN0aW9uIGZyb20gUkRNQTAg
+dG8gRFNJMwo+ICAgZHJtL21lZGlhdGVrOiBhZGQgY29ubmVjdGlvbiBmcm9tIFJETUExIHRvIERQ
+STEKPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBSRE1BMSB0byBEU0kxCj4g
+ICBkcm0vbWVkaWF0ZWs6IGFkZCBjb25uZWN0aW9uIGZyb20gUkRNQTEgdG8gRFNJMgo+ICAgZHJt
+L21lZGlhdGVrOiBhZGQgY29ubmVjdGlvbiBmcm9tIFJETUExIHRvIERTSTMKPiAgIGRybS9tZWRp
+YXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBSRE1BMiB0byBEUEkwCj4gICBkcm0vbWVkaWF0ZWs6
+IGFkZCBjb25uZWN0aW9uIGZyb20gUkRNQTIgdG8gRFBJMQo+ICAgZHJtL21lZGlhdGVrOiBhZGQg
+Y29ubmVjdGlvbiBmcm9tIFJETUEyIHRvIERTSTEKPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5l
+Y3Rpb24gZnJvbSBSRE1BMiB0byBEU0kyCj4gICBkcm0vbWVkaWF0ZWs6IGFkZCBjb25uZWN0aW9u
+IGZyb20gUkRNQTIgdG8gRFNJMwo+ICAgZHJtL21lZGlhdGVrOiBhZGQgRFBJMSBzdXBwb3J0IGZv
+ciBtdXRleAo+ICAgZHJtL21lZGlhdGVrOiBhZGQgRFNJMiBzdXBwb3J0IGZvciBtdXRleAo+ICAg
+ZHJtL21lZGlhdGVrOiBhZGQgRFNJMyBzdXBwb3J0IGZvciBtdXRleAo+ICAgZHJtL21lZGlhdGVr
+OiBhZGQgdGhpcmQgZGRwIHBhdGgKPiAgIGRybS9tZWRpYXRlazogQWRkIHN1cHBvcnQgZm9yIG1l
+ZGlhdGVrIFNPQyBNVDI3MTIKPiAKPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVk
+aWF0ZWssZGlzcC50eHQgICAgfCAgIDIgKy0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
+a19kcm1fY3J0Yy5jICAgICAgICAgICAgfCAgIDMgKwo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0
+ZWsvbXRrX2RybV9kZHAuYyAgICAgICAgICAgICB8IDIzNSArKysrKysrKysrKysrKysrKystLS0K
+PiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYyAgICAgICAgfCAg
+MTUgKy0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCAgICAg
+ICAgfCAgMTAgKy0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMgICAg
+ICAgICAgICAgfCAgNDcgKysrKy0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
+ZHJ2LmggICAgICAgICAgICAgfCAgIDUgKy0KPiAgNyBmaWxlcyBjaGFuZ2VkLCAyNzQgaW5zZXJ0
+aW9ucygrKSwgNDMgZGVsZXRpb25zKC0pCj4gCj4gLS0gCj4gMi4xMi41Cj4gCj4gX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCgotLSAKRGFuaWVsIFZl
+dHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3
+bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
