@@ -1,72 +1,77 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] arm64: allwinner: a64: add device
- tree node for HDMI simplefb
-Date: Tue, 26 Jun 2018 11:32:34 +0800
-Message-ID: <CAGb2v65W5zVGygcYx2CJDOm__Txp-Fjf=38axo=0K4A0g8hb_w@mail.gmail.com>
-References: <20180622124540.56203-1-icenowy@aosc.io> <20180622124540.56203-5-icenowy@aosc.io>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [PATCH v2 14/23] dt-bindings: cp110: prepare the syscon file to
+ list other syscons nodes
+Date: Tue, 26 Jun 2018 06:35:56 +0300
+Message-ID: <20180626033556.bsub25ykdseflsta@tarshish>
+References: <20180625151239.20976-1-miquel.raynal@bootlin.com>
+ <20180625151239.20976-15-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB2HHY3MQKGQEJNNF2IQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180622124540.56203-5-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180625151239.20976-15-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-pm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>, David Sniatkiwicz <davidsn@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 22, 2018 at 8:45 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> As the U-Boot bootloader now is also capable of initialize the HDMI on
-> A64 boards, add a simplefb device tree node for accessing the HDMI
-> framebuffer initialized by the bootloader.
->
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Hi Miquel,
 
-The subject should have "dts" in it, like:
+On Mon, Jun 25, 2018 at 05:12:30PM +0200, Miquel Raynal wrote:
+> There are multiple system controllers in CP110. Because all syscon nodes
+> use the same compatible, it is pertinent to use this same file to list
+> IPs inside it. Thus, change the header to be more generic, and align
+> with AP806 file.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-    arm64: dts: allwinner: a64: ....
+This patch and the file rename in patch #12 should be squashed together, I 
+think.
 
-Seems we've been missing them for half the patches this coming cycle.
-
-ChenYu
+baruch
 
 > ---
-> Changes in v2:
-> - Dropped LCD SimpleFB as it's already added. LCD SimpleFB needs some
->   fix but the fix is present when adding DE2 CCU.
->
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> index 318c4ba8ae9f..840753432ea5 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -68,6 +68,15 @@
->                                  <&display_clocks CLK_MIXER0>;
->                         status = "disabled";
->                 };
-> +
-> +               simplefb_hdmi: framebuffer-hdmi {
-> +                       compatible = "allwinner,simple-framebuffer",
-> +                                    "simple-framebuffer";
-> +                       allwinner,pipeline = "mixer1-lcd1-hdmi";
-> +                       clocks = <&display_clocks CLK_MIXER1>,
-> +                                <&ccu CLK_TCON1>, <&ccu CLK_HDMI>;
-> +                       status = "disabled";
-> +               };
->         };
->
->         cpus {
-> --
-> 2.17.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+>  .../bindings/arm/marvell/cp110-system-controller.txt       | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt
+> index 29cdbae6c5ac..56e7fb1153e7 100644
+> --- a/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt
+> +++ b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt
+> @@ -1,15 +1,15 @@
+> -Marvell Armada CP110 System Controller 0
+> -========================================
+> +Marvell Armada CP110 System Controller
+> +======================================
+>  
+>  The CP110 is one of the two core HW blocks of the Marvell Armada 7K/8K
+> -SoCs. It contains two sets of system control registers, System
+> -Controller 0 and System Controller 1. This Device Tree binding allows
+> -to describe the first system controller, which provides registers to
+> -configure various aspects of the SoC.
+> +SoCs. It contains system controllers, which provide several registers
+> +giving access to numerous features: clocks, pin-muxing and many other
+> +SoC configuration items. This DT binding allows to describe these
+> +system controllers.
+>  
+>  For the top level node:
+>   - compatible: must be: "syscon", "simple-mfd";
+> - - reg: register area of the CP110 system controller 0
+> + - reg: register area of the CP110 system controller
+>  
+>  Clocks:
+>  -------
+
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
