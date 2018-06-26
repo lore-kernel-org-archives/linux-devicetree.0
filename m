@@ -1,83 +1,62 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V2 0/5] arm64: Initial support Texas Instrument's AM654
- Platform
-Date: Tue, 26 Jun 2018 11:26:10 -0500
-Message-ID: <20180626162615.19194-1-nm@ti.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH V4 0/8] net: ethernet: stmmac: add support for stm32mp1
+Date: Tue, 26 Jun 2018 18:31:48 +0200
+Message-ID: <1979f33d-ce8d-5f59-0185-965361deb65c@st.com>
+References: <1527090479-5263-1-git-send-email-christophe.roullier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, Sudeep Holla <sudeep.holla@arm.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1527090479-5263-1-git-send-email-christophe.roullier@st.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Christophe Roullier <christophe.roullier@st.com>, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, peppe.cavallaro@st.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Christophe,
 
-This is an minor update from V1 posted earlier:
-	https://marc.info/?l=linux-kernel&m=152943745424138&w=2
+On 05/23/2018 05:47 PM, Christophe Roullier wrote:
+> Patches to have Ethernet support on stm32mp1
+> Changelog:
+> Remark from Rob Herring
+> Move Documentation/devicetree/bindings/arm/stm32.txt in
+> Documentation/devicetree/bindings/arm/stm32/stm32.txt and create
+> Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt
+> 
+> Replace also in arch/arm/boot/dts/stm32mp157c.dtsi, syscfg: system-config@50020000
+> with syscfg: syscon@50020000syscfg: system-config@50020000
+> 
+> Christophe Roullier (8):
+>    net: ethernet: stmmac: add adaptation for stm32mp157c.
+>    dt-bindings: stm32-dwmac: add support of MPU families
+>    ARM: dts: stm32: add ethernet pins to stm32mp157c
+>    ARM: dts: stm32: Add syscfg on stm32mp1
+>    ARM: dts: stm32: Add ethernet dwmac on stm32mp1
+>    net: stmmac: add dwmac-4.20a compatible
+>    ARM: dts: stm32: add support of ethernet on stm32mp157c-ev1
+>    dt-bindings: stm32: add compatible for syscon
+> 
+>   Documentation/devicetree/bindings/arm/stm32.txt    |  10 -
+>   .../devicetree/bindings/arm/stm32/stm32-syscon.txt |  14 ++
+>   .../devicetree/bindings/arm/stm32/stm32.txt        |  10 +
+>   .../devicetree/bindings/net/stm32-dwmac.txt        |  18 +-
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi          |  46 ++++
+>   arch/arm/boot/dts/stm32mp157c-ev1.dts              |  20 ++
+>   arch/arm/boot/dts/stm32mp157c.dtsi                 |  35 +++
+>   drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c  | 270 +++++++++++++++++++--
+>   .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   3 +-
+>   9 files changed, 398 insertions(+), 28 deletions(-)
+>   delete mode 100644 Documentation/devicetree/bindings/arm/stm32.txt
+>   create mode 100644 Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt
+>   create mode 100644 Documentation/devicetree/bindings/arm/stm32/stm32.txt
+> 
 
-The following series enables support for newest addition in TI's SoC
-portfolio - AM654 SoC.
+As discussed I squashed "ARM: dts: stm32: add ethernet pins to 
+stm32mp157c" and "ARM: dts: stm32: add support of ethernet on 
+stm32mp157c-ev1" ans fixed interrupt binding issue.
 
-The series is based off v4.18-rc1, also available here:
-https://github.com/nmenon/linux-2.6-playground/tree/upstream/v4.18-rc1/k3-1-am6-base
+So DT patches applied on stm32-next.
 
-Key changes since RFC are indicated in respective patches:
-* Pickedup Tony's Reviewed by
-* Modified cbass nodes to indicate interconnect (patch #3 in the series)
-
-Consolidated all patches (including all series) are available here:
-https://github.com/nmenon/linux-2.6-playground/commits/upstream/v4.18-rc1/k3-am6-integ
-
-Full Boot log (integrated of all series) is available here:
-   https://pastebin.ubuntu.com/p/bBFmnzYtCd/
-
-NOTE: The uart series is seperated out and we get operational console only
-after that series is merged.
-
-The AM654 SoC is a lead device of the K3 Multicore SoC architecture
-platform, targeted for broad market and industrial control with aim to
-meet the complex processing needs of modern embedded products.
-
-The Linux development follows closely the 66AK2G SoC model in aarch64.
-
-See AM65x Technical Reference Manual (SPRUID7, April 2018)
-for further details: http://www.ti.com/lit/pdf/spruid7
-
-
-Nishanth Menon (5):
-  dt-bindings: arm: ti: Add bindings for AM654 SoC
-  arm64: Add support for TI's K3 Multicore SoC architecture
-  arm64: dts: ti: Add Support for AM654 SoC
-  soc: ti: Add Support for AM654 SoC config option
-  arm64: dts: ti: Add support for AM654 EVM base board
-
- Documentation/devicetree/bindings/arm/ti/k3.txt |  23 +++++
- MAINTAINERS                                     |   9 ++
- arch/arm64/Kconfig.platforms                    |   7 ++
- arch/arm64/boot/dts/Makefile                    |   1 +
- arch/arm64/boot/dts/ti/Makefile                 |   9 ++
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi        |  31 +++++++
- arch/arm64/boot/dts/ti/k3-am65.dtsi             |  87 ++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-am654-base-board.dts  |  36 ++++++++
- arch/arm64/boot/dts/ti/k3-am654.dtsi            | 115 ++++++++++++++++++++++++
- drivers/soc/ti/Kconfig                          |  14 +++
- 10 files changed, 332 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/ti/k3.txt
- create mode 100644 arch/arm64/boot/dts/ti/Makefile
- create mode 100644 arch/arm64/boot/dts/ti/k3-am65-main.dtsi
- create mode 100644 arch/arm64/boot/dts/ti/k3-am65.dtsi
- create mode 100644 arch/arm64/boot/dts/ti/k3-am654-base-board.dts
- create mode 100644 arch/arm64/boot/dts/ti/k3-am654.dtsi
-
--- 
-2.15.1
+regards
+Alex
