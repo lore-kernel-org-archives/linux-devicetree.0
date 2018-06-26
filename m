@@ -1,45 +1,291 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 14/23] dt-bindings: cp110: prepare the syscon file to
- list other syscons nodes
-Date: Tue, 26 Jun 2018 09:34:10 +0200
-Message-ID: <20180626093410.2d9f815c@xps13>
-References: <20180625151239.20976-1-miquel.raynal@bootlin.com>
- <20180625151239.20976-15-miquel.raynal@bootlin.com>
- <20180626033556.bsub25ykdseflsta@tarshish>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 2/2] clocksource/drivers/mtk_systimer: Add support for
+ Mediatek SoCs
+Date: Tue, 26 Jun 2018 09:41:08 +0200
+Message-ID: <47b8aaab-98f3-8429-961c-fdcdc2c11a41@linaro.org>
+References: <1529910601-15005-1-git-send-email-stanley.chu@mediatek.com>
+ <1529910601-15005-3-git-send-email-stanley.chu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180626033556.bsub25ykdseflsta@tarshish>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-pm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>, David Sniatkiwicz <davidsn@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1529910601-15005-3-git-send-email-stanley.chu@mediatek.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stanley Chu <stanley.chu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmFydWNoLAoKT24gVHVlLCAyNiBKdW4gMjAxOCAwNjozNTo1NiArMDMwMCwgQmFydWNoIFNp
-YWNoIDxiYXJ1Y2hAdGtvcy5jby5pbD4Kd3JvdGU6Cgo+IEhpIE1pcXVlbCwKPiAKPiBPbiBNb24s
-IEp1biAyNSwgMjAxOCBhdCAwNToxMjozMFBNICswMjAwLCBNaXF1ZWwgUmF5bmFsIHdyb3RlOgo+
-ID4gVGhlcmUgYXJlIG11bHRpcGxlIHN5c3RlbSBjb250cm9sbGVycyBpbiBDUDExMC4gQmVjYXVz
-ZSBhbGwgc3lzY29uIG5vZGVzCj4gPiB1c2UgdGhlIHNhbWUgY29tcGF0aWJsZSwgaXQgaXMgcGVy
-dGluZW50IHRvIHVzZSB0aGlzIHNhbWUgZmlsZSB0byBsaXN0Cj4gPiBJUHMgaW5zaWRlIGl0LiBU
-aHVzLCBjaGFuZ2UgdGhlIGhlYWRlciB0byBiZSBtb3JlIGdlbmVyaWMsIGFuZCBhbGlnbgo+ID4g
-d2l0aCBBUDgwNiBmaWxlLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBNaXF1ZWwgUmF5bmFsIDxt
-aXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPiAgCj4gCj4gVGhpcyBwYXRjaCBhbmQgdGhlIGZpbGUg
-cmVuYW1lIGluIHBhdGNoICMxMiBzaG91bGQgYmUgc3F1YXNoZWQgdG9nZXRoZXIsIEkgCj4gdGhp
-bmsuCgpJIHdhcyBhc2tlZCBtdWx0aXBsZSB0aW1lcyB0byBjbGVhcmx5IHNlcGFyYXRlIGFueSBr
-aW5kIG9mIGZpbGUKcmVuYW1pbmcgd2l0aCBpbnRlcm5hbCBjaGFuZ2VzIGJlY2F1c2Ugb3RoZXJ3
-aXNlIHRoZSByZXZpZXdpbmcgcHJvY2VzcwppcyB3YXkgbW9yZSBjb21wbGljYXRlZC4gSSBkbyBh
-Z3JlZSB0aGUgY2hhbmdlcyBjb3VsZCBiZSBzcXVhc2hlZCBidXQKbm93IEkgcHJlZmVyIHRvIGxl
-dCB0aGVtIGFzIGlzIHVubGVzcyBJJ20gZXhwbGljaXRseSB0b2xkIHRvIGRvIHNvCmFmdGVyIHRo
-ZSByZXZpZXdpbmcgcHJvY2Vzcy4KClJlZ2FyZHMsCk1pcXXDqGwKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
-aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 25/06/2018 09:10, Stanley Chu wrote:
+> This patch adds a new clock event for the timer
+> found on the Mediatek SoCs.
+> 
+> The Mediatek System Timer has several 32-bit timers.
+> Only one timer is used by this driver as a clock event
+> supporting oneshot events.
+> 
+> The System Timer can be run with two clocks. A 13 MHz system
+> clock and the RTC clock running at 32 KHz. This implementation
+> uses the system clock with no clock source divider.
+> 
+> The interrupts are shared between the different timers.
+> We just enable one interrupt for the clock event. The clock
+> event timer is used by all cores.
+> 
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
+>  drivers/clocksource/Kconfig        |   13 ++-
+>  drivers/clocksource/Makefile       |    1 +
+>  drivers/clocksource/mtk_systimer.c |  177 ++++++++++++++++++++++++++++++++++++
+>
+
+>  3 files changed, 189 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/clocksource/mtk_systimer.c
+> 
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index dec0dd8..362c110 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -442,12 +442,21 @@ config SYS_SUPPORTS_SH_CMT
+>          bool
+>  
+>  config MTK_TIMER
+> -	bool "Mediatek timer driver" if COMPILE_TEST
+> +	bool "Mediatek general purpose timer driver" if COMPILE_TEST
+>  	depends on HAS_IOMEM
+>  	select TIMER_OF
+>  	select CLKSRC_MMIO
+>  	help
+> -	  Support for Mediatek timer driver.
+> +	  Support for Mediatek General Purpose Timer (GPT) driver.
+> +
+> +config MTK_TIMER_SYSTIMER
+> +	bool "Mediatek system timer driver" if COMPILE_TEST
+> +	depends on HAS_IOMEM
+> +	select TIMER_OF
+> +	select CLKSRC_MMIO
+> +	help
+> +	  Support for Mediatek System Timer (sys_timer) driver used as
+> +	  a clock event supporting oneshot events.
+>  
+>  config SPRD_TIMER
+>  	bool "Spreadtrum timer driver" if EXPERT
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index 00caf37..cdd34b2 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -50,6 +50,7 @@ obj-$(CONFIG_FSL_FTM_TIMER)	+= fsl_ftm_timer.o
+>  obj-$(CONFIG_VF_PIT_TIMER)	+= vf_pit_timer.o
+>  obj-$(CONFIG_CLKSRC_QCOM)	+= qcom-timer.o
+>  obj-$(CONFIG_MTK_TIMER)		+= mtk_timer.o
+> +obj-$(CONFIG_MTK_TIMER_SYSTIMER)	+= mtk_systimer.o
+>  obj-$(CONFIG_CLKSRC_PISTACHIO)	+= time-pistachio.o
+>  obj-$(CONFIG_CLKSRC_TI_32K)	+= timer-ti-32k.o
+>  obj-$(CONFIG_CLKSRC_NPS)	+= timer-nps.o
+> diff --git a/drivers/clocksource/mtk_systimer.c b/drivers/clocksource/mtk_systimer.c
+> new file mode 100644
+> index 0000000..06e74ce
+> --- /dev/null
+> +++ b/drivers/clocksource/mtk_systimer.c
+> @@ -0,0 +1,177 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +//
+> +//  Copyright (C) 2018 MediaTek Inc.
+> +
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/irq.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irqreturn.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/clocksource.h>
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <clocksource/arm_arch_timer.h>
+
+Do a cleanup with the headers. They are not all necessary.
+
+> +#define STMR_CLKEVT_DEFAULT_RATE  (13000000)
+> +
+> +/* registers */
+> +#define STMR_CON                  (0x0)
+> +#define STMR_VAL                  (0x4)
+> +
+> +/* STMR_CON */
+> +#define STMR_CON_EN               BIT(0)
+> +#define STMR_CON_IRQ_EN           BIT(1)
+> +#define STMR_CON_IRQ_CLR          BIT(4)
+> +
+> +struct mtk_stmr_clkevt_device {
+> +	void __iomem *base;
+> +	struct clock_event_device dev;
+> +};
+
+Use the timer_of structure, that will save you some lines of code as
+well as redundant structure definition.
+
+> +static inline struct mtk_stmr_clkevt_device*
+> +	to_mtk_clkevt_device(struct clock_event_device *c)> +{
+> +	return container_of(c, struct mtk_stmr_clkevt_device, dev);
+> +}
+> +
+> +static void mtk_stmr_reset(struct mtk_stmr_clkevt_device *evt)
+> +{
+> +	/* Clear IRQ */
+> +	writel(STMR_CON_IRQ_CLR | STMR_CON_EN, evt->base + STMR_CON);
+> +
+> +	/* Reset counter */
+> +	writel(0, evt->base + STMR_VAL);
+> +
+> +	/* Disable timer */
+> +	writel(0, evt->base + STMR_CON);
+> +}
+> +
+> +static void mtk_stmr_ack_irq(struct mtk_stmr_clkevt_device *evt)
+> +{
+> +	mtk_stmr_reset(evt);
+> +}
+> +
+> +static irqreturn_t mtk_stmr_handler(int irq, void *priv)
+> +{
+> +	struct mtk_stmr_clkevt_device *evt = priv;
+> +
+> +	mtk_stmr_ack_irq(evt);
+> +	evt->dev.event_handler(&evt->dev);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int mtk_stmr_clkevt_next_event(unsigned long ticks,
+> +				      struct clock_event_device *dev)
+
+Indent.
+
+> +{
+> +	struct mtk_stmr_clkevt_device *evt = to_mtk_clkevt_device(dev);
+> +
+> +	/*
+> +	 * reset timer first because we do not expect interrupt is triggered
+> +	 * by old compare value.
+> +	 */
+> +	mtk_stmr_reset(evt);
+> +
+> +	writel(STMR_CON_EN, evt->base + STMR_CON);
+> +
+> +	writel(ticks, evt->base + STMR_VAL);
+> +
+> +	writel(STMR_CON_EN | STMR_CON_IRQ_EN, evt->base + STMR_CON);
+> +
+> +	return 0;
+> +}
+> +
+> +static int mtk_stmr_clkevt_shutdown(struct clock_event_device *dev)
+> +{
+> +	struct mtk_stmr_clkevt_device *evt = to_mtk_clkevt_device(dev);
+> +
+> +	mtk_stmr_reset(evt);
+> +
+> +	return 0;
+> +}
+> +
+> +static int mtk_stmr_clkevt_resume(struct clock_event_device *clk)
+> +{
+> +	return mtk_stmr_clkevt_shutdown(clk);
+> +}
+> +
+> +static int mtk_stmr_clkevt_oneshot(struct clock_event_device *clk)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int __init mtk_stmr_init(struct device_node *node)
+> +{
+> +	struct mtk_stmr_clkevt_device *evt;
+> +	struct resource res;
+> +	u32 freq;
+> +
+> +	evt = kzalloc(sizeof(*evt), GFP_KERNEL);
+> +	if (!evt)
+> +		return -ENOMEM;
+> +
+> +	evt->dev.name = "mtk-clkevt";
+> +	evt->dev.shift = 32;
+> +	evt->dev.rating = 300;
+> +	evt->dev.features = CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_DYNIRQ;
+> +	evt->dev.set_state_shutdown = mtk_stmr_clkevt_shutdown;
+> +	evt->dev.set_state_oneshot = mtk_stmr_clkevt_oneshot;
+> +	evt->dev.tick_resume = mtk_stmr_clkevt_resume;
+> +	evt->dev.set_next_event = mtk_stmr_clkevt_next_event;
+> +	evt->dev.cpumask = cpu_possible_mask;
+> +
+> +	evt->base = of_iomap(node, 0);
+> +	if (IS_ERR(evt->base)) {
+> +		pr_err("Can't get resource\n");
+> +		goto err_kzalloc;
+> +	}
+> +
+> +	mtk_stmr_reset(evt);
+> +
+> +	evt->dev.irq = irq_of_parse_and_map(node, 0);
+> +	if (evt->dev.irq <= 0) {
+> +		pr_err("Can't parse IRQ\n");
+> +		goto err_mem;
+> +	}
+> +
+> +	if (of_property_read_u32(node, "clock-frequency", &freq)) {
+> +		pr_err("Can't get clk rate\n");
+> +		freq = STMR_CLKEVT_DEFAULT_RATE;
+> +	}
+> +
+> +	evt->dev.mult = div_sc(freq, NSEC_PER_SEC, evt->dev.shift);
+> +	evt->dev.max_delta_ns = clockevent_delta2ns(0xffffffff, &evt->dev);
+> +	evt->dev.min_delta_ns = clockevent_delta2ns(3, &evt->dev);
+> +
+> +	clockevents_register_device(&evt->dev);
+> +
+> +	if (request_irq(evt->dev.irq, mtk_stmr_handler,
+> +			IRQF_TIMER | IRQF_IRQPOLL |
+> +			IRQF_TRIGGER_HIGH | IRQF_PERCPU,
+> +			"mtk-clkevt", evt)) {
+> +		pr_err("failed to setup irq %d\n", evt->dev.irq);
+> +		goto err_mem;
+> +	}
+> +
+
+Remove all the above by using:
+
+        ret = timer_of_init(node, &to);
+        if (ret)
+                return ret;
+
+
+> +	pr_info("mtk_stmr: base=0x%lx, irq=%d, freq=%d, hz=%d\n",
+> +		(unsigned long)evt->base, evt->dev.irq, freq, HZ);
+> +
+> +	return 0;
+> +
+> +err_mem:
+> +	iounmap(evt->base);
+> +	of_address_to_resource(node, 0, &res);
+> +	release_mem_region(res.start, resource_size(&res));
+> +err_kzalloc:
+> +	kfree(evt);
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +TIMER_OF_DECLARE(mtk_systimer, "mediatek,sys_timer", mtk_stmr_init);
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
