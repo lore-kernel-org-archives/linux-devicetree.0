@@ -1,7 +1,7 @@
 From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V2 2/5] arm64: Add support for TI's K3 Multicore SoC architecture
-Date: Tue, 26 Jun 2018 11:26:12 -0500
-Message-ID: <20180626162615.19194-3-nm@ti.com>
+Subject: [PATCH V2 5/5] arm64: dts: ti: Add support for AM654 EVM base board
+Date: Tue, 26 Jun 2018 11:26:15 -0500
+Message-ID: <20180626162615.19194-6-nm@ti.com>
 References: <20180626162615.19194-1-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,38 +12,120 @@ To: Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
 Cc: Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Santosh Shilimkar <ssantosh@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Texas Instrument's K3 Multicore SoC architecture
-processors.
+The EValuation Module(EVM) platform for AM654 consists of a
+common Base board + one or more of daughter cards, which include:
+a) "Personality Modules", which can be specific to a profile, such as
+ ICSSG enabled or Multi-media (including audio).
+b) SERDES modules, which may be 2 lane PCIe or two port PCIe + USB2
+c) Camera daughter card
+d) various display panels
+
+Among other options. There are two basic configurations defined which
+include an "EVM" configuration and "IDK" (Industrial development kit)
+which differ in the specific combination of daughter cards that are
+used.
+
+To simplify support, we choose to support just the base board as the
+core device tree file and all daughter cards would be expected to be
+device tree overlays.
 
 Reviewed-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 Signed-off-by: Nishanth Menon <nm@ti.com>
 ---
 Changes since V1:
  * Picked up Tony's reviewed-by
  
-V1: https://patchwork.kernel.org/patch/10475323/
-RFC: https://patchwork.kernel.org/patch/10447633/
+V1: https://patchwork.kernel.org/patch/10475333/
+RFC: https://patchwork.kernel.org/patch/10447741/
 
- arch/arm64/Kconfig.platforms | 7 +++++++
- 1 file changed, 7 insertions(+)
+ MAINTAINERS                                    |  1 +
+ arch/arm64/boot/dts/Makefile                   |  1 +
+ arch/arm64/boot/dts/ti/Makefile                |  9 +++++++
+ arch/arm64/boot/dts/ti/k3-am654-base-board.dts | 36 ++++++++++++++++++++++++++
+ 4 files changed, 47 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/ti/Makefile
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am654-base-board.dts
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index d5aeac351fc3..52df25bf4f8c 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -71,6 +71,13 @@ config ARCH_EXYNOS
- 	help
- 	  This enables support for ARMv8 based Samsung Exynos SoC family.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6785ceaf5b0b..e9e916d1fb52 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2093,6 +2093,7 @@ M:	Nishanth Menon <nm@ti.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Supported
+ F:	Documentation/devicetree/bindings/arm/ti/k3.txt
++F:	arch/arm64/boot/dts/ti/Makefile
+ F:	arch/arm64/boot/dts/ti/k3-*
  
-+config ARCH_K3
-+	bool "Texas Instruments Inc. K3 multicore SoC architecture"
-+	select PM_GENERIC_DOMAINS if PM
-+	help
-+	  This enables support for Texas Instruments' K3 multicore SoC
-+	  architecture.
+ ARM/TEXAS INSTRUMENT KEYSTONE ARCHITECTURE
+diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+index 3543bc324553..4690364d584b 100644
+--- a/arch/arm64/boot/dts/Makefile
++++ b/arch/arm64/boot/dts/Makefile
+@@ -23,5 +23,6 @@ subdir-y += rockchip
+ subdir-y += socionext
+ subdir-y += sprd
+ subdir-y += synaptics
++subdir-y += ti
+ subdir-y += xilinx
+ subdir-y += zte
+diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
+new file mode 100644
+index 000000000000..63e619d0b5b8
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/Makefile
+@@ -0,0 +1,9 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Make file to build device tree binaries for boards based on
++# Texas Instruments Inc processors
++#
++# Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
++#
 +
- config ARCH_LAYERSCAPE
- 	bool "ARMv8 based Freescale Layerscape SoC family"
- 	select EDAC_SUPPORT
++dtb-$(CONFIG_ARCH_K3_AM6_SOC) += k3-am654-base-board.dtb
+diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+new file mode 100644
+index 000000000000..af6956fdc13f
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+@@ -0,0 +1,36 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
++ */
++
++/dts-v1/;
++
++#include "k3-am654.dtsi"
++
++/ {
++	compatible =  "ti,am654-evm", "ti,am654";
++	model = "Texas Instruments AM654 Base Board";
++
++	chosen {
++		stdout-path = "serial2:115200n8";
++		bootargs = "earlycon=ns16550a,mmio32,0x02800000";
++	};
++
++	memory@80000000 {
++		device_type = "memory";
++		/* 4G RAM */
++		reg = <0x00000000 0x80000000 0x00000000 0x80000000>,
++		      <0x00000008 0x80000000 0x00000000 0x80000000>;
++	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		secure_ddr: secure_ddr@9e800000 {
++			reg = <0 0x9e800000 0 0x01800000>; /* for OP-TEE */
++			alignment = <0x1000>;
++			no-map;
++		};
++	};
++};
 -- 
 2.15.1
