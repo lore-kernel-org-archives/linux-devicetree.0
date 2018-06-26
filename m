@@ -1,10 +1,10 @@
 From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Subject: [PATCH 03/14] fsi: Add mechanism to set the tSendDelay and tEchoDelay values
-Date: Wed, 27 Jun 2018 09:23:10 +1000
-Message-ID: <20180626232321.12372-4-benh@kernel.crashing.org>
-References: <20180626232321.12372-1-benh@kernel.crashing.org>
+Date: Wed, 27 Jun 2018 09:25:54 +1000
+Message-ID: <20180626232605.13420-4-benh@kernel.crashing.org>
+References: <20180626232605.13420-1-benh@kernel.crashing.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180626232321.12372-1-benh@kernel.crashing.org>
+In-Reply-To: <20180626232605.13420-1-benh@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Joel Stanley <joel@jms.id.au>
 Cc: linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>
