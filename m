@@ -1,84 +1,88 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 5/5] i2c: Add Actions Semi OWL family S900 I2C driver
-Date: Tue, 26 Jun 2018 20:18:44 +0300
-Message-ID: <CAHp75VdR5UbGvM3AOu21+Hp1xqPgtSnjRSKyhnCeB8ebAmF7eQ@mail.gmail.com>
-References: <20180623161147.15672-1-manivannan.sadhasivam@linaro.org>
- <20180623161147.15672-6-manivannan.sadhasivam@linaro.org> <CAHp75Vf_JR6scrwnomiu62_x2idgCGH63UdMf2bhfy8VNaijXQ@mail.gmail.com>
- <20180626170125.GB5241@Mani-XPS-13-9360>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v2 3/6] coresight: Introduce support for Coresight
+ Address Translation Unit
+Date: Tue, 26 Jun 2018 10:19:41 -0700
+Message-ID: <cdc280594f84fda5a880bf3ce3b0931d50809e58.camel@perches.com>
+References: <20180625112213.23492-1-suzuki.poulose@arm.com>
+         <20180625112213.23492-4-suzuki.poulose@arm.com>
+         <1dab29ef47d77c2456ee2500a4636f8793b53354.camel@perches.com>
+         <20180626155954.GA27118@xps15>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180626170125.GB5241@Mani-XPS-13-9360>
+In-Reply-To: <20180626155954.GA27118@xps15>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Linus Walleij <linus.walleij@linaro.org>, linux-i2c <linux-i2c@vger.kernel.org>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, amit.kucheria@linaro.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>, Thomas Liau <thomas.liau@actions-semi.com>, jeff.chen@actions-semi.com
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 26, 2018 at 8:01 PM, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
-> On Mon, Jun 25, 2018 at 12:38:50PM +0300, Andy Shevchenko wrote:
->> On Sat, Jun 23, 2018 at 7:11 PM, Manivannan Sadhasivam
->> <manivannan.sadhasivam@linaro.org> wrote:
+On Tue, 2018-06-26 at 09:59 -0600, Mathieu Poirier wrote:
+> On Mon, Jun 25, 2018 at 09:23:51AM -0700, Joe Perches wrote:
+> > On Mon, 2018-06-25 at 12:22 +0100, Suzuki K Poulose wrote:
+> > > Add the initial support for Coresight Address Translation Unit, which
+> > > augments the TMC in Coresight SoC-600 by providing an improved Scatter
+> > > Gather mechanism. CATU is always connected to a single TMC-ETR and
+> > > converts the AXI address with a translated address (from a given SG
+> > > table with specific format). The CATU should be programmed in pass
+> > > through mode and enabled even if the ETR doesn't use the translation
+> > > by CATU.
+> > 
+> > []
+> > > diff --git a/drivers/hwtracing/coresight/coresight-catu.h b/drivers/hwtracing/coresight/coresight-catu.h
+> > 
+> > []
+> > > +static inline bool coresight_is_catu_device(struct coresight_device *csdev)
+> > > +{
+> > > +	enum coresight_dev_subtype_helper subtype;
+> > > +
+> > > +	/* Make the checkpatch happy */
+> > > +	subtype = csdev->subtype.helper_subtype;
+> > > +
+> > > +	return IS_ENABLED(CONFIG_CORESIGHT_CATU) &&
+> > > +	       csdev->type == CORESIGHT_DEV_TYPE_HELPER &&
+> > > +	       subtype == CORESIGHT_DEV_SUBTYPE_HELPER_CATU;
+> > > +}
+> > 
+> > I believe you should not make checkpatch happy here
+> > by using a temporary but use the most readable form.
+> > 
+> > Probably the most readable form is:
+> > 
+> > 	return IS_ENABLED(CONFIG_CORESIGHT_CATU) &&
+> > 	       csdev->type == CORESIGHT_DEV_TYPE_HELPER &&
+> > 	       csdev->subtype.helper_subtype == CORESIGHT_DEV_SUBTYPE_HELPER_CATU;
+> > 
+> > where restricting line length to 80 columns is not useful
+> > because the identifiers are very long.  The identifiers
+> > are possibly longer than necessary.
+> 
+> I would prefer to avoid adding code that will trigger checkpatch warnings.  I
+> suggest the following:
+> 
+> static inline bool coresight_is_catu_device(struct coresight_device *csdev)
+> {
+>         if (!IS_ENABLED(CONFIG_CORESIGHT_CATU))
+>                 return false;
+> 
+>         if (csdev->type != CORESIGHT_DEV_TYPE_HELPER)
+>                 return false;
+> 
+>         if (csdev->subtype.helper_subtype != CORESIGHT_DEV_SUBTYPE_HELPER_CATU)
+>                 return false;
+> 
+>         return true;
+> }
+> 
+> No temporary variable and all shorther than 80 columns.
 
->> > +#define OWL_I2C_REG_CTL                (0x0000)
->> > +#define OWL_I2C_REG_CLKDIV     (0x0004)
->> > +#define OWL_I2C_REG_STAT       (0x0008)
->> > +#define OWL_I2C_REG_ADDR       (0x000C)
->> > +#define OWL_I2C_REG_TXDAT      (0x0010)
->> > +#define OWL_I2C_REG_RXDAT      (0x0014)
->> > +#define OWL_I2C_REG_CMD                (0x0018)
->> > +#define OWL_I2C_REG_FIFOCTL    (0x001C)
->> > +#define OWL_I2C_REG_FIFOSTAT   (0x0020)
->> > +#define OWL_I2C_REG_DATCNT     (0x0024)
->> > +#define OWL_I2C_REG_RCNT       (0x0028)
->>
->> I don't understand why these have parents?
->>
->
-> I'm not sure what you mean here! Can you please elaborate?
+Perhaps the most readable uses the positive
+form instead of the negative, but your choice.
+The compiler should emit equivalent or identical
+code anyway.
 
-One has to read 'parens'. Sorry for confusion.
+Do remember that checkpatch is brainless and
+everyone should always use theirs over fixing
+any message that checkpatch emits.
 
->> > +#define OWL_I2C_TIMEOUT                (msecs_to_jiffies(4 * 1000))
->>
->> Ditto.
-
-> Same as above
-
-Ditto.
-
->> > +       /* Wait until FIFO reset complete */
->> > +       do {
->> > +               val =3D readl(i2c_dev->base + OWL_I2C_REG_FIFOCTL);
->> > +               if (!(val & (OWL_I2C_FIFOCTL_RFR | OWL_I2C_FIFOCTL_TFR=
-)))
->> > +                       break;
->> > +       } while (1);
->>
->> No way. Get rid of infinite loop.
-
-> Okay. Can I change it to max of 50 retries with 1ms delay?
-
-Whatever suitable for HW. Rely on datasheet or other source of
-information about this timeouts.
-
->> > +static irqreturn_t owl_i2c_interrupt(int irq, void *_dev)
-
->> > +               dev_warn(&i2c_dev->adap.dev, "received NACK from devic=
-e");
->>
->> And if it happens hundreds times in a row?
-
-> Should I change it to dev_dbg?
-
->> > +               dev_warn(&i2c_dev->adap.dev, "bus error");
-
-> Same as above?
-
-ratelimit, another level, tracepoints, getting rid of them completely
-=E2=80=94 your call.
-
---=20
-With Best Regards,
-Andy Shevchenko
+cheers, Joe
