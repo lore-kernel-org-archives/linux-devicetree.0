@@ -1,76 +1,79 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [RFC PATCHv2 3/9] dt-bindings: display/ti: add am65x-dss bindings
-Date: Tue, 26 Jun 2018 11:15:33 +0300
-Message-ID: <9e743ebf-919f-3690-db95-14096fb22bf8@ti.com>
-References: <20180618132242.8673-1-tomi.valkeinen@ti.com>
- <20180618132242.8673-4-tomi.valkeinen@ti.com>
- <20180625185909.GA8320@rob-hp-laptop>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v2] arm64: dts: marvell: armada-37xx: reserve memory for ATF
+Date: Tue, 26 Jun 2018 10:17:01 +0200
+Message-ID: <20180626081701.27176-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180625185909.GA8320@rob-hp-laptop>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gMjUvMDYvMTggMjE6NTksIFJvYiBIZXJyaW5nIHdyb3RlOgo+IE9uIE1vbiwg
-SnVuIDE4LCAyMDE4IGF0IDA0OjIyOjM2UE0gKzAzMDAsIFRvbWkgVmFsa2VpbmVuIHdyb3RlOgo+
-PiBBZGQgRFQgYmluZGluZ3MgZm9yIFRleGFzIEluc3RydW1lbnRzIEFNNjV4IFNvQyBEaXNwbGF5
-IFN1YnN5c3RlbS4gIFRoZQo+PiBEU1M3IG9uIEFNNjV4IFNvQyBoYXMgdHdvIHZpZGVvIHBvcnRz
-IChEUEkgYW5kIE9MREkpIGFuZCB0d28gdmlkZW8KPj4gcGlwZWxpbmVzLgo+Pgo+PiBTaWduZWQt
-b2ZmLWJ5OiBKeXJpIFNhcmhhIDxqc2FyaGFAdGkuY29tPgo+PiBTaWduZWQtb2ZmLWJ5OiBUb21p
-IFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29tPgo+PiBDYzogZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmcKPj4gLS0tCj4+ICAuLi4vYmluZGluZ3MvZGlzcGxheS90aS90aSxhbTYtZHNz
-LnR4dCAgICAgICAgICAgfCAxNiArKysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwg
-MTYgaW5zZXJ0aW9ucygrKQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLGFtNi1kc3MudHh0Cj4+Cj4+IGRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxhbTYt
-ZHNzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3Rp
-LGFtNi1kc3MudHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAwMDAw
-MC4uMzQ2NmYwOTVmYjg0Cj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksYW02LWRzcy50eHQKPj4gQEAgLTAsMCAr
-MSwxNiBAQAo+PiArVGV4YXMgSW5zdHJ1bWVudHMgQU02NXggRGlzcGxheSBTdWJzeXN0ZW0KPj4g
-Kz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+PiArCj4+ICtSZXF1
-aXJlZCBwcm9wZXJ0aWVzOgo+PiArLSBjb21wYXRpYmxlOiAidGksYW02NXgtZHNzIiwgInRpLGFt
-Ni1kc3MiCj4gCj4gV2h5IGRvIHlvdSBuZWVkIDIgY29tcGF0aWJsZXM/IFdoYXQncyB0aGUgZGlm
-ZmVyZW5jZSBmb3IgdGhlICd4JyBpbiAKPiAnYW02NXgnPwoKRm9yIG5vdyB3ZSBoYXZlIG9ubHkg
-b25lIEFNNnh4IFNvQywgYnV0IHByb2JhYmx5IHRoZXJlIHdpbGwgYmUgbW9yZQp2YXJpYW50cywg
-cG9zc2libHkgd2l0aCBzbGlnaHRseSBkaWZmZXJlbnQgRFNTIHNldHVwcyAoc2F5LCBhIHNpbmds
-ZQpvdXRwdXQgdmVyc2lvbikuIEJ1dCB0aGVuLCBtYXliZSBhbGwgdGhlIHZhcmlhbnRzIHdpbGwg
-aGF2ZSB0aGUgZXhhY3QKc2FtZSBEU1MuCgpJJ20gbm90IHF1aXRlIHN1cmUgaG93IHRvIGhhbmRs
-ZSBpdCBoZXJlLCBzbyBJIGFkZGVkIGFtNi1kc3MgYXMgYSBiYXNlLApzbyB0aGF0IGluIHRoZSBE
-VCBmaWxlIHdlIGNvdWxkIGhhdmUgdGhlIGNvbXBhdGlibGUgYXMKImV4YWN0LW1vZGVsLW5hbWUi
-LCJhbTYtZHNzIiwgYW5kIG9ubHkgaGFuZGxlIGFtNi1kc3MgaW4gdGhlIGRyaXZlcgp1bmxlc3Mg
-d2UgZ2V0IG1vZGVscyB3aXRoIGRpZmZlcmVudCBEU1MgZmVhdHVyZXMuCgpCdXQgdGhlbiBJIHBy
-b2JhYmx5IHNob3VsZCBub3QgdXNlIGFtNjV4LCBhbmQgaW5zdGVhZCB1c2UgdGhlIGV4YWN0Cm1v
-ZGVsIG5hbWUgaGVyZSAoYW02NTQpLCBldmVuIGlmIHRoZSBsYXN0IG51bWJlciBpbiB0aGUgbW9k
-ZWwgc2hvdWxkIG5vdAphZmZlY3QgRFNTLgoKPj4gKy0gcmVnOiBhZGRyZXNzIGFuZCBsZW5ndGgg
-b2YgdGhlIHJlZ2lzdGVyIHNwYWNlcyBmb3IgRFNTIHN1Ym1vZHVsZXMKPj4gKy0gcmVnLW5hbWVz
-OiAiY29tbW9uIiwgInZpZGwxIiwgInZpZCIsICJvdnIxIiwgIm92cjIiLCAidnAxIiwgInZwMiIK
-Pj4gKy0gY2xvY2tzOiBwaGFuZGxlIHRvIGZjbGssIHZwMSwgYW5kIHZwMiBjbG9ja3MKPj4gKy0g
-Y2xvY2stbmFtZXM6ICJmY2siLCAidnAxIiwgInZwMiIKPiAKPiBmY2sgb3IgZmNsaz8KCmZjay4g
-SSdsbCBmaXggdGhhdC4KCj4+ICstIGludGVycnVwdHM6IHBoYW5kbGUgdG8gdGhlIERJU1BDIGlu
-dGVycnVwdAo+PiArLSBzeXNjb246IHBoYW5kbGUgdG8gc3lzY29uIGRldmljZSBoYW5kbGluZyBP
-TERJX1BXUkROX1RYIChwYXJ0aXRpb24gMSBvZgo+PiArICBBTTY1NCBDVFJMIE1NUjApCj4+ICsK
-Pj4gK1RoZSBEU1Mgb3V0cHV0cyBhcmUgZGVzY3JpYmVkIHVzaW5nIHRoZSBkZXZpY2UgZ3JhcGhz
-IGFzIGRvY3VtZW50ZWQgaW4KPj4gK0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9n
-cmFwaC50eHQuIEFNNiBEU1MgaGFzIGEgRFBJIG91dHB1dCBhcyBwb3J0IDAKPj4gK2FuZCBhbiBP
-TERJIG91dHB1dCBhcyBwb3J0IDEuCj4gCj4gV2hhdCdzIE9MREk/CgpPcGVuTERJIChodHRwczov
-L2VuLndpa2lwZWRpYS5vcmcvd2lraS9PcGVuTERJKS4gSSBzaG91bGQgcHJvYmFibHkgbm90CmFi
-YnJldmlhdGUgaXQgaGVyZS4KCiBUb21pCgoKLS0gClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQg
-T3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJ
-RDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+From: Victor Gu <xigu@marvell.com>
+
+The PSCI area should be reserved in Linux for PSCI operations such as
+suspend/resume.
+
+Reserve 2MiB of memory which matches the area used by ATF (BL1, BL2,
+BL3x, see [1] in ATF source code). This covers all PSCI code and data
+area and is 2MiB aligned, which is required by Linux for huge pages
+handling.
+
+Please note that this is a default setup allowing to perform PSCI
+operations with legacy bootloaders. Recent bootloaders should update the
+region size/position accordingly.
+
+[1] plat/marvell/a3700/common/include/platform_def.h
+
+Signed-off-by: Victor Gu <xigu@marvell.com>
+[miquel.raynal@bootlin.com: reword of commit message, comment in the DTSI]
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+
+Changes since v1:
+=================
+* Updated commit log to explain that this memory region should be
+  updated by recent bootloaders.
+* Added a comment to tell the same thing above the psci-area subnode.
+
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index 3353252d78a0..d18a4a098d79 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -22,6 +22,21 @@
+ 		serial1 = &uart1;
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		/*
++		 * The PSCI firmware region depicted below is the default one
++		 * and should be updated by the bootloader.
++		 */
++		psci-area@4000000 {
++			reg = <0 0x4000000 0 0x200000>;
++			no-map;
++		};
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-- 
+2.14.1
