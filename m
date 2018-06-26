@@ -1,46 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] Documentation: dt: keystone: ti-sci: Add optional
- host-id parameter
-Date: Tue, 26 Jun 2018 15:12:03 -0600
-Message-ID: <20180626211203.GA19874@rob-hp-laptop>
-References: <20180619194421.3432-1-nm@ti.com>
- <20180619194421.3432-2-nm@ti.com>
+Subject: Re: [PATCH 1/2] dt-bindings: serial: 8250_omap: Add compatible for
+ AM654 UART controller
+Date: Tue, 26 Jun 2018 15:12:53 -0600
+Message-ID: <20180626211253.GA21853@rob-hp-laptop>
+References: <20180619194450.6353-1-nm@ti.com>
+ <20180619194450.6353-2-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180619194421.3432-2-nm@ti.com>
+In-Reply-To: <20180619194450.6353-2-nm@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Nishanth Menon <nm@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>, Vignesh R <vigneshr@ti.com>, Jiri Slaby <jslaby@suse.com>, Sekhar Nori <nsekhar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 19, 2018 at 02:44:20PM -0500, Nishanth Menon wrote:
-> Texas Instrument's System Control Interface (TISCI) permits
-> the ability for OSs running in virtual machines to be able to
-> independently communicate with the firmware without the need going
-> through an hypervisor.
+On Tue, Jun 19, 2018 at 02:44:49PM -0500, Nishanth Menon wrote:
+> AM654 uses a UART controller that is only partially compatible with
+> existing 8250 UART. UART DMA integration is substantially different
+> and even a match against standard 8250 or omap4 would result in
+> non-working UART once DMA is enabled by default.
 > 
-> The "host-id" in effect is the hardware representation of the
-> host (example: VMs locked to a core) as identified to the System
-> Controller. Hypervisors can either fill in appropriate host-ids in dt
-> used for each VM instance OR may use prebuilt blobs where the host-ids
-> are pre-populated, as appropriate for the OS running in the VMs.
+> Introduce a specific compatible to help build up the differences in
+> follow on patches.
 > 
-> This is introduced as an optional parameter to maintain consistency
-> with legacy device tree blobs.
-> 
-> We call this with a vendor prefix to prevent any possible confusion
-> with SCSI ID (m68k) kernel option.
-> 
+> Cc: Sekhar Nori <nsekhar@ti.com>
+> Cc: Vignesh R <vigneshr@ti.com>
 > Signed-off-by: Nishanth Menon <nm@ti.com>
 > ---
-> Changes since RFC:
-> * Commit message update to elaborate usage in VM
-> 
-> RFC: https://patchwork.kernel.org/patch/10447753/
-> 
->  Documentation/devicetree/bindings/arm/keystone/ti,sci.txt | 4 ++++
->  1 file changed, 4 insertions(+)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
