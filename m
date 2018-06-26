@@ -1,203 +1,112 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v8 4/7] Bluetooth: hci_qca: Add wrapper functions for
- setting UART speed
-Date: Tue, 26 Jun 2018 12:02:07 -0700
-Message-ID: <20180626190207.GN129942@google.com>
-References: <20180625134013.19684-1-bgodavar@codeaurora.org>
- <20180625134013.19684-5-bgodavar@codeaurora.org>
- <20180625234354.GI129942@google.com>
- <89b1e4ce98a26d79935bf2ba9a4bc278@codeaurora.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 09/10] gpio: Add a driver for Cadence I3C GPIO expander
+Date: Tue, 26 Jun 2018 22:07:03 +0300
+Message-ID: <CAHp75Vdxg49q6aQj0dDpzM4q2WnQbGoCECWR1roda7aMR+u4gg@mail.gmail.com>
+References: <20180622104930.32050-1-boris.brezillon@bootlin.com> <20180622104930.32050-10-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <89b1e4ce98a26d79935bf2ba9a4bc278@codeaurora.org>
+In-Reply-To: <20180622104930.32050-10-boris.brezillon@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Linux Documentation List <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 26, 2018 at 07:01:18AM +0530, Balakrishna Godavarthi wrote:
-> Hi Matthias,
-> 
-> On 2018-06-26 05:13, Matthias Kaehlcke wrote:
-> > This is a nice improvement, a few remaining questions inline.
-> > 
-> > On Mon, Jun 25, 2018 at 07:10:10PM +0530, Balakrishna Godavarthi wrote:
-> > > In function qca_setup, we set initial and operating speeds for
-> > > Qualcomm
-> > > Bluetooth SoC's. This block of code is common across different
-> > > Qualcomm Bluetooth SoC's. Instead of duplicating the code, created
-> > > a wrapper function to set the speeds. So that future coming SoC's
-> > > can use these wrapper functions to set speeds.
-> > > 
-> > > Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-> > > ---
-> > > Changes in v8:
-> > >     * common function to set INIT and operating speeds.
-> > >     * moved hardware flow control to qca_set_speed().
-> > > 
-> > > Changes in v7:
-> > >     * initial patch
-> > >     * created wrapper functions for init and operating speeds.
-> > > ---
-> > >  drivers/bluetooth/hci_qca.c | 89
-> > > +++++++++++++++++++++++++++----------
-> > >  1 file changed, 65 insertions(+), 24 deletions(-)
-> > > 
-> > > diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> > > index fe62420ef838..38b7dbe6c897 100644
-> > > --- a/drivers/bluetooth/hci_qca.c
-> > > +++ b/drivers/bluetooth/hci_qca.c
-> > > @@ -119,6 +119,11 @@ struct qca_data {
-> > >  	u64 votes_off;
-> > >  };
-> > > 
-> > > +enum qca_speed_type {
-> > > +	QCA_INIT_SPEED = 1,
-> > > +	QCA_OPER_SPEED
-> > > +};
-> > > +
-> > >  struct qca_serdev {
-> > >  	struct hci_uart	 serdev_hu;
-> > >  	struct gpio_desc *bt_en;
-> > > @@ -923,6 +928,60 @@ static inline void host_set_baudrate(struct
-> > > hci_uart *hu, unsigned int speed)
-> > >  		hci_uart_set_baudrate(hu, speed);
-> > >  }
-> > > 
-> > > +static unsigned int qca_get_speed(struct hci_uart *hu,
-> > > +				  enum qca_speed_type speed_type)
-> > > +{
-> > > +	unsigned int speed = 0;
-> > > +
-> > > +	if (speed_type == QCA_INIT_SPEED) {
-> > > +		if (hu->init_speed)
-> > > +			speed = hu->init_speed;
-> > > +		else if (hu->proto->init_speed)
-> > > +			speed = hu->proto->init_speed;
-> > > +	} else {
-> > > +		if (hu->oper_speed)
-> > > +			speed = hu->oper_speed;
-> > > +		else if (hu->proto->oper_speed)
-> > > +			speed = hu->proto->oper_speed;
-> > > +	}
-> > > +
-> > > +	return speed;
-> > > +}
-> > > +
-> > > +static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type
-> > > speed_type)
-> > > +{
-> > > +	unsigned int speed, qca_baudrate;
-> > > +	int ret;
-> > > +
-> > > +	if (speed_type == QCA_INIT_SPEED) {
-> > > +		speed = qca_get_speed(hu, QCA_INIT_SPEED);
-> > > +		if (speed)
-> > > +			host_set_baudrate(hu, speed);
-> > > +		else
-> > > +			bt_dev_err(hu->hdev, "Init speed should be non zero");
-> > 
-> > The check for 'speed == 0' is done in multiple places. From this
-> > code I deduce that it is expected that both INIT and OPER speed are
-> > set to non-zero values. What happens if either of them is zero? Is the
-> > driver still operational?
-> > 
-> [Bala]: yes in hci_uart_setup()(hci_serdev.c) function before calling
-> qca_setup().
->         we actually set baudrate, but int  above code missed to restrict the
-> further call to qca_setup()
->        if speed =0. so we are checking the same in the qca_setup().. i.e.
-> qca_get_speed().
+On Fri, Jun 22, 2018 at 1:49 PM, Boris Brezillon
+<boris.brezillon@bootlin.com> wrote:
+> Add a driver for Cadence I3C GPIO expander.
+>
+> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 
-Sorry, didn't quite get you here. Yes, the driver is still operational?
+> +       scratchbuf = kmalloc(sizeof(*scratchbuf) * 2, GFP_KERNEL);
 
-Breaking it down in multiple questions:
+kmalloc_array() ?
 
-1. Is it an error if one of the speeds isn't specified?
+> +       ret = i3c_device_do_priv_xfers(gpioc->i3cdev, xfers,
+> +                                      ARRAY_SIZE(xfers));
 
-If yes we should probably check this early once and return an error
-early, instead of doing the check repeatedly
+One line?
 
-2. If it is not an error, what is the driver supposed to do?
 
-> > In the discussion on "[v7,8/8] Bluetooth: hci_qca: Add support for
-> > Qualcomm Bluetooth chip wcn3990" you mentioned the possbility to move
-> > the hci_uart_set_flow_control() calls into _set_speed(). This seemed
-> > interesting but finally it isn't done in this series. Did you
-> > encounter that it is not feasible/desirable for some reason?
-> > 
-> 
-> [Bala]: this patch is for rome where flow control is not used.
->         after we integrate wcn3990, flow control is hidden in the
-> qca_set_speed()
->         Pls check [v8 7/7] patch.
+> +static void cdns_i3c_gpio_set_multiple(struct gpio_chip *g,
+> +                                      unsigned long *mask,
+> +                                      unsigned long *bits)
+> +{
+> +       struct cdns_i3c_gpio *gpioc = gpioc_to_cdns_gpioc(g);
+> +       u8 newovr;
+> +       int ret;
+> +
+> +       newovr = (gpioc->ovr & ~(*mask)) | (*bits & *mask);
+> +       if (newovr == gpioc->ovr)
+> +               return;
+> +
+> +       ret = cdns_i3c_gpio_write_reg(gpioc, OVR, newovr);
+> +       if (!ret)
+> +               gpioc->ovr = newovr;
 
-Sorry, my confusion
+You don't change mask here, why do you need a pointer to it?
 
-> > >  static int qca_setup(struct hci_uart *hu)
-> > >  {
-> > >  	struct hci_dev *hdev = hu->hdev;
-> > > @@ -937,35 +996,17 @@ static int qca_setup(struct hci_uart *hu)
-> > >  	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
-> > > 
-> > >  	/* Setup initial baudrate */
-> > > -	speed = 0;
-> > > -	if (hu->init_speed)
-> > > -		speed = hu->init_speed;
-> > > -	else if (hu->proto->init_speed)
-> > > -		speed = hu->proto->init_speed;
-> > > -
-> > > -	if (speed)
-> > > -		host_set_baudrate(hu, speed);
-> > > +	qca_set_speed(hu, QCA_INIT_SPEED);
-> > > 
-> > >  	/* Setup user speed if needed */
-> > > -	speed = 0;
-> > > -	if (hu->oper_speed)
-> > > -		speed = hu->oper_speed;
-> > > -	else if (hu->proto->oper_speed)
-> > > -		speed = hu->proto->oper_speed;
-> > > +	ret = qca_set_speed(hu, QCA_OPER_SPEED);
-> > > +	if (ret)
-> > > +		return ret;
-> > > 
-> > > -	if (speed) {
-> > > +	speed = qca_get_speed(hu, QCA_OPER_SPEED);
-> > > +	if (speed)
-> > >  		qca_baudrate = qca_get_baudrate_value(speed);
-> > 
-> > Is the check here necessary? qca_get_baudrate_value() returns
-> > QCA_BAUDRATE_115200 for a zero speed.
-> 
-> this if for no zero operating speed,
+> +}
 
-My point is:
+> +static int cdns_i3c_gpio_get_multiple(struct gpio_chip *g,
+> +                                     unsigned long *mask,
+> +                                     unsigned long *bits)
+> +{
+> +       struct cdns_i3c_gpio *gpioc = gpioc_to_cdns_gpioc(g);
+> +       int ret;
+> +       u8 ivr;
+> +
+> +       ret = cdns_i3c_gpio_read_reg(gpioc, IVR, &ivr);
+> +       if (ret)
+> +               return ret;
+> +
+> +       *bits = ivr & *mask & gpioc->dir;
+> +       *bits |= gpioc->ovr & *mask & ~gpioc->dir;
 
-static int qca_setup(struct hci_uart *hu)
-{
-	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
+Ditto.
 
-	...
+> +
+> +       return 0;
+> +}
 
-	if (speed)
-		qca_baudrate = qca_get_baudrate_value(speed);
-}
+> +static void cdns_i3c_gpio_ibi_handler(struct i3c_device *i3cdev,
+> +                                     const struct i3c_ibi_payload *payload)
+> +{
+> +       struct cdns_i3c_gpio *gpioc = i3cdev_get_drvdata(i3cdev);
 
-static uint8_t qca_get_baudrate_value(int speed)
-{
-        switch (speed) {
+> +       u8 isr = 0;
 
-	...
+Perhaps you need to check the result of _read_reg() below instead of
+dummy assignment?
 
-        default:
-                return QCA_BAUDRATE_115200;
-        }
-}
+> +       int i;
+> +
+> +       cdns_i3c_gpio_read_reg(gpioc, ISR, &isr);
 
-If qca_get_baudrate_value() is called with 'speed == 0' it returns
-QCA_BAUDRATE_115200, which is the same value with which
-QCA_BAUDRATE_115200 is initialized.
+> +       for (i = 0; i < 8; i++) {
+> +               unsigned int irq;
+> +
+> +               if (!(BIT(i) & isr & gpioc->imr))
+> +                       continue;
 
-It seems the initialization and the check for 'speed == 0' could be removed.
+for_each_set_bit() ?
+
+> +
+> +               irq = irq_find_mapping(gpioc->gpioc.irq.domain, i);
+> +               handle_nested_irq(irq);
+> +       }
+> +}
+
+> +static const struct i3c_device_id cdns_i3c_gpio_ids[] = {
+> +       I3C_DEVICE(0x1c9, 0x0, NULL),
+
+> +       { /* sentinel */ },
+
+Slightly better without comma.
+
+> +};
+> +MODULE_DEVICE_TABLE(i3c, cdns_i3c_gpio_ids);
+
+-- 
+With Best Regards,
+Andy Shevchenko
