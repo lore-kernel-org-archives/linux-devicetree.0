@@ -1,62 +1,70 @@
-Return-Path: <SRS0=jXKD=JN=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v5 1/5] dt-bindings: leds: Add bindings for lltc,lt3593
-Date: Wed, 27 Jun 2018 20:52:33 +0200
-Message-Id: <20180627185237.24830-2-daniel@zonque.org>
-In-Reply-To: <20180627185237.24830-1-daniel@zonque.org>
-References: <20180627185237.24830-1-daniel@zonque.org>
-To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=kMlY=JM=phrozen.org=john@kernel.org>
+Subject: Re: [PATCH 10/25] dt-bindings: PCI: qcom,ar7100: adds binding doc
+References: <20180625171549.4618-1-john@phrozen.org>
+ <20180625171549.4618-11-john@phrozen.org>
+ <5926a597-b2fd-47f8-3a58-bf05d0b7da97@cogentembedded.com>
+From: John Crispin <john@phrozen.org>
+Message-ID: <0d386f69-5f28-edad-e6a7-587a8ed99622@phrozen.org>
+Date: Tue, 26 Jun 2018 09:13:30 +0200
+MIME-Version: 1.0
+In-Reply-To: <5926a597-b2fd-47f8-3a58-bf05d0b7da97@cogentembedded.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, James Hogan <jhogan@kernel.org>, Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch add the bindings document for LT3593 LED drivers.
-The binding is kept consistent with other LED driver bindings in that it
-stores all the LED-specific properties in its own subnode. As the hardware
-only supports one channel, there can consequently only be one sub-node.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- .../devicetree/bindings/leds/leds-lt3593.txt  | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-lt3593.txt
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lt3593.txt b/Documentation/devicetree/bindings/leds/leds-lt3593.txt
-new file mode 100644
-index 000000000000..6b2cabc36c0c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-lt3593.txt
-@@ -0,0 +1,32 @@
-+Bindings for Linear Technologies LT3593 LED controller
-+
-+Required properties:
-+- compatible:		Should be "lltc,lt3593".
-+- lltc,ctrl-gpios:	A handle to the GPIO that is connected to the 'CTRL'
-+			pin of the chip.
-+
-+The hardware supports only one LED. The properties of this LED are
-+configured in a sub-node in the device node.
-+
-+Optional sub-node properties:
-+- label:	A label for the LED. If none is given, the LED will be
-+		named "lt3595::".
-+- linux,default-trigger: The default trigger for the LED.
-+			See Documentation/devicetree/bindings/leds/common.txt
-+- default-state:	The initial state of the LED.
-+			See Documentation/devicetree/bindings/leds/common.txt
-+
-+If multiple chips of this type are found in a design, each one needs to
-+be handled by its own device node.
-+
-+Example:
-+
-+led-controller {
-+	compatible = "lltc,lt3593";
-+	lltc,ctrl-gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
-+
-+	led {
-+		label = "white:backlight";
-+		default-state = "on";
-+	};
-+};
--- 
-2.17.1
+On 25/06/18 20:06, Sergei Shtylyov wrote:
+> On 06/25/2018 08:15 PM, John Crispin wrote:
+>
+>> With the driver being converted from platform_data to pure OF, we need to
+>> also add some docs.
+>>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: John Crispin <john@phrozen.org>
+>> ---
+>>   .../devicetree/bindings/pci/qcom,ar7100-pci.txt    | 36 ++++++++++++++++++++++
+>>   1 file changed, 36 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/qcom,ar7100-pci.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/qcom,ar7100-pci.txt b/Documentation/devicetree/bindings/pci/qcom,ar7100-pci.txt
+>> new file mode 100644
+>> index 000000000000..97be7b0c4cf9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/qcom,ar7100-pci.txt
+>> @@ -0,0 +1,36 @@
+>> +* Qualcomm Atheros AR7100 PCI express root complex
+>> +
+>> +Required properties:
+>> +- compatible: should contain "qcom,ar7100-pci" to identify the core.
+>> +- reg: Should contain the register ranges as listed in the reg-names property.
+>> +- reg-names: Definition: Must include the following entries
+>> +	- "cfg_base"	IO Memory
+>> +- #address-cells: set to <3>
+>> +- #size-cells: set to <2>
+>> +- ranges: ranges for the PCI memory and I/O regions
+>> +- interrupt-map-mask and interrupt-map: standard PCI
+>> +	properties to define the mapping of the PCIe interface to interrupt
+>> +	numbers.
+>> +- #interrupt-cells: set to <1>
+>> +- interrupt-parent: phandle to the MIPS IRQ controller
+>     Never a required prop, can be "inherited" from the parent node.
+>
+>> +- interrupt-controller: define to enable the builtin IRQ cascade.
+>> +
+>> +* Example for ar7100
+>> +	pcie0: pcie-controller@180c0000 {
+>     Name it just "pcie@180c0000", please.
+>
+> [...]
+>
+> MBR, Sergei
+>
+
+Thanks, fixed in my local tree, also for the ar7240 doc. I'll wait to 
+see what other feedback i get before sending a V2
+     John
