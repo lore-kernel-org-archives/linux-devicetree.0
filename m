@@ -1,57 +1,133 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v5 4/4] clk: bd71837: Add driver for BD71837 PMIC clock
-Date: Mon, 25 Jun 2018 16:46:24 -0700
-Message-ID: <152997038474.143105.3390705878521933864@swboyd.mtv.corp.google.com>
-References: <cover.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
- <d99c8762b0fbbcb18ec4f4d104191364c0ea798c.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
- <152878945117.16708.12422348324182290971@swboyd.mtv.corp.google.com>
- <20180612082354.GG20078@localhost.localdomain>
- <20180613130338.GH20078@localhost.localdomain>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v8 4/7] Bluetooth: hci_qca: Add wrapper functions for
+ setting UART speed
+Date: Mon, 25 Jun 2018 17:05:29 -0700
+Message-ID: <20180626000529.GJ129942@google.com>
+References: <20180625134013.19684-1-bgodavar@codeaurora.org>
+ <20180625134013.19684-5-bgodavar@codeaurora.org>
+ <20180625234354.GI129942@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180613130338.GH20078@localhost.localdomain>
+Content-Disposition: inline
+In-Reply-To: <20180625234354.GI129942@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, broonie@kernel.org, lee.jones@linaro.org, lgirdwood@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Matti Vaittinen (2018-06-13 06:03:38)
-> On Tue, Jun 12, 2018 at 11:23:54AM +0300, Matti Vaittinen wrote:
-> > =
+On Mon, Jun 25, 2018 at 04:43:54PM -0700, Matthias Kaehlcke wrote:
+> This is a nice improvement, a few remaining questions inline.
+> 
+> On Mon, Jun 25, 2018 at 07:10:10PM +0530, Balakrishna Godavarthi wrote:
+> > In function qca_setup, we set initial and operating speeds for Qualcomm
+> > Bluetooth SoC's. This block of code is common across different
+> > Qualcomm Bluetooth SoC's. Instead of duplicating the code, created
+> > a wrapper function to set the speeds. So that future coming SoC's
+> > can use these wrapper functions to set speeds.
+> > 
+> > Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+> > ---
+> > Changes in v8:
+> >     * common function to set INIT and operating speeds.
+> >     * moved hardware flow control to qca_set_speed().
+> > 	
+> > Changes in v7:
+> >     * initial patch
+> >     * created wrapper functions for init and operating speeds.
+> > ---
+> >  drivers/bluetooth/hci_qca.c | 89 +++++++++++++++++++++++++++----------
+> >  1 file changed, 65 insertions(+), 24 deletions(-)
+> > 
+> > diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> > index fe62420ef838..38b7dbe6c897 100644
+> > --- a/drivers/bluetooth/hci_qca.c
+> > +++ b/drivers/bluetooth/hci_qca.c
+> > @@ -119,6 +119,11 @@ struct qca_data {
+> >  	u64 votes_off;
+> >  };
+> >  
+> > +enum qca_speed_type {
+> > +	QCA_INIT_SPEED = 1,
+> > +	QCA_OPER_SPEED
+> > +};
+> > +
+> >  struct qca_serdev {
+> >  	struct hci_uart	 serdev_hu;
+> >  	struct gpio_desc *bt_en;
+> > @@ -923,6 +928,60 @@ static inline void host_set_baudrate(struct hci_uart *hu, unsigned int speed)
+> >  		hci_uart_set_baudrate(hu, speed);
+> >  }
+> >  
+> > +static unsigned int qca_get_speed(struct hci_uart *hu,
+> > +				  enum qca_speed_type speed_type)
+> > +{
+> > +	unsigned int speed = 0;
+> > +
+> > +	if (speed_type == QCA_INIT_SPEED) {
+> > +		if (hu->init_speed)
+> > +			speed = hu->init_speed;
+> > +		else if (hu->proto->init_speed)
+> > +			speed = hu->proto->init_speed;
+> > +	} else {
+> > +		if (hu->oper_speed)
+> > +			speed = hu->oper_speed;
+> > +		else if (hu->proto->oper_speed)
+> > +			speed = hu->proto->oper_speed;
+> > +	}
+> > +
+> > +	return speed;
+> > +}
+> > +
+> > +static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
+> > +{
+> > +	unsigned int speed, qca_baudrate;
+> > +	int ret;
+> > +
+> > +	if (speed_type == QCA_INIT_SPEED) {
+> > +		speed = qca_get_speed(hu, QCA_INIT_SPEED);
+> > +		if (speed)
+> > +			host_set_baudrate(hu, speed);
+> > +		else
+> > +			bt_dev_err(hu->hdev, "Init speed should be non zero");
+> 
+> The check for 'speed == 0' is done in multiple places. From this
+> code I deduce that it is expected that both INIT and OPER speed are
+> set to non-zero values. What happens if either of them is zero? Is the
+> driver still operational?
+> 
+> > +		return 0;
+> > +	}
+> > +
+> > +	speed = qca_get_speed(hu, QCA_OPER_SPEED);
+> > +	if (!speed) {
+> > +		bt_dev_err(hu->hdev, "operating speed should be non zero");
+> > +		return 0;
+> > +	}
+> > +
+> > +	qca_baudrate = qca_get_baudrate_value(speed);
+> > +	bt_dev_info(hu->hdev, "Set UART speed to %d", speed);
+> > +	ret = qca_set_baudrate(hu->hdev, qca_baudrate);
+> > +	if (ret) {
+> > +		bt_dev_err(hu->hdev, "Failed to change the baudrate (%d)", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	host_set_baudrate(hu, speed);
+> > +
+> > +	return ret;
+> > +}
+> 
+> In the discussion on "[v7,8/8] Bluetooth: hci_qca: Add support for
+> Qualcomm Bluetooth chip wcn3990" you mentioned the possbility to move
+> the hci_uart_set_flow_control() calls into _set_speed(). This seemed
+> interesting but finally it isn't done in this series. Did you
+> encounter that it is not feasible/desirable for some reason?
 
-> > I see. This makes sense. I need to verify from HW colleagues whether
-> > this chip has internal oscillator or not. I originally thought we have
-> > on-chip oscillator - but as you say, we do have XIN pin in documentatio=
-n.
-> > So now I am not sure if the test board I have contains oscillator drivi=
-ng
-> > the clk on PMIC - or if the PMIC has internal oscillator. I'll clarify =
-this.
-> =
+I got that half wrong. "[v8,7/7] Bluetooth: hci_qca: Add support for
+Qualcomm Bluetooth chip wcn3990" adds the flow control calls to
+_set_speed() however there are still_set_flow_control() calls in
+qca_setup(), which confused/s me.
 
-> It really turned out that the PMIC just acts as a clock buffer. So I do
-> as you suggested and add lookup for parent clock to the driver. I
-> planned to do it so that if no parent is found from DT - then we assume
-> the 32.768KHz clock (as described in documentation). Eg, something along
-> the lines:
-> =
-
->         init.parent_names =3D of_clk_get_parent_name(pdev->dev.parent->of=
-_node, 0);
->         if (init.parent_names) {
->                 init.num_parents =3D 1;
->         } else {
->                 /* If parent is not given from DT we assume the typical u=
-se-case with
->                  * 32.768 KHz oscillator for RTC (Maybe we could just err=
-or out here?)
->                  */
->                 c->rate =3D BD71837_CLK_RATE;
->                 bd71837_clk_ops.recalc_rate =3D &bd71837_clk_recalc_rate;
->         }
-
-You can also add a clk directly in this driver in that case there isn't
-one in DT with the rate and name of your choosing. Then the logic is the
-same and we don't need a c->rate variable.
+Could you provide a brief summary on the situations (relevant for this
+driver) in which flow controls needs to be enabled/disabled?
