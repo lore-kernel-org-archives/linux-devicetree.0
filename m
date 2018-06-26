@@ -1,7 +1,7 @@
 From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: [PATCH 07/14] fsi: master-gpio: Remove unused definitions
-Date: Wed, 27 Jun 2018 09:25:58 +1000
-Message-ID: <20180626232605.13420-8-benh@kernel.crashing.org>
+Subject: [PATCH 13/14] arm: dts: OpenPower Romulus system can use coprocessor for FSI
+Date: Wed, 27 Jun 2018 09:26:04 +1000
+Message-ID: <20180626232605.13420-14-benh@kernel.crashing.org>
 References: <20180626232605.13420-1-benh@kernel.crashing.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180626232605.13420-1-benh@kernel.crashing.org>
@@ -12,33 +12,43 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 ---
- drivers/fsi/fsi-master-gpio.c | 6 ------
- 1 file changed, 6 deletions(-)
+ arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/fsi/fsi-master-gpio.c b/drivers/fsi/fsi-master-gpio.c
-index a00a85aa6d56..2bc85514bb0c 100644
---- a/drivers/fsi/fsi-master-gpio.c
-+++ b/drivers/fsi/fsi-master-gpio.c
-@@ -25,9 +25,6 @@
- #define	FSI_INIT_CLOCKS		5000	/* Clock out any old data */
- #define	FSI_GPIO_DPOLL_CLOCKS	50      /* < 21 will cause slave to hang */
- #define	FSI_GPIO_EPOLL_CLOCKS	50      /* Number of clocks for E_POLL retry */
--#define	FSI_GPIO_STD_DELAY	10	/* Standard GPIO delay in nS */
--					/* todo: adjust down as low as */
--					/* possible or eliminate */
- #define FSI_CRC_ERR_RETRIES	10
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+index 347938673c83..070b8f8f1d62 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+@@ -37,6 +37,11 @@
+ 			compatible = "shared-dma-pool";
+ 			reusable;
+ 		};
++
++		coldfire_memory: codefire_memory@9ef00000 {
++			reg = <0x9ef00000 0x00100000>;
++			no-map;
++		};
+ 	};
  
- #define	FSI_GPIO_CMD_DPOLL      0x2
-@@ -45,10 +42,7 @@
+ 	leds {
+@@ -56,10 +61,16 @@
+ 	};
  
- #define	FSI_GPIO_MAX_BUSY	200
- #define	FSI_GPIO_MTOE_COUNT	1000
--#define	FSI_GPIO_DRAIN_BITS	20
- #define	FSI_GPIO_CRC_SIZE	4
--#define	FSI_GPIO_MSG_ID_SIZE		2
--#define	FSI_GPIO_MSG_RESPID_SIZE	2
+ 	fsi: gpio-fsi {
+-		compatible = "fsi-master-gpio", "fsi-master";
++		compatible = "ibm,fsi-master-ast2500-cf", "fsi-master";
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
+-		no-gpio-delays;
++
++		memory-region = <&coldfire_memory>;
++		sram = <&sram>;
++		cvic = <&cvic>;
++
++		fw-name = "romulus";
++		fw-platform-sig = <0x526d>;
  
- #define LAST_ADDR_INVALID		0x1
- 
+ 		clock-gpios = <&gpio ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIGH>;
+ 		data-gpios = <&gpio ASPEED_GPIO(AA, 2) GPIO_ACTIVE_HIGH>;
 -- 
 2.17.1
