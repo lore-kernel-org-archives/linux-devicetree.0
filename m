@@ -1,14 +1,16 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 10/12] ASoC: qcom: apq8096: remove redundant
-	owner assignment
-Date: Tue, 26 Jun 2018 10:20:14 +0100
-Message-ID: <20180626092016.9296-11-srinivas.kandagatla@linaro.org>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH v2 03/12] ASoC: q6afe: dt-bindings: add
+ compatible string to dais
+Date: Tue, 26 Jun 2018 11:28:59 +0200
+Message-ID: <20180626092859.GA25217@centauri.ideon.se>
 References: <20180626092016.9296-1-srinivas.kandagatla@linaro.org>
+ <20180626092016.9296-4-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180626092016.9296-1-srinivas.kandagatla@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20180626092016.9296-4-srinivas.kandagatla@linaro.org>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
@@ -18,30 +20,45 @@ List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
 Errors-To: alsa-devel-bounces@alsa-project.org
 Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org, robh+dt@kernel.org, alsa-devel@alsa-project.org
-Cc: devicetree@vger.kernel.org, bgoswami@codeaurora.org, lgirdwood@gmail.com, linux-arm-msm@vger.kernel.org, tiwai@suse.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-kernel@lists.infradead.org, niklas.cassel@linaro.org, linux-kernel@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-arm-msm@vger.kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, tiwai@suse.com, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-module owner is already set in platform_driver_register(), so remove this
-redundant assignment.
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Acked-by: Niklas Cassel <niklas.cassel@linaro.org>
----
- sound/soc/qcom/apq8096.c | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/sound/soc/qcom/apq8096.c b/sound/soc/qcom/apq8096.c
-index 561cd429e6f2..6e79fec7e789 100644
---- a/sound/soc/qcom/apq8096.c
-+++ b/sound/soc/qcom/apq8096.c
-@@ -245,7 +245,6 @@ static struct platform_driver msm_snd_apq8096_driver = {
- 	.remove = apq8096_platform_remove,
- 	.driver = {
- 		.name = "msm-snd-apq8096",
--		.owner = THIS_MODULE,
- 		.of_match_table = msm_snd_apq8096_dt_match,
- 	},
- };
--- 
-2.16.2
+On Tue, Jun 26, 2018 at 10:20:07AM +0100, Srinivas Kandagatla wrote:
+> Add compatible string to dais so that it can support DT based module
+> autoloading.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/sound/qcom,q6afe.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/qcom,q6afe.txt b/Documentation/devicetree/bindings/sound/qcom,q6afe.txt
+> index bdbf87df8c0b..a8179409c194 100644
+> --- a/Documentation/devicetree/bindings/sound/qcom,q6afe.txt
+> +++ b/Documentation/devicetree/bindings/sound/qcom,q6afe.txt
+> @@ -17,6 +17,11 @@ used by all apr services. Must contain the following properties.
+>  subnode of "dais" representing board specific dai setup.
+>  "dais" node should have following properties followed by dai children.
+>  
+> +- compatible:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: must be "qcom,q6afe-dais"
+> +
+>  - #sound-dai-cells
+>  	Usage: required
+>  	Value type: <u32>
+> @@ -100,6 +105,7 @@ q6afe@4 {
+>  	reg = <APR_SVC_AFE>;
+>  
+>  	dais {
+> +		compatible = "qcom,q6afe-dais";
+>  		#sound-dai-cells = <1>;
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+> -- 
+> 2.16.2
+> 
