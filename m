@@ -1,41 +1,78 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH V2 1/2] dt-bindings: mtd: document Broadcom's TRX firmware
- format binding
-Date: Tue, 26 Jun 2018 08:21:16 -0600
-Message-ID: <CAL_JsqJV9c0QsPKeXvfbDrGDsFsTVOvBbCoGFetK5OPVgn+0Ng@mail.gmail.com>
-References: <20180612104434.15232-1-zajec5@gmail.com>
- <20180625220508.21242-1-zajec5@gmail.com>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH v7 1/4] mfd: bd71837: mfd driver for ROHM BD71837 PMIC
+Date: Tue, 26 Jun 2018 16:24:37 +0200
+Message-ID: <CAFqH_52v3-L1xLL12hzyGCbuooX5T52Lm7BXHM3sBX1ERWmhiQ@mail.gmail.com>
+References: <cover.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
+ <7e1888375c979accc402e9ddd7316e528b2ac52c.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
+ <CAFqH_51izuVgHukAORvwjZqGhxy85tdNdaHL9mOUnPnbCQmQjA@mail.gmail.com>
+ <20180626112455.GC2118@localhost.localdomain> <CAFqH_52NERfORwSkBh0stW+mvzRpw0to9CiWPwLB9mFo_TsW_w@mail.gmail.com>
+ <20180626120306.GD2118@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180625220508.21242-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Jonas Gorski <jonas.gorski@gmail.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marek.vasut@gmail.com>, MTD Maling List <linux-mtd@lists.infradead.org>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180626120306.GD2118@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: matti.vaittinen@fi.rohmeurope.com
+Cc: Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Matti Vaittinen <mazziesaccount@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>, chenjh@rock-chips.com, Andrey Smirnov <andrew.smirnov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Kate Stewart <kstewart@linuxfoundation.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@v>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdW4gMjUsIDIwMTggYXQgNDowNyBQTSBSYWZhxYIgTWnFgmVja2kgPHphamVjNUBn
-bWFpbC5jb20+IHdyb3RlOgo+Cj4gRnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tp
-LnBsPgo+Cj4gQnJvYWRjb20gYmFzZWQgaG9tZSByb3V0ZXIgZGV2aWNlcyB1c2UgVFJYIGZpcm13
-YXJlIGZvcm1hdC4gSXQncyBhCj4gY29udGFpbmVyIHRoYXQgY2FuIGhvbGQgZmV3IHBhcnRpdGlv
-bnMuIElmIG9wZXJhdGluZyBzeXN0ZW0gaXMgZXhwZWN0ZWQKPiB0byBhY2Nlc3MgdGhlbSBpdCBo
-YXMgdG8gdW5kZXJzdGFuZCB0aGF0IGZvcm1hdCBhbmQgcGFyc2UgZmxhc2ggZGF0YQo+IGFjY29y
-ZGluZ2x5Lgo+Cj4gU2lnbmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tp
-LnBsPgo+IC0tLQo+IFYyOiBEcm9wIHVubmVlZGVkICJicmNtLHRyeC12MSIgYW5kICJicmNtLHRy
-eC12MiIgYmluZGluZ3MuCj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9tdGQvcGFydGl0aW9ucy9icmNt
-LHRyeC50eHQgICAgICAgICAgIHwgMzcgKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUg
-Y2hhbmdlZCwgMzcgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0aXRpb25zL2JyY20sdHJ4LnR4dAoKUmV2
-aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+CgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXggTVREIGRpc2N1c3Np
-b24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8vbGludXgtbXRkLwo=
+Hi Matti,
+
+Missatge de Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com> del
+dia dt., 26 de juny 2018 a les 14:03:
+>
+> Hello Again Eric,
+>
+> On Tue, Jun 26, 2018 at 01:40:40PM +0200, Enric Balletbo Serra wrote:
+> > Hi Matti,
+> > Missatge de Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com> del
+> > dia dt., 26 de juny 2018 a les 13:25:
+> > > On Tue, Jun 26, 2018 at 11:06:33AM +0200, Enric Balletbo Serra wrote:
+> > > > Missatge de Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com> del
+> > > > dia dt., 19 de juny 2018 a les 12:57:
+> > >
+> > > > > +static const struct of_device_id bd71837_of_match[] = {
+> > > > > +       { .compatible = "rohm,bd71837", .data = (void *)0},
+> > > > > +       { },
+> > > >
+> > > > nit: { /* sentinel */ }
+> > >
+> > > I am sorry but I didn't quite get the point here. Could you please
+> > > explain what did you expect to be added here?
+> > >
+> >
+> > It's a nit but It is a good practice to specify that the last entry is
+> > a sentinel. Just this.
+> >
+> > +static const struct of_device_id bd71837_of_match[] = {
+> > +       { .compatible = "rohm,bd71837", .data = (void *)0},
+> > +       { /* sentinel */ }
+> > +};
+>
+> Oh, I see. Finally something I can disagree =) I quickly opened few
+> random drivers which declare match table. None of them practiced this
+> good practice. So I guess it is not such a standard after all. And I
+> guess the meaning of last entry in match table should be quite obvious.
+> Adding the comment /* sentinel */ sounds like stating the obvious at
+> best - at worst it gets one just to wonder what the "sentinel" means =)
+>
+
+git grep "/\* sentinel \*/"
+
+Anyway, I marked this change as a nit, so you don't need to change. I
+just commented because at some point I received a "complain" when I
+didn't add it. But this is up to the maintainer and I am not sure if
+the "complain" was received in this subsystem :)
+
+Cheers,
+ Enric
+
+> >
+> > And just noticed, is .data = (void *)0 really required?
+>
+> As static structs should be initialized to zero I'd say it is not
+> required. Will remove this. Thanks for pointing this out.
+>
+> Br,
+>         Matti Vaittinen
+>
