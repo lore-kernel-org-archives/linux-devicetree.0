@@ -1,188 +1,46 @@
-From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Subject: Re: [PATCH v8 4/7] Bluetooth: hci_qca: Add wrapper functions for
- setting UART speed
-Date: Tue, 26 Jun 2018 07:01:18 +0530
-Message-ID: <89b1e4ce98a26d79935bf2ba9a4bc278@codeaurora.org>
-References: <20180625134013.19684-1-bgodavar@codeaurora.org>
- <20180625134013.19684-5-bgodavar@codeaurora.org>
- <20180625234354.GI129942@google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+From: Lei YU <mine260309@gmail.com>
+Subject: [PATCH] clk: aspeed: Fix SDCLK name
+Date: Tue, 26 Jun 2018 09:55:25 +0800
+Message-ID: <1529978125-28712-1-git-send-email-mine260309@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180625234354.GI129942@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lei YU <mine260309@gmail.com>, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
+The SDCLK was named SDCLKCLK, and no one has used this yet.
+Fix it.
 
-On 2018-06-26 05:13, Matthias Kaehlcke wrote:
-> This is a nice improvement, a few remaining questions inline.
-> 
-> On Mon, Jun 25, 2018 at 07:10:10PM +0530, Balakrishna Godavarthi wrote:
->> In function qca_setup, we set initial and operating speeds for 
->> Qualcomm
->> Bluetooth SoC's. This block of code is common across different
->> Qualcomm Bluetooth SoC's. Instead of duplicating the code, created
->> a wrapper function to set the speeds. So that future coming SoC's
->> can use these wrapper functions to set speeds.
->> 
->> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
->> ---
->> Changes in v8:
->>     * common function to set INIT and operating speeds.
->>     * moved hardware flow control to qca_set_speed().
->> 
->> Changes in v7:
->>     * initial patch
->>     * created wrapper functions for init and operating speeds.
->> ---
->>  drivers/bluetooth/hci_qca.c | 89 
->> +++++++++++++++++++++++++++----------
->>  1 file changed, 65 insertions(+), 24 deletions(-)
->> 
->> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->> index fe62420ef838..38b7dbe6c897 100644
->> --- a/drivers/bluetooth/hci_qca.c
->> +++ b/drivers/bluetooth/hci_qca.c
->> @@ -119,6 +119,11 @@ struct qca_data {
->>  	u64 votes_off;
->>  };
->> 
->> +enum qca_speed_type {
->> +	QCA_INIT_SPEED = 1,
->> +	QCA_OPER_SPEED
->> +};
->> +
->>  struct qca_serdev {
->>  	struct hci_uart	 serdev_hu;
->>  	struct gpio_desc *bt_en;
->> @@ -923,6 +928,60 @@ static inline void host_set_baudrate(struct 
->> hci_uart *hu, unsigned int speed)
->>  		hci_uart_set_baudrate(hu, speed);
->>  }
->> 
->> +static unsigned int qca_get_speed(struct hci_uart *hu,
->> +				  enum qca_speed_type speed_type)
->> +{
->> +	unsigned int speed = 0;
->> +
->> +	if (speed_type == QCA_INIT_SPEED) {
->> +		if (hu->init_speed)
->> +			speed = hu->init_speed;
->> +		else if (hu->proto->init_speed)
->> +			speed = hu->proto->init_speed;
->> +	} else {
->> +		if (hu->oper_speed)
->> +			speed = hu->oper_speed;
->> +		else if (hu->proto->oper_speed)
->> +			speed = hu->proto->oper_speed;
->> +	}
->> +
->> +	return speed;
->> +}
->> +
->> +static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type 
->> speed_type)
->> +{
->> +	unsigned int speed, qca_baudrate;
->> +	int ret;
->> +
->> +	if (speed_type == QCA_INIT_SPEED) {
->> +		speed = qca_get_speed(hu, QCA_INIT_SPEED);
->> +		if (speed)
->> +			host_set_baudrate(hu, speed);
->> +		else
->> +			bt_dev_err(hu->hdev, "Init speed should be non zero");
-> 
-> The check for 'speed == 0' is done in multiple places. From this
-> code I deduce that it is expected that both INIT and OPER speed are
-> set to non-zero values. What happens if either of them is zero? Is the
-> driver still operational?
-> 
-[Bala]: yes in hci_uart_setup()(hci_serdev.c) function before calling 
-qca_setup().
-         we actually set baudrate, but int  above code missed to restrict 
-the further call to qca_setup()
-        if speed =0. so we are checking the same in the qca_setup().. 
-i.e. qca_get_speed().
+Signed-off-by: Lei YU <mine260309@gmail.com>
+---
+ drivers/clk/clk-aspeed.c                 | 2 +-
+ include/dt-bindings/clock/aspeed-clock.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-
->> +		return 0;
->> +	}
->> +
->> +	speed = qca_get_speed(hu, QCA_OPER_SPEED);
->> +	if (!speed) {
->> +		bt_dev_err(hu->hdev, "operating speed should be non zero");
->> +		return 0;
->> +	}
->> +
->> +	qca_baudrate = qca_get_baudrate_value(speed);
->> +	bt_dev_info(hu->hdev, "Set UART speed to %d", speed);
->> +	ret = qca_set_baudrate(hu->hdev, qca_baudrate);
->> +	if (ret) {
->> +		bt_dev_err(hu->hdev, "Failed to change the baudrate (%d)", ret);
->> +		return ret;
->> +	}
->> +
->> +	host_set_baudrate(hu, speed);
->> +
->> +	return ret;
->> +}
-> 
-> In the discussion on "[v7,8/8] Bluetooth: hci_qca: Add support for
-> Qualcomm Bluetooth chip wcn3990" you mentioned the possbility to move
-> the hci_uart_set_flow_control() calls into _set_speed(). This seemed
-> interesting but finally it isn't done in this series. Did you
-> encounter that it is not feasible/desirable for some reason?
-> 
-
-[Bala]: this patch is for rome where flow control is not used.
-         after we integrate wcn3990, flow control is hidden in the 
-qca_set_speed()
-         Pls check [v8 7/7] patch.
-
->> +
->>  static int qca_setup(struct hci_uart *hu)
->>  {
->>  	struct hci_dev *hdev = hu->hdev;
->> @@ -937,35 +996,17 @@ static int qca_setup(struct hci_uart *hu)
->>  	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
->> 
->>  	/* Setup initial baudrate */
->> -	speed = 0;
->> -	if (hu->init_speed)
->> -		speed = hu->init_speed;
->> -	else if (hu->proto->init_speed)
->> -		speed = hu->proto->init_speed;
->> -
->> -	if (speed)
->> -		host_set_baudrate(hu, speed);
->> +	qca_set_speed(hu, QCA_INIT_SPEED);
->> 
->>  	/* Setup user speed if needed */
->> -	speed = 0;
->> -	if (hu->oper_speed)
->> -		speed = hu->oper_speed;
->> -	else if (hu->proto->oper_speed)
->> -		speed = hu->proto->oper_speed;
->> +	ret = qca_set_speed(hu, QCA_OPER_SPEED);
->> +	if (ret)
->> +		return ret;
->> 
->> -	if (speed) {
->> +	speed = qca_get_speed(hu, QCA_OPER_SPEED);
->> +	if (speed)
->>  		qca_baudrate = qca_get_baudrate_value(speed);
-> 
-> Is the check here necessary? qca_get_baudrate_value() returns
-> QCA_BAUDRATE_115200 for a zero speed.
-
-this if for no zero operating speed,
-
+diff --git a/drivers/clk/clk-aspeed.c b/drivers/clk/clk-aspeed.c
+index 38b366b..f49c684 100644
+--- a/drivers/clk/clk-aspeed.c
++++ b/drivers/clk/clk-aspeed.c
+@@ -109,7 +109,7 @@ struct aspeed_clk_gate {
+ 	[ASPEED_CLK_GATE_RSACLK] =	{ 24, -1, "rsaclk-gate",	NULL,	0 }, /* RSA */
+ 	[ASPEED_CLK_GATE_UART3CLK] =	{ 25, -1, "uart3clk-gate",	"uart",	0 }, /* UART3 */
+ 	[ASPEED_CLK_GATE_UART4CLK] =	{ 26, -1, "uart4clk-gate",	"uart",	0 }, /* UART4 */
+-	[ASPEED_CLK_GATE_SDCLKCLK] =	{ 27, 16, "sdclk-gate",		NULL,	0 }, /* SDIO/SD */
++	[ASPEED_CLK_GATE_SDCLK] =	{ 27, 16, "sdclk-gate",		NULL,	0 }, /* SDIO/SD */
+ 	[ASPEED_CLK_GATE_LHCCLK] =	{ 28, -1, "lhclk-gate",		"lhclk", 0 }, /* LPC master/LPC+ */
+ };
+ 
+diff --git a/include/dt-bindings/clock/aspeed-clock.h b/include/dt-bindings/clock/aspeed-clock.h
+index 4476184..f437386 100644
+--- a/include/dt-bindings/clock/aspeed-clock.h
++++ b/include/dt-bindings/clock/aspeed-clock.h
+@@ -25,7 +25,7 @@
+ #define ASPEED_CLK_GATE_RSACLK		19
+ #define ASPEED_CLK_GATE_UART3CLK	20
+ #define ASPEED_CLK_GATE_UART4CLK	21
+-#define ASPEED_CLK_GATE_SDCLKCLK	22
++#define ASPEED_CLK_GATE_SDCLK		22
+ #define ASPEED_CLK_GATE_LHCCLK		23
+ #define ASPEED_CLK_HPLL			24
+ #define ASPEED_CLK_AHB			25
 -- 
-Regards
-Balakrishna.
+1.9.1
