@@ -1,7 +1,7 @@
 From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Subject: [PATCH 00/14] fsi: Fixes and Coldfire coprocessor offload
-Date: Wed, 27 Jun 2018 09:23:07 +1000
-Message-ID: <20180626232321.12372-1-benh@kernel.crashing.org>
+Date: Wed, 27 Jun 2018 09:25:51 +1000
+Message-ID: <20180626232605.13420-1-benh@kernel.crashing.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Joel Stanley <joel@jms.id.au>
