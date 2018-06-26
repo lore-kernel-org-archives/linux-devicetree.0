@@ -1,23 +1,55 @@
 From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 1/3] ARM: dts: imx51-zii-common: create common include dtsi
-Date: Tue, 26 Jun 2018 19:08:29 -0300
-Message-ID: <CAOMZO5DavdUwke_ErO-mB6RWe3e20390GhDfB91F7QmLvr3VQw@mail.gmail.com>
-References: <1529603100-31958-1-git-send-email-andrey.gusakov@cogentembedded.com>
- <1529603100-31958-2-git-send-email-andrey.gusakov@cogentembedded.com>
+Subject: [PATCH] ARM: dts: imx51: Add sahara crypto support
+Date: Tue, 26 Jun 2018 20:18:52 -0300
+Message-ID: <1530055132-16538-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529603100-31958-2-git-send-email-andrey.gusakov@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chris Healy <cphealy@gmail.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 21, 2018 at 2:44 PM, Andrey Gusakov
-<andrey.gusakov@cogentembedded.com> wrote:
-> Make shared include file. Move common stuff from rdu1 dts file to
-> dtsi for future reuse by other imx51 based boards from ZII.
->
-> Signed-off-by: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+From: Fabio Estevam <fabio.estevam@nxp.com>
 
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+The sahara crypto block on i.MX51 has the same IP version as
+the one on i.MX53.
+
+Add support for it.
+
+Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+---
+ arch/arm/boot/dts/imx51.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
+index fe01b89..89afb4b 100644
+--- a/arch/arm/boot/dts/imx51.dtsi
++++ b/arch/arm/boot/dts/imx51.dtsi
+@@ -588,6 +588,15 @@
+ 				clock-names = "ipg", "ahb", "ptp";
+ 				status = "disabled";
+ 			};
++
++			sahara: crypto@83ff8000 {
++				compatible = "fsl,imx53-sahara", "fsl,imx51-sahara";
++				reg = <0x83ff8000 0x4000>;
++				interrupts = <19 20>;
++				clocks = <&clks IMX5_CLK_SAHARA_IPG_GATE>,
++					 <&clks IMX5_CLK_SAHARA_IPG_GATE>;
++				clock-names = "ipg", "ahb";
++			};
+ 		};
+ 	};
+ };
+-- 
+2.7.4
