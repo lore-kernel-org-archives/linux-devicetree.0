@@ -1,48 +1,118 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH 0/4] media: sun6i: Add support for the H3 CSI controller
-Date: Tue, 26 Jun 2018 11:41:56 +0530
-Message-ID: <CAMty3ZBQXyvOnzy_9RLDW-QO9qnAC4SR5UJnWYmhiPrP23z_vg@mail.gmail.com>
-References: <20180305100432.15009-1-maxime.ripard@bootlin.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH] ARM: dts: make pfuze switch always-on for imx platforms
+Date: Tue, 26 Jun 2018 14:08:03 +0800
+Message-ID: <1529993283-32396-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180305100432.15009-1-maxime.ripard@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Mylene Josserand <mylene.josserand@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-media@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBNYXIgNSwgMjAxOCBhdCAzOjM0IFBNLCBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlw
-YXJkQGJvb3RsaW4uY29tPiB3cm90ZToKPiBIaSwKPgo+IFRoZSBIMyBhbmQgSDUgaGF2ZSBhIENT
-SSBjb250cm9sbGVyIGJhc2VkIG9uIHRoZSBvbmUgcHJldmlvdXNseSBmb3VuZAo+IGluIHRoZSBB
-MzEsIHRoYXQgaXMgY3VycmVudGx5IHN1cHBvcnRlZCBieSB0aGUgc3VuNmktY3NpIGRyaXZlci4K
-Pgo+IEFkZCB0aGUgY29tcGF0aWJsZXMgdG8gdGhlIGRldmljZSB0cmVlIGJpbmRpbmdzIGFuZCB0
-byB0aGUgZHJpdmVyIHRvCj4gbWFrZSBpdCB3b3JrIHByb3Blcmx5Lgo+Cj4gVGhpcyBvYnZpb3Vz
-bHkgZGVwZW5kcyBvbiB0aGUgc2VyaWUgIkluaXRpYWwgQWxsd2lubmVyIFYzcyBDU0kKPiBTdXBw
-b3J0IiBieSBZb25nIERlbmcuCj4KPiBMZXQgbWUga25vdyB3aGF0IHlvdSB0aGluaywKPiBNYXhp
-bWUKPgo+IE1heGltZSBSaXBhcmQgKDIpOgo+ICAgZHQtYmluZGluZ3M6IG1lZGlhOiBzdW42aTog
-QWRkIEEzMSBhbmQgSDMgY29tcGF0aWJsZXMKPiAgIG1lZGlhOiBzdW42aTogQWRkIEEzMSBjb21w
-YXRpYmxlCj4KPiBNeWzDqG5lIEpvc3NlcmFuZCAoMik6Cj4gICBBUk06IGR0czogc3VuOGk6IEFk
-ZCB0aGUgSDMvSDUgQ1NJIGNvbnRyb2xsZXIKPiAgIFtETyBOT1QgTUVSR0VdIEFSTTogZHRzOiBz
-dW44aTogQWRkIENBTTUwMEIgY2FtZXJhIG1vZHVsZSB0byB0aGUgTmFubwo+ICAgICBQaSBNMSsK
-Ckp1c3QgdHJ5aW5nIHRvIHVuZGVyc3RhbmQgd2hhdCBpbnRlcmZhY2UgaGFzIGJlZW4gdGVzdGVk
-IHdpdGggbnBpLW0xKywKaXMgaXQgRFZQIChwYXJhbGxlbCkgaW50ZXJmYWNlPyBJJ3ZlIEJhbmFu
-YXBpIDVNUFsxXSBhbmQgdHJ5aW5nIHRvCnRlc3Qgb24gdG9wLCBhbmQgbG9vayBsaWtlIGl0cyBN
-SVBJIENTSTIuIEkgZ3Vlc3MgWW9uZyBwYXRjaFsyXQpkb2Vzbid0IHN1cHBvcnQgQ1NJMiB5ZXQs
-IGFtIEkgY29ycmVjdD8KClsxXSBodHRwczovL3d3dy5hbWF6b24uaW4vR2VuZXJpYy1WMy0wLUJQ
-SS1NMy1jYW1lcmEtY2hpcHNldC9kcC9CMDcyN041Q0QxClsyXSBodHRwczovL3BhdGNod29yay5r
-ZXJuZWwub3JnL3BhdGNoLzEwMzgwMDY3LwoKSmFnYW4uCgotLSAKSmFnYW4gVGVraQpTZW5pb3Ig
-TGludXggS2VybmVsIEVuZ2luZWVyIHwgQW1hcnVsYSBTb2x1dGlvbnMKVS1Cb290LCBMaW51eCB8
-IFVwc3RyZWFtIE1haW50YWluZXIKSHlkZXJhYmFkLCBJbmRpYS4KCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
-aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+commit (5fe156f regulator: pfuze100: add enable/disable
+for switch) will cause those unreferenced switches being
+turned off if "regulator-always-on" is NOT present, as
+pfuze switches are normally used by critical modules which
+must be always ON or shared by many peripherals which
+do NOT implement power domain control, so just make sure
+all switches always ON to avoid any system issue caused
+by unexpectedly turning off switches.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6q-display5.dtsi  | 1 +
+ arch/arm/boot/dts/imx6q-mccmon6.dts    | 1 +
+ arch/arm/boot/dts/imx6q-novena.dts     | 1 +
+ arch/arm/boot/dts/imx6q-pistachio.dts  | 1 +
+ arch/arm/boot/dts/imx6qdl-gw54xx.dtsi  | 1 +
+ arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 1 +
+ arch/arm/boot/dts/imx6sx-sdb-reva.dts  | 1 +
+ 7 files changed, 7 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6q-display5.dtsi b/arch/arm/boot/dts/imx6q-display5.dtsi
+index 85232c7..33d266f 100644
+--- a/arch/arm/boot/dts/imx6q-display5.dtsi
++++ b/arch/arm/boot/dts/imx6q-display5.dtsi
+@@ -326,6 +326,7 @@
+ 			sw4_reg: sw4 {
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
+ 			};
+ 
+ 			swbst_reg: swbst {
+diff --git a/arch/arm/boot/dts/imx6q-mccmon6.dts b/arch/arm/boot/dts/imx6q-mccmon6.dts
+index b7e9f38..e6429c5 100644
+--- a/arch/arm/boot/dts/imx6q-mccmon6.dts
++++ b/arch/arm/boot/dts/imx6q-mccmon6.dts
+@@ -166,6 +166,7 @@
+ 			sw4_reg: sw4 {
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
+ 			};
+ 
+ 			swbst_reg: swbst {
+diff --git a/arch/arm/boot/dts/imx6q-novena.dts b/arch/arm/boot/dts/imx6q-novena.dts
+index fcd824d..0b3c651 100644
+--- a/arch/arm/boot/dts/imx6q-novena.dts
++++ b/arch/arm/boot/dts/imx6q-novena.dts
+@@ -341,6 +341,7 @@
+ 			reg_sw4: sw4 {
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
+ 			};
+ 
+ 			reg_swbst: swbst {
+diff --git a/arch/arm/boot/dts/imx6q-pistachio.dts b/arch/arm/boot/dts/imx6q-pistachio.dts
+index a31e83c..6ea09f9 100644
+--- a/arch/arm/boot/dts/imx6q-pistachio.dts
++++ b/arch/arm/boot/dts/imx6q-pistachio.dts
+@@ -253,6 +253,7 @@
+ 			sw4_reg: sw4 {
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
+ 			};
+ 
+ 			swbst_reg: swbst {
+diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+index a1a6fb5..281cae5 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+@@ -268,6 +268,7 @@
+ 			sw4_reg: sw4 {
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
+ 			};
+ 
+ 			swbst_reg: swbst {
+diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+index 15744ad..6e46a19 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+@@ -341,6 +341,7 @@
+ 			sw4_reg: sw4 {
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
+ 			};
+ 
+ 			swbst_reg: swbst {
+diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+index e3533e7..9cc6ff2 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb-reva.dts
++++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+@@ -63,6 +63,7 @@
+ 			sw4_reg: sw4 {
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
+ 			};
+ 
+ 			swbst_reg: swbst {
+-- 
+2.7.4
