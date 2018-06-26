@@ -1,38 +1,85 @@
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4/9] devicectree: bindings: fix location of leds common file
-Date: Tue, 26 Jun 2018 06:49:06 -0300
-Message-ID: <51f7b37fd560a2cf8a79db5222bf02abef97510b.1530005114.git.mchehab+samsung@kernel.org>
-References: <cover.1530005114.git.mchehab+samsung@kernel.org>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v3] ARM: dts: stm32: Add ADC support to stm32mp157c
+Date: Tue, 26 Jun 2018 11:51:15 +0200
+Message-ID: <3b44dd54-087c-e10f-4bf5-3728e735ee0c@st.com>
+References: <1527003937-15999-1-git-send-email-fabrice.gasnier@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1530005114.git.mchehab+samsung@kernel.org>
-In-Reply-To: <cover.1530005114.git.mchehab+samsung@kernel.org>
-References: <cover.1530005114.git.mchehab+samsung@kernel.org>
+In-Reply-To: <1527003937-15999-1-git-send-email-fabrice.gasnier@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: robh+dt@kernel.org, mcoquelin.stm32@gmail.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The leds.txt was moved and renamed. Fix references to
-it accordingly.
+Hi Fabrice
 
-Fixes: f67605394f0b ("devicetree/bindings: Move gpio-leds binding into leds directory")
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/devicetree/bindings/leds/common.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 05/22/2018 05:45 PM, Fabrice Gasnier wrote:
+> stm32mp157c has an ADC block with two physical ADCs.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+> Changes in v3:
+> - Add dmas since dmamux1 has been added on top of stm32-next
+> ---
+>   arch/arm/boot/dts/stm32mp157c.dtsi | 36 ++++++++++++++++++++++++++++++++++++
+>   1 file changed, 36 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+> index b66f673..66d7496 100644
+> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
 
-diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-index 1d4afe9644b6..aa1399814a2a 100644
---- a/Documentation/devicetree/bindings/leds/common.txt
-+++ b/Documentation/devicetree/bindings/leds/common.txt
-@@ -31,7 +31,7 @@ Optional properties for child nodes:
-      "backlight" - LED will act as a back-light, controlled by the framebuffer
- 		   system
-      "default-on" - LED will turn on (but for leds-gpio see "default-state"
--		    property in Documentation/devicetree/bindings/gpio/led.txt)
-+		    property in Documentation/devicetree/bindings/leds/leds-gpio.txt)
-      "heartbeat" - LED "double" flashes at a load average based rate
-      "disk-activity" - LED indicates disk activity
-      "ide-disk" - LED indicates IDE disk activity (deprecated),
--- 
-2.17.1
+
+Applied on stm32-next.
+
+Thanks.
+Alex
+
+
+> @@ -600,6 +600,42 @@
+>   			clocks = <&rcc DMAMUX>;
+>   		};
+>   
+> +		adc: adc@48003000 {
+> +			compatible = "st,stm32mp1-adc-core";
+> +			reg = <0x48003000 0x400>;
+> +			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&rcc ADC12>, <&rcc ADC12_K>;
+> +			clock-names = "bus", "adc";
+> +			interrupt-controller;
+> +			#interrupt-cells = <1>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +
+> +			adc1: adc@0 {
+> +				compatible = "st,stm32mp1-adc";
+> +				#io-channel-cells = <1>;
+> +				reg = <0x0>;
+> +				interrupt-parent = <&adc>;
+> +				interrupts = <0>;
+> +				dmas = <&dmamux1 9 0x400 0x01>;
+> +				dma-names = "rx";
+> +				status = "disabled";
+> +			};
+> +
+> +			adc2: adc@100 {
+> +				compatible = "st,stm32mp1-adc";
+> +				#io-channel-cells = <1>;
+> +				reg = <0x100>;
+> +				interrupt-parent = <&adc>;
+> +				interrupts = <1>;
+> +				dmas = <&dmamux1 10 0x400 0x01>;
+> +				dma-names = "rx";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+>   		rcc: rcc@50000000 {
+>   			compatible = "st,stm32mp1-rcc", "syscon";
+>   			reg = <0x50000000 0x1000>;
+> 
