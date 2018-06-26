@@ -1,57 +1,80 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v8 2/2] regulator: add QCOM RPMh regulator driver
-Date: Tue, 26 Jun 2018 16:02:03 +0100
-Message-ID: <20180626150203.GG1779@sirena.org.uk>
-References: <cover.1529712888.git.collinsd@codeaurora.org>
- <35c4ea70cdf5caba560fb6f40e866ee8bc456d93.1529712888.git.collinsd@codeaurora.org>
- <CAD=FV=XVEEPgjBXxR+-46RgxLOq63Xvq-jtruoaCxccmMoKUuA@mail.gmail.com>
- <20180626120733.GD1779@sirena.org.uk>
- <CAD=FV=X1E8Cz=L93G-zJwhM0R=N3YuBBhkvCnLvWuxMU9KJkTw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/2] dt-binding: hwmon: Add NPCM7xx PWM and Fan
+ controller documentation
+Date: Tue, 26 Jun 2018 09:03:41 -0600
+Message-ID: <CAL_JsqJCYPLw+jqx+7Cy=cXFFb-CNp=Ezew7FNT=cfAndqWe5A@mail.gmail.com>
+References: <20180624124155.82412-1-tmaimon77@gmail.com> <20180624124155.82412-2-tmaimon77@gmail.com>
+ <20180625171417.GA16379@rob-hp-laptop> <CAP6Zq1h-M6YDS67pkgHy-GMmiVk1D-RScLgDyG65JQM+S35rEQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="t4apE7yKrX2dGgJC"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=X1E8Cz=L93G-zJwhM0R=N3YuBBhkvCnLvWuxMU9KJkTw@mail.gmail.com>
+In-Reply-To: <CAP6Zq1h-M6YDS67pkgHy-GMmiVk1D-RScLgDyG65JQM+S35rEQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Avi Fishman <avifishman70@gmail.com>, Nancy Yuen <yuenn@google.com>, Brendan Higgins <brendanhiggins@google.com>, Patrick Venture <venture@google.com>, Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux HWMON List <linux-hwmon@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jun 25, 2018 at 4:20 PM Tomer Maimon <tmaimon77@gmail.com> wrote:
+>
+> Hi Rob,
+>
+>
+> On 25 June 2018 at 20:14, Rob Herring <robh@kernel.org> wrote:
+>>
+>> On Sun, Jun 24, 2018 at 03:41:54PM +0300, Tomer Maimon wrote:
+>> > Added device tree binding documentation for Nuvoton BMC
+>> > NPCM7xx Pulse Width Modulation (PWM)  and Fan tach controller.
+>> > The PWM controller can support upto 8 PWM output ports.
+>> > The Fan tach controller can support upto 16 tachometer inputs.
+>> >
+>> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+>> > ---
+>> >  .../devicetree/bindings/hwmon/npcm750-pwm-fan.txt  | 84 ++++++++++++++++++++++
+>> >  1 file changed, 84 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt b/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
+>> > new file mode 100644
+>> > index 000000000000..a9eacda34f92
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
+>> > @@ -0,0 +1,84 @@
+>> > +Nuvoton NPCM7xx PWM and Fan Tacho controller device driver
+>>
+>> Bindings are for h/w, not drivers.
+>>
+>> > +
+>> > +The NPCM7xx has two identical Pulse-width modulation (PWM) controller modules,
+>> > +Each PWM module has four PWM controller outputs, Totally 8 PWM controller outputs.
+>> > +
+>> > +The NPCM7xx has eight identical Fan tachometer controller modules,
+>> > +Each Fan module has two Fan controller inputs, Totally 16 Fan controller inputs.
+>>
+>> Have you looked at other fan ctrlr bindings?f This looks like similar
+>> h/w to ASpeed. Really, I'd like to see a common doc that describes the
+>
+>
+> We do not have the same H/W as Aspeed, I believe in the near future we will need to add
+> more DT properties that will used only in the NPCM7xx module.
 
---t4apE7yKrX2dGgJC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I didn't say it was the same. Both are multi-channel PWMs with tach
+inputs. Presumably, they can attach to the same types of fans as there
+are only a limited number of types of fans and none of them are
+specific to any fan controller.
 
-On Tue, Jun 26, 2018 at 08:00:29AM -0700, Doug Anderson wrote:
-> On Tue, Jun 26, 2018 at 5:07 AM, Mark Brown <broonie@kernel.org> wrote:
+>> structure and common properties.
+>
+>
+> what do you mean by common structure and common properties?
 
-> > Please do not submit new versions of already applied patches, please
-> > submit incremental updates to the existing code.  Modifying existing
-> > commits creates problems for other users building on top of those
-> > commits so it's best practice to only change pubished git commits if
-> > absolutely essential.
+When we have multiple bindings for the same class of device/hw, we
+define all the common parts in a common binding doc. This often
+doesn't happen at first, so we end up with a variety of bindings until
+we see some commonality.
 
-> Sorry, wasn't suggesting making any changes to those two patches, just
-> was noting the dependency.  ...but, as you said, the two dependent
-> patches have already landed and I just didn't notice.  :(  Sorry for
-> the noise.
+In this case, for structure, having sub-nodes for fans. As fans are
+not specific to the controllers, their node should not be defined by
+the controller binding. It's also how you describe the fan type,
+number of fans, the PWM connections, the tach connections, etc.
 
-Ah, so there's no revisions that need merging?  That's great.
-
---t4apE7yKrX2dGgJC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsyVWsACgkQJNaLcl1U
-h9CDEAf+Pbvqs48x4tcqT7Atu+4CmeFPJV6gwT13W9WALxT5iQogIEqnt1z3xW6v
-sT99T2zLaOGvWGePgRArCIetPeJi8UA3bN45ebyVk8zNtnpEXuqyGlftdf3B+z52
-fCppk5Uv3XuT2VQlftI0qaEihoMyPsfG93JUOp08GRDl8idaLIW2W1CVR8+SNv1k
-35HUXZKpBqxmJ0v6ZN5InUAAnMV49xg/Y8QqVElsoceCrIWZ95W8ZXoKzH3SMHh3
-uCPkji+mxXOUVkoNTgB66NxBdkb/osPHj6KfFTmOwFfHGRXar046i7IC+1E8V3tm
-7AOaBwyL0hfj3y27XU6dANvPNhiNgw==
-=yAFQ
------END PGP SIGNATURE-----
-
---t4apE7yKrX2dGgJC--
+Rob
