@@ -1,52 +1,71 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 4/9] devicectree: bindings: fix location of leds common
- file
-Date: Tue, 26 Jun 2018 16:38:44 +0200
-Message-ID: <20180626143844.GA3676@amd>
-References: <cover.1530005114.git.mchehab+samsung@kernel.org>
- <51f7b37fd560a2cf8a79db5222bf02abef97510b.1530005114.git.mchehab+samsung@kernel.org>
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
+Subject: Re: [RFC PATCH 1/2] spi: Add QuadSPI driver for Atmel SAMA5D2
+Date: Tue, 26 Jun 2018 17:44:26 +0300
+Message-ID: <455adb76-530a-1fd5-303c-cfa158ad7870@microchip.com>
+References: <20180618162124.21749-1-bugalski.piotr@gmail.com>
+ <20180618162124.21749-2-bugalski.piotr@gmail.com>
+ <20180621233321.0f25f572@bbrezillon>
+ <alpine.DEB.2.20.1806220719190.21824@carbonite>
+ <20180622093905.62a3b936@bbrezillon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51f7b37fd560a2cf8a79db5222bf02abef97510b.1530005114.git.mchehab+samsung@kernel.org>
+In-Reply-To: <20180622093905.62a3b936@bbrezillon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Piotr Bugalski <bugalski.piotr@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Cyrille Pitchen <cyrille.pitchen@microchip.com>, Piotr Bugalski <pbu@cryptera.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi, Piotr,
 
---jI8keyz6grp/JLjh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+General things to consider for the limitation in performance:
+- is the serial flash memory operating in Quad SPI?
+- QSCLK should be as high as possible
+- transfer delays - I checked them, they have default values, we should be good.
+- use DMA, as you suggested
 
-On Tue 2018-06-26 06:49:06, Mauro Carvalho Chehab wrote:
-> The leds.txt was moved and renamed. Fix references to
-> it accordingly.
->=20
-> Fixes: f67605394f0b ("devicetree/bindings: Move gpio-leds binding into le=
-ds directory")
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+On 06/22/2018 10:39 AM, Boris Brezillon wrote:
+> [...]
+> 
+>>>> +/*
+>>>> + * Atmel SAMA5D2 QuadSPI driver.
+>>>> + *
+>>>> + * Copyright (C) 2018 Cryptera A/S  
+>>>
+>>> A non-negligible portion of this code has been copied from the existing
+>>> driver. Please keep the existing copyright (you can still add Cryptera's
+>>> one).
+>>>  
+>>
+>> Technically this driver were written from scratch, with spi-fsl-qspi
+>> as example of new interface. Hence the name and code structure.
+>> But it's the same peripheral as Atmel's driver uses so code looks
+>> similar. I can unify the code to make comparsion even simpler and
+>> then update copyright.
+> 
+> Hm, ok. Some constructs really looked like they were copied
+> from the old driver, hence my comment. I'll let Nicolas give his
+> opinion on this aspect.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+This driver will be a conversion of the legacy one to the spi-mem interface. I
+would keep the legacy copyright and add Cryptera's below, as Boris suggested.
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+[...]
 
---jI8keyz6grp/JLjh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>>>> +#define QSPI_SR_CMD_COMPLETED           (QSPI_SR_INSTRE | QSPI_SR_CSR)  
+>>>
+>>> Do you really to wait for both INSTRE and CSR to consider the command
+>>> as complete?
+>>>  
+>>
+>> This part were really copied from Atmel driver. I wasn't sure so I
+>> used tested solution.
+> 
+> Okay. I guess that's a question for Cyrille and/or Tudor then.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+We have to wait for both INSTRE and CSR.
 
-iEYEARECAAYFAlsyT/QACgkQMOfwapXb+vIk4gCfQZY3lmfQQUMsqf2GFTPpjuG1
-ycoAn0OcAR1sUvdPeFc0FJ8xt3TUQY7P
-=+3bZ
------END PGP SIGNATURE-----
-
---jI8keyz6grp/JLjh--
+Best,
+ta
