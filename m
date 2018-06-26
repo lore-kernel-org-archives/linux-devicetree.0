@@ -1,58 +1,135 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: clock: Introduce QCOM LPASS clock
- bindings
-Date: Tue, 26 Jun 2018 13:53:36 -0600
-Message-ID: <20180626195336.GA25448@rob-hp-laptop>
-References: <1528961943-12506-1-git-send-email-tdas@codeaurora.org>
- <1528961943-12506-2-git-send-email-tdas@codeaurora.org>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v5 09/10] gpio: Add a driver for Cadence I3C GPIO
+ expander
+Date: Tue, 26 Jun 2018 21:56:48 +0200
+Message-ID: <20180626215648.1472b96e@bbrezillon>
+References: <20180622104930.32050-1-boris.brezillon@bootlin.com>
+        <20180622104930.32050-10-boris.brezillon@bootlin.com>
+        <CAHp75Vdxg49q6aQj0dDpzM4q2WnQbGoCECWR1roda7aMR+u4gg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1528961943-12506-2-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <CAHp75Vdxg49q6aQj0dDpzM4q2WnQbGoCECWR1roda7aMR+u4gg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rohit Kumar <rohitkr@codeaurora.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Linux Documentation List <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 14, 2018 at 01:09:02PM +0530, Taniya Das wrote:
-> Add device tree bindings for Low Power Audio subsystem clock controller for
-> Qualcomm Technology Inc's SDM845 SoCs.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  .../devicetree/bindings/clock/qcom,lpasscc.txt     | 46 ++++++++++++++++++++++
->  include/dt-bindings/clock/qcom,lpass-sdm845.h      | 18 +++++++++
->  2 files changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,lpasscc.txt
->  create mode 100644 include/dt-bindings/clock/qcom,lpass-sdm845.h
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,lpasscc.txt b/Documentation/devicetree/bindings/clock/qcom,lpasscc.txt
-> new file mode 100644
-> index 0000000..16cabc4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,lpasscc.txt
-> @@ -0,0 +1,46 @@
-> +Qualcomm LPASS Clock Controller Binding
-> +-----------------------------------------------
-> +
-> +Required properties :
-> +- compatible	: shall contain "qcom,sdm845-lpasscc"
-> +- #clock-cells	: from common clock binding, shall contain 1.
-> +
-> +Note that #address-cells, #size-cells, and ranges shall be present to ensure
-> +the lpasscc can address the various lpass cc registers.
-> +
-> +Child Node Properties :
-> +The Low Pass Audio clock controller would need to define the following child
-> +nodes with the properties.
-> +- compatible	: shall contain all of the below for clocks in each LPASS domain
-> +			"qcom,sdm845-lpass-gcc",
-> +			"qcom,sdm845-lpass-cc",
-> +			"qcom,sdm845-lpass-qdsp6ss"
-> +- reg		: shall contain base register address and size,
+Hi Andy,
 
-I can't really see any reason to have these child nodes. Just put 3 
-entries in reg in the parent.
+On Tue, 26 Jun 2018 22:07:03 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-Rob
+> On Fri, Jun 22, 2018 at 1:49 PM, Boris Brezillon
+> <boris.brezillon@bootlin.com> wrote:
+> > Add a driver for Cadence I3C GPIO expander.
+> >
+> > Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>  
+> 
+> > +       scratchbuf = kmalloc(sizeof(*scratchbuf) * 2, GFP_KERNEL);  
+> 
+> kmalloc_array() ?
+> 
+> > +       ret = i3c_device_do_priv_xfers(gpioc->i3cdev, xfers,
+> > +                                      ARRAY_SIZE(xfers));  
+> 
+> One line?
+> 
+> 
+> > +static void cdns_i3c_gpio_set_multiple(struct gpio_chip *g,
+> > +                                      unsigned long *mask,
+> > +                                      unsigned long *bits)
+> > +{
+> > +       struct cdns_i3c_gpio *gpioc = gpioc_to_cdns_gpioc(g);
+> > +       u8 newovr;
+> > +       int ret;
+> > +
+> > +       newovr = (gpioc->ovr & ~(*mask)) | (*bits & *mask);
+> > +       if (newovr == gpioc->ovr)
+> > +               return;
+> > +
+> > +       ret = cdns_i3c_gpio_write_reg(gpioc, OVR, newovr);
+> > +       if (!ret)
+> > +               gpioc->ovr = newovr;  
+> 
+> You don't change mask here, why do you need a pointer to it?
+
+What are you talking about??!!! This is part of the gpio_chip interface
+that drivers have to implement. You can't decide that mask should not be
+a pointer. And if you actually look at the code, you'll probably see
+that the reason we're passed a pointer here is that the GPIO chip might
+expose more GPIOs than can be represented by an unsigned long, hence
+the array of unsigned long.
+
+I'll say it here because this is not the first time I'm pissed off by
+one of your review. You seem to review everything that is posted on the
+LKML, and most of the time your reviews are superficial (focused on tiny
+details or coding style issues). Don't you have better things to do?
+
+I mean, I'm fine when I get such comments from people that also do
+useful comments, but yours are most of the time useless and sometime
+even wrong because you didn't time to look at the code in details.
+
+> 
+> > +}  
+> 
+> > +static int cdns_i3c_gpio_get_multiple(struct gpio_chip *g,
+> > +                                     unsigned long *mask,
+> > +                                     unsigned long *bits)
+> > +{
+> > +       struct cdns_i3c_gpio *gpioc = gpioc_to_cdns_gpioc(g);
+> > +       int ret;
+> > +       u8 ivr;
+> > +
+> > +       ret = cdns_i3c_gpio_read_reg(gpioc, IVR, &ivr);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       *bits = ivr & *mask & gpioc->dir;
+> > +       *bits |= gpioc->ovr & *mask & ~gpioc->dir;  
+> 
+> Ditto.
+> 
+> > +
+> > +       return 0;
+> > +}  
+> 
+> > +static void cdns_i3c_gpio_ibi_handler(struct i3c_device *i3cdev,
+> > +                                     const struct i3c_ibi_payload *payload)
+> > +{
+> > +       struct cdns_i3c_gpio *gpioc = i3cdev_get_drvdata(i3cdev);  
+> 
+> > +       u8 isr = 0;  
+> 
+> Perhaps you need to check the result of _read_reg() below instead of
+> dummy assignment?
+> 
+> > +       int i;
+> > +
+> > +       cdns_i3c_gpio_read_reg(gpioc, ISR, &isr);  
+> 
+> > +       for (i = 0; i < 8; i++) {
+> > +               unsigned int irq;
+> > +
+> > +               if (!(BIT(i) & isr & gpioc->imr))
+> > +                       continue;  
+> 
+> for_each_set_bit() ?
+> 
+> > +
+> > +               irq = irq_find_mapping(gpioc->gpioc.irq.domain, i);
+> > +               handle_nested_irq(irq);
+> > +       }
+> > +}  
+> 
+> > +static const struct i3c_device_id cdns_i3c_gpio_ids[] = {
+> > +       I3C_DEVICE(0x1c9, 0x0, NULL),  
+> 
+> > +       { /* sentinel */ },  
+> 
+> Slightly better without comma.
+> 
+> > +};
+> > +MODULE_DEVICE_TABLE(i3c, cdns_i3c_gpio_ids);  
+> 
