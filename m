@@ -1,153 +1,43 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v8 7/7] Bluetooth: hci_qca: Add support for Qualcomm
- Bluetooth chip wcn3990
-Date: Mon, 25 Jun 2018 18:05:59 -0700
-Message-ID: <20180626010559.GK129942@google.com>
-References: <20180625134013.19684-1-bgodavar@codeaurora.org>
- <20180625134013.19684-8-bgodavar@codeaurora.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH] ARM: dts: imx6sll-evk: make pfuze100 sw4 always on
+Date: Tue, 26 Jun 2018 01:06:40 +0000
+Message-ID: <AM3PR04MB13157D44DC7357CFB2F35948F5490@AM3PR04MB1315.eurprd04.prod.outlook.com>
+References: <1529648932-4832-1-git-send-email-Anson.Huang@nxp.com>
+ <CAOMZO5Coi-LRXG8vepnm-eSSx75LLEtsZ90WrtK6rEy76u+OBQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180625134013.19684-8-bgodavar@codeaurora.org>
+In-Reply-To: <CAOMZO5Coi-LRXG8vepnm-eSSx75LLEtsZ90WrtK6rEy76u+OBQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 25, 2018 at 07:10:13PM +0530, Balakrishna Godavarthi wrote:
-> Add support to set voltage/current of various regulators
-> to power up/down Bluetooth chip wcn3990.
-> 
-> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-> ---
-> changes in v8:
->     * closing qca buffer, if qca_power_setup fails
->     * chnaged ibs start timer function call location.
->     * updated review comments.
->   	
-> changes in v7:
->     * addressed review comments.
-> 
-> changes in v6:
->     * Hooked up qca_power to qca_serdev.
->     * renamed all the naming inconsistency functions with qca_*
->     * leveraged common code of ROME for wcn3990.
->     * created wrapper functions for re-usable blocks.
->     * updated function of _*regulator_enable and _*regualtor_disable.  
->     * removed redundant comments and functions.
->     * addressed review comments.
-> 
-> Changes in v5:
->     * updated regulator vddpa min_uV to 1304000.
->       * addressed review comments.
->  
-> Changes in v4:
->     * Segregated the changes of btqca from hci_qca
->     * rebased all changes on top of bluetooth-next.
->     * addressed review comments.
-> 
-> ---
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index 28187a89b850..bd4c9a78716f 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> ...
-> +static int qca_send_vendor_cmd(struct hci_dev *hdev, u8 cmd)
-> +{
-> +	struct hci_uart *hu = hci_get_drvdata(hdev);
-> +	struct qca_data *qca = hu->priv;
-> +	struct sk_buff *skb;
-> +
-> +	bt_dev_dbg(hdev, "sending command %02x to SoC", cmd);
-> +
-> +	skb = bt_skb_alloc(sizeof(cmd), GFP_KERNEL);
-> +	if (!skb) {
-> +		bt_dev_err(hdev, "Failed to allocate memory for vendor packet");
-
-As mentioned on v7, custom OOM messages should be avoided.
-
->  static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
->  {
-> +	struct qca_serdev *qcadev;
->  	unsigned int speed, qca_baudrate;
->  	int ret;
->  
-> @@ -971,6 +1054,13 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
->  		return 0;
->  	}
->  
-> +	qcadev = serdev_device_get_drvdata(hu->serdev);
-> +	/* Disabling hardware flow control is preferred while
-> +	 * sending change baud rate command to SoC.
-> +	 */
-
-Is it only preferred or must be?
-
-> +	if (qcadev->btsoc_type == QCA_WCN3990)
-> +		hci_uart_set_flow_control(hu, true);
-> +
-
-nit: consider doing this just before qca_set_baudrate(). It doesn't
-make a difference but leaves it clearer what exactly needs to be
-'protected' (analogy to locking).
-
->  	qca_baudrate = qca_get_baudrate_value(speed);
->  	bt_dev_info(hu->hdev, "Set UART speed to %d", speed);
->  	ret = qca_set_baudrate(hu->hdev, qca_baudrate);
-> @@ -980,8 +1070,10 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
->  	}
->  
->  	host_set_baudrate(hu, speed);
-> +	if (qcadev->btsoc_type == QCA_WCN3990)
-> +		hci_uart_set_flow_control(hu, false);
-
->  static int qca_setup(struct hci_uart *hu)
-> @@ -989,10 +1081,11 @@ static int qca_setup(struct hci_uart *hu)
->  	struct hci_dev *hdev = hu->hdev;
->  	struct qca_data *qca = hu->priv;
->  	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
-> +	struct qca_serdev *qcadev;
->  	int ret;
->  	int soc_ver = 0;
->  
-> -	bt_dev_info(hdev, "ROME setup");
-> +	qcadev = serdev_device_get_drvdata(hu->serdev);
->  
->  	/* Patch downloading has to be done without IBS mode */
->  	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
-> @@ -1000,6 +1093,35 @@ static int qca_setup(struct hci_uart *hu)
->  	/* Setup initial baudrate */
->  	qca_set_speed(hu, QCA_INIT_SPEED);
->  
-> +	if (qcadev->btsoc_type == QCA_WCN3990) {
-> +		bt_dev_dbg(hdev, "setting up wcn3990");
-> +		hci_uart_set_flow_control(hu, true);
-> +		ret = qca_send_vendor_cmd(hdev, QCA_WCN3990_POWERON_PULSE);
-> +		if (ret)
-> +			return ret;
-> +
-> +		hci_uart_set_flow_control(hu, false);
-> +		serdev_device_close(hu->serdev);
-> +		ret = serdev_device_open(hu->serdev);
-> +		if (ret) {
-> +			bt_dev_err(hdev, "failed to open port");
-> +			return ret;
-> +		}
-> +
-> +		msleep(100);
-
-Is the sleep really related with _open() or is it rather that the
-device needs to settle after the power on pulse? In the latter case
-I'd suggest to do the sleep before _open(), if it doesn't make a
-functional difference (makes the code a bit more self documenting).
-
-> +		/* Setup initial baudrate */
-> +		qca_set_speed(hu, QCA_INIT_SPEED);
-> +		hci_uart_set_flow_control(hu, false);
-
-This is still a bit noisy with all the open/close and flow control
-stuff. If I understand correctly this essentially switches the
-controller on (or resets it?) and brings it (and the driver) into a
-sane state. Would it make sense to move the above block into a
-wcn3990_init/reset() or so?
+SGksIEZhYmlvDQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdp
+bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1A
+Z21haWwuY29tXQ0KPiBTZW50OiBNb25kYXksIEp1bmUgMjUsIDIwMTggODoyMyBQTQ0KPiBUbzog
+QW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiBTaGF3biBHdW8gPHNoYXdu
+Z3VvQGtlcm5lbC5vcmc+OyBTYXNjaGEgSGF1ZXINCj4gPHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU+
+OyBTYXNjaGEgSGF1ZXIgPGtlcm5lbEBwZW5ndXRyb25peC5kZT47IEZhYmlvDQo+IEVzdGV2YW0g
+PGZhYmlvLmVzdGV2YW1AbnhwLmNvbT47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+
+Ow0KPiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgb3BlbiBsaXN0Ok9QRU4g
+RklSTVdBUkUgQU5EDQo+IEZMQVRURU5FRCBERVZJQ0UgVFJFRSBCSU5ESU5HUyA8ZGV2aWNldHJl
+ZUB2Z2VyLmtlcm5lbC5vcmc+Ow0KPiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPjsg
+bW9kZXJhdGVkIGxpc3Q6QVJNL0ZSRUVTQ0FMRSBJTVggLyBNWEMNCj4gQVJNIEFSQ0hJVEVDVFVS
+RSA8bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPjsgbGludXgta2VybmVsDQo+
+IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBB
+Uk06IGR0czogaW14NnNsbC1ldms6IG1ha2UgcGZ1emUxMDAgc3c0IGFsd2F5cyBvbg0KPiANCj4g
+SGkgQW5zb24sDQo+IA0KPiBPbiBGcmksIEp1biAyMiwgMjAxOCBhdCAzOjI4IEFNLCBBbnNvbiBI
+dWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gd3JvdGU6DQo+ID4gT24gaS5NWDZTTEwgRVZL
+IGJvYXJkLCBQRnV6ZTEwMCdzIFNXNCBpcyBzdXBwbHlpbmcgTFBERFIzLCBpdCBuZWVkcyB0bw0K
+PiA+IGJlIGFsd2F5cyBvbi4gVGhpcyBwYXRjaCBmaXhlcyBMaW51eCBrZXJuZWwgYm9vdCB1cCBo
+YW5nIGNhdXNlZCBieSBTVzQNCj4gPiBiZWluZyB0dXJuZWQNCj4gPiBvZmY6DQo+ID4NCj4gPiBb
+ICAgIDEuNjkzNjEzXSBjZmc4MDIxMTogZmFpbGVkIHRvIGxvYWQgcmVndWxhdG9yeS5kYg0KPiA+
+IFsgICAgMS43MDAwNjNdIFNXNDogZGlzYWJsaW5nDQo+ID4gWyAgICAxLjcwMzk3M10gU1dCU1Q6
+IGRpc2FibGluZw0KPiANCj4gSXQgd291bGQgYmUgbmljZSB0byBtZW50aW9uIGluIHRoZSBjb21t
+aXQgbG9nIHdoYXQgd2FzIHRoZSBwYXRjaCB0aGF0IGNhdXNlZA0KPiB0aGUgYnJlYWthZ2UsIGp1
+c3QgbGlrZSBSb2JpbiBkaWQgZm9yIGlteDZzbC1ldmsuDQo+IA0KPiBUaGFua3MsDQogDQpEb25l
+LCBhbHJlYWR5IHNlbnQgb3V0IFYyIHBhdGNoLCBwbGVhc2UgcmV2aWV3IGl0LCB0aGFua3MuDQoN
+CkFuc29uLg0KDQoNCg==
