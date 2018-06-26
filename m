@@ -1,49 +1,41 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 3/3] ARM: dts: imx6qdl-colibri: use pull-down on wake-up pin
-Date: Tue, 26 Jun 2018 16:52:43 +0200
-Message-ID: <20180626145243.24880-3-stefan@agner.ch>
-References: <20180626145243.24880-1-stefan@agner.ch>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v8 2/2] regulator: add QCOM RPMh regulator driver
+Date: Tue, 26 Jun 2018 08:00:29 -0700
+Message-ID: <CAD=FV=X1E8Cz=L93G-zJwhM0R=N3YuBBhkvCnLvWuxMU9KJkTw@mail.gmail.com>
+References: <cover.1529712888.git.collinsd@codeaurora.org> <35c4ea70cdf5caba560fb6f40e866ee8bc456d93.1529712888.git.collinsd@codeaurora.org>
+ <CAD=FV=XVEEPgjBXxR+-46RgxLOq63Xvq-jtruoaCxccmMoKUuA@mail.gmail.com> <20180626120733.GD1779@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180626145243.24880-1-stefan@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, s.hauer@pengutronix.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, max.krummenacher@toradex.com, marcel.ziswiler@toradex.com, Stefan Agner <stefan@agner.ch>, maitysanchayan@gmail.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180626120733.GD1779@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The wake-up pin is pulled low with 100kOhm on the carrier board.
-The current configuration of 100kOhm pull-up caused lots of
-interrupts, especially during boot up. Make sure the pin is at a
-reasonable level at startup by pulling it low on SoC side too.
+Hi,
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- arch/arm/boot/dts/imx6qdl-colibri.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+On Tue, Jun 26, 2018 at 5:07 AM, Mark Brown <broonie@kernel.org> wrote:
+> On Mon, Jun 25, 2018 at 11:50:52AM -0700, Doug Anderson wrote:
+>
+>> ...to this patch.  Speaking of which it might be getting very close to
+>> time for this series to land along with David's other series, AKA:
+>
+>> * [1/2] regulator: of: add property for allowed modes specification
+>>   https://patchwork.kernel.org/patch/10395731/
+>
+>> * [2/2] regulator: of: add support for allowed modes configuration
+>>   https://patchwork.kernel.org/patch/10395725/
+>
+> Please do not submit new versions of already applied patches, please
+> submit incremental updates to the existing code.  Modifying existing
+> commits creates problems for other users building on top of those
+> commits so it's best practice to only change pubished git commits if
+> absolutely essential.
 
-diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-index 55c90c2fbf69..6e937ca20869 100644
---- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-@@ -480,8 +480,7 @@
- 
- 	pinctrl_gpio_keys: gpiokeys {
- 		fsl,pins = <
--			/* Power button */
--			MX6QDL_PAD_EIM_A16__GPIO2_IO22		0x1b0b0
-+			MX6QDL_PAD_EIM_A16__GPIO2_IO22		0x130b0
- 		>;
- 	};
- 
--- 
-2.18.0
+Sorry, wasn't suggesting making any changes to those two patches, just
+was noting the dependency.  ...but, as you said, the two dependent
+patches have already landed and I just didn't notice.  :(  Sorry for
+the noise.
+
+-Doug
