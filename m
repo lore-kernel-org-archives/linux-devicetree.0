@@ -1,58 +1,49 @@
-Return-Path: <SRS0=uLt8=JN=linutronix.de=b.spranger@kernel.org>
-From: Benedikt Spranger <b.spranger@linutronix.de>
-Subject: [PATCH 18/20] spi: xilinx: Add support for xlnx,axi-quad-spi-1.00.a
-Date: Wed, 27 Jun 2018 19:09:36 +0200
-Message-Id: <20180627170938.30683-19-b.spranger@linutronix.de>
-In-Reply-To: <20180627170938.30683-1-b.spranger@linutronix.de>
-References: <20180627170938.30683-1-b.spranger@linutronix.de>
-To: kurt@linutronix.de
-Cc: Ricardo Ribalda <ricardo.ribalda@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Benedikt Spranger <b.spranger@linutronix.de>
+Return-Path: <SRS0=bntt=JN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr00042.outbound.protection.outlook.com ([40.107.0.42]:44438
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S932104AbeF0ADS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 Jun 2018 20:03:18 -0400
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v8 10/14] staging: typec: tcpci: enable vbus detection
+Date: Wed, 27 Jun 2018 07:45:28 +0800
+Message-Id: <1530056732-9640-11-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
+References: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: a.hajda@samsung.com, jun.li@nxp.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Ricardo Ribalda <ricardo.ribalda@gmail.com>
+TCPCI implementation may need SW to enable VBUS detection to generate
+power status events.
 
-The driver has been successfully tested with Xilinx's core
-axi-quad-spi-1.0.0a. Documented on DS843:
-
-https://www.xilinx.com/support/documentation/ip_documentation/axi_quad_spi/v1_00_a/ds843_axi_quad_spi.pdf
-
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-(cherry picked from commit a094c2fa093cf7fd0fe23d15cc2abca4083c6a45)
-Signed-off-by: Benedikt Spranger <b.spranger@linutronix.de>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- Documentation/devicetree/bindings/spi/spi-xilinx.txt | 2 +-
- drivers/spi/spi-xilinx.c                             | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/typec/tcpci.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-xilinx.txt b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
-index c7b7856bd528..7bf61efc66c8 100644
---- a/Documentation/devicetree/bindings/spi/spi-xilinx.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
-@@ -2,7 +2,7 @@ Xilinx SPI controller Device Tree Bindings
- -------------------------------------------------
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+index 3b35fce..4d3b0ae 100644
+--- a/drivers/staging/typec/tcpci.c
++++ b/drivers/staging/typec/tcpci.c
+@@ -373,6 +373,12 @@ static int tcpci_init(struct tcpc_dev *tcpc)
+ 	if (ret < 0)
+ 		return ret;
  
- Required properties:
--- compatible		: Should be "xlnx,xps-spi-2.00.a" or "xlnx,xps-spi-2.00.b"
-+- compatible		: Should be "xlnx,xps-spi-2.00.a", "xlnx,xps-spi-2.00.b" or "xlnx,axi-quad-spi-1.00.a"
- - reg			: Physical base address and size of SPI registers map.
- - interrupts		: Property with a value describing the interrupt
- 			  number.
-diff --git a/drivers/spi/spi-xilinx.c b/drivers/spi/spi-xilinx.c
-index e0b9fe1d0e37..63fedc49ae9c 100644
---- a/drivers/spi/spi-xilinx.c
-+++ b/drivers/spi/spi-xilinx.c
-@@ -381,6 +381,7 @@ static int xilinx_spi_find_buffer_size(struct xilinx_spi *xspi)
- }
- 
- static const struct of_device_id xilinx_spi_of_match[] = {
-+	{ .compatible = "xlnx,axi-quad-spi-1.00.a", },
- 	{ .compatible = "xlnx,xps-spi-2.00.a", },
- 	{ .compatible = "xlnx,xps-spi-2.00.b", },
- 	{}
++	/* Enable Vbus detection */
++	ret = regmap_write(tcpci->regmap, TCPC_COMMAND,
++			   TCPC_CMD_ENABLE_VBUS_DETECT);
++	if (ret < 0)
++		return ret;
++
+ 	reg = TCPC_ALERT_TX_SUCCESS | TCPC_ALERT_TX_FAILED |
+ 		TCPC_ALERT_TX_DISCARDED | TCPC_ALERT_RX_STATUS |
+ 		TCPC_ALERT_RX_HARD_RST | TCPC_ALERT_CC_STATUS;
 -- 
-2.18.0
+2.7.4
+
