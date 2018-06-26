@@ -1,56 +1,66 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v8 2/2] regulator: add QCOM RPMh regulator driver
-Date: Tue, 26 Jun 2018 13:07:33 +0100
-Message-ID: <20180626120733.GD1779@sirena.org.uk>
-References: <cover.1529712888.git.collinsd@codeaurora.org>
- <35c4ea70cdf5caba560fb6f40e866ee8bc456d93.1529712888.git.collinsd@codeaurora.org>
- <CAD=FV=XVEEPgjBXxR+-46RgxLOq63Xvq-jtruoaCxccmMoKUuA@mail.gmail.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 3/3] ARM: multi_v7_defconfig: enable STM32 SPI
+Date: Tue, 26 Jun 2018 14:13:20 +0200
+Message-ID: <f61c7908-8046-1709-94cf-a4066a330299@st.com>
+References: <1526566904-24514-1-git-send-email-amelie.delaunay@st.com>
+ <1526566904-24514-4-git-send-email-amelie.delaunay@st.com>
+ <e3bd3097-fbde-b790-e2b3-d78fb34b849d@st.com>
+ <120d8997-3184-bfed-26b7-e0ac7d995b74@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="at6+YcpfzWZg/htY"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=XVEEPgjBXxR+-46RgxLOq63Xvq-jtruoaCxccmMoKUuA@mail.gmail.com>
+In-Reply-To: <120d8997-3184-bfed-26b7-e0ac7d995b74@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+To: Amelie DELAUNAY <amelie.delaunay@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---at6+YcpfzWZg/htY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Mon, Jun 25, 2018 at 11:50:52AM -0700, Doug Anderson wrote:
+On 06/26/2018 01:47 PM, Amelie DELAUNAY wrote:
+> Hi Alex
+> 
+> On 06/26/2018 10:44 AM, Alexandre Torgue wrote:
+>> Hi Amélie
+>> 
+>> On 05/17/2018 04:21 PM, Amelie Delaunay wrote:
+>>> Enable the STM32 SPI driver, implemented on STM32MP1 SoC.
+>>>
+>>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+>>> ---
+>>>   arch/arm/configs/multi_v7_defconfig | 1 +
+>>>   1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/arch/arm/configs/multi_v7_defconfig 
+>>> b/arch/arm/configs/multi_v7_defconfig
+>>> index 89167cd..f990335 100644
+>>> --- a/arch/arm/configs/multi_v7_defconfig
+>>> +++ b/arch/arm/configs/multi_v7_defconfig
+>>> @@ -411,6 +411,7 @@ CONFIG_SPI_S3C64XX=m
+>>>   CONFIG_SPI_SH_MSIOF=m
+>>>   CONFIG_SPI_SH_HSPI=y
+>>>   CONFIG_SPI_SIRF=y
+>>> +CONFIG_SPI_STM32=y
+>>>   CONFIG_SPI_SUN4I=y
+>>>   CONFIG_SPI_SUN6I=y
+>>>   CONFIG_SPI_TEGRA114=y
+>>>
+>> 
+>> Driver which are are not "vital" to boot STM32 platform should be 
+>> defined as module. It's the case for this one. Isn't ?
+>> 
+> 
+> You're right. I'll send v2 with CONFIG_SPI_STM32=m ASAP. Should I resend
+> the whole patchset (with DT), or just this patch and you take the DT
+> patches as they are ?
+> 
 
-> ...to this patch.  Speaking of which it might be getting very close to
-> time for this series to land along with David's other series, AKA:
+No, you can just resend this one. I will take DT part from this version.
 
-> * [1/2] regulator: of: add property for allowed modes specification
->   https://patchwork.kernel.org/patch/10395731/
+Regards
+Alex
 
-> * [2/2] regulator: of: add support for allowed modes configuration
->   https://patchwork.kernel.org/patch/10395725/
-
-Please do not submit new versions of already applied patches, please
-submit incremental updates to the existing code.  Modifying existing
-commits creates problems for other users building on top of those
-commits so it's best practice to only change pubished git commits if
-absolutely essential.
-
---at6+YcpfzWZg/htY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsyLIQACgkQJNaLcl1U
-h9A3mQf7BbinIiX/WnJKrr4+my+I3hHicVubnBVayQLn5dXhoqJdolPD/4I39ig/
-0OBI2Xz6IAuEByEmZKC5cFlV9x7VQaMvfPjjD9vYQJbQmAkd1kwUrKrutjXhtkKn
-yStHJBE9mxuxzbIRnonjAwj+TGSGRsnRhVrZaO8xJ8MejTntnCKtSXA55XdqZ5QT
-e0IckrY+pD5C1sC9gvCbr6tgHyYRpml7ZkhC6JGPwseoFXVvv2lZdmR6iZ7SUqKy
-RzMv6XpdOWESd7I8MMbkYKntbOENYY2hyJRPUApm391hcHFWoOpYi7cO+2K/VDI7
-2JrEXzzQX5KyGo80Yy648/8tlqxYqQ==
-=e0zs
------END PGP SIGNATURE-----
-
---at6+YcpfzWZg/htY--
+> Regards,
+> Amelie
