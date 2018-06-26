@@ -1,100 +1,41 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH v2 1/2] clk: pxa: export 32kHz PLL
-Date: Tue, 26 Jun 2018 22:03:07 +0200
-Message-ID: <20180626200308.16192-1-robert.jarzmik@free.fr>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: Fix unbalanced quotation marks
+Date: Tue, 26 Jun 2018 14:19:44 -0600
+Message-ID: <20180626201944.GA24678@rob-hp-laptop>
+References: <20180617143127.11421-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180617143127.11421-1-j.neuschaefer@gmx.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Cc: devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Hauke Mehrtens <hauke@hauke-m.de>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Madalin Bucur <madalin.bucur@nxp.com>, David S. Mill
 List-Id: devicetree@vger.kernel.org
 
-This clock is especially used by the RTC driver, so export it so that
-devicetree users can use it.
+On Sun, Jun 17, 2018 at 04:31:18PM +0200, Jonathan Neuschäfer wrote:
+> Multiple binding documents have various forms of unbalanced quotation
+> marks. Fix them.
+> 
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+> ---
+> 
+> Should I split this patch so that different parts can go through different trees?
 
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
----
- drivers/clk/pxa/clk-pxa25x.c          | 6 ++++--
- drivers/clk/pxa/clk-pxa27x.c          | 7 ++++---
- drivers/clk/pxa/clk-pxa3xx.c          | 7 ++++---
- include/dt-bindings/clock/pxa-clock.h | 3 ++-
- 4 files changed, 14 insertions(+), 9 deletions(-)
+No, I applied it. Thanks.
 
-diff --git a/drivers/clk/pxa/clk-pxa25x.c b/drivers/clk/pxa/clk-pxa25x.c
-index 6416c1f8e632..c0e7c74ebd7b 100644
---- a/drivers/clk/pxa/clk-pxa25x.c
-+++ b/drivers/clk/pxa/clk-pxa25x.c
-@@ -292,8 +292,10 @@ static void __init pxa25x_register_plls(void)
- {
- 	clk_register_fixed_rate(NULL, "osc_3_6864mhz", NULL,
- 				CLK_GET_RATE_NOCACHE, 3686400);
--	clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
--				CLK_GET_RATE_NOCACHE, 32768);
-+	clkdev_pxa_register(CLK_OSC32k768, "osc_32_768khz", NULL,
-+			    clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
-+						    CLK_GET_RATE_NOCACHE,
-+						    32768);
- 	clk_register_fixed_rate(NULL, "clk_dummy", NULL, 0, 0);
- 	clk_register_fixed_factor(NULL, "ppll_95_85mhz", "osc_3_6864mhz",
- 				  0, 26, 1);
-diff --git a/drivers/clk/pxa/clk-pxa27x.c b/drivers/clk/pxa/clk-pxa27x.c
-index 25a30194d27a..d40b63e7bbce 100644
---- a/drivers/clk/pxa/clk-pxa27x.c
-+++ b/drivers/clk/pxa/clk-pxa27x.c
-@@ -314,9 +314,10 @@ static void __init pxa27x_register_plls(void)
- 	clk_register_fixed_rate(NULL, "osc_13mhz", NULL,
- 				CLK_GET_RATE_NOCACHE,
- 				13 * MHz);
--	clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
--				CLK_GET_RATE_NOCACHE,
--				32768 * KHz);
-+	clkdev_pxa_register(CLK_OSC32k768, "osc_32_768khz", NULL,
-+			    clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
-+						    CLK_GET_RATE_NOCACHE,
-+						    32768 * KHz));
- 	clk_register_fixed_rate(NULL, "clk_dummy", NULL, 0, 0);
- 	clk_register_fixed_factor(NULL, "ppll_312mhz", "osc_13mhz", 0, 24, 1);
- }
-diff --git a/drivers/clk/pxa/clk-pxa3xx.c b/drivers/clk/pxa/clk-pxa3xx.c
-index 2d126df2bccd..814b651c0504 100644
---- a/drivers/clk/pxa/clk-pxa3xx.c
-+++ b/drivers/clk/pxa/clk-pxa3xx.c
-@@ -286,9 +286,10 @@ static void __init pxa3xx_register_plls(void)
- 	clk_register_fixed_rate(NULL, "osc_13mhz", NULL,
- 				CLK_GET_RATE_NOCACHE,
- 				13 * MHz);
--	clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
--				CLK_GET_RATE_NOCACHE,
--				32768);
-+	clkdev_pxa_register(CLK_OSC32k768, "osc_32_768khz", NULL,
-+			    clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
-+						    CLK_GET_RATE_NOCACHE,
-+						    32768);
- 	clk_register_fixed_rate(NULL, "ring_osc_120mhz", NULL,
- 				CLK_GET_RATE_NOCACHE,
- 				120 * MHz);
-diff --git a/include/dt-bindings/clock/pxa-clock.h b/include/dt-bindings/clock/pxa-clock.h
-index e65803b1dc7e..0b0fd2b01538 100644
---- a/include/dt-bindings/clock/pxa-clock.h
-+++ b/include/dt-bindings/clock/pxa-clock.h
-@@ -72,6 +72,7 @@
- #define CLK_USIM 58
- #define CLK_USIM1 59
- #define CLK_USMI0 60
--#define CLK_MAX 61
-+#define CLK_OSC32k768 61
-+#define CLK_MAX 62
- 
- #endif
--- 
-2.11.0
+> ---
+>  .../devicetree/bindings/arm/samsung/samsung-boards.txt          | 2 +-
+>  .../devicetree/bindings/gpio/nintendo,hollywood-gpio.txt        | 2 +-
+>  Documentation/devicetree/bindings/input/touchscreen/hideep.txt  | 2 +-
+>  .../bindings/interrupt-controller/nvidia,tegra20-ictlr.txt      | 2 +-
+>  .../devicetree/bindings/interrupt-controller/st,stm32-exti.txt  | 2 +-
+>  Documentation/devicetree/bindings/mips/brcm/soc.txt             | 2 +-
+>  Documentation/devicetree/bindings/net/fsl-fman.txt              | 2 +-
+>  Documentation/devicetree/bindings/power/power_domain.txt        | 2 +-
+>  Documentation/devicetree/bindings/regulator/tps65090.txt        | 2 +-
+>  Documentation/devicetree/bindings/reset/st,sti-softreset.txt    | 2 +-
+>  Documentation/devicetree/bindings/sound/qcom,apq8016-sbc.txt    | 2 +-
+>  Documentation/devicetree/bindings/sound/qcom,apq8096.txt        | 2 +-
+>  12 files changed, 12 insertions(+), 12 deletions(-)
