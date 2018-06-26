@@ -1,37 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: soc: qcom: Fix default clock-freq for
- qcom,geni-i2c
-Date: Tue, 26 Jun 2018 13:24:49 -0600
-Message-ID: <20180626192449.GA24034@rob-hp-laptop>
-References: <20180613175011.217585-1-dianders@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Saravanan Sekar <sravanhome@gmail.com>
+Subject: [PATCH 0/2] Add clock driver for Actions S700 SoC
+Date: Tue, 26 Jun 2018 21:28:18 +0200
+Message-ID: <20180626192820.28237-1-sravanhome@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180613175011.217585-1-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: andy.gross@linaro.org, bjorn.andersson@linaro.org, kramasub@codeaurora.org, wsa@the-dreams.de, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
+To: afaerber@suse.de, sboyd@kernel.org
+Cc: pn@denx.de, linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, manivannan.sadhasivam@linaro.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, Saravanan Sekar <sravanhome@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2018 at 10:50:11AM -0700, Douglas Anderson wrote:
-> In an early version of the I2C patch that was posted to the list the
-> default I2C frequency (if none was specified) was 400 kHz.  There was
-> debate on the list and we decided that it would be more consistent
-> with the rest of i2c if we defaulted to 100 kHz.  ...but we never
-> updated the bindings.  Let's fix this.
-> 
-> NOTE: since the i2c driver itself hasn't actually landed yet and the
-> SoC here is very new it seems terribly unlikely that anyone was
-> relying on the old 400 kHz number, so I'll assume this is an OK
-> "incompatible" device tree change.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+This patchset adds clock support for Actions Semi OWL series
+S700 SoC with relevant clock bindings and device tree info.
 
-Applied, thanks.
+Changed the UART clock using CMU instance and changes are
+tested in cubieboard7 
 
-Rob
+Thanks and regards,
+Saravanan,
+Parthiban
+
+Saravanan Sekar (2):
+  arm64: dts: actions: Enable clock controller for S700
+  clk: actions: Add S700 SoC clock support
+
+ .../boot/dts/actions/s700-cubieboard7.dts     |   7 -
+ arch/arm64/boot/dts/actions/s700.dtsi         |   8 +
+ drivers/clk/actions/Kconfig                   |   7 +
+ drivers/clk/actions/Makefile                  |   1 +
+ drivers/clk/actions/owl-s700.c                | 614 ++++++++++++++++++
+ include/dt-bindings/clock/actions,s700-cmu.h  | 128 ++++
+ 6 files changed, 758 insertions(+), 7 deletions(-)
+ create mode 100644 drivers/clk/actions/owl-s700.c
+ create mode 100644 include/dt-bindings/clock/actions,s700-cmu.h
+
+-- 
+2.18.0
