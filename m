@@ -1,16 +1,15 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH 0/5] RFC: Mezzanine handling for 96boards
-Date: Tue, 26 Jun 2018 10:19:27 +0200
-Message-ID: <CAKv+Gu8cXxQWbnB++adGx=xwAzuM9jqxkCOznk1qP5r=P4vxrQ@mail.gmail.com>
-References: <20180618074556.6944-1-linus.walleij@linaro.org>
- <CAK8P3a2KqoX-squhGc8TBuJ==8xxELsuy-H+c1+C7Fu7Z4OjDA@mail.gmail.com>
- <CAKv+Gu-gAkfRsEUOc=iyxi6Twvg9cbvWNqNHRS2HzUDZg8xUhg@mail.gmail.com>
- <CACRpkdb1GksbePt6XgePCD6g-z4fxY-LF-gpyRfQVxCrq226fg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 0/4] media: sun6i: Add support for the H3 CSI controller
+Date: Tue, 26 Jun 2018 10:23:30 +0200
+Message-ID: <20180626082330.pvq3gi6mmokky5vl@flea>
+References: <20180305100432.15009-1-maxime.ripard@bootlin.com>
+ <CAMty3ZBQXyvOnzy_9RLDW-QO9qnAC4SR5UJnWYmhiPrP23z_vg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdb1GksbePt6XgePCD6g-z4fxY-LF-gpyRfQVxCrq226fg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZBQXyvOnzy_9RLDW-QO9qnAC4SR5UJnWYmhiPrP23z_vg@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,74 +19,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frank Rowand <frowand.list@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, dev <dev@lists.96boards.org>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@infradead.org>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Mylene Josserand <mylene.josserand@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 26 June 2018 at 10:09, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Mon, Jun 18, 2018 at 3:22 PM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
->
->> We should also consider firmware use of the mezzanines. For instance,
->> the Secure96 has a RNG which UEFI may want to use so the early boot
->> code can access is for KASLR. It also has a TPM, which should not be
->> reset/reinitialized/etc by the OS if we want to make meaningful use of
->> it.
->
-> This problem: sharing or dedicating a piece of hardware to UEFI or
-> the TrustZone secure world is a generic problem not related to
-> mezzanines or plug-in boards specifically.
->
-> c.f.
-> arch/arm64/boot/dts/arm/juno-motherboard.dtsi:
->
-> flash@0,00000000 {
->         /* 2 * 32MiB NOR Flash memory mounted on CS0 */
->         compatible = "arm,vexpress-flash", "cfi-flash";
->         linux,part-probe = "afs";
->         reg = <0 0x00000000 0x04000000>;
->         bank-width = <4>;
->         /*
->          * Unfortunately, accessing the flash disturbs
->          * the CPU idle states (suspend) and CPU
->          * hotplug of the platform. For this reason,
->          * flash hardware access is disabled by default.
->          */
->         status = "disabled";
-> };
->
-> What we need for this is something like
->
-> status = "secure-world-exclusive";
-> status = "UEFI-exclusive";
->
-> Or something like the same when using device tree.
->
+Hi,
 
-I agree that this is *also* a problem. But it is not what I was talking about.
+On Tue, Jun 26, 2018 at 11:41:56AM +0530, Jagan Teki wrote:
+> On Mon, Mar 5, 2018 at 3:34 PM, Maxime Ripard <maxime.ripard@bootlin.com>=
+ wrote:
+> > The H3 and H5 have a CSI controller based on the one previously found
+> > in the A31, that is currently supported by the sun6i-csi driver.
+> >
+> > Add the compatibles to the device tree bindings and to the driver to
+> > make it work properly.
+> >
+> > This obviously depends on the serie "Initial Allwinner V3s CSI
+> > Support" by Yong Deng.
+> >
+> > Let me know what you think,
+> > Maxime
+> >
+> > Maxime Ripard (2):
+> >   dt-bindings: media: sun6i: Add A31 and H3 compatibles
+> >   media: sun6i: Add A31 compatible
+> >
+> > Myl=E8ne Josserand (2):
+> >   ARM: dts: sun8i: Add the H3/H5 CSI controller
+> >   [DO NOT MERGE] ARM: dts: sun8i: Add CAM500B camera module to the Nano
+> >     Pi M1+
+> =
 
-My example is about peripherals that firmware and OS should both drive
-natively, and in the TPM case, the OS should be mindful of the fact
-that the measured state should be preserved. Also, it means that we
-may be duplicating functionality between the OS and firmware [as
-usual] so it might make sense to come up with something that takes
-both use cases into account.
+> Just trying to understand what interface has been tested with npi-m1+,
+> is it DVP (parallel) interface?
 
-> If people probe this from sysfs (as in my example) they are
-> obviously not novice users and they know what they are
-> doing. For a simple user experience, I suspect device tree
-> is what we want to use to populate defaults.
->
->> So ideally, DTs can be expressed such that older kernels can still use
->> those peripherals.
->
-> That kind of expressions are possible already, such as
-> putting the TPM DT node inside a SoC-specific I2C bus
-> node. The boot loader can do that for example.
->
-> Then they can't also probe the same board from userspace,
-> obviously. No matter whether they use the idea I present
-> here or device tree overlays or anything else.
->
+Yes
 
-OK.
+> I've Bananapi 5MP[1] and trying to test on top, and look like its
+> MIPI CSI2. I guess Yong patch[2] doesn't support CSI2 yet, am I
+> correct?
+
+This is what Yong's cover letter is saying yes :)
+
+The name Allwinner chose for this IP is very unfortunate...
+
+Maxime
+
+-- =
+
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
