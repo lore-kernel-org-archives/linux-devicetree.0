@@ -1,166 +1,59 @@
-From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Subject: Re: [PATCH v8 4/7] Bluetooth: hci_qca: Add wrapper functions for
- setting UART speed
-Date: Tue, 26 Jun 2018 10:43:31 +0530
-Message-ID: <66681ee5281749e17394cab6f58083d8@codeaurora.org>
-References: <20180625134013.19684-1-bgodavar@codeaurora.org>
- <20180625134013.19684-5-bgodavar@codeaurora.org>
- <20180625234354.GI129942@google.com> <20180626000529.GJ129942@google.com>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH 0/5] arm64: allwinner: h6: Enable AXP805 PMIC on Pine H64
+Date: Tue, 26 Jun 2018 13:14:35 +0800
+Message-ID: <7397ce33b3b5f1a6743ce8d527807efdb7f73caa.camel@aosc.io>
+References: <20180620051540.25617-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180626000529.GJ129942@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180620051540.25617-1-wens@csie.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Andre Przywara <andre.przywara@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-
-On 2018-06-26 05:35, Matthias Kaehlcke wrote:
-> On Mon, Jun 25, 2018 at 04:43:54PM -0700, Matthias Kaehlcke wrote:
->> This is a nice improvement, a few remaining questions inline.
->> 
->> On Mon, Jun 25, 2018 at 07:10:10PM +0530, Balakrishna Godavarthi 
->> wrote:
->> > In function qca_setup, we set initial and operating speeds for Qualcomm
->> > Bluetooth SoC's. This block of code is common across different
->> > Qualcomm Bluetooth SoC's. Instead of duplicating the code, created
->> > a wrapper function to set the speeds. So that future coming SoC's
->> > can use these wrapper functions to set speeds.
->> >
->> > Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
->> > ---
->> > Changes in v8:
->> >     * common function to set INIT and operating speeds.
->> >     * moved hardware flow control to qca_set_speed().
->> >
->> > Changes in v7:
->> >     * initial patch
->> >     * created wrapper functions for init and operating speeds.
->> > ---
->> >  drivers/bluetooth/hci_qca.c | 89 +++++++++++++++++++++++++++----------
->> >  1 file changed, 65 insertions(+), 24 deletions(-)
->> >
->> > diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->> > index fe62420ef838..38b7dbe6c897 100644
->> > --- a/drivers/bluetooth/hci_qca.c
->> > +++ b/drivers/bluetooth/hci_qca.c
->> > @@ -119,6 +119,11 @@ struct qca_data {
->> >  	u64 votes_off;
->> >  };
->> >
->> > +enum qca_speed_type {
->> > +	QCA_INIT_SPEED = 1,
->> > +	QCA_OPER_SPEED
->> > +};
->> > +
->> >  struct qca_serdev {
->> >  	struct hci_uart	 serdev_hu;
->> >  	struct gpio_desc *bt_en;
->> > @@ -923,6 +928,60 @@ static inline void host_set_baudrate(struct hci_uart *hu, unsigned int speed)
->> >  		hci_uart_set_baudrate(hu, speed);
->> >  }
->> >
->> > +static unsigned int qca_get_speed(struct hci_uart *hu,
->> > +				  enum qca_speed_type speed_type)
->> > +{
->> > +	unsigned int speed = 0;
->> > +
->> > +	if (speed_type == QCA_INIT_SPEED) {
->> > +		if (hu->init_speed)
->> > +			speed = hu->init_speed;
->> > +		else if (hu->proto->init_speed)
->> > +			speed = hu->proto->init_speed;
->> > +	} else {
->> > +		if (hu->oper_speed)
->> > +			speed = hu->oper_speed;
->> > +		else if (hu->proto->oper_speed)
->> > +			speed = hu->proto->oper_speed;
->> > +	}
->> > +
->> > +	return speed;
->> > +}
->> > +
->> > +static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
->> > +{
->> > +	unsigned int speed, qca_baudrate;
->> > +	int ret;
->> > +
->> > +	if (speed_type == QCA_INIT_SPEED) {
->> > +		speed = qca_get_speed(hu, QCA_INIT_SPEED);
->> > +		if (speed)
->> > +			host_set_baudrate(hu, speed);
->> > +		else
->> > +			bt_dev_err(hu->hdev, "Init speed should be non zero");
->> 
->> The check for 'speed == 0' is done in multiple places. From this
->> code I deduce that it is expected that both INIT and OPER speed are
->> set to non-zero values. What happens if either of them is zero? Is the
->> driver still operational?
->> 
->> > +		return 0;
->> > +	}
->> > +
->> > +	speed = qca_get_speed(hu, QCA_OPER_SPEED);
->> > +	if (!speed) {
->> > +		bt_dev_err(hu->hdev, "operating speed should be non zero");
->> > +		return 0;
->> > +	}
->> > +
->> > +	qca_baudrate = qca_get_baudrate_value(speed);
->> > +	bt_dev_info(hu->hdev, "Set UART speed to %d", speed);
->> > +	ret = qca_set_baudrate(hu->hdev, qca_baudrate);
->> > +	if (ret) {
->> > +		bt_dev_err(hu->hdev, "Failed to change the baudrate (%d)", ret);
->> > +		return ret;
->> > +	}
->> > +
->> > +	host_set_baudrate(hu, speed);
->> > +
->> > +	return ret;
->> > +}
->> 
->> In the discussion on "[v7,8/8] Bluetooth: hci_qca: Add support for
->> Qualcomm Bluetooth chip wcn3990" you mentioned the possbility to move
->> the hci_uart_set_flow_control() calls into _set_speed(). This seemed
->> interesting but finally it isn't done in this series. Did you
->> encounter that it is not feasible/desirable for some reason?
-> 
-> I got that half wrong. "[v8,7/7] Bluetooth: hci_qca: Add support for
-> Qualcomm Bluetooth chip wcn3990" adds the flow control calls to
-> _set_speed() however there are still_set_flow_control() calls in
-> qca_setup(), which confused/s me.
-> 
-> Could you provide a brief summary on the situations (relevant for this
-> driver) in which flow controls needs to be enabled/disabled?
-
-you will not find enable or disable of hardware flow control in this 
-patch.
-there is no hardware flow control in ROME chip.
-you will find hardware flow control in wcn3990 i.e. patch [v8 7/7]
-
-in wcn3990. we disable hardware flow control, when we sent mandatory 
-commands to BT chip.
-
-i.e while sending power on pulse i.e 0xFC byte for wcn3990 to boot up 
-completely and sending change baudrate request to BT chip.
-before sending these commands, we disable the chip flow control and 
-enable flow control once we sent these commands.
-
-so in our current code after integrating wcn3990, we disable flow 
-control two times.
-
-1. Before sending power on pulse i.e. qca_send_vendor_cmd(hdev, 
-QCA_WCN3990_POWERON_PULSE); in qca_setup.
-    so we find disable or enable hardware flow control in qca_setup()
-2. Before sending change BT CHIP baudrate request i.e.  
-qca_set_baudrate(hu->hdev, qca_baudrate); in qca_set_speed().
-
-
-
--- 
-Regards
-Balakrishna.
+5ZyoIDIwMTgtMDYtMjDkuInnmoQgMTM6MTUgKzA4MDDvvIxDaGVuLVl1IFRzYWnlhpnpgZPvvJoK
+PiBIaSBldmVyeW9uZSwKPiAKPiBUaGlzIHNlcmllcyBlbmFibGVzIHRoZSBBWFA4MDUgUE1JQyBm
+b3VuZCBvbiB0aGUgUGluZTY0IFBpbmUgSDY0Cj4gYm9hcmQuCj4gVGhlIEFYUDgwNSBzZWVtcyB0
+byBiZSBpZGVudGljYWwgdG8gdGhlIEFYUDgwNiB3aGVuIGNvbXBhcmluZwo+IGRhdGFzaGVldHMu
+Cj4gVGhlIFBpbmUgSDY0IHVzZXMgdGhlIFBNSUMgaW4gc3RhbmQtYWxvbmUgb3IgInNlbGYtd29y
+a2luZyIgbW9kZSwKPiB1c2luZwo+IHRoZSBJMkMgaW50ZXJmYWNlLiBOZWl0aGVyIGZlYXR1cmVz
+IGFyZSBjdXJyZW50bHkgc3VwcG9ydGVkLiBUaGlzCj4gc2VyaWVzCj4gYWRkcyBzdXBwb3J0IGZv
+ciB0aGVtLCBhbmQgdGhlbiBhZGRzIHRoZSBQTUlDIHRvIHRoZSBkZXZpY2UgdHJlZS4KPiAKPiBQ
+YXRjaCAxIGFkZHMgYSBuZXcgZGV2aWNlIHRyZWUgcHJvcGVydHkgdG8gZGVzY3JpYmUgdGhlIHNl
+bGYtd29ya2luZwo+IG1vZGUKPiBmb3IgdGhlIEFYUDgwNi4KPiAKPiBQYXRjaCAyIGFkZHMgc3Vw
+cG9ydCBmb3IgdGhlIG5ld2x5IGFkZGVkIHByb3BlcnR5IHRvIHRoZSBkcml2ZXIuCj4gCj4gUGF0
+Y2ggMyBhZGRzIHN1cHBvcnQgZm9yIHRoZSB1c2luZyBBWFA4MDYgd2l0aCBJMkMuCj4gCj4gUGF0
+Y2ggNCBjb252ZXJ0cyByYXcgY2xvY2svcmVzZXQgaW5kaWNlcyBmb3IgdGhlIEg2IFJfQ0NVIGN1
+cnJlbnRseQo+IGZvdW5kCj4gaW4gdGhlIGRldmljZSB0cmVlIHRvIG1hY3JvcyBkZWZpbmVkIGFz
+IHBhcnQgb2YgdGhlIGRldmljZSB0cmVlCj4gYmluZGluZ3MuCj4gCj4gUGF0Y2ggNSBhZGRzIHRo
+ZSBQTUlDIGFuZCBpdHMgcmVndWxhdG9ycyB0byB0aGUgUGluZSBINjQgZGV2aWNlIHRyZWUuCj4g
+Cj4gUGxlYXNlIGhhdmUgYSBsb29rLgo+IAo+IFJlZ2FyZHMKPiBDaGVuWXUKCkZvciB0aGUgd2hv
+bGUgc2VyaWVzOgoKVGVzdGVkLWJ5OiBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFvc2MuaW8+CgpB
+bmQsIGV4Y2VwdCB0d28gc21hbGwgaW5saW5lIGNvbW1lbnRzLAoKUmV2aWV3ZWQtYnk6IEljZW5v
+d3kgWmhlbmcgPGljZW5vd3lAYW9zYy5pbz4KCj4gCj4gCj4gQ2hlbi1ZdSBUc2FpICg0KToKPiAg
+IGR0LWJpbmRpbmdzOiBtZmQ6IGF4cDIweDogQWRkICJzZWxmLXdvcmtpbmciIG1vZGUgZm9yIEFY
+UDgwNgo+ICAgbWZkOiBheHAyMHg6IEFkZCBzZWxmLXdvcmtpbmcgbW9kZSBzdXBwb3J0IGZvciBB
+WFA4MDYKPiAgIG1mZDogYXhwMjB4OiBTdXBwb3J0IEFYUDgwNiBpbiBJMkMgbW9kZQo+ICAgYXJt
+NjQ6IGR0czogYWxsd2lubmVyOiBoNjogVXNlIG1hY3JvcyBmb3IgUl9DQ1UgY2xvY2sgYW5kIHJl
+c2V0Cj4gICAgIGluZGljZXMKPiAKPiBJY2Vub3d5IFpoZW5nICgxKToKPiAgIGFybTY0OiBkdHM6
+IGFsbHdpbm5lcjogaDY6IGVuYWJsZSBBWFA4MDUgUE1JQyBvbiBQaW5lIEg2NAo+IAo+ICAuLi4v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvYXhwMjB4LnR4dCAgICAgICAgfCAgIDcgKy0KPiAgLi4u
+L2Jvb3QvZHRzL2FsbHdpbm5lci9zdW41MGktaDYtcGluZS1oNjQuZHRzIHwgMTA5Cj4gKysrKysr
+KysrKysrKysrKysrCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvYWxsd2lubmVyL3N1bjUwaS1oNi5k
+dHNpICB8ICAgOSArLQo+ICBkcml2ZXJzL21mZC9heHAyMHgtaTJjLmMgICAgICAgICAgICAgICAg
+ICAgICAgfCAgIDIgKwo+ICBkcml2ZXJzL21mZC9heHAyMHguYyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfCAgMzAgKysrKy0KPiAgNSBmaWxlcyBjaGFuZ2VkLCAxNDkgaW5zZXJ0aW9ucygrKSwg
+OCBkZWxldGlvbnMoLSkKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
