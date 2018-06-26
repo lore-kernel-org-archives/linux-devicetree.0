@@ -1,212 +1,75 @@
-Return-Path: <SRS0=bntt=JN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00040.outbound.protection.outlook.com ([40.107.0.40]:27246
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+Return-Path: <SRS0=bqe9=JM=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-ve1eur01on0046.outbound.protection.outlook.com ([104.47.1.46]:4708
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S932104AbeF0AC5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 Jun 2018 20:02:57 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v8 06/14] usb: typec: tcpm: support get typec and pd config from device properties
-Date: Wed, 27 Jun 2018 07:45:24 +0800
-Message-Id: <1530056732-9640-7-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
-References: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
+        id S1751134AbeFZPBz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 26 Jun 2018 11:01:55 -0400
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v7 06/14] usb: typec: tcpm: support get typec and pd
+ config from device properties
+Date: Tue, 26 Jun 2018 15:01:52 +0000
+Message-ID: <VI1PR0402MB3917FA4726F3BACCF7795B2389490@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+References: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
+ <1529914126-22550-7-git-send-email-jun.li@nxp.com>
+ <2E89032DDAA8B9408CB92943514A0337014C1F47AF@SW-EX-MBX01.diasemi.com>
+In-Reply-To: <2E89032DDAA8B9408CB92943514A0337014C1F47AF@SW-EX-MBX01.diasemi.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: a.hajda@samsung.com, jun.li@nxp.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
+To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>
+Cc: "a.hajda@samsung.com" <a.hajda@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, Peter Chen <peter.chen@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds support of get typec and power delivery config from
-firmware description.
-
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Li Jun <jun.li@nxp.com>
----
- drivers/usb/typec/tcpm.c | 131 +++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 109 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index d22b37b..9dcab81 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -4236,6 +4236,81 @@ static int tcpm_copy_vdos(u32 *dest_vdo, const u32 *src_vdo,
- 	return nr_vdo;
- }
- 
-+static int tcpm_fw_get_caps(struct tcpm_port *port,
-+			    struct fwnode_handle *fwnode)
-+{
-+	const char *cap_str;
-+	int ret;
-+	u32 mw;
-+
-+	if (!fwnode)
-+		return -EINVAL;
-+
-+	/* USB data support is optional */
-+	ret = fwnode_property_read_string(fwnode, "data-role", &cap_str);
-+	if (ret == 0) {
-+		port->typec_caps.data = typec_find_port_data_role(cap_str);
-+		if (port->typec_caps.data < 0)
-+			return -EINVAL;
-+	}
-+
-+	ret = fwnode_property_read_string(fwnode, "power-role", &cap_str);
-+	if (ret < 0)
-+		return ret;
-+
-+	port->typec_caps.type = typec_find_port_power_role(cap_str);
-+	if (port->typec_caps.type < 0)
-+		return -EINVAL;
-+	port->port_type = port->typec_caps.type;
-+
-+	if (port->port_type == TYPEC_PORT_SNK)
-+		goto sink;
-+
-+	/* Get source pdos */
-+	ret = fwnode_property_read_u32_array(fwnode, "source-pdos",
-+					     NULL, 0);
-+	if (ret <= 0)
-+		return -EINVAL;
-+
-+	port->nr_src_pdo = min(ret, PDO_MAX_OBJECTS);
-+	ret = fwnode_property_read_u32_array(fwnode, "source-pdos",
-+					     port->src_pdo, port->nr_src_pdo);
-+	if ((ret < 0) || tcpm_validate_caps(port, port->src_pdo,
-+					    port->nr_src_pdo))
-+		return -EINVAL;
-+
-+	if (port->port_type == TYPEC_PORT_SRC)
-+		return 0;
-+
-+	/* Get the preferred power role for DRP */
-+	ret = fwnode_property_read_string(fwnode, "try-power-role", &cap_str);
-+	if (ret < 0)
-+		return ret;
-+
-+	port->typec_caps.prefer_role = typec_find_power_role(cap_str);
-+	if (port->typec_caps.prefer_role < 0)
-+		return -EINVAL;
-+sink:
-+	/* Get sink pdos */
-+	ret = fwnode_property_read_u32_array(fwnode, "sink-pdos",
-+					     NULL, 0);
-+	if (ret <= 0)
-+		return -EINVAL;
-+
-+	port->nr_snk_pdo = min(ret, PDO_MAX_OBJECTS);
-+	ret = fwnode_property_read_u32_array(fwnode, "sink-pdos",
-+					     port->snk_pdo, port->nr_snk_pdo);
-+	if ((ret < 0) || tcpm_validate_caps(port, port->snk_pdo,
-+					    port->nr_snk_pdo))
-+		return -EINVAL;
-+
-+	if (fwnode_property_read_u32(fwnode, "op-sink-microwatt", &mw) < 0)
-+		return -EINVAL;
-+	port->operating_snk_mw = mw / 1000;
-+
-+	return 0;
-+}
-+
- int tcpm_update_source_capabilities(struct tcpm_port *port, const u32 *pdo,
- 				    unsigned int nr_pdo)
- {
-@@ -4521,12 +4596,36 @@ static int devm_tcpm_psy_register(struct tcpm_port *port)
- 	return PTR_ERR_OR_ZERO(port->psy);
- }
- 
-+static int tcpm_copy_caps(struct tcpm_port *port,
-+			  const struct tcpc_config *tcfg)
-+{
-+	if (tcpm_validate_caps(port, tcfg->src_pdo, tcfg->nr_src_pdo) ||
-+	    tcpm_validate_caps(port, tcfg->snk_pdo, tcfg->nr_snk_pdo))
-+		return -EINVAL;
-+
-+	port->nr_src_pdo = tcpm_copy_pdos(port->src_pdo, tcfg->src_pdo,
-+					  tcfg->nr_src_pdo);
-+	port->nr_snk_pdo = tcpm_copy_pdos(port->snk_pdo, tcfg->snk_pdo,
-+					  tcfg->nr_snk_pdo);
-+
-+	port->nr_snk_vdo = tcpm_copy_vdos(port->snk_vdo, tcfg->snk_vdo,
-+					  tcfg->nr_snk_vdo);
-+
-+	port->operating_snk_mw = tcfg->operating_snk_mw;
-+
-+	port->typec_caps.prefer_role = tcfg->default_role;
-+	port->typec_caps.type = tcfg->type;
-+	port->typec_caps.data = tcfg->data;
-+
-+	return 0;
-+}
-+
- struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
- {
- 	struct tcpm_port *port;
- 	int i, err;
- 
--	if (!dev || !tcpc || !tcpc->config ||
-+	if (!dev || !tcpc ||
- 	    !tcpc->get_vbus || !tcpc->set_cc || !tcpc->get_cc ||
- 	    !tcpc->set_polarity || !tcpc->set_vconn || !tcpc->set_vbus ||
- 	    !tcpc->set_pd_rx || !tcpc->set_roles || !tcpc->pd_transmit)
-@@ -4556,30 +4655,18 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
- 	init_completion(&port->pps_complete);
- 	tcpm_debugfs_init(port);
- 
--	if (tcpm_validate_caps(port, tcpc->config->src_pdo,
--			       tcpc->config->nr_src_pdo) ||
--	    tcpm_validate_caps(port, tcpc->config->snk_pdo,
--			       tcpc->config->nr_snk_pdo)) {
--		err = -EINVAL;
-+	err = tcpm_fw_get_caps(port, tcpc->fwnode);
-+	if ((err < 0) && tcpc->config)
-+		err = tcpm_copy_caps(port, tcpc->config);
-+	if (err < 0)
- 		goto out_destroy_wq;
--	}
--	port->nr_src_pdo = tcpm_copy_pdos(port->src_pdo, tcpc->config->src_pdo,
--					  tcpc->config->nr_src_pdo);
--	port->nr_snk_pdo = tcpm_copy_pdos(port->snk_pdo, tcpc->config->snk_pdo,
--					  tcpc->config->nr_snk_pdo);
--	port->nr_snk_vdo = tcpm_copy_vdos(port->snk_vdo, tcpc->config->snk_vdo,
--					  tcpc->config->nr_snk_vdo);
--
--	port->operating_snk_mw = tcpc->config->operating_snk_mw;
--	if (!tcpc->config->try_role_hw)
--		port->try_role = tcpc->config->default_role;
-+
-+	if (!tcpc->config || !tcpc->config->try_role_hw)
-+		port->try_role = port->typec_caps.prefer_role;
- 	else
- 		port->try_role = TYPEC_NO_PREFERRED_ROLE;
- 
- 	port->typec_caps.fwnode = tcpc->fwnode;
--	port->typec_caps.prefer_role = tcpc->config->default_role;
--	port->typec_caps.type = tcpc->config->type;
--	port->typec_caps.data = tcpc->config->data;
- 	port->typec_caps.revision = 0x0120;	/* Type-C spec release 1.2 */
- 	port->typec_caps.pd_revision = 0x0300;	/* USB-PD spec release 3.0 */
- 	port->typec_caps.dr_set = tcpm_dr_set;
-@@ -4589,7 +4676,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
- 	port->typec_caps.port_type_set = tcpm_port_type_set;
- 
- 	port->partner_desc.identity = &port->partner_ident;
--	port->port_type = tcpc->config->type;
-+	port->port_type = port->typec_caps.type;
- 
- 	port->role_sw = usb_role_switch_get(port->dev);
- 	if (IS_ERR(port->role_sw)) {
-@@ -4607,7 +4694,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
- 		goto out_destroy_wq;
- 	}
- 
--	if (tcpc->config->alt_modes) {
-+	if (tcpc->config && tcpc->config->alt_modes) {
- 		const struct typec_altmode_desc *paltmode = tcpc->config->alt_modes;
- 
- 		i = 0;
--- 
-2.7.4
-
+SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQWRhbSBUaG9tc29uIFtt
+YWlsdG86QWRhbS5UaG9tc29uLk9wZW5zb3VyY2VAZGlhc2VtaS5jb21dDQo+IFNlbnQ6IDIwMTjE
+6jbUwjI1yNUgMTg6NDYNCj4gVG86IEp1biBMaSA8anVuLmxpQG54cC5jb20+OyByb2JoK2R0QGtl
+cm5lbC5vcmc7IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOw0KPiBoZWlra2kua3JvZ2VydXNA
+bGludXguaW50ZWwuY29tOyBsaW51eEByb2Vjay11cy5uZXQNCj4gQ2M6IGEuaGFqZGFAc2Ftc3Vu
+Zy5jb207IGN3MDAuY2hvaUBzYW1zdW5nLmNvbTsgc2h1ZmFuX2xlZUByaWNodGVrLmNvbTsNCj4g
+UGV0ZXIgQ2hlbiA8cGV0ZXIuY2hlbkBueHAuY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
+cmc7DQo+IGxpbnV4LXVzYkB2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14
+QG54cC5jb20+DQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggdjcgMDYvMTRdIHVzYjogdHlwZWM6IHRj
+cG06IHN1cHBvcnQgZ2V0IHR5cGVjIGFuZCBwZCBjb25maWcNCj4gZnJvbSBkZXZpY2UgcHJvcGVy
+dGllcw0KPiANCj4gT24gMjUgSnVuZSAyMDE4IDA5OjA5LCBMaSBKdW4gd3JvdGU6DQo+IA0KPiA+
+IFRoaXMgcGF0Y2ggYWRkcyBzdXBwb3J0IG9mIGdldCB0eXBlYyBhbmQgcG93ZXIgZGVsaXZlcnkg
+Y29uZmlnIGZyb20NCj4gPiBmaXJtd2FyZSBkZXNjcmlwdGlvbi4NCj4gPg0KPiA+IFJldmlld2Vk
+LWJ5OiBIZWlra2kgS3JvZ2VydXMgPGhlaWtraS5rcm9nZXJ1c0BsaW51eC5pbnRlbC5jb20+DQo+
+ID4gUmV2aWV3ZWQtYnk6IEd1ZW50ZXIgUm9lY2sgPGxpbnV4QHJvZWNrLXVzLm5ldD4NCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBMaSBKdW4gPGp1bi5saUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2
+ZXJzL3VzYi90eXBlYy90Y3BtLmMgfCAxMzINCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKystLS0tLQ0KPiA+IC0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTEwIGlu
+c2VydGlvbnMoKyksIDIyIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvdXNiL3R5cGVjL3RjcG0uYyBiL2RyaXZlcnMvdXNiL3R5cGVjL3RjcG0uYyBpbmRleA0KPiA+
+IGQyMmIzN2IuLjA0NTQ2NTQgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy91c2IvdHlwZWMvdGNw
+bS5jDQo+ID4gKysrIGIvZHJpdmVycy91c2IvdHlwZWMvdGNwbS5jDQo+ID4gQEAgLTQyMzYsNiAr
+NDIzNiw4MSBAQCBzdGF0aWMgaW50IHRjcG1fY29weV92ZG9zKHUzMiAqZGVzdF92ZG8sIGNvbnN0
+DQo+ID4gdTMyICpzcmNfdmRvLA0KPiA+ICAJcmV0dXJuIG5yX3ZkbzsNCj4gPiAgfQ0KPiANCj4g
+Li4uDQo+IA0KPiA+ICBzdHJ1Y3QgdGNwbV9wb3J0ICp0Y3BtX3JlZ2lzdGVyX3BvcnQoc3RydWN0
+IGRldmljZSAqZGV2LCBzdHJ1Y3QNCj4gPiB0Y3BjX2RldiAqdGNwYykgIHsNCj4gPiAgCXN0cnVj
+dCB0Y3BtX3BvcnQgKnBvcnQ7DQo+ID4gIAlpbnQgaSwgZXJyOw0KPiA+DQo+ID4gLQlpZiAoIWRl
+diB8fCAhdGNwYyB8fCAhdGNwYy0+Y29uZmlnIHx8DQo+ID4gKwlpZiAoIWRldiB8fCAhdGNwYyB8
+fA0KPiA+ICAJICAgICF0Y3BjLT5nZXRfdmJ1cyB8fCAhdGNwYy0+c2V0X2NjIHx8ICF0Y3BjLT5n
+ZXRfY2MgfHwNCj4gPiAgCSAgICAhdGNwYy0+c2V0X3BvbGFyaXR5IHx8ICF0Y3BjLT5zZXRfdmNv
+bm4gfHwgIXRjcGMtPnNldF92YnVzIHx8DQo+ID4gIAkgICAgIXRjcGMtPnNldF9wZF9yeCB8fCAh
+dGNwYy0+c2V0X3JvbGVzIHx8ICF0Y3BjLT5wZF90cmFuc21pdCkgQEANCj4gPiAtNDU1NiwzMCAr
+NDY1NSwxOSBAQCBzdHJ1Y3QgdGNwbV9wb3J0ICp0Y3BtX3JlZ2lzdGVyX3BvcnQoc3RydWN0DQo+
+ID4gZGV2aWNlICpkZXYsIHN0cnVjdCB0Y3BjX2RldiAqdGNwYykNCj4gPiAgCWluaXRfY29tcGxl
+dGlvbigmcG9ydC0+cHBzX2NvbXBsZXRlKTsNCj4gPiAgCXRjcG1fZGVidWdmc19pbml0KHBvcnQp
+Ow0KPiA+DQo+ID4gLQlpZiAodGNwbV92YWxpZGF0ZV9jYXBzKHBvcnQsIHRjcGMtPmNvbmZpZy0+
+c3JjX3BkbywNCj4gPiAtCQkJICAgICAgIHRjcGMtPmNvbmZpZy0+bnJfc3JjX3BkbykgfHwNCj4g
+PiAtCSAgICB0Y3BtX3ZhbGlkYXRlX2NhcHMocG9ydCwgdGNwYy0+Y29uZmlnLT5zbmtfcGRvLA0K
+PiA+IC0JCQkgICAgICAgdGNwYy0+Y29uZmlnLT5ucl9zbmtfcGRvKSkgew0KPiA+IC0JCWVyciA9
+IC1FSU5WQUw7DQo+ID4gKwlpZiAodGNwYy0+Y29uZmlnKQ0KPiA+ICsJCWVyciA9IHRjcG1fY29w
+eV9jYXBzKHBvcnQsIHRjcGMtPmNvbmZpZyk7DQo+ID4gKwllbHNlDQo+ID4gKwkJZXJyID0gdGNw
+bV9md19nZXRfY2Fwcyhwb3J0LCB0Y3BjLT5md25vZGUpOw0KPiA+ICsJaWYgKGVyciA8IDApDQo+
+IA0KPiBTaG91bGQgd2Ugbm90IGJlIGZhdm91cmluZyB0aGUgZ2VuZXJpYyBGVyBiYXNlZCBjYXBh
+YmlsaXRpZXMgb3ZlciB2YWx1ZXMNCj4gZGVmaW5lZCBpbiBhIFR5cGUgQyBwb3J0IGNvbnRyb2xs
+ZXIgZHJpdmVyLCBpZiB0aGUgRlcgY29uZmlnIGlzIHByZXNlbnQ/IEZvcg0KPiBleGFtcGxlDQo+
+IGZ1c2IzMDIgZHJpdmVyIGhhcyBhIGhhcmQgY29kZWQgY29uZmlnIHNvIHRoYXQgd291bGQgYWx3
+YXlzIGJlIHNlbGVjdGVkIHJhdGhlcg0KPiB0aGFuIHRoZSBGVyBiYXNlZCBjb25maWcsIHVubGVz
+cyBJJ20gbWlzc2luZyBzb21ldGhpbmcgb2J2aW91cz8NCg0KWW91IGFyZSByaWdodCwgSSB3aWxs
+IGNoYW5nZSBpdCB0byBiZSBiZWxvdzoNCmVyciA9IHRjcG1fZndfZ2V0X2NhcHMocG9ydCwgdGNw
+Yy0+Zndub2RlKTsNCmlmICgoZXJyIDwgMCkgJiYgdGNwYy0+Y29uZmlnKQ0KCWVyciA9IHRjcG1f
+Y29weV9jYXBzKHBvcnQsIHRjcGMtPmNvbmZpZyk7DQoNCnRoYW5rcw0KSnVuDQo=
