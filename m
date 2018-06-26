@@ -1,43 +1,63 @@
-Return-Path: <SRS0=78dS=JJ=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 1/2] dt-bindings: video: fbdev: add devicetree bindings for pxa3xx-gcu
-Date: Sat, 23 Jun 2018 21:11:24 +0200
-Message-Id: <20180623191125.22965-1-daniel@zonque.org>
-To: robh+dt@kernel.org, airlied@linux.ie, mark.rutland@arm.com, b.zolnierkie@samsung.com
-Cc: linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, robert.jarzmik@free.fr, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=Aiy4=JM=kernel.crashing.org=benh@kernel.org>
+Message-ID: <48e12a7e900a35b0d2a6400977985d49f1c3c91f.camel@kernel.crashing.org>
+Subject: [PATCH v2] dt-bindings: misc: ASPEED coprocessor interrupt
+ controller
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Date: Wed, 27 Jun 2018 09:57:51 +1000
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+To: devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds the binding documentation for the pxa3xx gcu.
+Add the device-tree binding definition for the AST2400
+and AST2500 coprocessor interrupt controller
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 ---
- .../bindings/display/marvell,pxa3xx-gcu.txt    | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/marvell,pxa3xx-gcu.txt
+ .../devicetree/bindings/misc/aspeed,cvic.txt  | 35 +++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/aspeed,cvic.txt
 
-diff --git a/Documentation/devicetree/bindings/display/marvell,pxa3xx-gcu.txt b/Documentation/devicetree/bindings/display/marvell,pxa3xx-gcu.txt
+diff --git a/Documentation/devicetree/bindings/misc/aspeed,cvic.txt b/Documentation/devicetree/bindings/misc/aspeed,cvic.txt
 new file mode 100644
-index 000000000000..d1b2302d0fd8
+index 000000000000..d62c783d1d5e
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/marvell,pxa3xx-gcu.txt
-@@ -0,0 +1,18 @@
-+PXA3xx GCU Controller
-+---------------------
++++ b/Documentation/devicetree/bindings/misc/aspeed,cvic.txt
+@@ -0,0 +1,35 @@
++* ASPEED AST2400 and AST2500 coprocessor interrupt controller
++
++This file describes the bindings for the interrupt controller present
++in the AST2400 and AST2500 BMC SoCs which provides interrupt to the
++ColdFire coprocessor.
++
++It is not a normal interrupt controller and it would be rather
++inconvenient to create an interrupt tree for it as it somewhat shares
++some of the same sources as the main ARM interrupt controller but with
++different numbers.
++
++The AST2500 supports a SW generated interrupt
 +
 +Required properties:
-+ - compatible : "marvell,pxa3xx-gcu"
-+ - reg : should contain the register range (address and length).
-+ - interrupts : GCU interrupt.
-+ - clocks: phandle to input clocks
++- reg: address and length of the register for the device.
++- compatible: "aspeed,cvic" and one of:
++		"aspeed,ast2400-cvic"
++	      or
++		"aspeed,ast2500-cvic"
 +
-+Example for PXA3xx:
++- valid-sources: One cell, bitmap of supported sources for the implementation
 +
-+	gcu@54000000 {
-+		compatible = "marvell,pxa3xx-gcu";
-+		reg = <0x54000000 0x1000>;
-+		interrupts = <39>;
-+		clocks = <&clks CLK_PXA300_GCU>;
++Optional properties;
++- copro-sw-interrupts: List of interrupt numbers that can be used as
++		       SW interrupts from the ARM to the coprocessor.
++		       (AST2500 only)
++
++Example:
++
++	cvic: copro-interrupt-controller@1e6c2000 {
++		compatible = "aspeed,ast2500-cvic";
++		valid-sources = <0xffffffff>;
++		copro-sw-interrupts = <1>;
++		reg = <0x1e6c2000 0x80>;
 +	};
-+
--- 
-2.17.1
