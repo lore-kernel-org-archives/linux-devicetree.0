@@ -1,78 +1,61 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RFC 1/4] dt-bindings: w1: document sub-node bindings for
- DS2760
-Date: Tue, 26 Jun 2018 15:33:19 -0600
-Message-ID: <20180626213319.GA22766@rob-hp-laptop>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH RFC 0/4] Adding DT functionality to w1 busses
+Date: Tue, 26 Jun 2018 15:39:04 -0600
+Message-ID: <CAL_JsqLfzfJC=_NhJy=jFAqEgfi=cvjMcnkjdHdzfM2uhKGBAQ@mail.gmail.com>
 References: <20180619212744.794-1-daniel@zonque.org>
- <20180619212744.794-2-daniel@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180619212744.794-2-daniel@zonque.org>
+In-Reply-To: <20180619212744.794-1-daniel@zonque.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Daniel Mack <daniel@zonque.org>
-Cc: zbr@ioremap.net, mark.rutland@arm.com, szabolcs.gyurko@tlt.hu, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: zbr@ioremap.net, Mark Rutland <mark.rutland@arm.com>, szabolcs.gyurko@tlt.hu, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 19, 2018 at 11:27:41PM +0200, Daniel Mack wrote:
-> This patch add a generic w1 bindings document that merely describes how
-> slave deviceses are grouped under master nodes. It also adds a specific
-> binding for the ds2760 battery monitor.
-> 
-> Signed-off-by: Daniel Mack <daniel@zonque.org>
-> ---
->  .../devicetree/bindings/w1/w1-ds2760.txt        |  9 +++++++++
->  .../devicetree/bindings/w1/w1-gpio.txt          |  6 ++++++
->  Documentation/devicetree/bindings/w1/w1.txt     | 17 +++++++++++++++++
->  3 files changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/w1/w1-ds2760.txt
->  create mode 100644 Documentation/devicetree/bindings/w1/w1.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/w1/w1-ds2760.txt b/Documentation/devicetree/bindings/w1/w1-ds2760.txt
-> new file mode 100644
-> index 000000000000..86a0f4c573eb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/w1/w1-ds2760.txt
-> @@ -0,0 +1,9 @@
-> +Devicetree bindings for Maxim DS2760
-> +====================================
-> +
-> +The ds2760 is a w1 slave device and must hence have its sub-node in DT
-> +under a w1 bus master node.
-> +
-> +Required properties:
-> +- compatible: must be "maxim,ds2760-w1"
-> +
-> diff --git a/Documentation/devicetree/bindings/w1/w1-gpio.txt b/Documentation/devicetree/bindings/w1/w1-gpio.txt
-> index 6e09c35d9f1a..a3e0e964b260 100644
-> --- a/Documentation/devicetree/bindings/w1/w1-gpio.txt
-> +++ b/Documentation/devicetree/bindings/w1/w1-gpio.txt
-> @@ -13,10 +13,16 @@ Optional properties:
->   - linux,open-drain: if specified, the data pin is considered in
->  		     open-drain mode.
->  
-> +Also refer to the generic w1.txt document.
-> +
->  Examples:
->  
->  	onewire@0 {
->  		compatible = "w1-gpio";
->  		gpios = <&gpio 126 0>, <&gpio 105 0>;
-> +
-> +		slave@0 {
+On Tue, Jun 19, 2018 at 3:27 PM, Daniel Mack <daniel@zonque.org> wrote:
+> In order to fully move battery-supplied devices over to devicetree, the
+> onewire subsystem must get some updates.
+>
+> Currently, the w1 bus system works like this. Device families, such as
+> battery controllers etc, are registered to the w1 core. Once a master
+> device is probed, it starts scanning the bus. Slave devices that are
+> revealed through this scan and that match previously registered
+> families are then registered, and their .add_slave() callback is
+> invoked.
+>
+> Some devices, such as the ds2760, use that callback to call
+> platform_device_alloc() at runtime with a fixed device name to
+> instanciate their only user. That user does the actual work, while the
+> slave device merely functions as an I/O proxy. In the user
+> implementation, the w1 slave device is accessible through
+> dev->parent.
 
-A unit-address should have a corresponding reg property. Also, the node 
-name should reflect the class of device.
+Looks to me like you are letting the driver structure define the DT
+structure. This detail is all irrelevant to DT.
 
-You don't really need the unit address here, but for multiple slaves you 
-would. I'm not sure what you'd use here since the only id/address is 
-the serial number which is unknown except for the family code. If you 
-have 2 identical devices with some different DT properties, how would 
-you match? I don't see a way other than putting the serial number (or 
-some portion of it) in DT.
+>
+> Now, for devicetree environments, this has to change a bit. First, slave
+> devices need to have a matching table so they can be listed as sub-nodes
+> of their master bus controller. Second, the core needs to match the
+> entries in these tables against the sub-nodes of the master node.
+> These two are trivial to do.
+>
+> The next question is how the w1 slave device and its user(s) are linked
+> together. I'm proposing a DT layout with the following example:
+>
+>         onewire {
+>                 compatible = "w1-gpio";
+>
+>                 w1_slave: slave@0 {
+>                         compatible = "maxim,w1-ds2760";
+>                 };
+>         };
+>
+>         battery-supply {
+>                 compatible = "maxim,ds2760-supply";
+>                 w1-slave = <&w1_slave>;
+>         };
 
-I'm not sure how common multiple slaves are. Perhaps just support a 
-single slave for now.
+This should just be one node and a child of the 1-wire master.
 
 Rob
