@@ -1,289 +1,753 @@
-From: Krzysztof Witos <kwitos@cadence.com>
-Subject: RE: [PATCH 2/2] added support for csirx dphy
-Date: Tue, 26 Jun 2018 09:04:31 +0000
-Message-ID: <BYAPR07MB48868E383E03E438ED63BD76C3490@BYAPR07MB4886.namprd07.prod.outlook.com>
-References: <20180608103304.16054-1-kwitos@cadence.com>
- <20180608103304.16054-3-kwitos@cadence.com>
- <20180614075118.ukxhr5b73ofjnz6c@flea>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH v7 1/4] mfd: bd71837: mfd driver for ROHM BD71837 PMIC
+Date: Tue, 26 Jun 2018 11:06:33 +0200
+Message-ID: <CAFqH_51izuVgHukAORvwjZqGhxy85tdNdaHL9mOUnPnbCQmQjA@mail.gmail.com>
+References: <cover.1529404894.git.matti.vaittinen@fi.rohmeurope.com> <7e1888375c979accc402e9ddd7316e528b2ac52c.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180614075118.ukxhr5b73ofjnz6c@flea>
-Content-Language: en-US
+In-Reply-To: <7e1888375c979accc402e9ddd7316e528b2ac52c.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:CADENCE MIPI-CSI2 BRIDGES" <linux-media@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: matti.vaittinen@fi.rohmeurope.com
+Cc: Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, mazziesaccount@gmail.com, Arnd Bergmann <arnd@arndb.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>, chenjh@rock-chips.com, andrew.smirnov@gmail.com, Linus Walleij <linus.walleij@linaro.org>, Kate Stewart <kstewart@linuxfoundation.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-input@vger.kernel.or
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+Hi Matti,
 
-Thank you very much for the review. Yes, I understand your point.=20
-This needs to be changed.
+Thanks for the patch, a few comments below, some are feedback I
+received when I sent some patches to this subsystem.
 
-> Hi,
->=20
-> On Fri, Jun 08, 2018 at 11:33:04AM +0100, Krzysztof Witos wrote:
-> > Signed-off-by: Krzysztof Witos <kwitos@cadence.com>
->=20
-> A commit log explaining what you're doing here would be nice.
->=20
-> > ---
-> >  drivers/media/platform/cadence/cdns-csi2rx.c | 342
-> > ++++++++++++++++++++++++---
-> >  1 file changed, 313 insertions(+), 29 deletions(-)
-> >
-> > diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c
-> > b/drivers/media/platform/cadence/cdns-csi2rx.c
-> > index a0f02916006b..9251ea6015f0 100644
-> > --- a/drivers/media/platform/cadence/cdns-csi2rx.c
-> > +++ b/drivers/media/platform/cadence/cdns-csi2rx.c
-> > @@ -2,14 +2,16 @@
-> >  /*
-> >   * Driver for Cadence MIPI-CSI2 RX Controller v1.3
-> >   *
-> > - * Copyright (C) 2017 Cadence Design Systems Inc.
-> > + * Copyright (C) 2017,2018 Cadence Design Systems Inc.
-> >   */
-> >
-> >  #include <linux/clk.h>
-> > +#include <linux/iopoll.h>
-> >  #include <linux/delay.h>
-> >  #include <linux/io.h>
-> >  #include <linux/module.h>
-> >  #include <linux/of.h>
-> > +#include <linux/of_address.h>
-> >  #include <linux/of_graph.h>
-> >  #include <linux/phy/phy.h>
-> >  #include <linux/platform_device.h>
-> > @@ -44,6 +46,33 @@
-> >  #define CSI2RX_LANES_MAX	4
-> >  #define CSI2RX_STREAMS_MAX	4
-> >
-> > +/* DPHY registers */
-> > +#define DPHY_PMA_CMN(reg)       (reg)
-> > +#define DPHY_PMA_LCLK(reg)      (0x100 + (reg))
-> > +#define DPHY_PMA_LDATA(lane, reg)   (0x200 + ((lane) * 0x100) + (reg))
-> > +#define DPHY_PMA_RCLK(reg)      (0x600 + (reg))
-> > +#define DPHY_PMA_RDATA(lane, reg)   (0x700 + ((lane) * 0x100) + (reg))
-> > +#define DPHY_PCS(reg)           (0xb00 + (reg))
-> > +
-> > +#define DPHY_CMN_SSM            DPHY_PMA_CMN(0x20)
-> > +#define DPHY_CMN_SSM_EN         BIT(0)
-> > +#define DPHY_CMN_RX_MODE_EN     BIT(10)
-> > +
-> > +#define DPHY_CMN_PWM            DPHY_PMA_CMN(0x40)
-> > +#define DPHY_CMN_PWM_DIV(x)     ((x) << 20)
-> > +#define DPHY_CMN_PWM_LOW(x)     ((x) << 10)
-> > +#define DPHY_CMN_PWM_HIGH(x)        (x)
-> > +
-> > +#define DPHY_CMN_PLL_CFG	DPHY_PMA_CMN(0xE8)
-> > +#define PLL_LOCKED		BIT(2)
-> > +
-> > +#define DPHY_PSM_CFG            DPHY_PCS(0x4)
-> > +#define DPHY_PSM_CFG_FROM_REG       BIT(0)
-> > +#define DPHY_PSM_CLK_DIV(x)     ((x) << 1)
-> > +
-> > +#define DPHY_BAND_CTRL          DPHY_PCS(0x0)
-> > +#define DPHY_BAND_LEFT_VAL(x)	(x)
-> > +
-> >  enum csi2rx_pads {
-> >  	CSI2RX_PAD_SINK,
-> >  	CSI2RX_PAD_SOURCE_STREAM0,
-> > @@ -67,7 +96,7 @@ struct csi2rx_priv {
-> >  	struct clk			*sys_clk;
-> >  	struct clk			*p_clk;
-> >  	struct clk			*pixel_clk[CSI2RX_STREAMS_MAX];
-> > -	struct phy			*dphy;
-> > +	struct clk			*hs_clk;
-> >
-> >  	u8				lanes[CSI2RX_LANES_MAX];
-> >  	u8				num_lanes;
-> > @@ -83,8 +112,175 @@ struct csi2rx_priv {
-> >  	struct v4l2_async_subdev	asd;
-> >  	struct v4l2_subdev		*source_subdev;
-> >  	int				source_pad;
-> > +	struct cdns_dphy		*dphy;
-> > +};
-> > +
-> > +struct cdns_dphy_cfg {
-> > +	unsigned int nlanes;
-> > +};
-> > +
-> > +struct cdns_dphy;
-> > +
-> > +enum cdns_dphy_clk_lane_cfg {
-> > +	DPHY_CLK_CFG_LEFT_DRIVES_ALL =3D 0,
-> > +	DPHY_CLK_CFG_LEFT_DRIVES_RIGHT =3D 1,
-> > +	DPHY_CLK_CFG_LEFT_DRIVES_LEFT =3D 2,
-> > +	DPHY_CLK_CFG_RIGHT_DRIVES_ALL =3D 3
-> > +};
-> > +
-> > +struct cdns_dphy_ops {
-> > +	int (*probe)(struct cdns_dphy *dphy);
-> > +	void (*remove)(struct cdns_dphy *dphy);
-> > +	void (*set_psm_div)(struct cdns_dphy *dphy, u8 div);
-> > +	void (*set_pll_cfg)(struct cdns_dphy *dphy);
-> > +	void (*set_clk_lane_cfg)(struct cdns_dphy *dphy,
-> > +		enum cdns_dphy_clk_lane_cfg cfg);
-> > +	void (*is_pll_locked)(struct cdns_dphy *dphy);
-> > +	void (*set_band_ctrl)(struct cdns_dphy *dphy, u8 value); };
-> > +
-> > +struct cdns_dphy {
-> > +	struct cdns_dphy_cfg cfg;
-> > +	void __iomem *regs;
-> > +	struct clk *psm_clk;
-> > +	const struct cdns_dphy_ops *ops;
-> >  };
-> >
-> > +static int cdns_dphy_set_band_ctrl(struct cdns_dphy *dphy,
-> > +	struct csi2rx_priv *csirx)
-> > +{
-> > +	u8 band_value;
-> > +	u32 hs_freq_mhz =3D clk_get_rate(csirx->hs_clk);
-> > +
-> > +	if (hs_freq_mhz >=3D 80 && hs_freq_mhz < 100)
-> > +		band_value =3D 0;
-> > +	else if (hs_freq_mhz >=3D 100 && hs_freq_mhz < 120)
-> > +		band_value =3D 1;
-> > +	else if (hs_freq_mhz >=3D 120 && hs_freq_mhz < 160)
-> > +		band_value =3D 2;
-> > +	else if (hs_freq_mhz >=3D 160 && hs_freq_mhz < 200)
-> > +		band_value =3D 3;
-> > +	else if (hs_freq_mhz >=3D 200 && hs_freq_mhz < 240)
-> > +		band_value =3D 4;
-> > +	else if (hs_freq_mhz >=3D 240 && hs_freq_mhz < 280)
-> > +		band_value =3D 5;
-> > +	else if (hs_freq_mhz >=3D 280 && hs_freq_mhz < 320)
-> > +		band_value =3D 6;
-> > +	else if (hs_freq_mhz >=3D 320 && hs_freq_mhz < 360)
-> > +		band_value =3D 7;
-> > +	else if (hs_freq_mhz >=3D 360 && hs_freq_mhz < 400)
-> > +		band_value =3D 8;
-> > +	else if (hs_freq_mhz >=3D 400 && hs_freq_mhz < 480)
-> > +		band_value =3D 9;
-> > +	else if (hs_freq_mhz >=3D 480 && hs_freq_mhz < 560)
-> > +		band_value =3D 10;
-> > +	else if (hs_freq_mhz >=3D 560 && hs_freq_mhz < 640)
-> > +		band_value =3D 11;
-> > +	else if (hs_freq_mhz >=3D 640 && hs_freq_mhz < 720)
-> > +		band_value =3D 12;
-> > +	else if (hs_freq_mhz >=3D 720 && hs_freq_mhz < 800)
-> > +		band_value =3D 13;
-> > +	else if (hs_freq_mhz >=3D 800 && hs_freq_mhz < 880)
-> > +		band_value =3D 14;
-> > +	else if (hs_freq_mhz >=3D 880 && hs_freq_mhz < 1040)
-> > +		band_value =3D 15;
-> > +	else if (hs_freq_mhz >=3D 1040 && hs_freq_mhz < 1200)
-> > +		band_value =3D 16;
-> > +	else if (hs_freq_mhz >=3D 1200 && hs_freq_mhz < 1350)
-> > +		band_value =3D 17;
-> > +	else if (hs_freq_mhz >=3D 1350 && hs_freq_mhz < 1500)
-> > +		band_value =3D 18;
-> > +	else if (hs_freq_mhz >=3D 1500 && hs_freq_mhz < 1750)
-> > +		band_value =3D 19;
-> > +	else if (hs_freq_mhz >=3D 1750 && hs_freq_mhz < 2000)
-> > +		band_value =3D 20;
-> > +	else if (hs_freq_mhz >=3D 2000 && hs_freq_mhz < 2250)
-> > +		band_value =3D 21;
-> > +	else if (hs_freq_mhz >=3D 2250 && hs_freq_mhz <=3D 2500)
-> > +		band_value =3D 22;
-> > +	else
-> > +		return -EINVAL;
-> > +
-> > +	if (dphy->ops->set_band_ctrl)
-> > +		dphy->ops->set_band_ctrl(dphy, band_value);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int cdns_dphy_setup_psm(struct cdns_dphy *dphy) {
-> > +	unsigned long psm_clk_hz =3D clk_get_rate(dphy->psm_clk);
-> > +	unsigned long psm_div;
-> > +
-> > +	if (!psm_clk_hz || psm_clk_hz > 100000000)
-> > +		return -EINVAL;
-> > +
-> > +	psm_div =3D DIV_ROUND_CLOSEST(psm_clk_hz, 1000000);
-> > +	if (dphy->ops->set_psm_div)
-> > +		dphy->ops->set_psm_div(dphy, psm_div);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void cdns_dphy_set_clk_lane_cfg(struct cdns_dphy *dphy,
-> > +	enum cdns_dphy_clk_lane_cfg cfg)
-> > +{
-> > +	if (dphy->ops->set_clk_lane_cfg)
-> > +		dphy->ops->set_clk_lane_cfg(dphy, cfg); }
-> > +
-> > +static void cdns_dphy_set_pll_cfg(struct cdns_dphy *dphy) {
-> > +	if (dphy->ops->set_pll_cfg)
-> > +		dphy->ops->set_pll_cfg(dphy);
-> > +}
-> > +
-> > +static void cdns_dphy_is_pll_locked(struct cdns_dphy *dphy) {
-> > +	if (dphy->ops->is_pll_locked)
-> > +		dphy->ops->is_pll_locked(dphy);
-> > +}
-> > +
-> > +static void cdns_csirx_dphy_init(struct csi2rx_priv *csi2rx,
-> > +	const struct cdns_dphy_cfg *dphy_cfg) {
-> > +
-> > +	/*
-> > +	 * Configure the band control settings.
-> > +	 */
-> > +	cdns_dphy_set_band_ctrl(csi2rx->dphy, csi2rx);
-> > +
-> > +	/*
-> > +	 * Configure the internal PSM clk divider so that the DPHY has a
-> > +	 * 1MHz clk (or something close).
-> > +	 */
-> > +	WARN_ON_ONCE(cdns_dphy_setup_psm(csi2rx->dphy));
-> > +
-> > +	/*
-> > +	 * Configure attach clk lanes to data lanes: the DPHY has 2 clk lanes
-> > +	 * and 8 data lanes, each clk lane can be attache different set of
-> > +	 * data lanes. The 2 groups are named 'left' and 'right', so here we
-> > +	 * just say that we want the 'left' clk lane to drive the 'left' data
-> > +	 * lanes.
-> > +	 */
-> > +	cdns_dphy_set_clk_lane_cfg(csi2rx->dphy,
-> > +		DPHY_CLK_CFG_LEFT_DRIVES_LEFT);
-> > +
-> > +	/*
-> > +	 * Configure the DPHY PLL that will be used to generate the TX byte
-> > +	 * clk.
-> > +	 */
-> > +	cdns_dphy_set_pll_cfg(csi2rx->dphy);
-> > +
-> > +	/*  Start RX state machine. */
-> > +	writel(DPHY_CMN_SSM_EN | DPHY_CMN_RX_MODE_EN,
-> > +		csi2rx->dphy->regs + DPHY_CMN_SSM);
-> > +
-> > +	/* Checking if PLL is locked */
-> > +	cdns_dphy_is_pll_locked(csi2rx->dphy);
-> > +
-> > +}
-> > +
->=20
-> That part looks like it's pretty much the same thing than the PHY support=
- in
-> the DSI bridge found there:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
-rivers
-> /gpu/drm/bridge/cdns-dsi.c#n493
->=20
-> This code shouldn't be duplicated, but shared, ideally through the phy
-> framework. That would require some changes to that framework though.
->=20
-> Maxime
->=20
+Missatge de Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com> del
+dia dt., 19 de juny 2018 a les 12:57:
+>
+> ROHM BD71837 PMIC MFD driver providing interrupts and support
+> for two subsystems:
+> - clk
+> - Regulators
+>
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+>  drivers/mfd/Kconfig         |  13 ++
+>  drivers/mfd/Makefile        |   1 +
+>  drivers/mfd/bd71837.c       | 221 ++++++++++++++++++++++++++
+>  include/linux/mfd/bd71837.h | 367 ++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 602 insertions(+)
+>  create mode 100644 drivers/mfd/bd71837.c
+>  create mode 100644 include/linux/mfd/bd71837.h
+>
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index b860eb5aa194..7aa05fc9ed8e 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1787,6 +1787,19 @@ config MFD_STW481X
+>           in various ST Microelectronics and ST-Ericsson embedded
+>           Nomadik series.
+>
+> +config MFD_BD71837
+> +       bool "BD71837 Power Management chip"
+
+I know that some drivers need to be built-in, is this really a
+requirement for this driver? Or should work as a module too.
+
+> +       depends on I2C=y
+> +       depends on OF
+> +       select REGMAP_I2C
+> +       select REGMAP_IRQ
+> +       select MFD_CORE
+> +       help
+> +         Select this option to get support for the ROHM BD71837
+> +         Power Management chips. BD71837 is designed to power processors like
+> +         NXP i.MX8. It contains 8 BUCK outputs and 7 LDOs, voltage monitoring
+> +         and emergency shut down as well as 32,768KHz clock output.
+> +
+>  config MFD_STM32_LPTIMER
+>         tristate "Support for STM32 Low-Power Timer"
+>         depends on (ARCH_STM32 && OF) || COMPILE_TEST
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index e9fd20dba18d..09dc9eb3782c 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -227,4 +227,5 @@ obj-$(CONFIG_MFD_STM32_TIMERS)      += stm32-timers.o
+>  obj-$(CONFIG_MFD_MXS_LRADC)     += mxs-lradc.o
+>  obj-$(CONFIG_MFD_SC27XX_PMIC)  += sprd-sc27xx-spi.o
+>  obj-$(CONFIG_RAVE_SP_CORE)     += rave-sp.o
+> +obj-$(CONFIG_MFD_BD71837)      += bd71837.o
+>
+> diff --git a/drivers/mfd/bd71837.c b/drivers/mfd/bd71837.c
+> new file mode 100644
+> index 000000000000..0f0361d6cad6
+> --- /dev/null
+> +++ b/drivers/mfd/bd71837.c
+> @@ -0,0 +1,221 @@
+> +// SPDX-License-Identifier: GPL-2.0
+
+There is a mismatch between what SPDX says and MODULE_LICENSE says.
+
+GPL-2.0 = GPL v2 only
+MODULE_LICENSE(GPL) = GPL v2 or later.
+
+ You'd like to change the SPDX identifier to GPL-2.0-or-later or set
+module license to "GPL v2".
+
+> +// Copyright (C) 2018 ROHM Semiconductors
+> +// bd71837.c -- ROHM BD71837MWV mfd driver
+> +//
+> +// Datasheet available from
+> +// https://www.rohm.com/datasheet/BD71837MWV/bd71837mwv-e
+> +
+> +#include <linux/module.h>
+> +#include <linux/moduleparam.h>
+This include is not required.
+
+> +#include <linux/init.h>
+> +#include <linux/slab.h>
+> +#include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+ditto
+
+> +#include <linux/irqdomain.h>
+ditto
+
+> +#include <linux/gpio.h>
+ditto
+
+> +#include <linux/regmap.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_gpio.h>
+ditto
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/bd71837.h>
+> +
+
+Please review the needed includes.
+
+> +static const struct resource irqs[] = {
+> +       {
+> +               .start = BD71837_INT_PWRBTN,
+> +               .end = BD71837_INT_PWRBTN,
+> +               .flags = IORESOURCE_IRQ,
+> +               .name = "pwr-btn",
+> +       }, {
+> +               .start = BD71837_INT_PWRBTN_L,
+> +               .end = BD71837_INT_PWRBTN_L,
+> +               .flags = IORESOURCE_IRQ,
+> +               .name = "pwr-btn-l",
+> +       }, {
+> +               .start = BD71837_INT_PWRBTN_S,
+> +               .end = BD71837_INT_PWRBTN_S,
+> +               .flags = IORESOURCE_IRQ,
+> +               .name = "pwr-btn-s",
+> +       },
+
+nit: no comma at the end
+
+> +};
+> +
+> +/* bd71837 multi function cells */
+> +static struct mfd_cell bd71837_mfd_cells[] = {
+> +       {
+> +               .name = "bd71837-clk",
+> +       }, {
+> +               .name = "bd718xx-pwrkey",
+> +               .resources = &irqs[0],
+> +               .num_resources = ARRAY_SIZE(irqs),
+> +       }, {
+> +               .name = "bd71837-pmic",
+> +       },
+nit: no comma at the end
+
+
+> +};
+> +
+> +static const struct regmap_irq bd71837_irqs[] = {
+> +       REGMAP_IRQ_REG(BD71837_INT_SWRST, 0, BD71837_INT_SWRST_MASK),
+> +       REGMAP_IRQ_REG(BD71837_INT_PWRBTN_S, 0, BD71837_INT_PWRBTN_S_MASK),
+> +       REGMAP_IRQ_REG(BD71837_INT_PWRBTN_L, 0, BD71837_INT_PWRBTN_L_MASK),
+> +       REGMAP_IRQ_REG(BD71837_INT_PWRBTN, 0, BD71837_INT_PWRBTN_MASK),
+> +       REGMAP_IRQ_REG(BD71837_INT_WDOG, 0, BD71837_INT_WDOG_MASK),
+> +       REGMAP_IRQ_REG(BD71837_INT_ON_REQ, 0, BD71837_INT_ON_REQ_MASK),
+> +       REGMAP_IRQ_REG(BD71837_INT_STBY_REQ, 0, BD71837_INT_STBY_REQ_MASK),
+> +};
+> +
+> +static struct regmap_irq_chip bd71837_irq_chip = {
+> +       .name = "bd71837-irq",
+> +       .irqs = bd71837_irqs,
+> +       .num_irqs = ARRAY_SIZE(bd71837_irqs),
+> +       .num_regs = 1,
+> +       .irq_reg_stride = 1,
+> +       .status_base = BD71837_REG_IRQ,
+> +       .mask_base = BD71837_REG_MIRQ,
+> +       .ack_base = BD71837_REG_IRQ,
+> +       .init_ack_masked = true,
+> +       .mask_invert = false,
+> +};
+> +
+> +static int bd71837_irq_exit(struct bd71837 *bd71837)
+> +{
+> +       if (bd71837->chip_irq > 0)
+> +               regmap_del_irq_chip(bd71837->chip_irq, bd71837->irq_data);
+> +       return 0;
+> +}
+> +
+> +static const struct regmap_range pmic_status_range = {
+> +       .range_min = BD71837_REG_IRQ,
+> +       .range_max = BD71837_REG_POW_STATE,
+> +};
+> +
+> +static const struct regmap_access_table volatile_regs = {
+> +       .yes_ranges = &pmic_status_range,
+> +       .n_yes_ranges = 1,
+> +};
+> +
+> +static const struct regmap_config bd71837_regmap_config = {
+> +       .reg_bits = 8,
+> +       .val_bits = 8,
+> +       .volatile_table = &volatile_regs,
+> +       .max_register = BD71837_MAX_REGISTER - 1,
+> +       .cache_type = REGCACHE_RBTREE,
+> +};
+> +
+> +#ifdef CONFIG_OF
+
+The driver is DT-only and depends on OF so you don't need to protect this.
+
+> +static const struct of_device_id bd71837_of_match[] = {
+> +       { .compatible = "rohm,bd71837", .data = (void *)0},
+> +       { },
+
+nit: { /* sentinel */ }
+
+> +};
+> +MODULE_DEVICE_TABLE(of, bd71837_of_match);
+> +#endif //CONFIG_OF
+> +
+> +static int bd71837_i2c_probe(struct i2c_client *i2c,
+> +                           const struct i2c_device_id *id)
+> +{
+> +       struct bd71837 *bd71837;
+> +       struct bd71837_board *board_info;
+> +       int ret = -EINVAL;
+> +
+> +       board_info = dev_get_platdata(&i2c->dev);
+> +
+> +       if (!board_info) {
+> +               board_info = devm_kzalloc(&i2c->dev, sizeof(*board_info),
+> +                                         GFP_KERNEL);
+> +               if (!board_info) {
+> +                       ret = -ENOMEM;
+> +                       goto err_out;
+> +               } else if (i2c->irq) {
+> +                       board_info->gpio_intr = i2c->irq;
+> +               } else {
+> +                       ret = -ENOENT;
+> +                       goto err_out;
+> +               }
+> +       }
+> +
+> +       if (!board_info)
+> +               goto err_out;
+> +
+> +       bd71837 = devm_kzalloc(&i2c->dev, sizeof(struct bd71837), GFP_KERNEL);
+> +       if (bd71837 == NULL)
+> +               return -ENOMEM;
+> +
+> +       i2c_set_clientdata(i2c, bd71837);
+> +       bd71837->dev = &i2c->dev;
+> +       bd71837->i2c_client = i2c;
+> +       bd71837->chip_irq = board_info->gpio_intr;
+> +
+> +       bd71837->regmap = devm_regmap_init_i2c(i2c, &bd71837_regmap_config);
+> +       if (IS_ERR(bd71837->regmap)) {
+> +               ret = PTR_ERR(bd71837->regmap);
+> +               dev_err(&i2c->dev, "regmap initialization failed: %d\n", ret);
+> +               goto err_out;
+> +       }
+> +
+> +       ret = bd71837_reg_read(bd71837, BD71837_REG_REV);
+> +       if (ret < 0) {
+> +               dev_err(bd71837->dev,
+> +                       "%s(): Read BD71837_REG_DEVICE failed!\n", __func__);
+> +               goto err_out;
+> +       }
+> +
+> +       ret = regmap_add_irq_chip(bd71837->regmap, bd71837->chip_irq,
+> +               IRQF_ONESHOT, 0,
+> +               &bd71837_irq_chip, &bd71837->irq_data);
+
+I think that you can use 'devm_regmap_add_irq_chip' here and remove
+the code to delete the irq chip
+
+> +       if (ret < 0) {
+> +               dev_err(bd71837->dev, "Failed to add irq_chip %d\n", ret);
+> +               goto err_out;
+> +       }
+> +
+> +       ret = mfd_add_devices(bd71837->dev, PLATFORM_DEVID_AUTO,
+> +                             bd71837_mfd_cells, ARRAY_SIZE(bd71837_mfd_cells),
+> +                             NULL, 0,
+> +                             regmap_irq_get_domain(bd71837->irq_data));
+
+Same here, I think you can use the devm_mfd_add_devices.
+
+> +       if (ret)
+> +               regmap_del_irq_chip(bd71837->chip_irq, bd71837->irq_data);
+
+If you use devm_ functions you can remove this.
+
+> +err_out:
+> +
+> +       return ret;
+> +}
+> +
+> +static int bd71837_i2c_remove(struct i2c_client *i2c)
+> +{
+> +       struct bd71837 *bd71837 = i2c_get_clientdata(i2c);
+> +
+> +       bd71837_irq_exit(bd71837);
+> +       mfd_remove_devices(bd71837->dev);
+
+All this can go away if you use the devm_ calls.
+
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct i2c_device_id bd71837_i2c_id[] = {
+> +       { .name = "bd71837", },
+> +       { }
+
+nit: { /* sentinel */ }
+
+> +};
+> +MODULE_DEVICE_TABLE(i2c, bd71837_i2c_id);
+> +
+> +static struct i2c_driver bd71837_i2c_driver = {
+> +       .driver = {
+> +               .name = "bd71837-mfd",
+> +               .owner = THIS_MODULE,
+
+Remove this, it is not needed, the core does it for you.
+
+> +               .of_match_table = of_match_ptr(bd71837_of_match),
+
+The driver is DT-only, don't need to call of_match_ptr.
+
+> +       },
+> +       .probe = bd71837_i2c_probe,
+> +       .remove = bd71837_i2c_remove,
+> +       .id_table = bd71837_i2c_id,
+> +};
+> +
+> +static int __init bd71837_i2c_init(void)
+> +{
+> +       return i2c_add_driver(&bd71837_i2c_driver);
+> +}
+> +/* init early so consumer devices can complete system boot */
+> +subsys_initcall(bd71837_i2c_init);
+> +
+> +static void __exit bd71837_i2c_exit(void)
+> +{
+> +       i2c_del_driver(&bd71837_i2c_driver);
+> +}
+> +module_exit(bd71837_i2c_exit);
+> +
+
+Can't you use module_i2c_driver here and get rid of init/exit calls?
+
+> +MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
+> +MODULE_DESCRIPTION("BD71837 chip multi-function driver");
+> +MODULE_LICENSE("GPL");
+
+License mismatch.
+
+> diff --git a/include/linux/mfd/bd71837.h b/include/linux/mfd/bd71837.h
+> new file mode 100644
+> index 000000000000..125c7478ec29
+> --- /dev/null
+> +++ b/include/linux/mfd/bd71837.h
+> @@ -0,0 +1,367 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/* Copyright (C) 2018 ROHM Semiconductors */
+> +
+> +/*
+> + * ROHM BD71837MWV header file
+> + */
+> +
+> +#ifndef __LINUX_MFD_BD71837_H__
+> +#define __LINUX_MFD_BD71837_H__
+> +
+> +#include <linux/regmap.h>
+> +
+> +enum {
+> +       BD71837_BUCK1   =       0,
+> +       BD71837_BUCK2,
+> +       BD71837_BUCK3,
+> +       BD71837_BUCK4,
+> +       BD71837_BUCK5,
+> +       BD71837_BUCK6,
+> +       BD71837_BUCK7,
+> +       BD71837_BUCK8,
+> +       BD71837_LDO1,
+> +       BD71837_LDO2,
+> +       BD71837_LDO3,
+> +       BD71837_LDO4,
+> +       BD71837_LDO5,
+> +       BD71837_LDO6,
+> +       BD71837_LDO7,
+> +       BD71837_REGULATOR_CNT,
+> +};
+> +
+> +#define BD71837_BUCK1_VOLTAGE_NUM      0x40
+> +#define BD71837_BUCK2_VOLTAGE_NUM      0x40
+> +#define BD71837_BUCK3_VOLTAGE_NUM      0x40
+> +#define BD71837_BUCK4_VOLTAGE_NUM      0x40
+> +
+> +#define BD71837_BUCK5_VOLTAGE_NUM      0x08
+> +#define BD71837_BUCK6_VOLTAGE_NUM      0x04
+> +#define BD71837_BUCK7_VOLTAGE_NUM      0x08
+> +#define BD71837_BUCK8_VOLTAGE_NUM      0x40
+> +
+> +#define BD71837_LDO1_VOLTAGE_NUM       0x04
+> +#define BD71837_LDO2_VOLTAGE_NUM       0x02
+> +#define BD71837_LDO3_VOLTAGE_NUM       0x10
+> +#define BD71837_LDO4_VOLTAGE_NUM       0x10
+> +#define BD71837_LDO5_VOLTAGE_NUM       0x10
+> +#define BD71837_LDO6_VOLTAGE_NUM       0x10
+> +#define BD71837_LDO7_VOLTAGE_NUM       0x10
+> +
+> +enum {
+> +       BD71837_REG_REV                = 0x00,
+> +       BD71837_REG_SWRESET            = 0x01,
+> +       BD71837_REG_I2C_DEV            = 0x02,
+> +       BD71837_REG_PWRCTRL0           = 0x03,
+> +       BD71837_REG_PWRCTRL1           = 0x04,
+> +       BD71837_REG_BUCK1_CTRL         = 0x05,
+> +       BD71837_REG_BUCK2_CTRL         = 0x06,
+> +       BD71837_REG_BUCK3_CTRL         = 0x07,
+> +       BD71837_REG_BUCK4_CTRL         = 0x08,
+> +       BD71837_REG_BUCK5_CTRL         = 0x09,
+> +       BD71837_REG_BUCK6_CTRL         = 0x0A,
+> +       BD71837_REG_BUCK7_CTRL         = 0x0B,
+> +       BD71837_REG_BUCK8_CTRL         = 0x0C,
+> +       BD71837_REG_BUCK1_VOLT_RUN     = 0x0D,
+> +       BD71837_REG_BUCK1_VOLT_IDLE    = 0x0E,
+> +       BD71837_REG_BUCK1_VOLT_SUSP    = 0x0F,
+> +       BD71837_REG_BUCK2_VOLT_RUN     = 0x10,
+> +       BD71837_REG_BUCK2_VOLT_IDLE    = 0x11,
+> +       BD71837_REG_BUCK3_VOLT_RUN     = 0x12,
+> +       BD71837_REG_BUCK4_VOLT_RUN     = 0x13,
+> +       BD71837_REG_BUCK5_VOLT         = 0x14,
+> +       BD71837_REG_BUCK6_VOLT         = 0x15,
+> +       BD71837_REG_BUCK7_VOLT         = 0x16,
+> +       BD71837_REG_BUCK8_VOLT         = 0x17,
+> +       BD71837_REG_LDO1_VOLT          = 0x18,
+> +       BD71837_REG_LDO2_VOLT          = 0x19,
+> +       BD71837_REG_LDO3_VOLT          = 0x1A,
+> +       BD71837_REG_LDO4_VOLT          = 0x1B,
+> +       BD71837_REG_LDO5_VOLT          = 0x1C,
+> +       BD71837_REG_LDO6_VOLT          = 0x1D,
+> +       BD71837_REG_LDO7_VOLT          = 0x1E,
+> +       BD71837_REG_TRANS_COND0        = 0x1F,
+> +       BD71837_REG_TRANS_COND1        = 0x20,
+> +       BD71837_REG_VRFAULTEN          = 0x21,
+> +       BD71837_REG_MVRFLTMASK0        = 0x22,
+> +       BD71837_REG_MVRFLTMASK1        = 0x23,
+> +       BD71837_REG_MVRFLTMASK2        = 0x24,
+> +       BD71837_REG_RCVCFG             = 0x25,
+> +       BD71837_REG_RCVNUM             = 0x26,
+> +       BD71837_REG_PWRONCONFIG0       = 0x27,
+> +       BD71837_REG_PWRONCONFIG1       = 0x28,
+> +       BD71837_REG_RESETSRC           = 0x29,
+> +       BD71837_REG_MIRQ               = 0x2A,
+> +       BD71837_REG_IRQ                = 0x2B,
+> +       BD71837_REG_IN_MON             = 0x2C,
+> +       BD71837_REG_POW_STATE          = 0x2D,
+> +       BD71837_REG_OUT32K             = 0x2E,
+> +       BD71837_REG_REGLOCK            = 0x2F,
+> +       BD71837_REG_OTPVER             = 0xFF,
+> +       BD71837_MAX_REGISTER           = 0x100,
+> +};
+> +
+> +#define REGLOCK_PWRSEQ 0x1
+> +#define REGLOCK_VREG   0x10
+> +
+> +/* Generic BUCK control masks */
+> +#define BD71837_BUCK_SEL       0x02
+> +#define BD71837_BUCK_EN                0x01
+> +#define BD71837_BUCK_RUN_ON    0x04
+> +
+> +/* Generic LDO masks */
+> +#define BD71837_LDO_SEL                0x80
+> +#define BD71837_LDO_EN         0x40
+> +
+> +/* BD71837 BUCK ramp rate CTRL reg bits */
+> +#define BUCK_RAMPRATE_MASK     0xC0
+> +#define BUCK_RAMPRATE_10P00MV  0x0
+> +#define BUCK_RAMPRATE_5P00MV   0x1
+> +#define BUCK_RAMPRATE_2P50MV   0x2
+> +#define BUCK_RAMPRATE_1P25MV   0x3
+> +
+> +/* BD71837_REG_BUCK1_VOLT_RUN bits */
+> +#define BUCK1_RUN_MASK         0x3F
+> +#define BUCK1_RUN_DEFAULT      0x14
+> +
+> +/* BD71837_REG_BUCK1_VOLT_SUSP bits */
+> +#define BUCK1_SUSP_MASK                0x3F
+> +#define BUCK1_SUSP_DEFAULT     0x14
+> +
+> +/* BD71837_REG_BUCK1_VOLT_IDLE bits */
+> +#define BUCK1_IDLE_MASK                0x3F
+> +#define BUCK1_IDLE_DEFAULT     0x14
+> +
+> +/* BD71837_REG_BUCK2_VOLT_RUN bits */
+> +#define BUCK2_RUN_MASK         0x3F
+> +#define BUCK2_RUN_DEFAULT      0x1E
+> +
+> +/* BD71837_REG_BUCK2_VOLT_IDLE bits */
+> +#define BUCK2_IDLE_MASK                0x3F
+> +#define BUCK2_IDLE_DEFAULT     0x14
+> +
+> +/* BD71837_REG_BUCK3_VOLT_RUN bits */
+> +#define BUCK3_RUN_MASK         0x3F
+> +#define BUCK3_RUN_DEFAULT      0x1E
+> +
+> +/* BD71837_REG_BUCK4_VOLT_RUN bits */
+> +#define BUCK4_RUN_MASK         0x3F
+> +#define BUCK4_RUN_DEFAULT      0x1E
+> +
+> +/* BD71837_REG_BUCK5_VOLT bits */
+> +#define BUCK5_MASK             0x07
+> +#define BUCK5_DEFAULT          0x02
+> +
+> +/* BD71837_REG_BUCK6_VOLT bits */
+> +#define BUCK6_MASK             0x03
+> +#define BUCK6_DEFAULT          0x03
+> +
+> +/* BD71837_REG_BUCK7_VOLT bits */
+> +#define BUCK7_MASK             0x07
+> +#define BUCK7_DEFAULT          0x03
+> +
+> +/* BD71837_REG_BUCK8_VOLT bits */
+> +#define BUCK8_MASK             0x3F
+> +#define BUCK8_DEFAULT          0x1E
+> +
+> +/* BD71837_REG_IRQ bits */
+> +#define IRQ_SWRST              0x40
+> +#define IRQ_PWRON_S            0x20
+> +#define IRQ_PWRON_L            0x10
+> +#define IRQ_PWRON              0x08
+> +#define IRQ_WDOG               0x04
+> +#define IRQ_ON_REQ             0x02
+> +#define IRQ_STBY_REQ           0x01
+> +
+> +/* BD71837_REG_OUT32K bits */
+> +#define BD71837_OUT32K_EN      0x01
+> +
+> +/* BD71837 gated clock rate */
+> +#define BD71837_CLK_RATE 32768
+> +
+> +/* BD71837 irqs */
+> +enum {
+> +       BD71837_INT_STBY_REQ,
+> +       BD71837_INT_ON_REQ,
+> +       BD71837_INT_WDOG,
+> +       BD71837_INT_PWRBTN,
+> +       BD71837_INT_PWRBTN_L,
+> +       BD71837_INT_PWRBTN_S,
+> +       BD71837_INT_SWRST
+> +};
+> +
+> +/* BD71837 interrupt masks */
+> +#define BD71837_INT_SWRST_MASK         0x40
+> +#define BD71837_INT_PWRBTN_S_MASK      0x20
+> +#define BD71837_INT_PWRBTN_L_MASK      0x10
+> +#define BD71837_INT_PWRBTN_MASK                0x8
+> +#define BD71837_INT_WDOG_MASK          0x4
+> +#define BD71837_INT_ON_REQ_MASK                0x2
+> +#define BD71837_INT_STBY_REQ_MASK      0x1
+> +
+> +/* BD71837_REG_LDO1_VOLT bits */
+> +#define LDO1_MASK              0x03
+> +
+> +/* BD71837_REG_LDO1_VOLT bits */
+> +#define LDO2_MASK              0x20
+> +
+> +/* BD71837_REG_LDO3_VOLT bits */
+> +#define LDO3_MASK              0x0F
+> +
+> +/* BD71837_REG_LDO4_VOLT bits */
+> +#define LDO4_MASK              0x0F
+> +
+> +/* BD71837_REG_LDO5_VOLT bits */
+> +#define LDO5_MASK              0x0F
+> +
+> +/* BD71837_REG_LDO6_VOLT bits */
+> +#define LDO6_MASK              0x0F
+> +
+> +/* BD71837_REG_LDO7_VOLT bits */
+> +#define LDO7_MASK              0x0F
+> +
+> +/* register write induced reset settings */
+
+/* Register ...
+
+> +
+> +/* even though the bit zero is not SWRESET type we still want to write zero
+
+/*
+ * Even
+
+> + * to it when changing type. Biz zero is 'SWRESET' trigger bit and if we
+
+s/Biz/Bit/
+
+> + * write 1 to it we will trigger the action. So always write 0 to it when
+> + * changning SWRESET action - no matter what we read from it.
+> + */
+> +#define BD71837_SWRESET_TYPE_MASK 7
+> +#define BD71837_SWRESET_TYPE_DISABLED 0
+> +#define BD71837_SWRESET_TYPE_COLD 4
+> +#define BD71837_SWRESET_TYPE_WARM 6
+> +
+> +#define BD71837_SWRESET_RESET_MASK 1
+> +#define BD71837_SWRESET_RESET 1
+> +
+> +/* Poweroff state transition conditions */
+> +
+> +#define BD718XX_ON_REQ_POWEROFF_MASK 1
+> +#define BD718XX_SWRESET_POWEROFF_MASK 2
+> +#define BD718XX_WDOG_POWEROFF_MASK 4
+> +#define BD718XX_KEY_L_POWEROFF_MASK 8
+> +
+> +#define BD718XX_POWOFF_TO_SNVS 0
+> +#define BD718XX_POWOFF_TO_RDY 0xF
+> +
+> +#define BD718XX_POWOFF_TIME_MASK 0xF0
+> +enum {
+> +       BD718XX_POWOFF_TIME_5MS = 0,
+> +       BD718XX_POWOFF_TIME_10MS,
+> +       BD718XX_POWOFF_TIME_15MS,
+> +       BD718XX_POWOFF_TIME_20MS,
+> +       BD718XX_POWOFF_TIME_25MS,
+> +       BD718XX_POWOFF_TIME_30MS,
+> +       BD718XX_POWOFF_TIME_35MS,
+> +       BD718XX_POWOFF_TIME_40MS,
+> +       BD718XX_POWOFF_TIME_45MS,
+> +       BD718XX_POWOFF_TIME_50MS,
+> +       BD718XX_POWOFF_TIME_75MS,
+> +       BD718XX_POWOFF_TIME_100MS,
+> +       BD718XX_POWOFF_TIME_250MS,
+> +       BD718XX_POWOFF_TIME_500MS,
+> +       BD718XX_POWOFF_TIME_750MS,
+> +       BD718XX_POWOFF_TIME_1500MS
+> +};
+> +
+> +/* Poweron sequence state transition conditions */
+> +
+> +#define BD718XX_RDY_TO_SNVS_MASK 0xF
+> +#define BD718XX_SNVS_TO_RUN_MASK 0xF0
+> +
+> +#define BD718XX_PWR_TRIG_KEY_L 1
+> +#define BD718XX_PWR_TRIG_KEY_S 2
+> +#define BD718XX_PWR_TRIG_PMIC_ON 4
+> +#define BD718XX_PWR_TRIG_VSYS_UVLO 8
+> +#define BD718XX_RDY_TO_SNVS_SIFT 0
+> +#define BD718XX_SNVS_TO_RUN_SIFT 4
+> +
+> +/* Timeout value for detecting short press */
+> +
+> +#define BD718XX_PWRBTN_SHORT_PRESS_MASK 0xF
+> +
+> +enum {
+> +       BD718XX_PWRBTN_SHORT_PRESS_10MS = 0,
+> +       BD718XX_PWRBTN_SHORT_PRESS_500MS,
+> +       BD718XX_PWRBTN_SHORT_PRESS_1000MS,
+> +       BD718XX_PWRBTN_SHORT_PRESS_1500MS,
+> +       BD718XX_PWRBTN_SHORT_PRESS_2000MS,
+> +       BD718XX_PWRBTN_SHORT_PRESS_2500MS,
+> +       BD718XX_PWRBTN_SHORT_PRESS_3000MS,
+> +       BD718XX_PWRBTN_SHORT_PRESS_3500MS,
+> +       BD718XX_PWRBTN_SHORT_PRESS_4000MS,
+> +       BD718XX_PWRBTN_SHORT_PRESS_4500MS,
+> +       BD718XX_PWRBTN_SHORT_PRESS_5000MS,
+> +       BD718XX_PWRBTN_SHORT_PRESS_5500MS,
+> +       BD718XX_PWRBTN_SHORT_PRESS_6000MS,
+> +       BD718XX_PWRBTN_SHORT_PRESS_6500MS,
+> +       BD718XX_PWRBTN_SHORT_PRESS_7000MS,
+> +       BD718XX_PWRBTN_SHORT_PRESS_7500MS
+> +};
+> +
+> +struct bd71837;
+> +struct bd71837_pmic;
+> +struct bd71837_clk;
+> +struct bd718xx_pwrkey;
+> +
+> +/*
+> + * Board platform data may be used to initialize regulators.
+> + */
+> +
+> +struct bd71837_board {
+> +       struct regulator_init_data *init_data[BD71837_REGULATOR_CNT];
+> +       int     gpio_intr;
+> +};
+> +
+> +struct bd71837 {
+> +       struct device *dev;
+> +       struct i2c_client *i2c_client;
+> +       struct regmap *regmap;
+> +       unsigned long int id;
+> +
+> +       int chip_irq;
+> +       struct regmap_irq_chip_data *irq_data;
+> +
+> +       struct bd71837_pmic *pmic;
+> +       struct bd71837_clk *clk;
+> +       struct bd718xx_pwrkey *pwrkey;
+> +};
+> +
+> +/*
+> + * bd71837 sub-driver chip access routines
+> + */
+> +
+
+All these access routines only hide the regmap_* calls, so why not use
+the regmap calls directly in the driver and remove all this?
+
+> +static inline int bd71837_reg_read(struct bd71837 *bd71837, u8 reg)
+> +{
+> +       int r, val;
+> +
+> +       r = regmap_read(bd71837->regmap, reg, &val);
+> +       if (r < 0)
+> +               return r;
+> +       return val;
+> +}
+> +
+> +static inline int bd71837_reg_write(struct bd71837 *bd71837, u8 reg,
+> +                                   unsigned int val)
+> +{
+> +       return regmap_write(bd71837->regmap, reg, val);
+> +}
+> +
+> +static inline int bd71837_set_bits(struct bd71837 *bd71837, u8 reg, u8 mask)
+> +{
+> +       return regmap_update_bits(bd71837->regmap, reg, mask, mask);
+> +}
+> +
+> +static inline int bd71837_clear_bits(struct bd71837 *bd71837, u8 reg,
+> +                                    u8 mask)
+> +{
+> +       return regmap_update_bits(bd71837->regmap, reg, mask, 0);
+> +}
+> +
+> +static inline int bd71837_update_bits(struct bd71837 *bd71837, u8 reg,
+> +                                     u8 mask, u8 val)
+> +{
+> +       return regmap_update_bits(bd71837->regmap, reg, mask, val);
+> +}
+> +
+> +#endif /* __LINUX_MFD_BD71837_H__ */
 > --
-> Maxime Ripard, Bootlin (formerly Free Electrons) Embedded Linux and Kerne=
-l
-> engineering https://bootlin.com
-
-
-Best Regards,
-Krzysztof
+> 2.14.3
+>
