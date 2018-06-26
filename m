@@ -1,53 +1,71 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH] arm64: dts: hikey: Define wl1835 power capabilities
-Date: Tue, 26 Jun 2018 09:25:44 +0100
-Message-ID: <5B31F888.7010403@hisilicon.com>
-References: <20180613151305.17240-1-ryan@edited.us>
- <CANcMJZASEDRxaXwdG96nNeEDPrDm_ap5MjhXonEcg=yHZ8F=qg@mail.gmail.com>
- <CALAqxLWjJKsU+XJmANzx-aO2ruszwbBnPV2yV5WoyVStO+5K0A@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 0/5] RFC: Mezzanine handling for 96boards
+Date: Tue, 26 Jun 2018 10:36:52 +0200
+Message-ID: <CACRpkdYZmoP-yf6wT0=3Npr4u9zB8qtEraihSYyrjXHeEHp0ow@mail.gmail.com>
+References: <20180618074556.6944-1-linus.walleij@linaro.org>
+ <CAK8P3a2KqoX-squhGc8TBuJ==8xxELsuy-H+c1+C7Fu7Z4OjDA@mail.gmail.com>
+ <CAKv+Gu-gAkfRsEUOc=iyxi6Twvg9cbvWNqNHRS2HzUDZg8xUhg@mail.gmail.com>
+ <CACRpkdb1GksbePt6XgePCD6g-z4fxY-LF-gpyRfQVxCrq226fg@mail.gmail.com>
+ <CAKv+Gu8cXxQWbnB++adGx=xwAzuM9jqxkCOznk1qP5r=P4vxrQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CALAqxLWjJKsU+XJmANzx-aO2ruszwbBnPV2yV5WoyVStO+5K0A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>, Ryan Grachek <ryan@edited.us>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Eyal Reizer <eyalr@ti.com>, Rob Herring <robh+dt@kernel.org>, Kalle Valo <kvalo@codeaurora.org>, Valentin Schneider <Valentin.Schneider@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-wireless@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAKv+Gu8cXxQWbnB++adGx=xwAzuM9jqxkCOznk1qP5r=P4vxrQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frank Rowand <frowand.list@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, dev <dev@lists.96boards.org>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi John,
+On Tue, Jun 26, 2018 at 10:19 AM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+> On 26 June 2018 at 10:09, Linus Walleij <linus.walleij@linaro.org> wrote:
+> > On Mon, Jun 18, 2018 at 3:22 PM Ard Biesheuvel
+> > <ard.biesheuvel@linaro.org> wrote:
+> >
+> >> We should also consider firmware use of the mezzanines. For instance,
+> >> the Secure96 has a RNG which UEFI may want to use so the early boot
+> >> code can access is for KASLR. It also has a TPM, which should not be
+> >> reset/reinitialized/etc by the OS if we want to make meaningful use of
+> >> it.
+> >
+> > This problem: sharing or dedicating a piece of hardware to UEFI or
+> > the TrustZone secure world is a generic problem not related to
+> > mezzanines or plug-in boards specifically.
+(...)
+> I agree that this is *also* a problem. But it is not what I was talking about.
+>
+> My example is about peripherals that firmware and OS should both drive
+> natively, and in the TPM case, the OS should be mindful of the fact
+> that the measured state should be preserved.
 
-On 2018/6/25 22:56, John Stultz wrote:
-> On Wed, Jun 13, 2018 at 11:30 AM, John Stultz <john.stultz@linaro.org> wrote:
->> On Wed, Jun 13, 2018 at 8:13 AM, Ryan Grachek <ryan@edited.us> wrote:
->>> These properties are required for compatibility with runtime PM.
->>> Without these properties, MMC host controller will not be aware
->>> of power capabilities. When the wlcore driver attempts to power
->>> on the device, it will erroneously fail with -EACCES.
->>>
->>> Signed-off-by: Ryan Grachek <ryan@edited.us>
->>
->> Fixes: 60f36637bbbd ("wlcore: sdio: allow pm to handle sdio power")
->> Tested-by: John Stultz <john.stultz@linaro.org>
->> Acked-by: John Stultz <john.stultz@linaro.org>
->>
->> Wei Xu: This fixes a functional regression with wifi on the HiKey
->> board that was introduced in 4.18-rc with commit 60f36637bbbd
->> ("wlcore: sdio: allow pm to handle sdio power").
-> 
-> Wei Xu: Just wanted to follow up to make sure this wasn't missed for
-> 4.18-rc, as I haven't seen it upstream or in -next, and it fixes a
-> recently introduced regression.
+Ah I see.
 
-Thanks!
-I will send out the fix pull request in these two days if no problem.
+In that case this is something the TPM driver should be doing
+I guess? I mean it is a "firmware plus OS TPM driver"-specific
+problem.
 
-Best Regards,
-Wei
+I guess that would be hard to duct-tape on if the peripheral
+is context-unaware and easy to do if the designer of the
+peripheral HW took multiple call-context into account.
+Whether TPM does this I don't know...
 
-> 
-> thanks
-> -john
-> 
-> .
-> 
+> Also, it means that we
+> may be duplicating functionality between the OS and firmware [as
+> usual] so it might make sense to come up with something that takes
+> both use cases into account.
+
+What we are doing now with Atmel's ECC chip is even worse:
+duplicating functionality between OS and userspace. So I'm
+trying to solve that first.
+
+Yours,
+Linus Walleij
