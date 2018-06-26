@@ -1,10 +1,10 @@
 From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Subject: [PATCH 04/14] fsi: master-gpio: Rename and adjust send delay
-Date: Wed, 27 Jun 2018 09:23:11 +1000
-Message-ID: <20180626232321.12372-5-benh@kernel.crashing.org>
-References: <20180626232321.12372-1-benh@kernel.crashing.org>
+Date: Wed, 27 Jun 2018 09:25:55 +1000
+Message-ID: <20180626232605.13420-5-benh@kernel.crashing.org>
+References: <20180626232605.13420-1-benh@kernel.crashing.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180626232321.12372-1-benh@kernel.crashing.org>
+In-Reply-To: <20180626232605.13420-1-benh@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Joel Stanley <joel@jms.id.au>
 Cc: linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>
