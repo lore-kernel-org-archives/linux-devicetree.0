@@ -1,35 +1,43 @@
-From: Luis Araneda <luaraneda@gmail.com>
-Subject: [PATCH] arm: dts: zynq: Fix memory size on the Zybo Z7 board
-Date: Tue, 26 Jun 2018 19:20:25 -0400
-Message-ID: <20180626232025.14003-1-luaraneda@gmail.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: [PATCH 00/14] fsi: Fixes and Coldfire coprocessor offload
+Date: Wed, 27 Jun 2018 09:23:07 +1000
+Message-ID: <20180626232321.12372-1-benh@kernel.crashing.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Luis Araneda <luaraneda@gmail.com>
+To: Joel Stanley <joel@jms.id.au>
+Cc: linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-According to the reference manual, the board has two Micron
-MT41K256M16HA-125 DDR3L memory ICs, which have 512 MiB each
+This series implements support for offloading the FSI protocol bitbanging
+to the ColdFire secondary core of the Aspeed SoCs. The result increases
+FSI performance by a factor of 4, and on systems that don't support async
+FSI clock, provide much more regular and continuous clocking which helps
+reliability.
 
-Tested on a ZYBO-Z7-20 board
+Patch 1 may go a different route and was already posted a few weeks ago,
+I included it for completeness.
 
-Signed-off-by: Luis Araneda <luaraneda@gmail.com>
----
- arch/arm/boot/dts/zynq-zybo-z7.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Patches 2..9 add some infrastructure to the FSI core to control some
+of the FSI protocol delays and adjustements/fixes to the existing GPIO
+bitbanging master. They are "mechanical" dependencies
 
-diff --git a/arch/arm/boot/dts/zynq-zybo-z7.dts b/arch/arm/boot/dts/zynq-zybo-z7.dts
-index 1e713dc98..bc81ebee5 100644
---- a/arch/arm/boot/dts/zynq-zybo-z7.dts
-+++ b/arch/arm/boot/dts/zynq-zybo-z7.dts
-@@ -13,7 +13,7 @@
- 
- 	memory@0 {
- 		device_type = "memory";
--		reg = <0x0 0x20000000>;
-+		reg = <0x0 0x40000000>;
- 	};
- 
- 	chosen {
--- 
-2.18.0
+Patch 10 moves some protocol definitions to a common place where the
+new master driver can find them
+
+Patch 11 is the DT binding for the new driver with comes with patch 12
+
+Finally patch 13 and 14 update the Romulus and Palmetto board device-trees
+to use the new driver.
+
+There's another dependency on the Aspeed GPIO driver changes for handling
+with GPIO lines ownership and handshaking. The patches have been submitted
+and can be found for reference there:
+
+        https://github.com/ozbenh/linux-ast/commits/gpio
+
+Finally, the driver needs a machine specific firmware file. The firwmare
+is open source and available at:
+
+        https://github.com/ozbenh/cf-fsi
+
+I will submit it to linux-firmware if there's enough popular demand ;-)
