@@ -1,80 +1,79 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] dt-binding: hwmon: Add NPCM7xx PWM and Fan
- controller documentation
-Date: Tue, 26 Jun 2018 09:03:41 -0600
-Message-ID: <CAL_JsqJCYPLw+jqx+7Cy=cXFFb-CNp=Ezew7FNT=cfAndqWe5A@mail.gmail.com>
-References: <20180624124155.82412-1-tmaimon77@gmail.com> <20180624124155.82412-2-tmaimon77@gmail.com>
- <20180625171417.GA16379@rob-hp-laptop> <CAP6Zq1h-M6YDS67pkgHy-GMmiVk1D-RScLgDyG65JQM+S35rEQ@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: qdsp6: q6asm: remove unused struct
+	q6asm member" to the asoc tree
+Date: Tue, 26 Jun 2018 16:10:52 +0100 (BST)
+Message-ID: <20180626151052.2DE53440070@finisterre.ee.mobilebroadband>
+References: <20180626092016.9296-13-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAP6Zq1h-M6YDS67pkgHy-GMmiVk1D-RScLgDyG65JQM+S35rEQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Avi Fishman <avifishman70@gmail.com>, Nancy Yuen <yuenn@google.com>, Brendan Higgins <brendanhiggins@google.com>, Patrick Venture <venture@google.com>, Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux HWMON List <linux-hwmon@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180626092016.9296-13-srinivas.kandagatla@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, tiwai@suse.com, broonie@kernel.org, niklas.cassel@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 25, 2018 at 4:20 PM Tomer Maimon <tmaimon77@gmail.com> wrote:
->
-> Hi Rob,
->
->
-> On 25 June 2018 at 20:14, Rob Herring <robh@kernel.org> wrote:
->>
->> On Sun, Jun 24, 2018 at 03:41:54PM +0300, Tomer Maimon wrote:
->> > Added device tree binding documentation for Nuvoton BMC
->> > NPCM7xx Pulse Width Modulation (PWM)  and Fan tach controller.
->> > The PWM controller can support upto 8 PWM output ports.
->> > The Fan tach controller can support upto 16 tachometer inputs.
->> >
->> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
->> > ---
->> >  .../devicetree/bindings/hwmon/npcm750-pwm-fan.txt  | 84 ++++++++++++++++++++++
->> >  1 file changed, 84 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt b/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
->> > new file mode 100644
->> > index 000000000000..a9eacda34f92
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
->> > @@ -0,0 +1,84 @@
->> > +Nuvoton NPCM7xx PWM and Fan Tacho controller device driver
->>
->> Bindings are for h/w, not drivers.
->>
->> > +
->> > +The NPCM7xx has two identical Pulse-width modulation (PWM) controller modules,
->> > +Each PWM module has four PWM controller outputs, Totally 8 PWM controller outputs.
->> > +
->> > +The NPCM7xx has eight identical Fan tachometer controller modules,
->> > +Each Fan module has two Fan controller inputs, Totally 16 Fan controller inputs.
->>
->> Have you looked at other fan ctrlr bindings?f This looks like similar
->> h/w to ASpeed. Really, I'd like to see a common doc that describes the
->
->
-> We do not have the same H/W as Aspeed, I believe in the near future we will need to add
-> more DT properties that will used only in the NPCM7xx module.
+The patch
 
-I didn't say it was the same. Both are multi-channel PWMs with tach
-inputs. Presumably, they can attach to the same types of fans as there
-are only a limited number of types of fans and none of them are
-specific to any fan controller.
+   ASoC: qdsp6: q6asm: remove unused struct q6asm member
 
->> structure and common properties.
->
->
-> what do you mean by common structure and common properties?
+has been applied to the asoc tree at
 
-When we have multiple bindings for the same class of device/hw, we
-define all the common parts in a common binding doc. This often
-doesn't happen at first, so we end up with a variety of bindings until
-we see some commonality.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-In this case, for structure, having sub-nodes for fans. As fans are
-not specific to the controllers, their node should not be defined by
-the controller binding. It's also how you describe the fan type,
-number of fans, the PWM connections, the tach connections, etc.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Rob
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From f339155a4063cf3177bb38f6e83760951148e86b Mon Sep 17 00:00:00 2001
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Date: Tue, 26 Jun 2018 10:20:16 +0100
+Subject: [PATCH] ASoC: qdsp6: q6asm: remove unused struct q6asm member
+
+pcmdev in struct q6asm seems be left over and unused, so just remove it.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Acked-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/qcom/qdsp6/q6asm.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/sound/soc/qcom/qdsp6/q6asm.c b/sound/soc/qcom/qdsp6/q6asm.c
+index c4fd28f168d5..2b2c7233bb5f 100644
+--- a/sound/soc/qcom/qdsp6/q6asm.c
++++ b/sound/soc/qcom/qdsp6/q6asm.c
+@@ -174,7 +174,6 @@ struct q6asm {
+ 	struct device *dev;
+ 	struct q6core_svc_api_info ainfo;
+ 	wait_queue_head_t mem_wait;
+-	struct platform_device *pcmdev;
+ 	spinlock_t slock;
+ 	struct audio_client *session[MAX_SESSIONS + 1];
+ };
+-- 
+2.17.1
