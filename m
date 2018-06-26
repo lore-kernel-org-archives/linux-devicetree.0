@@ -1,11 +1,16 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2] arm64: dts: marvell: armada-37xx: reserve memory for ATF
-Date: Tue, 26 Jun 2018 10:17:01 +0200
-Message-ID: <20180626081701.27176-1-miquel.raynal@bootlin.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH 0/5] RFC: Mezzanine handling for 96boards
+Date: Tue, 26 Jun 2018 10:19:27 +0200
+Message-ID: <CAKv+Gu8cXxQWbnB++adGx=xwAzuM9jqxkCOznk1qP5r=P4vxrQ@mail.gmail.com>
+References: <20180618074556.6944-1-linus.walleij@linaro.org>
+ <CAK8P3a2KqoX-squhGc8TBuJ==8xxELsuy-H+c1+C7Fu7Z4OjDA@mail.gmail.com>
+ <CAKv+Gu-gAkfRsEUOc=iyxi6Twvg9cbvWNqNHRS2HzUDZg8xUhg@mail.gmail.com>
+ <CACRpkdb1GksbePt6XgePCD6g-z4fxY-LF-gpyRfQVxCrq226fg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdb1GksbePt6XgePCD6g-z4fxY-LF-gpyRfQVxCrq226fg@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,65 +20,74 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frank Rowand <frowand.list@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, dev <dev@lists.96boards.org>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Victor Gu <xigu@marvell.com>
+On 26 June 2018 at 10:09, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Mon, Jun 18, 2018 at 3:22 PM Ard Biesheuvel
+> <ard.biesheuvel@linaro.org> wrote:
+>
+>> We should also consider firmware use of the mezzanines. For instance,
+>> the Secure96 has a RNG which UEFI may want to use so the early boot
+>> code can access is for KASLR. It also has a TPM, which should not be
+>> reset/reinitialized/etc by the OS if we want to make meaningful use of
+>> it.
+>
+> This problem: sharing or dedicating a piece of hardware to UEFI or
+> the TrustZone secure world is a generic problem not related to
+> mezzanines or plug-in boards specifically.
+>
+> c.f.
+> arch/arm64/boot/dts/arm/juno-motherboard.dtsi:
+>
+> flash@0,00000000 {
+>         /* 2 * 32MiB NOR Flash memory mounted on CS0 */
+>         compatible = "arm,vexpress-flash", "cfi-flash";
+>         linux,part-probe = "afs";
+>         reg = <0 0x00000000 0x04000000>;
+>         bank-width = <4>;
+>         /*
+>          * Unfortunately, accessing the flash disturbs
+>          * the CPU idle states (suspend) and CPU
+>          * hotplug of the platform. For this reason,
+>          * flash hardware access is disabled by default.
+>          */
+>         status = "disabled";
+> };
+>
+> What we need for this is something like
+>
+> status = "secure-world-exclusive";
+> status = "UEFI-exclusive";
+>
+> Or something like the same when using device tree.
+>
 
-The PSCI area should be reserved in Linux for PSCI operations such as
-suspend/resume.
+I agree that this is *also* a problem. But it is not what I was talking about.
 
-Reserve 2MiB of memory which matches the area used by ATF (BL1, BL2,
-BL3x, see [1] in ATF source code). This covers all PSCI code and data
-area and is 2MiB aligned, which is required by Linux for huge pages
-handling.
+My example is about peripherals that firmware and OS should both drive
+natively, and in the TPM case, the OS should be mindful of the fact
+that the measured state should be preserved. Also, it means that we
+may be duplicating functionality between the OS and firmware [as
+usual] so it might make sense to come up with something that takes
+both use cases into account.
 
-Please note that this is a default setup allowing to perform PSCI
-operations with legacy bootloaders. Recent bootloaders should update the
-region size/position accordingly.
+> If people probe this from sysfs (as in my example) they are
+> obviously not novice users and they know what they are
+> doing. For a simple user experience, I suspect device tree
+> is what we want to use to populate defaults.
+>
+>> So ideally, DTs can be expressed such that older kernels can still use
+>> those peripherals.
+>
+> That kind of expressions are possible already, such as
+> putting the TPM DT node inside a SoC-specific I2C bus
+> node. The boot loader can do that for example.
+>
+> Then they can't also probe the same board from userspace,
+> obviously. No matter whether they use the idea I present
+> here or device tree overlays or anything else.
+>
 
-[1] plat/marvell/a3700/common/include/platform_def.h
-
-Signed-off-by: Victor Gu <xigu@marvell.com>
-[miquel.raynal@bootlin.com: reword of commit message, comment in the DTSI]
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
-
-Changes since v1:
-=================
-* Updated commit log to explain that this memory region should be
-  updated by recent bootloaders.
-* Added a comment to tell the same thing above the psci-area subnode.
-
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index 3353252d78a0..d18a4a098d79 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -22,6 +22,21 @@
- 		serial1 = &uart1;
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		/*
-+		 * The PSCI firmware region depicted below is the default one
-+		 * and should be updated by the bootloader.
-+		 */
-+		psci-area@4000000 {
-+			reg = <0 0x4000000 0 0x200000>;
-+			no-map;
-+		};
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--- 
-2.14.1
+OK.
