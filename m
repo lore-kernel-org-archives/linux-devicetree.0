@@ -1,201 +1,110 @@
-From: Sayali Lokhande <sayalil@codeaurora.org>
-Subject: [PATCH V4 1/3] scsi: ufs: set the device reference clock setting
-Date: Tue, 26 Jun 2018 09:33:47 +0530
-Message-ID: <1529985829-18689-2-git-send-email-sayalil@codeaurora.org>
-References: <1529985829-18689-1-git-send-email-sayalil@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529985829-18689-1-git-send-email-sayalil@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: subhashj@codeaurora.org, cang@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, asutoshd@codeaurora.org, evgreen@chromium.org, riteshh@codeaurora.org
-Cc: linux-scsi@vger.kernel.org, Sayali Lokhande <sayalil@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [[DPU]PATCH] drm/msm/dsi: move the API setting PLL src
+ to modeset_init()
+Date: Tue, 26 Jun 2018 10:15:43 +0530
+Message-ID: <20180626044543.14992-1-spanda@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Abhinav Kumar <abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Subhash Jadavani <subhashj@codeaurora.org>
-
-UFS host supplies the reference clock to UFS device and UFS device
-specification allows host to provide one of the 4 frequencies (19.2 MHz,
-26 MHz, 38.4 MHz, 52 MHz) for reference clock. Host should set the
-device reference clock frequency setting in the device based on what
-frequency it is supplying to UFS device.
-
-Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
----
- .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  7 +++
- drivers/scsi/ufs/ufs.h                             |  9 +++
- drivers/scsi/ufs/ufshcd-pltfrm.c                   |  2 +
- drivers/scsi/ufs/ufshcd.c                          | 72 ++++++++++++++++++++++
- drivers/scsi/ufs/ufshcd.h                          |  2 +
- 5 files changed, 92 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-index c39dfef..4522434 100644
---- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-+++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-@@ -41,6 +41,12 @@ Optional properties:
- -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
- 			  Note that it is assume same number of lanes is used both
- 			  directions at once. If not specified, default is 2 lanes per direction.
-+- dev-ref-clk-freq	: Specify the device reference clock frequency, must be one of the following:
-+			  0: 19.2 MHz
-+			  1: 26 MHz
-+			  2: 38.4 MHz
-+			  3: 52 MHz
-+			  Defaults to 26 MHz if not specified.
- 
- Note: If above properties are not defined it can be assumed that the supply
- regulators or clocks are always on.
-@@ -66,4 +72,5 @@ Example:
- 		freq-table-hz = <100000000 200000000>, <0 0>, <0 0>;
- 		phys = <&ufsphy1>;
- 		phy-names = "ufsphy";
-+		dev-ref-clk-freq = <0>; /* reference clock freq: 19.2 MHz */
- 	};
-diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-index 14e5bf7..e15deb0 100644
---- a/drivers/scsi/ufs/ufs.h
-+++ b/drivers/scsi/ufs/ufs.h
-@@ -378,6 +378,15 @@ enum query_opcode {
- 	UPIU_QUERY_OPCODE_TOGGLE_FLAG	= 0x8,
- };
- 
-+/* bRefClkFreq attribute values */
-+enum ref_clk_freq {
-+	REF_CLK_FREQ_19_2_MHZ	= 0x0,
-+	REF_CLK_FREQ_26_MHZ	= 0x1,
-+	REF_CLK_FREQ_38_4_MHZ	= 0x2,
-+	REF_CLK_FREQ_52_MHZ	= 0x3,
-+	REF_CLK_FREQ_MAX	= REF_CLK_FREQ_52_MHZ,
-+};
-+
- /* Query response result code */
- enum {
- 	QUERY_RESULT_SUCCESS                    = 0x00,
-diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
-index e82bde0..0953563 100644
---- a/drivers/scsi/ufs/ufshcd-pltfrm.c
-+++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
-@@ -343,6 +343,8 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
- 	pm_runtime_set_active(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 
-+	ufshcd_parse_dev_ref_clk_freq(hba);
-+
- 	ufshcd_init_lanes_per_dir(hba);
- 
- 	err = ufshcd_init(hba, mmio_base, irq);
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index c5b1bf1..351f874 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6296,6 +6296,72 @@ static void ufshcd_def_desc_sizes(struct ufs_hba *hba)
- 	hba->desc_size.hlth_desc = QUERY_DESC_HEALTH_DEF_SIZE;
- }
- 
-+void ufshcd_parse_dev_ref_clk_freq(struct ufs_hba *hba)
-+{
-+	struct device *dev = hba->dev;
-+	int ret;
-+
-+	if (!dev)
-+		return;
-+
-+	ret = device_property_read_u32(dev, "dev-ref-clk-freq",
-+				   &hba->dev_ref_clk_freq);
-+	if (ret ||
-+	    (hba->dev_ref_clk_freq > REF_CLK_FREQ_52_MHZ)) {
-+		dev_err(hba->dev,
-+		"%s: invalid ref_clk setting = %d\n",
-+		__func__, hba->dev_ref_clk_freq);
-+		hba->dev_ref_clk_freq = REF_CLK_FREQ_MAX + 1;
-+	}
-+}
-+
-+/**
-+ * ufshcd_set_dev_ref_clk - set the device bRefClkFreq
-+ * @hba: per-adapter instance
-+ *
-+ * Read the current value of the bRefClkFreq attribute from device and update it
-+ * if host is supplying different reference clock frequency than one mentioned
-+ * in bRefClkFreq attribute.
-+ *
-+ * Returns zero on success, non-zero error value on failure.
-+ */
-+static int ufshcd_set_dev_ref_clk(struct ufs_hba *hba)
-+{
-+	int err = 0;
-+	int ref_clk = -1;
-+	static const char * const ref_clk_freqs[] = {"19.2 MHz", "26 MHz",
-+						     "38.4 MHz", "52 MHz"};
-+
-+	err = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_READ_ATTR,
-+			QUERY_ATTR_IDN_REF_CLK_FREQ, 0, 0, &ref_clk);
-+
-+	if (err) {
-+		dev_err(hba->dev, "%s: failed reading bRefClkFreq. err = %d\n",
-+			 __func__, err);
-+		goto out;
-+	}
-+
-+	if (ref_clk == hba->dev_ref_clk_freq)
-+		goto out; /* nothing to update */
-+
-+	err = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_WRITE_ATTR,
-+			QUERY_ATTR_IDN_REF_CLK_FREQ, 0, 0,
-+			&hba->dev_ref_clk_freq);
-+
-+	if (err)
-+		dev_err(hba->dev, "%s: bRefClkFreq setting to %s failed\n",
-+			__func__, ref_clk_freqs[hba->dev_ref_clk_freq]);
-+	/*
-+	 * It is good to print this out here to debug any later failures
-+	 * related to gear switch.
-+	 */
-+	dev_dbg(hba->dev, "%s: bRefClkFreq setting to %s succeeded\n",
-+			__func__, ref_clk_freqs[hba->dev_ref_clk_freq]);
-+
-+out:
-+	return err;
-+}
-+
- /**
-  * ufshcd_probe_hba - probe hba to detect device and initialize
-  * @hba: per-adapter instance
-@@ -6361,6 +6427,12 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
- 			"%s: Failed getting max supported power mode\n",
- 			__func__);
- 	} else {
-+		/*
-+		 * Set the right value to bRefClkFreq before attempting to
-+		 * switch to HS gears.
-+		 */
-+		if (hba->dev_ref_clk_freq < REF_CLK_FREQ_MAX + 1)
-+			ufshcd_set_dev_ref_clk(hba);
- 		ret = ufshcd_config_pwr_mode(hba, &hba->max_pwr_info.info);
- 		if (ret) {
- 			dev_err(hba->dev, "%s: Failed setting power mode, err = %d\n",
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 8110dcd..101a75c 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -548,6 +548,7 @@ struct ufs_hba {
- 	void *priv;
- 	unsigned int irq;
- 	bool is_irq_enabled;
-+	u32 dev_ref_clk_freq;
- 
- 	/* Interrupt aggregation support is broken */
- 	#define UFSHCD_QUIRK_BROKEN_INTR_AGGR			0x1
-@@ -746,6 +747,7 @@ static inline void ufshcd_rmwl(struct ufs_hba *hba, u32 mask, u32 val, u32 reg)
- int ufshcd_wait_for_register(struct ufs_hba *hba, u32 reg, u32 mask,
- 				u32 val, unsigned long interval_us,
- 				unsigned long timeout_ms, bool can_sleep);
-+void ufshcd_parse_dev_ref_clk_freq(struct ufs_hba *hba);
- 
- static inline void check_upiu_size(void)
- {
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+RnJvbTogQWJoaW5hdiBLdW1hciA8YWJoaW5hdmtAY29kZWF1cm9yYS5vcmc+CgpTZXR0aW5nIHRo
+ZSBEU0kgUExMIHNyYyBpbiBwcm9iZSBkb2Vzbid0IHByb3ZpZGUgdGhlIGNsb2NrCmRyaXZlciBz
+dWZmaWNpZW50IHRpbWUgdG8gcmVjbGFpbSB1bnVzZWQgY2xvY2sgcmVzb3VyY2VzCmZyb20gY29y
+ZWJvb3QgcmVzdWx0aW5nIGluIHdhcm5pbmdzIGZyb20gY2xvY2sgZHJpdmVyLgoKTW92ZSB0aGUg
+RFNJIFBMTCBzcmMgc2V0dGluZyB0byBtb2Rlc2V0X2luaXQoKSBzbyB0aGF0IHRoZQpjbG9jayBk
+cml2ZXIgY2FuIGNsYWltIHVudXNlZCBkaXNwbGF5IGNsb2NrIHJlc291cmNlcyBiZWZvcmUKdGhl
+IGRpc3BsYXkgZHJpdmVyIHJlcXVlc3RzIGZvciB0aGVtIGFnYWluLgoKU2lnbmVkLW9mZi1ieTog
+QWJoaW5hdiBLdW1hciA8YWJoaW5hdmtAY29kZWF1cm9yYS5vcmc+Ci0tLQogZHJpdmVycy9ncHUv
+ZHJtL21zbS9kc2kvZHNpLmMgICAgICAgICB8ICA2ICsrKysKIGRyaXZlcnMvZ3B1L2RybS9tc20v
+ZHNpL2RzaS5oICAgICAgICAgfCAgMSArCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9kc2lfbWFu
+YWdlci5jIHwgNjYgKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0KIDMgZmlsZXMg
+Y2hhbmdlZCwgNTEgaW5zZXJ0aW9ucygrKSwgMjIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9k
+c2kuYwppbmRleCA5ZmI2MTJjMTdhMzkuLmVhMTAwZjE1Y2UwZCAxMDA2NDQKLS0tIGEvZHJpdmVy
+cy9ncHUvZHJtL21zbS9kc2kvZHNpLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvZHNp
+LmMKQEAgLTIxMSw2ICsyMTEsMTIgQEAgaW50IG1zbV9kc2lfbW9kZXNldF9pbml0KHN0cnVjdCBt
+c21fZHNpICptc21fZHNpLCBzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAogCXByaXYgPSBkZXYtPmRl
+dl9wcml2YXRlOwogCW1zbV9kc2ktPmRldiA9IGRldjsKIAorCXJldCA9IG1zbV9kc2lfbWFuYWdl
+cl9wbGxfc2V0dXAobXNtX2RzaSk7CisJaWYgKHJldCkgeworCQlkZXZfZXJyKGRldi0+ZGV2LCAi
+ZmFpbGVkIHRvIHNldHVwIHBsbDogJWRcbiIsIHJldCk7CisJCWdvdG8gZmFpbDsKKwl9CisKIAly
+ZXQgPSBtc21fZHNpX2hvc3RfbW9kZXNldF9pbml0KG1zbV9kc2ktPmhvc3QsIGRldik7CiAJaWYg
+KHJldCkgewogCQlkZXZfZXJyKGRldi0+ZGV2LCAiZmFpbGVkIHRvIG1vZGVzZXQgaW5pdCBob3N0
+OiAlZFxuIiwgcmV0KTsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZHNpL2RzaS5o
+IGIvZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvZHNpLmgKaW5kZXggMzU2OTUzMDEwMjU2Li5hOWZl
+ZDlhYjE3YjIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZHNpL2RzaS5oCisrKyBi
+L2RyaXZlcnMvZ3B1L2RybS9tc20vZHNpL2RzaS5oCkBAIC0xMDEsNiArMTAxLDcgQEAgdm9pZCBt
+c21fZHNpX21hbmFnZXJfYXR0YWNoX2RzaV9kZXZpY2UoaW50IGlkLCB1MzIgZGV2aWNlX2ZsYWdz
+KTsKIGludCBtc21fZHNpX21hbmFnZXJfcmVnaXN0ZXIoc3RydWN0IG1zbV9kc2kgKm1zbV9kc2kp
+Owogdm9pZCBtc21fZHNpX21hbmFnZXJfdW5yZWdpc3RlcihzdHJ1Y3QgbXNtX2RzaSAqbXNtX2Rz
+aSk7CiBib29sIG1zbV9kc2lfbWFuYWdlcl92YWxpZGF0ZV9jdXJyZW50X2NvbmZpZyh1OCBpZCk7
+CitpbnQgbXNtX2RzaV9tYW5hZ2VyX3BsbF9zZXR1cChzdHJ1Y3QgbXNtX2RzaSAqbXNtX2RzaSk7
+CiAKIC8qIG1zbSBkc2kgKi8KIHN0YXRpYyBpbmxpbmUgYm9vbCBtc21fZHNpX2RldmljZV9jb25u
+ZWN0ZWQoc3RydWN0IG1zbV9kc2kgKm1zbV9kc2kpCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
+cm0vbXNtL2RzaS9kc2lfbWFuYWdlci5jIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvZHNpX21h
+bmFnZXIuYwppbmRleCA5ODBiMWJiYTg0NzcuLjQwZGExMjI5NTY1ZSAxMDA2NDQKLS0tIGEvZHJp
+dmVycy9ncHUvZHJtL21zbS9kc2kvZHNpX21hbmFnZXIuYworKysgYi9kcml2ZXJzL2dwdS9kcm0v
+bXNtL2RzaS9kc2lfbWFuYWdlci5jCkBAIC03MiwyNSArNzIsNjAgQEAgc3RhdGljIGludCBkc2lf
+bWdyX3BhcnNlX2R1YWxfZHNpKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsIGludCBpZCkKIAlyZXR1
+cm4gMDsKIH0KIAotc3RhdGljIGludCBkc2lfbWdyX3NldHVwX2NvbXBvbmVudHMoaW50IGlkKQor
+c3RhdGljIGludCBtc21fZHNpX3BsbF9jb25maWd1cmUoc3RydWN0IG1zbV9kc2kgKm1zbV9kc2ks
+IGJvb2wgaXNfZHVhbCkKIHsKLQlzdHJ1Y3QgbXNtX2RzaSAqbXNtX2RzaSA9IGRzaV9tZ3JfZ2V0
+X2RzaShpZCk7Ci0Jc3RydWN0IG1zbV9kc2kgKm90aGVyX2RzaSA9IGRzaV9tZ3JfZ2V0X290aGVy
+X2RzaShpZCk7CisJc3RydWN0IG1zbV9kc2kgKm90aGVyX2RzaSA9IGRzaV9tZ3JfZ2V0X290aGVy
+X2RzaShtc21fZHNpLT5pZCk7CiAJc3RydWN0IG1zbV9kc2kgKmNsa19tYXN0ZXJfZHNpID0gZHNp
+X21ncl9nZXRfZHNpKERTSV9DTE9DS19NQVNURVIpOwogCXN0cnVjdCBtc21fZHNpICpjbGtfc2xh
+dmVfZHNpID0gZHNpX21ncl9nZXRfZHNpKERTSV9DTE9DS19TTEFWRSk7CiAJc3RydWN0IG1zbV9k
+c2lfcGxsICpzcmNfcGxsOwotCWludCByZXQ7Ci0KLQlpZiAoIUlTX0RVQUxfRFNJKCkpIHsKLQkJ
+cmV0ID0gbXNtX2RzaV9ob3N0X3JlZ2lzdGVyKG1zbV9kc2ktPmhvc3QsIHRydWUpOwotCQlpZiAo
+cmV0KQotCQkJcmV0dXJuIHJldDsKKwlpbnQgcmV0ID0gMDsKIAorCWlmICghaXNfZHVhbCkgewog
+CQltc21fZHNpX3BoeV9zZXRfdXNlY2FzZShtc21fZHNpLT5waHksIE1TTV9EU0lfUEhZX1NUQU5E
+QUxPTkUpOwogCQlzcmNfcGxsID0gbXNtX2RzaV9waHlfZ2V0X3BsbChtc21fZHNpLT5waHkpOwog
+CQlpZiAoSVNfRVJSKHNyY19wbGwpKQogCQkJcmV0dXJuIFBUUl9FUlIoc3JjX3BsbCk7CiAJCXJl
+dCA9IG1zbV9kc2lfaG9zdF9zZXRfc3JjX3BsbChtc21fZHNpLT5ob3N0LCBzcmNfcGxsKTsKKwl9
+IGVsc2UgeworCQkvKiBQTEwwIGlzIHRvIGRyaXZlIGJvdGggMiBEU0kgbGluayBjbG9ja3MgaW4g
+RHVhbCBEU0kgbW9kZS4gKi8KKwkJbXNtX2RzaV9waHlfc2V0X3VzZWNhc2UoY2xrX21hc3Rlcl9k
+c2ktPnBoeSwKKwkJCQkJTVNNX0RTSV9QSFlfTUFTVEVSKTsKKwkJbXNtX2RzaV9waHlfc2V0X3Vz
+ZWNhc2UoY2xrX3NsYXZlX2RzaS0+cGh5LAorCQkJCQlNU01fRFNJX1BIWV9TTEFWRSk7CisJCXNy
+Y19wbGwgPSBtc21fZHNpX3BoeV9nZXRfcGxsKGNsa19tYXN0ZXJfZHNpLT5waHkpOworCQlpZiAo
+SVNfRVJSKHNyY19wbGwpKQorCQkJcmV0dXJuIFBUUl9FUlIoc3JjX3BsbCk7CisJCXJldCA9IG1z
+bV9kc2lfaG9zdF9zZXRfc3JjX3BsbChtc21fZHNpLT5ob3N0LCBzcmNfcGxsKTsKKwkJaWYgKHJl
+dCkKKwkJCXJldHVybiByZXQ7CisJCXJldCA9IG1zbV9kc2lfaG9zdF9zZXRfc3JjX3BsbChvdGhl
+cl9kc2ktPmhvc3QsIHNyY19wbGwpOworCX0KKworCXJldHVybiByZXQ7Cit9CisKK2ludCBtc21f
+ZHNpX21hbmFnZXJfcGxsX3NldHVwKHN0cnVjdCBtc21fZHNpICptc21fZHNpKQoreworCWludCBy
+ZXQ7CisKKwlpZiAoIUlTX0RVQUxfRFNJKCkpCisJCXJldCA9IG1zbV9kc2lfcGxsX2NvbmZpZ3Vy
+ZShtc21fZHNpLCB0cnVlKTsKKwllbHNlCisJCXJldCA9IG1zbV9kc2lfcGxsX2NvbmZpZ3VyZSht
+c21fZHNpLCBmYWxzZSk7CisKKwlyZXR1cm4gcmV0OworfQorCitzdGF0aWMgaW50IGRzaV9tZ3Jf
+c2V0dXBfY29tcG9uZW50cyhpbnQgaWQpCit7CisJc3RydWN0IG1zbV9kc2kgKm1zbV9kc2kgPSBk
+c2lfbWdyX2dldF9kc2koaWQpOworCXN0cnVjdCBtc21fZHNpICpvdGhlcl9kc2kgPSBkc2lfbWdy
+X2dldF9vdGhlcl9kc2koaWQpOworCWludCByZXQ7CisKKwlpZiAoIUlTX0RVQUxfRFNJKCkpIHsK
+KwkJcmV0ID0gbXNtX2RzaV9ob3N0X3JlZ2lzdGVyKG1zbV9kc2ktPmhvc3QsIHRydWUpOworCQlp
+ZiAocmV0KQorCQkJcmV0dXJuIHJldDsKIAl9IGVsc2UgaWYgKCFvdGhlcl9kc2kpIHsKIAkJcmV0
+ID0gMDsKIAl9IGVsc2UgewpAQCAtMTExLDE5ICsxNDYsNiBAQCBzdGF0aWMgaW50IGRzaV9tZ3Jf
+c2V0dXBfY29tcG9uZW50cyhpbnQgaWQpCiAJCXJldCA9IG1zbV9kc2lfaG9zdF9yZWdpc3Rlciht
+YXN0ZXJfbGlua19kc2ktPmhvc3QsIHRydWUpOwogCQlpZiAocmV0KQogCQkJcmV0dXJuIHJldDsK
+LQotCQkvKiBQTEwwIGlzIHRvIGRyaXZlIGJvdGggMiBEU0kgbGluayBjbG9ja3MgaW4gRHVhbCBE
+U0kgbW9kZS4gKi8KLQkJbXNtX2RzaV9waHlfc2V0X3VzZWNhc2UoY2xrX21hc3Rlcl9kc2ktPnBo
+eSwKLQkJCQkJTVNNX0RTSV9QSFlfTUFTVEVSKTsKLQkJbXNtX2RzaV9waHlfc2V0X3VzZWNhc2Uo
+Y2xrX3NsYXZlX2RzaS0+cGh5LAotCQkJCQlNU01fRFNJX1BIWV9TTEFWRSk7Ci0JCXNyY19wbGwg
+PSBtc21fZHNpX3BoeV9nZXRfcGxsKGNsa19tYXN0ZXJfZHNpLT5waHkpOwotCQlpZiAoSVNfRVJS
+KHNyY19wbGwpKQotCQkJcmV0dXJuIFBUUl9FUlIoc3JjX3BsbCk7Ci0JCXJldCA9IG1zbV9kc2lf
+aG9zdF9zZXRfc3JjX3BsbChtc21fZHNpLT5ob3N0LCBzcmNfcGxsKTsKLQkJaWYgKHJldCkKLQkJ
+CXJldHVybiByZXQ7Ci0JCXJldCA9IG1zbV9kc2lfaG9zdF9zZXRfc3JjX3BsbChvdGhlcl9kc2kt
+Pmhvc3QsIHNyY19wbGwpOwogCX0KIAogCXJldHVybiByZXQ7Ci0tIApUaGUgUXVhbGNvbW0gSW5u
+b3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgdGhlIENvZGUgQXVyb3JhIEZvcnVt
+LAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0CgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0
+CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
