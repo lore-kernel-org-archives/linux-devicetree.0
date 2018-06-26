@@ -1,242 +1,54 @@
-From: Mars Cheng <mars.cheng@mediatek.com>
-Subject: [PATCH v2 2/2] arm64: dts: mediatek: add mt6765 support
-Date: Tue, 26 Jun 2018 10:04:06 +0800
-Message-ID: <1529978646-28976-3-git-send-email-mars.cheng@mediatek.com>
-References: <1529978646-28976-1-git-send-email-mars.cheng@mediatek.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v10 5/7] i2c: fsi: Add transfer implementation
+Date: Tue, 26 Jun 2018 11:38:24 +0900
+Message-ID: <20180626023823.i3fmdegn2sric5kx@ninjato>
+References: <1528918579-27602-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1528918579-27602-6-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529978646-28976-1-git-send-email-mars.cheng@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <1528918579-27602-6-git-send-email-eajames@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mars Cheng <mars.cheng@mediatek.com>
+To: Eddie James <eajames@linux.vnet.ibm.com>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, benh@kernel.crashing.org, joel@jms.id.au, mark.rutland@arm.com, gregkh@linuxfoundation.org, rdunlap@infradead.org, andy.shevchenko@gmail.com, peda@axentia.se
 List-Id: devicetree@vger.kernel.org
 
-This adds basic chip support for MT6765 SoC.
+On Wed, Jun 13, 2018 at 02:36:17PM -0500, Eddie James wrote:
+> Execute I2C transfers from the FSI-attached I2C master. Use polling
+> instead of interrupts as we have no hardware IRQ over FSI.
+> 
+> Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
+> ---
+>  drivers/i2c/busses/i2c-fsi.c | 195 ++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 193 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-fsi.c b/drivers/i2c/busses/i2c-fsi.c
+> index 4611a0b..8c0a6cb 100644
+> --- a/drivers/i2c/busses/i2c-fsi.c
+> +++ b/drivers/i2c/busses/i2c-fsi.c
+> @@ -155,6 +155,7 @@ struct fsi_i2c_port {
+>  	struct i2c_adapter	adapter;
+>  	struct fsi_i2c_master	*master;
+>  	u16			port;
+> +	u16			xfrd;
+>  };
+>  
+>  static int fsi_i2c_read_reg(struct fsi_device *fsi, unsigned int reg,
+> @@ -230,6 +231,99 @@ static int fsi_i2c_set_port(struct fsi_i2c_port *port)
+>  	return fsi_i2c_write_reg(fsi, I2C_FSI_RESET_ERR, &dummy);
+>  }
+>  
+> +static int fsi_i2c_start(struct fsi_i2c_port *port, struct i2c_msg *msg,
+> +			 bool stop)
+> +{
+> +	struct fsi_i2c_master *i2c = port->master;
+> +	u32 cmd = I2C_CMD_WITH_START | I2C_CMD_WITH_ADDR;
+> +
+> +	port->xfrd = 0;
+> +
+> +	if (msg->flags & I2C_M_RD)
+> +		cmd |= I2C_CMD_READ;
 
-Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/Makefile       |    1 +
- arch/arm64/boot/dts/mediatek/mt6765-evb.dts |   33 ++++++
- arch/arm64/boot/dts/mediatek/mt6765.dtsi    |  158 +++++++++++++++++++++++++++
- 3 files changed, 192 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt6765-evb.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt6765.dtsi
-
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index ac17f60..7506b0d 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt6765-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
-diff --git a/arch/arm64/boot/dts/mediatek/mt6765-evb.dts b/arch/arm64/boot/dts/mediatek/mt6765-evb.dts
-new file mode 100644
-index 0000000..36dddff2
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt6765-evb.dts
-@@ -0,0 +1,33 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * dts file for Mediatek MT6765
-+ *
-+ * (C) Copyright 2018. Mediatek, Inc.
-+ *
-+ * Mars Cheng <mars.cheng@mediatek.com>
-+ */
-+
-+/dts-v1/;
-+#include "mt6765.dtsi"
-+
-+/ {
-+	model = "MediaTek MT6765 EVB";
-+	compatible = "mediatek,mt6765-evb", "mediatek,mt6765";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0 0x40000000 0 0x1e800000>;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:921600n8";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt6765.dtsi b/arch/arm64/boot/dts/mediatek/mt6765.dtsi
-new file mode 100644
-index 0000000..ab34c0f
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt6765.dtsi
-@@ -0,0 +1,158 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * dts file for Mediatek MT6765
-+ *
-+ * (C) Copyright 2018. Mediatek, Inc.
-+ *
-+ * Mars Cheng <mars.cheng@mediatek.com>
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "mediatek,mt6765";
-+	interrupt-parent = <&sysirq>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			enable-method = "psci";
-+			reg = <0x000>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			enable-method = "psci";
-+			reg = <0x001>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			enable-method = "psci";
-+			reg = <0x002>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			enable-method = "psci";
-+			reg = <0x003>;
-+		};
-+
-+		cpu4: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			enable-method = "psci";
-+			reg = <0x100>;
-+		};
-+
-+		cpu5: cpu@101 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			enable-method = "psci";
-+			reg = <0x101>;
-+		};
-+
-+		cpu6: cpu@102 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			enable-method = "psci";
-+			reg = <0x102>;
-+		};
-+
-+		cpu7: cpu@103 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			enable-method = "psci";
-+			reg = <0x103>;
-+		};
-+	};
-+
-+	baud_clk: dummy26m {
-+		compatible = "fixed-clock";
-+		clock-frequency = <26000000>;
-+		#clock-cells = <0>;
-+	};
-+
-+	sys_clk: dummyclk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <26000000>;
-+		#clock-cells = <0>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_PPI 13
-+			     (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14
-+			     (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11
-+			     (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10
-+			     (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	soc {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		compatible = "simple-bus";
-+		ranges;
-+
-+		sysirq: intpol-controller@10200a80 {
-+			compatible = "mediatek,mt6765-sysirq",
-+				     "mediatek,mt6577-sysirq";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
-+			reg = <0 0x10200a80 0 0x50>;
-+		};
-+
-+		gic: interrupt-controller@0c000000 {
-+			compatible = "arm,gic-v3";
-+			#interrupt-cells = <3>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			#redistributor-regions = <1>;
-+			interrupt-parent = <&gic>;
-+			interrupt-controller;
-+			reg = <0 0x0c000000 0 0x40000>, // distributor
-+			      <0 0x0c100000 0 0x200000>; // redistributor
-+			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		uart0: serial@11002000 {
-+			compatible = "mediatek,mt6765-uart",
-+				     "mediatek,mt6577-uart";
-+			reg = <0 0x11002000 0 0x400>;
-+			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&baud_clk>, <&sys_clk>;
-+			clock-names = "baud", "bus";
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@11003000 {
-+			compatible = "mediatek,mt6765-uart",
-+				     "mediatek,mt6577-uart";
-+			reg = <0 0x11003000 0 0x400>;
-+			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&baud_clk>, <&sys_clk>;
-+			clock-names = "baud", "bus";
-+			status = "disabled";
-+		};
-+	}; /* end of soc */
-+};
--- 
-1.7.9.5
+Since you support MANGLING, I'd think you can easily support
+I2C_M_REV_DIR_ADDR here, too?
