@@ -1,59 +1,100 @@
 From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH v2 2/2] ARM: dts: pxa: fix the rtc controller
-Date: Tue, 26 Jun 2018 22:03:08 +0200
-Message-ID: <20180626200308.16192-2-robert.jarzmik@free.fr>
-References: <20180626200308.16192-1-robert.jarzmik@free.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180626200308.16192-1-robert.jarzmik@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v2 1/2] clk: pxa: export 32kHz PLL
+Date: Tue, 26 Jun 2018 22:03:07 +0200
+Message-ID: <20180626200308.16192-1-robert.jarzmik@free.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The RTC controller is fed by an external fixed 32kHz clock. Yet the
-driver wants to acquire this clock, even though it doesn't make any use
-of it, ie. doesn't get the rate to make calculation.
-
-Therefore, use the exported 32.768kHz clock in the PXA clock tree to
-make the driver happy and working.
+This clock is especially used by the RTC driver, so export it so that
+devicetree users can use it.
 
 Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 ---
-Since v1: change the dummy clock by the actual 32.768kHz
----
- arch/arm/boot/dts/pxa25x.dtsi | 4 ++++
- arch/arm/boot/dts/pxa27x.dtsi | 4 ++++
- 2 files changed, 8 insertions(+)
+ drivers/clk/pxa/clk-pxa25x.c          | 6 ++++--
+ drivers/clk/pxa/clk-pxa27x.c          | 7 ++++---
+ drivers/clk/pxa/clk-pxa3xx.c          | 7 ++++---
+ include/dt-bindings/clock/pxa-clock.h | 3 ++-
+ 4 files changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/pxa25x.dtsi b/arch/arm/boot/dts/pxa25x.dtsi
-index 95d59be97213..78a413ea0e88 100644
---- a/arch/arm/boot/dts/pxa25x.dtsi
-+++ b/arch/arm/boot/dts/pxa25x.dtsi
-@@ -80,6 +80,10 @@
- 			#pwm-cells = <1>;
- 			clocks = <&clks CLK_PWM1>;
- 		};
-+
-+		rtc@40900000 {
-+			clocks = <&clks CLK_OSC32k768>>;
-+		};
- 	};
+diff --git a/drivers/clk/pxa/clk-pxa25x.c b/drivers/clk/pxa/clk-pxa25x.c
+index 6416c1f8e632..c0e7c74ebd7b 100644
+--- a/drivers/clk/pxa/clk-pxa25x.c
++++ b/drivers/clk/pxa/clk-pxa25x.c
+@@ -292,8 +292,10 @@ static void __init pxa25x_register_plls(void)
+ {
+ 	clk_register_fixed_rate(NULL, "osc_3_6864mhz", NULL,
+ 				CLK_GET_RATE_NOCACHE, 3686400);
+-	clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
+-				CLK_GET_RATE_NOCACHE, 32768);
++	clkdev_pxa_register(CLK_OSC32k768, "osc_32_768khz", NULL,
++			    clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
++						    CLK_GET_RATE_NOCACHE,
++						    32768);
+ 	clk_register_fixed_rate(NULL, "clk_dummy", NULL, 0, 0);
+ 	clk_register_fixed_factor(NULL, "ppll_95_85mhz", "osc_3_6864mhz",
+ 				  0, 26, 1);
+diff --git a/drivers/clk/pxa/clk-pxa27x.c b/drivers/clk/pxa/clk-pxa27x.c
+index 25a30194d27a..d40b63e7bbce 100644
+--- a/drivers/clk/pxa/clk-pxa27x.c
++++ b/drivers/clk/pxa/clk-pxa27x.c
+@@ -314,9 +314,10 @@ static void __init pxa27x_register_plls(void)
+ 	clk_register_fixed_rate(NULL, "osc_13mhz", NULL,
+ 				CLK_GET_RATE_NOCACHE,
+ 				13 * MHz);
+-	clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
+-				CLK_GET_RATE_NOCACHE,
+-				32768 * KHz);
++	clkdev_pxa_register(CLK_OSC32k768, "osc_32_768khz", NULL,
++			    clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
++						    CLK_GET_RATE_NOCACHE,
++						    32768 * KHz));
+ 	clk_register_fixed_rate(NULL, "clk_dummy", NULL, 0, 0);
+ 	clk_register_fixed_factor(NULL, "ppll_312mhz", "osc_13mhz", 0, 24, 1);
+ }
+diff --git a/drivers/clk/pxa/clk-pxa3xx.c b/drivers/clk/pxa/clk-pxa3xx.c
+index 2d126df2bccd..814b651c0504 100644
+--- a/drivers/clk/pxa/clk-pxa3xx.c
++++ b/drivers/clk/pxa/clk-pxa3xx.c
+@@ -286,9 +286,10 @@ static void __init pxa3xx_register_plls(void)
+ 	clk_register_fixed_rate(NULL, "osc_13mhz", NULL,
+ 				CLK_GET_RATE_NOCACHE,
+ 				13 * MHz);
+-	clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
+-				CLK_GET_RATE_NOCACHE,
+-				32768);
++	clkdev_pxa_register(CLK_OSC32k768, "osc_32_768khz", NULL,
++			    clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
++						    CLK_GET_RATE_NOCACHE,
++						    32768);
+ 	clk_register_fixed_rate(NULL, "ring_osc_120mhz", NULL,
+ 				CLK_GET_RATE_NOCACHE,
+ 				120 * MHz);
+diff --git a/include/dt-bindings/clock/pxa-clock.h b/include/dt-bindings/clock/pxa-clock.h
+index e65803b1dc7e..0b0fd2b01538 100644
+--- a/include/dt-bindings/clock/pxa-clock.h
++++ b/include/dt-bindings/clock/pxa-clock.h
+@@ -72,6 +72,7 @@
+ #define CLK_USIM 58
+ #define CLK_USIM1 59
+ #define CLK_USMI0 60
+-#define CLK_MAX 61
++#define CLK_OSC32k768 61
++#define CLK_MAX 62
  
- 	timer@40a00000 {
-diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-index 747f750f675d..2ab6986433c8 100644
---- a/arch/arm/boot/dts/pxa27x.dtsi
-+++ b/arch/arm/boot/dts/pxa27x.dtsi
-@@ -113,6 +113,10 @@
- 
- 			status = "disabled";
- 		};
-+
-+		rtc@40900000 {
-+			clocks = <&clks CLK_OSC32k768>;
-+		};
- 	};
- 
- 	clocks {
+ #endif
 -- 
 2.11.0
