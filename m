@@ -1,36 +1,30 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 0/2] ARM: LEGO MINDSTORMS EV3 Bluetooth support
-Date: Tue, 26 Jun 2018 11:51:00 -0500
-Message-ID: <a448b752-e32c-d5a8-7f11-57a14b63ba8a@lechnology.com>
-References: <20180531202549.11255-1-david@lechnology.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: xilinx_dma: Add VDMA
+ vertical flip property
+Date: Tue, 26 Jun 2018 11:00:54 -0600
+Message-ID: <20180626170054.GA1467@rob-hp-laptop>
+References: <1528875288-9140-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <1528875288-9140-2-git-send-email-radhey.shyam.pandey@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180531202549.11255-1-david@lechnology.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1528875288-9140-2-git-send-email-radhey.shyam.pandey@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Cc: vkoul@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, dan.j.williams@intel.com, appana.durga.rao@xilinx.com, lars@metafoo.de, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sekhar,
+On Wed, Jun 13, 2018 at 01:04:47PM +0530, Radhey Shyam Pandey wrote:
+> The AXI VDMA core supports Vertical flip in S2MM path when Enable
+> Vertical Flip (Advanced tab) is selected. To allow vertical flip
+> programming define an optional 'xlnx,enable-vert-flip' channel
+> child node property.
+> 
+> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+>  .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |    2 ++
+>  1 files changed, 2 insertions(+), 0 deletions(-)
 
-On 05/31/2018 03:25 PM, David Lechner wrote:
-> This series adds Bluetooth support to LEGO MINDSTORMS EV3.
-> 
-> The pwm-clock depends on the common clock framework, so this requires the
-> recent davinci common clock series to switch to the common clock framework
-> before it will actually work.
-> 
-> David Lechner (2):
->    ARM: dts: da850-lego-ev3: Add Bluetooth nodes
->    ARM: davinci_all_defconfig: Enable Bluetooth
-> 
->   arch/arm/boot/dts/da850-lego-ev3.dts   | 82 ++++++++++++++++++++++++++
->   arch/arm/configs/davinci_all_defconfig |  9 +++
->   2 files changed, 91 insertions(+)
-> 
-
-After "ARM: dts: da850: Add power-domains to PWM nodes", this is ready to
-apply.
+Reviewed-by: Rob Herring <robh@kernel.org>
