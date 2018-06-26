@@ -1,55 +1,35 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH] ARM: dts: imx51: Add sahara crypto support
-Date: Tue, 26 Jun 2018 20:18:52 -0300
-Message-ID: <1530055132-16538-1-git-send-email-festevam@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+From: Luis Araneda <luaraneda@gmail.com>
+Subject: [PATCH] arm: dts: zynq: Fix memory size on the Zybo Z7 board
+Date: Tue, 26 Jun 2018 19:20:25 -0400
+Message-ID: <20180626232025.14003-1-luaraneda@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Luis Araneda <luaraneda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
+According to the reference manual, the board has two Micron
+MT41K256M16HA-125 DDR3L memory ICs, which have 512 MiB each
 
-The sahara crypto block on i.MX51 has the same IP version as
-the one on i.MX53.
+Tested on a ZYBO-Z7-20 board
 
-Add support for it.
-
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+Signed-off-by: Luis Araneda <luaraneda@gmail.com>
 ---
- arch/arm/boot/dts/imx51.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/zynq-zybo-z7.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
-index fe01b89..89afb4b 100644
---- a/arch/arm/boot/dts/imx51.dtsi
-+++ b/arch/arm/boot/dts/imx51.dtsi
-@@ -588,6 +588,15 @@
- 				clock-names = "ipg", "ahb", "ptp";
- 				status = "disabled";
- 			};
-+
-+			sahara: crypto@83ff8000 {
-+				compatible = "fsl,imx53-sahara", "fsl,imx51-sahara";
-+				reg = <0x83ff8000 0x4000>;
-+				interrupts = <19 20>;
-+				clocks = <&clks IMX5_CLK_SAHARA_IPG_GATE>,
-+					 <&clks IMX5_CLK_SAHARA_IPG_GATE>;
-+				clock-names = "ipg", "ahb";
-+			};
- 		};
+diff --git a/arch/arm/boot/dts/zynq-zybo-z7.dts b/arch/arm/boot/dts/zynq-zybo-z7.dts
+index 1e713dc98..bc81ebee5 100644
+--- a/arch/arm/boot/dts/zynq-zybo-z7.dts
++++ b/arch/arm/boot/dts/zynq-zybo-z7.dts
+@@ -13,7 +13,7 @@
+ 
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x20000000>;
++		reg = <0x0 0x40000000>;
  	};
- };
+ 
+ 	chosen {
 -- 
-2.7.4
+2.18.0
