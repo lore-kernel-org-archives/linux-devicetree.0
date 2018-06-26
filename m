@@ -1,46 +1,35 @@
-From: Lei YU <mine260309@gmail.com>
-Subject: [PATCH] clk: aspeed: Fix SDCLK name
-Date: Tue, 26 Jun 2018 09:55:25 +0800
-Message-ID: <1529978125-28712-1-git-send-email-mine260309@gmail.com>
+From: Mars Cheng <mars.cheng@mediatek.com>
+Subject: [PATCH 0/2] Add basic SoC support for MT6765
+Date: Tue, 26 Jun 2018 10:04:04 +0800
+Message-ID: <1529978646-28976-1-git-send-email-mars.cheng@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lei YU <mine260309@gmail.com>, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The SDCLK was named SDCLKCLK, and no one has used this yet.
-Fix it.
 
-Signed-off-by: Lei YU <mine260309@gmail.com>
----
- drivers/clk/clk-aspeed.c                 | 2 +-
- include/dt-bindings/clock/aspeed-clock.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+This patch adds basic SoC support for Mediatek's new 8-core SoC,
+MT6765, which is mainly for smartphone application.
 
-diff --git a/drivers/clk/clk-aspeed.c b/drivers/clk/clk-aspeed.c
-index 38b366b..f49c684 100644
---- a/drivers/clk/clk-aspeed.c
-+++ b/drivers/clk/clk-aspeed.c
-@@ -109,7 +109,7 @@ struct aspeed_clk_gate {
- 	[ASPEED_CLK_GATE_RSACLK] =	{ 24, -1, "rsaclk-gate",	NULL,	0 }, /* RSA */
- 	[ASPEED_CLK_GATE_UART3CLK] =	{ 25, -1, "uart3clk-gate",	"uart",	0 }, /* UART3 */
- 	[ASPEED_CLK_GATE_UART4CLK] =	{ 26, -1, "uart4clk-gate",	"uart",	0 }, /* UART4 */
--	[ASPEED_CLK_GATE_SDCLKCLK] =	{ 27, 16, "sdclk-gate",		NULL,	0 }, /* SDIO/SD */
-+	[ASPEED_CLK_GATE_SDCLK] =	{ 27, 16, "sdclk-gate",		NULL,	0 }, /* SDIO/SD */
- 	[ASPEED_CLK_GATE_LHCCLK] =	{ 28, -1, "lhclk-gate",		"lhclk", 0 }, /* LPC master/LPC+ */
- };
- 
-diff --git a/include/dt-bindings/clock/aspeed-clock.h b/include/dt-bindings/clock/aspeed-clock.h
-index 4476184..f437386 100644
---- a/include/dt-bindings/clock/aspeed-clock.h
-+++ b/include/dt-bindings/clock/aspeed-clock.h
-@@ -25,7 +25,7 @@
- #define ASPEED_CLK_GATE_RSACLK		19
- #define ASPEED_CLK_GATE_UART3CLK	20
- #define ASPEED_CLK_GATE_UART4CLK	21
--#define ASPEED_CLK_GATE_SDCLKCLK	22
-+#define ASPEED_CLK_GATE_SDCLK		22
- #define ASPEED_CLK_GATE_LHCCLK		23
- #define ASPEED_CLK_HPLL			24
- #define ASPEED_CLK_AHB			25
--- 
-1.9.1
+Change in V2:
+1. fix clk properties in uart dts node
+2. fix typo in submit title
+3. add simple-bus in mt6765.dtsi
+4. use correct SPDX license format
+
+Mars Cheng (2):
+  dt-bindings: mediatek: Add bindings for mediatek MT6765 Platform
+  arm64: dts: mediatek: add mt6765 support
+
+ Documentation/devicetree/bindings/arm/mediatek.txt |    4 +
+ .../interrupt-controller/mediatek,sysirq.txt       |    1 +
+ .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
+ arch/arm64/boot/dts/mediatek/Makefile              |    1 +
+ arch/arm64/boot/dts/mediatek/mt6765-evb.dts        |   33 ++++
+ arch/arm64/boot/dts/mediatek/mt6765.dtsi           |  158 ++++++++++++++++++++
+ 6 files changed, 198 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6765-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6765.dtsi
