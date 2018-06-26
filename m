@@ -1,66 +1,44 @@
 From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 3/3] ARM: multi_v7_defconfig: enable STM32 SPI
-Date: Tue, 26 Jun 2018 14:13:20 +0200
-Message-ID: <f61c7908-8046-1709-94cf-a4066a330299@st.com>
-References: <1526566904-24514-1-git-send-email-amelie.delaunay@st.com>
- <1526566904-24514-4-git-send-email-amelie.delaunay@st.com>
- <e3bd3097-fbde-b790-e2b3-d78fb34b849d@st.com>
- <120d8997-3184-bfed-26b7-e0ac7d995b74@st.com>
+Subject: Re: [PATCH] ARM: dts: stm32: Add DFSDM support to stm32mp157c
+Date: Tue, 26 Jun 2018 14:25:48 +0200
+Message-ID: <8e696c04-2992-e20a-56ba-1b3097150ce9@st.com>
+References: <1527067835-22303-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <120d8997-3184-bfed-26b7-e0ac7d995b74@st.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1527067835-22303-1-git-send-email-fabrice.gasnier@st.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amelie DELAUNAY <amelie.delaunay@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, arnaud.pouliquen@st.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Fabrice,
 
-
-On 06/26/2018 01:47 PM, Amelie DELAUNAY wrote:
-> Hi Alex
+On 05/23/2018 11:30 AM, Fabrice Gasnier wrote:
+> stm32mp157c has DFSDM (Digital Filter For Sigma Delta Modulators) hardware
+> with 6 filter instances.
 > 
-> On 06/26/2018 10:44 AM, Alexandre Torgue wrote:
->> Hi Amélie
->> 
->> On 05/17/2018 04:21 PM, Amelie Delaunay wrote:
->>> Enable the STM32 SPI driver, implemented on STM32MP1 SoC.
->>>
->>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
->>> ---
->>>   arch/arm/configs/multi_v7_defconfig | 1 +
->>>   1 file changed, 1 insertion(+)
->>>
->>> diff --git a/arch/arm/configs/multi_v7_defconfig 
->>> b/arch/arm/configs/multi_v7_defconfig
->>> index 89167cd..f990335 100644
->>> --- a/arch/arm/configs/multi_v7_defconfig
->>> +++ b/arch/arm/configs/multi_v7_defconfig
->>> @@ -411,6 +411,7 @@ CONFIG_SPI_S3C64XX=m
->>>   CONFIG_SPI_SH_MSIOF=m
->>>   CONFIG_SPI_SH_HSPI=y
->>>   CONFIG_SPI_SIRF=y
->>> +CONFIG_SPI_STM32=y
->>>   CONFIG_SPI_SUN4I=y
->>>   CONFIG_SPI_SUN6I=y
->>>   CONFIG_SPI_TEGRA114=y
->>>
->> 
->> Driver which are are not "vital" to boot STM32 platform should be 
->> defined as module. It's the case for this one. Isn't ?
->> 
+> Signed-off-by: Fabrice Gasnier<fabrice.gasnier@st.com>
+> ---
+>   arch/arm/boot/dts/stm32mp157c.dtsi | 70 ++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 70 insertions(+)
 > 
-> You're right. I'll send v2 with CONFIG_SPI_STM32=m ASAP. Should I resend
-> the whole patchset (with DT), or just this patch and you take the DT
-> patches as they are ?
-> 
+> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+> index 66d7496..3d2f4e7 100644
+> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
 
-No, you can just resend this one. I will take DT part from this version.
+Applied on stm32-next.
 
-Regards
+Thanks.
 Alex
-
-> Regards,
-> Amelie
