@@ -1,110 +1,166 @@
-From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [[DPU]PATCH] drm/msm/dsi: move the API setting PLL src
- to modeset_init()
-Date: Tue, 26 Jun 2018 10:15:43 +0530
-Message-ID: <20180626044543.14992-1-spanda@codeaurora.org>
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: Re: [PATCH v8 4/7] Bluetooth: hci_qca: Add wrapper functions for
+ setting UART speed
+Date: Tue, 26 Jun 2018 10:43:31 +0530
+Message-ID: <66681ee5281749e17394cab6f58083d8@codeaurora.org>
+References: <20180625134013.19684-1-bgodavar@codeaurora.org>
+ <20180625134013.19684-5-bgodavar@codeaurora.org>
+ <20180625234354.GI129942@google.com> <20180626000529.GJ129942@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Abhinav Kumar <abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180626000529.GJ129942@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogQWJoaW5hdiBLdW1hciA8YWJoaW5hdmtAY29kZWF1cm9yYS5vcmc+CgpTZXR0aW5nIHRo
-ZSBEU0kgUExMIHNyYyBpbiBwcm9iZSBkb2Vzbid0IHByb3ZpZGUgdGhlIGNsb2NrCmRyaXZlciBz
-dWZmaWNpZW50IHRpbWUgdG8gcmVjbGFpbSB1bnVzZWQgY2xvY2sgcmVzb3VyY2VzCmZyb20gY29y
-ZWJvb3QgcmVzdWx0aW5nIGluIHdhcm5pbmdzIGZyb20gY2xvY2sgZHJpdmVyLgoKTW92ZSB0aGUg
-RFNJIFBMTCBzcmMgc2V0dGluZyB0byBtb2Rlc2V0X2luaXQoKSBzbyB0aGF0IHRoZQpjbG9jayBk
-cml2ZXIgY2FuIGNsYWltIHVudXNlZCBkaXNwbGF5IGNsb2NrIHJlc291cmNlcyBiZWZvcmUKdGhl
-IGRpc3BsYXkgZHJpdmVyIHJlcXVlc3RzIGZvciB0aGVtIGFnYWluLgoKU2lnbmVkLW9mZi1ieTog
-QWJoaW5hdiBLdW1hciA8YWJoaW5hdmtAY29kZWF1cm9yYS5vcmc+Ci0tLQogZHJpdmVycy9ncHUv
-ZHJtL21zbS9kc2kvZHNpLmMgICAgICAgICB8ICA2ICsrKysKIGRyaXZlcnMvZ3B1L2RybS9tc20v
-ZHNpL2RzaS5oICAgICAgICAgfCAgMSArCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9kc2lfbWFu
-YWdlci5jIHwgNjYgKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0KIDMgZmlsZXMg
-Y2hhbmdlZCwgNTEgaW5zZXJ0aW9ucygrKSwgMjIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9k
-c2kuYwppbmRleCA5ZmI2MTJjMTdhMzkuLmVhMTAwZjE1Y2UwZCAxMDA2NDQKLS0tIGEvZHJpdmVy
-cy9ncHUvZHJtL21zbS9kc2kvZHNpLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvZHNp
-LmMKQEAgLTIxMSw2ICsyMTEsMTIgQEAgaW50IG1zbV9kc2lfbW9kZXNldF9pbml0KHN0cnVjdCBt
-c21fZHNpICptc21fZHNpLCBzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAogCXByaXYgPSBkZXYtPmRl
-dl9wcml2YXRlOwogCW1zbV9kc2ktPmRldiA9IGRldjsKIAorCXJldCA9IG1zbV9kc2lfbWFuYWdl
-cl9wbGxfc2V0dXAobXNtX2RzaSk7CisJaWYgKHJldCkgeworCQlkZXZfZXJyKGRldi0+ZGV2LCAi
-ZmFpbGVkIHRvIHNldHVwIHBsbDogJWRcbiIsIHJldCk7CisJCWdvdG8gZmFpbDsKKwl9CisKIAly
-ZXQgPSBtc21fZHNpX2hvc3RfbW9kZXNldF9pbml0KG1zbV9kc2ktPmhvc3QsIGRldik7CiAJaWYg
-KHJldCkgewogCQlkZXZfZXJyKGRldi0+ZGV2LCAiZmFpbGVkIHRvIG1vZGVzZXQgaW5pdCBob3N0
-OiAlZFxuIiwgcmV0KTsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZHNpL2RzaS5o
-IGIvZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvZHNpLmgKaW5kZXggMzU2OTUzMDEwMjU2Li5hOWZl
-ZDlhYjE3YjIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZHNpL2RzaS5oCisrKyBi
-L2RyaXZlcnMvZ3B1L2RybS9tc20vZHNpL2RzaS5oCkBAIC0xMDEsNiArMTAxLDcgQEAgdm9pZCBt
-c21fZHNpX21hbmFnZXJfYXR0YWNoX2RzaV9kZXZpY2UoaW50IGlkLCB1MzIgZGV2aWNlX2ZsYWdz
-KTsKIGludCBtc21fZHNpX21hbmFnZXJfcmVnaXN0ZXIoc3RydWN0IG1zbV9kc2kgKm1zbV9kc2kp
-Owogdm9pZCBtc21fZHNpX21hbmFnZXJfdW5yZWdpc3RlcihzdHJ1Y3QgbXNtX2RzaSAqbXNtX2Rz
-aSk7CiBib29sIG1zbV9kc2lfbWFuYWdlcl92YWxpZGF0ZV9jdXJyZW50X2NvbmZpZyh1OCBpZCk7
-CitpbnQgbXNtX2RzaV9tYW5hZ2VyX3BsbF9zZXR1cChzdHJ1Y3QgbXNtX2RzaSAqbXNtX2RzaSk7
-CiAKIC8qIG1zbSBkc2kgKi8KIHN0YXRpYyBpbmxpbmUgYm9vbCBtc21fZHNpX2RldmljZV9jb25u
-ZWN0ZWQoc3RydWN0IG1zbV9kc2kgKm1zbV9kc2kpCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
-cm0vbXNtL2RzaS9kc2lfbWFuYWdlci5jIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvZHNpX21h
-bmFnZXIuYwppbmRleCA5ODBiMWJiYTg0NzcuLjQwZGExMjI5NTY1ZSAxMDA2NDQKLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL21zbS9kc2kvZHNpX21hbmFnZXIuYworKysgYi9kcml2ZXJzL2dwdS9kcm0v
-bXNtL2RzaS9kc2lfbWFuYWdlci5jCkBAIC03MiwyNSArNzIsNjAgQEAgc3RhdGljIGludCBkc2lf
-bWdyX3BhcnNlX2R1YWxfZHNpKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsIGludCBpZCkKIAlyZXR1
-cm4gMDsKIH0KIAotc3RhdGljIGludCBkc2lfbWdyX3NldHVwX2NvbXBvbmVudHMoaW50IGlkKQor
-c3RhdGljIGludCBtc21fZHNpX3BsbF9jb25maWd1cmUoc3RydWN0IG1zbV9kc2kgKm1zbV9kc2ks
-IGJvb2wgaXNfZHVhbCkKIHsKLQlzdHJ1Y3QgbXNtX2RzaSAqbXNtX2RzaSA9IGRzaV9tZ3JfZ2V0
-X2RzaShpZCk7Ci0Jc3RydWN0IG1zbV9kc2kgKm90aGVyX2RzaSA9IGRzaV9tZ3JfZ2V0X290aGVy
-X2RzaShpZCk7CisJc3RydWN0IG1zbV9kc2kgKm90aGVyX2RzaSA9IGRzaV9tZ3JfZ2V0X290aGVy
-X2RzaShtc21fZHNpLT5pZCk7CiAJc3RydWN0IG1zbV9kc2kgKmNsa19tYXN0ZXJfZHNpID0gZHNp
-X21ncl9nZXRfZHNpKERTSV9DTE9DS19NQVNURVIpOwogCXN0cnVjdCBtc21fZHNpICpjbGtfc2xh
-dmVfZHNpID0gZHNpX21ncl9nZXRfZHNpKERTSV9DTE9DS19TTEFWRSk7CiAJc3RydWN0IG1zbV9k
-c2lfcGxsICpzcmNfcGxsOwotCWludCByZXQ7Ci0KLQlpZiAoIUlTX0RVQUxfRFNJKCkpIHsKLQkJ
-cmV0ID0gbXNtX2RzaV9ob3N0X3JlZ2lzdGVyKG1zbV9kc2ktPmhvc3QsIHRydWUpOwotCQlpZiAo
-cmV0KQotCQkJcmV0dXJuIHJldDsKKwlpbnQgcmV0ID0gMDsKIAorCWlmICghaXNfZHVhbCkgewog
-CQltc21fZHNpX3BoeV9zZXRfdXNlY2FzZShtc21fZHNpLT5waHksIE1TTV9EU0lfUEhZX1NUQU5E
-QUxPTkUpOwogCQlzcmNfcGxsID0gbXNtX2RzaV9waHlfZ2V0X3BsbChtc21fZHNpLT5waHkpOwog
-CQlpZiAoSVNfRVJSKHNyY19wbGwpKQogCQkJcmV0dXJuIFBUUl9FUlIoc3JjX3BsbCk7CiAJCXJl
-dCA9IG1zbV9kc2lfaG9zdF9zZXRfc3JjX3BsbChtc21fZHNpLT5ob3N0LCBzcmNfcGxsKTsKKwl9
-IGVsc2UgeworCQkvKiBQTEwwIGlzIHRvIGRyaXZlIGJvdGggMiBEU0kgbGluayBjbG9ja3MgaW4g
-RHVhbCBEU0kgbW9kZS4gKi8KKwkJbXNtX2RzaV9waHlfc2V0X3VzZWNhc2UoY2xrX21hc3Rlcl9k
-c2ktPnBoeSwKKwkJCQkJTVNNX0RTSV9QSFlfTUFTVEVSKTsKKwkJbXNtX2RzaV9waHlfc2V0X3Vz
-ZWNhc2UoY2xrX3NsYXZlX2RzaS0+cGh5LAorCQkJCQlNU01fRFNJX1BIWV9TTEFWRSk7CisJCXNy
-Y19wbGwgPSBtc21fZHNpX3BoeV9nZXRfcGxsKGNsa19tYXN0ZXJfZHNpLT5waHkpOworCQlpZiAo
-SVNfRVJSKHNyY19wbGwpKQorCQkJcmV0dXJuIFBUUl9FUlIoc3JjX3BsbCk7CisJCXJldCA9IG1z
-bV9kc2lfaG9zdF9zZXRfc3JjX3BsbChtc21fZHNpLT5ob3N0LCBzcmNfcGxsKTsKKwkJaWYgKHJl
-dCkKKwkJCXJldHVybiByZXQ7CisJCXJldCA9IG1zbV9kc2lfaG9zdF9zZXRfc3JjX3BsbChvdGhl
-cl9kc2ktPmhvc3QsIHNyY19wbGwpOworCX0KKworCXJldHVybiByZXQ7Cit9CisKK2ludCBtc21f
-ZHNpX21hbmFnZXJfcGxsX3NldHVwKHN0cnVjdCBtc21fZHNpICptc21fZHNpKQoreworCWludCBy
-ZXQ7CisKKwlpZiAoIUlTX0RVQUxfRFNJKCkpCisJCXJldCA9IG1zbV9kc2lfcGxsX2NvbmZpZ3Vy
-ZShtc21fZHNpLCB0cnVlKTsKKwllbHNlCisJCXJldCA9IG1zbV9kc2lfcGxsX2NvbmZpZ3VyZSht
-c21fZHNpLCBmYWxzZSk7CisKKwlyZXR1cm4gcmV0OworfQorCitzdGF0aWMgaW50IGRzaV9tZ3Jf
-c2V0dXBfY29tcG9uZW50cyhpbnQgaWQpCit7CisJc3RydWN0IG1zbV9kc2kgKm1zbV9kc2kgPSBk
-c2lfbWdyX2dldF9kc2koaWQpOworCXN0cnVjdCBtc21fZHNpICpvdGhlcl9kc2kgPSBkc2lfbWdy
-X2dldF9vdGhlcl9kc2koaWQpOworCWludCByZXQ7CisKKwlpZiAoIUlTX0RVQUxfRFNJKCkpIHsK
-KwkJcmV0ID0gbXNtX2RzaV9ob3N0X3JlZ2lzdGVyKG1zbV9kc2ktPmhvc3QsIHRydWUpOworCQlp
-ZiAocmV0KQorCQkJcmV0dXJuIHJldDsKIAl9IGVsc2UgaWYgKCFvdGhlcl9kc2kpIHsKIAkJcmV0
-ID0gMDsKIAl9IGVsc2UgewpAQCAtMTExLDE5ICsxNDYsNiBAQCBzdGF0aWMgaW50IGRzaV9tZ3Jf
-c2V0dXBfY29tcG9uZW50cyhpbnQgaWQpCiAJCXJldCA9IG1zbV9kc2lfaG9zdF9yZWdpc3Rlciht
-YXN0ZXJfbGlua19kc2ktPmhvc3QsIHRydWUpOwogCQlpZiAocmV0KQogCQkJcmV0dXJuIHJldDsK
-LQotCQkvKiBQTEwwIGlzIHRvIGRyaXZlIGJvdGggMiBEU0kgbGluayBjbG9ja3MgaW4gRHVhbCBE
-U0kgbW9kZS4gKi8KLQkJbXNtX2RzaV9waHlfc2V0X3VzZWNhc2UoY2xrX21hc3Rlcl9kc2ktPnBo
-eSwKLQkJCQkJTVNNX0RTSV9QSFlfTUFTVEVSKTsKLQkJbXNtX2RzaV9waHlfc2V0X3VzZWNhc2Uo
-Y2xrX3NsYXZlX2RzaS0+cGh5LAotCQkJCQlNU01fRFNJX1BIWV9TTEFWRSk7Ci0JCXNyY19wbGwg
-PSBtc21fZHNpX3BoeV9nZXRfcGxsKGNsa19tYXN0ZXJfZHNpLT5waHkpOwotCQlpZiAoSVNfRVJS
-KHNyY19wbGwpKQotCQkJcmV0dXJuIFBUUl9FUlIoc3JjX3BsbCk7Ci0JCXJldCA9IG1zbV9kc2lf
-aG9zdF9zZXRfc3JjX3BsbChtc21fZHNpLT5ob3N0LCBzcmNfcGxsKTsKLQkJaWYgKHJldCkKLQkJ
-CXJldHVybiByZXQ7Ci0JCXJldCA9IG1zbV9kc2lfaG9zdF9zZXRfc3JjX3BsbChvdGhlcl9kc2kt
-Pmhvc3QsIHNyY19wbGwpOwogCX0KIAogCXJldHVybiByZXQ7Ci0tIApUaGUgUXVhbGNvbW0gSW5u
-b3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgdGhlIENvZGUgQXVyb3JhIEZvcnVt
-LAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0CgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0
-CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+Hi Matthias,
+
+On 2018-06-26 05:35, Matthias Kaehlcke wrote:
+> On Mon, Jun 25, 2018 at 04:43:54PM -0700, Matthias Kaehlcke wrote:
+>> This is a nice improvement, a few remaining questions inline.
+>> 
+>> On Mon, Jun 25, 2018 at 07:10:10PM +0530, Balakrishna Godavarthi 
+>> wrote:
+>> > In function qca_setup, we set initial and operating speeds for Qualcomm
+>> > Bluetooth SoC's. This block of code is common across different
+>> > Qualcomm Bluetooth SoC's. Instead of duplicating the code, created
+>> > a wrapper function to set the speeds. So that future coming SoC's
+>> > can use these wrapper functions to set speeds.
+>> >
+>> > Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+>> > ---
+>> > Changes in v8:
+>> >     * common function to set INIT and operating speeds.
+>> >     * moved hardware flow control to qca_set_speed().
+>> >
+>> > Changes in v7:
+>> >     * initial patch
+>> >     * created wrapper functions for init and operating speeds.
+>> > ---
+>> >  drivers/bluetooth/hci_qca.c | 89 +++++++++++++++++++++++++++----------
+>> >  1 file changed, 65 insertions(+), 24 deletions(-)
+>> >
+>> > diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+>> > index fe62420ef838..38b7dbe6c897 100644
+>> > --- a/drivers/bluetooth/hci_qca.c
+>> > +++ b/drivers/bluetooth/hci_qca.c
+>> > @@ -119,6 +119,11 @@ struct qca_data {
+>> >  	u64 votes_off;
+>> >  };
+>> >
+>> > +enum qca_speed_type {
+>> > +	QCA_INIT_SPEED = 1,
+>> > +	QCA_OPER_SPEED
+>> > +};
+>> > +
+>> >  struct qca_serdev {
+>> >  	struct hci_uart	 serdev_hu;
+>> >  	struct gpio_desc *bt_en;
+>> > @@ -923,6 +928,60 @@ static inline void host_set_baudrate(struct hci_uart *hu, unsigned int speed)
+>> >  		hci_uart_set_baudrate(hu, speed);
+>> >  }
+>> >
+>> > +static unsigned int qca_get_speed(struct hci_uart *hu,
+>> > +				  enum qca_speed_type speed_type)
+>> > +{
+>> > +	unsigned int speed = 0;
+>> > +
+>> > +	if (speed_type == QCA_INIT_SPEED) {
+>> > +		if (hu->init_speed)
+>> > +			speed = hu->init_speed;
+>> > +		else if (hu->proto->init_speed)
+>> > +			speed = hu->proto->init_speed;
+>> > +	} else {
+>> > +		if (hu->oper_speed)
+>> > +			speed = hu->oper_speed;
+>> > +		else if (hu->proto->oper_speed)
+>> > +			speed = hu->proto->oper_speed;
+>> > +	}
+>> > +
+>> > +	return speed;
+>> > +}
+>> > +
+>> > +static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
+>> > +{
+>> > +	unsigned int speed, qca_baudrate;
+>> > +	int ret;
+>> > +
+>> > +	if (speed_type == QCA_INIT_SPEED) {
+>> > +		speed = qca_get_speed(hu, QCA_INIT_SPEED);
+>> > +		if (speed)
+>> > +			host_set_baudrate(hu, speed);
+>> > +		else
+>> > +			bt_dev_err(hu->hdev, "Init speed should be non zero");
+>> 
+>> The check for 'speed == 0' is done in multiple places. From this
+>> code I deduce that it is expected that both INIT and OPER speed are
+>> set to non-zero values. What happens if either of them is zero? Is the
+>> driver still operational?
+>> 
+>> > +		return 0;
+>> > +	}
+>> > +
+>> > +	speed = qca_get_speed(hu, QCA_OPER_SPEED);
+>> > +	if (!speed) {
+>> > +		bt_dev_err(hu->hdev, "operating speed should be non zero");
+>> > +		return 0;
+>> > +	}
+>> > +
+>> > +	qca_baudrate = qca_get_baudrate_value(speed);
+>> > +	bt_dev_info(hu->hdev, "Set UART speed to %d", speed);
+>> > +	ret = qca_set_baudrate(hu->hdev, qca_baudrate);
+>> > +	if (ret) {
+>> > +		bt_dev_err(hu->hdev, "Failed to change the baudrate (%d)", ret);
+>> > +		return ret;
+>> > +	}
+>> > +
+>> > +	host_set_baudrate(hu, speed);
+>> > +
+>> > +	return ret;
+>> > +}
+>> 
+>> In the discussion on "[v7,8/8] Bluetooth: hci_qca: Add support for
+>> Qualcomm Bluetooth chip wcn3990" you mentioned the possbility to move
+>> the hci_uart_set_flow_control() calls into _set_speed(). This seemed
+>> interesting but finally it isn't done in this series. Did you
+>> encounter that it is not feasible/desirable for some reason?
+> 
+> I got that half wrong. "[v8,7/7] Bluetooth: hci_qca: Add support for
+> Qualcomm Bluetooth chip wcn3990" adds the flow control calls to
+> _set_speed() however there are still_set_flow_control() calls in
+> qca_setup(), which confused/s me.
+> 
+> Could you provide a brief summary on the situations (relevant for this
+> driver) in which flow controls needs to be enabled/disabled?
+
+you will not find enable or disable of hardware flow control in this 
+patch.
+there is no hardware flow control in ROME chip.
+you will find hardware flow control in wcn3990 i.e. patch [v8 7/7]
+
+in wcn3990. we disable hardware flow control, when we sent mandatory 
+commands to BT chip.
+
+i.e while sending power on pulse i.e 0xFC byte for wcn3990 to boot up 
+completely and sending change baudrate request to BT chip.
+before sending these commands, we disable the chip flow control and 
+enable flow control once we sent these commands.
+
+so in our current code after integrating wcn3990, we disable flow 
+control two times.
+
+1. Before sending power on pulse i.e. qca_send_vendor_cmd(hdev, 
+QCA_WCN3990_POWERON_PULSE); in qca_setup.
+    so we find disable or enable hardware flow control in qca_setup()
+2. Before sending change BT CHIP baudrate request i.e.  
+qca_set_baudrate(hu->hdev, qca_baudrate); in qca_set_speed().
+
+
+
+-- 
+Regards
+Balakrishna.
