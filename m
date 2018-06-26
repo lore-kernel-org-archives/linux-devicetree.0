@@ -1,71 +1,67 @@
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
-Subject: Re: [RFC PATCH 1/2] spi: Add QuadSPI driver for Atmel SAMA5D2
-Date: Tue, 26 Jun 2018 17:44:26 +0300
-Message-ID: <455adb76-530a-1fd5-303c-cfa158ad7870@microchip.com>
-References: <20180618162124.21749-1-bugalski.piotr@gmail.com>
- <20180618162124.21749-2-bugalski.piotr@gmail.com>
- <20180621233321.0f25f572@bbrezillon>
- <alpine.DEB.2.20.1806220719190.21824@carbonite>
- <20180622093905.62a3b936@bbrezillon>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 2/3] ARM: dts: imx6qdl-colibri: move card detect to module
+ device tree
+Date: Tue, 26 Jun 2018 16:52:42 +0200
+Message-ID: <20180626145243.24880-2-stefan@agner.ch>
+References: <20180626145243.24880-1-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180622093905.62a3b936@bbrezillon>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, Piotr Bugalski <bugalski.piotr@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Cyrille Pitchen <cyrille.pitchen@microchip.com>, Piotr Bugalski <pbu@cryptera.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180626145243.24880-1-stefan@agner.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org, s.hauer@pengutronix.de
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, max.krummenacher@toradex.com, marcel.ziswiler@toradex.com, Stefan Agner <stefan@agner.ch>, maitysanchayan@gmail.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Piotr,
+Muxing the card detect only in the carrier board device tree
+overwrites the USDHC muxing in the module level device tree.
+Move card detect to the module level device tree since this
+is also a default pinout of the Colibri standard. If a carrier
+board requires a different setting it still can overwrite the
+nodes in the carrier board specific device tree.
 
-General things to consider for the limitation in performance:
-- is the serial flash memory operating in Quad SPI?
-- QSCLK should be as high as possible
-- transfer delays - I checked them, they have default values, we should be good.
-- use DMA, as you suggested
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts | 3 ---
+ arch/arm/boot/dts/imx6qdl-colibri.dtsi       | 3 ++-
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-On 06/22/2018 10:39 AM, Boris Brezillon wrote:
-> [...]
-> 
->>>> +/*
->>>> + * Atmel SAMA5D2 QuadSPI driver.
->>>> + *
->>>> + * Copyright (C) 2018 Cryptera A/S  
->>>
->>> A non-negligible portion of this code has been copied from the existing
->>> driver. Please keep the existing copyright (you can still add Cryptera's
->>> one).
->>>  
->>
->> Technically this driver were written from scratch, with spi-fsl-qspi
->> as example of new interface. Hence the name and code structure.
->> But it's the same peripheral as Atmel's driver uses so code looks
->> similar. I can unify the code to make comparsion even simpler and
->> then update copyright.
-> 
-> Hm, ok. Some constructs really looked like they were copied
-> from the old driver, hence my comment. I'll let Nicolas give his
-> opinion on this aspect.
-
-This driver will be a conversion of the legacy one to the spi-mem interface. I
-would keep the legacy copyright and add Cryptera's below, as Boris suggested.
-
-[...]
-
->>>> +#define QSPI_SR_CMD_COMPLETED           (QSPI_SR_INSTRE | QSPI_SR_CSR)  
->>>
->>> Do you really to wait for both INSTRE and CSR to consider the command
->>> as complete?
->>>  
->>
->> This part were really copied from Atmel driver. I wasn't sure so I
->> used tested solution.
-> 
-> Okay. I guess that's a question for Cyrille and/or Tudor then.
-
-We have to wait for both INSTRE and CSR.
-
-Best,
-ta
+diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+index 3dee3af1a4c1..9de45a717356 100644
+--- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
++++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+@@ -221,9 +221,6 @@
+ 
+ /* Colibri MMC */
+ &usdhc1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_mmc_cd>;
+-	cd-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>; /* MMCD */
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+index 83d7c7d48c3f..55c90c2fbf69 100644
+--- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+@@ -385,7 +385,8 @@
+ /* Colibri MMC */
+ &usdhc1 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_usdhc1>;
++	pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_mmc_cd>;
++	cd-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>; /* MMCD */
+ 	vqmmc-supply = <&reg_3p3v>;
+ 	bus-width = <4>;
+ 	voltage-ranges = <3300 3300>;
+-- 
+2.18.0
