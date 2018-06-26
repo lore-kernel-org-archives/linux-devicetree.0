@@ -1,86 +1,30 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH v2 05/12] ASoC: qdsp6: q6asm: use
- of_platform_populate/depopulate()
-Date: Tue, 26 Jun 2018 11:32:45 +0200
-Message-ID: <20180626093245.GC25217@centauri.ideon.se>
-References: <20180626092016.9296-1-srinivas.kandagatla@linaro.org>
- <20180626092016.9296-6-srinivas.kandagatla@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 23/27] devicetree: fix name of pinctrl-bindings.txt
+Date: Tue, 26 Jun 2018 11:33:53 +0200
+Message-ID: <CACRpkda4AVhbeka0V17mJDjFihTFQY3+6M+iUBbPyaX22RTDow@mail.gmail.com>
+References: <cover.1528990947.git.mchehab+samsung@kernel.org> <d04d47f9fba035cf9de8589a288964c636324d58.1528990947.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20180626092016.9296-6-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-arm-msm@vger.kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, tiwai@suse.com, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d04d47f9fba035cf9de8589a288964c636324d58.1528990947.git.mchehab+samsung@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: linux-doc@vger.kernel.org, Mauro Carvalho Chehab <mchehab@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, Greg KH <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-serial@vger.kernel.org, linux-spi <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Acked-by: Niklas Cassel <niklas.cassel@linaro.org>
+On Thu, Jun 14, 2018 at 6:09 PM Mauro Carvalho Chehab
+<mchehab+samsung@kernel.org> wrote:
 
-On Tue, Jun 26, 2018 at 10:20:09AM +0100, Srinivas Kandagatla wrote:
-> Now that the child nodes have there own compatible strings,
-> Use of_platform_populate/depopulate() instead of less common
-> of_platform_device_create()/destroy().
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  sound/soc/qcom/qdsp6/q6asm.c | 16 ++--------------
->  1 file changed, 2 insertions(+), 14 deletions(-)
-> 
-> diff --git a/sound/soc/qcom/qdsp6/q6asm.c b/sound/soc/qcom/qdsp6/q6asm.c
-> index 530852385cad..c4fd28f168d5 100644
-> --- a/sound/soc/qcom/qdsp6/q6asm.c
-> +++ b/sound/soc/qcom/qdsp6/q6asm.c
-> @@ -177,7 +177,6 @@ struct q6asm {
->  	struct platform_device *pcmdev;
->  	spinlock_t slock;
->  	struct audio_client *session[MAX_SESSIONS + 1];
-> -	struct platform_device *pdev_dais;
->  };
->  
->  struct audio_client {
-> @@ -1344,7 +1343,6 @@ EXPORT_SYMBOL_GPL(q6asm_cmd_nowait);
->  static int q6asm_probe(struct apr_device *adev)
->  {
->  	struct device *dev = &adev->dev;
-> -	struct device_node *dais_np;
->  	struct q6asm *q6asm;
->  
->  	q6asm = devm_kzalloc(dev, sizeof(*q6asm), GFP_KERNEL);
-> @@ -1359,22 +1357,12 @@ static int q6asm_probe(struct apr_device *adev)
->  	spin_lock_init(&q6asm->slock);
->  	dev_set_drvdata(dev, q6asm);
->  
-> -	dais_np = of_get_child_by_name(dev->of_node, "dais");
-> -	if (dais_np) {
-> -		q6asm->pdev_dais = of_platform_device_create(dais_np,
-> -							   "q6asm-dai", dev);
-> -		of_node_put(dais_np);
-> -	}
-> -
-> -	return 0;
-> +	return of_platform_populate(dev->of_node, NULL, NULL, dev);
->  }
->  
->  static int q6asm_remove(struct apr_device *adev)
->  {
-> -	struct q6asm *q6asm = dev_get_drvdata(&adev->dev);
-> -
-> -	if (q6asm->pdev_dais)
-> -		of_platform_device_destroy(&q6asm->pdev_dais->dev, NULL);
-> +	of_platform_depopulate(&adev->dev);
->  
->  	return 0;
->  }
-> -- 
-> 2.16.2
-> 
+> Rename:
+>         pinctrl-binding.txt -> pinctrl-bindings.txt
+>
+> In order to match the current name of this file.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Is this applied in some other tree or something I should
+apply to the pinctrl tree?
+
+Yours,
+Linus Walleij
