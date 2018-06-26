@@ -1,194 +1,94 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH 2/3] arm64: allwinner: h6: add device tree
- nodes for MMC controllers
-Date: Tue, 26 Jun 2018 08:28:18 +0800
-Message-ID: <0b80e778a7c03b5aeeb0e4142895e0e820df3a95.camel@aosc.io>
-References: <20180426140728.43155-1-icenowy@aosc.io>
-	 <20180426140728.43155-3-icenowy@aosc.io>
-	 <9571735d-929f-a2ef-ed97-dc9193420b73@arm.com>
-	 <77DF7884-8DA8-4ED5-BB51-941CFDE4A123@aosc.io>
-	 <0ae1b6ce-c1cf-61e8-e09b-abec47b089b2@arm.com>
-	 <6EBD7D16-E985-4345-B2C2-D0CE7B32F8C5@aosc.io>
-	 <8259b2d9-be02-68fb-90bb-bd0ebdee0b05@arm.com>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH 5/5] arm64: dts: allwinner: h6: enable AXP805 PMIC on
+ Pine H64
+Date: Tue, 26 Jun 2018 08:49:41 +0800
+Message-ID: <f93b1524657048279f54004fdbcd6ab5af9ec1c1.camel@aosc.io>
+References: <20180620051540.25617-1-wens@csie.org>
+ <20180620051540.25617-6-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBN4RY3MQKGQEKLKZBUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <8259b2d9-be02-68fb-90bb-bd0ebdee0b05-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?ISO-8859-1?Q?Andr=E9?= Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180620051540.25617-6-wens@csie.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Andre Przywara <andre.przywara@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2018-04-27=E4=BA=94=E7=9A=84 22:25 +0100=EF=BC=8CAndr=C3=A9 Przyw=
-ara=E5=86=99=E9=81=93=EF=BC=9A
-> On 27/04/18 10:23, Icenowy Zheng wrote:
-> >=20
-> >=20
-> > =E4=BA=8E 2018=E5=B9=B44=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
-=885:18:23, Andre Przywara <andre.przywara@ar
-> > m.com> =E5=86=99=E5=88=B0:
-> > > Hi,
-> > >=20
-> > > On 27/04/18 09:36, Icenowy Zheng wrote:
-> > > >=20
-> > > >=20
-> > > > =E4=BA=8E 2018=E5=B9=B44=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=
-=8D=8812:45:38, Andre Przywara
-> > >=20
-> > > <andre.przywara-5wv7dgnIgG8@public.gmane.org> =E5=86=99=E5=88=B0:
-> > > > > Hi,
-> > > > >=20
-> > > > > On 26/04/18 15:07, Icenowy Zheng wrote:
-> > > > > > The Allwinner H6 SoC have 3 MMC controllers.
-> > > > > >=20
-> > > > > > Add device tree nodes for them.
-> > > > > >=20
-> > > > > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> > > > > > ---
-> > > > > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 56
-> > > > >=20
-> > > > > ++++++++++++++++++++++++++++
-> > > > > >  1 file changed, 56 insertions(+)
-> > > > > >=20
-> > > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > >=20
-> > > > > b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > > > index 4debc3962830..3cbfc035c979 100644
-> > > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > > > @@ -124,12 +124,68 @@
-> > > > > >  			interrupt-controller;
-> > > > > >  			#interrupt-cells =3D <3>;
-> > > > > > =20
-> > > > > > +			mmc0_pins: mmc0-pins {
-> > > > > > +				pins =3D "PF0", "PF1",
-> > > > > > "PF2", "PF3",
-> > > > > > +				       "PF4", "PF5";
-> > > > > > +				function =3D "mmc0";
-> > > > > > +				drive-strength =3D <30>;
-> > > > > > +				bias-pull-up;
-> > > > > > +			};
-> > > > > > +
-> > > > > > +			mmc2_pins: mmc2-pins {
-> > > > > > +				pins =3D "PC1", "PC4",
-> > > > > > "PC5", "PC6",
-> > > > > > +				       "PC7", "PC8",
-> > > > > > "PC9", "PC10",
-> > > > > > +				       "PC11", "PC12",
-> > > > > > "PC13", "PC14";
-> > > > > > +				function =3D "mmc2";
-> > > > > > +				drive-strength =3D <30>;
-> > > > > > +				bias-pull-up;
-> > > > > > +			};
-> > > > > > +
-> > > > > >  			uart0_ph_pins: uart0-ph {
-> > > > > >  				pins =3D "PH0", "PH1";
-> > > > > >  				function =3D "uart0";
-> > > > > >  			};
-> > > > > >  		};
-> > > > > > =20
-> > > > > > +		mmc0: mmc@4020000 {
-> > > > > > +			compatible =3D "allwinner,sun50i-h6-
-> > > > > > mmc";
-> > > > >=20
-> > > > > This should be:
-> > > > > 			compatible =3D "allwinner,sun50i-h6-mmc",
-> > > > > 				     "allwinner,sun50i-a64-
-> > > > > mmc";
-> > > >=20
-> > > > I'm intended to not add A64 compatible, as
-> > > > H6 is a quite new design
-> > > > (new process) and there might be different behavior, even on
-> > > > mmc0/1.
-> > >=20
-> > > But as your patch proves, it is fully backwards compatible: An
-> > > A64
-> > > driver works with this device.
-> >=20
-> > No, my patch only proves "the current A64 driver works
-> > with this device", not "Any A64 driver works with device", as
-> > the current driver doesn't fully use the capability provided
-> > by A64 MMC cobtrollers.
->=20
-> Good point, but I still believe every A64 driver would be capable of
-> driving an H6 MMC controller, ....
->=20
-> > > And this is what this compatible string list says: If your system
-> > > does
-> > > not have a specific H6 driver, you can use an A64 driver.
-> > > You might not get all the (potentially) new features, but it
-> > > covers
-> > > everything the A64 has.
-> > >=20
-> > > And a new silicon process doesn't matter here, since the software
-> > > interface is unchanged. *If* we find bugs, we can add quirks
-> > > matching
-> >=20
-> > I think there's timing parameters for higher speed bins which
-> > are different among chips. As we have currently no support
-> > for speed bins higher than DDR50, they're not added yet.
->=20
-> True, but what are those differences? I compared the A64 and H6
-> manuals
-> side by side, the differences I found are:
-> SMHC_FIFOTH[+0x40]:
-> 	BSIZE_OF_TRANS[30:28]:
-> 	- H6 supports 16 transfers for SMHC0 also.
-> 	other parameters:
-> 	- H6 recommends better values for SMHC0 also
-> SMHC_CSDC[+0x54]:
-> 	- H6 doesn't mention restriction to SMHC2
-> 	(though this might be a mistake)
-> SMHC_NTSR_REG[+0x5C]:
-> 	- H6 defines fields for bits[24:8]
-> SMHC_EMCE[+0x64] and SMHC_EMCE_DBG[+0x68]:
-> 	- H6 adds, for EMCE support
-> EMMC_DDR_SBIT_DET_REG[0x10c]:
-> 	- A64 doesn't mention restriction to SMHC2,
-> 	  but I believe this is a mistake
-> SMHC_EMCE_BMn[0x150 + 0x4 * 0..31]
-> 	- H6 adds, for EMCE support
->=20
-> All those pieces are only *additions* to the H6 over the A64, so
-> don't
-> affect backwards compatibility.
->=20
-> > > on
-> > > the H6 compatible string - that's why we put it here already,
-> > > despite
-> > > having a matching string in the kernel at the moment.
-> >=20
-> > Device tree is not driver data but hardware description, so
-> > it should follow "how the device is formed" rather than
-> > "how the device works".
->=20
-> True, but as shown above, the compatibility is really at the device
-> level.
-> Unless you have any other information ...
-
-Rob, could you answer whether we should add the A64 compatible or not?
-
->=20
-> Cheers,
-> Andre.
->=20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+5ZyoIDIwMTgtMDYtMjDkuInnmoQgMTM6MTUgKzA4MDDvvIxDaGVuLVl1IFRzYWnlhpnpgZPvvJoK
+PiBGcm9tOiBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFvc2MuaW8+Cj4gCj4gUGluZSBINjQgYm9h
+cmQgaGFzIGFuIEFYUDgwNSBQTUlDIG9uIGl0Lgo+IAo+IEVuYWJsZSBpdCBpbiB0aGUgZGV2aWNl
+IHRyZWUuCj4gCj4gU2lnbmVkLW9mZi1ieTogSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLmlv
+PgoKSSBzdWdnZXN0IHRvIG1lbnRpb24gdGhlIHdvcmtpbmcgbW9kZSBjaGFuZ2UgaGVyZS4KCj4g
+U2lnbmVkLW9mZi1ieTogQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3JnPgo+IC0tLQo+ICAuLi4v
+Ym9vdC9kdHMvYWxsd2lubmVyL3N1bjUwaS1oNi1waW5lLWg2NC5kdHMgfCAxMDkKPiArKysrKysr
+KysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDEwOSBpbnNlcnRpb25zKCspCj4gCj4gZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYWxsd2lubmVyL3N1bjUwaS1oNi1waW5lLWg2
+NC5kdHMKPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYWxsd2lubmVyL3N1bjUwaS1oNi1waW5lLWg2
+NC5kdHMKPiBpbmRleCAyZTk3MTczYzkyMDQuLjE2NzM2MzYzNThlZiAxMDA2NDQKPiAtLS0gYS9h
+cmNoL2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5lci9zdW41MGktaDYtcGluZS1oNjQuZHRzCj4gKysr
+IGIvYXJjaC9hcm02NC9ib290L2R0cy9hbGx3aW5uZXIvc3VuNTBpLWg2LXBpbmUtaDY0LmR0cwo+
+IEBAIC00NCw2ICs0NCwxMTUgQEAKPiAgJnJfaTJjIHsKPiAgCXN0YXR1cyA9ICJva2F5IjsKPiAg
+Cj4gKwlheHA4MDU6IHBtaWNAMzYgewo+ICsJCWNvbXBhdGlibGUgPSAieC1wb3dlcnMsYXhwODA1
+IiwgIngtcG93ZXJzLGF4cDgwNiI7Cj4gKwkJcmVnID0gPDB4MzY+Owo+ICsJCWludGVycnVwdC1w
+YXJlbnQgPSA8JnJfaW50Yz47Cj4gKwkJaW50ZXJydXB0cyA9IDwwIElSUV9UWVBFX0xFVkVMX0xP
+Vz47Cj4gKwkJaW50ZXJydXB0LWNvbnRyb2xsZXI7Cj4gKwkJI2ludGVycnVwdC1jZWxscyA9IDwx
+PjsKPiArCQl4LXBvd2VycyxzZWxmLXdvcmtpbmctbW9kZTsKPiArCj4gKwkJcmVndWxhdG9ycyB7
+Cj4gKwkJCXJlZ19hbGRvMTogYWxkbzEgewo+ICsJCQkJcmVndWxhdG9yLWFsd2F5cy1vbjsKPiAr
+CQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMzMDAwMDA+Owo+ICsJCQkJcmVndWxhdG9y
+LW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47Cj4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2Y2Mt
+cGwiOwo+ICsJCQl9Owo+ICsKPiArCQkJcmVnX2FsZG8yOiBhbGRvMiB7Cj4gKwkJCQlyZWd1bGF0
+b3ItbWluLW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsKPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92
+b2x0ID0gPDMzMDAwMDA+Owo+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmNjLWFjMjAwIjsKPiAr
+CQkJfTsKPiArCj4gKwkJCXJlZ19hbGRvMzogYWxkbzMgewo+ICsJCQkJLyogVGhpcyByZWd1bGF0
+b3IgaXMgY29ubmVjdGVkIHdpdGgKPiBDTERPMSAqLwo+ICsJCQkJcmVndWxhdG9yLWFsd2F5cy1v
+bjsKPiArCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMzMDAwMDA+Owo+ICsJCQkJcmVn
+dWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47Cj4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9
+ICJ2Y2MtM3YzLTEiOwo+ICsJCQl9Owo+ICsKPiArCQkJcmVnX2JsZG8xOiBibGRvMSB7Cj4gKwkJ
+CQlyZWd1bGF0b3ItYWx3YXlzLW9uOwo+ICsJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8
+MTgwMDAwMD47Cj4gKwkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxODAwMDAwPjsKPiAr
+CQkJCXJlZ3VsYXRvci1uYW1lID0gInZjYy1iaWFzLXBsbCI7Cj4gKwkJCX07Cj4gKwo+ICsJCQly
+ZWdfYmxkbzI6IGJsZG8yIHsKPiArCQkJCXJlZ3VsYXRvci1hbHdheXMtb247Cj4gKwkJCQlyZWd1
+bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwxODAwMDAwPjsKPiArCQkJCXJlZ3VsYXRvci1tYXgtbWlj
+cm92b2x0ID0gPDE4MDAwMDA+Owo+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmNjLWVmdXNlLXBj
+aWUtCj4gaGRtaS1pbyI7Cj4gKwkJCX07Cj4gKwo+ICsJCQlyZWdfYmxkbzM6IGJsZG8zIHsKPiAr
+CQkJCXJlZ3VsYXRvci1hbHdheXMtb247Cj4gKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9
+IDwxODAwMDAwPjsKPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE4MDAwMDA+Owo+
+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmNjLWRjeG9pbyI7Cj4gKwkJCX07Cj4gKwo+ICsJCQli
+bGRvNCB7Cj4gKwkJCQkvKiB1bnVzZWQgKi8KPiArCQkJfTsKPiArCj4gKwkJCXJlZ19jbGRvMTog
+Y2xkbzEgewo+ICsJCQkJLyogVGhpcyByZWd1bGF0b3IgaXMgY29ubmVjdGVkIHdpdGgKPiBBTERP
+MyAqLwo+ICsJCQkJcmVndWxhdG9yLWFsd2F5cy1vbjsKPiArCQkJCXJlZ3VsYXRvci1taW4tbWlj
+cm92b2x0ID0gPDMzMDAwMDA+Owo+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMw
+MDAwMD47Cj4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2Y2MtM3YzLTIiOwo+ICsJCQl9Owo+ICsK
+PiArCQkJcmVnX2NsZG8yOiBjbGRvMiB7Cj4gKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9
+IDwzMzAwMDAwPjsKPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAwMDA+Owo+
+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmNjLXdpZmktMSI7Cj4gKwkJCX07Cj4gKwo+ICsJCQly
+ZWdfY2xkbzM6IGNsZG8zIHsKPiArCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMzMDAw
+MDA+Owo+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47Cj4gKwkJCQly
+ZWd1bGF0b3ItbmFtZSA9ICJ2Y2Mtd2lmaS0yIjsKPiArCQkJfTsKPiArCj4gKwkJCXJlZ19kY2Rj
+YTogZGNkY2Egewo+ICsJCQkJcmVndWxhdG9yLWFsd2F5cy1vbjsKPiArCQkJCXJlZ3VsYXRvci1t
+aW4tbWljcm92b2x0ID0gPDgxMDAwMD47Cj4gKwkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9
+IDwxMDgwMDAwPjsKPiArCQkJCXJlZ3VsYXRvci1uYW1lID0gInZkZC1jcHUiOwo+ICsJCQl9Owo+
+ICsKPiArCQkJcmVnX2RjZGNjOiBkY2RjYyB7Cj4gKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9s
+dCA9IDw4MTAwMDA+Owo+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MTA4MDAwMD47
+Cj4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2ZGQtZ3B1IjsKPiArCQkJfTsKPiArCj4gKwkJCXJl
+Z19kY2RjZDogZGNkY2Qgewo+ICsJCQkJcmVndWxhdG9yLWFsd2F5cy1vbjsKPiArCQkJCXJlZ3Vs
+YXRvci1taW4tbWljcm92b2x0ID0gPDk2MDAwMD47Cj4gKwkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jv
+dm9sdCA9IDw5NjAwMDA+Owo+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmRkLXN5cyI7Cj4gKwkJ
+CX07Cj4gKwo+ICsJCQlyZWdfZGNkY2U6IGRjZGNlIHsKPiArCQkJCXJlZ3VsYXRvci1hbHdheXMt
+b247Cj4gKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwxMjAwMDAwPjsKPiArCQkJCXJl
+Z3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDEyMDAwMDA+Owo+ICsJCQkJcmVndWxhdG9yLW5hbWUg
+PSAidmNjLWRyYW0iOwo+ICsJCQl9Owo+ICsKPiArCQkJc3cgewo+ICsJCQkJLyogdW51c2VkICov
+Cj4gKwkJCX07Cj4gKwkJfTsKPiArCX07Cj4gKwo+ICAJcGNmODU2MzogcnRjQDUxIHsKPiAgCQlj
+b21wYXRpYmxlID0gIm54cCxwY2Y4NTYzIjsKPiAgCQlyZWcgPSA8MHg1MT47CgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
