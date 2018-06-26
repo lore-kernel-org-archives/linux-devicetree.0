@@ -1,54 +1,25 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [[DPU]PATCH] drm/msm/dsi: move the API setting PLL src to
- modeset_init()
-Date: Tue, 26 Jun 2018 13:27:14 -0400
-Message-ID: <CAF6AEGtbehXbc5PQ8-_18vOhB9eLFbD9ibjZuWwW5iG1G=8=fg@mail.gmail.com>
-References: <20180626044543.14992-1-spanda@codeaurora.org>
- <CAD=FV=UY5+ENfTmJeWvjMRxfeueBx435H+rbgYrzkWK5rc_-0Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAD=FV=UY5+ENfTmJeWvjMRxfeueBx435H+rbgYrzkWK5rc_-0Q@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Doug Anderson <dianders@chromium.org>
-Cc: devicetree@vger.kernel.org, ryadav@codeaurora.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sandeep Panda <spanda@codeaurora.org>, dri-devel <dri-devel@lists.freedesktop.org>, Stephen Boyd <swboyd@chromium.org>, Abhinav Kumar <abhinavk@codeaurora.org>, "Kristian H. Kristensen" <hoegsberg@chromium.org>, freedreno <freedreno@lists.freedesktop.org>, chandanu@codeaurora.org
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/2] ASoC: add tas5707 support
+Date: Tue, 26 Jun 2018 19:40:54 +0200
+Message-ID: <20180626174056.6400-1-jbrunet@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdW4gMjYsIDIwMTggYXQgMTE6NTUgQU0sIERvdWcgQW5kZXJzb24gPGRpYW5kZXJz
-QGNocm9taXVtLm9yZz4gd3JvdGU6Cj4gSGksCj4KPiBPbiBNb24sIEp1biAyNSwgMjAxOCBhdCA5
-OjQ1IFBNLCBTYW5kZWVwIFBhbmRhIDxzcGFuZGFAY29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+PiBG
-cm9tOiBBYmhpbmF2IEt1bWFyIDxhYmhpbmF2a0Bjb2RlYXVyb3JhLm9yZz4KPj4KPj4gU2V0dGlu
-ZyB0aGUgRFNJIFBMTCBzcmMgaW4gcHJvYmUgZG9lc24ndCBwcm92aWRlIHRoZSBjbG9jawo+PiBk
-cml2ZXIgc3VmZmljaWVudCB0aW1lIHRvIHJlY2xhaW0gdW51c2VkIGNsb2NrIHJlc291cmNlcwo+
-PiBmcm9tIGNvcmVib290IHJlc3VsdGluZyBpbiB3YXJuaW5ncyBmcm9tIGNsb2NrIGRyaXZlci4K
-Pj4KPj4gTW92ZSB0aGUgRFNJIFBMTCBzcmMgc2V0dGluZyB0byBtb2Rlc2V0X2luaXQoKSBzbyB0
-aGF0IHRoZQo+PiBjbG9jayBkcml2ZXIgY2FuIGNsYWltIHVudXNlZCBkaXNwbGF5IGNsb2NrIHJl
-c291cmNlcyBiZWZvcmUKPj4gdGhlIGRpc3BsYXkgZHJpdmVyIHJlcXVlc3RzIGZvciB0aGVtIGFn
-YWluLgo+Cj4gSU1ITyB0aGlzIGlzIGEgYmFkIGRlc2lnbi4gIFNlYW4gYW5kIFN0ZXBoZW4gY2Fu
-IGZlZWwgZnJlZSB0byBvdmVycmlkZQo+IG1lLCBidXQgSSB0aGluayB0aGUgY2xvY2sgZHJpdmVy
-IHNob3VsZCBiZSBpbXByb3ZlZCB0byBoYW5kbGUgdGhpcwo+IGNhc2UgYW5kIG5vdCByZXF1aXJl
-IHRoZSBjbG9jayB0byBnZXQgZGlzYWJsZWQgYmVmb3JlIExpbnV4IGVuYWJsZXMKPiBpdC4KPgoK
-SSBleHBlcmltZW50ZWQgd2l0aCBpdCBhIHdoaWxlIGJhY2tbMV0gKGluIHRoaXMgY2FzZSB3LyBs
-ayBsaWdodGluZyB1cAp0aGUgZGlzcGxheSkuICBJbiB0aGF0IGNhc2UgSSBuZWVkZWQgYm90aCB0
-aGUgY2xrIGFuZCBnZHNjIGNvZGUgdG8KcmVhbGl6ZSB0aGF0IGNsa3MvZ2RzYydzIHdlcmUgb24g
-YXQgYm9vdCwgYW5kIGZpeHVwIHRoZSByZWZjbnQgb2YgdGhlCmNsa3MgKGFuZCBwYXJlbnQgY2xv
-Y2tzIGFuZCBzbyBvbikuICBBbmQgdGhlbiB3aGVuIHByb2JlZCB0aGUgZGlzcGxheQpkcml2ZXIg
-d291bGQgY2hlY2sgaWYgY2xvY2tzIHdlcmUgZW5hYmxlZCB0byBkZWNpZGUgdG8gcmVhZGJhY2sg
-dGhlCnN0YXRlIGZyb20gdGhlIGh3LiAgKE1heWJlIHlvdSBjYW4gc2hvcnQtY2lyY3VpdCBzb21l
-IG9mIHRoYXQgaWYgeW91Cm9ubHkgY2FyZSBhYm91dCBEU0kgcGFuZWxzIHdpdGggYSBzaW5nbGUg
-Zml4ZWQgcmVzb2x1dGlvbiwgYnV0IGFzIHNvb24KYXMgZXh0ZXJuYWwgZGlzcGxheXMgY29tZSBp
-bnRvIHRoZSBwaWN0dXJlIHlvdSBjYW4ndCBhc3N1bWUgc28gbXVjaAphYm91dCB0aGUgaHcgIHN0
-YXRlLikKCkJSLAotUgoKWzFdIGh0dHBzOi8vZ2l0aHViLmNvbS9mcmVlZHJlbm8va2VybmVsLW1z
-bS9jb21taXRzL2Rpc3BsYXktaGFuZG92ZXIKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+This patchset extends the tas571x driver to support the tas5707
+audio power amplifier.
+
+Jerome Brunet (2):
+  ASoC: tas571x: add tas5707 compatible
+  ASoC: tas517x: add tas5707 support
+
+ .../devicetree/bindings/sound/tas571x.txt          |   1 +
+ sound/soc/codecs/Kconfig                           |   5 +-
+ sound/soc/codecs/tas571x.c                         | 110 +++++++++++++++++++++
+ sound/soc/codecs/tas571x.h                         |  16 +++
+ 4 files changed, 131 insertions(+), 1 deletion(-)
+
+-- 
+2.14.4
