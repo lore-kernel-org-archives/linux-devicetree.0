@@ -1,155 +1,93 @@
-From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 0/5] Add virtio-iommu driver
-Date: Tue, 26 Jun 2018 21:07:55 +0300
-Message-ID: <20180626210132-mutt-send-email-mst@kernel.org>
-References: <20180621190655.56391-1-jean-philippe.brucker@arm.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH] arm: dts: socfpga: denali needs nand_x_clk too
+Date: Tue, 26 Jun 2018 20:09:28 +0200
+Message-ID: <20180626200928.29aca979@xps13>
+References: <20180619120719.26921-1-richard@nod.at>
+        <CAK7LNASgPa4D0Siyo3mvK_AJ2zaECDXGaMEn-iNzQ9PFXFir+w@mail.gmail.com>
+        <3320422.EJ8D6C0VHL@blindfold>
+        <d4fdcd1d-db20-1837-a037-0982a042d357@kernel.org>
+        <20180625165506.484e025f@bbrezillon>
+        <CAK7LNATyo+7gauyQcRmNfCs8CagU1XdpHHgREMeTvf4rqxpeNQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180621190655.56391-1-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jayachandran.nair-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, tnowicki-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, virtio-dev-sDuHXQ4OtrM4h7I2RyI4rWD2FQJk+8+b@public.gmane.org, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNATyo+7gauyQcRmNfCs8CagU1XdpHHgREMeTvf4rqxpeNQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, Dinh Nguyen <dinguyen@kernel.org>, Richard Weinberger <richard@nod.at>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek =?UTF-8?B?VmHFoXV0?= <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 21, 2018 at 08:06:50PM +0100, Jean-Philippe Brucker wrote:
-> Implement the base virtio-iommu driver, following version 0.7 of the
-> specification [1].
-> =
+Hi Masahiro,
 
-> Changes since last version [2]:
-> * Address comments, thanks again for the review.
-> * As suggested, add a DT binding description in patch 1.
-> * Depend on VIRTIO_MMIO=3Dy to fix a build failure=B9
-> * Switch to v0.7 of the spec, which changes resv_mem parameters and adds
->   an MMIO flag. These are trivial but not backward compatible. Once
->   device or driver is upstream, updates to the spec will rely on feature
->   bits to stay compatible with this code.
-> * Implement the new tlb_sync interface, by splitting add_req() and
->   sync_req(). I noticed a small improvement on netperf stream because
->   the synchronous iommu_unmap() also benefits from this. Other
->   experiments, such as using kmem_cache for requests instead of kmalloc,
->   didn't show any improvement.
-> =
+On Tue, 26 Jun 2018 11:38:21 +0900, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 
-> Driver is available on branch virtio-iommu/v0.7 [3], and the x86+ACPI
-> prototype is on branch virtio-iommu/devel. That x86 code hasn't changed,
-> it still requires the DMA ifdeffery and I lack the expertise to tidy it
-> up. The kvmtool example device has been cleaned up and is available on
-> branch virtio-iommu/v0.7 [4].
-> =
+> 2018-06-25 23:55 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:
+> > On Mon, 25 Jun 2018 09:50:18 -0500
+> > Dinh Nguyen <dinguyen@kernel.org> wrote:
+> >  
+> >> On 06/22/2018 10:58 AM, Richard Weinberger wrote:  
+> >> > Masahiro,
+> >> >
+> >> > Am Freitag, 22. Juni 2018, 16:37:21 CEST schrieb Masahiro Yamada:  
+> >> >> Hi Richard,
+> >> >>
+> >> >>
+> >> >> 2018-06-19 21:07 GMT+09:00 Richard Weinberger <richard@nod.at>:  
+> >> >>> The denali NAND flash controller needs at least two clocks to operate,
+> >> >>> nand_clk and nand_x_clk.
+> >> >>> Since 1bb88666775e ("mtd: nand: denali: handle timing parameters by
+> >> >>> setup_data_interface()") nand_x_clk is used to derive timing settings.
+> >> >>>
+> >> >>> Signed-off-by: Richard Weinberger <richard@nod.at>
+> >> >>> ---
+> >> >>> Strictly speaking denali needs a ecc_clk too, but AFAIK such a clock
+> >> >>> is not present on this SoC.
+> >> >>> But my SoCFPGA knowledge is very limited.
+> >> >>>
+> >> >>> Thanks,
+> >> >>> //richard
+> >> >>> ---
+> >> >>>  arch/arm/boot/dts/socfpga.dtsi | 3 ++-
+> >> >>>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >> >>>
+> >> >>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> >> >>> index 486d4e7433ed..562f7b375bbd 100644
+> >> >>> --- a/arch/arm/boot/dts/socfpga.dtsi
+> >> >>> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> >> >>> @@ -754,7 +754,8 @@
+> >> >>>                         reg-names = "nand_data", "denali_reg";
+> >> >>>                         interrupts = <0x0 0x90 0x4>;
+> >> >>>                         dma-mask = <0xffffffff>;
+> >> >>> -                       clocks = <&nand_clk>;
+> >> >>> +                       clocks = <&nand_clk>, <&nand_x_clk>;
+> >> >>> +                       clock-names = "nand", "nand_x";  
+> >> >>
+> >> >>
+> >> >> IMHO, this should be
+> >> >>
+> >> >>                           clocks = <&nand_clk>, <&nand_x_clk>, <&nand_x_clk>;
+> >> >>                           clock-names = "nand", "nand_x", "ecc";  
+> >>
+> >> No, it should be just the nand_x and ecc.
+> >>
+> >> There's already a patch to use the nand_x_clk and not the nand_clk.  
+> 
+> 
+> Different people try to fix the problem in different ways.
+> 
+> I think it is due to miscommunication across sub-systems.
 
-> Feedback welcome!
-> =
+Is the series named
 
-> Thanks,
-> Jean
+        mtd: rawnand: denali: add new clocks and improve
+    	                      setup_data_interface
 
-So as I pointed out new virtio 0 device isn't really welcome ;)
-No one bothered implementing virtio 1 in MMIO for all the work
-that was put in defining it. The fact that the MMIO part of the
-spec doesn't seem to allow for transitional devices might
-or might not have something to do with this.
+still valid?
 
-So why make it an MMIO device at all? A system with an IOMMU
-will have a PCI bus, won't it? And it's pretty common to
-have the IOMMU be a PCI device on the root bus.
-Will remove need to bother with dt bindings etc.
+I am about to apply it (patches 2/5 to 5/5) but it looks like the
+discussion is still ongoing.
 
-
-> [1] virtio-iommu specification v0.7
->     https://www.spinics.net/lists/linux-virtualization/msg34127.html
-> [2] virtio-iommu driver v1
->     https://www.spinics.net/lists/kvm/msg164322.html
-> [3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.7
->     http://www.linux-arm.org/git?p=3Dlinux-jpb.git;a=3Dshortlog;h=3Drefs/=
-heads/virtio-iommu/v0.7
-> [4] git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.7 =
-
-> =
-
->                                   ---
-> =B9 A word on the module story. Because of complex dependencies IOMMU
-> drivers cannot yet be .ko modules. Enabling it is outside the scope of
-> this series but I have a small prototype on branch virtio-iommu/
-> module-devel. It seems desirable since some distros currently ship the
-> transport code as module and are unlikely to change this on our account.
-> Note that this series works fine with arm64 defconfig, which selects
-> VIRTIO_MMIO=3Dy.
-> =
-
-> I could use some help to clean this up. Currently my solution is to split
-> virtio-iommu into a module and a 3-lines built-in stub, which isn't
-> graceful but could have been worse.
-> =
-
-> Keeping the whole virtio-iommu driver as builtin would require accessing
-> any virtio utility through get_symbol. So far we only have seven of
-> those and could keep a list of pointer ops, but I find this solution
-> terrible. If virtio or virtio_mmio is a module, virtio-iommu also needs
-> to be one.
-> =
-
-> The minimal set of changes to make a module out of an OF-based IOMMU
-> driver seems to be:
-> * Export IOMMU symbols used by drivers
-> * Don't give up deferring probe in of_iommu
-> * Move IOMMU OF tables to .rodata
-> * Create a static virtio-iommu stub that declares the virtio-iommu OF
->   table entry. The build system doesn't pick up IOMMU_OF_DECLARE when
->   done from an object destined to be built as module :(
-> * Create a device_link between endpoint and IOMMU, to ensure that
->   removing the IOMMU driver also unbinds the endpoint driver. Putting
->   this in IOMMU core seems like a better approach since even when not
->   built as module, unbinding an IOMMU device via sysfs will cause
->   crashes.
-> =
-
-> With this, as long as virtio-mmio isn't loaded, the OF code defers probe
-> of endpoints that depend on virtio-iommu. Once virtio-mmio is loaded,
-> the probe is still deferred until virtio-iommu registers itself to the
-> virtio bus. Once virtio-iommu is loaded, probe of endpoints managed by
-> the IOMMU follows.
-> =
-
-> I'll investigate ACPI IORT when I find some time, though I don't expect
-> much complication and suggest we tackle one problem at a time. Since it
-> is a luxury that requires changes to the IOMMU core, module support is
-> left as a future improvement.
->                                   ---
-> =
-
-> Jean-Philippe Brucker (5):
->   dt-bindings: virtio: Specify #iommu-cells value for a virtio-iommu
->   iommu: Add virtio-iommu driver
->   iommu/virtio: Add probe request
->   iommu/virtio: Add event queue
->   vfio: Allow type-1 IOMMU instantiation for ARM
-> =
-
->  .../devicetree/bindings/virtio/mmio.txt       |    8 +
->  MAINTAINERS                                   |    6 +
->  drivers/iommu/Kconfig                         |   11 +
->  drivers/iommu/Makefile                        |    1 +
->  drivers/iommu/virtio-iommu.c                  | 1164 +++++++++++++++++
->  drivers/vfio/Kconfig                          |    2 +-
->  include/uapi/linux/virtio_ids.h               |    1 +
->  include/uapi/linux/virtio_iommu.h             |  172 +++
->  8 files changed, 1364 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/iommu/virtio-iommu.c
->  create mode 100644 include/uapi/linux/virtio_iommu.h
-> =
-
-> -- =
-
-> 2.17.0
+Thanks,
+Miquèl
