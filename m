@@ -1,67 +1,26 @@
-Return-Path: <vkoul@kernel.org>
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v4 1/6] dt-bindings: power: reset: Add qcom pon binding
-Date: Wed, 27 Jun 2018 17:22:56 +0530
-Message-Id: <20180627115301.21330-2-vkoul@kernel.org>
-In-Reply-To: <20180627115301.21330-1-vkoul@kernel.org>
-References: <20180627115301.21330-1-vkoul@kernel.org>
-To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Return-Path: <SRS0=y08W=JM=gmail.com=festevam@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqKxsY2hc9ezt77uWYNv03AFKH5=+VKkv3BcxzZmp-aNWg@mail.gmail.com>
+References: <1529693129-29817-1-git-send-email-festevam@gmail.com>
+ <20180625202109.GA22892@rob-hp-laptop> <CAOMZO5AAmC9_2RDu4_omCFLazV2Q083vPkCbH+_gie_jZnMp5A@mail.gmail.com>
+ <CAL_JsqKxsY2hc9ezt77uWYNv03AFKH5=+VKkv3BcxzZmp-aNWg@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Tue, 26 Jun 2018 20:19:28 -0300
+Message-ID: <CAOMZO5CNNYVjnWECj+LDC2BAfTgVa2aPjcOzbDwi-Vp89dwF6g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: fsl-imx-sahara: Add i.MX51 as a
+ supported SoC
+Content-Type: text/plain; charset="UTF-8"
+To: Rob Herring <robh@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The Power On device for Qcom PM 8xxx is a MFD supporting pwrkey and
-resin along with the Android reboot-mode.
+Hi Rob,
 
-Add the binding describing this.
+On Tue, Jun 26, 2018 at 11:24 AM, Rob Herring <robh@kernel.org> wrote:
 
-Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- .../devicetree/bindings/power/reset/qcom,pon.txt   | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+>> Would it be OK to use: compatible = "fsl,imx51-sahara", "fsl,imx53-sahara"; ?
+>
+> Yes, but the order should be reversed as it should be most specific
+> and newest first.
 
-diff --git a/Documentation/devicetree/bindings/power/reset/qcom,pon.txt b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
-new file mode 100644
-index 000000000000..f32cdd358267
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
-@@ -0,0 +1,35 @@
-+Qualcomm PON Device
-+
-+The Power On device for Qualcomm PM8xxx is MFD supporting pwrkey
-+along with the Android reboot-mode.
-+
-+This DT node has pwrkey as sub node.
-+
-+Required Properties:
-+-compatible: "qcom,pm8916-pon"
-+-reg: Specifies the physical address of the pon register
-+
-+Optional subnode:
-+-pwrkey: Specifies the subnode pwrkey and should follow the
-+ qcom,pm8941-pwrkey.txt description.
-+
-+The rest of the properties should follow the generic reboot-mode description
-+found in reboot-mode.txt
-+
-+Example:
-+
-+	pon@800 {
-+		compatible = "qcom,pm8916-pon";
-+
-+		reg = <0x800>;
-+		mode-bootloader = <0x2>;
-+		mode-recovery = <0x1>;
-+
-+		pwrkey {
-+			compatible = "qcom,pm8941-pwrkey";
-+			interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
-+			debounce = <15625>;
-+			bias-pull-up;
-+			linux,code = <KEY_POWER>;
-+		};
-+	};
--- 
-2.14.4
+Thanks for the feedback. Just sent a dts patch as you suggested.
