@@ -1,15 +1,17 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v2 4/4] mailbox: Add support for i.MX7D messaging unit
-Date: Tue, 26 Jun 2018 10:09:14 +0000
-Message-ID: <AM0PR04MB4211BBB72255BDA36C5AFF9880490@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20180615095107.24610-1-o.rempel@pengutronix.de>
- <20180615095107.24610-5-o.rempel@pengutronix.de>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 0/4] media: sun6i: Add support for the H3 CSI controller
+Date: Tue, 26 Jun 2018 13:08:06 +0200
+Message-ID: <20180626110806.mqygmu6odhcfy67h@flea>
+References: <20180305100432.15009-1-maxime.ripard@bootlin.com>
+ <CAMty3ZBQXyvOnzy_9RLDW-QO9qnAC4SR5UJnWYmhiPrP23z_vg@mail.gmail.com>
+ <20180626082330.pvq3gi6mmokky5vl@flea>
+ <CAMty3ZBRYtTBiYjQNZj07Ni_bi6qH+L1xga_kcHVrW0tZ0-hLQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180615095107.24610-5-o.rempel@pengutronix.de>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZBRYtTBiYjQNZj07Ni_bi6qH+L1xga_kcHVrW0tZ0-hLQ@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,375 +21,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Mylene Josserand <mylene.josserand@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
-> Sent: Friday, June 15, 2018 5:51 PM
-> To: Shawn Guo <shawnguo@kernel.org>; Fabio Estevam
-> <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>; Mark
-> Rutland <mark.rutland@arm.com>; A.s. Dong <aisheng.dong@nxp.com>
-> Cc: Oleksij Rempel <o.rempel@pengutronix.de>; kernel@pengutronix.de;
-> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
-> clk@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>
-> Subject: [PATCH v2 4/4] mailbox: Add support for i.MX7D messaging unit
-> 
-> The Mailbox controller is able to send messages (up to 4 32 bit words)
-> between the endpoints.
-> 
-> This driver was tested using the mailbox-test driver sending messages
-> between the Cortex-A7 and the Cortex-M4.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  drivers/mailbox/Kconfig       |   6 +
->  drivers/mailbox/Makefile      |   2 +
->  drivers/mailbox/imx-mailbox.c | 288
-> ++++++++++++++++++++++++++++++++++
->  3 files changed, 296 insertions(+)
->  create mode 100644 drivers/mailbox/imx-mailbox.c
-> 
-> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig index
-> a2bb27446dce..e1d2738a2e4c 100644
-> --- a/drivers/mailbox/Kconfig
-> +++ b/drivers/mailbox/Kconfig
-> @@ -15,6 +15,12 @@ config ARM_MHU
->  	  The controller has 3 mailbox channels, the last of which can be
->  	  used in Secure mode only.
-> 
-> +config IMX_MBOX
-> +	tristate "iMX Mailbox"
-> +	depends on SOC_IMX7D || COMPILE_TEST
-> +	help
-> +	  Mailbox implementation for iMX7D Messaging Unit (MU).
-> +
->  config PLATFORM_MHU
->  	tristate "Platform MHU Mailbox"
->  	depends on OF
-> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile index
-> cc23c3a43fcd..ba2fe1b6dd62 100644
-> --- a/drivers/mailbox/Makefile
-> +++ b/drivers/mailbox/Makefile
-> @@ -7,6 +7,8 @@ obj-$(CONFIG_MAILBOX_TEST)	+= mailbox-test.o
-> 
->  obj-$(CONFIG_ARM_MHU)	+= arm_mhu.o
-> 
-> +obj-$(CONFIG_IMX_MBOX)	+= imx-mailbox.o
-> +
->  obj-$(CONFIG_PLATFORM_MHU)	+= platform_mhu.o
-> 
->  obj-$(CONFIG_PL320_MBOX)	+= pl320-ipc.o
-> diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-> new file mode 100644 index 000000000000..e3f621cb1d30
-> --- /dev/null
-> +++ b/drivers/mailbox/imx-mailbox.c
-> @@ -0,0 +1,288 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 Pengutronix, Oleksij Rempel
-> +<o.rempel@pengutronix.de>  */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mailbox_controller.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +
-> +/* Transmit Register */
-> +#define IMX_MU_xTRn(x)		(0x00 + 4 * (x))
-> +/* Receive Register */
-> +#define IMX_MU_xRRn(x)		(0x10 + 4 * (x))
-> +/* Status Register */
-> +#define IMX_MU_xSR		0x20
-> +#define IMX_MU_xSR_TEn(x)	BIT(20 + (x))
-> +#define IMX_MU_xSR_RFn(x)	BIT(24 + (x))
-> +#define IMX_MU_xSR_BRDIP	BIT(9)
-> +
-> +/* Control Register */
-> +#define IMX_MU_xCR		0x24
-> +/* Transmit Interrupt Enable */
-> +#define IMX_MU_xCR_TIEn(x)	BIT(20 + (x))
-> +/* Receive Interrupt Enable */
-> +#define IMX_MU_xCR_RIEn(x)	BIT(24 + (x))
-> +
-> +#define IMX_MU_MAX_CHANS	4u
-> +
-> +struct imx_mu_priv;
-> +
-> +struct imx_mu_cfg {
-> +	unsigned int		chans;
-> +	void (*init_hw)(struct imx_mu_priv *priv); };
-> +
-> +struct imx_mu_con_priv {
-> +	int			irq;
-> +	unsigned int		bidx;
-> +	unsigned int		idx;
-> +};
-> +
-> +struct imx_mu_priv {
-> +	struct device		*dev;
-> +	const struct imx_mu_cfg	*dcfg;
-> +	void __iomem		*base;
-> +
-> +	struct mbox_controller	mbox;
-> +	struct mbox_chan	mbox_chans[IMX_MU_MAX_CHANS];
-> +
-> +	struct imx_mu_con_priv  con_priv[IMX_MU_MAX_CHANS];
-> +	struct clk		*clk;
-> +};
-> +
-> +static struct imx_mu_priv *to_imx_mu_priv(struct mbox_controller *mbox)
-> +{
-> +	return container_of(mbox, struct imx_mu_priv, mbox); }
-> +
-> +static void imx_mu_write(struct imx_mu_priv *priv, u32 val, u32 offs) {
-> +	iowrite32(val, priv->base + offs);
-> +}
-> +
-> +static u32 imx_mu_read(struct imx_mu_priv *priv, u32 offs) {
-> +	return ioread32(priv->base + offs);
-> +}
-> +
-> +static u32 imx_mu_rmw(struct imx_mu_priv *priv, u32 offs, u32 set, u32
-> +clr) {
-> +	u32 val;
-> +
-> +	val = imx_mu_read(priv, offs);
-> +	val &= ~clr;
-> +	val |= set;
-> +	imx_mu_write(priv, val, offs);
-> +
-> +	return val;
-> +}
-> +
-> +static irqreturn_t imx_mu_isr(int irq, void *p) {
-> +	struct mbox_chan *chan = p;
-> +	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
-> +	struct imx_mu_con_priv *cp = chan->con_priv;
-> +
-> +	u32 val, dat;
-> +
-> +	val = imx_mu_read(priv, IMX_MU_xSR);
-> +	val &= IMX_MU_xSR_TEn(cp->bidx) | IMX_MU_xSR_RFn(cp->bidx);
-> +	if (!val)
-> +		return IRQ_NONE;
-> +
-> +	if (val & IMX_MU_xSR_TEn(cp->bidx)) {
+On Tue, Jun 26, 2018 at 02:42:11PM +0530, Jagan Teki wrote:
+> On Tue, Jun 26, 2018 at 1:53 PM, Maxime Ripard
+> <maxime.ripard@bootlin.com> wrote:
+> > Hi,
+> >
+> > On Tue, Jun 26, 2018 at 11:41:56AM +0530, Jagan Teki wrote:
+> >> On Mon, Mar 5, 2018 at 3:34 PM, Maxime Ripard <maxime.ripard@bootlin.c=
+om> wrote:
+> >> > The H3 and H5 have a CSI controller based on the one previously found
+> >> > in the A31, that is currently supported by the sun6i-csi driver.
+> >> >
+> >> > Add the compatibles to the device tree bindings and to the driver to
+> >> > make it work properly.
+> >> >
+> >> > This obviously depends on the serie "Initial Allwinner V3s CSI
+> >> > Support" by Yong Deng.
+> >> >
+> >> > Let me know what you think,
+> >> > Maxime
+> >> >
+> >> > Maxime Ripard (2):
+> >> >   dt-bindings: media: sun6i: Add A31 and H3 compatibles
+> >> >   media: sun6i: Add A31 compatible
+> >> >
+> >> > Myl=E8ne Josserand (2):
+> >> >   ARM: dts: sun8i: Add the H3/H5 CSI controller
+> >> >   [DO NOT MERGE] ARM: dts: sun8i: Add CAM500B camera module to the N=
+ano
+> >> >     Pi M1+
+> >>
+> >> Just trying to understand what interface has been tested with npi-m1+,
+> >> is it DVP (parallel) interface?
+> >
+> > Yes
+> >
+> >> I've Bananapi 5MP[1] and trying to test on top, and look like its
+> >> MIPI CSI2. I guess Yong patch[2] doesn't support CSI2 yet, am I
+> >> correct?
+> >
+> > This is what Yong's cover letter is saying yes :)
+> =
 
-I'm wondering whether this can work properly for multi consumers
-at the same time. 
-Because xSR_TEn is 1 by default and four virtual channels actually
-are using the same interrupt. That means channel 1 interrupt may
-cause channel 2 believe it's txdone.
-Have we tested such using?
+> Thanks, and this ov5640 tested on -next or any specific code? please
+> provide if you have different code base.
 
-> +		imx_mu_rmw(priv, IMX_MU_xCR, 0, IMX_MU_xCR_TIEn(cp-
-> >bidx));
-> +		mbox_chan_txdone(chan, 0);
-> +	}
-> +
-> +	if (val & IMX_MU_xSR_RFn(cp->bidx)) {
-> +		dat = imx_mu_read(priv, IMX_MU_xRRn(cp->idx));
-> +		mbox_chan_received_data(chan, (void *)&dat);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static bool imx_mu_last_tx_done(struct mbox_chan *chan) {
-> +	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
-> +	struct imx_mu_con_priv *cp = chan->con_priv;
-> +	u32 val;
-> +
-> +	val = imx_mu_read(priv, IMX_MU_xSR);
-> +	/* test if transmit register is empty */
-> +	return (!!(val & IMX_MU_xSR_TEn(cp->bidx))); }
-> +
-> +static int imx_mu_send_data(struct mbox_chan *chan, void *data) {
-> +	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
-> +	struct imx_mu_con_priv *cp = chan->con_priv;
-> +	u32 *arg = data;
-> +
-> +	if (!imx_mu_last_tx_done(chan))
-> +		return -EBUSY;
-> +
-> +	imx_mu_write(priv, *arg, IMX_MU_xTRn(cp->idx));
-> +	imx_mu_rmw(priv, IMX_MU_xCR, IMX_MU_xSR_TEn(cp->bidx), 0);
-> +
-> +	return 0;
-> +}
+It should work with the current ov5640 driver.
 
-Since Sascha is requesting to write a generic MU mailbox driver for both
-SCU MU and M4 case, the current way using virtual channels in this patch
-only send one word a time obviously can't fit for SCU MU clients well.
-Do you think if we can refer to TI case to design a generic data transfer
-protocol to allow send multi words which is more close to SCU?
-include/linux/soc/ti/ti-msgmgr.h
-struct ti_msgmgr_message {
-        size_t len;
-        u8 *buf;
-};  
+Maxime
 
-Or we try to support both type transfer protocols in this driver?
-That may introduce much complexities, personally I'm not quite
-like that.
+-- =
 
-Regards
-Dong Aisheng
-
-> +
-> +static int imx_mu_startup(struct mbox_chan *chan) {
-> +	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
-> +	struct imx_mu_con_priv *cp = chan->con_priv;
-> +	int ret;
-> +
-> +	ret = request_irq(cp->irq, imx_mu_isr,
-> +			  IRQF_SHARED, "imx_mu_chan", chan);
-> +	if (ret) {
-> +		dev_err(chan->mbox->dev,
-> +			"Unable to acquire IRQ %d\n", cp->irq);
-> +		return ret;
-> +	}
-> +
-> +	imx_mu_rmw(priv, IMX_MU_xCR, IMX_MU_xCR_RIEn(cp->bidx), 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static void imx_mu_shutdown(struct mbox_chan *chan) {
-> +	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
-> +	struct imx_mu_con_priv *cp = chan->con_priv;
-> +
-> +	imx_mu_rmw(priv, IMX_MU_xCR, 0,
-> +		   IMX_MU_xCR_TIEn(cp->bidx) | IMX_MU_xCR_RIEn(cp-
-> >bidx));
-> +
-> +	free_irq(cp->irq, chan);
-> +}
-> +
-> +static const struct mbox_chan_ops imx_mu_ops = {
-> +	.send_data = imx_mu_send_data,
-> +	.startup = imx_mu_startup,
-> +	.shutdown = imx_mu_shutdown,
-> +};
-> +
-> +static int imx_mu_probe(struct platform_device *pdev) {
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *iomem;
-> +	struct imx_mu_priv *priv;
-> +	const struct imx_mu_cfg *dcfg;
-> +	unsigned int i, chans;
-> +	int irq, ret;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	dcfg = of_device_get_match_data(dev);
-> +	if (!dcfg)
-> +		return -EINVAL;
-> +
-> +	priv->dcfg = dcfg;
-> +	priv->dev = dev;
-> +
-> +	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	priv->base = devm_ioremap_resource(&pdev->dev, iomem);
-> +	if (IS_ERR(priv->base))
-> +		return PTR_ERR(priv->base);
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq <= 0)
-> +		return irq < 0 ? irq : -EINVAL;
-> +
-> +	priv->clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(priv->clk)) {
-> +		if (PTR_ERR(priv->clk) == -ENOENT) {
-> +			priv->clk = NULL;
-> +		} else {
-> +			dev_err(dev, "Failed to get clock\n");
-> +			return PTR_ERR(priv->clk);
-> +		}
-> +	}
-> +
-> +	ret = clk_prepare_enable(priv->clk);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable clock\n");
-> +		return ret;
-> +	}
-> +
-> +	chans = min(dcfg->chans, IMX_MU_MAX_CHANS);
-> +	/* Initialize channel identifiers */
-> +	for (i = 0; i < chans; i++) {
-> +		struct imx_mu_con_priv *cp = &priv->con_priv[i];
-> +
-> +		cp->bidx = 3 - i;
-> +		cp->idx = i;
-> +		cp->irq = irq;
-> +		priv->mbox_chans[i].con_priv = cp;
-> +	}
-> +
-> +	priv->mbox.dev = dev;
-> +	priv->mbox.ops = &imx_mu_ops;
-> +	priv->mbox.chans = priv->mbox_chans;
-> +	priv->mbox.num_chans = chans;
-> +	priv->mbox.txdone_irq = true;
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	if (priv->dcfg->init_hw)
-> +		priv->dcfg->init_hw(priv);
-> +
-> +	return mbox_controller_register(&priv->mbox);
-> +}
-> +
-> +static int imx_mu_remove(struct platform_device *pdev) {
-> +	struct imx_mu_priv *priv = platform_get_drvdata(pdev);
-> +
-> +	mbox_controller_unregister(&priv->mbox);
-> +	clk_disable_unprepare(priv->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +
-> +static void imx_mu_init_imx7d_a(struct imx_mu_priv *priv) {
-> +	/* Set default config */
-> +	imx_mu_write(priv, 0, IMX_MU_xCR);
-> +}
-> +
-> +static const struct imx_mu_cfg imx_mu_cfg_imx7d_a = {
-> +	.chans = IMX_MU_MAX_CHANS,
-> +	.init_hw = imx_mu_init_imx7d_a,
-> +};
-> +
-> +static const struct imx_mu_cfg imx_mu_cfg_imx7d_b = {
-> +	.chans = IMX_MU_MAX_CHANS,
-> +};
-> +
-> +static const struct of_device_id imx_mu_dt_ids[] = {
-> +	{ .compatible = "fsl,imx7s-mu-a", .data = &imx_mu_cfg_imx7d_a },
-> +	{ .compatible = "fsl,imx7s-mu-b", .data = &imx_mu_cfg_imx7d_b },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, imx_mu_dt_ids);
-> +
-> +static struct platform_driver imx_mu_driver = {
-> +	.probe		= imx_mu_probe,
-> +	.remove		= imx_mu_remove,
-> +	.driver = {
-> +		.name	= "imx_mu",
-> +		.of_match_table = imx_mu_dt_ids,
-> +	},
-> +};
-> +module_platform_driver(imx_mu_driver);
-> +
-> +MODULE_AUTHOR("Oleksij Rempel <o.rempel@pengutronix.de>");
-> +MODULE_DESCRIPTION("Message Unit driver for i.MX");
-> MODULE_LICENSE("GPL
-> +v2");
-> --
-> 2.17.1
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
