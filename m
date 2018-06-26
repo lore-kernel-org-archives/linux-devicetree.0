@@ -1,78 +1,38 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v2 3/6] coresight: Introduce support for Coresight
- Address Translation Unit
-Date: Tue, 26 Jun 2018 09:59:54 -0600
-Message-ID: <20180626155954.GA27118@xps15>
-References: <20180625112213.23492-1-suzuki.poulose@arm.com>
- <20180625112213.23492-4-suzuki.poulose@arm.com>
- <1dab29ef47d77c2456ee2500a4636f8793b53354.camel@perches.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: [PATCH 0/2] Fixup STM32MP157 device tree
+Date: Tue, 26 Jun 2018 18:18:59 +0200
+Message-ID: <1530029941-26089-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1dab29ef47d77c2456ee2500a4636f8793b53354.camel@perches.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: ludovic.barre@st.com, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 25, 2018 at 09:23:51AM -0700, Joe Perches wrote:
-> On Mon, 2018-06-25 at 12:22 +0100, Suzuki K Poulose wrote:
-> > Add the initial support for Coresight Address Translation Unit, which
-> > augments the TMC in Coresight SoC-600 by providing an improved Scatter
-> > Gather mechanism. CATU is always connected to a single TMC-ETR and
-> > converts the AXI address with a translated address (from a given SG
-> > table with specific format). The CATU should be programmed in pass
-> > through mode and enabled even if the ETR doesn't use the translation
-> > by CATU.
-> []
-> > diff --git a/drivers/hwtracing/coresight/coresight-catu.h b/drivers/hwtracing/coresight/coresight-catu.h
-> []
-> > +static inline bool coresight_is_catu_device(struct coresight_device *csdev)
-> > +{
-> > +	enum coresight_dev_subtype_helper subtype;
-> > +
-> > +	/* Make the checkpatch happy */
-> > +	subtype = csdev->subtype.helper_subtype;
-> > +
-> > +	return IS_ENABLED(CONFIG_CORESIGHT_CATU) &&
-> > +	       csdev->type == CORESIGHT_DEV_TYPE_HELPER &&
-> > +	       subtype == CORESIGHT_DEV_SUBTYPE_HELPER_CATU;
-> > +}
-> 
-> I believe you should not make checkpatch happy here
-> by using a temporary but use the most readable form.
-> 
-> Probably the most readable form is:
-> 
-> 	return IS_ENABLED(CONFIG_CORESIGHT_CATU) &&
-> 	       csdev->type == CORESIGHT_DEV_TYPE_HELPER &&
-> 	       csdev->subtype.helper_subtype == CORESIGHT_DEV_SUBTYPE_HELPER_CATU;
-> 
-> where restricting line length to 80 columns is not useful
-> because the identifiers are very long.  The identifiers
-> are possibly longer than necessary.
+This series:
+ -remove gpio aliases as there are not used.
+ -reorder nodes in stm32mp157c-ed1 file.
 
-I would prefer to avoid adding code that will trigger checkpatch warnings.  I
-suggest the following:
+Regards
+Alex
 
-static inline bool coresight_is_catu_device(struct coresight_device *csdev)
-{
-        if (!IS_ENABLED(CONFIG_CORESIGHT_CATU))
-                return false;
+Alexandre Torgue (2):
+  ARM: dts: stm32: remove gpio aliases for stm32mp157c
+  ARM: dts: stm32: Reorder nodes in stm32mp157c-ed1
 
-        if (csdev->type != CORESIGHT_DEV_TYPE_HELPER)
-                return false;
+ arch/arm/boot/dts/stm32mp157c-ed1.dts | 22 +++++++++++-----------
+ arch/arm/boot/dts/stm32mp157c.dtsi    | 14 --------------
+ 2 files changed, 11 insertions(+), 25 deletions(-)
 
-        if (csdev->subtype.helper_subtype != CORESIGHT_DEV_SUBTYPE_HELPER_CATU)
-                return false;
-
-        return true;
-}
-
-No temporary variable and all shorther than 80 columns.
-
-Thanks,
-Mathieu
-
-> 
+-- 
+2.7.4
