@@ -1,16 +1,16 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 07/11] ASoC: qdsp6: q6afe-dai: support dt
- based module loading
-Date: Tue, 26 Jun 2018 09:56:08 +0100
-Message-ID: <8975a553-a5cd-31fa-bf8c-1206d732b184@linaro.org>
+Subject: Re: [PATCH 04/11] ASoC: qdsp6: q6adm: use
+ of_platform_populate/depopulate()
+Date: Tue, 26 Jun 2018 09:56:54 +0100
+Message-ID: <7912fa0c-b677-3206-51ac-e870c00ff4f8@linaro.org>
 References: <20180625143115.8346-1-srinivas.kandagatla@linaro.org>
- <20180625143115.8346-8-srinivas.kandagatla@linaro.org>
- <20180625180308.GF10876@centauri.lan>
+ <20180625143115.8346-5-srinivas.kandagatla@linaro.org>
+ <20180625180329.GG10876@centauri.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180625180308.GF10876@centauri.lan>
+In-Reply-To: <20180625180329.GG10876@centauri.lan>
 Content-Language: en-US
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
@@ -28,10 +28,10 @@ List-Id: devicetree@vger.kernel.org
 
 
 On 25/06/18 19:03, Niklas Cassel wrote:
->> +
-> Usually there is no empty line between the table and MODULE_DEVICE_TABLE.
-> 
-Sure, will do!
+> You can remove pdev_routing from struct q6adm,
+> since it is no longer in use.
+yep, I thought I removed this, but it looks like its still there.
+Will fix this in next version.
 
 thanks,
 srini
