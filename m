@@ -1,94 +1,43 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [PATCH 5/5] arm64: dts: allwinner: h6: enable AXP805 PMIC on
- Pine H64
-Date: Tue, 26 Jun 2018 08:49:41 +0800
-Message-ID: <f93b1524657048279f54004fdbcd6ab5af9ec1c1.camel@aosc.io>
-References: <20180620051540.25617-1-wens@csie.org>
- <20180620051540.25617-6-wens@csie.org>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH V2] ARM: dts: imx6sll-evk: make pfuze100 sw4 always on
+Date: Tue, 26 Jun 2018 09:01:40 +0800
+Message-ID: <1529974900-28865-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180620051540.25617-6-wens@csie.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Andre Przywara <andre.przywara@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-5ZyoIDIwMTgtMDYtMjDkuInnmoQgMTM6MTUgKzA4MDDvvIxDaGVuLVl1IFRzYWnlhpnpgZPvvJoK
-PiBGcm9tOiBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFvc2MuaW8+Cj4gCj4gUGluZSBINjQgYm9h
-cmQgaGFzIGFuIEFYUDgwNSBQTUlDIG9uIGl0Lgo+IAo+IEVuYWJsZSBpdCBpbiB0aGUgZGV2aWNl
-IHRyZWUuCj4gCj4gU2lnbmVkLW9mZi1ieTogSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLmlv
-PgoKSSBzdWdnZXN0IHRvIG1lbnRpb24gdGhlIHdvcmtpbmcgbW9kZSBjaGFuZ2UgaGVyZS4KCj4g
-U2lnbmVkLW9mZi1ieTogQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3JnPgo+IC0tLQo+ICAuLi4v
-Ym9vdC9kdHMvYWxsd2lubmVyL3N1bjUwaS1oNi1waW5lLWg2NC5kdHMgfCAxMDkKPiArKysrKysr
-KysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDEwOSBpbnNlcnRpb25zKCspCj4gCj4gZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYWxsd2lubmVyL3N1bjUwaS1oNi1waW5lLWg2
-NC5kdHMKPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYWxsd2lubmVyL3N1bjUwaS1oNi1waW5lLWg2
-NC5kdHMKPiBpbmRleCAyZTk3MTczYzkyMDQuLjE2NzM2MzYzNThlZiAxMDA2NDQKPiAtLS0gYS9h
-cmNoL2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5lci9zdW41MGktaDYtcGluZS1oNjQuZHRzCj4gKysr
-IGIvYXJjaC9hcm02NC9ib290L2R0cy9hbGx3aW5uZXIvc3VuNTBpLWg2LXBpbmUtaDY0LmR0cwo+
-IEBAIC00NCw2ICs0NCwxMTUgQEAKPiAgJnJfaTJjIHsKPiAgCXN0YXR1cyA9ICJva2F5IjsKPiAg
-Cj4gKwlheHA4MDU6IHBtaWNAMzYgewo+ICsJCWNvbXBhdGlibGUgPSAieC1wb3dlcnMsYXhwODA1
-IiwgIngtcG93ZXJzLGF4cDgwNiI7Cj4gKwkJcmVnID0gPDB4MzY+Owo+ICsJCWludGVycnVwdC1w
-YXJlbnQgPSA8JnJfaW50Yz47Cj4gKwkJaW50ZXJydXB0cyA9IDwwIElSUV9UWVBFX0xFVkVMX0xP
-Vz47Cj4gKwkJaW50ZXJydXB0LWNvbnRyb2xsZXI7Cj4gKwkJI2ludGVycnVwdC1jZWxscyA9IDwx
-PjsKPiArCQl4LXBvd2VycyxzZWxmLXdvcmtpbmctbW9kZTsKPiArCj4gKwkJcmVndWxhdG9ycyB7
-Cj4gKwkJCXJlZ19hbGRvMTogYWxkbzEgewo+ICsJCQkJcmVndWxhdG9yLWFsd2F5cy1vbjsKPiAr
-CQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMzMDAwMDA+Owo+ICsJCQkJcmVndWxhdG9y
-LW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47Cj4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2Y2Mt
-cGwiOwo+ICsJCQl9Owo+ICsKPiArCQkJcmVnX2FsZG8yOiBhbGRvMiB7Cj4gKwkJCQlyZWd1bGF0
-b3ItbWluLW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsKPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92
-b2x0ID0gPDMzMDAwMDA+Owo+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmNjLWFjMjAwIjsKPiAr
-CQkJfTsKPiArCj4gKwkJCXJlZ19hbGRvMzogYWxkbzMgewo+ICsJCQkJLyogVGhpcyByZWd1bGF0
-b3IgaXMgY29ubmVjdGVkIHdpdGgKPiBDTERPMSAqLwo+ICsJCQkJcmVndWxhdG9yLWFsd2F5cy1v
-bjsKPiArCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMzMDAwMDA+Owo+ICsJCQkJcmVn
-dWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47Cj4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9
-ICJ2Y2MtM3YzLTEiOwo+ICsJCQl9Owo+ICsKPiArCQkJcmVnX2JsZG8xOiBibGRvMSB7Cj4gKwkJ
-CQlyZWd1bGF0b3ItYWx3YXlzLW9uOwo+ICsJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8
-MTgwMDAwMD47Cj4gKwkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxODAwMDAwPjsKPiAr
-CQkJCXJlZ3VsYXRvci1uYW1lID0gInZjYy1iaWFzLXBsbCI7Cj4gKwkJCX07Cj4gKwo+ICsJCQly
-ZWdfYmxkbzI6IGJsZG8yIHsKPiArCQkJCXJlZ3VsYXRvci1hbHdheXMtb247Cj4gKwkJCQlyZWd1
-bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwxODAwMDAwPjsKPiArCQkJCXJlZ3VsYXRvci1tYXgtbWlj
-cm92b2x0ID0gPDE4MDAwMDA+Owo+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmNjLWVmdXNlLXBj
-aWUtCj4gaGRtaS1pbyI7Cj4gKwkJCX07Cj4gKwo+ICsJCQlyZWdfYmxkbzM6IGJsZG8zIHsKPiAr
-CQkJCXJlZ3VsYXRvci1hbHdheXMtb247Cj4gKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9
-IDwxODAwMDAwPjsKPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE4MDAwMDA+Owo+
-ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmNjLWRjeG9pbyI7Cj4gKwkJCX07Cj4gKwo+ICsJCQli
-bGRvNCB7Cj4gKwkJCQkvKiB1bnVzZWQgKi8KPiArCQkJfTsKPiArCj4gKwkJCXJlZ19jbGRvMTog
-Y2xkbzEgewo+ICsJCQkJLyogVGhpcyByZWd1bGF0b3IgaXMgY29ubmVjdGVkIHdpdGgKPiBBTERP
-MyAqLwo+ICsJCQkJcmVndWxhdG9yLWFsd2F5cy1vbjsKPiArCQkJCXJlZ3VsYXRvci1taW4tbWlj
-cm92b2x0ID0gPDMzMDAwMDA+Owo+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMw
-MDAwMD47Cj4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2Y2MtM3YzLTIiOwo+ICsJCQl9Owo+ICsK
-PiArCQkJcmVnX2NsZG8yOiBjbGRvMiB7Cj4gKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9
-IDwzMzAwMDAwPjsKPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAwMDA+Owo+
-ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmNjLXdpZmktMSI7Cj4gKwkJCX07Cj4gKwo+ICsJCQly
-ZWdfY2xkbzM6IGNsZG8zIHsKPiArCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMzMDAw
-MDA+Owo+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47Cj4gKwkJCQly
-ZWd1bGF0b3ItbmFtZSA9ICJ2Y2Mtd2lmaS0yIjsKPiArCQkJfTsKPiArCj4gKwkJCXJlZ19kY2Rj
-YTogZGNkY2Egewo+ICsJCQkJcmVndWxhdG9yLWFsd2F5cy1vbjsKPiArCQkJCXJlZ3VsYXRvci1t
-aW4tbWljcm92b2x0ID0gPDgxMDAwMD47Cj4gKwkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9
-IDwxMDgwMDAwPjsKPiArCQkJCXJlZ3VsYXRvci1uYW1lID0gInZkZC1jcHUiOwo+ICsJCQl9Owo+
-ICsKPiArCQkJcmVnX2RjZGNjOiBkY2RjYyB7Cj4gKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9s
-dCA9IDw4MTAwMDA+Owo+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MTA4MDAwMD47
-Cj4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2ZGQtZ3B1IjsKPiArCQkJfTsKPiArCj4gKwkJCXJl
-Z19kY2RjZDogZGNkY2Qgewo+ICsJCQkJcmVndWxhdG9yLWFsd2F5cy1vbjsKPiArCQkJCXJlZ3Vs
-YXRvci1taW4tbWljcm92b2x0ID0gPDk2MDAwMD47Cj4gKwkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jv
-dm9sdCA9IDw5NjAwMDA+Owo+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmRkLXN5cyI7Cj4gKwkJ
-CX07Cj4gKwo+ICsJCQlyZWdfZGNkY2U6IGRjZGNlIHsKPiArCQkJCXJlZ3VsYXRvci1hbHdheXMt
-b247Cj4gKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwxMjAwMDAwPjsKPiArCQkJCXJl
-Z3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDEyMDAwMDA+Owo+ICsJCQkJcmVndWxhdG9yLW5hbWUg
-PSAidmNjLWRyYW0iOwo+ICsJCQl9Owo+ICsKPiArCQkJc3cgewo+ICsJCQkJLyogdW51c2VkICov
-Cj4gKwkJCX07Cj4gKwkJfTsKPiArCX07Cj4gKwo+ICAJcGNmODU2MzogcnRjQDUxIHsKPiAgCQlj
-b21wYXRpYmxlID0gIm54cCxwY2Y4NTYzIjsKPiAgCQlyZWcgPSA8MHg1MT47CgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On i.MX6SLL EVK board, PFuze100's SW4 is supplying
+LPDDR3, it needs to be always on. This patch fixes
+Linux kernel boot up hang caused by commit
+(5fe156f regulator: pfuze100: add enable/disable for switch),
+because SW4 is turned off unexpectedly:
+
+[    1.693613] cfg80211: failed to load regulatory.db
+[    1.700063] SW4: disabling
+[    1.703973] SWBST: disabling
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+changes since V1:
+	improve commit message by adding info of which commit introduces this issue.
+ arch/arm/boot/dts/imx6sll-evk.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-evk.dts
+index 4684ac4..2217c40 100644
+--- a/arch/arm/boot/dts/imx6sll-evk.dts
++++ b/arch/arm/boot/dts/imx6sll-evk.dts
+@@ -142,6 +142,7 @@
+ 			sw4_reg: sw4 {
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
+ 			};
+ 
+ 			swbst_reg: swbst {
+-- 
+2.7.4
