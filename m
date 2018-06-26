@@ -1,54 +1,45 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: Add system timer driver for Mediatek SoCs
-Date: Tue, 26 Jun 2018 09:31:47 +0200
-Message-ID: <561c2c41-ea92-3ad8-a1d7-aeef46cdc601@linaro.org>
-References: <1529910601-15005-1-git-send-email-stanley.chu@mediatek.com>
- <dd36b094-b11c-e6ef-a0fc-b039785e74f2@linaro.org>
- <1529917631.17448.22.camel@mtkswgap22>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 14/23] dt-bindings: cp110: prepare the syscon file to
+ list other syscons nodes
+Date: Tue, 26 Jun 2018 09:34:10 +0200
+Message-ID: <20180626093410.2d9f815c@xps13>
+References: <20180625151239.20976-1-miquel.raynal@bootlin.com>
+ <20180625151239.20976-15-miquel.raynal@bootlin.com>
+ <20180626033556.bsub25ykdseflsta@tarshish>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529917631.17448.22.camel@mtkswgap22>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanley Chu <stanley.chu@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180626033556.bsub25ykdseflsta@tarshish>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-pm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>, David Sniatkiwicz <davidsn@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 25/06/2018 11:07, Stanley Chu wrote:
-> On Mon, 2018-06-25 at 09:34 +0200, Daniel Lezcano wrote:
->> On 25/06/2018 09:09, Stanley Chu wrote:
->>> This patch adds a new driver for system timer on the Mediatek SoCs.
->>
->> Please elaborate why we need yet another timer.
->>
->> Is this timer present on all Mediatek platform ? Does it always co-exist
->> with the existing one ?
->>
->>
->>
->>
-> Hi Daniel,
-> 
-> This new "system timer" only exists on recent Mediatek platforms,
-> for example, MT6765. We will upstream driver first, and then update
-> device tree on MT6765 later.
-> 
-> System timer is designed and optimized as a SoC timer for
-> tick-broadcasting. Besides timer IP has simpler register manipulation
-> and friendly low-power design.
-> 
-> There is no plan to remove existed "General Purpose Timer" now.
-
-It is unclear what "General Purpose Timer" and "System Timer" differ
-except they are different timers running on different platforms.
-
-Merge them into a single timer-mediatek.c file.
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+SGkgQmFydWNoLAoKT24gVHVlLCAyNiBKdW4gMjAxOCAwNjozNTo1NiArMDMwMCwgQmFydWNoIFNp
+YWNoIDxiYXJ1Y2hAdGtvcy5jby5pbD4Kd3JvdGU6Cgo+IEhpIE1pcXVlbCwKPiAKPiBPbiBNb24s
+IEp1biAyNSwgMjAxOCBhdCAwNToxMjozMFBNICswMjAwLCBNaXF1ZWwgUmF5bmFsIHdyb3RlOgo+
+ID4gVGhlcmUgYXJlIG11bHRpcGxlIHN5c3RlbSBjb250cm9sbGVycyBpbiBDUDExMC4gQmVjYXVz
+ZSBhbGwgc3lzY29uIG5vZGVzCj4gPiB1c2UgdGhlIHNhbWUgY29tcGF0aWJsZSwgaXQgaXMgcGVy
+dGluZW50IHRvIHVzZSB0aGlzIHNhbWUgZmlsZSB0byBsaXN0Cj4gPiBJUHMgaW5zaWRlIGl0LiBU
+aHVzLCBjaGFuZ2UgdGhlIGhlYWRlciB0byBiZSBtb3JlIGdlbmVyaWMsIGFuZCBhbGlnbgo+ID4g
+d2l0aCBBUDgwNiBmaWxlLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBNaXF1ZWwgUmF5bmFsIDxt
+aXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPiAgCj4gCj4gVGhpcyBwYXRjaCBhbmQgdGhlIGZpbGUg
+cmVuYW1lIGluIHBhdGNoICMxMiBzaG91bGQgYmUgc3F1YXNoZWQgdG9nZXRoZXIsIEkgCj4gdGhp
+bmsuCgpJIHdhcyBhc2tlZCBtdWx0aXBsZSB0aW1lcyB0byBjbGVhcmx5IHNlcGFyYXRlIGFueSBr
+aW5kIG9mIGZpbGUKcmVuYW1pbmcgd2l0aCBpbnRlcm5hbCBjaGFuZ2VzIGJlY2F1c2Ugb3RoZXJ3
+aXNlIHRoZSByZXZpZXdpbmcgcHJvY2VzcwppcyB3YXkgbW9yZSBjb21wbGljYXRlZC4gSSBkbyBh
+Z3JlZSB0aGUgY2hhbmdlcyBjb3VsZCBiZSBzcXVhc2hlZCBidXQKbm93IEkgcHJlZmVyIHRvIGxl
+dCB0aGVtIGFzIGlzIHVubGVzcyBJJ20gZXhwbGljaXRseSB0b2xkIHRvIGRvIHNvCmFmdGVyIHRo
+ZSByZXZpZXdpbmcgcHJvY2Vzcy4KClJlZ2FyZHMsCk1pcXXDqGwKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
+aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
