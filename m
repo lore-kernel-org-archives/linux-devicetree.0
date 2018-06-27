@@ -1,65 +1,37 @@
-Return-Path: <SRS0=qqtW=JO=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 14/22] [media] tvp5150: issue source change events
-Date: Thu, 28 Jun 2018 18:20:46 +0200
-Message-Id: <20180628162054.25613-15-m.felsch@pengutronix.de>
-In-Reply-To: <20180628162054.25613-1-m.felsch@pengutronix.de>
-References: <20180628162054.25613-1-m.felsch@pengutronix.de>
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: p.zabel@pengutronix.de, afshin.nasser@gmail.com, javierm@redhat.com, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Return-Path: <SRS0=eG0j=JN=bitwise.fi=anssi.hannula@kernel.org>
+From: Anssi Hannula <anssi.hannula@bitwise.fi>
+Subject: [PATCH 0/3] can: xilinx_can: CAN FD core support
+Date: Wed, 27 Jun 2018 17:34:11 +0300
+Message-Id: <20180627143414.7114-1-anssi.hannula@bitwise.fi>
+To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Michal Simek <michal.simek@xilinx.com>, linux-can@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+Hi all,
 
-Issue a V4L2_EVENT_SOURCE_CHANGE notification when the TVP5150 locks
-onto a signal and when it loses the lock.
+This patchset adds support for the Xilinx CAN FD core to the
+xilinx_can driver.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-[m.felsch@pengutronix.de: partly mainline part port]
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/media/i2c/tvp5150.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+This is on top of my previous patches:
+- 2018-01-26 "[PATCH 0/5 resend] can: various fixes to xilinx_can driver"
+- 2018-01-29 "[PATCH] can: xilinx_can: use can_change_state()"
+- 2018-05-18 "[PATCH 0/4] can: fixes to xilinx_can".
 
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index 27cfd08be3d2..6296c68ac816 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -796,6 +796,11 @@ static v4l2_std_id tvp5150_read_std(struct v4l2_subdev *sd)
- 	}
- }
- 
-+static const struct v4l2_event tvp5150_ev_fmt = {
-+	.type = V4L2_EVENT_SOURCE_CHANGE,
-+	.u.src_change.changes = V4L2_EVENT_SRC_CH_RESOLUTION,
-+};
-+
- static irqreturn_t tvp5150_isr(int irq, void *dev_id)
- {
- 	struct tvp5150 *decoder = dev_id;
-@@ -811,6 +816,7 @@ static irqreturn_t tvp5150_isr(int irq, void *dev_id)
- 
- 		if (status & TVP5150_INT_A_LOCK) {
- 			decoder->lock = !!(status & TVP5150_INT_A_LOCK_STATUS);
-+			v4l2_subdev_notify_event(&decoder->sd, &tvp5150_ev_fmt);
- 			regmap_update_bits(map, TVP5150_MISC_CTL, mask,
- 					   decoder->lock ? decoder->oe : 0);
- 		}
-@@ -1216,6 +1222,7 @@ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
- 		/* Enable outputs if decoder is locked */
- 		val = decoder->lock ? decoder->oe : 0;
- 		int_val = TVP5150_INT_A_LOCK;
-+		v4l2_subdev_notify_event(&decoder->sd, &tvp5150_ev_fmt);
- 	}
- 
- 	regmap_update_bits(decoder->regmap, TVP5150_MISC_CTL, mask, val);
-@@ -1432,7 +1439,6 @@ static const struct v4l2_subdev_internal_ops tvp5150_internal_ops = {
- 	.registered = tvp5150_registered,
- };
- 
--
- /****************************************************************************
- 			I2C Client & Driver
-  ****************************************************************************/
+All the changes are also here, rebased on top of linux-can master
+(trivial rebase as there have been no other changes to the driver
+recently):
+https://github.com/anssih/linux/commits/e7a8b6dcf4b6ee2b69c8f2f8f1fd43f97d008b95
+
+Let me know if you want me to post them again.
+
+Anssi Hannula (3):
+      dt-bindings: can: xilinx_can: add Xilinx CAN FD bindings
+      can: xilinx_can: refactor code in preparation for CAN FD support
+      can: xilinx_can: add support for Xilinx CAN FD core
+
+ Documentation/devicetree/bindings/net/can/xilinx_can.txt |   36 -
+ drivers/net/can/xilinx_can.c                             |  480 +++++++++++----
+ 2 files changed, 399 insertions(+), 117 deletions(-)
+
 -- 
-2.17.1
+Anssi Hannula / Bitwise Oy
