@@ -1,463 +1,242 @@
-From: Houlong Wei <houlong.wei@mediatek.com>
-Subject: [PATCH v22 4/4] soc: mediatek: Add Mediatek CMDQ helper
-Date: Wed, 27 Jun 2018 19:16:12 +0800
-Message-ID: <1530098172-31385-5-git-send-email-houlong.wei@mediatek.com>
-References: <1530098172-31385-1-git-send-email-houlong.wei@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: tas517x: add tas5707 support" to the asoc tree
+Date: Wed, 27 Jun 2018 12:30:11 +0100 (BST)
+Message-ID: <20180627113011.AE553440070@finisterre.ee.mobilebroadband>
+References: <20180627073937.29912-3-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530098172-31385-1-git-send-email-houlong.wei@mediatek.com>
+In-Reply-To: <20180627073937.29912-3-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Monica Wang <monica.wang@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, HS Liao <hs.liao@mediatek.com>, ginny.chen@mediatek.com, enzhu.wa
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.orgalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Add Mediatek CMDQ helper to create CMDQ packet and assemble GCE op code.
+The patch
 
-Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
-Signed-off-by: HS Liao <hs.liao@mediatek.com>
+   ASoC: tas517x: add tas5707 support
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From f516d32262a4c0fef3fccdf2a82671f54f5c1e33 Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Wed, 27 Jun 2018 09:39:37 +0200
+Subject: [PATCH] ASoC: tas517x: add tas5707 support
+
+Add support for the tas5707 audio power amplifier.
+
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/soc/mediatek/Kconfig           |   12 ++
- drivers/soc/mediatek/Makefile          |    1 +
- drivers/soc/mediatek/mtk-cmdq-helper.c |  258 ++++++++++++++++++++++++++++++++
- include/linux/soc/mediatek/mtk-cmdq.h  |  132 ++++++++++++++++
- 4 files changed, 403 insertions(+)
- create mode 100644 drivers/soc/mediatek/mtk-cmdq-helper.c
- create mode 100644 include/linux/soc/mediatek/mtk-cmdq.h
+ sound/soc/codecs/Kconfig   |   5 +-
+ sound/soc/codecs/tas571x.c | 110 +++++++++++++++++++++++++++++++++++++
+ sound/soc/codecs/tas571x.h |  16 ++++++
+ 3 files changed, 130 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-index a7d0667..17bd759 100644
---- a/drivers/soc/mediatek/Kconfig
-+++ b/drivers/soc/mediatek/Kconfig
-@@ -4,6 +4,18 @@
- menu "MediaTek SoC drivers"
- 	depends on ARCH_MEDIATEK || COMPILE_TEST
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index 53c2d726bedf..6d1674699385 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -959,8 +959,11 @@ config SND_SOC_TAS5086
+ 	depends on I2C
  
-+config MTK_CMDQ
-+	tristate "MediaTek CMDQ Support"
-+	depends on ARCH_MEDIATEK || COMPILE_TEST
-+	select MAILBOX
-+	select MTK_CMDQ_MBOX
-+	select MTK_INFRACFG
+ config SND_SOC_TAS571X
+-	tristate "Texas Instruments TAS5711/TAS5717/TAS5719/TAS5721 power amplifiers"
++	tristate "Texas Instruments TAS571x power amplifiers"
+ 	depends on I2C
 +	help
-+	  Say yes here to add support for the MediaTek Command Queue (CMDQ)
-+	  driver. The CMDQ is used to help read/write registers with critical
-+	  time limitation, such as updating display configuration during the
-+	  vblank.
-+
- config MTK_INFRACFG
- 	bool "MediaTek INFRACFG Support"
- 	select REGMAP
-diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
-index 12998b0..64ce5ee 100644
---- a/drivers/soc/mediatek/Makefile
-+++ b/drivers/soc/mediatek/Makefile
-@@ -1,3 +1,4 @@
-+obj-$(CONFIG_MTK_CMDQ) += mtk-cmdq-helper.o
- obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
- obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
- obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys.o
-diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-new file mode 100644
-index 0000000..6c66091
---- /dev/null
-+++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -0,0 +1,258 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018 MediaTek Inc.
++	  Enable support for Texas Instruments TAS5707, TAS5711, TAS5717,
++	  TAS5719 and TAS5721 power amplifiers
+ 
+ config SND_SOC_TAS5720
+ 	tristate "Texas Instruments TAS5720 Mono Audio amplifier"
+diff --git a/sound/soc/codecs/tas571x.c b/sound/soc/codecs/tas571x.c
+index 52f34c94ec25..ca2dfe12344e 100644
+--- a/sound/soc/codecs/tas571x.c
++++ b/sound/soc/codecs/tas571x.c
+@@ -7,6 +7,9 @@
+  * TAS5721 support:
+  * Copyright (C) 2016 Petr Kulhavy, Barix AG <petr@barix.com>
+  *
++ * TAS5707 support:
++ * Copyright (C) 2018 Jerome Brunet, Baylibre SAS <jbrunet@baylibre.com>
 + *
-+ */
-+
-+#include <linux/completion.h>
-+#include <linux/errno.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/mailbox_controller.h>
-+#include <linux/soc/mediatek/mtk-cmdq.h>
-+
-+#define CMDQ_ARG_A_WRITE_MASK	0xffff
-+#define CMDQ_WRITE_ENABLE_MASK	BIT(0)
-+#define CMDQ_EOC_IRQ_EN		BIT(0)
-+#define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
-+				<< 32 | CMDQ_EOC_IRQ_EN)
-+
-+int cmdq_pkt_realloc_cmd_buffer(struct cmdq_pkt *pkt, size_t size)
-+{
-+	void *new_buf;
-+
-+	new_buf = krealloc(pkt->va_base, size, GFP_KERNEL | __GFP_ZERO);
-+	if (!new_buf)
-+		return -ENOMEM;
-+	pkt->va_base = new_buf;
-+	pkt->buf_size = size;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(cmdq_pkt_realloc_cmd_buffer);
-+
-+struct cmdq_client *cmdq_mbox_create(struct device *dev, int index)
-+{
-+	struct cmdq_client *client;
-+	long err = 0;
-+
-+	client = kzalloc(sizeof(*client), GFP_KERNEL);
-+	if (!client)
-+		return (struct cmdq_client *)-ENOMEM;
-+
-+	client->client.dev = dev;
-+	client->client.tx_block = false;
-+	client->chan = mbox_request_channel(&client->client, index);
-+
-+	if (IS_ERR(client->chan)) {
-+		dev_err(dev, "failed to request channel\n");
-+		err = PTR_ERR(client->chan);
-+		kfree(client);
-+
-+		return (struct cmdq_client *)err;
-+	}
-+
-+	return client;
-+}
-+EXPORT_SYMBOL(cmdq_mbox_create);
-+
-+void cmdq_mbox_destroy(struct cmdq_client *client)
-+{
-+	mbox_free_channel(client->chan);
-+	kfree(client);
-+}
-+EXPORT_SYMBOL(cmdq_mbox_destroy);
-+
-+int cmdq_pkt_create(struct cmdq_pkt **pkt_ptr)
-+{
-+	struct cmdq_pkt *pkt;
-+	int err;
-+
-+	pkt = kzalloc(sizeof(*pkt), GFP_KERNEL);
-+	if (!pkt)
-+		return -ENOMEM;
-+	err = cmdq_pkt_realloc_cmd_buffer(pkt, PAGE_SIZE);
-+	if (err < 0) {
-+		kfree(pkt);
-+		return err;
-+	}
-+	*pkt_ptr = pkt;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(cmdq_pkt_create);
-+
-+void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
-+{
-+	kfree(pkt->va_base);
-+	kfree(pkt);
-+}
-+EXPORT_SYMBOL(cmdq_pkt_destroy);
-+
-+static bool cmdq_pkt_is_finalized(struct cmdq_pkt *pkt)
-+{
-+	u64 *expect_eoc;
-+
-+	if (pkt->cmd_buf_size < CMDQ_INST_SIZE << 1)
-+		return false;
-+
-+	expect_eoc = pkt->va_base + pkt->cmd_buf_size - (CMDQ_INST_SIZE << 1);
-+	if (*expect_eoc == CMDQ_EOC_CMD)
-+		return true;
-+
-+	return false;
-+}
-+
-+static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
-+				   u32 arg_a, u32 arg_b)
-+{
-+	u64 *cmd_ptr;
-+	int err;
-+
-+	if (WARN_ON(cmdq_pkt_is_finalized(pkt)))
-+		return -EBUSY;
-+	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
-+		err = cmdq_pkt_realloc_cmd_buffer(pkt, pkt->buf_size << 1);
-+		if (err < 0)
-+			return err;
-+	}
-+	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
-+	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
-+	pkt->cmd_buf_size += CMDQ_INST_SIZE;
-+
-+	return 0;
-+}
-+
-+int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset)
-+{
-+	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
-+		    (subsys << CMDQ_SUBSYS_SHIFT);
-+
-+	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
-+}
-+EXPORT_SYMBOL(cmdq_pkt_write);
-+
-+int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
-+			u32 subsys, u32 offset, u32 mask)
-+{
-+	u32 offset_mask = offset;
-+	int err;
-+
-+	if (mask != 0xffffffff) {
-+		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
-+		if (err < 0)
-+			return err;
-+		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
-+	}
-+
-+	return cmdq_pkt_write(pkt, value, subsys, offset_mask);
-+}
-+EXPORT_SYMBOL(cmdq_pkt_write_mask);
-+
-+int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
-+{
-+	u32 arg_b;
-+
-+	if (event >= CMDQ_MAX_EVENT || event < 0)
-+		return -EINVAL;
-+
-+	/*
-+	 * WFE arg_b
-+	 * bit 0-11: wait value
-+	 * bit 15: 1 - wait, 0 - no wait
-+	 * bit 16-27: update value
-+	 * bit 31: 1 - update, 0 - no update
-+	 */
-+	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
-+
-+	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
-+}
-+EXPORT_SYMBOL(cmdq_pkt_wfe);
-+
-+int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event)
-+{
-+	if (event >= CMDQ_MAX_EVENT || event < 0)
-+		return -EINVAL;
-+
-+	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
-+				       CMDQ_WFE_UPDATE);
-+}
-+EXPORT_SYMBOL(cmdq_pkt_clear_event);
-+
-+static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
-+{
-+	int err;
-+
-+	if (cmdq_pkt_is_finalized(pkt))
-+		return 0;
-+
-+	/* insert EOC and generate IRQ for each command iteration */
-+	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
-+	if (err < 0)
-+		return err;
-+
-+	/* JUMP to end */
-+	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
-+	if (err < 0)
-+		return err;
-+
-+	return 0;
-+}
-+
-+int cmdq_pkt_flush_async(struct cmdq_client *client, struct cmdq_pkt *pkt,
-+			 cmdq_async_flush_cb cb, void *data)
-+{
-+	int err;
-+	struct device *dev;
-+	dma_addr_t dma_addr;
-+
-+	err = cmdq_pkt_finalize(pkt);
-+	if (err < 0)
-+		return err;
-+
-+	dev = client->chan->mbox->dev;
-+	dma_addr = dma_map_single(dev, pkt->va_base, pkt->cmd_buf_size,
-+		DMA_TO_DEVICE);
-+	if (dma_mapping_error(dev, dma_addr)) {
-+		dev_err(client->chan->mbox->dev, "dma map failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	pkt->pa_base = dma_addr;
-+	pkt->cb.cb = cb;
-+	pkt->cb.data = data;
-+
-+	mbox_send_message(client->chan, pkt);
-+	/* We can send next packet immediately, so just call txdone. */
-+	mbox_client_txdone(client->chan, 0);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(cmdq_pkt_flush_async);
-+
-+struct cmdq_flush_completion {
-+	struct completion cmplt;
-+	bool err;
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation; either version 2 of the License, or
+@@ -444,6 +447,111 @@ static const struct tas571x_chip tas5711_chip = {
+ 	.vol_reg_size			= 1,
+ };
+ 
++static const struct regmap_range tas5707_volatile_regs_range[] = {
++	regmap_reg_range(TAS571X_CLK_CTRL_REG,  TAS571X_ERR_STATUS_REG),
++	regmap_reg_range(TAS571X_OSC_TRIM_REG,  TAS571X_OSC_TRIM_REG),
++	regmap_reg_range(TAS5707_CH1_BQ0_REG, TAS5707_CH2_BQ6_REG),
 +};
 +
-+static void cmdq_pkt_flush_cb(struct cmdq_cb_data data)
-+{
-+	struct cmdq_flush_completion *cmplt = data.data;
++static const struct regmap_access_table tas5707_volatile_regs = {
++	.yes_ranges =	tas5707_volatile_regs_range,
++	.n_yes_ranges =	ARRAY_SIZE(tas5707_volatile_regs_range),
 +
-+	cmplt->err = data.err;
-+	complete(&cmplt->cmplt);
-+}
-+
-+int cmdq_pkt_flush(struct cmdq_client *client, struct cmdq_pkt *pkt)
-+{
-+	struct cmdq_flush_completion cmplt;
-+	int err;
-+
-+	init_completion(&cmplt.cmplt);
-+	err = cmdq_pkt_flush_async(client, pkt, cmdq_pkt_flush_cb, &cmplt);
-+	if (err < 0)
-+		return err;
-+	wait_for_completion(&cmplt.cmplt);
-+
-+	return cmplt.err ? -EFAULT : 0;
-+}
-+EXPORT_SYMBOL(cmdq_pkt_flush);
-diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-new file mode 100644
-index 0000000..d7c8ef2
---- /dev/null
-+++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -0,0 +1,132 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2018 MediaTek Inc.
-+ *
-+ */
-+
-+#ifndef __MTK_CMDQ_H__
-+#define __MTK_CMDQ_H__
-+
-+#include <linux/mailbox_client.h>
-+#include <linux/mailbox/mtk-cmdq-mailbox.h>
-+
-+/** cmdq event maximum */
-+#define CMDQ_MAX_EVENT				0x3ff
-+
-+struct cmdq_pkt;
-+
-+struct cmdq_client {
-+	struct mbox_client client;
-+	struct mbox_chan *chan;
 +};
 +
-+/**
-+ * cmdq_mbox_create() - create CMDQ mailbox client and channel
-+ * @dev:	device of CMDQ mailbox client
-+ * @index:	index of CMDQ mailbox channel
-+ *
-+ * Return: CMDQ mailbox client pointer
-+ */
-+struct cmdq_client *cmdq_mbox_create(struct device *dev, int index);
++static const DECLARE_TLV_DB_SCALE(tas5707_volume_tlv, -7900, 50, 1);
 +
-+/**
-+ * cmdq_mbox_destroy() - destroy CMDQ mailbox client and channel
-+ * @client:	the CMDQ mailbox client
-+ */
-+void cmdq_mbox_destroy(struct cmdq_client *client);
++static const char * const tas5707_volume_slew_step_txt[] = {
++	"256", "512", "1024", "2048",
++};
 +
-+/**
-+ * cmdq_pkt_create() - create a CMDQ packet
-+ * @pkt_ptr:	CMDQ packet pointer to retrieve cmdq_pkt
-+ *
-+ * Return: 0 for success; else the error code is returned
-+ */
-+int cmdq_pkt_create(struct cmdq_pkt **pkt_ptr);
++static const unsigned int tas5707_volume_slew_step_values[] = {
++	3, 0, 1, 2,
++};
 +
-+/**
-+ * cmdq_pkt_destroy() - destroy the CMDQ packet
-+ * @pkt:	the CMDQ packet
-+ */
-+void cmdq_pkt_destroy(struct cmdq_pkt *pkt);
++static SOC_VALUE_ENUM_SINGLE_DECL(tas5707_volume_slew_step_enum,
++				  TAS571X_VOL_CFG_REG, 0, 0x3,
++				  tas5707_volume_slew_step_txt,
++				  tas5707_volume_slew_step_values);
 +
-+/**
-+ * cmdq_pkt_realloc_cmd_buffer() - reallocate command buffer for CMDQ packet
-+ * @pkt:	the CMDQ packet
-+ * @size:	the request size
-+ * Return: 0 for success; else the error code is returned
-+ */
-+int cmdq_pkt_realloc_cmd_buffer(struct cmdq_pkt *pkt, size_t size);
++static const struct snd_kcontrol_new tas5707_controls[] = {
++	SOC_SINGLE_TLV("Master Volume",
++		       TAS571X_MVOL_REG,
++		       0, 0xff, 1, tas5707_volume_tlv),
++	SOC_DOUBLE_R_TLV("Speaker Volume",
++			 TAS571X_CH1_VOL_REG,
++			 TAS571X_CH2_VOL_REG,
++			 0, 0xff, 1, tas5707_volume_tlv),
++	SOC_DOUBLE("Speaker Switch",
++		   TAS571X_SOFT_MUTE_REG,
++		   TAS571X_SOFT_MUTE_CH1_SHIFT, TAS571X_SOFT_MUTE_CH2_SHIFT,
++		   1, 1),
 +
-+/**
-+ * cmdq_pkt_write() - append write command to the CMDQ packet
-+ * @pkt:	the CMDQ packet
-+ * @value:	the specified target register value
-+ * @subsys:	the CMDQ sub system code
-+ * @offset:	register offset from CMDQ sub system
-+ *
-+ * Return: 0 for success; else the error code is returned
-+ */
-+int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset);
++	SOC_ENUM("Slew Rate Steps", tas5707_volume_slew_step_enum),
 +
-+/**
-+ * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
-+ * @pkt:	the CMDQ packet
-+ * @value:	the specified target register value
-+ * @subsys:	the CMDQ sub system code
-+ * @offset:	register offset from CMDQ sub system
-+ * @mask:	the specified target register mask
-+ *
-+ * Return: 0 for success; else the error code is returned
-+ */
-+int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
-+			u32 subsys, u32 offset, u32 mask);
++	BIQUAD_COEFS("CH1 - Biquad 0", TAS5707_CH1_BQ0_REG),
++	BIQUAD_COEFS("CH1 - Biquad 1", TAS5707_CH1_BQ1_REG),
++	BIQUAD_COEFS("CH1 - Biquad 2", TAS5707_CH1_BQ2_REG),
++	BIQUAD_COEFS("CH1 - Biquad 3", TAS5707_CH1_BQ3_REG),
++	BIQUAD_COEFS("CH1 - Biquad 4", TAS5707_CH1_BQ4_REG),
++	BIQUAD_COEFS("CH1 - Biquad 5", TAS5707_CH1_BQ5_REG),
++	BIQUAD_COEFS("CH1 - Biquad 6", TAS5707_CH1_BQ6_REG),
 +
-+/**
-+ * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
-+ * @pkt:	the CMDQ packet
-+ * @event:	the desired event type to "wait and CLEAR"
-+ *
-+ * Return: 0 for success; else the error code is returned
-+ */
-+int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
++	BIQUAD_COEFS("CH2 - Biquad 0", TAS5707_CH2_BQ0_REG),
++	BIQUAD_COEFS("CH2 - Biquad 1", TAS5707_CH2_BQ1_REG),
++	BIQUAD_COEFS("CH2 - Biquad 2", TAS5707_CH2_BQ2_REG),
++	BIQUAD_COEFS("CH2 - Biquad 3", TAS5707_CH2_BQ3_REG),
++	BIQUAD_COEFS("CH2 - Biquad 4", TAS5707_CH2_BQ4_REG),
++	BIQUAD_COEFS("CH2 - Biquad 5", TAS5707_CH2_BQ5_REG),
++	BIQUAD_COEFS("CH2 - Biquad 6", TAS5707_CH2_BQ6_REG),
++};
 +
-+/**
-+ * cmdq_pkt_clear_event() - append clear event command to the CMDQ packet
-+ * @pkt:	the CMDQ packet
-+ * @event:	the desired event to be cleared
-+ *
-+ * Return: 0 for success; else the error code is returned
-+ */
-+int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event);
++static const struct reg_default tas5707_reg_defaults[] = {
++	{TAS571X_CLK_CTRL_REG,		0x6c},
++	{TAS571X_DEV_ID_REG,		0x70},
++	{TAS571X_ERR_STATUS_REG,	0x00},
++	{TAS571X_SYS_CTRL_1_REG,	0xa0},
++	{TAS571X_SDI_REG,		0x05},
++	{TAS571X_SYS_CTRL_2_REG,	0x40},
++	{TAS571X_SOFT_MUTE_REG,		0x00},
++	{TAS571X_MVOL_REG,		0xff},
++	{TAS571X_CH1_VOL_REG,		0x30},
++	{TAS571X_CH2_VOL_REG,		0x30},
++	{TAS571X_VOL_CFG_REG,		0x91},
++	{TAS571X_MODULATION_LIMIT_REG,	0x02},
++	{TAS571X_IC_DELAY_CH1_REG,	0xac},
++	{TAS571X_IC_DELAY_CH2_REG,	0x54},
++	{TAS571X_IC_DELAY_CH3_REG,	0xac},
++	{TAS571X_IC_DELAY_CH4_REG,	0x54},
++	{TAS571X_START_STOP_PERIOD_REG,	0x0f},
++	{TAS571X_OSC_TRIM_REG,		0x82},
++	{TAS571X_BKND_ERR_REG,		0x02},
++	{TAS571X_INPUT_MUX_REG,		0x17772},
++	{TAS571X_PWM_MUX_REG,		0x1021345},
++};
 +
-+/**
-+ * cmdq_pkt_flush() - trigger CMDQ to execute the CMDQ packet
-+ * @client:	the CMDQ mailbox client
-+ * @pkt:	the CMDQ packet
-+ *
-+ * Return: 0 for success; else the error code is returned
-+ *
-+ * Trigger CMDQ to execute the CMDQ packet. Note that this is a
-+ * synchronous flush function. When the function returned, the recorded
-+ * commands have been done.
-+ */
-+int cmdq_pkt_flush(struct cmdq_client *client, struct cmdq_pkt *pkt);
++static const struct regmap_config tas5707_regmap_config = {
++	.reg_bits			= 8,
++	.val_bits			= 32,
++	.max_register			= 0xff,
++	.reg_read			= tas571x_reg_read,
++	.reg_write			= tas571x_reg_write,
++	.reg_defaults			= tas5707_reg_defaults,
++	.num_reg_defaults		= ARRAY_SIZE(tas5707_reg_defaults),
++	.cache_type			= REGCACHE_RBTREE,
++	.wr_table			= &tas571x_write_regs,
++	.volatile_table			= &tas5707_volatile_regs,
++};
 +
-+/**
-+ * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
-+ *                          packet and call back at the end of done packet
-+ * @client:	the CMDQ mailbox client
-+ * @pkt:	the CMDQ packet
-+ * @cb:		called at the end of done packet
-+ * @data:	this data will pass back to cb
-+ *
-+ * Return: 0 for success; else the error code is returned
-+ *
-+ * Trigger CMDQ to asynchronously execute the CMDQ packet and call back
-+ * at the end of done packet. Note that this is an ASYNC function. When the
-+ * function returned, it may or may not be finished.
-+ */
-+int cmdq_pkt_flush_async(struct cmdq_client *client, struct cmdq_pkt *pkt,
-+			 cmdq_async_flush_cb cb, void *data);
++static const struct tas571x_chip tas5707_chip = {
++	.supply_names			= tas5711_supply_names,
++	.num_supply_names		= ARRAY_SIZE(tas5711_supply_names),
++	.controls			= tas5707_controls,
++	.num_controls			= ARRAY_SIZE(tas5707_controls),
++	.regmap_config			= &tas5707_regmap_config,
++	.vol_reg_size			= 1,
++};
 +
-+#endif	/* __MTK_CMDQ_H__ */
+ static const char *const tas5717_supply_names[] = {
+ 	"AVDD",
+ 	"DVDD",
+@@ -775,6 +883,7 @@ static int tas571x_i2c_remove(struct i2c_client *client)
+ }
+ 
+ static const struct of_device_id tas571x_of_match[] = {
++	{ .compatible = "ti,tas5707", .data = &tas5707_chip, },
+ 	{ .compatible = "ti,tas5711", .data = &tas5711_chip, },
+ 	{ .compatible = "ti,tas5717", .data = &tas5717_chip, },
+ 	{ .compatible = "ti,tas5719", .data = &tas5717_chip, },
+@@ -784,6 +893,7 @@ static const struct of_device_id tas571x_of_match[] = {
+ MODULE_DEVICE_TABLE(of, tas571x_of_match);
+ 
+ static const struct i2c_device_id tas571x_i2c_id[] = {
++	{ "tas5707", (kernel_ulong_t) &tas5707_chip },
+ 	{ "tas5711", (kernel_ulong_t) &tas5711_chip },
+ 	{ "tas5717", (kernel_ulong_t) &tas5717_chip },
+ 	{ "tas5719", (kernel_ulong_t) &tas5717_chip },
+diff --git a/sound/soc/codecs/tas571x.h b/sound/soc/codecs/tas571x.h
+index c45677bc26ad..bd23e89cfe79 100644
+--- a/sound/soc/codecs/tas571x.h
++++ b/sound/soc/codecs/tas571x.h
+@@ -53,6 +53,22 @@
+ #define TAS571X_PWM_MUX_REG		0x25
+ 
+ /* 20-byte biquad registers */
++#define TAS5707_CH1_BQ0_REG		0x29
++#define TAS5707_CH1_BQ1_REG		0x2a
++#define TAS5707_CH1_BQ2_REG		0x2b
++#define TAS5707_CH1_BQ3_REG		0x2c
++#define TAS5707_CH1_BQ4_REG		0x2d
++#define TAS5707_CH1_BQ5_REG		0x2e
++#define TAS5707_CH1_BQ6_REG		0x2f
++
++#define TAS5707_CH2_BQ0_REG		0x30
++#define TAS5707_CH2_BQ1_REG		0x31
++#define TAS5707_CH2_BQ2_REG		0x32
++#define TAS5707_CH2_BQ3_REG		0x33
++#define TAS5707_CH2_BQ4_REG		0x34
++#define TAS5707_CH2_BQ5_REG		0x35
++#define TAS5707_CH2_BQ6_REG		0x36
++
+ #define TAS5717_CH1_BQ0_REG		0x26
+ #define TAS5717_CH1_BQ1_REG		0x27
+ #define TAS5717_CH1_BQ2_REG		0x28
 -- 
-1.7.9.5
+2.17.1
