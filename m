@@ -1,38 +1,52 @@
-Return-Path: <SRS0=+1aA=JN=arm.com=marc.zyngier@kernel.org>
-Subject: Re: [PATCH] dt-bindings: irqchip: renesas-irqc: Document r8a77470
+Return-Path: <SRS0=ytnF=JN=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH] dt-bindings: irqchip: renesas-irqc: Document r8a77470
  support
+Date: Wed, 27 Jun 2018 08:43:30 +0000
+Message-ID: <OSBPR01MB2103FF4CF9F5477C8D47720CB8480@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 References: <1522318628-52821-1-git-send-email-biju.das@bp.renesas.com>
  <CAMuHMdUsO_jw5Lb4jDKk6H2Zn=4kJHhFp_fBArnaddkBXDQ24Q@mail.gmail.com>
- <OSBPR01MB2103FF4CF9F5477C8D47720CB8480@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-From: Marc Zyngier <marc.zyngier@arm.com>
-Message-ID: <a56c23bb-bd53-f387-9d8f-f589e53fa077@arm.com>
-Date: Wed, 27 Jun 2018 09:57:50 +0100
+In-Reply-To: <CAMuHMdUsO_jw5Lb4jDKk6H2Zn=4kJHhFp_fBArnaddkBXDQ24Q@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <OSBPR01MB2103FF4CF9F5477C8D47720CB8480@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Biju,
-
-On 27/06/18 09:43, Biju Das wrote:
-> Hello Marc,
-> 
-> Sorry to bother you.  Are you happy to merge the below patch with 4.18-rc3?
-> https://www.spinics.net/lists/linux-renesas-soc/msg25788.html
-
-This is odd. I queued that in April as part of a potential second set of
-fixes for 4.17, but somehow failed to ever send the pull request (and
-this was the only patch I had at that point).
-
-Apologies for the delay, I'll sync up with Thomas for this patch to make
-it into 4.18.
-
-Thanks for the heads up,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+SGVsbG8gTWFyYywNCg0KU29ycnkgdG8gYm90aGVyIHlvdS4gIEFyZSB5b3UgaGFwcHkgdG8gbWVy
+Z2UgdGhlIGJlbG93IHBhdGNoIHdpdGggNC4xOC1yYzM/DQpodHRwczovL3d3dy5zcGluaWNzLm5l
+dC9saXN0cy9saW51eC1yZW5lc2FzLXNvYy9tc2cyNTc4OC5odG1sDQoNCnJlZ2FyZHMsDQpCaWp1
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogZ2VlcnQudXl0dGVyaG9l
+dmVuQGdtYWlsLmNvbQ0KPiBbbWFpbHRvOmdlZXJ0LnV5dHRlcmhvZXZlbkBnbWFpbC5jb21dIE9u
+IEJlaGFsZiBPZiBHZWVydCBVeXR0ZXJob2V2ZW4NCj4gU2VudDogMzAgTWFyY2ggMjAxOCAwODo1
+Mw0KPiBUbzogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiBDYzogVGhvbWFz
+IEdsZWl4bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+OyBKYXNvbiBDb29wZXINCj4gPGphc29uQGxh
+a2VkYWVtb24ubmV0PjsgTWFyYyBaeW5naWVyIDxtYXJjLnp5bmdpZXJAYXJtLmNvbT47IFJvYg0K
+PiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFu
+ZEBhcm0uY29tPjsNCj4gR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5i
+ZT47IFNpbW9uIEhvcm1hbg0KPiA8aG9ybXNAdmVyZ2UubmV0LmF1PjsgQ2hyaXMgUGF0ZXJzb24g
+PENocmlzLlBhdGVyc29uMkByZW5lc2FzLmNvbT47DQo+IEZhYnJpemlvIENhc3RybyA8ZmFicml6
+aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPjsgb3BlbiBsaXN0Ok9QRU4NCj4gRklSTVdBUkUgQU5E
+IEZMQVRURU5FRCBERVZJQ0UgVFJFRSBCSU5ESU5HUw0KPiA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmc+OyBMaW51eC1SZW5lc2FzIDxsaW51eC1yZW5lc2FzLQ0KPiBzb2NAdmdlci5rZXJuZWwu
+b3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBkdC1iaW5kaW5nczogaXJxY2hpcDogcmVuZXNh
+cy1pcnFjOiBEb2N1bWVudCByOGE3NzQ3MA0KPiBzdXBwb3J0DQo+DQo+IE9uIFRodSwgTWFyIDI5
+LCAyMDE4IGF0IDEyOjE3IFBNLCBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+DQo+
+IHdyb3RlOg0KPiA+IFJlbmVzYXMgUlovRyBTb0MgaGF2ZSB0aGUgUi1DYXIgZ2VuMiBjb21wYXRp
+YmxlIElSUUMgaW50ZXJydXB0DQo+ID4gY29udHJvbGxlcnMuIERvY3VtZW50IFJaL0cxQyAoYWxz
+byBrbm93biBhcyBSOEE3NzQ3MCkgU29DIGJpbmRpbmdzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
+eTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBG
+YWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4NCj4gUmV2
+aWV3ZWQtYnk6IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+DQo+
+DQo+IEdye29ldGplLGVldGluZ31zLA0KPg0KPiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVy
+dA0KPg0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4
+IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LQ0KPiBtNjhrLm9yZw0KPg0KPiBJbiBwZXJzb25h
+bCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhh
+Y2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAi
+cHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmlj
+cyBFdXJvcGUgTHRkLCBEdWtlcyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBC
+dWNraW5naGFtc2hpcmUsIFNMOCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxl
+cyB1bmRlciBSZWdpc3RlcmVkIE5vLiAwNDU4NjcwOS4NCg==
