@@ -1,45 +1,42 @@
-From: Stanley Chu <stanley.chu@mediatek.com>
-Subject: Re: [PATCH v2 2/2] clocksource/drivers/mtk_systimer: Add support
- for Mediatek SoCs
-Date: Wed, 27 Jun 2018 17:50:16 +0800
-Message-ID: <1530093016.17448.35.camel@mtkswgap22>
-References: <1530086039-3763-1-git-send-email-stanley.chu@mediatek.com>
-         <1530086039-3763-3-git-send-email-stanley.chu@mediatek.com>
-         <2a40ec95-7352-f0c4-b394-d7b689de98ec@linaro.org>
+From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v13 0/3] Add suppport for sn65dsi86 bridge chip
+ and Innolux 2k edp panel
+Date: Wed, 27 Jun 2018 15:27:32 +0530
+Message-ID: <20180627095735.24517-1-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2a40ec95-7352-f0c4-b394-d7b689de98ec@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-06-27 at 11:39 +0200, Daniel Lezcano wrote:
-> On 27/06/2018 09:53, Stanley Chu wrote:
-> > This patch adds a new clock event for the timer
-> > found on the Mediatek SoCs.
-> > 
-> > The Mediatek System Timer has several 32-bit timers.
-> > Only one timer is used by this driver as a clock event
-> > supporting oneshot events.
-> > 
-> > The System Timer can be run with two clocks. A 13 MHz system
-> > clock and the RTC clock running at 32 KHz. This implementation
-> > uses the system clock with no clock source divider.
-> 
-> Recent platforms have the arch_arm_timer and it will be always selected.
-> 
-> What is the benefit of adding this timer ?
-> 
-> 
-Hi Daniel,
-
-To save power as much as possible, our platform enables
-"arch_timer_c3stop" in arch_arm_timer, and thus another always-on timer
-is required for tick-broadcasting. System Timer is introduced for above
-purpose.
-
-Thanks.
-Stanley Chu
+Q2hhbmdlcyBpbiBjdXJyZW50IHBhdGNoc2V0OgotIEFkZCBzdXNwZW5kLWdwaW8gcHJvcGVydHkg
+Zm9yIEdQSU8xIHBpbiBvbiBicmlkZ2UgY2hpcC4KClNhbmRlZXAgUGFuZGEgKDMpOgogIGR0LWJp
+bmRpbmdzOiBtZWRpYTogZXh0ZW5kIGludGVyZmFjZSBkb2N1bWVudGF0aW9uIGZvciBEU0kgYW5k
+IERQCiAgZHJtL2JyaWRnZTogYWRkIHN1cHBvcnQgZm9yIHNuNjVkc2k4NiBicmlkZ2UgZHJpdmVy
+CiAgZHQtYmluZGluZ3M6IGRybS9icmlkZ2U6IERvY3VtZW50IHNuNjVkc2k4NiBicmlkZ2UgYmlu
+ZGluZ3MKCiAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dCAgICAg
+ICB8ICA4OSArKysKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFj
+ZXMudHh0IHwgIDEwICstCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICAgICAgICAg
+ICAgICAgICAgICB8ICAgOSArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlICAgICAg
+ICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RpLXNuNjVkc2k4
+Ni5jICAgICAgICAgICAgICB8IDcwOSArKysrKysrKysrKysrKysrKysrKysKIDUgZmlsZXMgY2hh
+bmdlZCwgODE0IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNu
+NjVkc2k4Ni50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3Rp
+LXNuNjVkc2k4Ni5jCgotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlz
+IGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0aW9uIENv
+bGxhYm9yYXRpdmUgUHJvamVjdAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZnJlZWRyZW5vCg==
