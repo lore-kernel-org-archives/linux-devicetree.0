@@ -1,77 +1,49 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v2 1/6] dt-bindings: gpu: mali-utgard: add
- mediatek,mt7623-mali compatible
-Date: Wed, 27 Jun 2018 16:52:45 +0800
-Message-ID: <1530089565.29697.35.camel@mtkswgap22>
-References: <cover.1524816502.git.sean.wang@mediatek.com>
-         <7ab060c2e9ef2b220fc62913b8936b706dfaf202.1524816502.git.sean.wang@mediatek.com>
-         <3bd6e509-f99a-1f2d-1b66-65c414bacdbd@gmail.com>
+From: <honghui.zhang@mediatek.com>
+Subject: [PATCH 0/4] PCI: mediatek: fixup find_port, enable_msi and add pm, module support
+Date: Wed, 27 Jun 2018 17:21:34 +0800
+Message-ID: <1530091298-28120-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3bd6e509-f99a-1f2d-1b66-65c414bacdbd@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: sboyd@codeaurora.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
+Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-06-25 at 17:14 +0200, Matthias Brugger wrote:
-> 
-> On 27/04/18 10:14, sean.wang@mediatek.com wrote:
-> > From: Sean Wang <sean.wang@mediatek.com>
-> > 
-> > The MediaTek MT7623 SoC contains a Mali-450, so add a compatible for it
-> > and define its own vendor-specific properties.
-> > 
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> > ---
-> 
-> Hi Rob,
-> 
-> Any comments regarding this patch?
-> 
-> Regards,
-> Matthias
-> 
+From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-Hi, Matthias
+This patchset includes misc patchs:
 
-I've already got a Reviewed-by tag from Rob.
+The first patch fixup the mtk_pcie_find_port logical which will cause system
+could not touch the EP's configuration space which was connected to PCIe slot 1.
 
-Is it possible that this patch go through your tree ?
+The second patch fixup the enable msi logical, the operation to enable msi
+should be after system clock is enabled. The function of mtk_pcie_startup_port_v2's
+define location is re-arranged to avoid mtk_pcie_enable_msi's forward declaration.
+And call mtk_pcie_enable_msi in mtk_pcie_startup_port_v2 since the clock was all
+enabled at that time.
 
-	Sean
+The third patch was rebased and refactor of the v4 patch[1], changes are:
+ -Add PM support for MT7622.
+ -Using mtk_pcie_enable_port to re-establish the link when resumed.
+ -Rebase on the previous two patches.
 
-> >  Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> > index 99d1c0a..656068f 100644
-> > --- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> > +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> > @@ -19,6 +19,7 @@ Required properties:
-> >        + rockchip,rk3228-mali
-> >        + rockchip,rk3328-mali
-> >        + stericsson,db8500-mali
-> > +      + mediatek,mt7623-mali
-> >  
-> >    - reg: Physical base address and length of the GPU registers
-> >  
-> > @@ -89,6 +90,14 @@ to specify one more vendor-specific compatible, among:
-> >        * interrupt-names and interrupts:
-> >          + combined: combined interrupt of all of the above lines
-> >  
-> > +  - mediatek,mt7623-mali
-> > +     Required properties:
-> > +      * resets: phandle to the reset line for the GPU
-> > +      * mediatek,larb: phandle pointed to the local arbiter used to control the
-> > +	access to external memory on the SoC.
-> > +	see Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
-> > +	for details
-> > +
-> >  Example:
-> >  
-> >  mali: gpu@1c40000 {
-> > 
+The fourth patch add loadable kernel module support.
+
+Those patches was already reviewed-by Ryder Lee <ryder.lee@mediatek.com> so
+I just add the Reviewed-by tags in those patches.
+
+[1] https://patchwork.kernel.org/patch/10479079
+
+Honghui Zhang (4):
+  PCI: mediatek: fixup mtk_pcie_find_port logical
+  PCI: mediatek: enable msi after clock enabled
+  PCI: mediatek: Add system pm support for MT2712 and MT7622
+  PCI: mediatek: Add loadable kernel module support
+
+ drivers/pci/controller/Kconfig         |   2 +-
+ drivers/pci/controller/pcie-mediatek.c | 291 ++++++++++++++++++++++++---------
+ 2 files changed, 215 insertions(+), 78 deletions(-)
+
+-- 
+2.6.4
