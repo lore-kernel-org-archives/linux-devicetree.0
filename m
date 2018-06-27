@@ -1,78 +1,64 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: [PATCH 14/14] arm: dts: OpenPower Palmetto system can use coprocessor for FSI
-Date: Wed, 27 Jun 2018 09:26:05 +1000
-Message-ID: <20180626232605.13420-15-benh@kernel.crashing.org>
-References: <20180626232605.13420-1-benh@kernel.crashing.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH V5 1/5] dt-bindings: watchdog: add stm32mp1 support
+Date: Tue, 26 Jun 2018 17:41:20 -0700
+Message-ID: <a3e9d3a1-eb7a-5752-6c87-fa1906889543@roeck-us.net>
+References: <1529941383-8653-1-git-send-email-ludovic.Barre@st.com>
+ <1529941383-8653-2-git-send-email-ludovic.Barre@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180626232605.13420-1-benh@kernel.crashing.org>
+In-Reply-To: <1529941383-8653-2-git-send-email-ludovic.Barre@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To: Ludovic Barre <ludovic.Barre@st.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This switches away from userspace bitbanging to kernel FSI
-using the coprocessor.
+On 06/25/2018 08:42 AM, Ludovic Barre wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
+> 
+> This patch adds support of stm32mp1.
+> stm32mp1 requires 2 clocks lsi and pclk.
+> 
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 
-Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
----
- arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts | 31 ++++++++++++++-----
- 1 file changed, 24 insertions(+), 7 deletions(-)
+Following Rob's lead here.
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-index e6095f51ecf5..ba49b812e0bd 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-@@ -31,6 +31,11 @@
- 			no-map;
- 			reg = <0x98000000 0x01000000>; /* 16MB */
- 		};
-+
-+		coldfire_memory: codefire_memory@5ee00000 {
-+			reg = <0x5ee00000 0x00200000>;
-+			no-map;
-+		};
- 	};
- 
- 	leds {
-@@ -49,6 +54,25 @@
- 		};
- 	};
- 
-+	fsi: gpio-fsi {
-+		compatible = "ibm,fsi-master-ast2400-cf", "fsi-master";
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		memory-region = <&coldfire_memory>;
-+		sram = <&sram>;
-+		cvic = <&cvic>;
-+
-+		fw-name = "palmetto";
-+		fw-platform-sig = <0x5061>;
-+
-+		clock-gpios = <&gpio ASPEED_GPIO(A, 4) GPIO_ACTIVE_HIGH>;
-+		data-gpios = <&gpio ASPEED_GPIO(A, 5) GPIO_ACTIVE_HIGH>;
-+		mux-gpios = <&gpio ASPEED_GPIO(A, 6) GPIO_ACTIVE_HIGH>;
-+		enable-gpios = <&gpio ASPEED_GPIO(D, 0) GPIO_ACTIVE_HIGH>;
-+		trans-gpios = <&gpio ASPEED_GPIO(H, 6) GPIO_ACTIVE_HIGH>;
-+	};
-+
- 	gpio-keys {
- 		compatible = "gpio-keys";
- 
-@@ -323,13 +347,6 @@
- 		line-name = "SYS_PWROK_BMC";
- 	};
- 
--	pin_gpio_h6 {
--		gpio-hog;
--		gpios = <ASPEED_GPIO(H, 6) GPIO_ACTIVE_HIGH>;
--		output-high;
--		line-name = "SCM1_FSI0_DATA_EN";
--	};
--
- 	pin_gpio_h7 {
- 		gpio-hog;
- 		gpios = <ASPEED_GPIO(H, 7) GPIO_ACTIVE_HIGH>;
--- 
-2.17.1
+Reviewed-by: Guenter Roeck Linux@roeck-us.net>
+
+> ---
+>   .../devicetree/bindings/watchdog/st,stm32-iwdg.txt          | 13 ++++++++++---
+>   1 file changed, 10 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+> index cc13b10a..d8f4430 100644
+> --- a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+> @@ -2,9 +2,15 @@ STM32 Independent WatchDoG (IWDG)
+>   ---------------------------------
+>   
+>   Required properties:
+> -- compatible: "st,stm32-iwdg"
+> -- reg: physical base address and length of the registers set for the device
+> -- clocks: must contain a single entry describing the clock input
+> +- compatible: Should be either:
+> +  - "st,stm32-iwdg"
+> +  - "st,stm32mp1-iwdg"
+> +- reg: Physical base address and length of the registers set for the device
+> +- clocks: Reference to the clock entry lsi. Additional pclk clock entry
+> +  is required only for st,stm32mp1-iwdg.
+> +- clock-names: Name of the clocks used.
+> +  "lsi" for st,stm32-iwdg
+> +  "lsi", "pclk" for st,stm32mp1-iwdg
+>   
+>   Optional Properties:
+>   - timeout-sec: Watchdog timeout value in seconds.
+> @@ -15,5 +21,6 @@ iwdg: watchdog@40003000 {
+>   	compatible = "st,stm32-iwdg";
+>   	reg = <0x40003000 0x400>;
+>   	clocks = <&clk_lsi>;
+> +	clock-names = "lsi";
+>   	timeout-sec = <32>;
+>   };
+> 
