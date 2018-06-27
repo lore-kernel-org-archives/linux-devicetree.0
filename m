@@ -1,81 +1,122 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 4/4] PCI: mediatek: Add loadable kernel module support
-Date: Wed, 27 Jun 2018 19:39:06 +0300
-Message-ID: <CAHp75VdsSZifb5xZ2Q8cmJV=PgAaoN=iOhMfyVX4uE4vNpo=Mg@mail.gmail.com>
-References: <1530091298-28120-1-git-send-email-honghui.zhang@mediatek.com> <1530091298-28120-5-git-send-email-honghui.zhang@mediatek.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v6 1/8] dt-bindings: reset: Add AOSS reset bindings for
+ SDM845 SoCs
+Date: Wed, 27 Jun 2018 09:47:14 -0700
+Message-ID: <20180627164714.GK1860@tuxbook-pro>
+References: <20180627142443.1570-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530091298-28120-5-git-send-email-honghui.zhang@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <20180627142443.1570-1-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Honghui Zhang <honghui.zhang@mediatek.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-pci@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, yingjoe.chen@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, ryder.lee@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, YT Shen <yt.shen@mediatek.com>, sean.wang@mediatek.com
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, kyan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 27, 2018 at 12:21 PM,  <honghui.zhang@mediatek.com> wrote:
-> From: Honghui Zhang <honghui.zhang@mediatek.com>
->
-> Implement remove callback function for Mediatek PCIe driver to add
-> loadable kernel module support.
+On Wed 27 Jun 07:24 PDT 2018, Sibi Sankar wrote:
 
-> +static void mtk_pcie_irq_teardown(struct mtk_pcie *pcie)
-> +{
-> +       struct mtk_pcie_port *port, *tmp;
-> +
+> Add SDM845 AOSS (always on subsystem) reset controller binding
+> 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 
-> +       if (list_empty(&pcie->ports))
-> +               return;
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-This is redundant.
+Regards,
+Bjorn
 
+> ---
+> 
+> Not including Rob's earlier Reviewed-by due to change in compatible 
+> 
+>  .../bindings/reset/qcom,aoss-reset.txt        | 52 +++++++++++++++++++
+>  include/dt-bindings/reset/qcom,sdm845-aoss.h  | 17 ++++++
+>  2 files changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+>  create mode 100644 include/dt-bindings/reset/qcom,sdm845-aoss.h
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+> new file mode 100644
+> index 000000000000..510c748656ec
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+> @@ -0,0 +1,52 @@
+> +Qualcomm AOSS Reset Controller
+> +======================================
 > +
-> +       list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
-> +               irq_set_chained_handler_and_data(port->irq, NULL, NULL);
+> +This binding describes a reset-controller found on AOSS-CC (always on subsystem)
+> +for Qualcomm SDM845 SoCs.
 > +
-> +               if (port->irq_domain)
-> +                       irq_domain_remove(port->irq_domain);
+> +Required properties:
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be:
+> +		    "qcom,sdm845-aoss-cc"
 > +
-> +               if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> +                       if (port->msi_domain)
-> +                               irq_domain_remove(port->msi_domain);
-> +                       if (port->inner_domain)
-> +                               irq_domain_remove(port->inner_domain);
-> +               }
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: must specify the base address and size of the register
+> +	            space.
 > +
-> +               irq_dispose_mapping(port->irq);
-> +       }
-> +}
-
-> +static void mtk_pcie_free_resources(struct mtk_pcie *pcie)
-> +{
-> +       struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
-> +       struct list_head *windows = &host->windows;
+> +- #reset-cells:
+> +	Usage: required
+> +	Value type: <uint>
+> +	Definition: must be 1; cell entry represents the reset index.
 > +
-> +       pci_unmap_iospace(&pcie->pio);
-> +       pci_free_resource_list(windows);
-> +}
+> +Example:
 > +
-> +static int mtk_pcie_remove(struct platform_device *pdev)
-> +{
-> +       struct mtk_pcie *pcie = platform_get_drvdata(pdev);
-> +       struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
+> +aoss_reset: reset-controller@c2a0000 {
+> +	compatible = "qcom,sdm845-aoss-cc";
+> +	reg = <0xc2a0000 0x31000>;
+> +	#reset-cells = <1>;
+> +};
 > +
-> +       pci_stop_root_bus(host->bus);
-> +       pci_remove_root_bus(host->bus);
-> +       mtk_pcie_free_resources(pcie);
+> +Specifying reset lines connected to IP modules
+> +==============================================
 > +
-> +       mtk_pcie_irq_teardown(pcie);
+> +Device nodes that need access to reset lines should
+> +specify them as a reset phandle in their corresponding node as
+> +specified in reset.txt.
 > +
-
-> +       if (!list_empty(&pcie->ports))
-
-I think this is also not needed. Do you put runtime PM by the way?
-
-> +               mtk_pcie_put_resources(pcie);
+> +For list of all valid reset indicies see
+> +<dt-bindings/reset/qcom,sdm845-aoss.h>
 > +
-> +       return 0;
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
+> +Example:
+> +
+> +modem-pil@4080000 {
+> +	...
+> +
+> +	resets = <&aoss_reset AOSS_CC_MSS_RESTART>;
+> +	reset-names = "mss_restart";
+> +
+> +	...
+> +};
+> diff --git a/include/dt-bindings/reset/qcom,sdm845-aoss.h b/include/dt-bindings/reset/qcom,sdm845-aoss.h
+> new file mode 100644
+> index 000000000000..476c5fc873b6
+> --- /dev/null
+> +++ b/include/dt-bindings/reset/qcom,sdm845-aoss.h
+> @@ -0,0 +1,17 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2018 The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_RESET_AOSS_SDM_845_H
+> +#define _DT_BINDINGS_RESET_AOSS_SDM_845_H
+> +
+> +#define AOSS_CC_MSS_RESTART	0
+> +#define AOSS_CC_CAMSS_RESTART	1
+> +#define AOSS_CC_VENUS_RESTART	2
+> +#define AOSS_CC_GPU_RESTART	3
+> +#define AOSS_CC_DISPSS_RESTART	4
+> +#define AOSS_CC_WCSS_RESTART	5
+> +#define AOSS_CC_LPASS_RESTART	6
+> +
+> +#endif
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
