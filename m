@@ -1,34 +1,48 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: make pfuze switch always-on for imx platforms
-Date: Tue, 26 Jun 2018 22:20:48 -0300
-Message-ID: <CAOMZO5C--fpkRLfwmySFJeO2hwPdz3paxW1WMiqcqraqmbL9Mg@mail.gmail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH] ARM: dts: make pfuze switch always-on for imx platforms
+Date: Wed, 27 Jun 2018 01:23:01 +0000
+Message-ID: <DB5PR04MB1320492352AFFEB852E74D1AF5480@DB5PR04MB1320.eurprd04.prod.outlook.com>
 References: <1529993283-32396-1-git-send-email-Anson.Huang@nxp.com>
+ <CAOMZO5C--fpkRLfwmySFJeO2hwPdz3paxW1WMiqcqraqmbL9Mg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529993283-32396-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <CAOMZO5C--fpkRLfwmySFJeO2hwPdz3paxW1WMiqcqraqmbL9Mg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, NXP Linux Team <Linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 26, 2018 at 3:08 AM, Anson Huang <Anson.Huang@nxp.com> wrote:
-> commit (5fe156f regulator: pfuze100: add enable/disable
-> for switch) will cause those unreferenced switches being
-
-Nit: The proper way to reference a commit is:
-
-commit 5fe156f1cab4 ("regulator: pfuze100: add enable/disable for switch")
-
-12 char for the commit ID and the commit name inside (" ").
-
-> turned off if "regulator-always-on" is NOT present, as
-> pfuze switches are normally used by critical modules which
-> must be always ON or shared by many peripherals which
-> do NOT implement power domain control, so just make sure
-> all switches always ON to avoid any system issue caused
-> by unexpectedly turning off switches.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+DQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
+Z2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1AZ21haWwuY29t
+XQ0KPiBTZW50OiBXZWRuZXNkYXksIEp1bmUgMjcsIDIwMTggOToyMSBBTQ0KPiBUbzogQW5zb24g
+SHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiBTaGF3biBHdW8gPHNoYXduZ3VvQGtl
+cm5lbC5vcmc+OyBTYXNjaGEgSGF1ZXINCj4gPHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU+OyBTYXNj
+aGEgSGF1ZXIgPGtlcm5lbEBwZW5ndXRyb25peC5kZT47IEZhYmlvDQo+IEVzdGV2YW0gPGZhYmlv
+LmVzdGV2YW1AbnhwLmNvbT47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ow0KPiBN
+YXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgZGwtbGludXgtaW14IDxsaW51eC1p
+bXhAbnhwLmNvbT47DQo+IG1vZGVyYXRlZCBsaXN0OkFSTS9GUkVFU0NBTEUgSU1YIC8gTVhDIEFS
+TSBBUkNISVRFQ1RVUkUNCj4gPGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz47
+IG9wZW4gbGlzdDpPUEVOIEZJUk1XQVJFIEFORA0KPiBGTEFUVEVORUQgREVWSUNFIFRSRUUgQklO
+RElOR1MgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsNCj4gbGludXgta2VybmVsIDxsaW51
+eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBBUk06IGR0
+czogbWFrZSBwZnV6ZSBzd2l0Y2ggYWx3YXlzLW9uIGZvciBpbXggcGxhdGZvcm1zDQo+IA0KPiBP
+biBUdWUsIEp1biAyNiwgMjAxOCBhdCAzOjA4IEFNLCBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdA
+bnhwLmNvbT4NCj4gd3JvdGU6DQo+ID4gY29tbWl0ICg1ZmUxNTZmIHJlZ3VsYXRvcjogcGZ1emUx
+MDA6IGFkZCBlbmFibGUvZGlzYWJsZSBmb3Igc3dpdGNoKQ0KPiA+IHdpbGwgY2F1c2UgdGhvc2Ug
+dW5yZWZlcmVuY2VkIHN3aXRjaGVzIGJlaW5nDQo+IA0KPiBOaXQ6IFRoZSBwcm9wZXIgd2F5IHRv
+IHJlZmVyZW5jZSBhIGNvbW1pdCBpczoNCj4gDQo+IGNvbW1pdCA1ZmUxNTZmMWNhYjQgKCJyZWd1
+bGF0b3I6IHBmdXplMTAwOiBhZGQgZW5hYmxlL2Rpc2FibGUgZm9yIHN3aXRjaCIpDQo+IA0KPiAx
+MiBjaGFyIGZvciB0aGUgY29tbWl0IElEIGFuZCB0aGUgY29tbWl0IG5hbWUgaW5zaWRlICgiICIp
+Lg0KPiANCj4gPiB0dXJuZWQgb2ZmIGlmICJyZWd1bGF0b3ItYWx3YXlzLW9uIiBpcyBOT1QgcHJl
+c2VudCwgYXMgcGZ1emUgc3dpdGNoZXMNCj4gPiBhcmUgbm9ybWFsbHkgdXNlZCBieSBjcml0aWNh
+bCBtb2R1bGVzIHdoaWNoIG11c3QgYmUgYWx3YXlzIE9OIG9yDQo+ID4gc2hhcmVkIGJ5IG1hbnkg
+cGVyaXBoZXJhbHMgd2hpY2ggZG8gTk9UIGltcGxlbWVudCBwb3dlciBkb21haW4NCj4gPiBjb250
+cm9sLCBzbyBqdXN0IG1ha2Ugc3VyZSBhbGwgc3dpdGNoZXMgYWx3YXlzIE9OIHRvIGF2b2lkIGFu
+eSBzeXN0ZW0NCj4gPiBpc3N1ZSBjYXVzZWQgYnkgdW5leHBlY3RlZGx5IHR1cm5pbmcgb2ZmIHN3
+aXRjaGVzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5n
+QG54cC5jb20+DQo+IA0KPiBSZXZpZXdlZC1ieTogRmFiaW8gRXN0ZXZhbSA8ZmFiaW8uZXN0ZXZh
+bUBueHAuY29tPg0KDQpUaGFua3MsIHdpbGwgaW1wcm92ZSBpdCBhbmQgYWxzbyB0aGUgb3RoZXIg
+cGF0Y2ggZm9yIGlteDZzbGwuDQoNCkFuc29uLg0KDQoNCg==
