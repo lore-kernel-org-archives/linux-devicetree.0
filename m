@@ -1,128 +1,93 @@
-Return-Path: <SRS0=Dkm/=JL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-co1nam03on0083.outbound.protection.outlook.com ([104.47.40.83]:5760
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1754021AbeFYIbW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 Jun 2018 04:31:22 -0400
-From: Alan Douglas <adouglas@cadence.com>
-Subject: [PATCH 4/5] PCI: cadence: Add Power Management ops for host and EP
-Date: Mon, 25 Jun 2018 09:30:52 +0100
-Message-ID: <1529915453-4633-5-git-send-email-adouglas@cadence.com>
-In-Reply-To: <1529915453-4633-1-git-send-email-adouglas@cadence.com>
-References: <1529915453-4633-1-git-send-email-adouglas@cadence.com>
+Return-Path: <SRS0=bntt=JN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mga12.intel.com ([192.55.52.136]:23936 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S934304AbeF0Mcv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 Jun 2018 08:32:51 -0400
+From: Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: Re: [PATCH v2] arm64: dts: msm8996: Use dwc3-qcom glue driver for USB
+In-Reply-To: <CADb+VZJVtfgSDD+7F1J6p2YG0dguN7BhP=bzz3r8jO7FT7dk8w@mail.gmail.com>
+References: <20180531104710.23965-1-mgautam@codeaurora.org> <d98cd884-f25d-ee2e-58cf-400993e0d213@codeaurora.org> <CADGp=Qc8EEHEHiUZA2W9x67Micy-af5xND6Mb-0f+387TvMGeQ@mail.gmail.com> <c13e4dae-aba3-727a-9242-a968af450794@codeaurora.org> <CADGp=QdjwY=9C26NtehXLk5V=k7f1fqorzQcx98Gtc4jK0hc+A@mail.gmail.com> <CADb+VZKtAspuvO64FVEBHUbcB0Nr57jWpBmpS5GfCE+QKD4CcA@mail.gmail.com> <87r2ksshod.fsf@linux.intel.com> <CADb+VZJVtfgSDD+7F1J6p2YG0dguN7BhP=bzz3r8jO7FT7dk8w@mail.gmail.com>
+Date: Wed, 27 Jun 2018 15:30:12 +0300
+Message-ID: <87in64s97v.fsf@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
-To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Alan Douglas <adouglas@cadence.com>
+To: Pierre LE MAGOUROU <plemagourou@softbankrobotics.com>
+Cc: Vivek Gautam <vivek.gautam@codeaurora.org>, Julien Massot <jmassot@softbankrobotics.com>, Manu Gautam <mgautam@codeaurora.org>, andy.gross@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dianders@chromium.org, linux-usb@vger.kernel.org, gregkh@linuxfoundation.org, bjorn.andersson@linaro.org
 List-ID: <devicetree@vger.kernel.org>
 
-These PM ops will enable/disable the optional PHYs if present.  The
-AXI link-down register in the host driver is now cleared in
-cdns_pci_map_bus since the link-down bit will be set if the PHY has
-been disabled.  It is not cleared when enabling the PHY, since the
-link will not yet be up.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Alan Douglas <adouglas@cadence.com>
----
- drivers/pci/controller/pcie-cadence-ep.c   |    1 +
- drivers/pci/controller/pcie-cadence-host.c |    3 ++
- drivers/pci/controller/pcie-cadence.c      |   30 ++++++++++++++++++++++++++++
- drivers/pci/controller/pcie-cadence.h      |    4 +++
- 4 files changed, 38 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/pcie-cadence-ep.c
-index c02f33d..3eabd99 100644
---- a/drivers/pci/controller/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/pcie-cadence-ep.c
-@@ -555,6 +555,7 @@ static void cdns_pcie_ep_shutdown(struct platform_device *pdev)
- 	.driver = {
- 		.name = "cdns-pcie-ep",
- 		.of_match_table = cdns_pcie_ep_of_match,
-+		.pm	= &cdns_pcie_pm_ops,
- 	},
- 	.probe = cdns_pcie_ep_probe,
- 	.shutdown = cdns_pcie_ep_shutdown,
-diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/pcie-cadence-host.c
-index 36f3109..e3e9b7d 100644
---- a/drivers/pci/controller/pcie-cadence-host.c
-+++ b/drivers/pci/controller/pcie-cadence-host.c
-@@ -61,6 +61,8 @@ struct cdns_pcie_rc {
- 	/* Check that the link is up */
- 	if (!(cdns_pcie_readl(pcie, CDNS_PCIE_LM_BASE) & 0x1))
- 		return NULL;
-+	/* Clear AXI link-down status */
-+	cdns_pcie_writel(pcie, CDNS_PCIE_AT_LINKDOWN, 0x0);
- 
- 	/* Update Output registers for AXI region 0. */
- 	addr0 = CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_NBITS(12) |
-@@ -345,6 +347,7 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
- 	.driver = {
- 		.name = "cdns-pcie-host",
- 		.of_match_table = cdns_pcie_host_of_match,
-+		.pm	= &cdns_pcie_pm_ops,
- 	},
- 	.probe = cdns_pcie_host_probe,
- };
-diff --git a/drivers/pci/controller/pcie-cadence.c b/drivers/pci/controller/pcie-cadence.c
-index 2edc126..86f1b00 100644
---- a/drivers/pci/controller/pcie-cadence.c
-+++ b/drivers/pci/controller/pcie-cadence.c
-@@ -217,3 +217,33 @@ int cdns_pcie_init_phy(struct device *dev, struct cdns_pcie *pcie)
- 
- 	return ret;
- }
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int cdns_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct cdns_pcie *pcie = dev_get_drvdata(dev);
-+
-+	cdns_pcie_disable_phy(pcie);
-+
-+	return 0;
-+}
-+
-+static int cdns_pcie_resume_noirq(struct device *dev)
-+{
-+	struct cdns_pcie *pcie = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = cdns_pcie_enable_phy(pcie);
-+	if (ret) {
-+		dev_err(dev, "failed to enable phy\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
-+const struct dev_pm_ops cdns_pcie_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(cdns_pcie_suspend_noirq,
-+				      cdns_pcie_resume_noirq)
-+};
-diff --git a/drivers/pci/controller/pcie-cadence.h b/drivers/pci/controller/pcie-cadence.h
-index b342c80..ae6bf2a 100644
---- a/drivers/pci/controller/pcie-cadence.h
-+++ b/drivers/pci/controller/pcie-cadence.h
-@@ -166,6 +166,9 @@
- #define CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar) \
- 	(CDNS_PCIE_AT_BASE + 0x0804 + (bar) * 0x0008)
- 
-+/* AXI link down register */
-+#define CDNS_PCIE_AT_LINKDOWN (CDNS_PCIE_AT_BASE + 0x0824)
-+
- enum cdns_pcie_rp_bar {
- 	RP_BAR0,
- 	RP_BAR1,
-@@ -314,5 +317,6 @@ void cdns_pcie_set_outbound_region_for_normal_msg(struct cdns_pcie *pcie, u8 fn,
- void cdns_pcie_disable_phy(struct cdns_pcie *pcie);
- int cdns_pcie_enable_phy(struct cdns_pcie *pcie);
- int cdns_pcie_init_phy(struct device *dev, struct cdns_pcie *pcie);
-+extern const struct dev_pm_ops cdns_pcie_pm_ops;
- 
- #endif /* _PCIE_CADENCE_H */
--- 
-1.7.1
+Hi,
 
+Pierre LE MAGOUROU <plemagourou@softbankrobotics.com> writes:
+>> >> Thanks a lot,
+>> >> I will test this branch.
+>> >>
+>> >>
+>> > I just tested USB gadget with this branch on the db820c.
+>> >
+>> > If I activate a USB composite gadget device with EEM function, I can s=
+ee
+>> > the 'usb0' Ethernet interfaces on the device and on the host and I can
+>> ping
+>> > the db820c from the host.
+>> > When I create a USB composite gadget device with UAC2 function, I can =
+see
+>> > the audio cards on host and device but cannot play or record any sound.
+>> >
+>> > While looking at dwc3 traces with Ftrace, I noticed that the dwc3 driv=
+er
+>> is
+>> > stuck on wait_event_lock_irq() in dwc3_gadget_ep_dequeue() function wh=
+en
+>> I
+>> > use UAC2 gadget.
+>>
+>> can you share tracepoint data?
+>>
+>>
+> Here are the trace results when I start the UAC2 gadget device (all dwc3
+> functions and events are activated) : https://pastebin.com/NBP3tM8N
+> The last line you see "before wait_event EP_END_TRANSFER_PENDING" is a
+> trace_printk I added just before wait_event_lock_irq(). I also have a
+> trace_printk after the wait_event_lock_irq() that is never called.
+
+looks like we need to do away with the wait_event_lock_irq()
+call. usb_ep_dequeue() can be called from within the controller's
+interrupt handler, so we can't rely on wait_event_lock_irq(). I guess
+the best thing here would be to mark TRBs as dirty (and not increment
+dequeue pointer), so they aren't reused by accident, then let endpoint
+continue processing. Once command completion interrupt fires, we
+increment dequeue pointer.
+
+This should work better, I suppose. Do you want a shot at implementing
+this?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlszg1QACgkQzL64meEa
+mQaKhw/+Nx3JkblFpUbJs5FeLvh2jBpLIbgtNDaZJJhiPbQ8e1S29j4G7JJWs54h
+omWoR3IlH0NeRrgfxZVGeNHgr1W/8L3zQDzNDShwHcIAiihL4wgdeJG0IUrUu57s
+puiHMH6rG0CIpYaw1lIaD1zT6Ei3HK0dJibPhSD3fn6mrDF0pdqXeeaF9GsCpcI6
+rQGSOZ6sYomdC2XbodwRtqfHaZD0yBmG16gTknbxDOs+Uavp5MIRUstq+DJvxM6b
+VEJLcAtpzAtGiz3Szym2MJDKqtZxMSHUNNeDTWQYoEqs06Ut1Yq6sUcGFLNYtGCl
+awIH6TGRSGl2EhNEeHTuipLSKIy9Zp4+1v60XHIgMhrLNt7vD3Ig2p97UHSFfTLK
+IlGUlWySUA16x/IhMv/0X2KX8NvWK9Bpla34tkI7+5Chutd9Olb1DpvERJrnWLiW
+jIKUK1Ba6YfPwMI+oW6dqqTVMY4p6XZ/+T9HVTEoX4oog9vLS9L6nVI+hfSfSwh1
+eTUnxuZGL4i1nbSTAjEwZyUJsyve/EKqCyLOhPvJwZxXNjSJxQqIoASBpAUoESen
++XgC9XMgkvGpheEPv5zD6b2PqSdd/zlnJe2Qg19B6TT66xE5eqnbfK6FBlzMbruH
+Woeoa+uUOsiogSVtWlZhOSkK+9wGU+hx5T8efNDaRcJSakXYtvM=
+=Rb2l
+-----END PGP SIGNATURE-----
+--=-=-=--
