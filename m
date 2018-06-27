@@ -1,53 +1,48 @@
-Return-Path: <SRS0=bntt=JN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00050.outbound.protection.outlook.com ([40.107.0.50]:22016
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S932104AbeF0ADC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 Jun 2018 20:03:02 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v8 07/14] staging: typec: tcpci: remove unused tcpci_tcpc_config
-Date: Wed, 27 Jun 2018 07:45:25 +0800
-Message-Id: <1530056732-9640-8-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
-References: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: a.hajda@samsung.com, jun.li@nxp.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
+Return-Path: <vkoul@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v4 3/6] dt-bindings: Input: Add additional property to qcom pwrkey
+Date: Wed, 27 Jun 2018 17:22:58 +0530
+Message-Id: <20180627115301.21330-4-vkoul@kernel.org>
+In-Reply-To: <20180627115301.21330-1-vkoul@kernel.org>
+References: <20180627115301.21330-1-vkoul@kernel.org>
+To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Since we will use config settings via device properties, so
-remove the hard code tcpci_tcpc_config.
+Pwrkey and reset have similar properties so add additional
+property for linux,code to use the code for sending events.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Li Jun <jun.li@nxp.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/staging/typec/tcpci.c | 7 -------
- 1 file changed, 7 deletions(-)
+ Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index e59547a..076498a 100644
---- a/drivers/staging/typec/tcpci.c
-+++ b/drivers/staging/typec/tcpci.c
-@@ -464,17 +464,10 @@ static const struct regmap_config tcpci_regmap_config = {
- 	.max_register = 0x7F, /* 0x80 .. 0xFF are vendor defined */
- };
+diff --git a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+index 07bf55f6e0b9..bf719396eadd 100644
+--- a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
++++ b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+@@ -32,6 +32,14 @@ PROPERTIES
+ 	Definition: presence of this property indicates that the KPDPWR_N pin
+ 		    should be configured for pull up.
  
--static const struct tcpc_config tcpci_tcpc_config = {
--	.type = TYPEC_PORT_DFP,
--	.default_role = TYPEC_SINK,
--};
--
- static int tcpci_parse_config(struct tcpci *tcpci)
- {
- 	tcpci->controls_vbus = true; /* XXX */
++- linux,code:
++	Usage: optional
++	Value type: <u32>
++	Definition: The input key-code associated with the power key.
++		    Use the linux event codes defined in
++		    include/dt-bindings/input/linux-event-codes.h
++		    When property is omitted KEY_POWER is assumed.
++
+ EXAMPLE
  
--	/* TODO: Populate struct tcpc_config from ACPI/device-tree */
--	tcpci->tcpc.config = &tcpci_tcpc_config;
- 	tcpci->tcpc.fwnode = device_get_named_child_node(tcpci->dev,
- 							 "connector");
- 	if (!tcpci->tcpc.fwnode) {
+ 	pwrkey@800 {
+@@ -40,4 +48,5 @@ EXAMPLE
+ 		interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
+ 		debounce = <15625>;
+ 		bias-pull-up;
++		linux,code = <KEY_POWER>;
+ 	};
 -- 
-2.7.4
-
+2.14.4
