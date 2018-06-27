@@ -1,72 +1,106 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH v2 2/4] pci: dwc: pci-dra7xx: Enable errata i870 for both EP and RC mode
-Date: Wed, 27 Jun 2018 17:59:17 +0530
-Message-ID: <20180627122919.23926-3-vigneshr@ti.com>
-References: <20180627122919.23926-1-vigneshr@ti.com>
+From: Sibi S <sibis@codeaurora.org>
+Subject: Re: [PATCH v5 1/8] dt-bindings: reset: Add AOSS reset bindings for
+ SDM845 SoCs
+Date: Wed, 27 Jun 2018 19:54:18 +0530
+Message-ID: <aa84c861-5e37-5576-cd6f-94a302750d19@codeaurora.org>
+References: <20180521172714.8551-1-sibis@codeaurora.org>
+ <20180521172714.8551-2-sibis@codeaurora.org>
+ <20180623004433.GQ3402@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180627122919.23926-1-vigneshr@ti.com>
+In-Reply-To: <20180623004433.GQ3402@tuxbook-pro>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Vignesh R <vigneshr@ti.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <swboyd@chromium.org>
+Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Errata i870 is applicable in both EP and RC mode. Therefore rename
-function dra7xx_pcie_ep_unaligned_memaccess(), that implements errata
-workaround, to dra7xx_pcie_unaligned_memaccess() and call it from a
-common place. So, that errata workaround is applied for both modes of
-operation.
+Hi Bjorn,
+Thanks for the review will address the comments in the next respin.
 
-Reported-by: Chris Welch <Chris.Welch@viavisolutions.com>
-Signed-off-by: Vignesh R <vigneshr@ti.com>
----
- drivers/pci/controller/dwc/pci-dra7xx.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+On 06/23/2018 06:14 AM, Bjorn Andersson wrote:
+> On Mon 21 May 10:27 PDT 2018, Sibi Sankar wrote:
+> 
+>> Add SDM845 AOSS (always on subsystem) reset controller binding
+>>
+> 
+> I think it would be better if you made the binding represent the entire
+> clock controller, rather than only the reset-related portion of it.
+> 
+> As I can't find anything in the downstream kernel that references the
+> clock part of the hardware block I think the driver can be kept as is
+> (with updated compatible and adjust the offsets of the registers)
+> 
+> 
+> This makes the DT better represents the hardware and it makes it
+> possible to control the clocks in the future, without breaking backwards
+> compatibility with existing DTBs.
+> 
 
-diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-index 345aab56ce8b..95d9076e3fde 100644
---- a/drivers/pci/controller/dwc/pci-dra7xx.c
-+++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-@@ -542,7 +542,7 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
- };
- 
- /*
-- * dra7xx_pcie_ep_unaligned_memaccess: workaround for AM572x/AM571x Errata i870
-+ * dra7xx_pcie_unaligned_memaccess: workaround for AM572x/AM571x Errata i870
-  * @dra7xx: the dra7xx device where the workaround should be applied
-  *
-  * Access to the PCIe slave port that are not 32-bit aligned will result
-@@ -552,7 +552,7 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
-  *
-  * To avoid this issue set PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE to 1.
-  */
--static int dra7xx_pcie_ep_unaligned_memaccess(struct device *dev)
-+static int dra7xx_pcie_unaligned_memaccess(struct device *dev)
- {
- 	int ret;
- 	struct device_node *np = dev->of_node;
-@@ -695,6 +695,10 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 	if (dra7xx->link_gen < 0 || dra7xx->link_gen > 2)
- 		dra7xx->link_gen = 2;
- 
-+	ret = dra7xx_pcie_unaligned_memaccess(dev);
-+	if (ret)
-+		dev_err(dev, "WA for Errata i870 not appplied. Update DT\n");
-+
- 	switch (mode) {
- 	case DW_PCIE_RC_TYPE:
- 		if (!IS_ENABLED(CONFIG_PCI_DRA7XX_HOST)) {
-@@ -717,10 +721,6 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 		dra7xx_pcie_writel(dra7xx, PCIECTRL_TI_CONF_DEVICE_TYPE,
- 				   DEVICE_TYPE_EP);
- 
--		ret = dra7xx_pcie_ep_unaligned_memaccess(dev);
--		if (ret)
--			goto err_gpio;
--
- 		ret = dra7xx_add_pcie_ep(dra7xx, pdev);
- 		if (ret < 0)
- 			goto err_gpio;
+yup makes sense.
+
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>   .../bindings/reset/qcom,aoss-reset.txt        | 52 +++++++++++++++++++
+>>   include/dt-bindings/reset/qcom,sdm845-aoss.h  | 17 ++++++
+>>   2 files changed, 69 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+>>   create mode 100644 include/dt-bindings/reset/qcom,sdm845-aoss.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+>> new file mode 100644
+>> index 000000000000..cd5dcafb4ed7
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+>> @@ -0,0 +1,52 @@
+>> +Qualcomm AOSS Reset Controller
+>> +======================================
+>> +
+>> +This binding describes a reset-controller found on AOSS (always on subsystem)
+>> +for Qualcomm SDM845 SoCs.
+>> +
+>> +Required properties:
+>> +- compatible:
+>> +	Usage: required
+>> +	Value type: <string>
+>> +	Definition: must be:
+>> +		    "qcom,sdm845-aoss-reset"
+> 
+> qcom,sdm845-aoss-cc
+> 
+>> +
+>> +- reg:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: must specify the base address and size of the register
+>> +	            space.
+>> +
+>> +- #reset-cells:
+>> +	Usage: required
+>> +	Value type: <uint>
+>> +	Definition: must be 1; cell entry represents the reset index.
+>> +
+>> +Example:
+>> +
+>> +aoss_reset: reset-controller@c2b0000 {
+>> +	compatible = "qcom,sdm845-aoss-reset";
+>> +	reg = <0xc2b0000 0x21000>;
+> 
+> reg = <0xc2a0000 0x31000>;
+> 
+>> +	#reset-cells = <1>;
+>> +};
+>> +
+> 
+> Apart from this the binding looks good!
+> 
+> Regards,
+> Bjorn
+> 
+
 -- 
-2.18.0
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
