@@ -1,66 +1,137 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i-h3: Increase the GPU clock
- to 576 MHz
-Date: Wed, 27 Jun 2018 22:08:12 +0200
-Message-ID: <20180627200812.usm5ndoyrnmuhjrv@flea>
-References: <20180627072635.3592-1-paul.kocialkowski@bootlin.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCH v7 3/4] phy: Add QMP phy based UFS phy support for sdm845
+Date: Wed, 27 Jun 2018 13:17:32 -0700
+Message-ID: <CAE=gft4153GviYtYuoREgyPkwxwnejHG+t+H8MB+Jv1TXTouSA@mail.gmail.com>
+References: <20180619083647.10116-1-cang@codeaurora.org> <20180619083647.10116-4-cang@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zd3omamzv4izpv2n"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBN65Z7MQKGQECSHTURI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180627072635.3592-1-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Qiang Yu <yuq825-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Giulio Benetti <giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180619083647.10116-4-cang@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: cang@codeaurora.org
+Cc: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, Manu Gautam <mgautam@codeaurora.org>, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---zd3omamzv4izpv2n
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Wed, Jun 27, 2018 at 09:26:35AM +0200, Paul Kocialkowski wrote:
-> It was reported (based on declarations from the Allwiner BSP) that the
-> Mali 400 found on the H3 can be clocked up to 576 MHz.
-> 
-> The frequency was tested using the r6p2 out-of-tree driver and a Kodi
-> userspace with associated r6p2 blobs, leading to a working result.
-> 
-> This increases the clock to 576 MHz, which directly increases the pixel
-> throughput of the GPU (given the 1 pixel-per-cycle rate).
-> 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+On Tue, Jun 19, 2018 at 1:38 AM Can Guo <cang@codeaurora.org> wrote:
+>
+> Add UFS PHY support to make SDM845 UFS work with common PHY framework.
+>
+> Signed-off-by: Can Guo <cang@codeaurora.org>
 > ---
->  arch/arm/boot/dts/sun8i-h3.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-> index 41d57c76f290..a14a63092dc6 100644
-> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> @@ -133,7 +133,7 @@
->  			resets = <&ccu RST_BUS_GPU>;
->  
->  			assigned-clocks = <&ccu CLK_GPU>;
-> -			assigned-clock-rates = <384000000>;
-> +			assigned-clock-rates = <576000000>;
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 173 +++++++++++++++++++++++++++++++++++-
+>  drivers/phy/qualcomm/phy-qcom-qmp.h |  15 ++++
+>  2 files changed, 187 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index 9be9754..852792d 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+...
+>  static void qcom_qmp_phy_configure(void __iomem *base,
+>                                    const unsigned int *regs,
+>                                    const struct qmp_phy_init_tbl tbl[],
+> @@ -1131,6 +1249,15 @@ static int qcom_qmp_phy_init(struct phy *phy)
+>         qcom_qmp_phy_configure(pcs, cfg->regs, cfg->pcs_tbl, cfg->pcs_tbl_num);
+>
+>         /*
+> +        * UFS PHY requires the deassert of software reset before serdes start.
+> +        * For UFS PHY that has not software reset control bits in its address
 
-This should really be fixed through the driver or through OPPs,
-instead of just coding it here and hoping that it will remain set to
-that rate.
+This line of the comment is unclear. Maybe:
+"For UFS PHYs that do not have software reset control bits, defer
+starting serdes until the power on callback"
 
-Maxime
+> +        * space, it should skip starting serdes here. UFS PHY Serdes shall
+> +        * start when UFS explicitly calls PHY power on.
+> +        */
+> +       if ((cfg->type == PHY_TYPE_UFS) && cfg->no_pcs_sw_reset)
+> +               goto out;
+> +
+> +       /*
+>          * Pull out PHY from POWER DOWN state.
+>          * This is active low enable signal to power-down PHY.
+>          */
+> @@ -1159,6 +1286,7 @@ static int qcom_qmp_phy_init(struct phy *phy)
+>         }
+>         qmp->phy_initialized = true;
+>
+> +out:
+>         return ret;
+>
+>  err_pcs_ready:
+> @@ -1181,7 +1309,8 @@ static int qcom_qmp_phy_exit(struct phy *phy)
+>         clk_disable_unprepare(qphy->pipe_clk);
+>
+>         /* PHY reset */
+> -       qphy_setbits(qphy->pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
+> +       if (!cfg->no_pcs_sw_reset)
+> +               qphy_setbits(qphy->pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
+>
+>         /* stop SerDes and Phy-Coding-Sublayer */
+>         qphy_clrbits(qphy->pcs, cfg->regs[QPHY_START_CTRL], cfg->start_ctrl);
+> @@ -1199,6 +1328,44 @@ static int qcom_qmp_phy_exit(struct phy *phy)
+>         return 0;
+>  }
+>
+> +static int qcom_qmp_phy_poweron(struct phy *phy)
+> +{
+> +       struct qmp_phy *qphy = phy_get_drvdata(phy);
+> +       struct qcom_qmp *qmp = qphy->qmp;
+> +       const struct qmp_phy_cfg *cfg = qmp->cfg;
+> +       void __iomem *pcs = qphy->pcs;
+> +       void __iomem *status;
+> +       unsigned int mask, val;
+> +       int ret = 0;
+> +
+> +       if (cfg->type != PHY_TYPE_UFS)
+> +               return 0;
+> +
+> +       /*
+> +        * For UFS PHY that has not software reset control, serdes start
+> +        * should only happen when UFS driver explicitly calls phy_power_on
+> +        * after it deasserts software reset.
+> +        */
+> +       if (cfg->no_pcs_sw_reset && !qmp->phy_initialized &&
+> +           (qmp->init_count != 0)) {
+> +               /* start SerDes and Phy-Coding-Sublayer */
+> +               qphy_setbits(pcs, cfg->regs[QPHY_START_CTRL], cfg->start_ctrl);
+> +
+> +               status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
+> +               mask = cfg->mask_pcs_ready;
+> +
+> +               ret = readl_poll_timeout(status, val, !(val & mask), 1,
+> +                                        PHY_INIT_COMPLETE_TIMEOUT);
+> +               if (ret) {
+> +                       dev_err(qmp->dev, "phy initialization timed-out\n");
+> +                       return ret;
+> +               }
+> +               qmp->phy_initialized = true;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+>  static int qcom_qmp_phy_set_mode(struct phy *phy, enum phy_mode mode)
+>  {
+>         struct qmp_phy *qphy = phy_get_drvdata(phy);
+> @@ -1428,6 +1595,7 @@ static int phy_pipe_clk_register(struct qcom_qmp *qmp, struct device_node *np)
+>  static const struct phy_ops qcom_qmp_phy_gen_ops = {
+>         .init           = qcom_qmp_phy_init,
+>         .exit           = qcom_qmp_phy_exit,
+> +       .power_on       = qcom_qmp_phy_poweron,
 
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---zd3omamzv4izpv2n--
+The USB pipe clk discussion earlier this year got me on the lookout
+for asymmetric phy init functions. If we're flipping on START_CTRL in
+phy_poweron, shouldn't we be flipping it back off in phy_poweroff?
+>From the comments, it seems like this was done so that some sort of
+UFS reset step could happen. Would that sequencing still happen
+correctly if the PHY did:
+
+phy_init
+phy_power_on
+(phy_power_off)
+phy_power_on
+
+I'm unsure. Does suspend/resume work?
+
+-Evan
