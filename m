@@ -1,67 +1,74 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [1/3] ARM: dts: imx51-zii-common: create common include dtsi
-Date: Wed, 27 Jun 2018 10:33:22 -0700
-Message-ID: <CAHQ1cqGxXg5QYMTxbSsNDDr=ot0h0XWW98hHNVnf+SQhrjoL=g@mail.gmail.com>
-References: <1529603100-31958-2-git-send-email-andrey.gusakov@cogentembedded.com>
- <5a3490a5-ee5c-a4da-8b54-b5234b7e50d0@yandex.ru> <CAHQ1cqH0o2rsVJWccR6dBXQCnp2-mmLNTNOi0uAOO2SSdz0+xA@mail.gmail.com>
- <72694ec0-45ee-6f57-ebbf-249d4a0b23bc@cogentembedded.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: virtio: Specify #iommu-cells value
+	for a virtio-iommu
+Date: Wed, 27 Jun 2018 11:46:32 -0600
+Message-ID: <CAL_JsqLdahF+2VsH9h658z9guO0XmqHM75QLaHApZLNP8twUNA@mail.gmail.com>
+References: <20180621190655.56391-1-jean-philippe.brucker@arm.com>
+	<20180621190655.56391-2-jean-philippe.brucker@arm.com>
+	<20180625192753.GA22351@rob-hp-laptop>
+	<89d31865-ee35-ef8c-f7b3-f3acf2bbd30e@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <72694ec0-45ee-6f57-ebbf-249d4a0b23bc@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-imx@nxp.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <89d31865-ee35-ef8c-f7b3-f3acf2bbd30e-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jayachandran.nair-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, tnowicki-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, virtio-dev-sDuHXQ4OtrM4h7I2RyI4rWD2FQJk+8+b@public.gmane.org, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 27, 2018 at 9:59 AM Nikita Yushchenko
-<nikita.yoush@cogentembedded.com> wrote:
+On Tue, Jun 26, 2018 at 11:59 AM Jean-Philippe Brucker
+<jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org> wrote:
 >
-> > There are three boards that share that configuration almost to a T,
-> > with the only difference is the particular GPIOs used. Putting it into
-> > a common file avoids repeating the boilerplate and makes it explicit
-> > to the reader that those settings are shared.
+> On 25/06/18 20:27, Rob Herring wrote:
+> > On Thu, Jun 21, 2018 at 08:06:51PM +0100, Jean-Philippe Brucker wrote:
+> >> A virtio-mmio node may represent a virtio-iommu device. This is discovered
+> >> by the virtio driver at probe time, but the DMA topology isn't
+> >> discoverable and must be described by firmware. For DT the standard IOMMU
+> >> description is used, as specified in bindings/iommu/iommu.txt and
+> >> bindings/pci/pci-iommu.txt. Like many other IOMMUs, virtio-iommu
+> >> distinguishes masters by their endpoint IDs, which requires one IOMMU cell
+> >> in the "iommus" property.
+> >>
+> >> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+> >> ---
+> >>  Documentation/devicetree/bindings/virtio/mmio.txt | 8 ++++++++
+> >>  1 file changed, 8 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/virtio/mmio.txt b/Documentation/devicetree/bindings/virtio/mmio.txt
+> >> index 5069c1b8e193..337da0e3a87f 100644
+> >> --- a/Documentation/devicetree/bindings/virtio/mmio.txt
+> >> +++ b/Documentation/devicetree/bindings/virtio/mmio.txt
+> >> @@ -8,6 +8,14 @@ Required properties:
+> >>  - reg:              control registers base address and size including configuration space
+> >>  - interrupts:       interrupt generated by the device
+> >>
+> >> +Required properties for virtio-iommu:
+> >> +
+> >> +- #iommu-cells:     When the node describes a virtio-iommu device, it is
+> >> +            linked to DMA masters using the "iommus" property as
+> >> +            described in devicetree/bindings/iommu/iommu.txt. For
+> >> +            virtio-iommu #iommu-cells must be 1, each cell describing
+> >> +            a single endpoint ID.
+> >
+> > The iommus property should also be documented for the client side.
 >
-> I'd agree if that boilerplate was 100 lines.
->
+> Isn't section "IOMMU master node" of iommu.txt sufficient? Since the
+> iommus property applies to any DMA master, not only virtio-mmio devices,
+> the canonical description in iommu.txt seems the best place for it, and
+> I'm not sure what to add in this file. Maybe a short example below the
+> virtio_block one?
 
-OK, so your threshold is 100 lines, mine is 3. Agree to disagree?
+No, because somewhere we have to capture if 'iommus' is valid for
+'virtio-mmio' or not. Hopefully soon we'll actually be able to
+validate that.
 
-> But here it is small, and mostly containing lines that are required for
-> any i2c-gpio definition. It does not any value of itself.
->
-> Saving 5 lines at cost of loose of integrity is not something I agree with.
->
-
-Can we maybe tone it down and not make this sound like a struggle of
-"good vs. evil"?
-
-> > There are at least two boards that use that UART2 as is. Same as above
-> > this was done to reduce boilerplate.
->
-> Here have choice between two logical blocks - definitions of uart2 in
-> two boards that use them, and two logical blocks - definition in dtsi
-> and undo in board that does not use it.
->
-> You trade a couple of saved dts lines against keeping things consistent.
-
-That's your POV, mine is that I save a couple of lines and things are
-still consistent.
-
->
-> Nikita
->
-> P.S.
-> In case of these zii boards I doubt that dtsi worths at all. Despite of
-> all being imx51 boards from ZII, these boards don't seem to have large
-> common logical blocks. Perhaos RDU1 and babbage have more in common - so
-> what, create a dtsi for them?
-
-Nope, that slippery slope doesn't exist at all. We have a clear
-boundary/decision criteria of common vendor.
-
-As I said, let's leave this decision up to the maintainers and avoid
-continuing having this argument where neither party convinces another.
-
-Thanks,
-Andrey Smirnov
+Rob
