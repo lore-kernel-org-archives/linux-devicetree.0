@@ -1,84 +1,62 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 6/7] Bluetooth: mediatek: Add protocol support for
- MediaTek serial devices
-Date: Wed, 27 Jun 2018 20:04:19 +0300
-Message-ID: <CAHp75VedHLw52J_ymh3iYf2w=r8d+Kqg=fJZmBGnaCrEbNEPdQ@mail.gmail.com>
-References: <cover.1530004712.git.sean.wang@mediatek.com> <48215a1276c36af7ad581c3d83759fe9f55e3c4b.1530004712.git.sean.wang@mediatek.com>
- <CAHp75VehTeyyzR4bPKK3hFDTVqZnhdNy5vcBFJCSH_Zrx+QrKA@mail.gmail.com>
+From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH v2 00/10] Initial support for Samsung Galaxy S and Galaxy S 4G
+Date: Wed, 27 Jun 2018 19:12:14 +0200
+Message-ID: <1530119544-30023-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VehTeyyzR4bPKK3hFDTVqZnhdNy5vcBFJCSH_Zrx+QrKA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree <devicetree@vger.kernel.org>, linux-bluetooth@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xc-racer2@live.ca, pawel.mikolaj.chmiel@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 27, 2018 at 7:59 PM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Jun 27, 2018 at 8:43 AM,  <sean.wang@mediatek.com> wrote:
->> From: Sean Wang <sean.wang@mediatek.com>
->>
->
->> +config BT_HCIBTUART_MTK
->> +       tristate "MediaTek HCI UART driver"
->> +       depends on BT_HCIBTUART
->
->> +       default y
->
-> Perhaps it's an overkill for users which would like to have less
-> amount on stuff in kernel.
->
->
->> +#include <asm/unaligned.h>
->> +#include <linux/atomic.h>
->> +#include <linux/clk.h>
->> +#include <linux/firmware.h>
->> +#include <linux/module.h>
->> +#include <linux/pm_runtime.h>
->> +#include <linux/serdev.h>
+This patch series adds support for Samsung Galaxy S and Galaxy S 4G.
+Both are commercial phone based on Aries family.
 
-Perhaps alphabetically ordered?
+Changes from v1:
+  - Removed duplicated and unneeded headers
+  - Corrected node names
+  - Formatting fixes
+  - Removed unneeded pinctrl and sorted entries
+  - Set correct interrupt type for max8998 pmic
+  - Add missing regulators
+  - Added missing commit msg
+  - Added stdout-path
+  - Added information why we hardcode bootargs
+  - Added new patch which adds information, that there are samsung boards,
+    not using exynos bases soc.
+  - Split patch updating s5pv210_defconfig into three parts.
+    First is result of make savedefconfig, second adds drivers required
+    by both devices and last adds some options, which are usefull in booting
+    typical Linux distribution.
 
-+ blank line.
+Jonathan Bakker (2):
+  ARM: dts: s5pv210: Add initial DTS for SGH-T959P phone
+  dt-bindings: samsung: Document bindings for SGH-T959P board
 
->
->> +#include <net/bluetooth/bluetooth.h>
->> +#include <net/bluetooth/hci_core.h>
+Paweł Chmiel (8):
+  ARM: dts: s5pv210: Add missing interrupt-controller property to gph2
+  ARM: dts: s5pv210: Add initial DTS for Samsung Aries based phones
+  ARM: dts: s5pv210: Add initial DTS for Samsung Galaxy S phone
+  dt-bindings: samsung: Add S5PV210 as possible soc in Samsung boards
+  dt-bindings: samsung: Document bindings for Samsung aries boards
+  ARM: s5pv210_defconfig: Run make savedefconfig
+  ARM: s5pv210_defconfig: Enable drivers for Samsung Aries based phones
+  ARM: s5pv210_defconfig: Enable options needed to boot typical Linux
+    distro
 
->> +       /* Enable the power domain and clock the device requires. */
->> +       pm_runtime_enable(dev);
->> +       err = pm_runtime_get_sync(dev);
->> +       if (err < 0)
->> +               goto err_pm2;
-
-Should be err_pm1 here.
-Yes, that's correct.
-
->> +err_pm1:
->> +       pm_runtime_put_sync(dev);
->> +err_pm2:
->> +       pm_runtime_disable(dev);
-
->> +#define MTK_WMT_CMD_SIZE       (MTK_WMT_HDR_SIZE + MTK_STP_HDR_SIZE + \
->> +                                MTK_STP_TLR_SIZE + HCI_ACL_HDR_SIZE)
-
-It would look slightly better if you start on new line like
-#define FOO \
- (BAR + BAZ)
-
->> +struct mtk_stp_hdr {
->> +       __u8 prefix;
->> +       __u8 dlen1:4;
->> +       __u8 type:4;
-
->> +       __u8 dlen2:8;
-
-u8 already 8 bit.
-
->> +       __u8 cs;
->> +} __packed;
+ .../bindings/arm/samsung/samsung-boards.txt        |   5 +-
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/s5pv210-aries.dtsi               | 413 +++++++++++++++++++++
+ arch/arm/boot/dts/s5pv210-fascinate4g.dts          |  45 +++
+ arch/arm/boot/dts/s5pv210-galaxys.dts              |  77 ++++
+ arch/arm/boot/dts/s5pv210-pinctrl.dtsi             |   2 +
+ arch/arm/configs/s5pv210_defconfig                 |  49 ++-
+ 7 files changed, 589 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm/boot/dts/s5pv210-aries.dtsi
+ create mode 100644 arch/arm/boot/dts/s5pv210-fascinate4g.dts
+ create mode 100644 arch/arm/boot/dts/s5pv210-galaxys.dts
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
