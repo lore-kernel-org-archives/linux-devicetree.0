@@ -1,55 +1,39 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH 1/4] dt-bindings: power: Add Actions Semi S900 SPS
-Date: Wed, 27 Jun 2018 15:57:13 +0100
-Message-ID: <20180627145713.uao2gr5kknk2cypk@holly.lan>
-References: <20180411164036.8046-1-manivannan.sadhasivam@linaro.org>
- <20180411164036.8046-2-manivannan.sadhasivam@linaro.org>
- <a261bae6-d2fa-a550-7232-7647ce0ac0e2@suse.de>
- <20180626164117.GA5241@Mani-XPS-13-9360>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH v2 4/4] ARM: dts: dra7: Fix up unaligned access setting for PCIe EP
+Date: Wed, 27 Jun 2018 17:59:19 +0530
+Message-ID: <20180627122919.23926-5-vigneshr@ti.com>
+References: <20180627122919.23926-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180626164117.GA5241@Mani-XPS-13-9360>
+In-Reply-To: <20180627122919.23926-1-vigneshr@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, robh+dt@kernel.org, liuwei@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, amit.kucheria@linaro.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, manivannanece23@gmail.com, Jeff Chen <jeff.chen@actions-semi.com>, "Thomas C. Liau" <thomas.liau@actions-semi.com>
+To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Vignesh R <vigneshr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 26, 2018 at 10:11:17PM +0530, Manivannan Sadhasivam wrote:
-> > > diff --git a/include/dt-bindings/power/owl-s900-powergate.h b/include/dt-bindings/power/owl-s900-powergate.h
-> > > new file mode 100644
-> > > index 000000000000..f1aaf761112b
-> > > --- /dev/null
-> > > +++ b/include/dt-bindings/power/owl-s900-powergate.h
-> > > @@ -0,0 +1,23 @@
-> > > +// SPDX-License-Identifier: GPL-2.0+
-> > 
-> > checkpatch.pl warns about this line due to not using /* ... */ syntax
-> > for headers. I could fix that up on my own, but it made me realize that
-> > you are licensing this file under GPL-2.0+ only, whereas the .dts[i] is
-> > supposed to be dual-licensed.
-> > 
-> > Can you please give your consent to make this
-> > 
-> > /* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-> > 
-> 
-> You can change the license to GPL-2.0+ OR MIT.
-> 
-> > like my S500 and S700 bindings?
-> > 
-> > Question: Should it still be GPL-2.0+ or the new GPL-2.0-or-later?
-> >
-> 
-> I think GPL-2.0+ is fine.
+Bit positions of PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE and
+PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE in CTRL_CORE_SMA_SW_7 are
+incorrectly documented in the TRM. In fact, the bit positions are
+swapped. Update the DT bindings for PCIe EP to reflect the same.
 
-So... when I saw this I did wonder why one would knowly choose to use a
-deprecated license identifier (https://spdx.org/licenses/ ).
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+---
+ arch/arm/boot/dts/dra7.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-However running `git diff v4.17..v4.18-rc1` through some filters does
-indicate that GPL-2.0+ is the more popular choice by 256 to 0! Doesn't
-mean you couldn't break the mould though ;-).
-
-
-Daniel.
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 7bfe7f28e3bd..27ad193e1a87 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -355,7 +355,7 @@
+ 				ti,hwmods = "pcie1";
+ 				phys = <&pcie1_phy>;
+ 				phy-names = "pcie-phy0";
+-				ti,syscon-unaligned-access = <&scm_conf1 0x14 2>;
++				ti,syscon-unaligned-access = <&scm_conf1 0x14 1>;
+ 				status = "disabled";
+ 			};
+ 		};
+-- 
+2.18.0
