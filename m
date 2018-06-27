@@ -1,96 +1,125 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun8i: a83t: Add CPU regulator
- supplies for A83T boards
-Date: Wed, 27 Jun 2018 10:27:09 +0800
-Message-ID: <20180627022709.27434-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] arm: dts: socfpga: denali needs nand_x_clk too
+Date: Wed, 27 Jun 2018 11:52:22 +0900
+Message-ID: <CAK7LNATbmNadK=xPcaQ+seRS_YvH5ZP5SX8z74iOyYcJ0Soicw@mail.gmail.com>
+References: <20180619120719.26921-1-richard@nod.at> <CAK7LNASgPa4D0Siyo3mvK_AJ2zaECDXGaMEn-iNzQ9PFXFir+w@mail.gmail.com>
+ <3320422.EJ8D6C0VHL@blindfold> <d4fdcd1d-db20-1837-a037-0982a042d357@kernel.org>
+ <20180625165506.484e025f@bbrezillon> <CAK7LNATyo+7gauyQcRmNfCs8CagU1XdpHHgREMeTvf4rqxpeNQ@mail.gmail.com>
+ <20180626200928.29aca979@xps13>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBAPMZPMQKGQEMBO4FSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180626200928.29aca979@xps13>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Richard Weinberger <richard@nod.at>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marek.vasut@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The OPPs for the A83T CPU cores were added in v4.17 in commit 2db639d8c166
-("ARM: dts: sun8i: a83t: add stable OPP tables and CPUfreq"), but board
-level regulator supplies for the CPU clusters were only added for the
-TBS-A711 tablet. This means the other A83T boards do not benefit from
-voltage scaling, or worse, if the implementation does not scale the
-frequency when the voltage is fixed, no benefit at all.
+2018-06-27 3:09 GMT+09:00 Miquel Raynal <miquel.raynal@bootlin.com>:
+> Hi Masahiro,
+>
+> On Tue, 26 Jun 2018 11:38:21 +0900, Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+>
+>> 2018-06-25 23:55 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>=
+:
+>> > On Mon, 25 Jun 2018 09:50:18 -0500
+>> > Dinh Nguyen <dinguyen@kernel.org> wrote:
+>> >
+>> >> On 06/22/2018 10:58 AM, Richard Weinberger wrote:
+>> >> > Masahiro,
+>> >> >
+>> >> > Am Freitag, 22. Juni 2018, 16:37:21 CEST schrieb Masahiro Yamada:
+>> >> >> Hi Richard,
+>> >> >>
+>> >> >>
+>> >> >> 2018-06-19 21:07 GMT+09:00 Richard Weinberger <richard@nod.at>:
+>> >> >>> The denali NAND flash controller needs at least two clocks to ope=
+rate,
+>> >> >>> nand_clk and nand_x_clk.
+>> >> >>> Since 1bb88666775e ("mtd: nand: denali: handle timing parameters =
+by
+>> >> >>> setup_data_interface()") nand_x_clk is used to derive timing sett=
+ings.
+>> >> >>>
+>> >> >>> Signed-off-by: Richard Weinberger <richard@nod.at>
+>> >> >>> ---
+>> >> >>> Strictly speaking denali needs a ecc_clk too, but AFAIK such a cl=
+ock
+>> >> >>> is not present on this SoC.
+>> >> >>> But my SoCFPGA knowledge is very limited.
+>> >> >>>
+>> >> >>> Thanks,
+>> >> >>> //richard
+>> >> >>> ---
+>> >> >>>  arch/arm/boot/dts/socfpga.dtsi | 3 ++-
+>> >> >>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>> >> >>>
+>> >> >>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/s=
+ocfpga.dtsi
+>> >> >>> index 486d4e7433ed..562f7b375bbd 100644
+>> >> >>> --- a/arch/arm/boot/dts/socfpga.dtsi
+>> >> >>> +++ b/arch/arm/boot/dts/socfpga.dtsi
+>> >> >>> @@ -754,7 +754,8 @@
+>> >> >>>                         reg-names =3D "nand_data", "denali_reg";
+>> >> >>>                         interrupts =3D <0x0 0x90 0x4>;
+>> >> >>>                         dma-mask =3D <0xffffffff>;
+>> >> >>> -                       clocks =3D <&nand_clk>;
+>> >> >>> +                       clocks =3D <&nand_clk>, <&nand_x_clk>;
+>> >> >>> +                       clock-names =3D "nand", "nand_x";
+>> >> >>
+>> >> >>
+>> >> >> IMHO, this should be
+>> >> >>
+>> >> >>                           clocks =3D <&nand_clk>, <&nand_x_clk>, <=
+&nand_x_clk>;
+>> >> >>                           clock-names =3D "nand", "nand_x", "ecc";
+>> >>
+>> >> No, it should be just the nand_x and ecc.
+>> >>
+>> >> There's already a patch to use the nand_x_clk and not the nand_clk.
+>>
+>>
+>> Different people try to fix the problem in different ways.
+>>
+>> I think it is due to miscommunication across sub-systems.
+>
+> Is the series named
+>
+>         mtd: rawnand: denali: add new clocks and improve
+>                               setup_data_interface
+>
+> still valid?
 
-Add board level CPU cluster power supplies to all the A83T development
-boards, so they can have proper dynamic CPU voltage and frequency scaling.
+Yes.
+I believe V4 is valid.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts | 8 ++++++++
- arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts           | 8 ++++++++
- arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts       | 8 ++++++++
- 3 files changed, 24 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts b/arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts
-index 36ecebaff3c0..1c012a4def16 100644
---- a/arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts
-@@ -79,6 +79,14 @@
- 	};
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu100 {
-+	cpu-supply = <&reg_dcdc3>;
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-index 3b579d7567c8..c7ce4158d6c8 100644
---- a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-@@ -107,6 +107,14 @@
- 	};
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu100 {
-+	cpu-supply = <&reg_dcdc3>;
-+};
-+
- &de {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
-index 88decb0747ac..e5f0645e53a7 100644
---- a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
-@@ -145,6 +145,14 @@
- 	};
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu100 {
-+	cpu-supply = <&reg_dcdc3>;
-+};
-+
- &ehci0 {
- 	/* GL830 USB-to-SATA bridge here */
- 	status = "okay";
--- 
-2.18.0
+Information for Dinh Nguyen:
+
+http://patchwork.ozlabs.org/patch/933507/
+http://patchwork.ozlabs.org/patch/933487/
+http://patchwork.ozlabs.org/patch/933494/
+http://patchwork.ozlabs.org/patch/933506/
+
+
+If he is not convinced, I am open to discussion, though.
+
+
+
+> I am about to apply it (patches 2/5 to 5/5) but it looks like the
+> discussion is still ongoing.
+>
+> Thanks,
+> Miqu=C3=A8l
+>
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
