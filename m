@@ -1,85 +1,25 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] drm/panel: Augment the TPO TPG110 bindings
-Date: Wed, 27 Jun 2018 11:21:05 -0600
-Message-ID: <20180627172105.GA6777@rob-hp-laptop>
-References: <20180621184942.26087-1-linus.walleij@linaro.org>
+Subject: Re: [PATCH 5/7] dt-bindings: samsung: Document bindings for Samsung
+ aries boards
+Date: Wed, 27 Jun 2018 11:21:42 -0600
+Message-ID: <20180627172142.GA14919@rob-hp-laptop>
+References: <1529608199-5583-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+ <1529608199-5583-6-git-send-email-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180621184942.26087-1-linus.walleij@linaro.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
+In-Reply-To: <1529608199-5583-6-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: kgene@kernel.org, krzk@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xc-racer2@live.ca
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBKdW4gMjEsIDIwMTggYXQgMDg6NDk6NDFQTSArMDIwMCwgTGludXMgV2FsbGVpaiB3
-cm90ZToKPiBUaGUgVFBPIFRQRzExMCBiaW5kaW5ncyB3ZXJlIHVzaW5nIHRoZSBEUEkgYmluZGlu
-Z3MgKHBvcHVsYXIKPiBpbiB0aGUgZmJkZXYgc3Vic3lzdGVtKSBidXQgdGhpcyBtaXNzZXMgdGhl
-IGZpbmVyIHBvaW50cwo+IGxlYXJuZWQgaW4gdGhlIERSTSBzdWJzeXN0ZW0uCj4gCj4gV2UgbmVl
-ZCB0byBhdWdtZW50IHRoZSBiaW5kaW5ncyBmb3IgcHJvcGVyIERSTSBpbnRlZ3JhdGlvbjoKPiB0
-aGUgdGltaW5ncyBhcmUgZXhwcmVzc2VkIGJ5IHRoZSBoYXJkd2FyZSwgbm90IHB1dCBpbnRvIHRo
-ZQo+IGRldmljZSB0cmVlLgo+IAo+IE9sZCBkZXZpY2UgdHJlZXMgd2l0aCB0aGUgRFBJIGluZm8g
-d2lsbCBjb250aW51ZSB0byB3b3JrLAo+IGJ1dCBubyBrbm93biBkZXBsb3ltZW50cyBleGlzdC4K
-PiAKPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPiBTaWduZWQtb2ZmLWJ5OiBMaW51
-cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+Cj4gLS0tCj4gIC4uLi9iaW5kaW5n
-cy9kaXNwbGF5L3BhbmVsL3Rwbyx0cGcxMTAudHh0ICAgICB8IDM0ICsrKysrKysrLS0tLS0tLS0t
-LS0KPiAgMSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKyksIDIwIGRlbGV0aW9ucygtKQo+
-IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9wYW5lbC90cG8sdHBnMTEwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L3BhbmVsL3Rwbyx0cGcxMTAudHh0Cj4gaW5kZXggZjVlM2M2ZjIwOTVhLi4wZTkx
-ODA3NmQ1NWUgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcGFuZWwvdHBvLHRwZzExMC50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC90cG8sdHBnMTEwLnR4dAo+IEBAIC0xLDI2ICsx
-LDMyIEBACj4gIFRQTyBUUEcxMTAgUGFuZWwKPiAgPT09PT09PT09PT09PT09PQo+ICAKPiAtVGhp
-cyBiaW5kaW5nIGJ1aWxkcyBvbiB0aGUgRFBJIGJpbmRpbmdzLCBhZGRpbmcgYSBmZXcgcHJvcGVy
-dGllcwo+IC1hcyBhIHN1cGVyc2V0IG9mIGEgRFBJLiBTZWUgcGFuZWwtZHBpLnR4dCBmb3IgdGhl
-IHJlcXVpcmVkIERQSQo+IC1iaW5kaW5ncy4KPiArVGhpcyBwYW5lbCBkcml2ZXIgY2FuIGRyaXZl
-ciBhIHZhcmlldHkgb2YgcGFuZWxzLiBJdCByZXF1aXJlcwoKcy9jYW4gZHJpdmVyL2NhbiBkcml2
-ZS8KClRob3VnaCB3aGF0IGEgZHJpdmVyIHN1cHBvcnRzIGlzIGlycmVsZXZhbnQgdG8gdGhlIGJp
-bmRpbmcuLi4KCklmIHlvdSByZW1vdmUgdGltaW5ncywgaG93IGRvZXMgaXQgZHJpdmUgYSB2YXJp
-ZXR5IG9mIHBhbmVscz8gSnVzdCBieSAKY29tcGF0aWJsZT8gVGhhdCB3b3VsZCBtZWFuICJ0cG8s
-dHBnMTEwIiBhbG9uZSBpcyBub3QgdmFsaWQgbm9yIHVzZWZ1bCAKYXMgYSBmYWxsYmFjay4KCj4g
-K2EgZmV3IEdQSU8gbGluZXMgZm9yIGNvbnRyb2wgb2YgaXRzIHJlc2V0IGxpbmUgYW5kIGN1c3Rv
-bSBzZXJpYWwKPiArcHJvdG9jb2wuCj4gIAo+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+IC0tIGNv
-bXBhdGlibGUgOiAidHBvLHRwZzExMCIKPiArLSBjb21wYXRpYmxlIDogb25lIG9mOgo+ICsgICJz
-dGUsbm9tYWRpay1uaGsxNS1kaXNwbGF5IiwgInRwbyx0cGcxMTAiCj4gKyAgInRwbyx0cGcxMTAi
-Cj4gIC0gZ3Jlc3RiLWdwaW9zIDogcGFuZWwgcmVzZXQgR1BJTwo+ICAtIHNjZW4tZ3Bpb3MgOiBz
-ZXJpYWwgY29udHJvbCBlbmFibGUgR1BJTwo+ICAtIHNjbC1ncGlvcyA6IHNlcmlhbCBjb250cm9s
-IGNsb2NrIGxpbmUgR1BJTwo+ICAtIHNkYS1ncGlvcyA6IHNlcmlhbCBjb250cm9sIGRhdGEgbGlu
-ZSBHUElPCgpJMkM/IFRoYXQgc2hvdWxkIGJlIGRvbmUgZGlmZmVyZW50bHkuLi4KCj4gKy0gd2lk
-dGgtbW0gOiBzZWUgZGlzcGxheS9wYW5lbC9wYW5lbC1jb21tb24udHh0Cj4gKy0gaGVpZ2h0LW1t
-IDogc2VlIGRpc3BsYXkvcGFuZWwvcGFuZWwtY29tbW9uLnR4dAo+ICAKPiAtUmVxdWlyZWQgbm9k
-ZXM6Cj4gLS0gVmlkZW8gcG9ydCBmb3IgRFBJIGlucHV0LCBzZWUgcGFuZWwtZHBpLnR4dAo+IC0t
-IFBhbmVsIHRpbWluZyBmb3IgRFBJIHNldHVwLCBzZWUgcGFuZWwtZHBpLnR4dAo+ICtUaGUgZGV2
-aWNlIG5vZGUgY2FuIGNvbnRhaW4gb25lICdwb3J0JyBjaGlsZCBub2RlIHdpdGggb25lIGNoaWxk
-Cj4gKydlbmRwb2ludCcgbm9kZSwgYWNjb3JkaW5nIHRvIHRoZSBiaW5kaW5ncyBkZWZpbmVkIGlu
-Cj4gK21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0LiBUaGlzIG5vZGUgc2hvdWxkIGRlc2NyaWJl
-IHBhbmVsJ3MgdmlkZW8gYnVzLgo+ICAKPiAgRXhhbXBsZQo+ICAtLS0tLS0tCj4gIAo+ICBwYW5l
-bCB7Cj4gLQljb21wYXRpYmxlID0gInRwbyx0cGcxMTAiLCAicGFuZWwtZHBpIjsKPiArCWNvbXBh
-dGlibGUgPSAidHBvLHRwZzExMCI7Cj4gKwl3aWR0aC1tbSA9IDwxMTY+Owo+ICsJaGVpZ2h0LW1t
-ID0gPDg3PjsKPiAgCWdyZXN0Yi1ncGlvcyA9IDwmc3RtcGVfZ3BpbzQ0IDUgR1BJT19BQ1RJVkVf
-TE9XPjsKPiAgCXNjZW4tZ3Bpb3MgPSA8JmdwaW8wIDYgR1BJT19BQ1RJVkVfTE9XPjsKPiAgCXNj
-bC1ncGlvcyA9IDwmZ3BpbzAgNSBHUElPX0FDVElWRV9ISUdIPjsKPiBAQCAtMzIsMTYgKzM4LDQg
-QEAgcGFuZWwgewo+ICAJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jm5vbWFkaWtfY2xjZF9wYWRzPjsK
-PiAgCQl9Owo+ICAJfTsKPiAtCj4gLQlwYW5lbC10aW1pbmcgewo+IC0JCWNsb2NrLWZyZXF1ZW5j
-eSA9IDwzMzIwMDAwMD47Cj4gLQkJaGFjdGl2ZSA9IDw4MDA+Owo+IC0JCWhiYWNrLXBvcmNoID0g
-PDIxNj47Cj4gLQkJaGZyb250LXBvcmNoID0gPDQwPjsKPiAtCQloc3luYy1sZW4gPSA8MT47Cj4g
-LQkJdmFjdGl2ZSA9IDw0ODA+Owo+IC0JCXZiYWNrLXBvcmNoID0gPDM1PjsKPiAtCQl2ZnJvbnQt
-cG9yY2ggPSA8MTA+Owo+IC0JCXZzeW5jLWxlbiA9IDwxPjsKPiAtCX07Cj4gIH07Cj4gLS0gCj4g
-Mi4xNy4xCj4gCj4gLS0KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUg
-bGluZSAidW5zdWJzY3JpYmUgZGV2aWNldHJlZSIgaW4KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2Ug
-dG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZwo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0
-dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbApfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Thu, Jun 21, 2018 at 09:09:57PM +0200, Paweł Chmiel wrote:
+> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+
+Reviewed-by: Rob Herring <robh@kernel.org>
