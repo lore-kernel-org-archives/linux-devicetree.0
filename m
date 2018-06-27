@@ -1,72 +1,62 @@
 From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v4 0/6] Add power domain driver for corners on msm8996/sdm845
-Date: Wed, 27 Jun 2018 10:22:28 +0530
-Message-ID: <20180627045234.27403-1-rnayak@codeaurora.org>
+Subject: [PATCH v4 1/6] dt-bindings: opp: Introduce qcom-opp bindings
+Date: Wed, 27 Jun 2018 10:22:29 +0530
+Message-ID: <20180627045234.27403-2-rnayak@codeaurora.org>
+References: <20180627045234.27403-1-rnayak@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180627045234.27403-1-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org
 Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Changes in v4:
-* Included the patch to add qcom-opp bindings (dropped accidentally in v3)
-* merged the patches to add bindings for rpm and rpmh, added consumer binding example
-* Made the drivers built in, removed .remove
-* Added better description in changelog for PATCH 6/6
-* Updated rpmhpd_aggregate_corner() based on Davids feedback
-* rpmhpd_set_performance_state() returns max corner, in cases where its called
-with an INT_MAX
-* Dropped the patch to max vote on all corners at init, the patch did not
-work anyway, and it shouldn't be needed now
+On Qualcomm Technologies, Inc. platforms, an OPP node needs
+to describe an additional level/corner value that is then communicated
+to a remote microprocessor by the CPU, which then takes some
+actions (like adjusting voltage values across various rails)
+based on the value passed.
 
-Changes in v3:
-* Bindings split into seperate patches
-* Bindings updated to remove duplicate OPP table phandles
-* DT headers defining macros for Power domain indexes and OPP levels
-* Optimisations to use rpmh_write_async() whereever applicable
-* Fixed up handling of ACTIVE_ONLY/WAKE_ONLY/SLEEP voting for RPMh
-* Fixed the vlvl to hlvl conversions in set_performance
-* Other minor fixes based on review of v2
-* TODO: This series does not handle the case where all VDD_MX votes
-should be higher than VDD_CX from APPs, as pointed out
-by David Collins in v2. This needs support at genpd to propogate performance
-state up the parents, if we model these as Parent/Child to handle the
-interdependency.
+Describe these bindings in the qcom-opp bindings document.
 
-Changes in v2:
-* added a power domain driver for sdm845 which supports communicating to RPMh
-* dropped the changes to sdhc driver to move over to using OPP
-as there is active discussion on using OPP as the interface vs
-handling all of it in clock drivers
-* Other minor binding updates based on review of v1
-
-With performance state support for genpd/OPP merged, this is an effort
-to model a power domain driver to communicate corner/level
-values for qualcomm platforms to RPM (Remote Power Manager) and RPMh.
-
-Rajendra Nayak (6):
-  dt-bindings: opp: Introduce qcom-opp bindings
-  dt-bindings: power: Add qcom rpm power domain driver bindings
-  soc: qcom: rpmpd: Add a Power domain driver to model corners
-  soc: qcom: rpmpd: Add support for get/set performance state
-  arm64: dts: msm8996: Add rpmpd device node
-  soc: qcom: rpmhpd: Add RPMh Power domain driver
-
- .../devicetree/bindings/opp/qcom-opp.txt      |  25 ++
- .../devicetree/bindings/power/qcom,rpmpd.txt  | 146 +++++++
- arch/arm64/boot/dts/qcom/msm8996.dtsi         |  34 ++
- drivers/soc/qcom/Kconfig                      |  18 +
- drivers/soc/qcom/Makefile                     |   2 +
- drivers/soc/qcom/rpmhpd.c                     | 406 ++++++++++++++++++
- drivers/soc/qcom/rpmpd.c                      | 340 +++++++++++++++
- include/dt-bindings/power/qcom-rpmpd.h        |  39 ++
- 8 files changed, 1010 insertions(+)
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/opp/qcom-opp.txt      | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/opp/qcom-opp.txt
- create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
- create mode 100644 drivers/soc/qcom/rpmhpd.c
- create mode 100644 drivers/soc/qcom/rpmpd.c
- create mode 100644 include/dt-bindings/power/qcom-rpmpd.h
 
+diff --git a/Documentation/devicetree/bindings/opp/qcom-opp.txt b/Documentation/devicetree/bindings/opp/qcom-opp.txt
+new file mode 100644
+index 000000000000..db4d970c7ec7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/opp/qcom-opp.txt
+@@ -0,0 +1,25 @@
++Qualcomm OPP bindings to descibe OPP nodes with corner/level values
++
++OPP tables for devices on Qualcomm platforms require an additional
++platform specific corner/level value to be specified.
++This value is passed on to the RPM (Resource Power Manager) by
++the CPU, which then takes the necessary actions to set a voltage
++rail to an appropriate voltage based on the value passed.
++
++The bindings are based on top of the operating-points-v2 bindings
++described in Documentation/devicetree/bindings/opp/opp.txt
++Additional properties are described below.
++
++* OPP Table Node
++
++Required properties:
++- compatible: Allow OPPs to express their compatibility. It should be:
++  "operating-points-v2-qcom-level"
++
++* OPP Node
++
++Required properties:
++- qcom,level: On Qualcomm platforms an OPP node can describe a positive value
++representing a corner/level that's communicated with a remote microprocessor
++(usually called the RPM) which then translates it into a certain voltage on
++a voltage rail.
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
