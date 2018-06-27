@@ -1,49 +1,91 @@
 From: <honghui.zhang@mediatek.com>
-Subject: [PATCH 0/4] PCI: mediatek: fixup find_port, enable_msi and add pm, module support
-Date: Wed, 27 Jun 2018 17:21:34 +0800
-Message-ID: <1530091298-28120-1-git-send-email-honghui.zhang@mediatek.com>
+Subject: [PATCH 1/4] PCI: mediatek: fixup mtk_pcie_find_port logical
+Date: Wed, 27 Jun 2018 17:21:35 +0800
+Message-ID: <1530091298-28120-2-git-send-email-honghui.zhang@mediatek.com>
+References: <1530091298-28120-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1530091298-28120-1-git-send-email-honghui.zhang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
-Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
+Cc: youlin.pei@mediatek.com, hongkun.cao@mediatek.com, sean.wang@mediatek.com, honghui.zhang@mediatek.com, yt.shen@mediatek.com, yong.wu@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
 From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-This patchset includes misc patchs:
+Mediatek's host controller have two slots, each have it's own control
+registers. The host driver need to identify which slot was connected
+in order to access the device's configuration space. There's problem
+for current host driver to find out which slot was connected to for
+a given EP device.
 
-The first patch fixup the mtk_pcie_find_port logical which will cause system
-could not touch the EP's configuration space which was connected to PCIe slot 1.
+Assuming each slot have connect with one EP device as below:
 
-The second patch fixup the enable msi logical, the operation to enable msi
-should be after system clock is enabled. The function of mtk_pcie_startup_port_v2's
-define location is re-arranged to avoid mtk_pcie_enable_msi's forward declaration.
-And call mtk_pcie_enable_msi in mtk_pcie_startup_port_v2 since the clock was all
-enabled at that time.
+                host bridge
+  bus 0 --> __________|_______
+           |                  |
+           |                  |
+         slot 0             slot 1
+  bus 1 -->|        bus 2 --> |
+           |                  |
+         EP 0               EP 1
 
-The third patch was rebased and refactor of the v4 patch[1], changes are:
- -Add PM support for MT7622.
- -Using mtk_pcie_enable_port to re-establish the link when resumed.
- -Rebase on the previous two patches.
+While PCI emulation, system software will scan all the PCI device
+starting from devfn 0. So it will get the proper port for slot0 and
+slot1 device when using PCI_SLOT(devfn) for match. But it will get
+the wrong slot for EP1: The devfn will be start from 0 when scanning
+EP1 behind slot1, it will get port0 since the PCI_SLOT(EP1) is match
+for port0's slot value. So the host driver should not using EP's devfn
+but the slot's devfn(the slot which EP was connected to) for match.
 
-The fourth patch add loadable kernel module support.
+This patch fix the mtk_pcie_find_port's logical by using the slot's
+devfn for match.
 
-Those patches was already reviewed-by Ryder Lee <ryder.lee@mediatek.com> so
-I just add the Reviewed-by tags in those patches.
+Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+Reviewed-by: Ryder Lee <ryder.lee@mediatek.com>
+---
+ drivers/pci/controller/pcie-mediatek.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-[1] https://patchwork.kernel.org/patch/10479079
-
-Honghui Zhang (4):
-  PCI: mediatek: fixup mtk_pcie_find_port logical
-  PCI: mediatek: enable msi after clock enabled
-  PCI: mediatek: Add system pm support for MT2712 and MT7622
-  PCI: mediatek: Add loadable kernel module support
-
- drivers/pci/controller/Kconfig         |   2 +-
- drivers/pci/controller/pcie-mediatek.c | 291 ++++++++++++++++++++++++---------
- 2 files changed, 215 insertions(+), 78 deletions(-)
-
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index 0baabe3..9cf7ecf 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -337,10 +337,23 @@ static struct mtk_pcie_port *mtk_pcie_find_port(struct pci_bus *bus,
+ {
+ 	struct mtk_pcie *pcie = bus->sysdata;
+ 	struct mtk_pcie_port *port;
++	struct pci_dev *dev;
++	struct pci_bus *pbus;
+ 
+-	list_for_each_entry(port, &pcie->ports, list)
+-		if (port->slot == PCI_SLOT(devfn))
++	list_for_each_entry(port, &pcie->ports, list) {
++		if (bus->number == 0 && port->slot == PCI_SLOT(devfn)) {
+ 			return port;
++		} else if (bus->number != 0) {
++			pbus = bus;
++			do {
++				dev = pbus->self;
++				if (port->slot == PCI_SLOT(dev->devfn))
++					return port;
++
++				pbus = dev->bus;
++			} while (dev->bus->number != 0);
++		}
++	}
+ 
+ 	return NULL;
+ }
 -- 
 2.6.4
