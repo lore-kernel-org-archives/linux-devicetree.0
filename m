@@ -1,78 +1,64 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: Add mtk-systimer bindings
-Date: Wed, 27 Jun 2018 10:20:38 +0200
-Message-ID: <32d0da38-f014-c2c0-70ff-11cdf9ed0569@linaro.org>
-References: <1530086039-3763-1-git-send-email-stanley.chu@mediatek.com>
- <1530086039-3763-2-git-send-email-stanley.chu@mediatek.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH v5 4/4] clk: bd71837: Add driver for BD71837 PMIC clock
+Date: Wed, 27 Jun 2018 11:40:00 +0300
+Message-ID: <20180627084000.GE2118@localhost.localdomain>
+References: <cover.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
+ <d99c8762b0fbbcb18ec4f4d104191364c0ea798c.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
+ <152878945117.16708.12422348324182290971@swboyd.mtv.corp.google.com>
+ <20180612082354.GG20078@localhost.localdomain>
+ <20180613130338.GH20078@localhost.localdomain>
+ <152997038474.143105.3390705878521933864@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530086039-3763-2-git-send-email-stanley.chu@mediatek.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <152997038474.143105.3390705878521933864@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stanley Chu <stanley.chu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, broonie@kernel.org, lee.jones@linaro.org, lgirdwood@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-On 27/06/2018 09:53, Stanley Chu wrote:
-> Add binding documentation for the System Timer driver of
-> the Mediatek SoCs.
+Hello Stephen,
+
+On Mon, Jun 25, 2018 at 04:46:24PM -0700, Stephen Boyd wrote:
+> Quoting Matti Vaittinen (2018-06-13 06:03:38)
+> > On Tue, Jun 12, 2018 at 11:23:54AM +0300, Matti Vaittinen wrote:
+> > > 
+> > > I see. This makes sense. I need to verify from HW colleagues whether
+> > > this chip has internal oscillator or not. I originally thought we have
+> > > on-chip oscillator - but as you say, we do have XIN pin in documentation.
+> > > So now I am not sure if the test board I have contains oscillator driving
+> > > the clk on PMIC - or if the PMIC has internal oscillator. I'll clarify this.
+> > 
+> > It really turned out that the PMIC just acts as a clock buffer. So I do
+> > as you suggested and add lookup for parent clock to the driver. I
+> > planned to do it so that if no parent is found from DT - then we assume
+> > the 32.768KHz clock (as described in documentation). Eg, something along
+> > the lines:
+> > 
+> >         init.parent_names = of_clk_get_parent_name(pdev->dev.parent->of_node, 0);
+> >         if (init.parent_names) {
+> >                 init.num_parents = 1;
+> >         } else {
+> >                 /* If parent is not given from DT we assume the typical use-case with
+> >                  * 32.768 KHz oscillator for RTC (Maybe we could just error out here?)
+> >                  */
+> >                 c->rate = BD71837_CLK_RATE;
+> >                 bd71837_clk_ops.recalc_rate = &bd71837_clk_recalc_rate;
+> >         }
 > 
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> ---
+> You can also add a clk directly in this driver in that case there isn't
+> one in DT with the rate and name of your choosing. Then the logic is the
+> same and we don't need a c->rate variable.
 
+So you mean that I should use clk_hw_register_fixed_rate and create new
+clk if parent is not found? Isn't this a bit of an overkill? Downside is
+that then we do need remove/cleanup functionality for deleting this
+parent clock - and I didn't find devm support for fixed clock. Furthermore
+I guess that since it is parent, it can't be removed before child is removed.
 
->  .../bindings/timer/mediatek,mtk-systimer.txt       |   18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/mediatek,mtk-systimer.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-systimer.txt b/Documentation/devicetree/bindings/timer/mediatek,mtk-systimer.txt
-> new file mode 100644
-> index 0000000..7a5bde6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-systimer.txt
-> @@ -0,0 +1,18 @@
-> +Mediatek System Timers
-> +----------------------
-> +
-> +Required properties:
-> +- compatible: Should contain
-> +	"mediatek,sys_timer" for those platforms which support system timer.
-> +- reg: Should contain the location and length for system timer registers.
-> +- clocks: System timer is drived by system clock.
-> +
-> +Examples:
-> +
-> +	sys_timer@10017000 {
-> +		compatible = "mediatek,sys_timer";
-> +		reg = <0 0x10017000 0 0x1000>;
-> +		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&sys_clk>;
-> +	};
-> +
+Or did you mean something else but creating a fixed rate clock as parent
+here?
 
-Actually this binding already exists for mediatek timers, it is useless
-to add a new one.
-
-I note the binding in
-
-Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
-
-contains:
-
- clocks = <&system_clk>, <&rtc_clk>
-
-However the existing driver does only use <&system_clk> AFAICT, I'm
-questioning if <&rtc_clk> is really needed.
-
-So, I suggest you sort out and fixup the rtc_clk thing (drop it) and
-then just add your new platform in the list in this binding.
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Best Regards
+    Matti Vaittinen
