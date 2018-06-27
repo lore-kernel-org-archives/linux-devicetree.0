@@ -1,59 +1,48 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH v3 2/2] ARM: dts: pxa: fix the rtc controller
-Date: Wed, 27 Jun 2018 17:01:50 +0200
-Message-ID: <20180627150150.23951-2-robert.jarzmik@free.fr>
-References: <20180627150150.23951-1-robert.jarzmik@free.fr>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 1/4] dt-bindings: power: Add Actions Semi S900 SPS
+Date: Wed, 27 Jun 2018 17:05:14 +0200
+Message-ID: <71176a0c-dd23-2ca6-7698-9612e4ed6392@suse.de>
+References: <20180411164036.8046-1-manivannan.sadhasivam@linaro.org>
+ <20180411164036.8046-2-manivannan.sadhasivam@linaro.org>
+ <a261bae6-d2fa-a550-7232-7647ce0ac0e2@suse.de>
+ <20180626164117.GA5241@Mani-XPS-13-9360>
+ <20180627145713.uao2gr5kknk2cypk@holly.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180627150150.23951-1-robert.jarzmik@free.fr>
+In-Reply-To: <20180627145713.uao2gr5kknk2cypk@holly.lan>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, robh+dt@kernel.org, liuwei@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, amit.kucheria@linaro.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, manivannanece23@gmail.com, Jeff Chen <jeff.chen@actions-semi.com>, "Thomas C. Liau" <thomas.liau@actions-semi.com>
 List-Id: devicetree@vger.kernel.org
 
-The RTC controller is fed by an external fixed 32kHz clock. Yet the
-driver wants to acquire this clock, even though it doesn't make any use
-of it, ie. doesn't get the rate to make calculation.
+Am 27.06.2018 um 16:57 schrieb Daniel Thompson:
+> On Tue, Jun 26, 2018 at 10:11:17PM +0530, Manivannan Sadhasivam wrote:
+>>> Question: Should it still be GPL-2.0+ or the new GPL-2.0-or-later?
+>>
+>> I think GPL-2.0+ is fine.
+> 
+> So... when I saw this I did wonder why one would knowly choose to use a
+> deprecated license identifier (https://spdx.org/licenses/ ).
+> 
+> However running `git diff v4.17..v4.18-rc1` through some filters does
+> indicate that GPL-2.0+ is the more popular choice by 256 to 0! Doesn't
+> mean you couldn't break the mould though ;-).
 
-Therefore, use the exported 32.768kHz clock in the PXA clock tree to
-make the driver happy and working.
+The kernel.org documentation does not mention the new ones yet.
 
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
----
-Since v1: change the dummy clock by the actual 32.768kHz
----
- arch/arm/boot/dts/pxa25x.dtsi | 4 ++++
- arch/arm/boot/dts/pxa27x.dtsi | 4 ++++
- 2 files changed, 8 insertions(+)
+I checked under LICENSES/ - preferred/GPL-2.0.txt actually lists both
+identifiers, and checkpatch.pl did not complain about either.
 
-diff --git a/arch/arm/boot/dts/pxa25x.dtsi b/arch/arm/boot/dts/pxa25x.dtsi
-index 95d59be97213..78a413ea0e88 100644
---- a/arch/arm/boot/dts/pxa25x.dtsi
-+++ b/arch/arm/boot/dts/pxa25x.dtsi
-@@ -80,6 +80,10 @@
- 			#pwm-cells = <1>;
- 			clocks = <&clks CLK_PWM1>;
- 		};
-+
-+		rtc@40900000 {
-+			clocks = <&clks CLK_OSC32k768>>;
-+		};
- 	};
- 
- 	timer@40a00000 {
-diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-index 747f750f675d..2ab6986433c8 100644
---- a/arch/arm/boot/dts/pxa27x.dtsi
-+++ b/arch/arm/boot/dts/pxa27x.dtsi
-@@ -113,6 +113,10 @@
- 
- 			status = "disabled";
- 		};
-+
-+		rtc@40900000 {
-+			clocks = <&clks CLK_OSC32k768>;
-+		};
- 	};
- 
- 	clocks {
+So for my personal patches I'll be going with the new identifier, unless
+I hear of reasons not to.
+
+Cheers,
+Andreas
+
 -- 
-2.11.0
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
