@@ -1,7 +1,7 @@
 From: <honghui.zhang@mediatek.com>
-Subject: [PATCH 3/4] PCI: mediatek: Add system pm support for MT2712 and MT7622
-Date: Wed, 27 Jun 2018 17:21:37 +0800
-Message-ID: <1530091298-28120-4-git-send-email-honghui.zhang@mediatek.com>
+Subject: [PATCH 4/4] PCI: mediatek: Add loadable kernel module support
+Date: Wed, 27 Jun 2018 17:21:38 +0800
+Message-ID: <1530091298-28120-5-git-send-email-honghui.zhang@mediatek.com>
 References: <1530091298-28120-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,128 +14,148 @@ List-Id: devicetree@vger.kernel.org
 
 From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-The MTCMOS of PCIe Host for MT2712 and MT7622 will be off when system
-suspend, and all the internal control register will be reset after system
-resume. The PCIe link should be re-established and the related control
-register values should be re-set after system resume.
+Implement remove callback function for Mediatek PCIe driver to add
+loadable kernel module support.
 
 Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
 Reviewed-by: Ryder Lee <ryder.lee@mediatek.com>
 ---
- drivers/pci/controller/pcie-mediatek.c | 68 ++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+ drivers/pci/controller/Kconfig         |  2 +-
+ drivers/pci/controller/pcie-mediatek.c | 63 +++++++++++++++++++++++++++++++---
+ 2 files changed, 60 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index 18fa09b..6c61ac65 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -234,7 +234,7 @@ config PCIE_ROCKCHIP_EP
+ 	  available to support GEN2 with 4 slots.
+ 
+ config PCIE_MEDIATEK
+-	bool "MediaTek PCIe controller"
++	tristate "MediaTek PCIe controller"
+ 	depends on ARCH_MEDIATEK || COMPILE_TEST
+ 	depends on OF
+ 	depends on PCI_MSI_IRQ_DOMAIN
 diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 17bf99b..cac01ab 100644
+index cac01ab..5830cea 100644
 --- a/drivers/pci/controller/pcie-mediatek.c
 +++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -134,12 +134,14 @@ struct mtk_pcie_port;
- /**
-  * struct mtk_pcie_soc - differentiate between host generations
-  * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-+ * @pm_support: whether the host's MTCMOS will be off when suspend
-  * @ops: pointer to configuration access functions
-  * @startup: pointer to controller setting functions
-  * @setup_irq: pointer to initialize IRQ functions
-  */
- struct mtk_pcie_soc {
- 	bool need_fix_class_id;
-+	bool pm_support;
- 	struct pci_ops *ops;
- 	int (*startup)(struct mtk_pcie_port *port);
- 	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-@@ -1195,12 +1197,76 @@ static int mtk_pcie_probe(struct platform_device *pdev)
+@@ -15,6 +15,7 @@
+ #include <linux/irqdomain.h>
+ #include <linux/kernel.h>
+ #include <linux/msi.h>
++#include <linux/module.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+ #include <linux/of_platform.h>
+@@ -184,6 +185,7 @@ struct mtk_pcie_port {
+ 	struct phy *phy;
+ 	u32 lane;
+ 	u32 slot;
++	int irq;
+ 	struct irq_domain *irq_domain;
+ 	struct irq_domain *inner_domain;
+ 	struct irq_domain *msi_domain;
+@@ -536,6 +538,30 @@ static void mtk_pcie_enable_msi(struct mtk_pcie_port *port)
+ 	writel(val, port->base + PCIE_INT_MASK);
+ }
+ 
++static void mtk_pcie_irq_teardown(struct mtk_pcie *pcie)
++{
++	struct mtk_pcie_port *port, *tmp;
++
++	if (list_empty(&pcie->ports))
++		return;
++
++	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
++		irq_set_chained_handler_and_data(port->irq, NULL, NULL);
++
++		if (port->irq_domain)
++			irq_domain_remove(port->irq_domain);
++
++		if (IS_ENABLED(CONFIG_PCI_MSI)) {
++			if (port->msi_domain)
++				irq_domain_remove(port->msi_domain);
++			if (port->inner_domain)
++				irq_domain_remove(port->inner_domain);
++		}
++
++		irq_dispose_mapping(port->irq);
++	}
++}
++
+ static int mtk_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
+ 			     irq_hw_number_t hwirq)
+ {
+@@ -626,7 +652,7 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
+ 	struct mtk_pcie *pcie = port->pcie;
+ 	struct device *dev = pcie->dev;
+ 	struct platform_device *pdev = to_platform_device(dev);
+-	int err, irq;
++	int err;
+ 
+ 	err = mtk_pcie_init_irq_domain(port, node);
+ 	if (err) {
+@@ -634,8 +660,9 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
+ 		return err;
+ 	}
+ 
+-	irq = platform_get_irq(pdev, port->slot);
+-	irq_set_chained_handler_and_data(irq, mtk_pcie_intr_handler, port);
++	port->irq = platform_get_irq(pdev, port->slot);
++	irq_set_chained_handler_and_data(port->irq,
++					 mtk_pcie_intr_handler, port);
+ 
+ 	return 0;
+ }
+@@ -1197,6 +1224,32 @@ static int mtk_pcie_probe(struct platform_device *pdev)
  	return err;
  }
  
-+#ifdef CONFIG_PM_SLEEP
-+static int mtk_pcie_suspend_noirq(struct device *dev)
++static void mtk_pcie_free_resources(struct mtk_pcie *pcie)
 +{
-+	struct mtk_pcie *pcie = dev_get_drvdata(dev);
-+	const struct mtk_pcie_soc *soc = pcie->soc;
-+	struct mtk_pcie_port *port;
++	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
++	struct list_head *windows = &host->windows;
 +
-+	if (!soc->pm_support)
-+		return 0;
++	pci_unmap_iospace(&pcie->pio);
++	pci_free_resource_list(windows);
++}
 +
-+	if (list_empty(&pcie->ports))
-+		return 0;
++static int mtk_pcie_remove(struct platform_device *pdev)
++{
++	struct mtk_pcie *pcie = platform_get_drvdata(pdev);
++	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
 +
-+	list_for_each_entry(port, &pcie->ports, list) {
-+		clk_disable_unprepare(port->pipe_ck);
-+		clk_disable_unprepare(port->obff_ck);
-+		clk_disable_unprepare(port->axi_ck);
-+		clk_disable_unprepare(port->aux_ck);
-+		clk_disable_unprepare(port->ahb_ck);
-+		clk_disable_unprepare(port->sys_ck);
-+		phy_power_off(port->phy);
-+		phy_exit(port->phy);
-+	}
++	pci_stop_root_bus(host->bus);
++	pci_remove_root_bus(host->bus);
++	mtk_pcie_free_resources(pcie);
 +
-+	mtk_pcie_subsys_powerdown(pcie);
++	mtk_pcie_irq_teardown(pcie);
++
++	if (!list_empty(&pcie->ports))
++		mtk_pcie_put_resources(pcie);
 +
 +	return 0;
 +}
 +
-+static int mtk_pcie_resume_noirq(struct device *dev)
-+{
-+	struct mtk_pcie *pcie = dev_get_drvdata(dev);
-+	const struct mtk_pcie_soc *soc = pcie->soc;
-+	struct mtk_pcie_port *port;
-+
-+	if (!soc->pm_support)
-+		return 0;
-+
-+	if (list_empty(&pcie->ports))
-+		return 0;
-+
-+	if (dev->pm_domain) {
-+		pm_runtime_enable(dev);
-+		pm_runtime_get_sync(dev);
-+	}
-+
-+	clk_prepare_enable(pcie->free_ck);
-+
-+	list_for_each_entry(port, &pcie->ports, list)
-+		mtk_pcie_enable_port(port);
-+
-+	if (list_empty(&pcie->ports))
-+		mtk_pcie_subsys_powerdown(pcie);
-+
-+	return 0;
-+}
-+#endif
-+
-+static const struct dev_pm_ops mtk_pcie_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_pcie_suspend_noirq,
-+				      mtk_pcie_resume_noirq)
-+};
-+
- static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
- 	.ops = &mtk_pcie_ops,
- 	.startup = mtk_pcie_startup_port,
- };
+ #ifdef CONFIG_PM_SLEEP
+ static int mtk_pcie_suspend_noirq(struct device *dev)
+ {
+@@ -1290,6 +1343,7 @@ static const struct of_device_id mtk_pcie_ids[] = {
  
- static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
-+	.pm_support = true,
- 	.ops = &mtk_pcie_ops_v2,
- 	.startup = mtk_pcie_startup_port_v2,
- 	.setup_irq = mtk_pcie_setup_irq,
-@@ -1208,6 +1274,7 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
- 
- static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
- 	.need_fix_class_id = true,
-+	.pm_support = true,
- 	.ops = &mtk_pcie_ops_v2,
- 	.startup = mtk_pcie_startup_port_v2,
- 	.setup_irq = mtk_pcie_setup_irq,
-@@ -1227,6 +1294,7 @@ static struct platform_driver mtk_pcie_driver = {
+ static struct platform_driver mtk_pcie_driver = {
+ 	.probe = mtk_pcie_probe,
++	.remove = mtk_pcie_remove,
+ 	.driver = {
  		.name = "mtk-pcie",
  		.of_match_table = mtk_pcie_ids,
- 		.suppress_bind_attrs = true,
-+		.pm = &mtk_pcie_pm_ops,
+@@ -1297,4 +1351,5 @@ static struct platform_driver mtk_pcie_driver = {
+ 		.pm = &mtk_pcie_pm_ops,
  	},
  };
- builtin_platform_driver(mtk_pcie_driver);
+-builtin_platform_driver(mtk_pcie_driver);
++module_platform_driver(mtk_pcie_driver);
++MODULE_LICENSE("GPL v2");
 -- 
 2.6.4
