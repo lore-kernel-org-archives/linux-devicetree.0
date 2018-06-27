@@ -1,72 +1,67 @@
-Return-Path: <SRS0=bntt=JN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-he1eur01on0042.outbound.protection.outlook.com ([104.47.0.42]:61664
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S932104AbeF0ADN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 Jun 2018 20:03:13 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v8 09/14] staging: typec: tcpci: register port before request irq
-Date: Wed, 27 Jun 2018 07:45:27 +0800
-Message-Id: <1530056732-9640-10-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
-References: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: a.hajda@samsung.com, jun.li@nxp.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
+Return-Path: <vkoul@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v4 1/6] dt-bindings: power: reset: Add qcom pon binding
+Date: Wed, 27 Jun 2018 17:22:56 +0530
+Message-Id: <20180627115301.21330-2-vkoul@kernel.org>
+In-Reply-To: <20180627115301.21330-1-vkoul@kernel.org>
+References: <20180627115301.21330-1-vkoul@kernel.org>
+To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Peter Chen <peter.chen@nxp.com>
+The Power On device for Qcom PM 8xxx is a MFD supporting pwrkey and
+resin along with the Android reboot-mode.
 
-With that we can clear any pending events and the port is registered
-so driver can be ready to handle typec events once we request irq.
+Add the binding describing this.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Li Jun <jun.li@nxp.com>
+Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/staging/typec/tcpci.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/power/reset/qcom,pon.txt   | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/qcom,pon.txt
 
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index b63f147..3b35fce 100644
---- a/drivers/staging/typec/tcpci.c
-+++ b/drivers/staging/typec/tcpci.c
-@@ -537,24 +537,27 @@ static int tcpci_probe(struct i2c_client *client,
- 	if (IS_ERR(chip->data.regmap))
- 		return PTR_ERR(chip->data.regmap);
- 
-+	i2c_set_clientdata(client, chip);
+diff --git a/Documentation/devicetree/bindings/power/reset/qcom,pon.txt b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+new file mode 100644
+index 000000000000..f32cdd358267
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+@@ -0,0 +1,35 @@
++Qualcomm PON Device
 +
- 	/* Disable chip interrupts before requesting irq */
- 	err = regmap_raw_write(chip->data.regmap, TCPC_ALERT_MASK, &val,
- 			       sizeof(u16));
- 	if (err < 0)
- 		return err;
- 
-+	chip->tcpci = tcpci_register_port(&client->dev, &chip->data);
-+	if (IS_ERR(chip->tcpci))
-+		return PTR_ERR(chip->tcpci);
++The Power On device for Qualcomm PM8xxx is MFD supporting pwrkey
++along with the Android reboot-mode.
 +
- 	err = devm_request_threaded_irq(&client->dev, client->irq, NULL,
- 					_tcpci_irq,
- 					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
- 					dev_name(&client->dev), chip);
--	if (err < 0)
-+	if (err < 0) {
-+		tcpci_unregister_port(chip->tcpci);
- 		return err;
-+	}
- 
--	chip->tcpci = tcpci_register_port(&client->dev, &chip->data);
--	if (IS_ERR(chip->tcpci))
--		return PTR_ERR(chip->tcpci);
--
--	i2c_set_clientdata(client, chip);
- 	return 0;
- }
- 
++This DT node has pwrkey as sub node.
++
++Required Properties:
++-compatible: "qcom,pm8916-pon"
++-reg: Specifies the physical address of the pon register
++
++Optional subnode:
++-pwrkey: Specifies the subnode pwrkey and should follow the
++ qcom,pm8941-pwrkey.txt description.
++
++The rest of the properties should follow the generic reboot-mode description
++found in reboot-mode.txt
++
++Example:
++
++	pon@800 {
++		compatible = "qcom,pm8916-pon";
++
++		reg = <0x800>;
++		mode-bootloader = <0x2>;
++		mode-recovery = <0x1>;
++
++		pwrkey {
++			compatible = "qcom,pm8941-pwrkey";
++			interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
++			debounce = <15625>;
++			bias-pull-up;
++			linux,code = <KEY_POWER>;
++		};
++	};
 -- 
-2.7.4
-
+2.14.4
