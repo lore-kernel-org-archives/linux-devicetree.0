@@ -1,80 +1,49 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v5 02/10] docs: driver-api: Add I3C documentation
-Date: Wed, 27 Jun 2018 09:20:36 +0200
-Message-ID: <20180627092036.605dbf12@bbrezillon>
-References: <20180622104930.32050-1-boris.brezillon@bootlin.com>
-        <20180622104930.32050-3-boris.brezillon@bootlin.com>
-        <4898e391-f954-a399-0bca-7588942280b9@infradead.org>
+From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun8i-h3: Increase the GPU clock to
+ 576 MHz
+Date: Wed, 27 Jun 2018 09:26:35 +0200
+Message-ID: <20180627072635.3592-1-paul.kocialkowski@bootlin.com>
+Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4898e391-f954-a399-0bca-7588942280b9@infradead.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRBV7YZTMQKGQEXNQHG3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Qiang Yu <yuq825-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Giulio Benetti <giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Randy,
+It was reported (based on declarations from the Allwiner BSP) that the
+Mali 400 found on the H3 can be clocked up to 576 MHz.
 
-On Tue, 26 Jun 2018 14:07:49 -0700
-Randy Dunlap <rdunlap@infradead.org> wrote:
+The frequency was tested using the r6p2 out-of-tree driver and a Kodi
+userspace with associated r6p2 blobs, leading to a working result.
 
+This increases the clock to 576 MHz, which directly increases the pixel
+throughput of the GPU (given the 1 pixel-per-cycle rate).
 
-> > +
-> > +I3C Private SDR transfers
-> > +-------------------------
-> > +
-> > +Private SDR (Single Data Rate) transfers should be used for anything that is
-> > +device specific and does not require high transfer speed.
-> > +
-> > +It is the equivalent of I2C transfers but in the I3C world. Each transfer is
-> > +passed the device address (dynamic address assigned during DAA), a payload
-> > +and a direction.
-> > +
-> > +The only difference with I2C is that the transfer is much faster (typical SCL  
-> 
-> what is SCL?  It's not used anywhere else in this doc.
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-h3.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-It's an acronym used by I²C, it means Serial Clock Line. I'll just
-replace that by "typical clock frequency is 12.5MHz".
-
-> 
-> > +frequency is 12.5MHz).
-> > +
-> > +I3C HDR commands
-> > +----------------
-> > +
-> > +HDR commands should be used for anything that is device specific and requires
-> > +high transfer speed.
-> > +
-> > +The first thing attached to an HDR command is the HDR mode. There are currently
-> > +3 different modes defined by the I3C specification (refer to the specification
-> > +for more details):
-> > +
-> > +* HDR-DDR: Double Data Rate mode
-> > +* HDR-TSP: Ternary Symbol Pure. Only usable on busses with no I2C devices
-> > +* HDR-TSL: Ternary Symbol Legacy. Usable on busses with I2C devices
-> > +
-> > +When sending an HDR command, the whole bus has to enter HDR mode, which is done
-> > +using a broadcast CCC command.
-> > +Once the bus has entered a specific HDR mode, the master sends the HDR command.
-> > +An HDR command is made of:
-> > +
-> > +* one 16-bits command word
-> > +* N 16-bits data words  
-> 
-> I supposed the I3C spec will tell me the byte order of these words on the bus?
-> or this doc could tell us here.
-
-It's big endian. I'll make it clear in this doc.
-
-I'll also fix all the other mistakes you pointed out.
-
-> 
-> and you can add (if you want to):
-> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-
-I'll definitely add your R-b. Thanks for the review.
-
-Boris
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index 41d57c76f290..a14a63092dc6 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -133,7 +133,7 @@
+ 			resets = <&ccu RST_BUS_GPU>;
+ 
+ 			assigned-clocks = <&ccu CLK_GPU>;
+-			assigned-clock-rates = <384000000>;
++			assigned-clock-rates = <576000000>;
+ 		};
+ 	};
+ };
+-- 
+2.17.1
