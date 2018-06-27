@@ -1,117 +1,58 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 09/10] gpio: Add a driver for Cadence I3C GPIO expander
-Date: Wed, 27 Jun 2018 20:53:51 +0300
-Message-ID: <CAHp75VdBXj66Yd6sQHOWz19R9MUtYMSeq4j-+UidLedpfkB6mA@mail.gmail.com>
-References: <20180622104930.32050-1-boris.brezillon@bootlin.com>
- <20180622104930.32050-10-boris.brezillon@bootlin.com> <CAHp75Vdxg49q6aQj0dDpzM4q2WnQbGoCECWR1roda7aMR+u4gg@mail.gmail.com>
- <20180626215648.1472b96e@bbrezillon> <CAHp75VcVvOzgOM87rSrwsCxh+WAK-z+zVCJifnY+Xeeu=cPFiA@mail.gmail.com>
- <20180626234638.076fb816@bbrezillon>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 00/24] Add support for R40 HDMI pipeline
+Date: Wed, 27 Jun 2018 20:02:15 +0200
+Message-ID: <20180627180215.y5kvvdqeriadxwte@flea>
+References: <20180625120304.7543-1-jernej.skrabec@siol.net>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180626234638.076fb816@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Linux Documentation List <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2wy3m2pbmtcl6uw2"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBP5CZ7MQKGQEXAZLFTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180625120304.7543-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 27, 2018 at 12:46 AM, Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
-> On Tue, 26 Jun 2018 23:44:36 +0300
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->> On Tue, Jun 26, 2018 at 10:56 PM, Boris Brezillon
->> <boris.brezillon@bootlin.com> wrote:
->> > On Tue, 26 Jun 2018 22:07:03 +0300
->> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->> >> On Fri, Jun 22, 2018 at 1:49 PM, Boris Brezillon
->> >> <boris.brezillon@bootlin.com> wrote:
 
->> > I'll say it here because this is not the first time I'm pissed off by
->> > one of your review.
->>
->> Like 'I like offending people, because I think people who get offended
->> should be offended.' ?
->> I'm not that guy, relax.
->
-> I'm not offended, just annoyed, and not because I have things to change
-> in my patchset (I'm used to that and that's something I comply with
-> most of the time), but because the only reviews I had from you were of
-> this kind (nitpicking on minor stuff).
+--2wy3m2pbmtcl6uw2
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-OK, point taken.
+On Mon, Jun 25, 2018 at 02:02:40PM +0200, Jernej Skrabec wrote:
+> This series adds support for R40 HDMI pipeline. It is a bit special
+> than other already supported pipelines because it has additional unit
+> called TCON TOP responsible for relationship configuration between
+> mixers, TCONs and HDMI. Additionally, it has additional gates for DSI
+> and TV TCONs, TV encoder clock settings and pin muxing between LCD
+> and TV encoders.
+> 
+> However, it seems that TCON TOP will become a norm, since newer
+> Allwinner SoCs like H6 also have this unit.
+> 
+> I tested different possible configurations:
+> - mixer0 <> TCON-TV0 <> HDMI
+> - mixer0 <> TCON-TV1 <> HDMI
+> - mixer1 <> TCON-TV0 <> HDMI
+> - mixer1 <> TCON-TV1 <> HDMI
+> 
+> Please review.
 
->> > and most of the time your reviews are superficial (focused on tiny
->> > details or coding style issues). Don't you have better things to do?
->>
->> If your code is written using ancient style and / or API it's not good
->> to start with.
->> Isn't it? Otherwise, why we do introduce new internal APIs, for what purpose?
->
-> Come on!
->
-> - kzalloc() vs kmalloc_array()
-> - for (i = 0; i < n, i++) { if (BIT(x) & var) ... }
->   vs
->   for_each_bit_set() (which is not even applicable here because I'm
->   not manipulating an unsigned long)
->
-> Where do you see ancient style APIs here?
+I just applied it. It didn't apply cleanly, so please make sure it
+does next time, or at least state what the dependencies are.
 
-Both. kmalloc_array() and for_each_set_bit() were introduced quite
-long time ago.
-
-On top of that you are open coding, if I'm not mistaken, cpu_to_be32()
-and be32_to_cpu().
-...and more I believe.
-
-> And that's not even the problem. I'm okay to fix those things, but you
-> only ever do these kind of reviews, and sometime you even act like you
-> know better than the developer or the maintainer how the code should be
-> organized without even digging enough to have a clue (your comment on
-> the fact that mask should not be a pointer is a good example of such
-> situations).
-
-"sometime". Yes, I admit my mistakes.
-
->> On top of that you might find more interesting reviews where I pointed
->> out to a memory leak or other nasty stuff. But of course you prefer
->> not to norice that.
->
-> Yes, sometime you have valid point, but it gets lost in all the noise.
-
-Btw, you forgot to call of_node_put() on error path in one case. Did I
-again missed the details?
-
->> > I mean, I'm fine when I get such comments from people that also do
->> > useful comments, but yours are most of the time useless and sometime
->> > even wrong because you didn't time to look at the code in details.
->>
->> Calm down, please.
->
-> Why? Because I say you didn't look at the code in details? Isn't it
-> true? Did you look at what I3C is, how it works or how the I3C framework
-> is architectured? Because that's the kind of reviews I'd love to have on
-> this series.
-
-You got me.
-I have a copy of the spec, this require a bit of time to go through.
-
-For now I can offer you to consider IBI implementation using IRQ chip framework.
-It would give few advantages (like we do this for GPIO), such as IRQ
-statistics or wake up capabilities.
-
->> You would simple ignore them. Your choice.
->
-> That's not my point. My point is, maybe you should do less reviews but
-> spend more time on each of them
-
-Good point.
-
-> so you don't just scratch the surface
-> with comments I could get from a tool like checkpatch.
-
-Perhaps you should run checkpatch yourself then?
+Thanks!
+Maxime
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--2wy3m2pbmtcl6uw2--
