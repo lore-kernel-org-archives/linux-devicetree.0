@@ -1,396 +1,43 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH V4] ARM: dts: armada388-helios4
-Date: Wed, 27 Jun 2018 08:10:09 +0200
-Message-ID: <8736x8ahfi.fsf@bootlin.com>
-References: <20180605221545.32257-1-dennis@ausil.us>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v2 0/4] drm/tinydrm: new dirver for ILI9341 displays
+Date: Wed, 27 Jun 2018 08:58:45 +0200
+Message-ID: <CAKMK7uG5OdbiRFL26SzJ-+b0G64pfKftwtvG4CYGKpAt+rD5UQ@mail.gmail.com>
+References: <20180525193623.15533-1-david@lechnology.com>
+ <8840212b-fd46-e700-58a1-cb1b882c5771@tronnes.org>
+ <d5297fc5-94f2-edcd-5a11-95d7a9dca78d@lechnology.com>
+ <ecd75b89-14a6-12f7-0ec4-222b1f984e49@tronnes.org>
+ <5a2bc4e7-c6cd-b270-61d3-61bfa5d9e90d@tronnes.org>
+ <CAKMK7uF-hBjqnRG28fX7NXOJDc5YEWhq+G6s0M8usA+TXM1BKw@mail.gmail.com>
+ <bc3429d4-44e3-29dc-3588-209ba30fb2eb@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180605221545.32257-1-dennis@ausil.us> (Dennis Gilmore's
-        message of "Tue, 5 Jun 2018 17:15:45 -0500")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dennis Gilmore <dennis@ausil.us>
-Cc: linux-kernel@vger.kernel.org, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, aditya@kobol.io, gauthier@kobol.io
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <bc3429d4-44e3-29dc-3588-209ba30fb2eb@lechnology.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, limor@ladyada.net, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Nitin Patil <nitin@mindsensors.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dennis,
- 
- On mar., juin 05 2018, Dennis Gilmore <dennis@ausil.us> wrote:
-
-> The helios4 is a Armada388 based nas board designed by SolidRun and
-> based on their SOM. It is sold by kobol.io the dts file came from
-> https://raw.githubusercontent.com/armbian/build/master/patch/kernel/mvebu-default/95-helios4-device-tree.patch
-> I added a SPDX license line to match the clearfog it says it was based
-> on and a compatible line for "kobol,helios4"
->
-> Signed-off-by: Dennis Gilmore <dennis@ausil.us>
-
-Applied on mvebu/dt
-
-Thanks,
-
-Gregory
-
->
-> ---
->
-> changes since first submission
-> change solidrun to kobol in compatible line based on feedback
->
-> changes since v2
->
-> remove commented out nodes based on feedback
->
-> changes since v3
->
-> update copyright info for the dts based on a request from kobol
-> ---
->  arch/arm/boot/dts/Makefile               |   1 +
->  arch/arm/boot/dts/armada-388-helios4.dts | 313 +++++++++++++++++++++++
->  2 files changed, 314 insertions(+)
->  create mode 100644 arch/arm/boot/dts/armada-388-helios4.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 7e2424957809..490bfd586198 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1123,6 +1123,7 @@ dtb-$(CONFIG_MACH_ARMADA_38X) += \
->  	armada-388-clearfog-pro.dtb \
->  	armada-388-db.dtb \
->  	armada-388-gp.dtb \
-> +	armada-388-helios4.dtb \
->  	armada-388-rd.dtb
->  dtb-$(CONFIG_MACH_ARMADA_39X) += \
->  	armada-398-db.dtb
-> diff --git a/arch/arm/boot/dts/armada-388-helios4.dts b/arch/arm/boot/dts/armada-388-helios4.dts
-> new file mode 100644
-> index 000000000000..705adfa8c680
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/armada-388-helios4.dts
-> @@ -0,0 +1,313 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +/*
-> + * Device Tree file for Helios4
-> + * based on SolidRun Clearfog revision A1 rev 2.0 (88F6828)
-> + *
-> + *  Copyright (C) 2017 Aditya Prayoga <aditya@kobol.io>
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +#include "armada-388.dtsi"
-> +#include "armada-38x-solidrun-microsom.dtsi"
-> +
-> +/ {
-> +	model = "Helios4";
-> +	compatible = "kobol,helios4", "marvell,armada388",
-> +		"marvell,armada385", "marvell,armada380";
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x00000000 0x80000000>; /* 2 GB */
-> +	};
-> +
-> +	aliases {
-> +		/* So that mvebu u-boot can update the MAC addresses */
-> +		ethernet1 = &eth0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	reg_12v: regulator-12v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "power_brick_12V";
-> +		regulator-min-microvolt = <12000000>;
-> +		regulator-max-microvolt = <12000000>;
-> +		regulator-always-on;
-> +	};
-> +
-> +	reg_3p3v: regulator-3p3v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "3P3V";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_12v>;
-> +	};
-> +
-> +	reg_5p0v_hdd: regulator-5v-hdd {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "5V_HDD";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_12v>;
-> +	};
-> +
-> +	reg_5p0v_usb: regulator-5v-usb {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "USB-PWR";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +		enable-active-high;
-> +		gpio = <&expander0 6 GPIO_ACTIVE_HIGH>;
-> +		vin-supply = <&reg_12v>;
-> +	};
-> +
-> +	system-leds {
-> +		compatible = "gpio-leds";
-> +		status-led {
-> +			label = "helios4:green:status";
-> +			gpios = <&gpio0 24 GPIO_ACTIVE_LOW>;
-> +			linux,default-trigger = "heartbeat";
-> +			default-state = "on";
-> +		};
-> +
-> +		fault-led {
-> +			label = "helios4:red:fault";
-> +			gpios = <&gpio0 25 GPIO_ACTIVE_LOW>;
-> +			default-state = "keep";
-> +		};
-> +	};
-> +
-> +	io-leds {
-> +		compatible = "gpio-leds";
-> +		sata1-led {
-> +			label = "helios4:green:ata1";
-> +			gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;
-> +			linux,default-trigger = "ata1";
-> +			default-state = "off";
-> +		};
-> +		sata2-led {
-> +			label = "helios4:green:ata2";
-> +			gpios = <&gpio1 18 GPIO_ACTIVE_LOW>;
-> +			linux,default-trigger = "ata2";
-> +			default-state = "off";
-> +		};
-> +		sata3-led {
-> +			label = "helios4:green:ata3";
-> +			gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
-> +			linux,default-trigger = "ata3";
-> +			default-state = "off";
-> +		};
-> +		sata4-led {
-> +			label = "helios4:green:ata4";
-> +			gpios = <&gpio1 21 GPIO_ACTIVE_LOW>;
-> +			linux,default-trigger = "ata4";
-> +			default-state = "off";
-> +		};
-> +		usb-led {
-> +			label = "helios4:green:usb";
-> +			gpios = <&gpio1 22 GPIO_ACTIVE_LOW>;
-> +			linux,default-trigger = "usb-host";
-> +			default-state = "off";
-> +		};
-> +	};
-> +
-> +	fan1: j10-pwm {
-> +		compatible = "pwm-fan";
-> +		pwms = <&gpio1 9 40000>;	/* Target freq:25 kHz */
-> +	};
-> +
-> +	fan2: j17-pwm {
-> +		compatible = "pwm-fan";
-> +		pwms = <&gpio1 23 40000>;	/* Target freq:25 kHz */
-> +	};
-> +
-> +	usb2_phy: usb2-phy {
-> +		compatible = "usb-nop-xceiv";
-> +		vbus-regulator = <&reg_5p0v_usb>;
-> +	};
-> +
-> +	usb3_phy: usb3-phy {
-> +		compatible = "usb-nop-xceiv";
-> +	};
-> +
-> +	soc {
-> +		internal-regs {
-> +			i2c@11000 {
-> +				clock-frequency = <400000>;
-> +				pinctrl-0 = <&i2c0_pins>;
-> +				pinctrl-names = "default";
-> +				status = "okay";
-> +
-> +				/*
-> +				 * PCA9655 GPIO expander, up to 1MHz clock.
-> +				 *  0-Board Revision bit 0 #
-> +				 *  1-Board Revision bit 1 #
-> +				 *  5-USB3 overcurrent
-> +				 *  6-USB3 power
-> +				 */
-> +				expander0: gpio-expander@20 {
-> +					/*
-> +					 * This is how it should be:
-> +					 * compatible = "onnn,pca9655",
-> +					 *	 "nxp,pca9555";
-> +					 * but you can't do this because of
-> +					 * the way I2C works.
-> +					 */
-> +					compatible = "nxp,pca9555";
-> +					gpio-controller;
-> +					#gpio-cells = <2>;
-> +					reg = <0x20>;
-> +					pinctrl-names = "default";
-> +					pinctrl-0 = <&pca0_pins>;
-> +					interrupt-parent = <&gpio0>;
-> +					interrupts = <23 IRQ_TYPE_EDGE_FALLING>;
-> +					interrupt-controller;
-> +					#interrupt-cells = <2>;
-> +
-> +					board_rev_bit_0 {
-> +						gpio-hog;
-> +						gpios = <0 GPIO_ACTIVE_LOW>;
-> +						input;
-> +						line-name = "board-rev-0";
-> +					};
-> +					board_rev_bit_1 {
-> +						gpio-hog;
-> +						gpios = <1 GPIO_ACTIVE_LOW>;
-> +						input;
-> +						line-name = "board-rev-1";
-> +					};
-> +					usb3_ilimit {
-> +						gpio-hog;
-> +						gpios = <5 GPIO_ACTIVE_HIGH>;
-> +						input;
-> +						line-name = "usb-overcurrent-status";
-> +					};
-> +				};
-> +
-> +				temp_sensor: temp@4c {
-> +					compatible = "ti,lm75";
-> +					reg = <0x4c>;
-> +					vcc-supply = <&reg_3p3v>;
-> +				};
-> +			};
-> +
-> +			i2c@11100 {
-> +				/*
-> +				 * External I2C Bus for user peripheral
-> +				 */
-> +				clock-frequency = <400000>;
-> +				pinctrl-0 = <&helios_i2c1_pins>;
-> +				pinctrl-names = "default";
-> +				status = "okay";
-> +			};
-> +
-> +			sata@a8000 {
-> +				status = "okay";
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				sata0: sata-port@0 {
-> +					reg = <0>;
-> +				};
-> +
-> +				sata1: sata-port@1 {
-> +					reg = <1>;
-> +				};
-> +			};
-> +
-> +			sata@e0000 {
-> +				status = "okay";
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				sata2: sata-port@0 {
-> +					reg = <0>;
-> +				};
-> +
-> +				sata3: sata-port@1 {
-> +					reg = <1>;
-> +				};
-> +			};
-> +
-> +			spi@10680 {
-> +				pinctrl-0 = <&spi1_pins
-> +					     &microsom_spi1_cs_pins>;
-> +				pinctrl-names = "default";
-> +				status = "okay";
-> +			};
-> +
-> +			sdhci@d8000 {
-> +				bus-width = <4>;
-> +				cd-gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
-> +				no-1-8-v;
-> +				pinctrl-0 = <&helios_sdhci_pins
-> +					     &helios_sdhci_cd_pins>;
-> +				pinctrl-names = "default";
-> +				status = "okay";
-> +				vmmc = <&reg_3p3v>;
-> +				wp-inverted;
-> +			};
-> +
-> +			usb@58000 {
-> +				usb-phy = <&usb2_phy>;
-> +				status = "okay";
-> +			};
-> +
-> +			usb3@f0000 {
-> +				status = "okay";
-> +			};
-> +
-> +			usb3@f8000 {
-> +				status = "okay";
-> +			};
-> +
-> +			pinctrl@18000 {
-> +				pca0_pins: pca0-pins {
-> +					marvell,pins = "mpp23";
-> +					marvell,function = "gpio";
-> +				};
-> +				microsom_phy0_int_pins: microsom-phy0-int-pins {
-> +					marvell,pins = "mpp18";
-> +					marvell,function = "gpio";
-> +				};
-> +				helios_i2c1_pins: i2c1-pins {
-> +					marvell,pins = "mpp26", "mpp27";
-> +					marvell,function = "i2c1";
-> +				};
-> +				helios_sdhci_cd_pins: helios-sdhci-cd-pins {
-> +					marvell,pins = "mpp20";
-> +					marvell,function = "gpio";
-> +				};
-> +				helios_sdhci_pins: helios-sdhci-pins {
-> +					marvell,pins = "mpp21", "mpp28",
-> +						       "mpp37", "mpp38",
-> +						       "mpp39", "mpp40";
-> +					marvell,function = "sd0";
-> +				};
-> +				helios_led_pins: helios-led-pins {
-> +					marvell,pins = "mpp24", "mpp25",
-> +						       "mpp49", "mpp50",
-> +						       "mpp52", "mpp53",
-> +						       "mpp54";
-> +					marvell,function = "gpio";
-> +				};
-> +				helios_fan_pins: helios-fan-pins {
-> +					marvell,pins = "mpp41", "mpp43",
-> +						       "mpp48", "mpp55";
-> +					marvell,function = "gpio";
-> +				};
-> +				microsom_spi1_cs_pins: spi1-cs-pins {
-> +					marvell,pins = "mpp59";
-> +					marvell,function = "spi1";
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 2.17.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Gregory Clement, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
+T24gVHVlLCBKdW4gMjYsIDIwMTggYXQgODoxNiBQTSwgRGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVj
+aG5vbG9neS5jb20+IHdyb3RlOgo+IE9uIDA2LzIwLzIwMTggMDQ6MDcgQU0sIERhbmllbCBWZXR0
+ZXIgd3JvdGU6Cj4KPj4gSSBhY2tlZCBhbmQgZm9yd2FyZGVkIHRoZSBhY2NvdW50IHJlcXVlc3Qs
+IHNvcnJ5IGZvciB0aGUgZGVsYXkuIE5leHQKPj4gdGltZSBhcm91bmQsIHBva2luZyBtYWludGFp
+bmVycyBvbiBpcmMgaGVscHMgaWYgdGhpcyBzdHVmZiBpcyBzdHVjay4KPj4gLURhbmllbAo+Cj4K
+PiBUaGUgYWNjb3VudCB3YXMgc3VwcG9zZWRseSBzZXR1cCwgYnV0IEkgYW0gbm90IGFibGUgdG8g
+dXNlIGl0IGZvciBzb21lCj4gcmVhc29uLiBBcmUgdGhlcmUgYW55IHBhcnRpY3VsYXIgbmlja3Mg
+SSBzaG91bGQgcGluZyBvbiBJUkM/CgojZnJlZWRlc2t0b3Agb24gZnJlZW5vZGUgaXMgdGhlIGNo
+YW5uZWwgd2hlcmUgZmQubyBhZG1pbnMgaGFuZyBvdXQuCi1EYW5pZWwKLS0gCkRhbmllbCBWZXR0
+ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCis0MSAoMCkgNzkgMzY1IDU3
+IDQ4IC0gaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
