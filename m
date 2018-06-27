@@ -1,46 +1,50 @@
 Return-Path: <SRS0=bntt=JN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00068.outbound.protection.outlook.com ([40.107.0.68]:30800
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+Received: from mail-eopbgr690065.outbound.protection.outlook.com ([40.107.69.65]:19136
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1754129AbeF0ACl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 Jun 2018 20:02:41 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v8 03/14] staging: typec: tcpci: add compatible string for nxp ptn5110
-Date: Wed, 27 Jun 2018 07:45:21 +0800
-Message-Id: <1530056732-9640-4-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
-References: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
+        id S964953AbeF0MYR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 27 Jun 2018 08:24:17 -0400
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: [PATCH 4/4] Documentation: uartlite: Add clock to the binding
+Date: Wed, 27 Jun 2018 17:53:45 +0530
+Message-ID: <1530102225-6459-4-git-send-email-shubhrajyoti.datta@xilinx.com>
+In-Reply-To: <1530102225-6459-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+References: <1530102225-6459-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: a.hajda@samsung.com, jun.li@nxp.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
+To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, shubhrajyoti.datta@gmail.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add nxp ptn5110 typec controller compatible string: "nxp,ptn5110",
-which is a standard tcpci chip with power delivery support. Meanwhile
-remove "usb,tcpci" because it doesn't follow the binding format rule
-and has not been used yet.
+Add clock to the binding
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Li Jun <jun.li@nxp.com>
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 ---
- drivers/staging/typec/tcpci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index 076d97e..dd29288 100644
---- a/drivers/staging/typec/tcpci.c
-+++ b/drivers/staging/typec/tcpci.c
-@@ -575,7 +575,7 @@ MODULE_DEVICE_TABLE(i2c, tcpci_id);
- 
- #ifdef CONFIG_OF
- static const struct of_device_id tcpci_of_match[] = {
--	{ .compatible = "usb,tcpci", },
-+	{ .compatible = "nxp,ptn5110", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, tcpci_of_match);
--- 
+diff --git a/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt=
+ b/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt
+index df8aba0..7ae9008 100644
+--- a/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt
++++ b/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt
+@@ -13,6 +13,8 @@ Required properties:
+
+ Optional properties:
+ - port-number          : Set Uart port number
++- clock-names          : Should be "s_axi_aclk"
++- clocks               : Input clock specifier. Refer to common clock bind=
+ings.
+
+ Example:
+ serial@800C0000 {
+--
 2.7.4
 
+This email and any attachments are intended for the sole use of the named r=
+ecipient(s) and contain(s) confidential information that may be proprietary=
+, privileged or copyrighted under applicable law. If you are not the intend=
+ed recipient, do not read, copy, or forward this email message or any attac=
+hments. Delete this email message and any attachments immediately.
