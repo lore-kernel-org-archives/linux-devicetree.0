@@ -1,98 +1,54 @@
-Return-Path: <SRS0=jXKD=JN=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v5 3/5] leds: lt3593: switch to gpiod interface
-Date: Wed, 27 Jun 2018 20:52:35 +0200
-Message-Id: <20180627185237.24830-4-daniel@zonque.org>
-In-Reply-To: <20180627185237.24830-1-daniel@zonque.org>
-References: <20180627185237.24830-1-daniel@zonque.org>
-To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=yY7i=JN=gmail.com=groeck7@kernel.org>
+Sender: Guenter Roeck <groeck7@gmail.com>
+Subject: Re: [PATCH v8 07/14] staging: typec: tcpci: remove unused
+ tcpci_tcpc_config
+References: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
+ <1530056732-9640-8-git-send-email-jun.li@nxp.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Message-ID: <0447bae6-cb16-ecb4-5c01-a4a46b161b66@roeck-us.net>
+Date: Tue, 26 Jun 2018 17:31:17 -0700
+MIME-Version: 1.0
+In-Reply-To: <1530056732-9640-8-git-send-email-jun.li@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Li Jun <jun.li@nxp.com>, robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com
+Cc: a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Clean up the code a bit and transition over to the gpiod based interface.
+On 06/26/2018 04:45 PM, Li Jun wrote:
+> Since we will use config settings via device properties, so
+> remove the hard code tcpci_tcpc_config.
+> 
+> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Signed-off-by: Li Jun <jun.li@nxp.com>
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- drivers/leds/leds-lt3593.c | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
-index 1a3dc347db21..a096ee64cbbb 100644
---- a/drivers/leds/leds-lt3593.c
-+++ b/drivers/leds/leds-lt3593.c
-@@ -21,12 +21,13 @@
- #include <linux/leds.h>
- #include <linux/delay.h>
- #include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/slab.h>
- #include <linux/module.h>
- 
- struct lt3593_led_data {
- 	struct led_classdev cdev;
--	unsigned gpio;
-+	struct gpio_desc *gpiod;
- };
- 
- static int lt3593_led_set(struct led_classdev *led_cdev,
-@@ -46,25 +47,25 @@ static int lt3593_led_set(struct led_classdev *led_cdev,
- 	 */
- 
- 	if (value == 0) {
--		gpio_set_value_cansleep(led_dat->gpio, 0);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 0);
- 		return 0;
- 	}
- 
- 	pulses = 32 - (value * 32) / 255;
- 
- 	if (pulses == 0) {
--		gpio_set_value_cansleep(led_dat->gpio, 0);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 0);
- 		mdelay(1);
--		gpio_set_value_cansleep(led_dat->gpio, 1);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 1);
- 		return 0;
- 	}
- 
--	gpio_set_value_cansleep(led_dat->gpio, 1);
-+	gpiod_set_value_cansleep(led_dat->gpiod, 1);
- 
- 	while (pulses--) {
--		gpio_set_value_cansleep(led_dat->gpio, 0);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 0);
- 		udelay(1);
--		gpio_set_value_cansleep(led_dat->gpio, 1);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 1);
- 		udelay(1);
- 	}
- 
-@@ -85,15 +86,8 @@ static struct lt3593_led_data *lt3593_led_probe_pdata(struct device *dev)
- 	if (!led_data)
- 		return ERR_PTR(-ENOMEM);
- 
--	if (!gpio_is_valid(template->gpio)) {
--		dev_info(dev, "skipping unavailable LT3593 LED at gpio "
--			 "%d (%s)\n", template->gpio, template->name);
--		return ERR_PTR(-EINVAL);
--	}
--
- 	led_data->cdev.name = template->name;
- 	led_data->cdev.default_trigger = template->default_trigger;
--	led_data->gpio = template->gpio;
- 	led_data->cdev.brightness_set_blocking = lt3593_led_set;
- 
- 	state = (template->default_state == LEDS_GPIO_DEFSTATE_ON);
-@@ -108,6 +102,10 @@ static struct lt3593_led_data *lt3593_led_probe_pdata(struct device *dev)
- 	if (ret < 0)
- 		return ERR_PTR(ret);
- 
-+	led_data->gpiod = gpio_to_desc(template->gpio);
-+	if (!led_data->gpiod)
-+		return ERR_PTR(-EPROBE_DEFER);
-+
- 	ret = devm_led_classdev_register(dev, &led_data->cdev);
- 	if (ret < 0)
- 		return ERR_PTR(ret);
--- 
-2.17.1
+> ---
+>   drivers/staging/typec/tcpci.c | 7 -------
+>   1 file changed, 7 deletions(-)
+> 
+> diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+> index e59547a..076498a 100644
+> --- a/drivers/staging/typec/tcpci.c
+> +++ b/drivers/staging/typec/tcpci.c
+> @@ -464,17 +464,10 @@ static const struct regmap_config tcpci_regmap_config = {
+>   	.max_register = 0x7F, /* 0x80 .. 0xFF are vendor defined */
+>   };
+>   
+> -static const struct tcpc_config tcpci_tcpc_config = {
+> -	.type = TYPEC_PORT_DFP,
+> -	.default_role = TYPEC_SINK,
+> -};
+> -
+>   static int tcpci_parse_config(struct tcpci *tcpci)
+>   {
+>   	tcpci->controls_vbus = true; /* XXX */
+>   
+> -	/* TODO: Populate struct tcpc_config from ACPI/device-tree */
+> -	tcpci->tcpc.config = &tcpci_tcpc_config;
+>   	tcpci->tcpc.fwnode = device_get_named_child_node(tcpci->dev,
+>   							 "connector");
+>   	if (!tcpci->tcpc.fwnode) {
+> 
