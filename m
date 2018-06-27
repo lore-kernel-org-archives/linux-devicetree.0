@@ -1,74 +1,53 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: virtio: Specify #iommu-cells value
-	for a virtio-iommu
-Date: Wed, 27 Jun 2018 11:46:32 -0600
-Message-ID: <CAL_JsqLdahF+2VsH9h658z9guO0XmqHM75QLaHApZLNP8twUNA@mail.gmail.com>
-References: <20180621190655.56391-1-jean-philippe.brucker@arm.com>
-	<20180621190655.56391-2-jean-philippe.brucker@arm.com>
-	<20180625192753.GA22351@rob-hp-laptop>
-	<89d31865-ee35-ef8c-f7b3-f3acf2bbd30e@arm.com>
+From: thor.thayer@linux.intel.com
+Subject: [PATCH] arm64: dts: stratix10: Add SPI node clocks for Stratix10
+Date: Wed, 27 Jun 2018 12:50:27 -0500
+Message-ID: <1530121827-32390-1-git-send-email-thor.thayer@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <89d31865-ee35-ef8c-f7b3-f3acf2bbd30e-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jayachandran.nair-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, tnowicki-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, virtio-dev-sDuHXQ4OtrM4h7I2RyI4rWD2FQJk+8+b@public.gmane.org, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: dinguyen@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Thor Thayer <thor.thayer@linux.intel.com>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 26, 2018 at 11:59 AM Jean-Philippe Brucker
-<jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org> wrote:
->
-> On 25/06/18 20:27, Rob Herring wrote:
-> > On Thu, Jun 21, 2018 at 08:06:51PM +0100, Jean-Philippe Brucker wrote:
-> >> A virtio-mmio node may represent a virtio-iommu device. This is discovered
-> >> by the virtio driver at probe time, but the DMA topology isn't
-> >> discoverable and must be described by firmware. For DT the standard IOMMU
-> >> description is used, as specified in bindings/iommu/iommu.txt and
-> >> bindings/pci/pci-iommu.txt. Like many other IOMMUs, virtio-iommu
-> >> distinguishes masters by their endpoint IDs, which requires one IOMMU cell
-> >> in the "iommus" property.
-> >>
-> >> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/virtio/mmio.txt | 8 ++++++++
-> >>  1 file changed, 8 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/virtio/mmio.txt b/Documentation/devicetree/bindings/virtio/mmio.txt
-> >> index 5069c1b8e193..337da0e3a87f 100644
-> >> --- a/Documentation/devicetree/bindings/virtio/mmio.txt
-> >> +++ b/Documentation/devicetree/bindings/virtio/mmio.txt
-> >> @@ -8,6 +8,14 @@ Required properties:
-> >>  - reg:              control registers base address and size including configuration space
-> >>  - interrupts:       interrupt generated by the device
-> >>
-> >> +Required properties for virtio-iommu:
-> >> +
-> >> +- #iommu-cells:     When the node describes a virtio-iommu device, it is
-> >> +            linked to DMA masters using the "iommus" property as
-> >> +            described in devicetree/bindings/iommu/iommu.txt. For
-> >> +            virtio-iommu #iommu-cells must be 1, each cell describing
-> >> +            a single endpoint ID.
-> >
-> > The iommus property should also be documented for the client side.
->
-> Isn't section "IOMMU master node" of iommu.txt sufficient? Since the
-> iommus property applies to any DMA master, not only virtio-mmio devices,
-> the canonical description in iommu.txt seems the best place for it, and
-> I'm not sure what to add in this file. Maybe a short example below the
-> virtio_block one?
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-No, because somewhere we have to capture if 'iommus' is valid for
-'virtio-mmio' or not. Hopefully soon we'll actually be able to
-validate that.
+Add the required clocks for the new Stratix10 clock bindings
+to the SPI nodes.
 
-Rob
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+---
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index 67dac595dc72..9e54282ee08c 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -310,6 +310,7 @@
+ 			resets = <&rst SPIM0_RESET>;
+ 			reg-io-width = <4>;
+ 			num-cs = <4>;
++			clocks = <&clkmgr STRATIX10_L4_MAIN_CLK>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -322,6 +323,7 @@
+ 			resets = <&rst SPIM1_RESET>;
+ 			reg-io-width = <4>;
+ 			num-cs = <4>;
++			clocks = <&clkmgr STRATIX10_L4_MAIN_CLK>;
+ 			status = "disabled";
+ 		};
+ 
+-- 
+2.7.4
