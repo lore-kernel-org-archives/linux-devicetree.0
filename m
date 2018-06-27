@@ -1,64 +1,119 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v5 4/4] clk: bd71837: Add driver for BD71837 PMIC clock
-Date: Wed, 27 Jun 2018 11:40:00 +0300
-Message-ID: <20180627084000.GE2118@localhost.localdomain>
-References: <cover.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
- <d99c8762b0fbbcb18ec4f4d104191364c0ea798c.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
- <152878945117.16708.12422348324182290971@swboyd.mtv.corp.google.com>
- <20180612082354.GG20078@localhost.localdomain>
- <20180613130338.GH20078@localhost.localdomain>
- <152997038474.143105.3390705878521933864@swboyd.mtv.corp.google.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx6sll-evk: enable usdhc3 slot
+Date: Wed, 27 Jun 2018 16:36:45 +0800
+Message-ID: <1530088605-9264-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <152997038474.143105.3390705878521933864@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>, broonie@kernel.org, lee.jones@linaro.org, lgirdwood@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Stephen,
+On i.MX6SLL EVK board, SD3 slot can be used for
+WiFi and other SD accessories, enable it.
 
-On Mon, Jun 25, 2018 at 04:46:24PM -0700, Stephen Boyd wrote:
-> Quoting Matti Vaittinen (2018-06-13 06:03:38)
-> > On Tue, Jun 12, 2018 at 11:23:54AM +0300, Matti Vaittinen wrote:
-> > > 
-> > > I see. This makes sense. I need to verify from HW colleagues whether
-> > > this chip has internal oscillator or not. I originally thought we have
-> > > on-chip oscillator - but as you say, we do have XIN pin in documentation.
-> > > So now I am not sure if the test board I have contains oscillator driving
-> > > the clk on PMIC - or if the PMIC has internal oscillator. I'll clarify this.
-> > 
-> > It really turned out that the PMIC just acts as a clock buffer. So I do
-> > as you suggested and add lookup for parent clock to the driver. I
-> > planned to do it so that if no parent is found from DT - then we assume
-> > the 32.768KHz clock (as described in documentation). Eg, something along
-> > the lines:
-> > 
-> >         init.parent_names = of_clk_get_parent_name(pdev->dev.parent->of_node, 0);
-> >         if (init.parent_names) {
-> >                 init.num_parents = 1;
-> >         } else {
-> >                 /* If parent is not given from DT we assume the typical use-case with
-> >                  * 32.768 KHz oscillator for RTC (Maybe we could just error out here?)
-> >                  */
-> >                 c->rate = BD71837_CLK_RATE;
-> >                 bd71837_clk_ops.recalc_rate = &bd71837_clk_recalc_rate;
-> >         }
-> 
-> You can also add a clk directly in this driver in that case there isn't
-> one in DT with the rate and name of your choosing. Then the logic is the
-> same and we don't need a c->rate variable.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6sll-evk.dts | 65 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
 
-So you mean that I should use clk_hw_register_fixed_rate and create new
-clk if parent is not found? Isn't this a bit of an overkill? Downside is
-that then we do need remove/cleanup functionality for deleting this
-parent clock - and I didn't find devm support for fixed clock. Furthermore
-I guess that since it is parent, it can't be removed before child is removed.
-
-Or did you mean something else but creating a fixed rate clock as parent
-here?
-
-Best Regards
-    Matti Vaittinen
+diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-evk.dts
+index 2217c40..9013f03 100644
+--- a/arch/arm/boot/dts/imx6sll-evk.dts
++++ b/arch/arm/boot/dts/imx6sll-evk.dts
+@@ -84,6 +84,17 @@
+ 		gpio = <&gpio3 30 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
+ 	};
++
++	reg_sd3_vmmc: regulator-sd3-vmmc {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_reg_sd3_vmmc>;
++		regulator-name = "SD3_WIFI";
++		regulator-min-microvolt = <3000000>;
++		regulator-max-microvolt = <3000000>;
++		gpio = <&gpio4 4 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
+ };
+ 
+ &cpu0 {
+@@ -218,6 +229,18 @@
+ 	status = "okay";
+ };
+ 
++&usdhc3 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc3>;
++	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
++	cd-gpios = <&gpio3 22 GPIO_ACTIVE_LOW>;
++	keep-power-in-suspend;
++	enable-sdio-wakeup;
++	vmmc-supply = <&reg_sd3_vmmc>;
++	status = "okay";
++};
++
+ &usbotg1 {
+ 	vbus-supply = <&reg_usb_otg1_vbus>;
+ 	pinctrl-names = "default";
+@@ -261,6 +284,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_reg_sd3_vmmc: sd3vmmcgrp {
++		fsl,pins = <
++			MX6SLL_PAD_KEY_COL6__GPIO4_IO04 0x17059
++		>;
++	};
++
+ 	pinctrl_uart1: uart1grp {
+ 		fsl,pins = <
+ 			MX6SLL_PAD_UART1_TXD__UART1_DCE_TX 0x1b0b1
+@@ -301,6 +330,42 @@
+ 		>;
+ 	};
+ 
++	pinctrl_usdhc3: usdhc3grp {
++		fsl,pins = <
++			MX6SLL_PAD_SD3_CMD__SD3_CMD		0x17061
++			MX6SLL_PAD_SD3_CLK__SD3_CLK		0x13061
++			MX6SLL_PAD_SD3_DATA0__SD3_DATA0		0x17061
++			MX6SLL_PAD_SD3_DATA1__SD3_DATA1		0x17061
++			MX6SLL_PAD_SD3_DATA2__SD3_DATA2		0x17061
++			MX6SLL_PAD_SD3_DATA3__SD3_DATA3		0x17061
++			MX6SLL_PAD_REF_CLK_32K__GPIO3_IO22	0x17059
++		>;
++	};
++
++	pinctrl_usdhc3_100mhz: usdhc3grp_100mhz {
++		fsl,pins = <
++			MX6SLL_PAD_SD3_CMD__SD3_CMD		0x170a1
++			MX6SLL_PAD_SD3_CLK__SD3_CLK		0x130a1
++			MX6SLL_PAD_SD3_DATA0__SD3_DATA0		0x170a1
++			MX6SLL_PAD_SD3_DATA1__SD3_DATA1		0x170a1
++			MX6SLL_PAD_SD3_DATA2__SD3_DATA2		0x170a1
++			MX6SLL_PAD_SD3_DATA3__SD3_DATA3		0x170a1
++			MX6SLL_PAD_REF_CLK_32K__GPIO3_IO22	0x17059
++		>;
++	};
++
++	pinctrl_usdhc3_200mhz: usdhc3grp_200mhz {
++		fsl,pins = <
++			MX6SLL_PAD_SD3_CMD__SD3_CMD		0x170e9
++			MX6SLL_PAD_SD3_CLK__SD3_CLK		0x130f9
++			MX6SLL_PAD_SD3_DATA0__SD3_DATA0		0x170e9
++			MX6SLL_PAD_SD3_DATA1__SD3_DATA1		0x170e9
++			MX6SLL_PAD_SD3_DATA2__SD3_DATA2		0x170e9
++			MX6SLL_PAD_SD3_DATA3__SD3_DATA3		0x170e9
++			MX6SLL_PAD_REF_CLK_32K__GPIO3_IO22	0x17059
++		>;
++	};
++
+ 	pinctrl_usbotg1: usbotg1grp {
+ 		fsl,pins = <
+ 			MX6SLL_PAD_EPDC_PWR_COM__USB_OTG1_ID 0x17059
+-- 
+2.7.4
