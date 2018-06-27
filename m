@@ -1,191 +1,91 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v5 09/10] gpio: Add a driver for Cadence I3C GPIO
- expander
-Date: Wed, 27 Jun 2018 21:36:17 +0200
-Message-ID: <20180627213617.51e10712@bbrezillon>
-References: <20180622104930.32050-1-boris.brezillon@bootlin.com>
-        <20180622104930.32050-10-boris.brezillon@bootlin.com>
-        <CAHp75Vdxg49q6aQj0dDpzM4q2WnQbGoCECWR1roda7aMR+u4gg@mail.gmail.com>
-        <20180626215648.1472b96e@bbrezillon>
-        <CAHp75VcVvOzgOM87rSrwsCxh+WAK-z+zVCJifnY+Xeeu=cPFiA@mail.gmail.com>
-        <20180626234638.076fb816@bbrezillon>
-        <CAHp75VdBXj66Yd6sQHOWz19R9MUtYMSeq4j-+UidLedpfkB6mA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: [PATCH v4 1/2] clk: pxa: export 32kHz PLL
+Date: Wed, 27 Jun 2018 21:41:23 +0200
+Message-ID: <20180627194124.26366-1-robert.jarzmik@free.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VdBXj66Yd6sQHOWz19R9MUtYMSeq4j-+UidLedpfkB6mA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Linux Documentation List <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland>
+To: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
+This clock is especially used by the RTC driver, so export it so that
+devicetree users can use it.
 
-On Wed, 27 Jun 2018 20:53:51 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+---
+Since v2: fix missing parenthesis in clk-pxa25x.c and clk-pxa3xx.c
+---
+ drivers/clk/pxa/clk-pxa25x.c          | 6 ++++--
+ drivers/clk/pxa/clk-pxa27x.c          | 7 ++++---
+ drivers/clk/pxa/clk-pxa3xx.c          | 7 ++++---
+ include/dt-bindings/clock/pxa-clock.h | 3 ++-
+ 4 files changed, 14 insertions(+), 9 deletions(-)
 
-> On Wed, Jun 27, 2018 at 12:46 AM, Boris Brezillon
-> <boris.brezillon@bootlin.com> wrote:
-> > On Tue, 26 Jun 2018 23:44:36 +0300
-> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:  
-> >> On Tue, Jun 26, 2018 at 10:56 PM, Boris Brezillon
-> >> <boris.brezillon@bootlin.com> wrote:  
-> >> > On Tue, 26 Jun 2018 22:07:03 +0300
-> >> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:  
-> >> >> On Fri, Jun 22, 2018 at 1:49 PM, Boris Brezillon
-> >> >> <boris.brezillon@bootlin.com> wrote:  
-> 
-> >> > I'll say it here because this is not the first time I'm pissed off by
-> >> > one of your review.  
-> >>
-> >> Like 'I like offending people, because I think people who get offended
-> >> should be offended.' ?
-> >> I'm not that guy, relax.  
-> >
-> > I'm not offended, just annoyed, and not because I have things to change
-> > in my patchset (I'm used to that and that's something I comply with
-> > most of the time), but because the only reviews I had from you were of
-> > this kind (nitpicking on minor stuff).  
-> 
-> OK, point taken.
-> 
-> >> > and most of the time your reviews are superficial (focused on tiny
-> >> > details or coding style issues). Don't you have better things to do?  
-> >>
-> >> If your code is written using ancient style and / or API it's not good
-> >> to start with.
-> >> Isn't it? Otherwise, why we do introduce new internal APIs, for what purpose?  
-> >
-> > Come on!
-> >
-> > - kzalloc() vs kmalloc_array()
-> > - for (i = 0; i < n, i++) { if (BIT(x) & var) ... }
-> >   vs
-> >   for_each_bit_set() (which is not even applicable here because I'm
-> >   not manipulating an unsigned long)
-> >
-> > Where do you see ancient style APIs here?  
-> 
-> Both. kmalloc_array() and for_each_set_bit() were introduced quite
-> long time ago.
-
-I mean, kzalloc() is not deprecated AFAIK and I don't really see the
-benefit of using kmalloc_array(), but if that makes you happy, let's go
-for kmalloc_array().
-
-For for_each_bit_set() it would require changing the type of isr +
-having a temporary variable to get the reg value into an u8. Again, I
-can do the change, but I don't really see how it improves the code. 
-
-> 
-> On top of that you are open coding, if I'm not mistaken, cpu_to_be32()
-> and be32_to_cpu().
-
-Care to point where?
-
-> ...and more I believe.
-
-Care to point what?
+diff --git a/drivers/clk/pxa/clk-pxa25x.c b/drivers/clk/pxa/clk-pxa25x.c
+index 6416c1f8e632..e88f8e01fe3a 100644
+--- a/drivers/clk/pxa/clk-pxa25x.c
++++ b/drivers/clk/pxa/clk-pxa25x.c
+@@ -292,8 +292,10 @@ static void __init pxa25x_register_plls(void)
+ {
+ 	clk_register_fixed_rate(NULL, "osc_3_6864mhz", NULL,
+ 				CLK_GET_RATE_NOCACHE, 3686400);
+-	clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
+-				CLK_GET_RATE_NOCACHE, 32768);
++	clkdev_pxa_register(CLK_OSC32k768, "osc_32_768khz", NULL,
++			    clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
++						    CLK_GET_RATE_NOCACHE,
++						    32768));
+ 	clk_register_fixed_rate(NULL, "clk_dummy", NULL, 0, 0);
+ 	clk_register_fixed_factor(NULL, "ppll_95_85mhz", "osc_3_6864mhz",
+ 				  0, 26, 1);
+diff --git a/drivers/clk/pxa/clk-pxa27x.c b/drivers/clk/pxa/clk-pxa27x.c
+index 25a30194d27a..d40b63e7bbce 100644
+--- a/drivers/clk/pxa/clk-pxa27x.c
++++ b/drivers/clk/pxa/clk-pxa27x.c
+@@ -314,9 +314,10 @@ static void __init pxa27x_register_plls(void)
+ 	clk_register_fixed_rate(NULL, "osc_13mhz", NULL,
+ 				CLK_GET_RATE_NOCACHE,
+ 				13 * MHz);
+-	clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
+-				CLK_GET_RATE_NOCACHE,
+-				32768 * KHz);
++	clkdev_pxa_register(CLK_OSC32k768, "osc_32_768khz", NULL,
++			    clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
++						    CLK_GET_RATE_NOCACHE,
++						    32768 * KHz));
+ 	clk_register_fixed_rate(NULL, "clk_dummy", NULL, 0, 0);
+ 	clk_register_fixed_factor(NULL, "ppll_312mhz", "osc_13mhz", 0, 24, 1);
+ }
+diff --git a/drivers/clk/pxa/clk-pxa3xx.c b/drivers/clk/pxa/clk-pxa3xx.c
+index 2d126df2bccd..7aa120c3bd08 100644
+--- a/drivers/clk/pxa/clk-pxa3xx.c
++++ b/drivers/clk/pxa/clk-pxa3xx.c
+@@ -286,9 +286,10 @@ static void __init pxa3xx_register_plls(void)
+ 	clk_register_fixed_rate(NULL, "osc_13mhz", NULL,
+ 				CLK_GET_RATE_NOCACHE,
+ 				13 * MHz);
+-	clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
+-				CLK_GET_RATE_NOCACHE,
+-				32768);
++	clkdev_pxa_register(CLK_OSC32k768, "osc_32_768khz", NULL,
++			    clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
++						    CLK_GET_RATE_NOCACHE,
++						    32768));
+ 	clk_register_fixed_rate(NULL, "ring_osc_120mhz", NULL,
+ 				CLK_GET_RATE_NOCACHE,
+ 				120 * MHz);
+diff --git a/include/dt-bindings/clock/pxa-clock.h b/include/dt-bindings/clock/pxa-clock.h
+index e65803b1dc7e..0b0fd2b01538 100644
+--- a/include/dt-bindings/clock/pxa-clock.h
++++ b/include/dt-bindings/clock/pxa-clock.h
+@@ -72,6 +72,7 @@
+ #define CLK_USIM 58
+ #define CLK_USIM1 59
+ #define CLK_USMI0 60
+-#define CLK_MAX 61
++#define CLK_OSC32k768 61
++#define CLK_MAX 62
  
-> >> On top of that you might find more interesting reviews where I pointed
-> >> out to a memory leak or other nasty stuff. But of course you prefer
-> >> not to norice that.  
-> >
-> > Yes, sometime you have valid point, but it gets lost in all the noise.  
-> 
-> Btw, you forgot to call of_node_put() on error path in one case.
-
-In this driver or another patch of the series? I don't see any
-of_node_get() call in this GPIO driver, but maybe it's something done
-in one of the GPIO helper.
-
-> Did I
-> again missed the details?
-> 
-> >> > I mean, I'm fine when I get such comments from people that also do
-> >> > useful comments, but yours are most of the time useless and sometime
-> >> > even wrong because you didn't time to look at the code in details.  
-> >>
-> >> Calm down, please.  
-> >
-> > Why? Because I say you didn't look at the code in details? Isn't it
-> > true? Did you look at what I3C is, how it works or how the I3C framework
-> > is architectured? Because that's the kind of reviews I'd love to have on
-> > this series.  
-> 
-> You got me.
-> I have a copy of the spec, this require a bit of time to go through.
-
-Cool!
-
-> 
-> For now I can offer you to consider IBI implementation using IRQ chip framework.
-> It would give few advantages (like we do this for GPIO), such as IRQ
-> statistics or wake up capabilities.
-
-Just pasting the comment I made in my cover letter:
-
-"
-Main changes between the initial RFC and this v2 are:
-- Add a generic infrastructure to support IBIs. It's worth mentioning
-  that I tried exposing IBIs as a regular IRQs, but after several
-  attempts and a discussion with Mark Zyngier, it appeared that it was
-  not really fitting in the Linux IRQ model (the fact that you have
-  payload attached to IBIs, the fact that most of the time an IBI will
-  generate a transfer on the bus which has to be done in an atomic
-  context, ...)
-  The counterpart of this decision is the latency induced by the
-  workqueue approach, but since I don't have real use cases, I don't
-  know if this can be a problem or not. 
-"
-
-To sum-up, yes I tried implementing what you suggest, and it ended
-being messy for 2 main reasons:
-
-1/ IBIs have payload attached to them, and exposing IBIs are regular
-IRQs meant adding a payload queuing mechanism to the i3c_device so that
-the I3C device driver could dequeue each payload independently. Clearly
-not impossible to deal with, but conceptually far from the concept of
-IRQs we have in Linux.
-
-2/ The I3C APIs are meant to be used in non-atomic context, but if you
-expose IBIs are regular IRQs, the irqchip will have to mask/unmask the
-IRQs from an atomic context, and masking/unmasking IRQs almost always
-implies doing a CCC or priv SDR transfer. Plus, most of the time you'll
-have to retrieve extra info from the IRQ handler, which again means
-sending frames on the I3C bus. We could make that work by either
-supporting async transfers or having the irq chip handle the IRQ
-handlers from a thread. But both options add extra complexity for no
-real benefit given that IBIs are already not exactly fitting in the
-Linux IRQ model.
-
-The discussion I had with Mark Zyngier finished convincing me that
-IBIs would be better exposed with their own API.
-
-> 
-> >> You would simple ignore them. Your choice.  
-> >
-> > That's not my point. My point is, maybe you should do less reviews but
-> > spend more time on each of them  
-> 
-> Good point.
-> 
-> > so you don't just scratch the surface
-> > with comments I could get from a tool like checkpatch.  
-> 
-> Perhaps you should run checkpatch yourself then?
-> 
-
-I do run checkpatch --strict and fix most of the thing reported except
-those hurting readability. I don't remember seeing checkpatch complain
-about kzalloc() usage, and I guess it's not smart enough to detect that
-for_each_bit_set() can be used to replace the "for() if (BIT(x) & val)"
-pattern.
-
-Anyway, thanks for having a look at the I3C spec and starting the
-discussion on IBIs. I guess I owe you an apology.
-
-Regards,
-
-Boris
+ #endif
+-- 
+2.11.0
