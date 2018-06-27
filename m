@@ -1,86 +1,430 @@
-Return-Path: <SRS0=XC2B=JM=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH] leds: lt3593: Move GPIO node from child to device node
-Date: Tue, 26 Jun 2018 22:22:52 +0200
-Message-Id: <20180626202252.6127-1-daniel@zonque.org>
-To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=eG0j=JN=bitwise.fi=anssi.hannula@kernel.org>
+From: Anssi Hannula <anssi.hannula@bitwise.fi>
+Subject: [PATCH 2/3] can: xilinx_can: refactor code in preparation for CAN FD support
+Date: Wed, 27 Jun 2018 17:34:13 +0300
+Message-Id: <20180627143414.7114-3-anssi.hannula@bitwise.fi>
+In-Reply-To: <20180627143414.7114-1-anssi.hannula@bitwise.fi>
+References: <20180627143414.7114-1-anssi.hannula@bitwise.fi>
+To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Michal Simek <michal.simek@xilinx.com>, linux-can@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Move the GPIO node from the child node to the device node as it
-is a property of the chip, not of the LED.
+Xilinx CAN FD cores are different enough from the previous Zynq and AXI
+CAN cores that some refactoring of the driver is needed.
 
-Reported-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Daniel Mack <daniel@zonque.org>
+This commit contains most of the required refactoring to existing code
+and should not alter behavior on existing supported HW.
+
+The changes are:
+
+- Reading and writing to frame registers is parametrized to allow
+  reading/writing a different frame in the future.
+
+- Slightly misleading (as it did not specify *all* the interrupts
+  supported by the HW) XCAN_INTR_ALL is replaced with specifying the
+  interrupts inline in interrupt enabling code.
+
+- xcan_devtype_data.caps is renamed to xcan_devtype_data.flags to allow
+  for flags that define alternative functionality (e.g. mailboxes vs.
+  FIFO) instead of purely additive capabilities.
+
+- can_bittiming_const is added to xcan_devtype_data as CAN FD cores will
+  have wider setting ranges.
+
+- bus_clk clock name is now determined through xcan_devtype_data instead
+  of comparing compatible string in probe().
+
+- xcan_devtype_data is added to xcan_priv to allow flag checks after
+  probe().
+
+- XCAN_CAP_WATERMARK is now XCAN_FLAG_TXFEMP. CAN FD cores have
+  watermark support but no TXFEMP interrupt, which is what we are
+  actually interested in.
+
+- xcan_start_xmit() is split to in two parts to prepare for TX mailboxes
+  instead of FIFO in CAN FD cores.
+
+Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
+Cc: Michal Simek <michal.simek@xilinx.com>
 ---
- .../devicetree/bindings/leds/leds-lt3593.txt         | 10 ++++------
- drivers/leds/leds-lt3593.c                           | 12 ++++--------
- 2 files changed, 8 insertions(+), 14 deletions(-)
+ drivers/net/can/xilinx_can.c | 204 ++++++++++++++++++++++++-------------------
+ 1 file changed, 116 insertions(+), 88 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lt3593.txt b/Documentation/devicetree/bindings/leds/leds-lt3593.txt
-index b31d427448f8..6b2cabc36c0c 100644
---- a/Documentation/devicetree/bindings/leds/leds-lt3593.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lt3593.txt
-@@ -1,15 +1,13 @@
- Bindings for Linear Technologies LT3593 LED controller
- 
- Required properties:
--- compatible:	Should be "lltc,lt3593".
-+- compatible:		Should be "lltc,lt3593".
-+- lltc,ctrl-gpios:	A handle to the GPIO that is connected to the 'CTRL'
-+			pin of the chip.
- 
- The hardware supports only one LED. The properties of this LED are
- configured in a sub-node in the device node.
- 
--Required sub-node properties:
--- gpios:	A handle to the GPIO that is connected to the 'CTRL'
--		pin of the chip.
--
- Optional sub-node properties:
- - label:	A label for the LED. If none is given, the LED will be
- 		named "lt3595::".
-@@ -25,10 +23,10 @@ Example:
- 
- led-controller {
- 	compatible = "lltc,lt3593";
-+	lltc,ctrl-gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
- 
- 	led {
- 		label = "white:backlight";
--		gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
- 		default-state = "on";
- 	};
+diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c
+index ce9cf9b..615223b 100644
+--- a/drivers/net/can/xilinx_can.c
++++ b/drivers/net/can/xilinx_can.c
+@@ -51,16 +51,15 @@ enum xcan_reg {
+ 	XCAN_ISR_OFFSET		= 0x1C, /* Interrupt status */
+ 	XCAN_IER_OFFSET		= 0x20, /* Interrupt enable */
+ 	XCAN_ICR_OFFSET		= 0x24, /* Interrupt clear */
+-	XCAN_TXFIFO_ID_OFFSET	= 0x30,/* TX FIFO ID */
+-	XCAN_TXFIFO_DLC_OFFSET	= 0x34, /* TX FIFO DLC */
+-	XCAN_TXFIFO_DW1_OFFSET	= 0x38, /* TX FIFO Data Word 1 */
+-	XCAN_TXFIFO_DW2_OFFSET	= 0x3C, /* TX FIFO Data Word 2 */
+-	XCAN_RXFIFO_ID_OFFSET	= 0x50, /* RX FIFO ID */
+-	XCAN_RXFIFO_DLC_OFFSET	= 0x54, /* RX FIFO DLC */
+-	XCAN_RXFIFO_DW1_OFFSET	= 0x58, /* RX FIFO Data Word 1 */
+-	XCAN_RXFIFO_DW2_OFFSET	= 0x5C, /* RX FIFO Data Word 2 */
++	XCAN_TXFIFO_OFFSET	= 0x30, /* TX FIFO base */
++	XCAN_RXFIFO_OFFSET	= 0x50, /* RX FIFO base */
  };
-diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
-index f6aae616242e..9d4896aa8475 100644
---- a/drivers/leds/leds-lt3593.c
-+++ b/drivers/leds/leds-lt3593.c
-@@ -133,6 +133,10 @@ static int lt3593_led_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
  
-+	led_data->gpiod = devm_gpiod_get(dev, "lltc,ctrl", 0);
-+	if (IS_ERR(led_data->gpiod))
-+		return PTR_ERR(led_data->gpiod);
++#define XCAN_FRAME_ID_OFFSET(frame_base)	((frame_base) + 0x00)
++#define XCAN_FRAME_DLC_OFFSET(frame_base)	((frame_base) + 0x04)
++#define XCAN_FRAME_DW1_OFFSET(frame_base)	((frame_base) + 0x08)
++#define XCAN_FRAME_DW2_OFFSET(frame_base)	((frame_base) + 0x0C)
 +
- 	child = device_get_next_child_node(dev, NULL);
+ /* CAN register bit masks - XCAN_<REG>_<BIT>_MASK */
+ #define XCAN_SRR_CEN_MASK		0x00000002 /* CAN enable */
+ #define XCAN_SRR_RESET_MASK		0x00000001 /* Soft Reset the CAN core */
+@@ -101,11 +100,6 @@ enum xcan_reg {
+ #define XCAN_IDR_RTR_MASK		0x00000001 /* Remote TX request */
+ #define XCAN_DLCR_DLC_MASK		0xF0000000 /* Data length code */
  
- 	ret = fwnode_property_read_string(child, "label", &tmp);
-@@ -156,14 +160,6 @@ static int lt3593_led_probe(struct platform_device *pdev)
- 		}
+-#define XCAN_INTR_ALL		(XCAN_IXR_TXOK_MASK | XCAN_IXR_BSOFF_MASK |\
+-				 XCAN_IXR_WKUP_MASK | XCAN_IXR_SLP_MASK | \
+-				 XCAN_IXR_RXNEMP_MASK | XCAN_IXR_ERROR_MASK | \
+-				 XCAN_IXR_RXOFLW_MASK | XCAN_IXR_ARBLST_MASK)
+-
+ /* CAN register bit shift - XCAN_<REG>_<BIT>_SHIFT */
+ #define XCAN_BTR_SJW_SHIFT		7  /* Synchronous jump width */
+ #define XCAN_BTR_TS2_SHIFT		4  /* Time segment 2 */
+@@ -118,6 +112,15 @@ enum xcan_reg {
+ #define XCAN_FRAME_MAX_DATA_LEN		8
+ #define XCAN_TIMEOUT			(1 * HZ)
+ 
++/* TX-FIFO-empty interrupt available */
++#define XCAN_FLAG_TXFEMP	0x0001
++
++struct xcan_devtype_data {
++	unsigned int flags;
++	const struct can_bittiming_const *bittiming_const;
++	const char *bus_clk_name;
++};
++
+ /**
+  * struct xcan_priv - This definition define CAN driver instance
+  * @can:			CAN private data structure.
+@@ -133,6 +136,7 @@ enum xcan_reg {
+  * @irq_flags:			For request_irq()
+  * @bus_clk:			Pointer to struct clk
+  * @can_clk:			Pointer to struct clk
++ * @devtype:			Device type specific constants
+  */
+ struct xcan_priv {
+ 	struct can_priv can;
+@@ -149,6 +153,7 @@ struct xcan_priv {
+ 	unsigned long irq_flags;
+ 	struct clk *bus_clk;
+ 	struct clk *can_clk;
++	struct xcan_devtype_data devtype;
+ };
+ 
+ /* CAN Bittiming constants as per Xilinx CAN specs */
+@@ -164,11 +169,6 @@ static const struct can_bittiming_const xcan_bittiming_const = {
+ 	.brp_inc = 1,
+ };
+ 
+-#define XCAN_CAP_WATERMARK	0x0001
+-struct xcan_devtype_data {
+-	unsigned int caps;
+-};
+-
+ /**
+  * xcan_write_reg_le - Write a value to the device register little endian
+  * @priv:	Driver private data structure
+@@ -329,7 +329,11 @@ static int xcan_chip_start(struct net_device *ndev)
+ 		return err;
+ 
+ 	/* Enable interrupts */
+-	priv->write_reg(priv, XCAN_IER_OFFSET, XCAN_INTR_ALL);
++	priv->write_reg(priv, XCAN_IER_OFFSET,
++			XCAN_IXR_TXOK_MASK | XCAN_IXR_BSOFF_MASK |
++			XCAN_IXR_WKUP_MASK | XCAN_IXR_SLP_MASK |
++			XCAN_IXR_RXNEMP_MASK | XCAN_IXR_ERROR_MASK |
++			XCAN_IXR_RXOFLW_MASK | XCAN_IXR_ARBLST_MASK);
+ 
+ 	/* Check whether it is loopback mode or normal mode  */
+ 	if (priv->can.ctrlmode & CAN_CTRLMODE_LOOPBACK) {
+@@ -390,33 +394,15 @@ static int xcan_do_set_mode(struct net_device *ndev, enum can_mode mode)
+ }
+ 
+ /**
+- * xcan_start_xmit - Starts the transmission
+- * @skb:	sk_buff pointer that contains data to be Txed
+- * @ndev:	Pointer to net_device structure
+- *
+- * This function is invoked from upper layers to initiate transmission. This
+- * function uses the next available free txbuff and populates their fields to
+- * start the transmission.
+- *
+- * Return: 0 on success and failure value on error
++ * xcan_write_frame - Write a frame to HW
++ * @skb:		sk_buff pointer that contains data to be Txed
++ * @frame_offset:	Register offset to write the frame to
+  */
+-static int xcan_start_xmit(struct sk_buff *skb, struct net_device *ndev)
++static void xcan_write_frame(struct xcan_priv *priv, struct sk_buff *skb,
++			     int frame_offset)
+ {
+-	struct xcan_priv *priv = netdev_priv(ndev);
+-	struct can_frame *cf = (struct can_frame *)skb->data;
+ 	u32 id, dlc, data[2] = {0, 0};
+-	unsigned long flags;
+-
+-	if (can_dropped_invalid_skb(ndev, skb))
+-		return NETDEV_TX_OK;
+-
+-	/* Check if the TX buffer is full */
+-	if (unlikely(priv->read_reg(priv, XCAN_SR_OFFSET) &
+-			XCAN_SR_TXFLL_MASK)) {
+-		netif_stop_queue(ndev);
+-		netdev_err(ndev, "BUG!, TX FIFO full when queue awake!\n");
+-		return NETDEV_TX_BUSY;
+-	}
++	struct can_frame *cf = (struct can_frame *)skb->data;
+ 
+ 	/* Watch carefully on the bit sequence */
+ 	if (cf->can_id & CAN_EFF_FLAG) {
+@@ -452,23 +438,40 @@ static int xcan_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	if (cf->can_dlc > 4)
+ 		data[1] = be32_to_cpup((__be32 *)(cf->data + 4));
+ 
++	priv->write_reg(priv, XCAN_FRAME_ID_OFFSET(frame_offset), id);
++	/* If the CAN frame is RTR frame this write triggers transmission */
++	priv->write_reg(priv, XCAN_FRAME_DLC_OFFSET(frame_offset), dlc);
++	if (!(cf->can_id & CAN_RTR_FLAG)) {
++		priv->write_reg(priv, XCAN_FRAME_DW1_OFFSET(frame_offset), data[0]);
++		/* If the CAN frame is Standard/Extended frame this
++		 * write triggers transmission
++		 */
++		priv->write_reg(priv, XCAN_FRAME_DW2_OFFSET(frame_offset), data[1]);
++	}
++}
++
++/**
++ * xcan_start_xmit_fifo - Starts the transmission (FIFO mode)
++ *
++ * Return: 0 on success, -ENOSPC if FIFO is full.
++ */
++static int xcan_start_xmit_fifo(struct sk_buff *skb, struct net_device *ndev)
++{
++	struct xcan_priv *priv = netdev_priv(ndev);
++	unsigned long flags;
++
++	/* Check if the TX buffer is full */
++	if (unlikely(priv->read_reg(priv, XCAN_SR_OFFSET) &
++			XCAN_SR_TXFLL_MASK))
++		return -ENOSPC;
++
+ 	can_put_echo_skb(skb, ndev, priv->tx_head % priv->tx_max);
+ 
+ 	spin_lock_irqsave(&priv->tx_lock, flags);
+ 
+ 	priv->tx_head++;
+ 
+-	/* Write the Frame to Xilinx CAN TX FIFO */
+-	priv->write_reg(priv, XCAN_TXFIFO_ID_OFFSET, id);
+-	/* If the CAN frame is RTR frame this write triggers tranmission */
+-	priv->write_reg(priv, XCAN_TXFIFO_DLC_OFFSET, dlc);
+-	if (!(cf->can_id & CAN_RTR_FLAG)) {
+-		priv->write_reg(priv, XCAN_TXFIFO_DW1_OFFSET, data[0]);
+-		/* If the CAN frame is Standard/Extended frame this
+-		 * write triggers tranmission
+-		 */
+-		priv->write_reg(priv, XCAN_TXFIFO_DW2_OFFSET, data[1]);
+-	}
++	xcan_write_frame(priv, skb, XCAN_TXFIFO_OFFSET);
+ 
+ 	/* Clear TX-FIFO-empty interrupt for xcan_tx_interrupt() */
+ 	if (priv->tx_max > 1)
+@@ -480,6 +483,35 @@ static int xcan_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 
+ 	spin_unlock_irqrestore(&priv->tx_lock, flags);
+ 
++	return 0;
++}
++
++/**
++ * xcan_start_xmit - Starts the transmission
++ * @skb:	sk_buff pointer that contains data to be Txed
++ * @ndev:	Pointer to net_device structure
++ *
++ * This function is invoked from upper layers to initiate transmission. This
++ * function uses the next available free txbuff and populates their fields to
++ * start the transmission.
++ *
++ * Return: 0 on success and failure value on error
++ */
++static int xcan_start_xmit(struct sk_buff *skb, struct net_device *ndev)
++{
++	int ret;
++
++	if (can_dropped_invalid_skb(ndev, skb))
++		return NETDEV_TX_OK;
++
++	ret = xcan_start_xmit_fifo(skb, ndev);
++
++	if (ret < 0) {
++		netdev_err(ndev, "BUG!, TX full when queue awake!\n");
++		netif_stop_queue(ndev);
++		return NETDEV_TX_BUSY;
++	}
++
+ 	return NETDEV_TX_OK;
+ }
+ 
+@@ -487,13 +519,14 @@ static int xcan_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+  * xcan_rx -  Is called from CAN isr to complete the received
+  *		frame  processing
+  * @ndev:	Pointer to net_device structure
++ * @frame_base:	Register offset to the frame to be read
+  *
+  * This function is invoked from the CAN isr(poll) to process the Rx frames. It
+  * does minimal processing and invokes "netif_receive_skb" to complete further
+  * processing.
+  * Return: 1 on success and 0 on failure.
+  */
+-static int xcan_rx(struct net_device *ndev)
++static int xcan_rx(struct net_device *ndev, int frame_base)
+ {
+ 	struct xcan_priv *priv = netdev_priv(ndev);
+ 	struct net_device_stats *stats = &ndev->stats;
+@@ -508,9 +541,9 @@ static int xcan_rx(struct net_device *ndev)
  	}
  
--	led_data->gpiod = devm_fwnode_get_gpiod_from_child(dev, NULL, child,
--							   flags,
--							   led_data->name);
--	if (IS_ERR(led_data->gpiod)) {
--		fwnode_handle_put(child);
--		return PTR_ERR(led_data->gpiod);
--	}
+ 	/* Read a frame from Xilinx zynq CANPS */
+-	id_xcan = priv->read_reg(priv, XCAN_RXFIFO_ID_OFFSET);
+-	dlc = priv->read_reg(priv, XCAN_RXFIFO_DLC_OFFSET) >>
+-				XCAN_DLCR_DLC_SHIFT;
++	id_xcan = priv->read_reg(priv, XCAN_FRAME_ID_OFFSET(frame_base));
++	dlc = priv->read_reg(priv, XCAN_FRAME_DLC_OFFSET(frame_base)) >>
++				   XCAN_DLCR_DLC_SHIFT;
+ 
+ 	/* Change Xilinx CAN data length format to socketCAN data format */
+ 	cf->can_dlc = get_can_dlc(dlc);
+@@ -533,8 +566,8 @@ static int xcan_rx(struct net_device *ndev)
+ 	}
+ 
+ 	/* DW1/DW2 must always be read to remove message from RXFIFO */
+-	data[0] = priv->read_reg(priv, XCAN_RXFIFO_DW1_OFFSET);
+-	data[1] = priv->read_reg(priv, XCAN_RXFIFO_DW2_OFFSET);
++	data[0] = priv->read_reg(priv, XCAN_FRAME_DW1_OFFSET(frame_base));
++	data[1] = priv->read_reg(priv, XCAN_FRAME_DW2_OFFSET(frame_base));
+ 
+ 	if (!(cf->can_id & CAN_RTR_FLAG)) {
+ 		/* Change Xilinx CAN data format to socketCAN data format */
+@@ -806,7 +839,7 @@ static int xcan_rx_poll(struct napi_struct *napi, int quota)
+ 
+ 	isr = priv->read_reg(priv, XCAN_ISR_OFFSET);
+ 	while ((isr & XCAN_IXR_RXNEMP_MASK) && (work_done < quota)) {
+-		work_done += xcan_rx(ndev);
++		work_done += xcan_rx(ndev, XCAN_RXFIFO_OFFSET);
+ 		priv->write_reg(priv, XCAN_ICR_OFFSET, XCAN_IXR_RXNEMP_MASK);
+ 		isr = priv->read_reg(priv, XCAN_ISR_OFFSET);
+ 	}
+@@ -1193,13 +1226,21 @@ static const struct dev_pm_ops xcan_dev_pm_ops = {
+ };
+ 
+ static const struct xcan_devtype_data xcan_zynq_data = {
+-	.caps = XCAN_CAP_WATERMARK,
++	.flags = XCAN_FLAG_TXFEMP,
++	.bittiming_const = &xcan_bittiming_const,
++	.bus_clk_name = "pclk",
++};
++
++static const struct xcan_devtype_data xcan_axi_data = {
++	.flags = 0,
++	.bittiming_const = &xcan_bittiming_const,
++	.bus_clk_name = "s_axi_aclk",
+ };
+ 
+ /* Match table for OF platform binding */
+ static const struct of_device_id xcan_of_match[] = {
+ 	{ .compatible = "xlnx,zynq-can-1.0", .data = &xcan_zynq_data },
+-	{ .compatible = "xlnx,axi-can-1.00.a", },
++	{ .compatible = "xlnx,axi-can-1.00.a", .data = &xcan_axi_data },
+ 	{ /* end of list */ },
+ };
+ MODULE_DEVICE_TABLE(of, xcan_of_match);
+@@ -1219,7 +1260,7 @@ static int xcan_probe(struct platform_device *pdev)
+ 	struct net_device *ndev;
+ 	struct xcan_priv *priv;
+ 	const struct of_device_id *of_id;
+-	int caps = 0;
++	const struct xcan_devtype_data *devtype = &xcan_axi_data;
+ 	void __iomem *addr;
+ 	int ret, rx_max, tx_max, tx_fifo_depth;
+ 
+@@ -1241,12 +1282,8 @@ static int xcan_probe(struct platform_device *pdev)
+ 		goto err;
+ 
+ 	of_id = of_match_device(xcan_of_match, &pdev->dev);
+-	if (of_id) {
+-		const struct xcan_devtype_data *devtype_data = of_id->data;
 -
- 	led_data->cdev.name = led_data->name;
- 	led_data->cdev.brightness_set_blocking = lt3593_led_set;
- 	led_data->cdev.brightness = state ? LED_FULL : LED_OFF;
+-		if (devtype_data)
+-			caps = devtype_data->caps;
+-	}
++	if (of_id && of_id->data)
++		devtype = of_id->data;
+ 
+ 	/* There is no way to directly figure out how many frames have been
+ 	 * sent when the TXOK interrupt is processed. If watermark programming
+@@ -1259,7 +1296,7 @@ static int xcan_probe(struct platform_device *pdev)
+ 	 * sent), which is not a sensible state - possibly TXFWMEMP is not
+ 	 * completely synchronized with the rest of the bits?
+ 	 */
+-	if (caps & XCAN_CAP_WATERMARK)
++	if (devtype->flags & XCAN_FLAG_TXFEMP)
+ 		tx_max = min(tx_fifo_depth, 2);
+ 	else
+ 		tx_max = 1;
+@@ -1271,13 +1308,14 @@ static int xcan_probe(struct platform_device *pdev)
+ 
+ 	priv = netdev_priv(ndev);
+ 	priv->dev = &pdev->dev;
+-	priv->can.bittiming_const = &xcan_bittiming_const;
++	priv->can.bittiming_const = devtype->bittiming_const;
+ 	priv->can.do_set_mode = xcan_do_set_mode;
+ 	priv->can.do_get_berr_counter = xcan_get_berr_counter;
+ 	priv->can.ctrlmode_supported = CAN_CTRLMODE_LOOPBACK |
+ 					CAN_CTRLMODE_BERR_REPORTING;
+ 	priv->reg_base = addr;
+ 	priv->tx_max = tx_max;
++	priv->devtype = *devtype;
+ 	spin_lock_init(&priv->tx_lock);
+ 
+ 	/* Get IRQ for the device */
+@@ -1295,22 +1333,12 @@ static int xcan_probe(struct platform_device *pdev)
+ 		ret = PTR_ERR(priv->can_clk);
+ 		goto err_free;
+ 	}
+-	/* Check for type of CAN device */
+-	if (of_device_is_compatible(pdev->dev.of_node,
+-				    "xlnx,zynq-can-1.0")) {
+-		priv->bus_clk = devm_clk_get(&pdev->dev, "pclk");
+-		if (IS_ERR(priv->bus_clk)) {
+-			dev_err(&pdev->dev, "bus clock not found\n");
+-			ret = PTR_ERR(priv->bus_clk);
+-			goto err_free;
+-		}
+-	} else {
+-		priv->bus_clk = devm_clk_get(&pdev->dev, "s_axi_aclk");
+-		if (IS_ERR(priv->bus_clk)) {
+-			dev_err(&pdev->dev, "bus clock not found\n");
+-			ret = PTR_ERR(priv->bus_clk);
+-			goto err_free;
+-		}
++
++	priv->bus_clk = devm_clk_get(&pdev->dev, devtype->bus_clk_name);
++	if (IS_ERR(priv->bus_clk)) {
++		dev_err(&pdev->dev, "bus clock not found\n");
++		ret = PTR_ERR(priv->bus_clk);
++		goto err_free;
+ 	}
+ 
+ 	priv->write_reg = xcan_write_reg_le;
 -- 
-2.17.1
+2.8.3
