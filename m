@@ -1,51 +1,88 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 2/2] ARM: davinci_all_defconfig: Enable Bluetooth
-Date: Wed, 27 Jun 2018 12:13:02 -0500
-Message-ID: <0525829c-3070-6aee-39cf-1154dcbb1e75@lechnology.com>
-References: <20180531202549.11255-1-david@lechnology.com>
- <20180531202549.11255-3-david@lechnology.com>
- <5d45fabc-cc25-fbdf-859c-c29111b42eb2@ti.com>
+From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH v2 09/10] ARM: s5pv210_defconfig: Enable drivers for Samsung Aries based phones
+Date: Wed, 27 Jun 2018 19:12:23 +0200
+Message-ID: <1530119544-30023-10-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+References: <1530119544-30023-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d45fabc-cc25-fbdf-859c-c29111b42eb2@ti.com>
-Content-Language: en-US
+In-Reply-To: <1530119544-30023-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, linux-arm-kernel@lists.infradead.org
-Cc: Kevin Hilman <khilman@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xc-racer2@live.ca, pawel.mikolaj.chmiel@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 06/27/2018 06:11 AM, Sekhar Nori wrote:
-> On Friday 01 June 2018 01:55 AM, David Lechner wrote:
->> This enables Bluetooth modules in davinic_all_defconfig needed for LEGO
-> 
-> davinci_all_defconfig
-> 
->> MINDSTORMS EV3.
->>
->> Signed-off-by: David Lechner <david@lechnology.com>
->> ---
->>   arch/arm/configs/davinci_all_defconfig | 9 +++++++++
->>   1 file changed, 9 insertions(+)
-> 
->> +CONFIG_SERIAL_DEV_BUS=y
-> 
-> Any reason to build this into the kernel?
-> 
+Enable config options required for Samsung Aries based phones.
+ARM_APPENDED_DTB is also needed, because stock bootloader
+does not support loading dtb files.
 
-Yes:
+Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+---
+ arch/arm/configs/s5pv210_defconfig | 33 +++++++++++++++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
 
-
-config SERIAL_DEV_CTRL_TTYPORT
-	bool "Serial device TTY port controller"
-	help
-	  Say Y here if you want to use the Serial device bus with common TTY
-	  drivers (e.g. serial drivers).
-
-	  If unsure, say Y.
-	depends on TTY
-	depends on SERIAL_DEV_BUS != m
-	default y
-
-endif
+diff --git a/arch/arm/configs/s5pv210_defconfig b/arch/arm/configs/s5pv210_defconfig
+index 9c862d366fb3..f719e7f9a655 100644
+--- a/arch/arm/configs/s5pv210_defconfig
++++ b/arch/arm/configs/s5pv210_defconfig
+@@ -13,9 +13,12 @@ CONFIG_SOLARIS_X86_PARTITION=y
+ CONFIG_ARCH_S5PV210=y
+ CONFIG_VMSPLIT_2G=y
+ CONFIG_PREEMPT=y
++CONFIG_ARM_APPENDED_DTB=y
+ CONFIG_CMDLINE="root=/dev/ram0 rw ramdisk=8192 initrd=0x20800000,8M console=ttySAC1,115200 init=/linuxrc"
+ CONFIG_VFP=y
+ CONFIG_NEON=y
++CONFIG_NET=y
++CONFIG_CFG80211=m
+ CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
+ CONFIG_BLK_DEV_LOOP=y
+ CONFIG_BLK_DEV_RAM=y
+@@ -23,16 +26,42 @@ CONFIG_BLK_DEV_RAM_SIZE=8192
+ CONFIG_SCSI=y
+ CONFIG_BLK_DEV_SD=y
+ CONFIG_CHR_DEV_SG=y
++CONFIG_NETDEVICES=y
++CONFIG_BRCMFMAC=m
+ CONFIG_INPUT_EVDEV=y
+-# CONFIG_INPUT_KEYBOARD is not set
++CONFIG_KEYBOARD_GPIO=y
+ # CONFIG_INPUT_MOUSE is not set
+ CONFIG_INPUT_TOUCHSCREEN=y
+ CONFIG_SERIAL_8250=y
+ CONFIG_SERIAL_SAMSUNG=y
+ CONFIG_SERIAL_SAMSUNG_CONSOLE=y
+ CONFIG_HW_RANDOM=y
++CONFIG_I2C_GPIO=y
++CONFIG_POWER_SUPPLY=y
++CONFIG_BATTERY_MAX17040=y
+ # CONFIG_HWMON is not set
+-# CONFIG_USB_SUPPORT is not set
++CONFIG_MFD_MAX8998=y
++CONFIG_REGULATOR=y
++CONFIG_REGULATOR_MAX8998=y
++CONFIG_DRM=y
++CONFIG_DRM_EXYNOS=y
++CONFIG_DRM_EXYNOS_FIMD=y
++CONFIG_DRM_EXYNOS_DPI=y
++CONFIG_USB=y
++CONFIG_USB_OTG=y
++CONFIG_USB_EHCI_HCD=y
++CONFIG_USB_EHCI_EXYNOS=y
++CONFIG_USB_OHCI_HCD=y
++CONFIG_USB_OHCI_EXYNOS=y
++CONFIG_USB_DWC2=y
++CONFIG_MMC=y
++CONFIG_MMC_SDHCI=y
++CONFIG_MMC_SDHCI_S3C=y
++CONFIG_MMC_SDHCI_S3C_DMA=y
++CONFIG_RTC_CLASS=y
++CONFIG_RTC_DRV_MAX8998=m
++CONFIG_PHY_SAMSUNG_USB2=m
++CONFIG_PHY_S5PV210_USB2=y
+ CONFIG_EXT2_FS=y
+ CONFIG_MSDOS_FS=y
+ CONFIG_VFAT_FS=y
+-- 
+2.7.4
