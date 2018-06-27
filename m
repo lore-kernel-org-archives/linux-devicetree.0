@@ -1,76 +1,69 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH v4 1/6] Documentation: DT: Consolidate SP805 binding docs
-Date: Wed, 27 Jun 2018 11:47:21 -0700
-Message-ID: <8483f675-0c7d-4b0f-25fd-a5eff4bc7937@broadcom.com>
-References: <1527530497-10392-1-git-send-email-ray.jui@broadcom.com>
- <1527530497-10392-2-git-send-email-ray.jui@broadcom.com>
- <20180605194124.GA26885@rob-hp-laptop>
- <e91c75f3-f7a4-6f51-9911-7e22d5d05084@roeck-us.net>
- <CABGGisxEvWDy16SKE2RG-vhUHBZHSCCHyfwJsPY16B1fQS-=cA@mail.gmail.com>
- <09c870cd-0a44-6634-58d8-f57f9fcd0cb5@broadcom.com>
- <46ca340f-4347-94ca-6463-d38bece820e2@broadcom.com>
- <20180627183327.GD16753@roeck-us.net>
- <a18733e2-be06-4ea9-dbfb-1d4f756a97e7@broadcom.com>
- <20180627184234.GA19538@roeck-us.net>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [[DPU]PATCH] drm/msm/dsi: move the API setting PLL
+ src to modeset_init()
+Date: Wed, 27 Jun 2018 11:48:26 -0700
+Message-ID: <CAD=FV=XQL2FgU8dYwEpUQgwivkJ_XxM1JBzTnGV+EO_LvpvOFQ@mail.gmail.com>
+References: <20180626044543.14992-1-spanda@codeaurora.org>
+ <CAD=FV=UY5+ENfTmJeWvjMRxfeueBx435H+rbgYrzkWK5rc_-0Q@mail.gmail.com>
+ <CAF6AEGtbehXbc5PQ8-_18vOhB9eLFbD9ibjZuWwW5iG1G=8=fg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180627184234.GA19538@roeck-us.net>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Rob Herring <robh@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <CAF6AEGtbehXbc5PQ8-_18vOhB9eLFbD9ibjZuWwW5iG1G=8=fg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Abhinav Kumar <abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 6/27/2018 11:42 AM, Guenter Roeck wrote:
-> On Wed, Jun 27, 2018 at 11:38:48AM -0700, Ray Jui wrote:
->>
->>
->> On 6/27/2018 11:33 AM, Guenter Roeck wrote:
->>> On Wed, Jun 20, 2018 at 10:39:16AM -0700, Ray Jui wrote:
->>>> Hi Guenter/Rob,
->>>>
->>>> Kindly let me know how you want to proceed with this?
->>>>
->>>
->>> If I recall correctly, the patch series does not add a new problem
->>> but merely exposes one. Is my recollection correct ? If so, maybe
->>> we should just add a note somewhere indicating what might be wrong
->>> and otherwise apply the series.
->>>
->>> Does this make sense ?
->>
->> Yes this makes a lot of sense to me. This patch series exposes potential
->> problems in some SoCs that they might not be feeding the correct clock into
->> WDT, at least based on clock names from their DT entries.
->>
->> This patch series does not change/affect how SP805 works on those systems.
->>
->> Where should the note be added?
->>
-> 
-> I would suggest to add a note into the driver where the clock is used,
-> with the details discussed here.
-
-I assume you meant adding the notes to the SP805 driver where the clock 
-is used.
-
-If so, I think that makes sense. That notes deserves its own patch 
-because it really has nothing to do with any of the change in this patch 
-series.
-
-Do you want me to 1) embed that patch into this patch series and send 
-out v5; or 2) leave the patch series as it is and send out a separate 
-patch to add the notes to the driver?
-
-Thanks.
-
-> 
-> Does this make sense ?
-> 
-> Thanks,
-> Guenter
-> 
+SGksCgpPbiBUdWUsIEp1biAyNiwgMjAxOCBhdCAxMDoyNyBBTSwgUm9iIENsYXJrIDxyb2JkY2xh
+cmtAZ21haWwuY29tPiB3cm90ZToKPiBPbiBUdWUsIEp1biAyNiwgMjAxOCBhdCAxMTo1NSBBTSwg
+RG91ZyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPiB3cm90ZToKPj4gSGksCj4+Cj4+
+IE9uIE1vbiwgSnVuIDI1LCAyMDE4IGF0IDk6NDUgUE0sIFNhbmRlZXAgUGFuZGEgPHNwYW5kYUBj
+b2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4+PiBGcm9tOiBBYmhpbmF2IEt1bWFyIDxhYmhpbmF2a0Bj
+b2RlYXVyb3JhLm9yZz4KPj4+Cj4+PiBTZXR0aW5nIHRoZSBEU0kgUExMIHNyYyBpbiBwcm9iZSBk
+b2Vzbid0IHByb3ZpZGUgdGhlIGNsb2NrCj4+PiBkcml2ZXIgc3VmZmljaWVudCB0aW1lIHRvIHJl
+Y2xhaW0gdW51c2VkIGNsb2NrIHJlc291cmNlcwo+Pj4gZnJvbSBjb3JlYm9vdCByZXN1bHRpbmcg
+aW4gd2FybmluZ3MgZnJvbSBjbG9jayBkcml2ZXIuCj4+Pgo+Pj4gTW92ZSB0aGUgRFNJIFBMTCBz
+cmMgc2V0dGluZyB0byBtb2Rlc2V0X2luaXQoKSBzbyB0aGF0IHRoZQo+Pj4gY2xvY2sgZHJpdmVy
+IGNhbiBjbGFpbSB1bnVzZWQgZGlzcGxheSBjbG9jayByZXNvdXJjZXMgYmVmb3JlCj4+PiB0aGUg
+ZGlzcGxheSBkcml2ZXIgcmVxdWVzdHMgZm9yIHRoZW0gYWdhaW4uCj4+Cj4+IElNSE8gdGhpcyBp
+cyBhIGJhZCBkZXNpZ24uICBTZWFuIGFuZCBTdGVwaGVuIGNhbiBmZWVsIGZyZWUgdG8gb3ZlcnJp
+ZGUKPj4gbWUsIGJ1dCBJIHRoaW5rIHRoZSBjbG9jayBkcml2ZXIgc2hvdWxkIGJlIGltcHJvdmVk
+IHRvIGhhbmRsZSB0aGlzCj4+IGNhc2UgYW5kIG5vdCByZXF1aXJlIHRoZSBjbG9jayB0byBnZXQg
+ZGlzYWJsZWQgYmVmb3JlIExpbnV4IGVuYWJsZXMKPj4gaXQuCj4+Cj4KPiBJIGV4cGVyaW1lbnRl
+ZCB3aXRoIGl0IGEgd2hpbGUgYmFja1sxXSAoaW4gdGhpcyBjYXNlIHcvIGxrIGxpZ2h0aW5nIHVw
+Cj4gdGhlIGRpc3BsYXkpLiAgSW4gdGhhdCBjYXNlIEkgbmVlZGVkIGJvdGggdGhlIGNsayBhbmQg
+Z2RzYyBjb2RlIHRvCj4gcmVhbGl6ZSB0aGF0IGNsa3MvZ2RzYydzIHdlcmUgb24gYXQgYm9vdCwg
+YW5kIGZpeHVwIHRoZSByZWZjbnQgb2YgdGhlCj4gY2xrcyAoYW5kIHBhcmVudCBjbG9ja3MgYW5k
+IHNvIG9uKS4gIEFuZCB0aGVuIHdoZW4gcHJvYmVkIHRoZSBkaXNwbGF5Cj4gZHJpdmVyIHdvdWxk
+IGNoZWNrIGlmIGNsb2NrcyB3ZXJlIGVuYWJsZWQgdG8gZGVjaWRlIHRvIHJlYWRiYWNrIHRoZQo+
+IHN0YXRlIGZyb20gdGhlIGh3LiAgKE1heWJlIHlvdSBjYW4gc2hvcnQtY2lyY3VpdCBzb21lIG9m
+IHRoYXQgaWYgeW91Cj4gb25seSBjYXJlIGFib3V0IERTSSBwYW5lbHMgd2l0aCBhIHNpbmdsZSBm
+aXhlZCByZXNvbHV0aW9uLCBidXQgYXMgc29vbgo+IGFzIGV4dGVybmFsIGRpc3BsYXlzIGNvbWUg
+aW50byB0aGUgcGljdHVyZSB5b3UgY2FuJ3QgYXNzdW1lIHNvIG11Y2gKPiBhYm91dCB0aGUgaHcg
+IHN0YXRlLikKPgo+IEJSLAo+IC1SCj4KPiBbMV0gaHR0cHM6Ly9naXRodWIuY29tL2ZyZWVkcmVu
+by9rZXJuZWwtbXNtL2NvbW1pdHMvZGlzcGxheS1oYW5kb3ZlcgoKSXQgc2VlbXMgbGlrZSBzb21l
+dGhpbmcgbGlrZSB0aGF0IGlzIHRoZSByaWdodCByZWFsIHNvbHV0aW9uIGhlcmUsIGJ1dApJIGd1
+ZXNzIHNvbWVvbmUgbmVlZHMgdG8gc3RlcCB1cCBhbmQgd29yayBvbiBpdC4KCi4uLmluIGdlbmVy
+YWwgSSdtIHdhcnkgb2YgYW55IHBhdGNoIHRoYXQgd2lsbCBub3Qgd29yayB3aGVuCiJjbGtfaWdu
+b3JlX3VudXNlZCIgaXMgcGFzc2VkIGFzIGEgY29tbWFuZCBsaW5lIHBhcmFtZXRlci4gIEl0J3MK
+dXNlZnVsIHRvIGJlIGFibGUgdG8gdXNlIHRoaXMgY29tbWFuZCBsaW5lIHBhcmFtZXRlciBmb3Ig
+ZGVidWdnaW5nCnNvbWV0aW1lcyBhbmQgaXQgd291bGQgYmUgdW5mb3J0dW5hdGUgaWYgZG9pbmcg
+c28gc3Bld2VkIGEgYnVuY2ggb2YKZXh0cmEgd2FybmluZ3MuCgoKT24gYSBzaWRlIG5vZGUsIGl0
+IGFwcGVhcnMgdGhhdCBldmVuIHdpdGhvdXQgJHtTVUJKRUNUfSBwYXRjaCB0aGUKd2FybmluZ3Mg
+c2VlbSB0byBoYXZlIGdvbmUgYXdheSB3aXRoIHRoZSBsYXRlc3Qgc3RhY2sgb2YgcGF0Y2hlcyBJ
+J3ZlCmJlZW4gdGVzdGluZy4gIFRoZSB3YXJuaW5ncyBkb24ndCBldmVuIGNvbWUgYmFjayB3aXRo
+CiJjbGtfaWdub3JlX3VudXNlZCIuICBJIGhhdmVuJ3QgcGVyc29uYWxseSBkdWcgaW50byB3aHks
+IGJ1dCBJIGZpZ3VyZWQKSSdkIG1lbnRpb24gaXQuCgoKLURvdWcKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVl
+ZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
