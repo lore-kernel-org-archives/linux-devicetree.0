@@ -1,50 +1,84 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: a83t: Add CPU regulator
- supplies for A83T boards
-Date: Wed, 27 Jun 2018 19:04:03 +0200
-Message-ID: <20180627170403.y7ptuiyrhklh7foj@flea>
-References: <20180627022709.27434-1-wens@csie.org>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4 6/7] Bluetooth: mediatek: Add protocol support for
+ MediaTek serial devices
+Date: Wed, 27 Jun 2018 20:04:19 +0300
+Message-ID: <CAHp75VedHLw52J_ymh3iYf2w=r8d+Kqg=fJZmBGnaCrEbNEPdQ@mail.gmail.com>
+References: <cover.1530004712.git.sean.wang@mediatek.com> <48215a1276c36af7ad581c3d83759fe9f55e3c4b.1530004712.git.sean.wang@mediatek.com>
+ <CAHp75VehTeyyzR4bPKK3hFDTVqZnhdNy5vcBFJCSH_Zrx+QrKA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="fa3qwpgleac57r7o"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBE4HZ7MQKGQEBXJDDQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180627022709.27434-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VehTeyyzR4bPKK3hFDTVqZnhdNy5vcBFJCSH_Zrx+QrKA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sean.wang@mediatek.com
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree <devicetree@vger.kernel.org>, linux-bluetooth@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jun 27, 2018 at 7:59 PM, Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Wed, Jun 27, 2018 at 8:43 AM,  <sean.wang@mediatek.com> wrote:
+>> From: Sean Wang <sean.wang@mediatek.com>
+>>
+>
+>> +config BT_HCIBTUART_MTK
+>> +       tristate "MediaTek HCI UART driver"
+>> +       depends on BT_HCIBTUART
+>
+>> +       default y
+>
+> Perhaps it's an overkill for users which would like to have less
+> amount on stuff in kernel.
+>
+>
+>> +#include <asm/unaligned.h>
+>> +#include <linux/atomic.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/firmware.h>
+>> +#include <linux/module.h>
+>> +#include <linux/pm_runtime.h>
+>> +#include <linux/serdev.h>
 
---fa3qwpgleac57r7o
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Perhaps alphabetically ordered?
 
-On Wed, Jun 27, 2018 at 10:27:09AM +0800, Chen-Yu Tsai wrote:
-> The OPPs for the A83T CPU cores were added in v4.17 in commit 2db639d8c166
-> ("ARM: dts: sun8i: a83t: add stable OPP tables and CPUfreq"), but board
-> level regulator supplies for the CPU clusters were only added for the
-> TBS-A711 tablet. This means the other A83T boards do not benefit from
-> voltage scaling, or worse, if the implementation does not scale the
-> frequency when the voltage is fixed, no benefit at all.
-> 
-> Add board level CPU cluster power supplies to all the A83T development
-> boards, so they can have proper dynamic CPU voltage and frequency scaling.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
++ blank line.
 
-Applied, thanks!
-Maxime
+>
+>> +#include <net/bluetooth/bluetooth.h>
+>> +#include <net/bluetooth/hci_core.h>
+
+>> +       /* Enable the power domain and clock the device requires. */
+>> +       pm_runtime_enable(dev);
+>> +       err = pm_runtime_get_sync(dev);
+>> +       if (err < 0)
+>> +               goto err_pm2;
+
+Should be err_pm1 here.
+Yes, that's correct.
+
+>> +err_pm1:
+>> +       pm_runtime_put_sync(dev);
+>> +err_pm2:
+>> +       pm_runtime_disable(dev);
+
+>> +#define MTK_WMT_CMD_SIZE       (MTK_WMT_HDR_SIZE + MTK_STP_HDR_SIZE + \
+>> +                                MTK_STP_TLR_SIZE + HCI_ACL_HDR_SIZE)
+
+It would look slightly better if you start on new line like
+#define FOO \
+ (BAR + BAZ)
+
+>> +struct mtk_stp_hdr {
+>> +       __u8 prefix;
+>> +       __u8 dlen1:4;
+>> +       __u8 type:4;
+
+>> +       __u8 dlen2:8;
+
+u8 already 8 bit.
+
+>> +       __u8 cs;
+>> +} __packed;
 
 -- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---fa3qwpgleac57r7o--
+With Best Regards,
+Andy Shevchenko
