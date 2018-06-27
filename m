@@ -1,58 +1,34 @@
-From: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 1/2] dt-bindings: Add mtk-systimer bindings
-Date: Wed, 27 Jun 2018 15:53:58 +0800
-Message-ID: <1530086039-3763-2-git-send-email-stanley.chu@mediatek.com>
-References: <1530086039-3763-1-git-send-email-stanley.chu@mediatek.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: at24: Add address-width property
+Date: Wed, 27 Jun 2018 10:59:16 +0300
+Message-ID: <20180627075915.dwqo6w55c7xxvjmt@paasikivi.fi.intel.com>
+References: <1530078385-1546-1-git-send-email-alanx.chiang@intel.com>
+ <1530078385-1546-2-git-send-email-alanx.chiang@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1530086039-3763-1-git-send-email-stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1530078385-1546-2-git-send-email-alanx.chiang@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: alanx.chiang@intel.com
+Cc: linux-i2c@vger.kernel.org, andy.yeh@intel.com, andriy.shevchenko@linux.intel.com, andriy.shevchenko@intel.com, rajmohan.mani@intel.com, andy.shevchenko@gmail.com, tfiga@chromium.org, jcliang@chromium.org, brgl@bgdev.pl, robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for the System Timer driver of
-the Mediatek SoCs.
+On Wed, Jun 27, 2018 at 01:46:24PM +0800, alanx.chiang@intel.com wrote:
+> From: Alan Chiang <alanx.chiang@intel.com>
+> 
+> The AT24 series chips use 8-bit address by default. If some
+> chips would like to support more than 8 bits, the at24 driver
+> should be added the compatible field for specfic chips.
+> 
+> Provide a flexible way to determine the addressing bits through
+> address-width in this patch.
+> 
+> Signed-off-by: Alan Chiang <alanx.chiang@intel.com>
+> Signed-off-by: Andy Yeh <andy.yeh@intel.com>
 
-Signed-off-by: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- .../bindings/timer/mediatek,mtk-systimer.txt       |   18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/mediatek,mtk-systimer.txt
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-systimer.txt b/Documentation/devicetree/bindings/timer/mediatek,mtk-systimer.txt
-new file mode 100644
-index 0000000..7a5bde6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-systimer.txt
-@@ -0,0 +1,18 @@
-+Mediatek System Timers
-+----------------------
-+
-+Required properties:
-+- compatible: Should contain
-+	"mediatek,sys_timer" for those platforms which support system timer.
-+- reg: Should contain the location and length for system timer registers.
-+- clocks: System timer is drived by system clock.
-+
-+Examples:
-+
-+	sys_timer@10017000 {
-+		compatible = "mediatek,sys_timer";
-+		reg = <0 0x10017000 0 0x1000>;
-+		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&sys_clk>;
-+	};
-+
 -- 
-1.7.9.5
+Sakari Ailus
+sakari.ailus@linux.intel.com
