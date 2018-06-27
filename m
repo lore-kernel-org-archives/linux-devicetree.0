@@ -1,49 +1,57 @@
-Return-Path: <SRS0=bntt=JN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00042.outbound.protection.outlook.com ([40.107.0.42]:44438
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S932104AbeF0ADS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 Jun 2018 20:03:18 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v8 10/14] staging: typec: tcpci: enable vbus detection
-Date: Wed, 27 Jun 2018 07:45:28 +0800
-Message-Id: <1530056732-9640-11-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
-References: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: a.hajda@samsung.com, jun.li@nxp.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
+Return-Path: <vkoul@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v4 6/6] input: pm8941-pwrkey: Add resin entry
+Date: Wed, 27 Jun 2018 17:23:01 +0530
+Message-Id: <20180627115301.21330-7-vkoul@kernel.org>
+In-Reply-To: <20180627115301.21330-1-vkoul@kernel.org>
+References: <20180627115301.21330-1-vkoul@kernel.org>
+To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-TCPCI implementation may need SW to enable VBUS detection to generate
-power status events.
+Since handling is abstracted in this driver, we need to add resin entry
+in id table along with pwrkey_data.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Li Jun <jun.li@nxp.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/staging/typec/tcpci.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/input/misc/pm8941-pwrkey.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index 3b35fce..4d3b0ae 100644
---- a/drivers/staging/typec/tcpci.c
-+++ b/drivers/staging/typec/tcpci.c
-@@ -373,6 +373,12 @@ static int tcpci_init(struct tcpc_dev *tcpc)
- 	if (ret < 0)
- 		return ret;
+diff --git a/drivers/input/misc/pm8941-pwrkey.c b/drivers/input/misc/pm8941-pwrkey.c
+index 2047e34c0982..6547a57f5222 100644
+--- a/drivers/input/misc/pm8941-pwrkey.c
++++ b/drivers/input/misc/pm8941-pwrkey.c
+@@ -29,6 +29,7 @@
  
-+	/* Enable Vbus detection */
-+	ret = regmap_write(tcpci->regmap, TCPC_COMMAND,
-+			   TCPC_CMD_ENABLE_VBUS_DETECT);
-+	if (ret < 0)
-+		return ret;
+ #define PON_RT_STS			0x10
+ #define  PON_KPDPWR_N_SET		BIT(0)
++#define  PON_RESIN_N_SET		BIT(1)
+ 
+ #define PON_PS_HOLD_RST_CTL		0x5a
+ #define PON_PS_HOLD_RST_CTL2		0x5b
+@@ -39,6 +40,7 @@
+ 
+ #define PON_PULL_CTL			0x70
+ #define  PON_KPDPWR_PULL_UP		BIT(1)
++#define  PON_RESIN_PULL_UP		BIT(0)
+ 
+ #define PON_DBC_CTL			0x71
+ #define  PON_DBC_DELAY_MASK		0x7
+@@ -306,8 +308,14 @@ static const struct pm8941_data pwrkey_data = {
+ 	.status_bit = PON_KPDPWR_N_SET,
+ };
+ 
++static const struct pm8941_data resin_data = {
++	.pull_up_bit = PON_RESIN_PULL_UP,
++	.status_bit = PON_RESIN_N_SET,
++};
 +
- 	reg = TCPC_ALERT_TX_SUCCESS | TCPC_ALERT_TX_FAILED |
- 		TCPC_ALERT_TX_DISCARDED | TCPC_ALERT_RX_STATUS |
- 		TCPC_ALERT_RX_HARD_RST | TCPC_ALERT_CC_STATUS;
+ static const struct of_device_id pm8941_pwr_key_id_table[] = {
+ 	{ .compatible = "qcom,pm8941-pwrkey", .data = &pwrkey_data },
++	{ .compatible = "qcom,pm8941-resin", .data = &resin_data },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, pm8941_pwr_key_id_table);
 -- 
-2.7.4
-
+2.14.4
