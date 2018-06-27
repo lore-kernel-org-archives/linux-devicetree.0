@@ -1,52 +1,72 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: Re: [PATCH v10 0/7] i2c: Add FSI-attached I2C master algorithm
-Date: Wed, 27 Jun 2018 08:53:26 -0500
-Message-ID: <f7d0da3d-9bbd-2417-00eb-56b3a40025e2@linux.vnet.ibm.com>
-References: <1528918579-27602-1-git-send-email-eajames@linux.vnet.ibm.com>
- <20180626023940.zn4zin6idrgcf2zx@ninjato>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH v2 2/4] pci: dwc: pci-dra7xx: Enable errata i870 for both EP and RC mode
+Date: Wed, 27 Jun 2018 17:59:17 +0530
+Message-ID: <20180627122919.23926-3-vigneshr@ti.com>
+References: <20180627122919.23926-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180626023940.zn4zin6idrgcf2zx@ninjato>
-Content-Language: en-US
+In-Reply-To: <20180627122919.23926-1-vigneshr@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, benh@kernel.crashing.org, joel@jms.id.au, mark.rutland@arm.com, gregkh@linuxfoundation.org, rdunlap@infradead.org, andy.shevchenko@gmail.com, peda@axentia.se
+To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Vignesh R <vigneshr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Errata i870 is applicable in both EP and RC mode. Therefore rename
+function dra7xx_pcie_ep_unaligned_memaccess(), that implements errata
+workaround, to dra7xx_pcie_unaligned_memaccess() and call it from a
+common place. So, that errata workaround is applied for both modes of
+operation.
 
+Reported-by: Chris Welch <Chris.Welch@viavisolutions.com>
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+---
+ drivers/pci/controller/dwc/pci-dra7xx.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-On 06/25/2018 09:39 PM, Wolfram Sang wrote:
-> On Wed, Jun 13, 2018 at 02:36:12PM -0500, Eddie James wrote:
->> This series adds an algorithm for an I2C master physically located on an FSI
->> slave device. The I2C master has multiple ports, each of which may be connected
->> to an I2C slave. Access to the I2C master registers is achieved over FSI bus.
->>
->> Due to the multi-port nature of the I2C master, the driver instantiates a new
->> I2C adapter for each port connected to a slave. The connected ports should be
->> defined in the device tree under the I2C master device.
-> Thanks for this series and your patience.
->
-> While I can see why it also helps reviewing to send it as a series of
-> multiple patches, I consider applying the driver itself as just one
-> hunk. I am not decided on this yet.
->
-> I have a few comments, especially about recovery. I replied to the
-> relevant patches with more detail.
->
-> Also, are you (or someone from your company) willing to maintain the
-> driver? Then, an addition to MAINTAINERS would be much appreciated.
-
-Thanks for the review Wolfram! I addressed your comments about recovery, 
-please let me know what you think. I will fix the email for the dt patch 
-and make an addition to MAINTAINERS for the next version.
-
-Thanks,
-Eddie
-
->
-> Thanks,
->
->     Wolfram
->
+diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+index 345aab56ce8b..95d9076e3fde 100644
+--- a/drivers/pci/controller/dwc/pci-dra7xx.c
++++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+@@ -542,7 +542,7 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
+ };
+ 
+ /*
+- * dra7xx_pcie_ep_unaligned_memaccess: workaround for AM572x/AM571x Errata i870
++ * dra7xx_pcie_unaligned_memaccess: workaround for AM572x/AM571x Errata i870
+  * @dra7xx: the dra7xx device where the workaround should be applied
+  *
+  * Access to the PCIe slave port that are not 32-bit aligned will result
+@@ -552,7 +552,7 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
+  *
+  * To avoid this issue set PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE to 1.
+  */
+-static int dra7xx_pcie_ep_unaligned_memaccess(struct device *dev)
++static int dra7xx_pcie_unaligned_memaccess(struct device *dev)
+ {
+ 	int ret;
+ 	struct device_node *np = dev->of_node;
+@@ -695,6 +695,10 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+ 	if (dra7xx->link_gen < 0 || dra7xx->link_gen > 2)
+ 		dra7xx->link_gen = 2;
+ 
++	ret = dra7xx_pcie_unaligned_memaccess(dev);
++	if (ret)
++		dev_err(dev, "WA for Errata i870 not appplied. Update DT\n");
++
+ 	switch (mode) {
+ 	case DW_PCIE_RC_TYPE:
+ 		if (!IS_ENABLED(CONFIG_PCI_DRA7XX_HOST)) {
+@@ -717,10 +721,6 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+ 		dra7xx_pcie_writel(dra7xx, PCIECTRL_TI_CONF_DEVICE_TYPE,
+ 				   DEVICE_TYPE_EP);
+ 
+-		ret = dra7xx_pcie_ep_unaligned_memaccess(dev);
+-		if (ret)
+-			goto err_gpio;
+-
+ 		ret = dra7xx_add_pcie_ep(dra7xx, pdev);
+ 		if (ret < 0)
+ 			goto err_gpio;
+-- 
+2.18.0
