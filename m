@@ -1,41 +1,73 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v2 2/2] clocksource/drivers/mtk_systimer: Add support for
- Mediatek SoCs
-Date: Wed, 27 Jun 2018 11:39:32 +0200
-Message-ID: <2a40ec95-7352-f0c4-b394-d7b689de98ec@linaro.org>
-References: <1530086039-3763-1-git-send-email-stanley.chu@mediatek.com>
- <1530086039-3763-3-git-send-email-stanley.chu@mediatek.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: at24: Add address-width property
+Date: Wed, 27 Jun 2018 12:40:13 +0300
+Message-ID: <20180627094013.e42crqqufo2jqra6@paasikivi.fi.intel.com>
+References: <1530078385-1546-1-git-send-email-alanx.chiang@intel.com>
+ <1530078385-1546-2-git-send-email-alanx.chiang@intel.com>
+ <CAMRc=MeowpZ+OjjWs6-67BOnY=+Nbpn4Bi_Xw3n+NLsELZaptQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530086039-3763-3-git-send-email-stanley.chu@mediatek.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MeowpZ+OjjWs6-67BOnY=+Nbpn4Bi_Xw3n+NLsELZaptQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stanley Chu <stanley.chu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: alanx.chiang@intel.com, linux-i2c <linux-i2c@vger.kernel.org>, andy.yeh@intel.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, andriy.shevchenko@intel.com, Rajmohan Mani <rajmohan.mani@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, tfiga@chromium.org, jcliang@chromium.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27/06/2018 09:53, Stanley Chu wrote:
-> This patch adds a new clock event for the timer
-> found on the Mediatek SoCs.
+On Wed, Jun 27, 2018 at 10:19:38AM +0200, Bartosz Golaszewski wrote:
+> 2018-06-27 7:46 GMT+02:00  <alanx.chiang@intel.com>:
+> > From: Alan Chiang <alanx.chiang@intel.com>
+> >
+> > The AT24 series chips use 8-bit address by default. If some
+> > chips would like to support more than 8 bits, the at24 driver
+> > should be added the compatible field for specfic chips.
+> >
+> > Provide a flexible way to determine the addressing bits through
+> > address-width in this patch.
+> >
+> > Signed-off-by: Alan Chiang <alanx.chiang@intel.com>
+> > Signed-off-by: Andy Yeh <andy.yeh@intel.com>
+> >
+> > ---
+> > since v1:
+> > -- Remove the address-width field in the example.
+> > since v2:
+> > -- Remove redundant space.
+> >
+> > ---
+> >  Documentation/devicetree/bindings/eeprom/at24.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/eeprom/at24.txt b/Documentation/devicetree/bindings/eeprom/at24.txt
+> > index 61d833a..aededdb 100644
+> > --- a/Documentation/devicetree/bindings/eeprom/at24.txt
+> > +++ b/Documentation/devicetree/bindings/eeprom/at24.txt
+> > @@ -72,6 +72,8 @@ Optional properties:
+> >
+> >    - wp-gpios: GPIO to which the write-protect pin of the chip is connected.
+> >
+> > +  - address-width: number of address bits (one of 8, 16).
+> > +
+> >  Example:
+> >
+> >  eeprom@52 {
+> > --
+> > 2.7.4
+> >
 > 
-> The Mediatek System Timer has several 32-bit timers.
-> Only one timer is used by this driver as a clock event
-> supporting oneshot events.
+> Rob,
 > 
-> The System Timer can be run with two clocks. A 13 MHz system
-> clock and the RTC clock running at 32 KHz. This implementation
-> uses the system clock with no clock source divider.
+> we only have two possibilities here and the default is 8 bits.
+> 
+> What do you think about introducing a boolean property here called:
+> 'address-width-16' instead of an integer?
 
-Recent platforms have the arch_arm_timer and it will be always selected.
+I'd have thought the same, but it turns out address-width is already being
+used by the at25 bindings:
 
-What is the benefit of adding this timer ?
-
+Documentation/devicetree/bindings/eeprom/at25.txt
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Sakari Ailus
+sakari.ailus@linux.intel.com
