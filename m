@@ -1,125 +1,268 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] arm: dts: socfpga: denali needs nand_x_clk too
-Date: Wed, 27 Jun 2018 11:52:22 +0900
-Message-ID: <CAK7LNATbmNadK=xPcaQ+seRS_YvH5ZP5SX8z74iOyYcJ0Soicw@mail.gmail.com>
-References: <20180619120719.26921-1-richard@nod.at> <CAK7LNASgPa4D0Siyo3mvK_AJ2zaECDXGaMEn-iNzQ9PFXFir+w@mail.gmail.com>
- <3320422.EJ8D6C0VHL@blindfold> <d4fdcd1d-db20-1837-a037-0982a042d357@kernel.org>
- <20180625165506.484e025f@bbrezillon> <CAK7LNATyo+7gauyQcRmNfCs8CagU1XdpHHgREMeTvf4rqxpeNQ@mail.gmail.com>
- <20180626200928.29aca979@xps13>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v2 4/4] mailbox: Add support for i.MX7D messaging unit
+Date: Wed, 27 Jun 2018 03:18:47 +0000
+Message-ID: <AM0PR04MB4211DD477A8C8A1B2181D81A80480@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20180615095107.24610-1-o.rempel@pengutronix.de>
+ <20180615095107.24610-5-o.rempel@pengutronix.de>
+ <AM0PR04MB4211BBB72255BDA36C5AFF9880490@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <20180626132320.uvgfxff32p32ke6f@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180626200928.29aca979@xps13>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Richard Weinberger <richard@nod.at>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marek.vasut@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180626132320.uvgfxff32p32ke6f@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-2018-06-27 3:09 GMT+09:00 Miquel Raynal <miquel.raynal@bootlin.com>:
-> Hi Masahiro,
->
-> On Tue, 26 Jun 2018 11:38:21 +0900, Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
->
->> 2018-06-25 23:55 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>=
-:
->> > On Mon, 25 Jun 2018 09:50:18 -0500
->> > Dinh Nguyen <dinguyen@kernel.org> wrote:
->> >
->> >> On 06/22/2018 10:58 AM, Richard Weinberger wrote:
->> >> > Masahiro,
->> >> >
->> >> > Am Freitag, 22. Juni 2018, 16:37:21 CEST schrieb Masahiro Yamada:
->> >> >> Hi Richard,
->> >> >>
->> >> >>
->> >> >> 2018-06-19 21:07 GMT+09:00 Richard Weinberger <richard@nod.at>:
->> >> >>> The denali NAND flash controller needs at least two clocks to ope=
-rate,
->> >> >>> nand_clk and nand_x_clk.
->> >> >>> Since 1bb88666775e ("mtd: nand: denali: handle timing parameters =
-by
->> >> >>> setup_data_interface()") nand_x_clk is used to derive timing sett=
-ings.
->> >> >>>
->> >> >>> Signed-off-by: Richard Weinberger <richard@nod.at>
->> >> >>> ---
->> >> >>> Strictly speaking denali needs a ecc_clk too, but AFAIK such a cl=
-ock
->> >> >>> is not present on this SoC.
->> >> >>> But my SoCFPGA knowledge is very limited.
->> >> >>>
->> >> >>> Thanks,
->> >> >>> //richard
->> >> >>> ---
->> >> >>>  arch/arm/boot/dts/socfpga.dtsi | 3 ++-
->> >> >>>  1 file changed, 2 insertions(+), 1 deletion(-)
->> >> >>>
->> >> >>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/s=
-ocfpga.dtsi
->> >> >>> index 486d4e7433ed..562f7b375bbd 100644
->> >> >>> --- a/arch/arm/boot/dts/socfpga.dtsi
->> >> >>> +++ b/arch/arm/boot/dts/socfpga.dtsi
->> >> >>> @@ -754,7 +754,8 @@
->> >> >>>                         reg-names =3D "nand_data", "denali_reg";
->> >> >>>                         interrupts =3D <0x0 0x90 0x4>;
->> >> >>>                         dma-mask =3D <0xffffffff>;
->> >> >>> -                       clocks =3D <&nand_clk>;
->> >> >>> +                       clocks =3D <&nand_clk>, <&nand_x_clk>;
->> >> >>> +                       clock-names =3D "nand", "nand_x";
->> >> >>
->> >> >>
->> >> >> IMHO, this should be
->> >> >>
->> >> >>                           clocks =3D <&nand_clk>, <&nand_x_clk>, <=
-&nand_x_clk>;
->> >> >>                           clock-names =3D "nand", "nand_x", "ecc";
->> >>
->> >> No, it should be just the nand_x and ecc.
->> >>
->> >> There's already a patch to use the nand_x_clk and not the nand_clk.
->>
->>
->> Different people try to fix the problem in different ways.
->>
->> I think it is due to miscommunication across sub-systems.
->
-> Is the series named
->
->         mtd: rawnand: denali: add new clocks and improve
->                               setup_data_interface
->
-> still valid?
+> -----Original Message-----
+> From: Sascha Hauer [mailto:s.hauer@pengutronix.de]
+> Sent: Tuesday, June 26, 2018 9:23 PM
+> To: A.s. Dong <aisheng.dong@nxp.com>
+> Cc: Oleksij Rempel <o.rempel@pengutronix.de>; Shawn Guo
+> <shawnguo@kernel.org>; Fabio Estevam <fabio.estevam@nxp.com>; Rob
+> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
+> devicetree@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>; linux-arm-
+> kernel@lists.infradead.org; kernel@pengutronix.de; linux-
+> clk@vger.kernel.org
+> Subject: Re: [PATCH v2 4/4] mailbox: Add support for i.MX7D messaging unit
+> 
+> On Tue, Jun 26, 2018 at 10:09:14AM +0000, A.s. Dong wrote:
+> > Since Sascha is requesting to write a generic MU mailbox driver for
+> > both SCU MU and M4 case, the current way using virtual channels in
+> > this patch only send one word a time obviously can't fit for SCU MU clients
+> well.
+> > Do you think if we can refer to TI case to design a generic data
+> > transfer protocol to allow send multi words which is more close to SCU?
+> > include/linux/soc/ti/ti-msgmgr.h
+> > struct ti_msgmgr_message {
+> >         size_t len;
+> >         u8 *buf;
+> > };
+> >
+> > Or we try to support both type transfer protocols in this driver?
+> > That may introduce much complexities, personally I'm not quite like
+> > that.
+> 
+> To give you an idea what I am suggesting see the following patch.
+> It implements SCU mode ontop of Oleksijs patch. Untested of course and as
+> said, the mailbox framework lacks some way of synchronous receive, that
+> would still have to be implemented and Jassi might have his own ideas how
+> this could be done, but it doesn't add much complexity.
+> 
 
-Yes.
-I believe V4 is valid.
+Thanks for this.
+We did similar thing as I described in another mail.
+The different is we use interrupt and hrtimer to polling for rx which is the most
+complicated part (Tx is quite simple). Be noted that for this demo code, we do
+not need enable RX interrupt if using synchronize polling.
 
+If the mailbox framework can support synchronize polling, that would
+be good and will be much the same as we did in library way. Then we
+obviously can switch to mailbox way for SCU as well.
 
-Information for Dinh Nguyen:
+But as I repeat before, from your demo code, you can also see those bits are
+much specific to SCU MU protocol which I don't think is quite suitable to be
+merged into a generic MU driver, except we can find a much common way for
+handling both SCU MU and M4 case (e.g. change to TI style data transfer protocol).
 
-http://patchwork.ozlabs.org/patch/933507/
-http://patchwork.ozlabs.org/patch/933487/
-http://patchwork.ozlabs.org/patch/933494/
-http://patchwork.ozlabs.org/patch/933506/
+But anyway, I will try it as you guys insist. Then we do not need stop at this point
+for the whole QXP upstream work.
 
+Regards
+Dong Aisheng
 
-If he is not convinced, I am open to discussion, though.
-
-
-
-> I am about to apply it (patches 2/5 to 5/5) but it looks like the
-> discussion is still ongoing.
->
-> Thanks,
-> Miqu=C3=A8l
->
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+> Sascha
+> 
+> 
+> ------------------------------8<--------------------------------
+> 
+> From fad77078a1f1b5719fcc3c1ab789ce9cca4c9212 Mon Sep 17 00:00:00 2001
+> From: Sascha Hauer <s.hauer@pengutronix.de>
+> Date: Tue, 26 Jun 2018 15:07:04 +0200
+> Subject: [PATCH] mailbox: imx-mu: Implement SCU mode
+> 
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> ---
+>  drivers/mailbox/imx-mailbox.c        | 89 +++++++++++++++++++++++++++-
+>  include/dt-bindings/mailbox/imx-mu.h | 10 ++++
+>  2 files changed, 98 insertions(+), 1 deletion(-)  create mode 100644
+> include/dt-bindings/mailbox/imx-mu.h
+> 
+> diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
+> index e3f621cb1d30..a4803d1eae1d 100644
+> --- a/drivers/mailbox/imx-mailbox.c
+> +++ b/drivers/mailbox/imx-mailbox.c
+> @@ -10,6 +10,8 @@
+>  #include <linux/mailbox_controller.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+> +#include <linux/iopoll.h>
+> +#include <dt-bindings/mailbox/imx-mu.h>
+> 
+>  /* Transmit Register */
+>  #define IMX_MU_xTRn(x)		(0x00 + 4 * (x))
+> @@ -28,7 +30,7 @@
+>  /* Receive Interrupt Enable */
+>  #define IMX_MU_xCR_RIEn(x)	BIT(24 + (x))
+> 
+> -#define IMX_MU_MAX_CHANS	4u
+> +#define IMX_MU_MAX_CHANS	5u
+> 
+>  struct imx_mu_priv;
+> 
+> @@ -119,12 +121,80 @@ static bool imx_mu_last_tx_done(struct
+> mbox_chan *chan)
+>  	return (!!(val & IMX_MU_xSR_TEn(cp->bidx)));  }
+> 
+> +// Take from some include file
+> +struct sc_rpc_msg {
+> +	uint8_t version;
+> +	uint8_t size;
+> +	uint8_t svc;
+> +	uint8_t func;
+> +};
+> +
+> +#define MU_DATA_TIME_OUT_US    (100 * USEC_PER_MSEC)
+> +
+> +static int imx_mu_scu_send_data(struct imx_mu_priv *priv, void *data) {
+> +	struct sc_rpc_msg *msg = data;
+> +	uint32_t *msg_raw = data;
+> +	int i, ret;
+> +
+> +	for (i = 0; i < msg->size + 1; i++) {
+> +		int index = i % 4;
+> +		uint32_t asr;
+> +
+> +		/* Wait TX register to be empty. */
+> +		ret = readl_poll_timeout_atomic(priv->base + IMX_MU_xSR,
+> asr,
+> +						asr & IMX_MU_xSR_TEn(4 -
+> index),
+> +						0,
+> MU_DATA_TIME_OUT_US);
+> +		if (ret)
+> +			goto out;
+> +
+> +		writel(msg_raw[i], priv->base + IMX_MU_xTRn(4 - index));
+> +	}
+> +
+> +	ret = 0;
+> +out:
+> +	mbox_chan_txdone(chan, ret);
+> +	return ret;
+> +}
+> +
+> +static int imx_mu_scu_receive_data(struct imx_mu_priv *priv, void
+> +*data) {
+> +	struct sc_rpc_msg *msg = data;
+> +	uint32_t *msg_raw = data;
+> +	int i, ret, size = 8;
+> +
+> +	for (i = 0; i < size; i++) {
+> +		int index = i % 4;
+> +		uint32_t asr;
+> +
+> +		/* Wait TX register to be empty. */
+> +		ret = readl_poll_timeout_atomic(priv->base + IMX_MU_xSR,
+> asr,
+> +						asr & IMX_MU_xSR_RFn(4 -
+> index),
+> +						0,
+> MU_DATA_TIME_OUT_US);
+> +		if (ret)
+> +			return ret;
+> +
+> +		msg_raw[i] = readl(priv->base + IMX_MU_xRRn(4 - index));
+> +
+> +		if (i == 0) {
+> +			size = msg->size;
+> +			if (size > 7)
+> +				return -EINVAL;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int imx_mu_send_data(struct mbox_chan *chan, void *data)  {
+>  	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
+>  	struct imx_mu_con_priv *cp = chan->con_priv;
+>  	u32 *arg = data;
+> 
+> +	if (cp->idx == IMX_MU_CHANNEL_IMX8_SCU)
+> +		return imx_mu_scu_send_data(priv, data);
+> +
+>  	if (!imx_mu_last_tx_done(chan))
+>  		return -EBUSY;
+> 
+> @@ -134,6 +204,17 @@ static int imx_mu_send_data(struct mbox_chan
+> *chan, void *data)
+>  	return 0;
+>  }
+> 
+> +static int imx_mu_receive_data(struct mbox_chan *chan, void *data) {
+> +	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
+> +	struct imx_mu_con_priv *cp = chan->con_priv;
+> +
+> +	if (cp->idx == IMX_MU_CHANNEL_IMX8_SCU)
+> +		return imx_mu_scu_receive_data(priv, data);
+> +
+> +	return -EINVAL;
+> +}
+> +
+>  static int imx_mu_startup(struct mbox_chan *chan)  {
+>  	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox); @@ -
+> 166,6 +247,12 @@ static void imx_mu_shutdown(struct mbox_chan *chan)
+> 
+>  static const struct mbox_chan_ops imx_mu_ops = {
+>  	.send_data = imx_mu_send_data,
+> +	/*
+> +	 * FIXME: This has to be implemented in the mailbox framework.
+> +	 * Currently there is only support for asynchronous read using
+> +	 * callbacks which is not suitable for the SCU usecase.
+> +	 */
+> +//	.synchronous_read = imx_mu_receive_data,
+>  	.startup = imx_mu_startup,
+>  	.shutdown = imx_mu_shutdown,
+>  };
+> diff --git a/include/dt-bindings/mailbox/imx-mu.h b/include/dt-
+> bindings/mailbox/imx-mu.h
+> new file mode 100644
+> index 000000000000..4836266a7e57
+> --- /dev/null
+> +++ b/include/dt-bindings/mailbox/imx-mu.h
+> @@ -0,0 +1,10 @@
+> +#ifndef __DT_BINDINGS_MAILBOX_IMX_MU_H
+> +#define __DT_BINDINGS_MAILBOX_IMX_MU_H
+> +
+> +#define IMX_MU_CHANNEL0		0
+> +#define IMX_MU_CHANNEL1		1
+> +#define IMX_MU_CHANNEL2		2
+> +#define IMX_MU_CHANNEL3		3
+> +#define IMX_MU_CHANNEL_IMX8_SCU 4
+> +
+> +#endif /* __DT_BINDINGS_MAILBOX_IMX_MU_H */
+> --
+> 2.17.1
+> 
+> --
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 |
+> https://emea01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fww
+> w.pengutronix.de%2F&data=02%7C01%7Caisheng.dong%40nxp.com%7C80f
+> 356f57b1546baa07c08d5db67fe40%7C686ea1d3bc2b4c6fa92cd99c5c301635%7
+> C0%7C0%7C636656162050199526&sdata=D0CE9mVcj8CakYwAET0aVUpGMe
+> Ulz8thqzRfDgGlzkA%3D&reserved=0  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
