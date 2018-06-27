@@ -1,43 +1,41 @@
-From: Thierry Escande <thierry.escande@linaro.org>
-Subject: Re: [PATCH v10 00/14] Krait clocks + Krait CPUfreq
-Date: Wed, 27 Jun 2018 11:31:46 +0200
-Message-ID: <a58c2d2c-64d1-7223-dc98-8f749397375d@linaro.org>
-References: <1529415925-28915-1-git-send-email-sricharan@codeaurora.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v2 2/2] clocksource/drivers/mtk_systimer: Add support for
+ Mediatek SoCs
+Date: Wed, 27 Jun 2018 11:39:32 +0200
+Message-ID: <2a40ec95-7352-f0c4-b394-d7b689de98ec@linaro.org>
+References: <1530086039-3763-1-git-send-email-stanley.chu@mediatek.com>
+ <1530086039-3763-3-git-send-email-stanley.chu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529415925-28915-1-git-send-email-sricharan@codeaurora.org>
+In-Reply-To: <1530086039-3763-3-git-send-email-stanley.chu@mediatek.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: robh@kernel.org, viresh.kumar@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux@arm.linux.org.uk, ctatlor97@gmail.com
+To: Stanley Chu <stanley.chu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sricharan,
-
-On 19/06/2018 15:45, Sricharan R wrote:
-> Sricharan R (2):
->    clk: qcom: Add safe switch hook for krait mux clocks
->    dt-bindings: cpufreq: Document operating-points-v2-krait-cpu
+On 27/06/2018 09:53, Stanley Chu wrote:
+> This patch adds a new clock event for the timer
+> found on the Mediatek SoCs.
 > 
-> Stephen Boyd (12):
->    ARM: Add Krait L2 register accessor functions
->    clk: qcom: Add support for High-Frequency PLLs (HFPLLs)
->    clk: qcom: Add HFPLL driver
->    dt-bindings: clock: Document qcom,hfpll
->    clk: qcom: Add MSM8960/APQ8064's HFPLLs
->    clk: qcom: Add IPQ806X's HFPLLs
->    clk: qcom: Add support for Krait clocks
->    clk: qcom: Add KPSS ACC/GCC driver
->    dt-bindings: arm: Document qcom,kpss-gcc
->    clk: qcom: Add Krait clock controller driver
->    dt-bindings: clock: Document qcom,krait-cc
->    cpufreq: Add module to register cpufreq on Krait CPUs
+> The Mediatek System Timer has several 32-bit timers.
+> Only one timer is used by this driver as a clock event
+> supporting oneshot events.
+> 
+> The System Timer can be run with two clocks. A 13 MHz system
+> clock and the RTC clock running at 32 KHz. This implementation
+> uses the system clock with no clock source divider.
 
-Tested on apq8064 (db600c).
+Recent platforms have the arch_arm_timer and it will be always selected.
 
-Tested-By: Thierry Escande <thierry.escande@linaro.org>
+What is the benefit of adding this timer ?
 
-Best regards,
-Thierry
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
