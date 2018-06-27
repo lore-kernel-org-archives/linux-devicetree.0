@@ -1,49 +1,42 @@
-From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun8i-h3: Increase the GPU clock to
- 576 MHz
-Date: Wed, 27 Jun 2018 09:26:35 +0200
-Message-ID: <20180627072635.3592-1-paul.kocialkowski@bootlin.com>
-Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH v2 0/2] ASoC: add tas5707 support
+Date: Wed, 27 Jun 2018 09:39:35 +0200
+Message-ID: <20180627073937.29912-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBV7YZTMQKGQEXNQHG3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Qiang Yu <yuq825-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Giulio Benetti <giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-It was reported (based on declarations from the Allwiner BSP) that the
-Mali 400 found on the H3 can be clocked up to 576 MHz.
+This patchset extends the tas571x driver to support the tas5707
+audio power amplifier.
 
-The frequency was tested using the r6p2 out-of-tree driver and a Kodi
-userspace with associated r6p2 blobs, leading to a working result.
+Jerome Brunet (2):
+  ASoC: tas571x: add tas5707 compatible
+  ASoC: tas517x: add tas5707 support
 
-This increases the clock to 576 MHz, which directly increases the pixel
-throughput of the GPU (given the 1 pixel-per-cycle rate).
+Changes since v1 [0]:
+ * Fixed double const as reported by kbuild robot [1]
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-h3.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[0]: https://lkml.kernel.org/r/20180626174056.6400-1-jbrunet@baylibre.com
+[1]: https://lore.kernel.org/lkml/201806271000.j9AWAfLp%25fengguang.wu@intel.com/
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 41d57c76f290..a14a63092dc6 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -133,7 +133,7 @@
- 			resets = <&ccu RST_BUS_GPU>;
- 
- 			assigned-clocks = <&ccu CLK_GPU>;
--			assigned-clock-rates = <384000000>;
-+			assigned-clock-rates = <576000000>;
- 		};
- 	};
- };
+ .../devicetree/bindings/sound/tas571x.txt          |   1 +
+ sound/soc/codecs/Kconfig                           |   5 +-
+ sound/soc/codecs/tas571x.c                         | 110 +++++++++++++++++++++
+ sound/soc/codecs/tas571x.h                         |  16 +++
+ 4 files changed, 131 insertions(+), 1 deletion(-)
+
 -- 
-2.17.1
+2.14.4
