@@ -1,69 +1,85 @@
-Return-Path: <SRS0=13PW=IZ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mga06.intel.com ([134.134.136.31]:9347 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753066AbeFGDrt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 6 Jun 2018 23:47:49 -0400
-From: bingbu.cao@intel.com
-Subject: [PATCH v4 1/2] dt-bindings: Add bindings for AKM ak7375 voice coil lens
-Date: Thu,  7 Jun 2018 11:50:32 +0800
-Message-Id: <1528343433-2475-1-git-send-email-bingbu.cao@intel.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: sakari.ailus@linux.intel.com, tfiga@google.com, jacopo@jmondi.org, rajmohan.mani@intel.com, bingbu.cao@linux.intel.com, tian.shu.qiu@intel.com, jian.xu.zheng@intel.com
+Return-Path: <SRS0=M3sW=JN=linaro.org=bjorn.andersson@kernel.org>
+Date: Wed, 27 Jun 2018 10:26:41 -0700
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 5/6] dt-bindings: power: reset: qcom: Add resin binding
+Message-ID: <20180627172641.GL1860@tuxbook-pro>
+References: <20180627115301.21330-1-vkoul@kernel.org>
+ <20180627115301.21330-6-vkoul@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180627115301.21330-6-vkoul@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: linux-input@vger.kernel.org, linux-pm@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Bingbu Cao <bingbu.cao@intel.com>
+On Wed 27 Jun 04:53 PDT 2018, Vinod Koul wrote:
 
-Add device tree bindings for AKM ak7375 voice coil lens
-driver. This chip is used to drive a lens in a camera module.
+> Resin is similar to pwrkey, add the description and example
+> for resin bindings
+> 
 
-Signed-off-by: Tianshu Qiu <tian.shu.qiu@intel.com>
-Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
----
-Changes since v1:
-    - add the MAINTAINERS change
-    - correct the vendor prefix from akm to asahi-kasei
----
----
- Documentation/devicetree/bindings/media/i2c/ak7375.txt | 8 ++++++++
- MAINTAINERS                                            | 8 ++++++++
- 2 files changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ak7375.txt
+Regards,
+Bjorn
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ak7375.txt b/Documentation/devicetree/bindings/media/i2c/ak7375.txt
-new file mode 100644
-index 000000000000..aa3e24b41241
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ak7375.txt
-@@ -0,0 +1,8 @@
-+Asahi Kasei Microdevices AK7375 voice coil lens driver
-+
-+AK7375 is a camera voice coil lens.
-+
-+Mandatory properties:
-+
-+- compatible: "asahi-kasei,ak7375"
-+- reg: I2C slave address
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ea362219c4aa..ad68d75abc84 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2258,6 +2258,14 @@ L:	linux-leds@vger.kernel.org
- S:	Maintained
- F:	drivers/leds/leds-as3645a.c
- 
-+ASAHI KASEI AK7375 LENS VOICE COIL DRIVER
-+M:	Tianshu Qiu <tian.shu.qiu@intel.com>
-+L:	linux-media@vger.kernel.org
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Maintained
-+F:	drivers/media/i2c/ak7375.c
-+F:	Documentation/devicetree/bindings/media/i2c/ak7375.txt
-+
- ASAHI KASEI AK8974 DRIVER
- M:	Linus Walleij <linus.walleij@linaro.org>
- L:	linux-iio@vger.kernel.org
--- 
-1.9.1
-
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  .../devicetree/bindings/input/qcom,pm8941-pwrkey.txt       |  1 +
+>  Documentation/devicetree/bindings/power/reset/qcom,pon.txt | 14 ++++++++++++--
+>  2 files changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+> index bf719396eadd..34ab5763f494 100644
+> --- a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+> +++ b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+> @@ -7,6 +7,7 @@ PROPERTIES
+>  	Value type: <string>
+>  	Definition: must be one of:
+>  		    "qcom,pm8941-pwrkey"
+> +		    "qcom,pm8941-resin"
+>  
+>  - reg:
+>  	Usage: required
+> diff --git a/Documentation/devicetree/bindings/power/reset/qcom,pon.txt b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+> index f32cdd358267..651491bb63b7 100644
+> --- a/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+> +++ b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+> @@ -1,9 +1,9 @@
+>  Qualcomm PON Device
+>  
+>  The Power On device for Qualcomm PM8xxx is MFD supporting pwrkey
+> -along with the Android reboot-mode.
+> +and resin along with the Android reboot-mode.
+>  
+> -This DT node has pwrkey as sub node.
+> +This DT node has pwrkey and resin as sub nodes.
+>  
+>  Required Properties:
+>  -compatible: "qcom,pm8916-pon"
+> @@ -12,6 +12,8 @@ Required Properties:
+>  Optional subnode:
+>  -pwrkey: Specifies the subnode pwrkey and should follow the
+>   qcom,pm8941-pwrkey.txt description.
+> +-resin: Specifies the subnode resin and should follow the
+> + qcom,pm8xxx-pwrkey.txt description.
+>  
+>  The rest of the properties should follow the generic reboot-mode description
+>  found in reboot-mode.txt
+> @@ -32,4 +34,12 @@ Example:
+>  			bias-pull-up;
+>  			linux,code = <KEY_POWER>;
+>  		};
+> +
+> +		resin {
+> +			compatible = "qcom,pm8941-resin";
+> +			interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
+> +			debounce = <15625>;
+> +			bias-pull-up;
+> +			linux,code = <KEY_VOLUMEDOWN>;
+> +		};
+>  	};
+> -- 
+> 2.14.4
+> 
