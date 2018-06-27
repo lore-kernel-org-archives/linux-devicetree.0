@@ -1,54 +1,91 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v8 2/2] regulator: add QCOM RPMh regulator driver
-Date: Wed, 27 Jun 2018 16:01:26 +0100
-Message-ID: <20180627150126.GC5263@sirena.org.uk>
-References: <cover.1529712888.git.collinsd@codeaurora.org>
- <35c4ea70cdf5caba560fb6f40e866ee8bc456d93.1529712888.git.collinsd@codeaurora.org>
- <CAD=FV=XVEEPgjBXxR+-46RgxLOq63Xvq-jtruoaCxccmMoKUuA@mail.gmail.com>
- <20180626120733.GD1779@sirena.org.uk>
- <CAD=FV=X1E8Cz=L93G-zJwhM0R=N3YuBBhkvCnLvWuxMU9KJkTw@mail.gmail.com>
- <20180626150203.GG1779@sirena.org.uk>
- <CAD=FV=WC_XWRk-6OELOFFWGnhRq1VeoiiveqXLSy+xqsVb22pA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3siQDZowHQqNOShm"
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: [PATCH v3 1/2] clk: pxa: export 32kHz PLL
+Date: Wed, 27 Jun 2018 17:01:49 +0200
+Message-ID: <20180627150150.23951-1-robert.jarzmik@free.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=WC_XWRk-6OELOFFWGnhRq1VeoiiveqXLSy+xqsVb22pA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+To: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This clock is especially used by the RTC driver, so export it so that
+devicetree users can use it.
 
---3siQDZowHQqNOShm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+---
+Since v2: fix missing parenthesis in clk-pxa25x.c and clk-pxa3xx.c
+---
+ drivers/clk/pxa/clk-pxa25x.c          | 6 ++++--
+ drivers/clk/pxa/clk-pxa27x.c          | 7 ++++---
+ drivers/clk/pxa/clk-pxa3xx.c          | 7 ++++---
+ include/dt-bindings/clock/pxa-clock.h | 3 ++-
+ 4 files changed, 14 insertions(+), 9 deletions(-)
 
-On Tue, Jun 26, 2018 at 11:15:14AM -0700, Doug Anderson wrote:
-
-> I think he's still planning on re-shuffling his tree a bit.  When he
-> does this, do you need him to put the RPMh patches somewhere you can
-> merge into your tree?
-
-Well, I *think* there's no actual dependency here since it's a new
-driver with a Kconfig dependency.  It really just needs me to get round
-to trawling through what's a fairly large patch with a troubled history
-now you've reviewed it.
-
---3siQDZowHQqNOShm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlszpsUACgkQJNaLcl1U
-h9DRXAf/RSwjn9Yep/XR4J9nwQWdsAQuo9Gvn9tJjRoGglOah9oGV4HW8M3S3Jir
-RCTOixlFD8QmHXBMRkEoeY/dVPquUjJD1AvRUK54G+8Vi3oeb5G1ZvlY3bc0E7B3
-qXp9Gqp9fZ/6hWj/cmfkilgsdnbEiuaY3rWxUUWNKo1g6L8YzyXdLPMOoQ6KN9yv
-l+6GgUSct+LzxSXr6Bpas9mp1b/6xVH/3zbf/4+rp5Jod5ZMMOyHdX2YxKg7LwPZ
-qUUMFJYufubQIHGMeG8jLLFQG6ZreKG46OptHwSb5MXM46Uw40SrewGw4NMYYrt7
-JC3SzS+o9RlMhpmNBdqasAiYDQe2qw==
-=uOTE
------END PGP SIGNATURE-----
-
---3siQDZowHQqNOShm--
+diff --git a/drivers/clk/pxa/clk-pxa25x.c b/drivers/clk/pxa/clk-pxa25x.c
+index 6416c1f8e632..e88f8e01fe3a 100644
+--- a/drivers/clk/pxa/clk-pxa25x.c
++++ b/drivers/clk/pxa/clk-pxa25x.c
+@@ -292,8 +292,10 @@ static void __init pxa25x_register_plls(void)
+ {
+ 	clk_register_fixed_rate(NULL, "osc_3_6864mhz", NULL,
+ 				CLK_GET_RATE_NOCACHE, 3686400);
+-	clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
+-				CLK_GET_RATE_NOCACHE, 32768);
++	clkdev_pxa_register(CLK_OSC32k768, "osc_32_768khz", NULL,
++			    clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
++						    CLK_GET_RATE_NOCACHE,
++						    32768));
+ 	clk_register_fixed_rate(NULL, "clk_dummy", NULL, 0, 0);
+ 	clk_register_fixed_factor(NULL, "ppll_95_85mhz", "osc_3_6864mhz",
+ 				  0, 26, 1);
+diff --git a/drivers/clk/pxa/clk-pxa27x.c b/drivers/clk/pxa/clk-pxa27x.c
+index 25a30194d27a..d40b63e7bbce 100644
+--- a/drivers/clk/pxa/clk-pxa27x.c
++++ b/drivers/clk/pxa/clk-pxa27x.c
+@@ -314,9 +314,10 @@ static void __init pxa27x_register_plls(void)
+ 	clk_register_fixed_rate(NULL, "osc_13mhz", NULL,
+ 				CLK_GET_RATE_NOCACHE,
+ 				13 * MHz);
+-	clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
+-				CLK_GET_RATE_NOCACHE,
+-				32768 * KHz);
++	clkdev_pxa_register(CLK_OSC32k768, "osc_32_768khz", NULL,
++			    clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
++						    CLK_GET_RATE_NOCACHE,
++						    32768 * KHz));
+ 	clk_register_fixed_rate(NULL, "clk_dummy", NULL, 0, 0);
+ 	clk_register_fixed_factor(NULL, "ppll_312mhz", "osc_13mhz", 0, 24, 1);
+ }
+diff --git a/drivers/clk/pxa/clk-pxa3xx.c b/drivers/clk/pxa/clk-pxa3xx.c
+index 2d126df2bccd..7aa120c3bd08 100644
+--- a/drivers/clk/pxa/clk-pxa3xx.c
++++ b/drivers/clk/pxa/clk-pxa3xx.c
+@@ -286,9 +286,10 @@ static void __init pxa3xx_register_plls(void)
+ 	clk_register_fixed_rate(NULL, "osc_13mhz", NULL,
+ 				CLK_GET_RATE_NOCACHE,
+ 				13 * MHz);
+-	clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
+-				CLK_GET_RATE_NOCACHE,
+-				32768);
++	clkdev_pxa_register(CLK_OSC32k768, "osc_32_768khz", NULL,
++			    clk_register_fixed_rate(NULL, "osc_32_768khz", NULL,
++						    CLK_GET_RATE_NOCACHE,
++						    32768));
+ 	clk_register_fixed_rate(NULL, "ring_osc_120mhz", NULL,
+ 				CLK_GET_RATE_NOCACHE,
+ 				120 * MHz);
+diff --git a/include/dt-bindings/clock/pxa-clock.h b/include/dt-bindings/clock/pxa-clock.h
+index e65803b1dc7e..0b0fd2b01538 100644
+--- a/include/dt-bindings/clock/pxa-clock.h
++++ b/include/dt-bindings/clock/pxa-clock.h
+@@ -72,6 +72,7 @@
+ #define CLK_USIM 58
+ #define CLK_USIM1 59
+ #define CLK_USMI0 60
+-#define CLK_MAX 61
++#define CLK_OSC32k768 61
++#define CLK_MAX 62
+ 
+ #endif
+-- 
+2.11.0
