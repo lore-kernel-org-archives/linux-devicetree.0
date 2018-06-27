@@ -1,85 +1,63 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v4 2/7] serdev: add dev_pm_domain_attach|detach()
-Date: Wed, 27 Jun 2018 10:00:08 +0200
-Message-ID: <CAPDyKFp4kESPH4hcqgATYWBt3Kz3FhAOCpnrCc5PRSkMkBikEg@mail.gmail.com>
-References: <cover.1530004712.git.sean.wang@mediatek.com> <ed497b2a9751df3b2f84cc9db6d6834816a6027f.1530004712.git.sean.wang@mediatek.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v3 1/2] dt-bindings: at24: Add address-width property
+Date: Wed, 27 Jun 2018 10:19:38 +0200
+Message-ID: <CAMRc=MeowpZ+OjjWs6-67BOnY=+Nbpn4Bi_Xw3n+NLsELZaptQ@mail.gmail.com>
+References: <1530078385-1546-1-git-send-email-alanx.chiang@intel.com> <1530078385-1546-2-git-send-email-alanx.chiang@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ed497b2a9751df3b2f84cc9db6d6834816a6027f.1530004712.git.sean.wang@mediatek.com>
+In-Reply-To: <1530078385-1546-2-git-send-email-alanx.chiang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
+To: alanx.chiang@intel.com
+Cc: linux-i2c <linux-i2c@vger.kernel.org>, andy.yeh@intel.com, Sakari Ailus <sakari.ailus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, andriy.shevchenko@intel.com, Rajmohan Mani <rajmohan.mani@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, tfiga@chromium.org, jcliang@chromium.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27 June 2018 at 07:43,  <sean.wang@mediatek.com> wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+2018-06-27 7:46 GMT+02:00  <alanx.chiang@intel.com>:
+> From: Alan Chiang <alanx.chiang@intel.com>
 >
-> In order to open up the required power gate before any operation can be
-> effectively performed over the serial bus between CPU and serdev, it's
-> clearly essential to add common attach functions for PM domains to serdev
-> at the probe phase.
+> The AT24 series chips use 8-bit address by default. If some
+> chips would like to support more than 8 bits, the at24 driver
+> should be added the compatible field for specfic chips.
 >
-> Similarly, the relevant dettach function for the PM domains should be
-> properly and reversely added at the remove phase.
+> Provide a flexible way to determine the addressing bits through
+> address-width in this patch.
 >
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Jiri Slaby <jslaby@suse.com>
-> Cc: linux-serial@vger.kernel.org
-
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-
-Kind regards
-Uffe
-
+> Signed-off-by: Alan Chiang <alanx.chiang@intel.com>
+> Signed-off-by: Andy Yeh <andy.yeh@intel.com>
+>
 > ---
->  drivers/tty/serdev/core.c | 15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
+> since v1:
+> -- Remove the address-width field in the example.
+> since v2:
+> -- Remove redundant space.
 >
-> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-> index df93b72..8096138 100644
-> --- a/drivers/tty/serdev/core.c
-> +++ b/drivers/tty/serdev/core.c
-> @@ -13,6 +13,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> +#include <linux/pm_domain.h>
->  #include <linux/serdev.h>
->  #include <linux/slab.h>
+> ---
+>  Documentation/devicetree/bindings/eeprom/at24.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> @@ -330,8 +331,17 @@ EXPORT_SYMBOL_GPL(serdev_device_set_tiocm);
->  static int serdev_drv_probe(struct device *dev)
->  {
->         const struct serdev_device_driver *sdrv = to_serdev_device_driver(dev->driver);
-> +       int ret;
+> diff --git a/Documentation/devicetree/bindings/eeprom/at24.txt b/Documentation/devicetree/bindings/eeprom/at24.txt
+> index 61d833a..aededdb 100644
+> --- a/Documentation/devicetree/bindings/eeprom/at24.txt
+> +++ b/Documentation/devicetree/bindings/eeprom/at24.txt
+> @@ -72,6 +72,8 @@ Optional properties:
 >
-> -       return sdrv->probe(to_serdev_device(dev));
-> +       ret = dev_pm_domain_attach(dev, true);
-> +       if (ret)
-> +               return ret;
+>    - wp-gpios: GPIO to which the write-protect pin of the chip is connected.
+>
+> +  - address-width: number of address bits (one of 8, 16).
 > +
-> +       ret = sdrv->probe(to_serdev_device(dev));
-> +       if (ret)
-> +               dev_pm_domain_detach(dev, true);
-> +
-> +       return ret;
->  }
+>  Example:
 >
->  static int serdev_drv_remove(struct device *dev)
-> @@ -339,6 +349,9 @@ static int serdev_drv_remove(struct device *dev)
->         const struct serdev_device_driver *sdrv = to_serdev_device_driver(dev->driver);
->         if (sdrv->remove)
->                 sdrv->remove(to_serdev_device(dev));
-> +
-> +       dev_pm_domain_detach(dev, true);
-> +
->         return 0;
->  }
->
+>  eeprom@52 {
 > --
 > 2.7.4
 >
+
+Rob,
+
+we only have two possibilities here and the default is 8 bits.
+
+What do you think about introducing a boolean property here called:
+'address-width-16' instead of an integer?
+
+Best regards,
+Bartosz Golaszewski
