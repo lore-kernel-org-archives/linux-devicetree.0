@@ -1,66 +1,55 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 1/4] dt-bindings: power: Add Actions Semi S900 SPS
-Date: Wed, 27 Jun 2018 20:40:52 +0530
-Message-ID: <20180627151052.GA24330@mani>
-References: <20180411164036.8046-1-manivannan.sadhasivam@linaro.org>
- <20180411164036.8046-2-manivannan.sadhasivam@linaro.org>
- <a261bae6-d2fa-a550-7232-7647ce0ac0e2@suse.de>
- <20180626164117.GA5241@Mani-XPS-13-9360>
- <20180627145713.uao2gr5kknk2cypk@holly.lan>
+From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 2/2] ARM: dts: pxa: fix the rtc controller
+Date: Wed, 27 Jun 2018 17:16:27 +0200
+Message-ID: <20180627171627.592849b5@windsurf.home>
+References: <20180627150150.23951-1-robert.jarzmik@free.fr>
+        <20180627150150.23951-2-robert.jarzmik@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180627145713.uao2gr5kknk2cypk@holly.lan>
+In-Reply-To: <20180627150150.23951-2-robert.jarzmik@free.fr>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, robh+dt@kernel.org, liuwei@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, amit.kucheria@linaro.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, manivannanece23@gmail.com, Jeff Chen <jeff.chen@actions-semi.com>, "Thomas C. Liau" <thomas.liau@actions-semi.com>
+To: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 27, 2018 at 03:57:13PM +0100, Daniel Thompson wrote:
-> On Tue, Jun 26, 2018 at 10:11:17PM +0530, Manivannan Sadhasivam wrote:
-> > > > diff --git a/include/dt-bindings/power/owl-s900-powergate.h b/include/dt-bindings/power/owl-s900-powergate.h
-> > > > new file mode 100644
-> > > > index 000000000000..f1aaf761112b
-> > > > --- /dev/null
-> > > > +++ b/include/dt-bindings/power/owl-s900-powergate.h
-> > > > @@ -0,0 +1,23 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0+
-> > > 
-> > > checkpatch.pl warns about this line due to not using /* ... */ syntax
-> > > for headers. I could fix that up on my own, but it made me realize that
-> > > you are licensing this file under GPL-2.0+ only, whereas the .dts[i] is
-> > > supposed to be dual-licensed.
-> > > 
-> > > Can you please give your consent to make this
-> > > 
-> > > /* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-> > > 
-> > 
-> > You can change the license to GPL-2.0+ OR MIT.
-> > 
-> > > like my S500 and S700 bindings?
-> > > 
-> > > Question: Should it still be GPL-2.0+ or the new GPL-2.0-or-later?
-> > >
-> > 
-> > I think GPL-2.0+ is fine.
-> 
-> So... when I saw this I did wonder why one would knowly choose to use a
-> deprecated license identifier (https://spdx.org/licenses/ ).
-> 
-> However running `git diff v4.17..v4.18-rc1` through some filters does
-> indicate that GPL-2.0+ is the more popular choice by 256 to 0! Doesn't
-> mean you couldn't break the mould though ;-).
->
+Hello,
 
-I did grep through the source and hit with same numbers ;-) But I was not
-sure whether to break the mould or not, so chose the safest path :)
-
-Since you already gave the green signal, I think we can move to new style
-identifier.
-
-Thanks,
-Mani 
+On Wed, 27 Jun 2018 17:01:50 +0200, Robert Jarzmik wrote:
+> The RTC controller is fed by an external fixed 32kHz clock. Yet the
+> driver wants to acquire this clock, even though it doesn't make any use
+> of it, ie. doesn't get the rate to make calculation.
 > 
-> Daniel.
+> Therefore, use the exported 32.768kHz clock in the PXA clock tree to
+> make the driver happy and working.
+> 
+> Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+> ---
+> Since v1: change the dummy clock by the actual 32.768kHz
+> ---
+>  arch/arm/boot/dts/pxa25x.dtsi | 4 ++++
+>  arch/arm/boot/dts/pxa27x.dtsi | 4 ++++
+>  2 files changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/pxa25x.dtsi b/arch/arm/boot/dts/pxa25x.dtsi
+> index 95d59be97213..78a413ea0e88 100644
+> --- a/arch/arm/boot/dts/pxa25x.dtsi
+> +++ b/arch/arm/boot/dts/pxa25x.dtsi
+> @@ -80,6 +80,10 @@
+>  			#pwm-cells = <1>;
+>  			clocks = <&clks CLK_PWM1>;
+>  		};
+> +
+> +		rtc@40900000 {
+> +			clocks = <&clks CLK_OSC32k768>>;
+
+Double closing bracket, doesn't look good.
+
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
