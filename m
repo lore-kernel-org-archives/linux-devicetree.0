@@ -1,104 +1,38 @@
-Return-Path: <SRS0=qqtW=JO=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 13/22] [media] tvp5150: disable output while signal not locked
-Date: Thu, 28 Jun 2018 18:20:45 +0200
-Message-Id: <20180628162054.25613-14-m.felsch@pengutronix.de>
-In-Reply-To: <20180628162054.25613-1-m.felsch@pengutronix.de>
-References: <20180628162054.25613-1-m.felsch@pengutronix.de>
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: p.zabel@pengutronix.de, afshin.nasser@gmail.com, javierm@redhat.com, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Return-Path: <SRS0=+1aA=JN=arm.com=marc.zyngier@kernel.org>
+Subject: Re: [PATCH] dt-bindings: irqchip: renesas-irqc: Document r8a77470
+ support
+References: <1522318628-52821-1-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdUsO_jw5Lb4jDKk6H2Zn=4kJHhFp_fBArnaddkBXDQ24Q@mail.gmail.com>
+ <OSBPR01MB2103FF4CF9F5477C8D47720CB8480@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Message-ID: <a56c23bb-bd53-f387-9d8f-f589e53fa077@arm.com>
+Date: Wed, 27 Jun 2018 09:57:50 +0100
+MIME-Version: 1.0
+In-Reply-To: <OSBPR01MB2103FF4CF9F5477C8D47720CB8480@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+Hi Biju,
 
-To avoid short frames on stream start, keep output pins at high impedance
-while we are not properly locked onto the input signal.
+On 27/06/18 09:43, Biju Das wrote:
+> Hello Marc,
+> 
+> Sorry to bother you.  Are you happy to merge the below patch with 4.18-rc3?
+> https://www.spinics.net/lists/linux-renesas-soc/msg25788.html
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/media/i2c/tvp5150.c | 39 ++++++++++++++++++++++++++-----------
- 1 file changed, 28 insertions(+), 11 deletions(-)
+This is odd. I queued that in April as part of a potential second set of
+fixes for 4.17, but somehow failed to ever send the pull request (and
+this was the only patch I had at that point).
 
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index d8bdbedd8826..27cfd08be3d2 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -60,6 +60,7 @@ struct tvp5150 {
- 	v4l2_std_id detected_norm;
- 	u32 input;
- 	u32 output;
-+	u32 oe;
- 	int enable;
- 	bool lock;
- 
-@@ -799,14 +800,20 @@ static irqreturn_t tvp5150_isr(int irq, void *dev_id)
- {
- 	struct tvp5150 *decoder = dev_id;
- 	struct regmap *map = decoder->regmap;
--	unsigned int active = 0, status = 0;
-+	unsigned int mask, active = 0, status = 0;
-+
-+	mask = TVP5150_MISC_CTL_YCBCR_OE | TVP5150_MISC_CTL_SYNC_OE |
-+	       TVP5150_MISC_CTL_CLOCK_OE;
- 
- 	regmap_read(map, TVP5150_INT_STATUS_REG_A, &status);
- 	if (status) {
- 		regmap_write(map, TVP5150_INT_STATUS_REG_A, status);
- 
--		if (status & TVP5150_INT_A_LOCK)
-+		if (status & TVP5150_INT_A_LOCK) {
- 			decoder->lock = !!(status & TVP5150_INT_A_LOCK_STATUS);
-+			regmap_update_bits(map, TVP5150_MISC_CTL, mask,
-+					   decoder->lock ? decoder->oe : 0);
-+		}
- 
- 		return IRQ_HANDLED;
- 	}
-@@ -872,10 +879,26 @@ static int tvp5150_enable(struct v4l2_subdev *sd)
- 	/* Disable autoswitch mode */
- 	tvp5150_set_std(sd, std);
- 
--	if (decoder->mbus_type == V4L2_MBUS_PARALLEL)
-+	/*
-+	 * Enable the YCbCr and clock outputs. In discrete sync mode
-+	 * (non-BT.656) additionally enable the the sync outputs.
-+	 */
-+	switch (decoder->mbus_type) {
-+	case V4L2_MBUS_PARALLEL:
- 		/* 8-bit 4:2:2 YUV with discrete sync output */
- 		regmap_update_bits(decoder->regmap, TVP5150_DATA_RATE_SEL,
- 				   0x7, 0x0);
-+		decoder->oe = TVP5150_MISC_CTL_YCBCR_OE |
-+			      TVP5150_MISC_CTL_CLOCK_OE |
-+			      TVP5150_MISC_CTL_SYNC_OE;
-+		break;
-+	case V4L2_MBUS_BT656:
-+		decoder->oe = TVP5150_MISC_CTL_YCBCR_OE |
-+			      TVP5150_MISC_CTL_CLOCK_OE;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
- 
- 	return 0;
- };
-@@ -1190,14 +1213,8 @@ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
- 	if (enable) {
- 		tvp5150_enable(sd);
- 
--		/*
--		 * Enable the YCbCr and clock outputs. In discrete sync mode
--		 * (non-BT.656) additionally enable the the sync outputs.
--		 */
--		val = TVP5150_MISC_CTL_YCBCR_OE | TVP5150_MISC_CTL_CLOCK_OE;
--		if (decoder->mbus_type == V4L2_MBUS_PARALLEL)
--			val |= TVP5150_MISC_CTL_SYNC_OE;
--
-+		/* Enable outputs if decoder is locked */
-+		val = decoder->lock ? decoder->oe : 0;
- 		int_val = TVP5150_INT_A_LOCK;
- 	}
- 
+Apologies for the delay, I'll sync up with Thomas for this patch to make
+it into 4.18.
+
+Thanks for the heads up,
+
+	M.
 -- 
-2.17.1
+Jazz is not dead. It just smells funny...
