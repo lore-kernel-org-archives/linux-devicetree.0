@@ -1,35 +1,46 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/5] dt-bindings: tegra186-gpio: Add information for
- Tegra194
-Date: Wed, 27 Jun 2018 10:58:05 -0600
-Message-ID: <20180627165805.GA21522@rob-hp-laptop>
-References: <20180620125406.11906-1-mperttunen@nvidia.com>
+From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Subject: Re: [1/3] ARM: dts: imx51-zii-common: create common include dtsi
+Date: Wed, 27 Jun 2018 19:59:22 +0300
+Message-ID: <72694ec0-45ee-6f57-ebbf-249d4a0b23bc@cogentembedded.com>
+References: <1529603100-31958-2-git-send-email-andrey.gusakov@cogentembedded.com>
+ <5a3490a5-ee5c-a4da-8b54-b5234b7e50d0@yandex.ru>
+ <CAHQ1cqH0o2rsVJWccR6dBXQCnp2-mmLNTNOi0uAOO2SSdz0+xA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180620125406.11906-1-mperttunen@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mikko Perttunen <mperttunen@nvidia.com>
-Cc: mark.rutland@arm.com, vbhadram@nvidia.com, devicetree@vger.kernel.org, linus.walleij@linaro.org, jonathanh@nvidia.com, linux-gpio@vger.kernel.org, thierry.reding@gmail.com, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHQ1cqH0o2rsVJWccR6dBXQCnp2-mmLNTNOi0uAOO2SSdz0+xA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-imx@nxp.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 20, 2018 at 03:54:02PM +0300, Mikko Perttunen wrote:
-> The Tegra194 GPIO controller is similar to the one in Tegra186.
-> Add relevant information to the device tree binding documentation.
-> 
-> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpio.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+> There are three boards that share that configuration almost to a T,
+> with the only difference is the particular GPIOs used. Putting it into
+> a common file avoids repeating the boilerplate and makes it explicit
+> to the reader that those settings are shared.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I'd agree if that boilerplate was 100 lines.
+
+But here it is small, and mostly containing lines that are required for
+any i2c-gpio definition. It does not any value of itself.
+
+Saving 5 lines at cost of loose of integrity is not something I agree with.
+
+> There are at least two boards that use that UART2 as is. Same as above
+> this was done to reduce boilerplate.
+
+Here have choice between two logical blocks - definitions of uart2 in
+two boards that use them, and two logical blocks - definition in dtsi
+and undo in board that does not use it.
+
+You trade a couple of saved dts lines against keeping things consistent.
+
+Nikita
+
+P.S.
+In case of these zii boards I doubt that dtsi worths at all. Despite of
+all being imx51 boards from ZII, these boards don't seem to have large
+common logical blocks. Perhaos RDU1 and babbage have more in common - so
+what, create a dtsi for them?
