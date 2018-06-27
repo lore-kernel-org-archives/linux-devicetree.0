@@ -1,57 +1,58 @@
-Return-Path: <SRS0=bntt=JN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57948 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753398AbeF0Kmc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 Jun 2018 06:42:32 -0400
-Date: Wed, 27 Jun 2018 11:44:12 +0100
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RESEND PATCH 0/4] PCI: cadence: Host and EP driver updates for
- PHY and power management
-Message-ID: <20180627104412.GA8048@red-moon>
-References: <1526995569-5481-1-git-send-email-adouglas@cadence.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1526995569-5481-1-git-send-email-adouglas@cadence.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Alan Douglas <adouglas@cadence.com>
-Cc: bhelgaas@google.com, kishon@ti.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.com, cyrille.pitchen@free-electrons.com
+Return-Path: <vkoul@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v4 0/6] input: pm8941-pwrkey: Add support for reboot reason
+Date: Wed, 27 Jun 2018 17:22:55 +0530
+Message-Id: <20180627115301.21330-1-vkoul@kernel.org>
+To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, May 22, 2018 at 02:26:09PM +0100, Alan Douglas wrote:
-> This is a series of patches for the cadence PCIe host and EP drivers, to:
->  - Add optional list of generic PHYs to host and EP drivers
->  - Add PHY bindings to devicetree
->  - Add Power Management ops, which will enable/disable PHYs if present
->  - Update cdns_pcie_writel function signature
-> 
-> Changes in v2:
->     Split commit into four patches
->     Re-based on v4.17-rc1
-Alan,
+To add support for reboot reason there have been some attempts [1], [2]
+in past. Based on these discussions we added a new pon driver and made
+pwrkey and resin as child nodes to pon.
 
-can I drop this series ? It looks like it has been superseded by
-a new posting:
+Since the pwrkey and resin are similar, abstract pwrkey driver
+and then add support for resin in the same driver.
 
-https://patchwork.ozlabs.org/project/linux-pci/list/?series=51816
+Since the patches touch reset and input subsystems, it would be nice if
+folks can ACK and we carry thru one subsystem, I would prefer that to be
+input, other way would work fine too.
 
-Thanks,
-Lorenzo
+[1]: https://patchwork.kernel.org/patch/9751627/
+[2]: https://patchwork.kernel.org/patch/10381801/
 
-> Alan Douglas (4):
->   PCI: cadence: Update cdns_pcie_writel function signature
->   PCI: cadence: Add generic PHY support to host and EP drivers
->   dt-bindings: PCI: cadence: Add DT bindings for optional PHYs
->   PCI: cadence: Add Power Management ops for host and EP
-> 
->  .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt  |   4 +
->  .../bindings/pci/cdns,cdns-pcie-host.txt           |   2 +
->  drivers/pci/cadence/pcie-cadence-ep.c              |  15 ++-
->  drivers/pci/cadence/pcie-cadence-host.c            |  34 ++++++
->  drivers/pci/cadence/pcie-cadence.c                 | 123 +++++++++++++++++++++
->  drivers/pci/cadence/pcie-cadence.h                 |  13 ++-
->  6 files changed, 189 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 2.2.2
-> 
+Changes in v4:
+ - Add Rob's ack
+ - Fix typo and description in pon binding
+ - Separate out resin binding to an independent patch
+
+Changes in v3:
+ - Add Bjorn's ack
+ - Make variable for event code u32
+
+Changes in v2:
+ - Add Bjorn's ack
+ - Fix power binding by removing reg property
+ - Use single block for parent check in pm8941-pwrkey as suggested by
+   Dimitry
+
+Vinod Koul (6):
+  dt-bindings: power: reset: Add qcom pon binding
+  power: reset: qcom-pon: Add Qcom PON driver
+  dt-bindings: Input: Add additional property to qcom pwrkey
+  input: pm8941-pwrkey: Abstract register offsets and event code
+  dt-bindings: power: reset: qcom: Add resin binding
+  input: pm8941-pwrkey: Add resin entry
+
+ .../bindings/input/qcom,pm8941-pwrkey.txt          | 10 +++
+ .../devicetree/bindings/power/reset/qcom,pon.txt   | 45 +++++++++++
+ drivers/input/misc/pm8941-pwrkey.c                 | 69 ++++++++++++----
+ drivers/power/reset/Kconfig                        |  8 ++
+ drivers/power/reset/Makefile                       |  1 +
+ drivers/power/reset/qcom-pon.c                     | 91 ++++++++++++++++++++++
+ 6 files changed, 211 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+ create mode 100644 drivers/power/reset/qcom-pon.c
+
+-- 
+2.14.4
