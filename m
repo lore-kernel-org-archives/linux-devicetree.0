@@ -1,41 +1,157 @@
-Return-Path: <SRS0=GtbV=JB=haabendal.dk=esben@kernel.org>
-From: Esben Haabendal <esben@haabendal.dk>
-Subject: Re: [PATCH 0/4] i2c: imx: Fix and enable DMA support for LS1021A
-References: <20180523095623.3347-1-esben.haabendal@gmail.com>
-Date: Fri, 15 Jun 2018 10:22:13 +0200
-In-Reply-To: <20180523095623.3347-1-esben.haabendal@gmail.com> (Esben
-	Haabendal's message of "Wed, 23 May 2018 11:56:19 +0200")
-Message-ID: <87602kpih6.fsf@haabendal.dk>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Uwe =?utf-8?Q?Kleine-?= =?utf-8?Q?K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Return-Path: <vkoul@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v5 2/6] power: reset: qcom-pon: Add Qcom PON driver
+Date: Thu, 28 Jun 2018 20:38:46 +0530
+Message-Id: <20180628150850.15358-3-vkoul@kernel.org>
+In-Reply-To: <20180628150850.15358-1-vkoul@kernel.org>
+References: <20180628150850.15358-1-vkoul@kernel.org>
+To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Esben Haabendal <esben.haabendal@gmail.com> writes:
+Add support Qualcomm PM8xxx PON which is responsible for reboot
+mode support.
 
-> From: Esben Haabendal <eha@deif.com>
->
-> This patch series fixes two race conditions and minor issues with tracking
-> the stopped state when something goes wrong.
->
-> With that in place, DMA support works with NXP LS1021A, so it is enabled in
-> the last patch.
->
-> Esben Haabendal (4):
->   i2c: imx: Fix reinit_completion() use
->   i2c: imx: Fix race condition in dma read
->   i2c: imx: Simplify stopped state tracking
->   arm: dts: ls1021a: Enable I2C DMA support
->
->  arch/arm/boot/dts/ls1021a.dtsi |  6 ++++++
->  drivers/i2c/busses/i2c-imx.c   | 23 ++++++++++++-----------
->  2 files changed, 18 insertions(+), 11 deletions(-)
+Co-developed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ drivers/power/reset/Kconfig    | 11 +++++
+ drivers/power/reset/Makefile   |  1 +
+ drivers/power/reset/qcom-pon.c | 91 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 103 insertions(+)
+ create mode 100644 drivers/power/reset/qcom-pon.c
 
-Hi
-
-Is it possible that someone could find time to take a look at these
-patches?
-
-Best regards,
-Esben Haabendal
+diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+index df58fc878b3e..6533aa560aa1 100644
+--- a/drivers/power/reset/Kconfig
++++ b/drivers/power/reset/Kconfig
+@@ -104,6 +104,17 @@ config POWER_RESET_MSM
+ 	help
+ 	  Power off and restart support for Qualcomm boards.
+ 
++config POWER_RESET_QCOM_PON
++	tristate "Qualcomm power-on driver"
++	depends on ARCH_QCOM
++	depends on MFD_SPMI_PMIC
++	select REBOOT_MODE
++	help
++	  Power On support for Qualcomm boards.
++	  If you have a Qualcomm platform and need support for
++	  power-on and reboot reason, Say Y.
++	  If unsure, Say N.
++
+ config POWER_RESET_OCELOT_RESET
+ 	bool "Microsemi Ocelot reset driver"
+ 	depends on MSCC_OCELOT || COMPILE_TEST
+diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+index 7778c7485cf1..0aebee954ac1 100644
+--- a/drivers/power/reset/Makefile
++++ b/drivers/power/reset/Makefile
+@@ -11,6 +11,7 @@ obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
+ obj-$(CONFIG_POWER_RESET_GPIO_RESTART) += gpio-restart.o
+ obj-$(CONFIG_POWER_RESET_HISI) += hisi-reboot.o
+ obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
++obj-$(CONFIG_POWER_RESET_QCOM_PON) += qcom-pon.o
+ obj-$(CONFIG_POWER_RESET_OCELOT_RESET) += ocelot-reset.o
+ obj-$(CONFIG_POWER_RESET_PIIX4_POWEROFF) += piix4-poweroff.o
+ obj-$(CONFIG_POWER_RESET_LTC2952) += ltc2952-poweroff.o
+diff --git a/drivers/power/reset/qcom-pon.c b/drivers/power/reset/qcom-pon.c
+new file mode 100644
+index 000000000000..0c4caaa7e88f
+--- /dev/null
++++ b/drivers/power/reset/qcom-pon.c
+@@ -0,0 +1,91 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2017-18 Linaro Limited
++
++#include <linux/delay.h>
++#include <linux/errno.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/reboot.h>
++#include <linux/reboot-mode.h>
++#include <linux/regmap.h>
++
++#define PON_SOFT_RB_SPARE		0x8f
++
++struct pm8916_pon {
++	struct device *dev;
++	struct regmap *regmap;
++	u32 baseaddr;
++	struct reboot_mode_driver reboot_mode;
++};
++
++static int pm8916_reboot_mode_write(struct reboot_mode_driver *reboot,
++				    unsigned int magic)
++{
++	struct pm8916_pon *pon = container_of
++			(reboot, struct pm8916_pon, reboot_mode);
++	int ret;
++
++	ret = regmap_update_bits(pon->regmap,
++				 pon->baseaddr + PON_SOFT_RB_SPARE,
++				 0xfc, magic << 2);
++	if (ret < 0)
++		dev_err(pon->dev, "update reboot mode bits failed\n");
++
++	return ret;
++}
++
++static int pm8916_pon_probe(struct platform_device *pdev)
++{
++	struct pm8916_pon *pon;
++	int error;
++
++	pon = devm_kzalloc(&pdev->dev, sizeof(*pon), GFP_KERNEL);
++	if (!pon)
++		return -ENOMEM;
++
++	pon->dev = &pdev->dev;
++
++	pon->regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	if (!pon->regmap) {
++		dev_err(&pdev->dev, "failed to locate regmap\n");
++		return -ENODEV;
++	}
++
++	error = of_property_read_u32(pdev->dev.of_node, "reg",
++				     &pon->baseaddr);
++	if (error)
++		return error;
++
++	pon->reboot_mode.dev = &pdev->dev;
++	pon->reboot_mode.write = pm8916_reboot_mode_write;
++	error = devm_reboot_mode_register(&pdev->dev, &pon->reboot_mode);
++	if (error) {
++		dev_err(&pdev->dev, "can't register reboot mode\n");
++		return error;
++	}
++
++	platform_set_drvdata(pdev, pon);
++
++	return devm_of_platform_populate(&pdev->dev);
++}
++
++static const struct of_device_id pm8916_pon_id_table[] = {
++	{ .compatible = "qcom,pm8916-pon" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, pm8916_pon_id_table);
++
++static struct platform_driver pm8916_pon_driver = {
++	.probe = pm8916_pon_probe,
++	.driver = {
++		.name = "pm8916-pon",
++		.of_match_table = of_match_ptr(pm8916_pon_id_table),
++	},
++};
++module_platform_driver(pm8916_pon_driver);
++
++MODULE_DESCRIPTION("pm8916 Power On driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.14.4
