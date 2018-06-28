@@ -1,76 +1,36 @@
-Return-Path: <SRS0=Dkm/=JL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nbd.name ([46.4.11.11]:34696 "EHLO nbd.name"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1755135AbeFYRYA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 Jun 2018 13:24:00 -0400
-From: John Crispin <john@phrozen.org>
-Subject: [PATCH 12/25] dt-bindings: PCI: qcom,ar7240: adds binding doc
-Date: Mon, 25 Jun 2018 19:15:36 +0200
-Message-Id: <20180625171549.4618-13-john@phrozen.org>
-In-Reply-To: <20180625171549.4618-1-john@phrozen.org>
-References: <20180625171549.4618-1-john@phrozen.org>
+Return-Path: <SRS0=4PV1=JO=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-qt0-f193.google.com ([209.85.216.193]:40940 "EHLO
+        mail-qt0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752095AbeF1EKw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 28 Jun 2018 00:10:52 -0400
+Received: by mail-qt0-f193.google.com with SMTP id s47-v6so3616382qth.7
+        for <devicetree@vger.kernel.org>; Wed, 27 Jun 2018 21:10:51 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <20180626232109.10944-2-benh@kernel.crashing.org>
+References: <20180626232109.10944-1-benh@kernel.crashing.org> <20180626232109.10944-2-benh@kernel.crashing.org>
+From: Joel Stanley <joel@jms.id.au>
+Date: Thu, 28 Jun 2018 13:40:30 +0930
+Message-ID: <CACPK8XcoW6HCkpYYhFvyVkjzDrWYAzRLcXpnLVpaR+8wcjrhqA@mail.gmail.com>
+Subject: Re: [PATCH 01/14] devres: Add devm_of_iomap()
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
-To: James Hogan <jhogan@kernel.org>, Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org, John Crispin <john@phrozen.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: linux-aspeed@lists.ozlabs.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, devicetree <devicetree@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>, linux-kernel@vger.kernel.org-v2
 List-ID: <devicetree@vger.kernel.org>
 
-With the driver being converted from platform_data to pure OF, we need to
-also add some docs.
+On 27 June 2018 at 08:50, Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+> There are still quite a few cases where a device might want
+> to get to a different node of the device-tree, obtain the
+> resources and map them.
+>
+> We have of_iomap() and of_io_request_and_map() but they both
+> have shortcomings, such as not returning the size of the
+> resource found (which can be useful) and not being "managed".
+>
+> This adds a devm_of_iomap() that provides all of these and
+> should probably replace uses of the above in most drivers.
+>
+> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: John Crispin <john@phrozen.org>
----
- .../devicetree/bindings/pci/qcom,ar7240-pci.txt    | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/qcom,ar7240-pci.txt
-
-diff --git a/Documentation/devicetree/bindings/pci/qcom,ar7240-pci.txt b/Documentation/devicetree/bindings/pci/qcom,ar7240-pci.txt
-new file mode 100644
-index 000000000000..7f6ca8a0f859
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/qcom,ar7240-pci.txt
-@@ -0,0 +1,40 @@
-+* Qualcomm Atheros AR724X PCI express root complex
-+
-+Required properties:
-+- compatible: should contain "qcom,ar7240-pci" to identify the core.
-+- reg: Should contain the register ranges as listed in the reg-names property.
-+- reg-names: Definition: Must include the following entries
-+	- "crp_base"	Configuration registers
-+	- "ctrl_base"	Control registers
-+	- "cfg_base"	IO Memory
-+- #address-cells: set to <3>
-+- #size-cells: set to <2>
-+- ranges: ranges for the PCI memory and I/O regions
-+- interrupt-map-mask and interrupt-map: standard PCI
-+	properties to define the mapping of the PCIe interface to interrupt
-+	numbers.
-+- #interrupt-cells: set to <1>
-+- interrupt-parent: phandle to the MIPS IRQ controller
-+- interrupt-controller: define to enable the builtin IRQ cascade.
-+
-+* Example for qca9557
-+	pcie0: pcie-controller@180c0000 {
-+		compatible = "qcom,ar7240-pci";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		bus-range = <0x0 0x0>;
-+		reg = <0x180c0000 0x1000>,
-+		      <0x180f0000 0x100>,
-+		      <0x14000000 0x1000>;
-+		reg-names = "crp_base", "ctrl_base", "cfg_base";
-+		ranges = <0x2000000 0 0x10000000 0x10000000 0 0x04000000
-+			  0x1000000 0 0x00000000 0x00000000 0 0x00000001>;
-+		interrupt-parent = <&intc2>;
-+		interrupts = <1>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-map-mask = <0 0 0 1>;
-+		interrupt-map = <0 0 0 0 &pcie0 0>;
-+	};
--- 
-2.11.0
-
+Reviewed-by: Joel Stanley <joel@jms.id.au>
