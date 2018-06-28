@@ -1,225 +1,92 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v3 09/17] irqchip/irq-mvebu-icu: support ICU subnodes
-Date: Thu, 28 Jun 2018 13:45:09 +0100
-Message-ID: <61ff2e4f-55b6-cf70-5f04-32cd197c35f8@arm.com>
-References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
- <20180622151432.1566-10-miquel.raynal@bootlin.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v9 3/5] ARM: dts: Renesas R9A06G032 base device tree file
+Date: Thu, 28 Jun 2018 14:45:41 +0200
+Message-ID: <CAMuHMdWqowQjZ8Wsdj6ne-+UG8-OY_j6pi3R9JPP6L7ZgRhvBQ@mail.gmail.com>
+References: <1528973829-25493-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1528973829-25493-4-git-send-email-michel.pollet@bp.renesas.com>
+ <20180628120031.eq2yuysz4re2olwn@verge.net.au> <20180628121609.jf4dp4azeowte7pb@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180622151432.1566-10-miquel.raynal@bootlin.com>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haim Boot <hayim@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Hanna Hawa <hannah@marvell.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180628121609.jf4dp4azeowte7pb@verge.net.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Michel Pollet <michel.pollet@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22/06/18 16:14, Miquel Raynal wrote:
-> The ICU can handle several type of interrupt, each of them being handled
-> differently on AP side. On CP side, the ICU should be able to make the
-> distinction between each interrupt group by pointing to the right parent.
-> 
-> This is done through the introduction of new bindings, presenting the ICU
-> node as the parent of multiple ICU sub-nodes, each of them being an
-> interrupt type with a different interrupt parent. ICU interrupt 'clients'
-> now directly point to the right sub-node, avoiding the need for the extra
-> ICU_GRP_* parameter.
-> 
-> ICU subnodes are probed automatically with devm_platform_populate(). If
-> the node as no child, the probe function for NSRs will still be called
-> 'manually' in order to preserve backward compatibility with DT using the
-> old binding.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  drivers/irqchip/irq-mvebu-icu.c | 88 ++++++++++++++++++++++++++++++++++-------
->  1 file changed, 74 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
-> index 24d45186eb6b..f7c2ede9c222 100644
-> --- a/drivers/irqchip/irq-mvebu-icu.c
-> +++ b/drivers/irqchip/irq-mvebu-icu.c
-> @@ -43,6 +43,7 @@ struct mvebu_icu {
->  	struct regmap *regmap;
->  	struct device *dev;
->  	atomic_t initialized;
-> +	bool legacy_bindings;
->  };
->  
->  struct mvebu_icu_irq_data {
-> @@ -51,6 +52,30 @@ struct mvebu_icu_irq_data {
->  	unsigned int type;
->  };
->  
-> +static struct mvebu_icu *mvebu_icu_dev_get_drvdata(struct platform_device *pdev)
-> +{
-> +	struct mvebu_icu *icu;
-> +
-> +	/*
-> +	 * Device data being populated means we should be using legacy bindings.
-> +	 * Using the _parent_ device data means we should be using new bindings.
-> +	 */
-> +	icu = dev_get_drvdata(&pdev->dev);
-> +	if (icu) {
-> +		if (!icu->legacy_bindings)
-> +			return ERR_PTR(-EINVAL);
-> +	} else {
-> +		icu = dev_get_drvdata(pdev->dev.parent);
-> +		if (!icu)
-> +			return ERR_PTR(-ENODEV);
-> +
-> +		if (icu->legacy_bindings)
-> +			return ERR_PTR(-EINVAL);
-> +	}
+Hi Simon,
 
-Doesn't this make legacy_bindings completely redundant? Either the
-pointer is !NULL in the device, and this is using a legacy binging, or
-it is stored in the parent, and this is a new binding. You could even
-have a helper for that:
+On Thu, Jun 28, 2018 at 2:16 PM Simon Horman <horms@verge.net.au> wrote:
+> On Thu, Jun 28, 2018 at 02:00:32PM +0200, Simon Horman wrote:
+> > On Thu, Jun 14, 2018 at 11:56:32AM +0100, Michel Pollet wrote:
+> > > This adds the Renesas R9A06G032 bare bone support.
+> > >
+> > > This currently only handles the SYSCTRL block note,
+> > > generic parts (gic, architected timer) and a UART.
+> > >
+> > > Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> >
+> > Thanks, applied with the following appended:
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 9d5eeff51b5f..4c85ac04872d 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -1969,6 +1969,7 @@ S:      Supported
+> >  F:   arch/arm/boot/dts/emev2*
+> >  F:   arch/arm/boot/dts/r7s*
+> >  F:   arch/arm/boot/dts/r8a*
+> > +F:   arch/arm/boot/dts/r9a*
+> >  F:   arch/arm/boot/dts/sh*
+> >  F:   arch/arm/configs/shmobile_defconfig
+> >  F:   arch/arm/include/debug/renesas-scif.S
+>
+> One more update.
+>
+> dt-bindings/clock/r9a06g032-sysctrl.h is not present in v4.18-rc1,
+> current base of the renesas tree and likely base for the rest of the v4.19
+> development cycle.
+>
+> Accordingly I have removed the include of that header and replaced
+> the use of symbols it defines with numeric constants. The result is below.
 
-static bool is_legacy(struct platform_device *pdev)
-{
-	return !dev_get_drvdata(&pdev->dev);
-}
+Oh right. Thanks!
 
-The driver really doesn't need to be defending against itself, if
-anything, and it would save you quite a bit of error handling in the
-callers of this function.
+> Please:
+> 1) Check that this is correct and
 
-> +
-> +	return icu;
-> +}
-> +
->  static void mvebu_icu_init(struct mvebu_icu *icu, struct msi_msg *msg)
->  {
->  	if (atomic_cmpxchg(&icu->initialized, false, true))
-> @@ -107,24 +132,28 @@ mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
->  			       unsigned long *hwirq, unsigned int *type)
->  {
->  	struct mvebu_icu *icu = platform_msi_get_host_data(d);
-> -	unsigned int icu_group;
-> +	unsigned int param_count = icu->legacy_bindings ? 3 : 2;
->  
->  	/* Check the count of the parameters in dt */
-> -	if (WARN_ON(fwspec->param_count < 3)) {
-> +	if (WARN_ON(fwspec->param_count != param_count)) {
->  		dev_err(icu->dev, "wrong ICU parameter count %d\n",
->  			fwspec->param_count);
->  		return -EINVAL;
->  	}
->  
-> -	/* Only ICU group type is handled */
-> -	icu_group = fwspec->param[0];
-> -	if (icu_group != ICU_GRP_NSR && icu_group != ICU_GRP_SR &&
-> -	    icu_group != ICU_GRP_SEI && icu_group != ICU_GRP_REI) {
-> -		dev_err(icu->dev, "wrong ICU group type %x\n", icu_group);
-> -		return -EINVAL;
-> +	if (icu->legacy_bindings) {
-> +		*hwirq = fwspec->param[1];
-> +		*type = fwspec->param[2];
-> +		if (fwspec->param[0] != ICU_GRP_NSR) {
-> +			dev_err(icu->dev, "wrong ICU group type %x\n",
-> +				fwspec->param[0]);
-> +			return -EINVAL;
-> +		}
-> +	} else {
-> +		*hwirq = fwspec->param[0];
-> +		*type = fwspec->param[1];
->  	}
->  
-> -	*hwirq = fwspec->param[1];
->  	if (*hwirq >= ICU_MAX_IRQS) {
->  		dev_err(icu->dev, "invalid interrupt number %ld\n", *hwirq);
->  		return -EINVAL;
-> @@ -157,7 +186,10 @@ mvebu_icu_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
->  		goto free_irqd;
->  	}
->  
-> -	icu_irqd->icu_group = fwspec->param[0];
-> +	if (icu->legacy_bindings)
-> +		icu_irqd->icu_group = fwspec->param[0];
-> +	else
-> +		icu_irqd->icu_group = ICU_GRP_NSR;
->  	icu_irqd->icu = icu;
->  
->  	err = platform_msi_domain_alloc(domain, virq, nr_irqs);
-> @@ -211,9 +243,9 @@ static int mvebu_icu_subset_probe(struct platform_device *pdev)
->  	struct irq_domain *irq_domain;
->  	struct mvebu_icu *icu;
->  
-> -	icu = dev_get_drvdata(&pdev->dev);
-> -	if (!icu)
-> -		return -ENODEV;
-> +	icu = mvebu_icu_dev_get_drvdata(pdev);
-> +	if (IS_ERR(icu))
-> +		return PTR_ERR(icu);
->  
->  	pdev->dev.msi_domain = of_msi_get_domain(&pdev->dev, pdev->dev.of_node,
->  						 DOMAIN_BUS_PLATFORM_MSI);
-> @@ -236,6 +268,22 @@ static int mvebu_icu_subset_probe(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static const struct of_device_id mvebu_icu_subset_of_match[] = {
-> +	{
-> +		.compatible = "marvell,cp110-icu-nsr",
-> +	},
-> +	{},
-> +};
-> +
-> +static struct platform_driver mvebu_icu_subset_driver = {
-> +	.probe  = mvebu_icu_subset_probe,
-> +	.driver = {
-> +		.name = "mvebu-icu-subset",
-> +		.of_match_table = mvebu_icu_subset_of_match,
-> +	},
-> +};
-> +builtin_platform_driver(mvebu_icu_subset_driver);
-> +
->  static struct regmap_config mvebu_icu_regmap_config = {
->  	.reg_bits	= 32,
->  	.val_bits	= 32,
-> @@ -275,6 +323,15 @@ static int mvebu_icu_probe(struct platform_device *pdev)
->  	if (!icu->irq_chip.name)
->  		return -ENOMEM;
->  
-> +	/*
-> +	 * Legacy bindings: ICU is one node with one MSI parent: force manually
-> +	 *                  the probe of the NSR interrupts side.
-> +	 * New bindings: ICU node has children, one per interrupt controller
-> +	 *               having its own MSI parent: call platform_populate().
-> +	 */
-> +	if (!of_get_child_count(pdev->dev.of_node))
-> +		icu->legacy_bindings = true;
-> +
->  	icu->irq_chip.irq_mask = irq_chip_mask_parent;
->  	icu->irq_chip.irq_unmask = irq_chip_unmask_parent;
->  	icu->irq_chip.irq_eoi = irq_chip_eoi_parent;
-> @@ -299,7 +356,10 @@ static int mvebu_icu_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, icu);
->  
-> -	return mvebu_icu_subset_probe(pdev);
-> +	if (icu->legacy_bindings)
-> +		return mvebu_icu_subset_probe(pdev);
-> +	else
-> +		return devm_of_platform_populate(&pdev->dev);
->  }
->  
->  static const struct of_device_id mvebu_icu_of_match[] = {
-> 
+Looks good to me, except for the bogus "fixes" and "SoB" below
+(bad squash?)
 
-Thanks,
+> From: Michel Pollet <michel.pollet@bp.renesas.com>
+> Subject: [PATCH] ARM: dts: Renesas R9A06G032 base device tree file
+>
+> This adds the Renesas R9A06G032 bare bone support.
+>
+> This currently only handles the SYSCTRL block note,
+> generic parts (gic, architected timer) and a UART.
+>
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> [simon: updated MAINTAINERS file
+> [simon: do not use r9a06g032-sysctrl.h as it is not in the renesas tree yet]
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+>
+> fixes
+  ^^^^^
+>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+  ^^^^
 
-	M.
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-Jazz is not dead. It just smells funny...
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
