@@ -1,92 +1,192 @@
 From: Honghui Zhang <honghui.zhang@mediatek.com>
-Subject: Re: [PATCH 4/4] PCI: mediatek: Add loadable kernel module support
-Date: Thu, 28 Jun 2018 09:17:32 +0800
-Message-ID: <1530148652.28284.4.camel@mhfsdcap03>
+Subject: Re: [PATCH 3/4] PCI: mediatek: Add system pm support for MT2712 and
+ MT7622
+Date: Thu, 28 Jun 2018 09:44:25 +0800
+Message-ID: <1530150265.28284.25.camel@mhfsdcap03>
 References: <1530091298-28120-1-git-send-email-honghui.zhang@mediatek.com>
-         <1530091298-28120-5-git-send-email-honghui.zhang@mediatek.com>
-         <CAHp75VdsSZifb5xZ2Q8cmJV=PgAaoN=iOhMfyVX4uE4vNpo=Mg@mail.gmail.com>
+         <1530091298-28120-4-git-send-email-honghui.zhang@mediatek.com>
+         <CAHp75VcHgJrujzqstSc4RWpUbjip1vtJu87HN3uTosoLdOiT3A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VdsSZifb5xZ2Q8cmJV=PgAaoN=iOhMfyVX4uE4vNpo=Mg@mail.gmail.com>
+In-Reply-To: <CAHp75VcHgJrujzqstSc4RWpUbjip1vtJu87HN3uTosoLdOiT3A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-pci@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, yingjoe.chen@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, ryder.lee@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, YT Shen <yt.shen@mediatek.com>, sean.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-06-27 at 19:39 +0300, Andy Shevchenko wrote:
+On Wed, 2018-06-27 at 19:45 +0300, Andy Shevchenko wrote:
 > On Wed, Jun 27, 2018 at 12:21 PM,  <honghui.zhang@mediatek.com> wrote:
 > > From: Honghui Zhang <honghui.zhang@mediatek.com>
 > >
-> > Implement remove callback function for Mediatek PCIe driver to add
-> > loadable kernel module support.
+> > The MTCMOS of PCIe Host for MT2712 and MT7622 will be off when system
+> > suspend, and all the internal control register will be reset after system
+> > resume. The PCIe link should be re-established and the related control
+> > register values should be re-set after system resume.
 > 
-> > +static void mtk_pcie_irq_teardown(struct mtk_pcie *pcie)
+> >  struct mtk_pcie_soc {
+> >         bool need_fix_class_id;
+> 
+> > +       bool pm_support;
+> 
+> Hmm... Do you really need this flag? Can't runtime PM API tell you this?
+
+This host driver is both for MT2712, MT7622 and MT7623, but MT7623 do
+not this this patch.
+I only add this flag to identify whether we need to do the PM operation
+for this SoC since I do not want to touch anything for MT7623.
+ 
+> 
+> >         struct pci_ops *ops;
+> >         int (*startup)(struct mtk_pcie_port *port);
+> >         int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
+> > @@ -1195,12 +1197,76 @@ static int mtk_pcie_probe(struct platform_device *pdev)
+> >         return err;
+> >  }
+> >
+> > +#ifdef CONFIG_PM_SLEEP
+> > +static int mtk_pcie_suspend_noirq(struct device *dev)
+> 
+> Perhaps __maybe_unused?
+
+Ok, I'm a bit confused about this, if there's some discussion about
+this, do you have the link of those discussion and kindly point put it
+in this thread? Or I guess I can change this back to __maybe_unused if
+there's no other comments about this.
+
+> 
 > > +{
-> > +       struct mtk_pcie_port *port, *tmp;
+> > +       struct mtk_pcie *pcie = dev_get_drvdata(dev);
+> > +       const struct mtk_pcie_soc *soc = pcie->soc;
+> > +       struct mtk_pcie_port *port;
+> > +
+> > +       if (!soc->pm_support)
+> > +               return 0;
 > > +
 > 
 > > +       if (list_empty(&pcie->ports))
-> > +               return;
+> > +               return 0;
 > 
-> This is redundant.
+> So, if the list is empty you are not suspending for the host?
+> 
 
-Yeah, you are right, I will remove it.
+if the list was empty then it indicate that all the PCIe slot was not
+connected with any EP device, and all the resource have been release in
+probe time. So the host driver does not need to save or restore
+anything.
 
 > 
 > > +
-> > +       list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
-> > +               irq_set_chained_handler_and_data(port->irq, NULL, NULL);
-> > +
-> > +               if (port->irq_domain)
-> > +                       irq_domain_remove(port->irq_domain);
-> > +
-> > +               if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> > +                       if (port->msi_domain)
-> > +                               irq_domain_remove(port->msi_domain);
-> > +                       if (port->inner_domain)
-> > +                               irq_domain_remove(port->inner_domain);
-> > +               }
-> > +
-> > +               irq_dispose_mapping(port->irq);
+> > +       list_for_each_entry(port, &pcie->ports, list) {
+> > +               clk_disable_unprepare(port->pipe_ck);
+> > +               clk_disable_unprepare(port->obff_ck);
+> > +               clk_disable_unprepare(port->axi_ck);
+> > +               clk_disable_unprepare(port->aux_ck);
+> > +               clk_disable_unprepare(port->ahb_ck);
+> > +               clk_disable_unprepare(port->sys_ck);
+> > +               phy_power_off(port->phy);
+> > +               phy_exit(port->phy);
 > > +       }
-> > +}
-> 
-> > +static void mtk_pcie_free_resources(struct mtk_pcie *pcie)
-> > +{
-> > +       struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
-> > +       struct list_head *windows = &host->windows;
 > > +
-> > +       pci_unmap_iospace(&pcie->pio);
-> > +       pci_free_resource_list(windows);
-> > +}
-> > +
-> > +static int mtk_pcie_remove(struct platform_device *pdev)
-> > +{
-> > +       struct mtk_pcie *pcie = platform_get_drvdata(pdev);
-> > +       struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
-> > +
-> > +       pci_stop_root_bus(host->bus);
-> > +       pci_remove_root_bus(host->bus);
-> > +       mtk_pcie_free_resources(pcie);
-> > +
-> > +       mtk_pcie_irq_teardown(pcie);
-> > +
-> 
-> > +       if (!list_empty(&pcie->ports))
-> 
-> I think this is also not needed. Do you put runtime PM by the way?
-
-Yes, it's could be removed.
-the pm was putted in mtk_pcie_put_resources which will call
-mtk_pcie_subsys_powerdown, and the pm was putted in that function.
-
-thanks.
-
-> 
-> > +               mtk_pcie_put_resources(pcie);
+> > +       mtk_pcie_subsys_powerdown(pcie);
 > > +
 > > +       return 0;
 > > +}
+> > +
+> > +static int mtk_pcie_resume_noirq(struct device *dev)
+> > +{
+> > +       struct mtk_pcie *pcie = dev_get_drvdata(dev);
+> > +       const struct mtk_pcie_soc *soc = pcie->soc;
+> > +       struct mtk_pcie_port *port;
+> > +
+> > +       if (!soc->pm_support)
+> > +               return 0;
+> > +
+> 
+> > +       if (list_empty(&pcie->ports))
+> > +               return 0;
+> 
+> No runtime PM for this case?
+> (It seems now I understand why in previous patch you have a similar check)
+> 
+I guess host driver does not need to resume anything if there's no EP
+device was connected.
+
+> > +
+> > +       if (dev->pm_domain) {
+> > +               pm_runtime_enable(dev);
+> > +               pm_runtime_get_sync(dev);
+> > +       }
+> > +
+> > +       clk_prepare_enable(pcie->free_ck);
+> > +
+> > +       list_for_each_entry(port, &pcie->ports, list)
+> > +               mtk_pcie_enable_port(port);
+> > +
+> 
+> > +       if (list_empty(&pcie->ports))
+> 
+> Hmm... How it would be true if you already bailed out above on the
+> same condition?
+
+Assuming that there's EP device connected before suspend, and the EP was
+removed from the link while system suspend. It means that when enter
+this function the list is not empty, but after the function of
+mtk_pcie_enable_port was called, host driver found there's no EP device
+was connected anymore, it will free this list and some other resources
+in mtk_pcie_enable_port,(after mtk_pcie_enable_port was called, the list
+is empty in this scenario) but leave the subsys power along, I guess we
+need to take care of this scenario.
+> 
+> > +               mtk_pcie_subsys_powerdown(pcie);
+> > +
+> > +       return 0;
+> > +}
+> > +#endif
+> > +
+> > +static const struct dev_pm_ops mtk_pcie_pm_ops = {
+> > +       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_pcie_suspend_noirq,
+> > +                                     mtk_pcie_resume_noirq)
+> > +};
+> > +
+> >  static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
+> >         .ops = &mtk_pcie_ops,
+> >         .startup = mtk_pcie_startup_port,
+> >  };
+> >
+> >  static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
+> > +       .pm_support = true,
+> >         .ops = &mtk_pcie_ops_v2,
+> >         .startup = mtk_pcie_startup_port_v2,
+> >         .setup_irq = mtk_pcie_setup_irq,
+> 
+> No update for .pm ?
+
+I'm not get your point, I update the .pm callbacks in the
+platform_driver struct, this SoC data just store the different
+information for SoCs. Did I missed something?
+
+> 
+> > @@ -1208,6 +1274,7 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
+> >
+> >  static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
+> >         .need_fix_class_id = true,
+> > +       .pm_support = true,
+> >         .ops = &mtk_pcie_ops_v2,
+> >         .startup = mtk_pcie_startup_port_v2,
+> >         .setup_irq = mtk_pcie_setup_irq,
+> > @@ -1227,6 +1294,7 @@ static struct platform_driver mtk_pcie_driver = {
+> >                 .name = "mtk-pcie",
+> >                 .of_match_table = mtk_pcie_ids,
+> >                 .suppress_bind_attrs = true,
+> > +               .pm = &mtk_pcie_pm_ops,
+> >         },
+> >  };
+> >  builtin_platform_driver(mtk_pcie_driver);
+> > --
+> > 2.6.4
+> >
+> 
+> 
 > 
