@@ -1,15 +1,14 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 13/24] dt-bindings: display: sun4i-drm:
- Add R40 mixer compatibles
-Date: Thu, 28 Jun 2018 10:17:53 +0800
-Message-ID: <CAGb2v67wgNUmK20r2u9DyZ-rP76GG9_spob3AQM681N3xLSewQ@mail.gmail.com>
-References: <20180625120304.7543-1-jernej.skrabec@siol.net> <20180625120304.7543-14-jernej.skrabec@siol.net>
+Subject: Re: [PATCH v3 14/24] drm/sun4i: Add support for R40 mixers
+Date: Thu, 28 Jun 2018 10:18:54 +0800
+Message-ID: <CAGb2v673mEZD_kMjhEmJtAzYK5NyH6TSFKPBXTaZ_YirK0P_qg@mail.gmail.com>
+References: <20180625120304.7543-1-jernej.skrabec@siol.net> <20180625120304.7543-15-jernej.skrabec@siol.net>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBZ4K2HMQKGQEQH4ABVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBJML2HMQKGQE2GIKUPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180625120304.7543-14-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+In-Reply-To: <20180625120304.7543-15-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -21,12 +20,14 @@ Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob H
 List-Id: devicetree@vger.kernel.org
 
 On Mon, Jun 25, 2018 at 8:02 PM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> R40 DE2 mixers are similar to those found in A83T, except it needs
-> different clock settings.
+> Both mixers have similar capabilities as others SoCs with DE2.
 >
-> Add a compatibles for them.
+> First mixer has 1 VI and 3 UI planes and supports HW scaling on all
+> planes.
 >
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Second mixer has 1 VI and 1 UI planes and also supports HW scaling on
+> all planes.
+>
 > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 
 Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
