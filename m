@@ -1,48 +1,104 @@
-Return-Path: <vkoul@kernel.org>
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v5 3/6] dt-bindings: Input: Add additional property to qcom pwrkey
-Date: Thu, 28 Jun 2018 20:38:47 +0530
-Message-Id: <20180628150850.15358-4-vkoul@kernel.org>
-In-Reply-To: <20180628150850.15358-1-vkoul@kernel.org>
-References: <20180628150850.15358-1-vkoul@kernel.org>
-To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Return-Path: <SRS0=qqtW=JO=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH 13/22] [media] tvp5150: disable output while signal not locked
+Date: Thu, 28 Jun 2018 18:20:45 +0200
+Message-Id: <20180628162054.25613-14-m.felsch@pengutronix.de>
+In-Reply-To: <20180628162054.25613-1-m.felsch@pengutronix.de>
+References: <20180628162054.25613-1-m.felsch@pengutronix.de>
+To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: p.zabel@pengutronix.de, afshin.nasser@gmail.com, javierm@redhat.com, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Pwrkey and reset have similar properties so add additional
-property for linux,code to use the code for sending events.
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+To avoid short frames on stream start, keep output pins at high impedance
+while we are not properly locked onto the input signal.
+
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/media/i2c/tvp5150.c | 39 ++++++++++++++++++++++++++-----------
+ 1 file changed, 28 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-index 07bf55f6e0b9..bf719396eadd 100644
---- a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-+++ b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-@@ -32,6 +32,14 @@ PROPERTIES
- 	Definition: presence of this property indicates that the KPDPWR_N pin
- 		    should be configured for pull up.
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index d8bdbedd8826..27cfd08be3d2 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -60,6 +60,7 @@ struct tvp5150 {
+ 	v4l2_std_id detected_norm;
+ 	u32 input;
+ 	u32 output;
++	u32 oe;
+ 	int enable;
+ 	bool lock;
  
-+- linux,code:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: The input key-code associated with the power key.
-+		    Use the linux event codes defined in
-+		    include/dt-bindings/input/linux-event-codes.h
-+		    When property is omitted KEY_POWER is assumed.
+@@ -799,14 +800,20 @@ static irqreturn_t tvp5150_isr(int irq, void *dev_id)
+ {
+ 	struct tvp5150 *decoder = dev_id;
+ 	struct regmap *map = decoder->regmap;
+-	unsigned int active = 0, status = 0;
++	unsigned int mask, active = 0, status = 0;
 +
- EXAMPLE
++	mask = TVP5150_MISC_CTL_YCBCR_OE | TVP5150_MISC_CTL_SYNC_OE |
++	       TVP5150_MISC_CTL_CLOCK_OE;
  
- 	pwrkey@800 {
-@@ -40,4 +48,5 @@ EXAMPLE
- 		interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
- 		debounce = <15625>;
- 		bias-pull-up;
-+		linux,code = <KEY_POWER>;
- 	};
+ 	regmap_read(map, TVP5150_INT_STATUS_REG_A, &status);
+ 	if (status) {
+ 		regmap_write(map, TVP5150_INT_STATUS_REG_A, status);
+ 
+-		if (status & TVP5150_INT_A_LOCK)
++		if (status & TVP5150_INT_A_LOCK) {
+ 			decoder->lock = !!(status & TVP5150_INT_A_LOCK_STATUS);
++			regmap_update_bits(map, TVP5150_MISC_CTL, mask,
++					   decoder->lock ? decoder->oe : 0);
++		}
+ 
+ 		return IRQ_HANDLED;
+ 	}
+@@ -872,10 +879,26 @@ static int tvp5150_enable(struct v4l2_subdev *sd)
+ 	/* Disable autoswitch mode */
+ 	tvp5150_set_std(sd, std);
+ 
+-	if (decoder->mbus_type == V4L2_MBUS_PARALLEL)
++	/*
++	 * Enable the YCbCr and clock outputs. In discrete sync mode
++	 * (non-BT.656) additionally enable the the sync outputs.
++	 */
++	switch (decoder->mbus_type) {
++	case V4L2_MBUS_PARALLEL:
+ 		/* 8-bit 4:2:2 YUV with discrete sync output */
+ 		regmap_update_bits(decoder->regmap, TVP5150_DATA_RATE_SEL,
+ 				   0x7, 0x0);
++		decoder->oe = TVP5150_MISC_CTL_YCBCR_OE |
++			      TVP5150_MISC_CTL_CLOCK_OE |
++			      TVP5150_MISC_CTL_SYNC_OE;
++		break;
++	case V4L2_MBUS_BT656:
++		decoder->oe = TVP5150_MISC_CTL_YCBCR_OE |
++			      TVP5150_MISC_CTL_CLOCK_OE;
++		break;
++	default:
++		return -EINVAL;
++	}
+ 
+ 	return 0;
+ };
+@@ -1190,14 +1213,8 @@ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
+ 	if (enable) {
+ 		tvp5150_enable(sd);
+ 
+-		/*
+-		 * Enable the YCbCr and clock outputs. In discrete sync mode
+-		 * (non-BT.656) additionally enable the the sync outputs.
+-		 */
+-		val = TVP5150_MISC_CTL_YCBCR_OE | TVP5150_MISC_CTL_CLOCK_OE;
+-		if (decoder->mbus_type == V4L2_MBUS_PARALLEL)
+-			val |= TVP5150_MISC_CTL_SYNC_OE;
+-
++		/* Enable outputs if decoder is locked */
++		val = decoder->lock ? decoder->oe : 0;
+ 		int_val = TVP5150_INT_A_LOCK;
+ 	}
+ 
 -- 
-2.14.4
+2.17.1
