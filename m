@@ -1,40 +1,85 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 6/6] MAINTAINERS: Add entry for Actions Semi OWL I2C driver
-Date: Thu, 28 Jun 2018 23:40:42 +0530
-Message-ID: <20180628181042.2239-7-manivannan.sadhasivam@linaro.org>
-References: <20180628181042.2239-1-manivannan.sadhasivam@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180628181042.2239-1-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, afaerber@suse.de
-Cc: linus.walleij@linaro.org, linux-i2c@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3 10/24] drm/sun4i: tcon: Generalize engine search
+ algorithm
+Date: Thu, 28 Jun 2018 20:25:43 +0200
+Message-ID: <20180628182543.yyja6hiry7rx7fu2@flea>
+References: <20180625120304.7543-1-jernej.skrabec@siol.net>
+ <20180625120304.7543-11-jernej.skrabec@siol.net>
+ <CAGb2v66ndyhVFKsOt=g45MJ-cBun8WvRrDsb9XO2hteSX2oe5A@mail.gmail.com>
+ <1812731.FQOhD8MfmX@jernej-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1812731.FQOhD8MfmX@jernej-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add entry for Actions Semi OWL I2C driver and its binding under ARM/ACTIONS
-
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 09b54e9ebc6f..5084c62712fa 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1145,12 +1145,14 @@ F:	arch/arm/boot/dts/owl-*
- F:	arch/arm64/boot/dts/actions/
- F:	drivers/clk/actions/
- F:	drivers/clocksource/owl-*
-+F:	drivers/i2c/busses/i2c-owl.c
- F:	drivers/pinctrl/actions/*
- F:	drivers/soc/actions/
- F:	include/dt-bindings/power/owl-*
- F:	include/linux/soc/actions/
- F:	Documentation/devicetree/bindings/arm/actions.txt
- F:	Documentation/devicetree/bindings/clock/actions,s900-cmu.txt
-+F:	Documentation/devicetree/bindings/i2c/i2c-owl.txt
- F:	Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt
- F:	Documentation/devicetree/bindings/power/actions,owl-sps.txt
- F:	Documentation/devicetree/bindings/timer/actions,owl-timer.txt
--- 
-2.17.1
+T24gVGh1LCBKdW4gMjgsIDIwMTggYXQgMDY6NDg6NTBBTSArMDIwMCwgSmVybmVqIMWga3JhYmVj
+IHdyb3RlOgo+IERuZSDEjWV0cnRlaywgMjguIGp1bmlqIDIwMTggb2IgMDQ6MDY6NTIgQ0VTVCBq
+ZSBDaGVuLVl1IFRzYWkgbmFwaXNhbChhKToKPiA+IE9uIE1vbiwgSnVuIDI1LCAyMDE4IGF0IDg6
+MDIgUE0sIEplcm5laiBTa3JhYmVjIDxqZXJuZWouc2tyYWJlY0BzaW9sLm5ldD4gCj4gd3JvdGU6
+Cj4gPiA+IEN1cnJlbnQgIm9sZCIgbWV0aG9kIHRvIGZpbmQgZW5naW5lIHdvcmtlZCBwcmV0dHkg
+d2VsbCBmb3IgREUyLiBIb3dldmVyLAo+ID4gPiBpdCBkb2Vzbid0IHdvcmsgd2hlbiBUQ09OIFRP
+UCBpcyBiZXR3ZWVuICBtaXhlciAoZW5naW5lKSBhbmQgVENPTi4gVENPTgo+ID4gPiBUT1AgaGFz
+IG11bHRpcGxlIGlucHV0IHBvcnRzLCBidXQgY3VycmVudCBlbmdpbmUgc2VhcmNoIGFsZ29yaXRo
+bQo+ID4gPiBleHBlY3RzIG9ubHkgb25lLgo+ID4gPiAKPiA+ID4gVGhpcyBjYW4gYmUgZml4ZWQg
+YnkgZmlyc3QgbG9va2luZyBmb3Igb3V0cHV0IHBvcnQgaWQgYW5kIHNlbGVjdGluZwo+ID4gPiBt
+YXRjaGluZyBpbnB1dCBieSBzdWJ0cmFjdGluZyAxIGZvciB0aGUgbmV4dCByb3VuZC4gVGhpcyB3
+b3JrIGV2ZW4gaWYKPiA+ID4gdGhlcmUgaXMgb25seSBvbmUgaW5wdXQgYW5kIG91dHB1dC4KPiA+
+ID4gCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEplcm5laiBTa3JhYmVjIDxqZXJuZWouc2tyYWJlY0Bz
+aW9sLm5ldD4KPiA+ID4gLS0tCj4gPiA+IAo+ID4gPiAgZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1
+bjRpX3Rjb24uYyB8IDIyICsrKysrKysrKysrKysrKysrKy0tLS0KPiA+ID4gIDEgZmlsZSBjaGFu
+Z2VkLCAxOCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQo+ID4gPiAKPiA+ID4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMKPiA+ID4gYi9kcml2ZXJz
+L2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5jIGluZGV4IDA4NzQ3ZmMzZWU3MS4uMjY0YmNjNDNk
+YTExCj4gPiA+IDEwMDY0NAo+ID4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlf
+dGNvbi5jCj4gPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMKPiA+
+ID4gQEAgLTc5MSwxMiArNzkxLDE0IEBAIHN0YXRpYyBpbnQgc3VuNGlfdGNvbl9pbml0X3JlZ21h
+cChzdHJ1Y3QgZGV2aWNlCj4gPiA+ICpkZXYsCj4gPiA+IAo+ID4gPiAgICovCj4gPiA+ICAKPiA+
+ID4gIHN0YXRpYyBzdHJ1Y3Qgc3VueGlfZW5naW5lICoKPiA+ID4gIHN1bjRpX3Rjb25fZmluZF9l
+bmdpbmVfdHJhdmVyc2Uoc3RydWN0IHN1bjRpX2RydiAqZHJ2LAo+ID4gPiAKPiA+ID4gLSAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUpCj4gPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpub2Rl
+LAo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHUzMiBwb3J0X2lkKQo+ID4g
+PiAKPiA+ID4gIHsKPiA+ID4gIAo+ID4gPiAgICAgICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqcG9y
+dCwgKmVwLCAqcmVtb3RlOwo+ID4gPiAgICAgICAgIHN0cnVjdCBzdW54aV9lbmdpbmUgKmVuZ2lu
+ZSA9IEVSUl9QVFIoLUVJTlZBTCk7Cj4gPiA+IAo+ID4gPiArICAgICAgIHUzMiByZWcgPSAwOwo+
+ID4gPiAKPiA+ID4gLSAgICAgICBwb3J0ID0gb2ZfZ3JhcGhfZ2V0X3BvcnRfYnlfaWQobm9kZSwg
+MCk7Cj4gPiA+ICsgICAgICAgcG9ydCA9IG9mX2dyYXBoX2dldF9wb3J0X2J5X2lkKG5vZGUsIHBv
+cnRfaWQpOwo+ID4gPiAKPiA+ID4gICAgICAgICBpZiAoIXBvcnQpCj4gPiA+ICAgICAgICAgCj4g
+PiA+ICAgICAgICAgICAgICAgICByZXR1cm4gRVJSX1BUUigtRUlOVkFMKTsKPiA+ID4gCj4gPiA+
+IEBAIC04MjYsOCArODI4LDIwIEBAIHN1bjRpX3Rjb25fZmluZF9lbmdpbmVfdHJhdmVyc2Uoc3Ry
+dWN0IHN1bjRpX2Rydgo+ID4gPiAqZHJ2LAo+ID4gPiAKPiA+ID4gICAgICAgICAgICAgICAgIGlm
+IChyZW1vdGUgPT0gZW5naW5lLT5ub2RlKQo+ID4gPiAgICAgICAgICAgICAgICAgCj4gPiA+ICAg
+ICAgICAgICAgICAgICAgICAgICAgIGdvdG8gb3V0X3B1dF9yZW1vdGU7Cj4gPiA+IAo+ID4gPiAr
+ICAgICAgIC8qCj4gPiA+ICsgICAgICAgICogQWNjb3JkaW5nIHRvIGRldmljZSB0cmVlIGJpbmRp
+bmcgaW5wdXQgcG9ydHMgaGF2ZSBldmVuIGlkCj4gPiA+ICsgICAgICAgICogbnVtYmVyIGFuZCBv
+dXRwdXQgcG9ydHMgaGF2ZSBvZGQgaWQuIFNpbmNlIGNvbXBvbmVudCB3aXRoCj4gPiA+ICsgICAg
+ICAgICogbW9yZSB0aGFuIG9uZSBpbnB1dCBhbmQgb25lIG91dHB1dCAoVENPTiBUT1ApIGV4aXRz
+LCBjb3JyZWN0Cj4gPiA+ICsgICAgICAgICogcmVtb3RlIGlucHV0IGlkIGhhcyB0byBiZSBjYWxj
+dWxhdGVkIGJ5IHN1YnRyYWN0aW5nIDEgZnJvbQo+ID4gPiArICAgICAgICAqIHJlbW90ZSBvdXRw
+dXQgaWQuIElmIHRoaXMgZm9yIHNvbWUgcmVhc29uIGNhbid0IGJlIGRvbmUsIDAKPiA+ID4gKyAg
+ICAgICAgKiBpcyB1c2VkIGFzIGlucHV0IHBvcnQgaWQuCj4gPiA+ICsgICAgICAgICovCj4gPiAK
+PiA+IFlvdSBuZWVkIHRvIGNhbGwKPiA+IAo+ID4gICAgIG9mX25vZGVfcHV0KHBvcnQpOwo+ID4g
+Cj4gPiB0byBkcm9wIHRoZSByZWZlcmVuY2UgdG8gdGhlIG9yaWdpbmFsIHBvcnQuCj4gCj4gVGhh
+bmtzIGZvciBub3RpY2luZyBpdC4gSSBndWVzcyBJIHNob3VsZCBzZW5kIGZpeCBwYXRjaCwgc2lu
+Y2UgcGF0Y2hlcyBmcm9tIAo+IGRybS1taXNjLW5leHQgY2FuJ3QgYmUgZHJvcHBlZC4KClllYWgs
+IHBsZWFzZSBzZW5kIGFkZGl0aW9uYWwgcGF0Y2hlcyBmb3IgYWxsIHRoZSBpc3N1ZXMgcG9pbnRl
+ZCBvdXQgYnkKQ2hlbi1ZdS4KCk1heGltZQoKLS0gCk1heGltZSBSaXBhcmQsIEJvb3RsaW4gKGZv
+cm1lcmx5IEZyZWUgRWxlY3Ryb25zKQpFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2luZWVy
+aW5nCmh0dHBzOi8vYm9vdGxpbi5jb20KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVsCg==
