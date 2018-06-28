@@ -1,41 +1,24 @@
-Return-Path: <SRS0=qqtW=JO=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 02/22] [media] tvp5150: fix switch exit in set control handler
-Date: Thu, 28 Jun 2018 18:20:34 +0200
-Message-Id: <20180628162054.25613-3-m.felsch@pengutronix.de>
-In-Reply-To: <20180628162054.25613-1-m.felsch@pengutronix.de>
-References: <20180628162054.25613-1-m.felsch@pengutronix.de>
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: p.zabel@pengutronix.de, afshin.nasser@gmail.com, javierm@redhat.com, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Return-Path: <SRS0=MKI6=JO=linuxfoundation.org=gregkh@kernel.org>
+Date: Thu, 28 Jun 2018 19:50:38 +0900
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v8 00/14] staging: typec: tcpci: move out of staging
+Message-ID: <20180628105038.GA5191@kroah.com>
+References: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
+To: Li Jun <jun.li@nxp.com>
+Cc: robh+dt@kernel.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net, a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-The function only consists of a single switch case block without a
-default case. Unsupported control requests are indicated by the -EINVAL
-return code trough the last return statement at the end of the function. So
-exiting just the switch case block returns the -EINVAL error code but the
-hue control is supported and a zero should be returned instead.
+On Wed, Jun 27, 2018 at 07:45:18AM +0800, Li Jun wrote:
+> This patch set attempts to move the tcpci drivers out of staging by fix
+> some tcpci driver issues and define typec and power delivery device
+> properties, the changes are verified on NXP PTN5110, which is a standard
+> tcpci typec port controller device with power delivery support, tested
+> power source and sink with drp config.
 
-Replace the break by a 'return 0' to fix this behaviour.
+Nice work, thanks for sticking with this.  All now merged.
 
-Fixes: d183e4efcae8 ("[media] v4l: tvp5150: Add missing break in set
-control handler")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/media/i2c/tvp5150.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index da7ad455d4a8..509ac243ea97 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -828,7 +828,7 @@ static int tvp5150_s_ctrl(struct v4l2_ctrl *ctrl)
- 		return 0;
- 	case V4L2_CID_HUE:
- 		tvp5150_write(sd, TVP5150_HUE_CTL, ctrl->val);
--		break;
-+		return 0;
- 	case V4L2_CID_TEST_PATTERN:
- 		decoder->enable = ctrl->val ? false : true;
- 		tvp5150_selmux(sd);
--- 
-2.17.1
+greg k-h
