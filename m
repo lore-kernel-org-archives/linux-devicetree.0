@@ -1,314 +1,201 @@
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v3 5/6] coresight: catu: Add support for scatter gather tables
-Date: Thu, 28 Jun 2018 13:57:56 +0100
-Message-ID: <1530190677-19933-6-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH v3 2/6] coresight: Add helper device type
+Date: Thu, 28 Jun 2018 13:57:53 +0100
+Message-ID: <1530190677-19933-3-git-send-email-suzuki.poulose@arm.com>
 References: <1530190677-19933-1-git-send-email-suzuki.poulose@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1530190677-19933-1-git-send-email-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: robh@kernel.org, mathieu.poirier@linaro.org, Suzuki K Poulose <suzuki.poulose@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the support for setting up a SG table for use
-by the CATU. We reuse the tmc_sg_table to represent the table/data
-pages, even though the table format is different.
+Add a new coresight device type, which do not belong to any
+of the existing types, i.e, source, sink, link etc. A helper
+device could be connected to a coresight device, which could
+augment the functionality of the coresight device.
 
-Similar to ETR SG table, CATU uses a 4KB page size for data buffers
-as well as page tables. All table entries are 64bit wide and have
-the following format:
+This is intended to cover Coresight Address Translation Unit (CATU)
+devices, which provide improved Scatter Gather mechanism for TMC
+ETR. The idea is that the helper device could be controlled by
+the driver of the device it is attached to (in this case ETR),
+transparent to the generic coresight driver (and paths).
 
-        63                      12      1  0
-        x-----------------------------------x
-        |        Address [63-12] | SBZ  | V |
-        x-----------------------------------x
-
-	Where [V] ->	 0 - Pointer is invalid
-			 1 - Pointer is Valid
-
-CATU uses only first half of the page for data page pointers.
-i.e, single table page will only have 256 page pointers, addressing
-upto 1MB of data. The second half of a table page contains only two
-pointers at the end of the page (i.e, pointers at index 510 and 511),
-which are used as links to the "Previous" and "Next" page tables
-respectively.
-
-The first table page has an "Invalid" previous pointer and the
-next pointer entry points to the second page table if there is one.
-Similarly the last table page has an "Invalid" next pointer to
-indicate the end of the table chain.
+The operations include enable(), disable(), both of which could
+accept a device specific "data" which the driving device and
+the helper device could share. Since they don't appear in the
+coresight "path" tracked by software, we have to ensure that
+they are powered up/down whenever the master device is turned
+on.
 
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-catu.c | 251 +++++++++++++++++++++++++++
- 1 file changed, 251 insertions(+)
+ drivers/hwtracing/coresight/coresight.c | 43 +++++++++++++++++++++++++++++++--
+ include/linux/coresight.h               | 24 ++++++++++++++++++
+ 2 files changed, 65 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
-index 9d0cb1f..559d45b 100644
---- a/drivers/hwtracing/coresight/coresight-catu.c
-+++ b/drivers/hwtracing/coresight/coresight-catu.c
-@@ -16,10 +16,261 @@
+diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+index 7f2b478..3e07fd3 100644
+--- a/drivers/hwtracing/coresight/coresight.c
++++ b/drivers/hwtracing/coresight/coresight.c
+@@ -425,6 +425,42 @@ struct coresight_device *coresight_get_enabled_sink(bool deactivate)
+ 	return dev ? to_coresight_device(dev) : NULL;
+ }
  
- #include "coresight-catu.h"
- #include "coresight-priv.h"
-+#include "coresight-tmc.h"
- 
- #define csdev_to_catu_drvdata(csdev)	\
- 	dev_get_drvdata(csdev->dev.parent)
- 
-+/* Verbose output for CATU table contents */
-+#ifdef CATU_DEBUG
-+#define catu_dbg(x, ...) dev_dbg(x, __VA_ARGS__)
-+#else
-+#define catu_dbg(x, ...) do {} while (0)
-+#endif
-+
 +/*
-+ * CATU uses a page size of 4KB for page tables as well as data pages.
-+ * Each 64bit entry in the table has the following format.
-+ *
-+ *	63			12	1  0
-+ *	------------------------------------
-+ *	|	 Address [63-12] | SBZ	| V|
-+ *	------------------------------------
-+ *
-+ * Where bit[0] V indicates if the address is valid or not.
-+ * Each 4K table pages have upto 256 data page pointers, taking upto 2K
-+ * size. There are two Link pointers, pointing to the previous and next
-+ * table pages respectively at the end of the 4K page. (i.e, entry 510
-+ * and 511).
-+ *  E.g, a table of two pages could look like :
-+ *
-+ *                 Table Page 0               Table Page 1
-+ * SLADDR ===> x------------------x  x--> x-----------------x
-+ * INADDR    ->|  Page 0      | V |  |    | Page 256    | V | <- INADDR+1M
-+ *             |------------------|  |    |-----------------|
-+ * INADDR+4K ->|  Page 1      | V |  |    |                 |
-+ *             |------------------|  |    |-----------------|
-+ *             |  Page 2      | V |  |    |                 |
-+ *             |------------------|  |    |-----------------|
-+ *             |   ...        | V |  |    |    ...          |
-+ *             |------------------|  |    |-----------------|
-+ * INADDR+1020K|  Page 255    | V |  |    |   Page 511  | V |
-+ * SLADDR+2K==>|------------------|  |    |-----------------|
-+ *             |  UNUSED      |   |  |    |                 |
-+ *             |------------------|  |    |                 |
-+ *             |  UNUSED      |   |  |    |                 |
-+ *             |------------------|  |    |                 |
-+ *             |    ...       |   |  |    |                 |
-+ *             |------------------|  |    |-----------------|
-+ *             |   IGNORED    | 0 |  |    | Table Page 0| 1 |
-+ *             |------------------|  |    |-----------------|
-+ *             |  Table Page 1| 1 |--x    | IGNORED     | 0 |
-+ *             x------------------x       x-----------------x
-+ * SLADDR+4K==>
-+ *
-+ * The base input address (used by the ETR, programmed in INADDR_{LO,HI})
-+ * must be aligned to 1MB (the size addressable by a single page table).
-+ * The CATU maps INADDR{LO:HI} to the first page in the table pointed
-+ * to by SLADDR{LO:HI} and so on.
-+ *
++ * coresight_grab_device - Power up this device and any of the helper
++ * devices connected to it for trace operation. Since the helper devices
++ * don't appear on the trace path, they should be handled along with the
++ * the master device.
 + */
-+typedef u64 cate_t;
-+
-+#define CATU_PAGE_SHIFT		12
-+#define CATU_PAGE_SIZE		(1UL << CATU_PAGE_SHIFT)
-+#define CATU_PAGES_PER_SYSPAGE	(PAGE_SIZE / CATU_PAGE_SIZE)
-+
-+/* Page pointers are only allocated in the first 2K half */
-+#define CATU_PTRS_PER_PAGE	((CATU_PAGE_SIZE >> 1) / sizeof(cate_t))
-+#define CATU_PTRS_PER_SYSPAGE	(CATU_PAGES_PER_SYSPAGE * CATU_PTRS_PER_PAGE)
-+#define CATU_LINK_PREV		((CATU_PAGE_SIZE / sizeof(cate_t)) - 2)
-+#define CATU_LINK_NEXT		((CATU_PAGE_SIZE / sizeof(cate_t)) - 1)
-+
-+#define CATU_ADDR_SHIFT		12
-+#define CATU_ADDR_MASK		~(((cate_t)1 << CATU_ADDR_SHIFT) - 1)
-+#define CATU_ENTRY_VALID	((cate_t)0x1)
-+#define CATU_VALID_ENTRY(addr) \
-+	(((cate_t)(addr) & CATU_ADDR_MASK) | CATU_ENTRY_VALID)
-+#define CATU_ENTRY_ADDR(entry)	((cate_t)(entry) & ~((cate_t)CATU_ENTRY_VALID))
-+
-+/*
-+ * catu_get_table : Retrieve the table pointers for the given @offset
-+ * within the buffer. The buffer is wrapped around to a valid offset.
-+ *
-+ * Returns : The CPU virtual address for the beginning of the table
-+ * containing the data page pointer for @offset. If @daddrp is not NULL,
-+ * @daddrp points the DMA address of the beginning of the table.
-+ */
-+static inline cate_t *catu_get_table(struct tmc_sg_table *catu_table,
-+				     unsigned long offset,
-+				     dma_addr_t *daddrp)
-+{
-+	unsigned long buf_size = tmc_sg_table_buf_size(catu_table);
-+	unsigned int table_nr, pg_idx, pg_offset;
-+	struct tmc_pages *table_pages = &catu_table->table_pages;
-+	void *ptr;
-+
-+	/* Make sure offset is within the range */
-+	offset %= buf_size;
-+
-+	/*
-+	 * Each table can address 1MB and a single kernel page can
-+	 * contain "CATU_PAGES_PER_SYSPAGE" CATU tables.
-+	 */
-+	table_nr = offset >> 20;
-+	/* Find the table page where the table_nr lies in */
-+	pg_idx = table_nr / CATU_PAGES_PER_SYSPAGE;
-+	pg_offset = (table_nr % CATU_PAGES_PER_SYSPAGE) * CATU_PAGE_SIZE;
-+	if (daddrp)
-+		*daddrp = table_pages->daddrs[pg_idx] + pg_offset;
-+	ptr = page_address(table_pages->pages[pg_idx]);
-+	return (cate_t *)((unsigned long)ptr + pg_offset);
-+}
-+
-+#ifdef CATU_DEBUG
-+static void catu_dump_table(struct tmc_sg_table *catu_table)
++static void coresight_grab_device(struct coresight_device *csdev)
 +{
 +	int i;
-+	cate_t *table;
-+	unsigned long table_end, buf_size, offset = 0;
 +
-+	buf_size = tmc_sg_table_buf_size(catu_table);
-+	dev_dbg(catu_table->dev,
-+		"Dump table %p, tdaddr: %llx\n",
-+		catu_table, catu_table->table_daddr);
++	for (i = 0; i < csdev->nr_outport; i++) {
++		struct coresight_device *child = csdev->conns[i].child_dev;
 +
-+	while (offset < buf_size) {
-+		table_end = offset + SZ_1M < buf_size ?
-+			    offset + SZ_1M : buf_size;
-+		table = catu_get_table(catu_table, offset, NULL);
-+		for (i = 0; offset < table_end; i++, offset += CATU_PAGE_SIZE)
-+			dev_dbg(catu_table->dev, "%d: %llx\n", i, table[i]);
-+		dev_dbg(catu_table->dev, "Prev : %llx, Next: %llx\n",
-+			table[CATU_LINK_PREV], table[CATU_LINK_NEXT]);
-+		dev_dbg(catu_table->dev, "== End of sub-table ===");
++		if (child && child->type == CORESIGHT_DEV_TYPE_HELPER)
++			pm_runtime_get_sync(child->dev.parent);
 +	}
-+	dev_dbg(catu_table->dev, "== End of Table ===");
-+}
-+
-+#else
-+static inline void catu_dump_table(struct tmc_sg_table *catu_table)
-+{
-+}
-+#endif
-+
-+static inline cate_t catu_make_entry(dma_addr_t addr)
-+{
-+	return addr ? CATU_VALID_ENTRY(addr) : 0;
++	pm_runtime_get_sync(csdev->dev.parent);
 +}
 +
 +/*
-+ * catu_populate_table : Populate the given CATU table.
-+ * The table is always populated as a circular table.
-+ * i.e, the "prev" link of the "first" table points to the "last"
-+ * table and the "next" link of the "last" table points to the
-+ * "first" table. The buffer should be made linear by calling
-+ * catu_set_table().
++ * coresight_drop_device - Release this device and any of the helper
++ * devices connected to it.
 + */
-+static void
-+catu_populate_table(struct tmc_sg_table *catu_table)
++static void coresight_drop_device(struct coresight_device *csdev)
 +{
 +	int i;
-+	int sys_pidx;	/* Index to current system data page */
-+	int catu_pidx;	/* Index of CATU page within the system data page */
-+	unsigned long offset, buf_size, table_end;
-+	dma_addr_t data_daddr;
-+	dma_addr_t prev_taddr, next_taddr, cur_taddr;
-+	cate_t *table_ptr, *next_table;
 +
-+	buf_size = tmc_sg_table_buf_size(catu_table);
-+	sys_pidx = catu_pidx = 0;
-+	offset = 0;
++	pm_runtime_put(csdev->dev.parent);
++	for (i = 0; i < csdev->nr_outport; i++) {
++		struct coresight_device *child = csdev->conns[i].child_dev;
 +
-+	table_ptr = catu_get_table(catu_table, 0, &cur_taddr);
-+	prev_taddr = 0;	/* Prev link for the first table */
-+
-+	while (offset < buf_size) {
-+		/*
-+		 * The @offset is always 1M aligned here and we have an
-+		 * empty table @table_ptr to fill. Each table can address
-+		 * upto 1MB data buffer. The last table may have fewer
-+		 * entries if the buffer size is not aligned.
-+		 */
-+		table_end = (offset + SZ_1M) < buf_size ?
-+			    (offset + SZ_1M) : buf_size;
-+		for (i = 0; offset < table_end;
-+		     i++, offset += CATU_PAGE_SIZE) {
-+
-+			data_daddr = catu_table->data_pages.daddrs[sys_pidx] +
-+				     catu_pidx * CATU_PAGE_SIZE;
-+			catu_dbg(catu_table->dev,
-+				"[table %5ld:%03d] 0x%llx\n",
-+				(offset >> 20), i, data_daddr);
-+			table_ptr[i] = catu_make_entry(data_daddr);
-+			/* Move the pointers for data pages */
-+			catu_pidx = (catu_pidx + 1) % CATU_PAGES_PER_SYSPAGE;
-+			if (catu_pidx == 0)
-+				sys_pidx++;
-+		}
-+
-+		/*
-+		 * If we have finished all the valid entries, fill the rest of
-+		 * the table (i.e, last table page) with invalid entries,
-+		 * to fail the lookups.
-+		 */
-+		if (offset == buf_size) {
-+			memset(&table_ptr[i], 0,
-+			       sizeof(cate_t) * (CATU_PTRS_PER_PAGE - i));
-+			next_taddr = 0;
-+		} else {
-+			next_table = catu_get_table(catu_table,
-+						    offset, &next_taddr);
-+		}
-+
-+		table_ptr[CATU_LINK_PREV] = catu_make_entry(prev_taddr);
-+		table_ptr[CATU_LINK_NEXT] = catu_make_entry(next_taddr);
-+
-+		catu_dbg(catu_table->dev,
-+			"[table%5ld]: Cur: 0x%llx Prev: 0x%llx, Next: 0x%llx\n",
-+			(offset >> 20) - 1,  cur_taddr, prev_taddr, next_taddr);
-+
-+		/* Update the prev/next addresses */
-+		if (next_taddr) {
-+			prev_taddr = cur_taddr;
-+			cur_taddr = next_taddr;
-+			table_ptr = next_table;
-+		}
++		if (child && child->type == CORESIGHT_DEV_TYPE_HELPER)
++			pm_runtime_put(child->dev.parent);
 +	}
-+
-+	/* Sync the table for device */
-+	tmc_sg_table_sync_table(catu_table);
 +}
 +
-+static struct tmc_sg_table __maybe_unused *
-+catu_init_sg_table(struct device *catu_dev, int node,
-+		   ssize_t size, void **pages)
-+{
-+	int nr_tpages;
-+	struct tmc_sg_table *catu_table;
+ /**
+  * _coresight_build_path - recursively build a path from a @csdev to a sink.
+  * @csdev:	The device to start from.
+@@ -473,9 +509,9 @@ static int _coresight_build_path(struct coresight_device *csdev,
+ 	if (!node)
+ 		return -ENOMEM;
+ 
++	coresight_grab_device(csdev);
+ 	node->csdev = csdev;
+ 	list_add(&node->link, path);
+-	pm_runtime_get_sync(csdev->dev.parent);
+ 
+ 	return 0;
+ }
+@@ -519,7 +555,7 @@ void coresight_release_path(struct list_head *path)
+ 	list_for_each_entry_safe(nd, next, path, link) {
+ 		csdev = nd->csdev;
+ 
+-		pm_runtime_put_sync(csdev->dev.parent);
++		coresight_drop_device(csdev);
+ 		list_del(&nd->link);
+ 		kfree(nd);
+ 	}
+@@ -770,6 +806,9 @@ static struct device_type coresight_dev_type[] = {
+ 		.name = "source",
+ 		.groups = coresight_source_groups,
+ 	},
++	{
++		.name = "helper",
++	},
+ };
+ 
+ static void coresight_device_release(struct device *dev)
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index 7c188c2..3d40a2b 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -40,6 +40,7 @@ enum coresight_dev_type {
+ 	CORESIGHT_DEV_TYPE_LINK,
+ 	CORESIGHT_DEV_TYPE_LINKSINK,
+ 	CORESIGHT_DEV_TYPE_SOURCE,
++	CORESIGHT_DEV_TYPE_HELPER,
+ };
+ 
+ enum coresight_dev_subtype_sink {
+@@ -62,6 +63,10 @@ enum coresight_dev_subtype_source {
+ 	CORESIGHT_DEV_SUBTYPE_SOURCE_SOFTWARE,
+ };
+ 
++enum coresight_dev_subtype_helper {
++	CORESIGHT_DEV_SUBTYPE_HELPER_NONE,
++};
 +
-+	/*
-+	 * Each table can address upto 1MB and we can have
-+	 * CATU_PAGES_PER_SYSPAGE tables in a system page.
-+	 */
-+	nr_tpages = DIV_ROUND_UP(size, SZ_1M) / CATU_PAGES_PER_SYSPAGE;
-+	catu_table = tmc_alloc_sg_table(catu_dev, node, nr_tpages,
-+					size >> PAGE_SHIFT, pages);
-+	if (IS_ERR(catu_table))
-+		return catu_table;
+ /**
+  * union coresight_dev_subtype - further characterisation of a type
+  * @sink_subtype:	type of sink this component is, as defined
+@@ -70,6 +75,8 @@ enum coresight_dev_subtype_source {
+  *			by @coresight_dev_subtype_link.
+  * @source_subtype:	type of source this component is, as defined
+  *			by @coresight_dev_subtype_source.
++ * @helper_subtype:	type of helper this component is, as defined
++ *			by @coresight_dev_subtype_helper.
+  */
+ union coresight_dev_subtype {
+ 	/* We have some devices which acts as LINK and SINK */
+@@ -78,6 +85,7 @@ union coresight_dev_subtype {
+ 		enum coresight_dev_subtype_link link_subtype;
+ 	};
+ 	enum coresight_dev_subtype_source source_subtype;
++	enum coresight_dev_subtype_helper helper_subtype;
+ };
+ 
+ /**
+@@ -172,6 +180,7 @@ struct coresight_device {
+ #define source_ops(csdev)	csdev->ops->source_ops
+ #define sink_ops(csdev)		csdev->ops->sink_ops
+ #define link_ops(csdev)		csdev->ops->link_ops
++#define helper_ops(csdev)	csdev->ops->helper_ops
+ 
+ /**
+  * struct coresight_ops_sink - basic operations for a sink
+@@ -231,10 +240,25 @@ struct coresight_ops_source {
+ 			struct perf_event *event);
+ };
+ 
++/**
++ * struct coresight_ops_helper - Operations for a helper device.
++ *
++ * All operations could pass in a device specific data, which could
++ * help the helper device to determine what to do.
++ *
++ * @enable	: Enable the device
++ * @disable	: Disable the device
++ */
++struct coresight_ops_helper {
++	int (*enable)(struct coresight_device *csdev, void *data);
++	int (*disable)(struct coresight_device *csdev, void *data);
++};
 +
-+	catu_populate_table(catu_table);
-+	dev_dbg(catu_dev,
-+		"Setup table %p, size %ldKB, %d table pages\n",
-+		catu_table, (unsigned long)size >> 10,  nr_tpages);
-+	catu_dump_table(catu_table);
-+	return catu_table;
-+}
-+
- coresight_simple_reg32(struct catu_drvdata, devid, CORESIGHT_DEVID);
- coresight_simple_reg32(struct catu_drvdata, control, CATU_CONTROL);
- coresight_simple_reg32(struct catu_drvdata, status, CATU_STATUS);
+ struct coresight_ops {
+ 	const struct coresight_ops_sink *sink_ops;
+ 	const struct coresight_ops_link *link_ops;
+ 	const struct coresight_ops_source *source_ops;
++	const struct coresight_ops_helper *helper_ops;
+ };
+ 
+ #ifdef CONFIG_CORESIGHT
 -- 
 2.7.4
