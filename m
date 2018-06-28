@@ -1,62 +1,54 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v4 6/7] Bluetooth: mediatek: Add protocol support for
- MediaTek serial devices
-Date: Thu, 28 Jun 2018 07:19:41 +0200
-Message-ID: <20180628051941.GF629@localhost>
-References: <cover.1530004712.git.sean.wang@mediatek.com>
- <48215a1276c36af7ad581c3d83759fe9f55e3c4b.1530004712.git.sean.wang@mediatek.com>
- <CAHp75VehTeyyzR4bPKK3hFDTVqZnhdNy5vcBFJCSH_Zrx+QrKA@mail.gmail.com>
- <CAHp75VedHLw52J_ymh3iYf2w=r8d+Kqg=fJZmBGnaCrEbNEPdQ@mail.gmail.com>
- <1530155173.29697.48.camel@mtkswgap22>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Luis Araneda <luaraneda@gmail.com>
+Subject: [RFC PATCH 0/5] arm: dts: zynq: improvements and cleanup
+Date: Thu, 28 Jun 2018 01:42:00 -0400
+Message-ID: <20180628054205.17737-1-luaraneda@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1530155173.29697.48.camel@mtkswgap22>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Marcel Holtmann <marcel@holtmann.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-bluetooth@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Luis Araneda <luaraneda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 28, 2018 at 11:06:13AM +0800, Sean Wang wrote:
-> On Wed, 2018-06-27 at 20:04 +0300, Andy Shevchenko wrote:
-> > On Wed, Jun 27, 2018 at 7:59 PM, Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Wed, Jun 27, 2018 at 8:43 AM,  <sean.wang@mediatek.com> wrote:
-> > >> From: Sean Wang <sean.wang@mediatek.com>
+This series attempts to standardize device naming and improve
+its information for better identification
 
-> > >> +#include <net/bluetooth/bluetooth.h>
-> > >> +#include <net/bluetooth/hci_core.h>
-> > 
-> > >> +       /* Enable the power domain and clock the device requires. */
-> > >> +       pm_runtime_enable(dev);
-> > >> +       err = pm_runtime_get_sync(dev);
-> > >> +       if (err < 0)
-> > >> +               goto err_pm2;
+The values of the "compatible" and "model" device-tree properties
+are corrected for some devices, adding complementary information
+when necessary
 
-> > >> +err_pm1:
-> > >> +       pm_runtime_put_sync(dev);
-> > >> +err_pm2:
-> > >> +       pm_runtime_disable(dev);
+Additionally, a device-tree file is renamed to reflect the real model
+of the device
 
-Please name error labels after what they do, not using numbers (see
-CodingStyle). Here you could use err_disable_rpm instead of err_pm2, for
-example.
+I'm sending the series as an RFC because I don't know if
+device-tree files can be renamed and properties be changed
+(the last patch in particular)
 
-Also, if you really want to undo pm_runtime_get_sync() failing above,
-you still need a pm_runtime_put_noidle() to balance the usage count.
+The patches are sorted (descending) by what I think is
+the probability of being accepted
 
-> > >> +struct mtk_stp_hdr {
-> > >> +       __u8 prefix;
-> > >> +       __u8 dlen1:4;
-> > >> +       __u8 type:4;
-> > 
-> > >> +       __u8 dlen2:8;
-> > >> +       __u8 cs;
-> > >> +} __packed;
+Luis Araneda (5):
+  arm: dts: zynq: Set correct manufacturer for ZedBoard and MicroZed
+    boards
+  dt-bindings: xilinx: Add missing zynq boards
+  arm: dts: zynq: correct and improve the model property of dt files
+  arm: dts: zynq: rename board zed to zedboard
+  arm: dts: zynq: remove "zynq" prefix from compatible property
 
-Perhaps too much context have been lost here, but unless you're sharing
-this struct with user space, you should be using u8 (without __) above
-(and elsewhere).
+ .../devicetree/bindings/arm/xilinx.txt        | 34 ++++++++++++++-----
+ arch/arm/boot/dts/Makefile                    |  2 +-
+ arch/arm/boot/dts/zynq-cc108.dts              |  4 +--
+ arch/arm/boot/dts/zynq-microzed.dts           |  4 +--
+ arch/arm/boot/dts/zynq-parallella.dts         |  2 +-
+ arch/arm/boot/dts/zynq-zc702.dts              |  4 +--
+ arch/arm/boot/dts/zynq-zc706.dts              |  4 +--
+ arch/arm/boot/dts/zynq-zc770-xm010.dts        |  4 +--
+ arch/arm/boot/dts/zynq-zc770-xm011.dts        |  4 +--
+ arch/arm/boot/dts/zynq-zc770-xm012.dts        |  4 +--
+ arch/arm/boot/dts/zynq-zc770-xm013.dts        |  4 +--
+ .../dts/{zynq-zed.dts => zynq-zedboard.dts}   |  4 +--
+ arch/arm/boot/dts/zynq-zybo-z7.dts            |  4 +--
+ arch/arm/boot/dts/zynq-zybo.dts               |  4 +--
+ 14 files changed, 50 insertions(+), 32 deletions(-)
+ rename arch/arm/boot/dts/{zynq-zed.dts => zynq-zedboard.dts} (89%)
 
-Johan
+-- 
+2.18.0
