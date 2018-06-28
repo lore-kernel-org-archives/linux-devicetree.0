@@ -1,175 +1,82 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v3 06/17] irqchip/irq-mvebu-icu: switch to regmap
-Date: Thu, 28 Jun 2018 13:05:05 +0100
-Message-ID: <ebdd4cb8-7cc8-3efa-d4be-f5d8860e848d@arm.com>
-References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
- <20180622151432.1566-7-miquel.raynal@bootlin.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 0/8] gnss: add new GNSS subsystem
+Date: Thu, 28 Jun 2018 21:01:03 +0900
+Message-ID: <20180628120103.GA28131@kroah.com>
+References: <20180601082259.17563-1-johan@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180622151432.1566-7-miquel.raynal@bootlin.com>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haim Boot <hayim@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Hanna Hawa <hannah@marvell.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180601082259.17563-1-johan@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/06/18 16:14, Miquel Raynal wrote:
-> Before splitting the code to support multiple platform devices to
-> be probed (one for the ICU, one per interrupt group), let's switch to
-> regmap first by creating one in the ->probe().
-
-What's the benefit of doing so? I assume that has to do with supporting
-multiple devices that share an MMIO range?
-
+On Fri, Jun 01, 2018 at 10:22:51AM +0200, Johan Hovold wrote:
+> This series adds a new subsystem for GNSS receivers (e.g. GPS
+> receivers).
 > 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  drivers/irqchip/irq-mvebu-icu.c | 45 +++++++++++++++++++++++++++--------------
->  1 file changed, 30 insertions(+), 15 deletions(-)
+> While GNSS receivers are typically accessed using a UART interface they
+> often also support other I/O interfaces such as I2C, SPI and USB, while
+> yet other devices use iomem or even some form of remote-processor
+> messaging (rpmsg).
 > 
-> diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
-> index 0f2655d7f19e..3694c0d73c0d 100644
-> --- a/drivers/irqchip/irq-mvebu-icu.c
-> +++ b/drivers/irqchip/irq-mvebu-icu.c
-> @@ -18,6 +18,8 @@
->  #include <linux/of_irq.h>
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/syscon.h>
->  
->  #include <dt-bindings/interrupt-controller/mvebu-icu.h>
->  
-> @@ -38,7 +40,7 @@
->  
->  struct mvebu_icu {
->  	struct irq_chip irq_chip;
-> -	void __iomem *base;
-> +	struct regmap *regmap;
->  	struct irq_domain *domain;
->  	struct device *dev;
->  	atomic_t initialized;
-> @@ -56,10 +58,10 @@ static void mvebu_icu_init(struct mvebu_icu *icu, struct msi_msg *msg)
->  		return;
->  
->  	/* Set Clear/Set ICU SPI message address in AP */
-> -	writel_relaxed(msg[0].address_hi, icu->base + ICU_SETSPI_NSR_AH);
-> -	writel_relaxed(msg[0].address_lo, icu->base + ICU_SETSPI_NSR_AL);
-> -	writel_relaxed(msg[1].address_hi, icu->base + ICU_CLRSPI_NSR_AH);
-> -	writel_relaxed(msg[1].address_lo, icu->base + ICU_CLRSPI_NSR_AL);
-> +	regmap_write(icu->regmap, ICU_SETSPI_NSR_AH, msg[0].address_hi);
-> +	regmap_write(icu->regmap, ICU_SETSPI_NSR_AL, msg[0].address_lo);
-> +	regmap_write(icu->regmap, ICU_CLRSPI_NSR_AH, msg[1].address_hi);
-> +	regmap_write(icu->regmap, ICU_CLRSPI_NSR_AL, msg[1].address_lo);
-
-Isn't this a change in the way we write things to the MMIO registers?
-You're now trading a writel_relaxed for a writel, plus some locking...
-
-Talking about which: Are you always in a context where you can take that
-lock? The bit of documentation I've just read seems to imply that the
-default lock is a mutex. Is that always safe? My guess is that it isn't,
-and any callback that can end-up here after having taken something like
-the desc lock is going to blow in your face.
-
-Have you tried lockdep?
-
->  }
->  
->  static void mvebu_icu_write_msg(struct msi_desc *desc, struct msi_msg *msg)
-> @@ -82,7 +84,7 @@ static void mvebu_icu_write_msg(struct msi_desc *desc, struct msi_msg *msg)
->  		icu_int = 0;
->  	}
->  
-> -	writel_relaxed(icu_int, icu->base + ICU_INT_CFG(d->hwirq));
-> +	regmap_write(icu->regmap, ICU_INT_CFG(d->hwirq), icu_int);
->  
->  	/*
->  	 * The SATA unit has 2 ports, and a dedicated ICU entry per
-> @@ -94,10 +96,10 @@ static void mvebu_icu_write_msg(struct msi_desc *desc, struct msi_msg *msg)
->  	 * configured (regardless of which port is actually in use).
->  	 */
->  	if (d->hwirq == ICU_SATA0_ICU_ID || d->hwirq == ICU_SATA1_ICU_ID) {
-> -		writel_relaxed(icu_int,
-> -			       icu->base + ICU_INT_CFG(ICU_SATA0_ICU_ID));
-> -		writel_relaxed(icu_int,
-> -			       icu->base + ICU_INT_CFG(ICU_SATA1_ICU_ID));
-> +		regmap_write(icu->regmap, ICU_INT_CFG(ICU_SATA0_ICU_ID),
-> +			     icu_int);
-> +		regmap_write(icu->regmap, ICU_INT_CFG(ICU_SATA1_ICU_ID),
-> +			     icu_int);
->  	}
->  }
->  
-> @@ -204,12 +206,20 @@ static const struct irq_domain_ops mvebu_icu_domain_ops = {
->  	.free      = mvebu_icu_irq_domain_free,
->  };
->  
-> +static struct regmap_config mvebu_icu_regmap_config = {
-> +	.reg_bits	= 32,
-> +	.val_bits	= 32,
-> +	.reg_stride	= 4,
-> +	.name		= "mvebu_icu",
-> +};
-> +
->  static int mvebu_icu_probe(struct platform_device *pdev)
->  {
->  	struct mvebu_icu *icu;
->  	struct device_node *node = pdev->dev.of_node;
->  	struct device_node *gicp_dn;
->  	struct resource *res;
-> +	void __iomem *regs;
->  	int i;
->  
->  	icu = devm_kzalloc(&pdev->dev, sizeof(struct mvebu_icu),
-> @@ -220,12 +230,17 @@ static int mvebu_icu_probe(struct platform_device *pdev)
->  	icu->dev = &pdev->dev;
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	icu->base = devm_ioremap_resource(&pdev->dev, res);
-> -	if (IS_ERR(icu->base)) {
-> +	regs = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(regs)) {
->  		dev_err(&pdev->dev, "Failed to map icu base address.\n");
-> -		return PTR_ERR(icu->base);
-> +		return PTR_ERR(regs);
->  	}
->  
-> +	icu->regmap = devm_regmap_init_mmio(icu->dev, regs,
-> +					    &mvebu_icu_regmap_config);
-> +	if (IS_ERR(icu->regmap))
-> +		return PTR_ERR(icu->regmap);
-> +
->  	icu->irq_chip.name = devm_kasprintf(&pdev->dev, GFP_KERNEL,
->  					    "ICU.%x",
->  					    (unsigned int)res->start);
-> @@ -260,11 +275,11 @@ static int mvebu_icu_probe(struct platform_device *pdev)
->  	for (i = 0 ; i < ICU_MAX_IRQS ; i++) {
->  		u32 icu_int, icu_grp;
->  
-> -		icu_int = readl_relaxed(icu->base + ICU_INT_CFG(i));
-> +		regmap_read(icu->regmap, ICU_INT_CFG(i), &icu_int);
->  		icu_grp = icu_int >> ICU_GROUP_SHIFT;
->  
->  		if (icu_grp == ICU_GRP_NSR)
-> -			writel_relaxed(0x0, icu->base + ICU_INT_CFG(i));
-> +			regmap_write(icu->regmap, ICU_INT_CFG(i), 0);
->  	}
->  
->  	icu->domain =
+> The new GNSS subsystem abstracts the underlying interface and provides a
+> new "gnss" class type, which exposes a character-device interface (e.g.
+> /dev/gnss0) to user space. This allows GNSS receivers to have a
+> representation in the Linux device model, something which is important
+> not least for power management purposes and which also allows for easy
+> detection and identification of GNSS devices.
 > 
+> Note that the character-device interface provides raw access to whatever
+> protocol the receiver is (currently) using, such as NMEA 0183, UBX or
+> SiRF Binary. These protocols are expected to be continued to be handled
+> by user space for the time being, even if some hybrid solutions are also
+> conceivable (e.g. to have kernel drivers issue management commands).
+> 
+> This will still allow for better platform integration by allowing GNSS
+> devices and their resources (e.g. regulators and enable-gpios) to be
+> described by firmware and managed by kernel drivers rather than
+> platform-specific scripts and services.
+> 
+> While the current interface is kept minimal, it could be extended using
+> IOCTLs, sysfs or uevents as needs and proper abstraction levels are
+> identified and determined (e.g. for device and feature identification).
+> 
+> Another possible extension is to add generic 1PPS support.
+> 
+> I decided to go with a custom character-device interface rather than
+> pretend that these abstract GNSS devices are still TTY devices (e.g.
+> /dev/ttyGNSS0). Obviously, modifying line settings or reading modem
+> control signals does not make any sense for a device using, say, a
+> USB (not USB-serial) or iomem interface. This also means, however, that
+> user space would no longer be able to set the line speed to match a new
+> port configuration that can be set using the various GNSS protocols when
+> the underlying interface is indeed a UART; instead this would need to be
+> taken care of by the driver.
+> 
+> Also note that writes are always synchronous instead of requiring user
+> space to call tcdrain() after every command.
+> 
+> This all seems to work well-enough (e.g. with gpsd), but please let me
+> know if I've overlooked something which would indeed require a TTY
+> interface instead.
+> 
+> I have implemented drivers for receivers based on two common GNSS
+> chipsets; SiRFstar and u-blox. Due to lack of hardware, the sirf driver
+> has been tested using a mockup device and a USB-serial-based SiRFstar IV
+> GPS (using out-of-tree USB-serial code). [ Let me know if you've got any
+> evaluation kits to spare. ] The ubx driver has been tested using a
+> u-blox 8 GNSS evaluation kit (thanks u-blox!).
+> 
+> Finally, note that documentation (including kerneldoc) remains to be
+> written, but hopefully this will not hinder review given that the
+> current interfaces are fairly self-describing.
 
-Thanks,
+This all looks great.  Thanks for doing this work and adding a new
+subsystem for something that has been asked for for many years.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+All now merged in my tree, nice job!
+
+greg k-h
