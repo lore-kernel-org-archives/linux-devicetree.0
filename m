@@ -1,37 +1,39 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH v3] dmaengine: rcar-dmac: don't use DMAC error interrupt
-Date: Thu, 28 Jun 2018 09:51:23 +0530
-Message-ID: <20180628042123.GJ22377@vkoul-mobl>
-References: <87lgbgswl5.wl%kuninori.morimoto.gx@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH 0/4] RDU1/2 latest supported RAVE SP nodes
+Date: Wed, 27 Jun 2018 21:24:20 -0700
+Message-ID: <20180628042424.12664-1-andrew.smirnov@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87lgbgswl5.wl%kuninori.morimoto.gx@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Dan Williams <dan.j.williams@intel.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran@ksquared.org.uk>, Geert Uytterhoeven <geert+renesas@glider.be>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Lucas Stach <l.stach@pengutronix.de>, cphealy@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 15-06-18, 00:53, Kuninori Morimoto wrote:
-> 
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> 
-> rcar-dmac has 2 types of interrupt, 1) error IRQ (for all),
-> 2) IRQ for each channels.
-> If error happens on some channels, the error IRQ will be handled
-> by 1), and "all" channels will be restarted.
-> But in this design, error handling itself will be problem for
-> non error channel users.
-> This patch removes 1) handler, and handles error IRQ on 2)
-> 
-> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-> [Kuninori: updated patch to adjust DMACHCR/DMAOR]
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> Tested-by: Nguyen Viet Dung <nv-dung@jinso.co.jp>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Shawn:
 
-Applied, thanks
+These are patches adding the rest of RAVE SP child nodes covering all
+the rest of currently supported MFD cells. There's more to be added,
+once more drivers get accepted upstream.
+
+The bindings three drivers mentioned are availible in:
+
+    Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
+    Documentation/devicetree/bindings/input/zii,rave-sp-pwrbutton.txt
+    Documentation/devicetree/bindings/leds/backlight/zii,rave-sp-backlight.txt
+
+Feedback is welcome!
+
+Thanks,
+Andrey Smirnov
+
+Andrey Smirnov (4):
+  ARM: dts: imx51-zii-rdu1: Populate RAVE SP EEPROM nodes
+  ARM: dts: imx6qdl-zii-rdu2: Populate RAVE SP EEPROM nodes
+  ARM: dts: imx6qdl-zii-rdu2: Populate RAVE SP backlight node
+  ARM: dts: imx6qdl-zii-rdu2: Populate RAVE SP power button node
+
+ arch/arm/boot/dts/imx51-zii-rdu1.dts    | 29 +++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 26 ++++++++++++++++++++++
+ 2 files changed, 55 insertions(+)
 
 -- 
-~Vinod
+2.17.1
