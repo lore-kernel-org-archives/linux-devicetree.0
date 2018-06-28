@@ -1,195 +1,50 @@
-From: Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v3 3/5] clocksource/drivers/timer-mediatek: Rename function prefix
-Date: Thu, 28 Jun 2018 18:45:42 +0800
-Message-ID: <1530182744-10731-4-git-send-email-stanley.chu@mediatek.com>
-References: <1530182744-10731-1-git-send-email-stanley.chu@mediatek.com>
+From: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 0/5] Add system timer driver for Mediatek SoCs
+Date: Thu, 28 Jun 2018 18:45:39 +0800
+Message-ID: <1530182744-10731-1-git-send-email-stanley.chu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530182744-10731-1-git-send-email-stanley.chu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, Stanley Chu <stanley.chu@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add prefix to specify the name of supported timer hardware:
-"General Purpose Timer (GPT)".
+Changes since v2:
+- Rename existed mtk_timer.c to timer-mediatek.c.
+- Add system timer support into timer-mediatek.c instead of creating a new file.
+- Use _gpt_ and _syst_ to identify different timers.
+- Convert gpt driver to use timer_of.
+- Fix system timer driver: irq flags.
+- Fix bindings of both gpt and system timer.
 
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
----
- drivers/clocksource/timer-mediatek.c |   60 +++++++++++++++++-----------------
- 1 file changed, 30 insertions(+), 30 deletions(-)
+Changes since v1:
+- Use timer_of structure and APIs to make driver more clean.
+- Remove unnecessary headers.
+- Use fixed-clock.
+- Fix indent.
 
-diff --git a/drivers/clocksource/timer-mediatek.c b/drivers/clocksource/timer-mediatek.c
-index f9b724f..ff284f2 100644
---- a/drivers/clocksource/timer-mediatek.c
-+++ b/drivers/clocksource/timer-mediatek.c
-@@ -64,7 +64,7 @@ struct mtk_clock_event_device {
- 
- static void __iomem *gpt_sched_reg __read_mostly;
- 
--static u64 notrace mtk_read_sched_clock(void)
-+static u64 notrace mtk_gpt_read_sched_clock(void)
- {
- 	return readl_relaxed(gpt_sched_reg);
- }
-@@ -75,7 +75,7 @@ static inline struct mtk_clock_event_device *to_mtk_clk(
- 	return container_of(c, struct mtk_clock_event_device, dev);
- }
- 
--static void mtk_clkevt_time_stop(struct mtk_clock_event_device *evt, u8 timer)
-+static void mtk_gpt_clkevt_time_stop(struct mtk_clock_event_device *evt, u8 timer)
- {
- 	u32 val;
- 
-@@ -84,13 +84,13 @@ static void mtk_clkevt_time_stop(struct mtk_clock_event_device *evt, u8 timer)
- 			TIMER_CTRL_REG(timer));
- }
- 
--static void mtk_clkevt_time_setup(struct mtk_clock_event_device *evt,
-+static void mtk_gpt_clkevt_time_setup(struct mtk_clock_event_device *evt,
- 				unsigned long delay, u8 timer)
- {
- 	writel(delay, evt->gpt_base + TIMER_CMP_REG(timer));
- }
- 
--static void mtk_clkevt_time_start(struct mtk_clock_event_device *evt,
-+static void mtk_gpt_clkevt_time_start(struct mtk_clock_event_device *evt,
- 		bool periodic, u8 timer)
- {
- 	u32 val;
-@@ -112,35 +112,35 @@ static void mtk_clkevt_time_start(struct mtk_clock_event_device *evt,
- 	       evt->gpt_base + TIMER_CTRL_REG(timer));
- }
- 
--static int mtk_clkevt_shutdown(struct clock_event_device *clk)
-+static int mtk_gpt_clkevt_shutdown(struct clock_event_device *clk)
- {
--	mtk_clkevt_time_stop(to_mtk_clk(clk), GPT_CLK_EVT);
-+	mtk_gpt_clkevt_time_stop(to_mtk_clk(clk), GPT_CLK_EVT);
- 	return 0;
- }
- 
--static int mtk_clkevt_set_periodic(struct clock_event_device *clk)
-+static int mtk_gpt_clkevt_set_periodic(struct clock_event_device *clk)
- {
- 	struct mtk_clock_event_device *evt = to_mtk_clk(clk);
- 
--	mtk_clkevt_time_stop(evt, GPT_CLK_EVT);
--	mtk_clkevt_time_setup(evt, evt->ticks_per_jiffy, GPT_CLK_EVT);
--	mtk_clkevt_time_start(evt, true, GPT_CLK_EVT);
-+	mtk_gpt_clkevt_time_stop(evt, GPT_CLK_EVT);
-+	mtk_gpt_clkevt_time_setup(evt, evt->ticks_per_jiffy, GPT_CLK_EVT);
-+	mtk_gpt_clkevt_time_start(evt, true, GPT_CLK_EVT);
- 	return 0;
- }
- 
--static int mtk_clkevt_next_event(unsigned long event,
-+static int mtk_gpt_clkevt_next_event(unsigned long event,
- 				   struct clock_event_device *clk)
- {
- 	struct mtk_clock_event_device *evt = to_mtk_clk(clk);
- 
--	mtk_clkevt_time_stop(evt, GPT_CLK_EVT);
--	mtk_clkevt_time_setup(evt, event, GPT_CLK_EVT);
--	mtk_clkevt_time_start(evt, false, GPT_CLK_EVT);
-+	mtk_gpt_clkevt_time_stop(evt, GPT_CLK_EVT);
-+	mtk_gpt_clkevt_time_setup(evt, event, GPT_CLK_EVT);
-+	mtk_gpt_clkevt_time_start(evt, false, GPT_CLK_EVT);
- 
- 	return 0;
- }
- 
--static irqreturn_t mtk_timer_interrupt(int irq, void *dev_id)
-+static irqreturn_t mtk_gpt_interrupt(int irq, void *dev_id)
- {
- 	struct mtk_clock_event_device *evt = dev_id;
- 
-@@ -152,7 +152,7 @@ static irqreturn_t mtk_timer_interrupt(int irq, void *dev_id)
- }
- 
- static void
--__init mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer, u8 option)
-+__init mtk_gpt_setup(struct mtk_clock_event_device *evt, u8 timer, u8 option)
- {
- 	writel(TIMER_CTRL_CLEAR | TIMER_CTRL_DISABLE,
- 		evt->gpt_base + TIMER_CTRL_REG(timer));
-@@ -166,7 +166,7 @@ __init mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer, u8 option)
- 			evt->gpt_base + TIMER_CTRL_REG(timer));
- }
- 
--static void mtk_timer_enable_irq(struct mtk_clock_event_device *evt, u8 timer)
-+static void mtk_gpt_enable_irq(struct mtk_clock_event_device *evt, u8 timer)
- {
- 	u32 val;
- 
-@@ -181,7 +181,7 @@ static void mtk_timer_enable_irq(struct mtk_clock_event_device *evt, u8 timer)
- 			evt->gpt_base + GPT_IRQ_EN_REG);
- }
- 
--static int __init mtk_timer_init(struct device_node *node)
-+static int __init mtk_gpt_init(struct device_node *node)
- {
- 	struct mtk_clock_event_device *evt;
- 	struct resource res;
-@@ -195,14 +195,14 @@ static int __init mtk_timer_init(struct device_node *node)
- 	evt->dev.name = "mtk_tick";
- 	evt->dev.rating = 300;
- 	evt->dev.features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
--	evt->dev.set_state_shutdown = mtk_clkevt_shutdown;
--	evt->dev.set_state_periodic = mtk_clkevt_set_periodic;
--	evt->dev.set_state_oneshot = mtk_clkevt_shutdown;
--	evt->dev.tick_resume = mtk_clkevt_shutdown;
--	evt->dev.set_next_event = mtk_clkevt_next_event;
-+	evt->dev.set_state_shutdown = mtk_gpt_clkevt_shutdown;
-+	evt->dev.set_state_periodic = mtk_gpt_clkevt_set_periodic;
-+	evt->dev.set_state_oneshot = mtk_gpt_clkevt_shutdown;
-+	evt->dev.tick_resume = mtk_gpt_clkevt_shutdown;
-+	evt->dev.set_next_event = mtk_gpt_clkevt_next_event;
- 	evt->dev.cpumask = cpu_possible_mask;
- 
--	evt->gpt_base = of_io_request_and_map(node, 0, "mtk-timer");
-+	evt->gpt_base = of_io_request_and_map(node, 0, "mtk-timer-gpt");
- 	if (IS_ERR(evt->gpt_base)) {
- 		pr_err("Can't get resource\n");
- 		goto err_kzalloc;
-@@ -226,7 +226,7 @@ static int __init mtk_timer_init(struct device_node *node)
- 	}
- 	rate = clk_get_rate(clk);
- 
--	if (request_irq(evt->dev.irq, mtk_timer_interrupt,
-+	if (request_irq(evt->dev.irq, mtk_gpt_interrupt,
- 			IRQF_TIMER | IRQF_IRQPOLL, "mtk_timer", evt)) {
- 		pr_err("failed to setup irq %d\n", evt->dev.irq);
- 		goto err_clk_disable;
-@@ -235,18 +235,18 @@ static int __init mtk_timer_init(struct device_node *node)
- 	evt->ticks_per_jiffy = DIV_ROUND_UP(rate, HZ);
- 
- 	/* Configure clock source */
--	mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN);
-+	mtk_gpt_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN);
- 	clocksource_mmio_init(evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC),
- 			node->name, rate, 300, 32, clocksource_mmio_readl_up);
- 	gpt_sched_reg = evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC);
--	sched_clock_register(mtk_read_sched_clock, 32, rate);
-+	sched_clock_register(mtk_gpt_read_sched_clock, 32, rate);
- 
- 	/* Configure clock event */
--	mtk_timer_setup(evt, GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT);
-+	mtk_gpt_setup(evt, GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT);
- 	clockevents_config_and_register(&evt->dev, rate, 0x3,
- 					0xffffffff);
- 
--	mtk_timer_enable_irq(evt, GPT_CLK_EVT);
-+	mtk_gpt_enable_irq(evt, GPT_CLK_EVT);
- 
- 	return 0;
- 
-@@ -265,4 +265,4 @@ static int __init mtk_timer_init(struct device_node *node)
- 
- 	return -EINVAL;
- }
--TIMER_OF_DECLARE(mtk_mt6577, "mediatek,mt6577-timer", mtk_timer_init);
-+TIMER_OF_DECLARE(mtk_mt6577, "mediatek,mt6577-timer", mtk_gpt_init);
--- 
-1.7.9.5
+
+Stanley Chu (5):
+  clocksource/drivers/timer-mediatek: Add system timer bindings
+  clocksource/drivers/timer-mediatek: Rename mtk_timer to timer-mediatek
+  clocksource/drivers/timer-mediatek: Rename function prefix
+  clocksource/drivers/timer-mediatek: Convert the driver to timer-of
+  clocksource/drivers/timer-mediatek: Add support for system timer
+
+ .../bindings/timer/mediatek,mtk-timer.txt          |  38 ++-
+ drivers/clocksource/Makefile                       |   2 +-
+ drivers/clocksource/mtk_timer.c                    | 268 ---------------
+ drivers/clocksource/timer-mediatek.c               | 363 +++++++++++++++++++++
+ 4 files changed, 396 insertions(+), 275 deletions(-)
+ delete mode 100644 drivers/clocksource/mtk_timer.c
+ create mode 100644 drivers/clocksource/timer-mediatek.c
