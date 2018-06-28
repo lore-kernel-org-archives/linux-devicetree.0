@@ -1,71 +1,100 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v3 01/17] platform-msi: allow creation of MSI domain
- without interrupt number
-Date: Thu, 28 Jun 2018 12:12:04 +0100
-Message-ID: <c5b38c34-5ba0-6545-3635-45be1858fa3b@arm.com>
-References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
- <20180622151432.1566-2-miquel.raynal@bootlin.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH 1/2] regulator: bd71837: Editorial cleanups.
+Date: Thu, 28 Jun 2018 14:22:23 +0300
+Message-ID: <3f1f74f57cbe2d4af395219da841df63daedc1f7.1530184909.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180622151432.1566-2-miquel.raynal@bootlin.com>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haim Boot <hayim@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Hanna Hawa <hannah@marvell.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.shevchenko@gmail.com, axel.lin@ingics.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/06/18 16:14, Miquel Raynal wrote:
-> platform_msi_alloc_priv_data() checks that a number of interrupts is
-> always given. This extra-check has no real impact and just prevents
-> uselessly the user to create an MSI tree domain: remove it.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  drivers/base/platform-msi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
-> index 60d6cc618f1c..9f001f4ccc0f 100644
-> --- a/drivers/base/platform-msi.c
-> +++ b/drivers/base/platform-msi.c
-> @@ -203,7 +203,7 @@ platform_msi_alloc_priv_data(struct device *dev, unsigned int nvec,
->  	 * accordingly (which would impact the max number of MSI
->  	 * capable devices).
->  	 */
-> -	if (!dev->msi_domain || !write_msi_msg || !nvec || nvec > MAX_DEV_MSIS)
-> +	if (!dev->msi_domain || !write_msi_msg || nvec > MAX_DEV_MSIS)
->  		return ERR_PTR(-EINVAL);
->  
->  	if (dev->msi_domain->bus_token != DOMAIN_BUS_PLATFORM_MSI) {
-> 
+Address issues spotted by Andy Shevchenko during review of original patch
+No functional changes intended
 
-Huh... It's not that simple.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ drivers/regulator/bd71837-regulator.c | 25 ++++++++++---------------
+ 1 file changed, 10 insertions(+), 15 deletions(-)
 
-Yes, it allows you to get a tree via platform_msi_create_device_domain
-(assuming that's why you're changing it -- your commit message doesn't
-say much) but it also has some impact on the way msi_domain_prepare_irqs
-works (see how it is called from platform_msi_create_device_domain).
-
-Importantly, the msi_prepare callback takes nvec as a parameter, and
-that ends up trickling down to the irqchip, or whatever will setup the
-MSI domain. Things like the GICv3 ITS do rely on that to carve out the
-LPI space that subsequently gets used to populate the domain.
-
-So no, you can't do it like that. If you really want a tree, add a
-helper that does so.
-
-Thanks,
-
-	M.
+diff --git a/drivers/regulator/bd71837-regulator.c b/drivers/regulator/bd71837-regulator.c
+index f57f42ed7160..3a487255482c 100644
+--- a/drivers/regulator/bd71837-regulator.c
++++ b/drivers/regulator/bd71837-regulator.c
+@@ -2,19 +2,18 @@
+ // Copyright (C) 2018 ROHM Semiconductors
+ // bd71837-regulator.c ROHM BD71837MWV regulator driver
+ 
+-#include <linux/kernel.h>
+-#include <linux/module.h>
+-#include <linux/init.h>
++#include <linux/delay.h>
+ #include <linux/err.h>
++#include <linux/gpio.h>
+ #include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/mfd/bd71837.h>
++#include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
+-#include <linux/delay.h>
+-#include <linux/slab.h>
+-#include <linux/gpio.h>
+-#include <linux/mfd/bd71837.h>
+ #include <linux/regulator/of_regulator.h>
++#include <linux/slab.h>
+ 
+ struct bd71837_pmic {
+ 	struct regulator_desc descs[BD71837_REGULATOR_CNT];
+@@ -39,7 +38,7 @@ static int bd71837_buck1234_set_ramp_delay(struct regulator_dev *rdev,
+ 	int id = rdev->desc->id;
+ 	unsigned int ramp_value = BUCK_RAMPRATE_10P00MV;
+ 
+-	dev_dbg(&(pmic->pdev->dev), "Buck[%d] Set Ramp = %d\n", id + 1,
++	dev_dbg(&pmic->pdev->dev, "Buck[%d] Set Ramp = %d\n", id + 1,
+ 		ramp_delay);
+ 	switch (ramp_delay) {
+ 	case 1 ... 1250:
+@@ -544,8 +543,7 @@ static int bd71837_probe(struct platform_device *pdev)
+ 
+ 	int i, err;
+ 
+-	pmic = devm_kzalloc(&pdev->dev, sizeof(struct bd71837_pmic),
+-			    GFP_KERNEL);
++	pmic = devm_kzalloc(&pdev->dev, sizeof(*pmic), GFP_KERNEL);
+ 	if (!pmic)
+ 		return -ENOMEM;
+ 
+@@ -569,8 +567,8 @@ static int bd71837_probe(struct platform_device *pdev)
+ 		dev_err(&pmic->pdev->dev, "Failed to unlock PMIC (%d)\n", err);
+ 		goto err;
+ 	} else {
+-		dev_dbg(&pmic->pdev->dev, "%s: Unlocked lock register 0x%x\n",
+-			__func__, BD71837_REG_REGLOCK);
++		dev_dbg(&pmic->pdev->dev, "Unlocked lock register 0x%x\n",
++			BD71837_REG_REGLOCK);
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(pmic_regulator_inits); i++) {
+@@ -615,8 +613,6 @@ static int bd71837_probe(struct platform_device *pdev)
+ 		pmic->rdev[i] = rdev;
+ 	}
+ 
+-	return 0;
+-
+ err:
+ 	return err;
+ }
+@@ -624,7 +620,6 @@ static int bd71837_probe(struct platform_device *pdev)
+ static struct platform_driver bd71837_regulator = {
+ 	.driver = {
+ 		.name = "bd71837-pmic",
+-		.owner = THIS_MODULE,
+ 	},
+ 	.probe = bd71837_probe,
+ };
 -- 
-Jazz is not dead. It just smells funny...
+2.14.3
