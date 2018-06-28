@@ -1,80 +1,65 @@
-Return-Path: <SRS0=0B+L=JF=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-ot0-f194.google.com ([74.125.82.194]:45289 "EHLO
-        mail-ot0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753762AbeFSWqB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Jun 2018 18:46:01 -0400
-MIME-Version: 1.0
-References: <20180519204808.28899-1-aford173@gmail.com>
-In-Reply-To: <20180519204808.28899-1-aford173@gmail.com>
-From: Adam Ford <aford173@gmail.com>
-Date: Tue, 19 Jun 2018 17:45:49 -0500
-Message-ID: <CAHCN7xJ2ddUxeN=62FrhhE4VRyieNQYawXrzdfK0oHHEJocSAw@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: am3517-evm: Remove unnessary PMIC parameters
-Content-Type: text/plain; charset="UTF-8"
-Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: devicetree <devicetree@vger.kernel.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Derald Woods <woods.technical@gmail.com>
+Return-Path: <SRS0=qqtW=JO=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH 14/22] [media] tvp5150: issue source change events
+Date: Thu, 28 Jun 2018 18:20:46 +0200
+Message-Id: <20180628162054.25613-15-m.felsch@pengutronix.de>
+In-Reply-To: <20180628162054.25613-1-m.felsch@pengutronix.de>
+References: <20180628162054.25613-1-m.felsch@pengutronix.de>
+To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: p.zabel@pengutronix.de, afshin.nasser@gmail.com, javierm@redhat.com, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-On Sat, May 19, 2018 at 3:48 PM Adam Ford <aford173@gmail.com> wrote:
->
-> The AM3517-EVM uses a TPS65023 PMIC.  This is already defined
-> by:  compatible = "ti,tps65023"
->
-> There doesn't seem to be a need to have each regulator in the
-> PMIC with the 'compatible = "regulator-fixed"' since each
-> regulator has a min and max setting.
->
-> Signed-off-by: Adam Ford <aford173@gmail.com>
->
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-Gentle nudge
+Issue a V4L2_EVENT_SOURCE_CHANGE notification when the TVP5150 locks
+onto a signal and when it loses the lock.
 
-adam
-> diff --git a/arch/arm/boot/dts/am3517-som.dtsi b/arch/arm/boot/dts/am3517-som.dtsi
-> index a6d5ff73c163..7ff7cd135dca 100644
-> --- a/arch/arm/boot/dts/am3517-som.dtsi
-> +++ b/arch/arm/boot/dts/am3517-som.dtsi
-> @@ -64,7 +64,6 @@
->                 regulators {
->                         vdd_core_reg: VDCDC1 {
->                                 regulator-name = "vdd_core";
-> -                               compatible = "regulator-fixed";
->                                 regulator-always-on;
->                                 regulator-min-microvolt = <1200000>;
->                                 regulator-max-microvolt = <1200000>;
-> @@ -72,7 +71,6 @@
->
->                         vdd_io_reg: VDCDC2 {
->                                 regulator-name = "vdd_io";
-> -                               compatible = "regulator-fixed";
->                                 regulator-always-on;
->                                 regulator-min-microvolt = <3300000>;
->                                 regulator-max-microvolt = <3300000>;
-> @@ -80,7 +78,6 @@
->
->                         vdd_1v8_reg: VDCDC3 {
->                                 regulator-name = "vdd_1v8";
-> -                               compatible = "regulator-fixed";
->                                 regulator-always-on;
->                                 regulator-min-microvolt = <1800000>;
->                                 regulator-max-microvolt = <1800000>;
-> @@ -88,7 +85,6 @@
->
->                         vdd_usb18_reg: LDO1 {
->                                 regulator-name = "vdd_usb18";
-> -                               compatible = "regulator-fixed";
->                                 regulator-always-on;
->                                 regulator-min-microvolt = <1800000>;
->                                 regulator-max-microvolt = <1800000>;
-> @@ -96,7 +92,6 @@
->
->                         vdd_usb33_reg: LDO2 {
->                                 regulator-name = "vdd_usb33";
-> -                               compatible = "regulator-fixed";
->                                 regulator-always-on;
->                                 regulator-min-microvolt = <3300000>;
->                                 regulator-max-microvolt = <3300000>;
-> --
-> 2.17.0
->
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+[m.felsch@pengutronix.de: partly mainline part port]
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ drivers/media/i2c/tvp5150.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index 27cfd08be3d2..6296c68ac816 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -796,6 +796,11 @@ static v4l2_std_id tvp5150_read_std(struct v4l2_subdev *sd)
+ 	}
+ }
+ 
++static const struct v4l2_event tvp5150_ev_fmt = {
++	.type = V4L2_EVENT_SOURCE_CHANGE,
++	.u.src_change.changes = V4L2_EVENT_SRC_CH_RESOLUTION,
++};
++
+ static irqreturn_t tvp5150_isr(int irq, void *dev_id)
+ {
+ 	struct tvp5150 *decoder = dev_id;
+@@ -811,6 +816,7 @@ static irqreturn_t tvp5150_isr(int irq, void *dev_id)
+ 
+ 		if (status & TVP5150_INT_A_LOCK) {
+ 			decoder->lock = !!(status & TVP5150_INT_A_LOCK_STATUS);
++			v4l2_subdev_notify_event(&decoder->sd, &tvp5150_ev_fmt);
+ 			regmap_update_bits(map, TVP5150_MISC_CTL, mask,
+ 					   decoder->lock ? decoder->oe : 0);
+ 		}
+@@ -1216,6 +1222,7 @@ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
+ 		/* Enable outputs if decoder is locked */
+ 		val = decoder->lock ? decoder->oe : 0;
+ 		int_val = TVP5150_INT_A_LOCK;
++		v4l2_subdev_notify_event(&decoder->sd, &tvp5150_ev_fmt);
+ 	}
+ 
+ 	regmap_update_bits(decoder->regmap, TVP5150_MISC_CTL, mask, val);
+@@ -1432,7 +1439,6 @@ static const struct v4l2_subdev_internal_ops tvp5150_internal_ops = {
+ 	.registered = tvp5150_registered,
+ };
+ 
+-
+ /****************************************************************************
+ 			I2C Client & Driver
+  ****************************************************************************/
+-- 
+2.17.1
