@@ -1,57 +1,48 @@
-Return-Path: <vkoul@kernel.org>
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v5 6/6] input: pm8941-pwrkey: Add resin entry
-Date: Thu, 28 Jun 2018 20:38:50 +0530
-Message-Id: <20180628150850.15358-7-vkoul@kernel.org>
-In-Reply-To: <20180628150850.15358-1-vkoul@kernel.org>
-References: <20180628150850.15358-1-vkoul@kernel.org>
-To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Return-Path: <SRS0=qqtW=JO=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH 17/22] [media] tvp5150: add g_std callback
+Date: Thu, 28 Jun 2018 18:20:49 +0200
+Message-Id: <20180628162054.25613-18-m.felsch@pengutronix.de>
+In-Reply-To: <20180628162054.25613-1-m.felsch@pengutronix.de>
+References: <20180628162054.25613-1-m.felsch@pengutronix.de>
+To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: p.zabel@pengutronix.de, afshin.nasser@gmail.com, javierm@redhat.com, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Since handling is abstracted in this driver, we need to add resin entry
-in id table along with pwrkey_data.
+Add callback to retrieve the current set norm.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- drivers/input/misc/pm8941-pwrkey.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/media/i2c/tvp5150.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/input/misc/pm8941-pwrkey.c b/drivers/input/misc/pm8941-pwrkey.c
-index 2047e34c0982..6547a57f5222 100644
---- a/drivers/input/misc/pm8941-pwrkey.c
-+++ b/drivers/input/misc/pm8941-pwrkey.c
-@@ -29,6 +29,7 @@
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index 1990aaa17749..3b51b6b67736 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -756,6 +756,15 @@ static int tvp5150_set_std(struct v4l2_subdev *sd, v4l2_std_id std)
+ 	return 0;
+ }
  
- #define PON_RT_STS			0x10
- #define  PON_KPDPWR_N_SET		BIT(0)
-+#define  PON_RESIN_N_SET		BIT(1)
- 
- #define PON_PS_HOLD_RST_CTL		0x5a
- #define PON_PS_HOLD_RST_CTL2		0x5b
-@@ -39,6 +40,7 @@
- 
- #define PON_PULL_CTL			0x70
- #define  PON_KPDPWR_PULL_UP		BIT(1)
-+#define  PON_RESIN_PULL_UP		BIT(0)
- 
- #define PON_DBC_CTL			0x71
- #define  PON_DBC_DELAY_MASK		0x7
-@@ -306,8 +308,14 @@ static const struct pm8941_data pwrkey_data = {
- 	.status_bit = PON_KPDPWR_N_SET,
- };
- 
-+static const struct pm8941_data resin_data = {
-+	.pull_up_bit = PON_RESIN_PULL_UP,
-+	.status_bit = PON_RESIN_N_SET,
-+};
++static int tvp5150_g_std(struct v4l2_subdev *sd, v4l2_std_id *std)
++{
++	struct tvp5150 *decoder = to_tvp5150(sd);
 +
- static const struct of_device_id pm8941_pwr_key_id_table[] = {
- 	{ .compatible = "qcom,pm8941-pwrkey", .data = &pwrkey_data },
-+	{ .compatible = "qcom,pm8941-resin", .data = &resin_data },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, pm8941_pwr_key_id_table);
++	*std = decoder->norm;
++
++	return 0;
++}
++
+ static int tvp5150_s_std(struct v4l2_subdev *sd, v4l2_std_id std)
+ {
+ 	struct tvp5150 *decoder = to_tvp5150(sd);
+@@ -1417,6 +1426,7 @@ static const struct v4l2_subdev_tuner_ops tvp5150_tuner_ops = {
+ 
+ static const struct v4l2_subdev_video_ops tvp5150_video_ops = {
+ 	.s_std = tvp5150_s_std,
++	.g_std = tvp5150_g_std,
+ 	.querystd = tvp5150_querystd,
+ 	.s_stream = tvp5150_s_stream,
+ 	.s_routing = tvp5150_s_routing,
 -- 
-2.14.4
+2.17.1
