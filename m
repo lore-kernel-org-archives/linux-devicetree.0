@@ -1,57 +1,134 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v7 3/3] ARM: dts: Renesas R9A06G032 SMP enable method
-Date: Thu, 28 Jun 2018 14:18:14 +0200
-Message-ID: <20180628121813.ffrppdo7p3s42t5i@verge.net.au>
-References: <1530173842-56851-1-git-send-email-michel.pollet@bp.renesas.com>
- <1530173842-56851-4-git-send-email-michel.pollet@bp.renesas.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v3 08/17] irqchip/irq-mvebu-icu: disociate ICU and NSR
+Date: Thu, 28 Jun 2018 13:24:05 +0100
+Message-ID: <0d666052-b1f5-a27a-1bc8-fa3ede9e388a@arm.com>
+References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
+ <20180622151432.1566-9-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1530173842-56851-4-git-send-email-michel.pollet@bp.renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org, phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Douglas Anderson <dianders@chromium.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Rajendra Nayak <rnayak@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>, Stefan Wahren <stefan.wahren@i2se.com>, Carlo Caione <carlo@endlessm.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180622151432.1566-9-miquel.raynal@bootlin.com>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haim Boot <hayim@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Hanna Hawa <hannah@marvell.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 28, 2018 at 09:17:14AM +0100, Michel Pollet wrote:
-> Add a special enable method for the second CA7 of the R9A06G032
-> as well as the default value for the "cpu-release-addr" property.
+On 22/06/18 16:14, Miquel Raynal wrote:
+> NSR (non-secure interrupts) are handled in the ICU driver like if there
+> was only this type of interrupt in the ICU. Change this behavior to
+> prepare the introduction of SEI (System Error Interrupts) support by
+> moving the NSR code in a separate function. This is done under the form
+> of a 'probe' function to ease future migration to NSR/SEI being platform
+> devices part of the ICU.
 > 
-> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> ---
+>  drivers/irqchip/irq-mvebu-icu.c | 58 +++++++++++++++++++++++------------------
+>  1 file changed, 33 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
+> index 607948870a14..24d45186eb6b 100644
+> --- a/drivers/irqchip/irq-mvebu-icu.c
+> +++ b/drivers/irqchip/irq-mvebu-icu.c
+> @@ -205,6 +205,37 @@ static const struct irq_domain_ops mvebu_icu_domain_ops = {
+>  	.free      = mvebu_icu_irq_domain_free,
+>  };
+>  
+> +static int mvebu_icu_subset_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *msi_parent_dn;
+> +	struct irq_domain *irq_domain;
+> +	struct mvebu_icu *icu;
+> +
+> +	icu = dev_get_drvdata(&pdev->dev);
+> +	if (!icu)
+> +		return -ENODEV;
+> +
+> +	pdev->dev.msi_domain = of_msi_get_domain(&pdev->dev, pdev->dev.of_node,
+> +						 DOMAIN_BUS_PLATFORM_MSI);
+> +	if (!pdev->dev.msi_domain)
+> +		return -EPROBE_DEFER;
+> +
+> +	msi_parent_dn = irq_domain_get_of_node(pdev->dev.msi_domain);
+> +	if (!msi_parent_dn)
+> +		return -ENODEV;
+> +
+> +	irq_domain = platform_msi_create_device_domain(&pdev->dev, ICU_MAX_IRQS,
+> +						       mvebu_icu_write_msg,
+> +						       &mvebu_icu_domain_ops,
+> +						       icu);
+> +	if (!irq_domain) {
+> +		dev_err(&pdev->dev, "Failed to create ICU MSI domain\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static struct regmap_config mvebu_icu_regmap_config = {
+>  	.reg_bits	= 32,
+>  	.val_bits	= 32,
+> @@ -215,9 +246,6 @@ static struct regmap_config mvebu_icu_regmap_config = {
+>  static int mvebu_icu_probe(struct platform_device *pdev)
+>  {
+>  	struct mvebu_icu *icu;
+> -	struct device_node *node = pdev->dev.of_node;
+> -	struct device_node *gicp_dn;
+> -	struct irq_domain *irq_domain;
+>  	struct resource *res;
+>  	void __iomem *regs;
+>  	int i;
+> @@ -255,19 +283,6 @@ static int mvebu_icu_probe(struct platform_device *pdev)
+>  	icu->irq_chip.irq_set_affinity = irq_chip_set_affinity_parent;
+>  #endif
+>  
+> -	/*
+> -	 * We're probed after MSI domains have been resolved, so force
+> -	 * resolution here.
+> -	 */
+> -	pdev->dev.msi_domain = of_msi_get_domain(&pdev->dev, node,
+> -						 DOMAIN_BUS_PLATFORM_MSI);
+> -	if (!pdev->dev.msi_domain)
+> -		return -EPROBE_DEFER;
+> -
+> -	gicp_dn = irq_domain_get_of_node(pdev->dev.msi_domain);
+> -	if (!gicp_dn)
+> -		return -ENODEV;
+> -
+>  	/*
+>  	 * Clean all ICU interrupts with type SPI_NSR, required to
+>  	 * avoid unpredictable SPI assignments done by firmware.
+> @@ -282,16 +297,9 @@ static int mvebu_icu_probe(struct platform_device *pdev)
+>  			regmap_write(icu->regmap, ICU_INT_CFG(i), 0);
+>  	}
+>  
+> -	irq_domain =
+> -		platform_msi_create_device_domain(&pdev->dev, ICU_MAX_IRQS,
+> -						  mvebu_icu_write_msg,
+> -						  &mvebu_icu_domain_ops, icu);
+> -	if (!irq_domain) {
+> -		dev_err(&pdev->dev, "Failed to create ICU domain\n");
+> -		return -ENOMEM;
+> -	}
+> +	platform_set_drvdata(pdev, icu);
 
-Thanks, applied.
+What is the upshot of passing this icu pointer as part of the platform
+device structure instead of simply passing it as a parameter? Is
+anything else using it?
 
-I had to manually resolve a conflict due to updates to the patch
-that added this dtsi file (as noted elsewhere). Please check that this is
-correct.
+Thanks,
 
-
-From: Michel Pollet <michel.pollet@bp.renesas.com>
-Subject: [PATCH] ARM: dts: Renesas R9A06G032 SMP enable method
-
-Add a special enable method for the second CA7 of the R9A06G032
-as well as the default value for the "cpu-release-addr" property.
-
-Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm/boot/dts/r9a06g032.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r9a06g032.dtsi b/arch/arm/boot/dts/r9a06g032.dtsi
-index 339d0958011e..afe29c95a006 100644
---- a/arch/arm/boot/dts/r9a06g032.dtsi
-+++ b/arch/arm/boot/dts/r9a06g032.dtsi
-@@ -29,6 +29,8 @@
- 			compatible = "arm,cortex-a7";
- 			reg = <1>;
- 			clocks = <&sysctrl 84>;
-+			enable-method = "renesas,r9a06g032-smp";
-+			cpu-release-addr = <0 0x4000c204>;
- 		};
- 	};
- 
+	M.
 -- 
-2.11.0
+Jazz is not dead. It just smells funny...
