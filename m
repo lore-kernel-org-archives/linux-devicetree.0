@@ -1,48 +1,46 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 00/11] Add throttler driver for non-thermal throttling
-Date: Thu, 28 Jun 2018 20:52:16 +0200
-Message-ID: <20180628185216.GA5316@amd>
-References: <20180607181214.30338-1-mka@chromium.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
+From: Saravanan Sekar <sravanhome@gmail.com>
+Subject: [PATCH v2 0/3] Add clock driver for Actions S700 SoC
+Date: Thu, 28 Jun 2018 21:18:02 +0200
+Message-ID: <20180628191805.3722-1-sravanhome@gmail.com>
+References: <20180626192820.28237-3-sravanhome@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180607181214.30338-1-mka@chromium.org>
+In-Reply-To: <20180626192820.28237-3-sravanhome@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To: afaerber@suse.de, sboyd@kernel.org
+Cc: pn@denx.de, linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, manivannan.sadhasivam@linaro.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, Saravanan Sekar <sravanhome@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Changelog v2:
+Fixed 0 day compilation warning
+Modified existing dts Actions S900 clock bindings common to Actions
+Soc family
 
---ZGiS0Q5IWpPtfppv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patchset adds clock support for Actions Semi OWL series S700 SoC
+with relevant clock bindings and device tree info. 
 
-On Thu 2018-06-07 11:12:03, Matthias Kaehlcke wrote:
-> This series adds the throttler driver, for non-thermal throttling of
-> CPUs and devfreq devices. A use case for non-thermal throttling could
-> be the detection of a high battery discharge voltage, close to the
+Changed the UART clock using CMU instance and changes are tested in
+cubieboard7
 
-voltage -> current.
+Thanks and regards,
+Saravanan,
+Parthiban
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Saravanan Sekar (3):
+  arm64: dts: actions: Enable clock controller for S700
+  clk: actions: Add S700 SoC clock support
+  dt-bindings: clock: Modify Actions Soc clock bindings
 
---ZGiS0Q5IWpPtfppv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+ ...ions,s900-cmu.txt => actions,sx00-cmu.txt} |  18 +-
+ .../boot/dts/actions/s700-cubieboard7.dts     |   7 -
+ arch/arm64/boot/dts/actions/s700.dtsi         |   8 +
+ drivers/clk/actions/Kconfig                   |   7 +
+ drivers/clk/actions/Makefile                  |   1 +
+ drivers/clk/actions/owl-s700.c                | 614 ++++++++++++++++++
+ include/dt-bindings/clock/actions,s700-cmu.h  | 128 ++++
+ 7 files changed, 768 insertions(+), 15 deletions(-)
+ rename Documentation/devicetree/bindings/clock/{actions,s900-cmu.txt => actions,sx00-cmu.txt} (71%)
+ create mode 100644 drivers/clk/actions/owl-s700.c
+ create mode 100644 include/dt-bindings/clock/actions,s700-cmu.h
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAls1LmAACgkQMOfwapXb+vIyfACgsyILgIb3RCimjdyeOSMPEUfR
-fHIAn2/X/IZxbUejdst4yYgL0rFAX+yF
-=o9eh
------END PGP SIGNATURE-----
-
---ZGiS0Q5IWpPtfppv--
+-- 
+2.18.0
