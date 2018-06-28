@@ -1,174 +1,195 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v22 4/4] soc: mediatek: Add Mediatek CMDQ helper
-Date: Thu, 28 Jun 2018 18:41:56 +0800
-Message-ID: <1530182516.8518.11.camel@mtksdaap41>
-References: <1530098172-31385-1-git-send-email-houlong.wei@mediatek.com>
-         <1530098172-31385-5-git-send-email-houlong.wei@mediatek.com>
+From: Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v3 3/5] clocksource/drivers/timer-mediatek: Rename function prefix
+Date: Thu, 28 Jun 2018 18:45:42 +0800
+Message-ID: <1530182744-10731-4-git-send-email-stanley.chu@mediatek.com>
+References: <1530182744-10731-1-git-send-email-stanley.chu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530098172-31385-5-git-send-email-houlong.wei@mediatek.com>
+In-Reply-To: <1530182744-10731-1-git-send-email-stanley.chu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Houlong Wei <houlong.wei@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Monica Wang <monica.wang@mediatek.com>, HS Liao <hs.liao>
+To: Matthias Brugger <matthias.bgg@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, Stanley Chu <stanley.chu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Houlong:
+Add prefix to specify the name of supported timer hardware:
+"General Purpose Timer (GPT)".
 
-Some inline comment.
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+---
+ drivers/clocksource/timer-mediatek.c |   60 +++++++++++++++++-----------------
+ 1 file changed, 30 insertions(+), 30 deletions(-)
 
-On Wed, 2018-06-27 at 19:16 +0800, Houlong Wei wrote:
-> Add Mediatek CMDQ helper to create CMDQ packet and assemble GCE op code.
-> 
-> Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
-> Signed-off-by: HS Liao <hs.liao@mediatek.com>
-> ---
->  drivers/soc/mediatek/Kconfig           |   12 ++
->  drivers/soc/mediatek/Makefile          |    1 +
->  drivers/soc/mediatek/mtk-cmdq-helper.c |  258 ++++++++++++++++++++++++++++++++
->  include/linux/soc/mediatek/mtk-cmdq.h  |  132 ++++++++++++++++
->  4 files changed, 403 insertions(+)
->  create mode 100644 drivers/soc/mediatek/mtk-cmdq-helper.c
->  create mode 100644 include/linux/soc/mediatek/mtk-cmdq.h
-> 
-> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> index a7d0667..17bd759 100644
-> --- a/drivers/soc/mediatek/Kconfig
-> +++ b/drivers/soc/mediatek/Kconfig
-> @@ -4,6 +4,18 @@
->  menu "MediaTek SoC drivers"
->  	depends on ARCH_MEDIATEK || COMPILE_TEST
->  
-
-[...]
-
-> +
-> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
-> +{
-> +	u32 arg_b;
-> +
-> +	if (event >= CMDQ_MAX_EVENT || event < 0)
-
-The type of event is 'u32', so checking 'event < 0' is redundant.
-
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * WFE arg_b
-> +	 * bit 0-11: wait value
-> +	 * bit 15: 1 - wait, 0 - no wait
-> +	 * bit 16-27: update value
-> +	 * bit 31: 1 - update, 0 - no update
-> +	 */
-> +	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
-> +
-> +	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
-> +}
-> +EXPORT_SYMBOL(cmdq_pkt_wfe);
-> +
-> +int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event)
-> +{
-> +	if (event >= CMDQ_MAX_EVENT || event < 0)
-
-The type of event is 'u32', so checking 'event < 0' is redundant.
-
-> +		return -EINVAL;
-> +
-> +	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
-> +				       CMDQ_WFE_UPDATE);
-> +}
-> +EXPORT_SYMBOL(cmdq_pkt_clear_event);
-> +
-> +static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
-> +{
-> +	int err;
-> +
-> +	if (cmdq_pkt_is_finalized(pkt))
-> +		return 0;
-> +
-> +	/* insert EOC and generate IRQ for each command iteration */
-> +	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	/* JUMP to end */
-> +	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	return 0;
-> +}
-> +
-> +int cmdq_pkt_flush_async(struct cmdq_client *client, struct cmdq_pkt *pkt,
-> +			 cmdq_async_flush_cb cb, void *data)
-> +{
-> +	int err;
-> +	struct device *dev;
-> +	dma_addr_t dma_addr;
-> +
-> +	err = cmdq_pkt_finalize(pkt);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	dev = client->chan->mbox->dev;
-> +	dma_addr = dma_map_single(dev, pkt->va_base, pkt->cmd_buf_size,
-> +		DMA_TO_DEVICE);
-
-You map here, but I could not find unmap, so the unmap should be done in
-client driver. I would prefer a symmetric map/unmap which means that
-both map and unmap are done in client driver. I think you put map here
-because you should map after finalize. Therefore, export
-cmdq_pkt_finalize() to client driver and let client do finalize, so
-there is no finalize in flush function. This method have a benefit that
-if client reuse command buffer, it need not to map/unmap frequently.
-
-Regards,
-CK
-
-> +	if (dma_mapping_error(dev, dma_addr)) {
-> +		dev_err(client->chan->mbox->dev, "dma map failed\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	pkt->pa_base = dma_addr;
-> +	pkt->cb.cb = cb;
-> +	pkt->cb.data = data;
-> +
-> +	mbox_send_message(client->chan, pkt);
-> +	/* We can send next packet immediately, so just call txdone. */
-> +	mbox_client_txdone(client->chan, 0);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(cmdq_pkt_flush_async);
-> +
-> +struct cmdq_flush_completion {
-> +	struct completion cmplt;
-> +	bool err;
-> +};
-> +
-> +static void cmdq_pkt_flush_cb(struct cmdq_cb_data data)
-> +{
-> +	struct cmdq_flush_completion *cmplt = data.data;
-> +
-> +	cmplt->err = data.err;
-> +	complete(&cmplt->cmplt);
-> +}
-> +
-> +int cmdq_pkt_flush(struct cmdq_client *client, struct cmdq_pkt *pkt)
-> +{
-> +	struct cmdq_flush_completion cmplt;
-> +	int err;
-> +
-> +	init_completion(&cmplt.cmplt);
-> +	err = cmdq_pkt_flush_async(client, pkt, cmdq_pkt_flush_cb, &cmplt);
-> +	if (err < 0)
-> +		return err;
-> +	wait_for_completion(&cmplt.cmplt);
-> +
-> +	return cmplt.err ? -EFAULT : 0;
-> +}
-> +EXPORT_SYMBOL(cmdq_pkt_flush);
-
-[...]
+diff --git a/drivers/clocksource/timer-mediatek.c b/drivers/clocksource/timer-mediatek.c
+index f9b724f..ff284f2 100644
+--- a/drivers/clocksource/timer-mediatek.c
++++ b/drivers/clocksource/timer-mediatek.c
+@@ -64,7 +64,7 @@ struct mtk_clock_event_device {
+ 
+ static void __iomem *gpt_sched_reg __read_mostly;
+ 
+-static u64 notrace mtk_read_sched_clock(void)
++static u64 notrace mtk_gpt_read_sched_clock(void)
+ {
+ 	return readl_relaxed(gpt_sched_reg);
+ }
+@@ -75,7 +75,7 @@ static inline struct mtk_clock_event_device *to_mtk_clk(
+ 	return container_of(c, struct mtk_clock_event_device, dev);
+ }
+ 
+-static void mtk_clkevt_time_stop(struct mtk_clock_event_device *evt, u8 timer)
++static void mtk_gpt_clkevt_time_stop(struct mtk_clock_event_device *evt, u8 timer)
+ {
+ 	u32 val;
+ 
+@@ -84,13 +84,13 @@ static void mtk_clkevt_time_stop(struct mtk_clock_event_device *evt, u8 timer)
+ 			TIMER_CTRL_REG(timer));
+ }
+ 
+-static void mtk_clkevt_time_setup(struct mtk_clock_event_device *evt,
++static void mtk_gpt_clkevt_time_setup(struct mtk_clock_event_device *evt,
+ 				unsigned long delay, u8 timer)
+ {
+ 	writel(delay, evt->gpt_base + TIMER_CMP_REG(timer));
+ }
+ 
+-static void mtk_clkevt_time_start(struct mtk_clock_event_device *evt,
++static void mtk_gpt_clkevt_time_start(struct mtk_clock_event_device *evt,
+ 		bool periodic, u8 timer)
+ {
+ 	u32 val;
+@@ -112,35 +112,35 @@ static void mtk_clkevt_time_start(struct mtk_clock_event_device *evt,
+ 	       evt->gpt_base + TIMER_CTRL_REG(timer));
+ }
+ 
+-static int mtk_clkevt_shutdown(struct clock_event_device *clk)
++static int mtk_gpt_clkevt_shutdown(struct clock_event_device *clk)
+ {
+-	mtk_clkevt_time_stop(to_mtk_clk(clk), GPT_CLK_EVT);
++	mtk_gpt_clkevt_time_stop(to_mtk_clk(clk), GPT_CLK_EVT);
+ 	return 0;
+ }
+ 
+-static int mtk_clkevt_set_periodic(struct clock_event_device *clk)
++static int mtk_gpt_clkevt_set_periodic(struct clock_event_device *clk)
+ {
+ 	struct mtk_clock_event_device *evt = to_mtk_clk(clk);
+ 
+-	mtk_clkevt_time_stop(evt, GPT_CLK_EVT);
+-	mtk_clkevt_time_setup(evt, evt->ticks_per_jiffy, GPT_CLK_EVT);
+-	mtk_clkevt_time_start(evt, true, GPT_CLK_EVT);
++	mtk_gpt_clkevt_time_stop(evt, GPT_CLK_EVT);
++	mtk_gpt_clkevt_time_setup(evt, evt->ticks_per_jiffy, GPT_CLK_EVT);
++	mtk_gpt_clkevt_time_start(evt, true, GPT_CLK_EVT);
+ 	return 0;
+ }
+ 
+-static int mtk_clkevt_next_event(unsigned long event,
++static int mtk_gpt_clkevt_next_event(unsigned long event,
+ 				   struct clock_event_device *clk)
+ {
+ 	struct mtk_clock_event_device *evt = to_mtk_clk(clk);
+ 
+-	mtk_clkevt_time_stop(evt, GPT_CLK_EVT);
+-	mtk_clkevt_time_setup(evt, event, GPT_CLK_EVT);
+-	mtk_clkevt_time_start(evt, false, GPT_CLK_EVT);
++	mtk_gpt_clkevt_time_stop(evt, GPT_CLK_EVT);
++	mtk_gpt_clkevt_time_setup(evt, event, GPT_CLK_EVT);
++	mtk_gpt_clkevt_time_start(evt, false, GPT_CLK_EVT);
+ 
+ 	return 0;
+ }
+ 
+-static irqreturn_t mtk_timer_interrupt(int irq, void *dev_id)
++static irqreturn_t mtk_gpt_interrupt(int irq, void *dev_id)
+ {
+ 	struct mtk_clock_event_device *evt = dev_id;
+ 
+@@ -152,7 +152,7 @@ static irqreturn_t mtk_timer_interrupt(int irq, void *dev_id)
+ }
+ 
+ static void
+-__init mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer, u8 option)
++__init mtk_gpt_setup(struct mtk_clock_event_device *evt, u8 timer, u8 option)
+ {
+ 	writel(TIMER_CTRL_CLEAR | TIMER_CTRL_DISABLE,
+ 		evt->gpt_base + TIMER_CTRL_REG(timer));
+@@ -166,7 +166,7 @@ __init mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer, u8 option)
+ 			evt->gpt_base + TIMER_CTRL_REG(timer));
+ }
+ 
+-static void mtk_timer_enable_irq(struct mtk_clock_event_device *evt, u8 timer)
++static void mtk_gpt_enable_irq(struct mtk_clock_event_device *evt, u8 timer)
+ {
+ 	u32 val;
+ 
+@@ -181,7 +181,7 @@ static void mtk_timer_enable_irq(struct mtk_clock_event_device *evt, u8 timer)
+ 			evt->gpt_base + GPT_IRQ_EN_REG);
+ }
+ 
+-static int __init mtk_timer_init(struct device_node *node)
++static int __init mtk_gpt_init(struct device_node *node)
+ {
+ 	struct mtk_clock_event_device *evt;
+ 	struct resource res;
+@@ -195,14 +195,14 @@ static int __init mtk_timer_init(struct device_node *node)
+ 	evt->dev.name = "mtk_tick";
+ 	evt->dev.rating = 300;
+ 	evt->dev.features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
+-	evt->dev.set_state_shutdown = mtk_clkevt_shutdown;
+-	evt->dev.set_state_periodic = mtk_clkevt_set_periodic;
+-	evt->dev.set_state_oneshot = mtk_clkevt_shutdown;
+-	evt->dev.tick_resume = mtk_clkevt_shutdown;
+-	evt->dev.set_next_event = mtk_clkevt_next_event;
++	evt->dev.set_state_shutdown = mtk_gpt_clkevt_shutdown;
++	evt->dev.set_state_periodic = mtk_gpt_clkevt_set_periodic;
++	evt->dev.set_state_oneshot = mtk_gpt_clkevt_shutdown;
++	evt->dev.tick_resume = mtk_gpt_clkevt_shutdown;
++	evt->dev.set_next_event = mtk_gpt_clkevt_next_event;
+ 	evt->dev.cpumask = cpu_possible_mask;
+ 
+-	evt->gpt_base = of_io_request_and_map(node, 0, "mtk-timer");
++	evt->gpt_base = of_io_request_and_map(node, 0, "mtk-timer-gpt");
+ 	if (IS_ERR(evt->gpt_base)) {
+ 		pr_err("Can't get resource\n");
+ 		goto err_kzalloc;
+@@ -226,7 +226,7 @@ static int __init mtk_timer_init(struct device_node *node)
+ 	}
+ 	rate = clk_get_rate(clk);
+ 
+-	if (request_irq(evt->dev.irq, mtk_timer_interrupt,
++	if (request_irq(evt->dev.irq, mtk_gpt_interrupt,
+ 			IRQF_TIMER | IRQF_IRQPOLL, "mtk_timer", evt)) {
+ 		pr_err("failed to setup irq %d\n", evt->dev.irq);
+ 		goto err_clk_disable;
+@@ -235,18 +235,18 @@ static int __init mtk_timer_init(struct device_node *node)
+ 	evt->ticks_per_jiffy = DIV_ROUND_UP(rate, HZ);
+ 
+ 	/* Configure clock source */
+-	mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN);
++	mtk_gpt_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN);
+ 	clocksource_mmio_init(evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC),
+ 			node->name, rate, 300, 32, clocksource_mmio_readl_up);
+ 	gpt_sched_reg = evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC);
+-	sched_clock_register(mtk_read_sched_clock, 32, rate);
++	sched_clock_register(mtk_gpt_read_sched_clock, 32, rate);
+ 
+ 	/* Configure clock event */
+-	mtk_timer_setup(evt, GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT);
++	mtk_gpt_setup(evt, GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT);
+ 	clockevents_config_and_register(&evt->dev, rate, 0x3,
+ 					0xffffffff);
+ 
+-	mtk_timer_enable_irq(evt, GPT_CLK_EVT);
++	mtk_gpt_enable_irq(evt, GPT_CLK_EVT);
+ 
+ 	return 0;
+ 
+@@ -265,4 +265,4 @@ static int __init mtk_timer_init(struct device_node *node)
+ 
+ 	return -EINVAL;
+ }
+-TIMER_OF_DECLARE(mtk_mt6577, "mediatek,mt6577-timer", mtk_timer_init);
++TIMER_OF_DECLARE(mtk_mt6577, "mediatek,mt6577-timer", mtk_gpt_init);
+-- 
+1.7.9.5
