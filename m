@@ -1,98 +1,99 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v7 00/29] Add support for mediatek SOC MT2712
-Date: Thu, 28 Jun 2018 08:02:28 +0200
-Message-ID: <20180628060228.GJ13978@phenom.ffwll.local>
-References: <1529482771-2153-1-git-send-email-stu.hsieh@mediatek.com>
- <20180625084740.GN2958@phenom.ffwll.local>
- <1530157537.11190.53.camel@mtksdccf07>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH 2/3] k3dma: add support to reserved minimum channels
+Date: Thu, 28 Jun 2018 11:32:39 +0530
+Message-ID: <20180628060239.GO22377@vkoul-mobl>
+References: <20180622032416.20133-1-guodong.xu@linaro.org>
+ <20180622032416.20133-3-guodong.xu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1530157537.11190.53.camel@mtksdccf07>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stu Hsieh <stu.hsieh@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180622032416.20133-3-guodong.xu@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guodong Xu <guodong.xu@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, dan.j.williams@intel.com, liyu65@hisilicon.com, suzhuangluan@hisilicon.com, xuhongtao8@hisilicon.com, zhongkaihua@huawei.com, xuezhiliang@hisilicon.com, xupeng7@huawei.com, sunliang10@huawei.com, fengbaopeng@hisilicon.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBKdW4gMjgsIDIwMTggYXQgMTE6NDU6MzdBTSArMDgwMCwgU3R1IEhzaWVoIHdyb3Rl
-Ogo+IEhpLCBEYW5pZWwgVmV0dGVyOgo+IAo+IE9uIE1vbiwgMjAxOC0wNi0yNSBhdCAxMDo0NyAr
-MDIwMCwgRGFuaWVsIFZldHRlciB3cm90ZToKPiA+IE9uIFdlZCwgSnVuIDIwLCAyMDE4IGF0IDA0
-OjE5OjAyUE0gKzA4MDAsIFN0dSBIc2llaCB3cm90ZToKPiA+ID4gVGhpcyBwYXRjaCBhZGQgc3Vw
-cG9ydCBmb3IgdGhlIE1lZGlhdGVrIE1UMjcxMiBESVNQIHN1YnN5c3RlbS4KPiA+ID4gTVQyNzEy
-IGlzIGJhc2Ugb24gTVQ4MTczLCB0aGVyZSBhcmUgc29tZSBkaWZmZXJlbmNlIGFzIGZvbGxvd2lu
-ZzoKPiA+ID4gTVQyNzEyIHN1cHBvcnQgdGhyZWUgZGlzcCBvdXRwdXQodHdvIG92bCBhbmQgb25l
-IHJkbWEpCj4gPiA+IAo+ID4gPiBDaGFuZ2UgaW4gdjY6Cj4gPiA+IC0gVXBkYXRlIGNvbW1pdCBt
-ZXNzYWdlIGZvciB0aGUgcGF0Y2gKPiA+ID4gICAiZHJtL21lZGlhdGVrOiBVcGRhdGUgdGhlIGRl
-ZmluaXRpb24gb2YgY29ubmVjdGlvbiBmcm9tIFJETUExIHRvIERQSTAiCj4gPiAKPiA+IEp1c3Qg
-YSBkcml2ZS1ieSBjb21tZW50IG9uIHRoZSBtZWRpYXRlayBkcml2ZXI6Cj4gPiAKPiA+IEFzIGZh
-ciBhcyBJIGNhbiBzZWUgbXRrX2RybV9nZW0uYyByZWltcGxlbWVudHMgdGhlIGNtYSBoZWxwZXJz
-IGFzIGEKPiA+IGNvcHlwYXN0ZSBqb2IuIEFueSByZWFzb25zIHdoeSB5b3UncmUgbm90IHVzaW5n
-IHRoZSBub3JtYWwgY21hIGhlbHBlcnM/Cj4gPiAKPiA+IFRoYW5rcywgRGFuaWVsCj4gPiA+IAo+
-IAo+IEluIHRoZSBiZWdpbm5pbmcsIHdlIGRldmVsb3AgbXRrX2RybV9nZW0uYyBieSByZWZlcnJp
-bmcgb3RoZXIgcGxhdGZvcm0uCj4gV2Ugd2lsbCB0cnkgdG8gdXNlIHRoZSBub3JtYWwgY21hIGhl
-bHBlcnMgYWNjb3JkaW5nIHRvIHlvdXIgaWRlYS4KClNvdW5kcyBncmVhdCBpZiB5b3UgY2FuIGRv
-IHRoaXMgYXMgYSBsb25nZXItdGVybSByZWZhY3RvcmluZyB0YXNrIQoKSSBkaXNjdXNzZWQgdGhp
-cyBhbHNvIGEgYml0IHdpdGggUGhpbGlwcCBvbiBpcmMsIGFuZCBoZSBzYWlkIHRoZXJlJ3MKcG9z
-c2libGUgYSBuZWVkIHRvIHN1cHBvcnQgbm9uLWNvbnRpZyBidWZmZXJzIGluIG10ay4gSWYgdGhh
-dCBjYW4ndCBiZQpkb25lIHVzaW5nIGNtYSBoZWxwZXJzICh1c3VhbGx5IHlvdSBoYXZlIGFuIGlv
-bW11IGluIHN1Y2ggYSBjYXNlLCB3aGljaAphZ2FpbiBnaXZlcyB5b3UgYSBjb250aWcgYnVmZmVy
-IGluIGRldmljZS1hZGRyZXNzIHNwYWNlLCBhbmQgdGhhdCBjYW4gYmUKdXNlZCBieSBjbWEgSSB0
-aGluayksIHRoZW4gSSB0aGluayBpdCB3b3VsZCBzdGlsbCBiZSB1c2VmdWwgaWYgeW91IHVzZSB0
-aGUKY21hIGhlbHBlcnMgZm9yIHRoZSBjb250aWcgYnVmZmVycy4gQnV0IHRoZW4gd3JhcCB0aGVt
-IGluIHNvbWUgbXRrIGNvZGUgdG8Kc3dpdGNoIGJldHdlZW4gdGhlIHR3by4KCkNoZWVycywgRGFu
-aWVsCgo+IAo+IFRoYW5rcywKPiBTdHUKPiAKPiA+ID4gU3R1IEhzaWVoICgyOSk6Cj4gPiA+ICAg
-ZHJtL21lZGlhdGVrOiB1cGRhdGUgZHQtYmluZGluZ3MgZm9yIG10MjcxMgo+ID4gPiAgIGRybS9t
-ZWRpYXRlazogc3VwcG9ydCBtYXhpbXVtIDY0IG11dGV4IG1vZAo+ID4gPiAgIGRybS9tZWRpYXRl
-azogYWRkIGRkcCBjb21wb25lbnQgQUFMMQo+ID4gPiAgIGRybS9tZWRpYXRlazogYWRkIGRkcCBj
-b21wb25lbnQgT0QxCj4gPiA+ICAgZHJtL21lZGlhdGVrOiBhZGQgZGRwIGNvbXBvbmVudCBQV00x
-Cj4gPiA+ICAgZHJtL21lZGlhdGVrOiBhZGQgZGRwIGNvbXBvbmVudCBQV00yCj4gPiA+ICAgZHJt
-L21lZGlhdGVrOiBhZGQgY29tcG9uZW50IERQSTEKPiA+ID4gICBkcm0vbWVkaWF0ZWs6IGFkZCBj
-b21wb25lbnQgRFNJMgo+ID4gPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbXBvbmVudCBEU0kzCj4g
-PiA+ICAgZHJtL21lZGlhdGVrOiBhZGQgdGhlIERTSTEgZm9yIGNvbXBvbmVudCBpbml0IGNvbmRp
-dGlvbgo+ID4gPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBPRDEgdG8gUkRN
-QTEKPiA+ID4gICBkcm0vbWVkaWF0ZWs6IFVwZGF0ZSB0aGUgZGVmaW5pdGlvbiBvZiBjb25uZWN0
-aW9uIGZyb20gUkRNQTEgdG8gRFBJMAo+ID4gPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rp
-b24gZnJvbSBSRE1BMCB0byBEUEkwCj4gPiA+ICAgZHJtL21lZGlhdGVrOiBhZGQgY29ubmVjdGlv
-biBmcm9tIFJETUEwIHRvIERTSTIKPiA+ID4gICBkcm0vbWVkaWF0ZWs6IGFkZCBjb25uZWN0aW9u
-IGZyb20gUkRNQTAgdG8gRFNJMwo+ID4gPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24g
-ZnJvbSBSRE1BMSB0byBEUEkxCj4gPiA+ICAgZHJtL21lZGlhdGVrOiBhZGQgY29ubmVjdGlvbiBm
-cm9tIFJETUExIHRvIERTSTEKPiA+ID4gICBkcm0vbWVkaWF0ZWs6IGFkZCBjb25uZWN0aW9uIGZy
-b20gUkRNQTEgdG8gRFNJMgo+ID4gPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJv
-bSBSRE1BMSB0byBEU0kzCj4gPiA+ICAgZHJtL21lZGlhdGVrOiBhZGQgY29ubmVjdGlvbiBmcm9t
-IFJETUEyIHRvIERQSTAKPiA+ID4gICBkcm0vbWVkaWF0ZWs6IGFkZCBjb25uZWN0aW9uIGZyb20g
-UkRNQTIgdG8gRFBJMQo+ID4gPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBS
-RE1BMiB0byBEU0kxCj4gPiA+ICAgZHJtL21lZGlhdGVrOiBhZGQgY29ubmVjdGlvbiBmcm9tIFJE
-TUEyIHRvIERTSTIKPiA+ID4gICBkcm0vbWVkaWF0ZWs6IGFkZCBjb25uZWN0aW9uIGZyb20gUkRN
-QTIgdG8gRFNJMwo+ID4gPiAgIGRybS9tZWRpYXRlazogYWRkIERQSTEgc3VwcG9ydCBmb3IgbXV0
-ZXgKPiA+ID4gICBkcm0vbWVkaWF0ZWs6IGFkZCBEU0kyIHN1cHBvcnQgZm9yIG11dGV4Cj4gPiA+
-ICAgZHJtL21lZGlhdGVrOiBhZGQgRFNJMyBzdXBwb3J0IGZvciBtdXRleAo+ID4gPiAgIGRybS9t
-ZWRpYXRlazogYWRkIHRoaXJkIGRkcCBwYXRoCj4gPiA+ICAgZHJtL21lZGlhdGVrOiBBZGQgc3Vw
-cG9ydCBmb3IgbWVkaWF0ZWsgU09DIE1UMjcxMgo+ID4gPiAKPiA+ID4gIC4uLi9iaW5kaW5ncy9k
-aXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRpc3AudHh0ICAgIHwgICAyICstCj4gPiA+ICBkcml2
-ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgICAgICAgICAgICB8ICAgMyArCj4g
-PiA+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyAgICAgICAgICAgICB8
-IDIzNSArKysrKysrKysrKysrKysrKystLS0KPiA+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
-ay9tdGtfZHJtX2RkcF9jb21wLmMgICAgICAgIHwgIDE1ICstCj4gPiA+ICBkcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oICAgICAgICB8ICAxMCArLQo+ID4gPiAgZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMgICAgICAgICAgICAgfCAgNDcgKysr
-Ky0KPiA+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5oICAgICAgICAg
-ICAgIHwgICA1ICstCj4gPiA+ICA3IGZpbGVzIGNoYW5nZWQsIDI3NCBpbnNlcnRpb25zKCspLCA0
-MyBkZWxldGlvbnMoLSkKPiA+ID4gCj4gPiA+IC0tIAo+ID4gPiAyLjEyLjUKPiA+ID4gCj4gPiA+
-IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gPiA+IGRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKPiA+ID4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-Zwo+ID4gPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo+ID4gCj4gCj4gCgotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwg
-SW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 22-06-18, 11:24, Guodong Xu wrote:
+> From: Li Yu <liyu65@hisilicon.com>
+> 
+> On k3 series of SoC, DMA controller reserves some channels for
+> other on-chip coprocessors. By adding support to dma_min_chan, kernel
+> will not be able to use these reserved channels.
+> 
+> One example is on Hi3660 platform, channel 0 is reserved to lpm3.
+> 
+> Please also refer to Documentation/devicetree/bindings/dma/k3dma.txt
+
+and if some other platform has channel X marked for co-processor, maybe
+a last channel or something in middle, how will this work then?
+
+I am thinking this should be a mask, rather than min.
+
+> 
+> Signed-off-by: Li Yu <liyu65@hisilicon.com>
+> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
+> ---
+>  drivers/dma/k3dma.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/dma/k3dma.c b/drivers/dma/k3dma.c
+> index fa31cccbe04f..13cec12742e3 100644
+> --- a/drivers/dma/k3dma.c
+> +++ b/drivers/dma/k3dma.c
+> @@ -113,6 +113,7 @@ struct k3_dma_dev {
+>  	struct dma_pool		*pool;
+>  	u32			dma_channels;
+>  	u32			dma_requests;
+> +	u32			dma_min_chan;
+>  	unsigned int		irq;
+>  };
+>  
+> @@ -309,7 +310,7 @@ static void k3_dma_tasklet(unsigned long arg)
+>  
+>  	/* check new channel request in d->chan_pending */
+>  	spin_lock_irq(&d->lock);
+> -	for (pch = 0; pch < d->dma_channels; pch++) {
+> +	for (pch = d->dma_min_chan; pch < d->dma_channels; pch++) {
+>  		p = &d->phy[pch];
+>  
+>  		if (p->vchan == NULL && !list_empty(&d->chan_pending)) {
+> @@ -326,7 +327,7 @@ static void k3_dma_tasklet(unsigned long arg)
+>  	}
+>  	spin_unlock_irq(&d->lock);
+>  
+> -	for (pch = 0; pch < d->dma_channels; pch++) {
+> +	for (pch = d->dma_min_chan; pch < d->dma_channels; pch++) {
+>  		if (pch_alloc & (1 << pch)) {
+>  			p = &d->phy[pch];
+>  			c = p->vchan;
+> @@ -825,6 +826,8 @@ static int k3_dma_probe(struct platform_device *op)
+>  				"dma-channels", &d->dma_channels);
+>  		of_property_read_u32((&op->dev)->of_node,
+>  				"dma-requests", &d->dma_requests);
+> +		of_property_read_u32((&op->dev)->of_node,
+> +				"dma-min-chan", &d->dma_min_chan);
+>  	}
+>  
+>  	d->clk = devm_clk_get(&op->dev, NULL);
+> @@ -848,12 +851,12 @@ static int k3_dma_probe(struct platform_device *op)
+>  		return -ENOMEM;
+>  
+>  	/* init phy channel */
+> -	d->phy = devm_kcalloc(&op->dev,
+> -		d->dma_channels, sizeof(struct k3_dma_phy), GFP_KERNEL);
+> +	d->phy = devm_kcalloc(&op->dev, (d->dma_channels - d->dma_min_chan),
+> +			sizeof(struct k3_dma_phy), GFP_KERNEL);
+>  	if (d->phy == NULL)
+>  		return -ENOMEM;
+>  
+> -	for (i = 0; i < d->dma_channels; i++) {
+> +	for (i = d->dma_min_chan; i < d->dma_channels; i++) {
+>  		struct k3_dma_phy *p = &d->phy[i];
+>  
+>  		p->idx = i;
+> -- 
+> 2.17.1
+
+-- 
+~Vinod
