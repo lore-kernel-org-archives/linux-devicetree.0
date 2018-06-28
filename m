@@ -1,99 +1,177 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH 2/3] k3dma: add support to reserved minimum channels
-Date: Thu, 28 Jun 2018 11:32:39 +0530
-Message-ID: <20180628060239.GO22377@vkoul-mobl>
-References: <20180622032416.20133-1-guodong.xu@linaro.org>
- <20180622032416.20133-3-guodong.xu@linaro.org>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [Dev] [PATCH 0/5] RFC: Mezzanine handling for 96boards
+Date: Thu, 28 Jun 2018 08:10:31 +0200
+Message-ID: <fdf376f0-8a9e-0cc9-b47e-0d7d3c41ef3e@xilinx.com>
+References: <20180618074556.6944-1-linus.walleij@linaro.org>
+ <CAL_JsqK2DKPbaFvUPSU2E7oh1_pryrRXPMg8OASmK722jmznwA@mail.gmail.com>
+ <CACRpkdZSk_jABqdcMGhyLaG42YXn3c0mqdKrfnUwNAuFj+kfbg@mail.gmail.com>
+ <CABGGisxta7f_CQt1Lsz+QRiyG8qVJ=rdBYnL5kSzLfw0-UxizA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180622032416.20133-3-guodong.xu@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guodong Xu <guodong.xu@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, dan.j.williams@intel.com, liyu65@hisilicon.com, suzhuangluan@hisilicon.com, xuhongtao8@hisilicon.com, zhongkaihua@huawei.com, xuezhiliang@hisilicon.com, xupeng7@huawei.com, sunliang10@huawei.com, fengbaopeng@hisilicon.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABGGisxta7f_CQt1Lsz+QRiyG8qVJ=rdBYnL5kSzLfw0-UxizA@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Frank Rowand <frowand.list@gmail.com>, Mark Brown <broonie@kernel.org>, Michal Simek <michal.simek@xilinx.com>, dev <dev@lists.96boards.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, mika.westerberg@linux.intel.com, andy@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 22-06-18, 11:24, Guodong Xu wrote:
-> From: Li Yu <liyu65@hisilicon.com>
-> 
-> On k3 series of SoC, DMA controller reserves some channels for
-> other on-chip coprocessors. By adding support to dma_min_chan, kernel
-> will not be able to use these reserved channels.
-> 
-> One example is on Hi3660 platform, channel 0 is reserved to lpm3.
-> 
-> Please also refer to Documentation/devicetree/bindings/dma/k3dma.txt
++Pantelis
 
-and if some other platform has channel X marked for co-processor, maybe
-a last channel or something in middle, how will this work then?
-
-I am thinking this should be a mask, rather than min.
-
+On 27.6.2018 17:23, Rob Herring wrote:
+> On Tue, Jun 26, 2018 at 8:36 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>>
+>> On Tue, Jun 19, 2018 at 5:52 PM Rob Herring <robh+dt@kernel.org> wrote:
+>>> On Mon, Jun 18, 2018 at 1:45 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>>
+>>>> A3: Overlays is Big Upfront Design.
+>> (...)
+>>> I don't agree. This can be broken down into various smaller mostly
+>>> independent problems. Overlay handling is mostly an orthogonal
+>>> problem. The exception is that we need to ensure bindings allow a
+>>> decoupling of upstream of the connector and downstream of the
+>>> connector so the downstream part can be a reusable overlay. Defining
+>>> anything while ignoring this known criteria would be a mistake.
+>>
+>> Hopefully we can make a connector binding that can
+>> be used in any way by the OS: either probe a board
+>> populating driver (such as in this patch set) or allow
+>> an overlay to be inserted (the aforementioned driver
+>> compiled out or inactive) further down the road. I would
+>> like to believe the board population problem is a
+>> both/and thing, not an either/or thing here.
 > 
-> Signed-off-by: Li Yu <liyu65@hisilicon.com>
-> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
-> ---
->  drivers/dma/k3dma.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
+> Certainly both can be supported. The base DT should be the same. I
+> don't think populating via DT needs to be a further down the road
+> thing. We're already further down the road...
 > 
-> diff --git a/drivers/dma/k3dma.c b/drivers/dma/k3dma.c
-> index fa31cccbe04f..13cec12742e3 100644
-> --- a/drivers/dma/k3dma.c
-> +++ b/drivers/dma/k3dma.c
-> @@ -113,6 +113,7 @@ struct k3_dma_dev {
->  	struct dma_pool		*pool;
->  	u32			dma_channels;
->  	u32			dma_requests;
-> +	u32			dma_min_chan;
->  	unsigned int		irq;
->  };
->  
-> @@ -309,7 +310,7 @@ static void k3_dma_tasklet(unsigned long arg)
->  
->  	/* check new channel request in d->chan_pending */
->  	spin_lock_irq(&d->lock);
-> -	for (pch = 0; pch < d->dma_channels; pch++) {
-> +	for (pch = d->dma_min_chan; pch < d->dma_channels; pch++) {
->  		p = &d->phy[pch];
->  
->  		if (p->vchan == NULL && !list_empty(&d->chan_pending)) {
-> @@ -326,7 +327,7 @@ static void k3_dma_tasklet(unsigned long arg)
->  	}
->  	spin_unlock_irq(&d->lock);
->  
-> -	for (pch = 0; pch < d->dma_channels; pch++) {
-> +	for (pch = d->dma_min_chan; pch < d->dma_channels; pch++) {
->  		if (pch_alloc & (1 << pch)) {
->  			p = &d->phy[pch];
->  			c = p->vchan;
-> @@ -825,6 +826,8 @@ static int k3_dma_probe(struct platform_device *op)
->  				"dma-channels", &d->dma_channels);
->  		of_property_read_u32((&op->dev)->of_node,
->  				"dma-requests", &d->dma_requests);
-> +		of_property_read_u32((&op->dev)->of_node,
-> +				"dma-min-chan", &d->dma_min_chan);
->  	}
->  
->  	d->clk = devm_clk_get(&op->dev, NULL);
-> @@ -848,12 +851,12 @@ static int k3_dma_probe(struct platform_device *op)
->  		return -ENOMEM;
->  
->  	/* init phy channel */
-> -	d->phy = devm_kcalloc(&op->dev,
-> -		d->dma_channels, sizeof(struct k3_dma_phy), GFP_KERNEL);
-> +	d->phy = devm_kcalloc(&op->dev, (d->dma_channels - d->dma_min_chan),
-> +			sizeof(struct k3_dma_phy), GFP_KERNEL);
->  	if (d->phy == NULL)
->  		return -ENOMEM;
->  
-> -	for (i = 0; i < d->dma_channels; i++) {
-> +	for (i = d->dma_min_chan; i < d->dma_channels; i++) {
->  		struct k3_dma_phy *p = &d->phy[i];
->  
->  		p->idx = i;
-> -- 
-> 2.17.1
+>> Could be a simple as a compatible-string for the
+>> connector(s). We just keep it dirt simple.
+> 
+> Yes, that would be the most simple case. Not really any work to do
+> there, so what's the point? Soon enough, we'll need to support all the
+> things listed below and what we certainly don't need is each connector
+> doing things their own way.
+> 
+>>> The list is roughly like this:
+>>>
+>>> - Connector node binding and probing infrastructure
+>>> - GPIO (already done w/ gpio-map binding)
+>>
+>> I tested that actually, using the connector as nexus. It works
+>> fine. The problem I ran into was more practical
+>> (see below).
+>>
+>>> - I2C
+>>> - SPI
+>>> - Pinmux
+>>> - clocks
+>>> - OF graph (displays, cameras, etc.)
+>>> - USB (re-use the USB connector binding for non-standard connectors)
+>>> - Userspace interface
+>>>
+>>> We don't have to support every interface from the start. The bindings
+>>> and corresponding kernel support can be designed 1-by-1 for the most
+>>> part. Start with something simple like a GPIO LED on a mezzanine.
+>>
+>> I have that working today, I just didn't go beyond that.
+>>
+>> It's because of usability issues. (Described below.)
+>>
+>>> Once
+>>> the base is functionality is there, the other parts can be worked on
+>>> incrementally. We can punt any overlay handling to the bootloader
+>>> initially.
+>>
+>> I didn't even do that. I just patched the DTS with a connector
+>> and booted it.
+> 
+> Yes, or just do that. In any case, don't blame overlays for avoiding
+> more fully defining connector bindings.
+> 
+>> From a user point of view whether having a
+>> patched up DTS or a boot loader modifying the DTB at
+>> run-time does not really matter as these boards are
+>> non-discoverable anyway. The boot loader will now know
+>> if they are there or not. What should the user do? Should
+>> they send command line arguments to U-Boot to say that
+>> we have the secure96 board? Flash different boot loaders
+>> depending on what board(s) are connected? That is even
+>> more awkward (IMO) than just modifying and redeploying
+>> the DTB.
+> 
+> Ideally, it would be as simple as editing a syslinux style menu text
+> file or setting an EFI variable. But yes, we do need to define exactly
+> how that is done. It's something on the todo list for EBBR, but not
+> going to happen until after the 1st release.
+> 
+>> The bright side of this patch set is that the user boots
+>> and the kernel is aware of there being a connector
+>> and presents sysfs files to populate the boards.
+>>
+>> User goes "hm OK I have a secure96":
+>> cd /sys/bus/platform/devices/connector
+>> echo 1 > secure96
+>>
+>> And there it populates.
+>>
+>> No special boot loaders. No special tools.
+>>
+>>> That punts all the issues around overlays like designing a
+>>> userspace interface, where overlays are located (filesystem, passed
+>>> from bootloader, built into the kernel), when they are loaded, and how
+>>> to specify which overlays to load. Most of Frank's list is related to
+>>> these issues.
+>>
+>> And that is where the user (also me) stops short.
+>>
+>> Now I want to plug this board. OK download device tree
+>> compiler, author a fragment, compile it, compile a
+>> special userspace for inserting it into the right node,
+>> flash filesystem with that new userpace tool, also
+>> do not forget the DTB fragment, parameterize that
+>> tool to load the fragment into the connector node.
+>> Maybe the user need to change stuff on the fly?
+>> Hm then they need a text editor and a DT compiler
+>> on the target too, OK things like that can be done.
+> 
+> With your series, they'd just have to edit and rebuild the kernel...
+> 
+>> Admittedly the above is more versatile. Probably
+>> awesome when you need to populate a device forest
+>> on an FPGA.
+>>
+>> But is that even a realistic usecase? And what about
+>> the average plug-in board user? If they can do the
+>> population by compiling a kernel driver for their
+>> board and say it's there and populate it with a simple
+>> echo into a sysfs file they will be happy.
+> 
+> Only a kernel developer would think compiling a kernel driver makes
+> for a good usecase.
+> 
+> For users, I think all the board dtbs have to be on the filesystem and
+> the user only has to set which ones to apply (when there is no eeprom
+> to allow doing that automatically). That's essentially what you have
+> on RPi today (though I've got issues with some of their overlays, but
+> that's a whole other can of worms).
+> 
+> The other user usecase I think is custom or prototyping boards. For
+> those cases, we probably do want some run-time interface which could
+> be a kernel driver (as you have) or configfs overlay interface. But
+> I'd start with the first usecase and worry about this one later.
 
--- 
-~Vinod
+Pantelis had (I believe still have) configs overlay interface already.
+At least we are keep having it in xilinx soc tree.
+
+Thanks,
+Michal
