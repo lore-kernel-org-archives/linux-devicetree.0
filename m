@@ -1,84 +1,127 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v3 07/17] irqchip/irq-mvebu-icu: make irq_domain local
-Date: Thu, 28 Jun 2018 13:10:05 +0100
-Message-ID: <2f751e0a-857e-22ab-1748-5fd1cb127766@arm.com>
-References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
- <20180622151432.1566-8-miquel.raynal@bootlin.com>
+From: Stefan Popa <stefan.popa@analog.com>
+Subject: [PATCH v3 2/2] dt-bindings: iio: dac: Add docs for AD5758 DAC
+Date: Thu, 28 Jun 2018 15:14:33 +0300
+Message-ID: <1530188073-28362-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180622151432.1566-8-miquel.raynal@bootlin.com>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haim Boot <hayim@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Hanna Hawa <hannah@marvell.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, Michael.Hennerich@analog.com, lars@metafoo.de
+Cc: knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
 List-Id: devicetree@vger.kernel.org
 
-On 22/06/18 16:14, Miquel Raynal wrote:
-> Make the current MSI irq_domain local to ease the split between ICU
-> platform device code and NSR platform device code.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-> ---
->  drivers/irqchip/irq-mvebu-icu.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
-> index 3694c0d73c0d..607948870a14 100644
-> --- a/drivers/irqchip/irq-mvebu-icu.c
-> +++ b/drivers/irqchip/irq-mvebu-icu.c
-> @@ -41,7 +41,6 @@
->  struct mvebu_icu {
->  	struct irq_chip irq_chip;
->  	struct regmap *regmap;
-> -	struct irq_domain *domain;
->  	struct device *dev;
->  	atomic_t initialized;
->  };
-> @@ -218,6 +217,7 @@ static int mvebu_icu_probe(struct platform_device *pdev)
->  	struct mvebu_icu *icu;
->  	struct device_node *node = pdev->dev.of_node;
->  	struct device_node *gicp_dn;
-> +	struct irq_domain *irq_domain;
->  	struct resource *res;
->  	void __iomem *regs;
->  	int i;
-> @@ -282,11 +282,11 @@ static int mvebu_icu_probe(struct platform_device *pdev)
->  			regmap_write(icu->regmap, ICU_INT_CFG(i), 0);
->  	}
->  
-> -	icu->domain =
-> +	irq_domain =
->  		platform_msi_create_device_domain(&pdev->dev, ICU_MAX_IRQS,
->  						  mvebu_icu_write_msg,
->  						  &mvebu_icu_domain_ops, icu);
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+Changes in v3:
+	- AD5758 can be both a current and voltage output DAC. The
+	  decision is made based on the DT and the channel type is set
+	  during probe.
+	- range was replaced by range-microvolt and range-microamp
+	- dc-dc-mode, range-microvolt and range-microamp are required
+	  properties.
+	- Introduced a slew-time-us property from which slew rate clock
+	  and slew rate step are calculated using a best match algorithm.
+	- Added units in the name of the properties.
+	- Offered more explanation for the various modes of operation.
 
-nit: this really hurts my eyes. Please put the = sign and the function
-call on a single line. I really don't care if it checkpatch is having a
-fit because of that.
+Changes in v2:
+	- Nothing changed, just to follow the patch set version.
+ .../devicetree/bindings/iio/dac/ad5758.txt         | 73 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 74 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5758.txt
 
-> -	if (!icu->domain) {
-> +	if (!irq_domain) {
->  		dev_err(&pdev->dev, "Failed to create ICU domain\n");
->  		return -ENOMEM;
->  	}
-> 
-
-But looking at the next patch, you might as well fold the two. On its
-own, this patches is pretty pointless.
-
-Thanks,
-
-	M.
+diff --git a/Documentation/devicetree/bindings/iio/dac/ad5758.txt b/Documentation/devicetree/bindings/iio/dac/ad5758.txt
+new file mode 100644
+index 0000000..797df9b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/dac/ad5758.txt
+@@ -0,0 +1,73 @@
++Analog Devices AD5758 DAC device driver
++
++Required properties for the AD5758:
++	- compatible: Must be "adi,ad5758"
++	- reg: SPI chip select number for the device
++	- spi-max-frequency: Max SPI frequency to use (< 50000000)
++	- spi-cpha: is the only mode that is supported
++
++Required properties:
++
++ - adi,dc-dc-mode: Mode of operation of the dc-to-dc converter
++ 		   Dynamic Power Control (DPC)
++		   In this mode, the AD5758 circuitry senses the output voltage and
++		   dynamically regulates the supply voltage, VDPC+, to meet compliance
++		   requirements plus an optimized headroom voltage for the output buffer.
++
++		   Programmable Power Control (PPC)
++		   In this mode, the VDPC+ voltage is user-programmable to a fixed level
++		   that needs to accommodate the maximum output load required.
++
++		   The output of the DAC core is either converted to a current or voltage
++		   output at the VIOUT pin. Only one mode can be enabled at any one time.
++
++		   The following values are currently supported:
++			* 1: DPC current mode
++			* 2: DPC voltage mode
++			* 3: PPC current mode
++
++ Depending on the selected output mode (voltage or current) one of the two properties must
++ be present:
++
++ - adi,range-microvolt: Voltage output range
++ 		The array of voltage output ranges must contain two fields:
++	      	* <0 5000000>: 0 V to 5 V voltage range
++		* <0 10000000>: 0 V to 10 V voltage range
++		* <(-5000000) 5000000>: ±5 V voltage range
++		* <(-10000000) 10000000>: ±10 V voltage range
++ - adi,range-microamp: Current output range
++ 		The array of current output ranges must contain two fields:
++		* <0 20000>: 0 mA to 20 mA current range
++		* <0 24000>: 0 mA to 24 mA current range
++		* <4 24000>: 4 mA to 20 mA current range
++		* <(-20000) 20000>: ±20 mA current range
++		* <(-24000) 24000>: ±24 mA current range
++		* <(-1000) 22000>: −1 mA to +22 mA current range
++
++Optional properties:
++
++ - adi,dc-dc-ilim-microamp: The dc-to-dc converter current limit
++		   The following values are currently supported [uA]:
++		   	* 150000
++			* 200000
++			* 250000
++			* 300000
++			* 350000
++			* 400000
++
++ - adi,slew-time-us: The time it takes for the output to reach the full scale [uS]
++ 		     The supported range is between 133us up to 1023984375us
++
++AD5758 Example:
++
++	ad5758@0 {
++		compatible = "adi,ad5758";
++		reg = <0>;
++		spi-max-frequency = <1000000>;
++		spi-cpha;
++
++		adi,dc-dc-mode = <2>;
++		adi,range-microvolt = <0 10000000>;
++		adi,dc-dc-ilim-microamp = <200000>;
++		adi,slew-time-us = <125000>;
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 12d102d..60b1028 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -802,6 +802,7 @@ L:	linux-iio@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+ F:	drivers/iio/dac/ad5758.c
++F:	Documentation/devicetree/bindings/iio/dac/ad5758.txt
+ 
+ ANALOG DEVICES INC AD5686 DRIVER
+ M:	Stefan Popa <stefan.popa@analog.com>
 -- 
-Jazz is not dead. It just smells funny...
+2.7.4
