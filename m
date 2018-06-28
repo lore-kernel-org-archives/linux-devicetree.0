@@ -1,50 +1,24 @@
-Return-Path: <SRS0=1b4G=JP=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 1/7] mmc: pxamci: remove irq from private context
-Date: Fri, 29 Jun 2018 16:47:32 +0200
-Message-Id: <20180629144738.446-2-daniel@zonque.org>
-In-Reply-To: <20180629144738.446-1-daniel@zonque.org>
-References: <20180629144738.446-1-daniel@zonque.org>
-To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: robert.jarzmik@free.fr, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=MKI6=JO=linuxfoundation.org=gregkh@kernel.org>
+Date: Thu, 28 Jun 2018 21:14:40 +0900
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 1/4] tty: serial: uartlite: Add structure for private data
+Message-ID: <20180628121440.GA29924@kroah.com>
+References: <1530102225-6459-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1530102225-6459-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+To: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, shubhrajyoti.datta@gmail.com, Tanvi Desai <tanvi.desai@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This seems to be a left-over from times before the IRQ was handled by devm
-functions. Remove it.
+On Wed, Jun 27, 2018 at 05:53:42PM +0530, Shubhrajyoti Datta wrote:
+> This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- drivers/mmc/host/pxamci.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+I am supposed to just delete emails with this type of footer, but I'll
+tell you that this prevents any such patch from being applied to the
+kernel, sorry.
 
-diff --git a/drivers/mmc/host/pxamci.c b/drivers/mmc/host/pxamci.c
-index 6c94474e36f4..f0968882dbd3 100644
---- a/drivers/mmc/host/pxamci.c
-+++ b/drivers/mmc/host/pxamci.c
-@@ -58,7 +58,6 @@ struct pxamci_host {
- 	void __iomem		*base;
- 	struct clk		*clk;
- 	unsigned long		clkrate;
--	int			irq;
- 	unsigned int		clkrt;
- 	unsigned int		cmdat;
- 	unsigned int		imask;
-@@ -711,7 +710,6 @@ static int pxamci_probe(struct platform_device *pdev)
- 
- 	spin_lock_init(&host->lock);
- 	host->res = r;
--	host->irq = irq;
- 	host->imask = MMC_I_MASK_ALL;
- 
- 	host->base = devm_ioremap_resource(&pdev->dev, r);
-@@ -729,7 +727,7 @@ static int pxamci_probe(struct platform_device *pdev)
- 	writel(64, host->base + MMC_RESTO);
- 	writel(host->imask, host->base + MMC_I_MASK);
- 
--	ret = devm_request_irq(&pdev->dev, host->irq, pxamci_irq, 0,
-+	ret = devm_request_irq(&pdev->dev, irq, pxamci_irq, 0,
- 			       DRIVER_NAME, host);
- 	if (ret)
- 		goto out;
--- 
-2.17.1
+Please remove it is not compatible with kernel development processes.
+
+greg k-h
