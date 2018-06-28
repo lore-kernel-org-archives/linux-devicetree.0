@@ -1,127 +1,40 @@
-Return-Path: <SRS0=jXKD=JN=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v5 4/5] leds: lt3593: Add device tree probing glue
-Date: Wed, 27 Jun 2018 20:52:36 +0200
-Message-Id: <20180627185237.24830-5-daniel@zonque.org>
-In-Reply-To: <20180627185237.24830-1-daniel@zonque.org>
-References: <20180627185237.24830-1-daniel@zonque.org>
-To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=I01o=JO=redhat.com=javierm@kernel.org>
+Subject: Re: [PATCH 00/21] TVP5150 fixes and new features
+References: <20180628162054.25613-1-m.felsch@pengutronix.de>
+From: Javier Martinez Canillas <javierm@redhat.com>
+Message-ID: <9058a558-dd67-33f6-b2c7-7e3cdc3a7f61@redhat.com>
+Date: Thu, 28 Jun 2018 22:57:28 +0200
+MIME-Version: 1.0
+In-Reply-To: <20180628162054.25613-1-m.felsch@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Marco Felsch <m.felsch@pengutronix.de>, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: p.zabel@pengutronix.de, afshin.nasser@gmail.com, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-The binding details are described in an earlier commit that adds the
-documentation.
+Hi Marco,
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- drivers/leds/leds-lt3593.c | 70 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+On 06/28/2018 06:20 PM, Marco Felsch wrote:
+> First some fixes were made which may possibly interesting for other
+> kernel versions.
+> 
+> Then I picked most of the patches from Philipp [1] and ported them
+> to the recent media_tree master branch [3].
+> 
+> But the main purpose of this series is to convert the proprietary
+> connector DT property into the generic input port property. I picked commit
+> ('partial revert of "[media] tvp5150: add HW input connectors support"')
+> to have a clean working base and used the results of the discussion [2].
+> 
 
-diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
-index a096ee64cbbb..2e35a4a4c571 100644
---- a/drivers/leds/leds-lt3593.c
-+++ b/drivers/leds/leds-lt3593.c
-@@ -24,8 +24,11 @@
- #include <linux/gpio/consumer.h>
- #include <linux/slab.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <uapi/linux/uleds.h>
- 
- struct lt3593_led_data {
-+	char name[LED_MAX_NAME_SIZE];
- 	struct led_classdev cdev;
- 	struct gpio_desc *gpiod;
- };
-@@ -120,22 +123,89 @@ static int lt3593_led_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct lt3593_led_data *led_data;
-+	struct fwnode_handle *child;
-+	int ret, state = LEDS_GPIO_DEFSTATE_OFF;
-+	enum gpiod_flags flags = GPIOD_OUT_LOW;
-+	const char *tmp;
- 
- 	if (dev_get_platdata(dev)) {
- 		led_data = lt3593_led_probe_pdata(dev);
- 		if (IS_ERR(led_data))
- 			return PTR_ERR(led_data);
-+
-+		goto out;
- 	}
- 
-+	if (!dev->of_node)
-+		return -ENODEV;
-+
-+	led_data = devm_kzalloc(dev, sizeof(*led_data), GFP_KERNEL);
-+	if (!led_data)
-+		return -ENOMEM;
-+
-+	if (device_get_child_node_count(dev) != 1) {
-+		dev_err(dev, "Device must have exactly one LED sub-node.");
-+		return -EINVAL;
-+	}
-+
-+	led_data->gpiod = devm_gpiod_get(dev, "lltc,ctrl", 0);
-+	if (IS_ERR(led_data->gpiod))
-+		return PTR_ERR(led_data->gpiod);
-+
-+	child = device_get_next_child_node(dev, NULL);
-+
-+	ret = fwnode_property_read_string(child, "label", &tmp);
-+	if (ret < 0)
-+		snprintf(led_data->name, sizeof(led_data->name),
-+			 "lt3593::");
-+	else
-+		snprintf(led_data->name, sizeof(led_data->name),
-+			 "lt3593:%s", tmp);
-+
-+	fwnode_property_read_string(child, "linux,default-trigger",
-+				    &led_data->cdev.default_trigger);
-+
-+	if (!fwnode_property_read_string(child, "default-state", &tmp)) {
-+		if (!strcmp(tmp, "keep")) {
-+			state = LEDS_GPIO_DEFSTATE_KEEP;
-+			flags = GPIOD_ASIS;
-+		} else if (!strcmp(tmp, "on")) {
-+			state = LEDS_GPIO_DEFSTATE_ON;
-+			flags = GPIOD_OUT_HIGH;
-+		}
-+	}
-+
-+	led_data->cdev.name = led_data->name;
-+	led_data->cdev.brightness_set_blocking = lt3593_led_set;
-+	led_data->cdev.brightness = state ? LED_FULL : LED_OFF;
-+
-+	ret = devm_led_classdev_register(dev, &led_data->cdev);
-+	if (ret < 0) {
-+		fwnode_handle_put(child);
-+		return ret;
-+	}
-+
-+	led_data->cdev.dev->of_node = dev->of_node;
-+
-+out:
- 	platform_set_drvdata(pdev, led_data);
- 
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id of_lt3593_leds_match[] = {
-+	{ .compatible = "lltc,lt3593", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, of_lt3593_leds_match);
-+#endif
-+
- static struct platform_driver lt3593_led_driver = {
- 	.probe		= lt3593_led_probe,
- 	.driver		= {
- 		.name	= "leds-lt3593",
-+		.of_match_table = of_match_ptr(of_lt3593_leds_match),
- 	},
- };
- 
+Thanks for working on this! I've felt guilty that I never re-worked my
+patch-set after the discussion from [2].
+
+I'll try to review these patches next week.
+
+Best regards,
 -- 
-2.17.1
+Javier Martinez Canillas
+Software Engineer - Desktop Hardware Enablement
+Red Hat
