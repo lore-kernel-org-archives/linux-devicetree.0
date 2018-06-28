@@ -1,14 +1,15 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 14/24] drm/sun4i: Add support for R40 mixers
-Date: Thu, 28 Jun 2018 10:18:54 +0800
-Message-ID: <CAGb2v673mEZD_kMjhEmJtAzYK5NyH6TSFKPBXTaZ_YirK0P_qg@mail.gmail.com>
-References: <20180625120304.7543-1-jernej.skrabec@siol.net> <20180625120304.7543-15-jernej.skrabec@siol.net>
+Subject: Re: [PATCH v3 15/24] dt-bindings: display: sun4i-drm:
+ Add description of A64 HDMI PHY
+Date: Thu, 28 Jun 2018 10:19:55 +0800
+Message-ID: <CAGb2v66ytOrjMOK067URknens34jvYxJ1XoYmGMi4Ji0LYt9sQ@mail.gmail.com>
+References: <20180625120304.7543-1-jernej.skrabec@siol.net> <20180625120304.7543-16-jernej.skrabec@siol.net>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBJML2HMQKGQE2GIKUPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBY4L2HMQKGQEKRTREEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180625120304.7543-15-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+In-Reply-To: <20180625120304.7543-16-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -20,14 +21,47 @@ Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob H
 List-Id: devicetree@vger.kernel.org
 
 On Mon, Jun 25, 2018 at 8:02 PM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> Both mixers have similar capabilities as others SoCs with DE2.
+> A64 HDMI PHY is similar to H3 HDMI PHY except it has two possible PLL
+> clock parents. It is compatible to other HDMI PHYs, like that found in
+> R40.
 >
-> First mixer has 1 VI and 3 UI planes and supports HW scaling on all
-> planes.
->
-> Second mixer has 1 VI and 1 UI planes and also supports HW scaling on
-> all planes.
->
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> index 84fe38dbb900..dc83f21ef188 100644
+> --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> @@ -101,6 +101,7 @@ DWC HDMI PHY
+>
+>  Required properties:
+>    - compatible: value must be one of:
+> +    * allwinner,sun50i-a64-hdmi-phy
+>      * allwinner,sun8i-a83t-hdmi-phy
+>      * allwinner,sun8i-h3-hdmi-phy
+
+Nit: the list is sorted by family first, then SoC name, so it should
+be the last on the list.
+
+Otherwise,
 
 Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+
+>    - reg: base address and size of memory-mapped region
+> @@ -111,8 +112,9 @@ Required properties:
+>    - resets: phandle to the reset controller driving the PHY
+>    - reset-names: must be "phy"
+>
+> -H3 HDMI PHY requires additional clock:
+> +H3 and A64 HDMI PHY require additional clocks:
+>    - pll-0: parent of phy clock
+> +  - pll-1: second possible phy clock parent (A64 only)
+>
+>  TV Encoder
+>  ----------
+> --
+> 2.18.0
+>
