@@ -1,118 +1,47 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 1/2] dt-bindings: nand: meson: add Amlogic NAND controller driver
-Date: Wed, 27 Jun 2018 16:40:45 -0700
-Message-ID: <7hvaa3hk76.fsf@baylibre.com>
-References: <20180613161314.14894-1-yixun.lan@amlogic.com>
-        <20180613161314.14894-2-yixun.lan@amlogic.com>
-        <CAFBinCBeyXf6LNaZzAw6WnsxzDAv8E=Yp2eem0xCPWMEUi6pnQ@mail.gmail.com>
-        <20180626183003.GA3019@rob-hp-laptop>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 09/10] gpio: Add a driver for Cadence I3C GPIO expander
+Date: Thu, 28 Jun 2018 03:00:58 +0300
+Message-ID: <CAHp75Vd5ucaeOD4S76ANcOVUA=QrCpGNAmun6+ihnsOTsgtcKg@mail.gmail.com>
+References: <20180622104930.32050-1-boris.brezillon@bootlin.com>
+ <20180622104930.32050-10-boris.brezillon@bootlin.com> <CAHp75Vdxg49q6aQj0dDpzM4q2WnQbGoCECWR1roda7aMR+u4gg@mail.gmail.com>
+ <20180626215648.1472b96e@bbrezillon> <CAHp75VcVvOzgOM87rSrwsCxh+WAK-z+zVCJifnY+Xeeu=cPFiA@mail.gmail.com>
+ <20180626234638.076fb816@bbrezillon> <CAHp75VdBXj66Yd6sQHOWz19R9MUtYMSeq4j-+UidLedpfkB6mA@mail.gmail.com>
+ <20180627213617.51e10712@bbrezillon> <8bf36e4025b6ec5198a668edda6bcbef3b06e97b.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180626183003.GA3019@rob-hp-laptop> (Rob Herring's message of
-        "Tue, 26 Jun 2018 12:30:03 -0600")
+In-Reply-To: <8bf36e4025b6ec5198a668edda6bcbef3b06e97b.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, yixun.lan@amlogic.com, linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com, richard@nod.at, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, marek.vasut@gmail.com, devicetree@vger.kernel.org, liang.yang@amlogic.com, jian.hu@amlogic.com, carlo@caione.org, linux-amlogic@lists.infradead.org, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+To: Joe Perches <joe@perches.com>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Linux Documentation List <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh@kernel.org> writes:
-
-> On Sun, Jun 24, 2018 at 12:46:59AM +0200, Martin Blumenstingl wrote:
->> Hello Yixun, Hello Liang,
->> 
->> I have a few small comments inline below
->> additionally I tried to explain the reason behind
->> "amlogic,mmc-syscon", clkin0 and clkin1 so Rob (or the devicetree
->> maintainers in general) can give feedback. feel free to correct me
->> wherever I'm wrong or provide additional notes in case I missed
->> something!
->> 
->> On Wed, Jun 13, 2018 at 10:17 AM Yixun Lan <yixun.lan@amlogic.com> wrote:
->> >
->> > From: Liang Yang <liang.yang@amlogic.com>
->> >
->> > Add Amlogic NAND controller dt-bindings for Meson SoC,
->> > Current this driver support GXBB/GXL/AXG platform.
->> >
->> > Signed-off-by: Liang Yang <liang.yang@amlogic.com>
->> > Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
->> > ---
->> >  .../bindings/mtd/amlogic,meson-nand.txt       | 118 ++++++++++++++++++
->> >  1 file changed, 118 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
->> > new file mode 100644
->> > index 000000000000..eac9f9433d5d
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
->> > @@ -0,0 +1,118 @@
->> > +Amlogic NAND Flash Controller (NFC) for GXBB/GXL/AXG family SoCs
->> > +
->> > +This file documents the properties in addition to those available in
->> > +the MTD NAND bindings.
->> > +
->> > +Required properties:
->> > +- compatible : contains one of:
->> > +  - "amlogic,meson-gxl-nfc"
->> > +  - "amlogic,meson-axg-nfc"
->> the patch description states that GXBB/GXL/AXG are supported
->> shouldn't you add a compatible string for GXBB as well?
->> 
->> > +- clocks     :
->> > +       A list of phandle + clock-specifier pairs for the clocks listed
->> > +       in clock-names.
->> > +
->> > +- clock-names: Should contain the following:
->> > +       "core" - NFC module gate clock
->> > +       "clkin0" - Parent clock of internal mux
->> > +       "clkin1" - Other parent clock of internal mux
->> to give the devicetree maintainers some context on clkin0 and clkin1:
->> 
->> older SoCs (Meson8, Meson8b - not supported by this binding/driver
->> yet) had a dedicated NAND clock. there neither clkin0 or clkin1 would
->> be used, instead we just had a "nand" or "interface" clock (I'm not
->> aware of the actual naming in Amlogic's internal datasheets)
->> 
->> newer SoCs do NOT have a dedicated NAND "interface" clock anymore.
->> instead they are sharing the clock with the "sd_emmc_c" controller (I
->> *believe* the reason for this is because sd_emmc_c and the NAND
->> controller use the same pads on the SoC, pinctrl muxing controls where
->> these pads are routed -> NAND and sd_emmc_c cannot be used at the same
->> time, so SoC designers probably decided to re-use the clock)
->> 
->> unfortunately the sd_emmc_c clock is not provided by the "main" clock
->> controller on these newer SoCs
->> instead the clock is part of the MMC controller's register space (see
->> the SD_EMMC_CLOCK register in drivers/mmc/host/meson-gx-mmc.c)
->> even worse: the SD_EMMC_CLOCK contains more than just clock settings
->> (bit 25 enables the SDIO interrupt, which is currently not supported
->> by the meson-gx-mmc driver though)
->> 
->> the SD_EMMC_CLOCK register has a mux (CLK_SRC_MASK) to choose from
->> clkin0 and clkin1 which are passed here
->> the "amlogic,mmc-syscon" property is used to get a phandle to the
->> sd_emmc_c syscon register space
->> thus there is a bit of code duplication in the MMC and NAND drivers
->> with this binding (because both need to configure the SD_EMMC_CLOCK
->> register)
+On Thu, Jun 28, 2018 at 1:54 AM, Joe Perches <joe@perches.com> wrote:
+> On Wed, 2018-06-27 at 21:36 +0200, Boris Brezillon wrote:
+>> I mean, kzalloc() is not deprecated AFAIK and I don't really see the
+>> benefit of using kmalloc_array(), but if that makes you happy, let's go
+>> for kmalloc_array().
 >
-> Well, that's ugly. Really, the SD controller should be modeled as a 
-> clock provider. But then you would have to always have a driver 
-> instantiated for it. Maybe you need that anyway if accessing this 
-> register is dependent on some other clock or reset to the module being 
-> enabled (which you may not hit if you only access the reg during boot)?
+> kcalloc
 
-On some earlier rounds of off-lis review, we did consider making the
-SD/MMC controller a clock provider.  But forcing it to be instantiated
-was kinda ugly too, especailly because there are several instances of
-the MMC IP, and only one of them shares the clock with the NAND, so only
-one of them needs to be a clock provider. :(
+IIRC in the original code kmalloc(x*y) is used.
 
-> But if you really want to do it this way, I guess that is fine.
+>> I do run checkpatch --strict and fix most of the thing reported except
+>> those hurting readability. I don't remember seeing checkpatch complain
+>> about kzalloc() usage, and I guess it's not smart enough to detect that
+>> for_each_bit_set() can be used to replace the "for() if (BIT(x) & val)"
+>> pattern.
+>
+> That would not an appropriate conversion suggestion in any case.
+> coccinelle could at least look at whether or not x is allocated
+> as a bitmap via DECLARE_BITMAP or bitmap_alloc
 
-Thanks.  We did consider a few options, and found this one to be the
-least worst of a few options.
+Huh?!
 
-Kevin
+bitmap operations are working against unsigned long *. one long is
+also a bitmap.
+So, that coccinelle scripts must be fixed accordingly.
+
+-- 
+With Best Regards,
+Andy Shevchenko
