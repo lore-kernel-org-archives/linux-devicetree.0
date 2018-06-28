@@ -1,54 +1,77 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH v10 00/14] Krait clocks + Krait CPUfreq
-Date: Thu, 28 Jun 2018 09:59:13 +0530
-Message-ID: <410263b4-9434-ed49-626d-2a14efe350f0@codeaurora.org>
-References: <1529415925-28915-1-git-send-email-sricharan@codeaurora.org>
- <a58c2d2c-64d1-7223-dc98-8f749397375d@linaro.org>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH 2/4] ARM: dts: imx6qdl-zii-rdu2: Populate RAVE SP EEPROM nodes
+Date: Wed, 27 Jun 2018 21:39:37 -0700
+Message-ID: <CAHQ1cqHpX_nz+xyyPg30kXsn2oTp2BBzk-qpCi3z3kezg1PTWg@mail.gmail.com>
+References: <20180628042424.12664-1-andrew.smirnov@gmail.com> <20180628042424.12664-3-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a58c2d2c-64d1-7223-dc98-8f749397375d@linaro.org>
-Content-Language: en-US
+In-Reply-To: <20180628042424.12664-3-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Escande <thierry.escande@linaro.org>
-Cc: robh@kernel.org, viresh.kumar@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux@arm.linux.org.uk, ctatlor97@gmail.com
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Lucas Stach <l.stach@pengutronix.de>, Chris Healy <cphealy@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+On Wed, Jun 27, 2018 at 9:24 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+>
+> ZII's RDU1s come with two EEPROMs attached to RAVE SP. Add
 
-On 6/27/2018 3:01 PM, Thierry Escande wrote:
-> Hi Sricharan,
-> 
-> On 19/06/2018 15:45, Sricharan R wrote:
->> Sricharan R (2):
->>    clk: qcom: Add safe switch hook for krait mux clocks
->>    dt-bindings: cpufreq: Document operating-points-v2-krait-cpu
->>
->> Stephen Boyd (12):
->>    ARM: Add Krait L2 register accessor functions
->>    clk: qcom: Add support for High-Frequency PLLs (HFPLLs)
->>    clk: qcom: Add HFPLL driver
->>    dt-bindings: clock: Document qcom,hfpll
->>    clk: qcom: Add MSM8960/APQ8064's HFPLLs
->>    clk: qcom: Add IPQ806X's HFPLLs
->>    clk: qcom: Add support for Krait clocks
->>    clk: qcom: Add KPSS ACC/GCC driver
->>    dt-bindings: arm: Document qcom,kpss-gcc
->>    clk: qcom: Add Krait clock controller driver
->>    dt-bindings: clock: Document qcom,krait-cc
->>    cpufreq: Add module to register cpufreq on Krait CPUs
-> 
-> Tested on apq8064 (db600c).
-> 
-> Tested-By: Thierry Escande <thierry.escande@linaro.org>
-> 
+Ugh, the description should read RDU2, not RDU1. Will fix in v2,
+tomorrow. Sorry about that.
 
-  Thanks for testing this !!
-  I Will try to merge the kryo cpu-freq and this one if that looks neat.
+Thanks,
+Andrey Smirnov
 
-Regards,
- Sricharan
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> corresponding nodes to make them availible.
+>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: cphealy@gmail.com
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> ---
+>  arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+> index 19a075aee19e..e4630481d951 100644
+> --- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+> @@ -320,10 +320,28 @@
+>         rave-sp {
+>                 compatible = "zii,rave-sp-rdu2";
+>                 current-speed = <1000000>;
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+>
+>                 watchdog {
+>                         compatible = "zii,rave-sp-watchdog";
+>                 };
+> +
+> +               eeprom@a3 {
+> +                       compatible = "zii,rave-sp-eeprom";
+> +                       reg = <0xa3 0x4000>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       zii,eeprom-name = "dds-eeprom";
+> +               };
+> +
+> +               eeprom@a4 {
+> +                       compatible = "zii,rave-sp-eeprom";
+> +                       reg = <0xa4 0x4000>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       zii,eeprom-name = "main-eeprom";
+> +               };
+>         };
+>  };
+>
+> --
+> 2.17.1
+>
