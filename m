@@ -1,70 +1,145 @@
-Return-Path: <SRS0=bntt=JN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-sn1nam02on0063.outbound.protection.outlook.com ([104.47.36.63]:3920
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S964989AbeF0MYR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 27 Jun 2018 08:24:17 -0400
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: [PATCH 3/4] doc: uartlite: Add binding for the driver
-Date: Wed, 27 Jun 2018 17:53:44 +0530
-Message-ID: <1530102225-6459-3-git-send-email-shubhrajyoti.datta@xilinx.com>
-In-Reply-To: <1530102225-6459-1-git-send-email-shubhrajyoti.datta@xilinx.com>
-References: <1530102225-6459-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+Return-Path: <vkoul@kernel.org>
+Date: Thu, 28 Jun 2018 10:46:42 +0530
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [v6 3/7] dmaengine: fsl-qdma: Add qDMA controller driver for
+ Layerscape SoCs
+Message-ID: <20180628051642.GK22377@vkoul-mobl>
+References: <20180615102236.32859-1-wen.he_1@nxp.com>
+ <20180615102236.32859-3-wen.he_1@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-Sender: devicetree-owner@vger.kernel.org
-To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, shubhrajyoti.datta@gmail.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180615102236.32859-3-wen.he_1@nxp.com>
+To: Wen He <wen.he_1@nxp.com>
+Cc: dmaengine@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add uartlite binding for the driver
+On 15-06-18, 18:22, Wen He wrote:
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
----
- .../bindings/serial/xlnx,opb-uartlite.txt          | 24 ++++++++++++++++++=
-++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/xlnx,opb-uartl=
-ite.txt
+> +static struct fsl_qdma_comp *fsl_qdma_request_enqueue_desc(
+> +					struct fsl_qdma_chan *fsl_chan,
+> +					unsigned int dst_nents,
+> +					unsigned int src_nents)
+> +{
+> +	struct fsl_qdma_comp *comp_temp;
+> +	struct fsl_qdma_queue *queue = fsl_chan->queue;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&queue->queue_lock, flags);
+> +	if (list_empty(&queue->comp_free)) {
+> +		spin_unlock_irqrestore(&queue->queue_lock, flags);
+> +		comp_temp = kzalloc(sizeof(*comp_temp), GFP_KERNEL);
 
-diff --git a/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt=
- b/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt
-new file mode 100644
-index 0000000..df8aba0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt
-@@ -0,0 +1,24 @@
-+Xilinx Axi Uartlite controller Device Tree Bindings
-+---------------------------------------------------------
-+
-+Required properties:
-+- compatible           : Can be either of
-+                               "xlnx,xps-uartlite-1.00.a"
-+                               "xlnx,opb-uartlite-1.00.b"
-+- reg                  : Physical base address and size of the Axi Uartlit=
-e
-+                         registers map.
-+- interrupts           : Property with a value describing the interrupt
-+                         number.
-+- interrupt-parent     : Must be core interrupt controller.
-+
-+Optional properties:
-+- port-number          : Set Uart port number
-+
-+Example:
-+serial@800C0000 {
-+       compatible =3D "xlnx,xps-uartlite-1.00.a";
-+       reg =3D <0x0 0x800c0000 0x10000>;
-+       interrupt-parent =3D <&gic>;
-+       interrupts =3D <0x0 0x6e 0x1>;
-+       port-number =3D <0>;
-+};
---
-2.7.4
+this is invoked from fsl_qdma_prep_memcpy, so needs to be GFP_NOWAIT
+flag
 
-This email and any attachments are intended for the sole use of the named r=
-ecipient(s) and contain(s) confidential information that may be proprietary=
-, privileged or copyrighted under applicable law. If you are not the intend=
-ed recipient, do not read, copy, or forward this email message or any attac=
-hments. Delete this email message and any attachments immediately.
+> +		if (!comp_temp)
+> +			return NULL;
+> +
+> +		comp_temp->virt_addr = dma_pool_alloc(queue->comp_pool,
+> +						      GFP_KERNEL,
+
+here as well
+
+> +static struct fsl_qdma_queue *fsl_qdma_alloc_queue_resources(
+> +					struct platform_device *pdev,
+> +					unsigned int queue_num)
+> +{
+> +	struct fsl_qdma_queue *queue_head, *queue_temp;
+> +	int ret, len, i;
+> +	unsigned int queue_size[FSL_QDMA_QUEUE_MAX];
+> +
+> +	if (queue_num > FSL_QDMA_QUEUE_MAX)
+> +		queue_num = FSL_QDMA_QUEUE_MAX;
+> +	len = sizeof(*queue_head) * queue_num;
+> +	queue_head = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
+
+we have kcalloc variant for this
+
+> +	if (!queue_head)
+> +		return NULL;
+> +
+> +	ret = device_property_read_u32_array(&pdev->dev, "queue-sizes",
+> +					queue_size, queue_num);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Can't get queue-sizes.\n");
+> +		return NULL;
+> +	}
+> +
+> +	for (i = 0; i < queue_num; i++) {
+> +		if (queue_size[i] > FSL_QDMA_CIRCULAR_DESC_SIZE_MAX ||
+> +			    queue_size[i] < FSL_QDMA_CIRCULAR_DESC_SIZE_MIN) {
+> +			dev_err(&pdev->dev, "Get wrong queue-sizes.\n");
+> +			return NULL;
+> +		}
+> +		queue_temp = queue_head + i;
+> +		queue_temp->cq = dma_alloc_coherent(&pdev->dev,
+> +						sizeof(struct fsl_qdma_format) *
+> +						queue_size[i],
+> +						&queue_temp->bus_addr,
+> +						GFP_KERNEL);
+> +		if (!queue_temp->cq) {
+> +			devm_kfree(&pdev->dev, queue_head);
+
+any reason this is freed explicitly
+
+> +static int fsl_qdma_halt(struct fsl_qdma_engine *fsl_qdma)
+> +{
+> +	void __iomem *ctrl = fsl_qdma->ctrl_base;
+> +	void __iomem *block = fsl_qdma->block_base;
+> +	int i, count = 5;
+
+why 5
+
+> +static int fsl_qdma_queue_transfer_complete(struct fsl_qdma_engine *fsl_qdma)
+> +{
+> +	struct fsl_qdma_queue *fsl_queue = fsl_qdma->queue;
+> +	struct fsl_qdma_queue *fsl_status = fsl_qdma->status;
+> +	struct fsl_qdma_queue *temp_queue;
+> +	struct fsl_qdma_comp *fsl_comp;
+> +	struct fsl_qdma_format *status_addr;
+> +	struct fsl_qdma_format *csgf_src;
+> +	struct fsl_pre_status pre;
+> +	void __iomem *block = fsl_qdma->block_base;
+> +	u32 reg, i;
+> +	bool duplicate, duplicate_handle;
+> +
+> +	memset(&pre, 0, sizeof(struct fsl_pre_status));
+> +
+> +	while (1) {
+
+this loop can potentially read bad data from HW and keep spining
+forever. Good practice would be to add safeguards and loop 'N' times
+which you deem is large enough to process 
+
+> +		duplicate = 0;
+> +		duplicate_handle = 0;
+
+empty line here
+
+> +		reg = qdma_readl(fsl_qdma, block + FSL_QDMA_BSQSR);
+> +		if (reg & FSL_QDMA_BSQSR_QE)
+> +			return 0;
+
+here..
+
+> +		status_addr = fsl_status->virt_head;
+> +		if (qdma_ccdf_get_queue(status_addr) == pre.queue &&
+> +			qdma_ccdf_addr_get64(status_addr) == pre.addr)
+> +			duplicate = 1;
+
+here (basically after each logical block to help read)
+
+> +		i = qdma_ccdf_get_queue(status_addr);
+> +		pre.queue = qdma_ccdf_get_queue(status_addr);
+> +		pre.addr = qdma_ccdf_addr_get64(status_addr);
+> +		temp_queue = fsl_queue + i;
+> +		spin_lock(&temp_queue->queue_lock);
+> +		if (list_empty(&temp_queue->comp_used)) {
+> +			if (duplicate) {
+> +				duplicate_handle = 1;
+
+why do this, you can remove duplicate_handle and use duplicate below?
+
+-- 
+~Vinod
