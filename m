@@ -1,90 +1,43 @@
-From: vitor <Vitor.Soares@synopsys.com>
-Subject: Re: [PATCH v5 01/10] i3c: Add core I3C infrastructure
-Date: Thu, 28 Jun 2018 16:38:56 +0100
-Message-ID: <088dc947-da66-cec9-44a8-0f1097690bfd@synopsys.com>
-References: <20180622104930.32050-1-boris.brezillon@bootlin.com>
- <20180622104930.32050-2-boris.brezillon@bootlin.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: serial: imx: clarify rs485 support usage
+Date: Thu, 28 Jun 2018 13:30:40 -0300
+Message-ID: <CAOMZO5DfJZUayL_JCH1UKSXYQTraoBTK7w3YHif6aLz0nFdh3g@mail.gmail.com>
+References: <e9beff38e9035c2f33d691f362e37d8e62aaa660.1530170732.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180622104930.32050-2-boris.brezillon@bootlin.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <e9beff38e9035c2f33d691f362e37d8e62aaa660.1530170732.git.baruch@tkos.co.il>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?Lothar_Wa=C3=9Fmann?= <LW@karo-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+Hi Baruch,
 
+On Thu, Jun 28, 2018 at 4:25 AM, Baruch Siach <baruch@tkos.co.il> wrote:
+> The i.MX UART peripheral uses the RST_B signal as input, and CTS_B as
+> output. This is just like the DCE role in RS-232. This is true
+> regardless of the "DTE mode" setting of this peripheral.
+>
+> As a result, rs485 support hardware must use the CTS_B signal to control
+> the RS-485 transceiver. This is in contrast to generic rs485 kernel
+> code, documentation, and DT property names that consistently refer to
+> the RTS as transceiver control signal.
+>
+> Add a note in the DT binding document about that, to reduce the
+> confusion somewhat.
+>
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
 
-On 22-06-2018 11:49, Boris Brezillon wrote:
-> +static int of_i3c_master_add_i3c_dev(struct i3c_master_controller *master,
-> +				     struct device_node *node, u32 *reg)
-> +{
-> +	struct i3c_device_info info = { };
-> +	enum i3c_addr_slot_status addrstatus;
-> +	struct i3c_device *i3cdev;
-> +	u32 init_dyn_addr = 0;
-> +
-> +	if (reg[0]) {
-> +		if (reg[0] > I3C_MAX_ADDR)
-> +			return -EINVAL;
-> +
-> +		addrstatus = i3c_bus_get_addr_slot_status(master->bus, reg[0]);
-> +		if (addrstatus != I3C_ADDR_SLOT_FREE)
-> +			return -EINVAL;
-> +	}
-> +
-> +	info.static_addr = reg[0];
-> +
-> +	if (!of_property_read_u32(node, "assigned-address", &init_dyn_addr)) {
-> +		if (init_dyn_addr > I3C_MAX_ADDR)
-> +			return -EINVAL;
-> +
-> +		addrstatus = i3c_bus_get_addr_slot_status(master->bus,
-> +							  init_dyn_addr);
-> +		if (addrstatus != I3C_ADDR_SLOT_FREE)
-> +			return -EINVAL;
-> +	}
-> +
-> +	info.pid = ((u64)reg[1] << 32) | reg[2];
-> +
-> +	if ((info.pid & GENMASK_ULL(63, 48)) ||
-> +	    I3C_PID_RND_LOWER_32BITS(info.pid))
-> +		return -EINVAL;
-> +
-> +	i3cdev = i3c_master_alloc_i3c_dev(master, &info, &i3c_device_type);
-> +	if (IS_ERR(i3cdev))
-> +		return PTR_ERR(i3cdev);
-> +
-> +	i3cdev->init_dyn_addr = init_dyn_addr;
-> +	i3cdev->dev.of_node = node;
-> +	list_add_tail(&i3cdev->common.node, &master->bus->devs.i3c);
-> +
-> +	return 0;
-> +}
-> +
+Yes, this is helpful:
 
-I'm writing the driver for the Synopsys master and but now I getting an 
-issue.
-
-I use the "slot" of the device to do all transfers, something like you 
-use in DAA. I using the master_priv to save the "slot" per device but 
-the problem is when I call the i3c_master_add_i3c_dev_locked() to 
-retrieve the info I don't have it yet.
-
- From my analysis this can be solve with:
-     - send PID, BCR and DCR when I call i3c_master_add_i3c_dev_locked() 
-or similar function.
-     - Pre-allocate an i3c_device -> attach it (slot data goes to 
-master_priv) -> retrieve info -> if there is already an i3c_device with 
-same PID destroy the pre-allocated one.
-     - Replace the info.dyn_address with a structure with dyn_address 
-and slot and use it in CCC structure.
-
-This is something that will need to be supported for I3C HCI spec too. 
-Do you have any suggestion?
-
-Best regards,
-Vitor Soares
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
