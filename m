@@ -1,99 +1,46 @@
-From: Honghui Zhang <honghui.zhang@mediatek.com>
-Subject: Re: [PATCH 1/4] PCI: mediatek: fixup mtk_pcie_find_port logical
-Date: Thu, 28 Jun 2018 09:12:07 +0800
-Message-ID: <1530148327.28284.1.camel@mhfsdcap03>
-References: <1530091298-28120-1-git-send-email-honghui.zhang@mediatek.com>
-         <1530091298-28120-2-git-send-email-honghui.zhang@mediatek.com>
-         <CAHp75Ve2N_Bt8FvX8xCx3JtQ+ozZE=isfsKp9swY+86Cg-78XQ@mail.gmail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH] ARM: dts: imx6sll-evk: enable usdhc3 slot
+Date: Thu, 28 Jun 2018 01:14:44 +0000
+Message-ID: <AM3PR04MB1315128EA1000FD6D0903CEAF54F0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+References: <1530088605-9264-1-git-send-email-Anson.Huang@nxp.com>
+ <CAOMZO5DoRUSOfV_oh242w6s_1Zs8yAy9Kf4D+WdYym5c+6nucg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Ve2N_Bt8FvX8xCx3JtQ+ozZE=isfsKp9swY+86Cg-78XQ@mail.gmail.com>
+In-Reply-To: <CAOMZO5DoRUSOfV_oh242w6s_1Zs8yAy9Kf4D+WdYym5c+6nucg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-pci@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, yingjoe.chen@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, ryder.lee@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, YT Shen <yt.shen@mediatek.com>, sean.wang@mediatek.com
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-06-27 at 19:35 +0300, Andy Shevchenko wrote:
-> On Wed, Jun 27, 2018 at 12:21 PM,  <honghui.zhang@mediatek.com> wrote:
-> > From: Honghui Zhang <honghui.zhang@mediatek.com>
-> >
-> > Mediatek's host controller have two slots, each have it's own control
-> > registers. The host driver need to identify which slot was connected
-> > in order to access the device's configuration space. There's problem
-> > for current host driver to find out which slot was connected to for
-> > a given EP device.
-> >
-> > Assuming each slot have connect with one EP device as below:
-> >
-> >                 host bridge
-> >   bus 0 --> __________|_______
-> >            |                  |
-> >            |                  |
-> >          slot 0             slot 1
-> >   bus 1 -->|        bus 2 --> |
-> >            |                  |
-> >          EP 0               EP 1
-> >
-> > While PCI emulation, system software will scan all the PCI device
-> > starting from devfn 0. So it will get the proper port for slot0 and
-> > slot1 device when using PCI_SLOT(devfn) for match. But it will get
-> > the wrong slot for EP1: The devfn will be start from 0 when scanning
-> > EP1 behind slot1, it will get port0 since the PCI_SLOT(EP1) is match
-> > for port0's slot value. So the host driver should not using EP's devfn
-> > but the slot's devfn(the slot which EP was connected to) for match.
-> >
-> > This patch fix the mtk_pcie_find_port's logical by using the slot's
-> > devfn for match.
-> 
-> 
-> > +       list_for_each_entry(port, &pcie->ports, list) {
-> > +               if (bus->number == 0 && port->slot == PCI_SLOT(devfn)) {
-> >                         return port;
-> > +               } else if (bus->number != 0) {
-> 
-> You can do it like (no need 'else')
-> 
-> if (...)
->  return ...;
-> if (bus->number) {
->  ...
-> }
-> 
-> > +                       pbus = bus;
-> > +                       do {
-> > +                               dev = pbus->self;
-> > +                               if (port->slot == PCI_SLOT(dev->devfn))
-> > +                                       return port;
-> > +
-> > +                               pbus = dev->bus;
-> > +                       } while (dev->bus->number != 0);
-> 
-> This can be rewritten like
-> 
-> pbus = bus;
-> while (pbus->number) {
->  dev = ...;
->  ...
->  pbus = dev->bus;
-> }
-> 
-> and no need for if (bus->number) anymore.
-> 
-
-Hi, Andy, thanks very much for your advise, I will change it in the next
-version.
-
-thanks.
-> > +               }
-> > +       }
-> >
-> >         return NULL;
-> >  }
-> > --
-> > 2.6.4
-> >
-> 
-> 
-> 
+SGksIEZhYmlvDQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdp
+bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1A
+Z21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIEp1bmUgMjcsIDIwMTggMTA6MzEgUE0NCj4g
+VG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogU2hhd24gR3VvIDxz
+aGF3bmd1b0BrZXJuZWwub3JnPjsgU2FzY2hhIEhhdWVyDQo+IDxzLmhhdWVyQHBlbmd1dHJvbml4
+LmRlPjsgU2FzY2hhIEhhdWVyIDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyBGYWJpbw0KPiBFc3Rl
+dmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwu
+b3JnPjsNCj4gTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IG9wZW4gbGlzdDpP
+UEVOIEZJUk1XQVJFIEFORA0KPiBGTEFUVEVORUQgREVWSUNFIFRSRUUgQklORElOR1MgPGRldmlj
+ZXRyZWVAdmdlci5rZXJuZWwub3JnPjsNCj4gZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNv
+bT47IG1vZGVyYXRlZCBsaXN0OkFSTS9GUkVFU0NBTEUgSU1YIC8gTVhDDQo+IEFSTSBBUkNISVRF
+Q1RVUkUgPGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz47IGxpbnV4LWtlcm5l
+bA0KPiA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz4NCj4gU3ViamVjdDogUmU6IFtQQVRD
+SF0gQVJNOiBkdHM6IGlteDZzbGwtZXZrOiBlbmFibGUgdXNkaGMzIHNsb3QNCj4gDQo+IEhpIEFu
+c29uLA0KPiANCj4gT24gV2VkLCBKdW4gMjcsIDIwMTggYXQgNTozNiBBTSwgQW5zb24gSHVhbmcg
+PEFuc29uLkh1YW5nQG54cC5jb20+DQo+IHdyb3RlOg0KPiANCj4gPiArJnVzZGhjMyB7DQo+ID4g
+KyAgICAgICBwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiLCAic3RhdGVfMTAwbWh6IiwgInN0YXRl
+XzIwMG1oeiI7DQo+ID4gKyAgICAgICBwaW5jdHJsLTAgPSA8JnBpbmN0cmxfdXNkaGMzPjsNCj4g
+PiArICAgICAgIHBpbmN0cmwtMSA9IDwmcGluY3RybF91c2RoYzNfMTAwbWh6PjsNCj4gPiArICAg
+ICAgIHBpbmN0cmwtMiA9IDwmcGluY3RybF91c2RoYzNfMjAwbWh6PjsNCj4gPiArICAgICAgIGNk
+LWdwaW9zID0gPCZncGlvMyAyMiBHUElPX0FDVElWRV9MT1c+Ow0KPiA+ICsgICAgICAga2VlcC1w
+b3dlci1pbi1zdXNwZW5kOw0KPiA+ICsgICAgICAgZW5hYmxlLXNkaW8td2FrZXVwOw0KPiA+ICsg
+ICAgICAgdm1tYy1zdXBwbHkgPSA8JnJlZ19zZDNfdm1tYz47DQo+ID4gKyAgICAgICBzdGF0dXMg
+PSAib2theSI7DQo+ID4gK307DQo+ID4gKw0KPiA+ICAmdXNib3RnMSB7DQo+IA0KPiBQbGVhc2Ug
+a2VlcCB0aGUgbm9kZXMgc29ydGVkIGluIGFscGhhYmV0aWNhbCBvcmRlci4NCg0KVGhhbmtzLCBp
+dCBpcyBiZWNhdXNlIG9yaWdpbmFsIGNvZGUgZG9lcyBOT1QgZG8gaXQgaW4gYWxwaGFiZXRpY2Fs
+IG9yZGVyLCBzbyBJIGp1c3QgYWRkZWQNCnVzZGhjMyBhdCB0aGUgZW5kIG9mIHVzZGhjMSwgYnV0
+IEkgc2VudCBWMiBwYXRjaCB0byByZS1zb3J0IGl0IGFueXdheSwgcGxlYXNlIHJldmlldyBpdC4g
+IA0KDQpBbnNvbi4NCg0KDQo=
