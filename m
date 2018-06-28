@@ -1,95 +1,27 @@
-Return-Path: <SRS0=ekay=JB=nxp.com=wen.he_1@kernel.org>
-From: Wen He <wen.he_1@nxp.com>
-Subject: [v6 1/7] dmaengine: fsldma: Replace DMA_IN/OUT by FSL_DMA_IN/OUT
-Date: Fri, 15 Jun 2018 18:22:30 +0800
-Message-Id: <20180615102236.32859-1-wen.he_1@nxp.com>
-To: vkoul@kernel.org, dmaengine@vger.kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
+Return-Path: <SRS0=MKI6=JO=linuxfoundation.org=gregkh@kernel.org>
+Date: Thu, 28 Jun 2018 21:12:12 +0900
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 2/4] tty: serial: uartlite: Add clock adaptation
+Message-ID: <20180628121212.GA22500@kroah.com>
+References: <1530102225-6459-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+ <1530102225-6459-2-git-send-email-shubhrajyoti.datta@xilinx.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1530102225-6459-2-git-send-email-shubhrajyoti.datta@xilinx.com>
+To: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, shubhrajyoti.datta@gmail.com, Tanvi Desai <tanvi.desai@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch implement a standard macro call functions is
-used to NXP dma drivers.
+On Wed, Jun 27, 2018 at 05:53:43PM +0530, Shubhrajyoti Datta wrote:
+>  - Add support of Common Clock Framework for Uartlite driver
+>  - Add support for suspend and resume operations
+> 
 
-Signed-off-by: Wen He <wen.he_1@nxp.com>
----
-change in v6:
-	- no
+When you have to list multiple things that a single patch does, that's a
+huge hint that it should be broken up into smaller pieces.  Can you
+split this up into two patches please?
 
- drivers/dma/fsldma.c |   16 ++++++++--------
- drivers/dma/fsldma.h |    4 ++--
- 2 files changed, 10 insertions(+), 10 deletions(-)
+thanks,
 
-diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
-index 3eaece8..75479d6 100644
---- a/drivers/dma/fsldma.c
-+++ b/drivers/dma/fsldma.c
-@@ -53,42 +53,42 @@
- 
- static void set_sr(struct fsldma_chan *chan, u32 val)
- {
--	DMA_OUT(chan, &chan->regs->sr, val, 32);
-+	FSL_DMA_OUT(chan, &chan->regs->sr, val, 32);
- }
- 
- static u32 get_sr(struct fsldma_chan *chan)
- {
--	return DMA_IN(chan, &chan->regs->sr, 32);
-+	return FSL_DMA_IN(chan, &chan->regs->sr, 32);
- }
- 
- static void set_mr(struct fsldma_chan *chan, u32 val)
- {
--	DMA_OUT(chan, &chan->regs->mr, val, 32);
-+	FSL_DMA_OUT(chan, &chan->regs->mr, val, 32);
- }
- 
- static u32 get_mr(struct fsldma_chan *chan)
- {
--	return DMA_IN(chan, &chan->regs->mr, 32);
-+	return FSL_DMA_IN(chan, &chan->regs->mr, 32);
- }
- 
- static void set_cdar(struct fsldma_chan *chan, dma_addr_t addr)
- {
--	DMA_OUT(chan, &chan->regs->cdar, addr | FSL_DMA_SNEN, 64);
-+	FSL_DMA_OUT(chan, &chan->regs->cdar, addr | FSL_DMA_SNEN, 64);
- }
- 
- static dma_addr_t get_cdar(struct fsldma_chan *chan)
- {
--	return DMA_IN(chan, &chan->regs->cdar, 64) & ~FSL_DMA_SNEN;
-+	return FSL_DMA_IN(chan, &chan->regs->cdar, 64) & ~FSL_DMA_SNEN;
- }
- 
- static void set_bcr(struct fsldma_chan *chan, u32 val)
- {
--	DMA_OUT(chan, &chan->regs->bcr, val, 32);
-+	FSL_DMA_OUT(chan, &chan->regs->bcr, val, 32);
- }
- 
- static u32 get_bcr(struct fsldma_chan *chan)
- {
--	return DMA_IN(chan, &chan->regs->bcr, 32);
-+	return FSL_DMA_IN(chan, &chan->regs->bcr, 32);
- }
- 
- /*
-diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
-index 4787d48..6dc0039 100644
---- a/drivers/dma/fsldma.h
-+++ b/drivers/dma/fsldma.h
-@@ -223,10 +223,10 @@ static void out_le64(u64 __iomem *addr, u64 val)
- }
- #endif
- 
--#define DMA_IN(fsl_chan, addr, width)					\
-+#define FSL_DMA_IN(fsl_chan, addr, width)				\
- 		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
- 			in_be##width(addr) : in_le##width(addr))
--#define DMA_OUT(fsl_chan, addr, val, width)				\
-+#define FSL_DMA_OUT(fsl_chan, addr, val, width)			\
- 		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
- 			out_be##width(addr, val) : out_le##width(addr, val))
- 
--- 
-1.7.1
+greg k-h
