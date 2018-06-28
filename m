@@ -1,38 +1,34 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3 1/3] cpufreq: imx6q: check speed grades for i.MX6ULL
-Date: Thu, 28 Jun 2018 08:48:38 +0800
-Message-ID: <20180628004837.GB22683@dragon>
-References: <20180522062853.24799-1-sebastien.szymanski@armadeus.com>
- <20180611053826.GC16091@dragon>
- <2d63a25f-7265-7aa7-a7dc-fd2379240804@armadeus.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v5 09/10] gpio: Add a driver for Cadence I3C GPIO
+ expander
+Date: Wed, 27 Jun 2018 17:50:38 -0700
+Message-ID: <f5e65551fea695b533eb275bdbcf43204d515d58.camel@perches.com>
+References: <20180622104930.32050-1-boris.brezillon@bootlin.com>
+         <20180622104930.32050-10-boris.brezillon@bootlin.com>
+         <CAHp75Vdxg49q6aQj0dDpzM4q2WnQbGoCECWR1roda7aMR+u4gg@mail.gmail.com>
+         <20180626215648.1472b96e@bbrezillon>
+         <CAHp75VcVvOzgOM87rSrwsCxh+WAK-z+zVCJifnY+Xeeu=cPFiA@mail.gmail.com>
+         <20180626234638.076fb816@bbrezillon>
+         <CAHp75VdBXj66Yd6sQHOWz19R9MUtYMSeq4j-+UidLedpfkB6mA@mail.gmail.com>
+         <20180627213617.51e10712@bbrezillon>
+         <8bf36e4025b6ec5198a668edda6bcbef3b06e97b.camel@perches.com>
+         <CAHp75Vd5ucaeOD4S76ANcOVUA=QrCpGNAmun6+ihnsOTsgtcKg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2d63a25f-7265-7aa7-a7dc-fd2379240804@armadeus.com>
+In-Reply-To: <CAHp75Vd5ucaeOD4S76ANcOVUA=QrCpGNAmun6+ihnsOTsgtcKg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Linux Documentation List <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 25, 2018 at 10:01:44AM +0200, Sébastien Szymanski wrote:
-> Hi,
-> 
-> On 06/11/2018 07:38 AM, Shawn Guo wrote:
-> > On Tue, May 22, 2018 at 08:28:51AM +0200, Sébastien Szymanski wrote:
-> >> Check the max speed supported from the fuses for i.MX6ULL and update the
-> >> operating points table accordingly.
-> >>
-> >> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
-> > 
-> > Acked-by: Shawn Guo <shawnguo@kernel.org>
-> > 
-> 
-> Thanks, but what about the two others patches ? Now that patch 1 is in
-> 4.18-rc1, should I resend the two others patches ? Should I merge them
-> together ?
+On Thu, 2018-06-28 at 03:00 +0300, Andy Shevchenko wrote:
+> bitmap operations are working against unsigned long *. one long is
+> also a bitmap.
 
-Yes, please.  That's what Viresh and Stefan were asking in the review.
+Should only be so if declared via DECLARE_BITMAP
 
-Shawn
+> So, that coccinelle scripts must be fixed accordingly.
+
+We disagree about a non-existent script.
