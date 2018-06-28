@@ -1,125 +1,195 @@
 From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 1/4] PCI: mediatek: fixup mtk_pcie_find_port logical
-Date: Thu, 28 Jun 2018 08:07:37 -0500
-Message-ID: <20180628130737.GA90450@bhelgaas-glaptop.roam.corp.google.com>
-References: <1530091298-28120-1-git-send-email-honghui.zhang@mediatek.com>
- <1530091298-28120-2-git-send-email-honghui.zhang@mediatek.com>
+Subject: Re: [PATCH v4 23/26] devicetree: fix a series of wrong file
+ references
+Date: Thu, 28 Jun 2018 08:53:10 -0500
+Message-ID: <20180628135310.GD90450@bhelgaas-glaptop.roam.corp.google.com>
+References: <cover.1529079119.git.mchehab+samsung@kernel.org>
+ <266e5f874b36aa83f3327879d85921fab52d5461.1529079120.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1530091298-28120-2-git-send-email-honghui.zhang@mediatek.com>
+In-Reply-To: <266e5f874b36aa83f3327879d85921fab52d5461.1529079120.git.mchehab+samsung@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: honghui.zhang@mediatek.com
-Cc: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, youlin.pei@mediatek.com, hongkun.cao@mediatek.com, sean.wang@mediatek.com, yt.shen@mediatek.com, yong.wu@mediatek.com
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Zhou Wang <wangzhou1@hisilicon.com>, Bjorn Helgaas <bhelgaas@google.com>, Xiaowei Song <songxiaowei@hisilicon.com>, Binghui Wang <wangbinghui@hisilicon.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-input@vger.kernel.org, devicetree@vger.kern
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 27, 2018 at 05:21:35PM +0800, honghui.zhang@mediatek.com wrote:
-> From: Honghui Zhang <honghui.zhang@mediatek.com>
+On Fri, Jun 15, 2018 at 01:30:51PM -0300, Mauro Carvalho Chehab wrote:
+> As files got renamed, their references broke.
 > 
-> Mediatek's host controller have two slots, each have it's own control
-> registers. The host driver need to identify which slot was connected
-> in order to access the device's configuration space. There's problem
-> for current host driver to find out which slot was connected to for
-> a given EP device.
+> Manually fix a series of broken refs at the DT bindings.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-  The Mediatek host controller has two slots, each with its own control
-  registers.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-> Assuming each slot have connect with one EP device as below:
-> 
->                 host bridge
->   bus 0 --> __________|_______
->            |                  |
->            |                  |
->          slot 0             slot 1
->   bus 1 -->|        bus 2 --> |
->            |                  |
->          EP 0               EP 1
-> 
-> While PCI emulation, system software will scan all the PCI device
+Thanks for fixing these!
 
-s/While PCI emulation/During PCI enumeration/
-
-> starting from devfn 0. So it will get the proper port for slot0 and
-> slot1 device when using PCI_SLOT(devfn) for match. But it will get
-> the wrong slot for EP1: The devfn will be start from 0 when scanning
-> EP1 behind slot1, it will get port0 since the PCI_SLOT(EP1) is match
-> for port0's slot value. So the host driver should not using EP's devfn
-> but the slot's devfn(the slot which EP was connected to) for match.
-> 
-> This patch fix the mtk_pcie_find_port's logical by using the slot's
-> devfn for match.
-> 
-> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-> Reviewed-by: Ryder Lee <ryder.lee@mediatek.com>
 > ---
->  drivers/pci/controller/pcie-mediatek.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/input/rmi4/rmi_2d_sensor.txt |  2 +-
+>  Documentation/devicetree/bindings/mfd/sun6i-prcm.txt |  2 +-
+>  .../devicetree/bindings/pci/hisilicon-pcie.txt       |  2 +-
+>  Documentation/devicetree/bindings/pci/kirin-pcie.txt |  2 +-
+>  .../devicetree/bindings/pci/pci-keystone.txt         |  4 ++--
+>  .../devicetree/bindings/sound/st,stm32-i2s.txt       |  2 +-
+>  .../devicetree/bindings/sound/st,stm32-sai.txt       |  2 +-
+>  MAINTAINERS                                          | 12 ++++++------
+>  8 files changed, 14 insertions(+), 14 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> index 0baabe3..9cf7ecf 100644
-> --- a/drivers/pci/controller/pcie-mediatek.c
-> +++ b/drivers/pci/controller/pcie-mediatek.c
-> @@ -337,10 +337,23 @@ static struct mtk_pcie_port *mtk_pcie_find_port(struct pci_bus *bus,
->  {
->  	struct mtk_pcie *pcie = bus->sysdata;
->  	struct mtk_pcie_port *port;
-> +	struct pci_dev *dev;
-> +	struct pci_bus *pbus;
+> diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
+> index f2c30c8b725d..9afffbdf6e28 100644
+> --- a/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
+> +++ b/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
+> @@ -12,7 +12,7 @@ Additional documentation for F11 can be found at:
+>  http://www.synaptics.com/sites/default/files/511-000136-01-Rev-E-RMI4-Interfacing-Guide.pdf
 >  
-> -	list_for_each_entry(port, &pcie->ports, list)
-> -		if (port->slot == PCI_SLOT(devfn))
-> +	list_for_each_entry(port, &pcie->ports, list) {
-
-mvebu has the identical hardware structure but uses an array instead
-of a list:
-
-  num = of_get_available_child_count(np);
-  pcie->ports = devm_kcalloc(dev, num, sizeof(*pcie->ports), GFP_KERNEL);
-  for_each_available_child_of_node(np, child) {
-    struct mvebu_pcie_port *port = &pcie->ports[i];
-    mvebu_pcie_parse_port(pcie, port, child);
-  }
-
-It would be nice if mvebu and mtk used the same strategy so the code
-looks the same.
-
-> +		if (bus->number == 0 && port->slot == PCI_SLOT(devfn)) {
-
-Is the root bus number fixed at 0 or is it programmable?  Many drivers
-do something like this:
-
-  if (bus->number == pcie->root_bus_nr)
-
-to handle the case of the root bus number being programmable.
-
->  			return port;
-> +		} else if (bus->number != 0) {
-> +			pbus = bus;
-> +			do {
-> +				dev = pbus->self;
-> +				if (port->slot == PCI_SLOT(dev->devfn))
-> +					return port;
-> +
-> +				pbus = dev->bus;
-> +			} while (dev->bus->number != 0);
-
-You should not need to search up the tree of dev->bus->self.
-
-mvebu_pcie_find_port() checks the root port secondary and subordinate
-bus numbers, which should work here, too.
-
-> +		}
-> +	}
+>  Optional Touch Properties:
+> -Description in Documentation/devicetree/bindings/input/touch
+> +Description in Documentation/devicetree/bindings/input/touchscreen
+>  - touchscreen-inverted-x
+>  - touchscreen-inverted-y
+>  - touchscreen-swapped-x-y
+> diff --git a/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt b/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
+> index 4d21ffdb0fc1..daa091c2e67b 100644
+> --- a/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
+> +++ b/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
+> @@ -8,7 +8,7 @@ Required properties:
+>   - reg: The PRCM registers range
 >  
->  	return NULL;
->  }
+>  The prcm node may contain several subdevices definitions:
+> - - see Documentation/devicetree/clk/sunxi.txt for clock devices
+> + - see Documentation/devicetree/bindings/clock/sunxi.txt for clock devices
+>   - see Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt for reset
+>     controller devices
+>  
+> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+> index 7bf9df047a1e..0dcb87d6554f 100644
+> --- a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+> @@ -3,7 +3,7 @@ HiSilicon Hip05 and Hip06 PCIe host bridge DT description
+>  HiSilicon PCIe host controller is based on the Synopsys DesignWare PCI core.
+>  It shares common functions with the PCIe DesignWare core driver and inherits
+>  common properties defined in
+> -Documentation/devicetree/bindings/pci/designware-pci.txt.
+> +Documentation/devicetree/bindings/pci/designware-pcie.txt.
+>  
+>  Additional properties are described here:
+>  
+> diff --git a/Documentation/devicetree/bindings/pci/kirin-pcie.txt b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
+> index 6e217c63123d..6bbe43818ad5 100644
+> --- a/Documentation/devicetree/bindings/pci/kirin-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
+> @@ -3,7 +3,7 @@ HiSilicon Kirin SoCs PCIe host DT description
+>  Kirin PCIe host controller is based on the Synopsys DesignWare PCI core.
+>  It shares common functions with the PCIe DesignWare core driver and
+>  inherits common properties defined in
+> -Documentation/devicetree/bindings/pci/designware-pci.txt.
+> +Documentation/devicetree/bindings/pci/designware-pcie.txt.
+>  
+>  Additional properties are described here:
+>  
+> diff --git a/Documentation/devicetree/bindings/pci/pci-keystone.txt b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+> index 7e05487544ed..3d4a209b0fd0 100644
+> --- a/Documentation/devicetree/bindings/pci/pci-keystone.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+> @@ -3,9 +3,9 @@ TI Keystone PCIe interface
+>  Keystone PCI host Controller is based on the Synopsys DesignWare PCI
+>  hardware version 3.65.  It shares common functions with the PCIe DesignWare
+>  core driver and inherits common properties defined in
+> -Documentation/devicetree/bindings/pci/designware-pci.txt
+> +Documentation/devicetree/bindings/pci/designware-pcie.txt
+>  
+> -Please refer to Documentation/devicetree/bindings/pci/designware-pci.txt
+> +Please refer to Documentation/devicetree/bindings/pci/designware-pcie.txt
+>  for the details of DesignWare DT bindings.  Additional properties are
+>  described here as well as properties that are not applicable.
+>  
+> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt b/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
+> index 4bda52042402..58c341300552 100644
+> --- a/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
+> +++ b/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
+> @@ -18,7 +18,7 @@ Required properties:
+>      See Documentation/devicetree/bindings/dma/stm32-dma.txt.
+>    - dma-names: Identifier for each DMA request line. Must be "tx" and "rx".
+>    - pinctrl-names: should contain only value "default"
+> -  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/pinctrl-stm32.txt
+> +  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+>  
+>  Optional properties:
+>    - resets: Reference to a reset controller asserting the reset controller
+> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+> index f301cdf0b7e6..3a3fc506e43a 100644
+> --- a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+> +++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+> @@ -37,7 +37,7 @@ SAI subnodes required properties:
+>  	"tx": if sai sub-block is configured as playback DAI
+>  	"rx": if sai sub-block is configured as capture DAI
+>    - pinctrl-names: should contain only value "default"
+> -  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/pinctrl-stm32.txt
+> +  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+>  
+>  SAI subnodes Optional properties:
+>    - st,sync: specify synchronization mode.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 783ce44b3e7a..fd3fc63f2759 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6966,7 +6966,7 @@ IIO MULTIPLEXER
+>  M:	Peter Rosin <peda@axentia.se>
+>  L:	linux-iio@vger.kernel.org
+>  S:	Maintained
+> -F:	Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
+> +F:	Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
+>  F:	drivers/iio/multiplexer/iio-mux.c
+>  
+>  IIO SUBSYSTEM AND DRIVERS
+> @@ -9696,7 +9696,7 @@ MXSFB DRM DRIVER
+>  M:	Marek Vasut <marex@denx.de>
+>  S:	Supported
+>  F:	drivers/gpu/drm/mxsfb/
+> -F:	Documentation/devicetree/bindings/display/mxsfb-drm.txt
+> +F:	Documentation/devicetree/bindings/display/mxsfb.txt
+>  
+>  MYRICOM MYRI-10G 10GbE DRIVER (MYRI10GE)
+>  M:	Chris Lee <christopher.lee@cspi.com>
+> @@ -10885,7 +10885,7 @@ M:	Will Deacon <will.deacon@arm.com>
+>  L:	linux-pci@vger.kernel.org
+>  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+>  S:	Maintained
+> -F:	Documentation/devicetree/bindings/pci/controller-generic-pci.txt
+> +F:	Documentation/devicetree/bindings/pci/host-generic-pci.txt
+>  F:	drivers/pci/controller/pci-host-common.c
+>  F:	drivers/pci/controller/pci-host-generic.c
+>  
+> @@ -11066,7 +11066,7 @@ M:	Xiaowei Song <songxiaowei@hisilicon.com>
+>  M:	Binghui Wang <wangbinghui@hisilicon.com>
+>  L:	linux-pci@vger.kernel.org
+>  S:	Maintained
+> -F:	Documentation/devicetree/bindings/pci/pcie-kirin.txt
+> +F:	Documentation/devicetree/bindings/pci/kirin-pcie.txt
+>  F:	drivers/pci/controller/dwc/pcie-kirin.c
+>  
+>  PCIE DRIVER FOR HISILICON STB
+> @@ -12457,7 +12457,7 @@ L:	linux-crypto@vger.kernel.org
+>  L:	linux-samsung-soc@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/crypto/exynos-rng.c
+> -F:	Documentation/devicetree/bindings/crypto/samsung,exynos-rng4.txt
+> +F:	Documentation/devicetree/bindings/rng/samsung,exynos4-rng.txt
+>  
+>  SAMSUNG EXYNOS TRUE RANDOM NUMBER GENERATOR (TRNG) DRIVER
+>  M:	Łukasz Stelmach <l.stelmach@samsung.com>
+> @@ -13571,7 +13571,7 @@ F:	drivers/*/stm32-*timer*
+>  F:	drivers/pwm/pwm-stm32*
+>  F:	include/linux/*/stm32-*tim*
+>  F:	Documentation/ABI/testing/*timer-stm32
+> -F:	Documentation/devicetree/bindings/*/stm32-*timer
+> +F:	Documentation/devicetree/bindings/*/stm32-*timer*
+>  F:	Documentation/devicetree/bindings/pwm/pwm-stm32*
+>  
+>  STMMAC ETHERNET DRIVER
 > -- 
-> 2.6.4
+> 2.17.1
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
