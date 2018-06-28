@@ -1,75 +1,90 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 1/2] iio: light: Add support for vishay vcnl4035
-Date: Thu, 28 Jun 2018 23:35:49 +0800
-Message-ID: <201806282346.z3EjCFvh%fengguang.wu@intel.com>
-References: <20180628123021.1628338-1-pn@denx.de>
+From: vitor <Vitor.Soares@synopsys.com>
+Subject: Re: [PATCH v5 01/10] i3c: Add core I3C infrastructure
+Date: Thu, 28 Jun 2018 16:38:56 +0100
+Message-ID: <088dc947-da66-cec9-44a8-0f1097690bfd@synopsys.com>
+References: <20180622104930.32050-1-boris.brezillon@bootlin.com>
+ <20180622104930.32050-2-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180628123021.1628338-1-pn@denx.de>
+In-Reply-To: <20180622104930.32050-2-boris.brezillon@bootlin.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, matthias.bgg@gmail.com, wd@denx.de, sbabic@denx.de, hs@denx.de, Parthiban Nallathambi <pn@denx.de>
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Parthiban,
-
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on iio/togreg]
-[also build test WARNING on v4.18-rc2 next-20180628]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Parthiban-Nallathambi/iio-light-Add-support-for-vishay-vcnl4035/20180628-213034
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
+Hi Boris,
 
 
-sparse warnings: (new ones prefixed by >>)
+On 22-06-2018 11:49, Boris Brezillon wrote:
+> +static int of_i3c_master_add_i3c_dev(struct i3c_master_controller *master,
+> +				     struct device_node *node, u32 *reg)
+> +{
+> +	struct i3c_device_info info = { };
+> +	enum i3c_addr_slot_status addrstatus;
+> +	struct i3c_device *i3cdev;
+> +	u32 init_dyn_addr = 0;
+> +
+> +	if (reg[0]) {
+> +		if (reg[0] > I3C_MAX_ADDR)
+> +			return -EINVAL;
+> +
+> +		addrstatus = i3c_bus_get_addr_slot_status(master->bus, reg[0]);
+> +		if (addrstatus != I3C_ADDR_SLOT_FREE)
+> +			return -EINVAL;
+> +	}
+> +
+> +	info.static_addr = reg[0];
+> +
+> +	if (!of_property_read_u32(node, "assigned-address", &init_dyn_addr)) {
+> +		if (init_dyn_addr > I3C_MAX_ADDR)
+> +			return -EINVAL;
+> +
+> +		addrstatus = i3c_bus_get_addr_slot_status(master->bus,
+> +							  init_dyn_addr);
+> +		if (addrstatus != I3C_ADDR_SLOT_FREE)
+> +			return -EINVAL;
+> +	}
+> +
+> +	info.pid = ((u64)reg[1] << 32) | reg[2];
+> +
+> +	if ((info.pid & GENMASK_ULL(63, 48)) ||
+> +	    I3C_PID_RND_LOWER_32BITS(info.pid))
+> +		return -EINVAL;
+> +
+> +	i3cdev = i3c_master_alloc_i3c_dev(master, &info, &i3c_device_type);
+> +	if (IS_ERR(i3cdev))
+> +		return PTR_ERR(i3cdev);
+> +
+> +	i3cdev->init_dyn_addr = init_dyn_addr;
+> +	i3cdev->dev.of_node = node;
+> +	list_add_tail(&i3cdev->common.node, &master->bus->devs.i3c);
+> +
+> +	return 0;
+> +}
+> +
 
->> drivers/iio/light/vcnl4035.c:136:28: sparse: cast to restricted __le16
+I'm writing the driver for the Synopsys master and but now I getting an 
+issue.
 
-vim +136 drivers/iio/light/vcnl4035.c
+I use the "slot" of the device to do all transfers, something like you 
+use in DAA. I using the master_priv to save the "slot" per device but 
+the problem is when I call the i3c_master_add_i3c_dev_locked() to 
+retrieve the info I don't have it yet.
 
-   115	
-   116	static irqreturn_t vcnl4035_trigger_consumer_handler(int irq, void *p)
-   117	{
-   118		struct iio_poll_func *pf = p;
-   119		struct iio_dev *indio_dev = pf->indio_dev;
-   120		struct vcnl4035_data *data = iio_priv(indio_dev);
-   121		int als_data;
-   122		int ret;
-   123	
-   124		if (iio_trigger_using_own(indio_dev) && data->irq_timestamp) {
-   125			pf->timestamp = data->irq_timestamp;
-   126			data->irq_timestamp = 0;
-   127		}
-   128	
-   129		if (!pf->timestamp)
-   130			pf->timestamp = iio_get_time_ns(indio_dev);
-   131	
-   132		mutex_lock(&data->lock);
-   133		ret = regmap_read(data->regmap, VCNL4035_ALS_DATA, &als_data);
-   134		mutex_unlock(&data->lock);
-   135		if (!ret) {
- > 136			als_data = le16_to_cpu(als_data);
-   137			iio_push_to_buffers_with_timestamp(indio_dev,
-   138							   &als_data,
-   139							   pf->timestamp);
-   140		} else
-   141			dev_err(&data->client->dev,
-   142				"Trigger consumer can't read from sensor.\n");
-   143		pf->timestamp = 0;
-   144	
-   145		iio_trigger_notify_done(indio_dev->trig);
-   146	
-   147		return IRQ_HANDLED;
-   148	}
-   149	
+ From my analysis this can be solve with:
+     - send PID, BCR and DCR when I call i3c_master_add_i3c_dev_locked() 
+or similar function.
+     - Pre-allocate an i3c_device -> attach it (slot data goes to 
+master_priv) -> retrieve info -> if there is already an i3c_device with 
+same PID destroy the pre-allocated one.
+     - Replace the info.dyn_address with a structure with dyn_address 
+and slot and use it in CCC structure.
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+This is something that will need to be supported for I3C HCI spec too. 
+Do you have any suggestion?
+
+Best regards,
+Vitor Soares
