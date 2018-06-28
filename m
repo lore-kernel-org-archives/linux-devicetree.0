@@ -1,24 +1,81 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx6sll: declare src module to be compatible
- to imx51's src
-Date: Thu, 28 Jun 2018 11:25:11 +0800
-Message-ID: <20180628032510.GH22683@dragon>
-References: <1529483917-18057-1-git-send-email-Anson.Huang@nxp.com>
+From: Stu Hsieh <stu.hsieh@mediatek.com>
+Subject: Re: [PATCH v7 00/29] Add support for mediatek SOC MT2712
+Date: Thu, 28 Jun 2018 11:45:37 +0800
+Message-ID: <1530157537.11190.53.camel@mtksdccf07>
+References: <1529482771-2153-1-git-send-email-stu.hsieh@mediatek.com>
+ <20180625084740.GN2958@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1529483917-18057-1-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180625084740.GN2958@phenom.ffwll.local>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 20, 2018 at 04:38:37PM +0800, Anson Huang wrote:
-> i.MX6SLL uses same SRC module as i.MX51, add "fsl,imx51-src"
-> compatible string to enable SRC driver to support setting
-> CPU resume address for cpu-idle and suspend/resume.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-
-Applied, thanks.
+SGksIERhbmllbCBWZXR0ZXI6CgpPbiBNb24sIDIwMTgtMDYtMjUgYXQgMTA6NDcgKzAyMDAsIERh
+bmllbCBWZXR0ZXIgd3JvdGU6Cj4gT24gV2VkLCBKdW4gMjAsIDIwMTggYXQgMDQ6MTk6MDJQTSAr
+MDgwMCwgU3R1IEhzaWVoIHdyb3RlOgo+ID4gVGhpcyBwYXRjaCBhZGQgc3VwcG9ydCBmb3IgdGhl
+IE1lZGlhdGVrIE1UMjcxMiBESVNQIHN1YnN5c3RlbS4KPiA+IE1UMjcxMiBpcyBiYXNlIG9uIE1U
+ODE3MywgdGhlcmUgYXJlIHNvbWUgZGlmZmVyZW5jZSBhcyBmb2xsb3dpbmc6Cj4gPiBNVDI3MTIg
+c3VwcG9ydCB0aHJlZSBkaXNwIG91dHB1dCh0d28gb3ZsIGFuZCBvbmUgcmRtYSkKPiA+IAo+ID4g
+Q2hhbmdlIGluIHY2Ogo+ID4gLSBVcGRhdGUgY29tbWl0IG1lc3NhZ2UgZm9yIHRoZSBwYXRjaAo+
+ID4gICAiZHJtL21lZGlhdGVrOiBVcGRhdGUgdGhlIGRlZmluaXRpb24gb2YgY29ubmVjdGlvbiBm
+cm9tIFJETUExIHRvIERQSTAiCj4gCj4gSnVzdCBhIGRyaXZlLWJ5IGNvbW1lbnQgb24gdGhlIG1l
+ZGlhdGVrIGRyaXZlcjoKPiAKPiBBcyBmYXIgYXMgSSBjYW4gc2VlIG10a19kcm1fZ2VtLmMgcmVp
+bXBsZW1lbnRzIHRoZSBjbWEgaGVscGVycyBhcyBhCj4gY29weXBhc3RlIGpvYi4gQW55IHJlYXNv
+bnMgd2h5IHlvdSdyZSBub3QgdXNpbmcgdGhlIG5vcm1hbCBjbWEgaGVscGVycz8KPiAKPiBUaGFu
+a3MsIERhbmllbAo+ID4gCgpJbiB0aGUgYmVnaW5uaW5nLCB3ZSBkZXZlbG9wIG10a19kcm1fZ2Vt
+LmMgYnkgcmVmZXJyaW5nIG90aGVyIHBsYXRmb3JtLgpXZSB3aWxsIHRyeSB0byB1c2UgdGhlIG5v
+cm1hbCBjbWEgaGVscGVycyBhY2NvcmRpbmcgdG8geW91ciBpZGVhLgoKVGhhbmtzLApTdHUKCj4g
+PiBTdHUgSHNpZWggKDI5KToKPiA+ICAgZHJtL21lZGlhdGVrOiB1cGRhdGUgZHQtYmluZGluZ3Mg
+Zm9yIG10MjcxMgo+ID4gICBkcm0vbWVkaWF0ZWs6IHN1cHBvcnQgbWF4aW11bSA2NCBtdXRleCBt
+b2QKPiA+ICAgZHJtL21lZGlhdGVrOiBhZGQgZGRwIGNvbXBvbmVudCBBQUwxCj4gPiAgIGRybS9t
+ZWRpYXRlazogYWRkIGRkcCBjb21wb25lbnQgT0QxCj4gPiAgIGRybS9tZWRpYXRlazogYWRkIGRk
+cCBjb21wb25lbnQgUFdNMQo+ID4gICBkcm0vbWVkaWF0ZWs6IGFkZCBkZHAgY29tcG9uZW50IFBX
+TTIKPiA+ICAgZHJtL21lZGlhdGVrOiBhZGQgY29tcG9uZW50IERQSTEKPiA+ICAgZHJtL21lZGlh
+dGVrOiBhZGQgY29tcG9uZW50IERTSTIKPiA+ICAgZHJtL21lZGlhdGVrOiBhZGQgY29tcG9uZW50
+IERTSTMKPiA+ICAgZHJtL21lZGlhdGVrOiBhZGQgdGhlIERTSTEgZm9yIGNvbXBvbmVudCBpbml0
+IGNvbmRpdGlvbgo+ID4gICBkcm0vbWVkaWF0ZWs6IGFkZCBjb25uZWN0aW9uIGZyb20gT0QxIHRv
+IFJETUExCj4gPiAgIGRybS9tZWRpYXRlazogVXBkYXRlIHRoZSBkZWZpbml0aW9uIG9mIGNvbm5l
+Y3Rpb24gZnJvbSBSRE1BMSB0byBEUEkwCj4gPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rp
+b24gZnJvbSBSRE1BMCB0byBEUEkwCj4gPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24g
+ZnJvbSBSRE1BMCB0byBEU0kyCj4gPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJv
+bSBSRE1BMCB0byBEU0kzCj4gPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBS
+RE1BMSB0byBEUEkxCj4gPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBSRE1B
+MSB0byBEU0kxCj4gPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBSRE1BMSB0
+byBEU0kyCj4gPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBSRE1BMSB0byBE
+U0kzCj4gPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBSRE1BMiB0byBEUEkw
+Cj4gPiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBSRE1BMiB0byBEUEkxCj4g
+PiAgIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBSRE1BMiB0byBEU0kxCj4gPiAg
+IGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBSRE1BMiB0byBEU0kyCj4gPiAgIGRy
+bS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBSRE1BMiB0byBEU0kzCj4gPiAgIGRybS9t
+ZWRpYXRlazogYWRkIERQSTEgc3VwcG9ydCBmb3IgbXV0ZXgKPiA+ICAgZHJtL21lZGlhdGVrOiBh
+ZGQgRFNJMiBzdXBwb3J0IGZvciBtdXRleAo+ID4gICBkcm0vbWVkaWF0ZWs6IGFkZCBEU0kzIHN1
+cHBvcnQgZm9yIG11dGV4Cj4gPiAgIGRybS9tZWRpYXRlazogYWRkIHRoaXJkIGRkcCBwYXRoCj4g
+PiAgIGRybS9tZWRpYXRlazogQWRkIHN1cHBvcnQgZm9yIG1lZGlhdGVrIFNPQyBNVDI3MTIKPiA+
+IAo+ID4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRpc3AudHh0ICAg
+IHwgICAyICstCj4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jICAg
+ICAgICAgICAgfCAgIDMgKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
+cC5jICAgICAgICAgICAgIHwgMjM1ICsrKysrKysrKysrKysrKysrKy0tLQo+ID4gIGRyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgICAgICAgIHwgIDE1ICstCj4gPiAg
+ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCAgICAgICAgfCAgMTAg
+Ky0KPiA+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyAgICAgICAgICAg
+ICB8ICA0NyArKysrLQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5o
+ICAgICAgICAgICAgIHwgICA1ICstCj4gPiAgNyBmaWxlcyBjaGFuZ2VkLCAyNzQgaW5zZXJ0aW9u
+cygrKSwgNDMgZGVsZXRpb25zKC0pCj4gPiAKPiA+IC0tIAo+ID4gMi4xMi41Cj4gPiAKPiA+IF9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gPiBkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0Cj4gPiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4gPiBo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo+
+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
