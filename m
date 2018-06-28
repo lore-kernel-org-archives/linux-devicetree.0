@@ -1,56 +1,429 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: [PATCH v2] dt-bindings: serial: imx: clarify rs485 support usage
-Date: Thu, 28 Jun 2018 10:25:32 +0300
-Message-ID: <e9beff38e9035c2f33d691f362e37d8e62aaa660.1530170732.git.baruch@tkos.co.il>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 02/10] ARM: dts: s5pv210: Add initial DTS for Samsung
+ Aries based phones
+Date: Thu, 28 Jun 2018 09:41:21 +0200
+Message-ID: <CAJKOXPdxdwmCcXNnYNCc81hZVi=YUs_+CNKev_gPZbXoMPPepg@mail.gmail.com>
+References: <1530119544-30023-1-git-send-email-pawel.mikolaj.chmiel@gmail.com> <1530119544-30023-3-git-send-email-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, linux-serial@vger.kernel.org, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, linux-arm-kernel@lists.infradead.org, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1530119544-30023-3-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Cc: kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xc-racer2@live.ca
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGkuTVggVUFSVCBwZXJpcGhlcmFsIHVzZXMgdGhlIFJTVF9CIHNpZ25hbCBhcyBpbnB1dCwg
-YW5kIENUU19CIGFzCm91dHB1dC4gVGhpcyBpcyBqdXN0IGxpa2UgdGhlIERDRSByb2xlIGluIFJT
-LTIzMi4gVGhpcyBpcyB0cnVlCnJlZ2FyZGxlc3Mgb2YgdGhlICJEVEUgbW9kZSIgc2V0dGluZyBv
-ZiB0aGlzIHBlcmlwaGVyYWwuCgpBcyBhIHJlc3VsdCwgcnM0ODUgc3VwcG9ydCBoYXJkd2FyZSBt
-dXN0IHVzZSB0aGUgQ1RTX0Igc2lnbmFsIHRvIGNvbnRyb2wKdGhlIFJTLTQ4NSB0cmFuc2NlaXZl
-ci4gVGhpcyBpcyBpbiBjb250cmFzdCB0byBnZW5lcmljIHJzNDg1IGtlcm5lbApjb2RlLCBkb2N1
-bWVudGF0aW9uLCBhbmQgRFQgcHJvcGVydHkgbmFtZXMgdGhhdCBjb25zaXN0ZW50bHkgcmVmZXIg
-dG8KdGhlIFJUUyBhcyB0cmFuc2NlaXZlciBjb250cm9sIHNpZ25hbC4KCkFkZCBhIG5vdGUgaW4g
-dGhlIERUIGJpbmRpbmcgZG9jdW1lbnQgYWJvdXQgdGhhdCwgdG8gcmVkdWNlIHRoZQpjb25mdXNp
-b24gc29tZXdoYXQuCgpTaWduZWQtb2ZmLWJ5OiBCYXJ1Y2ggU2lhY2ggPGJhcnVjaEB0a29zLmNv
-LmlsPgotLS0KdjI6IEZpeCBjb21taXQgbG9nIHR5cG9zIChMb3RoYXIgV2HDn21hbm4pCi0tLQog
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NlcmlhbC9mc2wtaW14LXVhcnQudHh0
-IHwgNiArKysrKy0KIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24o
-LSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc2VyaWFs
-L2ZzbC1pbXgtdWFydC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc2Vy
-aWFsL2ZzbC1pbXgtdWFydC50eHQKaW5kZXggYWZjZmJjMzRlMjQzLi4zNTk1N2NiZjE1NzEgMTAw
-NjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zZXJpYWwvZnNsLWlt
-eC11YXJ0LnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc2VyaWFs
-L2ZzbC1pbXgtdWFydC50eHQKQEAgLTksNyArOSwxMSBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgog
-LSBmc2wsZHRlLW1vZGUgOiBJbmRpY2F0ZSB0aGUgdWFydCB3b3JrcyBpbiBEVEUgbW9kZS4gVGhl
-IHVhcnQgd29ya3MKICAgICAgICAgICAgICAgICAgIGluIERDRSBtb2RlIGJ5IGRlZmF1bHQuCiAt
-IHJzNDg1LXJ0cy1kZWxheSwgcnM0ODUtcnRzLWFjdGl2ZS1sb3csIHJzNDg1LXJ4LWR1cmluZy10
-eCwKLSAgbGludXgscnM0ODUtZW5hYmxlZC1hdC1ib290LXRpbWU6IHNlZSByczQ4NS50eHQKKyAg
-bGludXgscnM0ODUtZW5hYmxlZC1hdC1ib290LXRpbWU6IHNlZSByczQ4NS50eHQuIE5vdGUgdGhh
-dCBmb3IgUlM0ODUKKyAgeW91IG11c3QgZW5hYmxlIGVpdGhlciB0aGUgInVhcnQtaGFzLXJ0c2N0
-cyIgb3IgdGhlICJydHMtZ3Bpb3MiCisgIHByb3BlcnRpZXMuIEluIGNhc2UgeW91IHVzZSAidWFy
-dC1oYXMtcnRzY3RzIiB0aGUgc2lnbmFsIHRoYXQgY29udHJvbHMKKyAgdGhlIHRyYW5zY2VpdmVy
-IGlzIGFjdHVhbGx5IENUU19CLCBub3QgUlRTX0IuIENUU19CIGlzIGFsd2F5cyBvdXRwdXQsCisg
-IGFuZCBSVFNfQiBpcyBpbnB1dCwgcmVnYXJkbGVzcyBvZiBkdGUtbW9kZS4KIAogUGxlYXNlIGNo
-ZWNrIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zZXJpYWwvc2VyaWFsLnR4dAog
-Zm9yIHRoZSBjb21wbGV0ZSBsaXN0IG9mIGdlbmVyaWMgcHJvcGVydGllcy4KLS0gCjIuMTguMAoK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
-bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
-ZXJuZWwK
+On 27 June 2018 at 19:12, Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com=
+> wrote:
+> This DTS file have initial support Samsung Aries based phones.
+> Initial version have support for:
+> - sdcard
+> - internal memory (present only on non 4g variant)
+> - max8998 pmic and rtc
+> - max17040 fuel gauge
+> - gpio keys
+> - fimd (no panel driver yet)
+> - usb (peripherial mode)
+> - wifi
+>
+> Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> ---
+>
+> Changes from v1:
+>   - Removed duplicated and unneeded headers
+>   - Corrected node names
+>   - Added missing spaces
+>   - Removed unneeded pinctrl and sorted entries
+>   - Set correct interrupt type for max8998 pmic
+>   - Add missing regulators
+> ---
+> ---
+>  arch/arm/boot/dts/s5pv210-aries.dtsi | 423 +++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 423 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/s5pv210-aries.dtsi
+>
+> diff --git a/arch/arm/boot/dts/s5pv210-aries.dtsi b/arch/arm/boot/dts/s5p=
+v210-aries.dtsi
+> new file mode 100644
+> index 000000000000..61b6cf76265f
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/s5pv210-aries.dtsi
+> @@ -0,0 +1,423 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Samsung's S5PV210 based Galaxy Aries board device tree source
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include "s5pv210.dtsi"
+> +
+> +/ {
+> +       compatible =3D "samsung,aries", "samsung,s5pv210";
+> +
+> +       aliases {
+> +               i2c6 =3D &i2c_pmic;
+> +               i2c9 =3D &i2c_fuel;
+> +       };
+> +
+> +       memory@30000000 {
+> +               device_type =3D "memory";
+> +               reg =3D <0x30000000 0x05000000
+> +                       0x40000000 0x10000000
+> +                       0x50000000 0x08000000>;
+> +       };
+> +
+> +       wifi_pwrseq: wifi-pwrseq {
+> +               compatible =3D "mmc-pwrseq-simple";
+> +               reset-gpios =3D <&gpg1 2 GPIO_ACTIVE_LOW>;
+> +               pinctrl-names =3D "default";
+> +               pinctrl-0 =3D <&wlan_gpio_rst>;
+> +               post-power-on-delay-ms =3D <500>;
+> +               power-off-delay-us =3D <500>;
+> +       };
+> +
+> +       i2c_pmic: i2c-gpio-0 {
+> +               compatible =3D "i2c-gpio";
+> +               sda-gpios =3D <&gpj4 0 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAI=
+N)>;
+> +               scl-gpios =3D <&gpj4 3 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAI=
+N)>;
+> +               i2c-gpio,delay-us =3D <2>;
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <0>;
+> +
+> +               pmic@66 {
+> +                       compatible =3D "maxim,max8998";
+> +                       reg =3D <0x66>;
+> +                       interrupt-parent =3D <&gph0>;
+> +                       interrupts =3D <7 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +                       max8998,pmic-buck1-default-dvs-idx =3D <1>;
+> +                       max8998,pmic-buck1-dvs-gpios =3D <&gph0 3 GPIO_AC=
+TIVE_HIGH>,
+> +                                                       <&gph0 4 GPIO_ACT=
+IVE_HIGH>;
+> +                       max8998,pmic-buck1-dvs-voltage =3D <1275000>, <12=
+00000>,
+> +                                                       <1050000>, <95000=
+0>;
+> +
+> +                       max8998,pmic-buck2-default-dvs-idx =3D <0>;
+> +                       max8998,pmic-buck2-dvs-gpio =3D <&gph0 5 GPIO_ACT=
+IVE_HIGH>;
+> +                       max8998,pmic-buck2-dvs-voltage =3D <1100000>, <10=
+00000>;
+> +
+> +                       regulators {
+> +                               ldo2_reg: LDO2 {
+> +                                       regulator-name =3D "VALIVE_1.2V";
+> +                                       regulator-min-microvolt =3D <1200=
+000>;
+> +                                       regulator-max-microvolt =3D <1200=
+000>;
+> +                                       regulator-always-on;
+> +
+> +                                       regulator-state-mem {
+> +                                               regulator-on-in-suspend;
+> +                                       };
+> +                               };
+> +
+> +                               ldo3_reg: LDO3 {
+> +                                       regulator-name =3D "VUSB_1.1V";
+> +                                       regulator-min-microvolt =3D <1100=
+000>;
+> +                                       regulator-max-microvolt =3D <1100=
+000>;
+> +
+> +                                       regulator-state-mem {
+> +                                               regulator-off-in-suspend;
+> +                                       };
+> +                               };
+> +
+> +                               ldo4_reg: LDO4 {
+> +                                       regulator-name =3D "VADC_3.3V";
+> +                                       regulator-min-microvolt =3D <3300=
+000>;
+> +                                       regulator-max-microvolt =3D <3300=
+000>;
+> +                                       regulator-always-on;
+> +
+> +                                       regulator-state-mem {
+> +                                               regulator-off-in-suspend;
+> +                                       };
+> +                               };
+> +
+> +                               ldo5_reg: LDO5 {
+> +                                       regulator-name =3D "VTF_2.8V";
+> +                                       regulator-min-microvolt =3D <2800=
+000>;
+> +                                       regulator-max-microvolt =3D <2800=
+000>;
+> +
+> +                                       regulator-state-mem {
+> +                                               regulator-off-in-suspend;
+> +                                       };
+> +                               };
+> +
+> +                               ldo6_reg: LDO6 {
+> +                                       regulator-name =3D "LDO6";
+> +                                       regulator-min-microvolt =3D <1600=
+000>;
+> +                                       regulator-max-microvolt =3D <3600=
+000>;
+> +                               };
+> +
+> +                               ldo7_reg: LDO7 {
+> +                                       regulator-name =3D "VLCD_1.8V";
+> +                                       regulator-min-microvolt =3D <1800=
+000>;
+> +                                       regulator-max-microvolt =3D <1800=
+000>;
+> +                                       /* Till we get panel driver */
+> +                                       regulator-always-on;
+> +
+> +                                       regulator-state-mem {
+> +                                               regulator-off-in-suspend;
+> +                                       };
+> +                               };
+> +
+> +                               ldo8_reg: LDO8 {
+> +                                       regulator-name =3D "VUSB_3.3V";
+> +                                       regulator-min-microvolt =3D <3300=
+000>;
+> +                                       regulator-max-microvolt =3D <3300=
+000>;
+> +
+> +                                       regulator-state-mem {
+> +                                               regulator-off-in-suspend;
+> +                                       };
+> +                               };
+> +
+> +                               ldo9_reg: LDO9 {
+> +                                       regulator-name =3D "VCC_2.8V_PDA"=
+;
+> +                                       regulator-min-microvolt =3D <2800=
+000>;
+> +                                       regulator-max-microvolt =3D <2800=
+000>;
+> +                                       regulator-always-on;
+> +                               };
+> +
+> +                               ldo10_reg: LDO10 {
+> +                                       regulator-name =3D "VPLL_1.2V";
+> +                                       regulator-min-microvolt =3D <1200=
+000>;
+> +                                       regulator-max-microvolt =3D <1200=
+000>;
+> +                                       regulator-always-on;
+> +
+> +                                       regulator-state-mem {
+> +                                               regulator-on-in-suspend;
+> +                                       };
+> +                               };
+> +
+> +                               ldo11_reg: LDO11 {
+> +                                       regulator-name =3D "CAM_AF_3.0V";
+> +                                       regulator-min-microvolt =3D <3000=
+000>;
+> +                                       regulator-max-microvolt =3D <3000=
+000>;
+> +
+> +                                       regulator-state-mem {
+> +                                               regulator-off-in-suspend;
+> +                                       };
+> +                               };
+> +
+> +                               ldo12_reg: LDO12 {
+> +                                       regulator-name =3D "CAM_SENSOR_CO=
+RE_1.2V";
+> +                                       regulator-min-microvolt =3D <1200=
+000>;
+> +                                       regulator-max-microvolt =3D <1200=
+000>;
+> +
+> +                                       regulator-state-mem {
+> +                                               regulator-off-in-suspend;
+> +                                       };
+> +                               };
+> +
+> +                               ldo13_reg: LDO13 {
+> +                                       regulator-name =3D "VGA_VDDIO_2.8=
+V";
+> +                                       regulator-min-microvolt =3D <2800=
+000>;
+> +                                       regulator-max-microvolt =3D <2800=
+000>;
+> +
+> +                                       regulator-state-mem {
+> +                                               regulator-off-in-suspend;
+> +                                       };
+> +                               };
+> +
+> +                               ldo14_reg: LDO14 {
+> +                                       regulator-name =3D "VGA_DVDD_1.8V=
+";
+> +                                       regulator-min-microvolt =3D <1800=
+000>;
+> +                                       regulator-max-microvolt =3D <1800=
+000>;
+> +
+> +                                       regulator-state-mem {
+> +                                               regulator-off-in-suspend;
+> +                                       };
+> +                               };
+> +
+> +                               ldo15_reg: LDO15 {
+> +                                       regulator-name =3D "CAM_ISP_HOST_=
+2.8V";
+> +                                       regulator-min-microvolt =3D <2800=
+000>;
+> +                                       regulator-max-microvolt =3D <2800=
+000>;
+> +
+> +                                       regulator-state-mem {
+> +                                               regulator-off-in-suspend;
+> +                                       };
+> +                               };
+> +
+> +                               ldo16_reg: LDO16 {
+> +                                       regulator-name =3D "VGA_AVDD_2.8V=
+";
+> +                                       regulator-min-microvolt =3D <2800=
+000>;
+> +                                       regulator-max-microvolt =3D <2800=
+000>;
+> +
+> +                                       regulator-state-mem {
+> +                                               regulator-off-in-suspend;
+> +                                       };
+> +                               };
+> +
+> +                               ldo17_reg: LDO17 {
+> +                                       regulator-name =3D "VCC_3.0V_LCD"=
+;
+> +                                       regulator-min-microvolt =3D <3000=
+000>;
+> +                                       regulator-max-microvolt =3D <3000=
+000>;
+> +                                       /* Till we get panel driver */
+> +                                       regulator-always-on;
+> +
+> +                                       regulator-state-mem {
+> +                                               regulator-off-in-suspend;
+> +                                       };
+> +                               };
+> +
+> +                               buck1_reg: BUCK1 {
+> +                                       regulator-name =3D "vddarm";
+> +                                       regulator-min-microvolt =3D <7500=
+00>;
+> +                                       regulator-max-microvolt =3D <1500=
+000>;
+> +
+> +                                       regulator-state-mem {
+> +                                               regulator-off-in-suspend;
+> +                                               regulator-suspend-microvo=
+lt =3D <1250000>;
+> +                                       };
+> +                               };
+> +
+> +                               buck2_reg: BUCK2 {
+> +                                       regulator-name =3D "vddint";
+> +                                       regulator-min-microvolt =3D <7500=
+00>;
+> +                                       regulator-max-microvolt =3D <1500=
+000>;
+> +
+> +                                       regulator-state-mem {
+> +                                               regulator-off-in-suspend;
+> +                                               regulator-suspend-microvo=
+lt =3D <1100000>;
+> +                                       };
+> +                               };
+> +
+> +                               buck3_reg: BUCK3 {
+> +                                       regulator-name =3D "VCC_1.8V";
+> +                                       regulator-min-microvolt =3D <1800=
+000>;
+> +                                       regulator-max-microvolt =3D <1800=
+000>;
+> +                                       regulator-always-on;
+> +                               };
+> +
+> +                               buck4_reg: BUCK4 {
+> +                                       regulator-name =3D "CAM_ISP_CORE_=
+1.2V";
+> +                                       regulator-min-microvolt =3D <1200=
+000>;
+> +                                       regulator-max-microvolt =3D <1200=
+000>;
+> +
+> +                                       regulator-state-mem {
+> +                                               regulator-off-in-suspend;
+> +                                       };
+> +                               };
+> +
+> +                               ap32khz_reg: EN32KHz-AP {
+> +                                       regulator-name =3D "32KHz AP";
+> +                                       regulator-always-on;
+> +                               };
+> +
+> +                               cp32khz_reg: EN32KHz-CP {
+> +                                       regulator-name =3D "32KHz CP";
+> +                               };
+> +
+> +                               vichg_reg: ENVICHG {
+> +                                       regulator-name =3D "VICHG";
+> +                                       regulator-always-on;
+> +                               };
+> +
+> +                               safe1_sreg: ESAFEOUT1 {
+> +                                       regulator-name =3D "SAFEOUT1";
+> +                               };
+> +
+> +                               safe2_sreg: ESAFEOUT2 {
+> +                                       regulator-name =3D "SAFEOUT2";
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
+> +       i2c_fuel: i2c-gpio-1 {
+> +               compatible =3D "i2c-gpio";
+> +               sda-gpios =3D <&mp05 1 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAI=
+N)>;
+> +               scl-gpios =3D <&mp05 0 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAI=
+N)>;
+> +               i2c-gpio,delay-us =3D <2>;
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <0>;
+> +
+> +               fuelgauge@36 {
+> +                       compatible =3D "maxim,max17040";
+> +                       interrupt-parent =3D <&vic0>;
+> +                       interrupts =3D <7>;
+> +                       reg =3D <0x36>;
+> +               };
+> +       };
+> +};
+> +
+> +&xusbxti {
+> +       clock-frequency =3D <24000000>;
+> +};
+> +
+> +&pinctrl0 {
+
+Thanks for changes. You missed one part - ordering the labels here
+alphabetically, so:
+
+&fimd {}
+&hsotg {}
+...
+&xusbxti {}
+
+Best regards,
+Krzysztof
