@@ -1,112 +1,215 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH v3 15/24] dt-bindings: display:
- sun4i-drm: Add description of A64 HDMI PHY
-Date: Thu, 28 Jun 2018 15:00:32 +0800
-Message-ID: <CAGb2v67iRZZTQuTH8inwmPC6S0BRecFgPEpKrxgThQbsYaZgmQ@mail.gmail.com>
-References: <20180625120304.7543-1-jernej.skrabec@siol.net>
- <20180625120304.7543-16-jernej.skrabec@siol.net> <CAGb2v66ytOrjMOK067URknens34jvYxJ1XoYmGMi4Ji0LYt9sQ@mail.gmail.com>
- <1669385.k4L9lni8DF@jernej-laptop>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: djw@archiso.i-did-not-set--mail-host-address--so-tickle-me
+Subject: Re: [PATCH v3 2/5] gpio: syscon: rockchip: add GPIO_MUTE support for rk3328
+Date: Thu, 28 Jun 2018 15:22:04 +0800
+Message-ID: <87y3eze5pf.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me>
+References: <1527737273-8387-1-git-send-email-djw@t-chip.com.cn>
+        <1527737273-8387-3-git-send-email-djw@t-chip.com.cn>
+        <CAL_JsqJK4vrmLBeN_ZeGCXAyqshshL16B0KN_+8uvt+=-O9TEw@mail.gmail.com>
+        <0d08ba26-77f2-6c42-8fb1-214aaf6085e9@t-chip.com.cn>
+        <CAL_JsqKSy4q5dfVfXbRMLa7koTWufpAt3yNdE-9mwyJ-VzVQRQ@mail.gmail.com>
+        <87zi0d8tue.fsf@t-chip.com.cn> <20180605195854.GA16394@rob-hp-laptop>
+        <8736xz8jph.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBJUP2LMQKGQEKT42Z4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1669385.k4L9lni8DF@jernej-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8736xz8jph.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me>
+        (Levin's message of "Thu, 07 Jun 2018 09:32:42 +0800")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Levin <djw@t-chip.com.cn>
+Cc: Rob Herring <robh@kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Wayne Chou <zxf@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 28, 2018 at 12:51 PM, Jernej =C5=A0krabec
-<jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> Dne =C4=8Detrtek, 28. junij 2018 ob 04:19:55 CEST je Chen-Yu Tsai napisal=
-(a):
->> On Mon, Jun 25, 2018 at 8:02 PM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org=
->
-> wrote:
->> > A64 HDMI PHY is similar to H3 HDMI PHY except it has two possible PLL
->> > clock parents. It is compatible to other HDMI PHYs, like that found in
->> > R40.
->> >
->> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
->> > ---
->> >
->> >  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 4 +++=
--
->> >  1 file changed, 3 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm=
-.txt
->> > b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt index
->> > 84fe38dbb900..dc83f21ef188 100644
->> > --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
->> > +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
->> > @@ -101,6 +101,7 @@ DWC HDMI PHY
->> >
->> >  Required properties:
->> >    - compatible: value must be one of:
->> > +    * allwinner,sun50i-a64-hdmi-phy
->> >
->> >      * allwinner,sun8i-a83t-hdmi-phy
->> >      * allwinner,sun8i-h3-hdmi-phy
->>
->> Nit: the list is sorted by family first, then SoC name, so it should
->> be the last on the list.
->
-> I went alphabetically, since "5" is before "8"...
+Levin <djw@t-chip.com.cn> writes:
 
-I see. I think version sort applies here, given that sun50i is newer
-than sun8i.
-
-ChenYu
-
-> Best regards,
-> Jernej
+> Rob Herring <robh@kernel.org> writes:
 >
+>> On Sat, Jun 02, 2018 at 04:40:09PM +0800, Levin Du wrote:
+>>> 
+>>> Rob Herring <robh+dt@kernel.org> writes:
+>>> 
+>>> > On Thu, May 31, 2018 at 9:05 PM, Levin <djw@t-chip.com.cn> wrote:
+>>> > > Hi Rob,
+>>> > > 
+>>> > > 
+>>> > > On 2018-05-31 10:45 PM, Rob Herring wrote:
+>>> > > > 
+>>> > > > On Wed, May 30, 2018 at 10:27 PM,  <djw@t-chip.com.cn> wrote:
+>>> > > > > 
+>>> > > > > From: Levin Du <djw@t-chip.com.cn>
+>>> > > > > 
+>>> > > > > In Rockchip RK3328, the output only GPIO_MUTE pin,
+>>> > > > > originally for codec
+>>> > > > > mute control, can also be used for general purpose. It is
+>>> > > > > manipulated by
+>>> > > > > the GRF_SOC_CON10 register.
+>>> > > > > 
+>>> > > > > Signed-off-by: Levin Du <djw@t-chip.com.cn>
+>>> > > > > 
+>>> > > > > ---
+>>> > > > > 
+>>> > > > > Changes in v3:
+>>> > > > > - Change from general gpio-syscon to specific
+>>> > > > > rk3328-gpio-mute
+>>> > > > > 
+>>> > > > > Changes in v2:
+>>> > > > > - Rename gpio_syscon10 to gpio_mute in doc
+>>> > > > > 
+>>> > > > > Changes in v1:
+>>> > > > > - Refactured for general gpio-syscon usage for Rockchip SoCs.
+>>> > > > > - Add doc rockchip,gpio-syscon.txt
+>>> > > > > 
+>>> > > > >   .../bindings/gpio/rockchip,rk3328-gpio-mute.txt    | 28
+>>> > > > > +++++++++++++++++++
+>>> > > > >   drivers/gpio/gpio-syscon.c                         | 31
+>>> > > > > ++++++++++++++++++++++
+>>> > > > >   2 files changed, 59 insertions(+)
+>>> > > > >   create mode 100644
+>>> > > > > Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
+>>> > > > > 
+>>> > > > > diff --git
+>>> > > > > a/Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
+>>> > > > > b/Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
+>>> > > > > new file mode 100644
+>>> > > > > index 0000000..10bc632
+>>> > > > > --- /dev/null
+>>> > > > > +++
+>>> > > > > b/Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
+>>> > > > > @@ -0,0 +1,28 @@
+>>> > > > > +Rockchip RK3328 GPIO controller dedicated for the GPIO_MUTE
+>>> > > > > pin.
+>>> > > > > +
+>>> > > > > +In Rockchip RK3328, the output only GPIO_MUTE pin,
+>>> > > > > originally for codec
+>>> > > > > mute
+>>> > > > > +control, can also be used for general purpose. It is
+>>> > > > > manipulated by the
+>>> > > > > +GRF_SOC_CON10 register.
+>>> > > > > +
+>>> > > > > +Required properties:
+>>> > > > > +- compatible: Should contain "rockchip,rk3328-gpio-mute".
+>>> > > > > +- gpio-controller: Marks the device node as a gpio
+>>> > > > > controller.
+>>> > > > > +- #gpio-cells: Should be 2. The first cell is the pin
+>>> > > > > number and
+>>> > > > > +  the second cell is used to specify the gpio polarity:
+>>> > > > > +    0 = Active high,
+>>> > > > > +    1 = Active low.
+>>> > > > > +
+>>> > > > > +Example:
+>>> > > > > +
+>>> > > > > +       grf: syscon@ff100000 {
+>>> > > > > +               compatible = "rockchip,rk3328-grf", "syscon",
+>>> > > > > "simple-mfd";
+>>> > > > > +
+>>> > > > > +               gpio_mute: gpio-mute {
+>>> > > > 
+>>> > > > Node names should be generic:
+>>> > > > 
+>>> > > > gpio {
+>>> > > > 
+>>> > > > This also means you can't add another GPIO node in the future
+>>> > > > and
+>>> > > > you'll have to live with "rockchip,rk3328-gpio-mute" covering
+>>> > > > more
+>>> > > > than 1 GPIO if you do need to add more GPIOs.
+>>> > > 
+>>> > > 
+>>> > > As the first line describes, this GPIO controller is dedicated for
+>>> > > the
+>>> > > GPIO_MUTE pin.
+>>> > > There's only one GPIO pin in the GRF_SOC_CON10 register. Therefore
+>>> > > the
+>>> > > gpio_mute
+>>> > > name is proper IMHO.
+>>> > 
+>>> > It's how many GPIOs in the GRF, not this register. What I'm saying is
+>>> > when you come along later to add another GPIO in the GRF, you had
+>>> > better just add it to this same node. I'm not going to accept another
+>>> > GPIO controller node within the GRF. You have the cells to support
+>>> > more than 1, so it would only be a driver change. The compatible
+>>> > string would then not be ideally named at that point. But compatible
+>>> > strings are just unique identifiers, so it doesn't really matter what
+>>> > the string is.
+>>> > 
+>>> 
+>>> I'll try my best to introduce the situation here. The GRF, GPIO0~GPIO3
+>>> are register blocks in the RK3328 Soc. The GPIO0~GPIO3 contain registers
+>>> for GPIO operations like reading/writing data, setting direction,
+>>> interruption etc, which corresponds to the GPIO banks (gpio0~gpio3)
+>>> defined in rk3328.dtsi:
 >>
->> Otherwise,
+>> I'm only talking about GRF functions, not "regular" GPIOs.
 >>
->> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>>> 	pinctrl: pinctrl {
+>>> 		compatible = "rockchip,rk3328-pinctrl";
+>>> 		rockchip,grf = <&grf>;
+>>> 		#address-cells = <2>;
+>>> 		#size-cells = <2>;
+>>> 		ranges;
+>>> 
+>>> 		gpio0: gpio0@ff210000 {
+>>> 			compatible = "rockchip,gpio-bank";
+>>> 			reg = <0x0 0xff210000 0x0 0x100>;
+>>> 			interrupts = <GIC_SPI 51 			IRQ_TYPE_LEVEL_HIGH>;
+>>> 			clocks = <&cru PCLK_GPIO0>;
+>>> 
+>>> 			gpio-controller;
+>>> 			#gpio-cells = <2>;
+>>> 
+>>> 			interrupt-controller;
+>>> 			#interrupt-cells = <2>;
+>>> 		};
+>>> 
+>>> 		gpio1: gpio1@ff220000 {
+>>>                //...
+>>> 		};
+>>> 
+>>> 		gpio2: gpio2@ff230000 {
+>>>                //...
+>>> 		};
+>>> 
+>>> 		gpio3: gpio3@ff240000 {
+>>>                //...
+>>> 		};
+>>>         }
+>>> 
+>>> However, these general GPIO pins has multiplexed functions and their
+>>> pull up/down and driving strength can also be configured. These settings
+>>> are manipulated by the GRF registers in pinctrl driver. Quoted from the
+>>> TRM, the GRF has the following function:
+>>> 
+>>> - IOMUX control
+>>> - Control the state of GPIO in power-down mode
+>>> - GPIO PAD pull down and pull up control
+>>> - Used for common system control
+>>> - Used to record the system state
+>>> 
+>>> Therefore the functions of the GRF are messy and scattered in different
+>>> nodes. The so-called GPIO_MUTE does not belong to GPIO0~GPIO3. It is
+>>> manipulated by the GRF_SOC_CON10 register in the GRF block.
+>>> 
+>>> > I'm being told both "this is the only GPIO" and "the GRF has too many
+>>> > different functions for us to tell you what they all are". So which is
+>>> > it?
+>>> > 
+>>> > Rob
+>>> 
+>>> They are both true, but lack of context. See the above description.
 >>
->> >    - reg: base address and size of memory-mapped region
->> >
->> > @@ -111,8 +112,9 @@ Required properties:
->> >    - resets: phandle to the reset controller driving the PHY
->> >    - reset-names: must be "phy"
->> >
->> > -H3 HDMI PHY requires additional clock:
->> >
->> > +H3 and A64 HDMI PHY require additional clocks:
->> >    - pll-0: parent of phy clock
->> >
->> > +  - pll-1: second possible phy clock parent (A64 only)
->> >
->> >  TV Encoder
->> >  ----------
->> >
->> > --
->> > 2.18.0
+>> What I meant was "only GPIO in GRF registers"...
+>>
+>> Rob
 >
+> I check the TRM and schematic once again. In GRF resters, there are also
+> HDMI GPIOs, which are already covered by the HDMI driver. Aside from
+> those, MUTE_GPIO is the only GPIO.
 >
->
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+> Levin
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Hi Rob,
+
+Is there anything I can do to move forward? I know that this patch is
+far from a perfect solution. But it can be refactored later on.
+
+Best Regards,
+Levin
