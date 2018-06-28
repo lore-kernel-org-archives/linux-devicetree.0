@@ -1,85 +1,94 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 10/24] drm/sun4i: tcon: Generalize engine search
- algorithm
-Date: Thu, 28 Jun 2018 20:25:43 +0200
-Message-ID: <20180628182543.yyja6hiry7rx7fu2@flea>
-References: <20180625120304.7543-1-jernej.skrabec@siol.net>
- <20180625120304.7543-11-jernej.skrabec@siol.net>
- <CAGb2v66ndyhVFKsOt=g45MJ-cBun8WvRrDsb9XO2hteSX2oe5A@mail.gmail.com>
- <1812731.FQOhD8MfmX@jernej-laptop>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [RFC] ARM: dts: imx7s: Fix the port reg properties
+Date: Thu, 28 Jun 2018 15:43:52 -0300
+Message-ID: <CAOMZO5DPdzQVtSHfp3RtgLPsUi_aTJG7J-OrJpUz0Kk3U86zzQ@mail.gmail.com>
+References: <1526306996-25045-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1812731.FQOhD8MfmX@jernej-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1526306996-25045-1-git-send-email-festevam@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBKdW4gMjgsIDIwMTggYXQgMDY6NDg6NTBBTSArMDIwMCwgSmVybmVqIMWga3JhYmVj
-IHdyb3RlOgo+IERuZSDEjWV0cnRlaywgMjguIGp1bmlqIDIwMTggb2IgMDQ6MDY6NTIgQ0VTVCBq
-ZSBDaGVuLVl1IFRzYWkgbmFwaXNhbChhKToKPiA+IE9uIE1vbiwgSnVuIDI1LCAyMDE4IGF0IDg6
-MDIgUE0sIEplcm5laiBTa3JhYmVjIDxqZXJuZWouc2tyYWJlY0BzaW9sLm5ldD4gCj4gd3JvdGU6
-Cj4gPiA+IEN1cnJlbnQgIm9sZCIgbWV0aG9kIHRvIGZpbmQgZW5naW5lIHdvcmtlZCBwcmV0dHkg
-d2VsbCBmb3IgREUyLiBIb3dldmVyLAo+ID4gPiBpdCBkb2Vzbid0IHdvcmsgd2hlbiBUQ09OIFRP
-UCBpcyBiZXR3ZWVuICBtaXhlciAoZW5naW5lKSBhbmQgVENPTi4gVENPTgo+ID4gPiBUT1AgaGFz
-IG11bHRpcGxlIGlucHV0IHBvcnRzLCBidXQgY3VycmVudCBlbmdpbmUgc2VhcmNoIGFsZ29yaXRo
-bQo+ID4gPiBleHBlY3RzIG9ubHkgb25lLgo+ID4gPiAKPiA+ID4gVGhpcyBjYW4gYmUgZml4ZWQg
-YnkgZmlyc3QgbG9va2luZyBmb3Igb3V0cHV0IHBvcnQgaWQgYW5kIHNlbGVjdGluZwo+ID4gPiBt
-YXRjaGluZyBpbnB1dCBieSBzdWJ0cmFjdGluZyAxIGZvciB0aGUgbmV4dCByb3VuZC4gVGhpcyB3
-b3JrIGV2ZW4gaWYKPiA+ID4gdGhlcmUgaXMgb25seSBvbmUgaW5wdXQgYW5kIG91dHB1dC4KPiA+
-ID4gCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEplcm5laiBTa3JhYmVjIDxqZXJuZWouc2tyYWJlY0Bz
-aW9sLm5ldD4KPiA+ID4gLS0tCj4gPiA+IAo+ID4gPiAgZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1
-bjRpX3Rjb24uYyB8IDIyICsrKysrKysrKysrKysrKysrKy0tLS0KPiA+ID4gIDEgZmlsZSBjaGFu
-Z2VkLCAxOCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQo+ID4gPiAKPiA+ID4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMKPiA+ID4gYi9kcml2ZXJz
-L2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5jIGluZGV4IDA4NzQ3ZmMzZWU3MS4uMjY0YmNjNDNk
-YTExCj4gPiA+IDEwMDY0NAo+ID4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlf
-dGNvbi5jCj4gPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMKPiA+
-ID4gQEAgLTc5MSwxMiArNzkxLDE0IEBAIHN0YXRpYyBpbnQgc3VuNGlfdGNvbl9pbml0X3JlZ21h
-cChzdHJ1Y3QgZGV2aWNlCj4gPiA+ICpkZXYsCj4gPiA+IAo+ID4gPiAgICovCj4gPiA+ICAKPiA+
-ID4gIHN0YXRpYyBzdHJ1Y3Qgc3VueGlfZW5naW5lICoKPiA+ID4gIHN1bjRpX3Rjb25fZmluZF9l
-bmdpbmVfdHJhdmVyc2Uoc3RydWN0IHN1bjRpX2RydiAqZHJ2LAo+ID4gPiAKPiA+ID4gLSAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUpCj4gPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpub2Rl
-LAo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHUzMiBwb3J0X2lkKQo+ID4g
-PiAKPiA+ID4gIHsKPiA+ID4gIAo+ID4gPiAgICAgICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqcG9y
-dCwgKmVwLCAqcmVtb3RlOwo+ID4gPiAgICAgICAgIHN0cnVjdCBzdW54aV9lbmdpbmUgKmVuZ2lu
-ZSA9IEVSUl9QVFIoLUVJTlZBTCk7Cj4gPiA+IAo+ID4gPiArICAgICAgIHUzMiByZWcgPSAwOwo+
-ID4gPiAKPiA+ID4gLSAgICAgICBwb3J0ID0gb2ZfZ3JhcGhfZ2V0X3BvcnRfYnlfaWQobm9kZSwg
-MCk7Cj4gPiA+ICsgICAgICAgcG9ydCA9IG9mX2dyYXBoX2dldF9wb3J0X2J5X2lkKG5vZGUsIHBv
-cnRfaWQpOwo+ID4gPiAKPiA+ID4gICAgICAgICBpZiAoIXBvcnQpCj4gPiA+ICAgICAgICAgCj4g
-PiA+ICAgICAgICAgICAgICAgICByZXR1cm4gRVJSX1BUUigtRUlOVkFMKTsKPiA+ID4gCj4gPiA+
-IEBAIC04MjYsOCArODI4LDIwIEBAIHN1bjRpX3Rjb25fZmluZF9lbmdpbmVfdHJhdmVyc2Uoc3Ry
-dWN0IHN1bjRpX2Rydgo+ID4gPiAqZHJ2LAo+ID4gPiAKPiA+ID4gICAgICAgICAgICAgICAgIGlm
-IChyZW1vdGUgPT0gZW5naW5lLT5ub2RlKQo+ID4gPiAgICAgICAgICAgICAgICAgCj4gPiA+ICAg
-ICAgICAgICAgICAgICAgICAgICAgIGdvdG8gb3V0X3B1dF9yZW1vdGU7Cj4gPiA+IAo+ID4gPiAr
-ICAgICAgIC8qCj4gPiA+ICsgICAgICAgICogQWNjb3JkaW5nIHRvIGRldmljZSB0cmVlIGJpbmRp
-bmcgaW5wdXQgcG9ydHMgaGF2ZSBldmVuIGlkCj4gPiA+ICsgICAgICAgICogbnVtYmVyIGFuZCBv
-dXRwdXQgcG9ydHMgaGF2ZSBvZGQgaWQuIFNpbmNlIGNvbXBvbmVudCB3aXRoCj4gPiA+ICsgICAg
-ICAgICogbW9yZSB0aGFuIG9uZSBpbnB1dCBhbmQgb25lIG91dHB1dCAoVENPTiBUT1ApIGV4aXRz
-LCBjb3JyZWN0Cj4gPiA+ICsgICAgICAgICogcmVtb3RlIGlucHV0IGlkIGhhcyB0byBiZSBjYWxj
-dWxhdGVkIGJ5IHN1YnRyYWN0aW5nIDEgZnJvbQo+ID4gPiArICAgICAgICAqIHJlbW90ZSBvdXRw
-dXQgaWQuIElmIHRoaXMgZm9yIHNvbWUgcmVhc29uIGNhbid0IGJlIGRvbmUsIDAKPiA+ID4gKyAg
-ICAgICAgKiBpcyB1c2VkIGFzIGlucHV0IHBvcnQgaWQuCj4gPiA+ICsgICAgICAgICovCj4gPiAK
-PiA+IFlvdSBuZWVkIHRvIGNhbGwKPiA+IAo+ID4gICAgIG9mX25vZGVfcHV0KHBvcnQpOwo+ID4g
-Cj4gPiB0byBkcm9wIHRoZSByZWZlcmVuY2UgdG8gdGhlIG9yaWdpbmFsIHBvcnQuCj4gCj4gVGhh
-bmtzIGZvciBub3RpY2luZyBpdC4gSSBndWVzcyBJIHNob3VsZCBzZW5kIGZpeCBwYXRjaCwgc2lu
-Y2UgcGF0Y2hlcyBmcm9tIAo+IGRybS1taXNjLW5leHQgY2FuJ3QgYmUgZHJvcHBlZC4KClllYWgs
-IHBsZWFzZSBzZW5kIGFkZGl0aW9uYWwgcGF0Y2hlcyBmb3IgYWxsIHRoZSBpc3N1ZXMgcG9pbnRl
-ZCBvdXQgYnkKQ2hlbi1ZdS4KCk1heGltZQoKLS0gCk1heGltZSBSaXBhcmQsIEJvb3RsaW4gKGZv
-cm1lcmx5IEZyZWUgRWxlY3Ryb25zKQpFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2luZWVy
-aW5nCmh0dHBzOi8vYm9vdGxpbi5jb20KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+Hi Rob,
+
+On Mon, May 14, 2018 at 11:09 AM, Fabio Estevam <festevam@gmail.com> wrote:
+> From: Fabio Estevam <fabio.estevam@nxp.com>
+>
+> The 'reg' property must match the unit address, so fix them
+> to avoid the following DTC warnings with W=1:
+>
+> arch/arm/boot/dts/imx7d-cl-som-imx7.dtb: Warning (graph_port): /replicator/ports/port@2: graph node unit address error, expected "0"
+> arch/arm/boot/dts/imx7d-cl-som-imx7.dtb: Warning (graph_port): /soc/funnel@30041000/ports/port@2: graph node unit address error, expected "0"
+> arch/arm/boot/dts/imx7d-cl-som-imx7.dtb: Warning (graph_port): /soc/funnel@30083000/ports/port@2: graph node unit address error, expected "0"
+> arch/arm/boot/dts/imx7d-cl-som-imx7.dtb: Warning (graph_port): /soc/etf@30084000/ports/port@1: graph node unit address error, expected "0"
+>
+> Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+> ---
+> Hi Rob,
+>
+> Is this the correct way to fix these warnings?
+
+Any suggestions, please? I would like to clean up these dtc warnings.
+
+Thanks
+
+
+>
+>  arch/arm/boot/dts/imx7s.dtsi | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+> index 7d33993..55b6241 100644
+> --- a/arch/arm/boot/dts/imx7s.dtsi
+> +++ b/arch/arm/boot/dts/imx7s.dtsi
+> @@ -126,7 +126,7 @@
+>
+>                         /* replicator input port */
+>                         port@2 {
+> -                               reg = <0>;
+> +                               reg = <2>;
+>                                 replicator_in_port0: endpoint {
+>                                         slave-mode;
+>                                         remote-endpoint = <&etf_out_port>;
+> @@ -183,7 +183,7 @@
+>
+>                                 /* funnel output port */
+>                                 port@2 {
+> -                                       reg = <0>;
+> +                                       reg = <2>;
+>                                         ca_funnel_out_port0: endpoint {
+>                                                 remote-endpoint = <&hugo_funnel_in_port0>;
+>                                         };
+> @@ -234,7 +234,7 @@
+>                                 };
+>
+>                                 port@2 {
+> -                                       reg = <0>;
+> +                                       reg = <2>;
+>                                         hugo_funnel_out_port0: endpoint {
+>                                                 remote-endpoint = <&etf_in_port>;
+>                                         };
+> @@ -263,7 +263,7 @@
+>                                 };
+>
+>                                 port@1 {
+> -                                       reg = <0>;
+> +                                       reg = <1>;
+>                                         etf_out_port: endpoint {
+>                                                 remote-endpoint = <&replicator_in_port0>;
+>                                         };
+> --
+> 2.7.4
+>
