@@ -1,115 +1,41 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v3 5/5] clocksource/drivers/timer-mediatek: Add support
- for system timer
-Date: Thu, 28 Jun 2018 16:08:59 +0200
-Message-ID: <b025b8c2-9cfd-466e-ec1c-9fa5e2148904@linaro.org>
-References: <1530182744-10731-1-git-send-email-stanley.chu@mediatek.com>
- <1530182744-10731-6-git-send-email-stanley.chu@mediatek.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 0/5] Renesas R9A06G032 PINCTRL Driver
+Date: Thu, 28 Jun 2018 16:10:45 +0200
+Message-ID: <CACRpkdag1snZfeCC1y5TJdgVzAXbv+nDJrA-3R=49haTM8Kxpw@mail.gmail.com>
+References: <1528974029-29617-1-git-send-email-michel.pollet@bp.renesas.com>
+ <CACRpkdbX0R+ipasLfZi80yf2OBU0TuDT-0KoUJBvrQz3Zj6eFQ@mail.gmail.com> <CAMuHMdVL-00gb7ZfgNGr8-VawFUpg+iY5mpPF6UZPfjFqM1_jg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530182744-10731-6-git-send-email-stanley.chu@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <CAMuHMdVL-00gb7ZfgNGr8-VawFUpg+iY5mpPF6UZPfjFqM1_jg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stanley Chu <stanley.chu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michel Pollet <michel.pollet@bp.renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Magnus Damm <damm+renesas@opensource.se>
 List-Id: devicetree@vger.kernel.org
 
-On 28/06/2018 12:45, Stanley Chu wrote:
-> This patch adds a new "System Timer" on the Mediatek SoCs.
-> 
-> The System Timer is introduced as an always-on timer being
-> clockevent device for tick-broadcasting.
-> 
-> For clock, it is driven by 13 MHz system clock.
-> The implementation uses the system clock with no clock
-> source divider.
-> 
-> For interrupt, the clock event timer can be used by all cores.
-> 
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> ---
+On Mon, Jun 18, 2018 at 10:57 AM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> On Mon, Jun 18, 2018 at 10:46 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > On Thu, Jun 14, 2018 at 1:00 PM, Michel Pollet
+> > <michel.pollet@bp.renesas.com> wrote:
 
-Please do the GPT prefix in patch 3/5, so this patch will contain 'syst'
-addition only.
+> > Is it totally different from the other "great old ones" in the SuperH-PFC
+> > series or is there some other reason why it was done like this?
+>
+> Yes it is, cfr. drivers/pinctrl/pinctrl-rza1.c, which lives outside sh-pfc, too.
 
->  drivers/clocksource/timer-mediatek.c |  225 +++++++++++++++++++++++++---------
->  1 file changed, 167 insertions(+), 58 deletions(-)
-> 
-> diff --git a/drivers/clocksource/timer-mediatek.c b/drivers/clocksource/timer-mediatek.c
-> index d94d8e1..6878736 100644
-> --- a/drivers/clocksource/timer-mediatek.c
-> +++ b/drivers/clocksource/timer-mediatek.c
-> @@ -26,32 +26,46 @@
->  #include <linux/slab.h>
->  #include "timer-of.h"
->  
-> -#define GPT_IRQ_EN_REG		0x00
-> -#define GPT_IRQ_ENABLE(val)	BIT((val) - 1)
-> -#define GPT_IRQ_ACK_REG		0x08
-> -#define GPT_IRQ_ACK(val)	BIT((val) - 1)
-> -
-> -#define TIMER_CTRL_REG(val)	(0x10 * (val))
-> -#define TIMER_CTRL_OP(val)	(((val) & 0x3) << 4)
-> -#define TIMER_CTRL_OP_ONESHOT	(0)
-> -#define TIMER_CTRL_OP_REPEAT	(1)
-> -#define TIMER_CTRL_OP_FREERUN	(3)
-> -#define TIMER_CTRL_CLEAR	(2)
-> -#define TIMER_CTRL_ENABLE	(1)
-> -#define TIMER_CTRL_DISABLE	(0)
-> -
-> -#define TIMER_CLK_REG(val)	(0x04 + (0x10 * (val)))
-> -#define TIMER_CLK_SRC(val)	(((val) & 0x1) << 4)
-> -#define TIMER_CLK_SRC_SYS13M	(0)
-> -#define TIMER_CLK_SRC_RTC32K	(1)
-> -#define TIMER_CLK_DIV1		(0x0)
-> -#define TIMER_CLK_DIV2		(0x1)
-> -
-> -#define TIMER_CNT_REG(val)	(0x08 + (0x10 * (val)))
-> -#define TIMER_CMP_REG(val)	(0x0C + (0x10 * (val)))
-> -
-> -#define GPT_CLK_EVT	1
-> -#define GPT_CLK_SRC	2
-> +#define TIMER_CLK_EVT           (1)
-> +#define TIMER_CLK_SRC           (2)
-> +
-> +#define TIMER_SYNC_TICKS        (3)
-> +
-> +/* gpt */
-> +#define GPT_IRQ_EN_REG          0x00
-> +#define GPT_IRQ_ENABLE(val)     BIT((val) - 1)
-> +#define GPT_IRQ_ACK_REG	        0x08
-> +#define GPT_IRQ_ACK(val)        BIT((val) - 1)
-> +
-> +#define GPT_CTRL_REG(val)       (0x10 * (val))
-> +#define GPT_CTRL_OP(val)        (((val) & 0x3) << 4)
-> +#define GPT_CTRL_OP_ONESHOT     (0)
-> +#define GPT_CTRL_OP_REPEAT      (1)
-> +#define GPT_CTRL_OP_FREERUN     (3)
-> +#define GPT_CTRL_CLEAR          (2)
-> +#define GPT_CTRL_ENABLE         (1)
-> +#define GPT_CTRL_DISABLE        (0)
-> +
-> +#define GPT_CLK_REG(val)        (0x04 + (0x10 * (val)))
-> +#define GPT_CLK_SRC(val)        (((val) & 0x1) << 4)
-> +#define GPT_CLK_SRC_SYS13M      (0)
-> +#define GPT_CLK_SRC_RTC32K      (1)
-> +#define GPT_CLK_DIV1            (0x0)
-> +#define GPT_CLK_DIV2            (0x1)
-> +
-> +#define GPT_CNT_REG(val)        (0x08 + (0x10 * (val)))
-> +#define GPT_CMP_REG(val)        (0x0C + (0x10 * (val)))
+OK I see.
 
-Please do the GPT prefix in patch 3/5, so this patch will contain 'syst'
-addition only and will make review easier.
+I take it that it is also totally different from the rza1 HW?
 
-Thanks.
+It's fine like this, if there are many of them we might want
+to create something like a renesas/ subfolder at some point
+and stash them in there.
 
+> Of course I can take it through my sh-pfc tree, once the rough edges have been
+> removed.
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+That's best I think, it always works smooth.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Yours,
+Linus Walleij
