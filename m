@@ -1,194 +1,88 @@
-From: houlong wei <houlong.wei@mediatek.com>
-Subject: Re: [PATCH v22 4/4] soc: mediatek: Add Mediatek CMDQ helper
-Date: Fri, 29 Jun 2018 07:32:19 +0800
-Message-ID: <1530228739.21991.14.camel@mhfsdcap03>
-References: <1530098172-31385-1-git-send-email-houlong.wei@mediatek.com>
-         <1530098172-31385-5-git-send-email-houlong.wei@mediatek.com>
-         <1530182516.8518.11.camel@mtksdaap41>
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH v4 1/6] Documentation: DT: Consolidate SP805 binding docs
+Date: Thu, 28 Jun 2018 16:50:57 -0700
+Message-ID: <42b856bf-2dc1-f69b-44e1-f5a04715f673@broadcom.com>
+References: <1527530497-10392-2-git-send-email-ray.jui@broadcom.com>
+ <20180605194124.GA26885@rob-hp-laptop>
+ <e91c75f3-f7a4-6f51-9911-7e22d5d05084@roeck-us.net>
+ <CABGGisxEvWDy16SKE2RG-vhUHBZHSCCHyfwJsPY16B1fQS-=cA@mail.gmail.com>
+ <09c870cd-0a44-6634-58d8-f57f9fcd0cb5@broadcom.com>
+ <46ca340f-4347-94ca-6463-d38bece820e2@broadcom.com>
+ <20180627183327.GD16753@roeck-us.net>
+ <a18733e2-be06-4ea9-dbfb-1d4f756a97e7@broadcom.com>
+ <20180627184234.GA19538@roeck-us.net>
+ <8483f675-0c7d-4b0f-25fd-a5eff4bc7937@broadcom.com>
+ <20180627185529.GB19743@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530182516.8518.11.camel@mtksdaap41>
+In-Reply-To: <20180627185529.GB19743@roeck-us.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: CK Hu <ck.hu@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh =?UTF-8?Q?=28=E8=AC=9D=E6=BF=9F=E9=81=A0=29?= <Bibby.Hsieh@mediatek.com>, YT
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Rob Herring <robh@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-06-28 at 18:41 +0800, CK Hu wrote:
-> Hi, Houlong:
-> 
-> Some inline comment.
-> 
-> On Wed, 2018-06-27 at 19:16 +0800, Houlong Wei wrote:
-> > Add Mediatek CMDQ helper to create CMDQ packet and assemble GCE op code.
-> > 
-> > Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
-> > Signed-off-by: HS Liao <hs.liao@mediatek.com>
-> > ---
-> >  drivers/soc/mediatek/Kconfig           |   12 ++
-> >  drivers/soc/mediatek/Makefile          |    1 +
-> >  drivers/soc/mediatek/mtk-cmdq-helper.c |  258 ++++++++++++++++++++++++++++++++
-> >  include/linux/soc/mediatek/mtk-cmdq.h  |  132 ++++++++++++++++
-> >  4 files changed, 403 insertions(+)
-> >  create mode 100644 drivers/soc/mediatek/mtk-cmdq-helper.c
-> >  create mode 100644 include/linux/soc/mediatek/mtk-cmdq.h
-> > 
-> > diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> > index a7d0667..17bd759 100644
-> > --- a/drivers/soc/mediatek/Kconfig
-> > +++ b/drivers/soc/mediatek/Kconfig
-> > @@ -4,6 +4,18 @@
-> >  menu "MediaTek SoC drivers"
-> >  	depends on ARCH_MEDIATEK || COMPILE_TEST
-> >  
-> 
-> [...]
-> 
-> > +
-> > +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
-> > +{
-> > +	u32 arg_b;
-> > +
-> > +	if (event >= CMDQ_MAX_EVENT || event < 0)
-> 
-> The type of event is 'u32', so checking 'event < 0' is redundant.
+Hi Guenter/Florian,
 
-will fix.
+On 6/27/2018 11:55 AM, Guenter Roeck wrote:
+> On Wed, Jun 27, 2018 at 11:47:21AM -0700, Ray Jui wrote:
+>>
+>>
+>> On 6/27/2018 11:42 AM, Guenter Roeck wrote:
+>>> On Wed, Jun 27, 2018 at 11:38:48AM -0700, Ray Jui wrote:
+>>>>
+>>>>
+>>>> On 6/27/2018 11:33 AM, Guenter Roeck wrote:
+>>>>> On Wed, Jun 20, 2018 at 10:39:16AM -0700, Ray Jui wrote:
+>>>>>> Hi Guenter/Rob,
+>>>>>>
+>>>>>> Kindly let me know how you want to proceed with this?
+>>>>>>
+>>>>>
+>>>>> If I recall correctly, the patch series does not add a new problem
+>>>>> but merely exposes one. Is my recollection correct ? If so, maybe
+>>>>> we should just add a note somewhere indicating what might be wrong
+>>>>> and otherwise apply the series.
+>>>>>
+>>>>> Does this make sense ?
+>>>>
+>>>> Yes this makes a lot of sense to me. This patch series exposes potential
+>>>> problems in some SoCs that they might not be feeding the correct clock into
+>>>> WDT, at least based on clock names from their DT entries.
+>>>>
+>>>> This patch series does not change/affect how SP805 works on those systems.
+>>>>
+>>>> Where should the note be added?
+>>>>
+>>>
+>>> I would suggest to add a note into the driver where the clock is used,
+>>> with the details discussed here.
+>>
+>> I assume you meant adding the notes to the SP805 driver where the clock is
+>> used.
+>>
+>> If so, I think that makes sense. That notes deserves its own patch because
+>> it really has nothing to do with any of the change in this patch series.
+>>
+>> Do you want me to 1) embed that patch into this patch series and send out
+>> v5; or 2) leave the patch series as it is and send out a separate patch to
+>> add the notes to the driver?
+>>
+> 2) is fine. I don't have the series here right now; if I recall correctly
+> all patches in the series are all marked as Reviewed-by: and/or Acked-by:.
+> If so, I'll apply them to my tree tonight, or at least the ones that will
+> go in through the watchdog tree.
+> 
+> Guenter
+> 
 
-> 
-> > +		return -EINVAL;
-> > +
-> > +	/*
-> > +	 * WFE arg_b
-> > +	 * bit 0-11: wait value
-> > +	 * bit 15: 1 - wait, 0 - no wait
-> > +	 * bit 16-27: update value
-> > +	 * bit 31: 1 - update, 0 - no update
-> > +	 */
-> > +	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
-> > +
-> > +	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
-> > +}
-> > +EXPORT_SYMBOL(cmdq_pkt_wfe);
-> > +
-> > +int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event)
-> > +{
-> > +	if (event >= CMDQ_MAX_EVENT || event < 0)
-> 
-> The type of event is 'u32', so checking 'event < 0' is redundant.
+Guenter, please let us know once you take the first 4 patches.
 
-Will fix.
+Florian, could you please help with the last 2, once Guenter confirmed 
+the first 4 are merged.
 
-> 
-> > +		return -EINVAL;
-> > +
-> > +	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
-> > +				       CMDQ_WFE_UPDATE);
-> > +}
-> > +EXPORT_SYMBOL(cmdq_pkt_clear_event);
-> > +
-> > +static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
-> > +{
-> > +	int err;
-> > +
-> > +	if (cmdq_pkt_is_finalized(pkt))
-> > +		return 0;
-> > +
-> > +	/* insert EOC and generate IRQ for each command iteration */
-> > +	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
-> > +	if (err < 0)
-> > +		return err;
-> > +
-> > +	/* JUMP to end */
-> > +	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
-> > +	if (err < 0)
-> > +		return err;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +int cmdq_pkt_flush_async(struct cmdq_client *client, struct cmdq_pkt *pkt,
-> > +			 cmdq_async_flush_cb cb, void *data)
-> > +{
-> > +	int err;
-> > +	struct device *dev;
-> > +	dma_addr_t dma_addr;
-> > +
-> > +	err = cmdq_pkt_finalize(pkt);
-> > +	if (err < 0)
-> > +		return err;
-> > +
-> > +	dev = client->chan->mbox->dev;
-> > +	dma_addr = dma_map_single(dev, pkt->va_base, pkt->cmd_buf_size,
-> > +		DMA_TO_DEVICE);
-> 
-> You map here, but I could not find unmap, so the unmap should be done in
-> client driver. I would prefer a symmetric map/unmap which means that
-> both map and unmap are done in client driver. I think you put map here
-> because you should map after finalize. 
+Thanks!
 
-The unmap is done before callback to client, in function
-cmdq_task_exec_done, mtk-cmdq-mailbox.c.
-
-> Therefore, export
-> cmdq_pkt_finalize() to client driver and let client do finalize, so
-> there is no finalize in flush function. This method have a benefit that
-> if client reuse command buffer, it need not to map/unmap frequently.
-
-If client reuse command buffer or cmdq_pkt(command queue packet), client
-will add new commands to the cmdq_pkt, so map/unmap are necessary for
-each cmdq_pkt flush.
-
-> 
-> Regards,
-> CK
-> 
-> > +	if (dma_mapping_error(dev, dma_addr)) {
-> > +		dev_err(client->chan->mbox->dev, "dma map failed\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	pkt->pa_base = dma_addr;
-> > +	pkt->cb.cb = cb;
-> > +	pkt->cb.data = data;
-> > +
-> > +	mbox_send_message(client->chan, pkt);
-> > +	/* We can send next packet immediately, so just call txdone. */
-> > +	mbox_client_txdone(client->chan, 0);
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL(cmdq_pkt_flush_async);
-> > +
-> > +struct cmdq_flush_completion {
-> > +	struct completion cmplt;
-> > +	bool err;
-> > +};
-> > +
-> > +static void cmdq_pkt_flush_cb(struct cmdq_cb_data data)
-> > +{
-> > +	struct cmdq_flush_completion *cmplt = data.data;
-> > +
-> > +	cmplt->err = data.err;
-> > +	complete(&cmplt->cmplt);
-> > +}
-> > +
-> > +int cmdq_pkt_flush(struct cmdq_client *client, struct cmdq_pkt *pkt)
-> > +{
-> > +	struct cmdq_flush_completion cmplt;
-> > +	int err;
-> > +
-> > +	init_completion(&cmplt.cmplt);
-> > +	err = cmdq_pkt_flush_async(client, pkt, cmdq_pkt_flush_cb, &cmplt);
-> > +	if (err < 0)
-> > +		return err;
-> > +	wait_for_completion(&cmplt.cmplt);
-> > +
-> > +	return cmplt.err ? -EFAULT : 0;
-> > +}
-> > +EXPORT_SYMBOL(cmdq_pkt_flush);
-> 
-> [...]
-> 
-> 
+Ray
