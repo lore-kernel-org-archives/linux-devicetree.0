@@ -1,55 +1,82 @@
-Return-Path: <SRS0=mOcJ=JA=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from michel.telenet-ops.be ([195.130.137.88]:35224 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1755033AbeFNPSc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Jun 2018 11:18:32 -0400
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC 2/2] arm64: dts: renesas: salvator-common: Fix adv7482 decimal unit addresses
-Date: Thu, 14 Jun 2018 15:48:08 +0200
-Message-Id: <1528984088-24801-3-git-send-email-geert+renesas@glider.be>
-In-Reply-To: <1528984088-24801-1-git-send-email-geert+renesas@glider.be>
-References: <1528984088-24801-1-git-send-email-geert+renesas@glider.be>
-Sender: devicetree-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <SRS0=qqtW=JO=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH 08/22] [media] tvp5150: trigger autodetection on subdev open to reset cropping
+Date: Thu, 28 Jun 2018 18:20:40 +0200
+Message-Id: <20180628162054.25613-9-m.felsch@pengutronix.de>
+In-Reply-To: <20180628162054.25613-1-m.felsch@pengutronix.de>
+References: <20180628162054.25613-1-m.felsch@pengutronix.de>
+To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: p.zabel@pengutronix.de, afshin.nasser@gmail.com, javierm@redhat.com, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-With recent dtc and W=1:
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-    ...salvator-x.dtb: Warning (graph_port): /soc/i2c@e66d8000/video-receiver@70/port@10: graph node unit address error, expected "a"
-    ...salvator-x.dtb: Warning (graph_port): /soc/i2c@e66d8000/video-receiver@70/port@11: graph node unit address error, expected "b"
+If cropping isn't set explicitly by userspace, reset it to the maximum
+possible rectangle in subdevice open if a standard change is detected.
 
-Unit addresses are always hexadecimal (without prefix), while the bases
-of reg property values depend on their prefixes.
-
-Fixes: 908001d778eba06e ("arm64: dts: renesas: salvator-common: Add ADV7482 support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+[m.felsch@pengutronix.de: move code from internal_ops.open() to pad_ops.init_cfg()]
+[m.felsch@pengutronix.de: make use of tvp5150_set_default() helper]
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- arch/arm64/boot/dts/renesas/salvator-common.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/i2c/tvp5150.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-index 320250d708c3bbab..47088206cc052a15 100644
---- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-+++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-@@ -437,7 +437,7 @@
- 			};
- 		};
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index c73536cfcc62..dbfc56c87434 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -55,6 +55,7 @@ struct tvp5150 {
+ 	struct regmap *regmap;
  
--		port@10 {
-+		port@a {
- 			reg = <10>;
+ 	v4l2_std_id norm;	/* Current set standard */
++	v4l2_std_id detected_norm;
+ 	u32 input;
+ 	u32 output;
+ 	int enable;
+@@ -1034,6 +1035,27 @@ static int tvp5150_g_mbus_config(struct v4l2_subdev *sd,
+ /****************************************************************************
+ 			V4L2 subdev pad ops
+  ****************************************************************************/
++static int tvp5150_init_cfg(struct v4l2_subdev *sd,
++			    struct v4l2_subdev_pad_config *cfg)
++{
++	struct tvp5150 *decoder = to_tvp5150(sd);
++	v4l2_std_id std;
++
++	/*
++	 * Reset selection to maximum on subdev_open() if autodetection is on
++	 * and a standard change is detected.
++	 */
++	if (decoder->norm == V4L2_STD_ALL) {
++		std = tvp5150_read_std(sd);
++		if (std != decoder->detected_norm) {
++			decoder->detected_norm = std;
++			tvp5150_set_default(std, &decoder->rect);
++		}
++	}
++
++	return 0;
++}
++
+ static int tvp5150_enum_mbus_code(struct v4l2_subdev *sd,
+ 		struct v4l2_subdev_pad_config *cfg,
+ 		struct v4l2_subdev_mbus_code_enum *code)
+@@ -1308,6 +1330,7 @@ static const struct v4l2_subdev_vbi_ops tvp5150_vbi_ops = {
+ };
  
- 			adv7482_txa: endpoint {
-@@ -447,7 +447,7 @@
- 			};
- 		};
+ static const struct v4l2_subdev_pad_ops tvp5150_pad_ops = {
++	.init_cfg = tvp5150_init_cfg,
+ 	.enum_mbus_code = tvp5150_enum_mbus_code,
+ 	.enum_frame_size = tvp5150_enum_frame_size,
+ 	.set_fmt = tvp5150_fill_fmt,
+@@ -1640,6 +1663,7 @@ static int tvp5150_probe(struct i2c_client *c,
+ 		return res;
  
--		port@11 {
-+		port@b {
- 			reg = <11>;
+ 	core->norm = V4L2_STD_ALL;	/* Default is autodetect */
++	core->detected_norm = V4L2_STD_UNKNOWN;
+ 	core->input = TVP5150_COMPOSITE1;
+ 	core->enable = true;
  
- 			adv7482_txb: endpoint {
 -- 
-2.7.4
-
+2.17.1
