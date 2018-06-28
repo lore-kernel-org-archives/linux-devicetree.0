@@ -1,36 +1,139 @@
 From: Michel Pollet <michel.pollet@bp.renesas.com>
-Subject: [PATCH v7 1/3] dt-bindings: cpu: Add Renesas R9A06G032 SMP enable method.
-Date: Thu, 28 Jun 2018 09:17:12 +0100
-Message-ID: <1530173842-56851-2-git-send-email-michel.pollet@bp.renesas.com>
+Subject: [PATCH v7 2/3] arm: shmobile: Add the R9A06G032 SMP enabler driver
+Date: Thu, 28 Jun 2018 09:17:13 +0100
+Message-ID: <1530173842-56851-3-git-send-email-michel.pollet@bp.renesas.com>
 References: <1530173842-56851-1-git-send-email-michel.pollet@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1530173842-56851-1-git-send-email-michel.pollet@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
-Cc: phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Kevin Hilman <khilman@baylibre.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Carlo Caione <carlo@endlessm.com>, Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Carlo Caione <carlo@endlessm.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Andy Gross <andy.gross@linaro.org>, Stefan Wahren <stefan.wahren@i2se.com>, Florian Fainelli <f.fainelli@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a special enable method for second CA7 of the R9A06G032
+The Renesas R9A06G032 second CA7 is parked in a ROM pen at boot time, it
+equires a special enable method to get it started.
 
 Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 ---
- Documentation/devicetree/bindings/arm/cpus.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/soc/renesas/Makefile        |  1 +
+ drivers/soc/renesas/r9a06g032-smp.c | 96 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 97 insertions(+)
+ create mode 100644 drivers/soc/renesas/r9a06g032-smp.c
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 29e1dc5..b395d107 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -219,6 +219,7 @@ described below.
- 			    "qcom,kpss-acc-v1"
- 			    "qcom,kpss-acc-v2"
- 			    "renesas,apmu"
-+			    "renesas,r9a06g032-smp"
- 			    "rockchip,rk3036-smp"
- 			    "rockchip,rk3066-smp"
- 			    "ste,dbx500-smp"
+diff --git a/drivers/soc/renesas/Makefile b/drivers/soc/renesas/Makefile
+index 7dc0f20..44a0d6b1 100644
+--- a/drivers/soc/renesas/Makefile
++++ b/drivers/soc/renesas/Makefile
+@@ -18,6 +18,7 @@ obj-$(CONFIG_SYSC_R8A77970)	+= r8a77970-sysc.o
+ obj-$(CONFIG_SYSC_R8A77980)	+= r8a77980-sysc.o
+ obj-$(CONFIG_SYSC_R8A77990)	+= r8a77990-sysc.o
+ obj-$(CONFIG_SYSC_R8A77995)	+= r8a77995-sysc.o
++obj-$(CONFIG_ARCH_R9A06G032)	+= r9a06g032-smp.o
+ 
+ # Family
+ obj-$(CONFIG_RST_RCAR)		+= rcar-rst.o
+diff --git a/drivers/soc/renesas/r9a06g032-smp.c b/drivers/soc/renesas/r9a06g032-smp.c
+new file mode 100644
+index 0000000..a1926e8
+--- /dev/null
++++ b/drivers/soc/renesas/r9a06g032-smp.c
+@@ -0,0 +1,96 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * R9A06G032 Second CA7 enabler.
++ *
++ * Copyright (C) 2018 Renesas Electronics Europe Limited
++ *
++ * Michel Pollet <michel.pollet@bp.renesas.com>, <buserror@gmail.com>
++ * Derived from actions,s500-smp
++ */
++
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/smp.h>
++
++/*
++ * The second CPU is parked in ROM at boot time. It requires waking it after
++ * writing an address into the BOOTADDR register of sysctrl.
++ *
++ * So the default value of the "cpu-release-addr" corresponds to BOOTADDR...
++ *
++ * *However* the BOOTADDR register is not available when the kernel
++ * starts in NONSEC mode.
++ *
++ * So for NONSEC mode, the bootloader re-parks the second CPU into a pen
++ * in SRAM, and changes the "cpu-release-addr" of linux's DT to a SRAM address,
++ * which is not restricted.
++ */
++
++static void __iomem *cpu_bootaddr;
++
++static DEFINE_SPINLOCK(cpu_lock);
++
++static int
++r9a06g032_smp_boot_secondary(unsigned int cpu,
++			     struct task_struct *idle)
++{
++	if (!cpu_bootaddr)
++		return -ENODEV;
++
++	spin_lock(&cpu_lock);
++
++	writel(__pa_symbol(secondary_startup), cpu_bootaddr);
++	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
++
++	spin_unlock(&cpu_lock);
++
++	return 0;
++}
++
++static void __init r9a06g032_smp_prepare_cpus(unsigned int max_cpus)
++{
++	struct device_node *dn;
++	int ret = -EINVAL, dns;
++	u32 bootaddr;
++
++	dn = of_get_cpu_node(1, NULL);
++	if (!dn) {
++		pr_err("CPU#1: missing device tree node\n");
++		return;
++	}
++	/*
++	 * Determine the address from which the CPU is polling.
++	 * The bootloader *does* change this property.
++	 * Note: The property can be either 64 or 32 bits, so handle both cases
++	 */
++	if (of_find_property(dn, "cpu-release-addr", &dns)) {
++		if (dns == sizeof(u64)) {
++			u64 temp;
++
++			ret = of_property_read_u64(dn,
++						   "cpu-release-addr", &temp);
++			bootaddr = temp;
++		} else {
++			ret = of_property_read_u32(dn,
++						   "cpu-release-addr",
++						   &bootaddr);
++		}
++	}
++	of_node_put(dn);
++	if (ret) {
++		pr_err("CPU#1: invalid cpu-release-addr property\n");
++		return;
++	}
++	pr_info("CPU#1: cpu-release-addr %08x\n", bootaddr);
++
++	cpu_bootaddr = ioremap(bootaddr, sizeof(bootaddr));
++}
++
++static const struct smp_operations r9a06g032_smp_ops __initconst = {
++	.smp_prepare_cpus = r9a06g032_smp_prepare_cpus,
++	.smp_boot_secondary = r9a06g032_smp_boot_secondary,
++};
++
++CPU_METHOD_OF_DECLARE(r9a06g032_smp,
++		      "renesas,r9a06g032-smp", &r9a06g032_smp_ops);
 -- 
 2.7.4
