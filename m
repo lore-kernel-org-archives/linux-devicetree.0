@@ -1,46 +1,51 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 05/10] dt-bindings: samsung: Add S5PV210 as possible
- soc in Samsung boards
-Date: Thu, 28 Jun 2018 09:52:36 +0200
-Message-ID: <CAJKOXPcZJWW49TL-eybV5486pnik0+-G9ByVg=b1iWbTJwAvAw@mail.gmail.com>
-References: <1530119544-30023-1-git-send-email-pawel.mikolaj.chmiel@gmail.com> <1530119544-30023-6-git-send-email-pawel.mikolaj.chmiel@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Daniel Mack <daniel@zonque.org>
+Subject: [PATCH v2 0/4] Add devicetree functionality to w1 busses
+Date: Thu, 28 Jun 2018 09:55:36 +0200
+Message-ID: <20180628075540.1757-1-daniel@zonque.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530119544-30023-6-git-send-email-pawel.mikolaj.chmiel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Cc: kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xc-racer2@live.ca
+To: zbr@ioremap.net, robh+dt@kernel.org, mark.rutland@arm.com, szabolcs.gyurko@tlt.hu
+Cc: sre@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, robert.jarzmik@free.fr, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27 June 2018 at 19:12, Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com=
-> wrote:
-> There are Samsung devices, which are not Exynos-based boards,
-> like it's in case of S5PV210. Document this information at beginning
-> of file.
->
-> Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> ---
->  Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards=
-.txt b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-> index 14510b215480..175f669d9bb6 100644
-> --- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-> +++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-> @@ -1,4 +1,4 @@
-> -* Samsung's Exynos SoC based boards
-> +* Samsung's Exynos and S5P SoC based boards
+This patch set contains four small patches that bring devicetree
+functionality to w1 bus masters and slaves in general. As an example,
+the DS2760 driver is made aware of devicetree nodes as an example.
+Other drivers can easily be ported later.
 
-At the point of this commit, there are no S5P boards mentioned. These
-will be added with next commit so please just squash it with the next
-one.
+W1 masters scan their bus in order to discover slave devices. Once
+one is found, a driver matching the family of the device is instanciated
+which handles it.
 
-I saw that Rob reviewed your v1 after you sent v2, so don't forget to
-include it in v3:
-Reviewed-by: Rob Herring <robh@kernel.org>
+All that's needed for now is a call to of_find_matching_node() when
+a slave device is attached, so the corresponding of_node pointer is
+set. For devices such as the DS2760, another driver is probed which
+can access the w1 slave through dev->parent.
 
-Best regards,
-Krzysztof
+Patch #1 adds some DT bindings documentation
+Patch #2 adds the call to of_find_matching_node()
+Patch #3 implements the match table for the DS2760 w1 slave
+Patch #4 makes the DS2760 supply driver aware of DT environments
+
+This works fine on a PXA3xx based board with a battery attached to
+the w1-gpio bus master controller.
+
+Daniel Mack (4):
+  dt-bindings: w1: document sub-node bindings for DS2760
+  w1: core: match sub-nodes of bus masters in devicetree
+  w1: ds2760: add devicetree matching glue
+  power: ds2760_battery: add device tree glue
+
+ .../devicetree/bindings/w1/maxim,ds2760.txt    | 15 +++++++++++++++
+ .../devicetree/bindings/w1/w1-gpio.txt         |  6 ++++++
+ Documentation/devicetree/bindings/w1/w1.txt    | 18 ++++++++++++++++++
+ drivers/power/supply/ds2760_battery.c          |  6 +++++-
+ drivers/w1/slaves/w1_ds2760.c                  |  9 +++++++++
+ drivers/w1/w1.c                                |  3 +++
+ include/linux/w1.h                             |  2 ++
+ 7 files changed, 58 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/w1/maxim,ds2760.txt
+ create mode 100644 Documentation/devicetree/bindings/w1/w1.txt
+
+-- 
+2.17.1
