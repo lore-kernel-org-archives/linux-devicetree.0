@@ -1,60 +1,71 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 0/6] Make deferring probe forever optional
-Date: Thu, 28 Jun 2018 14:43:38 -0600
-Message-ID: <20180628204344.13973-1-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Unsubscribe: <https://lists.linaro.org/mailman/options/boot-architecture>,
- <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/boot-architecture/>
-List-Post: <mailto:boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linaro.org/mailman/listinfo/boot-architecture>,
- <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Errors-To: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Sender: "boot-architecture" <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 3/6] pinctrl: Support stopping deferred probe after initcalls
+Date: Thu, 28 Jun 2018 14:43:41 -0600
+Message-ID: <20180628204344.13973-4-robh@kernel.org>
+References: <20180628204344.13973-1-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180628204344.13973-1-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, boot-architecture@lists.linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBzZXJpZXMgY2FtZSBvdXQgb2YgYSBkaXNjdXNzaW9uIG9uIHRoZSBBUk0gYm9vdC1hcmNo
-aXRlY3R1cmUKbGlzdFsxXSBhYm91dCBEVCBmb3J3YXJkcyBhbmQgYmFja3dhcmRzIGNvbXBhdGli
-aWxpdHkgaXNzdWVzLiBUaGVyZSBhcmUKaXNzdWVzIHdpdGggbmV3ZXIgRFRzIGJyZWFraW5nIG9u
-IG9sZGVyLCBzdGFibGUga2VybmVscy4gU29tZSBvZiB0aGVzZQphcmUgZGlmZmljdWx0IHRvIHNv
-bHZlLCBidXQgY2FzZXMgb2Ygb3B0aW9uYWwgZGV2aWNlcyBub3QgaGF2aW5nCmtlcm5lbCBzdXBw
-b3J0IHNob3VsZCBiZSBzb2x2YWJsZS4KCkkgdGVzdGVkIHRoaXMgb24gYSBSUGkzIEIgd2l0aCB0
-aGUgcGluY3RybCBkcml2ZXIgZm9yY2VkIG9mZi4gV2l0aCB0aGlzCmNoYW5nZSwgdGhlIE1NQy9T
-RCBhbmQgVUFSVCBkcml2ZXJzIGNhbiBmdW5jdGlvbiB3aXRob3V0IHRoZSBwaW5jdHJsCmRyaXZl
-ci4gSSBsZWZ0IHRoZSBkdHMgY2hhbmdlIG91dCB0aGlzIHRpbWUuCgp2MiBvZiB0aGlzIHNlcmll
-cyBjYW4gYmUgZm91bmQgaGVyZVsyXS4KClJvYgoKWzFdIGh0dHBzOi8vbGlzdHMubGluYXJvLm9y
-Zy9waXBlcm1haWwvYm9vdC1hcmNoaXRlY3R1cmUvMjAxOC1BcHJpbC8wMDA0NjYuaHRtbApbMl0g
-aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL3Byb2plY3QvbGttbC9saXN0Lz9zZXJp
-ZXM9MzQ3NDEzCgpSb2IgSGVycmluZyAoNik6CiAgZHJpdmVyIGNvcmU6IGFsbG93IHN0b3BwaW5n
-IGRlZmVycmVkIHByb2JlIGFmdGVyIGluaXQKICBkdC1iaW5kaW5nczogcGluY3RybDogYWRkIGEg
-J3BpbmN0cmwtdXNlLWRlZmF1bHQnIHByb3BlcnR5CiAgcGluY3RybDogU3VwcG9ydCBzdG9wcGlu
-ZyBkZWZlcnJlZCBwcm9iZSBhZnRlciBpbml0Y2FsbHMKICBpb21tdTogU3RvcCBkZWZlcnJpbmcg
-cHJvYmUgYXQgZW5kIG9mIGluaXRjYWxscwogIGlvbW11OiBSZW1vdmUgSU9NTVVfT0ZfREVDTEFS
-RQogIFBNIC8gRG9tYWluczogU3RvcCBkZWZlcnJpbmcgcHJvYmUgYXQgdGhlIGVuZCBvZiBpbml0
-Y2FsbAoKIC4uLi9hZG1pbi1ndWlkZS9rZXJuZWwtcGFyYW1ldGVycy50eHQgICAgICAgICB8ICA5
-ICsrKwogLi4uL2JpbmRpbmdzL3BpbmN0cmwvcGluY3RybC1iaW5kaW5ncy50eHQgICAgIHwgIDYg
-KysKIGRyaXZlcnMvYmFzZS9kZC5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDU3ICsr
-KysrKysrKysrKysrKysrKysKIGRyaXZlcnMvYmFzZS9wb3dlci9kb21haW4uYyAgICAgICAgICAg
-ICAgICAgICB8ICAyICstCiBkcml2ZXJzL2lvbW11L2FybS1zbW11LXYzLmMgICAgICAgICAgICAg
-ICAgICAgfCAgMiAtCiBkcml2ZXJzL2lvbW11L2FybS1zbW11LmMgICAgICAgICAgICAgICAgICAg
-ICAgfCAgNyAtLS0KIGRyaXZlcnMvaW9tbXUvZXh5bm9zLWlvbW11LmMgICAgICAgICAgICAgICAg
-ICB8ICAyIC0KIGRyaXZlcnMvaW9tbXUvaXBtbXUtdm1zYS5jICAgICAgICAgICAgICAgICAgICB8
-ICAzIC0KIGRyaXZlcnMvaW9tbXUvbXNtX2lvbW11LmMgICAgICAgICAgICAgICAgICAgICB8ICAy
-IC0KIGRyaXZlcnMvaW9tbXUvb2ZfaW9tbXUuYyAgICAgICAgICAgICAgICAgICAgICB8IDIxICst
-LS0tLS0KIGRyaXZlcnMvaW9tbXUvcWNvbV9pb21tdS5jICAgICAgICAgICAgICAgICAgICB8ICAy
-IC0KIGRyaXZlcnMvaW9tbXUvcm9ja2NoaXAtaW9tbXUuYyAgICAgICAgICAgICAgICB8ICAyIC0K
-IGRyaXZlcnMvcGluY3RybC9kZXZpY2V0cmVlLmMgICAgICAgICAgICAgICAgICB8IDE1ICsrKy0t
-CiBpbmNsdWRlL2FzbS1nZW5lcmljL3ZtbGludXgubGRzLmggICAgICAgICAgICAgfCAgMiAtCiBp
-bmNsdWRlL2xpbnV4L2RldmljZS5oICAgICAgICAgICAgICAgICAgICAgICAgfCAgMiArCiBpbmNs
-dWRlL2xpbnV4L29mX2lvbW11LmggICAgICAgICAgICAgICAgICAgICAgfCAgNCAtLQogMTYgZmls
-ZXMgY2hhbmdlZCwgODggaW5zZXJ0aW9ucygrKSwgNTAgZGVsZXRpb25zKC0pCgotLQoyLjE3LjEK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KYm9vdC1hcmNo
-aXRlY3R1cmUgbWFpbGluZyBsaXN0CmJvb3QtYXJjaGl0ZWN0dXJlQGxpc3RzLmxpbmFyby5vcmcK
-aHR0cHM6Ly9saXN0cy5saW5hcm8ub3JnL21haWxtYW4vbGlzdGluZm8vYm9vdC1hcmNoaXRlY3R1
-cmUK
+Pinctrl drivers are a common dependency which can prevent a system
+booting even if the default or bootloader configured settings can work.
+If a pinctrl node in DT indicates that the default pin setup can be used
+with the 'pinctrl-use-default' property, then only defer probe until
+initcalls are done. If the deferred probe timeout is enabled or loadable
+modules are disabled, then we'll stop deferring probe regardless of the
+DT property. This gives platforms the option to work without their
+pinctrl driver being enabled.
+
+Dropped the pinctrl specific deferring probe message as the driver core
+can print deferred probe related messages if needed.
+
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+v3:
+- Drop pinctrl deferred probe msg in favor of driver core messages
+- Move the handling of "pinctrl-use-default" option out of driver core
+- Stop deferring probe if modules are not enabled.
+
+Linus, I reworked this a bit, so didn't add your ack.
+
+ drivers/pinctrl/devicetree.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+index c4aa411f5935..2969ff3162c3 100644
+--- a/drivers/pinctrl/devicetree.c
++++ b/drivers/pinctrl/devicetree.c
+@@ -111,17 +111,24 @@ static int dt_to_map_one_config(struct pinctrl *p,
+ 	int ret;
+ 	struct pinctrl_map *map;
+ 	unsigned num_maps;
++	bool allow_default = false;
+
+ 	/* Find the pin controller containing np_config */
+ 	np_pctldev = of_node_get(np_config);
+ 	for (;;) {
++		if (!allow_default)
++			allow_default = of_property_read_bool(np_pctldev,
++							      "pinctrl-use-default");
++
+ 		np_pctldev = of_get_next_parent(np_pctldev);
+ 		if (!np_pctldev || of_node_is_root(np_pctldev)) {
+-			dev_info(p->dev, "could not find pctldev for node %pOF, deferring probe\n",
+-				np_config);
+ 			of_node_put(np_pctldev);
+-			/* OK let's just assume this will appear later then */
+-			return -EPROBE_DEFER;
++			ret = driver_deferred_probe_check_state(p->dev);
++			/* keep deferring if modules are enabled unless we've timed out */
++			if (IS_ENABLED(CONFIG_MODULES) && !allow_default && ret == -ENODEV)
++				ret = -EPROBE_DEFER;
++
++			return ret;
+ 		}
+ 		/* If we're creating a hog we can use the passed pctldev */
+ 		if (hog_pctldev && (np_pctldev == p->dev->of_node)) {
+--
+2.17.1
