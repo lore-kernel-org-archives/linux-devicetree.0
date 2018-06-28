@@ -1,89 +1,38 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [[DPU]PATCH] drm/msm/dsi: move the API setting PLL src to
- modeset_init()
-Date: Wed, 27 Jun 2018 20:35:35 -0400
-Message-ID: <CAF6AEGv6u=HSHQJ-uFBQwWH-cM3AVi+jjtsF54QYkXgeJ3=emw@mail.gmail.com>
-References: <20180626044543.14992-1-spanda@codeaurora.org>
- <CAD=FV=UY5+ENfTmJeWvjMRxfeueBx435H+rbgYrzkWK5rc_-0Q@mail.gmail.com>
- <CAF6AEGtbehXbc5PQ8-_18vOhB9eLFbD9ibjZuWwW5iG1G=8=fg@mail.gmail.com>
- <CAD=FV=XQL2FgU8dYwEpUQgwivkJ_XxM1JBzTnGV+EO_LvpvOFQ@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3 1/3] cpufreq: imx6q: check speed grades for i.MX6ULL
+Date: Thu, 28 Jun 2018 08:48:38 +0800
+Message-ID: <20180628004837.GB22683@dragon>
+References: <20180522062853.24799-1-sebastien.szymanski@armadeus.com>
+ <20180611053826.GC16091@dragon>
+ <2d63a25f-7265-7aa7-a7dc-fd2379240804@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAD=FV=XQL2FgU8dYwEpUQgwivkJ_XxM1JBzTnGV+EO_LvpvOFQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Doug Anderson <dianders@chromium.org>
-Cc: devicetree@vger.kernel.org, ryadav@codeaurora.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sandeep Panda <spanda@codeaurora.org>, dri-devel <dri-devel@lists.freedesktop.org>, Stephen Boyd <swboyd@chromium.org>, Abhinav Kumar <abhinavk@codeaurora.org>, "Kristian H. Kristensen" <hoegsberg@chromium.org>, freedreno <freedreno@lists.freedesktop.org>, chandanu@codeaurora.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2d63a25f-7265-7aa7-a7dc-fd2379240804@armadeus.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gMjcsIDIwMTggYXQgMjo0OCBQTSwgRG91ZyBBbmRlcnNvbiA8ZGlhbmRlcnNA
-Y2hyb21pdW0ub3JnPiB3cm90ZToKPiBIaSwKPgo+IE9uIFR1ZSwgSnVuIDI2LCAyMDE4IGF0IDEw
-OjI3IEFNLCBSb2IgQ2xhcmsgPHJvYmRjbGFya0BnbWFpbC5jb20+IHdyb3RlOgo+PiBPbiBUdWUs
-IEp1biAyNiwgMjAxOCBhdCAxMTo1NSBBTSwgRG91ZyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21p
-dW0ub3JnPiB3cm90ZToKPj4+IEhpLAo+Pj4KPj4+IE9uIE1vbiwgSnVuIDI1LCAyMDE4IGF0IDk6
-NDUgUE0sIFNhbmRlZXAgUGFuZGEgPHNwYW5kYUBjb2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4+Pj4g
-RnJvbTogQWJoaW5hdiBLdW1hciA8YWJoaW5hdmtAY29kZWF1cm9yYS5vcmc+Cj4+Pj4KPj4+PiBT
-ZXR0aW5nIHRoZSBEU0kgUExMIHNyYyBpbiBwcm9iZSBkb2Vzbid0IHByb3ZpZGUgdGhlIGNsb2Nr
-Cj4+Pj4gZHJpdmVyIHN1ZmZpY2llbnQgdGltZSB0byByZWNsYWltIHVudXNlZCBjbG9jayByZXNv
-dXJjZXMKPj4+PiBmcm9tIGNvcmVib290IHJlc3VsdGluZyBpbiB3YXJuaW5ncyBmcm9tIGNsb2Nr
-IGRyaXZlci4KPj4+Pgo+Pj4+IE1vdmUgdGhlIERTSSBQTEwgc3JjIHNldHRpbmcgdG8gbW9kZXNl
-dF9pbml0KCkgc28gdGhhdCB0aGUKPj4+PiBjbG9jayBkcml2ZXIgY2FuIGNsYWltIHVudXNlZCBk
-aXNwbGF5IGNsb2NrIHJlc291cmNlcyBiZWZvcmUKPj4+PiB0aGUgZGlzcGxheSBkcml2ZXIgcmVx
-dWVzdHMgZm9yIHRoZW0gYWdhaW4uCj4+Pgo+Pj4gSU1ITyB0aGlzIGlzIGEgYmFkIGRlc2lnbi4g
-IFNlYW4gYW5kIFN0ZXBoZW4gY2FuIGZlZWwgZnJlZSB0byBvdmVycmlkZQo+Pj4gbWUsIGJ1dCBJ
-IHRoaW5rIHRoZSBjbG9jayBkcml2ZXIgc2hvdWxkIGJlIGltcHJvdmVkIHRvIGhhbmRsZSB0aGlz
-Cj4+PiBjYXNlIGFuZCBub3QgcmVxdWlyZSB0aGUgY2xvY2sgdG8gZ2V0IGRpc2FibGVkIGJlZm9y
-ZSBMaW51eCBlbmFibGVzCj4+PiBpdC4KPj4+Cj4+Cj4+IEkgZXhwZXJpbWVudGVkIHdpdGggaXQg
-YSB3aGlsZSBiYWNrWzFdIChpbiB0aGlzIGNhc2Ugdy8gbGsgbGlnaHRpbmcgdXAKPj4gdGhlIGRp
-c3BsYXkpLiAgSW4gdGhhdCBjYXNlIEkgbmVlZGVkIGJvdGggdGhlIGNsayBhbmQgZ2RzYyBjb2Rl
-IHRvCj4+IHJlYWxpemUgdGhhdCBjbGtzL2dkc2MncyB3ZXJlIG9uIGF0IGJvb3QsIGFuZCBmaXh1
-cCB0aGUgcmVmY250IG9mIHRoZQo+PiBjbGtzIChhbmQgcGFyZW50IGNsb2NrcyBhbmQgc28gb24p
-LiAgQW5kIHRoZW4gd2hlbiBwcm9iZWQgdGhlIGRpc3BsYXkKPj4gZHJpdmVyIHdvdWxkIGNoZWNr
-IGlmIGNsb2NrcyB3ZXJlIGVuYWJsZWQgdG8gZGVjaWRlIHRvIHJlYWRiYWNrIHRoZQo+PiBzdGF0
-ZSBmcm9tIHRoZSBody4gIChNYXliZSB5b3UgY2FuIHNob3J0LWNpcmN1aXQgc29tZSBvZiB0aGF0
-IGlmIHlvdQo+PiBvbmx5IGNhcmUgYWJvdXQgRFNJIHBhbmVscyB3aXRoIGEgc2luZ2xlIGZpeGVk
-IHJlc29sdXRpb24sIGJ1dCBhcyBzb29uCj4+IGFzIGV4dGVybmFsIGRpc3BsYXlzIGNvbWUgaW50
-byB0aGUgcGljdHVyZSB5b3UgY2FuJ3QgYXNzdW1lIHNvIG11Y2gKPj4gYWJvdXQgdGhlIGh3ICBz
-dGF0ZS4pCj4+Cj4+IEJSLAo+PiAtUgo+Pgo+PiBbMV0gaHR0cHM6Ly9naXRodWIuY29tL2ZyZWVk
-cmVuby9rZXJuZWwtbXNtL2NvbW1pdHMvZGlzcGxheS1oYW5kb3Zlcgo+Cj4gSXQgc2VlbXMgbGlr
-ZSBzb21ldGhpbmcgbGlrZSB0aGF0IGlzIHRoZSByaWdodCByZWFsIHNvbHV0aW9uIGhlcmUsIGJ1
-dAo+IEkgZ3Vlc3Mgc29tZW9uZSBuZWVkcyB0byBzdGVwIHVwIGFuZCB3b3JrIG9uIGl0Lgo+Cgp5
-ZWFoLCBzYWRseSBJIGhhdmVuJ3QgZm91bmQgdGltZSB0byByZXZpc2l0IGl0IChraW5kYSBiZWVu
-IHNob3J0IG9uCnRpbWUgdG8gd29yayBvbiBkaXNwbGF5L2tlcm5lbCBzaWRlIG9mIHRoaW5ncy4u
-IGl0IHdvdWxkIGJlIGhlbHBmdWwgaWYKcWNvbSB3b3VsZCBzdG9wIGNvbWluZyBvdXQgd2l0aCBu
-ZXcgZ3B1J3Mgc28gb2Z0ZW4gOi1QKQoKQnV0IEkgYW0gcHJldHR5IHN1cmUgaWYgd2Ugd2FudCBh
-IGdlbmVyYWwgc29sdXRpb24gdGhhdCBjYW4gYWxzbyBkZWFsCncvIHNwbGFzaCBzY3JlZW4gb24g
-aG90LXBsdWdnYWJsZSBkaXNwbGF5LCBhbmQgbm90IGp1c3QgdGhlIHNpbXBsZXIKY2FzZSBvZiBm
-aXhlZCByZXNvbHV0aW9uIGRzaSBwYW5lbHMsIGl0IGlzIGdvaW5nIHRvIHJlcXVpcmUKY29vcGVy
-YXRpb24gYmV0d2VlbiBjbGsvZ2RzYyBhbmQgZGlzcGxheSBkcml2ZXIuCgo+IC4uLmluIGdlbmVy
-YWwgSSdtIHdhcnkgb2YgYW55IHBhdGNoIHRoYXQgd2lsbCBub3Qgd29yayB3aGVuCj4gImNsa19p
-Z25vcmVfdW51c2VkIiBpcyBwYXNzZWQgYXMgYSBjb21tYW5kIGxpbmUgcGFyYW1ldGVyLiAgSXQn
-cwo+IHVzZWZ1bCB0byBiZSBhYmxlIHRvIHVzZSB0aGlzIGNvbW1hbmQgbGluZSBwYXJhbWV0ZXIg
-Zm9yIGRlYnVnZ2luZwo+IHNvbWV0aW1lcyBhbmQgaXQgd291bGQgYmUgdW5mb3J0dW5hdGUgaWYg
-ZG9pbmcgc28gc3Bld2VkIGEgYnVuY2ggb2YKPiBleHRyYSB3YXJuaW5ncy4KCmZvciAiZnVsbCBk
-aXN0cm8iIGNvbmZpZyB3aGVyZSBhbGwgdGhlIGRpc3BsYXkgZHJpdmVycyBhcmUgYnVpbHQgYXMK
-bW9kdWxlcyBhbmQgcHJpb3IgdG8gcmVhbCBkaXNwbGF5IGRyaXZlciBsb2FkaW5nIHlvdSBoYXZl
-IGtlcm5lbAppbmhlcml0aW5nIHRoZSBkaXNwbGF5IHZpYSBlZmlmYiBvciBzaW1wbGVmYiwgSSB0
-aGluayB3ZSBuZWVkIHRvIGJlCmFibGUgdG8gZmxhZyBjZXJ0YWluIGNsb2NrcyBhbmQgcG93ZXIg
-ZG9tYWlucyAoYW5kIG9uIG90aGVyIHBsYXRmb3JtcywKcGVyaGFwcyByZWd1bGF0b3JzKSBhcyAi
-aWYgdGhlIGJvb3Rsb2FkZXIgbGVmdCB0aGlzIG9uLCBrZWVwIGl0IHRoYXQKd2F5Ii4uICBJIGd1
-ZXNzIGZvciBzaW1wbGUtZmIgd2UgY291bGQgcGVyaGFwcyBzb2x2ZSBpdCBieSBhdHRhY2hpbmcK
-cG93ZXIgZG9tYWlucyBhbmQgY2xrcyB0byB0aGUgc2ltcGxlLWZiIG5vZGUsIGJ1dCB0aGF0IGRv
-ZXNuJ3QgcmVhbGx5CndvcmsgZm9yIGVmaWZiLi4KCkJSLAotUgoKCj4KPgo+IE9uIGEgc2lkZSBu
-b2RlLCBpdCBhcHBlYXJzIHRoYXQgZXZlbiB3aXRob3V0ICR7U1VCSkVDVH0gcGF0Y2ggdGhlCj4g
-d2FybmluZ3Mgc2VlbSB0byBoYXZlIGdvbmUgYXdheSB3aXRoIHRoZSBsYXRlc3Qgc3RhY2sgb2Yg
-cGF0Y2hlcyBJJ3ZlCj4gYmVlbiB0ZXN0aW5nLiAgVGhlIHdhcm5pbmdzIGRvbid0IGV2ZW4gY29t
-ZSBiYWNrIHdpdGgKPiAiY2xrX2lnbm9yZV91bnVzZWQiLiAgSSBoYXZlbid0IHBlcnNvbmFsbHkg
-ZHVnIGludG8gd2h5LCBidXQgSSBmaWd1cmVkCj4gSSdkIG1lbnRpb24gaXQuCj4KPgo+IC1Eb3Vn
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Mon, Jun 25, 2018 at 10:01:44AM +0200, Sébastien Szymanski wrote:
+> Hi,
+> 
+> On 06/11/2018 07:38 AM, Shawn Guo wrote:
+> > On Tue, May 22, 2018 at 08:28:51AM +0200, Sébastien Szymanski wrote:
+> >> Check the max speed supported from the fuses for i.MX6ULL and update the
+> >> operating points table accordingly.
+> >>
+> >> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+> > 
+> > Acked-by: Shawn Guo <shawnguo@kernel.org>
+> > 
+> 
+> Thanks, but what about the two others patches ? Now that patch 1 is in
+> 4.18-rc1, should I resend the two others patches ? Should I merge them
+> together ?
+
+Yes, please.  That's what Viresh and Stefan were asking in the review.
+
+Shawn
