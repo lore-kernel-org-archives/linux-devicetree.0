@@ -1,62 +1,68 @@
-From: Luis Araneda <luaraneda@gmail.com>
-Subject: [RFC PATCH 2/5] dt-bindings: xilinx: Add missing zynq boards
-Date: Thu, 28 Jun 2018 01:42:02 -0400
-Message-ID: <20180628054205.17737-3-luaraneda@gmail.com>
-References: <20180628054205.17737-1-luaraneda@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180628054205.17737-1-luaraneda@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Luis Araneda <luaraneda@gmail.com>
+From: Mikko Perttunen <cyndis@kapsi.fi>
+Subject: Re: [PATCH 2/2] arm64: tegra: Add CPU nodes to Tegra194 device tree
+Date: Thu, 28 Jun 2018 08:57:23 +0300
+Message-ID: <4eacd53a-b128-241f-8284-14e315451c8e@kapsi.fi>
+References: <20180620122827.14165-1-mperttunen@nvidia.com>
+ <20180620122827.14165-2-mperttunen@nvidia.com>
+ <20180627165730.GA15867@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180627165730.GA15867@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jonathanh@nvidia.com, thierry.reding@gmail.com, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The bindings were missing when adding the device-tree files
-Also, improve description of existing boards
+On 27.06.2018 19:57, Rob Herring wrote:
+> On Wed, Jun 20, 2018 at 03:28:27PM +0300, Mikko Perttunen wrote:
+>> Add CPU and PSCI nodes to device tree. The Tegra194 SoC contains
+>> eight NVIDIA Carmel CPUs.
+>>
+>> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+>> ---
+>>   arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 40 +++++++++++++++++++
+>>   arch/arm64/boot/dts/nvidia/tegra194.dtsi       | 53 ++++++++++++++++++++++++++
+>>   2 files changed, 93 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+>> index ecb034177fc2..859ab5af17c1 100644
+>> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+>> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+>> @@ -229,6 +229,46 @@
+>>   		};
+>>   	};
+>>   
+>> +	cpus {
+>> +		cpu@0 {
+>> +			enable-method = "psci";
+>> +		};
+> 
+> Kind of strange to have this separated out. I guess you have non-PSCI
+> firmware too? In any case, unless things have changed, upstream is only
+> supporting spin-table or PSCI for arm64. So please combine this with the
+> rest of the cpu nodes.
 
-Signed-off-by: Luis Araneda <luaraneda@gmail.com>
----
- .../devicetree/bindings/arm/xilinx.txt        | 22 +++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+This was copied from older Tegras - we might have had some systems in 
+the past with non-PSCI firmware, but certainly don't have that anymore. 
+I'll combine the nodes.
 
-diff --git a/Documentation/devicetree/bindings/arm/xilinx.txt b/Documentation/devicetree/bindings/arm/xilinx.txt
-index b9043bc35..f1e911058 100644
---- a/Documentation/devicetree/bindings/arm/xilinx.txt
-+++ b/Documentation/devicetree/bindings/arm/xilinx.txt
-@@ -8,15 +8,33 @@ Required root node properties:
- 
- Additional compatible strings:
- 
--- Xilinx internal board cc108
-+- Xilinx CC108 board
-   "xlnx,zynq-cc108"
- 
--- Xilinx internal board zc770 with different FMC cards
-+- Avnet MicroZed board
-+  "avnet,zynq-microzed"
-+
-+- Adapteva Parallella board
-+  "adapteva,parallella"
-+
-+- Xilinx ZC702 board
-+  "xlnx,zynq-zc702"
-+
-+- Xilinx ZC706 board
-+  "xlnx,zynq-zc706"
-+
-+- Xilinx ZC770 board, with different FMC cards
-   "xlnx,zynq-zc770-xm010"
-   "xlnx,zynq-zc770-xm011"
-   "xlnx,zynq-zc770-xm012"
-   "xlnx,zynq-zc770-xm013"
- 
-+- Avnet ZedBoard board
-+  "avnet,zynq-zed"
-+
-+- Digilent Zybo board
-+  "digilent,zynq-zybo"
-+
- - Digilent Zybo Z7 board
-   "digilent,zynq-zybo-z7"
- 
--- 
-2.18.0
+Mikko
+
+> 
+> Rob
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
