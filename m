@@ -1,77 +1,57 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH 2/4] ARM: dts: imx6qdl-zii-rdu2: Populate RAVE SP EEPROM nodes
-Date: Wed, 27 Jun 2018 21:39:37 -0700
-Message-ID: <CAHQ1cqHpX_nz+xyyPg30kXsn2oTp2BBzk-qpCi3z3kezg1PTWg@mail.gmail.com>
-References: <20180628042424.12664-1-andrew.smirnov@gmail.com> <20180628042424.12664-3-andrew.smirnov@gmail.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH v3 09/24] drm/sun4i: Don't skip TCONs if
+ they don't have channel 0
+Date: Thu, 28 Jun 2018 06:45:56 +0200
+Message-ID: <2676604.ZYCNkuCdbT@jernej-laptop>
+References: <20180625120304.7543-1-jernej.skrabec@siol.net> <20180625120304.7543-10-jernej.skrabec@siol.net> <CAGb2v64EkVK+AEngEuadBzAZagyU7eyOhHhBh0iFrxS+-BbCYQ@mail.gmail.com>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180628042424.12664-3-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Lucas Stach <l.stach@pengutronix.de>, Chris Healy <cphealy@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBXGQ2HMQKGQEM4BVOEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v64EkVK+AEngEuadBzAZagyU7eyOhHhBh0iFrxS+-BbCYQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 27, 2018 at 9:24 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
->
-> ZII's RDU1s come with two EEPROMs attached to RAVE SP. Add
+Dne =C4=8Detrtek, 28. junij 2018 ob 03:51:31 CEST je Chen-Yu Tsai napisal(a=
+):
+> On Mon, Jun 25, 2018 at 8:02 PM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>=
+=20
+wrote:
+> > TV TCONs (channel 1 only) are always connected to TV or HDMI encoder.
+> > Because of that, all output endpoints on such TCON node will point to a
+> > encoder which is part of component framework.
+> >=20
+> > Correct current graph traversing algorithm in such way that it doesn't
+> > skip output enpoints with id 0 on TV TCONs.
+>=20
+> No. Our bindings say that endpoint 0 _is_ channel 0. For TCONs that don't
+> have channel 0, it must be skipped.
 
-Ugh, the description should read RDU2, not RDU1. Will fix in v2,
-tomorrow. Sorry about that.
+I'm not sure where this is stated. I read TCON binding again. Can you pleas=
+e=20
+point me to it?
 
-Thanks,
-Andrey Smirnov
+So on TV TCONs on R40 (without channel 0) TVE would be endpoint 1 and HDMI=
+=20
+endpoint 2 (or the other way around)?
 
-> corresponding nodes to make them availible.
->
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: cphealy@gmail.com
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> ---
->  arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-> index 19a075aee19e..e4630481d951 100644
-> --- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-> @@ -320,10 +320,28 @@
->         rave-sp {
->                 compatible = "zii,rave-sp-rdu2";
->                 current-speed = <1000000>;
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
->
->                 watchdog {
->                         compatible = "zii,rave-sp-watchdog";
->                 };
-> +
-> +               eeprom@a3 {
-> +                       compatible = "zii,rave-sp-eeprom";
-> +                       reg = <0xa3 0x4000>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       zii,eeprom-name = "dds-eeprom";
-> +               };
-> +
-> +               eeprom@a4 {
-> +                       compatible = "zii,rave-sp-eeprom";
-> +                       reg = <0xa4 0x4000>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       zii,eeprom-name = "main-eeprom";
-> +               };
->         };
->  };
->
-> --
-> 2.17.1
->
+Best regards,
+Jernej
+
+
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
