@@ -1,53 +1,60 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 4/6] iommu: Stop deferring probe at end of initcalls
-Date: Thu, 28 Jun 2018 14:43:42 -0600
-Message-ID: <20180628204344.13973-5-robh@kernel.org>
-References: <20180628204344.13973-1-robh@kernel.org>
+Subject: [PATCH v3 0/6] Make deferring probe forever optional
+Date: Thu, 28 Jun 2018 14:43:38 -0600
+Message-ID: <20180628204344.13973-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180628204344.13973-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Unsubscribe: <https://lists.linaro.org/mailman/options/boot-architecture>,
+ <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/boot-architecture/>
+List-Post: <mailto:boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linaro.org/mailman/listinfo/boot-architecture>,
+ <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Errors-To: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Sender: "boot-architecture" <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
 To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The IOMMU subsystem has its own mechanism to not defer probe if driver
-support is missing. Now that the driver core supports stopping deferring
-probe if drivers aren't built-in (and probed), use the driver core
-support so the IOMMU specific support can be removed.
-
-Acked-by: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
-Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-v3:
-  - Update to new function name
-
- drivers/iommu/of_iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-index 5c36a8b7656a..78ddf47dd67a 100644
---- a/drivers/iommu/of_iommu.c
-+++ b/drivers/iommu/of_iommu.c
-@@ -133,7 +133,7 @@ static int of_iommu_xlate(struct device *dev,
- 	 * a proper probe-ordering dependency mechanism in future.
- 	 */
- 	if (!ops)
--		return -EPROBE_DEFER;
-+		return driver_deferred_probe_check_state(dev);
-
- 	return ops->of_xlate(dev, iommu_spec);
- }
---
-2.17.1
+VGhpcyBzZXJpZXMgY2FtZSBvdXQgb2YgYSBkaXNjdXNzaW9uIG9uIHRoZSBBUk0gYm9vdC1hcmNo
+aXRlY3R1cmUKbGlzdFsxXSBhYm91dCBEVCBmb3J3YXJkcyBhbmQgYmFja3dhcmRzIGNvbXBhdGli
+aWxpdHkgaXNzdWVzLiBUaGVyZSBhcmUKaXNzdWVzIHdpdGggbmV3ZXIgRFRzIGJyZWFraW5nIG9u
+IG9sZGVyLCBzdGFibGUga2VybmVscy4gU29tZSBvZiB0aGVzZQphcmUgZGlmZmljdWx0IHRvIHNv
+bHZlLCBidXQgY2FzZXMgb2Ygb3B0aW9uYWwgZGV2aWNlcyBub3QgaGF2aW5nCmtlcm5lbCBzdXBw
+b3J0IHNob3VsZCBiZSBzb2x2YWJsZS4KCkkgdGVzdGVkIHRoaXMgb24gYSBSUGkzIEIgd2l0aCB0
+aGUgcGluY3RybCBkcml2ZXIgZm9yY2VkIG9mZi4gV2l0aCB0aGlzCmNoYW5nZSwgdGhlIE1NQy9T
+RCBhbmQgVUFSVCBkcml2ZXJzIGNhbiBmdW5jdGlvbiB3aXRob3V0IHRoZSBwaW5jdHJsCmRyaXZl
+ci4gSSBsZWZ0IHRoZSBkdHMgY2hhbmdlIG91dCB0aGlzIHRpbWUuCgp2MiBvZiB0aGlzIHNlcmll
+cyBjYW4gYmUgZm91bmQgaGVyZVsyXS4KClJvYgoKWzFdIGh0dHBzOi8vbGlzdHMubGluYXJvLm9y
+Zy9waXBlcm1haWwvYm9vdC1hcmNoaXRlY3R1cmUvMjAxOC1BcHJpbC8wMDA0NjYuaHRtbApbMl0g
+aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL3Byb2plY3QvbGttbC9saXN0Lz9zZXJp
+ZXM9MzQ3NDEzCgpSb2IgSGVycmluZyAoNik6CiAgZHJpdmVyIGNvcmU6IGFsbG93IHN0b3BwaW5n
+IGRlZmVycmVkIHByb2JlIGFmdGVyIGluaXQKICBkdC1iaW5kaW5nczogcGluY3RybDogYWRkIGEg
+J3BpbmN0cmwtdXNlLWRlZmF1bHQnIHByb3BlcnR5CiAgcGluY3RybDogU3VwcG9ydCBzdG9wcGlu
+ZyBkZWZlcnJlZCBwcm9iZSBhZnRlciBpbml0Y2FsbHMKICBpb21tdTogU3RvcCBkZWZlcnJpbmcg
+cHJvYmUgYXQgZW5kIG9mIGluaXRjYWxscwogIGlvbW11OiBSZW1vdmUgSU9NTVVfT0ZfREVDTEFS
+RQogIFBNIC8gRG9tYWluczogU3RvcCBkZWZlcnJpbmcgcHJvYmUgYXQgdGhlIGVuZCBvZiBpbml0
+Y2FsbAoKIC4uLi9hZG1pbi1ndWlkZS9rZXJuZWwtcGFyYW1ldGVycy50eHQgICAgICAgICB8ICA5
+ICsrKwogLi4uL2JpbmRpbmdzL3BpbmN0cmwvcGluY3RybC1iaW5kaW5ncy50eHQgICAgIHwgIDYg
+KysKIGRyaXZlcnMvYmFzZS9kZC5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDU3ICsr
+KysrKysrKysrKysrKysrKysKIGRyaXZlcnMvYmFzZS9wb3dlci9kb21haW4uYyAgICAgICAgICAg
+ICAgICAgICB8ICAyICstCiBkcml2ZXJzL2lvbW11L2FybS1zbW11LXYzLmMgICAgICAgICAgICAg
+ICAgICAgfCAgMiAtCiBkcml2ZXJzL2lvbW11L2FybS1zbW11LmMgICAgICAgICAgICAgICAgICAg
+ICAgfCAgNyAtLS0KIGRyaXZlcnMvaW9tbXUvZXh5bm9zLWlvbW11LmMgICAgICAgICAgICAgICAg
+ICB8ICAyIC0KIGRyaXZlcnMvaW9tbXUvaXBtbXUtdm1zYS5jICAgICAgICAgICAgICAgICAgICB8
+ICAzIC0KIGRyaXZlcnMvaW9tbXUvbXNtX2lvbW11LmMgICAgICAgICAgICAgICAgICAgICB8ICAy
+IC0KIGRyaXZlcnMvaW9tbXUvb2ZfaW9tbXUuYyAgICAgICAgICAgICAgICAgICAgICB8IDIxICst
+LS0tLS0KIGRyaXZlcnMvaW9tbXUvcWNvbV9pb21tdS5jICAgICAgICAgICAgICAgICAgICB8ICAy
+IC0KIGRyaXZlcnMvaW9tbXUvcm9ja2NoaXAtaW9tbXUuYyAgICAgICAgICAgICAgICB8ICAyIC0K
+IGRyaXZlcnMvcGluY3RybC9kZXZpY2V0cmVlLmMgICAgICAgICAgICAgICAgICB8IDE1ICsrKy0t
+CiBpbmNsdWRlL2FzbS1nZW5lcmljL3ZtbGludXgubGRzLmggICAgICAgICAgICAgfCAgMiAtCiBp
+bmNsdWRlL2xpbnV4L2RldmljZS5oICAgICAgICAgICAgICAgICAgICAgICAgfCAgMiArCiBpbmNs
+dWRlL2xpbnV4L29mX2lvbW11LmggICAgICAgICAgICAgICAgICAgICAgfCAgNCAtLQogMTYgZmls
+ZXMgY2hhbmdlZCwgODggaW5zZXJ0aW9ucygrKSwgNTAgZGVsZXRpb25zKC0pCgotLQoyLjE3LjEK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KYm9vdC1hcmNo
+aXRlY3R1cmUgbWFpbGluZyBsaXN0CmJvb3QtYXJjaGl0ZWN0dXJlQGxpc3RzLmxpbmFyby5vcmcK
+aHR0cHM6Ly9saXN0cy5saW5hcm8ub3JnL21haWxtYW4vbGlzdGluZm8vYm9vdC1hcmNoaXRlY3R1
+cmUK
