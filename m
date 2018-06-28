@@ -1,29 +1,37 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH RESEND 0/3] K2G: mmc: Update mmc dt node to use
-Date: Thu, 28 Jun 2018 09:45:18 +0530
-Message-ID: <7199d72f-9980-c700-6ebe-3f8927b64f62@ti.com>
-References: <20180622101617.11157-1-kishon@ti.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH v3] dmaengine: rcar-dmac: don't use DMAC error interrupt
+Date: Thu, 28 Jun 2018 09:51:23 +0530
+Message-ID: <20180628042123.GJ22377@vkoul-mobl>
+References: <87lgbgswl5.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180622101617.11157-1-kishon@ti.com>
+Content-Disposition: inline
+In-Reply-To: <87lgbgswl5.wl%kuninori.morimoto.gx@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <ssantosh@kernel.org>
-Cc: robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Dan Williams <dan.j.williams@intel.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran@ksquared.org.uk>, Geert Uytterhoeven <geert+renesas@glider.be>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Santosh,
-
-On Friday 22 June 2018 03:46 PM, Kishon Vijay Abraham I wrote:
-> Update mmc dt node to use sdhci-omap binding instead of omap_hsmmc
-> binding.
+On 15-06-18, 00:53, Kuninori Morimoto wrote:
 > 
-> I've also updated keystone_defconfig to enable CONFIG_MMC_SDHCI_OMAP.
-> Everyone who use a custom .config should also enable
-> CONFIG_MMC_SDHCI_OMAP for MMC to work.
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> 
+> rcar-dmac has 2 types of interrupt, 1) error IRQ (for all),
+> 2) IRQ for each channels.
+> If error happens on some channels, the error IRQ will be handled
+> by 1), and "all" channels will be restarted.
+> But in this design, error handling itself will be problem for
+> non error channel users.
+> This patch removes 1) handler, and handles error IRQ on 2)
+> 
+> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+> [Kuninori: updated patch to adjust DMACHCR/DMAOR]
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Tested-by: Nguyen Viet Dung <nv-dung@jinso.co.jp>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Can this series be merged?
+Applied, thanks
 
-Thanks
-Kishon
+-- 
+~Vinod
