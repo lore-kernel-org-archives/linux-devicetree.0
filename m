@@ -1,173 +1,115 @@
-Return-Path: <vkoul@kernel.org>
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v5 4/6] input: pm8941-pwrkey: Abstract register offsets and event code
-Date: Thu, 28 Jun 2018 20:38:48 +0530
-Message-Id: <20180628150850.15358-5-vkoul@kernel.org>
-In-Reply-To: <20180628150850.15358-1-vkoul@kernel.org>
-References: <20180628150850.15358-1-vkoul@kernel.org>
-To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Return-Path: <SRS0=aZFw=JO=gmail.com=mr.ray.clinton@kernel.org>
+MIME-Version: 1.0
+From: Ray Clinton <mr.ray.clinton@gmail.com>
+Date: Thu, 28 Jun 2018 12:16:32 -0400
+Message-ID: <CAPMnawtNMm4sZmU1Z1Laa81tC6KJBGaKn0K_sPxxbPsD+KngOA@mail.gmail.com>
+Subject: of_n_{addr,size}_cells(struct device_node *np) - Allow for returning
+ value of node passed in
+Content-Type: multipart/alternative; boundary="00000000000090823f056fb60e39"
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-In order to support resin thru the pwrkey driver (they are very
-similar in nature) we need to abstract the handling in this driver.
+--00000000000090823f056fb60e39
+Content-Type: text/plain; charset="UTF-8"
 
-First we abstract pull_up_bit and status_bit along in driver data.
-The event code sent for key events is quiried from DT.
+Hi,
 
-Since the device can be child of pon lookup regmap and reg from
-parent if lookup fails (we are child).
+I only just started doing anything with kernel development, this is my
+first email on this list, so I'm sorry if I ask a dumb question or mess up
+on any rules of etiquette, I'm trying to follow them.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/input/misc/pm8941-pwrkey.c | 61 ++++++++++++++++++++++++++++++--------
- 1 file changed, 48 insertions(+), 13 deletions(-)
+I'm sure there is a reason for this, but of_n_{addr,size}_cells() will only
+return a parent's #address-cells or #size-cells values. I realize
+of_property_read_u32(np, "#address-cells", &cells), for example, could be
+called on the current node to get that value, but is seems to be that
+of_n_{addr,size}_cells() is a little bit of a misleading name; I expected
+it to return the above mentioned values of the node passed in, and if that
+was not explicitly defined it would look to the parents. I ask because I
+ran into a problem when working on a driver and trying to include an .dtsi
+that contained a node with different values for #address-cells and
+#size-cells; I could never get the correct values returned, I only got the
+parents'. So my questions are
 
-diff --git a/drivers/input/misc/pm8941-pwrkey.c b/drivers/input/misc/pm8941-pwrkey.c
-index 18ad956454f1..2047e34c0982 100644
---- a/drivers/input/misc/pm8941-pwrkey.c
-+++ b/drivers/input/misc/pm8941-pwrkey.c
-@@ -20,6 +20,7 @@
- #include <linux/log2.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/reboot.h>
- #include <linux/regmap.h>
-@@ -42,6 +43,10 @@
- #define PON_DBC_CTL			0x71
- #define  PON_DBC_DELAY_MASK		0x7
- 
-+struct pm8941_data {
-+	unsigned int pull_up_bit;
-+	unsigned int status_bit;
-+};
- 
- struct pm8941_pwrkey {
- 	struct device *dev;
-@@ -52,6 +57,9 @@ struct pm8941_pwrkey {
- 
- 	unsigned int revision;
- 	struct notifier_block reboot_notifier;
-+
-+	u32 code;
-+	const struct pm8941_data *data;
- };
- 
- static int pm8941_reboot_notify(struct notifier_block *nb,
-@@ -124,7 +132,8 @@ static irqreturn_t pm8941_pwrkey_irq(int irq, void *_data)
- 	if (error)
- 		return IRQ_HANDLED;
- 
--	input_report_key(pwrkey->input, KEY_POWER, !!(sts & PON_KPDPWR_N_SET));
-+	input_report_key(pwrkey->input, pwrkey->code,
-+			 sts & pwrkey->data->status_bit);
- 	input_sync(pwrkey->input);
- 
- 	return IRQ_HANDLED;
-@@ -157,6 +166,7 @@ static int pm8941_pwrkey_probe(struct platform_device *pdev)
- {
- 	struct pm8941_pwrkey *pwrkey;
- 	bool pull_up;
-+	struct device *parent;
- 	u32 req_delay;
- 	int error;
- 
-@@ -175,12 +185,30 @@ static int pm8941_pwrkey_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	pwrkey->dev = &pdev->dev;
-+	pwrkey->data = of_device_get_match_data(&pdev->dev);
- 
--	pwrkey->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	parent = pdev->dev.parent;
-+	pwrkey->regmap = dev_get_regmap(parent, NULL);
- 	if (!pwrkey->regmap) {
--		dev_err(&pdev->dev, "failed to locate regmap\n");
--		return -ENODEV;
-+		/*
-+		 * we failed to get regmap for parent
-+		 * Check if we are child on pon and read regmap and reg from
-+		 * parent
-+		 */
-+		pwrkey->regmap = dev_get_regmap(parent->parent, NULL);
-+		if (!pwrkey->regmap) {
-+			dev_err(&pdev->dev, "failed to locate regmap\n");
-+			return -ENODEV;
-+		}
-+
-+		error = of_property_read_u32(parent->of_node,
-+					     "reg", &pwrkey->baseaddr);
-+	} else {
-+		error = of_property_read_u32(pdev->dev.of_node, "reg",
-+					     &pwrkey->baseaddr);
- 	}
-+	if (error)
-+		return error;
- 
- 	pwrkey->irq = platform_get_irq(pdev, 0);
- 	if (pwrkey->irq < 0) {
-@@ -188,11 +216,6 @@ static int pm8941_pwrkey_probe(struct platform_device *pdev)
- 		return pwrkey->irq;
- 	}
- 
--	error = of_property_read_u32(pdev->dev.of_node, "reg",
--				     &pwrkey->baseaddr);
--	if (error)
--		return error;
--
- 	error = regmap_read(pwrkey->regmap, pwrkey->baseaddr + PON_REV2,
- 			    &pwrkey->revision);
- 	if (error) {
-@@ -200,13 +223,20 @@ static int pm8941_pwrkey_probe(struct platform_device *pdev)
- 		return error;
- 	}
- 
-+	error = of_property_read_u32(pdev->dev.of_node, "linux,code",
-+				     &pwrkey->code);
-+	if (error) {
-+		dev_info(&pdev->dev, "no linux,code assuming power%d\n", error);
-+		pwrkey->code = KEY_POWER;
-+	}
-+
- 	pwrkey->input = devm_input_allocate_device(&pdev->dev);
- 	if (!pwrkey->input) {
- 		dev_dbg(&pdev->dev, "unable to allocate input device\n");
- 		return -ENOMEM;
- 	}
- 
--	input_set_capability(pwrkey->input, EV_KEY, KEY_POWER);
-+	input_set_capability(pwrkey->input, EV_KEY, pwrkey->code);
- 
- 	pwrkey->input->name = "pm8941_pwrkey";
- 	pwrkey->input->phys = "pm8941_pwrkey/input0";
-@@ -225,8 +255,8 @@ static int pm8941_pwrkey_probe(struct platform_device *pdev)
- 
- 	error = regmap_update_bits(pwrkey->regmap,
- 				   pwrkey->baseaddr + PON_PULL_CTL,
--				   PON_KPDPWR_PULL_UP,
--				   pull_up ? PON_KPDPWR_PULL_UP : 0);
-+				   pwrkey->data->pull_up_bit,
-+				   pull_up ? pwrkey->data->pull_up_bit : 0);
- 	if (error) {
- 		dev_err(&pdev->dev, "failed to set pull: %d\n", error);
- 		return error;
-@@ -271,8 +301,13 @@ static int pm8941_pwrkey_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct pm8941_data pwrkey_data = {
-+	.pull_up_bit = PON_KPDPWR_PULL_UP,
-+	.status_bit = PON_KPDPWR_N_SET,
-+};
-+
- static const struct of_device_id pm8941_pwr_key_id_table[] = {
--	{ .compatible = "qcom,pm8941-pwrkey" },
-+	{ .compatible = "qcom,pm8941-pwrkey", .data = &pwrkey_data },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, pm8941_pwr_key_id_table);
--- 
-2.14.4
+1) If the methods are not meant to return the values for #address-cells and
+#size-cells should it be named something like of_n_parent_{addr,size}_cells?
+2) If they are meant to return the values for the current node could there
+be a check that looks something like this?:
+
+int of_n_addr_cells(struct device_node *np)
+{
+u32 cells;
+
+*       if (!of_property_read_u32(np, "#address-cells", &cells))*
+*               return cells;*
+
+do {
+if (np->parent)
+np = np->parent;
+if (!of_property_read_u32(np, "#address-cells", &cells))
+return cells;
+} while (np->parent);
+/* No #address-cells property for the root node */
+return OF_ROOT_NODE_ADDR_CELLS_DEFAULT;
+}
+
+I realize I could be missing something and that this isn't an important
+change, but I just thought I'd ask. Thanks so much!
+
+--00000000000090823f056fb60e39
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><span style=3D"text-decoration-style:initial;text-decorati=
+on-color:initial;float:none;display:inline">Hi,</span><div style=3D"text-de=
+coration-style:initial;text-decoration-color:initial"><br></div><div style=
+=3D"text-decoration-style:initial;text-decoration-color:initial">I only jus=
+t started doing anything with kernel development, this is my first email on=
+ this list, so I&#39;m sorry if I ask a dumb question or mess up on any rul=
+es of etiquette, I&#39;m trying to follow them.=C2=A0</div><div style=3D"te=
+xt-decoration-style:initial;text-decoration-color:initial"><br></div><div s=
+tyle=3D"text-decoration-style:initial;text-decoration-color:initial">I&#39;=
+m sure there is a reason for this, but of_n_{addr,size}_cells() will only r=
+eturn a parent&#39;s #address-cells or #size-cells values. I realize of_pro=
+perty_read_u32(np, &quot;#address-cells&quot;, &amp;cells), for example, co=
+uld be called on the current node to get that value, but is seems to be tha=
+t of_n_{addr,size}_cells() is a little bit of a misleading name; I expected=
+ it to return the above mentioned values of the node passed in, and if that=
+ was not explicitly defined it would look to the parents. I ask because I r=
+an into a problem when working on a driver and trying to include an .dtsi t=
+hat contained a node with different values for #address-cells and #size-cel=
+ls; I could never get the correct values returned, I only got the parents&#=
+39;. So my questions are</div><div style=3D"text-decoration-style:initial;t=
+ext-decoration-color:initial"><br></div><div style=3D"text-decoration-style=
+:initial;text-decoration-color:initial">1) If the methods are not meant to =
+return the values for #address-cells and #size-cells should it be named som=
+ething like of_n_parent_{addr,size}_cells?</div><div style=3D"text-decorati=
+on-style:initial;text-decoration-color:initial">2) If they are meant to ret=
+urn the values for the current node could there be a check that looks somet=
+hing like this?:</div><div style=3D"text-decoration-style:initial;text-deco=
+ration-color:initial"><br></div><div style=3D"text-decoration-style:initial=
+;text-decoration-color:initial"><div>int of_n_addr_cells(struct device_node=
+ *np)</div><div>{</div><div><span style=3D"white-space:pre-wrap">	</span>u3=
+2 cells;</div><div><br></div><div><div style=3D"background-color:rgb(255,25=
+5,255);text-decoration-style:initial;text-decoration-color:initial"><i>=C2=
+=A0 =C2=A0 =C2=A0 =C2=A0if (!of_property_read_u32(np, &quot;#address-cells&=
+quot;, &amp;cells))</i></div><div style=3D"background-color:rgb(255,255,255=
+);text-decoration-style:initial;text-decoration-color:initial"><i>=C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return cells;</i></div></di=
+v><div style=3D"background-color:rgb(255,255,255);text-decoration-style:ini=
+tial;text-decoration-color:initial"><br></div><div><span style=3D"white-spa=
+ce:pre-wrap">	</span>do {</div><div><span style=3D"white-space:pre-wrap">		=
+</span>if (np-&gt;parent)</div><div><span style=3D"white-space:pre-wrap">		=
+	</span>np =3D np-&gt;parent;</div><div><span style=3D"white-space:pre-wrap=
+">		</span>if (!of_property_read_u32(np, &quot;#address-cells&quot;, &amp;c=
+ells))</div><div><span style=3D"white-space:pre-wrap">			</span>return cell=
+s;</div><div><span style=3D"white-space:pre-wrap">	</span>} while (np-&gt;p=
+arent);</div><div><span style=3D"white-space:pre-wrap">	</span>/* No #addre=
+ss-cells property for the root node */</div><div><span style=3D"white-space=
+:pre-wrap">	</span>return OF_ROOT_NODE_ADDR_CELLS_DEFAULT;</div><div>}</div=
+></div><div style=3D"text-decoration-style:initial;text-decoration-color:in=
+itial"><br></div><div style=3D"text-decoration-style:initial;text-decoratio=
+n-color:initial">I realize I could be missing something and that this isn&#=
+39;t an important change, but I just thought I&#39;d ask. Thanks so much!</=
+div><br></div>
+
+--00000000000090823f056fb60e39--
