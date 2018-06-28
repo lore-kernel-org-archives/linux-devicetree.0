@@ -1,43 +1,109 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: serial: imx: clarify rs485 support usage
-Date: Thu, 28 Jun 2018 13:30:40 -0300
-Message-ID: <CAOMZO5DfJZUayL_JCH1UKSXYQTraoBTK7w3YHif6aLz0nFdh3g@mail.gmail.com>
-References: <e9beff38e9035c2f33d691f362e37d8e62aaa660.1530170732.git.baruch@tkos.co.il>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e9beff38e9035c2f33d691f362e37d8e62aaa660.1530170732.git.baruch@tkos.co.il>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?Lothar_Wa=C3=9Fmann?= <LW@karo-electronics.de>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: [PATCHv2 1/2] ARM: dts: imx53: PPD: Add fixed-regulator information
+Date: Thu, 28 Jun 2018 18:36:38 +0200
+Message-ID: <20180628163639.1078-1-sebastian.reichel@collabora.co.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Baruch,
+Add information about 3V3 power rail to avoid kernel warnings,
+that dummy regulators have been added.
 
-On Thu, Jun 28, 2018 at 4:25 AM, Baruch Siach <baruch@tkos.co.il> wrote:
-> The i.MX UART peripheral uses the RST_B signal as input, and CTS_B as
-> output. This is just like the DCE role in RS-232. This is true
-> regardless of the "DTE mode" setting of this peripheral.
->
-> As a result, rs485 support hardware must use the CTS_B signal to control
-> the RS-485 transceiver. This is in contrast to generic rs485 kernel
-> code, documentation, and DT property names that consistently refer to
-> the RTS as transceiver control signal.
->
-> Add a note in the DT binding document about that, to reduce the
-> confusion somewhat.
->
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+---
+Changes since PATCHv1:
+ * split usbphy rename into its own patch
+ * drop useless regulator-boot-on
+---
+ arch/arm/boot/dts/imx53-ppd.dts | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-Yes, this is helpful:
-
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+diff --git a/arch/arm/boot/dts/imx53-ppd.dts b/arch/arm/boot/dts/imx53-ppd.dts
+index 4ddef5abda56..daed979b6e40 100644
+--- a/arch/arm/boot/dts/imx53-ppd.dts
++++ b/arch/arm/boot/dts/imx53-ppd.dts
+@@ -140,6 +140,25 @@
+ 		regulator-always-on;
+ 	};
+ 
++	reg_3v3: regulator-3v3 {
++		/* TPS54320 */
++		compatible = "regulator-fixed";
++		regulator-name = "3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	reg_3v3_lcd: regulator-3v3-lcd {
++		/* MIC2009 */
++		compatible = "regulator-fixed";
++		regulator-name = "LCD_3V3";
++		vin-supply = <&reg_3v3>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
+ 	pwm_bl: backlight {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&pwm2 0 50000>;
+@@ -154,6 +173,7 @@
+ 				     234 237 239 242 244 247 249 252 255>;
+ 		default-brightness-level = <0>;
+ 		enable-gpios = <&gpio5 29 GPIO_ACTIVE_HIGH>;
++		power-supply = <&reg_3v3_lcd>;
+ 	};
+ 
+ 	leds {
+@@ -200,6 +220,7 @@
+ 
+ 	usbphy2: usbphy2 {
+ 		compatible = "usb-nop-xceiv";
++		vcc-supply = <&reg_3v3>;
+ 		reset-gpios = <&gpio4 4 GPIO_ACTIVE_LOW>;
+ 		clock-names = "main_clk";
+ 		clock-frequency = <24000000>;
+@@ -210,6 +231,7 @@
+ 
+ 	usbphy3: usbphy3 {
+ 		compatible = "usb-nop-xceiv";
++		vcc-supply = <&reg_3v3>;
+ 		reset-gpios = <&gpio2 19 GPIO_ACTIVE_LOW>;
+ 		clock-names = "main_clk";
+ 
+@@ -221,6 +243,7 @@
+ 
+ 	panel-lvds0 {
+ 		compatible = "nvd,9128";
++		power-supply = <&reg_3v3_lcd>;
+ 
+ 		port {
+ 			panel_in_lvds0: endpoint {
+@@ -230,6 +253,14 @@
+ 	};
+ };
+ 
++&usbphy0 {
++	vcc-supply = <&reg_3v3>;
++};
++
++&usbphy1 {
++	vcc-supply = <&reg_3v3>;
++};
++
+ &audmux {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_audmux>;
+@@ -409,6 +440,7 @@
+ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_fec>;
++	phy-supply = <&reg_3v3>;
+ 	phy-mode = "rmii";
+ 	phy-reset-gpios = <&gpio2 16 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+-- 
+2.18.0
