@@ -1,15 +1,15 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 09/24] drm/sun4i: Don't skip TCONs if
- they don't have channel 0
-Date: Thu, 28 Jun 2018 09:51:31 +0800
-Message-ID: <CAGb2v64EkVK+AEngEuadBzAZagyU7eyOhHhBh0iFrxS+-BbCYQ@mail.gmail.com>
-References: <20180625120304.7543-1-jernej.skrabec@siol.net> <20180625120304.7543-10-jernej.skrabec@siol.net>
+Subject: Re: [PATCH v3 06/24] drm/sun4i: Fix releasing node when
+ enumerating enpoints
+Date: Thu, 28 Jun 2018 09:53:36 +0800
+Message-ID: <CAGb2v65dNvqcWa7MUMesrEeDGfEmd0xPpKQmbqJ60_FHe=Y_JA@mail.gmail.com>
+References: <20180625120304.7543-1-jernej.skrabec@siol.net> <20180625120304.7543-7-jernej.skrabec@siol.net>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBOP62DMQKGQEUZ6NCBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBN772DMQKGQE7SQFJMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180625120304.7543-10-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+In-Reply-To: <20180625120304.7543-7-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -21,14 +21,14 @@ Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob H
 List-Id: devicetree@vger.kernel.org
 
 On Mon, Jun 25, 2018 at 8:02 PM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> TV TCONs (channel 1 only) are always connected to TV or HDMI encoder.
-> Because of that, all output endpoints on such TCON node will point to a
-> encoder which is part of component framework.
+> sun4i_drv_add_endpoints() has a memory leak since it uses of_node_put()
+> when remote is equal to NULL and does nothing when remote has a valid
+> pointer.
 >
-> Correct current graph traversing algorithm in such way that it doesn't
-> skip output enpoints with id 0 on TV TCONs.
+> Invert the logic to fix memory leak.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 
-No. Our bindings say that endpoint 0 _is_ channel 0. For TCONs that don't
-have channel 0, it must be skipped.
+Given this is a fix, it should have Fixes and stable tags.
 
 ChenYu
