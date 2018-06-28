@@ -1,113 +1,99 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V2] ARM: dts: imx6sll-evk: enable usdhc3 slot
-Date: Thu, 28 Jun 2018 09:04:27 +0800
-Message-ID: <1530147867-24159-1-git-send-email-Anson.Huang@nxp.com>
+From: Honghui Zhang <honghui.zhang@mediatek.com>
+Subject: Re: [PATCH 1/4] PCI: mediatek: fixup mtk_pcie_find_port logical
+Date: Thu, 28 Jun 2018 09:12:07 +0800
+Message-ID: <1530148327.28284.1.camel@mhfsdcap03>
+References: <1530091298-28120-1-git-send-email-honghui.zhang@mediatek.com>
+         <1530091298-28120-2-git-send-email-honghui.zhang@mediatek.com>
+         <CAHp75Ve2N_Bt8FvX8xCx3JtQ+ozZE=isfsKp9swY+86Cg-78XQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Ve2N_Bt8FvX8xCx3JtQ+ozZE=isfsKp9swY+86Cg-78XQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-pci@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, yingjoe.chen@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, ryder.lee@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, YT Shen <yt.shen@mediatek.com>, sean.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On i.MX6SLL EVK board, SD3 slot can be used for
-WiFi and other SD accessories, enable it.
+On Wed, 2018-06-27 at 19:35 +0300, Andy Shevchenko wrote:
+> On Wed, Jun 27, 2018 at 12:21 PM,  <honghui.zhang@mediatek.com> wrote:
+> > From: Honghui Zhang <honghui.zhang@mediatek.com>
+> >
+> > Mediatek's host controller have two slots, each have it's own control
+> > registers. The host driver need to identify which slot was connected
+> > in order to access the device's configuration space. There's problem
+> > for current host driver to find out which slot was connected to for
+> > a given EP device.
+> >
+> > Assuming each slot have connect with one EP device as below:
+> >
+> >                 host bridge
+> >   bus 0 --> __________|_______
+> >            |                  |
+> >            |                  |
+> >          slot 0             slot 1
+> >   bus 1 -->|        bus 2 --> |
+> >            |                  |
+> >          EP 0               EP 1
+> >
+> > While PCI emulation, system software will scan all the PCI device
+> > starting from devfn 0. So it will get the proper port for slot0 and
+> > slot1 device when using PCI_SLOT(devfn) for match. But it will get
+> > the wrong slot for EP1: The devfn will be start from 0 when scanning
+> > EP1 behind slot1, it will get port0 since the PCI_SLOT(EP1) is match
+> > for port0's slot value. So the host driver should not using EP's devfn
+> > but the slot's devfn(the slot which EP was connected to) for match.
+> >
+> > This patch fix the mtk_pcie_find_port's logical by using the slot's
+> > devfn for match.
+> 
+> 
+> > +       list_for_each_entry(port, &pcie->ports, list) {
+> > +               if (bus->number == 0 && port->slot == PCI_SLOT(devfn)) {
+> >                         return port;
+> > +               } else if (bus->number != 0) {
+> 
+> You can do it like (no need 'else')
+> 
+> if (...)
+>  return ...;
+> if (bus->number) {
+>  ...
+> }
+> 
+> > +                       pbus = bus;
+> > +                       do {
+> > +                               dev = pbus->self;
+> > +                               if (port->slot == PCI_SLOT(dev->devfn))
+> > +                                       return port;
+> > +
+> > +                               pbus = dev->bus;
+> > +                       } while (dev->bus->number != 0);
+> 
+> This can be rewritten like
+> 
+> pbus = bus;
+> while (pbus->number) {
+>  dev = ...;
+>  ...
+>  pbus = dev->bus;
+> }
+> 
+> and no need for if (bus->number) anymore.
+> 
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6sll-evk.dts | 65 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
+Hi, Andy, thanks very much for your advise, I will change it in the next
+version.
 
-diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-evk.dts
-index 2217c40..1a60c8d 100644
---- a/arch/arm/boot/dts/imx6sll-evk.dts
-+++ b/arch/arm/boot/dts/imx6sll-evk.dts
-@@ -84,6 +84,17 @@
- 		gpio = <&gpio3 30 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 	};
-+
-+	reg_sd3_vmmc: regulator-sd3-vmmc {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_sd3_vmmc>;
-+		regulator-name = "SD3_WIFI";
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3000000>;
-+		gpio = <&gpio4 4 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
- };
- 
- &cpu0 {
-@@ -236,7 +247,25 @@
- 	status = "okay";
- };
- 
-+&usdhc3 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
-+	cd-gpios = <&gpio3 22 GPIO_ACTIVE_LOW>;
-+	keep-power-in-suspend;
-+	enable-sdio-wakeup;
-+	vmmc-supply = <&reg_sd3_vmmc>;
-+	status = "okay";
-+};
-+
- &iomuxc {
-+	pinctrl_reg_sd3_vmmc: sd3vmmcgrp {
-+		fsl,pins = <
-+			MX6SLL_PAD_KEY_COL6__GPIO4_IO04 0x17059
-+		>;
-+	};
-+
- 	pinctrl_usb_otg1_vbus: vbus1grp {
- 		fsl,pins = <
- 			MX6SLL_PAD_KEY_COL4__GPIO4_IO00 0x17059
-@@ -307,6 +336,42 @@
- 		>;
- 	};
- 
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD3_CMD__SD3_CMD		0x17061
-+			MX6SLL_PAD_SD3_CLK__SD3_CLK		0x13061
-+			MX6SLL_PAD_SD3_DATA0__SD3_DATA0		0x17061
-+			MX6SLL_PAD_SD3_DATA1__SD3_DATA1		0x17061
-+			MX6SLL_PAD_SD3_DATA2__SD3_DATA2		0x17061
-+			MX6SLL_PAD_SD3_DATA3__SD3_DATA3		0x17061
-+			MX6SLL_PAD_REF_CLK_32K__GPIO3_IO22	0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_100mhz: usdhc3grp_100mhz {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD3_CMD__SD3_CMD		0x170a1
-+			MX6SLL_PAD_SD3_CLK__SD3_CLK		0x130a1
-+			MX6SLL_PAD_SD3_DATA0__SD3_DATA0		0x170a1
-+			MX6SLL_PAD_SD3_DATA1__SD3_DATA1		0x170a1
-+			MX6SLL_PAD_SD3_DATA2__SD3_DATA2		0x170a1
-+			MX6SLL_PAD_SD3_DATA3__SD3_DATA3		0x170a1
-+			MX6SLL_PAD_REF_CLK_32K__GPIO3_IO22	0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_200mhz: usdhc3grp_200mhz {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD3_CMD__SD3_CMD		0x170e9
-+			MX6SLL_PAD_SD3_CLK__SD3_CLK		0x130f9
-+			MX6SLL_PAD_SD3_DATA0__SD3_DATA0		0x170e9
-+			MX6SLL_PAD_SD3_DATA1__SD3_DATA1		0x170e9
-+			MX6SLL_PAD_SD3_DATA2__SD3_DATA2		0x170e9
-+			MX6SLL_PAD_SD3_DATA3__SD3_DATA3		0x170e9
-+			MX6SLL_PAD_REF_CLK_32K__GPIO3_IO22	0x17059
-+		>;
-+	};
-+
- 	pinctrl_i2c1: i2c1grp {
- 		fsl,pins = <
- 			MX6SLL_PAD_I2C1_SCL__I2C1_SCL	 0x4001b8b1
--- 
-2.7.4
+thanks.
+> > +               }
+> > +       }
+> >
+> >         return NULL;
+> >  }
+> > --
+> > 2.6.4
+> >
+> 
+> 
+> 
