@@ -1,73 +1,41 @@
 Return-Path: <SRS0=qqtW=JO=pengutronix.de=mfe@kernel.org>
 From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 10/22] [media] tvp5150: split reset/enable routine
-Date: Thu, 28 Jun 2018 18:20:42 +0200
-Message-Id: <20180628162054.25613-11-m.felsch@pengutronix.de>
+Subject: [PATCH 02/22] [media] tvp5150: fix switch exit in set control handler
+Date: Thu, 28 Jun 2018 18:20:34 +0200
+Message-Id: <20180628162054.25613-3-m.felsch@pengutronix.de>
 In-Reply-To: <20180628162054.25613-1-m.felsch@pengutronix.de>
 References: <20180628162054.25613-1-m.felsch@pengutronix.de>
 To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: p.zabel@pengutronix.de, afshin.nasser@gmail.com, javierm@redhat.com, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+The function only consists of a single switch case block without a
+default case. Unsupported control requests are indicated by the -EINVAL
+return code trough the last return statement at the end of the function. So
+exiting just the switch case block returns the -EINVAL error code but the
+hue control is supported and a zero should be returned instead.
 
-To trigger standard autodetection only the reset part of the routine
-is necessary during probe(). Split this out to make it callable on its own.
+Replace the break by a 'return 0' to fix this behaviour.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-[m.felsch@pengutronix.de: adapt commit message]
-[m.felsch@pengutronix.de: add tvp5150_enable() to tvp5150_s_stream()]
+Fixes: d183e4efcae8 ("[media] v4l: tvp5150: Add missing break in set
+control handler")
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- drivers/media/i2c/tvp5150.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ drivers/media/i2c/tvp5150.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index 895bc2bfb1d1..284694c21556 100644
+index da7ad455d4a8..509ac243ea97 100644
 --- a/drivers/media/i2c/tvp5150.c
 +++ b/drivers/media/i2c/tvp5150.c
-@@ -796,9 +796,6 @@ static v4l2_std_id tvp5150_read_std(struct v4l2_subdev *sd)
- 
- static int tvp5150_reset(struct v4l2_subdev *sd, u32 val)
- {
--	struct tvp5150 *decoder = to_tvp5150(sd);
--	v4l2_std_id std;
--
- 	/* Initializes TVP5150 to its default values */
- 	tvp5150_write_inittab(sd, tvp5150_init_default);
- 
-@@ -808,12 +805,20 @@ static int tvp5150_reset(struct v4l2_subdev *sd, u32 val)
- 	/* Selects decoder input */
- 	tvp5150_selmux(sd);
- 
--	/* Initializes TVP5150 to stream enabled values */
--	tvp5150_write_inittab(sd, tvp5150_init_enable);
--
- 	/* Initialize image preferences */
- 	v4l2_ctrl_handler_setup(&decoder->hdl);
- 
-+	return 0;
-+}
-+
-+static int tvp5150_enable(struct v4l2_subdev *sd)
-+{
-+	struct tvp5150 *decoder = to_tvp5150(sd);
-+	v4l2_std_id std;
-+
-+	/* Initializes TVP5150 to stream enabled values */
-+	tvp5150_write_inittab(sd, tvp5150_init_enable);
-+
- 	if (decoder->norm == V4L2_STD_ALL)
- 		std = tvp5150_read_std(sd);
- 	else
-@@ -1138,6 +1143,8 @@ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
- 	       TVP5150_MISC_CTL_CLOCK_OE;
- 
- 	if (enable) {
-+		tvp5150_enable(sd);
-+
- 		/*
- 		 * Enable the YCbCr and clock outputs. In discrete sync mode
- 		 * (non-BT.656) additionally enable the the sync outputs.
+@@ -828,7 +828,7 @@ static int tvp5150_s_ctrl(struct v4l2_ctrl *ctrl)
+ 		return 0;
+ 	case V4L2_CID_HUE:
+ 		tvp5150_write(sd, TVP5150_HUE_CTL, ctrl->val);
+-		break;
++		return 0;
+ 	case V4L2_CID_TEST_PATTERN:
+ 		decoder->enable = ctrl->val ? false : true;
+ 		tvp5150_selmux(sd);
 -- 
 2.17.1
