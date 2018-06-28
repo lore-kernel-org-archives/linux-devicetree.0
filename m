@@ -1,7 +1,7 @@
 From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH 4/4] ARM: dts: imx6qdl-zii-rdu2: Populate RAVE SP power button node
-Date: Wed, 27 Jun 2018 21:24:24 -0700
-Message-ID: <20180628042424.12664-5-andrew.smirnov@gmail.com>
+Subject: [PATCH 2/4] ARM: dts: imx6qdl-zii-rdu2: Populate RAVE SP EEPROM nodes
+Date: Wed, 27 Jun 2018 21:24:22 -0700
+Message-ID: <20180628042424.12664-3-andrew.smirnov@gmail.com>
 References: <20180628042424.12664-1-andrew.smirnov@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180628042424.12664-1-andrew.smirnov@gmail.com>
@@ -10,8 +10,8 @@ To: Shawn Guo <shawnguo@kernel.org>
 Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Lucas Stach <l.stach@pengutronix.de>, cphealy@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RAVE SP found on RDU2 implements power button control compatible with
-the rave-sp-pwrbutton driver. Add a node to make it availible.
+ZII's RDU1s come with two EEPROMs attached to RAVE SP. Add
+corresponding nodes to make them availible.
 
 Cc: Fabio Estevam <fabio.estevam@nxp.com>
 Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
@@ -25,23 +25,41 @@ Cc: devicetree@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 ---
- arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-index 48da4b15da09..869dfd8431a1 100644
+index 19a075aee19e..e4630481d951 100644
 --- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-@@ -331,6 +331,10 @@
- 			compatible = "zii,rave-sp-backlight";
- 		};
+@@ -320,10 +320,28 @@
+ 	rave-sp {
+ 		compatible = "zii,rave-sp-rdu2";
+ 		current-speed = <1000000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
  
-+		pwrbutton {
-+			compatible = "zii,rave-sp-pwrbutton";
+ 		watchdog {
+ 			compatible = "zii,rave-sp-watchdog";
+ 		};
++
++		eeprom@a3 {
++			compatible = "zii,rave-sp-eeprom";
++			reg = <0xa3 0x4000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			zii,eeprom-name = "dds-eeprom";
 +		};
 +
- 		eeprom@a3 {
- 			compatible = "zii,rave-sp-eeprom";
- 			reg = <0xa3 0x4000>;
++		eeprom@a4 {
++			compatible = "zii,rave-sp-eeprom";
++			reg = <0xa4 0x4000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			zii,eeprom-name = "main-eeprom";
++		};
+ 	};
+ };
+ 
 -- 
 2.17.1
