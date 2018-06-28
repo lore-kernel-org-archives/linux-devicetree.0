@@ -1,430 +1,275 @@
-Return-Path: <SRS0=eG0j=JN=bitwise.fi=anssi.hannula@kernel.org>
-From: Anssi Hannula <anssi.hannula@bitwise.fi>
-Subject: [PATCH 2/3] can: xilinx_can: refactor code in preparation for CAN FD support
-Date: Wed, 27 Jun 2018 17:34:13 +0300
-Message-Id: <20180627143414.7114-3-anssi.hannula@bitwise.fi>
-In-Reply-To: <20180627143414.7114-1-anssi.hannula@bitwise.fi>
-References: <20180627143414.7114-1-anssi.hannula@bitwise.fi>
-To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Michal Simek <michal.simek@xilinx.com>, linux-can@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Return-Path: <SRS0=d689=JO=gmail.com=tmaimon77@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqJCYPLw+jqx+7Cy=cXFFb-CNp=Ezew7FNT=cfAndqWe5A@mail.gmail.com>
+References: <20180624124155.82412-1-tmaimon77@gmail.com> <20180624124155.82412-2-tmaimon77@gmail.com>
+ <20180625171417.GA16379@rob-hp-laptop> <CAP6Zq1h-M6YDS67pkgHy-GMmiVk1D-RScLgDyG65JQM+S35rEQ@mail.gmail.com>
+ <CAL_JsqJCYPLw+jqx+7Cy=cXFFb-CNp=Ezew7FNT=cfAndqWe5A@mail.gmail.com>
+From: Tomer Maimon <tmaimon77@gmail.com>
+Date: Thu, 28 Jun 2018 14:01:07 +0300
+Message-ID: <CAP6Zq1iWcpfP5h9GT0BRhdo-DQ3B_rZCi3FP-8xFRVMCsU-y=w@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] dt-binding: hwmon: Add NPCM7xx PWM and Fan
+ controller documentation
+Content-Type: multipart/alternative; boundary="000000000000fd04a9056fb1a57d"
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Avi Fishman <avifishman70@gmail.com>, Nancy Yuen <yuenn@google.com>, Brendan Higgins <brendanhiggins@google.com>, Patrick Venture <venture@google.com>, Joel Stanley <joel@jms.id.au>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux HWMON List <linux-hwmon@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Xilinx CAN FD cores are different enough from the previous Zynq and AXI
-CAN cores that some refactoring of the driver is needed.
+--000000000000fd04a9056fb1a57d
+Content-Type: text/plain; charset="UTF-8"
 
-This commit contains most of the required refactoring to existing code
-and should not alter behavior on existing supported HW.
+Hi Rob,
 
-The changes are:
+On 26 June 2018 at 18:03, Rob Herring <robh@kernel.org> wrote:
 
-- Reading and writing to frame registers is parametrized to allow
-  reading/writing a different frame in the future.
+> On Mon, Jun 25, 2018 at 4:20 PM Tomer Maimon <tmaimon77@gmail.com> wrote:
+> >
+> > Hi Rob,
+> >
+> >
+> > On 25 June 2018 at 20:14, Rob Herring <robh@kernel.org> wrote:
+> >>
+> >> On Sun, Jun 24, 2018 at 03:41:54PM +0300, Tomer Maimon wrote:
+> >> > Added device tree binding documentation for Nuvoton BMC
+> >> > NPCM7xx Pulse Width Modulation (PWM)  and Fan tach controller.
+> >> > The PWM controller can support upto 8 PWM output ports.
+> >> > The Fan tach controller can support upto 16 tachometer inputs.
+> >> >
+> >> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> >> > ---
+> >> >  .../devicetree/bindings/hwmon/npcm750-pwm-fan.txt  | 84
+> ++++++++++++++++++++++
+> >> >  1 file changed, 84 insertions(+)
+> >> >  create mode 100644 Documentation/devicetree/
+> bindings/hwmon/npcm750-pwm-fan.txt
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
+> b/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
+> >> > new file mode 100644
+> >> > index 000000000000..a9eacda34f92
+> >> > --- /dev/null
+> >> > +++ b/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
+> >> > @@ -0,0 +1,84 @@
+> >> > +Nuvoton NPCM7xx PWM and Fan Tacho controller device driver
+> >>
+> >> Bindings are for h/w, not drivers.
+> >>
+> >> > +
+> >> > +The NPCM7xx has two identical Pulse-width modulation (PWM)
+> controller modules,
+> >> > +Each PWM module has four PWM controller outputs, Totally 8 PWM
+> controller outputs.
+> >> > +
+> >> > +The NPCM7xx has eight identical Fan tachometer controller modules,
+> >> > +Each Fan module has two Fan controller inputs, Totally 16 Fan
+> controller inputs.
+> >>
+> >> Have you looked at other fan ctrlr bindings?f This looks like similar
+> >> h/w to ASpeed. Really, I'd like to see a common doc that describes the
+> >
+> >
+> > We do not have the same H/W as Aspeed, I believe in the near future we
+> will need to add
+> > more DT properties that will used only in the NPCM7xx module.
+>
+> I didn't say it was the same. Both are multi-channel PWMs with tach
+> inputs. Presumably, they can attach to the same types of fans as there
+> are only a limited number of types of fans and none of them are
+> specific to any fan controller.
+>
+> >> structure and common properties.
+> >
+> >
+> > what do you mean by common structure and common properties?
+>
+> When we have multiple bindings for the same class of device/hw, we
+> define all the common parts in a common binding doc. This often
+> doesn't happen at first, so we end up with a variety of bindings until
+> we see some commonality.
+>
+> In this case, for structure, having sub-nodes for fans. As fans are
+> not specific to the controllers, their node should not be defined by
+> the controller binding. It's also how you describe the fan type,
+> number of fans, the PWM connections, the tach connections, etc.
+>
+> Rob
+>
 
-- Slightly misleading (as it did not specify *all* the interrupts
-  supported by the HW) XCAN_INTR_ALL is replaced with specifying the
-  interrupts inline in interrupt enabling code.
+Thanks a lot for the clarification, indeed we can do a common binding doc.
+is it O.K. for now to stay with the same binding document (V5 - that  i
+will send toady),
+and later on we will work on creating common binding document for the
+fan-nodes.
 
-- xcan_devtype_data.caps is renamed to xcan_devtype_data.flags to allow
-  for flags that define alternative functionality (e.g. mailboxes vs.
-  FIFO) instead of purely additive capabilities.
+also I will like to know how to represent the fan-nodes properties in
+the common
+binding document,
+the property name "aspeed,fan-tach-ch" is something related Aspeed.
 
-- can_bittiming_const is added to xcan_devtype_data as CAN FD cores will
-  have wider setting ranges.
+Do I need to ask the Aspeed hwmon maintainer to modify his driver to
+use fan-tach-ch
+property?
+or to mention both fan-tach properties (NPCM and Aspeed) in the  common
+binding document ?
 
-- bus_clk clock name is now determined through xcan_devtype_data instead
-  of comparing compatible string in probe().
+Thanks,
 
-- xcan_devtype_data is added to xcan_priv to allow flag checks after
-  probe().
+Tomer
 
-- XCAN_CAP_WATERMARK is now XCAN_FLAG_TXFEMP. CAN FD cores have
-  watermark support but no TXFEMP interrupt, which is what we are
-  actually interested in.
+--000000000000fd04a9056fb1a57d
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-- xcan_start_xmit() is split to in two parts to prepare for TX mailboxes
-  instead of FIFO in CAN FD cores.
+<div dir=3D"ltr">Hi Rob,<div class=3D"gmail_extra"><br><div class=3D"gmail_=
+quote">On 26 June 2018 at 18:03, Rob Herring <span dir=3D"ltr">&lt;<a href=
+=3D"mailto:robh@kernel.org" target=3D"_blank">robh@kernel.org</a>&gt;</span=
+> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;bo=
+rder-left:1px #ccc solid;padding-left:1ex"><div class=3D"HOEnZb"><div class=
+=3D"h5">On Mon, Jun 25, 2018 at 4:20 PM Tomer Maimon &lt;<a href=3D"mailto:=
+tmaimon77@gmail.com">tmaimon77@gmail.com</a>&gt; wrote:<br>
+&gt;<br>
+&gt; Hi Rob,<br>
+&gt;<br>
+&gt;<br>
+&gt; On 25 June 2018 at 20:14, Rob Herring &lt;<a href=3D"mailto:robh@kerne=
+l.org">robh@kernel.org</a>&gt; wrote:<br>
+&gt;&gt;<br>
+&gt;&gt; On Sun, Jun 24, 2018 at 03:41:54PM +0300, Tomer Maimon wrote:<br>
+&gt;&gt; &gt; Added device tree binding documentation for Nuvoton BMC<br>
+&gt;&gt; &gt; NPCM7xx Pulse Width Modulation (PWM)=C2=A0 and Fan tach contr=
+oller.<br>
+&gt;&gt; &gt; The PWM controller can support upto 8 PWM output ports.<br>
+&gt;&gt; &gt; The Fan tach controller can support upto 16 tachometer inputs=
+.<br>
+&gt;&gt; &gt;<br>
+&gt;&gt; &gt; Signed-off-by: Tomer Maimon &lt;<a href=3D"mailto:tmaimon77@g=
+mail.com">tmaimon77@gmail.com</a>&gt;<br>
+&gt;&gt; &gt; ---<br>
+&gt;&gt; &gt;=C2=A0 .../devicetree/bindings/hwmon/<wbr>npcm750-pwm-fan.txt=
+=C2=A0 | 84 ++++++++++++++++++++++<br>
+&gt;&gt; &gt;=C2=A0 1 file changed, 84 insertions(+)<br>
+&gt;&gt; &gt;=C2=A0 create mode 100644 Documentation/devicetree/<wbr>bindin=
+gs/hwmon/npcm750-pwm-<wbr>fan.txt<br>
+&gt;&gt; &gt;<br>
+&gt;&gt; &gt; diff --git a/Documentation/devicetree/<wbr>bindings/hwmon/npc=
+m750-pwm-<wbr>fan.txt b/Documentation/devicetree/<wbr>bindings/hwmon/npcm75=
+0-pwm-<wbr>fan.txt<br>
+&gt;&gt; &gt; new file mode 100644<br>
+&gt;&gt; &gt; index 000000000000..a9eacda34f92<br>
+&gt;&gt; &gt; --- /dev/null<br>
+&gt;&gt; &gt; +++ b/Documentation/devicetree/<wbr>bindings/hwmon/npcm750-pw=
+m-<wbr>fan.txt<br>
+&gt;&gt; &gt; @@ -0,0 +1,84 @@<br>
+&gt;&gt; &gt; +Nuvoton NPCM7xx PWM and Fan Tacho controller device driver<b=
+r>
+&gt;&gt;<br>
+&gt;&gt; Bindings are for h/w, not drivers.<br>
+&gt;&gt;<br>
+&gt;&gt; &gt; +<br>
+&gt;&gt; &gt; +The NPCM7xx has two identical Pulse-width modulation (PWM) c=
+ontroller modules,<br>
+&gt;&gt; &gt; +Each PWM module has four PWM controller outputs, Totally 8 P=
+WM controller outputs.<br>
+&gt;&gt; &gt; +<br>
+&gt;&gt; &gt; +The NPCM7xx has eight identical Fan tachometer controller mo=
+dules,<br>
+&gt;&gt; &gt; +Each Fan module has two Fan controller inputs, Totally 16 Fa=
+n controller inputs.<br>
+&gt;&gt;<br>
+&gt;&gt; Have you looked at other fan ctrlr bindings?f This looks like simi=
+lar<br>
+&gt;&gt; h/w to ASpeed. Really, I&#39;d like to see a common doc that descr=
+ibes the<br>
+&gt;<br>
+&gt;<br>
+&gt; We do not have the same H/W as Aspeed, I believe in the near future we=
+ will need to add<br>
+&gt; more DT properties that will used only in the NPCM7xx module.<br>
+<br>
+</div></div>I didn&#39;t say it was the same. Both are multi-channel PWMs w=
+ith tach<br>
+inputs. Presumably, they can attach to the same types of fans as there<br>
+are only a limited number of types of fans and none of them are<br>
+specific to any fan controller.<br>
+<span class=3D""><br>
+&gt;&gt; structure and common properties.<br>
+&gt;<br>
+&gt;<br>
+&gt; what do you mean by common structure and common properties?<br>
+<br>
+</span>When we have multiple bindings for the same class of device/hw, we<b=
+r>
+define all the common parts in a common binding doc. This often<br>
+doesn&#39;t happen at first, so we end up with a variety of bindings until<=
+br>
+we see some commonality.<br>
+<br>
+In this case, for structure, having sub-nodes for fans. As fans are<br>
+not specific to the controllers, their node should not be defined by<br>
+the controller binding. It&#39;s also how you describe the fan type,<br>
+number of fans, the PWM connections, the tach connections, etc.<br>
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+Rob<br></font></span></blockquote><div><br></div><div>Thanks a lot for the =
+clarification, indeed we can do a common binding doc.</div><div>is it O.K. =
+for now to stay with the same binding document (V5 - that=C2=A0 i will send=
+ toady),<br></div><div>and later on we will work on creating=C2=A0<span sty=
+le=3D"font-size:small;background-color:rgb(255,255,255);text-decoration-sty=
+le:initial;text-decoration-color:initial;float:none;display:inline">common =
+binding document for the fan-nodes.</span></div><div><span style=3D"font-si=
+ze:small;background-color:rgb(255,255,255);text-decoration-style:initial;te=
+xt-decoration-color:initial;float:none;display:inline"><br></span></div><di=
+v>also I will like to know how to represent the=C2=A0<span style=3D"font-si=
+ze:small;background-color:rgb(255,255,255);text-decoration-style:initial;te=
+xt-decoration-color:initial;float:none;display:inline">fan-nodes properties=
+ in the=C2=A0<span style=3D"text-decoration-style:initial;text-decoration-c=
+olor:initial;float:none;display:inline">common binding document,</span></sp=
+an></div><div>the property name &quot;<font color=3D"#000000"><span style=
+=3D"font-family:&quot;Ubuntu Mono&quot;,monospace;font-size:0.9em;white-spa=
+ce:pre">aspeed,fan-tach-ch&quot; </span><font face=3D"arial, helvetica, san=
+s-serif"><span style=3D"white-space:pre">is </span><span style=3D"white-spa=
+ce:pre">something </span><span style=3D"white-space:pre">related Aspeed.</s=
+pan></font></font></div><div><font color=3D"#000000" face=3D"Ubuntu Mono, m=
+onospace"><span style=3D"font-size:0.9em;white-space:pre"><br></span></font=
+></div><div><font color=3D"#000000"><font face=3D"arial, helvetica, sans-se=
+rif"><span style=3D"white-space:pre">Do I need to ask the Aspeed hwmon main=
+tainer to modify his driver to use  </span></font><span style=3D"background=
+-color:rgb(255,255,255);text-decoration-style:initial;text-decoration-color=
+:initial;float:none;display:inline"><span style=3D"font-family:&quot;Ubuntu=
+ Mono&quot;,monospace;font-size:11.7px;white-space:pre">fan-tach-ch </span>=
+<span style=3D"white-space:pre"><font face=3D"arial, helvetica, sans-serif"=
+>property?</font></span></span><font face=3D"arial, helvetica, sans-serif">=
+=C2=A0</font></font></div><div><font color=3D"#000000"><span style=3D"white=
+-space:pre"><font face=3D"arial, helvetica, sans-serif">or to mention both =
+fan-tach</font><font face=3D"Ubuntu Mono, monospace"><span style=3D"font-si=
+ze:11.7px"> </span></font></span><span style=3D"font-family:&quot;Ubuntu Mo=
+no&quot;,monospace;font-size:0.9em;white-space:pre"><span style=3D"color:rg=
+b(34,34,34);font-family:arial,sans-serif;font-size:small;white-space:normal=
+;background-color:rgb(255,255,255);text-decoration-style:initial;text-decor=
+ation-color:initial;float:none;display:inline">properties<span>=C2=A0(NPCM =
+and Aspeed) in the=C2=A0
 
-Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
-Cc: Michal Simek <michal.simek@xilinx.com>
----
- drivers/net/can/xilinx_can.c | 204 ++++++++++++++++++++++++-------------------
- 1 file changed, 116 insertions(+), 88 deletions(-)
+<span style=3D"font-size:small;background-color:rgb(255,255,255);text-decor=
+ation-style:initial;text-decoration-color:initial;float:none;display:inline=
+">common binding document</span>=C2=A0?</span></span></span></font></div><d=
+iv><span style=3D"color:rgb(34,34,34);font-family:arial,sans-serif;font-siz=
+e:small;white-space:normal;background-color:rgb(255,255,255);text-decoratio=
+n-style:initial;text-decoration-color:initial;float:none;display:inline"><s=
+pan></span></span>
 
-diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c
-index ce9cf9b..615223b 100644
---- a/drivers/net/can/xilinx_can.c
-+++ b/drivers/net/can/xilinx_can.c
-@@ -51,16 +51,15 @@ enum xcan_reg {
- 	XCAN_ISR_OFFSET		= 0x1C, /* Interrupt status */
- 	XCAN_IER_OFFSET		= 0x20, /* Interrupt enable */
- 	XCAN_ICR_OFFSET		= 0x24, /* Interrupt clear */
--	XCAN_TXFIFO_ID_OFFSET	= 0x30,/* TX FIFO ID */
--	XCAN_TXFIFO_DLC_OFFSET	= 0x34, /* TX FIFO DLC */
--	XCAN_TXFIFO_DW1_OFFSET	= 0x38, /* TX FIFO Data Word 1 */
--	XCAN_TXFIFO_DW2_OFFSET	= 0x3C, /* TX FIFO Data Word 2 */
--	XCAN_RXFIFO_ID_OFFSET	= 0x50, /* RX FIFO ID */
--	XCAN_RXFIFO_DLC_OFFSET	= 0x54, /* RX FIFO DLC */
--	XCAN_RXFIFO_DW1_OFFSET	= 0x58, /* RX FIFO Data Word 1 */
--	XCAN_RXFIFO_DW2_OFFSET	= 0x5C, /* RX FIFO Data Word 2 */
-+	XCAN_TXFIFO_OFFSET	= 0x30, /* TX FIFO base */
-+	XCAN_RXFIFO_OFFSET	= 0x50, /* RX FIFO base */
- };
- 
-+#define XCAN_FRAME_ID_OFFSET(frame_base)	((frame_base) + 0x00)
-+#define XCAN_FRAME_DLC_OFFSET(frame_base)	((frame_base) + 0x04)
-+#define XCAN_FRAME_DW1_OFFSET(frame_base)	((frame_base) + 0x08)
-+#define XCAN_FRAME_DW2_OFFSET(frame_base)	((frame_base) + 0x0C)
-+
- /* CAN register bit masks - XCAN_<REG>_<BIT>_MASK */
- #define XCAN_SRR_CEN_MASK		0x00000002 /* CAN enable */
- #define XCAN_SRR_RESET_MASK		0x00000001 /* Soft Reset the CAN core */
-@@ -101,11 +100,6 @@ enum xcan_reg {
- #define XCAN_IDR_RTR_MASK		0x00000001 /* Remote TX request */
- #define XCAN_DLCR_DLC_MASK		0xF0000000 /* Data length code */
- 
--#define XCAN_INTR_ALL		(XCAN_IXR_TXOK_MASK | XCAN_IXR_BSOFF_MASK |\
--				 XCAN_IXR_WKUP_MASK | XCAN_IXR_SLP_MASK | \
--				 XCAN_IXR_RXNEMP_MASK | XCAN_IXR_ERROR_MASK | \
--				 XCAN_IXR_RXOFLW_MASK | XCAN_IXR_ARBLST_MASK)
--
- /* CAN register bit shift - XCAN_<REG>_<BIT>_SHIFT */
- #define XCAN_BTR_SJW_SHIFT		7  /* Synchronous jump width */
- #define XCAN_BTR_TS2_SHIFT		4  /* Time segment 2 */
-@@ -118,6 +112,15 @@ enum xcan_reg {
- #define XCAN_FRAME_MAX_DATA_LEN		8
- #define XCAN_TIMEOUT			(1 * HZ)
- 
-+/* TX-FIFO-empty interrupt available */
-+#define XCAN_FLAG_TXFEMP	0x0001
-+
-+struct xcan_devtype_data {
-+	unsigned int flags;
-+	const struct can_bittiming_const *bittiming_const;
-+	const char *bus_clk_name;
-+};
-+
- /**
-  * struct xcan_priv - This definition define CAN driver instance
-  * @can:			CAN private data structure.
-@@ -133,6 +136,7 @@ enum xcan_reg {
-  * @irq_flags:			For request_irq()
-  * @bus_clk:			Pointer to struct clk
-  * @can_clk:			Pointer to struct clk
-+ * @devtype:			Device type specific constants
-  */
- struct xcan_priv {
- 	struct can_priv can;
-@@ -149,6 +153,7 @@ struct xcan_priv {
- 	unsigned long irq_flags;
- 	struct clk *bus_clk;
- 	struct clk *can_clk;
-+	struct xcan_devtype_data devtype;
- };
- 
- /* CAN Bittiming constants as per Xilinx CAN specs */
-@@ -164,11 +169,6 @@ static const struct can_bittiming_const xcan_bittiming_const = {
- 	.brp_inc = 1,
- };
- 
--#define XCAN_CAP_WATERMARK	0x0001
--struct xcan_devtype_data {
--	unsigned int caps;
--};
--
- /**
-  * xcan_write_reg_le - Write a value to the device register little endian
-  * @priv:	Driver private data structure
-@@ -329,7 +329,11 @@ static int xcan_chip_start(struct net_device *ndev)
- 		return err;
- 
- 	/* Enable interrupts */
--	priv->write_reg(priv, XCAN_IER_OFFSET, XCAN_INTR_ALL);
-+	priv->write_reg(priv, XCAN_IER_OFFSET,
-+			XCAN_IXR_TXOK_MASK | XCAN_IXR_BSOFF_MASK |
-+			XCAN_IXR_WKUP_MASK | XCAN_IXR_SLP_MASK |
-+			XCAN_IXR_RXNEMP_MASK | XCAN_IXR_ERROR_MASK |
-+			XCAN_IXR_RXOFLW_MASK | XCAN_IXR_ARBLST_MASK);
- 
- 	/* Check whether it is loopback mode or normal mode  */
- 	if (priv->can.ctrlmode & CAN_CTRLMODE_LOOPBACK) {
-@@ -390,33 +394,15 @@ static int xcan_do_set_mode(struct net_device *ndev, enum can_mode mode)
- }
- 
- /**
-- * xcan_start_xmit - Starts the transmission
-- * @skb:	sk_buff pointer that contains data to be Txed
-- * @ndev:	Pointer to net_device structure
-- *
-- * This function is invoked from upper layers to initiate transmission. This
-- * function uses the next available free txbuff and populates their fields to
-- * start the transmission.
-- *
-- * Return: 0 on success and failure value on error
-+ * xcan_write_frame - Write a frame to HW
-+ * @skb:		sk_buff pointer that contains data to be Txed
-+ * @frame_offset:	Register offset to write the frame to
-  */
--static int xcan_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-+static void xcan_write_frame(struct xcan_priv *priv, struct sk_buff *skb,
-+			     int frame_offset)
- {
--	struct xcan_priv *priv = netdev_priv(ndev);
--	struct can_frame *cf = (struct can_frame *)skb->data;
- 	u32 id, dlc, data[2] = {0, 0};
--	unsigned long flags;
--
--	if (can_dropped_invalid_skb(ndev, skb))
--		return NETDEV_TX_OK;
--
--	/* Check if the TX buffer is full */
--	if (unlikely(priv->read_reg(priv, XCAN_SR_OFFSET) &
--			XCAN_SR_TXFLL_MASK)) {
--		netif_stop_queue(ndev);
--		netdev_err(ndev, "BUG!, TX FIFO full when queue awake!\n");
--		return NETDEV_TX_BUSY;
--	}
-+	struct can_frame *cf = (struct can_frame *)skb->data;
- 
- 	/* Watch carefully on the bit sequence */
- 	if (cf->can_id & CAN_EFF_FLAG) {
-@@ -452,23 +438,40 @@ static int xcan_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	if (cf->can_dlc > 4)
- 		data[1] = be32_to_cpup((__be32 *)(cf->data + 4));
- 
-+	priv->write_reg(priv, XCAN_FRAME_ID_OFFSET(frame_offset), id);
-+	/* If the CAN frame is RTR frame this write triggers transmission */
-+	priv->write_reg(priv, XCAN_FRAME_DLC_OFFSET(frame_offset), dlc);
-+	if (!(cf->can_id & CAN_RTR_FLAG)) {
-+		priv->write_reg(priv, XCAN_FRAME_DW1_OFFSET(frame_offset), data[0]);
-+		/* If the CAN frame is Standard/Extended frame this
-+		 * write triggers transmission
-+		 */
-+		priv->write_reg(priv, XCAN_FRAME_DW2_OFFSET(frame_offset), data[1]);
-+	}
-+}
-+
-+/**
-+ * xcan_start_xmit_fifo - Starts the transmission (FIFO mode)
-+ *
-+ * Return: 0 on success, -ENOSPC if FIFO is full.
-+ */
-+static int xcan_start_xmit_fifo(struct sk_buff *skb, struct net_device *ndev)
-+{
-+	struct xcan_priv *priv = netdev_priv(ndev);
-+	unsigned long flags;
-+
-+	/* Check if the TX buffer is full */
-+	if (unlikely(priv->read_reg(priv, XCAN_SR_OFFSET) &
-+			XCAN_SR_TXFLL_MASK))
-+		return -ENOSPC;
-+
- 	can_put_echo_skb(skb, ndev, priv->tx_head % priv->tx_max);
- 
- 	spin_lock_irqsave(&priv->tx_lock, flags);
- 
- 	priv->tx_head++;
- 
--	/* Write the Frame to Xilinx CAN TX FIFO */
--	priv->write_reg(priv, XCAN_TXFIFO_ID_OFFSET, id);
--	/* If the CAN frame is RTR frame this write triggers tranmission */
--	priv->write_reg(priv, XCAN_TXFIFO_DLC_OFFSET, dlc);
--	if (!(cf->can_id & CAN_RTR_FLAG)) {
--		priv->write_reg(priv, XCAN_TXFIFO_DW1_OFFSET, data[0]);
--		/* If the CAN frame is Standard/Extended frame this
--		 * write triggers tranmission
--		 */
--		priv->write_reg(priv, XCAN_TXFIFO_DW2_OFFSET, data[1]);
--	}
-+	xcan_write_frame(priv, skb, XCAN_TXFIFO_OFFSET);
- 
- 	/* Clear TX-FIFO-empty interrupt for xcan_tx_interrupt() */
- 	if (priv->tx_max > 1)
-@@ -480,6 +483,35 @@ static int xcan_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 
- 	spin_unlock_irqrestore(&priv->tx_lock, flags);
- 
-+	return 0;
-+}
-+
-+/**
-+ * xcan_start_xmit - Starts the transmission
-+ * @skb:	sk_buff pointer that contains data to be Txed
-+ * @ndev:	Pointer to net_device structure
-+ *
-+ * This function is invoked from upper layers to initiate transmission. This
-+ * function uses the next available free txbuff and populates their fields to
-+ * start the transmission.
-+ *
-+ * Return: 0 on success and failure value on error
-+ */
-+static int xcan_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-+{
-+	int ret;
-+
-+	if (can_dropped_invalid_skb(ndev, skb))
-+		return NETDEV_TX_OK;
-+
-+	ret = xcan_start_xmit_fifo(skb, ndev);
-+
-+	if (ret < 0) {
-+		netdev_err(ndev, "BUG!, TX full when queue awake!\n");
-+		netif_stop_queue(ndev);
-+		return NETDEV_TX_BUSY;
-+	}
-+
- 	return NETDEV_TX_OK;
- }
- 
-@@ -487,13 +519,14 @@ static int xcan_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-  * xcan_rx -  Is called from CAN isr to complete the received
-  *		frame  processing
-  * @ndev:	Pointer to net_device structure
-+ * @frame_base:	Register offset to the frame to be read
-  *
-  * This function is invoked from the CAN isr(poll) to process the Rx frames. It
-  * does minimal processing and invokes "netif_receive_skb" to complete further
-  * processing.
-  * Return: 1 on success and 0 on failure.
-  */
--static int xcan_rx(struct net_device *ndev)
-+static int xcan_rx(struct net_device *ndev, int frame_base)
- {
- 	struct xcan_priv *priv = netdev_priv(ndev);
- 	struct net_device_stats *stats = &ndev->stats;
-@@ -508,9 +541,9 @@ static int xcan_rx(struct net_device *ndev)
- 	}
- 
- 	/* Read a frame from Xilinx zynq CANPS */
--	id_xcan = priv->read_reg(priv, XCAN_RXFIFO_ID_OFFSET);
--	dlc = priv->read_reg(priv, XCAN_RXFIFO_DLC_OFFSET) >>
--				XCAN_DLCR_DLC_SHIFT;
-+	id_xcan = priv->read_reg(priv, XCAN_FRAME_ID_OFFSET(frame_base));
-+	dlc = priv->read_reg(priv, XCAN_FRAME_DLC_OFFSET(frame_base)) >>
-+				   XCAN_DLCR_DLC_SHIFT;
- 
- 	/* Change Xilinx CAN data length format to socketCAN data format */
- 	cf->can_dlc = get_can_dlc(dlc);
-@@ -533,8 +566,8 @@ static int xcan_rx(struct net_device *ndev)
- 	}
- 
- 	/* DW1/DW2 must always be read to remove message from RXFIFO */
--	data[0] = priv->read_reg(priv, XCAN_RXFIFO_DW1_OFFSET);
--	data[1] = priv->read_reg(priv, XCAN_RXFIFO_DW2_OFFSET);
-+	data[0] = priv->read_reg(priv, XCAN_FRAME_DW1_OFFSET(frame_base));
-+	data[1] = priv->read_reg(priv, XCAN_FRAME_DW2_OFFSET(frame_base));
- 
- 	if (!(cf->can_id & CAN_RTR_FLAG)) {
- 		/* Change Xilinx CAN data format to socketCAN data format */
-@@ -806,7 +839,7 @@ static int xcan_rx_poll(struct napi_struct *napi, int quota)
- 
- 	isr = priv->read_reg(priv, XCAN_ISR_OFFSET);
- 	while ((isr & XCAN_IXR_RXNEMP_MASK) && (work_done < quota)) {
--		work_done += xcan_rx(ndev);
-+		work_done += xcan_rx(ndev, XCAN_RXFIFO_OFFSET);
- 		priv->write_reg(priv, XCAN_ICR_OFFSET, XCAN_IXR_RXNEMP_MASK);
- 		isr = priv->read_reg(priv, XCAN_ISR_OFFSET);
- 	}
-@@ -1193,13 +1226,21 @@ static const struct dev_pm_ops xcan_dev_pm_ops = {
- };
- 
- static const struct xcan_devtype_data xcan_zynq_data = {
--	.caps = XCAN_CAP_WATERMARK,
-+	.flags = XCAN_FLAG_TXFEMP,
-+	.bittiming_const = &xcan_bittiming_const,
-+	.bus_clk_name = "pclk",
-+};
-+
-+static const struct xcan_devtype_data xcan_axi_data = {
-+	.flags = 0,
-+	.bittiming_const = &xcan_bittiming_const,
-+	.bus_clk_name = "s_axi_aclk",
- };
- 
- /* Match table for OF platform binding */
- static const struct of_device_id xcan_of_match[] = {
- 	{ .compatible = "xlnx,zynq-can-1.0", .data = &xcan_zynq_data },
--	{ .compatible = "xlnx,axi-can-1.00.a", },
-+	{ .compatible = "xlnx,axi-can-1.00.a", .data = &xcan_axi_data },
- 	{ /* end of list */ },
- };
- MODULE_DEVICE_TABLE(of, xcan_of_match);
-@@ -1219,7 +1260,7 @@ static int xcan_probe(struct platform_device *pdev)
- 	struct net_device *ndev;
- 	struct xcan_priv *priv;
- 	const struct of_device_id *of_id;
--	int caps = 0;
-+	const struct xcan_devtype_data *devtype = &xcan_axi_data;
- 	void __iomem *addr;
- 	int ret, rx_max, tx_max, tx_fifo_depth;
- 
-@@ -1241,12 +1282,8 @@ static int xcan_probe(struct platform_device *pdev)
- 		goto err;
- 
- 	of_id = of_match_device(xcan_of_match, &pdev->dev);
--	if (of_id) {
--		const struct xcan_devtype_data *devtype_data = of_id->data;
--
--		if (devtype_data)
--			caps = devtype_data->caps;
--	}
-+	if (of_id && of_id->data)
-+		devtype = of_id->data;
- 
- 	/* There is no way to directly figure out how many frames have been
- 	 * sent when the TXOK interrupt is processed. If watermark programming
-@@ -1259,7 +1296,7 @@ static int xcan_probe(struct platform_device *pdev)
- 	 * sent), which is not a sensible state - possibly TXFWMEMP is not
- 	 * completely synchronized with the rest of the bits?
- 	 */
--	if (caps & XCAN_CAP_WATERMARK)
-+	if (devtype->flags & XCAN_FLAG_TXFEMP)
- 		tx_max = min(tx_fifo_depth, 2);
- 	else
- 		tx_max = 1;
-@@ -1271,13 +1308,14 @@ static int xcan_probe(struct platform_device *pdev)
- 
- 	priv = netdev_priv(ndev);
- 	priv->dev = &pdev->dev;
--	priv->can.bittiming_const = &xcan_bittiming_const;
-+	priv->can.bittiming_const = devtype->bittiming_const;
- 	priv->can.do_set_mode = xcan_do_set_mode;
- 	priv->can.do_get_berr_counter = xcan_get_berr_counter;
- 	priv->can.ctrlmode_supported = CAN_CTRLMODE_LOOPBACK |
- 					CAN_CTRLMODE_BERR_REPORTING;
- 	priv->reg_base = addr;
- 	priv->tx_max = tx_max;
-+	priv->devtype = *devtype;
- 	spin_lock_init(&priv->tx_lock);
- 
- 	/* Get IRQ for the device */
-@@ -1295,22 +1333,12 @@ static int xcan_probe(struct platform_device *pdev)
- 		ret = PTR_ERR(priv->can_clk);
- 		goto err_free;
- 	}
--	/* Check for type of CAN device */
--	if (of_device_is_compatible(pdev->dev.of_node,
--				    "xlnx,zynq-can-1.0")) {
--		priv->bus_clk = devm_clk_get(&pdev->dev, "pclk");
--		if (IS_ERR(priv->bus_clk)) {
--			dev_err(&pdev->dev, "bus clock not found\n");
--			ret = PTR_ERR(priv->bus_clk);
--			goto err_free;
--		}
--	} else {
--		priv->bus_clk = devm_clk_get(&pdev->dev, "s_axi_aclk");
--		if (IS_ERR(priv->bus_clk)) {
--			dev_err(&pdev->dev, "bus clock not found\n");
--			ret = PTR_ERR(priv->bus_clk);
--			goto err_free;
--		}
-+
-+	priv->bus_clk = devm_clk_get(&pdev->dev, devtype->bus_clk_name);
-+	if (IS_ERR(priv->bus_clk)) {
-+		dev_err(&pdev->dev, "bus clock not found\n");
-+		ret = PTR_ERR(priv->bus_clk);
-+		goto err_free;
- 	}
- 
- 	priv->write_reg = xcan_write_reg_le;
--- 
-2.8.3
+</div><div><span style=3D"font-size:small;background-color:rgb(255,255,255)=
+;text-decoration-style:initial;text-decoration-color:initial;float:none;dis=
+play:inline"><br></span></div><div><span style=3D"font-size:small;backgroun=
+d-color:rgb(255,255,255);text-decoration-style:initial;text-decoration-colo=
+r:initial;float:none;display:inline">Thanks,</span></div><div><span style=
+=3D"font-size:small;background-color:rgb(255,255,255);text-decoration-style=
+:initial;text-decoration-color:initial;float:none;display:inline"><br></spa=
+n></div><div><span style=3D"font-size:small;background-color:rgb(255,255,25=
+5);text-decoration-style:initial;text-decoration-color:initial;float:none;d=
+isplay:inline">Tomer</span></div><div><span style=3D"font-size:small;backgr=
+ound-color:rgb(255,255,255);text-decoration-style:initial;text-decoration-c=
+olor:initial;float:none;display:inline"><span style=3D"font-size:12.8px;tex=
+t-decoration-style:initial;text-decoration-color:initial;float:none;display=
+:inline"><span>=C2=A0</span></span>
+
+</span></div></div><br></div></div>
+
+--000000000000fd04a9056fb1a57d--
