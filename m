@@ -1,49 +1,194 @@
-From: Nick Dyer <nick@shmanahar.org>
-Subject: [PATCH v1] ARM: dts: imx51-zii-rdu1: correct touchscreen axis
- inversion
-Date: Thu, 28 Jun 2018 23:56:26 +0100
-Message-ID: <20180628225626.26203-1-nick@shmanahar.org>
+From: houlong wei <houlong.wei@mediatek.com>
+Subject: Re: [PATCH v22 4/4] soc: mediatek: Add Mediatek CMDQ helper
+Date: Fri, 29 Jun 2018 07:32:19 +0800
+Message-ID: <1530228739.21991.14.camel@mhfsdcap03>
+References: <1530098172-31385-1-git-send-email-houlong.wei@mediatek.com>
+         <1530098172-31385-5-git-send-email-houlong.wei@mediatek.com>
+         <1530182516.8518.11.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>, devicetree@vger.kernel.org, Nick Dyer <nick@shmanahar.org>, Andrey Smirnov <andrew.smirnov@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1530182516.8518.11.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: CK Hu <ck.hu@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh =?UTF-8?Q?=28=E8=AC=9D=E6=BF=9F=E9=81=A0=29?= <Bibby.Hsieh@mediatek.com>, YT
 List-Id: devicetree@vger.kernel.org
 
-The RMI4 touchscreen driver applied inversion and axis swap in the
-wrong order, violating the DT binding for those properties. This was fixed in
-645a397, so correct the RDU1 DT to apply the inversion to the
-correct axis.
+On Thu, 2018-06-28 at 18:41 +0800, CK Hu wrote:
+> Hi, Houlong:
+> 
+> Some inline comment.
+> 
+> On Wed, 2018-06-27 at 19:16 +0800, Houlong Wei wrote:
+> > Add Mediatek CMDQ helper to create CMDQ packet and assemble GCE op code.
+> > 
+> > Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
+> > Signed-off-by: HS Liao <hs.liao@mediatek.com>
+> > ---
+> >  drivers/soc/mediatek/Kconfig           |   12 ++
+> >  drivers/soc/mediatek/Makefile          |    1 +
+> >  drivers/soc/mediatek/mtk-cmdq-helper.c |  258 ++++++++++++++++++++++++++++++++
+> >  include/linux/soc/mediatek/mtk-cmdq.h  |  132 ++++++++++++++++
+> >  4 files changed, 403 insertions(+)
+> >  create mode 100644 drivers/soc/mediatek/mtk-cmdq-helper.c
+> >  create mode 100644 include/linux/soc/mediatek/mtk-cmdq.h
+> > 
+> > diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
+> > index a7d0667..17bd759 100644
+> > --- a/drivers/soc/mediatek/Kconfig
+> > +++ b/drivers/soc/mediatek/Kconfig
+> > @@ -4,6 +4,18 @@
+> >  menu "MediaTek SoC drivers"
+> >  	depends on ARCH_MEDIATEK || COMPILE_TEST
+> >  
+> 
+> [...]
+> 
+> > +
+> > +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
+> > +{
+> > +	u32 arg_b;
+> > +
+> > +	if (event >= CMDQ_MAX_EVENT || event < 0)
+> 
+> The type of event is 'u32', so checking 'event < 0' is redundant.
 
-Tested on Zii RDU1 00-5105-30 rev B
+will fix.
 
-Signed-off-by: Nick Dyer <nick@shmanahar.org>
----
- arch/arm/boot/dts/imx51-zii-rdu1.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> > +		return -EINVAL;
+> > +
+> > +	/*
+> > +	 * WFE arg_b
+> > +	 * bit 0-11: wait value
+> > +	 * bit 15: 1 - wait, 0 - no wait
+> > +	 * bit 16-27: update value
+> > +	 * bit 31: 1 - update, 0 - no update
+> > +	 */
+> > +	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
+> > +
+> > +	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
+> > +}
+> > +EXPORT_SYMBOL(cmdq_pkt_wfe);
+> > +
+> > +int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event)
+> > +{
+> > +	if (event >= CMDQ_MAX_EVENT || event < 0)
+> 
+> The type of event is 'u32', so checking 'event < 0' is redundant.
 
-diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-index 68f5c1d5ecd0..b1d83fb08150 100644
---- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
-+++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-@@ -553,7 +553,7 @@
- 
- 		rmi4-f11@11 {
- 			reg = <0x11>;
--			touchscreen-inverted-y;
-+			touchscreen-inverted-x;
- 			touchscreen-swapped-x-y;
- 			syna,sensor-type = <1>;
- 		};
--- 
-2.17.1
+Will fix.
+
+> 
+> > +		return -EINVAL;
+> > +
+> > +	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
+> > +				       CMDQ_WFE_UPDATE);
+> > +}
+> > +EXPORT_SYMBOL(cmdq_pkt_clear_event);
+> > +
+> > +static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+> > +{
+> > +	int err;
+> > +
+> > +	if (cmdq_pkt_is_finalized(pkt))
+> > +		return 0;
+> > +
+> > +	/* insert EOC and generate IRQ for each command iteration */
+> > +	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
+> > +	if (err < 0)
+> > +		return err;
+> > +
+> > +	/* JUMP to end */
+> > +	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
+> > +	if (err < 0)
+> > +		return err;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +int cmdq_pkt_flush_async(struct cmdq_client *client, struct cmdq_pkt *pkt,
+> > +			 cmdq_async_flush_cb cb, void *data)
+> > +{
+> > +	int err;
+> > +	struct device *dev;
+> > +	dma_addr_t dma_addr;
+> > +
+> > +	err = cmdq_pkt_finalize(pkt);
+> > +	if (err < 0)
+> > +		return err;
+> > +
+> > +	dev = client->chan->mbox->dev;
+> > +	dma_addr = dma_map_single(dev, pkt->va_base, pkt->cmd_buf_size,
+> > +		DMA_TO_DEVICE);
+> 
+> You map here, but I could not find unmap, so the unmap should be done in
+> client driver. I would prefer a symmetric map/unmap which means that
+> both map and unmap are done in client driver. I think you put map here
+> because you should map after finalize. 
+
+The unmap is done before callback to client, in function
+cmdq_task_exec_done, mtk-cmdq-mailbox.c.
+
+> Therefore, export
+> cmdq_pkt_finalize() to client driver and let client do finalize, so
+> there is no finalize in flush function. This method have a benefit that
+> if client reuse command buffer, it need not to map/unmap frequently.
+
+If client reuse command buffer or cmdq_pkt(command queue packet), client
+will add new commands to the cmdq_pkt, so map/unmap are necessary for
+each cmdq_pkt flush.
+
+> 
+> Regards,
+> CK
+> 
+> > +	if (dma_mapping_error(dev, dma_addr)) {
+> > +		dev_err(client->chan->mbox->dev, "dma map failed\n");
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	pkt->pa_base = dma_addr;
+> > +	pkt->cb.cb = cb;
+> > +	pkt->cb.data = data;
+> > +
+> > +	mbox_send_message(client->chan, pkt);
+> > +	/* We can send next packet immediately, so just call txdone. */
+> > +	mbox_client_txdone(client->chan, 0);
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL(cmdq_pkt_flush_async);
+> > +
+> > +struct cmdq_flush_completion {
+> > +	struct completion cmplt;
+> > +	bool err;
+> > +};
+> > +
+> > +static void cmdq_pkt_flush_cb(struct cmdq_cb_data data)
+> > +{
+> > +	struct cmdq_flush_completion *cmplt = data.data;
+> > +
+> > +	cmplt->err = data.err;
+> > +	complete(&cmplt->cmplt);
+> > +}
+> > +
+> > +int cmdq_pkt_flush(struct cmdq_client *client, struct cmdq_pkt *pkt)
+> > +{
+> > +	struct cmdq_flush_completion cmplt;
+> > +	int err;
+> > +
+> > +	init_completion(&cmplt.cmplt);
+> > +	err = cmdq_pkt_flush_async(client, pkt, cmdq_pkt_flush_cb, &cmplt);
+> > +	if (err < 0)
+> > +		return err;
+> > +	wait_for_completion(&cmplt.cmplt);
+> > +
+> > +	return cmplt.err ? -EFAULT : 0;
+> > +}
+> > +EXPORT_SYMBOL(cmdq_pkt_flush);
+> 
+> [...]
+> 
+> 
