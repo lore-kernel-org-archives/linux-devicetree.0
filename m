@@ -1,15 +1,14 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 20/24] drm/sun4i: Add support for A64
- HDMI PHY
-Date: Thu, 28 Jun 2018 10:30:47 +0800
-Message-ID: <CAGb2v64dC6xdVHCTnVODCubAYD=WQF+zVkaLXWTnrCoYtYuzag@mail.gmail.com>
-References: <20180625120304.7543-1-jernej.skrabec@siol.net> <20180625120304.7543-21-jernej.skrabec@siol.net>
+Subject: Re: [PATCH v3 21/24] drm: of: Export drm_crtc_port_mask()
+Date: Thu, 28 Jun 2018 10:32:12 +0800
+Message-ID: <CAGb2v66vEJZijF82u6cKf3j0J678=kNCCps5+=oj7iHCzM9n6g@mail.gmail.com>
+References: <20180625120304.7543-1-jernej.skrabec@siol.net> <20180625120304.7543-22-jernej.skrabec@siol.net>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB3UQ2HMQKGQERILCH6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBQUR2HMQKGQEICDAMFQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180625120304.7543-21-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+In-Reply-To: <20180625120304.7543-22-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -21,8 +20,9 @@ Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob H
 List-Id: devicetree@vger.kernel.org
 
 On Mon, Jun 25, 2018 at 8:03 PM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> PHY is the same as in H3, except it can switch between two clock
-> parents.
+> Function is useful when drm_of_find_possible_crtcs() can't be used and
+> custom parsing is needed. This can happen for example when there is a
+> node with multiple muxes between crtc and encoder.
 >
 > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 
