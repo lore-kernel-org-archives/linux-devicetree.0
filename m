@@ -1,112 +1,125 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v3 4/6] dts: bindings: Document device tree binding for CATU
-Date: Thu, 28 Jun 2018 13:57:55 +0100
-Message-ID: <1530190677-19933-5-git-send-email-suzuki.poulose@arm.com>
-References: <1530190677-19933-1-git-send-email-suzuki.poulose@arm.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 1/4] PCI: mediatek: fixup mtk_pcie_find_port logical
+Date: Thu, 28 Jun 2018 08:07:37 -0500
+Message-ID: <20180628130737.GA90450@bhelgaas-glaptop.roam.corp.google.com>
+References: <1530091298-28120-1-git-send-email-honghui.zhang@mediatek.com>
+ <1530091298-28120-2-git-send-email-honghui.zhang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530190677-19933-1-git-send-email-suzuki.poulose@arm.com>
+Content-Disposition: inline
+In-Reply-To: <1530091298-28120-2-git-send-email-honghui.zhang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>, Mark Rutland <mark.rutland@arm.com>
+To: honghui.zhang@mediatek.com
+Cc: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, youlin.pei@mediatek.com, hongkun.cao@mediatek.com, sean.wang@mediatek.com, yt.shen@mediatek.com, yong.wu@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Document CATU device-tree bindings. CATU augments the TMC-ETR
-by providing an improved Scatter Gather mechanism for streaming
-trace data to non-contiguous system RAM pages.
+On Wed, Jun 27, 2018 at 05:21:35PM +0800, honghui.zhang@mediatek.com wrote:
+> From: Honghui Zhang <honghui.zhang@mediatek.com>
+> 
+> Mediatek's host controller have two slots, each have it's own control
+> registers. The host driver need to identify which slot was connected
+> in order to access the device's configuration space. There's problem
+> for current host driver to find out which slot was connected to for
+> a given EP device.
 
-Cc: devicetree@vger.kernel.org
-Cc: frowand.list@gmail.com
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- .../devicetree/bindings/arm/coresight.txt          | 53 ++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+  The Mediatek host controller has two slots, each with its own control
+  registers.
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-index 9aa30a1..5d1ad09 100644
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -39,6 +39,8 @@ its hardware characteristcs.
- 
- 		- System Trace Macrocell:
- 			"arm,coresight-stm", "arm,primecell"; [1]
-+		- Coresight Address Translation Unit (CATU)
-+			"arm,coresight-catu", "arm,primecell";
- 
- 	* reg: physical base address and length of the register
- 	  set(s) of the component.
-@@ -90,6 +92,10 @@ its hardware characteristcs.
- 	* arm,scatter-gather: boolean. Indicates that the TMC-ETR can safely
- 	  use the SG mode on this system.
- 
-+* Optional property for CATU :
-+	* interrupts : Exactly one SPI may be listed for reporting the address
-+	  error
-+
- Example:
- 
- 1. Sinks
-@@ -121,6 +127,35 @@ Example:
- 		};
- 	};
- 
-+	etr@20070000 {
-+		compatible = "arm,coresight-tmc", "arm,primecell";
-+		reg = <0 0x20070000 0 0x1000>;
-+
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			/* input port */
-+			port@0 {
-+				reg =  <0>;
-+				etr_in_port: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&replicator2_out_port0>;
-+				};
-+			};
-+
-+			/* CATU link represented by output port */
-+			port@1 {
-+				reg = <1>;
-+				etr_out_port: endpoint {
-+					remote-endpoint = <&catu_in_port>;
-+				};
-+			};
-+		};
-+	};
-+
- 2. Links
- 	replicator {
- 		/* non-configurable replicators don't show up on the
-@@ -250,5 +285,23 @@ Example:
- 		};
- 	};
- 
-+5. CATU
-+
-+	catu@207e0000 {
-+		compatible = "arm,coresight-catu", "arm,primecell";
-+		reg = <0 0x207e0000 0 0x1000>;
-+
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+
-+		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+		port {
-+			catu_in_port: endpoint {
-+				slave-mode;
-+				remote-endpoint = <&etr_out_port>;
-+			};
-+		};
-+	};
-+
- [1]. There is currently two version of STM: STM32 and STM500.  Both
- have the same HW interface and as such don't need an explicit binding name.
--- 
-2.7.4
+> Assuming each slot have connect with one EP device as below:
+> 
+>                 host bridge
+>   bus 0 --> __________|_______
+>            |                  |
+>            |                  |
+>          slot 0             slot 1
+>   bus 1 -->|        bus 2 --> |
+>            |                  |
+>          EP 0               EP 1
+> 
+> While PCI emulation, system software will scan all the PCI device
+
+s/While PCI emulation/During PCI enumeration/
+
+> starting from devfn 0. So it will get the proper port for slot0 and
+> slot1 device when using PCI_SLOT(devfn) for match. But it will get
+> the wrong slot for EP1: The devfn will be start from 0 when scanning
+> EP1 behind slot1, it will get port0 since the PCI_SLOT(EP1) is match
+> for port0's slot value. So the host driver should not using EP's devfn
+> but the slot's devfn(the slot which EP was connected to) for match.
+> 
+> This patch fix the mtk_pcie_find_port's logical by using the slot's
+> devfn for match.
+> 
+> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+> Reviewed-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+>  drivers/pci/controller/pcie-mediatek.c | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index 0baabe3..9cf7ecf 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -337,10 +337,23 @@ static struct mtk_pcie_port *mtk_pcie_find_port(struct pci_bus *bus,
+>  {
+>  	struct mtk_pcie *pcie = bus->sysdata;
+>  	struct mtk_pcie_port *port;
+> +	struct pci_dev *dev;
+> +	struct pci_bus *pbus;
+>  
+> -	list_for_each_entry(port, &pcie->ports, list)
+> -		if (port->slot == PCI_SLOT(devfn))
+> +	list_for_each_entry(port, &pcie->ports, list) {
+
+mvebu has the identical hardware structure but uses an array instead
+of a list:
+
+  num = of_get_available_child_count(np);
+  pcie->ports = devm_kcalloc(dev, num, sizeof(*pcie->ports), GFP_KERNEL);
+  for_each_available_child_of_node(np, child) {
+    struct mvebu_pcie_port *port = &pcie->ports[i];
+    mvebu_pcie_parse_port(pcie, port, child);
+  }
+
+It would be nice if mvebu and mtk used the same strategy so the code
+looks the same.
+
+> +		if (bus->number == 0 && port->slot == PCI_SLOT(devfn)) {
+
+Is the root bus number fixed at 0 or is it programmable?  Many drivers
+do something like this:
+
+  if (bus->number == pcie->root_bus_nr)
+
+to handle the case of the root bus number being programmable.
+
+>  			return port;
+> +		} else if (bus->number != 0) {
+> +			pbus = bus;
+> +			do {
+> +				dev = pbus->self;
+> +				if (port->slot == PCI_SLOT(dev->devfn))
+> +					return port;
+> +
+> +				pbus = dev->bus;
+> +			} while (dev->bus->number != 0);
+
+You should not need to search up the tree of dev->bus->self.
+
+mvebu_pcie_find_port() checks the root port secondary and subordinate
+bus numbers, which should work here, too.
+
+> +		}
+> +	}
+>  
+>  	return NULL;
+>  }
+> -- 
+> 2.6.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
