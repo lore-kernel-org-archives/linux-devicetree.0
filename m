@@ -1,79 +1,61 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v3 4/5] clocksource/drivers/timer-mediatek: Convert the
- driver to timer-of
-Date: Thu, 28 Jun 2018 16:03:18 +0200
-Message-ID: <5cdfbfdf-4d6e-de18-0f20-2f3b50129b87@linaro.org>
-References: <1530182744-10731-1-git-send-email-stanley.chu@mediatek.com>
- <1530182744-10731-5-git-send-email-stanley.chu@mediatek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [alsa-devel] [PATCH v2 1/2] ASoC: qcom: dt-bindings: Add sdm845
+ machine bindings
+Date: Thu, 28 Jun 2018 08:04:05 -0600
+Message-ID: <CAL_JsqJrpxz=W1zB8cr0CSUF9a+8yYMmNGQzQGEAcs3__D-GpQ@mail.gmail.com>
+References: <1529578399-3633-1-git-send-email-rohitkr@codeaurora.org>
+ <1529578399-3633-2-git-send-email-rohitkr@codeaurora.org> <20180625191737.GA13246@rob-hp-laptop>
+ <5c976a29-b1ff-4fb5-9346-2288dfecd4c3@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530182744-10731-5-git-send-email-stanley.chu@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <5c976a29-b1ff-4fb5-9346-2288dfecd4c3@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stanley Chu <stanley.chu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
+To: Rohit kumar <rohitkr@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Banajit Goswami <bgoswami@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Patrick Lai <plai@codeaurora.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 28/06/2018 12:45, Stanley Chu wrote:
-> Convert the driver to use the timer_of helpers.
-> This allows to remove custom proprietary structure,
-> factors out and simplifies the code.
-> 
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> ---
->  drivers/clocksource/timer-mediatek.c |  222 ++++++++++++++++------------------
->  1 file changed, 104 insertions(+), 118 deletions(-)
-> 
-> diff --git a/drivers/clocksource/timer-mediatek.c b/drivers/clocksource/timer-mediatek.c
-> index ff284f2..d94d8e1 100644
-> --- a/drivers/clocksource/timer-mediatek.c
-> +++ b/drivers/clocksource/timer-mediatek.c
-> @@ -18,16 +18,13 @@
->  
->  #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
->  
-> -#include <linux/clk.h>
->  #include <linux/clockchips.h>
-> +#include <linux/clocksource.h>
->  #include <linux/interrupt.h>
-> -#include <linux/irq.h>
->  #include <linux/irqreturn.h>
-> -#include <linux/of.h>
-> -#include <linux/of_address.h>
-> -#include <linux/of_irq.h>
->  #include <linux/sched_clock.h>
->  #include <linux/slab.h>
-> +#include "timer-of.h"
->  
->  #define GPT_IRQ_EN_REG		0x00
->  #define GPT_IRQ_ENABLE(val)	BIT((val) - 1)
-> @@ -56,49 +53,57 @@
->  #define GPT_CLK_EVT	1
->  #define GPT_CLK_SRC	2
->  
-> -struct mtk_clock_event_device {
-> -	void __iomem *gpt_base;
-> -	u32 ticks_per_jiffy;
-> -	struct clock_event_device dev;
-> +struct mtk_timer_private {
-> +	unsigned long ticks_per_jiffy;
->  };
+On Thu, Jun 28, 2018 at 12:20 AM Rohit Kumar <rohitkr@codeaurora.org> wrote:
+>
+> Thanks Rob for reviewing.
+>
+>
+> On 6/26/2018 12:47 AM, Rob Herring wrote:
+> > On Thu, Jun 21, 2018 at 04:23:18PM +0530, Rohit kumar wrote:
+> >> Add devicetree bindings documentation file for SDM845 sound card.
+> >>
+> >> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+> >> ---
+> >>   .../devicetree/bindings/sound/qcom,sdm845.txt      | 82 ++++++++++++++++++++++
+> >>   1 file changed, 82 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/sound/qcom,sdm845.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/sound/qcom,sdm845.txt b/Documentation/devicetree/bindings/sound/qcom,sdm845.txt
+> >> new file mode 100644
+> >> index 0000000..68feb08
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/sound/qcom,sdm845.txt
+> >> @@ -0,0 +1,82 @@
+> >> +* Qualcomm Technologies Inc. SDM845 ASoC sound card driver
+> >> +
+> >> +This binding describes the SDM845 sound card, which uses qdsp for audio.
+> >> +
+> >> +- compatible:
+> >> +    Usage: required
+> >> +    Value type: <stringlist>
+> >> +    Definition: must be "qcom,sdm845-sndcard"
+> >> +
+> >> +- qcom,audio-routing:
+> > Use just 'audio-routing'.
+>
+> This is same which is being followed in apq8096 machine driver. As all
+> qcom machine drivers will
+> mostly follow the same design, Vinod asked to pull out the APIs in
+> common file - https://patchwork.kernel.org/patch/10479625/ .
+> Same is for qcom,model. I will add missing documentation for it in the
+> next patchset.
 
-This private structure is not needed. There is timer_of_clk->period
+Yes, I know. There are lots of <vendor>,model and others, and I'm
+asking folks to drop the vendor prefix.
 
-cf.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/clocksource/timer-of.c#n144
-
-
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Rob
