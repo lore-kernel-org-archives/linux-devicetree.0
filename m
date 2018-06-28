@@ -1,16 +1,15 @@
 From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [PATCH v3 15/24] dt-bindings: display: sun4i-drm:
- Add description of A64 HDMI PHY
-Date: Thu, 28 Jun 2018 06:51:22 +0200
-Message-ID: <1669385.k4L9lni8DF@jernej-laptop>
-References: <20180625120304.7543-1-jernej.skrabec@siol.net> <20180625120304.7543-16-jernej.skrabec@siol.net> <CAGb2v66ytOrjMOK067URknens34jvYxJ1XoYmGMi4Ji0LYt9sQ@mail.gmail.com>
+Subject: Re: [PATCH v3 16/24] drm/sun4i: Enable DW HDMI PHY clock
+Date: Thu, 28 Jun 2018 06:52:54 +0200
+Message-ID: <4926299.TVnF4K2nSG@jernej-laptop>
+References: <20180625120304.7543-1-jernej.skrabec@siol.net> <20180625120304.7543-17-jernej.skrabec@siol.net> <CAGb2v65En4RbVdRu7c6MJUztVhC36dWr0kaO9bqc9PtuXAcsww@mail.gmail.com>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBIOT2HMQKGQEHQXCT7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERB7OT2HMQKGQE4O4FA7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v66ytOrjMOK067URknens34jvYxJ1XoYmGMi4Ji0LYt9sQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAGb2v65En4RbVdRu7c6MJUztVhC36dWr0kaO9bqc9PtuXAcsww-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -21,68 +20,37 @@ To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dne =C4=8Detrtek, 28. junij 2018 ob 04:19:55 CEST je Chen-Yu Tsai napisal(a=
+Dne =C4=8Detrtek, 28. junij 2018 ob 04:22:36 CEST je Chen-Yu Tsai napisal(a=
 ):
 > On Mon, Jun 25, 2018 at 8:02 PM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>=
 =20
 wrote:
-> > A64 HDMI PHY is similar to H3 HDMI PHY except it has two possible PLL
-> > clock parents. It is compatible to other HDMI PHYs, like that found in
-> > R40.
+> > Current DW HDMI PHY code never prepares and enables PHY clock after it =
+is
+> > created. It's just used as it is. This may work in some cases, but it's
+> > clearly wrong. Fix it by adding proper calls to enable/disable PHY
+> > clock.
 > >=20
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Fixes: 4f86e81748fe ("drm/sun4i: Add support for H3 HDMI PHY variant")
+> >=20
 > > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> > ---
-> >=20
-> >  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.=
-txt
-> > b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt index
-> > 84fe38dbb900..dc83f21ef188 100644
-> > --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> > +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> > @@ -101,6 +101,7 @@ DWC HDMI PHY
-> >=20
-> >  Required properties:
-> >    - compatible: value must be one of:
-> > +    * allwinner,sun50i-a64-hdmi-phy
-> >=20
-> >      * allwinner,sun8i-a83t-hdmi-phy
-> >      * allwinner,sun8i-h3-hdmi-phy
 >=20
-> Nit: the list is sorted by family first, then SoC name, so it should
-> be the last on the list.
+> So why does it work on the H3? Because there's only one PLL that the whol=
+e
+> display pipeline uses?
 
-I went alphabetically, since "5" is before "8"...
+Yes, there is only one PLL_VIDEO and TCON and HDMI controller already enabl=
+ed=20
+it.
 
 Best regards,
 Jernej
 
 >=20
-> Otherwise,
+> We should probably tag this for stable. So,
 >=20
+> Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 > Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->=20
-> >    - reg: base address and size of memory-mapped region
-> >=20
-> > @@ -111,8 +112,9 @@ Required properties:
-> >    - resets: phandle to the reset controller driving the PHY
-> >    - reset-names: must be "phy"
-> >=20
-> > -H3 HDMI PHY requires additional clock:
-> >=20
-> > +H3 and A64 HDMI PHY require additional clocks:
-> >    - pll-0: parent of phy clock
-> >=20
-> > +  - pll-1: second possible phy clock parent (A64 only)
-> >=20
-> >  TV Encoder
-> >  ----------
-> >=20
-> > --
-> > 2.18.0
 
 
 
