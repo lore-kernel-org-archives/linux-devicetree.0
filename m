@@ -1,82 +1,84 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 0/8] gnss: add new GNSS subsystem
-Date: Thu, 28 Jun 2018 21:01:03 +0900
-Message-ID: <20180628120103.GA28131@kroah.com>
-References: <20180601082259.17563-1-johan@kernel.org>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v3 07/17] irqchip/irq-mvebu-icu: make irq_domain local
+Date: Thu, 28 Jun 2018 13:10:05 +0100
+Message-ID: <2f751e0a-857e-22ab-1748-5fd1cb127766@arm.com>
+References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
+ <20180622151432.1566-8-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180601082259.17563-1-johan@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180622151432.1566-8-miquel.raynal@bootlin.com>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haim Boot <hayim@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Hanna Hawa <hannah@marvell.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 01, 2018 at 10:22:51AM +0200, Johan Hovold wrote:
-> This series adds a new subsystem for GNSS receivers (e.g. GPS
-> receivers).
+On 22/06/18 16:14, Miquel Raynal wrote:
+> Make the current MSI irq_domain local to ease the split between ICU
+> platform device code and NSR platform device code.
 > 
-> While GNSS receivers are typically accessed using a UART interface they
-> often also support other I/O interfaces such as I2C, SPI and USB, while
-> yet other devices use iomem or even some form of remote-processor
-> messaging (rpmsg).
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> ---
+>  drivers/irqchip/irq-mvebu-icu.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> The new GNSS subsystem abstracts the underlying interface and provides a
-> new "gnss" class type, which exposes a character-device interface (e.g.
-> /dev/gnss0) to user space. This allows GNSS receivers to have a
-> representation in the Linux device model, something which is important
-> not least for power management purposes and which also allows for easy
-> detection and identification of GNSS devices.
-> 
-> Note that the character-device interface provides raw access to whatever
-> protocol the receiver is (currently) using, such as NMEA 0183, UBX or
-> SiRF Binary. These protocols are expected to be continued to be handled
-> by user space for the time being, even if some hybrid solutions are also
-> conceivable (e.g. to have kernel drivers issue management commands).
-> 
-> This will still allow for better platform integration by allowing GNSS
-> devices and their resources (e.g. regulators and enable-gpios) to be
-> described by firmware and managed by kernel drivers rather than
-> platform-specific scripts and services.
-> 
-> While the current interface is kept minimal, it could be extended using
-> IOCTLs, sysfs or uevents as needs and proper abstraction levels are
-> identified and determined (e.g. for device and feature identification).
-> 
-> Another possible extension is to add generic 1PPS support.
-> 
-> I decided to go with a custom character-device interface rather than
-> pretend that these abstract GNSS devices are still TTY devices (e.g.
-> /dev/ttyGNSS0). Obviously, modifying line settings or reading modem
-> control signals does not make any sense for a device using, say, a
-> USB (not USB-serial) or iomem interface. This also means, however, that
-> user space would no longer be able to set the line speed to match a new
-> port configuration that can be set using the various GNSS protocols when
-> the underlying interface is indeed a UART; instead this would need to be
-> taken care of by the driver.
-> 
-> Also note that writes are always synchronous instead of requiring user
-> space to call tcdrain() after every command.
-> 
-> This all seems to work well-enough (e.g. with gpsd), but please let me
-> know if I've overlooked something which would indeed require a TTY
-> interface instead.
-> 
-> I have implemented drivers for receivers based on two common GNSS
-> chipsets; SiRFstar and u-blox. Due to lack of hardware, the sirf driver
-> has been tested using a mockup device and a USB-serial-based SiRFstar IV
-> GPS (using out-of-tree USB-serial code). [ Let me know if you've got any
-> evaluation kits to spare. ] The ubx driver has been tested using a
-> u-blox 8 GNSS evaluation kit (thanks u-blox!).
-> 
-> Finally, note that documentation (including kerneldoc) remains to be
-> written, but hopefully this will not hinder review given that the
-> current interfaces are fairly self-describing.
+> diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
+> index 3694c0d73c0d..607948870a14 100644
+> --- a/drivers/irqchip/irq-mvebu-icu.c
+> +++ b/drivers/irqchip/irq-mvebu-icu.c
+> @@ -41,7 +41,6 @@
+>  struct mvebu_icu {
+>  	struct irq_chip irq_chip;
+>  	struct regmap *regmap;
+> -	struct irq_domain *domain;
+>  	struct device *dev;
+>  	atomic_t initialized;
+>  };
+> @@ -218,6 +217,7 @@ static int mvebu_icu_probe(struct platform_device *pdev)
+>  	struct mvebu_icu *icu;
+>  	struct device_node *node = pdev->dev.of_node;
+>  	struct device_node *gicp_dn;
+> +	struct irq_domain *irq_domain;
+>  	struct resource *res;
+>  	void __iomem *regs;
+>  	int i;
+> @@ -282,11 +282,11 @@ static int mvebu_icu_probe(struct platform_device *pdev)
+>  			regmap_write(icu->regmap, ICU_INT_CFG(i), 0);
+>  	}
+>  
+> -	icu->domain =
+> +	irq_domain =
+>  		platform_msi_create_device_domain(&pdev->dev, ICU_MAX_IRQS,
+>  						  mvebu_icu_write_msg,
+>  						  &mvebu_icu_domain_ops, icu);
 
-This all looks great.  Thanks for doing this work and adding a new
-subsystem for something that has been asked for for many years.
+nit: this really hurts my eyes. Please put the = sign and the function
+call on a single line. I really don't care if it checkpatch is having a
+fit because of that.
 
-All now merged in my tree, nice job!
+> -	if (!icu->domain) {
+> +	if (!irq_domain) {
+>  		dev_err(&pdev->dev, "Failed to create ICU domain\n");
+>  		return -ENOMEM;
+>  	}
+> 
 
-greg k-h
+But looking at the next patch, you might as well fold the two. On its
+own, this patches is pretty pointless.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
