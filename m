@@ -1,75 +1,71 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH v3 09/24] drm/sun4i: Don't skip TCONs if
- they don't have channel 0
-Date: Thu, 28 Jun 2018 14:24:34 +0800
-Message-ID: <CAGb2v67kBRWkJpJogFR4GXgA66dsxVaMVWN8MDiP_wFTqxW-=g@mail.gmail.com>
-References: <20180625120304.7543-1-jernej.skrabec@siol.net>
- <20180625120304.7543-10-jernej.skrabec@siol.net> <CAGb2v64EkVK+AEngEuadBzAZagyU7eyOhHhBh0iFrxS+-BbCYQ@mail.gmail.com>
- <2676604.ZYCNkuCdbT@jernej-laptop>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [RFC PATCH 1/5] arm: dts: zynq: Set correct manufacturer for
+ ZedBoard and MicroZed boards
+Date: Thu, 28 Jun 2018 08:36:52 +0200
+Message-ID: <d43b1758-cc0c-3a19-0d7d-f4773fe5caac@xilinx.com>
+References: <20180628054205.17737-1-luaraneda@gmail.com>
+ <20180628054205.17737-2-luaraneda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBOP62HMQKGQEWBKFNEY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <2676604.ZYCNkuCdbT@jernej-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180628054205.17737-2-luaraneda@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Luis Araneda <luaraneda@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 28, 2018 at 12:45 PM, Jernej =C5=A0krabec
-<jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> Dne =C4=8Detrtek, 28. junij 2018 ob 03:51:31 CEST je Chen-Yu Tsai napisal=
-(a):
->> On Mon, Jun 25, 2018 at 8:02 PM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org=
->
-> wrote:
->> > TV TCONs (channel 1 only) are always connected to TV or HDMI encoder.
->> > Because of that, all output endpoints on such TCON node will point to =
-a
->> > encoder which is part of component framework.
->> >
->> > Correct current graph traversing algorithm in such way that it doesn't
->> > skip output enpoints with id 0 on TV TCONs.
->>
->> No. Our bindings say that endpoint 0 _is_ channel 0. For TCONs that don'=
-t
->> have channel 0, it must be skipped.
->
-> I'm not sure where this is stated. I read TCON binding again. Can you ple=
-ase
-> point me to it?
+On 28.6.2018 07:42, Luis Araneda wrote:
+> Both boards are made by Avnet, Inc.
+> 
+> Signed-off-by: Luis Araneda <luaraneda@gmail.com>
+> ---
+>  arch/arm/boot/dts/zynq-microzed.dts | 2 +-
+>  arch/arm/boot/dts/zynq-zed.dts      | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/zynq-microzed.dts b/arch/arm/boot/dts/zynq-microzed.dts
+> index aa4a0b6de..e40f40a7f 100644
+> --- a/arch/arm/boot/dts/zynq-microzed.dts
+> +++ b/arch/arm/boot/dts/zynq-microzed.dts
+> @@ -8,7 +8,7 @@
+>  
+>  / {
+>  	model = "Zynq MicroZED Development Board";
+> -	compatible = "xlnx,zynq-microzed", "xlnx,zynq-7000";
+> +	compatible = "avnet,zynq-microzed", "xlnx,zynq-7000";
+>  
+>  	aliases {
+>  		ethernet0 = &gem0;
+> diff --git a/arch/arm/boot/dts/zynq-zed.dts b/arch/arm/boot/dts/zynq-zed.dts
+> index 53c6883ce..98381cc85 100644
+> --- a/arch/arm/boot/dts/zynq-zed.dts
+> +++ b/arch/arm/boot/dts/zynq-zed.dts
+> @@ -8,7 +8,7 @@
+>  
+>  / {
+>  	model = "Zynq Zed Development Board";
+> -	compatible = "xlnx,zynq-zed", "xlnx,zynq-7000";
+> +	compatible = "avnet,zynq-zed", "xlnx,zynq-7000";
+>  
+>  	aliases {
+>  		ethernet0 = &gem0;
+> 
 
-https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bin=
-dings/display/sunxi/sun4i-drm.txt#L169
+Unfortunately we don't know who is parsing this string. It means please
+keep that origin compatible string there.
 
-Our TCON driver still expects RGB or LVDS panel / bridges on endpoint 0.
-So I guess this was sort of implied historically. It's no longer true.
-This is something we should probably fix.
+I have no problem with this.
+compatible = "avnet,zynq-zed", "xlnx,zynq-zed", "xlnx,zynq-7000";
 
-In practice our drivers don't look at it (yet), but rely on the downstream
-encoder type to determine which channel to use.
-
-But please add the "allwinner,tcon-channel" property as specified in
-the binding.
-
-> So on TV TCONs on R40 (without channel 0) TVE would be endpoint 1 and HDM=
-I
-> endpoint 2 (or the other way around)?
-
-Which one goes first doesn't quite matter. IIRC there's also a mux for TVE?
-
-ChenYu
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Thanks,
+Michal
