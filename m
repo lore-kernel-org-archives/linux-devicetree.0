@@ -1,54 +1,67 @@
-Return-Path: <SRS0=fTn5=JD=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v4 0/2] clk: Add driver for MAX9485
-Date: Sun, 17 Jun 2018 14:05:33 +0200
-Message-Id: <20180617120535.2529-1-daniel@zonque.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: mturquette@baylibre.com, sboyd@kernel.org
-Cc: linux-clk@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <vkoul@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v5 1/6] dt-bindings: power: reset: Add qcom pon binding
+Date: Thu, 28 Jun 2018 20:38:45 +0530
+Message-Id: <20180628150850.15358-2-vkoul@kernel.org>
+In-Reply-To: <20180628150850.15358-1-vkoul@kernel.org>
+References: <20180628150850.15358-1-vkoul@kernel.org>
+To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This is v4 of the driver for Maxim's MAX9485 programmable audio clock
-generator.
+The Power On device for Qcom PM 8xxx is a MFD supporting pwrkey and
+resin along with the Android reboot-mode.
 
-v3 → v4:
-* Rebased to 4.18-rc1
+Add the binding describing this.
 
-v2 → v3:
+Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ .../devicetree/bindings/power/reset/qcom,pon.txt   | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/qcom,pon.txt
 
-* Addressed a lot of issues pointed out by Stephen Boyd:
-  * Dropped local register caching
-  * Implement own OF clk_hw getter in favor of the onecell helper
-  * Implemented recalc_rate() properly by reading from the hardware
-  * Dropped input clock frequency validation
-  * Style issues
-
-* Fixed a gpio line handling bug in resume
-* Added Rob's Revied-by to 1/2
-
-v1 → v2:
-
-* Now served as two patches, one for the DT bits, and one for the actual
-  implementation. The DT bits are put in the 1st patch because the
-  implementation depends on the shared header file.
-
-* Added support for suspend/resume
-
-Daniel Mack (2):
-  dts: clk: add devicetree bindings for MAX9485
-  clk: Add driver for MAX9485
-
- .../bindings/clock/maxim,max9485.txt          |  59 +++
- drivers/clk/Kconfig                           |   6 +
- drivers/clk/Makefile                          |   1 +
- drivers/clk/clk-max9485.c                     | 402 ++++++++++++++++++
- include/dt-bindings/clock/maxim,max9485.h     |  18 +
- 5 files changed, 486 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/maxim,max9485.txt
- create mode 100644 drivers/clk/clk-max9485.c
- create mode 100644 include/dt-bindings/clock/maxim,max9485.h
-
+diff --git a/Documentation/devicetree/bindings/power/reset/qcom,pon.txt b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+new file mode 100644
+index 000000000000..f32cdd358267
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+@@ -0,0 +1,35 @@
++Qualcomm PON Device
++
++The Power On device for Qualcomm PM8xxx is MFD supporting pwrkey
++along with the Android reboot-mode.
++
++This DT node has pwrkey as sub node.
++
++Required Properties:
++-compatible: "qcom,pm8916-pon"
++-reg: Specifies the physical address of the pon register
++
++Optional subnode:
++-pwrkey: Specifies the subnode pwrkey and should follow the
++ qcom,pm8941-pwrkey.txt description.
++
++The rest of the properties should follow the generic reboot-mode description
++found in reboot-mode.txt
++
++Example:
++
++	pon@800 {
++		compatible = "qcom,pm8916-pon";
++
++		reg = <0x800>;
++		mode-bootloader = <0x2>;
++		mode-recovery = <0x1>;
++
++		pwrkey {
++			compatible = "qcom,pm8941-pwrkey";
++			interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
++			debounce = <15625>;
++			bias-pull-up;
++			linux,code = <KEY_POWER>;
++		};
++	};
 -- 
-2.17.1
+2.14.4
