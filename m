@@ -1,56 +1,65 @@
-From: Michel Pollet <michel.pollet@bp.renesas.com>
-Subject: [PATCH v7 0/3] Renesas R9A06G032 SMP enabler
-Date: Thu, 28 Jun 2018 09:17:11 +0100
-Message-ID: <1530173842-56851-1-git-send-email-michel.pollet@bp.renesas.com>
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
+Subject: Re: [RFC PATCH 1/2] spi: Add QuadSPI driver for Atmel SAMA5D2
+Date: Thu, 28 Jun 2018 11:37:07 +0300
+Message-ID: <1d736934-b3e7-7b23-0f34-1d22d36b2b18@microchip.com>
+References: <20180618162124.21749-1-bugalski.piotr@gmail.com>
+ <20180618162124.21749-2-bugalski.piotr@gmail.com>
+ <20180621233321.0f25f572@bbrezillon>
+ <alpine.DEB.2.20.1806220719190.21824@carbonite>
+ <20180622093905.62a3b936@bbrezillon>
+ <455adb76-530a-1fd5-303c-cfa158ad7870@microchip.com>
+ <alpine.DEB.2.20.1806270940500.32198@carbonite>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.20.1806270940500.32198@carbonite>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
-Cc: phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Douglas Anderson <dianders@chromium.org>, Kevin Hilman <khilman@baylibre.com>, Chen-Yu Tsai <wens@csie.org>, Stefan Wahren <stefan.wahren@i2se.com>, Rajendra Nayak <rnayak@codeaurora.org>, Carlo Caione <carlo@endlessm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Piotr Bugalski <bugalski.piotr@gmail.com>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Cyrille Pitchen <cyrille.pitchen@microchip.com>, Piotr Bugalski <pbu@cryptera.com>
 List-Id: devicetree@vger.kernel.org
 
-*WARNING -- this requires the base R9A06G032 support patches
-already posted
+Hi, Piotr,
 
-This patch series is for enabling the second CA7 of the R9A06G032.
-It's based on a spin_table method, and it reuses the same binding
-property as that driver.
+On 06/27/2018 10:52 AM, Piotr Bugalski wrote:
+> 
+>> General things to consider for the limitation in performance:
+>> - is the serial flash memory operating in Quad SPI?
+> 
+> Yes, I've checked signal using logic analyzer, data is transferred using
+> all four lines.
+> 
+>> - QSCLK should be as high as possible
+> 
+> Sure, but when we are using lower frequency CPU impact should be
+> negligible while efficiency is crap on every speed.
+> 
+>> - transfer delays - I checked them, they have default values, we should be good.
+>> - use DMA, as you suggested
+>>
+> 
+> I don't understand one thing. While CPU is not busy and during my tests
+> 100% of CPU can be used for communication, efficiency is still very low.
+> Why DMA has such impact?
+> 
+> It is very interesting to observe signals using logic analyzer.
+> When CPU is used for communication, there are long delays after
+> every byte transferred. These delays are  much longer than it should be only because of writing next value by CPU.
 
-v7:
- + Moved to drivers/soc/renesas, as requested.
-v6:
- + Passed scriptcheck --strict on the driver.
- + Rebased on base patchset v10
-v5:
-  + Fixed a couple of typos
-  + Added the Reviewed-by tags where appropriate
-  + Rebased on base patch v9
-  + Replaced the dts property with a 64 bits one.
-  + Changed the driver to support 32 or 64 bits property.
-v4:
-  + Geert's comments adressed.
-  + Renamed symbols to r9a06g032 to match the rest of patchset
-  + Rebased on base patch v8
-v3:
-  + Removed mentions of rz/?n1d?
-  + Rebased on base patch v7
-v2:
-  + Added suggestions from Florian Fainelli
-  + Use __pa_symbol()
-  + Simplified logic in prepare_cpu()
-  + Reordered the patches
-  + Rebased on RZN1 Base patch v5
+Are those consecutive transfers (same peripheral without removing chip select)?
+The delays between consecutive transfers can be set just in SPI mode. It would
+be strange to see this kind of delays in serial memory mode.
 
-Michel Pollet (3):
-  dt-bindings: cpu: Add Renesas R9A06G032 SMP enable method.
-  arm: shmobile: Add the R9A06G032 SMP enabler driver
-  ARM: dts: Renesas R9A06G032 SMP enable method
+> I tried to change SPI frequency. If delay were CPU related,
+> delay time should stay the same. Unfortunately results were different -
+> lowering SPI freqency extends delay time.
 
- Documentation/devicetree/bindings/arm/cpus.txt |  1 +
- arch/arm/boot/dts/r9a06g032.dtsi               |  2 +
- drivers/soc/renesas/Makefile                   |  1 +
- drivers/soc/renesas/r9a06g032-smp.c            | 96 ++++++++++++++++++++++++++
- 4 files changed, 100 insertions(+)
- create mode 100644 drivers/soc/renesas/r9a06g032-smp.c
+If QSCK is less than f-perif-clock/2, then setting DLYBS to 1 will shorten the
+DLYBS delay, but this is peanuts.
 
--- 
-2.7.4
+Thanks,
+ta
+
+> Using DMA makes these delays to disappear, but how to acheive CPU
+> communication without delays?
