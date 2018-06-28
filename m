@@ -1,55 +1,119 @@
-Return-Path: <SRS0=1b4G=JP=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 6/7] mmc: pxamci: remove pxa-mmc,gpio-power from devicetree bindings
-Date: Fri, 29 Jun 2018 16:47:37 +0200
-Message-Id: <20180629144738.446-7-daniel@zonque.org>
-In-Reply-To: <20180629144738.446-1-daniel@zonque.org>
-References: <20180629144738.446-1-daniel@zonque.org>
-To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: robert.jarzmik@free.fr, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=qqtW=JO=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH 09/22] [media] tvp5150: fix standard autodetection
+Date: Thu, 28 Jun 2018 18:20:41 +0200
+Message-Id: <20180628162054.25613-10-m.felsch@pengutronix.de>
+In-Reply-To: <20180628162054.25613-1-m.felsch@pengutronix.de>
+References: <20180628162054.25613-1-m.felsch@pengutronix.de>
+To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: p.zabel@pengutronix.de, afshin.nasser@gmail.com, javierm@redhat.com, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Devicetree-enabled boards should use proper regulators to control the
-power of cards, not GPIOs, so let's remove this property. The regulator
-properties are are supported by the MMC core and are described in the
-generic MMC document:
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-  Documentation/devicetree/bindings/mmc/mmc.txt
+Make sure to not overwrite decoder->norm when setting the standard
+in hardware, but only when instructed by V4L2 API calls.
 
-Note that devicetree support for PXA platforms hasn't fully landed yet,
-so this binding does not have any users at this point.
-
-Signed-off-by: Daniel Mack <daniel@zonque.org>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- Documentation/devicetree/bindings/mmc/pxa-mmc.txt | 1 -
- drivers/mmc/host/pxamci.c                         | 3 ---
- 2 files changed, 4 deletions(-)
+ drivers/media/i2c/tvp5150.c | 56 ++++++++++++++++++++-----------------
+ 1 file changed, 31 insertions(+), 25 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/pxa-mmc.txt b/Documentation/devicetree/bindings/mmc/pxa-mmc.txt
-index b7025de7dced..359b13977f24 100644
---- a/Documentation/devicetree/bindings/mmc/pxa-mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/pxa-mmc.txt
-@@ -8,7 +8,6 @@ Required properties:
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index dbfc56c87434..895bc2bfb1d1 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -731,8 +731,6 @@ static int tvp5150_set_std(struct v4l2_subdev *sd, v4l2_std_id std)
+ 	struct tvp5150 *decoder = to_tvp5150(sd);
+ 	int fmt = 0;
  
- Optional properties:
- - marvell,detect-delay-ms: sets the detection delay timeout in ms.
--- marvell,gpio-power: GPIO spec for the card power enable pin
- 
- This file documents differences between the core properties in mmc.txt
- and the properties used by the pxa-mmc driver.
-diff --git a/drivers/mmc/host/pxamci.c b/drivers/mmc/host/pxamci.c
-index e15708aa77a2..c01d69904e2a 100644
---- a/drivers/mmc/host/pxamci.c
-+++ b/drivers/mmc/host/pxamci.c
-@@ -612,9 +612,6 @@ static int pxamci_of_init(struct platform_device *pdev,
- 		of_get_named_gpio(np, "wp-gpios", 0);
- 
- 	/* pxa-mmc specific */
--	pdata->gpio_power =
--		of_get_named_gpio(np, "pxa-mmc,gpio-power", 0);
+-	decoder->norm = std;
 -
- 	if (of_property_read_u32(np, "pxa-mmc,detect-delay-ms", &tmp) == 0)
- 		pdata->detect_delay_ms = tmp;
+ 	/* First tests should be against specific std */
  
+ 	if (std == V4L2_STD_NTSC_443) {
+@@ -769,13 +767,37 @@ static int tvp5150_s_std(struct v4l2_subdev *sd, v4l2_std_id std)
+ 	else
+ 		decoder->rect.height = TVP5150_V_MAX_OTHERS;
+ 
++	decoder->norm = std;
+ 
+ 	return tvp5150_set_std(sd, std);
+ }
+ 
++static v4l2_std_id tvp5150_read_std(struct v4l2_subdev *sd)
++{
++	int val = tvp5150_read(sd, TVP5150_STATUS_REG_5);
++
++	switch (val & 0x0F) {
++	case 0x01:
++		return V4L2_STD_NTSC;
++	case 0x03:
++		return V4L2_STD_PAL;
++	case 0x05:
++		return V4L2_STD_PAL_M;
++	case 0x07:
++		return V4L2_STD_PAL_N | V4L2_STD_PAL_Nc;
++	case 0x09:
++		return V4L2_STD_NTSC_443;
++	case 0xb:
++		return V4L2_STD_SECAM;
++	default:
++		return V4L2_STD_UNKNOWN;
++	}
++}
++
+ static int tvp5150_reset(struct v4l2_subdev *sd, u32 val)
+ {
+ 	struct tvp5150 *decoder = to_tvp5150(sd);
++	v4l2_std_id std;
+ 
+ 	/* Initializes TVP5150 to its default values */
+ 	tvp5150_write_inittab(sd, tvp5150_init_default);
+@@ -792,7 +814,13 @@ static int tvp5150_reset(struct v4l2_subdev *sd, u32 val)
+ 	/* Initialize image preferences */
+ 	v4l2_ctrl_handler_setup(&decoder->hdl);
+ 
+-	tvp5150_set_std(sd, decoder->norm);
++	if (decoder->norm == V4L2_STD_ALL)
++		std = tvp5150_read_std(sd);
++	else
++		std = decoder->norm;
++
++	/* Disable autoswitch mode */
++	tvp5150_set_std(sd, std);
+ 
+ 	if (decoder->mbus_type == V4L2_MBUS_PARALLEL)
+ 		/* 8-bit 4:2:2 YUV with discrete sync output */
+@@ -829,28 +857,6 @@ static int tvp5150_s_ctrl(struct v4l2_ctrl *ctrl)
+ 	return -EINVAL;
+ }
+ 
+-static v4l2_std_id tvp5150_read_std(struct v4l2_subdev *sd)
+-{
+-	int val = tvp5150_read(sd, TVP5150_STATUS_REG_5);
+-
+-	switch (val & 0x0F) {
+-	case 0x01:
+-		return V4L2_STD_NTSC;
+-	case 0x03:
+-		return V4L2_STD_PAL;
+-	case 0x05:
+-		return V4L2_STD_PAL_M;
+-	case 0x07:
+-		return V4L2_STD_PAL_N | V4L2_STD_PAL_Nc;
+-	case 0x09:
+-		return V4L2_STD_NTSC_443;
+-	case 0xb:
+-		return V4L2_STD_SECAM;
+-	default:
+-		return V4L2_STD_UNKNOWN;
+-	}
+-}
+-
+ static void tvp5150_set_default(v4l2_std_id std, struct v4l2_rect *crop)
+ {
+ 	/* Default is no cropping */
 -- 
 2.17.1
