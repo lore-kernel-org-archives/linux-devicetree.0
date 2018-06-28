@@ -1,83 +1,49 @@
-From: Thor Thayer <thor.thayer@linux.intel.com>
-Subject: Re: [PATCH] arm64: dts: stratix10: Add SPI node clocks for Stratix10
-Date: Thu, 28 Jun 2018 15:23:56 -0500
-Message-ID: <b325b195-de23-c0bf-8c82-ab72bac2c43c@linux.intel.com>
-References: <1530121827-32390-1-git-send-email-thor.thayer@linux.intel.com>
- <22497e7f-74dc-2427-6b36-5900fe062d9d@kernel.org>
-Reply-To: thor.thayer@linux.intel.com
+From: Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH] arm64: dts: hikey: Define wl1835 power capabilities
+Date: Thu, 28 Jun 2018 21:25:31 +0100
+Message-ID: <5B35443B.2060903@hisilicon.com>
+References: <20180613151305.17240-1-ryan@edited.us>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <22497e7f-74dc-2427-6b36-5900fe062d9d@kernel.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dinh Nguyen <dinguyen@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180613151305.17240-1-ryan@edited.us>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ryan Grachek <ryan@edited.us>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dinh,
+Hi Ryan,
 
-On 06/28/2018 02:37 PM, Dinh Nguyen wrote:
-> Hi Thor
+On 2018/6/13 16:13, Ryan Grachek wrote:
+> These properties are required for compatibility with runtime PM.
+> Without these properties, MMC host controller will not be aware
+> of power capabilities. When the wlcore driver attempts to power
+> on the device, it will erroneously fail with -EACCES.
 > 
-> On 06/27/2018 12:50 PM, thor.thayer@linux.intel.com wrote:
->> From: Thor Thayer <thor.thayer@linux.intel.com>
->>
->> Add the required clocks for the new Stratix10 clock bindings
->> to the SPI nodes.
->>
->> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
->> ---
->>   arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
->> index 67dac595dc72..9e54282ee08c 100644
->> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
->> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
->> @@ -310,6 +310,7 @@
->>   			resets = <&rst SPIM0_RESET>;
->>   			reg-io-width = <4>;
->>   			num-cs = <4>;
->> +			clocks = <&clkmgr STRATIX10_L4_MAIN_CLK>;
->>   			status = "disabled";
->>   		};
->>   
->> @@ -322,6 +323,7 @@
->>   			resets = <&rst SPIM1_RESET>;
->>   			reg-io-width = <4>;
->>   			num-cs = <4>;
->> +			clocks = <&clkmgr STRATIX10_L4_MAIN_CLK>;
->>   			status = "disabled";
->>   		};
->>   
->>
+> Signed-off-by: Ryan Grachek <ryan@edited.us>
+> ---
+
+Applied to hisilicon fix tree.
+Thanks!
+
+Best Regards,
+Wei
+
+>  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> I thought you already sent a patch for this?
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> index 38f881955217..c5feca8cd10b 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> @@ -323,6 +323,8 @@
+>  			bus-width = <0x4>;
+>  			cap-sd-highspeed;
+>  			non-removable;
+> +			cap-power-off-card;
+> +			keep-power-in-suspend;
+>  			vmmc-supply = <&reg_vdd_3v3>;
+>  			mmc-pwrseq = <&wl1835_pwrseq>;
+>  
 > 
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2018-June/585514.html
-> 
-> Dinh
-> 
-Good catch. I didn't see the clock addition in the
-
-dinh_linux_for_next/socfpga_for_next_v4.19_fixes_v1
-dinh_linux_for_next/socfpga_for_next_v4.19_dts_v1
-
-branches so I assumed it hadn't been applied (since the num-cs change 
-from the patchset is there).
-
-This is a simpler patch since the STRATIX10_SPI_M_CLK isn't needed.
-
-Thanks,
-
-Thor
