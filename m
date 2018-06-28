@@ -1,82 +1,57 @@
-Return-Path: <SRS0=qqtW=JO=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 08/22] [media] tvp5150: trigger autodetection on subdev open to reset cropping
-Date: Thu, 28 Jun 2018 18:20:40 +0200
-Message-Id: <20180628162054.25613-9-m.felsch@pengutronix.de>
-In-Reply-To: <20180628162054.25613-1-m.felsch@pengutronix.de>
-References: <20180628162054.25613-1-m.felsch@pengutronix.de>
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: p.zabel@pengutronix.de, afshin.nasser@gmail.com, javierm@redhat.com, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Return-Path: <vkoul@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v5 6/6] input: pm8941-pwrkey: Add resin entry
+Date: Thu, 28 Jun 2018 20:38:50 +0530
+Message-Id: <20180628150850.15358-7-vkoul@kernel.org>
+In-Reply-To: <20180628150850.15358-1-vkoul@kernel.org>
+References: <20180628150850.15358-1-vkoul@kernel.org>
+To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+Since handling is abstracted in this driver, we need to add resin entry
+in id table along with pwrkey_data.
 
-If cropping isn't set explicitly by userspace, reset it to the maximum
-possible rectangle in subdevice open if a standard change is detected.
-
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-[m.felsch@pengutronix.de: move code from internal_ops.open() to pad_ops.init_cfg()]
-[m.felsch@pengutronix.de: make use of tvp5150_set_default() helper]
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/media/i2c/tvp5150.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/input/misc/pm8941-pwrkey.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index c73536cfcc62..dbfc56c87434 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -55,6 +55,7 @@ struct tvp5150 {
- 	struct regmap *regmap;
+diff --git a/drivers/input/misc/pm8941-pwrkey.c b/drivers/input/misc/pm8941-pwrkey.c
+index 2047e34c0982..6547a57f5222 100644
+--- a/drivers/input/misc/pm8941-pwrkey.c
++++ b/drivers/input/misc/pm8941-pwrkey.c
+@@ -29,6 +29,7 @@
  
- 	v4l2_std_id norm;	/* Current set standard */
-+	v4l2_std_id detected_norm;
- 	u32 input;
- 	u32 output;
- 	int enable;
-@@ -1034,6 +1035,27 @@ static int tvp5150_g_mbus_config(struct v4l2_subdev *sd,
- /****************************************************************************
- 			V4L2 subdev pad ops
-  ****************************************************************************/
-+static int tvp5150_init_cfg(struct v4l2_subdev *sd,
-+			    struct v4l2_subdev_pad_config *cfg)
-+{
-+	struct tvp5150 *decoder = to_tvp5150(sd);
-+	v4l2_std_id std;
-+
-+	/*
-+	 * Reset selection to maximum on subdev_open() if autodetection is on
-+	 * and a standard change is detected.
-+	 */
-+	if (decoder->norm == V4L2_STD_ALL) {
-+		std = tvp5150_read_std(sd);
-+		if (std != decoder->detected_norm) {
-+			decoder->detected_norm = std;
-+			tvp5150_set_default(std, &decoder->rect);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int tvp5150_enum_mbus_code(struct v4l2_subdev *sd,
- 		struct v4l2_subdev_pad_config *cfg,
- 		struct v4l2_subdev_mbus_code_enum *code)
-@@ -1308,6 +1330,7 @@ static const struct v4l2_subdev_vbi_ops tvp5150_vbi_ops = {
+ #define PON_RT_STS			0x10
+ #define  PON_KPDPWR_N_SET		BIT(0)
++#define  PON_RESIN_N_SET		BIT(1)
+ 
+ #define PON_PS_HOLD_RST_CTL		0x5a
+ #define PON_PS_HOLD_RST_CTL2		0x5b
+@@ -39,6 +40,7 @@
+ 
+ #define PON_PULL_CTL			0x70
+ #define  PON_KPDPWR_PULL_UP		BIT(1)
++#define  PON_RESIN_PULL_UP		BIT(0)
+ 
+ #define PON_DBC_CTL			0x71
+ #define  PON_DBC_DELAY_MASK		0x7
+@@ -306,8 +308,14 @@ static const struct pm8941_data pwrkey_data = {
+ 	.status_bit = PON_KPDPWR_N_SET,
  };
  
- static const struct v4l2_subdev_pad_ops tvp5150_pad_ops = {
-+	.init_cfg = tvp5150_init_cfg,
- 	.enum_mbus_code = tvp5150_enum_mbus_code,
- 	.enum_frame_size = tvp5150_enum_frame_size,
- 	.set_fmt = tvp5150_fill_fmt,
-@@ -1640,6 +1663,7 @@ static int tvp5150_probe(struct i2c_client *c,
- 		return res;
- 
- 	core->norm = V4L2_STD_ALL;	/* Default is autodetect */
-+	core->detected_norm = V4L2_STD_UNKNOWN;
- 	core->input = TVP5150_COMPOSITE1;
- 	core->enable = true;
- 
++static const struct pm8941_data resin_data = {
++	.pull_up_bit = PON_RESIN_PULL_UP,
++	.status_bit = PON_RESIN_N_SET,
++};
++
+ static const struct of_device_id pm8941_pwr_key_id_table[] = {
+ 	{ .compatible = "qcom,pm8941-pwrkey", .data = &pwrkey_data },
++	{ .compatible = "qcom,pm8941-resin", .data = &resin_data },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, pm8941_pwr_key_id_table);
 -- 
-2.17.1
+2.14.4
