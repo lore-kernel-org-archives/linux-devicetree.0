@@ -1,33 +1,67 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 3/3] pinctrl: actions: Add interrupt support for OWL
- S900 SoC
-Date: Fri, 29 Jun 2018 14:31:54 +0200
-Message-ID: <CACRpkdZcUJBsb-P5eT3PcYe1ukYCU8OC95pBbR58wYXutdT1JQ@mail.gmail.com>
-References: <20180623045954.6729-1-manivannan.sadhasivam@linaro.org> <20180623045954.6729-4-manivannan.sadhasivam@linaro.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 07/17] irqchip/irq-mvebu-icu: make irq_domain local
+Date: Fri, 29 Jun 2018 14:32:11 +0200
+Message-ID: <20180629143211.4b4f827a@xps13>
+References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
+ <20180622151432.1566-8-miquel.raynal@bootlin.com>
+ <2f751e0a-857e-22ab-1748-5fd1cb127766@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180623045954.6729-4-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>, "Thomas C. Liau" <thomas.liau@actions-semi.com>, Jeff Chen <jeff.chen@actions-semi.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2f751e0a-857e-22ab-1748-5fd1cb127766@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 23, 2018 at 7:00 AM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
-
-> Add interrupt support for Actions Semi OWL S900 SoC.
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Patch applied with Andy's review tag.
-
-I really like the looks of this!
-
-If you have ideas on how we can move more of the multiple
-IRQ parent per-bank IRQ into the core and make it easier to
-use, feel free to contribute ideas and code :)
-
-Yours,
-Linus Walle=C3=ADj
+SGkgTWFyYywKCk1hcmMgWnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+IHdyb3RlIG9uIFRo
+dSwgMjggSnVuIDIwMTggMTM6MTA6MDUKKzAxMDA6Cgo+IE9uIDIyLzA2LzE4IDE2OjE0LCBNaXF1
+ZWwgUmF5bmFsIHdyb3RlOgo+ID4gTWFrZSB0aGUgY3VycmVudCBNU0kgaXJxX2RvbWFpbiBsb2Nh
+bCB0byBlYXNlIHRoZSBzcGxpdCBiZXR3ZWVuIElDVQo+ID4gcGxhdGZvcm0gZGV2aWNlIGNvZGUg
+YW5kIE5TUiBwbGF0Zm9ybSBkZXZpY2UgY29kZS4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogTWlx
+dWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4KPiA+IFJldmlld2VkLWJ5OiBU
+aG9tYXMgUGV0YXp6b25pIDx0aG9tYXMucGV0YXp6b25pQGJvb3RsaW4uY29tPgo+ID4gLS0tCj4g
+PiAgZHJpdmVycy9pcnFjaGlwL2lycS1tdmVidS1pY3UuYyB8IDYgKysrLS0tCj4gPiAgMSBmaWxl
+IGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKPiA+IAo+ID4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvaXJxY2hpcC9pcnEtbXZlYnUtaWN1LmMgYi9kcml2ZXJzL2lycWNoaXAv
+aXJxLW12ZWJ1LWljdS5jCj4gPiBpbmRleCAzNjk0YzBkNzNjMGQuLjYwNzk0ODg3MGExNCAxMDA2
+NDQKPiA+IC0tLSBhL2RyaXZlcnMvaXJxY2hpcC9pcnEtbXZlYnUtaWN1LmMKPiA+ICsrKyBiL2Ry
+aXZlcnMvaXJxY2hpcC9pcnEtbXZlYnUtaWN1LmMKPiA+IEBAIC00MSw3ICs0MSw2IEBACj4gPiAg
+c3RydWN0IG12ZWJ1X2ljdSB7Cj4gPiAgCXN0cnVjdCBpcnFfY2hpcCBpcnFfY2hpcDsKPiA+ICAJ
+c3RydWN0IHJlZ21hcCAqcmVnbWFwOwo+ID4gLQlzdHJ1Y3QgaXJxX2RvbWFpbiAqZG9tYWluOwo+
+ID4gIAlzdHJ1Y3QgZGV2aWNlICpkZXY7Cj4gPiAgCWF0b21pY190IGluaXRpYWxpemVkOwo+ID4g
+IH07Cj4gPiBAQCAtMjE4LDYgKzIxNyw3IEBAIHN0YXRpYyBpbnQgbXZlYnVfaWN1X3Byb2JlKHN0
+cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gPiAgCXN0cnVjdCBtdmVidV9pY3UgKmljdTsK
+PiA+ICAJc3RydWN0IGRldmljZV9ub2RlICpub2RlID0gcGRldi0+ZGV2Lm9mX25vZGU7Cj4gPiAg
+CXN0cnVjdCBkZXZpY2Vfbm9kZSAqZ2ljcF9kbjsKPiA+ICsJc3RydWN0IGlycV9kb21haW4gKmly
+cV9kb21haW47Cj4gPiAgCXN0cnVjdCByZXNvdXJjZSAqcmVzOwo+ID4gIAl2b2lkIF9faW9tZW0g
+KnJlZ3M7Cj4gPiAgCWludCBpOwo+ID4gQEAgLTI4MiwxMSArMjgyLDExIEBAIHN0YXRpYyBpbnQg
+bXZlYnVfaWN1X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gPiAgCQkJcmVn
+bWFwX3dyaXRlKGljdS0+cmVnbWFwLCBJQ1VfSU5UX0NGRyhpKSwgMCk7Cj4gPiAgCX0KPiA+ICAK
+PiA+IC0JaWN1LT5kb21haW4gPQo+ID4gKwlpcnFfZG9tYWluID0KPiA+ICAJCXBsYXRmb3JtX21z
+aV9jcmVhdGVfZGV2aWNlX2RvbWFpbigmcGRldi0+ZGV2LCBJQ1VfTUFYX0lSUVMsCj4gPiAgCQkJ
+CQkJICBtdmVidV9pY3Vfd3JpdGVfbXNnLAo+ID4gIAkJCQkJCSAgJm12ZWJ1X2ljdV9kb21haW5f
+b3BzLCBpY3UpOyAgCj4gCj4gbml0OiB0aGlzIHJlYWxseSBodXJ0cyBteSBleWVzLiBQbGVhc2Ug
+cHV0IHRoZSA9IHNpZ24gYW5kIHRoZSBmdW5jdGlvbgo+IGNhbGwgb24gYSBzaW5nbGUgbGluZS4g
+SSByZWFsbHkgZG9uJ3QgY2FyZSBpZiBpdCBjaGVja3BhdGNoIGlzIGhhdmluZyBhCj4gZml0IGJl
+Y2F1c2Ugb2YgdGhhdC4KCkkgYWxzbyBkaXNsaWtlLiBXaWxsIGNoYW5nZS4KCj4gCj4gPiAtCWlm
+ICghaWN1LT5kb21haW4pIHsKPiA+ICsJaWYgKCFpcnFfZG9tYWluKSB7Cj4gPiAgCQlkZXZfZXJy
+KCZwZGV2LT5kZXYsICJGYWlsZWQgdG8gY3JlYXRlIElDVSBkb21haW5cbiIpOwo+ID4gIAkJcmV0
+dXJuIC1FTk9NRU07Cj4gPiAgCX0KPiA+ICAgCj4gCj4gQnV0IGxvb2tpbmcgYXQgdGhlIG5leHQg
+cGF0Y2gsIHlvdSBtaWdodCBhcyB3ZWxsIGZvbGQgdGhlIHR3by4gT24gaXRzCj4gb3duLCB0aGlz
+IHBhdGNoZXMgaXMgcHJldHR5IHBvaW50bGVzcy4KCk1vc3Qgb2Z0ZW4gcGVvcGxlIGFzayB0byBz
+cGxpdCBsb2dpY2FsIGNoYW5nZXMgYXMgbXVjaCBhcyBwb3NzaWJsZS4gQnV0CkkgaGF2ZSBubyBw
+cm9ibGVtIHNxdWFzaGluZyB0aGVzZSB0d28gcGF0Y2hlcy4KCgpUaGFua3MsCk1pcXXDqGwKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
+ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
+ZWwK
