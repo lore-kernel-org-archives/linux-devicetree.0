@@ -1,76 +1,218 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: phy: Add binding doc for Stingray
- PCIe PHY
-Date: Fri, 29 Jun 2018 12:06:59 +0530
-Message-ID: <424c21ea-e751-16e8-71b0-d05537b9e0b3@ti.com>
-References: <1529540316-21706-1-git-send-email-ray.jui@broadcom.com>
- <1529540316-21706-2-git-send-email-ray.jui@broadcom.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v22 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
+Date: Fri, 29 Jun 2018 15:08:03 +0800
+Message-ID: <1530256083.8518.36.camel@mtksdaap41>
+References: <1530098172-31385-1-git-send-email-houlong.wei@mediatek.com>
+         <1530098172-31385-3-git-send-email-houlong.wei@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529540316-21706-2-git-send-email-ray.jui@broadcom.com>
+In-Reply-To: <1530098172-31385-3-git-send-email-houlong.wei@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>, robh+dt@kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+To: Houlong Wei <houlong.wei@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Monica Wang <monica.wang@mediatek.com>, HS Liao <hs.liao>
 List-Id: devicetree@vger.kernel.org
 
-+Rob and device tree list
+Hi, Houlong:
 
-On Thursday 21 June 2018 05:48 AM, Ray Jui wrote:
-> Add binding document for Stingray PCIe PHYs for both PAXB and PAXC based
-> root complex
+Some inline comment.
+
+On Wed, 2018-06-27 at 19:16 +0800, Houlong Wei wrote:
+> This patch is first version of Mediatek Command Queue(CMDQ) driver. The
+> CMDQ is used to help write registers with critical time limitation,
+> such as updating display configuration during the vblank. It controls
+> Global Command Engine (GCE) hardware to achieve this requirement.
+> Currently, CMDQ only supports display related hardwares, but we expect
+> it can be extended to other hardwares for future requirements.
 > 
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+> Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
+> Signed-off-by: HS Liao <hs.liao@mediatek.com>
+> Signed-off-by: CK Hu <ck.hu@mediatek.com>
 > ---
->  .../devicetree/bindings/phy/brcm,sr-pcie-phy.txt   | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/brcm,sr-pcie-phy.txt
+>  drivers/mailbox/Kconfig                  |   10 +
+>  drivers/mailbox/Makefile                 |    2 +
+>  drivers/mailbox/mtk-cmdq-mailbox.c       |  634 ++++++++++++++++++++++++++++++
+>  include/linux/mailbox/mtk-cmdq-mailbox.h |   70 ++++
+>  4 files changed, 716 insertions(+)
+>  create mode 100644 drivers/mailbox/mtk-cmdq-mailbox.c
+>  create mode 100644 include/linux/mailbox/mtk-cmdq-mailbox.h
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/brcm,sr-pcie-phy.txt b/Documentation/devicetree/bindings/phy/brcm,sr-pcie-phy.txt
-> new file mode 100644
-> index 0000000..c2eede6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/brcm,sr-pcie-phy.txt
-> @@ -0,0 +1,39 @@
-> +Broadcom Stingray PCIe PHY
+
+[...]
+
 > +
-> +Required properties:
-> +- compatible: must be "brcm,sr-pcie-phy"
-> +- brcm,sr-cdru: phandle to the CDRU syscon node
-> +- brcm,sr-mhb: phandle to the MHB syscon node
-> +- #phy-cells: Must be 1, denotes the PHY index
+> +static int cmdq_thread_reset(struct cmdq *cmdq, struct cmdq_thread *thread)
+> +{
+> +	u32 warm_reset;
 > +
-> +For PAXB based root complex, one can have a configuration of up to 8 PHYs
-> +PHY index goes from 0 to 7
+> +	writel(CMDQ_THR_DO_WARM_RESET, thread->base + CMDQ_THR_WARM_RESET);
+> +	if (readl_poll_timeout_atomic(thread->base + CMDQ_THR_WARM_RESET,
+> +			warm_reset, !(warm_reset & CMDQ_THR_DO_WARM_RESET),
+> +			0, 10)) {
+> +		dev_err(cmdq->mbox.dev, "reset GCE thread 0x%x failed\n",
+> +			(u32)(thread->base - cmdq->base));
+> +		return -EFAULT;
+> +	}
+> +	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
+
+The CMDQ_THR_SLOT_CYCLES looks like not relevant to reset. Maybe you
+just need to set this value when startup.
+
 > +
-> +For the internal PAXC based root complex, PHY index is always 8
+> +	return 0;
+> +}
 > +
-> +Example:
-> +	mhb: syscon@60401000 {
-> +		compatible = "brcm,sr-mhb", "syscon";
-> +		reg = <0 0x60401000 0 0x38c>;
-> +	};
+
+[...]
+
 > +
-> +	cdru: syscon@6641d000 {
-> +		compatible = "brcm,sr-cdru", "syscon";
-> +		reg = <0 0x6641d000 0 0x400>;
-> +	};
+> +static void cmdq_task_exec(struct cmdq_pkt *pkt, struct cmdq_thread *thread)
+> +{
+> +	struct cmdq *cmdq;
+> +	struct cmdq_task *task;
+> +	unsigned long curr_pa, end_pa;
 > +
-> +	pcie_phy: phy {
-> +		compatible = "brcm,sr-pcie-phy";
-> +		brcm,sr-cdru = <&cdru>;
-> +		brcm,sr-mhb = <&mhb>;
-> +		#phy-cells = <1>;
-> +	};
+> +	cmdq = dev_get_drvdata(thread->chan->mbox->dev);
 > +
-> +	/* users of the PCIe PHY */
+> +	/* Client should not flush new tasks if suspended. */
+> +	WARN_ON(cmdq->suspended);
 > +
-> +	pcie0: pcie@48000000 {
-> +		...
-> +		...
-> +		phys = <&pcie_phy 0>;
-> +		phy-names = "pcie-phy";
-> +	};
-> 
+> +	task = kzalloc(sizeof(*task), GFP_ATOMIC);
+> +	task->cmdq = cmdq;
+> +	INIT_LIST_HEAD(&task->list_entry);
+> +	task->pa_base = pkt->pa_base;
+> +	task->thread = thread;
+> +	task->pkt = pkt;
+> +
+> +	if (list_empty(&thread->task_busy_list)) {
+> +		WARN_ON(clk_enable(cmdq->clock) < 0);
+> +		WARN_ON(cmdq_thread_reset(cmdq, thread) < 0);
+> +
+> +		writel(task->pa_base, thread->base + CMDQ_THR_CURR_ADDR);
+> +		writel(task->pa_base + pkt->cmd_buf_size,
+> +		       thread->base + CMDQ_THR_END_ADDR);
+> +		writel(thread->priority, thread->base + CMDQ_THR_PRIORITY);
+> +		writel(CMDQ_THR_IRQ_EN, thread->base + CMDQ_THR_IRQ_ENABLE);
+> +		writel(CMDQ_THR_ENABLED, thread->base + CMDQ_THR_ENABLE_TASK);
+> +
+> +		if (thread->timeout_ms != CMDQ_NO_TIMEOUT)
+> +			mod_timer(&thread->timeout,
+> +				jiffies + msecs_to_jiffies(thread->timeout_ms));
+
+I think the timeout processing should be done by client driver. The
+total time to execute a command buffer does not depend on GCE HW speed
+because the WFE (wait for event) command would wait for client HW event,
+so the total time depend on how long a client HW send this event to GCE
+and the timeout processing should be client driver's job. Each client
+may have different timeout processing mechanism, for example, if display
+could dynamic change panel frame rate between 120Hz and 60Hz, and the
+timeout time is 2 frame, so it may dynamically change timeout time
+between 17ms and 33ms. Another reason is that display have interrupt
+every vblank, and it could check timeout in that interrupt, so the timer
+in cmdq driver looks redundant. Because each client would define its own
+timeout processing mechanism, so it's not wise to put timeout processing
+in cmdq driver.
+
+> +	} else {
+> +		WARN_ON(cmdq_thread_suspend(cmdq, thread) < 0);
+> +		curr_pa = readl(thread->base + CMDQ_THR_CURR_ADDR);
+> +		end_pa = readl(thread->base + CMDQ_THR_END_ADDR);
+> +
+> +		/*
+> +		 * Atomic execution should remove the following wfe, i.e. only
+> +		 * wait event at first task, and prevent to pause when running.
+> +		 */
+> +		if (thread->atomic_exec) {
+> +			/* GCE is executing if command is not WFE */
+> +			if (!cmdq_thread_is_in_wfe(thread)) {
+> +				cmdq_thread_resume(thread);
+> +				cmdq_thread_wait_end(thread, end_pa);
+> +				WARN_ON(cmdq_thread_suspend(cmdq, thread) < 0);
+> +				/* set to this task directly */
+> +				writel(task->pa_base,
+> +				       thread->base + CMDQ_THR_CURR_ADDR);
+> +			} else {
+> +				cmdq_task_insert_into_thread(task);
+> +				cmdq_task_remove_wfe(task);
+> +				smp_mb(); /* modify jump before enable thread */
+> +			}
+> +		} else {
+> +			/* check boundary */
+> +			if (curr_pa == end_pa - CMDQ_INST_SIZE ||
+> +			    curr_pa == end_pa) {
+> +				/* set to this task directly */
+> +				writel(task->pa_base,
+> +				       thread->base + CMDQ_THR_CURR_ADDR);
+> +			} else {
+> +				cmdq_task_insert_into_thread(task);
+> +				smp_mb(); /* modify jump before enable thread */
+> +			}
+> +		}
+> +		writel(task->pa_base + pkt->cmd_buf_size,
+> +		       thread->base + CMDQ_THR_END_ADDR);
+> +		cmdq_thread_resume(thread);
+> +	}
+> +	list_move_tail(&task->list_entry, &thread->task_busy_list);
+> +}
+> +
+> +static void cmdq_task_exec_done(struct cmdq_task *task, bool err)
+> +{
+> +	struct device *dev = task->cmdq->mbox.dev;
+> +	struct cmdq_cb_data cmdq_cb_data;
+> +
+> +	dma_unmap_single(dev, task->pa_base, task->pkt->cmd_buf_size,
+> +			 DMA_TO_DEVICE);
+
+Move this to client driver.
+
+> +	if (task->pkt->cb.cb) {
+> +		cmdq_cb_data.err = err;
+> +		cmdq_cb_data.data = task->pkt->cb.data;
+> +		task->pkt->cb.cb(cmdq_cb_data);
+> +	}
+> +	list_del(&task->list_entry);
+> +}
+> +
+
+[...]
+
+> +
+> +static bool cmdq_mbox_last_tx_done(struct mbox_chan *chan)
+> +{
+> +	return true;
+> +}
+> +
+> +static const struct mbox_chan_ops cmdq_mbox_chan_ops = {
+> +	.send_data = cmdq_mbox_send_data,
+> +	.startup = cmdq_mbox_startup,
+> +	.shutdown = cmdq_mbox_shutdown,
+> +	.last_tx_done = cmdq_mbox_last_tx_done,
+
+Because mbox->txdone_poll is false, so you need not to implement
+last_tx_done.
+
+Regards,
+CK
+
+> +};
+> +
+> +static struct mbox_chan *cmdq_xlate(struct mbox_controller *mbox,
+> +		const struct of_phandle_args *sp)
+> +{
+> +	int ind = sp->args[0];
+> +	struct cmdq_thread *thread;
+> +
+> +	if (ind >= mbox->num_chans)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	thread = mbox->chans[ind].con_priv;
+> +	thread->timeout_ms = sp->args[1];
+> +	thread->priority = sp->args[2];
+> +	thread->atomic_exec = (sp->args[3] != 0);
+> +	thread->chan = &mbox->chans[ind];
+> +
+> +	return &mbox->chans[ind];
+> +}
+> +
+[...]
