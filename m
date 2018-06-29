@@ -1,31 +1,35 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 0/2] pinctrl: imx: Add driver for i.MX8MQ
-Date: Fri, 29 Jun 2018 10:07:26 +0200
-Message-ID: <CACRpkda-pZgmZTz-1AWcSDok4u1xLb=coqVHe5WjU5SSNTW9jg@mail.gmail.com>
-References: <1529680549-22079-1-git-send-email-abel.vesa@nxp.com>
+Subject: Re: [PATCH 1/5] dt-bindings: tegra186-gpio: Add information for
+ Tegra194
+Date: Fri, 29 Jun 2018 10:09:21 +0200
+Message-ID: <CACRpkdaa+Si0iZMpGEFFz6UyRotckdD5YRBPAsFxPkFsibWOkw@mail.gmail.com>
+References: <20180620125406.11906-1-mperttunen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529680549-22079-1-git-send-email-abel.vesa@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: abel.vesa@nxp.com
-Cc: Lucas Stach <l.stach@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, abelvesa@linux.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180620125406.11906-1-mperttunen@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mikko Perttunen <mperttunen@nvidia.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, vbhadram@nvidia.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 22, 2018 at 5:16 PM Abel Vesa <abel.vesa@nxp.com> wrote:
+On Wed, Jun 20, 2018 at 2:54 PM Mikko Perttunen <mperttunen@nvidia.com> wrote:
 
-> This is the fifth version for the patch series sent by Lucas.
-> https://www.spinics.net/lists/devicetree/msg212752.html
+> The Tegra194 GPIO controller is similar to the one in Tegra186.
+> Add relevant information to the device tree binding documentation.
 >
-> Fourth version can be found here:
->
-> https://lkml.org/lkml/2018/6/20/478
->
-> Changes since v4:
->  * implemented all Aisheng's review comments
+> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
 
-All looks good, just respin the DT binding patch so Rob
-can ACK it.
+Patch applied with Rob's ACK.
 
 Yours,
 Linus Walleij
