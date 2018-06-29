@@ -1,75 +1,112 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 4/5] phy: phy-mtk-tphy: add property for BC12
-Date: Fri, 29 Jun 2018 10:20:30 +0800
-Message-ID: <c074a2e2fad54c9be78635effe3ee5044ebbfdc5.1530238400.git.chunfeng.yun@mediatek.com>
-References: <54260d59ae39c2335e97892fe85db16cac30b33b.1530238400.git.chunfeng.yun@mediatek.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [v4,1/6] Documentation: DT: Consolidate SP805 binding docs
+Date: Thu, 28 Jun 2018 19:55:01 -0700
+Message-ID: <20180629025501.GA28536@roeck-us.net>
+References: <1527530497-10392-2-git-send-email-ray.jui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54260d59ae39c2335e97892fe85db16cac30b33b.1530238400.git.chunfeng.yun@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <1527530497-10392-2-git-send-email-ray.jui@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+To: Ray Jui <ray.jui@broadcom.com>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Some platforms support BC12 which is disabled by default,
-here add a property to enable it if need
+On Mon, May 28, 2018 at 11:01:32AM -0700, Ray Jui wrote:
+> Consolidate two SP805 binding documents "arm,sp805.txt" and
+> "sp805-wdt.txt" into "arm,sp805.txt" that matches the naming of the
+> desired compatible string to be used
+> 
+> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- drivers/phy/mediatek/phy-mtk-tphy.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+For the record:
 
-diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
-index 9ab6f2e..3eb8e1b 100644
---- a/drivers/phy/mediatek/phy-mtk-tphy.c
-+++ b/drivers/phy/mediatek/phy-mtk-tphy.c
-@@ -101,6 +101,9 @@
- #define P2C_RG_AVALID			BIT(2)
- #define P2C_RG_IDDIG			BIT(1)
- 
-+#define U3P_U2PHYBC12C		0x080
-+#define P2C_RG_CHGDT_EN		BIT(0)
-+
- #define U3P_U3_CHIP_GPIO_CTLD		0x0c
- #define P3C_REG_IP_SW_RST		BIT(31)
- #define P3C_MCU_BUS_CK_GATE_EN		BIT(30)
-@@ -297,6 +300,7 @@ struct mtk_phy_instance {
- 	int eye_src;
- 	int eye_vrt;
- 	int eye_term;
-+	bool bc12_en;
- };
- 
- struct mtk_tphy {
-@@ -839,12 +843,16 @@ static void phy_parse_property(struct mtk_tphy *tphy,
- 	if (instance->type != PHY_TYPE_USB2)
- 		return;
- 
-+	instance->bc12_en = device_property_read_bool(dev, "mediatek,bc12");
- 	device_property_read_u32(dev, "mediatek,eye-src",
- 				 &instance->eye_src);
- 	device_property_read_u32(dev, "mediatek,eye-vrt",
- 				 &instance->eye_vrt);
- 	device_property_read_u32(dev, "mediatek,eye-term",
- 				 &instance->eye_term);
-+	dev_dbg(dev, "bc12:%d, src:%d, vrt:%d, term:%d\n",
-+		instance->bc12_en, instance->eye_src,
-+		instance->eye_vrt, instance->eye_term);
- }
- 
- static void u2_phy_props_set(struct mtk_tphy *tphy,
-@@ -854,6 +862,11 @@ static void u2_phy_props_set(struct mtk_tphy *tphy,
- 	void __iomem *com = u2_banks->com;
- 	u32 tmp;
- 
-+	if (instance->bc12_en) {
-+		tmp = readl(com + U3P_U2PHYBC12C);
-+		tmp |= P2C_RG_CHGDT_EN;	/* BC1.2 path Enable */
-+		writel(tmp, com + U3P_U2PHYBC12C);
-+	}
- 
- 	if (instance->eye_src) {
- 		tmp = readl(com + U3P_USBPHYACR5);
--- 
-1.9.1
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>  .../devicetree/bindings/watchdog/arm,sp805.txt     | 27 ++++++++++++++-----
+>  .../devicetree/bindings/watchdog/sp805-wdt.txt     | 31 ----------------------
+>  2 files changed, 20 insertions(+), 38 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
+> index ca99d64..0fa3629 100644
+> --- a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
+> @@ -1,17 +1,30 @@
+>  ARM AMBA Primecell SP805 Watchdog
+>  
+> +SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
+> +can be used to identify the peripheral type, vendor, and revision.
+> +This value can be used for driver matching.
+> +
+> +As SP805 WDT is a primecell IP, it follows the base bindings specified in
+> +'arm/primecell.txt'
+> +
+>  Required properties:
+> -- compatible: Should be "arm,sp805" & "arm,primecell"
+> -- reg: Should contain location and length for watchdog timer register.
+> -- interrupts: Should contain the list of watchdog timer interrupts.
+> -- clocks: clocks driving the watchdog timer hardware. This list should be 2
+> -	clocks. With 2 clocks, the order is wdogclk clock, apb_pclk.
+> +- compatible:  Should be "arm,sp805" & "arm,primecell"
+> +- reg:         Should contain location and length for watchdog timer register
+> +- clocks:      Clocks driving the watchdog timer hardware. This list should be
+> +               2 clocks. With 2 clocks, the order is wdog_clk, apb_pclk
+> +               wdog_clk can be equal to or be a sub-multiple of the apb_pclk
+> +               frequency
+> +- clock-names: Shall be "wdog_clk" for first clock and "apb_pclk" for the
+> +               second one
+> +
+> +Optional properties:
+> +- interrupts:  Should specify WDT interrupt number
+>  
+>  Example:
+>  	watchdog@66090000 {
+>  		compatible = "arm,sp805", "arm,primecell";
+>  		reg = <0x66090000 0x1000>;
+>  		interrupts = <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>;
+> -		clocks = <&apb_pclk>,<&apb_pclk>;
+> -		clock-names = "wdogclk", "apb_pclk";
+> +		clocks = <&wdt_clk>, <&apb_pclk>;
+> +		clock-names = "wdog_clk", "apb_pclk";
+>  	};
+> diff --git a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+> deleted file mode 100644
+> index edc4f0e..0000000
+> --- a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+> +++ /dev/null
+> @@ -1,31 +0,0 @@
+> -* ARM SP805 Watchdog Timer (WDT) Controller
+> -
+> -SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
+> -can be used to identify the peripheral type, vendor, and revision.
+> -This value can be used for driver matching.
+> -
+> -As SP805 WDT is a primecell IP, it follows the base bindings specified in
+> -'arm/primecell.txt'
+> -
+> -Required properties:
+> -- compatible : Should be "arm,sp805-wdt", "arm,primecell"
+> -- reg : Base address and size of the watchdog timer registers.
+> -- clocks : From common clock binding.
+> -           First clock is PCLK and the second is WDOGCLK.
+> -           WDOGCLK can be equal to or be a sub-multiple of the PCLK frequency.
+> -- clock-names : From common clock binding.
+> -                Shall be "apb_pclk" for first clock and "wdog_clk" for the
+> -                second one.
+> -
+> -Optional properties:
+> -- interrupts : Should specify WDT interrupt number.
+> -
+> -Examples:
+> -
+> -		cluster1_core0_watchdog: wdt@c000000 {
+> -			compatible = "arm,sp805-wdt", "arm,primecell";
+> -			reg = <0x0 0xc000000 0x0 0x1000>;
+> -			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+> -			clock-names = "apb_pclk", "wdog_clk";
+> -		};
+> -
