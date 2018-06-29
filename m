@@ -1,59 +1,73 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v3 0/8] gnss: add new GNSS subsystem
-Date: Fri, 29 Jun 2018 11:46:07 +0200
-Message-ID: <20180629094607.GC31718@amd>
-References: <20180601082259.17563-1-johan@kernel.org>
- <20180628120103.GA28131@kroah.com>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v4 6/7] Bluetooth: mediatek: Add protocol support for
+ MediaTek serial devices
+Date: Fri, 29 Jun 2018 17:47:26 +0800
+Message-ID: <1530265646.6245.6.camel@mtkswgap22>
+References: <cover.1530004712.git.sean.wang@mediatek.com>
+         <48215a1276c36af7ad581c3d83759fe9f55e3c4b.1530004712.git.sean.wang@mediatek.com>
+         <CAHp75VehTeyyzR4bPKK3hFDTVqZnhdNy5vcBFJCSH_Zrx+QrKA@mail.gmail.com>
+         <CAHp75VedHLw52J_ymh3iYf2w=r8d+Kqg=fJZmBGnaCrEbNEPdQ@mail.gmail.com>
+         <1530155173.29697.48.camel@mtkswgap22> <20180628051941.GF629@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="xo44VMWPx7vlQ2+2"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180628120103.GA28131@kroah.com>
+In-Reply-To: <20180628051941.GF629@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, alan@linux.intel.com
-Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Marcel Holtmann <marcel@holtmann.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-bluetooth@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 2018-06-28 at 07:19 +0200, Johan Hovold wrote:
+> On Thu, Jun 28, 2018 at 11:06:13AM +0800, Sean Wang wrote:
+> > On Wed, 2018-06-27 at 20:04 +0300, Andy Shevchenko wrote:
+> > > On Wed, Jun 27, 2018 at 7:59 PM, Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > > On Wed, Jun 27, 2018 at 8:43 AM,  <sean.wang@mediatek.com> wrote:
+> > > >> From: Sean Wang <sean.wang@mediatek.com>
+> 
+> > > >> +#include <net/bluetooth/bluetooth.h>
+> > > >> +#include <net/bluetooth/hci_core.h>
+> > > 
+> > > >> +       /* Enable the power domain and clock the device requires. */
+> > > >> +       pm_runtime_enable(dev);
+> > > >> +       err = pm_runtime_get_sync(dev);
+> > > >> +       if (err < 0)
+> > > >> +               goto err_pm2;
+> 
+> > > >> +err_pm1:
+> > > >> +       pm_runtime_put_sync(dev);
+> > > >> +err_pm2:
+> > > >> +       pm_runtime_disable(dev);
+> 
+> Please name error labels after what they do, not using numbers (see
+> CodingStyle). Here you could use err_disable_rpm instead of err_pm2, for
+> example.
+> 
+> Also, if you really want to undo pm_runtime_get_sync() failing above,
+> you still need a pm_runtime_put_noidle() to balance the usage count.
+> 
 
---xo44VMWPx7vlQ2+2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'll give a reasonable naming for these labels and add a
+pm_runtime_put_noidle() in the path undoing failing
+pm_runtime_get_sync().
 
+> > > >> +struct mtk_stp_hdr {
+> > > >> +       __u8 prefix;
+> > > >> +       __u8 dlen1:4;
+> > > >> +       __u8 type:4;
+> > > 
+> > > >> +       __u8 dlen2:8;
+> > > >> +       __u8 cs;
+> > > >> +} __packed;
+> 
+> Perhaps too much context have been lost here, but unless you're sharing
+> this struct with user space, you should be using u8 (without __) above
+> (and elsewhere).
+> 
 
-> > Finally, note that documentation (including kerneldoc) remains to be
-> > written, but hopefully this will not hinder review given that the
-> > current interfaces are fairly self-describing.
->=20
-> This all looks great.  Thanks for doing this work and adding a new
-> subsystem for something that has been asked for for many years.
->=20
-> All now merged in my tree, nice job!
+These struct don't be shard with user space so I will turn __u8 into u8.
 
-I don't think discussion was finished on this one.
+Thanks so much for all suggestions. 
 
-In particular, we agreed that /dev/gnssrawX would be better device
-name, so that we still have place where to put proper abstraction
-layer in future.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---xo44VMWPx7vlQ2+2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAls1/98ACgkQMOfwapXb+vLUQACgqpWMsI37vi4u0C6kmqx7hkVo
-XRIAnjq3CzVtwfkll7xX/8TtjV9FUild
-=Q4uJ
------END PGP SIGNATURE-----
-
---xo44VMWPx7vlQ2+2--
+> Johan
