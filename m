@@ -1,37 +1,36 @@
-Return-Path: <SRS0=1b4G=JP=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 2/7] mmc: pxamci: remove dma resources from private context
-Date: Fri, 29 Jun 2018 16:47:33 +0200
-Message-Id: <20180629144738.446-3-daniel@zonque.org>
-In-Reply-To: <20180629144738.446-1-daniel@zonque.org>
-References: <20180629144738.446-1-daniel@zonque.org>
-To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: robert.jarzmik@free.fr, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+From: Stephen Boyd <sboyd@kernel.org>
+In-Reply-To: <1527948122-32092-1-git-send-email-festevam@gmail.com>
+References: <1527948122-32092-1-git-send-email-festevam@gmail.com>
+Message-ID: <153029679730.143105.4116951376524374351@swboyd.mtv.corp.google.com>
+Subject: Re: [PATCH v2] dt-bindings: clock: imx6ul: Do not change the clock
+ definition order
+Date: Fri, 29 Jun 2018 11:26:37 -0700
+To: Fabio Estevam <festevam@gmail.com>
+Cc: michael@amarulasolutions.com, stefan.wahren@i2se.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, anson.huang@nxp.com, stefan@agner.ch, Fabio Estevam <fabio.estevam@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-These members are no longer in use, so let's remove them.
+Quoting Fabio Estevam (2018-06-02 07:02:02)
+> From: Fabio Estevam <fabio.estevam@nxp.com>
+> =
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- drivers/mmc/host/pxamci.c | 4 ----
- 1 file changed, 4 deletions(-)
+> Commit f5a4670de966 ("clk: imx: Add new clo01 and clo2 controlled
+> by CCOSR") introduced the CLK_CLKO definitions, but didn't put them
+> at the end of the list, which may cause dtb breakage when running an old
+> dtb with a newer kernel.
+> =
 
-diff --git a/drivers/mmc/host/pxamci.c b/drivers/mmc/host/pxamci.c
-index f0968882dbd3..a826c0e8a096 100644
---- a/drivers/mmc/host/pxamci.c
-+++ b/drivers/mmc/host/pxamci.c
-@@ -71,12 +71,8 @@ struct pxamci_host {
- 	struct dma_chan		*dma_chan_rx;
- 	struct dma_chan		*dma_chan_tx;
- 	dma_cookie_t		dma_cookie;
--	dma_addr_t		sg_dma;
- 	unsigned int		dma_len;
--
- 	unsigned int		dma_dir;
--	unsigned int		dma_drcmrrx;
--	unsigned int		dma_drcmrtx;
- 
- 	struct regulator	*vcc;
- };
--- 
-2.17.1
+> In order to avoid that, simply add the new CLK_CKO clock definitions
+> at the end of the list.
+> =
+
+> Fixes: f5a4670de966 ("clk: imx: Add new clo01 and clo2 controlled by CCOS=
+R")
+> Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+> ---
+
+Applied to clk-fixes
