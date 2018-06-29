@@ -1,24 +1,45 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH V2 1/2] clk: imx6ul: add GPIO clock gates
-Date: Fri, 29 Jun 2018 11:42:51 -0700
-Message-ID: <153029777187.143105.15648614335130166075@swboyd.mtv.corp.google.com>
-References: <1527990245-13619-1-git-send-email-Anson.Huang@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH] arm64: dts: sdm845: Default qupv3_id_0 as "disabled" like _id_1
+Date: Fri, 29 Jun 2018 11:45:27 -0700
+Message-ID: <20180629184527.161970-1-dianders@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527990245-13619-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>, fabio.estevam@nxp.com, kernel@pengutronix.de, mark.rutland@arm.com, matteo.lisi@engicam.com, michael@amarulasolutions.com, mturquette@baylibre.com, robh+dt@kernel.org, shawnguo@kernel.org
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: andy.gross@linaro.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Anson Huang (2018-06-02 18:44:04)
-> i.MX6UL has GPIO clock gates in CCM CCGR,
-> add them into clock tree for clock management.
-> =
+In commit 8e4947ee477d ("arm64: dts: qcom: sdm845: Add I2C, SPI, and
+UART9 nodes") I accidentally forgot to add the line:
 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
+  status = "disabled";
 
-Applied to clk-next
+to qupv3_id_0 to match qupv3_id_1.  Add it now.  NOTE: right now the
+only sdm845 board with a device tree in mainline is MTP and that board
+currently doesn't have any peripherals under qupv3_id_0.  If any board
+was currently using peripherals under qupv3_id_0 then that board would
+need to add this snippet to their board dts file:
+
+  &qupv3_id_0 {
+     status = "okay";
+  };
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 00722b533a92..9c10ff5e5843 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -258,6 +258,7 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges;
++			status = "disabled";
+ 
+ 			i2c0: i2c@880000 {
+ 				compatible = "qcom,geni-i2c";
+-- 
+2.18.0.399.gad0ab374a1-goog
