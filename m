@@ -1,39 +1,88 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH] bindings: add clocks optional binding for imx gpio
-Date: Fri, 29 Jun 2018 11:30:04 +0800
-Message-ID: <1530243004-10529-1-git-send-email-Anson.Huang@nxp.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v2 0/6] Add Actions Semi S900 I2C support
+Date: Fri, 29 Jun 2018 06:13:31 +0200
+Message-ID: <76F2EEF1-A266-4E05-8C72-74492928A531@axentia.se>
+References: <20180628181042.2239-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180628181042.2239-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, wsa@the-dreams.de, robh+dt@kernel.org, afaerber@suse.de
+Cc: linus.walleij@linaro.org, linux-i2c@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com
 List-Id: devicetree@vger.kernel.org
 
-Some i.MX SoCs have GPIO clock gate in CCM, accessing
-GPIO registers needs to enable GPIO clock gate first,
-i.MX GPIO driver will enable clock gate if there is
-clock property in GPIO node of dtb, add optional property
-to i.MX GPIO binding doc.
+On June 28, 2018 8:10:36 PM GMT+02:00, Manivannan Sadhasivam <manivannan=2E=
+sadhasivam@linaro=2Eorg> wrote:
+>This patchset adds I2C controller support for Actions Semi S900 SoC=2E
+>This driver has been structured in a way such that there will be only
+>one controller driver for the whole OWL family series (S500, S700 and
+>S900 SoCs)=2E
+>
+>There are 6 I2C controllers with separate memory mapped register space=2E
+>The I2C controller can handle atmost two messages concatenated by a
+>repeated start via its internal address feature=2E Hence the driver
+>uses this feature for messages of length greater than 1=2E In those
+>cases,
+>the first message of the combined message should be a `write` with
+>maximum
+>message length 6 and the second message's maximum length should be 240
+>bytes=2E
+>
+>As far as the bus speed is concerned, this driver only supports
+>Standard (100KHz) and High speed (400KHz) for now=2E
+>
+>The pinctrl definitions are only available for I2C0, I2C1 and I2C2=2E
+>With the mux option available only for I2C0=2E
+>
+>For Bubblegum-96 board utilizing the S900 SoC, only I2C1 and I2C2 which
+>are exposed on the Low speed expansion connector are enabled=2E
+>
+>Thanks,
+>Mani
+>
+>Changes in v2:
+>
+>As per Andy's review:
+>* Modified infinite loops to fixed number of retries
+>* Used i2c_8bit_addr_from_msg for constructing the slave address
+>* Removed unnecessary parenthesis around defines
+>* Modified certain dev_warn to dev_dbg
+>* Modified the error handling to more generic pattern
+>
+>* Fixed the return value in owl_i2c_master_xfer
+>* Added MAINTAINERS patch for I2C driver and its binding
+>
+>Manivannan Sadhasivam (6):
+>  dt-bindings: i2c: Add binding for Actions Semi OWL I2C controller
+>  arm64: dts: actions: Add Actions Semi S900 I2C controller nodes
+>  arm64: dts: actions: Add pinctrl definition for S900 I2C controller
+>  arm64: dts: actions: Enable I2C1 and I2C2 in Bubblegum-96 board
+>  i2c: Add Actions Semi OWL family S900 I2C driver
+>  MAINTAINERS: Add entry for Actions Semi OWL I2C driver
+>
+> =2E=2E=2E/devicetree/bindings/i2c/i2c-owl=2Etxt       |  27 +
+> MAINTAINERS                                   |   2 +
+> =2E=2E=2E/dts/actions/s900-bubblegum-96-pins=2Edtsi   |  29 ++
+> =2E=2E=2E/boot/dts/actions/s900-bubblegum-96=2Edts    |  11 +
+> arch/arm64/boot/dts/actions/s900=2Edtsi         |  60 +++
+> drivers/i2c/busses/Kconfig                    |   7 +
+> drivers/i2c/busses/Makefile                   |   1 +
+> drivers/i2c/busses/i2c-owl=2Ec                  | 471 ++++++++++++++++++
+> 8 files changed, 608 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/i2c/i2c-owl=2Etxt
+>create mode 100644
+>arch/arm64/boot/dts/actions/s900-bubblegum-96-pins=2Edtsi
+> create mode 100644 drivers/i2c/busses/i2c-owl=2Ec
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt | 3 +++
- 1 file changed, 3 insertions(+)
+Hi!
 
-diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
-index dbd22e0..1b3eed0 100644
---- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
-@@ -19,6 +19,9 @@ Required properties:
-       4 = active high level-sensitive.
-       8 = active low level-sensitive.
- 
-+Optional properties:
-+- clocks: the clocks used by gpio bank
-+
- Example:
- 
- gpio0: gpio@73f84000 {
--- 
-2.7.4
+I don't know for sure, but over here the arch/arm64/boot/dts/actions folde=
+r has no pinctrl nodes at all (v4=2E18-rc2)=2E So, what is this series base=
+d on? The reason I started looking was that patch 2 *appears* to depend on =
+patch 3, and I just wanted to double check that=2E=2E=2E
+
+Cheers,
+Peter
