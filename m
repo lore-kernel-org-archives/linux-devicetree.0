@@ -1,105 +1,74 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [RfC v1 5/5] ARM64: dts: meson-gxl: add support for the Oranth
- Tanix TX3 Mini
-Date: Fri, 29 Jun 2018 14:53:02 -0700
-Message-ID: <7hin61cla9.fsf@baylibre.com>
-References: <20180624182814.31691-1-martin.blumenstingl@googlemail.com>
- <20180624182814.31691-6-martin.blumenstingl@googlemail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 1/6] driver core: allow stopping deferred probe after init
+Date: Sat, 30 Jun 2018 01:25:36 +0300
+Message-ID: <CAHp75Vf+o7aA8M6T+zM5r8i_YCzWkP=rO8sTHY0qtz-YjVRibA@mail.gmail.com>
+References: <20180628204344.13973-1-robh@kernel.org> <20180628204344.13973-2-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180624182814.31691-6-martin.blumenstingl@googlemail.com>
- (Martin Blumenstingl's message of "Sun, 24 Jun 2018 20:28:14 +0200")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, narmstrong@baylibre.com, yixun.lan@amlogic.com, robh+dt@kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180628204344.13973-2-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, boot-architecture@lists.linaro.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
-
-> The Tanix TX3 Mini is a TV box based on the Amlogic S905W chipset.
-> There are two variants:
-> - 1 GiB or 2 GiB of DDR3 memory
-> - 8 GB or 16 GB eMMC flash
+On Thu, Jun 28, 2018 at 11:43 PM, Rob Herring <robh@kernel.org> wrote:
+> Deferred probe will currently wait forever on dependent devices to probe,
+> but sometimes a driver will never exist. It's also not always critical for
+> a driver to exist. Platforms can rely on default configuration from the
+> bootloader or reset defaults for things such as pinctrl and power domains.
+> This is often the case with initial platform support until various drivers
+> get enabled. There's at least 2 scenarios where deferred probe can render
+> a platform broken. Both involve using a DT which has more devices and
+> dependencies than the kernel supports. The 1st case is a driver may be
+> disabled in the kernel config. The 2nd case is the kernel version may
+> simply not have the dependent driver. This can happen if using a newer DT
+> (provided by firmware perhaps) with a stable kernel version. Deferred
+> probe issues can be difficult to debug especially if the console has
+> dependencies or userspace fails to boot to a shell.
 >
-> Both variants come with:
-> - 802.11 b/g/n wifi (Silicon Valley Microelectronics SSV6051, does not
->   support Bluetooth)
-> - an LED 7 segment display with an FD628 controller
-> - HDMI and AV (CVBS) output
-> - 2x USB (utilizing both USB ports provided by the SoC)
-> - micro SD card slot
-> - serial console (uart_AO) has to be soldered after opening the case
+> There are also cases like IOMMUs where only built-in drivers are
+> supported, so deferring probe after initcalls is not needed. The IOMMU
+> subsystem implemented its own mechanism to handle this using OF_DECLARE
+> linker sections.
 >
-> The board seems to be very similar to the P23x and Q20x reference
-> boards, which is why it includes meson-gx-p23x-q20x.dtsi:
-> - eMMC reset routed to BOOT_9
-> - the SDIO wifi chip's reset line is routed to GPIOX_6 and the reference
->   clock is 32.768KHz on PWM_E
-> - SD card detection is routed to CARD_6
-> - vqmmc of all MMC controllers is hard-wired to 1.8V (VDDIO_BOOT)
-> - uart_AO can be accessed after opening the case and soldering RX, TX
->   and GND lines onto the exposed solder points (marked with RX, TX and
->   GND)
+> This commit adds makes ending deferred probe conditional on initcalls
+> being completed or a debug timeout. Subsystems or drivers may opt-in by
+> calling driver_deferred_probe_check_init_done() instead of
+> unconditionally returning -EPROBE_DEFER. They may use additional
+> information from DT or kernel's config to decide whether to continue to
+> defer probe or not.
 >
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  arch/arm64/boot/dts/amlogic/Makefile          |  1 +
->  .../dts/amlogic/meson-gxl-s905w-tx3-mini.dts  | 22 +++++++++++++++++++
->  2 files changed, 23 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dts
->
-> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-> index 6de2e7f5a9cc..1b46affd376d 100644
-> --- a/arch/arm64/boot/dts/amlogic/Makefile
-> +++ b/arch/arm64/boot/dts/amlogic/Makefile
-> @@ -18,6 +18,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-p281.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-tx3-mini.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-khadas-vim2.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-nexbox-a1.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q200.dtb
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dts
-> new file mode 100644
-> index 000000000000..08aca8346b72
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dts
-> @@ -0,0 +1,22 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2018 Martin Blumenstingl <martin.blumenstingl@googlemail.com>.
-> + * Based on meson-gxl-s905d-p231.dts:
-> + * - Copyright (c) 2016 Endless Computers, Inc.
-> + *   Author: Carlo Caione <carlo@endlessm.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "meson-gxl-s905w.dtsi"
+> The timeout mechanism is intended for debug purposes and WARNs loudly.
 
-Just use meson-gxl-s905x.dtsi
+> The remaining deferred probe pending list will also be dumped after the
+> timeout. Not that this timeout won't work for the console which needs
+> to be enabled before userspace starts. However, if the console's
+> dependencies are resolved, then the kernel log will be printed (as
+> opposed to no output).
 
-Kevin
+There is another patch flying around with debugfs node to dump a list
+of deferred probe queue.
+I dunno if it makes sense to dump it here and there and if yes, some
+unification in output, perhaps?
 
-> +#include "meson-gx-p23x-q20x.dtsi"
-> +
-> +/ {
-> +	compatible = "oranth,tx3-mini", "amlogic,s905w", "amlogic,meson-gxl";
-> +	model = "Oranth Tanix TX3 Mini";
-> +
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x0 0x0 0x40000000>; /* 1 GiB or 2 GiB */
-> +	};
-> +};
+> +       deferred_probe_timeout = simple_strtol(str, NULL, 0);
+
+Hmm... I don't think 16-base or 8-base values are useful to support.
+One subtle difference that people usually consider timeout values as
+10-base and if at some point someone makes it as 0100 (no matter why),
+it would be much less than expected.
+08 wouldn't parsed at all.
+
+> +       if (deferred_probe_timeout > 0) {
+
+Would it be harmful / useful if we skip this check and run the work immediately?
+
+> +               schedule_delayed_work(&deferred_probe_timeout_work,
+> +                       deferred_probe_timeout * HZ);
+> +       }
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
