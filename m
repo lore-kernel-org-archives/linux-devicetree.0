@@ -1,149 +1,411 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v3 06/17] irqchip/irq-mvebu-icu: switch to regmap
-Date: Fri, 29 Jun 2018 17:27:51 +0200
-Message-ID: <20180629172751.7404a531@xps13>
-References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
- <20180622151432.1566-7-miquel.raynal@bootlin.com>
- <ebdd4cb8-7cc8-3efa-d4be-f5d8860e848d@arm.com>
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: Re: [PATCH v8 4/7] Bluetooth: hci_qca: Add wrapper functions for
+ setting UART speed
+Date: Fri, 29 Jun 2018 20:59:38 +0530
+Message-ID: <4368cc0e04c26560f2adeb5ab796b827@codeaurora.org>
+References: <20180625134013.19684-1-bgodavar@codeaurora.org>
+ <20180625134013.19684-5-bgodavar@codeaurora.org>
+ <20180625234354.GI129942@google.com>
+ <89b1e4ce98a26d79935bf2ba9a4bc278@codeaurora.org>
+ <20180626190207.GN129942@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <ebdd4cb8-7cc8-3efa-d4be-f5d8860e848d@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180626190207.GN129942@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyYywKCk1hcmMgWnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+IHdyb3RlIG9uIFRo
-dSwgMjggSnVuIDIwMTggMTM6MDU6MDUKKzAxMDA6Cgo+IE9uIDIyLzA2LzE4IDE2OjE0LCBNaXF1
-ZWwgUmF5bmFsIHdyb3RlOgo+ID4gQmVmb3JlIHNwbGl0dGluZyB0aGUgY29kZSB0byBzdXBwb3J0
-IG11bHRpcGxlIHBsYXRmb3JtIGRldmljZXMgdG8KPiA+IGJlIHByb2JlZCAob25lIGZvciB0aGUg
-SUNVLCBvbmUgcGVyIGludGVycnVwdCBncm91cCksIGxldCdzIHN3aXRjaCB0bwo+ID4gcmVnbWFw
-IGZpcnN0IGJ5IGNyZWF0aW5nIG9uZSBpbiB0aGUgLT5wcm9iZSgpLiAgCj4gCj4gV2hhdCdzIHRo
-ZSBiZW5lZml0IG9mIGRvaW5nIHNvPyBJIGFzc3VtZSB0aGF0IGhhcyB0byBkbyB3aXRoIHN1cHBv
-cnRpbmcKPiBtdWx0aXBsZSBkZXZpY2VzIHRoYXQgc2hhcmUgYW4gTU1JTyByYW5nZT8KClllcywg
-dGhlIElDVSBzdWJub2RlcyB3aWxsIHNoYXJlIHRoZSBzYW1lIE1NSU8gcmFuZ2UuCgo+IAo+ID4g
-Cj4gPiBTaWduZWQtb2ZmLWJ5OiBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4u
-Y29tPgo+ID4gLS0tCj4gPiAgZHJpdmVycy9pcnFjaGlwL2lycS1tdmVidS1pY3UuYyB8IDQ1ICsr
-KysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tCj4gPiAgMSBmaWxlIGNoYW5n
-ZWQsIDMwIGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9pcnFjaGlwL2lycS1tdmVidS1pY3UuYyBiL2RyaXZlcnMvaXJxY2hpcC9pcnEt
-bXZlYnUtaWN1LmMKPiA+IGluZGV4IDBmMjY1NWQ3ZjE5ZS4uMzY5NGMwZDczYzBkIDEwMDY0NAo+
-ID4gLS0tIGEvZHJpdmVycy9pcnFjaGlwL2lycS1tdmVidS1pY3UuYwo+ID4gKysrIGIvZHJpdmVy
-cy9pcnFjaGlwL2lycS1tdmVidS1pY3UuYwo+ID4gQEAgLTE4LDYgKzE4LDggQEAKPiA+ICAjaW5j
-bHVkZSA8bGludXgvb2ZfaXJxLmg+Cj4gPiAgI2luY2x1ZGUgPGxpbnV4L29mX3BsYXRmb3JtLmg+
-Cj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgo+ID4gKyNpbmNsdWRlIDxs
-aW51eC9yZWdtYXAuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvbWZkL3N5c2Nvbi5oPgo+ID4gIAo+
-ID4gICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9tdmVidS1pY3Uu
-aD4KPiA+ICAKPiA+IEBAIC0zOCw3ICs0MCw3IEBACj4gPiAgCj4gPiAgc3RydWN0IG12ZWJ1X2lj
-dSB7Cj4gPiAgCXN0cnVjdCBpcnFfY2hpcCBpcnFfY2hpcDsKPiA+IC0Jdm9pZCBfX2lvbWVtICpi
-YXNlOwo+ID4gKwlzdHJ1Y3QgcmVnbWFwICpyZWdtYXA7Cj4gPiAgCXN0cnVjdCBpcnFfZG9tYWlu
-ICpkb21haW47Cj4gPiAgCXN0cnVjdCBkZXZpY2UgKmRldjsKPiA+ICAJYXRvbWljX3QgaW5pdGlh
-bGl6ZWQ7Cj4gPiBAQCAtNTYsMTAgKzU4LDEwIEBAIHN0YXRpYyB2b2lkIG12ZWJ1X2ljdV9pbml0
-KHN0cnVjdCBtdmVidV9pY3UgKmljdSwgc3RydWN0IG1zaV9tc2cgKm1zZykKPiA+ICAJCXJldHVy
-bjsKPiA+ICAKPiA+ICAJLyogU2V0IENsZWFyL1NldCBJQ1UgU1BJIG1lc3NhZ2UgYWRkcmVzcyBp
-biBBUCAqLwo+ID4gLQl3cml0ZWxfcmVsYXhlZChtc2dbMF0uYWRkcmVzc19oaSwgaWN1LT5iYXNl
-ICsgSUNVX1NFVFNQSV9OU1JfQUgpOwo+ID4gLQl3cml0ZWxfcmVsYXhlZChtc2dbMF0uYWRkcmVz
-c19sbywgaWN1LT5iYXNlICsgSUNVX1NFVFNQSV9OU1JfQUwpOwo+ID4gLQl3cml0ZWxfcmVsYXhl
-ZChtc2dbMV0uYWRkcmVzc19oaSwgaWN1LT5iYXNlICsgSUNVX0NMUlNQSV9OU1JfQUgpOwo+ID4g
-LQl3cml0ZWxfcmVsYXhlZChtc2dbMV0uYWRkcmVzc19sbywgaWN1LT5iYXNlICsgSUNVX0NMUlNQ
-SV9OU1JfQUwpOwo+ID4gKwlyZWdtYXBfd3JpdGUoaWN1LT5yZWdtYXAsIElDVV9TRVRTUElfTlNS
-X0FILCBtc2dbMF0uYWRkcmVzc19oaSk7Cj4gPiArCXJlZ21hcF93cml0ZShpY3UtPnJlZ21hcCwg
-SUNVX1NFVFNQSV9OU1JfQUwsIG1zZ1swXS5hZGRyZXNzX2xvKTsKPiA+ICsJcmVnbWFwX3dyaXRl
-KGljdS0+cmVnbWFwLCBJQ1VfQ0xSU1BJX05TUl9BSCwgbXNnWzFdLmFkZHJlc3NfaGkpOwo+ID4g
-KwlyZWdtYXBfd3JpdGUoaWN1LT5yZWdtYXAsIElDVV9DTFJTUElfTlNSX0FMLCBtc2dbMV0uYWRk
-cmVzc19sbyk7ICAKPiAKPiBJc24ndCB0aGlzIGEgY2hhbmdlIGluIHRoZSB3YXkgd2Ugd3JpdGUg
-dGhpbmdzIHRvIHRoZSBNTUlPIHJlZ2lzdGVycz8KPiBZb3UncmUgbm93IHRyYWRpbmcgYSB3cml0
-ZWxfcmVsYXhlZCBmb3IgYSB3cml0ZWwsIHBsdXMgc29tZSBsb2NraW5nLi4uCgpJcyB0aGUgIndy
-aXRlbF9yZWxheGVkIiAtPiAid3JpdGVsIiB0aGluZyByZWFsbHkgYW4gaXNzdWU/Cgo+IAo+IFRh
-bGtpbmcgYWJvdXQgd2hpY2g6IEFyZSB5b3UgYWx3YXlzIGluIGEgY29udGV4dCB3aGVyZSB5b3Ug
-Y2FuIHRha2UgdGhhdAo+IGxvY2s/IFRoZSBiaXQgb2YgZG9jdW1lbnRhdGlvbiBJJ3ZlIGp1c3Qg
-cmVhZCBzZWVtcyB0byBpbXBseSB0aGF0IHRoZQo+IGRlZmF1bHQgbG9jayBpcyBhIG11dGV4LiBJ
-cyB0aGF0IGFsd2F5cyBzYWZlPyBNeSBndWVzcyBpcyB0aGF0IGl0IGlzbid0LAo+IGFuZCBhbnkg
-Y2FsbGJhY2sgdGhhdCBjYW4gZW5kLXVwIGhlcmUgYWZ0ZXIgaGF2aW5nIHRha2VuIHNvbWV0aGlu
-ZyBsaWtlCj4gdGhlIGRlc2MgbG9jayBpcyBnb2luZyB0byBibG93IGluIHlvdXIgZmFjZS4KPiAK
-PiBIYXZlIHlvdSB0cmllZCBsb2NrZGVwPwoKSnVzdCBkaWQgLS0gdGhhbmtzIGZvciBwb2ludGlu
-ZyBpdCwgaXQgZmFpbGVkIG9uY2UgdGhlIG92ZXJoZWF0CmludGVycnVwdCBmaXJlZC4gSSdtIG5v
-dCBzdXJlIGlmIGl0IGlzIGJlY2F1c2Ugb2YgdGhlIHJlZ21hcC1sb2NraW5nCm1lY2hhbmlzbS4g
-VGhlcmUgaXMgZGVmaW5pdGVseSBzb21ldGhpbmcgdG8gZml4IHRoZXJlLCBidXQgSSBkb24ndCBr
-bm93CndoYXQgZm9yIG5vdzsgSSdsbCBjb21lIGJhY2sgb24gaXQuCgpbZm9yIHJlZmVyZW5jZTog
-bG9ncyBiZWxvd10KClRoYW5rcywKTWlxdcOobAoKLS0tClsgICA5MS4xMjg2MTVdIApbICAgOTEu
-MTMwMTIwXSA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQpbICAgOTEuMTM0NDA4XSBX
-QVJOSU5HOiBpbmNvbnNpc3RlbnQgbG9jayBzdGF0ZQpbICAgOTEuMTM4Njk4XSA0LjE4LjAtcmMx
-LTAwMDQ3LWc3ZjdjODA1YzJiNjktZGlydHkgIzE1ODAgTm90IHRhaW50ZWQKWyAgIDkxLjE0NDkw
-NV0gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KWyAgIDkxLjE0OTE5M10gaW5jb25z
-aXN0ZW50IHtIQVJESVJRLU9OLVd9IC0+IHtJTi1IQVJESVJRLVd9IHVzYWdlLgpbICAgOTEuMTU1
-MjI3XSBzd2FwcGVyLzAvMCBbSEMxWzFdOlNDMFswXTpIRTA6U0UxXSB0YWtlczoKWyAgIDkxLjE2
-MDM4OF0gKF9fX19wdHJ2YWxfX19fKSAoJnR6LT5sb2NrKXs/LisufSwgYXQ6IHRoZXJtYWxfem9u
-ZV9nZXRfdGVtcCsweDYwLzB4MTU4ClsgICA5MS4xNjgxODZdIHtIQVJESVJRLU9OLVd9IHN0YXRl
-IHdhcyByZWdpc3RlcmVkIGF0OgpbICAgOTEuMTczMDg5XSAgIGxvY2tfYWNxdWlyZSsweDQ0LzB4
-NjAKWyAgIDkxLjE3NjY4M10gICBfX211dGV4X2xvY2srMHg3NC8weDg4MApbICAgOTEuMTgwMzYy
-XSAgIG11dGV4X2xvY2tfbmVzdGVkKzB4MWMvMHgyOApbICAgOTEuMTg0MzkwXSAgIHRoZXJtYWxf
-em9uZV9vZl9zZW5zb3JfcmVnaXN0ZXIrMHgxOTgvMHgyNTAKWyAgIDkxLjE4OTgxMl0gICBkZXZt
-X3RoZXJtYWxfem9uZV9vZl9zZW5zb3JfcmVnaXN0ZXIrMHg1Yy8weGMwClsgICA5MS4xOTU0OThd
-ICAgYXJtYWRhX3RoZXJtYWxfcHJvYmUrMHgyMjAvMHg1ZjAKWyAgIDkxLjE5OTk2M10gICBwbGF0
-Zm9ybV9kcnZfcHJvYmUrMHg1MC8weGIwClsgICA5MS4yMDQwNzhdICAgZHJpdmVyX3Byb2JlX2Rl
-dmljZSsweDIyNC8weDMwOApbICAgOTEuMjA4NDU0XSAgIF9fZHJpdmVyX2F0dGFjaCsweGU4LzB4
-ZjAKWyAgIDkxLjIxMjMwOV0gICBidXNfZm9yX2VhY2hfZGV2KzB4NjgvMHhjOApbICAgOTEuMjE2
-MjQ4XSAgIGRyaXZlcl9hdHRhY2grMHgyMC8weDI4ClsgICA5MS4yMTk5MjZdICAgYnVzX2FkZF9k
-cml2ZXIrMHgxMDgvMHgyMjgKWyAgIDkxLjIyMzg2Nl0gICBkcml2ZXJfcmVnaXN0ZXIrMHg2MC8w
-eDExMApbICAgOTEuMjI3ODA2XSAgIF9fcGxhdGZvcm1fZHJpdmVyX3JlZ2lzdGVyKzB4NDQvMHg1
-MApbICAgOTEuMjMyNjIyXSAgIGFybWFkYV90aGVybWFsX2RyaXZlcl9pbml0KzB4MTgvMHgyMApb
-ICAgOTEuMjM3NDM2XSAgIGRvX29uZV9pbml0Y2FsbCsweDU4LzB4MTcwClsgICA5MS4yNDEzNzhd
-ICAga2VybmVsX2luaXRfZnJlZWFibGUrMHgxZDQvMHgyN2MKWyAgIDkxLjI0NTg0M10gICBrZXJu
-ZWxfaW5pdCsweDEwLzB4MTA4ClsgICA5MS4yNDk0MzRdICAgcmV0X2Zyb21fZm9yaysweDEwLzB4
-MTgKWyAgIDkxLjI1MzExMV0gaXJxIGV2ZW50IHN0YW1wOiA2MTMxMgpbICAgOTEuMjU2NTMwXSBo
-YXJkaXJxcyBsYXN0ICBlbmFibGVkIGF0ICg2MTMwOSk6IFs8ZmZmZjAwMDAwODA4NmFiMD5dIGFy
-Y2hfY3B1X2lkbGUrMHgxMC8weDIwClsgICA5MS4yNjQ5MThdIGhhcmRpcnFzIGxhc3QgZGlzYWJs
-ZWQgYXQgKDYxMzEwKTogWzxmZmZmMDAwMDA4MDgzMTM0Pl0gZWwxX2lycSsweDc0LzB4MTMwClsg
-ICA5MS4yNzI4NzFdIHNvZnRpcnFzIGxhc3QgIGVuYWJsZWQgYXQgKDYxMzEyKTogWzxmZmZmMDAw
-MDA4MGI3ZmEwPl0gX2xvY2FsX2JoX2VuYWJsZSsweDIwLzB4NDAKWyAgIDkxLjI4MTUyMF0gc29m
-dGlycXMgbGFzdCBkaXNhYmxlZCBhdCAoNjEzMTEpOiBbPGZmZmYwMDAwMDgwYjgzOTg+XSBpcnFf
-ZW50ZXIrMHg1OC8weDc4ClsgICA5MS4yODk1NTldIApbICAgOTEuMjg5NTU5XSBvdGhlciBpbmZv
-IHRoYXQgbWlnaHQgaGVscCB1cyBkZWJ1ZyB0aGlzOgpbICAgOTEuMjk2MTE0XSAgUG9zc2libGUg
-dW5zYWZlIGxvY2tpbmcgc2NlbmFyaW86ClsgICA5MS4yOTYxMTRdIApbICAgOTEuMzAyMDU4XSAg
-ICAgICAgQ1BVMApbICAgOTEuMzA0NTE0XSAgICAgICAgLS0tLQpbICAgOTEuMzA2OTcwXSAgIGxv
-Y2soJnR6LT5sb2NrKTsKWyAgIDkxLjMxMDA0MV0gICA8SW50ZXJydXB0PgpbICAgOTEuMzEyNjcw
-XSAgICAgbG9jaygmdHotPmxvY2spOwpbICAgOTEuMzE1OTE2XSAKWyAgIDkxLjMxNTkxNl0gICoq
-KiBERUFETE9DSyAqKioKWyAgIDkxLjMxNTkxNl0gClsgICA5MS4zMjE4NjNdIG5vIGxvY2tzIGhl
-bGQgYnkgc3dhcHBlci8wLzAuClsgICA5MS4zMjU4OTBdIApbICAgOTEuMzI1ODkwXSBzdGFjayBi
-YWNrdHJhY2U6ClsgICA5MS4zMzAyNjldIENQVTogMCBQSUQ6IDAgQ29tbTogc3dhcHBlci8wIE5v
-dCB0YWludGVkIDQuMTguMC1yYzEtMDAwNDctZzdmN2M4MDVjMmI2OS1kaXJ0eSAjMTU4MApbICAg
-OTEuMzM5MDkxXSBIYXJkd2FyZSBuYW1lOiBNYXJ2ZWxsIEFybWFkYSA3MDQwIERCIGJvYXJkIChE
-VCkKWyAgIDkxLjM0NDc3NV0gQ2FsbCB0cmFjZToKWyAgIDkxLjM0NzIzNF0gIGR1bXBfYmFja3Ry
-YWNlKzB4MC8weDFhMApbICAgOTEuMzUwOTEzXSAgc2hvd19zdGFjaysweDE0LzB4MjAKWyAgIDkx
-LjM1NDI0NF0gIGR1bXBfc3RhY2srMHhiOC8weGY0ClsgICA5MS4zNTc1NzRdICBwcmludF91c2Fn
-ZV9idWcucGFydC4yNCsweDI2NC8weDI3YwpbICAgOTEuMzYyMjExXSAgbWFya19sb2NrKzB4MTUw
-LzB4NmIwClsgICA5MS4zNjU2MjhdICBfX2xvY2tfYWNxdWlyZSsweDZkMC8weDE4ZjgKWyAgIDkx
-LjM2OTU2OF0gIGxvY2tfYWNxdWlyZSsweDQ0LzB4NjAKWyAgIDkxLjM3MzA3M10gIF9fbXV0ZXhf
-bG9jaysweDc0LzB4ODgwClsgICA5MS4zNzY2NjZdICBtdXRleF9sb2NrX25lc3RlZCsweDFjLzB4
-MjgKWyAgIDkxLjM4MDYwNl0gIHRoZXJtYWxfem9uZV9nZXRfdGVtcCsweDYwLzB4MTU4ClsgICA5
-MS4zODQ5ODJdICB0aGVybWFsX3pvbmVfZGV2aWNlX3VwZGF0ZS5wYXJ0LjQrMHgzNC8weGUwClsg
-ICA5MS4zOTAzMThdICB0aGVybWFsX3pvbmVfZGV2aWNlX3VwZGF0ZSsweDI4LzB4MzgKWyAgIDkx
-LjM5NTA0M10gIGFybWFkYV9vdmVyaGVhdF9pc3IrMHhiMC8weGI4ClsgICA5MS4zOTkxNTldICBf
-X2hhbmRsZV9pcnFfZXZlbnRfcGVyY3B1KzB4OWMvMHgxMjgKWyAgIDkxLjQwMzg4M10gIGhhbmRs
-ZV9pcnFfZXZlbnRfcGVyY3B1KzB4MzQvMHg4OApbICAgOTEuNDA4MzQ2XSAgaGFuZGxlX2lycV9l
-dmVudCsweDQ4LzB4NzgKWyAgIDkxLjQxMjIwMV0gIGhhbmRsZV9mYXN0ZW9pX2lycSsweGEwLzB4
-MTgwClsgICA5MS40MTYzMTZdICBnZW5lcmljX2hhbmRsZV9pcnErMHgyNC8weDM4ClsgICA5MS40
-MjAzNDZdICBtdmVidV9zZWlfaGFuZGxlX2Nhc2NhZGVfaXJxKzB4YzgvMHgxODAKWyAgIDkxLjQy
-NTMzMl0gIGdlbmVyaWNfaGFuZGxlX2lycSsweDI0LzB4MzgKWyAgIDkxLjQyOTM2MF0gIF9faGFu
-ZGxlX2RvbWFpbl9pcnErMHg1Yy8weGI4ClsgICA5MS40MzM0NzNdICBnaWNfaGFuZGxlX2lycSsw
-eDU4LzB4YjAKWyAgIDkxLjQzNzE1MV0gIGVsMV9pcnErMHhiNC8weDEzMApbICAgOTEuNDQwMzA2
-XSAgYXJjaF9jcHVfaWRsZSsweDE0LzB4MjAKWyAgIDkxLjQ0Mzg5OF0gIGRlZmF1bHRfaWRsZV9j
-YWxsKzB4MTgvMHgzMApbICAgOTEuNDQ3ODQwXSAgZG9faWRsZSsweDFjNC8weDI3OApbICAgOTEu
-NDUxMDgyXSAgY3B1X3N0YXJ0dXBfZW50cnkrMHgyNC8weDI4ClsgICA5MS40NTUwMjNdICByZXN0
-X2luaXQrMHgyNTQvMHgyNjgKWyAgIDkxLjQ1ODQ0MF0gIHN0YXJ0X2tlcm5lbCsweDNmMC8weDQx
-YwpbICAgOTEuNDYyMTI2XSB0aGVybWFsIHRoZXJtYWxfem9uZTU6IGNyaXRpY2FsIHRlbXBlcmF0
-dXJlIHJlYWNoZWQgKDU0IEMpLCBzaHV0dGluZyBkb3duCgoKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi Matthias,
+
+On 2018-06-27 00:32, Matthias Kaehlcke wrote:
+> On Tue, Jun 26, 2018 at 07:01:18AM +0530, Balakrishna Godavarthi wrote:
+>> Hi Matthias,
+>> 
+>> On 2018-06-26 05:13, Matthias Kaehlcke wrote:
+>> > This is a nice improvement, a few remaining questions inline.
+>> >
+>> > On Mon, Jun 25, 2018 at 07:10:10PM +0530, Balakrishna Godavarthi wrote:
+>> > > In function qca_setup, we set initial and operating speeds for
+>> > > Qualcomm
+>> > > Bluetooth SoC's. This block of code is common across different
+>> > > Qualcomm Bluetooth SoC's. Instead of duplicating the code, created
+>> > > a wrapper function to set the speeds. So that future coming SoC's
+>> > > can use these wrapper functions to set speeds.
+>> > >
+>> > > Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+>> > > ---
+>> > > Changes in v8:
+>> > >     * common function to set INIT and operating speeds.
+>> > >     * moved hardware flow control to qca_set_speed().
+>> > >
+>> > > Changes in v7:
+>> > >     * initial patch
+>> > >     * created wrapper functions for init and operating speeds.
+>> > > ---
+>> > >  drivers/bluetooth/hci_qca.c | 89
+>> > > +++++++++++++++++++++++++++----------
+>> > >  1 file changed, 65 insertions(+), 24 deletions(-)
+>> > >
+>> > > diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+>> > > index fe62420ef838..38b7dbe6c897 100644
+>> > > --- a/drivers/bluetooth/hci_qca.c
+>> > > +++ b/drivers/bluetooth/hci_qca.c
+>> > > @@ -119,6 +119,11 @@ struct qca_data {
+>> > >  	u64 votes_off;
+>> > >  };
+>> > >
+>> > > +enum qca_speed_type {
+>> > > +	QCA_INIT_SPEED = 1,
+>> > > +	QCA_OPER_SPEED
+>> > > +};
+>> > > +
+>> > >  struct qca_serdev {
+>> > >  	struct hci_uart	 serdev_hu;
+>> > >  	struct gpio_desc *bt_en;
+>> > > @@ -923,6 +928,60 @@ static inline void host_set_baudrate(struct
+>> > > hci_uart *hu, unsigned int speed)
+>> > >  		hci_uart_set_baudrate(hu, speed);
+>> > >  }
+>> > >
+>> > > +static unsigned int qca_get_speed(struct hci_uart *hu,
+>> > > +				  enum qca_speed_type speed_type)
+>> > > +{
+>> > > +	unsigned int speed = 0;
+>> > > +
+>> > > +	if (speed_type == QCA_INIT_SPEED) {
+>> > > +		if (hu->init_speed)
+>> > > +			speed = hu->init_speed;
+>> > > +		else if (hu->proto->init_speed)
+>> > > +			speed = hu->proto->init_speed;
+>> > > +	} else {
+>> > > +		if (hu->oper_speed)
+>> > > +			speed = hu->oper_speed;
+>> > > +		else if (hu->proto->oper_speed)
+>> > > +			speed = hu->proto->oper_speed;
+>> > > +	}
+>> > > +
+>> > > +	return speed;
+>> > > +}
+>> > > +
+>> > > +static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type
+>> > > speed_type)
+>> > > +{
+>> > > +	unsigned int speed, qca_baudrate;
+>> > > +	int ret;
+>> > > +
+>> > > +	if (speed_type == QCA_INIT_SPEED) {
+>> > > +		speed = qca_get_speed(hu, QCA_INIT_SPEED);
+>> > > +		if (speed)
+>> > > +			host_set_baudrate(hu, speed);
+>> > > +		else
+>> > > +			bt_dev_err(hu->hdev, "Init speed should be non zero");
+>> >
+>> > The check for 'speed == 0' is done in multiple places. From this
+>> > code I deduce that it is expected that both INIT and OPER speed are
+>> > set to non-zero values. What happens if either of them is zero? Is the
+>> > driver still operational?
+>> >
+>> [Bala]: yes in hci_uart_setup()(hci_serdev.c) function before calling
+>> qca_setup().
+>>         we actually set baudrate, but int  above code missed to 
+>> restrict the
+>> further call to qca_setup()
+>>        if speed =0. so we are checking the same in the qca_setup().. 
+>> i.e.
+>> qca_get_speed().
+> 
+> Sorry, didn't quite get you here. Yes, the driver is still operational?
+> 
+> Breaking it down in multiple questions:
+> 
+> 1. Is it an error if one of the speeds isn't specified?
+> 
+
+[Bala]:  i want to break this issue for two chips.
+         for rome:  No, it is not a error if one of speeds are missing.
+                    but it is mandate to have at least one of the speeds.
+                    to current implementation we are strictly not 
+checking this case.
+                    i.e. terminate qca_setup() if both speeds missing.
+                    will do this change in this patch.
+         for wnc3990: yes it an error if any of the speeds are missing.
+                      it is mandate to have both the speeds.
+                      to current implementation we are strictly not 
+checking this case.
+                      i.e. terminate qca_setup() if any speeds missing.
+                      will integrate this in patch add support for 
+wcn3990.
+
+        "The check for 'speed == 0' is done in multiple places. From this
+        code I deduce that it is expected that both INIT and OPER speed 
+are
+        set to non-zero values. What happens if either of them is zero? 
+Is the
+        driver still operational"
+
+       still we will have speed ==0 check for BT chip ROME. pls find code 
+snippet below
+
+          thanks for catching this corner case.
+
+> If yes we should probably check this early once and return an error
+> early, instead of doing the check repeatedly
+> 
+> 2. If it is not an error, what is the driver supposed to do?
+> 
+>> > In the discussion on "[v7,8/8] Bluetooth: hci_qca: Add support for
+>> > Qualcomm Bluetooth chip wcn3990" you mentioned the possbility to move
+>> > the hci_uart_set_flow_control() calls into _set_speed(). This seemed
+>> > interesting but finally it isn't done in this series. Did you
+>> > encounter that it is not feasible/desirable for some reason?
+>> >
+>> 
+>> [Bala]: this patch is for rome where flow control is not used.
+>>         after we integrate wcn3990, flow control is hidden in the
+>> qca_set_speed()
+>>         Pls check [v8 7/7] patch.
+> 
+> Sorry, my confusion
+> 
+>> > >  static int qca_setup(struct hci_uart *hu)
+>> > >  {
+>> > >  	struct hci_dev *hdev = hu->hdev;
+>> > > @@ -937,35 +996,17 @@ static int qca_setup(struct hci_uart *hu)
+>> > >  	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+>> > >
+>> > >  	/* Setup initial baudrate */
+>> > > -	speed = 0;
+>> > > -	if (hu->init_speed)
+>> > > -		speed = hu->init_speed;
+>> > > -	else if (hu->proto->init_speed)
+>> > > -		speed = hu->proto->init_speed;
+>> > > -
+>> > > -	if (speed)
+>> > > -		host_set_baudrate(hu, speed);
+>> > > +	qca_set_speed(hu, QCA_INIT_SPEED);
+>> > >
+>> > >  	/* Setup user speed if needed */
+>> > > -	speed = 0;
+>> > > -	if (hu->oper_speed)
+>> > > -		speed = hu->oper_speed;
+>> > > -	else if (hu->proto->oper_speed)
+>> > > -		speed = hu->proto->oper_speed;
+>> > > +	ret = qca_set_speed(hu, QCA_OPER_SPEED);
+>> > > +	if (ret)
+>> > > +		return ret;
+>> > >
+>> > > -	if (speed) {
+>> > > +	speed = qca_get_speed(hu, QCA_OPER_SPEED);
+>> > > +	if (speed)
+>> > >  		qca_baudrate = qca_get_baudrate_value(speed);
+>> >
+>> > Is the check here necessary? qca_get_baudrate_value() returns
+>> > QCA_BAUDRATE_115200 for a zero speed.
+>> 
+>> this if for no zero operating speed,
+> 
+> My point is:
+> 
+> static int qca_setup(struct hci_uart *hu)
+> {
+> 	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
+> 
+> 	...
+> 
+> 	if (speed)
+> 		qca_baudrate = qca_get_baudrate_value(speed);
+> }
+> 
+> static uint8_t qca_get_baudrate_value(int speed)
+> {
+>         switch (speed) {
+> 
+> 	...
+> 
+>         default:
+>                 return QCA_BAUDRATE_115200;
+>         }
+> }
+> 
+> If qca_get_baudrate_value() is called with 'speed == 0' it returns
+> QCA_BAUDRATE_115200, which is the same value with which
+> QCA_BAUDRATE_115200 is initialized.
+> 
+> It seems the initialization and the check for 'speed == 0' could be 
+> removed.
+
+[Bala]: the above speed == 0 is highly recommended, let us assume ROME 
+chip init speed moved from 115200 to 2000000 and operating speed is 
+defined as zero.
+        then this check will help us. else if we remove speed ==0 then in 
+qca_baudrate we will end up having a different value.
+         Pls find the code snippet for better understanding.
+
+after your suggestion. code snippet along with wcn3990 integration.
+
+
+[Bala]: for rome any one of the speeds are required.
+         for wcn3990 requires both speeds.
+
+static int qca_check_speeds(struct hci_uart *hu)
+{
+         struct qca_serdev *qcadev;
+
+         qcadev = serdev_device_get_drvdata(hu->serdev);
+         if (qcadev->btsoc_type == QCA_WCN3990) {
+                 /* QCA WCN3990 requires both the speed values. */
+                 if (qca_get_speed(hu, QCA_INIT_SPEED) &&
+                     qca_get_speed(hu, QCA_OPER_SPEED))
+
+                         return 0;
+
+                 bt_dev_err(hu->hdev, "Both the speeds should be non 
+zero");
+                 return 1;
+         }
+
+         if (qca_get_speed(hu, QCA_INIT_SPEED) ||
+              qca_get_speed(hu, QCA_OPER_SPEED))
+                 return 0;
+
+         bt_dev_err(hu->hdev, "either of the speeds should be non zero");
+         return 1;
+         [Bala]: pls suggest, what could be error no if above criteria is 
+not met.
+}
+
+static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type 
+speed_type)
+{
+         struct qca_serdev *qcadev;
+         unsigned int speed, qca_baudrate;
+         int ret;
+
+         if (speed_type == QCA_INIT_SPEED) {
+                 speed = qca_get_speed(hu, QCA_INIT_SPEED);
+                 if (speed)
+                         host_set_baudrate(hu, speed);
+                 [Bala]: this speed check is required for ROME, that if 
+ROME init speed is zero.
+                 return 0;
+         }
+
+         speed = qca_get_speed(hu, QCA_OPER_SPEED);
+         if (!speed)
+                 return 0;
+         [Bala]: this speed check is required for ROME, that if ROME 
+operating speed is zero.
+
+[Bala]: this is speeds in both OPER and init speeds are required.. as we 
+move forward if any one of the speed is set.
+
+         qcadev = serdev_device_get_drvdata(hu->serdev);
+         /* Disabling hardware flow control is preferred while
+          * sending change baud rate command to SoC.
+if (qcadev->btsoc_type == QCA_WCN3990)
+                 hci_uart_set_flow_control(hu, true);
+
+         qca_baudrate = qca_get_baudrate_value(speed);
+         bt_dev_info(hu->hdev, "Set UART speed to %d", speed);
+         ret = qca_set_baudrate(hu->hdev, qca_baudrate);
+         if (ret) {
+                 bt_dev_err(hu->hdev, "Failed to change the baudrate 
+(%d)", ret);
+                 return ret;
+         }
+
+         host_set_baudrate(hu, speed);
+         if (qcadev->btsoc_type == QCA_WCN3990)
+                 hci_uart_set_flow_control(hu, false);
+
+         return 0;
+}
+
+static int qca_setup(struct hci_uart *hu)
+{
+         struct hci_dev *hdev = hu->hdev;
+         struct qca_data *qca = hu->priv;
+         unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
+         struct qca_serdev *qcadev;
+         int ret;
+         int soc_ver = 0;
+
+         qcadev = serdev_device_get_drvdata(hu->serdev);
+
+         /* Patch downloading has to be done without IBS mode */
+         clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+
+         ret = qca_check_speeds(hu);
+         if (ret)
+                 return ret;
+
+         /* Setup initial baudrate */
+         qca_set_speed(hu, QCA_INIT_SPEED);
+         speed = qca_get_speed(hu, QCA_INIT_SPEED);
+         if (speed)
+                 qca_baudrate = qca_get_baudrate_value(speed);
+
+[Bala]: i have newly add above statement. initial speed of both ROME and 
+wcn3990 when the chip boot up is 115200.
+         in future, if we have new chip where initial  speed of chip 
+during boot up is 200000. then this will help us to get the actual 
+initial speed i.e. based upon the init speed.
+
+         if (qcadev->btsoc_type == QCA_WCN3990) {
+                                                                
+bt_dev_dbg(hdev, "setting up wcn3990");
+                 hci_uart_set_flow_control(hu, true);
+                 ret = qca_send_vendor_cmd(hdev, 
+QCA_WCN3990_POWERON_PULSE);
+                 if (ret)
+                         return ret;
+
+                 hci_uart_set_flow_control(hu, false);
+                 serdev_device_close(hu->serdev);
+                 ret = serdev_device_open(hu->serdev);
+                 if (ret) {
+                         bt_dev_err(hdev, "failed to open port");
+                         return ret;
+                 }
+
+                 msleep(100);
+                 /* Setup initial baudrate */
+                 qca_set_speed(hu, QCA_INIT_SPEED);
+                 hci_uart_set_flow_control(hu, false);
+                 ret = qca_read_soc_version(hdev, &soc_ver);
+                 if (ret < 0 || soc_ver == 0) {
+                         bt_dev_err(hdev, "Failed to get version %d", 
+ret);
+                         return ret;
+                 }
+                 bt_dev_info(hdev, "wcn3990 controller version 0x%08x", 
+soc_ver);
+         } else {
+                 bt_dev_info(hdev, "ROME setup");
+         }
+
+         /* Setup user speed if needed */
+         ret = qca_set_speed(hu, QCA_OPER_SPEED);
+         if (ret)
+                 return ret;
+
+         speed = qca_get_speed(hu, QCA_OPER_SPEED);
+         if (speed)
+                 qca_baudrate = qca_get_baudrate_value(speed);
+
+       [Bala]: the above speed == 0 is highly recommended, let us assume 
+ROME chip init speed moved from 115200 to 2000000 and operating speed is 
+defined as zero.
+        then this check will help us. else if we remove speed ==0 then in 
+qca_baudrate we will end up having a different value.
+        ….
+         }
+
+  Pls let me know, whether i have clarified your queries.
+-- 
+Regards
+Balakrishna.
