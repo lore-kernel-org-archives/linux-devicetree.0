@@ -1,56 +1,39 @@
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2] arm64: dts: marvell: armada-37xx: reserve memory for
- ATF
-Date: Fri, 29 Jun 2018 13:44:07 +0200
-Message-ID: <20180629134407.112819d2@windsurf>
-References: <20180626081701.27176-1-miquel.raynal@bootlin.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v3 0/8] gnss: add new GNSS subsystem
+Date: Fri, 29 Jun 2018 13:46:46 +0200
+Message-ID: <20180629114646.GU629@localhost>
+References: <20180601082259.17563-1-johan@kernel.org>
+ <20180628120103.GA28131@kroah.com>
+ <20180629094607.GC31718@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180626081701.27176-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Victor Gu <xigu@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180629094607.GC31718@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, alan@linux.intel.com, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Fri, Jun 29, 2018 at 11:46:07AM +0200, Pavel Machek wrote:
+> 
+> > > Finally, note that documentation (including kerneldoc) remains to be
+> > > written, but hopefully this will not hinder review given that the
+> > > current interfaces are fairly self-describing.
+> > 
+> > This all looks great.  Thanks for doing this work and adding a new
+> > subsystem for something that has been asked for for many years.
+> > 
+> > All now merged in my tree, nice job!
+> 
+> I don't think discussion was finished on this one.
+> 
+> In particular, we agreed that /dev/gnssrawX would be better device
+> name, so that we still have place where to put proper abstraction
+> layer in future.
 
-On Tue, 26 Jun 2018 10:17:01 +0200, Miquel Raynal wrote:
-> From: Victor Gu <xigu@marvell.com>
-> 
-> The PSCI area should be reserved in Linux for PSCI operations such as
-> suspend/resume.
-> 
-> Reserve 2MiB of memory which matches the area used by ATF (BL1, BL2,
-> BL3x, see [1] in ATF source code). This covers all PSCI code and data
-> area and is 2MiB aligned, which is required by Linux for huge pages
-> handling.
-> 
-> Please note that this is a default setup allowing to perform PSCI
-> operations with legacy bootloaders. Recent bootloaders should update the
-> region size/position accordingly.
-> 
-> [1] plat/marvell/a3700/common/include/platform_def.h
-> 
-> Signed-off-by: Victor Gu <xigu@marvell.com>
-> [miquel.raynal@bootlin.com: reword of commit message, comment in the DTSI]
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+I did not agree with you on that. I said we could consider that name if
+this was to be changed at all, which I do not think is necessary for
+the reasons spelled out in this thread.
 
-Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Johan
