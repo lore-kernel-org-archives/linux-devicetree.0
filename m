@@ -1,39 +1,35 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 0/8] gnss: add new GNSS subsystem
-Date: Fri, 29 Jun 2018 14:26:00 -0400
-Message-ID: <20180629182600.GA17562@kroah.com>
-References: <20180601082259.17563-1-johan@kernel.org>
- <20180628120103.GA28131@kroah.com>
- <20180629094607.GC31718@amd>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH V2 2/2] ARM: dts: imx6ul: add GPIO clocks
+Date: Fri, 29 Jun 2018 11:39:38 -0700
+Message-ID: <153029757874.143105.17774476792947607999@swboyd.mtv.corp.google.com>
+References: <1527990245-13619-1-git-send-email-Anson.Huang@nxp.com>
+ <1527990245-13619-2-git-send-email-Anson.Huang@nxp.com>
+ <AM3PR04MB1315D8B57E1A5D47BECBDCD3F54A0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <20180628005217.GC22683@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180629094607.GC31718@amd>
+In-Reply-To: <20180628005217.GC22683@dragon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, alan@linux.intel.com, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "matteo.lisi@engicam.com" <matteo.lisi@engicam.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "michael@amarulasolutions.com" <michael@amarulasolutions.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 29, 2018 at 11:46:07AM +0200, Pavel Machek wrote:
-> 
-> > > Finally, note that documentation (including kerneldoc) remains to be
-> > > written, but hopefully this will not hinder review given that the
-> > > current interfaces are fairly self-describing.
-> > 
-> > This all looks great.  Thanks for doing this work and adding a new
-> > subsystem for something that has been asked for for many years.
-> > 
-> > All now merged in my tree, nice job!
-> 
-> I don't think discussion was finished on this one.
+Quoting Shawn Guo (2018-06-27 17:52:18)
+> On Mon, Jun 25, 2018 at 03:14:39AM +0000, Anson Huang wrote:
+> > Gentle Ping...
+> =
 
-It looked done to me as there was only a single set of patches, with no
-other working patches submitted from anyone else.
+> I cannot apply this dts patch until the clock patch is landed on
+> mainline, because it has a dependency on new clock ID IMX6UL_CLK_GPIO1
+> created by clock patch.
+> =
 
-If this turns out to be a "bad" api, then we can deal with it then, but
-for now let's try this out.
 
-thanks,
-
-greg k-h
+Does it matter if that clk ID changes across branches? Or is everything
+good if it just exists as some number? The patch adding the define
+conflicts with another patch to fix the numbering scheme to be
+incremental instead of changing IMX6UL and IMX6ULL which is annoying.
+I'll probably make a topic branch just for the fix and merge it into
+clk-fixes and this branch so you can pick it up from there if you like.
