@@ -1,82 +1,89 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v3 01/17] platform-msi: allow creation of MSI domain
- without interrupt number
-Date: Fri, 29 Jun 2018 16:43:23 +0200
-Message-ID: <20180629164323.7fb2a0c3@xps13>
-References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
- <20180622151432.1566-2-miquel.raynal@bootlin.com>
- <c5b38c34-5ba0-6545-3635-45be1858fa3b@arm.com>
- <20180629094035.5199fe89@xps13>
- <86bmbtzmhk.wl-marc.zyngier@arm.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v9 3/5] ARM: dts: Renesas R9A06G032 base device tree file
+Date: Fri, 29 Jun 2018 16:45:06 +0200
+Message-ID: <20180629144505.xcencoba4ru6tiee@verge.net.au>
+References: <1528973829-25493-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1528973829-25493-4-git-send-email-michel.pollet@bp.renesas.com>
+ <20180628120031.eq2yuysz4re2olwn@verge.net.au>
+ <20180628121609.jf4dp4azeowte7pb@verge.net.au>
+ <CAMuHMdWqowQjZ8Wsdj6ne-+UG8-OY_j6pi3R9JPP6L7ZgRhvBQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <86bmbtzmhk.wl-marc.zyngier@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWqowQjZ8Wsdj6ne-+UG8-OY_j6pi3R9JPP6L7ZgRhvBQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michel Pollet <michel.pollet@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyYywKCk1hcmMgWnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+IHdyb3RlIG9uIEZy
-aSwgMjkgSnVuIDIwMTggMTU6Mzg6MzEKKzAxMDA6Cgo+IE9uIEZyaSwgMjkgSnVuIDIwMTggMDg6
-NDA6MzUgKzAxMDAsCj4gTWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4g
-d3JvdGU6Cj4gPiAKPiA+IEhpIE1hcmMsCj4gPiAKPiA+IE1hcmMgWnluZ2llciA8bWFyYy56eW5n
-aWVyQGFybS5jb20+IHdyb3RlIG9uIFRodSwgMjggSnVuIDIwMTggMTI6MTI6MDQKPiA+ICswMTAw
-Ogo+ID4gICAKPiA+ID4gT24gMjIvMDYvMTggMTY6MTQsIE1pcXVlbCBSYXluYWwgd3JvdGU6ICAK
-PiA+ID4gPiBwbGF0Zm9ybV9tc2lfYWxsb2NfcHJpdl9kYXRhKCkgY2hlY2tzIHRoYXQgYSBudW1i
-ZXIgb2YgaW50ZXJydXB0cyBpcwo+ID4gPiA+IGFsd2F5cyBnaXZlbi4gVGhpcyBleHRyYS1jaGVj
-ayBoYXMgbm8gcmVhbCBpbXBhY3QgYW5kIGp1c3QgcHJldmVudHMKPiA+ID4gPiB1c2VsZXNzbHkg
-dGhlIHVzZXIgdG8gY3JlYXRlIGFuIE1TSSB0cmVlIGRvbWFpbjogcmVtb3ZlIGl0Lgo+ID4gPiA+
-IAo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IE1pcXVlbCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9v
-dGxpbi5jb20+Cj4gPiA+ID4gLS0tCj4gPiA+ID4gIGRyaXZlcnMvYmFzZS9wbGF0Zm9ybS1tc2ku
-YyB8IDIgKy0KPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0
-aW9uKC0pCj4gPiA+ID4gCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYmFzZS9wbGF0Zm9y
-bS1tc2kuYyBiL2RyaXZlcnMvYmFzZS9wbGF0Zm9ybS1tc2kuYwo+ID4gPiA+IGluZGV4IDYwZDZj
-YzYxOGYxYy4uOWYwMDFmNGNjYzBmIDEwMDY0NAo+ID4gPiA+IC0tLSBhL2RyaXZlcnMvYmFzZS9w
-bGF0Zm9ybS1tc2kuYwo+ID4gPiA+ICsrKyBiL2RyaXZlcnMvYmFzZS9wbGF0Zm9ybS1tc2kuYwo+
-ID4gPiA+IEBAIC0yMDMsNyArMjAzLDcgQEAgcGxhdGZvcm1fbXNpX2FsbG9jX3ByaXZfZGF0YShz
-dHJ1Y3QgZGV2aWNlICpkZXYsIHVuc2lnbmVkIGludCBudmVjLAo+ID4gPiA+ICAJICogYWNjb3Jk
-aW5nbHkgKHdoaWNoIHdvdWxkIGltcGFjdCB0aGUgbWF4IG51bWJlciBvZiBNU0kKPiA+ID4gPiAg
-CSAqIGNhcGFibGUgZGV2aWNlcykuCj4gPiA+ID4gIAkgKi8KPiA+ID4gPiAtCWlmICghZGV2LT5t
-c2lfZG9tYWluIHx8ICF3cml0ZV9tc2lfbXNnIHx8ICFudmVjIHx8IG52ZWMgPiBNQVhfREVWX01T
-SVMpCj4gPiA+ID4gKwlpZiAoIWRldi0+bXNpX2RvbWFpbiB8fCAhd3JpdGVfbXNpX21zZyB8fCBu
-dmVjID4gTUFYX0RFVl9NU0lTKQo+ID4gPiA+ICAJCXJldHVybiBFUlJfUFRSKC1FSU5WQUwpOwo+
-ID4gPiA+ICAKPiA+ID4gPiAgCWlmIChkZXYtPm1zaV9kb21haW4tPmJ1c190b2tlbiAhPSBET01B
-SU5fQlVTX1BMQVRGT1JNX01TSSkgewo+ID4gPiA+ICAgICAKPiA+ID4gCj4gPiA+IEh1aC4uLiBJ
-dCdzIG5vdCB0aGF0IHNpbXBsZS4KPiA+ID4gCj4gPiA+IFllcywgaXQgYWxsb3dzIHlvdSB0byBn
-ZXQgYSB0cmVlIHZpYSBwbGF0Zm9ybV9tc2lfY3JlYXRlX2RldmljZV9kb21haW4KPiA+ID4gKGFz
-c3VtaW5nIHRoYXQncyB3aHkgeW91J3JlIGNoYW5naW5nIGl0IC0tIHlvdXIgY29tbWl0IG1lc3Nh
-Z2UgZG9lc24ndAo+ID4gPiBzYXkgbXVjaCkgIAo+ID4gCj4gPiBJbmRlZWQuIFRoYXQgd2FzIGV4
-YWN0bHkgbXkgaW50ZW50aW9uLgo+ID4gICAKPiA+ID4gYnV0IGl0IGFsc28gaGFzIHNvbWUgaW1w
-YWN0IG9uIHRoZSB3YXkgbXNpX2RvbWFpbl9wcmVwYXJlX2lycXMKPiA+ID4gd29ya3MgKHNlZSBo
-b3cgaXQgaXMgY2FsbGVkIGZyb20gcGxhdGZvcm1fbXNpX2NyZWF0ZV9kZXZpY2VfZG9tYWluKS4K
-PiA+ID4gCj4gPiA+IEltcG9ydGFudGx5LCB0aGUgbXNpX3ByZXBhcmUgY2FsbGJhY2sgdGFrZXMg
-bnZlYyBhcyBhIHBhcmFtZXRlciwgYW5kCj4gPiA+IHRoYXQgZW5kcyB1cCB0cmlja2xpbmcgZG93
-biB0byB0aGUgaXJxY2hpcCwgb3Igd2hhdGV2ZXIgd2lsbCBzZXR1cCB0aGUKPiA+ID4gTVNJIGRv
-bWFpbi4gVGhpbmdzIGxpa2UgdGhlIEdJQ3YzIElUUyBkbyByZWx5IG9uIHRoYXQgdG8gY2FydmUg
-b3V0IHRoZQo+ID4gPiBMUEkgc3BhY2UgdGhhdCBzdWJzZXF1ZW50bHkgZ2V0cyB1c2VkIHRvIHBv
-cHVsYXRlIHRoZSBkb21haW4uCj4gPiA+IAo+ID4gPiBTbyBubywgeW91IGNhbid0IGRvIGl0IGxp
-a2UgdGhhdC4gSWYgeW91IHJlYWxseSB3YW50IGEgdHJlZSwgYWRkIGEKPiA+ID4gaGVscGVyIHRo
-YXQgZG9lcyBzby4gIAo+ID4gCj4gPiBTbyBpZiBJIHVuZGVyc3RhbmQgY29ycmVjdGx5LCB3aGF0
-IHNob3VsZCBiZSBkb25lIGlzIHdyaXR0aW5nIGEgbmV3Cj4gPiBoZWxwZXIgdGhhdCB3b3VsZCBk
-byBzb21ldGhpbmcgc2ltaWxhciB0bwo+ID4gcGxhdGZvcm1fbXNpX2NyZWF0ZV9kZXZpY2VfZG9t
-YWluKCksIGJ1dCBjcmVhdGluZyBpbnN0ZWFkIGEgdHJlZSBkb21haW4KPiA+IGFuZCBzdGlsbCBn
-aXZpbmcgbXNpX2RvbWFpbl9wcmVwYXJlX2lycXMoKSBhIG1lYW5pbmdmdWwgbnVtYmVyIChhcwo+
-ID4gbnZlYykgdGhhdCB3b3VsZCBiZSB0aGUgbWF4aW11bSBudW1iZXIgb2YgTVNJcyB0aGF0IGNv
-dWxkIGJlIGFsbG9jYXRlZC4KPiA+IEFtIEkgcmlnaHQgaGVyZT8gIAo+IAo+IFdoYXQgSSBoYXZl
-IGluIG1pbmQgaXMgdGhlIGZvbGxvd2luZyAodW50ZXN0ZWQpIHBhdGNoLiBMZXQgbWUga25vdyBp
-Zgo+IHRoYXQgd29ya3MgZm9yIHlvdS4KCk9rLCB0aGF0J3MgcmVhbGx5IGNsb3NlIHRvIHdoYXQg
-SSB3cm90ZSB0aGlzIG1vcm5pbmcsIGNvb2wuIEkgd2FzIG5vdApzdXJlIHRoYXQgd2FzIHRoZSBv
-bmx5IHRoaW5nIHRvIG1vZGlmeS4KClRoYW5rcywKTWlxdcOobAoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Thu, Jun 28, 2018 at 02:45:41PM +0200, Geert Uytterhoeven wrote:
+> Hi Simon,
+> 
+> On Thu, Jun 28, 2018 at 2:16 PM Simon Horman <horms@verge.net.au> wrote:
+> > On Thu, Jun 28, 2018 at 02:00:32PM +0200, Simon Horman wrote:
+> > > On Thu, Jun 14, 2018 at 11:56:32AM +0100, Michel Pollet wrote:
+> > > > This adds the Renesas R9A06G032 bare bone support.
+> > > >
+> > > > This currently only handles the SYSCTRL block note,
+> > > > generic parts (gic, architected timer) and a UART.
+> > > >
+> > > > Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> > > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > > Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> > >
+> > > Thanks, applied with the following appended:
+> > >
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 9d5eeff51b5f..4c85ac04872d 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -1969,6 +1969,7 @@ S:      Supported
+> > >  F:   arch/arm/boot/dts/emev2*
+> > >  F:   arch/arm/boot/dts/r7s*
+> > >  F:   arch/arm/boot/dts/r8a*
+> > > +F:   arch/arm/boot/dts/r9a*
+> > >  F:   arch/arm/boot/dts/sh*
+> > >  F:   arch/arm/configs/shmobile_defconfig
+> > >  F:   arch/arm/include/debug/renesas-scif.S
+> >
+> > One more update.
+> >
+> > dt-bindings/clock/r9a06g032-sysctrl.h is not present in v4.18-rc1,
+> > current base of the renesas tree and likely base for the rest of the v4.19
+> > development cycle.
+> >
+> > Accordingly I have removed the include of that header and replaced
+> > the use of symbols it defines with numeric constants. The result is below.
+> 
+> Oh right. Thanks!
+> 
+> > Please:
+> > 1) Check that this is correct and
+> 
+> Looks good to me, except for the bogus "fixes" and "SoB" below
+> (bad squash?)
+> 
+> > From: Michel Pollet <michel.pollet@bp.renesas.com>
+> > Subject: [PATCH] ARM: dts: Renesas R9A06G032 base device tree file
+> >
+> > This adds the Renesas R9A06G032 bare bone support.
+> >
+> > This currently only handles the SYSCTRL block note,
+> > generic parts (gic, architected timer) and a UART.
+> >
+> > Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > [simon: updated MAINTAINERS file
+> > [simon: do not use r9a06g032-sysctrl.h as it is not in the renesas tree yet]
+> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> >
+> > fixes
+>   ^^^^^
+> >
+> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+>   ^^^^
+> 
+> Gr{oetje,eeting}s,
+
+Thanks, I'll remove that trailing garbage.
