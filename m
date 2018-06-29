@@ -1,84 +1,24 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH] ARM: dts: imx6: correct anatop regulators range
-Date: Fri, 29 Jun 2018 08:41:52 +0000
-Message-ID: <AM3PR04MB1315000269912D2423AC63D9F54E0@AM3PR04MB1315.eurprd04.prod.outlook.com>
-References: <1530258861-11666-1-git-send-email-Anson.Huang@nxp.com>
-         <1530260109.22468.60.camel@pengutronix.de>
-         <AM3PR04MB13157A4948E36BAE60A8DC49F54E0@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <1530261518.22468.62.camel@pengutronix.de>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH 0/2] Enable VDMA S2MM vertical flip support
+Date: Fri, 29 Jun 2018 14:21:05 +0530
+Message-ID: <20180629085105.GC22377@vkoul-mobl>
+References: <1528875288-9140-1-git-send-email-radhey.shyam.pandey@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530261518.22468.62.camel@pengutronix.de>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1528875288-9140-1-git-send-email-radhey.shyam.pandey@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, dan.j.williams@intel.com, appana.durga.rao@xilinx.com, lars@metafoo.de, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIEx1Y2FzDQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMdWNhcyBTdGFjaCBbbWFpbHRvOmwuc3RhY2hAcGVu
-Z3V0cm9uaXguZGVdDQo+IFNlbnQ6IEZyaWRheSwgSnVuZSAyOSwgMjAxOCA0OjM5IFBNDQo+IFRv
-OiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT47IHNoYXduZ3VvQGtlcm5lbC5vcmc7
-DQo+IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgRmFiaW8g
-RXN0ZXZhbQ0KPiA8ZmFiaW8uZXN0ZXZhbUBueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOyBt
-YXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZw0KPiBDYzogZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVj
-dDogUmU6IFtQQVRDSF0gQVJNOiBkdHM6IGlteDY6IGNvcnJlY3QgYW5hdG9wIHJlZ3VsYXRvcnMg
-cmFuZ2UNCj4gDQo+IEFtIEZyZWl0YWcsIGRlbiAyOS4wNi4yMDE4LCAwODoyNyArMDAwMCBzY2hy
-aWViIEFuc29uIEh1YW5nOg0KPiA+IEhpLCBMdWNhcw0KPiA+DQo+ID4gQW5zb24gSHVhbmcNCj4g
-PiBCZXN0IFJlZ2FyZHMhDQo+ID4NCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
-LS0NCj4gPiA+ID4gPiBGcm9tOiBMdWNhcyBTdGFjaCBbbWFpbHRvOmwuc3RhY2hAcGVuZ3V0cm9u
-aXguZGVdDQo+ID4gPiBTZW50OiBGcmlkYXksIEp1bmUgMjksIDIwMTggNDoxNSBQTQ0KPiA+ID4g
-PiA+ID4gPiBUbzogQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+OyBzaGF3bmd1b0Br
-ZXJuZWwub3JnOw0KPiA+ID4gPiA+IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGtlcm5lbEBwZW5n
-dXRyb25peC5kZTsgRmFiaW8gRXN0ZXZhbQ0KPiA+ID4gPiA+ID4gPiA+ID4gPGZhYmlvLmVzdGV2
-YW1AbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gPiA+ID4gPiA+ID4gPiA+IG1hcmsu
-cnV0bGFuZEBhcm0uY29tOw0KPiA+ID4gPiA+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZzsNCj4gPiA+ID4gPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+IGxp
-bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gPiA+ID4gPiBDYzogZGwtbGludXgtaW14IDxs
-aW51eC1pbXhAbnhwLmNvbT4NCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIEFSTTogZHRzOiBp
-bXg2OiBjb3JyZWN0IGFuYXRvcCByZWd1bGF0b3JzIHJhbmdlDQo+ID4gPg0KPiA+ID4gQW0gRnJl
-aXRhZywgZGVuIDI5LjA2LjIwMTgsIDE1OjU0ICswODAwIHNjaHJpZWIgQW5zb24gSHVhbmc6DQo+
-ID4gPiA+IENvcnJlY3Qgc29tZSBpLk1YNiBTb0NzIGFuYXRvcCByZWd1bGF0b3JzIHJhbmdlIGFj
-Y29yZGluZyB0bw0KPiA+ID4gPiByZWZlcmVuY2UgbWFudWFsLg0KPiA+ID4gPg0KPiA+ID4gPiBT
-aWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPiA+DQo+
-ID4gPiBOQUNLLg0KPiA+ID4NCj4gPiA+IFRoaXMgaXMgd3JvbmcuIFdoaWxlIHRoZSByZWd1bGF0
-b3Igc3VwcG9ydHMgdGhpcyByYW5nZSwgdGhlIFNvQw0KPiA+ID4gZG9lc24ndC7CoFRoZSBjdXJy
-ZW50IHNldHRpbmdzIGFyZSBkZXJpdmVkIGZyb20gdGhlIGFsbG93ZWQgb3BlcmF0aW5nDQo+ID4g
-PiByYW5nZXMgb2YgdGhlIFNvQyAoYXQgbGVhc3QgZm9yIHRoZSBNWDZRREwpLCB3aGljaCBpcyBp
-biBhY2NvcmRhbmNlDQo+ID4gPiB3aXRoIGhvdyByZWd1bGF0b3IgY29uc3RyYWludHMgaW4gRFQg
-YXJlIG1lYW50IHRvIGJlIHVzZWQuDQo+ID4NCj4gPg0KPiA+IFVuZGVyc3RhbmQgdGhhdCBub3Jt
-YWxseSB0aGVzZSByZWd1bGF0b3JzJyB2b2x0YWdlIGFyZSBOT1QgYWRqdXN0ZWQsDQo+ID4gd2Ug
-anVzdCB1c2UgdGhlIGRlZmF1bHQgdmFsdWUsIGxldCdzIGp1c3QgY2FsbCB0aGUgb3BlcmF0aW5n
-IHJhbmdlIG9mDQo+ID4gdGhlIFNvQyAiU29DIHJhbmdlIiwgbXkgaW50ZW50aW9uIGlzIHRvIG1h
-a2UgYWxsIGkuTVg2J3MgYW5hdG9wDQo+ID4gcmVndWxhdG9yIHNldHRpbmdzIGFsaWduZWQgc2lu
-Y2UgdGhleSBhcmUgaW4gc2FtZSBzZXJpZXMsIEkgc2F3IHNvbWUNCj4gPiBpLk1YNiBTb0NzIHVz
-ZSBzYW1lIFNvQyByYW5nZSBhcyBhbmF0b3AgbGRvIHJhbmdlLCBidXQgc29tZSBhcmUgTk9ULA0K
-PiA+IGxpa2UgaW14NnFkbC9pbXg2c3gvaW14NnNsIHVzZSBkaWZmZXJlbnQgU29DIHJhbmdlIHRo
-YW4gYW5hdG9wIGxkbw0KPiA+IHJhbmdlLCBidXQgaW14NnVsL3VsbC9zbGwgdXNlIHNhbWUgcmVn
-dWxhdG9yIHJhbmdlIGFzIGFuYXRvcCBsZG8sIGFuZA0KPiA+IHJlZ3VsYXRvciAxcDEvMnA1LzNw
-MCBhbHNvIGhhdmUgZGlmZmVyZW50IHNldHRpbmdzLCBzb21lIGFyZSB1c2UgU29DIHJhbmdlDQo+
-IGFuZCBzb21lIGFyZSBqdXN0IHNhbWUgYXMgYW5hdG9wIGxkbyByYW5nZS4uLi50aGlzIGxvb2tz
-IHJlYWxseSBjb25mdXNlZC4NCj4gPg0KPiA+IFNvLCBkbyB5b3UgdGhpbmsgd2UgY2FuIGFkanVz
-dCB0aGUgaW14NnVsL3VsbC9zbGwncyByZWd1bGF0b3IgcmFuZ2UgdG8NCj4gPiBiZSBTb0MgcmFu
-Z2UgcmF0aGVyIHRoYW4gYW5hdG9wIGxkbyByYW5nZT8gQW5kIGhvdyB0byBkZWZpbmUgdGhlIFNv
-Qw0KPiA+IHJhbmdlPyBMaWtlIHRoZSAxcDEgbGRvIHJhbmdlLCBob3cgZG8gd2Uga25vdyB3aGlj
-aCByYW5nZSBpcyBmaW5lPyBBcyBJIHNhdw0KPiBpdCBpcyAxdiB+IDEuMnYgb24gaW14NnFkbCwg
-YnV0IDAuOHYgfiAxLjM3NXYgb24gaW14NnNsPw0KPiANCj4gSWYgeW91IHdhbnQgdG8gYWxpZ24g
-dGhvc2Ugdm9sdGFnZXMgdG8gc29tZXRoaW5nIHRoZW4gaXQncyBkZWZpbml0ZWx5IHRoZSBTb0MN
-Cj4gcmFuZ2UgeW91IHdhbnQgdG8gdXNlLiBUaGlzIGlzIGhvdyB0aGUgY29uc3RyYWludHMgYXJl
-IHNwZWNpZmllZCBpbiB0aGUgRFQNCj4gYmluZGluZywgYXMgYmVpbmcgdGhlIGFsbG93ZWQgdm9s
-dGFnZSByYW5nZSB0aGF0IHdvbid0IGRhbWFnZSBhbnkgb2YgdGhlDQo+IGF0dGFjaGVkIGNvbnN1
-bWVycy4NCj4gDQo+IFBsZWFzZSBhbGlnbiB0aGUgY29uc3RyYWludHMgdG8gdGhlIG9wZXJhdGlu
-ZyByYW5nZXMsIGFzIHNwZWNpZmllZCBpbiB0aGUNCj4gZGF0YXNoZWV0LiBGb3IgZXhhbXBsZSBh
-biBleGNlcnB0IGZyb20gdGhlIGkuTVg2U0wgZGF0YXNoZWV0Og0KPiANCj4gIjQuMy4yLjEgUmVn
-dWxhdG9ycyBmb3IgQW5hbG9nIE1vZHVsZXMNCj4gICBMRE9fMVAxDQo+ICAgIFsuLi5dIFR5cGlj
-YWwgUHJvZ3JhbW1pbmcgT3BlcmF0aW5nIFJhbmdlIGlzIDEuMCBWIHRvIDEuMiBWIHdpdGggdGhl
-DQo+IG5vbWluYWwgZGVmYXVsdCBzZXR0aW5nIGFzIDEuMSBWIg0KPiANCj4gU28gdGhlIHJhbmdl
-IGZvciAxcDEgTERPIG9uIGkuTVg2U0wgc2hvdWxkIGJlIDEuMFYgdG8gMS4yViwgd2hpY2ggaXMg
-dGhlIHNhbWUNCj4gYXMgaS5NWDZRREwuDQoNCk9LLCB0aGFua3MsIEkgd2lsbCBjaGVjayBhbGwg
-dGhlIGRhdGFzaGVldCBhbmQgcmV3b3JrIGEgcGF0Y2guDQoNCkFuc29uLg0KDQo+IA0KPiBSZWdh
-cmRzLA0KPiBMdWNhcw0K
+On 13-06-18, 13:04, Radhey Shyam Pandey wrote:
+> The AXI VDMA core supports Vertical Flip with S2MM as the path when
+> Enable Vertical Flip (Advanced tab) is selected. This patch series add
+> DT property for vertical flip and program its state in VDMA start_transfer.
+
+Applied both, thanks
+
+-- 
+~Vinod
