@@ -1,69 +1,63 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCHv2 1/3] dt-bindings: display: dw_hdmi.txt: add cec-disable
- property
-Date: Fri, 29 Jun 2018 09:17:39 +0200
-Message-ID: <714ee0ef-25c4-e065-8120-aebc27a1add7@baylibre.com>
-References: <20180323125915.13986-1-hverkuil@xs4all.nl>
- <20180323125915.13986-2-hverkuil@xs4all.nl>
- <20180326072830.iphtbw5mkeciv4kj@rob-hp-laptop>
- <05e7ade1-89be-0f0f-18a5-88ff0310a70b@xs4all.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <05e7ade1-89be-0f0f-18a5-88ff0310a70b@xs4all.nl>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh@kernel.org>
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
+From: alanx.chiang@intel.com
+Subject: [PATCH v4 2/2] eeprom: at24: Add support for address-width property
+Date: Fri, 29 Jun 2018 15:21:55 +0800
+Message-ID: <1530256915-25034-3-git-send-email-alanx.chiang@intel.com>
+References: <1530256915-25034-1-git-send-email-alanx.chiang@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1530256915-25034-1-git-send-email-alanx.chiang@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-i2c@vger.kernel.org
+Cc: andy.yeh@intel.com, sakari.ailus@linux.intel.com, andriy.shevchenko@linux.intel.com, andriy.shevchenko@intel.com, rajmohan.mani@intel.com, andy.shevchenko@gmail.com, tfiga@chromium.org, jcliang@chromium.org, brgl@bgdev.pl, robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alan Chiang <alanx.chiang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGFucywKCk9uIDAzLzA0LzIwMTggMTA6MjcsIEhhbnMgVmVya3VpbCB3cm90ZToKPiBPbiAy
-Ny8wMy8xOCAwMDoyNSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+IE9uIEZyaSwgTWFyIDIzLCAyMDE4
-IGF0IDAxOjU5OjEzUE0gKzAxMDAsIEhhbnMgVmVya3VpbCB3cm90ZToKPj4+IEZyb206IEhhbnMg
-VmVya3VpbCA8aGFucy52ZXJrdWlsQGNpc2NvLmNvbT4KPj4+Cj4+PiBTb21lIGJvYXJkcyBoYXZl
-IGJvdGggYSBEZXNpZ25XYXJlIGFuZCB0aGVpciBvd24gQ0VDIGNvbnRyb2xsZXIuCj4+PiBUaGUg
-Q0VDIHBpbiBpcyBvbmx5IGhvb2tlZCB1cCB0byB0aGVpciBvd24gQ0VDIGNvbnRyb2xsZXIgYW5k
-IG5vdAo+Pj4gdG8gdGhlIERXIGNvbnRyb2xsZXIuCj4+Pgo+Pj4gQWRkIHRoZSBjZWMtZGlzYWJs
-ZSBwcm9wZXJ0eSB0byBkaXNhYmxlIHRoZSBEVyBDRUMgY29udHJvbGxlci4KPj4+Cj4+PiBUaGlz
-IHBhcnRpY3VsYXIgc2l0dWF0aW9uIGhhcHBlbnMgb24gQW1sb2dpYyBib2FyZHMgdGhhdCBoYXZl
-IHRoZWlyCj4+PiBvd24gbWVzb24gQ0VDIGNvbnRyb2xsZXIuCj4+Cj4+IFNlZW1zIGxpa2Ugd2Ug
-Y291bGQgYXZvaWQgdGhpcyBieSBkZXNjcmliaW5nIGhvdyB0aGUgQ0VDIGxpbmUgaXMgaG9va2Vk
-IAo+PiB1cCB3aGljaCBjb3VsZCBiZSBuZWVkZWQgZm9yIG90aGVyIHJlYXNvbnMuCj4gCj4gU28g
-dGhlcmUgYXJlIHRocmVlIHNpdHVhdGlvbnM6Cj4gCj4gMSkgVGhlIGNlYyBwaW4gaXMgY29ubmVj
-dGVkIHRvIHRoZSBEVyBIRE1JIFRYLiBUaGF0J3MgYWxyZWFkeSBzdXBwb3J0ZWQuCj4gMikgVGhl
-IGNlYyBwaW4gaXMgbm90IGNvbm5lY3RlZCBhdCBhbGwsIGJ1dCB0aGUgQ0VDIElQIGlzIGluc3Rh
-bnRpYXRlZC4KPiAgICBXZSBuZWVkIHRoZSBjZWMtZGlzYWJsZSBwcm9wZXJ0eSBmb3IgdGhhdC4g
-VGhpcyBzaW1wbHkgc3RhdGVzIHRoYXQgdGhlCj4gICAgQ0VDIHBpbiBpcyBub3QgY29ubmVjdGVk
-Lgo+IDMpIFRoZSBjZWMgcGluIGlzIGNvbm5lY3RlZCB0byBhbiBIRE1JIFJYLiBXZSBkbyBub3Qg
-c3VwcG9ydCB0aGlzIGF0IHRoZQo+ICAgIG1vbWVudC4gSWYgd2Ugd2FudCB0byBzdXBwb3J0IHRo
-aXMsIHRoZW4gd2UgbmVlZCBhICdoZG1pLXJ4JyBwaGFuZGxlCj4gICAgdGhhdCBwb2ludHMgdG8g
-dGhlIEhETUkgcmVjZWl2ZXIgdGhhdCB0aGUgQ0VDIHBpbiBpcyBhc3NvY2lhdGVkIHdpdGguCj4g
-ICAgVGhpcyB3aWxsIGJlIHNpbWlsYXIgdG8gdGhlIGFscmVhZHkgZXhpc3RpbmcgJ2hkbWktcGhh
-bmRsZScgcHJvcGVydHkKPiAgICB1c2VkIHRvIGFzc29jaWF0ZSBhIENFQyBkcml2ZXIgd2l0aCBh
-biBIRE1JIHRyYW5zbWl0dGVyLiBJbiBoaW5kc2lnaHQKPiAgICBpdCB3b3VsZCBoYXZlIGJlZW4g
-YmV0dGVyIGlmICdoZG1pLXBoYW5kbGUnIHdhcyBuYW1lZCAnaGRtaS10eCcgOi0oCj4gCj4gSSBj
-YW4gbWFrZSBhIGJpbmRpbmcgcHJvcG9zYWwgZm9yIDMsIGJ1dCBJIGhhdmUgbm8gaGFyZHdhcmUg
-dG8gdGVzdCBpdCwKPiBzbyBJIHRoaW5rIGl0IGlzIGJldHRlciB0byBhZGQgdGhpcyBvbmx5IHdo
-ZW4gc29tZW9uZSBoYXMgaGFyZHdhcmUuIEl0Cj4gd2lsbCByZXF1aXJlIHF1aXRlIGEgZmV3IGNo
-YW5nZXMgdG8gdGhlIGRyaXZlciBhbmQgbGlrZWx5IGFsc28gdGhlIENFQyBjb3JlLgoKQ2FuJ3Qg
-d2Ugc2ltcGx5IGFkZCBhIHByb3BlcnR5IHRvIG92ZXJyaWRlIHRoZSBIVyBjb25maWcgZmllbGRz
-IGluIHRoaXMgY2FzZSA/Ckl0IHdpbGwgYmUgdGhlbiB1c2FibGUgd2l0aCBhbnkgZmVhdHVyZSB0
-aGUgaXMgZW5hYmxlZCBieSByZWFkaW5nIHRoZSBjb25maWcKYml0cyBsaWtlIEFIQiBBdWRpbywg
-STJjLCBDRUMsIC4uLiBhbmQgbWF5YmUgbWFueSBtb3JlIGluIHRoZSBmdXR1cmUuCgpOZWlsCgo+
-IAo+IFJlZ2FyZHMsCj4gCj4gCUhhbnMKPiAKPj4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBIYW5z
-IFZlcmt1aWwgPGhhbnMudmVya3VpbEBjaXNjby5jb20+Cj4+PiBBY2tlZC1ieTogTmVpbCBBcm1z
-dHJvbmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPgo+Pj4gLS0tCj4+PiAgRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R3X2hkbWkudHh0IHwgMyArKysK
-Pj4+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCj4gCgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+From: Alan Chiang <alanx.chiang@intel.com>
+
+Provide a flexible way to determine the addressing bits of eeprom.
+Pass the addressing bits to driver through address-width property.
+
+Signed-off-by: Alan Chiang <alanx.chiang@intel.com>
+Signed-off-by: Andy Yeh <andy.yeh@intel.com>
+
+---
+since v1
+-- Add a warn message for 8-bit addressing.
+since v2
+-- Modify the warning message for clear.
+-- Move the clearing bit operation outside of a statement.
+since v3
+-- Merge the warning message into one line.
+
+---
+ drivers/misc/eeprom/at24.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+index 0c125f2..7ea640b 100644
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -478,6 +478,23 @@ static void at24_properties_to_pdata(struct device *dev,
+ 	if (device_property_present(dev, "no-read-rollover"))
+ 		chip->flags |= AT24_FLAG_NO_RDROL;
+ 
++	err = device_property_read_u32(dev, "address-width", &val);
++	if (!err) {
++		switch (val) {
++		case 8:
++			if (chip->flags & AT24_FLAG_ADDR16)
++				dev_warn(dev, "Override address width to be 8, while default is 16\n");
++			chip->flags &= ~AT24_FLAG_ADDR16;
++			break;
++		case 16:
++			chip->flags |= AT24_FLAG_ADDR16;
++			break;
++		default:
++			dev_warn(dev, "Bad \"address-width\" property: %u\n",
++				 val);
++		}
++	}
++
+ 	err = device_property_read_u32(dev, "size", &val);
+ 	if (!err)
+ 		chip->byte_len = val;
+-- 
+2.7.4
