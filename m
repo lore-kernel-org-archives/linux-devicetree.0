@@ -1,15 +1,14 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v3 09/17] irqchip/irq-mvebu-icu: support ICU subnodes
-Date: Fri, 29 Jun 2018 14:34:27 +0200
-Message-ID: <20180629143427.16c7113b@xps13>
-References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
- <20180622151432.1566-10-miquel.raynal@bootlin.com>
- <61ff2e4f-55b6-cf70-5f04-32cd197c35f8@arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] ARM: dts: ux500: Correct SCU unit address
+Date: Fri, 29 Jun 2018 14:39:07 +0200
+Message-ID: <CACRpkdY40_uNAw3jAXaMR6TSM4mX5aoy6zOcx2LwyhX+8_qJJg@mail.gmail.com>
+References: <20180626075010.15611-1-geert+renesas@glider.be>
+ <20180626075010.15611-2-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <61ff2e4f-55b6-cf70-5f04-32cd197c35f8@arm.com>
+In-Reply-To: <20180626075010.15611-2-geert+renesas@glider.be>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,61 +18,19 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyYywKCk1hcmMgWnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+IHdyb3RlIG9uIFRo
-dSwgMjggSnVuIDIwMTggMTM6NDU6MDkKKzAxMDA6Cgo+IE9uIDIyLzA2LzE4IDE2OjE0LCBNaXF1
-ZWwgUmF5bmFsIHdyb3RlOgo+ID4gVGhlIElDVSBjYW4gaGFuZGxlIHNldmVyYWwgdHlwZSBvZiBp
-bnRlcnJ1cHQsIGVhY2ggb2YgdGhlbSBiZWluZyBoYW5kbGVkCj4gPiBkaWZmZXJlbnRseSBvbiBB
-UCBzaWRlLiBPbiBDUCBzaWRlLCB0aGUgSUNVIHNob3VsZCBiZSBhYmxlIHRvIG1ha2UgdGhlCj4g
-PiBkaXN0aW5jdGlvbiBiZXR3ZWVuIGVhY2ggaW50ZXJydXB0IGdyb3VwIGJ5IHBvaW50aW5nIHRv
-IHRoZSByaWdodCBwYXJlbnQuCj4gPiAKPiA+IFRoaXMgaXMgZG9uZSB0aHJvdWdoIHRoZSBpbnRy
-b2R1Y3Rpb24gb2YgbmV3IGJpbmRpbmdzLCBwcmVzZW50aW5nIHRoZSBJQ1UKPiA+IG5vZGUgYXMg
-dGhlIHBhcmVudCBvZiBtdWx0aXBsZSBJQ1Ugc3ViLW5vZGVzLCBlYWNoIG9mIHRoZW0gYmVpbmcg
-YW4KPiA+IGludGVycnVwdCB0eXBlIHdpdGggYSBkaWZmZXJlbnQgaW50ZXJydXB0IHBhcmVudC4g
-SUNVIGludGVycnVwdCAnY2xpZW50cycKPiA+IG5vdyBkaXJlY3RseSBwb2ludCB0byB0aGUgcmln
-aHQgc3ViLW5vZGUsIGF2b2lkaW5nIHRoZSBuZWVkIGZvciB0aGUgZXh0cmEKPiA+IElDVV9HUlBf
-KiBwYXJhbWV0ZXIuCj4gPiAKPiA+IElDVSBzdWJub2RlcyBhcmUgcHJvYmVkIGF1dG9tYXRpY2Fs
-bHkgd2l0aCBkZXZtX3BsYXRmb3JtX3BvcHVsYXRlKCkuIElmCj4gPiB0aGUgbm9kZSBhcyBubyBj
-aGlsZCwgdGhlIHByb2JlIGZ1bmN0aW9uIGZvciBOU1JzIHdpbGwgc3RpbGwgYmUgY2FsbGVkCj4g
-PiAnbWFudWFsbHknIGluIG9yZGVyIHRvIHByZXNlcnZlIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkg
-d2l0aCBEVCB1c2luZyB0aGUKPiA+IG9sZCBiaW5kaW5nLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5
-OiBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPgo+ID4gLS0tCj4gPiAg
-ZHJpdmVycy9pcnFjaGlwL2lycS1tdmVidS1pY3UuYyB8IDg4ICsrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKystLS0tLS0tCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDc0IGluc2VydGlvbnMo
-KyksIDE0IGRlbGV0aW9ucygtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pcnFjaGlw
-L2lycS1tdmVidS1pY3UuYyBiL2RyaXZlcnMvaXJxY2hpcC9pcnEtbXZlYnUtaWN1LmMKPiA+IGlu
-ZGV4IDI0ZDQ1MTg2ZWI2Yi4uZjdjMmVkZTljMjIyIDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9p
-cnFjaGlwL2lycS1tdmVidS1pY3UuYwo+ID4gKysrIGIvZHJpdmVycy9pcnFjaGlwL2lycS1tdmVi
-dS1pY3UuYwo+ID4gQEAgLTQzLDYgKzQzLDcgQEAgc3RydWN0IG12ZWJ1X2ljdSB7Cj4gPiAgCXN0
-cnVjdCByZWdtYXAgKnJlZ21hcDsKPiA+ICAJc3RydWN0IGRldmljZSAqZGV2Owo+ID4gIAlhdG9t
-aWNfdCBpbml0aWFsaXplZDsKPiA+ICsJYm9vbCBsZWdhY3lfYmluZGluZ3M7Cj4gPiAgfTsKPiA+
-ICAKPiA+ICBzdHJ1Y3QgbXZlYnVfaWN1X2lycV9kYXRhIHsKPiA+IEBAIC01MSw2ICs1MiwzMCBA
-QCBzdHJ1Y3QgbXZlYnVfaWN1X2lycV9kYXRhIHsKPiA+ICAJdW5zaWduZWQgaW50IHR5cGU7Cj4g
-PiAgfTsKPiA+ICAKPiA+ICtzdGF0aWMgc3RydWN0IG12ZWJ1X2ljdSAqbXZlYnVfaWN1X2Rldl9n
-ZXRfZHJ2ZGF0YShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4gK3sKPiA+ICsJc3Ry
-dWN0IG12ZWJ1X2ljdSAqaWN1Owo+ID4gKwo+ID4gKwkvKgo+ID4gKwkgKiBEZXZpY2UgZGF0YSBi
-ZWluZyBwb3B1bGF0ZWQgbWVhbnMgd2Ugc2hvdWxkIGJlIHVzaW5nIGxlZ2FjeSBiaW5kaW5ncy4K
-PiA+ICsJICogVXNpbmcgdGhlIF9wYXJlbnRfIGRldmljZSBkYXRhIG1lYW5zIHdlIHNob3VsZCBi
-ZSB1c2luZyBuZXcgYmluZGluZ3MuCj4gPiArCSAqLwo+ID4gKwlpY3UgPSBkZXZfZ2V0X2RydmRh
-dGEoJnBkZXYtPmRldik7Cj4gPiArCWlmIChpY3UpIHsKPiA+ICsJCWlmICghaWN1LT5sZWdhY3lf
-YmluZGluZ3MpCj4gPiArCQkJcmV0dXJuIEVSUl9QVFIoLUVJTlZBTCk7Cj4gPiArCX0gZWxzZSB7
-Cj4gPiArCQlpY3UgPSBkZXZfZ2V0X2RydmRhdGEocGRldi0+ZGV2LnBhcmVudCk7Cj4gPiArCQlp
-ZiAoIWljdSkKPiA+ICsJCQlyZXR1cm4gRVJSX1BUUigtRU5PREVWKTsKPiA+ICsKPiA+ICsJCWlm
-IChpY3UtPmxlZ2FjeV9iaW5kaW5ncykKPiA+ICsJCQlyZXR1cm4gRVJSX1BUUigtRUlOVkFMKTsK
-PiA+ICsJfSAgCj4gCj4gRG9lc24ndCB0aGlzIG1ha2UgbGVnYWN5X2JpbmRpbmdzIGNvbXBsZXRl
-bHkgcmVkdW5kYW50PyBFaXRoZXIgdGhlCj4gcG9pbnRlciBpcyAhTlVMTCBpbiB0aGUgZGV2aWNl
-LCBhbmQgdGhpcyBpcyB1c2luZyBhIGxlZ2FjeSBiaW5naW5nLCBvcgo+IGl0IGlzIHN0b3JlZCBp
-biB0aGUgcGFyZW50LCBhbmQgdGhpcyBpcyBhIG5ldyBiaW5kaW5nLiBZb3UgY291bGQgZXZlbgo+
-IGhhdmUgYSBoZWxwZXIgZm9yIHRoYXQ6Cj4gCj4gc3RhdGljIGJvb2wgaXNfbGVnYWN5KHN0cnVj
-dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gewo+IAlyZXR1cm4gIWRldl9nZXRfZHJ2ZGF0YSgm
-cGRldi0+ZGV2KTsKPiB9Cj4gCj4gVGhlIGRyaXZlciByZWFsbHkgZG9lc24ndCBuZWVkIHRvIGJl
-IGRlZmVuZGluZyBhZ2FpbnN0IGl0c2VsZiwgaWYKPiBhbnl0aGluZywgYW5kIGl0IHdvdWxkIHNh
-dmUgeW91IHF1aXRlIGEgYml0IG9mIGVycm9yIGhhbmRsaW5nIGluIHRoZQo+IGNhbGxlcnMgb2Yg
-dGhpcyBmdW5jdGlvbi4KCllvdSdyZSByaWdodCwgSSB3aWxsIHNpbXBsaWZ5IHRoaXMuCgpUaGFu
-a3MsCk1pcXXDqGwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWFybS1rZXJuZWwK
+On Tue, Jun 26, 2018 at 9:50 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+
+> The unit address of the Cortex-A9 SCU device node contains one zero too
+> many.  Remove it.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Patch applied!
+
+Yours,
+Linus Walleij
