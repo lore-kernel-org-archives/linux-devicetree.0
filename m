@@ -1,109 +1,80 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH] ARM: dts: imx6: correct anatop regulators range
-Date: Fri, 29 Jun 2018 08:27:41 +0000
-Message-ID: <AM3PR04MB13157A4948E36BAE60A8DC49F54E0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH] ARM: dts: imx6: correct anatop regulators range
+Date: Fri, 29 Jun 2018 10:38:38 +0200
+Message-ID: <1530261518.22468.62.camel@pengutronix.de>
 References: <1530258861-11666-1-git-send-email-Anson.Huang@nxp.com>
- <1530260109.22468.60.camel@pengutronix.de>
+         <1530260109.22468.60.camel@pengutronix.de>
+         <AM3PR04MB13157A4948E36BAE60A8DC49F54E0@AM3PR04MB1315.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530260109.22468.60.camel@pengutronix.de>
-Content-Language: en-US
+In-Reply-To: <AM3PR04MB13157A4948E36BAE60A8DC49F54E0@AM3PR04MB1315.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Anson Huang <anson.huang@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIEx1Y2FzDQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMdWNhcyBTdGFjaCBbbWFpbHRvOmwuc3RhY2hAcGVu
-Z3V0cm9uaXguZGVdDQo+IFNlbnQ6IEZyaWRheSwgSnVuZSAyOSwgMjAxOCA0OjE1IFBNDQo+IFRv
-OiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT47IHNoYXduZ3VvQGtlcm5lbC5vcmc7
-DQo+IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgRmFiaW8g
-RXN0ZXZhbQ0KPiA8ZmFiaW8uZXN0ZXZhbUBueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOyBt
-YXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZw0KPiBDYzogZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVj
-dDogUmU6IFtQQVRDSF0gQVJNOiBkdHM6IGlteDY6IGNvcnJlY3QgYW5hdG9wIHJlZ3VsYXRvcnMg
-cmFuZ2UNCj4gDQo+IEFtIEZyZWl0YWcsIGRlbiAyOS4wNi4yMDE4LCAxNTo1NCArMDgwMCBzY2hy
-aWViIEFuc29uIEh1YW5nOg0KPiA+IENvcnJlY3Qgc29tZSBpLk1YNiBTb0NzIGFuYXRvcCByZWd1
-bGF0b3JzIHJhbmdlIGFjY29yZGluZyB0byByZWZlcmVuY2UNCj4gPiBtYW51YWwuDQo+ID4NCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gDQo+
-IE5BQ0suDQo+IA0KPiBUaGlzIGlzIHdyb25nLiBXaGlsZSB0aGUgcmVndWxhdG9yIHN1cHBvcnRz
-IHRoaXMgcmFuZ2UsIHRoZSBTb0MgZG9lc24ndC7CoFRoZQ0KPiBjdXJyZW50IHNldHRpbmdzIGFy
-ZSBkZXJpdmVkIGZyb20gdGhlIGFsbG93ZWQgb3BlcmF0aW5nIHJhbmdlcyBvZiB0aGUgU29DIChh
-dA0KPiBsZWFzdCBmb3IgdGhlIE1YNlFETCksIHdoaWNoIGlzIGluIGFjY29yZGFuY2Ugd2l0aCBo
-b3cgcmVndWxhdG9yIGNvbnN0cmFpbnRzDQo+IGluIERUIGFyZSBtZWFudCB0byBiZSB1c2VkLg0K
-IA0KVW5kZXJzdGFuZCB0aGF0IG5vcm1hbGx5IHRoZXNlIHJlZ3VsYXRvcnMnIHZvbHRhZ2UgYXJl
-IE5PVCBhZGp1c3RlZCwgd2UganVzdCB1c2UNCnRoZSBkZWZhdWx0IHZhbHVlLCBsZXQncyBqdXN0
-IGNhbGwgdGhlIG9wZXJhdGluZyByYW5nZSBvZiB0aGUgU29DICJTb0MgcmFuZ2UiLA0KbXkgaW50
-ZW50aW9uIGlzIHRvIG1ha2UgYWxsIGkuTVg2J3MgYW5hdG9wIHJlZ3VsYXRvciBzZXR0aW5ncyBh
-bGlnbmVkIHNpbmNlIHRoZXkgYXJlIGluIHNhbWUgc2VyaWVzLCANCkkgc2F3IHNvbWUgaS5NWDYg
-U29DcyB1c2Ugc2FtZSBTb0MgcmFuZ2UgYXMgYW5hdG9wIGxkbyByYW5nZSwgYnV0IHNvbWUgYXJl
-DQpOT1QsIGxpa2UgaW14NnFkbC9pbXg2c3gvaW14NnNsIHVzZSBkaWZmZXJlbnQgU29DIHJhbmdl
-IHRoYW4gYW5hdG9wIGxkbyByYW5nZSwNCmJ1dCBpbXg2dWwvdWxsL3NsbCB1c2Ugc2FtZSByZWd1
-bGF0b3IgcmFuZ2UgYXMgYW5hdG9wIGxkbywgYW5kIHJlZ3VsYXRvciAxcDEvMnA1LzNwMA0KYWxz
-byBoYXZlIGRpZmZlcmVudCBzZXR0aW5ncywgc29tZSBhcmUgdXNlIFNvQyByYW5nZSBhbmQgc29t
-ZSBhcmUganVzdCBzYW1lIGFzIGFuYXRvcA0KbGRvIHJhbmdlLi4uLnRoaXMgbG9va3MgcmVhbGx5
-IGNvbmZ1c2VkLg0KDQpTbywgZG8geW91IHRoaW5rIHdlIGNhbiBhZGp1c3QgdGhlIGlteDZ1bC91
-bGwvc2xsJ3MgcmVndWxhdG9yIHJhbmdlIHRvIGJlIFNvQyByYW5nZSByYXRoZXIgdGhhbg0KYW5h
-dG9wIGxkbyByYW5nZT8gQW5kIGhvdyB0byBkZWZpbmUgdGhlIFNvQyByYW5nZT8gTGlrZSB0aGUg
-MXAxIGxkbyByYW5nZSwgaG93IGRvDQp3ZSBrbm93IHdoaWNoIHJhbmdlIGlzIGZpbmU/IEFzIEkg
-c2F3IGl0IGlzIDF2IH4gMS4ydiBvbiBpbXg2cWRsLCBidXQgMC44diB+IDEuMzc1diBvbiBpbXg2
-c2w/DQoNClRoYW5rcy4NCg0KQW5zb24uDQoNCj4gDQo+IFJlZ2FyZHMsDQo+IEx1Y2FzDQo+IA0K
-PiA+IC0tLQ0KPiA+IMKgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC5kdHNpIHwgMTIgKysrKysr
-LS0tLS0tDQo+ID4gwqBhcmNoL2FybS9ib290L2R0cy9pbXg2c2wuZHRzacKgwqB8wqDCoDQgKyst
-LQ0KPiA+IMKgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnN4LmR0c2nCoMKgfMKgwqA0ICsrLS0NCj4g
-PiDCoDMgZmlsZXMgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pDQo+
-ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC5kdHNpDQo+ID4g
-Yi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLmR0c2kgaW5kZXggOTExMTQxZS4uZDlmOThkZCAx
-MDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLmR0c2kNCj4gPiArKysg
-Yi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLmR0c2kNCj4gPiBAQCAtNjg5LDggKzY4OSw4IEBA
-DQo+ID4gPiDCoAkJCQlyZWd1bGF0b3ItMXAxIHsNCj4gPiA+IMKgCQkJCQljb21wYXRpYmxlID0g
-ImZzbCxhbmF0b3AtcmVndWxhdG9yIjsNCj4gPiA+IMKgCQkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2
-ZGQxcDEiOw0KPiA+ID4gLQkJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MTAwMDAwMD47
-DQo+ID4gPiAtCQkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxMjAwMDAwPjsNCj4gPiA+
-ICsJCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDgwMDAwMD47DQo+ID4gPiArCQkJCQly
-ZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxMzc1MDAwPjsNCj4gPiA+IMKgCQkJCQlyZWd1bGF0
-b3ItYWx3YXlzLW9uOw0KPiA+ID4gwqAJCQkJCWFuYXRvcC1yZWctb2Zmc2V0ID0gPDB4MTEwPjsN
-Cj4gPiA+IMKgCQkJCQlhbmF0b3Atdm9sLWJpdC1zaGlmdCA9IDw4PjsNCj4gPiBAQCAtNzA0LDgg
-KzcwNCw4IEBADQo+ID4gPiDCoAkJCQlyZWd1bGF0b3ItM3AwIHsNCj4gPiA+IMKgCQkJCQljb21w
-YXRpYmxlID0gImZzbCxhbmF0b3AtcmVndWxhdG9yIjsNCj4gPiA+IMKgCQkJCQlyZWd1bGF0b3It
-bmFtZSA9ICJ2ZGQzcDAiOw0KPiA+ID4gLQkJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8
-MjgwMDAwMD47DQo+ID4gPiAtCQkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwzMTUwMDAw
-PjsNCj4gPiA+ICsJCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDI2MjUwMDA+Ow0KPiA+
-ID4gKwkJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzQwMDAwMD47DQo+ID4gPiDCoAkJ
-CQkJcmVndWxhdG9yLWFsd2F5cy1vbjsNCj4gPiA+IMKgCQkJCQlhbmF0b3AtcmVnLW9mZnNldCA9
-IDwweDEyMD47DQo+ID4gPiDCoAkJCQkJYW5hdG9wLXZvbC1iaXQtc2hpZnQgPSA8OD47DQo+ID4g
-QEAgLTcxOSw4ICs3MTksOCBAQA0KPiA+ID4gwqAJCQkJcmVndWxhdG9yLTJwNSB7DQo+ID4gPiDC
-oAkJCQkJY29tcGF0aWJsZSA9ICJmc2wsYW5hdG9wLXJlZ3VsYXRvciI7DQo+ID4gPiDCoAkJCQkJ
-cmVndWxhdG9yLW5hbWUgPSAidmRkMnA1IjsNCj4gPiA+IC0JCQkJCXJlZ3VsYXRvci1taW4tbWlj
-cm92b2x0ID0gPDIyNTAwMDA+Ow0KPiA+ID4gLQkJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQg
-PSA8Mjc1MDAwMD47DQo+ID4gPiArCQkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwyMTAw
-MDAwPjsNCj4gPiA+ICsJCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDI4NzUwMDA+Ow0K
-PiA+ID4gwqAJCQkJCXJlZ3VsYXRvci1hbHdheXMtb247DQo+ID4gPiDCoAkJCQkJYW5hdG9wLXJl
-Zy1vZmZzZXQgPSA8MHgxMzA+Ow0KPiA+ID4gwqAJCQkJCWFuYXRvcC12b2wtYml0LXNoaWZ0ID0g
-PDg+Ow0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2c2wuZHRzaQ0KPiA+
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnNsLmR0c2kgaW5kZXggODFmNDgxMTYuLjNkNzkzMWIg
-MTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnNsLmR0c2kNCj4gPiArKysg
-Yi9hcmNoL2FybS9ib290L2R0cy9pbXg2c2wuZHRzaQ0KPiA+IEBAIC01MzksOCArNTM5LDggQEAN
-Cj4gPiA+IMKgCQkJCXJlZ3VsYXRvci0zcDAgew0KPiA+ID4gwqAJCQkJCWNvbXBhdGlibGUgPSAi
-ZnNsLGFuYXRvcC1yZWd1bGF0b3IiOw0KPiA+ID4gwqAJCQkJCXJlZ3VsYXRvci1uYW1lID0gInZk
-ZDNwMCI7DQo+ID4gPiAtCQkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwyODAwMDAwPjsN
-Cj4gPiA+IC0JCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMxNTAwMDA+Ow0KPiA+ID4g
-KwkJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MjYyNTAwMD47DQo+ID4gPiArCQkJCQly
-ZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwzNDAwMDAwPjsNCj4gPiA+IMKgCQkJCQlyZWd1bGF0
-b3ItYWx3YXlzLW9uOw0KPiA+ID4gwqAJCQkJCWFuYXRvcC1yZWctb2Zmc2V0ID0gPDB4MTIwPjsN
-Cj4gPiA+IMKgCQkJCQlhbmF0b3Atdm9sLWJpdC1zaGlmdCA9IDw4PjsNCj4gPiBkaWZmIC0tZ2l0
-IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnN4LmR0c2kNCj4gPiBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L2lteDZzeC5kdHNpIGluZGV4IDcxMzBhYjguLmYyNmY2MTEgMTAwNjQ0DQo+ID4gLS0tIGEvYXJj
-aC9hcm0vYm9vdC9kdHMvaW14NnN4LmR0c2kNCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9p
-bXg2c3guZHRzaQ0KPiA+IEBAIC02MDcsOCArNjA3LDggQEANCj4gPiA+IMKgCQkJCXJlZ3VsYXRv
-ci0zcDAgew0KPiA+ID4gwqAJCQkJCWNvbXBhdGlibGUgPSAiZnNsLGFuYXRvcC1yZWd1bGF0b3Ii
-Ow0KPiA+ID4gwqAJCQkJCXJlZ3VsYXRvci1uYW1lID0gInZkZDNwMCI7DQo+ID4gPiAtCQkJCQly
-ZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwyODAwMDAwPjsNCj4gPiA+IC0JCQkJCXJlZ3VsYXRv
-ci1tYXgtbWljcm92b2x0ID0gPDMxNTAwMDA+Ow0KPiA+ID4gKwkJCQkJcmVndWxhdG9yLW1pbi1t
-aWNyb3ZvbHQgPSA8MjYyNTAwMD47DQo+ID4gPiArCQkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9s
-dCA9IDwzNDAwMDAwPjsNCj4gPiA+IMKgCQkJCQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiA+ID4g
-wqAJCQkJCWFuYXRvcC1yZWctb2Zmc2V0ID0gPDB4MTIwPjsNCj4gPiA+IMKgCQkJCQlhbmF0b3At
-dm9sLWJpdC1zaGlmdCA9IDw4PjsNCg==
+Am Freitag, den 29.06.2018, 08:27 +0000 schrieb Anson Huang:
+> Hi, Lucas
+> 
+> Anson Huang
+> Best Regards!
+> 
+> 
+> > -----Original Message-----
+> > > > From: Lucas Stach [mailto:l.stach@pengutronix.de]
+> > Sent: Friday, June 29, 2018 4:15 PM
+> > > > > > To: Anson Huang <anson.huang@nxp.com>; shawnguo@kernel.org;
+> > > > s.hauer@pengutronix.de; kernel@pengutronix.de; Fabio Estevam
+> > > > > > > > <fabio.estevam@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com;
+> > > > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
+> > linux-kernel@vger.kernel.org
+> > > > Cc: dl-linux-imx <linux-imx@nxp.com>
+> > Subject: Re: [PATCH] ARM: dts: imx6: correct anatop regulators range
+> > 
+> > Am Freitag, den 29.06.2018, 15:54 +0800 schrieb Anson Huang:
+> > > Correct some i.MX6 SoCs anatop regulators range according to reference
+> > > manual.
+> > > 
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > 
+> > NACK.
+> > 
+> > This is wrong. While the regulator supports this range, the SoC doesn't. The
+> > current settings are derived from the allowed operating ranges of the SoC (at
+> > least for the MX6QDL), which is in accordance with how regulator constraints
+> > in DT are meant to be used.
+> 
+>  
+> Understand that normally these regulators' voltage are NOT adjusted, we just use
+> the default value, let's just call the operating range of the SoC "SoC range",
+> my intention is to make all i.MX6's anatop regulator settings aligned since they are in same series, 
+> I saw some i.MX6 SoCs use same SoC range as anatop ldo range, but some are
+> NOT, like imx6qdl/imx6sx/imx6sl use different SoC range than anatop ldo range,
+> but imx6ul/ull/sll use same regulator range as anatop ldo, and regulator 1p1/2p5/3p0
+> also have different settings, some are use SoC range and some are just same as anatop
+> ldo range....this looks really confused.
+> 
+> So, do you think we can adjust the imx6ul/ull/sll's regulator range to be SoC range rather than
+> anatop ldo range? And how to define the SoC range? Like the 1p1 ldo range, how do
+> we know which range is fine? As I saw it is 1v ~ 1.2v on imx6qdl, but 0.8v ~ 1.375v on imx6sl?
+
+If you want to align those voltages to something then it's definitely
+the SoC range you want to use. This is how the constraints are
+specified in the DT binding, as being the allowed voltage range that
+won't damage any of the attached consumers.
+
+Please align the constraints to the operating ranges, as specified in
+the datasheet. For example an excerpt from the i.MX6SL datasheet:
+
+"4.3.2.1 Regulators for Analog Modules
+  LDO_1P1
+   [...] Typical Programming Operating Range is 1.0 V to 1.2 V with the
+nominal default setting as 1.1 V"
+
+So the range for 1p1 LDO on i.MX6SL should be 1.0V to 1.2V, which is
+the same as i.MX6QDL.
+
+Regards,
+Lucas
