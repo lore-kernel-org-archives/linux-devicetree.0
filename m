@@ -1,41 +1,26 @@
-Return-Path: <SRS0=y08W=JM=gmail.com=festevam@kernel.org>
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH v2] dt-bindings: sram: Add 'clocks' as an optional property
-Date: Tue, 26 Jun 2018 20:07:33 -0300
-Message-Id: <1530054453-10393-1-git-send-email-festevam@gmail.com>
-To: robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, p.zabel@pengutronix.de, vz@mleia.com, Fabio Estevam <fabio.estevam@nxp.com>
+Return-Path: <SRS0=SoUM=JP=free.fr=robert.jarzmik@kernel.org>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH 4/7] mmc: pxamci: fix indenting
+References: <20180629144738.446-1-daniel@zonque.org>
+	<20180629144738.446-5-daniel@zonque.org>
+Date: Fri, 29 Jun 2018 23:20:12 +0200
+In-Reply-To: <20180629144738.446-5-daniel@zonque.org> (Daniel Mack's message
+	of "Fri, 29 Jun 2018 16:47:35 +0200")
+Message-ID: <87k1qhjnn7.fsf@belgarion.home>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: Daniel Mack <daniel@zonque.org>
+Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
+Daniel Mack <daniel@zonque.org> writes:
 
-Some SoCs (like i.MX53) need to specify the SRAM clock in the
-device tree via the clocks property.
+> pxamci_of_init() had some weird indenting.
+>
+> Signed-off-by: Daniel Mack <daniel@zonque.org>
+Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
 
-Add an entry to the optional property section.
+Cheers.
 
-Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
----
-Changes since v1:
-- Add space before : and use the more common "list of phandle
-and clock specifier pairs" term - Vladimir
-
- Documentation/devicetree/bindings/sram/sram.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/sram/sram.txt b/Documentation/devicetree/bindings/sram/sram.txt
-index 267da44..ae6ca34 100644
---- a/Documentation/devicetree/bindings/sram/sram.txt
-+++ b/Documentation/devicetree/bindings/sram/sram.txt
-@@ -50,6 +50,8 @@ Optional properties in the area nodes:
- 		 manipulation of the page attributes.
- - label : the name for the reserved partition, if omitted, the label
-           is taken from the node name excluding the unit address.
-+- clocks : a list of phandle and clock specifier pairs that controls the
-+	   SRAM clock.
- 
- Example:
- 
--- 
-2.7.4
+--
+Robert
