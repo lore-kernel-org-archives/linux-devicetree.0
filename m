@@ -1,35 +1,31 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/5] dt-bindings: tegra186-gpio: Add information for
- Tegra194
-Date: Fri, 29 Jun 2018 10:09:21 +0200
-Message-ID: <CACRpkdaa+Si0iZMpGEFFz6UyRotckdD5YRBPAsFxPkFsibWOkw@mail.gmail.com>
-References: <20180620125406.11906-1-mperttunen@nvidia.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v4 2/2] eeprom: at24: Add support for address-width
+ property
+Date: Fri, 29 Jun 2018 11:10:10 +0300
+Message-ID: <20180629081010.odoq2pgilskhzck3@paasikivi.fi.intel.com>
+References: <1530256915-25034-1-git-send-email-alanx.chiang@intel.com>
+ <1530256915-25034-3-git-send-email-alanx.chiang@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180620125406.11906-1-mperttunen@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mikko Perttunen <mperttunen@nvidia.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, vbhadram@nvidia.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1530256915-25034-3-git-send-email-alanx.chiang@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: alanx.chiang@intel.com
+Cc: linux-i2c@vger.kernel.org, andy.yeh@intel.com, andriy.shevchenko@linux.intel.com, andriy.shevchenko@intel.com, rajmohan.mani@intel.com, andy.shevchenko@gmail.com, tfiga@chromium.org, jcliang@chromium.org, brgl@bgdev.pl, robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 20, 2018 at 2:54 PM Mikko Perttunen <mperttunen@nvidia.com> wrote:
+On Fri, Jun 29, 2018 at 03:21:55PM +0800, alanx.chiang@intel.com wrote:
+> From: Alan Chiang <alanx.chiang@intel.com>
+> 
+> Provide a flexible way to determine the addressing bits of eeprom.
+> Pass the addressing bits to driver through address-width property.
+> 
+> Signed-off-by: Alan Chiang <alanx.chiang@intel.com>
+> Signed-off-by: Andy Yeh <andy.yeh@intel.com>
 
-> The Tegra194 GPIO controller is similar to the one in Tegra186.
-> Add relevant information to the device tree binding documentation.
->
-> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-Patch applied with Rob's ACK.
-
-Yours,
-Linus Walleij
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
