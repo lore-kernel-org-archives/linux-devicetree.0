@@ -1,105 +1,69 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH v3 4/5] dmaengine: xilinx_dma: autodetect whether the HW
- supports scatter-gather
-Date: Fri, 29 Jun 2018 13:07:07 +0530
-Message-ID: <20180629073707.GZ22377@vkoul-mobl>
-References: <20180625092724.22164-1-andrea.merello@gmail.com>
- <20180625092724.22164-4-andrea.merello@gmail.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 01/17] platform-msi: allow creation of MSI domain
+ without interrupt number
+Date: Fri, 29 Jun 2018 09:40:35 +0200
+Message-ID: <20180629094035.5199fe89@xps13>
+References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
+ <20180622151432.1566-2-miquel.raynal@bootlin.com>
+ <c5b38c34-5ba0-6545-3635-45be1858fa3b@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180625092724.22164-4-andrea.merello@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrea Merello <andrea.merello@gmail.com>
-Cc: dan.j.williams@intel.com, michal.simek@xilinx.com, appana.durga.rao@xilinx.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <c5b38c34-5ba0-6545-3635-45be1858fa3b@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 25-06-18, 11:27, Andrea Merello wrote:
-> The AXIDMA and CDMA HW can be either direct-access or scatter-gather
-> version. These are SW incompatible.
-> 
-> The driver can handle both version: a DT property was used to
-                                ^^^^
-versions
-
-> tell the driver whether to assume the HW is is scatter-gather mode.
-                                           ^^^^^
-is in?
-
-> 
-> This patch makes the driver to autodetect this information. The DT
-> property is not required anymore.
-> 
-> No changes for VDMA.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-> Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> ---
-> Changes in v2:
-> 	- autodetect only in !VDMA case
-> Changes in v3:
-> 	- cc DT maintainers/ML
-> ---
->  drivers/dma/xilinx/xilinx_dma.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-> index 7f0ab904b749..43fcc71ff287 100644
-> --- a/drivers/dma/xilinx/xilinx_dma.c
-> +++ b/drivers/dma/xilinx/xilinx_dma.c
-> @@ -86,6 +86,7 @@
->  #define XILINX_DMA_DMASR_DMA_DEC_ERR		BIT(6)
->  #define XILINX_DMA_DMASR_DMA_SLAVE_ERR		BIT(5)
->  #define XILINX_DMA_DMASR_DMA_INT_ERR		BIT(4)
-> +#define XILINX_DMA_DMASR_SG_MASK		BIT(3)
->  #define XILINX_DMA_DMASR_IDLE			BIT(1)
->  #define XILINX_DMA_DMASR_HALTED		BIT(0)
->  #define XILINX_DMA_DMASR_DELAY_MASK		GENMASK(31, 24)
-> @@ -406,7 +407,6 @@ struct xilinx_dma_config {
->   * @dev: Device Structure
->   * @common: DMA device structure
->   * @chan: Driver specific DMA channel
-> - * @has_sg: Specifies whether Scatter-Gather is present or not
->   * @mcdma: Specifies whether Multi-Channel is present or not
->   * @flush_on_fsync: Flush on frame sync
->   * @ext_addr: Indicates 64 bit addressing is supported by dma device
-> @@ -426,7 +426,6 @@ struct xilinx_dma_device {
->  	struct device *dev;
->  	struct dma_device common;
->  	struct xilinx_dma_chan *chan[XILINX_DMA_MAX_CHANS_PER_DEVICE];
-> -	bool has_sg;
->  	bool mcdma;
->  	u32 flush_on_fsync;
->  	bool ext_addr;
-> @@ -2393,7 +2392,6 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
->  
->  	chan->dev = xdev->dev;
->  	chan->xdev = xdev;
-> -	chan->has_sg = xdev->has_sg;
->  	chan->desc_pendingcount = 0x0;
->  	chan->ext_addr = xdev->ext_addr;
->  	/* This variable ensures that descriptors are not
-> @@ -2486,6 +2484,15 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
->  		chan->stop_transfer = xilinx_dma_stop_transfer;
->  	}
->  
-> +	/* check if SG is enabled (only for AXIDMA and CDMA) */
-> +	if (xdev->dma_config->dmatype != XDMA_TYPE_VDMA) {
-> +		if (dma_ctrl_read(chan, XILINX_DMA_REG_DMASR) &
-> +		    XILINX_DMA_DMASR_SG_MASK)
-
-why not read this for VDMA too, will it return false?
-
-> +			chan->has_sg = true;
-> +		dev_dbg(chan->dev, "ch %d: SG %s\n", chan->id,
-> +			chan->has_sg ? "enabled" : "disabled");
-
-this debug print can be removed
-
--- 
-~Vinod
+SGkgTWFyYywKCk1hcmMgWnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+IHdyb3RlIG9uIFRo
+dSwgMjggSnVuIDIwMTggMTI6MTI6MDQKKzAxMDA6Cgo+IE9uIDIyLzA2LzE4IDE2OjE0LCBNaXF1
+ZWwgUmF5bmFsIHdyb3RlOgo+ID4gcGxhdGZvcm1fbXNpX2FsbG9jX3ByaXZfZGF0YSgpIGNoZWNr
+cyB0aGF0IGEgbnVtYmVyIG9mIGludGVycnVwdHMgaXMKPiA+IGFsd2F5cyBnaXZlbi4gVGhpcyBl
+eHRyYS1jaGVjayBoYXMgbm8gcmVhbCBpbXBhY3QgYW5kIGp1c3QgcHJldmVudHMKPiA+IHVzZWxl
+c3NseSB0aGUgdXNlciB0byBjcmVhdGUgYW4gTVNJIHRyZWUgZG9tYWluOiByZW1vdmUgaXQuCj4g
+PiAKPiA+IFNpZ25lZC1vZmYtYnk6IE1pcXVlbCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9vdGxp
+bi5jb20+Cj4gPiAtLS0KPiA+ICBkcml2ZXJzL2Jhc2UvcGxhdGZvcm0tbXNpLmMgfCAyICstCj4g
+PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCj4gPiAKPiA+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Jhc2UvcGxhdGZvcm0tbXNpLmMgYi9kcml2ZXJzL2Jhc2Uv
+cGxhdGZvcm0tbXNpLmMKPiA+IGluZGV4IDYwZDZjYzYxOGYxYy4uOWYwMDFmNGNjYzBmIDEwMDY0
+NAo+ID4gLS0tIGEvZHJpdmVycy9iYXNlL3BsYXRmb3JtLW1zaS5jCj4gPiArKysgYi9kcml2ZXJz
+L2Jhc2UvcGxhdGZvcm0tbXNpLmMKPiA+IEBAIC0yMDMsNyArMjAzLDcgQEAgcGxhdGZvcm1fbXNp
+X2FsbG9jX3ByaXZfZGF0YShzdHJ1Y3QgZGV2aWNlICpkZXYsIHVuc2lnbmVkIGludCBudmVjLAo+
+ID4gIAkgKiBhY2NvcmRpbmdseSAod2hpY2ggd291bGQgaW1wYWN0IHRoZSBtYXggbnVtYmVyIG9m
+IE1TSQo+ID4gIAkgKiBjYXBhYmxlIGRldmljZXMpLgo+ID4gIAkgKi8KPiA+IC0JaWYgKCFkZXYt
+Pm1zaV9kb21haW4gfHwgIXdyaXRlX21zaV9tc2cgfHwgIW52ZWMgfHwgbnZlYyA+IE1BWF9ERVZf
+TVNJUykKPiA+ICsJaWYgKCFkZXYtPm1zaV9kb21haW4gfHwgIXdyaXRlX21zaV9tc2cgfHwgbnZl
+YyA+IE1BWF9ERVZfTVNJUykKPiA+ICAJCXJldHVybiBFUlJfUFRSKC1FSU5WQUwpOwo+ID4gIAo+
+ID4gIAlpZiAoZGV2LT5tc2lfZG9tYWluLT5idXNfdG9rZW4gIT0gRE9NQUlOX0JVU19QTEFURk9S
+TV9NU0kpIHsKPiA+ICAgCj4gCj4gSHVoLi4uIEl0J3Mgbm90IHRoYXQgc2ltcGxlLgo+IAo+IFll
+cywgaXQgYWxsb3dzIHlvdSB0byBnZXQgYSB0cmVlIHZpYSBwbGF0Zm9ybV9tc2lfY3JlYXRlX2Rl
+dmljZV9kb21haW4KPiAoYXNzdW1pbmcgdGhhdCdzIHdoeSB5b3UncmUgY2hhbmdpbmcgaXQgLS0g
+eW91ciBjb21taXQgbWVzc2FnZSBkb2Vzbid0Cj4gc2F5IG11Y2gpCgpJbmRlZWQuIFRoYXQgd2Fz
+IGV4YWN0bHkgbXkgaW50ZW50aW9uLgoKPiBidXQgaXQgYWxzbyBoYXMgc29tZSBpbXBhY3Qgb24g
+dGhlIHdheSBtc2lfZG9tYWluX3ByZXBhcmVfaXJxcwo+IHdvcmtzIChzZWUgaG93IGl0IGlzIGNh
+bGxlZCBmcm9tIHBsYXRmb3JtX21zaV9jcmVhdGVfZGV2aWNlX2RvbWFpbikuCj4gCj4gSW1wb3J0
+YW50bHksIHRoZSBtc2lfcHJlcGFyZSBjYWxsYmFjayB0YWtlcyBudmVjIGFzIGEgcGFyYW1ldGVy
+LCBhbmQKPiB0aGF0IGVuZHMgdXAgdHJpY2tsaW5nIGRvd24gdG8gdGhlIGlycWNoaXAsIG9yIHdo
+YXRldmVyIHdpbGwgc2V0dXAgdGhlCj4gTVNJIGRvbWFpbi4gVGhpbmdzIGxpa2UgdGhlIEdJQ3Yz
+IElUUyBkbyByZWx5IG9uIHRoYXQgdG8gY2FydmUgb3V0IHRoZQo+IExQSSBzcGFjZSB0aGF0IHN1
+YnNlcXVlbnRseSBnZXRzIHVzZWQgdG8gcG9wdWxhdGUgdGhlIGRvbWFpbi4KPiAKPiBTbyBubywg
+eW91IGNhbid0IGRvIGl0IGxpa2UgdGhhdC4gSWYgeW91IHJlYWxseSB3YW50IGEgdHJlZSwgYWRk
+IGEKPiBoZWxwZXIgdGhhdCBkb2VzIHNvLgoKU28gaWYgSSB1bmRlcnN0YW5kIGNvcnJlY3RseSwg
+d2hhdCBzaG91bGQgYmUgZG9uZSBpcyB3cml0dGluZyBhIG5ldwpoZWxwZXIgdGhhdCB3b3VsZCBk
+byBzb21ldGhpbmcgc2ltaWxhciB0bwpwbGF0Zm9ybV9tc2lfY3JlYXRlX2RldmljZV9kb21haW4o
+KSwgYnV0IGNyZWF0aW5nIGluc3RlYWQgYSB0cmVlIGRvbWFpbgphbmQgc3RpbGwgZ2l2aW5nIG1z
+aV9kb21haW5fcHJlcGFyZV9pcnFzKCkgYSBtZWFuaW5nZnVsIG51bWJlciAoYXMKbnZlYykgdGhh
+dCB3b3VsZCBiZSB0aGUgbWF4aW11bSBudW1iZXIgb2YgTVNJcyB0aGF0IGNvdWxkIGJlIGFsbG9j
+YXRlZC4KQW0gSSByaWdodCBoZXJlPwoKClRoYW5rcywKTWlxdcOobAoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
+IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
