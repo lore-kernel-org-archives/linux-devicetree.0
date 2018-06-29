@@ -1,74 +1,56 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] regulator: uniphier: add regulator driver for
- UniPhier SoC
-Date: Fri, 29 Jun 2018 12:03:41 +0100
-Message-ID: <20180629110341.GA6556@sirena.org.uk>
-References: <1530260533-19415-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1530260533-19415-3-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH v8 2/2] regulator: add QCOM RPMh regulator driver
+Date: Fri, 29 Jun 2018 12:06:41 +0100
+Message-ID: <20180629110641.GB6556@sirena.org.uk>
+References: <35c4ea70cdf5caba560fb6f40e866ee8bc456d93.1529712888.git.collinsd@codeaurora.org>
+ <CAD=FV=XVEEPgjBXxR+-46RgxLOq63Xvq-jtruoaCxccmMoKUuA@mail.gmail.com>
+ <20180626120733.GD1779@sirena.org.uk>
+ <CAD=FV=X1E8Cz=L93G-zJwhM0R=N3YuBBhkvCnLvWuxMU9KJkTw@mail.gmail.com>
+ <20180626150203.GG1779@sirena.org.uk>
+ <CAD=FV=WC_XWRk-6OELOFFWGnhRq1VeoiiveqXLSy+xqsVb22pA@mail.gmail.com>
+ <20180627150126.GC5263@sirena.org.uk>
+ <CAD=FV=WYcCVjAiMpzf4zyAByw5y-oDMnuabip1HXqa-mQFRt2w@mail.gmail.com>
+ <20180628101813.GD14040@sirena.org.uk>
+ <87cc8c77-7b39-1746-4680-cb26d602e62e@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+        protocol="application/pgp-signature"; boundary="gatW/ieO32f1wygP"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1530260533-19415-3-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <87cc8c77-7b39-1746-4680-cb26d602e62e@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+To: David Collins <collinsd@codeaurora.org>
+Cc: Doug Anderson <dianders@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 
---LZvS9be/3tNcYl/X
+--gatW/ieO32f1wygP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Jun 29, 2018 at 05:22:13PM +0900, Kunihiko Hayashi wrote:
+On Thu, Jun 28, 2018 at 11:04:17AM -0700, David Collins wrote:
 
-> +++ b/drivers/regulator/uniphier-regulator.c
-> @@ -0,0 +1,251 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Regulator controller driver for UniPhier SoC
-> + * Copyright 2018 Socionext Inc.
-> + * Author: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> + */
+> Do you have any remaining concerns with the qcom-rpmh-regulator binding
+> and driver patches that would keep you from applying them (other than the
+> dependency patches being applied first)?
 
-Please make the entire header a C++ comment so that it looks intentional
-rather than mixing C and C++ like this.
+To repeat I need to find the time to sit down and go through them
+properly, the problems this driver has had mean I feel I need to be
+extra careful there.
 
-> +static int uniphier_regulator_enable(struct regulator_dev *rdev)
-> +{
-> +	struct uniphier_regulator_priv *priv = rdev_get_drvdata(rdev);
-> +	u32 val;
-> +
-> +	val = readl_relaxed(priv->base + rdev->desc->enable_reg);
-> +	val &= ~rdev->desc->enable_mask;
-> +	val |= rdev->desc->enable_val;
-> +	writel_relaxed(val, priv->base + rdev->desc->enable_reg);
-> +
-> +	return 0;
-> +}
-
-Could you use a MMIO regmap for this driver?  All the operations look
-like they're just straight up operations of the sort the standard
-helpers support them and it means the driver will be able to take
-advantage of any improvements the core makes for free.
-
-Otherwise this looks great, and the above two issues can be fixed as
-followup patches so I'll apply.
-
---LZvS9be/3tNcYl/X
+--gatW/ieO32f1wygP
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAls2EgoACgkQJNaLcl1U
-h9AsXgf+MRnX8FkOk0vX/KB9mHeOwDsvFGJLp/N7zOdoizH96U9cZwHFYB5CNPW1
-Tm5bYkEGJwexsgKJaMxTmjLBoy6Fn0hFNezTIdkNccPqGRrFslRXDXmbtMqSbXP8
-Ms9dDrcL/muaMlMwLvmdmsKwwyLT+Lc9av7O+IK2Nrvf598P0nT8TlG1OUT9IoS9
-AN1LdRxou4r/Bua8fl8q71+oewZ3x7NOOOH/WI6kHUSp/6AqrMNwabixa//R3rK8
-phi3VVo7q4iwgun7Uakyj2fdmpQeAc5jbnGdKQ/qdFlMY9PalH8LPoM2VFgMSgZd
-+TatjwzgoeFOtMpFOat2c0KUgDxv+Q==
-=F2Hb
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAls2EsEACgkQJNaLcl1U
+h9Bx1Af7Bz4I6SUQg9lGj8sFvYlmI95U/RkOKKl7qwJ1vL4rDIVYxUnCKptgUZwq
+m999vmbzQx/olgopwVBpHjalHCCKSwUFUT3YLsZHOxhg6qT32C98tsWk0fc0ryXp
+TxeeeXZyGf9g1hUE5VJvxZyLPvGk/iz62cI6U2vj9zPwrc8D1m5yNrWqos18roZo
+oSF41AOVcFDlSU2AIbuelz/T4e15rxvHxygubBMzyMUGjVicYdnIfvLq+XRWOD6i
+GVg7h1+rEXX8mAFslOj0E1Y+WruwGlbcQQtF0WmEw4bzoHjhUzwlKU6Iryjwfc2F
+3OqeExM3CbmRv90iiRAz87ILL2Kotw==
+=rGtf
 -----END PGP SIGNATURE-----
 
---LZvS9be/3tNcYl/X--
+--gatW/ieO32f1wygP--
