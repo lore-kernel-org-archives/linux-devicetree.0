@@ -1,92 +1,149 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 00/19] mmc: mmci: add stm32 sdmmc variant
-Date: Fri, 29 Jun 2018 17:18:14 +0200
-Message-ID: <CAPDyKFrYBLQDbtTgeuwCjpr5+2Y4+BUcYAmxT0AKj_-SvvGGQg@mail.gmail.com>
-References: <1528809280-31116-1-git-send-email-ludovic.Barre@st.com> <f475a8c7-5a48-bf40-bbd9-a7a513f8a70f@st.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 06/17] irqchip/irq-mvebu-icu: switch to regmap
+Date: Fri, 29 Jun 2018 17:27:51 +0200
+Message-ID: <20180629172751.7404a531@xps13>
+References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
+ <20180622151432.1566-7-miquel.raynal@bootlin.com>
+ <ebdd4cb8-7cc8-3efa-d4be-f5d8860e848d@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f475a8c7-5a48-bf40-bbd9-a7a513f8a70f@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic BARRE <ludovic.barre@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <ebdd4cb8-7cc8-3efa-d4be-f5d8860e848d@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29 June 2018 at 15:51, Ludovic BARRE <ludovic.barre@st.com> wrote:
-> hi Ulf
->
-> I know that you very busy on other task,
-> but did you have time to look my serie.
-> do you have first feedback ?
-
-Apologize for the delay. I am going to catch up on mmc next week.
-
-At first glance, this looks reasonable.
-
-Kind regards
-Uffe
-
->
-> BR
-> Ludo
->
->
-> On 06/12/2018 03:14 PM, Ludovic Barre wrote:
->>
->> From: Ludovic Barre <ludovic.barre@st.com>
->>
->> This patch series adapts mmci driver to add support for stm32
->> sdmmc variant. stm32h7 SoC integrates the first revision of
->> stm32 sdmmc.
->>
->> This series is composed of 3 parts:
->> -Prepare mmci driver to manage dma interfaces by adding property.
->>   New mmci dma API is defined according to the legacy needs.
->> -Adapt mmci driver to dedicated constraints of stm32 sdmmc variant,
->>   defined under some specific properties.
->> -Add stm32 sdmmc variant. As Internal DMA way satisfies data
->> transfer, the mmci driver hasn't been modified for pio_read/write.
->> Specific adds-ons to stm32 sdmmc:
->>   + registers
->>   + clk/power functions
->>   + idma interface
->>
->> Ludovic Barre (19):
->>    mmc: mmci: regroup and define dma operations
->>    mmc: mmci: merge qcom dml feature into mmci dma
->>    mmc: mmci: add datactrl block size variant property
->>    mmc: mmci: expand startbiterr to irqmask and error check
->>    mmc: mmci: allow to overwrite clock/power procedure to specific
->>      variant
->>    mmc: mmci: add variant properties to define cpsm & cmdresp bits
->>    mmc: mmci: add variant property to define dpsm bit
->>    mmc: mmci: add variant property to define irq pio mask
->>    mmc: mmci: add variant property to write datactrl before command
->>    mmc: mmci: add variant property to allow remain data
->>    mmc: mmci: add variant property to check specific data constraint
->>    mmc: mmci: add variant property to request a reset
->>    mmc: mmci: send stop cmd if a data command fail
->>    mmc: mmci: add clock divider for stm32 sdmmc
->>    mmc: mmci: add stm32 sdmmc registers
->>    mmc: mmci: add DT bindings for STM32 sdmmc
->>    mmc: mmci: add stm32 sdmmc idma support
->>    mmc: mmci: add specific clk/pwr procedure for stm32 sdmmc
->>    mmc: mmci: add stm32 sdmmc variant
->>
->>   Documentation/devicetree/bindings/mmc/mmci.txt |  11 +
->>   drivers/mmc/host/Makefile                      |   3 +-
->>   drivers/mmc/host/mmci.c                        | 846
->> +++++++++++--------------
->>   drivers/mmc/host/mmci.h                        | 237 ++++++-
->>   drivers/mmc/host/mmci_dma.c                    | 780
->> +++++++++++++++++++++++
->>   drivers/mmc/host/mmci_dma.h                    |  33 +
->>   drivers/mmc/host/mmci_qcom_dml.c               | 177 ------
->>   drivers/mmc/host/mmci_qcom_dml.h               |  31 -
->>   8 files changed, 1410 insertions(+), 708 deletions(-)
->>   create mode 100644 drivers/mmc/host/mmci_dma.c
->>   create mode 100644 drivers/mmc/host/mmci_dma.h
->>   delete mode 100644 drivers/mmc/host/mmci_qcom_dml.c
->>   delete mode 100644 drivers/mmc/host/mmci_qcom_dml.h
->>
->
+SGkgTWFyYywKCk1hcmMgWnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+IHdyb3RlIG9uIFRo
+dSwgMjggSnVuIDIwMTggMTM6MDU6MDUKKzAxMDA6Cgo+IE9uIDIyLzA2LzE4IDE2OjE0LCBNaXF1
+ZWwgUmF5bmFsIHdyb3RlOgo+ID4gQmVmb3JlIHNwbGl0dGluZyB0aGUgY29kZSB0byBzdXBwb3J0
+IG11bHRpcGxlIHBsYXRmb3JtIGRldmljZXMgdG8KPiA+IGJlIHByb2JlZCAob25lIGZvciB0aGUg
+SUNVLCBvbmUgcGVyIGludGVycnVwdCBncm91cCksIGxldCdzIHN3aXRjaCB0bwo+ID4gcmVnbWFw
+IGZpcnN0IGJ5IGNyZWF0aW5nIG9uZSBpbiB0aGUgLT5wcm9iZSgpLiAgCj4gCj4gV2hhdCdzIHRo
+ZSBiZW5lZml0IG9mIGRvaW5nIHNvPyBJIGFzc3VtZSB0aGF0IGhhcyB0byBkbyB3aXRoIHN1cHBv
+cnRpbmcKPiBtdWx0aXBsZSBkZXZpY2VzIHRoYXQgc2hhcmUgYW4gTU1JTyByYW5nZT8KClllcywg
+dGhlIElDVSBzdWJub2RlcyB3aWxsIHNoYXJlIHRoZSBzYW1lIE1NSU8gcmFuZ2UuCgo+IAo+ID4g
+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4u
+Y29tPgo+ID4gLS0tCj4gPiAgZHJpdmVycy9pcnFjaGlwL2lycS1tdmVidS1pY3UuYyB8IDQ1ICsr
+KysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tCj4gPiAgMSBmaWxlIGNoYW5n
+ZWQsIDMwIGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9pcnFjaGlwL2lycS1tdmVidS1pY3UuYyBiL2RyaXZlcnMvaXJxY2hpcC9pcnEt
+bXZlYnUtaWN1LmMKPiA+IGluZGV4IDBmMjY1NWQ3ZjE5ZS4uMzY5NGMwZDczYzBkIDEwMDY0NAo+
+ID4gLS0tIGEvZHJpdmVycy9pcnFjaGlwL2lycS1tdmVidS1pY3UuYwo+ID4gKysrIGIvZHJpdmVy
+cy9pcnFjaGlwL2lycS1tdmVidS1pY3UuYwo+ID4gQEAgLTE4LDYgKzE4LDggQEAKPiA+ICAjaW5j
+bHVkZSA8bGludXgvb2ZfaXJxLmg+Cj4gPiAgI2luY2x1ZGUgPGxpbnV4L29mX3BsYXRmb3JtLmg+
+Cj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgo+ID4gKyNpbmNsdWRlIDxs
+aW51eC9yZWdtYXAuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvbWZkL3N5c2Nvbi5oPgo+ID4gIAo+
+ID4gICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9tdmVidS1pY3Uu
+aD4KPiA+ICAKPiA+IEBAIC0zOCw3ICs0MCw3IEBACj4gPiAgCj4gPiAgc3RydWN0IG12ZWJ1X2lj
+dSB7Cj4gPiAgCXN0cnVjdCBpcnFfY2hpcCBpcnFfY2hpcDsKPiA+IC0Jdm9pZCBfX2lvbWVtICpi
+YXNlOwo+ID4gKwlzdHJ1Y3QgcmVnbWFwICpyZWdtYXA7Cj4gPiAgCXN0cnVjdCBpcnFfZG9tYWlu
+ICpkb21haW47Cj4gPiAgCXN0cnVjdCBkZXZpY2UgKmRldjsKPiA+ICAJYXRvbWljX3QgaW5pdGlh
+bGl6ZWQ7Cj4gPiBAQCAtNTYsMTAgKzU4LDEwIEBAIHN0YXRpYyB2b2lkIG12ZWJ1X2ljdV9pbml0
+KHN0cnVjdCBtdmVidV9pY3UgKmljdSwgc3RydWN0IG1zaV9tc2cgKm1zZykKPiA+ICAJCXJldHVy
+bjsKPiA+ICAKPiA+ICAJLyogU2V0IENsZWFyL1NldCBJQ1UgU1BJIG1lc3NhZ2UgYWRkcmVzcyBp
+biBBUCAqLwo+ID4gLQl3cml0ZWxfcmVsYXhlZChtc2dbMF0uYWRkcmVzc19oaSwgaWN1LT5iYXNl
+ICsgSUNVX1NFVFNQSV9OU1JfQUgpOwo+ID4gLQl3cml0ZWxfcmVsYXhlZChtc2dbMF0uYWRkcmVz
+c19sbywgaWN1LT5iYXNlICsgSUNVX1NFVFNQSV9OU1JfQUwpOwo+ID4gLQl3cml0ZWxfcmVsYXhl
+ZChtc2dbMV0uYWRkcmVzc19oaSwgaWN1LT5iYXNlICsgSUNVX0NMUlNQSV9OU1JfQUgpOwo+ID4g
+LQl3cml0ZWxfcmVsYXhlZChtc2dbMV0uYWRkcmVzc19sbywgaWN1LT5iYXNlICsgSUNVX0NMUlNQ
+SV9OU1JfQUwpOwo+ID4gKwlyZWdtYXBfd3JpdGUoaWN1LT5yZWdtYXAsIElDVV9TRVRTUElfTlNS
+X0FILCBtc2dbMF0uYWRkcmVzc19oaSk7Cj4gPiArCXJlZ21hcF93cml0ZShpY3UtPnJlZ21hcCwg
+SUNVX1NFVFNQSV9OU1JfQUwsIG1zZ1swXS5hZGRyZXNzX2xvKTsKPiA+ICsJcmVnbWFwX3dyaXRl
+KGljdS0+cmVnbWFwLCBJQ1VfQ0xSU1BJX05TUl9BSCwgbXNnWzFdLmFkZHJlc3NfaGkpOwo+ID4g
+KwlyZWdtYXBfd3JpdGUoaWN1LT5yZWdtYXAsIElDVV9DTFJTUElfTlNSX0FMLCBtc2dbMV0uYWRk
+cmVzc19sbyk7ICAKPiAKPiBJc24ndCB0aGlzIGEgY2hhbmdlIGluIHRoZSB3YXkgd2Ugd3JpdGUg
+dGhpbmdzIHRvIHRoZSBNTUlPIHJlZ2lzdGVycz8KPiBZb3UncmUgbm93IHRyYWRpbmcgYSB3cml0
+ZWxfcmVsYXhlZCBmb3IgYSB3cml0ZWwsIHBsdXMgc29tZSBsb2NraW5nLi4uCgpJcyB0aGUgIndy
+aXRlbF9yZWxheGVkIiAtPiAid3JpdGVsIiB0aGluZyByZWFsbHkgYW4gaXNzdWU/Cgo+IAo+IFRh
+bGtpbmcgYWJvdXQgd2hpY2g6IEFyZSB5b3UgYWx3YXlzIGluIGEgY29udGV4dCB3aGVyZSB5b3Ug
+Y2FuIHRha2UgdGhhdAo+IGxvY2s/IFRoZSBiaXQgb2YgZG9jdW1lbnRhdGlvbiBJJ3ZlIGp1c3Qg
+cmVhZCBzZWVtcyB0byBpbXBseSB0aGF0IHRoZQo+IGRlZmF1bHQgbG9jayBpcyBhIG11dGV4LiBJ
+cyB0aGF0IGFsd2F5cyBzYWZlPyBNeSBndWVzcyBpcyB0aGF0IGl0IGlzbid0LAo+IGFuZCBhbnkg
+Y2FsbGJhY2sgdGhhdCBjYW4gZW5kLXVwIGhlcmUgYWZ0ZXIgaGF2aW5nIHRha2VuIHNvbWV0aGlu
+ZyBsaWtlCj4gdGhlIGRlc2MgbG9jayBpcyBnb2luZyB0byBibG93IGluIHlvdXIgZmFjZS4KPiAK
+PiBIYXZlIHlvdSB0cmllZCBsb2NrZGVwPwoKSnVzdCBkaWQgLS0gdGhhbmtzIGZvciBwb2ludGlu
+ZyBpdCwgaXQgZmFpbGVkIG9uY2UgdGhlIG92ZXJoZWF0CmludGVycnVwdCBmaXJlZC4gSSdtIG5v
+dCBzdXJlIGlmIGl0IGlzIGJlY2F1c2Ugb2YgdGhlIHJlZ21hcC1sb2NraW5nCm1lY2hhbmlzbS4g
+VGhlcmUgaXMgZGVmaW5pdGVseSBzb21ldGhpbmcgdG8gZml4IHRoZXJlLCBidXQgSSBkb24ndCBr
+bm93CndoYXQgZm9yIG5vdzsgSSdsbCBjb21lIGJhY2sgb24gaXQuCgpbZm9yIHJlZmVyZW5jZTog
+bG9ncyBiZWxvd10KClRoYW5rcywKTWlxdcOobAoKLS0tClsgICA5MS4xMjg2MTVdIApbICAgOTEu
+MTMwMTIwXSA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQpbICAgOTEuMTM0NDA4XSBX
+QVJOSU5HOiBpbmNvbnNpc3RlbnQgbG9jayBzdGF0ZQpbICAgOTEuMTM4Njk4XSA0LjE4LjAtcmMx
+LTAwMDQ3LWc3ZjdjODA1YzJiNjktZGlydHkgIzE1ODAgTm90IHRhaW50ZWQKWyAgIDkxLjE0NDkw
+NV0gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KWyAgIDkxLjE0OTE5M10gaW5jb25z
+aXN0ZW50IHtIQVJESVJRLU9OLVd9IC0+IHtJTi1IQVJESVJRLVd9IHVzYWdlLgpbICAgOTEuMTU1
+MjI3XSBzd2FwcGVyLzAvMCBbSEMxWzFdOlNDMFswXTpIRTA6U0UxXSB0YWtlczoKWyAgIDkxLjE2
+MDM4OF0gKF9fX19wdHJ2YWxfX19fKSAoJnR6LT5sb2NrKXs/LisufSwgYXQ6IHRoZXJtYWxfem9u
+ZV9nZXRfdGVtcCsweDYwLzB4MTU4ClsgICA5MS4xNjgxODZdIHtIQVJESVJRLU9OLVd9IHN0YXRl
+IHdhcyByZWdpc3RlcmVkIGF0OgpbICAgOTEuMTczMDg5XSAgIGxvY2tfYWNxdWlyZSsweDQ0LzB4
+NjAKWyAgIDkxLjE3NjY4M10gICBfX211dGV4X2xvY2srMHg3NC8weDg4MApbICAgOTEuMTgwMzYy
+XSAgIG11dGV4X2xvY2tfbmVzdGVkKzB4MWMvMHgyOApbICAgOTEuMTg0MzkwXSAgIHRoZXJtYWxf
+em9uZV9vZl9zZW5zb3JfcmVnaXN0ZXIrMHgxOTgvMHgyNTAKWyAgIDkxLjE4OTgxMl0gICBkZXZt
+X3RoZXJtYWxfem9uZV9vZl9zZW5zb3JfcmVnaXN0ZXIrMHg1Yy8weGMwClsgICA5MS4xOTU0OThd
+ICAgYXJtYWRhX3RoZXJtYWxfcHJvYmUrMHgyMjAvMHg1ZjAKWyAgIDkxLjE5OTk2M10gICBwbGF0
+Zm9ybV9kcnZfcHJvYmUrMHg1MC8weGIwClsgICA5MS4yMDQwNzhdICAgZHJpdmVyX3Byb2JlX2Rl
+dmljZSsweDIyNC8weDMwOApbICAgOTEuMjA4NDU0XSAgIF9fZHJpdmVyX2F0dGFjaCsweGU4LzB4
+ZjAKWyAgIDkxLjIxMjMwOV0gICBidXNfZm9yX2VhY2hfZGV2KzB4NjgvMHhjOApbICAgOTEuMjE2
+MjQ4XSAgIGRyaXZlcl9hdHRhY2grMHgyMC8weDI4ClsgICA5MS4yMTk5MjZdICAgYnVzX2FkZF9k
+cml2ZXIrMHgxMDgvMHgyMjgKWyAgIDkxLjIyMzg2Nl0gICBkcml2ZXJfcmVnaXN0ZXIrMHg2MC8w
+eDExMApbICAgOTEuMjI3ODA2XSAgIF9fcGxhdGZvcm1fZHJpdmVyX3JlZ2lzdGVyKzB4NDQvMHg1
+MApbICAgOTEuMjMyNjIyXSAgIGFybWFkYV90aGVybWFsX2RyaXZlcl9pbml0KzB4MTgvMHgyMApb
+ICAgOTEuMjM3NDM2XSAgIGRvX29uZV9pbml0Y2FsbCsweDU4LzB4MTcwClsgICA5MS4yNDEzNzhd
+ICAga2VybmVsX2luaXRfZnJlZWFibGUrMHgxZDQvMHgyN2MKWyAgIDkxLjI0NTg0M10gICBrZXJu
+ZWxfaW5pdCsweDEwLzB4MTA4ClsgICA5MS4yNDk0MzRdICAgcmV0X2Zyb21fZm9yaysweDEwLzB4
+MTgKWyAgIDkxLjI1MzExMV0gaXJxIGV2ZW50IHN0YW1wOiA2MTMxMgpbICAgOTEuMjU2NTMwXSBo
+YXJkaXJxcyBsYXN0ICBlbmFibGVkIGF0ICg2MTMwOSk6IFs8ZmZmZjAwMDAwODA4NmFiMD5dIGFy
+Y2hfY3B1X2lkbGUrMHgxMC8weDIwClsgICA5MS4yNjQ5MThdIGhhcmRpcnFzIGxhc3QgZGlzYWJs
+ZWQgYXQgKDYxMzEwKTogWzxmZmZmMDAwMDA4MDgzMTM0Pl0gZWwxX2lycSsweDc0LzB4MTMwClsg
+ICA5MS4yNzI4NzFdIHNvZnRpcnFzIGxhc3QgIGVuYWJsZWQgYXQgKDYxMzEyKTogWzxmZmZmMDAw
+MDA4MGI3ZmEwPl0gX2xvY2FsX2JoX2VuYWJsZSsweDIwLzB4NDAKWyAgIDkxLjI4MTUyMF0gc29m
+dGlycXMgbGFzdCBkaXNhYmxlZCBhdCAoNjEzMTEpOiBbPGZmZmYwMDAwMDgwYjgzOTg+XSBpcnFf
+ZW50ZXIrMHg1OC8weDc4ClsgICA5MS4yODk1NTldIApbICAgOTEuMjg5NTU5XSBvdGhlciBpbmZv
+IHRoYXQgbWlnaHQgaGVscCB1cyBkZWJ1ZyB0aGlzOgpbICAgOTEuMjk2MTE0XSAgUG9zc2libGUg
+dW5zYWZlIGxvY2tpbmcgc2NlbmFyaW86ClsgICA5MS4yOTYxMTRdIApbICAgOTEuMzAyMDU4XSAg
+ICAgICAgQ1BVMApbICAgOTEuMzA0NTE0XSAgICAgICAgLS0tLQpbICAgOTEuMzA2OTcwXSAgIGxv
+Y2soJnR6LT5sb2NrKTsKWyAgIDkxLjMxMDA0MV0gICA8SW50ZXJydXB0PgpbICAgOTEuMzEyNjcw
+XSAgICAgbG9jaygmdHotPmxvY2spOwpbICAgOTEuMzE1OTE2XSAKWyAgIDkxLjMxNTkxNl0gICoq
+KiBERUFETE9DSyAqKioKWyAgIDkxLjMxNTkxNl0gClsgICA5MS4zMjE4NjNdIG5vIGxvY2tzIGhl
+bGQgYnkgc3dhcHBlci8wLzAuClsgICA5MS4zMjU4OTBdIApbICAgOTEuMzI1ODkwXSBzdGFjayBi
+YWNrdHJhY2U6ClsgICA5MS4zMzAyNjldIENQVTogMCBQSUQ6IDAgQ29tbTogc3dhcHBlci8wIE5v
+dCB0YWludGVkIDQuMTguMC1yYzEtMDAwNDctZzdmN2M4MDVjMmI2OS1kaXJ0eSAjMTU4MApbICAg
+OTEuMzM5MDkxXSBIYXJkd2FyZSBuYW1lOiBNYXJ2ZWxsIEFybWFkYSA3MDQwIERCIGJvYXJkIChE
+VCkKWyAgIDkxLjM0NDc3NV0gQ2FsbCB0cmFjZToKWyAgIDkxLjM0NzIzNF0gIGR1bXBfYmFja3Ry
+YWNlKzB4MC8weDFhMApbICAgOTEuMzUwOTEzXSAgc2hvd19zdGFjaysweDE0LzB4MjAKWyAgIDkx
+LjM1NDI0NF0gIGR1bXBfc3RhY2srMHhiOC8weGY0ClsgICA5MS4zNTc1NzRdICBwcmludF91c2Fn
+ZV9idWcucGFydC4yNCsweDI2NC8weDI3YwpbICAgOTEuMzYyMjExXSAgbWFya19sb2NrKzB4MTUw
+LzB4NmIwClsgICA5MS4zNjU2MjhdICBfX2xvY2tfYWNxdWlyZSsweDZkMC8weDE4ZjgKWyAgIDkx
+LjM2OTU2OF0gIGxvY2tfYWNxdWlyZSsweDQ0LzB4NjAKWyAgIDkxLjM3MzA3M10gIF9fbXV0ZXhf
+bG9jaysweDc0LzB4ODgwClsgICA5MS4zNzY2NjZdICBtdXRleF9sb2NrX25lc3RlZCsweDFjLzB4
+MjgKWyAgIDkxLjM4MDYwNl0gIHRoZXJtYWxfem9uZV9nZXRfdGVtcCsweDYwLzB4MTU4ClsgICA5
+MS4zODQ5ODJdICB0aGVybWFsX3pvbmVfZGV2aWNlX3VwZGF0ZS5wYXJ0LjQrMHgzNC8weGUwClsg
+ICA5MS4zOTAzMThdICB0aGVybWFsX3pvbmVfZGV2aWNlX3VwZGF0ZSsweDI4LzB4MzgKWyAgIDkx
+LjM5NTA0M10gIGFybWFkYV9vdmVyaGVhdF9pc3IrMHhiMC8weGI4ClsgICA5MS4zOTkxNTldICBf
+X2hhbmRsZV9pcnFfZXZlbnRfcGVyY3B1KzB4OWMvMHgxMjgKWyAgIDkxLjQwMzg4M10gIGhhbmRs
+ZV9pcnFfZXZlbnRfcGVyY3B1KzB4MzQvMHg4OApbICAgOTEuNDA4MzQ2XSAgaGFuZGxlX2lycV9l
+dmVudCsweDQ4LzB4NzgKWyAgIDkxLjQxMjIwMV0gIGhhbmRsZV9mYXN0ZW9pX2lycSsweGEwLzB4
+MTgwClsgICA5MS40MTYzMTZdICBnZW5lcmljX2hhbmRsZV9pcnErMHgyNC8weDM4ClsgICA5MS40
+MjAzNDZdICBtdmVidV9zZWlfaGFuZGxlX2Nhc2NhZGVfaXJxKzB4YzgvMHgxODAKWyAgIDkxLjQy
+NTMzMl0gIGdlbmVyaWNfaGFuZGxlX2lycSsweDI0LzB4MzgKWyAgIDkxLjQyOTM2MF0gIF9faGFu
+ZGxlX2RvbWFpbl9pcnErMHg1Yy8weGI4ClsgICA5MS40MzM0NzNdICBnaWNfaGFuZGxlX2lycSsw
+eDU4LzB4YjAKWyAgIDkxLjQzNzE1MV0gIGVsMV9pcnErMHhiNC8weDEzMApbICAgOTEuNDQwMzA2
+XSAgYXJjaF9jcHVfaWRsZSsweDE0LzB4MjAKWyAgIDkxLjQ0Mzg5OF0gIGRlZmF1bHRfaWRsZV9j
+YWxsKzB4MTgvMHgzMApbICAgOTEuNDQ3ODQwXSAgZG9faWRsZSsweDFjNC8weDI3OApbICAgOTEu
+NDUxMDgyXSAgY3B1X3N0YXJ0dXBfZW50cnkrMHgyNC8weDI4ClsgICA5MS40NTUwMjNdICByZXN0
+X2luaXQrMHgyNTQvMHgyNjgKWyAgIDkxLjQ1ODQ0MF0gIHN0YXJ0X2tlcm5lbCsweDNmMC8weDQx
+YwpbICAgOTEuNDYyMTI2XSB0aGVybWFsIHRoZXJtYWxfem9uZTU6IGNyaXRpY2FsIHRlbXBlcmF0
+dXJlIHJlYWNoZWQgKDU0IEMpLCBzaHV0dGluZyBkb3duCgoKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
+CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
