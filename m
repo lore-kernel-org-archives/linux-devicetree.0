@@ -1,47 +1,78 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v2 1/3] arm64: dts: actions: Enable clock controller for
- S700
-Date: Fri, 29 Jun 2018 19:38:50 +0200
-Message-ID: <c3a62fea-a769-d2fc-2fef-c43ac9c95de6@suse.de>
-References: <20180626192820.28237-3-sravanhome@gmail.com>
- <20180628191805.3722-1-sravanhome@gmail.com>
- <20180628191805.3722-2-sravanhome@gmail.com>
- <153029379879.143105.2037926027438984922@swboyd.mtv.corp.google.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: New remoteproc driver for TI PRU
+Date: Fri, 29 Jun 2018 12:44:12 -0500
+Message-ID: <8fc18d40-72f5-9215-26f0-1492e3a6c0e7@lechnology.com>
+References: <20180623210810.21232-1-david@lechnology.com>
+ <e0a883af-8228-5b06-3186-f57d8f898aaa@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <153029379879.143105.2037926027438984922@swboyd.mtv.corp.google.com>
+In-Reply-To: <e0a883af-8228-5b06-3186-f57d8f898aaa@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Saravanan Sekar <sravanhome@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, mturquette@baylibre.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, manivannan.sadhasivam@linaro.org, pn@denx.de, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Roger Quadros <rogerq@ti.com>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, "Anna, Suman" <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 29.06.2018 um 19:36 schrieb Stephen Boyd:
-> Quoting Saravanan Sekar (2018-06-28 12:18:03)
->> diff --git a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
->> index ef79d7905f44..28f3f4a0f7f0 100644
->> --- a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
->> +++ b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
->> diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
->> index 66dd5309f0a2..3530b705df90 100644
->> --- a/arch/arm64/boot/dts/actions/s700.dtsi
->> +++ b/arch/arm64/boot/dts/actions/s700.dtsi
+On 06/29/2018 04:58 AM, Roger Quadros wrote:
+> +Suman & Tero
 > 
-> Can the above part be split from the below part? I don't want to merge
-> dts bits into clk tree, when those should normally go through arm-soc.
+> Hi David,
 > 
->> diff --git a/include/dt-bindings/clock/actions,s700-cmu.h b/include/dt-bindings/clock/actions,s700-cmu.h
->> new file mode 100644
+> On 24/06/18 00:08, David Lechner wrote:
+>>
+>> Date: Sat, 23 Jun 2018 15:43:59 -0500
+>> Subject: [PATCH 0/8] New remoteproc driver for TI PRU
+>>
+>> This series adds a new remoteproc driver for the TI Programmable Runtime Unit
+>> (PRU) that is present in some TI Sitara processors. This code has been tested
+>> working on AM1808 (LEGO MINDSTORMS EV3) and AM3358 (BeagleBone Green).
+> 
+> This is great. We have been working on something similar and I think it would
+> be great if we can collaborate to get all our needs addressed.
 
-This part needs to go into the bindings patch, which should be 1/3, not
-3/3 please.
+Yes, I have used the PRU with the TI kernel on BeagleBone so I've seen the TI
+implementation. My primary interest is in the AM1808, which has a far simpler
+PRU than other SoCs. So, I was hoping I could get away with just implementing
+the basic stuff that I need and let TI add the more complex stuff later.
 
-Thanks,
-Andreas
+> 
+> Our primary requirement is that it should be possible for a user (e.g. kernel driver) to
+> - request a specific PRU core load a specific firmware blob and boot/stop the PRU.
 
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+For this, I was thinking of suggesting a generic remoteproc provider/consumer
+binding that is similar to other subsystems. For example:
+
+Provider node has:
+
+	#remoteproc-cells = <1>;
+
+And consumer has:
+
+	remoteprocs = <&pruss 0>, <&pruss 1>;
+	remoteproc-names = "pru0", "pru1";
+
+The consumer device would be responsible for determining the firmware file
+and for calling the rproc boot function.
+
+
+> - configure INTC interrupt mapping based on either resource table or DT
+> - use request_irq to request and use an interrupt.
+
+I didn't consider creating a new interrupt controller in device tree, but
+that makes sense. I will have to look into it some more.
+
+
+> - request access to DRAM/SRAM
+
+Can the existing device tree bindings for reserved-memory be used for this?
+I would expect the consumer nodes to use this and not the PRUSS provider node.
+
+
+> - configure gpimode/miirt/xfr (CFG space)
+
+I have no idea what this stuff is. :-)
+
+(This is what I was referring to when I said I was hoping that someone
+else could add more later).
