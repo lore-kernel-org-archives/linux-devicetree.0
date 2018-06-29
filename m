@@ -1,56 +1,70 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v8 2/2] regulator: add QCOM RPMh regulator driver
-Date: Fri, 29 Jun 2018 12:06:41 +0100
-Message-ID: <20180629110641.GB6556@sirena.org.uk>
-References: <35c4ea70cdf5caba560fb6f40e866ee8bc456d93.1529712888.git.collinsd@codeaurora.org>
- <CAD=FV=XVEEPgjBXxR+-46RgxLOq63Xvq-jtruoaCxccmMoKUuA@mail.gmail.com>
- <20180626120733.GD1779@sirena.org.uk>
- <CAD=FV=X1E8Cz=L93G-zJwhM0R=N3YuBBhkvCnLvWuxMU9KJkTw@mail.gmail.com>
- <20180626150203.GG1779@sirena.org.uk>
- <CAD=FV=WC_XWRk-6OELOFFWGnhRq1VeoiiveqXLSy+xqsVb22pA@mail.gmail.com>
- <20180627150126.GC5263@sirena.org.uk>
- <CAD=FV=WYcCVjAiMpzf4zyAByw5y-oDMnuabip1HXqa-mQFRt2w@mail.gmail.com>
- <20180628101813.GD14040@sirena.org.uk>
- <87cc8c77-7b39-1746-4680-cb26d602e62e@codeaurora.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/3] PM / Domains: dt: Add a power-domain-names property
+Date: Fri, 29 Jun 2018 13:07:26 +0200
+Message-ID: <CAPDyKFpM51t13xtNT54d-9_n-0P=HuzV=TOy+r073NymM+=YhA@mail.gmail.com>
+References: <20180629110432.5179-1-ulf.hansson@linaro.org>
+ <20180629110432.5179-2-ulf.hansson@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gatW/ieO32f1wygP"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87cc8c77-7b39-1746-4680-cb26d602e62e@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: Doug Anderson <dianders@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180629110432.5179-2-ulf.hansson@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux PM <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Kevin Hilman <khilman@kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Jon Hunter <jonathanh@nvidia.com>, Todor Tomov <todor.tomov@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-tegra@vger.kernel.org, Lucas Stach <dev@lynxeye.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
++devicetree list, Rob
 
---gatW/ieO32f1wygP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Jun 28, 2018 at 11:04:17AM -0700, David Collins wrote:
-
-> Do you have any remaining concerns with the qcom-rpmh-regulator binding
-> and driver patches that would keep you from applying them (other than the
-> dependency patches being applied first)?
-
-To repeat I need to find the time to sit down and go through them
-properly, the problems this driver has had mean I feel I need to be
-extra careful there.
-
---gatW/ieO32f1wygP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAls2EsEACgkQJNaLcl1U
-h9Bx1Af7Bz4I6SUQg9lGj8sFvYlmI95U/RkOKKl7qwJ1vL4rDIVYxUnCKptgUZwq
-m999vmbzQx/olgopwVBpHjalHCCKSwUFUT3YLsZHOxhg6qT32C98tsWk0fc0ryXp
-TxeeeXZyGf9g1hUE5VJvxZyLPvGk/iz62cI6U2vj9zPwrc8D1m5yNrWqos18roZo
-oSF41AOVcFDlSU2AIbuelz/T4e15rxvHxygubBMzyMUGjVicYdnIfvLq+XRWOD6i
-GVg7h1+rEXX8mAFslOj0E1Y+WruwGlbcQQtF0WmEw4bzoHjhUzwlKU6Iryjwfc2F
-3OqeExM3CbmRv90iiRAz87ILL2Kotw==
-=rGtf
------END PGP SIGNATURE-----
-
---gatW/ieO32f1wygP--
+On 29 June 2018 at 13:04, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> Let's add a power-domain-names property, to allow consumer drivers to match
+> the power-domains specifiers via a list of power domain names. This follows
+> the same concept as for other similar DT bindings.
+>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/power/power_domain.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+> index 9b387f861aed..4d6bc8829468 100644
+> --- a/Documentation/devicetree/bindings/power/power_domain.txt
+> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
+> @@ -114,18 +114,26 @@ Required properties:
+>   - power-domains : A list of PM domain specifiers, as defined by bindings of
+>                 the power controller that is the PM domain provider.
+>
+> +Optional properties:
+> + - power-domain-names : A list of power domain name strings sorted in the same
+> +               order as the power-domains property. Consumers drivers will use
+> +               power-domain-names to match power domains with power-domains
+> +               specifiers.
+> +
+>  Example:
+>
+>         leaky-device@12350000 {
+>                 compatible = "foo,i-leak-current";
+>                 reg = <0x12350000 0x1000>;
+>                 power-domains = <&power 0>;
+> +               power-domain-names = "io";
+>         };
+>
+>         leaky-device@12351000 {
+>                 compatible = "foo,i-leak-current";
+>                 reg = <0x12351000 0x1000>;
+>                 power-domains = <&power 0>, <&power 1> ;
+> +               power-domain-names = "io", "clk";
+>         };
+>
+>  The first example above defines a typical PM domain consumer device, which is
+> --
+> 2.17.1
+>
