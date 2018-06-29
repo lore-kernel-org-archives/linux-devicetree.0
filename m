@@ -1,45 +1,58 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v1] ARM: dts: imx51-zii-rdu1: correct touchscreen axis
- inversion
-Date: Fri, 29 Jun 2018 10:55:55 +0200
-Message-ID: <1530262555.22468.63.camel@pengutronix.de>
-References: <20180628225626.26203-1-nick@shmanahar.org>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v3 6/6] PM / Domains: Stop deferring probe at the end of initcall
+Date: Fri, 29 Jun 2018 10:58:50 +0200
+Message-ID: <6638705.joTkLXoa2B@aspire.rjw.lan>
+References: <20180628204344.13973-1-robh@kernel.org> <20180628204344.13973-7-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180628225626.26203-1-nick@shmanahar.org>
+In-Reply-To: <20180628204344.13973-7-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nick Dyer <nick@shmanahar.org>, Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Chris Healy <cphealy@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, boot-architecture@lists.linaro.org, linux-arm-kernel@lists.infradead.org, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 28.06.2018, 23:56 +0100 schrieb Nick Dyer:
-> The RMI4 touchscreen driver applied inversion and axis swap in the
-> wrong order, violating the DT binding for those properties. This was fixed in
-> 645a397, so correct the RDU1 DT to apply the inversion to the
-> correct axis.
+On Thursday, June 28, 2018 10:43:44 PM CEST Rob Herring wrote:
+> All PM domain drivers must be built-in (at least those using DT), so
+> there is no point deferring probe after initcalls are done. Continuing
+> to defer probe may prevent booting successfully even if managing PM
+> domains is not required. This can happen if the user failed to enable
+> the driver or if power-domains are added to a platform's DT, but there
+> is not yet a driver (e.g. a new DTB with an old kernel).
 > 
-> Tested on Zii RDU1 00-5105-30 rev B
+> Call the driver core function driver_deferred_probe_check_init_done()
+> instead of just returning -EPROBE_DEFER to stop deferring probe when
+> initcalls are done.
 > 
-> Signed-off-by: Nick Dyer <nick@shmanahar.org>
-
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Kevin Hilman <khilman@kernel.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Len Brown <len.brown@intel.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
->  arch/arm/boot/dts/imx51-zii-rdu1.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> v3:
+>   - Update to new function name
 > 
-> diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-> index 68f5c1d5ecd0..b1d83fb08150 100644
-> --- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
-> +++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-> @@ -553,7 +553,7 @@
->  
-> >  		rmi4-f11@11 {
-> >  			reg = <0x11>;
-> > -			touchscreen-inverted-y;
-> > +			touchscreen-inverted-x;
-> >  			touchscreen-swapped-x-y;
-> >  			syna,sensor-type = <1>;
-> >  		};
+>  drivers/base/power/domain.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index 4925af5c4cf0..8c12213875c6 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -2253,7 +2253,7 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device_node *np,
+>  		mutex_unlock(&gpd_list_lock);
+>  		dev_dbg(dev, "%s() failed to find PM domain: %ld\n",
+>  			__func__, PTR_ERR(pd));
+> -		return -EPROBE_DEFER;
+> +		return driver_deferred_probe_check_state(dev);
+>  	}
+> 
+>  	dev_dbg(dev, "adding to PM domain %s\n", pd->name);
+> --
+
+ACK
