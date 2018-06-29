@@ -1,14 +1,14 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 1/3] PM / Domains: dt: Add a power-domain-names property
-Date: Fri, 29 Jun 2018 13:07:26 +0200
-Message-ID: <CAPDyKFpM51t13xtNT54d-9_n-0P=HuzV=TOy+r073NymM+=YhA@mail.gmail.com>
-References: <20180629110432.5179-1-ulf.hansson@linaro.org>
- <20180629110432.5179-2-ulf.hansson@linaro.org>
+From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2] arm64: dts: marvell: armada-37xx: reserve memory for
+ ATF
+Date: Fri, 29 Jun 2018 13:44:07 +0200
+Message-ID: <20180629134407.112819d2@windsurf>
+References: <20180626081701.27176-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180629110432.5179-2-ulf.hansson@linaro.org>
+In-Reply-To: <20180626081701.27176-1-miquel.raynal@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,53 +18,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux PM <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Kevin Hilman <khilman@kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Jon Hunter <jonathanh@nvidia.com>, Todor Tomov <todor.tomov@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-tegra@vger.kernel.org, Lucas Stach <dev@lynxeye.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Victor Gu <xigu@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-+devicetree list, Rob
+Hello,
 
-On 29 June 2018 at 13:04, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> Let's add a power-domain-names property, to allow consumer drivers to match
-> the power-domains specifiers via a list of power domain names. This follows
-> the same concept as for other similar DT bindings.
->
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
->  Documentation/devicetree/bindings/power/power_domain.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-> index 9b387f861aed..4d6bc8829468 100644
-> --- a/Documentation/devicetree/bindings/power/power_domain.txt
-> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
-> @@ -114,18 +114,26 @@ Required properties:
->   - power-domains : A list of PM domain specifiers, as defined by bindings of
->                 the power controller that is the PM domain provider.
->
-> +Optional properties:
-> + - power-domain-names : A list of power domain name strings sorted in the same
-> +               order as the power-domains property. Consumers drivers will use
-> +               power-domain-names to match power domains with power-domains
-> +               specifiers.
-> +
->  Example:
->
->         leaky-device@12350000 {
->                 compatible = "foo,i-leak-current";
->                 reg = <0x12350000 0x1000>;
->                 power-domains = <&power 0>;
-> +               power-domain-names = "io";
->         };
->
->         leaky-device@12351000 {
->                 compatible = "foo,i-leak-current";
->                 reg = <0x12351000 0x1000>;
->                 power-domains = <&power 0>, <&power 1> ;
-> +               power-domain-names = "io", "clk";
->         };
->
->  The first example above defines a typical PM domain consumer device, which is
-> --
-> 2.17.1
->
+On Tue, 26 Jun 2018 10:17:01 +0200, Miquel Raynal wrote:
+> From: Victor Gu <xigu@marvell.com>
+> 
+> The PSCI area should be reserved in Linux for PSCI operations such as
+> suspend/resume.
+> 
+> Reserve 2MiB of memory which matches the area used by ATF (BL1, BL2,
+> BL3x, see [1] in ATF source code). This covers all PSCI code and data
+> area and is 2MiB aligned, which is required by Linux for huge pages
+> handling.
+> 
+> Please note that this is a default setup allowing to perform PSCI
+> operations with legacy bootloaders. Recent bootloaders should update the
+> region size/position accordingly.
+> 
+> [1] plat/marvell/a3700/common/include/platform_def.h
+> 
+> Signed-off-by: Victor Gu <xigu@marvell.com>
+> [miquel.raynal@bootlin.com: reword of commit message, comment in the DTSI]
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+
+Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
