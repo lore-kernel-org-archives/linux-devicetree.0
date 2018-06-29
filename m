@@ -1,7 +1,7 @@
 From: Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v4 1/5] clocksource/drivers/timer-mediatek: Add system timer bindings
-Date: Fri, 29 Jun 2018 08:17:22 +0800
-Message-ID: <1530231446-13760-2-git-send-email-stanley.chu@mediatek.com>
+Subject: [PATCH v4 5/5] clocksource/drivers/timer-mediatek: Add support for system timer
+Date: Fri, 29 Jun 2018 08:17:26 +0800
+Message-ID: <1530231446-13760-6-git-send-email-stanley.chu@mediatek.com>
 References: <1530231446-13760-1-git-send-email-stanley.chu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,71 +12,151 @@ To: Matthias Brugger <matthias.bgg@gmail.com>, Daniel Lezcano <daniel.lezcano@li
 Cc: linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, Stanley Chu <stanley.chu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes bindings of existed "General Purpose Timer",
-and then add bindings of new "System Timer" on Mediatek SoCs.
+This patch adds a new "System Timer" on the Mediatek SoCs.
+
+The System Timer is introduced as an always-on timer being
+clockevent device for tick-broadcasting.
+
+For clock, it is driven by 13 MHz system clock.
+The implementation uses the system clock with no clock
+source divider.
+
+For interrupt, the clock event timer can be used by all cores.
 
 Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
 ---
- .../bindings/timer/mediatek,mtk-timer.txt          |   38 ++++++++++++++++----
- 1 file changed, 32 insertions(+), 6 deletions(-)
+ drivers/clocksource/timer-mediatek.c |  108 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 108 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
-index b1fe7e9..605fd8f 100644
---- a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
-+++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
-@@ -1,5 +1,14 @@
--Mediatek MT6577, MT6572 and MT6589 Timers
-----------------------------------------
-+Mediatek Timers
-+---------------
-+
-+Mediatek SoCs have two different timers on different platforms,
-+- GPT (General Purpose Timer)
-+- SYST (System Timer)
-+
-+Please bind correct timers in each platforms.
-+
-+
-+** General Purpose Timer (GPT)
+diff --git a/drivers/clocksource/timer-mediatek.c b/drivers/clocksource/timer-mediatek.c
+index e57c4d7..957bb23 100644
+--- a/drivers/clocksource/timer-mediatek.c
++++ b/drivers/clocksource/timer-mediatek.c
+@@ -58,6 +58,84 @@
  
- Required properties:
- - compatible should contain:
-@@ -11,9 +20,8 @@ Required properties:
- 	* "mediatek,mt8135-timer" for MT8135 compatible timers
- 	* "mediatek,mt8173-timer" for MT8173 compatible timers
- 	* "mediatek,mt6577-timer" for MT6577 and all above compatible timers
--- reg: Should contain location and length for timers register.
--- clocks: Clocks driving the timer hardware. This list should include two
--	clocks. The order is system clock and as second clock the RTC clock.
-+- reg: Should contain location and length for GPT register.
-+- clocks: GPT is drived by system clock.
+ static void __iomem *gpt_sched_reg __read_mostly;
  
- Examples:
++/* system timer */
++#define SYST_CON                (0x0)
++#define SYST_VAL                (0x4)
++
++#define SYST_CON_REG(to)        (timer_of_base(to) + SYST_CON)
++#define SYST_VAL_REG(to)        (timer_of_base(to) + SYST_VAL)
++
++#define SYST_CON_EN              BIT(0)
++#define SYST_CON_IRQ_EN          BIT(1)
++#define SYST_CON_IRQ_CLR         BIT(4)
++
++static void __iomem *gpt_sched_reg __read_mostly;
++
++static void mtk_syst_reset(struct timer_of *to)
++{
++	/* clear and disable interrupt */
++	writel(SYST_CON_IRQ_CLR | SYST_CON_EN, SYST_CON_REG(to));
++
++	/* reset counter */
++	writel(0, SYST_VAL_REG(to));
++
++	/* disable timer */
++	writel(0, SYST_CON_REG(to));
++}
++
++static void mtk_syst_ack_irq(struct timer_of *to)
++{
++	mtk_syst_reset(to);
++}
++
++static irqreturn_t mtk_syst_handler(int irq, void *dev_id)
++{
++	struct clock_event_device *clkevt = (struct clock_event_device *)dev_id;
++	struct timer_of *to = to_timer_of(clkevt);
++
++	mtk_syst_ack_irq(to);
++	clkevt->event_handler(clkevt);
++
++	return IRQ_HANDLED;
++}
++
++static int mtk_syst_clkevt_next_event(unsigned long ticks,
++				      struct clock_event_device *clkevt)
++{
++	struct timer_of *to = to_timer_of(clkevt);
++
++	/*
++	 * reset timer first because we do not expect interrupt is triggered
++	 * by old compare value.
++	 */
++	mtk_syst_reset(to);
++
++	writel(SYST_CON_EN, SYST_CON_REG(to));
++
++	writel(ticks, SYST_VAL_REG(to));
++
++	writel(SYST_CON_EN | SYST_CON_IRQ_EN, SYST_CON_REG(to));
++
++	return 0;
++}
++
++static int mtk_syst_clkevt_shutdown(struct clock_event_device *clkevt)
++{
++	mtk_syst_reset(to_timer_of(clkevt));
++
++	return 0;
++}
++
++static int mtk_syst_clkevt_resume(struct clock_event_device *clkevt)
++{
++	return mtk_syst_clkevt_shutdown(clkevt);
++}
++
++static int mtk_syst_clkevt_oneshot(struct clock_event_device *clkevt)
++{
++	return 0;
++}
++
+ static u64 notrace mtk_gpt_read_sched_clock(void)
+ {
+ 	return readl_relaxed(gpt_sched_reg);
+@@ -186,6 +264,35 @@ static void mtk_gpt_enable_irq(struct timer_of *to, u8 timer)
+ 	},
+ };
  
-@@ -21,5 +29,23 @@ Examples:
- 		compatible = "mediatek,mt6577-timer";
- 		reg = <0x10008000 0x80>;
- 		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
--		clocks = <&system_clk>, <&rtc_clk>;
-+		clocks = <&system_clk>;
-+	};
++static int __init mtk_syst_init(struct device_node *node)
++{
++	int ret;
 +
++	to.clkevt.features = CLOCK_EVT_FEAT_DYNIRQ | CLOCK_EVT_FEAT_ONESHOT;
++	to.clkevt.set_state_shutdown = mtk_syst_clkevt_shutdown;
++	to.clkevt.set_state_oneshot = mtk_syst_clkevt_oneshot;
++	to.clkevt.tick_resume = mtk_syst_clkevt_resume;
++	to.clkevt.set_next_event = mtk_syst_clkevt_next_event;
++	to.of_irq.handler = mtk_syst_handler;
 +
-+** System Timer (SYST)
++	ret = timer_of_init(node, &to);
++	if (ret)
++		goto err;
 +
-+Required properties:
-+- compatible: Should contain
-+	* "mediatek,mt6765-timer" for MT6765 compatible timers
-+- reg: Should contain the location and length for system timer registers.
-+- clocks: System timer is drived by system clock.
++	mtk_syst_reset(&to);
 +
-+Examples:
++	clockevents_config_and_register(&to.clkevt, timer_of_rate(&to),
++					TIMER_SYNC_TICKS, 0xffffffff);
 +
-+	systimer@10017000 {
-+		compatible = "mediatek,mt6765-timer";
-+		reg = <0 0x10017000 0 0x1000>;
-+		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&system_clk>;
- 	};
++	pr_info("irq=%d, rate=%lu, max_ns: %llu, min_ns: %llu\n",
++		timer_of_irq(&to), timer_of_rate(&to),
++		to.clkevt.max_delta_ns, to.clkevt.min_delta_ns);
++
++	return 0;
++err:
++	return ret;
++}
++
+ static int __init mtk_gpt_init(struct device_node *node)
+ {
+ 	int ret;
+@@ -224,3 +331,4 @@ static int __init mtk_gpt_init(struct device_node *node)
+ 	return ret;
+ }
+ TIMER_OF_DECLARE(mtk_mt6577, "mediatek,mt6577-timer", mtk_gpt_init);
++TIMER_OF_DECLARE(mtk_mt6765, "mediatek,mt6765-timer", mtk_syst_init);
 -- 
 1.7.9.5
