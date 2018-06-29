@@ -1,134 +1,190 @@
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Subject: Re: [PATCH v2 1/2] gpio: mediatek: add driver for MT7621
-Date: Fri, 29 Jun 2018 18:52:16 +0200
-Message-ID: <CAMhs-H_EmNoFQhiLzxT07=bzO7np0ZPvsZon1a8Y-MCp+r977A@mail.gmail.com>
-References: <1530276212-18376-2-git-send-email-sergio.paracuellos@gmail.com>
- <201806300035.7k8QGAO8%fengguang.wu@intel.com>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH v2] display: panel: Add KOE tx14d24vm1bpa display
+ support (320x240)
+Date: Fri, 29 Jun 2018 19:05:29 +0200
+Message-ID: <20180629190529.0f59db98@jawa>
+References: <20180412143715.6828-1-lukma@denx.de>
+        <20180529150528.22136-1-lukma@denx.de>
+        <20180622105605.3018453c@jawa>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <201806300035.7k8QGAO8%fengguang.wu@intel.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: kbuild test robot <lkp@intel.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, driverdev-devel@linuxdriverproject.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, kbuild-all@01.org, NeilBrown <neil@brown.name>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/WjbNHFWHz_V7yvL8.ar5wrr"; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180622105605.3018453c@jawa>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 29, 2018 at 6:43 PM, kbuild test robot <lkp@intel.com> wrote:
-> Hi Sergio,
->
-> Thank you for the patch! Yet something to improve:
->
-> [auto build test ERROR on gpio/for-next]
-> [also build test ERROR on v4.18-rc2 next-20180629]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
->
-> url:    https://github.com/0day-ci/linux/commits/Sergio-Paracuellos/gpio-mediatek-driver-for-gpio-chip-in-MT7621-SoC/20180629-225420
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git for-next
-> config: x86_64-randconfig-s0-06292230 (attached as .config)
-> compiler: gcc-6 (Debian 6.4.0-9) 6.4.0 20171026
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=x86_64
->
-> All errors (new ones prefixed by >>):
->
->    drivers/gpio/gpio-mt7621.c: In function 'mediatek_gpio_bank_probe':
->>> drivers/gpio/gpio-mt7621.c:221:10: error: 'struct gpio_chip' has no member named 'of_node'
->      rg->chip.of_node = node;
->              ^
+--Sig_/WjbNHFWHz_V7yvL8.ar5wrr
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Should I have to add #ifdef CONFIG_OF_GPIO for this line? Is kind of
-ugly hack... Does exist another way to fix this?
+Hi Thierry,
 
-Thanks,
-    Sergio Paracuellos
+> Hi Thierry,
+>=20
+> > This commit adds support for KOE's 5.7" display.
+> >=20
+> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> > Changes for v2:
+> > - Add Reviewed-by tag =20
+>=20
+> Could you apply this patch to your tree?
 
->
-> vim +221 drivers/gpio/gpio-mt7621.c
->
->    207
->    208  static int
->    209  mediatek_gpio_bank_probe(struct platform_device *pdev,
->    210                           struct device_node *node, int bank)
->    211  {
->    212          struct mtk_data *gpio = dev_get_drvdata(&pdev->dev);
->    213          struct mtk_gc *rg;
->    214          void __iomem *dat, *set, *ctrl, *diro;
->    215          int ret;
->    216
->    217          rg = &gpio->gc_map[bank];
->    218          memset(rg, 0, sizeof(*rg));
->    219
->    220          spin_lock_init(&rg->lock);
->  > 221          rg->chip.of_node = node;
->    222          rg->bank = bank;
->    223          rg->chip.label = mediatek_gpio_bank_name(rg->bank);
->    224
->    225          dat = gpio->gpio_membase + GPIO_REG_DATA + (rg->bank * GPIO_BANK_WIDE);
->    226          set = gpio->gpio_membase + GPIO_REG_DSET + (rg->bank * GPIO_BANK_WIDE);
->    227          ctrl = gpio->gpio_membase + GPIO_REG_DCLR + (rg->bank * GPIO_BANK_WIDE);
->    228          diro = gpio->gpio_membase + GPIO_REG_CTRL + (rg->bank * GPIO_BANK_WIDE);
->    229
->    230          ret = bgpio_init(&rg->chip, &pdev->dev, 4,
->    231                           dat, set, ctrl, diro, NULL, 0);
->    232          if (ret) {
->    233                  dev_err(&pdev->dev, "bgpio_init() failed\n");
->    234                  return ret;
->    235          }
->    236
->    237          ret = devm_gpiochip_add_data(&pdev->dev, &rg->chip, gpio);
->    238          if (ret < 0) {
->    239                  dev_err(&pdev->dev, "Could not register gpio %d, ret=%d\n",
->    240                          rg->chip.ngpio, ret);
->    241                  return ret;
->    242          }
->    243
->    244          if (gpio->gpio_irq) {
->    245                  /*
->    246                   * Manually request the irq here instead of passing
->    247                   * a flow-handler to gpiochip_set_chained_irqchip,
->    248                   * because the irq is shared.
->    249                   */
->    250                  ret = devm_request_irq(&pdev->dev, gpio->gpio_irq,
->    251                                         mediatek_gpio_irq_handler, IRQF_SHARED,
->    252                                         rg->chip.label, &rg->chip);
->    253
->    254                  if (ret) {
->    255                          dev_err(&pdev->dev, "Error requesting IRQ %d: %d\n",
->    256                                  gpio->gpio_irq, ret);
->    257                          return ret;
->    258                  }
->    259
->    260                  mediatek_gpio_irq_chip.name = rg->chip.label;
->    261                  ret = gpiochip_irqchip_add(&rg->chip, &mediatek_gpio_irq_chip,
->    262                                             0, handle_simple_irq, IRQ_TYPE_NONE);
->    263                  if (ret) {
->    264                          dev_err(&pdev->dev, "failed to add gpiochip_irqchip\n");
->    265                          return ret;
->    266                  }
->    267
->    268                  gpiochip_set_chained_irqchip(&rg->chip, &mediatek_gpio_irq_chip,
->    269                                               gpio->gpio_irq, NULL);
->    270          }
->    271
->    272          /* set polarity to low for all gpios */
->    273          mtk_gpio_w32(rg, GPIO_REG_POL, 0);
->    274
->    275          dev_info(&pdev->dev, "registering %d gpios\n", rg->chip.ngpio);
->    276
->    277          return 0;
->    278  }
->    279
->
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+If I may gentle ping on this patch..... It is quite mature now... :-)
+
+Best regards,
+=C5=81ukasz
+
+>=20
+> Thanks in advance,
+> =C5=81ukasz
+>=20
+> >=20
+> > ---
+> >  .../bindings/display/panel/koe,tx14d24vm1bpa.txt   | 42
+> > ++++++++++++++++++++++
+> > drivers/gpu/drm/panel/panel-simple.c               | 26
+> > ++++++++++++++ 2 files changed, 68 insertions(+) create mode 100644
+> > Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+> >=20
+> > diff --git
+> > a/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+> > b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+> > new file mode 100644 index 000000000000..be7ac666807b --- /dev/null
+> > +++
+> > b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+> > @@ -0,0 +1,42 @@ +Kaohsiung Opto-Electronics Inc. 5.7" QVGA (320 x
+> > 240) TFT LCD panel +
+> > +Required properties:
+> > +- compatible: should be "koe,tx14d24vm1bpa"
+> > +- backlight: phandle of the backlight device attached to the panel
+> > +- power-supply: single regulator to provide the supply voltage
+> > +
+> > +Required nodes:
+> > +- port: Parallel port mapping to connect this display
+> > +
+> > +This panel needs single power supply voltage. Its backlight is
+> > conntrolled +via PWM signal.
+> > +
+> > +Example:
+> > +--------
+> > +
+> > +Example device-tree definition when connected to iMX53 based board
+> > +
+> > +	lcd_panel: lcd-panel {
+> > +		compatible =3D "koe,tx14d24vm1bpa";
+> > +		backlight =3D <&backlight_lcd>;
+> > +		power-supply =3D <&reg_3v3>;
+> > +
+> > +		port {
+> > +			lcd_panel_in: endpoint {
+> > +				remote-endpoint =3D
+> > <&lcd_display_out>;
+> > +			};
+> > +		};
+> > +	};
+> > +
+> > +Then one needs to extend the dispX node:
+> > +
+> > +	lcd_display: disp1 {
+> > +
+> > +		port@1 {
+> > +			reg =3D <1>;
+> > +
+> > +			lcd_display_out: endpoint {
+> > +				remote-endpoint =3D <&lcd_panel_in>;
+> > +			};
+> > +		};
+> > +	};
+> > diff --git a/drivers/gpu/drm/panel/panel-simple.c
+> > b/drivers/gpu/drm/panel/panel-simple.c index
+> > d9984bdb5bb5..103b43ce7dee 100644 ---
+> > a/drivers/gpu/drm/panel/panel-simple.c +++
+> > b/drivers/gpu/drm/panel/panel-simple.c @@ -1268,6 +1268,29 @@ static
+> > const struct panel_desc innolux_zj070na_01p =3D { },
+> >  };
+> > =20
+> > +static const struct display_timing koe_tx14d24vm1bpa_timing =3D {
+> > +	.pixelclock =3D { 5580000, 5850000, 6200000 },
+> > +	.hactive =3D { 320, 320, 320 },
+> > +	.hfront_porch =3D { 30, 30, 30 },
+> > +	.hback_porch =3D { 30, 30, 30 },
+> > +	.hsync_len =3D { 1, 5, 17 },
+> > +	.vactive =3D { 240, 240, 240 },
+> > +	.vfront_porch =3D { 6, 6, 6 },
+> > +	.vback_porch =3D { 5, 5, 5 },
+> > +	.vsync_len =3D { 1, 2, 11 },
+> > +	.flags =3D DISPLAY_FLAGS_DE_HIGH,
+> > +};
+> > +
+> > +static const struct panel_desc koe_tx14d24vm1bpa =3D {
+> > +	.timings =3D &koe_tx14d24vm1bpa_timing,
+> > +	.num_timings =3D 1,
+> > +	.bpc =3D 6,
+> > +	.size =3D {
+> > +		.width =3D 115,
+> > +		.height =3D 86,
+> > +	},
+> > +};
+> > +
+> >  static const struct display_timing koe_tx31d200vm0baa_timing =3D {
+> >  	.pixelclock =3D { 39600000, 43200000, 48000000 },
+> >  	.hactive =3D { 1280, 1280, 1280 },
+> > @@ -2204,6 +2227,9 @@ static const struct of_device_id
+> > platform_of_match[] =3D { .compatible =3D "innolux,zj070na-01p",
+> >  		.data =3D &innolux_zj070na_01p,
+> >  	}, {
+> > +		.compatible =3D "koe,tx14d24vm1bpa",
+> > +		.data =3D &koe_tx14d24vm1bpa,
+> > +	}, {
+> >  		.compatible =3D "koe,tx31d200vm0baa",
+> >  		.data =3D &koe_tx31d200vm0baa,
+> >  	}, { =20
+>=20
+>=20
+>=20
+>=20
+> Best regards,
+>=20
+> Lukasz Majewski
+>=20
+> --
+>=20
+> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+> Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+
+--Sig_/WjbNHFWHz_V7yvL8.ar5wrr
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAls2ZtkACgkQAR8vZIA0
+zr2+Egf+O2amWyNW4PwDXGQX6ds0oJIizprDZzdcaPOXds0OYXnPjV3+ct2k56+3
+TbBrOtqLxz0qVnjDZbTtRkOIiYJEzxc6T78T5i5Ie9aTxY/HV1qdv8TgemhTNZME
+WCviELoIP714Ptde6J7pkzqIo7NYrlNi1FHCxzlqalrpHto5d0hHOLpXL7IQONPW
+/dB9uEQNU97ZQdORde+bzOZ3ty3bcrxx7uniocOTSllfwUx7D0H2K4nv8t3MKyCy
+cjaA0GZ5LzaYLL2rV88grz4WfJzPFYh/hSd8MoDGzqDAfx9ML6AAd2BFttilzDhs
+hvgkfWN457q5/Dy3pGA10M2lkTRxJw==
+=OzNa
+-----END PGP SIGNATURE-----
+
+--Sig_/WjbNHFWHz_V7yvL8.ar5wrr--
