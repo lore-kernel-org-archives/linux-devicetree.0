@@ -1,69 +1,27 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v12 5/5] dt-bindings: drm/panel: Document Innolux
- TV123WAM panel bindings
-Date: Fri, 29 Jun 2018 14:14:12 +0200
-Message-ID: <20180629121414eucas1p21171a1eab3ee081c8b4114ca58264669~8oIIwEXJJ1824018240eucas1p2G@eucas1p2.samsung.com>
-References: <1529584329-632-1-git-send-email-spanda@codeaurora.org>
- <CGME20180622072307epcas4p48b7b94318be80d6a6c732d3fd908c3fc@epcas4p4.samsung.com>
- <1529584329-632-6-git-send-email-spanda@codeaurora.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: Add gpio interrupt bindings
+ for Actions S900 SoC
+Date: Fri, 29 Jun 2018 14:27:18 +0200
+Message-ID: <CACRpkdZ1kE3Bop+8rdwJHFcV-Ss3F0LwHUA8zC7nepyxCyGEbg@mail.gmail.com>
+References: <20180623045954.6729-1-manivannan.sadhasivam@linaro.org> <20180623045954.6729-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1529584329-632-6-git-send-email-spanda@codeaurora.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sandeep Panda <spanda@codeaurora.org>, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: hoegsberg@chromium.org, chandanu@codeaurora.org, ryadav@codeaurora.org, abhinavk@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180623045954.6729-2-manivannan.sadhasivam@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>, "Thomas C. Liau" <thomas.liau@actions-semi.com>, Jeff Chen <jeff.chen@actions-semi.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjEuMDYuMjAxOCAxNDozMiwgU2FuZGVlcCBQYW5kYSB3cm90ZToKPiBJbm5vbHV4IFRWMTIz
-V0FNIGlzIGEgMTIuMyIgZURQIGRpc3BsYXkgcGFuZWwgd2l0aAo+IDIxNjB4MTQ0MCByZXNvbHV0
-aW9uLCB3aGljaCBjYW4gYmUgc3VwcG9ydGVkIGJ5IHNpbXBsZQo+IHBhbmVsIGRyaXZlci4KCkFy
-ZSB5b3Ugc3VyZSB0aGlzIGlzIElubm9sdXg/IFF1aWNrIGdyZXAgb24gSW50ZXJuZXQgZmluZHMg
-b25seSBCT0UKcGFuZWwgd2l0aCB0aGlzIFRWMTIzV0FNWzFdLgoKWzFdOgpodHRwczovL2UyZS50
-aS5jb20vY2ZzLWZpbGUvX19rZXkvY29tbXVuaXR5c2VydmVyLWRpc2N1c3Npb25zLWNvbXBvbmVu
-dHMtZmlsZXMvMTM4L1RWMTIzV0FNXzJEMDBfTkQwXzVGMDBfUHJvZHVjdC1zcGVjXzVGMDBfQk9F
-XzVGMDBfMjAxNjExMTVfMkQwMF9BMDAucGRmCgpSZWdhcmRzCkFuZHJ6ZWoKPgo+IENoYW5nZXMg
-aW4gdjE6Cj4gIC0gTWFrZSB1c2Ugb2Ygc2ltcGxlIHBhbmVsIGRyaXZlciBpbnN0ZWFkIG9mIGNy
-ZWF0aW5nCj4gICAgYSBuZXcgZHJpdmVyIGZvciB0aGlzIHBhbmVsIChTZWFuIFBhdWwpLgo+ICAt
-IENvbWJpbmUgZHQtYmluZGluZyBhbmQgZHJpdmVyIGNoYW5nZXMgaW50byBvbmUgcGF0Y2gKPiAg
-ICBhcyBkb25lIGJ5IG90aGVyIGV4aXN0aW5nIHBhbmVsIHN1cHBvcnQgY2hhbmdlcy4KPgo+IENo
-YW5nZXMgaW4gdjI6Cj4gIC0gU2VwYXJhdGUgZHJpdmVyIGNoYW5nZSBmcm9tIGR0LWJpbmRpbmcg
-ZG9jdW1lbnRhdGlvbiAoUm9iIEhlcnJpbmcpLgo+ICAtIEFkZCB0aGUgcHJvcGVydGllcyBmcm9t
-IHNpbXBsZS1wYW5lbCBiaW5kaW5nIHRoYXQgYXJlIGFwcGxpY2FibGUgdG8KPiAgICB0aGlzIHBh
-bmVsIChSb2IgSGVycmluZykuCj4KPiBTaWduZWQtb2ZmLWJ5OiBTYW5kZWVwIFBhbmRhIDxzcGFu
-ZGFAY29kZWF1cm9yYS5vcmc+Cj4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5l
-bC5vcmc+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsdHYxMjN3
-YW0udHh0ICAgICAgfCAyMCArKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwg
-MjAgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQKPgo+IGRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
-bC9pbm5vbHV4LHR2MTIzd2FtLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsdHYxMjN3YW0udHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2
-NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLmE5YjM1MjY1ZmExMwo+IC0tLSAvZGV2L251bGwKPiAr
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5v
-bHV4LHR2MTIzd2FtLnR4dAo+IEBAIC0wLDAgKzEsMjAgQEAKPiArSW5ub2x1eCBUVjEyM1dBTSAx
-Mi4zIGluY2ggZURQIDJLIGRpc3BsYXkgcGFuZWwKPiArCj4gK1RoaXMgYmluZGluZyBpcyBjb21w
-YXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQK
-PiAraW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlzIGRpcmVjdG9yeS4KPiArCj4gK1JlcXVpcmVk
-IHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJpbm5vbHV4LHR2MTIzd2Ft
-Igo+ICstIHBvd2VyLXN1cHBseTogcmVndWxhdG9yIHRvIHByb3ZpZGUgdGhlIHN1cHBseSB2b2x0
-YWdlCj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICstIGVuYWJsZS1ncGlvczogR1BJTyBw
-aW4gdG8gZW5hYmxlIG9yIGRpc2FibGUgdGhlIHBhbmVsCj4gKy0gYmFja2xpZ2h0OiBwaGFuZGxl
-IG9mIHRoZSBiYWNrbGlnaHQgZGV2aWNlIGF0dGFjaGVkIHRvIHRoZSBwYW5lbAo+ICsKPiArRXhh
-bXBsZToKPiArCXBhbmVsX2VkcDogcGFuZWwtZWRwIHsKPiArCQljb21wYXRpYmxlID0gImlubm9s
-dXgsdHYxMjN3YW0iOwo+ICsJCWVuYWJsZS1ncGlvcyA9IDwmbXNtZ3BpbyAzMSBHUElPX0FDVElW
-RV9MT1c+Owo+ICsJCXBvd2VyLXN1cHBseSA9IDwmcG04OTE2X2wyPjsKPiArCQliYWNrbGlnaHQg
-PSA8JmJhY2tsaWdodD47Cj4gKwl9OwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+On Sat, Jun 23, 2018 at 7:00 AM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+
+> Add gpio interrupt bindings for Actions Semi S900 SoC.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+Patch applied.
+
+Yours,
+Linus Walleij
