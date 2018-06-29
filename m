@@ -1,50 +1,69 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v3 0/8] gnss: add new GNSS subsystem
-Date: Fri, 29 Jun 2018 14:09:14 +0200
-Message-ID: <20180629120914.GA9802@localhost>
-References: <20180601082259.17563-1-johan@kernel.org>
- <20180628120103.GA28131@kroah.com>
- <20180629094607.GC31718@amd>
- <20180629114646.GU629@localhost>
- <20180629120554.GA2477@amd>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v12 5/5] dt-bindings: drm/panel: Document Innolux
+ TV123WAM panel bindings
+Date: Fri, 29 Jun 2018 14:14:12 +0200
+Message-ID: <20180629121414eucas1p21171a1eab3ee081c8b4114ca58264669~8oIIwEXJJ1824018240eucas1p2G@eucas1p2.samsung.com>
+References: <1529584329-632-1-git-send-email-spanda@codeaurora.org>
+ <CGME20180622072307epcas4p48b7b94318be80d6a6c732d3fd908c3fc@epcas4p4.samsung.com>
+ <1529584329-632-6-git-send-email-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180629120554.GA2477@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, alan@linux.intel.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1529584329-632-6-git-send-email-spanda@codeaurora.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sandeep Panda <spanda@codeaurora.org>, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: hoegsberg@chromium.org, chandanu@codeaurora.org, ryadav@codeaurora.org, abhinavk@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 29, 2018 at 02:05:54PM +0200, Pavel Machek wrote:
-> On Fri 2018-06-29 13:46:46, Johan Hovold wrote:
-> > On Fri, Jun 29, 2018 at 11:46:07AM +0200, Pavel Machek wrote:
-> > > 
-> > > > > Finally, note that documentation (including kerneldoc) remains to be
-> > > > > written, but hopefully this will not hinder review given that the
-> > > > > current interfaces are fairly self-describing.
-> > > > 
-> > > > This all looks great.  Thanks for doing this work and adding a new
-> > > > subsystem for something that has been asked for for many years.
-> > > > 
-> > > > All now merged in my tree, nice job!
-> > > 
-> > > I don't think discussion was finished on this one.
-> > > 
-> > > In particular, we agreed that /dev/gnssrawX would be better device
-> > > name, so that we still have place where to put proper abstraction
-> > > layer in future.
-> > 
-> > I did not agree with you on that. I said we could consider that name if
-> > this was to be changed at all, which I do not think is necessary for
-> > the reasons spelled out in this thread.
-> 
-> So, again: there's nothing gnss specific in those patches. It does not
-> know about the format of the data passed around. (Best you can claim
-> that somehow data flow characteristics are unique to gnss.) And this
-> takes namespace needed for real gnss subsystem. Please don't do it.
-
-This is the real gnss subsystem. Get over it.
-
-Johan
+T24gMjEuMDYuMjAxOCAxNDozMiwgU2FuZGVlcCBQYW5kYSB3cm90ZToKPiBJbm5vbHV4IFRWMTIz
+V0FNIGlzIGEgMTIuMyIgZURQIGRpc3BsYXkgcGFuZWwgd2l0aAo+IDIxNjB4MTQ0MCByZXNvbHV0
+aW9uLCB3aGljaCBjYW4gYmUgc3VwcG9ydGVkIGJ5IHNpbXBsZQo+IHBhbmVsIGRyaXZlci4KCkFy
+ZSB5b3Ugc3VyZSB0aGlzIGlzIElubm9sdXg/IFF1aWNrIGdyZXAgb24gSW50ZXJuZXQgZmluZHMg
+b25seSBCT0UKcGFuZWwgd2l0aCB0aGlzIFRWMTIzV0FNWzFdLgoKWzFdOgpodHRwczovL2UyZS50
+aS5jb20vY2ZzLWZpbGUvX19rZXkvY29tbXVuaXR5c2VydmVyLWRpc2N1c3Npb25zLWNvbXBvbmVu
+dHMtZmlsZXMvMTM4L1RWMTIzV0FNXzJEMDBfTkQwXzVGMDBfUHJvZHVjdC1zcGVjXzVGMDBfQk9F
+XzVGMDBfMjAxNjExMTVfMkQwMF9BMDAucGRmCgpSZWdhcmRzCkFuZHJ6ZWoKPgo+IENoYW5nZXMg
+aW4gdjE6Cj4gIC0gTWFrZSB1c2Ugb2Ygc2ltcGxlIHBhbmVsIGRyaXZlciBpbnN0ZWFkIG9mIGNy
+ZWF0aW5nCj4gICAgYSBuZXcgZHJpdmVyIGZvciB0aGlzIHBhbmVsIChTZWFuIFBhdWwpLgo+ICAt
+IENvbWJpbmUgZHQtYmluZGluZyBhbmQgZHJpdmVyIGNoYW5nZXMgaW50byBvbmUgcGF0Y2gKPiAg
+ICBhcyBkb25lIGJ5IG90aGVyIGV4aXN0aW5nIHBhbmVsIHN1cHBvcnQgY2hhbmdlcy4KPgo+IENo
+YW5nZXMgaW4gdjI6Cj4gIC0gU2VwYXJhdGUgZHJpdmVyIGNoYW5nZSBmcm9tIGR0LWJpbmRpbmcg
+ZG9jdW1lbnRhdGlvbiAoUm9iIEhlcnJpbmcpLgo+ICAtIEFkZCB0aGUgcHJvcGVydGllcyBmcm9t
+IHNpbXBsZS1wYW5lbCBiaW5kaW5nIHRoYXQgYXJlIGFwcGxpY2FibGUgdG8KPiAgICB0aGlzIHBh
+bmVsIChSb2IgSGVycmluZykuCj4KPiBTaWduZWQtb2ZmLWJ5OiBTYW5kZWVwIFBhbmRhIDxzcGFu
+ZGFAY29kZWF1cm9yYS5vcmc+Cj4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5l
+bC5vcmc+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsdHYxMjN3
+YW0udHh0ICAgICAgfCAyMCArKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwg
+MjAgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQKPgo+IGRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
+bC9pbm5vbHV4LHR2MTIzd2FtLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsdHYxMjN3YW0udHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2
+NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLmE5YjM1MjY1ZmExMwo+IC0tLSAvZGV2L251bGwKPiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5v
+bHV4LHR2MTIzd2FtLnR4dAo+IEBAIC0wLDAgKzEsMjAgQEAKPiArSW5ub2x1eCBUVjEyM1dBTSAx
+Mi4zIGluY2ggZURQIDJLIGRpc3BsYXkgcGFuZWwKPiArCj4gK1RoaXMgYmluZGluZyBpcyBjb21w
+YXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQK
+PiAraW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlzIGRpcmVjdG9yeS4KPiArCj4gK1JlcXVpcmVk
+IHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJpbm5vbHV4LHR2MTIzd2Ft
+Igo+ICstIHBvd2VyLXN1cHBseTogcmVndWxhdG9yIHRvIHByb3ZpZGUgdGhlIHN1cHBseSB2b2x0
+YWdlCj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICstIGVuYWJsZS1ncGlvczogR1BJTyBw
+aW4gdG8gZW5hYmxlIG9yIGRpc2FibGUgdGhlIHBhbmVsCj4gKy0gYmFja2xpZ2h0OiBwaGFuZGxl
+IG9mIHRoZSBiYWNrbGlnaHQgZGV2aWNlIGF0dGFjaGVkIHRvIHRoZSBwYW5lbAo+ICsKPiArRXhh
+bXBsZToKPiArCXBhbmVsX2VkcDogcGFuZWwtZWRwIHsKPiArCQljb21wYXRpYmxlID0gImlubm9s
+dXgsdHYxMjN3YW0iOwo+ICsJCWVuYWJsZS1ncGlvcyA9IDwmbXNtZ3BpbyAzMSBHUElPX0FDVElW
+RV9MT1c+Owo+ICsJCXBvd2VyLXN1cHBseSA9IDwmcG04OTE2X2wyPjsKPiArCQliYWNrbGlnaHQg
+PSA8JmJhY2tsaWdodD47Cj4gKwl9OwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
