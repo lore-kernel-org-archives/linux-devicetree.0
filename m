@@ -1,85 +1,82 @@
-From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?=
-        <sebastien.szymanski@armadeus.com>
-Subject: [PATCH 1/1] ARM: dts: imx6ull: add operating points
-Date: Fri, 29 Jun 2018 16:52:21 +0200
-Message-ID: <20180629145221.10393-1-sebastien.szymanski@armadeus.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 01/17] platform-msi: allow creation of MSI domain
+ without interrupt number
+Date: Fri, 29 Jun 2018 16:43:23 +0200
+Message-ID: <20180629164323.7fb2a0c3@xps13>
+References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
+ <20180622151432.1566-2-miquel.raynal@bootlin.com>
+ <c5b38c34-5ba0-6545-3635-45be1858fa3b@arm.com>
+ <20180629094035.5199fe89@xps13>
+ <86bmbtzmhk.wl-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <86bmbtzmhk.wl-marc.zyngier@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-i.MX6ULL has different operating ranges than i.MX6UL so add the
-operating points for the i.MX6ULL and removed them form board device
-trees. A 25mV offset is added to the minimum allowed values like for the
-i.MX6UL.
-The valid frequencies are now selected by the cpufreq driver according
-to ratings stored in fuses since commit 0aa9abd4c212 ("cpufreq: imx6q:
-check speed grades for i.MX6ULL")
-
-Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
----
- arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi | 14 --------------
- arch/arm/boot/dts/imx6ull.dtsi              | 19 +++++++++++++++++++
- 2 files changed, 19 insertions(+), 14 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi b/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
-index 3dffbcd50bf6..183193e8580d 100644
---- a/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
-+++ b/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
-@@ -20,20 +20,6 @@
- 
- &cpu0 {
- 	clock-frequency = <792000000>;
--	operating-points = <
--		/* kHz	uV */
--		792000  1225000
--		528000	1175000
--		396000	1025000
--		198000	950000
--	>;
--	fsl,soc-operating-points = <
--		/* KHz	uV */
--		792000  1175000
--		528000	1175000
--		396000	1175000
--		198000	1175000
--	>;
- };
- 
- &iomuxc {
-diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
-index ebc25c98e5e1..ade64bd46fab 100644
---- a/arch/arm/boot/dts/imx6ull.dtsi
-+++ b/arch/arm/boot/dts/imx6ull.dtsi
-@@ -48,6 +48,25 @@
- /* Delete CAAM node in AIPS-2 (i.MX6UL specific) */
- /delete-node/ &crypto;
- 
-+&cpu0 {
-+	operating-points = <
-+		/* kHz	uV */
-+		900000	1275000
-+		792000	1225000
-+		528000	1175000
-+		396000	1025000
-+		198000	950000
-+	>;
-+	fsl,soc-operating-points = <
-+		/* KHz	uV */
-+		900000	1175000
-+		792000	1175000
-+		528000	1175000
-+		396000	1175000
-+		198000	1175000
-+	>;
-+};
-+
- / {
- 	soc {
- 		aips3: aips-bus@2200000 {
--- 
-2.16.4
+SGkgTWFyYywKCk1hcmMgWnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+IHdyb3RlIG9uIEZy
+aSwgMjkgSnVuIDIwMTggMTU6Mzg6MzEKKzAxMDA6Cgo+IE9uIEZyaSwgMjkgSnVuIDIwMTggMDg6
+NDA6MzUgKzAxMDAsCj4gTWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4g
+d3JvdGU6Cj4gPiAKPiA+IEhpIE1hcmMsCj4gPiAKPiA+IE1hcmMgWnluZ2llciA8bWFyYy56eW5n
+aWVyQGFybS5jb20+IHdyb3RlIG9uIFRodSwgMjggSnVuIDIwMTggMTI6MTI6MDQKPiA+ICswMTAw
+Ogo+ID4gICAKPiA+ID4gT24gMjIvMDYvMTggMTY6MTQsIE1pcXVlbCBSYXluYWwgd3JvdGU6ICAK
+PiA+ID4gPiBwbGF0Zm9ybV9tc2lfYWxsb2NfcHJpdl9kYXRhKCkgY2hlY2tzIHRoYXQgYSBudW1i
+ZXIgb2YgaW50ZXJydXB0cyBpcwo+ID4gPiA+IGFsd2F5cyBnaXZlbi4gVGhpcyBleHRyYS1jaGVj
+ayBoYXMgbm8gcmVhbCBpbXBhY3QgYW5kIGp1c3QgcHJldmVudHMKPiA+ID4gPiB1c2VsZXNzbHkg
+dGhlIHVzZXIgdG8gY3JlYXRlIGFuIE1TSSB0cmVlIGRvbWFpbjogcmVtb3ZlIGl0Lgo+ID4gPiA+
+IAo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IE1pcXVlbCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9v
+dGxpbi5jb20+Cj4gPiA+ID4gLS0tCj4gPiA+ID4gIGRyaXZlcnMvYmFzZS9wbGF0Zm9ybS1tc2ku
+YyB8IDIgKy0KPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0
+aW9uKC0pCj4gPiA+ID4gCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYmFzZS9wbGF0Zm9y
+bS1tc2kuYyBiL2RyaXZlcnMvYmFzZS9wbGF0Zm9ybS1tc2kuYwo+ID4gPiA+IGluZGV4IDYwZDZj
+YzYxOGYxYy4uOWYwMDFmNGNjYzBmIDEwMDY0NAo+ID4gPiA+IC0tLSBhL2RyaXZlcnMvYmFzZS9w
+bGF0Zm9ybS1tc2kuYwo+ID4gPiA+ICsrKyBiL2RyaXZlcnMvYmFzZS9wbGF0Zm9ybS1tc2kuYwo+
+ID4gPiA+IEBAIC0yMDMsNyArMjAzLDcgQEAgcGxhdGZvcm1fbXNpX2FsbG9jX3ByaXZfZGF0YShz
+dHJ1Y3QgZGV2aWNlICpkZXYsIHVuc2lnbmVkIGludCBudmVjLAo+ID4gPiA+ICAJICogYWNjb3Jk
+aW5nbHkgKHdoaWNoIHdvdWxkIGltcGFjdCB0aGUgbWF4IG51bWJlciBvZiBNU0kKPiA+ID4gPiAg
+CSAqIGNhcGFibGUgZGV2aWNlcykuCj4gPiA+ID4gIAkgKi8KPiA+ID4gPiAtCWlmICghZGV2LT5t
+c2lfZG9tYWluIHx8ICF3cml0ZV9tc2lfbXNnIHx8ICFudmVjIHx8IG52ZWMgPiBNQVhfREVWX01T
+SVMpCj4gPiA+ID4gKwlpZiAoIWRldi0+bXNpX2RvbWFpbiB8fCAhd3JpdGVfbXNpX21zZyB8fCBu
+dmVjID4gTUFYX0RFVl9NU0lTKQo+ID4gPiA+ICAJCXJldHVybiBFUlJfUFRSKC1FSU5WQUwpOwo+
+ID4gPiA+ICAKPiA+ID4gPiAgCWlmIChkZXYtPm1zaV9kb21haW4tPmJ1c190b2tlbiAhPSBET01B
+SU5fQlVTX1BMQVRGT1JNX01TSSkgewo+ID4gPiA+ICAgICAKPiA+ID4gCj4gPiA+IEh1aC4uLiBJ
+dCdzIG5vdCB0aGF0IHNpbXBsZS4KPiA+ID4gCj4gPiA+IFllcywgaXQgYWxsb3dzIHlvdSB0byBn
+ZXQgYSB0cmVlIHZpYSBwbGF0Zm9ybV9tc2lfY3JlYXRlX2RldmljZV9kb21haW4KPiA+ID4gKGFz
+c3VtaW5nIHRoYXQncyB3aHkgeW91J3JlIGNoYW5naW5nIGl0IC0tIHlvdXIgY29tbWl0IG1lc3Nh
+Z2UgZG9lc24ndAo+ID4gPiBzYXkgbXVjaCkgIAo+ID4gCj4gPiBJbmRlZWQuIFRoYXQgd2FzIGV4
+YWN0bHkgbXkgaW50ZW50aW9uLgo+ID4gICAKPiA+ID4gYnV0IGl0IGFsc28gaGFzIHNvbWUgaW1w
+YWN0IG9uIHRoZSB3YXkgbXNpX2RvbWFpbl9wcmVwYXJlX2lycXMKPiA+ID4gd29ya3MgKHNlZSBo
+b3cgaXQgaXMgY2FsbGVkIGZyb20gcGxhdGZvcm1fbXNpX2NyZWF0ZV9kZXZpY2VfZG9tYWluKS4K
+PiA+ID4gCj4gPiA+IEltcG9ydGFudGx5LCB0aGUgbXNpX3ByZXBhcmUgY2FsbGJhY2sgdGFrZXMg
+bnZlYyBhcyBhIHBhcmFtZXRlciwgYW5kCj4gPiA+IHRoYXQgZW5kcyB1cCB0cmlja2xpbmcgZG93
+biB0byB0aGUgaXJxY2hpcCwgb3Igd2hhdGV2ZXIgd2lsbCBzZXR1cCB0aGUKPiA+ID4gTVNJIGRv
+bWFpbi4gVGhpbmdzIGxpa2UgdGhlIEdJQ3YzIElUUyBkbyByZWx5IG9uIHRoYXQgdG8gY2FydmUg
+b3V0IHRoZQo+ID4gPiBMUEkgc3BhY2UgdGhhdCBzdWJzZXF1ZW50bHkgZ2V0cyB1c2VkIHRvIHBv
+cHVsYXRlIHRoZSBkb21haW4uCj4gPiA+IAo+ID4gPiBTbyBubywgeW91IGNhbid0IGRvIGl0IGxp
+a2UgdGhhdC4gSWYgeW91IHJlYWxseSB3YW50IGEgdHJlZSwgYWRkIGEKPiA+ID4gaGVscGVyIHRo
+YXQgZG9lcyBzby4gIAo+ID4gCj4gPiBTbyBpZiBJIHVuZGVyc3RhbmQgY29ycmVjdGx5LCB3aGF0
+IHNob3VsZCBiZSBkb25lIGlzIHdyaXR0aW5nIGEgbmV3Cj4gPiBoZWxwZXIgdGhhdCB3b3VsZCBk
+byBzb21ldGhpbmcgc2ltaWxhciB0bwo+ID4gcGxhdGZvcm1fbXNpX2NyZWF0ZV9kZXZpY2VfZG9t
+YWluKCksIGJ1dCBjcmVhdGluZyBpbnN0ZWFkIGEgdHJlZSBkb21haW4KPiA+IGFuZCBzdGlsbCBn
+aXZpbmcgbXNpX2RvbWFpbl9wcmVwYXJlX2lycXMoKSBhIG1lYW5pbmdmdWwgbnVtYmVyIChhcwo+
+ID4gbnZlYykgdGhhdCB3b3VsZCBiZSB0aGUgbWF4aW11bSBudW1iZXIgb2YgTVNJcyB0aGF0IGNv
+dWxkIGJlIGFsbG9jYXRlZC4KPiA+IEFtIEkgcmlnaHQgaGVyZT8gIAo+IAo+IFdoYXQgSSBoYXZl
+IGluIG1pbmQgaXMgdGhlIGZvbGxvd2luZyAodW50ZXN0ZWQpIHBhdGNoLiBMZXQgbWUga25vdyBp
+Zgo+IHRoYXQgd29ya3MgZm9yIHlvdS4KCk9rLCB0aGF0J3MgcmVhbGx5IGNsb3NlIHRvIHdoYXQg
+SSB3cm90ZSB0aGlzIG1vcm5pbmcsIGNvb2wuIEkgd2FzIG5vdApzdXJlIHRoYXQgd2FzIHRoZSBv
+bmx5IHRoaW5nIHRvIG1vZGlmeS4KClRoYW5rcywKTWlxdcOobAoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
