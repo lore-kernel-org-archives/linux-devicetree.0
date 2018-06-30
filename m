@@ -1,72 +1,64 @@
-Return-Path: <vkoul@kernel.org>
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v5 5/6] dt-bindings: power: reset: qcom: Add resin binding
-Date: Thu, 28 Jun 2018 20:38:49 +0530
-Message-Id: <20180628150850.15358-6-vkoul@kernel.org>
-In-Reply-To: <20180628150850.15358-1-vkoul@kernel.org>
-References: <20180628150850.15358-1-vkoul@kernel.org>
-To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Return-Path: <SRS0=Ekl+=JQ=zonque.org=daniel@kernel.org>
+From: Daniel Mack <daniel@zonque.org>
+Subject: [PATCH v2 6/7] mmc: pxamci: remove pxa-mmc,gpio-power from devicetree bindings
+Date: Sat, 30 Jun 2018 20:14:04 +0200
+Message-Id: <20180630181405.17630-7-daniel@zonque.org>
+In-Reply-To: <20180630181405.17630-1-daniel@zonque.org>
+References: <20180630181405.17630-1-daniel@zonque.org>
+To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: robert.jarzmik@free.fr, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Resin is similar to pwrkey, add the description and example
-for resin bindings
+Devicetree-enabled boards should use proper regulators to control the
+power of cards, not GPIOs, so let's remove this property. The regulator
+properties are supported by the MMC core and are described in the
+generic MMC document:
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+  Documentation/devicetree/bindings/mmc/mmc.txt
+
+Note that devicetree support for PXA platforms hasn't fully landed yet,
+so this binding does not have any users at this point.
+
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
 ---
- .../devicetree/bindings/input/qcom,pm8941-pwrkey.txt       |  1 +
- Documentation/devicetree/bindings/power/reset/qcom,pon.txt | 14 ++++++++++++--
- 2 files changed, 13 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/mmc/pxa-mmc.txt | 2 +-
+ drivers/mmc/host/pxamci.c                         | 3 ---
+ 2 files changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-index bf719396eadd..34ab5763f494 100644
---- a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-+++ b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-@@ -7,6 +7,7 @@ PROPERTIES
- 	Value type: <string>
- 	Definition: must be one of:
- 		    "qcom,pm8941-pwrkey"
-+		    "qcom,pm8941-resin"
+diff --git a/Documentation/devicetree/bindings/mmc/pxa-mmc.txt b/Documentation/devicetree/bindings/mmc/pxa-mmc.txt
+index f2687752597e..5f5c2bec2b8c 100644
+--- a/Documentation/devicetree/bindings/mmc/pxa-mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/pxa-mmc.txt
+@@ -8,7 +8,6 @@ Required properties:
  
- - reg:
- 	Usage: required
-diff --git a/Documentation/devicetree/bindings/power/reset/qcom,pon.txt b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
-index f32cdd358267..651491bb63b7 100644
---- a/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
-+++ b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
-@@ -1,9 +1,9 @@
- Qualcomm PON Device
+ Optional properties:
+ - marvell,detect-delay-ms: sets the detection delay timeout in ms.
+-- marvell,gpio-power: GPIO spec for the card power enable pin
  
- The Power On device for Qualcomm PM8xxx is MFD supporting pwrkey
--along with the Android reboot-mode.
-+and resin along with the Android reboot-mode.
+ In addition to the properties described in this docuent, the details
+ described in mmc.txt are supported.
+@@ -19,6 +18,7 @@ mmc0: mmc@41100000 {
+ 	compatible = "marvell,pxa-mmc";
+ 	reg = <0x41100000 0x1000>;
+ 	interrupts = <23>;
++	vmmc-supply = <&mmc_regulator>;
+ 	cd-gpios = <&gpio 23 0>;
+ 	wp-gpios = <&gpio 24 0>;
+ };
+diff --git a/drivers/mmc/host/pxamci.c b/drivers/mmc/host/pxamci.c
+index e046e684b3f9..1e7703116763 100644
+--- a/drivers/mmc/host/pxamci.c
++++ b/drivers/mmc/host/pxamci.c
+@@ -607,9 +607,6 @@ static int pxamci_of_init(struct platform_device *pdev,
+ 		return -ENOMEM;
  
--This DT node has pwrkey as sub node.
-+This DT node has pwrkey and resin as sub nodes.
+ 	/* pxa-mmc specific */
+-	pdata->gpio_power =
+-		of_get_named_gpio(np, "pxa-mmc,gpio-power", 0);
+-
+ 	if (of_property_read_u32(np, "pxa-mmc,detect-delay-ms", &tmp) == 0)
+ 		pdata->detect_delay_ms = tmp;
  
- Required Properties:
- -compatible: "qcom,pm8916-pon"
-@@ -12,6 +12,8 @@ Required Properties:
- Optional subnode:
- -pwrkey: Specifies the subnode pwrkey and should follow the
-  qcom,pm8941-pwrkey.txt description.
-+-resin: Specifies the subnode resin and should follow the
-+ qcom,pm8xxx-pwrkey.txt description.
- 
- The rest of the properties should follow the generic reboot-mode description
- found in reboot-mode.txt
-@@ -32,4 +34,12 @@ Example:
- 			bias-pull-up;
- 			linux,code = <KEY_POWER>;
- 		};
-+
-+		resin {
-+			compatible = "qcom,pm8941-resin";
-+			interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
-+			debounce = <15625>;
-+			bias-pull-up;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+		};
- 	};
 -- 
-2.14.4
+2.17.1
