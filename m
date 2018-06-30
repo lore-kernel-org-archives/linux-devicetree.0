@@ -1,52 +1,51 @@
-Return-Path: <SRS0=qqtW=JO=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 22/22] [media] tvp5150: Change default input source selection behaviour
-Date: Thu, 28 Jun 2018 18:20:54 +0200
-Message-Id: <20180628162054.25613-23-m.felsch@pengutronix.de>
-In-Reply-To: <20180628162054.25613-1-m.felsch@pengutronix.de>
-References: <20180628162054.25613-1-m.felsch@pengutronix.de>
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: p.zabel@pengutronix.de, afshin.nasser@gmail.com, javierm@redhat.com, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Return-Path: <SRS0=Ekl+=JQ=zonque.org=daniel@kernel.org>
+From: Daniel Mack <daniel@zonque.org>
+Subject: [PATCH v2 1/7] mmc: pxamci: remove irq from private context
+Date: Sat, 30 Jun 2018 20:13:59 +0200
+Message-Id: <20180630181405.17630-2-daniel@zonque.org>
+In-Reply-To: <20180630181405.17630-1-daniel@zonque.org>
+References: <20180630181405.17630-1-daniel@zonque.org>
+To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: robert.jarzmik@free.fr, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The default input is still TVP5150_COMPOSITE1, but if the platform
-supports DT the default will be changed to the first valid connector.
-First in this context means the connector at the lowest port number.
+This seems to be a left-over from times before the IRQ was handled by devm
+functions. Remove it.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
 ---
- drivers/media/i2c/tvp5150.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/mmc/host/pxamci.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index 3645d1166118..8b40cf721853 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -1835,7 +1835,7 @@ static int tvp5150_probe(struct i2c_client *c,
- 	struct v4l2_subdev *sd;
- 	struct device_node *np = c->dev.of_node;
- 	struct regmap *map;
--	int res;
-+	int res, i;
+diff --git a/drivers/mmc/host/pxamci.c b/drivers/mmc/host/pxamci.c
+index 6c94474e36f4..f0968882dbd3 100644
+--- a/drivers/mmc/host/pxamci.c
++++ b/drivers/mmc/host/pxamci.c
+@@ -58,7 +58,6 @@ struct pxamci_host {
+ 	void __iomem		*base;
+ 	struct clk		*clk;
+ 	unsigned long		clkrate;
+-	int			irq;
+ 	unsigned int		clkrt;
+ 	unsigned int		cmdat;
+ 	unsigned int		imask;
+@@ -711,7 +710,6 @@ static int pxamci_probe(struct platform_device *pdev)
  
- 	/* Check if the adapter supports the needed features */
- 	if (!i2c_check_functionality(c->adapter,
-@@ -1881,7 +1881,16 @@ static int tvp5150_probe(struct i2c_client *c,
+ 	spin_lock_init(&host->lock);
+ 	host->res = r;
+-	host->irq = irq;
+ 	host->imask = MMC_I_MASK_ALL;
  
- 	core->norm = V4L2_STD_ALL;	/* Default is autodetect */
- 	core->detected_norm = V4L2_STD_UNKNOWN;
-+	/*
-+	 * Default is TVP5150_COMPOSITE1.
-+	 * In case of OF support, default is first valid port
-+	 */
- 	core->input = TVP5150_COMPOSITE1;
-+	for (i = 0; i < TVP5150_PORT_NUM - 1; i++)
-+		if (core->endpoints[i]) {
-+			core->input = i;
-+			break;
-+		}
- 	core->enable = true;
+ 	host->base = devm_ioremap_resource(&pdev->dev, r);
+@@ -729,7 +727,7 @@ static int pxamci_probe(struct platform_device *pdev)
+ 	writel(64, host->base + MMC_RESTO);
+ 	writel(host->imask, host->base + MMC_I_MASK);
  
- 	v4l2_ctrl_handler_init(&core->hdl, 5);
+-	ret = devm_request_irq(&pdev->dev, host->irq, pxamci_irq, 0,
++	ret = devm_request_irq(&pdev->dev, irq, pxamci_irq, 0,
+ 			       DRIVER_NAME, host);
+ 	if (ret)
+ 		goto out;
 -- 
 2.17.1
