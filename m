@@ -1,54 +1,117 @@
-Return-Path: <SRS0=Z3/K=JB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from inva020.nxp.com ([92.121.34.13]:43727 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S965521AbeFOKYb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 Jun 2018 06:24:31 -0400
-From: Wen He <wen.he_1@nxp.com>
-Subject: [v6 7/7] arm: dts: ls1021a: add qdma device tree nodes
-Date: Fri, 15 Jun 2018 18:22:36 +0800
-Message-Id: <20180615102236.32859-7-wen.he_1@nxp.com>
-In-Reply-To: <20180615102236.32859-1-wen.he_1@nxp.com>
-References: <20180615102236.32859-1-wen.he_1@nxp.com>
-Sender: devicetree-owner@vger.kernel.org
-To: vkoul@kernel.org, dmaengine@vger.kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
+Return-Path: <SRS0=Ekl+=JQ=zonque.org=daniel@kernel.org>
+From: Daniel Mack <daniel@zonque.org>
+Subject: [PATCH v2 5/7] mmc: pxamci: call mmc_of_parse()
+Date: Sat, 30 Jun 2018 20:14:03 +0200
+Message-Id: <20180630181405.17630-6-daniel@zonque.org>
+In-Reply-To: <20180630181405.17630-1-daniel@zonque.org>
+References: <20180630181405.17630-1-daniel@zonque.org>
+To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: robert.jarzmik@free.fr, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
 List-ID: <devicetree@vger.kernel.org>
 
-add the qDMA device tree nodes for LS1021A devices.
-Signed-off-by: Wen He <wen.he_1@nxp.com>
+Call into mmc_of_parse() from pxamci_of_init(). As it needs a pointer to a
+struct mmc_host, refactor the code a bit.
+
+This allows all generic MMC properties to be set that are described in
+Documentation/devicetree/bindings/mmc/mmc.txt. Reword the documentation
+a bit to make that clear.
+
+The "cd" and "wp" gpio lookups are removed as the lookup will now be
+done by mmc_of_parse().
+
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
 ---
-change in v6:
-	- no
+ .../devicetree/bindings/mmc/pxa-mmc.txt       |  4 ++--
+ drivers/mmc/host/pxamci.c                     | 24 ++++++++++---------
+ 2 files changed, 15 insertions(+), 13 deletions(-)
 
- arch/arm/boot/dts/ls1021a.dtsi |   15 +++++++++++++++
- 1 files changed, 15 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index c55d479..061c839 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -571,6 +571,21 @@
- 				 <&clockgen 4 1>;
- 		};
+diff --git a/Documentation/devicetree/bindings/mmc/pxa-mmc.txt b/Documentation/devicetree/bindings/mmc/pxa-mmc.txt
+index b7025de7dced..f2687752597e 100644
+--- a/Documentation/devicetree/bindings/mmc/pxa-mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/pxa-mmc.txt
+@@ -10,8 +10,8 @@ Optional properties:
+ - marvell,detect-delay-ms: sets the detection delay timeout in ms.
+ - marvell,gpio-power: GPIO spec for the card power enable pin
  
-+		qdma: dma-controller@8390000 {
-+			compatible = "fsl,ls1021a-qdma";
-+			reg = <0x0 0x8398000 0x0 0x1000>, /* Controller regs */
-+				<0x0 0x8399000 0x0 0x1000>, /* Status regs */
-+				<0x0 0x839a000 0x0 0x2000>; /* Block regs */
-+			interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "qdma-error", "qdma-queue";
-+			dma-channels = <8>;
-+			fsl,queues = <2>;
-+			status-sizes = <64>;
-+			queue-sizes = <64 64>;
-+			big-endian;
-+		};
+-This file documents differences between the core properties in mmc.txt
+-and the properties used by the pxa-mmc driver.
++In addition to the properties described in this docuent, the details
++described in mmc.txt are supported.
+ 
+ Examples:
+ 
+diff --git a/drivers/mmc/host/pxamci.c b/drivers/mmc/host/pxamci.c
+index 3df60c7babce..e046e684b3f9 100644
+--- a/drivers/mmc/host/pxamci.c
++++ b/drivers/mmc/host/pxamci.c
+@@ -591,11 +591,13 @@ static const struct of_device_id pxa_mmc_dt_ids[] = {
+ 
+ MODULE_DEVICE_TABLE(of, pxa_mmc_dt_ids);
+ 
+-static int pxamci_of_init(struct platform_device *pdev)
++static int pxamci_of_init(struct platform_device *pdev,
++			  struct mmc_host *mmc)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct pxamci_platform_data *pdata;
+ 	u32 tmp;
++	int ret;
+ 
+ 	if (!np)
+ 		return 0;
+@@ -604,11 +606,6 @@ static int pxamci_of_init(struct platform_device *pdev)
+ 	if (!pdata)
+ 		return -ENOMEM;
+ 
+-	pdata->gpio_card_detect =
+-		of_get_named_gpio(np, "cd-gpios", 0);
+-	pdata->gpio_card_ro =
+-		of_get_named_gpio(np, "wp-gpios", 0);
+-
+ 	/* pxa-mmc specific */
+ 	pdata->gpio_power =
+ 		of_get_named_gpio(np, "pxa-mmc,gpio-power", 0);
+@@ -616,12 +613,17 @@ static int pxamci_of_init(struct platform_device *pdev)
+ 	if (of_property_read_u32(np, "pxa-mmc,detect-delay-ms", &tmp) == 0)
+ 		pdata->detect_delay_ms = tmp;
+ 
++	ret = mmc_of_parse(mmc);
++	if (ret < 0)
++		return ret;
 +
- 		dcu: dcu@2ce0000 {
- 			compatible = "fsl,ls1021a-dcu";
- 			reg = <0x0 0x2ce0000 0x0 0x10000>;
+ 	pdev->dev.platform_data = pdata;
+ 
+ 	return 0;
+ }
+ #else
+-static int pxamci_of_init(struct platform_device *pdev)
++static int pxamci_of_init(struct platform_device *pdev,
++			  struct mmc_host *mmc)
+ {
+         return 0;
+ }
+@@ -634,10 +636,6 @@ static int pxamci_probe(struct platform_device *pdev)
+ 	struct resource *r;
+ 	int ret, irq, gpio_cd = -1, gpio_ro = -1, gpio_power = -1;
+ 
+-	ret = pxamci_of_init(pdev);
+-	if (ret)
+-		return ret;
+-
+ 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0)
+@@ -672,6 +670,10 @@ static int pxamci_probe(struct platform_device *pdev)
+ 	 */
+ 	mmc->max_blk_count = 65535;
+ 
++	ret = pxamci_of_init(pdev, mmc);
++	if (ret)
++		return ret;
++
+ 	host = mmc_priv(mmc);
+ 	host->mmc = mmc;
+ 	host->pdata = pdev->dev.platform_data;
 -- 
-1.7.1
-
+2.17.1
