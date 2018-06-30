@@ -1,40 +1,155 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v3 6/6] MAINTAINERS: Add entry for Actions Semiconductor Owl I2C driver
-Date: Sat, 30 Jun 2018 19:03:30 +0530
-Message-ID: <20180630133330.23858-7-manivannan.sadhasivam@linaro.org>
-References: <20180630133330.23858-1-manivannan.sadhasivam@linaro.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v4 2/2] dt-bindings: iio: dac: Add docs for AD5758 DAC
+Date: Sat, 30 Jun 2018 16:54:07 +0100
+Message-ID: <20180630165407.2a878dbd@archlinux>
+References: <1530261550-21224-1-git-send-email-stefan.popa@analog.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180630133330.23858-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <1530261550-21224-1-git-send-email-stefan.popa@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, afaerber@suse.de
-Cc: linus.walleij@linaro.org, linux-i2c@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Stefan Popa <stefan.popa@analog.com>
+Cc: Michael.Hennerich@analog.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add entry for Actions Semiconductor Owl I2C driver under ARM/ACTIONS
+On Fri, 29 Jun 2018 11:39:10 +0300
+Stefan Popa <stefan.popa@analog.com> wrote:
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+One minor inline. =20
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 09b54e9ebc6f..5084c62712fa 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1145,12 +1145,14 @@ F:	arch/arm/boot/dts/owl-*
- F:	arch/arm64/boot/dts/actions/
- F:	drivers/clk/actions/
- F:	drivers/clocksource/owl-*
-+F:	drivers/i2c/busses/i2c-owl.c
- F:	drivers/pinctrl/actions/*
- F:	drivers/soc/actions/
- F:	include/dt-bindings/power/owl-*
- F:	include/linux/soc/actions/
- F:	Documentation/devicetree/bindings/arm/actions.txt
- F:	Documentation/devicetree/bindings/clock/actions,s900-cmu.txt
-+F:	Documentation/devicetree/bindings/i2c/i2c-owl.txt
- F:	Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt
- F:	Documentation/devicetree/bindings/power/actions,owl-sps.txt
- F:	Documentation/devicetree/bindings/timer/actions,owl-timer.txt
--- 
-2.17.1
+We could look at making some of these properties generic
+(slew-time for example) but I'm not sure we fully understand
+the 'space' yet to know exactly how this could be described
+for all devices.  Hence perhaps best to leave it as it is for now.
+
+Jonathan
+
+> ---
+> Changes in v4:
+> 	- Nothing changed, just to follow the patch set version.
+> Changes in v3:
+> 	- AD5758 can be both a current and voltage output DAC. The
+> 	  decision is made based on the DT and the channel type is set
+> 	  during probe.
+> 	- range was replaced by range-microvolt and range-microamp
+> 	- dc-dc-mode, range-microvolt and range-microamp are required
+> 	  properties.
+> 	- Introduced a slew-time-us property from which slew rate clock
+> 	  and slew rate step are calculated using a best match algorithm.
+> 	- Added units in the name of the properties.
+> 	- Offered more explanation for the various modes of operation.
+>=20
+> Changes in v2:
+> 	- Nothing changed, just to follow the patch set version.
+>=20
+>  .../devicetree/bindings/iio/dac/ad5758.txt         | 73 ++++++++++++++++=
+++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5758.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/dac/ad5758.txt b/Docum=
+entation/devicetree/bindings/iio/dac/ad5758.txt
+> new file mode 100644
+> index 0000000..797df9b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/dac/ad5758.txt
+> @@ -0,0 +1,73 @@
+> +Analog Devices AD5758 DAC device driver
+> +
+> +Required properties for the AD5758:
+> +	- compatible: Must be "adi,ad5758"
+> +	- reg: SPI chip select number for the device
+> +	- spi-max-frequency: Max SPI frequency to use (< 50000000)
+> +	- spi-cpha: is the only mode that is supported
+> +
+> +Required properties:
+> +
+> + - adi,dc-dc-mode: Mode of operation of the dc-to-dc converter
+> + 		   Dynamic Power Control (DPC)
+> +		   In this mode, the AD5758 circuitry senses the output voltage and
+> +		   dynamically regulates the supply voltage, VDPC+, to meet compliance
+> +		   requirements plus an optimized headroom voltage for the output buff=
+er.
+> +
+> +		   Programmable Power Control (PPC)
+> +		   In this mode, the VDPC+ voltage is user-programmable to a fixed lev=
+el
+> +		   that needs to accommodate the maximum output load required.
+> +
+> +		   The output of the DAC core is either converted to a current or volt=
+age
+> +		   output at the VIOUT pin. Only one mode can be enabled at any one ti=
+me.
+> +
+> +		   The following values are currently supported:
+> +			* 1: DPC current mode
+> +			* 2: DPC voltage mode
+> +			* 3: PPC current mode
+> +
+> + Depending on the selected output mode (voltage or current) one of the t=
+wo properties must
+> + be present:
+> +
+> + - adi,range-microvolt: Voltage output range
+> + 		The array of voltage output ranges must contain two fields:
+> +	      	* <0 5000000>: 0 V to 5 V voltage range
+> +		* <0 10000000>: 0 V to 10 V voltage range
+> +		* <(-5000000) 5000000>: =C2=B15 V voltage range
+> +		* <(-10000000) 10000000>: =C2=B110 V voltage range
+> + - adi,range-microamp: Current output range
+> + 		The array of current output ranges must contain two fields:
+> +		* <0 20000>: 0 mA to 20 mA current range
+> +		* <0 24000>: 0 mA to 24 mA current range
+> +		* <4 24000>: 4 mA to 20 mA current range
+> +		* <(-20000) 20000>: =C2=B120 mA current range
+> +		* <(-24000) 24000>: =C2=B124 mA current range
+> +		* <(-1000) 22000>: =E2=88=921 mA to +22 mA current range
+> +
+> +Optional properties:
+> +
+> + - adi,dc-dc-ilim-microamp: The dc-to-dc converter current limit
+> +		   The following values are currently supported [uA]:
+> +		   	* 150000
+> +			* 200000
+> +			* 250000
+> +			* 300000
+> +			* 350000
+> +			* 400000
+> +
+> + - adi,slew-time-us: The time it takes for the output to reach the full =
+scale [uS]
+> + 		     The supported range is between 133us up to 1023984375us
+> +
+> +AD5758 Example:
+> +
+> +	ad5758@0 {
+
+Node names should be generic - now we don't have dac in the device tree
+spec but it feels like the right choice rather than the part number.
+https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.2
+
+> +		compatible =3D "adi,ad5758";
+> +		reg =3D <0>;
+> +		spi-max-frequency =3D <1000000>;
+> +		spi-cpha;
+> +
+> +		adi,dc-dc-mode =3D <2>;
+> +		adi,range-microvolt =3D <0 10000000>;
+> +		adi,dc-dc-ilim-microamp =3D <200000>;
+> +		adi,slew-time-us =3D <125000>;
+> +	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 12d102d..60b1028 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -802,6 +802,7 @@ L:	linux-iio@vger.kernel.org
+>  W:	http://ez.analog.com/community/linux-device-drivers
+>  S:	Supported
+>  F:	drivers/iio/dac/ad5758.c
+> +F:	Documentation/devicetree/bindings/iio/dac/ad5758.txt
+> =20
+>  ANALOG DEVICES INC AD5686 DRIVER
+>  M:	Stefan Popa <stefan.popa@analog.com>
