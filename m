@@ -1,128 +1,127 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/3 v2] net: dsa: Add DT bindings for Vitesse VSC73xx switches
-Date: Sat, 30 Jun 2018 13:17:29 +0200
-Message-ID: <20180630111731.19551-1-linus.walleij@linaro.org>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: netdev@vger.kernel.org, openwrt-devel@lists.openwrt.org, LEDE Development List <lede-dev@lists.infradead.org>, Gabor Juhos <juhosg@openwrt.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 5/6] i2c: Add Actions Semi OWL family S900 I2C driver
+Date: Sat, 30 Jun 2018 15:14:37 +0300
+Message-ID: <CAHp75Vd__qOXVxZTdxREwD6p1sEw49R2Kqb+esAmr_EhtT=gFg@mail.gmail.com>
+References: <20180628181042.2239-1-manivannan.sadhasivam@linaro.org> <20180628181042.2239-6-manivannan.sadhasivam@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180628181042.2239-6-manivannan.sadhasivam@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Linus Walleij <linus.walleij@linaro.org>, linux-i2c <linux-i2c@vger.kernel.org>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, amit.kucheria@linaro.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>, Thomas Liau <thomas.liau@actions-semi.com>, jeff.chen@actions-semi.com
 List-Id: devicetree@vger.kernel.org
 
-This adds the device tree bindings for the Vitesse VSC73xx
-switches. We also add the vendor name for Vitesse.
+On Thu, Jun 28, 2018 at 9:10 PM, Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+> Add Actions Semi OWL family S900 I2C driver.
 
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v2:
-- Fix spelling error
-- Properly reference the GPIO bindings
-- Collect Florians ACK
----
- .../bindings/net/dsa/vitesse,vsc73xx.txt      | 81 +++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt   |  1 +
- 2 files changed, 82 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-new file mode 100644
-index 000000000000..ed4710c40641
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-@@ -0,0 +1,81 @@
-+Vitesse VSC73xx Switches
-+========================
-+
-+This defines device tree bindings for the Vitesse VSC73xx switch chips.
-+The Vitesse company has been acquired by Microsemi and Microsemi in turn
-+acquired by Microchip but retains this vendor branding.
-+
-+The currently supported switch chips are:
-+Vitesse VSC7385 SparX-G5 5+1-port Integrated Gigabit Ethernet Switch
-+Vitesse VSC7388 SparX-G8 8-port Integrated Gigabit Ethernet Switch
-+Vitesse VSC7395 SparX-G5e 5+1-port Integrated Gigabit Ethernet Switch
-+Vitesse VSC7398 SparX-G8e 8-port Integrated Gigabit Ethernet Switch
-+
-+The device tree node is an SPI device so it must reside inside a SPI bus
-+device tree node, see spi/spi-bus.txt
-+
-+Required properties:
-+
-+- compatible: must be exactly one of:
-+	"vitesse,vsc7385"
-+	"vitesse,vsc7388"
-+	"vitesse,vsc7395"
-+	"vitesse,vsc7398"
-+- gpio-controller: indicates that this switch is also a GPIO controller,
-+  see gpio/gpio.txt
-+- #gpio-cells: this must be set to <2> and indicates that we are a twocell
-+  GPIO controller, see gpio/gpio.txt
-+
-+Optional properties:
-+
-+- reset-gpios: a handle to a GPIO line that can issue reset of the chip.
-+  It should be tagged as active low.
-+
-+Required subnodes:
-+
-+See net/dsa/dsa.txt for a list of additional required and optional properties
-+and subnodes of DSA switches.
-+
-+Examples:
-+
-+switch@0 {
-+	compatible = "vitesse,vsc7395";
-+	reg = <0>;
-+	/* Specified for 2.5 MHz or below */
-+	spi-max-frequency = <2500000>;
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			label = "lan1";
-+		};
-+		port@1 {
-+			reg = <1>;
-+			label = "lan2";
-+		};
-+		port@2 {
-+			reg = <2>;
-+			label = "lan3";
-+		};
-+		port@3 {
-+			reg = <3>;
-+			label = "lan4";
-+		};
-+		vsc: port@6 {
-+			reg = <6>;
-+			label = "cpu";
-+			ethernet = <&gmac1>;
-+			phy-mode = "rgmii";
-+			fixed-link {
-+				speed = <1000>;
-+				full-duplex;
-+				pause;
-+			};
-+		};
-+	};
-+};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 7cad066191ee..3e5398f87eac 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -395,6 +395,7 @@ v3	V3 Semiconductor
- variscite	Variscite Ltd.
- via	VIA Technologies, Inc.
- virtio	Virtual I/O Device Specification, developed by the OASIS consortium
-+vitesse	Vitesse Semiconductor Corporation
- vivante	Vivante Corporation
- vocore VoCore Studio
- voipac	Voipac Technologies s.r.o.
+> +#include <linux/io.h>
+
+Perhaps keep in order?
+
+> +#define OWL_I2C_DEFAULT_SPEED  100000
+> +#define OWL_I2C_MAX_SPEED      400000
+
+..._SPEED -> ..._SPEED_HZ ?
+
+DEFAULT -> DEF ?
+
+> +static int owl_i2c_reset(struct owl_i2c_dev *i2c_dev)
+> +{
+> +       unsigned int val, timeout = 0;
+> +
+> +       owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_CTL,
+> +                               OWL_I2C_CTL_EN, false);
+
+> +       mdelay(1);
+
+1 ms keeping CPU busy for nothing. Perhaps usleep_range() / msleep()?
+Is it called in atomic context?
+
+> +       owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_CTL,
+> +                               OWL_I2C_CTL_EN, true);
+> +
+> +       /* Reset FIFO */
+> +       owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_FIFOCTL,
+> +                               OWL_I2C_FIFOCTL_RFR | OWL_I2C_FIFOCTL_TFR,
+> +                               true);
+> +
+> +       /* Wait 50ms for FIFO reset complete */
+> +       do {
+> +               val = readl(i2c_dev->base + OWL_I2C_REG_FIFOCTL);
+> +               if (!(val & (OWL_I2C_FIFOCTL_RFR | OWL_I2C_FIFOCTL_TFR)))
+> +                       break;
+
+> +               mdelay(1);
+
+Ditto.
+
+> +       } while (timeout++ < OWL_I2C_MAX_RETRIES);
+
+OK, I see you call it from IRQ context. 50ms for IRQ handler is
+inappropriate. (1ms either, but at least not so drastically).
+
+> +}
+
+> +static irqreturn_t owl_i2c_interrupt(int irq, void *_dev)
+> +{
+
+> +       stat = readl(i2c_dev->base + OWL_I2C_REG_STAT);
+> +       if (stat & OWL_I2C_STAT_BEB) {
+> +               dev_dbg(&i2c_dev->adap.dev, "bus error");
+
+> +               owl_i2c_reset(i2c_dev);
+
+This is questionable to be here (looking at so loong delays in it).
+
+> +               goto stop;
+> +       }
+
+> +       return IRQ_HANDLED;
+> +}
+
+> +static int owl_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+> +                               int num)
+> +{
+
+> +       int ret = 0, idx;
+
+Redundant assignment.
+
+> +       ret = owl_i2c_hw_init(i2c_dev);
+> +       if (ret)
+> +               return ret;
+
+> +}
+
+> +static const struct i2c_algorithm owl_i2c_algorithm = {
+> +       .master_xfer    = owl_i2c_master_xfer,
+
+> +       .functionality  = owl_i2c_func
+
+Slightly better to keep comma at the end
+
+> +};
+> +
+> +static const struct i2c_adapter_quirks owl_i2c_quirks = {
+> +       .flags          = I2C_AQ_COMB | I2C_AQ_COMB_WRITE_FIRST,
+> +       .max_read_len   = 240,
+> +       .max_write_len  = 240,
+> +       .max_comb_1st_msg_len = 6,
+> +       .max_comb_2nd_msg_len = 240
+
+Ditto.
+
+> +};
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
