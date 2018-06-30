@@ -1,50 +1,49 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 3/4] iio: hx711: add maintainer for driver
-Date: Sat, 30 Jun 2018 18:35:00 +0100
-Message-ID: <20180630183500.051452f0@archlinux>
-References: <20180625151845.GA6392@arbeit>
+Subject: Re: [PATCH v2 4/4] iio: hx711: warning in dt binding example doc
+Date: Sat, 30 Jun 2018 18:36:17 +0100
+Message-ID: <20180630183617.102dfb84@archlinux>
+References: <20180625151926.GA6403@arbeit>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180625151845.GA6392@arbeit>
+In-Reply-To: <20180625151926.GA6403@arbeit>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andreas Klinger <ak@it-klinger.de>
 Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Jun 2018 17:18:45 +0200
+On Mon, 25 Jun 2018 17:19:26 +0200
 Andreas Klinger <ak@it-klinger.de> wrote:
 
-> add a maintainer for driver hx711
+> device tree compiler (dtc) gives a warning if a device node has "@" with a
+> following number as it's name but no reg property.
+> 
+> fix the example in the documentation of avia,hx711 to conform to dtc
+> behavior
 > 
 > Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-I applied this one before (not certain I emailed to say that)
-so please drop from future versions of the patch set.
+
+Given there will be fuzz, I'll pick this up when patches 1 and 2 are
+ready and Acked by a devicetree maintainer.
 
 Thanks,
 
 Jonathan
-
 > ---
->  MAINTAINERS | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  Documentation/devicetree/bindings/iio/adc/avia-hx711.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 4b65225d443a..cfb8a08777ac 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2535,6 +2535,13 @@ S:	Maintained
->  F:	drivers/auxdisplay/
->  F:	include/linux/cfag12864b.h
+> diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+> index d0c066e3df69..8c9bcaa4d750 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+> @@ -15,7 +15,7 @@ Optional properties:
+>  			is 50000 in the datasheet
 >  
-> +AVIA HX711 ANALOG DIGITAL CONVERTER IIO DRIVER
-> +M:	Andreas Klinger <ak@it-klinger.de>
-> +L:	linux-iio@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-> +F:	drivers/iio/adc/hx711.c
-> +
->  AX.25 NETWORK LAYER
->  M:	Ralf Baechle <ralf@linux-mips.org>
->  L:	linux-hams@vger.kernel.org
+>  Example:
+> -weight@0 {
+> +weight {
+>  	compatible = "avia,hx711";
+>  	sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
+>  	dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
