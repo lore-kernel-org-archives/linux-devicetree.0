@@ -1,18 +1,17 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 06/24] drm/sun4i: Fix releasing node when
- enumerating enpoints
-Date: Sat, 30 Jun 2018 09:09:57 +0800
-Message-ID: <CAGb2v65xZe8VM+dOd1fchXgekpgzvj1s75zdjz-6Met4K-5nBg@mail.gmail.com>
+Subject: Re: [PATCH v3 16/24] drm/sun4i: Enable DW HDMI PHY clock
+Date: Sat, 30 Jun 2018 09:11:20 +0800
+Message-ID: <CAGb2v64UY9t9oKPQiEJkFsTyxJOJTG9dvJMNJYoHy7CKQ4Ap2Q@mail.gmail.com>
 References: <20180625120304.7543-1-jernej.skrabec@siol.net>
- <20180625120304.7543-7-jernej.skrabec@siol.net> <CAGb2v65dNvqcWa7MUMesrEeDGfEmd0xPpKQmbqJ60_FHe=Y_JA@mail.gmail.com>
- <3837144.KdEe8HRubn@jernej-laptop>
+ <20180625120304.7543-17-jernej.skrabec@siol.net> <CAGb2v65En4RbVdRu7c6MJUztVhC36dWr0kaO9bqc9PtuXAcsww@mail.gmail.com>
+ <3131254.YlICBQirlu@jernej-laptop>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB7FQ3PMQKGQEX4XPGJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBT5R3PMQKGQENGDRMLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <3837144.KdEe8HRubn@jernej-laptop>
+In-Reply-To: <3131254.YlICBQirlu@jernej-laptop>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -23,30 +22,39 @@ To: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 30, 2018 at 3:15 AM, Jernej =C5=A0krabec <jernej.skrabec@siol.n=
+On Sat, Jun 30, 2018 at 3:19 AM, Jernej =C5=A0krabec <jernej.skrabec@siol.n=
 et> wrote:
-> Dne =C4=8Detrtek, 28. junij 2018 ob 03:53:36 CEST je Chen-Yu Tsai napisal=
+> Dne =C4=8Detrtek, 28. junij 2018 ob 04:22:36 CEST je Chen-Yu Tsai napisal=
 (a):
 >> On Mon, Jun 25, 2018 at 8:02 PM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org=
 >
 > wrote:
->> > sun4i_drv_add_endpoints() has a memory leak since it uses of_node_put(=
-)
->> > when remote is equal to NULL and does nothing when remote has a valid
->> > pointer.
+>> > Current DW HDMI PHY code never prepares and enables PHY clock after it=
+ is
+>> > created. It's just used as it is. This may work in some cases, but it'=
+s
+>> > clearly wrong. Fix it by adding proper calls to enable/disable PHY
+>> > clock.
 >> >
->> > Invert the logic to fix memory leak.
+>> > Fixes: 4f86e81748fe ("drm/sun4i: Add support for H3 HDMI PHY variant")
 >> >
 >> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 >>
->> Given this is a fix, it should have Fixes and stable tags.
+>> So why does it work on the H3? Because there's only one PLL that the who=
+le
+>> display pipeline uses?
+>>
+>> We should probably tag this for stable. So,
+>>
+>> Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+>> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 >
-> How should be this handled given that the patch is already merged and can=
-not
-> be dropped?
+> Same question as before, how this should be handled? Can I send separate =
+patch
+> with same content to stable ML only?
 
-We can't. We'll have to manually submit it for stable once this lands
-in Linus' tree.
+Yes, including the hash of the commit which is already in Linus' tree. So
+you have to send it after the next -rc1.
 
 ChenYu
 
