@@ -1,49 +1,78 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 4/4] iio: hx711: warning in dt binding example doc
-Date: Sat, 30 Jun 2018 18:36:17 +0100
-Message-ID: <20180630183617.102dfb84@archlinux>
-References: <20180625151926.GA6403@arbeit>
+From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Subject: Re: [PATCH v3 2/2] iio: adc: Add Spreadtrum SC27XX PMICs ADC
+ support
+Date: Sat, 30 Jun 2018 19:00:42 +0100
+Message-ID: <20180630190042.4962bff3@archlinux>
+References: <900586c7a4ce55818ab330c738f306c7452191ef.1529550463.git.baolin.wang@linaro.org>
+        <95836d610301133ffdac1efa86d7daf4cecb97b7.1529550463.git.baolin.wang@linaro.org>
+        <20180622151338.00003622@huawei.com>
+        <CAMz4kuJUeDjTVJqNc4cNv=LwR1HkuFap4vBF7CCcrxNqnTHa-A@mail.gmail.com>
+        <20180624143009.48cf14f8@archlinux>
+        <20180624144734.62f28908@archlinux>
+        <CAMz4kuJb4aRxNKXYkDJ5vQQgFRN+87_br2gp1BtTLji0dp8XHQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180625151926.GA6403@arbeit>
+In-Reply-To: <CAMz4kuJb4aRxNKXYkDJ5vQQgFRN+87_br2gp1BtTLji0dp8XHQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Klinger <ak@it-klinger.de>
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, freeman.liu@spreadtrum.com, Mark Brown <broonie@kernel.org>, DTML <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Jun 2018 17:19:26 +0200
-Andreas Klinger <ak@it-klinger.de> wrote:
+On Mon, 25 Jun 2018 09:47:54 +0800
+Baolin Wang <baolin.wang@linaro.org> wrote:
 
-> device tree compiler (dtc) gives a warning if a device node has "@" with a
-> following number as it's name but no reg property.
+> Hi Jonathan,
 > 
-> fix the example in the documentation of avia,hx711 to conform to dtc
-> behavior
+> On 24 June 2018 at 21:47, Jonathan Cameron <jic23@jic23.retrosnub.co.uk> wrote:
+> > On Sun, 24 Jun 2018 14:30:09 +0100
+> > Jonathan Cameron <jic23@kernel.org> wrote:
+> >  
+> >> On Sun, 24 Jun 2018 17:13:00 +0800
+> >> Baolin Wang <baolin.wang@linaro.org> wrote:
+> >>  
+> >> > Hi Jonathan,
+> >> >
+> >> > On 22 June 2018 at 22:13, Jonathan Cameron <jonathan.cameron@huawei.com> wrote:  
+> >> > > On Thu, 21 Jun 2018 11:14:05 +0800
+> >> > > Baolin Wang <baolin.wang@linaro.org> wrote:
+> >> > >  
+> >> > >> From: Freeman Liu <freeman.liu@spreadtrum.com>
+> >> > >>
+> >> > >> The Spreadtrum SC27XX PMICs ADC controller contains 32 channels,
+> >> > >> which is used to sample voltages with 12 bits conversion.
+> >> > >>
+> >> > >> [Baolin Wang did lots of improvements]
+> >> > >>
+> >> > >> Signed-off-by: Freeman Liu <freeman.liu@spreadtrum.com>
+> >> > >> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>  
+> >> > >
+> >> > > One trivial missed bit of cleanup inline.  I'll sort that
+> >> > > when applying if no one else points anything out before I get back to my
+> >> > > development machine.  
+> >> >
+> >> > Thanks.  
+> >>
+> >> Applied to the togreg branch of iio.git and pushed out as testing
+> >> for the autobuilders to play with it.  
+> > Sorry, backed out for now.  My togreg tree is non rebasing and
+> > this is dependant on some stuff that only went in during the merge
+> > window.
+> >
+> > I'll send a pull request to GregKH fairly soon and after that do
+> > the merge back into my tree to pick that hwspin lock stuff up.
+> >
+> > So this will be a week or two before I can apply it without issues.
+> >
+> > Give me a poke if I seem to have forgotten about it.  
 > 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-
-Given there will be fuzz, I'll pick this up when patches 1 and 2 are
-ready and Acked by a devicetree maintainer.
+> OK. Many thanks for your help.
+> 
+Applied now with dependencies in place.  Applied to the togreg
+branch of iio.git and pushed out as testing for the autobuilders
+to play with it.
 
 Thanks,
 
 Jonathan
-> ---
->  Documentation/devicetree/bindings/iio/adc/avia-hx711.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-> index d0c066e3df69..8c9bcaa4d750 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-> @@ -15,7 +15,7 @@ Optional properties:
->  			is 50000 in the datasheet
->  
->  Example:
-> -weight@0 {
-> +weight {
->  	compatible = "avia,hx711";
->  	sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
->  	dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
