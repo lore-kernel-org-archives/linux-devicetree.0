@@ -1,74 +1,62 @@
-Return-Path: <SRS0=jXKD=JN=zonque.org=daniel@kernel.org>
+Return-Path: <SRS0=Ekl+=JQ=zonque.org=daniel@kernel.org>
 From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v5 0/5] leds: add devicetree functionality to lltc,lt3593 driver
-Date: Wed, 27 Jun 2018 20:52:32 +0200
-Message-Id: <20180627185237.24830-1-daniel@zonque.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Subject: [PATCH v2 4/7] mmc: pxamci: fix indenting
+Date: Sat, 30 Jun 2018 20:14:02 +0200
+Message-Id: <20180630181405.17630-5-daniel@zonque.org>
+In-Reply-To: <20180630181405.17630-1-daniel@zonque.org>
+References: <20180630181405.17630-1-daniel@zonque.org>
+To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: robert.jarzmik@free.fr, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This is v5 of the series that brings devicetree support for the
-lltc,lt3593 LED driver.
+pxamci_of_init() had some weird indenting.
 
-Before this series, the driver supported controlling multiple LEDs
-through an array in the platform data. IOW, a single instance of the
-driver was able to control multiple hardware chips.
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
+---
+ drivers/mmc/host/pxamci.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-This series changes that, and requires a distinct platform device to
-be set up for each of them, if a board has multiple of these hardware
-chips. The reason is that in DT, nodes should represent hardware, and
-it's much cleaner this way.
-
-As stated earlier in the thread for v1, the driver currently only has
-one user in mainline (the Raumfeld platform) which is soon to be
-replaced by a devicetree file. This user only uses one LED via pdata, so
-the change mentioned above does not cause a regression.
-
-Once the platform is fully ported to DT, I'll send another patch that
-removes pdata handling from this driver completely, but it's kept around
-as legacy bridge for now.
-
-
-Changelog:
-
-v4 → v5:
-* Moved GPIO property from LED subnode to device node, as requested
-  by Rob Herring.
-* Squashed the patch titled "sync module license information with
-  header" in 5/5.
-
-v3 → v4:
-
-* Fixed a mishap that slipped in during rebase which caused a compile
-  error
-* Removed empty line at end of the DT documentation file
-* Switched to SPDX license header in the driver
-
-v2 → v3:
-
-* Fixed a typo in the commit log of 1/5
-* Rebased onto 4.18-rc1
-
-v1 → v2:
-
-* Moved LED-specific properties into a sub-node in DT, as requested by
-  Jacek Anaszewski.
-
-
-Daniel Mack (5):
-  dt-bindings: leds: Add bindings for lltc,lt3593
-  leds: lt3593: merge functions and clean up code
-  leds: lt3593: switch to gpiod interface
-  leds: lt3593: Add device tree probing glue
-  leds: lt3593: update email address and switch to SPDX license header
-
- .../devicetree/bindings/leds/leds-lt3593.txt  |  32 +++
- drivers/leds/leds-lt3593.c                    | 190 ++++++++++--------
- 2 files changed, 137 insertions(+), 85 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-lt3593.txt
-
+diff --git a/drivers/mmc/host/pxamci.c b/drivers/mmc/host/pxamci.c
+index ee1c32862ef8..3df60c7babce 100644
+--- a/drivers/mmc/host/pxamci.c
++++ b/drivers/mmc/host/pxamci.c
+@@ -593,16 +593,16 @@ MODULE_DEVICE_TABLE(of, pxa_mmc_dt_ids);
+ 
+ static int pxamci_of_init(struct platform_device *pdev)
+ {
+-        struct device_node *np = pdev->dev.of_node;
+-        struct pxamci_platform_data *pdata;
+-        u32 tmp;
++	struct device_node *np = pdev->dev.of_node;
++	struct pxamci_platform_data *pdata;
++	u32 tmp;
+ 
+-        if (!np)
+-                return 0;
++	if (!np)
++		return 0;
+ 
+-        pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+-        if (!pdata)
+-                return -ENOMEM;
++	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return -ENOMEM;
+ 
+ 	pdata->gpio_card_detect =
+ 		of_get_named_gpio(np, "cd-gpios", 0);
+@@ -616,9 +616,9 @@ static int pxamci_of_init(struct platform_device *pdev)
+ 	if (of_property_read_u32(np, "pxa-mmc,detect-delay-ms", &tmp) == 0)
+ 		pdata->detect_delay_ms = tmp;
+ 
+-        pdev->dev.platform_data = pdata;
++	pdev->dev.platform_data = pdata;
+ 
+-        return 0;
++	return 0;
+ }
+ #else
+ static int pxamci_of_init(struct platform_device *pdev)
 -- 
 2.17.1
