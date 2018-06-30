@@ -1,78 +1,110 @@
-From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Subject: Re: [PATCH v3 2/2] iio: adc: Add Spreadtrum SC27XX PMICs ADC
- support
-Date: Sat, 30 Jun 2018 19:00:42 +0100
-Message-ID: <20180630190042.4962bff3@archlinux>
-References: <900586c7a4ce55818ab330c738f306c7452191ef.1529550463.git.baolin.wang@linaro.org>
-        <95836d610301133ffdac1efa86d7daf4cecb97b7.1529550463.git.baolin.wang@linaro.org>
-        <20180622151338.00003622@huawei.com>
-        <CAMz4kuJUeDjTVJqNc4cNv=LwR1HkuFap4vBF7CCcrxNqnTHa-A@mail.gmail.com>
-        <20180624143009.48cf14f8@archlinux>
-        <20180624144734.62f28908@archlinux>
-        <CAMz4kuJb4aRxNKXYkDJ5vQQgFRN+87_br2gp1BtTLji0dp8XHQ@mail.gmail.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v3 2/6] arm64: dts: actions: Add Actions Semiconductor
+ S900 I2C controller nodes
+Date: Sat, 30 Jun 2018 22:57:46 +0200
+Message-ID: <F8B97397-EBE6-400A-A9A8-CD415EE24C55@axentia.se>
+References: <20180630133330.23858-1-manivannan.sadhasivam@linaro.org>
+ <20180630133330.23858-3-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMz4kuJb4aRxNKXYkDJ5vQQgFRN+87_br2gp1BtTLji0dp8XHQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, freeman.liu@spreadtrum.com, Mark Brown <broonie@kernel.org>, DTML <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180630133330.23858-3-manivannan.sadhasivam@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, wsa@the-dreams.de, robh+dt@kernel.org, afaerber@suse.de
+Cc: devicetree@vger.kernel.org, daniel.thompson@linaro.org, manivannanece23@gmail.com, jeff.chen@actions-semi.com, hzhang@ucrobotics.com, thomas.liau@actions-semi.com, linus.walleij@linaro.org, liuwei@actions-semi.com, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, linux-gpio@vger.kernel.org, andy.shevchenko@gmail.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, bdong@ucrobotics.com, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Jun 2018 09:47:54 +0800
-Baolin Wang <baolin.wang@linaro.org> wrote:
-
-> Hi Jonathan,
+On June 30, 2018 3:33:26 PM GMT+02:00, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
+>Add I2C controller nodes for Actions Semiconductor S900 SoC.
+>
+>Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>---
+> arch/arm64/boot/dts/actions/s900.dtsi | 60 +++++++++++++++++++++++++++
+> 1 file changed, 60 insertions(+)
+>
+>diff --git a/arch/arm64/boot/dts/actions/s900.dtsi
+>b/arch/arm64/boot/dts/actions/s900.dtsi
+>index 7ae8b931f000..6f7b89edbe4d 100644
+>--- a/arch/arm64/boot/dts/actions/s900.dtsi
+>+++ b/arch/arm64/boot/dts/actions/s900.dtsi
+>@@ -174,6 +174,66 @@
+> 			#clock-cells = <1>;
+> 		};
 > 
-> On 24 June 2018 at 21:47, Jonathan Cameron <jic23@jic23.retrosnub.co.uk> wrote:
-> > On Sun, 24 Jun 2018 14:30:09 +0100
-> > Jonathan Cameron <jic23@kernel.org> wrote:
-> >  
-> >> On Sun, 24 Jun 2018 17:13:00 +0800
-> >> Baolin Wang <baolin.wang@linaro.org> wrote:
-> >>  
-> >> > Hi Jonathan,
-> >> >
-> >> > On 22 June 2018 at 22:13, Jonathan Cameron <jonathan.cameron@huawei.com> wrote:  
-> >> > > On Thu, 21 Jun 2018 11:14:05 +0800
-> >> > > Baolin Wang <baolin.wang@linaro.org> wrote:
-> >> > >  
-> >> > >> From: Freeman Liu <freeman.liu@spreadtrum.com>
-> >> > >>
-> >> > >> The Spreadtrum SC27XX PMICs ADC controller contains 32 channels,
-> >> > >> which is used to sample voltages with 12 bits conversion.
-> >> > >>
-> >> > >> [Baolin Wang did lots of improvements]
-> >> > >>
-> >> > >> Signed-off-by: Freeman Liu <freeman.liu@spreadtrum.com>
-> >> > >> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>  
-> >> > >
-> >> > > One trivial missed bit of cleanup inline.  I'll sort that
-> >> > > when applying if no one else points anything out before I get back to my
-> >> > > development machine.  
-> >> >
-> >> > Thanks.  
-> >>
-> >> Applied to the togreg branch of iio.git and pushed out as testing
-> >> for the autobuilders to play with it.  
-> > Sorry, backed out for now.  My togreg tree is non rebasing and
-> > this is dependant on some stuff that only went in during the merge
-> > window.
-> >
-> > I'll send a pull request to GregKH fairly soon and after that do
-> > the merge back into my tree to pick that hwspin lock stuff up.
-> >
-> > So this will be a week or two before I can apply it without issues.
-> >
-> > Give me a poke if I seem to have forgotten about it.  
-> 
-> OK. Many thanks for your help.
-> 
-Applied now with dependencies in place.  Applied to the togreg
-branch of iio.git and pushed out as testing for the autobuilders
-to play with it.
+>+		i2c0: i2c@e0170000 {
+>+			compatible = "actions,s900-i2c";
+>+			reg = <0 0xe0170000 0 0x1000>;
+>+			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+>+			#address-cells = <1>;
+>+			#size-cells = <0>;
+>+			status = "disabled";
+>+			pinctrl-names = "default";
+>+			pinctrl-0 = <&i2c0_default>;
+>+		};
+>+
+>+		i2c1: i2c@e0172000 {
+>+			compatible = "actions,s900-i2c";
+>+			reg = <0 0xe0172000 0 0x1000>;
+>+			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+>+			#address-cells = <1>;
+>+			#size-cells = <0>;
+>+			status = "disabled";
+>+			pinctrl-names = "default";
+>+			pinctrl-0 = <&i2c1_default>;
+>+		};
+>+
+>+		i2c2: i2c@e0174000 {
+>+			compatible = "actions,s900-i2c";
+>+			reg = <0 0xe0174000 0 0x1000>;
+>+			interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
+>+			#address-cells = <1>;
+>+			#size-cells = <0>;
+>+			status = "disabled";
+>+			pinctrl-names = "default";
+>+			pinctrl-0 = <&i2c2_default>;
+>+		};
+>+
+>+		i2c3: i2c@e0176000 {
+>+			compatible = "actions,s900-i2c";
+>+			reg = <0 0xe0176000 0 0x1000>;
+>+			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+>+			#address-cells = <1>;
+>+			#size-cells = <0>;
+>+			status = "disabled";
+>+		};
+>+
+>+		i2c4: i2c@e0178000 {
+>+			compatible = "actions,s900-i2c";
+>+			reg = <0 0xe0178000 0 0x1000>;
+>+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+>+			#address-cells = <1>;
+>+			#size-cells = <0>;
+>+			status = "disabled";
+>+		};
+>+
+>+		i2c5: i2c@e017a000 {
+>+			compatible = "actions,s900-i2c";
+>+			reg = <0 0xe017a000 0 0x1000>;
+>+			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+>+			#address-cells = <1>;
+>+			#size-cells = <0>;
+>+			status = "disabled";
+>+		};
+>+
+> 		pinctrl: pinctrl@e01b0000 {
+> 			compatible = "actions,s900-pinctrl";
+> 			reg = <0x0 0xe01b0000 0x0 0x1000>;
 
-Thanks,
+This patch *still* depends on patch 3/6. You need to reorder the series so that it is properly bisectable.
 
-Jonathan
+Cheers,
+Peter
