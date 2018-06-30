@@ -1,74 +1,38 @@
-Return-Path: <SRS0=Dkm/=JL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-cys01nam02on0043.outbound.protection.outlook.com ([104.47.37.43]:32547
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1753076AbeFYIbm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 25 Jun 2018 04:31:42 -0400
-From: Alan Douglas <adouglas@cadence.com>
-Subject: [PATCH 3/5] dt-bindings: PCI: cadence: Add DT bindings for optional PHYs
-Date: Mon, 25 Jun 2018 09:30:51 +0100
-Message-ID: <1529915453-4633-4-git-send-email-adouglas@cadence.com>
-In-Reply-To: <1529915453-4633-1-git-send-email-adouglas@cadence.com>
-References: <1529915453-4633-1-git-send-email-adouglas@cadence.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Alan Douglas <adouglas@cadence.com>
+Return-Path: <SRS0=Ekl+=JQ=zonque.org=daniel@kernel.org>
+From: Daniel Mack <daniel@zonque.org>
+Subject: [PATCH v2 2/7] mmc: pxamci: remove dma resources from private context
+Date: Sat, 30 Jun 2018 20:14:00 +0200
+Message-Id: <20180630181405.17630-3-daniel@zonque.org>
+In-Reply-To: <20180630181405.17630-1-daniel@zonque.org>
+References: <20180630181405.17630-1-daniel@zonque.org>
+To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: robert.jarzmik@free.fr, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Update DT documentation to include optional PHYs for cadence PCIe
-host and endpoint controllers.
+These members are no longer in use, so let's remove them.
 
-Signed-off-by: Alan Douglas <adouglas@cadence.com>
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
 ---
- .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt  |    5 +++++
- .../bindings/pci/cdns,cdns-pcie-host.txt           |    6 ++++++
- 2 files changed, 11 insertions(+), 0 deletions(-)
+ drivers/mmc/host/pxamci.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-index 9a30523..4a0475e 100644
---- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-+++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-@@ -9,6 +9,9 @@ Required properties:
+diff --git a/drivers/mmc/host/pxamci.c b/drivers/mmc/host/pxamci.c
+index f0968882dbd3..a826c0e8a096 100644
+--- a/drivers/mmc/host/pxamci.c
++++ b/drivers/mmc/host/pxamci.c
+@@ -71,12 +71,8 @@ struct pxamci_host {
+ 	struct dma_chan		*dma_chan_rx;
+ 	struct dma_chan		*dma_chan_tx;
+ 	dma_cookie_t		dma_cookie;
+-	dma_addr_t		sg_dma;
+ 	unsigned int		dma_len;
+-
+ 	unsigned int		dma_dir;
+-	unsigned int		dma_drcmrrx;
+-	unsigned int		dma_drcmrtx;
  
- Optional properties:
- - max-functions: Maximum number of functions that can be configured (default 1).
-+- phys: From PHY bindings: List of Generic PHY phandles. One per lane if more
-+  than one in the list.  If only one PHY listed it must manage all lanes. 
-+- phy-names:  List of names to identify the PHY.
- 
- Example:
- 
-@@ -19,4 +22,6 @@ pcie@fc000000 {
- 	reg-names = "reg", "mem";
- 	cdns,max-outbound-regions = <16>;
- 	max-functions = /bits/ 8 <8>;
-+	phys = <&ep_phy0 &ep_phy1>;
-+	phy-names = "pcie-lane0","pcie-lane1";
- };
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-index 20a33f3..91de69c 100644
---- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-+++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-@@ -24,6 +24,9 @@ Optional properties:
-   translations (default 32)
- - vendor-id: The PCI vendor ID (16 bits, default is design dependent)
- - device-id: The PCI device ID (16 bits, default is design dependent)
-+- phys: From PHY bindings: List of Generic PHY phandles. One per lane if more
-+  than one in the list.  If only one PHY listed it must manage all lanes. 
-+- phy-names:  List of names to identify the PHY.
- 
- Example:
- 
-@@ -57,4 +60,7 @@ pcie@fb000000 {
- 	interrupt-map-mask = <0x0 0x0 0x0  0x7>;
- 
- 	msi-parent = <&its_pci>;
-+
-+	phys = <&pcie_phy0>;
-+	phy-names = "pcie-phy";
+ 	struct regulator	*vcc;
  };
 -- 
-1.7.1
-
+2.17.1
