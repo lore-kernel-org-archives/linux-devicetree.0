@@ -1,15 +1,14 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/3] ARM: dts: imx6qdl-colibri: mux SD/MMC card detect
- explicitly
-Date: Sun, 1 Jul 2018 21:23:18 +0800
-Message-ID: <20180701132317.GQ4348@dragon>
-References: <20180626145243.24880-1-stefan@agner.ch>
+Subject: Re: [PATCH] ARM: dts: imx51: Add sahara crypto support
+Date: Sun, 1 Jul 2018 21:25:53 +0800
+Message-ID: <20180701132552.GR4348@dragon>
+References: <1530055132-16538-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180626145243.24880-1-stefan@agner.ch>
+In-Reply-To: <1530055132-16538-1-git-send-email-festevam@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,14 +18,18 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, max.krummenacher@toradex.com, marcel.ziswiler@toradex.com, s.hauer@pengutronix.de, maitysanchayan@gmail.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 26, 2018 at 04:52:41PM +0200, Stefan Agner wrote:
-> Do not rely on reset/boot defaults and use a default GPIO setting
-> with pull-up enabled.
+On Tue, Jun 26, 2018 at 08:18:52PM -0300, Fabio Estevam wrote:
+> From: Fabio Estevam <fabio.estevam@nxp.com>
 > 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> The sahara crypto block on i.MX51 has the same IP version as
+> the one on i.MX53.
+> 
+> Add support for it.
+> 
+> Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
 
-Applied all, thanks.
+Applied, thanks.
