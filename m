@@ -1,29 +1,22 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/4] ARM: dts: imx6qdl-zii-rdu2: Populate RAVE SP EEPROM
- nodes
-Date: Sun, 1 Jul 2018 21:48:55 +0800
-Message-ID: <20180701134854.GV4348@dragon>
-References: <20180628042424.12664-1-andrew.smirnov@gmail.com>
- <20180628042424.12664-3-andrew.smirnov@gmail.com>
- <CAHQ1cqHpX_nz+xyyPg30kXsn2oTp2BBzk-qpCi3z3kezg1PTWg@mail.gmail.com>
+Subject: Re: [PATCH V2] ARM: dts: imx6sll-evk: enable usdhc3 slot
+Date: Sun, 1 Jul 2018 21:52:38 +0800
+Message-ID: <20180701135237.GW4348@dragon>
+References: <1530147867-24159-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHQ1cqHpX_nz+xyyPg30kXsn2oTp2BBzk-qpCi3z3kezg1PTWg@mail.gmail.com>
+In-Reply-To: <1530147867-24159-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Lucas Stach <l.stach@pengutronix.de>, Chris Healy <cphealy@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 27, 2018 at 09:39:37PM -0700, Andrey Smirnov wrote:
-> On Wed, Jun 27, 2018 at 9:24 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
-> >
-> > ZII's RDU1s come with two EEPROMs attached to RAVE SP. Add
+On Thu, Jun 28, 2018 at 09:04:27AM +0800, Anson Huang wrote:
+> On i.MX6SLL EVK board, SD3 slot can be used for
+> WiFi and other SD accessories, enable it.
 > 
-> Ugh, the description should read RDU2, not RDU1. Will fix in v2,
-> tomorrow. Sorry about that.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-I fixed it up and applied the series.
-
-Shawn
+Applied, thanks.
