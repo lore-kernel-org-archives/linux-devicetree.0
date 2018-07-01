@@ -1,63 +1,55 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 5/6] i2c: Add Actions Semiconductor Owl family S900 I2C driver
-Date: Sun, 1 Jul 2018 12:11:54 +0300
-Message-ID: <CAHp75VcDK7U-x-W9-gaY9-2zAJqnawdwe5gor0ifX8iYe_p0_Q@mail.gmail.com>
-References: <20180630133330.23858-1-manivannan.sadhasivam@linaro.org>
- <20180630133330.23858-6-manivannan.sadhasivam@linaro.org> <CAHp75VcVNb51tJzKbCU3pqf0XYPCUZWpv38nfaV1711vyf2S0Q@mail.gmail.com>
- <20180701081333.GB28390@Mani-XPS-13-9360> <20180701084140.GC28390@Mani-XPS-13-9360>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v1] ARM: dts: imx6sl-evk: keep sw4 always on
+Date: Sun, 1 Jul 2018 17:34:04 +0800
+Message-ID: <20180701093402.GN4348@dragon>
+References: <1529930051-14122-1-git-send-email-yibin.gong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180701084140.GC28390@Mani-XPS-13-9360>
+Content-Disposition: inline
+In-Reply-To: <1529930051-14122-1-git-send-email-yibin.gong@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Linus Walleij <linus.walleij@linaro.org>, linux-i2c <linux-i2c@vger.kernel.org>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, amit.kucheria@linaro.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>, Thomas Liau <thomas.liau@actions-semi.com>, jeff.chen@actions-semi.com
+To: Robin Gong <yibin.gong@nxp.com>
+Cc: kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, anson.huang@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 1, 2018 at 11:41 AM, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
-> On Sun, Jul 01, 2018 at 01:43:33PM +0530, Manivannan Sadhasivam wrote:
->> On Sun, Jul 01, 2018 at 12:11:00AM +0300, Andy Shevchenko wrote:
->> > On Sat, Jun 30, 2018 at 4:33 PM, Manivannan Sadhasivam
->> > <manivannan.sadhasivam@linaro.org> wrote:
->> > > Add Actions Semiconductor Owl family S900 I2C driver.
+On Mon, Jun 25, 2018 at 08:34:11PM +0800, Robin Gong wrote:
+> SW4 is one power rail for LPDDR2 on i.mx6sl-evk, so it should
+> be kept always on. But it's disabled after switch disabled
+> interface implemented in pfuze driver
+> 'commit 5fe156f1cab4
+> ("regulator: pfuze100: add enable/disable for switch")'.Thus,
+> it breaks kernel bootup. Add 'regulator-always-on' for SW4.
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 
->> > > +static int owl_i2c_reset(struct owl_i2c_dev *i2c_dev)
->> > > +{
->> >
->> > > +       mdelay(1);
->> >
->> > But now, since it's not used in atomic context, we may switch to
->> > usleep_range() / msleep() instead.
->> >
->>
->> okay, will use msleep()
->>
->
-> Just realised, I have to use spinlock for the entire owl_i2c_master_xfer
-> function, so can't use sleep* for delay.
->
->> > > +       owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_CTL,
->> > > +                               OWL_I2C_CTL_EN, true);
->> > > +
->> >
->> > > +       /* Wait 50ms for FIFO reset complete */
->> > > +       do {
->> >
->> > > +               mdelay(1);
->> >
->> > Especially in this case it's very important.
->> >
->>
->> Okay.
->
-> Same here, but I'm not sure about the latency. What is your suggestion?
+Does that mean boards with existing DTB installed will stop working with
+new kernel?  That's bad, and the kernel commit should probably be
+reverted.
 
-Look at other i2c bus drivers, check with data sheet you have, try to
-refactor / redesign code that wouldn't need to sleep so long in atomic
-context.
+Shawn
 
-
--- 
-With Best Regards,
-Andy Shevchenko
+> ---
+>  arch/arm/boot/dts/imx6sl-evk.dts | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
+> index 37e792f..798df66 100644
+> --- a/arch/arm/boot/dts/imx6sl-evk.dts
+> +++ b/arch/arm/boot/dts/imx6sl-evk.dts
+> @@ -199,6 +199,7 @@
+>  			sw4_reg: sw4 {
+>  				regulator-min-microvolt = <800000>;
+>  				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+>  			};
+>  
+>  			swbst_reg: swbst {
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
