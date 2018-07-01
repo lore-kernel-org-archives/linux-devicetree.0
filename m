@@ -1,279 +1,67 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/2] ARM: dts: imx6ul: Add DTS for ConnectCore 6UL SBC
- Express
-Date: Sun, 1 Jul 2018 10:44:14 +0800
-Message-ID: <20180701024413.GC4348@dragon>
-References: <1529393534-7827-1-git-send-email-alex.gonzalez@digi.com>
- <1529393534-7827-3-git-send-email-alex.gonzalez@digi.com>
+Subject: Re: [PATCH v5] ARM: dts: imx51-zii-rdu1: fix touchscreen pinctrl
+Date: Sun, 1 Jul 2018 11:20:29 +0800
+Message-ID: <20180701032028.GF4348@dragon>
+References: <CAFXsbZr-HJE54c0BC5=d1tStByA5ytGhSSZMirNKE03JzGCDXQ@mail.gmail.com>
+ <20180621181000.12687-1-nick@shmanahar.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <stable-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1529393534-7827-3-git-send-email-alex.gonzalez@digi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Gonzalez <alex.gonzalez@digi.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, s.hauer@pengutronix.de, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180621181000.12687-1-nick@shmanahar.org>
+Sender: stable-owner@vger.kernel.org
+To: Nick Dyer <nick@shmanahar.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 19, 2018 at 09:32:14AM +0200, Alex Gonzalez wrote:
-> The ConnectCore 6UL Single Board Computer (SBC) Express contains the
-> ConnectCore 6UL System-On-Module.
+On Thu, Jun 21, 2018 at 07:10:00PM +0100, Nick Dyer wrote:
+> The pinctrl settings were incorrect for the touchscreen interrupt line, causing
+> an interrupt storm. This change has been tested with both the atmel_mxt_ts and
+> RMI4 drivers on the RDU1 units.
 > 
-> Its hardware specifications are:
+> The value 0x4 comes from the value of register IOMUXC_SW_PAD_CTL_PAD_CSI1_D8
+> from the old vendor kernel.
 > 
-> * 256MB DDR3 memory
-> * 256MB NAND flash
-> * Single Ethernet
-> * USB Host and USB-OTG
-> * MicroSD external storage
-> * Groove connectors and Raspberry Pi Hat compatible expansion header
-> 
-> Signed-off-by: Alex Gonzalez <alex.gonzalez@digi.com>
+> Signed-off-by: Nick Dyer <nick@shmanahar.org>
+> Fixes: ceef0396f367 ("ARM: dts: imx: add ZII RDU1 board")
+> Cc: <stable@vger.kernel.org> # 4.15+
+> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+> Tested-by: Chris Healy <cphealy@gmail.com>
+
+Applied, thanks.
+
 > ---
->  arch/arm/boot/dts/Makefile                      |   1 +
->  arch/arm/boot/dts/imx6ul-ccimx6ulsbcexpress.dts | 205 ++++++++++++++++++++++++
->  2 files changed, 206 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6ul-ccimx6ulsbcexpress.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 37a3de760d40..6135d3dc381c 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -533,6 +533,7 @@ dtb-$(CONFIG_SOC_IMX6SX) += \
->  	imx6sx-udoo-neo-full.dtb
->  dtb-$(CONFIG_SOC_IMX6UL) += \
->  	imx6ul-14x14-evk.dtb \
-> +	imx6ul-ccimx6ulsbcexpress.dtb \
->  	imx6ul-geam.dtb \
->  	imx6ul-isiot-emmc.dtb \
->  	imx6ul-isiot-nand.dtb \
-> diff --git a/arch/arm/boot/dts/imx6ul-ccimx6ulsbcexpress.dts b/arch/arm/boot/dts/imx6ul-ccimx6ulsbcexpress.dts
-> new file mode 100644
-> index 000000000000..1e3c4200b924
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6ul-ccimx6ulsbcexpress.dts
-> @@ -0,0 +1,205 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Digi International's ConnectCore6UL SBC Express board device tree source
-> + *
-> + * Copyright 2018 Digi International, Inc.
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include "imx6ul.dtsi"
-> +#include "imx6ul-ccimx6ulsom.dtsi"
-> +
-> +/ {
-> +	model = "Digi International ConnectCore 6UL SBC Express.";
-> +	compatible = "digi,ccimx6ulsbcexpress", "digi,ccimx6ulsom",
-> +		     "fsl,imx6ul";
-> +};
-> +
-> +&adc1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_adc1>;
-> +	adc-ch-list = <4>;
+> Changes in v5:
+> - Add tested by Chris Healy
+> Changes in v4:
+> - Add reviewed by Fabio
 
-Undocumented DT property.
-
-> +	status = "okay";
-> +};
-> +
-> +&ecspi3 {
-> +	fsl,spi-num-chipselects = <1>;
-
-This property is obsoleted.
-
-> +	cs-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_ecspi3_master>;
-> +	status = "okay";
-> +};
-> +
-> +&fec1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_enet1>;
-> +	phy-mode = "rmii";
-> +	phy-handle = <&ethphy0>;
-> +	status = "okay";
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ethphy0: ethernet-phy@0 {
-> +			compatible = "ethernet-phy-ieee802.3-c22";
-> +			smsc,disable-energy-detect;
-> +			reg = <0>;
-> +		};
-> +	};
-> +};
-> +
-> +&can1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_flexcan1>;
-> +	xceiver-supply = <&ext_3v3>;
-> +	status = "okay";
-> +};
-
-Nodes are well sorted alphabetically in label name, but this one is not.
-
-> +
-> +&i2c2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c2>;
-> +	status = "okay";
-> +};
-> +
-> +&pwm1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_pwm1>;
-> +	status = "okay";
-> +};
-> +
-> +&uart4 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart4>;
-> +	status = "okay";
-> +};
-> +
-> +&uart5 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart5>;
-> +	status = "okay";
-> +};
-> +
-> +&usbotg1 {
-> +	dr_mode = "host";
-> +	disable-over-current;
-> +	status = "okay";
-> +};
-> +
-> +&usbotg2 {
-> +	dr_mode = "host";
-> +	disable-over-current;
-> +	status = "okay";
-> +};
-> +
-> +&usdhc2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usdhc2>;
-> +	broken-cd;      /* no carrier detect line (use polling) */
-> +	no-1-8-v;
-> +	status = "okay";
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_hog>;
-> +
-> +	imx6ul-ccimx6ul {
-
-Drop this container node.
+You do not have to send new version just for collecting review and test
+tags.  I will do that when applying.
 
 Shawn
 
-> +		pinctrl_adc1: adc1grp {
-> +			fsl,pins = <
-> +				/* GPIO1_4/ADC1_IN4 (pin 7 of the expansion header) */
-> +				MX6UL_PAD_GPIO1_IO04__GPIO1_IO04        0xb0
-> +			>;
-> +		};
-> +
-> +		pinctrl_ecspi3_master: ecspi3grp1 {
-> +			fsl,pins = <
-> +				MX6UL_PAD_UART2_RX_DATA__ECSPI3_SCLK	0x10b0
-> +				MX6UL_PAD_UART2_CTS_B__ECSPI3_MOSI	0x10b0
-> +				MX6UL_PAD_UART2_RTS_B__ECSPI3_MISO	0x10b0
-> +				MX6UL_PAD_UART2_TX_DATA__GPIO1_IO20	0x10b0 /* Chip Select */
-> +			>;
-> +		};
-> +
-> +		pinctrl_ecspi3_slave: ecspi3grp2 {
-> +			fsl,pins = <
-> +				MX6UL_PAD_UART2_RX_DATA__ECSPI3_SCLK	0x10b0
-> +				MX6UL_PAD_UART2_CTS_B__ECSPI3_MOSI	0x10b0
-> +				MX6UL_PAD_UART2_RTS_B__ECSPI3_MISO	0x10b0
-> +				MX6UL_PAD_UART2_TX_DATA__ECSPI3_SS0	0x10b0 /* Chip Select */
-> +			>;
-> +		};
-> +
-> +		pinctrl_enet1: enet1grp {
-> +			fsl,pins = <
-> +				MX6UL_PAD_GPIO1_IO07__ENET1_MDC		0x1b0b0
-> +				MX6UL_PAD_GPIO1_IO06__ENET1_MDIO	0x1b0b0
-> +				MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
-> +				MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER	0x1b0b0
-> +				MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
-> +				MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
-> +				MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
-> +				MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
-> +				MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
-> +				MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x40017051
-> +			>;
-> +		};
-> +
-> +		pinctrl_flexcan1: flexcan1grp{
-> +			fsl,pins = <
-> +				MX6UL_PAD_LCD_DATA08__FLEXCAN1_TX	0x1b020
-> +				MX6UL_PAD_LCD_DATA09__FLEXCAN1_RX	0x1b020
-> +			>;
-> +		};
-> +
-> +		pinctrl_i2c2: i2c2grp {
-> +			fsl,pins = <
-> +				MX6UL_PAD_GPIO1_IO00__I2C2_SCL 0x4001b8b0
-> +				MX6UL_PAD_GPIO1_IO01__I2C2_SDA 0x4001b8b0
-> +			>;
-> +		};
-> +
-> +		pinctrl_pwm1: pwm1grp {
-> +			fsl,pins = <
-> +				MX6UL_PAD_LCD_DATA00__PWM1_OUT		0x10b0
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart4: uart4grp {
-> +			fsl,pins = <
-> +				MX6UL_PAD_LCD_CLK__UART4_DCE_TX		0x1b0b1
-> +				MX6UL_PAD_LCD_ENABLE__UART4_DCE_RX	0x1b0b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart5: uart5grp {
-> +			fsl,pins = <
-> +				MX6UL_PAD_UART5_TX_DATA__UART5_DCE_TX	0x1b0b1
-> +				MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX	0x1b0b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_usdhc2: usdhc2grp {
-> +			fsl,pins = <
-> +				MX6UL_PAD_CSI_HSYNC__USDHC2_CMD		0x17059
-> +				MX6UL_PAD_CSI_VSYNC__USDHC2_CLK		0x10071
-> +				MX6UL_PAD_CSI_DATA00__USDHC2_DATA0	0x17059
-> +				MX6UL_PAD_CSI_DATA01__USDHC2_DATA1	0x17059
-> +				MX6UL_PAD_CSI_DATA02__USDHC2_DATA2	0x17059
-> +				MX6UL_PAD_CSI_DATA03__USDHC2_DATA3	0x17059
-> +			>;
-> +		};
-> +
-> +		/* General purpose pinctrl */
-> +		pinctrl_hog: hoggrp {
-> +			fsl,pins = <
-> +				/* GPIOs BANK 3 */
-> +				MX6UL_PAD_LCD_RESET__GPIO3_IO04		0xf030
-> +			>;
-> +		};
-> +
-> +	};
-> +};
+> Changes in v3:
+> - Update commit message to add source of 0x4 value, fixes tag and CC stable
+> Changes in v2:
+> - Use hex, only alter IRQ line config
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>  arch/arm/boot/dts/imx51-zii-rdu1.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+> index df9eca94d812..8a878687197b 100644
+> --- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
+> +++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+> @@ -770,7 +770,7 @@
+>  
+>  	pinctrl_ts: tsgrp {
+>  		fsl,pins = <
+> -			MX51_PAD_CSI1_D8__GPIO3_12		0x85
+> +			MX51_PAD_CSI1_D8__GPIO3_12		0x04
+>  			MX51_PAD_CSI1_D9__GPIO3_13		0x85
+>  		>;
+>  	};
+> -- 
+> 2.17.1
+> 
