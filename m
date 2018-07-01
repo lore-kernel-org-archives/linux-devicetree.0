@@ -1,242 +1,135 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/3] ARM: dts: imx: add ZII SCU2 ESB board
-Date: Sun, 1 Jul 2018 16:25:09 +0800
-Message-ID: <20180701082508.GI4348@dragon>
-References: <1529603100-31958-1-git-send-email-andrey.gusakov@cogentembedded.com>
- <1529603100-31958-3-git-send-email-andrey.gusakov@cogentembedded.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: Re: [PATCH v3 09/24] drm/sun4i: Don't skip TCONs if
+ they don't have channel 0
+Date: Sun, 01 Jul 2018 10:27:43 +0200
+Message-ID: <8952939.l1hLr1Mv9y@jernej-laptop>
+References: <20180625120304.7543-1-jernej.skrabec@siol.net> <2676604.ZYCNkuCdbT@jernej-laptop> <CAGb2v67kBRWkJpJogFR4GXgA66dsxVaMVWN8MDiP_wFTqxW-=g@mail.gmail.com>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1529603100-31958-3-git-send-email-andrey.gusakov@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andrew.smirnov@gmail.com, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, cphealy@gmail.com, l.stach@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBXNB4LMQKGQE4KXDVWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v67kBRWkJpJogFR4GXgA66dsxVaMVWN8MDiP_wFTqxW-=g@mail.gmail.com>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 21, 2018 at 08:44:59PM +0300, Andrey Gusakov wrote:
-> This adds support for the Zodiac Inflight Innovations SCU2 Ethernet
-> Switch Board, which is based on the i.MX51.
-> 
-> Signed-off-by: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
-> ---
->  arch/arm/boot/dts/Makefile               |   3 +-
->  arch/arm/boot/dts/imx51-zii-scu2-esb.dts | 178 +++++++++++++++++++++++++++++++
->  2 files changed, 180 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/imx51-zii-scu2-esb.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 37a3de7..d8900f4 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -358,7 +358,8 @@ dtb-$(CONFIG_SOC_IMX51) += \
->  	imx51-digi-connectcore-jsk.dtb \
->  	imx51-eukrea-mbimxsd51-baseboard.dtb \
->  	imx51-ts4800.dtb \
-> -	imx51-zii-rdu1.dtb
-> +	imx51-zii-rdu1.dtb \
-> +	imx51-zii-scu2-esb.dtb
->  dtb-$(CONFIG_SOC_IMX53) += \
->  	imx53-ard.dtb \
->  	imx53-cx9020.dtb \
-> diff --git a/arch/arm/boot/dts/imx51-zii-scu2-esb.dts b/arch/arm/boot/dts/imx51-zii-scu2-esb.dts
-> new file mode 100644
-> index 0000000..e052133
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx51-zii-scu2-esb.dts
-> @@ -0,0 +1,178 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +// Copyright (C) 2018 Zodiac Inflight Innovations
-> +
-> +/dts-v1/;
-> +#include "imx51-zii-common.dtsi"
-> +
-> +/ {
-> +	model = "ZII SCU2 ESB board";
-> +	compatible = "zii,imx51-scu2-esb", "fsl,imx51";
-> +};
-> +
-> +&esdhc1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_esdhc1_4bit &pinctrl_esdhc1_8bit>;
-> +	bus-width = <8>;
-> +};
-> +
-> +&fec {
-> +	phy-reset-gpios = <&gpio4 21 GPIO_ACTIVE_LOW>;
-> +
-> +	fixed-link {
-> +		speed = <100>;
-> +		full-duplex;
-> +	};
-> +
-> +	fec_mdio: mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		status = "okay";
-> +
-> +		switch@0 {
-> +			compatible = "marvell,mv88e6085";
-> +			reg = <0>;
-> +			dsa,member = <0 0>;
-> +			eeprom-length = <512>;
-> +			interrupt-parent = <&gpio4>;
-> +			interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					label = "port1";
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					label = "port2";
-> +				};
-> +
-> +				port@2 {
-> +					reg = <2>;
-> +					label = "port3";
-> +				};
-> +
-> +				port@3 {
-> +					reg = <3>;
-> +					label = "scu2scu";
-> +				};
-> +
-> +				port@4 {
-> +					reg = <4>;
-> +					label = "esb2host";
-> +				};
+Dne =C4=8Detrtek, 28. junij 2018 ob 08:24:34 CEST je Chen-Yu Tsai napisal(a=
+):
+> On Thu, Jun 28, 2018 at 12:45 PM, Jernej =C5=A0krabec
+>=20
+> <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
+> > Dne =C4=8Detrtek, 28. junij 2018 ob 03:51:31 CEST je Chen-Yu Tsai napis=
+al(a):
+> >> On Mon, Jun 25, 2018 at 8:02 PM, Jernej Skrabec <jernej.skrabec@siol.n=
+et>
+> >=20
+> > wrote:
+> >> > TV TCONs (channel 1 only) are always connected to TV or HDMI encoder=
+.
+> >> > Because of that, all output endpoints on such TCON node will point t=
+o a
+> >> > encoder which is part of component framework.
+> >> >=20
+> >> > Correct current graph traversing algorithm in such way that it doesn=
+'t
+> >> > skip output enpoints with id 0 on TV TCONs.
+> >>=20
+> >> No. Our bindings say that endpoint 0 _is_ channel 0. For TCONs that do=
+n't
+> >> have channel 0, it must be skipped.
+> >=20
+> > I'm not sure where this is stated. I read TCON binding again. Can you
+> > please point me to it?
+>=20
+> https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/b=
+ind
+> ings/display/sunxi/sun4i-drm.txt#L169
+>=20
+> Our TCON driver still expects RGB or LVDS panel / bridges on endpoint 0.
 
-Please constantly have newline between nodes.
+Yes, but that can only happen on TCON which has channel 0. TV TCONs (those=
+=20
+with channel 1 only) can't have panels or bridges connected to them, becaus=
+e=20
+they are internally always connected to either HDMI or TV encoder or both.=
+=20
+Actually, R40 is the only SoC, where same TV TCON can be connected to TV=20
+encoder or HDMI. Others have specialized TV TCONs, which are connect to onl=
+y=20
+one encoder.
 
-Shawn
+IMO TV TCONs are really just stripped down LCD TCONs to support one (or max=
+=20
+two) specific encoder.
 
-> +				port@5 {
-> +					reg = <5>;
-> +					label = "esb2mezz";
-> +					phy-mode = "sgmii";
-> +
-> +					fixed-link {
-> +						speed = <1000>;
-> +						full-duplex;
-> +					};
-> +				};
-> +				port@6 {
-> +					reg = <6>;
-> +					label = "cpu";
-> +					phy-mode = "mii";
-> +					ethernet = <&fec>;
-> +
-> +					fixed-link {
-> +						speed = <100>;
-> +						full-duplex;
-> +					};
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&i2c2 {
-> +	lm75@48 {
-> +		compatible = "national,lm75";
-> +		reg = <0x48>;
-> +	};
-> +};
-> +
-> +&i2c_gpio {
-> +	gpios = <&gpio3 1 GPIO_ACTIVE_HIGH>, /* sda */
-> +		<&gpio3 0 GPIO_ACTIVE_HIGH>; /* scl */
-> +};
-> +
-> +&ipu {
-> +	status = "disabled";
-> +};
-> +
-> +&usb_vbus {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usb_mmc_reset>;
-> +	gpio = <&gpio4 19 GPIO_ACTIVE_LOW>;
-> +	startup-delay-us = <150000>;
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl_fec: fecgrp {
-> +		fsl,pins = <
-> +			MX51_PAD_DISP2_DAT15__FEC_TDATA0	0x2004
-> +			MX51_PAD_DISP2_DAT6__FEC_TDATA1		0x2004
-> +			MX51_PAD_DISP2_DAT7__FEC_TDATA2		0x2004
-> +			MX51_PAD_DISP2_DAT8__FEC_TDATA3		0x2004
-> +			MX51_PAD_DISP2_DAT9__FEC_TX_EN		0x2004
-> +			MX51_PAD_DISP2_DAT10__FEC_COL		0x0180
-> +			MX51_PAD_DISP2_DAT11__FEC_RX_CLK	0x0180
-> +			MX51_PAD_DISP2_DAT12__FEC_RX_DV		0x20a4
-> +			MX51_PAD_DISP2_DAT13__FEC_TX_CLK	0x2180
-> +			MX51_PAD_DISP2_DAT14__FEC_RDATA0	0x2180
-> +			MX51_PAD_DI2_DISP_CLK__FEC_RDATA1	0x0085
-> +			MX51_PAD_DI_GP4__FEC_RDATA2		0x0085
-> +			MX51_PAD_DISP2_DAT0__FEC_RDATA3		0x0085
-> +			MX51_PAD_DI2_PIN2__FEC_MDC		0x2004
-> +			MX51_PAD_DI2_PIN3__FEC_MDIO		0x01f5
-> +			MX51_PAD_DI2_PIN4__FEC_CRS		0x0180
-> +			MX51_PAD_AUD3_BB_FS__GPIO4_21		0x0000
-> +		>;
-> +	};
-> +
-> +	pinctrl_swi2c: swi2cgrp {
-> +		fsl,pins = <
-> +			MX51_PAD_DI1_PIN11__GPIO3_0		0x100
-> +			MX51_PAD_DI1_PIN12__GPIO3_1		0x100
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart1: uart1grp {
-> +		fsl,pins = <
-> +			MX51_PAD_UART1_RXD__UART1_RXD		0x1c5
-> +			MX51_PAD_UART1_TXD__UART1_TXD		0x1c5
-> +			MX51_PAD_UART1_RTS__UART1_RTS		0x1c5
-> +			MX51_PAD_UART1_CTS__UART1_CTS		0x1c5
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart2: uart2grp {
-> +		fsl,pins = <
-> +			MX51_PAD_UART2_RXD__UART2_RXD		0x1c5
-> +			MX51_PAD_UART2_TXD__UART2_TXD		0x1c5
-> +			MX51_PAD_USBH1_DATA0__UART2_CTS		0x1c5
-> +			MX51_PAD_USBH1_DATA3__UART2_RTS		0x1c5
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart3: uart3grp {
-> +		fsl,pins = <
-> +			MX51_PAD_UART3_RXD__UART3_RXD		0x1c5
-> +			MX51_PAD_UART3_TXD__UART3_TXD		0x1c5
-> +		>;
-> +	};
-> +
-> +	pinctrl_usb_mmc_reset: usbmmcgrp {
-> +		fsl,pins = <
-> +			MX51_PAD_AUD3_BB_RXD__GPIO4_19		0x100
-> +		>;
-> +	};
-> +};
-> -- 
-> 1.9.1
-> 
+> So I guess this was sort of implied historically. It's no longer true.
+> This is something we should probably fix.
+
+Fixed in what way? You mean update bindings to mention that TCON output=20
+endpoint 0 is reserved for panels or bridges?
+
+>=20
+> In practice our drivers don't look at it (yet), but rely on the downstrea=
+m
+> encoder type to determine which channel to use.
+>=20
+> But please add the "allwinner,tcon-channel" property as specified in
+> the binding.
+
+It's my understanding of TCON binding documentation that property=20
+"allwinner,tcon-channel" is needed only if TCON supports both channels. TV=
+=20
+TCON clearly supports only channel 1. In that case, there is no doubt to wh=
+ich=20
+channel output endpoint belongs.
+
+If that's not true, dt bindings documentation should be reworded to contain=
+=20
+word "needed" or something similar. Currently, no DT for newer SoC contains=
+=20
+that property (for example, A83T, H3, H5 or even A33). On A33 this is even=
+=20
+more interesting, since tcon0 has only channel 0 and has DSI output endpoin=
+t=20
+with number 1. According to TCON binding docs, if "allwinner,tcon-channel" =
+is=20
+not preset, endpoint number represent channel. So, that would mean DSI need=
+s=20
+channel 1 on tcon which supports clearly only channel 0. So either there TC=
+ON=20
+bindings documentation needs updates or DT for A33 has to be updated.
+
+BTW, "allwinner,tcon-channel" property is not used at all in the code.
+
+>=20
+> > So on TV TCONs on R40 (without channel 0) TVE would be endpoint 1 and H=
+DMI
+> > endpoint 2 (or the other way around)?
+>=20
+> Which one goes first doesn't quite matter. IIRC there's also a mux for TV=
+E?
+
+AFAIK, TV TCON is by default connected to TV encoder unless HDMI mux in TCO=
+N=20
+TOP points to it. I think it's best put TVE with lower number since it's=20
+default and HDMI with higher number.
+
+Best regards,
+Jernej
+
+
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
