@@ -1,76 +1,45 @@
-Return-Path: <SRS0=SxbK=JL=linaro.org=vinod.koul@kernel.org>
-From: Vinod Koul <vinod.koul@linaro.org>
-Subject: [PATCH v3 1/5] dt-bindings: power: reset: Add qcom pon binding
-Date: Mon, 25 Jun 2018 12:08:36 +0530
-Message-Id: <20180625063840.30173-2-vkoul@kernel.org>
-In-Reply-To: <20180625063840.30173-1-vkoul@kernel.org>
-References: <20180625063840.30173-1-vkoul@kernel.org>
-To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
-List-ID: <devicetree@vger.kernel.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH V2 2/2] ARM: dts: imx6ul: add GPIO clocks
+Date: Sun, 1 Jul 2018 10:19:49 +0800
+Message-ID: <20180701021947.GA4348@dragon>
+References: <1527990245-13619-1-git-send-email-Anson.Huang@nxp.com>
+ <1527990245-13619-2-git-send-email-Anson.Huang@nxp.com>
+ <AM3PR04MB1315D8B57E1A5D47BECBDCD3F54A0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <20180628005217.GC22683@dragon>
+ <153029757874.143105.17774476792947607999@swboyd.mtv.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <153029757874.143105.17774476792947607999@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Anson Huang <anson.huang@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "matteo.lisi@engicam.com" <matteo.lisi@engicam.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "michael@amarulasolutions.com" <michael@amarulasolutions.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+List-Id: devicetree@vger.kernel.org
 
-The Power On driver for Qcom PM 8xxx is a MFD supporting pwrkey and
-resin along with the Android reboot-mode.
-Add the binding describing this.
+On Fri, Jun 29, 2018 at 11:39:38AM -0700, Stephen Boyd wrote:
+> Quoting Shawn Guo (2018-06-27 17:52:18)
+> > On Mon, Jun 25, 2018 at 03:14:39AM +0000, Anson Huang wrote:
+> > > Gentle Ping...
+> > 
+> > I cannot apply this dts patch until the clock patch is landed on
+> > mainline, because it has a dependency on new clock ID IMX6UL_CLK_GPIO1
+> > created by clock patch.
+> > 
+> 
+> Does it matter if that clk ID changes across branches? Or is everything
+> good if it just exists as some number?
 
-Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- .../devicetree/bindings/power/reset/qcom,pon.txt   | 45 ++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+We use macro IMX6UL_CLK_GPIO1 instead of hard-coded number in DTS.  So
+it doesn't matter if IMX6UL_CLK_GPIO1 changes.
 
-diff --git a/Documentation/devicetree/bindings/power/reset/qcom,pon.txt b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
-new file mode 100644
-index 000000000000..0dc24c9b93d5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
-@@ -0,0 +1,45 @@
-+Qualcomm PON Driver
-+
-+The Power On driver for Qualcomm PM8xxx is MFD supporting pwrkey and
-+resin along with the Android reboot-mode.
-+
-+This DT node has pwrkey and resin as sub nodes.
-+
-+Required Properties:
-+-compatible: "qcom,pm8916-pon"
-+-reg: Specifies the physical address of the pon register
-+
-+Optional subnodes:
-+-prwrkey: Specifies the subnode pwrkey and should follow the
-+ qcom,pm8xxx-pwrkey.txt description.
-+-resin: Specifies the subnode resin and should follow the
-+ qcom,pm8xxx-pwrkey.txt description.
-+
-+The rest of the properties should follow the generic reboot-mode description
-+found in reboot-mode.txt
-+
-+Example:
-+
-+	pon@800 {
-+		compatible = "qcom,pm8916-pon";
-+
-+		reg = <0x800>;
-+		mode-bootloader = <0x2>;
-+		mode-recovery = <0x1>;
-+
-+		pwrkey {
-+			compatible = "qcom,pm8941-pwrkey";
-+			interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
-+			debounce = <15625>;
-+			bias-pull-up;
-+			linux,code = <KEY_POWER>;
-+		};
-+
-+		resin {
-+			compatible = "qcom,pm8941-resin";
-+			interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
-+			debounce = <15625>;
-+			bias-pull-up;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+		};
-+	};
--- 
-2.14.4
+> The patch adding the define
+> conflicts with another patch to fix the numbering scheme to be
+> incremental instead of changing IMX6UL and IMX6ULL which is annoying.
+> I'll probably make a topic branch just for the fix and merge it into
+> clk-fixes and this branch so you can pick it up from there if you like.
+
+It will be good if you can have a topic branch.  Otherwise, we are also
+fine to wait till the clock patches lands on mainline.
+
+Shawn
