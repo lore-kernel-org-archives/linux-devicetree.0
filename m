@@ -1,65 +1,67 @@
-From: Parthiban Nallathambi <pn@denx.de>
-Subject: Re: [PATCH v2 0/3] Add clock driver for Actions S700 SoC
-Date: Sun, 1 Jul 2018 20:24:56 +0200
-Message-ID: <440c9eed-b930-5a4c-4320-11eec682add6@denx.de>
-References: <20180626192820.28237-3-sravanhome@gmail.com>
- <20180628191805.3722-1-sravanhome@gmail.com>
- <8503ae31-aaf3-e4ba-f385-859a6cd3f8d6@suse.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] drm/panel: Augment the TPO TPG110 bindings
+Date: Sun, 1 Jul 2018 21:01:16 +0200
+Message-ID: <CACRpkdZWJoshkrLafCUiZB7+8xFH1YtC4h+pA-bLW92zr5J-Nw@mail.gmail.com>
+References: <20180621184942.26087-1-linus.walleij@linaro.org>
+ <20180627172105.GA6777@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8503ae31-aaf3-e4ba-f385-859a6cd3f8d6@suse.de>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Saravanan Sekar <sravanhome@gmail.com>
-Cc: sboyd@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, mturquette@baylibre.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, manivannan.sadhasivam@linaro.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jeff Chen <jeff.chen@actions-semi.com>, "Thomas C. Liau" <thomas.liau@actions-semi.com>, Cubietech support <support@cubietech.com>, linux <linux@cubietech.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180627172105.GA6777@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Andreas,
-
-On 07/01/2018 08:05 PM, Andreas Färber wrote:
-> Hi Saravannan,
-> 
-> Am 28.06.2018 um 21:18 schrieb Saravanan Sekar:
->> Changelog v2:
->> Fixed 0 day compilation warning
->> Modified existing dts Actions S900 clock bindings common to Actions
->> Soc family
-> 
-> Please post v3 without --in-reply-to. It's becoming messy to read.
-> 
->> This patchset adds clock support for Actions Semi OWL series S700 SoC
->> with relevant clock bindings and device tree info. 
->>
->> Changed the UART clock using CMU instance and changes are tested in
->> cubieboard7
-> 
-> Did you find any better way of testing than my "reboot bootloader" from
-> preinstalled Android?
-
-Flashing bootloader.bin and u-boot-dtb.img at below offset trigger the
-automatic boot from SD. But ADFU needs to long pressed before connecting
-the power.
-
-sudo dd if=bootloader.bin of=/dev/sdX bs=512 seek=4097
-sudo dd if=u-boot-dtb.img of=/dev/sdX bs=1024 seek=3072
-
-With this is place, u-boot expects GPT layout by default. I am able to boot
-the kernel from FAT/ext by updating the bootcmd/u-boot env accordingly. 
-
-I haven't tried flashing/replacing u-boot in eMMC still.
-
-> 
-> In addition to missing Actions Semi you may want to CC Cubietech.
-
-+Added cubitech linux group.
-
-> 
-> Thanks,
-> Andreas
-> 
-
--- 
-Thanks,
-Parthiban N
+T24gV2VkLCBKdW4gMjcsIDIwMTggYXQgNzoyMSBQTSBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwu
+b3JnPiB3cm90ZToKPiBPbiBUaHUsIEp1biAyMSwgMjAxOCBhdCAwODo0OTo0MVBNICswMjAwLCBM
+aW51cyBXYWxsZWlqIHdyb3RlOgoKPiA+ICtUaGlzIHBhbmVsIGRyaXZlciBjYW4gZHJpdmVyIGEg
+dmFyaWV0eSBvZiBwYW5lbHMuIEl0IHJlcXVpcmVzCj4KPiBzL2NhbiBkcml2ZXIvY2FuIGRyaXZl
+Lwo+Cj4gVGhvdWdoIHdoYXQgYSBkcml2ZXIgc3VwcG9ydHMgaXMgaXJyZWxldmFudCB0byB0aGUg
+YmluZGluZy4uLgoKSXQgaXQgbm90IGEgc29mdHdhcmUgZHJpdmVyIHRoZSB0ZXh0IGlzIHJlZmVy
+cmluZyB0by4gSXQgaXMgYQplbGVjdHJpY2FsIGludGVyZmFjZSB0byBhIHBhbmVsLiBMaWtlIGhv
+dyBhIFRUTCBjaXJjdWl0IGNvbm5lY3RlZAp0byBhIExFRCBpcyByZWZlcnJlZCB0byBhcyBhICJM
+RUQgZHJpdmVyIiwgaXQncyBzaW1wbHkgd2hhdCB0aGUKaW5kdXN0cnkgY2FsbHMgdGhlc2UgdGhp
+bmdzLgoKU28gdGhlcmUgYXJlIHR3byB0aGluZ3M6IHRoZSBwYW5lbCBkcml2ZXIgYW5kIHRoZSBw
+YW5lbCwgdGhlCnNhbWUgcGFuZWwgZHJpdmVyIGlzIHVzZWQgd2l0aCBzZXZlcmFsIHBhbmVscy4g
+V2hhdCB0aGUKZWxlY3Ryb25pY3MgZW5naW5lZXIgd2lsbCBkbyBpcyBwdXQgYSBwYW5lbCBkcml2
+ZXIgbGlrZSB0aGlzCmludG8gaGlzIGRlc2lnbiBhbmQgdGhlbiBjb25uZWN0IHNvbWUgcGFuZWwg
+cy9oZSBmaW5kcwppbiB0aGUgcmlnaHQgcXVhbnRpdHkgaW4gdGhlIHN0cmVldHMgb2YgU2hlbnpo
+ZW4uCgo+IElmIHlvdSByZW1vdmUgdGltaW5ncywgaG93IGRvZXMgaXQgZHJpdmUgYSB2YXJpZXR5
+IG9mIHBhbmVscz8gSnVzdCBieQo+IGNvbXBhdGlibGU/CgpZZXMuCgpMaWtlIHdlIGRpZCBmb3IK
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaWxpdGVrLGls
+aTkzMjIudHh0CndoaWNoIGlzIHNpbWlsYXIgdG8gdGhpcy4KCkluIGZhY3QgSSB0aGluayBtYW55
+IHBhbmVsIGRyaXZlcnMgYXJlIGp1c3Qgc2xvcHBpbHkgc2xpcHBpbmcgaW4KdW5kZXIgdGhlIHJh
+ZGFyIGFzICJwYW5lbHMiIGluIG91ciBiaW5kaW5ncy4KCj5UaGF0IHdvdWxkIG1lYW4gInRwbyx0
+cGcxMTAiIGFsb25lIGlzIG5vdCB2YWxpZCBub3IgdXNlZnVsCj4gYXMgYSBmYWxsYmFjay4KCkFj
+dHVhbGx5IGl0IGlzLiBUaGUgaGFyZHdhcmUgaXMgd2lyZWQgdXAgdG8gdGhlIGRlc2lyZWQKcmVz
+b2x1dGlvbiB3aXRoIGhhcmR3YXJlIHN0cmFwcywgd2hpY2ggYXBwZWFyIGluCnRoZSByZWdpc3Rl
+cnMgdGhlIChzb2Z0d2FyZSkgZHJpdmVyIGNhbiByZWFkIG91dCBzbwp0aGlzIGlzIGlkZWFsbHkg
+c2VsZi1kZXNjcmliaW5nIGhhcmR3YXJlLgoKQnV0IGZvciB0aGUgZXZlbnQgdGhhdCBzb21ldGhp
+bmcgbmVlZHMgdHdlYWtpbmcgaW4gdGhlCmZ1dHVyZSwgbGlrZSB3ZSBvdmVyc3BlY2lmeSBzYXkg
+U29DcywgSSBpbmNsdWRlIHRoZQpleGFjdCBzeXN0ZW0gb24gd2hpY2ggaXQgaXMgZGVwbG95ZCBh
+cyBhIHNlcGFyYXRlCmNvbXBhdGlibGUgc3RyaW5nLgoKPiA+ICthIGZldyBHUElPIGxpbmVzIGZv
+ciBjb250cm9sIG9mIGl0cyByZXNldCBsaW5lIGFuZCBjdXN0b20gc2VyaWFsCj4gPiArcHJvdG9j
+b2wuCj4gPgo+ID4gIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiAtLSBjb21wYXRpYmxlIDogInRw
+byx0cGcxMTAiCj4gPiArLSBjb21wYXRpYmxlIDogb25lIG9mOgo+ID4gKyAgInN0ZSxub21hZGlr
+LW5oazE1LWRpc3BsYXkiLCAidHBvLHRwZzExMCIKPiA+ICsgICJ0cG8sdHBnMTEwIgo+ID4gIC0g
+Z3Jlc3RiLWdwaW9zIDogcGFuZWwgcmVzZXQgR1BJTwo+ID4gIC0gc2Nlbi1ncGlvcyA6IHNlcmlh
+bCBjb250cm9sIGVuYWJsZSBHUElPCj4gPiAgLSBzY2wtZ3Bpb3MgOiBzZXJpYWwgY29udHJvbCBj
+bG9jayBsaW5lIEdQSU8KPiA+ICAtIHNkYS1ncGlvcyA6IHNlcmlhbCBjb250cm9sIGRhdGEgbGlu
+ZSBHUElPCj4KPiBJMkM/IFRoYXQgc2hvdWxkIGJlIGRvbmUgZGlmZmVyZW50bHkuLi4KCkl0IGlz
+IG5vdCBJMkMsIHRoZSBsaW5lcyBhcmUganVzdCBuYW1lZCBjb25mdXNpbmdseQpzaW1pbGFyLiBO
+b25lIG9mIHRoZSBJMkMgKC1saWtlKSBwcm90b2NvbHMgYXBwbHkuCkkgd2FzIHNpbWlsYXJseSBj
+b25mdXNlZCB3aGVuIEkgZmlyc3QgaW1wbGVtZW50ZWQgaXQuCgooTWF5YmUgSSBzaG91bGQgYWRk
+IGEgY29tbWVudCB0byBleHBsYWluIHRoaXMuKQoKWW91cnMsCkxpbnVzIFdhbGxlaWoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
