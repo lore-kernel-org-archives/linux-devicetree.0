@@ -1,258 +1,31 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 3/3] ARM: dts: imx: add ZII SCU2 Mezz board
-Date: Sun, 1 Jul 2018 16:44:05 +0800
-Message-ID: <20180701084404.GJ4348@dragon>
-References: <1529603100-31958-1-git-send-email-andrey.gusakov@cogentembedded.com>
- <1529603100-31958-4-git-send-email-andrey.gusakov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: dts: imx50: fix KPP pin definition typos
+Date: Sun, 1 Jul 2018 17:06:13 +0800
+Message-ID: <20180701090612.GL4348@dragon>
+References: <20180624055929.10011-1-akurz@blala.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1529603100-31958-4-git-send-email-andrey.gusakov@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, cphealy@gmail.com, andrew.smirnov@gmail.com, l.stach@pengutronix.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20180624055929.10011-1-akurz@blala.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexander Kurz <akurz@blala.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Greg Ungerer <gerg@uclinux.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 21, 2018 at 08:45:00PM +0300, Andrey Gusakov wrote:
-> This adds support for the Zodiac Inflight Innovations SCU2 Mezz
-> board, which is based on the i.MX51.
+On Sun, Jun 24, 2018 at 05:59:29AM +0000, Alexander Kurz wrote:
+> iMX50 pin mux options for pads KEY_COL2 and KEY_COL3 allow muxing the same
+> KEY_COL instances as the pad name. Fix typos shifting KEY_COL instances.
 > 
-> Signed-off-by: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
-> ---
->  arch/arm/boot/dts/Makefile                |   3 +-
->  arch/arm/boot/dts/imx51-zii-scu2-mezz.dts | 190 ++++++++++++++++++++++++++++++
->  2 files changed, 192 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/imx51-zii-scu2-mezz.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index d8900f4..e0dc187 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -359,7 +359,8 @@ dtb-$(CONFIG_SOC_IMX51) += \
->  	imx51-eukrea-mbimxsd51-baseboard.dtb \
->  	imx51-ts4800.dtb \
->  	imx51-zii-rdu1.dtb \
-> -	imx51-zii-scu2-esb.dtb
-> +	imx51-zii-scu2-esb.dtb \
-> +	imx51-zii-scu2-mezz.dtb
->  dtb-$(CONFIG_SOC_IMX53) += \
->  	imx53-ard.dtb \
->  	imx53-cx9020.dtb \
-> diff --git a/arch/arm/boot/dts/imx51-zii-scu2-mezz.dts b/arch/arm/boot/dts/imx51-zii-scu2-mezz.dts
-> new file mode 100644
-> index 0000000..f58572a
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx51-zii-scu2-mezz.dts
-> @@ -0,0 +1,190 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +// Copyright (C) 2018 Zodiac Inflight Innovations
-> +
-> +/dts-v1/;
-> +#include "imx51-zii-common.dtsi"
-> +
-> +/ {
-> +	model = "ZII SCU2 Mezz Board";
-> +	compatible = "zii,imx51-scu2-mezz", "fsl,imx51";
-> +
-> +	aliases {
-> +		mdio-gpio0 = &mdio_gpio;
-> +	};
-> +
-> +	mdio_gpio: mdio-gpio {
-> +		compatible = "virtual,mdio-gpio";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_swmdio>;
-> +		gpios = <&gpio2 7 GPIO_ACTIVE_HIGH>, /* mdc */
-> +			<&gpio2 6 GPIO_ACTIVE_HIGH>; /* mdio */
-> +
+> Signed-off-by: Alexander Kurz <akurz@blala.de>
 
-The newline in middle of property list is not really necessary.
-
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		switch@0 {
-> +			compatible = "marvell,mv88e6085";
-> +			reg = <0>;
-> +			dsa,member = <0 0>;
-> +			eeprom-length = <512>;
-> +			interrupt-parent = <&gpio1>;
-> +			interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					label = "port4";
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					label = "port5";
-> +				};
-> +
-> +				port@2 {
-> +					reg = <2>;
-> +					label = "port6";
-> +				};
-> +
-> +				port@3 {
-> +					reg = <3>;
-> +					label = "port7";
-> +				};
-> +
-> +				port@4 {
-> +					reg = <4>;
-> +					label = "cpu";
-> +					ethernet = <&fec>;
-> +
-> +					fixed-link {
-> +						speed = <100>;
-> +						full-duplex;
-> +					};
-> +				};
-> +
-> +				port@5 {
-> +					reg = <5>;
-> +					label = "mezz2esb";
-> +					phy-mode = "sgmii";
-
-Please have a newline between property list and child node.
-
-> +					fixed-link {
-> +						speed = <1000>;
-> +						full-duplex;
-> +					};
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&usb_vbus {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usb_mmc_reset>;
-> +	gpio = <&gpio3 13 GPIO_ACTIVE_LOW>;
-> +	startup-delay-us = <150000>;
-> +};
-
-Please sort these labelled nodes alphabetically in label name.  &iomuxc
-can be an exception though.
-
-> +
-> +&esdhc1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_esdhc1_4bit &pinctrl_esdhc1_8bit>;
-> +	bus-width = <8>;
-> +};
-> +
-> +&fec {
-> +	phy-reset-gpios = <&gpio2 14 GPIO_ACTIVE_LOW>;
-> +	phy-reset-duration = <1>;
-> +	phy-supply = <&vgen3_reg>;
-> +	phy-handle = <&ethphy>;
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ethphy: ethernet-phy@0 {
-> +			reg = <0>;
-> +			max-speed = <100>;
-> +		};
-> +	};
-> +};
-> +
-> +
-> +&i2c_gpio {
-> +	gpios = <&gpio3 2 GPIO_ACTIVE_HIGH>, /* sda */
-> +		<&gpio3 1 GPIO_ACTIVE_HIGH>; /* scl */
-> +};
-> +
-> +&uart2 {
-> +	status = "disabled";
-> +};
-> +
-> +&vsd_reg {
-> +	regulator-always-on;
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl_fec: fecgrp {
-> +		fsl,pins = <
-> +			MX51_PAD_DISP2_DAT15__FEC_TDATA0	0x2004
-> +			MX51_PAD_DISP2_DAT6__FEC_TDATA1		0x2004
-> +			MX51_PAD_DISP2_DAT7__FEC_TDATA2		0x2004
-> +			MX51_PAD_DISP2_DAT8__FEC_TDATA3		0x2004
-> +			MX51_PAD_DISP2_DAT9__FEC_TX_EN		0x2004
-> +			MX51_PAD_DISP2_DAT10__FEC_COL		0x0180
-> +			MX51_PAD_DISP2_DAT11__FEC_RX_CLK	0x0180
-> +			MX51_PAD_DISP2_DAT12__FEC_RX_DV		0x20a4
-> +			MX51_PAD_DISP2_DAT1__FEC_RX_ER		0x20a4
-> +			MX51_PAD_DISP2_DAT13__FEC_TX_CLK	0x2180
-> +			MX51_PAD_DI_GP3__FEC_TX_ER		0x2004
-> +			MX51_PAD_DISP2_DAT14__FEC_RDATA0	0x2180
-> +			MX51_PAD_DI2_DISP_CLK__FEC_RDATA1	0x0085
-> +			MX51_PAD_DI_GP4__FEC_RDATA2		0x0085
-> +			MX51_PAD_DISP2_DAT0__FEC_RDATA3		0x0085
-> +			MX51_PAD_DI2_PIN2__FEC_MDC		0x2004
-> +			MX51_PAD_DI2_PIN3__FEC_MDIO		0x01f5
-> +			MX51_PAD_DI2_PIN4__FEC_CRS		0x0180
-> +			MX51_PAD_EIM_A20__GPIO2_14		0x0085
-> +			MX51_PAD_EIM_A21__GPIO2_15		0x00e5
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart1: uart1grp {
-> +		fsl,pins = <
-> +			MX51_PAD_UART1_RXD__UART1_RXD		0x1c5
-> +			MX51_PAD_UART1_TXD__UART1_TXD		0x1c5
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart2: uart2grp {
-> +	};
-
-Why this empty pinctrl?
-
-> +
-> +	pinctrl_uart3: uart3grp {
-> +		fsl,pins = <
-> +			MX51_PAD_UART3_RXD__UART3_RXD		0x1c5
-> +			MX51_PAD_UART3_TXD__UART3_TXD		0x1c5
-> +		>;
-> +	};
-> +
-> +	pinctrl_usb_mmc_reset: usbmmcgrp {
-> +		fsl,pins = <
-> +			MX51_PAD_CSI1_D9__GPIO3_13		0x85
-> +		>;
-> +	};
-> +
-> +	pinctrl_swmdio: swmdiogrp {
-> +		fsl,pins = <
-> +			MX51_PAD_EIM_D22__GPIO2_6		0x100
-> +			MX51_PAD_EIM_D23__GPIO2_7		0x100
-> +		>;
-> +	};
-> +
-> +	pinctrl_swi2c: swi2cgrp {
-> +		fsl,pins = <
-> +			MX51_PAD_DI1_PIN12__GPIO3_1		0x100
-> +			MX51_PAD_DI1_PIN13__GPIO3_2		0x100
-> +		>;
-> +	};
-
-Please sort these pinctrl nodes alphabetically as well.
-
-Shawn
-
-> +};
-> -- 
-> 1.9.1
-> 
+Applied, thanks.
