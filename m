@@ -1,73 +1,97 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 4/6] arm64: dts: mediatek: Add missing cooling device
- properties for CPUs
-Date: Mon, 2 Jul 2018 18:56:47 +0200
-Message-ID: <003321e5-3d47-9626-ee65-be5abd54a3ae@gmail.com>
-References: <cover.1527225682.git.viresh.kumar@linaro.org>
- <49b1086c104b0ee22f6e992a0abb380de9320c09.1527225682.git.viresh.kumar@linaro.org>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v7 1/4] phy: Update PHY power control sequence
+Date: Mon, 2 Jul 2018 22:30:19 +0530
+Message-ID: <CAFp+6iHxu2GYAn8ftDuHfE1Hj=aQvd6Rum9zjEe-G1WHsAkZuw@mail.gmail.com>
+References: <20180619083647.10116-1-cang@codeaurora.org> <20180619083647.10116-2-cang@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <49b1086c104b0ee22f6e992a0abb380de9320c09.1527225682.git.viresh.kumar@linaro.org>
-Content-Language: en-US
+In-Reply-To: <20180619083647.10116-2-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Can Guo <cang@codeaurora.org>
+Cc: Subhash Jadavani <subhashj@codeaurora.org>, asutoshd@codeaurora.org, Manu Gautam <mgautam@codeaurora.org>, kishon <kishon@ti.com>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 25/05/18 07:40, Viresh Kumar wrote:
-> The cooling device properties, like "#cooling-cells" and
-> "dynamic-power-coefficient", should either be present for all the CPUs
-> of a cluster or none. If these are present only for a subset of CPUs of
-> a cluster then things will start falling apart as soon as the CPUs are
-> brought online in a different order. For example, this will happen
-> because the operating system looks for such properties in the CPU node
-> it is trying to bring up, so that it can register a cooling device.
-> 
-> Add such missing properties.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-
-pushed now to v4.18-next/dts64
-
+On Tue, Jun 19, 2018 at 2:06 PM, Can Guo <cang@codeaurora.org> wrote:
+> All PHYs should be powered on before register configuration starts. And
+> only PCIe PHYs need an extra power control before deasserts reset state.
+>
+> Signed-off-by: Can Guo <cang@codeaurora.org>
 > ---
->  arch/arm64/boot/dts/mediatek/mt7622.dtsi | 1 +
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 2 ++
->  2 files changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> index 9213c966c224..d49fe125e770 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> @@ -89,6 +89,7 @@
->  				 <&apmixedsys CLK_APMIXED_MAIN_CORE_EN>;
->  			clock-names = "cpu", "intermediate";
->  			operating-points-v2 = <&cpu_opp_table>;
-> +			#cooling-cells = <2>;
->  			enable-method = "psci";
->  			clock-frequency = <1300000000>;
->  		};
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 94597e33c806..abd2f15a544b 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -168,6 +168,7 @@
->  			reg = <0x001>;
->  			enable-method = "psci";
->  			cpu-idle-states = <&CPU_SLEEP_0>;
-> +			#cooling-cells = <2>;
->  			clocks = <&infracfg CLK_INFRA_CA53SEL>,
->  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
->  			clock-names = "cpu", "intermediate";
-> @@ -193,6 +194,7 @@
->  			reg = <0x101>;
->  			enable-method = "psci";
->  			cpu-idle-states = <&CPU_SLEEP_0>;
-> +			#cooling-cells = <2>;
->  			clocks = <&infracfg CLK_INFRA_CA57SEL>,
->  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
->  			clock-names = "cpu", "intermediate";
-> 
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 19 ++++++++++++-------
+>  1 file changed, 12 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index 97ef942..ccb8578 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -935,10 +935,12 @@ static void qcom_qmp_phy_configure(void __iomem *base,
+>         }
+>  }
+>
+> -static int qcom_qmp_phy_com_init(struct qcom_qmp *qmp)
+> +static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
+>  {
+> +       struct qcom_qmp *qmp = qphy->qmp;
+>         const struct qmp_phy_cfg *cfg = qmp->cfg;
+>         void __iomem *serdes = qmp->serdes;
+> +       void __iomem *pcs = qphy->pcs;
+>         void __iomem *dp_com = qmp->dp_com;
+>         int ret, i;
+>
+> @@ -979,10 +981,6 @@ static int qcom_qmp_phy_com_init(struct qcom_qmp *qmp)
+>                 goto err_rst;
+>         }
+>
+> -       if (cfg->has_phy_com_ctrl)
+> -               qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+> -                            SW_PWRDN);
+> -
+>         if (cfg->has_phy_dp_com_ctrl) {
+>                 qphy_setbits(dp_com, QPHY_V3_DP_COM_POWER_DOWN_CTRL,
+>                              SW_PWRDN);
+> @@ -1000,6 +998,12 @@ static int qcom_qmp_phy_com_init(struct qcom_qmp *qmp)
+>                              SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
+>         }
+>
+> +       if (cfg->has_phy_com_ctrl)
+> +               qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+> +                            SW_PWRDN);
+> +       else
+> +               qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+> +
+>         /* Serdes configuration */
+>         qcom_qmp_phy_configure(serdes, cfg->regs, cfg->serdes_tbl,
+>                                cfg->serdes_tbl_num);
+> @@ -1090,7 +1094,7 @@ static int qcom_qmp_phy_init(struct phy *phy)
+>
+>         dev_vdbg(qmp->dev, "Initializing QMP phy\n");
+>
+> -       ret = qcom_qmp_phy_com_init(qmp);
+> +       ret = qcom_qmp_phy_com_init(qphy);
+>         if (ret)
+>                 return ret;
+>
+> @@ -1127,7 +1131,8 @@ static int qcom_qmp_phy_init(struct phy *phy)
+>          * Pull out PHY from POWER DOWN state.
+>          * This is active low enable signal to power-down PHY.
+>          */
+> -       qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+> +       if(cfg->type == PHY_TYPE_PCIE)
+> +               qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+>
+>         if (cfg->has_pwrdn_delay)
+>                 usleep_range(cfg->pwrdn_delay_min, cfg->pwrdn_delay_max);
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
+
+Looks good.
+Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+
+Best regards
+Vivek
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
