@@ -1,74 +1,43 @@
-From: Mikko Perttunen <cyndis@kapsi.fi>
-Subject: Re: [PATCH v3 6/8] serial: Add Tegra Combined UART driver
-Date: Mon, 2 Jul 2018 16:30:07 +0300
-Message-ID: <50c4702b-3d59-e443-5075-c888f83a2615@kapsi.fi>
-References: <20180702114033.15654-1-mperttunen@nvidia.com>
- <20180702114033.15654-7-mperttunen@nvidia.com> <20180702131851.GH13096@ulmo>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH v2 0/2] clk: meson-axg: add pcie related clocks
+Date: Mon, 2 Jul 2018 21:31:16 +0000
+Message-ID: <20180702213118.19222-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180702131851.GH13096@ulmo>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Mikko Perttunen <mperttunen@nvidia.com>
-Cc: jassisinghbrar@gmail.com, gregkh@linuxfoundation.org, jonathanh@nvidia.com, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Yixun Lan <yixun.lan@amlogic.com>, linux-kernel@vger.kernel.org, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Jianxin Qin <jianxin.qin@amlogic.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02.07.2018 16:18, Thierry Reding wrote:
-> On Mon, Jul 02, 2018 at 02:40:31PM +0300, Mikko Perttunen wrote:
->> The Tegra Combined UART (TCU) is a mailbox-based mechanism that allows
->> multiplexing multiple "virtual UARTs" into a single hardware serial
->> port. The TCU is the primary serial port on Tegra194 devices.
->>
->> Add a TCU driver utilizing the mailbox framework, as the used mailboxes
->> are part of Tegra HSP blocks that are already controlled by the Tegra
->> HSP mailbox driver.
->>
->> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
->> ---
->>
->> Notes:
->>      v2:
->>      - Removed (void) casts for unused variables.
->>      - Changed the uart_set_options() call to be on one line, even if its
->>        over 80 characters.
->>      - Added defines for magic numbers.
->>      - Style fixes.
->>      - Changed Kconfig entry to depend on the Tegra HSP driver instead of
->>        just the mailbox framework.
->>      
->>      v3:
->>      - Removed FLUSH bit, as it's unnecessary and slows down printing
->>      - Removed call to uart_set_options
->>      - Added mbox_free_channel calls to remove()
->>
->>   drivers/tty/serial/Kconfig       |   9 ++
->>   drivers/tty/serial/Makefile      |   1 +
->>   drivers/tty/serial/tegra-tcu.c   | 291 +++++++++++++++++++++++++++++++++++++++
->>   include/uapi/linux/serial_core.h |   3 +
->>   4 files changed, 304 insertions(+)
->>   create mode 100644 drivers/tty/serial/tegra-tcu.c
-> 
-> The driver looks good to me. But for my own understanding, is there some
-> way we can make use of the multiplexing? That is, could we add a
-> mechanism to have the driver filter out only a specific stream? Could we
-> also specify which stream to send data back to? What happens by default?
-> Which stream is data sent to?
+This patch series try to add clocks for the pcie driver,
+Due to ASIC desigin, the mipi clock is also required by the pcie
+controller, so we also added in this patch series.
 
-There is no multiplexing on the producer/device side (i.e. what this 
-driver does). The mailbox specified in device tree specifies the stream 
-we send stuff to. The mailboxes are per-CPU (we use the CCPLEX mailbox 
-here), so it cannot really be changed.
 
-The consumer then sees the multiplexing in that it can receive from and 
-transmit to all of the various CPUs in the system at the same time. AIUI 
-there is also a secondary form of multiplexing where the outputs of 
-different VMs can be multiplexed by the hypervisor, but I'm not very 
-familiar with that.
+Changes since v1 at [1]:
+  -- Separate dt-binding header files
+  -- use table to exclude unwanted clock parent
 
-Mikko
+[1] https://lkml.kernel.org/r/20180621122620.13195-1-yixun.lan@amlogic.com
 
-> 
-> Thierry
-> 
+Yixun Lan (2):
+  clk: meson-axg: add pcie and mipi clock bindings
+  clk: meson-axg: add clocks required by pcie driver
+
+ drivers/clk/meson/axg.c              | 148 +++++++++++++++++++++++++++
+ drivers/clk/meson/axg.h              |   6 +-
+ include/dt-bindings/clock/axg-clkc.h |   3 +
+ 3 files changed, 156 insertions(+), 1 deletion(-)
+
+-- 
+2.18.0
