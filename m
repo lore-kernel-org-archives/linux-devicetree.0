@@ -1,79 +1,159 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH 1/2] drm/panel: Augment the TPO TPG110 bindings
-Date: Mon, 2 Jul 2018 09:36:14 +0200
-Message-ID: <20180702073616eucas1p1bf821b222950e0f142dadc2ec198e28b~9fRTGJNjD0394203942eucas1p1Z@eucas1p1.samsung.com>
-References: <20180621184942.26087-1-linus.walleij@linaro.org>
- <20180627172105.GA6777@rob-hp-laptop>
- <CGME20180701190136epcas3p1069def4d385e67180afc5d0558a5cd70@epcas3p1.samsung.com>
- <CACRpkdZWJoshkrLafCUiZB7+8xFH1YtC4h+pA-bLW92zr5J-Nw@mail.gmail.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH 08/32] media: camss: Unify the clock names
+Date: Mon, 2 Jul 2018 09:46:14 +0200
+Message-ID: <6331a4df-4240-31d9-ea2c-f9f52ab62e79@xs4all.nl>
+References: <1529681621-9682-1-git-send-email-todor.tomov@linaro.org>
+ <1529681621-9682-9-git-send-email-todor.tomov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CACRpkdZWJoshkrLafCUiZB7+8xFH1YtC4h+pA-bLW92zr5J-Nw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1529681621-9682-9-git-send-email-todor.tomov@linaro.org>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Todor Tomov <todor.tomov@linaro.org>, mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, linux-media@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDEuMDcuMjAxOCAyMTowMSwgTGludXMgV2FsbGVpaiB3cm90ZToKPiBPbiBXZWQsIEp1biAy
-NywgMjAxOCBhdCA3OjIxIFBNIFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+IHdyb3RlOgo+
-PiBPbiBUaHUsIEp1biAyMSwgMjAxOCBhdCAwODo0OTo0MVBNICswMjAwLCBMaW51cyBXYWxsZWlq
-IHdyb3RlOgo+Pj4gK1RoaXMgcGFuZWwgZHJpdmVyIGNhbiBkcml2ZXIgYSB2YXJpZXR5IG9mIHBh
-bmVscy4gSXQgcmVxdWlyZXMKPj4gcy9jYW4gZHJpdmVyL2NhbiBkcml2ZS8KPj4KPj4gVGhvdWdo
-IHdoYXQgYSBkcml2ZXIgc3VwcG9ydHMgaXMgaXJyZWxldmFudCB0byB0aGUgYmluZGluZy4uLgo+
-IEl0IGl0IG5vdCBhIHNvZnR3YXJlIGRyaXZlciB0aGUgdGV4dCBpcyByZWZlcnJpbmcgdG8uIEl0
-IGlzIGEKPiBlbGVjdHJpY2FsIGludGVyZmFjZSB0byBhIHBhbmVsLiBMaWtlIGhvdyBhIFRUTCBj
-aXJjdWl0IGNvbm5lY3RlZAo+IHRvIGEgTEVEIGlzIHJlZmVycmVkIHRvIGFzIGEgIkxFRCBkcml2
-ZXIiLCBpdCdzIHNpbXBseSB3aGF0IHRoZQo+IGluZHVzdHJ5IGNhbGxzIHRoZXNlIHRoaW5ncy4K
-Pgo+IFNvIHRoZXJlIGFyZSB0d28gdGhpbmdzOiB0aGUgcGFuZWwgZHJpdmVyIGFuZCB0aGUgcGFu
-ZWwsIHRoZQo+IHNhbWUgcGFuZWwgZHJpdmVyIGlzIHVzZWQgd2l0aCBzZXZlcmFsIHBhbmVscy4g
-V2hhdCB0aGUKPiBlbGVjdHJvbmljcyBlbmdpbmVlciB3aWxsIGRvIGlzIHB1dCBhIHBhbmVsIGRy
-aXZlciBsaWtlIHRoaXMKPiBpbnRvIGhpcyBkZXNpZ24gYW5kIHRoZW4gY29ubmVjdCBzb21lIHBh
-bmVsIHMvaGUgZmluZHMKPiBpbiB0aGUgcmlnaHQgcXVhbnRpdHkgaW4gdGhlIHN0cmVldHMgb2Yg
-U2hlbnpoZW4uCj4KPj4gSWYgeW91IHJlbW92ZSB0aW1pbmdzLCBob3cgZG9lcyBpdCBkcml2ZSBh
-IHZhcmlldHkgb2YgcGFuZWxzPyBKdXN0IGJ5Cj4+IGNvbXBhdGlibGU/Cj4gWWVzLgo+Cj4gTGlr
-ZSB3ZSBkaWQgZm9yCj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvaWxpdGVrLGlsaTkzMjIudHh0Cj4gd2hpY2ggaXMgc2ltaWxhciB0byB0aGlzLgo+Cj4g
-SW4gZmFjdCBJIHRoaW5rIG1hbnkgcGFuZWwgZHJpdmVycyBhcmUganVzdCBzbG9wcGlseSBzbGlw
-cGluZyBpbgo+IHVuZGVyIHRoZSByYWRhciBhcyAicGFuZWxzIiBpbiBvdXIgYmluZGluZ3MuCj4K
-Pj4gVGhhdCB3b3VsZCBtZWFuICJ0cG8sdHBnMTEwIiBhbG9uZSBpcyBub3QgdmFsaWQgbm9yIHVz
-ZWZ1bAo+PiBhcyBhIGZhbGxiYWNrLgo+IEFjdHVhbGx5IGl0IGlzLiBUaGUgaGFyZHdhcmUgaXMg
-d2lyZWQgdXAgdG8gdGhlIGRlc2lyZWQKPiByZXNvbHV0aW9uIHdpdGggaGFyZHdhcmUgc3RyYXBz
-LCB3aGljaCBhcHBlYXIgaW4KPiB0aGUgcmVnaXN0ZXJzIHRoZSAoc29mdHdhcmUpIGRyaXZlciBj
-YW4gcmVhZCBvdXQgc28KPiB0aGlzIGlzIGlkZWFsbHkgc2VsZi1kZXNjcmliaW5nIGhhcmR3YXJl
-Lgo+Cj4gQnV0IGZvciB0aGUgZXZlbnQgdGhhdCBzb21ldGhpbmcgbmVlZHMgdHdlYWtpbmcgaW4g
-dGhlCj4gZnV0dXJlLCBsaWtlIHdlIG92ZXJzcGVjaWZ5IHNheSBTb0NzLCBJIGluY2x1ZGUgdGhl
-Cj4gZXhhY3Qgc3lzdGVtIG9uIHdoaWNoIGl0IGlzIGRlcGxveWQgYXMgYSBzZXBhcmF0ZQo+IGNv
-bXBhdGlibGUgc3RyaW5nLgo+Cj4+PiArYSBmZXcgR1BJTyBsaW5lcyBmb3IgY29udHJvbCBvZiBp
-dHMgcmVzZXQgbGluZSBhbmQgY3VzdG9tIHNlcmlhbAo+Pj4gK3Byb3RvY29sLgo+Pj4KPj4+ICBS
-ZXF1aXJlZCBwcm9wZXJ0aWVzOgo+Pj4gLS0gY29tcGF0aWJsZSA6ICJ0cG8sdHBnMTEwIgo+Pj4g
-Ky0gY29tcGF0aWJsZSA6IG9uZSBvZjoKPj4+ICsgICJzdGUsbm9tYWRpay1uaGsxNS1kaXNwbGF5
-IiwgInRwbyx0cGcxMTAiCj4+PiArICAidHBvLHRwZzExMCIKPj4+ICAtIGdyZXN0Yi1ncGlvcyA6
-IHBhbmVsIHJlc2V0IEdQSU8KPj4+ICAtIHNjZW4tZ3Bpb3MgOiBzZXJpYWwgY29udHJvbCBlbmFi
-bGUgR1BJTwo+Pj4gIC0gc2NsLWdwaW9zIDogc2VyaWFsIGNvbnRyb2wgY2xvY2sgbGluZSBHUElP
-Cj4+PiAgLSBzZGEtZ3Bpb3MgOiBzZXJpYWwgY29udHJvbCBkYXRhIGxpbmUgR1BJTwo+PiBJMkM/
-IFRoYXQgc2hvdWxkIGJlIGRvbmUgZGlmZmVyZW50bHkuLi4KPiBJdCBpcyBub3QgSTJDLCB0aGUg
-bGluZXMgYXJlIGp1c3QgbmFtZWQgY29uZnVzaW5nbHkKPiBzaW1pbGFyLiBOb25lIG9mIHRoZSBJ
-MkMgKC1saWtlKSBwcm90b2NvbHMgYXBwbHkuCj4gSSB3YXMgc2ltaWxhcmx5IGNvbmZ1c2VkIHdo
-ZW4gSSBmaXJzdCBpbXBsZW1lbnRlZCBpdC4KPgo+IChNYXliZSBJIHNob3VsZCBhZGQgYSBjb21t
-ZW50IHRvIGV4cGxhaW4gdGhpcy4pCgpJIGhhdmUgZ3JlcHBlZCBJbnRlcm5ldCwgb3V0IG9mIGN1
-cmlvc2l0eSwgYW5kIGl0IHNlZW1zIGl0IGlzIHNvLWNhbGxlZAozLXdpcmUgc3BpIFsxXS4KClsx
-XToKaHR0cDovL2FpdGVuZG8zLnNha3VyYS5uZS5qcC9haXRlbmRvX2RhdGEvcHJvZHVjdF9pbWcv
-bGNkL3RmdC9UNDNQMDAvVFBHMTEwJTIwQ3VzdG9tZXIlMjBTcGVjXzAuNi5wZGYKCgpSZWdhcmRz
-CkFuZHJ6ZWoKCj4KPiBZb3VycywKPiBMaW51cyBXYWxsZWlqCj4gX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4g
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCgoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 22/06/18 17:33, Todor Tomov wrote:
+> Unify the clock names - use names closer to the clock
+> definitions.
+
+Added the devicetree mailinglist since this touches on the binding doc.
+
+Regards,
+
+	Hans
+
+> 
+> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+> ---
+>  .../devicetree/bindings/media/qcom,camss.txt       | 24 +++++++++++-----------
+>  drivers/media/platform/qcom/camss/camss.c          | 20 ++++++++----------
+>  2 files changed, 20 insertions(+), 24 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
+> index cadeceb..032e8ed 100644
+> --- a/Documentation/devicetree/bindings/media/qcom,camss.txt
+> +++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
+> @@ -53,7 +53,7 @@ Qualcomm Camera Subsystem
+>  	Usage: required
+>  	Value type: <stringlist>
+>  	Definition: Should contain the following entries:
+> -                - "camss_top_ahb"
+> +                - "top_ahb"
+>                  - "ispif_ahb"
+>                  - "csiphy0_timer"
+>                  - "csiphy1_timer"
+> @@ -67,11 +67,11 @@ Qualcomm Camera Subsystem
+>                  - "csi1_phy"
+>                  - "csi1_pix"
+>                  - "csi1_rdi"
+> -                - "camss_ahb"
+> -                - "camss_vfe_vfe"
+> -                - "camss_csi_vfe"
+> -                - "iface"
+> -                - "bus"
+> +                - "ahb"
+> +                - "vfe0"
+> +                - "csi_vfe0"
+> +                - "vfe_ahb"
+> +                - "vfe_axi"
+>  - vdda-supply:
+>  	Usage: required
+>  	Value type: <phandle>
+> @@ -161,7 +161,7 @@ Qualcomm Camera Subsystem
+>  			<&gcc GCC_CAMSS_CSI_VFE0_CLK>,
+>  			<&gcc GCC_CAMSS_VFE_AHB_CLK>,
+>  			<&gcc GCC_CAMSS_VFE_AXI_CLK>;
+> -                clock-names = "camss_top_ahb",
+> +                clock-names = "top_ahb",
+>                          "ispif_ahb",
+>                          "csiphy0_timer",
+>                          "csiphy1_timer",
+> @@ -175,11 +175,11 @@ Qualcomm Camera Subsystem
+>                          "csi1_phy",
+>                          "csi1_pix",
+>                          "csi1_rdi",
+> -                        "camss_ahb",
+> -                        "camss_vfe_vfe",
+> -                        "camss_csi_vfe",
+> -                        "iface",
+> -                        "bus";
+> +                        "ahb",
+> +                        "vfe0",
+> +                        "csi_vfe0",
+> +                        "vfe_ahb",
+> +                        "vfe_axi";
+>  		vdda-supply = <&pm8916_l2>;
+>  		iommus = <&apps_iommu 3>;
+>  		ports {
+> diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
+> index abf6184..0b663e0 100644
+> --- a/drivers/media/platform/qcom/camss/camss.c
+> +++ b/drivers/media/platform/qcom/camss/camss.c
+> @@ -32,8 +32,7 @@ static const struct resources csiphy_res[] = {
+>  	/* CSIPHY0 */
+>  	{
+>  		.regulator = { NULL },
+> -		.clock = { "camss_top_ahb", "ispif_ahb",
+> -			   "camss_ahb", "csiphy0_timer" },
+> +		.clock = { "top_ahb", "ispif_ahb", "ahb", "csiphy0_timer" },
+>  		.clock_rate = { { 0 },
+>  				{ 0 },
+>  				{ 0 },
+> @@ -45,8 +44,7 @@ static const struct resources csiphy_res[] = {
+>  	/* CSIPHY1 */
+>  	{
+>  		.regulator = { NULL },
+> -		.clock = { "camss_top_ahb", "ispif_ahb",
+> -			   "camss_ahb", "csiphy1_timer" },
+> +		.clock = { "top_ahb", "ispif_ahb", "ahb", "csiphy1_timer" },
+>  		.clock_rate = { { 0 },
+>  				{ 0 },
+>  				{ 0 },
+> @@ -60,8 +58,7 @@ static const struct resources csid_res[] = {
+>  	/* CSID0 */
+>  	{
+>  		.regulator = { "vdda" },
+> -		.clock = { "camss_top_ahb", "ispif_ahb",
+> -			   "csi0_ahb", "camss_ahb",
+> +		.clock = { "top_ahb", "ispif_ahb", "csi0_ahb", "ahb",
+>  			   "csi0", "csi0_phy", "csi0_pix", "csi0_rdi" },
+>  		.clock_rate = { { 0 },
+>  				{ 0 },
+> @@ -78,8 +75,7 @@ static const struct resources csid_res[] = {
+>  	/* CSID1 */
+>  	{
+>  		.regulator = { "vdda" },
+> -		.clock = { "camss_top_ahb", "ispif_ahb",
+> -			   "csi1_ahb", "camss_ahb",
+> +		.clock = { "top_ahb", "ispif_ahb", "csi1_ahb", "ahb",
+>  			   "csi1", "csi1_phy", "csi1_pix", "csi1_rdi" },
+>  		.clock_rate = { { 0 },
+>  				{ 0 },
+> @@ -96,10 +92,10 @@ static const struct resources csid_res[] = {
+>  
+>  static const struct resources_ispif ispif_res = {
+>  	/* ISPIF */
+> -	.clock = { "camss_top_ahb", "camss_ahb", "ispif_ahb",
+> +	.clock = { "top_ahb", "ahb", "ispif_ahb",
+>  		   "csi0", "csi0_pix", "csi0_rdi",
+>  		   "csi1", "csi1_pix", "csi1_rdi" },
+> -	.clock_for_reset = { "camss_vfe_vfe", "camss_csi_vfe" },
+> +	.clock_for_reset = { "vfe0", "csi_vfe0" },
+>  	.reg = { "ispif", "csi_clk_mux" },
+>  	.interrupt = "ispif"
+>  
+> @@ -108,8 +104,8 @@ static const struct resources_ispif ispif_res = {
+>  static const struct resources vfe_res = {
+>  	/* VFE0 */
+>  	.regulator = { NULL },
+> -	.clock = { "camss_top_ahb", "camss_vfe_vfe", "camss_csi_vfe",
+> -		   "iface", "bus", "camss_ahb" },
+> +	.clock = { "top_ahb", "vfe0", "csi_vfe0",
+> +		   "vfe_ahb", "vfe_axi", "ahb" },
+>  	.clock_rate = { { 0 },
+>  			{ 50000000, 80000000, 100000000, 160000000,
+>  			  177780000, 200000000, 266670000, 320000000,
+> 
