@@ -1,53 +1,59 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v4 2/6] dt: qcom: 8996: thermal: Move to DT initialisation
-Date: Mon,  2 Jul 2018 18:14:05 +0530
-Message-ID: <80e54ddfa672ae05db24a90c5f5463fc7fcbec46.1530533998.git.amit.kucheria@linaro.org>
-References: <cover.1530533998.git.amit.kucheria@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1530533998.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1530533998.git.amit.kucheria@linaro.org>
-References: <cover.1530533998.git.amit.kucheria@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v4 0/6] thermal: tsens: Refactoring for TSENSv2 IP
+Date: Mon,  2 Jul 2018 18:14:03 +0530
+Message-ID: <cover.1530533998.git.amit.kucheria@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, smohanad@codeaurora.org, vivek.gautam@codeaurora.org, andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh@kernel.org>, rnayak@codeaurora.org, Kees Cook <keescook@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, smohanad@codeaurora.org, bjorn.andersson@linaro.org, edubezval@gmail.com, vivek.gautam@codeaurora.org, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-We also split up the regmap address space into two, one for the TM
-registers, the other for the SROT registers. This was required to deal with
-different address offsets for the TM and SROT registers across different
-SoC families.
+This series is a mixed bag:
+- Some code moves to allow code sharing between various v2.x.y versions of
+  the TSENS IP,
+- new qcom,tsens-v2.4.0 DT property for SDM845 and a generic qcom,tsens-v2
+  property as a fallback compatible for all v2.x.y platforms,
+- new platform support (sdm845)
+- a cleanup patch and
+- a DT change to have a common way to deal with the SROT and TM registers
+  despite slightly different features across the IP family and different
+  register offsets.
 
-Since tsens-common.c/init_common() currently only registers one address
-space, the order is important (TM before SROT). This is OK since the code
-doesn't really use the SROT functionality yet.
+Rob mentioned offline that we should expose the full version string of the
+TSENS IP (x.y.z) and have a fallback compatible. I hope patch 4 does what
+you were looking for.
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+Regards,
+Amit
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 8c7f9ca..6c8a857 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -461,7 +461,17 @@
- 
- 		tsens0: thermal-sensor@4a8000 {
- 			compatible = "qcom,msm8996-tsens";
--			reg = <0x4a8000 0x2000>;
-+			reg = <0x4a9000 0x1000>, /* TM */
-+			      <0x4a8000 0x1000>; /* SROT */
-+			#qcom,sensors = <13>;
-+			#thermal-sensor-cells = <1>;
-+		};
-+
-+		tsens1: thermal-sensor@4ac000 {
-+			compatible = "qcom,msm8996-tsens";
-+			reg = <0x4ad000 0x1000>, /* TM */
-+			      <0x4ac000 0x1000>; /* SROT */
-+			#qcom,sensors = <8>;
- 			#thermal-sensor-cells = <1>;
- 		};
- 
+Amit Kucheria (6):
+  thermal: tsens: Get rid of unused fields in structure
+  dt: qcom: 8996: thermal: Move to DT initialisation
+  thermal: tsens: Rename tsens-8996 to tsens-v2 for reuse
+  thermal: tsens: Add support for SDM845
+  thermal: tsens: Check if we have valid data before reading
+  arm64: dts: sdm845: Add tsens nodes
+
+ .../devicetree/bindings/thermal/qcom-tsens.txt     |  2 ++
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              | 12 ++++++-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               | 16 +++++++++
+ drivers/thermal/qcom/Makefile                      |  2 +-
+ drivers/thermal/qcom/{tsens-8996.c => tsens-v2.c}  | 39 ++++++++++++----------
+ drivers/thermal/qcom/tsens.c                       |  6 ++++
+ drivers/thermal/qcom/tsens.h                       |  7 ++--
+ 7 files changed, 62 insertions(+), 22 deletions(-)
+ rename drivers/thermal/qcom/{tsens-8996.c => tsens-v2.c} (66%)
+
 -- 
 2.7.4
