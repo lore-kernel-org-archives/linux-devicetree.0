@@ -1,43 +1,51 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [RESEND PATCH v4 0/2] Add a property in at24.c
-Date: Mon, 2 Jul 2018 13:59:02 +0200
-Message-ID: <CAMRc=MfFH7EnyAXyBK+sssjyYoz9LhNDTkzWRsHBsPcDV7Ecig@mail.gmail.com>
-References: <1530522740-2798-1-git-send-email-alanx.chiang@intel.com>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH v6 0/2] pinctrl: imx: Add driver for i.MX8MQ
+Date: Mon,  2 Jul 2018 14:59:04 +0300
+Message-ID: <1530532746-619-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530522740-2798-1-git-send-email-alanx.chiang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alanx.chiang@intel.com
-Cc: linux-i2c <linux-i2c@vger.kernel.org>, andy.yeh@intel.com, Sakari Ailus <sakari.ailus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, andriy.shevchenko@intel.com, Rajmohan Mani <rajmohan.mani@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, tfiga@chromium.org, jcliang@chromium.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+To: Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh@kernel.org>, Dong Aisheng <aisheng.dong@nxp.com>
+Cc: linux-gpio@vger.kernel.org, linux-imx@nxp.com, Shawn Guo <shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-2018-07-02 11:12 GMT+02:00  <alanx.chiang@intel.com>:
-> From: Alan Chiang <alanx.chiang@intel.com>
->
-> This RESEND PATCH only adds the Acked-by and Reviewed-by,
-> no other patch for the codes.
->
+This is the sixth version for the patch series sent by Lucas.
 
-Please don't do this. We're waiting for Rob's Acked-by and I will
-collect all the tags anyway. Don't resend unless there are changes to
-patches.
+https://www.spinics.net/lists/devicetree/msg212752.html
 
-Best regards,
-Bartosz Golaszewski
+Fifth version can be found here:
 
-> In at24.c, it uses 8-bit addressing by default. In this patch,
-> add a property address-width that provides a flexible method to
-> pass the information to the driver.
->
-> Alan Chiang (2):
->   dt-bindings: at24: Add address-width property
->   eeprom: at24: Add support for address-width property
->
->  Documentation/devicetree/bindings/eeprom/at24.txt |  2 ++
->  drivers/misc/eeprom/at24.c                        | 17 +++++++++++++++++
->  2 files changed, 19 insertions(+)
->
-> --
-> 2.7.4
->
+https://lkml.org/lkml/2018/6/22/501
+
+Changes since v5:
+ * implemented Rob's review comments related to bindings
+
+Changes since v4:
+ * implemented all Aisheng's review comments
+
+Changes since v3:
+ * dropped the SION generic pinconf changes
+ * added examples to the bindings doc
+
+Changes since v2:
+ * switch back to the 'fsl,pins' and hardcoded the config values
+inside the dts.
+ * updated documentation accordingly
+
+Abel Vesa (1):
+  dt-bindings: add binding for i.MX8MQ IOMUXC
+
+Lucas Stach (1):
+  pinctrl: imx: add driver for i.MX8MQ
+
+ .../bindings/pinctrl/fsl,imx8mq-pinctrl.txt        |  36 +++
+ drivers/pinctrl/freescale/Kconfig                  |   7 +
+ drivers/pinctrl/freescale/Makefile                 |   1 +
+ drivers/pinctrl/freescale/pinctrl-imx8mq.c         | 351 +++++++++++++++++++++
+ 4 files changed, 395 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
+ create mode 100644 drivers/pinctrl/freescale/pinctrl-imx8mq.c
+
+-- 
+2.7.4
