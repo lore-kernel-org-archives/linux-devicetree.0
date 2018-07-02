@@ -1,49 +1,72 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH v1] ARM: dts: imx6sl-evk: keep sw4 always on
-Date: Mon, 2 Jul 2018 01:09:02 +0000
-Message-ID: <AM3PR04MB13155B8D567ABEF7EF03249AF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
-References: <1529930051-14122-1-git-send-email-yibin.gong@nxp.com>
- <20180701093402.GN4348@dragon>
- <CAOMZO5BjOEGWv2dC-bp0BYHq+PhLssEKic+o7ock8_1Dobd=sQ@mail.gmail.com>
- <AM3PR04MB131507901BFEE1A5E426EECBF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5D8tjnjbwMdLGd7KF7_4PwqRWX8XH8kdcF3-5e-r2YQEA@mail.gmail.com>
- <AM3PR04MB1315E7AED2BCE2265E6C443DF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5D8v4KM9S4ooHTDbA+vc8BZN_eO_wDuOPA+8Hcq-SmLDw@mail.gmail.com>
- <AM3PR04MB1315C7C7CFF990615732FFBCF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5AM5VRS7UiWuvAQ8vvTB8OM+iwofuYrbsL_yB9e0Z9Kyg@mail.gmail.com>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH 2/2] regulator: uniphier: add regulator driver for UniPhier SoC
+Date: Mon, 02 Jul 2018 10:10:35 +0900
+Message-ID: <20180702101034.23E8.4A936039@socionext.com>
+References: <1530260533-19415-3-git-send-email-hayashi.kunihiko@socionext.com> <20180629110341.GA6556@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5AM5VRS7UiWuvAQ8vvTB8OM+iwofuYrbsL_yB9e0Z9Kyg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180629110341.GA6556@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Robin Gong <yibin.gong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
-Z2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1AZ21haWwuY29t
-XQ0KPiBTZW50OiBNb25kYXksIEp1bHkgMiwgMjAxOCA5OjA1IEFNDQo+IFRvOiBBbnNvbiBIdWFu
-ZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVs
-Lm9yZz47IFJvYmluIEdvbmcgPHlpYmluLmdvbmdAbnhwLmNvbT47DQo+IE1hcmsgUnV0bGFuZCA8
-bWFyay5ydXRsYW5kQGFybS5jb20+OyBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQNCj4gRkxB
-VFRFTkVEIERFVklDRSBUUkVFIEJJTkRJTkdTIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47
-DQo+IGxpbnV4LWtlcm5lbCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IFJvYiBIZXJy
-aW5nDQo+IDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAu
-Y29tPjsgU2FzY2hhIEhhdWVyDQo+IDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyBGYWJpbyBFc3Rl
-dmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+Ow0KPiBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJFRVND
-QUxFIElNWCAvIE1YQyBBUk0gQVJDSElURUNUVVJFDQo+IDxsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjFdIEFSTTogZHRzOiBpbXg2
-c2wtZXZrOiBrZWVwIHN3NCBhbHdheXMgb24NCj4gDQo+IE9uIFN1biwgSnVsIDEsIDIwMTggYXQg
-MTA6MDMgUE0sIEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiB3cm90ZToNCj4g
-DQo+ID4gU28gdGhhdCBtZWFuIHN1Y2gga2luZCBvZiBrZXJuZWwgcGF0Y2ggd2lsbCBuZXZlciBi
-ZSBpbnRvIGtlcm5lbD8gRXZlbg0KPiA+IGlmIGl0IGlzIGEgbmVjZXNzYXJ5IHBhdGNoIGZvciBm
-aXhpbmcgc29tZSBvdGhlciBpc3N1ZXM/IEkganVzdCB3b25kZXINCj4gPiBob3cgdGhpcyBjYXNl
-IGJlaW5nIGhhbmRsZWQuDQo+IA0KPiBXaGF0IGlzIHRoZSBpc3N1ZSB0aGF0IDVmZTE1NmYxY2Fi
-NGYgZml4ZXM/IEl0IGlzIG5vdCBjbGVhciBieSBsb29raW5nIGF0IHRoZQ0KPiBjb21taXQgbG9n
-Lg0KDQpPbiBzb21lIG5ldyBpLk1YIHBsYXRmb3JtcywgUEZ1emUgc3dpdGNoZXMgYXJlIHVzZWQg
-Zm9yIHN1cHBseWluZyBHUFUvVlBVDQpvciBvdGhlciBub24tY3JpdGljYWwgbW9kdWxlcyBvbmx5
-LCB0aGVzZSBzd2l0Y2hlcyBuZWVkIHRvIGJlIHR1cm5lZCBvZmYgYnkNCnJ1bnRpbWUgUE0gdG8g
-YXZvaWQgdmVyeSBoaWdoIHBvd2VyIGxlYWthZ2UsIGxpa2Ugb24gbVNjYWxlODUwRC4NCg0KQW5z
-b24NCg0K
+Hi Mark,
+Thank you for your comments.
+
+On Fri, 29 Jun 2018 12:03:41 +0100 <broonie@kernel.org> wrote:
+
+> On Fri, Jun 29, 2018 at 05:22:13PM +0900, Kunihiko Hayashi wrote:
+> 
+> > +++ b/drivers/regulator/uniphier-regulator.c
+> > @@ -0,0 +1,251 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Regulator controller driver for UniPhier SoC
+> > + * Copyright 2018 Socionext Inc.
+> > + * Author: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > + */
+> 
+> Please make the entire header a C++ comment so that it looks intentional
+> rather than mixing C and C++ like this.
+
+Okay, I'll rewrite it as a C++ comment.
+
+> 
+> > +static int uniphier_regulator_enable(struct regulator_dev *rdev)
+> > +{
+> > +	struct uniphier_regulator_priv *priv = rdev_get_drvdata(rdev);
+> > +	u32 val;
+> > +
+> > +	val = readl_relaxed(priv->base + rdev->desc->enable_reg);
+> > +	val &= ~rdev->desc->enable_mask;
+> > +	val |= rdev->desc->enable_val;
+> > +	writel_relaxed(val, priv->base + rdev->desc->enable_reg);
+> > +
+> > +	return 0;
+> > +}
+> 
+> Could you use a MMIO regmap for this driver?  All the operations look
+> like they're just straight up operations of the sort the standard
+> helpers support them and it means the driver will be able to take
+> advantage of any improvements the core makes for free.
+
+Indeed. In this case, I can use a MMIO regmap and it's reasonable and
+simply to use it.
+
+
+> Otherwise this looks great, and the above two issues can be fixed as
+> followup patches so I'll apply.
+
+And more, as with uniphier_usb3_reset [1], I can reuse soc_data and
+use clk_bulk in it. If it's no problem, I'll rewrite like that next.
+
+[1] https://lkml.org/lkml/2018/6/29/183
+
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
