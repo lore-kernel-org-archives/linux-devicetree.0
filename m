@@ -1,89 +1,78 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 2/2] arm64: tegra: Add CPU nodes to Tegra194 device tree
-Date: Mon, 2 Jul 2018 15:57:54 +0200
-Message-ID: <20180702135754.GM13096@ulmo>
-References: <20180702121131.13461-1-mperttunen@nvidia.com>
- <20180702121131.13461-2-mperttunen@nvidia.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v4 0/6] thermal: tsens: Refactoring for TSENSv2 IP
+Date: Mon, 2 Jul 2018 19:30:11 +0530
+Message-ID: <CAHLCerNj83pYHDJg2aHoqOqJ6NEg+OWHT-RW4SDbEHrwJXYEtw@mail.gmail.com>
+References: <cover.1530533998.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============9134007389063895449=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180702121131.13461-2-mperttunen@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mikko Perttunen <mperttunen@nvidia.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jonathanh@nvidia.com, robh+dt@kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1530533998.git.amit.kucheria@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Kees Cook <keescook@chromium.org>, Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jul 2, 2018 at 6:14 PM, Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> This series is a mixed bag:
+> - Some code moves to allow code sharing between various v2.x.y versions of
+>   the TSENS IP,
+> - new qcom,tsens-v2.4.0 DT property for SDM845 and a generic qcom,tsens-v2
+>   property as a fallback compatible for all v2.x.y platforms,
+> - new platform support (sdm845)
+> - a cleanup patch and
+> - a DT change to have a common way to deal with the SROT and TM registers
+>   despite slightly different features across the IP family and different
+>   register offsets.
+>
+> Rob mentioned offline that we should expose the full version string of the
+> TSENS IP (x.y.z) and have a fallback compatible. I hope patch 4 does what
+> you were looking for.
+>
+> Regards,
+> Amit
 
---===============9134007389063895449==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="oiL9LJXJsdjS5rzq"
-Content-Disposition: inline
+Forgot to append the changelog. Here it is.
 
+Changes since v3:
+- Introduce qcom,tsens-v2.4.0 property and make qcom,tsens-v2 a
+  fallback, compatible property.
+- Rename ops_v2 to ops_generic_v2
 
---oiL9LJXJsdjS5rzq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes since v2:
+- Based on review, moved tsens-8996.c to tsens-v2.c and changed
+  corresponding function names, struct names to allow for generic tsensv2
+  platforms
+- All v2 platforms will now only need to use the qcom,tsen-v2 property
+- Added a DT patch to initialize tsens driver on sdm845, now that 4.18-rc1
+  will contain an sdm845.dtsi
 
-On Mon, Jul 02, 2018 at 03:11:31PM +0300, Mikko Perttunen wrote:
-> Add CPU and PSCI nodes to device tree. The Tegra194 SoC contains
-> eight NVIDIA Carmel CPUs.
->=20
-> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
-> ---
->=20
-> Notes:
->     v2:
->     - Moved PSCI node/properties to SoC device tree
->=20
->  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 67 ++++++++++++++++++++++++++=
-++++++
->  1 file changed, 67 insertions(+)
+Changes since v1:
+- Move get_temp() from tsens-8996 to tsens-common and rename
+- Change 8996 DT entry to allow init_common() to work across sdm845 and
+  8996 due to different offsets
 
-Applied, thanks.
-
-Thierry
-
---oiL9LJXJsdjS5rzq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAls6L2IACgkQ3SOs138+
-s6Hliw/+LfJGullf42ByB6mbKyZGcO3GbiJ7ob/zgR7GYmj5swQd2NanUjZjTZ1s
-1VOUjPd5PeEEgpBdIEZ4+bHZO1G9LcP2/0fes40eiTTNRSyp6+v+ntezZSc1pGgt
-AFEUtujq9DHMGTj6KPOCCL8GMqH2f7kAnhuzf0UGJf5IoSc41VTKQ3QKYHYuEzrV
-XVXL3AwPvBrnYgZlkm0S29RBMPBx1xgurM3JTL89YtFyApjKn8k8VrzDblimRLlO
-rSg4EpGoZOdv+HsFgZQDuQRmamvXVTpw2peZfaLibusOUn6HtWAODZ18GAlxf/E0
-olXqwNleNJnN8FChoTlcClfjT9M1FhiU17SPN9ZINDwdyAUMa0J27Cu90oejFavh
-Ig4oa0WtrMse3/Y6TzBvxzY2nqd7wuhz92MjK5XCk9K7pA3hNdODAgrOGx+nKQuI
-T6sH3eZoB5a8XpR5Q4sS7DnQu/nuZ5EIMlt/ocebEqjBbIu82AYHMir3rvjG5Llc
-EdmLNymiT0Aub0ZPkqy59oSXz6SJXhoPx9xs6oTwOn+AqMvmrYyQnoWubvo6yMri
-Ag37ze1FKQTGWhafjEXxNXfeX3IlX7jjeKQaR8d/e2YIqvornAu8JOejOFYxHSEE
-Xtx0XYxuprjZDyEr3NiuEVfptSdCjSJLMl3GP5XsZrcmGL+iwV8=
-=0WWG
------END PGP SIGNATURE-----
-
---oiL9LJXJsdjS5rzq--
-
-
---===============9134007389063895449==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============9134007389063895449==--
+> Amit Kucheria (6):
+>   thermal: tsens: Get rid of unused fields in structure
+>   dt: qcom: 8996: thermal: Move to DT initialisation
+>   thermal: tsens: Rename tsens-8996 to tsens-v2 for reuse
+>   thermal: tsens: Add support for SDM845
+>   thermal: tsens: Check if we have valid data before reading
+>   arm64: dts: sdm845: Add tsens nodes
+>
+>  .../devicetree/bindings/thermal/qcom-tsens.txt     |  2 ++
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi              | 12 ++++++-
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi               | 16 +++++++++
+>  drivers/thermal/qcom/Makefile                      |  2 +-
+>  drivers/thermal/qcom/{tsens-8996.c => tsens-v2.c}  | 39 ++++++++++++----------
+>  drivers/thermal/qcom/tsens.c                       |  6 ++++
+>  drivers/thermal/qcom/tsens.h                       |  7 ++--
+>  7 files changed, 62 insertions(+), 22 deletions(-)
+>  rename drivers/thermal/qcom/{tsens-8996.c => tsens-v2.c} (66%)
+>
+> --
+> 2.7.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
