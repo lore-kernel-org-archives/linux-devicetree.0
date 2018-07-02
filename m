@@ -1,166 +1,77 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v2 3/3] dt-bindings: clock: Modify Actions Soc clock
- bindings
-Date: Mon, 2 Jul 2018 07:32:01 +0530
-Message-ID: <20180702020201.GA2654@Mani-XPS-13-9360>
-References: <20180626192820.28237-3-sravanhome@gmail.com>
- <20180628191805.3722-1-sravanhome@gmail.com>
- <20180628191805.3722-4-sravanhome@gmail.com>
- <20180630093202.GB7320@Mani-XPS-13-9360>
- <15070ea0-aebf-2b7d-89f0-b21e729c927e@gmail.com>
- <20180701173706.GA15895@Mani-XPS-13-9360>
- <88ce01d4-2694-eca0-770e-d4bd2869a258@suse.de>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v3 2/2] iio: adc: Add Spreadtrum SC27XX PMICs ADC support
+Date: Mon, 2 Jul 2018 10:03:49 +0800
+Message-ID: <CAMz4kuKAA=m=++MO3NLzQwNtC=ms8SoU9pvXDwqfb=pQWOw2ww@mail.gmail.com>
+References: <900586c7a4ce55818ab330c738f306c7452191ef.1529550463.git.baolin.wang@linaro.org>
+ <95836d610301133ffdac1efa86d7daf4cecb97b7.1529550463.git.baolin.wang@linaro.org>
+ <20180622151338.00003622@huawei.com> <CAMz4kuJUeDjTVJqNc4cNv=LwR1HkuFap4vBF7CCcrxNqnTHa-A@mail.gmail.com>
+ <20180624143009.48cf14f8@archlinux> <20180624144734.62f28908@archlinux>
+ <CAMz4kuJb4aRxNKXYkDJ5vQQgFRN+87_br2gp1BtTLji0dp8XHQ@mail.gmail.com> <20180630190042.4962bff3@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <88ce01d4-2694-eca0-770e-d4bd2869a258@suse.de>
+In-Reply-To: <20180630190042.4962bff3@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: Saravanan Sekar <sravanhome@gmail.com>, sboyd@kernel.org, pn@denx.de, linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, Jeff Chen <jeff.chen@actions-semi.com>, "Thomas C. Liau" <thomas.liau@actions-semi.com>
+To: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, freeman.liu@spreadtrum.com, Mark Brown <broonie@kernel.org>, DTML <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
+On 1 July 2018 at 02:00, Jonathan Cameron <jic23@jic23.retrosnub.co.uk> wrote:
+> On Mon, 25 Jun 2018 09:47:54 +0800
+> Baolin Wang <baolin.wang@linaro.org> wrote:
+>
+>> Hi Jonathan,
+>>
+>> On 24 June 2018 at 21:47, Jonathan Cameron <jic23@jic23.retrosnub.co.uk> wrote:
+>> > On Sun, 24 Jun 2018 14:30:09 +0100
+>> > Jonathan Cameron <jic23@kernel.org> wrote:
+>> >
+>> >> On Sun, 24 Jun 2018 17:13:00 +0800
+>> >> Baolin Wang <baolin.wang@linaro.org> wrote:
+>> >>
+>> >> > Hi Jonathan,
+>> >> >
+>> >> > On 22 June 2018 at 22:13, Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
+>> >> > > On Thu, 21 Jun 2018 11:14:05 +0800
+>> >> > > Baolin Wang <baolin.wang@linaro.org> wrote:
+>> >> > >
+>> >> > >> From: Freeman Liu <freeman.liu@spreadtrum.com>
+>> >> > >>
+>> >> > >> The Spreadtrum SC27XX PMICs ADC controller contains 32 channels,
+>> >> > >> which is used to sample voltages with 12 bits conversion.
+>> >> > >>
+>> >> > >> [Baolin Wang did lots of improvements]
+>> >> > >>
+>> >> > >> Signed-off-by: Freeman Liu <freeman.liu@spreadtrum.com>
+>> >> > >> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>> >> > >
+>> >> > > One trivial missed bit of cleanup inline.  I'll sort that
+>> >> > > when applying if no one else points anything out before I get back to my
+>> >> > > development machine.
+>> >> >
+>> >> > Thanks.
+>> >>
+>> >> Applied to the togreg branch of iio.git and pushed out as testing
+>> >> for the autobuilders to play with it.
+>> > Sorry, backed out for now.  My togreg tree is non rebasing and
+>> > this is dependant on some stuff that only went in during the merge
+>> > window.
+>> >
+>> > I'll send a pull request to GregKH fairly soon and after that do
+>> > the merge back into my tree to pick that hwspin lock stuff up.
+>> >
+>> > So this will be a week or two before I can apply it without issues.
+>> >
+>> > Give me a poke if I seem to have forgotten about it.
+>>
+>> OK. Many thanks for your help.
+>>
+> Applied now with dependencies in place.  Applied to the togreg
+> branch of iio.git and pushed out as testing for the autobuilders
+> to play with it.
 
-On Sun, Jul 01, 2018 at 07:58:15PM +0200, Andreas Färber wrote:
-> Hi,
-> 
-> Am 01.07.2018 um 19:37 schrieb Manivannan Sadhasivam:
-> > On Sun, Jul 01, 2018 at 07:26:20PM +0200, Saravanan Sekar wrote:
-> >> Hi Mani
-> >>
-> >>
-> >> On 06/30/18 11:32, Manivannan Sadhasivam wrote:
-> >>> Hi Saravanan,
-> >>>
-> >>> I agree with modifying the existing binding to accomodate other
-> >>> SoC's of the same family. But the binding should be
-> >>> "actions,owl-cmu.txt" since it reflects the family name.
-> >>
-> >> Agree, will modify the name
-> >>
-> >>> Andreas, what do you think?
-> 
-> I concur that sx00 is insufficient. Older models were called ATMxxxx.
-> Unfortunately with owl- it then no longer matches the compatible, but I
-> wouldn't mind.
-> 
-> >>> On Thu, Jun 28, 2018 at 09:18:05PM +0200, Saravanan Sekar wrote:
-> >>>> Modify clock bindings common Actions Semi Soc family S700/S900.
-> >>>>
-> >>>> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
-> >>>> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> >>>> ---
-> >>>>   ...tions,s900-cmu.txt => actions,sx00-cmu.txt} | 18 ++++++++++--------
-> >>>>   1 file changed, 10 insertions(+), 8 deletions(-)
-> >>>>   rename Documentation/devicetree/bindings/clock/{actions,s900-cmu.txt => actions,sx00-cmu.txt} (71%)
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/clock/actions,s900-cmu.txt b/Documentation/devicetree/bindings/clock/actions,sx00-cmu.txt
-> >>>> similarity index 71%
-> >>>> rename from Documentation/devicetree/bindings/clock/actions,s900-cmu.txt
-> >>>> rename to Documentation/devicetree/bindings/clock/actions,sx00-cmu.txt
-> >>>> index 93e4fb827cd6..8dc7edb4d198 100644
-> >>>> --- a/Documentation/devicetree/bindings/clock/actions,s900-cmu.txt
-> >>>> +++ b/Documentation/devicetree/bindings/clock/actions,sx00-cmu.txt
-> >>>> @@ -1,12 +1,14 @@
-> >>>> -* Actions S900 Clock Management Unit (CMU)
-> >>>> +* Actions S900/S700 Clock Management Unit (CMU)
-> >>> Same as above. Should be Actions OWL SoC's Clock Management Unit (CMU).
-> >>
-> >> sure
-> >>
-> > 
-> > During the review of I2C controller driver, Andreas pointed out that
-> > we should use Owl instead of OWL in all places and also Actions should
-> > be replaced by Actions Semiconductor.
-> 
-> Actually I was just asking to include the company name and not just say
-> Owl. Whether it's Actions, Actions Semi or Actions Semiconductor is not
-> that important to me - that would be for the Actions Semi colleagues to
-> comment - which I see are not in CC... Please fix that! You don't need
-> mp-cs I think, but the others please.
-> 
+Thanks Jonathan.
 
-Okay, cool.
-
-> > So, please change it in relevant
-> > places. For this binding, title should be:
-> > 
-> > Actions Semiconductor Owl SoC's Clock Management Unit (CMU).
-> 
-> "SoC's" looks weird there, do we have such precedence to add it?
-> "Actions Owl Clock Management Unit (CMU)" might do?
-> 
-
-Let's keep 'Actions Semi' everywhere unless Actions Semi people say
-differently.
-
-> Saravanan, please compare other patch titles and adapt your subjects
-> accordingly: "modify bindings" is not very meaningful, since a patch
-> always modifies something and the prefix already indicates dt-bindings
-> as target. "Soc" is misspelled. The time-saving information to put there
-> would be addition of S700.
-> 
-> >>>> -The Actions S900 clock management unit generates and supplies clock to various
-> >>>> -controllers within the SoC. The clock binding described here is applicable to
-> >>>> -S900 SoC.
-> >>>> +The Actions S900/S700 clock management unit generates and supplies clock to
-> >>>> +various controllers within the SoC. The clock binding described here is
-> >>>> +applicable to S900/S700 SoC.
-> 
-> "S900 and S700 SoCs"? (keep the slash above)
-> 
-
-Agree.
-
-> >>>>   Required Properties:
-> >>>> -- compatible: should be "actions,s900-cmu"
-> >>>> +- compatible: should be one of this
-> >>> Change to: compatible: should be one of the following:
-> >>
-> >> sure
-> >>
-> >>> Thanks,
-> >>> Mani
-> >>>
-> >>>> +	"actions,s900-cmu"
-> >>>> +	"actions,s700-cmu"
-> 
-> Mani, should we order alphabetically? I.e., will S500 go before S900, or
-> will people just always append at the end now? Not saying we have to,
-> but keeping it consistent across Actions bindings would be desirable.
-> 
-
-Yes, we should order alphabetically IMO. That way it looks good!
-
-> >>>>   - reg: physical base address of the controller and length of memory mapped
-> >>>>     region.
-> >>>>   - clocks: Reference to the parent clocks ("hosc", "losc")
-> >>>> @@ -15,9 +17,9 @@ Required Properties:
-> >>>>   Each clock is assigned an identifier, and client nodes can use this identifier
-> >>>>   to specify the clock which they consume.
-> >>>> -All available clocks are defined as preprocessor macros in
-> >>>> -dt-bindings/clock/actions,s900-cmu.h header and can be used in device
-> >>>> -tree sources.
-> >>>> +All available clocks are defined as preprocessor macros in corresponding
-> >>>> +dt-bindings/clock/actions,s900-cmu.h or s700-cmu.h header and can be used in
-> 
-> actions,s700-cmu.h for humans please or at least ...,s700-cmu.h.
-> 
-
-actions,s700-cmu.h looks good to me.
-
-Thanks,
-Mani
-
-> >>>> +device tree sources.
-> >>>>   External clocks:
-> 
-> Thanks,
-> Andreas
-> 
-> -- 
-> SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-> GF: Felix Imendörffer, Jane Smithard, Graham Norton
-> HRB 21284 (AG Nürnberg)
+---
+Baolin Wang
+Best Regards
