@@ -1,40 +1,40 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v2 0/3] Kingdisplay-kd097d04-panel
-Date: Mon,  2 Jul 2018 12:32:26 +0200
-Message-ID: <20180702103229.3952-1-heiko@sntech.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Subject: [PATCH v2 1/3] dt-bindings: Add vendor prefix for kingdisplay
+Date: Mon,  2 Jul 2018 12:32:27 +0200
+Message-ID: <20180702103229.3952-2-heiko@sntech.de>
+References: <20180702103229.3952-1-heiko@sntech.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180702103229.3952-1-heiko@sntech.de>
+Sender: linux-kernel-owner@vger.kernel.org
 To: thierry.reding@gmail.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, hl@rock-chips.com, briannorris@chromium.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, nickey.yang@rock-chips.com, robh+dt@kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, seanpaul@chromium.org, briannorris@chromium.org, hl@rock-chips.com, nickey.yang@rock-chips.com, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIElubm9sdXggcDA5N3BmZyBpcyBvbmUgb2YgdHdvIHBvc3NpYmxlIHBhbmVscyB1c2VkIGlu
-IHRoZQpncnUtc2NhcmxldCBDaHJvbWVPUyBkZXZpY2VzLgoKVGhpcyB2MiB1cGRhdGVzIHRoZSBk
-cml2ZXIgd2l0aCBjaGFuZ2VzIGZyb20gdGhlIENocm9tZU9TIHNpZGUKYW5kIHRyaWVzIHRvIGFk
-ZHJlc3MgbW9zdCBvZiB0aGUgY29tbWVudHMgcmVjZWl2ZWQgZnJvbSBTZWFuIFBhdWwuCgoKTmlj
-a2V5IFlhbmcgKDMpOgogIGR0LWJpbmRpbmdzOiBBZGQgdmVuZG9yIHByZWZpeCBmb3Iga2luZ2Rp
-c3BsYXkKICBkdC1iaW5kaW5nczogQWRkIEtJTkdESVNQTEFZIEtEMDk3RDA0IHBhbmVsIGJpbmRp
-bmdzCiAgZHJtL3BhbmVsOiBhZGQgS2luZ2Rpc3BsYXkga2QwOTdkMDQgcGFuZWwgZHJpdmVyCgog
-Li4uL2Rpc3BsYXkvcGFuZWwva2luZ2Rpc3BsYXksa2QwOTdkMDQudHh0ICAgIHwgIDIyICsKIC4u
-Li9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgICB8ICAgMSArCiBkcml2
-ZXJzL2dwdS9kcm0vcGFuZWwvS2NvbmZpZyAgICAgICAgICAgICAgICAgfCAgMTEgKwogZHJpdmVy
-cy9ncHUvZHJtL3BhbmVsL01ha2VmaWxlICAgICAgICAgICAgICAgIHwgICAxICsKIC4uLi9kcm0v
-cGFuZWwvcGFuZWwta2luZ2Rpc3BsYXkta2QwOTdkMDQuYyAgICB8IDQ2OSArKysrKysrKysrKysr
-KysrKysKIDUgZmlsZXMgY2hhbmdlZCwgNTA0IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9raW5n
-ZGlzcGxheSxrZDA5N2QwNC50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
-cGFuZWwvcGFuZWwta2luZ2Rpc3BsYXkta2QwOTdkMDQuYwoKLS0gCjIuMTcuMAoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+From: Nickey Yang <nickey.yang@rock-chips.com>
+
+Kingdisplay Technology Co., Ltd, established in
+China Shenzhen in 2006, is a national high-tech
+enterprise specializing in the R&D, manufacturing
+and marketing of TFT-LCM and touch panel.
+
+Signed-off-by: Nickey Yang <nickey.yang@rock-chips.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 7cad066191ee..5a379c462e07 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -188,6 +188,7 @@ keymile	Keymile GmbH
+ khadas	Khadas
+ kiebackpeter    Kieback & Peter GmbH
+ kinetic Kinetic Technologies
++kingdisplay	King & Display Technology Co., Ltd.
+ kingnovel	Kingnovel Technology Co., Ltd.
+ koe	Kaohsiung Opto-Electronics Inc.
+ kosagi	Sutajio Ko-Usagi PTE Ltd.
+-- 
+2.17.0
