@@ -1,65 +1,61 @@
-From: alanx.chiang@intel.com
-Subject: [RESEND PATCH v4 2/2] eeprom: at24: Add support for address-width property
-Date: Mon,  2 Jul 2018 17:12:20 +0800
-Message-ID: <1530522740-2798-3-git-send-email-alanx.chiang@intel.com>
-References: <1530522740-2798-1-git-send-email-alanx.chiang@intel.com>
+From: Li Wei <liwei213@huawei.com>
+Subject: [PATCH v11 0/4] scsi: ufs: add ufs driver code for Hisilicon Hi3660 SoC
+Date: Mon, 2 Jul 2018 17:35:43 +0800
+Message-ID: <20180702093547.39507-1-liwei213@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530522740-2798-1-git-send-email-alanx.chiang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-i2c@vger.kernel.org
-Cc: andy.yeh@intel.com, sakari.ailus@linux.intel.com, andriy.shevchenko@linux.intel.com, andriy.shevchenko@intel.com, rajmohan.mani@intel.com, andy.shevchenko@gmail.com, tfiga@chromium.org, jcliang@chromium.org, brgl@bgdev.pl, robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alan Chiang <alanx.chiang@intel.com>
+To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, khilman@baylibre.com, arnd@arndb.de, gregory.clement@free-electrons.com, thomas.petazzoni@free-electrons.com, yamada.masahiro@socionext.com, riku.voipio@linaro.org, treding@nvidia.com, krzk@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org
+Cc: zangleigang@hisilicon.com, gengjianfeng@hisilicon.com, sunzhaosheng@hisilicon.com, ian.rickards@arm.com, guodong.xu@linaro.org, puck.chen@hisilicon.com, john.stultz@linaro.org, liwei213@huawei.com, fengbaopeng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-From: Alan Chiang <alanx.chiang@intel.com>
+This patchset adds driver support for UFS for Hi3660 SoC. It is verified on HiKey960 board.
 
-Provide a flexible way to determine the addressing bits of eeprom.
-Pass the addressing bits to driver through address-width property.
+Li Wei (4):
+  scsi: ufs: add Hisilicon ufs driver code
+  dt-bindings: scsi: ufs: add document for hisi-ufs
+  arm64: dts: add ufs dts node
+  arm64: defconfig: enable configs for Hisilicon ufs
 
-Signed-off-by: Alan Chiang <alanx.chiang@intel.com>
-Signed-off-by: Andy Yeh <andy.yeh@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+ Documentation/devicetree/bindings/ufs/ufs-hisi.txt |  41 ++
+ .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  10 +-
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |  18 +
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/scsi/ufs/Kconfig                           |   9 +
+ drivers/scsi/ufs/Makefile                          |   1 +
+ drivers/scsi/ufs/ufs-hisi.c                        | 619 +++++++++++++++++++++
+ drivers/scsi/ufs/ufs-hisi.h                        | 115 ++++
+ 8 files changed, 811 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ufs/ufs-hisi.txt
+ create mode 100644 drivers/scsi/ufs/ufs-hisi.c
+ create mode 100644 drivers/scsi/ufs/ufs-hisi.h
 
----
-since v1
--- Add a warn message for 8-bit addressing.
-since v2
--- Modify the warning message for clear.
--- Move the clearing bit operation outside of a statement.
-since v3
--- Merge the warning message into one line.
-
----
- drivers/misc/eeprom/at24.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-index 0c125f2..7ea640b 100644
---- a/drivers/misc/eeprom/at24.c
-+++ b/drivers/misc/eeprom/at24.c
-@@ -478,6 +478,23 @@ static void at24_properties_to_pdata(struct device *dev,
- 	if (device_property_present(dev, "no-read-rollover"))
- 		chip->flags |= AT24_FLAG_NO_RDROL;
- 
-+	err = device_property_read_u32(dev, "address-width", &val);
-+	if (!err) {
-+		switch (val) {
-+		case 8:
-+			if (chip->flags & AT24_FLAG_ADDR16)
-+				dev_warn(dev, "Override address width to be 8, while default is 16\n");
-+			chip->flags &= ~AT24_FLAG_ADDR16;
-+			break;
-+		case 16:
-+			chip->flags |= AT24_FLAG_ADDR16;
-+			break;
-+		default:
-+			dev_warn(dev, "Bad \"address-width\" property: %u\n",
-+				 val);
-+		}
-+	}
-+
- 	err = device_property_read_u32(dev, "size", &val);
- 	if (!err)
- 		chip->byte_len = val;
+Major changes in v11:
+ - solve review comments from John Stultz.
+  *include Rob Herring's Reviewed-by tag to the dt-binding patch.
+  *drop the defconfig changes, such as f2fs and squashfs related.
+Major changes in v10:
+ - solve review comments from Rob Herring.
+   *Modify the "reset-names" describe in ufs-hisi.txt binding file.
+   *List clocks in ufs-hisi.txt binding file.
+   *remove the "arst" and keep only "rst" in the binging files.
+   *remove the "arst" member from both dts and c code. 
+Major changes in v9:
+ - solve review comments from Rob Herring.
+   *remove freq-table-hz in ufs-hisi.txt binding file.
+   *Move the rst to the ufshcd_pltfm.txt common binding file.
+   *Modify the member "assert" of UFS host structure to "arst".
+Major changes in v8:
+ - solve review comments from zhangfei.
+   *Add Version history.
+ - solve review comments from Rob Herring.
+   *remove freq-table-hz.
+ -  solve review comments from Riku Voipio.
+   *Add MODULE_DEVICE_TABLE for ufs driver.
 -- 
-2.7.4
+Major changes in v7:
+ - solve review comments from Philippe Ombredanne.
+   *use the new SPDX license ids instead of the GNU General Public License.
+-- 
+2.15.0
