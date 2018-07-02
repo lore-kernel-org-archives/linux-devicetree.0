@@ -1,63 +1,73 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/5] ARM: dts: dra7: Disable metastability workaround for
- USB2
-Date: Mon, 2 Jul 2018 04:05:29 -0700
-Message-ID: <20180702110529.GR112168@atomide.com>
-References: <1527584458-6257-1-git-send-email-rogerq@ti.com>
- <1527584458-6257-2-git-send-email-rogerq@ti.com>
+From: Mikko Perttunen <mperttunen@nvidia.com>
+Subject: [PATCH v3 0/8] Tegra Combined UART driver
+Date: Mon, 2 Jul 2018 14:40:25 +0300
+Message-ID: <20180702114033.15654-1-mperttunen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1527584458-6257-2-git-send-email-rogerq@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "[4.16+]" <stable@vger.kernel.org>
+To: jassisinghbrar@gmail.com, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com
+Cc: devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mikko Perttunen <mperttunen@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [180529 02:03]:
-> Disable the metastability workaround for USB2. The original
-> patch disabled the workaround on the wrong USB port.
-> 
-> Fixes: b8c9c6fa2002 ("ARM: dts: dra7: Disable USB metastability workaround for USB2")
-> Cc: <stable@vger.kernel.org>        [4.16+]
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
+Hi, here's v3. Changes are in individual patches. Acks are still
+missing from the following patches:
 
+mailbox: Add transmit done by blocking option
+mailbox: tegra-hsp: Refactor in preparation of mailboxes
+mailbox: tegra-hsp: Add support for shared mailboxes
+serial: Add Tegra Combined UART driver
 
-Sorry for the delay, applying this one into omap-for-v4.18/fixes.
+Thanks,
+Mikko
 
-Regards,
+Original message:
 
-Tony
+Hi all,
 
-> ---
->  arch/arm/boot/dts/dra7.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index f4ddd86..9cace9f 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -1582,7 +1582,6 @@
->  				dr_mode = "otg";
->  				snps,dis_u3_susphy_quirk;
->  				snps,dis_u2_susphy_quirk;
-> -				snps,dis_metastability_quirk;
->  			};
->  		};
->  
-> @@ -1610,6 +1609,7 @@
->  				dr_mode = "otg";
->  				snps,dis_u3_susphy_quirk;
->  				snps,dis_u2_susphy_quirk;
-> +				snps,dis_metastability_quirk;
->  			};
->  		};
->  
-> -- 
-> cheers,
-> -roger
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
+on Tegra194, the primary console UART is the "Tegra Combined UART",
+or TCU. This is a "virtual UART", where each consumer communicates
+with a central implementation over mailboxes. The central
+implementation then multiplexes the streams and arbitrates use of
+a hardware serial port. This driver implements the consumer portion
+to allow using the primary console.
+
+The series is split into the following parts:
+* patches 1 and 2 add the device tree bindings for mailbox and tcu
+  itself.
+* patch 3 adds a blocking transmission option to the mailbox
+  framework.
+* patches 4 and 5 add support for the "shared mailbox" primitive
+  to the Tegra HSP driver.
+* patch 6 adds the TCU driver itself
+* patches 7 and 8 do the necessary device tree changes.
+
+The series has been tested on the Tegra194 P2972 board.
+
+Mikko Perttunen (8):
+  dt-bindings: tegra186-hsp: Add shared interrupts
+  dt-bindings: serial: Add bindings for nvidia,tegra194-tcu
+  mailbox: Add transmit done by blocking option
+  mailbox: tegra-hsp: Refactor in preparation of mailboxes
+  mailbox: tegra-hsp: Add support for shared mailboxes
+  serial: Add Tegra Combined UART driver
+  arm64: tegra: Add nodes for tcu on Tegra194
+  arm64: tegra: Mark tcu as primary serial port on Tegra194 P2888
+
+ .../bindings/mailbox/nvidia,tegra186-hsp.txt       |   3 +
+ .../bindings/serial/nvidia,tegra194-tcu.txt        |  35 +++
+ arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi     |   2 +-
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi           |  34 ++-
+ drivers/mailbox/mailbox.c                          |  30 +-
+ drivers/mailbox/mailbox.h                          |   1 +
+ drivers/mailbox/tegra-hsp.c                        | 320 +++++++++++++++++----
+ drivers/tty/serial/Kconfig                         |   9 +
+ drivers/tty/serial/Makefile                        |   1 +
+ drivers/tty/serial/tegra-tcu.c                     | 291 +++++++++++++++++++
+ include/uapi/linux/serial_core.h                   |   3 +
+ 11 files changed, 661 insertions(+), 68 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/nvidia,tegra194-tcu.txt
+ create mode 100644 drivers/tty/serial/tegra-tcu.c
+
+-- 
+2.16.1
