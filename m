@@ -1,65 +1,163 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v2 0/4] PCI: mediatek: fixup find_port, enable_msi and
- add pm, module support
-Date: Mon, 2 Jul 2018 14:48:19 +0800
-Message-ID: <1530514099.6415.1.camel@mtkswgap22>
-References: <1530503384-1218-1-git-send-email-honghui.zhang@mediatek.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v4 6/6] dt-bindings: media: rcar-vin: Clarify optional
+ props
+Date: Mon, 02 Jul 2018 10:19:25 +0300
+Message-ID: <39247463.ySXe3lkPXm@avalon>
+References: <1528813566-17927-1-git-send-email-jacopo+renesas@jmondi.org>
+ <20180613085455.GC4952@w540> <20180627052431.GO5237@bigcity.dyn.berto.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530503384-1218-1-git-send-email-honghui.zhang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: honghui.zhang@mediatek.com
-Cc: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180627052431.GO5237@bigcity.dyn.berto.se>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
+Cc: devicetree@vger.kernel.org, jacopo mondi <jacopo@jmondi.org>, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@glider.be, Sakari Ailus <sakari.ailus@linux.intel.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-07-02 at 11:49 +0800, honghui.zhang@mediatek.com wrote:
-> From: Honghui Zhang <honghui.zhang@mediatek.com>
-> 
-> This patchset includes misc patchs:
-> 
-> The first patch fixup the mtk_pcie_find_port logical which will cause system
-> could not touch the EP's configuration space which was connected to PCIe slot 1.
-> 
-> The second patch fixup the enable msi logical, the operation to enable msi
-> should be after system clock is enabled. The function of mtk_pcie_startup_port_v2's
-> define location is re-arranged to avoid mtk_pcie_enable_msi's forward declaration.
-> And call mtk_pcie_enable_msi in mtk_pcie_startup_port_v2 since the clock was all
-> enabled at that time.
-> 
-> The third patch was rebased and refactor of the v4 patch[1], changes are:
->  -Add PM support for MT7622.
->  -Using mtk_pcie_enable_port to re-establish the link when resumed.
->  -Rebase on the previous two patches.
-> 
-> The fourth patch add loadable kernel module support.
-> 
-> Some of those patches was already reviewed-by Ryder Lee <ryder.lee@mediatek.com>,
-> so I just add the Reviewed-by tags in those patches.
-> 
-> [1] https://patchwork.kernel.org/patch/10479079
-> 
-> Change since v1:
->  - A bit of code refact of the first patch suggested by Andy Shevchenko, and
->    commit message updated.
->  - Using __maybe_unused.
->  - Remove the redundant list_empty check of the fourth patch.
-> 
-> Honghui Zhang (4):
->   PCI: mediatek: fixup mtk_pcie_find_port logical
->   PCI: mediatek: enable msi after clock enabled
->   PCI: mediatek: Add system pm support for MT2712 and MT7622
->   PCI: mediatek: Add loadable kernel module support
-> 
->  drivers/pci/controller/Kconfig         |   2 +-
->  drivers/pci/controller/pcie-mediatek.c | 289 ++++++++++++++++++++++++---------
->  2 files changed, 213 insertions(+), 78 deletions(-)
-> 
+Hi Niklas,
 
-For the series:
+On Wednesday, 27 June 2018 08:24:31 EEST Niklas S=F6derlund wrote:
+> On 2018-06-13 10:54:55 +0200, Jacopo Mondi wrote:
+> > On Tue, Jun 12, 2018 at 06:45:53PM +0300, Sakari Ailus wrote:
+> >> On Tue, Jun 12, 2018 at 04:26:06PM +0200, Jacopo Mondi wrote:
+> >>> Add a note to the R-Car VIN interface bindings to clarify that all
+> >>> properties listed as generic properties in video-interfaces.txt can
+> >>> be included in port@0 endpoint, but if not explicitly listed in the
+> >>> interface bindings documentation, they do not modify it behaviour.
+> >>> =
 
-Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+> >>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >>> ---
+> >>> =
 
+> >>>  Documentation/devicetree/bindings/media/rcar_vin.txt | 6 ++++++
+> >>>  1 file changed, 6 insertions(+)
+> >>> =
 
-Thanks.
+> >>> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> >>> b/Documentation/devicetree/bindings/media/rcar_vin.txt index
+> >>> 8130849..03544c7 100644
+> >>> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> >>> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> >>> @@ -55,6 +55,12 @@ from local SoC CSI-2 receivers (port1) depending on
+> >>> SoC.
+> >>> =
+
+> >>>        instances that are connected to external pins should have port
+> >>>        0.
+> >>> =
+
+> >>>        - Optional properties for endpoint nodes of port@0:
+> >>> +
+> >>> +        All properties described in [1] and which apply to the
+> >>> selected
+> >>> +        media bus type could be optionally listed here to better
+> >>> describe
+> >>> +        the current hardware configuration, but only the following
+> >>> ones do
+> >>> +        actually modify the VIN interface behaviour:
+> >>> +
+> =
+
+> I'm not sure the description have to be as explicit to that the
+> properties in 'video-interfaces.txt' are not currently used by the
+> driver. I find it not relevant which ones are used or not, what is
+> important for me is that all properties in 'video-interfaces.txt' which
+> can be used to describe the specific bus are valid for the DT
+> description.
+
+I agree with you. The driver is irrelevant in this context. What matters is =
+
+which properties are applicable to the bus. For instance, if the VIN parall=
+el =
+
+input supports configurable polarities for the h/v sync signals, hsync-acti=
+ve =
+
+and vsync-active should be listed in the bindings. On the other hand, if th=
+e =
+
+polarities are fixed, then the properties are not needed.
+
+> On a side note, in rcar_vin.txt we have this section describing the Gen2
+> bindings:
+> =
+
+>   The per-board settings Gen2 platforms:
+>    - port sub-node describing a single endpoint connected to the vin
+>      as described in video-interfaces.txt[1]. Only the first one will
+>      be considered as each vin interface has one input port.
+> =
+
+> This whole series only deals with documenting the Gen3 optional
+> properties and not the Gen2. Maybe with parallel input support for Gen3
+> patches on there way to making it upstream this series should be
+> extended to in a good way merge the port@0 optional properties for both
+> generations of hardware?
+
+That would be nice too :-)
+
+> >> I don't think this should be needed. You should only have properties
+> >> that describe the hardware configuration in a given system.
+> > =
+
+> > There has been quite some debate on this, and please bear with me
+> > here for re-proposing it: I started by removing properties in some DT
+> > files for older Renesas board which listed endpoint properties not
+> > documented in the VIN's bindings and not parsed by the VIN driver [1]
+> > Niklas (but Simon and Geert seems to agree here) opposed to that
+> > patch, as those properties where described in 'video-interfaces.txt' and
+> > even if not parsed by the current driver implementation, they actually
+> > describe hardware. I rebated that only properties listed in the device
+> > bindings documentation should actually be used, and having properties
+> > not parsed by the driver confuses users, which may expect changing
+> > them modifies the interface configuration, which does not happens at
+> > the moment.
+> > =
+
+> > This came out as a middle ground from a discussion with Niklas. As
+> > stated in the cover letter if this patch makes someone uncomfortable, f=
+eel
+> > free to drop it not to hold back the rest of the series which has been
+> > well received instead.
+> =
+
+> What I don't agree with and sparked this debate from my side was the
+> deletion of properties in dts files which correctly does describe the
+> bus but which are not currently parsed by the driver. To me that is
+> decreasing the value of the dts. If on the other hand the goal is to
+> deprecate a property from the video-interfaces.txt by slowly removing
+> them from dts where the driver don't use them I'm all for it. But I
+> don't think this is the case here right?
+
+I think you're right, I don't think that's the case.
+
+We should not remove properties from the dts files when they correctly =
+
+describe the hardware and have an added-value. On the other hand, if a =
+
+property correctly describes the hardware, but is constrained to a single =
+
+value due to hardware limitations, then we can omit it.
+
+> > [1] https://www.spinics.net/lists/arm-kernel/msg656302.html
+> > =
+
+> >>> - hsync-active: see [1] for description. Default is active high.
+> >>> - vsync-active: see [1] for description. Default is active high.
+> >>> - data-enable-active: polarity of CLKENB signal, see [1] for
+
+-- =
+
+Regards,
+
+Laurent Pinchart
