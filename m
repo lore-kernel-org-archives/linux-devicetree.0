@@ -1,46 +1,35 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 3/4] dt: bindings: lm3692x: Update binding for LED sync control
-Date: Mon, 2 Jul 2018 13:12:15 -0500
-Message-ID: <20180702181216.19660-3-dmurphy@ti.com>
-References: <20180702181216.19660-1-dmurphy@ti.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v7 00/10] Introduce the Counter subsystem
+Date: Mon, 2 Jul 2018 13:13:40 -0500
+Message-ID: <603b0373-f1e1-5938-fa53-8328c9a5964f@lechnology.com>
+References: <cover.1529607879.git.vilhelm.gray@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180702181216.19660-1-dmurphy@ti.com>
+In-Reply-To: <cover.1529607879.git.vilhelm.gray@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, jacek.anaszewski@gmail.com, andy.shevchenko@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+To: William Breathitt Gray <vilhelm.gray@gmail.com>, gregkh@linuxfoundation.org
+Cc: jic23@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, fabrice.gasnier@st.com, benjamin.gaignard@st.com, robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Update the binding to be able to configure the LED
-sync to turn on.
+On 06/21/2018 04:06 PM, William Breathitt Gray wrote:
+> I decided to strip down these devices to arrive at the core essence of
+> what constitutes a "counter device" and therefore design a "generic
+> counter" abstraction to better represent these devices and prevent the
+> ambiguity we discovered with the existing IIO Counter interface. This
+> abstraction became the Generic Counter paradigm, which is explained in
+> detail within the Documentation/driver-api/generic-counter.rst file
+> introduced by this patchset.
 
-The LM36922 has one output but can sync current to 2 LED
-strings.  The user may only use one sync so the other
-syncs need to be disabled.
+I'm curious if you have given any thought to the time aspect of counters.
+I am interested in the rate at which the counters are counting (e.g. how
+many counts per second). I realize that you can calculate this in
+userspace or in the kernel using the system timer, but it is not very
+accurate since Linux is not a realtime OS. So, I would like to get the
+rate directly from the hardware. For example, the TI eQEP[1], like the
+one found in BeagleBones, has a couple ways of measuring time (see link
+for details).
 
-The LM36923 has 3 LED syncs.
-
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- Documentation/devicetree/bindings/leds/leds-lm3692x.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-index 6c9074f84a51..08b352840bd7 100644
---- a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-@@ -20,7 +20,10 @@ Optional properties:
- 	- vled-supply : LED supply
- 
- Required child properties:
--	- reg : 0
-+	- reg : 0 - Will enable all LED sync paths
-+		1 - Will enable the LED1 sync
-+		2 - Will enable the LED2 sync
-+		3 - Will enable the LED3 sync (LM36923 only)
- 
- Optional child properties:
- 	- label : see Documentation/devicetree/bindings/leds/common.txt
--- 
-2.17.0.582.gccdcbd54c
+[1]: http://www.ti.com/lit/ug/sprug05a/sprug05a.pdf
