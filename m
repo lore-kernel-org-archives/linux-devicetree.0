@@ -1,95 +1,134 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 1/1] ARM: dts: imx6ull: add operating points
-Date: Mon, 2 Jul 2018 10:22:05 +0530
-Message-ID: <20180702045205.fdh4dwwhwyfftptl@vireshk-i7>
-References: <20180629145221.10393-1-sebastien.szymanski@armadeus.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: Re: [PATCH v7 3/6] kernel/reboot.c: export pm_power_off_prepare
+Date: Mon, 2 Jul 2018 07:04:22 +0200
+Message-ID: <20738ca3-4289-9e44-ff74-9099b5b8c2b6@pengutronix.de>
+References: <20180517055014.6607-1-o.rempel@pengutronix.de>
+ <20180517055014.6607-4-o.rempel@pengutronix.de>
+ <daba73df-037c-2583-3a08-f3f27c4129d1@pengutronix.de>
+ <2307533.g32PyNi9fl@aspire.rjw.lan> <20180617070527.GL16091@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="HiPCWAM0hvhY06dQMa7Wk95ToC7Gl2hlf"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180629145221.10393-1-sebastien.szymanski@armadeus.com>
+In-Reply-To: <20180617070527.GL16091@dragon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?Q?S=C3=A9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
-Cc: linux-arm-kernel@lists.infradead.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>
+To: Shawn Guo <shawnguo@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Mark Brown <broonie@kernel.org>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 29-06-18, 16:52, Sébastien Szymanski wrote:
-> i.MX6ULL has different operating ranges than i.MX6UL so add the
-> operating points for the i.MX6ULL and removed them form board device
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--HiPCWAM0hvhY06dQMa7Wk95ToC7Gl2hlf
+Content-Type: multipart/mixed; boundary="otFWDJEXySuV7qS8y6T1ZFssVlkaKfQop";
+ protected-headers="v1"
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Shawn Guo <shawnguo@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Mark Brown <broonie@kernel.org>, kernel@pengutronix.de,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Liam Girdwood <lgirdwood@gmail.com>,
+ Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>,
+ Russell King <linux@armlinux.org.uk>, linux-pm@vger.kernel.org
+Message-ID: <20738ca3-4289-9e44-ff74-9099b5b8c2b6@pengutronix.de>
+Subject: Re: [PATCH v7 3/6] kernel/reboot.c: export pm_power_off_prepare
+References: <20180517055014.6607-1-o.rempel@pengutronix.de>
+ <20180517055014.6607-4-o.rempel@pengutronix.de>
+ <daba73df-037c-2583-3a08-f3f27c4129d1@pengutronix.de>
+ <2307533.g32PyNi9fl@aspire.rjw.lan> <20180617070527.GL16091@dragon>
+In-Reply-To: <20180617070527.GL16091@dragon>
 
-s/removed/remove/
-s/form/from/
+--otFWDJEXySuV7qS8y6T1ZFssVlkaKfQop
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-> trees. A 25mV offset is added to the minimum allowed values like for the
-> i.MX6UL.
-> The valid frequencies are now selected by the cpufreq driver according
-> to ratings stored in fuses since commit 0aa9abd4c212 ("cpufreq: imx6q:
-> check speed grades for i.MX6ULL")
-> 
-> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
-> ---
->  arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi | 14 --------------
->  arch/arm/boot/dts/imx6ull.dtsi              | 19 +++++++++++++++++++
->  2 files changed, 19 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi b/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
-> index 3dffbcd50bf6..183193e8580d 100644
-> --- a/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
-> +++ b/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
-> @@ -20,20 +20,6 @@
->  
->  &cpu0 {
->  	clock-frequency = <792000000>;
-> -	operating-points = <
-> -		/* kHz	uV */
-> -		792000  1225000
-> -		528000	1175000
-> -		396000	1025000
-> -		198000	950000
-> -	>;
-> -	fsl,soc-operating-points = <
-> -		/* KHz	uV */
-> -		792000  1175000
-> -		528000	1175000
-> -		396000	1175000
-> -		198000	1175000
-> -	>;
->  };
->  
->  &iomuxc {
-> diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
-> index ebc25c98e5e1..ade64bd46fab 100644
-> --- a/arch/arm/boot/dts/imx6ull.dtsi
-> +++ b/arch/arm/boot/dts/imx6ull.dtsi
-> @@ -48,6 +48,25 @@
->  /* Delete CAAM node in AIPS-2 (i.MX6UL specific) */
->  /delete-node/ &crypto;
->  
-> +&cpu0 {
-> +	operating-points = <
-> +		/* kHz	uV */
-> +		900000	1275000
-> +		792000	1225000
-> +		528000	1175000
-> +		396000	1025000
-> +		198000	950000
-> +	>;
-> +	fsl,soc-operating-points = <
-> +		/* KHz	uV */
-> +		900000	1175000
-> +		792000	1175000
-> +		528000	1175000
-> +		396000	1175000
-> +		198000	1175000
-> +	>;
-> +};
-> +
->  / {
->  	soc {
->  		aips3: aips-bus@2200000 {
+Hi Rafael,
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+it is two weeks since this email. Probably it was lost some where in the
+space time continuum.
+Can you please respond to it :)
 
--- 
-viresh
+On 17.06.2018 09:05, Shawn Guo wrote:
+> On Tue, Jun 12, 2018 at 04:33:05PM +0200, Rafael J. Wysocki wrote:
+>> On Tuesday, June 12, 2018 2:42:12 PM CEST Oleksij Rempel wrote:
+>>>  This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+>>> --Sj2PRcQlY7eZybdA0sq9wWzJEO8fKS924
+>>> Content-Type: multipart/mixed; boundary=3D"d6BZYFRi4L3iCmOh3nm6wjii3d=
+WC9QFDg";
+>>>  protected-headers=3D"v1"
+>>> From: Oleksij Rempel <o.rempel@pengutronix.de>
+>>> To: Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>,=
+
+>>>  "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+>>> Cc: kernel@pengutronix.de, devicetree@vger.kernel.org,
+>>>  linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+>>>  linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.o=
+rg>,
+>>>  Liam Girdwood <lgirdwood@gmail.com>,
+>>>  Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kern=
+el.org>,
+>>>  Mark Rutland <mark.rutland@arm.com>,
+>>>  Michael Turquette <mturquette@baylibre.com>,
+>>>  Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nx=
+p.com>,
+>>>  Russell King <linux@armlinux.org.uk>
+>>> Message-ID: <daba73df-037c-2583-3a08-f3f27c4129d1@pengutronix.de>
+>>> Subject: Re: [PATCH v7 3/6] kernel/reboot.c: export pm_power_off_prep=
+are
+>>> References: <20180517055014.6607-1-o.rempel@pengutronix.de>
+>>>  <20180517055014.6607-4-o.rempel@pengutronix.de>
+>>> In-Reply-To: <20180517055014.6607-4-o.rempel@pengutronix.de>
+>>>
+>>> --d6BZYFRi4L3iCmOh3nm6wjii3dWC9QFDg
+>>> Content-Type: text/plain; charset=3Dutf-8
+>>> Content-Language: en-US
+>>> Content-Transfer-Encoding: quoted-printable
+>>>
+>>> Hi Rafael,
+>>>
+>>> Last version of this patch was send at 17.05.2018. No other comment w=
+as
+>>> provided and this patch is a blocker for other patches in this serie.=
+
+>>> Can you please give some feedback on it.
+>>
+>> I would have done that had I not missed the patch.
+>>
+>> Which probably wouldn't have happened had you CCed it to linux-pm.
+>>
+>> Anyway, I have no particular problems with exporting pm_power_off_prep=
+are via
+>> EXPORT_SYMBOL_GPL().
+>=20
+> Rafael,
+>=20
+> Can we have your explicit Acked-by tag on this patch?  Thanks.
+>=20
+> Shawn
+>=20
+
+
+--otFWDJEXySuV7qS8y6T1ZFssVlkaKfQop--
+
+--HiPCWAM0hvhY06dQMa7Wk95ToC7Gl2hlf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAls5slYACgkQdQOiSHVI
+77R2sAf/X9mHyHBxUk8NRvP4/mSj0ZBzaD6H/acG8rx5PgaoeiCETAdfU1+PRb55
+KwMwyreI14fsuYpZch45Kteub768zhZfc3J8uhZTGECZ/be+AOid3XzgjvZ4Rma7
+rut3U7XgXHMHY41m9Q9y6H6OXvwlJjsyUUPYYN2e4d1fPNYcAc7PMK2570bPRAxh
+nv5n/TpiDorfh83c6mApCQtrMmHUPY5m71k/DtnnbdtulO3E6PHC/qiQzFywQPB6
+YpZHNW/G9DjgFgA4purXQz1ql4W/fPWAe7N9QeTpe7Dbm24+6cywJKpEs70impOo
+hs0gsMlodRhWgpLvKV3/jFVY651u1w==
+=7pZD
+-----END PGP SIGNATURE-----
+
+--HiPCWAM0hvhY06dQMa7Wk95ToC7Gl2hlf--
