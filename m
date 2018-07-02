@@ -1,40 +1,40 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v2 1/2] clk: meson-axg: add pcie and mipi clock bindings
-Date: Mon, 2 Jul 2018 21:31:17 +0000
-Message-ID: <20180702213118.19222-2-yixun.lan@amlogic.com>
-References: <20180702213118.19222-1-yixun.lan@amlogic.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] bindings: add clocks optional binding for imx gpio
+Date: Mon, 2 Jul 2018 15:45:39 +0200
+Message-ID: <CACRpkdbbbbO-94i-ZTSunzuUQcJ8dQpuPHBYODrvdWQyuri7yw@mail.gmail.com>
+References: <1530243004-10529-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180702213118.19222-1-yixun.lan@amlogic.com>
+In-Reply-To: <1530243004-10529-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Yixun Lan <yixun.lan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Jianxin Qin <jianxin.qin@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Anson Huang <Anson.Huang@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, NXP Linux Team <Linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the pcie and mipi clock dt-bindings for the pcie driver.
+On Fri, Jun 29, 2018 at 5:34 AM Anson Huang <Anson.Huang@nxp.com> wrote:
 
-Since the mipi clock isalso used by the pcie driver,
-we add it together in this patch.
+> Some i.MX SoCs have GPIO clock gate in CCM, accessing
+> GPIO registers needs to enable GPIO clock gate first,
+> i.MX GPIO driver will enable clock gate if there is
+> clock property in GPIO node of dtb, add optional property
+> to i.MX GPIO binding doc.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Tested-by: Jianxin Qin <jianxin.qin@amlogic.com>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
----
- include/dt-bindings/clock/axg-clkc.h | 3 +++
- 1 file changed, 3 insertions(+)
+Make sense since the gpio-mxc driver already supports this :)
 
-diff --git a/include/dt-bindings/clock/axg-clkc.h b/include/dt-bindings/clock/axg-clkc.h
-index 555937a25504..70371228b7e0 100644
---- a/include/dt-bindings/clock/axg-clkc.h
-+++ b/include/dt-bindings/clock/axg-clkc.h
-@@ -68,5 +68,8 @@
- #define CLKID_SD_EMMC_B_CLK0			59
- #define CLKID_SD_EMMC_C_CLK0			60
- #define CLKID_HIFI_PLL				69
-+#define CLKID_PCIE_CML_EN0			79
-+#define CLKID_PCIE_CML_EN1			80
-+#define CLKID_MIPI_ENABLE			81
- 
- #endif /* __AXG_CLKC_H */
--- 
-2.18.0
+> +Optional properties:
+> +- clocks: the clocks used by gpio bank
+
+Should the text be "the clock for clocking the GPIO silicon"
+I guess that is what it is. And singularis?
+
+Does it hurt to give the clock a name? Like the common
+"pclk" for peripheral clock or something similar that other
+i.MX silicon uses?
+
+Fabio: can we have your ACK on this too.
+
+Yours,
+Linus Walleij
