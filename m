@@ -1,254 +1,104 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/2] arm64: dts: mediatek: add mt6765 support
-Date: Mon, 2 Jul 2018 15:50:00 -0600
-Message-ID: <CAL_JsqKxvCxn3eb0sZVFwhUudDAkoHH5uyUgt1NY06zt-yKkQQ@mail.gmail.com>
-References: <1529978646-28976-1-git-send-email-mars.cheng@mediatek.com> <1529978646-28976-3-git-send-email-mars.cheng@mediatek.com>
+From: Daniel Mack <daniel@zonque.org>
+Subject: [PATCH] ASoC: pxa-ssp: add support for an external
+	clock in devicetree
+Date: Mon,  2 Jul 2018 17:11:00 +0200
+Message-ID: <20180702151100.28999-1-daniel@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529978646-28976-3-git-send-email-mars.cheng@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mars Cheng <mars.cheng@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, CC Hwang <cc.hwang@mediatek.com>, Loda Choui <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, haojian.zhuang@gmail.com, robert.jarzmik@free.fr, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 25, 2018 at 8:04 PM Mars Cheng <mars.cheng@mediatek.com> wrote:
->
-> This adds basic chip support for MT6765 SoC.
->
-> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/Makefile       |    1 +
->  arch/arm64/boot/dts/mediatek/mt6765-evb.dts |   33 ++++++
->  arch/arm64/boot/dts/mediatek/mt6765.dtsi    |  158 +++++++++++++++++++++++++++
->  3 files changed, 192 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt6765-evb.dts
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt6765.dtsi
->
-> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-> index ac17f60..7506b0d 100644
-> --- a/arch/arm64/boot/dts/mediatek/Makefile
-> +++ b/arch/arm64/boot/dts/mediatek/Makefile
-> @@ -1,6 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
-> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6765-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6765-evb.dts b/arch/arm64/boot/dts/mediatek/mt6765-evb.dts
-> new file mode 100644
-> index 0000000..36dddff2
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt6765-evb.dts
-> @@ -0,0 +1,33 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * dts file for Mediatek MT6765
-> + *
-> + * (C) Copyright 2018. Mediatek, Inc.
-> + *
-> + * Mars Cheng <mars.cheng@mediatek.com>
-> + */
-> +
-> +/dts-v1/;
-> +#include "mt6765.dtsi"
-> +
-> +/ {
-> +       model = "MediaTek MT6765 EVB";
-> +       compatible = "mediatek,mt6765-evb", "mediatek,mt6765";
-> +
-> +       aliases {
-> +               serial0 = &uart0;
-> +       };
-> +
-> +       memory@40000000 {
-> +               device_type = "memory";
-> +               reg = <0 0x40000000 0 0x1e800000>;
-> +       };
-> +
-> +       chosen {
-> +               stdout-path = "serial0:921600n8";
-> +       };
-> +};
-> +
-> +&uart0 {
-> +       status = "okay";
-> +};
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6765.dtsi b/arch/arm64/boot/dts/mediatek/mt6765.dtsi
-> new file mode 100644
-> index 0000000..ab34c0f
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt6765.dtsi
-> @@ -0,0 +1,158 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * dts file for Mediatek MT6765
-> + *
-> + * (C) Copyright 2018. Mediatek, Inc.
-> + *
-> + * Mars Cheng <mars.cheng@mediatek.com>
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +       compatible = "mediatek,mt6765";
-> +       interrupt-parent = <&sysirq>;
-> +       #address-cells = <2>;
-> +       #size-cells = <2>;
-> +
-> +       psci {
-> +               compatible = "arm,psci-0.2";
-> +               method = "smc";
-> +       };
-> +
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               cpu0: cpu@0 {
+Allow setting a clock called 'extclk' in the device of the ssp-dai
+device. If specified, this clock will be set to the mclk rate from the
+DAI's .set_sysclk() callback. The DAI will also configure itself to
+use that external clock.
 
-Really need labels for cpu nodes?
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+---
+ .../bindings/sound/mrvl,pxa-ssp.txt           |  8 ++++++
+ sound/soc/pxa/pxa-ssp.c                       | 25 +++++++++++++++++++
+ 2 files changed, 33 insertions(+)
 
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a53";
-> +                       enable-method = "psci";
-> +                       reg = <0x000>;
-> +               };
-> +
-> +               cpu1: cpu@1 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a53";
-> +                       enable-method = "psci";
-> +                       reg = <0x001>;
-> +               };
-> +
-> +               cpu2: cpu@2 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a53";
-> +                       enable-method = "psci";
-> +                       reg = <0x002>;
-> +               };
-> +
-> +               cpu3: cpu@3 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a53";
-> +                       enable-method = "psci";
-> +                       reg = <0x003>;
-> +               };
-> +
-> +               cpu4: cpu@100 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a53";
-> +                       enable-method = "psci";
-> +                       reg = <0x100>;
-> +               };
-> +
-> +               cpu5: cpu@101 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a53";
-> +                       enable-method = "psci";
-> +                       reg = <0x101>;
-> +               };
-> +
-> +               cpu6: cpu@102 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a53";
-> +                       enable-method = "psci";
-> +                       reg = <0x102>;
-> +               };
-> +
-> +               cpu7: cpu@103 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a53";
-> +                       enable-method = "psci";
-> +                       reg = <0x103>;
-> +               };
-> +       };
-> +
-> +       baud_clk: dummy26m {
-> +               compatible = "fixed-clock";
-> +               clock-frequency = <26000000>;
-> +               #clock-cells = <0>;
-> +       };
-> +
-> +       sys_clk: dummyclk {
-> +               compatible = "fixed-clock";
-> +               clock-frequency = <26000000>;
-> +               #clock-cells = <0>;
-> +       };
-> +
-> +       timer {
-> +               compatible = "arm,armv8-timer";
-> +               interrupt-parent = <&gic>;
-> +               interrupts = <GIC_PPI 13
-> +                            (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +                            <GIC_PPI 14
-> +                            (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +                            <GIC_PPI 11
-> +                            (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +                            <GIC_PPI 10
-> +                            (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
-> +       };
-> +
-> +       soc {
-> +               #address-cells = <2>;
-> +               #size-cells = <2>;
-> +               compatible = "simple-bus";
-> +               ranges;
-> +
-> +               sysirq: intpol-controller@10200a80 {
-
-interrupt-controller@...
-
-> +                       compatible = "mediatek,mt6765-sysirq",
-> +                                    "mediatek,mt6577-sysirq";
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <3>;
-> +                       interrupt-parent = <&gic>;
-> +                       reg = <0 0x10200a80 0 0x50>;
-> +               };
-> +
-> +               gic: interrupt-controller@0c000000 {
-
-Drop the leading 0. Build your dts with W=12 and fix the warnings like this.
-
-> +                       compatible = "arm,gic-v3";
-> +                       #interrupt-cells = <3>;
-> +                       #address-cells = <2>;
-> +                       #size-cells = <2>;
-> +                       #redistributor-regions = <1>;
-> +                       interrupt-parent = <&gic>;
-> +                       interrupt-controller;
-> +                       reg = <0 0x0c000000 0 0x40000>, // distributor
-> +                             <0 0x0c100000 0 0x200000>; // redistributor
-> +                       interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +               };
-> +
-> +               uart0: serial@11002000 {
-> +                       compatible = "mediatek,mt6765-uart",
-> +                                    "mediatek,mt6577-uart";
-> +                       reg = <0 0x11002000 0 0x400>;
-> +                       interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
-> +                       clocks = <&baud_clk>, <&sys_clk>;
-> +                       clock-names = "baud", "bus";
-> +                       status = "disabled";
-> +               };
-> +
-> +               uart1: serial@11003000 {
-> +                       compatible = "mediatek,mt6765-uart",
-> +                                    "mediatek,mt6577-uart";
-> +                       reg = <0 0x11003000 0 0x400>;
-> +                       interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
-> +                       clocks = <&baud_clk>, <&sys_clk>;
-> +                       clock-names = "baud", "bus";
-> +                       status = "disabled";
-> +               };
-> +       }; /* end of soc */
-> +};
-> --
-> 1.7.9.5
->
+diff --git a/Documentation/devicetree/bindings/sound/mrvl,pxa-ssp.txt b/Documentation/devicetree/bindings/sound/mrvl,pxa-ssp.txt
+index efd3fb1f68d2..feef39b4a4fd 100644
+--- a/Documentation/devicetree/bindings/sound/mrvl,pxa-ssp.txt
++++ b/Documentation/devicetree/bindings/sound/mrvl,pxa-ssp.txt
+@@ -5,6 +5,14 @@ Required properties:
+ 	compatible	Must be "mrvl,pxa-ssp-dai"
+ 	port		A phandle reference to a PXA ssp upstream device
+ 
++Optional properties:
++
++	clock-names
++	clocks		Through "clock-names" and "clocks", external clocks
++			can be configured. If a clock names "extclk" exists,
++			it will be set to the mclk rate of the audio stream
++			and be used as clock provider of the DAI.
++
+ Example:
+ 
+ 	/* upstream device */
+diff --git a/sound/soc/pxa/pxa-ssp.c b/sound/soc/pxa/pxa-ssp.c
+index f8339bb01251..c43fe3b9c79c 100644
+--- a/sound/soc/pxa/pxa-ssp.c
++++ b/sound/soc/pxa/pxa-ssp.c
+@@ -41,6 +41,7 @@
+  */
+ struct ssp_priv {
+ 	struct ssp_device *ssp;
++	struct clk *extclk;
+ 	unsigned long ssp_clk;
+ 	unsigned int sysclk;
+ 	unsigned int dai_fmt;
+@@ -205,6 +206,21 @@ static int pxa_ssp_set_dai_sysclk(struct snd_soc_dai *cpu_dai,
+ 	u32 sscr0 = pxa_ssp_read_reg(ssp, SSCR0) &
+ 		~(SSCR0_ECS | SSCR0_NCS | SSCR0_MOD | SSCR0_ACS);
+ 
++	if (priv->extclk) {
++		int ret;
++
++		/*
++		 * For DT based boards, if an extclk is given, use it
++		 * here and configure PXA_SSP_CLK_EXT.
++		 */
++
++		ret = clk_set_rate(priv->extclk, freq);
++		if (ret < 0)
++			return ret;
++
++		clk_id = PXA_SSP_CLK_EXT;
++	}
++
+ 	dev_dbg(&ssp->pdev->dev,
+ 		"pxa_ssp_set_dai_sysclk id: %d, clk_id %d, freq %u\n",
+ 		cpu_dai->id, clk_id, freq);
+@@ -773,6 +789,15 @@ static int pxa_ssp_probe(struct snd_soc_dai *dai)
+ 			ret = -ENODEV;
+ 			goto err_priv;
+ 		}
++
++		priv->extclk = devm_clk_get(dev, "extclk");
++		if (IS_ERR(priv->extclk)) {
++			ret = PTR_ERR(priv->extclk);
++			if (ret == -EPROBE_DEFER)
++				return ret;
++
++			priv->extclk = NULL;
++		}
+ 	} else {
+ 		priv->ssp = pxa_ssp_request(dai->id + 1, "SoC audio");
+ 		if (priv->ssp == NULL) {
+-- 
+2.17.1
