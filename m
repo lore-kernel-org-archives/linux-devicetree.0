@@ -1,84 +1,29 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCHv2 1/3] dt-bindings: display: dw_hdmi.txt: add cec-disable
- property
-Date: Mon, 2 Jul 2018 11:02:48 +0200
-Message-ID: <19324e94-59a1-2d64-3a83-6ca6d00dff3c@xs4all.nl>
-References: <20180323125915.13986-1-hverkuil@xs4all.nl>
- <20180323125915.13986-2-hverkuil@xs4all.nl>
- <20180326072830.iphtbw5mkeciv4kj@rob-hp-laptop>
- <05e7ade1-89be-0f0f-18a5-88ff0310a70b@xs4all.nl>
- <714ee0ef-25c4-e065-8120-aebc27a1add7@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <714ee0ef-25c4-e065-8120-aebc27a1add7@baylibre.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Neil Armstrong <narmstrong@baylibre.com>, Rob Herring <robh@kernel.org>
-Cc: linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+From: alanx.chiang@intel.com
+Subject: [RESEND PATCH v4 0/2] Add a property in at24.c
+Date: Mon,  2 Jul 2018 17:12:18 +0800
+Message-ID: <1530522740-2798-1-git-send-email-alanx.chiang@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-i2c@vger.kernel.org
+Cc: andy.yeh@intel.com, sakari.ailus@linux.intel.com, andriy.shevchenko@linux.intel.com, andriy.shevchenko@intel.com, rajmohan.mani@intel.com, andy.shevchenko@gmail.com, tfiga@chromium.org, jcliang@chromium.org, brgl@bgdev.pl, robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alan Chiang <alanx.chiang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjkvMDYvMTggMDk6MTcsIE5laWwgQXJtc3Ryb25nIHdyb3RlOgo+IEhpIEhhbnMsCj4gCj4g
-T24gMDMvMDQvMjAxOCAxMDoyNywgSGFucyBWZXJrdWlsIHdyb3RlOgo+PiBPbiAyNy8wMy8xOCAw
-MDoyNSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+PiBPbiBGcmksIE1hciAyMywgMjAxOCBhdCAwMTo1
-OToxM1BNICswMTAwLCBIYW5zIFZlcmt1aWwgd3JvdGU6Cj4+Pj4gRnJvbTogSGFucyBWZXJrdWls
-IDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgo+Pj4+Cj4+Pj4gU29tZSBib2FyZHMgaGF2ZSBib3Ro
-IGEgRGVzaWduV2FyZSBhbmQgdGhlaXIgb3duIENFQyBjb250cm9sbGVyLgo+Pj4+IFRoZSBDRUMg
-cGluIGlzIG9ubHkgaG9va2VkIHVwIHRvIHRoZWlyIG93biBDRUMgY29udHJvbGxlciBhbmQgbm90
-Cj4+Pj4gdG8gdGhlIERXIGNvbnRyb2xsZXIuCj4+Pj4KPj4+PiBBZGQgdGhlIGNlYy1kaXNhYmxl
-IHByb3BlcnR5IHRvIGRpc2FibGUgdGhlIERXIENFQyBjb250cm9sbGVyLgo+Pj4+Cj4+Pj4gVGhp
-cyBwYXJ0aWN1bGFyIHNpdHVhdGlvbiBoYXBwZW5zIG9uIEFtbG9naWMgYm9hcmRzIHRoYXQgaGF2
-ZSB0aGVpcgo+Pj4+IG93biBtZXNvbiBDRUMgY29udHJvbGxlci4KPj4+Cj4+PiBTZWVtcyBsaWtl
-IHdlIGNvdWxkIGF2b2lkIHRoaXMgYnkgZGVzY3JpYmluZyBob3cgdGhlIENFQyBsaW5lIGlzIGhv
-b2tlZCAKPj4+IHVwIHdoaWNoIGNvdWxkIGJlIG5lZWRlZCBmb3Igb3RoZXIgcmVhc29ucy4KPj4K
-Pj4gU28gdGhlcmUgYXJlIHRocmVlIHNpdHVhdGlvbnM6Cj4+Cj4+IDEpIFRoZSBjZWMgcGluIGlz
-IGNvbm5lY3RlZCB0byB0aGUgRFcgSERNSSBUWC4gVGhhdCdzIGFscmVhZHkgc3VwcG9ydGVkLgo+
-PiAyKSBUaGUgY2VjIHBpbiBpcyBub3QgY29ubmVjdGVkIGF0IGFsbCwgYnV0IHRoZSBDRUMgSVAg
-aXMgaW5zdGFudGlhdGVkLgo+PiAgICBXZSBuZWVkIHRoZSBjZWMtZGlzYWJsZSBwcm9wZXJ0eSBm
-b3IgdGhhdC4gVGhpcyBzaW1wbHkgc3RhdGVzIHRoYXQgdGhlCj4+ICAgIENFQyBwaW4gaXMgbm90
-IGNvbm5lY3RlZC4KPj4gMykgVGhlIGNlYyBwaW4gaXMgY29ubmVjdGVkIHRvIGFuIEhETUkgUlgu
-IFdlIGRvIG5vdCBzdXBwb3J0IHRoaXMgYXQgdGhlCj4+ICAgIG1vbWVudC4gSWYgd2Ugd2FudCB0
-byBzdXBwb3J0IHRoaXMsIHRoZW4gd2UgbmVlZCBhICdoZG1pLXJ4JyBwaGFuZGxlCj4+ICAgIHRo
-YXQgcG9pbnRzIHRvIHRoZSBIRE1JIHJlY2VpdmVyIHRoYXQgdGhlIENFQyBwaW4gaXMgYXNzb2Np
-YXRlZCB3aXRoLgo+PiAgICBUaGlzIHdpbGwgYmUgc2ltaWxhciB0byB0aGUgYWxyZWFkeSBleGlz
-dGluZyAnaGRtaS1waGFuZGxlJyBwcm9wZXJ0eQo+PiAgICB1c2VkIHRvIGFzc29jaWF0ZSBhIENF
-QyBkcml2ZXIgd2l0aCBhbiBIRE1JIHRyYW5zbWl0dGVyLiBJbiBoaW5kc2lnaHQKPj4gICAgaXQg
-d291bGQgaGF2ZSBiZWVuIGJldHRlciBpZiAnaGRtaS1waGFuZGxlJyB3YXMgbmFtZWQgJ2hkbWkt
-dHgnIDotKAo+Pgo+PiBJIGNhbiBtYWtlIGEgYmluZGluZyBwcm9wb3NhbCBmb3IgMywgYnV0IEkg
-aGF2ZSBubyBoYXJkd2FyZSB0byB0ZXN0IGl0LAo+PiBzbyBJIHRoaW5rIGl0IGlzIGJldHRlciB0
-byBhZGQgdGhpcyBvbmx5IHdoZW4gc29tZW9uZSBoYXMgaGFyZHdhcmUuIEl0Cj4+IHdpbGwgcmVx
-dWlyZSBxdWl0ZSBhIGZldyBjaGFuZ2VzIHRvIHRoZSBkcml2ZXIgYW5kIGxpa2VseSBhbHNvIHRo
-ZSBDRUMgY29yZS4KPiAKPiBDYW4ndCB3ZSBzaW1wbHkgYWRkIGEgcHJvcGVydHkgdG8gb3ZlcnJp
-ZGUgdGhlIEhXIGNvbmZpZyBmaWVsZHMgaW4gdGhpcyBjYXNlID8KPiBJdCB3aWxsIGJlIHRoZW4g
-dXNhYmxlIHdpdGggYW55IGZlYXR1cmUgdGhlIGlzIGVuYWJsZWQgYnkgcmVhZGluZyB0aGUgY29u
-ZmlnCj4gYml0cyBsaWtlIEFIQiBBdWRpbywgSTJjLCBDRUMsIC4uLiBhbmQgbWF5YmUgbWFueSBt
-b3JlIGluIHRoZSBmdXR1cmUuCgpZZXMsIHdlIGNhbiBkbyB0aGF0IGFzIHdlbGwuIEJ1dCBpcyB0
-aGF0IGEgcHJvcGVyIGRlc2NyaXB0aW9uIG9mIHRoZSBoYXJkd2FyZT8KVGhlIEhXICpkb2VzKiBz
-dXBwb3J0IENFQywgYnV0IGluIHRoaXMgY2FzZSB0aGUgQ0VDIGxpbmUgaXMganVzdCBub3QgaG9v
-a2VkCnVwIHRvIGFueXRoaW5nLiBTbyBvdmVycmlkaW5nIHRoZSBIVyBjb25maWcgZmllbGQgZG9l
-c24ndCByZWFsbHkgc291bmQgcmlnaHQKdG8gbWUuCgpJIHN0aWxsIGJlbGlldmUgdGhhdCB0aGUg
-Y2VjLWRpc2FibGUgcHJvcGVydHkgaW4gb3JkZXIgdG8gZGVzY3JpYmUgc2l0dWF0aW9uCjIgaW4g
-dGhlIGxpc3QgYWJvdmUgaXMgdGhlIHJpZ2h0IGFwcHJvYWNoLgoKUGVyaGFwcyBnaXZpbmcgaXQg
-YSBkaWZmZXJlbnQgbmFtZSAoY2VjLW5vdC1jb25uZWN0ZWQ/KSBoZWxwcyBvdmVyY29tZSBSb2In
-cwpvYmplY3Rpb25zPyBSb2I/CgpTb3JyeSBmb3Igbm90IGZvbGxvd2luZyB1cCBvbiB0aGlzIGVh
-cmxpZXIuCgpSZWdhcmRzLAoKCUhhbnMKCj4gCj4gTmVpbAo+IAo+Pgo+PiBSZWdhcmRzLAo+Pgo+
-PiAJSGFucwo+Pgo+Pj4KPj4+Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IEhhbnMgVmVya3VpbCA8aGFu
-cy52ZXJrdWlsQGNpc2NvLmNvbT4KPj4+PiBBY2tlZC1ieTogTmVpbCBBcm1zdHJvbmcgPG5hcm1z
-dHJvbmdAYmF5bGlicmUuY29tPgo+Pj4+IC0tLQo+Pj4+ICBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHdfaGRtaS50eHQgfCAzICsrKwo+Pj4+ICAxIGZp
-bGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCj4+Cj4gCj4gCj4gX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4g
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCj4gCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+From: Alan Chiang <alanx.chiang@intel.com>
+
+This RESEND PATCH only adds the Acked-by and Reviewed-by,
+no other patch for the codes.
+
+In at24.c, it uses 8-bit addressing by default. In this patch,
+add a property address-width that provides a flexible method to
+pass the information to the driver.
+
+Alan Chiang (2):
+  dt-bindings: at24: Add address-width property
+  eeprom: at24: Add support for address-width property
+
+ Documentation/devicetree/bindings/eeprom/at24.txt |  2 ++
+ drivers/misc/eeprom/at24.c                        | 17 +++++++++++++++++
+ 2 files changed, 19 insertions(+)
+
+-- 
+2.7.4
