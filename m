@@ -1,91 +1,69 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v4 4/6] thermal: tsens: Add support for SDM845
-Date: Mon,  2 Jul 2018 18:14:07 +0530
-Message-ID: <43e3ae530334efab3fa0151430879f03731e9daa.1530533998.git.amit.kucheria@linaro.org>
-References: <cover.1530533998.git.amit.kucheria@linaro.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3 2/8] dt-bindings: serial: Add bindings for
+ nvidia,tegra194-tcu
+Date: Mon, 2 Jul 2018 14:51:54 +0200
+Message-ID: <20180702125154.GD13096@ulmo>
+References: <20180702114033.15654-1-mperttunen@nvidia.com>
+ <20180702114033.15654-3-mperttunen@nvidia.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="DiL7RhKs8rK9YGuF"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1530533998.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1530533998.git.amit.kucheria@linaro.org>
-References: <cover.1530533998.git.amit.kucheria@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20180702114033.15654-3-mperttunen@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, smohanad@codeaurora.org, vivek.gautam@codeaurora.org, andy.gross@linaro.org, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kees Cook <keescook@chromium.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+To: Mikko Perttunen <mperttunen@nvidia.com>
+Cc: jassisinghbrar@gmail.com, gregkh@linuxfoundation.org, jonathanh@nvidia.com, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SDM845 uses v2.4.0 of the TSENS IP block but the get_temp() function
-appears to be identical across v2.x.y in code seen so far. We use the
-generic get_temp() function.
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- Documentation/devicetree/bindings/thermal/qcom-tsens.txt | 2 ++
- drivers/thermal/qcom/tsens-v2.c                          | 6 +++++-
- drivers/thermal/qcom/tsens.c                             | 6 ++++++
- drivers/thermal/qcom/tsens.h                             | 5 ++++-
- 4 files changed, 17 insertions(+), 2 deletions(-)
+--DiL7RhKs8rK9YGuF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-index 06195e8..075182e 100644
---- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-+++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-@@ -5,6 +5,8 @@ Required properties:
-  - "qcom,msm8916-tsens" : For 8916 Family of SoCs
-  - "qcom,msm8974-tsens" : For 8974 Family of SoCs
-  - "qcom,msm8996-tsens" : For 8996 Family of SoCs
-+ - "qcom,tsens-v2.4.0"  : For SDM845 Family of SoCs
-+ - "qcom,tsens-v2"      : Generic fallback binding for any Soc using 2.x.y version of the tsens IP
- 
- - reg: Address range of the thermal registers
- - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
-diff --git a/drivers/thermal/qcom/tsens-v2.c b/drivers/thermal/qcom/tsens-v2.c
-index 2eca7ff..1871945 100644
---- a/drivers/thermal/qcom/tsens-v2.c
-+++ b/drivers/thermal/qcom/tsens-v2.c
-@@ -69,8 +69,12 @@ static const struct tsens_ops ops_generic_v2 = {
- 	.get_temp	= get_temp_tsens_v2,
- };
- 
-+const struct tsens_data data_tsens_v2 = {
-+	.ops            = &ops_generic_v2,
-+};
-+
-+/* Kept around for backward compatibility with old msm8996.dtsi */
- const struct tsens_data data_8996 = {
- 	.num_sensors	= 13,
- 	.ops		= &ops_generic_v2,
- };
--
-diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-index 3440166c..992ed17 100644
---- a/drivers/thermal/qcom/tsens.c
-+++ b/drivers/thermal/qcom/tsens.c
-@@ -72,6 +72,12 @@ static const struct of_device_id tsens_table[] = {
- 	}, {
- 		.compatible = "qcom,msm8996-tsens",
- 		.data = &data_8996,
-+	}, {
-+		.compatible = "qcom,tsens-v2.4.0",
-+		.data = &data_tsens_v2,
-+	}, {
-+		.compatible = "qcom,tsens-v2",
-+		.data = &data_tsens_v2,
- 	},
- 	{}
- };
-diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
-index dc56e1e..69212cb 100644
---- a/drivers/thermal/qcom/tsens.h
-+++ b/drivers/thermal/qcom/tsens.h
-@@ -87,6 +87,9 @@ void compute_intercept_slope(struct tsens_device *, u32 *, u32 *, u32);
- int init_common(struct tsens_device *);
- int get_temp_common(struct tsens_device *, int, int *);
- 
--extern const struct tsens_data data_8916, data_8974, data_8960, data_8996;
-+/* TSENS v1 targets */
-+extern const struct tsens_data data_8916, data_8974, data_8960;
-+/* TSENS v2 targets */
-+extern const struct tsens_data data_8996, data_tsens_v2;
- 
- #endif /* __QCOM_TSENS_H__ */
--- 
-2.7.4
+On Mon, Jul 02, 2018 at 02:40:27PM +0300, Mikko Perttunen wrote:
+> Add bindings for the Tegra Combined UART device used to talk to the
+> UART console on Tegra194 systems.
+>=20
+> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Acked-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>=20
+> Notes:
+>     v2:
+>     - Added Rob's Reviewed-by.
+>    =20
+>     v3:
+>     - Added Jon's Acked-by.
+>=20
+>  .../bindings/serial/nvidia,tegra194-tcu.txt        | 35 ++++++++++++++++=
+++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serial/nvidia,tegra=
+194-tcu.txt
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--DiL7RhKs8rK9YGuF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAls6H+cACgkQ3SOs138+
+s6Ftgw/6Al7FwFrx9x0Bqz8/QSQwlP8RexRWeehUJgvEHfqeQvlUuDnGjbzykNwO
+HaxhGzpGfckbwKqDAdbrkR1jLOdd/dckJBT1Qz7Co8orMhHcjxlHbmNV43t/t26w
+r7qBzH5cM9FkC8vmMjNhRP3REOqDZ1HOuW2Zp4jgO9EeBKGfDWnBzAiyYLWVkH5n
+Az1AEjSF5Rw54D7Mbt5EWGQ5oRp5waxyboz8D6qw5jVN6vHwudIM+3f2pNv7iIix
+9aNJvJLOk+RAbce8vFOuATAc1N/7CSJhLVvBW97hXGt5cTECPMdb1jmqT8IkofrR
+k+3PA+yacx0KLTf3vZXEWrqoAndJMd2XEJFJE1zm2BLZ/s4qvXAA6mZjVCKe8wIU
+yKeE8aLcptG7WPgRfF7KI6UO11q9igpQ9FF2LMIUcn8snTFxbli4RqcjX2E6nShD
+Mh1iApK4uu05AeKY4G9l4UFd7jFPBK2ajTeG/MprzF9Uyu+mjxCjlZvSZKo3jIAs
+wsUkMNeuGap0yDxRdeco+lO1XBXtYWrnSk6twI59KV5IO0bj8nxZrKn2SBgVo5G+
+QjvnocC7hno+Abx3xzB735rKnu+VNxH7HDIy3sj4smfwwtGrkwWy0wiSg8OUbtDB
+XojFX8e0T14LttZnLKWshq8iAOuTl1lpwhOmMhKTaI+DrFdrRWY=
+=1DhX
+-----END PGP SIGNATURE-----
+
+--DiL7RhKs8rK9YGuF--
