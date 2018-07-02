@@ -1,89 +1,55 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v11 10/10] arch: sh: migor: Use new renesas-ceu camera
- driver
-Date: Mon, 2 Jul 2018 12:11:59 +0200
-Message-ID: <3a262281-2f47-af79-970a-c8ec5ac82778@xs4all.nl>
-References: <1519295846-11612-1-git-send-email-jacopo+renesas@jmondi.org>
- <1519295846-11612-11-git-send-email-jacopo+renesas@jmondi.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH v5 3/4] dt-bindings: Add Innolux P097PFG panel bindings
+Date: Mon,  2 Jul 2018 12:27:20 +0200
+Message-ID: <20180702102721.3546-4-heiko@sntech.de>
+References: <20180702102721.3546-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519295846-11612-11-git-send-email-jacopo+renesas@jmondi.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
-Cc: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180702102721.3546-1-heiko@sntech.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: thierry.reding@gmail.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, hl@rock-chips.com, briannorris@chromium.org, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/02/18 11:37, Jacopo Mondi wrote:
-> Migo-R platform uses sh_mobile_ceu camera driver, which is now being
-> replaced by a proper V4L2 camera driver named 'renesas-ceu'.
-> 
-> Move Migo-R platform to use the v4l2 renesas-ceu camera driver
-> interface and get rid of soc_camera defined components used to register
-> sensor drivers and of platform specific enable/disable routines.
-> 
-> Register clock source and GPIOs for sensor drivers, so they can use
-> clock and gpio APIs.
-> 
-> Also, memory for CEU video buffers is now reserved with membocks APIs,
-> and need to be declared as dma_coherent during machine initialization to
-> remove that architecture specific part from CEU driver.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-> ---
->  arch/sh/boards/mach-migor/setup.c      | 225 +++++++++++++++------------------
->  arch/sh/kernel/cpu/sh4a/clock-sh7722.c |   2 +-
->  2 files changed, 101 insertions(+), 126 deletions(-)
-> 
-> diff --git a/arch/sh/boards/mach-migor/setup.c b/arch/sh/boards/mach-migor/setup.c
-> index 0bcbe58..271dfc2 100644
-> --- a/arch/sh/boards/mach-migor/setup.c
-> +++ b/arch/sh/boards/mach-migor/setup.c
-> @@ -1,17 +1,16 @@
-> +// SPDX-License-Identifier: GPL-2.0
->  /*
->   * Renesas System Solutions Asia Pte. Ltd - Migo-R
->   *
->   * Copyright (C) 2008 Magnus Damm
-> - *
-> - * This file is subject to the terms and conditions of the GNU General Public
-> - * License.  See the file "COPYING" in the main directory of this archive
-> - * for more details.
->   */
-> +#include <linux/clkdev.h>
->  #include <linux/init.h>
->  #include <linux/platform_device.h>
->  #include <linux/interrupt.h>
->  #include <linux/input.h>
->  #include <linux/input/sh_keysc.h>
-> +#include <linux/memblock.h>
->  #include <linux/mmc/host.h>
->  #include <linux/mtd/physmap.h>
->  #include <linux/mfd/tmio.h>
-> @@ -23,10 +22,11 @@
->  #include <linux/delay.h>
->  #include <linux/clk.h>
->  #include <linux/gpio.h>
-> +#include <linux/gpio/machine.h>
->  #include <linux/videodev2.h>
->  #include <linux/sh_intc.h>
->  #include <video/sh_mobile_lcdc.h>
-> -#include <media/drv-intf/sh_mobile_ceu.h>
-> +#include <media/drv-intf/renesas-ceu.h>
->  #include <media/i2c/ov772x.h>
->  #include <media/soc_camera.h>
-
-You left a stray soc_camera.h include here.
-
-Can you make a patch that removes this and verify that everything compiles?
-
-I also see CONFIG_SOC_CAMERA in several arch/sh/configs/*_defconfig files.
-Should those be updated?
-
-Regards,
-
-	Hans
+RnJvbTogaHVhbmcgbGluIDxobEByb2NrLWNoaXBzLmNvbT4KClRoZSBJbm5vbHV4IFAwOTdQRkcg
+cGFuZWwgaXMgOS43IiBwYW5lbCB3aXRoIDE1MzZYMjA0OApyZXNvbHV0aW9uLCBpdCByZXVzZSBQ
+MDc5WkNBIHBhbmVsIGRyaXZlciwgc28gaW1wcm92ZQpwMDc5WkNBIGR0LWJpbmRpbmcgdG8gc3Vw
+cG9ydCBQMDk3UEZHLgoKQ2hhbmdlcyBpbiB2MjoKLSBOb25lCkNoYW5nZXMgaW4gdjM6Ci0gTm9u
+ZQpDaGFuZ2VzIGluIHY0OgotIE5vbmUKQ2hhbmdlcyBpbiB2NToKLSB1c2Ugc2VwYXJhdGUgZmls
+ZSBmb3IgYmluZGluZwotIGtlZXAgcG93ZXIgc3VwcGxpZXMgYXMgcmVxdWlyZWQKClNpZ25lZC1v
+ZmYtYnk6IExpbiBIdWFuZyA8aGxAcm9jay1jaGlwcy5jb20+ClNpZ25lZC1vZmYtYnk6IEhlaWtv
+IFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Ci0tLQogLi4uL2Rpc3BsYXkvcGFuZWwvaW5ub2x1
+eCxwMDk3cGZnLnR4dCAgICAgICAgIHwgMjQgKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNo
+YW5nZWQsIDI0IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHAwOTdwZmcudHh0Cgpk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
+ZWwvaW5ub2x1eCxwMDk3cGZnLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L3BhbmVsL2lubm9sdXgscDA5N3BmZy50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQK
+aW5kZXggMDAwMDAwMDAwMDAwLi41OTVkOWRmZWZmZDMKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHAwOTdw
+ZmcudHh0CkBAIC0wLDAgKzEsMjQgQEAKK0lubm9sdXggUDA5N1BGRyA5LjciIDE1MzZ4MjA0OCBU
+RlQgTENEIHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IHNob3Vs
+ZCBiZSAiaW5ub2x1eCxwMDk3cGZnIgorLSByZWc6IERTSSB2aXJ0dWFsIGNoYW5uZWwgb2YgdGhl
+IHBlcmlwaGVyYWwKKy0gYXZkZC1zdXBwbHk6IHBoYW5kbGUgb2YgdGhlIHJlZ3VsYXRvciB0aGF0
+IHByb3ZpZGVzIHBvc2l0aXZlIHZvbHRhZ2UKKy0gYXZlZS1zdXBwbHk6IHBoYW5kbGUgb2YgdGhl
+IHJlZ3VsYXRvciB0aGF0IHByb3ZpZGVzIG5lZ2F0aXZlIHZvbHRhZ2UKKy0gZW5hYmxlLWdwaW9z
+OiBwYW5lbCBlbmFibGUgZ3BpbworCitPcHRpb25hbCBwcm9wZXJ0aWVzOgorLSBiYWNrbGlnaHQ6
+IHBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQgdG8gdGhlIHBhbmVsCisK
+K0V4YW1wbGU6CisKKwkmbWlwaV9kc2kgeworCQlwYW5lbCB7CisJCQljb21wYXRpYmxlID0gImlu
+bm9sdXgscDA3OXpjYSI7CisJCQlyZWcgPSA8MD47CisJCQlhdmRkLXN1cHBseSA9IDwuLi4+Owor
+CQkJYXZlZS1zdXBwbHkgPSA8Li4uPjsKKwkJCWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsKKwkJ
+CWVuYWJsZS1ncGlvcyA9IDwmZ3BpbzEgMTMgR1BJT19BQ1RJVkVfSElHSD47CisJCX07CisJfTsK
+LS0gCjIuMTcuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
