@@ -1,59 +1,51 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v4 0/6] thermal: tsens: Refactoring for TSENSv2 IP
-Date: Mon,  2 Jul 2018 18:14:03 +0530
-Message-ID: <cover.1530533998.git.amit.kucheria@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH v4 6/6] arm64: dts: sdm845: Add tsens nodes
+Date: Mon,  2 Jul 2018 18:14:09 +0530
+Message-ID: <a52b77ad84867774a0659f51ccb79b17ba7638ab.1530533998.git.amit.kucheria@linaro.org>
+References: <cover.1530533998.git.amit.kucheria@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1530533998.git.amit.kucheria@linaro.org>
+In-Reply-To: <cover.1530533998.git.amit.kucheria@linaro.org>
+References: <cover.1530533998.git.amit.kucheria@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, rnayak@codeaurora.org, Kees Cook <keescook@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, smohanad@codeaurora.org, bjorn.andersson@linaro.org, edubezval@gmail.com, vivek.gautam@codeaurora.org, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, smohanad@codeaurora.org, vivek.gautam@codeaurora.org, andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This series is a mixed bag:
-- Some code moves to allow code sharing between various v2.x.y versions of
-  the TSENS IP,
-- new qcom,tsens-v2.4.0 DT property for SDM845 and a generic qcom,tsens-v2
-  property as a fallback compatible for all v2.x.y platforms,
-- new platform support (sdm845)
-- a cleanup patch and
-- a DT change to have a common way to deal with the SROT and TM registers
-  despite slightly different features across the IP family and different
-  register offsets.
+SDM845 has two tsens blocks, one with 13 sensors and the other with 8
+sensors.
 
-Rob mentioned offline that we should expose the full version string of the
-TSENS IP (x.y.z) and have a fallback compatible. I hope patch 4 does what
-you were looking for.
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-Regards,
-Amit
-
-Amit Kucheria (6):
-  thermal: tsens: Get rid of unused fields in structure
-  dt: qcom: 8996: thermal: Move to DT initialisation
-  thermal: tsens: Rename tsens-8996 to tsens-v2 for reuse
-  thermal: tsens: Add support for SDM845
-  thermal: tsens: Check if we have valid data before reading
-  arm64: dts: sdm845: Add tsens nodes
-
- .../devicetree/bindings/thermal/qcom-tsens.txt     |  2 ++
- arch/arm64/boot/dts/qcom/msm8996.dtsi              | 12 ++++++-
- arch/arm64/boot/dts/qcom/sdm845.dtsi               | 16 +++++++++
- drivers/thermal/qcom/Makefile                      |  2 +-
- drivers/thermal/qcom/{tsens-8996.c => tsens-v2.c}  | 39 ++++++++++++----------
- drivers/thermal/qcom/tsens.c                       |  6 ++++
- drivers/thermal/qcom/tsens.h                       |  7 ++--
- 7 files changed, 62 insertions(+), 22 deletions(-)
- rename drivers/thermal/qcom/{tsens-8996.c => tsens-v2.c} (66%)
-
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index cdaabeb..edf8505 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -221,6 +221,22 @@
+ 			#interrupt-cells = <2>;
+ 		};
+ 
++		tsens0: tsens@c222000 {
++			compatible = "qcom,tsens-v2.4.0", "qcom,tsens-v2";
++			reg = <0xc263000 0x1ff>, /* TM */
++			      <0xc222000 0x1ff>; /* SROT */
++			#qcom,sensors = <13>;
++			#thermal-sensor-cells = <1>;
++		};
++
++		tsens1: tsens@c223000 {
++			compatible = "qcom,tsens-v2.4.0", "qcom,tsens-v2";
++			reg = <0xc265000 0x1ff>, /* TM */
++			      <0xc223000 0x1ff>; /* SROT */
++			#qcom,sensors = <8>;
++			#thermal-sensor-cells = <1>;
++		};
++
+ 		spmi_bus: spmi@c440000 {
+ 			compatible = "qcom,spmi-pmic-arb";
+ 			reg = <0xc440000 0x1100>,
 -- 
 2.7.4
