@@ -1,134 +1,42 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH] arm: dts: socfpga: denali needs nand_x_clk too
-Date: Mon, 2 Jul 2018 08:19:26 -0500
-Message-ID: <ff8ad078-1e98-9e4f-0f9c-64981caad8c9@kernel.org>
-References: <20180619120719.26921-1-richard@nod.at>
- <CAK7LNASgPa4D0Siyo3mvK_AJ2zaECDXGaMEn-iNzQ9PFXFir+w@mail.gmail.com>
- <3320422.EJ8D6C0VHL@blindfold>
- <d4fdcd1d-db20-1837-a037-0982a042d357@kernel.org>
- <20180625165506.484e025f@bbrezillon>
- <CAK7LNATyo+7gauyQcRmNfCs8CagU1XdpHHgREMeTvf4rqxpeNQ@mail.gmail.com>
- <20180626200928.29aca979@xps13>
- <CAK7LNATbmNadK=xPcaQ+seRS_YvH5ZP5SX8z74iOyYcJ0Soicw@mail.gmail.com>
- <333ae81b-af62-ec2e-3311-5487b1cc90c1@kernel.org>
- <CAK7LNATuCqs5ofKnNCSEYhWanD+u2+5NzB7asaYhqb7BVUW_Fw@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 3/6] pinctrl: Support stopping deferred probe after initcalls
+Date: Mon, 2 Jul 2018 15:23:08 +0200
+Message-ID: <CACRpkdZU50xG-seDq8pZ0QLBXzn_Ygs-s1rJXGqzpfDJGbjDtA@mail.gmail.com>
+References: <20180628204344.13973-1-robh@kernel.org> <20180628204344.13973-4-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNATuCqs5ofKnNCSEYhWanD+u2+5NzB7asaYhqb7BVUW_Fw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180628204344.13973-4-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, =?UTF-8?Q?Marek_Va=c5=a1ut?= <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, boot-architecture@lists.linaro.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jun 28, 2018 at 10:43 PM Rob Herring <robh@kernel.org> wrote:
 
+> Pinctrl drivers are a common dependency which can prevent a system
+> booting even if the default or bootloader configured settings can work.
+> If a pinctrl node in DT indicates that the default pin setup can be used
+> with the 'pinctrl-use-default' property, then only defer probe until
+> initcalls are done. If the deferred probe timeout is enabled or loadable
+> modules are disabled, then we'll stop deferring probe regardless of the
+> DT property. This gives platforms the option to work without their
+> pinctrl driver being enabled.
+>
+> Dropped the pinctrl specific deferring probe message as the driver core
+> can print deferred probe related messages if needed.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> v3:
+> - Drop pinctrl deferred probe msg in favor of driver core messages
+> - Move the handling of "pinctrl-use-default" option out of driver core
+> - Stop deferring probe if modules are not enabled.
+>
+> Linus, I reworked this a bit, so didn't add your ack.
 
-On 07/01/2018 08:35 PM, Masahiro Yamada wrote:
-> Hi Dinh,
-> 
-> 2018-06-27 23:55 GMT+09:00 Dinh Nguyen <dinguyen@kernel.org>:
->> Hi Masahiro,
->>
->> On 06/26/2018 09:52 PM, Masahiro Yamada wrote:
->>> 2018-06-27 3:09 GMT+09:00 Miquel Raynal <miquel.raynal@bootlin.com>:
->>>> Hi Masahiro,
->>>>
->>>> On Tue, 26 Jun 2018 11:38:21 +0900, Masahiro Yamada
->>>> <yamada.masahiro@socionext.com> wrote:
->>>>
->>>>> 2018-06-25 23:55 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:
->>>>>> On Mon, 25 Jun 2018 09:50:18 -0500
->>>>>> Dinh Nguyen <dinguyen@kernel.org> wrote:
->>>>>>
->>>>>>> On 06/22/2018 10:58 AM, Richard Weinberger wrote:
->>>>>>>> Masahiro,
->>>>>>>>
->>>>>>>> Am Freitag, 22. Juni 2018, 16:37:21 CEST schrieb Masahiro Yamada:
->>>>>>>>> Hi Richard,
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> 2018-06-19 21:07 GMT+09:00 Richard Weinberger <richard@nod.at>:
->>>>>>>>>> The denali NAND flash controller needs at least two clocks to operate,
->>>>>>>>>> nand_clk and nand_x_clk.
->>>>>>>>>> Since 1bb88666775e ("mtd: nand: denali: handle timing parameters by
->>>>>>>>>> setup_data_interface()") nand_x_clk is used to derive timing settings.
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Richard Weinberger <richard@nod.at>
->>>>>>>>>> ---
->>>>>>>>>> Strictly speaking denali needs a ecc_clk too, but AFAIK such a clock
->>>>>>>>>> is not present on this SoC.
->>>>>>>>>> But my SoCFPGA knowledge is very limited.
->>>>>>>>>>
->>>>>>>>>> Thanks,
->>>>>>>>>> //richard
->>>>>>>>>> ---
->>>>>>>>>>  arch/arm/boot/dts/socfpga.dtsi | 3 ++-
->>>>>>>>>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>>>>>>>>
->>>>>>>>>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
->>>>>>>>>> index 486d4e7433ed..562f7b375bbd 100644
->>>>>>>>>> --- a/arch/arm/boot/dts/socfpga.dtsi
->>>>>>>>>> +++ b/arch/arm/boot/dts/socfpga.dtsi
->>>>>>>>>> @@ -754,7 +754,8 @@
->>>>>>>>>>                         reg-names = "nand_data", "denali_reg";
->>>>>>>>>>                         interrupts = <0x0 0x90 0x4>;
->>>>>>>>>>                         dma-mask = <0xffffffff>;
->>>>>>>>>> -                       clocks = <&nand_clk>;
->>>>>>>>>> +                       clocks = <&nand_clk>, <&nand_x_clk>;
->>>>>>>>>> +                       clock-names = "nand", "nand_x";
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> IMHO, this should be
->>>>>>>>>
->>>>>>>>>                           clocks = <&nand_clk>, <&nand_x_clk>, <&nand_x_clk>;
->>>>>>>>>                           clock-names = "nand", "nand_x", "ecc";
->>>>>>>
->>>>>>> No, it should be just the nand_x and ecc.
->>>>>>>
->>>>>>> There's already a patch to use the nand_x_clk and not the nand_clk.
->>>>>
->>>>>
->>>>> Different people try to fix the problem in different ways.
->>>>>
->>>>> I think it is due to miscommunication across sub-systems.
->>>>
->>>> Is the series named
->>>>
->>>>         mtd: rawnand: denali: add new clocks and improve
->>>>                               setup_data_interface
->>>>
->>>> still valid?
->>>
->>> Yes.
->>> I believe V4 is valid.
->>>
->>>
->>> Information for Dinh Nguyen:
->>>
->>> http://patchwork.ozlabs.org/patch/933507/
->>> http://patchwork.ozlabs.org/patch/933487/
->>> http://patchwork.ozlabs.org/patch/933494/
->>> http://patchwork.ozlabs.org/patch/933506/
->>>
->>>
->>> If he is not convinced, I am open to discussion, though.
->>
->> I wasn't aware of these patches. This patch is staged to go into
->> v4.17-rc3 through the arm-soc:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/commit/arch/arm/boot/dts/socfpga.dtsi?h=fixes&id=4eda9b766b042ea38d84df91581b03f6145a2ab0
->>
->> I think your patch will handle a case where only 1 clock is passed in,
->> so it should be okay right?
->>
-> 
-> I should be OK,
-> but please consider the proper fix for v4.19
-> as Boris suggested.
-> 
+Looks even better now:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Yes, I will spin up a patch.
-
-Dinh
+Yours,
+Linus Walleij
