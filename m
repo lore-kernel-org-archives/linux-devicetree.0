@@ -1,38 +1,55 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v1] ARM: dts: imx6sl-evk: keep sw4 always on
-Date: Sun, 1 Jul 2018 22:17:15 -0300
-Message-ID: <CAOMZO5BdtxKjQge5ONpnjr1yNVeTJf4u8Gh-fPqpHz7G9ipOTg@mail.gmail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH v1] ARM: dts: imx6sl-evk: keep sw4 always on
+Date: Mon, 2 Jul 2018 01:19:20 +0000
+Message-ID: <AM3PR04MB1315D8EF80847B4AF1FF4BA5F5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
 References: <1529930051-14122-1-git-send-email-yibin.gong@nxp.com>
- <20180701093402.GN4348@dragon> <CAOMZO5BjOEGWv2dC-bp0BYHq+PhLssEKic+o7ock8_1Dobd=sQ@mail.gmail.com>
+ <20180701093402.GN4348@dragon>
+ <CAOMZO5BjOEGWv2dC-bp0BYHq+PhLssEKic+o7ock8_1Dobd=sQ@mail.gmail.com>
  <AM3PR04MB131507901BFEE1A5E426EECBF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
  <CAOMZO5D8tjnjbwMdLGd7KF7_4PwqRWX8XH8kdcF3-5e-r2YQEA@mail.gmail.com>
  <AM3PR04MB1315E7AED2BCE2265E6C443DF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
  <CAOMZO5D8v4KM9S4ooHTDbA+vc8BZN_eO_wDuOPA+8Hcq-SmLDw@mail.gmail.com>
  <AM3PR04MB1315C7C7CFF990615732FFBCF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5AM5VRS7UiWuvAQ8vvTB8OM+iwofuYrbsL_yB9e0Z9Kyg@mail.gmail.com> <AM3PR04MB13155B8D567ABEF7EF03249AF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5AM5VRS7UiWuvAQ8vvTB8OM+iwofuYrbsL_yB9e0Z9Kyg@mail.gmail.com>
+ <AM3PR04MB13155B8D567ABEF7EF03249AF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5BdtxKjQge5ONpnjr1yNVeTJf4u8Gh-fPqpHz7G9ipOTg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM3PR04MB13155B8D567ABEF7EF03249AF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+In-Reply-To: <CAOMZO5BdtxKjQge5ONpnjr1yNVeTJf4u8Gh-fPqpHz7G9ipOTg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
+To: Fabio Estevam <festevam@gmail.com>
 Cc: Shawn Guo <shawnguo@kernel.org>, Robin Gong <yibin.gong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 1, 2018 at 10:09 PM, Anson Huang <anson.huang@nxp.com> wrote:
-
-> On some new i.MX platforms, PFuze switches are used for supplying GPU/VPU
-> or other non-critical modules only, these switches need to be turned off by
-> runtime PM to avoid very high power leakage, like on mScale850D.
-
-Ok, in this case I suggest adding a new property so that the switches
-can be turned off only when the new property is present.
-
-When this new property is absent, then we keep the current behavior
-and avoid dtb breakage.
-
-Since MX8M support is not in place yet, this is not urgent, so I will
-send a revert and then you can re-work the patch so that it does not
-affect the old dtbs.
-
-Do you agree with such approach?
+DQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
+Z2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1AZ21haWwuY29t
+XQ0KPiBTZW50OiBNb25kYXksIEp1bHkgMiwgMjAxOCA5OjE3IEFNDQo+IFRvOiBBbnNvbiBIdWFu
+ZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVs
+Lm9yZz47IFJvYmluIEdvbmcgPHlpYmluLmdvbmdAbnhwLmNvbT47DQo+IE1hcmsgUnV0bGFuZCA8
+bWFyay5ydXRsYW5kQGFybS5jb20+OyBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQNCj4gRkxB
+VFRFTkVEIERFVklDRSBUUkVFIEJJTkRJTkdTIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47
+DQo+IGxpbnV4LWtlcm5lbCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IFJvYiBIZXJy
+aW5nDQo+IDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAu
+Y29tPjsgU2FzY2hhIEhhdWVyDQo+IDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyBGYWJpbyBFc3Rl
+dmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+Ow0KPiBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJFRVND
+QUxFIElNWCAvIE1YQyBBUk0gQVJDSElURUNUVVJFDQo+IDxsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjFdIEFSTTogZHRzOiBpbXg2
+c2wtZXZrOiBrZWVwIHN3NCBhbHdheXMgb24NCj4gDQo+IE9uIFN1biwgSnVsIDEsIDIwMTggYXQg
+MTA6MDkgUE0sIEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiB3cm90ZToNCj4g
+DQo+ID4gT24gc29tZSBuZXcgaS5NWCBwbGF0Zm9ybXMsIFBGdXplIHN3aXRjaGVzIGFyZSB1c2Vk
+IGZvciBzdXBwbHlpbmcNCj4gPiBHUFUvVlBVIG9yIG90aGVyIG5vbi1jcml0aWNhbCBtb2R1bGVz
+IG9ubHksIHRoZXNlIHN3aXRjaGVzIG5lZWQgdG8gYmUNCj4gPiB0dXJuZWQgb2ZmIGJ5IHJ1bnRp
+bWUgUE0gdG8gYXZvaWQgdmVyeSBoaWdoIHBvd2VyIGxlYWthZ2UsIGxpa2Ugb24NCj4gbVNjYWxl
+ODUwRC4NCj4gDQo+IE9rLCBpbiB0aGlzIGNhc2UgSSBzdWdnZXN0IGFkZGluZyBhIG5ldyBwcm9w
+ZXJ0eSBzbyB0aGF0IHRoZSBzd2l0Y2hlcyBjYW4gYmUNCj4gdHVybmVkIG9mZiBvbmx5IHdoZW4g
+dGhlIG5ldyBwcm9wZXJ0eSBpcyBwcmVzZW50Lg0KPiANCj4gV2hlbiB0aGlzIG5ldyBwcm9wZXJ0
+eSBpcyBhYnNlbnQsIHRoZW4gd2Uga2VlcCB0aGUgY3VycmVudCBiZWhhdmlvciBhbmQgYXZvaWQN
+Cj4gZHRiIGJyZWFrYWdlLg0KPiANCj4gU2luY2UgTVg4TSBzdXBwb3J0IGlzIG5vdCBpbiBwbGFj
+ZSB5ZXQsIHRoaXMgaXMgbm90IHVyZ2VudCwgc28gSSB3aWxsIHNlbmQgYSByZXZlcnQNCj4gYW5k
+IHRoZW4geW91IGNhbiByZS13b3JrIHRoZSBwYXRjaCBzbyB0aGF0IGl0IGRvZXMgbm90IGFmZmVj
+dCB0aGUgb2xkIGR0YnMuDQo+IA0KPiBEbyB5b3UgYWdyZWUgd2l0aCBzdWNoIGFwcHJvYWNoPw0K
+DQpTdXJlLCBJIGFncmVlIGZvciBub3cuIEFzIEkgZGlkIE5PVCB3YW50IHRvIGhhdmUgYW55IGJy
+ZWFrYWdlLiBUaGFua3MuDQogDQpBbnNvbi4NCg0KDQo=
