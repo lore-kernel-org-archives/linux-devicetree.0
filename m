@@ -1,104 +1,36 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH] ASoC: pxa-ssp: add support for an external
-	clock in devicetree
-Date: Mon,  2 Jul 2018 17:11:00 +0200
-Message-ID: <20180702151100.28999-1-daniel@zonque.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v1] ARM: dts: imx6sl-evk: keep sw4 always on
+Date: Mon, 2 Jul 2018 20:14:49 -0300
+Message-ID: <CAOMZO5AxsvOhWi47goBm7YuqiLEhZ5fgK4BtCqg_hyLtdWfqfA@mail.gmail.com>
+References: <1529930051-14122-1-git-send-email-yibin.gong@nxp.com>
+ <20180701093402.GN4348@dragon> <CAOMZO5BjOEGWv2dC-bp0BYHq+PhLssEKic+o7ock8_1Dobd=sQ@mail.gmail.com>
+ <AM3PR04MB131507901BFEE1A5E426EECBF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5D8tjnjbwMdLGd7KF7_4PwqRWX8XH8kdcF3-5e-r2YQEA@mail.gmail.com>
+ <AM3PR04MB1315E7AED2BCE2265E6C443DF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5D8v4KM9S4ooHTDbA+vc8BZN_eO_wDuOPA+8Hcq-SmLDw@mail.gmail.com>
+ <AM3PR04MB1315C7C7CFF990615732FFBCF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5AM5VRS7UiWuvAQ8vvTB8OM+iwofuYrbsL_yB9e0Z9Kyg@mail.gmail.com>
+ <AM3PR04MB13155B8D567ABEF7EF03249AF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5BdtxKjQge5ONpnjr1yNVeTJf4u8Gh-fPqpHz7G9ipOTg@mail.gmail.com> <1530526335.15665.13.camel@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, haojian.zhuang@gmail.com, robert.jarzmik@free.fr, Daniel Mack <daniel@zonque.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1530526335.15665.13.camel@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Gong <yibin.gong@nxp.com>
+Cc: Anson Huang <anson.huang@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Allow setting a clock called 'extclk' in the device of the ssp-dai
-device. If specified, this clock will be set to the mclk rate from the
-DAI's .set_sysclk() callback. The DAI will also configure itself to
-use that external clock.
+Hi Robin,
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- .../bindings/sound/mrvl,pxa-ssp.txt           |  8 ++++++
- sound/soc/pxa/pxa-ssp.c                       | 25 +++++++++++++++++++
- 2 files changed, 33 insertions(+)
+On Sun, Jul 1, 2018 at 11:12 PM, Robin Gong <yibin.gong@nxp.com> wrote:
 
-diff --git a/Documentation/devicetree/bindings/sound/mrvl,pxa-ssp.txt b/Documentation/devicetree/bindings/sound/mrvl,pxa-ssp.txt
-index efd3fb1f68d2..feef39b4a4fd 100644
---- a/Documentation/devicetree/bindings/sound/mrvl,pxa-ssp.txt
-+++ b/Documentation/devicetree/bindings/sound/mrvl,pxa-ssp.txt
-@@ -5,6 +5,14 @@ Required properties:
- 	compatible	Must be "mrvl,pxa-ssp-dai"
- 	port		A phandle reference to a PXA ssp upstream device
- 
-+Optional properties:
-+
-+	clock-names
-+	clocks		Through "clock-names" and "clocks", external clocks
-+			can be configured. If a clock names "extclk" exists,
-+			it will be set to the mclk rate of the audio stream
-+			and be used as clock provider of the DAI.
-+
- Example:
- 
- 	/* upstream device */
-diff --git a/sound/soc/pxa/pxa-ssp.c b/sound/soc/pxa/pxa-ssp.c
-index f8339bb01251..c43fe3b9c79c 100644
---- a/sound/soc/pxa/pxa-ssp.c
-+++ b/sound/soc/pxa/pxa-ssp.c
-@@ -41,6 +41,7 @@
-  */
- struct ssp_priv {
- 	struct ssp_device *ssp;
-+	struct clk *extclk;
- 	unsigned long ssp_clk;
- 	unsigned int sysclk;
- 	unsigned int dai_fmt;
-@@ -205,6 +206,21 @@ static int pxa_ssp_set_dai_sysclk(struct snd_soc_dai *cpu_dai,
- 	u32 sscr0 = pxa_ssp_read_reg(ssp, SSCR0) &
- 		~(SSCR0_ECS | SSCR0_NCS | SSCR0_MOD | SSCR0_ACS);
- 
-+	if (priv->extclk) {
-+		int ret;
-+
-+		/*
-+		 * For DT based boards, if an extclk is given, use it
-+		 * here and configure PXA_SSP_CLK_EXT.
-+		 */
-+
-+		ret = clk_set_rate(priv->extclk, freq);
-+		if (ret < 0)
-+			return ret;
-+
-+		clk_id = PXA_SSP_CLK_EXT;
-+	}
-+
- 	dev_dbg(&ssp->pdev->dev,
- 		"pxa_ssp_set_dai_sysclk id: %d, clk_id %d, freq %u\n",
- 		cpu_dai->id, clk_id, freq);
-@@ -773,6 +789,15 @@ static int pxa_ssp_probe(struct snd_soc_dai *dai)
- 			ret = -ENODEV;
- 			goto err_priv;
- 		}
-+
-+		priv->extclk = devm_clk_get(dev, "extclk");
-+		if (IS_ERR(priv->extclk)) {
-+			ret = PTR_ERR(priv->extclk);
-+			if (ret == -EPROBE_DEFER)
-+				return ret;
-+
-+			priv->extclk = NULL;
-+		}
- 	} else {
- 		priv->ssp = pxa_ssp_request(dai->id + 1, "SoC audio");
- 		if (priv->ssp == NULL) {
--- 
-2.17.1
+> But in fact, the original dts is not correct without 'regulator-always-
+> on'since SW4 is the critical DDR power rail, although, it's kept on in
+> the previous kernel by no switches enable/disable interfaces provided
+> in pfuze driver. Adding new property which can be done totally by the
+> common 'regulator-always-on' is not a good choice. Keep the dts patch
+> adding 'regulator-always-on' ahead of pfuze driver pach adding
+> enable/disable interface is enough for such case I think.
+
+We really want to avoid  breaking old dtb's running a new kernel.
