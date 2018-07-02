@@ -1,140 +1,73 @@
-From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v3 3/4] PCI: mediatek: Add system pm support for MT2712 and MT7622
-Date: Mon, 2 Jul 2018 15:57:43 +0800
-Message-ID: <1530518264-6125-4-git-send-email-honghui.zhang@mediatek.com>
-References: <1530518264-6125-1-git-send-email-honghui.zhang@mediatek.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 5/8] remoteproc: new driver for TI PRU
+Date: Mon, 2 Jul 2018 11:05:04 +0300
+Message-ID: <d331a7dc-9fb0-aa05-36e6-3e1373b6fd16@ti.com>
+References: <20180623210810.21232-1-david@lechnology.com>
+ <20180623210810.21232-6-david@lechnology.com>
+ <ce87a7dc-ecf6-f3fd-9121-bf99216f7412@ti.com>
+ <CA+CtpRhQ07=3UytY7QrfnpWkY06UqHbNVq099Coez3C4H3U5yg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530518264-6125-1-git-send-email-honghui.zhang@mediatek.com>
+In-Reply-To: <CA+CtpRhQ07=3UytY7QrfnpWkY06UqHbNVq099Coez3C4H3U5yg@mail.gmail.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
-Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
+To: Derald Woods <woods.technical@gmail.com>
+Cc: David Lechner <david@lechnology.com>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, "Anna, Suman" <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang@mediatek.com>
+Derald,
 
-The MTCMOS of PCIe Host for MT2712 and MT7622 will be off when system
-suspend, and all the internal control register will be reset after system
-resume. The PCIe link should be re-established and the related control
-register values should be re-set after system resume.
+On 30/06/18 22:02, Derald Woods wrote:
+> 
+> 
+> On Fri, Jun 29, 2018 at 5:14 AM, Roger Quadros <rogerq@ti.com <mailto:rogerq@ti.com>> wrote:
+> 
+> 
+> 
+>     On 24/06/18 00:08, David Lechner wrote:
+>     > This adds a new remoteproc driver for TI Programmable Realtime Units
+>     > (PRUs).
+>     >
+>     > This has been tested working on AM1808 (LEGO MINDSTORMS EV3) using the
+>     > sample rpmsg client driver.
+>     >
+>     > Signed-off-by: David Lechner <david@lechnology.com <mailto:david@lechnology.com>>
+>     > ---
+>     >  MAINTAINERS                       |   5 +
+>     >  drivers/remoteproc/Kconfig        |   7 +
+>     >  drivers/remoteproc/Makefile       |   1 +
+>     >  drivers/remoteproc/ti_pru_rproc.c | 660 ++++++++++++++++++++++++++++++
+>     >  4 files changed, 673 insertions(+)
+>     >  create mode 100644 drivers/remoteproc/ti_pru_rproc.c
 
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-Acked-by: Ryder Lee <ryder.lee@mediatek.com>
----
- drivers/pci/controller/pcie-mediatek.c | 67 ++++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+<snip>
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 86918d4..175d7b6 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -134,12 +134,14 @@ struct mtk_pcie_port;
- /**
-  * struct mtk_pcie_soc - differentiate between host generations
-  * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-+ * @pm_support: whether the host's MTCMOS will be off when suspend
-  * @ops: pointer to configuration access functions
-  * @startup: pointer to controller setting functions
-  * @setup_irq: pointer to initialize IRQ functions
-  */
- struct mtk_pcie_soc {
- 	bool need_fix_class_id;
-+	bool pm_support;
- 	struct pci_ops *ops;
- 	int (*startup)(struct mtk_pcie_port *port);
- 	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-@@ -1197,12 +1199,75 @@ static int mtk_pcie_probe(struct platform_device *pdev)
- 	return err;
- }
- 
-+static int __maybe_unused mtk_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct mtk_pcie *pcie = dev_get_drvdata(dev);
-+	const struct mtk_pcie_soc *soc = pcie->soc;
-+	struct mtk_pcie_port *port;
-+
-+	if (!soc->pm_support)
-+		return 0;
-+
-+	if (list_empty(&pcie->ports))
-+		return 0;
-+
-+	list_for_each_entry(port, &pcie->ports, list) {
-+		clk_disable_unprepare(port->pipe_ck);
-+		clk_disable_unprepare(port->obff_ck);
-+		clk_disable_unprepare(port->axi_ck);
-+		clk_disable_unprepare(port->aux_ck);
-+		clk_disable_unprepare(port->ahb_ck);
-+		clk_disable_unprepare(port->sys_ck);
-+		phy_power_off(port->phy);
-+		phy_exit(port->phy);
-+	}
-+
-+	mtk_pcie_subsys_powerdown(pcie);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused mtk_pcie_resume_noirq(struct device *dev)
-+{
-+	struct mtk_pcie *pcie = dev_get_drvdata(dev);
-+	const struct mtk_pcie_soc *soc = pcie->soc;
-+	struct mtk_pcie_port *port, *tmp;
-+
-+	if (!soc->pm_support)
-+		return 0;
-+
-+	if (list_empty(&pcie->ports))
-+		return 0;
-+
-+	if (dev->pm_domain) {
-+		pm_runtime_enable(dev);
-+		pm_runtime_get_sync(dev);
-+	}
-+
-+	clk_prepare_enable(pcie->free_ck);
-+
-+	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
-+		mtk_pcie_enable_port(port);
-+
-+	/* In case of EP was removed while system suspend. */
-+	if (list_empty(&pcie->ports))
-+		mtk_pcie_subsys_powerdown(pcie);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops mtk_pcie_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_pcie_suspend_noirq,
-+				      mtk_pcie_resume_noirq)
-+};
-+
- static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
- 	.ops = &mtk_pcie_ops,
- 	.startup = mtk_pcie_startup_port,
- };
- 
- static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
-+	.pm_support = true,
- 	.ops = &mtk_pcie_ops_v2,
- 	.startup = mtk_pcie_startup_port_v2,
- 	.setup_irq = mtk_pcie_setup_irq,
-@@ -1210,6 +1275,7 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
- 
- static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
- 	.need_fix_class_id = true,
-+	.pm_support = true,
- 	.ops = &mtk_pcie_ops_v2,
- 	.startup = mtk_pcie_startup_port_v2,
- 	.setup_irq = mtk_pcie_setup_irq,
-@@ -1229,6 +1295,7 @@ static struct platform_driver mtk_pcie_driver = {
- 		.name = "mtk-pcie",
- 		.of_match_table = mtk_pcie_ids,
- 		.suppress_bind_attrs = true,
-+		.pm = &mtk_pcie_pm_ops,
- 	},
- };
- builtin_platform_driver(mtk_pcie_driver);
+> 
+>     We already have a working irq_chip implementation for INTC.
+>     https://git.ti.com/ti-linux-kernel/ti-linux-kernel/blobs/ti-linux-4.14.y/drivers/remoteproc/pruss_intc.c <https://git.ti.com/ti-linux-kernel/ti-linux-kernel/blobs/ti-linux-4.14.y/drivers/remoteproc/pruss_intc.c>
+> 
+>     I think we can leverage directly from that.
+> 
+>     This way pru_rproc or client device nodes can easily specify a pruss_intc interrupt parent and the
+>     SYSEVENT number as the irq. Then device drivers can simply use request_irq().
+> 
+>     example usage here
+>     https://git.ti.com/ti-linux-kernel/ti-linux-kernel/blobs/ti-linux-4.14.y/arch/arm/boot/dts/am33xx.dtsi#line986 <https://git.ti.com/ti-linux-kernel/ti-linux-kernel/blobs/ti-linux-4.14.y/arch/arm/boot/dts/am33xx.dtsi#line986>
+>     https://git.ti.com/ti-linux-kernel/ti-linux-kernel/blobs/ti-linux-4.14.y/drivers/remoteproc/pru_rproc.c#line670 <https://git.ti.com/ti-linux-kernel/ti-linux-kernel/blobs/ti-linux-4.14.y/drivers/remoteproc/pru_rproc.c#line670>
+> 
+> 
+> 
+> 
+> ​Is this PRU code on a path to be added to the mainline kernel?​ There is an increase in the number of available systems which would benefit from consistent PRU interfaces. If code is not mainlined, or on a mainline path, some may think it is not usable or ready for production. Is this a permanent "out-of-tree" and/or "TI-tree" development. Just wondering.
+> 
+
+Yes, we constantly upstream our work. We are currently working to get the PRU support upstream.
+
 -- 
-2.6.4
+cheers,
+-roger
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
