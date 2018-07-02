@@ -1,38 +1,43 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v7 3/4] ARM: davinci: dts: make psc0 a reset provider
-Date: Mon, 2 Jul 2018 17:27:21 +0530
-Message-ID: <b56077f5-c8ef-6c19-7b2e-c82eec23d127@ti.com>
-References: <20180621073706.22812-1-brgl@bgdev.pl>
- <20180621073706.22812-4-brgl@bgdev.pl>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [RESEND PATCH v4 0/2] Add a property in at24.c
+Date: Mon, 2 Jul 2018 13:59:02 +0200
+Message-ID: <CAMRc=MfFH7EnyAXyBK+sssjyYoz9LhNDTkzWRsHBsPcDV7Ecig@mail.gmail.com>
+References: <1530522740-2798-1-git-send-email-alanx.chiang@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180621073706.22812-4-brgl@bgdev.pl>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1530522740-2798-1-git-send-email-alanx.chiang@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: alanx.chiang@intel.com
+Cc: linux-i2c <linux-i2c@vger.kernel.org>, andy.yeh@intel.com, Sakari Ailus <sakari.ailus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, andriy.shevchenko@intel.com, Rajmohan Mani <rajmohan.mani@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, tfiga@chromium.org, jcliang@chromium.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 21 June 2018 01:07 PM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> The psc driver registers with the reset framework as a provider. Add
-> the #reset-cells property to the psc0 node.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Reviewed-by: David Lechner <david@lechnology.com>
+2018-07-02 11:12 GMT+02:00  <alanx.chiang@intel.com>:
+> From: Alan Chiang <alanx.chiang@intel.com>
+>
+> This RESEND PATCH only adds the Acked-by and Reviewed-by,
+> no other patch for the codes.
+>
 
-Applied to v4.19/dt branch of my tree.
+Please don't do this. We're waiting for Rob's Acked-by and I will
+collect all the tags anyway. Don't resend unless there are changes to
+patches.
 
-Thanks,
-Sekhar
+Best regards,
+Bartosz Golaszewski
+
+> In at24.c, it uses 8-bit addressing by default. In this patch,
+> add a property address-width that provides a flexible method to
+> pass the information to the driver.
+>
+> Alan Chiang (2):
+>   dt-bindings: at24: Add address-width property
+>   eeprom: at24: Add support for address-width property
+>
+>  Documentation/devicetree/bindings/eeprom/at24.txt |  2 ++
+>  drivers/misc/eeprom/at24.c                        | 17 +++++++++++++++++
+>  2 files changed, 19 insertions(+)
+>
+> --
+> 2.7.4
+>
