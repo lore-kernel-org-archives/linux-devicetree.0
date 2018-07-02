@@ -1,795 +1,186 @@
-From: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
-Subject: Re: [PATCH 1/3] ARM: dts: imx51-zii-common: create common include dtsi
-Date: Mon, 2 Jul 2018 11:21:36 +0300
-Message-ID: <CAFmnZc0a=90fmXQ3qzZTkkJ08=pQuSoqp4xUX34fhZ_vOiRyYw@mail.gmail.com>
-References: <1529603100-31958-1-git-send-email-andrey.gusakov@cogentembedded.com>
- <1529603100-31958-2-git-send-email-andrey.gusakov@cogentembedded.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Re: [PATCH v3 10/24] drm/sun4i: tcon: Generalize
+ engine search algorithm
+Date: Mon, 2 Jul 2018 10:56:21 +0200
+Message-ID: <20180702085621.aq6ksr3amwnj42jc@flea>
+References: <20180625120304.7543-1-jernej.skrabec@siol.net>
+ <20180628182543.yyja6hiry7rx7fu2@flea>
+ <3257762.ZQzN8rrT6c@jernej-laptop>
+ <7152481.kAipQ5gD38@jernej-laptop>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529603100-31958-2-git-send-email-andrey.gusakov@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chris Healy <cphealy@gmail.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="weag3fumpaj4truu"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQOR47MQKGQEJC5VX2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <7152481.kAipQ5gD38@jernej-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
 
-I'll rework this patchset without dtsi and resend.
+--weag3fumpaj4truu
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for comments.
+On Sun, Jul 01, 2018 at 09:09:47PM +0200, Jernej =C5=A0krabec wrote:
+> Dne petek, 29. junij 2018 ob 21:06:09 CEST je Jernej =C5=A0krabec napisal=
+(a):
+> > Dne =C4=8Detrtek, 28. junij 2018 ob 20:25:43 CEST je Maxime Ripard napi=
+sal(a):
+> > > On Thu, Jun 28, 2018 at 06:48:50AM +0200, Jernej =C5=A0krabec wrote:
+> > > > Dne =C4=8Detrtek, 28. junij 2018 ob 04:06:52 CEST je Chen-Yu Tsai n=
+apisal(a):
+> > > > > On Mon, Jun 25, 2018 at 8:02 PM, Jernej Skrabec
+> > > > > <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> > > >=20
+> > > > wrote:
+> > > > > > Current "old" method to find engine worked pretty well for DE2.
+> > > > > > However,
+> > > > > > it doesn't work when TCON TOP is between  mixer (engine) and TC=
+ON.
+> > > > > > TCON
+> > > > > > TOP has multiple input ports, but current engine search algorit=
+hm
+> > > > > > expects only one.
+> > > > > >=20
+> > > > > > This can be fixed by first looking for output port id and selec=
+ting
+> > > > > > matching input by subtracting 1 for the next round. This work e=
+ven
+> > > > > > if
+> > > > > > there is only one input and output.
+> > > > > >=20
+> > > > > > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> > > > > > ---
+> > > > > >=20
+> > > > > >  drivers/gpu/drm/sun4i/sun4i_tcon.c | 22 ++++++++++++++++++----
+> > > > > >  1 file changed, 18 insertions(+), 4 deletions(-)
+> > > > > >=20
+> > > > > > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > > > > b/drivers/gpu/drm/sun4i/sun4i_tcon.c index
+> > > > > > 08747fc3ee71..264bcc43da11
+> > > > > > 100644
+> > > > > > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > > > > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > > > > @@ -791,12 +791,14 @@ static int sun4i_tcon_init_regmap(struct
+> > > > > > device
+> > > > > > *dev,
+> > > > > >=20
+> > > > > >   */
+> > > > > > =20
+> > > > > >  static struct sunxi_engine *
+> > > > > >  sun4i_tcon_find_engine_traverse(struct sun4i_drv *drv,
+> > > > > >=20
+> > > > > > -                               struct device_node *node)
+> > > > > > +                               struct device_node *node,
+> > > > > > +                               u32 port_id)
+> > > > > >=20
+> > > > > >  {
+> > > > > > =20
+> > > > > >         struct device_node *port, *ep, *remote;
+> > > > > >         struct sunxi_engine *engine =3D ERR_PTR(-EINVAL);
+> > > > > >=20
+> > > > > > +       u32 reg =3D 0;
+> > > > > >=20
+> > > > > > -       port =3D of_graph_get_port_by_id(node, 0);
+> > > > > > +       port =3D of_graph_get_port_by_id(node, port_id);
+> > > > > >=20
+> > > > > >         if (!port)
+> > > > > >        =20
+> > > > > >                 return ERR_PTR(-EINVAL);
+> > > > > >=20
+> > > > > > @@ -826,8 +828,20 @@ sun4i_tcon_find_engine_traverse(struct
+> > > > > > sun4i_drv
+> > > > > > *drv,
+> > > > > >=20
+> > > > > >                 if (remote =3D=3D engine->node)
+> > > > > >                =20
+> > > > > >                         goto out_put_remote;
+> > > > > >=20
+> > > > > > +       /*
+> > > > > > +        * According to device tree binding input ports have ev=
+en id
+> > > > > > +        * number and output ports have odd id. Since component=
+ with
+> > > > > > +        * more than one input and one output (TCON TOP) exits,
+> > > > > > correct
+> > > > > > +        * remote input id has to be calculated by subtracting =
+1
+> > > > > > from
+> > > > > > +        * remote output id. If this for some reason can't be d=
+one,
+> > > > > > 0
+> > > > > > +        * is used as input port id.
+> > > > > > +        */
+> > > > >=20
+> > > > > You need to call
+> > > > >=20
+> > > > >     of_node_put(port);
+> > > > >=20
+> > > > > to drop the reference to the original port.
+> > > >=20
+> > > > Thanks for noticing it. I guess I should send fix patch, since patc=
+hes
+> > > > from
+> > > > drm-misc-next can't be dropped.
+> > >=20
+> > > Yeah, please send additional patches for all the issues pointed out b=
+y
+> > > Chen-Yu.
+> >=20
+> > Of course. I hope this can be resolved till the end of the next week. A=
+fter
+> > that, I will be away from PC for 2 weeks. Feel free to drop DT patches =
+if
+> > you think that it will come too close to merge window.
+>=20
+> Actually, can you drop it anyway? It needs a lot of changes and keeping H=
+DMI=20
+> working would need some effort.
 
-On Thu, Jun 21, 2018 at 8:44 PM, Andrey Gusakov
-<andrey.gusakov@cogentembedded.com> wrote:
-> Make shared include file. Move common stuff from rdu1 dts file to
-> dtsi for future reuse by other imx51 based boards from ZII.
->
-> Signed-off-by: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
-> ---
->  arch/arm/boot/dts/imx51-zii-common.dtsi | 317 ++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/imx51-zii-rdu1.dts    | 330 +++-----------------------------
->  2 files changed, 347 insertions(+), 300 deletions(-)
->  create mode 100644 arch/arm/boot/dts/imx51-zii-common.dtsi
->
-> diff --git a/arch/arm/boot/dts/imx51-zii-common.dtsi b/arch/arm/boot/dts/imx51-zii-common.dtsi
-> new file mode 100644
-> index 0000000..b0f0643
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx51-zii-common.dtsi
-> @@ -0,0 +1,317 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +// Copyright (C) 2018 Zodiac Inflight Innovations
-> +
-> +#include "imx51.dtsi"
-> +
-> +/ {
-> +       chosen {
-> +               stdout-path = &uart1;
-> +       };
-> +
-> +       /* Will be filled by the bootloader */
-> +       memory@90000000 {
-> +               reg = <0x90000000 0>;
-> +       };
-> +
-> +       i2c_gpio: i2c-gpio {
-> +               compatible = "i2c-gpio";
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_swi2c>;
-> +               i2c-gpio,delay-us = <50>;
-> +               status = "okay";
-> +
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +       };
-> +
-> +       usb_vbus: regulator-usb-vbus {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "usb_vbus";
-> +               regulator-min-microvolt = <5000000>;
-> +               regulator-max-microvolt = <5000000>;
-> +       };
-> +};
-> +
-> +&cpu {
-> +       cpu-supply = <&sw1_reg>;
-> +};
-> +
-> +&ecspi1 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_ecspi1>;
-> +       cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>,
-> +                  <&gpio4 25 GPIO_ACTIVE_LOW>;
-> +       status = "okay";
-> +
-> +       pmic@0 {
-> +               compatible = "fsl,mc13892";
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_pmic>;
-> +               spi-max-frequency = <6000000>;
-> +               spi-cs-high;
-> +               reg = <0>;
-> +               interrupt-parent = <&gpio1>;
-> +               interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
-> +               fsl,mc13xxx-uses-adc;
-> +
-> +               regulators {
-> +                       sw1_reg: sw1 {
-> +                               regulator-min-microvolt = <600000>;
-> +                               regulator-max-microvolt = <1375000>;
-> +                               regulator-boot-on;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       sw2_reg: sw2 {
-> +                               regulator-min-microvolt = <900000>;
-> +                               regulator-max-microvolt = <1850000>;
-> +                               regulator-boot-on;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       sw3_reg: sw3 {
-> +                               regulator-min-microvolt = <1100000>;
-> +                               regulator-max-microvolt = <1850000>;
-> +                               regulator-boot-on;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       sw4_reg: sw4 {
-> +                               regulator-min-microvolt = <1100000>;
-> +                               regulator-max-microvolt = <1850000>;
-> +                               regulator-boot-on;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vpll_reg: vpll {
-> +                               regulator-min-microvolt = <1050000>;
-> +                               regulator-max-microvolt = <1800000>;
-> +                               regulator-boot-on;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vdig_reg: vdig {
-> +                               regulator-min-microvolt = <1650000>;
-> +                               regulator-max-microvolt = <1650000>;
-> +                               regulator-boot-on;
-> +                       };
-> +
-> +                       vsd_reg: vsd {
-> +                               regulator-min-microvolt = <1800000>;
-> +                               regulator-max-microvolt = <3150000>;
-> +                       };
-> +
-> +                       vusb_reg: vusb {
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vusb2_reg: vusb2 {
-> +                               regulator-min-microvolt = <2400000>;
-> +                               regulator-max-microvolt = <2775000>;
-> +                               regulator-boot-on;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vvideo_reg: vvideo {
-> +                               regulator-min-microvolt = <2775000>;
-> +                               regulator-max-microvolt = <2775000>;
-> +                       };
-> +
-> +                       vaudio_reg: vaudio {
-> +                               regulator-min-microvolt = <2300000>;
-> +                               regulator-max-microvolt = <3000000>;
-> +                       };
-> +
-> +                       vcam_reg: vcam {
-> +                               regulator-min-microvolt = <2500000>;
-> +                               regulator-max-microvolt = <3000000>;
-> +                       };
-> +
-> +                       vgen1_reg: vgen1 {
-> +                               regulator-min-microvolt = <1200000>;
-> +                               regulator-max-microvolt = <1200000>;
-> +                       };
-> +
-> +                       vgen2_reg: vgen2 {
-> +                               regulator-min-microvolt = <1200000>;
-> +                               regulator-max-microvolt = <3150000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vgen3_reg: vgen3 {
-> +                               regulator-min-microvolt = <1800000>;
-> +                               regulator-max-microvolt = <2900000>;
-> +                               regulator-always-on;
-> +                       };
-> +               };
-> +
-> +               leds {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       led-control = <0x0 0x0 0x3f83f8 0x0>;
-> +
-> +                       sysled3: led3@3 {
-> +                               reg = <3>;
-> +                               label = "system:red:power";
-> +                               linux,default-trigger = "default-on";
-> +                       };
-> +
-> +                       sysled4: led4@4 {
-> +                               reg = <4>;
-> +                               label = "system:green:act";
-> +                               linux,default-trigger = "heartbeat";
-> +                       };
-> +               };
-> +       };
-> +
-> +       flash@1 {
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               compatible = "atmel,at45", "atmel,dataflash";
-> +               spi-max-frequency = <25000000>;
-> +               reg = <1>;
-> +       };
-> +};
-> +
-> +&ecspi2 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_ecspi2>;
-> +       cs-gpios = <&gpio3 24 GPIO_ACTIVE_LOW>,
-> +                  <&gpio3 28 GPIO_ACTIVE_LOW>;
-> +       status = "okay";
-> +};
-> +
-> +&esdhc1 {
-> +       non-removable;
-> +       no-1-8-v;
-> +       no-sdio;
-> +       no-sd;
-> +       status = "okay";
-> +};
-> +
-> +&esdhc4 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_esdhc4>;
-> +       bus-width = <4>;
-> +       no-1-8-v;
-> +       no-sdio;
-> +       cd-gpios = <&gpio4 8 GPIO_ACTIVE_LOW>;
-> +       status = "okay";
-> +};
-> +
-> +&fec {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_fec>;
-> +       phy-mode = "mii";
-> +       status = "okay";
-> +};
-> +
-> +&i2c2 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_i2c2>;
-> +       status = "okay";
-> +
-> +       eeprom@50 {
-> +               compatible = "atmel,24c04";
-> +               pagesize = <16>;
-> +               reg = <0x50>;
-> +       };
-> +};
-> +
-> +&uart1 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_uart1>;
-> +       status = "okay";
-> +};
-> +
-> +&uart2 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_uart2>;
-> +       status = "okay";
-> +};
-> +
-> +&uart3 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_uart3>;
-> +       status = "okay";
-> +};
-> +
-> +&usbotg {
-> +       dr_mode = "host";
-> +       disable-over-current;
-> +       phy_type = "utmi_wide";
-> +       vbus-supply = <&usb_vbus>;
-> +       status = "okay";
-> +};
-> +
-> +&usbphy0 {
-> +       vcc-supply = <&vusb2_reg>;
-> +};
-> +
-> +&iomuxc {
-> +       pinctrl_ecspi1: ecspi1grp {
-> +               fsl,pins = <
-> +                       MX51_PAD_CSPI1_MISO__ECSPI1_MISO        0x185
-> +                       MX51_PAD_CSPI1_MOSI__ECSPI1_MOSI        0x185
-> +                       MX51_PAD_CSPI1_SCLK__ECSPI1_SCLK        0x185
-> +                       MX51_PAD_CSPI1_SS0__GPIO4_24            0x85
-> +                       MX51_PAD_CSPI1_SS1__GPIO4_25            0x85
-> +               >;
-> +       };
-> +
-> +       pinctrl_ecspi2: ecspi2grp {
-> +               fsl,pins = <
-> +                       MX51_PAD_NANDF_RB2__ECSPI2_SCLK         0x185
-> +                       MX51_PAD_NANDF_RB3__ECSPI2_MISO         0x185
-> +                       MX51_PAD_NANDF_D15__ECSPI2_MOSI         0x185
-> +                       MX51_PAD_NANDF_RDY_INT__GPIO3_24        0x85
-> +                       MX51_PAD_NANDF_D12__GPIO3_28            0x85
-> +               >;
-> +       };
-> +
-> +       pinctrl_esdhc1_4bit: esdhc1grp_4bit {
-> +               fsl,pins = <
-> +                       MX51_PAD_SD1_CMD__SD1_CMD               0x400020d5
-> +                       MX51_PAD_SD1_CLK__SD1_CLK               0x20d5
-> +                       MX51_PAD_SD1_DATA0__SD1_DATA0           0x20d5
-> +                       MX51_PAD_SD1_DATA1__SD1_DATA1           0x20d5
-> +                       MX51_PAD_SD1_DATA2__SD1_DATA2           0x20d5
-> +                       MX51_PAD_SD1_DATA3__SD1_DATA3           0x20d5
-> +               >;
-> +       };
-> +
-> +       pinctrl_esdhc1_8bit: esdhc1grp_8bit {
-> +               fsl,pins = <
-> +                       MX51_PAD_SD2_DATA0__SD1_DAT4            0x20d5
-> +                       MX51_PAD_SD2_DATA1__SD1_DAT5            0x20d5
-> +                       MX51_PAD_SD2_DATA2__SD1_DAT6            0x20d5
-> +                       MX51_PAD_SD2_DATA3__SD1_DAT7            0x20d5
-> +               >;
-> +       };
-> +
-> +       pinctrl_esdhc4: esdhc4grp {
-> +               fsl,pins = <
-> +                       MX51_PAD_NANDF_RB1__SD4_CMD             0x400020d5
-> +                       MX51_PAD_NANDF_CS2__SD4_CLK             0x20d5
-> +                       MX51_PAD_NANDF_CS3__SD4_DAT0            0x20d5
-> +                       MX51_PAD_NANDF_CS4__SD4_DAT1            0x20d5
-> +                       MX51_PAD_NANDF_CS5__SD4_DAT2            0x20d5
-> +                       MX51_PAD_NANDF_CS6__SD4_DAT3            0x20d5
-> +                       MX51_PAD_NANDF_D0__GPIO4_8              0x100
-> +               >;
-> +       };
-> +
-> +       pinctrl_i2c2: i2c2grp {
-> +               fsl,pins = <
-> +                       MX51_PAD_KEY_COL4__I2C2_SCL             0x400001ed
-> +                       MX51_PAD_KEY_COL5__I2C2_SDA             0x400001ed
-> +               >;
-> +       };
-> +
-> +       pinctrl_pmic: pmicgrp {
-> +               fsl,pins = <
-> +                       MX51_PAD_GPIO1_4__GPIO1_4               0x85
-> +                       MX51_PAD_GPIO1_8__GPIO1_8               0xe5
-> +               >;
-> +       };
-> +};
-> diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-> index df9eca9..59a80da 100644
-> --- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
-> +++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-> @@ -1,61 +1,14 @@
-> -/*
-> - * Copyright (C) 2017 Zodiac Inflight Innovations
-> - *
-> - * This file is dual-licensed: you can use it either under the terms
-> - * of the GPL or the X11 license, at your option. Note that this dual
-> - * licensing only applies to this file, and not this project as a
-> - * whole.
-> - *
-> - *  a) This file is free software; you can redistribute it and/or
-> - *     modify it under the terms of the GNU General Public License
-> - *     version 2 as published by the Free Software Foundation.
-> - *
-> - *     This file is distributed in the hope that it will be useful,
-> - *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - *     GNU General Public License for more details.
-> - *
-> - * Or, alternatively,
-> - *
-> - *  b) Permission is hereby granted, free of charge, to any person
-> - *     obtaining a copy of this software and associated documentation
-> - *     files (the "Software"), to deal in the Software without
-> - *     restriction, including without limitation the rights to use,
-> - *     copy, modify, merge, publish, distribute, sublicense, and/or
-> - *     sell copies of the Software, and to permit persons to whom the
-> - *     Software is furnished to do so, subject to the following
-> - *     conditions:
-> - *
-> - *     The above copyright notice and this permission notice shall be
-> - *     included in all copies or substantial portions of the Software.
-> - *
-> - *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND,
-> - *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> - *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> - *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> - *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> - *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> - *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> - *     OTHER DEALINGS IN THE SOFTWARE.
-> - */
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +// Copyright (C) 2018 Zodiac Inflight Innovations
->
->  /dts-v1/;
-> -#include "imx51.dtsi"
-> +#include "imx51-zii-common.dtsi"
->  #include <dt-bindings/sound/fsl-imx-audmux.h>
->
->  / {
->         model = "ZII RDU1 Board";
->         compatible = "zii,imx51-rdu1", "fsl,imx51";
->
-> -       chosen {
-> -               stdout-path = &uart1;
-> -       };
-> -
-> -       /* Will be filled by the bootloader */
-> -       memory@90000000 {
-> -               reg = <0x90000000 0>;
-> -       };
-> -
->         aliases {
->                 mdio-gpio0 = &mdio_gpio;
->                 rtc0 = &ds1341;
-> @@ -94,14 +47,6 @@
->                 enable-gpios = <&gpio4 26 GPIO_ACTIVE_LOW>;
->         };
->
-> -       reg_5p0v_main: regulator-5p0v-main {
-> -               compatible = "regulator-fixed";
-> -               regulator-name = "5V_MAIN";
-> -               regulator-min-microvolt = <5000000>;
-> -               regulator-max-microvolt = <5000000>;
-> -               regulator-always-on;
-> -       };
-> -
->         reg_3p3v: regulator-3p3v {
->                 compatible = "regulator-fixed";
->                 regulator-name = "3.3V";
-> @@ -150,28 +95,6 @@
->                 };
->         };
->
-> -       i2c_gpio: i2c-gpio {
-> -               compatible = "i2c-gpio";
-> -               pinctrl-names = "default";
-> -               pinctrl-0 = <&pinctrl_swi2c>;
-> -               gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>, /* sda */
-> -                       <&gpio3 4 GPIO_ACTIVE_HIGH>; /* scl */
-> -               i2c-gpio,delay-us = <50>;
-> -               status = "okay";
-> -
-> -               #address-cells = <1>;
-> -               #size-cells = <0>;
-> -
-> -               sgtl5000: codec@a {
-> -                       compatible = "fsl,sgtl5000";
-> -                       reg = <0x0a>;
-> -                       clocks = <&clk_26M_snd>;
-> -                       VDDA-supply = <&vdig_reg>;
-> -                       VDDIO-supply = <&vvideo_reg>;
-> -                       #sound-dai-cells = <0>;
-> -               };
-> -       };
-> -
->         spi_gpio: spi-gpio {
->                 compatible = "spi-gpio";
->                 #address-cells = <1>;
-> @@ -315,178 +238,30 @@
->         };
->  };
->
-> -&cpu {
-> -       cpu-supply = <&sw1_reg>;
-> +&usb_vbus {
-> +       regulator-always-on;
->  };
->
-> -&ecspi1 {
-> -       pinctrl-names = "default";
-> -       pinctrl-0 = <&pinctrl_ecspi1>;
-> -       cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>,
-> -                  <&gpio4 25 GPIO_ACTIVE_LOW>;
-> -       status = "okay";
-> -
-> -       pmic@0 {
-> -               compatible = "fsl,mc13892";
-> -               pinctrl-names = "default";
-> -               pinctrl-0 = <&pinctrl_pmic>;
-> -               spi-max-frequency = <6000000>;
-> -               spi-cs-high;
-> -               reg = <0>;
-> -               interrupt-parent = <&gpio1>;
-> -               interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
-> -               fsl,mc13xxx-uses-adc;
-> -
-> -               regulators {
-> -                       sw1_reg: sw1 {
-> -                               regulator-min-microvolt = <600000>;
-> -                               regulator-max-microvolt = <1375000>;
-> -                               regulator-boot-on;
-> -                               regulator-always-on;
-> -                       };
-> -
-> -                       sw2_reg: sw2 {
-> -                               regulator-min-microvolt = <900000>;
-> -                               regulator-max-microvolt = <1850000>;
-> -                               regulator-boot-on;
-> -                               regulator-always-on;
-> -                       };
-> -
-> -                       sw3_reg: sw3 {
-> -                               regulator-min-microvolt = <1100000>;
-> -                               regulator-max-microvolt = <1850000>;
-> -                               regulator-boot-on;
-> -                               regulator-always-on;
-> -                       };
-> -
-> -                       sw4_reg: sw4 {
-> -                               regulator-min-microvolt = <1100000>;
-> -                               regulator-max-microvolt = <1850000>;
-> -                               regulator-boot-on;
-> -                               regulator-always-on;
-> -                       };
-> -
-> -                       vpll_reg: vpll {
-> -                               regulator-min-microvolt = <1050000>;
-> -                               regulator-max-microvolt = <1800000>;
-> -                               regulator-boot-on;
-> -                               regulator-always-on;
-> -                       };
-> -
-> -                       vdig_reg: vdig {
-> -                               regulator-min-microvolt = <1650000>;
-> -                               regulator-max-microvolt = <1650000>;
-> -                               regulator-boot-on;
-> -                       };
-> -
-> -                       vsd_reg: vsd {
-> -                               regulator-min-microvolt = <1800000>;
-> -                               regulator-max-microvolt = <3150000>;
-> -                       };
-> -
-> -                       vusb_reg: vusb {
-> -                               regulator-always-on;
-> -                       };
-> -
-> -                       vusb2_reg: vusb2 {
-> -                               regulator-min-microvolt = <2400000>;
-> -                               regulator-max-microvolt = <2775000>;
-> -                               regulator-boot-on;
-> -                               regulator-always-on;
-> -                       };
-> -
-> -                       vvideo_reg: vvideo {
-> -                               regulator-min-microvolt = <2775000>;
-> -                               regulator-max-microvolt = <2775000>;
-> -                       };
-> -
-> -                       vaudio_reg: vaudio {
-> -                               regulator-min-microvolt = <2300000>;
-> -                               regulator-max-microvolt = <3000000>;
-> -                       };
-> -
-> -                       vcam_reg: vcam {
-> -                               regulator-min-microvolt = <2500000>;
-> -                               regulator-max-microvolt = <3000000>;
-> -                       };
-> -
-> -                       vgen1_reg: vgen1 {
-> -                               regulator-min-microvolt = <1200000>;
-> -                               regulator-max-microvolt = <1200000>;
-> -                       };
-> -
-> -                       vgen2_reg: vgen2 {
-> -                               regulator-min-microvolt = <1200000>;
-> -                               regulator-max-microvolt = <3150000>;
-> -                               regulator-always-on;
-> -                       };
-> -
-> -                       vgen3_reg: vgen3 {
-> -                               regulator-min-microvolt = <1800000>;
-> -                               regulator-max-microvolt = <2900000>;
-> -                               regulator-always-on;
-> -                       };
-> -               };
-> -
-> -               leds {
-> -                       #address-cells = <1>;
-> -                       #size-cells = <0>;
-> -                       led-control = <0x0 0x0 0x3f83f8 0x0>;
-> -
-> -                       sysled0@3 {
-> -                               reg = <3>;
-> -                               label = "system:green:status";
-> -                               linux,default-trigger = "default-on";
-> -                       };
-> -
-> -                       sysled1@4 {
-> -                               reg = <4>;
-> -                               label = "system:green:act";
-> -                               linux,default-trigger = "heartbeat";
-> -                       };
-> -               };
-> -       };
-> -
-> -       flash@1 {
-> -               #address-cells = <1>;
-> -               #size-cells = <1>;
-> -               compatible = "atmel,at45db642d", "atmel,at45", "atmel,dataflash";
-> -               spi-max-frequency = <25000000>;
-> -               reg = <1>;
-> -       };
-> +&ecspi2 {
-> +       status = "disabled";
->  };
->
->  &esdhc1 {
->         pinctrl-names = "default";
-> -       pinctrl-0 = <&pinctrl_esdhc1>;
-> +       pinctrl-0 = <&pinctrl_esdhc1_4bit>;
->         bus-width = <4>;
-> -       no-1-8-v;
-> -       non-removable;
-> -       no-sdio;
-> -       no-sd;
-> -       status = "okay";
-> +};
-> +
-> +&esdhc4 {
-> +       status = "disabled";
->  };
->
->  &fec {
-> -       pinctrl-names = "default";
-> -       pinctrl-0 = <&pinctrl_fec>;
-> -       phy-mode = "mii";
->         phy-reset-gpios = <&gpio2 14 GPIO_ACTIVE_LOW>;
->         phy-supply = <&vgen3_reg>;
-> -       status = "okay";
->  };
->
->  &i2c2 {
-> -       pinctrl-names = "default";
-> -       pinctrl-0 = <&pinctrl_i2c2>;
-> -       status = "okay";
-> -
-> -       eeprom@50 {
-> -               compatible = "atmel,24c04";
-> -               pagesize = <16>;
-> -               reg = <0x50>;
-> -       };
-> -
->         hpa1: amp@60 {
->                 compatible = "ti,tpa6130a2";
->                 reg = <0x60>;
-> @@ -550,31 +325,29 @@
->
->  };
->
-> -&ipu_di0_disp1 {
-> -       remote-endpoint = <&display_in>;
-> -};
-> +&i2c_gpio {
-> +       gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>, /* sda */
-> +               <&gpio3 4 GPIO_ACTIVE_HIGH>; /* scl */
->
-> -&ssi2 {
-> -       status = "okay";
-> +       sgtl5000: codec@a {
-> +               compatible = "fsl,sgtl5000";
-> +               reg = <0x0a>;
-> +               clocks = <&clk_26M_snd>;
-> +               VDDA-supply = <&vdig_reg>;
-> +               VDDIO-supply = <&vvideo_reg>;
-> +               #sound-dai-cells = <0>;
-> +       };
->  };
->
-> -&uart1 {
-> -       pinctrl-names = "default";
-> -       pinctrl-0 = <&pinctrl_uart1>;
-> -       status = "okay";
-> +&ipu_di0_disp1 {
-> +       remote-endpoint = <&display_in>;
->  };
->
-> -&uart2 {
-> -       pinctrl-names = "default";
-> -       pinctrl-0 = <&pinctrl_uart2>;
-> +&ssi2 {
->         status = "okay";
->  };
->
->  &uart3 {
-> -       pinctrl-names = "default";
-> -       pinctrl-0 = <&pinctrl_uart3>;
-> -       status = "okay";
-> -
->         rave-sp {
->                 compatible = "zii,rave-sp-rdu1";
->                 current-speed = <38400>;
-> @@ -593,7 +366,7 @@
->         fsl,usbphy = <&usbh1phy>;
->         disable-over-current;
->         maximum-speed = "full-speed";
-> -       vbus-supply = <&reg_5p0v_main>;
-> +       vbus-supply = <&usb_vbus>;
->         status = "okay";
->  };
->
-> @@ -604,20 +377,12 @@
->         phy_type = "ulpi";
->         fsl,usbphy = <&usbh2phy>;
->         disable-over-current;
-> -       vbus-supply = <&reg_5p0v_main>;
-> +       vbus-supply = <&usb_vbus>;
->         status = "okay";
->  };
->
-> -&usbphy0 {
-> -       vcc-supply = <&vusb_reg>;
-> -};
-> -
-> -&usbotg {
-> -       dr_mode = "host";
-> -       disable-over-current;
-> -       phy_type = "utmi_wide";
-> -       vbus-supply = <&reg_5p0v_main>;
-> -       status = "okay";
-> +&sysled3 {
-> +       label = "system:green:status";
->  };
->
->  &iomuxc {
-> @@ -642,27 +407,6 @@
->                 >;
->         };
->
-> -       pinctrl_ecspi1: ecspi1grp {
-> -               fsl,pins = <
-> -                       MX51_PAD_CSPI1_MISO__ECSPI1_MISO        0x185
-> -                       MX51_PAD_CSPI1_MOSI__ECSPI1_MOSI        0x185
-> -                       MX51_PAD_CSPI1_SCLK__ECSPI1_SCLK        0x185
-> -                       MX51_PAD_CSPI1_SS0__GPIO4_24            0x85
-> -                       MX51_PAD_CSPI1_SS1__GPIO4_25            0x85
-> -               >;
-> -       };
-> -
-> -       pinctrl_esdhc1: esdhc1grp {
-> -               fsl,pins = <
-> -                       MX51_PAD_SD1_CMD__SD1_CMD               0x400020d5
-> -                       MX51_PAD_SD1_CLK__SD1_CLK               0x20d5
-> -                       MX51_PAD_SD1_DATA0__SD1_DATA0           0x20d5
-> -                       MX51_PAD_SD1_DATA1__SD1_DATA1           0x20d5
-> -                       MX51_PAD_SD1_DATA2__SD1_DATA2           0x20d5
-> -                       MX51_PAD_SD1_DATA3__SD1_DATA3           0x20d5
-> -               >;
-> -       };
-> -
->         pinctrl_fec: fecgrp {
->                 fsl,pins = <
->                         MX51_PAD_EIM_EB2__FEC_MDIO              0x1f5
-> @@ -696,13 +440,6 @@
->                 >;
->         };
->
-> -       pinctrl_i2c2: i2c2grp {
-> -               fsl,pins = <
-> -                       MX51_PAD_KEY_COL4__I2C2_SCL             0x400001ed
-> -                       MX51_PAD_KEY_COL5__I2C2_SDA             0x400001ed
-> -               >;
-> -       };
-> -
->         pinctrl_ipu_disp1: ipudisp1grp {
->                 fsl,pins = <
->                         MX51_PAD_DISP1_DAT0__DISP1_DAT0         0x5
-> @@ -741,13 +478,6 @@
->                 >;
->         };
->
-> -       pinctrl_pmic: pmicgrp {
-> -               fsl,pins = <
-> -                       MX51_PAD_GPIO1_4__GPIO1_4               0x1e0
-> -                       MX51_PAD_GPIO1_8__GPIO1_8               0x21e2
-> -               >;
-> -       };
-> -
->         pinctrl_sndgate26mhz: sndgate26mhzgrp {
->                 fsl,pins = <
->                         MX51_PAD_CSPI1_RDY__GPIO4_26            0x85
-> --
-> 1.9.1
->
+No, we can't drop it, unfortunately.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--weag3fumpaj4truu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAls56LQACgkQ0rTAlCFN
+r3SfOA//Rb53Vq1lID0WxKB9uSBs/bU3mPxug0skNSfmQpD3OJoS3aFabr41aoPS
+wIiPeeMRnkxZydAc5EdosY9vJb8MRV5aYbVsEmiGXTPL1n8YE+Ppe/z4793BbAkg
+QSF9DzukzzdIU0geZSX7IIOrQjzkBc1aV2CzQe/JOSqfQLKUZdZOKepRJy1wUWkm
+5OPpn0DPbBk0tpZT+FnBqH7nLKFvrMa+cZ0CdeSJ+4PlRgc3W77dHleXE+xnyICZ
+rDw65tJNZzhSlK3RBb3LjhBJn1Ez1C9iRZaBpBzkcezLpaIuoESOg3z+bnGLZYGn
+I/nmlmz7cqb4MjBjcb2zZd0ihYXVa0I6Mzsc+VzQECOxMmfhIZ/Sutw+BDH23Gqo
+wW1KIpJWJyIyU4SZHn/Z96+fQNzHXe7N+Qu1gcgp3DHxukXGjhp3U1BpUAuV6dJ3
+oiUrQCqES7WNlS7S0w3UTe1bubSKTsMFbI2tCXvnYXzGMKRM7zZF1H3hEQ8FRp/z
+aVXjUeqQ2QwtEglFOQpwhAIWBWUMhacEyPw5/ITt1T6cDZ2vXqUBeAT5LUXv6zEy
+R273T3N1rdym5glKXTK398Z7hUGCmzSPtJoVmKyJqZJvH3nzAmK43cLcoJ9wjG3S
+Y5CJmViV40CxlUisvMu7jZP7cb8bbY3IpnbZt4MJcDcIK8z+6aE=
+=z0jz
+-----END PGP SIGNATURE-----
+
+--weag3fumpaj4truu--
