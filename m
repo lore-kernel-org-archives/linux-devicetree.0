@@ -1,136 +1,65 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v7 2/4] phy: General struct and field cleanup
-Date: Mon, 2 Jul 2018 12:12:15 +0530
-Message-ID: <CAFp+6iEP7jvT_UZ-ui6BrYOkOUAYPen3bTEwKURJ9zZBnWa=MA@mail.gmail.com>
-References: <20180619083647.10116-1-cang@codeaurora.org> <20180619083647.10116-3-cang@codeaurora.org>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH v2 0/4] PCI: mediatek: fixup find_port, enable_msi and
+ add pm, module support
+Date: Mon, 2 Jul 2018 14:48:19 +0800
+Message-ID: <1530514099.6415.1.camel@mtkswgap22>
+References: <1530503384-1218-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180619083647.10116-3-cang@codeaurora.org>
+In-Reply-To: <1530503384-1218-1-git-send-email-honghui.zhang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Can Guo <cang@codeaurora.org>
-Cc: Subhash Jadavani <subhashj@codeaurora.org>, asutoshd@codeaurora.org, Manu Gautam <mgautam@codeaurora.org>, kishon <kishon@ti.com>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+To: honghui.zhang@mediatek.com
+Cc: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Can,
+On Mon, 2018-07-02 at 11:49 +0800, honghui.zhang@mediatek.com wrote:
+> From: Honghui Zhang <honghui.zhang@mediatek.com>
+> 
+> This patchset includes misc patchs:
+> 
+> The first patch fixup the mtk_pcie_find_port logical which will cause system
+> could not touch the EP's configuration space which was connected to PCIe slot 1.
+> 
+> The second patch fixup the enable msi logical, the operation to enable msi
+> should be after system clock is enabled. The function of mtk_pcie_startup_port_v2's
+> define location is re-arranged to avoid mtk_pcie_enable_msi's forward declaration.
+> And call mtk_pcie_enable_msi in mtk_pcie_startup_port_v2 since the clock was all
+> enabled at that time.
+> 
+> The third patch was rebased and refactor of the v4 patch[1], changes are:
+>  -Add PM support for MT7622.
+>  -Using mtk_pcie_enable_port to re-establish the link when resumed.
+>  -Rebase on the previous two patches.
+> 
+> The fourth patch add loadable kernel module support.
+> 
+> Some of those patches was already reviewed-by Ryder Lee <ryder.lee@mediatek.com>,
+> so I just add the Reviewed-by tags in those patches.
+> 
+> [1] https://patchwork.kernel.org/patch/10479079
+> 
+> Change since v1:
+>  - A bit of code refact of the first patch suggested by Andy Shevchenko, and
+>    commit message updated.
+>  - Using __maybe_unused.
+>  - Remove the redundant list_empty check of the fourth patch.
+> 
+> Honghui Zhang (4):
+>   PCI: mediatek: fixup mtk_pcie_find_port logical
+>   PCI: mediatek: enable msi after clock enabled
+>   PCI: mediatek: Add system pm support for MT2712 and MT7622
+>   PCI: mediatek: Add loadable kernel module support
+> 
+>  drivers/pci/controller/Kconfig         |   2 +-
+>  drivers/pci/controller/pcie-mediatek.c | 289 ++++++++++++++++++++++++---------
+>  2 files changed, 213 insertions(+), 78 deletions(-)
+> 
+
+For the series:
+
+Acked-by: Ryder Lee <ryder.lee@mediatek.com>
 
 
-On Tue, Jun 19, 2018 at 2:06 PM, Can Guo <cang@codeaurora.org> wrote:
-> Move MSM8996 specific PHY vreg list struct name to a genernal one as it is
-> used by all PHYs. Add a specific field to handle dual lane situation.
->
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp.c | 25 ++++++++++++++-----------
->  1 file changed, 14 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index ccb8578..9be9754 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -649,6 +649,8 @@ struct qmp_phy_cfg {
->
->         /* true, if PHY has a separate DP_COM control block */
->         bool has_phy_dp_com_ctrl;
-> +       /* true, if PHY has secondary tx/rx lanes to be configured */
-> +       bool is_dual_lane_phy;
->         /* Register offset of secondary tx/rx lanes for USB DP combo PHY */
->         unsigned int tx_b_lane_offset;
->         unsigned int rx_b_lane_offset;
-> @@ -758,7 +760,7 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
->  };
->
->  /* list of regulators */
-> -static const char * const msm8996_phy_vreg_l[] = {
-> +static const char * const qmp_phy_vreg_l[] = {
->         "vdda-phy", "vdda-pll",
->  };
->
-> @@ -778,8 +780,8 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
->         .num_clks               = ARRAY_SIZE(msm8996_phy_clk_l),
->         .reset_list             = msm8996_pciephy_reset_l,
->         .num_resets             = ARRAY_SIZE(msm8996_pciephy_reset_l),
-> -       .vreg_list              = msm8996_phy_vreg_l,
-> -       .num_vregs              = ARRAY_SIZE(msm8996_phy_vreg_l),
-> +       .vreg_list              = qmp_phy_vreg_l,
-> +       .num_vregs              = ARRAY_SIZE(qmp_phy_vreg_l),
->         .regs                   = pciephy_regs_layout,
->
->         .start_ctrl             = PCS_START | PLL_READY_GATE_EN,
-> @@ -809,8 +811,8 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
->         .num_clks               = ARRAY_SIZE(msm8996_phy_clk_l),
->         .reset_list             = msm8996_usb3phy_reset_l,
->         .num_resets             = ARRAY_SIZE(msm8996_usb3phy_reset_l),
-> -       .vreg_list              = msm8996_phy_vreg_l,
-> -       .num_vregs              = ARRAY_SIZE(msm8996_phy_vreg_l),
-> +       .vreg_list              = qmp_phy_vreg_l,
-> +       .num_vregs              = ARRAY_SIZE(qmp_phy_vreg_l),
->         .regs                   = usb3phy_regs_layout,
->
->         .start_ctrl             = SERDES_START | PCS_START,
-> @@ -870,8 +872,8 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
->         .num_clks               = ARRAY_SIZE(qmp_v3_phy_clk_l),
->         .reset_list             = msm8996_usb3phy_reset_l,
->         .num_resets             = ARRAY_SIZE(msm8996_usb3phy_reset_l),
-> -       .vreg_list              = msm8996_phy_vreg_l,
-> -       .num_vregs              = ARRAY_SIZE(msm8996_phy_vreg_l),
-> +       .vreg_list              = qmp_phy_vreg_l,
-> +       .num_vregs              = ARRAY_SIZE(qmp_phy_vreg_l),
->         .regs                   = qmp_v3_usb3phy_regs_layout,
->
->         .start_ctrl             = SERDES_START | PCS_START,
-> @@ -883,6 +885,7 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
->         .pwrdn_delay_max        = POWER_DOWN_DELAY_US_MAX,
->
->         .has_phy_dp_com_ctrl    = true,
-> +       .is_dual_lane_phy       = true,
->         .tx_b_lane_offset       = 0x400,
->         .rx_b_lane_offset       = 0x400,
->  };
-> @@ -903,8 +906,8 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
->         .num_clks               = ARRAY_SIZE(qmp_v3_phy_clk_l),
->         .reset_list             = msm8996_usb3phy_reset_l,
->         .num_resets             = ARRAY_SIZE(msm8996_usb3phy_reset_l),
-> -       .vreg_list              = msm8996_phy_vreg_l,
-> -       .num_vregs              = ARRAY_SIZE(msm8996_phy_vreg_l),
-> +       .vreg_list              = qmp_phy_vreg_l,
-> +       .num_vregs              = ARRAY_SIZE(qmp_phy_vreg_l),
->         .regs                   = qmp_v3_usb3phy_regs_layout,
->
->         .start_ctrl             = SERDES_START | PCS_START,
-> @@ -1116,12 +1119,12 @@ static int qcom_qmp_phy_init(struct phy *phy)
->         /* Tx, Rx, and PCS configurations */
->         qcom_qmp_phy_configure(tx, cfg->regs, cfg->tx_tbl, cfg->tx_tbl_num);
->         /* Configuration for other LANE for USB-DP combo PHY */
-> -       if (cfg->has_phy_dp_com_ctrl)
-> +       if (cfg->is_dual_lane_phy)
->                 qcom_qmp_phy_configure(tx + cfg->tx_b_lane_offset, cfg->regs,
->                                        cfg->tx_tbl, cfg->tx_tbl_num);
->
->         qcom_qmp_phy_configure(rx, cfg->regs, cfg->rx_tbl, cfg->rx_tbl_num);
-> -       if (cfg->has_phy_dp_com_ctrl)
-> +       if (cfg->is_dual_lane_phy)
->                 qcom_qmp_phy_configure(rx + cfg->rx_b_lane_offset, cfg->regs,
->                                        cfg->rx_tbl, cfg->rx_tbl_num);
->
-
-Thanks for the patch. Looks good to me now.
-Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-
-Best regards
-Vivek
-
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Thanks.
