@@ -1,53 +1,84 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 0/5] ARM: dts: dra7/am7xx: USB fixes and enhancements
-Date: Mon, 2 Jul 2018 11:56:59 +0300
-Message-ID: <e6e22046-e784-9cf6-3882-5a7f6ac66f2c@ti.com>
-References: <1527584458-6257-1-git-send-email-rogerq@ti.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCHv2 1/3] dt-bindings: display: dw_hdmi.txt: add cec-disable
+ property
+Date: Mon, 2 Jul 2018 11:02:48 +0200
+Message-ID: <19324e94-59a1-2d64-3a83-6ca6d00dff3c@xs4all.nl>
+References: <20180323125915.13986-1-hverkuil@xs4all.nl>
+ <20180323125915.13986-2-hverkuil@xs4all.nl>
+ <20180326072830.iphtbw5mkeciv4kj@rob-hp-laptop>
+ <05e7ade1-89be-0f0f-18a5-88ff0310a70b@xs4all.nl>
+ <714ee0ef-25c4-e065-8120-aebc27a1add7@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527584458-6257-1-git-send-email-rogerq@ti.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <714ee0ef-25c4-e065-8120-aebc27a1add7@baylibre.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Neil Armstrong <narmstrong@baylibre.com>, Rob Herring <robh@kernel.org>
+Cc: linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
-
-On 29/05/18 12:00, Roger Quadros wrote:
-> Hi Tony,
-> 
-> These are some fixes and enhancements for USB ports on dra7 and am57xx-idk EVMs.
-> If OK, please queue these for v4.18. Thanks.
-> 
-
-Gentle reminder.
-Could you please pick the first patch for 2018-rc, and the rest for -next. Thanks.
-
-> Roger Quadros (5):
->   ARM: dts: dra7: Disable metastability workaround for USB2
->   ARM: dts: am57xx-idk: Enable dual role for USB2 port
->   ARM: dts: dra7-evm: Add extcon to USB2 port
->   ARM: dts: dra71-evm: Add VBUS GPIO to USB1/USB2 extcon
->   ARM: dts: dra76-evm: Add VBUS GPIO to USB1/USB2 extcon
-> 
->  arch/arm/boot/dts/am571x-idk.dts         |  4 ----
->  arch/arm/boot/dts/am572x-idk-common.dtsi |  4 ----
->  arch/arm/boot/dts/am57xx-idk-common.dtsi |  7 ++++++-
->  arch/arm/boot/dts/dra7-evm-common.dtsi   | 10 ++++++++++
->  arch/arm/boot/dts/dra7-evm.dts           |  9 ---------
->  arch/arm/boot/dts/dra7.dtsi              |  2 +-
->  arch/arm/boot/dts/dra71-evm.dts          |  8 ++++++++
->  arch/arm/boot/dts/dra72-evm-common.dtsi  |  1 +
->  arch/arm/boot/dts/dra76-evm.dts          |  8 ++++++++
->  9 files changed, 34 insertions(+), 19 deletions(-)
-> 
-
--- 
-cheers,
--roger
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+T24gMjkvMDYvMTggMDk6MTcsIE5laWwgQXJtc3Ryb25nIHdyb3RlOgo+IEhpIEhhbnMsCj4gCj4g
+T24gMDMvMDQvMjAxOCAxMDoyNywgSGFucyBWZXJrdWlsIHdyb3RlOgo+PiBPbiAyNy8wMy8xOCAw
+MDoyNSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+PiBPbiBGcmksIE1hciAyMywgMjAxOCBhdCAwMTo1
+OToxM1BNICswMTAwLCBIYW5zIFZlcmt1aWwgd3JvdGU6Cj4+Pj4gRnJvbTogSGFucyBWZXJrdWls
+IDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgo+Pj4+Cj4+Pj4gU29tZSBib2FyZHMgaGF2ZSBib3Ro
+IGEgRGVzaWduV2FyZSBhbmQgdGhlaXIgb3duIENFQyBjb250cm9sbGVyLgo+Pj4+IFRoZSBDRUMg
+cGluIGlzIG9ubHkgaG9va2VkIHVwIHRvIHRoZWlyIG93biBDRUMgY29udHJvbGxlciBhbmQgbm90
+Cj4+Pj4gdG8gdGhlIERXIGNvbnRyb2xsZXIuCj4+Pj4KPj4+PiBBZGQgdGhlIGNlYy1kaXNhYmxl
+IHByb3BlcnR5IHRvIGRpc2FibGUgdGhlIERXIENFQyBjb250cm9sbGVyLgo+Pj4+Cj4+Pj4gVGhp
+cyBwYXJ0aWN1bGFyIHNpdHVhdGlvbiBoYXBwZW5zIG9uIEFtbG9naWMgYm9hcmRzIHRoYXQgaGF2
+ZSB0aGVpcgo+Pj4+IG93biBtZXNvbiBDRUMgY29udHJvbGxlci4KPj4+Cj4+PiBTZWVtcyBsaWtl
+IHdlIGNvdWxkIGF2b2lkIHRoaXMgYnkgZGVzY3JpYmluZyBob3cgdGhlIENFQyBsaW5lIGlzIGhv
+b2tlZCAKPj4+IHVwIHdoaWNoIGNvdWxkIGJlIG5lZWRlZCBmb3Igb3RoZXIgcmVhc29ucy4KPj4K
+Pj4gU28gdGhlcmUgYXJlIHRocmVlIHNpdHVhdGlvbnM6Cj4+Cj4+IDEpIFRoZSBjZWMgcGluIGlz
+IGNvbm5lY3RlZCB0byB0aGUgRFcgSERNSSBUWC4gVGhhdCdzIGFscmVhZHkgc3VwcG9ydGVkLgo+
+PiAyKSBUaGUgY2VjIHBpbiBpcyBub3QgY29ubmVjdGVkIGF0IGFsbCwgYnV0IHRoZSBDRUMgSVAg
+aXMgaW5zdGFudGlhdGVkLgo+PiAgICBXZSBuZWVkIHRoZSBjZWMtZGlzYWJsZSBwcm9wZXJ0eSBm
+b3IgdGhhdC4gVGhpcyBzaW1wbHkgc3RhdGVzIHRoYXQgdGhlCj4+ICAgIENFQyBwaW4gaXMgbm90
+IGNvbm5lY3RlZC4KPj4gMykgVGhlIGNlYyBwaW4gaXMgY29ubmVjdGVkIHRvIGFuIEhETUkgUlgu
+IFdlIGRvIG5vdCBzdXBwb3J0IHRoaXMgYXQgdGhlCj4+ICAgIG1vbWVudC4gSWYgd2Ugd2FudCB0
+byBzdXBwb3J0IHRoaXMsIHRoZW4gd2UgbmVlZCBhICdoZG1pLXJ4JyBwaGFuZGxlCj4+ICAgIHRo
+YXQgcG9pbnRzIHRvIHRoZSBIRE1JIHJlY2VpdmVyIHRoYXQgdGhlIENFQyBwaW4gaXMgYXNzb2Np
+YXRlZCB3aXRoLgo+PiAgICBUaGlzIHdpbGwgYmUgc2ltaWxhciB0byB0aGUgYWxyZWFkeSBleGlz
+dGluZyAnaGRtaS1waGFuZGxlJyBwcm9wZXJ0eQo+PiAgICB1c2VkIHRvIGFzc29jaWF0ZSBhIENF
+QyBkcml2ZXIgd2l0aCBhbiBIRE1JIHRyYW5zbWl0dGVyLiBJbiBoaW5kc2lnaHQKPj4gICAgaXQg
+d291bGQgaGF2ZSBiZWVuIGJldHRlciBpZiAnaGRtaS1waGFuZGxlJyB3YXMgbmFtZWQgJ2hkbWkt
+dHgnIDotKAo+Pgo+PiBJIGNhbiBtYWtlIGEgYmluZGluZyBwcm9wb3NhbCBmb3IgMywgYnV0IEkg
+aGF2ZSBubyBoYXJkd2FyZSB0byB0ZXN0IGl0LAo+PiBzbyBJIHRoaW5rIGl0IGlzIGJldHRlciB0
+byBhZGQgdGhpcyBvbmx5IHdoZW4gc29tZW9uZSBoYXMgaGFyZHdhcmUuIEl0Cj4+IHdpbGwgcmVx
+dWlyZSBxdWl0ZSBhIGZldyBjaGFuZ2VzIHRvIHRoZSBkcml2ZXIgYW5kIGxpa2VseSBhbHNvIHRo
+ZSBDRUMgY29yZS4KPiAKPiBDYW4ndCB3ZSBzaW1wbHkgYWRkIGEgcHJvcGVydHkgdG8gb3ZlcnJp
+ZGUgdGhlIEhXIGNvbmZpZyBmaWVsZHMgaW4gdGhpcyBjYXNlID8KPiBJdCB3aWxsIGJlIHRoZW4g
+dXNhYmxlIHdpdGggYW55IGZlYXR1cmUgdGhlIGlzIGVuYWJsZWQgYnkgcmVhZGluZyB0aGUgY29u
+ZmlnCj4gYml0cyBsaWtlIEFIQiBBdWRpbywgSTJjLCBDRUMsIC4uLiBhbmQgbWF5YmUgbWFueSBt
+b3JlIGluIHRoZSBmdXR1cmUuCgpZZXMsIHdlIGNhbiBkbyB0aGF0IGFzIHdlbGwuIEJ1dCBpcyB0
+aGF0IGEgcHJvcGVyIGRlc2NyaXB0aW9uIG9mIHRoZSBoYXJkd2FyZT8KVGhlIEhXICpkb2VzKiBz
+dXBwb3J0IENFQywgYnV0IGluIHRoaXMgY2FzZSB0aGUgQ0VDIGxpbmUgaXMganVzdCBub3QgaG9v
+a2VkCnVwIHRvIGFueXRoaW5nLiBTbyBvdmVycmlkaW5nIHRoZSBIVyBjb25maWcgZmllbGQgZG9l
+c24ndCByZWFsbHkgc291bmQgcmlnaHQKdG8gbWUuCgpJIHN0aWxsIGJlbGlldmUgdGhhdCB0aGUg
+Y2VjLWRpc2FibGUgcHJvcGVydHkgaW4gb3JkZXIgdG8gZGVzY3JpYmUgc2l0dWF0aW9uCjIgaW4g
+dGhlIGxpc3QgYWJvdmUgaXMgdGhlIHJpZ2h0IGFwcHJvYWNoLgoKUGVyaGFwcyBnaXZpbmcgaXQg
+YSBkaWZmZXJlbnQgbmFtZSAoY2VjLW5vdC1jb25uZWN0ZWQ/KSBoZWxwcyBvdmVyY29tZSBSb2In
+cwpvYmplY3Rpb25zPyBSb2I/CgpTb3JyeSBmb3Igbm90IGZvbGxvd2luZyB1cCBvbiB0aGlzIGVh
+cmxpZXIuCgpSZWdhcmRzLAoKCUhhbnMKCj4gCj4gTmVpbAo+IAo+Pgo+PiBSZWdhcmRzLAo+Pgo+
+PiAJSGFucwo+Pgo+Pj4KPj4+Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IEhhbnMgVmVya3VpbCA8aGFu
+cy52ZXJrdWlsQGNpc2NvLmNvbT4KPj4+PiBBY2tlZC1ieTogTmVpbCBBcm1zdHJvbmcgPG5hcm1z
+dHJvbmdAYmF5bGlicmUuY29tPgo+Pj4+IC0tLQo+Pj4+ICBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHdfaGRtaS50eHQgfCAzICsrKwo+Pj4+ICAxIGZp
+bGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCj4+Cj4gCj4gCj4gX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4g
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCj4gCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
