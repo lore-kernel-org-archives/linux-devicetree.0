@@ -1,55 +1,125 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH v1] ARM: dts: imx6sl-evk: keep sw4 always on
-Date: Mon, 2 Jul 2018 01:19:20 +0000
-Message-ID: <AM3PR04MB1315D8EF80847B4AF1FF4BA5F5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
-References: <1529930051-14122-1-git-send-email-yibin.gong@nxp.com>
- <20180701093402.GN4348@dragon>
- <CAOMZO5BjOEGWv2dC-bp0BYHq+PhLssEKic+o7ock8_1Dobd=sQ@mail.gmail.com>
- <AM3PR04MB131507901BFEE1A5E426EECBF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5D8tjnjbwMdLGd7KF7_4PwqRWX8XH8kdcF3-5e-r2YQEA@mail.gmail.com>
- <AM3PR04MB1315E7AED2BCE2265E6C443DF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5D8v4KM9S4ooHTDbA+vc8BZN_eO_wDuOPA+8Hcq-SmLDw@mail.gmail.com>
- <AM3PR04MB1315C7C7CFF990615732FFBCF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5AM5VRS7UiWuvAQ8vvTB8OM+iwofuYrbsL_yB9e0Z9Kyg@mail.gmail.com>
- <AM3PR04MB13155B8D567ABEF7EF03249AF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5BdtxKjQge5ONpnjr1yNVeTJf4u8Gh-fPqpHz7G9ipOTg@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] arm: dts: socfpga: denali needs nand_x_clk too
+Date: Mon, 2 Jul 2018 10:35:22 +0900
+Message-ID: <CAK7LNATuCqs5ofKnNCSEYhWanD+u2+5NzB7asaYhqb7BVUW_Fw@mail.gmail.com>
+References: <20180619120719.26921-1-richard@nod.at> <CAK7LNASgPa4D0Siyo3mvK_AJ2zaECDXGaMEn-iNzQ9PFXFir+w@mail.gmail.com>
+ <3320422.EJ8D6C0VHL@blindfold> <d4fdcd1d-db20-1837-a037-0982a042d357@kernel.org>
+ <20180625165506.484e025f@bbrezillon> <CAK7LNATyo+7gauyQcRmNfCs8CagU1XdpHHgREMeTvf4rqxpeNQ@mail.gmail.com>
+ <20180626200928.29aca979@xps13> <CAK7LNATbmNadK=xPcaQ+seRS_YvH5ZP5SX8z74iOyYcJ0Soicw@mail.gmail.com>
+ <333ae81b-af62-ec2e-3311-5487b1cc90c1@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5BdtxKjQge5ONpnjr1yNVeTJf4u8Gh-fPqpHz7G9ipOTg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <333ae81b-af62-ec2e-3311-5487b1cc90c1@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Robin Gong <yibin.gong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Dinh Nguyen <dinguyen@kernel.org>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
-Z2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1AZ21haWwuY29t
-XQ0KPiBTZW50OiBNb25kYXksIEp1bHkgMiwgMjAxOCA5OjE3IEFNDQo+IFRvOiBBbnNvbiBIdWFu
-ZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVs
-Lm9yZz47IFJvYmluIEdvbmcgPHlpYmluLmdvbmdAbnhwLmNvbT47DQo+IE1hcmsgUnV0bGFuZCA8
-bWFyay5ydXRsYW5kQGFybS5jb20+OyBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQNCj4gRkxB
-VFRFTkVEIERFVklDRSBUUkVFIEJJTkRJTkdTIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47
-DQo+IGxpbnV4LWtlcm5lbCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IFJvYiBIZXJy
-aW5nDQo+IDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAu
-Y29tPjsgU2FzY2hhIEhhdWVyDQo+IDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyBGYWJpbyBFc3Rl
-dmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+Ow0KPiBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJFRVND
-QUxFIElNWCAvIE1YQyBBUk0gQVJDSElURUNUVVJFDQo+IDxsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjFdIEFSTTogZHRzOiBpbXg2
-c2wtZXZrOiBrZWVwIHN3NCBhbHdheXMgb24NCj4gDQo+IE9uIFN1biwgSnVsIDEsIDIwMTggYXQg
-MTA6MDkgUE0sIEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiB3cm90ZToNCj4g
-DQo+ID4gT24gc29tZSBuZXcgaS5NWCBwbGF0Zm9ybXMsIFBGdXplIHN3aXRjaGVzIGFyZSB1c2Vk
-IGZvciBzdXBwbHlpbmcNCj4gPiBHUFUvVlBVIG9yIG90aGVyIG5vbi1jcml0aWNhbCBtb2R1bGVz
-IG9ubHksIHRoZXNlIHN3aXRjaGVzIG5lZWQgdG8gYmUNCj4gPiB0dXJuZWQgb2ZmIGJ5IHJ1bnRp
-bWUgUE0gdG8gYXZvaWQgdmVyeSBoaWdoIHBvd2VyIGxlYWthZ2UsIGxpa2Ugb24NCj4gbVNjYWxl
-ODUwRC4NCj4gDQo+IE9rLCBpbiB0aGlzIGNhc2UgSSBzdWdnZXN0IGFkZGluZyBhIG5ldyBwcm9w
-ZXJ0eSBzbyB0aGF0IHRoZSBzd2l0Y2hlcyBjYW4gYmUNCj4gdHVybmVkIG9mZiBvbmx5IHdoZW4g
-dGhlIG5ldyBwcm9wZXJ0eSBpcyBwcmVzZW50Lg0KPiANCj4gV2hlbiB0aGlzIG5ldyBwcm9wZXJ0
-eSBpcyBhYnNlbnQsIHRoZW4gd2Uga2VlcCB0aGUgY3VycmVudCBiZWhhdmlvciBhbmQgYXZvaWQN
-Cj4gZHRiIGJyZWFrYWdlLg0KPiANCj4gU2luY2UgTVg4TSBzdXBwb3J0IGlzIG5vdCBpbiBwbGFj
-ZSB5ZXQsIHRoaXMgaXMgbm90IHVyZ2VudCwgc28gSSB3aWxsIHNlbmQgYSByZXZlcnQNCj4gYW5k
-IHRoZW4geW91IGNhbiByZS13b3JrIHRoZSBwYXRjaCBzbyB0aGF0IGl0IGRvZXMgbm90IGFmZmVj
-dCB0aGUgb2xkIGR0YnMuDQo+IA0KPiBEbyB5b3UgYWdyZWUgd2l0aCBzdWNoIGFwcHJvYWNoPw0K
-DQpTdXJlLCBJIGFncmVlIGZvciBub3cuIEFzIEkgZGlkIE5PVCB3YW50IHRvIGhhdmUgYW55IGJy
-ZWFrYWdlLiBUaGFua3MuDQogDQpBbnNvbi4NCg0KDQo=
+Hi Dinh,
+
+2018-06-27 23:55 GMT+09:00 Dinh Nguyen <dinguyen@kernel.org>:
+> Hi Masahiro,
+>
+> On 06/26/2018 09:52 PM, Masahiro Yamada wrote:
+>> 2018-06-27 3:09 GMT+09:00 Miquel Raynal <miquel.raynal@bootlin.com>:
+>>> Hi Masahiro,
+>>>
+>>> On Tue, 26 Jun 2018 11:38:21 +0900, Masahiro Yamada
+>>> <yamada.masahiro@socionext.com> wrote:
+>>>
+>>>> 2018-06-25 23:55 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:
+>>>>> On Mon, 25 Jun 2018 09:50:18 -0500
+>>>>> Dinh Nguyen <dinguyen@kernel.org> wrote:
+>>>>>
+>>>>>> On 06/22/2018 10:58 AM, Richard Weinberger wrote:
+>>>>>>> Masahiro,
+>>>>>>>
+>>>>>>> Am Freitag, 22. Juni 2018, 16:37:21 CEST schrieb Masahiro Yamada:
+>>>>>>>> Hi Richard,
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> 2018-06-19 21:07 GMT+09:00 Richard Weinberger <richard@nod.at>:
+>>>>>>>>> The denali NAND flash controller needs at least two clocks to operate,
+>>>>>>>>> nand_clk and nand_x_clk.
+>>>>>>>>> Since 1bb88666775e ("mtd: nand: denali: handle timing parameters by
+>>>>>>>>> setup_data_interface()") nand_x_clk is used to derive timing settings.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Richard Weinberger <richard@nod.at>
+>>>>>>>>> ---
+>>>>>>>>> Strictly speaking denali needs a ecc_clk too, but AFAIK such a clock
+>>>>>>>>> is not present on this SoC.
+>>>>>>>>> But my SoCFPGA knowledge is very limited.
+>>>>>>>>>
+>>>>>>>>> Thanks,
+>>>>>>>>> //richard
+>>>>>>>>> ---
+>>>>>>>>>  arch/arm/boot/dts/socfpga.dtsi | 3 ++-
+>>>>>>>>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+>>>>>>>>> index 486d4e7433ed..562f7b375bbd 100644
+>>>>>>>>> --- a/arch/arm/boot/dts/socfpga.dtsi
+>>>>>>>>> +++ b/arch/arm/boot/dts/socfpga.dtsi
+>>>>>>>>> @@ -754,7 +754,8 @@
+>>>>>>>>>                         reg-names = "nand_data", "denali_reg";
+>>>>>>>>>                         interrupts = <0x0 0x90 0x4>;
+>>>>>>>>>                         dma-mask = <0xffffffff>;
+>>>>>>>>> -                       clocks = <&nand_clk>;
+>>>>>>>>> +                       clocks = <&nand_clk>, <&nand_x_clk>;
+>>>>>>>>> +                       clock-names = "nand", "nand_x";
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> IMHO, this should be
+>>>>>>>>
+>>>>>>>>                           clocks = <&nand_clk>, <&nand_x_clk>, <&nand_x_clk>;
+>>>>>>>>                           clock-names = "nand", "nand_x", "ecc";
+>>>>>>
+>>>>>> No, it should be just the nand_x and ecc.
+>>>>>>
+>>>>>> There's already a patch to use the nand_x_clk and not the nand_clk.
+>>>>
+>>>>
+>>>> Different people try to fix the problem in different ways.
+>>>>
+>>>> I think it is due to miscommunication across sub-systems.
+>>>
+>>> Is the series named
+>>>
+>>>         mtd: rawnand: denali: add new clocks and improve
+>>>                               setup_data_interface
+>>>
+>>> still valid?
+>>
+>> Yes.
+>> I believe V4 is valid.
+>>
+>>
+>> Information for Dinh Nguyen:
+>>
+>> http://patchwork.ozlabs.org/patch/933507/
+>> http://patchwork.ozlabs.org/patch/933487/
+>> http://patchwork.ozlabs.org/patch/933494/
+>> http://patchwork.ozlabs.org/patch/933506/
+>>
+>>
+>> If he is not convinced, I am open to discussion, though.
+>
+> I wasn't aware of these patches. This patch is staged to go into
+> v4.17-rc3 through the arm-soc:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/commit/arch/arm/boot/dts/socfpga.dtsi?h=fixes&id=4eda9b766b042ea38d84df91581b03f6145a2ab0
+>
+> I think your patch will handle a case where only 1 clock is passed in,
+> so it should be okay right?
+>
+
+I should be OK,
+but please consider the proper fix for v4.19
+as Boris suggested.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
