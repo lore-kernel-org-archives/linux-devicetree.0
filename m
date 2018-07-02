@@ -1,61 +1,73 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v7 0/4] ARM: davinci: complete the conversion to using the
- reset framework
-Date: Mon, 2 Jul 2018 10:27:53 -0500
-Message-ID: <345aed22-629a-abf6-df22-adee88a43df6@lechnology.com>
-References: <20180621073706.22812-1-brgl@bgdev.pl>
- <9ec10627-49a5-07ad-8c9d-5ac873096cc0@ti.com>
- <CAMRc=Me1JTuw40tMWaai2oKMxmc_ktN2OKBhF8tmGt0cQ6magg@mail.gmail.com>
- <e4bd9f57-617a-a59e-5d05-be1a6b3e6b3d@ti.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 4/6] arm64: dts: mediatek: Add missing cooling device
+ properties for CPUs
+Date: Mon, 2 Jul 2018 18:56:47 +0200
+Message-ID: <003321e5-3d47-9626-ee65-be5abd54a3ae@gmail.com>
+References: <cover.1527225682.git.viresh.kumar@linaro.org>
+ <49b1086c104b0ee22f6e992a0abb380de9320c09.1527225682.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e4bd9f57-617a-a59e-5d05-be1a6b3e6b3d@ti.com>
+In-Reply-To: <49b1086c104b0ee22f6e992a0abb380de9320c09.1527225682.git.viresh.kumar@linaro.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Viresh Kumar <viresh.kumar@linaro.org>, arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/02/2018 07:08 AM, Sekhar Nori wrote:
-> Hi Bjorn,
-> 
-> On Thursday 21 June 2018 05:11 PM, Bartosz Golaszewski wrote:
->> 2018-06-21 12:52 GMT+02:00 Sekhar Nori <nsekhar@ti.com>:
->>> Hi Bartosz,
->>>
->>> On Thursday 21 June 2018 01:07 PM, Bartosz Golaszewski wrote:
->>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>>>
->>>> These are the remaining patches that still need to be merged in order
->>>> to complete the conversion of the davinci dsp driver to using the reset
->>>> framework.
->>>>
->>>> They apply on top of v4.18-rc1 with David Lechner's remaining patches
->>>> merged.
->>>
->>> Series looks good to me.
->>>
->>> To preserve bisect, shouldn't the order of applying be patch #3, #4, #1
->>> and #2 ?
->>>
->>> Given the dependencies and to preserve bisect its easiest if I take the
->>> series with acks from remoteproc and clock maintainers.
->>>
->>> Open to other suggestions as well.
->>>
->>> Thanks,
->>> Sekhar
->>
->> Oops you're right about the order. Do you want me to resend?
-> 
-> With your ack, I can queue 1/4 for v4.19 and provide an immutable commit
-> to you (on top of v4.18-rc1) for you to merge any further changes you
-> want to queue from your tree.
-> 
-> Bartosz, given the number of moving pieces, I think its better to keep
-> 2/4 for v4.20 release - once all other other dependencies have been merged.
 
-I was thinking the same thing as well. I will pick it up in a
-clk-davinci-4.20 branch if that sounds OK.
+
+On 25/05/18 07:40, Viresh Kumar wrote:
+> The cooling device properties, like "#cooling-cells" and
+> "dynamic-power-coefficient", should either be present for all the CPUs
+> of a cluster or none. If these are present only for a subset of CPUs of
+> a cluster then things will start falling apart as soon as the CPUs are
+> brought online in a different order. For example, this will happen
+> because the operating system looks for such properties in the CPU node
+> it is trying to bring up, so that it can register a cooling device.
+> 
+> Add such missing properties.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+
+pushed now to v4.18-next/dts64
+
+> ---
+>  arch/arm64/boot/dts/mediatek/mt7622.dtsi | 1 +
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 2 ++
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> index 9213c966c224..d49fe125e770 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> @@ -89,6 +89,7 @@
+>  				 <&apmixedsys CLK_APMIXED_MAIN_CORE_EN>;
+>  			clock-names = "cpu", "intermediate";
+>  			operating-points-v2 = <&cpu_opp_table>;
+> +			#cooling-cells = <2>;
+>  			enable-method = "psci";
+>  			clock-frequency = <1300000000>;
+>  		};
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 94597e33c806..abd2f15a544b 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -168,6 +168,7 @@
+>  			reg = <0x001>;
+>  			enable-method = "psci";
+>  			cpu-idle-states = <&CPU_SLEEP_0>;
+> +			#cooling-cells = <2>;
+>  			clocks = <&infracfg CLK_INFRA_CA53SEL>,
+>  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+>  			clock-names = "cpu", "intermediate";
+> @@ -193,6 +194,7 @@
+>  			reg = <0x101>;
+>  			enable-method = "psci";
+>  			cpu-idle-states = <&CPU_SLEEP_0>;
+> +			#cooling-cells = <2>;
+>  			clocks = <&infracfg CLK_INFRA_CA57SEL>,
+>  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+>  			clock-names = "cpu", "intermediate";
+> 
