@@ -1,125 +1,77 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] arm: dts: socfpga: denali needs nand_x_clk too
-Date: Mon, 2 Jul 2018 10:35:22 +0900
-Message-ID: <CAK7LNATuCqs5ofKnNCSEYhWanD+u2+5NzB7asaYhqb7BVUW_Fw@mail.gmail.com>
-References: <20180619120719.26921-1-richard@nod.at> <CAK7LNASgPa4D0Siyo3mvK_AJ2zaECDXGaMEn-iNzQ9PFXFir+w@mail.gmail.com>
- <3320422.EJ8D6C0VHL@blindfold> <d4fdcd1d-db20-1837-a037-0982a042d357@kernel.org>
- <20180625165506.484e025f@bbrezillon> <CAK7LNATyo+7gauyQcRmNfCs8CagU1XdpHHgREMeTvf4rqxpeNQ@mail.gmail.com>
- <20180626200928.29aca979@xps13> <CAK7LNATbmNadK=xPcaQ+seRS_YvH5ZP5SX8z74iOyYcJ0Soicw@mail.gmail.com>
- <333ae81b-af62-ec2e-3311-5487b1cc90c1@kernel.org>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v7 00/29] Add support for mediatek SOC MT2712
+Date: Mon, 2 Jul 2018 09:39:10 +0800
+Message-ID: <1530495550.4568.2.camel@mtksdaap41>
+References: <1529482771-2153-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <333ae81b-af62-ec2e-3311-5487b1cc90c1@kernel.org>
+In-Reply-To: <1529482771-2153-1-git-send-email-stu.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@kernel.org>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+To: Stu Hsieh <stu.hsieh@mediatek.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Dinh,
+Hi, Stu:
 
-2018-06-27 23:55 GMT+09:00 Dinh Nguyen <dinguyen@kernel.org>:
-> Hi Masahiro,
->
-> On 06/26/2018 09:52 PM, Masahiro Yamada wrote:
->> 2018-06-27 3:09 GMT+09:00 Miquel Raynal <miquel.raynal@bootlin.com>:
->>> Hi Masahiro,
->>>
->>> On Tue, 26 Jun 2018 11:38:21 +0900, Masahiro Yamada
->>> <yamada.masahiro@socionext.com> wrote:
->>>
->>>> 2018-06-25 23:55 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:
->>>>> On Mon, 25 Jun 2018 09:50:18 -0500
->>>>> Dinh Nguyen <dinguyen@kernel.org> wrote:
->>>>>
->>>>>> On 06/22/2018 10:58 AM, Richard Weinberger wrote:
->>>>>>> Masahiro,
->>>>>>>
->>>>>>> Am Freitag, 22. Juni 2018, 16:37:21 CEST schrieb Masahiro Yamada:
->>>>>>>> Hi Richard,
->>>>>>>>
->>>>>>>>
->>>>>>>> 2018-06-19 21:07 GMT+09:00 Richard Weinberger <richard@nod.at>:
->>>>>>>>> The denali NAND flash controller needs at least two clocks to operate,
->>>>>>>>> nand_clk and nand_x_clk.
->>>>>>>>> Since 1bb88666775e ("mtd: nand: denali: handle timing parameters by
->>>>>>>>> setup_data_interface()") nand_x_clk is used to derive timing settings.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Richard Weinberger <richard@nod.at>
->>>>>>>>> ---
->>>>>>>>> Strictly speaking denali needs a ecc_clk too, but AFAIK such a clock
->>>>>>>>> is not present on this SoC.
->>>>>>>>> But my SoCFPGA knowledge is very limited.
->>>>>>>>>
->>>>>>>>> Thanks,
->>>>>>>>> //richard
->>>>>>>>> ---
->>>>>>>>>  arch/arm/boot/dts/socfpga.dtsi | 3 ++-
->>>>>>>>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>>>>>>>
->>>>>>>>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
->>>>>>>>> index 486d4e7433ed..562f7b375bbd 100644
->>>>>>>>> --- a/arch/arm/boot/dts/socfpga.dtsi
->>>>>>>>> +++ b/arch/arm/boot/dts/socfpga.dtsi
->>>>>>>>> @@ -754,7 +754,8 @@
->>>>>>>>>                         reg-names = "nand_data", "denali_reg";
->>>>>>>>>                         interrupts = <0x0 0x90 0x4>;
->>>>>>>>>                         dma-mask = <0xffffffff>;
->>>>>>>>> -                       clocks = <&nand_clk>;
->>>>>>>>> +                       clocks = <&nand_clk>, <&nand_x_clk>;
->>>>>>>>> +                       clock-names = "nand", "nand_x";
->>>>>>>>
->>>>>>>>
->>>>>>>> IMHO, this should be
->>>>>>>>
->>>>>>>>                           clocks = <&nand_clk>, <&nand_x_clk>, <&nand_x_clk>;
->>>>>>>>                           clock-names = "nand", "nand_x", "ecc";
->>>>>>
->>>>>> No, it should be just the nand_x and ecc.
->>>>>>
->>>>>> There's already a patch to use the nand_x_clk and not the nand_clk.
->>>>
->>>>
->>>> Different people try to fix the problem in different ways.
->>>>
->>>> I think it is due to miscommunication across sub-systems.
->>>
->>> Is the series named
->>>
->>>         mtd: rawnand: denali: add new clocks and improve
->>>                               setup_data_interface
->>>
->>> still valid?
->>
->> Yes.
->> I believe V4 is valid.
->>
->>
->> Information for Dinh Nguyen:
->>
->> http://patchwork.ozlabs.org/patch/933507/
->> http://patchwork.ozlabs.org/patch/933487/
->> http://patchwork.ozlabs.org/patch/933494/
->> http://patchwork.ozlabs.org/patch/933506/
->>
->>
->> If he is not convinced, I am open to discussion, though.
->
-> I wasn't aware of these patches. This patch is staged to go into
-> v4.17-rc3 through the arm-soc:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/commit/arch/arm/boot/dts/socfpga.dtsi?h=fixes&id=4eda9b766b042ea38d84df91581b03f6145a2ab0
->
-> I think your patch will handle a case where only 1 clock is passed in,
-> so it should be okay right?
->
+On Wed, 2018-06-20 at 16:19 +0800, Stu Hsieh wrote:
+> This patch add support for the Mediatek MT2712 DISP subsystem.
+> MT2712 is base on MT8173, there are some difference as following:
+> MT2712 support three disp output(two ovl and one rdma)
+> 
 
-I should be OK,
-but please consider the proper fix for v4.19
-as Boris suggested.
+For the series, applied to mediatek-drm-next-4.19 [1], the patch
+'drm/mediatek: Add support for mediatek SOC MT2712' has line over 80
+character, so I've modified it.
 
+[1]
+https://github.com/ckhu-mediatek/linux.git-tags/commits/mediatek-drm-next-4.19
 
+Regards,
+CK
 
--- 
-Best Regards
-Masahiro Yamada
+> Change in v6:
+> - Update commit message for the patch
+>   "drm/mediatek: Update the definition of connection from RDMA1 to DPI0"
+> 
+> Stu Hsieh (29):
+>   drm/mediatek: update dt-bindings for mt2712
+>   drm/mediatek: support maximum 64 mutex mod
+>   drm/mediatek: add ddp component AAL1
+>   drm/mediatek: add ddp component OD1
+>   drm/mediatek: add ddp component PWM1
+>   drm/mediatek: add ddp component PWM2
+>   drm/mediatek: add component DPI1
+>   drm/mediatek: add component DSI2
+>   drm/mediatek: add component DSI3
+>   drm/mediatek: add the DSI1 for component init condition
+>   drm/mediatek: add connection from OD1 to RDMA1
+>   drm/mediatek: Update the definition of connection from RDMA1 to DPI0
+>   drm/mediatek: add connection from RDMA0 to DPI0
+>   drm/mediatek: add connection from RDMA0 to DSI2
+>   drm/mediatek: add connection from RDMA0 to DSI3
+>   drm/mediatek: add connection from RDMA1 to DPI1
+>   drm/mediatek: add connection from RDMA1 to DSI1
+>   drm/mediatek: add connection from RDMA1 to DSI2
+>   drm/mediatek: add connection from RDMA1 to DSI3
+>   drm/mediatek: add connection from RDMA2 to DPI0
+>   drm/mediatek: add connection from RDMA2 to DPI1
+>   drm/mediatek: add connection from RDMA2 to DSI1
+>   drm/mediatek: add connection from RDMA2 to DSI2
+>   drm/mediatek: add connection from RDMA2 to DSI3
+>   drm/mediatek: add DPI1 support for mutex
+>   drm/mediatek: add DSI2 support for mutex
+>   drm/mediatek: add DSI3 support for mutex
+>   drm/mediatek: add third ddp path
+>   drm/mediatek: Add support for mediatek SOC MT2712
+> 
+>  .../bindings/display/mediatek/mediatek,disp.txt    |   2 +-
+>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c            |   3 +
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c             | 235 ++++++++++++++++++---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        |  15 +-
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  10 +-
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c             |  47 ++++-
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.h             |   5 +-
+>  7 files changed, 274 insertions(+), 43 deletions(-)
+> 
