@@ -1,38 +1,55 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH RESEND 0/3] K2G: mmc: Update mmc dt node to use
-Date: Mon, 2 Jul 2018 08:20:54 +0530
-Message-ID: <00a3d968-ff2b-9703-fe43-7c39e43e16b8@ti.com>
-References: <20180622101617.11157-1-kishon@ti.com>
- <7199d72f-9980-c700-6ebe-3f8927b64f62@ti.com>
- <10adb1c9-9b10-e1e7-7076-25b0c68c99f1@oracle.com>
+From: <honghui.zhang@mediatek.com>
+Subject: [PATCH v2 0/4] PCI: mediatek: fixup find_port, enable_msi and add pm, module support
+Date: Mon, 2 Jul 2018 11:49:40 +0800
+Message-ID: <1530503384-1218-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <10adb1c9-9b10-e1e7-7076-25b0c68c99f1@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>
+To: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
+Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
+From: Honghui Zhang <honghui.zhang@mediatek.com>
 
+This patchset includes misc patchs:
 
-On Saturday 30 June 2018 04:29 AM, Santosh Shilimkar wrote:
-> On 6/27/2018 9:15 PM, Kishon Vijay Abraham I wrote:
->> Santosh,
->>
->> On Friday 22 June 2018 03:46 PM, Kishon Vijay Abraham I wrote:
->>> Update mmc dt node to use sdhci-omap binding instead of omap_hsmmc
->>> binding.
->>>
->>> I've also updated keystone_defconfig to enable CONFIG_MMC_SDHCI_OMAP.
->>> Everyone who use a custom .config should also enable
->>> CONFIG_MMC_SDHCI_OMAP for MMC to work.
->>
->> Can this series be merged?
->>
-> Applied. Sorry for missing it in earlier batch.
+The first patch fixup the mtk_pcie_find_port logical which will cause system
+could not touch the EP's configuration space which was connected to PCIe slot 1.
 
-Thanks Santosh.
+The second patch fixup the enable msi logical, the operation to enable msi
+should be after system clock is enabled. The function of mtk_pcie_startup_port_v2's
+define location is re-arranged to avoid mtk_pcie_enable_msi's forward declaration.
+And call mtk_pcie_enable_msi in mtk_pcie_startup_port_v2 since the clock was all
+enabled at that time.
 
--Kishon
+The third patch was rebased and refactor of the v4 patch[1], changes are:
+ -Add PM support for MT7622.
+ -Using mtk_pcie_enable_port to re-establish the link when resumed.
+ -Rebase on the previous two patches.
+
+The fourth patch add loadable kernel module support.
+
+Some of those patches was already reviewed-by Ryder Lee <ryder.lee@mediatek.com>,
+so I just add the Reviewed-by tags in those patches.
+
+[1] https://patchwork.kernel.org/patch/10479079
+
+Change since v1:
+ - A bit of code refact of the first patch suggested by Andy Shevchenko, and
+   commit message updated.
+ - Using __maybe_unused.
+ - Remove the redundant list_empty check of the fourth patch.
+
+Honghui Zhang (4):
+  PCI: mediatek: fixup mtk_pcie_find_port logical
+  PCI: mediatek: enable msi after clock enabled
+  PCI: mediatek: Add system pm support for MT2712 and MT7622
+  PCI: mediatek: Add loadable kernel module support
+
+ drivers/pci/controller/Kconfig         |   2 +-
+ drivers/pci/controller/pcie-mediatek.c | 289 ++++++++++++++++++++++++---------
+ 2 files changed, 213 insertions(+), 78 deletions(-)
+
+-- 
+2.6.4
