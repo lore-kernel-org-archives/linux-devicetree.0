@@ -1,84 +1,254 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] drm/panel: Augment the TPO TPG110 bindings
-Date: Mon, 2 Jul 2018 15:41:28 -0600
-Message-ID: <CAL_JsqL2868efE6EBUnSKXPMoVcUkUTF72G40-pasBM_WibBfg@mail.gmail.com>
-References: <20180621184942.26087-1-linus.walleij@linaro.org>
- <20180627172105.GA6777@rob-hp-laptop>
- <CACRpkdZWJoshkrLafCUiZB7+8xFH1YtC4h+pA-bLW92zr5J-Nw@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 2/2] arm64: dts: mediatek: add mt6765 support
+Date: Mon, 2 Jul 2018 15:50:00 -0600
+Message-ID: <CAL_JsqKxvCxn3eb0sZVFwhUudDAkoHH5uyUgt1NY06zt-yKkQQ@mail.gmail.com>
+References: <1529978646-28976-1-git-send-email-mars.cheng@mediatek.com> <1529978646-28976-3-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CACRpkdZWJoshkrLafCUiZB7+8xFH1YtC4h+pA-bLW92zr5J-Nw@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1529978646-28976-3-git-send-email-mars.cheng@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mars Cheng <mars.cheng@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, CC Hwang <cc.hwang@mediatek.com>, Loda Choui <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBKdWwgMSwgMjAxOCBhdCAxOjAxIFBNIExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxl
-aWpAbGluYXJvLm9yZz4gd3JvdGU6Cj4KPiBPbiBXZWQsIEp1biAyNywgMjAxOCBhdCA3OjIxIFBN
-IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+IHdyb3RlOgo+ID4gT24gVGh1LCBKdW4gMjEs
-IDIwMTggYXQgMDg6NDk6NDFQTSArMDIwMCwgTGludXMgV2FsbGVpaiB3cm90ZToKPgo+ID4gPiAr
-VGhpcyBwYW5lbCBkcml2ZXIgY2FuIGRyaXZlciBhIHZhcmlldHkgb2YgcGFuZWxzLiBJdCByZXF1
-aXJlcwo+ID4KPiA+IHMvY2FuIGRyaXZlci9jYW4gZHJpdmUvCj4gPgo+ID4gVGhvdWdoIHdoYXQg
-YSBkcml2ZXIgc3VwcG9ydHMgaXMgaXJyZWxldmFudCB0byB0aGUgYmluZGluZy4uLgo+Cj4gSXQg
-aXQgbm90IGEgc29mdHdhcmUgZHJpdmVyIHRoZSB0ZXh0IGlzIHJlZmVycmluZyB0by4gSXQgaXMg
-YQo+IGVsZWN0cmljYWwgaW50ZXJmYWNlIHRvIGEgcGFuZWwuIExpa2UgaG93IGEgVFRMIGNpcmN1
-aXQgY29ubmVjdGVkCj4gdG8gYSBMRUQgaXMgcmVmZXJyZWQgdG8gYXMgYSAiTEVEIGRyaXZlciIs
-IGl0J3Mgc2ltcGx5IHdoYXQgdGhlCj4gaW5kdXN0cnkgY2FsbHMgdGhlc2UgdGhpbmdzLgoKWWVz
-LCBJJ20gYXdhcmUgb2YgdGhlIHRlcm0sIGJ1dCBJIHNlZSAqZmFyKiBtb3JlIG9mIHRoZSBvdGhl
-ciB1c2Ugb2YgImRyaXZlciIuCgpDYW4geW91IHNheSAicGFuZWwgZHJpdmVyIElDIiB0byBjbGFy
-aWZ5LgoKPiBTbyB0aGVyZSBhcmUgdHdvIHRoaW5nczogdGhlIHBhbmVsIGRyaXZlciBhbmQgdGhl
-IHBhbmVsLCB0aGUKPiBzYW1lIHBhbmVsIGRyaXZlciBpcyB1c2VkIHdpdGggc2V2ZXJhbCBwYW5l
-bHMuIFdoYXQgdGhlCj4gZWxlY3Ryb25pY3MgZW5naW5lZXIgd2lsbCBkbyBpcyBwdXQgYSBwYW5l
-bCBkcml2ZXIgbGlrZSB0aGlzCj4gaW50byBoaXMgZGVzaWduIGFuZCB0aGVuIGNvbm5lY3Qgc29t
-ZSBwYW5lbCBzL2hlIGZpbmRzCj4gaW4gdGhlIHJpZ2h0IHF1YW50aXR5IGluIHRoZSBzdHJlZXRz
-IG9mIFNoZW56aGVuLgoKWWVwLiBJJ3ZlIGhhZCB0aGUgZnVuIG9mIHRyeWluZyB0byBmaWd1cmUg
-b3V0IGhvdyB0byBnZXQgcGFuZWxzCndvcmtpbmcgYW5kIGhhdmluZyB0aGUgcGllY2VtZWFsIGRv
-Y3VtZW50YXRpb24gb2YgdGhlIGRyaXZlciBJQwp3aXRob3V0IGFsbCB0aGUgaG9vay11cCBkZXRh
-aWxzLi4uCgo+ID4gSWYgeW91IHJlbW92ZSB0aW1pbmdzLCBob3cgZG9lcyBpdCBkcml2ZSBhIHZh
-cmlldHkgb2YgcGFuZWxzPyBKdXN0IGJ5Cj4gPiBjb21wYXRpYmxlPwo+Cj4gWWVzLgo+Cj4gTGlr
-ZSB3ZSBkaWQgZm9yCj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvaWxpdGVrLGlsaTkzMjIudHh0Cj4gd2hpY2ggaXMgc2ltaWxhciB0byB0aGlzLgoKQWNj
-b3JkaW5nIHRvIHRoYXQsIHRoZXJlJ3Mgb25seSAxIHBhbmVsIHN1cHBvcnRlZC4KCj4gSW4gZmFj
-dCBJIHRoaW5rIG1hbnkgcGFuZWwgZHJpdmVycyBhcmUganVzdCBzbG9wcGlseSBzbGlwcGluZyBp
-bgo+IHVuZGVyIHRoZSByYWRhciBhcyAicGFuZWxzIiBpbiBvdXIgYmluZGluZ3MuCgpJbmRlZWQu
-IEknbSBub3Qgc3VyZSB0aGF0IHRyeWluZyB0byBzcGxpdCBkcml2ZXIgSUNzIGFuZCBwYW5lbHMg
-aXMKcmVhbGx5IGZlYXNpYmxlIGF0IGxlYXN0IHVwIGZyb250IGdpdmVuIGhvdyBwb29yIHRoZSBk
-b2N1bWVudGF0aW9uIGlzCnR5cGljYWxseS4KCj4gPlRoYXQgd291bGQgbWVhbiAidHBvLHRwZzEx
-MCIgYWxvbmUgaXMgbm90IHZhbGlkIG5vciB1c2VmdWwKPiA+IGFzIGEgZmFsbGJhY2suCj4KPiBB
-Y3R1YWxseSBpdCBpcy4gVGhlIGhhcmR3YXJlIGlzIHdpcmVkIHVwIHRvIHRoZSBkZXNpcmVkCj4g
-cmVzb2x1dGlvbiB3aXRoIGhhcmR3YXJlIHN0cmFwcywgd2hpY2ggYXBwZWFyIGluCj4gdGhlIHJl
-Z2lzdGVycyB0aGUgKHNvZnR3YXJlKSBkcml2ZXIgY2FuIHJlYWQgb3V0IHNvCj4gdGhpcyBpcyBp
-ZGVhbGx5IHNlbGYtZGVzY3JpYmluZyBoYXJkd2FyZS4KCk5pY2UuIENhbiB5b3UgYWRkIHRoYXQg
-ZGV0YWlsLgoKPiBCdXQgZm9yIHRoZSBldmVudCB0aGF0IHNvbWV0aGluZyBuZWVkcyB0d2Vha2lu
-ZyBpbiB0aGUKPiBmdXR1cmUsIGxpa2Ugd2Ugb3ZlcnNwZWNpZnkgc2F5IFNvQ3MsIEkgaW5jbHVk
-ZSB0aGUKPiBleGFjdCBzeXN0ZW0gb24gd2hpY2ggaXQgaXMgZGVwbG95ZCBhcyBhIHNlcGFyYXRl
-Cj4gY29tcGF0aWJsZSBzdHJpbmcuCj4KPiA+ID4gK2EgZmV3IEdQSU8gbGluZXMgZm9yIGNvbnRy
-b2wgb2YgaXRzIHJlc2V0IGxpbmUgYW5kIGN1c3RvbSBzZXJpYWwKPiA+ID4gK3Byb3RvY29sLgo+
-ID4gPgo+ID4gPiAgUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ID4gLS0gY29tcGF0aWJsZSA6ICJ0
-cG8sdHBnMTEwIgo+ID4gPiArLSBjb21wYXRpYmxlIDogb25lIG9mOgo+ID4gPiArICAic3RlLG5v
-bWFkaWstbmhrMTUtZGlzcGxheSIsICJ0cG8sdHBnMTEwIgo+ID4gPiArICAidHBvLHRwZzExMCIK
-PiA+ID4gIC0gZ3Jlc3RiLWdwaW9zIDogcGFuZWwgcmVzZXQgR1BJTwoKQWxzbywgdXNlICdyZXNl
-dC1ncGlvcycgYXMgdGhhdCBpcyB0aGUgc3RhbmRhcmQgbmFtZS4KCj4gPiA+ICAtIHNjZW4tZ3Bp
-b3MgOiBzZXJpYWwgY29udHJvbCBlbmFibGUgR1BJTwo+ID4gPiAgLSBzY2wtZ3Bpb3MgOiBzZXJp
-YWwgY29udHJvbCBjbG9jayBsaW5lIEdQSU8KPiA+ID4gIC0gc2RhLWdwaW9zIDogc2VyaWFsIGNv
-bnRyb2wgZGF0YSBsaW5lIEdQSU8KPiA+Cj4gPiBJMkM/IFRoYXQgc2hvdWxkIGJlIGRvbmUgZGlm
-ZmVyZW50bHkuLi4KPgo+IEl0IGlzIG5vdCBJMkMsIHRoZSBsaW5lcyBhcmUganVzdCBuYW1lZCBj
-b25mdXNpbmdseQo+IHNpbWlsYXIuIE5vbmUgb2YgdGhlIEkyQyAoLWxpa2UpIHByb3RvY29scyBh
-cHBseS4KPiBJIHdhcyBzaW1pbGFybHkgY29uZnVzZWQgd2hlbiBJIGZpcnN0IGltcGxlbWVudGVk
-IGl0LgoKSWYgdGhpcyBpcyAzLXdpcmUgU1BJIHRoZW4gYXMgQW5kcnplaiBzYXlzLCB0aGVuIHN0
-aWxsIGl0IHNob3VsZCBiZQpkb25lIGFzIHNwaS1ncGlvLiBXaGljaCByZWFsbHkganVzdCBtZWFu
-cyB0aGVzZSBncGlvIHByb3BlcnRpZXMgZ28KYXdheSBhbmQgdGhpcyBzaG91bGQgYmUgYSBTUEkg
-Y2hpbGQgbm9kZS4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+On Mon, Jun 25, 2018 at 8:04 PM Mars Cheng <mars.cheng@mediatek.com> wrote:
+>
+> This adds basic chip support for MT6765 SoC.
+>
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/Makefile       |    1 +
+>  arch/arm64/boot/dts/mediatek/mt6765-evb.dts |   33 ++++++
+>  arch/arm64/boot/dts/mediatek/mt6765.dtsi    |  158 +++++++++++++++++++++++++++
+>  3 files changed, 192 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6765-evb.dts
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6765.dtsi
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> index ac17f60..7506b0d 100644
+> --- a/arch/arm64/boot/dts/mediatek/Makefile
+> +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> @@ -1,6 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
+> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6765-evb.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
+> diff --git a/arch/arm64/boot/dts/mediatek/mt6765-evb.dts b/arch/arm64/boot/dts/mediatek/mt6765-evb.dts
+> new file mode 100644
+> index 0000000..36dddff2
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt6765-evb.dts
+> @@ -0,0 +1,33 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * dts file for Mediatek MT6765
+> + *
+> + * (C) Copyright 2018. Mediatek, Inc.
+> + *
+> + * Mars Cheng <mars.cheng@mediatek.com>
+> + */
+> +
+> +/dts-v1/;
+> +#include "mt6765.dtsi"
+> +
+> +/ {
+> +       model = "MediaTek MT6765 EVB";
+> +       compatible = "mediatek,mt6765-evb", "mediatek,mt6765";
+> +
+> +       aliases {
+> +               serial0 = &uart0;
+> +       };
+> +
+> +       memory@40000000 {
+> +               device_type = "memory";
+> +               reg = <0 0x40000000 0 0x1e800000>;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path = "serial0:921600n8";
+> +       };
+> +};
+> +
+> +&uart0 {
+> +       status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/mediatek/mt6765.dtsi b/arch/arm64/boot/dts/mediatek/mt6765.dtsi
+> new file mode 100644
+> index 0000000..ab34c0f
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt6765.dtsi
+> @@ -0,0 +1,158 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * dts file for Mediatek MT6765
+> + *
+> + * (C) Copyright 2018. Mediatek, Inc.
+> + *
+> + * Mars Cheng <mars.cheng@mediatek.com>
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +       compatible = "mediatek,mt6765";
+> +       interrupt-parent = <&sysirq>;
+> +       #address-cells = <2>;
+> +       #size-cells = <2>;
+> +
+> +       psci {
+> +               compatible = "arm,psci-0.2";
+> +               method = "smc";
+> +       };
+> +
+> +       cpus {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               cpu0: cpu@0 {
+
+Really need labels for cpu nodes?
+
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53";
+> +                       enable-method = "psci";
+> +                       reg = <0x000>;
+> +               };
+> +
+> +               cpu1: cpu@1 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53";
+> +                       enable-method = "psci";
+> +                       reg = <0x001>;
+> +               };
+> +
+> +               cpu2: cpu@2 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53";
+> +                       enable-method = "psci";
+> +                       reg = <0x002>;
+> +               };
+> +
+> +               cpu3: cpu@3 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53";
+> +                       enable-method = "psci";
+> +                       reg = <0x003>;
+> +               };
+> +
+> +               cpu4: cpu@100 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53";
+> +                       enable-method = "psci";
+> +                       reg = <0x100>;
+> +               };
+> +
+> +               cpu5: cpu@101 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53";
+> +                       enable-method = "psci";
+> +                       reg = <0x101>;
+> +               };
+> +
+> +               cpu6: cpu@102 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53";
+> +                       enable-method = "psci";
+> +                       reg = <0x102>;
+> +               };
+> +
+> +               cpu7: cpu@103 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a53";
+> +                       enable-method = "psci";
+> +                       reg = <0x103>;
+> +               };
+> +       };
+> +
+> +       baud_clk: dummy26m {
+> +               compatible = "fixed-clock";
+> +               clock-frequency = <26000000>;
+> +               #clock-cells = <0>;
+> +       };
+> +
+> +       sys_clk: dummyclk {
+> +               compatible = "fixed-clock";
+> +               clock-frequency = <26000000>;
+> +               #clock-cells = <0>;
+> +       };
+> +
+> +       timer {
+> +               compatible = "arm,armv8-timer";
+> +               interrupt-parent = <&gic>;
+> +               interrupts = <GIC_PPI 13
+> +                            (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+> +                            <GIC_PPI 14
+> +                            (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+> +                            <GIC_PPI 11
+> +                            (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+> +                            <GIC_PPI 10
+> +                            (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
+> +       };
+> +
+> +       soc {
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               compatible = "simple-bus";
+> +               ranges;
+> +
+> +               sysirq: intpol-controller@10200a80 {
+
+interrupt-controller@...
+
+> +                       compatible = "mediatek,mt6765-sysirq",
+> +                                    "mediatek,mt6577-sysirq";
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <3>;
+> +                       interrupt-parent = <&gic>;
+> +                       reg = <0 0x10200a80 0 0x50>;
+> +               };
+> +
+> +               gic: interrupt-controller@0c000000 {
+
+Drop the leading 0. Build your dts with W=12 and fix the warnings like this.
+
+> +                       compatible = "arm,gic-v3";
+> +                       #interrupt-cells = <3>;
+> +                       #address-cells = <2>;
+> +                       #size-cells = <2>;
+> +                       #redistributor-regions = <1>;
+> +                       interrupt-parent = <&gic>;
+> +                       interrupt-controller;
+> +                       reg = <0 0x0c000000 0 0x40000>, // distributor
+> +                             <0 0x0c100000 0 0x200000>; // redistributor
+> +                       interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +               };
+> +
+> +               uart0: serial@11002000 {
+> +                       compatible = "mediatek,mt6765-uart",
+> +                                    "mediatek,mt6577-uart";
+> +                       reg = <0 0x11002000 0 0x400>;
+> +                       interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
+> +                       clocks = <&baud_clk>, <&sys_clk>;
+> +                       clock-names = "baud", "bus";
+> +                       status = "disabled";
+> +               };
+> +
+> +               uart1: serial@11003000 {
+> +                       compatible = "mediatek,mt6765-uart",
+> +                                    "mediatek,mt6577-uart";
+> +                       reg = <0 0x11003000 0 0x400>;
+> +                       interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
+> +                       clocks = <&baud_clk>, <&sys_clk>;
+> +                       clock-names = "baud", "bus";
+> +                       status = "disabled";
+> +               };
+> +       }; /* end of soc */
+> +};
+> --
+> 1.7.9.5
+>
