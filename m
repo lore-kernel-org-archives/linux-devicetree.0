@@ -1,7 +1,7 @@
 From: David Lechner <david@lechnology.com>
 Subject: Re: [v7,03/10] docs: Add Generic Counter interface documentation
-Date: Mon, 2 Jul 2018 14:37:53 -0500
-Message-ID: <b7c690eb-274e-3377-cf8a-2f9ab836677e@lechnology.com>
+Date: Mon, 2 Jul 2018 14:42:06 -0500
+Message-ID: <c27faf65-9579-254b-725f-07b57c316285@lechnology.com>
 References: <7606bdc53c26c332b2bbff0f865380fb0e874b56.1529607879.git.vilhelm.gray@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
@@ -27,19 +27,7 @@ On 06/21/2018 04:07 PM, William Breathitt Gray wrote:
 > +Through these sysfs attributes, programs and scripts may interact with
 > +the Generic Counter paradigm Counts, Signals, and Synapses of respective
 > +counter devices.
-> +
 
-Have you considered a character device in addition to the sysfs interface?
-
-I basically have many of the same concerns that resulted in a char dev for
-gpio[1].
-
-- With sysfs, you *can* technically poll for events, but then you have to
-   seek and read or re-open the file.
-- File permissions are annoying if you want a non root user to be able to
-   use the device.
-- A single program can't claim exclusive access to a device.
-- There is no automatic cleanup if a userspace program accessing the device
-    crashes.
-
-[1]: https://www.elinux.org/images/7/74/Elce2017_new_GPIO_interface.pdf
+I don't actually see any mention of the Synapses in the sysfs documentation.
+But configfs my be better suited to configuring Synapses anyway, e.g. one
+would symlink a Signal to a Counter to make the connection.
