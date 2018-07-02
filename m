@@ -1,159 +1,85 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 08/32] media: camss: Unify the clock names
-Date: Mon, 2 Jul 2018 09:46:14 +0200
-Message-ID: <6331a4df-4240-31d9-ea2c-f9f52ab62e79@xs4all.nl>
-References: <1529681621-9682-1-git-send-email-todor.tomov@linaro.org>
- <1529681621-9682-9-git-send-email-todor.tomov@linaro.org>
+From: <honghui.zhang@mediatek.com>
+Subject: [PATCH v3 1/4] PCI: mediatek: fixup mtk_pcie_find_port logical
+Date: Mon, 2 Jul 2018 15:57:41 +0800
+Message-ID: <1530518264-6125-2-git-send-email-honghui.zhang@mediatek.com>
+References: <1530518264-6125-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529681621-9682-9-git-send-email-todor.tomov@linaro.org>
-Content-Language: en-US
+In-Reply-To: <1530518264-6125-1-git-send-email-honghui.zhang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Todor Tomov <todor.tomov@linaro.org>, mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, linux-media@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>
+To: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
+Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 22/06/18 17:33, Todor Tomov wrote:
-> Unify the clock names - use names closer to the clock
-> definitions.
+From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-Added the devicetree mailinglist since this touches on the binding doc.
+The Mediatek's host controller has two slots, each with it's own control
+registers. The host driver need to identify which slot was connected
+in order to access the device's configuration space. There's problem
+for current host driver to find out which slot was connected to for
+a given EP device.
 
-Regards,
+Assuming each slot have connect with one EP device as below:
 
-	Hans
+                host bridge
+  bus 0 --> __________|_______
+           |                  |
+           |                  |
+         slot 0             slot 1
+  bus 1 -->|        bus 2 --> |
+           |                  |
+         EP 0               EP 1
 
-> 
-> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
-> ---
->  .../devicetree/bindings/media/qcom,camss.txt       | 24 +++++++++++-----------
->  drivers/media/platform/qcom/camss/camss.c          | 20 ++++++++----------
->  2 files changed, 20 insertions(+), 24 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
-> index cadeceb..032e8ed 100644
-> --- a/Documentation/devicetree/bindings/media/qcom,camss.txt
-> +++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
-> @@ -53,7 +53,7 @@ Qualcomm Camera Subsystem
->  	Usage: required
->  	Value type: <stringlist>
->  	Definition: Should contain the following entries:
-> -                - "camss_top_ahb"
-> +                - "top_ahb"
->                  - "ispif_ahb"
->                  - "csiphy0_timer"
->                  - "csiphy1_timer"
-> @@ -67,11 +67,11 @@ Qualcomm Camera Subsystem
->                  - "csi1_phy"
->                  - "csi1_pix"
->                  - "csi1_rdi"
-> -                - "camss_ahb"
-> -                - "camss_vfe_vfe"
-> -                - "camss_csi_vfe"
-> -                - "iface"
-> -                - "bus"
-> +                - "ahb"
-> +                - "vfe0"
-> +                - "csi_vfe0"
-> +                - "vfe_ahb"
-> +                - "vfe_axi"
->  - vdda-supply:
->  	Usage: required
->  	Value type: <phandle>
-> @@ -161,7 +161,7 @@ Qualcomm Camera Subsystem
->  			<&gcc GCC_CAMSS_CSI_VFE0_CLK>,
->  			<&gcc GCC_CAMSS_VFE_AHB_CLK>,
->  			<&gcc GCC_CAMSS_VFE_AXI_CLK>;
-> -                clock-names = "camss_top_ahb",
-> +                clock-names = "top_ahb",
->                          "ispif_ahb",
->                          "csiphy0_timer",
->                          "csiphy1_timer",
-> @@ -175,11 +175,11 @@ Qualcomm Camera Subsystem
->                          "csi1_phy",
->                          "csi1_pix",
->                          "csi1_rdi",
-> -                        "camss_ahb",
-> -                        "camss_vfe_vfe",
-> -                        "camss_csi_vfe",
-> -                        "iface",
-> -                        "bus";
-> +                        "ahb",
-> +                        "vfe0",
-> +                        "csi_vfe0",
-> +                        "vfe_ahb",
-> +                        "vfe_axi";
->  		vdda-supply = <&pm8916_l2>;
->  		iommus = <&apps_iommu 3>;
->  		ports {
-> diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
-> index abf6184..0b663e0 100644
-> --- a/drivers/media/platform/qcom/camss/camss.c
-> +++ b/drivers/media/platform/qcom/camss/camss.c
-> @@ -32,8 +32,7 @@ static const struct resources csiphy_res[] = {
->  	/* CSIPHY0 */
->  	{
->  		.regulator = { NULL },
-> -		.clock = { "camss_top_ahb", "ispif_ahb",
-> -			   "camss_ahb", "csiphy0_timer" },
-> +		.clock = { "top_ahb", "ispif_ahb", "ahb", "csiphy0_timer" },
->  		.clock_rate = { { 0 },
->  				{ 0 },
->  				{ 0 },
-> @@ -45,8 +44,7 @@ static const struct resources csiphy_res[] = {
->  	/* CSIPHY1 */
->  	{
->  		.regulator = { NULL },
-> -		.clock = { "camss_top_ahb", "ispif_ahb",
-> -			   "camss_ahb", "csiphy1_timer" },
-> +		.clock = { "top_ahb", "ispif_ahb", "ahb", "csiphy1_timer" },
->  		.clock_rate = { { 0 },
->  				{ 0 },
->  				{ 0 },
-> @@ -60,8 +58,7 @@ static const struct resources csid_res[] = {
->  	/* CSID0 */
->  	{
->  		.regulator = { "vdda" },
-> -		.clock = { "camss_top_ahb", "ispif_ahb",
-> -			   "csi0_ahb", "camss_ahb",
-> +		.clock = { "top_ahb", "ispif_ahb", "csi0_ahb", "ahb",
->  			   "csi0", "csi0_phy", "csi0_pix", "csi0_rdi" },
->  		.clock_rate = { { 0 },
->  				{ 0 },
-> @@ -78,8 +75,7 @@ static const struct resources csid_res[] = {
->  	/* CSID1 */
->  	{
->  		.regulator = { "vdda" },
-> -		.clock = { "camss_top_ahb", "ispif_ahb",
-> -			   "csi1_ahb", "camss_ahb",
-> +		.clock = { "top_ahb", "ispif_ahb", "csi1_ahb", "ahb",
->  			   "csi1", "csi1_phy", "csi1_pix", "csi1_rdi" },
->  		.clock_rate = { { 0 },
->  				{ 0 },
-> @@ -96,10 +92,10 @@ static const struct resources csid_res[] = {
->  
->  static const struct resources_ispif ispif_res = {
->  	/* ISPIF */
-> -	.clock = { "camss_top_ahb", "camss_ahb", "ispif_ahb",
-> +	.clock = { "top_ahb", "ahb", "ispif_ahb",
->  		   "csi0", "csi0_pix", "csi0_rdi",
->  		   "csi1", "csi1_pix", "csi1_rdi" },
-> -	.clock_for_reset = { "camss_vfe_vfe", "camss_csi_vfe" },
-> +	.clock_for_reset = { "vfe0", "csi_vfe0" },
->  	.reg = { "ispif", "csi_clk_mux" },
->  	.interrupt = "ispif"
->  
-> @@ -108,8 +104,8 @@ static const struct resources_ispif ispif_res = {
->  static const struct resources vfe_res = {
->  	/* VFE0 */
->  	.regulator = { NULL },
-> -	.clock = { "camss_top_ahb", "camss_vfe_vfe", "camss_csi_vfe",
-> -		   "iface", "bus", "camss_ahb" },
-> +	.clock = { "top_ahb", "vfe0", "csi_vfe0",
-> +		   "vfe_ahb", "vfe_axi", "ahb" },
->  	.clock_rate = { { 0 },
->  			{ 50000000, 80000000, 100000000, 160000000,
->  			  177780000, 200000000, 266670000, 320000000,
-> 
+During PCI enumeration, system software will scan all the PCI device
+starting from devfn 0. So it will get the proper port for slot0 and
+slot1 device when using PCI_SLOT(devfn) for match. But it will get
+the wrong slot for EP1: The devfn will be start from 0 when scanning
+EP1 behind slot1, it will get port0 since the PCI_SLOT(EP1) is match
+for port0's slot value. So the host driver should not using EP's devfn
+but the slot's devfn(the slot which EP was connected to) for match.
+
+This patch fix the mtk_pcie_find_port's logical by using the slot's
+devfn for match.
+
+Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+---
+ drivers/pci/controller/pcie-mediatek.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index 0baabe3..b43f41d 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -337,11 +337,26 @@ static struct mtk_pcie_port *mtk_pcie_find_port(struct pci_bus *bus,
+ {
+ 	struct mtk_pcie *pcie = bus->sysdata;
+ 	struct mtk_pcie_port *port;
++	struct pci_dev *dev;
++	struct pci_bus *pbus;
+ 
+-	list_for_each_entry(port, &pcie->ports, list)
+-		if (port->slot == PCI_SLOT(devfn))
++	list_for_each_entry(port, &pcie->ports, list) {
++		if (!bus->number && port->slot == PCI_SLOT(devfn))
+ 			return port;
+ 
++		if (bus->number) {
++			pbus = bus;
++
++			while (pbus->number) {
++				dev = pbus->self;
++				pbus = dev->bus;
++			}
++
++			if (port->slot == PCI_SLOT(dev->devfn))
++				return port;
++		}
++	}
++
+ 	return NULL;
+ }
+ 
+-- 
+2.6.4
