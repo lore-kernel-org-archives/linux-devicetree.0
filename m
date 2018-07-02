@@ -1,80 +1,63 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 5/8] mailbox: tegra-hsp: Add support for shared
- mailboxes
-Date: Mon, 2 Jul 2018 15:13:00 +0200
-Message-ID: <20180702131300.GG13096@ulmo>
-References: <20180702114033.15654-1-mperttunen@nvidia.com>
- <20180702114033.15654-6-mperttunen@nvidia.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V3 0/4] Changes for SDCC5 version
+Date: Mon, 2 Jul 2018 15:17:21 +0200
+Message-ID: <CAPDyKFof7cV-ixNCySBOTJ2Ht6m2-RNUNWYFxZ1WGf==v1P2qw@mail.gmail.com>
+References: <1529386761-4923-1-git-send-email-vviswana@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Wtrm9ATX0sn6fFKv"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180702114033.15654-6-mperttunen@nvidia.com>
+In-Reply-To: <1529386761-4923-1-git-send-email-vviswana@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mikko Perttunen <mperttunen@nvidia.com>
-Cc: jassisinghbrar@gmail.com, gregkh@linuxfoundation.org, jonathanh@nvidia.com, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Vijay Viswanath <vviswana@codeaurora.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>, devicetree@vger.kernel.org, Asutosh Das <asutoshd@codeaurora.org>, Sahitya Tummala <stummala@codeaurora.org>, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Jeremy McNicoll <jeremymc@redhat.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Harjani Ritesh <riteshh@codeaurora.org>, vbadigan@codeaurora.org, Doug Anderson <dianders@google.com>, sayalil@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
+On 19 June 2018 at 07:39, Vijay Viswanath <vviswana@codeaurora.org> wrote:
+> With SDCC5, the MCI register space got removed and the offset/order of
+> several registers have changed. Based on SDCC version used and the register,
+> we need to pick the base address and offset.
+>
+> Depends on patch series: "[PATCH V5 0/2] mmc: sdhci-msm: Configuring IO_PAD support for sdhci-msm"
+>
+> Changes since RFC:
+>         Dropped voltage regulator changes in sdhci-msm
+>         Split the "Register changes for sdcc V5" patch
+>         Instead of checking mci removal for deciding which base addr to use,
+>         new function pointers are defined for the 2 variants of sdcc:
+>                 1) MCI present
+>                 2) V5 (mci removed)
+>         Instead of string comparing with the compatible string from DT file,
+>         the sdhci_msm_probe will now pick the data associated with the
+>         compatible entry and use it to load variant specific address offsets
+>         and msm variant specific read/write ops.
+>
+> Changes since V1:
+>         Removed unused msm_reab & msm_writeb APIs
+>         Changed certain register addresses from uppercase to lowercase hex
+>         letters
+>         Removed extra lines and spaces
+>         Split "[PATCH V1 0/3] Changes for SDCC5 version" patch into two,
+>         one for Documentation and other for the driver changes.
+>
+> Changes since V2:
+>         Used lower case for macro function defenitions
+>         Removed unused function pointers for msm_readb & msm_writeb
+>
+>
+> Sayali Lokhande (3):
+>   mmc: sdhci-msm: Define new Register address map
+>   Documentation: sdhci-msm: Add new compatible string for SDCC v5
+>   mmc: host: Register changes for sdcc V5
+>
+> Vijay Viswanath (1):
+>   mmc: sdhci-msm: Add msm version specific ops and data structures
+>
+>  .../devicetree/bindings/mmc/sdhci-msm.txt          |   7 +-
+>  drivers/mmc/host/sdhci-msm.c                       | 511 ++++++++++++++++-----
+>  2 files changed, 391 insertions(+), 127 deletions(-)
+>
 
---Wtrm9ATX0sn6fFKv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks, applied for next!
 
-On Mon, Jul 02, 2018 at 02:40:30PM +0300, Mikko Perttunen wrote:
-> The Tegra HSP block supports 'shared mailboxes' that are simple 32-bit
-> registers consisting of a FULL bit in MSB position and 31 bits of data.
-> The hardware can be configured to trigger interrupts when a mailbox
-> is empty or full. Add support for these shared mailboxes to the HSP
-> driver.
->=20
-> The initial use for the mailboxes is the Tegra Combined UART. For this
-> purpose, we use interrupts to receive data, and spinning to wait for
-> the transmit mailbox to be emptied to minimize unnecessary overhead.
->=20
-> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
-> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->=20
-> Notes:
->     v3:
->     - Added define HSP_INT0_IE_FULL_SHIFT
->     - Added Jon's Reviewed-by
->    =20
->     v2:
->     - Added defines for some register fields
->     - Simplified bit looping logic in interrupt handler
->     - Changed write done polling to use readl_poll_timeout
->     - Removed unnecessary zero assignments
->     - Fixed two error cases in probe to do proper cleanup
->=20
->  drivers/mailbox/tegra-hsp.c | 211 ++++++++++++++++++++++++++++++++++++++=
-+-----
->  1 file changed, 191 insertions(+), 20 deletions(-)
-
-Looks good to me:
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---Wtrm9ATX0sn6fFKv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAls6JNwACgkQ3SOs138+
-s6GWoRAAjMSzFRnjIqmYTKNAlC3+zWjnHI329p0ETq4v9BEhKuDXsCKv490meKDp
-+OFZOvgs7InvdNKX9sUmFYsiHNx7z0AjfyMhbLq2QqFQLJVxLG+h5I1oYdrhIaZ6
-PIhOlQNEgrr5b7wYnj/2CvVtANCNB/3uw23gkhQVCvvV0V2SI/SFZzp+JvO4JUT6
-KLSvQEGrmialeqaLvDi47nZswcrjh6w28O6YALiJHQWnx66dk3jQFxqS8Ck+4YXk
-ihTUSlkG3Qy5PzZQQ/zFESL/S6bh9dLeUkGeFeigsV5B2sBBrcsffP0Sj2Ox3TIQ
-LpFHSu9yXAsRRlSxWpeLDVox+AaTrzNNf+earyvItB9tAHKDl1mCLLqAuWrkKyye
-AX1hvhLSuT2oXCfvtx/Xiw2XvI19gvXFtuAsMYb1S7fliIcEkuZqruLKT2yeOMLh
-3alEYF1QYnVzh7JwInY16Kq7lJ2bHLBOZ01SFVFCAoyZR/Or/yVapoHaHk6LQMwW
-vuYBZE7zCWw670+3OS7qRdIwhtt4S1qd5MAoodyu3oA8ZV0C052EhkXASEVG+d0r
-QbJCpeNcTfbDnBUnANJ/saLmTe2EAGhmYN4NxR9VKNyH9oKjS9zVr2p42uNvruLq
-z+xo5qXKOavNVYhVA93k4MQfEEASqltcqr90nE9/0KeO0u0rdDM=
-=30K8
------END PGP SIGNATURE-----
-
---Wtrm9ATX0sn6fFKv--
+Kind regards
+Uffe
