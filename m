@@ -1,42 +1,74 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 3/6] pinctrl: Support stopping deferred probe after initcalls
-Date: Mon, 2 Jul 2018 15:23:08 +0200
-Message-ID: <CACRpkdZU50xG-seDq8pZ0QLBXzn_Ygs-s1rJXGqzpfDJGbjDtA@mail.gmail.com>
-References: <20180628204344.13973-1-robh@kernel.org> <20180628204344.13973-4-robh@kernel.org>
+From: Mikko Perttunen <cyndis@kapsi.fi>
+Subject: Re: [PATCH v3 6/8] serial: Add Tegra Combined UART driver
+Date: Mon, 2 Jul 2018 16:30:07 +0300
+Message-ID: <50c4702b-3d59-e443-5075-c888f83a2615@kapsi.fi>
+References: <20180702114033.15654-1-mperttunen@nvidia.com>
+ <20180702114033.15654-7-mperttunen@nvidia.com> <20180702131851.GH13096@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180628204344.13973-4-robh@kernel.org>
+In-Reply-To: <20180702131851.GH13096@ulmo>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, boot-architecture@lists.linaro.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Thierry Reding <thierry.reding@gmail.com>, Mikko Perttunen <mperttunen@nvidia.com>
+Cc: jassisinghbrar@gmail.com, gregkh@linuxfoundation.org, jonathanh@nvidia.com, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 28, 2018 at 10:43 PM Rob Herring <robh@kernel.org> wrote:
+On 02.07.2018 16:18, Thierry Reding wrote:
+> On Mon, Jul 02, 2018 at 02:40:31PM +0300, Mikko Perttunen wrote:
+>> The Tegra Combined UART (TCU) is a mailbox-based mechanism that allows
+>> multiplexing multiple "virtual UARTs" into a single hardware serial
+>> port. The TCU is the primary serial port on Tegra194 devices.
+>>
+>> Add a TCU driver utilizing the mailbox framework, as the used mailboxes
+>> are part of Tegra HSP blocks that are already controlled by the Tegra
+>> HSP mailbox driver.
+>>
+>> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+>> ---
+>>
+>> Notes:
+>>      v2:
+>>      - Removed (void) casts for unused variables.
+>>      - Changed the uart_set_options() call to be on one line, even if its
+>>        over 80 characters.
+>>      - Added defines for magic numbers.
+>>      - Style fixes.
+>>      - Changed Kconfig entry to depend on the Tegra HSP driver instead of
+>>        just the mailbox framework.
+>>      
+>>      v3:
+>>      - Removed FLUSH bit, as it's unnecessary and slows down printing
+>>      - Removed call to uart_set_options
+>>      - Added mbox_free_channel calls to remove()
+>>
+>>   drivers/tty/serial/Kconfig       |   9 ++
+>>   drivers/tty/serial/Makefile      |   1 +
+>>   drivers/tty/serial/tegra-tcu.c   | 291 +++++++++++++++++++++++++++++++++++++++
+>>   include/uapi/linux/serial_core.h |   3 +
+>>   4 files changed, 304 insertions(+)
+>>   create mode 100644 drivers/tty/serial/tegra-tcu.c
+> 
+> The driver looks good to me. But for my own understanding, is there some
+> way we can make use of the multiplexing? That is, could we add a
+> mechanism to have the driver filter out only a specific stream? Could we
+> also specify which stream to send data back to? What happens by default?
+> Which stream is data sent to?
 
-> Pinctrl drivers are a common dependency which can prevent a system
-> booting even if the default or bootloader configured settings can work.
-> If a pinctrl node in DT indicates that the default pin setup can be used
-> with the 'pinctrl-use-default' property, then only defer probe until
-> initcalls are done. If the deferred probe timeout is enabled or loadable
-> modules are disabled, then we'll stop deferring probe regardless of the
-> DT property. This gives platforms the option to work without their
-> pinctrl driver being enabled.
->
-> Dropped the pinctrl specific deferring probe message as the driver core
-> can print deferred probe related messages if needed.
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> v3:
-> - Drop pinctrl deferred probe msg in favor of driver core messages
-> - Move the handling of "pinctrl-use-default" option out of driver core
-> - Stop deferring probe if modules are not enabled.
->
-> Linus, I reworked this a bit, so didn't add your ack.
+There is no multiplexing on the producer/device side (i.e. what this 
+driver does). The mailbox specified in device tree specifies the stream 
+we send stuff to. The mailboxes are per-CPU (we use the CCPLEX mailbox 
+here), so it cannot really be changed.
 
-Looks even better now:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+The consumer then sees the multiplexing in that it can receive from and 
+transmit to all of the various CPUs in the system at the same time. AIUI 
+there is also a secondary form of multiplexing where the outputs of 
+different VMs can be multiplexed by the hypervisor, but I'm not very 
+familiar with that.
 
-Yours,
-Linus Walleij
+Mikko
+
+> 
+> Thierry
+> 
