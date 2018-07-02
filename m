@@ -1,139 +1,95 @@
-From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v2 3/4] PCI: mediatek: Add system pm support for MT2712 and MT7622
-Date: Mon, 2 Jul 2018 11:49:43 +0800
-Message-ID: <1530503384-1218-4-git-send-email-honghui.zhang@mediatek.com>
-References: <1530503384-1218-1-git-send-email-honghui.zhang@mediatek.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 1/1] ARM: dts: imx6ull: add operating points
+Date: Mon, 2 Jul 2018 10:22:05 +0530
+Message-ID: <20180702045205.fdh4dwwhwyfftptl@vireshk-i7>
+References: <20180629145221.10393-1-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530503384-1218-1-git-send-email-honghui.zhang@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <20180629145221.10393-1-sebastien.szymanski@armadeus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
-Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
+To: =?utf-8?Q?S=C3=A9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
+Cc: linux-arm-kernel@lists.infradead.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang@mediatek.com>
+On 29-06-18, 16:52, Sébastien Szymanski wrote:
+> i.MX6ULL has different operating ranges than i.MX6UL so add the
+> operating points for the i.MX6ULL and removed them form board device
 
-The MTCMOS of PCIe Host for MT2712 and MT7622 will be off when system
-suspend, and all the internal control register will be reset after system
-resume. The PCIe link should be re-established and the related control
-register values should be re-set after system resume.
+s/removed/remove/
+s/form/from/
 
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
----
- drivers/pci/controller/pcie-mediatek.c | 67 ++++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+> trees. A 25mV offset is added to the minimum allowed values like for the
+> i.MX6UL.
+> The valid frequencies are now selected by the cpufreq driver according
+> to ratings stored in fuses since commit 0aa9abd4c212 ("cpufreq: imx6q:
+> check speed grades for i.MX6ULL")
+> 
+> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+> ---
+>  arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi | 14 --------------
+>  arch/arm/boot/dts/imx6ull.dtsi              | 19 +++++++++++++++++++
+>  2 files changed, 19 insertions(+), 14 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi b/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
+> index 3dffbcd50bf6..183193e8580d 100644
+> --- a/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
+> +++ b/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
+> @@ -20,20 +20,6 @@
+>  
+>  &cpu0 {
+>  	clock-frequency = <792000000>;
+> -	operating-points = <
+> -		/* kHz	uV */
+> -		792000  1225000
+> -		528000	1175000
+> -		396000	1025000
+> -		198000	950000
+> -	>;
+> -	fsl,soc-operating-points = <
+> -		/* KHz	uV */
+> -		792000  1175000
+> -		528000	1175000
+> -		396000	1175000
+> -		198000	1175000
+> -	>;
+>  };
+>  
+>  &iomuxc {
+> diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
+> index ebc25c98e5e1..ade64bd46fab 100644
+> --- a/arch/arm/boot/dts/imx6ull.dtsi
+> +++ b/arch/arm/boot/dts/imx6ull.dtsi
+> @@ -48,6 +48,25 @@
+>  /* Delete CAAM node in AIPS-2 (i.MX6UL specific) */
+>  /delete-node/ &crypto;
+>  
+> +&cpu0 {
+> +	operating-points = <
+> +		/* kHz	uV */
+> +		900000	1275000
+> +		792000	1225000
+> +		528000	1175000
+> +		396000	1025000
+> +		198000	950000
+> +	>;
+> +	fsl,soc-operating-points = <
+> +		/* KHz	uV */
+> +		900000	1175000
+> +		792000	1175000
+> +		528000	1175000
+> +		396000	1175000
+> +		198000	1175000
+> +	>;
+> +};
+> +
+>  / {
+>  	soc {
+>  		aips3: aips-bus@2200000 {
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 86918d4..c530539 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -134,12 +134,14 @@ struct mtk_pcie_port;
- /**
-  * struct mtk_pcie_soc - differentiate between host generations
-  * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-+ * @pm_support: whether the host's MTCMOS will be off when suspend
-  * @ops: pointer to configuration access functions
-  * @startup: pointer to controller setting functions
-  * @setup_irq: pointer to initialize IRQ functions
-  */
- struct mtk_pcie_soc {
- 	bool need_fix_class_id;
-+	bool pm_support;
- 	struct pci_ops *ops;
- 	int (*startup)(struct mtk_pcie_port *port);
- 	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-@@ -1197,12 +1199,75 @@ static int mtk_pcie_probe(struct platform_device *pdev)
- 	return err;
- }
- 
-+static int __maybe_unused mtk_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct mtk_pcie *pcie = dev_get_drvdata(dev);
-+	const struct mtk_pcie_soc *soc = pcie->soc;
-+	struct mtk_pcie_port *port;
-+
-+	if (!soc->pm_support)
-+		return 0;
-+
-+	if (list_empty(&pcie->ports))
-+		return 0;
-+
-+	list_for_each_entry(port, &pcie->ports, list) {
-+		clk_disable_unprepare(port->pipe_ck);
-+		clk_disable_unprepare(port->obff_ck);
-+		clk_disable_unprepare(port->axi_ck);
-+		clk_disable_unprepare(port->aux_ck);
-+		clk_disable_unprepare(port->ahb_ck);
-+		clk_disable_unprepare(port->sys_ck);
-+		phy_power_off(port->phy);
-+		phy_exit(port->phy);
-+	}
-+
-+	mtk_pcie_subsys_powerdown(pcie);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused mtk_pcie_resume_noirq(struct device *dev)
-+{
-+	struct mtk_pcie *pcie = dev_get_drvdata(dev);
-+	const struct mtk_pcie_soc *soc = pcie->soc;
-+	struct mtk_pcie_port *port;
-+
-+	if (!soc->pm_support)
-+		return 0;
-+
-+	if (list_empty(&pcie->ports))
-+		return 0;
-+
-+	if (dev->pm_domain) {
-+		pm_runtime_enable(dev);
-+		pm_runtime_get_sync(dev);
-+	}
-+
-+	clk_prepare_enable(pcie->free_ck);
-+
-+	list_for_each_entry_safe(port, &pcie->ports, list)
-+		mtk_pcie_enable_port(port);
-+
-+	/* In case of EP was removed while system suspend. */
-+	if (list_empty(&pcie->ports))
-+		mtk_pcie_subsys_powerdown(pcie);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops mtk_pcie_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_pcie_suspend_noirq,
-+				      mtk_pcie_resume_noirq)
-+};
-+
- static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
- 	.ops = &mtk_pcie_ops,
- 	.startup = mtk_pcie_startup_port,
- };
- 
- static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
-+	.pm_support = true,
- 	.ops = &mtk_pcie_ops_v2,
- 	.startup = mtk_pcie_startup_port_v2,
- 	.setup_irq = mtk_pcie_setup_irq,
-@@ -1210,6 +1275,7 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
- 
- static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
- 	.need_fix_class_id = true,
-+	.pm_support = true,
- 	.ops = &mtk_pcie_ops_v2,
- 	.startup = mtk_pcie_startup_port_v2,
- 	.setup_irq = mtk_pcie_setup_irq,
-@@ -1229,6 +1295,7 @@ static struct platform_driver mtk_pcie_driver = {
- 		.name = "mtk-pcie",
- 		.of_match_table = mtk_pcie_ids,
- 		.suppress_bind_attrs = true,
-+		.pm = &mtk_pcie_pm_ops,
- 	},
- };
- builtin_platform_driver(mtk_pcie_driver);
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+
 -- 
-2.6.4
+viresh
