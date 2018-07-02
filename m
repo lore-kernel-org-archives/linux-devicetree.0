@@ -1,140 +1,136 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v2] ARM: imx: Provide support for NXP i.MX7D Cortex-M4
-Date: Mon,  2 Jul 2018 08:27:55 +0200
-Message-ID: <20180702062755.17263-1-o.rempel@pengutronix.de>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v7 2/4] phy: General struct and field cleanup
+Date: Mon, 2 Jul 2018 12:12:15 +0530
+Message-ID: <CAFp+6iEP7jvT_UZ-ui6BrYOkOUAYPen3bTEwKURJ9zZBnWa=MA@mail.gmail.com>
+References: <20180619083647.10116-1-cang@codeaurora.org> <20180619083647.10116-3-cang@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180619083647.10116-3-cang@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Can Guo <cang@codeaurora.org>
+Cc: Subhash Jadavani <subhashj@codeaurora.org>, asutoshd@codeaurora.org, Manu Gautam <mgautam@codeaurora.org>, kishon <kishon@ti.com>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Cortex M4 part can be started from a boot loader or over
-Linux remoteproc framework.
+Hi Can,
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- arch/arm/boot/dts/Makefile         |  2 +-
- arch/arm/mach-imx/Kconfig          | 33 +++++++++++++++++++-----------
- arch/arm/mach-imx/Makefile         |  3 ++-
- arch/arm/mach-imx/mach-imx7d-cm4.c | 21 +++++++++++++++++++
- 4 files changed, 45 insertions(+), 14 deletions(-)
- create mode 100644 arch/arm/mach-imx/mach-imx7d-cm4.c
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 7e2424957809..e3fe1bfbc404 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -539,7 +539,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ull-14x14-evk.dtb \
- 	imx6ull-colibri-eval-v3.dtb \
- 	imx6ull-colibri-wifi-eval-v3.dtb
--dtb-$(CONFIG_SOC_IMX7D) += \
-+dtb-$(CONFIG_SOC_IMX7D_CA7) += \
- 	imx7d-cl-som-imx7.dtb \
- 	imx7d-colibri-emmc-eval-v3.dtb \
- 	imx7d-colibri-eval-v3.dtb \
-diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-index e47fa13f4b0c..5ad58b1cb4bc 100644
---- a/arch/arm/mach-imx/Kconfig
-+++ b/arch/arm/mach-imx/Kconfig
-@@ -522,18 +522,6 @@ config SOC_IMX6UL
- 	help
- 	  This enables support for Freescale i.MX6 UltraLite processor.
- 
--config SOC_IMX7D
--	bool "i.MX7 Dual support"
--	select PINCTRL_IMX7D
--	select ARM_GIC
--	select HAVE_ARM_ARCH_TIMER
--	select HAVE_IMX_ANATOP
--	select HAVE_IMX_MMDC
--	select HAVE_IMX_SRC
--	select IMX_GPCV2
--	help
--		This enables support for Freescale i.MX7 Dual processor.
--
- config SOC_LS1021A
- 	bool "Freescale LS1021A support"
- 	select ARM_GIC
-@@ -548,6 +536,27 @@ comment "Cortex-A/Cortex-M asymmetric multiprocessing platforms"
- 
- if ARCH_MULTI_V7 || ARM_SINGLE_ARMV7M
- 
-+config SOC_IMX7D_CA7
-+	bool
-+	select ARM_GIC
-+	select HAVE_ARM_ARCH_TIMER
-+	select HAVE_IMX_ANATOP
-+	select HAVE_IMX_MMDC
-+	select HAVE_IMX_SRC
-+	select IMX_GPCV2
-+
-+config SOC_IMX7D_CM4
-+	bool
-+	select ARMV7M_SYSTICK
-+
-+config SOC_IMX7D
-+	bool "i.MX7 Dual support"
-+	select PINCTRL_IMX7D
-+	select SOC_IMX7D_CA7 if ARCH_MULTI_V7
-+	select SOC_IMX7D_CM4 if ARM_SINGLE_ARMV7M
-+	help
-+		This enables support for Freescale i.MX7 Dual processor.
-+
- config SOC_VF610
- 	bool "Vybrid Family VF610 support"
- 	select ARM_GIC if ARCH_MULTI_V7
-diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
-index 2327e3e876d8..64ebeb6a4f30 100644
---- a/arch/arm/mach-imx/Makefile
-+++ b/arch/arm/mach-imx/Makefile
-@@ -81,7 +81,8 @@ obj-$(CONFIG_SOC_IMX6SL) += mach-imx6sl.o
- obj-$(CONFIG_SOC_IMX6SLL) += mach-imx6sl.o
- obj-$(CONFIG_SOC_IMX6SX) += mach-imx6sx.o
- obj-$(CONFIG_SOC_IMX6UL) += mach-imx6ul.o
--obj-$(CONFIG_SOC_IMX7D) += mach-imx7d.o
-+obj-$(CONFIG_SOC_IMX7D_CA7) += mach-imx7d.o
-+obj-$(CONFIG_SOC_IMX7D_CM4) += mach-imx7d-cm4.o
- 
- ifeq ($(CONFIG_SUSPEND),y)
- AFLAGS_suspend-imx6.o :=-Wa,-march=armv7-a
-diff --git a/arch/arm/mach-imx/mach-imx7d-cm4.c b/arch/arm/mach-imx/mach-imx7d-cm4.c
-new file mode 100644
-index 000000000000..c36dea79aeb8
---- /dev/null
-+++ b/arch/arm/mach-imx/mach-imx7d-cm4.c
-@@ -0,0 +1,21 @@
-+/*
-+ * Copyright 2017 Pengutronix
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <asm/v7m.h>
-+#include <asm/mach/arch.h>
-+
-+static const char * const imx7d_cm4_dt_compat[] __initconst = {
-+	"fsl,imx7d-cm4",
-+	NULL,
-+};
-+
-+DT_MACHINE_START(IMX7D, "Freescale i.MX7 Dual Cortex-M4 (Device Tree)")
-+	.dt_compat = imx7d_cm4_dt_compat,
-+	.restart = armv7m_restart,
-+MACHINE_END
+On Tue, Jun 19, 2018 at 2:06 PM, Can Guo <cang@codeaurora.org> wrote:
+> Move MSM8996 specific PHY vreg list struct name to a genernal one as it is
+> used by all PHYs. Add a specific field to handle dual lane situation.
+>
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 25 ++++++++++++++-----------
+>  1 file changed, 14 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index ccb8578..9be9754 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -649,6 +649,8 @@ struct qmp_phy_cfg {
+>
+>         /* true, if PHY has a separate DP_COM control block */
+>         bool has_phy_dp_com_ctrl;
+> +       /* true, if PHY has secondary tx/rx lanes to be configured */
+> +       bool is_dual_lane_phy;
+>         /* Register offset of secondary tx/rx lanes for USB DP combo PHY */
+>         unsigned int tx_b_lane_offset;
+>         unsigned int rx_b_lane_offset;
+> @@ -758,7 +760,7 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
+>  };
+>
+>  /* list of regulators */
+> -static const char * const msm8996_phy_vreg_l[] = {
+> +static const char * const qmp_phy_vreg_l[] = {
+>         "vdda-phy", "vdda-pll",
+>  };
+>
+> @@ -778,8 +780,8 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
+>         .num_clks               = ARRAY_SIZE(msm8996_phy_clk_l),
+>         .reset_list             = msm8996_pciephy_reset_l,
+>         .num_resets             = ARRAY_SIZE(msm8996_pciephy_reset_l),
+> -       .vreg_list              = msm8996_phy_vreg_l,
+> -       .num_vregs              = ARRAY_SIZE(msm8996_phy_vreg_l),
+> +       .vreg_list              = qmp_phy_vreg_l,
+> +       .num_vregs              = ARRAY_SIZE(qmp_phy_vreg_l),
+>         .regs                   = pciephy_regs_layout,
+>
+>         .start_ctrl             = PCS_START | PLL_READY_GATE_EN,
+> @@ -809,8 +811,8 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
+>         .num_clks               = ARRAY_SIZE(msm8996_phy_clk_l),
+>         .reset_list             = msm8996_usb3phy_reset_l,
+>         .num_resets             = ARRAY_SIZE(msm8996_usb3phy_reset_l),
+> -       .vreg_list              = msm8996_phy_vreg_l,
+> -       .num_vregs              = ARRAY_SIZE(msm8996_phy_vreg_l),
+> +       .vreg_list              = qmp_phy_vreg_l,
+> +       .num_vregs              = ARRAY_SIZE(qmp_phy_vreg_l),
+>         .regs                   = usb3phy_regs_layout,
+>
+>         .start_ctrl             = SERDES_START | PCS_START,
+> @@ -870,8 +872,8 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
+>         .num_clks               = ARRAY_SIZE(qmp_v3_phy_clk_l),
+>         .reset_list             = msm8996_usb3phy_reset_l,
+>         .num_resets             = ARRAY_SIZE(msm8996_usb3phy_reset_l),
+> -       .vreg_list              = msm8996_phy_vreg_l,
+> -       .num_vregs              = ARRAY_SIZE(msm8996_phy_vreg_l),
+> +       .vreg_list              = qmp_phy_vreg_l,
+> +       .num_vregs              = ARRAY_SIZE(qmp_phy_vreg_l),
+>         .regs                   = qmp_v3_usb3phy_regs_layout,
+>
+>         .start_ctrl             = SERDES_START | PCS_START,
+> @@ -883,6 +885,7 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
+>         .pwrdn_delay_max        = POWER_DOWN_DELAY_US_MAX,
+>
+>         .has_phy_dp_com_ctrl    = true,
+> +       .is_dual_lane_phy       = true,
+>         .tx_b_lane_offset       = 0x400,
+>         .rx_b_lane_offset       = 0x400,
+>  };
+> @@ -903,8 +906,8 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
+>         .num_clks               = ARRAY_SIZE(qmp_v3_phy_clk_l),
+>         .reset_list             = msm8996_usb3phy_reset_l,
+>         .num_resets             = ARRAY_SIZE(msm8996_usb3phy_reset_l),
+> -       .vreg_list              = msm8996_phy_vreg_l,
+> -       .num_vregs              = ARRAY_SIZE(msm8996_phy_vreg_l),
+> +       .vreg_list              = qmp_phy_vreg_l,
+> +       .num_vregs              = ARRAY_SIZE(qmp_phy_vreg_l),
+>         .regs                   = qmp_v3_usb3phy_regs_layout,
+>
+>         .start_ctrl             = SERDES_START | PCS_START,
+> @@ -1116,12 +1119,12 @@ static int qcom_qmp_phy_init(struct phy *phy)
+>         /* Tx, Rx, and PCS configurations */
+>         qcom_qmp_phy_configure(tx, cfg->regs, cfg->tx_tbl, cfg->tx_tbl_num);
+>         /* Configuration for other LANE for USB-DP combo PHY */
+> -       if (cfg->has_phy_dp_com_ctrl)
+> +       if (cfg->is_dual_lane_phy)
+>                 qcom_qmp_phy_configure(tx + cfg->tx_b_lane_offset, cfg->regs,
+>                                        cfg->tx_tbl, cfg->tx_tbl_num);
+>
+>         qcom_qmp_phy_configure(rx, cfg->regs, cfg->rx_tbl, cfg->rx_tbl_num);
+> -       if (cfg->has_phy_dp_com_ctrl)
+> +       if (cfg->is_dual_lane_phy)
+>                 qcom_qmp_phy_configure(rx + cfg->rx_b_lane_offset, cfg->regs,
+>                                        cfg->rx_tbl, cfg->rx_tbl_num);
+>
+
+Thanks for the patch. Looks good to me now.
+Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+
+Best regards
+Vivek
+
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
 -- 
-2.17.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
