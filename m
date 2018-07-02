@@ -1,116 +1,47 @@
-From: Mikko Perttunen <mperttunen@nvidia.com>
-Subject: [PATCH v2 2/2] arm64: tegra: Add CPU nodes to Tegra194 device tree
-Date: Mon, 2 Jul 2018 15:11:31 +0300
-Message-ID: <20180702121131.13461-2-mperttunen@nvidia.com>
-References: <20180702121131.13461-1-mperttunen@nvidia.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v4 0/5] mtd: rawnand: denali: add new clocks and improve
+ setup_data_interface
+Date: Mon, 2 Jul 2018 14:28:40 +0200
+Message-ID: <20180702142840.42801396@xps13>
+References: <1529683598-25783-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180702121131.13461-1-mperttunen@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mikko Perttunen <mperttunen@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1529683598-25783-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-mtd@lists.infradead.org, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Richard Weinberger <richard@nod.at>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add CPU and PSCI nodes to device tree. The Tegra194 SoC contains
-eight NVIDIA Carmel CPUs.
+Hi Masahiro,
 
-Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
----
+Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Sat, 23 Jun
+2018 01:06:33 +0900:
 
-Notes:
-    v2:
-    - Moved PSCI node/properties to SoC device tree
+> The ->setup_data_interface() hook needs to know the clock frequency.
+> In fact, this IP needs three clocks, but the current driver does not
+> represent it.  Thus, it is hard to understand what is the correct
+> clock frequency.
+> (at least, clock property is not described in the DT-binding at all.)
+> 
+> This series adds more clocks based on the IP datasheet, and document
+> it in the DT binding.
+> In the new binding, three clocks are required: core clock, bus interface
+> clock, ECC engine clock.
+> 
+> 1/5 is a backport candidate to fix SOCFPGA.
+> 
+> 
+> Masahiro Yamada (5):
+>   mtd: rawnand: denali_dt: set clk_x_rate to 200 MHz unconditionally
+>   mtd: rawnand: denali_dt: use dev as a shorthand of &pdev->dev
+>   dt-binding: mtd: denali_dt: document clock property
+>   mtd: rawnand: denali_dt: add more clocks based on IP datasheet
+>   mtd: rawnand: denali: optimize timing parameters for data interface
 
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 67 ++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+Applied patches 2-5/5 to nand/next on top of v4-18.rc3 (to have the fix
+1/5).
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 6322ef265c2f..8c2b4671ef81 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -329,6 +329,73 @@
- 		};
- 	};
- 
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "nvidia,tegra194-carmel", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x10000>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@1 {
-+			compatible = "nvidia,tegra194-carmel", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x10001>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@2 {
-+			compatible = "nvidia,tegra194-carmel", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x100>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@3 {
-+			compatible = "nvidia,tegra194-carmel", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x101>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@4 {
-+			compatible = "nvidia,tegra194-carmel", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x200>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@5 {
-+			compatible = "nvidia,tegra194-carmel", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x201>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@6 {
-+			compatible = "nvidia,tegra194-carmel", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x10300>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@7 {
-+			compatible = "nvidia,tegra194-carmel", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x10301>;
-+			enable-method = "psci";
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-1.0";
-+		status = "okay";
-+		method = "smc";
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13
--- 
-2.16.1
+Thanks,
+Miquèl
