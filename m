@@ -1,50 +1,28 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH v1] ARM: dts: imx6sl-evk: keep sw4 always on
-Date: Mon, 2 Jul 2018 00:53:50 +0000
-Message-ID: <AM3PR04MB131507901BFEE1A5E426EECBF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v1] ARM: dts: imx6sl-evk: keep sw4 always on
+Date: Sun, 1 Jul 2018 21:54:49 -0300
+Message-ID: <CAOMZO5D8tjnjbwMdLGd7KF7_4PwqRWX8XH8kdcF3-5e-r2YQEA@mail.gmail.com>
 References: <1529930051-14122-1-git-send-email-yibin.gong@nxp.com>
- <20180701093402.GN4348@dragon>
- <CAOMZO5BjOEGWv2dC-bp0BYHq+PhLssEKic+o7ock8_1Dobd=sQ@mail.gmail.com>
+ <20180701093402.GN4348@dragon> <CAOMZO5BjOEGWv2dC-bp0BYHq+PhLssEKic+o7ock8_1Dobd=sQ@mail.gmail.com>
+ <AM3PR04MB131507901BFEE1A5E426EECBF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5BjOEGWv2dC-bp0BYHq+PhLssEKic+o7ock8_1Dobd=sQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <AM3PR04MB131507901BFEE1A5E426EECBF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: Robin Gong <yibin.gong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Robin Gong <yibin.gong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
-Z2UtLS0tLQ0KPiBGcm9tOiBGYWJpbyBFc3RldmFtIFttYWlsdG86ZmVzdGV2YW1AZ21haWwuY29t
-XQ0KPiBTZW50OiBNb25kYXksIEp1bHkgMiwgMjAxOCA3OjMzIEFNDQo+IFRvOiBTaGF3biBHdW8g
-PHNoYXduZ3VvQGtlcm5lbC5vcmc+OyBBbnNvbiBIdWFuZw0KPiA8YW5zb24uaHVhbmdAbnhwLmNv
-bT4NCj4gQ2M6IFJvYmluIEdvbmcgPHlpYmluLmdvbmdAbnhwLmNvbT47IE1hcmsgUnV0bGFuZA0K
-PiA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQgRkxB
-VFRFTkVEDQo+IERFVklDRSBUUkVFIEJJTkRJTkdTIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-Zz47IGxpbnV4LWtlcm5lbA0KPiA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IFJvYiBI
-ZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ow0KPiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBu
-eHAuY29tPjsgU2FzY2hhIEhhdWVyIDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+Ow0KPiBGYWJpbyBF
-c3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+OyBtb2RlcmF0ZWQgbGlzdDpBUk0vRlJFRVND
-QUxFDQo+IElNWCAvIE1YQyBBUk0gQVJDSElURUNUVVJFIDxsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjFdIEFSTTogZHRzOiBpbXg2
-c2wtZXZrOiBrZWVwIHN3NCBhbHdheXMgb24NCj4gDQo+IE9uIFN1biwgSnVsIDEsIDIwMTggYXQg
-NjozNCBBTSwgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPiB3cm90ZToNCj4gPiBPbiBN
-b24sIEp1biAyNSwgMjAxOCBhdCAwODozNDoxMVBNICswODAwLCBSb2JpbiBHb25nIHdyb3RlOg0K
-PiA+PiBTVzQgaXMgb25lIHBvd2VyIHJhaWwgZm9yIExQRERSMiBvbiBpLm14NnNsLWV2aywgc28g
-aXQgc2hvdWxkIGJlIGtlcHQNCj4gPj4gYWx3YXlzIG9uLiBCdXQgaXQncyBkaXNhYmxlZCBhZnRl
-ciBzd2l0Y2ggZGlzYWJsZWQgaW50ZXJmYWNlDQo+ID4+IGltcGxlbWVudGVkIGluIHBmdXplIGRy
-aXZlciAnY29tbWl0IDVmZTE1NmYxY2FiNA0KPiA+PiAoInJlZ3VsYXRvcjogcGZ1emUxMDA6IGFk
-ZCBlbmFibGUvZGlzYWJsZSBmb3Igc3dpdGNoIiknLlRodXMsIGl0DQo+ID4+IGJyZWFrcyBrZXJu
-ZWwgYm9vdHVwLiBBZGQgJ3JlZ3VsYXRvci1hbHdheXMtb24nIGZvciBTVzQuDQo+ID4+DQo+ID4+
-IFNpZ25lZC1vZmYtYnk6IFJvYmluIEdvbmcgPHlpYmluLmdvbmdAbnhwLmNvbT4NCj4gPg0KPiA+
-IERvZXMgdGhhdCBtZWFuIGJvYXJkcyB3aXRoIGV4aXN0aW5nIERUQiBpbnN0YWxsZWQgd2lsbCBz
-dG9wIHdvcmtpbmcNCj4gPiB3aXRoIG5ldyBrZXJuZWw/ICBUaGF0J3MgYmFkLCBhbmQgdGhlIGtl
-cm5lbCBjb21taXQgc2hvdWxkIHByb2JhYmx5IGJlDQo+ID4gcmV2ZXJ0ZWQuDQo+IA0KPiBZZXMs
-IHRoaXMgaXMgYSBnb29kIHBvaW50Lg0KPiANCj4gQW5zb24sDQo+IA0KPiBTaG91bGQgNWZlMTU2
-ZjFjYWI0ICgicmVndWxhdG9yOiBwZnV6ZTEwMDogYWRkIGVuYWJsZS9kaXNhYmxlIGZvcg0KPiBz
-d2l0Y2giKSBiZSByZXZlcnRlZCB0byBhdm9pZCBzdWNoIGJyZWFrYWdlPw0KIA0KWWVzLCBJIHRo
-aW5rIHdlIGNhbiByZXZlcnQgaXQgdG8gYXZvaWQgYnJlYWthZ2UuIERpZG4ndCBub3RpY2UgdGhh
-dCBzb21lDQppLk1YIHBsYXRmb3JtIGRvIE5PVCBoYXZlIHRob3NlIGNyaXRpY2FsIHN3aXRjaGVz
-IGFsd2F5cy1vbi4NCg0KQW5zb24uDQoNCg==
+Hi Anson,
+
+On Sun, Jul 1, 2018 at 9:53 PM, Anson Huang <anson.huang@nxp.com> wrote:
+
+> Yes, I think we can revert it to avoid breakage. Didn't notice that some
+> i.MX platform do NOT have those critical switches always-on.
+
+Ok, thanks for confirming.
+
+I will send a revert patch then.
+
+Thanks
