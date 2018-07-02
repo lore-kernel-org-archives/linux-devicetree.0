@@ -1,68 +1,64 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v10 5/7] i2c: fsi: Add transfer implementation
-Date: Mon, 2 Jul 2018 20:24:34 +0200
-Message-ID: <20180702182434.5wxxszpgpf6wergl@ninjato>
-References: <1528918579-27602-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1528918579-27602-6-git-send-email-eajames@linux.vnet.ibm.com>
- <20180626023823.i3fmdegn2sric5kx@ninjato>
- <6713efb9-c4c3-f648-a1e9-7918110091e4@linux.vnet.ibm.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 2/6] dt: qcom: 8996: thermal: Move to DT initialisation
+Date: Mon, 2 Jul 2018 11:48:06 -0700
+Message-ID: <20180702184806.GA2050@tuxbook-pro>
+References: <cover.1530533998.git.amit.kucheria@linaro.org>
+ <80e54ddfa672ae05db24a90c5f5463fc7fcbec46.1530533998.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yhxnagpnshnqsemd"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6713efb9-c4c3-f648-a1e9-7918110091e4@linux.vnet.ibm.com>
+In-Reply-To: <80e54ddfa672ae05db24a90c5f5463fc7fcbec46.1530533998.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.vnet.ibm.com>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, benh@kernel.crashing.org, joel@jms.id.au, mark.rutland@arm.com, gregkh@linuxfoundation.org, rdunlap@infradead.org, andy.shevchenko@gmail.com, peda@axentia.se
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: linux-kernel@vger.kernel.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, edubezval@gmail.com, smohanad@codeaurora.org, vivek.gautam@codeaurora.org, andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon 02 Jul 05:44 PDT 2018, Amit Kucheria wrote:
 
---yhxnagpnshnqsemd
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> We also split up the regmap address space into two, one for the TM
+> registers, the other for the SROT registers. This was required to deal with
+> different address offsets for the TM and SROT registers across different
+> SoC families.
+> 
+> Since tsens-common.c/init_common() currently only registers one address
+> space, the order is important (TM before SROT). This is OK since the code
+> doesn't really use the SROT functionality yet.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-> > > +	if (msg->flags & I2C_M_RD)
-> > > +		cmd |=3D I2C_CMD_READ;
-> > Since you support MANGLING, I'd think you can easily support
-> > I2C_M_REV_DIR_ADDR here, too?
->=20
-> Hm, I don't really understand the purpose of that flag. From the docs:
->=20
-> This toggles the Rd/Wr flag. That is, if you want to do a write, but
-> =C2=A0=C2=A0=C2=A0 need to emit an Rd instead of a Wr, or vice versa, you=
- set this
-> =C2=A0=C2=A0=C2=A0 flag. For example:
-> S Addr Rd [A] Data [A] Data [A] ... [A] Data [A] P
->=20
-> I don't think our hardware supports this type of operation.
+Regards,
+Bjorn
 
-I'd think something like this should do:
-
-	if (msg->flags & I2C_M_REV_DIR_ADDR)
-		cmd ^=3D I2C_CMD_READ;
-
-
---yhxnagpnshnqsemd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAls6beIACgkQFA3kzBSg
-KbbaORAAswydmxmWNfNqtkPEkp+nF0CxGMkNxdsL0sGKq/fRpmUFApwZAu0f8eBm
-z3mezjFVsYO99lb4WU4dzSWZgOWx293ruYoFLjza1CE3Vf5HQTpRZCM0eWSWP3/T
-tmIIJwivXUbjEuhTQY4SJCAsNZyBMM6ehBotdvU5c9PDnhEqLoMUVJCX/aPIuJLr
-AgDamRyUH2crRMx7kaP9fazU4UAGfOlljslFai9zf7+ojgc9YknXTy9tDhUi0EeW
-XeRg6yiFygf6obS9d0E3VI3PiFckbqhM9Sq80YeHPNGAq7uQeW98lBRfy74ln+jh
-SOWcP1sDz8quX0Hm0Hh5sSKW3GFqviovPbh+wVbKQDik71/i3vS98gcQgOEhYae4
-6kUSFfk756f0qfWlzYNIUhABYaEgjOjzpkGu8RIbc2IxD9IAz4CwQAuKKcyuLqMt
-QKIx8/g4IOHZlYTYL4VGZrcQ7hEkiBppUefA3vZBP159lByFU90ASCh3VqnDJ0VI
-cBJdGkTGHriDOrfV+jGMh34GJtljDPfpYNoeh9wpqfvpXXf+Y29Nk73zHhJo4TWC
-3ZRouWXbVyQT+AQGJCR7X6I3m4Vs3FJgD0nlViaDoD0hroQTI0R5p5mtiK3sqWhV
-Zz7BPeJ9hiH/TsbgLqyTrWjrGnW+atIDSYnuas/q3qeuOCj743E=
-=tcvP
------END PGP SIGNATURE-----
-
---yhxnagpnshnqsemd--
+> ---
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> index 8c7f9ca..6c8a857 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> @@ -461,7 +461,17 @@
+>  
+>  		tsens0: thermal-sensor@4a8000 {
+>  			compatible = "qcom,msm8996-tsens";
+> -			reg = <0x4a8000 0x2000>;
+> +			reg = <0x4a9000 0x1000>, /* TM */
+> +			      <0x4a8000 0x1000>; /* SROT */
+> +			#qcom,sensors = <13>;
+> +			#thermal-sensor-cells = <1>;
+> +		};
+> +
+> +		tsens1: thermal-sensor@4ac000 {
+> +			compatible = "qcom,msm8996-tsens";
+> +			reg = <0x4ad000 0x1000>, /* TM */
+> +			      <0x4ac000 0x1000>; /* SROT */
+> +			#qcom,sensors = <8>;
+>  			#thermal-sensor-cells = <1>;
+>  		};
+>  
+> -- 
+> 2.7.4
+> 
