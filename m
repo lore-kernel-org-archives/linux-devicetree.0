@@ -1,45 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: k3dma: add optional property
- dma_min_chan
-Date: Tue, 3 Jul 2018 12:54:42 -0600
-Message-ID: <20180703185442.GA18008@rob-hp-laptop>
-References: <20180622032416.20133-1-guodong.xu@linaro.org>
- <20180622032416.20133-2-guodong.xu@linaro.org>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: [PATCH 1/3] ARM: i.MX31: remove rnga registration as a platform device
+Date: Tue,  3 Jul 2018 22:29:32 +0300
+Message-ID: <20180703192934.6080-2-vz@mleia.com>
+References: <20180703192934.6080-1-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180622032416.20133-2-guodong.xu@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guodong Xu <guodong.xu@linaro.org>
-Cc: vkoul@kernel.org, mark.rutland@arm.com, dan.j.williams@intel.com, liyu65@hisilicon.com, suzhuangluan@hisilicon.com, xuhongtao8@hisilicon.com, zhongkaihua@huawei.com, xuezhiliang@hisilicon.com, xupeng7@huawei.com, sunliang10@huawei.com, fengbaopeng@hisilicon.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180703192934.6080-1-vz@mleia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 22, 2018 at 11:24:14AM +0800, Guodong Xu wrote:
-> From: Li Yu <liyu65@hisilicon.com>
-> 
-> Add optional property dma_min_chan for k3dma.
-> 
-> Signed-off-by: Li Yu <liyu65@hisilicon.com>
-> ---
->  Documentation/devicetree/bindings/dma/k3dma.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/k3dma.txt b/Documentation/devicetree/bindings/dma/k3dma.txt
-> index 4945aeac4dc4..2fa1370c3173 100644
-> --- a/Documentation/devicetree/bindings/dma/k3dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/k3dma.txt
-> @@ -12,6 +12,11 @@ Required properties:
->  		have specific request line
->  - clocks: clock required
->  
-> +Optional properties:
-> +- dma_min_chan: the minimum number of DMA channel which begin to use
-> +		the default value is 0, but in some platform is
-> +		configured 1, like hi3660 platform
+On i.MX31 powered boards with OF support Security Random Number
+Generator Accelerator RNGA controller is initialized from device tree,
+its registration as a platform device is redundant and actually it is
+broken due to missing clock information:
 
-Can't this be implied by the compatible?
+  mxc_rnga mxc_rnga: Could not get rng_clk!
+  mxc_rnga: probe of mxc_rnga failed with error -2
 
-If not, needs vendor prefix and don't use '_' in property names.
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+---
+ arch/arm/mach-imx/imx31-dt.c | 18 ------------------
+ 1 file changed, 18 deletions(-)
 
-Rob
+diff --git a/arch/arm/mach-imx/imx31-dt.c b/arch/arm/mach-imx/imx31-dt.c
+index 668d74b..9d9640a 100644
+--- a/arch/arm/mach-imx/imx31-dt.c
++++ b/arch/arm/mach-imx/imx31-dt.c
+@@ -9,35 +9,17 @@
+  * http://www.gnu.org/copyleft/gpl.html
+  */
+ 
+-#include <linux/irq.h>
+-#include <linux/of_irq.h>
+-#include <linux/of_platform.h>
+ #include <asm/mach/arch.h>
+-#include <asm/mach/time.h>
+-
+ #include "common.h"
+-#include "mx31.h"
+ 
+ static const char * const imx31_dt_board_compat[] __initconst = {
+ 	"fsl,imx31",
+ 	NULL
+ };
+ 
+-/* FIXME: replace with DT binding */
+-static const struct resource imx31_rnga_res[] __initconst = {
+-	DEFINE_RES_MEM(MX31_RNGA_BASE_ADDR, SZ_16K),
+-};
+-
+-static void __init imx31_dt_mach_init(void)
+-{
+-	platform_device_register_simple("mxc_rnga", -1, imx31_rnga_res,
+-					ARRAY_SIZE(imx31_rnga_res));
+-}
+-
+ DT_MACHINE_START(IMX31_DT, "Freescale i.MX31 (Device Tree Support)")
+ 	.map_io		= mx31_map_io,
+ 	.init_early	= imx31_init_early,
+ 	.init_irq	= mx31_init_irq,
+-	.init_machine	= imx31_dt_mach_init,
+ 	.dt_compat	= imx31_dt_board_compat,
+ MACHINE_END
+-- 
+2.10.2
