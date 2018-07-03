@@ -1,89 +1,27 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 1/3] clk: meson: add DT documentation for emmc clock
- controller
-Date: Tue, 03 Jul 2018 10:16:16 +0200
-Message-ID: <1530605776.2900.163.camel@baylibre.com>
-References: <20180703145716.31860-1-yixun.lan@amlogic.com>
-         <20180703145716.31860-2-yixun.lan@amlogic.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 2/6] arm64: dts: freescale: Add missing cooling device
+ properties for CPUs
+Date: Tue, 3 Jul 2018 14:04:31 +0530
+Message-ID: <20180703083431.l4rbnept2lwjocol@vireshk-i7>
+References: <cover.1527225682.git.viresh.kumar@linaro.org>
+ <e4504945d2b684fae2850bbcf03a6d02917a8c8a.1527225682.git.viresh.kumar@linaro.org>
+ <CAAQ0ZWRsroAAKRyxdd9ZCreriAjdBecmJy01sRy+6i_iQsMKgw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180703145716.31860-2-yixun.lan@amlogic.com>
+Content-Disposition: inline
+In-Reply-To: <CAAQ0ZWRsroAAKRyxdd9ZCreriAjdBecmJy01sRy+6i_iQsMKgw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, catalin.marinas@arm.com, Will Deacon <will.deacon@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-07-03 at 14:57 +0000, Yixun Lan wrote:
-> Document the EMMC sub clock controller driver, the potential consumer
-> of this driver is EMMC or NAND.
-> 
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-> ---
->  .../bindings/clock/amlogic,emmc-clkc.txt      | 45 +++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,emmc-clkc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/amlogic,emmc-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,emmc-clkc.txt
-> new file mode 100644
-> index 000000000000..5534bd446363
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/amlogic,emmc-clkc.txt
-> @@ -0,0 +1,45 @@
-> +* Amlogic EMMC Sub Clock Controller Driver
-> +
-> +The Amlogic EMMC clock controller generates and supplies clock to support
-> +EMMC and NAND controller
-> +
-> +Required Properties:
-> +
-> +- compatible: should be:
-> +		"amlogic,emmc-clkc"
+On 03-07-18, 15:34, Shawn Guo wrote:
+> Please use my kernel.org email address for future patches.
 
-missing clocks and clock-names here
+As there were many patches I relied on get_maintainers to do that
+stuff and it didn't pick you up by default. Maybe try fixing
+MAINTAINERS to add an entry against your email id ?
 
-> +
-> +- #clock-cells: should be 1.
-> +
-> +Two clocks are provided as the parent of this EMMC clock controller driver from
-> +upper layer clock controller - eg "amlogic,axg-clkc" in AXG platfrom.
-> +The main consumer of this driver is EMMC or NAND, to specify which the clock
-> +they may consume, the preprocessor macros in the dt-bindings/clock/emmc-clkc.h
-> +header and can be used in device tree sources.
-
-Not sure this explanation belongs in dt-binding documentation.
-Maybe this should be in the driver itself.
-
-> +
-> +Parent node should have the following properties :
-> +- compatible: "syscon", "simple-mfd, and "amlogic,emmc-clkc"
-> +- reg: base address and size of the EMMC control register space.
-> +
-> +Example: Clock controller node:
-> +
-> +sd_emmc_c_clkc: clock-controller@7000 {
-> +	compatible = "amlogic,emmc-clkc", "syscon", "simple-mfd";
-> +	reg = <0x0 0x7000 0x0 0x4>;
-> +	#clock-cells = <1>;
-> +
-> +	clock-names = "clkin0", "clkin1";
-> +	clocks = <&clkc CLKID_SD_EMMC_C_CLK0>,
-> +			<&clkc CLKID_FCLK_DIV2>;
-> +};
-> +
-
-Not sure the following is necessary, you don't really to show how to use a clock
-controller.
-
-> +Example: NAND controller node that consumes the clock generated by the clock
-> +  controller:
-> +
-> +	nand: nfc@7800 {
-> +		compatible = "amlogic,meson-axg-nfc";
-> +		reg = <0x0 0x7800 0x0 0x100>;
-> +		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
-> +		clocks = <&clkc CLKID_SD_EMMC_C>,
-> +				<&sd_emmc_c_clkc CLKID_EMMC_C_DIV>;
-> +		clock-names = "core", "device";
-> +	};
+-- 
+viresh
