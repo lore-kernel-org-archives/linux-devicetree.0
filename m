@@ -1,208 +1,101 @@
-From: Saravanan Sekar <sravanhome@gmail.com>
-Subject: [PATCH v3 1/5] dt-bindings: clock: Rename document generic to Actions Semi Soc's
-Date: Tue,  3 Jul 2018 11:25:20 +0200
-Message-ID: <20180703092524.1697111-2-sravanhome@gmail.com>
-References: <20180703092524.1697111-1-sravanhome@gmail.com>
+From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Subject: Re: [RFC PATCH 6/8] dts: coresight: Clean up the device tree graph
+ bindings
+Date: Tue, 3 Jul 2018 10:44:13 +0100
+Message-ID: <79d24815-278a-5465-65eb-afd3535236e7@arm.com>
+References: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
+ <1527858967-16047-7-git-send-email-suzuki.poulose@arm.com>
+ <20180612204802.GA15817@rob-hp-laptop>
+ <a1c0749b-9c97-b45f-716f-a62ae07af278@arm.com>
+ <5448BBB7-93FE-400F-9D87-FABF5DE0539C@arm.com>
+ <c0d531ec-9201-bfd8-e6c3-9140698b0697@arm.com>
+ <HE1PR0802MB24127EC935B9AF6F82AB3B6EEE7E0@HE1PR0802MB2412.eurprd08.prod.outlook.com>
+ <075b99a1-2a29-f6dc-e9f2-99f895c27d35@arm.com>
+ <CANLsYkx9cjV-bWg7aLg-kJT7x7DtwTHdsYzzM8A3+cFFnu_mNg@mail.gmail.com>
+ <HE1PR0802MB24121F0EEF8D7D643BC391A1EE7E0@HE1PR0802MB2412.eurprd08.prod.outlook.com>
+ <5e013d65-9931-6b8d-ce7c-4333309d4ada@arm.com>
+ <CAL_Jsq+0kExVY33kdDoR6bAxbr2VzRUzW2j0k+2wmv4CSNVnpQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180703092524.1697111-1-sravanhome@gmail.com>
+In-Reply-To: <CAL_Jsq+0kExVY33kdDoR6bAxbr2VzRUzW2j0k+2wmv4CSNVnpQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: afaerber@suse.de, sboyd@kernel.org, manivannan.sadhasivam@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, support@cubietech.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, linux@cubietech.com, darren@cubietech.com, mp-cs@actions-semi.com, pn@denx.de, sravanhome@gmail.com
+To: Rob Herring <robh@kernel.org>
+Cc: Matt Sealey <Matt.Sealey@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, John Horley <John.Horley@arm.com>, "mike.leach@linaro.org" <mike.leach@linaro.org>, "coresight@lists.linaro.org" <coresight@lists.linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Rename document generic to Actions Semi Owl S700/S900 Soc's.
-Add clock bindings constants for action S700
+Hi Rob,
 
-Signed-off-by: Parthiban Nallathambi <pn@denx.de>
-Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
----
- .../{actions,s900-cmu.txt => actions,owl-cmu.txt}  |  20 ++--
- include/dt-bindings/clock/actions,s700-cmu.h       | 128 +++++++++++++++++++++
- 2 files changed, 139 insertions(+), 9 deletions(-)
- rename Documentation/devicetree/bindings/clock/{actions,s900-cmu.txt => actions,owl-cmu.txt} (67%)
- create mode 100644 include/dt-bindings/clock/actions,s700-cmu.h
+On 14/06/18 14:59, Rob Herring wrote:
+> On Thu, Jun 14, 2018 at 2:53 AM, Suzuki K Poulose
+> <Suzuki.Poulose@arm.com> wrote:
+>> On 13/06/18 22:07, Matt Sealey wrote:
+>>>
+>>>
+>>>
+>>>> -----Original Message-----
+>>>> From: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>>>
+>>>>> So, if the suggestion is to use an existing property "unit", I am fine
+>>>>> with it, if people agree to it.
+>>>>
+>>>>
+>>>> If we're going to have something sharply different than ACPI I prefer
+>>>> Rob's idea.
+>>
+>>
+>> No, the above comment is about using "unit" ( if it is a standard property
+>> for specifying something specific to hardware) instead of "coresight,hwid".
+>> I would prefer to stick to the DT graph bindings, because :
+> 
+> "unit" is not a standard property and I don't like it either.
+> 
+>>
+>> 1) The connections are bi-directional => Well, not necessarily
+>> bi-directional
+>> in terms of the data flow. But the connection information is critical. i.e,
+>> we need information about both the end-points of a connection, which the DT
+>> graph bindings solves.
+>>
+>> All we are missing is a way for specifying the "hardware port" number and
+>> the
+>> direction of flow. I don't see why do we need to create something new just
+>> for
+>> these two properties for something that exists today and works reasonably
+>> well
+>> for the usecase.
+> 
+> If you have "in-ports" and "out-ports" nodes, then that gives you
+> direction and you can use reg for the "hardware port".
+> 
+> in-ports {
+>    port@0 {
+>      reg = <0>;
+>      endpoint {...};
+>    };
+>    port@1 {
+>      reg = <1>;
+>      endpoint {...};
+>    };
+> };
+> out-ports {
+>    port@0 {
+>      reg = <0>;
+>      endpoint {...};
+>    };
+> };
+> 
+> I'll need to check, but dtc may need an update to not warn about this.
+> 
 
-diff --git a/Documentation/devicetree/bindings/clock/actions,s900-cmu.txt b/Documentation/devicetree/bindings/clock/actions,owl-cmu.txt
-similarity index 67%
-rename from Documentation/devicetree/bindings/clock/actions,s900-cmu.txt
-rename to Documentation/devicetree/bindings/clock/actions,owl-cmu.txt
-index 93e4fb827cd6..d737ea74a450 100644
---- a/Documentation/devicetree/bindings/clock/actions,s900-cmu.txt
-+++ b/Documentation/devicetree/bindings/clock/actions,owl-cmu.txt
-@@ -1,12 +1,14 @@
--* Actions S900 Clock Management Unit (CMU)
-+* Actions Semi Owl Clock Management Unit (CMU)
- 
--The Actions S900 clock management unit generates and supplies clock to various
--controllers within the SoC. The clock binding described here is applicable to
--S900 SoC.
-+The Actions Semi S900/S700 clock management unit generates and supplies clock
-+to various controllers within the SoC. The clock binding described here is
-+applicable to S900 and S700 SoC's.
- 
- Required Properties:
- 
--- compatible: should be "actions,s900-cmu"
-+- compatible: should be one of the following,
-+	"actions,s900-cmu"
-+	"actions,s700-cmu"
- - reg: physical base address of the controller and length of memory mapped
-   region.
- - clocks: Reference to the parent clocks ("hosc", "losc")
-@@ -15,16 +17,16 @@ Required Properties:
- Each clock is assigned an identifier, and client nodes can use this identifier
- to specify the clock which they consume.
- 
--All available clocks are defined as preprocessor macros in
--dt-bindings/clock/actions,s900-cmu.h header and can be used in device
--tree sources.
-+All available clocks are defined as preprocessor macros in corresponding
-+dt-bindings/clock/actions,s900-cmu.h or actions,s700-cmu.h header and can be
-+used in device tree sources.
- 
- External clocks:
- 
- The hosc clock used as input for the plls is generated outside the SoC. It is
- expected that it is defined using standard clock bindings as "hosc".
- 
--Actions S900 CMU also requires one more clock:
-+Actions Semi S900 CMU also requires one more clock:
-  - "losc" - internal low frequency oscillator
- 
- Example: Clock Management Unit node:
-diff --git a/include/dt-bindings/clock/actions,s700-cmu.h b/include/dt-bindings/clock/actions,s700-cmu.h
-new file mode 100644
-index 000000000000..b8b8baa34613
---- /dev/null
-+++ b/include/dt-bindings/clock/actions,s700-cmu.h
-@@ -0,0 +1,128 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Actions S700 clock driver
-+ *
-+ * Copyright (c) 2014 Actions Semi Inc.
-+ * Author: David Liu <liuwei@actions-semi.com>
-+ *
-+ * Author: Pathiban Nallathambi <pn@denx.de>
-+ * Author: Saravanan Sekar <sravanhome@gmail.com>
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_S700_H
-+#define __DT_BINDINGS_CLOCK_S700_H
-+
-+#define CLK_NONE			0
-+
-+/* fixed rate clocks */
-+#define CLK_LOSC			1
-+#define CLK_HOSC			2
-+
-+/* pll clocks */
-+#define CLK_CORE_PLL			3
-+#define CLK_DEV_PLL			4
-+#define CLK_DDR_PLL			5
-+#define CLK_NAND_PLL			6
-+#define CLK_DISPLAY_PLL			7
-+#define CLK_TVOUT_PLL			8
-+#define CLK_CVBS_PLL			9
-+#define CLK_AUDIO_PLL			10
-+#define CLK_ETHERNET_PLL		11
-+
-+
-+/* system clock */
-+#define CLK_SYS_BASE			12
-+#define CLK_CPU				CLK_SYS_BASE
-+#define CLK_DEV				(CLK_SYS_BASE+1)
-+#define CLK_AHB				(CLK_SYS_BASE+2)
-+#define CLK_APB				(CLK_SYS_BASE+3)
-+#define CLK_DMAC			(CLK_SYS_BASE+4)
-+#define CLK_NOC0_CLK_MUX		(CLK_SYS_BASE+5)
-+#define CLK_NOC1_CLK_MUX		(CLK_SYS_BASE+6)
-+#define CLK_HP_CLK_MUX			(CLK_SYS_BASE+7)
-+#define CLK_HP_CLK_DIV			(CLK_SYS_BASE+8)
-+#define CLK_NOC1_CLK_DIV		(CLK_SYS_BASE+9)
-+#define CLK_NOC0			(CLK_SYS_BASE+10)
-+#define CLK_NOC1			(CLK_SYS_BASE+11)
-+#define CLK_SENOR_SRC			(CLK_SYS_BASE+12)
-+
-+/* peripheral device clock */
-+#define CLK_PERIP_BASE			25
-+#define CLK_GPIO			(CLK_PERIP_BASE)
-+#define CLK_TIMER			(CLK_PERIP_BASE+1)
-+#define CLK_DSI				(CLK_PERIP_BASE+2)
-+#define CLK_CSI				(CLK_PERIP_BASE+3)
-+#define CLK_SI				(CLK_PERIP_BASE+4)
-+#define CLK_DE				(CLK_PERIP_BASE+5)
-+#define CLK_HDE				(CLK_PERIP_BASE+6)
-+#define CLK_VDE				(CLK_PERIP_BASE+7)
-+#define CLK_VCE				(CLK_PERIP_BASE+8)
-+#define CLK_NAND			(CLK_PERIP_BASE+9)
-+#define CLK_SD0				(CLK_PERIP_BASE+10)
-+#define CLK_SD1				(CLK_PERIP_BASE+11)
-+#define CLK_SD2				(CLK_PERIP_BASE+12)
-+
-+#define CLK_UART0			(CLK_PERIP_BASE+13)
-+#define CLK_UART1			(CLK_PERIP_BASE+14)
-+#define CLK_UART2			(CLK_PERIP_BASE+15)
-+#define CLK_UART3			(CLK_PERIP_BASE+16)
-+#define CLK_UART4			(CLK_PERIP_BASE+17)
-+#define CLK_UART5			(CLK_PERIP_BASE+18)
-+#define CLK_UART6			(CLK_PERIP_BASE+19)
-+
-+#define CLK_PWM0			(CLK_PERIP_BASE+20)
-+#define CLK_PWM1			(CLK_PERIP_BASE+21)
-+#define CLK_PWM2			(CLK_PERIP_BASE+22)
-+#define CLK_PWM3			(CLK_PERIP_BASE+23)
-+#define CLK_PWM4			(CLK_PERIP_BASE+24)
-+#define CLK_PWM5			(CLK_PERIP_BASE+25)
-+#define CLK_GPU3D			(CLK_PERIP_BASE+26)
-+
-+#define CLK_I2C0			(CLK_PERIP_BASE+27)
-+#define CLK_I2C1			(CLK_PERIP_BASE+28)
-+#define CLK_I2C2			(CLK_PERIP_BASE+29)
-+#define CLK_I2C3			(CLK_PERIP_BASE+30)
-+
-+
-+#define CLK_SPI0			(CLK_PERIP_BASE+31)
-+#define CLK_SPI1			(CLK_PERIP_BASE+32)
-+#define CLK_SPI2			(CLK_PERIP_BASE+33)
-+#define CLK_SPI3			(CLK_PERIP_BASE+34)
-+
-+#define CLK_USB3_480MPLL0		(CLK_PERIP_BASE+35)
-+#define CLK_USB3_480MPHY0		(CLK_PERIP_BASE+36)
-+#define CLK_USB3_5GPHY			(CLK_PERIP_BASE+37)
-+#define CLK_USB3_CCE			(CLK_PERIP_BASE+48)
-+#define CLK_USB3_MAC			(CLK_PERIP_BASE+49)
-+
-+
-+#define CLK_LCD				(CLK_PERIP_BASE+50)
-+#define CLK_HDMI_AUDIO			(CLK_PERIP_BASE+51)
-+#define CLK_I2SRX			(CLK_PERIP_BASE+52)
-+#define CLK_I2STX			(CLK_PERIP_BASE+53)
-+
-+#define CLK_SENSOR0			(CLK_PERIP_BASE+54)
-+#define CLK_SENSOR1			(CLK_PERIP_BASE+55)
-+
-+#define CLK_HDMI_DEV			(CLK_PERIP_BASE+56)
-+
-+#define CLK_ETHERNET			(CLK_PERIP_BASE+59)
-+#define CLK_RMII_REF			(CLK_PERIP_BASE+60)
-+
-+#define CLK_USB2H0_PLLEN		(CLK_PERIP_BASE+61)
-+#define CLK_USB2H0_PHY			(CLK_PERIP_BASE+62)
-+#define CLK_USB2H0_CCE			(CLK_PERIP_BASE+63)
-+#define CLK_USB2H1_PLLEN		(CLK_PERIP_BASE+64)
-+#define CLK_USB2H1_PHY			(CLK_PERIP_BASE+65)
-+#define CLK_USB2H1_CCE			(CLK_PERIP_BASE+66)
-+
-+
-+#define CLK_TVOUT			(CLK_PERIP_BASE+67)
-+
-+#define CLK_THERMAL_SENSOR		(CLK_PERIP_BASE+68)
-+
-+#define CLK_IRC_SWITCH			(CLK_PERIP_BASE+69)
-+#define CLK_PCM1			(CLK_PERIP_BASE+70)
-+#define CLK_NR_CLKS			(CLK_PCM1+1) /* update on adding new clk */
-+
-+#endif /* __DT_BINDINGS_CLOCK_S700_H */
--- 
-2.14.4
+I did a quick check with the upstream dtc tool and the above form is
+doesn't generate any errors.
+
+Mathieu, Rob,
+
+Shall I proceed with the proposal above ?
+
+
+Suzuki
