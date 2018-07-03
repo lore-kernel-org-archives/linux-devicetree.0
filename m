@@ -1,27 +1,89 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/5] dt-bindings: phy-mtk-tphy: add optional properties
- for u2phy
-Date: Tue, 3 Jul 2018 17:33:35 -0600
-Message-ID: <20180703233335.GA32530@rob-hp-laptop>
-References: <54260d59ae39c2335e97892fe85db16cac30b33b.1530238400.git.chunfeng.yun@mediatek.com>
- <86d49766059a738e7182a49e6c113a12403b3b01.1530238400.git.chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH 1/2] dt-bindings: reset: uniphier: add USB3 controller
+ reset support
+Date: Tue, 3 Jul 2018 17:37:47 -0600
+Message-ID: <20180703233747.GA850@rob-hp-laptop>
+References: <1530259891-18822-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1530259891-18822-2-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <86d49766059a738e7182a49e6c113a12403b3b01.1530238400.git.chunfeng.yun@mediatek.com>
+In-Reply-To: <1530259891-18822-2-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 29, 2018 at 10:20:28AM +0800, Chunfeng Yun wrote:
-> Add some optional properties for eye diagram test and BC12 of
-> u2phy
+On Fri, Jun 29, 2018 at 05:11:30PM +0900, Kunihiko Hayashi wrote:
+> Add DT bindings for reset control of USB3 controller implemented in
+> UniPhier SoCs.
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
->  Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  .../devicetree/bindings/reset/uniphier-reset.txt   | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> index 93efed6..f21d81c 100644
+> --- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> +++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> @@ -118,3 +118,48 @@ Example:
+>  
+>  		other nodes ...
+>  	};
+> +
+> +
+> +USB3 controller reset
+> +---------------------
+> +
+> +Required properties:
+> +- compatible: Should be
+> +    "socionext,uniphier-pro4-usb3-reset" - for Pro4 SoC
+> +    "socionext,uniphier-pxs2-usb3-reset" - for PXs2 SoC
+> +    "socionext,uniphier-ld20-usb3-reset" - for LD20 SoC
+> +    "socionext,uniphier-pxs3-usb3-reset" - for PXs3 SoC
+> +- #reset-cells: Should be 1.
+> +- reg: Specifies offset and length of the register set for the device.
+> +- clocks: A list of phandles to the clock gate for USB3 glue layer.
+> +	According to the clock-names, appropriate clocks are required.
+> +- clock-names: Should contain
+> +    "gio", "link" - for Pro4 SoC
+> +    "link"        - for others
+> +- resets: A list of phandles to the reset control for USB3 glue layer.
+> +	According to the reset-names, appropriate resets are required.
+> +- reset-names: Should contain
+> +    "gio", "link" - for Pro4 SoC
+> +    "link"        - for others
+> +
+> +Example:
+> +
+> +	usb-glue@65b00000 {
+> +		compatible = "socionext,uniphier-ld20-dwc3-glue",
+> +			     "simple-mfd";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0x65b00000 0x400>;
+> +
+> +		usb_rst: reset@0 {
+> +			compatible = "socionext,uniphier-ld20-usb3-reset";
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This looks weird. You have a reset controller within the USB block? And 
+then a parent reset controller too?
+
+> +			reg = <0x0 0x4>;
+> +			#reset-cells = <1>;
+> +			clock-names = "link";
+> +			clocks = <&sys_clk 14>;
+> +			clock-names = "link";
+> +			resets = <&sys_rst 14>;
+> +		};
+> +
+> +		other nodes ...
+
+What other nodes?
+
+> +	};
+> -- 
+> 2.7.4
+> 
