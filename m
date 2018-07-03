@@ -1,55 +1,45 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 12/12] drm/rockchip: add support for CDNS MHDP IP
- controller.
-Date: Tue, 03 Jul 2018 13:03:11 +0200
-Message-ID: <2647490.Uuqs1CuF1U@diego>
-References: <1530612152-27555-1-git-send-email-dkos@cadence.com>
- <1530612152-27555-13-git-send-email-dkos@cadence.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v1] ARM: dts: imx6sl-evk: keep sw4 always on
+Date: Tue, 3 Jul 2018 08:10:32 -0300
+Message-ID: <CAOMZO5BY99f5jjU+73=8WjqwBKr_q2S1mvx90URZUBkgOVn9YA@mail.gmail.com>
+References: <CAOMZO5BjOEGWv2dC-bp0BYHq+PhLssEKic+o7ock8_1Dobd=sQ@mail.gmail.com>
+ <AM3PR04MB131507901BFEE1A5E426EECBF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5D8tjnjbwMdLGd7KF7_4PwqRWX8XH8kdcF3-5e-r2YQEA@mail.gmail.com>
+ <AM3PR04MB1315E7AED2BCE2265E6C443DF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5D8v4KM9S4ooHTDbA+vc8BZN_eO_wDuOPA+8Hcq-SmLDw@mail.gmail.com>
+ <AM3PR04MB1315C7C7CFF990615732FFBCF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5AM5VRS7UiWuvAQ8vvTB8OM+iwofuYrbsL_yB9e0Z9Kyg@mail.gmail.com>
+ <AM3PR04MB13155B8D567ABEF7EF03249AF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5BdtxKjQge5ONpnjr1yNVeTJf4u8Gh-fPqpHz7G9ipOTg@mail.gmail.com>
+ <1530526335.15665.13.camel@nxp.com> <20180703053843.GC4348@dragon> <AM3PR04MB131542D42FCD798FDBBA54BFF5420@AM3PR04MB1315.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1530612152-27555-13-git-send-email-dkos@cadence.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Damian Kos <dkos@cadence.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, pgaj@cadence.com, Rob Herring <robh+dt@kernel.org>, stelford@cadence.com, ltyrala@cadence.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AM3PR04MB131542D42FCD798FDBBA54BFF5420@AM3PR04MB1315.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Robin Gong <yibin.gong@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRGFtaWVuLAoKaXQncyB2ZXJ5IGNvb2wgdG8gc2VlIGNvbGxhYm9yYXRpb24gZnJvbSB2ZW5k
-b3JzIG9uIHRoaXMuCgoKQW0gRGllbnN0YWcsIDMuIEp1bGkgMjAxOCwgMTI6MDI6MjMgQ0VTVCBz
-Y2hyaWViIERhbWlhbiBLb3M6Cj4KCkl0IHdvdWxkIGJlIHJlYWxseSBuaWNlIHRvIGV4cGxhaW4g
-YSBiaXQgYWJvdXQgdGhlIGFkZGVkIGNvbnRyb2xsZXIgc3VwcG9ydAppbiB0aGUgY29tbWl0IG1l
-c3NhZ2UsIHNvIHRoYXQgcGVvcGxlIHJldmlld2luZyB0aGUgcGF0Y2ggY2FuIGdldCBhCmZlZWxp
-bmcgZm9yIGl0LgoKPiBTaWduZWQtb2ZmLWJ5OiBEYW1pYW4gS29zIDxka29zQGNhZGVuY2UuY29t
-Pgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWNvcmUuYyB8ICA5NTMK
-PiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLSBkcml2ZXJzL2dwdS9kcm0vcm9ja2No
-aXAvY2RuLWRwLWNvcmUuaCB8ICAKPiAyNSArCj4gIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9j
-ZG4tZHAtcmVnLmMgIHwgICAgMiArLQo+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRw
-LXJlZy5oICB8ICAgIDQgKwoKRnJvbSB0aGUgY2hhbmdlcyBiZWxvdywgaXQgbG9va3MgdGhhdCB0
-aGlzIHNlZW1zIHRvIGFkZCBzdXBwb3J0IGZvciBhCmJyaWRnZSBjaGlwIGJhc2VkIG9uIHRoYXQg
-SVAgYmxvY2suIFNvIGl0IHNlZW1zIGxpa2UgdGhlIGJyaWRnZStnbHVlIGRyaXZlcgptb2RlbCB3
-b3VsZCBiZSBhIHBlcmZlY3QgZml0IGZvciB0aGlzLCBpbnN0ZWFkIG9mIHN0YXBsaW5nIHRoaXMg
-b250byB0aGUKUm9ja2NoaXAtc3BlY2lmaWMgZHJpdmVyLgoKU28gZXNzZW50aWFsbHksIHlvdSBj
-b3VsZCB0YWtlIHRoZSBSb2NrY2hpcCBjZG4tZHAgZHJpdmVyLCBtb3ZlIHRoZSBjb21tb24KcGFy
-dHMgdG8gZHJpdmVycy9ncHUvZHJtL2JyaWRnZSBhbmQgdGhlbiBjcmVhdGUgc2VwYXJhdGUgZ2x1
-ZSBkcml2ZXJzIGZvcgpib3RoIFJvY2tjaGlwIGFuZCB5b3VyIGV4dGVybmFsIGJyaWRnZSBJUCBi
-bG9jay4KClRoaXMgd291bGQgcHJldmVudCBjb2RlIGR1cGxpY2F0aW9uIGFuZCBhbHNvIGFsbG93
-IHlvdXIgYnJpZGdlIGRyaXZlciB0bwpiZSBjb21waWxlZCB3aXRob3V0IHRoZSBSb2NrY2hpcCBk
-cm0gYmVpbmcgcHJlc2VudCA6LSkgLgpBbmQgYWxzbyBwYXZlIHRoZSB3YXkgZm9yIGZ1dHVyZSBz
-b2NzIHVzaW5nIHlvdXIgRFAgaXAgYmxvY2suCgoKTm93YWRheXMgd2UgaGF2ZSBxdWl0ZSBhIG51
-bWJlciBvZiBleGFtcGxlcyB5b3UgY291bGQgdGFrZSBhcwppbnNwaXJhdGlvbiBmb3IgdGhpczoK
-LSBicmlkZ2UvYW5hbG9naXgvKiAoc2hhcmVkIGJldHdlZW4gRXh5bm9zIGFuZCBSb2NrY2hpcCBy
-aWdodCBub3cpCi0gYnJpZGdlL3N5bm9wc3lzL2R3LWhkbWkqIChzaGFyZWQgYmV0d2VlbiBhIHF1
-aXRlIGJpZyBudW1iZXIgb2YgdXNlcnMpCi0gYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMg
-KHNoYXJlZCBiZXR3ZWVuIFJvY2tjaGlwIFtwZW5kaW5nXSBhbmQgc3RtKQoKClRoYW5rcwpIZWlr
-bwoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Anson,
+
+On Tue, Jul 3, 2018 at 4:44 AM, Anson Huang <anson.huang@nxp.com> wrote:
+
+> It is NOT easy to identify which switch is critical or NOT, and different platforms
+> have different board design, it will introduce many platform specified code, so I think
+> just revert the pfuze100 switch enable/disable patch should be OK for now.
+
+I have sent the pfuze100 regulator patch revert and it is linux-next
+now. Should probably reach 4.18-rc4.
+
+> After a couple of release cycles, add the pfuze100 switch enable/disable patch
+> back to support this feature, I believe users should switch to new dtb with "regulator-always-on"
+> existing already.
+
+That will still break old dtb compatibility.
+
+You cannot force users to use "regulator-always-on" and the old dtbs
+need to always work.
+
+So whatever new feature you need to introduce it needs to be done in
+such a way that the existing dtb's will continue working.
