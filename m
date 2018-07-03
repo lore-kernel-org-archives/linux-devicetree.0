@@ -1,138 +1,62 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 1/3] scsi: ufs: set the device reference clock setting
-Date: Tue, 3 Jul 2018 12:04:15 -0600
-Message-ID: <CAL_JsqJUBQ2d1mV8ep_h3iZ-ka73ZGEJ3kZ8VkJmb8gDd_R7Sw@mail.gmail.com>
-References: <1528455990-24572-1-git-send-email-sayalil@codeaurora.org>
- <1528455990-24572-2-git-send-email-sayalil@codeaurora.org>
- <20180612192636.GA31725@rob-hp-laptop> <000101d403d3$87210d20$95632760$@codeaurora.org>
- <CAL_JsqLsdEGEjPo8yh5dGoGWTes41QxUiJ4NN0Q9qsgLBaTpjw@mail.gmail.com> <002401d4093d$256fdc90$704f95b0$@codeaurora.org>
+Subject: Re: [PATCH v4 1/2] devicetree/bindings: display: Add document for
+ rockchip RGB output
+Date: Tue, 3 Jul 2018 12:25:59 -0600
+Message-ID: <20180703182559.GA12809@rob-hp-laptop>
+References: <1529997340-156879-1-git-send-email-hjc@rock-chips.com>
+ <1529997340-156879-2-git-send-email-hjc@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <002401d4093d$256fdc90$704f95b0$@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sayali Lokhande <sayalil@codeaurora.org>
-Cc: Subhash Jadavani <subhashj@codeaurora.org>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, asutoshd@codeaurora.org, Evan Green <evgreen@chromium.org>, linux-scsi@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1529997340-156879-2-git-send-email-hjc@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sandy Huang <hjc@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 21, 2018 at 2:52 AM sayali <sayalil@codeaurora.org> wrote:
->
-> Hi Rob,
->
-> Please check my comment inline.
-
-As mentioned in the back and forth comments previously in this thread,
-please fix your email client (hint: you can't use Outlook) and
-properly quote your replies (i.e. the leading ">")
-
-> Thanks,
-> Sayali
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Thursday, June 14, 2018 7:59 PM
-> To: sayali <sayalil@codeaurora.org>
-> Cc: Subhash Jadavani <subhashj@codeaurora.org>; Can Guo <cang@codeaurora.=
-org>; Vivek Gautam <vivek.gautam@codeaurora.org>; Rajendra Nayak <rnayak@co=
-deaurora.org>; Vinayak Holikatti <vinholikatti@gmail.com>; James E.J. Botto=
-mley <jejb@linux.vnet.ibm.com>; Martin K. Petersen <martin.petersen@oracle.=
-com>; asutoshd@codeaurora.org; Evan Green <evgreen@chromium.org>; linux-scs=
-i@vger.kernel.org; Mark Rutland <mark.rutland@arm.com>; Mathieu Malaterre <=
-malat@debian.org>; open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDIN=
-GS <devicetree@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>
-> Subject: Re: [PATCH V2 1/3] scsi: ufs: set the device reference clock set=
-ting
->
-> On Thu, Jun 14, 2018 at 5:33 AM, sayali <sayalil@codeaurora.org> wrote:
-> > Comment inline.
-> >
-> > Thanks,
-> > Sayali
-> > -----Original Message-----
-> > From: Rob Herring [mailto:robh@kernel.org]
-> > Sent: Wednesday, June 13, 2018 12:57 AM
-> > To: Sayali Lokhande <sayalil@codeaurora.org>
-> > Cc: subhashj@codeaurora.org; cang@codeaurora.org;
-> > vivek.gautam@codeaurora.org; rnayak@codeaurora.org;
-> > vinholikatti@gmail.com; jejb@linux.vnet.ibm.com;
-> > martin.petersen@oracle.com; asutoshd@codeaurora.org;
-> > evgreen@chromium.org; linux-scsi@vger.kernel.org; Mark Rutland
-> > <mark.rutland@arm.com>; Mathieu Malaterre <malat@debian.org>; open
-> > list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-> > <devicetree@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>
-> > Subject: Re: [PATCH V2 1/3] scsi: ufs: set the device reference clock
-> > setting
-> >
-> > On Fri, Jun 08, 2018 at 04:36:28PM +0530, Sayali Lokhande wrote:
-> >> From: Subhash Jadavani <subhashj@codeaurora.org>
-> >>
-> >> UFS host supplies the reference clock to UFS device and UFS device
-> >> specification allows host to provide one of the 4 frequencies (19.2
-> >> MHz,
-> >> 26 MHz, 38.4 MHz, 52 MHz) for reference clock. Host should set the
-> >> device reference clock frequency setting in the device based on what
-> >> frequency it is supplying to UFS device.
-> >>
-> >> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-> >> Signed-off-by: Can Guo <cang@codeaurora.org>
-> >> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
-> >> ---
-> >>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  7 +++
-> >>  drivers/scsi/ufs/ufs.h                             |  9 ++++
-> >>  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 24 ++++++++++
-> >>  drivers/scsi/ufs/ufshcd.c                          | 52
-> > ++++++++++++++++++++++
-> >>  drivers/scsi/ufs/ufshcd.h                          |  1 +
-> >>  5 files changed, 93 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> >> b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> >> index c39dfef..4522434 100644
-> >> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> >> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> >> @@ -41,6 +41,12 @@ Optional properties:
-> >>  -lanes-per-direction : number of lanes available per direction -
-> >> either 1
-> > or 2.
-> >>                         Note that it is assume same number of lanes
-> >> is
-> > used both
-> >>                         directions at once. If not specified, default
-> >> is 2
-> > lanes per direction.
-> >> +- dev-ref-clk-freq   : Specify the device reference clock frequency, =
-must
-> > be one of the following:
-> >> +                       0: 19.2 MHz
-> >> +                       1: 26 MHz
-> >> +                       2: 38.4 MHz
-> >> +                       3: 52 MHz
-> >> +                       Defaults to 26 MHz if not specified.
-> >
-> > I must have misunderstood your last response. I thought you could
-> > handle things without DT. If not, my question remains.
-> > [Sayali]: Ref clk frequency setting could vary from
-> > platfrom-to-platform(vendor specific). Hence we need to pass it via DT.
-> >         Currently in DT we do not set/mention any ref clk frequency
-> > parameter. Hence I have added one new DT entry to configure
-> >         required ref clk freq.
->
-> The clocks property contains "ref_clk". Is that not the same clock?
-> Why can't you read what that frequency is? Or you need to be able to chan=
-ge it to a specific frequency? These all look like typical oscillator frequ=
-encies, so I wouldn't expect you could change them (other than divide by 2 =
-maybe).
-> [Sayali] : It is the same "ref_clk", but we need to be able to change it =
-to a specific frequency as per requirement. Thus, we need new DT entry to s=
-pecify/override reference clock frequency as per need.
-
-That is not what your patch does. It just tells the device what the
-frequency is. If you need to get the rate, use "clk_get_rate" on
-"ref_clk". If you need to actually set it to a specific frequency,
-then we have properties for that already (assigned-clock-rates).
-
-Seems to me that by the time you get to Linux, the bootloader would
-have already set this. Otherwise, how do you boot? Seems like you
-would want to read the attr and ensure "ref_clk" freq matches.
-
-Rob
+T24gVHVlLCBKdW4gMjYsIDIwMTggYXQgMDM6MTU6MzlQTSArMDgwMCwgU2FuZHkgSHVhbmcgd3Jv
+dGU6Cj4gVGhpcyBwYXRoIGFkZCBzdXBwb3J0IHJ2MTEwOCBhbmQgcHgzMCByZ2Igb3V0cHV0IGlu
+dGVyZmFjZSBkcml2ZXIuCgpCaW5kaW5ncyBhcmUgZm9yIGgvdywgbm90IGRyaXZlcnMuCgo+IAo+
+IFNpZ25lZC1vZmYtYnk6IFNhbmR5IEh1YW5nIDxoamNAcm9jay1jaGlwcy5jb20+Cj4gTGluazog
+aHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3BhdGNoL21zZ2lkLzE1MDk1MjI3NjUt
+MTE4NzU5LTEtZ2l0LXNlbmQtZW1haWwtaGpjQHJvY2stY2hpcHMuY29tCj4gLS0tCj4gCj4gQ2hh
+bmdlcyBpbiB2NDogQWRkIHN1cHBvcnQgcHgzMAo+IENoYW5nZXMgaW4gdjM6IE5vbmUKPiBDaGFu
+Z2VzIGluIHYyOiBOb25lCj4gCj4gLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2No
+aXAtcmdiLnR4dCAgICAgfCA3MyArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFu
+Z2VkLCA3MyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1yZ2IudHh0Cj4g
+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3JvY2tjaGlwL3JvY2tjaGlwLXJnYi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1yZ2IudHh0Cj4gbmV3IGZpbGUgbW9kZSAx
+MDA2NDQKPiBpbmRleCAwMDAwMDAwLi4wNzdiOWFkCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlw
+LXJnYi50eHQKPiBAQCAtMCwwICsxLDczIEBACj4gK1JvY2tjaGlwIFJWMTEwOCBSR0IgaW50ZXJm
+YWNlCj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gKwo+ICtSZXF1aXJlZCBw
+cm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6IG1hdGNoaW5nIHRoZSBzb2MgdHlwZToKPiArCS0g
+InJvY2tjaGlwLHB4MzAtcmdiIjsKPiArCS0gInJvY2tjaGlwLHJ2MTEwOC1yZ2IiOwoKVGhpcyBk
+b2Vzbid0IGxvb2sgcmlnaHQ/IFdoYXQgKGFuZCBob3cpIGlzIGdldHRpbmcgcHJvZ3JhbW1lZCBo
+ZXJlIApiZWNhdXNlIHlvdSBkb24ndCBoYXZlIGFueSByZWdpc3RlciBpbnRlcmZhY2UuCgo+ICsK
+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPiArLSBwaW5jdHJsLW5hbWVzOiBzaG91bGQgYmUgYSAi
+bGNkYyIgZW50cnkgb3IgYSAiZGVmYXVsdCIgZW50cnkuCj4gKy0gcGluY3RybC0wOiBwaW4gY29u
+dHJvbCBncm91cCB0byBiZSB1c2VkIGZvciB0aGlzIGludGVyZmFjZS4KPiArCj4gK1RoZSByZ2Ig
+aGFzIHR3byB2aWRlbyBwb3J0cyBkZXNjcmliZWQgYnk6Cj4gKwlEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQKPiArVGhlaXIgY29ubmVj
+dGlvbnMgYXJlIG1vZGVsZWQgdXNpbmcgdGhlIE9GIGdyYXBoIGJpbmRpbmdzIHNwZWNpZmllZCBp
+bgo+ICsJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KPiArCj4g
+Ky0gdmlkZW8gcG9ydCAwIGZvciB0aGUgVk9QIGlucHV0LCB0aGUgcmVtb3RlIGVuZHBvaW50IG1h
+eWJlIHZvcGIvdm9wbC92b3AKClNvIHRoZXJlIGlzIGEgbXV4IGZvciB0aGVzZSBpbnB1dHMgYW5k
+IHRoZXkgYXJlIHN3aXRjaGVkIHdpdGggcGluY3RybD8gCgpKdXN0IHB1dCB0aGUgcGluY3RybCBu
+b2RlcyBvZiB0aGUgc291cmNlcyBhbmQgZW5hYmxlIHdoaWNoZXZlciBvbmUgaXMgCmFjdGl2ZS4K
+ClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
