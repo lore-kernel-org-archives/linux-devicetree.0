@@ -1,29 +1,53 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v2 1/2] clk: meson-axg: add pcie and mipi clock bindings
-Date: Tue, 03 Jul 2018 11:20:40 +0200
-Message-ID: <1530609640.2900.184.camel@baylibre.com>
-References: <20180702213118.19222-1-yixun.lan@amlogic.com>
-         <20180702213118.19222-2-yixun.lan@amlogic.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Saravanan Sekar <sravanhome@gmail.com>
+Subject: [PATCH v3 0/5] Add clock driver for Actions S700 SoC
+Date: Tue,  3 Jul 2018 11:25:19 +0200
+Message-ID: <20180703092524.1697111-1-sravanhome@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180702213118.19222-2-yixun.lan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Jianxin Qin <jianxin.qin@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: afaerber@suse.de, sboyd@kernel.org, manivannan.sadhasivam@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, support@cubietech.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, linux@cubietech.com, darren@cubietech.com, mp-cs@actions-semi.com, pn@denx.de, sravanhome@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-07-02 at 21:31 +0000, Yixun Lan wrote:
-> Add the pcie and mipi clock dt-bindings for the pcie driver.
-> 
-> Since the mipi clock isalso used by the pcie driver,
-> we add it together in this patch.
-> 
-> Tested-by: Jianxin Qin <jianxin.qin@amlogic.com>
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-> ---
->  include/dt-bindings/clock/axg-clkc.h | 3 +++
->  1 file changed, 3 insertions(+)
+Changelog v3:
+- Splitted uart clock DTS changes into separate patch
+- Splitted REGMAP Kconfig selection into separate patch
+- General naming convention as "Actions Semi" in dt-binding documentation
+- Patch re-oredering
+- Cleanup and fixed review findings
 
-Applied. Thx
+Changelog v2:
+Fixed 0 day compilation warning
+Modified existing dts Actions S900 clock bindings common to Actions
+Soc family
+
+This patchset adds clock support for Actions Semi OWL series S700 SoC
+with relevant clock bindings and device tree info. 
+
+Changed the UART clock using CMU instance and changes are tested in
+cubieboard7
+
+Thanks and regards,
+Saravanan,
+Parthiban
+
+Saravanan Sekar (5):
+  dt-bindings: clock: Rename document generic to Actions Semi Soc's
+  clk: actions: Add S700 SoC clock support
+  clk: actions: Add REGMAP as dependency
+  arm64: dts: actions: Enable clock controller for S700
+  arm64: dts: actions: Set UART clock reference from CMU
+
+ .../{actions,s900-cmu.txt => actions,owl-cmu.txt}  |  20 +-
+ arch/arm64/boot/dts/actions/s700-cubieboard7.dts   |   8 +-
+ arch/arm64/boot/dts/actions/s700.dtsi              |  14 +
+ drivers/clk/actions/Kconfig                        |  14 +
+ drivers/clk/actions/Makefile                       |   1 +
+ drivers/clk/actions/owl-s700.c                     | 610 +++++++++++++++++++++
+ include/dt-bindings/clock/actions,s700-cmu.h       | 128 +++++
+ 7 files changed, 779 insertions(+), 16 deletions(-)
+ rename Documentation/devicetree/bindings/clock/{actions,s900-cmu.txt => actions,owl-cmu.txt} (67%)
+ create mode 100644 drivers/clk/actions/owl-s700.c
+ create mode 100644 include/dt-bindings/clock/actions,s700-cmu.h
+
+-- 
+2.14.4
