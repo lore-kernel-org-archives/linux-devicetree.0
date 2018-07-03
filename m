@@ -1,96 +1,126 @@
-From: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5 1/4] resource: Move reparent_resources() to
- kernel/resource.c and make it public
-Date: Tue, 3 Jul 2018 22:55:03 +0800
-Message-ID: <20180703145503.GA1225@MiWiFi-R3L-srv>
-References: <20180612032831.29747-1-bhe@redhat.com>
- <20180612032831.29747-2-bhe@redhat.com>
- <CAHp75Vd6v4+RTq-5uw_BJpT6=w2KGjTfU+rEst6+8igs2cyntw@mail.gmail.com>
- <20180612093812.GC1820@MiWiFi-R3L-srv>
- <CAHp75Vf_kBLkE6v=JyOdfNoWktWEfKs7JzRP1XEc4TeuT5xqfw@mail.gmail.com>
- <CAHp75Vdaqj+n=F7wSB9PFGpf9Ok2XZzKcq_H0DzmtjmN-4UUfw@mail.gmail.com>
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: [PATCH 1/2] ASoC: atmel-i2s: Remove unnecessary audio PLL clock (aclk)
+Date: Tue, 3 Jul 2018 17:56:30 +0300
+Message-ID: <20180703145631.15246-2-codrin.ciubotariu@microchip.com>
+References: <20180703145631.15246-1-codrin.ciubotariu@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vdaqj+n=F7wSB9PFGpf9Ok2XZzKcq_H0DzmtjmN-4UUfw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, brijesh.singh-5C7GfCeVMHo@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, KY Srinivasan <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Dave Young <dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Josh Triplett <josh@joshtri>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180703145631.15246-1-codrin.ciubotariu@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, alexandre.belloni@bootlin.com, nicolas.ferre@microchip.com, robh+dt@kernel.org, broonie@kernel.org, quentin.schulz@bootlin.com
+Cc: Cristian.Birsan@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
+The generated clock (gclk) driver is able to set aclk as its parent and
+change its rate alone, if needed. This means that our driver no longer
+needs to configure aclk and we can let gclk select and configure its
+clock source.
 
-On 06/12/18 at 05:24pm, Andy Shevchenko wrote:
-> On Tue, Jun 12, 2018 at 5:20 PM, Andy Shevchenko
-> <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> Hmm, I just copied it from arch/powerpc/kernel/pci-common.c. The
-> >> function interface expects an integer returned value, not sure what a
-> >> real error codes look like, could you give more hints? Will change
-> >> accordingly.
-> >
-> > I briefly looked at the code and error codes we have, so, my proposal
-> > is one of the following
-> 
-> >  - use -ECANCELED (not the best choice for first occurrence here,
-> > though I can't find better)
-> 
-> Actually -ENOTSUPP might suit the first case (although the actual
-> would be something like -EOVERLAP, which we don't have)
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+---
+ sound/soc/atmel/atmel-i2s.c | 46 ++++++-------------------------------
+ 1 file changed, 7 insertions(+), 39 deletions(-)
 
-Sorry for late reply, and many thanks for your great suggestion.
-
-I am fine to use -ENOTSUPP as the first returned value, and -ECANCELED
-for the 2nd one. Or define an enum as you suggested inside the function
-or in header file.
-
-Or use -EBUSY for the first case because existing resource is
-overlapping but not fully contained by 'res'; and -EINVAL for
-the 2nd case since didn't find any one resources which is contained by
-'res', means we passed in a invalid resource. 
-
-All is fine to me, I can repost with each of them.
-
-Thanks
-Baoquan
-
-> 
-> >  - use positive integers (or enum), like
-> >   #define RES_REPARENTED 0
-> >   #define RES_OVERLAPPED 1
-> >   #define RES_NOCONFLICT 2
-> >
-> >
-> >>> > +               if (firstpp == NULL)
-> >>> > +                       firstpp = pp;
-> >>> > +       }
-> >>>
-> >>> > +       if (firstpp == NULL)
-> >>> > +               return -1;      /* didn't find any conflicting entries? */
-> >>>
-> >>> Ditto.
-> >
-> > Ditto.
-> >
-> >>>
-> >>> > +}
-> >>> > +EXPORT_SYMBOL(reparent_resources);
-> >
-> > --
-> > With Best Regards,
-> > Andy Shevchenko
-> 
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+diff --git a/sound/soc/atmel/atmel-i2s.c b/sound/soc/atmel/atmel-i2s.c
+index 5d3b5af9fd92..d88c1d995036 100644
+--- a/sound/soc/atmel/atmel-i2s.c
++++ b/sound/soc/atmel/atmel-i2s.c
+@@ -206,7 +206,6 @@ struct atmel_i2s_dev {
+ 	struct regmap				*regmap;
+ 	struct clk				*pclk;
+ 	struct clk				*gclk;
+-	struct clk				*aclk;
+ 	struct snd_dmaengine_dai_dma_data	playback;
+ 	struct snd_dmaengine_dai_dma_data	capture;
+ 	unsigned int				fmt;
+@@ -303,7 +302,7 @@ static int atmel_i2s_get_gck_param(struct atmel_i2s_dev *dev, int fs)
+ {
+ 	int i, best;
+ 
+-	if (!dev->gclk || !dev->aclk) {
++	if (!dev->gclk) {
+ 		dev_err(dev->dev, "cannot generate the I2S Master Clock\n");
+ 		return -EINVAL;
+ 	}
+@@ -421,7 +420,7 @@ static int atmel_i2s_switch_mck_generator(struct atmel_i2s_dev *dev,
+ 					  bool enabled)
+ {
+ 	unsigned int mr, mr_mask;
+-	unsigned long aclk_rate;
++	unsigned long gclk_rate;
+ 	int ret;
+ 
+ 	mr = 0;
+@@ -445,35 +444,18 @@ static int atmel_i2s_switch_mck_generator(struct atmel_i2s_dev *dev,
+ 		/* Disable/unprepare the PMC generated clock. */
+ 		clk_disable_unprepare(dev->gclk);
+ 
+-		/* Disable/unprepare the PLL audio clock. */
+-		clk_disable_unprepare(dev->aclk);
+ 		return 0;
+ 	}
+ 
+ 	if (!dev->gck_param)
+ 		return -EINVAL;
+ 
+-	aclk_rate = dev->gck_param->mck * (dev->gck_param->imckdiv + 1);
++	gclk_rate = dev->gck_param->mck * (dev->gck_param->imckdiv + 1);
+ 
+-	/* Fist change the PLL audio clock frequency ... */
+-	ret = clk_set_rate(dev->aclk, aclk_rate);
++	ret = clk_set_rate(dev->gclk, gclk_rate);
+ 	if (ret)
+ 		return ret;
+ 
+-	/*
+-	 * ... then set the PMC generated clock rate to the very same frequency
+-	 * to set the gclk parent to aclk.
+-	 */
+-	ret = clk_set_rate(dev->gclk, aclk_rate);
+-	if (ret)
+-		return ret;
+-
+-	/* Prepare and enable the PLL audio clock first ... */
+-	ret = clk_prepare_enable(dev->aclk);
+-	if (ret)
+-		return ret;
+-
+-	/* ... then prepare and enable the PMC generated clock. */
+ 	ret = clk_prepare_enable(dev->gclk);
+ 	if (ret)
+ 		return ret;
+@@ -668,28 +650,14 @@ static int atmel_i2s_probe(struct platform_device *pdev)
+ 		return err;
+ 	}
+ 
+-	/* Get audio clocks to generate the I2S Master Clock (I2S_MCK) */
+-	dev->aclk = devm_clk_get(&pdev->dev, "aclk");
++	/* Get audio clock to generate the I2S Master Clock (I2S_MCK) */
+ 	dev->gclk = devm_clk_get(&pdev->dev, "gclk");
+-	if (IS_ERR(dev->aclk) && IS_ERR(dev->gclk)) {
+-		if (PTR_ERR(dev->aclk) == -EPROBE_DEFER ||
+-		    PTR_ERR(dev->gclk) == -EPROBE_DEFER)
++	if (IS_ERR(dev->gclk)) {
++		if (PTR_ERR(dev->gclk) == -EPROBE_DEFER)
+ 			return -EPROBE_DEFER;
+ 		/* Master Mode not supported */
+-		dev->aclk = NULL;
+ 		dev->gclk = NULL;
+-	} else if (IS_ERR(dev->gclk)) {
+-		err = PTR_ERR(dev->gclk);
+-		dev_err(&pdev->dev,
+-			"failed to get the PMC generated clock: %d\n", err);
+-		return err;
+-	} else if (IS_ERR(dev->aclk)) {
+-		err = PTR_ERR(dev->aclk);
+-		dev_err(&pdev->dev,
+-			"failed to get the PLL audio clock: %d\n", err);
+-		return err;
+ 	}
+-
+ 	dev->dev = &pdev->dev;
+ 	dev->regmap = regmap;
+ 	platform_set_drvdata(pdev, dev);
+-- 
+2.17.1
