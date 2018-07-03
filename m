@@ -1,42 +1,91 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 3/4] dt-bindings: Add Innolux P097PFG panel bindings
-Date: Tue, 3 Jul 2018 11:20:43 -0600
-Message-ID: <20180703172043.GA14703@rob-hp-laptop>
-References: <20180702102721.3546-1-heiko@sntech.de>
- <20180702102721.3546-4-heiko@sntech.de>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH linux-next v6 07/13] dt-bindings: mfd: Add a document for
+ PECI client MFD
+Date: Tue, 3 Jul 2018 10:21:58 -0700
+Message-ID: <88cab816-3bc1-5e0b-7282-4ca05f458a9a@linux.intel.com>
+References: <20180621193721.20588-1-jae.hyun.yoo@linux.intel.com>
+ <20180621194054.20897-1-jae.hyun.yoo@linux.intel.com>
+ <20180703165835.GA18160@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180702102721.3546-4-heiko@sntech.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, hl@rock-chips.com, briannorris@chromium.org, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, thierry.reding@gmail.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180703165835.GA18160@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Joel Stanley <joel@jms.id.au>, Vernon Mauery <vernon.mauery@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdWwgMDIsIDIwMTggYXQgMTI6Mjc6MjBQTSArMDIwMCwgSGVpa28gU3R1ZWJuZXIg
-d3JvdGU6Cj4gRnJvbTogaHVhbmcgbGluIDxobEByb2NrLWNoaXBzLmNvbT4KPiAKPiBUaGUgSW5u
-b2x1eCBQMDk3UEZHIHBhbmVsIGlzIDkuNyIgcGFuZWwgd2l0aCAxNTM2WDIwNDgKPiByZXNvbHV0
-aW9uLCBpdCByZXVzZSBQMDc5WkNBIHBhbmVsIGRyaXZlciwgc28gaW1wcm92ZQo+IHAwNzlaQ0Eg
-ZHQtYmluZGluZyB0byBzdXBwb3J0IFAwOTdQRkcuCj4gCj4gQ2hhbmdlcyBpbiB2MjoKPiAtIE5v
-bmUKPiBDaGFuZ2VzIGluIHYzOgo+IC0gTm9uZQo+IENoYW5nZXMgaW4gdjQ6Cj4gLSBOb25lCj4g
-Q2hhbmdlcyBpbiB2NToKPiAtIHVzZSBzZXBhcmF0ZSBmaWxlIGZvciBiaW5kaW5nCj4gLSBrZWVw
-IHBvd2VyIHN1cHBsaWVzIGFzIHJlcXVpcmVkCj4gCj4gU2lnbmVkLW9mZi1ieTogTGluIEh1YW5n
-IDxobEByb2NrLWNoaXBzLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVp
-a29Ac250ZWNoLmRlPgo+IC0tLQo+ICAuLi4vZGlzcGxheS9wYW5lbC9pbm5vbHV4LHAwOTdwZmcu
-dHh0ICAgICAgICAgfCAyNCArKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAy
-NCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHAwOTdwZmcudHh0CgpSZXZpZXdl
-ZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Rob,
+
+Thanks for the review. Please see my inline answer.
+
+On 7/3/2018 9:58 AM, Rob Herring wrote:
+> On Thu, Jun 21, 2018 at 12:40:54PM -0700, Jae Hyun Yoo wrote:
+>> This commit adds a dt-bindings document for PECI client MFD.
+> 
+> This and the next patch still have the same issues I've outlined in at
+> least 2 prior versions.
+>   
+
+Okay. I think the next patch (9/13) for hwmon dt-bindings document
+is not needed anymore because those were already added in MFD driver
+implementation in the patch 8/13. Please correct me if it's not
+you pointed.
+
+>> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+>> Cc: Andrew Jeffery <andrew@aj.id.au>
+>> Cc: James Feist <james.feist@linux.intel.com>
+>> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
+>> Cc: Joel Stanley <joel@jms.id.au>
+>> Cc: Vernon Mauery <vernon.mauery@linux.intel.com>
+>> ---
+>>   .../bindings/mfd/intel-peci-client.txt        | 34 +++++++++++++++++++
+>>   1 file changed, 34 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mfd/intel-peci-client.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/intel-peci-client.txt b/Documentation/devicetree/bindings/mfd/intel-peci-client.txt
+>> new file mode 100644
+>> index 000000000000..cb341e363add
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/intel-peci-client.txt
+>> @@ -0,0 +1,34 @@
+>> +* Intel PECI client bindings
+>> +
+>> +PECI (Platform Environment Control Interface) is a one-wire bus interface that
+>> +provides a communication channel from PECI clients in Intel processors and
+>> +chipset components to external monitoring or control devices. PECI is designed
+>> +to support the following sideband functions:
+>> +
+>> +- Processor and DRAM thermal management
+>> +- Platform Manageability
+>> +- Processor Interface Tuning and Diagnostics
+>> +- Failure Analysis
+>> +
+>> +Required properties:
+>> +- compatible : Should be "intel,peci-client".
+>> +- reg        : Should contain address of a client CPU. Address range of CPU
+>> +	       clients starts from 0x30 based on PECI specification.
+>> +
+>> +Example:
+>> +	peci-bus@0 {
+>> +		compatible = "vendor,soc-peci";
+>> +		reg = <0x0 0x1000>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		peci-client@30 {
+>> +			compatible = "intel,peci-client";
+>> +			reg = <0x30>;
+>> +		};
+>> +
+>> +		peci-client@31 {
+>> +			compatible = "intel,peci-client";
+>> +			reg = <0x31>;
+>> +		};
+>> +	};
+>> -- 
+>> 2.17.1
+>>
+> 
