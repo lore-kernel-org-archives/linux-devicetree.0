@@ -1,30 +1,50 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/6] arm64: dts: freescale: Add missing cooling device
- properties for CPUs
-Date: Tue, 3 Jul 2018 18:08:28 +0800
-Message-ID: <20180703100827.GP4348@dragon>
-References: <cover.1527225682.git.viresh.kumar@linaro.org>
- <e4504945d2b684fae2850bbcf03a6d02917a8c8a.1527225682.git.viresh.kumar@linaro.org>
- <CAAQ0ZWRsroAAKRyxdd9ZCreriAjdBecmJy01sRy+6i_iQsMKgw@mail.gmail.com>
- <20180703083431.l4rbnept2lwjocol@vireshk-i7>
+From: Robert Nelson <robertcnelson@gmail.com>
+Subject: Re: [PATCH] ARM: dts: am335x-bone-common: Fix mmc0 Write Protect
+Date: Tue, 3 Jul 2018 05:23:45 -0500
+Message-ID: <CAOCHtYjki+_qGUXzweTwNCdqfG-Z0kLmq+HqpqFZ8dB14fy_yA@mail.gmail.com>
+References: <20180702202143.25343-1-robertcnelson@gmail.com>
+ <20180703062419.GB112168@atomide.com>
+ <6c0eb111-a301-d6c9-46c9-7bc45c82511c@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180703083431.l4rbnept2lwjocol@vireshk-i7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, catalin.marinas@arm.com, Will Deacon <will.deacon@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <6c0eb111-a301-d6c9-46c9-7bc45c82511c@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Drew Fustini <drew@beagleboard.org>, Jason Kridner <jkridner@beagleboard.org>, linux-omap <linux-omap@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 03, 2018 at 02:04:31PM +0530, Viresh Kumar wrote:
-> On 03-07-18, 15:34, Shawn Guo wrote:
-> > Please use my kernel.org email address for future patches.
-> 
-> As there were many patches I relied on get_maintainers to do that
-> stuff and it didn't pick you up by default. Maybe try fixing
-> MAINTAINERS to add an entry against your email id ?
+On Tue, Jul 3, 2018 at 1:31 AM, Faiz Abbas <faiz_abbas@ti.com> wrote:
+> Hi,
+>
+> On Tuesday 03 July 2018 11:54 AM, Tony Lindgren wrote:
+>> * Robert Nelson <robertcnelson@gmail.com> [180702 20:24]:
+>>> Mainline Commit b74c2b21e1551018af53ee6c1efc051dfce2d788 added the pinmux
+>>> settings for mmc1, however this pin (0x9a0) is routed to P9_42 on the cape
+>>> header. Thus any BeagleBone cape that utilizes P9_42 triggers mmc0's Write
+>>> Protect.
+>>
+>> Thanks applying into omap-for-v4.18/fixes. I'll also add a Fixes tag for
+>> it.
+>>
+>
+> The evm sk sdwp needs to be removed as well. I guess I'll post a
+> separate patch as this is already applied.
 
-Good point.  Will patch MAINTAINERS for arm64 freescale DTS.
+Yeah, i don't have an evm sk, while i found found one schematic that
+made it look okay, wasn't 100% sure on all the revisions..
 
-Shawn
+Regards,
+
+-- 
+Robert Nelson
+https://rcn-ee.com/
