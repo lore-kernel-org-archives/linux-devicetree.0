@@ -1,29 +1,38 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] clk: imx6sll: add GPIO LPCGs
-Date: Tue, 3 Jul 2018 13:31:46 -0600
-Message-ID: <20180703193146.GA29496@rob-hp-laptop>
-References: <1529649154-5724-1-git-send-email-Anson.Huang@nxp.com>
+From: Mathieu Malaterre <malat@debian.org>
+Subject: Re: [PATCH 00/14] dma-jz4780 improvements
+Date: Tue, 3 Jul 2018 21:32:13 +0200
+Message-ID: <CA+7wUsykjQkSHshNNVJaZJ4d_U9Q4fhaoRaNOTHhjoj43xRPLg@mail.gmail.com>
+References: <20180703123214.23090-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1529649154-5724-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20180703123214.23090-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, aisheng.dong@nxp.com, ping.bai@nxp.com, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: vkoul@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, dansilsby@gmail.com, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 22, 2018 at 02:32:33PM +0800, Anson Huang wrote:
-> According to Reference Manual Rev.0, 06/2017,
-> there are GPIO LPCGs defined in CCM CCGRs,
-> add them into clock tree.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  drivers/clk/imx/clk-imx6sll.c             | 6 ++++++
+On Tue, Jul 3, 2018 at 2:32 PM Paul Cercueil <paul@crapouillou.net> wrote:
+>
+> Hi,
+>
+> This set of patches by myself and Daniel extends the dma-jz4780 driver
+> to support other SoCs (JZ4770, JZ4740, JZ4725B).
+>
+> Some fixes are also included, for proper residue reporting, which fixes
+> errors with ALSA.
+>
+> Finally, the last two patches update the devicetree bindings for the
+> JZ4780 SoC and add a binding for the JZ4770 SoC.
+>
+> This patchset was tested on JZ4780, JZ4770 and JZ4725B, but was not tested
+> on the JZ4740, so it would be fantastic if somebody could test it there.
 
->  include/dt-bindings/clock/imx6sll-clock.h | 9 ++++++++-
+For the entire series, everything works as expected on JZ4780 (Creator
+CI20), including reading from sdcard.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Tested-by: Mathieu Malaterre <malat@debian.org>
 
->  2 files changed, 14 insertions(+), 1 deletion(-)
+> Regards,
+> -Paul
+>
