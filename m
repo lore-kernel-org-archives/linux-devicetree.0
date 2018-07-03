@@ -1,100 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/8] dt-bindings: add bindings for TI PRU as remoteproc
-Date: Tue, 3 Jul 2018 14:59:32 -0600
-Message-ID: <20180703205932.GA28054@rob-hp-laptop>
-References: <20180623210810.21232-1-david@lechnology.com>
- <20180623210810.21232-5-david@lechnology.com>
+Subject: Re: [PATCH 1/2] dt-bindings: Add DataImage, Inc. vendor prefix
+Date: Tue, 3 Jul 2018 15:02:38 -0600
+Message-ID: <20180703210238.GA31190@rob-hp-laptop>
+References: <1529930490-11874-1-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20180623210810.21232-5-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <1529930490-11874-1-git-send-email-michal.vokac@ysoft.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 23, 2018 at 04:08:06PM -0500, David Lechner wrote:
-> This adds a new binding for the TI Programmable Runtime Unit (PRU)
-> as a remoteproc device.
-> 
-> Signed-off-by: David Lechner <david@lechnology.com>
-> ---
->  .../bindings/remoteproc/ti_pru_rproc.txt      | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti_pru_rproc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/ti_pru_rproc.txt b/Documentation/devicetree/bindings/remoteproc/ti_pru_rproc.txt
-> new file mode 100644
-> index 000000000000..0e80a8db46d0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/remoteproc/ti_pru_rproc.txt
-> @@ -0,0 +1,51 @@
-> +TI Programmable Realtime Unit (PRU)
-> +===================================
-> +
-> +Some TI Sitara SoCs contain a Programmable Realtime Unit subsystem with two
-> +processor cores that can be used for hard-realtime tasks.
-> +
-> +
-> +Required properties:
-> +--------------------
-> +The following are the mandatory properties:
-> +
-> +- compatible:		Should be one of the following,
-> +			    "ti,da850-pru-rproc" for AM18xx/OMAPL138 SoCs
-> +			    "ti,am3352-pru-rproc" for AM355x SoCs
-> +
-> +- reg:			Should contain the memory region for the PRUSS
-> +
-> +- interrupts: 		Should contain the interrupt number used to receive the
-> +			virtualqueue kick interrupts from the PRU (i.e.
-> +			PRU_EVTOUT0 and PRU_EVTOUT1)
-> +
-> +- interrupt-names	Should contain "pru0-vq", "pru1-vq"
-> +
-> +Optional properties:
-> +--------------------
-> +
-> +- power-domains:	A phandle to the power domain that powers the PRUSS
-
-Only for da850?
-
-> +
-> +- ti,hwmods:		Name of the hwmod associated to the PRUSS, which is
-> +			typically "pruss"
-
-Only for am3352?
-
-typically? You should enumerate possible values.
-
-> +
-> +Example:
-> +--------
-> +
-> +	// AM18xx
-> +	pru_rproc: cpu@30000 {
-
-cpu is reserved for cpu nodes.
-
-> +		compatible = "ti,da850-pru-rproc";
-> +		reg = <0x30000 0x10000>;
-> +		interrupts = <3>, <4>;
-> +		interrupt-names = "pru0-vq", "pru1-vq";
-> +		power-domains = <&psc0 13>;
-> +	};
-> +
-> +	// AM335x
-> +	pru_rproc: cpu@4a300000 {
-> +		compatible = "ti,am3352-pru-rproc";
-> +		reg = <0x4a300000 0x80000>;
-> +		interrupts = <20>, <21>;
-> +		interrupt-names = "pru0-vq", "pru1-vq";
-> +		ti,hwmods = "pruss";
-> +	};
-
-Really need 2 examples?
-
-> -- 
-> 2.17.1
-> 
+T24gTW9uLCBKdW4gMjUsIDIwMTggYXQgMDI6NDE6MjlQTSArMDIwMCwgTWljaGFsIFZva8OhxI0g
+d3JvdGU6Cj4gRGF0YUltYWdlIGlzIGEgVGFpd2FuLWJhc2VkIG1hbnVmYWN0dXJlciBvZiBMQ0Qg
+cGFuZWxzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IE1pY2hhbCBWb2vDocSNIDxtaWNoYWwudm9rYWNA
+eXNvZnQuY29tPgo+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVu
+ZG9yLXByZWZpeGVzLnR4dCB8IDEgKwo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykK
+ClJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
