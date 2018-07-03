@@ -1,71 +1,100 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 1/4] resource: Move reparent_resources() to
- kernel/resource.c and make it public
-Date: Tue, 3 Jul 2018 23:57:48 +0300
-Message-ID: <CAHp75VeEjhcYF4Fy4O_srdv_nEGGjGwAHhZufscB_tiLQVQ=FQ@mail.gmail.com>
-References: <20180612032831.29747-1-bhe@redhat.com>
- <20180612032831.29747-2-bhe@redhat.com>
- <CAHp75Vd6v4+RTq-5uw_BJpT6=w2KGjTfU+rEst6+8igs2cyntw@mail.gmail.com>
- <20180612093812.GC1820@MiWiFi-R3L-srv>
- <CAHp75Vf_kBLkE6v=JyOdfNoWktWEfKs7JzRP1XEc4TeuT5xqfw@mail.gmail.com>
- <CAHp75Vdaqj+n=F7wSB9PFGpf9Ok2XZzKcq_H0DzmtjmN-4UUfw@mail.gmail.com>
- <20180703145503.GA1225@MiWiFi-R3L-srv>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4/8] dt-bindings: add bindings for TI PRU as remoteproc
+Date: Tue, 3 Jul 2018 14:59:32 -0600
+Message-ID: <20180703205932.GA28054@rob-hp-laptop>
+References: <20180623210810.21232-1-david@lechnology.com>
+ <20180623210810.21232-5-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180703145503.GA1225@MiWiFi-R3L-srv>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Baoquan He <bhe@redhat.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, brijesh.singh@amd.com, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, Keith Busch <keith.busch@intel.com>, Max Filippov <jcmvbkbc@gmail.com>, Paul Mackerras <paulus@samba.org>, baiyaowei@cmss.chinamobile.com, Frank Rowand <frowand.list@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stephen Hemminger <sthemmin@microsoft.com>, linux-nvdimm@lists.01.org, Michael Ellerman <mpe@ellerman.id.au>, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, linux-input <linux-input@vger.kernel.org>, Gustavo Padovan <gustavo@padovan.org>, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Tom Lendacky <thomas.lendacky@amd.com>, Haiyang Zhang <haiyangz@microsoft.com>, Maarten
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180623210810.21232-5-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>
+Cc: linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 3, 2018 at 5:55 PM, Baoquan He <bhe@redhat.com> wrote:
-> On 06/12/18 at 05:24pm, Andy Shevchenko wrote:
->> On Tue, Jun 12, 2018 at 5:20 PM, Andy Shevchenko
->> <andy.shevchenko@gmail.com> wrote:
+On Sat, Jun 23, 2018 at 04:08:06PM -0500, David Lechner wrote:
+> This adds a new binding for the TI Programmable Runtime Unit (PRU)
+> as a remoteproc device.
+> 
+> Signed-off-by: David Lechner <david@lechnology.com>
+> ---
+>  .../bindings/remoteproc/ti_pru_rproc.txt      | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti_pru_rproc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/ti_pru_rproc.txt b/Documentation/devicetree/bindings/remoteproc/ti_pru_rproc.txt
+> new file mode 100644
+> index 000000000000..0e80a8db46d0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/ti_pru_rproc.txt
+> @@ -0,0 +1,51 @@
+> +TI Programmable Realtime Unit (PRU)
+> +===================================
+> +
+> +Some TI Sitara SoCs contain a Programmable Realtime Unit subsystem with two
+> +processor cores that can be used for hard-realtime tasks.
+> +
+> +
+> +Required properties:
+> +--------------------
+> +The following are the mandatory properties:
+> +
+> +- compatible:		Should be one of the following,
+> +			    "ti,da850-pru-rproc" for AM18xx/OMAPL138 SoCs
+> +			    "ti,am3352-pru-rproc" for AM355x SoCs
+> +
+> +- reg:			Should contain the memory region for the PRUSS
+> +
+> +- interrupts: 		Should contain the interrupt number used to receive the
+> +			virtualqueue kick interrupts from the PRU (i.e.
+> +			PRU_EVTOUT0 and PRU_EVTOUT1)
+> +
+> +- interrupt-names	Should contain "pru0-vq", "pru1-vq"
+> +
+> +Optional properties:
+> +--------------------
+> +
+> +- power-domains:	A phandle to the power domain that powers the PRUSS
 
->> > I briefly looked at the code and error codes we have, so, my proposal
->> > is one of the following
->>
->> >  - use -ECANCELED (not the best choice for first occurrence here,
->> > though I can't find better)
->>
->> Actually -ENOTSUPP might suit the first case (although the actual
->> would be something like -EOVERLAP, which we don't have)
->
-> Sorry for late reply, and many thanks for your great suggestion.
->
+Only for da850?
 
-> I am fine to use -ENOTSUPP as the first returned value, and -ECANCELED
-> for the 2nd one.
+> +
+> +- ti,hwmods:		Name of the hwmod associated to the PRUSS, which is
+> +			typically "pruss"
 
-I have no strong opinion, but I like (slightly better) this approach ^^^
+Only for am3352?
 
-> Or define an enum as you suggested inside the function
-> or in header file.
+typically? You should enumerate possible values.
 
->
-> Or use -EBUSY for the first case because existing resource is
-> overlapping but not fully contained by 'res'; and -EINVAL for
-> the 2nd case since didn't find any one resources which is contained by
-> 'res', means we passed in a invalid resource.
->
-> All is fine to me, I can repost with each of them.
+> +
+> +Example:
+> +--------
+> +
+> +	// AM18xx
+> +	pru_rproc: cpu@30000 {
 
->> >  - use positive integers (or enum), like
->> >   #define RES_REPARENTED 0
->> >   #define RES_OVERLAPPED 1
->> >   #define RES_NOCONFLICT 2
+cpu is reserved for cpu nodes.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> +		compatible = "ti,da850-pru-rproc";
+> +		reg = <0x30000 0x10000>;
+> +		interrupts = <3>, <4>;
+> +		interrupt-names = "pru0-vq", "pru1-vq";
+> +		power-domains = <&psc0 13>;
+> +	};
+> +
+> +	// AM335x
+> +	pru_rproc: cpu@4a300000 {
+> +		compatible = "ti,am3352-pru-rproc";
+> +		reg = <0x4a300000 0x80000>;
+> +		interrupts = <20>, <21>;
+> +		interrupt-names = "pru0-vq", "pru1-vq";
+> +		ti,hwmods = "pruss";
+> +	};
+
+Really need 2 examples?
+
+> -- 
+> 2.17.1
+> 
