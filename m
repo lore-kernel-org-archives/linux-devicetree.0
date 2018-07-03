@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 11/14] dmaengine: dma-jz4780: Further residue status fix
-Date: Tue,  3 Jul 2018 14:32:11 +0200
-Message-ID: <20180703123214.23090-12-paul@crapouillou.net>
+Subject: [PATCH 12/14] dmaengine: dma-jz4780: Use dma_set_residue()
+Date: Tue,  3 Jul 2018 14:32:12 +0200
+Message-ID: <20180703123214.23090-13-paul@crapouillou.net>
 References: <20180703123214.23090-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180703123214.23090-1-paul@crapouillou.net>
@@ -12,35 +12,42 @@ List-Id: devicetree@vger.kernel.org
 
 From: Daniel Silsby <dansilsby@gmail.com>
 
-Func jz4780_dma_desc_residue() expects the index to the next hw
-descriptor as its last parameter. Caller func jz4780_dma_tx_status(),
-however, applied modulus before passing it. When the current hw
-descriptor was last in the list, the index passed became zero.
-
-The resulting excess of reported residue especially caused problems
-with cyclic DMA transfer clients, i.e. ALSA AIC audio output, which
-rely on this for determining current DMA location within buffer.
-
-Combined with the recent and related residue-reporting fixes, spurious
-ALSA audio underruns on jz4770 hardware are now fixed.
+This is the standard method provided by dmaengine header.
 
 Signed-off-by: Daniel Silsby <dansilsby@gmail.com>
 ---
- drivers/dma/dma-jz4780.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/dma-jz4780.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 64270d53ba57..690b853977b2 100644
+index 690b853977b2..084b7a46a68d 100644
 --- a/drivers/dma/dma-jz4780.c
 +++ b/drivers/dma/dma-jz4780.c
-@@ -647,7 +647,7 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
+@@ -633,6 +633,7 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
+ 	struct virt_dma_desc *vdesc;
+ 	enum dma_status status;
+ 	unsigned long flags;
++	unsigned long residue = 0;
+ 
+ 	status = dma_cookie_status(chan, cookie, txstate);
+ 	if ((status == DMA_COMPLETE) || (txstate == NULL))
+@@ -643,13 +644,13 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
+ 	vdesc = vchan_find_desc(&jzchan->vchan, cookie);
+ 	if (vdesc) {
+ 		/* On the issued list, so hasn't been processed yet */
+-		txstate->residue = jz4780_dma_desc_residue(jzchan,
++		residue = jz4780_dma_desc_residue(jzchan,
  					to_jz4780_dma_desc(vdesc), 0);
  	} else if (cookie == jzchan->desc->vdesc.tx.cookie) {
- 		txstate->residue = jz4780_dma_desc_residue(jzchan, jzchan->desc,
--			  (jzchan->curr_hwdesc + 1) % jzchan->desc->count);
-+					jzchan->curr_hwdesc + 1);
- 	} else
- 		txstate->residue = 0;
+-		txstate->residue = jz4780_dma_desc_residue(jzchan, jzchan->desc,
++		residue = jz4780_dma_desc_residue(jzchan, jzchan->desc,
+ 					jzchan->curr_hwdesc + 1);
+-	} else
+-		txstate->residue = 0;
++	}
++	dma_set_residue(txstate, residue);
  
+ 	if (vdesc && jzchan->desc && vdesc == &jzchan->desc->vdesc
+ 	    && jzchan->desc->status & (JZ_DMA_DCS_AR | JZ_DMA_DCS_HLT))
 -- 
 2.18.0
