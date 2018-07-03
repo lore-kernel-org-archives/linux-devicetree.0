@@ -1,26 +1,27 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCHv2 1/2] ARM: dts: imx53: PPD: Add fixed-regulator
- information
-Date: Tue, 3 Jul 2018 13:59:04 +0800
-Message-ID: <20180703055902.GE4348@dragon>
-References: <20180628163639.1078-1-sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCH v1] ARM: dts: imx51-zii-rdu1: correct touchscreen axis
+ inversion
+Date: Tue, 3 Jul 2018 14:12:14 +0800
+Message-ID: <20180703061212.GG4348@dragon>
+References: <20180628225626.26203-1-nick@shmanahar.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180628163639.1078-1-sebastian.reichel@collabora.co.uk>
+In-Reply-To: <20180628225626.26203-1-nick@shmanahar.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
+To: Nick Dyer <nick@shmanahar.org>
+Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>, devicetree@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 28, 2018 at 06:36:38PM +0200, Sebastian Reichel wrote:
-> Add information about 3V3 power rail to avoid kernel warnings,
-> that dummy regulators have been added.
+On Thu, Jun 28, 2018 at 11:56:26PM +0100, Nick Dyer wrote:
+> The RMI4 touchscreen driver applied inversion and axis swap in the
+> wrong order, violating the DT binding for those properties. This was fixed in
+> 645a397, so correct the RDU1 DT to apply the inversion to the
+> correct axis.
 > 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+> Tested on Zii RDU1 00-5105-30 rev B
+> 
+> Signed-off-by: Nick Dyer <nick@shmanahar.org>
 
-I changed subject prefix to 'ARM: dts: imx53-ppd: ...', and applied
-both.
-
-Shawn
+Applied, thanks.
