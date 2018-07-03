@@ -1,77 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH linux-next v6 07/13] dt-bindings: mfd: Add a document for
- PECI client MFD
-Date: Tue, 3 Jul 2018 10:58:35 -0600
-Message-ID: <20180703165835.GA18160@rob-hp-laptop>
-References: <20180621193721.20588-1-jae.hyun.yoo@linux.intel.com>
- <20180621194054.20897-1-jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH v6 1/2] dt-bindings: add binding for i.MX8MQ IOMUXC
+Date: Tue, 3 Jul 2018 10:59:50 -0600
+Message-ID: <20180703165950.GA23752@rob-hp-laptop>
+References: <1530532746-619-1-git-send-email-abel.vesa@nxp.com>
+ <1530532746-619-2-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180621194054.20897-1-jae.hyun.yoo@linux.intel.com>
+In-Reply-To: <1530532746-619-2-git-send-email-abel.vesa@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Joel Stanley <joel@jms.id.au>, Vernon Mauery <vernon.mauery@linux.intel.com>
+To: Abel Vesa <abel.vesa@nxp.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, linux-gpio@vger.kernel.org, linux-imx@nxp.com, Shawn Guo <shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Abel Vesa <abelvesa@linux.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 21, 2018 at 12:40:54PM -0700, Jae Hyun Yoo wrote:
-> This commit adds a dt-bindings document for PECI client MFD.
-
-This and the next patch still have the same issues I've outlined in at 
-least 2 prior versions.
- 
-> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-> Cc: Andrew Jeffery <andrew@aj.id.au>
-> Cc: James Feist <james.feist@linux.intel.com>
-> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
-> Cc: Joel Stanley <joel@jms.id.au>
-> Cc: Vernon Mauery <vernon.mauery@linux.intel.com>
+On Mon, Jul 02, 2018 at 02:59:05PM +0300, Abel Vesa wrote:
+> This adds the binding for the i.MX8MQ pin controller, in the same
+> fashion as earlier i.MX SoCs.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
 > ---
->  .../bindings/mfd/intel-peci-client.txt        | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/intel-peci-client.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/intel-peci-client.txt b/Documentation/devicetree/bindings/mfd/intel-peci-client.txt
-> new file mode 100644
-> index 000000000000..cb341e363add
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/intel-peci-client.txt
-> @@ -0,0 +1,34 @@
-> +* Intel PECI client bindings
-> +
-> +PECI (Platform Environment Control Interface) is a one-wire bus interface that
-> +provides a communication channel from PECI clients in Intel processors and
-> +chipset components to external monitoring or control devices. PECI is designed
-> +to support the following sideband functions:
-> +
-> +- Processor and DRAM thermal management
-> +- Platform Manageability
-> +- Processor Interface Tuning and Diagnostics
-> +- Failure Analysis
-> +
-> +Required properties:
-> +- compatible : Should be "intel,peci-client".
-> +- reg        : Should contain address of a client CPU. Address range of CPU
-> +	       clients starts from 0x30 based on PECI specification.
-> +
-> +Example:
-> +	peci-bus@0 {
-> +		compatible = "vendor,soc-peci";
-> +		reg = <0x0 0x1000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		peci-client@30 {
-> +			compatible = "intel,peci-client";
-> +			reg = <0x30>;
-> +		};
-> +
-> +		peci-client@31 {
-> +			compatible = "intel,peci-client";
-> +			reg = <0x31>;
-> +		};
-> +	};
-> -- 
-> 2.17.1
-> 
+>  .../bindings/pinctrl/fsl,imx8mq-pinctrl.txt        | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
+
+Reviewed-by: Rob Herring <robh@kernel.org>
