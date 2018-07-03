@@ -1,72 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 2/5] dt-bindings: xilinx: Add missing zynq boards
-Date: Tue, 3 Jul 2018 17:04:10 -0600
-Message-ID: <20180703230410.GA31330@rob-hp-laptop>
+Subject: Re: [RFC PATCH 5/5] arm: dts: zynq: remove "zynq" prefix from
+ compatible property
+Date: Tue, 3 Jul 2018 17:07:45 -0600
+Message-ID: <20180703230745.GA2129@rob-hp-laptop>
 References: <20180628054205.17737-1-luaraneda@gmail.com>
- <20180628054205.17737-3-luaraneda@gmail.com>
+ <20180628054205.17737-6-luaraneda@gmail.com>
+ <042f6632-f4f6-d278-9859-b8998468c3bf@xilinx.com>
+ <CAHbBuxpuAC0PDfFBQ+D_zJu-AmWFNhEWCojr8LAWfO-ootLqEg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180628054205.17737-3-luaraneda@gmail.com>
+In-Reply-To: <CAHbBuxpuAC0PDfFBQ+D_zJu-AmWFNhEWCojr8LAWfO-ootLqEg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Luis Araneda <luaraneda@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Michal Simek <michal.simek@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 28, 2018 at 01:42:02AM -0400, Luis Araneda wrote:
-> The bindings were missing when adding the device-tree files
-> Also, improve description of existing boards
+On Tue, Jul 03, 2018 at 03:18:49AM -0400, Luis Araneda wrote:
+> Hi Michal,
 > 
-> Signed-off-by: Luis Araneda <luaraneda@gmail.com>
-> ---
->  .../devicetree/bindings/arm/xilinx.txt        | 22 +++++++++++++++++--
->  1 file changed, 20 insertions(+), 2 deletions(-)
+> On Thu, Jun 28, 2018 at 2:42 AM Michal Simek <michal.simek@xilinx.com> wrote:
+> > zynq name here is correct which is saying that hardblock is going to be
+> > described. Without it it is suggesting that hardblock is not used and it
+> > is for example on zybo with microblaze.
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/xilinx.txt b/Documentation/devicetree/bindings/arm/xilinx.txt
-> index b9043bc35..f1e911058 100644
-> --- a/Documentation/devicetree/bindings/arm/xilinx.txt
-> +++ b/Documentation/devicetree/bindings/arm/xilinx.txt
-> @@ -8,15 +8,33 @@ Required root node properties:
->  
->  Additional compatible strings:
->  
-> -- Xilinx internal board cc108
-> +- Xilinx CC108 board
->    "xlnx,zynq-cc108"
->  
-> -- Xilinx internal board zc770 with different FMC cards
-> +- Avnet MicroZed board
-> +  "avnet,zynq-microzed"
-> +
-> +- Adapteva Parallella board
-> +  "adapteva,parallella"
+> In my opinion, the zynq name is just adding redundant information to
+> the "xlnx,zynq-7000" value.
 
-This is documented in adapteva.txt, but I'd prefer if you put it 
-here and remove adapteva.txt.
+Maybe so, but you can't just go around changing compatible strings. Once 
+set, it's an ABI.
 
-> +
-> +- Xilinx ZC702 board
-> +  "xlnx,zynq-zc702"
-> +
-> +- Xilinx ZC706 board
-> +  "xlnx,zynq-zc706"
-> +
-> +- Xilinx ZC770 board, with different FMC cards
->    "xlnx,zynq-zc770-xm010"
->    "xlnx,zynq-zc770-xm011"
->    "xlnx,zynq-zc770-xm012"
->    "xlnx,zynq-zc770-xm013"
->  
-> +- Avnet ZedBoard board
-> +  "avnet,zynq-zed"
-> +
-> +- Digilent Zybo board
-> +  "digilent,zynq-zybo"
-> +
->  - Digilent Zybo Z7 board
->    "digilent,zynq-zybo-z7"
->  
-> -- 
-> 2.18.0
-> 
+Rob
