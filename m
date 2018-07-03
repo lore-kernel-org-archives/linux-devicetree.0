@@ -1,50 +1,56 @@
-From: Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH] ARM: dts: am335x-bone-common: Fix mmc0 Write Protect
-Date: Tue, 3 Jul 2018 05:23:45 -0500
-Message-ID: <CAOCHtYjki+_qGUXzweTwNCdqfG-Z0kLmq+HqpqFZ8dB14fy_yA@mail.gmail.com>
-References: <20180702202143.25343-1-robertcnelson@gmail.com>
- <20180703062419.GB112168@atomide.com>
- <6c0eb111-a301-d6c9-46c9-7bc45c82511c@ti.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v2 1/8] drm/bridge/synopsys: dsi: move
+ mipi_dsi_host_unregister to __dw_mipi_dsi_remove
+Date: Tue, 3 Jul 2018 12:40:23 +0200
+Message-ID: <20180703104025eucas1p14d3e2c79b8b9684fe0e815a43940cb8c~91bXiDzus1951019510eucas1p1C@eucas1p1.samsung.com>
+References: <20180618102806.15650-1-heiko@sntech.de>
+ <CGME20180618102835epcas1p3ac605f9d14736ae1298889772d5e3da2@epcas1p3.samsung.com>
+ <20180618102806.15650-2-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6c0eb111-a301-d6c9-46c9-7bc45c82511c@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Drew Fustini <drew@beagleboard.org>, Jason Kridner <jkridner@beagleboard.org>, linux-omap <linux-omap@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180618102806.15650-2-heiko@sntech.de>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, mka@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 3, 2018 at 1:31 AM, Faiz Abbas <faiz_abbas@ti.com> wrote:
-> Hi,
->
-> On Tuesday 03 July 2018 11:54 AM, Tony Lindgren wrote:
->> * Robert Nelson <robertcnelson@gmail.com> [180702 20:24]:
->>> Mainline Commit b74c2b21e1551018af53ee6c1efc051dfce2d788 added the pinmux
->>> settings for mmc1, however this pin (0x9a0) is routed to P9_42 on the cape
->>> header. Thus any BeagleBone cape that utilizes P9_42 triggers mmc0's Write
->>> Protect.
->>
->> Thanks applying into omap-for-v4.18/fixes. I'll also add a Fixes tag for
->> it.
->>
->
-> The evm sk sdwp needs to be removed as well. I guess I'll post a
-> separate patch as this is already applied.
-
-Yeah, i don't have an evm sk, while i found found one schematic that
-made it look okay, wasn't 100% sure on all the revisions..
-
-Regards,
-
--- 
-Robert Nelson
-https://rcn-ee.com/
+T24gMTguMDYuMjAxOCAxMjoyNywgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gUmlnaHQgbm93IHRo
+ZSBob3N0IGlzIG9ubHkgdW5yZWdpc3RlcmVkIHdoZW4gdGhlIGRyaXZlciBpcyB1c2VkIHZpYSB0
+aGUKPiBicmlkZ2UgYXBpIGFuZCBub3QgdmlhIHRoZSBjb21wb25lbnQgYXBpLCBsZWFkaW5nIHRv
+IHRoZSBob3N0IHN0YXlpbmcKPiByZWdpc3RlcmVkIGluIGNhc2VzIGxpa2UgcHJvYmUgZGVmZXJy
+YWwuCj4KPiBTbyBtb3ZlIHRoZSBob3N0IHVucmVnaXN0ZXIgdG8gdGhlIGdlbmVyYWwgcmVtb3Zl
+IGZ1bmN0aW9uLCBzbyB0aGF0IGl0Cj4gZ2V0cyBjbGVhbmVkIHVwIGluIGFsbCBjYXNlcy4KPgo+
+IFNpZ25lZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+CgpJIGhhdmUg
+bHVya2VkIGludG8gdGhlIG9ubHkgY3VycmVudCB1c2VyIG9mIHRoZSBicmlkZ2UgKHN0bSksIGFu
+ZCBJIGFtCmxpdHRsZSBiaXQgY29uZnVzZWQgaG93IGRvZXMgaXQgd29yaywgYnV0IHRoaXMgY2hh
+bmdlIGxvb2tzIE9LLgoKUmV2aWV3ZWQtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3Vu
+Zy5jb20+CgrCoC0tClJlZ2FyZHMKQW5kcnplago+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vYnJp
+ZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMgfCA0ICsrLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDIg
+aW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
+dS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vYnJp
+ZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMKPiBpbmRleCBmZDc5OTk2NDJjZjguLjA3Y2RlMjU1
+Y2FiMiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1p
+cGktZHNpLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGkt
+ZHNpLmMKPiBAQCAtOTQxLDYgKzk0MSw4IEBAIF9fZHdfbWlwaV9kc2lfcHJvYmUoc3RydWN0IHBs
+YXRmb3JtX2RldmljZSAqcGRldiwKPiAgCj4gIHN0YXRpYyB2b2lkIF9fZHdfbWlwaV9kc2lfcmVt
+b3ZlKHN0cnVjdCBkd19taXBpX2RzaSAqZHNpKQo+ICB7Cj4gKwltaXBpX2RzaV9ob3N0X3VucmVn
+aXN0ZXIoJmRzaS0+ZHNpX2hvc3QpOwo+ICsKPiAgCXBtX3J1bnRpbWVfZGlzYWJsZShkc2ktPmRl
+dik7Cj4gIH0KPiAgCj4gQEAgLTk1Nyw4ICs5NTksNiBAQCBFWFBPUlRfU1lNQk9MX0dQTChkd19t
+aXBpX2RzaV9wcm9iZSk7Cj4gIAo+ICB2b2lkIGR3X21pcGlfZHNpX3JlbW92ZShzdHJ1Y3QgZHdf
+bWlwaV9kc2kgKmRzaSkKPiAgewo+IC0JbWlwaV9kc2lfaG9zdF91bnJlZ2lzdGVyKCZkc2ktPmRz
+aV9ob3N0KTsKPiAtCj4gIAlfX2R3X21pcGlfZHNpX3JlbW92ZShkc2kpOwo+ICB9Cj4gIEVYUE9S
+VF9TWU1CT0xfR1BMKGR3X21pcGlfZHNpX3JlbW92ZSk7CgoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
