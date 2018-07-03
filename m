@@ -1,37 +1,25 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/1] ARM: dts: imx6ull: add operating points
-Date: Tue, 3 Jul 2018 14:34:38 +0800
-Message-ID: <20180703063436.GI4348@dragon>
-References: <20180629145221.10393-1-sebastien.szymanski@armadeus.com>
- <20180702045205.fdh4dwwhwyfftptl@vireshk-i7>
+Subject: Re: [PATCH V2] ARM: dts: imx6: correct anatop regulators range
+Date: Tue, 3 Jul 2018 14:39:43 +0800
+Message-ID: <20180703063942.GK4348@dragon>
+References: <1530497076-15509-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180702045205.fdh4dwwhwyfftptl@vireshk-i7>
+In-Reply-To: <1530497076-15509-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>, linux-arm-kernel@lists.infradead.org, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, l.stach@pengutronix.de, Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 02, 2018 at 10:22:05AM +0530, Viresh Kumar wrote:
-> On 29-06-18, 16:52, Sébastien Szymanski wrote:
-> > i.MX6ULL has different operating ranges than i.MX6UL so add the
-> > operating points for the i.MX6ULL and removed them form board device
+On Mon, Jul 02, 2018 at 10:04:36AM +0800, Anson Huang wrote:
+> According to i.MX6 datasheet, the LDO_1P1's typical
+> programming operating range is 1.0V to 1.2V, and
+> the LDO_2P5's typical programming operating range
+> is 2.25V to 2.75V, correct LDO_1P1 and LDO_2P5's
+> regulator range settings for i.MX6 SoCs.
 > 
-> s/removed/remove/
-> s/form/from/
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-I fixed them up and applied the patch.
-
-Shawn
-
-> 
-> > trees. A 25mV offset is added to the minimum allowed values like for the
-> > i.MX6UL.
-> > The valid frequencies are now selected by the cpufreq driver according
-> > to ratings stored in fuses since commit 0aa9abd4c212 ("cpufreq: imx6q:
-> > check speed grades for i.MX6ULL")
-> > 
-> > Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+Applied, thanks.
