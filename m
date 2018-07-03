@@ -1,25 +1,56 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 16/20] dts: arm: omap: Update coresight bindings for
- hardware ports
-Date: Tue, 3 Jul 2018 00:09:51 -0700
-Message-ID: <20180703070951.GH112168@atomide.com>
-References: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
- <1528235011-30691-17-git-send-email-suzuki.poulose@arm.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 15/15] arm: dts: imx: Add missing OPP properties for CPUs
+Date: Tue, 3 Jul 2018 15:12:16 +0800
+Message-ID: <20180703071215.GM4348@dragon>
+References: <cover.1527244200.git.viresh.kumar@linaro.org>
+ <264124e14b966a1bbc07c364fbd89fc55aa765e6.1527244201.git.viresh.kumar@linaro.org>
+ <1527248760.3472.6.camel@pengutronix.de>
+ <20180528110739.ewmhlf72sl7u5ju7@vireshk-i7>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1528235011-30691-17-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <20180528110739.ewmhlf72sl7u5ju7@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org, robh@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com, sudeep.holla@arm.com, arm@kernel.org, linux-kernel@vger.kernel.org, matt.sealey@arm.com, john.horley@arm.com, charles.garcia-tobin@arm.com, coresight@lists.linaro.org, devicetree@vger.kernel.org, mike.leach@linaro.org, linux-omap@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Lucas Stach <l.stach@pengutronix.de>, arm@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, chris.redpath@arm.com, ionela.voinescu@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Suzuki K Poulose <suzuki.poulose@arm.com> [180605 14:48]:
-> Switch to the new coresight bindings for hardware ports
+On Mon, May 28, 2018 at 04:37:39PM +0530, Viresh Kumar wrote:
+> Hi Lucas,
+> 
+> On 25-05-18, 13:46, Lucas Stach wrote:
+> > This is a lot of duplicate information for what is effectively a shared
+> >  cluster wide thing. This does absolutely not _feel_ right.
+> 
+> I cannot agree more :)
+> 
+> > What problem are you solving here? Why do we need all this duplicate
+> > information? Why can't we fix it by falling back to looking at cpu0 if
+> > needed?
+> 
+> Let me try explaining one of the problem scenarios to you as your
+> platform is a single cluster one. Make cpufreq driver as module, don't
+> insert it, hotplug out CPU0 and now insert the cpufreq driver. The
+> cpufreq core will try adding the cpufreq policy for CPU1 but wouldn't
+> find the required information in the DT node of CPU1 and so will fail
+> or behave incorrectly.
+> 
+> We can't look at CPU0 as we don't know they are related at all.
+> Nothing tells that to us. The right solution to fix the duplication is
+> to move to OPP-v2 bindings, which allow us to create a single OPP
+> table node and refer to it from all the CPU nodes. Because in case of
+> imx platforms getting updated here, we use the old and some platforms
+> specific frequency tables, we have to duplicate it everywhere.
+> 
+> But looking from DT otherwise, all the device should anyway have all
+> the information required right in their node. That can be simplified
+> with things like phandle to opp-v2 node, but still everything needs to
+> be there. We shouldn't really rely on other CPU nodes to make it work.
+> That would be an incomplete definition of the hardware IMHO.
 
-So is this patch safe for me to pick separately for v4.19?
+Lucas,
 
-Regards,
+Are you fine with the patch now considering the respond from Viresh?
 
-Tony
+Shawn
