@@ -1,126 +1,191 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH linux-next v6 04/13] dt-bindings: Add a document of PECI
- adapter driver for ASPEED AST24xx/25xx SoCs
-Date: Tue, 3 Jul 2018 10:01:50 -0700
-Message-ID: <7f7d1045-ca1f-6086-8fce-ceab53568bcd@linux.intel.com>
-References: <20180621193721.20588-1-jae.hyun.yoo@linux.intel.com>
- <20180621194024.20771-1-jae.hyun.yoo@linux.intel.com>
- <20180703165148.GA11628@rob-hp-laptop>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v2 7/8] drm/bridge/synopsys: dsi: add dual-dsi support
+Date: Tue, 3 Jul 2018 19:07:02 +0200
+Message-ID: <20180703170704eucas1p219825811a840a2bbe077a3439c5d1558~96s9V2Ipb1884318843eucas1p2B@eucas1p2.samsung.com>
+References: <20180618102806.15650-1-heiko@sntech.de>
+ <CGME20180618102835epcas2p1f39f4cbaba303cfcfb961487bc785a58@epcas2p1.samsung.com>
+ <20180618102806.15650-8-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180703165148.GA11628@rob-hp-laptop>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180618102806.15650-8-heiko@sntech.de>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jason M Biils <jason.m.bills@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Greg KH <gregkh@linuxfoundation.org>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Robin Murphy <robin.murphy@arm.com>, Ryan Chen <ryan_chen@aspeedtech.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, mka@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thanks a lot for the review. Please check my inline answer.
-
-On 7/3/2018 9:51 AM, Rob Herring wrote:
-> On Thu, Jun 21, 2018 at 12:40:24PM -0700, Jae Hyun Yoo wrote:
->> This commit adds a dt-bindings document of PECI adapter driver for ASPEED
->> AST24xx/25xx SoCs.
->>
->> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
->> Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
->> Reviewed-by: James Feist <james.feist@linux.intel.com>
->> Reviewed-by: Vernon Mauery <vernon.mauery@linux.intel.com>
->> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> Cc: Greg KH <gregkh@linuxfoundation.org>
->> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
->> Cc: Milton Miller II <miltonm@us.ibm.com>
->> Cc: Pavel Machek <pavel@ucw.cz>
->> Cc: Robin Murphy <robin.murphy@arm.com>
->> Cc: Ryan Chen <ryan_chen@aspeedtech.com>
->> ---
->>   .../devicetree/bindings/peci/peci-aspeed.txt  | 57 +++++++++++++++++++
->>   1 file changed, 57 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/peci/peci-aspeed.txt
->>
->> diff --git a/Documentation/devicetree/bindings/peci/peci-aspeed.txt b/Documentation/devicetree/bindings/peci/peci-aspeed.txt
->> new file mode 100644
->> index 000000000000..8c35f905589d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/peci/peci-aspeed.txt
->> @@ -0,0 +1,57 @@
->> +Device tree configuration for PECI buses on the AST24XX and AST25XX SoCs.
->> +
->> +Required properties:
->> +- compatible        : Should be "aspeed,ast2400-peci" or "aspeed,ast2500-peci"
->> +		      - aspeed,ast2400-peci: ASPEED AST2400 family PECI
->> +					     controller
->> +		      - aspeed,ast2500-peci: ASPEED AST2500 family PECI
->> +					     controller
-> 
-> Just this is sufficient:
-> 
-> Should be one of:
-> 	"aspeed,ast2400-peci"
-> 	"aspeed,ast2500-peci"
-> 
-> With that,
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-
-Thanks! I'll change it as you commented out.
-
-Jae
-
->> +- reg               : Should contain PECI controller registers location and
->> +		      length.
->> +- #address-cells    : Should be <1> required to define a client address.
->> +- #size-cells       : Should be <0> required to define a client address.
->> +- interrupts        : Should contain PECI controller interrupt.
->> +- clocks            : Should contain clock source for PECI controller. Should
->> +		      reference the external oscillator clock in the second
->> +		      cell.
->> +- resets            : Should contain phandle to reset controller with the reset
->> +		      number in the second cell.
->> +- clock-frequency   : Should contain the operation frequency of PECI controller
->> +		      in units of Hz.
->> +		      187500 ~ 24000000
->> +
->> +Optional properties:
->> +- msg-timing        : Message timing negotiation period. This value will
->> +		      determine the period of message timing negotiation to be
->> +		      issued by PECI controller. The unit of the programmed
->> +		      value is four times of PECI clock period.
->> +		      0 ~ 255 (default: 1)
->> +- addr-timing       : Address timing negotiation period. This value will
->> +		      determine the period of address timing negotiation to be
->> +		      issued by PECI controller. The unit of the programmed
->> +		      value is four times of PECI clock period.
->> +		      0 ~ 255 (default: 1)
->> +- rd-sampling-point : Read sampling point selection. The whole period of a bit
->> +		      time will be divided into 16 time frames. This value will
->> +		      determine the time frame in which the controller will
->> +		      sample PECI signal for data read back. Usually in the
->> +		      middle of a bit time is the best.
->> +		      0 ~ 15 (default: 8)
->> +- cmd-timeout-ms    : Command timeout in units of ms.
->> +		      1 ~ 60000 (default: 1000)
->> +
->> +Example:
->> +	peci0: peci-bus@0 {
->> +		compatible = "aspeed,ast2500-peci";
->> +		reg = <0x0 0x60>;
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		interrupts = <15>;
->> +		clocks = <&syscon ASPEED_CLK_GATE_REFCLK>;
->> +		resets = <&syscon ASPEED_RESET_PECI>;
->> +		clock-frequency = <24000000>;
->> +		msg-timing = <1>;
->> +		addr-timing = <1>;
->> +		rd-sampling-point = <8>;
->> +		cmd-timeout-ms = <1000>;
->> +	};
->> -- 
->> 2.17.1
->>
+T24gMTguMDYuMjAxOCAxMjoyOCwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gRnJvbTogTmlja2V5
+IFlhbmcgPG5pY2tleS55YW5nQHJvY2stY2hpcHMuY29tPgo+Cj4gQWxsb3cgdG8gYWxzbyBkcml2
+ZSBhIHNsYXZlIGR3LW1pcGktZHNpIGNvbnRyb2xsZXIgaW4gYSBkdWFsLWRzaQo+IHNldHVwLiBU
+aGlzIHdpbGwgcmVxdWlyZSBhZGRpdGlvbmFsIGltcGxlbWVudGF0aW9uLXNwZWNpZmljCj4gY29k
+ZSB0byBsb29rIHVwIHRoZSBzbGF2ZSBpbnN0YW5jZSBhbmQgZG8gc3BlY2lmaWMgc2V0dXAuCj4g
+QWxzbyB3aWxsIHByb2JhYmx5IG5lZWQgY29kZSBpbiB0aGUgc3BlY2lmaWMgY3J0Y3MgYXMgZHVh
+bC1kc2kKPiBkb2VzIG5vdCBlcXVhbCB0d28gc2VwYXJhdGUgZHNpIG91dHB1dHMuCj4KPiBUbyBh
+Y3RpdmF0ZSwgdGhlIGltcGxlbWVudGF0aW9uLXNwZWNpZmljIGNvZGUgc2hvdWxkIHNldCB0aGUg
+c2xhdmUKPiB1c2luZyBkd19taXBpX2RzaV9zZXRfc2xhdmUoKSBiZWZvcmUgY2FsbGluZyBfX2R3
+X21pcGlfZHNpX2JpbmQoKS4KPgo+IHYyOgo+IC0gZXhwZWN0IHJlYWwgaW50ZXJmYWNlIG51bWJl
+ciBvZiBsYW5lcwo+IC0ga2VlcCBsaW5rcyB0byBib3RoIG1hc3RlciBhbmQgc2xhdmUKCkkgZGlk
+IG5vdCBzZWUgdGhlIHdob2xlIGRyaXZlci9waXBlbGluZSwgYnV0IGl0IHNlZW1zIHRoZSBwb2lu
+dCBvZiB0aGlzCnBhdGNoIGlzIHRvIHBlcmZvcm0gdGhlIHNhbWUgd29yayBvbiB0aGUgc2xhdmUg
+YXMgb24gdGhlIG1hc3RlciBpbiBjYXNlCm9mIGR1YWwgbW9kZS4gSSB0aGluayBEU0kgc2hvdWxk
+IG5vdCBiZSBhIHBsYWNlIGZvciBpdCwKRFNJIG1hc3RlcnMgdXN1YWxseSBhcmUgc3R1cGlkIGRl
+dmljZXMgZnJvbSBkaXNwbGF5IHN0YWNrIFBvViwgdGhleSBqdXN0CmNvbnZlcnQgdmlkZW8gc3Ry
+ZWFtcywgaW4gZHVhbCBtb2RlIGFsc28uIEluIHRoaXMgY2FzZSB0aGUgcGFuZWwgYW5kL29yCmNy
+dGMgYWRkcyBjb21wbGljYXRpb25zIHNvIHRoZXkgc2hvdWxkIGJlIHJlc3BvbnNpYmxlIGZvciBo
+YW5kbGluZyBpdC4KUGFuZWwgc2hvdWxkOgotIHJlZ2lzdGVyIGl0cyBib3RoIG1pcGkgaW50ZXJm
+YWNlcyB3aXRoIHByb3BlciBtb2RlX2ZsYWdzIChtYXliZSBzb21lCmR1YWwtbW9kZSBpbmRpY2F0
+aW9uIGZsYWdzIHNob3VsZCBiZSBhZGRlZCBpZiBuZWNlc3NhcnkpLAotIHJlZ2lzdGVyIGRybV9w
+YW5lbCBmb3IgYm90aCBpbnRlcmZhY2VzIChpdCByZXF1aXJlcyBjaGFuZ2UgaW4KZHJtX3BhbmVs
+IGFwaSksIGFuZCBwcm92aWRlIHZpZGVvIG1vZGUgdGltaW5ncy4KLSBpbiBjYXNlIGl0IG5lZWRz
+IHBlcmZvcm0gdHJhbnNmZXJzIHBlcmZvcm0gaXQgdG8gbWFzdGVyL3NsYXZlL2JvdGgKaW50ZXJm
+YWNlcyBhY2NvcmRpbmcgdG8gaXRzIG5lZWRzLAoKSSBhbSBub3Qgc3VyZSBhYm91dCBEUk0gcGlw
+ZWxpbmUsIGl0IHNob3VsZCBtb2RlbCwgbWF5YmUgaXQgY291bGQgYmUKZG9uZSB0aGlzIHdheToK
+Q1JUQyAtLT5FTkNPREVSMChkc2kgbWFzdGVyKSAtLT4gQ09OTkVDVE9SMCAocGFuZWwgaW50ZXJm
+YWNlIDApCsKgwqDCoMKgwqAgfC0tLT4gRU5DT0RFUjEoZHNpIHNsYXZlKSAtLT4gQ09OTkVDVE9S
+MSAocGFuZWwgaW50ZXJmYWNlIDEpCgpCdXQgSSBhbSBub3Qgc3VyZSBpZiBpdCBpcyBub3QgcmVz
+ZXJ2ZWQgb25seSBmb3IgbWlycm9yaW5nLgoKRm9yIG1lIG1vcmUgdGVtcHRpbmcgc29sdXRpb24g
+aXMgdG8gY3JlYXRlIG1ldGEtZW5jb2Rlci1jb25uZWN0b3IgbGV0J3MKY2FsbCBpdCBkdWFsLWVu
+Y29kZXIgKG1heWJlIGl0IGNvdWxkIGJlIGV2ZW4gZ2VuZXJpYyksIHdoaWNoIGlzIHZpc2libGUK
+dG8gdXNlcnNwYWNlIGFzIHNpbmdsZSBwaXBlbGluZSBhbmQgZW5jYXBzdWxhdGVzIGJvdGggZHNp
+IGJyaWRnZXMvcGFuZWwKaW5wdXRzLiBTbyBpdHMgZXZlcnkgY2FsbGJhY2sgd2lsbCBiZSB0cmFu
+c2xhdGVkIHVzdWFsbHkgdG8gc2VxdWVuY2Ugb2YKY2FsbGJhY2tzIHRvIDFzdCBhbmQgMm5kIGRz
+aSwgb3IgaW4gY2FzZSBvZiBnZXRfbW9kZXMgaXQgc2hvdWxkIHJldHVybgptb2RlIHdoaWNoIHJl
+cHJlc2VudCBzdW0gb2YgbW9kZXMgaW4gYm90aCBwYW5lbHMuCk1heWJlIGl0IGxvb2tzIG1vcmUg
+Y29tcGxpY2F0ZWQsIGJ1dCBpdCBjYW4gYmUgbW9yZSB1bml2ZXJzYWwgLSB5b3UgY2FuCnVzZSBp
+dCB3aXRoIGRpZmZlcmVudCBicmlkZ2VzL3BhbmVscyBldmVuIHR3byBzaW5nbGUtcGFuZWxzIGlm
+IG5lY2Vzc2FyeS4KCk9mIGNvdXJzZSBJIGRvIG5vdCBzZWUgdGhlIHdob2xlIHBpY3R1cmUsIG9y
+IEkgY2FuIGJlIGp1c3Qgd3JvbmcsIG9yCmp1c3QgZnJlYWtpbmcgcHVyaXN0IDopLiBJZiB0aGVy
+ZSBhcmUgYXJndW1lbnRzIGFnYWluc3QgbXkgdmlzaW9uIHBsZWFzZQpwcm92aWRlIHRoZW0uCkkg
+YW0gYWxzbyBub3Qgc3Ryb25nbHkgYWdhaW5zdCB5b3VyIHNvbHV0aW9uLCBJIGp1c3Qgd2FudCB0
+byBzaG93CmFsdGVybmF0aXZlcywgd2hpY2ggY291bGQgYmUgYmV0dGVyL21vcmUgZ2VuZXJpYy4K
+ClJlZ2FyZHMKQW5kcnplagoKPgo+IFNpZ25lZC1vZmYtYnk6IE5pY2tleSBZYW5nIDxuaWNrZXku
+eWFuZ0Byb2NrLWNoaXBzLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVp
+a29Ac250ZWNoLmRlPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3
+LW1pcGktZHNpLmMgfCA5MyArKysrKysrKysrKysrKysrKy0tCj4gIGluY2x1ZGUvZHJtL2JyaWRn
+ZS9kd19taXBpX2RzaS5oICAgICAgICAgICAgICB8ICAxICsKPiAgMiBmaWxlcyBjaGFuZ2VkLCA4
+NiBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYyBiL2RyaXZlcnMvZ3B1L2RybS9i
+cmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYwo+IGluZGV4IGJkNTAzZjAwMGVkNS4uNmEzNDVk
+MWRkZTI1IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHct
+bWlwaS1kc2kuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlw
+aS1kc2kuYwo+IEBAIC0yMzAsOSArMjMwLDIwIEBAIHN0cnVjdCBkd19taXBpX2RzaSB7Cj4gIAl1
+MzIgZm9ybWF0Owo+ICAJdW5zaWduZWQgbG9uZyBtb2RlX2ZsYWdzOwo+ICAKPiArCXN0cnVjdCBk
+d19taXBpX2RzaSAqbWFzdGVyOyAvKiBkdWFsLWRzaSBtYXN0ZXIgcHRyICovCj4gKwlzdHJ1Y3Qg
+ZHdfbWlwaV9kc2kgKnNsYXZlOyAvKiBkdWFsLWRzaSBzbGF2ZSBwdHIgKi8KPiArCj4gIAljb25z
+dCBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9kYXRhICpwbGF0X2RhdGE7Cj4gIH07Cj4gIAo+ICsv
+Kgo+ICsgKiBDaGVjayBpZiBlaXRoZXIgYSBsaW5rIHRvIGEgbWFzdGVyIG9yIHNsYXZlIGlzIHBy
+ZXNlbnQKPiArICovCj4gK3N0YXRpYyBpbmxpbmUgYm9vbCBkd19taXBpX2lzX2R1YWxfbW9kZShz
+dHJ1Y3QgZHdfbWlwaV9kc2kgKmRzaSkKPiArewo+ICsJcmV0dXJuIGRzaS0+c2xhdmUgfHwgZHNp
+LT5tYXN0ZXI7Cj4gK30KPiArCj4gIC8qCj4gICAqIFRoZSBjb250cm9sbGVyIHNob3VsZCBnZW5l
+cmF0ZSAyIGZyYW1lcyBiZWZvcmUKPiAgICogcHJlcGFyaW5nIHRoZSBwZXJpcGhlcmFsLgo+IEBA
+IC0yNzMsMTggKzI4NCwyNiBAQCBzdGF0aWMgaW50IGR3X21pcGlfZHNpX2hvc3RfYXR0YWNoKHN0
+cnVjdCBtaXBpX2RzaV9ob3N0ICpob3N0LAo+ICAJc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZTsK
+PiAgCXN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsOwo+ICAJaW50IHJldDsKPiArCWludCBsYW5lcyA9
+IGRldmljZS0+bGFuZXM7Cj4gIAo+IC0JaWYgKGRldmljZS0+bGFuZXMgPiBkc2ktPnBsYXRfZGF0
+YS0+bWF4X2RhdGFfbGFuZXMpIHsKPiArCWlmIChsYW5lcyA+IGRzaS0+cGxhdF9kYXRhLT5tYXhf
+ZGF0YV9sYW5lcykgewo+ICAJCWRldl9lcnIoZHNpLT5kZXYsICJ0aGUgbnVtYmVyIG9mIGRhdGEg
+bGFuZXMoJXUpIGlzIHRvbyBtYW55XG4iLAo+ICAJCQlkZXZpY2UtPmxhbmVzKTsKPiAgCQlyZXR1
+cm4gLUVJTlZBTDsKPiAgCX0KPiAgCj4gLQlkc2ktPmxhbmVzID0gZGV2aWNlLT5sYW5lczsKPiAr
+CWRzaS0+bGFuZXMgPSBsYW5lczsKPiAgCWRzaS0+Y2hhbm5lbCA9IGRldmljZS0+Y2hhbm5lbDsK
+PiAgCWRzaS0+Zm9ybWF0ID0gZGV2aWNlLT5mb3JtYXQ7Cj4gIAlkc2ktPm1vZGVfZmxhZ3MgPSBk
+ZXZpY2UtPm1vZGVfZmxhZ3M7Cj4gIAo+ICsJaWYgKGRzaS0+c2xhdmUpIHsKPiArCQlkc2ktPnNs
+YXZlLT5sYW5lcyA9IGRzaS0+bGFuZXM7Cj4gKwkJZHNpLT5zbGF2ZS0+Y2hhbm5lbCA9IGRzaS0+
+Y2hhbm5lbDsKPiArCQlkc2ktPnNsYXZlLT5mb3JtYXQgPSBkc2ktPmZvcm1hdDsKPiArCQlkc2kt
+PnNsYXZlLT5tb2RlX2ZsYWdzID0gZHNpLT5tb2RlX2ZsYWdzOwo+ICsJfQo+ICsKPiAgCXJldCA9
+IGRybV9vZl9maW5kX3BhbmVsX29yX2JyaWRnZShob3N0LT5kZXYtPm9mX25vZGUsIDEsIDAsCj4g
+IAkJCQkJICAmcGFuZWwsICZicmlkZ2UpOwo+ICAJaWYgKHJldCkKPiBAQCAtNDQxLDEwICs0NjAs
+MTcgQEAgc3RhdGljIHNzaXplX3QgZHdfbWlwaV9kc2lfaG9zdF90cmFuc2ZlcihzdHJ1Y3QgbWlw
+aV9kc2lfaG9zdCAqaG9zdCwKPiAgCX0KPiAgCj4gIAlkd19taXBpX21lc3NhZ2VfY29uZmlnKGRz
+aSwgbXNnKTsKPiArCWlmIChkc2ktPnNsYXZlKQo+ICsJCWR3X21pcGlfbWVzc2FnZV9jb25maWco
+ZHNpLT5zbGF2ZSwgbXNnKTsKPiAgCj4gIAlyZXQgPSBkd19taXBpX2RzaV93cml0ZShkc2ksICZw
+YWNrZXQpOwo+ICAJaWYgKHJldCkKPiAgCQlyZXR1cm4gcmV0Owo+ICsJaWYgKGRzaS0+c2xhdmUp
+IHsKPiArCQlyZXQgPSBkd19taXBpX2RzaV93cml0ZShkc2ktPnNsYXZlLCAmcGFja2V0KTsKPiAr
+CQlpZiAocmV0KQo+ICsJCQlyZXR1cm4gcmV0Owo+ICsJfQo+ICAKPiAgCWlmIChtc2ctPnJ4X2J1
+ZiAmJiBtc2ctPnJ4X2xlbikgewo+ICAJCXJldCA9IGR3X21pcGlfZHNpX3JlYWQoZHNpLCBtc2cp
+Owo+IEBAIC01ODMsNyArNjA5LDE1IEBAIHN0YXRpYyB2b2lkIGR3X21pcGlfZHNpX3ZpZGVvX3Bh
+Y2tldF9jb25maWcoc3RydWN0IGR3X21pcGlfZHNpICpkc2ksCj4gIAkgKiBEU0lfVk5QQ1IuTlBT
+SVpFLi4uIGVzcGVjaWFsbHkgYmVjYXVzZSB0aGlzIGRyaXZlciBzdXBwb3J0cwo+ICAJICogbm9u
+LWJ1cnN0IHZpZGVvIG1vZGVzLCBzZWUgZHdfbWlwaV9kc2lfdmlkZW9fbW9kZV9jb25maWcoKS4u
+Lgo+ICAJICovCj4gLQlkc2lfd3JpdGUoZHNpLCBEU0lfVklEX1BLVF9TSVpFLCBWSURfUEtUX1NJ
+WkUobW9kZS0+aGRpc3BsYXkpKTsKPiArCj4gKwlpbnQgcGt0X3NpemU7Cj4gKwo+ICsJaWYgKGR3
+X21pcGlfaXNfZHVhbF9tb2RlKGRzaSkpCj4gKwkJcGt0X3NpemUgPSBWSURfUEtUX1NJWkUobW9k
+ZS0+aGRpc3BsYXkgLyAyKTsKPiArCWVsc2UKPiArCQlwa3Rfc2l6ZSA9IFZJRF9QS1RfU0laRSht
+b2RlLT5oZGlzcGxheSk7Cj4gKwo+ICsJZHNpX3dyaXRlKGRzaSwgRFNJX1ZJRF9QS1RfU0laRSwg
+cGt0X3NpemUpOwo+ICB9Cj4gIAo+ICBzdGF0aWMgdm9pZCBkd19taXBpX2RzaV9jb21tYW5kX21v
+ZGVfY29uZmlnKHN0cnVjdCBkd19taXBpX2RzaSAqZHNpKQo+IEBAIC03NTYsMjMgKzc5MCwzOSBA
+QCBzdGF0aWMgdm9pZCBkd19taXBpX2RzaV9icmlkZ2VfcG9zdF9kaXNhYmxlKHN0cnVjdCBkcm1f
+YnJpZGdlICpicmlkZ2UpCj4gIAlkc2ktPnBhbmVsX2JyaWRnZS0+ZnVuY3MtPnBvc3RfZGlzYWJs
+ZShkc2ktPnBhbmVsX2JyaWRnZSk7Cj4gIAo+ICAJZHdfbWlwaV9kc2lfZGlzYWJsZShkc2kpOwo+
+ICsJaWYgKGRzaS0+c2xhdmUpIHsKPiArCQlkd19taXBpX2RzaV9kaXNhYmxlKGRzaS0+c2xhdmUp
+Owo+ICsJCWNsa19kaXNhYmxlX3VucHJlcGFyZShkc2ktPnNsYXZlLT5wY2xrKTsKPiArCQlwbV9y
+dW50aW1lX3B1dChkc2ktPnNsYXZlLT5kZXYpOwo+ICsJfQo+ICsKPiAgCWNsa19kaXNhYmxlX3Vu
+cHJlcGFyZShkc2ktPnBjbGspOwo+ICAJcG1fcnVudGltZV9wdXQoZHNpLT5kZXYpOwo+ICB9Cj4g
+IAo+IC1zdGF0aWMgdm9pZCBkd19taXBpX2RzaV9icmlkZ2VfbW9kZV9zZXQoc3RydWN0IGRybV9i
+cmlkZ2UgKmJyaWRnZSwKPiAtCQkJCQlzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSwKPiAt
+CQkJCQlzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqYWRqdXN0ZWRfbW9kZSkKPiArc3RhdGljIHVu
+c2lnbmVkIGludCBkd19taXBpX2RzaV9nZXRfbGFuZXMoc3RydWN0IGR3X21pcGlfZHNpICpkc2kp
+Cj4gK3sKPiArCWlmIChkc2ktPm1hc3RlcikKPiArCQlyZXR1cm4gZHNpLT5tYXN0ZXItPmxhbmVz
+ICsgZHNpLT5sYW5lczsKPiArCj4gKwlpZiAoZHNpLT5zbGF2ZSkKPiArCQlyZXR1cm4gZHNpLT5s
+YW5lcyArIGRzaS0+c2xhdmUtPmxhbmVzOwo+ICsKPiArCXJldHVybiBkc2ktPmxhbmVzOwo+ICt9
+Cj4gKwo+ICtzdGF0aWMgdm9pZCBkd19taXBpX2RzaV9tb2RlX3NldChzdHJ1Y3QgZHdfbWlwaV9k
+c2kgKmRzaSwKPiArCQkJCXN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICphZGp1c3RlZF9tb2RlKQo+
+ICB7Cj4gLQlzdHJ1Y3QgZHdfbWlwaV9kc2kgKmRzaSA9IGJyaWRnZV90b19kc2koYnJpZGdlKTsK
+PiAgCWNvbnN0IHN0cnVjdCBkd19taXBpX2RzaV9waHlfb3BzICpwaHlfb3BzID0gZHNpLT5wbGF0
+X2RhdGEtPnBoeV9vcHM7Cj4gIAl2b2lkICpwcml2X2RhdGEgPSBkc2ktPnBsYXRfZGF0YS0+cHJp
+dl9kYXRhOwo+ICAJaW50IHJldDsKPiArCXUzMiBsYW5lcyA9IGR3X21pcGlfZHNpX2dldF9sYW5l
+cyhkc2kpOwo+ICAKPiAgCWNsa19wcmVwYXJlX2VuYWJsZShkc2ktPnBjbGspOwo+ICAKPiAgCXJl
+dCA9IHBoeV9vcHMtPmdldF9sYW5lX21icHMocHJpdl9kYXRhLCBhZGp1c3RlZF9tb2RlLCBkc2kt
+Pm1vZGVfZmxhZ3MsCj4gLQkJCQkgICAgIGRzaS0+bGFuZXMsIGRzaS0+Zm9ybWF0LCAmZHNpLT5s
+YW5lX21icHMpOwo+ICsJCQkJICAgICBsYW5lcywgZHNpLT5mb3JtYXQsICZkc2ktPmxhbmVfbWJw
+cyk7Cj4gIAlpZiAocmV0KQo+ICAJCURSTV9ERUJVR19EUklWRVIoIlBoeSBnZXRfbGFuZV9tYnBz
+KCkgZmFpbGVkXG4iKTsKPiAgCj4gQEAgLTgwNCwxMiArODU0LDI1IEBAIHN0YXRpYyB2b2lkIGR3
+X21pcGlfZHNpX2JyaWRnZV9tb2RlX3NldChzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlLAo+ICAJ
+ZHdfbWlwaV9kc2lfc2V0X21vZGUoZHNpLCAwKTsKPiAgfQo+ICAKPiArc3RhdGljIHZvaWQgZHdf
+bWlwaV9kc2lfYnJpZGdlX21vZGVfc2V0KHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UsCj4gKwkJ
+CQkJc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUsCj4gKwkJCQkJc3RydWN0IGRybV9kaXNw
+bGF5X21vZGUgKmFkanVzdGVkX21vZGUpCj4gK3sKPiArCXN0cnVjdCBkd19taXBpX2RzaSAqZHNp
+ID0gYnJpZGdlX3RvX2RzaShicmlkZ2UpOwo+ICsKPiArCWR3X21pcGlfZHNpX21vZGVfc2V0KGRz
+aSwgYWRqdXN0ZWRfbW9kZSk7Cj4gKwlpZiAoZHNpLT5zbGF2ZSkKPiArCQlkd19taXBpX2RzaV9t
+b2RlX3NldChkc2ktPnNsYXZlLCBhZGp1c3RlZF9tb2RlKTsKPiArfQo+ICsKPiAgc3RhdGljIHZv
+aWQgZHdfbWlwaV9kc2lfYnJpZGdlX2VuYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+
+ICB7Cj4gIAlzdHJ1Y3QgZHdfbWlwaV9kc2kgKmRzaSA9IGJyaWRnZV90b19kc2koYnJpZGdlKTsK
+PiAgCj4gIAkvKiBTd2l0Y2ggdG8gdmlkZW8gbW9kZSBmb3IgcGFuZWwtYnJpZGdlIGVuYWJsZSAm
+IHBhbmVsIGVuYWJsZSAqLwo+ICAJZHdfbWlwaV9kc2lfc2V0X21vZGUoZHNpLCBNSVBJX0RTSV9N
+T0RFX1ZJREVPKTsKPiArCWlmIChkc2ktPnNsYXZlKQo+ICsJCWR3X21pcGlfZHNpX3NldF9tb2Rl
+KGRzaS0+c2xhdmUsIE1JUElfRFNJX01PREVfVklERU8pOwo+ICB9Cj4gIAo+ICBzdGF0aWMgZW51
+bSBkcm1fbW9kZV9zdGF0dXMKPiBAQCAtOTQ5LDYgKzEwMTIsMjAgQEAgc3RhdGljIHZvaWQgX19k
+d19taXBpX2RzaV9yZW1vdmUoc3RydWN0IGR3X21pcGlfZHNpICpkc2kpCj4gIAlwbV9ydW50aW1l
+X2Rpc2FibGUoZHNpLT5kZXYpOwo+ICB9Cj4gIAo+ICt2b2lkIGR3X21pcGlfZHNpX3NldF9zbGF2
+ZShzdHJ1Y3QgZHdfbWlwaV9kc2kgKmRzaSwgc3RydWN0IGR3X21pcGlfZHNpICpzbGF2ZSkKPiAr
+ewo+ICsJLyogaW50cm9kdWNlIGNvbnRyb2xsZXJzIHRvIGVhY2ggb3RoZXIgKi8KPiArCWRzaS0+
+c2xhdmUgPSBzbGF2ZTsKPiArCWRzaS0+c2xhdmUtPm1hc3RlciA9IGRzaTsKPiArCj4gKwkvKiBt
+aWdyYXRlIHNldHRpbmdzIGZvciBhbHJlYWR5IGF0dGFjaGVkIGRpc3BsYXlzICovCj4gKwlkc2kt
+PnNsYXZlLT5sYW5lcyA9IGRzaS0+bGFuZXM7Cj4gKwlkc2ktPnNsYXZlLT5jaGFubmVsID0gZHNp
+LT5jaGFubmVsOwo+ICsJZHNpLT5zbGF2ZS0+Zm9ybWF0ID0gZHNpLT5mb3JtYXQ7Cj4gKwlkc2kt
+PnNsYXZlLT5tb2RlX2ZsYWdzID0gZHNpLT5tb2RlX2ZsYWdzOwo+ICt9Cj4gK0VYUE9SVF9TWU1C
+T0xfR1BMKGR3X21pcGlfZHNpX3NldF9zbGF2ZSk7Cj4gKwo+ICAvKgo+ICAgKiBQcm9iZS9yZW1v
+dmUgQVBJLCB1c2VkIGZyb20gcGxhdGZvcm1zIGJhc2VkIG9uIHRoZSBEUk0gYnJpZGdlIEFQSS4K
+PiAgICovCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHJtL2JyaWRnZS9kd19taXBpX2RzaS5oIGIv
+aW5jbHVkZS9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLmgKPiBpbmRleCA2ZDdmOGViNWQ5ZjIuLjVm
+ZDk5N2NkZjI4MSAxMDA2NDQKPiAtLS0gYS9pbmNsdWRlL2RybS9icmlkZ2UvZHdfbWlwaV9kc2ku
+aAo+ICsrKyBiL2luY2x1ZGUvZHJtL2JyaWRnZS9kd19taXBpX2RzaS5oCj4gQEAgLTM3LDUgKzM3
+LDYgQEAgc3RydWN0IGR3X21pcGlfZHNpICpkd19taXBpX2RzaV9wcm9iZShzdHJ1Y3QgcGxhdGZv
+cm1fZGV2aWNlICpwZGV2LAo+ICB2b2lkIGR3X21pcGlfZHNpX3JlbW92ZShzdHJ1Y3QgZHdfbWlw
+aV9kc2kgKmRzaSk7Cj4gIGludCBkd19taXBpX2RzaV9iaW5kKHN0cnVjdCBkd19taXBpX2RzaSAq
+ZHNpLCBzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpOwo+ICB2b2lkIGR3X21pcGlfZHNpX3Vu
+YmluZChzdHJ1Y3QgZHdfbWlwaV9kc2kgKmRzaSk7Cj4gK3ZvaWQgZHdfbWlwaV9kc2lfc2V0X3Ns
+YXZlKHN0cnVjdCBkd19taXBpX2RzaSAqZHNpLCBzdHJ1Y3QgZHdfbWlwaV9kc2kgKnNsYXZlKTsK
+PiAgCj4gICNlbmRpZiAvKiBfX0RXX01JUElfRFNJX18gKi8KCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
