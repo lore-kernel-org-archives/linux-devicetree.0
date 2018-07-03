@@ -1,76 +1,36 @@
-From: Mikko Perttunen <cyndis@kapsi.fi>
-Subject: Re: [PATCH v3 6/8] serial: Add Tegra Combined UART driver
-Date: Tue, 3 Jul 2018 09:40:16 +0300
-Message-ID: <02120216-e305-5968-3567-d7174c2a8b13@kapsi.fi>
-References: <20180702114033.15654-1-mperttunen@nvidia.com>
- <20180702114033.15654-7-mperttunen@nvidia.com> <20180702131851.GH13096@ulmo>
- <50c4702b-3d59-e443-5075-c888f83a2615@kapsi.fi> <20180702134731.GI13096@ulmo>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 08/15] arm: dts: dra74x: Add missing cooling device
+ properties for CPUs
+Date: Mon, 2 Jul 2018 23:43:40 -0700
+Message-ID: <20180703064340.GD112168@atomide.com>
+References: <cover.1527244200.git.viresh.kumar@linaro.org>
+ <4860aab6e550b91ecc5c37c80cbffa6a6a70a4c9.1527244201.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180702134731.GI13096@ulmo>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <4860aab6e550b91ecc5c37c80cbffa6a6a70a4c9.1527244201.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mikko Perttunen <mperttunen@nvidia.com>, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, jassisinghbrar@gmail.com, linux-kernel@vger.kernel.org, jonathanh@nvidia.com, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: arm@kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02.07.2018 16:47, Thierry Reding wrote:
-> On Mon, Jul 02, 2018 at 04:30:07PM +0300, Mikko Perttunen wrote:
->> On 02.07.2018 16:18, Thierry Reding wrote:
->>> On Mon, Jul 02, 2018 at 02:40:31PM +0300, Mikko Perttunen wrote:
->>>> The Tegra Combined UART (TCU) is a mailbox-based mechanism that allows
->>>> multiplexing multiple "virtual UARTs" into a single hardware serial
->>>> port. The TCU is the primary serial port on Tegra194 devices.
->>>>
->>>> Add a TCU driver utilizing the mailbox framework, as the used mailboxes
->>>> are part of Tegra HSP blocks that are already controlled by the Tegra
->>>> HSP mailbox driver.
->>>>
->>>> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
->>>> ---
->>>>
->>>> Notes:
->>>>       v2:
->>>>       - Removed (void) casts for unused variables.
->>>>       - Changed the uart_set_options() call to be on one line, even if its
->>>>         over 80 characters.
->>>>       - Added defines for magic numbers.
->>>>       - Style fixes.
->>>>       - Changed Kconfig entry to depend on the Tegra HSP driver instead of
->>>>         just the mailbox framework.
->>>>       v3:
->>>>       - Removed FLUSH bit, as it's unnecessary and slows down printing
->>>>       - Removed call to uart_set_options
->>>>       - Added mbox_free_channel calls to remove()
->>>>
->>>>    drivers/tty/serial/Kconfig       |   9 ++
->>>>    drivers/tty/serial/Makefile      |   1 +
->>>>    drivers/tty/serial/tegra-tcu.c   | 291 +++++++++++++++++++++++++++++++++++++++
->>>>    include/uapi/linux/serial_core.h |   3 +
->>>>    4 files changed, 304 insertions(+)
->>>>    create mode 100644 drivers/tty/serial/tegra-tcu.c
->>>
->>> The driver looks good to me. But for my own understanding, is there some
->>> way we can make use of the multiplexing? That is, could we add a
->>> mechanism to have the driver filter out only a specific stream? Could we
->>> also specify which stream to send data back to? What happens by default?
->>> Which stream is data sent to?
->>
->> There is no multiplexing on the producer/device side (i.e. what this driver
->> does). The mailbox specified in device tree specifies the stream we send
->> stuff to. The mailboxes are per-CPU (we use the CCPLEX mailbox here), so it
->> cannot really be changed.
+* Viresh Kumar <viresh.kumar@linaro.org> [180525 03:35]:
+> The cooling device properties, like "#cooling-cells" and
+> "dynamic-power-coefficient", should either be present for all the CPUs
+> of a cluster or none. If these are present only for a subset of CPUs of
+> a cluster then things will start falling apart as soon as the CPUs are
+> brought online in a different order. For example, this will happen
+> because the operating system looks for such properties in the CPU node
+> it is trying to bring up, so that it can register a cooling device.
 > 
-> Oh, I see, so there is one stream per pair of mailboxes? That is, the
-> mailboxes we specify in the DT define which stream we receive from and
-> send to?
-
-Correct.
-
-Mikko
-
+> Add such missing properties.
 > 
-> Thierry
-> 
+> Fix other missing properties (clocks, supply, clock latency) as well to
+> make it all work.
+
+Applying this one into omap-for-v4.19/dt thanks.
+
+Regards,
+
+Tony
