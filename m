@@ -1,358 +1,118 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 2/7 v5] iommu: of: make of_pci_map_rid() available for
- other devices too
-Date: Tue, 3 Jul 2018 15:41:49 +0100
-Message-ID: <ba5b3055-da3f-0efc-efe9-44270dcf1420@arm.com>
-References: <1526824191-7000-1-git-send-email-nipun.gupta@nxp.com>
- <1526824191-7000-3-git-send-email-nipun.gupta@nxp.com>
+From: richard.gong@linux.intel.com
+Subject: [PATCHv6 0/8] Add Intel Stratix10 FPGA manager and service layer
+Date: Tue,  3 Jul 2018 09:46:47 -0500
+Message-ID: <1530629215-26990-1-git-send-email-richard.gong@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526824191-7000-3-git-send-email-nipun.gupta@nxp.com>
-Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nipun Gupta <nipun.gupta@nxp.com>, will.deacon@arm.com, robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, gregkh@linuxfoundation.org, laurentiu.tudor@nxp.com, bhelgaas@google.com
-Cc: hch@lst.de, joro@8bytes.org, m.szyprowski@samsung.com, shawnguo@kernel.org, frowand.list@gmail.com, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, bharat.bhushan@nxp.com, stuyoder@gmail.com, leoyang.li@nxp.com
+To: catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, corbet@lwn.net
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, linux-doc@vger.kernel.org, yves.vandervennet@linux.intel.com, richard.gong@linux.intel.com, richard.gong@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 20/05/18 14:49, Nipun Gupta wrote:
-> iommu-map property is also used by devices with fsl-mc. This
-> patch moves the of_pci_map_rid to generic location, so that it
-> can be used by other busses too.
-> 
-> 'of_pci_map_rid' is renamed here to 'of_map_rid' and there is no
-> functional change done in the API.
+From: Richard Gong <richard.gong@intel.com>
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Nipun Gupta <nipun.gupta@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->   drivers/iommu/of_iommu.c |   5 +--
->   drivers/of/base.c        | 102 +++++++++++++++++++++++++++++++++++++++++++++++
->   drivers/of/irq.c         |   5 +--
->   drivers/pci/of.c         | 101 ----------------------------------------------
->   include/linux/of.h       |  11 +++++
->   include/linux/of_pci.h   |  10 -----
->   6 files changed, 117 insertions(+), 117 deletions(-)
-> 
-> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> index 5c36a8b..811e160 100644
-> --- a/drivers/iommu/of_iommu.c
-> +++ b/drivers/iommu/of_iommu.c
-> @@ -149,9 +149,8 @@ static int of_pci_iommu_init(struct pci_dev *pdev, u16 alias, void *data)
->   	struct of_phandle_args iommu_spec = { .args_count = 1 };
->   	int err;
->   
-> -	err = of_pci_map_rid(info->np, alias, "iommu-map",
-> -			     "iommu-map-mask", &iommu_spec.np,
-> -			     iommu_spec.args);
-> +	err = of_map_rid(info->np, alias, "iommu-map", "iommu-map-mask",
-> +			 &iommu_spec.np, iommu_spec.args);
->   	if (err)
->   		return err == -ENODEV ? NO_IOMMU : err;
->   
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 848f549..c7aac81 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1995,3 +1995,105 @@ int of_find_last_cache_level(unsigned int cpu)
->   
->   	return cache_level;
->   }
-> +
-> +/**
-> + * of_map_rid - Translate a requester ID through a downstream mapping.
-> + * @np: root complex device node.
-> + * @rid: device requester ID to map.
-> + * @map_name: property name of the map to use.
-> + * @map_mask_name: optional property name of the mask to use.
-> + * @target: optional pointer to a target device node.
-> + * @id_out: optional pointer to receive the translated ID.
-> + *
-> + * Given a device requester ID, look up the appropriate implementation-defined
-> + * platform ID and/or the target device which receives transactions on that
-> + * ID, as per the "iommu-map" and "msi-map" bindings. Either of @target or
-> + * @id_out may be NULL if only the other is required. If @target points to
-> + * a non-NULL device node pointer, only entries targeting that node will be
-> + * matched; if it points to a NULL value, it will receive the device node of
-> + * the first matching target phandle, with a reference held.
-> + *
-> + * Return: 0 on success or a standard error code on failure.
-> + */
-> +int of_map_rid(struct device_node *np, u32 rid,
-> +	       const char *map_name, const char *map_mask_name,
-> +	       struct device_node **target, u32 *id_out)
-> +{
-> +	u32 map_mask, masked_rid;
-> +	int map_len;
-> +	const __be32 *map = NULL;
-> +
-> +	if (!np || !map_name || (!target && !id_out))
-> +		return -EINVAL;
-> +
-> +	map = of_get_property(np, map_name, &map_len);
-> +	if (!map) {
-> +		if (target)
-> +			return -ENODEV;
-> +		/* Otherwise, no map implies no translation */
-> +		*id_out = rid;
-> +		return 0;
-> +	}
-> +
-> +	if (!map_len || map_len % (4 * sizeof(*map))) {
-> +		pr_err("%pOF: Error: Bad %s length: %d\n", np,
-> +			map_name, map_len);
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* The default is to select all bits. */
-> +	map_mask = 0xffffffff;
-> +
-> +	/*
-> +	 * Can be overridden by "{iommu,msi}-map-mask" property.
-> +	 * If of_property_read_u32() fails, the default is used.
-> +	 */
-> +	if (map_mask_name)
-> +		of_property_read_u32(np, map_mask_name, &map_mask);
-> +
-> +	masked_rid = map_mask & rid;
-> +	for ( ; map_len > 0; map_len -= 4 * sizeof(*map), map += 4) {
-> +		struct device_node *phandle_node;
-> +		u32 rid_base = be32_to_cpup(map + 0);
-> +		u32 phandle = be32_to_cpup(map + 1);
-> +		u32 out_base = be32_to_cpup(map + 2);
-> +		u32 rid_len = be32_to_cpup(map + 3);
-> +
-> +		if (rid_base & ~map_mask) {
-> +			pr_err("%pOF: Invalid %s translation - %s-mask (0x%x) ignores rid-base (0x%x)\n",
-> +				np, map_name, map_name,
-> +				map_mask, rid_base);
-> +			return -EFAULT;
-> +		}
-> +
-> +		if (masked_rid < rid_base || masked_rid >= rid_base + rid_len)
-> +			continue;
-> +
-> +		phandle_node = of_find_node_by_phandle(phandle);
-> +		if (!phandle_node)
-> +			return -ENODEV;
-> +
-> +		if (target) {
-> +			if (*target)
-> +				of_node_put(phandle_node);
-> +			else
-> +				*target = phandle_node;
-> +
-> +			if (*target != phandle_node)
-> +				continue;
-> +		}
-> +
-> +		if (id_out)
-> +			*id_out = masked_rid - rid_base + out_base;
-> +
-> +		pr_debug("%pOF: %s, using mask %08x, rid-base: %08x, out-base: %08x, length: %08x, rid: %08x -> %08x\n",
-> +			np, map_name, map_mask, rid_base, out_base,
-> +			rid_len, rid, masked_rid - rid_base + out_base);
-> +		return 0;
-> +	}
-> +
-> +	pr_err("%pOF: Invalid %s translation - no match for rid 0x%x on %pOF\n",
-> +		np, map_name, rid, target && *target ? *target : NULL);
-> +	return -EFAULT;
-> +}
-> +EXPORT_SYMBOL_GPL(of_map_rid);
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 02ad93a..e1f6f39 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -22,7 +22,6 @@
->   #include <linux/module.h>
->   #include <linux/of.h>
->   #include <linux/of_irq.h>
-> -#include <linux/of_pci.h>
->   #include <linux/string.h>
->   #include <linux/slab.h>
->   
-> @@ -588,8 +587,8 @@ static u32 __of_msi_map_rid(struct device *dev, struct device_node **np,
->   	 * "msi-map" property.
->   	 */
->   	for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent)
-> -		if (!of_pci_map_rid(parent_dev->of_node, rid_in, "msi-map",
-> -				    "msi-map-mask", np, &rid_out))
-> +		if (!of_map_rid(parent_dev->of_node, rid_in, "msi-map",
-> +				"msi-map-mask", np, &rid_out))
->   			break;
->   	return rid_out;
->   }
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index a28355c..d2cebbe 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -362,107 +362,6 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
->   EXPORT_SYMBOL_GPL(of_pci_get_host_bridge_resources);
->   #endif /* CONFIG_OF_ADDRESS */
->   
-> -/**
-> - * of_pci_map_rid - Translate a requester ID through a downstream mapping.
-> - * @np: root complex device node.
-> - * @rid: PCI requester ID to map.
-> - * @map_name: property name of the map to use.
-> - * @map_mask_name: optional property name of the mask to use.
-> - * @target: optional pointer to a target device node.
-> - * @id_out: optional pointer to receive the translated ID.
-> - *
-> - * Given a PCI requester ID, look up the appropriate implementation-defined
-> - * platform ID and/or the target device which receives transactions on that
-> - * ID, as per the "iommu-map" and "msi-map" bindings. Either of @target or
-> - * @id_out may be NULL if only the other is required. If @target points to
-> - * a non-NULL device node pointer, only entries targeting that node will be
-> - * matched; if it points to a NULL value, it will receive the device node of
-> - * the first matching target phandle, with a reference held.
-> - *
-> - * Return: 0 on success or a standard error code on failure.
-> - */
-> -int of_pci_map_rid(struct device_node *np, u32 rid,
-> -		   const char *map_name, const char *map_mask_name,
-> -		   struct device_node **target, u32 *id_out)
-> -{
-> -	u32 map_mask, masked_rid;
-> -	int map_len;
-> -	const __be32 *map = NULL;
-> -
-> -	if (!np || !map_name || (!target && !id_out))
-> -		return -EINVAL;
-> -
-> -	map = of_get_property(np, map_name, &map_len);
-> -	if (!map) {
-> -		if (target)
-> -			return -ENODEV;
-> -		/* Otherwise, no map implies no translation */
-> -		*id_out = rid;
-> -		return 0;
-> -	}
-> -
-> -	if (!map_len || map_len % (4 * sizeof(*map))) {
-> -		pr_err("%pOF: Error: Bad %s length: %d\n", np,
-> -			map_name, map_len);
-> -		return -EINVAL;
-> -	}
-> -
-> -	/* The default is to select all bits. */
-> -	map_mask = 0xffffffff;
-> -
-> -	/*
-> -	 * Can be overridden by "{iommu,msi}-map-mask" property.
-> -	 * If of_property_read_u32() fails, the default is used.
-> -	 */
-> -	if (map_mask_name)
-> -		of_property_read_u32(np, map_mask_name, &map_mask);
-> -
-> -	masked_rid = map_mask & rid;
-> -	for ( ; map_len > 0; map_len -= 4 * sizeof(*map), map += 4) {
-> -		struct device_node *phandle_node;
-> -		u32 rid_base = be32_to_cpup(map + 0);
-> -		u32 phandle = be32_to_cpup(map + 1);
-> -		u32 out_base = be32_to_cpup(map + 2);
-> -		u32 rid_len = be32_to_cpup(map + 3);
-> -
-> -		if (rid_base & ~map_mask) {
-> -			pr_err("%pOF: Invalid %s translation - %s-mask (0x%x) ignores rid-base (0x%x)\n",
-> -				np, map_name, map_name,
-> -				map_mask, rid_base);
-> -			return -EFAULT;
-> -		}
-> -
-> -		if (masked_rid < rid_base || masked_rid >= rid_base + rid_len)
-> -			continue;
-> -
-> -		phandle_node = of_find_node_by_phandle(phandle);
-> -		if (!phandle_node)
-> -			return -ENODEV;
-> -
-> -		if (target) {
-> -			if (*target)
-> -				of_node_put(phandle_node);
-> -			else
-> -				*target = phandle_node;
-> -
-> -			if (*target != phandle_node)
-> -				continue;
-> -		}
-> -
-> -		if (id_out)
-> -			*id_out = masked_rid - rid_base + out_base;
-> -
-> -		pr_debug("%pOF: %s, using mask %08x, rid-base: %08x, out-base: %08x, length: %08x, rid: %08x -> %08x\n",
-> -			np, map_name, map_mask, rid_base, out_base,
-> -			rid_len, rid, masked_rid - rid_base + out_base);
-> -		return 0;
-> -	}
-> -
-> -	pr_err("%pOF: Invalid %s translation - no match for rid 0x%x on %pOF\n",
-> -		np, map_name, rid, target && *target ? *target : NULL);
-> -	return -EFAULT;
-> -}
-> -
->   #if IS_ENABLED(CONFIG_OF_IRQ)
->   /**
->    * of_irq_parse_pci - Resolve the interrupt for a PCI device
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 4d25e4f..f4251c3 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -545,6 +545,10 @@ const __be32 *of_prop_next_u32(struct property *prop, const __be32 *cur,
->   
->   extern int of_cpu_node_to_id(struct device_node *np);
->   
-> +int of_map_rid(struct device_node *np, u32 rid,
-> +	       const char *map_name, const char *map_mask_name,
-> +	       struct device_node **target, u32 *id_out);
-> +
->   #else /* CONFIG_OF */
->   
->   static inline void of_core_init(void)
-> @@ -931,6 +935,13 @@ static inline int of_cpu_node_to_id(struct device_node *np)
->   	return -ENODEV;
->   }
->   
-> +static inline int of_map_rid(struct device_node *np, u32 rid,
-> +			     const char *map_name, const char *map_mask_name,
-> +			     struct device_node **target, u32 *id_out)
-> +{
-> +	return -EINVAL;
-> +}
-> +
->   #define of_match_ptr(_ptr)	NULL
->   #define of_match_node(_matches, _node)	NULL
->   #endif /* CONFIG_OF */
-> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-> index 091033a..a23b44a 100644
-> --- a/include/linux/of_pci.h
-> +++ b/include/linux/of_pci.h
-> @@ -17,9 +17,6 @@ struct device_node *of_pci_find_child_device(struct device_node *parent,
->   int of_get_pci_domain_nr(struct device_node *node);
->   int of_pci_get_max_link_speed(struct device_node *node);
->   void of_pci_check_probe_only(void);
-> -int of_pci_map_rid(struct device_node *np, u32 rid,
-> -		   const char *map_name, const char *map_mask_name,
-> -		   struct device_node **target, u32 *id_out);
->   #else
->   static inline struct device_node *of_pci_find_child_device(struct device_node *parent,
->   					     unsigned int devfn)
-> @@ -44,13 +41,6 @@ static inline int of_pci_get_devfn(struct device_node *np)
->   	return -1;
->   }
->   
-> -static inline int of_pci_map_rid(struct device_node *np, u32 rid,
-> -			const char *map_name, const char *map_mask_name,
-> -			struct device_node **target, u32 *id_out)
-> -{
-> -	return -EINVAL;
-> -}
-> -
->   static inline int
->   of_pci_get_max_link_speed(struct device_node *node)
->   {
-> 
+This is the 6th submission of Intel stratix10 service layer patches. Intel
+Stratix10 FPGA manager, which is 1st Stratix10 service layer client, is
+included in this submission.
+
+Stratix10 service layer patches have been reviewed internally by Alan Tull
+and other colleagues at Intel.
+
+Some features of the Intel Stratix10 SoC require a level of privilege
+higher than the kernel is granted. Such secure features include
+FPGA programming. In terms of the ARMv8 architecture, the kernel runs
+at Exception Level 1 (EL1), access to the features requires
+Exception Level 3 (EL3).
+
+The Intel Stratix10 service layer provides an in kernel API for drivers to
+request access to the secure features. The requests are queued and
+processed one by one. ARM’s SMCCC is used to pass the execution of the
+requests on to a secure monitor (EL3).
+
+Later the Intel Stratix10 service layer driver will be extended to provide
+services for QSPI, Crypto and warm reset.
+
+v2: add patches for FPGA manager, FPGA manager binding, dts and defconfig
+    remove intel-service subdirectory and intel-service.h, move intel-smc.h
+    and intel-service.c to driver/misc subdirectory
+    remove global variables
+    change service layer driver be 'default n'
+    correct SPDX markers
+    add timeout for do..while() loop
+    add kernel-doc for the functions and structs, correct multiline comments
+    replace kfifo_in/kfifo_out with kfifo_in_spinlocked/kfifo_out_spinlocked
+    rename struct intel_svc_data (at client header) to intel_svc_client_msg
+    rename struct intel_svc_private_mem to intel_svc_data
+    other corrections/changes from Intel internal code reviews
+v3: change all exported functions with "intel_svc_" as the prefix
+    increase timeout values for claiming back submitted buffer(s)
+    rename struct intel_command_reconfig_payload to
+    struct intel_svc_command_reconfig_payload
+    add pr_err() to provide the error return value
+    change to put fpga_mgr node under firmware/svc node
+    change to FPGA manager to align the update of service client APIs, and the
+    update of fpga_mgr device node
+    Other corrections/changes
+v4: s/intel/stratix10/ on some variables, structs, functions, and file names
+    intel-service.c -> stratix10-svc.c
+    intel-smc.h -> stratix10-smc.h
+    intel-service-client.h -> stratix10-svc-client.h
+    remove non-kernel-doc formatting
+    s/fpga-mgr@0/fpga-mgr/ to remove unit_address at fpga_mgr node
+    add Rob's Reviewed-by
+    add Richard's signed-off-by
+v5: add a new API statix10_svc_done() which is called by service client
+    when client request is completed or error occurs during request
+    process. Which allows service layer to free its resources.
+    remove dummy client from service layer client header and service layer
+    source file.
+    add Rob's Reviewed-by
+    add a new file stratix10-svc.rst and add that to driver-api/index.rst
+    kernel-doc fixes
+v6: replace kthread_create_on_cpu() with kthread_create_on_node()
+    extend stratix_svc_send() to support service client which doesn't use
+    memory allocated by service layer
+    add S10_RECONFIG_TIMEOUT
+    rename s/S10_BUF_TIMEOUT/S10_BUFFER_TIMEOUT/
+    fix service layer and FPGA manager Klocwork errors
+
+Alan Tull (3):
+  dt-bindings: fpga: add Stratix10 SoC FPGA manager binding
+  arm64: dts: stratix10: add fpga manager and region
+  fpga: add intel stratix10 soc fpga manager driver
+
+Richard Gong (5):
+  dt-bindings, firmware: add Intel Stratix10 service layer binding
+  arm64: dts: stratix10: add stratix10 service driver binding to base
+    dtsi
+  driver, misc: add Intel Stratix10 service layer driver
+  defconfig: enable fpga and service layer
+  Documentation: driver-api: add stratix10 service layer
+
+ .../bindings/firmware/intel,stratix10-svc.txt      |   57 ++
+ .../bindings/fpga/intel-stratix10-soc-fpga-mgr.txt |   17 +
+ Documentation/driver-api/index.rst                 |    1 +
+ Documentation/driver-api/stratix10-svc.rst         |   32 +
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |   48 +
+ arch/arm64/configs/defconfig                       |    6 +
+ drivers/fpga/Kconfig                               |    6 +
+ drivers/fpga/Makefile                              |    1 +
+ drivers/fpga/stratix10-soc.c                       |  553 +++++++++++
+ drivers/misc/Kconfig                               |   12 +
+ drivers/misc/Makefile                              |    1 +
+ drivers/misc/stratix10-smc.h                       |  205 ++++
+ drivers/misc/stratix10-svc.c                       | 1000 ++++++++++++++++++++
+ include/linux/stratix10-svc-client.h               |  201 ++++
+ 14 files changed, 2140 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
+ create mode 100644 Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
+ create mode 100644 Documentation/driver-api/stratix10-svc.rst
+ create mode 100644 drivers/fpga/stratix10-soc.c
+ create mode 100644 drivers/misc/stratix10-smc.h
+ create mode 100644 drivers/misc/stratix10-svc.c
+ create mode 100644 include/linux/stratix10-svc-client.h
+
+-- 
+2.7.4
