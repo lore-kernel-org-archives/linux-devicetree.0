@@ -1,54 +1,41 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 2/3] clk: meson: add sub EMMC clock dt-bindings IDs
-Date: Tue, 03 Jul 2018 12:01:15 +0200
-Message-ID: <1530612075.2900.204.camel@baylibre.com>
-References: <20180703145716.31860-1-yixun.lan@amlogic.com>
-         <20180703145716.31860-3-yixun.lan@amlogic.com>
-         <20180703092107.51497a8f@bbrezillon>
-         <4b88c509-27ea-2605-023b-de208921e157@amlogic.com>
-         <1530605373.2900.158.camel@baylibre.com>
-         <1aedbb15-1373-adde-f5bb-bce3701d50b0@amlogic.com>
+From: Damian Kos <dkos@cadence.com>
+Subject: [PATCH 00/12] drm: add support for Cadence MHDP DPI/DP bridge.
+Date: Tue, 3 Jul 2018 11:02:11 +0100
+Message-ID: <1530612152-27555-1-git-send-email-dkos@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1aedbb15-1373-adde-f5bb-bce3701d50b0@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>, Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <seanpaul@chromium.org>, Sandy Huang <hjc@rock-chips.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Damian Kos <dkos@cadence.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Cc: ltyrala@cadence.com, pgaj@cadence.com, stelford@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-07-03 at 17:56 +0800, Yixun Lan wrote:
-> > > Yes, It's true, the mux is parent of the div clock.
-> > > 
-> > > while testing for the NAND driver, I find it's kind of loose about the
-> > > parent of the clock, so selecting the div (and let CCF decide freely) is
-> > > actually works fine
-> > > 
-> > > but for the EMMC driver, especially when running at high clock, it's
-> > > kind of picky about the parent of the clock, 
-> > 
-> > It would be nice to get an explanation about this behavior.
-> > it seems that even of the rate provided by CLKID_SD_EMMC_X_CLK0 (main clock
-> > controller) is correct, the eMMC cannot reliably tune with it.
-> > 
-> > Could you elaborate on this ?
-> > 
-> 
-> It's during my own test in AXG platform, I found clock path
-> a) fclk_div2 -> sd_emmc_c_clk0_sel -> sd_emmc_c_clk0_div ->
-> sd_emmc_c_clk0 -> sd_emmc_c_mux -> sd_emmc_c_div
-> 
-> b) fclk_div2 -> sd_emmc_c_mux -> sd_emmc_c_div
-> 
-> path a) doesn't work in EMMC driver, even both clock parent of them from
-> the same fclk_div2 source.
-> 
->  sd_emmc_c_mux -> sd_emmc_c_div is the clock from the EMMC register base.
-> I believe it's ASIC design issue
+Damian Kos (3):
+  dt-bindings: drm/bridge: Document Cadence MHDP bridge bindings
+  drm/rockchip: added implementation for a few FW commands.
+  drm/rockchip: add support for CDNS MHDP IP controller.
 
-yes Yixun, I did the same test. What I meant with this question is: could you
-confirm there a problem with this clock, and what it is exactly so we can adjust
-the clock as necessary.
+Quentin Schulz (9):
+  HACK: increase timeout for drm_atomic_helper_wait_for_vblanks
+  drm/dp: make dp_link_status and dp_get_lane_status usable from
+    outside of the core
+  drm/dp: add helpers for drm_dp_set_adjust_request_pre_emphasis and
+    drm_dp_set_adjust_request_voltage
+  drm/dp: fix training interval formula for DP 1.3+
+  drm/dp: fix link probing for devices supporting DP 1.4+
+  drm/dp: fix drm_dp_link_power_* for DP 1.2+
+  drm/dp: fix drm_dp_link_train_clock_recovery_delay for DP 1.4
+  drm/dp: add max number of lanes supported
+  drm/dp: add pixel encoding and colorimetry format indicator field in
+    MISC1
 
-If FDIV2 entry to this clock is broken, maybe it should be removed.
+ .../bindings/display/bridge/cdns,mhdp.txt          |   39 +
+ drivers/gpu/drm/drm_atomic_helper.c                |    2 +-
+ drivers/gpu/drm/drm_dp_helper.c                    |   97 ++-
+ drivers/gpu/drm/rockchip/cdn-dp-core.c             |  953 +++++++++++++++++++-
+ drivers/gpu/drm/rockchip/cdn-dp-core.h             |   25 +
+ drivers/gpu/drm/rockchip/cdn-dp-reg.c              |  167 ++++-
+ drivers/gpu/drm/rockchip/cdn-dp-reg.h              |  147 +++-
+ include/drm/drm_dp_helper.h                        |   14 +-
+ 8 files changed, 1400 insertions(+), 44 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.txt
