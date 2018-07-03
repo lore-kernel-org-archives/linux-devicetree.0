@@ -1,116 +1,114 @@
-From: William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: Re: [v7, 02/10] counter: Documentation: Add Generic Counter sysfs
- documentation
-Date: Tue, 3 Jul 2018 10:04:06 -0400
-Message-ID: <20180703140406.GA14958@sophia>
-References: <27299151c2c7c57e70c49b4f7b794839d00cd750.1529607879.git.vilhelm.gray@gmail.com>
- <2c7ae044-c09b-3d51-bd16-3ecf35154024@lechnology.com>
+From: Damian Kos <dkos@cadence.com>
+Subject: RE: [PATCH 12/12] drm/rockchip: add support for CDNS MHDP IP
+ controller.
+Date: Tue, 3 Jul 2018 14:06:56 +0000
+Message-ID: <CO2PR07MB25512372C4FEAF1990305433CD420@CO2PR07MB2551.namprd07.prod.outlook.com>
+References: <1530612152-27555-1-git-send-email-dkos@cadence.com>
+ <1530612152-27555-13-git-send-email-dkos@cadence.com>
+ <2647490.Uuqs1CuF1U@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2c7ae044-c09b-3d51-bd16-3ecf35154024@lechnology.com>
+In-Reply-To: <2647490.Uuqs1CuF1U@diego>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: gregkh@linuxfoundation.org, jic23@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, fabrice.gasnier@st.com, benjamin.gaignard@st.com, robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com
+To: =?iso-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <seanpaul@chromium.org>, Sandy Huang <hjc@rock-chips.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, Lukasz Tyrala <ltyrala@cadence.com>, Przemyslaw Gaj <pgaj@cadence.com>, Scott Telford <stelford@cadence.com>, Quentin Schulz <quentin.schulz@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 02, 2018 at 02:11:35PM -0500, David Lechner wrote:
->On 06/21/2018 04:07 PM, William Breathitt Gray wrote:
->> +What:		/sys/bus/counter/devices/counterX/countY/count_mode
->> +KernelVersion:	4.19
->> +Contact:	linux-iio@vger.kernel.org
->> +Description:
->> +		Count mode for channel Y. The ceiling and floor values for
->> +		Count Y are used by the count mode where required. The following
->> +		count modes are available:
->> +
->> +		Normal:
->> +			Counting is continuous in either direction.
->> +
->> +		Range Limit:
->> +			An upper or lower limit is set, mimicking limit switches
->> +			in the mechanical counterpart. The upper limit is set to
->> +			the Count Y ceiling value, while the lower limit is set
->> +			to the Count Y floor value. The counter freezes at
->> +			count = ceiling when counting up, and at count = floor
->> +			when counting down. At either of these limits, the
->> +			counting is resumed only when the count direction is
->> +			reversed.
->> +
->> +		Non-Recycle:
->> +			The counter is disabled whenever a counter overflow or
->> +			underflow takes place. The counter is re-enabled when a
->> +			new count value is loaded to the counter via a preset
->> +			operation or direct write.
->> +
->> +		Modulo-N:
->> +			A count value boundary is set between the Count Y floor
->> +			value and the Count Y ceiling value. The counter is
->> +			reset to the Cunt Y floor value at count = ceiling when
->> +			counting up, while the counter is set to the Count Y
->> +			ceiling value at count = floor when counting down; the
->> +			counter does not freeze at the boundary points, but
->> +			counts continuously throughout.
->> +
+Hi Heiko,
+
+Thank you for your feedback! Initially, MHDP driver was developed as a DRM =
+bridge driver and was planned to be placed in drivers/gpu/drm/bridge/cadenc=
+e/mhdp.c.  However, there was already a driver for Cadence's DP controller =
+developed by RockChip, but that driver uses different DRM framework. Both c=
+ontrollers (including firmware) are quite different internally (MST/FEC/DSC=
+ support, link training done by driver, additional commands, etc.) but they=
+ have very similar register map, except for Framer/Streamer, so they appear=
+ similar.
+
+We would be more than happy to provide fully separate driver (that was basi=
+cally pasted in RockChip's driver) for DP DRM bridge. Some parts can defini=
+tely shared between these two drivers like code for mailbox and commands se=
+nt/received by it, audio init.
+
+Moving cdn-dp-* to drivers/gpu/drm/bridge/ was also a plan, but it seems th=
+at cdn-dp-core.c use some stuff from drivers/gpu/drm/rockchip/*. cdn-dp-cor=
+e driver in this case seems like a part of a bigger picture while the drive=
+r that we want to upstream is standalone.
+
+We'll move/add everything that can be shared by both drivers to drivers/gpu=
+/drm/ and add new DPI/DP bridge driver as you advised and provide a new pat=
+ch.
+
+PS. Should we post patches 01-08 done in DRM helper by Quentin as a separat=
+e patch, so that reviewers will not have to go through them every time when=
+ we send updated version?
+
+Regards,
+Damian
+
+-----Original Message-----
+From: Heiko St=FCbner <heiko@sntech.de>=20
+Sent: Tuesday, July 3, 2018 13:03
+To: Damian Kos <dkos@cadence.com>
+Cc: David Airlie <airlied@linux.ie>; Rob Herring <robh+dt@kernel.org>; Mark=
+ Rutland <mark.rutland@arm.com>; Gustavo Padovan <gustavo@padovan.org>; Maa=
+rten Lankhorst <maarten.lankhorst@linux.intel.com>; Sean Paul <seanpaul@chr=
+omium.org>; Sandy Huang <hjc@rock-chips.com>; dri-devel@lists.freedesktop.o=
+rg; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-ker=
+nel@lists.infradead.org; linux-rockchip@lists.infradead.org; Lukasz Tyrala =
+<ltyrala@cadence.com>; Przemyslaw Gaj <pgaj@cadence.com>; Scott Telford <st=
+elford@cadence.com>
+Subject: Re: [PATCH 12/12] drm/rockchip: add support for CDNS MHDP IP contr=
+oller.
+
+EXTERNAL MAIL
+
+
+Hi Damien,
+
+it's very cool to see collaboration from vendors on this.
+
+
+Am Dienstag, 3. Juli 2018, 12:02:23 CEST schrieb Damian Kos:
 >
->This might be a bit misleading since the values returned are all lower case,
->e.g. "rising edge", whereas they are listed here in Title Case.
 
-Fair point, the options explicitly listed in the documentation should
-match how they appear on the system. I'll make sure to consolidate these
-and the others you mentioned in the next revision.
+It would be really nice to explain a bit about the added controller support=
+ in the commit message, so that people reviewing the patch can get a feelin=
+g for it.
 
->> +What:		/sys/bus/counter/devices/counterX/countY/preset
->> +KernelVersion:	4.19
->> +Contact:	linux-iio@vger.kernel.org
->> +Description:
->> +		If the counter device supports preset registers -- registers
->> +		used to load counter channels to a set count upon device-defined
->> +		preset operation trigger events -- the preset count for channel
->> +		Y is provided by this attribute.
->
->Should this be presetZ in case a device has more than one preset?
+> Signed-off-by: Damian Kos <dkos@cadence.com>
+> ---
+>  drivers/gpu/drm/rockchip/cdn-dp-core.c |  953
+> +++++++++++++++++++++++++++++++-=20
+> +++++++++++++++++++++++++++++++drivers/gpu/drm/rockchip/cdn-dp-core.h=20
+> +++++++++++++++++++++++++++++++|
+> 25 +
+>  drivers/gpu/drm/rockchip/cdn-dp-reg.c  |    2 +-
+>  drivers/gpu/drm/rockchip/cdn-dp-reg.h  |    4 +
 
-I suppose it could be possible for a device to feature more than one
-preset register for a count. However, in those cases a simple numbering
-scheme such as presetZ would be ambigious: which preset register is
-evaluated at which point?
+>From the changes below, it looks that this seems to add support for a bridg=
+e chip based on that IP block. So it seems like the bridge+glue driver mode=
+l would be a perfect fit for this, instead of stapling this onto the Rockch=
+ip-specific driver.
 
-I suspect in these kind of devices the preset registers are designated
-specific triggers; for example, perhaps preset0 is evaluated when the
-count reaches a ceiling, while preset1 is evaluated when a count reaches
-a floor. In those sort of cases, it may be better to be more explicit
-and define them as preset_ceiling and preset_floor (or something
-similar) to make their behavior and use more apparent.
+So essentially, you could take the Rockchip cdn-dp driver, move the common =
+parts to drivers/gpu/drm/bridge and then create separate glue drivers for b=
+oth Rockchip and your external bridge IP block.
 
-Alternatively, if the multiple presets are configurable, then there may
-be value with a presetZ scheme if we have a respective presetZ_op
-attribute (or similar) to expose the preset operation trigger condition
-to the user. I haven't personally encountered devices like this, but I
-can see it as possible, so we can consider this design once we try to
-add support for a device that requires it.
+This would prevent code duplication and also allow your bridge driver to be=
+ compiled without the Rockchip drm being present :-) .
+And also pave the way for future socs using your DP ip block.
 
->> +What:		/sys/bus/counter/devices/counterX/signalY/signal
->> +KernelVersion:	4.19
->> +Contact:	linux-iio@vger.kernel.org
->> +Description:
->> +		Signal data of Signal Y represented as a string.
->
->I guess the actual value returned depends on the type of signal? Would we
->need /sys/bus/counter/devices/counterX/signalY/type to indicate this so we
->know how to interpret the value?
 
-I'm not sure how useful such an attribute would be. If we're using some
-sort of generic utility to list out counter device information, then it
-can print out the signal data directly because it's reported as a
-character string. On the other hand, if the utility is specific for your
-particular device, it should already know the format of the signal data
-to parse at the very least from the respective documentation.
+Nowadays we have quite a number of examples you could take as inspiration f=
+or this:
+- bridge/analogix/* (shared between Exynos and Rockchip right now)
+- bridge/synopsys/dw-hdmi* (shared between a quite big number of users)
+- bridge/synopsys/dw-mipi-dsi.c (shared between Rockchip [pending] and stm)
 
-I don't believe adding this attribute would be technically difficult,
-but I would hold off on adding it until we see a situation that requires
-it (perhaps a device with multiple signal sources of different types for
-example).
 
-William Breathitt Gray
+Thanks
+Heiko
