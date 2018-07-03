@@ -1,76 +1,58 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [RFC PATCH 0/4] sysfs interface to miscellaneous BMC controls and fields
-Date: Tue,  3 Jul 2018 17:04:09 +1000
-Message-ID: <20180703070413.28756-1-andrew@aj.id.au>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v3 4/6] bus: ti-sysc: Add support for software reset
+Date: Tue, 3 Jul 2018 00:07:43 -0700
+Message-ID: <20180703070743.GG112168@atomide.com>
+References: <20180606060826.14671-5-faiz_abbas@ti.com>
+ <20180607073530.GH5738@atomide.com>
+ <a169ba7f-53f2-cf9a-a9ee-daffd6b53279@ti.com>
+ <20180608062158.GI5738@atomide.com>
+ <acdfef83-8778-e8f4-e423-ed04a9a8a649@ti.com>
+ <20180611060957.GN5738@atomide.com>
+ <f460481f-85a9-2a41-a894-6f25122dee8a@ti.com>
+ <20180611062904.GO5738@atomide.com>
+ <89d55b0b-fe9e-793b-2694-25755ac2bc15@ti.com>
+ <20180611070332.GP5738@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180611070332.GP5738@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Andrew Jeffery <andrew@aj.id.au>, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, gregkh@linuxfoundation.org, Eugene.Cho@dell.com, a.amelkin@yadro.com, stewart@linux.ibm.com, benh@kernel.crashing.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, mark.rutland@arm.com, paul@pwsan.com, t-kristo@ti.com, robh+dt@kernel.org, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-*Dons firefighting gear*
+* Tony Lindgren <tony@atomide.com> [180611 07:06]:
+> * Faiz Abbas <faiz_abbas@ti.com> [180611 06:48]:
+> > Hi,
+> > 
+> > On Monday 11 June 2018 11:59 AM, Tony Lindgren wrote:
+> > > * Faiz Abbas <faiz_abbas@ti.com> [180611 06:28]:
+> > >> Great. I thought I completely misunderstood you. But I don't see what
+> > >> adding another function will accomplish. A QUIRK flag used in the same
+> > >> function would work well enough>
+> > > Fine with me as long as the function stays simple for both
+> > > syss and sysc reset.
+> > >
+> > 
+> > 
+> > In general a reset status bit being in sysstatus is the norm and it
+> > being in sysconfig should be the "quirk" for which a flag needs to be
+> > added. What do you think?
+> 
+> Sure makes sense to me.
+> 
+> > As an aside, naming bitshifts by the name of the platform they were
+> > originally added in seems weird. There should be some generic mask
+> > saying "soft reset is the 0th bit". Currently I am using
+> > SYSC_OMAP4_SOFTRESET for a dra76x module. I guess it depends on how many
+> > different sysconfig types we have.
+> 
+> Sure we could have a macro for that.
 
-Hello,
+So what's the conclusion on this one? Are you going to do one
+more version of the ti-sysc driver patch?
 
-This series introduces a bmc-misc-ctrl driver for exposing hardware interfaces
-provided by the BMC (Baseboard Management Controller) for scratch register
-communication between the host and the BMC, and other miscellaneous switches
-controlling BMC hardware features that can be exposed to the host.
+Regards,
 
-Previously Ben Herrenschmidt sent mail wanting to get some consensus on a good
-way forward:
-
-https://lkml.org/lkml/2018/4/10/222
-
-To summarise Ben's points:
-
-We have found that the controls we need to expose do not fit well into existing
-driver models for several reasons:
-
-1. Not exposing the fields to userspace would instead mean encoding policy
-   affecting the host system into the BMC kernel (typically scratch registers)
-2. Some controls are so unique as to defy integration into other drivers
-3. Exposing specific, well-constrained fields feels less evil than falling back
-   to devmem.
-
-This series is one implementation of what we had in mind. My motivation is with
-respect to ASPEED BMC hardware but Dell have also indicated they would also
-make use of something similar for Nuvoton BMCs.
-
-To those ends, the implementation of bmc-misc-ctrl introduced here:
-
-1. Uses devicetree to describe the miscellaneous fields and switches
-2. Exposes the fields in sysfs via value/mask/set/clear attributes
-3. Adds a 'bmc' class for the fields to aid discovery in userspace
-
-Now, the intent is bmc-misc-ctrl is used as a last resort. If features can
-sanely be exposed in more appropriate drivers, then that should (obviously) be
-done instead.
-
-I'm sending this out as an RFC as I'm sure people will have feedback. I hope it
-will be more constructive than 'NAK'.
-
-Thanks,
-
-Andrew
-
-Andrew Jeffery (4):
-  dts: misc: Add bindings documentation for bmc-misc-ctrl
-  Documentation: ABI: Add sysfs-class-bmc documentation to testing
-  misc: Add bmc-misc-ctrl
-  dts: aspeed-g5: Add bmc-misc-ctrl nodes to devicetree
-
- Documentation/ABI/testing/sysfs-class-bmc     |  62 +++
- .../bindings/misc/bmc-misc-ctrl.txt           | 252 ++++++++++++
- MAINTAINERS                                   |   7 +
- arch/arm/boot/dts/aspeed-g5.dtsi              | 192 +++++++++
- drivers/misc/Kconfig                          |   8 +
- drivers/misc/Makefile                         |   1 +
- drivers/misc/bmc-misc-ctrl.c                  | 363 ++++++++++++++++++
- 7 files changed, 885 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-bmc
- create mode 100644 Documentation/devicetree/bindings/misc/bmc-misc-ctrl.txt
- create mode 100644 drivers/misc/bmc-misc-ctrl.c
-
--- 
-2.17.1
+Tony
