@@ -1,38 +1,29 @@
-From: Mathieu Malaterre <malat@debian.org>
-Subject: Re: [PATCH 00/14] dma-jz4780 improvements
-Date: Tue, 3 Jul 2018 21:32:13 +0200
-Message-ID: <CA+7wUsykjQkSHshNNVJaZJ4d_U9Q4fhaoRaNOTHhjoj43xRPLg@mail.gmail.com>
-References: <20180703123214.23090-1-paul@crapouillou.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 14/32] media: dt-bindings: media: qcom,camss: Fix
+ whitespaces
+Date: Tue, 3 Jul 2018 13:36:00 -0600
+Message-ID: <20180703193600.GA1692@rob-hp-laptop>
+References: <1529681621-9682-1-git-send-email-todor.tomov@linaro.org>
+ <1529681621-9682-15-git-send-email-todor.tomov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180703123214.23090-1-paul@crapouillou.net>
+Content-Disposition: inline
+In-Reply-To: <1529681621-9682-15-git-send-email-todor.tomov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: vkoul@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, dansilsby@gmail.com, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>
+To: Todor Tomov <todor.tomov@linaro.org>
+Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 3, 2018 at 2:32 PM Paul Cercueil <paul@crapouillou.net> wrote:
->
-> Hi,
->
-> This set of patches by myself and Daniel extends the dma-jz4780 driver
-> to support other SoCs (JZ4770, JZ4740, JZ4725B).
->
-> Some fixes are also included, for proper residue reporting, which fixes
-> errors with ALSA.
->
-> Finally, the last two patches update the devicetree bindings for the
-> JZ4780 SoC and add a binding for the JZ4770 SoC.
->
-> This patchset was tested on JZ4780, JZ4770 and JZ4725B, but was not tested
-> on the JZ4740, so it would be fantastic if somebody could test it there.
+On Fri, Jun 22, 2018 at 06:33:23PM +0300, Todor Tomov wrote:
+> Use tabs.
+> 
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: devicetree@vger.kernel.org
+> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+> ---
+>  .../devicetree/bindings/media/qcom,camss.txt       | 92 +++++++++++-----------
+>  1 file changed, 46 insertions(+), 46 deletions(-)
 
-For the entire series, everything works as expected on JZ4780 (Creator
-CI20), including reading from sdcard.
-
-Tested-by: Mathieu Malaterre <malat@debian.org>
-
-> Regards,
-> -Paul
->
+Reviewed-by: Rob Herring <robh@kernel.org>
