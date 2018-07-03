@@ -1,65 +1,47 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 12/15] arm: dts: highbank: Add missing OPP properties for CPUs
-Date: Tue, 3 Jul 2018 07:46:34 -0700
-Message-ID: <CAOesGMjtFSVg1yu-9TAxXTTtvzGaUGn6P9-hnK5XrgHVFVHDOQ@mail.gmail.com>
-References: <cover.1527244200.git.viresh.kumar@linaro.org> <f8a4e5c3062397736475ec599de730206846cb9b.1527244201.git.viresh.kumar@linaro.org>
- <CAL_JsqJRKMREfJ8LoDfuda8BU3g5Eq1AX5cPZGzO3uN3vUhrAQ@mail.gmail.com>
- <20180702232735.eocdrdfwyj37577h@localhost> <20180703041321.k2ewqta76cnqhsmm@vireshk-i7>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: ARM: dts: sun8i: h3: Enable dwmac-sun8i on the
+ Beelink X2
+Date: Tue, 3 Jul 2018 16:50:20 +0200
+Message-ID: <20180703145020.hkct43ccbpteleht@flea>
+References: <20180630062720.24225-1-codekipper@gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180703041321.k2ewqta76cnqhsmm@vireshk-i7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, Ionela Voinescu <ionela.voinescu@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, DTML <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="i442abj7v37vzoll"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLM253MQKGQENCLO5HY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180630062720.24225-1-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: wens-jdAy2FN1RRM@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 2, 2018 at 9:13 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 02-07-18, 16:27, Olof Johansson wrote:
->> On Mon, Jul 02, 2018 at 02:25:40PM -0600, Rob Herring wrote:
->> > On Fri, May 25, 2018 at 4:32 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->> > >
->> > > The OPP properties, like "operating-points", should either be present
->> > > for all the CPUs of a cluster or none. If these are present only for a
->> > > subset of CPUs of a cluster then things will start falling apart as soon
->> > > as the CPUs are brought online in a different order. For example, this
->> > > will happen because the operating system looks for such properties in
->> > > the CPU node it is trying to bring up, so that it can create an OPP
->> > > table.
->> > >
->> > > Add such missing properties.
->> > >
->> > > Fix other missing property (clock latency) as well to make it all
->> > > work.
->> > >
->> > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
->> > > ---
->> > >  arch/arm/boot/dts/highbank.dts | 30 ++++++++++++++++++++++++++++++
->> > >  1 file changed, 30 insertions(+)
->> >
->> > Acked-by: Rob Herring <robh@kernel.org>
->> >
->> > ARM-SOC maintainers, Please apply this.
->>
->> Applied to next/dt.
->
-> Thanks Olof.
->
-> Can you also apply other patches in this series, that haven't been
-> applied yet by SoC maintainers ? And same for the arm64 series..
 
-This is the kind of patch that should be applied by the maintainers
-for active platforms, where they have systems to test with and can
-make sure you haven't regressed something on them.
+--i442abj7v37vzoll
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-For very low patch rate platforms we can apply directly through
-maintainer acks, like in this case.
+Hi,
 
-So, my recommendation is to repost the series to the maintainers.
-Please don't patchbomb arm@kernel.org though, so keep us off of cc by
-default (you can add our individual addresses if you want).
+On Sat, Jun 30, 2018 at 08:27:20AM +0200, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> The enabling of the emac was reverted when stability issues were
+> discovered.
 
+What stability issues exactly? Have they been fixed? If so, by which
+commit?
 
-Thanks,
+Maxime
 
--Olof
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--i442abj7v37vzoll--
