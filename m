@@ -1,31 +1,44 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3] ARM: imx: Provide support for NXP i.MX7D Cortex-M4
-Date: Tue, 3 Jul 2018 15:18:28 +0800
-Message-ID: <20180703071827.GO4348@dragon>
-References: <20180703071247.6545-1-o.rempel@pengutronix.de>
+From: Luis Araneda <luaraneda@gmail.com>
+Subject: Re: [RFC PATCH 5/5] arm: dts: zynq: remove "zynq" prefix from
+ compatible property
+Date: Tue, 3 Jul 2018 03:18:49 -0400
+Message-ID: <CAHbBuxpuAC0PDfFBQ+D_zJu-AmWFNhEWCojr8LAWfO-ootLqEg@mail.gmail.com>
+References: <20180628054205.17737-1-luaraneda@gmail.com> <20180628054205.17737-6-luaraneda@gmail.com>
+ <042f6632-f4f6-d278-9859-b8998468c3bf@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180703071247.6545-1-o.rempel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <042f6632-f4f6-d278-9859-b8998468c3bf@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 03, 2018 at 09:12:47AM +0200, Oleksij Rempel wrote:
-> Cortex M4 part can be started from a boot loader or over
-> Linux remoteproc framework.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Hi Michal,
 
-Applied, thanks.
+On Thu, Jun 28, 2018 at 2:42 AM Michal Simek <michal.simek@xilinx.com> wrote:
+> zynq name here is correct which is saying that hardblock is going to be
+> described. Without it it is suggesting that hardblock is not used and it
+> is for example on zybo with microblaze.
+
+In my opinion, the zynq name is just adding redundant information to
+the "xlnx,zynq-7000" value.
+Taking the Zybo board, the current compatible property is:
+> compatible = "digilent,zynq-zybo", "xlnx,zynq-7000";
+
+I'm proposing to change it to:
+> compatible = "digilent,zybo", "xlnx,zynq-7000";
+(I know I must keep the old value too,  I'm simplifying)
+
+In the case of a Zybo board with a microblaze, the property could be:
+> compatible = "digilent,zybo", "xlnx,microblaze";
+
+That would allow to differentiate between zynq and microblaze.
+
+I have no problem on dropping the patch if you like. There might be
+something that I'm not seeing or a use case that I'm missing.
+
+
+Thanks,
+
+Luis Araneda.
