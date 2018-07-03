@@ -1,84 +1,162 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v2 2/8] drm/bridge/synopsys: dsi: don't call
- __dw_mipi_dsi_probe from dw_mipi_dsi_bind
-Date: Tue, 3 Jul 2018 14:16:28 +0200
-Message-ID: <20180703121630eucas1p2a8a61ac1390b7dbc34cf2bea78f1fcf5~92vQQKuDT2201222012eucas1p2I@eucas1p2.samsung.com>
-References: <20180618102806.15650-1-heiko@sntech.de>
- <CGME20180618102832epcas4p3619984fa86b7407e1545e031fd950c30@epcas4p3.samsung.com>
- <20180618102806.15650-3-heiko@sntech.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180618102806.15650-3-heiko@sntech.de>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, mka@chromium.org
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 01/14] dmaengine: dma-jz4780: Avoid hardcoding number of channels
+Date: Tue,  3 Jul 2018 14:32:01 +0200
+Message-ID: <20180703123214.23090-2-paul@crapouillou.net>
+References: <20180703123214.23090-1-paul@crapouillou.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180703123214.23090-1-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTguMDYuMjAxOCAxMjoyOCwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gX19kd19taXBpX2Rz
-aV9wcm9iZSgpIGRvZXMgYWxsIHRoZSBncmFiYmluZyBvZiByZXNvdXJjZXMgYW5kIGRvZXMgaXQg
-dXNpbmcKPiBkZXZtLWhlbHBlcnMuIFNvIHRoaXMgaXMgaGFwcGVuaW5nIG9uIGVhY2ggdHJ5IG9m
-IG1hc3RlciBicmluZ3VwIHBvc3NpYmx5Cj4gc2xvd2luZyBkb3duIHRoaW5ncyBhIGxvdC4KPgo+
-IERyaXZlcnMgdXNpbmcgdGhlIGNvbXBvbmVudCBmcmFtZXdvcmsgbWF5IGluc3RlYWQgd2FudCBj
-YWxsIGR3X21pcGlfZHNpX3Byb2JlCj4gc2VwYXJhdGVseSBpbiB0aGVpciBwcm9iZSBmdW5jdGlv
-biBzZXR1cCByZXNvdXJjZXMgZWFybHkuIFRoYXQgd2F5IHRoZSBkc2kKPiBidXMgYWxzbyBnZXRz
-IGNyZWF0ZWQgZWFybGllciBhbmQgYWxzbyBub3QgcmVjcmVhdGVkIG9uIGVhY2ggYmluZC10cnks
-IHNvCj4gdGhhdCBhdHRhY2hlZCBwYW5lbHMgY2FuIGxvYWQgdGhlaXIgbW9kdWxlcyBhbmQgYmUg
-cHJvYmVkIHdheSBiZWZvcmUgdGhlCj4gYnJpZGdlLWF0dGFjaCBpbiB0aGUgYmluZCBjYWxsLgo+
-Cj4gU28gZHJvcCB0aGUgY2FsbCB0byBfX2R3X21pcGlfZHNpX3Byb2JlIGFuZCBtb2RpZnkgdGhl
-IGZ1bmN0aW9uIHRvIHRha2UKPiBhIHN0cnVjdCBkd19taXBpX2RzaSBpbnN0ZWFkIG9mIHRoZSBw
-bGF0Zm9ybS1kZXZpY2UuCj4KPiBTaWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVpa29A
-c250ZWNoLmRlPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1p
-cGktZHNpLmMgfCAxNSArKystLS0tLS0tLS0tLS0KPiAgaW5jbHVkZS9kcm0vYnJpZGdlL2R3X21p
-cGlfZHNpLmggICAgICAgICAgICAgIHwgIDUgKy0tLS0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA0IGlu
-c2VydGlvbnMoKyksIDE2IGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1
-L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYyBiL2RyaXZlcnMvZ3B1L2RybS9icmlk
-Z2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYwo+IGluZGV4IDA3Y2RlMjU1Y2FiMi4uYmI0YWVjYTVj
-MGY5IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlw
-aS1kc2kuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1k
-c2kuYwo+IEBAIC05NjYsMzEgKzk2NiwyMiBAQCBFWFBPUlRfU1lNQk9MX0dQTChkd19taXBpX2Rz
-aV9yZW1vdmUpOwo+ICAvKgo+ICAgKiBCaW5kL3VuYmluZCBBUEksIHVzZWQgZnJvbSBwbGF0Zm9y
-bXMgYmFzZWQgb24gdGhlIGNvbXBvbmVudCBmcmFtZXdvcmsuCj4gICAqLwo+IC1zdHJ1Y3QgZHdf
-bWlwaV9kc2kgKgo+IC1kd19taXBpX2RzaV9iaW5kKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
-ZXYsIHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlciwKPiAtCQkgY29uc3Qgc3RydWN0IGR3X21p
-cGlfZHNpX3BsYXRfZGF0YSAqcGxhdF9kYXRhKQo+ICtpbnQgZHdfbWlwaV9kc2lfYmluZChzdHJ1
-Y3QgZHdfbWlwaV9kc2kgKmRzaSwgc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyKQo+ICB7Cj4g
-LQlzdHJ1Y3QgZHdfbWlwaV9kc2kgKmRzaTsKPiAgCWludCByZXQ7Cj4gIAo+IC0JZHNpID0gX19k
-d19taXBpX2RzaV9wcm9iZShwZGV2LCBwbGF0X2RhdGEpOwo+IC0JaWYgKElTX0VSUihkc2kpKQo+
-IC0JCXJldHVybiBkc2k7Cj4gLQo+ICAJcmV0ID0gZHJtX2JyaWRnZV9hdHRhY2goZW5jb2Rlciwg
-JmRzaS0+YnJpZGdlLCBOVUxMKTsKPiAgCWlmIChyZXQpIHsKPiAtCQlkd19taXBpX2RzaV9yZW1v
-dmUoZHNpKTsKPiAgCQlEUk1fRVJST1IoIkZhaWxlZCB0byBpbml0aWFsaXplIGJyaWRnZSB3aXRo
-IGRybVxuIik7Cj4gLQkJcmV0dXJuIEVSUl9QVFIocmV0KTsKPiArCQlyZXR1cm4gcmV0Owo+ICAJ
-fQo+ICAKPiAtCXJldHVybiBkc2k7Cj4gKwlyZXR1cm4gcmV0Owo+ICB9Cj4gIEVYUE9SVF9TWU1C
-T0xfR1BMKGR3X21pcGlfZHNpX2JpbmQpOwo+ICAKPiAgdm9pZCBkd19taXBpX2RzaV91bmJpbmQo
-c3RydWN0IGR3X21pcGlfZHNpICpkc2kpCj4gIHsKPiAtCV9fZHdfbWlwaV9kc2lfcmVtb3ZlKGRz
-aSk7Cj4gIH0KPiAgRVhQT1JUX1NZTUJPTF9HUEwoZHdfbWlwaV9kc2lfdW5iaW5kKTsKCkNhbid0
-IHdlIGp1c3QgcmVtb3ZlIHRoZXNlIHR3byBiaW5kL3VuYmluZCBmdW5jdGlvbnMgYW5kIGNhbGwK
-ZHJtX2JyaWRnZV9hdHRhY2ggZGlyZWN0bHk/CgpSZWdhcmRzCkFuZHJ6ZWoKCj4gIAo+IGRpZmYg
-LS1naXQgYS9pbmNsdWRlL2RybS9icmlkZ2UvZHdfbWlwaV9kc2kuaCBiL2luY2x1ZGUvZHJtL2Jy
-aWRnZS9kd19taXBpX2RzaS5oCj4gaW5kZXggZDljNmQ1NDlmOTcxLi42ZDdmOGViNWQ5ZjIgMTAw
-NjQ0Cj4gLS0tIGEvaW5jbHVkZS9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLmgKPiArKysgYi9pbmNs
-dWRlL2RybS9icmlkZ2UvZHdfbWlwaV9kc2kuaAo+IEBAIC0zNSwxMCArMzUsNyBAQCBzdHJ1Y3Qg
-ZHdfbWlwaV9kc2kgKmR3X21pcGlfZHNpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
-ZXYsCj4gIAkJCQkgICAgICBjb25zdCBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9kYXRhCj4gIAkJ
-CQkgICAgICAqcGxhdF9kYXRhKTsKPiAgdm9pZCBkd19taXBpX2RzaV9yZW1vdmUoc3RydWN0IGR3
-X21pcGlfZHNpICpkc2kpOwo+IC1zdHJ1Y3QgZHdfbWlwaV9kc2kgKmR3X21pcGlfZHNpX2JpbmQo
-c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwKPiAtCQkJCSAgICAgc3RydWN0IGRybV9lbmNv
-ZGVyICplbmNvZGVyLAo+IC0JCQkJICAgICBjb25zdCBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9k
-YXRhCj4gLQkJCQkgICAgICpwbGF0X2RhdGEpOwo+ICtpbnQgZHdfbWlwaV9kc2lfYmluZChzdHJ1
-Y3QgZHdfbWlwaV9kc2kgKmRzaSwgc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyKTsKPiAgdm9p
-ZCBkd19taXBpX2RzaV91bmJpbmQoc3RydWN0IGR3X21pcGlfZHNpICpkc2kpOwo+ICAKPiAgI2Vu
-ZGlmIC8qIF9fRFdfTUlQSV9EU0lfXyAqLwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+As part of the work to support various other Ingenic JZ47xx SoC versions,
+which don't feature the same number of DMA channels per core, we now
+deduce the number of DMA channels available from the devicetree
+compatible string.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/dma/dma-jz4780.c | 53 +++++++++++++++++++++++++++++-----------
+ 1 file changed, 39 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index 85820a2d69d4..b40f491f0367 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -16,6 +16,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/of_dma.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+@@ -23,8 +24,6 @@
+ #include "dmaengine.h"
+ #include "virt-dma.h"
+ 
+-#define JZ_DMA_NR_CHANNELS	32
+-
+ /* Global registers. */
+ #define JZ_DMA_REG_DMAC		0x1000
+ #define JZ_DMA_REG_DIRQP	0x1004
+@@ -135,14 +134,20 @@ struct jz4780_dma_chan {
+ 	unsigned int curr_hwdesc;
+ };
+ 
++enum jz_version {
++	ID_JZ4780,
++};
++
+ struct jz4780_dma_dev {
+ 	struct dma_device dma_device;
+ 	void __iomem *base;
+ 	struct clk *clk;
+ 	unsigned int irq;
++	unsigned int nb_channels;
++	enum jz_version version;
+ 
+ 	uint32_t chan_reserved;
+-	struct jz4780_dma_chan chan[JZ_DMA_NR_CHANNELS];
++	struct jz4780_dma_chan chan[];
+ };
+ 
+ struct jz4780_dma_filter_data {
+@@ -648,7 +653,7 @@ static irqreturn_t jz4780_dma_irq_handler(int irq, void *data)
+ 
+ 	pending = jz4780_dma_readl(jzdma, JZ_DMA_REG_DIRQP);
+ 
+-	for (i = 0; i < JZ_DMA_NR_CHANNELS; i++) {
++	for (i = 0; i < jzdma->nb_channels; i++) {
+ 		if (!(pending & (1<<i)))
+ 			continue;
+ 
+@@ -728,7 +733,7 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
+ 	data.channel = dma_spec->args[1];
+ 
+ 	if (data.channel > -1) {
+-		if (data.channel >= JZ_DMA_NR_CHANNELS) {
++		if (data.channel >= jzdma->nb_channels) {
+ 			dev_err(jzdma->dma_device.dev,
+ 				"device requested non-existent channel %u\n",
+ 				data.channel);
+@@ -752,19 +757,45 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
+ 	}
+ }
+ 
++static const unsigned int jz4780_dma_nb_channels[] = {
++	[ID_JZ4780] = 32,
++};
++
++static const struct of_device_id jz4780_dma_dt_match[] = {
++	{ .compatible = "ingenic,jz4780-dma", .data = (void *)ID_JZ4780 },
++	{},
++};
++MODULE_DEVICE_TABLE(of, jz4780_dma_dt_match);
++
+ static int jz4780_dma_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
++	const struct of_device_id *of_id = of_match_device(
++			jz4780_dma_dt_match, dev);
+ 	struct jz4780_dma_dev *jzdma;
+ 	struct jz4780_dma_chan *jzchan;
+ 	struct dma_device *dd;
+ 	struct resource *res;
++	enum jz_version version;
++	unsigned int nb_channels;
+ 	int i, ret;
+ 
+-	jzdma = devm_kzalloc(dev, sizeof(*jzdma), GFP_KERNEL);
++	if (of_id)
++		version = (enum jz_version)of_id->data;
++	else
++		version = ID_JZ4780; /* Default when not probed from DT */
++
++	nb_channels = jz4780_dma_nb_channels[version];
++
++	jzdma = devm_kzalloc(dev, sizeof(*jzdma)
++				+ sizeof(*jzdma->chan) * nb_channels,
++				GFP_KERNEL);
+ 	if (!jzdma)
+ 		return -ENOMEM;
+ 
++	jzdma->nb_channels = nb_channels;
++	jzdma->version = version;
++
+ 	platform_set_drvdata(pdev, jzdma);
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -839,7 +870,7 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 
+ 	INIT_LIST_HEAD(&dd->channels);
+ 
+-	for (i = 0; i < JZ_DMA_NR_CHANNELS; i++) {
++	for (i = 0; i < jzdma->nb_channels; i++) {
+ 		jzchan = &jzdma->chan[i];
+ 		jzchan->id = i;
+ 
+@@ -884,19 +915,13 @@ static int jz4780_dma_remove(struct platform_device *pdev)
+ 
+ 	free_irq(jzdma->irq, jzdma);
+ 
+-	for (i = 0; i < JZ_DMA_NR_CHANNELS; i++)
++	for (i = 0; i < jzdma->nb_channels; i++)
+ 		tasklet_kill(&jzdma->chan[i].vchan.task);
+ 
+ 	dma_async_device_unregister(&jzdma->dma_device);
+ 	return 0;
+ }
+ 
+-static const struct of_device_id jz4780_dma_dt_match[] = {
+-	{ .compatible = "ingenic,jz4780-dma", .data = NULL },
+-	{},
+-};
+-MODULE_DEVICE_TABLE(of, jz4780_dma_dt_match);
+-
+ static struct platform_driver jz4780_dma_driver = {
+ 	.probe		= jz4780_dma_probe,
+ 	.remove		= jz4780_dma_remove,
+-- 
+2.18.0
