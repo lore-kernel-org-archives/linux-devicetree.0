@@ -1,99 +1,55 @@
-From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: thermal: Add binding document for SR thermal
-Date: Tue, 3 Jul 2018 16:15:19 +0530
-Message-ID: <CABe79T77VSHCbtApO=kgX5hbL8FXeCAPEcdf9wYo+CwOTDk35A@mail.gmail.com>
-References: <1529310679-13482-1-git-send-email-srinath.mannam@broadcom.com>
- <1529310679-13482-2-git-send-email-srinath.mannam@broadcom.com>
- <20180620195214.GA10436@rob-hp-laptop> <CABe79T74ycjqCAo5gnKkdMKZfcVGSuOX-EiUuhiwZ-iMtacPzQ@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 12/12] drm/rockchip: add support for CDNS MHDP IP
+ controller.
+Date: Tue, 03 Jul 2018 13:03:11 +0200
+Message-ID: <2647490.Uuqs1CuF1U@diego>
+References: <1530612152-27555-1-git-send-email-dkos@cadence.com>
+ <1530612152-27555-13-git-send-email-dkos@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABe79T74ycjqCAo5gnKkdMKZfcVGSuOX-EiUuhiwZ-iMtacPzQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1530612152-27555-13-git-send-email-dkos@cadence.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Damian Kos <dkos@cadence.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, pgaj@cadence.com, Rob Herring <robh+dt@kernel.org>, stelford@cadence.com, ltyrala@cadence.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Kindly provide your feedback.
-
-Regards,
-Srinath.
-
-On Fri, Jun 22, 2018 at 11:21 AM, Srinath Mannam
-<srinath.mannam@broadcom.com> wrote:
-> Hi Rob,
->
-> Please find my comments for the reason to have multiple DT nodes.
->
-> On Thu, Jun 21, 2018 at 1:22 AM, Rob Herring <robh@kernel.org> wrote:
->> On Mon, Jun 18, 2018 at 02:01:17PM +0530, Srinath Mannam wrote:
->>> From: Pramod Kumar <pramod.kumar@broadcom.com>
->>>
->>> Add binding document for supported thermal implementation
->>> in Stingray.
->>>
->>> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
->>> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
->>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
->>> Reviewed-by: Srinath Mannam <srinath.mannam@broadcom.com>
->>> ---
->>>  .../bindings/thermal/brcm,sr-thermal.txt           | 45 ++++++++++++++++++++++
->>>  1 file changed, 45 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
->>> new file mode 100644
->>> index 0000000..33f9e11
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
->>> @@ -0,0 +1,45 @@
->>> +* Broadcom Stingray Thermal
->>> +
->>> +This binding describes thermal sensors that is part of Stingray SoCs.
->>> +
->>> +Required properties:
->>> +- compatible : Must be "brcm,sr-thermal"
->>> +- reg : memory where tmon data will be available.
->>> +
->>> +Example:
->>> +     tmons {
->>> +             compatible = "simple-bus";
->>> +             #address-cells = <1>;
->>> +             #size-cells = <1>;
->>> +             ranges;
->>> +
->>> +             tmon_ihost0: thermal@8f100000 {
->>> +                     compatible = "brcm,sr-thermal";
->>> +                     reg = <0x8f100000 0x4>;
->>> +             };
->>
->> You still haven't given me a compelling reason why you need a node per
->> register.
->>
->> You have a single range of registers. Make this 1 node.
->>
->
-> We Have two reasons to have multiple nodes..
-> 1. Our chip has multiple functional blocks. Each functional block has
-> its own thermal zone.
-> Functional blocks and their thermal zones enabled/disabled based on end product.
-> Few functional blocks need to disabled for few products so thermal
-> zones also need to disable.
-> In that case, nodes of specific thermal zones are removed from DTS
-> file of corresponding product.
->
-> 2. Thermal framework provides sysfs interface to configure thermal
-> zones and read temperature of thermal zone.
-> To configure individual thermal zone, we need to have separate DT node.
-> Same to read temperature of individual thermal zone.
-> Ex: To read temperature of thermal zone 0.
->          cat /sys/class/thermal/thermal_zone0/temp
->      To configure trip temperature of thermal zone 0.
->           echo 110000 > /sys/class/thermal/thermal_zone0/trip_point_0_temp
->
-> Also to avoid driver source change for the multiple products it is
-> clean to have multiple DT nodes.
->
->> Rob
+SGkgRGFtaWVuLAoKaXQncyB2ZXJ5IGNvb2wgdG8gc2VlIGNvbGxhYm9yYXRpb24gZnJvbSB2ZW5k
+b3JzIG9uIHRoaXMuCgoKQW0gRGllbnN0YWcsIDMuIEp1bGkgMjAxOCwgMTI6MDI6MjMgQ0VTVCBz
+Y2hyaWViIERhbWlhbiBLb3M6Cj4KCkl0IHdvdWxkIGJlIHJlYWxseSBuaWNlIHRvIGV4cGxhaW4g
+YSBiaXQgYWJvdXQgdGhlIGFkZGVkIGNvbnRyb2xsZXIgc3VwcG9ydAppbiB0aGUgY29tbWl0IG1l
+c3NhZ2UsIHNvIHRoYXQgcGVvcGxlIHJldmlld2luZyB0aGUgcGF0Y2ggY2FuIGdldCBhCmZlZWxp
+bmcgZm9yIGl0LgoKPiBTaWduZWQtb2ZmLWJ5OiBEYW1pYW4gS29zIDxka29zQGNhZGVuY2UuY29t
+Pgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWNvcmUuYyB8ICA5NTMK
+PiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLSBkcml2ZXJzL2dwdS9kcm0vcm9ja2No
+aXAvY2RuLWRwLWNvcmUuaCB8ICAKPiAyNSArCj4gIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9j
+ZG4tZHAtcmVnLmMgIHwgICAgMiArLQo+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRw
+LXJlZy5oICB8ICAgIDQgKwoKRnJvbSB0aGUgY2hhbmdlcyBiZWxvdywgaXQgbG9va3MgdGhhdCB0
+aGlzIHNlZW1zIHRvIGFkZCBzdXBwb3J0IGZvciBhCmJyaWRnZSBjaGlwIGJhc2VkIG9uIHRoYXQg
+SVAgYmxvY2suIFNvIGl0IHNlZW1zIGxpa2UgdGhlIGJyaWRnZStnbHVlIGRyaXZlcgptb2RlbCB3
+b3VsZCBiZSBhIHBlcmZlY3QgZml0IGZvciB0aGlzLCBpbnN0ZWFkIG9mIHN0YXBsaW5nIHRoaXMg
+b250byB0aGUKUm9ja2NoaXAtc3BlY2lmaWMgZHJpdmVyLgoKU28gZXNzZW50aWFsbHksIHlvdSBj
+b3VsZCB0YWtlIHRoZSBSb2NrY2hpcCBjZG4tZHAgZHJpdmVyLCBtb3ZlIHRoZSBjb21tb24KcGFy
+dHMgdG8gZHJpdmVycy9ncHUvZHJtL2JyaWRnZSBhbmQgdGhlbiBjcmVhdGUgc2VwYXJhdGUgZ2x1
+ZSBkcml2ZXJzIGZvcgpib3RoIFJvY2tjaGlwIGFuZCB5b3VyIGV4dGVybmFsIGJyaWRnZSBJUCBi
+bG9jay4KClRoaXMgd291bGQgcHJldmVudCBjb2RlIGR1cGxpY2F0aW9uIGFuZCBhbHNvIGFsbG93
+IHlvdXIgYnJpZGdlIGRyaXZlciB0bwpiZSBjb21waWxlZCB3aXRob3V0IHRoZSBSb2NrY2hpcCBk
+cm0gYmVpbmcgcHJlc2VudCA6LSkgLgpBbmQgYWxzbyBwYXZlIHRoZSB3YXkgZm9yIGZ1dHVyZSBz
+b2NzIHVzaW5nIHlvdXIgRFAgaXAgYmxvY2suCgoKTm93YWRheXMgd2UgaGF2ZSBxdWl0ZSBhIG51
+bWJlciBvZiBleGFtcGxlcyB5b3UgY291bGQgdGFrZSBhcwppbnNwaXJhdGlvbiBmb3IgdGhpczoK
+LSBicmlkZ2UvYW5hbG9naXgvKiAoc2hhcmVkIGJldHdlZW4gRXh5bm9zIGFuZCBSb2NrY2hpcCBy
+aWdodCBub3cpCi0gYnJpZGdlL3N5bm9wc3lzL2R3LWhkbWkqIChzaGFyZWQgYmV0d2VlbiBhIHF1
+aXRlIGJpZyBudW1iZXIgb2YgdXNlcnMpCi0gYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMg
+KHNoYXJlZCBiZXR3ZWVuIFJvY2tjaGlwIFtwZW5kaW5nXSBhbmQgc3RtKQoKClRoYW5rcwpIZWlr
+bwoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
