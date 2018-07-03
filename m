@@ -1,107 +1,116 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: w1: document sub-node bindings for
- DS2760
-Date: Tue, 3 Jul 2018 17:16:50 -0600
-Message-ID: <20180703231650.GA9201@rob-hp-laptop>
-References: <20180628075540.1757-1-daniel@zonque.org>
- <20180628075540.1757-2-daniel@zonque.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v8 1/2] dt-binding: hwmon: Add NPCM7xx PWM and Fan controller documentation
+Date: Wed,  4 Jul 2018 02:23:25 +0300
+Message-ID: <20180703232326.355718-2-tmaimon77@gmail.com>
+References: <20180703232326.355718-1-tmaimon77@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180628075540.1757-2-daniel@zonque.org>
+In-Reply-To: <20180703232326.355718-1-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Mack <daniel@zonque.org>
-Cc: zbr@ioremap.net, mark.rutland@arm.com, szabolcs.gyurko@tlt.hu, sre@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, robert.jarzmik@free.fr
+To: robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, linux@roeck-us.net, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 28, 2018 at 09:55:37AM +0200, Daniel Mack wrote:
-> This patch add a generic w1 bindings document that merely describes how
-> slave deviceses are grouped under master nodes. It also adds a specific
-> binding for the ds2760 battery monitor.
-> 
-> Signed-off-by: Daniel Mack <daniel@zonque.org>
-> ---
->  .../devicetree/bindings/w1/maxim,ds2760.txt    | 15 +++++++++++++++
->  .../devicetree/bindings/w1/w1-gpio.txt         |  6 ++++++
->  Documentation/devicetree/bindings/w1/w1.txt    | 18 ++++++++++++++++++
->  3 files changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/w1/maxim,ds2760.txt
->  create mode 100644 Documentation/devicetree/bindings/w1/w1.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/w1/maxim,ds2760.txt b/Documentation/devicetree/bindings/w1/maxim,ds2760.txt
-> new file mode 100644
-> index 000000000000..d916fdd213f7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/w1/maxim,ds2760.txt
-> @@ -0,0 +1,15 @@
-> +Devicetree bindings for Maxim DS2760
-> +====================================
-> +
-> +The ds2760 is a w1 slave device and must hence have its sub-node in DT
-> +under a w1 bus master node.
-> +
-> +The device exposes a power supply, so the details described in
-> +Documentation/devicetree/bindings/power/supply/power_supply.txt apply.
-> +
-> +Required properties:
-> +- compatible: must be "maxim,ds2760"
-> +
-> +Optional properties:
-> +- power-supplies:	Refers to one or more power supplies connected to
-> +			this battery.
-> diff --git a/Documentation/devicetree/bindings/w1/w1-gpio.txt b/Documentation/devicetree/bindings/w1/w1-gpio.txt
-> index 6e09c35d9f1a..6694317bcbed 100644
-> --- a/Documentation/devicetree/bindings/w1/w1-gpio.txt
-> +++ b/Documentation/devicetree/bindings/w1/w1-gpio.txt
-> @@ -13,10 +13,16 @@ Optional properties:
->   - linux,open-drain: if specified, the data pin is considered in
->  		     open-drain mode.
->  
-> +Also refer to the generic w1.txt document.
-> +
->  Examples:
->  
->  	onewire@0 {
->  		compatible = "w1-gpio";
->  		gpios = <&gpio 126 0>, <&gpio 105 0>;
-> +
-> +		battery {
-> +			compatible = "maxim,ds2760";
+Added device tree binding documentation for Nuvoton BMC
+NPCM7xx Pulse Width Modulation (PWM)  and Fan tach controller.
+The Nuvoton BMC NPCM7XX supports 8 PWM controller outputs
+and 16 Fan tachometer controller inputs.
 
-Perhaps show the power-supplies property as that's the whole point to 
-have in DT.
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ .../devicetree/bindings/hwmon/npcm750-pwm-fan.txt  | 84 ++++++++++++++++++++++
+ 1 file changed, 84 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
 
-> +		};
->  	};
->  
-> diff --git a/Documentation/devicetree/bindings/w1/w1.txt b/Documentation/devicetree/bindings/w1/w1.txt
-> new file mode 100644
-> index 000000000000..6ac103f972a0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/w1/w1.txt
-> @@ -0,0 +1,18 @@
-> +Generic devicetree bindings for onewire (w1) busses
-> +===================================================
-> +
-> +Onewire busses are described through nodes of their master bus controller.
-> +Slave devices are listed as sub-nodes of such master devices. For now, one
-> +one slave is allowed per bus master.
-
-s/one one/only one/
-
-> +
-> +
-> +Example:
-> +
-> +	onewire {
-> +		compatible = "w1-gpio";
-> +		gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
-> +
-> +		battery {
-> +			compatible = "maxim,ds2760";
-> +		};
-> +	};
-> -- 
-> 2.17.1
-> 
+diff --git a/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt b/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
+new file mode 100644
+index 000000000000..d22da14c696f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
+@@ -0,0 +1,84 @@
++Nuvoton NPCM7xx PWM and Fan Tacho controller device
++
++The Nuvoton BMC NPCM7XX supports 8 Pulse-width modulation (PWM)
++controller outputs and 16 Fan tachometer controller inputs.
++
++Required properties for pwm-fan node
++- #address-cells : should be 1.
++- #size-cells 	: should be 0.
++- compatible	: "nuvoton,npcm750-pwm-fan" for Poleg NPCM7XX.
++- reg 			: specifies physical base address and size of the registers.
++- reg-names 	: must contain:
++					* "pwm" for the PWM registers.
++ 					* "fan" for the Fan registers.
++- clocks		: phandle of reference clocks.
++- clock-names	: must contain
++					* "pwm" for PWM controller operating clock.
++ 					* "fan" for Fan controller operating clock.
++- interrupts	: contain the Fan interrupts with flags for falling edge.
++- pinctrl-names	: a pinctrl state named "default" must be defined.
++- pinctrl-0 	: phandle referencing pin configuration of the PWM and Fan
++					controller ports.
++
++fan subnode format:
++===================
++Under fan subnode can be upto 8 child nodes, each child node representing a fan.
++Each fan subnode must have one PWM channel and atleast one Fan tach channel.
++
++For PWM channel can be configured cooling-levels to create cooling device.
++Cooling device could be bound to a thermal zone for the thermal control.
++
++Required properties for each child node:
++- reg : specify the PWM output channel.
++	integer value in the range 0 through 7, that represent
++	the PWM channel number that used.
++
++- fan-tach-ch : specify the Fan tach input channel.
++		integer value in the range 0 through 15, that represent
++		the fan tach channel number that used.
++
++		At least one Fan tach input channel is required
++
++Optional property for each child node:
++- cooling-levels: PWM duty cycle values in a range from 0 to 255
++                  which correspond to thermal cooling states.
++
++Examples:
++
++pwm_fan:pwm-fan-controller@103000 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "nuvoton,npcm750-pwm-fan";
++	reg = <0x103000 0x2000>,
++		<0x180000 0x8000>;
++	reg-names = "pwm", "fan";
++	clocks = <&clk NPCM7XX_CLK_APB3>,
++		<&clk NPCM7XX_CLK_APB4>;
++	clock-names = "pwm","fan";
++	interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm0_pins &pwm1_pins &pwm2_pins
++			&fanin0_pins &fanin1_pins &fanin2_pins
++			&fanin3_pins &fanin4_pins>;
++	fan@0 {
++		reg = <0x00>;
++		fan-tach-ch = /bits/ 8 <0x00 0x01>;
++		cooling-levels = <127 255>;
++	};
++	fan@1 {
++		reg = <0x01>;
++		fan-tach-ch = /bits/ 8 <0x02 0x03>;
++	};
++	fan@2 {
++		reg = <0x02>;
++		fan-tach-ch = /bits/ 8 <0x04>;
++	};
++
++};
+\ No newline at end of file
+-- 
+2.14.1
