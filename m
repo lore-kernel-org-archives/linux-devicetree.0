@@ -1,34 +1,34 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 09/15] arm: dts: omap: Add missing cooling device
- properties for CPUs
-Date: Mon, 2 Jul 2018 23:44:18 -0700
-Message-ID: <20180703064418.GE112168@atomide.com>
-References: <cover.1527244200.git.viresh.kumar@linaro.org>
- <7aa1c7c6d1e76b551ed74512af797db28be8925f.1527244201.git.viresh.kumar@linaro.org>
+From: Luis Araneda <luaraneda@gmail.com>
+Subject: Re: [RFC PATCH 1/5] arm: dts: zynq: Set correct manufacturer for
+ ZedBoard and MicroZed boards
+Date: Tue, 3 Jul 2018 02:51:08 -0400
+Message-ID: <CAHbBuxqXwaPL-mznVSkQ_nLdetj+StgiP6LjS1Qhq65aG_92EA@mail.gmail.com>
+References: <20180628054205.17737-1-luaraneda@gmail.com> <20180628054205.17737-2-luaraneda@gmail.com>
+ <d43b1758-cc0c-3a19-0d7d-f4773fe5caac@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7aa1c7c6d1e76b551ed74512af797db28be8925f.1527244201.git.viresh.kumar@linaro.org>
+In-Reply-To: <d43b1758-cc0c-3a19-0d7d-f4773fe5caac@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: arm@kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Viresh Kumar <viresh.kumar@linaro.org> [180525 03:35]:
-> The cooling device properties, like "#cooling-cells" and
-> "dynamic-power-coefficient", should either be present for all the CPUs
-> of a cluster or none. If these are present only for a subset of CPUs of
-> a cluster then things will start falling apart as soon as the CPUs are
-> brought online in a different order. For example, this will happen
-> because the operating system looks for such properties in the CPU node
-> it is trying to bring up, so that it can register a cooling device.
-> 
-> Add such missing properties.
-> 
-> Fix other missing properties (clocks, supply, clock latency) as well to
-> make it all work.
+Hi Michal,
 
-Applying this too into omap-for-v4.19/dt thanks.
+On Thu, Jun 28, 2018 at 2:37 AM Michal Simek <michal.simek@xilinx.com> wrote:
+>
+> On 28.6.2018 07:42, Luis Araneda wrote:
+> Unfortunately we don't know who is parsing this string. It means please
+> keep that origin compatible string there.
+>
+> I have no problem with this.
+> compatible = "avnet,zynq-zed", "xlnx,zynq-zed", "xlnx,zynq-7000";
 
-Tony
+Ok, I'll change that for V2, and I'll keep it in mind for the rest of
+the series too.
+
+
+Thanks for reviewing,
+
+Luis Araneda.
