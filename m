@@ -1,56 +1,99 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v2 1/8] drm/bridge/synopsys: dsi: move
- mipi_dsi_host_unregister to __dw_mipi_dsi_remove
-Date: Tue, 3 Jul 2018 12:40:23 +0200
-Message-ID: <20180703104025eucas1p14d3e2c79b8b9684fe0e815a43940cb8c~91bXiDzus1951019510eucas1p1C@eucas1p1.samsung.com>
-References: <20180618102806.15650-1-heiko@sntech.de>
- <CGME20180618102835epcas1p3ac605f9d14736ae1298889772d5e3da2@epcas1p3.samsung.com>
- <20180618102806.15650-2-heiko@sntech.de>
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: thermal: Add binding document for SR thermal
+Date: Tue, 3 Jul 2018 16:15:19 +0530
+Message-ID: <CABe79T77VSHCbtApO=kgX5hbL8FXeCAPEcdf9wYo+CwOTDk35A@mail.gmail.com>
+References: <1529310679-13482-1-git-send-email-srinath.mannam@broadcom.com>
+ <1529310679-13482-2-git-send-email-srinath.mannam@broadcom.com>
+ <20180620195214.GA10436@rob-hp-laptop> <CABe79T74ycjqCAo5gnKkdMKZfcVGSuOX-EiUuhiwZ-iMtacPzQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180618102806.15650-2-heiko@sntech.de>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, mka@chromium.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABe79T74ycjqCAo5gnKkdMKZfcVGSuOX-EiUuhiwZ-iMtacPzQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTguMDYuMjAxOCAxMjoyNywgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gUmlnaHQgbm93IHRo
-ZSBob3N0IGlzIG9ubHkgdW5yZWdpc3RlcmVkIHdoZW4gdGhlIGRyaXZlciBpcyB1c2VkIHZpYSB0
-aGUKPiBicmlkZ2UgYXBpIGFuZCBub3QgdmlhIHRoZSBjb21wb25lbnQgYXBpLCBsZWFkaW5nIHRv
-IHRoZSBob3N0IHN0YXlpbmcKPiByZWdpc3RlcmVkIGluIGNhc2VzIGxpa2UgcHJvYmUgZGVmZXJy
-YWwuCj4KPiBTbyBtb3ZlIHRoZSBob3N0IHVucmVnaXN0ZXIgdG8gdGhlIGdlbmVyYWwgcmVtb3Zl
-IGZ1bmN0aW9uLCBzbyB0aGF0IGl0Cj4gZ2V0cyBjbGVhbmVkIHVwIGluIGFsbCBjYXNlcy4KPgo+
-IFNpZ25lZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+CgpJIGhhdmUg
-bHVya2VkIGludG8gdGhlIG9ubHkgY3VycmVudCB1c2VyIG9mIHRoZSBicmlkZ2UgKHN0bSksIGFu
-ZCBJIGFtCmxpdHRsZSBiaXQgY29uZnVzZWQgaG93IGRvZXMgaXQgd29yaywgYnV0IHRoaXMgY2hh
-bmdlIGxvb2tzIE9LLgoKUmV2aWV3ZWQtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3Vu
-Zy5jb20+CgrCoC0tClJlZ2FyZHMKQW5kcnplago+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vYnJp
-ZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMgfCA0ICsrLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDIg
-aW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
-dS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vYnJp
-ZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMKPiBpbmRleCBmZDc5OTk2NDJjZjguLjA3Y2RlMjU1
-Y2FiMiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1p
-cGktZHNpLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGkt
-ZHNpLmMKPiBAQCAtOTQxLDYgKzk0MSw4IEBAIF9fZHdfbWlwaV9kc2lfcHJvYmUoc3RydWN0IHBs
-YXRmb3JtX2RldmljZSAqcGRldiwKPiAgCj4gIHN0YXRpYyB2b2lkIF9fZHdfbWlwaV9kc2lfcmVt
-b3ZlKHN0cnVjdCBkd19taXBpX2RzaSAqZHNpKQo+ICB7Cj4gKwltaXBpX2RzaV9ob3N0X3VucmVn
-aXN0ZXIoJmRzaS0+ZHNpX2hvc3QpOwo+ICsKPiAgCXBtX3J1bnRpbWVfZGlzYWJsZShkc2ktPmRl
-dik7Cj4gIH0KPiAgCj4gQEAgLTk1Nyw4ICs5NTksNiBAQCBFWFBPUlRfU1lNQk9MX0dQTChkd19t
-aXBpX2RzaV9wcm9iZSk7Cj4gIAo+ICB2b2lkIGR3X21pcGlfZHNpX3JlbW92ZShzdHJ1Y3QgZHdf
-bWlwaV9kc2kgKmRzaSkKPiAgewo+IC0JbWlwaV9kc2lfaG9zdF91bnJlZ2lzdGVyKCZkc2ktPmRz
-aV9ob3N0KTsKPiAtCj4gIAlfX2R3X21pcGlfZHNpX3JlbW92ZShkc2kpOwo+ICB9Cj4gIEVYUE9S
-VF9TWU1CT0xfR1BMKGR3X21pcGlfZHNpX3JlbW92ZSk7CgoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Rob,
+
+Kindly provide your feedback.
+
+Regards,
+Srinath.
+
+On Fri, Jun 22, 2018 at 11:21 AM, Srinath Mannam
+<srinath.mannam@broadcom.com> wrote:
+> Hi Rob,
+>
+> Please find my comments for the reason to have multiple DT nodes.
+>
+> On Thu, Jun 21, 2018 at 1:22 AM, Rob Herring <robh@kernel.org> wrote:
+>> On Mon, Jun 18, 2018 at 02:01:17PM +0530, Srinath Mannam wrote:
+>>> From: Pramod Kumar <pramod.kumar@broadcom.com>
+>>>
+>>> Add binding document for supported thermal implementation
+>>> in Stingray.
+>>>
+>>> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+>>> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+>>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+>>> Reviewed-by: Srinath Mannam <srinath.mannam@broadcom.com>
+>>> ---
+>>>  .../bindings/thermal/brcm,sr-thermal.txt           | 45 ++++++++++++++++++++++
+>>>  1 file changed, 45 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>>> new file mode 100644
+>>> index 0000000..33f9e11
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>>> @@ -0,0 +1,45 @@
+>>> +* Broadcom Stingray Thermal
+>>> +
+>>> +This binding describes thermal sensors that is part of Stingray SoCs.
+>>> +
+>>> +Required properties:
+>>> +- compatible : Must be "brcm,sr-thermal"
+>>> +- reg : memory where tmon data will be available.
+>>> +
+>>> +Example:
+>>> +     tmons {
+>>> +             compatible = "simple-bus";
+>>> +             #address-cells = <1>;
+>>> +             #size-cells = <1>;
+>>> +             ranges;
+>>> +
+>>> +             tmon_ihost0: thermal@8f100000 {
+>>> +                     compatible = "brcm,sr-thermal";
+>>> +                     reg = <0x8f100000 0x4>;
+>>> +             };
+>>
+>> You still haven't given me a compelling reason why you need a node per
+>> register.
+>>
+>> You have a single range of registers. Make this 1 node.
+>>
+>
+> We Have two reasons to have multiple nodes..
+> 1. Our chip has multiple functional blocks. Each functional block has
+> its own thermal zone.
+> Functional blocks and their thermal zones enabled/disabled based on end product.
+> Few functional blocks need to disabled for few products so thermal
+> zones also need to disable.
+> In that case, nodes of specific thermal zones are removed from DTS
+> file of corresponding product.
+>
+> 2. Thermal framework provides sysfs interface to configure thermal
+> zones and read temperature of thermal zone.
+> To configure individual thermal zone, we need to have separate DT node.
+> Same to read temperature of individual thermal zone.
+> Ex: To read temperature of thermal zone 0.
+>          cat /sys/class/thermal/thermal_zone0/temp
+>      To configure trip temperature of thermal zone 0.
+>           echo 110000 > /sys/class/thermal/thermal_zone0/trip_point_0_temp
+>
+> Also to avoid driver source change for the multiple products it is
+> clean to have multiple DT nodes.
+>
+>> Rob
