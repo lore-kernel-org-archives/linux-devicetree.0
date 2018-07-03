@@ -1,42 +1,27 @@
-Return-Path: <SRS0=Q+Wx=JT=linaro.org=lee.jones@kernel.org>
-Date: Tue, 3 Jul 2018 08:41:19 +0100
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2] dt-bindings: mfd: fix documentation of tps65911
-Message-ID: <20180703074119.GK20176@dell>
-References: <1528146863.2818.23.camel@googlemail.com>
- <20180605070457.GF21163@dell>
- <1528190809.2527.5.camel@googlemail.com>
- <20180611182734.GA17896@rob-hp-laptop>
- <1529781960.2215.2.camel@googlemail.com>
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 3 Jul 2018 15:01:48 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/5] dt-bindings: PCI: cadence: Add DT bindings for
+ optional PHYs
+Message-ID: <20180703210148.GA29718@rob-hp-laptop>
+References: <1529915453-4633-1-git-send-email-adouglas@cadence.com>
+ <1529915453-4633-4-git-send-email-adouglas@cadence.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1529781960.2215.2.camel@googlemail.com>
-To: Christoph Fritz <chf.fritz@googlemail.com>
-Cc: Tony Lindgren <tony@atomide.com>, devicetree <devicetree@vger.kernel.org>, linux-omap@vger.kernel.org, Rob Herring <robh@kernel.org>
+In-Reply-To: <1529915453-4633-4-git-send-email-adouglas@cadence.com>
+To: Alan Douglas <adouglas@cadence.com>
+Cc: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Sat, 23 Jun 2018, Christoph Fritz wrote:
-> On Mon, 2018-06-11 at 12:27 -0600, Rob Herring wrote:
-> > On Tue, Jun 05, 2018 at 11:26:49AM +0200, Christoph Fritz wrote:
-> > > This patch fixes documentation of tps65911 because its list of
-> > > compatible regulators contains wrongly vdd3 instead of vdd2.
-> > > 
-> > > Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/mfd/tps65910.txt | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > Acked-by: Rob Herring <robh@kernel.org>
+On Mon, Jun 25, 2018 at 09:30:51AM +0100, Alan Douglas wrote:
+> Update DT documentation to include optional PHYs for cadence PCIe
+> host and endpoint controllers.
 > 
-> any chance to get this patch queued soon?
+> Signed-off-by: Alan Douglas <adouglas@cadence.com>
+> ---
+>  .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt  |    5 +++++
+>  .../bindings/pci/cdns,cdns-pcie-host.txt           |    6 ++++++
+>  2 files changed, 11 insertions(+), 0 deletions(-)
 
-It's in the queue to be reviewed.  I have just returned from paternity
-leave and have 290 emails to get through.  Please bear with me.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Reviewed-by: Rob Herring <robh@kernel.org>
