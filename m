@@ -1,60 +1,40 @@
-From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [PATCH 2/2] ASoC: atmel-i2s: dt-bindings: Remove unnecessary phandle to aclk
-Date: Tue, 3 Jul 2018 17:56:31 +0300
-Message-ID: <20180703145631.15246-3-codrin.ciubotariu@microchip.com>
-References: <20180703145631.15246-1-codrin.ciubotariu@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Marcel Ziswiler <marcel@ziswiler.com>
+Subject: [RESEND PATCH] apalis_t30: fix can2
+Date: Tue,  3 Jul 2018 17:03:39 +0200
+Message-ID: <20180703150340.29580-1-marcel@ziswiler.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180703145631.15246-1-codrin.ciubotariu@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, alexandre.belloni@bootlin.com, nicolas.ferre@microchip.com, robh+dt@kernel.org, broonie@kernel.org, quentin.schulz@bootlin.com
-Cc: Cristian.Birsan@microchip.com
+To: linux-tegra@vger.kernel.org, linux-can@vger.kernel.org
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Marcel Ziswiler <marcel@ziswiler.com>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The optional clock phandle to aclk (Audio PLL clock) is no longer needed
-by the driver.
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+CAN2 currently fails on probe as follows:
+
+mcp251x spi1.1: Probe failed, err=19
+
+Fix this by enabling input on pin mux of resp. SPI4 pins.
+
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+
+Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
 ---
- Documentation/devicetree/bindings/sound/atmel-i2s.txt | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/atmel-i2s.txt b/Documentation/devicetree/bindings/sound/atmel-i2s.txt
-index 735368b8a73f..40549f496a81 100644
---- a/Documentation/devicetree/bindings/sound/atmel-i2s.txt
-+++ b/Documentation/devicetree/bindings/sound/atmel-i2s.txt
-@@ -15,7 +15,6 @@ Required properties:
- - clock-names:    Should be one of each entry matching the clocks phandles list:
-                   - "pclk" (peripheral clock) Required.
-                   - "gclk" (generated clock) Optional (1).
--                  - "aclk" (Audio PLL clock) Optional (1).
-                   - "muxclk" (I2S mux clock) Optional (1).
- 
- Optional properties:
-@@ -23,9 +22,9 @@ Optional properties:
- - princtrl-names: Should contain only one value - "default".
- 
- 
--(1) : Only the peripheral clock is required. The generated clock, the Audio
--      PLL clock adn the I2S mux clock are optional and should only be set
--      together, when Master Mode is required.
-+(1) : Only the peripheral clock is required. The generated clock and the I2S
-+      mux clock are optional and should only be set together, when Master Mode
-+      is required.
- 
- Example:
- 
-@@ -40,8 +39,8 @@ Example:
- 			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) |
- 			 AT91_XDMAC_DT_PERID(32))>;
- 		dma-names = "tx", "rx";
--		clocks = <&i2s0_clk>, <&i2s0_gclk>, <&audio_pll_pmc>, <&i2s0muxck>;
--		clock-names = "pclk", "gclk", "aclk", "muxclk";
-+		clocks = <&i2s0_clk>, <&i2s0_gclk>, <&i2s0muxck>;
-+		clock-names = "pclk", "gclk", "muxclk";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_i2s0_default>;
- 	};
+ arch/arm/boot/dts/tegra30-apalis.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
+index d1d21ec2a844..9ff6aafd72b3 100644
+--- a/arch/arm/boot/dts/tegra30-apalis.dtsi
++++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
+@@ -118,6 +118,7 @@
+ 				nvidia,function = "spi4";
+ 				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
+ 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
++				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
+ 			};
+ 			/* CAN_INT2 */
+ 			spi2_cs2_n_pw3 {
 -- 
-2.17.1
+2.14.4
