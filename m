@@ -1,62 +1,26 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] devicetree/bindings: display: Add document for
- rockchip RGB output
-Date: Tue, 3 Jul 2018 12:25:59 -0600
-Message-ID: <20180703182559.GA12809@rob-hp-laptop>
-References: <1529997340-156879-1-git-send-email-hjc@rock-chips.com>
- <1529997340-156879-2-git-send-email-hjc@rock-chips.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2] ARM64: dts: rockchip: add some pins to rk3399
+Date: Tue, 03 Jul 2018 20:40:39 +0200
+Message-ID: <2032713.mjOMvqe6Sx@phil>
+References: <20180621133210.9359-1-ayaka@soulik.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1529997340-156879-2-git-send-email-hjc@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sandy Huang <hjc@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180621133210.9359-1-ayaka@soulik.info>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Randy Li <ayaka@soulik.info>
+Cc: linux-rockchip@lists.infradead.org, shawn.lin@rock-chips.com, klaus.goger@theobroma-systems.com, mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdW4gMjYsIDIwMTggYXQgMDM6MTU6MzlQTSArMDgwMCwgU2FuZHkgSHVhbmcgd3Jv
-dGU6Cj4gVGhpcyBwYXRoIGFkZCBzdXBwb3J0IHJ2MTEwOCBhbmQgcHgzMCByZ2Igb3V0cHV0IGlu
-dGVyZmFjZSBkcml2ZXIuCgpCaW5kaW5ncyBhcmUgZm9yIGgvdywgbm90IGRyaXZlcnMuCgo+IAo+
-IFNpZ25lZC1vZmYtYnk6IFNhbmR5IEh1YW5nIDxoamNAcm9jay1jaGlwcy5jb20+Cj4gTGluazog
-aHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3BhdGNoL21zZ2lkLzE1MDk1MjI3NjUt
-MTE4NzU5LTEtZ2l0LXNlbmQtZW1haWwtaGpjQHJvY2stY2hpcHMuY29tCj4gLS0tCj4gCj4gQ2hh
-bmdlcyBpbiB2NDogQWRkIHN1cHBvcnQgcHgzMAo+IENoYW5nZXMgaW4gdjM6IE5vbmUKPiBDaGFu
-Z2VzIGluIHYyOiBOb25lCj4gCj4gLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2No
-aXAtcmdiLnR4dCAgICAgfCA3MyArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFu
-Z2VkLCA3MyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1yZ2IudHh0Cj4g
-Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3JvY2tjaGlwL3JvY2tjaGlwLXJnYi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1yZ2IudHh0Cj4gbmV3IGZpbGUgbW9kZSAx
-MDA2NDQKPiBpbmRleCAwMDAwMDAwLi4wNzdiOWFkCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlw
-LXJnYi50eHQKPiBAQCAtMCwwICsxLDczIEBACj4gK1JvY2tjaGlwIFJWMTEwOCBSR0IgaW50ZXJm
-YWNlCj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gKwo+ICtSZXF1aXJlZCBw
-cm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6IG1hdGNoaW5nIHRoZSBzb2MgdHlwZToKPiArCS0g
-InJvY2tjaGlwLHB4MzAtcmdiIjsKPiArCS0gInJvY2tjaGlwLHJ2MTEwOC1yZ2IiOwoKVGhpcyBk
-b2Vzbid0IGxvb2sgcmlnaHQ/IFdoYXQgKGFuZCBob3cpIGlzIGdldHRpbmcgcHJvZ3JhbW1lZCBo
-ZXJlIApiZWNhdXNlIHlvdSBkb24ndCBoYXZlIGFueSByZWdpc3RlciBpbnRlcmZhY2UuCgo+ICsK
-PiArT3B0aW9uYWwgcHJvcGVydGllczoKPiArLSBwaW5jdHJsLW5hbWVzOiBzaG91bGQgYmUgYSAi
-bGNkYyIgZW50cnkgb3IgYSAiZGVmYXVsdCIgZW50cnkuCj4gKy0gcGluY3RybC0wOiBwaW4gY29u
-dHJvbCBncm91cCB0byBiZSB1c2VkIGZvciB0aGlzIGludGVyZmFjZS4KPiArCj4gK1RoZSByZ2Ig
-aGFzIHR3byB2aWRlbyBwb3J0cyBkZXNjcmliZWQgYnk6Cj4gKwlEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQKPiArVGhlaXIgY29ubmVj
-dGlvbnMgYXJlIG1vZGVsZWQgdXNpbmcgdGhlIE9GIGdyYXBoIGJpbmRpbmdzIHNwZWNpZmllZCBp
-bgo+ICsJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KPiArCj4g
-Ky0gdmlkZW8gcG9ydCAwIGZvciB0aGUgVk9QIGlucHV0LCB0aGUgcmVtb3RlIGVuZHBvaW50IG1h
-eWJlIHZvcGIvdm9wbC92b3AKClNvIHRoZXJlIGlzIGEgbXV4IGZvciB0aGVzZSBpbnB1dHMgYW5k
-IHRoZXkgYXJlIHN3aXRjaGVkIHdpdGggcGluY3RybD8gCgpKdXN0IHB1dCB0aGUgcGluY3RybCBu
-b2RlcyBvZiB0aGUgc291cmNlcyBhbmQgZW5hYmxlIHdoaWNoZXZlciBvbmUgaXMgCmFjdGl2ZS4K
-ClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Am Donnerstag, 21. Juni 2018, 15:32:10 CEST schrieb Randy Li:
+> Those pins would be used by many boards.
+> 
+> Signed-off-by: Randy Li <ayaka@soulik.info>
+
+applied for 4.19 after fixing the subject (arm64 instead of ARM64 and
+removing an unnecessary new blank line)
+
+
+Thanks
+Heiko
