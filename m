@@ -1,76 +1,96 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: Re: [PATCH 2/3] clk: meson: add sub EMMC clock dt-bindings IDs
-Date: Tue, 3 Jul 2018 15:36:46 +0800
-Message-ID: <4b88c509-27ea-2605-023b-de208921e157@amlogic.com>
-References: <20180703145716.31860-1-yixun.lan@amlogic.com>
- <20180703145716.31860-3-yixun.lan@amlogic.com>
- <20180703092107.51497a8f@bbrezillon>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH v1] ARM: dts: imx6sl-evk: keep sw4 always on
+Date: Tue, 3 Jul 2018 07:44:10 +0000
+Message-ID: <AM3PR04MB131542D42FCD798FDBBA54BFF5420@AM3PR04MB1315.eurprd04.prod.outlook.com>
+References: <CAOMZO5BjOEGWv2dC-bp0BYHq+PhLssEKic+o7ock8_1Dobd=sQ@mail.gmail.com>
+ <AM3PR04MB131507901BFEE1A5E426EECBF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5D8tjnjbwMdLGd7KF7_4PwqRWX8XH8kdcF3-5e-r2YQEA@mail.gmail.com>
+ <AM3PR04MB1315E7AED2BCE2265E6C443DF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5D8v4KM9S4ooHTDbA+vc8BZN_eO_wDuOPA+8Hcq-SmLDw@mail.gmail.com>
+ <AM3PR04MB1315C7C7CFF990615732FFBCF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5AM5VRS7UiWuvAQ8vvTB8OM+iwofuYrbsL_yB9e0Z9Kyg@mail.gmail.com>
+ <AM3PR04MB13155B8D567ABEF7EF03249AF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5BdtxKjQge5ONpnjr1yNVeTJf4u8Gh-fPqpHz7G9ipOTg@mail.gmail.com>
+ <1530526335.15665.13.camel@nxp.com> <20180703053843.GC4348@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180703092107.51497a8f@bbrezillon>
+In-Reply-To: <20180703053843.GC4348@dragon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: yixun.lan@amlogic.com, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Robin Gong <yibin.gong@nxp.com>
+Cc: "festevam@gmail.com" <festevam@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi, Shawn
 
-Hi Broris
-
- thanks for your quick response, and see my comments below
-
-On 07/03/18 15:21, Boris Brezillon wrote:
-> On Tue, 3 Jul 2018 14:57:15 +0000
-> Yixun Lan <yixun.lan@amlogic.com> wrote:
-> 
->> Add two clock bindings IDs which provided by the EMMC clock controller,
->> These two clocks will be used by EMMC or NAND driver.
->>
->> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
->> ---
->>  include/dt-bindings/clock/emmc-clkc.h | 14 ++++++++++++++
->>  1 file changed, 14 insertions(+)
->>  create mode 100644 include/dt-bindings/clock/emmc-clkc.h
->>
->> diff --git a/include/dt-bindings/clock/emmc-clkc.h b/include/dt-bindings/clock/emmc-clkc.h
->> new file mode 100644
->> index 000000000000..d9972c400e58
->> --- /dev/null
->> +++ b/include/dt-bindings/clock/emmc-clkc.h
->> @@ -0,0 +1,14 @@
->> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
->> +/*
->> + * Meson EMMC sub clock tree IDs
->> + *
->> + * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
->> + */
->> +
->> +#ifndef __EMMC_CLKC_H
->> +#define __EMMC_CLKC_H
->> +
->> +#define CLKID_EMMC_C_MUX				0
-> 
-> Looks like the MUX clk is the parent of the DIV one, and I guess the clk
-> driver is able to select the best parent+div pair for a requested rate.
-> Do you really need to expose the MUX to users?
-> 
-
-Yes, It's true, the mux is parent of the div clock.
-
-while testing for the NAND driver, I find it's kind of loose about the
-parent of the clock, so selecting the div (and let CCF decide freely) is
-actually works fine
-
-but for the EMMC driver, especially when running at high clock, it's
-kind of picky about the parent of the clock, so the driver may want to
-manually choose the parent of the mux clock (example fclk_div2 here).
-That's why I'm exporting this clock ID.
+Anson Huang
+Best Regards!
 
 
->> +#define CLKID_EMMC_C_DIV				1
->> +
->> +#endif
-> 
-> .
-> 
+> -----Original Message-----
+> From: Shawn Guo [mailto:shawnguo@kernel.org]
+> Sent: Tuesday, July 3, 2018 1:39 PM
+> To: Robin Gong <yibin.gong@nxp.com>
+> Cc: festevam@gmail.com; Anson Huang <anson.huang@nxp.com>;
+> mark.rutland@arm.com; devicetree@vger.kernel.org;
+> linux-kernel@vger.kernel.org; robh+dt@kernel.org; dl-linux-imx
+> <linux-imx@nxp.com>; kernel@pengutronix.de; Fabio Estevam
+> <fabio.estevam@nxp.com>; linux-arm-kernel@lists.infradead.org
+> Subject: Re: [PATCH v1] ARM: dts: imx6sl-evk: keep sw4 always on
+>=20
+> On Mon, Jul 02, 2018 at 02:12:52AM +0000, Robin Gong wrote:
+> > But in fact, the original dts is not correct without
+> > 'regulator-always- on'since SW4 is the critical DDR power rail,
+> > although, it's kept on in the previous kernel by no switches
+> > enable/disable interfaces provided in pfuze driver. Adding new
+> > property which can be done totally by the common 'regulator-always-on'
+> > is not a good choice. Keep the dts patch adding 'regulator-always-on'
+> > ahead of pfuze driver pach adding enable/disable interface is enough fo=
+r such
+> case I think.
+>=20
+> We can not just break the installed DTBs like this.  If patching regulato=
+r driver
+> with a new property is really difficult, we could migrate the existing us=
+ers in a
+> 'soft' way:
+=20
+Patching regulator driver needs to add property for those regulators can be=
+ OFF,
+it will make users confuse with original regulator framework knowledge, NOT=
+ a
+good idea.
+
+>=20
+>  - Add required regulator-always-on for regulator nodes in DTS.
+=20
+I & Yibin already sent out patch to add " regulator-always-on " for regulat=
+or nodes in DTS,
+so they can be applied first?
+
+
+>  - Patch i.MX platform code to check the presence of regulator-always-on
+>    property for critical regulators, and give a big warning if it's
+>    missing.
+It is NOT easy to identify which switch is critical or NOT, and different p=
+latforms
+have different board design, it will introduce many platform specified code=
+, so I think
+just revert the pfuze100 switch enable/disable patch should be OK for now.=
+=20
+
+>  - Wait for a couple of release cycles for users to migrate.
+>  - Add regulator driver patch back and break users who keep ignoring
+>    the warning.
+After a couple of release cycles, add the pfuze100 switch enable/disable pa=
+tch
+back to support this feature, I believe users should switch to new dtb with=
+ "regulator-always-on"=20
+existing already.
+
+Anson.
+
+>=20
+> Shawn
