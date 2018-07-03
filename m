@@ -1,38 +1,32 @@
-From: Andreas Klinger <ak@it-klinger.de>
-Subject: [PATCH v3 3/3] iio: hx711: warning in dt binding example doc
-Date: Tue, 3 Jul 2018 14:50:40 +0200
-Message-ID: <20180703125040.GA18226@arbeit>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [RFC PATCH v2 1/6] mtd: spi-nor: atmel-quaspi: Typo fix
+Date: Tue, 3 Jul 2018 14:52:24 +0200
+Message-ID: <20180703125224.GC14626@piout.net>
+References: <20180627131609.13681-1-bugalski.piotr@gmail.com>
+ <20180627131609.13681-2-bugalski.piotr@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
+In-Reply-To: <20180627131609.13681-2-bugalski.piotr@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Piotr Bugalski <bugalski.piotr@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Cyrille Pitchen <cyrille.pitchen@microchip.com>, Tudor Ambarus <tudor.ambarus@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-device tree compiler (dtc) gives a warning if a device node has "@" with a
-following number as it's name but no reg property.
+Hi,
 
-fix the example in the documentation of avia,hx711 to conform to dtc
-behavior
+On 27/06/2018 15:16:04+0200, Piotr Bugalski wrote:
+> Just minor typo fix. Fixed in preparation of new driver.
+> 
+> Signed-off: Piotr Bugalski <pbu@cryptera.com>
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- Documentation/devicetree/bindings/iio/adc/avia-hx711.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This SoB line must match the author. It doesn't matter which one you
+change. note that you can still submit your patch from an address
+different from your work address if necessary (git format-patch will
+insert the proper From line).
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-index 669d213e2964..73676eef8f08 100644
---- a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-@@ -15,7 +15,7 @@ Optional properties:
- 				time which is 50000 in the datasheet
- 
- Example:
--weight@0 {
-+weight {
- 	compatible = "avia,hx711";
- 	sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
- 	dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
 -- 
-2.1.4
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
