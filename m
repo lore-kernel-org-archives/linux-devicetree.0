@@ -1,87 +1,92 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/7 v5] iommu: support iommu configuration for fsl-mc
-	devices
-Date: Tue, 3 Jul 2018 16:30:35 +0100
-Message-ID: <947a6e16-98ff-9389-b15c-d3025b7be4be@arm.com>
-References: <1526824191-7000-1-git-send-email-nipun.gupta@nxp.com>
-	<1526824191-7000-4-git-send-email-nipun.gupta@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1526824191-7000-4-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, laurentiu.tudor-3arQi8VN3Tc@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: atmel-i2s: dt-bindings: Remove unnecessary phandle to aclk" to the asoc tree
+Date: Tue, 03 Jul 2018 16:33:55 +0100
+Message-ID: <E1faNJT-0003di-5D@debutante>
+References: <20180703145631.15246-3-codrin.ciubotariu@microchip.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180703145631.15246-3-codrin.ciubotariu@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc: Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, alexandre.belloni@bootlin.com, nicolas.ferre@microchip.com, robh+dt@kernel.orgbroonie@kernel.org, quentin.schulz@bootlin.com, Cristian.Birsan@microchip.comalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/05/18 14:49, Nipun Gupta wrote:
-> With of_pci_map_rid available for all the busses, use the function
-> for configuration of devices on fsl-mc bus
+The patch
 
-FWIW I had a quick hack at factoring out the commonality with 
-of_pci_iommu_init(), at which point I reckon this change is easier to 
-follow as-is for the moment, so:
+   ASoC: atmel-i2s: dt-bindings: Remove unnecessary phandle to aclk
 
-Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+has been applied to the asoc tree at
 
-> Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-> ---
->   drivers/iommu/of_iommu.c | 20 ++++++++++++++++++++
->   1 file changed, 20 insertions(+)
-> 
-> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> index 811e160..284474d 100644
-> --- a/drivers/iommu/of_iommu.c
-> +++ b/drivers/iommu/of_iommu.c
-> @@ -24,6 +24,7 @@
->   #include <linux/of_iommu.h>
->   #include <linux/of_pci.h>
->   #include <linux/slab.h>
-> +#include <linux/fsl/mc.h>
->   
->   #define NO_IOMMU	1
->   
-> @@ -159,6 +160,23 @@ static int of_pci_iommu_init(struct pci_dev *pdev, u16 alias, void *data)
->   	return err;
->   }
->   
-> +static int of_fsl_mc_iommu_init(struct fsl_mc_device *mc_dev,
-> +				struct device_node *master_np)
-> +{
-> +	struct of_phandle_args iommu_spec = { .args_count = 1 };
-> +	int err;
-> +
-> +	err = of_map_rid(master_np, mc_dev->icid, "iommu-map",
-> +			 "iommu-map-mask", &iommu_spec.np,
-> +			 iommu_spec.args);
-> +	if (err)
-> +		return err == -ENODEV ? NO_IOMMU : err;
-> +
-> +	err = of_iommu_xlate(&mc_dev->dev, &iommu_spec);
-> +	of_node_put(iommu_spec.np);
-> +	return err;
-> +}
-> +
->   const struct iommu_ops *of_iommu_configure(struct device *dev,
->   					   struct device_node *master_np)
->   {
-> @@ -190,6 +208,8 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
->   
->   		err = pci_for_each_dma_alias(to_pci_dev(dev),
->   					     of_pci_iommu_init, &info);
-> +	} else if (dev_is_fsl_mc(dev)) {
-> +		err = of_fsl_mc_iommu_init(to_fsl_mc_device(dev), master_np);
->   	} else {
->   		struct of_phandle_args iommu_spec;
->   		int idx = 0;
-> 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 2bd368d7bf21028f37a123041a138922254d4840 Mon Sep 17 00:00:00 2001
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Date: Tue, 3 Jul 2018 17:56:31 +0300
+Subject: [PATCH] ASoC: atmel-i2s: dt-bindings: Remove unnecessary phandle to
+ aclk
+
+The optional clock phandle to aclk (Audio PLL clock) is no longer needed
+by the driver.
+
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/atmel-i2s.txt | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/atmel-i2s.txt b/Documentation/devicetree/bindings/sound/atmel-i2s.txt
+index 735368b8a73f..40549f496a81 100644
+--- a/Documentation/devicetree/bindings/sound/atmel-i2s.txt
++++ b/Documentation/devicetree/bindings/sound/atmel-i2s.txt
+@@ -15,7 +15,6 @@ Required properties:
+ - clock-names:    Should be one of each entry matching the clocks phandles list:
+                   - "pclk" (peripheral clock) Required.
+                   - "gclk" (generated clock) Optional (1).
+-                  - "aclk" (Audio PLL clock) Optional (1).
+                   - "muxclk" (I2S mux clock) Optional (1).
+ 
+ Optional properties:
+@@ -23,9 +22,9 @@ Optional properties:
+ - princtrl-names: Should contain only one value - "default".
+ 
+ 
+-(1) : Only the peripheral clock is required. The generated clock, the Audio
+-      PLL clock adn the I2S mux clock are optional and should only be set
+-      together, when Master Mode is required.
++(1) : Only the peripheral clock is required. The generated clock and the I2S
++      mux clock are optional and should only be set together, when Master Mode
++      is required.
+ 
+ Example:
+ 
+@@ -40,8 +39,8 @@ Example:
+ 			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) |
+ 			 AT91_XDMAC_DT_PERID(32))>;
+ 		dma-names = "tx", "rx";
+-		clocks = <&i2s0_clk>, <&i2s0_gclk>, <&audio_pll_pmc>, <&i2s0muxck>;
+-		clock-names = "pclk", "gclk", "aclk", "muxclk";
++		clocks = <&i2s0_clk>, <&i2s0_gclk>, <&i2s0muxck>;
++		clock-names = "pclk", "gclk", "muxclk";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_i2s0_default>;
+ 	};
+-- 
+2.18.0.rc2
