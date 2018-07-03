@@ -1,91 +1,138 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH linux-next v6 07/13] dt-bindings: mfd: Add a document for
- PECI client MFD
-Date: Tue, 3 Jul 2018 10:21:58 -0700
-Message-ID: <88cab816-3bc1-5e0b-7282-4ca05f458a9a@linux.intel.com>
-References: <20180621193721.20588-1-jae.hyun.yoo@linux.intel.com>
- <20180621194054.20897-1-jae.hyun.yoo@linux.intel.com>
- <20180703165835.GA18160@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V2 1/3] scsi: ufs: set the device reference clock setting
+Date: Tue, 3 Jul 2018 12:04:15 -0600
+Message-ID: <CAL_JsqJUBQ2d1mV8ep_h3iZ-ka73ZGEJ3kZ8VkJmb8gDd_R7Sw@mail.gmail.com>
+References: <1528455990-24572-1-git-send-email-sayalil@codeaurora.org>
+ <1528455990-24572-2-git-send-email-sayalil@codeaurora.org>
+ <20180612192636.GA31725@rob-hp-laptop> <000101d403d3$87210d20$95632760$@codeaurora.org>
+ <CAL_JsqLsdEGEjPo8yh5dGoGWTes41QxUiJ4NN0Q9qsgLBaTpjw@mail.gmail.com> <002401d4093d$256fdc90$704f95b0$@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180703165835.GA18160@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <002401d4093d$256fdc90$704f95b0$@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Joel Stanley <joel@jms.id.au>, Vernon Mauery <vernon.mauery@linux.intel.com>
+To: Sayali Lokhande <sayalil@codeaurora.org>
+Cc: Subhash Jadavani <subhashj@codeaurora.org>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, asutoshd@codeaurora.org, Evan Green <evgreen@chromium.org>, linux-scsi@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, Jun 21, 2018 at 2:52 AM sayali <sayalil@codeaurora.org> wrote:
+>
+> Hi Rob,
+>
+> Please check my comment inline.
 
-Thanks for the review. Please see my inline answer.
+As mentioned in the back and forth comments previously in this thread,
+please fix your email client (hint: you can't use Outlook) and
+properly quote your replies (i.e. the leading ">")
 
-On 7/3/2018 9:58 AM, Rob Herring wrote:
-> On Thu, Jun 21, 2018 at 12:40:54PM -0700, Jae Hyun Yoo wrote:
->> This commit adds a dt-bindings document for PECI client MFD.
-> 
-> This and the next patch still have the same issues I've outlined in at
-> least 2 prior versions.
->   
+> Thanks,
+> Sayali
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Thursday, June 14, 2018 7:59 PM
+> To: sayali <sayalil@codeaurora.org>
+> Cc: Subhash Jadavani <subhashj@codeaurora.org>; Can Guo <cang@codeaurora.=
+org>; Vivek Gautam <vivek.gautam@codeaurora.org>; Rajendra Nayak <rnayak@co=
+deaurora.org>; Vinayak Holikatti <vinholikatti@gmail.com>; James E.J. Botto=
+mley <jejb@linux.vnet.ibm.com>; Martin K. Petersen <martin.petersen@oracle.=
+com>; asutoshd@codeaurora.org; Evan Green <evgreen@chromium.org>; linux-scs=
+i@vger.kernel.org; Mark Rutland <mark.rutland@arm.com>; Mathieu Malaterre <=
+malat@debian.org>; open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDIN=
+GS <devicetree@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>
+> Subject: Re: [PATCH V2 1/3] scsi: ufs: set the device reference clock set=
+ting
+>
+> On Thu, Jun 14, 2018 at 5:33 AM, sayali <sayalil@codeaurora.org> wrote:
+> > Comment inline.
+> >
+> > Thanks,
+> > Sayali
+> > -----Original Message-----
+> > From: Rob Herring [mailto:robh@kernel.org]
+> > Sent: Wednesday, June 13, 2018 12:57 AM
+> > To: Sayali Lokhande <sayalil@codeaurora.org>
+> > Cc: subhashj@codeaurora.org; cang@codeaurora.org;
+> > vivek.gautam@codeaurora.org; rnayak@codeaurora.org;
+> > vinholikatti@gmail.com; jejb@linux.vnet.ibm.com;
+> > martin.petersen@oracle.com; asutoshd@codeaurora.org;
+> > evgreen@chromium.org; linux-scsi@vger.kernel.org; Mark Rutland
+> > <mark.rutland@arm.com>; Mathieu Malaterre <malat@debian.org>; open
+> > list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+> > <devicetree@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>
+> > Subject: Re: [PATCH V2 1/3] scsi: ufs: set the device reference clock
+> > setting
+> >
+> > On Fri, Jun 08, 2018 at 04:36:28PM +0530, Sayali Lokhande wrote:
+> >> From: Subhash Jadavani <subhashj@codeaurora.org>
+> >>
+> >> UFS host supplies the reference clock to UFS device and UFS device
+> >> specification allows host to provide one of the 4 frequencies (19.2
+> >> MHz,
+> >> 26 MHz, 38.4 MHz, 52 MHz) for reference clock. Host should set the
+> >> device reference clock frequency setting in the device based on what
+> >> frequency it is supplying to UFS device.
+> >>
+> >> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+> >> Signed-off-by: Can Guo <cang@codeaurora.org>
+> >> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+> >> ---
+> >>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  7 +++
+> >>  drivers/scsi/ufs/ufs.h                             |  9 ++++
+> >>  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 24 ++++++++++
+> >>  drivers/scsi/ufs/ufshcd.c                          | 52
+> > ++++++++++++++++++++++
+> >>  drivers/scsi/ufs/ufshcd.h                          |  1 +
+> >>  5 files changed, 93 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> >> b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> >> index c39dfef..4522434 100644
+> >> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> >> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> >> @@ -41,6 +41,12 @@ Optional properties:
+> >>  -lanes-per-direction : number of lanes available per direction -
+> >> either 1
+> > or 2.
+> >>                         Note that it is assume same number of lanes
+> >> is
+> > used both
+> >>                         directions at once. If not specified, default
+> >> is 2
+> > lanes per direction.
+> >> +- dev-ref-clk-freq   : Specify the device reference clock frequency, =
+must
+> > be one of the following:
+> >> +                       0: 19.2 MHz
+> >> +                       1: 26 MHz
+> >> +                       2: 38.4 MHz
+> >> +                       3: 52 MHz
+> >> +                       Defaults to 26 MHz if not specified.
+> >
+> > I must have misunderstood your last response. I thought you could
+> > handle things without DT. If not, my question remains.
+> > [Sayali]: Ref clk frequency setting could vary from
+> > platfrom-to-platform(vendor specific). Hence we need to pass it via DT.
+> >         Currently in DT we do not set/mention any ref clk frequency
+> > parameter. Hence I have added one new DT entry to configure
+> >         required ref clk freq.
+>
+> The clocks property contains "ref_clk". Is that not the same clock?
+> Why can't you read what that frequency is? Or you need to be able to chan=
+ge it to a specific frequency? These all look like typical oscillator frequ=
+encies, so I wouldn't expect you could change them (other than divide by 2 =
+maybe).
+> [Sayali] : It is the same "ref_clk", but we need to be able to change it =
+to a specific frequency as per requirement. Thus, we need new DT entry to s=
+pecify/override reference clock frequency as per need.
 
-Okay. I think the next patch (9/13) for hwmon dt-bindings document
-is not needed anymore because those were already added in MFD driver
-implementation in the patch 8/13. Please correct me if it's not
-you pointed.
+That is not what your patch does. It just tells the device what the
+frequency is. If you need to get the rate, use "clk_get_rate" on
+"ref_clk". If you need to actually set it to a specific frequency,
+then we have properties for that already (assigned-clock-rates).
 
->> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
->> Cc: Andrew Jeffery <andrew@aj.id.au>
->> Cc: James Feist <james.feist@linux.intel.com>
->> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
->> Cc: Joel Stanley <joel@jms.id.au>
->> Cc: Vernon Mauery <vernon.mauery@linux.intel.com>
->> ---
->>   .../bindings/mfd/intel-peci-client.txt        | 34 +++++++++++++++++++
->>   1 file changed, 34 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mfd/intel-peci-client.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/intel-peci-client.txt b/Documentation/devicetree/bindings/mfd/intel-peci-client.txt
->> new file mode 100644
->> index 000000000000..cb341e363add
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/intel-peci-client.txt
->> @@ -0,0 +1,34 @@
->> +* Intel PECI client bindings
->> +
->> +PECI (Platform Environment Control Interface) is a one-wire bus interface that
->> +provides a communication channel from PECI clients in Intel processors and
->> +chipset components to external monitoring or control devices. PECI is designed
->> +to support the following sideband functions:
->> +
->> +- Processor and DRAM thermal management
->> +- Platform Manageability
->> +- Processor Interface Tuning and Diagnostics
->> +- Failure Analysis
->> +
->> +Required properties:
->> +- compatible : Should be "intel,peci-client".
->> +- reg        : Should contain address of a client CPU. Address range of CPU
->> +	       clients starts from 0x30 based on PECI specification.
->> +
->> +Example:
->> +	peci-bus@0 {
->> +		compatible = "vendor,soc-peci";
->> +		reg = <0x0 0x1000>;
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		peci-client@30 {
->> +			compatible = "intel,peci-client";
->> +			reg = <0x30>;
->> +		};
->> +
->> +		peci-client@31 {
->> +			compatible = "intel,peci-client";
->> +			reg = <0x31>;
->> +		};
->> +	};
->> -- 
->> 2.17.1
->>
-> 
+Seems to me that by the time you get to Linux, the bootloader would
+have already set this. Otherwise, how do you boot? Seems like you
+would want to read the attr and ensure "ref_clk" freq matches.
+
+Rob
