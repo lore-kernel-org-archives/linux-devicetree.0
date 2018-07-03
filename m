@@ -1,78 +1,112 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v2 2/8] drm/bridge/synopsys: dsi: don't call
- __dw_mipi_dsi_probe from dw_mipi_dsi_bind
-Date: Tue, 03 Jul 2018 14:32:30 +0200
-Message-ID: <2625174.NhUSvPQ7SK@diego>
-References: <20180618102806.15650-1-heiko@sntech.de>
- <20180618102806.15650-3-heiko@sntech.de>
- <20180703121630eucas1p2a8a61ac1390b7dbc34cf2bea78f1fcf5~92vQQKuDT2201222012eucas1p2I@eucas1p2.samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180703121630eucas1p2a8a61ac1390b7dbc34cf2bea78f1fcf5~92vQQKuDT2201222012eucas1p2I@eucas1p2.samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, dri-devel@lists.freedesktop.org, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, mka@chromium.org
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 03/14] dmaengine: dma-jz4780: Use 4-word descriptors
+Date: Tue,  3 Jul 2018 14:32:03 +0200
+Message-ID: <20180703123214.23090-4-paul@crapouillou.net>
+References: <20180703123214.23090-1-paul@crapouillou.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180703123214.23090-1-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRGllbnN0YWcsIDMuIEp1bGkgMjAxOCwgMTQ6MTY6MjggQ0VTVCBzY2hyaWViIEFuZHJ6ZWog
-SGFqZGE6Cj4gT24gMTguMDYuMjAxOCAxMjoyOCwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gPiBf
-X2R3X21pcGlfZHNpX3Byb2JlKCkgZG9lcyBhbGwgdGhlIGdyYWJiaW5nIG9mIHJlc291cmNlcyBh
-bmQgZG9lcyBpdCB1c2luZwo+ID4gZGV2bS1oZWxwZXJzLiBTbyB0aGlzIGlzIGhhcHBlbmluZyBv
-biBlYWNoIHRyeSBvZiBtYXN0ZXIgYnJpbmd1cCBwb3NzaWJseQo+ID4gc2xvd2luZyBkb3duIHRo
-aW5ncyBhIGxvdC4KPiA+IAo+ID4gRHJpdmVycyB1c2luZyB0aGUgY29tcG9uZW50IGZyYW1ld29y
-ayBtYXkgaW5zdGVhZCB3YW50IGNhbGwKPiA+IGR3X21pcGlfZHNpX3Byb2JlIHNlcGFyYXRlbHkg
-aW4gdGhlaXIgcHJvYmUgZnVuY3Rpb24gc2V0dXAgcmVzb3VyY2VzCj4gPiBlYXJseS4gVGhhdCB3
-YXkgdGhlIGRzaSBidXMgYWxzbyBnZXRzIGNyZWF0ZWQgZWFybGllciBhbmQgYWxzbyBub3QKPiA+
-IHJlY3JlYXRlZCBvbiBlYWNoIGJpbmQtdHJ5LCBzbyB0aGF0IGF0dGFjaGVkIHBhbmVscyBjYW4g
-bG9hZCB0aGVpcgo+ID4gbW9kdWxlcyBhbmQgYmUgcHJvYmVkIHdheSBiZWZvcmUgdGhlIGJyaWRn
-ZS1hdHRhY2ggaW4gdGhlIGJpbmQgY2FsbC4KPiA+IAo+ID4gU28gZHJvcCB0aGUgY2FsbCB0byBf
-X2R3X21pcGlfZHNpX3Byb2JlIGFuZCBtb2RpZnkgdGhlIGZ1bmN0aW9uIHRvIHRha2UKPiA+IGEg
-c3RydWN0IGR3X21pcGlfZHNpIGluc3RlYWQgb2YgdGhlIHBsYXRmb3JtLWRldmljZS4KPiA+IAo+
-ID4gU2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiA+IC0t
-LQo+ID4gCj4gPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5j
-IHwgMTUgKysrLS0tLS0tLS0tLS0tCj4gPiAgaW5jbHVkZS9kcm0vYnJpZGdlL2R3X21pcGlfZHNp
-LmggICAgICAgICAgICAgIHwgIDUgKy0tLS0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDQgaW5zZXJ0
-aW9ucygrKSwgMTYgZGVsZXRpb25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
-dS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMKPiA+IGIvZHJpdmVycy9ncHUvZHJt
-L2JyaWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5jIGluZGV4Cj4gPiAwN2NkZTI1NWNhYjIuLmJi
-NGFlY2E1YzBmOSAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3Bz
-eXMvZHctbWlwaS1kc2kuYwo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5
-cy9kdy1taXBpLWRzaS5jCj4gPiBAQCAtOTY2LDMxICs5NjYsMjIgQEAgRVhQT1JUX1NZTUJPTF9H
-UEwoZHdfbWlwaV9kc2lfcmVtb3ZlKTsKPiA+IAo+ID4gIC8qCj4gPiAgCj4gPiAgICogQmluZC91
-bmJpbmQgQVBJLCB1c2VkIGZyb20gcGxhdGZvcm1zIGJhc2VkIG9uIHRoZSBjb21wb25lbnQgZnJh
-bWV3b3JrLgo+ID4gICAqLwo+ID4gCj4gPiAtc3RydWN0IGR3X21pcGlfZHNpICoKPiA+IC1kd19t
-aXBpX2RzaV9iaW5kKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsIHN0cnVjdCBkcm1fZW5j
-b2Rlcgo+ID4gKmVuY29kZXIsIC0JCSBjb25zdCBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9kYXRh
-ICpwbGF0X2RhdGEpCj4gPiAraW50IGR3X21pcGlfZHNpX2JpbmQoc3RydWN0IGR3X21pcGlfZHNp
-ICpkc2ksIHN0cnVjdCBkcm1fZW5jb2Rlcgo+ID4gKmVuY29kZXIpCj4gPiAKPiA+ICB7Cj4gPiAK
-PiA+IC0Jc3RydWN0IGR3X21pcGlfZHNpICpkc2k7Cj4gPiAKPiA+ICAJaW50IHJldDsKPiA+IAo+
-ID4gLQlkc2kgPSBfX2R3X21pcGlfZHNpX3Byb2JlKHBkZXYsIHBsYXRfZGF0YSk7Cj4gPiAtCWlm
-IChJU19FUlIoZHNpKSkKPiA+IC0JCXJldHVybiBkc2k7Cj4gPiAtCj4gPiAKPiA+ICAJcmV0ID0g
-ZHJtX2JyaWRnZV9hdHRhY2goZW5jb2RlciwgJmRzaS0+YnJpZGdlLCBOVUxMKTsKPiA+ICAJaWYg
-KHJldCkgewo+ID4gCj4gPiAtCQlkd19taXBpX2RzaV9yZW1vdmUoZHNpKTsKPiA+IAo+ID4gIAkJ
-RFJNX0VSUk9SKCJGYWlsZWQgdG8gaW5pdGlhbGl6ZSBicmlkZ2Ugd2l0aCBkcm1cbiIpOwo+ID4g
-Cj4gPiAtCQlyZXR1cm4gRVJSX1BUUihyZXQpOwo+ID4gKwkJcmV0dXJuIHJldDsKPiA+IAo+ID4g
-IAl9Cj4gPiAKPiA+IC0JcmV0dXJuIGRzaTsKPiA+ICsJcmV0dXJuIHJldDsKPiA+IAo+ID4gIH0K
-PiA+ICBFWFBPUlRfU1lNQk9MX0dQTChkd19taXBpX2RzaV9iaW5kKTsKPiA+ICAKPiA+ICB2b2lk
-IGR3X21pcGlfZHNpX3VuYmluZChzdHJ1Y3QgZHdfbWlwaV9kc2kgKmRzaSkKPiA+ICB7Cj4gPiAK
-PiA+IC0JX19kd19taXBpX2RzaV9yZW1vdmUoZHNpKTsKPiA+IAo+ID4gIH0KPiA+ICBFWFBPUlRf
-U1lNQk9MX0dQTChkd19taXBpX2RzaV91bmJpbmQpOwo+IAo+IENhbid0IHdlIGp1c3QgcmVtb3Zl
-IHRoZXNlIHR3byBiaW5kL3VuYmluZCBmdW5jdGlvbnMgYW5kIGNhbGwKPiBkcm1fYnJpZGdlX2F0
-dGFjaCBkaXJlY3RseT8KCkkgZ3Vlc3MgbXkgbWFpbiBtb3RpdmF0aW9uIHdhcyB0byBrZWVwIHNo
-b3dpbmcgdGhhdCB0aGUgYnJpZGdlLWF0dGFjaAooYW5kIGFueSBmdXR1cmUgYmluZCBhY3Rpb25z
-KSBpcyB0aGUgcmVzcG9uc2liaWxpdHkgb2YgdGhlIG1haW4gZHJpdmVyLApidXQgdGhlbiBhZ2Fp
-biB3ZSBjYW4gZG8gaXQgYW55d2F5IHlvdSBwcmVmZXIuCgpTbyBJIHNlZSBubyBwcm9ibGVtIHRv
-IG1vdmUgdGhpcyB0byB0aGUgZ2x1ZSBkcml2ZXIsIGlmIHlvdSBwcmVmZXIuCgoKSGVpa28KCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+The only information we use in the 8-word version of the hardware DMA
+descriptor that is not present in the 4-word version is the transfer
+type, aka. the ID of the source or recipient device.
+
+Since the transfer type will never change for a DMA channel in use,
+we can just set it once for all in the corresponding DMA register
+before starting any transfer.
+
+This has several benefits:
+
+* the driver will handle twice as many hardware DMA descriptors;
+
+* the driver is closer to support the JZ4740, which only supports 4-word
+  hardware DMA descriptors;
+
+* the JZ4770 SoC needs the transfer type to be set in the corresponding
+  DMA register anyway, even if 8-word descriptors are in use.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/dma/dma-jz4780.c | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index 4d234caf5d62..cd2cd70fd843 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -93,17 +93,12 @@
+  * @dtc: transfer count (number of blocks of the transfer size specified in DCM
+  * to transfer) in the low 24 bits, offset of the next descriptor from the
+  * descriptor base address in the upper 8 bits.
+- * @sd: target/source stride difference (in stride transfer mode).
+- * @drt: request type
+  */
+ struct jz4780_dma_hwdesc {
+ 	uint32_t dcm;
+ 	uint32_t dsa;
+ 	uint32_t dta;
+ 	uint32_t dtc;
+-	uint32_t sd;
+-	uint32_t drt;
+-	uint32_t reserved[2];
+ };
+ 
+ /* Size of allocations for hardware descriptor blocks. */
+@@ -280,7 +275,6 @@ static int jz4780_dma_setup_hwdesc(struct jz4780_dma_chan *jzchan,
+ 		desc->dcm = JZ_DMA_DCM_SAI;
+ 		desc->dsa = addr;
+ 		desc->dta = config->dst_addr;
+-		desc->drt = jzchan->transfer_type;
+ 
+ 		width = config->dst_addr_width;
+ 		maxburst = config->dst_maxburst;
+@@ -288,7 +282,6 @@ static int jz4780_dma_setup_hwdesc(struct jz4780_dma_chan *jzchan,
+ 		desc->dcm = JZ_DMA_DCM_DAI;
+ 		desc->dsa = config->src_addr;
+ 		desc->dta = addr;
+-		desc->drt = jzchan->transfer_type;
+ 
+ 		width = config->src_addr_width;
+ 		maxburst = config->src_maxburst;
+@@ -433,9 +426,10 @@ static struct dma_async_tx_descriptor *jz4780_dma_prep_dma_memcpy(
+ 	tsz = jz4780_dma_transfer_size(dest | src | len,
+ 				       &jzchan->transfer_shift);
+ 
++	jzchan->transfer_type = JZ_DMA_DRT_AUTO;
++
+ 	desc->desc[0].dsa = src;
+ 	desc->desc[0].dta = dest;
+-	desc->desc[0].drt = JZ_DMA_DRT_AUTO;
+ 	desc->desc[0].dcm = JZ_DMA_DCM_TIE | JZ_DMA_DCM_SAI | JZ_DMA_DCM_DAI |
+ 			    tsz << JZ_DMA_DCM_TSZ_SHIFT |
+ 			    JZ_DMA_WIDTH_32_BIT << JZ_DMA_DCM_SP_SHIFT |
+@@ -490,9 +484,12 @@ static void jz4780_dma_begin(struct jz4780_dma_chan *jzchan)
+ 			(jzchan->curr_hwdesc + 1) % jzchan->desc->count;
+ 	}
+ 
+-	/* Use 8-word descriptors. */
+-	jz4780_dma_chn_writel(jzdma, jzchan->id,
+-			      JZ_DMA_REG_DCS, JZ_DMA_DCS_DES8);
++	/* Use 4-word descriptors. */
++	jz4780_dma_chn_writel(jzdma, jzchan->id, JZ_DMA_REG_DCS, 0);
++
++	/* Set transfer type. */
++	jz4780_dma_chn_writel(jzdma, jzchan->id, JZ_DMA_REG_DRT,
++			      jzchan->transfer_type);
+ 
+ 	/* Write descriptor address and initiate descriptor fetch. */
+ 	desc_phys = jzchan->desc->desc_phys +
+@@ -502,7 +499,7 @@ static void jz4780_dma_begin(struct jz4780_dma_chan *jzchan)
+ 
+ 	/* Enable the channel. */
+ 	jz4780_dma_chn_writel(jzdma, jzchan->id, JZ_DMA_REG_DCS,
+-			      JZ_DMA_DCS_DES8 | JZ_DMA_DCS_CTE);
++			      JZ_DMA_DCS_CTE);
+ }
+ 
+ static void jz4780_dma_issue_pending(struct dma_chan *chan)
+-- 
+2.18.0
