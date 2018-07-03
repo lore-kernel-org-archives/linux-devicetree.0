@@ -1,138 +1,105 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 1/2] dt-binding: hwmon: Add NPCM7xx PWM and Fan
- controller documentation
-Date: Tue, 3 Jul 2018 10:45:03 -0600
-Message-ID: <20180703164503.GA25357@rob-hp-laptop>
-References: <20180703094701.255662-1-tmaimon77@gmail.com>
- <20180703094701.255662-2-tmaimon77@gmail.com>
+Subject: Re: [PATCH linux-next v6 01/13] dt-bindings: Add a document of PECI
+ subsystem
+Date: Tue, 3 Jul 2018 10:47:31 -0600
+Message-ID: <20180703164731.GA9150@rob-hp-laptop>
+References: <20180621193721.20588-1-jae.hyun.yoo@linux.intel.com>
+ <20180621193947.20645-1-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180703094701.255662-2-tmaimon77@gmail.com>
+In-Reply-To: <20180621193947.20645-1-jae.hyun.yoo@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: mark.rutland@arm.com, jdelvare@suse.com, linux@roeck-us.net, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 03, 2018 at 12:47:00PM +0300, Tomer Maimon wrote:
-> Added device tree binding documentation for Nuvoton BMC
-> NPCM7xx Pulse Width Modulation (PWM)  and Fan tach controller.
-> The PWM controller can support upto 8 PWM output ports.
-> The Fan tach controller can support upto 16 tachometer inputs.
+On Thu, Jun 21, 2018 at 12:39:47PM -0700, Jae Hyun Yoo wrote:
+> This commit adds a document of generic PECI bus, adapter and client
+> driver.
 > 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+> Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
+> Reviewed-by: James Feist <james.feist@linux.intel.com>
+> Reviewed-by: Vernon Mauery <vernon.mauery@linux.intel.com>
+> Cc: Andrew Jeffery <andrew@aj.id.au>
+> Cc: Joel Stanley <joel@jms.id.au>
 > ---
->  .../devicetree/bindings/hwmon/npcm750-pwm-fan.txt  | 87 ++++++++++++++++++++++
->  1 file changed, 87 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
+>  .../devicetree/bindings/peci/peci.txt         | 60 +++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/peci/peci.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt b/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
+> diff --git a/Documentation/devicetree/bindings/peci/peci.txt b/Documentation/devicetree/bindings/peci/peci.txt
 > new file mode 100644
-> index 000000000000..c56d72d03717
+> index 000000000000..5583aa80b78a
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
-> @@ -0,0 +1,87 @@
-> +Nuvoton NPCM7xx PWM and Fan Tacho controller device
+> +++ b/Documentation/devicetree/bindings/peci/peci.txt
+> @@ -0,0 +1,60 @@
+> +Generic device tree configuration for PECI buses
+> +================================================
 > +
-> +The NPCM7xx has two identical Pulse-width modulation (PWM) controller modules,
-> +Each PWM module has four PWM controller outputs, Totally 8 PWM controller outputs.
-
-Kind of sounds like this should be 2 nodes then?
-
+> +Required properties:
+> +- compatible     : Should be "simple-bus".
+> +- #address-cells : Should be present if the device has sub-nodes.
+> +- #size-cells    : Should be present if the device has sub-nodes.
+> +- ranges         : Should contain PECI controller registers ranges.
 > +
-> +The NPCM7xx has eight identical Fan tachometer controller modules,
-> +Each Fan module has two Fan controller inputs, Totally 16 Fan controller inputs.
-> +
-> +Required properties for pwm-fan node
-> +- #address-cells : should be 1.
-> +- #size-cells 	: should be 0.
-> +- compatible	: "nuvoton,npcm750-pwm-fan" for Poleg NPCM7XX.
-> +- reg 			: specifies physical base address and size of the registers.
-> +- reg-names 	: must contain:
-> +					* "pwm" for the PWM registers.
-> + 					* "fan" for the Fan registers.
-> +- clocks		: phandle of reference clocks.
-> +- clock-names	: must contain
-> +					* "clk_apb3" for clock of PWM controller.
-> + 					* "clk_apb4" for clock of Fan controller.
-
-The "clk_" part is redundant.
-
-Also, this should be the names of the clocks in the module, not the name 
-of the source clocks. It seems like these may be the latter?
-
-> +- interrupts	: contain the Fan interrupts with flags for falling edge.
-> +- pinctrl-names	: a pinctrl state named "default" must be defined.
-> +- pinctrl-0 	: phandle referencing pin configuration of the PWM and Fan
-> +					controller ports.
-> +
-> +fan subnode format:
-> +===================
-> +Under fan subnode can be upto 8 child nodes, each child node representing a fan.
-> +Each fan subnode must have one PWM channel and atleast one Fan tach channel.
-> +
-> +For PWM channel can be configured cooling-levels to create cooling device.
-> +Cooling device could be bound to a thermal zone for the thermal control.
-> +
-> +Required properties for each child node:
-> +- reg : specify the PWM output channel.
-> +	integer value in the range 0 through 7, that represent
-> +	the PWM channel number that used.
-> +
-> +- fan-tach-ch : specify the Fan tach input channel.
-> +		integer value in the range 0 through 15, that represent
-> +		the fan tach channel number that used.
-> +
-> +		At least one Fan tach input channel is required
-> +
-> +Optional property for each child node:
-> +- cooling-levels: PWM duty cycle values in a range from 0 to 255
-> +                  which correspond to thermal cooling states.
-> +
-> +Examples:
-> +
-> +pwm_fan:pwm-fan-controller@103000 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	compatible = "nuvoton,npcm750-pwm-fan";
-> +	reg = <0x103000 0x2000>,
-> +		<0x180000 0x8000>;
-> +	reg-names = "pwm", "fan";
-> +	clocks = <&clk NPCM7XX_CLK_APB3>,
-> +		<&clk NPCM7XX_CLK_APB4>;
-> +	clock-names = "clk_apb3","clk_apb4";
-> +	interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-> +			<GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-> +			<GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-> +			<GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-> +			<GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-> +			<GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-> +			<GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-> +			<GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pwm0_pins &pwm1_pins &pwm2_pins
-> +			&fanin0_pins &fanin1_pins &fanin2_pins
-> +			&fanin3_pins &fanin4_pins>;
-> +	fan@0 {
-> +		reg = <0x00>;
-> +		fan-ch = /bits/ 8 <0x00 0x01>;
-
-Doesn't match the doc.
-
-> +		cooling-levels = <127 255>;
+> +Example:
+> +	peci: peci@10000000 {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0x0 0x10000000 0x1000>;
 > +	};
-> +	fan@1 {
-> +		reg = <0x01>;
-> +		fan-ch = /bits/ 8 <0x02 0x03>;
-> +	};
-> +	fan@2 {
-> +		reg = <0x02>;
-> +		fan-ch = /bits/ 8 <0x04>;
+
+I don't think you need this section. It's just the parent of the 
+controller, right?
+
+> +
+> +Generic device tree configuration for PECI adapters
+> +===================================================
+> +
+> +Required properties:
+> +- #address-cells : Should be <1>. Read more about client addresses below.
+> +- #size-cells    : Should be <0>. Read more about client addresses below.
+> +
+> +The cells properties above define that an address of CPU clients of a PECI bus
+> +are described by a single value.
+> +
+> +Example:
+> +	peci0: peci-bus@0 {
+> +		compatible = "vendor,soc-peci";
+> +		reg = <0x0 0x1000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
 > +	};
 > +
-> +};
-> \ No newline at end of file
+> +Generic device tree configuration for PECI clients
+> +==================================================
+> +
+> +Required properties:
+> +- compatible : Should contain name of PECI client.
+> +- reg        : Should contain address of a client CPU. Address range of CPU
+> +	       clients starts from 0x30 based on PECI specification.
+> +
+> +Example:
+> +	peci-bus@0 {
+> +		compatible = "vendor,soc-peci";
+> +		reg = <0x0 0x1000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		peci-client@30 {
+> +			compatible = "vendor,peci-client";
+> +			reg = <0x30>;
+> +		};
+> +
+> +		peci-client@31 {
+> +			compatible = "vendor,peci-client";
+> +			reg = <0x31>;
+> +		};
+> +	};
 > -- 
-> 2.14.1
+> 2.17.1
 > 
