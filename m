@@ -1,60 +1,65 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [RFC PATCH 1/4] dts: misc: Add bindings documentation for
- bmc-misc-ctrl
-Date: Wed, 04 Jul 2018 01:39:53 +1000
-Message-ID: <6f0c3d6d81202e385fee55a2c8aaec18d1d2acda.camel@kernel.crashing.org>
-References: <20180703070413.28756-1-andrew@aj.id.au>
- <20180703070413.28756-2-andrew@aj.id.au> <20180703075009.GA27649@kroah.com>
- <a1c3ecd4fed28e2b33c95a476452318dba58cd7e.camel@kernel.crashing.org>
- <20180703143109.GB2043@kroah.com>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/6] dt: bindings: add bindings for msa memory region
+Date: Tue, 03 Jul 2018 18:42:24 +0300
+Message-ID: <87o9fonx5r.fsf@kamboji.qca.qualcomm.com>
+References: <20180605123616.528-1-govinds@codeaurora.org>
+        <20180605231814.GB194157@rodete-desktop-imager.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180703143109.GB2043@kroah.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Eugene.Cho@dell.com, a.amelkin@yadro.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, joel@jms.id.au, stewart@linux.ibm.com, openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180605231814.GB194157-rgVyoJUnxu4fQXCR9C5MjtfHHWVUegAGYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+        (Brian Norris's message of "Tue, 5 Jun 2018 16:18:16 -0700")
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-07-03 at 16:31 +0200, Greg KH wrote:
-> On Wed, Jul 04, 2018 at 12:16:49AM +1000, Benjamin Herrenschmidt wrote:
-> > On Tue, 2018-07-03 at 09:50 +0200, Greg KH wrote:
-> > > On Tue, Jul 03, 2018 at 05:04:10PM +1000, Andrew Jeffery wrote:
-> > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > > > ---
-> > > 
-> > > I can't take patches without any changelog text at all :(
-> > 
-> > Greg (and replying to your other comments as well)...
-> > 
-> > This is an RFC series, it's not meant for you to take at this point,
-> > it's about discussing the overall approach to exposing BMC random
-> > "tunables" as explained in patch 0 of the series.
-> > 
-> > Yes the individual patches aren't yet at the level of polish for a
-> > formal submission, we (naively ?) thought that's what the whole RFC tag
-> > is about :-)
-> 
-> Oh come on, putting a basic "here is what this patch does" comment
-> should be part of every patch, otherwise what is there to comment on if
-> we don't know what is going on in the patch itself?
+Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> writes:
 
-Well, it adds documentation :-) You can just read the patch which is
-... the documentation :)
-> 
-> Anyway, I provided a bunch of feedback to the "real" patch in this
-> series...
+> + Rob
+>
+> On Tue, Jun 05, 2018 at 06:06:16PM +0530, Govind Singh wrote:
+>> Add device tree binding documentation details of msa
+>> memory region for ath10k qmi client for SDM845/APQ8098
+>> SoC into "qcom,ath10k.txt".
+>> 
+>> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/net/wireless/qcom,ath10k.txt          | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+>> index 7fd4e8ce4149..0efc47f4ba34 100644
+>> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+>> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+>> @@ -56,6 +56,8 @@ Optional properties:
+>>  				     the length can vary between hw versions.
+>>  - <supply-name>-supply: handle to the regulator device tree node
+>>  			   optional "supply-name" is "vdd-0.8-cx-mx".
+>> +- msa-fixed-region: phandle, specifier to children of reserved MSA memory.
+>
+> As in reserved-memory/reserved-memory.txt? Might refer to that doc here.
+> Or is this some other kind of reserved memory?
+>
+> If the former, it's normally called just "memory-region", although
+> that does seem somewhat non-descriptive...
+>
+>> +- msa-size: MSA memory size for fw internal use.
+>
+> Do you really need both of these? It seems like your code uses one or
+> the other, not both. In which case, this is not a very good description,
+> because it sounds like they would go together.
+>
+> Also, if you're not using standard/generic properties (e.g., the
+> aforementioned "memory-region" binding), you typically should use a
+> vendor prefix, like "qcom,msa-size".
 
-Yes, you did that's fine. Thanks.
+Devicetree folks, any comments? I would like to apply this via my
+ath.git tree but need help with the review.
 
-Cheers,
-Ben.
+Full patch here:
+
+https://patchwork.kernel.org/patch/10448169/
+
+-- 
+Kalle Valo
