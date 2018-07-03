@@ -1,85 +1,65 @@
-From: richard.gong@linux.intel.com
-Subject: [PATCHv6 2/8] arm64: dts: stratix10: add stratix10 service driver binding to base dtsi
-Date: Tue,  3 Jul 2018 09:46:49 -0500
-Message-ID: <1530629215-26990-3-git-send-email-richard.gong@linux.intel.com>
-References: <1530629215-26990-1-git-send-email-richard.gong@linux.intel.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 12/15] arm: dts: highbank: Add missing OPP properties for CPUs
+Date: Tue, 3 Jul 2018 07:46:34 -0700
+Message-ID: <CAOesGMjtFSVg1yu-9TAxXTTtvzGaUGn6P9-hnK5XrgHVFVHDOQ@mail.gmail.com>
+References: <cover.1527244200.git.viresh.kumar@linaro.org> <f8a4e5c3062397736475ec599de730206846cb9b.1527244201.git.viresh.kumar@linaro.org>
+ <CAL_JsqJRKMREfJ8LoDfuda8BU3g5Eq1AX5cPZGzO3uN3vUhrAQ@mail.gmail.com>
+ <20180702232735.eocdrdfwyj37577h@localhost> <20180703041321.k2ewqta76cnqhsmm@vireshk-i7>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530629215-26990-1-git-send-email-richard.gong@linux.intel.com>
+In-Reply-To: <20180703041321.k2ewqta76cnqhsmm@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, corbet@lwn.net
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, linux-doc@vger.kernel.org, yves.vandervennet@linux.intel.com, richard.gong@linux.intel.com, richard.gong@intel.com
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, Ionela Voinescu <ionela.voinescu@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, DTML <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Richard Gong <richard.gong@intel.com>
+On Mon, Jul 2, 2018 at 9:13 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> On 02-07-18, 16:27, Olof Johansson wrote:
+>> On Mon, Jul 02, 2018 at 02:25:40PM -0600, Rob Herring wrote:
+>> > On Fri, May 25, 2018 at 4:32 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>> > >
+>> > > The OPP properties, like "operating-points", should either be present
+>> > > for all the CPUs of a cluster or none. If these are present only for a
+>> > > subset of CPUs of a cluster then things will start falling apart as soon
+>> > > as the CPUs are brought online in a different order. For example, this
+>> > > will happen because the operating system looks for such properties in
+>> > > the CPU node it is trying to bring up, so that it can create an OPP
+>> > > table.
+>> > >
+>> > > Add such missing properties.
+>> > >
+>> > > Fix other missing property (clock latency) as well to make it all
+>> > > work.
+>> > >
+>> > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+>> > > ---
+>> > >  arch/arm/boot/dts/highbank.dts | 30 ++++++++++++++++++++++++++++++
+>> > >  1 file changed, 30 insertions(+)
+>> >
+>> > Acked-by: Rob Herring <robh@kernel.org>
+>> >
+>> > ARM-SOC maintainers, Please apply this.
+>>
+>> Applied to next/dt.
+>
+> Thanks Olof.
+>
+> Can you also apply other patches in this series, that haven't been
+> applied yet by SoC maintainers ? And same for the arm64 series..
 
-Add Intel Stratix10 service layer to the device tree
+This is the kind of patch that should be applied by the maintainers
+for active platforms, where they have systems to test with and can
+make sure you haven't regressed something on them.
 
-Signed-off-by: Richard Gong <richard.gong@intel.com>
-Signed-off-by: Alan Tull <atull@kernel.org>
-Acked-by: Moritz Fischer <mdf@kernel.org>
----
-v2: Change to put service layer driver node under the firmware node
-    Change compatible to "intel, stratix10-svc"
-v3: No change
-v4: s/service driver/stratix10 service driver/ in subject line
-v5: No change
-v6: Add Moritz's Acked-by
----
- arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 36 +++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+For very low patch rate platforms we can apply directly through
+maintainer acks, like in this case.
 
-diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-index e6b05937..1ba9a1c 100644
---- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-+++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-@@ -24,6 +24,19 @@
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		service_reserved: svcbuffer@0 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x0 0x0 0x0 0x1000000>;
-+			alignment = <0x1000>;
-+			no-map;
-+		};
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -466,5 +479,28 @@
- 				interrupts = <16 4>, <48 4>;
- 			};
- 		};
-+
-+		qspi: spi@ff8d2000 {
-+			compatible = "cdns,qspi-nor";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0xff8d2000 0x100>,
-+			      <0xff900000 0x100000>;
-+			interrupts = <0 3 4>;
-+			cdns,fifo-depth = <128>;
-+			cdns,fifo-width = <4>;
-+			cdns,trigger-address = <0x00000000>;
-+			clocks = <&qspi_clk>;
-+
-+			status = "disabled";
-+		};
-+
-+		firmware {
-+			svc {
-+				compatible = "intel,stratix10-svc";
-+				method = "smc";
-+				memory-region = <&service_reserved>;
-+			};
-+		};
- 	};
- };
--- 
-2.7.4
+So, my recommendation is to repost the series to the maintainers.
+Please don't patchbomb arm@kernel.org though, so keep us off of cc by
+default (you can add our individual addresses if you want).
+
+
+Thanks,
+
+-Olof
