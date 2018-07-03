@@ -1,52 +1,39 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH] bindings: add clocks optional binding for imx gpio
-Date: Tue, 3 Jul 2018 01:14:11 +0000
-Message-ID: <AM3PR04MB13158C70263CB7CD5CB24173F5420@AM3PR04MB1315.eurprd04.prod.outlook.com>
-References: <1530243004-10529-1-git-send-email-Anson.Huang@nxp.com>
- <CACRpkdbbbbO-94i-ZTSunzuUQcJ8dQpuPHBYODrvdWQyuri7yw@mail.gmail.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH V2] bindings: add clocks optional binding for imx gpio
+Date: Tue,  3 Jul 2018 09:18:14 +0800
+Message-ID: <1530580694-8649-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbbbbO-94i-ZTSunzuUQcJ8dQpuPHBYODrvdWQyuri7yw@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, fabio.estevam@nxp.com, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-SGksIExpbnVzDQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMaW51cyBXYWxsZWlqIFttYWlsdG86bGludXMud2Fs
-bGVpakBsaW5hcm8ub3JnXQ0KPiBTZW50OiBNb25kYXksIEp1bHkgMiwgMjAxOCA5OjQ2IFBNDQo+
-IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT47IEZhYmlvIEVzdGV2YW0NCj4g
-PGZhYmlvLmVzdGV2YW1AbnhwLmNvbT4NCj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5l
-bC5vcmc+OyBNYXJrIFJ1dGxhbmQNCj4gPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgb3BlbiBsaXN0
-OkdQSU8gU1VCU1lTVEVNDQo+IDxsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZz47IG9wZW4gbGlz
-dDpPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVORUQNCj4gREVWSUNFIFRSRUUgQklORElOR1MgPGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
-ZzsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRD
-SF0gYmluZGluZ3M6IGFkZCBjbG9ja3Mgb3B0aW9uYWwgYmluZGluZyBmb3IgaW14IGdwaW8NCj4g
-DQo+IE9uIEZyaSwgSnVuIDI5LCAyMDE4IGF0IDU6MzQgQU0gQW5zb24gSHVhbmcgPEFuc29uLkh1
-YW5nQG54cC5jb20+DQo+IHdyb3RlOg0KPiANCj4gPiBTb21lIGkuTVggU29DcyBoYXZlIEdQSU8g
-Y2xvY2sgZ2F0ZSBpbiBDQ00sIGFjY2Vzc2luZyBHUElPIHJlZ2lzdGVycw0KPiA+IG5lZWRzIHRv
-IGVuYWJsZSBHUElPIGNsb2NrIGdhdGUgZmlyc3QsIGkuTVggR1BJTyBkcml2ZXIgd2lsbCBlbmFi
-bGUNCj4gPiBjbG9jayBnYXRlIGlmIHRoZXJlIGlzIGNsb2NrIHByb3BlcnR5IGluIEdQSU8gbm9k
-ZSBvZiBkdGIsIGFkZA0KPiA+IG9wdGlvbmFsIHByb3BlcnR5IHRvIGkuTVggR1BJTyBiaW5kaW5n
-IGRvYy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0Bu
-eHAuY29tPg0KPiANCj4gTWFrZSBzZW5zZSBzaW5jZSB0aGUgZ3Bpby1teGMgZHJpdmVyIGFscmVh
-ZHkgc3VwcG9ydHMgdGhpcyA6KQ0KPiANCj4gPiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiAr
-LSBjbG9ja3M6IHRoZSBjbG9ja3MgdXNlZCBieSBncGlvIGJhbmsNCj4gDQo+IFNob3VsZCB0aGUg
-dGV4dCBiZSAidGhlIGNsb2NrIGZvciBjbG9ja2luZyB0aGUgR1BJTyBzaWxpY29uIg0KPiBJIGd1
-ZXNzIHRoYXQgaXMgd2hhdCBpdCBpcy4gQW5kIHNpbmd1bGFyaXM/DQoNClllcywgaXQgaXMgc2lu
-Z3VsYXJpcywgSSB3aWxsIGltcHJvdmUgdGhlIHRleHQuDQoNCj4gDQo+IERvZXMgaXQgaHVydCB0
-byBnaXZlIHRoZSBjbG9jayBhIG5hbWU/IExpa2UgdGhlIGNvbW1vbiAicGNsayIgZm9yIHBlcmlw
-aGVyYWwNCj4gY2xvY2sgb3Igc29tZXRoaW5nIHNpbWlsYXIgdGhhdCBvdGhlciBpLk1YIHNpbGlj
-b24gdXNlcz8NCg0KSXQgaXMganVzdCBiZWNhdXNlIEdQSU8gb25seSBuZWVkcyBvbmUgY2xvY2ss
-IGFuZCB0aGUgZHJpdmVyIGRvZXMgTk9UIGdldCB0aGUNCmNsb2NrIHVzaW5nIGNsb2NrIG5hbWUs
-IHNvIHRoZSBHUElPIG5vZGUgaW4gZHRiIGFsc28gaGFzIG5vIGNsb2NrIG5hbWUgc3BlY2lmaWVk
-LA0KaWYgd2UgYWRkIGEgY2xvY2sgbmFtZSBoZXJlLCBkdGIgYWxzbyBuZWVkIHRvIGJlIHVwZGF0
-ZWQ/IEFuZCBJIHNhdyBvdGhlciBpLk1YDQptb2R1bGVzIHdoaWNoIGhhdmUgb25seSBvbmUgY2xv
-Y2ssIHRoZXkgYWxzbyBoYXZlIG5vIGNsb2NrIG5hbWUgc3BlY2lmaWVkLCBsaWtlIEkyQw0Kb24g
-aS5NWDZRREwsIEkgd2lsbCBzZW5kIGEgVjIgcGF0Y2ggd2l0aCB0ZXh0IGltcHJvdmVkLCB0aGFu
-a3MuDQoNCkFuc29uLg0KDQo+IA0KPiBGYWJpbzogY2FuIHdlIGhhdmUgeW91ciBBQ0sgb24gdGhp
-cyB0b28uDQo+IA0KPiBZb3VycywNCj4gTGludXMgV2FsbGVpag0K
+Some i.MX SoCs have GPIO clock gate in CCM, accessing
+GPIO registers needs to enable GPIO clock gate first,
+i.MX GPIO driver will enable clock gate if there is
+clock property in GPIO node of dtb, add optional property
+to i.MX GPIO binding doc.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
+index dbd22e0..b4cd9f90 100644
+--- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
+@@ -19,6 +19,9 @@ Required properties:
+       4 = active high level-sensitive.
+       8 = active low level-sensitive.
+ 
++Optional properties:
++- clocks: the clock for clocking the GPIO silicon
++
+ Example:
+ 
+ gpio0: gpio@73f84000 {
+-- 
+2.7.4
