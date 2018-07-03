@@ -1,50 +1,29 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH] ARM: tegra: Fix Tegra30 Cardhu PCA954x reset
-Date: Tue, 3 Jul 2018 09:59:47 +0100
-Message-ID: <1530608387-9591-1-git-send-email-jonathanh@nvidia.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH v2 1/2] clk: meson-axg: add pcie and mipi clock bindings
+Date: Tue, 03 Jul 2018 11:20:40 +0200
+Message-ID: <1530609640.2900.184.camel@baylibre.com>
+References: <20180702213118.19222-1-yixun.lan@amlogic.com>
+         <20180702213118.19222-2-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <stable-owner@vger.kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jon Hunter <jonathanh@nvidia.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180702213118.19222-2-yixun.lan@amlogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Jianxin Qin <jianxin.qin@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On all versions of Tegra30 Cardhu, the reset signal to the NXP PCA9546
-I2C mux is connected to the Tegra GPIO BB0. Currently, this pin on the
-Tegra is not configured as a GPIO but as a special-function IO (SFIO)
-that is multiplexing the pin to an I2S controller. On exiting system
-suspend, I2C commands sent to the PCA9546 are failing because there is
-no ACK. Although it is not possible to see exactly what is happening
-to the reset during suspend, by ensuring it is configured as a GPIO
-and driven high, to de-assert the reset, the failures are no longer
-seen.
+On Mon, 2018-07-02 at 21:31 +0000, Yixun Lan wrote:
+> Add the pcie and mipi clock dt-bindings for the pcie driver.
+> 
+> Since the mipi clock isalso used by the pcie driver,
+> we add it together in this patch.
+> 
+> Tested-by: Jianxin Qin <jianxin.qin@amlogic.com>
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> ---
+>  include/dt-bindings/clock/axg-clkc.h | 3 +++
+>  1 file changed, 3 insertions(+)
 
-Please note that this GPIO is also used to drive the reset signal
-going to the camera connector on the board. However, given that there
-is no camera support currently for Cardhu, this should not have any
-impact.
-
-Fixes: 40431d16ff11 ("ARM: tegra: enable PCA9546 on Cardhu")
-
-Cc: stable@vger.kernel.org
-
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
- arch/arm/boot/dts/tegra30-cardhu.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/tegra30-cardhu.dtsi b/arch/arm/boot/dts/tegra30-cardhu.dtsi
-index 92a9740c533f..3b1db7b9ec50 100644
---- a/arch/arm/boot/dts/tegra30-cardhu.dtsi
-+++ b/arch/arm/boot/dts/tegra30-cardhu.dtsi
-@@ -206,6 +206,7 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0x70>;
-+			reset-gpio = <&gpio TEGRA_GPIO(BB, 0) GPIO_ACTIVE_LOW>;
- 		};
- 	};
- 
--- 
-1.9.1
+Applied. Thx
