@@ -1,31 +1,73 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 02/15] arm: dts: ls1021a: Add missing cooling device
- properties for CPUs
-Date: Tue, 3 Jul 2018 09:35:10 +0800
-Message-ID: <20180703013508.GA28742@dragon>
-References: <cover.1527244200.git.viresh.kumar@linaro.org>
- <abb38102bb031a5c0d3ef9adf58b4b04ad38c07c.1527244201.git.viresh.kumar@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v13 3/3] dt-bindings: drm/bridge: Document
+ sn65dsi86 bridge bindings
+Date: Mon, 2 Jul 2018 20:00:35 -0600
+Message-ID: <20180703020035.GA12650@rob-hp-laptop>
+References: <20180627095735.24517-1-spanda@codeaurora.org>
+ <20180627095735.24517-4-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <abb38102bb031a5c0d3ef9adf58b4b04ad38c07c.1527244201.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20180627095735.24517-4-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 25, 2018 at 04:01:48PM +0530, Viresh Kumar wrote:
-> The cooling device properties, like "#cooling-cells" and
-> "dynamic-power-coefficient", should either be present for all the CPUs
-> of a cluster or none. If these are present only for a subset of CPUs of
-> a cluster then things will start falling apart as soon as the CPUs are
-> brought online in a different order. For example, this will happen
-> because the operating system looks for such properties in the CPU node
-> it is trying to bring up, so that it can register a cooling device.
-> 
-> Add such missing properties.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-
-Applied, thanks.
+T24gV2VkLCBKdW4gMjcsIDIwMTggYXQgMDM6Mjc6MzVQTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3
+cm90ZToKPiBEb2N1bWVudCB0aGUgYmluZGluZ3MgdXNlZCBmb3IgdGhlIHNuNjVkc2k4NiBEU0kg
+dG8gZURQIGJyaWRnZS4KPiAKPiBDaGFuZ2VzIGluIHYxOgo+ICAtIFJlcGhyYXNlIHRoZSBkdC1i
+aW5kaW5nIGRlc2NyaXB0aW9ucyB0byBiZSBtb3JlIGlubGluZSB3aXRoIGV4aXN0aW5nCj4gICAg
+YmluZGluZ3MgKEFuZHJ6ZWogSGFqZGEpLgo+ICAtIEFkZCBtaXNzaW5nIGR0LWJpbmRpbmcgdGhh
+dCBhcmUgcGFyc2VkIGJ5IGNvcnJlc3BvbmRpbmcgZHJpdmVyCj4gICAgKEFuZHJ6ZWogSGFqZGEp
+Lgo+IAo+IENoYW5nZXMgaW4gdjI6Cj4gIC0gUmVtb3ZlIGVkcCBwYW5lbCBzcGVjaWZpYyBkdC1i
+aW5kaW5nIGVudHJpZXMuIE9ubHkga2VlcCBicmlkZ2UKPiAgICBzcGVjaWZpYyBlbnRyaWVzIChT
+ZWFuIFBhdWwpLgo+ICAtIFJlbW92ZSBjdXN0b20tbW9kZXMgZHQgZW50cnkgc2luY2UgaXRzIHVz
+YWdlIGlzIHJlbW92ZWQgZnJvbSBkcml2ZXIgYWxzbyAoU2VhbiBQYXVsKS4KPiAgLSBSZW1vdmUg
+aXMtcGx1Z2dhYmxlIGR0IGVudHJ5IHNpbmNlIHRoaXMgd2lsbCBub3QgYmUgbmVlZGVkIGFueW1v
+cmUgKFNlYW4gUGF1bCkuCj4gCj4gQ2hhbmdlcyBpbiB2MzoKPiAgLSBSZW1vdmUgaXJxLWdwaW8g
+ZHQgZW50cnkgYW5kIGluc3RlYWQgcG9wdWxhdGUgaXMgYW4gaW50ZXJydXB0Cj4gICAgcHJvcGVy
+dHkgKFJvYiBIZXJyaW5nKS4KPiAKPiBDaGFuZ2VzIGluIHY0Ogo+ICAtIEFkZCBsaW5rIHRvIGJy
+aWRnZSBjaGlwIGRhdGFzaGVldCAoU3RlcGhlbiBCb3lkKQo+ICAtIEFkZCB2cGxsIGFuZCB2Y2Mg
+cmVndWxhdG9yIHN1cHBseSBiaW5kaW5ncyAoU3RlcGhlbiBCb3lkKQo+ICAtIEFkZCByZWYgY2xr
+IG9wdGlvbmFsIGR0IGJpbmRpbmcgKFN0ZXBoZW4gQm95ZCkKPiAgLSBBZGQgZ3Bpby1jb250cm9s
+bGVyIG9wdGlvbmFsIGR0IGJpbmRpbmcgKFN0ZXBoZW4gQm95ZCkKPiAKPiBDaGFuZ2VzIGluIHY1
+Ogo+ICAtIFVzZSBjbG9jayBwcm9wZXJ0eSB0byBzcGVjaWZ5IHRoZSBpbnB1dCByZWZjbGsgKFN0
+ZXBoZW4gQm95ZCkuCj4gIC0gVXBkYXRlIGdwaW8gY2VsbCBhbmQgcHdtIGNlbGwgbnVtYmVycyAo
+U3RlcGhlbiBCb3lkKS4KPiAKPiBDaGFuZ2VzIGluIHY2Ogo+ICAtIEFkZCBwcm9wZXJ0eSB0byBt
+ZW50aW9uIHRoZSBsYW5lIG1hcHBpbmcgc2NoZW1lIGFuZCBwb2xhcml0eSBpbnZlcnNpb24KPiAg
+ICAoU3RlcGhlbiBCb3lkKS4KPiAKPiBDaGFuZ2VzIGluIHY3Ogo+ICAtIERldGFpbCBkZXNjcmlw
+dGlvbiBvZiBsYW5lIG1hcHBpbmcgc2NoZW1lIGR0IHByb3BlcnR5IChBbmRyemVqCj4gICAgSGFq
+ZGEvIFJvYiBIZXJyaW5nKS4KPiAgLSBSZW1vdmVkIEhEUCBncGlvIGJpbmRpbmcsIHNpbmNlIHRo
+ZSBicmlkZ2UgdXNlcyBJUlEgc2lnbmFsIHRvCj4gICAgZGV0ZXJtaW5lIEhQRCwgYW5kIElSUSBw
+cm9wZXJ0eSBpcyBhbHJlYWR5IGRvY3VtZW50ZWQgaW4gYmluZGluZy4KPiAKPiBDaGFuZ2VzIGlu
+IHY4Ogo+ICAtIFJlbW92ZWQgdW5uZWNlc3NhcnkgZXhwbGFuYXRpb24gb2YgbGFuZSBtYXBwaW5n
+IGFuZCBwb2xhcml0eSBkdAo+ICAgIHByb3BlcnR5LCBzaW5jZSB0aGVzZSBhcmUgYWxyZWFkeSBl
+eHBsYWluZWQgaW4gbWVkaWEvdmlkZW8taW50ZXJmYWNlCj4gICAgZHQgYmluaWRuZyAoUm9iIEhl
+cnJpbmcpLgo+IAo+IENoYW5nZXMgaW4gdjk6Cj4gIC0gQXZvaWQgcHV0dGluZyByZS1kZWZpbml0
+aW9uIG9mIGxhbmUgbWFwcGluZyBhbmQgcG9sYXJpdHkgZHQgYmluZGluZwo+ICAgIChSb2IgSGVy
+cmluZykuCj4gCj4gQ2hhbmdlcyBpbiB2MTA6Cj4gIC0gVXNlIGludGVycnVwdHMtZXh0ZW5kZWQg
+cHJvcGVydHkgaW5zdGVhZCBvZiBpbnRlcnJ1cHRzIHRvIHNwZWNpZnkKPiAgICBpbnRlcnJ1cHQg
+bGluZSAoQW5kcnplaiBIYWpkYSkuCj4gIC0gTW92ZSBkYXRhLWxhbmVzIGFuZCBsYW5lLXBvbGFy
+aXR5IHByb3BlcnR5IGV4YW1wbGUgdG8gcHJvcGVyIHBsYWNlIChBbmRyemVqIEhhamRhKS4KPiAK
+PiBDaGFuZ2VzIGluIHYxMToKPiAgLSBBZGQgYSBwcm9wZXJ0eSBmb3Igc3VzcGVuZCBncGlvIGZ1
+bmN0aW9uIG9mIEdQSU8xIHBpbiBvbiBicmlkZ2UgY2hpcAo+ICAgIChTdGVwaGVuIEJveWQpLgo+
+IAo+IFNpZ25lZC1vZmYtYnk6IFNhbmRlZXAgUGFuZGEgPHNwYW5kYUBjb2RlYXVyb3JhLm9yZz4K
+PiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQgICAg
+ICAgfCA4OSArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA4OSBpbnNl
+cnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dAoKUmV2aWV3ZWQtYnk6IFJv
+YiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2ZyZWVkcmVubwo=
