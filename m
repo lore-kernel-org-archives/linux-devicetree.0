@@ -1,54 +1,79 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 12/15] arm: dts: highbank: Add missing OPP properties for
- CPUs
-Date: Tue, 3 Jul 2018 09:43:21 +0530
-Message-ID: <20180703041321.k2ewqta76cnqhsmm@vireshk-i7>
-References: <cover.1527244200.git.viresh.kumar@linaro.org>
- <f8a4e5c3062397736475ec599de730206846cb9b.1527244201.git.viresh.kumar@linaro.org>
- <CAL_JsqJRKMREfJ8LoDfuda8BU3g5Eq1AX5cPZGzO3uN3vUhrAQ@mail.gmail.com>
- <20180702232735.eocdrdfwyj37577h@localhost>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v7 0/4] ARM: davinci: complete the conversion to using the
+ reset framework
+Date: Tue, 3 Jul 2018 10:12:55 +0530
+Message-ID: <03256c00-c23f-68c4-c62b-fb4b85547551@ti.com>
+References: <20180621073706.22812-1-brgl@bgdev.pl>
+ <9ec10627-49a5-07ad-8c9d-5ac873096cc0@ti.com>
+ <CAMRc=Me1JTuw40tMWaai2oKMxmc_ktN2OKBhF8tmGt0cQ6magg@mail.gmail.com>
+ <e4bd9f57-617a-a59e-5d05-be1a6b3e6b3d@ti.com>
+ <345aed22-629a-abf6-df22-adee88a43df6@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180702232735.eocdrdfwyj37577h@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Rob Herring <robh@kernel.org>, ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <345aed22-629a-abf6-df22-adee88a43df6@lechnology.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Lechner <david@lechnology.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@kernel.org>, linux-remoteproc@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02-07-18, 16:27, Olof Johansson wrote:
-> On Mon, Jul 02, 2018 at 02:25:40PM -0600, Rob Herring wrote:
-> > On Fri, May 25, 2018 at 4:32 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > >
-> > > The OPP properties, like "operating-points", should either be present
-> > > for all the CPUs of a cluster or none. If these are present only for a
-> > > subset of CPUs of a cluster then things will start falling apart as soon
-> > > as the CPUs are brought online in a different order. For example, this
-> > > will happen because the operating system looks for such properties in
-> > > the CPU node it is trying to bring up, so that it can create an OPP
-> > > table.
-> > >
-> > > Add such missing properties.
-> > >
-> > > Fix other missing property (clock latency) as well to make it all
-> > > work.
-> > >
-> > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > > ---
-> > >  arch/arm/boot/dts/highbank.dts | 30 ++++++++++++++++++++++++++++++
-> > >  1 file changed, 30 insertions(+)
-> > 
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > 
-> > ARM-SOC maintainers, Please apply this.
+On Monday 02 July 2018 08:57 PM, David Lechner wrote:
+> On 07/02/2018 07:08 AM, Sekhar Nori wrote:
+>> Hi Bjorn,
+>>
+>> On Thursday 21 June 2018 05:11 PM, Bartosz Golaszewski wrote:
+>>> 2018-06-21 12:52 GMT+02:00 Sekhar Nori <nsekhar@ti.com>:
+>>>> Hi Bartosz,
+>>>>
+>>>> On Thursday 21 June 2018 01:07 PM, Bartosz Golaszewski wrote:
+>>>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>>>>
+>>>>> These are the remaining patches that still need to be merged in order
+>>>>> to complete the conversion of the davinci dsp driver to using the
+>>>>> reset
+>>>>> framework.
+>>>>>
+>>>>> They apply on top of v4.18-rc1 with David Lechner's remaining patches
+>>>>> merged.
+>>>>
+>>>> Series looks good to me.
+>>>>
+>>>> To preserve bisect, shouldn't the order of applying be patch #3, #4, #1
+>>>> and #2 ?
+>>>>
+>>>> Given the dependencies and to preserve bisect its easiest if I take the
+>>>> series with acks from remoteproc and clock maintainers.
+>>>>
+>>>> Open to other suggestions as well.
+>>>>
+>>>> Thanks,
+>>>> Sekhar
+>>>
+>>> Oops you're right about the order. Do you want me to resend?
+>>
+>> With your ack, I can queue 1/4 for v4.19 and provide an immutable commit
+>> to you (on top of v4.18-rc1) for you to merge any further changes you
+>> want to queue from your tree.
+>>
+>> Bartosz, given the number of moving pieces, I think its better to keep
+>> 2/4 for v4.20 release - once all other other dependencies have been
+>> merged.
 > 
-> Applied to next/dt.
+> I was thinking the same thing as well. I will pick it up in a
+> clk-davinci-4.20 branch if that sounds OK.
 
-Thanks Olof.
+Sounds good. Just check that there really are no users of that API
+before queuing :)
 
-Can you also apply other patches in this series, that haven't been
-applied yet by SoC maintainers ? And same for the arm64 series..
-
--- 
-viresh
+Regards,
+Sekhar
