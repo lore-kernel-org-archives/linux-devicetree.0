@@ -1,27 +1,36 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v1] ARM: dts: imx51-zii-rdu1: correct touchscreen axis
- inversion
-Date: Tue, 3 Jul 2018 14:12:14 +0800
-Message-ID: <20180703061212.GG4348@dragon>
-References: <20180628225626.26203-1-nick@shmanahar.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: am335x-bone-common: Fix mmc0 Write Protect
+Date: Mon, 2 Jul 2018 23:24:19 -0700
+Message-ID: <20180703062419.GB112168@atomide.com>
+References: <20180702202143.25343-1-robertcnelson@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180628225626.26203-1-nick@shmanahar.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nick Dyer <nick@shmanahar.org>
-Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>, devicetree@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
+In-Reply-To: <20180702202143.25343-1-robertcnelson@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robert Nelson <robertcnelson@gmail.com>
+Cc: devicetree@vger.kernel.org, Drew Fustini <drew@beagleboard.org>, Faiz Abbas <faiz_abbas@ti.com>, Jason Kridner <jkridner@beagleboard.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 28, 2018 at 11:56:26PM +0100, Nick Dyer wrote:
-> The RMI4 touchscreen driver applied inversion and axis swap in the
-> wrong order, violating the DT binding for those properties. This was fixed in
-> 645a397, so correct the RDU1 DT to apply the inversion to the
-> correct axis.
-> 
-> Tested on Zii RDU1 00-5105-30 rev B
-> 
-> Signed-off-by: Nick Dyer <nick@shmanahar.org>
+* Robert Nelson <robertcnelson@gmail.com> [180702 20:24]:
+> Mainline Commit b74c2b21e1551018af53ee6c1efc051dfce2d788 added the pinmux
+> settings for mmc1, however this pin (0x9a0) is routed to P9_42 on the cape
+> header. Thus any BeagleBone cape that utilizes P9_42 triggers mmc0's Write
+> Protect.
 
-Applied, thanks.
+Thanks applying into omap-for-v4.18/fixes. I'll also add a Fixes tag for
+it.
+
+Regards,
+
+Tony
