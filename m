@@ -1,26 +1,29 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: nvmem: imx-ocotp: add compatible string
- for imx6sll
-Date: Tue, 3 Jul 2018 16:32:47 -0600
-Message-ID: <20180703223247.GA31692@rob-hp-laptop>
-References: <1530070130-3004-1-git-send-email-Anson.Huang@nxp.com>
- <1530070130-3004-2-git-send-email-Anson.Huang@nxp.com>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH v11 1/4] scsi: ufs: add Hisilicon ufs driver code
+Date: Tue, 3 Jul 2018 15:33:31 -0700
+Message-ID: <CALAqxLUMcsAe4mLakRxewtE_9A0mSzxgZR76nCaQQyUt4HZVVA@mail.gmail.com>
+References: <20180702093547.39507-1-liwei213@huawei.com> <20180702093547.39507-2-liwei213@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1530070130-3004-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20180702093547.39507-2-liwei213@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: srinivas.kandagatla@linaro.org, mark.rutland@arm.com, Linux-imx@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Li Wei <liwei213@huawei.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, Kevin Hilman <khilman@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, yamada.masahiro@socionext.com, Riku Voipio <riku.voipio@linaro.org>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <krzk@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-scsi@vger.kernel.org, zangl
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 27, 2018 at 11:28:50AM +0800, Anson Huang wrote:
-> Add new compatible string for i.MX6SLL SOC.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+On Mon, Jul 2, 2018 at 2:35 AM, Li Wei <liwei213@huawei.com> wrote:
+> add Hisilicon ufs driver code.
+>
+> Signed-off-by: Li Wei <liwei213@huawei.com>
+> Signed-off-by: Geng Jianfeng <gengjianfeng@hisilicon.com>
+> Signed-off-by: Zang Leigang <zangleigang@hisilicon.com>
+> Signed-off-by: Yu Jianfeng <steven.yujianfeng@hisilicon.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Tested-by: John Stultz <john.stultz@linaro.org>
+
+So this patchset has been floating around for over a year now. Can I
+nudge someone to pick it up?
+
+thanks
+-john
