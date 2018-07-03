@@ -1,28 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] clk: aspeed: Fix SDCLK name
-Date: Tue, 3 Jul 2018 16:09:17 -0600
-Message-ID: <20180703220917.GA5938@rob-hp-laptop>
-References: <1529978125-28712-1-git-send-email-mine260309@gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: mediatek: Add bindings for mediatek
+ MT6765 Platform
+Date: Tue, 3 Jul 2018 16:11:01 -0600
+Message-ID: <20180703221101.GA6829@rob-hp-laptop>
+References: <1529978646-28976-1-git-send-email-mars.cheng@mediatek.com>
+ <1529978646-28976-2-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1529978125-28712-1-git-send-email-mine260309@gmail.com>
+In-Reply-To: <1529978646-28976-2-git-send-email-mars.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lei YU <mine260309@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Mark Rutland <mark.rutland@arm.com>, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Mars Cheng <mars.cheng@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 26, 2018 at 09:55:25AM +0800, Lei YU wrote:
-> The SDCLK was named SDCLKCLK, and no one has used this yet.
-> Fix it.
+On Tue, Jun 26, 2018 at 10:04:05AM +0800, Mars Cheng wrote:
+> This adds dt-binding documentation for Mediatek MT6765. Only
+> include very basic items, gic, uart timer and cpu.
 > 
-> Signed-off-by: Lei YU <mine260309@gmail.com>
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
 > ---
->  drivers/clk/clk-aspeed.c                 | 2 +-
+>  Documentation/devicetree/bindings/arm/mediatek.txt |    4 ++++
+>  .../interrupt-controller/mediatek,sysirq.txt       |    1 +
+>  .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
 
->  include/dt-bindings/clock/aspeed-clock.h | 2 +-
+These can all go thru different trees, so should be split.
 
-Acked-by: Rob Herring <robh@kernel.org>
-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  3 files changed, 6 insertions(+)
