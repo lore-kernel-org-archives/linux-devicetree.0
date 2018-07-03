@@ -1,241 +1,96 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v4 6/6] dt-bindings: media: rcar-vin: Clarify optional
- props
-Date: Tue, 3 Jul 2018 21:52:38 +0200
-Message-ID: <20180703195238.GD5611@w540>
-References: <1528813566-17927-1-git-send-email-jacopo+renesas@jmondi.org>
- <20180613085455.GC4952@w540>
- <20180627052431.GO5237@bigcity.dyn.berto.se>
- <39247463.ySXe3lkPXm@avalon>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: interrupt-controller: RISC-V local
+ interrupt controller docs
+Date: Tue, 3 Jul 2018 14:10:48 -0600
+Message-ID: <20180703201048.GA20288@rob-hp-laptop>
+References: <20180622232006.12158-1-palmer@sifive.com>
+ <20180622232006.12158-3-palmer@sifive.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2559860096375180371=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <39247463.ySXe3lkPXm@avalon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@glider.be, Sakari Ailus <sakari.ailus@linux.intel.com>, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180622232006.12158-3-palmer@sifive.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Palmer Dabbelt <palmer@sifive.com>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, aou@eecs.berkeley.edu, shorne@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@dabbelt.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jun 22, 2018 at 04:20:05PM -0700, Palmer Dabbelt wrote:
+> From: Palmer Dabbelt <palmer@dabbelt.com>
+> 
+> This patch adds documentation on the RISC-V local interrupt controller,
+> which is a per-hart interrupt controller that manages all interrupts
+> entering a RISC-V hart.  This interrupt controller is present on all
+> RISC-V systems.
+> 
+> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+> ---
+>  .../interrupt-controller/riscv,cpu-intc.txt        | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+> new file mode 100644
+> index 000000000000..61900e2e3868
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+> @@ -0,0 +1,41 @@
+> +RISC-V Hart-Level Interrupt Controller (HLIC)
+> +---------------------------------------------
+> +
+> +RISC-V cores include Control Status Registers (CSRs) which are local to each
+> +hart and can be read or written by software. Some of these CSRs are used to
+> +control local interrupts connected to the core.  Every interrupt is ultimately
+> +routed through a hart's HLIC before it interrupts that hart.
+> +
+> +The RISC-V supervisor ISA manual specifies three interrupt sources that are
+> +attached to every HLIC: software interrupts, the timer interrupt, and external
+> +interrupts.  Software interrupts are used to send IPIs between cores.  The
+> +timer interrupt comes from an architecturally mandated real-time timer that is
+> +controller via SBI calls and CSR reads.  External interrupts connect all other
+> +device interrupts to the HLIC, which are routed via the platform-level
+> +interrupt controller (PLIC).
+> +
+> +All RISC-V systems that conform to the supervisor ISA specification are
+> +required to have a HLIC with these three interrupt sources present.  Since the
+> +interrupt map is defined by the ISA it's not listed in the HLIC's device tree
+> +entry, though external interrupt controllers (like the PLIC, for example) will
+> +need to define how their interrupts map to the relevant HLICs.
 
---===============2559860096375180371==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UoPmpPX/dBe4BELn"
-Content-Disposition: inline
+What are the PLIC to HLIC connections you need to support? 1-to-1 is 
+easy. But I would imagine you'd want the PLIC irq to go to all the HLICs 
+which can't really be described unless you list every CPU's HLIC in 
+PLIC "interrupts" property.
 
+We avoid this problem on ARM because a single DT interrupt controller 
+node represents even per cpu interrupts and interrupt cells are used to 
+indicate which CPU interrupts are routed too. That's not perfect either, 
+but seems to be good enough (though maybe Marc Z or Mark R have more 
+thoughts on that).
 
---UoPmpPX/dBe4BELn
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> +
+> +Required properties:
+> +- compatible : "riscv,cpu-intc"
 
-Hi Laurent, Niklas,
+Kind of vague. There's only one implementation and one set of bugs?
 
-On Mon, Jul 02, 2018 at 10:19:25AM +0300, Laurent Pinchart wrote:
-> Hi Niklas,
->
-> On Wednesday, 27 June 2018 08:24:31 EEST Niklas S=C3=B6derlund wrote:
-> > On 2018-06-13 10:54:55 +0200, Jacopo Mondi wrote:
-> > > On Tue, Jun 12, 2018 at 06:45:53PM +0300, Sakari Ailus wrote:
-> > >> On Tue, Jun 12, 2018 at 04:26:06PM +0200, Jacopo Mondi wrote:
-> > >>> Add a note to the R-Car VIN interface bindings to clarify that all
-> > >>> properties listed as generic properties in video-interfaces.txt can
-> > >>> be included in port@0 endpoint, but if not explicitly listed in the
-> > >>> interface bindings documentation, they do not modify it behaviour.
-> > >>>
-> > >>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > >>> ---
-> > >>>
-> > >>>  Documentation/devicetree/bindings/media/rcar_vin.txt | 6 ++++++
-> > >>>  1 file changed, 6 insertions(+)
-> > >>>
-> > >>> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt
-> > >>> b/Documentation/devicetree/bindings/media/rcar_vin.txt index
-> > >>> 8130849..03544c7 100644
-> > >>> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-> > >>> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> > >>> @@ -55,6 +55,12 @@ from local SoC CSI-2 receivers (port1) depending=
- on
-> > >>> SoC.
-> > >>>
-> > >>>        instances that are connected to external pins should have po=
-rt
-> > >>>        0.
-> > >>>
-> > >>>        - Optional properties for endpoint nodes of port@0:
-> > >>> +
-> > >>> +        All properties described in [1] and which apply to the
-> > >>> selected
-> > >>> +        media bus type could be optionally listed here to better
-> > >>> describe
-> > >>> +        the current hardware configuration, but only the following
-> > >>> ones do
-> > >>> +        actually modify the VIN interface behaviour:
-> > >>> +
-> >
-> > I'm not sure the description have to be as explicit to that the
-> > properties in 'video-interfaces.txt' are not currently used by the
-> > driver. I find it not relevant which ones are used or not, what is
-> > important for me is that all properties in 'video-interfaces.txt' which
-> > can be used to describe the specific bus are valid for the DT
-> > description.
->
-> I agree with you. The driver is irrelevant in this context. What matters =
-is
-> which properties are applicable to the bus. For instance, if the VIN para=
-llel
-> input supports configurable polarities for the h/v sync signals, hsync-ac=
-tive
-> and vsync-active should be listed in the bindings. On the other hand, if =
-the
-> polarities are fixed, then the properties are not needed.
->
-
-Fine, I'll surrender then, you're too many to fight against :p
-
-Joking aside, I see your points, and I'll resend dropping this last
-bit and documenting which properties applies to the interface.
-
-I can list:
-- vsync-active (added by this series)
-- hsync-active (added by this series)
-- data-enable-active (added by this series)
-- field-active-even (to be added)
-
-I haven't find a way to configure the plck-sample value in the VINs
-registers. Should we skip it?
-
-I also think 'bus-width' and 'data-shift' are not directly configurable in
-registers but depends on SoC, the selected input interface, and the
-input image format (see tables at 26.3.1 datasheet revision 1.00), so
-it makes sense list them as acceptable properties.
-
-Do I have your ack on this so I can re-spin?
-
-> > On a side note, in rcar_vin.txt we have this section describing the Gen2
-> > bindings:
-> >
-> >   The per-board settings Gen2 platforms:
-> >    - port sub-node describing a single endpoint connected to the vin
-> >      as described in video-interfaces.txt[1]. Only the first one will
-> >      be considered as each vin interface has one input port.
-> >
-> > This whole series only deals with documenting the Gen3 optional
-> > properties and not the Gen2. Maybe with parallel input support for Gen3
-> > patches on there way to making it upstream this series should be
-> > extended to in a good way merge the port@0 optional properties for both
-> > generations of hardware?
->
-> That would be nice too :-)
-
-I see..
-
-Well, I would keep the Gen2/Gen3 sections separate, as they have a
-different layout of port nodes (Gen2 has a single 'port' node, while Gen3 c=
-ould
-have several 'port' nodes enclosed in a 'ports' one).
-
-But I could indeed reference the optional endpoint properties of
-'port@0' of Gen3 bindings in Gen2 ones. Or the other way around. Do
-you have any preference?
-
-Thanks
-   j
-
-
->
-> > >> I don't think this should be needed. You should only have properties
-> > >> that describe the hardware configuration in a given system.
-> > >
-> > > There has been quite some debate on this, and please bear with me
-> > > here for re-proposing it: I started by removing properties in some DT
-> > > files for older Renesas board which listed endpoint properties not
-> > > documented in the VIN's bindings and not parsed by the VIN driver [1]
-> > > Niklas (but Simon and Geert seems to agree here) opposed to that
-> > > patch, as those properties where described in 'video-interfaces.txt' =
-and
-> > > even if not parsed by the current driver implementation, they actually
-> > > describe hardware. I rebated that only properties listed in the device
-> > > bindings documentation should actually be used, and having properties
-> > > not parsed by the driver confuses users, which may expect changing
-> > > them modifies the interface configuration, which does not happens at
-> > > the moment.
-> > >
-> > > This came out as a middle ground from a discussion with Niklas. As
-> > > stated in the cover letter if this patch makes someone uncomfortable,=
- feel
-> > > free to drop it not to hold back the rest of the series which has been
-> > > well received instead.
-> >
-> > What I don't agree with and sparked this debate from my side was the
-> > deletion of properties in dts files which correctly does describe the
-> > bus but which are not currently parsed by the driver. To me that is
-> > decreasing the value of the dts. If on the other hand the goal is to
-> > deprecate a property from the video-interfaces.txt by slowly removing
-> > them from dts where the driver don't use them I'm all for it. But I
-> > don't think this is the case here right?
->
-> I think you're right, I don't think that's the case.
->
-> We should not remove properties from the dts files when they correctly
-> describe the hardware and have an added-value. On the other hand, if a
-> property correctly describes the hardware, but is constrained to a single
-> value due to hardware limitations, then we can omit it.
->
-> > > [1] https://www.spinics.net/lists/arm-kernel/msg656302.html
-> > >
-> > >>> - hsync-active: see [1] for description. Default is active high.
-> > >>> - vsync-active: see [1] for description. Default is active high.
-> > >>> - data-enable-active: polarity of CLKENB signal, see [1] for
->
-> --
-> Regards,
->
-> Laurent Pinchart
->
->
->
-
---UoPmpPX/dBe4BELn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJbO9QGAAoJEHI0Bo8WoVY8HJsP/22BjJ0S3pyP+mCR+6UwvMCV
-0jRLN3v4eWvCwqMroU6OWUCBCXSIiLoYa6FQCcMcl40cqG0gRiBsc0ZC7+arhhaZ
-bzVzoYn5Jf73CHdKI8hdaxi2B+6ULa/jvM5CXm0qLQ2XTVogDvXjGKjV/Jeg2V3V
-eKGOfEuoZoA5IJFmL3b+orN9WwsXJC58wFHamUEfYNWdyN7V7XKuorzJzLiT+ajo
-DGsySYeG7KCJcE1h0lVTqhVpXFMyHKodYG89/0oWnauas35MX7BL/v5UQjSQIgiN
-zRur5nANM5OdssfKSL2MvF8Gl+Me1NAG4IwiLgQaWycQBLRiBOdwW1LJav88B7Kf
-8UMi2D1PpAVsSXJhudkeJqGQMrFdUUTRg+pbTll6kbfV2RAArvv1Bdcr2pnoEDpM
-SUCIxsgVv/CVHYOa11Sszy1eUjWCRSk+C2JhwIMnLQ8rnOx/KYaRSIGwF5VVr5bk
-Rz350e52rQV6wxCqyQQ278WfmHC6yTPgC2tAHpa8kr1sMYMzOu8y8qKA4Ywq7zJL
-3AdSrYHC+r3syTwyF4uf82hIanglsKu0F7fLP7VweMnmLCoBMgIkWadaSQWxLWbK
-O44gTFHP220TclURi4BL6GTdLQke3QViINGZ8mlQRs1Y1/oPaNY/T9jlzANwnj4O
-cOFDyZDnZXL6Tvn3WmGb
-=/CB5
------END PGP SIGNATURE-----
-
---UoPmpPX/dBe4BELn--
-
-
---===============2559860096375180371==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2559860096375180371==--
+> +- #interrupt-cells : should be <1>
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +
+> +Furthermore, this interrupt-controller MUST be embedded inside the cpu
+> +definition of the hart whose CSRs control these local interrupts.
+> +
+> +An example device tree entry for a HLIC is show below.
+> +
+> +	cpu1: cpu@1 {
+> +		compatible = "riscv";
+> +		...
+> +		cpu1-intc: interrupt-controller {
+> +			#interrupt-cells = <1>;
+> +			compatible = "riscv,cpu-intc";
+> +			interrupt-controller;
+> +		};
+> +	};
+> -- 
+> 2.16.4
+> 
