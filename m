@@ -1,44 +1,61 @@
-From: Luis Araneda <luaraneda@gmail.com>
-Subject: Re: [RFC PATCH 5/5] arm: dts: zynq: remove "zynq" prefix from
- compatible property
-Date: Tue, 3 Jul 2018 03:18:49 -0400
-Message-ID: <CAHbBuxpuAC0PDfFBQ+D_zJu-AmWFNhEWCojr8LAWfO-ootLqEg@mail.gmail.com>
-References: <20180628054205.17737-1-luaraneda@gmail.com> <20180628054205.17737-6-luaraneda@gmail.com>
- <042f6632-f4f6-d278-9859-b8998468c3bf@xilinx.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH 2/3] clk: meson: add sub EMMC clock dt-bindings IDs
+Date: Tue, 3 Jul 2018 09:21:07 +0200
+Message-ID: <20180703092107.51497a8f@bbrezillon>
+References: <20180703145716.31860-1-yixun.lan@amlogic.com>
+ <20180703145716.31860-3-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <042f6632-f4f6-d278-9859-b8998468c3bf@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180703145716.31860-3-yixun.lan@amlogic.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Yixun Lan <yixun.lan@amlogic.com>
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jian Hu <jian.hu@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michal,
+On Tue, 3 Jul 2018 14:57:15 +0000
+Yixun Lan <yixun.lan@amlogic.com> wrote:
 
-On Thu, Jun 28, 2018 at 2:42 AM Michal Simek <michal.simek@xilinx.com> wrote:
-> zynq name here is correct which is saying that hardblock is going to be
-> described. Without it it is suggesting that hardblock is not used and it
-> is for example on zybo with microblaze.
+> Add two clock bindings IDs which provided by the EMMC clock controller,
+> These two clocks will be used by EMMC or NAND driver.
+> 
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> ---
+>  include/dt-bindings/clock/emmc-clkc.h | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/emmc-clkc.h
+> 
+> diff --git a/include/dt-bindings/clock/emmc-clkc.h b/include/dt-bindings/clock/emmc-clkc.h
+> new file mode 100644
+> index 000000000000..d9972c400e58
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/emmc-clkc.h
+> @@ -0,0 +1,14 @@
+> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+> +/*
+> + * Meson EMMC sub clock tree IDs
+> + *
+> + * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
+> + */
+> +
+> +#ifndef __EMMC_CLKC_H
+> +#define __EMMC_CLKC_H
+> +
+> +#define CLKID_EMMC_C_MUX				0
 
-In my opinion, the zynq name is just adding redundant information to
-the "xlnx,zynq-7000" value.
-Taking the Zybo board, the current compatible property is:
-> compatible = "digilent,zynq-zybo", "xlnx,zynq-7000";
+Looks like the MUX clk is the parent of the DIV one, and I guess the clk
+driver is able to select the best parent+div pair for a requested rate.
+Do you really need to expose the MUX to users?
 
-I'm proposing to change it to:
-> compatible = "digilent,zybo", "xlnx,zynq-7000";
-(I know I must keep the old value too,  I'm simplifying)
-
-In the case of a Zybo board with a microblaze, the property could be:
-> compatible = "digilent,zybo", "xlnx,microblaze";
-
-That would allow to differentiate between zynq and microblaze.
-
-I have no problem on dropping the patch if you like. There might be
-something that I'm not seeing or a use case that I'm missing.
-
-
-Thanks,
-
-Luis Araneda.
+> +#define CLKID_EMMC_C_DIV				1
+> +
+> +#endif
