@@ -1,24 +1,33 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCH 4/4] dts: aspeed-g5: Add bmc-misc-ctrl nodes to
- devicetree
-Date: Tue, 3 Jul 2018 09:54:34 +0200
-Message-ID: <20180703075434.GD27649@kroah.com>
-References: <20180703070413.28756-1-andrew@aj.id.au>
- <20180703070413.28756-5-andrew@aj.id.au>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH 16/20] dts: arm: omap: Update coresight bindings for
+ hardware ports
+Date: Tue, 3 Jul 2018 08:59:11 +0100
+Message-ID: <10a95b43-09d8-2e8e-fa44-a8c9227b3053@arm.com>
+References: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
+ <1528235011-30691-17-git-send-email-suzuki.poulose@arm.com>
+ <20180703070951.GH112168@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180703070413.28756-5-andrew@aj.id.au>
+In-Reply-To: <20180703070951.GH112168@atomide.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, Eugene.Cho@dell.com, a.amelkin@yadro.com, stewart@linux.ibm.com, benh@kernel.crashing.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org, robh@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com, sudeep.holla@arm.com, arm@kernel.org, linux-kernel@vger.kernel.org, matt.sealey@arm.com, john.horley@arm.com, charles.garcia-tobin@arm.com, coresight@lists.linaro.org, devicetree@vger.kernel.org, mike.leach@linaro.org, linux-omap@vger.kernel.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 03, 2018 at 05:04:13PM +1000, Andrew Jeffery wrote:
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  arch/arm/boot/dts/aspeed-g5.dtsi | 192 +++++++++++++++++++++++++++++++
->  1 file changed, 192 insertions(+)
 
-No changelog :(
+
+Hi Tony,
+
+On 07/03/2018 08:09 AM, Tony Lindgren wrote:
+> * Suzuki K Poulose <suzuki.poulose@arm.com> [180605 14:48]:
+>> Switch to the new coresight bindings for hardware ports
+> 
+> So is this patch safe for me to pick separately for v4.19?
+
+No. Please ignore this for now. The bindings are still under
+discussion. Sorry for the inconvenience.
+
+Suzuki
