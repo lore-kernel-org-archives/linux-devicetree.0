@@ -1,82 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/6] dt-bindings: power: Add qcom rpm power domain
- driver bindings
-Date: Tue, 3 Jul 2018 16:35:54 -0600
-Message-ID: <20180703223554.GA32313@rob-hp-laptop>
-References: <20180627045234.27403-1-rnayak@codeaurora.org>
- <20180627045234.27403-3-rnayak@codeaurora.org>
+Subject: Re: [RFC PATCH v2 6/6] dt-bindings: spi: QuadSPI driver for Atmel
+ SAMA5D2
+Date: Tue, 3 Jul 2018 16:45:54 -0600
+Message-ID: <20180703224554.GA13754@rob-hp-laptop>
+References: <20180627131609.13681-1-bugalski.piotr@gmail.com>
+ <20180627131609.13681-7-bugalski.piotr@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180627045234.27403-3-rnayak@codeaurora.org>
+In-Reply-To: <20180627131609.13681-7-bugalski.piotr@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Piotr Bugalski <bugalski.piotr@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Cyrille Pitchen <cyrille.pitchen@microchip.com>, Tudor Ambarus <tudor.ambarus@microchip.com>, Piotr Bugalski <pbu@cryptera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 27, 2018 at 10:22:30AM +0530, Rajendra Nayak wrote:
-> Add DT bindings to describe the rpm/rpmh power domains found on Qualcomm
-> Technologies, Inc. SoCs. These power domains communicate a performance
-> state to RPM/RPMh, which then translates it into corresponding voltage on a
-> PMIC rail.
+On Wed, Jun 27, 2018 at 03:16:09PM +0200, Piotr Bugalski wrote:
+> Atmel SAMA5D2 QuadSPI driver was moved from mtd to spi subsystem,
+> this change is just moving DT-binding documentation.
 > 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Suggested-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> Signed-off-by: Piotr Bugalski <pbu@cryptera.com>
 > ---
->  .../devicetree/bindings/power/qcom,rpmpd.txt  | 146 ++++++++++++++++++
->  include/dt-bindings/power/qcom-rpmpd.h        |  39 +++++
->  2 files changed, 185 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
->  create mode 100644 include/dt-bindings/power/qcom-rpmpd.h
+>  Documentation/devicetree/bindings/{mtd => spi}/atmel-quadspi.txt | 0
+>  1 file changed, 0 insertions(+), 0 deletions(-)
+>  rename Documentation/devicetree/bindings/{mtd => spi}/atmel-quadspi.txt (100%)
+
+Acked-by: Rob Herring <robh@kernel.org>
+
 > 
-> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> new file mode 100644
-> index 000000000000..8825080afa5a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> @@ -0,0 +1,146 @@
-> +Qualcomm RPM/RPMh Power domains
-> +
-> +For RPM/RPMh Power domains, we communicate a performance state to RPM/RPMh
-> +which then translates it into a corresponding voltage on a rail
-> +
-> +Required Properties:
-> + - compatible: Should be one of the following
-> +	* qcom,msm8996-rpmpd: RPM Power domain for the msm8996 family of SoC
-> +	* qcom,sdm845-rpmhpd: RPMh Power domain for the sdm845 family of SoC
-> + - power-domain-cells: number of cells in Power domain specifier
-> +	must be 1.
-> + - operating-points-v2: Phandle to the OPP table for the Power domain.
-> +	Refer to Documentation/devicetree/bindings/power/power_domain.txt
-> +	and Documentation/devicetree/bindings/opp/qcom-opp.txt for more details
-> +
-> +Refer to <dt-bindings/power/qcom-rpmpd.h> for the level values for
-> +various OPPs for different platforms as well as Power domain indexes
-> +
-> +Example: rpmh power domain controller and OPP table
-> +
-> +#include <dt-bindings/power/qcom-rpmhpd.h>
-> +
-> +qcom,level values specified in the OPP tables for RPMh power domains
-> +should use the RPMH_REGULATOR_LEVEL_* constants from
-> +<dt-bindings/power/qcom-rpmhpd.h>
-> +
-> +	rpmhpd: power-controller {
-> +		compatible = "qcom,sdm845-rpmhpd";
-> +		#power-domain-cells = <1>;
-> +		operating-points-v2 = <&rpmhpd_opp_table>;
-> +	};
-> +
-> +	rpmhpd_opp_table: opp-table {
-> +		compatible = "operating-points-v2-qcom-level";
-> +
-> +		rpmhpd_opp_ret: opp1 {
-> +			qcom,level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-> +		};
-
-I don't see the point in using the OPP binding here when you aren't 
-using *any* of the properties from it.
-
-Rob
+> diff --git a/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt b/Documentation/devicetree/bindings/spi/atmel-quadspi.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
+> rename to Documentation/devicetree/bindings/spi/atmel-quadspi.txt
+> -- 
+> 2.11.0
+> 
