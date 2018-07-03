@@ -1,7 +1,7 @@
 From: richard.gong@linux.intel.com
-Subject: [PATCHv6 4/8] dt-bindings: fpga: add Stratix10 SoC FPGA manager binding
-Date: Tue,  3 Jul 2018 09:46:51 -0500
-Message-ID: <1530629215-26990-5-git-send-email-richard.gong@linux.intel.com>
+Subject: [PATCHv6 2/8] arm64: dts: stratix10: add stratix10 service driver binding to base dtsi
+Date: Tue,  3 Jul 2018 09:46:49 -0500
+Message-ID: <1530629215-26990-3-git-send-email-richard.gong@linux.intel.com>
 References: <1530629215-26990-1-git-send-email-richard.gong@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1530629215-26990-1-git-send-email-richard.gong@linux.intel.com>
@@ -10,47 +10,76 @@ To: catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@k
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, linux-doc@vger.kernel.org, yves.vandervennet@linux.intel.com, richard.gong@linux.intel.com, richard.gong@intel.com
 List-Id: devicetree@vger.kernel.org
 
-From: Alan Tull <atull@kernel.org>
+From: Richard Gong <richard.gong@intel.com>
 
-Add a Device Tree binding for the Intel Stratix10 SoC FPGA manager.
+Add Intel Stratix10 service layer to the device tree
 
-Signed-off-by: Alan Tull <atull@kernel.org>
 Signed-off-by: Richard Gong <richard.gong@intel.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Alan Tull <atull@kernel.org>
+Acked-by: Moritz Fischer <mdf@kernel.org>
 ---
-v2: this patch is added in patch set version 2
-v3: change to put fpga_mgr node under firmware/svc node
-v4: s/fpga-mgr@0/fpga-mgr/ to remove unit_address
-    add Richard's signed-off-by
-v5: add Reviewed-by Rob Herring
-v6: no change
+v2: Change to put service layer driver node under the firmware node
+    Change compatible to "intel, stratix10-svc"
+v3: No change
+v4: s/service driver/stratix10 service driver/ in subject line
+v5: No change
+v6: Add Moritz's Acked-by
 ---
- .../bindings/fpga/intel-stratix10-soc-fpga-mgr.txt      | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 36 +++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
-new file mode 100644
-index 0000000..6e03f79
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
-@@ -0,0 +1,17 @@
-+Intel Stratix10 SoC FPGA Manager
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index e6b05937..1ba9a1c 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -24,6 +24,19 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
 +
-+Required properties:
-+The fpga_mgr node has the following mandatory property, must be located under
-+firmware/svc node.
-+
-+- compatible : should contain "intel,stratix10-soc-fpga-mgr"
-+
-+Example:
-+
-+	firmware {
-+		svc {
-+			fpga_mgr: fpga-mgr {
-+				compatible = "intel,stratix10-soc-fpga-mgr";
-+			};
++		service_reserved: svcbuffer@0 {
++			compatible = "shared-dma-pool";
++			reg = <0x0 0x0 0x0 0x1000000>;
++			alignment = <0x1000>;
++			no-map;
 +		};
 +	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -466,5 +479,28 @@
+ 				interrupts = <16 4>, <48 4>;
+ 			};
+ 		};
++
++		qspi: spi@ff8d2000 {
++			compatible = "cdns,qspi-nor";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0xff8d2000 0x100>,
++			      <0xff900000 0x100000>;
++			interrupts = <0 3 4>;
++			cdns,fifo-depth = <128>;
++			cdns,fifo-width = <4>;
++			cdns,trigger-address = <0x00000000>;
++			clocks = <&qspi_clk>;
++
++			status = "disabled";
++		};
++
++		firmware {
++			svc {
++				compatible = "intel,stratix10-svc";
++				method = "smc";
++				memory-region = <&service_reserved>;
++			};
++		};
+ 	};
+ };
 -- 
 2.7.4
