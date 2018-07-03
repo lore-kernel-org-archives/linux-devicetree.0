@@ -1,61 +1,76 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH 2/3] clk: meson: add sub EMMC clock dt-bindings IDs
-Date: Tue, 3 Jul 2018 09:21:07 +0200
-Message-ID: <20180703092107.51497a8f@bbrezillon>
-References: <20180703145716.31860-1-yixun.lan@amlogic.com>
- <20180703145716.31860-3-yixun.lan@amlogic.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v3 0/8] gnss: add new GNSS subsystem
+Date: Tue, 3 Jul 2018 09:20:58 +0200
+Message-ID: <20180703072058.GN9802@localhost>
+References: <20180601082259.17563-1-johan@kernel.org>
+ <20180628120103.GA28131@kroah.com>
+ <20180629094607.GC31718@amd>
+ <20180629114646.GU629@localhost>
+ <20180629120554.GA2477@amd>
+ <20180629120914.GA9802@localhost>
+ <20180702193226.GB30798@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180703145716.31860-3-yixun.lan@amlogic.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jian Hu <jian.hu@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180702193226.GB30798@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, alan@linux.intel.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 3 Jul 2018 14:57:15 +0000
-Yixun Lan <yixun.lan@amlogic.com> wrote:
-
-> Add two clock bindings IDs which provided by the EMMC clock controller,
-> These two clocks will be used by EMMC or NAND driver.
+On Mon, Jul 02, 2018 at 09:32:26PM +0200, Pavel Machek wrote:
+> On Fri 2018-06-29 14:09:14, Johan Hovold wrote:
+> > On Fri, Jun 29, 2018 at 02:05:54PM +0200, Pavel Machek wrote:
+> > > On Fri 2018-06-29 13:46:46, Johan Hovold wrote:
+> > > > On Fri, Jun 29, 2018 at 11:46:07AM +0200, Pavel Machek wrote:
+> > > > > 
+> > > > > > > Finally, note that documentation (including kerneldoc) remains to be
+> > > > > > > written, but hopefully this will not hinder review given that the
+> > > > > > > current interfaces are fairly self-describing.
+> > > > > > 
+> > > > > > This all looks great.  Thanks for doing this work and adding a new
+> > > > > > subsystem for something that has been asked for for many years.
+> > > > > > 
+> > > > > > All now merged in my tree, nice job!
+> > > > > 
+> > > > > I don't think discussion was finished on this one.
+> > > > > 
+> > > > > In particular, we agreed that /dev/gnssrawX would be better device
+> > > > > name, so that we still have place where to put proper abstraction
+> > > > > layer in future.
+> > > > 
+> > > > I did not agree with you on that. I said we could consider that name if
+> > > > this was to be changed at all, which I do not think is necessary for
+> > > > the reasons spelled out in this thread.
+> > > 
+> > > So, again: there's nothing gnss specific in those patches. It does not
+> > > know about the format of the data passed around. (Best you can claim
+> > > that somehow data flow characteristics are unique to gnss.) And this
+> > > takes namespace needed for real gnss subsystem. Please don't do it.
+> > 
+> > This is the real gnss subsystem. Get over it.
 > 
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-> ---
->  include/dt-bindings/clock/emmc-clkc.h | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->  create mode 100644 include/dt-bindings/clock/emmc-clkc.h
-> 
-> diff --git a/include/dt-bindings/clock/emmc-clkc.h b/include/dt-bindings/clock/emmc-clkc.h
-> new file mode 100644
-> index 000000000000..d9972c400e58
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/emmc-clkc.h
-> @@ -0,0 +1,14 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-> +/*
-> + * Meson EMMC sub clock tree IDs
-> + *
-> + * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
-> + */
-> +
-> +#ifndef __EMMC_CLKC_H
-> +#define __EMMC_CLKC_H
-> +
-> +#define CLKID_EMMC_C_MUX				0
+> Congratulations. You have created gnss subsystem that has 0 lines of
+> code that are gnss-specific.
 
-Looks like the MUX clk is the parent of the DIV one, and I guess the clk
-driver is able to select the best parent+div pair for a requested rate.
-Do you really need to expose the MUX to users?
+We have been through this already.
 
-> +#define CLKID_EMMC_C_DIV				1
-> +
-> +#endif
+> This is not real gnss subsystem. This is pipe that passes data,
+> similar to /dev/psaux or mouse on /dev/ttyS0. Sooner or later, real
+> gnss subsystem (with unified interface) will be needed, as it was for
+> input, and this "pipe and gpio" thing should not hog required
+> namespace.
+
+It is still the gnss subsystem with a raw interface to the underlying
+protocols. As I've said repeatedly, *if* someone ever comes up with a
+way of abstracting these protocols, and can make the case this is really
+something we want to handle in the kernel, we would still be using the
+same drivers for managing power and I/O. Get it? It's the same
+subsystem, you'd just be adding a second higher-level interface (cf.
+hiddev and hidraw).
+
+So again, all that this comes down to is bike shedding about the device
+node name.
+
+Johan
