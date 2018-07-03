@@ -1,32 +1,72 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: Add vendor prefix for AsusTek Computer Inc.
-Date: Tue, 3 Jul 2018 17:01:37 -0600
-Message-ID: <20180703230137.GA30170@rob-hp-laptop>
-References: <20180627203315.348-1-luaraneda@gmail.com>
+Subject: Re: [RFC PATCH 2/5] dt-bindings: xilinx: Add missing zynq boards
+Date: Tue, 3 Jul 2018 17:04:10 -0600
+Message-ID: <20180703230410.GA31330@rob-hp-laptop>
+References: <20180628054205.17737-1-luaraneda@gmail.com>
+ <20180628054205.17737-3-luaraneda@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180627203315.348-1-luaraneda@gmail.com>
+In-Reply-To: <20180628054205.17737-3-luaraneda@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Luis Araneda <luaraneda@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jani Nikula <jani.nikula@intel.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "David S . Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 27, 2018 at 04:33:15PM -0400, Luis Araneda wrote:
-> "AsusTek Computer Inc. is a Taiwanese multinational computer
-> and phone hardware and electronics company headquartered
-> in Beitou District, Taipei, Taiwan." - Wikipedia.org
-> 
-> Website: https://www.asus.com
-> 
-> The prefix is already in use by at least 5 ARM boards
+On Thu, Jun 28, 2018 at 01:42:02AM -0400, Luis Araneda wrote:
+> The bindings were missing when adding the device-tree files
+> Also, improve description of existing boards
 > 
 > Signed-off-by: Luis Araneda <luaraneda@gmail.com>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/arm/xilinx.txt        | 22 +++++++++++++++++--
+>  1 file changed, 20 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/xilinx.txt b/Documentation/devicetree/bindings/arm/xilinx.txt
+> index b9043bc35..f1e911058 100644
+> --- a/Documentation/devicetree/bindings/arm/xilinx.txt
+> +++ b/Documentation/devicetree/bindings/arm/xilinx.txt
+> @@ -8,15 +8,33 @@ Required root node properties:
+>  
+>  Additional compatible strings:
+>  
+> -- Xilinx internal board cc108
+> +- Xilinx CC108 board
+>    "xlnx,zynq-cc108"
+>  
+> -- Xilinx internal board zc770 with different FMC cards
+> +- Avnet MicroZed board
+> +  "avnet,zynq-microzed"
+> +
+> +- Adapteva Parallella board
+> +  "adapteva,parallella"
 
-Applied.
+This is documented in adapteva.txt, but I'd prefer if you put it 
+here and remove adapteva.txt.
 
-Rob
+> +
+> +- Xilinx ZC702 board
+> +  "xlnx,zynq-zc702"
+> +
+> +- Xilinx ZC706 board
+> +  "xlnx,zynq-zc706"
+> +
+> +- Xilinx ZC770 board, with different FMC cards
+>    "xlnx,zynq-zc770-xm010"
+>    "xlnx,zynq-zc770-xm011"
+>    "xlnx,zynq-zc770-xm012"
+>    "xlnx,zynq-zc770-xm013"
+>  
+> +- Avnet ZedBoard board
+> +  "avnet,zynq-zed"
+> +
+> +- Digilent Zybo board
+> +  "digilent,zynq-zybo"
+> +
+>  - Digilent Zybo Z7 board
+>    "digilent,zynq-zybo-z7"
+>  
+> -- 
+> 2.18.0
+> 
