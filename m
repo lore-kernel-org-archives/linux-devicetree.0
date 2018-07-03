@@ -1,7 +1,7 @@
 From: Damian Kos <dkos@cadence.com>
-Subject: [PATCH 03/12] drm/dp: add helpers for drm_dp_set_adjust_request_pre_emphasis and drm_dp_set_adjust_request_voltage
-Date: Tue, 3 Jul 2018 11:02:14 +0100
-Message-ID: <1530612152-27555-4-git-send-email-dkos@cadence.com>
+Subject: [PATCH 05/12] drm/dp: fix link probing for devices supporting DP 1.4+
+Date: Tue, 3 Jul 2018 11:02:16 +0100
+Message-ID: <1530612152-27555-6-git-send-email-dkos@cadence.com>
 References: <1530612152-27555-1-git-send-email-dkos@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,74 +14,72 @@ List-Id: devicetree@vger.kernel.org
 
 From: Quentin Schulz <quentin.schulz@free-electrons.com>
 
-We already have functions to get the adjust request voltage and
-pre-emphasis for a lane so it makes also sense to be able to set them so
-that we can then easily update them via a DPCD write.
+DP 1.4 introduced a DP_EXTENDED_RCVR_CAPA_FIELD_PRESENT bit in
+DP_TRAINING_AUX_RD_INTERVAL register. If set, DPCD registers from
+DP_DPCD_REV to DP_ADAPTER_CAP should be retrieved starting from
+DP_DPCD_REV_EXTENDED. All registers are copied except DP_DPCD_REV,
+DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT which represent the
+"true capabilities" of DPRX device.
 
-Add helpers for drm_dp_set_adjust_request_pre_emphasis and
-drm_dp_set_adjust_request_voltage that respectively set the
-pre-emphasis and voltage of a lane in the link status array.
+Original DP_DPCD_REV, DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT
+might falsely return lower capabilities to "avoid interoperability
+issues with some of the existing DP Source devices that malfunction
+when they discover the higher capabilities within those three
+registers.".
+
+Before DP 1.4, DP_EXTENDED_RCVR_CAPA_FIELD_PRESENT bit was reserved
+and read 0 so it's safe to check against it even if DP revision is
+<1.4
 
 Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
 Signed-off-by: Damian Kos <dkos@cadence.com>
 ---
- drivers/gpu/drm/drm_dp_helper.c |   28 ++++++++++++++++++++++++++++
- include/drm/drm_dp_helper.h     |    4 ++++
- 2 files changed, 32 insertions(+), 0 deletions(-)
+ drivers/gpu/drm/drm_dp_helper.c |   30 +++++++++++++++++++++++++++++-
+ 1 files changed, 29 insertions(+), 1 deletions(-)
 
 diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-index 3bc2e98..ca2f469 100644
+index 7f5d568..b6a27ab 100644
 --- a/drivers/gpu/drm/drm_dp_helper.c
 +++ b/drivers/gpu/drm/drm_dp_helper.c
-@@ -120,6 +120,34 @@ u8 drm_dp_get_adjust_request_pre_emphasis(const u8 link_status[DP_LINK_STATUS_SI
- }
- EXPORT_SYMBOL(drm_dp_get_adjust_request_pre_emphasis);
+@@ -370,10 +370,38 @@ int drm_dp_link_probe(struct drm_dp_aux *aux, struct drm_dp_link *link)
+ {
+ 	u8 values[3];
+ 	int err;
++	unsigned int addr;
  
-+void drm_dp_set_adjust_request_voltage(u8 link_status[DP_LINK_STATUS_SIZE],
-+				       int lane, u8 volt)
-+{
-+	int i = DP_ADJUST_REQUEST_LANE0_1 + (lane >> 1);
-+	int s = ((lane & 1) ?
-+		 DP_ADJUST_VOLTAGE_SWING_LANE1_SHIFT :
-+		 DP_ADJUST_VOLTAGE_SWING_LANE0_SHIFT);
-+	int idx = i - DP_LANE0_1_STATUS;
-+
-+	link_status[idx] &= ~(DP_ADJUST_VOLTAGE_SWING_LANE0_MASK << s);
-+	link_status[idx] |= volt << s;
-+}
-+EXPORT_SYMBOL(drm_dp_set_adjust_request_voltage);
-+
-+void drm_dp_set_adjust_request_pre_emphasis(u8 link_status[DP_LINK_STATUS_SIZE],
-+					    int lane, u8 pre_emphasis)
-+{
-+	int i = DP_ADJUST_REQUEST_LANE0_1 + (lane >> 1);
-+	int s = ((lane & 1) ?
-+		 DP_ADJUST_PRE_EMPHASIS_LANE1_SHIFT :
-+		 DP_ADJUST_PRE_EMPHASIS_LANE0_SHIFT);
-+	int idx = i - DP_LANE0_1_STATUS;
-+
-+	link_status[idx] &= ~(DP_ADJUST_PRE_EMPHASIS_LANE0_MASK << s);
-+	link_status[idx] |= pre_emphasis << s;
-+}
-+EXPORT_SYMBOL(drm_dp_set_adjust_request_pre_emphasis);
-+
- void drm_dp_link_train_clock_recovery_delay(const u8 dpcd[DP_RECEIVER_CAP_SIZE]) {
- 	if (dpcd[DP_TRAINING_AUX_RD_INTERVAL] == 0)
- 		udelay(100);
-diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-index a488af0..6e64b2a 100644
---- a/include/drm/drm_dp_helper.h
-+++ b/include/drm/drm_dp_helper.h
-@@ -946,6 +946,10 @@ u8 drm_dp_get_adjust_request_voltage(const u8 link_status[DP_LINK_STATUS_SIZE],
- 				     int lane);
- u8 drm_dp_get_adjust_request_pre_emphasis(const u8 link_status[DP_LINK_STATUS_SIZE],
- 					  int lane);
-+void drm_dp_set_adjust_request_voltage(u8 link_status[DP_LINK_STATUS_SIZE],
-+				       int lane, u8 volt);
-+void drm_dp_set_adjust_request_pre_emphasis(u8 link_status[DP_LINK_STATUS_SIZE],
-+					    int lane, u8 pre_emphasis);
+ 	memset(link, 0, sizeof(*link));
  
- #define DP_BRANCH_OUI_HEADER_SIZE	0xc
- #define DP_RECEIVER_CAP_SIZE		0xf
+-	err = drm_dp_dpcd_read(aux, DP_DPCD_REV, values, sizeof(values));
++	/*
++	 * DP 1.4 introduced a DP_EXTENDED_RCVR_CAPA_FIELD_PRESENT bit in
++	 * DP_TRAINING_AUX_RD_INTERVAL register. If set, DPCD registers from
++	 * DP_DPCD_REV to DP_ADAPTER_CAP should be retrieved starting from
++	 * DP_DPCD_REV_EXTENDED. All registers are copied except DP_DPCD_REV,
++	 * DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT which represent the
++	 * "true capabilities" of DPRX device.
++	 *
++	 * Original DP_DPCD_REV, DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT
++	 * might falsely return lower capabilities to "avoid interoperability
++	 * issues with some of the existing DP Source devices that malfunction
++	 * when they discover the higher capabilities within those three
++	 * registers.".
++	 *
++	 * Before DP 1.4, DP_EXTENDED_RCVR_CAPA_FIELD_PRESENT bit was reserved
++	 * and read 0 so it's safe to check against it even if DP revision is
++	 * <1.4
++	 */
++	err = drm_dp_dpcd_readb(aux, DP_TRAINING_AUX_RD_INTERVAL, values);
++	if (err < 0)
++		return err;
++
++	if (values[0] & DP_EXTENDED_RCVR_CAPA_FIELD_PRESENT)
++		addr = DP_DP13_DPCD_REV;
++	else
++		addr = DP_DPCD_REV;
++
++	err = drm_dp_dpcd_read(aux, addr, values, sizeof(values));
+ 	if (err < 0)
+ 		return err;
+ 
 -- 
 1.7.1
