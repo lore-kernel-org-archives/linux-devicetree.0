@@ -1,56 +1,123 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 15/15] arm: dts: imx: Add missing OPP properties for CPUs
-Date: Tue, 3 Jul 2018 15:12:16 +0800
-Message-ID: <20180703071215.GM4348@dragon>
-References: <cover.1527244200.git.viresh.kumar@linaro.org>
- <264124e14b966a1bbc07c364fbd89fc55aa765e6.1527244201.git.viresh.kumar@linaro.org>
- <1527248760.3472.6.camel@pengutronix.de>
- <20180528110739.ewmhlf72sl7u5ju7@vireshk-i7>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: [PATCH v3] ARM: imx: Provide support for NXP i.MX7D Cortex-M4
+Date: Tue,  3 Jul 2018 09:12:47 +0200
+Message-ID: <20180703071247.6545-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180528110739.ewmhlf72sl7u5ju7@vireshk-i7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Lucas Stach <l.stach@pengutronix.de>, arm@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, chris.redpath@arm.com, ionela.voinescu@arm.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 28, 2018 at 04:37:39PM +0530, Viresh Kumar wrote:
-> Hi Lucas,
-> 
-> On 25-05-18, 13:46, Lucas Stach wrote:
-> > This is a lot of duplicate information for what is effectively a shared
-> >  cluster wide thing. This does absolutely not _feel_ right.
-> 
-> I cannot agree more :)
-> 
-> > What problem are you solving here? Why do we need all this duplicate
-> > information? Why can't we fix it by falling back to looking at cpu0 if
-> > needed?
-> 
-> Let me try explaining one of the problem scenarios to you as your
-> platform is a single cluster one. Make cpufreq driver as module, don't
-> insert it, hotplug out CPU0 and now insert the cpufreq driver. The
-> cpufreq core will try adding the cpufreq policy for CPU1 but wouldn't
-> find the required information in the DT node of CPU1 and so will fail
-> or behave incorrectly.
-> 
-> We can't look at CPU0 as we don't know they are related at all.
-> Nothing tells that to us. The right solution to fix the duplication is
-> to move to OPP-v2 bindings, which allow us to create a single OPP
-> table node and refer to it from all the CPU nodes. Because in case of
-> imx platforms getting updated here, we use the old and some platforms
-> specific frequency tables, we have to duplicate it everywhere.
-> 
-> But looking from DT otherwise, all the device should anyway have all
-> the information required right in their node. That can be simplified
-> with things like phandle to opp-v2 node, but still everything needs to
-> be there. We shouldn't really rely on other CPU nodes to make it work.
-> That would be an incomplete definition of the hardware IMHO.
+Cortex M4 part can be started from a boot loader or over
+Linux remoteproc framework.
 
-Lucas,
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ arch/arm/mach-imx/Kconfig          | 33 +++++++++++++++++++-----------
+ arch/arm/mach-imx/Makefile         |  3 ++-
+ arch/arm/mach-imx/mach-imx7d-cm4.c | 18 ++++++++++++++++
+ 3 files changed, 41 insertions(+), 13 deletions(-)
+ create mode 100644 arch/arm/mach-imx/mach-imx7d-cm4.c
 
-Are you fine with the patch now considering the respond from Viresh?
-
-Shawn
+diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+index e47fa13f4b0c..5ad58b1cb4bc 100644
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -522,18 +522,6 @@ config SOC_IMX6UL
+ 	help
+ 	  This enables support for Freescale i.MX6 UltraLite processor.
+ 
+-config SOC_IMX7D
+-	bool "i.MX7 Dual support"
+-	select PINCTRL_IMX7D
+-	select ARM_GIC
+-	select HAVE_ARM_ARCH_TIMER
+-	select HAVE_IMX_ANATOP
+-	select HAVE_IMX_MMDC
+-	select HAVE_IMX_SRC
+-	select IMX_GPCV2
+-	help
+-		This enables support for Freescale i.MX7 Dual processor.
+-
+ config SOC_LS1021A
+ 	bool "Freescale LS1021A support"
+ 	select ARM_GIC
+@@ -548,6 +536,27 @@ comment "Cortex-A/Cortex-M asymmetric multiprocessing platforms"
+ 
+ if ARCH_MULTI_V7 || ARM_SINGLE_ARMV7M
+ 
++config SOC_IMX7D_CA7
++	bool
++	select ARM_GIC
++	select HAVE_ARM_ARCH_TIMER
++	select HAVE_IMX_ANATOP
++	select HAVE_IMX_MMDC
++	select HAVE_IMX_SRC
++	select IMX_GPCV2
++
++config SOC_IMX7D_CM4
++	bool
++	select ARMV7M_SYSTICK
++
++config SOC_IMX7D
++	bool "i.MX7 Dual support"
++	select PINCTRL_IMX7D
++	select SOC_IMX7D_CA7 if ARCH_MULTI_V7
++	select SOC_IMX7D_CM4 if ARM_SINGLE_ARMV7M
++	help
++		This enables support for Freescale i.MX7 Dual processor.
++
+ config SOC_VF610
+ 	bool "Vybrid Family VF610 support"
+ 	select ARM_GIC if ARCH_MULTI_V7
+diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
+index 2327e3e876d8..64ebeb6a4f30 100644
+--- a/arch/arm/mach-imx/Makefile
++++ b/arch/arm/mach-imx/Makefile
+@@ -81,7 +81,8 @@ obj-$(CONFIG_SOC_IMX6SL) += mach-imx6sl.o
+ obj-$(CONFIG_SOC_IMX6SLL) += mach-imx6sl.o
+ obj-$(CONFIG_SOC_IMX6SX) += mach-imx6sx.o
+ obj-$(CONFIG_SOC_IMX6UL) += mach-imx6ul.o
+-obj-$(CONFIG_SOC_IMX7D) += mach-imx7d.o
++obj-$(CONFIG_SOC_IMX7D_CA7) += mach-imx7d.o
++obj-$(CONFIG_SOC_IMX7D_CM4) += mach-imx7d-cm4.o
+ 
+ ifeq ($(CONFIG_SUSPEND),y)
+ AFLAGS_suspend-imx6.o :=-Wa,-march=armv7-a
+diff --git a/arch/arm/mach-imx/mach-imx7d-cm4.c b/arch/arm/mach-imx/mach-imx7d-cm4.c
+new file mode 100644
+index 000000000000..0800b5891d2a
+--- /dev/null
++++ b/arch/arm/mach-imx/mach-imx7d-cm4.c
+@@ -0,0 +1,18 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2018 Pengutronix, Oleksij Rempel <o.rempel@pengutronix.de>
++ */
++
++#include <linux/kernel.h>
++#include <asm/v7m.h>
++#include <asm/mach/arch.h>
++
++static const char * const imx7d_cm4_dt_compat[] __initconst = {
++	"fsl,imx7d-cm4",
++	NULL,
++};
++
++DT_MACHINE_START(IMX7D, "Freescale i.MX7 Dual Cortex-M4 (Device Tree)")
++	.dt_compat = imx7d_cm4_dt_compat,
++	.restart = armv7m_restart,
++MACHINE_END
+-- 
+2.17.1
