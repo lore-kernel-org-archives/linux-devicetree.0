@@ -1,26 +1,59 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 00/14] dma-jz4780 improvements
-Date: Tue,  3 Jul 2018 14:32:00 +0200
-Message-ID: <20180703123214.23090-1-paul@crapouillou.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v2 3/8] drm/bridge/synopsys: dsi: defer probing if panel
+ not available in bridge-attach
+Date: Tue, 3 Jul 2018 14:42:49 +0200
+Message-ID: <20180703124251eucas1p25b137491e5e1adc8ce3cfc36650e82cb~93GQzL7MQ0183501835eucas1p2a@eucas1p2.samsung.com>
+References: <20180618102806.15650-1-heiko@sntech.de>
+ <CGME20180618102836epcas3p431543a6ca9ddfd8f0ba27bc8c4a639bc@epcas3p4.samsung.com>
+ <20180618102806.15650-4-heiko@sntech.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180618102806.15650-4-heiko@sntech.de>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, mka@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-This set of patches by myself and Daniel extends the dma-jz4780 driver
-to support other SoCs (JZ4770, JZ4740, JZ4725B).
-
-Some fixes are also included, for proper residue reporting, which fixes
-errors with ALSA.
-
-Finally, the last two patches update the devicetree bindings for the
-JZ4780 SoC and add a binding for the JZ4770 SoC.
-
-This patchset was tested on JZ4780, JZ4770 and JZ4725B, but was not tested
-on the JZ4740, so it would be fantastic if somebody could test it there.
-
-Regards,
--Paul
+T24gMTguMDYuMjAxOCAxMjoyOCwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gV2hlbiB0aGUgcGFu
+ZWwtZHJpdmVyIGlzIGJ1aWxkIGFzIGEgbW9kdWxlIGl0IGN1cnJlbnRseSBmYWlscyBoYXJkIGFz
+IHRoZQo+IHBhbmVsIGNhbm5vdCBiZSBwcm9iZWQgZGlyZWN0bHk6Cj4KPiBkd19taXBpX2RzaV9i
+aW5kKCkKPiAgIF9fZHdfbWlwaV9kc2lfcHJvYmUoKQo+ICAgICBjcmVhdGVzIGRzaSBidXMKPiAg
+ICAgY3JlYXRlcyBwYW5lbCBkZXZpY2UKPiAgICAgdHJpZ2dlcnMgcGFuZWwgbW9kdWxlIGxvYWQK
+PiAgICAgcGFuZWwgbm90IHByb2JlZCAobW9kdWxlIG5vdCBsb2FkZWQgb3IgcGFuZWwgcHJvYmUg
+c2xvdykKPiAgIGRybV9icmlkZ2VfYXR0YWNoCj4gICAgIGZhaWxzIHdpdGggLUVJTlZBTCBkdWUg
+dG8gZW1wdHkgcGFuZWxfYnJpZGdlCj4KPiBTbyBlbWl0IGEgLUVQUk9CRV9ERUZFUiBpbiB0aGF0
+IGNhc2UgdG8gZ2l2ZSB0aGUgZHJpdmVyIGFub3RoZXIKPiBjaGFuY2UgYXQgZ2V0dGluZyB0aGUg
+ZGlzcGxheSBsYXRlci4KClRoYXRzIG9kZCAoYXQgbGVhc3QgZm9yIG1lKSwgaWYgdGhlIHJlc291
+cmNlIChwYW5lbCBpbiB0aGlzIGNhc2UpIGlzIG5vdApwcmVzZW50LCBicmlkZ2Ugc2hvdWxkIG5v
+dCBiZSBhdHRhY2hlZCAoZHJtX2JyaWRnZV9hdHRhY2ggc2hvdWxkIG5vdCBiZQpjYWxsZWQpLiBJ
+ZSBfX2R3X21pcGlfZHNpX3Byb2JlIHNob3VsZCByYXRoZXIgbG9vayBmb3IgdGhlIHBhbmVsIGFu
+ZApkZWZlciBpZiBub3QgZm91bmQuIFJlc291cmNlIGdhdGhlcmluZyBpcyB0aGUgdGFzayBvZiBw
+cm9iZS4KZHJtX2JyaWRnZV9hdHRhY2ggY2FuIGJlIGNhbGxlZCBhZnRlciBwcm9iZSBhbmQgaXQg
+d291bGQgYmUgZGlmZmljdWx0CmZvciB0aGUgY2FsbGVyIHRvIHJlYWN0IHByb3Blcmx5IGZvciAt
+RVBST0JFX0RFRkVSIGVycm9yLgoKUmVnYXJkcwpBbmRyemVqCgo+Cj4gU2lnbmVkLW9mZi1ieTog
+SGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJt
+L2JyaWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5jIHwgMyArKysKPiAgMSBmaWxlIGNoYW5nZWQs
+IDMgaW5zZXJ0aW9ucygrKQo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
+c3lub3BzeXMvZHctbWlwaS1kc2kuYyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMv
+ZHctbWlwaS1kc2kuYwo+IGluZGV4IGJiNGFlY2E1YzBmOS4uYmQ1MDNmMDAwZWQ1IDEwMDY0NAo+
+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYwo+ICsr
+KyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYwo+IEBAIC04
+MzUsNiArODM1LDkgQEAgc3RhdGljIGludCBkd19taXBpX2RzaV9icmlkZ2VfYXR0YWNoKHN0cnVj
+dCBkcm1fYnJpZGdlICpicmlkZ2UpCj4gIAkJcmV0dXJuIC1FTk9ERVY7Cj4gIAl9Cj4gIAo+ICsJ
+aWYgKCFkc2ktPnBhbmVsX2JyaWRnZSkKPiArCQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsKPiArCj4g
+IAkvKiBTZXQgdGhlIGVuY29kZXIgdHlwZSBhcyBjYWxsZXIgZG9lcyBub3Qga25vdyBpdCAqLwo+
+ICAJYnJpZGdlLT5lbmNvZGVyLT5lbmNvZGVyX3R5cGUgPSBEUk1fTU9ERV9FTkNPREVSX0RTSTsK
+PiAgCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
