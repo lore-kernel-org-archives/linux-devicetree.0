@@ -1,73 +1,122 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v13 3/3] dt-bindings: drm/bridge: Document
- sn65dsi86 bridge bindings
-Date: Mon, 2 Jul 2018 20:00:35 -0600
-Message-ID: <20180703020035.GA12650@rob-hp-laptop>
-References: <20180627095735.24517-1-spanda@codeaurora.org>
- <20180627095735.24517-4-spanda@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v22 1/4] dt-bindings: soc: Add documentation for the
+ MediaTek GCE unit
+Date: Mon, 2 Jul 2018 20:30:40 -0600
+Message-ID: <20180703023040.GA24508@rob-hp-laptop>
+References: <1530098172-31385-1-git-send-email-houlong.wei@mediatek.com>
+ <1530098172-31385-2-git-send-email-houlong.wei@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180627095735.24517-4-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+In-Reply-To: <1530098172-31385-2-git-send-email-houlong.wei@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Houlong Wei <houlong.wei@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Monica Wang <monica.wang@mediatek.com>, HS Liao <hs.liao@mediatek.com>, ginny.chen@m
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gMjcsIDIwMTggYXQgMDM6Mjc6MzVQTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3
-cm90ZToKPiBEb2N1bWVudCB0aGUgYmluZGluZ3MgdXNlZCBmb3IgdGhlIHNuNjVkc2k4NiBEU0kg
-dG8gZURQIGJyaWRnZS4KPiAKPiBDaGFuZ2VzIGluIHYxOgo+ICAtIFJlcGhyYXNlIHRoZSBkdC1i
-aW5kaW5nIGRlc2NyaXB0aW9ucyB0byBiZSBtb3JlIGlubGluZSB3aXRoIGV4aXN0aW5nCj4gICAg
-YmluZGluZ3MgKEFuZHJ6ZWogSGFqZGEpLgo+ICAtIEFkZCBtaXNzaW5nIGR0LWJpbmRpbmcgdGhh
-dCBhcmUgcGFyc2VkIGJ5IGNvcnJlc3BvbmRpbmcgZHJpdmVyCj4gICAgKEFuZHJ6ZWogSGFqZGEp
-Lgo+IAo+IENoYW5nZXMgaW4gdjI6Cj4gIC0gUmVtb3ZlIGVkcCBwYW5lbCBzcGVjaWZpYyBkdC1i
-aW5kaW5nIGVudHJpZXMuIE9ubHkga2VlcCBicmlkZ2UKPiAgICBzcGVjaWZpYyBlbnRyaWVzIChT
-ZWFuIFBhdWwpLgo+ICAtIFJlbW92ZSBjdXN0b20tbW9kZXMgZHQgZW50cnkgc2luY2UgaXRzIHVz
-YWdlIGlzIHJlbW92ZWQgZnJvbSBkcml2ZXIgYWxzbyAoU2VhbiBQYXVsKS4KPiAgLSBSZW1vdmUg
-aXMtcGx1Z2dhYmxlIGR0IGVudHJ5IHNpbmNlIHRoaXMgd2lsbCBub3QgYmUgbmVlZGVkIGFueW1v
-cmUgKFNlYW4gUGF1bCkuCj4gCj4gQ2hhbmdlcyBpbiB2MzoKPiAgLSBSZW1vdmUgaXJxLWdwaW8g
-ZHQgZW50cnkgYW5kIGluc3RlYWQgcG9wdWxhdGUgaXMgYW4gaW50ZXJydXB0Cj4gICAgcHJvcGVy
-dHkgKFJvYiBIZXJyaW5nKS4KPiAKPiBDaGFuZ2VzIGluIHY0Ogo+ICAtIEFkZCBsaW5rIHRvIGJy
-aWRnZSBjaGlwIGRhdGFzaGVldCAoU3RlcGhlbiBCb3lkKQo+ICAtIEFkZCB2cGxsIGFuZCB2Y2Mg
-cmVndWxhdG9yIHN1cHBseSBiaW5kaW5ncyAoU3RlcGhlbiBCb3lkKQo+ICAtIEFkZCByZWYgY2xr
-IG9wdGlvbmFsIGR0IGJpbmRpbmcgKFN0ZXBoZW4gQm95ZCkKPiAgLSBBZGQgZ3Bpby1jb250cm9s
-bGVyIG9wdGlvbmFsIGR0IGJpbmRpbmcgKFN0ZXBoZW4gQm95ZCkKPiAKPiBDaGFuZ2VzIGluIHY1
-Ogo+ICAtIFVzZSBjbG9jayBwcm9wZXJ0eSB0byBzcGVjaWZ5IHRoZSBpbnB1dCByZWZjbGsgKFN0
-ZXBoZW4gQm95ZCkuCj4gIC0gVXBkYXRlIGdwaW8gY2VsbCBhbmQgcHdtIGNlbGwgbnVtYmVycyAo
-U3RlcGhlbiBCb3lkKS4KPiAKPiBDaGFuZ2VzIGluIHY2Ogo+ICAtIEFkZCBwcm9wZXJ0eSB0byBt
-ZW50aW9uIHRoZSBsYW5lIG1hcHBpbmcgc2NoZW1lIGFuZCBwb2xhcml0eSBpbnZlcnNpb24KPiAg
-ICAoU3RlcGhlbiBCb3lkKS4KPiAKPiBDaGFuZ2VzIGluIHY3Ogo+ICAtIERldGFpbCBkZXNjcmlw
-dGlvbiBvZiBsYW5lIG1hcHBpbmcgc2NoZW1lIGR0IHByb3BlcnR5IChBbmRyemVqCj4gICAgSGFq
-ZGEvIFJvYiBIZXJyaW5nKS4KPiAgLSBSZW1vdmVkIEhEUCBncGlvIGJpbmRpbmcsIHNpbmNlIHRo
-ZSBicmlkZ2UgdXNlcyBJUlEgc2lnbmFsIHRvCj4gICAgZGV0ZXJtaW5lIEhQRCwgYW5kIElSUSBw
-cm9wZXJ0eSBpcyBhbHJlYWR5IGRvY3VtZW50ZWQgaW4gYmluZGluZy4KPiAKPiBDaGFuZ2VzIGlu
-IHY4Ogo+ICAtIFJlbW92ZWQgdW5uZWNlc3NhcnkgZXhwbGFuYXRpb24gb2YgbGFuZSBtYXBwaW5n
-IGFuZCBwb2xhcml0eSBkdAo+ICAgIHByb3BlcnR5LCBzaW5jZSB0aGVzZSBhcmUgYWxyZWFkeSBl
-eHBsYWluZWQgaW4gbWVkaWEvdmlkZW8taW50ZXJmYWNlCj4gICAgZHQgYmluaWRuZyAoUm9iIEhl
-cnJpbmcpLgo+IAo+IENoYW5nZXMgaW4gdjk6Cj4gIC0gQXZvaWQgcHV0dGluZyByZS1kZWZpbml0
-aW9uIG9mIGxhbmUgbWFwcGluZyBhbmQgcG9sYXJpdHkgZHQgYmluZGluZwo+ICAgIChSb2IgSGVy
-cmluZykuCj4gCj4gQ2hhbmdlcyBpbiB2MTA6Cj4gIC0gVXNlIGludGVycnVwdHMtZXh0ZW5kZWQg
-cHJvcGVydHkgaW5zdGVhZCBvZiBpbnRlcnJ1cHRzIHRvIHNwZWNpZnkKPiAgICBpbnRlcnJ1cHQg
-bGluZSAoQW5kcnplaiBIYWpkYSkuCj4gIC0gTW92ZSBkYXRhLWxhbmVzIGFuZCBsYW5lLXBvbGFy
-aXR5IHByb3BlcnR5IGV4YW1wbGUgdG8gcHJvcGVyIHBsYWNlIChBbmRyemVqIEhhamRhKS4KPiAK
-PiBDaGFuZ2VzIGluIHYxMToKPiAgLSBBZGQgYSBwcm9wZXJ0eSBmb3Igc3VzcGVuZCBncGlvIGZ1
-bmN0aW9uIG9mIEdQSU8xIHBpbiBvbiBicmlkZ2UgY2hpcAo+ICAgIChTdGVwaGVuIEJveWQpLgo+
-IAo+IFNpZ25lZC1vZmYtYnk6IFNhbmRlZXAgUGFuZGEgPHNwYW5kYUBjb2RlYXVyb3JhLm9yZz4K
-PiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQgICAg
-ICAgfCA4OSArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA4OSBpbnNl
-cnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dAoKUmV2aWV3ZWQtYnk6IFJv
-YiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2ZyZWVkcmVubwo=
+On Wed, Jun 27, 2018 at 07:16:09PM +0800, Houlong Wei wrote:
+> This adds documentation for the MediaTek Global Command Engine (GCE) unit
+> found in MT8173 SoCs.
+> 
+> Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
+> Signed-off-by: HS Liao <hs.liao@mediatek.com>
+> ---
+> Hi Rob,
+>   I don't add your ACK in this version since the dt-binding description
+> has been changed. Thanks.
+> ---
+>  .../devicetree/bindings/mailbox/mtk-gce.txt        |   65 ++++++++++++++++++++
+>  include/dt-bindings/gce/mt8173-gce.h               |   48 +++++++++++++++
+>  2 files changed, 113 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+>  create mode 100644 include/dt-bindings/gce/mt8173-gce.h
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> new file mode 100644
+> index 0000000..26f65a4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> @@ -0,0 +1,65 @@
+> +MediaTek GCE
+> +===============
+> +
+> +The Global Command Engine (GCE) is used to help read/write registers with
+> +critical time limitation, such as updating display configuration during the
+> +vblank. The GCE can be used to implement the Command Queue (CMDQ) driver.
+> +
+> +CMDQ driver uses mailbox framework for communication. Please refer to
+> +mailbox.txt for generic information about mailbox device-tree bindings.
+> +
+> +Required properties:
+> +- compatible: Must be "mediatek,mt8173-gce"
+> +- reg: Address range of the GCE unit
+> +- interrupts: The interrupt signal from the GCE block
+> +- clock: Clocks according to the common clock binding
+> +- clock-names: Must be "gce" to stand for GCE clock
+> +- thread-num: Maximum threads count of GCE.
+
+mediatek,thread-num
+
+Is this needed for anything other than error checking the thread id in 
+the mbox cells? if that's it, then drop it. 
+
+> +- #mbox-cells: Should be 4.
+> +	<&phandle channel timeout priority atomic_exec>
+> +	phandle: Label name of a gce node.
+> +	channel: Channel of mailbox. Be equal to the thread id of GCE.
+> +	timeout: Maximum time of software waiting GCE processing done, in unit
+> +		of millisecond.
+> +	priority: Priority of GCE thread.
+> +	atomic_exec: GCE processing continuous packets of commands in atomic
+> +		way.
+> +
+> +Required properties for a client device:
+> +- mboxes: Client use mailbox to communicate with GCE, it should have this
+> +  property and list of phandle, mailbox specifiers.
+> +- gce-subsys: Specify the sub-system id which is corresponding to the register
+> +  address.
+
+What is this for?
+
+> +
+> +Optional properties for a client device:
+> +- gce-event: Specify the event if the client has any. Because the event is
+> +  parsed by client, so client can replace 'gce-event' with other meaningful
+> +  name.
+
+If the client sets the name, then no point having here. It must be 
+documented in the client binding. But then, what is this for in the 
+first place?
+
+> +
+> +Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'. Such as
+> +thread number, sub-system ids, thread priority, event ids.
+> +
+> +Example:
+> +
+> +	gce: gce@10212000 {
+
+mailbox@...
+
+> +		compatible = "mediatek,mt8173-gce";
+> +		reg = <0 0x10212000 0 0x1000>;
+> +		interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&infracfg CLK_INFRA_GCE>;
+> +		clock-names = "gce";
+> +		thread-num = CMDQ_THR_MAX_COUNT;
+> +		#mbox-cells = <4>;
+> +	};
+> +
+> +Example for a client device:
+> +
+> +	mmsys: clock-controller@14000000 {
+> +		compatible = "mediatek,mt8173-mmsys";
+> +		mboxes = <&gce 0 2000 CMDQ_THR_PRIO_LOWEST 1>,
+> +			 <&gce 1 2000 CMDQ_THR_PRIO_LOWEST 1>;
+> +		gce-subsys = <SUBSYS_1400XXXX>;
+> +		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
+> +				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
+> +
+> +		...
+> +	};
