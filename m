@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 07/14] dmaengine: dma-jz4780: Enable Fast DMA to the AIC
-Date: Tue,  3 Jul 2018 14:32:07 +0200
-Message-ID: <20180703123214.23090-8-paul@crapouillou.net>
+Subject: [PATCH 05/14] dmaengine: dma-jz4780: Add support for the JZ4740 SoC
+Date: Tue,  3 Jul 2018 14:32:05 +0200
+Message-ID: <20180703123214.23090-6-paul@crapouillou.net>
 References: <20180703123214.23090-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180703123214.23090-1-paul@crapouillou.net>
@@ -10,36 +10,73 @@ To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutlan
 Cc: Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-With the fast DMA bit set, the DMA will transfer twice as much data
-per clock period to the AIC, so there is little point not to set it.
+The JZ4740 SoC has a single DMA core starring six DMA channels.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/dma/dma-jz4780.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/dma/jz4780-dma.txt | 1 +
+ drivers/dma/Kconfig                                  | 2 +-
+ drivers/dma/dma-jz4780.c                             | 4 ++++
+ 3 files changed, 6 insertions(+), 1 deletion(-)
 
+diff --git a/Documentation/devicetree/bindings/dma/jz4780-dma.txt b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
+index 0fd0759053be..d7ca3f925fdf 100644
+--- a/Documentation/devicetree/bindings/dma/jz4780-dma.txt
++++ b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
+@@ -5,6 +5,7 @@ Required properties:
+ - compatible: Should be one of:
+   * ingenic,jz4780-dma
+   * ingenic,jz4770-dma
++  * ingenic,jz4740-dma
+ - reg: Should contain the DMA channel registers location and length, followed
+   by the DMA controller registers location and length.
+ - interrupts: Should contain the interrupt specifier of the DMA controller.
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 48d25dccedb7..a935d15ec581 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -143,7 +143,7 @@ config DMA_JZ4740
+ 
+ config DMA_JZ4780
+ 	tristate "JZ4780 DMA support"
+-	depends on MACH_JZ4780 || MACH_JZ4770 || COMPILE_TEST
++	depends on MACH_INGENIC || COMPILE_TEST
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
 diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 922e4031e70e..7ee2c121948f 100644
+index 7b8b2dcd119e..ccadbe61dde7 100644
 --- a/drivers/dma/dma-jz4780.c
 +++ b/drivers/dma/dma-jz4780.c
-@@ -52,6 +52,7 @@
- #define JZ_DMA_DMAC_DMAE	BIT(0)
- #define JZ_DMA_DMAC_AR		BIT(2)
- #define JZ_DMA_DMAC_HLT		BIT(3)
-+#define JZ_DMA_DMAC_FAIC	BIT(27)
- #define JZ_DMA_DMAC_FMSC	BIT(31)
+@@ -133,6 +133,7 @@ struct jz4780_dma_chan {
+ };
  
- #define JZ_DMA_DRT_AUTO		0x8
-@@ -929,8 +930,8 @@ static int jz4780_dma_probe(struct platform_device *pdev)
- 	 * Also set the FMSC bit - it increases MSC performance, so it makes
- 	 * little sense not to enable it.
- 	 */
--	jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DMAC,
--			  JZ_DMA_DMAC_DMAE | JZ_DMA_DMAC_FMSC);
-+	jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DMAC, JZ_DMA_DMAC_DMAE |
-+			       JZ_DMA_DMAC_FAIC | JZ_DMA_DMAC_FMSC);
+ enum jz_version {
++	ID_JZ4740,
+ 	ID_JZ4770,
+ 	ID_JZ4780,
+ };
+@@ -247,6 +248,7 @@ static void jz4780_dma_desc_free(struct virt_dma_desc *vdesc)
+ }
  
- 	if (jzdma->version == ID_JZ4780)
- 		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DMACP, 0);
+ static const unsigned int jz4780_dma_ord_max[] = {
++	[ID_JZ4740] = 5,
+ 	[ID_JZ4770] = 6,
+ 	[ID_JZ4780] = 7,
+ };
+@@ -801,11 +803,13 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
+ }
+ 
+ static const unsigned int jz4780_dma_nb_channels[] = {
++	[ID_JZ4740] = 6,
+ 	[ID_JZ4770] = 6,
+ 	[ID_JZ4780] = 32,
+ };
+ 
+ static const struct of_device_id jz4780_dma_dt_match[] = {
++	{ .compatible = "ingenic,jz4740-dma", .data = (void *)ID_JZ4740 },
+ 	{ .compatible = "ingenic,jz4770-dma", .data = (void *)ID_JZ4770 },
+ 	{ .compatible = "ingenic,jz4780-dma", .data = (void *)ID_JZ4780 },
+ 	{},
 -- 
 2.18.0
