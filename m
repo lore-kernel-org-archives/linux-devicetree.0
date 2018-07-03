@@ -1,7 +1,7 @@
 From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: [PATCH 1/3] ARM: i.MX31: remove rnga registration as a platform device
-Date: Tue,  3 Jul 2018 22:29:32 +0300
-Message-ID: <20180703192934.6080-2-vz@mleia.com>
+Subject: [PATCH 3/3] ARM: dts: imx31: add LogicPD MX31Lite board description
+Date: Tue,  3 Jul 2018 22:29:34 +0300
+Message-ID: <20180703192934.6080-4-vz@mleia.com>
 References: <20180703192934.6080-1-vz@mleia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,58 +21,220 @@ To: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Sasc
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On i.MX31 powered boards with OF support Security Random Number
-Generator Accelerator RNGA controller is initialized from device tree,
-its registration as a platform device is redundant and actually it is
-broken due to missing clock information:
-
-  mxc_rnga mxc_rnga: Could not get rng_clk!
-  mxc_rnga: probe of mxc_rnga failed with error -2
+The added DTS contains a combined description of LogicPD MX31 Lite
+SoM devices, peripherals are routed to ports on a baseboard:
+* PATA controller,
+* SD/MMC controller,
+* 2 GPIO LEDs,
+* UART controllers,
+* Freescale MC13783 MFD connected over SPI,
+* SMSC LAN9117,
+* ST Micro NAND SLC, 64 MiB,
+* Intel NOR flash, 16 MiB.
 
 Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 ---
- arch/arm/mach-imx/imx31-dt.c | 18 ------------------
- 1 file changed, 18 deletions(-)
+ arch/arm/boot/dts/Makefile       |   3 +-
+ arch/arm/boot/dts/imx31-lite.dts | 177 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 179 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/imx31-lite.dts
 
-diff --git a/arch/arm/mach-imx/imx31-dt.c b/arch/arm/mach-imx/imx31-dt.c
-index 668d74b..9d9640a 100644
---- a/arch/arm/mach-imx/imx31-dt.c
-+++ b/arch/arm/mach-imx/imx31-dt.c
-@@ -9,35 +9,17 @@
-  * http://www.gnu.org/copyleft/gpl.html
-  */
- 
--#include <linux/irq.h>
--#include <linux/of_irq.h>
--#include <linux/of_platform.h>
- #include <asm/mach/arch.h>
--#include <asm/mach/time.h>
--
- #include "common.h"
--#include "mx31.h"
- 
- static const char * const imx31_dt_board_compat[] __initconst = {
- 	"fsl,imx31",
- 	NULL
- };
- 
--/* FIXME: replace with DT binding */
--static const struct resource imx31_rnga_res[] __initconst = {
--	DEFINE_RES_MEM(MX31_RNGA_BASE_ADDR, SZ_16K),
--};
--
--static void __init imx31_dt_mach_init(void)
--{
--	platform_device_register_simple("mxc_rnga", -1, imx31_rnga_res,
--					ARRAY_SIZE(imx31_rnga_res));
--}
--
- DT_MACHINE_START(IMX31_DT, "Freescale i.MX31 (Device Tree Support)")
- 	.map_io		= mx31_map_io,
- 	.init_early	= imx31_init_early,
- 	.init_irq	= mx31_init_irq,
--	.init_machine	= imx31_dt_mach_init,
- 	.dt_compat	= imx31_dt_board_compat,
- MACHINE_END
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 37a3de7..2210b73 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -345,7 +345,8 @@ dtb-$(CONFIG_SOC_IMX27) += \
+ 	imx27-phytec-phycore-rdk.dtb \
+ 	imx27-phytec-phycard-s-rdk.dtb
+ dtb-$(CONFIG_SOC_IMX31) += \
+-	imx31-bug.dtb
++	imx31-bug.dtb \
++	imx31-lite.dtb
+ dtb-$(CONFIG_SOC_IMX35) += \
+ 	imx35-eukrea-mbimxsd35-baseboard.dtb \
+ 	imx35-pdk.dtb
+diff --git a/arch/arm/boot/dts/imx31-lite.dts b/arch/arm/boot/dts/imx31-lite.dts
+new file mode 100644
+index 0000000..db52ddc
+--- /dev/null
++++ b/arch/arm/boot/dts/imx31-lite.dts
+@@ -0,0 +1,177 @@
++// SPDX-License-Identifier: GPL-2.0+
++//
++// Copyright (C) 2016-2018 Vladimir Zapolskiy <vz@mleia.com>
++
++/dts-v1/;
++
++#include "imx31.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++
++/ {
++	model = "LogicPD i.MX31 Lite";
++	compatible = "logicpd,imx31-lite", "fsl,imx31";
++
++	chosen {
++		stdout-path = &uart1;
++	};
++
++	memory@80000000 {
++		reg = <0x80000000 0x8000000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		led0 {
++			gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
++		};
++
++		led1 {
++			gpios = <&gpio1 7 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&ata {
++	status = "okay";
++};
++
++&nfc {
++	nand-bus-width = <8>;
++	nand-ecc-mode = "hw";
++	nand-on-flash-bbt;
++	status = "okay";
++};
++
++&sdhci1 {
++	bus-width = <4>;
++	cd-gpios = <&gpio2 11 GPIO_ACTIVE_HIGH>;
++	wp-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
++
++&spi2 {
++	status = "okay";
++
++	pmic@0 {
++		compatible = "fsl,mc13783";
++		reg = <0>;
++		spi-cs-high;
++		spi-max-frequency = <1000000>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <3 IRQ_TYPE_EDGE_RISING>;
++
++		fsl,mc13xxx-uses-adc;
++		fsl,mc13xxx-uses-rtc;
++
++		regulators {
++			sw1a {		/* QVCC */
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1500000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++
++			sw1b {		/* QVCC */
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1500000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++
++			sw2a {		/* 1.8V_DDR, NVCC2, NVCC21 and NVCC22 */
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++
++			sw2b {		/* NVCC10 */
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++
++			violo {		/* NVCC1 and NVCC7 */
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++
++			viohi {		/* VIOHI */
++				regulator-min-microvolt = <2775000>;
++				regulator-max-microvolt = <2775000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++
++			vaudio {	/* VAUDIO */
++				regulator-min-microvolt = <2775000>;
++				regulator-max-microvolt = <2775000>;
++			};
++
++			vcam {		/* NVCC4 */
++				regulator-min-microvolt = <2800000>;
++				regulator-max-microvolt = <2800000>;
++			};
++
++			vgen {		/* NVCC5 / NVCC8 and NVCC6 / NVCC9 */
++				regulator-min-microvolt = <2775000>;
++				regulator-max-microvolt = <2775000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++
++			vmmc2 {		/* NVCC3 */
++				regulator-min-microvolt = <1600000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++		};
++	};
++};
++
++&uart1 {
++	uart-has-rtscts;
++	status = "okay";
++};
++
++/* Routed to the extension board */
++&uart2 {
++	uart-has-rtscts;
++	status = "okay";
++};
++
++/* Routed to the extension board */
++&uart3 {
++	uart-has-rtscts;
++	status = "okay";
++};
++
++&weim {
++	status = "okay";
++
++	nor@0,0 {
++		compatible = "cfi-flash";
++		reg = <0 0x0 0x200000>;
++		bank-width = <2>;
++		linux,mtd-name = "physmap-flash.0";
++		fsl,weim-cs-timing = <0x0000cf03 0xa0330d01 0x00220800>;
++	};
++
++	ethernet@4,0 {
++		compatible = "smsc,lan9117", "smsc,lan9115";
++		reg = <4 0x0 0x100>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <26 IRQ_TYPE_EDGE_FALLING>;
++		phy-mode = "mii";
++		reg-io-width = <2>;
++		smsc,irq-push-pull;
++		fsl,weim-cs-timing = <0x00008701 0x04000541 0x00010000>;
++	};
++};
 -- 
 2.10.2
