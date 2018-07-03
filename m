@@ -1,47 +1,52 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 12/15] arm: dts: highbank: Add missing OPP properties for
- CPUs
-Date: Mon, 2 Jul 2018 16:27:35 -0700
-Message-ID: <20180702232735.eocdrdfwyj37577h@localhost>
-References: <cover.1527244200.git.viresh.kumar@linaro.org>
- <f8a4e5c3062397736475ec599de730206846cb9b.1527244201.git.viresh.kumar@linaro.org>
- <CAL_JsqJRKMREfJ8LoDfuda8BU3g5Eq1AX5cPZGzO3uN3vUhrAQ@mail.gmail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH] bindings: add clocks optional binding for imx gpio
+Date: Tue, 3 Jul 2018 01:14:11 +0000
+Message-ID: <AM3PR04MB13158C70263CB7CD5CB24173F5420@AM3PR04MB1315.eurprd04.prod.outlook.com>
+References: <1530243004-10529-1-git-send-email-Anson.Huang@nxp.com>
+ <CACRpkdbbbbO-94i-ZTSunzuUQcJ8dQpuPHBYODrvdWQyuri7yw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJRKMREfJ8LoDfuda8BU3g5Eq1AX5cPZGzO3uN3vUhrAQ@mail.gmail.com>
+In-Reply-To: <CACRpkdbbbbO-94i-ZTSunzuUQcJ8dQpuPHBYODrvdWQyuri7yw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 02, 2018 at 02:25:40PM -0600, Rob Herring wrote:
-> On Fri, May 25, 2018 at 4:32 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > The OPP properties, like "operating-points", should either be present
-> > for all the CPUs of a cluster or none. If these are present only for a
-> > subset of CPUs of a cluster then things will start falling apart as soon
-> > as the CPUs are brought online in a different order. For example, this
-> > will happen because the operating system looks for such properties in
-> > the CPU node it is trying to bring up, so that it can create an OPP
-> > table.
-> >
-> > Add such missing properties.
-> >
-> > Fix other missing property (clock latency) as well to make it all
-> > work.
-> >
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > ---
-> >  arch/arm/boot/dts/highbank.dts | 30 ++++++++++++++++++++++++++++++
-> >  1 file changed, 30 insertions(+)
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
-> ARM-SOC maintainers, Please apply this.
-
-Applied to next/dt.
-
-
--Olof
+SGksIExpbnVzDQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdp
+bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMaW51cyBXYWxsZWlqIFttYWlsdG86bGludXMud2Fs
+bGVpakBsaW5hcm8ub3JnXQ0KPiBTZW50OiBNb25kYXksIEp1bHkgMiwgMjAxOCA5OjQ2IFBNDQo+
+IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT47IEZhYmlvIEVzdGV2YW0NCj4g
+PGZhYmlvLmVzdGV2YW1AbnhwLmNvbT4NCj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5l
+bC5vcmc+OyBNYXJrIFJ1dGxhbmQNCj4gPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgb3BlbiBsaXN0
+OkdQSU8gU1VCU1lTVEVNDQo+IDxsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZz47IG9wZW4gbGlz
+dDpPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVORUQNCj4gREVWSUNFIFRSRUUgQklORElOR1MgPGRl
+dmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
+ZzsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRD
+SF0gYmluZGluZ3M6IGFkZCBjbG9ja3Mgb3B0aW9uYWwgYmluZGluZyBmb3IgaW14IGdwaW8NCj4g
+DQo+IE9uIEZyaSwgSnVuIDI5LCAyMDE4IGF0IDU6MzQgQU0gQW5zb24gSHVhbmcgPEFuc29uLkh1
+YW5nQG54cC5jb20+DQo+IHdyb3RlOg0KPiANCj4gPiBTb21lIGkuTVggU29DcyBoYXZlIEdQSU8g
+Y2xvY2sgZ2F0ZSBpbiBDQ00sIGFjY2Vzc2luZyBHUElPIHJlZ2lzdGVycw0KPiA+IG5lZWRzIHRv
+IGVuYWJsZSBHUElPIGNsb2NrIGdhdGUgZmlyc3QsIGkuTVggR1BJTyBkcml2ZXIgd2lsbCBlbmFi
+bGUNCj4gPiBjbG9jayBnYXRlIGlmIHRoZXJlIGlzIGNsb2NrIHByb3BlcnR5IGluIEdQSU8gbm9k
+ZSBvZiBkdGIsIGFkZA0KPiA+IG9wdGlvbmFsIHByb3BlcnR5IHRvIGkuTVggR1BJTyBiaW5kaW5n
+IGRvYy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0Bu
+eHAuY29tPg0KPiANCj4gTWFrZSBzZW5zZSBzaW5jZSB0aGUgZ3Bpby1teGMgZHJpdmVyIGFscmVh
+ZHkgc3VwcG9ydHMgdGhpcyA6KQ0KPiANCj4gPiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiAr
+LSBjbG9ja3M6IHRoZSBjbG9ja3MgdXNlZCBieSBncGlvIGJhbmsNCj4gDQo+IFNob3VsZCB0aGUg
+dGV4dCBiZSAidGhlIGNsb2NrIGZvciBjbG9ja2luZyB0aGUgR1BJTyBzaWxpY29uIg0KPiBJIGd1
+ZXNzIHRoYXQgaXMgd2hhdCBpdCBpcy4gQW5kIHNpbmd1bGFyaXM/DQoNClllcywgaXQgaXMgc2lu
+Z3VsYXJpcywgSSB3aWxsIGltcHJvdmUgdGhlIHRleHQuDQoNCj4gDQo+IERvZXMgaXQgaHVydCB0
+byBnaXZlIHRoZSBjbG9jayBhIG5hbWU/IExpa2UgdGhlIGNvbW1vbiAicGNsayIgZm9yIHBlcmlw
+aGVyYWwNCj4gY2xvY2sgb3Igc29tZXRoaW5nIHNpbWlsYXIgdGhhdCBvdGhlciBpLk1YIHNpbGlj
+b24gdXNlcz8NCg0KSXQgaXMganVzdCBiZWNhdXNlIEdQSU8gb25seSBuZWVkcyBvbmUgY2xvY2ss
+IGFuZCB0aGUgZHJpdmVyIGRvZXMgTk9UIGdldCB0aGUNCmNsb2NrIHVzaW5nIGNsb2NrIG5hbWUs
+IHNvIHRoZSBHUElPIG5vZGUgaW4gZHRiIGFsc28gaGFzIG5vIGNsb2NrIG5hbWUgc3BlY2lmaWVk
+LA0KaWYgd2UgYWRkIGEgY2xvY2sgbmFtZSBoZXJlLCBkdGIgYWxzbyBuZWVkIHRvIGJlIHVwZGF0
+ZWQ/IEFuZCBJIHNhdyBvdGhlciBpLk1YDQptb2R1bGVzIHdoaWNoIGhhdmUgb25seSBvbmUgY2xv
+Y2ssIHRoZXkgYWxzbyBoYXZlIG5vIGNsb2NrIG5hbWUgc3BlY2lmaWVkLCBsaWtlIEkyQw0Kb24g
+aS5NWDZRREwsIEkgd2lsbCBzZW5kIGEgVjIgcGF0Y2ggd2l0aCB0ZXh0IGltcHJvdmVkLCB0aGFu
+a3MuDQoNCkFuc29uLg0KDQo+IA0KPiBGYWJpbzogY2FuIHdlIGhhdmUgeW91ciBBQ0sgb24gdGhp
+cyB0b28uDQo+IA0KPiBZb3VycywNCj4gTGludXMgV2FsbGVpag0K
