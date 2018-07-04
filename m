@@ -1,65 +1,124 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 0/4] mfd/regulator/clk/input: bd71837: ROHM BD71837
- PMIC driver
-Date: Wed, 4 Jul 2018 10:21:09 +0100
-Message-ID: <20180704092109.GT20176@dell>
-References: <cover.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
- <20180621103400.GB6076@localhost.localdomain>
- <20180703070200.GC20176@dell>
- <20180704084715.GI2118@localhost.localdomain>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v5 5/5] clocksource/drivers/timer-mediatek: Add support
+ for system timer
+Date: Wed, 4 Jul 2018 11:27:53 +0200 (CEST)
+Message-ID: <alpine.DEB.2.21.1807041108110.1816@nanos.tec.linutronix.de>
+References: <1530669383-17516-1-git-send-email-stanley.chu@mediatek.com> <1530669383-17516-6-git-send-email-stanley.chu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180704084715.GI2118@localhost.localdomain>
+In-Reply-To: <1530669383-17516-6-git-send-email-stanley.chu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, arnd@arndb.de, dmitry.torokhov@gmail.com, sre@kernel.org, chenjh@rock-chips.com, andrew.smirnov@gmail.com, linus.walleij@linaro.org, kstewart@linuxfoundation.org, heiko@sntech.de, gregkh@linuxfoundation.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: Stanley Chu <stanley.chu@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 04 Jul 2018, Matti Vaittinen wrote:
+On Wed, 4 Jul 2018, Stanley Chu wrote:
+> +/* system timer */
+> +#define SYST_CON                (0x0)
+> +#define SYST_VAL                (0x4)
+> +
+> +#define SYST_CON_REG(to)        (timer_of_base(to) + SYST_CON)
+> +#define SYST_VAL_REG(to)        (timer_of_base(to) + SYST_VAL)
+> +
+> +#define SYST_CON_EN              BIT(0)
+> +#define SYST_CON_IRQ_EN          BIT(1)
+> +#define SYST_CON_IRQ_CLR         BIT(4)
+> +
+> +static void __iomem *gpt_sched_reg __read_mostly;
+> +
+> +static void mtk_syst_reset(struct timer_of *to)
+> +{
+> +	/* clear and disable interrupt */
+> +	writel(SYST_CON_IRQ_CLR | SYST_CON_EN, SYST_CON_REG(to));
+> +
+> +	/* reset counter */
+> +	writel(0, SYST_VAL_REG(to));
+> +
+> +	/* disable timer */
+> +	writel(0, SYST_CON_REG(to));
 
-> On Tue, Jul 03, 2018 at 08:02:00AM +0100, Lee Jones wrote:
-> > On Thu, 21 Jun 2018, Matti Vaittinen wrote:
-> > 
-> > > On Tue, Jun 19, 2018 at 01:55:31PM +0300, Matti Vaittinen wrote:
-> > > > Patch series adding support for ROHM BD71837 PMIC.
-> > > > 
-> > > What is the preferred way when I send updated patches:
-> > > 
-> > > 1. always resend _all_ unapplied patches even if there is no changes to
-> > >    some of them. (patch-vN mail thread contains _all_ unapplied patches)
-> > > 2. only resend changed patches (patch-vN mail thread contains only
-> > >    patches that were changed from patch-vN-1)
-> > > 
-> > > I have currently used approach 1 - so that no patches would be
-> > > accidentally forgotten - but downside is that people need to check if
-> > > they have already reviewed some of the patches. I'd rather not caused
-> > > any extra work. What is the most convenient way for you guys?
-> > 
-> > Option 1 is preferred.
-> > 
-> > Just ensure you apply any tags you have collected so reviewers can see
-> > which patches are pending a review.  It's also a good idea to keep a
-> > succinct change log between the "--" marker and the diff stat where
-> > you can state "v4: No change" or the like.
-> 
-> Right. Thanks. Just one question - what if I get reviewed-by for a
-> patch which I later rework? Like this MFD patch where I got reviewed-by
-> from Linus Walleij for v6 - but which I reworked due to comments from
-> Enric and Dmitry. I have not kept the reviewed-by as the patch is not
-> exactly the same Linus was originally reviewing. I guess the tags should
-> be only kept for patches which are unchanged, right?
+Not having any insight into the inner workings of that hardware. This
+sequence does not make any sense.
 
-That is the $64,000 question.  The answer is "it depends".  You should
-use your common sense.  Did your re-work taint the code that your
-reviewer provided his tag for?  If so, drop it.  If not, keep it.
+You first clear and disable the interrupt, but leave the counter
+running. Then you reset the counter and _after_ that you disable the
+timer.
 
-There are no hard and fast rules about these kinds of things.
+Is that a workaround for yet another completely misdesigned piece of timer
+hardware or is it just the software implementation which makes no sense?
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+If it's a workaround for HW stupidity then you really want to document it
+proper.
+
+If not then, what's wrong with doing the obvious:
+{
+	writel(SYST_CON_IRQ_CLR, SYST_CON_REG(to));
+}
+
+which clears the interrupt and disables the timer in one go. Writing the
+counter is not required at all because the next_event() function will write
+it again and the counter value is irrelevant once the timer is disabled.
+
+> +static void mtk_syst_ack_irq(struct timer_of *to)
+> +{
+> +	mtk_syst_reset(to);
+> +}
+> +
+> +static irqreturn_t mtk_syst_handler(int irq, void *dev_id)
+> +{
+> +	struct clock_event_device *clkevt = (struct clock_event_device *)dev_id;
+
+No type casts from and to void. They are completely pointless.
+
+> +	struct timer_of *to = to_timer_of(clkevt);
+> +
+> +	mtk_syst_ack_irq(to);
+
+So you do the full dance here.
+
+> +	clkevt->event_handler(clkevt);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int mtk_syst_clkevt_next_event(unsigned long ticks,
+> +				      struct clock_event_device *clkevt)
+> +{
+> +	struct timer_of *to = to_timer_of(clkevt);
+> +
+> +	/*
+> +	 * reset timer first because we do not expect interrupt is triggered
+> +	 * by old compare value.
+> +	 */
+> +	mtk_syst_reset(to);
+
+And here, which gets called through the event_handler.
+
+> +
+> +	writel(SYST_CON_EN, SYST_CON_REG(to));
+
+Why are you enabling the timer _before_ setting the new counter value? This
+does not make any sense at least not w/o a comment explaining WHY this
+needs to be so convoluted.
+
+> +	writel(ticks, SYST_VAL_REG(to));
+> +
+> +	writel(SYST_CON_EN | SYST_CON_IRQ_EN, SYST_CON_REG(to));
+
+With a sane hardware implementation the whole thing can be boiled down to:
+
+{
+	writel(ticks, SYST_VAL_REG(to));
+	writel(SYST_CON_EN | SYST_CON_IRQ_EN, SYST_CON_REG(to));
+}
+
+There is no need to do the whole reset thing, unless the hardware is
+broken. Either you manage to overwrite the timer in time or not. The extra
+work of writing the control register before that is a cosmetic 'makes me
+feel' good hack, which just makes the normal case slower. If you have an
+occasional spurious interrupt, fine, but you can get them anyway.
+
+Thanks,
+
+	tglx
