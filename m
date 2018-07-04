@@ -1,132 +1,144 @@
-From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH v5 2/2] dt-bindings: iio: dac: Add docs for AD5758 DAC
-Date: Wed, 4 Jul 2018 17:32:53 +0300
-Message-ID: <1530714773-18956-1-git-send-email-stefan.popa@analog.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH 2/3] dt-bindings: pinctrl: meson-g12a: document pin name
+Date: Wed, 4 Jul 2018 22:45:10 +0000
+Message-ID: <20180704224511.29350-3-yixun.lan@amlogic.com>
+References: <20180704224511.29350-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180704224511.29350-1-yixun.lan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, Michael.Hennerich@analog.com, lars@metafoo.de
-Cc: knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
+To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Cc: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh@kernel.org>, Xingyu Chen <xingyu.chen@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Document the pins for Amlogic's Meson-G12A SoC.
+
+Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 ---
-Changes in v5:
-	- used a dac@0 as a more generic node name instead of ad5758@0.
-Changes in v4:
-	- Nothing changed, just to follow the patch set version.
-Changes in v3:
-	- AD5758 can be both a current and voltage output DAC. The
-	  decision is made based on the DT and the channel type is set
-	  during probe.
-	- range was replaced by range-microvolt and range-microamp
-	- dc-dc-mode, range-microvolt and range-microamp are required
-	  properties.
-	- Introduced a slew-time-us property from which slew rate clock
-	  and slew rate step are calculated using a best match algorithm.
-	- Added units in the name of the properties.
-	- Offered more explanation for the various modes of operation.
+ include/dt-bindings/gpio/meson-g12a-gpio.h | 114 +++++++++++++++++++++
+ 1 file changed, 114 insertions(+)
+ create mode 100644 include/dt-bindings/gpio/meson-g12a-gpio.h
 
-Changes in v2:
-	- Nothing changed, just to follow the patch set version.
-
- .../devicetree/bindings/iio/dac/ad5758.txt         | 73 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 74 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5758.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/dac/ad5758.txt b/Documentation/devicetree/bindings/iio/dac/ad5758.txt
+diff --git a/include/dt-bindings/gpio/meson-g12a-gpio.h b/include/dt-bindings/gpio/meson-g12a-gpio.h
 new file mode 100644
-index 0000000..90bc496
+index 000000000000..f7bd69350d18
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/ad5758.txt
-@@ -0,0 +1,73 @@
-+Analog Devices AD5758 DAC device driver
++++ b/include/dt-bindings/gpio/meson-g12a-gpio.h
+@@ -0,0 +1,114 @@
++/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
++/*
++ * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
++ * Author: Xingyu Chen <xingyu.chen@amlogic.com>
++ */
 +
-+Required properties for the AD5758:
-+	- compatible: Must be "adi,ad5758"
-+	- reg: SPI chip select number for the device
-+	- spi-max-frequency: Max SPI frequency to use (< 50000000)
-+	- spi-cpha: is the only mode that is supported
++#ifndef _DT_BINDINGS_MESON_G12A_GPIO_H
++#define _DT_BINDINGS_MESON_G12A_GPIO_H
 +
-+Required properties:
++/* First GPIO chip */
++#define GPIOAO_0	0
++#define GPIOAO_1	1
++#define GPIOAO_2	2
++#define GPIOAO_3	3
++#define GPIOAO_4	4
++#define GPIOAO_5	5
++#define GPIOAO_6	6
++#define GPIOAO_7	7
++#define GPIOAO_8	8
++#define GPIOAO_9	9
++#define GPIOAO_10	10
++#define GPIOAO_11	11
++#define GPIOE_0		12
++#define GPIOE_1		13
++#define GPIOE_2		14
 +
-+ - adi,dc-dc-mode: Mode of operation of the dc-to-dc converter
-+ 		   Dynamic Power Control (DPC)
-+		   In this mode, the AD5758 circuitry senses the output voltage and
-+		   dynamically regulates the supply voltage, VDPC+, to meet compliance
-+		   requirements plus an optimized headroom voltage for the output buffer.
++/* Second GPIO chip */
++#define GPIOZ_0		0
++#define GPIOZ_1		1
++#define GPIOZ_2		2
++#define GPIOZ_3		3
++#define GPIOZ_4		4
++#define GPIOZ_5		5
++#define GPIOZ_6		6
++#define GPIOZ_7		7
++#define GPIOZ_8		8
++#define GPIOZ_9		9
++#define GPIOZ_10	10
++#define GPIOZ_11	11
++#define GPIOZ_12	12
++#define GPIOZ_13	13
++#define GPIOZ_14	14
++#define GPIOZ_15	15
++#define GPIOH_0		16
++#define GPIOH_1		17
++#define GPIOH_2		18
++#define GPIOH_3		19
++#define GPIOH_4		20
++#define GPIOH_5		21
++#define GPIOH_6		22
++#define GPIOH_7		23
++#define GPIOH_8		24
++#define BOOT_0		25
++#define BOOT_1		26
++#define BOOT_2		27
++#define BOOT_3		28
++#define BOOT_4		29
++#define BOOT_5		30
++#define BOOT_6		31
++#define BOOT_7		32
++#define BOOT_8		33
++#define BOOT_9		34
++#define BOOT_10		35
++#define BOOT_11		36
++#define BOOT_12		37
++#define BOOT_13		38
++#define BOOT_14		39
++#define BOOT_15		40
++#define GPIOC_0		41
++#define GPIOC_1		42
++#define GPIOC_2		43
++#define GPIOC_3		44
++#define GPIOC_4		45
++#define GPIOC_5		46
++#define GPIOC_6		47
++#define GPIOC_7		48
++#define GPIOA_0		49
++#define GPIOA_1		50
++#define GPIOA_2		51
++#define GPIOA_3		52
++#define GPIOA_4		53
++#define GPIOA_5		54
++#define GPIOA_6		55
++#define GPIOA_7		56
++#define GPIOA_8		57
++#define GPIOA_9		58
++#define GPIOA_10	59
++#define GPIOA_11	60
++#define GPIOA_12	61
++#define GPIOA_13	62
++#define GPIOA_14	63
++#define GPIOA_15	64
++#define GPIOX_0		65
++#define GPIOX_1		66
++#define GPIOX_2		67
++#define GPIOX_3		68
++#define GPIOX_4		69
++#define GPIOX_5		70
++#define GPIOX_6		71
++#define GPIOX_7		72
++#define GPIOX_8		73
++#define GPIOX_9		74
++#define GPIOX_10	75
++#define GPIOX_11	76
++#define GPIOX_12	77
++#define GPIOX_13	78
++#define GPIOX_14	79
++#define GPIOX_15	80
++#define GPIOX_16	81
++#define GPIOX_17	82
++#define GPIOX_18	83
++#define GPIOX_19	84
 +
-+		   Programmable Power Control (PPC)
-+		   In this mode, the VDPC+ voltage is user-programmable to a fixed level
-+		   that needs to accommodate the maximum output load required.
-+
-+		   The output of the DAC core is either converted to a current or voltage
-+		   output at the VIOUT pin. Only one mode can be enabled at any one time.
-+
-+		   The following values are currently supported:
-+			* 1: DPC current mode
-+			* 2: DPC voltage mode
-+			* 3: PPC current mode
-+
-+ Depending on the selected output mode (voltage or current) one of the two properties must
-+ be present:
-+
-+ - adi,range-microvolt: Voltage output range
-+ 		The array of voltage output ranges must contain two fields:
-+	      	* <0 5000000>: 0 V to 5 V voltage range
-+		* <0 10000000>: 0 V to 10 V voltage range
-+		* <(-5000000) 5000000>: ±5 V voltage range
-+		* <(-10000000) 10000000>: ±10 V voltage range
-+ - adi,range-microamp: Current output range
-+ 		The array of current output ranges must contain two fields:
-+		* <0 20000>: 0 mA to 20 mA current range
-+		* <0 24000>: 0 mA to 24 mA current range
-+		* <4 24000>: 4 mA to 20 mA current range
-+		* <(-20000) 20000>: ±20 mA current range
-+		* <(-24000) 24000>: ±24 mA current range
-+		* <(-1000) 22000>: −1 mA to +22 mA current range
-+
-+Optional properties:
-+
-+ - adi,dc-dc-ilim-microamp: The dc-to-dc converter current limit
-+		   The following values are currently supported [uA]:
-+		   	* 150000
-+			* 200000
-+			* 250000
-+			* 300000
-+			* 350000
-+			* 400000
-+
-+ - adi,slew-time-us: The time it takes for the output to reach the full scale [uS]
-+ 		     The supported range is between 133us up to 1023984375us
-+
-+AD5758 Example:
-+
-+	dac@0 {
-+		compatible = "adi,ad5758";
-+		reg = <0>;
-+		spi-max-frequency = <1000000>;
-+		spi-cpha;
-+
-+		adi,dc-dc-mode = <2>;
-+		adi,range-microvolt = <0 10000000>;
-+		adi,dc-dc-ilim-microamp = <200000>;
-+		adi,slew-time-us = <125000>;
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 12d102d..60b1028 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -802,6 +802,7 @@ L:	linux-iio@vger.kernel.org
- W:	http://ez.analog.com/community/linux-device-drivers
- S:	Supported
- F:	drivers/iio/dac/ad5758.c
-+F:	Documentation/devicetree/bindings/iio/dac/ad5758.txt
- 
- ANALOG DEVICES INC AD5686 DRIVER
- M:	Stefan Popa <stefan.popa@analog.com>
++#endif /* _DT_BINDINGS_MESON_G12A_GPIO_H */
 -- 
-2.7.4
+2.18.0
