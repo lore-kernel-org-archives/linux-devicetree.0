@@ -1,65 +1,408 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH v1] ARM: dts: imx6sl-evk: keep sw4 always on
-Date: Wed, 4 Jul 2018 08:56:06 +0200
-Message-ID: <20180704085606.78bb104b@karo-electronics.de>
-References: <CAOMZO5BjOEGWv2dC-bp0BYHq+PhLssEKic+o7ock8_1Dobd=sQ@mail.gmail.com>
- <AM3PR04MB131507901BFEE1A5E426EECBF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5D8tjnjbwMdLGd7KF7_4PwqRWX8XH8kdcF3-5e-r2YQEA@mail.gmail.com>
- <AM3PR04MB1315E7AED2BCE2265E6C443DF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5D8v4KM9S4ooHTDbA+vc8BZN_eO_wDuOPA+8Hcq-SmLDw@mail.gmail.com>
- <AM3PR04MB1315C7C7CFF990615732FFBCF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5AM5VRS7UiWuvAQ8vvTB8OM+iwofuYrbsL_yB9e0Z9Kyg@mail.gmail.com>
- <AM3PR04MB13155B8D567ABEF7EF03249AF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5BdtxKjQge5ONpnjr1yNVeTJf4u8Gh-fPqpHz7G9ipOTg@mail.gmail.com>
- <1530526335.15665.13.camel@nxp.com> <20180703053843.GC4348@dragon>
- <AM3PR04MB131542D42FCD798FDBBA54BFF5420@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <CAOMZO5BY99f5jjU+73=8WjqwBKr_q2S1mvx90URZUBkgOVn9YA@mail.gmail.com>
- <1530697336.15665.43.camel@nxp.com>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: Re: [RFC PATCH 3/4] misc: Add bmc-misc-ctrl
+Date: Wed, 04 Jul 2018 16:48:58 +0930
+Message-ID: <1530688738.3910192.1429467464.5C781D10@webmail.messagingengine.com>
+References: <20180703070413.28756-1-andrew@aj.id.au>
+ <20180703070413.28756-4-andrew@aj.id.au>
+ <20180703075424.GC27649@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1530697336.15665.43.camel@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Gong <yibin.gong@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anson Huang <anson.huang@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180703075424.GC27649@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, Eugene.Cho@dell.com, a.amelkin@yadro.com, stewart@linux.ibm.com, benh@kernel.crashing.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBXZWQsIDQgSnVsIDIwMTggMDE6NDI6NTQgKzAwMDAgUm9iaW4gR29uZyB3cm90ZToK
-PiBPbiDkuowsIDIwMTgtMDctMDMgYXQgMDg6MTAgLTAzMDAsIEZhYmlvIEVzdGV2YW0gd3JvdGU6
-Cj4gPiBIaSBBbnNvbiwKPiA+IAo+ID4gT24gVHVlLCBKdWwgMywgMjAxOCBhdCA0OjQ0IEFNLCBB
-bnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4KPiA+IHdyb3RlOgo+ID4gCj4gPiA+IAo+
-ID4gPiBJdCBpcyBOT1QgZWFzeSB0byBpZGVudGlmeSB3aGljaCBzd2l0Y2ggaXMgY3JpdGljYWwg
-b3IgTk9ULCBhbmQKPiA+ID4gZGlmZmVyZW50IHBsYXRmb3Jtcwo+ID4gPiBoYXZlIGRpZmZlcmVu
-dCBib2FyZCBkZXNpZ24sIGl0IHdpbGwgaW50cm9kdWNlIG1hbnkgcGxhdGZvcm0KPiA+ID4gc3Bl
-Y2lmaWVkIGNvZGUsIHNvIEkgdGhpbmsKPiA+ID4ganVzdCByZXZlcnQgdGhlIHBmdXplMTAwIHN3
-aXRjaCBlbmFibGUvZGlzYWJsZSBwYXRjaCBzaG91bGQgYmUgT0sKPiA+ID4gZm9yIG5vdy4KPiA+
-IEkgaGF2ZSBzZW50IHRoZSBwZnV6ZTEwMCByZWd1bGF0b3IgcGF0Y2ggcmV2ZXJ0IGFuZCBpdCBp
-cyBsaW51eC1uZXh0Cj4gPiBub3cuIFNob3VsZCBwcm9iYWJseSByZWFjaCA0LjE4LXJjNC4KPiA+
-IAo+ID4gPiAKPiA+ID4gQWZ0ZXIgYSBjb3VwbGUgb2YgcmVsZWFzZSBjeWNsZXMsIGFkZCB0aGUg
-cGZ1emUxMDAgc3dpdGNoCj4gPiA+IGVuYWJsZS9kaXNhYmxlIHBhdGNoCj4gPiA+IGJhY2sgdG8g
-c3VwcG9ydCB0aGlzIGZlYXR1cmUsIEkgYmVsaWV2ZSB1c2VycyBzaG91bGQgc3dpdGNoIHRvIG5l
-dwo+ID4gPiBkdGIgd2l0aCAicmVndWxhdG9yLWFsd2F5cy1vbiIKPiA+ID4gZXhpc3RpbmcgYWxy
-ZWFkeS4KPiA+IFRoYXQgd2lsbCBzdGlsbCBicmVhayBvbGQgZHRiIGNvbXBhdGliaWxpdHkuCj4g
-PiAKPiA+IFlvdSBjYW5ub3QgZm9yY2UgdXNlcnMgdG8gdXNlICJyZWd1bGF0b3ItYWx3YXlzLW9u
-IiBhbmQgdGhlIG9sZCBkdGJzCj4gPiBuZWVkIHRvIGFsd2F5cyB3b3JrLgo+ID4gCj4gPiBTbyB3
-aGF0ZXZlciBuZXcgZmVhdHVyZSB5b3UgbmVlZCB0byBpbnRyb2R1Y2UgaXQgbmVlZHMgdG8gYmUg
-ZG9uZSBpbgo+ID4gc3VjaCBhIHdheSB0aGF0IHRoZSBleGlzdGluZyBkdGIncyB3aWxsIGNvbnRp
-bnVlIHdvcmtpbmcuCj4gQnV0IGFjdHVhbGx5IGV4aXN0aW5nIGR0YiBpcyBub3QgcmlnaHQgc2lu
-Y2UgdGhlIGNyaXRpY2FsIHBvd2VyIHJhaWwKPiBtaXNzaW5nICdyZWd1bGF0b3ItYWx3YXlzLW9u
-Jy4gSXQncyBhIGZpeCBwYXRjaCBmb3IgZHRzLCBub3QgcmVsYXRlZAo+IHdpdGggZm9sbG93aW5n
-IGR0Yi9rZXJuZWwgYnJlYWsgcnVsZXMsIGp1c3QgYSBzaW1wbGUgZHRzIHBhdGNoLiBXaHkKPiBz
-aG91bGQgd2UgbWFrZSBwcm9taXNlIGZvciB0aGUgd3JvbmcgZHRicz8KPgpCZWNhdXNlIHRoZXkg
-YXJlIGxpdmluZyBpbiB0aGUgb3V0c2lkZSB3b3JsZCBvbiByZWFsIGRldmljZXMuCgoKTG90aGFy
-IFdhw59tYW5uCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
-aW51eC1hcm0ta2VybmVsCg==
+On Tue, 3 Jul 2018, at 17:24, Greg KH wrote:
+> On Tue, Jul 03, 2018 at 05:04:12PM +1000, Andrew Jeffery wrote:
+> > bmc-misc-ctrl is used to expose miscellaneous Baseboard
+> > Management Controller (BMC) hardware features described in the devicetree
+> > to userspace.
+> > 
+> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > ---
+> >  MAINTAINERS                  |   1 +
+> >  drivers/misc/Kconfig         |   8 +
+> >  drivers/misc/Makefile        |   1 +
+> >  drivers/misc/bmc-misc-ctrl.c | 363 +++++++++++++++++++++++++++++++++++
+> >  4 files changed, 373 insertions(+)
+> >  create mode 100644 drivers/misc/bmc-misc-ctrl.c
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 9766d7832d8b..30d39440b6f2 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -2741,6 +2741,7 @@ R:	Andrew Jeffery <andrew@aj.id.au>
+> >  L:	openbmc@lists.ozlabs.org (moderated for non-subscribers)
+> >  S:	Supported
+> >  F:	Documentation/devicetree/bindings/misc/bmc-misc-ctrl.txt
+> > +F:	drivers/misc/bmc-misc-ctrl.c
+> >  
+> >  BPF (Safe dynamic programs and tools)
+> >  M:	Alexei Starovoitov <ast@kernel.org>
+> > diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> > index 3726eacdf65d..f46bc8208b50 100644
+> > --- a/drivers/misc/Kconfig
+> > +++ b/drivers/misc/Kconfig
+> > @@ -513,6 +513,14 @@ config MISC_RTSX
+> >  	tristate
+> >  	default MISC_RTSX_PCI || MISC_RTSX_USB
+> >  
+> > +config BMC_MISC_CTRL
+> > +	tristate "Miscellaneous BMC Control Interfaces"
+> > +	depends on REGMAP && MFD_SYSCON
+> > +	help
+> > +	  Say yes to expose scratch registers used to communicate between the
+> > +	  host and BMC along with other miscellaneous control interfaces
+> > +	  provided by BMC SoCs
+> > +
+> >  source "drivers/misc/c2port/Kconfig"
+> >  source "drivers/misc/eeprom/Kconfig"
+> >  source "drivers/misc/cb710/Kconfig"
+> > diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> > index af22bbc3d00c..4fb2fac7a486 100644
+> > --- a/drivers/misc/Makefile
+> > +++ b/drivers/misc/Makefile
+> > @@ -58,3 +58,4 @@ obj-$(CONFIG_ASPEED_LPC_SNOOP)	+= aspeed-lpc-snoop.o
+> >  obj-$(CONFIG_PCI_ENDPOINT_TEST)	+= pci_endpoint_test.o
+> >  obj-$(CONFIG_OCXL)		+= ocxl/
+> >  obj-$(CONFIG_MISC_RTSX)		+= cardreader/
+> > +obj-$(CONFIG_BMC_MISC_CTRL)     += bmc-misc-ctrl.o
+> > diff --git a/drivers/misc/bmc-misc-ctrl.c b/drivers/misc/bmc-misc-ctrl.c
+> > new file mode 100644
+> > index 000000000000..ff907029163f
+> > --- /dev/null
+> > +++ b/drivers/misc/bmc-misc-ctrl.c
+> > @@ -0,0 +1,363 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +// Copyright 2018 IBM Corp.
+> > +
+> > +#include <linux/bitops.h>
+> > +#include <linux/device.h>
+> > +#include <linux/kobject.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> > +
+> > +struct bmc_ctrl {
+> > +	struct device *dev;
+> > +	struct regmap *map;
+> > +	bool ro;
+> > +	u32 shift;
+> > +	u32 mask;
+> > +	struct kobj_attribute mask_attr;
+> > +	const char *label;
+> > +	struct kobj_attribute label_attr;
+> > +	union {
+> > +		struct {
+> > +			u32 value;
+> > +			struct kobj_attribute value_attr;
+> > +		};
+> > +		struct {
+> > +			u32 read;
+> > +			u32 set;
+> > +			u32 clear;
+> > +			struct kobj_attribute read_attr;
+> > +			struct kobj_attribute set_attr;
+> > +			struct kobj_attribute clear_attr;
+> > +		};
+> 
+> What is this crazy union for?  Why are you messing around with "raw"
+> kobject attributes?  This is a device, you should never have to mess
+> with sysfs calls or kobject calls or structures directly.  If you do,
+> that's a huge hint something is wrong here.
+> 
+> 
+> > +	};
+> > +};
+> > +
+> > +static ssize_t bmc_misc_rmw_show(struct kobject *kobj,
+> > +					struct kobj_attribute *attr, char *buf)
+> > +{
+> > +	struct bmc_ctrl *ctrl;
+> > +	unsigned int val;
+> > +	int rc;
+> > +
+> > +	ctrl = container_of(attr, struct bmc_ctrl, value_attr);
+> > +	rc = regmap_read(ctrl->map, ctrl->value, &val);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	val = (val & ctrl->mask) >> ctrl->shift;
+> > +
+> > +	return sprintf(buf, "%u\n", val);
+> > +}
+> > +
+> > +static ssize_t bmc_misc_rmw_store(struct kobject *kobj,
+> > +					 struct kobj_attribute *attr,
+> > +					 const char *buf, size_t count)
+> > +{
+> > +	struct bmc_ctrl *ctrl;
+> > +	long val;
+> > +	int rc;
+> > +
+> > +	rc = kstrtol(buf, 0, &val);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	ctrl = container_of(attr, struct bmc_ctrl, value_attr);
+> > +	val <<= ctrl->shift;
+> > +	if (val & ~ctrl->mask)
+> > +		return -EINVAL;
+> > +	rc = regmap_update_bits(ctrl->map, ctrl->value, ctrl->mask, val);
+> > +
+> > +	return rc < 0 ? rc : count;
+> > +}
+> > +
+> > +static void bmc_misc_add_rmw_attrs(struct bmc_ctrl *ctrl,
+> > +				   struct attribute *attrs[6])
+> > +{
+> > +	sysfs_attr_init(&ctrl->attr.attr);
+> > +	ctrl->value_attr.attr.name = "value";
+> > +	ctrl->value_attr.attr.mode = 0664;
+> > +	ctrl->value_attr.show = bmc_misc_rmw_show;
+> > +	ctrl->value_attr.store = bmc_misc_rmw_store;
+> > +	attrs[2] = &ctrl->value_attr.attr;
+> > +	attrs[3] = NULL;
+> 
+> You aren't "adding" any attributes here, you are only setting them up
+> (in an odd way, see below...)
+> 
+> > +}
+> > +
+> > +static int bmc_misc_init_rmw(struct bmc_ctrl *ctrl, struct device_node *node,
+> > +			     struct attribute *attrs[6])
+> 
+> That's an oddly-hard-coded array size for no good reason :(
+> 
+> 
+> > +{
+> > +	u32 val;
+> > +	int rc;
+> > +
+> > +	rc = of_property_read_u32(node, "offset", &ctrl->value);
+> > +	if (rc < 0)
+> > +		return rc;
+> > +
+> > +	if (!of_property_read_u32(node, "default-value", &val)) {
+> > +		val <<= ctrl->shift;
+> > +		if (val & ~ctrl->mask)
+> > +			return -EINVAL;
+> > +		val &= ctrl->mask;
+> > +		regmap_update_bits(ctrl->map, ctrl->value, ctrl->mask, val);
+> > +	}
+> > +
+> > +	bmc_misc_add_rmw_attrs(ctrl, attrs);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static ssize_t bmc_misc_sc_read_show(struct kobject *kobj,
+> > +					struct kobj_attribute *attr, char *buf)
+> > +{
+> > +	struct bmc_ctrl *ctrl;
+> > +	unsigned int val;
+> > +	int rc;
+> > +
+> > +	ctrl = container_of(attr, struct bmc_ctrl, read_attr);
+> > +	rc = regmap_read(ctrl->map, ctrl->read, &val);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	val = (val & ctrl->mask) >> ctrl->shift;
+> > +
+> > +	return sprintf(buf, "%u\n", val);
+> > +
+> > +}
+> > +
+> > +static ssize_t bmc_misc_sc_set_store(struct kobject *kobj,
+> > +					    struct kobj_attribute *attr,
+> > +					    const char *buf, size_t count)
+> > +{
+> > +	struct bmc_ctrl *ctrl;
+> > +	long val;
+> > +	int rc;
+> > +
+> > +	rc = kstrtol(buf, 0, &val);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	ctrl = container_of(attr, struct bmc_ctrl, set_attr);
+> > +	val <<= ctrl->shift;
+> > +	if (val & ~ctrl->mask)
+> > +		return -EINVAL;
+> > +	val &= ctrl->mask;
+> > +	rc = regmap_write(ctrl->map, ctrl->set, val);
+> > +
+> > +	return rc < 0 ? rc : count;
+> > +}
+> > +
+> > +static ssize_t bmc_misc_sc_clear_store(struct kobject *kobj,
+> > +					      struct kobj_attribute *attr,
+> > +					      const char *buf, size_t count)
+> > +{
+> > +	struct bmc_ctrl *ctrl;
+> > +	long val;
+> > +	int rc;
+> > +
+> > +	rc = kstrtol(buf, 0, &val);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	ctrl = container_of(attr, struct bmc_ctrl, clear_attr);
+> > +	val <<= ctrl->shift;
+> > +	if (val & ~ctrl->mask)
+> > +		return -EINVAL;
+> > +	val &= ctrl->mask;
+> > +	rc = regmap_write(ctrl->map, ctrl->clear, val);
+> > +
+> > +	return rc < 0 ? rc : count;
+> > +}
+> > +
+> > +static void bmc_misc_add_sc_attrs(struct bmc_ctrl *ctrl,
+> > +				  struct attribute *attrs[6])
+> > +{
+> > +	sysfs_attr_init(&ctrl->read_attr.attr);
+> > +	ctrl->read_attr.attr.name = "value";
+> > +	ctrl->read_attr.attr.mode = 0444;
+> > +	ctrl->read_attr.show = bmc_misc_sc_read_show;
+> > +	attrs[2] = &ctrl->read_attr.attr;
+> > +
+> > +	sysfs_attr_init(&ctrl->set_attr.attr);
+> > +	ctrl->set_attr.attr.name = "set";
+> > +	ctrl->set_attr.attr.mode = 0200;
+> > +	ctrl->set_attr.store = bmc_misc_sc_set_store;
+> > +	attrs[3] = &ctrl->set_attr.attr;
+> > +
+> > +	sysfs_attr_init(&ctrl->clear_attr.attr);
+> > +	ctrl->clear_attr.attr.name = "clear";
+> > +	ctrl->clear_attr.attr.mode = 0200;
+> > +	ctrl->clear_attr.store = bmc_misc_sc_clear_store;
+> > +	attrs[4] = &ctrl->clear_attr.attr;
+> > +
+> > +	attrs[5] = NULL;
+> > +}
+> > +
+> > +static int bmc_misc_init_sc(struct bmc_ctrl *ctrl, struct device_node *node,
+> > +			    struct attribute *attrs[6])
+> > +{
+> > +	int rc;
+> > +
+> > +	rc = of_property_read_u32_array(node, "offset", &ctrl->read, 3);
+> > +	if (rc < 0)
+> > +		return rc;
+> > +
+> > +	if (of_property_read_bool(node, "default-set"))
+> > +		regmap_write(ctrl->map, ctrl->set, ctrl->mask);
+> > +	else if (of_property_read_bool(node, "default-clear"))
+> > +		regmap_write(ctrl->map, ctrl->clear, ctrl->mask);
+> > +
+> > +	bmc_misc_add_sc_attrs(ctrl, attrs);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static ssize_t bmc_misc_label_show(struct kobject *kobj,
+> > +				   struct kobj_attribute *attr, char *buf)
+> > +{
+> > +	struct bmc_ctrl *ctrl = container_of(attr, struct bmc_ctrl, label_attr);
+> > +
+> > +	return sprintf(buf, "%s\n", ctrl->label);
+> > +}
+> > +
+> > +static ssize_t bmc_misc_mask_show(struct kobject *kobj,
+> > +				   struct kobj_attribute *attr, char *buf)
+> > +{
+> > +	struct bmc_ctrl *ctrl = container_of(attr, struct bmc_ctrl, mask_attr);
+> > +
+> > +	return sprintf(buf, "0x%x\n", ctrl->mask >> ctrl->shift);
+> > +}
+> > +
+> > +static int bmc_misc_init_dt(struct bmc_ctrl *ctrl, struct device_node *node,
+> > +			    struct attribute *attrs[6])
+> > +{
+> > +	int rc;
+> > +
+> > +	/* Example children:
+> > +	 *
+> > +	 * field@80.6 {
+> > +	 *      compatible = "bmc-misc-control";
+> > +	 *      reg = <0x80>;
+> > +	 *      bit-mask = <0x1>;
+> > +	 *      bit-shift = <6>;
+> > +	 *      label = "ilpc2ahb-disable";
+> > +	 * };
+> > +	 *
+> > +	 * field@70.6 {
+> > +	 *      compatible = "bmc-misc-control";
+> > +	 *      // Write-1-set/Write-1-clear semantics
+> > +	 *      set-clear;
+> > +	 *      default-set;
+> > +	 *      reg = <0x70 0x70 0x7c>
+> > +	 *      bit-mask = <0x1>;
+> > +	 *      bit-shift = <6>;
+> > +	 *      label = "lpc-sio-decode-disable";
+> > +	 * };
+> > +	 *
+> > +	 * field@50.0 {
+> > +	 *	compatible = "bmc-misc-control";
+> > +	 *	read-only;
+> > +	 *	reg = <0x50>;
+> > +	 *	bit-mask = <0xffffffff>;
+> > +	 *	bit-shift = <0>;
+> > +	 *	label = "vga-scratch-1";
+> > +	 * };
+> > +	 */
+> > +	rc = of_property_read_u32(node, "mask", &ctrl->mask);
+> > +	if (rc < 0)
+> > +		return rc;
+> > +
+> > +	ctrl->shift = __ffs(ctrl->mask);
+> > +	ctrl->ro = of_property_read_bool(node, "read-only");
+> > +
+> > +	rc = of_property_read_string(node, "label", &ctrl->label);
+> > +	if (rc < 0)
+> > +		return rc;
+> > +
+> > +	ctrl->label_attr.attr.name = "label";
+> > +	ctrl->label_attr.attr.mode = 0444;
+> > +	ctrl->label_attr.show = bmc_misc_label_show;
+> > +	attrs[0] = &ctrl->label_attr.attr;
+> 
+> This works?  You normally have to manually initialize a dynamic
+> attribute.  Why are you doing it this way and not using an attribute
+> group?
+> 
+> > +	ctrl->mask_attr.attr.name = "mask";
+> > +	ctrl->mask_attr.attr.mode = 0444;
+> > +	ctrl->mask_attr.show = bmc_misc_mask_show;
+> > +	attrs[1] = &ctrl->mask_attr.attr;
+> > +
+> > +	if (of_property_read_bool(node, "set-clear"))
+> > +		return bmc_misc_init_sc(ctrl, node, attrs);
+> > +
+> > +	return bmc_misc_init_rmw(ctrl, node, attrs);
+> > +}
+> > +
+> > +static struct class bmc_class = {
+> > +	.name =		"bmc",
+> > +};
+> 
+> Why are you using a custom device class for a single device?
+> 
+> you need to document the heck out of this in the changelog to help
+> explain all of these odd design decisions.
+
+It got a bit perverse from attempting to separate the devicetree handling from everything else. I'll fix the issues you've pointed out and rework the sysfs/kobj stuff.
+
+However, the patch (and the series) was intended as a straw man. I should have put more effort in to avoid some of the distraction (sorry), but I was also hoping to get feedback on the general approach (so devicetree design and how to expose the bits to userspace in a useful manner).
+
+Regarding the class, yeah, it's probably not the right choice and I'm not going to double down on it, but it collates the fields in an easy to discover location. Not doing something like this means a lot of grubbing around in /sys/device. Is there a better approach?
+
+Thanks for the feedback so far.
+
+Andrew
