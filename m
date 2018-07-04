@@ -1,175 +1,86 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v5 04/12] PM / devfreq: Add struct devfreq_policy
-Date: Wed, 04 Jul 2018 11:51:30 +0900
-Message-ID: <5B3C3632.1010706@samsung.com>
-References: <20180703234705.227473-1-mka@chromium.org>
-        <CGME20180703235030epcas4p423e7bf876628913adb3e41ffdc8ba3cd@epcas4p4.samsung.com>
-        <20180703234705.227473-5-mka@chromium.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH v3 15/24] dt-bindings: display:
+ sun4i-drm: Add description of A64 HDMI PHY
+Date: Wed, 4 Jul 2018 12:05:43 +0800
+Message-ID: <CAGb2v65RUiEFSKe9YO8=bROmtozHKRN4s76QHpY+38PJPLaG7w@mail.gmail.com>
+References: <20180625120304.7543-1-jernej.skrabec@siol.net>
+ <1669385.k4L9lni8DF@jernej-laptop> <CAGb2v67iRZZTQuTH8inwmPC6S0BRecFgPEpKrxgThQbsYaZgmQ@mail.gmail.com>
+ <1814959.07NGAI1aoU@jernej-laptop>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180703234705.227473-5-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>, MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBLUP6HMQKGQEAUQ2IJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1814959.07NGAI1aoU@jernej-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sat, Jun 30, 2018 at 3:32 AM, Jernej =C5=A0krabec <jernej.skrabec@siol.n=
+et> wrote:
+> Dne =C4=8Detrtek, 28. junij 2018 ob 09:00:32 CEST je Chen-Yu Tsai napisal=
+(a):
+>> On Thu, Jun 28, 2018 at 12:51 PM, Jernej =C5=A0krabec
+>>
+>> <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
+>> > Dne =C4=8Detrtek, 28. junij 2018 ob 04:19:55 CEST je Chen-Yu Tsai napi=
+sal(a):
+>> >> On Mon, Jun 25, 2018 at 8:02 PM, Jernej Skrabec <jernej.skrabec@siol.=
+net>
+>> >
+>> > wrote:
+>> >> > A64 HDMI PHY is similar to H3 HDMI PHY except it has two possible P=
+LL
+>> >> > clock parents. It is compatible to other HDMI PHYs, like that found=
+ in
+>> >> > R40.
+>> >> >
+>> >> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> >> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+>> >> > ---
+>> >> >
+>> >> >  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 4 =
++++-
+>> >> >  1 file changed, 3 insertions(+), 1 deletion(-)
+>> >> >
+>> >> > diff --git
+>> >> > a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+>> >> > b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt ind=
+ex
+>> >> > 84fe38dbb900..dc83f21ef188 100644
+>> >> > --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+>> >> > +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+>> >> > @@ -101,6 +101,7 @@ DWC HDMI PHY
+>> >> >
+>> >> >  Required properties:
+>> >> >    - compatible: value must be one of:
+>> >> > +    * allwinner,sun50i-a64-hdmi-phy
+>> >> >
+>> >> >      * allwinner,sun8i-a83t-hdmi-phy
+>> >> >      * allwinner,sun8i-h3-hdmi-phy
+>> >>
+>> >> Nit: the list is sorted by family first, then SoC name, so it should
+>> >> be the last on the list.
+>> >
+>> > I went alphabetically, since "5" is before "8"...
+>>
+>> I see. I think version sort applies here, given that sun50i is newer
+>> than sun8i.
+>
+> Should I make a patch for that?
 
-On 2018년 07월 04일 08:46, Matthias Kaehlcke wrote:
-> Move variables related with devfreq policy changes from struct devfreq
-> to the new struct devfreq_policy and add a policy field to struct devfreq.
-> 
-> The following variables are moved:
-> 
-> df->min/max_freq           =>   p->user.min/max_freq
-> df->scaling_min/max_freq   =>   p->devinfo.min/max_freq
-> df->governor               =>   p->governor
-> df->governor_name          =>   p->governor_name
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
-> ---
-> Changes in v5:
-> - none
-> 
-> Changes in v4:
-> - added 'Reviewed-by: Brian Norris <briannorris@chromium.org>' tag
-> 
-> Changes in v3:
-> - none
-> 
-> Changes in v2:
-> - performance, powersave and simpleondemand governors don't need changes
->   with "PM / devfreq: Don't adjust to user limits in governors"
-> - formatting fixes
-> ---
->  drivers/devfreq/devfreq.c          | 137 ++++++++++++++++-------------
->  drivers/devfreq/governor_passive.c |   4 +-
->  include/linux/devfreq.h            |  38 +++++---
->  3 files changed, 103 insertions(+), 76 deletions(-)
-> 
+Yes, please.
 
-(skip)
-
->  
-> diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
-> index 3bc29acbd54e..e0987c749ec2 100644
-> --- a/drivers/devfreq/governor_passive.c
-> +++ b/drivers/devfreq/governor_passive.c
-> @@ -99,12 +99,12 @@ static int update_devfreq_passive(struct devfreq *devfreq, unsigned long freq)
->  {
->  	int ret;
->  
-> -	if (!devfreq->governor)
-> +	if (!devfreq->policy.governor)
->  		return -EINVAL;
->  
->  	mutex_lock_nested(&devfreq->lock, SINGLE_DEPTH_NESTING);
->  
-> -	ret = devfreq->governor->get_target_freq(devfreq, &freq);
-> +	ret = devfreq->policy.governor->get_target_freq(devfreq, &freq);
->  	if (ret < 0)
->  		goto out;
->  
-> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
-> index 3aae5b3af87c..9bf23b976f4d 100644
-> --- a/include/linux/devfreq.h
-> +++ b/include/linux/devfreq.h
-> @@ -109,6 +109,30 @@ struct devfreq_dev_profile {
->  	unsigned int max_state;
->  };
->  
-> +/**
-> + * struct devfreq_freq_limits - Devfreq frequency limits
-> + * @min_freq:	minimum frequency
-> + * @max_freq:	maximum frequency
-> + */
-> +struct devfreq_freq_limits {
-> +	unsigned long min_freq;
-> +	unsigned long max_freq;
-> +};
-> +
-> +/**
-> + * struct devfreq_policy - Devfreq policy
-> + * @user:	frequency limits requested by the user
-> + * @devinfo:	frequency limits of the device (available OPPs)
-> + * @governor:	method how to choose frequency based on the usage.
-
-nitpick. remove '.' on the end of line.
-
-> + * @governor_name:	devfreq governor name for use with this devfreq
-> + */
-> +struct devfreq_policy {
-> +	struct devfreq_freq_limits user;
-> +	struct devfreq_freq_limits devinfo;
-> +	const struct devfreq_governor *governor;
-> +	char governor_name[DEVFREQ_NAME_LEN];
-> +};
-> +
->  /**
->   * struct devfreq - Device devfreq structure
->   * @node:	list node - contains the devices with devfreq that have been
-> @@ -117,8 +141,6 @@ struct devfreq_dev_profile {
->   * @dev:	device registered by devfreq class. dev.parent is the device
->   *		using devfreq.
->   * @profile:	device-specific devfreq profile
-> - * @governor:	method how to choose frequency based on the usage.
-> - * @governor_name:	devfreq governor name for use with this devfreq
->   * @nb:		notifier block used to notify devfreq object that it should
->   *		reevaluate operable frequencies. Devfreq users may use
->   *		devfreq.nb to the corresponding register notifier call chain.
-> @@ -126,10 +148,7 @@ struct devfreq_dev_profile {
->   * @previous_freq:	previously configured frequency value.
->   * @data:	Private data of the governor. The devfreq framework does not
->   *		touch this.
-> - * @min_freq:	Limit minimum frequency requested by user (0: none)
-> - * @max_freq:	Limit maximum frequency requested by user (0: none)
-> - * @scaling_min_freq:	Limit minimum frequency requested by OPP interface
-> - * @scaling_max_freq:	Limit maximum frequency requested by OPP interface
-> + * @policy:		Policy for frequency adjustments
-
-The devfreq_policy contains the range of frequency and governor information.
-But, this description focus on the frequency. You need to explain the more
-correct description of 'policy'.
-
->   * @stop_polling:	 devfreq polling status of a device.
->   * @total_trans:	Number of devfreq transitions
->   * @trans_table:	Statistics of devfreq transitions
-> @@ -151,8 +170,6 @@ struct devfreq {
->  	struct mutex lock;
->  	struct device dev;
->  	struct devfreq_dev_profile *profile;
-> -	const struct devfreq_governor *governor;
-> -	char governor_name[DEVFREQ_NAME_LEN];
->  	struct notifier_block nb;
->  	struct delayed_work work;
->  
-> @@ -161,10 +178,7 @@ struct devfreq {
->  
->  	void *data; /* private data for governors */
->  
-> -	unsigned long min_freq;
-> -	unsigned long max_freq;
-> -	unsigned long scaling_min_freq;
-> -	unsigned long scaling_max_freq;
-> +	struct devfreq_policy policy;
-
-I recommend that you better to move under 'struct devfreq_dev_profile'
-as following:
-	
-	struct devfreq_dev_profile *profile;
-	struct devfreq_policy policy;
-
-
->  	bool stop_polling;
->  
->  	/* information for device frequency transition */
-> 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
