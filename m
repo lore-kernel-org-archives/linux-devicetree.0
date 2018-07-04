@@ -1,101 +1,93 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 6/8] drm/dsi: add helper function to find the second
- host in a dual-dsi setup
-Date: Wed, 04 Jul 2018 12:47:29 +0200
-Message-ID: <2112691.6xyttTyCZ2@phil>
-References: <20180618102806.15650-1-heiko@sntech.de>
- <20180618102806.15650-7-heiko@sntech.de>
- <20180703150650eucas1p28f06bae066a5c83cf820c7993764bcaa~95D_j3hK30626506265eucas1p25@eucas1p2.samsung.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v8 1/2] mfd: bd71837: mfd driver for ROHM BD71837 PMIC
+Date: Wed, 4 Jul 2018 11:53:06 +0100
+Message-ID: <20180704105002.GD496@dell>
+References: <cover.1530259815.git.matti.vaittinen@fi.rohmeurope.com>
+ <18a04e42debb2a23aec855cac3bcf3d6ab6c55fd.1530259815.git.matti.vaittinen@fi.rohmeurope.com>
+ <CAFqH_533te3UuY9V9U+Z0yxTkW==3wsK22uzB4G=aWGour7Quw@mail.gmail.com>
+ <20180704083911.GH2118@localhost.localdomain>
+ <20180704095257.GJ2118@localhost.localdomain>
+ <20180704101102.GA496@dell>
+ <20180704103430.GA13087@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180703150650eucas1p28f06bae066a5c83cf820c7993764bcaa~95D_j3hK30626506265eucas1p25@eucas1p2.samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, dri-devel@lists.freedesktop.org, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, mka@chromium.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180704103430.GA13087@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Enric Balletbo Serra <eballetbo@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Matti Vaittinen <mazziesaccount@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>, chenjh@rock-chips.com, Andrey Smirnov <andrew.smirnov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Kate Stewart <kstewart@linuxfoundation.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, sboyd@kernel.org, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>linux-kernel <li>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRGllbnN0YWcsIDMuIEp1bGkgMjAxOCwgMTc6MDY6NDggQ0VTVCBzY2hyaWViIEFuZHJ6ZWog
-SGFqZGE6Cj4gT24gMTguMDYuMjAxOCAxMjoyOCwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gPiA+
-RnJvbSBhIHNwZWNpZmllZCBvdXRwdXQgcG9ydCBvZiBvbmUgZHNpIGNvbnRyb2xsZXIgdGhpcyBm
-dW5jdGlvbiBhbGxvd3MgdG8KPiA+IGl0ZXJhdGUgb3ZlciB0aGUgbGlzdCBvZiByZWdpc3RlcmVk
-IGRzaSBjb250cm9sbGVycyB0cnlpbmcgdG8gZmluZCBhIHNlY29uZAo+ID4gaW5zdGFuY2UgY29u
-bmVjdGVkIHRvIHRoZSBzYW1lIGRpc3BsYXksIGxpa2UgaXQgaXMgdXNlZCBpbiBkdWFsLWRzaSBz
-ZXR1cHMuCj4gPgo+ID4gU2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVj
-aC5kZT4KPiAKPiBUaGUgY29kZSBsb29rcyBoYWNreSB0byBtZSAtIGl0IGl0ZXJhdGVzIG92ZXIg
-ZXh0ZXJuYWwgbm9kZXMsIGl0IGFzc3VtZXMKPiBhbGwgZ3JhcGggbGlua3MgYXJlIGRlZGljYXRl
-ZCBleGNsdXNpdmVseSB0byBkc2kKClRoZSBsb29wIGl0ZXJhdGVzIG92ZXIgYWxsIHJlZ2lzdGVy
-ZWQgZHNpIGNvbnRyb2xsZXJzIGFuZCBjaGVja3MgdGhlIHNhbWUKcG9ydC9lbmRwb2ludCBjb21i
-aW5hdGlvbiBhcyBvbiB0aGUgcHJpbWFyeSBob3N0LgoKT25lIGFzc3VtcHRpb24gaXMgdGhhdCB0
-aGUgZHNpIGNvbnRyb2xsZXJzIGFyZSBpZGVudGljYWwsIGJ1dCB0aGF0IGlzCmFsc28gYW4gYXJn
-dW1lbnQKCkFzIHRoZSBzcGxpdHRpbmcgb2YgdGhlIG91dHB1dCB0byB0d28gRFNJLWNvbnRyb2xs
-ZXJzIGlzIGEgc3BlY2lhbApmZWF0dXJlIG9mIHRoZSBzb2NzIENSVEMsIEknZCB0aGluayB0aGUg
-Y2hhbmNlcyBhcmUgdmVyeSBzbGltIHRoYXQKdGhlcmUgd2lsbCBiZSB0d28gY29tcGxldGVseSBk
-aWZmZXJlbnQgRFNJIGNvbnRyb2xsZXJzIHVzZWQgZm9yCnNvbWV0aGluZyBsaWtlIHRoaXMuCgo+
-IGl0IGFzc3VtZXMgdGhhdCB0aGVyZQo+IGlzIG5vIGFkZGl0aW9uYWwgbm9kZSBiZXR3ZWVuIGRz
-aSBob3N0IGFuZCB0aGUgcGFuZWwuCgpZZXAuCgoKSGVpa28KCgo+ID4gLS0tCj4gPiAgZHJpdmVy
-cy9ncHUvZHJtL2RybV9taXBpX2RzaS5jIHwgNTYgKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKwo+ID4gIGluY2x1ZGUvZHJtL2RybV9taXBpX2RzaS5oICAgICB8ICAyICsrCj4gPiAg
-MiBmaWxlcyBjaGFuZ2VkLCA1OCBpbnNlcnRpb25zKCspCj4gPgo+ID4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9kcm1fbWlwaV9kc2kuYyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fbWlwaV9k
-c2kuYwo+ID4gaW5kZXggYmM3M2I3ZjViOWZjLi4wYzNjOWM3YWEzYjggMTAwNjQ0Cj4gPiAtLS0g
-YS9kcml2ZXJzL2dwdS9kcm0vZHJtX21pcGlfZHNpLmMKPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9kcm1fbWlwaV9kc2kuYwo+ID4gQEAgLTMwLDYgKzMwLDcgQEAKPiA+ICAjaW5jbHVkZSA8bGlu
-dXgvZGV2aWNlLmg+Cj4gPiAgI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+ID4gICNpbmNsdWRl
-IDxsaW51eC9vZl9kZXZpY2UuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvb2ZfZ3JhcGguaD4KPiA+
-ICAjaW5jbHVkZSA8bGludXgvcG1fcnVudGltZS5oPgo+ID4gICNpbmNsdWRlIDxsaW51eC9zbGFi
-Lmg+Cj4gPiAgCj4gPiBAQCAtMjgyLDYgKzI4Myw2MSBAQCBzdHJ1Y3QgbWlwaV9kc2lfaG9zdCAq
-b2ZfZmluZF9taXBpX2RzaV9ob3N0X2J5X25vZGUoc3RydWN0IGRldmljZV9ub2RlICpub2RlKQo+
-ID4gIH0KPiA+ICBFWFBPUlRfU1lNQk9MKG9mX2ZpbmRfbWlwaV9kc2lfaG9zdF9ieV9ub2RlKTsK
-PiA+ICAKPiA+ICtzdHJ1Y3QgZGV2aWNlX25vZGUgKm9mX21pcGlfZHNpX2ZpbmRfc2Vjb25kX2hv
-c3Qoc3RydWN0IGRldmljZV9ub2RlICpmaXJzdF9ucCwKPiA+ICsJCQkJCQkgaW50IHBvcnQsIGlu
-dCBlbmRwb2ludCkKPiA+ICt7Cj4gPiArCXN0cnVjdCBtaXBpX2RzaV9ob3N0ICpmaXJzdCwgKmhv
-c3Q7Cj4gPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqcmVtb3RlLCAqbnAsICpzZWNvbmRfbnAgPSBO
-VUxMOwo+ID4gKwlpbnQgbnVtID0gMDsKPiA+ICsKPiA+ICsJZmlyc3QgPSBvZl9maW5kX21pcGlf
-ZHNpX2hvc3RfYnlfbm9kZShmaXJzdF9ucCk7Cj4gPiArCWlmICghZmlyc3QpIHsKPiA+ICsJCXBy
-X2Vycigibm8gZHNpLWhvc3QgZm9yIG5vZGUgJXNcbiIsIGZpcnN0X25wLT5mdWxsX25hbWUpOwo+
-ID4gKwkJcmV0dXJuIEVSUl9QVFIoLUVOT0RFVik7Cj4gPiArCX0KPiA+ICsKPiA+ICsJLyogb3V0
-cHV0LW5vZGUgb2YgdGhlIGtub3duIGRzaS1ob3N0ICovCj4gPiArCXJlbW90ZSA9IG9mX2dyYXBo
-X2dldF9yZW1vdGVfbm9kZShmaXJzdF9ucCwgcG9ydCwgZW5kcG9pbnQpOwo+ID4gKwlpZiAoIXJl
-bW90ZSkgewo+ID4gKwkJZGV2X2VycihmaXJzdC0+ZGV2LCAibm8gb3V0cHV0IG5vZGUgZm91bmRc
-biIpOwo+ID4gKwkJcmV0dXJuIEVSUl9QVFIoLUVOT0RFVik7Cj4gPiArCX0KPiA+ICsKPiA+ICsJ
-bXV0ZXhfbG9jaygmaG9zdF9sb2NrKTsKPiA+ICsKPiA+ICsJbGlzdF9mb3JfZWFjaF9lbnRyeSho
-b3N0LCAmaG9zdF9saXN0LCBsaXN0KSB7Cj4gPiArCQlucCA9IG9mX2dyYXBoX2dldF9yZW1vdGVf
-bm9kZShob3N0LT5kZXYtPm9mX25vZGUsCj4gPiArCQkJCQkgICAgICBwb3J0LCBlbmRwb2ludCk7
-Cj4gPiArCj4gPiArCQkvKiBmb3VuZCBhIGhvc3QgY29ubmVjdGVkIHRvIHRoaXMgcGFuZWwgKi8K
-PiA+ICsJCWlmIChucCA9PSByZW1vdGUpCj4gPiArCQkJbnVtKys7Cj4gPiArCj4gPiArCQkvKiBm
-b3VuZCBvbmUgc2Vjb25kIGhvc3QgKi8KPiA+ICsJCWlmIChob3N0LT5kZXYtPm9mX25vZGUgIT0g
-Zmlyc3RfbnApCj4gPiArCQkJc2Vjb25kX25wID0gaG9zdC0+ZGV2LT5vZl9ub2RlOwo+ID4gKwo+
-ID4gKwkJb2Zfbm9kZV9wdXQobnApOwo+ID4gKwl9Cj4gPiArCj4gPiArCS8qIG9mX25vZGVfZ2V0
-IHRoZSBub2RlIHVuZGVyIGhvc3RfbG9jayAqLwo+ID4gKwlpZiAobnVtID09IDIpCj4gPiArCQlv
-Zl9ub2RlX2dldChzZWNvbmRfbnApOwo+ID4gKwo+ID4gKwltdXRleF91bmxvY2soJmhvc3RfbG9j
-ayk7Cj4gPiArCj4gPiArCW9mX25vZGVfcHV0KHJlbW90ZSk7Cj4gPiArCj4gPiArCWlmIChudW0g
-PiAyKSB7Cj4gPiArCQlkZXZfZXJyKGZpcnN0LT5kZXYsCj4gPiArCQkJICAgICAgInRvbyBtYW55
-IERTSSBsaW5rcyBmb3Igb3V0cHV0OiAlZCBsaW5rc1xuIiwgbnVtKTsKPiA+ICsJCXJldHVybiBF
-UlJfUFRSKC1FSU5WQUwpOwo+ID4gKwl9Cj4gPiArCj4gPiArCXJldHVybiBzZWNvbmRfbnA7Cj4g
-PiArfQo+ID4gK0VYUE9SVF9TWU1CT0wob2ZfbWlwaV9kc2lfZmluZF9zZWNvbmRfaG9zdCk7Cj4g
-PiArCj4gPiAgaW50IG1pcGlfZHNpX2hvc3RfcmVnaXN0ZXIoc3RydWN0IG1pcGlfZHNpX2hvc3Qg
-Kmhvc3QpCj4gPiAgewo+ID4gIAlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGU7Cj4gPiBkaWZmIC0t
-Z2l0IGEvaW5jbHVkZS9kcm0vZHJtX21pcGlfZHNpLmggYi9pbmNsdWRlL2RybS9kcm1fbWlwaV9k
-c2kuaAo+ID4gaW5kZXggNGZlZjE5MDY0YjBmLi44OTUzMmFlNjljOTEgMTAwNjQ0Cj4gPiAtLS0g
-YS9pbmNsdWRlL2RybS9kcm1fbWlwaV9kc2kuaAo+ID4gKysrIGIvaW5jbHVkZS9kcm0vZHJtX21p
-cGlfZHNpLmgKPiA+IEBAIC0xMDcsNiArMTA3LDggQEAgc3RydWN0IG1pcGlfZHNpX2hvc3Qgewo+
-ID4gIGludCBtaXBpX2RzaV9ob3N0X3JlZ2lzdGVyKHN0cnVjdCBtaXBpX2RzaV9ob3N0ICpob3N0
-KTsKPiA+ICB2b2lkIG1pcGlfZHNpX2hvc3RfdW5yZWdpc3RlcihzdHJ1Y3QgbWlwaV9kc2lfaG9z
-dCAqaG9zdCk7Cj4gPiAgc3RydWN0IG1pcGlfZHNpX2hvc3QgKm9mX2ZpbmRfbWlwaV9kc2lfaG9z
-dF9ieV9ub2RlKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSk7Cj4gPiArc3RydWN0IGRldmljZV9u
-b2RlICpvZl9taXBpX2RzaV9maW5kX3NlY29uZF9ob3N0KHN0cnVjdCBkZXZpY2Vfbm9kZSAqZmly
-c3RfbnAsCj4gPiArCQkJCQkJIGludCBwb3J0LCBpbnQgZW5kcG9pbnQpOwo+ID4gIAo+ID4gIC8q
-IERTSSBtb2RlIGZsYWdzICovCj4gPiAgCj4gCj4gCj4gCgoKCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Wed, 04 Jul 2018, Matti Vaittinen wrote:
+
+> On Wed, Jul 04, 2018 at 11:11:02AM +0100, Lee Jones wrote:
+> > On Wed, 04 Jul 2018, Matti Vaittinen wrote:
+> > 
+> > > On Wed, Jul 04, 2018 at 11:39:11AM +0300, Matti Vaittinen wrote:
+> > > > On Tue, Jul 03, 2018 at 11:26:00AM +0200, Enric Balletbo Serra wrote:
+> > > > > Missatge de Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com> del
+> > > > > dia dv., 29 de juny 2018 a les 11:47:
+> > > > > 
+> > > > > Now that you use devm calls and you don't need to unwind things I
+> > > > > think is better to use plain returns. So,
+> > > > > 
+> > > > > return -ENOMEM;
+> > > > 
+> > > > I have never really understood why use of gotos in error handling is
+> > > > discouraged.
+> > 
+> > They're not.
+> > 
+> > > > Personally I would always choose single point of exit from
+> > > > a function when it is simple enough to achieve (like in this case). I've
+> > > > written and fixed way too many functions which leak resources or
+> > > > accidentally keep a lock when exiting from error branches. But I know
+> > > > many colleagues like you who prefer not to have gotos but  in place returns
+> > > > instead. So I guess I'll leave the final call on this to the one who is
+> > > > maintainer for this code. And it is true there is no things to unwind
+> > > > now - which does not mean that next updater won't add such. But as I
+> > > > said, I know plenty of people share your view - and even though I rather
+> > > > maintain code with only one exit the final call is on subsystem maintainer
+> > > > here.
+> > 
+> > Please use gotos in the error path.
+> > 
+> > IMO, it's the nicest way to unwind (as you call it).
+> 
+> I'll keep the gotos but clean other stuff for patch v9 then.
+
+Sounds good.
+
+> > > Actually, If it was completely my call the probe would look something
+> > > like this:
+> > > 
+> > > +static int bd71837_i2c_probe(struct i2c_client *i2c,
+> > > +                           const struct i2c_device_id *id)
+> > > +{
+
+[...]
+
+> > > +}
+> > > 
+> > > What do you think of this? To my eye it is nice. It keeps single point of
+> > > exit and introduces only simple if-statements without the need of curly
+> > > brackets. And finally the error prints string works as a comment too.
+> > > I've seen bunch of constructs like this on the networking side but I
+> > > have no idea if this is frowned on this subsystem =) Oh, and probe abowe
+> > > is just to illustrate the idea, I did not even try compiling it yet.
+> > 
+> > That is horrible.  I nearly vomited on my keyboard. 
+> 
+> Note to self: Never to buy second hand keyboard from Lee =)
+
+That is sound advice.
+
+Not sure I would buy 2nd-hand keyboard from anyone - ewe! :\
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
