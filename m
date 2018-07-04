@@ -1,56 +1,101 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v5 08/12] cpufreq: Add stub for cpufreq_update_policy()
-Date: Wed, 4 Jul 2018 16:14:34 +0530
-Message-ID: <20180704104434.subvhwvnkkiv255c@vireshk-i7>
-References: <20180703234705.227473-1-mka@chromium.org>
- <20180703234705.227473-9-mka@chromium.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 6/8] drm/dsi: add helper function to find the second
+ host in a dual-dsi setup
+Date: Wed, 04 Jul 2018 12:47:29 +0200
+Message-ID: <2112691.6xyttTyCZ2@phil>
+References: <20180618102806.15650-1-heiko@sntech.de>
+ <20180618102806.15650-7-heiko@sntech.de>
+ <20180703150650eucas1p28f06bae066a5c83cf820c7993764bcaa~95D_j3hK30626506265eucas1p25@eucas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180703234705.227473-9-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180703150650eucas1p28f06bae066a5c83cf820c7993764bcaa~95D_j3hK30626506265eucas1p25@eucas1p2.samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, dri-devel@lists.freedesktop.org, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, mka@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On 03-07-18, 16:47, Matthias Kaehlcke wrote:
-> cpufreq stubs out some functions when CONFIG_CPU_FREQ=n , but
-> cpufreq_update_policy() is not among them. The throttler driver
-> (https://patchwork.kernel.org/patch/10453351/) uses cpufreq as one
-> possible throttling mechanism, but it can still be useful without
-> cpufreq. Stubbing out cpufreq_update_policy() allows the throttler
-> driver to be built without ugly #ifdef'ery when cpufreq is disabled.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
-> ---
-> Changes in v5:
-> - none
-> 
-> Changes in v4:
-> - added 'Reviewed-by: Brian Norris <briannorris@chromium.org>' tag
-> 
-> Changes in v3:
-> - patch added to series
-> ---
->  include/linux/cpufreq.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-> index 882a9b9e34bc..dba8c4951e2e 100644
-> --- a/include/linux/cpufreq.h
-> +++ b/include/linux/cpufreq.h
-> @@ -210,6 +210,7 @@ static inline unsigned int cpufreq_quick_get_max(unsigned int cpu)
->  	return 0;
->  }
->  static inline void disable_cpufreq(void) { }
-> +static inline void cpufreq_update_policy(unsigned int cpu) { }
->  #endif
->  
->  #ifdef CONFIG_CPU_FREQ_STAT
-
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-
--- 
-viresh
+QW0gRGllbnN0YWcsIDMuIEp1bGkgMjAxOCwgMTc6MDY6NDggQ0VTVCBzY2hyaWViIEFuZHJ6ZWog
+SGFqZGE6Cj4gT24gMTguMDYuMjAxOCAxMjoyOCwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gPiA+
+RnJvbSBhIHNwZWNpZmllZCBvdXRwdXQgcG9ydCBvZiBvbmUgZHNpIGNvbnRyb2xsZXIgdGhpcyBm
+dW5jdGlvbiBhbGxvd3MgdG8KPiA+IGl0ZXJhdGUgb3ZlciB0aGUgbGlzdCBvZiByZWdpc3RlcmVk
+IGRzaSBjb250cm9sbGVycyB0cnlpbmcgdG8gZmluZCBhIHNlY29uZAo+ID4gaW5zdGFuY2UgY29u
+bmVjdGVkIHRvIHRoZSBzYW1lIGRpc3BsYXksIGxpa2UgaXQgaXMgdXNlZCBpbiBkdWFsLWRzaSBz
+ZXR1cHMuCj4gPgo+ID4gU2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVj
+aC5kZT4KPiAKPiBUaGUgY29kZSBsb29rcyBoYWNreSB0byBtZSAtIGl0IGl0ZXJhdGVzIG92ZXIg
+ZXh0ZXJuYWwgbm9kZXMsIGl0IGFzc3VtZXMKPiBhbGwgZ3JhcGggbGlua3MgYXJlIGRlZGljYXRl
+ZCBleGNsdXNpdmVseSB0byBkc2kKClRoZSBsb29wIGl0ZXJhdGVzIG92ZXIgYWxsIHJlZ2lzdGVy
+ZWQgZHNpIGNvbnRyb2xsZXJzIGFuZCBjaGVja3MgdGhlIHNhbWUKcG9ydC9lbmRwb2ludCBjb21i
+aW5hdGlvbiBhcyBvbiB0aGUgcHJpbWFyeSBob3N0LgoKT25lIGFzc3VtcHRpb24gaXMgdGhhdCB0
+aGUgZHNpIGNvbnRyb2xsZXJzIGFyZSBpZGVudGljYWwsIGJ1dCB0aGF0IGlzCmFsc28gYW4gYXJn
+dW1lbnQKCkFzIHRoZSBzcGxpdHRpbmcgb2YgdGhlIG91dHB1dCB0byB0d28gRFNJLWNvbnRyb2xs
+ZXJzIGlzIGEgc3BlY2lhbApmZWF0dXJlIG9mIHRoZSBzb2NzIENSVEMsIEknZCB0aGluayB0aGUg
+Y2hhbmNlcyBhcmUgdmVyeSBzbGltIHRoYXQKdGhlcmUgd2lsbCBiZSB0d28gY29tcGxldGVseSBk
+aWZmZXJlbnQgRFNJIGNvbnRyb2xsZXJzIHVzZWQgZm9yCnNvbWV0aGluZyBsaWtlIHRoaXMuCgo+
+IGl0IGFzc3VtZXMgdGhhdCB0aGVyZQo+IGlzIG5vIGFkZGl0aW9uYWwgbm9kZSBiZXR3ZWVuIGRz
+aSBob3N0IGFuZCB0aGUgcGFuZWwuCgpZZXAuCgoKSGVpa28KCgo+ID4gLS0tCj4gPiAgZHJpdmVy
+cy9ncHUvZHJtL2RybV9taXBpX2RzaS5jIHwgNTYgKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKwo+ID4gIGluY2x1ZGUvZHJtL2RybV9taXBpX2RzaS5oICAgICB8ICAyICsrCj4gPiAg
+MiBmaWxlcyBjaGFuZ2VkLCA1OCBpbnNlcnRpb25zKCspCj4gPgo+ID4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvZ3B1L2RybS9kcm1fbWlwaV9kc2kuYyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fbWlwaV9k
+c2kuYwo+ID4gaW5kZXggYmM3M2I3ZjViOWZjLi4wYzNjOWM3YWEzYjggMTAwNjQ0Cj4gPiAtLS0g
+YS9kcml2ZXJzL2dwdS9kcm0vZHJtX21pcGlfZHNpLmMKPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9kcm1fbWlwaV9kc2kuYwo+ID4gQEAgLTMwLDYgKzMwLDcgQEAKPiA+ICAjaW5jbHVkZSA8bGlu
+dXgvZGV2aWNlLmg+Cj4gPiAgI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+ID4gICNpbmNsdWRl
+IDxsaW51eC9vZl9kZXZpY2UuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvb2ZfZ3JhcGguaD4KPiA+
+ICAjaW5jbHVkZSA8bGludXgvcG1fcnVudGltZS5oPgo+ID4gICNpbmNsdWRlIDxsaW51eC9zbGFi
+Lmg+Cj4gPiAgCj4gPiBAQCAtMjgyLDYgKzI4Myw2MSBAQCBzdHJ1Y3QgbWlwaV9kc2lfaG9zdCAq
+b2ZfZmluZF9taXBpX2RzaV9ob3N0X2J5X25vZGUoc3RydWN0IGRldmljZV9ub2RlICpub2RlKQo+
+ID4gIH0KPiA+ICBFWFBPUlRfU1lNQk9MKG9mX2ZpbmRfbWlwaV9kc2lfaG9zdF9ieV9ub2RlKTsK
+PiA+ICAKPiA+ICtzdHJ1Y3QgZGV2aWNlX25vZGUgKm9mX21pcGlfZHNpX2ZpbmRfc2Vjb25kX2hv
+c3Qoc3RydWN0IGRldmljZV9ub2RlICpmaXJzdF9ucCwKPiA+ICsJCQkJCQkgaW50IHBvcnQsIGlu
+dCBlbmRwb2ludCkKPiA+ICt7Cj4gPiArCXN0cnVjdCBtaXBpX2RzaV9ob3N0ICpmaXJzdCwgKmhv
+c3Q7Cj4gPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqcmVtb3RlLCAqbnAsICpzZWNvbmRfbnAgPSBO
+VUxMOwo+ID4gKwlpbnQgbnVtID0gMDsKPiA+ICsKPiA+ICsJZmlyc3QgPSBvZl9maW5kX21pcGlf
+ZHNpX2hvc3RfYnlfbm9kZShmaXJzdF9ucCk7Cj4gPiArCWlmICghZmlyc3QpIHsKPiA+ICsJCXBy
+X2Vycigibm8gZHNpLWhvc3QgZm9yIG5vZGUgJXNcbiIsIGZpcnN0X25wLT5mdWxsX25hbWUpOwo+
+ID4gKwkJcmV0dXJuIEVSUl9QVFIoLUVOT0RFVik7Cj4gPiArCX0KPiA+ICsKPiA+ICsJLyogb3V0
+cHV0LW5vZGUgb2YgdGhlIGtub3duIGRzaS1ob3N0ICovCj4gPiArCXJlbW90ZSA9IG9mX2dyYXBo
+X2dldF9yZW1vdGVfbm9kZShmaXJzdF9ucCwgcG9ydCwgZW5kcG9pbnQpOwo+ID4gKwlpZiAoIXJl
+bW90ZSkgewo+ID4gKwkJZGV2X2VycihmaXJzdC0+ZGV2LCAibm8gb3V0cHV0IG5vZGUgZm91bmRc
+biIpOwo+ID4gKwkJcmV0dXJuIEVSUl9QVFIoLUVOT0RFVik7Cj4gPiArCX0KPiA+ICsKPiA+ICsJ
+bXV0ZXhfbG9jaygmaG9zdF9sb2NrKTsKPiA+ICsKPiA+ICsJbGlzdF9mb3JfZWFjaF9lbnRyeSho
+b3N0LCAmaG9zdF9saXN0LCBsaXN0KSB7Cj4gPiArCQlucCA9IG9mX2dyYXBoX2dldF9yZW1vdGVf
+bm9kZShob3N0LT5kZXYtPm9mX25vZGUsCj4gPiArCQkJCQkgICAgICBwb3J0LCBlbmRwb2ludCk7
+Cj4gPiArCj4gPiArCQkvKiBmb3VuZCBhIGhvc3QgY29ubmVjdGVkIHRvIHRoaXMgcGFuZWwgKi8K
+PiA+ICsJCWlmIChucCA9PSByZW1vdGUpCj4gPiArCQkJbnVtKys7Cj4gPiArCj4gPiArCQkvKiBm
+b3VuZCBvbmUgc2Vjb25kIGhvc3QgKi8KPiA+ICsJCWlmIChob3N0LT5kZXYtPm9mX25vZGUgIT0g
+Zmlyc3RfbnApCj4gPiArCQkJc2Vjb25kX25wID0gaG9zdC0+ZGV2LT5vZl9ub2RlOwo+ID4gKwo+
+ID4gKwkJb2Zfbm9kZV9wdXQobnApOwo+ID4gKwl9Cj4gPiArCj4gPiArCS8qIG9mX25vZGVfZ2V0
+IHRoZSBub2RlIHVuZGVyIGhvc3RfbG9jayAqLwo+ID4gKwlpZiAobnVtID09IDIpCj4gPiArCQlv
+Zl9ub2RlX2dldChzZWNvbmRfbnApOwo+ID4gKwo+ID4gKwltdXRleF91bmxvY2soJmhvc3RfbG9j
+ayk7Cj4gPiArCj4gPiArCW9mX25vZGVfcHV0KHJlbW90ZSk7Cj4gPiArCj4gPiArCWlmIChudW0g
+PiAyKSB7Cj4gPiArCQlkZXZfZXJyKGZpcnN0LT5kZXYsCj4gPiArCQkJICAgICAgInRvbyBtYW55
+IERTSSBsaW5rcyBmb3Igb3V0cHV0OiAlZCBsaW5rc1xuIiwgbnVtKTsKPiA+ICsJCXJldHVybiBF
+UlJfUFRSKC1FSU5WQUwpOwo+ID4gKwl9Cj4gPiArCj4gPiArCXJldHVybiBzZWNvbmRfbnA7Cj4g
+PiArfQo+ID4gK0VYUE9SVF9TWU1CT0wob2ZfbWlwaV9kc2lfZmluZF9zZWNvbmRfaG9zdCk7Cj4g
+PiArCj4gPiAgaW50IG1pcGlfZHNpX2hvc3RfcmVnaXN0ZXIoc3RydWN0IG1pcGlfZHNpX2hvc3Qg
+Kmhvc3QpCj4gPiAgewo+ID4gIAlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGU7Cj4gPiBkaWZmIC0t
+Z2l0IGEvaW5jbHVkZS9kcm0vZHJtX21pcGlfZHNpLmggYi9pbmNsdWRlL2RybS9kcm1fbWlwaV9k
+c2kuaAo+ID4gaW5kZXggNGZlZjE5MDY0YjBmLi44OTUzMmFlNjljOTEgMTAwNjQ0Cj4gPiAtLS0g
+YS9pbmNsdWRlL2RybS9kcm1fbWlwaV9kc2kuaAo+ID4gKysrIGIvaW5jbHVkZS9kcm0vZHJtX21p
+cGlfZHNpLmgKPiA+IEBAIC0xMDcsNiArMTA3LDggQEAgc3RydWN0IG1pcGlfZHNpX2hvc3Qgewo+
+ID4gIGludCBtaXBpX2RzaV9ob3N0X3JlZ2lzdGVyKHN0cnVjdCBtaXBpX2RzaV9ob3N0ICpob3N0
+KTsKPiA+ICB2b2lkIG1pcGlfZHNpX2hvc3RfdW5yZWdpc3RlcihzdHJ1Y3QgbWlwaV9kc2lfaG9z
+dCAqaG9zdCk7Cj4gPiAgc3RydWN0IG1pcGlfZHNpX2hvc3QgKm9mX2ZpbmRfbWlwaV9kc2lfaG9z
+dF9ieV9ub2RlKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSk7Cj4gPiArc3RydWN0IGRldmljZV9u
+b2RlICpvZl9taXBpX2RzaV9maW5kX3NlY29uZF9ob3N0KHN0cnVjdCBkZXZpY2Vfbm9kZSAqZmly
+c3RfbnAsCj4gPiArCQkJCQkJIGludCBwb3J0LCBpbnQgZW5kcG9pbnQpOwo+ID4gIAo+ID4gIC8q
+IERTSSBtb2RlIGZsYWdzICovCj4gPiAgCj4gCj4gCj4gCgoKCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
