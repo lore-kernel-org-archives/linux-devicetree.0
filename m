@@ -1,210 +1,175 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v22 4/4] soc: mediatek: Add Mediatek CMDQ helper
-Date: Wed, 4 Jul 2018 10:39:14 +0800
-Message-ID: <1530671954.8732.10.camel@mtksdaap41>
-References: <1530098172-31385-1-git-send-email-houlong.wei@mediatek.com>
-         <1530098172-31385-5-git-send-email-houlong.wei@mediatek.com>
-         <1530182516.8518.11.camel@mtksdaap41>
-         <1530228739.21991.14.camel@mhfsdcap03>
-         <1530264123.22098.12.camel@mtksdaap41>
-         <1530665257.24157.7.camel@mhfsdcap03>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v5 04/12] PM / devfreq: Add struct devfreq_policy
+Date: Wed, 04 Jul 2018 11:51:30 +0900
+Message-ID: <5B3C3632.1010706@samsung.com>
+References: <20180703234705.227473-1-mka@chromium.org>
+        <CGME20180703235030epcas4p423e7bf876628913adb3e41ffdc8ba3cd@epcas4p4.samsung.com>
+        <20180703234705.227473-5-mka@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530665257.24157.7.camel@mhfsdcap03>
+In-reply-to: <20180703234705.227473-5-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: houlong wei <houlong.wei@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh =?UTF-8?Q?=28=E8=AC=9D=E6=BF=9F=E9=81=A0=29?= <Bibby.Hsieh@mediatek.com>, YT
+To: Matthias Kaehlcke <mka@chromium.org>, MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Houlong:
+Hi,
 
-On Wed, 2018-07-04 at 08:47 +0800, houlong wei wrote:
-> On Fri, 2018-06-29 at 17:22 +0800, CK Hu wrote:
-> > Hi, Houlong:
-> > 
-> > On Fri, 2018-06-29 at 07:32 +0800, houlong wei wrote:
-> > > On Thu, 2018-06-28 at 18:41 +0800, CK Hu wrote:
-> > > > Hi, Houlong:
-> > > > 
-> > > > Some inline comment.
-> > > > 
-> > > > On Wed, 2018-06-27 at 19:16 +0800, Houlong Wei wrote:
-> > > > > Add Mediatek CMDQ helper to create CMDQ packet and assemble GCE op code.
-> > > > > 
-> > > > > Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
-> > > > > Signed-off-by: HS Liao <hs.liao@mediatek.com>
-> > > > > ---
-> > > > >  drivers/soc/mediatek/Kconfig           |   12 ++
-> > > > >  drivers/soc/mediatek/Makefile          |    1 +
-> > > > >  drivers/soc/mediatek/mtk-cmdq-helper.c |  258 ++++++++++++++++++++++++++++++++
-> > > > >  include/linux/soc/mediatek/mtk-cmdq.h  |  132 ++++++++++++++++
-> > > > >  4 files changed, 403 insertions(+)
-> > > > >  create mode 100644 drivers/soc/mediatek/mtk-cmdq-helper.c
-> > > > >  create mode 100644 include/linux/soc/mediatek/mtk-cmdq.h
-> > > > > 
-> > > > > diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> > > > > index a7d0667..17bd759 100644
-> > > > > --- a/drivers/soc/mediatek/Kconfig
-> > > > > +++ b/drivers/soc/mediatek/Kconfig
-> > > > > @@ -4,6 +4,18 @@
-> > > > >  menu "MediaTek SoC drivers"
-> > > > >  	depends on ARCH_MEDIATEK || COMPILE_TEST
-> > > > >  
-> > > > 
-> > 
-> > [...]
-> > 
-> > > > > +
-> > > > > +static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
-> > > > > +{
-> > > > > +	int err;
-> > > > > +
-> > > > > +	if (cmdq_pkt_is_finalized(pkt))
-> > > > > +		return 0;
-> > > > > +
-> > > > > +	/* insert EOC and generate IRQ for each command iteration */
-> > > > > +	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
-> > > > > +	if (err < 0)
-> > > > > +		return err;
-> > > > > +
-> > > > > +	/* JUMP to end */
-> > > > > +	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
-> > > > > +	if (err < 0)
-> > > > > +		return err;
-> > > > > +
-> > > > > +	return 0;
-> > > > > +}
-> > > > > +
-> > > > > +int cmdq_pkt_flush_async(struct cmdq_client *client, struct cmdq_pkt *pkt,
-> > > > > +			 cmdq_async_flush_cb cb, void *data)
-> > > > > +{
-> > > > > +	int err;
-> > > > > +	struct device *dev;
-> > > > > +	dma_addr_t dma_addr;
-> > > > > +
-> > > > > +	err = cmdq_pkt_finalize(pkt);
-> > > > > +	if (err < 0)
-> > > > > +		return err;
-> > > > > +
-> > > > > +	dev = client->chan->mbox->dev;
-> > > > > +	dma_addr = dma_map_single(dev, pkt->va_base, pkt->cmd_buf_size,
-> > > > > +		DMA_TO_DEVICE);
-> > > > 
-> > > > You map here, but I could not find unmap, so the unmap should be done in
-> > > > client driver. I would prefer a symmetric map/unmap which means that
-> > > > both map and unmap are done in client driver. I think you put map here
-> > > > because you should map after finalize. 
-> > > 
-> > > The unmap is done before callback to client, in function
-> > > cmdq_task_exec_done, mtk-cmdq-mailbox.c.
-> > 
-> > You put unmap in mailbox controller, and map here (here would be mailbox
-> > client), so this is not symmetric. If the code is asymmetric, it's easy
-> > to cause bug and not easy to maintain. So I would like move both
-> > map/unmap to client driver.
-> > 
+On 2018년 07월 04일 08:46, Matthias Kaehlcke wrote:
+> Move variables related with devfreq policy changes from struct devfreq
+> to the new struct devfreq_policy and add a policy field to struct devfreq.
 > 
-> Since map/unmap is common code for client drivers, can we move unmap to
-> CMDQ helper and do not put in client driver?
+> The following variables are moved:
 > 
-> > > 
-> > > > Therefore, export
-> > > > cmdq_pkt_finalize() to client driver and let client do finalize, so
-> > > > there is no finalize in flush function. This method have a benefit that
-> > > > if client reuse command buffer, it need not to map/unmap frequently.
-> > > 
-> > > If client reuse command buffer or cmdq_pkt(command queue packet), client
-> > > will add new commands to the cmdq_pkt, so map/unmap are necessary for
-> > > each cmdq_pkt flush.
-> > 
-> > If the buffer size is 4K bytes, client driver could map the whole 4K at
-> > initialization. Before it write new command, it call
-> > dma_sync_single_for_cpu(), after it write new command, it call
-> > dma_sync_single_for_device(). And then it could flush this buffer to
-> > mailbox controller. So client driver just call dma sync function when it
-> > reuse the command buffer. dma sync function is much lightweight then dma
-> > map because map would search the memory area which could be mapped.
-> > 
-> > Regards,
-> > CK
+> df->min/max_freq           =>   p->user.min/max_freq
+> df->scaling_min/max_freq   =>   p->devinfo.min/max_freq
+> df->governor               =>   p->governor
+> df->governor_name          =>   p->governor_name
 > 
-> Maybe we can do dma map/unmap/sync in cmdq helper, and make client
-> driver simple.
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Reviewed-by: Brian Norris <briannorris@chromium.org>
+> ---
+> Changes in v5:
+> - none
+> 
+> Changes in v4:
+> - added 'Reviewed-by: Brian Norris <briannorris@chromium.org>' tag
+> 
+> Changes in v3:
+> - none
+> 
+> Changes in v2:
+> - performance, powersave and simpleondemand governors don't need changes
+>   with "PM / devfreq: Don't adjust to user limits in governors"
+> - formatting fixes
+> ---
+>  drivers/devfreq/devfreq.c          | 137 ++++++++++++++++-------------
+>  drivers/devfreq/governor_passive.c |   4 +-
+>  include/linux/devfreq.h            |  38 +++++---
+>  3 files changed, 103 insertions(+), 76 deletions(-)
 > 
 
-Why are map/unmap common code for client drivers? I've mentioned that
-some client driver may just call dma sync function before flush, so it
-does not map for every flush. Frequently map/unmap has some drawback:
+(skip)
 
-1. Waste CPU resource: this also waste power.
-2. Risk of mapping fail: to reduce this risk, client driver could map at
-initialization.
+>  
+> diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
+> index 3bc29acbd54e..e0987c749ec2 100644
+> --- a/drivers/devfreq/governor_passive.c
+> +++ b/drivers/devfreq/governor_passive.c
+> @@ -99,12 +99,12 @@ static int update_devfreq_passive(struct devfreq *devfreq, unsigned long freq)
+>  {
+>  	int ret;
+>  
+> -	if (!devfreq->governor)
+> +	if (!devfreq->policy.governor)
+>  		return -EINVAL;
+>  
+>  	mutex_lock_nested(&devfreq->lock, SINGLE_DEPTH_NESTING);
+>  
+> -	ret = devfreq->governor->get_target_freq(devfreq, &freq);
+> +	ret = devfreq->policy.governor->get_target_freq(devfreq, &freq);
+>  	if (ret < 0)
+>  		goto out;
+>  
+> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+> index 3aae5b3af87c..9bf23b976f4d 100644
+> --- a/include/linux/devfreq.h
+> +++ b/include/linux/devfreq.h
+> @@ -109,6 +109,30 @@ struct devfreq_dev_profile {
+>  	unsigned int max_state;
+>  };
+>  
+> +/**
+> + * struct devfreq_freq_limits - Devfreq frequency limits
+> + * @min_freq:	minimum frequency
+> + * @max_freq:	maximum frequency
+> + */
+> +struct devfreq_freq_limits {
+> +	unsigned long min_freq;
+> +	unsigned long max_freq;
+> +};
+> +
+> +/**
+> + * struct devfreq_policy - Devfreq policy
+> + * @user:	frequency limits requested by the user
+> + * @devinfo:	frequency limits of the device (available OPPs)
+> + * @governor:	method how to choose frequency based on the usage.
 
-I think reducing these drawback is more important than making client
-driver simple.
+nitpick. remove '.' on the end of line.
 
-Regards,
-CK
+> + * @governor_name:	devfreq governor name for use with this devfreq
+> + */
+> +struct devfreq_policy {
+> +	struct devfreq_freq_limits user;
+> +	struct devfreq_freq_limits devinfo;
+> +	const struct devfreq_governor *governor;
+> +	char governor_name[DEVFREQ_NAME_LEN];
+> +};
+> +
+>  /**
+>   * struct devfreq - Device devfreq structure
+>   * @node:	list node - contains the devices with devfreq that have been
+> @@ -117,8 +141,6 @@ struct devfreq_dev_profile {
+>   * @dev:	device registered by devfreq class. dev.parent is the device
+>   *		using devfreq.
+>   * @profile:	device-specific devfreq profile
+> - * @governor:	method how to choose frequency based on the usage.
+> - * @governor_name:	devfreq governor name for use with this devfreq
+>   * @nb:		notifier block used to notify devfreq object that it should
+>   *		reevaluate operable frequencies. Devfreq users may use
+>   *		devfreq.nb to the corresponding register notifier call chain.
+> @@ -126,10 +148,7 @@ struct devfreq_dev_profile {
+>   * @previous_freq:	previously configured frequency value.
+>   * @data:	Private data of the governor. The devfreq framework does not
+>   *		touch this.
+> - * @min_freq:	Limit minimum frequency requested by user (0: none)
+> - * @max_freq:	Limit maximum frequency requested by user (0: none)
+> - * @scaling_min_freq:	Limit minimum frequency requested by OPP interface
+> - * @scaling_max_freq:	Limit maximum frequency requested by OPP interface
+> + * @policy:		Policy for frequency adjustments
 
-> > 
-> > > 
-> > > > 
-> > > > Regards,
-> > > > CK
-> > > > 
-> > > > > +	if (dma_mapping_error(dev, dma_addr)) {
-> > > > > +		dev_err(client->chan->mbox->dev, "dma map failed\n");
-> > > > > +		return -ENOMEM;
-> > > > > +	}
-> > > > > +
-> > > > > +	pkt->pa_base = dma_addr;
-> > > > > +	pkt->cb.cb = cb;
-> > > > > +	pkt->cb.data = data;
-> > > > > +
-> > > > > +	mbox_send_message(client->chan, pkt);
-> > > > > +	/* We can send next packet immediately, so just call txdone. */
-> > > > > +	mbox_client_txdone(client->chan, 0);
-> > > > > +
-> > > > > +	return 0;
-> > > > > +}
-> > > > > +EXPORT_SYMBOL(cmdq_pkt_flush_async);
-> > > > > +
-> > > > > +struct cmdq_flush_completion {
-> > > > > +	struct completion cmplt;
-> > > > > +	bool err;
-> > > > > +};
-> > > > > +
-> > > > > +static void cmdq_pkt_flush_cb(struct cmdq_cb_data data)
-> > > > > +{
-> > > > > +	struct cmdq_flush_completion *cmplt = data.data;
-> > > > > +
-> > > > > +	cmplt->err = data.err;
-> > > > > +	complete(&cmplt->cmplt);
-> > > > > +}
-> > > > > +
-> > > > > +int cmdq_pkt_flush(struct cmdq_client *client, struct cmdq_pkt *pkt)
-> > > > > +{
-> > > > > +	struct cmdq_flush_completion cmplt;
-> > > > > +	int err;
-> > > > > +
-> > > > > +	init_completion(&cmplt.cmplt);
-> > > > > +	err = cmdq_pkt_flush_async(client, pkt, cmdq_pkt_flush_cb, &cmplt);
-> > > > > +	if (err < 0)
-> > > > > +		return err;
-> > > > > +	wait_for_completion(&cmplt.cmplt);
-> > > > > +
-> > > > > +	return cmplt.err ? -EFAULT : 0;
-> > > > > +}
-> > > > > +EXPORT_SYMBOL(cmdq_pkt_flush);
-> > > > 
-> > > > [...]
-> > > > 
-> > > > 
-> > > 
-> > > 
-> > 
-> > 
+The devfreq_policy contains the range of frequency and governor information.
+But, this description focus on the frequency. You need to explain the more
+correct description of 'policy'.
+
+>   * @stop_polling:	 devfreq polling status of a device.
+>   * @total_trans:	Number of devfreq transitions
+>   * @trans_table:	Statistics of devfreq transitions
+> @@ -151,8 +170,6 @@ struct devfreq {
+>  	struct mutex lock;
+>  	struct device dev;
+>  	struct devfreq_dev_profile *profile;
+> -	const struct devfreq_governor *governor;
+> -	char governor_name[DEVFREQ_NAME_LEN];
+>  	struct notifier_block nb;
+>  	struct delayed_work work;
+>  
+> @@ -161,10 +178,7 @@ struct devfreq {
+>  
+>  	void *data; /* private data for governors */
+>  
+> -	unsigned long min_freq;
+> -	unsigned long max_freq;
+> -	unsigned long scaling_min_freq;
+> -	unsigned long scaling_max_freq;
+> +	struct devfreq_policy policy;
+
+I recommend that you better to move under 'struct devfreq_dev_profile'
+as following:
+	
+	struct devfreq_dev_profile *profile;
+	struct devfreq_policy policy;
+
+
+>  	bool stop_polling;
+>  
+>  	/* information for device frequency transition */
 > 
-> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
