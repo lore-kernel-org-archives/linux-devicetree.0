@@ -1,124 +1,59 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 5/5] clocksource/drivers/timer-mediatek: Add support
- for system timer
-Date: Wed, 4 Jul 2018 11:27:53 +0200 (CEST)
-Message-ID: <alpine.DEB.2.21.1807041108110.1816@nanos.tec.linutronix.de>
-References: <1530669383-17516-1-git-send-email-stanley.chu@mediatek.com> <1530669383-17516-6-git-send-email-stanley.chu@mediatek.com>
+From: Vikash Garodia <vgarodia@codeaurora.org>
+Subject: Re: [PATCH v2 2/5] media: venus: add a routine to set venus state
+Date: Wed, 04 Jul 2018 15:11:49 +0530
+Message-ID: <5560573ed426b03ad7676ac14a291e70@codeaurora.org>
+References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
+ <1527884768-22392-3-git-send-email-vgarodia@codeaurora.org>
+ <20180601212117.GD11565@jcrouse-lnx.qualcomm.com>
+ <CAAFQd5DH2i+8ZJ+s2XUnmFHwxXKLF6z_=w0Z-RFs=W9oVvrJgw@mail.gmail.com>
+ <ca7567c1df773f1223d919fab28f1460@codeaurora.org>
+ <CAAFQd5BvTNhafus4WcoPLiBTN8X3Ls+YA0OgpfnyadDayvVQxA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530669383-17516-6-git-send-email-stanley.chu@mediatek.com>
+In-Reply-To: <CAAFQd5BvTNhafus4WcoPLiBTN8X3Ls+YA0OgpfnyadDayvVQxA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stanley Chu <stanley.chu@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, bjorn.andersson@linaro.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>, linux-media-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 4 Jul 2018, Stanley Chu wrote:
-> +/* system timer */
-> +#define SYST_CON                (0x0)
-> +#define SYST_VAL                (0x4)
-> +
-> +#define SYST_CON_REG(to)        (timer_of_base(to) + SYST_CON)
-> +#define SYST_VAL_REG(to)        (timer_of_base(to) + SYST_VAL)
-> +
-> +#define SYST_CON_EN              BIT(0)
-> +#define SYST_CON_IRQ_EN          BIT(1)
-> +#define SYST_CON_IRQ_CLR         BIT(4)
-> +
-> +static void __iomem *gpt_sched_reg __read_mostly;
-> +
-> +static void mtk_syst_reset(struct timer_of *to)
-> +{
-> +	/* clear and disable interrupt */
-> +	writel(SYST_CON_IRQ_CLR | SYST_CON_EN, SYST_CON_REG(to));
-> +
-> +	/* reset counter */
-> +	writel(0, SYST_VAL_REG(to));
-> +
-> +	/* disable timer */
-> +	writel(0, SYST_CON_REG(to));
+On 2018-07-04 14:30, Tomasz Figa wrote:
+> On Wed, Jul 4, 2018 at 4:59 PM Vikash Garodia <vgarodia@codeaurora.org> 
+> wrote:
+>> On 2018-06-04 18:24, Tomasz Figa wrote:
+>> > On Sat, Jun 2, 2018 at 6:21 AM Jordan Crouse <jcrouse@codeaurora.org>
+>> > wrote:
+>> >> On Sat, Jun 02, 2018 at 01:56:05AM +0530, Vikash Garodia wrote:
+>> > Given that this function is supposed to substitute existing calls into
+>> > qcom_scm_set_remote_state(), why not just do something like this:
+>> >
+>> >         if (qcom_scm_is_available())
+>> >                 return qcom_scm_set_remote_state(state, 0);
+>> >
+>> >         switch (state) {
+>> >         case TZBSP_VIDEO_SUSPEND:
+>> >                 writel_relaxed(1, reg_base + WRAPPER_A9SS_SW_RESET);
+>> >                 break;
+>> >         case TZBSP_VIDEO_RESUME:
+>> >                 venus_reset_hw(core);
+>> >                 break;
+>> >         }
+>> >
+>> >         return 0;
+>> This will not work as driver will write on the register irrespective 
+>> of
+>> scm
+>> availability.
+> 
+> I'm sorry, where would it do so? The second line returns from the
+> function inf SCM is available, so the rest of the function wouldn't be
+> executed.
 
-Not having any insight into the inner workings of that hardware. This
-sequence does not make any sense.
+Ah!! you are right. That would work as well.
+I am ok with either way, but would recommend to keep it the existing way
+as it makes it little more readable.
 
-You first clear and disable the interrupt, but leave the counter
-running. Then you reset the counter and _after_ that you disable the
-timer.
-
-Is that a workaround for yet another completely misdesigned piece of timer
-hardware or is it just the software implementation which makes no sense?
-
-If it's a workaround for HW stupidity then you really want to document it
-proper.
-
-If not then, what's wrong with doing the obvious:
-{
-	writel(SYST_CON_IRQ_CLR, SYST_CON_REG(to));
-}
-
-which clears the interrupt and disables the timer in one go. Writing the
-counter is not required at all because the next_event() function will write
-it again and the counter value is irrelevant once the timer is disabled.
-
-> +static void mtk_syst_ack_irq(struct timer_of *to)
-> +{
-> +	mtk_syst_reset(to);
-> +}
-> +
-> +static irqreturn_t mtk_syst_handler(int irq, void *dev_id)
-> +{
-> +	struct clock_event_device *clkevt = (struct clock_event_device *)dev_id;
-
-No type casts from and to void. They are completely pointless.
-
-> +	struct timer_of *to = to_timer_of(clkevt);
-> +
-> +	mtk_syst_ack_irq(to);
-
-So you do the full dance here.
-
-> +	clkevt->event_handler(clkevt);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int mtk_syst_clkevt_next_event(unsigned long ticks,
-> +				      struct clock_event_device *clkevt)
-> +{
-> +	struct timer_of *to = to_timer_of(clkevt);
-> +
-> +	/*
-> +	 * reset timer first because we do not expect interrupt is triggered
-> +	 * by old compare value.
-> +	 */
-> +	mtk_syst_reset(to);
-
-And here, which gets called through the event_handler.
-
-> +
-> +	writel(SYST_CON_EN, SYST_CON_REG(to));
-
-Why are you enabling the timer _before_ setting the new counter value? This
-does not make any sense at least not w/o a comment explaining WHY this
-needs to be so convoluted.
-
-> +	writel(ticks, SYST_VAL_REG(to));
-> +
-> +	writel(SYST_CON_EN | SYST_CON_IRQ_EN, SYST_CON_REG(to));
-
-With a sane hardware implementation the whole thing can be boiled down to:
-
-{
-	writel(ticks, SYST_VAL_REG(to));
-	writel(SYST_CON_EN | SYST_CON_IRQ_EN, SYST_CON_REG(to));
-}
-
-There is no need to do the whole reset thing, unless the hardware is
-broken. Either you manage to overwrite the timer in time or not. The extra
-work of writing the control register before that is a cosmetic 'makes me
-feel' good hack, which just makes the normal case slower. If you have an
-occasional spurious interrupt, fine, but you can get them anyway.
-
-Thanks,
-
-	tglx
+> Best regards,
+> Tomasz
