@@ -1,169 +1,49 @@
-Return-Path: <vkoul@kernel.org>
-Date: Fri, 6 Jul 2018 12:03:07 +0530
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH v5 2/6] power: reset: qcom-pon: Add Qcom PON driver
-Message-ID: <20180706063307.GV22377@vkoul-mobl>
-References: <20180628150850.15358-1-vkoul@kernel.org>
- <20180628150850.15358-3-vkoul@kernel.org>
+Return-Path: <SRS0=klVN=JU=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from cloudserver094114.home.pl ([79.96.170.134]:59424 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932673AbeGDKww (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Jul 2018 06:52:52 -0400
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v3 1/2] cpufreq: imx6q/thermal: imx: register cooling device depending on OF
+Date: Wed, 04 Jul 2018 12:51:27 +0200
+Message-ID: <1832522.sVWMd1pqUx@aspire.rjw.lan>
+In-Reply-To: <20180619093157.ike3xmmregese6bh@vireshk-i7>
+References: <20180608090640.29076-1-bst@pengutronix.de> <1529400139.7211.12.camel@pengutronix.de> <20180619093157.ike3xmmregese6bh@vireshk-i7>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180628150850.15358-3-vkoul@kernel.org>
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+Sender: devicetree-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Bastian Stender <bst@pengutronix.de>
+Cc: Lucas Stach <l.stach@pengutronix.de>, devicetree@vger.kernel.org, Anson Huang <anson.huang@nxp.com>, linux-pm@vger.kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, Zhang Rui <rui.zhang@intel.com>, Leonard Crestez <leonard.crestez@nxp.com>, Shawn Guo <shawnguo@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Sebastian,
-
-On 28-06-18, 20:38, Vinod Koul wrote:
-> Add support Qualcomm PM8xxx PON which is responsible for reboot
-> mode support.
-
-Any feedback for this patch/series?
-
-> Co-developed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  drivers/power/reset/Kconfig    | 11 +++++
->  drivers/power/reset/Makefile   |  1 +
->  drivers/power/reset/qcom-pon.c | 91 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 103 insertions(+)
->  create mode 100644 drivers/power/reset/qcom-pon.c
+On Tuesday, June 19, 2018 11:31:57 AM CEST Viresh Kumar wrote:
+> On 19-06-18, 11:22, Lucas Stach wrote:
+> > Hi Viresh,
+> > 
+> > Am Dienstag, den 19.06.2018, 14:35 +0530 schrieb Viresh Kumar:
+> > > On 08-06-18, 11:06, Bastian Stender wrote:
+> > > > The cooling device should be part of the i.MX cpufreq driver, but it
+> > > > cannot be removed for the sake of DT stability.
+> > > 
+> > > I am not sure what you meant by DT stability here. Can you please explain that ?
+> > 
+> > The goal that we strive for in i.MX land is that a any newer kernel
+> > boots on a older DT without functional regressions compared to a
+> > matching DT/kernel pair when possible.
 > 
-> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> index df58fc878b3e..6533aa560aa1 100644
-> --- a/drivers/power/reset/Kconfig
-> +++ b/drivers/power/reset/Kconfig
-> @@ -104,6 +104,17 @@ config POWER_RESET_MSM
->  	help
->  	  Power off and restart support for Qualcomm boards.
->  
-> +config POWER_RESET_QCOM_PON
-> +	tristate "Qualcomm power-on driver"
-> +	depends on ARCH_QCOM
-> +	depends on MFD_SPMI_PMIC
-> +	select REBOOT_MODE
-> +	help
-> +	  Power On support for Qualcomm boards.
-> +	  If you have a Qualcomm platform and need support for
-> +	  power-on and reboot reason, Say Y.
-> +	  If unsure, Say N.
-> +
->  config POWER_RESET_OCELOT_RESET
->  	bool "Microsemi Ocelot reset driver"
->  	depends on MSCC_OCELOT || COMPILE_TEST
-> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-> index 7778c7485cf1..0aebee954ac1 100644
-> --- a/drivers/power/reset/Makefile
-> +++ b/drivers/power/reset/Makefile
-> @@ -11,6 +11,7 @@ obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
->  obj-$(CONFIG_POWER_RESET_GPIO_RESTART) += gpio-restart.o
->  obj-$(CONFIG_POWER_RESET_HISI) += hisi-reboot.o
->  obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
-> +obj-$(CONFIG_POWER_RESET_QCOM_PON) += qcom-pon.o
->  obj-$(CONFIG_POWER_RESET_OCELOT_RESET) += ocelot-reset.o
->  obj-$(CONFIG_POWER_RESET_PIIX4_POWEROFF) += piix4-poweroff.o
->  obj-$(CONFIG_POWER_RESET_LTC2952) += ltc2952-poweroff.o
-> diff --git a/drivers/power/reset/qcom-pon.c b/drivers/power/reset/qcom-pon.c
-> new file mode 100644
-> index 000000000000..0c4caaa7e88f
-> --- /dev/null
-> +++ b/drivers/power/reset/qcom-pon.c
-> @@ -0,0 +1,91 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2017-18 Linaro Limited
-> +
-> +#include <linux/delay.h>
-> +#include <linux/errno.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reboot.h>
-> +#include <linux/reboot-mode.h>
-> +#include <linux/regmap.h>
-> +
-> +#define PON_SOFT_RB_SPARE		0x8f
-> +
-> +struct pm8916_pon {
-> +	struct device *dev;
-> +	struct regmap *regmap;
-> +	u32 baseaddr;
-> +	struct reboot_mode_driver reboot_mode;
-> +};
-> +
-> +static int pm8916_reboot_mode_write(struct reboot_mode_driver *reboot,
-> +				    unsigned int magic)
-> +{
-> +	struct pm8916_pon *pon = container_of
-> +			(reboot, struct pm8916_pon, reboot_mode);
-> +	int ret;
-> +
-> +	ret = regmap_update_bits(pon->regmap,
-> +				 pon->baseaddr + PON_SOFT_RB_SPARE,
-> +				 0xfc, magic << 2);
-> +	if (ret < 0)
-> +		dev_err(pon->dev, "update reboot mode bits failed\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static int pm8916_pon_probe(struct platform_device *pdev)
-> +{
-> +	struct pm8916_pon *pon;
-> +	int error;
-> +
-> +	pon = devm_kzalloc(&pdev->dev, sizeof(*pon), GFP_KERNEL);
-> +	if (!pon)
-> +		return -ENOMEM;
-> +
-> +	pon->dev = &pdev->dev;
-> +
-> +	pon->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> +	if (!pon->regmap) {
-> +		dev_err(&pdev->dev, "failed to locate regmap\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	error = of_property_read_u32(pdev->dev.of_node, "reg",
-> +				     &pon->baseaddr);
-> +	if (error)
-> +		return error;
-> +
-> +	pon->reboot_mode.dev = &pdev->dev;
-> +	pon->reboot_mode.write = pm8916_reboot_mode_write;
-> +	error = devm_reboot_mode_register(&pdev->dev, &pon->reboot_mode);
-> +	if (error) {
-> +		dev_err(&pdev->dev, "can't register reboot mode\n");
-> +		return error;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, pon);
-> +
-> +	return devm_of_platform_populate(&pdev->dev);
-> +}
-> +
-> +static const struct of_device_id pm8916_pon_id_table[] = {
-> +	{ .compatible = "qcom,pm8916-pon" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, pm8916_pon_id_table);
-> +
-> +static struct platform_driver pm8916_pon_driver = {
-> +	.probe = pm8916_pon_probe,
-> +	.driver = {
-> +		.name = "pm8916-pon",
-> +		.of_match_table = of_match_ptr(pm8916_pon_id_table),
-> +	},
-> +};
-> +module_platform_driver(pm8916_pon_driver);
-> +
-> +MODULE_DESCRIPTION("pm8916 Power On driver");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.14.4
+> Right, that's being backwards compatible and we must do that.
+> 
+> > > What about calling both OF and non-OF calls from the cpufreq driver, based on
+> > > the fact that data is present in DT or not ?
+> > 
+> > That's right, we could move the cooling device registration completely
+> > to the cpufreq driver. As that would consolidate the code some more, I
+> > agree that this is the right way to go.
+> 
+> We are good to go then :)
 
--- 
-~Vinod
+So I've applied the patch.
+
+Thanks!
+
