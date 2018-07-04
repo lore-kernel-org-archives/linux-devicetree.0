@@ -1,125 +1,66 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v8 0/6] mtd: rawnand: add NVIDIA Tegra NAND flash
- support
-Date: Wed, 4 Jul 2018 09:45:48 +0200
-Message-ID: <20180704094548.158fc6b6@xps13>
-References: <20180624212727.21672-1-stefan@agner.ch>
-        <20180625143437.24f71e7e@xps13>
-        <edc1958f1c8ead2159e2aa28c06301ef@agner.ch>
+From: Mars Cheng <mars.cheng@mediatek.com>
+Subject: Re: [PATCH v3 4/4] arm64: dts: mediatek: add mt6765 support
+Date: Wed, 4 Jul 2018 15:47:53 +0800
+Message-ID: <1530690473.16183.3.camel@mtkswgap22>
+References: <1530669174-17623-1-git-send-email-mars.cheng@mediatek.com>
+         <1530669174-17623-5-git-send-email-mars.cheng@mediatek.com>
+         <f482708c-ea5e-5d81-a176-d69be9ccdf63@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <edc1958f1c8ead2159e2aa28c06301ef@agner.ch>
+In-Reply-To: <f482708c-ea5e-5d81-a176-d69be9ccdf63@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: thierry.reding@gmail.com, boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, dev@lynxeye.de, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+Hi Marc
 
-Stefan Agner <stefan@agner.ch> wrote on Wed, 04 Jul 2018 09:33:44 +0200:
-
-> Hi Thierry, Hi Miquel,
-> 
-> On 25.06.2018 14:34, Miquel Raynal wrote:
-> > Hi Stefan,
+On Wed, 2018-07-04 at 08:35 +0100, Marc Zyngier wrote:
+> On 04/07/18 02:52, Mars Cheng wrote:
+> > This adds basic chip support for MT6765 SoC.
 > > 
-> > On Sun, 24 Jun 2018 23:27:21 +0200, Stefan Agner <stefan@agner.ch>
-> > wrote:
-> >   
-> >> Eigth and hopefully final revision gets rid of nand_release() as
-> >> suggested by Boris.
-> >>
-> >> --
-> >> Stefan
-> >>
-> >> Changes since v1:
-> >> - Split controller and NAND chip structure
-> >> - Add BCH support
-> >> - Allow to select algorithm and strength using device tree
-> >> - Improve HW ECC error reporting and use DEC_STATUS_BUF only
-> >> - Use SPDX license identifier
-> >> - Use per algorithm mtd_ooblayout_ops
-> >> - Use setup_data_interface callback for NAND timing configuration
-> >>
-> >> Changes since v2:
-> >> - Set clock rate using assigned-clocks
-> >> - Use BIT() macro
-> >> - Fix and improve timing calculation
-> >> - Improve ECC error handling
-> >> - Store OOB layout for tag area in Tegra chip structure
-> >> - Update/fix bindings
-> >> - Use more specific variable names (replace "value")
-> >> - Introduce nand-is-boot-medium
-> >> - Choose sensible ECC strenght automatically
-> >> - Use wait_for_completion_timeout
-> >> - Print register dump on completion timeout
-> >> - Unify tegra_nand_(read|write)_page in tegra_nand_page_xfer
-> >>
-> >> Changes since v3:
-> >> - Implement tegra_nand_(read|write)_raw using DMA
-> >> - Implement tegra_nand_(read|write)_oob using DMA
-> >> - Name registers according to Tegra 2 Technical Reference Manual (v02p)
-> >> - Use wait_for_completion_io_timeout to account for IO
-> >> - Get chip select id from device tree reg property
-> >> - Clear interrupts and reinit wait queues in case command/DMA times out
-> >> - Set default MTD name after nand_set_flash_node
-> >> - Move MODULE_DEVICE_TABLE after declaration of tegra_nand_of_match
-> >> - Make (rs|bch)_strength static
-> >>
-> >> Changes since v4:
-> >> - Pass OOB area to nand_check_erased_ecc_chunk
-> >> - Pass algorithm specific bits_per_step to tegra_nand_get_strength
-> >> - Store ECC layout in chip structure
-> >> - Fix pointer assignment (use NULL)
-> >> - Removed obsolete header delay.h
-> >> - Fixed newlines
-> >> - Use non-_io variant of wait_for_completion_timeout
-> >>
-> >> Changes since v5:
-> >> - Drop extra OOB bytes support
-> >>
-> >> Changes since v6:
-> >> - checkpatch.pl fixes
-> >>
-> >> Changes since v7:
-> >> - Replace nand_release() with mtd_device_unregister() + nand_cleanup()
-> >>
-> >> Lucas Stach (1):
-> >>   ARM: dts: tegra: add Tegra20 NAND flash controller node
-> >>
-> >> Stefan Agner (5):
-> >>   mtd: rawnand: add Reed-Solomon error correction algorithm
-> >>   mtd: rawnand: add an option to specify NAND chip as a boot device
-> >>   mtd: rawnand: tegra: add devicetree binding
-> >>   mtd: rawnand: add NVIDIA Tegra NAND Flash controller driver
-> >>   ARM: dts: tegra: enable NAND flash on Colibri T20
-> >>
-> >>  .../devicetree/bindings/mtd/nand.txt          |    6 +-
-> >>  .../bindings/mtd/nvidia-tegra20-nand.txt      |   64 +
-> >>  MAINTAINERS                                   |    7 +
-> >>  arch/arm/boot/dts/tegra20-colibri-512.dtsi    |   16 +
-> >>  arch/arm/boot/dts/tegra20.dtsi                |   15 +
-> >>  drivers/mtd/nand/raw/Kconfig                  |   10 +
-> >>  drivers/mtd/nand/raw/Makefile                 |    1 +
-> >>  drivers/mtd/nand/raw/nand_base.c              |    4 +
-> >>  drivers/mtd/nand/raw/tegra_nand.c             | 1230 +++++++++++++++++
-> >>  include/linux/mtd/rawnand.h                   |    7 +
-> >>  10 files changed, 1359 insertions(+), 1 deletion(-)
-> >>  create mode 100644 Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
-> >>  create mode 100644 drivers/mtd/nand/raw/tegra_nand.c
-> >>  
+> > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> > ---
+> >  arch/arm64/boot/dts/mediatek/Makefile       |    1 +
+> >  arch/arm64/boot/dts/mediatek/mt6765-evb.dts |   33 ++++++
+> >  arch/arm64/boot/dts/mediatek/mt6765.dtsi    |  155 +++++++++++++++++++++++++++
+> >  3 files changed, 189 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt6765-evb.dts
+> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt6765.dtsi
 > > 
-> > Series applied to nand/next. I just changed the subject of patch3/6 to
-> > be "dt-bindings: mtd: add tegra NAND controller binding".
-> >   
 > 
-> It seems "series applied" refers to the MTD part...
+> [...]
 > 
-> I guess patch 5 and 6 have to go through Tegra tree, Thierry?
+> > +
+> > +		gic: interrupt-controller@c000000 {
+> > +			compatible = "arm,gic-v3";
+> > +			#interrupt-cells = <3>;
+> > +			#address-cells = <2>;
+> > +			#size-cells = <2>;
+> > +			#redistributor-regions = <1>;
+> > +			interrupt-parent = <&gic>;
+> > +			interrupt-controller;
+> > +			reg = <0 0x0c000000 0 0x40000>, // distributor
+> > +			      <0 0x0c100000 0 0x200000>, // redistributor
+> > +			      <0 0x0c400000 0 0x40000>; // gicc
+> 
+> For the second time: please add *all* the GIC CPU interface regions,
+> described in the Cortex-A53 TRM[1] (GICC, GICH, and GICV).
+> 
 
-Indeed :)
+MT6765 has no GICH/GICV/ITS in mediatek design. Have confirmed with our
+designer.  
 
-Regards,
-Miquèl
+MT6797 had similar question from you. Sorry for not mentioned it first.
+
+http://lists.infradead.org/pipermail/linux-mediatek/2017-February/008074.html
+
+Thanks.
+> Thanks,
+> 
+> 	M.
+> 
+> [1]
+> https://urldefense.proofpoint.com/v2/url?u=http-3A__infocenter.arm.com_help_topic_com.arm.doc.ddi0500g_ch09s02s01.html&d=DwICaQ&c=X9NHckmGz7LNQmqtvpDCYVnn6eFXNivfZeknqiAo-n0&r=Ph_SbcClVGRWmGxVhfr-5CZF9ffiUOE7TZ47ns4ROh4&m=9L01qJc7apuzwLobX_nhN0ik8IFdu_X7hJ139x5dNNw&s=0zeZXtWPeITLj01RSxAQ6NfNkTUu9Il0Dddgk07-6QA&e= 
