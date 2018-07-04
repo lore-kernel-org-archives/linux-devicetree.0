@@ -1,82 +1,112 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: virtio: Specify #iommu-cells value
-	for a virtio-iommu
-Date: Wed, 4 Jul 2018 12:45:20 +0100
-Message-ID: <0d701fb2-aea5-12a2-e07e-ba128e2e36e7@arm.com>
-References: <20180621190655.56391-1-jean-philippe.brucker@arm.com>
-	<20180621190655.56391-2-jean-philippe.brucker@arm.com>
-	<20180625192753.GA22351@rob-hp-laptop>
-	<89d31865-ee35-ef8c-f7b3-f3acf2bbd30e@arm.com>
-	<CAL_JsqLdahF+2VsH9h658z9guO0XmqHM75QLaHApZLNP8twUNA@mail.gmail.com>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH v2] mfd: as3722: disable auto power on when AC OK
+Date: Wed, 4 Jul 2018 12:03:29 +0000
+Message-ID: <1530705807.13209.44.camel@toradex.com>
+References: <20180703150411.29709-1-marcel@ziswiler.com>
+         <20180704075202.GQ20176@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAL_JsqLdahF+2VsH9h658z9guO0XmqHM75QLaHApZLNP8twUNA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jayachandran.nair-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, tnowicki-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, virtio-dev-sDuHXQ4OtrM4h7I2RyI4rWD2FQJk+8+b@public.gmane.org, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180704075202.GQ20176@dell>
+Content-Language: en-US
+Content-ID: <75817DF6228CC840B9622624905C6388@eurprd05.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "lee.jones@linaro.org" <lee.jones@linaro.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27/06/18 18:46, Rob Herring wrote:
-> On Tue, Jun 26, 2018 at 11:59 AM Jean-Philippe Brucker
-> <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org> wrote:
->>
->> On 25/06/18 20:27, Rob Herring wrote:
->>> On Thu, Jun 21, 2018 at 08:06:51PM +0100, Jean-Philippe Brucker wrote:
->>>> A virtio-mmio node may represent a virtio-iommu device. This is discovered
->>>> by the virtio driver at probe time, but the DMA topology isn't
->>>> discoverable and must be described by firmware. For DT the standard IOMMU
->>>> description is used, as specified in bindings/iommu/iommu.txt and
->>>> bindings/pci/pci-iommu.txt. Like many other IOMMUs, virtio-iommu
->>>> distinguishes masters by their endpoint IDs, which requires one IOMMU cell
->>>> in the "iommus" property.
->>>>
->>>> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
->>>> ---
->>>>   Documentation/devicetree/bindings/virtio/mmio.txt | 8 ++++++++
->>>>   1 file changed, 8 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/virtio/mmio.txt b/Documentation/devicetree/bindings/virtio/mmio.txt
->>>> index 5069c1b8e193..337da0e3a87f 100644
->>>> --- a/Documentation/devicetree/bindings/virtio/mmio.txt
->>>> +++ b/Documentation/devicetree/bindings/virtio/mmio.txt
->>>> @@ -8,6 +8,14 @@ Required properties:
->>>>   - reg:              control registers base address and size including configuration space
->>>>   - interrupts:       interrupt generated by the device
->>>>
->>>> +Required properties for virtio-iommu:
->>>> +
->>>> +- #iommu-cells:     When the node describes a virtio-iommu device, it is
->>>> +            linked to DMA masters using the "iommus" property as
->>>> +            described in devicetree/bindings/iommu/iommu.txt. For
->>>> +            virtio-iommu #iommu-cells must be 1, each cell describing
->>>> +            a single endpoint ID.
->>>
->>> The iommus property should also be documented for the client side.
->>
->> Isn't section "IOMMU master node" of iommu.txt sufficient? Since the
->> iommus property applies to any DMA master, not only virtio-mmio devices,
->> the canonical description in iommu.txt seems the best place for it, and
->> I'm not sure what to add in this file. Maybe a short example below the
->> virtio_block one?
-> 
-> No, because somewhere we have to capture if 'iommus' is valid for
-> 'virtio-mmio' or not. Hopefully soon we'll actually be able to
-> validate that.
-
-Indeed, it's rather unusual to have a single compatible which may either 
-be an IOMMU or an IOMMU client (but not both at once, I hope!), so 
-nailing down the exact semantics as clearly as possible would definitely 
-be desirable.
-
-Robin.
+T24gV2VkLCAyMDE4LTA3LTA0IGF0IDA4OjUyICswMTAwLCBMZWUgSm9uZXMgd3JvdGU6DQo+IE9u
+IFR1ZSwgMDMgSnVsIDIwMTgsIE1hcmNlbCBaaXN3aWxlciB3cm90ZToNCj4gDQo+ID4gRnJvbTog
+TWFyY2VsIFppc3dpbGVyIDxtYXJjZWwuemlzd2lsZXJAdG9yYWRleC5jb20+DQo+ID4gDQo+ID4g
+T24gYW1zIEFTMzcyMiwgcG93ZXIgb24gd2hlbiBBQyBPSyBpcyBlbmFibGVkIGJ5IGRlZmF1bHQu
+DQo+ID4gTWFraW5nIHRoaXMgb3B0aW9uIGFzIGRpc2FibGUgYnkgZGVmYXVsdCBhbmQgZW5hYmxl
+IG9ubHkNCj4gPiB3aGVuIHBsYXRmb3JtIG5lZWQgdGhpcyBleHBsaWNpdGx5Lg0KPiA+IA0KPiA+
+IFNpZ25lZC1vZmYtYnk6IExheG1hbiBEZXdhbmdhbiA8bGRld2FuZ2FuQG52aWRpYS5jb20+DQo+
+ID4gUmV2aWV3ZWQtYnk6IEJpYmVrIEJhc3UgPGJiYXN1QG52aWRpYS5jb20+DQo+ID4gVGVzdGVk
+LWJ5OiBCaWJlayBCYXN1IDxiYmFzdUBudmlkaWEuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IE1h
+cmNlbCBaaXN3aWxlciA8bWFyY2VsLnppc3dpbGVyQHRvcmFkZXguY29tPg0KPiA+IA0KPiA+IC0t
+LQ0KPiA+IA0KPiA+IENoYW5nZXMgaW4gdjI6DQo+ID4gLSBEb2N1bWVudCBkZXZpY2UgdHJlZSBw
+cm9wZXJ0eSBhcyBzdWdnZXN0ZWQgYnkgU3RlZmFuLg0KPiA+IC0gUmVuYW1lIFNFUTEgdG8gU0VR
+VTEgYXMgcGVyIGRhdGFzaGVldCBhcyBzdWdnZXN0ZWQgYnkgU3RlZmFuLg0KPiA+IC0gRHJvcCBy
+ZWZlcmVuY2UgdG8gZG93bnN0cmVhbSBjb21taXQgYXMgc3VnZ2VzdGVkIGJ5IExlZS4NCj4gPiAN
+Cj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9hczM3MjIudHh0IHwg
+IDIgKysNCj4gPiAgZHJpdmVycy9tZmQvYXMzNzIyLmMgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHwgMTIgKysrKysrKysrKysrDQo+ID4gIGluY2x1ZGUvbGludXgvbWZkL2FzMzcyMi5oICAg
+ICAgICAgICAgICAgICAgICAgICB8ICAzICsrKw0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDE3IGlu
+c2VydGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL21mZC9hczM3MjIudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbWZkL2FzMzcyMi50eHQNCj4gPiBpbmRleCA1Mjk3YjIyMTA3MDQuLjJhNjY1
+NzQxZDdmZSAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbWZkL2FzMzcyMi50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbWZkL2FzMzcyMi50eHQNCj4gPiBAQCAtMjAsNiArMjAsOCBAQCBPcHRpb25hbCBwcm9w
+ZXJ0aWVzOg0KPiA+ICAtIGFtcyxlbmFibGUtaW50ZXJuYWwtaTJjLXB1bGx1cDogQm9vbGVhbiBw
+cm9wZXJ0eSwgdG8gZW5hYmxlDQo+ID4gaW50ZXJuYWwgcHVsbHVwIG9uDQo+ID4gIAlpMmMgc2Ns
+L3NkYSBwaW5zLiBNaXNzaW5nIHRoaXMgd2lsbCBkaXNhYmxlIGludGVybmFsDQo+ID4gcHVsbHVw
+IG9uIGkyYw0KPiA+ICAJc2NsL3NkYSBsaW5lcy4NCj4gPiArLSBhbXMsZW5hYmxlLWFjLW9rLXBv
+d2VyLW9uOiBCb29sZWFuIHByb3BlcnR5LCB0byBlbmFibGUgZXhpdCBvdXQNCj4gPiBvZiBwb3dl
+ciBvZmYNCj4gPiArCW1vZGUgd2l0aCBBQ19PSyBwaW4gKHBpbiBlbmFibGVkIGluIHBvd2VyIG9m
+ZiBtb2RlKS4NCj4gDQo+IFRoaXMgbmVlZHMgYSBEVCBBY2suDQoNClllcywgY2VydGFpbmx5LiBU
+aGF0J3Mgd2h5IEkgQ0MnZCB0aGUgZGV2aWNlIHRyZWUgbWFpbGluZyBsaXN0IGFzIHdlbGwNCmFz
+IE1yLiBIZXJyaW5nIGhpbXNlbGYuDQoNCj4gPiAgT3B0aW9uYWwgc3VibW9kdWxlIGFuZCB0aGVp
+ciBwcm9wZXJ0aWVzOg0KPiA+ICA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT0NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvYXMzNzIyLmMgYi9kcml2ZXJzL21mZC9h
+czM3MjIuYw0KPiA+IGluZGV4IGY4NzM0MmMyMTFiYy4uNGQwNjllZDIxZmY2IDEwMDY0NA0KPiA+
+IC0tLSBhL2RyaXZlcnMvbWZkL2FzMzcyMi5jDQo+ID4gKysrIGIvZHJpdmVycy9tZmQvYXMzNzIy
+LmMNCj4gPiBAQCAtMzQ5LDYgKzM0OSw4IEBAIHN0YXRpYyBpbnQgYXMzNzIyX2kyY19vZl9wcm9i
+ZShzdHJ1Y3QNCj4gPiBpMmNfY2xpZW50ICppMmMsDQo+ID4gIAkJCQkJImFtcyxlbmFibGUtaW50
+ZXJuYWwtaW50LQ0KPiA+IHB1bGx1cCIpOw0KPiA+ICAJYXMzNzIyLT5lbl9pbnRlcm5faTJjX3B1
+bGx1cCA9IG9mX3Byb3BlcnR5X3JlYWRfYm9vbChucCwNCj4gPiAgCQkJCQkiYW1zLGVuYWJsZS1p
+bnRlcm5hbC1pMmMtDQo+ID4gcHVsbHVwIik7DQo+ID4gKwlhczM3MjItPmVuX2FjX29rX3B3cl9v
+biA9IG9mX3Byb3BlcnR5X3JlYWRfYm9vbChucCwNCj4gPiArCQkJCQkiYW1zLGVuYWJsZS1hYy1v
+ay1wb3dlci0NCj4gPiBvbiIpOw0KPiA+ICAJYXMzNzIyLT5pcnFfZmxhZ3MgPSBpcnFkX2dldF90
+cmlnZ2VyX3R5cGUoaXJxX2RhdGEpOw0KPiA+ICAJZGV2X2RiZygmaTJjLT5kZXYsICJJUlEgZmxh
+Z3MgYXJlIDB4JTA4bHhcbiIsIGFzMzcyMi0NCj4gPiA+aXJxX2ZsYWdzKTsNCj4gPiAgCXJldHVy
+biAwOw0KPiA+IEBAIC0zNjAsNiArMzYyLDcgQEAgc3RhdGljIGludCBhczM3MjJfaTJjX3Byb2Jl
+KHN0cnVjdCBpMmNfY2xpZW50DQo+ID4gKmkyYywNCj4gPiAgCXN0cnVjdCBhczM3MjIgKmFzMzcy
+MjsNCj4gPiAgCXVuc2lnbmVkIGxvbmcgaXJxX2ZsYWdzOw0KPiA+ICAJaW50IHJldDsNCj4gPiAr
+CXU4IHZhbCA9IDA7DQo+ID4gIA0KPiA+ICAJYXMzNzIyID0gZGV2bV9remFsbG9jKCZpMmMtPmRl
+diwgc2l6ZW9mKHN0cnVjdCBhczM3MjIpLA0KPiA+IEdGUF9LRVJORUwpOw0KPiA+ICAJaWYgKCFh
+czM3MjIpDQo+ID4gQEAgLTM5OCw2ICs0MDEsMTUgQEAgc3RhdGljIGludCBhczM3MjJfaTJjX3By
+b2JlKHN0cnVjdCBpMmNfY2xpZW50DQo+ID4gKmkyYywNCj4gPiAgCWlmIChyZXQgPCAwKQ0KPiA+
+ICAJCXJldHVybiByZXQ7DQo+ID4gIA0KPiA+ICsJaWYgKGFzMzcyMi0+ZW5fYWNfb2tfcHdyX29u
+KQ0KPiA+ICsJCXZhbCA9IEFTMzcyMl9DVFJMX1NFUVUxX0FDX09LX1BXUl9PTjsNCj4gPiArCXJl
+dCA9IGFzMzcyMl91cGRhdGVfYml0cyhhczM3MjIsIEFTMzcyMl9DVFJMX1NFUVUxX1JFRywNCj4g
+PiArCQkJQVMzNzIyX0NUUkxfU0VRVTFfQUNfT0tfUFdSX09OLCB2YWwpOw0KPiANCj4gV2hhdCBp
+cyB0aGUgZGVmYXVsdCB2YWx1ZT8NCg0KWWVzLCBzb3JyeS4gSSBxdWVzcyBpdCBtYXkgbm90IGJl
+IGNvbXBsZXRlbHkgY2xlYXIgZnJvbSBMYXhtYW4ncw0Kb3JpZ2luYWwgY29tbWl0IG1lc3NhZ2Uu
+DQoNCj4gSWYgMCwgeW91IGNvdWxkIHBsYWNlIGFsbCBvZiB0aGlzIGNvZGUgaW5zaWRlIHRoZSAi
+aWYNCj4gKGFzMzcyMi0+ZW5fYWNfb2tfcHdyX29uKSIgYW5kIHNhdmUgb24gYSBmZXcgdW5uZWNl
+c3NhcnkgY3ljbGVzLg0KDQpVbmZvcnR1bmF0ZWx5LCBpdCBpcyBub3QgcXVpdGUgdGhhdCBzaW1w
+bGUuIFdoaWxlIHRoZSBoYXJkd2FyZSBkZWZhdWx0DQp3b3VsZCBhY3R1YWxseSBiZSBvbiBhdCBs
+ZWFzdCBKZXRzb24gVEsxIGFzIHdlbGwgYXMgVG9yYWRleCBBcGFsaXMgVEsxDQpkbyBub3Qgd29y
+ayB0aGF0IHdheS4gVGhlcmVmb3JlLCBteSAocmVzcC4gTGF4bWFuJ3MpIHByb3Bvc2VkIHdheSBv
+Zg0KaGFuZGxpbmcgdGhpcyB3YXMvaXMgZm9yIHRoZSBkZWZhdWx0IHRvIGJlIG9mZiBhbmQgYW55
+Ym9keSByZWFsbHkNCnJlcXVpcmluZyBpdCB0byBiZSBvbiBoYXZpbmcgdG8gZG8gc28gdmlhIGFk
+ZGluZyB0aGlzIGRldmljZSB0cmVlDQpwcm9wZXJ0eS4gSSBhZG1pdCB0aGF0IHRoaXMgbWF5IGJl
+IHBlcmNlaXZlZCBhcyBhIGJlaGF2aW91cmFsIGNoYW5nZQ0KaG93ZXZlciBhcyBtZW50aW9uZWQg
+YWJvdmUgYXQgbGVhc3Qgb24gSmV0c29uIFRLMSBhcyB3ZWxsIGFzIFRvcmFkZXgNCkFwYWxpcyBU
+SzEgdGhpcyByZWFsbHkgZml4ZXMgcG93ZXJvZmYgd2hpY2ggb3RoZXJ3aXNlIGltbWVkaWF0ZWx5
+DQpwb3dlcmVkIG9uIGFnYWluLiBTbyB0aGlzIGlzIHJlYWxseSBhIGJ1ZyBmaXguIEkgbWF5IGlu
+Y2x1ZGUgc29tZSBtb3JlDQppbmZvcm1hdGlvbiBpbiB0aGUgY29tbWl0IG1lc3NhZ2UgaWYgcmVx
+dWVzdGVkLg0KDQpNYXliZSBzb21lYm9keSBmcm9tIE5WSURJQSBjb3VsZCBhbHNvIGNvbW1lbnQg
+b24gd2hldGhlciBvciBub3QgdGhpcyBpcw0KcmVhbGx5IGEgZ29vZCBpZGVhIG9yIGhvdyB0aGV5
+IHdvdWxkIGV4cGVjdCB0aGluZ3MgdG8gd29yay4gQW55Ym9keT8NCg0KPiA+ICsJaWYgKHJldCA8
+IDApIHsNCj4gPiArCQlkZXZfZXJyKGFzMzcyMi0+ZGV2LCAiQ1RSTHNlcXUxIHVwZGF0ZSBmYWls
+ZWQ6DQo+ID4gJWRcbiIsIHJldCk7DQo+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiArCX0NCj4gPiAr
+DQo+ID4gIAlyZXQgPSBkZXZtX21mZF9hZGRfZGV2aWNlcygmaTJjLT5kZXYsIC0xLCBhczM3MjJf
+ZGV2cywNCj4gPiAgCQkJCSAgIEFSUkFZX1NJWkUoYXMzNzIyX2RldnMpLCBOVUxMLA0KPiA+IDAs
+DQo+ID4gIAkJCQkgICByZWdtYXBfaXJxX2dldF9kb21haW4oYXMzNzIyLQ0KPiA+ID5pcnFfZGF0
+YSkpOw0KPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L21mZC9hczM3MjIuaA0KPiA+IGIv
+aW5jbHVkZS9saW51eC9tZmQvYXMzNzIyLmgNCj4gPiBpbmRleCA1MWU2Zjk0MTQ1NzUuLmI0MDRh
+NWFmOWJiYSAxMDA2NDQNCj4gPiAtLS0gYS9pbmNsdWRlL2xpbnV4L21mZC9hczM3MjIuaA0KPiA+
+ICsrKyBiL2luY2x1ZGUvbGludXgvbWZkL2FzMzcyMi5oDQo+ID4gQEAgLTI5Niw2ICsyOTYsOCBA
+QA0KPiA+ICAjZGVmaW5lIEFTMzcyMl9BREMxX0NPTlZfTk9UUkVBRFkJCQlCSVQoNykNCj4gPiAg
+I2RlZmluZSBBUzM3MjJfQURDMV9TT1VSQ0VfU0VMRUNUX01BU0sJCQkweDFGDQo+ID4gIA0KPiA+
+ICsjZGVmaW5lIEFTMzcyMl9DVFJMX1NFUVUxX0FDX09LX1BXUl9PTgkJCUJJVCgNCj4gPiAwKQ0K
+PiA+ICsNCj4gPiAgLyogR1BJTyBtb2RlcyAqLw0KPiA+ICAjZGVmaW5lIEFTMzcyMl9HUElPX01P
+REVfTUFTSwkJCQkweDA3DQo+ID4gICNkZWZpbmUgQVMzNzIyX0dQSU9fTU9ERV9JTlBVVAkJCQkw
+eDAwDQo+ID4gQEAgLTM5MSw2ICszOTMsNyBAQCBzdHJ1Y3QgYXMzNzIyIHsNCj4gPiAgCXVuc2ln
+bmVkIGxvbmcgaXJxX2ZsYWdzOw0KPiA+ICAJYm9vbCBlbl9pbnRlcm5faW50X3B1bGx1cDsNCj4g
+PiAgCWJvb2wgZW5faW50ZXJuX2kyY19wdWxsdXA7DQo+ID4gKwlib29sIGVuX2FjX29rX3B3cl9v
+bjsNCj4gPiAgCXN0cnVjdCByZWdtYXBfaXJxX2NoaXBfZGF0YSAqaXJxX2RhdGE7DQo+ID4gIH07
