@@ -1,34 +1,41 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v10 1/6] MAINTAINERS: add at91 usart mfd driver
-Date: Wed, 4 Jul 2018 07:23:59 +0100
-Message-ID: <20180704062359.GZ20176@dell>
-References: <20180625172230.29686-1-radu.pirea@microchip.com>
- <20180625172230.29686-2-radu.pirea@microchip.com>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: Re: [RFC PATCH 1/4] dts: misc: Add bindings documentation for
+ bmc-misc-ctrl
+Date: Wed, 04 Jul 2018 15:58:31 +0930
+Message-ID: <1530685711.3894608.1429457792.4DE9E784@webmail.messagingengine.com>
+References: <20180703070413.28756-1-andrew@aj.id.au>
+ <20180703070413.28756-2-andrew@aj.id.au>
+ <20180703075009.GA27649@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180625172230.29686-2-radu.pirea@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Radu Pirea <radu.pirea@microchip.com>
-Cc: broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180703075009.GA27649@kroah.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benh@kernel.crashing.org, Eugene.Cho@dell.com, a.amelkin@yadro.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, joel@jms.id.au, stewart@linux.ibm.com, openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Jun 2018, Radu Pirea wrote:
+Hi Greg,
 
-> Added entry for at91 usart mfd driver.
+On Tue, 3 Jul 2018, at 17:20, Greg KH wrote:
+> On Tue, Jul 03, 2018 at 05:04:10PM +1000, Andrew Jeffery wrote:
+> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > ---
 > 
-> Signed-off-by: Radu Pirea <radu.pirea@microchip.com>
-> ---
->  MAINTAINERS | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> I can't take patches without any changelog text at all :(
+> 
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+I wasn't expecting you to put them into your tree - the general concept/implementation is still too immature for that, let alone the commit messages :) However, I'll address this before sending another spin of the patches.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Sorry for the noise and thanks for the quick response.
+
+Andrew
