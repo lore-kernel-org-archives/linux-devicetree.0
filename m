@@ -1,61 +1,173 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v2 2/5] media: venus: add a routine to set venus state
-Date: Wed, 4 Jul 2018 19:08:59 +0900
-Message-ID: <CAAFQd5Bsh22v7jp8CAO-qQEa6kLk4Qws37DmLZUytAJbUjOCWw@mail.gmail.com>
-References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
- <1527884768-22392-3-git-send-email-vgarodia@codeaurora.org>
- <20180601212117.GD11565@jcrouse-lnx.qualcomm.com> <CAAFQd5DH2i+8ZJ+s2XUnmFHwxXKLF6z_=w0Z-RFs=W9oVvrJgw@mail.gmail.com>
- <ca7567c1df773f1223d919fab28f1460@codeaurora.org> <CAAFQd5BvTNhafus4WcoPLiBTN8X3Ls+YA0OgpfnyadDayvVQxA@mail.gmail.com>
- <5560573ed426b03ad7676ac14a291e70@codeaurora.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v8 1/2] mfd: bd71837: mfd driver for ROHM BD71837 PMIC
+Date: Wed, 4 Jul 2018 11:11:02 +0100
+Message-ID: <20180704101102.GA496@dell>
+References: <cover.1530259815.git.matti.vaittinen@fi.rohmeurope.com>
+ <18a04e42debb2a23aec855cac3bcf3d6ab6c55fd.1530259815.git.matti.vaittinen@fi.rohmeurope.com>
+ <CAFqH_533te3UuY9V9U+Z0yxTkW==3wsK22uzB4G=aWGour7Quw@mail.gmail.com>
+ <20180704083911.GH2118@localhost.localdomain>
+ <20180704095257.GJ2118@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5560573ed426b03ad7676ac14a291e70@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20180704095257.GJ2118@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vgarodia@codeaurora.org
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, bjorn.andersson@linaro.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>, linux-media-owner@vger.kernel.org
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Enric Balletbo Serra <eballetbo@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Matti Vaittinen <mazziesaccount@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>, chenjh@rock-chips.com, Andrey Smirnov <andrew.smirnov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Kate Stewart <kstewart@linuxfoundation.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, sboyd@kernel.org, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>linux-kernel <li>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 4, 2018 at 6:41 PM Vikash Garodia <vgarodia@codeaurora.org> wrote:
->
-> On 2018-07-04 14:30, Tomasz Figa wrote:
-> > On Wed, Jul 4, 2018 at 4:59 PM Vikash Garodia <vgarodia@codeaurora.org>
-> > wrote:
-> >> On 2018-06-04 18:24, Tomasz Figa wrote:
-> >> > On Sat, Jun 2, 2018 at 6:21 AM Jordan Crouse <jcrouse@codeaurora.org>
-> >> > wrote:
-> >> >> On Sat, Jun 02, 2018 at 01:56:05AM +0530, Vikash Garodia wrote:
-> >> > Given that this function is supposed to substitute existing calls into
-> >> > qcom_scm_set_remote_state(), why not just do something like this:
-> >> >
-> >> >         if (qcom_scm_is_available())
-> >> >                 return qcom_scm_set_remote_state(state, 0);
-> >> >
-> >> >         switch (state) {
-> >> >         case TZBSP_VIDEO_SUSPEND:
-> >> >                 writel_relaxed(1, reg_base + WRAPPER_A9SS_SW_RESET);
-> >> >                 break;
-> >> >         case TZBSP_VIDEO_RESUME:
-> >> >                 venus_reset_hw(core);
-> >> >                 break;
-> >> >         }
-> >> >
-> >> >         return 0;
-> >> This will not work as driver will write on the register irrespective
-> >> of
-> >> scm
-> >> availability.
-> >
-> > I'm sorry, where would it do so? The second line returns from the
-> > function inf SCM is available, so the rest of the function wouldn't be
-> > executed.
->
-> Ah!! you are right. That would work as well.
-> I am ok with either way, but would recommend to keep it the existing way
-> as it makes it little more readable.
+On Wed, 04 Jul 2018, Matti Vaittinen wrote:
 
-I personally think the early exit is more readable, as it clearly
-separates the SCM and non-SCM part.
+> On Wed, Jul 04, 2018 at 11:39:11AM +0300, Matti Vaittinen wrote:
+> > On Tue, Jul 03, 2018 at 11:26:00AM +0200, Enric Balletbo Serra wrote:
+> > > Missatge de Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com> del
+> > > dia dv., 29 de juny 2018 a les 11:47:
+> > > 
+> > > Now that you use devm calls and you don't need to unwind things I
+> > > think is better to use plain returns. So,
+> > > 
+> > > return -ENOMEM;
+> > 
+> > I have never really understood why use of gotos in error handling is
+> > discouraged.
 
-Best regards,
-Tomasz
+They're not.
+
+> > Personally I would always choose single point of exit from
+> > a function when it is simple enough to achieve (like in this case). I've
+> > written and fixed way too many functions which leak resources or
+> > accidentally keep a lock when exiting from error branches. But I know
+> > many colleagues like you who prefer not to have gotos but  in place returns
+> > instead. So I guess I'll leave the final call on this to the one who is
+> > maintainer for this code. And it is true there is no things to unwind
+> > now - which does not mean that next updater won't add such. But as I
+> > said, I know plenty of people share your view - and even though I rather
+> > maintain code with only one exit the final call is on subsystem maintainer
+> > here.
+
+Please use gotos in the error path.
+
+IMO, it's the nicest way to unwind (as you call it).
+
+> Actually, If it was completely my call the probe would look something
+> like this:
+> 
+> +static int bd71837_i2c_probe(struct i2c_client *i2c,
+> +                           const struct i2c_device_id *id)
+> +{
+> +       struct bd71837 *bd71837;
+> +       struct bd71837_board *board_info;
+> +       int gpio_intr = 0;
+> +
+> +       const char *errstr = "No IRQ configured";
+> +       int ret = -EINVAL;
+> +
+> +       bd71837 = devm_kzalloc(&i2c->dev, sizeof(struct bd71837), GFP_KERNEL);
+> +
+> +       if (bd71837 == NULL)
+> +               return -ENOMEM;
+> +
+> +       board_info = dev_get_platdata(&i2c->dev);
+> +
+> +       if (!board_info)
+> +               gpio_intr = i2c->irq;
+> +       else
+> +               gpio_intr = board_info->gpio_intr;
+> +
+> +       if (!gpio_intr)
+> +               goto err_out;
+> +
+> +       i2c_set_clientdata(i2c, bd71837);
+> +       bd71837->dev = &i2c->dev;
+> +       bd71837->i2c_client = i2c;
+> +       bd71837->chip_irq = gpio_intr;
+> +
+> +       errstr = "regmap initialization failed";
+> +
+> +       bd71837->regmap = devm_regmap_init_i2c(i2c, &bd71837_regmap_config);
+> +       ret = PTR_ERR(bd71837->regmap);
+> +       if (IS_ERR(bd71837->regmap))
+> +               goto err_out;
+> +
+> +       errstr = "Read BD71837_REG_DEVICE failed";
+> +       ret = bd71837_reg_read(bd71837, BD71837_REG_REV);
+> +       if (ret < 0)
+> +               goto err_out;
+> +
+> +       errstr = "Failed to add irq_chip";
+> +       ret = devm_regmap_add_irq_chip(&i2c->dev, bd71837->regmap,
+> +                                      bd71837->chip_irq, IRQF_ONESHOT, 0,
+> +                                      &bd71837_irq_chip, &bd71837->irq_data);
+> +       if (ret < 0)
+> +               goto err_out;
+> +
+> +       errstr = "Failed to configure button short press timeout";
+> +       ret = regmap_update_bits(bd71837->regmap,
+> +                                BD71837_REG_PWRONCONFIG0,
+> +                                BD718XX_PWRBTN_PRESS_DURATION_MASK,
+> +                                BD718XX_PWRBTN_SHORT_PRESS_10MS);
+> +       if (ret < 0)
+> +               goto err_out;
+> +
+> +       /* According to BD71847 datasheet the HW default for long press
+> +        * detection is 10ms. So lets change it to 10 sec so we can actually
+> +        * get the short push and allow gracefull shut down
+> +        */
+> +       ret = regmap_update_bits(bd71837->regmap,
+> +                                BD71837_REG_PWRONCONFIG1,
+> +                                BD718XX_PWRBTN_PRESS_DURATION_MASK,
+> +                                BD718XX_PWRBTN_LONG_PRESS_10S);
+> +
+> +       errstr = "Failed to configure button long press timeout";
+> +       if (ret < 0)
+> +               goto err_out;
+> +
+> +       btns[0].irq = regmap_irq_get_virq(bd71837->irq_data,
+> +                                         BD71837_INT_PWRBTN_S);
+> +
+> +       errstr = "Failed to get the IRQ";
+> +       ret = btns[0].irq;
+> +       if (btns[0].irq < 0)
+> +               goto err_out;
+> +
+> +       errstr = "Failed to create subdevices";
+> +       ret = devm_mfd_add_devices(bd71837->dev, PLATFORM_DEVID_AUTO,
+> +                                  bd71837_mfd_cells,
+> +                                  ARRAY_SIZE(bd71837_mfd_cells), NULL, 0,
+> +                                  regmap_irq_get_domain(bd71837->irq_data));
+> +       if (ret) {
+> +err_out:
+> +               if (errstr)
+> +                       dev_err(&i2c->dev, "%s (%d)\n", errstr, ret);
+> +       }
+> +
+> +       return ret;
+> +}
+> 
+> What do you think of this? To my eye it is nice. It keeps single point of
+> exit and introduces only simple if-statements without the need of curly
+> brackets. And finally the error prints string works as a comment too.
+> I've seen bunch of constructs like this on the networking side but I
+> have no idea if this is frowned on this subsystem =) Oh, and probe abowe
+> is just to illustrate the idea, I did not even try compiling it yet.
+
+That is horrible.  I nearly vomited on my keyboard.  It doesn't flow
+anywhere nearly as nicely has sorting out all of the error handling
+*after* it has been detected.  You're sacrificing readability to save
+a single line and do not save any *actual* lines of code, only a brace.
+
+Landing a goto in the middle of a statement is messy and unsightly.
+
+What happens when you have some resources to free?  The last few lines
+will become very messy, very quickly.
+
+Nit: "something == NULL" is better written as "!something".
+Nit: Please use proper multi-line comments as per the Coding Style.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
