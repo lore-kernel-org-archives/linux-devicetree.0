@@ -1,65 +1,117 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 2/5] mfd: axp20x: Add self-working mode support for AXP806
-Date: Wed, 4 Jul 2018 08:33:11 +0100
-Message-ID: <20180704073311.GH20176@dell>
-References: <20180620051540.25617-1-wens@csie.org>
- <20180620051540.25617-3-wens@csie.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v8 0/6] mtd: rawnand: add NVIDIA Tegra NAND flash support
+Date: Wed, 04 Jul 2018 09:33:44 +0200
+Message-ID: <edc1958f1c8ead2159e2aa28c06301ef@agner.ch>
+References: <20180624212727.21672-1-stefan@agner.ch>
+ <20180625143437.24f71e7e@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180620051540.25617-3-wens@csie.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Andre Przywara <andre.przywara@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180625143437.24f71e7e@xps13>
+Sender: linux-kernel-owner@vger.kernel.org
+To: thierry.reding@gmail.com, Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, dev@lynxeye.de, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMCBKdW4gMjAxOCwgQ2hlbi1ZdSBUc2FpIHdyb3RlOgoKPiBUaGUgQVhQODA2IGNh
-biBvcGVyYXRlIGluIGEgc3RhbmRhbG9uZSAic2VsZi13b3JraW5nIiBtb2RlLCBpbiB3aGljaCBp
-dAo+IGlzIGFsc28gcmVzcG9uc2libGUgZm9yIHBvd2VyIGNvbnRyb2wgb2YgdGhlIG92ZXJhbGwg
-c3lzdGVtLiBUaGlzIG1vZGUKPiBpcyBzaW1pbGFyIHRvIHRoZSBtYXN0ZXIgbW9kZSwgYnV0IHRo
-ZSBFTi9QV1JPTiBwaW4gZnVuY3Rpb25zIGFzIGEgcG93ZXIKPiBidXR0b24sIGluc3RlYWQgb2Yg
-YSBsZXZlbC10cmlnZ2VyZWQgZW5hYmxlIHN3aXRjaC4KPiAKPiBUaGlzIHBhdGNoIGFkZHMgY29k
-ZSBjaGVja2luZyBmb3IgdGhlIG5ldyAieC1wb3dlcnMsc2VsZi13b3JraW5nLW1vZGUiCj4gcHJv
-cGVydHksIGFuZCBhIHNlcGFyYXRlIG1mZF9jZWxsIGxpc3QgdGhhdCBpbmNsdWRlcyB0aGUgcG93
-ZXIgYnV0dG9uCj4gKFBFSykgc3ViLWRldmljZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBDaGVuLVl1
-IFRzYWkgPHdlbnNAY3NpZS5vcmc+Cj4gLS0tCj4gIGRyaXZlcnMvbWZkL2F4cDIweC5jIHwgMzAg
-KysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAyNyBpbnNl
-cnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9h
-eHAyMHguYyBiL2RyaXZlcnMvbWZkL2F4cDIweC5jCj4gaW5kZXggOWEyZWYzZDliOGY4Li4xOTg4
-ODgxNTI5YTkgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9tZmQvYXhwMjB4LmMKPiArKysgYi9kcml2
-ZXJzL21mZC9heHAyMHguYwo+IEBAIC0yMjEsNiArMjIxLDExIEBAIHN0YXRpYyBjb25zdCBzdHJ1
-Y3QgcmVzb3VyY2UgYXhwODAzX3Bla19yZXNvdXJjZXNbXSA9IHsKPiAgCURFRklORV9SRVNfSVJR
-X05BTUVEKEFYUDgwM19JUlFfUEVLX0ZBTF9FREdFLCAiUEVLX0RCRiIpLAo+ICB9Owo+ICAKPiAr
-c3RhdGljIGNvbnN0IHN0cnVjdCByZXNvdXJjZSBheHA4MDZfcGVrX3Jlc291cmNlc1tdID0gewo+
-ICsJREVGSU5FX1JFU19JUlFfTkFNRUQoQVhQODA2X0lSUV9QT0tfUklTRSwgIlBFS19EQlIiKSwK
-PiArCURFRklORV9SRVNfSVJRX05BTUVEKEFYUDgwNl9JUlFfUE9LX0ZBTEwsICJQRUtfREJGIiks
-Cj4gK307Cj4gKwo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IHJlc291cmNlIGF4cDgwOV9wZWtfcmVz
-b3VyY2VzW10gPSB7Cj4gIAlERUZJTkVfUkVTX0lSUV9OQU1FRChBWFA4MDlfSVJRX1BFS19SSVNf
-RURHRSwgIlBFS19EQlIiKSwKPiAgCURFRklORV9SRVNfSVJRX05BTUVEKEFYUDgwOV9JUlFfUEVL
-X0ZBTF9FREdFLCAiUEVLX0RCRiIpLAo+IEBAIC03MzAsNiArNzM1LDE3IEBAIHN0YXRpYyBjb25z
-dCBzdHJ1Y3QgbWZkX2NlbGwgYXhwODAzX2NlbGxzW10gPSB7Cj4gIAl7CS5uYW1lCQkJPSAiYXhw
-MjB4LXJlZ3VsYXRvciIgfSwKPiAgfTsKPiAgCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbWZkX2Nl
-bGwgYXhwODA2X3NlbGZfd29ya2luZ19jZWxsc1tdID0gewo+ICsJewo+ICsJCS5uYW1lCQkJPSAi
-YXhwMjIxLXBlayIsCj4gKwkJLm51bV9yZXNvdXJjZXMJCT0gQVJSQVlfU0laRShheHA4MDZfcGVr
-X3Jlc291cmNlcyksCj4gKwkJLnJlc291cmNlcwkJPSBheHA4MDZfcGVrX3Jlc291cmNlcywKPiAr
-CX0sCj4gKwl7Cj4gKwkJLm5hbWUJCQk9ICJheHAyMHgtcmVndWxhdG9yIiwKPiArCX0sCj4gK307
-CgpOaXQ6IFBsZWFzZSBwbGFjZSBzaW5nbGUgbGluZSBlbnRyaWVzIG9uIGEgc2luZ2xlIGxpbmUu
-ICBMaWtlIHRoaXM6CgoJeyAgIAkgIC5uYW1lCQkJPSAiYXhwMjB4LXJlZ3VsYXRvciIsIH0sCgpB
-ZnRlciB5b3UgaGF2ZSBtYWRlIHRoYXQgY2hhbmdlLCBwbGVhc2UgYWRkIG15OgoKRm9yIG15IG93
-biByZWZlcmVuY2U6CiAgQWNrZWQtZm9yLU1GRC1ieTogTGVlIEpvbmVzIDxsZWUuam9uZXNAbGlu
-YXJvLm9yZz4KCi0tIApMZWUgSm9uZXMgW+adjueQvOaWr10KTGluYXJvIFNlcnZpY2VzIFRlY2hu
-aWNhbCBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29D
-cwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Thierry, Hi Miquel,
+
+On 25.06.2018 14:34, Miquel Raynal wrote:
+> Hi Stefan,
+> 
+> On Sun, 24 Jun 2018 23:27:21 +0200, Stefan Agner <stefan@agner.ch>
+> wrote:
+> 
+>> Eigth and hopefully final revision gets rid of nand_release() as
+>> suggested by Boris.
+>>
+>> --
+>> Stefan
+>>
+>> Changes since v1:
+>> - Split controller and NAND chip structure
+>> - Add BCH support
+>> - Allow to select algorithm and strength using device tree
+>> - Improve HW ECC error reporting and use DEC_STATUS_BUF only
+>> - Use SPDX license identifier
+>> - Use per algorithm mtd_ooblayout_ops
+>> - Use setup_data_interface callback for NAND timing configuration
+>>
+>> Changes since v2:
+>> - Set clock rate using assigned-clocks
+>> - Use BIT() macro
+>> - Fix and improve timing calculation
+>> - Improve ECC error handling
+>> - Store OOB layout for tag area in Tegra chip structure
+>> - Update/fix bindings
+>> - Use more specific variable names (replace "value")
+>> - Introduce nand-is-boot-medium
+>> - Choose sensible ECC strenght automatically
+>> - Use wait_for_completion_timeout
+>> - Print register dump on completion timeout
+>> - Unify tegra_nand_(read|write)_page in tegra_nand_page_xfer
+>>
+>> Changes since v3:
+>> - Implement tegra_nand_(read|write)_raw using DMA
+>> - Implement tegra_nand_(read|write)_oob using DMA
+>> - Name registers according to Tegra 2 Technical Reference Manual (v02p)
+>> - Use wait_for_completion_io_timeout to account for IO
+>> - Get chip select id from device tree reg property
+>> - Clear interrupts and reinit wait queues in case command/DMA times out
+>> - Set default MTD name after nand_set_flash_node
+>> - Move MODULE_DEVICE_TABLE after declaration of tegra_nand_of_match
+>> - Make (rs|bch)_strength static
+>>
+>> Changes since v4:
+>> - Pass OOB area to nand_check_erased_ecc_chunk
+>> - Pass algorithm specific bits_per_step to tegra_nand_get_strength
+>> - Store ECC layout in chip structure
+>> - Fix pointer assignment (use NULL)
+>> - Removed obsolete header delay.h
+>> - Fixed newlines
+>> - Use non-_io variant of wait_for_completion_timeout
+>>
+>> Changes since v5:
+>> - Drop extra OOB bytes support
+>>
+>> Changes since v6:
+>> - checkpatch.pl fixes
+>>
+>> Changes since v7:
+>> - Replace nand_release() with mtd_device_unregister() + nand_cleanup()
+>>
+>> Lucas Stach (1):
+>>   ARM: dts: tegra: add Tegra20 NAND flash controller node
+>>
+>> Stefan Agner (5):
+>>   mtd: rawnand: add Reed-Solomon error correction algorithm
+>>   mtd: rawnand: add an option to specify NAND chip as a boot device
+>>   mtd: rawnand: tegra: add devicetree binding
+>>   mtd: rawnand: add NVIDIA Tegra NAND Flash controller driver
+>>   ARM: dts: tegra: enable NAND flash on Colibri T20
+>>
+>>  .../devicetree/bindings/mtd/nand.txt          |    6 +-
+>>  .../bindings/mtd/nvidia-tegra20-nand.txt      |   64 +
+>>  MAINTAINERS                                   |    7 +
+>>  arch/arm/boot/dts/tegra20-colibri-512.dtsi    |   16 +
+>>  arch/arm/boot/dts/tegra20.dtsi                |   15 +
+>>  drivers/mtd/nand/raw/Kconfig                  |   10 +
+>>  drivers/mtd/nand/raw/Makefile                 |    1 +
+>>  drivers/mtd/nand/raw/nand_base.c              |    4 +
+>>  drivers/mtd/nand/raw/tegra_nand.c             | 1230 +++++++++++++++++
+>>  include/linux/mtd/rawnand.h                   |    7 +
+>>  10 files changed, 1359 insertions(+), 1 deletion(-)
+>>  create mode 100644 Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
+>>  create mode 100644 drivers/mtd/nand/raw/tegra_nand.c
+>>
+> 
+> Series applied to nand/next. I just changed the subject of patch3/6 to
+> be "dt-bindings: mtd: add tegra NAND controller binding".
+> 
+
+It seems "series applied" refers to the MTD part...
+
+I guess patch 5 and 6 have to go through Tegra tree, Thierry?
+
+--
+Stefan
