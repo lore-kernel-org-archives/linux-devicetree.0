@@ -1,94 +1,63 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 03/12] drm/dp: add helpers for
- drm_dp_set_adjust_request_pre_emphasis and drm_dp_set_adjust_request_voltage
-Date: Wed, 4 Jul 2018 10:16:49 +0200
-Message-ID: <20180704081648.GI3891@phenom.ffwll.local>
-References: <1530612152-27555-1-git-send-email-dkos@cadence.com>
- <1530612152-27555-4-git-send-email-dkos@cadence.com>
+From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v2] ARM: dts: sun8i: h3: Enable dwmac-sun8i on
+ the Beelink X2
+Date: Wed,  4 Jul 2018 10:30:03 +0200
+Message-ID: <20180704083003.26849-1-codekipper@gmail.com>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1530612152-27555-4-git-send-email-dkos@cadence.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Damian Kos <dkos@cadence.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, pgaj@cadence.com, Rob Herring <robh+dt@kernel.org>, stelford@cadence.com, ltyrala@cadence.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBDUL6LMQKGQE6R2V3NI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdWwgMDMsIDIwMTggYXQgMTE6MDI6MTRBTSArMDEwMCwgRGFtaWFuIEtvcyB3cm90
-ZToKPiBGcm9tOiBRdWVudGluIFNjaHVseiA8cXVlbnRpbi5zY2h1bHpAZnJlZS1lbGVjdHJvbnMu
-Y29tPgo+IAo+IFdlIGFscmVhZHkgaGF2ZSBmdW5jdGlvbnMgdG8gZ2V0IHRoZSBhZGp1c3QgcmVx
-dWVzdCB2b2x0YWdlIGFuZAo+IHByZS1lbXBoYXNpcyBmb3IgYSBsYW5lIHNvIGl0IG1ha2VzIGFs
-c28gc2Vuc2UgdG8gYmUgYWJsZSB0byBzZXQgdGhlbSBzbwo+IHRoYXQgd2UgY2FuIHRoZW4gZWFz
-aWx5IHVwZGF0ZSB0aGVtIHZpYSBhIERQQ0Qgd3JpdGUuCj4gCj4gQWRkIGhlbHBlcnMgZm9yIGRy
-bV9kcF9zZXRfYWRqdXN0X3JlcXVlc3RfcHJlX2VtcGhhc2lzIGFuZAo+IGRybV9kcF9zZXRfYWRq
-dXN0X3JlcXVlc3Rfdm9sdGFnZSB0aGF0IHJlc3BlY3RpdmVseSBzZXQgdGhlCj4gcHJlLWVtcGhh
-c2lzIGFuZCB2b2x0YWdlIG9mIGEgbGFuZSBpbiB0aGUgbGluayBzdGF0dXMgYXJyYXkuCj4gCj4g
-U2lnbmVkLW9mZi1ieTogUXVlbnRpbiBTY2h1bHogPHF1ZW50aW4uc2NodWx6QGZyZWUtZWxlY3Ry
-b25zLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBEYW1pYW4gS29zIDxka29zQGNhZGVuY2UuY29tPgoK
-SG0gdXN1YWxseSB0aGlzIGlzIHNvdXJjZSBkZXBlbmRlbnQgLSBzb21lIHNvdXJjZXMgb25seSBo
-YXZlIG9uZQphZGovcHJlLWVtcGggdmFsdWUgZm9yIGFsbCBsYW5lcywgc29tZSBvbmx5IDIgKGZv
-ciBncm91cHMgb2YgMiksIHNvbWUgZm9yCmFsbCBmb3VyLiBUaGF0J3Mga2luZGEgd2h5IHdlIGRv
-bid0IGhhdmUgaGVscGVycyBmb3IgdGhpcyBzdHVmZi4KCkFuIGV4Y2VsbGVudCB3YXkgdG8gc2hv
-dyB0aGF0IHlvdXIgbmV3IGhlbHBlcnMgYXJlIHVzZWZ1bCB3b3VsZCBiZSB0byBnbwp0aHJvdWdo
-IGV4aXN0aW5nIGRyaXZlcnMgYW5kIGNvbnZlcnQgdGhlbSBvdmVyLCB3aGVyZSBpdCBtYWtlcyBz
-ZW5zZS4gU2FtZQpraW5kYSBob2xkcyBmb3IgcGF0Y2ggMS4KClRoYW5rcywgRGFuaWVsCj4gLS0t
-Cj4gIGRyaXZlcnMvZ3B1L2RybS9kcm1fZHBfaGVscGVyLmMgfCAgIDI4ICsrKysrKysrKysrKysr
-KysrKysrKysrKysrKysKPiAgaW5jbHVkZS9kcm0vZHJtX2RwX2hlbHBlci5oICAgICB8ICAgIDQg
-KysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0p
-Cj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fZHBfaGVscGVyLmMgYi9kcml2
-ZXJzL2dwdS9kcm0vZHJtX2RwX2hlbHBlci5jCj4gaW5kZXggM2JjMmU5OC4uY2EyZjQ2OSAxMDA2
-NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vZHJtX2RwX2hlbHBlci5jCj4gKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL2RybV9kcF9oZWxwZXIuYwo+IEBAIC0xMjAsNiArMTIwLDM0IEBAIHU4IGRybV9k
-cF9nZXRfYWRqdXN0X3JlcXVlc3RfcHJlX2VtcGhhc2lzKGNvbnN0IHU4IGxpbmtfc3RhdHVzW0RQ
-X0xJTktfU1RBVFVTX1NJCj4gIH0KPiAgRVhQT1JUX1NZTUJPTChkcm1fZHBfZ2V0X2FkanVzdF9y
-ZXF1ZXN0X3ByZV9lbXBoYXNpcyk7Cj4gIAo+ICt2b2lkIGRybV9kcF9zZXRfYWRqdXN0X3JlcXVl
-c3Rfdm9sdGFnZSh1OCBsaW5rX3N0YXR1c1tEUF9MSU5LX1NUQVRVU19TSVpFXSwKPiArCQkJCSAg
-ICAgICBpbnQgbGFuZSwgdTggdm9sdCkKPiArewo+ICsJaW50IGkgPSBEUF9BREpVU1RfUkVRVUVT
-VF9MQU5FMF8xICsgKGxhbmUgPj4gMSk7Cj4gKwlpbnQgcyA9ICgobGFuZSAmIDEpID8KPiArCQkg
-RFBfQURKVVNUX1ZPTFRBR0VfU1dJTkdfTEFORTFfU0hJRlQgOgo+ICsJCSBEUF9BREpVU1RfVk9M
-VEFHRV9TV0lOR19MQU5FMF9TSElGVCk7Cj4gKwlpbnQgaWR4ID0gaSAtIERQX0xBTkUwXzFfU1RB
-VFVTOwo+ICsKPiArCWxpbmtfc3RhdHVzW2lkeF0gJj0gfihEUF9BREpVU1RfVk9MVEFHRV9TV0lO
-R19MQU5FMF9NQVNLIDw8IHMpOwo+ICsJbGlua19zdGF0dXNbaWR4XSB8PSB2b2x0IDw8IHM7Cj4g
-K30KPiArRVhQT1JUX1NZTUJPTChkcm1fZHBfc2V0X2FkanVzdF9yZXF1ZXN0X3ZvbHRhZ2UpOwo+
-ICsKPiArdm9pZCBkcm1fZHBfc2V0X2FkanVzdF9yZXF1ZXN0X3ByZV9lbXBoYXNpcyh1OCBsaW5r
-X3N0YXR1c1tEUF9MSU5LX1NUQVRVU19TSVpFXSwKPiArCQkJCQkgICAgaW50IGxhbmUsIHU4IHBy
-ZV9lbXBoYXNpcykKPiArewo+ICsJaW50IGkgPSBEUF9BREpVU1RfUkVRVUVTVF9MQU5FMF8xICsg
-KGxhbmUgPj4gMSk7Cj4gKwlpbnQgcyA9ICgobGFuZSAmIDEpID8KPiArCQkgRFBfQURKVVNUX1BS
-RV9FTVBIQVNJU19MQU5FMV9TSElGVCA6Cj4gKwkJIERQX0FESlVTVF9QUkVfRU1QSEFTSVNfTEFO
-RTBfU0hJRlQpOwo+ICsJaW50IGlkeCA9IGkgLSBEUF9MQU5FMF8xX1NUQVRVUzsKPiArCj4gKwls
-aW5rX3N0YXR1c1tpZHhdICY9IH4oRFBfQURKVVNUX1BSRV9FTVBIQVNJU19MQU5FMF9NQVNLIDw8
-IHMpOwo+ICsJbGlua19zdGF0dXNbaWR4XSB8PSBwcmVfZW1waGFzaXMgPDwgczsKPiArfQo+ICtF
-WFBPUlRfU1lNQk9MKGRybV9kcF9zZXRfYWRqdXN0X3JlcXVlc3RfcHJlX2VtcGhhc2lzKTsKPiAr
-Cj4gIHZvaWQgZHJtX2RwX2xpbmtfdHJhaW5fY2xvY2tfcmVjb3ZlcnlfZGVsYXkoY29uc3QgdTgg
-ZHBjZFtEUF9SRUNFSVZFUl9DQVBfU0laRV0pIHsKPiAgCWlmIChkcGNkW0RQX1RSQUlOSU5HX0FV
-WF9SRF9JTlRFUlZBTF0gPT0gMCkKPiAgCQl1ZGVsYXkoMTAwKTsKPiBkaWZmIC0tZ2l0IGEvaW5j
-bHVkZS9kcm0vZHJtX2RwX2hlbHBlci5oIGIvaW5jbHVkZS9kcm0vZHJtX2RwX2hlbHBlci5oCj4g
-aW5kZXggYTQ4OGFmMC4uNmU2NGIyYSAxMDA2NDQKPiAtLS0gYS9pbmNsdWRlL2RybS9kcm1fZHBf
-aGVscGVyLmgKPiArKysgYi9pbmNsdWRlL2RybS9kcm1fZHBfaGVscGVyLmgKPiBAQCAtOTQ2LDYg
-Kzk0NiwxMCBAQCB1OCBkcm1fZHBfZ2V0X2FkanVzdF9yZXF1ZXN0X3ZvbHRhZ2UoY29uc3QgdTgg
-bGlua19zdGF0dXNbRFBfTElOS19TVEFUVVNfU0laRV0sCj4gIAkJCQkgICAgIGludCBsYW5lKTsK
-PiAgdTggZHJtX2RwX2dldF9hZGp1c3RfcmVxdWVzdF9wcmVfZW1waGFzaXMoY29uc3QgdTggbGlu
-a19zdGF0dXNbRFBfTElOS19TVEFUVVNfU0laRV0sCj4gIAkJCQkJICBpbnQgbGFuZSk7Cj4gK3Zv
-aWQgZHJtX2RwX3NldF9hZGp1c3RfcmVxdWVzdF92b2x0YWdlKHU4IGxpbmtfc3RhdHVzW0RQX0xJ
-TktfU1RBVFVTX1NJWkVdLAo+ICsJCQkJICAgICAgIGludCBsYW5lLCB1OCB2b2x0KTsKPiArdm9p
-ZCBkcm1fZHBfc2V0X2FkanVzdF9yZXF1ZXN0X3ByZV9lbXBoYXNpcyh1OCBsaW5rX3N0YXR1c1tE
-UF9MSU5LX1NUQVRVU19TSVpFXSwKPiArCQkJCQkgICAgaW50IGxhbmUsIHU4IHByZV9lbXBoYXNp
-cyk7Cj4gIAo+ICAjZGVmaW5lIERQX0JSQU5DSF9PVUlfSEVBREVSX1NJWkUJMHhjCj4gICNkZWZp
-bmUgRFBfUkVDRUlWRVJfQ0FQX1NJWkUJCTB4Zgo+IC0tIAo+IDEuNy4xCj4gCj4gX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCgotLSAKRGFuaWVsIFZl
-dHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3
-bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+The enabling of the EMAC was reverted as there was an issue on how
+to handle the integrated PHY and it was getting close to the release
+window (fe45174b72ae ("arm: dts: sunxi: Revert EMAC changes")).
+
+When a solution was found, then the changes were restored in
+4b236a0fe512 ("arm: dts: sunxi: h3/h5: Restore EMAC changes") and
+4904337fe34f ("ARM: dts: sunxi: Restore EMAC changes (boards)").
+Unfortunately enabling for the Beelink X2 was missed.
+
+This reverts partially commit 6b0e06df5cad (Revert "ARM: dts:
+sun8i: h3: Enable dwmac-sun8i on the Beelink X2")
+
+Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+Changes for v2:
+- Added more details in commit message about the reverting and restoring
+  patches.
+---
+ arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+index cf1f970b0c6f..5d23667dc2d2 100644
+--- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
++++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+@@ -123,6 +123,13 @@
+ 	status = "okay";
+ };
+ 
++&emac {
++	phy-handle = <&int_mii_phy>;
++	phy-mode = "mii";
++	allwinner,leds-active-low;
++	status = "okay";
++};
++
+ &hdmi {
+ 	status = "okay";
+ };
+-- 
+2.18.0
