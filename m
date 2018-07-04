@@ -1,82 +1,34 @@
-Return-Path: <SRS0=7ojG=JT=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wr0-f194.google.com ([209.85.128.194]:33467 "EHLO
-        mail-wr0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753322AbeGCOId (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Jul 2018 10:08:33 -0400
-Received: by mail-wr0-f194.google.com with SMTP id k7-v6so2142561wrq.0
-        for <devicetree@vger.kernel.org>; Tue, 03 Jul 2018 07:08:32 -0700 (PDT)
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v7 1/2] media: ov2680: dt: Add bindings for OV2680
-Date: Tue,  3 Jul 2018 15:08:02 +0100
-Message-Id: <20180703140803.19580-2-rui.silva@linaro.org>
-In-Reply-To: <20180703140803.19580-1-rui.silva@linaro.org>
-References: <20180703140803.19580-1-rui.silva@linaro.org>
-Sender: devicetree-owner@vger.kernel.org
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hverkuil@xs4all.nl
-Cc: linux-media@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, devicetree@vger.kernel.org
+Return-Path: <SRS0=fuJB=JU=linaro.org=lee.jones@kernel.org>
+Date: Wed, 4 Jul 2018 08:41:21 +0100
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2] dt-bindings: mfd: fix documentation of tps65911
+Message-ID: <20180704074121.GO20176@dell>
+References: <1528146863.2818.23.camel@googlemail.com>
+ <20180605070457.GF21163@dell>
+ <1528190809.2527.5.camel@googlemail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1528190809.2527.5.camel@googlemail.com>
+To: Christoph Fritz <chf.fritz@googlemail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, devicetree <devicetree@vger.kernel.org>, linux-omap@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree binding documentation for the OV2680 camera sensor.
+On Tue, 05 Jun 2018, Christoph Fritz wrote:
 
-CC: devicetree@vger.kernel.org
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
----
- .../devicetree/bindings/media/i2c/ov2680.txt  | 46 +++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2680.txt
+> This patch fixes documentation of tps65911 because its list of
+> compatible regulators contains wrongly vdd3 instead of vdd2.
+> 
+> Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/tps65910.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov2680.txt b/Documentation/devicetree/bindings/media/i2c/ov2680.txt
-new file mode 100644
-index 000000000000..11e925ed9dad
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov2680.txt
-@@ -0,0 +1,46 @@
-+* Omnivision OV2680 MIPI CSI-2 sensor
-+
-+Required Properties:
-+- compatible: should be "ovti,ov2680".
-+- clocks: reference to the xvclk input clock.
-+- clock-names: should be "xvclk".
-+- DOVDD-supply: Digital I/O voltage supply.
-+- DVDD-supply: Digital core voltage supply.
-+- AVDD-supply: Analog voltage supply.
-+
-+Optional Properties:
-+- reset-gpios: reference to the GPIO connected to the powerdown/reset pin,
-+               if any. This is an active low signal to the OV2680.
-+
-+The device node must contain one 'port' child node for its digital output
-+video port, and this port must have a single endpoint in accordance with
-+ the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Endpoint node required properties for CSI-2 connection are:
-+- remote-endpoint: a phandle to the bus receiver's endpoint node.
-+- clock-lanes: should be set to <0> (clock lane on hardware lane 0).
-+- data-lanes: should be set to <1> (one CSI-2 lane supported).
-+
-+Example:
-+
-+&i2c2 {
-+	ov2680: camera-sensor@36 {
-+		compatible = "ovti,ov2680";
-+		reg = <0x36>;
-+		clocks = <&osc>;
-+		clock-names = "xvclk";
-+		reset-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
-+		DOVDD-supply = <&sw2_reg>;
-+		DVDD-supply = <&sw2_reg>;
-+		AVDD-supply = <&reg_peri_3p15v>;
-+
-+		port {
-+			ov2680_to_mipi: endpoint {
-+				remote-endpoint = <&mipi_from_sensor>;
-+				clock-lanes = <0>;
-+				data-lanes = <1>;
-+			};
-+		};
-+	};
-+};
+Applied, thanks.
+
 -- 
-2.18.0
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
