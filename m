@@ -1,216 +1,90 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 1/4] resource: Move reparent_resources() to
- kernel/resource.c and make it public
-Date: Wed, 4 Jul 2018 19:46:41 +0300
-Message-ID: <CAHp75VfWLcQq4XGM3RyfO_ENx=3=WrCEhtOw+a0Sfwz_OpQ0UQ@mail.gmail.com>
-References: <20180704041038.8190-1-bhe@redhat.com>
- <20180704041038.8190-2-bhe@redhat.com>
+From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Subject: Re: [PATCH 05/14] dmaengine: dma-jz4780: Add support for the JZ4740 SoC
+Date: Wed, 4 Jul 2018 22:22:27 +0530
+Message-ID: <CANc+2y4L3WPUn39fmy+D=vYT7jwYcc+0Ox3sZ8V6cyM511UmhQ@mail.gmail.com>
+References: <20180703123214.23090-1-paul@crapouillou.net> <20180703123214.23090-6-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <20180704041038.8190-2-bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, brijesh.singh-5C7GfCeVMHo@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, KY Srinivasan <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Dave Young <dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Josh Triplett <josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180703123214.23090-6-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 4, 2018 at 7:10 AM, Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> reparent_resources() is duplicated in arch/microblaze/pci/pci-common.c
-> and arch/powerpc/kernel/pci-common.c, so move it to kernel/resource.c
-> so that it's shared.
-
-With couple of comments below,
-
-Reviewed-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-P.S. In some commit message in this series you used 'likt' instead of 'like'.
-
+On 3 July 2018 at 18:02, Paul Cercueil <paul@crapouillou.net> wrote:
+> The JZ4740 SoC has a single DMA core starring six DMA channels.
 >
-> Signed-off-by: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  arch/microblaze/pci/pci-common.c | 37 -------------------------------------
->  arch/powerpc/kernel/pci-common.c | 35 -----------------------------------
->  include/linux/ioport.h           |  1 +
->  kernel/resource.c                | 39 +++++++++++++++++++++++++++++++++++++++
->  4 files changed, 40 insertions(+), 72 deletions(-)
+>  Documentation/devicetree/bindings/dma/jz4780-dma.txt | 1 +
+>  drivers/dma/Kconfig                                  | 2 +-
+>  drivers/dma/dma-jz4780.c                             | 4 ++++
+>  3 files changed, 6 insertions(+), 1 deletion(-)
 >
-> diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
-> index f34346d56095..7899bafab064 100644
-> --- a/arch/microblaze/pci/pci-common.c
-> +++ b/arch/microblaze/pci/pci-common.c
-> @@ -619,43 +619,6 @@ int pcibios_add_device(struct pci_dev *dev)
->  EXPORT_SYMBOL(pcibios_add_device);
+> diff --git a/Documentation/devicetree/bindings/dma/jz4780-dma.txt b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
+> index 0fd0759053be..d7ca3f925fdf 100644
+> --- a/Documentation/devicetree/bindings/dma/jz4780-dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
+> @@ -5,6 +5,7 @@ Required properties:
+>  - compatible: Should be one of:
+>    * ingenic,jz4780-dma
+>    * ingenic,jz4770-dma
+> +  * ingenic,jz4740-dma
+>  - reg: Should contain the DMA channel registers location and length, followed
+>    by the DMA controller registers location and length.
+>  - interrupts: Should contain the interrupt specifier of the DMA controller.
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index 48d25dccedb7..a935d15ec581 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -143,7 +143,7 @@ config DMA_JZ4740
 >
->  /*
-> - * Reparent resource children of pr that conflict with res
-> - * under res, and make res replace those children.
-> - */
-> -static int __init reparent_resources(struct resource *parent,
-> -                                    struct resource *res)
-> -{
-> -       struct resource *p, **pp;
-> -       struct resource **firstpp = NULL;
-> -
-> -       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
-> -               if (p->end < res->start)
-> -                       continue;
-> -               if (res->end < p->start)
-> -                       break;
-> -               if (p->start < res->start || p->end > res->end)
-> -                       return -1;      /* not completely contained */
-> -               if (firstpp == NULL)
-> -                       firstpp = pp;
-> -       }
-> -       if (firstpp == NULL)
-> -               return -1;      /* didn't find any conflicting entries? */
-> -       res->parent = parent;
-> -       res->child = *firstpp;
-> -       res->sibling = *pp;
-> -       *firstpp = res;
-> -       *pp = NULL;
-> -       for (p = res->child; p != NULL; p = p->sibling) {
-> -               p->parent = res;
-> -               pr_debug("PCI: Reparented %s [%llx..%llx] under %s\n",
-> -                        p->name,
-> -                        (unsigned long long)p->start,
-> -                        (unsigned long long)p->end, res->name);
-> -       }
-> -       return 0;
-> -}
-> -
-> -/*
->   *  Handle resources of PCI devices.  If the world were perfect, we could
->   *  just allocate all the resource regions and do nothing more.  It isn't.
->   *  On the other hand, we cannot just re-allocate all devices, as it would
-> diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-> index fe9733ffffaa..926035bb378d 100644
-> --- a/arch/powerpc/kernel/pci-common.c
-> +++ b/arch/powerpc/kernel/pci-common.c
-> @@ -1088,41 +1088,6 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
->  EXPORT_SYMBOL(pcibios_align_resource);
+>  config DMA_JZ4780
+>         tristate "JZ4780 DMA support"
+> -       depends on MACH_JZ4780 || MACH_JZ4770 || COMPILE_TEST
+> +       depends on MACH_INGENIC || COMPILE_TEST
+>         select DMA_ENGINE
+>         select DMA_VIRTUAL_CHANNELS
+>         help
+> diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+> index 7b8b2dcd119e..ccadbe61dde7 100644
+> --- a/drivers/dma/dma-jz4780.c
+> +++ b/drivers/dma/dma-jz4780.c
+> @@ -133,6 +133,7 @@ struct jz4780_dma_chan {
+>  };
 >
->  /*
-> - * Reparent resource children of pr that conflict with res
-> - * under res, and make res replace those children.
-> - */
-> -static int reparent_resources(struct resource *parent,
-> -                                    struct resource *res)
-> -{
-> -       struct resource *p, **pp;
-> -       struct resource **firstpp = NULL;
-> -
-> -       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
-> -               if (p->end < res->start)
-> -                       continue;
-> -               if (res->end < p->start)
-> -                       break;
-> -               if (p->start < res->start || p->end > res->end)
-> -                       return -1;      /* not completely contained */
-> -               if (firstpp == NULL)
-> -                       firstpp = pp;
-> -       }
-> -       if (firstpp == NULL)
-> -               return -1;      /* didn't find any conflicting entries? */
-> -       res->parent = parent;
-> -       res->child = *firstpp;
-> -       res->sibling = *pp;
-> -       *firstpp = res;
-> -       *pp = NULL;
-> -       for (p = res->child; p != NULL; p = p->sibling) {
-> -               p->parent = res;
-> -               pr_debug("PCI: Reparented %s %pR under %s\n",
-> -                        p->name, p, res->name);
-> -       }
-> -       return 0;
-> -}
-> -
-> -/*
->   *  Handle resources of PCI devices.  If the world were perfect, we could
->   *  just allocate all the resource regions and do nothing more.  It isn't.
->   *  On the other hand, we cannot just re-allocate all devices, as it would
-> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> index da0ebaec25f0..dfdcd0bfe54e 100644
-> --- a/include/linux/ioport.h
-> +++ b/include/linux/ioport.h
-> @@ -192,6 +192,7 @@ extern int allocate_resource(struct resource *root, struct resource *new,
->  struct resource *lookup_resource(struct resource *root, resource_size_t start);
->  int adjust_resource(struct resource *res, resource_size_t start,
->                     resource_size_t size);
-> +int reparent_resources(struct resource *parent, struct resource *res);
->  resource_size_t resource_alignment(struct resource *res);
->  static inline resource_size_t resource_size(const struct resource *res)
->  {
-> diff --git a/kernel/resource.c b/kernel/resource.c
-> index 30e1bc68503b..d1cbf4b50e17 100644
-> --- a/kernel/resource.c
-> +++ b/kernel/resource.c
-> @@ -983,6 +983,45 @@ int adjust_resource(struct resource *res, resource_size_t start,
+>  enum jz_version {
+> +       ID_JZ4740,
+>         ID_JZ4770,
+>         ID_JZ4780,
+>  };
+> @@ -247,6 +248,7 @@ static void jz4780_dma_desc_free(struct virt_dma_desc *vdesc)
 >  }
->  EXPORT_SYMBOL(adjust_resource);
 >
-> +/*
-
-/** ?
-
-> + * reparent_resources - reparent resource children of parent that res covers
-> + * @parent: parent resource descriptor
-> + * @res: resource descriptor desired by caller
-> + *
-> + * Reparent resource children of 'parent' that conflict with 'res'
-> + * under 'res', and make 'res' replace those children.
-
-Describe error codes, please.
-
-> + */
-> +int reparent_resources(struct resource *parent, struct resource *res)
-> +{
-> +       struct resource *p, **pp;
-> +       struct resource **firstpp = NULL;
-> +
-> +       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
-> +               if (p->end < res->start)
-> +                       continue;
-> +               if (res->end < p->start)
-> +                       break;
-> +               if (p->start < res->start || p->end > res->end)
-> +                       return -ENOTSUPP;       /* not completely contained */
-> +               if (firstpp == NULL)
-> +                       firstpp = pp;
-> +       }
-> +       if (firstpp == NULL)
-> +               return -ECANCELED; /* didn't find any conflicting entries? */
-> +       res->parent = parent;
-> +       res->child = *firstpp;
-> +       res->sibling = *pp;
-> +       *firstpp = res;
-> +       *pp = NULL;
-> +       for (p = res->child; p != NULL; p = p->sibling) {
-> +               p->parent = res;
-> +               pr_debug("PCI: Reparented %s %pR under %s\n",
-> +                        p->name, p, res->name);
-> +       }
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL(reparent_resources);
-> +
->  static void __init __reserve_region_with_split(struct resource *root,
->                 resource_size_t start, resource_size_t end,
->                 const char *name)
+>  static const unsigned int jz4780_dma_ord_max[] = {
+> +       [ID_JZ4740] = 5,
+>         [ID_JZ4770] = 6,
+>         [ID_JZ4780] = 7,
+>  };
+> @@ -801,11 +803,13 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
+>  }
+>
+>  static const unsigned int jz4780_dma_nb_channels[] = {
+> +       [ID_JZ4740] = 6,
+>         [ID_JZ4770] = 6,
+>         [ID_JZ4780] = 32,
+>  };
+>
+>  static const struct of_device_id jz4780_dma_dt_match[] = {
+> +       { .compatible = "ingenic,jz4740-dma", .data = (void *)ID_JZ4740 },
+>         { .compatible = "ingenic,jz4770-dma", .data = (void *)ID_JZ4770 },
+>         { .compatible = "ingenic,jz4780-dma", .data = (void *)ID_JZ4780 },
+>         {},
 > --
-> 2.13.6
+> 2.18.0
+>
 >
 
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Patch looks good to me.
+Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>/
