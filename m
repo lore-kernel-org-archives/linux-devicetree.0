@@ -1,126 +1,113 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2] mfd: as3722: disable auto power on when AC OK
-Date: Wed, 4 Jul 2018 08:52:02 +0100
-Message-ID: <20180704075202.GQ20176@dell>
-References: <20180703150411.29709-1-marcel@ziswiler.com>
+From: Vikash Garodia <vgarodia@codeaurora.org>
+Subject: Re: [PATCH v2 2/5] media: venus: add a routine to set venus state
+Date: Wed, 04 Jul 2018 13:29:33 +0530
+Message-ID: <ca7567c1df773f1223d919fab28f1460@codeaurora.org>
+References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
+ <1527884768-22392-3-git-send-email-vgarodia@codeaurora.org>
+ <20180601212117.GD11565@jcrouse-lnx.qualcomm.com>
+ <CAAFQd5DH2i+8ZJ+s2XUnmFHwxXKLF6z_=w0Z-RFs=W9oVvrJgw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180703150411.29709-1-marcel@ziswiler.com>
+In-Reply-To: <CAAFQd5DH2i+8ZJ+s2XUnmFHwxXKLF6z_=w0Z-RFs=W9oVvrJgw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel@ziswiler.com>
-Cc: linux-tegra@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Laxman Dewangan <ldewangan@nvidia.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, andy.gross@linaro.org, bjorn.andersson@linaro.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 03 Jul 2018, Marcel Ziswiler wrote:
+Hi Jordan, Tomasz,
 
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Thanks for your valuable review comments.
+
+On 2018-06-04 18:24, Tomasz Figa wrote:
+> Hi Jordan, Vikash,
 > 
-> On ams AS3722, power on when AC OK is enabled by default.
-> Making this option as disable by default and enable only
-> when platform need this explicitly.
+> On Sat, Jun 2, 2018 at 6:21 AM Jordan Crouse <jcrouse@codeaurora.org> 
+> wrote:
+>> 
+>> On Sat, Jun 02, 2018 at 01:56:05AM +0530, Vikash Garodia wrote:
+> [snip]
+>> > +int venus_set_hw_state(enum tzbsp_video_state state, struct venus_core *core)
+>> > +{
+>> > +     int ret;
+>> > +     struct device *dev = core->dev;
+>> 
+>> If you get rid of the log message as you should, you don't need this.
+
+Would prefer to keep the log for cases when enum is expanded while the 
+switch does
+not handle it.
+
+>> > +     void __iomem *reg_base = core->base;
+>> > +
+>> > +     switch (state) {
+>> > +     case TZBSP_VIDEO_SUSPEND:
+>> > +             if (qcom_scm_is_available())
+>> > +                     ret = qcom_scm_set_remote_state(TZBSP_VIDEO_SUSPEND, 0);
+>> > +             else
+>> > +                     writel_relaxed(1, reg_base + WRAPPER_A9SS_SW_RESET);
+>> 
+>> You can just use core->base here and not bother making a local 
+>> variable for it.
+Ok.
+
+>> > +             break;
+>> > +     case TZBSP_VIDEO_RESUME:
+>> > +             if (qcom_scm_is_available())
+>> > +                     ret = qcom_scm_set_remote_state(TZBSP_VIDEO_RESUME, 0);
+>> > +             else
+>> > +                     venus_reset_hw(core);
+>> > +             break;
+>> > +     default:
+>> > +             dev_err(dev, "invalid state\n");
+>> 
+>> state is a enum - you are highly unlikely to be calling it in your own 
+>> code with
+>> a random value.  It is smart to have the default, but you don't need 
+>> the log
+>> message - that is just wasted space in the binary.
+
+Incase enum is expanded while the switch does not handle it, default 
+will be useful.
+
+>> > +             break;
+>> > +     }
+>> 
+>> There are three paths in the switch statement that could end up with 
+>> 'ret' being
+>> uninitialized here.  Set it to 0 when you declare it.
+
+> Does this actually compile? The compiler should detect that ret is
+> used uninitialized. Setting it to 0 at declaration time actually
+> prevents compiler from doing that and makes it impossible to catch
+> cases when the ret should actually be non-zero, e.g. the invalid enum
+> value case.
+
+It does compile while it gave me failure while doing the functional 
+validation.
+I have fixed it in next series of patch.
+
+> Given that this function is supposed to substitute existing calls into
+> qcom_scm_set_remote_state(), why not just do something like this:
 > 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> Reviewed-by: Bibek Basu <bbasu@nvidia.com>
-> Tested-by: Bibek Basu <bbasu@nvidia.com>
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+>         if (qcom_scm_is_available())
+>                 return qcom_scm_set_remote_state(state, 0);
 > 
-> ---
+>         switch (state) {
+>         case TZBSP_VIDEO_SUSPEND:
+>                 writel_relaxed(1, reg_base + WRAPPER_A9SS_SW_RESET);
+>                 break;
+>         case TZBSP_VIDEO_RESUME:
+>                 venus_reset_hw(core);
+>                 break;
+>         }
 > 
-> Changes in v2:
-> - Document device tree property as suggested by Stefan.
-> - Rename SEQ1 to SEQU1 as per datasheet as suggested by Stefan.
-> - Drop reference to downstream commit as suggested by Lee.
-> 
->  Documentation/devicetree/bindings/mfd/as3722.txt |  2 ++
->  drivers/mfd/as3722.c                             | 12 ++++++++++++
->  include/linux/mfd/as3722.h                       |  3 +++
->  3 files changed, 17 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/as3722.txt b/Documentation/devicetree/bindings/mfd/as3722.txt
-> index 5297b2210704..2a665741d7fe 100644
-> --- a/Documentation/devicetree/bindings/mfd/as3722.txt
-> +++ b/Documentation/devicetree/bindings/mfd/as3722.txt
-> @@ -20,6 +20,8 @@ Optional properties:
->  - ams,enable-internal-i2c-pullup: Boolean property, to enable internal pullup on
->  	i2c scl/sda pins. Missing this will disable internal pullup on i2c
->  	scl/sda lines.
-> +- ams,enable-ac-ok-power-on: Boolean property, to enable exit out of power off
-> +	mode with AC_OK pin (pin enabled in power off mode).
+>         return 0;
+This will not work as driver will write on the register irrespective of 
+scm
+availability.
 
-This needs a DT Ack.
-
->  Optional submodule and their properties:
->  =======================================
-> diff --git a/drivers/mfd/as3722.c b/drivers/mfd/as3722.c
-> index f87342c211bc..4d069ed21ff6 100644
-> --- a/drivers/mfd/as3722.c
-> +++ b/drivers/mfd/as3722.c
-> @@ -349,6 +349,8 @@ static int as3722_i2c_of_probe(struct i2c_client *i2c,
->  					"ams,enable-internal-int-pullup");
->  	as3722->en_intern_i2c_pullup = of_property_read_bool(np,
->  					"ams,enable-internal-i2c-pullup");
-> +	as3722->en_ac_ok_pwr_on = of_property_read_bool(np,
-> +					"ams,enable-ac-ok-power-on");
->  	as3722->irq_flags = irqd_get_trigger_type(irq_data);
->  	dev_dbg(&i2c->dev, "IRQ flags are 0x%08lx\n", as3722->irq_flags);
->  	return 0;
-> @@ -360,6 +362,7 @@ static int as3722_i2c_probe(struct i2c_client *i2c,
->  	struct as3722 *as3722;
->  	unsigned long irq_flags;
->  	int ret;
-> +	u8 val = 0;
->  
->  	as3722 = devm_kzalloc(&i2c->dev, sizeof(struct as3722), GFP_KERNEL);
->  	if (!as3722)
-> @@ -398,6 +401,15 @@ static int as3722_i2c_probe(struct i2c_client *i2c,
->  	if (ret < 0)
->  		return ret;
->  
-> +	if (as3722->en_ac_ok_pwr_on)
-> +		val = AS3722_CTRL_SEQU1_AC_OK_PWR_ON;
-> +	ret = as3722_update_bits(as3722, AS3722_CTRL_SEQU1_REG,
-> +			AS3722_CTRL_SEQU1_AC_OK_PWR_ON, val);
-
-What is the default value?
-
-If 0, you could place all of this code inside the "if
-(as3722->en_ac_ok_pwr_on)" and save on a few unnecessary cycles.
-
-> +	if (ret < 0) {
-> +		dev_err(as3722->dev, "CTRLsequ1 update failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
->  	ret = devm_mfd_add_devices(&i2c->dev, -1, as3722_devs,
->  				   ARRAY_SIZE(as3722_devs), NULL, 0,
->  				   regmap_irq_get_domain(as3722->irq_data));
-> diff --git a/include/linux/mfd/as3722.h b/include/linux/mfd/as3722.h
-> index 51e6f9414575..b404a5af9bba 100644
-> --- a/include/linux/mfd/as3722.h
-> +++ b/include/linux/mfd/as3722.h
-> @@ -296,6 +296,8 @@
->  #define AS3722_ADC1_CONV_NOTREADY			BIT(7)
->  #define AS3722_ADC1_SOURCE_SELECT_MASK			0x1F
->  
-> +#define AS3722_CTRL_SEQU1_AC_OK_PWR_ON			BIT(0)
-> +
->  /* GPIO modes */
->  #define AS3722_GPIO_MODE_MASK				0x07
->  #define AS3722_GPIO_MODE_INPUT				0x00
-> @@ -391,6 +393,7 @@ struct as3722 {
->  	unsigned long irq_flags;
->  	bool en_intern_int_pullup;
->  	bool en_intern_i2c_pullup;
-> +	bool en_ac_ok_pwr_on;
->  	struct regmap_irq_chip_data *irq_data;
->  };
->  
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> Best regards,
+> Tomasz
