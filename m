@@ -1,68 +1,174 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v4] MAINTAINERS: Add file patterns for serio device tree
- bindings
-Date: Wed, 4 Jul 2018 15:27:26 +0000
-Message-ID: <20180704152726.uastaefdyzhlbhau@penguin>
-References: <20180622100818.29420-1-geert@linux-m68k.org>
+From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Subject: Re: [PATCH 01/14] dmaengine: dma-jz4780: Avoid hardcoding number of channels
+Date: Wed, 4 Jul 2018 21:58:15 +0530
+Message-ID: <CANc+2y4ZJDKou4x570zNv82fSAxiOpbZfd3rFNB2M5Ft1C3eiQ@mail.gmail.com>
+References: <20180703123214.23090-1-paul@crapouillou.net> <20180703123214.23090-2-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180622100818.29420-1-geert@linux-m68k.org>
+In-Reply-To: <20180703123214.23090-2-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 22, 2018 at 12:08:18PM +0200, Geert Uytterhoeven wrote:
-> Submitters of device tree binding documentation may forget to CC
-> the subsystem maintainer if this is missing.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Hi Paul,
 
-Since nobody else did I'll pick it up, thank you Geert.
-
+On 3 July 2018 at 18:02, Paul Cercueil <paul@crapouillou.net> wrote:
+> As part of the work to support various other Ingenic JZ47xx SoC versions,
+> which don't feature the same number of DMA channels per core, we now
+> deduce the number of DMA channels available from the devicetree
+> compatible string.
+>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
-> v3:
->   - Update for next-20180622,
-> 
-> v2:
->   - Add Acked-by.
-> 
-> Impact on "scripts/get_maintainer.pl -f Documentation/devicetree/bindings/serio/":
-> 
-> -Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS,commit_signer:3/3=100%,authored:1/3=33%)
-> -Mark Rutland <mark.rutland@arm.com> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS,commit_signer:1/3=33%)
-> -Dmitry Torokhov <dmitry.torokhov@gmail.com> (commit_signer:1/3=33%)
-> -Danilo Krummrich <danilokrummrich@dk-develop.de> (commit_signer:1/3=33%,authored:1/3=33%)
-> -Linus Walleij <linus.walleij@linaro.org> (commit_signer:1/3=33%)
-> -Mathieu Malaterre <malat@debian.org> (authored:1/3=33%)
-> +Dmitry Torokhov <dmitry.torokhov@gmail.com> (maintainer:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...)
-> +Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
-> +Mark Rutland <mark.rutland@arm.com> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
-> +linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...)
->  devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
->  linux-kernel@vger.kernel.org (open list)
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 464d91879df89fce..df246daab5a27af2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7100,6 +7100,7 @@ F:	include/uapi/linux/input.h
->  F:	include/uapi/linux/input-event-codes.h
->  F:	include/linux/input/
->  F:	Documentation/devicetree/bindings/input/
-> +F:	Documentation/devicetree/bindings/serio/
->  F:	Documentation/input/
->  
->  INPUT MULTITOUCH (MT) PROTOCOL
-> -- 
-> 2.17.1
-> 
+>  drivers/dma/dma-jz4780.c | 53 +++++++++++++++++++++++++++++-----------
+>  1 file changed, 39 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+> index 85820a2d69d4..b40f491f0367 100644
+> --- a/drivers/dma/dma-jz4780.c
+> +++ b/drivers/dma/dma-jz4780.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/of_dma.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+> @@ -23,8 +24,6 @@
+>  #include "dmaengine.h"
+>  #include "virt-dma.h"
+>
+> -#define JZ_DMA_NR_CHANNELS     32
+> -
+>  /* Global registers. */
+>  #define JZ_DMA_REG_DMAC                0x1000
+>  #define JZ_DMA_REG_DIRQP       0x1004
+> @@ -135,14 +134,20 @@ struct jz4780_dma_chan {
+>         unsigned int curr_hwdesc;
+>  };
+>
+> +enum jz_version {
+> +       ID_JZ4780,
+> +};
+> +
+>  struct jz4780_dma_dev {
+>         struct dma_device dma_device;
+>         void __iomem *base;
+>         struct clk *clk;
+>         unsigned int irq;
+> +       unsigned int nb_channels;
+> +       enum jz_version version;
+>
+>         uint32_t chan_reserved;
+> -       struct jz4780_dma_chan chan[JZ_DMA_NR_CHANNELS];
+> +       struct jz4780_dma_chan chan[];
 
--- 
-Dmitry
+Looks like a variable length array in struct. I think there is some
+effort to remove the usage of VLA. Can you revisit this? I may be
+wrong, please feel free to correct.
+
+>  };
+>
+>  struct jz4780_dma_filter_data {
+> @@ -648,7 +653,7 @@ static irqreturn_t jz4780_dma_irq_handler(int irq, void *data)
+>
+>         pending = jz4780_dma_readl(jzdma, JZ_DMA_REG_DIRQP);
+>
+> -       for (i = 0; i < JZ_DMA_NR_CHANNELS; i++) {
+> +       for (i = 0; i < jzdma->nb_channels; i++) {
+>                 if (!(pending & (1<<i)))
+>                         continue;
+>
+> @@ -728,7 +733,7 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
+>         data.channel = dma_spec->args[1];
+>
+>         if (data.channel > -1) {
+> -               if (data.channel >= JZ_DMA_NR_CHANNELS) {
+> +               if (data.channel >= jzdma->nb_channels) {
+>                         dev_err(jzdma->dma_device.dev,
+>                                 "device requested non-existent channel %u\n",
+>                                 data.channel);
+> @@ -752,19 +757,45 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
+>         }
+>  }
+>
+> +static const unsigned int jz4780_dma_nb_channels[] = {
+> +       [ID_JZ4780] = 32,
+> +};
+> +
+> +static const struct of_device_id jz4780_dma_dt_match[] = {
+> +       { .compatible = "ingenic,jz4780-dma", .data = (void *)ID_JZ4780 },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, jz4780_dma_dt_match);
+> +
+>  static int jz4780_dma_probe(struct platform_device *pdev)
+>  {
+>         struct device *dev = &pdev->dev;
+> +       const struct of_device_id *of_id = of_match_device(
+> +                       jz4780_dma_dt_match, dev);
+>         struct jz4780_dma_dev *jzdma;
+>         struct jz4780_dma_chan *jzchan;
+>         struct dma_device *dd;
+>         struct resource *res;
+> +       enum jz_version version;
+> +       unsigned int nb_channels;
+>         int i, ret;
+>
+> -       jzdma = devm_kzalloc(dev, sizeof(*jzdma), GFP_KERNEL);
+> +       if (of_id)
+> +               version = (enum jz_version)of_id->data;
+> +       else
+> +               version = ID_JZ4780; /* Default when not probed from DT */
+> +
+> +       nb_channels = jz4780_dma_nb_channels[version];
+> +
+> +       jzdma = devm_kzalloc(dev, sizeof(*jzdma)
+> +                               + sizeof(*jzdma->chan) * nb_channels,
+> +                               GFP_KERNEL);
+>         if (!jzdma)
+>                 return -ENOMEM;
+>
+> +       jzdma->nb_channels = nb_channels;
+> +       jzdma->version = version;
+> +
+>         platform_set_drvdata(pdev, jzdma);
+>
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> @@ -839,7 +870,7 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+>
+>         INIT_LIST_HEAD(&dd->channels);
+>
+> -       for (i = 0; i < JZ_DMA_NR_CHANNELS; i++) {
+> +       for (i = 0; i < jzdma->nb_channels; i++) {
+>                 jzchan = &jzdma->chan[i];
+>                 jzchan->id = i;
+>
+> @@ -884,19 +915,13 @@ static int jz4780_dma_remove(struct platform_device *pdev)
+>
+>         free_irq(jzdma->irq, jzdma);
+>
+> -       for (i = 0; i < JZ_DMA_NR_CHANNELS; i++)
+> +       for (i = 0; i < jzdma->nb_channels; i++)
+>                 tasklet_kill(&jzdma->chan[i].vchan.task);
+>
+>         dma_async_device_unregister(&jzdma->dma_device);
+>         return 0;
+>  }
+>
+> -static const struct of_device_id jz4780_dma_dt_match[] = {
+> -       { .compatible = "ingenic,jz4780-dma", .data = NULL },
+> -       {},
+> -};
+> -MODULE_DEVICE_TABLE(of, jz4780_dma_dt_match);
+> -
+>  static struct platform_driver jz4780_dma_driver = {
+>         .probe          = jz4780_dma_probe,
+>         .remove         = jz4780_dma_remove,
+> --
+> 2.18.0
+>
+>
