@@ -1,7 +1,7 @@
 From: Andreas Klinger <ak@it-klinger.de>
-Subject: [PATCH v4 1/3] iio: hx711: add clock-frequency property in DT
-Date: Wed, 4 Jul 2018 14:36:38 +0200
-Message-ID: <20180704123638.GA30535@arbeit>
+Subject: [PATCH v4 2/3] iio: hx711: add delay until DOUT is ready
+Date: Wed, 4 Jul 2018 14:36:54 +0200
+Message-ID: <20180704123654.GA30568@arbeit>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -10,45 +10,84 @@ Sender: linux-kernel-owner@vger.kernel.org
 To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add clock-frequency property for hx711 ADC
+On a system with parasitic capacities it turned out that DOUT is not ready
+after 100 ns after PD_SCK has raised. A measurement showed almost 1000 ns
+until DOUT has reached its correct value.
 
-This is the frequency of PD_SCK. It affects only the high value duration
-since low value duration is not relevant and we are not able to switch
-faster than the minimum duration specified.
+With this patch its now possible to wait until data is ready.
 
-After PD_SCK goes high DOUT is read just before PD_SCK goes down again.
-This is necessary because of parasitic capacities on the wiring.
+The wait time should not be higher than the maximum PD_SCK high time which
+is corresponding to the datasheet 50000 ns.
 
 Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 ---
- Documentation/devicetree/bindings/iio/adc/avia-hx711.txt | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/iio/adc/hx711.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-index b3629405f568..4bee51d536e1 100644
---- a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-@@ -8,11 +8,21 @@ Required properties:
- 		See Documentation/devicetree/bindings/gpio/gpio.txt
-  - avdd-supply:	Definition of the regulator used as analog supply
- 
-+Optional properties:
-+ - clock-frequency:	Frequency of PD_SCK
-+			This setting affects the duration of the high value
-+			phase of the clock (PD_SCK). The low value phase is
-+			not affected since it is not relevant for the
-+			measurement.
-+			Minimum value allowed is 20 kHz because of maximum
-+			high time of 50 microseconds.
-+
- Example:
- weight@0 {
- 	compatible = "avia,hx711";
- 	sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
- 	dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
- 	avdd-suppy = <&avdd>;
-+	clock-frequency = <100000>;
+diff --git a/drivers/iio/adc/hx711.c b/drivers/iio/adc/hx711.c
+index 9430b54121e0..c914c36f9cdf 100644
+--- a/drivers/iio/adc/hx711.c
++++ b/drivers/iio/adc/hx711.c
+@@ -97,6 +97,14 @@ struct hx711_data {
+ 	 * 2x32-bit channel + 64-bit timestamp
+ 	 */
+ 	u32			buffer[4];
++	/*
++	 * delay after a rising edge on SCK until the data is ready DOUT
++	 * this is dependent on the hx711 where the datasheet tells a
++	 * maximum value of 100 ns
++	 * but also on potential parasitic capacities on the wiring
++	 */
++	u32			data_ready_delay_ns;
++	u32			clock_frequency;
  };
  
+ static int hx711_cycle(struct hx711_data *hx711_data)
+@@ -110,6 +118,14 @@ static int hx711_cycle(struct hx711_data *hx711_data)
+ 	 */
+ 	preempt_disable();
+ 	gpiod_set_value(hx711_data->gpiod_pd_sck, 1);
++
++	/*
++	 * wait until DOUT is ready
++	 * it turned out that parasitic capacities are extending the time
++	 * until DOUT has reached it's value
++	 */
++	ndelay(hx711_data->data_ready_delay_ns);
++
+ 	val = gpiod_get_value(hx711_data->gpiod_dout);
+ 	/*
+ 	 * here we are not waiting for 0.2 us as suggested by the datasheet,
+@@ -458,6 +474,7 @@ static const struct iio_chan_spec hx711_chan_spec[] = {
+ static int hx711_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
+ 	struct hx711_data *hx711_data;
+ 	struct iio_dev *indio_dev;
+ 	int ret;
+@@ -530,6 +547,22 @@ static int hx711_probe(struct platform_device *pdev)
+ 	hx711_data->gain_set = 128;
+ 	hx711_data->gain_chan_a = 128;
+ 
++	hx711_data->clock_frequency = 400000;
++	ret = of_property_read_u32(np, "clock-frequency",
++					&hx711_data->clock_frequency);
++
++	/*
++	 * datasheet says the high level of PD_SCK has a maximum duration
++	 * of 50 microseconds
++	 */
++	if (hx711_data->clock_frequency < 20000) {
++		dev_warn(dev, "clock-frequency too low - assuming 400 kHz\n");
++		hx711_data->clock_frequency = 400000;
++	}
++
++	hx711_data->data_ready_delay_ns =
++				1000000000 / hx711_data->clock_frequency;
++
+ 	platform_set_drvdata(pdev, indio_dev);
+ 
+ 	indio_dev->name = "hx711";
 -- 
 2.1.4
