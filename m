@@ -1,136 +1,94 @@
-From: Vikash Garodia <vgarodia@codeaurora.org>
-Subject: Re: [PATCH v2 2/5] media: venus: add a routine to set venus state
-Date: Wed, 04 Jul 2018 13:38:26 +0530
-Message-ID: <1b9ba366cc8484e4f2ef1510a8f57b38@codeaurora.org>
-References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
- <1527884768-22392-3-git-send-email-vgarodia@codeaurora.org>
- <be5cc865-608b-dabb-2a3c-b5864c387d64@mm-sol.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 03/12] drm/dp: add helpers for
+ drm_dp_set_adjust_request_pre_emphasis and drm_dp_set_adjust_request_voltage
+Date: Wed, 4 Jul 2018 10:16:49 +0200
+Message-ID: <20180704081648.GI3891@phenom.ffwll.local>
+References: <1530612152-27555-1-git-send-email-dkos@cadence.com>
+ <1530612152-27555-4-git-send-email-dkos@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <be5cc865-608b-dabb-2a3c-b5864c387d64@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1530612152-27555-4-git-send-email-dkos@cadence.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Damian Kos <dkos@cadence.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, pgaj@cadence.com, Rob Herring <robh+dt@kernel.org>, stelford@cadence.com, ltyrala@cadence.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stanimir,
-
-Thanks for your valuable comments.
-
-On 2018-06-04 19:20, Stanimir Varbanov wrote:
-> Hi Vikash,
-> 
-> Thanks for the patch!
-> 
-> On  1.06.2018 23:26, Vikash Garodia wrote:
->> Add a new routine which abstracts the TZ call to
-> 
-> Actually the new routine abstracts Venus CPU state, Isn't it?
-
-Yes, its a Venus CPU state controlled by TZ. I can mention it as
-an abstraction of venus CPU state.
-
->> set the video hardware state.
->> 
->> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
->> ---
->>   drivers/media/platform/qcom/venus/core.h      |  5 +++++
->>   drivers/media/platform/qcom/venus/firmware.c  | 28 
->> +++++++++++++++++++++++++++
->>   drivers/media/platform/qcom/venus/firmware.h  |  1 +
->>   drivers/media/platform/qcom/venus/hfi_venus.c | 13 ++++---------
->>   4 files changed, 38 insertions(+), 9 deletions(-)
->> 
->> diff --git a/drivers/media/platform/qcom/venus/core.h 
->> b/drivers/media/platform/qcom/venus/core.h
->> index 85e66e2..e7bfb63 100644
->> --- a/drivers/media/platform/qcom/venus/core.h
->> +++ b/drivers/media/platform/qcom/venus/core.h
->> @@ -35,6 +35,11 @@ struct reg_val {
->>   	u32 value;
->>   };
->> 
->> +enum tzbsp_video_state {
->> +	TZBSP_VIDEO_SUSPEND = 0,
->> +	TZBSP_VIDEO_RESUME
->> +};
-> 
-> please move this in firmware.c, for more see below.
-> 
->> +
->>   struct venus_resources {
->>   	u64 dma_mask;
->>   	const struct freq_tbl *freq_tbl;
->> diff --git a/drivers/media/platform/qcom/venus/firmware.c 
->> b/drivers/media/platform/qcom/venus/firmware.c
->> index 7d89b5a..b4664ed 100644
->> --- a/drivers/media/platform/qcom/venus/firmware.c
->> +++ b/drivers/media/platform/qcom/venus/firmware.c
->> @@ -53,6 +53,34 @@ static void venus_reset_hw(struct venus_core *core)
->>   	/* Bring Arm9 out of reset */
->>   	writel_relaxed(0, reg_base + WRAPPER_A9SS_SW_RESET);
->>   }
->> +
->> +int venus_set_hw_state(enum tzbsp_video_state state, struct 
->> venus_core *core)
-> 
-> can we put this function this way:
-> 
-> venus_set_state(struct venus_core *core, bool on)
-> 
-> so we set the state to On when we are power-up the venus CPU and Off
-> when we power-down.
-> 
-> by this way we really abstract the state, IMO.
-
-Good point. Will do in similar way.
-
->> +{
->> +	int ret;
->> +	struct device *dev = core->dev;
->> +	void __iomem *reg_base = core->base;
-> 
-> just 'base' should be enough.
-
-Infact, comment from Jordan, we can remove it altogether.
-
->> +
->> +	switch (state) {
->> +	case TZBSP_VIDEO_SUSPEND:
->> +		if (qcom_scm_is_available())
-> 
-> You really shouldn't rely on this function (see the comment from Bjorn
-> on first version of this patch series).
-> 
-> I think we have to replace qcom_scm_is_available() with some flag which
-> is reflecting does the firmware subnode is exist or not. In case it is
-> not exist the we have to go with TZ scm calls.
-
-As we discussed, will keep it under the check for a valid firmware 
-device.
-We can avoid the extra flag in that way.
-
->> +			ret = qcom_scm_set_remote_state(TZBSP_VIDEO_SUSPEND, 0);
->> +		else
->> +			writel_relaxed(1, reg_base + WRAPPER_A9SS_SW_RESET);
->> +		break;
->> +	case TZBSP_VIDEO_RESUME:
->> +		if (qcom_scm_is_available())
->> +			ret = qcom_scm_set_remote_state(TZBSP_VIDEO_RESUME, 0);
->> +		else
->> +			venus_reset_hw(core);
->> +		break;
->> +	default:
->> +		dev_err(dev, "invalid state\n");
->> +		break;
->> +	}
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL_GPL(venus_set_hw_state);
->> +
-> 
-> regards,
-> Stan
+T24gVHVlLCBKdWwgMDMsIDIwMTggYXQgMTE6MDI6MTRBTSArMDEwMCwgRGFtaWFuIEtvcyB3cm90
+ZToKPiBGcm9tOiBRdWVudGluIFNjaHVseiA8cXVlbnRpbi5zY2h1bHpAZnJlZS1lbGVjdHJvbnMu
+Y29tPgo+IAo+IFdlIGFscmVhZHkgaGF2ZSBmdW5jdGlvbnMgdG8gZ2V0IHRoZSBhZGp1c3QgcmVx
+dWVzdCB2b2x0YWdlIGFuZAo+IHByZS1lbXBoYXNpcyBmb3IgYSBsYW5lIHNvIGl0IG1ha2VzIGFs
+c28gc2Vuc2UgdG8gYmUgYWJsZSB0byBzZXQgdGhlbSBzbwo+IHRoYXQgd2UgY2FuIHRoZW4gZWFz
+aWx5IHVwZGF0ZSB0aGVtIHZpYSBhIERQQ0Qgd3JpdGUuCj4gCj4gQWRkIGhlbHBlcnMgZm9yIGRy
+bV9kcF9zZXRfYWRqdXN0X3JlcXVlc3RfcHJlX2VtcGhhc2lzIGFuZAo+IGRybV9kcF9zZXRfYWRq
+dXN0X3JlcXVlc3Rfdm9sdGFnZSB0aGF0IHJlc3BlY3RpdmVseSBzZXQgdGhlCj4gcHJlLWVtcGhh
+c2lzIGFuZCB2b2x0YWdlIG9mIGEgbGFuZSBpbiB0aGUgbGluayBzdGF0dXMgYXJyYXkuCj4gCj4g
+U2lnbmVkLW9mZi1ieTogUXVlbnRpbiBTY2h1bHogPHF1ZW50aW4uc2NodWx6QGZyZWUtZWxlY3Ry
+b25zLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBEYW1pYW4gS29zIDxka29zQGNhZGVuY2UuY29tPgoK
+SG0gdXN1YWxseSB0aGlzIGlzIHNvdXJjZSBkZXBlbmRlbnQgLSBzb21lIHNvdXJjZXMgb25seSBo
+YXZlIG9uZQphZGovcHJlLWVtcGggdmFsdWUgZm9yIGFsbCBsYW5lcywgc29tZSBvbmx5IDIgKGZv
+ciBncm91cHMgb2YgMiksIHNvbWUgZm9yCmFsbCBmb3VyLiBUaGF0J3Mga2luZGEgd2h5IHdlIGRv
+bid0IGhhdmUgaGVscGVycyBmb3IgdGhpcyBzdHVmZi4KCkFuIGV4Y2VsbGVudCB3YXkgdG8gc2hv
+dyB0aGF0IHlvdXIgbmV3IGhlbHBlcnMgYXJlIHVzZWZ1bCB3b3VsZCBiZSB0byBnbwp0aHJvdWdo
+IGV4aXN0aW5nIGRyaXZlcnMgYW5kIGNvbnZlcnQgdGhlbSBvdmVyLCB3aGVyZSBpdCBtYWtlcyBz
+ZW5zZS4gU2FtZQpraW5kYSBob2xkcyBmb3IgcGF0Y2ggMS4KClRoYW5rcywgRGFuaWVsCj4gLS0t
+Cj4gIGRyaXZlcnMvZ3B1L2RybS9kcm1fZHBfaGVscGVyLmMgfCAgIDI4ICsrKysrKysrKysrKysr
+KysrKysrKysrKysrKysKPiAgaW5jbHVkZS9kcm0vZHJtX2RwX2hlbHBlci5oICAgICB8ICAgIDQg
+KysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0p
+Cj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fZHBfaGVscGVyLmMgYi9kcml2
+ZXJzL2dwdS9kcm0vZHJtX2RwX2hlbHBlci5jCj4gaW5kZXggM2JjMmU5OC4uY2EyZjQ2OSAxMDA2
+NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vZHJtX2RwX2hlbHBlci5jCj4gKysrIGIvZHJpdmVy
+cy9ncHUvZHJtL2RybV9kcF9oZWxwZXIuYwo+IEBAIC0xMjAsNiArMTIwLDM0IEBAIHU4IGRybV9k
+cF9nZXRfYWRqdXN0X3JlcXVlc3RfcHJlX2VtcGhhc2lzKGNvbnN0IHU4IGxpbmtfc3RhdHVzW0RQ
+X0xJTktfU1RBVFVTX1NJCj4gIH0KPiAgRVhQT1JUX1NZTUJPTChkcm1fZHBfZ2V0X2FkanVzdF9y
+ZXF1ZXN0X3ByZV9lbXBoYXNpcyk7Cj4gIAo+ICt2b2lkIGRybV9kcF9zZXRfYWRqdXN0X3JlcXVl
+c3Rfdm9sdGFnZSh1OCBsaW5rX3N0YXR1c1tEUF9MSU5LX1NUQVRVU19TSVpFXSwKPiArCQkJCSAg
+ICAgICBpbnQgbGFuZSwgdTggdm9sdCkKPiArewo+ICsJaW50IGkgPSBEUF9BREpVU1RfUkVRVUVT
+VF9MQU5FMF8xICsgKGxhbmUgPj4gMSk7Cj4gKwlpbnQgcyA9ICgobGFuZSAmIDEpID8KPiArCQkg
+RFBfQURKVVNUX1ZPTFRBR0VfU1dJTkdfTEFORTFfU0hJRlQgOgo+ICsJCSBEUF9BREpVU1RfVk9M
+VEFHRV9TV0lOR19MQU5FMF9TSElGVCk7Cj4gKwlpbnQgaWR4ID0gaSAtIERQX0xBTkUwXzFfU1RB
+VFVTOwo+ICsKPiArCWxpbmtfc3RhdHVzW2lkeF0gJj0gfihEUF9BREpVU1RfVk9MVEFHRV9TV0lO
+R19MQU5FMF9NQVNLIDw8IHMpOwo+ICsJbGlua19zdGF0dXNbaWR4XSB8PSB2b2x0IDw8IHM7Cj4g
+K30KPiArRVhQT1JUX1NZTUJPTChkcm1fZHBfc2V0X2FkanVzdF9yZXF1ZXN0X3ZvbHRhZ2UpOwo+
+ICsKPiArdm9pZCBkcm1fZHBfc2V0X2FkanVzdF9yZXF1ZXN0X3ByZV9lbXBoYXNpcyh1OCBsaW5r
+X3N0YXR1c1tEUF9MSU5LX1NUQVRVU19TSVpFXSwKPiArCQkJCQkgICAgaW50IGxhbmUsIHU4IHBy
+ZV9lbXBoYXNpcykKPiArewo+ICsJaW50IGkgPSBEUF9BREpVU1RfUkVRVUVTVF9MQU5FMF8xICsg
+KGxhbmUgPj4gMSk7Cj4gKwlpbnQgcyA9ICgobGFuZSAmIDEpID8KPiArCQkgRFBfQURKVVNUX1BS
+RV9FTVBIQVNJU19MQU5FMV9TSElGVCA6Cj4gKwkJIERQX0FESlVTVF9QUkVfRU1QSEFTSVNfTEFO
+RTBfU0hJRlQpOwo+ICsJaW50IGlkeCA9IGkgLSBEUF9MQU5FMF8xX1NUQVRVUzsKPiArCj4gKwls
+aW5rX3N0YXR1c1tpZHhdICY9IH4oRFBfQURKVVNUX1BSRV9FTVBIQVNJU19MQU5FMF9NQVNLIDw8
+IHMpOwo+ICsJbGlua19zdGF0dXNbaWR4XSB8PSBwcmVfZW1waGFzaXMgPDwgczsKPiArfQo+ICtF
+WFBPUlRfU1lNQk9MKGRybV9kcF9zZXRfYWRqdXN0X3JlcXVlc3RfcHJlX2VtcGhhc2lzKTsKPiAr
+Cj4gIHZvaWQgZHJtX2RwX2xpbmtfdHJhaW5fY2xvY2tfcmVjb3ZlcnlfZGVsYXkoY29uc3QgdTgg
+ZHBjZFtEUF9SRUNFSVZFUl9DQVBfU0laRV0pIHsKPiAgCWlmIChkcGNkW0RQX1RSQUlOSU5HX0FV
+WF9SRF9JTlRFUlZBTF0gPT0gMCkKPiAgCQl1ZGVsYXkoMTAwKTsKPiBkaWZmIC0tZ2l0IGEvaW5j
+bHVkZS9kcm0vZHJtX2RwX2hlbHBlci5oIGIvaW5jbHVkZS9kcm0vZHJtX2RwX2hlbHBlci5oCj4g
+aW5kZXggYTQ4OGFmMC4uNmU2NGIyYSAxMDA2NDQKPiAtLS0gYS9pbmNsdWRlL2RybS9kcm1fZHBf
+aGVscGVyLmgKPiArKysgYi9pbmNsdWRlL2RybS9kcm1fZHBfaGVscGVyLmgKPiBAQCAtOTQ2LDYg
+Kzk0NiwxMCBAQCB1OCBkcm1fZHBfZ2V0X2FkanVzdF9yZXF1ZXN0X3ZvbHRhZ2UoY29uc3QgdTgg
+bGlua19zdGF0dXNbRFBfTElOS19TVEFUVVNfU0laRV0sCj4gIAkJCQkgICAgIGludCBsYW5lKTsK
+PiAgdTggZHJtX2RwX2dldF9hZGp1c3RfcmVxdWVzdF9wcmVfZW1waGFzaXMoY29uc3QgdTggbGlu
+a19zdGF0dXNbRFBfTElOS19TVEFUVVNfU0laRV0sCj4gIAkJCQkJICBpbnQgbGFuZSk7Cj4gK3Zv
+aWQgZHJtX2RwX3NldF9hZGp1c3RfcmVxdWVzdF92b2x0YWdlKHU4IGxpbmtfc3RhdHVzW0RQX0xJ
+TktfU1RBVFVTX1NJWkVdLAo+ICsJCQkJICAgICAgIGludCBsYW5lLCB1OCB2b2x0KTsKPiArdm9p
+ZCBkcm1fZHBfc2V0X2FkanVzdF9yZXF1ZXN0X3ByZV9lbXBoYXNpcyh1OCBsaW5rX3N0YXR1c1tE
+UF9MSU5LX1NUQVRVU19TSVpFXSwKPiArCQkJCQkgICAgaW50IGxhbmUsIHU4IHByZV9lbXBoYXNp
+cyk7Cj4gIAo+ICAjZGVmaW5lIERQX0JSQU5DSF9PVUlfSEVBREVSX1NJWkUJMHhjCj4gICNkZWZp
+bmUgRFBfUkVDRUlWRVJfQ0FQX1NJWkUJCTB4Zgo+IC0tIAo+IDEuNy4xCj4gCj4gX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCgotLSAKRGFuaWVsIFZl
+dHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3
+bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
