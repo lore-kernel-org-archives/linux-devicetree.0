@@ -1,113 +1,45 @@
-From: Vikash Garodia <vgarodia@codeaurora.org>
-Subject: Re: [PATCH v2 2/5] media: venus: add a routine to set venus state
-Date: Wed, 04 Jul 2018 13:29:33 +0530
-Message-ID: <ca7567c1df773f1223d919fab28f1460@codeaurora.org>
-References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
- <1527884768-22392-3-git-send-email-vgarodia@codeaurora.org>
- <20180601212117.GD11565@jcrouse-lnx.qualcomm.com>
- <CAAFQd5DH2i+8ZJ+s2XUnmFHwxXKLF6z_=w0Z-RFs=W9oVvrJgw@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 12/12] mfd: cros_ec: Add throttler sub-device
+Date: Wed, 4 Jul 2018 08:59:43 +0100
+Message-ID: <20180704075943.GS20176@dell>
+References: <20180703234705.227473-1-mka@chromium.org>
+ <20180703234705.227473-13-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAFQd5DH2i+8ZJ+s2XUnmFHwxXKLF6z_=w0Z-RFs=W9oVvrJgw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180703234705.227473-13-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tfiga@chromium.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, andy.gross@linaro.org, bjorn.andersson@linaro.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jordan, Tomasz,
+On Tue, 03 Jul 2018, Matthias Kaehlcke wrote:
 
-Thanks for your valuable review comments.
-
-On 2018-06-04 18:24, Tomasz Figa wrote:
-> Hi Jordan, Vikash,
+> Instantiate the CrOS EC throttler if it is enabled in the kernel
+> configuration.
 > 
-> On Sat, Jun 2, 2018 at 6:21 AM Jordan Crouse <jcrouse@codeaurora.org> 
-> wrote:
->> 
->> On Sat, Jun 02, 2018 at 01:56:05AM +0530, Vikash Garodia wrote:
-> [snip]
->> > +int venus_set_hw_state(enum tzbsp_video_state state, struct venus_core *core)
->> > +{
->> > +     int ret;
->> > +     struct device *dev = core->dev;
->> 
->> If you get rid of the log message as you should, you don't need this.
-
-Would prefer to keep the log for cases when enum is expanded while the 
-switch does
-not handle it.
-
->> > +     void __iomem *reg_base = core->base;
->> > +
->> > +     switch (state) {
->> > +     case TZBSP_VIDEO_SUSPEND:
->> > +             if (qcom_scm_is_available())
->> > +                     ret = qcom_scm_set_remote_state(TZBSP_VIDEO_SUSPEND, 0);
->> > +             else
->> > +                     writel_relaxed(1, reg_base + WRAPPER_A9SS_SW_RESET);
->> 
->> You can just use core->base here and not bother making a local 
->> variable for it.
-Ok.
-
->> > +             break;
->> > +     case TZBSP_VIDEO_RESUME:
->> > +             if (qcom_scm_is_available())
->> > +                     ret = qcom_scm_set_remote_state(TZBSP_VIDEO_RESUME, 0);
->> > +             else
->> > +                     venus_reset_hw(core);
->> > +             break;
->> > +     default:
->> > +             dev_err(dev, "invalid state\n");
->> 
->> state is a enum - you are highly unlikely to be calling it in your own 
->> code with
->> a random value.  It is smart to have the default, but you don't need 
->> the log
->> message - that is just wasted space in the binary.
-
-Incase enum is expanded while the switch does not handle it, default 
-will be useful.
-
->> > +             break;
->> > +     }
->> 
->> There are three paths in the switch statement that could end up with 
->> 'ret' being
->> uninitialized here.  Set it to 0 when you declare it.
-
-> Does this actually compile? The compiler should detect that ret is
-> used uninitialized. Setting it to 0 at declaration time actually
-> prevents compiler from doing that and makes it impossible to catch
-> cases when the ret should actually be non-zero, e.g. the invalid enum
-> value case.
-
-It does compile while it gave me failure while doing the functional 
-validation.
-I have fixed it in next series of patch.
-
-> Given that this function is supposed to substitute existing calls into
-> qcom_scm_set_remote_state(), why not just do something like this:
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Reviewed-by: Brian Norris <briannorris@chromium.org>
+> ---
+> Changes in v5:
+> - added 'Reviewed-by: Brian Norris <briannorris@chromium.org>' tag
 > 
->         if (qcom_scm_is_available())
->                 return qcom_scm_set_remote_state(state, 0);
+> Changes in v4:
+> - register throttler in cros_ec_dev.c instead of cros_ec.c
 > 
->         switch (state) {
->         case TZBSP_VIDEO_SUSPEND:
->                 writel_relaxed(1, reg_base + WRAPPER_A9SS_SW_RESET);
->                 break;
->         case TZBSP_VIDEO_RESUME:
->                 venus_reset_hw(core);
->                 break;
->         }
-> 
->         return 0;
-This will not work as driver will write on the register irrespective of 
-scm
-availability.
+> Changes in v3:
+> - patch added to series
+> ---
+>  drivers/mfd/cros_ec_dev.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 
-> Best regards,
-> Tomasz
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
