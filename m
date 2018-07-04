@@ -1,360 +1,65 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v5 05/12] PM / devfreq: Add support for policy notifiers
-Date: Wed, 04 Jul 2018 15:41:46 +0900
-Message-ID: <5B3C6C2A.1070205@samsung.com>
-References: <20180703234705.227473-1-mka@chromium.org>
-        <CGME20180703234900epcas1p1cda806bab6bbe69228ca5ee56bc33f36@epcas1p1.samsung.com>
-        <20180703234705.227473-6-mka@chromium.org>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCH v1] ARM: dts: imx6sl-evk: keep sw4 always on
+Date: Wed, 4 Jul 2018 08:56:06 +0200
+Message-ID: <20180704085606.78bb104b@karo-electronics.de>
+References: <CAOMZO5BjOEGWv2dC-bp0BYHq+PhLssEKic+o7ock8_1Dobd=sQ@mail.gmail.com>
+ <AM3PR04MB131507901BFEE1A5E426EECBF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5D8tjnjbwMdLGd7KF7_4PwqRWX8XH8kdcF3-5e-r2YQEA@mail.gmail.com>
+ <AM3PR04MB1315E7AED2BCE2265E6C443DF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5D8v4KM9S4ooHTDbA+vc8BZN_eO_wDuOPA+8Hcq-SmLDw@mail.gmail.com>
+ <AM3PR04MB1315C7C7CFF990615732FFBCF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5AM5VRS7UiWuvAQ8vvTB8OM+iwofuYrbsL_yB9e0Z9Kyg@mail.gmail.com>
+ <AM3PR04MB13155B8D567ABEF7EF03249AF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5BdtxKjQge5ONpnjr1yNVeTJf4u8Gh-fPqpHz7G9ipOTg@mail.gmail.com>
+ <1530526335.15665.13.camel@nxp.com> <20180703053843.GC4348@dragon>
+ <AM3PR04MB131542D42FCD798FDBBA54BFF5420@AM3PR04MB1315.eurprd04.prod.outlook.com>
+ <CAOMZO5BY99f5jjU+73=8WjqwBKr_q2S1mvx90URZUBkgOVn9YA@mail.gmail.com>
+ <1530697336.15665.43.camel@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180703234705.227473-6-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>, MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1530697336.15665.43.camel@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Gong <yibin.gong@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anson Huang <anson.huang@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-
-Firstly,
-I'm not sure why devfreq needs the devfreq_verify_within_limits() function.
-
-devfreq already used the OPP interface as default. It means that
-the outside of 'drivers/devfreq' can disable/enable the frequency
-such as drivers/thermal/devfreq_cooling.c. Also, when some device
-drivers disable/enable the specific frequency, the devfreq core
-consider them.
-
-So, devfreq doesn't need to devfreq_verify_within_limits() because
-already support some interface to change the minimum/maximum frequency
-of devfreq device. 
-
-In case of cpufreq subsystem, cpufreq only provides 'cpufreq_verify_with_limits()'
-to change the minimum/maximum frequency of cpu. some device driver cannot
-change the minimum/maximum frequency through OPP interface.
-
-But, in case of devfreq subsystem, as I explained already, devfreq support
-the OPP interface as default way. devfreq subsystem doesn't need to add
-other way to change the minimum/maximum frequency.
-
-
-Secondly,
-This patch send the 'struct devfreq_policy' instance as the data
-when sending the notification as following:
-
-	srcu_notifier_call_chain(&devfreq->policy_notifier_list,
-			DEVFREQ_ADJUST, policy);
-
-But, I think that if devfreq core sends the 'struct devfreq_freq_limits'
-instance instead of 'struct devfreq_policy', it is enough.
-Because receiver of DEVFREQ_ADJUST just will use the min_freq/max_freq variables.
-
-So, I tried to find the cpufreq's case. The some device drivers using
-CPUFREQ_POLICY_NOTIFIER uses following variables of 'struct cpufreq_policy'.
-It means that receiver of CPUFREQ_POLICY_NOTIFIER don't need to other
-information/variables except for min/max frequency.
-
-- policy->min
-- policy->max
-- policy->cpuinfo.max_freq
-- policy->cpuinfo.min_freq
-- policy->cpu : not related to devfreq)
-- policy->related_cpus : not related to devfreq)
-
-- list of device drivers using CPUFREQ_POLICY_NOTIFIER (linux kernel is v4.18-rc1)
-$ grep -rn "CPUFREQ_POLICY_NOTIFIER" .
-./drivers/macintosh/windfarm_cpufreq_clamp.c
-./drivers/thermal/cpu_cooling.c
-./drivers/thermal/cpu_cooling.c
-./drivers/acpi/processor_thermal.c
-./drivers/acpi/processor_thermal.c
-./drivers/acpi/processor_perflib.c
-./drivers/acpi/processor_perflib.c
-./drivers/base/arch_topology.c
-./drivers/base/arch_topology.c
-./drivers/video/fbdev/sa1100fb.c
-./drivers/video/fbdev/pxafb.c
-./drivers/cpufreq/ppc_cbe_cpufreq_pmi.c
-./drivers/cpufreq/cpufreq.c
-./drivers/cpufreq/cpufreq.c
-./drivers/cpufreq/cpufreq.c
-./drivers/cpufreq/cpufreq.c
-
-
-On 2018년 07월 04일 08:46, Matthias Kaehlcke wrote:
-> Policy notifiers are called before a frequency change and may narrow
-> the min/max frequency range in devfreq_policy, which is used to adjust
-> the target frequency if it is beyond this range.
-> 
-> Also add a few helpers:
->  - devfreq_verify_within_[dev_]limits()
->     - should be used by the notifiers for policy adjustments.
->  - dev_to_devfreq()
->     - lookup a devfreq strict from a device pointer
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
-> ---
-> Changes in v5:
-> - none
-> 
-> Changes in v4:
-> - Fixed typo in commit message: devfreg => devfreq
-> - added 'Reviewed-by: Brian Norris <briannorris@chromium.org>' tag
-> 
-> Changes in v3:
-> - devfreq.h: fixed misspelling of struct devfreq_policy
-> 
-> Changes in v2:
-> - performance, powersave and simpleondemand governors don't need changes
->   with "PM / devfreq: Don't adjust to user limits in governors"
-> - formatting fixes
-> ---
->  drivers/devfreq/devfreq.c | 48 ++++++++++++++++++++++-------
->  include/linux/devfreq.h   | 65 +++++++++++++++++++++++++++++++++++++++
->  2 files changed, 102 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> index 21604d6ae2b8..4cbaa7ad1972 100644
-> --- a/drivers/devfreq/devfreq.c
-> +++ b/drivers/devfreq/devfreq.c
-> @@ -72,6 +72,21 @@ static struct devfreq *find_device_devfreq(struct device *dev)
->  	return ERR_PTR(-ENODEV);
->  }
->  
-> +/**
-> + * dev_to_devfreq() - find devfreq struct using device pointer
-> + * @dev:	device pointer used to lookup device devfreq.
-> + */
-> +struct devfreq *dev_to_devfreq(struct device *dev)
-> +{
-> +	struct devfreq *devfreq;
-> +
-> +	mutex_lock(&devfreq_list_lock);
-> +	devfreq = find_device_devfreq(dev);
-> +	mutex_unlock(&devfreq_list_lock);
-> +
-> +	return devfreq;
-> +}
-> +
->  static unsigned long find_available_min_freq(struct devfreq *devfreq)
->  {
->  	struct dev_pm_opp *opp;
-> @@ -269,20 +284,21 @@ int update_devfreq(struct devfreq *devfreq)
->  	if (!policy->governor)
->  		return -EINVAL;
->  
-> +	policy->min = policy->devinfo.min_freq;
-> +	policy->max = policy->devinfo.max_freq;
-
-Why don't you consider 'policy->user.max/min_freq' as following?
-As I already commented, I think that 'struct devfreq_freq_limits' is enough
-instead of 'struct devfreq_policy'.
-
-	->max_freq = MIN(policy->devinfo.max_freq, policy->user.max_freq);
-	->min_freq = MAX(policy->devinfo.min_freq, policy->user.min_freq);
-
-
-> +
-> +	srcu_notifier_call_chain(&devfreq->policy_notifier_list,
-> +				DEVFREQ_ADJUST, policy);
-> +
->  	/* Reevaluate the proper frequency */
->  	err = policy->governor->get_target_freq(devfreq, &freq);
->  	if (err)
->  		return err;
->  
-> -	/*
-> -	 * Adjust the frequency with user freq, QoS and available freq.
-> -	 *
-> -	 * List from the highest priority
-> -	 * max_freq
-> -	 * min_freq
-> -	 */
-> -	max_freq = MIN(policy->devinfo.max_freq, policy->user.max_freq);
-> -	min_freq = MAX(policy->devinfo.min_freq, policy->user.min_freq);
-> +	/* Adjust the frequency */
-> +
-> +	max_freq = MIN(policy->max, policy->user.max_freq);
-> +	min_freq = MAX(policy->min, policy->user.min_freq);
->  
->  	if (freq < min_freq) {
->  		freq = min_freq;
-> @@ -645,6 +661,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
->  	devfreq->last_stat_updated = jiffies;
->  
->  	srcu_init_notifier_head(&devfreq->transition_notifier_list);
-> +	srcu_init_notifier_head(&devfreq->policy_notifier_list);
->  
->  	mutex_unlock(&devfreq->lock);
->  
-> @@ -1445,7 +1462,7 @@ EXPORT_SYMBOL(devm_devfreq_unregister_opp_notifier);
->   * devfreq_register_notifier() - Register a driver with devfreq
->   * @devfreq:	The devfreq object.
->   * @nb:		The notifier block to register.
-> - * @list:	DEVFREQ_TRANSITION_NOTIFIER.
-> + * @list:	DEVFREQ_TRANSITION_NOTIFIER or DEVFREQ_POLICY_NOTIFIER.
->   */
->  int devfreq_register_notifier(struct devfreq *devfreq,
->  				struct notifier_block *nb,
-> @@ -1461,6 +1478,10 @@ int devfreq_register_notifier(struct devfreq *devfreq,
->  		ret = srcu_notifier_chain_register(
->  				&devfreq->transition_notifier_list, nb);
->  		break;
-> +	case DEVFREQ_POLICY_NOTIFIER:
-> +		ret = srcu_notifier_chain_register(
-> +				&devfreq->policy_notifier_list, nb);
-> +		break;
->  	default:
->  		ret = -EINVAL;
->  	}
-> @@ -1473,7 +1494,7 @@ EXPORT_SYMBOL(devfreq_register_notifier);
->   * devfreq_unregister_notifier() - Unregister a driver with devfreq
->   * @devfreq:	The devfreq object.
->   * @nb:		The notifier block to be unregistered.
-> - * @list:	DEVFREQ_TRANSITION_NOTIFIER.
-> + * @list:	DEVFREQ_TRANSITION_NOTIFIER or DEVFREQ_POLICY_NOTIFIER.
->   */
->  int devfreq_unregister_notifier(struct devfreq *devfreq,
->  				struct notifier_block *nb,
-> @@ -1489,6 +1510,11 @@ int devfreq_unregister_notifier(struct devfreq *devfreq,
->  		ret = srcu_notifier_chain_unregister(
->  				&devfreq->transition_notifier_list, nb);
->  		break;
-> +	case DEVFREQ_POLICY_NOTIFIER:
-> +		ret = srcu_notifier_chain_unregister(
-> +				&devfreq->policy_notifier_list, nb);
-> +		break;
-> +
->  	default:
->  		ret = -EINVAL;
->  	}
-> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
-> index 9bf23b976f4d..7c8dce96db73 100644
-> --- a/include/linux/devfreq.h
-> +++ b/include/linux/devfreq.h
-> @@ -33,6 +33,10 @@
->  #define	DEVFREQ_PRECHANGE		(0)
->  #define DEVFREQ_POSTCHANGE		(1)
->  
-> +#define DEVFREQ_POLICY_NOTIFIER		1
-> +
-> +#define	DEVFREQ_ADJUST			0
-> +
->  struct devfreq;
->  struct devfreq_governor;
->  
-> @@ -121,12 +125,16 @@ struct devfreq_freq_limits {
->  
->  /**
->   * struct devfreq_policy - Devfreq policy
-> + * @min:	minimum frequency (adjustable by policy notifiers)
-> + * @min:	maximum frequency (adjustable by policy notifiers)
->   * @user:	frequency limits requested by the user
->   * @devinfo:	frequency limits of the device (available OPPs)
->   * @governor:	method how to choose frequency based on the usage.
->   * @governor_name:	devfreq governor name for use with this devfreq
->   */
->  struct devfreq_policy {
-> +	unsigned long min;
-> +	unsigned long max;
->  	struct devfreq_freq_limits user;
->  	struct devfreq_freq_limits devinfo;
->  	const struct devfreq_governor *governor;
-> @@ -155,6 +163,7 @@ struct devfreq_policy {
->   * @time_in_state:	Statistics of devfreq states
->   * @last_stat_updated:	The last time stat updated
->   * @transition_notifier_list: list head of DEVFREQ_TRANSITION_NOTIFIER notifier
-> + * @policy_notifier_list: list head of DEVFREQ_POLICY_NOTIFIER notifier
->   *
->   * This structure stores the devfreq information for a give device.
->   *
-> @@ -188,6 +197,7 @@ struct devfreq {
->  	unsigned long last_stat_updated;
->  
->  	struct srcu_notifier_head transition_notifier_list;
-> +	struct srcu_notifier_head policy_notifier_list;
->  };
->  
->  struct devfreq_freqs {
-> @@ -240,6 +250,45 @@ extern void devm_devfreq_unregister_notifier(struct device *dev,
->  extern struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev,
->  						int index);
->  
-> +/**
-> + * devfreq_verify_within_limits() - Adjust a devfreq policy if needed to make
-> + *                                  sure its min/max values are within a
-> + *                                  specified range.
-> + * @policy:	the policy
-> + * @min:	the minimum frequency
-> + * @max:	the maximum frequency
-> + */
-> +static inline void devfreq_verify_within_limits(struct devfreq_policy *policy,
-> +		unsigned int min, unsigned int max)
-> +{
-> +	if (policy->min < min)
-> +		policy->min = min;
-> +	if (policy->max < min)
-> +		policy->max = min;
-> +	if (policy->min > max)
-> +		policy->min = max;
-> +	if (policy->max > max)
-> +		policy->max = max;
-> +	if (policy->min > policy->max)
-> +		policy->min = policy->max;
-> +}
-> +
-> +/**
-> + * devfreq_verify_within_dev_limits() - Adjust a devfreq policy if needed to
-> + *                                      make sure its min/max values are within
-> + *                                      the frequency range supported by the
-> + *                                      device.
-> + * @policy:	the policy
-> + */
-> +static inline void
-> +devfreq_verify_within_dev_limits(struct devfreq_policy *policy)
-> +{
-> +	devfreq_verify_within_limits(policy, policy->devinfo.min_freq,
-> +			policy->devinfo.max_freq);
-> +}
-> +
-> +struct devfreq *dev_to_devfreq(struct device *dev);
-> +
->  #if IS_ENABLED(CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND)
->  /**
->   * struct devfreq_simple_ondemand_data - void *data fed to struct devfreq
-> @@ -394,10 +443,26 @@ static inline struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev,
->  	return ERR_PTR(-ENODEV);
->  }
->  
-> +static inline void devfreq_verify_within_limits(struct devfreq_policy *policy,
-> +		unsigned int min, unsigned int max)
-> +{
-> +}
-> +
-> +static inline void
-> +devfreq_verify_within_dev_limits(struct devfreq_policy *policy)
-> +{
-> +}
-> +
->  static inline int devfreq_update_stats(struct devfreq *df)
->  {
->  	return -EINVAL;
->  }
-> +
-> +static inline struct devfreq *dev_to_devfreq(struct device *dev)
-> +{
-> +	return NULL;
-> +}
-> +
->  #endif /* CONFIG_PM_DEVFREQ */
->  
->  #endif /* __LINUX_DEVFREQ_H__ */
-> 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+SGksCgpPbiBXZWQsIDQgSnVsIDIwMTggMDE6NDI6NTQgKzAwMDAgUm9iaW4gR29uZyB3cm90ZToK
+PiBPbiDkuowsIDIwMTgtMDctMDMgYXQgMDg6MTAgLTAzMDAsIEZhYmlvIEVzdGV2YW0gd3JvdGU6
+Cj4gPiBIaSBBbnNvbiwKPiA+IAo+ID4gT24gVHVlLCBKdWwgMywgMjAxOCBhdCA0OjQ0IEFNLCBB
+bnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4KPiA+IHdyb3RlOgo+ID4gCj4gPiA+IAo+
+ID4gPiBJdCBpcyBOT1QgZWFzeSB0byBpZGVudGlmeSB3aGljaCBzd2l0Y2ggaXMgY3JpdGljYWwg
+b3IgTk9ULCBhbmQKPiA+ID4gZGlmZmVyZW50IHBsYXRmb3Jtcwo+ID4gPiBoYXZlIGRpZmZlcmVu
+dCBib2FyZCBkZXNpZ24sIGl0IHdpbGwgaW50cm9kdWNlIG1hbnkgcGxhdGZvcm0KPiA+ID4gc3Bl
+Y2lmaWVkIGNvZGUsIHNvIEkgdGhpbmsKPiA+ID4ganVzdCByZXZlcnQgdGhlIHBmdXplMTAwIHN3
+aXRjaCBlbmFibGUvZGlzYWJsZSBwYXRjaCBzaG91bGQgYmUgT0sKPiA+ID4gZm9yIG5vdy4KPiA+
+IEkgaGF2ZSBzZW50IHRoZSBwZnV6ZTEwMCByZWd1bGF0b3IgcGF0Y2ggcmV2ZXJ0IGFuZCBpdCBp
+cyBsaW51eC1uZXh0Cj4gPiBub3cuIFNob3VsZCBwcm9iYWJseSByZWFjaCA0LjE4LXJjNC4KPiA+
+IAo+ID4gPiAKPiA+ID4gQWZ0ZXIgYSBjb3VwbGUgb2YgcmVsZWFzZSBjeWNsZXMsIGFkZCB0aGUg
+cGZ1emUxMDAgc3dpdGNoCj4gPiA+IGVuYWJsZS9kaXNhYmxlIHBhdGNoCj4gPiA+IGJhY2sgdG8g
+c3VwcG9ydCB0aGlzIGZlYXR1cmUsIEkgYmVsaWV2ZSB1c2VycyBzaG91bGQgc3dpdGNoIHRvIG5l
+dwo+ID4gPiBkdGIgd2l0aCAicmVndWxhdG9yLWFsd2F5cy1vbiIKPiA+ID4gZXhpc3RpbmcgYWxy
+ZWFkeS4KPiA+IFRoYXQgd2lsbCBzdGlsbCBicmVhayBvbGQgZHRiIGNvbXBhdGliaWxpdHkuCj4g
+PiAKPiA+IFlvdSBjYW5ub3QgZm9yY2UgdXNlcnMgdG8gdXNlICJyZWd1bGF0b3ItYWx3YXlzLW9u
+IiBhbmQgdGhlIG9sZCBkdGJzCj4gPiBuZWVkIHRvIGFsd2F5cyB3b3JrLgo+ID4gCj4gPiBTbyB3
+aGF0ZXZlciBuZXcgZmVhdHVyZSB5b3UgbmVlZCB0byBpbnRyb2R1Y2UgaXQgbmVlZHMgdG8gYmUg
+ZG9uZSBpbgo+ID4gc3VjaCBhIHdheSB0aGF0IHRoZSBleGlzdGluZyBkdGIncyB3aWxsIGNvbnRp
+bnVlIHdvcmtpbmcuCj4gQnV0IGFjdHVhbGx5IGV4aXN0aW5nIGR0YiBpcyBub3QgcmlnaHQgc2lu
+Y2UgdGhlIGNyaXRpY2FsIHBvd2VyIHJhaWwKPiBtaXNzaW5nICdyZWd1bGF0b3ItYWx3YXlzLW9u
+Jy4gSXQncyBhIGZpeCBwYXRjaCBmb3IgZHRzLCBub3QgcmVsYXRlZAo+IHdpdGggZm9sbG93aW5n
+IGR0Yi9rZXJuZWwgYnJlYWsgcnVsZXMsIGp1c3QgYSBzaW1wbGUgZHRzIHBhdGNoLiBXaHkKPiBz
+aG91bGQgd2UgbWFrZSBwcm9taXNlIGZvciB0aGUgd3JvbmcgZHRicz8KPgpCZWNhdXNlIHRoZXkg
+YXJlIGxpdmluZyBpbiB0aGUgb3V0c2lkZSB3b3JsZCBvbiByZWFsIGRldmljZXMuCgoKTG90aGFy
+IFdhw59tYW5uCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
+aW51eC1hcm0ta2VybmVsCg==
