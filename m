@@ -1,78 +1,145 @@
-From: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] dt: bindings: add bindings for msa memory region
-Date: Wed, 04 Jul 2018 15:21:38 +0530
-Message-ID: <efdb902e1fb8e5476a5661dfedc36aba@codeaurora.org>
-References: <20180605123616.528-1-govinds@codeaurora.org>
- <20180605231814.GB194157@rodete-desktop-imager.corp.google.com>
- <87o9fonx5r.fsf@kamboji.qca.qualcomm.com>
- <20180703160122.w54lq7mr2uectjea@lakrids.cambridge.arm.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH v8 1/2] mfd: bd71837: mfd driver for ROHM BD71837 PMIC
+Date: Wed, 4 Jul 2018 12:52:57 +0300
+Message-ID: <20180704095257.GJ2118@localhost.localdomain>
+References: <cover.1530259815.git.matti.vaittinen@fi.rohmeurope.com>
+ <18a04e42debb2a23aec855cac3bcf3d6ab6c55fd.1530259815.git.matti.vaittinen@fi.rohmeurope.com>
+ <CAFqH_533te3UuY9V9U+Z0yxTkW==3wsK22uzB4G=aWGour7Quw@mail.gmail.com>
+ <20180704083911.GH2118@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180703160122.w54lq7mr2uectjea-agMKViyK24J5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180704083911.GH2118@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo Serra <eballetbo@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Matti Vaittinen <mazziesaccount@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>, chenjh@rock-chips.com, Andrey Smirnov <andrew.smirnov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Kate Stewart <kstewart@linuxfoundation.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, sboyd@kernel.org, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-07-03 21:31, Mark Rutland wrote:
-> On Tue, Jul 03, 2018 at 06:42:24PM +0300, Kalle Valo wrote:
->> Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> writes:
->> 
->> > + Rob
->> >
->> > On Tue, Jun 05, 2018 at 06:06:16PM +0530, Govind Singh wrote:
->> >> Add device tree binding documentation details of msa
->> >> memory region for ath10k qmi client for SDM845/APQ8098
->> >> SoC into "qcom,ath10k.txt".
->> >>
->> >> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> >> ---
->> >>  .../devicetree/bindings/net/wireless/qcom,ath10k.txt          | 4 ++++
->> >>  1 file changed, 4 insertions(+)
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> >> index 7fd4e8ce4149..0efc47f4ba34 100644
->> >> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> >> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> >> @@ -56,6 +56,8 @@ Optional properties:
->> >>  				     the length can vary between hw versions.
->> >>  - <supply-name>-supply: handle to the regulator device tree node
->> >>  			   optional "supply-name" is "vdd-0.8-cx-mx".
->> >> +- msa-fixed-region: phandle, specifier to children of reserved MSA memory.
->> >
->> > As in reserved-memory/reserved-memory.txt? Might refer to that doc here.
->> > Or is this some other kind of reserved memory?
->> >
-
-sure, i will give reference to reserved-memory.txt.
-
->> > If the former, it's normally called just "memory-region", although
->> > that does seem somewhat non-descriptive...
->> >
->> >> +- msa-size: MSA memory size for fw internal use.
->> >
->> > Do you really need both of these? It seems like your code uses one or
->> > the other, not both. In which case, this is not a very good description,
->> > because it sounds like they would go together.
->> >
->> > Also, if you're not using standard/generic properties (e.g., the
->> > aforementioned "memory-region" binding), you typically should use a
->> > vendor prefix, like "qcom,msa-size".
->> 
->> Devicetree folks, any comments? I would like to apply this via my
->> ath.git tree but need help with the review.
+On Wed, Jul 04, 2018 at 11:39:11AM +0300, Matti Vaittinen wrote:
+> On Tue, Jul 03, 2018 at 11:26:00AM +0200, Enric Balletbo Serra wrote:
+> > Missatge de Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com> del
+> > dia dv., 29 de juny 2018 a les 11:47:
+> > 
+> > Now that you use devm calls and you don't need to unwind things I
+> > think is better to use plain returns. So,
+> > 
+> > return -ENOMEM;
 > 
-> I think Brian's comments w.r.t msa-size and msa-fixed-region both 
-> stand.
-> It would be good if Govind could answer his questions.
-> 
+> I have never really understood why use of gotos in error handling is
+> discouraged. Personally I would always choose single point of exit from
+> a function when it is simple enough to achieve (like in this case). I've
+> written and fixed way too many functions which leak resources or
+> accidentally keep a lock when exiting from error branches. But I know
+> many colleagues like you who prefer not to have gotos but  in place returns
+> instead. So I guess I'll leave the final call on this to the one who is
+> maintainer for this code. And it is true there is no things to unwind
+> now - which does not mean that next updater won't add such. But as I
+> said, I know plenty of people share your view - and even though I rather
+> maintain code with only one exit the final call is on subsystem maintainer
+> here.
 
-As Brian suggested, i am planing to remove msa-size and keep only 
-msa-fixed-region.
+Actually, If it was completely my call the probe would look something
+like this:
 
++static int bd71837_i2c_probe(struct i2c_client *i2c,
++                           const struct i2c_device_id *id)
++{
++       struct bd71837 *bd71837;
++       struct bd71837_board *board_info;
++       int gpio_intr = 0;
++
++       const char *errstr = "No IRQ configured";
++       int ret = -EINVAL;
++
++       bd71837 = devm_kzalloc(&i2c->dev, sizeof(struct bd71837), GFP_KERNEL);
++
++       if (bd71837 == NULL)
++               return -ENOMEM;
++
++       board_info = dev_get_platdata(&i2c->dev);
++
++       if (!board_info)
++               gpio_intr = i2c->irq;
++       else
++               gpio_intr = board_info->gpio_intr;
++
++       if (!gpio_intr)
++               goto err_out;
++
++       i2c_set_clientdata(i2c, bd71837);
++       bd71837->dev = &i2c->dev;
++       bd71837->i2c_client = i2c;
++       bd71837->chip_irq = gpio_intr;
++
++       errstr = "regmap initialization failed";
++
++       bd71837->regmap = devm_regmap_init_i2c(i2c, &bd71837_regmap_config);
++       ret = PTR_ERR(bd71837->regmap);
++       if (IS_ERR(bd71837->regmap))
++               goto err_out;
++
++       errstr = "Read BD71837_REG_DEVICE failed";
++       ret = bd71837_reg_read(bd71837, BD71837_REG_REV);
++       if (ret < 0)
++               goto err_out;
++
++       errstr = "Failed to add irq_chip";
++       ret = devm_regmap_add_irq_chip(&i2c->dev, bd71837->regmap,
++                                      bd71837->chip_irq, IRQF_ONESHOT, 0,
++                                      &bd71837_irq_chip, &bd71837->irq_data);
++       if (ret < 0)
++               goto err_out;
++
++       errstr = "Failed to configure button short press timeout";
++       ret = regmap_update_bits(bd71837->regmap,
++                                BD71837_REG_PWRONCONFIG0,
++                                BD718XX_PWRBTN_PRESS_DURATION_MASK,
++                                BD718XX_PWRBTN_SHORT_PRESS_10MS);
++       if (ret < 0)
++               goto err_out;
++
++       /* According to BD71847 datasheet the HW default for long press
++        * detection is 10ms. So lets change it to 10 sec so we can actually
++        * get the short push and allow gracefull shut down
++        */
++       ret = regmap_update_bits(bd71837->regmap,
++                                BD71837_REG_PWRONCONFIG1,
++                                BD718XX_PWRBTN_PRESS_DURATION_MASK,
++                                BD718XX_PWRBTN_LONG_PRESS_10S);
++
++       errstr = "Failed to configure button long press timeout";
++       if (ret < 0)
++               goto err_out;
++
++       btns[0].irq = regmap_irq_get_virq(bd71837->irq_data,
++                                         BD71837_INT_PWRBTN_S);
++
++       errstr = "Failed to get the IRQ";
++       ret = btns[0].irq;
++       if (btns[0].irq < 0)
++               goto err_out;
++
++       errstr = "Failed to create subdevices";
++       ret = devm_mfd_add_devices(bd71837->dev, PLATFORM_DEVID_AUTO,
++                                  bd71837_mfd_cells,
++                                  ARRAY_SIZE(bd71837_mfd_cells), NULL, 0,
++                                  regmap_irq_get_domain(bd71837->irq_data));
++       if (ret) {
++err_out:
++               if (errstr)
++                       dev_err(&i2c->dev, "%s (%d)\n", errstr, ret);
++       }
++
++       return ret;
++}
 
-Thanks
-Govind
+What do you think of this? To my eye it is nice. It keeps single point of
+exit and introduces only simple if-statements without the need of curly
+brackets. And finally the error prints string works as a comment too.
+I've seen bunch of constructs like this on the networking side but I
+have no idea if this is frowned on this subsystem =) Oh, and probe abowe
+is just to illustrate the idea, I did not even try compiling it yet.
+
+Best Regards
+    Matti Vaittinen
