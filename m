@@ -1,79 +1,49 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v5 07/12] PM / devfreq: export devfreq_class
-Date: Wed, 04 Jul 2018 14:30:32 +0900
-Message-ID: <5B3C5B78.6020401@samsung.com>
-References: <20180703234705.227473-1-mka@chromium.org>
-        <CGME20180703234837epcas5p1da751e0394c16816b95ac1956bf6de20@epcas5p1.samsung.com>
-        <20180703234705.227473-8-mka@chromium.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v4 2/6] dt-bindings: power: Add qcom rpm power domain
+ driver bindings
+Date: Wed, 4 Jul 2018 11:27:57 +0530
+Message-ID: <20180704055757.4li26b6poxllmh2k@vireshk-i7>
+References: <20180627045234.27403-1-rnayak@codeaurora.org>
+ <20180627045234.27403-3-rnayak@codeaurora.org>
+ <20180703223554.GA32313@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180703234705.227473-8-mka@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <20180703223554.GA32313@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>, MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
+To: Rob Herring <robh@kernel.org>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 03-07-18, 16:35, Rob Herring wrote:
+> > +qcom,level values specified in the OPP tables for RPMh power domains
+> > +should use the RPMH_REGULATOR_LEVEL_* constants from
+> > +<dt-bindings/power/qcom-rpmhpd.h>
+> > +
+> > +	rpmhpd: power-controller {
+> > +		compatible = "qcom,sdm845-rpmhpd";
+> > +		#power-domain-cells = <1>;
+> > +		operating-points-v2 = <&rpmhpd_opp_table>;
+> > +	};
+> > +
+> > +	rpmhpd_opp_table: opp-table {
+> > +		compatible = "operating-points-v2-qcom-level";
+> > +
+> > +		rpmhpd_opp_ret: opp1 {
+> > +			qcom,level = <RPMH_REGULATOR_LEVEL_RETENTION>;
+> > +		};
+> 
+> I don't see the point in using the OPP binding here when you aren't 
+> using *any* of the properties from it.
 
-I didn't see any framework which exporting the class instance.
-It is very dangerous. Unknown device drivers is able to reset
-the 'devfreq_class' instance. I can't agree this approach.
+Yeah, that's the case for now. But there are cases (as Stephen
+mentioned earlier [1]) where the voltage values (and maybe other
+values like current, etc) would be known and filled in DT. And that's
+why we all agreed to use OPP tables for PM domains as well, as these
+are really "operating performance points" of these PM domains.
 
-Regards,
-Chanwoo Choi
+-- 
+viresh
 
-
-On 2018년 07월 04일 08:47, Matthias Kaehlcke wrote:
-> Exporting the device class allows other parts of the kernel to enumerate
-> the devfreq devices and receive notification when a devfreq device is
-> added or removed.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
-> ---
-> Changes in v5:
-> - none
-> 
-> Changes in v4:
-> - added 'Reviewed-by: Brian Norris <briannorris@chromium.org>' tag
-> 
-> Changes in v3:
-> - none
-> 
-> Changes in v2:
-> - patch added to series
-> ---
->  drivers/devfreq/devfreq.c | 3 ++-
->  include/linux/devfreq.h   | 2 ++
->  2 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> index 4cbaa7ad1972..38b90b64fc6e 100644
-> --- a/drivers/devfreq/devfreq.c
-> +++ b/drivers/devfreq/devfreq.c
-> @@ -31,7 +31,8 @@
->  #define MAX(a,b)	((a > b) ? a : b)
->  #define MIN(a,b)	((a < b) ? a : b)
->  
-> -static struct class *devfreq_class;
-> +struct class *devfreq_class;
-> +EXPORT_SYMBOL_GPL(devfreq_class);
->  
->  /*
->   * devfreq core provides delayed work based load monitoring helper
-> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
-> index c4f84a769cb5..964e064a951f 100644
-> --- a/include/linux/devfreq.h
-> +++ b/include/linux/devfreq.h
-> @@ -206,6 +206,8 @@ struct devfreq_freqs {
->  };
->  
->  #if defined(CONFIG_PM_DEVFREQ)
-> +extern struct class *devfreq_class;
-> +
->  extern struct devfreq *devfreq_add_device(struct device *dev,
->  				  struct devfreq_dev_profile *profile,
->  				  const char *governor_name,
-> 
+[1] lkml.kernel.org/r/20180110025454.GG21040@codeaurora.org
