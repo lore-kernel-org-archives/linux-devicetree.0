@@ -1,56 +1,48 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v7 0/4] mfd/regulator/clk/input: bd71837: ROHM BD71837
- PMIC driver
-Date: Wed, 4 Jul 2018 11:47:15 +0300
-Message-ID: <20180704084715.GI2118@localhost.localdomain>
-References: <cover.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
- <20180621103400.GB6076@localhost.localdomain>
- <20180703070200.GC20176@dell>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v2 2/5] media: venus: add a routine to set venus state
+Date: Wed, 4 Jul 2018 18:00:59 +0900
+Message-ID: <CAAFQd5BvTNhafus4WcoPLiBTN8X3Ls+YA0OgpfnyadDayvVQxA@mail.gmail.com>
+References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
+ <1527884768-22392-3-git-send-email-vgarodia@codeaurora.org>
+ <20180601212117.GD11565@jcrouse-lnx.qualcomm.com> <CAAFQd5DH2i+8ZJ+s2XUnmFHwxXKLF6z_=w0Z-RFs=W9oVvrJgw@mail.gmail.com>
+ <ca7567c1df773f1223d919fab28f1460@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180703070200.GC20176@dell>
+In-Reply-To: <ca7567c1df773f1223d919fab28f1460@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, arnd@arndb.de, dmitry.torokhov@gmail.com, sre@kernel.org, chenjh@rock-chips.com, andrew.smirnov@gmail.com, linus.walleij@linaro.org, kstewart@linuxfoundation.org, heiko@sntech.de, gregkh@linuxfoundation.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: vgarodia@codeaurora.org
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, bjorn.andersson@linaro.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 03, 2018 at 08:02:00AM +0100, Lee Jones wrote:
-> On Thu, 21 Jun 2018, Matti Vaittinen wrote:
-> 
-> > On Tue, Jun 19, 2018 at 01:55:31PM +0300, Matti Vaittinen wrote:
-> > > Patch series adding support for ROHM BD71837 PMIC.
-> > > 
-> > What is the preferred way when I send updated patches:
-> > 
-> > 1. always resend _all_ unapplied patches even if there is no changes to
-> >    some of them. (patch-vN mail thread contains _all_ unapplied patches)
-> > 2. only resend changed patches (patch-vN mail thread contains only
-> >    patches that were changed from patch-vN-1)
-> > 
-> > I have currently used approach 1 - so that no patches would be
-> > accidentally forgotten - but downside is that people need to check if
-> > they have already reviewed some of the patches. I'd rather not caused
-> > any extra work. What is the most convenient way for you guys?
-> 
-> Option 1 is preferred.
-> 
-> Just ensure you apply any tags you have collected so reviewers can see
-> which patches are pending a review.  It's also a good idea to keep a
-> succinct change log between the "--" marker and the diff stat where
-> you can state "v4: No change" or the like.
+On Wed, Jul 4, 2018 at 4:59 PM Vikash Garodia <vgarodia@codeaurora.org> wrote:
+> On 2018-06-04 18:24, Tomasz Figa wrote:
+> > On Sat, Jun 2, 2018 at 6:21 AM Jordan Crouse <jcrouse@codeaurora.org>
+> > wrote:
+> >> On Sat, Jun 02, 2018 at 01:56:05AM +0530, Vikash Garodia wrote:
+> > Given that this function is supposed to substitute existing calls into
+> > qcom_scm_set_remote_state(), why not just do something like this:
+> >
+> >         if (qcom_scm_is_available())
+> >                 return qcom_scm_set_remote_state(state, 0);
+> >
+> >         switch (state) {
+> >         case TZBSP_VIDEO_SUSPEND:
+> >                 writel_relaxed(1, reg_base + WRAPPER_A9SS_SW_RESET);
+> >                 break;
+> >         case TZBSP_VIDEO_RESUME:
+> >                 venus_reset_hw(core);
+> >                 break;
+> >         }
+> >
+> >         return 0;
+> This will not work as driver will write on the register irrespective of
+> scm
+> availability.
 
-Right. Thanks. Just one question - what if I get reviewed-by for a
-patch which I later rework? Like this MFD patch where I got reviewed-by
-from Linus Walleij for v6 - but which I reworked due to comments from
-Enric and Dmitry. I have not kept the reviewed-by as the patch is not
-exactly the same Linus was originally reviewing. I guess the tags should
-be only kept for patches which are unchanged, right?
-> 
-> -- 
-> Lee Jones [李琼斯]
-> Linaro Services Technical Lead
-> Linaro.org │ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+I'm sorry, where would it do so? The second line returns from the
+function inf SCM is available, so the rest of the function wouldn't be
+executed.
+
+Best regards,
+Tomasz
