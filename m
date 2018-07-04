@@ -1,66 +1,40 @@
-From: Mars Cheng <mars.cheng@mediatek.com>
-Subject: Re: [PATCH v3 4/4] arm64: dts: mediatek: add mt6765 support
-Date: Wed, 4 Jul 2018 15:47:53 +0800
-Message-ID: <1530690473.16183.3.camel@mtkswgap22>
-References: <1530669174-17623-1-git-send-email-mars.cheng@mediatek.com>
-         <1530669174-17623-5-git-send-email-mars.cheng@mediatek.com>
-         <f482708c-ea5e-5d81-a176-d69be9ccdf63@arm.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 3/5] mfd: axp20x: Support AXP806 in I2C mode
+Date: Wed, 4 Jul 2018 08:33:49 +0100
+Message-ID: <20180704073349.GI20176@dell>
+References: <20180620051540.25617-1-wens@csie.org>
+ <20180620051540.25617-4-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f482708c-ea5e-5d81-a176-d69be9ccdf63@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180620051540.25617-4-wens@csie.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Andre Przywara <andre.przywara@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc
-
-On Wed, 2018-07-04 at 08:35 +0100, Marc Zyngier wrote:
-> On 04/07/18 02:52, Mars Cheng wrote:
-> > This adds basic chip support for MT6765 SoC.
-> > 
-> > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> > ---
-> >  arch/arm64/boot/dts/mediatek/Makefile       |    1 +
-> >  arch/arm64/boot/dts/mediatek/mt6765-evb.dts |   33 ++++++
-> >  arch/arm64/boot/dts/mediatek/mt6765.dtsi    |  155 +++++++++++++++++++++++++++
-> >  3 files changed, 189 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt6765-evb.dts
-> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt6765.dtsi
-> > 
-> 
-> [...]
-> 
-> > +
-> > +		gic: interrupt-controller@c000000 {
-> > +			compatible = "arm,gic-v3";
-> > +			#interrupt-cells = <3>;
-> > +			#address-cells = <2>;
-> > +			#size-cells = <2>;
-> > +			#redistributor-regions = <1>;
-> > +			interrupt-parent = <&gic>;
-> > +			interrupt-controller;
-> > +			reg = <0 0x0c000000 0 0x40000>, // distributor
-> > +			      <0 0x0c100000 0 0x200000>, // redistributor
-> > +			      <0 0x0c400000 0 0x40000>; // gicc
-> 
-> For the second time: please add *all* the GIC CPU interface regions,
-> described in the Cortex-A53 TRM[1] (GICC, GICH, and GICV).
-> 
-
-MT6765 has no GICH/GICV/ITS in mediatek design. Have confirmed with our
-designer.  
-
-MT6797 had similar question from you. Sorry for not mentioned it first.
-
-http://lists.infradead.org/pipermail/linux-mediatek/2017-February/008074.html
-
-Thanks.
-> Thanks,
-> 
-> 	M.
-> 
-> [1]
-> https://urldefense.proofpoint.com/v2/url?u=http-3A__infocenter.arm.com_help_topic_com.arm.doc.ddi0500g_ch09s02s01.html&d=DwICaQ&c=X9NHckmGz7LNQmqtvpDCYVnn6eFXNivfZeknqiAo-n0&r=Ph_SbcClVGRWmGxVhfr-5CZF9ffiUOE7TZ47ns4ROh4&m=9L01qJc7apuzwLobX_nhN0ik8IFdu_X7hJ139x5dNNw&s=0zeZXtWPeITLj01RSxAQ6NfNkTUu9Il0Dddgk07-6QA&e= 
+T24gV2VkLCAyMCBKdW4gMjAxOCwgQ2hlbi1ZdSBUc2FpIHdyb3RlOgoKPiBUaGUgUGluZTY0IEg2
+NCBib2FyZCB1c2VzIGFuIEFYUDgwNiBQTUlDIGluIEkyQyBhbmQgc2VsZi13b3JraW5nIG1vZGUu
+Cj4gVGhlIEg2NCBTb0MgZG9lcyBub3QgaGF2ZSB0aGUgdXN1YWwgUlNCIGNvbnRyb2xsZXIuCj4g
+Cj4gVGhpcyBwYXRjaCBhZGRzIEFYUDgwNiB0byB0aGUgbGlzdCBvZiBkZXZpY2VzIHN1cHBvcnRl
+ZCBpbiBJMkMgbW9kZS4KPiBJbiB0aGVvcnksIGFsbCBSU0ItYmFzZWQgUE1JQ3MgY2FuIGFsc28g
+YmUgdXNlZCBpbiBJMkMgbW9kZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBDaGVuLVl1IFRzYWkgPHdl
+bnNAY3NpZS5vcmc+Cj4gLS0tCj4gIGRyaXZlcnMvbWZkL2F4cDIweC1pMmMuYyB8IDIgKysKPiAg
+MSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQoKRm9yIG15IG93biByZWZlcmVuY2U6CiAg
+QWNrZWQtZm9yLU1GRC1ieTogTGVlIEpvbmVzIDxsZWUuam9uZXNAbGluYXJvLm9yZz4KCi0tIApM
+ZWUgSm9uZXMgW+adjueQvOaWr10KTGluYXJvIFNlcnZpY2VzIFRlY2huaWNhbCBMZWFkCkxpbmFy
+by5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJv
+OiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
