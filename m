@@ -1,57 +1,78 @@
-From: Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v1 1/2] dt-binding: bmc: Add NPCM7xx LPC BPC documentation
-Date: Wed,  4 Jul 2018 12:14:26 +0300
-Message-ID: <20180704091427.409971-2-tmaimon77@gmail.com>
-References: <20180704091427.409971-1-tmaimon77@gmail.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Subject: Re: [PATCH] ARM: dts: berlin: switch to earlycon
+Date: Wed, 4 Jul 2018 17:14:35 +0800
+Message-ID: <20180704171435.6b6113de@xhacker.debian>
+References: <7f67507ad697fc8c6d012f734c4d9a631d1afad1.1527608389.git.tommyhebb@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180704091427.409971-1-tmaimon77@gmail.com>
+In-Reply-To: <7f67507ad697fc8c6d012f734c4d9a631d1afad1.1527608389.git.tommyhebb@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, arnd@arnd.de, gregkh@linuxfoundation.org, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
+To: Thomas Hebb <tommyhebb@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/Synaptics
+        Berlin SoC support" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Added device tree binding documentation for Nuvoton BMC
-NPCM7xx BIOS Post Code (BPC).
-The NPCM7xx BPC monitoring two configurable I/O addresses
-written by the host on Low Pin Count (LPC) bus.
+Hi Thomas,
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- .../devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt    | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt
+On Tue, 29 May 2018 11:41:42 -0400 Thomas Hebb wrote:
 
-diff --git a/Documentation/devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt b/Documentation/devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt
-new file mode 100644
-index 000000000000..0832c9cbea32
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt
-@@ -0,0 +1,26 @@
-+Nuvoton NPCM7xx LPC BPC interface
-+
-+Nuvoton BMC NPCM7xx BIOS Post Code (BPC) monitoring two
-+configurable I/O addresses written by the host on the
-+Low Pin Count (LPC) bus, the capure data stored in 128-word FIFO.
-+
-+NPCM7xx BPC supports capture double words, when using capture
-+double word only I/O address 1 is monitored.
-+
-+Required properties for lpc_bpc node
-+- compatible	: "nuvoton,npcm750-lpc-bpc" for Poleg NPCM7XX.
-+- reg 			: specifies physical base address and size of the registers.
-+- interrupts	: contain the LPC BPC with flags for falling edge.
-+- monitor-ports : contain monitor I/O addresses, at least one monitor I/O
-+				  address required
-+
-+Optional property for lpc_bpc node
-+- bpc-en-dwcapture : enable capture double words support.
-+
-+Example:
-+	lpc_bpc: lpc-bpc@f0007040 {
-+		compatible = "nuvoton,npcm7xx-lpc-bpc";
-+		reg = <0xf0007040 0x14>;
-+		monitor-ports = <0x80>;
-+		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+	};
--- 
-2.14.1
+> The Synopsys DesignWare 8250 UART in Berlin SoCs is now supported by
+> 8250_early, so we can use earlycon for early console output instead
+> of earlyprintk, which requires an SoC-specific kernel.
+
+IIRC, earlyprintk still works during the decompress progress while the
+earlycon doesn't.
+
+> 
+> Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+> ---
+>  arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts        | 2 +-
+>  arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 2 +-
+>  arch/arm/boot/dts/berlin2q-marvell-dmp.dts        | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts b/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
+> index 1c475796d17f..f98798bb684f 100644
+> --- a/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
+> +++ b/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
+> @@ -45,7 +45,7 @@
+>  	compatible = "sony,nsz-gs7", "marvell,berlin2", "marvell,berlin";
+>  
+>  	chosen {
+> -		bootargs = "earlyprintk";
+> +		bootargs = "earlycon";
+
+Is there something missing here? example, uart8250,mmio,<addr>?
+
+>  		stdout-path = "serial0:115200n8";
+>  	};
+>  
+> diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+> index ca24def0ce13..20f31cdeaf38 100644
+> --- a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+> +++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+> @@ -46,7 +46,7 @@
+>  	compatible = "google,chromecast", "marvell,berlin2cd", "marvell,berlin";
+>  
+>  	chosen {
+> -		bootargs = "earlyprintk";
+> +		bootargs = "earlycon";
+>  		stdout-path = "serial0:115200n8";
+>  	};
+>  
+> diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+> index 57aa5f8a7c77..9834e84a0797 100644
+> --- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+> +++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+> @@ -49,7 +49,7 @@
+>  	};
+>  
+>  	chosen {
+> -		bootargs = "earlyprintk";
+> +		bootargs = "earlycon";
+>  		stdout-path = "serial0:115200n8";
+>  	};
+>  
