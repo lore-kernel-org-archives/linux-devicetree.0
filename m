@@ -1,12 +1,23 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH v2] dt-bindings: marvell: Add documentation for the Armada
- 3700 AVS binding
-Date: Wed,  4 Jul 2018 15:25:24 +0200
-Message-ID: <20180704132524.23640-1-gregory.clement@bootlin.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: Re: [PATCH v3 4/6] bus: ti-sysc: Add support for software reset
+Date: Wed, 4 Jul 2018 19:06:35 +0530
+Message-ID: <1138704c-b7a4-391f-3404-e1bd25a4a0ff@ti.com>
+References: <a169ba7f-53f2-cf9a-a9ee-daffd6b53279@ti.com>
+ <20180608062158.GI5738@atomide.com>
+ <acdfef83-8778-e8f4-e423-ed04a9a8a649@ti.com>
+ <20180611060957.GN5738@atomide.com>
+ <f460481f-85a9-2a41-a894-6f25122dee8a@ti.com>
+ <20180611062904.GO5738@atomide.com>
+ <89d55b0b-fe9e-793b-2694-25755ac2bc15@ti.com>
+ <20180611070332.GP5738@atomide.com> <20180703070743.GG112168@atomide.com>
+ <ee54c3ea-6200-33dd-83da-491f5fdd9f5c@ti.com>
+ <20180703073139.GN112168@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180703073139.GN112168@atomide.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,47 +27,65 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Hua Jing <jinghua@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Ken Ma <make@marvell.com>, Victor Gu <xigu@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, paul@pwsan.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, robh+dt@kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Extend the documentation of the Armada 37xx SoC with the Adaptive Voltage
-Scaling (AVS) registers.
+Hi,
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
----
-Changelog:
-v1 -> v2:
- - Add Acked-by: from Viresh Kumar
- - Add the dt mailing list in copy
+On Tuesday 03 July 2018 01:01 PM, Tony Lindgren wrote:
+> * Faiz Abbas <faiz_abbas@ti.com> [180703 07:31]:
+>> Hi,
+>>
+>> On Tuesday 03 July 2018 12:37 PM, Tony Lindgren wrote:
+>>> * Tony Lindgren <tony@atomide.com> [180611 07:06]:
+>>>> * Faiz Abbas <faiz_abbas@ti.com> [180611 06:48]:
+>>>>> Hi,
+>>>>>
+>>>>> On Monday 11 June 2018 11:59 AM, Tony Lindgren wrote:
+>>>>>> * Faiz Abbas <faiz_abbas@ti.com> [180611 06:28]:
+>>>>>>> Great. I thought I completely misunderstood you. But I don't see what
+>>>>>>> adding another function will accomplish. A QUIRK flag used in the same
+>>>>>>> function would work well enough>
+>>>>>> Fine with me as long as the function stays simple for both
+>>>>>> syss and sysc reset.
+>>>>>>
+>>>>>
+>>>>>
+>>>>> In general a reset status bit being in sysstatus is the norm and it
+>>>>> being in sysconfig should be the "quirk" for which a flag needs to be
+>>>>> added. What do you think?
+>>>>
+>>>> Sure makes sense to me.
+>>>>
+>>>>> As an aside, naming bitshifts by the name of the platform they were
+>>>>> originally added in seems weird. There should be some generic mask
+>>>>> saying "soft reset is the 0th bit". Currently I am using
+>>>>> SYSC_OMAP4_SOFTRESET for a dra76x module. I guess it depends on how many
+>>>>> different sysconfig types we have.
+>>>>
+>>>> Sure we could have a macro for that.
+>>>
+>>> So what's the conclusion on this one? Are you going to do one
+>>> more version of the ti-sysc driver patch?
+>>>
+>>
+>> Yes. I have just now been able to get back to this. Will post a v4 by
+>> tomorrow.
+> 
+> OK thanks!
+> 
 
- .../bindings/arm/marvell/armada-37xx.txt         | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+After taking a second look at this thread, I don't see anything big to
+be modified.
 
-diff --git a/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt b/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt
-index 35c3c3460d17..22438f659d1e 100644
---- a/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt
-+++ b/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt
-@@ -33,3 +33,19 @@ nb_pm: syscon@14000 {
- 	compatible = "marvell,armada-3700-nb-pm", "syscon";
- 	reg = <0x14000 0x60>;
- }
-+
-+AVS
-+---
-+
-+For AVS an other component is needed:
-+
-+Required properties:
-+- compatible     : should contain "marvell,armada-3700-avs", "syscon";
-+- reg            : the register start and length for the AVS
-+
-+Example:
-+avs: avs@11500 {
-+	compatible = "marvell,armada-3700-avs", "syscon";
-+	reg = <0x11500 0x40>;
-+}
-+
--- 
-2.17.1
+We both agree that "reset status bit in sysconfig register" is the quirk
+case which can be added once such an IP is discovered in ti-sysc.
+
+All I need to change is SYSC_OMAP4_SOFTRESET to SYSC_SOFT_RESET_SHIFT_0
+for better readability and rebase it to the latest mainline.
+
+Do reply if you differ on the above.
+
+Thanks,
+Faiz
