@@ -1,75 +1,136 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v3 4/4] arm64: dts: mediatek: add mt6765 support
-Date: Wed, 4 Jul 2018 08:59:56 +0100
-Message-ID: <304dc0a7-bcba-961c-40f4-b324ecc2d003@arm.com>
-References: <1530669174-17623-1-git-send-email-mars.cheng@mediatek.com>
- <1530669174-17623-5-git-send-email-mars.cheng@mediatek.com>
- <f482708c-ea5e-5d81-a176-d69be9ccdf63@arm.com>
- <1530690473.16183.3.camel@mtkswgap22>
+From: Vikash Garodia <vgarodia@codeaurora.org>
+Subject: Re: [PATCH v2 2/5] media: venus: add a routine to set venus state
+Date: Wed, 04 Jul 2018 13:38:26 +0530
+Message-ID: <1b9ba366cc8484e4f2ef1510a8f57b38@codeaurora.org>
+References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
+ <1527884768-22392-3-git-send-email-vgarodia@codeaurora.org>
+ <be5cc865-608b-dabb-2a3c-b5864c387d64@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530690473.16183.3.camel@mtkswgap22>
-Content-Language: en-GB
+In-Reply-To: <be5cc865-608b-dabb-2a3c-b5864c387d64@mm-sol.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mars Cheng <mars.cheng@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/07/18 08:47, Mars Cheng wrote:
-> Hi Marc
+Hi Stanimir,
+
+Thanks for your valuable comments.
+
+On 2018-06-04 19:20, Stanimir Varbanov wrote:
+> Hi Vikash,
 > 
-> On Wed, 2018-07-04 at 08:35 +0100, Marc Zyngier wrote:
->> On 04/07/18 02:52, Mars Cheng wrote:
->>> This adds basic chip support for MT6765 SoC.
->>>
->>> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
->>> ---
->>>  arch/arm64/boot/dts/mediatek/Makefile       |    1 +
->>>  arch/arm64/boot/dts/mediatek/mt6765-evb.dts |   33 ++++++
->>>  arch/arm64/boot/dts/mediatek/mt6765.dtsi    |  155 +++++++++++++++++++++++++++
->>>  3 files changed, 189 insertions(+)
->>>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6765-evb.dts
->>>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6765.dtsi
->>>
->>
->> [...]
->>
->>> +
->>> +		gic: interrupt-controller@c000000 {
->>> +			compatible = "arm,gic-v3";
->>> +			#interrupt-cells = <3>;
->>> +			#address-cells = <2>;
->>> +			#size-cells = <2>;
->>> +			#redistributor-regions = <1>;
->>> +			interrupt-parent = <&gic>;
->>> +			interrupt-controller;
->>> +			reg = <0 0x0c000000 0 0x40000>, // distributor
->>> +			      <0 0x0c100000 0 0x200000>, // redistributor
->>> +			      <0 0x0c400000 0 0x40000>; // gicc
->>
->> For the second time: please add *all* the GIC CPU interface regions,
->> described in the Cortex-A53 TRM[1] (GICC, GICH, and GICV).
->>
+> Thanks for the patch!
 > 
-> MT6765 has no GICH/GICV/ITS in mediatek design. Have confirmed with our
-> designer.  
-
-The only way *not* to have GICH or GICV is to assert GICCDISABLE on the
-CPU, in which case you don't have GICC either, nor any support for the
-GICv3 at all. So either the designer is wrong or the documentation is
-wrong. Which one is it, do you think?
-
-As for the ITS, that's a perfectly optional part of the design, and not
-part of the CPU.
-
-> MT6797 had similar question from you. Sorry for not mentioned it first.
+> On  1.06.2018 23:26, Vikash Garodia wrote:
+>> Add a new routine which abstracts the TZ call to
 > 
-> http://lists.infradead.org/pipermail/linux-mediatek/2017-February/008074.html
+> Actually the new routine abstracts Venus CPU state, Isn't it?
 
-Well, that's wrong too.
+Yes, its a Venus CPU state controlled by TZ. I can mention it as
+an abstraction of venus CPU state.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+>> set the video hardware state.
+>> 
+>> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
+>> ---
+>>   drivers/media/platform/qcom/venus/core.h      |  5 +++++
+>>   drivers/media/platform/qcom/venus/firmware.c  | 28 
+>> +++++++++++++++++++++++++++
+>>   drivers/media/platform/qcom/venus/firmware.h  |  1 +
+>>   drivers/media/platform/qcom/venus/hfi_venus.c | 13 ++++---------
+>>   4 files changed, 38 insertions(+), 9 deletions(-)
+>> 
+>> diff --git a/drivers/media/platform/qcom/venus/core.h 
+>> b/drivers/media/platform/qcom/venus/core.h
+>> index 85e66e2..e7bfb63 100644
+>> --- a/drivers/media/platform/qcom/venus/core.h
+>> +++ b/drivers/media/platform/qcom/venus/core.h
+>> @@ -35,6 +35,11 @@ struct reg_val {
+>>   	u32 value;
+>>   };
+>> 
+>> +enum tzbsp_video_state {
+>> +	TZBSP_VIDEO_SUSPEND = 0,
+>> +	TZBSP_VIDEO_RESUME
+>> +};
+> 
+> please move this in firmware.c, for more see below.
+> 
+>> +
+>>   struct venus_resources {
+>>   	u64 dma_mask;
+>>   	const struct freq_tbl *freq_tbl;
+>> diff --git a/drivers/media/platform/qcom/venus/firmware.c 
+>> b/drivers/media/platform/qcom/venus/firmware.c
+>> index 7d89b5a..b4664ed 100644
+>> --- a/drivers/media/platform/qcom/venus/firmware.c
+>> +++ b/drivers/media/platform/qcom/venus/firmware.c
+>> @@ -53,6 +53,34 @@ static void venus_reset_hw(struct venus_core *core)
+>>   	/* Bring Arm9 out of reset */
+>>   	writel_relaxed(0, reg_base + WRAPPER_A9SS_SW_RESET);
+>>   }
+>> +
+>> +int venus_set_hw_state(enum tzbsp_video_state state, struct 
+>> venus_core *core)
+> 
+> can we put this function this way:
+> 
+> venus_set_state(struct venus_core *core, bool on)
+> 
+> so we set the state to On when we are power-up the venus CPU and Off
+> when we power-down.
+> 
+> by this way we really abstract the state, IMO.
+
+Good point. Will do in similar way.
+
+>> +{
+>> +	int ret;
+>> +	struct device *dev = core->dev;
+>> +	void __iomem *reg_base = core->base;
+> 
+> just 'base' should be enough.
+
+Infact, comment from Jordan, we can remove it altogether.
+
+>> +
+>> +	switch (state) {
+>> +	case TZBSP_VIDEO_SUSPEND:
+>> +		if (qcom_scm_is_available())
+> 
+> You really shouldn't rely on this function (see the comment from Bjorn
+> on first version of this patch series).
+> 
+> I think we have to replace qcom_scm_is_available() with some flag which
+> is reflecting does the firmware subnode is exist or not. In case it is
+> not exist the we have to go with TZ scm calls.
+
+As we discussed, will keep it under the check for a valid firmware 
+device.
+We can avoid the extra flag in that way.
+
+>> +			ret = qcom_scm_set_remote_state(TZBSP_VIDEO_SUSPEND, 0);
+>> +		else
+>> +			writel_relaxed(1, reg_base + WRAPPER_A9SS_SW_RESET);
+>> +		break;
+>> +	case TZBSP_VIDEO_RESUME:
+>> +		if (qcom_scm_is_available())
+>> +			ret = qcom_scm_set_remote_state(TZBSP_VIDEO_RESUME, 0);
+>> +		else
+>> +			venus_reset_hw(core);
+>> +		break;
+>> +	default:
+>> +		dev_err(dev, "invalid state\n");
+>> +		break;
+>> +	}
+>> +	return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(venus_set_hw_state);
+>> +
+> 
+> regards,
+> Stan
