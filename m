@@ -1,51 +1,60 @@
-Return-Path: <robherring2@gmail.com>
-Date: Tue, 3 Jul 2018 16:21:42 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: sram: Add 'clocks' as an optional
- property
-Message-ID: <20180703222142.GA15061@rob-hp-laptop>
-References: <1530054453-10393-1-git-send-email-festevam@gmail.com>
+Return-Path: <SRS0=lYNq=JU=gmail.com=dmitry.torokhov@kernel.org>
+Date: Wed, 4 Jul 2018 15:47:28 +0000
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 0/4] input: touchscreen: eeti: DT bindings and
+ clean-ups
+Message-ID: <20180704154728.t5yykanltuz5f5od@penguin>
+References: <20180623154533.26901-1-daniel@zonque.org>
+ <e32434be-cb77-e00b-15d6-aa8592399560@zonque.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1530054453-10393-1-git-send-email-festevam@gmail.com>
-To: Fabio Estevam <festevam@gmail.com>
-Cc: devicetree@vger.kernel.org, p.zabel@pengutronix.de, vz@mleia.com, Fabio Estevam <fabio.estevam@nxp.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e32434be-cb77-e00b-15d6-aa8592399560@zonque.org>
+To: Daniel Mack <daniel@zonque.org>
+Cc: robh+dt@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Jun 26, 2018 at 08:07:33PM -0300, Fabio Estevam wrote:
-> From: Fabio Estevam <fabio.estevam@nxp.com>
+On Mon, Jul 02, 2018 at 09:55:25AM +0200, Daniel Mack wrote:
+> Hi Dmitry,
 > 
-> Some SoCs (like i.MX53) need to specify the SRAM clock in the
-> device tree via the clocks property.
+> On Saturday, June 23, 2018 05:45 PM, Daniel Mack wrote:
+> > This is v2 of the series that brings DT bindings to the eeti driver and
+> > cleans up the code a bit.
 > 
-> Add an entry to the optional property section.
-> 
-> Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
-> Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
-> ---
-> Changes since v1:
-> - Add space before : and use the more common "list of phandle
-> and clock specifier pairs" term - Vladimir
-> 
->  Documentation/devicetree/bindings/sram/sram.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/sram/sram.txt b/Documentation/devicetree/bindings/sram/sram.txt
-> index 267da44..ae6ca34 100644
-> --- a/Documentation/devicetree/bindings/sram/sram.txt
-> +++ b/Documentation/devicetree/bindings/sram/sram.txt
-> @@ -50,6 +50,8 @@ Optional properties in the area nodes:
->  		 manipulation of the page attributes.
->  - label : the name for the reserved partition, if omitted, the label
->            is taken from the node name excluding the unit address.
-> +- clocks : a list of phandle and clock specifier pairs that controls the
-> +	   SRAM clock.
+> Is this set good to go in or should I repost it with Rob's Reviewed-by in
+> 1/4?
 
-A list controlling THE (single) SRAM clock?
+No, I applied the lot, thanks.
 
-Once we start needing clocks, power, or other setup, we really should 
-have specific compatible strings (and binding docs) for the SRAM. I'll 
-take a single clock though.
+> 
+> 
+> Thanks,
+> Daniel
+> 
+> 
+> > 
+> > Changelog:
+> > 
+> > v1 → v2:
+> > * dropped module parameters
+> > * use touchscreen_report_pos() and drop some code for that
+> > * squashes 4/5 and 5/5 of v1
+> > 
+> > Daniel Mack (4):
+> >    dt-bindings: input: touchscreen: add bindings for eeti touchscreen
+> >      controller
+> >    input: touchscreen: eeti: add device tree matching table
+> >    input: touchscreen: eeti: drop module parameters, parse DT properties
+> >    input: touchscreen: eeti: fix link to documentation and email address
+> >      in header
+> > 
+> >   .../bindings/input/touchscreen/eeti.txt       | 31 ++++++++++++++++
+> >   drivers/input/touchscreen/eeti_ts.c           | 37 +++++++++----------
+> >   2 files changed, 48 insertions(+), 20 deletions(-)
+> >   create mode 100644 Documentation/devicetree/bindings/input/touchscreen/eeti.txt
+> > 
+> 
 
-Rob
+-- 
+Dmitry
