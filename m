@@ -1,52 +1,78 @@
-From: Robin Gong <yibin.gong@nxp.com>
-Subject: Re: [PATCH v1] ARM: dts: imx6sl-evk: keep sw4 always on
-Date: Wed, 4 Jul 2018 01:42:54 +0000
-Message-ID: <1530697336.15665.43.camel@nxp.com>
-References: <CAOMZO5BjOEGWv2dC-bp0BYHq+PhLssEKic+o7ock8_1Dobd=sQ@mail.gmail.com>
-         <AM3PR04MB131507901BFEE1A5E426EECBF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
-         <CAOMZO5D8tjnjbwMdLGd7KF7_4PwqRWX8XH8kdcF3-5e-r2YQEA@mail.gmail.com>
-         <AM3PR04MB1315E7AED2BCE2265E6C443DF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
-         <CAOMZO5D8v4KM9S4ooHTDbA+vc8BZN_eO_wDuOPA+8Hcq-SmLDw@mail.gmail.com>
-         <AM3PR04MB1315C7C7CFF990615732FFBCF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
-         <CAOMZO5AM5VRS7UiWuvAQ8vvTB8OM+iwofuYrbsL_yB9e0Z9Kyg@mail.gmail.com>
-         <AM3PR04MB13155B8D567ABEF7EF03249AF5430@AM3PR04MB1315.eurprd04.prod.outlook.com>
-         <CAOMZO5BdtxKjQge5ONpnjr1yNVeTJf4u8Gh-fPqpHz7G9ipOTg@mail.gmail.com>
-         <1530526335.15665.13.camel@nxp.com> <20180703053843.GC4348@dragon>
-         <AM3PR04MB131542D42FCD798FDBBA54BFF5420@AM3PR04MB1315.eurprd04.prod.outlook.com>
-         <CAOMZO5BY99f5jjU+73=8WjqwBKr_q2S1mvx90URZUBkgOVn9YA@mail.gmail.com>
+From: Stanley Chu <stanley.chu@mediatek.com>
+Subject: Re: [PATCH v4 1/5] clocksource/drivers/timer-mediatek: Add system
+ timer bindings
+Date: Wed, 4 Jul 2018 09:49:27 +0800
+Message-ID: <1530668967.17448.55.camel@mtkswgap22>
+References: <1530231446-13760-1-git-send-email-stanley.chu@mediatek.com>
+         <1530231446-13760-2-git-send-email-stanley.chu@mediatek.com>
+         <20180703233256.GA27424@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5BY99f5jjU+73=8WjqwBKr_q2S1mvx90URZUBkgOVn9YA@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <2B891B2205B58049928F6419B42AAB82@eurprd04.prod.outlook.com>
+In-Reply-To: <20180703233256.GA27424@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "festevam@gmail.com" <festevam@gmail.com>, Anson Huang <anson.huang@nxp.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+To: Rob Herring <robh@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-T24g5LqMLCAyMDE4LTA3LTAzIGF0IDA4OjEwIC0wMzAwLCBGYWJpbyBFc3RldmFtIHdyb3RlOg0K
-PiBIaSBBbnNvbiwNCj4gDQo+IE9uIFR1ZSwgSnVsIDMsIDIwMTggYXQgNDo0NCBBTSwgQW5zb24g
-SHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IHdyb3RlOg0KPiANCj4gPiANCj4gPiBJdCBp
-cyBOT1QgZWFzeSB0byBpZGVudGlmeSB3aGljaCBzd2l0Y2ggaXMgY3JpdGljYWwgb3IgTk9ULCBh
-bmQNCj4gPiBkaWZmZXJlbnQgcGxhdGZvcm1zDQo+ID4gaGF2ZSBkaWZmZXJlbnQgYm9hcmQgZGVz
-aWduLCBpdCB3aWxsIGludHJvZHVjZSBtYW55IHBsYXRmb3JtDQo+ID4gc3BlY2lmaWVkIGNvZGUs
-IHNvIEkgdGhpbmsNCj4gPiBqdXN0IHJldmVydCB0aGUgcGZ1emUxMDAgc3dpdGNoIGVuYWJsZS9k
-aXNhYmxlIHBhdGNoIHNob3VsZCBiZSBPSw0KPiA+IGZvciBub3cuDQo+IEkgaGF2ZSBzZW50IHRo
-ZSBwZnV6ZTEwMCByZWd1bGF0b3IgcGF0Y2ggcmV2ZXJ0IGFuZCBpdCBpcyBsaW51eC1uZXh0DQo+
-IG5vdy4gU2hvdWxkIHByb2JhYmx5IHJlYWNoIDQuMTgtcmM0Lg0KPiANCj4gPiANCj4gPiBBZnRl
-ciBhIGNvdXBsZSBvZiByZWxlYXNlIGN5Y2xlcywgYWRkIHRoZSBwZnV6ZTEwMCBzd2l0Y2gNCj4g
-PiBlbmFibGUvZGlzYWJsZSBwYXRjaA0KPiA+IGJhY2sgdG8gc3VwcG9ydCB0aGlzIGZlYXR1cmUs
-IEkgYmVsaWV2ZSB1c2VycyBzaG91bGQgc3dpdGNoIHRvIG5ldw0KPiA+IGR0YiB3aXRoICJyZWd1
-bGF0b3ItYWx3YXlzLW9uIg0KPiA+IGV4aXN0aW5nIGFscmVhZHkuDQo+IFRoYXQgd2lsbCBzdGls
-bCBicmVhayBvbGQgZHRiIGNvbXBhdGliaWxpdHkuDQo+IA0KPiBZb3UgY2Fubm90IGZvcmNlIHVz
-ZXJzIHRvIHVzZSAicmVndWxhdG9yLWFsd2F5cy1vbiIgYW5kIHRoZSBvbGQgZHRicw0KPiBuZWVk
-IHRvIGFsd2F5cyB3b3JrLg0KPiANCj4gU28gd2hhdGV2ZXIgbmV3IGZlYXR1cmUgeW91IG5lZWQg
-dG8gaW50cm9kdWNlIGl0IG5lZWRzIHRvIGJlIGRvbmUgaW4NCj4gc3VjaCBhIHdheSB0aGF0IHRo
-ZSBleGlzdGluZyBkdGIncyB3aWxsIGNvbnRpbnVlIHdvcmtpbmcuDQpCdXQgYWN0dWFsbHkgZXhp
-c3RpbmcgZHRiIGlzIG5vdCByaWdodCBzaW5jZSB0aGUgY3JpdGljYWwgcG93ZXIgcmFpbA0KbWlz
-c2luZyAncmVndWxhdG9yLWFsd2F5cy1vbicuIEl0J3MgYSBmaXggcGF0Y2ggZm9yIGR0cywgbm90
-IHJlbGF0ZWQNCndpdGggZm9sbG93aW5nIGR0Yi9rZXJuZWwgYnJlYWsgcnVsZXMsIGp1c3QgYSBz
-aW1wbGUgZHRzIHBhdGNoLiBXaHkNCnNob3VsZCB3ZSBtYWtlIHByb21pc2UgZm9yIHRoZSB3cm9u
-ZyBkdGJzPw==
+On Tue, 2018-07-03 at 17:32 -0600, Rob Herring wrote:
+
+Hi Rob,
+
+> > +- reg: Should contain location and length for GPT register.
+> > +- clocks: GPT is drived by system clock.
+> 
+> s/drived/driven/
+
+Will be fixed in v5.
+
+> 
+> >  
+> >  Examples:
+> >  
+> > @@ -21,5 +29,23 @@ Examples:
+> >  		compatible = "mediatek,mt6577-timer";
+> >  		reg = <0x10008000 0x80>;
+> >  		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
+> > -		clocks = <&system_clk>, <&rtc_clk>;
+> > +		clocks = <&system_clk>;
+> > +	};
+> > +
+> > +
+> > +** System Timer (SYST)
+> > +
+> > +Required properties:
+> > +- compatible: Should contain
+> > +	* "mediatek,mt6765-timer" for MT6765 compatible timers
+> > +- reg: Should contain the location and length for system timer registers.
+> > +- clocks: System timer is drived by system clock.
+> 
+> These look the same. Can't you just add the compatible string and note 
+> in the description it is the system timer. Or make the compatible 
+> "mediatek,mt6765-systimer"
+> 
+
+OK! We will simplify it and just use the same compatible string.
+
+> > +
+> > +Examples:
+> > +
+> > +	systimer@10017000 {
+> 
+> timer@
+
+As above, will be fixed in v5.
+
+> 
+> > +		compatible = "mediatek,mt6765-timer";
+> > +		reg = <0 0x10017000 0 0x1000>;
+> > +		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
+> > +		clocks = <&system_clk>;
+> >  	};
+> > -- 
+> > 1.7.9.5
+> > 
+
+Thanks.
+Stanley Chu
