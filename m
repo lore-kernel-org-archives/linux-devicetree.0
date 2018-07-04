@@ -1,57 +1,134 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: Re: [PATCH 1/3] dt-bindings: k3dma: add optional property dma_min_chan
-Date: Wed, 4 Jul 2018 09:14:26 +0800
-Message-ID: <CAFGCpxyx1fqo0ZmthumQbHVJZTZ=mpX7HGg_V8oowmKRfb46VA@mail.gmail.com>
-References: <20180622032416.20133-1-guodong.xu@linaro.org> <20180622032416.20133-2-guodong.xu@linaro.org>
- <20180703185442.GA18008@rob-hp-laptop>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 11/14] dt-bindings: fsi: Document binding for the
+ fsi-master-ast-cf "device"
+Date: Wed, 04 Jul 2018 11:16:10 +1000
+Message-ID: <77039070d470d5d408e750218ddbccf9cb33a78e.camel@kernel.crashing.org>
+References: <20180626232605.13420-1-benh@kernel.crashing.org>
+         <20180626232605.13420-12-benh@kernel.crashing.org>
+         <20180703223046.GA20184@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180703185442.GA18008@rob-hp-laptop>
+In-Reply-To: <20180703223046.GA20184@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: vkoul@kernel.org, Mark Rutland <mark.rutland@arm.com>, dan.j.williams@intel.com, liyu65@hisilicon.com, Suzhuangluan <suzhuangluan@hisilicon.com>, "xuhongtao (A)" <xuhongtao8@hisilicon.com>, zhongkaihua <zhongkaihua@huawei.com>, Xuezhiliang <xuezhiliang@hisilicon.com>, "xupeng (Q)" <xupeng7@huawei.com>, sunliang10@huawei.com, "Fengbaopeng (kevin, Kirin Solution Dept)" <fengbaopeng@hisilicon.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 4, 2018 at 2:54 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Jun 22, 2018 at 11:24:14AM +0800, Guodong Xu wrote:
-> > From: Li Yu <liyu65@hisilicon.com>
-> >
-> > Add optional property dma_min_chan for k3dma.
-> >
-> > Signed-off-by: Li Yu <liyu65@hisilicon.com>
+On Tue, 2018-07-03 at 16:30 -0600, Rob Herring wrote:
+> On Wed, Jun 27, 2018 at 09:26:02AM +1000, Benjamin Herrenschmidt wrote:
+> > This isn't per-se a real device, it's a pseudo-device that
+> > represents the use of the Aspeed built-in ColdFire to
+> > implement the FSI protocol by bitbanging the GPIOs instead
+> > of doing it from the ARM core.
+> > 
+> > Thus it's a drop-in replacement for the existing
+> > fsi-master-gpio pseudo-device for use on systems for which
+> > a corresponding firmware file exists. It has most of the
+> > same properties, plus some more needed to operate the
+> > coprocessor.
+> > 
+> > Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 > > ---
-> >  Documentation/devicetree/bindings/dma/k3dma.txt | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/t b/Documentation/devicetree/bindings/dma/k3dma.txt
-> > index 4945aeac4dc4..2fa1370c3173 100644
-> > --- a/Documentation/devicetree/bindings/dma/k3dma.txt
-> > +++ b/Documentation/devicetree/bindings/dma/k3dma.txt
-> > @@ -12,6 +12,11 @@ Required properties:
-> >               have specific request line
-> >  - clocks: clock required
-> >
-> > +Optional properties:
-> > +- dma_min_chan: the minimum number of DMA channel which begin to use
-> > +             the default value is 0, but in some platform is
-> > +             configured 1, like hi3660 platform
->
-> Can't this be implied by the compatible?
->
+> >  .../bindings/fsi/fsi-master-ast-cf.txt        | 36 +++++++++++++++++++
+> >  1 file changed, 36 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt b/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
+> > new file mode 100644
+> > index 000000000000..50913ae685cc
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
+> > @@ -0,0 +1,36 @@
+> > +Device-tree bindings for ColdFire offloaded gpio-based FSI master driver
+> > +------------------------------------------------------------------------
+> > +
+> > +Required properties:
+> > + - compatible =
+> > +   	      "fsi-master-ast-2400-cf" for an AST2400 based system
+> > +	    or
+> > +	      "fsi-master-ast-2500-cf" for an AST2500 based system
+> 
+> <vendor>,<soc>-<block>
 
-No. "hisilicon,k3-dma-1.0" can work with series of hisilicon kirin
-SoC. And each has different reservation of channels for on-chip
-coprocessors.
+It's not really a SOC block from a vendor, it's a pseudo-device in a
+way. The current one that doesn't use the coldfire offload is just
+compatible "fsi-master-gpio".
 
-> If not, needs vendor prefix and don't use '_' in property names.
->
+I can add a vendor but what should it be ? aspeed because it runs on
+the aspeed SoCs only ? ibm because we wrote it and FSI is an IBM
+protocol ?
 
-Sure, thanks. Will change that when design new property. As Vinod
-suggested, it makes sense to change this to a mask.
+<soc>-<block> doesn't make sense here though.
 
+> > +
+> > + - clock-gpios = <gpio-descriptor>;	: GPIO for FSI clock
+> > + - data-gpios = <gpio-descriptor>;	: GPIO for FSI data signal
+> > + - enable-gpios = <gpio-descriptor>;	: GPIO for enable signal
+> > + - trans-gpios = <gpio-descriptor>;	: GPIO for voltage translator enable
+> > + - mux-gpios = <gpio-descriptor>;	: GPIO for pin multiplexing with other
+> 
+> So the gpio info is pased to the CF? Otherwise, what's the point of 
+> having these in DT?
 
--Guodong
+In the original version you are looking at, they are not passed to the
+CF per-se but the driver does use aspeed GPIO specific APIs to
+configure them to be owned by the CF, so we need the references.
 
-> Rob
+However, I've just reworked the ucode with a few tricks to avoid losing
+singificant performance, so that we can indeed pass them to the CF,
+thus avoiding the need for a per-system image, so the above are here to
+stay.
+
+> > +                                          functions (eg, external FSI masters)
+> > + - memory-region = <phandle>;		: Reference to the reserved memory for
+> > +                                          the ColdFire. Must be 2M aligned on
+> > +					  AST2400 and 1M aligned on AST2500
+> > + - sram = <phandle>;			: Reference to the SRAM node.
+> > + - cvic = <phandle>;			: Reference to the CVIC node.
+> 
+> Vendor prefixes.
+
+On what ? Why would an "sram" pointer have a vendor prefix ? Or a
+memory region pointer ?
+
+> > + - fw-name = <string>;			: The name used to construct the firmware
+> > +   	     				  file name (cf-fsi-<name>.bin)
+> 
+> firmware-name is used in some other places (and is the full filename).
+
+It's gone in the latest version as there's a single FW file now for all
+systems.
+> 
+> > + - fw-platform-sig = <value>;		: A signature value that must match the one
+> > +   		     			  contained in the firmware image. Known
+> > +					  values are listed in the firmware interface
+> > +					  file cf-fsi-fw.h
+> 
+> Vendor prefix unless you think this could be common.
+
+It's going away.
+
+> > +Examples:
+> > +
+> > +    fsi-master {
+> > +        compatible = "fsi-master-gpio", "fsi-master";
+> 
+> Forget to update the example?
+
+Indeed :)
+
+> > +        clock-gpios = <&gpio 0>;
+> > +        data-gpios = <&gpio 1>;
+> > +        enable-gpios = <&gpio 2>;
+> > +        trans-gpios = <&gpio 3>;
+> > +        mux-gpios = <&gpio 4>;
+> > +    }
+> > -- 
+> > 2.17.1
+> > 
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
