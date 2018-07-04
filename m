@@ -1,59 +1,48 @@
-From: Vikash Garodia <vgarodia@codeaurora.org>
-Subject: Re: [PATCH v2 2/5] media: venus: add a routine to set venus state
-Date: Wed, 04 Jul 2018 15:11:49 +0530
-Message-ID: <5560573ed426b03ad7676ac14a291e70@codeaurora.org>
-References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
- <1527884768-22392-3-git-send-email-vgarodia@codeaurora.org>
- <20180601212117.GD11565@jcrouse-lnx.qualcomm.com>
- <CAAFQd5DH2i+8ZJ+s2XUnmFHwxXKLF6z_=w0Z-RFs=W9oVvrJgw@mail.gmail.com>
- <ca7567c1df773f1223d919fab28f1460@codeaurora.org>
- <CAAFQd5BvTNhafus4WcoPLiBTN8X3Ls+YA0OgpfnyadDayvVQxA@mail.gmail.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: [PATCH] ARM: dts: da850: Add power-domains to CPPI 4.1 node
+Date: Wed, 4 Jul 2018 15:14:32 +0530
+Message-ID: <20180704094432.5424-1-nsekhar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAFQd5BvTNhafus4WcoPLiBTN8X3Ls+YA0OgpfnyadDayvVQxA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tfiga@chromium.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, bjorn.andersson@linaro.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>, linux-media-owner@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, David Lechner <david@lechnology.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Device Tree Mailing List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-07-04 14:30, Tomasz Figa wrote:
-> On Wed, Jul 4, 2018 at 4:59 PM Vikash Garodia <vgarodia@codeaurora.org> 
-> wrote:
->> On 2018-06-04 18:24, Tomasz Figa wrote:
->> > On Sat, Jun 2, 2018 at 6:21 AM Jordan Crouse <jcrouse@codeaurora.org>
->> > wrote:
->> >> On Sat, Jun 02, 2018 at 01:56:05AM +0530, Vikash Garodia wrote:
->> > Given that this function is supposed to substitute existing calls into
->> > qcom_scm_set_remote_state(), why not just do something like this:
->> >
->> >         if (qcom_scm_is_available())
->> >                 return qcom_scm_set_remote_state(state, 0);
->> >
->> >         switch (state) {
->> >         case TZBSP_VIDEO_SUSPEND:
->> >                 writel_relaxed(1, reg_base + WRAPPER_A9SS_SW_RESET);
->> >                 break;
->> >         case TZBSP_VIDEO_RESUME:
->> >                 venus_reset_hw(core);
->> >                 break;
->> >         }
->> >
->> >         return 0;
->> This will not work as driver will write on the register irrespective 
->> of
->> scm
->> availability.
-> 
-> I'm sorry, where would it do so? The second line returns from the
-> function inf SCM is available, so the rest of the function wouldn't be
-> executed.
+This adds the power-domains property to CPPI 4.1 node.
 
-Ah!! you are right. That would work as well.
-I am ok with either way, but would recommend to keep it the existing way
-as it makes it little more readable.
+The CPPI 4.1 DMA driver uses pm_runtime to manage the clocks,
+so it needs this property in order to find and enable the clock
+properly.
 
-> Best regards,
-> Tomasz
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+---
+Applies for v4.19/dt branch of my tree.
+
+ arch/arm/boot/dts/da850.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 9e05a5a709c0..07f215e7e5b8 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -637,6 +637,7 @@
+ 				interrupts = <58>;
+ 				#dma-cells = <2>;
+ 				#dma-channels = <4>;
++				power-domains = <&psc1 1>;
+ 				status = "okay";
+ 			};
+ 		};
+-- 
+2.16.2
