@@ -1,58 +1,40 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v5 09/12] dt-bindings: misc: add bindings for throttler
-Date: Wed, 4 Jul 2018 15:30:03 +0530
-Message-ID: <20180704100003.u4fagd2vxwwbp443@vireshk-i7>
-References: <20180703234705.227473-1-mka@chromium.org>
- <20180703234705.227473-10-mka@chromium.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v3 0/4] clk: rockchip: support clock controller for px30 SoC
+Date: Wed, 04 Jul 2018 12:08:15 +0200
+Message-ID: <19643053.9AiPb2dtV0@phil>
+References: <1529029011-15021-1-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180703234705.227473-10-mka@chromium.org>
+In-Reply-To: <1529029011-15021-1-git-send-email-zhangqing@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
+To: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, cl@rock-chips.com, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 03-07-18, 16:47, Matthias Kaehlcke wrote:
-> The Throttler is used for non-thermal throttling of system components
-> like CPUs or devfreq devices.
+Hi Elaine,
+
+Am Freitag, 15. Juni 2018, 04:16:47 CEST schrieb Elaine Zhang:
+> Change in V3:
+> [PATCH v3 1/4]: Correct description
+> [PATCH v3 2/4]: Use an SPDX tag instead.
+> [PATCH v3 3/4]: Use an SPDX tag instead,
+> 		parent_rate might overflow and fix it.
+> 		fix up the checkpatch warning.
+> 		add more CMPOSITE_xxx_HALFdiv.
 > 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> --
-> Changes in v5:
-> - patch added to the series (replacing "dt-bindings: PM / OPP: add
->   opp-throttlers property")
-> ---
->  .../devicetree/bindings/misc/throttler.txt          | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/throttler.txt
+> Change in V2:
+> [PATCH v2 2/4]: modify the Author name
+> [PATCH v2 3/4]: provide a bit more explanation for commit message
 > 
-> diff --git a/Documentation/devicetree/bindings/misc/throttler.txt b/Documentation/devicetree/bindings/misc/throttler.txt
-> new file mode 100644
-> index 000000000000..2ea80c62dbe1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/throttler.txt
-> @@ -0,0 +1,13 @@
-> +Throttler driver
-> +
-> +The Throttler is used for non-thermal throttling of system components like
-> +CPUs or devfreq devices.
-> +
-> +Required properties:
-> +- throttler-opps	Array of OPP-v2 phandles with the OPPs used for
-> +			throttling.
-> +
-> +Example:
-> +	throttler {
-> +		 throttler-opps = <&cpu0_opp03, &cpu1_opp02, &gpu_opp03>;
-> +	};
+> Elaine Zhang (4):
+>   dt-bindings: add bindings for px30 clock controller
+>   clk: rockchip: add dt-binding header for px30
+>   clk: rockchip: add support for half divider
+>   clk: rockchip: add clock controller for px30
 
-All you do with these phandles for now is that you parse them and read
-"opp-hz" value. For that purpose current bindings look sufficient.
->From OPP point of view:
+I've applied the set for 4.19 but dropped the panic-notifier
+dump function from the px30 clock driver.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-
--- 
-viresh
+Heiko
