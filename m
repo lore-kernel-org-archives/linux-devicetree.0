@@ -1,195 +1,185 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 13/19] mmc: mmci: send stop cmd if a data command fail
-Date: Wed, 4 Jul 2018 15:37:39 +0200
-Message-ID: <CAPDyKFrbHcyy+rcVPrJAvO+y-ywQ=yE=gT3dbG2kqroQAhMF2Q@mail.gmail.com>
-References: <1528809280-31116-1-git-send-email-ludovic.Barre@st.com> <1528809280-31116-14-git-send-email-ludovic.Barre@st.com>
+From: Stanley Chu <stanley.chu@mediatek.com>
+Subject: Re: [PATCH v5 5/5] clocksource/drivers/timer-mediatek: Add support
+ for system timer
+Date: Wed, 4 Jul 2018 22:24:05 +0800
+Message-ID: <1530714245.17448.77.camel@mtkswgap22>
+References: <1530669383-17516-1-git-send-email-stanley.chu@mediatek.com>
+         <1530669383-17516-6-git-send-email-stanley.chu@mediatek.com>
+         <alpine.DEB.2.21.1807041108110.1816@nanos.tec.linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528809280-31116-14-git-send-email-ludovic.Barre@st.com>
+In-Reply-To: <alpine.DEB.2.21.1807041108110.1816@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: devicetree@vger.kernel.org, wsd_upstream@mediatek.com, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12 June 2018 at 15:14, Ludovic Barre <ludovic.Barre@st.com> wrote:
-> From: Ludovic Barre <ludovic.barre@st.com>
->
-> The mmc framework follows the requirement of SD_Specification:
-> the STOP_TRANSMISSION is sent on multiple write/read commands
-> and the stop command (alone), not needed on other ADTC commands.
->
-> But, some variants require a stop command "STOP_TRANSMISION" to clear
-> the DPSM "Data Path State Machine" if an error happens on command or data
-> step. If it's not done the next data command will freeze hardware block.
-> Needed to support the STM32 sdmmc variant.
->
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> ---
->  drivers/mmc/host/mmci.c | 36 +++++++++++++++++++++++++++++++-----
->  drivers/mmc/host/mmci.h |  3 +++
->  2 files changed, 34 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> index 87724e1..9af7db8 100644
-> --- a/drivers/mmc/host/mmci.c
-> +++ b/drivers/mmc/host/mmci.c
-> @@ -24,6 +24,7 @@
->  #include <linux/mmc/pm.h>
->  #include <linux/mmc/host.h>
->  #include <linux/mmc/card.h>
-> +#include <linux/mmc/mmc.h>
->  #include <linux/mmc/slot-gpio.h>
->  #include <linux/amba/bus.h>
->  #include <linux/clk.h>
-> @@ -522,11 +523,28 @@ static void mmci_set_mask1(struct mmci_host *host, unsigned int mask)
->         host->mask1_reg = mask;
->  }
->
-> -static void mmci_stop_data(struct mmci_host *host)
-> +static int mmci_stop_data(struct mmci_host *host)
+On Wed, 2018-07-04 at 11:27 +0200, Thomas Gleixner wrote:
+> On Wed, 4 Jul 2018, Stanley Chu wrote:
 
-Let's leave this as void function and instead add a check in
-mmci_start_command(), to see if the command is a
-MMC_STOP_TRANSMISSION. If so, then add host->variant->cmdreg_stop to
-the register that is written in it.
+Hi Thomas,
 
-And actually, I think this change alone should be a separate patch
-coming before $subject patch in the series, as it addresses the first
-problem of two.
+Thanks so much for very constructive comments.
 
->  {
-> +       struct mmc_command *stop = &host->stop_abort;
-> +       struct mmc_data *data = host->data;
-> +       unsigned int cmd = 0;
-> +
->         mmci_write_datactrlreg(host, 0);
->         mmci_set_mask1(host, 0);
->         host->data = NULL;
-> +
-> +       if (host->variant->cmdreg_stop) {
-> +               cmd |= host->variant->cmdreg_stop;
-> +               if (!data->stop) {
-> +                       memset(stop, 0, sizeof(struct mmc_command));
-> +                       stop->opcode = MMC_STOP_TRANSMISSION;
-> +                       stop->arg = 0;
-> +                       stop->flags = MMC_RSP_R1B | MMC_CMD_AC;
-> +                       data->stop = stop;
+Summary of below response,
 
-I don't understand why you want the host->stop_abort being present in
-the mmci host struct? Can we get rid of that?
+1, Yes. System timer has a "clock enable (i.e., SYST_CON_EN)" design
+which not only start timer to countdown but also be required to make
+interrupt function work.
 
-Anyway, re-using the data->stop pointer seems reasonable.
+In other words, SYST_CON_EN shall be set before user changes interrupt
+related registers, for example, enable or disable interrupt.
 
-> +               }
-> +       }
-> +
-> +       return cmd;
->  }
->
->  static void mmci_init_sg(struct mmci_host *host, struct mmc_data *data)
-> @@ -703,6 +721,7 @@ mmci_data_irq(struct mmci_host *host, struct mmc_data *data,
->               unsigned int status)
->  {
->         unsigned int status_err;
-> +       unsigned int cmd_reg = 0;
->
->         /* Make sure we have data to handle */
->         if (!data)
-> @@ -761,7 +780,7 @@ mmci_data_irq(struct mmci_host *host, struct mmc_data *data,
->         if (status & MCI_DATAEND || data->error) {
->                 mmci_dma_finalize(host, data);
->
-> -               mmci_stop_data(host);
-> +               cmd_reg = mmci_stop_data(host);
->
->                 if (!data->error)
->                         /* The error clause is handled above, success! */
-> @@ -770,7 +789,7 @@ mmci_data_irq(struct mmci_host *host, struct mmc_data *data,
->                 if (!data->stop || host->mrq->sbc) {
->                         mmci_request_end(host, data->mrq);
->                 } else {
-> -                       mmci_start_command(host, data->stop, 0);
-> +                       mmci_start_command(host, data->stop, cmd_reg);
->                 }
->         }
->  }
-> @@ -780,6 +799,8 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->              unsigned int status)
->  {
->         void __iomem *base = host->base;
-> +       struct mmc_data *data = host->data;
-> +       unsigned int cmd_reg = 0;
->         bool sbc;
->
->         if (!cmd)
-> @@ -865,11 +886,16 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->         }
->
->         if ((!sbc && !cmd->data) || cmd->error) {
-> -               if (host->data) {
-> +               if (data) {
->                         /* Terminate the DMA transfer */
->                         mmci_dma_error(host);
->
-> -                       mmci_stop_data(host);
-> +                       cmd_reg = mmci_stop_data(host);
-> +
-> +                       if (data->stop) {
+2. The driver certainly has to be optimized and redundant register
+operations shall be removed.
 
-This means a change in behavior for !host->variant->cmdreg_stop
-variants, because the mmc core may have assigned data->stop. Did you
-test this path for any of the old variants?
+Both things will be done in v6.
 
-The change as such anyway seems like a good idea. If we had data, we
-may play safe and send a stop command to let the card to try to close
-down the transfer. On the other hand, we don't want this to come as
-side-effect, but rather it deserves is own standalone patch.
+> > +/* system timer */
+> > +#define SYST_CON                (0x0)
+> > +#define SYST_VAL                (0x4)
+> > +
+> > +#define SYST_CON_REG(to)        (timer_of_base(to) + SYST_CON)
+> > +#define SYST_VAL_REG(to)        (timer_of_base(to) + SYST_VAL)
+> > +
+> > +#define SYST_CON_EN              BIT(0)
+> > +#define SYST_CON_IRQ_EN          BIT(1)
+> > +#define SYST_CON_IRQ_CLR         BIT(4)
+> > +
+> > +static void __iomem *gpt_sched_reg __read_mostly;
+> > +
+> > +static void mtk_syst_reset(struct timer_of *to)
+> > +{
+> > +	/* clear and disable interrupt */
+> > +	writel(SYST_CON_IRQ_CLR | SYST_CON_EN, SYST_CON_REG(to));
+> > +
+> > +	/* reset counter */
+> > +	writel(0, SYST_VAL_REG(to));
+> > +
+> > +	/* disable timer */
+> > +	writel(0, SYST_CON_REG(to));
+> 
+> Not having any insight into the inner workings of that hardware. This
+> sequence does not make any sense.
+> 
+> You first clear and disable the interrupt, but leave the counter
+> running. Then you reset the counter and _after_ that you disable the
+> timer.
+> 
+> Is that a workaround for yet another completely misdesigned piece of timer
+> hardware or is it just the software implementation which makes no sense?
+> 
+> If it's a workaround for HW stupidity then you really want to document it
+> proper.
+> 
+> If not then, what's wrong with doing the obvious:
+> {
+> 	writel(SYST_CON_IRQ_CLR, SYST_CON_REG(to));
+> }
 
-I guess there are two options going forward.
-1) Split the patch and see if this works for other variants first and
-the add your changes on top for the new ST variant.
-2) Make this change only to affect the new ST variant.
+As above summary said, SYST_CON_EN shall be set to
+1. Change interrupt function.
+2. Allow timeout tick to be updated.
 
-I am fine with both.
+We will document those as comments in v6.
 
-> +                               mmci_start_command(host, data->stop, cmd_reg);
-> +                               return;
-> +                       }
->                 }
->                 mmci_request_end(host, host->mrq);
->         } else if (sbc) {
-> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-> index 2d7e901..4b4cd1d 100644
-> --- a/drivers/mmc/host/mmci.h
-> +++ b/drivers/mmc/host/mmci.h
-> @@ -243,6 +243,7 @@ struct mmci_host;
->   * @cmdreg_lrsp_crc: enable value for long response with crc
->   * @cmdreg_srsp_crc: enable value for short response with crc
->   * @cmdreg_srsp: enable value for short response without crc
-> + * @cmdreg_stop: enable value for stop and abort transmission
->   * @datalength_bits: number of bits in the MMCIDATALENGTH register
->   * @fifosize: number of bytes that can be written when MMCI_TXFIFOEMPTY
->   *           is asserted (likewise for RX)
-> @@ -298,6 +299,7 @@ struct variant_data {
->         unsigned int            cmdreg_lrsp_crc;
->         unsigned int            cmdreg_srsp_crc;
->         unsigned int            cmdreg_srsp;
-> +       unsigned int            cmdreg_stop;
->         unsigned int            datalength_bits;
->         unsigned int            fifosize;
->         unsigned int            fifohalfsize;
-> @@ -343,6 +345,7 @@ struct mmci_host {
->         struct mmc_request      *mrq;
->         struct mmc_command      *cmd;
->         struct mmc_data         *data;
-> +       struct mmc_command      stop_abort;
->         struct mmc_host         *mmc;
->         struct clk              *clk;
->         bool                    singleirq;
-> --
-> 2.7.4
->
+> 
+> which clears the interrupt and disables the timer in one go. Writing the
+> counter is not required at all because the next_event() function will write
+> it again and the counter value is irrelevant once the timer is disabled.
+> 
+> > +static void mtk_syst_ack_irq(struct timer_of *to)
+> > +{
+> > +	mtk_syst_reset(to);
+> > +}
+> > +
+> > +static irqreturn_t mtk_syst_handler(int irq, void *dev_id)
+> > +{
+> > +	struct clock_event_device *clkevt = (struct clock_event_device *)dev_id;
+> 
+> No type casts from and to void. They are completely pointless.
 
-Kind regards
-Uffe
+Will be fixed in v6.
+
+> 
+> > +	struct timer_of *to = to_timer_of(clkevt);
+> > +
+> > +	mtk_syst_ack_irq(to);
+> 
+> So you do the full dance here.
+
+Here full dance is not necessary and we only need to "clear and disable
+interrupt".
+
+Will be optimized in v6.
+
+> 
+> > +	clkevt->event_handler(clkevt);
+> > +
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> > +static int mtk_syst_clkevt_next_event(unsigned long ticks,
+> > +				      struct clock_event_device *clkevt)
+> > +{
+> > +	struct timer_of *to = to_timer_of(clkevt);
+> > +
+> > +	/*
+> > +	 * reset timer first because we do not expect interrupt is triggered
+> > +	 * by old compare value.
+> > +	 */
+> > +	mtk_syst_reset(to);
+> 
+> And here, which gets called through the event_handler.
+
+Timer reset here is not necessary.
+
+Will be removed in v6.
+
+> 
+> > +
+> > +	writel(SYST_CON_EN, SYST_CON_REG(to));
+> 
+> Why are you enabling the timer _before_ setting the new counter value? This
+> does not make any sense at least not w/o a comment explaining WHY this
+> needs to be so convoluted.
+
+As above response in mtk_syst_reset().
+
+> 
+> > +	writel(ticks, SYST_VAL_REG(to));
+> > +
+> > +	writel(SYST_CON_EN | SYST_CON_IRQ_EN, SYST_CON_REG(to));
+> 
+> With a sane hardware implementation the whole thing can be boiled down to:
+> 
+> {
+> 	writel(ticks, SYST_VAL_REG(to));
+> 	writel(SYST_CON_EN | SYST_CON_IRQ_EN, SYST_CON_REG(to));
+> }
+> 
+> There is no need to do the whole reset thing, unless the hardware is
+> broken. Either you manage to overwrite the timer in time or not. The extra
+> work of writing the control register before that is a cosmetic 'makes me
+> feel' good hack, which just makes the normal case slower. If you have an
+> occasional spurious interrupt, fine, but you can get them anyway.
+> 
+
+Yes, we have reviewed reset timing and found most of them are not
+necessary actually.
+
+We will optimize driver in v6.
+
+> Thanks,
+> 
+> 	tglx
+
+
+Thanks,
+Stanley Chu
+
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
