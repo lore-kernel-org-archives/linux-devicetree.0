@@ -1,72 +1,38 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v4 4/6] thermal: tsens: Add support for SDM845
-Date: Wed, 4 Jul 2018 22:56:26 +0530
-Message-ID: <CAHLCerNpifvM9nGXiE63-DQ0okP8+1wdxq52qo-K1TWzoYzjtQ@mail.gmail.com>
-References: <cover.1530533998.git.amit.kucheria@linaro.org>
- <43e3ae530334efab3fa0151430879f03731e9daa.1530533998.git.amit.kucheria@linaro.org>
- <20180703162619.GA17238@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: [PATCH v3 0/2] Add Broadcom Stingray PCIe PHY support
+Date: Wed,  4 Jul 2018 11:22:11 -0700
+Message-ID: <1530728533-28770-1-git-send-email-ray.jui@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180703162619.GA17238@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Kees Cook <keescook@chromium.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <ray.jui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 3, 2018 at 9:56 PM, Rob Herring <robh@kernel.org> wrote:
-> On Mon, Jul 02, 2018 at 06:14:07PM +0530, Amit Kucheria wrote:
->> SDM845 uses v2.4.0 of the TSENS IP block but the get_temp() function
->> appears to be identical across v2.x.y in code seen so far. We use the
->> generic get_temp() function.
->>
->> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/thermal/qcom-tsens.txt | 2 ++
->>  drivers/thermal/qcom/tsens-v2.c                          | 6 +++++-
->>  drivers/thermal/qcom/tsens.c                             | 6 ++++++
->>  drivers/thermal/qcom/tsens.h                             | 5 ++++-
->>  4 files changed, 17 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
->> index 06195e8..075182e 100644
->> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
->> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
->> @@ -5,6 +5,8 @@ Required properties:
->>   - "qcom,msm8916-tsens" : For 8916 Family of SoCs
->>   - "qcom,msm8974-tsens" : For 8974 Family of SoCs
->>   - "qcom,msm8996-tsens" : For 8996 Family of SoCs
->> + - "qcom,tsens-v2.4.0"  : For SDM845 Family of SoCs
->> + - "qcom,tsens-v2"      : Generic fallback binding for any Soc using 2.x.y version of the tsens IP
->
-> You need to show what are valid combinations of compatibles. Does v2
-> apply to 8996? One valid combination per line.
+This patch series adds PCIe PHY support for both PAXB and PAXC root complex in
+Broadcom Stingray SOC
 
-I've restructured qcom-tsens.txt to look like this:
+This patch series is based off v4.18-rc3 and is available on GIHUB:
+repo: https://github.com/Broadcom/arm64-linux.git
+branch: sr-pcie-phy-v3
 
------%<-------
+Changes since v2:
+ - Add 'reg' property to the driver so it can access the PCIe SS PHY block
+ - Rebase to v4.18-rc3
 
-* QCOM SoC Temperature Sensor (TSENS)
+Changes since v1:
+ - Rebase from v4.17-rc5 to v4.18-rc1
 
-Required properties:
-- compatible: must be one of the following:
-    - "qcom,msm8916-tsens" (MSM8916)
-    - "qcom,msm8974-tsens" (MSM8974)
-    - "qcom,msm8996-tsens" (MSM8996)
-    - "qcom,tsens-<ip_version>", "qcom,tsens-v2" (TSENS IP version and a
-       generic v2 property as fallback except for MSM8996)
+Ray Jui (2):
+  dt-bindings: phy: Add binding doc for Stingray PCIe PHY
+  phy: bcm-sr-pcie: Add Stingray PCIe PHY driver
 
-  Examples with ip_version are:
-    - "qcom,tsens-v2.4.0", "qcom,tsens-v2" (SDM845)
-    - "qcom,tsens-v2.2.1", "qcom,tsens-v2" (MSM8998)
+ .../devicetree/bindings/phy/brcm,sr-pcie-phy.txt   |  41 +++
+ drivers/phy/broadcom/Kconfig                       |  10 +
+ drivers/phy/broadcom/Makefile                      |   2 +
+ drivers/phy/broadcom/phy-bcm-sr-pcie.c             | 327 +++++++++++++++++++++
+ 4 files changed, 380 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,sr-pcie-phy.txt
+ create mode 100644 drivers/phy/broadcom/phy-bcm-sr-pcie.c
 
------%<-------
-
-8996 would end up being something like this if needed, though we're
-stuck with "qcom,msm8996-tsens":
-"qcom,msm8996-tsens", "qcom,tsens-v2.1.0", "qcom,tsens-v2" (MSM8996)
-
-If this looks good, I'll respin the patches.
-
-Regards,
-Amit
+-- 
+2.1.4
