@@ -1,263 +1,86 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v22 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
-Date: Wed, 4 Jul 2018 17:03:10 +0800
-Message-ID: <1530694990.24031.15.camel@mtksdaap41>
-References: <1530098172-31385-1-git-send-email-houlong.wei@mediatek.com>
-         <1530098172-31385-3-git-send-email-houlong.wei@mediatek.com>
-         <1530256083.8518.36.camel@mtksdaap41>
-         <1530663042.21991.64.camel@mhfsdcap03>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 09/17] irqchip/irq-mvebu-icu: support ICU subnodes
+Date: Wed, 4 Jul 2018 11:09:17 +0200
+Message-ID: <20180704110917.65557d0a@xps13>
+References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
+ <20180622151432.1566-10-miquel.raynal@bootlin.com>
+ <61ff2e4f-55b6-cf70-5f04-32cd197c35f8@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530663042.21991.64.camel@mhfsdcap03>
-Sender: linux-kernel-owner@vger.kernel.org
-To: houlong wei <houlong.wei@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh =?UTF-8?Q?=28=E8=AC=9D=E6=BF=9F=E9=81=A0=29?= <Bibby.Hsieh@mediatek.com>, YT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <61ff2e4f-55b6-cf70-5f04-32cd197c35f8@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Houlong:
-
-On Wed, 2018-07-04 at 08:10 +0800, houlong wei wrote:
-> On Fri, 2018-06-29 at 15:08 +0800, CK Hu wrote:
-> > Hi, Houlong:
-> > 
-> > Some inline comment.
-> > 
-> > On Wed, 2018-06-27 at 19:16 +0800, Houlong Wei wrote:
-> > > This patch is first version of Mediatek Command Queue(CMDQ) driver. The
-> > > CMDQ is used to help write registers with critical time limitation,
-> > > such as updating display configuration during the vblank. It controls
-> > > Global Command Engine (GCE) hardware to achieve this requirement.
-> > > Currently, CMDQ only supports display related hardwares, but we expect
-> > > it can be extended to other hardwares for future requirements.
-> > > 
-> > > Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
-> > > Signed-off-by: HS Liao <hs.liao@mediatek.com>
-> > > Signed-off-by: CK Hu <ck.hu@mediatek.com>
-> > > ---
-> > >  drivers/mailbox/Kconfig                  |   10 +
-> > >  drivers/mailbox/Makefile                 |    2 +
-> > >  drivers/mailbox/mtk-cmdq-mailbox.c       |  634 ++++++++++++++++++++++++++++++
-> > >  include/linux/mailbox/mtk-cmdq-mailbox.h |   70 ++++
-> > >  4 files changed, 716 insertions(+)
-> > >  create mode 100644 drivers/mailbox/mtk-cmdq-mailbox.c
-> > >  create mode 100644 include/linux/mailbox/mtk-cmdq-mailbox.h
-> > > 
-> > 
-> > [...]
-> > 
-> > > +
-> > > +static int cmdq_thread_reset(struct cmdq *cmdq, struct cmdq_thread *thread)
-> > > +{
-> > > +	u32 warm_reset;
-> > > +
-> > > +	writel(CMDQ_THR_DO_WARM_RESET, thread->base + CMDQ_THR_WARM_RESET);
-> > > +	if (readl_poll_timeout_atomic(thread->base + CMDQ_THR_WARM_RESET,
-> > > +			warm_reset, !(warm_reset & CMDQ_THR_DO_WARM_RESET),
-> > > +			0, 10)) {
-> > > +		dev_err(cmdq->mbox.dev, "reset GCE thread 0x%x failed\n",
-> > > +			(u32)(thread->base - cmdq->base));
-> > > +		return -EFAULT;
-> > > +	}
-> > > +	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
-> > 
-> > The CMDQ_THR_SLOT_CYCLES looks like not relevant to reset. Maybe you
-> > just need to set this value when startup.
-> 
-> Will move configuration of CMDQ_THR_SLOT_CYCLES to cmdq_xlate() where is
-> startup of a GCE thread.
-> 
-> > 
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > 
-> > [...]
-> > 
-> > > +
-> > > +static void cmdq_task_exec(struct cmdq_pkt *pkt, struct cmdq_thread *thread)
-> > > +{
-> > > +	struct cmdq *cmdq;
-> > > +	struct cmdq_task *task;
-> > > +	unsigned long curr_pa, end_pa;
-> > > +
-> > > +	cmdq = dev_get_drvdata(thread->chan->mbox->dev);
-> > > +
-> > > +	/* Client should not flush new tasks if suspended. */
-> > > +	WARN_ON(cmdq->suspended);
-> > > +
-> > > +	task = kzalloc(sizeof(*task), GFP_ATOMIC);
-> > > +	task->cmdq = cmdq;
-> > > +	INIT_LIST_HEAD(&task->list_entry);
-> > > +	task->pa_base = pkt->pa_base;
-> > > +	task->thread = thread;
-> > > +	task->pkt = pkt;
-> > > +
-> > > +	if (list_empty(&thread->task_busy_list)) {
-> > > +		WARN_ON(clk_enable(cmdq->clock) < 0);
-> > > +		WARN_ON(cmdq_thread_reset(cmdq, thread) < 0);
-> > > +
-> > > +		writel(task->pa_base, thread->base + CMDQ_THR_CURR_ADDR);
-> > > +		writel(task->pa_base + pkt->cmd_buf_size,
-> > > +		       thread->base + CMDQ_THR_END_ADDR);
-> > > +		writel(thread->priority, thread->base + CMDQ_THR_PRIORITY);
-> > > +		writel(CMDQ_THR_IRQ_EN, thread->base + CMDQ_THR_IRQ_ENABLE);
-> > > +		writel(CMDQ_THR_ENABLED, thread->base + CMDQ_THR_ENABLE_TASK);
-> > > +
-> > > +		if (thread->timeout_ms != CMDQ_NO_TIMEOUT)
-> > > +			mod_timer(&thread->timeout,
-> > > +				jiffies + msecs_to_jiffies(thread->timeout_ms));
-> > 
-> > I think the timeout processing should be done by client driver. The
-> > total time to execute a command buffer does not depend on GCE HW speed
-> > because the WFE (wait for event) command would wait for client HW event,
-> > so the total time depend on how long a client HW send this event to GCE
-> > and the timeout processing should be client driver's job. Each client
-> > may have different timeout processing mechanism, for example, if display
-> > could dynamic change panel frame rate between 120Hz and 60Hz, and the
-> > timeout time is 2 frame, so it may dynamically change timeout time
-> > between 17ms and 33ms. Another reason is that display have interrupt
-> > every vblank, and it could check timeout in that interrupt, so the timer
-> > in cmdq driver looks redundant. Because each client would define its own
-> > timeout processing mechanism, so it's not wise to put timeout processing
-> > in cmdq driver.
-> 
-> The client drivers' owners strongly hope to keep the current timeout
-> mechanism, the reasons are below.
-> 1. If remove, all clients should add timeout mechanism and the code will
-> be redundant.
-> 2. If timeout happens, only GCE driver can do reset and continue to
-> execute next packet.
-
-For the reason 2, GCE should not continue execute next packet because
-the packets may have dependency. So GCE driver could only drop all
-packet (this is what you do in cmdq_thread_handle_timeout()). For reason
-1, you have a assumption that all client have the same request for
-timeout: constant timeout value or no timeout. If it's so, that's ok to
-put timeout mechanism in cmdq driver. But if one day, a new request for
-timeout, for example, dynamic timeout value, that means not all client
-driver implement timeout in the same way, putting timeout mechanism in
-cmdq driver does not reduce any thing but just move multiple client
-driver's code into cmdq driver. I would accept to put here only if all
-client driver use the same timeout mechanism.
-
-Regards,
-CK
-
-> 
-> > 
-> > > +	} else {
-> > > +		WARN_ON(cmdq_thread_suspend(cmdq, thread) < 0);
-> > > +		curr_pa = readl(thread->base + CMDQ_THR_CURR_ADDR);
-> > > +		end_pa = readl(thread->base + CMDQ_THR_END_ADDR);
-> > > +
-> > > +		/*
-> > > +		 * Atomic execution should remove the following wfe, i.e. only
-> > > +		 * wait event at first task, and prevent to pause when running.
-> > > +		 */
-> > > +		if (thread->atomic_exec) {
-> > > +			/* GCE is executing if command is not WFE */
-> > > +			if (!cmdq_thread_is_in_wfe(thread)) {
-> > > +				cmdq_thread_resume(thread);
-> > > +				cmdq_thread_wait_end(thread, end_pa);
-> > > +				WARN_ON(cmdq_thread_suspend(cmdq, thread) < 0);
-> > > +				/* set to this task directly */
-> > > +				writel(task->pa_base,
-> > > +				       thread->base + CMDQ_THR_CURR_ADDR);
-> > > +			} else {
-> > > +				cmdq_task_insert_into_thread(task);
-> > > +				cmdq_task_remove_wfe(task);
-> > > +				smp_mb(); /* modify jump before enable thread */
-> > > +			}
-> > > +		} else {
-> > > +			/* check boundary */
-> > > +			if (curr_pa == end_pa - CMDQ_INST_SIZE ||
-> > > +			    curr_pa == end_pa) {
-> > > +				/* set to this task directly */
-> > > +				writel(task->pa_base,
-> > > +				       thread->base + CMDQ_THR_CURR_ADDR);
-> > > +			} else {
-> > > +				cmdq_task_insert_into_thread(task);
-> > > +				smp_mb(); /* modify jump before enable thread */
-> > > +			}
-> > > +		}
-> > > +		writel(task->pa_base + pkt->cmd_buf_size,
-> > > +		       thread->base + CMDQ_THR_END_ADDR);
-> > > +		cmdq_thread_resume(thread);
-> > > +	}
-> > > +	list_move_tail(&task->list_entry, &thread->task_busy_list);
-> > > +}
-> > > +
-> > > +static void cmdq_task_exec_done(struct cmdq_task *task, bool err)
-> > > +{
-> > > +	struct device *dev = task->cmdq->mbox.dev;
-> > > +	struct cmdq_cb_data cmdq_cb_data;
-> > > +
-> > > +	dma_unmap_single(dev, task->pa_base, task->pkt->cmd_buf_size,
-> > > +			 DMA_TO_DEVICE);
-> > 
-> > Move this to client driver.
-> 
-> map/unmap are common code for clients driver, could we move it to cmdq
-> helper?
-> 
-> > 
-> > > +	if (task->pkt->cb.cb) {
-> > > +		cmdq_cb_data.err = err;
-> > > +		cmdq_cb_data.data = task->pkt->cb.data;
-> > > +		task->pkt->cb.cb(cmdq_cb_data);
-> > > +	}
-> > > +	list_del(&task->list_entry);
-> > > +}
-> > > +
-> > 
-> > [...]
-> > 
-> > > +
-> > > +static bool cmdq_mbox_last_tx_done(struct mbox_chan *chan)
-> > > +{
-> > > +	return true;
-> > > +}
-> > > +
-> > > +static const struct mbox_chan_ops cmdq_mbox_chan_ops = {
-> > > +	.send_data = cmdq_mbox_send_data,
-> > > +	.startup = cmdq_mbox_startup,
-> > > +	.shutdown = cmdq_mbox_shutdown,
-> > > +	.last_tx_done = cmdq_mbox_last_tx_done,
-> > 
-> > Because mbox->txdone_poll is false, so you need not to implement
-> > last_tx_done.
-> > 
-> > Regards,
-> > CK
-> 
-> Will remove cmdq_mbox_last_tx_done().
-> 
-> > 
-> > > +};
-> > > +
-> > > +static struct mbox_chan *cmdq_xlate(struct mbox_controller *mbox,
-> > > +		const struct of_phandle_args *sp)
-> > > +{
-> > > +	int ind = sp->args[0];
-> > > +	struct cmdq_thread *thread;
-> > > +
-> > > +	if (ind >= mbox->num_chans)
-> > > +		return ERR_PTR(-EINVAL);
-> > > +
-> > > +	thread = mbox->chans[ind].con_priv;
-> > > +	thread->timeout_ms = sp->args[1];
-> > > +	thread->priority = sp->args[2];
-> > > +	thread->atomic_exec = (sp->args[3] != 0);
-> > > +	thread->chan = &mbox->chans[ind];
-> > > +
-> > > +	return &mbox->chans[ind];
-> > > +}
-> > > +
-> > [...]
-> > 
-> > 
-> 
-> 
+SGkgTWFyYywKCk1hcmMgWnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+IHdyb3RlIG9uIFRo
+dSwgMjggSnVuIDIwMTggMTM6NDU6MDkKKzAxMDA6Cgo+IE9uIDIyLzA2LzE4IDE2OjE0LCBNaXF1
+ZWwgUmF5bmFsIHdyb3RlOgo+ID4gVGhlIElDVSBjYW4gaGFuZGxlIHNldmVyYWwgdHlwZSBvZiBp
+bnRlcnJ1cHQsIGVhY2ggb2YgdGhlbSBiZWluZyBoYW5kbGVkCj4gPiBkaWZmZXJlbnRseSBvbiBB
+UCBzaWRlLiBPbiBDUCBzaWRlLCB0aGUgSUNVIHNob3VsZCBiZSBhYmxlIHRvIG1ha2UgdGhlCj4g
+PiBkaXN0aW5jdGlvbiBiZXR3ZWVuIGVhY2ggaW50ZXJydXB0IGdyb3VwIGJ5IHBvaW50aW5nIHRv
+IHRoZSByaWdodCBwYXJlbnQuCj4gPiAKPiA+IFRoaXMgaXMgZG9uZSB0aHJvdWdoIHRoZSBpbnRy
+b2R1Y3Rpb24gb2YgbmV3IGJpbmRpbmdzLCBwcmVzZW50aW5nIHRoZSBJQ1UKPiA+IG5vZGUgYXMg
+dGhlIHBhcmVudCBvZiBtdWx0aXBsZSBJQ1Ugc3ViLW5vZGVzLCBlYWNoIG9mIHRoZW0gYmVpbmcg
+YW4KPiA+IGludGVycnVwdCB0eXBlIHdpdGggYSBkaWZmZXJlbnQgaW50ZXJydXB0IHBhcmVudC4g
+SUNVIGludGVycnVwdCAnY2xpZW50cycKPiA+IG5vdyBkaXJlY3RseSBwb2ludCB0byB0aGUgcmln
+aHQgc3ViLW5vZGUsIGF2b2lkaW5nIHRoZSBuZWVkIGZvciB0aGUgZXh0cmEKPiA+IElDVV9HUlBf
+KiBwYXJhbWV0ZXIuCj4gPiAKPiA+IElDVSBzdWJub2RlcyBhcmUgcHJvYmVkIGF1dG9tYXRpY2Fs
+bHkgd2l0aCBkZXZtX3BsYXRmb3JtX3BvcHVsYXRlKCkuIElmCj4gPiB0aGUgbm9kZSBhcyBubyBj
+aGlsZCwgdGhlIHByb2JlIGZ1bmN0aW9uIGZvciBOU1JzIHdpbGwgc3RpbGwgYmUgY2FsbGVkCj4g
+PiAnbWFudWFsbHknIGluIG9yZGVyIHRvIHByZXNlcnZlIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkg
+d2l0aCBEVCB1c2luZyB0aGUKPiA+IG9sZCBiaW5kaW5nLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5
+OiBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPgo+ID4gLS0tCj4gPiAg
+ZHJpdmVycy9pcnFjaGlwL2lycS1tdmVidS1pY3UuYyB8IDg4ICsrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKystLS0tLS0tCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDc0IGluc2VydGlvbnMo
+KyksIDE0IGRlbGV0aW9ucygtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pcnFjaGlw
+L2lycS1tdmVidS1pY3UuYyBiL2RyaXZlcnMvaXJxY2hpcC9pcnEtbXZlYnUtaWN1LmMKPiA+IGlu
+ZGV4IDI0ZDQ1MTg2ZWI2Yi4uZjdjMmVkZTljMjIyIDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9p
+cnFjaGlwL2lycS1tdmVidS1pY3UuYwo+ID4gKysrIGIvZHJpdmVycy9pcnFjaGlwL2lycS1tdmVi
+dS1pY3UuYwo+ID4gQEAgLTQzLDYgKzQzLDcgQEAgc3RydWN0IG12ZWJ1X2ljdSB7Cj4gPiAgCXN0
+cnVjdCByZWdtYXAgKnJlZ21hcDsKPiA+ICAJc3RydWN0IGRldmljZSAqZGV2Owo+ID4gIAlhdG9t
+aWNfdCBpbml0aWFsaXplZDsKPiA+ICsJYm9vbCBsZWdhY3lfYmluZGluZ3M7Cj4gPiAgfTsKPiA+
+ICAKPiA+ICBzdHJ1Y3QgbXZlYnVfaWN1X2lycV9kYXRhIHsKPiA+IEBAIC01MSw2ICs1MiwzMCBA
+QCBzdHJ1Y3QgbXZlYnVfaWN1X2lycV9kYXRhIHsKPiA+ICAJdW5zaWduZWQgaW50IHR5cGU7Cj4g
+PiAgfTsKPiA+ICAKPiA+ICtzdGF0aWMgc3RydWN0IG12ZWJ1X2ljdSAqbXZlYnVfaWN1X2Rldl9n
+ZXRfZHJ2ZGF0YShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4gK3sKPiA+ICsJc3Ry
+dWN0IG12ZWJ1X2ljdSAqaWN1Owo+ID4gKwo+ID4gKwkvKgo+ID4gKwkgKiBEZXZpY2UgZGF0YSBi
+ZWluZyBwb3B1bGF0ZWQgbWVhbnMgd2Ugc2hvdWxkIGJlIHVzaW5nIGxlZ2FjeSBiaW5kaW5ncy4K
+PiA+ICsJICogVXNpbmcgdGhlIF9wYXJlbnRfIGRldmljZSBkYXRhIG1lYW5zIHdlIHNob3VsZCBi
+ZSB1c2luZyBuZXcgYmluZGluZ3MuCj4gPiArCSAqLwo+ID4gKwlpY3UgPSBkZXZfZ2V0X2RydmRh
+dGEoJnBkZXYtPmRldik7Cj4gPiArCWlmIChpY3UpIHsKPiA+ICsJCWlmICghaWN1LT5sZWdhY3lf
+YmluZGluZ3MpCj4gPiArCQkJcmV0dXJuIEVSUl9QVFIoLUVJTlZBTCk7Cj4gPiArCX0gZWxzZSB7
+Cj4gPiArCQlpY3UgPSBkZXZfZ2V0X2RydmRhdGEocGRldi0+ZGV2LnBhcmVudCk7Cj4gPiArCQlp
+ZiAoIWljdSkKPiA+ICsJCQlyZXR1cm4gRVJSX1BUUigtRU5PREVWKTsKPiA+ICsKPiA+ICsJCWlm
+IChpY3UtPmxlZ2FjeV9iaW5kaW5ncykKPiA+ICsJCQlyZXR1cm4gRVJSX1BUUigtRUlOVkFMKTsK
+PiA+ICsJfSAgCj4gCj4gRG9lc24ndCB0aGlzIG1ha2UgbGVnYWN5X2JpbmRpbmdzIGNvbXBsZXRl
+bHkgcmVkdW5kYW50PyBFaXRoZXIgdGhlCj4gcG9pbnRlciBpcyAhTlVMTCBpbiB0aGUgZGV2aWNl
+LCBhbmQgdGhpcyBpcyB1c2luZyBhIGxlZ2FjeSBiaW5naW5nLCBvcgo+IGl0IGlzIHN0b3JlZCBp
+biB0aGUgcGFyZW50LCBhbmQgdGhpcyBpcyBhIG5ldyBiaW5kaW5nLiBZb3UgY291bGQgZXZlbgo+
+IGhhdmUgYSBoZWxwZXIgZm9yIHRoYXQ6Cj4gCj4gc3RhdGljIGJvb2wgaXNfbGVnYWN5KHN0cnVj
+dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gewo+IAlyZXR1cm4gIWRldl9nZXRfZHJ2ZGF0YSgm
+cGRldi0+ZGV2KTsKPiB9Cj4gCj4gVGhlIGRyaXZlciByZWFsbHkgZG9lc24ndCBuZWVkIHRvIGJl
+IGRlZmVuZGluZyBhZ2FpbnN0IGl0c2VsZiwgaWYKPiBhbnl0aGluZywgYW5kIGl0IHdvdWxkIHNh
+dmUgeW91IHF1aXRlIGEgYml0IG9mIGVycm9yIGhhbmRsaW5nIGluIHRoZQo+IGNhbGxlcnMgb2Yg
+dGhpcyBmdW5jdGlvbi4KCkkgc2ltcGxpZmllZCB0aGUgc2FuaXR5IGNoZWNrcyBidXQgSSBoYWQg
+dG8ga2VlcCBhbiBpY3UtPmlzX2xlZ2FjeQpib29sZWFuIGJlY2F1c2UgdGhlIGFib3ZlIGZ1bmN0
+aW9uIHdvdWxkIG5vdCBoYXZlIHdvcmtlZCwgZm9yIGluc3RhbmNlLAppbiB0aGUgKl90cmFuc2xh
+dGUoKSBob29rLiBBcyB0aGlzIGhvb2sgZG9lcyBub3QgcmVjZWl2ZSBhIHN0cnVjdApkZXZpY2Ug
+KiAob3IgcGxhdGZvcm1fZGV2aWNlKSBhcyBwYXJhbWV0ZXIsIEkgdHJpZWQgdG8gdXNlIGljdS0+
+ZGV2Cmluc3RlYWQuIFRoaXMgY2Fubm90IHdvcmsgYXMgaXQgYWx3YXlzIHBvaW50cyB0byB0aGUg
+ZGV2aWNlIGhhdmluZyB0aGUKZHJpdmVyIGRhdGEgYXR0YWNoZWQuCgpQbGVhc2UgdGVsbCBtZSBp
+ZiB0aGUgbmV4dCB2ZXJzaW9uIGZpdHMgd2hhdCB5b3UgZXhwZWN0LgoKVGhhbmtzLApNaXF1w6hs
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
+cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
+a2VybmVsCg==
