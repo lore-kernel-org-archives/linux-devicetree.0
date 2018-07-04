@@ -1,56 +1,56 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v3 4/4] arm64: dts: mediatek: add mt6765 support
-Date: Wed, 4 Jul 2018 08:35:14 +0100
-Message-ID: <f482708c-ea5e-5d81-a176-d69be9ccdf63@arm.com>
-References: <1530669174-17623-1-git-send-email-mars.cheng@mediatek.com>
- <1530669174-17623-5-git-send-email-mars.cheng@mediatek.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: ARM: dts: sun8i: h3: Enable dwmac-sun8i on the
+ Beelink X2
+Date: Wed, 4 Jul 2018 09:44:08 +0200
+Message-ID: <20180704074408.sx4ek6lvbaiyj5ut@flea>
+References: <20180630062720.24225-1-codekipper@gmail.com>
+ <20180703145020.hkct43ccbpteleht@flea>
+ <CAEKpxBmCLF8PMQ2h2qghfMEMktQYdDZEPaFRLvN8-uzDr0mi9g@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530669174-17623-5-git-send-email-mars.cheng@mediatek.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mars Cheng <mars.cheng@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="npzyb65xtj6uxonq"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBW7V6HMQKGQEWTVCKRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAEKpxBmCLF8PMQ2h2qghfMEMktQYdDZEPaFRLvN8-uzDr0mi9g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/07/18 02:52, Mars Cheng wrote:
-> This adds basic chip support for MT6765 SoC.
+
+--npzyb65xtj6uxonq
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Tue, Jul 03, 2018 at 07:19:16PM +0200, Code Kipper wrote:
+> On 3 July 2018 at 16:50, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > Hi,
+> >
+> > On Sat, Jun 30, 2018 at 08:27:20AM +0200, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> >> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>
+> >> The enabling of the emac was reverted when stability issues were
+> >> discovered.
+> >
+> > What stability issues exactly? Have they been fixed? If so, by which
+> > commit?
 > 
-> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/Makefile       |    1 +
->  arch/arm64/boot/dts/mediatek/mt6765-evb.dts |   33 ++++++
->  arch/arm64/boot/dts/mediatek/mt6765.dtsi    |  155 +++++++++++++++++++++++++++
->  3 files changed, 189 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt6765-evb.dts
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt6765.dtsi
-> 
+> They were fixed by 4904337fe34f (ARM: dts: sunxi: Restore EMAC changes
+> (boards)) but this board was missed.
 
-[...]
+Please add that to the commit log, and what the issue was.
 
-> +
-> +		gic: interrupt-controller@c000000 {
-> +			compatible = "arm,gic-v3";
-> +			#interrupt-cells = <3>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			#redistributor-regions = <1>;
-> +			interrupt-parent = <&gic>;
-> +			interrupt-controller;
-> +			reg = <0 0x0c000000 0 0x40000>, // distributor
-> +			      <0 0x0c100000 0 0x200000>, // redistributor
-> +			      <0 0x0c400000 0 0x40000>; // gicc
+Maxime
 
-For the second time: please add *all* the GIC CPU interface regions,
-described in the Cortex-A53 TRM[1] (GICC, GICH, and GICV).
-
-Thanks,
-
-	M.
-
-[1]
-http://infocenter.arm.com/help/topic/com.arm.doc.ddi0500g/ch09s02s01.html
 -- 
-Jazz is not dead. It just smells funny...
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--npzyb65xtj6uxonq--
