@@ -1,385 +1,44 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: [PATCH v3 2/2] phy: bcm-sr-pcie: Add Stingray PCIe PHY driver
-Date: Wed,  4 Jul 2018 11:22:13 -0700
-Message-ID: <1530728533-28770-3-git-send-email-ray.jui@broadcom.com>
-References: <1530728533-28770-1-git-send-email-ray.jui@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530728533-28770-1-git-send-email-ray.jui@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <ray.jui@broadcom.com>
+From: Stefan Schmidt <stefan@datenfreihafen.org>
+Subject: Re: [RFC net-next 00/15] net: A socket API for LoRa
+Date: Wed, 4 Jul 2018 20:26:13 +0200
+Message-ID: <487df785-ddf5-ed81-a253-6afb7f2de811@datenfreihafen.org>
+References: <20180701110804.32415-1-afaerber@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180701110804.32415-1-afaerber@suse.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, netdev@vger.kernel.org
+Cc: =?UTF-8?Q?Michal_Kube=c4=8dek?= <mkubecek@suse.cz>, =?UTF-8?Q?Konstantin_B=c3=b6hm?= <konstantin.boehm@ancud.de>, contact@snootlab.com, Ken Yu <ken.yu@rakwireless.com>, =?UTF-8?Q?Michael_R=c3=b6der?= <michael.roeder@avnet.eu>, Rob Herring <robh@kernel.org>, lora@globalsat.com.tw, Alexander Graf <agraf@suse.de>, Jan Jongboom <jan.jongboom@arm.com>, Janus Piwek <jpiwek@arroweurope.com>, Jon Ortego <Jon.Ortego@imst.de>, Jian-Hong Pan <starnight@g.ncu.edu.tw>, devicetree@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>, Marcel Holtmann <marcel@holtmann.org>, Mark Brown <broonie@kernel.org>, Dollar Chen <dollar.chen@wtmec.com>, Brian Ray <brian.ray@link-labs.com>, linux-arm-kernel@lists.infradead.org, lora@radioshuttle.de, Matthias Brugger <mbrugger@suse.com>, Ben Whitten <ben.whitten@lairdtech.com>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Steve deRosier <deros>
 List-Id: devicetree@vger.kernel.org
 
-Add Stingray PCIe PHY driver for both PAXB and PAXC root complex
-
-Signed-off-by: Ray Jui <ray.jui@broadcom.com>
----
- drivers/phy/broadcom/Kconfig           |  10 +
- drivers/phy/broadcom/Makefile          |   2 +
- drivers/phy/broadcom/phy-bcm-sr-pcie.c | 327 +++++++++++++++++++++++++++++++++
- 3 files changed, 339 insertions(+)
- create mode 100644 drivers/phy/broadcom/phy-bcm-sr-pcie.c
-
-diff --git a/drivers/phy/broadcom/Kconfig b/drivers/phy/broadcom/Kconfig
-index 97d27b0d5..8786a96 100644
---- a/drivers/phy/broadcom/Kconfig
-+++ b/drivers/phy/broadcom/Kconfig
-@@ -80,3 +80,13 @@ config PHY_BRCM_USB
- 	  This driver is required by the USB XHCI, EHCI and OHCI
- 	  drivers.
- 	  If unsure, say N.
-+
-+config PHY_BCM_SR_PCIE
-+	tristate "Broadcom Stingray PCIe PHY driver"
-+	depends on OF && (ARCH_BCM_IPROC || COMPILE_TEST)
-+	select GENERIC_PHY
-+	select MFD_SYSCON
-+	default ARCH_BCM_IPROC
-+	help
-+	  Enable this to support the Broadcom Stingray PCIe PHY
-+	  If unsure, say N.
-diff --git a/drivers/phy/broadcom/Makefile b/drivers/phy/broadcom/Makefile
-index 13e000c..0f60184 100644
---- a/drivers/phy/broadcom/Makefile
-+++ b/drivers/phy/broadcom/Makefile
-@@ -9,3 +9,5 @@ obj-$(CONFIG_PHY_BRCM_SATA)		+= phy-brcm-sata.o
- obj-$(CONFIG_PHY_BRCM_USB)		+= phy-brcm-usb-dvr.o
- 
- phy-brcm-usb-dvr-objs := phy-brcm-usb.o phy-brcm-usb-init.o
-+
-+obj-$(CONFIG_PHY_BCM_SR_PCIE)		+= phy-bcm-sr-pcie.o
-diff --git a/drivers/phy/broadcom/phy-bcm-sr-pcie.c b/drivers/phy/broadcom/phy-bcm-sr-pcie.c
-new file mode 100644
-index 0000000..ff15dae
---- /dev/null
-+++ b/drivers/phy/broadcom/phy-bcm-sr-pcie.c
-@@ -0,0 +1,327 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2016-2018 Broadcom
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+/* we have up to 8 PAXB based RC. The 9th one is always PAXC */
-+#define SR_NR_PCIE_PHYS               9
-+#define SR_PAXC_PHY_IDX               (SR_NR_PCIE_PHYS - 1)
-+
-+#define PCIE_PIPEMUX_CFG_OFFSET       0x10c
-+#define PCIE_PIPEMUX_SELECT_STRAP     0xf
-+
-+#define CDRU_STRAP_DATA_LSW_OFFSET    0x5c
-+#define PCIE_PIPEMUX_SHIFT            19
-+#define PCIE_PIPEMUX_MASK             0xf
-+
-+#define MHB_MEM_PW_PAXC_OFFSET        0x1c0
-+#define MHB_PWR_ARR_POWERON           0x8
-+#define MHB_PWR_ARR_POWEROK           0x4
-+#define MHB_PWR_POWERON               0x2
-+#define MHB_PWR_POWEROK               0x1
-+#define MHB_PWR_STATUS_MASK           (MHB_PWR_ARR_POWERON | \
-+				       MHB_PWR_ARR_POWEROK | \
-+				       MHB_PWR_POWERON | \
-+				       MHB_PWR_POWEROK)
-+
-+struct sr_pcie_phy_core;
-+
-+/**
-+ * struct sr_pcie_phy - Stingray PCIe PHY
-+ *
-+ * @core: pointer to the Stingray PCIe PHY core control
-+ * @index: PHY index
-+ * @phy: pointer to the kernel PHY device
-+ */
-+struct sr_pcie_phy {
-+	struct sr_pcie_phy_core *core;
-+	unsigned int index;
-+	struct phy *phy;
-+};
-+
-+/**
-+ * struct sr_pcie_phy_core - Stingray PCIe PHY core control
-+ *
-+ * @dev: pointer to device
-+ * @base: base register of PCIe SS
-+ * @cdru: regmap to the CDRU device
-+ * @mhb: regmap to the MHB device
-+ * @pipemux: pipemuex strap
-+ * @phys: array of PCIe PHYs
-+ */
-+struct sr_pcie_phy_core {
-+	struct device *dev;
-+	void __iomem *base;
-+	struct regmap *cdru;
-+	struct regmap *mhb;
-+	u32 pipemux;
-+	struct sr_pcie_phy phys[SR_NR_PCIE_PHYS];
-+};
-+
-+/*
-+ * PCIe PIPEMUX lookup table
-+ *
-+ * Each array index represents a PIPEMUX strap setting
-+ * The array element represents a bitmap where a set bit means the PCIe
-+ * core and associated serdes has been enabled as RC and is available for use
-+ */
-+static const u8 pipemux_table[] = {
-+	/* PIPEMUX = 0, EP 1x16 */
-+	0x00,
-+	/* PIPEMUX = 1, EP 2x8 */
-+	0x00,
-+	/* PIPEMUX = 2, EP 4x4 */
-+	0x00,
-+	/* PIPEMUX = 3, RC 2x8, cores 0, 7 */
-+	0x81,
-+	/* PIPEMUX = 4, RC 4x4, cores 0, 1, 6, 7 */
-+	0xc3,
-+	/* PIPEMUX = 5, RC 8x2, all 8 cores */
-+	0xff,
-+	/* PIPEMUX = 6, RC 3x4 + 2x2, cores 0, 2, 3, 6, 7 */
-+	0xcd,
-+	/* PIPEMUX = 7, RC 1x4 + 6x2, cores 0, 2, 3, 4, 5, 6, 7 */
-+	0xfd,
-+	/* PIPEMUX = 8, EP 1x8 + RC 4x2, cores 4, 5, 6, 7 */
-+	0xf0,
-+	/* PIPEMUX = 9, EP 1x8 + RC 2x4, cores 6, 7 */
-+	0xc0,
-+	/* PIPEMUX = 10, EP 2x4 + RC 2x4, cores 1, 6 */
-+	0x42,
-+	/* PIPEMUX = 11, EP 2x4 + RC 4x2, cores 2, 3, 4, 5 */
-+	0x3c,
-+	/* PIPEMUX = 12, EP 1x4 + RC 6x2, cores 2, 3, 4, 5, 6, 7 */
-+	0xfc,
-+	/* PIPEMUX = 13, RC 2x4 + RC 1x4 + 2x2, cores 2, 3, 6 */
-+	0x4c,
-+};
-+
-+/*
-+ * Return true if the strap setting is valid
-+ */
-+static bool pipemux_strap_is_valid(u32 pipemux)
-+{
-+	return !!(pipemux < ARRAY_SIZE(pipemux_table));
-+}
-+
-+/*
-+ * Read the PCIe PIPEMUX from strap
-+ */
-+static u32 pipemux_strap_read(struct sr_pcie_phy_core *core)
-+{
-+	u32 pipemux;
-+
-+	/*
-+	 * Read PIPEMUX configuration register to determine the pipemux setting
-+	 *
-+	 * In the case when the value indicates using HW strap, fall back to
-+	 * use HW strap
-+	 */
-+	pipemux = readl(core->base + PCIE_PIPEMUX_CFG_OFFSET);
-+	pipemux &= PCIE_PIPEMUX_MASK;
-+	if (pipemux == PCIE_PIPEMUX_SELECT_STRAP) {
-+		regmap_read(core->cdru, CDRU_STRAP_DATA_LSW_OFFSET, &pipemux);
-+		pipemux >>= PCIE_PIPEMUX_SHIFT;
-+		pipemux &= PCIE_PIPEMUX_MASK;
-+	}
-+
-+	return pipemux;
-+}
-+
-+/*
-+ * Given a PIPEMUX strap and PCIe core index, this function returns true if the
-+ * PCIe core needs to be enabled
-+ */
-+static bool pcie_core_is_for_rc(struct sr_pcie_phy *phy)
-+{
-+	struct sr_pcie_phy_core *core = phy->core;
-+	unsigned int core_idx = phy->index;
-+
-+	return !!((pipemux_table[core->pipemux] >> core_idx) & 0x1);
-+}
-+
-+static int sr_pcie_phy_init(struct phy *p)
-+{
-+	struct sr_pcie_phy *phy = phy_get_drvdata(p);
-+
-+	/*
-+	 * Check whether this PHY is for root complex or not. If yes, return
-+	 * zero so the host driver can proceed to enumeration. If not, return
-+	 * an error and that will force the host driver to bail out
-+	 */
-+	if (pcie_core_is_for_rc(phy))
-+		return 0;
-+	else
-+		return -ENODEV;
-+}
-+
-+static int sr_paxc_phy_init(struct phy *p)
-+{
-+	struct sr_pcie_phy *phy = phy_get_drvdata(p);
-+	struct sr_pcie_phy_core *core = phy->core;
-+	unsigned int core_idx = phy->index;
-+	u32 val;
-+
-+	if (core_idx != SR_PAXC_PHY_IDX)
-+		return -EINVAL;
-+
-+	regmap_read(core->mhb, MHB_MEM_PW_PAXC_OFFSET, &val);
-+	if ((val & MHB_PWR_STATUS_MASK) != MHB_PWR_STATUS_MASK) {
-+		dev_err(core->dev, "PAXC is not powered up\n");
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static int sr_pcie_phy_exit(struct phy *p)
-+{
-+	/* dummy function to allow host driver to proceed */
-+	return 0;
-+}
-+
-+static int sr_pcie_phy_power_on(struct phy *p)
-+{
-+	/* dummy function to allow host driver to proceed */
-+	return 0;
-+}
-+
-+static int sr_pcie_phy_power_off(struct phy *p)
-+{
-+	/* dummy function to allow host to proceed */
-+	return 0;
-+}
-+
-+static const struct phy_ops sr_pcie_phy_ops = {
-+	.init = sr_pcie_phy_init,
-+	.exit = sr_pcie_phy_exit,
-+	.power_on = sr_pcie_phy_power_on,
-+	.power_off = sr_pcie_phy_power_off,
-+};
-+
-+static const struct phy_ops sr_paxc_phy_ops = {
-+	.init = sr_paxc_phy_init,
-+	.exit = sr_pcie_phy_exit,
-+	.power_on = sr_pcie_phy_power_on,
-+	.power_off = sr_pcie_phy_power_off,
-+};
-+
-+static struct phy *sr_pcie_phy_xlate(struct device *dev,
-+				     struct of_phandle_args *args)
-+{
-+	struct sr_pcie_phy_core *core;
-+	int phy_idx;
-+
-+	core = dev_get_drvdata(dev);
-+	if (!core)
-+		return ERR_PTR(-EINVAL);
-+
-+	phy_idx = args->args[0];
-+
-+	if (WARN_ON(phy_idx >= SR_NR_PCIE_PHYS))
-+		return ERR_PTR(-ENODEV);
-+
-+	return core->phys[phy_idx].phy;
-+}
-+
-+static int sr_pcie_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *node = dev->of_node;
-+	struct sr_pcie_phy_core *core;
-+	struct resource *res;
-+	struct phy_provider *provider;
-+	unsigned int phy_idx = 0;
-+
-+	core = devm_kzalloc(dev, sizeof(*core), GFP_KERNEL);
-+	if (!core)
-+		return -ENOMEM;
-+
-+	core->dev = dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	core->base = devm_ioremap_resource(core->dev, res);
-+	if (IS_ERR(core->base))
-+		return PTR_ERR(core->base);
-+
-+	core->cdru = syscon_regmap_lookup_by_phandle(node, "brcm,sr-cdru");
-+	if (IS_ERR(core->cdru)) {
-+		dev_err(core->dev, "unable to find CDRU device\n");
-+		return PTR_ERR(core->cdru);
-+	}
-+
-+	core->mhb = syscon_regmap_lookup_by_phandle(node, "brcm,sr-mhb");
-+	if (IS_ERR(core->mhb)) {
-+		dev_err(core->dev, "unable to find MHB device\n");
-+		return PTR_ERR(core->mhb);
-+	}
-+
-+	/* read the PCIe PIPEMUX strap setting */
-+	core->pipemux = pipemux_strap_read(core);
-+	if (!pipemux_strap_is_valid(core->pipemux)) {
-+		dev_err(core->dev, "invalid PCIe PIPEMUX strap %u\n",
-+			core->pipemux);
-+		return -EIO;
-+	}
-+
-+	for (phy_idx = 0; phy_idx < SR_NR_PCIE_PHYS; phy_idx++) {
-+		struct sr_pcie_phy *p = &core->phys[phy_idx];
-+		const struct phy_ops *ops;
-+
-+		if (phy_idx == SR_PAXC_PHY_IDX)
-+			ops = &sr_paxc_phy_ops;
-+		else
-+			ops = &sr_pcie_phy_ops;
-+
-+		p->phy = devm_phy_create(dev, NULL, ops);
-+		if (IS_ERR(p->phy)) {
-+			dev_err(dev, "failed to create PCIe PHY\n");
-+			return PTR_ERR(p->phy);
-+		}
-+
-+		p->core = core;
-+		p->index = phy_idx;
-+		phy_set_drvdata(p->phy, p);
-+	}
-+
-+	dev_set_drvdata(dev, core);
-+
-+	provider = devm_of_phy_provider_register(dev, sr_pcie_phy_xlate);
-+	if (IS_ERR(provider)) {
-+		dev_err(dev, "failed to register PHY provider\n");
-+		return PTR_ERR(provider);
-+	}
-+
-+	dev_info(dev, "Stingray PCIe PHY driver initialized\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id sr_pcie_phy_match_table[] = {
-+	{ .compatible = "brcm,sr-pcie-phy" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, sr_pcie_phy_match_table);
-+
-+static struct platform_driver sr_pcie_phy_driver = {
-+	.driver = {
-+		.name		= "sr-pcie-phy",
-+		.of_match_table	= sr_pcie_phy_match_table,
-+	},
-+	.probe	= sr_pcie_phy_probe,
-+};
-+module_platform_driver(sr_pcie_phy_driver);
-+
-+MODULE_AUTHOR("Ray Jui <ray.jui@broadcom.com>");
-+MODULE_DESCRIPTION("Broadcom Stingray PCIe PHY driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.1.4
+SGVsbG8uCgpPbiAwMS4wNy4yMDE4IDEzOjA3LCBBbmRyZWFzIEbDpHJiZXIgd3JvdGU6Cj4gCj4g
+VGhpcyBwYXRjaHNldCwgdXBkYXRlZCBmcm9tIDIwMTcgYW5kIGV4dGVuZGVkLCBpcyBpbXBsZW1l
+bnRpbmcga2VybmVsIGRyaXZlcnMKPiBmb3IgdmFyaW91cyBMb1JhIGNoaXBzZXRzIGFuZCBtb2R1
+bGVzLgoKSSBhbSB2ZXJ5IGhhcHB5IHRvIHNlZSB0aGF0IHdlIG5vdyBoYXZlIHRocmVlIHBlb3Bs
+ZSAoeW91LCBKaWFuLUhvbmcgYW5kCkJlbikgd29ya2luZyB0b3dhcmRzIGEgbG9yYSBzdWJzeXN0
+ZW0gZm9yIHByb3RvY29sIHN0YWNrIGFuZCBkcml2ZXJzLgoKV2lsbCBhbGxvY2F0ZSBzb21lIHRp
+bWUgdG8gbG9vayBvdmVyIHRoaXMgYW5kIHByb3ZpZGUgc29tZSByZXZpZXcgYW5kCmZlZWRiYWNr
+IGhvdyB3ZSBoYW5kbGVkIHRoaW5ncyBpbiB0aGUgaWVlZTgwMjE1NCBhbmQgNmxvd3BhbiBzdWJz
+eXN0ZW1zLgoKV2UgYXJlIGFsc28gaGF2aW5nIGEgSW9UIHByb3RvY29scyB3b3Jrc2hvcCBkdXJp
+bmcgTmV0RGV2IENvbmYgbmV4dCB3ZWVrCmluIE1vbnRyZWFsIChzaG9ydCBub3RpY2UgaWYgeW91
+IGFyZSBub3QgYWxyZWFkeSBwbGFubmluZyB0byBhdHRlbmQpLiBJZgp5b3UgKG9yIEJlbikgaGFz
+IHNvZW0gdG9waWNzIHdhbnRlZCB0byBicmluZyB1cCB0aGVpciBwbGVhc2UgbGV0IG1lIGtub3cK
+YnkgcG0uIEppYW4tSG9uZyB3aWxsIGJlIHRoZXJlIHByZXNlbnRpbmcgb24gaGlzIGxvcmEgd29y
+ayBhbmQgSSB3b3VsZApsb3ZlIHRvIGdldCBtb3JlIGlucHV0IGZyb20geW91IGFuZCBCZW4gb24g
+eW91ciB2aWV3cyBvbiB0aGlzLgoKaHR0cHM6Ly9uZXRkZXZjb25mLm9yZy8weDEyL3Nlc3Npb24u
+aHRtbD93b3Jrc2hvcC1vbi1pb3QtcmVsYXRlZC1tYWMtbGF5ZXJzLWhlYWRlci1jb21wcmVzc2lv
+bi1hbmQtcm91dGluZy1wcm90b2NvbHMKCnJlZ2FyZHMKU3RlZmFuIFNjaG1pZHQKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwg
+bWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
+bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
