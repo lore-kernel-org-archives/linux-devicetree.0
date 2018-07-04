@@ -1,40 +1,61 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3 0/4] clk: rockchip: support clock controller for px30 SoC
-Date: Wed, 04 Jul 2018 12:08:15 +0200
-Message-ID: <19643053.9AiPb2dtV0@phil>
-References: <1529029011-15021-1-git-send-email-zhangqing@rock-chips.com>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v2 2/5] media: venus: add a routine to set venus state
+Date: Wed, 4 Jul 2018 19:08:59 +0900
+Message-ID: <CAAFQd5Bsh22v7jp8CAO-qQEa6kLk4Qws37DmLZUytAJbUjOCWw@mail.gmail.com>
+References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
+ <1527884768-22392-3-git-send-email-vgarodia@codeaurora.org>
+ <20180601212117.GD11565@jcrouse-lnx.qualcomm.com> <CAAFQd5DH2i+8ZJ+s2XUnmFHwxXKLF6z_=w0Z-RFs=W9oVvrJgw@mail.gmail.com>
+ <ca7567c1df773f1223d919fab28f1460@codeaurora.org> <CAAFQd5BvTNhafus4WcoPLiBTN8X3Ls+YA0OgpfnyadDayvVQxA@mail.gmail.com>
+ <5560573ed426b03ad7676ac14a291e70@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529029011-15021-1-git-send-email-zhangqing@rock-chips.com>
+In-Reply-To: <5560573ed426b03ad7676ac14a291e70@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Elaine Zhang <zhangqing@rock-chips.com>
-Cc: sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, cl@rock-chips.com, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com
+To: vgarodia@codeaurora.org
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, bjorn.andersson@linaro.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>, linux-media-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Elaine,
+On Wed, Jul 4, 2018 at 6:41 PM Vikash Garodia <vgarodia@codeaurora.org> wrote:
+>
+> On 2018-07-04 14:30, Tomasz Figa wrote:
+> > On Wed, Jul 4, 2018 at 4:59 PM Vikash Garodia <vgarodia@codeaurora.org>
+> > wrote:
+> >> On 2018-06-04 18:24, Tomasz Figa wrote:
+> >> > On Sat, Jun 2, 2018 at 6:21 AM Jordan Crouse <jcrouse@codeaurora.org>
+> >> > wrote:
+> >> >> On Sat, Jun 02, 2018 at 01:56:05AM +0530, Vikash Garodia wrote:
+> >> > Given that this function is supposed to substitute existing calls into
+> >> > qcom_scm_set_remote_state(), why not just do something like this:
+> >> >
+> >> >         if (qcom_scm_is_available())
+> >> >                 return qcom_scm_set_remote_state(state, 0);
+> >> >
+> >> >         switch (state) {
+> >> >         case TZBSP_VIDEO_SUSPEND:
+> >> >                 writel_relaxed(1, reg_base + WRAPPER_A9SS_SW_RESET);
+> >> >                 break;
+> >> >         case TZBSP_VIDEO_RESUME:
+> >> >                 venus_reset_hw(core);
+> >> >                 break;
+> >> >         }
+> >> >
+> >> >         return 0;
+> >> This will not work as driver will write on the register irrespective
+> >> of
+> >> scm
+> >> availability.
+> >
+> > I'm sorry, where would it do so? The second line returns from the
+> > function inf SCM is available, so the rest of the function wouldn't be
+> > executed.
+>
+> Ah!! you are right. That would work as well.
+> I am ok with either way, but would recommend to keep it the existing way
+> as it makes it little more readable.
 
-Am Freitag, 15. Juni 2018, 04:16:47 CEST schrieb Elaine Zhang:
-> Change in V3:
-> [PATCH v3 1/4]: Correct description
-> [PATCH v3 2/4]: Use an SPDX tag instead.
-> [PATCH v3 3/4]: Use an SPDX tag instead,
-> 		parent_rate might overflow and fix it.
-> 		fix up the checkpatch warning.
-> 		add more CMPOSITE_xxx_HALFdiv.
-> 
-> Change in V2:
-> [PATCH v2 2/4]: modify the Author name
-> [PATCH v2 3/4]: provide a bit more explanation for commit message
-> 
-> Elaine Zhang (4):
->   dt-bindings: add bindings for px30 clock controller
->   clk: rockchip: add dt-binding header for px30
->   clk: rockchip: add support for half divider
->   clk: rockchip: add clock controller for px30
+I personally think the early exit is more readable, as it clearly
+separates the SCM and non-SCM part.
 
-I've applied the set for 4.19 but dropped the panic-notifier
-dump function from the px30 clock driver.
-
-Heiko
+Best regards,
+Tomasz
