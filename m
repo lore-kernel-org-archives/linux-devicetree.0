@@ -1,57 +1,56 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 3/8] drm/bridge/synopsys: dsi: defer probing if panel
- not available in bridge-attach
-Date: Wed, 04 Jul 2018 12:36:15 +0200
-Message-ID: <2796749.EVdO9cK1mC@phil>
-References: <20180618102806.15650-1-heiko@sntech.de>
- <20180618102806.15650-4-heiko@sntech.de>
- <20180703124251eucas1p25b137491e5e1adc8ce3cfc36650e82cb~93GQzL7MQ0183501835eucas1p2a@eucas1p2.samsung.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v5 08/12] cpufreq: Add stub for cpufreq_update_policy()
+Date: Wed, 04 Jul 2018 12:41:21 +0200
+Message-ID: <2392356.ug1cyb9g3O@aspire.rjw.lan>
+References: <20180703234705.227473-1-mka@chromium.org> <20180703234705.227473-9-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180703124251eucas1p25b137491e5e1adc8ce3cfc36650e82cb~93GQzL7MQ0183501835eucas1p2a@eucas1p2.samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, dri-devel@lists.freedesktop.org, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, mka@chromium.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180703234705.227473-9-mka@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRGllbnN0YWcsIDMuIEp1bGkgMjAxOCwgMTQ6NDI6NDkgQ0VTVCBzY2hyaWViIEFuZHJ6ZWog
-SGFqZGE6Cj4gT24gMTguMDYuMjAxOCAxMjoyOCwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gPiBX
-aGVuIHRoZSBwYW5lbC1kcml2ZXIgaXMgYnVpbGQgYXMgYSBtb2R1bGUgaXQgY3VycmVudGx5IGZh
-aWxzIGhhcmQgYXMgdGhlCj4gPiBwYW5lbCBjYW5ub3QgYmUgcHJvYmVkIGRpcmVjdGx5Ogo+ID4K
-PiA+IGR3X21pcGlfZHNpX2JpbmQoKQo+ID4gICBfX2R3X21pcGlfZHNpX3Byb2JlKCkKPiA+ICAg
-ICBjcmVhdGVzIGRzaSBidXMKPiA+ICAgICBjcmVhdGVzIHBhbmVsIGRldmljZQo+ID4gICAgIHRy
-aWdnZXJzIHBhbmVsIG1vZHVsZSBsb2FkCj4gPiAgICAgcGFuZWwgbm90IHByb2JlZCAobW9kdWxl
-IG5vdCBsb2FkZWQgb3IgcGFuZWwgcHJvYmUgc2xvdykKPiA+ICAgZHJtX2JyaWRnZV9hdHRhY2gK
-PiA+ICAgICBmYWlscyB3aXRoIC1FSU5WQUwgZHVlIHRvIGVtcHR5IHBhbmVsX2JyaWRnZQo+ID4K
-PiA+IFNvIGVtaXQgYSAtRVBST0JFX0RFRkVSIGluIHRoYXQgY2FzZSB0byBnaXZlIHRoZSBkcml2
-ZXIgYW5vdGhlcgo+ID4gY2hhbmNlIGF0IGdldHRpbmcgdGhlIGRpc3BsYXkgbGF0ZXIuCj4gCj4g
-VGhhdHMgb2RkIChhdCBsZWFzdCBmb3IgbWUpLCBpZiB0aGUgcmVzb3VyY2UgKHBhbmVsIGluIHRo
-aXMgY2FzZSkgaXMgbm90Cj4gcHJlc2VudCwgYnJpZGdlIHNob3VsZCBub3QgYmUgYXR0YWNoZWQg
-KGRybV9icmlkZ2VfYXR0YWNoIHNob3VsZCBub3QgYmUKPiBjYWxsZWQpLiBJZSBfX2R3X21pcGlf
-ZHNpX3Byb2JlIHNob3VsZCByYXRoZXIgbG9vayBmb3IgdGhlIHBhbmVsIGFuZAo+IGRlZmVyIGlm
-IG5vdCBmb3VuZC4gUmVzb3VyY2UgZ2F0aGVyaW5nIGlzIHRoZSB0YXNrIG9mIHByb2JlLgo+IGRy
-bV9icmlkZ2VfYXR0YWNoIGNhbiBiZSBjYWxsZWQgYWZ0ZXIgcHJvYmUgYW5kIGl0IHdvdWxkIGJl
-IGRpZmZpY3VsdAo+IGZvciB0aGUgY2FsbGVyIHRvIHJlYWN0IHByb3Blcmx5IGZvciAtRVBST0JF
-X0RFRkVSIGVycm9yLgoKSSB0aGluayBvbmUgb2YgdGhlIHByb2JsZW1zIGNvbWVzIGZyb20gdGhl
-IGZhY3QgdGhhdCB0aGUgcGFuZWwgb25seQpnZXRzIHByb2JlZCAoYW5kIGV2ZW4gdGhlIHBhbmVs
-LWRldmljZSBjcmVhdGVkKSBhZnRlciB0aGUgZHNpIGhvc3QgYnVzCmdldHMgY3JlYXRlZCBpbiBf
-X2R3X21pcGlfZHNpX3Byb2JlLgoKCkluIGhpbmRzaWdodCwgSSB0aGluayB0aGlzIGlzIG1vcmUg
-b2YgYSBjb25jdXJyZW5jeSBpc3N1ZSBiZXR3ZWVuIHRoZQpwYW5lbCBwcm9iaW5nIGFuZCBjYWxs
-aW5nIGRzaS1hdHRhY2ggYW5kIHRoZSBkc2ktY29udHJvbGxlciBsb29raW5nIGZvcgp0aGUgcGFu
-ZWwgdnMuIHBhbmVsLWJyaWRnZS4KClNvIHdoZW4gSSdtIHVzaW5nIGRybV9vZl9maW5kX3BhbmVs
-X29yX2JyaWRnZSgpIGFzIGluZGljYXRvciBvZiB0aGUKcGFuZWwgYmVpbmcsIGl0IHByb2JhYmx5
-IG1ha2VzIHRoaW5ncyByYWN5LiBJJ2xsIHRyeSB0byBmaW5kIGEgYmV0dGVyCnNvbHV0aW9uIGZv
-ciB0aGUgaXNzdWUuCgoKSGVpa28KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+On Wednesday, July 4, 2018 1:47:01 AM CEST Matthias Kaehlcke wrote:
+> cpufreq stubs out some functions when CONFIG_CPU_FREQ=n , but
+> cpufreq_update_policy() is not among them. The throttler driver
+> (https://patchwork.kernel.org/patch/10453351/) uses cpufreq as one
+> possible throttling mechanism, but it can still be useful without
+> cpufreq. Stubbing out cpufreq_update_policy() allows the throttler
+> driver to be built without ugly #ifdef'ery when cpufreq is disabled.
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Reviewed-by: Brian Norris <briannorris@chromium.org>
+> ---
+> Changes in v5:
+> - none
+> 
+> Changes in v4:
+> - added 'Reviewed-by: Brian Norris <briannorris@chromium.org>' tag
+> 
+> Changes in v3:
+> - patch added to series
+> ---
+>  include/linux/cpufreq.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+> index 882a9b9e34bc..dba8c4951e2e 100644
+> --- a/include/linux/cpufreq.h
+> +++ b/include/linux/cpufreq.h
+> @@ -210,6 +210,7 @@ static inline unsigned int cpufreq_quick_get_max(unsigned int cpu)
+>  	return 0;
+>  }
+>  static inline void disable_cpufreq(void) { }
+> +static inline void cpufreq_update_policy(unsigned int cpu) { }
+>  #endif
+>  
+>  #ifdef CONFIG_CPU_FREQ_STAT
+> 
+
+I can take this patch if you want me to.
+
+Thanks,
+Rafael
