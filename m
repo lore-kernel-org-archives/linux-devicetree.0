@@ -1,51 +1,104 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v7 1/4] mfd: bd71837: mfd driver for ROHM BD71837 PMIC
-Date: Wed, 4 Jul 2018 14:56:23 +0000
-Message-ID: <20180704145623.zgei3ehrwdpcu26r@penguin>
-References: <cover.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
- <7e1888375c979accc402e9ddd7316e528b2ac52c.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
- <CAFqH_51izuVgHukAORvwjZqGhxy85tdNdaHL9mOUnPnbCQmQjA@mail.gmail.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 09/17] irqchip/irq-mvebu-icu: support ICU subnodes
+Date: Wed, 4 Jul 2018 17:16:22 +0200
+Message-ID: <20180704171622.2df87519@xps13>
+References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
+ <20180622151432.1566-10-miquel.raynal@bootlin.com>
+ <61ff2e4f-55b6-cf70-5f04-32cd197c35f8@arm.com>
+ <20180704110917.65557d0a@xps13>
+ <f4d1d42c-98b9-a485-0baf-2248114f8c8a@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFqH_51izuVgHukAORvwjZqGhxy85tdNdaHL9mOUnPnbCQmQjA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo Serra <eballetbo@gmail.com>
-Cc: matti.vaittinen@fi.rohmeurope.com, Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, mazziesaccount@gmail.com, Arnd Bergmann <arnd@arndb.de>, Sebastian Reichel <sre@kernel.org>, chenjh@rock-chips.com, andrew.smirnov@gmail.com, Linus Walleij <linus.walleij@linaro.org>, Kate Stewart <kstewart@linuxfoundation.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-input@vger.kernel.org, mikko
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <f4d1d42c-98b9-a485-0baf-2248114f8c8a@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Enric,
-
-On Tue, Jun 26, 2018 at 11:06:33AM +0200, Enric Balletbo Serra wrote:
-> Hi Matti,
-> 
-> Thanks for the patch, a few comments below, some are feedback I
-> received when I sent some patches to this subsystem.
-> 
-> Missatge de Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com> del
-> dia dt., 19 de juny 2018 a les 12:57:
-> > +};
-> > +
-> > +/* bd71837 multi function cells */
-> > +static struct mfd_cell bd71837_mfd_cells[] = {
-> > +       {
-> > +               .name = "bd71837-clk",
-> > +       }, {
-> > +               .name = "bd718xx-pwrkey",
-> > +               .resources = &irqs[0],
-> > +               .num_resources = ARRAY_SIZE(irqs),
-> > +       }, {
-> > +               .name = "bd71837-pmic",
-> > +       },
-> nit: no comma at the end
-
-Actually, trailing comma is preferred on structures/arrays without
-sentinels, because if one needs to add a new entry/new member, then in
-the diff there will have only one new line added, instead of one line
-being changed (adding now necessary comma) and one added.
-
-Thanks.
-
--- 
-Dmitry
+SGkgTWFyYywKCk1hcmMgWnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+IHdyb3RlIG9uIFdl
+ZCwgNCBKdWwgMjAxOCAxMzo0Mzo1OAorMDEwMDoKCj4gT24gMDQvMDcvMTggMTA6MDksIE1pcXVl
+bCBSYXluYWwgd3JvdGU6Cj4gPiBIaSBNYXJjLAo+ID4gCj4gPiBNYXJjIFp5bmdpZXIgPG1hcmMu
+enluZ2llckBhcm0uY29tPiB3cm90ZSBvbiBUaHUsIDI4IEp1biAyMDE4IDEzOjQ1OjA5Cj4gPiAr
+MDEwMDoKPiA+ICAgCj4gPj4gT24gMjIvMDYvMTggMTY6MTQsIE1pcXVlbCBSYXluYWwgd3JvdGU6
+ICAKPiA+Pj4gVGhlIElDVSBjYW4gaGFuZGxlIHNldmVyYWwgdHlwZSBvZiBpbnRlcnJ1cHQsIGVh
+Y2ggb2YgdGhlbSBiZWluZyBoYW5kbGVkCj4gPj4+IGRpZmZlcmVudGx5IG9uIEFQIHNpZGUuIE9u
+IENQIHNpZGUsIHRoZSBJQ1Ugc2hvdWxkIGJlIGFibGUgdG8gbWFrZSB0aGUKPiA+Pj4gZGlzdGlu
+Y3Rpb24gYmV0d2VlbiBlYWNoIGludGVycnVwdCBncm91cCBieSBwb2ludGluZyB0byB0aGUgcmln
+aHQgcGFyZW50Lgo+ID4+Pgo+ID4+PiBUaGlzIGlzIGRvbmUgdGhyb3VnaCB0aGUgaW50cm9kdWN0
+aW9uIG9mIG5ldyBiaW5kaW5ncywgcHJlc2VudGluZyB0aGUgSUNVCj4gPj4+IG5vZGUgYXMgdGhl
+IHBhcmVudCBvZiBtdWx0aXBsZSBJQ1Ugc3ViLW5vZGVzLCBlYWNoIG9mIHRoZW0gYmVpbmcgYW4K
+PiA+Pj4gaW50ZXJydXB0IHR5cGUgd2l0aCBhIGRpZmZlcmVudCBpbnRlcnJ1cHQgcGFyZW50LiBJ
+Q1UgaW50ZXJydXB0ICdjbGllbnRzJwo+ID4+PiBub3cgZGlyZWN0bHkgcG9pbnQgdG8gdGhlIHJp
+Z2h0IHN1Yi1ub2RlLCBhdm9pZGluZyB0aGUgbmVlZCBmb3IgdGhlIGV4dHJhCj4gPj4+IElDVV9H
+UlBfKiBwYXJhbWV0ZXIuCj4gPj4+Cj4gPj4+IElDVSBzdWJub2RlcyBhcmUgcHJvYmVkIGF1dG9t
+YXRpY2FsbHkgd2l0aCBkZXZtX3BsYXRmb3JtX3BvcHVsYXRlKCkuIElmCj4gPj4+IHRoZSBub2Rl
+IGFzIG5vIGNoaWxkLCB0aGUgcHJvYmUgZnVuY3Rpb24gZm9yIE5TUnMgd2lsbCBzdGlsbCBiZSBj
+YWxsZWQKPiA+Pj4gJ21hbnVhbGx5JyBpbiBvcmRlciB0byBwcmVzZXJ2ZSBiYWNrd2FyZCBjb21w
+YXRpYmlsaXR5IHdpdGggRFQgdXNpbmcgdGhlCj4gPj4+IG9sZCBiaW5kaW5nLgo+ID4+Pgo+ID4+
+PiBTaWduZWQtb2ZmLWJ5OiBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29t
+Pgo+ID4+PiAtLS0KPiA+Pj4gIGRyaXZlcnMvaXJxY2hpcC9pcnEtbXZlYnUtaWN1LmMgfCA4OCAr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLQo+ID4+PiAgMSBmaWxlIGNo
+YW5nZWQsIDc0IGluc2VydGlvbnMoKyksIDE0IGRlbGV0aW9ucygtKQo+ID4+Pgo+ID4+PiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9pcnFjaGlwL2lycS1tdmVidS1pY3UuYyBiL2RyaXZlcnMvaXJxY2hp
+cC9pcnEtbXZlYnUtaWN1LmMKPiA+Pj4gaW5kZXggMjRkNDUxODZlYjZiLi5mN2MyZWRlOWMyMjIg
+MTAwNjQ0Cj4gPj4+IC0tLSBhL2RyaXZlcnMvaXJxY2hpcC9pcnEtbXZlYnUtaWN1LmMKPiA+Pj4g
+KysrIGIvZHJpdmVycy9pcnFjaGlwL2lycS1tdmVidS1pY3UuYwo+ID4+PiBAQCAtNDMsNiArNDMs
+NyBAQCBzdHJ1Y3QgbXZlYnVfaWN1IHsKPiA+Pj4gIAlzdHJ1Y3QgcmVnbWFwICpyZWdtYXA7Cj4g
+Pj4+ICAJc3RydWN0IGRldmljZSAqZGV2Owo+ID4+PiAgCWF0b21pY190IGluaXRpYWxpemVkOwo+
+ID4+PiArCWJvb2wgbGVnYWN5X2JpbmRpbmdzOwo+ID4+PiAgfTsKPiA+Pj4gIAo+ID4+PiAgc3Ry
+dWN0IG12ZWJ1X2ljdV9pcnFfZGF0YSB7Cj4gPj4+IEBAIC01MSw2ICs1MiwzMCBAQCBzdHJ1Y3Qg
+bXZlYnVfaWN1X2lycV9kYXRhIHsKPiA+Pj4gIAl1bnNpZ25lZCBpbnQgdHlwZTsKPiA+Pj4gIH07
+Cj4gPj4+ICAKPiA+Pj4gK3N0YXRpYyBzdHJ1Y3QgbXZlYnVfaWN1ICptdmVidV9pY3VfZGV2X2dl
+dF9kcnZkYXRhKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gPj4+ICt7Cj4gPj4+ICsJ
+c3RydWN0IG12ZWJ1X2ljdSAqaWN1Owo+ID4+PiArCj4gPj4+ICsJLyoKPiA+Pj4gKwkgKiBEZXZp
+Y2UgZGF0YSBiZWluZyBwb3B1bGF0ZWQgbWVhbnMgd2Ugc2hvdWxkIGJlIHVzaW5nIGxlZ2FjeSBi
+aW5kaW5ncy4KPiA+Pj4gKwkgKiBVc2luZyB0aGUgX3BhcmVudF8gZGV2aWNlIGRhdGEgbWVhbnMg
+d2Ugc2hvdWxkIGJlIHVzaW5nIG5ldyBiaW5kaW5ncy4KPiA+Pj4gKwkgKi8KPiA+Pj4gKwlpY3Ug
+PSBkZXZfZ2V0X2RydmRhdGEoJnBkZXYtPmRldik7Cj4gPj4+ICsJaWYgKGljdSkgewo+ID4+PiAr
+CQlpZiAoIWljdS0+bGVnYWN5X2JpbmRpbmdzKQo+ID4+PiArCQkJcmV0dXJuIEVSUl9QVFIoLUVJ
+TlZBTCk7Cj4gPj4+ICsJfSBlbHNlIHsKPiA+Pj4gKwkJaWN1ID0gZGV2X2dldF9kcnZkYXRhKHBk
+ZXYtPmRldi5wYXJlbnQpOwo+ID4+PiArCQlpZiAoIWljdSkKPiA+Pj4gKwkJCXJldHVybiBFUlJf
+UFRSKC1FTk9ERVYpOwo+ID4+PiArCj4gPj4+ICsJCWlmIChpY3UtPmxlZ2FjeV9iaW5kaW5ncykK
+PiA+Pj4gKwkJCXJldHVybiBFUlJfUFRSKC1FSU5WQUwpOwo+ID4+PiArCX0gICAgCj4gPj4KPiA+
+PiBEb2Vzbid0IHRoaXMgbWFrZSBsZWdhY3lfYmluZGluZ3MgY29tcGxldGVseSByZWR1bmRhbnQ/
+IEVpdGhlciB0aGUKPiA+PiBwb2ludGVyIGlzICFOVUxMIGluIHRoZSBkZXZpY2UsIGFuZCB0aGlz
+IGlzIHVzaW5nIGEgbGVnYWN5IGJpbmdpbmcsIG9yCj4gPj4gaXQgaXMgc3RvcmVkIGluIHRoZSBw
+YXJlbnQsIGFuZCB0aGlzIGlzIGEgbmV3IGJpbmRpbmcuIFlvdSBjb3VsZCBldmVuCj4gPj4gaGF2
+ZSBhIGhlbHBlciBmb3IgdGhhdDoKPiA+Pgo+ID4+IHN0YXRpYyBib29sIGlzX2xlZ2FjeShzdHJ1
+Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4+IHsKPiA+PiAJcmV0dXJuICFkZXZfZ2V0X2Ry
+dmRhdGEoJnBkZXYtPmRldik7Cj4gPj4gfQo+ID4+Cj4gPj4gVGhlIGRyaXZlciByZWFsbHkgZG9l
+c24ndCBuZWVkIHRvIGJlIGRlZmVuZGluZyBhZ2FpbnN0IGl0c2VsZiwgaWYKPiA+PiBhbnl0aGlu
+ZywgYW5kIGl0IHdvdWxkIHNhdmUgeW91IHF1aXRlIGEgYml0IG9mIGVycm9yIGhhbmRsaW5nIGlu
+IHRoZQo+ID4+IGNhbGxlcnMgb2YgdGhpcyBmdW5jdGlvbi4gIAo+ID4gCj4gPiBJIHNpbXBsaWZp
+ZWQgdGhlIHNhbml0eSBjaGVja3MgYnV0IEkgaGFkIHRvIGtlZXAgYW4gaWN1LT5pc19sZWdhY3kK
+PiA+IGJvb2xlYW4gYmVjYXVzZSB0aGUgYWJvdmUgZnVuY3Rpb24gd291bGQgbm90IGhhdmUgd29y
+a2VkLCBmb3IgaW5zdGFuY2UsCj4gPiBpbiB0aGUgKl90cmFuc2xhdGUoKSBob29rLiBBcyB0aGlz
+IGhvb2sgZG9lcyBub3QgcmVjZWl2ZSBhIHN0cnVjdAo+ID4gZGV2aWNlICogKG9yIHBsYXRmb3Jt
+X2RldmljZSkgYXMgcGFyYW1ldGVyLCBJIHRyaWVkIHRvIHVzZSBpY3UtPmRldgo+ID4gaW5zdGVh
+ZC4gVGhpcyBjYW5ub3Qgd29yayBhcyBpdCBhbHdheXMgcG9pbnRzIHRvIHRoZSBkZXZpY2UgaGF2
+aW5nIHRoZQo+ID4gZHJpdmVyIGRhdGEgYXR0YWNoZWQuICAKPiAKPiBZb3UgY291bGQgc3RpbGwg
+aGF2ZSB0aGUgcGRldiBhcyBwYXJ0IG9mIHRoZSBkb21haW4gaG9zdF9kYXRhLCByaWdodD8KPiBJ
+c24ndCB0aGF0IGp1c3QgYSBtYXR0ZXIgb2YgaGF2aW5nIGEgcG9pbnRlciB0byB0aGUgcGRldiBh
+cyBwYXJ0IG9mIHRoZQo+IGljdSBkYXRhIHN0cnVjdHVyZT8KClRoZXJlIGlzIGFscmVhZHkgYSAn
+c3RydWN0IGRldmljZSAqZGV2JyBwb2ludGVyIGluIHRoZSBJQ1UgZGF0YQpzdHJ1Y3R1cmUuIFRo
+aXMgcG9pbnRlciBpcyBzZXQgdG8gIiZwZGV2LT5kZXYiIGluIHRoZSBtYWluIHByb2JlCmZ1bmN0
+aW9uLgoKTGVnYWN5OiBkZXYgaXMgdGhlIHVuaXF1ZSBJQ1UgZGV2aWNlLCB0aGUgZHJpdmVyIGRh
+dGEgaXMgYXR0YWNoZWQgdG8gaXQuCk5vdzogZGV2IGlzIHRoZSAnaG9zdCcgSUNVIGRldmljZSB0
+aGF0IGlzIHRoZSBwYXJlbnQgb2YgdHdvIG90aGVyCmRldmljZXMsIElDVSBOU1IgY29udHJvbGxl
+ciBhbmQgU0VJIE5TUiBjb250cm9sbGVyLiBUaGUgZHJpdmVyIGRhdGEgaXMKYWxzbyBhdHRhY2hl
+ZCB0byB0aGlzIGRldmljZS4KClNvIGluIGJvdGggc2l0dWF0aW9ucyBjaGVja2luZyBkZXZfZ2V0
+X2RydmRhdGEoaWN1LT5kZXYpIHdvdWxkIHJldHVybiBhCnZhbGlkIHBvaW50ZXIuCgpEb2VzIHRo
+aXMgYW5zd2VyIHlvdXIgcXVlc3Rpb24/CgpLaW5kIHJlZ2FyZHMsCk1pcXXDqGwKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwg
+bWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
+bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
