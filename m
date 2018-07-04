@@ -1,113 +1,57 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH 1/2] dt-bindings: reset: uniphier: add USB3 controller reset support
-Date: Wed, 04 Jul 2018 10:09:38 +0900
-Message-ID: <20180704100938.8235.4A936039@socionext.com>
-References: <1530259891-18822-2-git-send-email-hayashi.kunihiko@socionext.com> <20180703233747.GA850@rob-hp-laptop>
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: Re: [PATCH 1/3] dt-bindings: k3dma: add optional property dma_min_chan
+Date: Wed, 4 Jul 2018 09:14:26 +0800
+Message-ID: <CAFGCpxyx1fqo0ZmthumQbHVJZTZ=mpX7HGg_V8oowmKRfb46VA@mail.gmail.com>
+References: <20180622032416.20133-1-guodong.xu@linaro.org> <20180622032416.20133-2-guodong.xu@linaro.org>
+ <20180703185442.GA18008@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180703233747.GA850@rob-hp-laptop>
+In-Reply-To: <20180703185442.GA18008@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+Cc: vkoul@kernel.org, Mark Rutland <mark.rutland@arm.com>, dan.j.williams@intel.com, liyu65@hisilicon.com, Suzhuangluan <suzhuangluan@hisilicon.com>, "xuhongtao (A)" <xuhongtao8@hisilicon.com>, zhongkaihua <zhongkaihua@huawei.com>, Xuezhiliang <xuezhiliang@hisilicon.com>, "xupeng (Q)" <xupeng7@huawei.com>, sunliang10@huawei.com, "Fengbaopeng (kevin, Kirin Solution Dept)" <fengbaopeng@hisilicon.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Tue, 3 Jul 2018 17:37:47 -0600 <robh@kernel.org> wrote:
-
-> On Fri, Jun 29, 2018 at 05:11:30PM +0900, Kunihiko Hayashi wrote:
-> > Add DT bindings for reset control of USB3 controller implemented in
-> > UniPhier SoCs.
-> > 
-> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+On Wed, Jul 4, 2018 at 2:54 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Jun 22, 2018 at 11:24:14AM +0800, Guodong Xu wrote:
+> > From: Li Yu <liyu65@hisilicon.com>
+> >
+> > Add optional property dma_min_chan for k3dma.
+> >
+> > Signed-off-by: Li Yu <liyu65@hisilicon.com>
 > > ---
-> >  .../devicetree/bindings/reset/uniphier-reset.txt   | 45 ++++++++++++++++++++++
-> >  1 file changed, 45 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-> > index 93efed6..f21d81c 100644
-> > --- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-> > +++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-> > @@ -118,3 +118,48 @@ Example:
-> >  
-> >  		other nodes ...
-> >  	};
-> > +
-> > +
-> > +USB3 controller reset
-> > +---------------------
-> > +
-> > +Required properties:
-> > +- compatible: Should be
-> > +    "socionext,uniphier-pro4-usb3-reset" - for Pro4 SoC
-> > +    "socionext,uniphier-pxs2-usb3-reset" - for PXs2 SoC
-> > +    "socionext,uniphier-ld20-usb3-reset" - for LD20 SoC
-> > +    "socionext,uniphier-pxs3-usb3-reset" - for PXs3 SoC
-> > +- #reset-cells: Should be 1.
-> > +- reg: Specifies offset and length of the register set for the device.
-> > +- clocks: A list of phandles to the clock gate for USB3 glue layer.
-> > +	According to the clock-names, appropriate clocks are required.
-> > +- clock-names: Should contain
-> > +    "gio", "link" - for Pro4 SoC
-> > +    "link"        - for others
-> > +- resets: A list of phandles to the reset control for USB3 glue layer.
-> > +	According to the reset-names, appropriate resets are required.
-> > +- reset-names: Should contain
-> > +    "gio", "link" - for Pro4 SoC
-> > +    "link"        - for others
-> > +
-> > +Example:
-> > +
-> > +	usb-glue@65b00000 {
-> > +		compatible = "socionext,uniphier-ld20-dwc3-glue",
-> > +			     "simple-mfd";
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		ranges = <0 0x65b00000 0x400>;
-> > +
-> > +		usb_rst: reset@0 {
-> > +			compatible = "socionext,uniphier-ld20-usb3-reset";
-> 
-> This looks weird. You have a reset controller within the USB block? And 
-> then a parent reset controller too?
+> >  Documentation/devicetree/bindings/dma/k3dma.txt | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/t b/Documentation/devicetree/bindings/dma/k3dma.txt
+> > index 4945aeac4dc4..2fa1370c3173 100644
+> > --- a/Documentation/devicetree/bindings/dma/k3dma.txt
+> > +++ b/Documentation/devicetree/bindings/dma/k3dma.txt
+> > @@ -12,6 +12,11 @@ Required properties:
+> >               have specific request line
+> >  - clocks: clock required
+> >
+> > +Optional properties:
+> > +- dma_min_chan: the minimum number of DMA channel which begin to use
+> > +             the default value is 0, but in some platform is
+> > +             configured 1, like hi3660 platform
+>
+> Can't this be implied by the compatible?
+>
 
-Yes, this reset control is included in USB3 glue layer, and this is necessary 
-to enable USB3 core. The following diagram shows those relationships.
+No. "hisilicon,k3-dma-1.0" can work with series of hisilicon kirin
+SoC. And each has different reservation of channels for on-chip
+coprocessors.
 
-	USB3 block
-	|
-	+---USB3 glue layer
-	|   |
-	|   +--- usb3-reset
-	|   |
-	|   +--- usb3-regluator
-	|   |
-	|   +--- usb3-phy
-	|
-	+---USB3 core
+> If not, needs vendor prefix and don't use '_' in property names.
+>
 
-The system reset, as parent reset controller, is necessary to enable
-the entire USB3 block including the glue layer.
+Sure, thanks. Will change that when design new property. As Vinod
+suggested, it makes sense to change this to a mask.
 
-> > +			reg = <0x0 0x4>;
-> > +			#reset-cells = <1>;
-> > +			clock-names = "link";
-> > +			clocks = <&sys_clk 14>;
-> > +			clock-names = "link";
-> > +			resets = <&sys_rst 14>;
-> > +		};
-> > +
-> > +		other nodes ...
-> 
-> What other nodes?
 
-As mentioned above, the glue layer consists of reset, regulator, and phy.
-I assume that the "other nodes" mean that these nodes are placed.
+-Guodong
 
-Thank you,
-
----
-Best Regards,
-Kunihiko Hayashi
+> Rob
