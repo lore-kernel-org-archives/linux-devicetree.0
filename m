@@ -1,53 +1,56 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v10 5/7] i2c: fsi: Add transfer implementation
-Date: Thu, 5 Jul 2018 23:59:42 +0200
-Message-ID: <20180705215941.25lniljxnzcopsp7@tetsubishi>
-References: <1528918579-27602-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1528918579-27602-6-git-send-email-eajames@linux.vnet.ibm.com>
- <20180626023823.i3fmdegn2sric5kx@ninjato>
- <6713efb9-c4c3-f648-a1e9-7918110091e4@linux.vnet.ibm.com>
- <20180702182434.5wxxszpgpf6wergl@ninjato>
- <ab5a5b9c-931e-e8ca-d064-92a917e00a3b@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jbuejn5n2u6fhqy6"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ab5a5b9c-931e-e8ca-d064-92a917e00a3b@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.vnet.ibm.com>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, benh@kernel.crashing.org, joel@jms.id.au, mark.rutland@arm.com, gregkh@linuxfoundation.org, rdunlap@infradead.org, andy.shevchenko@gmail.com, peda@axentia.se
+From: thor.thayer@linux.intel.com
+Subject: [PATCH] arm64: dts: stratix10: Fix SPI nodes for Stratix10
+Date: Thu,  5 Jul 2018 17:02:19 -0500
+Message-ID: <1530828139-16120-1-git-send-email-thor.thayer@linux.intel.com>
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: stable@vger.kernel.org
+Cc: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thor Thayer <thor.thayer@linux.intel.com>, #@vger.kernel.org, 4.14.x@vger.kernel.org, 4.9.x@vger.kernel.org, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
---jbuejn5n2u6fhqy6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Patch did not apply cleanly to 4.9 and 4.14 stable branches
+because of additional node properties added after 4.14. So
+backport patch and cleanup commit 4595299c5eae ("arm64: dts:
+   stratix10: Fix SPI nodes for Stratix10")
 
-> I meant that the hardware cannot interpret this, it would be a meaningless
-> command unfortunately.
+Remove the unused bus-num node and change num-chipselect
+to num-cs to match SPI bindings.
 
-I see. Thanks for double-checking.
+Cc: stable@vger.kernel.org # 4.14.x
+Cc: stable@vger.kernel.org # 4.9.x
+Fixes: 78cd6a9d8e154 ("arm64: dts: Add base stratix 10 dtsi")
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+Signed-off-by: Olof Johansson <olof@lixom.net>
+---
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-
---jbuejn5n2u6fhqy6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAls+lMUACgkQFA3kzBSg
-KbYrMQ//Szqy7H8ny/ePnGdQoC+aBNI7ua2lPaS1u+dvzlSnqmuh5eSsQZ0m+RLr
-02g3U2/EYtwU+9g7Qu5kjAanpV2aDlhdTl4PsU9B382zd7Rvs2l4iZAhw4kFtEl9
-bnb+mUfVWNZW21PhqeD51AjBjXMA2rW1nHSozhMtesHfWAqwvGcUE54w4Zc35EZS
-3yh2+1M6fTAKh77LGjBU65aJZb4cwSf+KO8UOUsOzG8s9ZC6LYsJZIWMLEc7mhQA
-dr7vxmwCMi2tf5OSsH8QN39cRMSMOxTdxmLGKjZPFIb+i7YWfWsx6zrPCb2X7kJi
-GDko5LmGgJA2j93BVGF1jdjZX6FyxE6yxXjCWXbbrkuiVqDBVk8Id9WH9QnlifV7
-pYXrboKLQ/aIeH5zo3LBSPpWbz9obBXN8c40D8fUljv+jrz2HHF/4iVA9GsNSa+y
-1qWFbVsbjXg2fznkyOSg+e3zNSVQ8myD+r47WpjMEfLXPeDpYXF6eWOhgL4mlqn1
-lwEa2Y/maQKipTowhuC0bH7G82uw25OqR6WZ2dqyTRGivmui7p4KUQrYCzbnZPYZ
-Yrd2eJGzqZbiKIXrcObq9VajOKJWIbgaBAZwk2ZRyvNqcR35+iQzlSot76IY63M6
-60R4hSgQNLwTMXwaMsS5nUiia2mBhF+YOjp1tzu+8q5vY9PUjdc=
-=CJql
------END PGP SIGNATURE-----
-
---jbuejn5n2u6fhqy6--
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index c2b9bcb0ef61..57f75453ee93 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -231,8 +231,7 @@
+ 			#size-cells = <0>;
+ 			reg = <0xffda4000 0x1000>;
+ 			interrupts = <0 101 4>;
+-			num-chipselect = <4>;
+-			bus-num = <0>;
++			num-cs = <4>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -242,8 +241,7 @@
+ 			#size-cells = <0>;
+ 			reg = <0xffda5000 0x1000>;
+ 			interrupts = <0 102 4>;
+-			num-chipselect = <4>;
+-			bus-num = <0>;
++			num-cs = <4>;
+ 			status = "disabled";
+ 		};
+ 
+-- 
+2.7.4
