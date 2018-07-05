@@ -1,193 +1,79 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 01/14] dmaengine: dma-jz4780: Avoid hardcoding number of
- channels
-Date: Thu, 05 Jul 2018 20:26:38 +0200
-Message-ID: <1530815198.6642.1@smtp.crapouillou.net>
-References: <20180703123214.23090-1-paul@crapouillou.net>
-        <20180703123214.23090-2-paul@crapouillou.net>
-        <CANc+2y4ZJDKou4x570zNv82fSAxiOpbZfd3rFNB2M5Ft1C3eiQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: [PATCH v11 0/8] i2c: Add FSI-attached I2C master algorithm
+Date: Thu,  5 Jul 2018 13:40:22 -0500
+Message-ID: <1530816030-13010-1-git-send-email-eajames@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANc+2y4ZJDKou4x570zNv82fSAxiOpbZfd3rFNB2M5Ft1C3eiQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>
+To: linux-i2c@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, robh+dt@kernel.org, benh@kernel.crashing.org, joel@jms.id.au, mark.rutland@arm.com, gregkh@linuxfoundation.org, rdunlap@infradead.org, andy.shevchenko@gmail.com, peda@axentia.se, Eddie James <eajames@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi PrasannaKumar,
+This series adds an algorithm for an I2C master physically located on an FSI
+slave device. The I2C master has multiple ports, each of which may be connected
+to an I2C slave. Access to the I2C master registers is achieved over FSI bus.
 
-> Hi Paul,
-> 
-> On 3 July 2018 at 18:02, Paul Cercueil <paul@crapouillou.net> wrote:
->>  As part of the work to support various other Ingenic JZ47xx SoC 
->> versions,
->>  which don't feature the same number of DMA channels per core, we now
->>  deduce the number of DMA channels available from the devicetree
->>  compatible string.
->> 
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  ---
->>   drivers/dma/dma-jz4780.c | 53 
->> +++++++++++++++++++++++++++++-----------
->>   1 file changed, 39 insertions(+), 14 deletions(-)
->> 
->>  diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
->>  index 85820a2d69d4..b40f491f0367 100644
->>  --- a/drivers/dma/dma-jz4780.c
->>  +++ b/drivers/dma/dma-jz4780.c
->>  @@ -16,6 +16,7 @@
->>   #include <linux/interrupt.h>
->>   #include <linux/module.h>
->>   #include <linux/of.h>
->>  +#include <linux/of_device.h>
->>   #include <linux/of_dma.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/slab.h>
->>  @@ -23,8 +24,6 @@
->>   #include "dmaengine.h"
->>   #include "virt-dma.h"
->> 
->>  -#define JZ_DMA_NR_CHANNELS     32
->>  -
->>   /* Global registers. */
->>   #define JZ_DMA_REG_DMAC                0x1000
->>   #define JZ_DMA_REG_DIRQP       0x1004
->>  @@ -135,14 +134,20 @@ struct jz4780_dma_chan {
->>          unsigned int curr_hwdesc;
->>   };
->> 
->>  +enum jz_version {
->>  +       ID_JZ4780,
->>  +};
->>  +
->>   struct jz4780_dma_dev {
->>          struct dma_device dma_device;
->>          void __iomem *base;
->>          struct clk *clk;
->>          unsigned int irq;
->>  +       unsigned int nb_channels;
->>  +       enum jz_version version;
->> 
->>          uint32_t chan_reserved;
->>  -       struct jz4780_dma_chan chan[JZ_DMA_NR_CHANNELS];
->>  +       struct jz4780_dma_chan chan[];
-> 
-> Looks like a variable length array in struct. I think there is some
-> effort to remove the usage of VLA. Can you revisit this? I may be
-> wrong, please feel free to correct.
+Due to the multi-port nature of the I2C master, the driver instantiates a new
+I2C adapter for each port connected to a slave. The connected ports should be
+defined in the device tree under the I2C master device.
 
-Are you sure? It's the first time I hear about it.
-Could anybody confirm?
+Changes since v10
+ - Add myself to maintainers
+ - Rework the reset path. Use generic bus recovery and only do the reset if SDA
+   is low.
+ - Fixed email signature on dts patch
+ - Pulled in Ben H's fix for use-after-free in remove()
 
->>   };
->> 
->>   struct jz4780_dma_filter_data {
->>  @@ -648,7 +653,7 @@ static irqreturn_t jz4780_dma_irq_handler(int 
->> irq, void *data)
->> 
->>          pending = jz4780_dma_readl(jzdma, JZ_DMA_REG_DIRQP);
->> 
->>  -       for (i = 0; i < JZ_DMA_NR_CHANNELS; i++) {
->>  +       for (i = 0; i < jzdma->nb_channels; i++) {
->>                  if (!(pending & (1<<i)))
->>                          continue;
->> 
->>  @@ -728,7 +733,7 @@ static struct dma_chan 
->> *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
->>          data.channel = dma_spec->args[1];
->> 
->>          if (data.channel > -1) {
->>  -               if (data.channel >= JZ_DMA_NR_CHANNELS) {
->>  +               if (data.channel >= jzdma->nb_channels) {
->>                          dev_err(jzdma->dma_device.dev,
->>                                  "device requested non-existent 
->> channel %u\n",
->>                                  data.channel);
->>  @@ -752,19 +757,45 @@ static struct dma_chan 
->> *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
->>          }
->>   }
->> 
->>  +static const unsigned int jz4780_dma_nb_channels[] = {
->>  +       [ID_JZ4780] = 32,
->>  +};
->>  +
->>  +static const struct of_device_id jz4780_dma_dt_match[] = {
->>  +       { .compatible = "ingenic,jz4780-dma", .data = (void 
->> *)ID_JZ4780 },
->>  +       {},
->>  +};
->>  +MODULE_DEVICE_TABLE(of, jz4780_dma_dt_match);
->>  +
->>   static int jz4780_dma_probe(struct platform_device *pdev)
->>   {
->>          struct device *dev = &pdev->dev;
->>  +       const struct of_device_id *of_id = of_match_device(
->>  +                       jz4780_dma_dt_match, dev);
->>          struct jz4780_dma_dev *jzdma;
->>          struct jz4780_dma_chan *jzchan;
->>          struct dma_device *dd;
->>          struct resource *res;
->>  +       enum jz_version version;
->>  +       unsigned int nb_channels;
->>          int i, ret;
->> 
->>  -       jzdma = devm_kzalloc(dev, sizeof(*jzdma), GFP_KERNEL);
->>  +       if (of_id)
->>  +               version = (enum jz_version)of_id->data;
->>  +       else
->>  +               version = ID_JZ4780; /* Default when not probed 
->> from DT */
->>  +
->>  +       nb_channels = jz4780_dma_nb_channels[version];
->>  +
->>  +       jzdma = devm_kzalloc(dev, sizeof(*jzdma)
->>  +                               + sizeof(*jzdma->chan) * 
->> nb_channels,
->>  +                               GFP_KERNEL);
->>          if (!jzdma)
->>                  return -ENOMEM;
->> 
->>  +       jzdma->nb_channels = nb_channels;
->>  +       jzdma->version = version;
->>  +
->>          platform_set_drvdata(pdev, jzdma);
->> 
->>          res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>  @@ -839,7 +870,7 @@ static int jz4780_dma_probe(struct 
->> platform_device *pdev)
->> 
->>          INIT_LIST_HEAD(&dd->channels);
->> 
->>  -       for (i = 0; i < JZ_DMA_NR_CHANNELS; i++) {
->>  +       for (i = 0; i < jzdma->nb_channels; i++) {
->>                  jzchan = &jzdma->chan[i];
->>                  jzchan->id = i;
->> 
->>  @@ -884,19 +915,13 @@ static int jz4780_dma_remove(struct 
->> platform_device *pdev)
->> 
->>          free_irq(jzdma->irq, jzdma);
->> 
->>  -       for (i = 0; i < JZ_DMA_NR_CHANNELS; i++)
->>  +       for (i = 0; i < jzdma->nb_channels; i++)
->>                  tasklet_kill(&jzdma->chan[i].vchan.task);
->> 
->>          dma_async_device_unregister(&jzdma->dma_device);
->>          return 0;
->>   }
->> 
->>  -static const struct of_device_id jz4780_dma_dt_match[] = {
->>  -       { .compatible = "ingenic,jz4780-dma", .data = NULL },
->>  -       {},
->>  -};
->>  -MODULE_DEVICE_TABLE(of, jz4780_dma_dt_match);
->>  -
->>   static struct platform_driver jz4780_dma_driver = {
->>          .probe          = jz4780_dma_probe,
->>          .remove         = jz4780_dma_remove,
->>  --
->>  2.18.0
->> 
->> 
+Changes since v9
+ - Switch the status masks to use a combination of bits rather than directly
+   coding the value
+ - Remove the interrupt mask definition as it was unused
+ - Fixed return value of master_xfer function (return number of xfrs, not 0)
+
+Changes since v8
+ - Drop unecessary else statements
+ - Use i++ instead of ++i
+ - Use kzalloc/kfree instead of devm_kzalloc/devm_kfree for port structure
+ - Drop the list_empty check in remove
+
+Changes since v7
+ - Fix grammer in Kconfig (a -> an)
+ - Change I2C registers to use BIT and GENMASK
+ - Remove custom macros and use FIELD_PREP and FIELD_GET
+ - Fix a few unecessary initializations and "return rc" that are always zero
+ - Clean up the read/write fifo functions a bit
+ - Few other clean-up items
+
+Changes since v6
+ - Remove spinlock for reset functionality; it's unecessary and doesn't work
+   with the latest FSI core.
+ - Use a mutex instead of a semaphore, and don't wait for timeout to get the
+   lock.
+ - Use usleeps instead of schedule_timeout; it's not worth the overhead when
+   the wait should be very short in between sending the command and receiving
+   the response.
+
+Changes since v5
+ - Fix reset functionality and do a reset after every transfer failure
+
+Eddie James (8):
+  dt-bindings: i2c: Add FSI-attached I2C master dt binding documentation
+  i2c: Add FSI-attached I2C master algorithm
+  i2c: fsi: Add port structures
+  i2c: fsi: Add abort and hardware reset procedures
+  i2c: fsi: Add transfer implementation
+  i2c: fsi: Add I2C master locking
+  i2c: fsi: Add bus recovery
+  MAINTAINERS: Add Eddie as the maintainer for the FSI-attached I2C
+    driver
+
+ Documentation/devicetree/bindings/i2c/i2c-fsi.txt |  40 ++
+ MAINTAINERS                                       |   8 +
+ drivers/i2c/busses/Kconfig                        |  11 +
+ drivers/i2c/busses/Makefile                       |   1 +
+ drivers/i2c/busses/i2c-fsi.c                      | 753 ++++++++++++++++++++++
+ 5 files changed, 813 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-fsi.txt
+ create mode 100644 drivers/i2c/busses/i2c-fsi.c
+
+-- 
+1.8.3.1
