@@ -1,153 +1,94 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v9 2/2] mfd: bd71837: Devicetree bindings for ROHM
- BD71837 PMIC
-Date: Thu, 5 Jul 2018 13:39:19 +0300
-Message-ID: <20180705103919.GB8426@localhost.localdomain>
-References: <cover.1530776326.git.matti.vaittinen@fi.rohmeurope.com>
- <87cc68c82c3c95e82797e0ce3d401a4f1d6daf25.1530776326.git.matti.vaittinen@fi.rohmeurope.com>
- <20180705092444.GL496@dell>
+From: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [PATCH v12 5/5] dt-bindings: drm/panel: Document
+ Innolux TV123WAM panel bindings
+Date: Thu, 05 Jul 2018 16:13:16 +0530
+Message-ID: <71088d11ee05f45a675eb5ad94c9837e@codeaurora.org>
+References: <1529584329-632-1-git-send-email-spanda@codeaurora.org>
+ <CGME20180622072307epcas4p48b7b94318be80d6a6c732d3fd908c3fc@epcas4p4.samsung.com>
+ <1529584329-632-6-git-send-email-spanda@codeaurora.org>
+ <20180629121414eucas1p21171a1eab3ee081c8b4114ca58264669~8oIIwEXJJ1824018240eucas1p2G@eucas1p2.samsung.com>
+ <f9d9174dbf1355c7a407c03b718a87b3@codeaurora.org>
+ <20180705101827eucas1p2fcc767335aee02c1735e045ebefabc84~_cawUMmOH2040620406eucas1p22@eucas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180705092444.GL496@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, arnd@arndb.de, dmitry.torokhov@gmail.com, sre@kernel.org, chenjh@rock-chips.com, andrew.smirnov@gmail.com, linus.walleij@linaro.org, kstewart@linuxfoundation.org, heiko@sntech.de, gregkh@linuxfoundation.org, eballetbo@gmail.com, sboyd@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180705101827eucas1p2fcc767335aee02c1735e045ebefabc84~_cawUMmOH2040620406eucas1p22-PmokGAFL9ItqW5MlFJXMulaTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-And thanks again Lee!
-
-On Thu, Jul 05, 2018 at 10:24:44AM +0100, Lee Jones wrote:
-> On Thu, 05 Jul 2018, Matti Vaittinen wrote:
-> 
-> > Document devicetree bindings for ROHM BD71837 PMIC MFD.
-> > 
-> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  | 67 ++++++++++++++++++++++
-> >  1 file changed, 67 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-> > new file mode 100644
-> > index 000000000000..67f2616288d9
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-> > @@ -0,0 +1,67 @@
-> > +* ROHM BD71837 Power Management Integrated Circuit bindings
-> > +
-> > +BD71837MWV is a programmable Power Management IC for powering single-core,
-> > +dual-core, and quad-core SoC’s such as NXP-i.MX 8M. It is optimized for
-> 
-> Nit: s/SOC's/SOCs/
-
-I'll change this.
-
-> > +low BOM cost and compact solution footprint. It integrates 8 Buck
-> > +egulators and 7 LDO’s to provide all the power rails required by the SoC and
-> 
-> Nit: s/LDO's/LDOs/
-
-I'll change this.
-
-> > +the commonly used peripherals.
-> > +
-> > +Datasheet for PMIC is available at:
-> > +https://www.rohm.com/datasheet/BD71837MWV/bd71837mwv-e
-> > +
-> > +Required properties:
-> > + - compatible		: Should be "rohm,bd71837".
-> > + - reg			: I2C slave address.
-> > + - interrupt-parent	: Phandle to the parent interrupt controller.
-> > + - interrupts		: The interrupt line the device is connected to.
-> > + - clocks		: The parent clock connected to PMIC. If this is missng
-> 
-> s/missng/missing/
-
-I'll change this.
-
-> > +			  32768 KHz clock is assumed.
-> > + - #clock-cells		: Should be 0
-> > + - regulators:		: List of child nodes that specify the regulators
-> 
-> By your convention, the bottom two entries are missing '.'s.
-
-I'll change this.
-
-> > +			  Please see ../regulator/rohm,bd71837-regulator.txt
-> > +
-> > +Optional properties:
-> > +- clock-output-names	: Should contain name for output clock.
-> > +
-> > +Example:
-> > +
-> > +	/* external oscillator node */
-> 
-> Uppercase character to start a sentence.
-
-I'll change this.
-
-> > +	osc: oscillator {
-> > +		compatible = "fixed-clock";
-> > +		#clock-cells = <1>;
-> > +		clock-frequency  = <32768>;
-> > +		clock-output-names = "osc";
-> > +	};
-> > +
-> > +	/* PMIC node */
-> 
-> Is this comment really necessary?  The node is called "pmic".
-
-I'll remove this.
-
-> > +	pmic: pmic@4b {
-> > +		compatible = "rohm,bd71837";
-> > +		reg = <0x4b>;
-> > +		interrupt-parent = <&gpio1>;
-> > +		interrupts = <29 GPIO_ACTIVE_LOW>;
-> > +		interrupt-names = "irq";
-> > +		#clock-cells = <0>;
-> > +		clocks = <&osc 0>;
-> > +		clock-output-names = "bd71837-32k-out";
-> > +
-> > +		regulators {
-> > +			buck1: BUCK1 {
-> > +				regulator-name = "buck1";
-> > +				regulator-min-microvolt = <700000>;
-> > +				regulator-max-microvolt = <1300000>;
-> > +				regulator-boot-on;
-> > +				regulator-ramp-delay = <1250>;
-> > +			};
-> > +			/* ... */
-> > +		};
-> > +	};
-> > +
-> > +	/* Clock consumer node */
-> > +
-> > +	foo@0 {
-> > +		compatible = "bar,foo";
-> > +		/* ... */
-> 
-> No need for this line.  Additional properties are always expected.
-
-I'll remove this.
-
-> > +		clock-names = "my-clock";
-> > +		clocks = <&pmic>;
-> > +	};
-> 
-> Do you have a real example to give?
-
-For clock consumer? Sorry, no I don't.
-
-Br,
-	Matti Vaittinen
-
-> -- 
-> Lee Jones [李琼斯]
-> Linaro Services Technical Lead
-> Linaro.org │ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+T24gMjAxOC0wNy0wNSAxNTo0OCwgQW5kcnplaiBIYWpkYSB3cm90ZToKPiBPbiAwNS4wNy4yMDE4
+IDA4OjM4LCBzcGFuZGFAY29kZWF1cm9yYS5vcmcgd3JvdGU6Cj4+IE9uIDIwMTgtMDYtMjkgMTc6
+NDQsIEFuZHJ6ZWogSGFqZGEgd3JvdGU6Cj4+PiBPbiAyMS4wNi4yMDE4IDE0OjMyLCBTYW5kZWVw
+IFBhbmRhIHdyb3RlOgo+Pj4+IElubm9sdXggVFYxMjNXQU0gaXMgYSAxMi4zIiBlRFAgZGlzcGxh
+eSBwYW5lbCB3aXRoCj4+Pj4gMjE2MHgxNDQwIHJlc29sdXRpb24sIHdoaWNoIGNhbiBiZSBzdXBw
+b3J0ZWQgYnkgc2ltcGxlCj4+Pj4gcGFuZWwgZHJpdmVyLgo+Pj4gQXJlIHlvdSBzdXJlIHRoaXMg
+aXMgSW5ub2x1eD8gUXVpY2sgZ3JlcCBvbiBJbnRlcm5ldCBmaW5kcyBvbmx5IEJPRQo+Pj4gcGFu
+ZWwgd2l0aCB0aGlzIFRWMTIzV0FNWzFdLgo+Pj4gCj4+PiBbMV06Cj4+PiBodHRwczovL2UyZS50
+aS5jb20vY2ZzLWZpbGUvX19rZXkvY29tbXVuaXR5c2VydmVyLWRpc2N1c3Npb25zLWNvbXBvbmVu
+dHMtZmlsZXMvMTM4L1RWMTIzV0FNXzJEMDBfTkQwXzVGMDBfUHJvZHVjdC1zcGVjXzVGMDBfQk9F
+XzVGMDBfMjAxNjExMTVfMkQwMF9BMDAucGRmCj4+PiAKPj4gVGhlIHBhbmVsIHVzZWQgaGVyZSBp
+cyBpbm5vbHV4LCB3aGljaCBpcyBhIDJrIHBhbmVsLiBXaGVyZSB0aGUgQk9FIG9uZQo+PiBpcyBh
+IDEwODBwIHBhbmVsLgo+IAo+IE15IGRvdWJ0cyBjb21lcyBmcm9tIHRoZSBmYWN0IHRoYXQgSW5u
+b2x1eCB1c2VzIGRpZmZlcmVudCBjb252ZW50aW9uIAo+IGZvcgo+IHBhbmVsIG5hbWluZywgc2Vl
+IGZvciBleGFtcGxlIFsxXS4KPiAKPiBBY2NvcmRpbmcgdG8gdGhpcyBjb252ZW50aW9uIHlvdXIg
+cGFuZWwgc2hvdWxkIGhhdmUgbmFtZSBzdGFydGluZyB3aXRoOgo+IE4xMjNaREctCj4gCj4gVFYx
+MjNXQU0gZm9sbG93cyBCT0UncyBjb252ZW50aW9uLgo+IAo+IERvIHlvdSBoYXZlIGRhdGFzaGVl
+dCwgcGh5c2ljYWwgcGFuZWwgb3Igc29tZXRoaW5nIHRvIGVuc3VyZSB0aGUgbmFtZSAKPiBpcwo+
+IGNvcnJlY3Q/Cj4gCj4gWzFdOgo+IGh0dHA6Ly93d3cucGFuZWxvb2suY29tL2JyYW1vZGxpc3Qu
+cGhwP3N0PSZwbD0mYnJhbmRzW109NjMmc2lnbmFsX3R5cGVfY2F0ZWdvcnk9NzAKPiAKPiBSZWdh
+cmRzCj4gQW5kcnplago+IApUaGUgZGF0YSBzaGVldCBpIGhhdmUgZG9lcyBub3QgbWVudGlvbiBh
+bnkgdmVyc2lvbiBpbmZvL2lkIG9mIGlubm9sdXggCnBhbmVsLCBzbyBpIHRvb2sgdGhlCnZlcnNp
+b24gbmFtZSBmcm9tIGEgZG93biBzdHJlYW0gcGF0Y2ggd2UgaGFkIGVhcmxpZXIgdXNlZCB0byBi
+cmluZyB1cCAKdGhpcyBwYW5lbC4KVW5mb3J0dW5hdGVseSBpIGNhbiBub3Qgc2hhcmUgdGhlIGRh
+dGEgc2hlZXQgYWxzbyBhcyBpdCBpcyB3YXRlciBtYXJrZWQgCmFzIGNvbmZpZGVudGlhbC4KClRo
+aXMgcGFuZWwgcGF0Y2hlcyBhcmUgYWxyZWFkeSBtZXJnZWQgaW4gZHJtLW1pc2MsIHdpbGwgdXBs
+b2FkIGEgbmV3IApwYXRjaCB0byByZW1vdmUgdHYxMjMqIG5hbWUKYW5kIHB1dCBzb21lIGdlbmVy
+aWMgaW5ub2x1eCBwYW5lbCBuYW1lIGxpa2UgaW5ub2x1eCwyawoKCj4+IAo+Pj4gUmVnYXJkcwo+
+Pj4gQW5kcnplago+Pj4+IENoYW5nZXMgaW4gdjE6Cj4+Pj4gIC0gTWFrZSB1c2Ugb2Ygc2ltcGxl
+IHBhbmVsIGRyaXZlciBpbnN0ZWFkIG9mIGNyZWF0aW5nCj4+Pj4gICAgYSBuZXcgZHJpdmVyIGZv
+ciB0aGlzIHBhbmVsIChTZWFuIFBhdWwpLgo+Pj4+ICAtIENvbWJpbmUgZHQtYmluZGluZyBhbmQg
+ZHJpdmVyIGNoYW5nZXMgaW50byBvbmUgcGF0Y2gKPj4+PiAgICBhcyBkb25lIGJ5IG90aGVyIGV4
+aXN0aW5nIHBhbmVsIHN1cHBvcnQgY2hhbmdlcy4KPj4+PiAKPj4+PiBDaGFuZ2VzIGluIHYyOgo+
+Pj4+ICAtIFNlcGFyYXRlIGRyaXZlciBjaGFuZ2UgZnJvbSBkdC1iaW5kaW5nIGRvY3VtZW50YXRp
+b24gKFJvYiAKPj4+PiBIZXJyaW5nKS4KPj4+PiAgLSBBZGQgdGhlIHByb3BlcnRpZXMgZnJvbSBz
+aW1wbGUtcGFuZWwgYmluZGluZyB0aGF0IGFyZSBhcHBsaWNhYmxlIAo+Pj4+IHRvCj4+Pj4gICAg
+dGhpcyBwYW5lbCAoUm9iIEhlcnJpbmcpLgo+Pj4+IAo+Pj4+IFNpZ25lZC1vZmYtYnk6IFNhbmRl
+ZXAgUGFuZGEgPHNwYW5kYUBjb2RlYXVyb3JhLm9yZz4KPj4+PiBSZXZpZXdlZC1ieTogUm9iIEhl
+cnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPj4+PiAtLS0KPj4+PiAgLi4uL2JpbmRpbmdzL2Rpc3Bs
+YXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQgICAgICB8IDIwCj4+Pj4gKysrKysrKysrKysr
+KysrKysrKysKPj4+PiAgMSBmaWxlIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKykKPj4+PiAgY3Jl
+YXRlIG1vZGUgMTAwNjQ0Cj4+Pj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQKPj4+PiAKPj4+PiBkaWZmIC0tZ2l0Cj4+
+Pj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5v
+bHV4LHR2MTIzd2FtLnR4dAo+Pj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQKPj4+PiBuZXcgZmlsZSBtb2RlIDEw
+MDY0NAo+Pj4+IGluZGV4IDAwMDAwMDAwMDAwMC4uYTliMzUyNjVmYTEzCj4+Pj4gLS0tIC9kZXYv
+bnVsbAo+Pj4+ICsrKwo+Pj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQKPj4+PiBAQCAtMCwwICsxLDIwIEBACj4+
+Pj4gK0lubm9sdXggVFYxMjNXQU0gMTIuMyBpbmNoIGVEUCAySyBkaXNwbGF5IHBhbmVsCj4+Pj4g
+Kwo+Pj4+ICtUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwg
+YmluZGluZywgd2hpY2ggaXMKPj4+PiBzcGVjaWZpZWQKPj4+PiAraW4gc2ltcGxlLXBhbmVsLnR4
+dCBpbiB0aGlzIGRpcmVjdG9yeS4KPj4+PiArCj4+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+
+Pj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJpbm5vbHV4LHR2MTIzd2FtIgo+Pj4+ICstIHBv
+d2VyLXN1cHBseTogcmVndWxhdG9yIHRvIHByb3ZpZGUgdGhlIHN1cHBseSB2b2x0YWdlCj4+Pj4g
+Kwo+Pj4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+Pj4+ICstIGVuYWJsZS1ncGlvczogR1BJTyBw
+aW4gdG8gZW5hYmxlIG9yIGRpc2FibGUgdGhlIHBhbmVsCj4+Pj4gKy0gYmFja2xpZ2h0OiBwaGFu
+ZGxlIG9mIHRoZSBiYWNrbGlnaHQgZGV2aWNlIGF0dGFjaGVkIHRvIHRoZSBwYW5lbAo+Pj4+ICsK
+Pj4+PiArRXhhbXBsZToKPj4+PiArCXBhbmVsX2VkcDogcGFuZWwtZWRwIHsKPj4+PiArCQljb21w
+YXRpYmxlID0gImlubm9sdXgsdHYxMjN3YW0iOwo+Pj4+ICsJCWVuYWJsZS1ncGlvcyA9IDwmbXNt
+Z3BpbyAzMSBHUElPX0FDVElWRV9MT1c+Owo+Pj4+ICsJCXBvd2VyLXN1cHBseSA9IDwmcG04OTE2
+X2wyPjsKPj4+PiArCQliYWNrbGlnaHQgPSA8JmJhY2tsaWdodD47Cj4+Pj4gKwl9Owo+PiAKPj4g
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVu
+byBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
