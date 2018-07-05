@@ -1,146 +1,143 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v3 09/17] irqchip/irq-mvebu-icu: support ICU subnodes
-Date: Thu, 5 Jul 2018 09:19:24 +0100
-Message-ID: <1caaca86-aafc-c006-f2df-e42daf9f866b@arm.com>
-References: <20180622151432.1566-1-miquel.raynal@bootlin.com>
- <20180622151432.1566-10-miquel.raynal@bootlin.com>
- <61ff2e4f-55b6-cf70-5f04-32cd197c35f8@arm.com>
- <20180704110917.65557d0a@xps13>
- <f4d1d42c-98b9-a485-0baf-2248114f8c8a@arm.com>
- <20180704171622.2df87519@xps13>
+From: Ben Whitten <Ben.Whitten@lairdtech.com>
+Subject: RE: [RFC net-next 15/15] net: lora: Add Semtech SX1301
+Date: Thu, 5 Jul 2018 08:43:27 +0000
+Message-ID: <BY1PR02MB111404D586D88AB2F93FDA03E7400@BY1PR02MB1114.namprd02.prod.outlook.com>
+References: <20180701110804.32415-1-afaerber@suse.de>
+ <20180701110804.32415-16-afaerber@suse.de>
+ <20180702161258.GA18744@sirena.org.uk>
+ <4e06cc72-2092-70f3-c801-bf6e4c3cbec2@suse.de>
+ <BY1PR02MB111481D94EB0D68AD5FCA689E7430@BY1PR02MB1114.namprd02.prod.outlook.com>
+ <8d514feb-41c7-8ec4-ace2-94e627187a0b@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180704171622.2df87519@xps13>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8d514feb-41c7-8ec4-ace2-94e627187a0b@suse.de>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Cc: Mark Brown <broonie@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jian-Hong Pan <starnight@g.ncu.edu.tw>, Jiri Pirko <jiri@resnulli.us>, Marcel Holtmann <marcel@holtmann.org>, "David S . Miller" <davem@davemloft.net>, Matthias Brugger <mbrugger@suse.com>, Janus Piwek <jpiwek@arroweurope.com>, =?utf-8?B?TWljaGFlbCBSw7ZkZXI=?= <michael.roeder@avnet.eu>, Dollar Chen <dollar.chen@wtmec.com>, Ken Yu <ken.yu@rakwireless.com>, Steve deRosier <derosier@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "LoRa_Community_Support@semtech.com" <LoRa_Community_Support@semtech.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/07/18 16:16, Miquel Raynal wrote:
-> Hi Marc,
-> 
-> Marc Zyngier <marc.zyngier@arm.com> wrote on Wed, 4 Jul 2018 13:43:58
-> +0100:
-> 
->> On 04/07/18 10:09, Miquel Raynal wrote:
->>> Hi Marc,
->>>
->>> Marc Zyngier <marc.zyngier@arm.com> wrote on Thu, 28 Jun 2018 13:45:09
->>> +0100:
->>>   
->>>> On 22/06/18 16:14, Miquel Raynal wrote:  
->>>>> The ICU can handle several type of interrupt, each of them being handled
->>>>> differently on AP side. On CP side, the ICU should be able to make the
->>>>> distinction between each interrupt group by pointing to the right parent.
->>>>>
->>>>> This is done through the introduction of new bindings, presenting the ICU
->>>>> node as the parent of multiple ICU sub-nodes, each of them being an
->>>>> interrupt type with a different interrupt parent. ICU interrupt 'clients'
->>>>> now directly point to the right sub-node, avoiding the need for the extra
->>>>> ICU_GRP_* parameter.
->>>>>
->>>>> ICU subnodes are probed automatically with devm_platform_populate(). If
->>>>> the node as no child, the probe function for NSRs will still be called
->>>>> 'manually' in order to preserve backward compatibility with DT using the
->>>>> old binding.
->>>>>
->>>>> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
->>>>> ---
->>>>>  drivers/irqchip/irq-mvebu-icu.c | 88 ++++++++++++++++++++++++++++++++++-------
->>>>>  1 file changed, 74 insertions(+), 14 deletions(-)
->>>>>
->>>>> diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
->>>>> index 24d45186eb6b..f7c2ede9c222 100644
->>>>> --- a/drivers/irqchip/irq-mvebu-icu.c
->>>>> +++ b/drivers/irqchip/irq-mvebu-icu.c
->>>>> @@ -43,6 +43,7 @@ struct mvebu_icu {
->>>>>  	struct regmap *regmap;
->>>>>  	struct device *dev;
->>>>>  	atomic_t initialized;
->>>>> +	bool legacy_bindings;
->>>>>  };
->>>>>  
->>>>>  struct mvebu_icu_irq_data {
->>>>> @@ -51,6 +52,30 @@ struct mvebu_icu_irq_data {
->>>>>  	unsigned int type;
->>>>>  };
->>>>>  
->>>>> +static struct mvebu_icu *mvebu_icu_dev_get_drvdata(struct platform_device *pdev)
->>>>> +{
->>>>> +	struct mvebu_icu *icu;
->>>>> +
->>>>> +	/*
->>>>> +	 * Device data being populated means we should be using legacy bindings.
->>>>> +	 * Using the _parent_ device data means we should be using new bindings.
->>>>> +	 */
->>>>> +	icu = dev_get_drvdata(&pdev->dev);
->>>>> +	if (icu) {
->>>>> +		if (!icu->legacy_bindings)
->>>>> +			return ERR_PTR(-EINVAL);
->>>>> +	} else {
->>>>> +		icu = dev_get_drvdata(pdev->dev.parent);
->>>>> +		if (!icu)
->>>>> +			return ERR_PTR(-ENODEV);
->>>>> +
->>>>> +		if (icu->legacy_bindings)
->>>>> +			return ERR_PTR(-EINVAL);
->>>>> +	}    
->>>>
->>>> Doesn't this make legacy_bindings completely redundant? Either the
->>>> pointer is !NULL in the device, and this is using a legacy binging, or
->>>> it is stored in the parent, and this is a new binding. You could even
->>>> have a helper for that:
->>>>
->>>> static bool is_legacy(struct platform_device *pdev)
->>>> {
->>>> 	return !dev_get_drvdata(&pdev->dev);
->>>> }
->>>>
->>>> The driver really doesn't need to be defending against itself, if
->>>> anything, and it would save you quite a bit of error handling in the
->>>> callers of this function.  
->>>
->>> I simplified the sanity checks but I had to keep an icu->is_legacy
->>> boolean because the above function would not have worked, for instance,
->>> in the *_translate() hook. As this hook does not receive a struct
->>> device * (or platform_device) as parameter, I tried to use icu->dev
->>> instead. This cannot work as it always points to the device having the
->>> driver data attached.  
->>
->> You could still have the pdev as part of the domain host_data, right?
->> Isn't that just a matter of having a pointer to the pdev as part of the
->> icu data structure?
-> 
-> There is already a 'struct device *dev' pointer in the ICU data
-> structure. This pointer is set to "&pdev->dev" in the main probe
-> function.
-> 
-> Legacy: dev is the unique ICU device, the driver data is attached to it.
-> Now: dev is the 'host' ICU device that is the parent of two other
-> devices, ICU NSR controller and SEI NSR controller. The driver data is
-> also attached to this device.
-> 
-> So in both situations checking dev_get_drvdata(icu->dev) would return a
-> valid pointer.
-> 
-> Does this answer your question?
-
-I think I need to see the full picture again. Post the updated series,
-and we'll see what we can do.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+PiBTdWJqZWN0OiBSZTogW1JGQyBuZXQtbmV4dCAxNS8xNV0gbmV0OiBsb3JhOiBBZGQgU2VtdGVj
+aCBTWDEzMDENCj4gDQo+IEhpIEJlbiwNCj4gDQo+IEFtIDAyLjA3LjIwMTggdW0gMjI6NDMgc2No
+cmllYiBCZW4gV2hpdHRlbjoNCj4gPj4gMikgVGhpcyBTUEkgZGV2aWNlIGlzIGluIHR1cm4gZXhw
+b3NpbmcgdGhlIHR3byBTUEkgbWFzdGVycyB0aGF0IHlvdQ0KPiA+PiBhbHJlYWR5IGZvdW5kIGJl
+bG93LCBhbmQgSSBkaWRuJ3Qgc2VlIGEgc2FuZSB3YXkgdG8gc3BsaXQgdGhhdCBjb2RlIG91dA0K
+PiA+PiBpbnRvIGRyaXZlcnMvc3BpLywgc28gaXQncyBpbiBkcml2ZXJzL25ldC9sb3JhLyBoZXJl
+IC0gaGFzIHRoZXJlIGJlZW4NCj4gPj4gYW55IHByZWNlZGVuY2UgZWl0aGVyIHdheT8NCj4gPg0K
+PiA+IEluIG15IHdvcmsgaW4gcHJvZ3Jlc3MgZHJpdmVyIEkganVzdCByZWdpc3RlciBvbmUgY29u
+dHJvbGxlciBmb3IgdGhlIHN4MTMwMQ0KPiB3aXRoIHR3byBjaGlwIHNlbGVjdHMgYW5kIHVzZSB0
+aGUgY2hpcCBzZWxlY3QgaW5mb3JtYXRpb24gdG8gY2hvb3NlIHRoZQ0KPiBjb3JyZWN0IHJhZGlv
+IHRvIHNlbmQgdG8sIHRoaXMgaXMgYmFzZWQgb24gdGhlIERUIHJlZyBpbmZvcm1hdGlvbi4gTm8g
+bmVlZCB0bw0KPiByZWdpc3RlciB0d28gc2VwYXJhdGUgbWFzdGVycy4NCj4gDQo+IEkgaGFkIGNv
+bnNpZGVyZWQgdGhhdCBhbmQgZGlzY2FyZGVkIGl0LiBUaGUgU1gxMzAxIGhhcyBub3QganVzdCB0
+d28gQ1MNCj4gcmVnaXN0ZXJzIHRob3VnaCBidXQgYWxzbyB0d28gcGFpcnMgb2YgYWRkciwgZGF0
+YSByZWdpc3RlcnMuIFRoYXQgc3BlYWtzDQo+IGZvciB0d28gbWFzdGVycyB3aXRoIGEgc2luZ2xl
+IGNoaXAtc2VsZWN0IGVhY2gsIHVubGVzcyBJJ20NCj4gbWlzdW5kZXJzdGFuZGluZyB0aGUgbWVh
+bmluZyBvZiB0aGUgcmVnaXN0ZXJzLg0KDQpCYXNlZCBvbiBNYXJrcyBzdWdnZXN0aW9uIEkgYW0g
+ZXhwZXJpbWVudGluZyB3aXRoIHVzaW5nIHRoZSBTWDEzMDEgdG8gZXhwb3NlIGEgcmVnbWFwX2J1
+cyB0aGF0IHRoZSB1bmRlcmx5aW5nIFNYMTI1NyBjYW4gYXR0YWNoIHRvLCBzbyB0aGUgcmFkaW8g
+aGFzIGEgY29yZSBjb21wb25lbnQsIGEgU1BJIGNvbXBvbmVudCBmb3IgZGlyZWN0IGNvbm5lY3Rp
+b24gYW5kIHRoaXMgY29uY2VudHJhdG9yIGNvbm5lY3Rpb24gY29tcG9uZW50LiANCg0KPiA+PiBB
+bSAwMi4wNy4yMDE4IHVtIDE4OjEyIHNjaHJpZWIgTWFyayBCcm93bjoNCj4gPj4+IE9uIFN1biwg
+SnVsIDAxLCAyMDE4IGF0IDAxOjA4OjA0UE0gKzAyMDAsIEFuZHJlYXMgRsOkcmJlciB3cm90ZToN
+Cj4gPj4+DQo+ID4+Pj4gK3N0YXRpYyB2b2lkIHN4MTMwMV9yYWRpb19zcGlfc2V0X2NzKHN0cnVj
+dCBzcGlfZGV2aWNlICpzcGksIGJvb2wNCj4gZW5hYmxlKQ0KPiA+Pj4+ICt7DQo+ID4+Pj4gKwlp
+bnQgcmV0Ow0KPiA+Pj4+ICsNCj4gPj4+PiArCWRldl9kYmcoJnNwaS0+ZGV2LCAic2V0dGluZyBT
+UEkgQ1MgdG8gJXNcbiIsIGVuYWJsZSA/ICIxIiA6ICIwIik7DQo+ID4+Pj4gKw0KPiA+Pj4+ICsJ
+aWYgKGVuYWJsZSkNCj4gPj4+PiArCQlyZXR1cm47DQo+ID4+Pj4gKw0KPiA+Pj4+ICsJcmV0ID0g
+c3gxMzAxX3JhZGlvX3NldF9jcyhzcGktPmNvbnRyb2xsZXIsIGVuYWJsZSk7DQo+ID4+Pj4gKwlp
+ZiAocmV0KQ0KPiA+Pj4+ICsJCWRldl93YXJuKCZzcGktPmRldiwgImZhaWxlZCB0byB3cml0ZSBD
+UyAoJWQpXG4iLCByZXQpOw0KPiA+Pj4+ICt9DQo+ID4+Pg0KPiA+Pj4gU28gd2UgbmV2ZXIgZGlz
+YWJsZSBjaGlwIHNlbGVjdD8NCj4gPj4NCj4gPj4gTm90IGhlcmUsIEkgaW5zdGVhZCBkaWQgdGhh
+dCBpbiB0cmFuc2Zlcl9vbmUgYmVsb3cuDQo+ID4+DQo+ID4+IFVuZm9ydHVuYXRlbHkgdGhlcmUg
+c2VlbXMgdG8gYmUgbm8gZG9jdW1lbnRhdGlvbiwgb25seSByZWZlcmVuY2UNCj4gY29kZToNCj4g
+Pj4NCj4gPj4gaHR0cHM6Ly9naXRodWIuY29tL0xvcmEtDQo+ID4+IG5ldC9sb3JhX2dhdGV3YXkv
+YmxvYi9tYXN0ZXIvbGlibG9yYWd3L3NyYy9sb3JhZ3dfcmFkaW8uYyNMMTIxDQo+ID4+IGh0dHBz
+Oi8vZ2l0aHViLmNvbS9Mb3JhLQ0KPiA+PiBuZXQvbG9yYV9nYXRld2F5L2Jsb2IvbWFzdGVyL2xp
+YmxvcmFndy9zcmMvbG9yYWd3X3JhZGlvLmMjTDE2NQ0KPiA+Pg0KPiA+PiBJdCBzZXRzIENTIHRv
+IDAgYmVmb3JlIHdyaXRpbmcgdG8gYWRkcmVzcyBhbmQgZGF0YSByZWdpc3RlcnMsIHRoZW4NCj4g
+Pj4gaW1tZWRpYXRlbHkgc2V0cyBDUyB0byAxIGFuZCBiYWNrIHRvIDAgYmVmb3JlIHJlYWRpbmcg
+b3IgZW5kaW5nIHRoZQ0KPiA+PiB3cml0ZSB0cmFuc2FjdGlvbi4gSSd2ZSB0cmllZCB0byBmb3Jj
+ZSB0aGUgc2FtZSBiZWhhdmlvciBpbiB0aGlzIGRyaXZlci4NCj4gPj4gTXkgZ3Vlc3Mgd2FzIHRo
+YXQgQ1MgaXMgaGlnaC1hY3RpdmUgZHVyaW5nIHRoZSBzaG9ydCAxLTAgY3ljbGUsIGJlY2F1c2UN
+Cj4gPj4gaWYgaXQncyBsb3ctYWN0aXZlIGR1cmluZyB0aGUgcmVnaXN0ZXIgd3JpdGVzIHRoZW4g
+d2h5IHRoZSBoZWNrIGlzIGl0DQo+ID4+IHNldCB0byAwIGFnYWluIGluIHRoZSBlbmQgaW5zdGVh
+ZCBvZiBrZWVwaW5nIGF0IDEuLi4gY29uZnVzaW5nLg0KPiA+Pg0KPiA+PiBNYXliZSB0aGUgU2Vt
+dGVjaCBmb2xrcyBDQydlZCBjYW4gY29tbWVudCBob3cgdGhlc2UgcmVnaXN0ZXJzIHdvcms/DQo+
+ID4+DQo+ID4+Pj4gKwlpZiAodHhfYnVmKSB7DQo+ID4+Pj4gKwkJcmV0ID0gc3gxMzAxX3dyaXRl
+KHNzeC0+cGFyZW50LCBzc3gtPnJlZ3MgKw0KPiA+PiBSRUdfUkFESU9fWF9BRERSLCB0eF9idWYg
+PyB0eF9idWZbMF0gOiAwKTsNCj4gPj4+DQo+ID4+PiBUaGlzIGxvb2tzIGNvbmZ1c2VkLiAgV2Un
+cmUgaW4gYW4gaWYgKHR4X2J1ZikgYmxvY2sgYnV0IHRoZXJlJ3MgYSB1c2Ugb2YNCj4gPj4+IHRo
+ZSB0ZXJuZXJ5IG9wZXJhdG9yIHRoYXQgYXBwZWFycyB0byBiZSBjaGVja2luZyBpZiB3ZSBoYXZl
+IGEgdHhfYnVmPw0KPiA+Pg0KPiA+PiBZZWFoLCBhcyBtZW50aW9uZWQgdGhpcyBSRkMgaXMgbm90
+IHJlYWR5IGZvciBtZXJnaW5nIC0gY2hlY2twYXRjaC5wbA0KPiA+PiB3aWxsIGNvbXBsYWluIGFi
+b3V0IGxpbmVzIHRvbyBsb25nLCBhbmQgVE9ET3MgYXJlIHNwcmlua2xlZCBhbGwgb3ZlciBvcg0K
+PiA+PiBub3QgZXZlbiBtZW50aW9uZWQuIEl0J3MgYSBQcm9vZiBvZiBDb25jZXB0IHRoYXQgYSBu
+ZXRfZGV2aWNlIGNvdWxkIHdvcmsNCj4gPj4gZm9yIGEgd2lkZSByYW5nZSBvZiBzcGkgYW5kIHNl
+cmRldiBiYXNlZCBkcml2ZXJzLCBhbmQgb24gdG9wIHRoaXMgZGV2aWNlDQo+ID4+IGhhcyBtb3Jl
+IHRoYW4gb25lIGNoYW5uZWwsIHdoaWNoIG1heSBpbmZsdWVuY2UgbmV0d29yay1sZXZlbCBkZXNp
+Z24NCj4gPj4gZGlzY3Vzc2lvbnMuDQo+ID4+DQo+ID4+IFRoYXQgc2FpZCwgSSdsbCBoYXBwaWx5
+IGRyb3AgdGhlIHNlY29uZCBjaGVjay4gVGhhbmtzIGZvciBzcG90dGluZyENCj4gPj4NCj4gPj4+
+PiArCQlpZiAocmV0KSB7DQo+ID4+Pj4gKwkJCWRldl9lcnIoJnNwaS0+ZGV2LCAiU1BJIHJhZGlv
+IGFkZHJlc3Mgd3JpdGUNCj4gPj4gZmFpbGVkXG4iKTsNCj4gPj4+PiArCQkJcmV0dXJuIHJldDsN
+Cj4gPj4+PiArCQl9DQo+ID4+Pj4gKw0KPiA+Pj4+ICsJCXJldCA9IHN4MTMwMV93cml0ZShzc3gt
+PnBhcmVudCwgc3N4LT5yZWdzICsNCj4gPj4gUkVHX1JBRElPX1hfREFUQSwgKHR4X2J1ZiAmJiB4
+ZnItPmxlbiA+PSAyKSA/IHR4X2J1ZlsxXSA6IDApOw0KPiA+Pj4+ICsJCWlmIChyZXQpIHsNCj4g
+Pj4+PiArCQkJZGV2X2Vycigmc3BpLT5kZXYsICJTUEkgcmFkaW8gZGF0YSB3cml0ZSBmYWlsZWRc
+biIpOw0KPiA+Pj4+ICsJCQlyZXR1cm4gcmV0Ow0KPiA+Pj4+ICsJCX0NCj4gPj4+DQo+ID4+PiBU
+aGlzIGxvb2tzIGF3ZnVsbHkgbGlrZSB5b3UncmUgY29taW5nIGluIGF0IHRoZSB3cm9uZyBhYnN0
+cmFjdGlvbiBsYXllcg0KPiA+Pj4gYW5kIHRoZSBoYXJkd2FyZSBhY3R1YWxseSBpbXBsZW1lbnRz
+IGEgcmVnaXN0ZXIgYWJzdHJhY3Rpb24gcmF0aGVyIHRoYW4NCj4gPj4+IGEgU1BJIG9uZSBzbyB5
+b3Ugc2hvdWxkIGJlIHVzaW5nIHJlZ21hcCBhcyB0aGUgYWJzdHJhY3Rpb24uDQo+ID4+DQo+ID4+
+IEkgZG9uJ3QgdW5kZXJzdGFuZC4gQmVuIGhhcyBzdWdnZXN0ZWQgdXNpbmcgcmVnbWFwIGZvciB0
+aGUgU1BJIF9kZXZpY2VfDQo+ID4+IHRoYXQgd2UncmUgdGFsa2luZyB0bywgd2hpY2ggbWF5IGJl
+IGEgZ29vZCBpZGVhLiBCdXQgdGhpcyBTWDEzMDEgZGV2aWNlDQo+ID4+IGluIHR1cm4gaGFzIHR3
+byBTUEkgX21hc3RlcnNfIHRhbGtpbmcgdG8gYW4gU1gxMjV4IHNsYXZlIGVhY2guIEkgZG9uJ3QN
+Cj4gPj4gc2VlIGhvdyB1c2luZyByZWdtYXAgaW5zdGVhZCBvZiBteSB3cmFwcGVycyBhdm9pZHMg
+dGhpcyBzcGlfY29udHJvbGxlcj8NCj4gPj4gVGhlIHdob2xlIHBvaW50IG9mIHRoaXMgc3BpX2Nv
+bnRyb2xsZXIgaXMgdG8gYWJzdHJhY3QgYW5kIHNlcGFyYXRlIHRoZQ0KPiA+PiBTWDEyNTUgdnMu
+IFNYMTI1NyB2cy4gd2hhdGV2ZXItcmFkaW8tYXR0YWNoZWQgaW50byBhIHNlcGFyYXRlIGRyaXZl
+ciwNCj4gPj4gaW5zdGVhZCBvZiBtaXhpbmcgaXQgaW50byB0aGUgU1gxMzAxIGRyaXZlciAtIHRv
+IG1lIHRoYXQgbG9va3MgY2xlYW5lcg0KPiA+PiBhbmQgbW9yZSBleHRlbnNpYmxlLiBJdCBhbHNv
+IGhhcyB0aGUgc2lkZS1lZmZlY3QgdGhhdCB3ZSBjb3VsZCBjb25maWd1cmUNCj4gPj4gdGhlIHR3
+byByYWRpb3MgdmlhIERUIChmcmVxdWVuY2llcywgY2xrIG91dHB1dCwgZXRjLikuDQo+ID4NCj4g
+PiBZb3Ugd2FudCBhbiBTUEkgY29udHJvbGxlciBpbiB0aGUgU1gxMzAxIGFzIHRoZSBkb3duIHN0
+cmVhbSByYWRpb3MgYXJlIFNQSQ0KPiBhbmQgY291bGQgYmUgYXR0YWNoZWQgZGlyZWN0bHkgdG8g
+YSBob3N0IFNQSSBidXMsIG1ha2VzIHNlbnNlIHRvIGhhdmUgb25lDQo+IHJhZGlvIGRyaXZlciBh
+bmQgdGFsayB0aHJvdWdoIHRoZSBTWDEzMDEuDQo+ID4gQnV0IHlvdSBzaG91bGQgdXNlIHRoZSBy
+ZWdtYXAgdG8gYWNjZXNzIHRoZSBTWDEzMDEgbWFzdGVyIGNvbnRyb2xsZXINCj4gcmVnaXN0ZXJz
+Lg0KPiA+IEV4YW1wbGUgSSB1c2Ugd2l0aCBvbmUgU1BJIG1hc3RlciBhbmQgc29tZSBjbG9jayBp
+bmZvOg0KPiA+IGVnOg0KPiA+IAlzeDEzMDE6IHN4MTMwMUAwIHsNCj4gDQo+IE5vZGUgbmFtZXMg
+c2hvdWxkIG5vdCByZXBlYXQgdGhlIGNoaXBzZXQsIHRoYXQgZ29lcyBpbnRvIGNvbXBhdGlibGUu
+DQo+IA0KPiBsb3JhLWNvbmNlbnRyYXRvckAwPw0KPiANClN1cmUNCg0KPiA+IAkJY29tcGF0aWJs
+ZSA9ICJzZW10ZWNoLHN4MTMwMSI7DQo+ID4gCQlyZWcgPSA8MD47DQo+ID4gCQkjYWRkcmVzcy1j
+ZWxscyA9IDwxPjsNCj4gPiAJCSNzaXplLWNlbGxzID0gPDA+Ow0KPiANCj4gSSB3b3VsZCBzdGls
+bCBmaW5kIGl0IGNsZWFuZXIgdG8gaGF2ZSAoYSkgc3ViLW5vZGUocykgZm9yIHRoZSByYWRpb3Mu
+DQpIb3cgZG8geW91IG1lYW4/DQoNCj4gPiAJCXNwaS1tYXgtZnJlcXVlbmN5ID0gPDgwMDAwMDA+
+Ow0KPiANCj4gRGF0YXNoZWV0IHNheXMgMTAgTUh6LCB3aHkgOCBNSHo/DQo+IA0KPiA+IAkJZ3Bp
+b3MtcmVzZXQgPSA8JnBpb0EgMjYgR1BJT19BQ1RJVkVfSElHSD47DQo+IA0KPiByZXNldC1ncGlv
+cz8NCkFncmVlZCwgdGhpcyBzZWVtcyBtb3JlIGNvbW1vbi4NCg0KPiA+IAkJY2xvY2tzID0gPCZy
+YWRpbzEgMD4sIDwmY2xraHMgMD47DQo+ID4gCQljbG9jay1uYW1lcyA9ICJjbGszMm0iLCAiY2xr
+aHMiOw0KPiA+DQo+ID4gCQlyYWRpbzA6IHN4MTI1N0AwIHsNCj4gDQo+IGxvcmFAMD8NCj4gDQo+
+ID4gCQkJY29tcGF0aWJsZSA9ICJzZW10ZWNoLHN4MTI1eCI7DQo+IA0KPiBObyB3aWxkY2FyZHMg
+aW4gYmluZGluZ3MgcGxlYXNlLCB1c2UgY29uY3JldGUgInNlbXRlY2gsc3gxMjU3Ii4NClN1cmUN
+Cg0KPiA+IAkJCXJlZyA9IDwwPjsNCj4gPiAJCQlzcGktbWF4LWZyZXF1ZW5jeSA9IDw4MDAwMDAw
+PjsNCj4gDQo+IERhdGFzaGVldCBzYXlzIDEwIG5zIC0gSSByZXBvcnRlZCB0byBTZW10ZWNoIHRo
+YXQgaXQgc2hvdWxkIHByb2JhYmx5IHNheQ0KPiAxMCBNSHosIHRvby4NCj4gDQo+ID4gCQkJdHg7
+DQo+IA0KPiBNaWdodCB3ZSBjb25maWd1cmUgdGhhdCBvbiB0aGUgc3gxMzAxIGluc3RlYWQ/DQoN
+CldlbGwgdGhlIGFiaWxpdHkgZm9yIGEgcmFkaW8gdG8gVFggaXMgYSByYWRpbyBwcm9wZXJ0eSBy
+ZWFsbHkuIEl0IGRlcGVuZHMgb24gdGhlIGJvYXJkIHdoaWNoIGNoYWluIGhhcyB0aGUgUEFzIG9u
+LiBJIGRvbuKAmXQgdGhpbmsgdGhhdCBpdHMgYXBwcm9wcmlhdGUgdG8gY29uZmlndXJlIHRoaXMg
+YXQgdGhlIGNvbmNlbnRyYXRvciwgaXQgY2FuIGluc3RlYWQgZGlzY292ZXIgdGhpcyBmcm9tIHRo
+ZSByYWRpb3MuDQoNCj4gPiAJCQljbG9ja3MgPSA8JnRjeG8gMD47DQo+ID4gCQkJY2xvY2stbmFt
+ZXMgPSAidGN4byI7DQo+ID4gCQl9Ow0KPiA+DQo+ID4gCQlyYWRpbzE6IHN4MTI1N0AxIHsNCj4g
+PiAJCQljb21wYXRpYmxlID0gInNlbXRlY2gsc3gxMjV4IjsNCj4gPiAJCQlyZWcgPSA8MT47DQo+
+ID4gCQkJc3BpLW1heC1mcmVxdWVuY3kgPSA8ODAwMDAwMD47DQo+ID4gCQkJI2Nsb2NrLWNlbGxz
+ID0gPDA+Ow0KPiA+IAkJCWNsb2NrcyA9IDwmdGN4byAwPjsNCj4gPiAJCQljbG9jay1uYW1lcyA9
+ICJ0Y3hvIjsNCj4gPiAJCQljbG9jay1vdXRwdXQtbmFtZXMgPSAiY2xrMzJtIjsNCj4gPiAJCX07
+DQo+ID4gfTsNCj4gW3NuaXBdDQo+IA0KPiBSZWdhcmRzLA0KPiBBbmRyZWFzDQo+IA0KPiAtLQ0K
+PiBTVVNFIExpbnV4IEdtYkgsIE1heGZlbGRzdHIuIDUsIDkwNDA5IE7DvHJuYmVyZywgR2VybWFu
+eQ0KPiBHRjogRmVsaXggSW1lbmTDtnJmZmVyLCBKYW5lIFNtaXRoYXJkLCBHcmFoYW0gTm9ydG9u
+DQo+IEhSQiAyMTI4NCAoQUcgTsO8cm5iZXJnKQ0K
