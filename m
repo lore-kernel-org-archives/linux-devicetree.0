@@ -1,96 +1,190 @@
-From: Tom Hebb <tommyhebb@gmail.com>
-Subject: Re: [PATCH] ARM: dts: berlin: switch to earlycon
-Date: Wed, 4 Jul 2018 17:14:24 -0400
-Message-ID: <03049848-f627-41aa-0808-152c4f959ed8@gmail.com>
-References: <7f67507ad697fc8c6d012f734c4d9a631d1afad1.1527608389.git.tommyhebb@gmail.com>
- <20180704171435.6b6113de@xhacker.debian>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v6 5/5] clocksource/drivers/timer-mediatek: Add support
+ for system timer
+Date: Thu, 5 Jul 2018 02:13:01 +0200
+Message-ID: <2cb9177c-0586-4432-94a2-df46fe64cc3b@linaro.org>
+References: <1530715820-3406-1-git-send-email-stanley.chu@mediatek.com>
+ <1530715820-3406-6-git-send-email-stanley.chu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180704171435.6b6113de@xhacker.debian>
+In-Reply-To: <1530715820-3406-6-git-send-email-stanley.chu@mediatek.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc: linux-kernel@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/Synaptics Berlin SoC support" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Stanley Chu <stanley.chu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Jisheng,
-
-On 07/04/2018 05:14 AM, Jisheng Zhang wrote:
-> Hi Thomas,
+On 04/07/2018 16:50, Stanley Chu wrote:
+> This patch adds a new "System Timer" on the Mediatek SoCs.
 > 
-> On Tue, 29 May 2018 11:41:42 -0400 Thomas Hebb wrote:
+> The System Timer is introduced as an always-on timer being
+> clockevent device for tick-broadcasting.
 > 
->> The Synopsys DesignWare 8250 UART in Berlin SoCs is now supported by
->> 8250_early, so we can use earlycon for early console output instead
->> of earlyprintk, which requires an SoC-specific kernel.
+> For clock, it is driven by 13 MHz system clock.
+> The implementation uses the system clock with no clock
+> source divider.
 > 
-> IIRC, earlyprintk still works during the decompress progress while the
-> earlycon doesn't.
-
-Yes, I believe that's correct. My original rationale for this patch was
-that earlycon is generally preferred over earlyprintk since it doesn't
-require SoC-specific kernels, but now I'm not convinced that either of
-the two parameters belongs in the dts file. As you point out,
-earlyprintk can do things that earlycon cannot, and in the common case,
-neither are needed.
-
-Perhaps removing the bootargs property altogether is more correct. I'm
-happy to send another patch to do that if you concur.
-
->>
->> Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
->> ---
->>  arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts        | 2 +-
->>  arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 2 +-
->>  arch/arm/boot/dts/berlin2q-marvell-dmp.dts        | 2 +-
->>  3 files changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts b/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
->> index 1c475796d17f..f98798bb684f 100644
->> --- a/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
->> +++ b/arch/arm/boot/dts/berlin2-sony-nsz-gs7.dts
->> @@ -45,7 +45,7 @@
->>  	compatible = "sony,nsz-gs7", "marvell,berlin2", "marvell,berlin";
->>  
->>  	chosen {
->> -		bootargs = "earlyprintk";
->> +		bootargs = "earlycon";
+> For interrupt, the clock event timer can be used by all cores.
 > 
-> Is there something missing here? example, uart8250,mmio,<addr>?
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
+>  drivers/clocksource/timer-mediatek.c |  110 +++++++++++++++++++++++++++++++++-
+>  1 file changed, 109 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clocksource/timer-mediatek.c b/drivers/clocksource/timer-mediatek.c
+> index e57c4d7..e98244a 100644
+> --- a/drivers/clocksource/timer-mediatek.c
+> +++ b/drivers/clocksource/timer-mediatek.c
+> @@ -58,6 +58,86 @@
+>  
+>  static void __iomem *gpt_sched_reg __read_mostly;
+>  
+> +/* system timer */
+> +#define SYST_BASE               (0x40)
+> +
+> +#define SYST_CON                (SYST_BASE + 0x0)
+> +#define SYST_VAL                (SYST_BASE + 0x4)
+> +
+> +#define SYST_CON_REG(to)        (timer_of_base(to) + SYST_CON)
+> +#define SYST_VAL_REG(to)        (timer_of_base(to) + SYST_VAL)
+> +
+> +/*
+> + * SYST_CON_EN: Clock enable. Shall be set to
+> + *   - Start timer countdown.
+> + *   - Allow timeout ticks being updated.
+> + *   - Allow changing interrupt functions.
+> + *
+> + * SYST_CON_IRQ_EN: Set to allow interrupt.
+> + *
+> + * SYST_CON_IRQ_CLR: Set to clear interrupt.
+> + */
+> +#define SYST_CON_EN              BIT(0)
+> +#define SYST_CON_IRQ_EN          BIT(1)
+> +#define SYST_CON_IRQ_CLR         BIT(4)
+> +
+> +static void __iomem *gpt_sched_reg __read_mostly;
 
-No explicit MMIO info is needed for earlycon on DT systems where an
-stdout-path property is present. I've tested the patch as-is and the
-early output works fine.
+duplicate 'gpt_sched_reg' variable.
 
->>  		stdout-path = "serial0:115200n8";
->>  	};
->>  
->> diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
->> index ca24def0ce13..20f31cdeaf38 100644
->> --- a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
->> +++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
->> @@ -46,7 +46,7 @@
->>  	compatible = "google,chromecast", "marvell,berlin2cd", "marvell,berlin";
->>  
->>  	chosen {
->> -		bootargs = "earlyprintk";
->> +		bootargs = "earlycon";
->>  		stdout-path = "serial0:115200n8";
->>  	};
->>  
->> diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
->> index 57aa5f8a7c77..9834e84a0797 100644
->> --- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
->> +++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
->> @@ -49,7 +49,7 @@
->>  	};
->>  
->>  	chosen {
->> -		bootargs = "earlyprintk";
->> +		bootargs = "earlycon";
->>  		stdout-path = "serial0:115200n8";
->>  	};
->>  
->
+
+> +static void mtk_syst_ack_irq(struct timer_of *to)
+> +{
+> +	/* Clear and disable interrupt */
+> +	writel(SYST_CON_IRQ_CLR | SYST_CON_EN, SYST_CON_REG(to));
+> +}
+> +
+> +static irqreturn_t mtk_syst_handler(int irq, void *dev_id)
+> +{
+> +	struct clock_event_device *clkevt = dev_id;
+> +	struct timer_of *to = to_timer_of(clkevt);
+> +
+> +	mtk_syst_ack_irq(to);
+> +	clkevt->event_handler(clkevt);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int mtk_syst_clkevt_next_event(unsigned long ticks,
+> +				      struct clock_event_device *clkevt)
+> +{
+> +	struct timer_of *to = to_timer_of(clkevt);
+> +
+> +	/* Enable clock to allow timeout tick update later */
+> +	writel(SYST_CON_EN, SYST_CON_REG(to));
+> +
+> +	/*
+> +	 * Write new timeout ticks. Timer shall start countdown
+> +	 * after timeout ticks are updated.
+> +	 */
+> +	writel(ticks, SYST_VAL_REG(to));
+> +
+> +	/* Enable interrupt */
+> +	writel(SYST_CON_EN | SYST_CON_IRQ_EN, SYST_CON_REG(to));
+> +
+> +	return 0;
+> +}
+> +
+> +static int mtk_syst_clkevt_shutdown(struct clock_event_device *clkevt)
+> +{
+> +	/* Disable timer */
+> +	writel(0, SYST_CON_REG(to_timer_of(clkevt)));
+> +
+> +	return 0;
+> +}
+> +
+> +static int mtk_syst_clkevt_resume(struct clock_event_device *clkevt)
+> +{
+> +	return mtk_syst_clkevt_shutdown(clkevt);
+> +}
+> +
+> +static int mtk_syst_clkevt_oneshot(struct clock_event_device *clkevt)
+> +{
+> +	return 0;
+> +}
+> +
+>  static u64 notrace mtk_gpt_read_sched_clock(void)
+>  {
+>  	return readl_relaxed(gpt_sched_reg);
+> @@ -186,6 +266,34 @@ static void mtk_gpt_enable_irq(struct timer_of *to, u8 timer)
+>  	},
+>  };
+>  
+> +static int __init mtk_syst_init(struct device_node *node)
+> +{
+> +	int ret;
+> +
+> +	to.clkevt.features = CLOCK_EVT_FEAT_DYNIRQ | CLOCK_EVT_FEAT_ONESHOT;
+> +	to.clkevt.set_state_shutdown = mtk_syst_clkevt_shutdown;
+> +	to.clkevt.set_state_oneshot = mtk_syst_clkevt_oneshot;
+> +	to.clkevt.tick_resume = mtk_syst_clkevt_resume;
+> +	to.clkevt.set_next_event = mtk_syst_clkevt_next_event;
+> +	to.of_irq.handler = mtk_syst_handler;
+> +
+> +	ret = timer_of_init(node, &to);
+> +	if (ret)
+> +		goto err;
+> +
+> +	clockevents_config_and_register(&to.clkevt, timer_of_rate(&to),
+> +					TIMER_SYNC_TICKS, 0xffffffff);
+> +
+> +	pr_info("irq=%d, rate=%lu, max_ns: %llu, min_ns: %llu\n",
+> +		timer_of_irq(&to), timer_of_rate(&to),
+> +		to.clkevt.max_delta_ns, to.clkevt.min_delta_ns);
+
+Please remove this trace. Most of this information is already available
+in /proc/timer_list.
+
+However, if you think it is worth to add this trace, do a proposition in
+the time framework directly so all drivers can benefit this change.
+
+> +	return 0;
+> +err:
+> +	timer_of_cleanup(&to);
+> +	return ret;
+> +}
+> +
+>  static int __init mtk_gpt_init(struct device_node *node)
+>  {
+>  	int ret;
+> @@ -218,9 +326,9 @@ static int __init mtk_gpt_init(struct device_node *node)
+>  	mtk_gpt_enable_irq(&to, TIMER_CLK_EVT);
+>  
+>  	return 0;
+> -
+>  err:
+>  	timer_of_cleanup(&to);
+>  	return ret;
+>  }
+>  TIMER_OF_DECLARE(mtk_mt6577, "mediatek,mt6577-timer", mtk_gpt_init);
+> +TIMER_OF_DECLARE(mtk_mt6765, "mediatek,mt6765-timer", mtk_syst_init);
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
