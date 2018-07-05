@@ -1,41 +1,68 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v4 1/2] clk: pxa: export 32kHz PLL
-Date: Thu, 05 Jul 2018 07:34:10 +0200
-Message-ID: <87d0w2gsa5.fsf@belgarion.home>
-References: <20180627194124.26366-1-robert.jarzmik@free.fr>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 1/4] mfd: bd71837: mfd driver for ROHM BD71837 PMIC
+Date: Thu, 5 Jul 2018 06:52:26 +0100
+Message-ID: <20180705055226.GJ496@dell>
+References: <cover.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
+ <7e1888375c979accc402e9ddd7316e528b2ac52c.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
+ <CAFqH_51izuVgHukAORvwjZqGhxy85tdNdaHL9mOUnPnbCQmQjA@mail.gmail.com>
+ <20180704145623.zgei3ehrwdpcu26r@penguin>
+ <CAFqH_50UshTTc0Cv0wBhUoPdm0jZVgcvRKr3qzb=M-jCcMhdtA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180627194124.26366-1-robert.jarzmik@free.fr> (Robert Jarzmik's
- message of "Wed, 27 Jun 2018 21:41:23 +0200")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAFqH_50UshTTc0Cv0wBhUoPdm0jZVgcvRKr3qzb=M-jCcMhdtA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo Serra <eballetbo@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, matti.vaittinen@fi.rohmeurope.com, Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Matti Vaittinen <mazziesaccount@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Sebastian Reichel <sre@kernel.org>, chenjh@rock-chips.com, Andrey Smirnov <andrew.smirnov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Kate Stewart <kstewart@linuxfoundation.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kerne>
 List-Id: devicetree@vger.kernel.org
 
-Robert Jarzmik <robert.jarzmik@free.fr> writes:
+On Wed, 04 Jul 2018, Enric Balletbo Serra wrote:
 
-> This clock is especially used by the RTC driver, so export it so that
-> devicetree users can use it.
->
-> Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
-> ---
-> Since v2: fix missing parenthesis in clk-pxa25x.c and clk-pxa3xx.c
+> Missatge de Dmitry Torokhov <dmitry.torokhov@gmail.com> del dia dc., 4
+> de jul. 2018 a les 17:10:
+> >
+> > Hi Enric,
+> >
+> > On Tue, Jun 26, 2018 at 11:06:33AM +0200, Enric Balletbo Serra wrote:
+> > > Hi Matti,
+> > >
+> > > Thanks for the patch, a few comments below, some are feedback I
+> > > received when I sent some patches to this subsystem.
+> > >
+> > > Missatge de Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com> del
+> > > dia dt., 19 de juny 2018 a les 12:57:
+> > > > +};
+> > > > +
+> > > > +/* bd71837 multi function cells */
+> > > > +static struct mfd_cell bd71837_mfd_cells[] = {
+> > > > +       {
+> > > > +               .name = "bd71837-clk",
+> > > > +       }, {
+> > > > +               .name = "bd718xx-pwrkey",
+> > > > +               .resources = &irqs[0],
+> > > > +               .num_resources = ARRAY_SIZE(irqs),
+> > > > +       }, {
+> > > > +               .name = "bd71837-pmic",
+> > > > +       },
+> > > nit: no comma at the end
+> >
+> > Actually, trailing comma is preferred on structures/arrays without
+> > sentinels, because if one needs to add a new entry/new member, then in
+> > the diff there will have only one new line added, instead of one line
+> > being changed (adding now necessary comma) and one added.
 
-Hi Michael and Stephen,
+[...]
 
-Could you have a look please ?
+> Dmitry, I really appreciate this kind of comments, especially when
+> there is a justification, so I can learn more and more to do better
+> patches.
 
-Cheers.
++1
 
---
-Robert
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
