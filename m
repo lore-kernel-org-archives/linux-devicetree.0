@@ -1,49 +1,73 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 4/6] bus: ti-sysc: Add support for software reset
-Date: Wed, 4 Jul 2018 22:55:06 -0700
-Message-ID: <20180705055506.GI26255@atomide.com>
-References: <acdfef83-8778-e8f4-e423-ed04a9a8a649@ti.com>
- <20180611060957.GN5738@atomide.com>
- <f460481f-85a9-2a41-a894-6f25122dee8a@ti.com>
- <20180611062904.GO5738@atomide.com>
- <89d55b0b-fe9e-793b-2694-25755ac2bc15@ti.com>
- <20180611070332.GP5738@atomide.com>
- <20180703070743.GG112168@atomide.com>
- <ee54c3ea-6200-33dd-83da-491f5fdd9f5c@ti.com>
- <20180703073139.GN112168@atomide.com>
- <1138704c-b7a4-391f-3404-e1bd25a4a0ff@ti.com>
+From: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [PATCH v12 5/5] dt-bindings: drm/panel: Document
+ Innolux TV123WAM panel bindings
+Date: Thu, 05 Jul 2018 12:08:04 +0530
+Message-ID: <f9d9174dbf1355c7a407c03b718a87b3@codeaurora.org>
+References: <1529584329-632-1-git-send-email-spanda@codeaurora.org>
+ <CGME20180622072307epcas4p48b7b94318be80d6a6c732d3fd908c3fc@epcas4p4.samsung.com>
+ <1529584329-632-6-git-send-email-spanda@codeaurora.org>
+ <20180629121414eucas1p21171a1eab3ee081c8b4114ca58264669~8oIIwEXJJ1824018240eucas1p2G@eucas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1138704c-b7a4-391f-3404-e1bd25a4a0ff@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, mark.rutland@arm.com, paul@pwsan.com, t-kristo@ti.com, robh+dt@kernel.org, bcousson@baylibre.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180629121414eucas1p21171a1eab3ee081c8b4114ca58264669~8oIIwEXJJ1824018240eucas1p2G-PmokGAFL9ItqW5MlFJXMulaTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Faiz Abbas <faiz_abbas@ti.com> [180704 13:37]:
-> After taking a second look at this thread, I don't see anything big to
-> be modified.
-> 
-> We both agree that "reset status bit in sysconfig register" is the quirk
-> case which can be added once such an IP is discovered in ti-sysc.
-
-Yes agreed.
-
-> All I need to change is SYSC_OMAP4_SOFTRESET to SYSC_SOFT_RESET_SHIFT_0
-> for better readability and rebase it to the latest mainline.
-
-Let's not change SYSC_OMAP4_SOFTRESET as only the ti-sysc
-driver needs to know that and it can be set based on the
-compatible.
-
-How about replace ddata->cfg.quirks & SYSC_QUIRK_RESET_STATUS
-test with just ddata->cfg.syss_mask test in your sysc_reset()?
-
-We still need to set SYSC_QUIRK_RESET_STATUS too for pdata
-callbacks.
-
-Regards,
-
-Tony
+T24gMjAxOC0wNi0yOSAxNzo0NCwgQW5kcnplaiBIYWpkYSB3cm90ZToKPiBPbiAyMS4wNi4yMDE4
+IDE0OjMyLCBTYW5kZWVwIFBhbmRhIHdyb3RlOgo+PiBJbm5vbHV4IFRWMTIzV0FNIGlzIGEgMTIu
+MyIgZURQIGRpc3BsYXkgcGFuZWwgd2l0aAo+PiAyMTYweDE0NDAgcmVzb2x1dGlvbiwgd2hpY2gg
+Y2FuIGJlIHN1cHBvcnRlZCBieSBzaW1wbGUKPj4gcGFuZWwgZHJpdmVyLgo+IAo+IEFyZSB5b3Ug
+c3VyZSB0aGlzIGlzIElubm9sdXg/IFF1aWNrIGdyZXAgb24gSW50ZXJuZXQgZmluZHMgb25seSBC
+T0UKPiBwYW5lbCB3aXRoIHRoaXMgVFYxMjNXQU1bMV0uCj4gCj4gWzFdOgo+IGh0dHBzOi8vZTJl
+LnRpLmNvbS9jZnMtZmlsZS9fX2tleS9jb21tdW5pdHlzZXJ2ZXItZGlzY3Vzc2lvbnMtY29tcG9u
+ZW50cy1maWxlcy8xMzgvVFYxMjNXQU1fMkQwMF9ORDBfNUYwMF9Qcm9kdWN0LXNwZWNfNUYwMF9C
+T0VfNUYwMF8yMDE2MTExNV8yRDAwX0EwMC5wZGYKPiAKVGhlIHBhbmVsIHVzZWQgaGVyZSBpcyBp
+bm5vbHV4LCB3aGljaCBpcyBhIDJrIHBhbmVsLiBXaGVyZSB0aGUgQk9FIG9uZSAKaXMgYSAxMDgw
+cCBwYW5lbC4KCj4gUmVnYXJkcwo+IEFuZHJ6ZWoKPj4gCj4+IENoYW5nZXMgaW4gdjE6Cj4+ICAt
+IE1ha2UgdXNlIG9mIHNpbXBsZSBwYW5lbCBkcml2ZXIgaW5zdGVhZCBvZiBjcmVhdGluZwo+PiAg
+ICBhIG5ldyBkcml2ZXIgZm9yIHRoaXMgcGFuZWwgKFNlYW4gUGF1bCkuCj4+ICAtIENvbWJpbmUg
+ZHQtYmluZGluZyBhbmQgZHJpdmVyIGNoYW5nZXMgaW50byBvbmUgcGF0Y2gKPj4gICAgYXMgZG9u
+ZSBieSBvdGhlciBleGlzdGluZyBwYW5lbCBzdXBwb3J0IGNoYW5nZXMuCj4+IAo+PiBDaGFuZ2Vz
+IGluIHYyOgo+PiAgLSBTZXBhcmF0ZSBkcml2ZXIgY2hhbmdlIGZyb20gZHQtYmluZGluZyBkb2N1
+bWVudGF0aW9uIChSb2IgSGVycmluZykuCj4+ICAtIEFkZCB0aGUgcHJvcGVydGllcyBmcm9tIHNp
+bXBsZS1wYW5lbCBiaW5kaW5nIHRoYXQgYXJlIGFwcGxpY2FibGUgdG8KPj4gICAgdGhpcyBwYW5l
+bCAoUm9iIEhlcnJpbmcpLgo+PiAKPj4gU2lnbmVkLW9mZi1ieTogU2FuZGVlcCBQYW5kYSA8c3Bh
+bmRhQGNvZGVhdXJvcmEub3JnPgo+PiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2Vy
+bmVsLm9yZz4KPj4gLS0tCj4+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2
+MTIzd2FtLnR4dCAgICAgIHwgMjAgCj4+ICsrKysrKysrKysrKysrKysrKysrCj4+ICAxIGZpbGUg
+Y2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IAo+PiBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIz
+d2FtLnR4dAo+PiAKPj4gZGlmZiAtLWdpdCAKPj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2FtLnR4dCAKPj4gYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2Ft
+LnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLmE5YjM1
+MjY1ZmExMwo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyAKPj4gYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2FtLnR4dAo+PiBAQCAt
+MCwwICsxLDIwIEBACj4+ICtJbm5vbHV4IFRWMTIzV0FNIDEyLjMgaW5jaCBlRFAgMksgZGlzcGxh
+eSBwYW5lbAo+PiArCj4+ICtUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1w
+bGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgCj4+IHNwZWNpZmllZAo+PiAraW4gc2ltcGxlLXBh
+bmVsLnR4dCBpbiB0aGlzIGRpcmVjdG9yeS4KPj4gKwo+PiArUmVxdWlyZWQgcHJvcGVydGllczoK
+Pj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJpbm5vbHV4LHR2MTIzd2FtIgo+PiArLSBwb3dl
+ci1zdXBwbHk6IHJlZ3VsYXRvciB0byBwcm92aWRlIHRoZSBzdXBwbHkgdm9sdGFnZQo+PiArCj4+
+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+PiArLSBlbmFibGUtZ3Bpb3M6IEdQSU8gcGluIHRvIGVu
+YWJsZSBvciBkaXNhYmxlIHRoZSBwYW5lbAo+PiArLSBiYWNrbGlnaHQ6IHBoYW5kbGUgb2YgdGhl
+IGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQgdG8gdGhlIHBhbmVsCj4+ICsKPj4gK0V4YW1wbGU6
+Cj4+ICsJcGFuZWxfZWRwOiBwYW5lbC1lZHAgewo+PiArCQljb21wYXRpYmxlID0gImlubm9sdXgs
+dHYxMjN3YW0iOwo+PiArCQllbmFibGUtZ3Bpb3MgPSA8Jm1zbWdwaW8gMzEgR1BJT19BQ1RJVkVf
+TE9XPjsKPj4gKwkJcG93ZXItc3VwcGx5ID0gPCZwbTg5MTZfbDI+Owo+PiArCQliYWNrbGlnaHQg
+PSA8JmJhY2tsaWdodD47Cj4+ICsJfTsKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZnJlZWRyZW5vCg==
