@@ -1,33 +1,53 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 4/4] venus: firmware: register separate driver for
- firmware device
-Date: Thu, 5 Jul 2018 17:36:42 -0600
-Message-ID: <20180705233642.GA27823@rob-hp-laptop>
-References: <1530731212-30474-1-git-send-email-vgarodia@codeaurora.org>
- <1530731212-30474-5-git-send-email-vgarodia@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: Add vendor prefix for Vamrs Ltd.
+Date: Thu, 5 Jul 2018 17:38:15 -0600
+Message-ID: <20180705233815.GA31327@rob-hp-laptop>
+References: <20180705150818.29931-1-ezequiel@collabora.com>
+ <20180705150818.29931-2-ezequiel@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1530731212-30474-5-git-send-email-vgarodia@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vikash Garodia <vgarodia@codeaurora.org>
-Cc: stanimir.varbanov@linaro.org, hverkuil@xs4all.nl, mchehab@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
+In-Reply-To: <20180705150818.29931-2-ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 05, 2018 at 12:36:52AM +0530, Vikash Garodia wrote:
-> A separate child device is added for video firmware.
-> This is needed to
-> [1] configure the firmware context bank with the desired SID.
-> [2] ensure that the iova for firmware region is from 0x0.
+On Thu, Jul 05, 2018 at 12:08:17PM -0300, Ezequiel Garcia wrote:
+> Vamrs Ltd. is a hardware solutions provider based in China.
 > 
-> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
+> Website: http://vamrs.com/
+> 
+> Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 > ---
->  .../devicetree/bindings/media/qcom,venus.txt       | 17 +++++++-
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 7cad066191ee..5dc2c5f49e37 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -393,6 +393,7 @@ urt	United Radiant Technology Corporation
+>  usi	Universal Scientific Industrial Co., Ltd.
+>  v3	V3 Semiconductor
+>  variscite	Variscite Ltd.
+> +vamrs	Vamrs Ltd.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Alphabetical order please.
 
->  drivers/media/platform/qcom/venus/core.c           | 49 +++++++++++++++++++---
->  drivers/media/platform/qcom/venus/firmware.c       | 18 ++++++++
->  drivers/media/platform/qcom/venus/firmware.h       |  2 +
->  4 files changed, 80 insertions(+), 6 deletions(-)
+>  via	VIA Technologies, Inc.
+>  virtio	Virtual I/O Device Specification, developed by the OASIS consortium
+>  vivante	Vivante Corporation
+> -- 
+> 2.18.0.rc2
+> 
