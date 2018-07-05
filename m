@@ -1,68 +1,140 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 18/23] dt-bindings: thermal: armada: add reference to
- new bindings
-Date: Thu, 5 Jul 2018 12:05:28 +0200
-Message-ID: <20180705120528.4b923e16@xps13>
-References: <20180625151239.20976-1-miquel.raynal@bootlin.com>
- <20180625151239.20976-19-miquel.raynal@bootlin.com>
- <20180703213011.GA13190@rob-hp-laptop>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: pxa-ssp: add support for an external
+	clock in devicetree" to the asoc tree
+Date: Thu, 05 Jul 2018 11:08:35 +0100
+Message-ID: <E1fb1Bj-0002sd-KD@debutante>
+References: <20180702151100.28999-1-daniel@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180703213011.GA13190@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-pm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>, David Sniatkiwicz <davidsn@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180702151100.28999-1-daniel@zonque.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Daniel Mack <daniel@zonque.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, haojian.zhuang@gmail.com, robh+dt@kernel.org, broonie@kernel.org, robert.jarzmik@free.fr
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGUgb24gVHVlLCAzIEp1
-bCAyMDE4IDE1OjMwOjExIC0wNjAwOgoKPiBPbiBNb24sIEp1biAyNSwgMjAxOCBhdCAwNToxMjoz
-NFBNICswMjAwLCBNaXF1ZWwgUmF5bmFsIHdyb3RlOgo+ID4gTmV3IGJpbmRpbmdzICh3aXRoIHRo
-ZSBzeXNjb24gYW5kIHRoZSBvdmVyaGVhdCBpbnRlcnJ1cHQpIGFyZSBhdmFpbGFibGUgIAo+IAo+
-IFdoYXQgaW50ZXJydXB0PyBJdCdzIG5vdCBpbiB5b3VyIG5ldyBiaW5kaW5nLgo+IAo+ID4gZm9y
-IEFQODA2IGFuZCBDUDExMCBjb21wYXRpYmxlcy4gQWRkIGEgcmVmZXJlbmNlIHRvIHRoZXNlIGZp
-bGVzIGZyb20gdGhlCj4gPiBvcmlnaW5hbCBkb2N1bWVudGF0aW9uLgo+ID4gCj4gPiBTaWduZWQt
-b2ZmLWJ5OiBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPgo+ID4gLS0t
-Cj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvYXJtYWRhLXRo
-ZXJtYWwudHh0IHwgNSArKysrKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykK
-PiA+IAo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90
-aGVybWFsL2FybWFkYS10aGVybWFsLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy90aGVybWFsL2FybWFkYS10aGVybWFsLnR4dAo+ID4gaW5kZXggZTBkMDEzYTJlNjZkLi5m
-M2I0NDExMDA4OTAgMTAwNjQ0Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvdGhlcm1hbC9hcm1hZGEtdGhlcm1hbC50eHQKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL2FybWFkYS10aGVybWFsLnR4dAo+ID4gQEAgLTEw
-LDYgKzEwLDExIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiAgICAgICogbWFydmVsbCxhcm1h
-ZGEtYXA4MDYtdGhlcm1hbAo+ID4gICAgICAqIG1hcnZlbGwsYXJtYWRhLWNwMTEwLXRoZXJtYWwg
-IAo+IAo+IFJlYWxseSB5b3Ugc2hvdWxkIG5vdCBiZSB1c2luZyB0aGUgc2FtZSBjb21wYXRpYmxl
-IGZvciBib3RoLiBOb3cgeW91IAo+IGhhdmUgMiBkcml2ZXJzIG1hdGNoaW5nIHRvIHNhbWUgY29t
-cGF0aWJsZXMuCj4gCj4gQ2FuJ3QgeW91IG1ha2UgdGhpcyBhIGNoaWxkIG9mIHRoZSBzeXNjb24g
-d2l0aG91dCBicmVha2luZyB0aGUgYmluZGluZz8KCldlIGFyZSB0YWxraW5nIGFib3V0IG9ubHkg
-MSBkcml2ZXIgaGVyZSwgc28gSSdtIG5vdCBzdXJlIGhvdyBJIHNob3VsZAp1bmRlcnN0YW5kIHlv
-dXIgbGFzdCBzZW50ZW5jZS4gRG8geW91IHdhbnQgbWUgdG8gYWRkIGEgc2Vjb25kCmNvbXBhdGli
-bGUgKGZvciB0aGUgc2FtZSBwaWVjZSBvZiBoYXJkd2FyZSkgZm9yIHRoZXJtYWwgbm9kZSBkZWNs
-YXJlZAphcyBhIGNoaWxkIG9mIHRoZSBzeXNjb24/CgpJIGNvdWxkIGhhbmRsZSB0aGlzIHNpdHVh
-dGlvbiBpbiB0aGUgZHJpdmVyIGJ5IGNyZWF0aW5nIHRoZSBtaXNzaW5nCnJlZ21hcCBpbiBjYXNl
-IHdlIGFyZSB1c2luZyB0aGUgb2xkIGNvbXBhdGlibGUuIElmIHRoaXMgaXMgdGhlIHNvbHV0aW9u
-CnlvdSBwcmVmZXIsIGhvdyBzaG91bGQgSSBuYW1lIHRoZSBuZXcgY29tcGF0aWJsZXMgPwoKPiAK
-PiA+ICAKPiA+ICtOb3RlOiB0aGVzZSBiaW5kaW5ncyBhcmUgZGVwcmVjYXRlZCBmb3IgQVA4MDYv
-Q1AxMTAgYW5kIHNob3VsZCBpbnN0ZWFkCj4gPiArZm9sbG93IHRoZSBydWxlcyBkZXNjcmliZWQg
-aW46Cj4gPiArRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tYXJ2ZWxsL2Fw
-ODA2LXN5c3RlbS1jb250cm9sbGVyLnR4dAo+ID4gK0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9hcm0vbWFydmVsbC9jcDExMC1zeXN0ZW0tY29udHJvbGxlci50eHQKPiA+ICsKPiA+
-ICAtIHJlZzogRGV2aWNlJ3MgcmVnaXN0ZXIgc3BhY2UuCj4gPiAgICBUd28gZW50cmllcyBhcmUg
-ZXhwZWN0ZWQsIHNlZSB0aGUgZXhhbXBsZXMgYmVsb3cuIFRoZSBmaXJzdCBvbmUgcG9pbnRzCj4g
-PiAgICB0byB0aGUgc3RhdHVzIHJlZ2lzdGVyICg0QikuIFRoZSBzZWNvbmQgb25lIHBvaW50cyB0
-byB0aGUgY29udHJvbAo+ID4gLS0gCj4gPiAyLjE0LjEKPiA+ICAgCgpUaGFua3MsCk1pcXXDqGwK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
-bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
-ZXJuZWwK
+The patch
+
+   ASoC: pxa-ssp: add support for an external clock in devicetree
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 90eb6b59d311e6facd040124cb5b659a865125b8 Mon Sep 17 00:00:00 2001
+From: Daniel Mack <daniel@zonque.org>
+Date: Mon, 2 Jul 2018 17:11:00 +0200
+Subject: [PATCH] ASoC: pxa-ssp: add support for an external clock in
+ devicetree
+
+Allow setting a clock called 'extclk' in the device of the ssp-dai
+device. If specified, this clock will be set to the mclk rate from the
+DAI's .set_sysclk() callback. The DAI will also configure itself to
+use that external clock.
+
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../bindings/sound/mrvl,pxa-ssp.txt           |  8 ++++++
+ sound/soc/pxa/pxa-ssp.c                       | 25 +++++++++++++++++++
+ 2 files changed, 33 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/mrvl,pxa-ssp.txt b/Documentation/devicetree/bindings/sound/mrvl,pxa-ssp.txt
+index 74c9ba6c2823..93b982e9419f 100644
+--- a/Documentation/devicetree/bindings/sound/mrvl,pxa-ssp.txt
++++ b/Documentation/devicetree/bindings/sound/mrvl,pxa-ssp.txt
+@@ -5,6 +5,14 @@ Required properties:
+ 	compatible	Must be "mrvl,pxa-ssp-dai"
+ 	port		A phandle reference to a PXA ssp upstream device
+ 
++Optional properties:
++
++	clock-names
++	clocks		Through "clock-names" and "clocks", external clocks
++			can be configured. If a clock names "extclk" exists,
++			it will be set to the mclk rate of the audio stream
++			and be used as clock provider of the DAI.
++
+ Example:
+ 
+ 	/* upstream device */
+diff --git a/sound/soc/pxa/pxa-ssp.c b/sound/soc/pxa/pxa-ssp.c
+index ff1e0bd8d407..69033e1a84e6 100644
+--- a/sound/soc/pxa/pxa-ssp.c
++++ b/sound/soc/pxa/pxa-ssp.c
+@@ -41,6 +41,7 @@
+  */
+ struct ssp_priv {
+ 	struct ssp_device *ssp;
++	struct clk *extclk;
+ 	unsigned long ssp_clk;
+ 	unsigned int sysclk;
+ 	unsigned int dai_fmt;
+@@ -205,6 +206,21 @@ static int pxa_ssp_set_dai_sysclk(struct snd_soc_dai *cpu_dai,
+ 	u32 sscr0 = pxa_ssp_read_reg(ssp, SSCR0) &
+ 		~(SSCR0_ECS | SSCR0_NCS | SSCR0_MOD | SSCR0_ACS);
+ 
++	if (priv->extclk) {
++		int ret;
++
++		/*
++		 * For DT based boards, if an extclk is given, use it
++		 * here and configure PXA_SSP_CLK_EXT.
++		 */
++
++		ret = clk_set_rate(priv->extclk, freq);
++		if (ret < 0)
++			return ret;
++
++		clk_id = PXA_SSP_CLK_EXT;
++	}
++
+ 	dev_dbg(&ssp->pdev->dev,
+ 		"pxa_ssp_set_dai_sysclk id: %d, clk_id %d, freq %u\n",
+ 		cpu_dai->id, clk_id, freq);
+@@ -774,6 +790,15 @@ static int pxa_ssp_probe(struct snd_soc_dai *dai)
+ 			ret = -ENODEV;
+ 			goto err_priv;
+ 		}
++
++		priv->extclk = devm_clk_get(dev, "extclk");
++		if (IS_ERR(priv->extclk)) {
++			ret = PTR_ERR(priv->extclk);
++			if (ret == -EPROBE_DEFER)
++				return ret;
++
++			priv->extclk = NULL;
++		}
+ 	} else {
+ 		priv->ssp = pxa_ssp_request(dai->id + 1, "SoC audio");
+ 		if (priv->ssp == NULL) {
+-- 
+2.18.0.rc2
