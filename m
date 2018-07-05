@@ -1,140 +1,223 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: pxa-ssp: add support for an external
-	clock in devicetree" to the asoc tree
-Date: Thu, 05 Jul 2018 11:08:35 +0100
-Message-ID: <E1fb1Bj-0002sd-KD@debutante>
-References: <20180702151100.28999-1-daniel@zonque.org>
+From: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v6 1/4] resource: Move reparent_resources() to
+ kernel/resource.c and make it public
+Date: Thu, 5 Jul 2018 18:09:39 +0800
+Message-ID: <20180705100939.GD1225@MiWiFi-R3L-srv>
+References: <20180704041038.8190-1-bhe@redhat.com>
+ <20180704041038.8190-2-bhe@redhat.com>
+ <CAHp75VfWLcQq4XGM3RyfO_ENx=3=WrCEhtOw+a0Sfwz_OpQ0UQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180702151100.28999-1-daniel@zonque.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Daniel Mack <daniel@zonque.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, haojian.zhuang@gmail.com, robh+dt@kernel.org, broonie@kernel.org, robert.jarzmik@free.fr
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VfWLcQq4XGM3RyfO_ENx=3=WrCEhtOw+a0Sfwz_OpQ0UQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, brijesh.singh-5C7GfCeVMHo@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, KY Srinivasan <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Dave Young <dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Josh Triplett <josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org>, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On 07/04/18 at 07:46pm, Andy Shevchenko wrote:
+> On Wed, Jul 4, 2018 at 7:10 AM, Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> > reparent_resources() is duplicated in arch/microblaze/pci/pci-common.c
+> > and arch/powerpc/kernel/pci-common.c, so move it to kernel/resource.c
+> > so that it's shared.
+> 
+> With couple of comments below,
 
-   ASoC: pxa-ssp: add support for an external clock in devicetree
+Sure, will fix these and repost with your reviewed-by, thanks. Should be
+after I reproduce and fix those issues reported by test robot.
 
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 90eb6b59d311e6facd040124cb5b659a865125b8 Mon Sep 17 00:00:00 2001
-From: Daniel Mack <daniel@zonque.org>
-Date: Mon, 2 Jul 2018 17:11:00 +0200
-Subject: [PATCH] ASoC: pxa-ssp: add support for an external clock in
- devicetree
-
-Allow setting a clock called 'extclk' in the device of the ssp-dai
-device. If specified, this clock will be set to the mclk rate from the
-DAI's .set_sysclk() callback. The DAI will also configure itself to
-use that external clock.
-
-Signed-off-by: Daniel Mack <daniel@zonque.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../bindings/sound/mrvl,pxa-ssp.txt           |  8 ++++++
- sound/soc/pxa/pxa-ssp.c                       | 25 +++++++++++++++++++
- 2 files changed, 33 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/sound/mrvl,pxa-ssp.txt b/Documentation/devicetree/bindings/sound/mrvl,pxa-ssp.txt
-index 74c9ba6c2823..93b982e9419f 100644
---- a/Documentation/devicetree/bindings/sound/mrvl,pxa-ssp.txt
-+++ b/Documentation/devicetree/bindings/sound/mrvl,pxa-ssp.txt
-@@ -5,6 +5,14 @@ Required properties:
- 	compatible	Must be "mrvl,pxa-ssp-dai"
- 	port		A phandle reference to a PXA ssp upstream device
- 
-+Optional properties:
-+
-+	clock-names
-+	clocks		Through "clock-names" and "clocks", external clocks
-+			can be configured. If a clock names "extclk" exists,
-+			it will be set to the mclk rate of the audio stream
-+			and be used as clock provider of the DAI.
-+
- Example:
- 
- 	/* upstream device */
-diff --git a/sound/soc/pxa/pxa-ssp.c b/sound/soc/pxa/pxa-ssp.c
-index ff1e0bd8d407..69033e1a84e6 100644
---- a/sound/soc/pxa/pxa-ssp.c
-+++ b/sound/soc/pxa/pxa-ssp.c
-@@ -41,6 +41,7 @@
-  */
- struct ssp_priv {
- 	struct ssp_device *ssp;
-+	struct clk *extclk;
- 	unsigned long ssp_clk;
- 	unsigned int sysclk;
- 	unsigned int dai_fmt;
-@@ -205,6 +206,21 @@ static int pxa_ssp_set_dai_sysclk(struct snd_soc_dai *cpu_dai,
- 	u32 sscr0 = pxa_ssp_read_reg(ssp, SSCR0) &
- 		~(SSCR0_ECS | SSCR0_NCS | SSCR0_MOD | SSCR0_ACS);
- 
-+	if (priv->extclk) {
-+		int ret;
-+
-+		/*
-+		 * For DT based boards, if an extclk is given, use it
-+		 * here and configure PXA_SSP_CLK_EXT.
-+		 */
-+
-+		ret = clk_set_rate(priv->extclk, freq);
-+		if (ret < 0)
-+			return ret;
-+
-+		clk_id = PXA_SSP_CLK_EXT;
-+	}
-+
- 	dev_dbg(&ssp->pdev->dev,
- 		"pxa_ssp_set_dai_sysclk id: %d, clk_id %d, freq %u\n",
- 		cpu_dai->id, clk_id, freq);
-@@ -774,6 +790,15 @@ static int pxa_ssp_probe(struct snd_soc_dai *dai)
- 			ret = -ENODEV;
- 			goto err_priv;
- 		}
-+
-+		priv->extclk = devm_clk_get(dev, "extclk");
-+		if (IS_ERR(priv->extclk)) {
-+			ret = PTR_ERR(priv->extclk);
-+			if (ret == -EPROBE_DEFER)
-+				return ret;
-+
-+			priv->extclk = NULL;
-+		}
- 	} else {
- 		priv->ssp = pxa_ssp_request(dai->id + 1, "SoC audio");
- 		if (priv->ssp == NULL) {
--- 
-2.18.0.rc2
+> 
+> Reviewed-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> P.S. In some commit message in this series you used 'likt' instead of 'like'.
+> 
+> >
+> > Signed-off-by: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  arch/microblaze/pci/pci-common.c | 37 -------------------------------------
+> >  arch/powerpc/kernel/pci-common.c | 35 -----------------------------------
+> >  include/linux/ioport.h           |  1 +
+> >  kernel/resource.c                | 39 +++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 40 insertions(+), 72 deletions(-)
+> >
+> > diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
+> > index f34346d56095..7899bafab064 100644
+> > --- a/arch/microblaze/pci/pci-common.c
+> > +++ b/arch/microblaze/pci/pci-common.c
+> > @@ -619,43 +619,6 @@ int pcibios_add_device(struct pci_dev *dev)
+> >  EXPORT_SYMBOL(pcibios_add_device);
+> >
+> >  /*
+> > - * Reparent resource children of pr that conflict with res
+> > - * under res, and make res replace those children.
+> > - */
+> > -static int __init reparent_resources(struct resource *parent,
+> > -                                    struct resource *res)
+> > -{
+> > -       struct resource *p, **pp;
+> > -       struct resource **firstpp = NULL;
+> > -
+> > -       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
+> > -               if (p->end < res->start)
+> > -                       continue;
+> > -               if (res->end < p->start)
+> > -                       break;
+> > -               if (p->start < res->start || p->end > res->end)
+> > -                       return -1;      /* not completely contained */
+> > -               if (firstpp == NULL)
+> > -                       firstpp = pp;
+> > -       }
+> > -       if (firstpp == NULL)
+> > -               return -1;      /* didn't find any conflicting entries? */
+> > -       res->parent = parent;
+> > -       res->child = *firstpp;
+> > -       res->sibling = *pp;
+> > -       *firstpp = res;
+> > -       *pp = NULL;
+> > -       for (p = res->child; p != NULL; p = p->sibling) {
+> > -               p->parent = res;
+> > -               pr_debug("PCI: Reparented %s [%llx..%llx] under %s\n",
+> > -                        p->name,
+> > -                        (unsigned long long)p->start,
+> > -                        (unsigned long long)p->end, res->name);
+> > -       }
+> > -       return 0;
+> > -}
+> > -
+> > -/*
+> >   *  Handle resources of PCI devices.  If the world were perfect, we could
+> >   *  just allocate all the resource regions and do nothing more.  It isn't.
+> >   *  On the other hand, we cannot just re-allocate all devices, as it would
+> > diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
+> > index fe9733ffffaa..926035bb378d 100644
+> > --- a/arch/powerpc/kernel/pci-common.c
+> > +++ b/arch/powerpc/kernel/pci-common.c
+> > @@ -1088,41 +1088,6 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
+> >  EXPORT_SYMBOL(pcibios_align_resource);
+> >
+> >  /*
+> > - * Reparent resource children of pr that conflict with res
+> > - * under res, and make res replace those children.
+> > - */
+> > -static int reparent_resources(struct resource *parent,
+> > -                                    struct resource *res)
+> > -{
+> > -       struct resource *p, **pp;
+> > -       struct resource **firstpp = NULL;
+> > -
+> > -       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
+> > -               if (p->end < res->start)
+> > -                       continue;
+> > -               if (res->end < p->start)
+> > -                       break;
+> > -               if (p->start < res->start || p->end > res->end)
+> > -                       return -1;      /* not completely contained */
+> > -               if (firstpp == NULL)
+> > -                       firstpp = pp;
+> > -       }
+> > -       if (firstpp == NULL)
+> > -               return -1;      /* didn't find any conflicting entries? */
+> > -       res->parent = parent;
+> > -       res->child = *firstpp;
+> > -       res->sibling = *pp;
+> > -       *firstpp = res;
+> > -       *pp = NULL;
+> > -       for (p = res->child; p != NULL; p = p->sibling) {
+> > -               p->parent = res;
+> > -               pr_debug("PCI: Reparented %s %pR under %s\n",
+> > -                        p->name, p, res->name);
+> > -       }
+> > -       return 0;
+> > -}
+> > -
+> > -/*
+> >   *  Handle resources of PCI devices.  If the world were perfect, we could
+> >   *  just allocate all the resource regions and do nothing more.  It isn't.
+> >   *  On the other hand, we cannot just re-allocate all devices, as it would
+> > diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> > index da0ebaec25f0..dfdcd0bfe54e 100644
+> > --- a/include/linux/ioport.h
+> > +++ b/include/linux/ioport.h
+> > @@ -192,6 +192,7 @@ extern int allocate_resource(struct resource *root, struct resource *new,
+> >  struct resource *lookup_resource(struct resource *root, resource_size_t start);
+> >  int adjust_resource(struct resource *res, resource_size_t start,
+> >                     resource_size_t size);
+> > +int reparent_resources(struct resource *parent, struct resource *res);
+> >  resource_size_t resource_alignment(struct resource *res);
+> >  static inline resource_size_t resource_size(const struct resource *res)
+> >  {
+> > diff --git a/kernel/resource.c b/kernel/resource.c
+> > index 30e1bc68503b..d1cbf4b50e17 100644
+> > --- a/kernel/resource.c
+> > +++ b/kernel/resource.c
+> > @@ -983,6 +983,45 @@ int adjust_resource(struct resource *res, resource_size_t start,
+> >  }
+> >  EXPORT_SYMBOL(adjust_resource);
+> >
+> > +/*
+> 
+> /** ?
+> 
+> > + * reparent_resources - reparent resource children of parent that res covers
+> > + * @parent: parent resource descriptor
+> > + * @res: resource descriptor desired by caller
+> > + *
+> > + * Reparent resource children of 'parent' that conflict with 'res'
+> > + * under 'res', and make 'res' replace those children.
+> 
+> Describe error codes, please.
+> 
+> > + */
+> > +int reparent_resources(struct resource *parent, struct resource *res)
+> > +{
+> > +       struct resource *p, **pp;
+> > +       struct resource **firstpp = NULL;
+> > +
+> > +       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
+> > +               if (p->end < res->start)
+> > +                       continue;
+> > +               if (res->end < p->start)
+> > +                       break;
+> > +               if (p->start < res->start || p->end > res->end)
+> > +                       return -ENOTSUPP;       /* not completely contained */
+> > +               if (firstpp == NULL)
+> > +                       firstpp = pp;
+> > +       }
+> > +       if (firstpp == NULL)
+> > +               return -ECANCELED; /* didn't find any conflicting entries? */
+> > +       res->parent = parent;
+> > +       res->child = *firstpp;
+> > +       res->sibling = *pp;
+> > +       *firstpp = res;
+> > +       *pp = NULL;
+> > +       for (p = res->child; p != NULL; p = p->sibling) {
+> > +               p->parent = res;
+> > +               pr_debug("PCI: Reparented %s %pR under %s\n",
+> > +                        p->name, p, res->name);
+> > +       }
+> > +       return 0;
+> > +}
+> > +EXPORT_SYMBOL(reparent_resources);
+> > +
+> >  static void __init __reserve_region_with_split(struct resource *root,
+> >                 resource_size_t start, resource_size_t end,
+> >                 const char *name)
+> > --
+> > 2.13.6
+> >
+> 
+> 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
