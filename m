@@ -1,13 +1,16 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 0/5] arm64: allwinner: h6: Enable AXP805 PMIC on Pine
- H64
-Date: Thu, 5 Jul 2018 11:41:00 +0200
-Message-ID: <20180705094100.ezydvbitowwe5pwf@flea>
-References: <20180705031106.344-1-wens@csie.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 18/23] dt-bindings: thermal: armada: add reference to
+ new bindings
+Date: Thu, 5 Jul 2018 12:05:28 +0200
+Message-ID: <20180705120528.4b923e16@xps13>
+References: <20180625151239.20976-1-miquel.raynal@bootlin.com>
+ <20180625151239.20976-19-miquel.raynal@bootlin.com>
+ <20180703213011.GA13190@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1062594378914858130=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180705031106.344-1-wens@csie.org>
+In-Reply-To: <20180703213011.GA13190@rob-hp-laptop>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,72 +20,49 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-pm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>, David Sniatkiwicz <davidsn@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
---===============1062594378914858130==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lshr46ipidxaztwx"
-Content-Disposition: inline
-
-
---lshr46ipidxaztwx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jul 05, 2018 at 11:11:01AM +0800, Chen-Yu Tsai wrote:
-> Hi everyone,
->=20
-> This series enables the AXP805 PMIC found on the Pine64 Pine H64 board.
-> The AXP805 seems to be identical to the AXP806 when comparing datasheets.
-> The Pine H64 uses the PMIC in stand-alone or "self-working" mode, using
-> the I2C interface. Neither features are currently supported. This series
-> adds support for them, and then adds the PMIC to the device tree.
-
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---lshr46ipidxaztwx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAls956sACgkQ0rTAlCFN
-r3QPGxAAkqvk2NxHg8A1mWq6LKMSnaNqOYiOyTfkWRw9rQKPVMwg9TBclxhzibki
-UFtF+suGzRBalFCZhoafJZ+MiLn8fdeTVx/pJV+whDEKAdt1J5EMFglv8zijdg7t
-ketVmG5BhVLAG4mvMnPUM4VKymlBIbuG9czFZeFD9CNRj9wpi+KJllVyEM1thr/3
-yyvYQvie2261CjwEc1n2ioPDOgKXbq/NsYfx/51l7qHxbHbtrnV2BeNB7xbbX4Fk
-ntuAu03bp6hzC6e/KXyv0kJ4EoXeoJsWeT8aPUMrO08EmPvKnctt3SH3QiEmvGOY
-oYdCV+1PMNzg1oaVA2oJlUuTq+joL7EAwsC8ZesM2ZBfk47V9/ZWp51NCeOyqmS2
-MrcA/M1ajcvVdvdjR3WqBNvqCQ7cvdmfohm7pIc/62W+JcIgRbdCTE+VDBk8Nbvb
-uh28bigi8ZxLgP3sn7ZXkb2yNN8ejA3mZLW/Sysu8a46Sn11FJSw5/22jj0IBYlT
-Mm94F5D2DhZWgX5oZ5DKzy5VT0W2QNu4KFASAk/I6k3BUhJkcPcwKn2M9HNsQlgR
-r16Pxm3j7ymXF+XyJnY5dOhTmaZIalHWq/jJ1Yx0U+ZbxcXc3ni5QEsoenEmFbUK
-Q4kWw34n9MiuO6NpadlLVvHGMq39D2Dbuge8or1zRy0Rmm0FIU8=
-=NtZT
------END PGP SIGNATURE-----
-
---lshr46ipidxaztwx--
-
-
---===============1062594378914858130==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1062594378914858130==--
+SGkgUm9iLAoKUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGUgb24gVHVlLCAzIEp1
+bCAyMDE4IDE1OjMwOjExIC0wNjAwOgoKPiBPbiBNb24sIEp1biAyNSwgMjAxOCBhdCAwNToxMjoz
+NFBNICswMjAwLCBNaXF1ZWwgUmF5bmFsIHdyb3RlOgo+ID4gTmV3IGJpbmRpbmdzICh3aXRoIHRo
+ZSBzeXNjb24gYW5kIHRoZSBvdmVyaGVhdCBpbnRlcnJ1cHQpIGFyZSBhdmFpbGFibGUgIAo+IAo+
+IFdoYXQgaW50ZXJydXB0PyBJdCdzIG5vdCBpbiB5b3VyIG5ldyBiaW5kaW5nLgo+IAo+ID4gZm9y
+IEFQODA2IGFuZCBDUDExMCBjb21wYXRpYmxlcy4gQWRkIGEgcmVmZXJlbmNlIHRvIHRoZXNlIGZp
+bGVzIGZyb20gdGhlCj4gPiBvcmlnaW5hbCBkb2N1bWVudGF0aW9uLgo+ID4gCj4gPiBTaWduZWQt
+b2ZmLWJ5OiBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPgo+ID4gLS0t
+Cj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvYXJtYWRhLXRo
+ZXJtYWwudHh0IHwgNSArKysrKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykK
+PiA+IAo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90
+aGVybWFsL2FybWFkYS10aGVybWFsLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy90aGVybWFsL2FybWFkYS10aGVybWFsLnR4dAo+ID4gaW5kZXggZTBkMDEzYTJlNjZkLi5m
+M2I0NDExMDA4OTAgMTAwNjQ0Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvdGhlcm1hbC9hcm1hZGEtdGhlcm1hbC50eHQKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL2FybWFkYS10aGVybWFsLnR4dAo+ID4gQEAgLTEw
+LDYgKzEwLDExIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiAgICAgICogbWFydmVsbCxhcm1h
+ZGEtYXA4MDYtdGhlcm1hbAo+ID4gICAgICAqIG1hcnZlbGwsYXJtYWRhLWNwMTEwLXRoZXJtYWwg
+IAo+IAo+IFJlYWxseSB5b3Ugc2hvdWxkIG5vdCBiZSB1c2luZyB0aGUgc2FtZSBjb21wYXRpYmxl
+IGZvciBib3RoLiBOb3cgeW91IAo+IGhhdmUgMiBkcml2ZXJzIG1hdGNoaW5nIHRvIHNhbWUgY29t
+cGF0aWJsZXMuCj4gCj4gQ2FuJ3QgeW91IG1ha2UgdGhpcyBhIGNoaWxkIG9mIHRoZSBzeXNjb24g
+d2l0aG91dCBicmVha2luZyB0aGUgYmluZGluZz8KCldlIGFyZSB0YWxraW5nIGFib3V0IG9ubHkg
+MSBkcml2ZXIgaGVyZSwgc28gSSdtIG5vdCBzdXJlIGhvdyBJIHNob3VsZAp1bmRlcnN0YW5kIHlv
+dXIgbGFzdCBzZW50ZW5jZS4gRG8geW91IHdhbnQgbWUgdG8gYWRkIGEgc2Vjb25kCmNvbXBhdGli
+bGUgKGZvciB0aGUgc2FtZSBwaWVjZSBvZiBoYXJkd2FyZSkgZm9yIHRoZXJtYWwgbm9kZSBkZWNs
+YXJlZAphcyBhIGNoaWxkIG9mIHRoZSBzeXNjb24/CgpJIGNvdWxkIGhhbmRsZSB0aGlzIHNpdHVh
+dGlvbiBpbiB0aGUgZHJpdmVyIGJ5IGNyZWF0aW5nIHRoZSBtaXNzaW5nCnJlZ21hcCBpbiBjYXNl
+IHdlIGFyZSB1c2luZyB0aGUgb2xkIGNvbXBhdGlibGUuIElmIHRoaXMgaXMgdGhlIHNvbHV0aW9u
+CnlvdSBwcmVmZXIsIGhvdyBzaG91bGQgSSBuYW1lIHRoZSBuZXcgY29tcGF0aWJsZXMgPwoKPiAK
+PiA+ICAKPiA+ICtOb3RlOiB0aGVzZSBiaW5kaW5ncyBhcmUgZGVwcmVjYXRlZCBmb3IgQVA4MDYv
+Q1AxMTAgYW5kIHNob3VsZCBpbnN0ZWFkCj4gPiArZm9sbG93IHRoZSBydWxlcyBkZXNjcmliZWQg
+aW46Cj4gPiArRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tYXJ2ZWxsL2Fw
+ODA2LXN5c3RlbS1jb250cm9sbGVyLnR4dAo+ID4gK0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9hcm0vbWFydmVsbC9jcDExMC1zeXN0ZW0tY29udHJvbGxlci50eHQKPiA+ICsKPiA+
+ICAtIHJlZzogRGV2aWNlJ3MgcmVnaXN0ZXIgc3BhY2UuCj4gPiAgICBUd28gZW50cmllcyBhcmUg
+ZXhwZWN0ZWQsIHNlZSB0aGUgZXhhbXBsZXMgYmVsb3cuIFRoZSBmaXJzdCBvbmUgcG9pbnRzCj4g
+PiAgICB0byB0aGUgc3RhdHVzIHJlZ2lzdGVyICg0QikuIFRoZSBzZWNvbmQgb25lIHBvaW50cyB0
+byB0aGUgY29udHJvbAo+ID4gLS0gCj4gPiAyLjE0LjEKPiA+ICAgCgpUaGFua3MsCk1pcXXDqGwK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
+bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
+ZXJuZWwK
