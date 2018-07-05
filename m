@@ -1,155 +1,45 @@
-From: Stanley Chu <stanley.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v6 5/5] clocksource/drivers/timer-mediatek: Add support
- for system timer
-Date: Thu, 5 Jul 2018 09:04:01 +0800
-Message-ID: <1530752641.17448.79.camel@mtkswgap22>
-References: <1530715820-3406-1-git-send-email-stanley.chu@mediatek.com>
- <1530715820-3406-6-git-send-email-stanley.chu@mediatek.com>
- <2cb9177c-0586-4432-94a2-df46fe64cc3b@linaro.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 0/3] ARM: dts: imx31: add device tree description of basic
+ controllers
+Date: Wed, 4 Jul 2018 22:05:45 -0300
+Message-ID: <CAOMZO5AWr=o1xgD5m7Q6SwrXgf__aVtXTk2GHFV_CryfV4tGiQ@mail.gmail.com>
+References: <20180703192934.6080-1-vz@mleia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <2cb9177c-0586-4432-94a2-df46fe64cc3b-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180703192934.6080-1-vz@mleia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-07-05 at 02:13 +0200, Daniel Lezcano wrote:
-> On 04/07/2018 16:50, Stanley Chu wrote:
+Hi Vladimir,
 
-Hi Daniel,
+On Tue, Jul 3, 2018 at 4:29 PM, Vladimir Zapolskiy <vz@mleia.com> wrote:
+> The changeset combines a number of essential updates to support device tree
+> on Freescale i.MX31 powered boards:
+> * removal of bogus RNGA registration for i.MX31 (device tree only),
+> * the core controllers on the i.MX31 SoC are now properly described,
+> * for reference and testing I add basic support of LogicPD MX31Lite board.
+>
+> There are some missing compatibles in the change 2/3, however at the moment
+> I assume that either adding the values can be omitted or deferred, here is
+> the exact list:
+> * "fsl,imx31-pata"
+> * "fsl,imx31-rtc"
+> * "fsl,imx31-nand"
+> * "fsl,imx31-weim"
+>
+> To test the changes I used a LogicPD reference board, however note that
+> still I have to add a workaround to the old known issue within imx-wdt
 
-Well remove duplicate one in v7.
-
-> > +
-> > +static void __iomem *gpt_sched_reg __read_mostly;
-> 
-> duplicate 'gpt_sched_reg' variable.
-> 
-> 
-> > +static void mtk_syst_ack_irq(struct timer_of *to)
-> > +{
-> > +	/* Clear and disable interrupt */
-> > +	writel(SYST_CON_IRQ_CLR | SYST_CON_EN, SYST_CON_REG(to));
-> > +}
-> > +
-> > +static irqreturn_t mtk_syst_handler(int irq, void *dev_id)
-> > +{
-> > +	struct clock_event_device *clkevt = dev_id;
-> > +	struct timer_of *to = to_timer_of(clkevt);
-> > +
-> > +	mtk_syst_ack_irq(to);
-> > +	clkevt->event_handler(clkevt);
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int mtk_syst_clkevt_next_event(unsigned long ticks,
-> > +				      struct clock_event_device *clkevt)
-> > +{
-> > +	struct timer_of *to = to_timer_of(clkevt);
-> > +
-> > +	/* Enable clock to allow timeout tick update later */
-> > +	writel(SYST_CON_EN, SYST_CON_REG(to));
-> > +
-> > +	/*
-> > +	 * Write new timeout ticks. Timer shall start countdown
-> > +	 * after timeout ticks are updated.
-> > +	 */
-> > +	writel(ticks, SYST_VAL_REG(to));
-> > +
-> > +	/* Enable interrupt */
-> > +	writel(SYST_CON_EN | SYST_CON_IRQ_EN, SYST_CON_REG(to));
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int mtk_syst_clkevt_shutdown(struct clock_event_device *clkevt)
-> > +{
-> > +	/* Disable timer */
-> > +	writel(0, SYST_CON_REG(to_timer_of(clkevt)));
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int mtk_syst_clkevt_resume(struct clock_event_device *clkevt)
-> > +{
-> > +	return mtk_syst_clkevt_shutdown(clkevt);
-> > +}
-> > +
-> > +static int mtk_syst_clkevt_oneshot(struct clock_event_device *clkevt)
-> > +{
-> > +	return 0;
-> > +}
-> > +
-> >  static u64 notrace mtk_gpt_read_sched_clock(void)
-> >  {
-> >  	return readl_relaxed(gpt_sched_reg);
-> > @@ -186,6 +266,34 @@ static void mtk_gpt_enable_irq(struct timer_of *to, u8 timer)
-> >  	},
-> >  };
-> >  
-> > +static int __init mtk_syst_init(struct device_node *node)
-> > +{
-> > +	int ret;
-> > +
-> > +	to.clkevt.features = CLOCK_EVT_FEAT_DYNIRQ | CLOCK_EVT_FEAT_ONESHOT;
-> > +	to.clkevt.set_state_shutdown = mtk_syst_clkevt_shutdown;
-> > +	to.clkevt.set_state_oneshot = mtk_syst_clkevt_oneshot;
-> > +	to.clkevt.tick_resume = mtk_syst_clkevt_resume;
-> > +	to.clkevt.set_next_event = mtk_syst_clkevt_next_event;
-> > +	to.of_irq.handler = mtk_syst_handler;
-> > +
-> > +	ret = timer_of_init(node, &to);
-> > +	if (ret)
-> > +		goto err;
-> > +
-> > +	clockevents_config_and_register(&to.clkevt, timer_of_rate(&to),
-> > +					TIMER_SYNC_TICKS, 0xffffffff);
-> > +
-> > +	pr_info("irq=%d, rate=%lu, max_ns: %llu, min_ns: %llu\n",
-> > +		timer_of_irq(&to), timer_of_rate(&to),
-> > +		to.clkevt.max_delta_ns, to.clkevt.min_delta_ns);
-> 
-> Please remove this trace. Most of this information is already available
-> in /proc/timer_list.
-> 
-> However, if you think it is worth to add this trace, do a proposition in
-> the time framework directly so all drivers can benefit this change.
-> 
-
-OK! Will remove this log in v7.
-
-> > +	return 0;
-> > +err:
-> > +	timer_of_cleanup(&to);
-> > +	return ret;
-> > +}
-> > +
-> >  static int __init mtk_gpt_init(struct device_node *node)
-> >  {
-> >  	int ret;
-> > @@ -218,9 +326,9 @@ static int __init mtk_gpt_init(struct device_node *node)
-> >  	mtk_gpt_enable_irq(&to, TIMER_CLK_EVT);
-> >  
-> >  	return 0;
-> > -
-> >  err:
-> >  	timer_of_cleanup(&to);
-> >  	return ret;
-> >  }
-> >  TIMER_OF_DECLARE(mtk_mt6577, "mediatek,mt6577-timer", mtk_gpt_init);
-> > +TIMER_OF_DECLARE(mtk_mt6765, "mediatek,mt6765-timer", mtk_syst_init);
-> > 
-> 
-> 
+Hopefully you and Uwe can reach an agreement on the imx31 watchdog fix :-)
