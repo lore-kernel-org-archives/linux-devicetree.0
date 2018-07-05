@@ -1,91 +1,113 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 06/23] thermal: armada: average over samples to avoid
- glitches
-Date: Thu,  5 Jul 2018 18:04:20 +0200
-Message-ID: <20180705160437.12325-7-miquel.raynal@bootlin.com>
-References: <20180705160437.12325-1-miquel.raynal@bootlin.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 11/14] dt-bindings: fsi: Document binding for the
+ fsi-master-ast-cf "device"
+Date: Thu, 5 Jul 2018 10:08:16 -0600
+Message-ID: <CAL_JsqLfg+7pUXgXecpObqfUTVvp4QAR150LsMho2EkKtkqgFg@mail.gmail.com>
+References: <20180626232605.13420-1-benh@kernel.crashing.org>
+ <20180626232605.13420-12-benh@kernel.crashing.org> <20180703223046.GA20184@rob-hp-laptop>
+ <77039070d470d5d408e750218ddbccf9cb33a78e.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180705160437.12325-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <77039070d470d5d408e750218ddbccf9cb33a78e.camel@kernel.crashing.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Configure the sample frequency and number of averaged samples.
+On Tue, Jul 3, 2018 at 7:16 PM Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+>
+> On Tue, 2018-07-03 at 16:30 -0600, Rob Herring wrote:
+> > On Wed, Jun 27, 2018 at 09:26:02AM +1000, Benjamin Herrenschmidt wrote:
+> > > This isn't per-se a real device, it's a pseudo-device that
+> > > represents the use of the Aspeed built-in ColdFire to
+> > > implement the FSI protocol by bitbanging the GPIOs instead
+> > > of doing it from the ARM core.
+> > >
+> > > Thus it's a drop-in replacement for the existing
+> > > fsi-master-gpio pseudo-device for use on systems for which
+> > > a corresponding firmware file exists. It has most of the
+> > > same properties, plus some more needed to operate the
+> > > coprocessor.
+> > >
+> > > Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > > ---
+> > >  .../bindings/fsi/fsi-master-ast-cf.txt        | 36 +++++++++++++++++++
+> > >  1 file changed, 36 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt b/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
+> > > new file mode 100644
+> > > index 000000000000..50913ae685cc
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
+> > > @@ -0,0 +1,36 @@
+> > > +Device-tree bindings for ColdFire offloaded gpio-based FSI master driver
+> > > +------------------------------------------------------------------------
+> > > +
+> > > +Required properties:
+> > > + - compatible =
+> > > +                 "fsi-master-ast-2400-cf" for an AST2400 based system
+> > > +       or
+> > > +         "fsi-master-ast-2500-cf" for an AST2500 based system
+> >
+> > <vendor>,<soc>-<block>
+>
+> It's not really a SOC block from a vendor, it's a pseudo-device in a
+> way. The current one that doesn't use the coldfire offload is just
+> compatible "fsi-master-gpio".
+>
+> I can add a vendor but what should it be ? aspeed because it runs on
+> the aspeed SoCs only ? ibm because we wrote it and FSI is an IBM
+> protocol ?
 
-This is needed for two reasons:
-1/ To be bootloader independent.
-2/ To prepare the introduction of multi-sensors support by preventing
-   inconsistencies when reading temperatures that could be a mean of
-   samples took from different sensors.
+I would say aspeed as it is tied to their chip.
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/thermal/armada_thermal.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+>
+> <soc>-<block> doesn't make sense here though.
 
-diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_thermal.c
-index 9291ea3ad2f7..1f9706d96a0d 100644
---- a/drivers/thermal/armada_thermal.c
-+++ b/drivers/thermal/armada_thermal.c
-@@ -54,7 +54,12 @@
- #define CONTROL0_TSEN_START		BIT(0)
- #define CONTROL0_TSEN_RESET		BIT(1)
- #define CONTROL0_TSEN_ENABLE		BIT(2)
-+#define CONTROL0_TSEN_AVG_BYPASS	BIT(6)
-+#define CONTROL0_TSEN_OSR_SHIFT		24
-+#define CONTROL0_TSEN_OSR_MAX		0x3
- 
-+#define CONTROL1_TSEN_AVG_SHIFT		0
-+#define CONTROL1_TSEN_AVG_MASK		0x7
- #define CONTROL1_EXT_TSEN_SW_RESET	BIT(7)
- #define CONTROL1_EXT_TSEN_HW_RESETn	BIT(8)
- 
-@@ -194,6 +199,13 @@ static void armada_ap806_init(struct platform_device *pdev,
- 	reg = readl_relaxed(priv->control0);
- 	reg &= ~CONTROL0_TSEN_RESET;
- 	reg |= CONTROL0_TSEN_START | CONTROL0_TSEN_ENABLE;
-+
-+	/* Sample every ~2ms */
-+	reg |= CONTROL0_TSEN_OSR_MAX << CONTROL0_TSEN_OSR_SHIFT;
-+
-+	/* Enable average (2 samples by default) */
-+	reg &= ~CONTROL0_TSEN_AVG_BYPASS;
-+
- 	writel(reg, priv->control0);
- 
- 	/* Wait the sensors to be valid or the core will warn the user */
-@@ -203,7 +215,20 @@ static void armada_ap806_init(struct platform_device *pdev,
- static void armada_cp110_init(struct platform_device *pdev,
- 			      struct armada_thermal_priv *priv)
- {
-+	u32 reg;
-+
- 	armada380_init(pdev, priv);
-+
-+	/* Sample every ~2ms */
-+	reg = readl_relaxed(priv->control0);
-+	reg |= CONTROL0_TSEN_OSR_MAX << CONTROL0_TSEN_OSR_SHIFT;
-+	writel(reg, priv->control0);
-+
-+	/* Average the output value over 2^1 = 2 samples */
-+	reg = readl_relaxed(priv->control1);
-+	reg &= ~CONTROL1_TSEN_AVG_MASK << CONTROL1_TSEN_AVG_SHIFT;
-+	reg |= 1 << CONTROL1_TSEN_AVG_SHIFT;
-+	writel(reg, priv->control1);
- }
- 
- static bool armada_is_valid(struct armada_thermal_priv *priv)
--- 
-2.14.1
+But you do already have <soc> in the compatible, but in a slightly
+different form and position. And "cf" is the block.
+
+So I'd propose: aspeed,ast2500-cf-fsi-master
+
+>
+> > > +
+> > > + - clock-gpios = <gpio-descriptor>;        : GPIO for FSI clock
+> > > + - data-gpios = <gpio-descriptor>; : GPIO for FSI data signal
+> > > + - enable-gpios = <gpio-descriptor>;       : GPIO for enable signal
+> > > + - trans-gpios = <gpio-descriptor>;        : GPIO for voltage translator enable
+> > > + - mux-gpios = <gpio-descriptor>;  : GPIO for pin multiplexing with other
+> >
+> > So the gpio info is pased to the CF? Otherwise, what's the point of
+> > having these in DT?
+>
+> In the original version you are looking at, they are not passed to the
+> CF per-se but the driver does use aspeed GPIO specific APIs to
+> configure them to be owned by the CF, so we need the references.
+
+Okay.
+
+> However, I've just reworked the ucode with a few tricks to avoid losing
+> singificant performance, so that we can indeed pass them to the CF,
+> thus avoiding the need for a per-system image, so the above are here to
+> stay.
+>
+> > > +                                          functions (eg, external FSI masters)
+> > > + - memory-region = <phandle>;              : Reference to the reserved memory for
+> > > +                                          the ColdFire. Must be 2M aligned on
+> > > +                                     AST2400 and 1M aligned on AST2500
+> > > + - sram = <phandle>;                       : Reference to the SRAM node.
+> > > + - cvic = <phandle>;                       : Reference to the CVIC node.
+> >
+> > Vendor prefixes.
+>
+> On what ? Why would an "sram" pointer have a vendor prefix ? Or a
+> memory region pointer ?
+
+memory-region is a standard property. sram and cvic are not, so should
+have vendor prefixes. However, perhaps we should add a common "sram"
+property to sram/sram.txt.
+
+Rob
