@@ -1,44 +1,131 @@
-From: Piotr Bugalski <bugalski.piotr@gmail.com>
-Subject: Re: [RFC PATCH v2 1/6] mtd: spi-nor: atmel-quaspi: Typo fix
-Date: Thu, 5 Jul 2018 09:26:35 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1807050924430.31418@carbonite>
-References: <20180627131609.13681-1-bugalski.piotr@gmail.com> <20180627131609.13681-2-bugalski.piotr@gmail.com> <20180703125224.GC14626@piout.net>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v9 0/2] mfd/regulator/clk/input: bd71837: ROHM BD71837 PMIC
+ driver
+Date: Thu, 5 Jul 2018 10:45:32 +0300
+Message-ID: <cover.1530776326.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180703125224.GC14626@piout.net>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Piotr Bugalski <bugalski.piotr@gmail.com>, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Cyrille Pitchen <cyrille.pitchen@microchip.com>, Tudor Ambarus <tudor.ambarus@microchip.com>
+To: mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, arnd@arndb.de, dmitry.torokhov@gmail.com, sre@kernel.org, chenjh@rock-chips.com, andrew.smirnov@gmail.com, linus.walleij@linaro.org, kstewart@linuxfoundation.org, heiko@sntech.de, gregkh@linuxfoundation.org, eballetbo@gmail.com
+Cc: sboyd@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
+Patch series adding support for ROHM BD71837 PMIC.
 
-Hi Alexandre,
+BD71837 is a programmable Power Management IC for powering single-core,
+dual-core, and quad-core SoC’s such as NXP-i.MX 8M. It is optimized for
+low BOM cost and compact solution footprint. It integrates 8 buck
+regulators and 7 LDO’s to provide all the power rails required by the
+SoC and the commonly used peripherals.
 
-Thank you for you comment.
+This is reduced set of patches containing only the MFD and devicetree
+bindings. This enables alrady applied regulator part and power button
+support using gpio-keys. Clock and reset support will be sent as separate
+set of patches - possibly only after my vacations. Sorry for longish delay
+which will follow.
 
-On Tue, 3 Jul 2018, Alexandre Belloni wrote:
+Changelog v9
+Fixes initiated by feedback from Enric Balletbo Serra, Lee and Dmitry.
+- Simplified control flow for probe
+- Removed accidentally left squash commit message
+- Some comma presence toggling after last member in an array =)
+- Styling of multi line comments.
 
-> Hi,
->
-> On 27/06/2018 15:16:04+0200, Piotr Bugalski wrote:
->> Just minor typo fix. Fixed in preparation of new driver.
->>
->> Signed-off: Piotr Bugalski <pbu@cryptera.com>
->
-> This SoB line must match the author. It doesn't matter which one you
-> change. note that you can still submit your patch from an address
-> different from your work address if necessary (git format-patch will
-> insert the proper From line).
->
+Changelog v8
+- Dropped clk-bd71837 from series (will send later)
+- Dropped bd718xx-pwrkey driver and used gpio_keys instead.
+- Added power-button short/long press duration configuratio to MFD
+- Cleaned MFD driver according to comments from Enric Balletbo Serra.
+  (used devm, removed unnecessary header inclusions, removed redundant
+  assignment, styling issues, allow building MFD part as module, fixed
+  license mismatch).
 
-I didn't notice this issue, I'll fix it in next release.
+Changelog v7
+- patch 1: Cleaned MFD probe since MFD no longer directly reads DT
+  properties.
+- patch 1/4: Moved power-key related definitions from powerkey patch (4)
+  to MFD patch (1) so that powerkey can be applied independently
+- Patch 2 is unchanged.
+- patch 3: Added missing allocation check back to clk probe
 
-> -- 
-> Alexandre Belloni, Bootlin (formerly Free Electrons)
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
->
+Changelog v6
+- Added power-key input driver
+Based on feedback from Rob Herring and Stephen Boyd
+- Added link to datasheet
+- Removed interrupt-controller from DT and fixed binding document
+- clk styling fixes
+- remove clkdev usage
+- add clk bindings to MFD documentation
+- removed clk binding document
 
-Best Regards,
-Piotr
+Changelog v5
+- dropped regulator patches which are already applied to Mark's tree
+Based on feedback from Rob Herring and Stephen Boyd
+- mfd bindings: explain why this can be interrupt-controller
+- mfd bindings: describe interrupts better
+- mfd bindings: require one cell interrupt specifier
+- mfd bindings: use generic node names in example
+- mfd driver:   ack masked interrupt once at init
+- clk bindings: use generic node names in example
+- clk driver:   use devm
+- clk driver:   use of_clk_add_hw_provider
+- clk driver:   change severity of print and how prints are emitted at
+                probe error path.
+- clk driver:   dropped forward declared functions
+- clk configs:  drop unnecessary dependencies
+- clk driver:   other styling issues
+- mfd/clk DT:   drop clk node.
+
+Changelog v4
+- remove mutex from regulator state check as core prevents simultaneous
+  accesses
+- allow voltage change for bucks 1 to 4 when regulator is enabled
+- fix indentiation problems
+- properly correct SPDX comments
+
+Changelog v3
+- kill unused variable
+- kill unused definitions
+- use REGMAP_IRQ_REG
+
+Changelog v2
+Based on feedback from Mark Brown
+- Squashed code and buildfile changes to same patch
+- Fixed some styling issues
+- Changed SPDX comments to CPP style
+- Error out if voltage is changed when regulator is enabled instead of
+  Disabling the regulator for duration of change
+- Use devm_regulator_register
+- Remove compatible usage from regulators - use parent dev for config
+- Add a note about using regulator-boot-on for BUCK6 and 7
+- fixed warnings from kbuild test robot
+
+patch 1:
+        MFD driver and definitions bringing interrupt support and
+        enabling clk, regulator and input subsystems.
+patch 2:
+        MFD driver DT bindings
+
+This patch series is based on for-mfd-next
+
+---
+
+Matti Vaittinen (2):
+  mfd: bd71837: mfd driver for ROHM BD71837 PMIC
+  mfd: bd71837: Devicetree bindings for ROHM BD71837 PMIC
+
+ .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  |  67 ++++
+ drivers/mfd/Kconfig                                |  13 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/bd71837.c                              | 215 +++++++++++
+ include/linux/mfd/bd71837.h                        | 391 +++++++++++++++++++++
+ 5 files changed, 687 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+ create mode 100644 drivers/mfd/bd71837.c
+ create mode 100644 include/linux/mfd/bd71837.h
+
+-- 
+2.14.3
