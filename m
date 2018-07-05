@@ -1,68 +1,49 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 1/4] mfd: bd71837: mfd driver for ROHM BD71837 PMIC
-Date: Thu, 5 Jul 2018 06:52:26 +0100
-Message-ID: <20180705055226.GJ496@dell>
-References: <cover.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
- <7e1888375c979accc402e9ddd7316e528b2ac52c.1529404894.git.matti.vaittinen@fi.rohmeurope.com>
- <CAFqH_51izuVgHukAORvwjZqGhxy85tdNdaHL9mOUnPnbCQmQjA@mail.gmail.com>
- <20180704145623.zgei3ehrwdpcu26r@penguin>
- <CAFqH_50UshTTc0Cv0wBhUoPdm0jZVgcvRKr3qzb=M-jCcMhdtA@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v3 4/6] bus: ti-sysc: Add support for software reset
+Date: Wed, 4 Jul 2018 22:55:06 -0700
+Message-ID: <20180705055506.GI26255@atomide.com>
+References: <acdfef83-8778-e8f4-e423-ed04a9a8a649@ti.com>
+ <20180611060957.GN5738@atomide.com>
+ <f460481f-85a9-2a41-a894-6f25122dee8a@ti.com>
+ <20180611062904.GO5738@atomide.com>
+ <89d55b0b-fe9e-793b-2694-25755ac2bc15@ti.com>
+ <20180611070332.GP5738@atomide.com>
+ <20180703070743.GG112168@atomide.com>
+ <ee54c3ea-6200-33dd-83da-491f5fdd9f5c@ti.com>
+ <20180703073139.GN112168@atomide.com>
+ <1138704c-b7a4-391f-3404-e1bd25a4a0ff@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAFqH_50UshTTc0Cv0wBhUoPdm0jZVgcvRKr3qzb=M-jCcMhdtA@mail.gmail.com>
+In-Reply-To: <1138704c-b7a4-391f-3404-e1bd25a4a0ff@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo Serra <eballetbo@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, matti.vaittinen@fi.rohmeurope.com, Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Matti Vaittinen <mazziesaccount@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Sebastian Reichel <sre@kernel.org>, chenjh@rock-chips.com, Andrey Smirnov <andrew.smirnov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Kate Stewart <kstewart@linuxfoundation.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kerne>
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, mark.rutland@arm.com, paul@pwsan.com, t-kristo@ti.com, robh+dt@kernel.org, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 04 Jul 2018, Enric Balletbo Serra wrote:
+* Faiz Abbas <faiz_abbas@ti.com> [180704 13:37]:
+> After taking a second look at this thread, I don't see anything big to
+> be modified.
+> 
+> We both agree that "reset status bit in sysconfig register" is the quirk
+> case which can be added once such an IP is discovered in ti-sysc.
 
-> Missatge de Dmitry Torokhov <dmitry.torokhov@gmail.com> del dia dc., 4
-> de jul. 2018 a les 17:10:
-> >
-> > Hi Enric,
-> >
-> > On Tue, Jun 26, 2018 at 11:06:33AM +0200, Enric Balletbo Serra wrote:
-> > > Hi Matti,
-> > >
-> > > Thanks for the patch, a few comments below, some are feedback I
-> > > received when I sent some patches to this subsystem.
-> > >
-> > > Missatge de Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com> del
-> > > dia dt., 19 de juny 2018 a les 12:57:
-> > > > +};
-> > > > +
-> > > > +/* bd71837 multi function cells */
-> > > > +static struct mfd_cell bd71837_mfd_cells[] = {
-> > > > +       {
-> > > > +               .name = "bd71837-clk",
-> > > > +       }, {
-> > > > +               .name = "bd718xx-pwrkey",
-> > > > +               .resources = &irqs[0],
-> > > > +               .num_resources = ARRAY_SIZE(irqs),
-> > > > +       }, {
-> > > > +               .name = "bd71837-pmic",
-> > > > +       },
-> > > nit: no comma at the end
-> >
-> > Actually, trailing comma is preferred on structures/arrays without
-> > sentinels, because if one needs to add a new entry/new member, then in
-> > the diff there will have only one new line added, instead of one line
-> > being changed (adding now necessary comma) and one added.
+Yes agreed.
 
-[...]
+> All I need to change is SYSC_OMAP4_SOFTRESET to SYSC_SOFT_RESET_SHIFT_0
+> for better readability and rebase it to the latest mainline.
 
-> Dmitry, I really appreciate this kind of comments, especially when
-> there is a justification, so I can learn more and more to do better
-> patches.
+Let's not change SYSC_OMAP4_SOFTRESET as only the ti-sysc
+driver needs to know that and it can be set based on the
+compatible.
 
-+1
+How about replace ddata->cfg.quirks & SYSC_QUIRK_RESET_STATUS
+test with just ddata->cfg.syss_mask test in your sysc_reset()?
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+We still need to set SYSC_QUIRK_RESET_STATUS too for pdata
+callbacks.
+
+Regards,
+
+Tony
