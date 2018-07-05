@@ -1,223 +1,84 @@
-From: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6 1/4] resource: Move reparent_resources() to
- kernel/resource.c and make it public
-Date: Thu, 5 Jul 2018 18:09:39 +0800
-Message-ID: <20180705100939.GD1225@MiWiFi-R3L-srv>
-References: <20180704041038.8190-1-bhe@redhat.com>
- <20180704041038.8190-2-bhe@redhat.com>
- <CAHp75VfWLcQq4XGM3RyfO_ENx=3=WrCEhtOw+a0Sfwz_OpQ0UQ@mail.gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v12 5/5] dt-bindings: drm/panel: Document Innolux
+ TV123WAM panel bindings
+Date: Thu, 5 Jul 2018 12:18:25 +0200
+Message-ID: <20180705101827eucas1p2fcc767335aee02c1735e045ebefabc84~_cawUMmOH2040620406eucas1p22@eucas1p2.samsung.com>
+References: <1529584329-632-1-git-send-email-spanda@codeaurora.org>
+ <CGME20180622072307epcas4p48b7b94318be80d6a6c732d3fd908c3fc@epcas4p4.samsung.com>
+ <1529584329-632-6-git-send-email-spanda@codeaurora.org>
+ <20180629121414eucas1p21171a1eab3ee081c8b4114ca58264669~8oIIwEXJJ1824018240eucas1p2G@eucas1p2.samsung.com>
+ <f9d9174dbf1355c7a407c03b718a87b3@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfWLcQq4XGM3RyfO_ENx=3=WrCEhtOw+a0Sfwz_OpQ0UQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, brijesh.singh-5C7GfCeVMHo@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, KY Srinivasan <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Dave Young <dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Josh Triplett <josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org>, =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <f9d9174dbf1355c7a407c03b718a87b3@codeaurora.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: spanda@codeaurora.org
+Cc: devicetree@vger.kernel.org, ryadav@codeaurora.org, linux-arm-msm@vger.kernel.org, abhinavk@codeaurora.org, dri-devel@lists.freedesktop.org, hoegsberg@chromium.org, freedreno@lists.freedesktop.org, chandanu@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/04/18 at 07:46pm, Andy Shevchenko wrote:
-> On Wed, Jul 4, 2018 at 7:10 AM, Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> > reparent_resources() is duplicated in arch/microblaze/pci/pci-common.c
-> > and arch/powerpc/kernel/pci-common.c, so move it to kernel/resource.c
-> > so that it's shared.
-> 
-> With couple of comments below,
-
-Sure, will fix these and repost with your reviewed-by, thanks. Should be
-after I reproduce and fix those issues reported by test robot.
-
-> 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> P.S. In some commit message in this series you used 'likt' instead of 'like'.
-> 
-> >
-> > Signed-off-by: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  arch/microblaze/pci/pci-common.c | 37 -------------------------------------
-> >  arch/powerpc/kernel/pci-common.c | 35 -----------------------------------
-> >  include/linux/ioport.h           |  1 +
-> >  kernel/resource.c                | 39 +++++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 40 insertions(+), 72 deletions(-)
-> >
-> > diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
-> > index f34346d56095..7899bafab064 100644
-> > --- a/arch/microblaze/pci/pci-common.c
-> > +++ b/arch/microblaze/pci/pci-common.c
-> > @@ -619,43 +619,6 @@ int pcibios_add_device(struct pci_dev *dev)
-> >  EXPORT_SYMBOL(pcibios_add_device);
-> >
-> >  /*
-> > - * Reparent resource children of pr that conflict with res
-> > - * under res, and make res replace those children.
-> > - */
-> > -static int __init reparent_resources(struct resource *parent,
-> > -                                    struct resource *res)
-> > -{
-> > -       struct resource *p, **pp;
-> > -       struct resource **firstpp = NULL;
-> > -
-> > -       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
-> > -               if (p->end < res->start)
-> > -                       continue;
-> > -               if (res->end < p->start)
-> > -                       break;
-> > -               if (p->start < res->start || p->end > res->end)
-> > -                       return -1;      /* not completely contained */
-> > -               if (firstpp == NULL)
-> > -                       firstpp = pp;
-> > -       }
-> > -       if (firstpp == NULL)
-> > -               return -1;      /* didn't find any conflicting entries? */
-> > -       res->parent = parent;
-> > -       res->child = *firstpp;
-> > -       res->sibling = *pp;
-> > -       *firstpp = res;
-> > -       *pp = NULL;
-> > -       for (p = res->child; p != NULL; p = p->sibling) {
-> > -               p->parent = res;
-> > -               pr_debug("PCI: Reparented %s [%llx..%llx] under %s\n",
-> > -                        p->name,
-> > -                        (unsigned long long)p->start,
-> > -                        (unsigned long long)p->end, res->name);
-> > -       }
-> > -       return 0;
-> > -}
-> > -
-> > -/*
-> >   *  Handle resources of PCI devices.  If the world were perfect, we could
-> >   *  just allocate all the resource regions and do nothing more.  It isn't.
-> >   *  On the other hand, we cannot just re-allocate all devices, as it would
-> > diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-> > index fe9733ffffaa..926035bb378d 100644
-> > --- a/arch/powerpc/kernel/pci-common.c
-> > +++ b/arch/powerpc/kernel/pci-common.c
-> > @@ -1088,41 +1088,6 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
-> >  EXPORT_SYMBOL(pcibios_align_resource);
-> >
-> >  /*
-> > - * Reparent resource children of pr that conflict with res
-> > - * under res, and make res replace those children.
-> > - */
-> > -static int reparent_resources(struct resource *parent,
-> > -                                    struct resource *res)
-> > -{
-> > -       struct resource *p, **pp;
-> > -       struct resource **firstpp = NULL;
-> > -
-> > -       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
-> > -               if (p->end < res->start)
-> > -                       continue;
-> > -               if (res->end < p->start)
-> > -                       break;
-> > -               if (p->start < res->start || p->end > res->end)
-> > -                       return -1;      /* not completely contained */
-> > -               if (firstpp == NULL)
-> > -                       firstpp = pp;
-> > -       }
-> > -       if (firstpp == NULL)
-> > -               return -1;      /* didn't find any conflicting entries? */
-> > -       res->parent = parent;
-> > -       res->child = *firstpp;
-> > -       res->sibling = *pp;
-> > -       *firstpp = res;
-> > -       *pp = NULL;
-> > -       for (p = res->child; p != NULL; p = p->sibling) {
-> > -               p->parent = res;
-> > -               pr_debug("PCI: Reparented %s %pR under %s\n",
-> > -                        p->name, p, res->name);
-> > -       }
-> > -       return 0;
-> > -}
-> > -
-> > -/*
-> >   *  Handle resources of PCI devices.  If the world were perfect, we could
-> >   *  just allocate all the resource regions and do nothing more.  It isn't.
-> >   *  On the other hand, we cannot just re-allocate all devices, as it would
-> > diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> > index da0ebaec25f0..dfdcd0bfe54e 100644
-> > --- a/include/linux/ioport.h
-> > +++ b/include/linux/ioport.h
-> > @@ -192,6 +192,7 @@ extern int allocate_resource(struct resource *root, struct resource *new,
-> >  struct resource *lookup_resource(struct resource *root, resource_size_t start);
-> >  int adjust_resource(struct resource *res, resource_size_t start,
-> >                     resource_size_t size);
-> > +int reparent_resources(struct resource *parent, struct resource *res);
-> >  resource_size_t resource_alignment(struct resource *res);
-> >  static inline resource_size_t resource_size(const struct resource *res)
-> >  {
-> > diff --git a/kernel/resource.c b/kernel/resource.c
-> > index 30e1bc68503b..d1cbf4b50e17 100644
-> > --- a/kernel/resource.c
-> > +++ b/kernel/resource.c
-> > @@ -983,6 +983,45 @@ int adjust_resource(struct resource *res, resource_size_t start,
-> >  }
-> >  EXPORT_SYMBOL(adjust_resource);
-> >
-> > +/*
-> 
-> /** ?
-> 
-> > + * reparent_resources - reparent resource children of parent that res covers
-> > + * @parent: parent resource descriptor
-> > + * @res: resource descriptor desired by caller
-> > + *
-> > + * Reparent resource children of 'parent' that conflict with 'res'
-> > + * under 'res', and make 'res' replace those children.
-> 
-> Describe error codes, please.
-> 
-> > + */
-> > +int reparent_resources(struct resource *parent, struct resource *res)
-> > +{
-> > +       struct resource *p, **pp;
-> > +       struct resource **firstpp = NULL;
-> > +
-> > +       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
-> > +               if (p->end < res->start)
-> > +                       continue;
-> > +               if (res->end < p->start)
-> > +                       break;
-> > +               if (p->start < res->start || p->end > res->end)
-> > +                       return -ENOTSUPP;       /* not completely contained */
-> > +               if (firstpp == NULL)
-> > +                       firstpp = pp;
-> > +       }
-> > +       if (firstpp == NULL)
-> > +               return -ECANCELED; /* didn't find any conflicting entries? */
-> > +       res->parent = parent;
-> > +       res->child = *firstpp;
-> > +       res->sibling = *pp;
-> > +       *firstpp = res;
-> > +       *pp = NULL;
-> > +       for (p = res->child; p != NULL; p = p->sibling) {
-> > +               p->parent = res;
-> > +               pr_debug("PCI: Reparented %s %pR under %s\n",
-> > +                        p->name, p, res->name);
-> > +       }
-> > +       return 0;
-> > +}
-> > +EXPORT_SYMBOL(reparent_resources);
-> > +
-> >  static void __init __reserve_region_with_split(struct resource *root,
-> >                 resource_size_t start, resource_size_t end,
-> >                 const char *name)
-> > --
-> > 2.13.6
-> >
-> 
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+T24gMDUuMDcuMjAxOCAwODozOCwgc3BhbmRhQGNvZGVhdXJvcmEub3JnIHdyb3RlOgo+IE9uIDIw
+MTgtMDYtMjkgMTc6NDQsIEFuZHJ6ZWogSGFqZGEgd3JvdGU6Cj4+IE9uIDIxLjA2LjIwMTggMTQ6
+MzIsIFNhbmRlZXAgUGFuZGEgd3JvdGU6Cj4+PiBJbm5vbHV4IFRWMTIzV0FNIGlzIGEgMTIuMyIg
+ZURQIGRpc3BsYXkgcGFuZWwgd2l0aAo+Pj4gMjE2MHgxNDQwIHJlc29sdXRpb24sIHdoaWNoIGNh
+biBiZSBzdXBwb3J0ZWQgYnkgc2ltcGxlCj4+PiBwYW5lbCBkcml2ZXIuCj4+IEFyZSB5b3Ugc3Vy
+ZSB0aGlzIGlzIElubm9sdXg/IFF1aWNrIGdyZXAgb24gSW50ZXJuZXQgZmluZHMgb25seSBCT0UK
+Pj4gcGFuZWwgd2l0aCB0aGlzIFRWMTIzV0FNWzFdLgo+Pgo+PiBbMV06Cj4+IGh0dHBzOi8vZTJl
+LnRpLmNvbS9jZnMtZmlsZS9fX2tleS9jb21tdW5pdHlzZXJ2ZXItZGlzY3Vzc2lvbnMtY29tcG9u
+ZW50cy1maWxlcy8xMzgvVFYxMjNXQU1fMkQwMF9ORDBfNUYwMF9Qcm9kdWN0LXNwZWNfNUYwMF9C
+T0VfNUYwMF8yMDE2MTExNV8yRDAwX0EwMC5wZGYKPj4KPiBUaGUgcGFuZWwgdXNlZCBoZXJlIGlz
+IGlubm9sdXgsIHdoaWNoIGlzIGEgMmsgcGFuZWwuIFdoZXJlIHRoZSBCT0Ugb25lIAo+IGlzIGEg
+MTA4MHAgcGFuZWwuCgpNeSBkb3VidHMgY29tZXMgZnJvbSB0aGUgZmFjdCB0aGF0IElubm9sdXgg
+dXNlcyBkaWZmZXJlbnQgY29udmVudGlvbiBmb3IKcGFuZWwgbmFtaW5nLCBzZWUgZm9yIGV4YW1w
+bGUgWzFdLgoKQWNjb3JkaW5nIHRvIHRoaXMgY29udmVudGlvbiB5b3VyIHBhbmVsIHNob3VsZCBo
+YXZlIG5hbWUgc3RhcnRpbmcgd2l0aDoKTjEyM1pERy0KClRWMTIzV0FNIGZvbGxvd3MgQk9FJ3Mg
+Y29udmVudGlvbi4KCkRvIHlvdSBoYXZlIGRhdGFzaGVldCwgcGh5c2ljYWwgcGFuZWwgb3Igc29t
+ZXRoaW5nIHRvIGVuc3VyZSB0aGUgbmFtZSBpcwpjb3JyZWN0PwoKWzFdOgpodHRwOi8vd3d3LnBh
+bmVsb29rLmNvbS9icmFtb2RsaXN0LnBocD9zdD0mcGw9JmJyYW5kc1tdPTYzJnNpZ25hbF90eXBl
+X2NhdGVnb3J5PTcwCgpSZWdhcmRzCkFuZHJ6ZWoKCj4KPj4gUmVnYXJkcwo+PiBBbmRyemVqCj4+
+PiBDaGFuZ2VzIGluIHYxOgo+Pj4gIC0gTWFrZSB1c2Ugb2Ygc2ltcGxlIHBhbmVsIGRyaXZlciBp
+bnN0ZWFkIG9mIGNyZWF0aW5nCj4+PiAgICBhIG5ldyBkcml2ZXIgZm9yIHRoaXMgcGFuZWwgKFNl
+YW4gUGF1bCkuCj4+PiAgLSBDb21iaW5lIGR0LWJpbmRpbmcgYW5kIGRyaXZlciBjaGFuZ2VzIGlu
+dG8gb25lIHBhdGNoCj4+PiAgICBhcyBkb25lIGJ5IG90aGVyIGV4aXN0aW5nIHBhbmVsIHN1cHBv
+cnQgY2hhbmdlcy4KPj4+Cj4+PiBDaGFuZ2VzIGluIHYyOgo+Pj4gIC0gU2VwYXJhdGUgZHJpdmVy
+IGNoYW5nZSBmcm9tIGR0LWJpbmRpbmcgZG9jdW1lbnRhdGlvbiAoUm9iIEhlcnJpbmcpLgo+Pj4g
+IC0gQWRkIHRoZSBwcm9wZXJ0aWVzIGZyb20gc2ltcGxlLXBhbmVsIGJpbmRpbmcgdGhhdCBhcmUg
+YXBwbGljYWJsZSB0bwo+Pj4gICAgdGhpcyBwYW5lbCAoUm9iIEhlcnJpbmcpLgo+Pj4KPj4+IFNp
+Z25lZC1vZmYtYnk6IFNhbmRlZXAgUGFuZGEgPHNwYW5kYUBjb2RlYXVyb3JhLm9yZz4KPj4+IFJl
+dmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+Pj4gLS0tCj4+PiAgLi4u
+L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQgICAgICB8IDIwIAo+
+Pj4gKysrKysrKysrKysrKysrKysrKysKPj4+ICAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9u
+cygrKQo+Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCAKPj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsdHYxMjN3YW0udHh0Cj4+Pgo+Pj4gZGlm
+ZiAtLWdpdCAKPj4+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+cGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQgCj4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsdHYxMjN3YW0udHh0Cj4+PiBuZXcgZmls
+ZSBtb2RlIDEwMDY0NAo+Pj4gaW5kZXggMDAwMDAwMDAwMDAwLi5hOWIzNTI2NWZhMTMKPj4+IC0t
+LSAvZGV2L251bGwKPj4+ICsrKyAKPj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQKPj4+IEBAIC0wLDAgKzEsMjAg
+QEAKPj4+ICtJbm5vbHV4IFRWMTIzV0FNIDEyLjMgaW5jaCBlRFAgMksgZGlzcGxheSBwYW5lbAo+
+Pj4gKwo+Pj4gK1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5l
+bCBiaW5kaW5nLCB3aGljaCBpcyAKPj4+IHNwZWNpZmllZAo+Pj4gK2luIHNpbXBsZS1wYW5lbC50
+eHQgaW4gdGhpcyBkaXJlY3RvcnkuCj4+PiArCj4+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4+
+ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZSAiaW5ub2x1eCx0djEyM3dhbSIKPj4+ICstIHBvd2Vy
+LXN1cHBseTogcmVndWxhdG9yIHRvIHByb3ZpZGUgdGhlIHN1cHBseSB2b2x0YWdlCj4+PiArCj4+
+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPj4+ICstIGVuYWJsZS1ncGlvczogR1BJTyBwaW4gdG8g
+ZW5hYmxlIG9yIGRpc2FibGUgdGhlIHBhbmVsCj4+PiArLSBiYWNrbGlnaHQ6IHBoYW5kbGUgb2Yg
+dGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQgdG8gdGhlIHBhbmVsCj4+PiArCj4+PiArRXhh
+bXBsZToKPj4+ICsJcGFuZWxfZWRwOiBwYW5lbC1lZHAgewo+Pj4gKwkJY29tcGF0aWJsZSA9ICJp
+bm5vbHV4LHR2MTIzd2FtIjsKPj4+ICsJCWVuYWJsZS1ncGlvcyA9IDwmbXNtZ3BpbyAzMSBHUElP
+X0FDVElWRV9MT1c+Owo+Pj4gKwkJcG93ZXItc3VwcGx5ID0gPCZwbTg5MTZfbDI+Owo+Pj4gKwkJ
+YmFja2xpZ2h0ID0gPCZiYWNrbGlnaHQ+Owo+Pj4gKwl9Owo+Cj4KCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
