@@ -1,74 +1,44 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 18/23] dt-bindings: thermal: armada: add reference to
- new bindings
-Date: Thu, 5 Jul 2018 12:03:04 -0600
-Message-ID: <CAL_JsqL9h4RExZtm5cER-5kNvMpDzH-4MwcmY7VOLXB9-uEYYA@mail.gmail.com>
-References: <20180625151239.20976-1-miquel.raynal@bootlin.com>
- <20180625151239.20976-19-miquel.raynal@bootlin.com>
- <20180703213011.GA13190@rob-hp-laptop>
- <20180705120528.4b923e16@xps13>
+Subject: Re: [PATCH v2] pinctrl: at91-pio4: add support for drive strength
+Date: Thu, 5 Jul 2018 12:04:57 -0600
+Message-ID: <20180705180457.GA5809@rob-hp-laptop>
+References: <20180629081533.31885-1-ludovic.desroches@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180705120528.4b923e16@xps13>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>, David Sniatkiwicz <davidsn@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180629081533.31885-1-ludovic.desroches@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBKdWwgNSwgMjAxOCBhdCA0OjA1IEFNIE1pcXVlbCBSYXluYWwgPG1pcXVlbC5yYXlu
-YWxAYm9vdGxpbi5jb20+IHdyb3RlOgo+Cj4gSGkgUm9iLAo+Cj4gUm9iIEhlcnJpbmcgPHJvYmhA
-a2VybmVsLm9yZz4gd3JvdGUgb24gVHVlLCAzIEp1bCAyMDE4IDE1OjMwOjExIC0wNjAwOgo+Cj4g
-PiBPbiBNb24sIEp1biAyNSwgMjAxOCBhdCAwNToxMjozNFBNICswMjAwLCBNaXF1ZWwgUmF5bmFs
-IHdyb3RlOgo+ID4gPiBOZXcgYmluZGluZ3MgKHdpdGggdGhlIHN5c2NvbiBhbmQgdGhlIG92ZXJo
-ZWF0IGludGVycnVwdCkgYXJlIGF2YWlsYWJsZQo+ID4KPiA+IFdoYXQgaW50ZXJydXB0PyBJdCdz
-IG5vdCBpbiB5b3VyIG5ldyBiaW5kaW5nLgoKPz8/CgoKCj4gPiA+IGZvciBBUDgwNiBhbmQgQ1Ax
-MTAgY29tcGF0aWJsZXMuIEFkZCBhIHJlZmVyZW5jZSB0byB0aGVzZSBmaWxlcyBmcm9tIHRoZQo+
-ID4gPiBvcmlnaW5hbCBkb2N1bWVudGF0aW9uLgo+ID4gPgo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBN
-aXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPgo+ID4gPiAtLS0KPiA+ID4g
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL2FybWFkYS10aGVybWFs
-LnR4dCB8IDUgKysrKysKPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykKPiA+
-ID4KPiA+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90
-aGVybWFsL2FybWFkYS10aGVybWFsLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy90aGVybWFsL2FybWFkYS10aGVybWFsLnR4dAo+ID4gPiBpbmRleCBlMGQwMTNhMmU2NmQu
-LmYzYjQ0MTEwMDg5MCAxMDA2NDQKPiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3RoZXJtYWwvYXJtYWRhLXRoZXJtYWwudHh0Cj4gPiA+ICsrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL2FybWFkYS10aGVybWFsLnR4dAo+ID4g
-PiBAQCAtMTAsNiArMTAsMTEgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ID4gICAgICAqIG1h
-cnZlbGwsYXJtYWRhLWFwODA2LXRoZXJtYWwKPiA+ID4gICAgICAqIG1hcnZlbGwsYXJtYWRhLWNw
-MTEwLXRoZXJtYWwKPiA+Cj4gPiBSZWFsbHkgeW91IHNob3VsZCBub3QgYmUgdXNpbmcgdGhlIHNh
-bWUgY29tcGF0aWJsZSBmb3IgYm90aC4gTm93IHlvdQo+ID4gaGF2ZSAyIGRyaXZlcnMgbWF0Y2hp
-bmcgdG8gc2FtZSBjb21wYXRpYmxlcy4KPiA+Cj4gPiBDYW4ndCB5b3UgbWFrZSB0aGlzIGEgY2hp
-bGQgb2YgdGhlIHN5c2NvbiB3aXRob3V0IGJyZWFraW5nIHRoZSBiaW5kaW5nPwo+Cj4gV2UgYXJl
-IHRhbGtpbmcgYWJvdXQgb25seSAxIGRyaXZlciBoZXJlLCBzbyBJJ20gbm90IHN1cmUgaG93IEkg
-c2hvdWxkCj4gdW5kZXJzdGFuZCB5b3VyIGxhc3Qgc2VudGVuY2UuIERvIHlvdSB3YW50IG1lIHRv
-IGFkZCBhIHNlY29uZAo+IGNvbXBhdGlibGUgKGZvciB0aGUgc2FtZSBwaWVjZSBvZiBoYXJkd2Fy
-ZSkgZm9yIHRoZXJtYWwgbm9kZSBkZWNsYXJlZAo+IGFzIGEgY2hpbGQgb2YgdGhlIHN5c2Nvbj8K
-CkkgZG9uJ3Qga25vdyB3aGF0IEknbSBzdWdnZXN0aW5nLiBZb3VyIGNoYW5nZXMgbG9vayBsaWtl
-IHRoZXkgYnJlYWsKY29tcGF0aWJpbGl0eSB0byBtZS4gV2hhdCBoYXBwZW5zIGlmIHlvdSB1c2Ug
-dGhpcyBuZXcgYmluZGluZyB3aXRob3V0CmFueSBrZXJuZWwgY2hhbmdlPwoKPiBJIGNvdWxkIGhh
-bmRsZSB0aGlzIHNpdHVhdGlvbiBpbiB0aGUgZHJpdmVyIGJ5IGNyZWF0aW5nIHRoZSBtaXNzaW5n
-Cj4gcmVnbWFwIGluIGNhc2Ugd2UgYXJlIHVzaW5nIHRoZSBvbGQgY29tcGF0aWJsZS4gSWYgdGhp
-cyBpcyB0aGUgc29sdXRpb24KPiB5b3UgcHJlZmVyLCBob3cgc2hvdWxkIEkgbmFtZSB0aGUgbmV3
-IGNvbXBhdGlibGVzID8KPgo+ID4KPiA+ID4KPiA+ID4gK05vdGU6IHRoZXNlIGJpbmRpbmdzIGFy
-ZSBkZXByZWNhdGVkIGZvciBBUDgwNi9DUDExMCBhbmQgc2hvdWxkIGluc3RlYWQKPiA+ID4gK2Zv
-bGxvdyB0aGUgcnVsZXMgZGVzY3JpYmVkIGluOgo+ID4gPiArRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2FybS9tYXJ2ZWxsL2FwODA2LXN5c3RlbS1jb250cm9sbGVyLnR4dAo+ID4g
-PiArRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tYXJ2ZWxsL2NwMTEwLXN5
-c3RlbS1jb250cm9sbGVyLnR4dAo+ID4gPiArCj4gPiA+ICAtIHJlZzogRGV2aWNlJ3MgcmVnaXN0
-ZXIgc3BhY2UuCj4gPiA+ICAgIFR3byBlbnRyaWVzIGFyZSBleHBlY3RlZCwgc2VlIHRoZSBleGFt
-cGxlcyBiZWxvdy4gVGhlIGZpcnN0IG9uZSBwb2ludHMKPiA+ID4gICAgdG8gdGhlIHN0YXR1cyBy
-ZWdpc3RlciAoNEIpLiBUaGUgc2Vjb25kIG9uZSBwb2ludHMgdG8gdGhlIGNvbnRyb2wKPiA+ID4g
-LS0KPiA+ID4gMi4xNC4xCj4gPiA+Cj4KPiBUaGFua3MsCj4gTWlxdcOobAoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Fri, Jun 29, 2018 at 10:15:33AM +0200, Ludovic Desroches wrote:
+> Add support for the drive strength configuration. Usually, this value is
+> expressed in mA. Since the numeric value depends on VDDIOP voltage, a
+> value we can't retrieve at runtime, the controller uses low, medium and
+> high to define the drive strength.
+> 
+> The PIO controller accepts two values for the low drive configuration: 0
+> and 1. Most of the time, we don't care about the drive strength. So we
+> keep the default value which is 0. The drive strength is advertised
+> through the sysfs only when it has been explicitly set in the device
+> tree i.e. if its value is different from 0.
+> 
+> Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> ---
+> 
+> Changes:
+> - v2: use atmel,drive-strength property instead of drive-strengh one
+> since it is not expressend in mA and there is no way to retrieve this
+> value at runtime.
+> - v1: https://www.spinics.net/lists/linux-gpio/msg27789.html
+> 
+>  .../bindings/pinctrl/atmel,at91-pio4-pinctrl.txt   |  3 ++
+>  drivers/pinctrl/pinctrl-at91-pio4.c                | 42 ++++++++++++++++++++++
+>  include/dt-bindings/pinctrl/at91.h                 |  4 +++
+>  3 files changed, 49 insertions(+)
+
+For the DT parts,
+
+Acked-by: Rob Herring <robh@kernel.org>
