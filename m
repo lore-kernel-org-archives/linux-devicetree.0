@@ -1,27 +1,114 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v10 2/2] mfd: bd71837: Devicetree bindings for ROHM
- BD71837 PMIC
-Date: Thu, 5 Jul 2018 14:39:21 -0600
-Message-ID: <20180705203921.GA28410@rob-hp-laptop>
-References: <cover.1530800707.git.matti.vaittinen@fi.rohmeurope.com>
- <8ef84806b7152a4da2bffa0456052e98f4c6e1c6.1530800707.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH v9 1/7] dt-bindings: net: bluetooth: Add device tree
+ bindings for QTI chip wcn3990
+Date: Thu, 5 Jul 2018 14:42:50 -0600
+Message-ID: <20180705204250.GA30484@rob-hp-laptop>
+References: <20180705165515.13340-1-bgodavar@codeaurora.org>
+ <20180705165515.13340-2-bgodavar@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8ef84806b7152a4da2bffa0456052e98f4c6e1c6.1530800707.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <20180705165515.13340-2-bgodavar@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, arnd@arndb.de, dmitry.torokhov@gmail.com, sre@kernel.org, chenjh@rock-chips.com, andrew.smirnov@gmail.com, linus.walleij@linaro.org, kstewart@linuxfoundation.org, heiko@sntech.de, gregkh@linuxfoundation.org, eballetbo@gmail.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, mka@chromium.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 05, 2018 at 05:32:58PM +0300, Matti Vaittinen wrote:
-> Document devicetree bindings for ROHM BD71837 PMIC MFD.
+On Thu, Jul 05, 2018 at 10:25:09PM +0530, Balakrishna Godavarthi wrote:
+> This patch enables regulators for the Qualcomm Bluetooth wcn3990
+> controller.
 > 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
 > ---
->  .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  | 62 ++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+> Changes in v9:
+>     * updated with latest reg handle and names.
+>     * updated max-speed definition. 
+> 
+> Changes in v8:
+>     * Separated the optional entries between two chips
+> 
+> Changes in v7:
+>     * no change.
+> 
+> Changes in v6:
+> 
+>     * Changed the oper-speed to max-speed.
+> 
+> Changes in v5:
+> 
+>     * Added entry for oper-speed and init-speed.
+> 
+> ---
+>  .../bindings/net/qualcomm-bluetooth.txt       | 28 +++++++++++++++++--
+>  1 file changed, 26 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> index 0ea18a53cc29..ced58575e2b8 100644
+> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> @@ -10,12 +10,22 @@ device the slave device is attached to.
+>  Required properties:
+>   - compatible: should contain one of the following:
+>     * "qcom,qca6174-bt"
+> +   * "qcom,wcn3990-bt"
+> +
+> +Optional properties for compatible string qcom,qca6174-bt:
+>  
+> -Optional properties:
+>   - enable-gpios: gpio specifier used to enable chip
+>   - clocks: clock provided to the controller (SUSCLK_32KHZ)
+>  
+> -Example:
+> +Optional properties for compatible string qcom,wcn3990-bt:
+> +
+> + - vddio-supply: Bluetooth wcn3990 VDD_IO supply regulator handle.
+> + - vddxo-supply: Bluetooth wcn3990 VDD_XO supply regulator handle.
+> + - vddrf-supply: Bluetooth wcn3990 VDD_RF supply regulator handle.
+> + - vddch0-supply: Bluetooth wcn3990 VDD_CH0 supply regulator handle.
+> + - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
+> +
+> +Examples:
+>  
+>  serial@7570000 {
+>  	label = "BT-UART";
+> @@ -28,3 +38,17 @@ serial@7570000 {
+>  		clocks = <&divclk4>;
+>  	};
+>  };
+> +
+> +serial@898000 {
+> +	label = "BT-UART";
+
+label is generally intended for when you need to identify the physical 
+connector which wouldn't apply here.
+
+> +	status = "okay";
+
+Don't show status in examples.
+
+> +
+> +	bluetooth {
+> +		compatible = "qcom,wcn3990-bt";
+> +		vddio-supply = <&vreg_s4a_1p8>;
+> +		vddxosupply = <&vreg_l7a_1p8>;
+
+Typo.
+
+With those fixed,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +		vddrf-supply = <&vreg_l17a_1p3>;
+> +		vddch0-supply = <&vreg_l25a_3p3>;
+> +		max-speed = <3200000>;
+> +	};
+> +};
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
