@@ -1,44 +1,72 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND PATCH v4 1/2] dt-bindings: at24: Add address-width
- property
-Date: Thu, 5 Jul 2018 15:22:04 -0600
-Message-ID: <20180705212204.GA10449@rob-hp-laptop>
-References: <1530522740-2798-1-git-send-email-alanx.chiang@intel.com>
- <1530522740-2798-2-git-send-email-alanx.chiang@intel.com>
+Subject: Re: [PATCH v4 1/3] iio: hx711: add clock-frequency property in DT
+Date: Thu, 5 Jul 2018 15:30:19 -0600
+Message-ID: <20180705213019.GA12792@rob-hp-laptop>
+References: <20180704123638.GA30535@arbeit>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1530522740-2798-2-git-send-email-alanx.chiang@intel.com>
+In-Reply-To: <20180704123638.GA30535@arbeit>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alanx.chiang@intel.com
-Cc: linux-i2c@vger.kernel.org, andy.yeh@intel.com, sakari.ailus@linux.intel.com, andriy.shevchenko@linux.intel.com, andriy.shevchenko@intel.com, rajmohan.mani@intel.com, andy.shevchenko@gmail.com, tfiga@chromium.org, jcliang@chromium.org, brgl@bgdev.pl, mark.rutland@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 02, 2018 at 05:12:19PM +0800, alanx.chiang@intel.com wrote:
-> From: Alan Chiang <alanx.chiang@intel.com>
+On Wed, Jul 04, 2018 at 02:36:38PM +0200, Andreas Klinger wrote:
+> Add clock-frequency property for hx711 ADC
 > 
-> The AT24 series chips use 8-bit address by default. If some
-> chips would like to support more than 8 bits, the at24 driver
-> should be added the compatible field for specfic chips.
+> This is the frequency of PD_SCK. It affects only the high value duration
+> since low value duration is not relevant and we are not able to switch
+> faster than the minimum duration specified.
 > 
-> Provide a flexible way to determine the addressing bits through
-> address-width in this patch.
-> 
-> Signed-off-by: Alan Chiang <alanx.chiang@intel.com>
-> Signed-off-by: Andy Yeh <andy.yeh@intel.com>
-> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> 
-> ---
-> since v1:
-> -- Remove the address-width field in the example.
-> since v2:
-> -- Remove redundant space.
-> since v3:
-> -- Add Acked-by.
-> 
-> ---
->  Documentation/devicetree/bindings/eeprom/at24.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> After PD_SCK goes high DOUT is read just before PD_SCK goes down again.
+> This is necessary because of parasitic capacities on the wiring.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+s/capacities/capacitance/
+
+> 
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> ---
+>  Documentation/devicetree/bindings/iio/adc/avia-hx711.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+> index b3629405f568..4bee51d536e1 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+> @@ -8,11 +8,21 @@ Required properties:
+>  		See Documentation/devicetree/bindings/gpio/gpio.txt
+>   - avdd-supply:	Definition of the regulator used as analog supply
+>  
+> +Optional properties:
+> + - clock-frequency:	Frequency of PD_SCK
+> +			This setting affects the duration of the high value
+> +			phase of the clock (PD_SCK). The low value phase is
+> +			not affected since it is not relevant for the
+> +			measurement.
+
+That's not how frequency works. The high time should be equal to the low 
+time. If you have parasitic capacitance affecting the rise time, then it 
+is going to affect the fall time too.
+
+Perhaps there could be some reason not to have a square wave, but I 
+didn't see one in the datasheet.
+
+> +			Minimum value allowed is 20 kHz because of maximum
+> +			high time of 50 microseconds.
+
+So 10kHz should be minimum.
+
+> +
+>  Example:
+>  weight@0 {
+>  	compatible = "avia,hx711";
+>  	sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
+>  	dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
+>  	avdd-suppy = <&avdd>;
+> +	clock-frequency = <100000>;
+>  };
+>  
+> -- 
+> 2.1.4
