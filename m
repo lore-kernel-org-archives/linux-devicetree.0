@@ -1,112 +1,74 @@
-From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Subject: [PATCH v9 0/7]  Enable Bluetooth functionality for WCN3990
-Date: Thu,  5 Jul 2018 22:25:08 +0530
-Message-ID: <20180705165515.13340-1-bgodavar@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: marcel@holtmann.org, johan.hedberg@gmail.com, mka@chromium.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, Balakrishna Godavarthi <bgodavar@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 18/23] dt-bindings: thermal: armada: add reference to
+ new bindings
+Date: Thu, 5 Jul 2018 12:03:04 -0600
+Message-ID: <CAL_JsqL9h4RExZtm5cER-5kNvMpDzH-4MwcmY7VOLXB9-uEYYA@mail.gmail.com>
+References: <20180625151239.20976-1-miquel.raynal@bootlin.com>
+ <20180625151239.20976-19-miquel.raynal@bootlin.com>
+ <20180703213011.GA13190@rob-hp-laptop>
+ <20180705120528.4b923e16@xps13>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180705120528.4b923e16@xps13>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>, David Sniatkiwicz <davidsn@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-These patches enables Bluetooth functinalties for new Qualcomm
-Bluetooth chip wnc3990. As this is latest chip with new features, 
-along with some common features to old chip "qcom,qca6174-bt".
-we have updated names of functions that are used for both the chips 
-to keep this generic and would help in future when we would have new 
-BT SoC.
-
-The below are difference between new and old chips.
-
-*Power:
- *New chip: we use voltage regulators to turn on/off the chip and we 
-  must send a command on Tx line to turn on/off the chip completely.
- *Old chip: We turn on/off by setting a GPIO.
-
- *Note: Turning on sequence differs between two chips.
-
-*Firmware download:
-  Only firmware file name differ from New and Old chip.
-  
-  So we reused some functions/structure/variables which are used for old 
-  chip to New chip by generic naming (may be future chips may use same functions).
-
- * As we have multiple changes for functions names,we have tested these patches 
-   on both chips.
-
-v9:
- * removed smps regs.
- * hidded flow control in respective functions.
- * moved qca_soc_ver to qca_setup
- * addressed review comments.
- 
-v8:
-  * Squashed [v7 2/8] and [v7 3/8] to one patch.
-  * updated functions to set and get the UART speeds.
-  * addressed review comments.
-
-v7:
-  * Renamed all the possible function of ROME to generic.
-  * updated with review comments for hci_qca and btqca
-  * fixed kbuild errors.
-  * created wrapper functions for re-usable blocks.
- 
-v6:
-  * Hooked up qca_power to qca_serdev.
-  * renamed all the naming inconsistency functions with qca_*
-  * leveraged common code of ROME for wcn3990.
-  * created wrapper functions for re-usable blocks.
-  * updated function of _*regulator_enable and _*regualtor_disable.  
-  * removed redundant comments and functions.
-  * add code to derive the firmware files based on ROM Version.
-  * created new patch for common function of ROME and wcn3990.
-  * enables Qualcomm chip to operate at 3.2Mbps.
-  * updated names of functions that are used for both the chips to keep this generic. 
-
-v5:
-  * updated with review comments for hci_qca and btqca
- 
-v4:
-  * rebased all changes on top of bluetooth-next.
-  * addressed review comments.
-  * New patch created for firmware download.
-
-v3:
-  * Rebased all changes on top of bluetooth-next.
-  * dt-bindings: net: bluetooth: Add device tree bindings for QTI chip wcn3990
-    - added dt-binding snippet for bluetooth chip wcn3990.
-  * Bluetooth: Add support for wcn3990 soc.
-    - updated BT_INFO with bt_dev_info, where ever necessary.
-
-v2:
-   * Add support for wcn3990:
-    These changes are aligned as per serdev frame work.
-          We implemented these changes on top of https://patchwork.kernel.org/patch/10316093/
-        As this patch enable serdev for one of the Qualcomm BT chip.
-
-        The changes in the patch include.
-        - Adding support to voting up/down regulators for WCN3990.
-           - Bluetooth firmware download for wcn3990.
-
-  * Add device tree bindings for Atheros chips:
-          These changes are on top of https://patchwork.kernel.org/patch/10316097/.
-          - Description of device tree bindings.
-
-Balakrishna Godavarthi (7):
-  dt-bindings: net: bluetooth: Add device tree bindings for QTI chip
-    wcn3990
-  Bluetooth: btqca: Rename ROME specific functions to generic functions
-  Bluetooth: btqca: Redefine qca_uart_setup() to generic function.
-  Bluetooth: hci_qca: Add wrapper functions for setting UART speed
-  Bluetooth: hci_qca: Enable 3.2 Mbps operating speed.
-  Bluetooth: btqca: Add wcn3990 firmware download support.
-  Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990
-
- .../bindings/net/qualcomm-bluetooth.txt       |  28 +-
- drivers/bluetooth/btqca.c                     | 113 +++--
- drivers/bluetooth/btqca.h                     |  22 +-
- drivers/bluetooth/hci_qca.c                   | 468 +++++++++++++++---
- 4 files changed, 518 insertions(+), 113 deletions(-)
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+T24gVGh1LCBKdWwgNSwgMjAxOCBhdCA0OjA1IEFNIE1pcXVlbCBSYXluYWwgPG1pcXVlbC5yYXlu
+YWxAYm9vdGxpbi5jb20+IHdyb3RlOgo+Cj4gSGkgUm9iLAo+Cj4gUm9iIEhlcnJpbmcgPHJvYmhA
+a2VybmVsLm9yZz4gd3JvdGUgb24gVHVlLCAzIEp1bCAyMDE4IDE1OjMwOjExIC0wNjAwOgo+Cj4g
+PiBPbiBNb24sIEp1biAyNSwgMjAxOCBhdCAwNToxMjozNFBNICswMjAwLCBNaXF1ZWwgUmF5bmFs
+IHdyb3RlOgo+ID4gPiBOZXcgYmluZGluZ3MgKHdpdGggdGhlIHN5c2NvbiBhbmQgdGhlIG92ZXJo
+ZWF0IGludGVycnVwdCkgYXJlIGF2YWlsYWJsZQo+ID4KPiA+IFdoYXQgaW50ZXJydXB0PyBJdCdz
+IG5vdCBpbiB5b3VyIG5ldyBiaW5kaW5nLgoKPz8/CgoKCj4gPiA+IGZvciBBUDgwNiBhbmQgQ1Ax
+MTAgY29tcGF0aWJsZXMuIEFkZCBhIHJlZmVyZW5jZSB0byB0aGVzZSBmaWxlcyBmcm9tIHRoZQo+
+ID4gPiBvcmlnaW5hbCBkb2N1bWVudGF0aW9uLgo+ID4gPgo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBN
+aXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPgo+ID4gPiAtLS0KPiA+ID4g
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL2FybWFkYS10aGVybWFs
+LnR4dCB8IDUgKysrKysKPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykKPiA+
+ID4KPiA+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90
+aGVybWFsL2FybWFkYS10aGVybWFsLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy90aGVybWFsL2FybWFkYS10aGVybWFsLnR4dAo+ID4gPiBpbmRleCBlMGQwMTNhMmU2NmQu
+LmYzYjQ0MTEwMDg5MCAxMDA2NDQKPiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3RoZXJtYWwvYXJtYWRhLXRoZXJtYWwudHh0Cj4gPiA+ICsrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL2FybWFkYS10aGVybWFsLnR4dAo+ID4g
+PiBAQCAtMTAsNiArMTAsMTEgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ID4gICAgICAqIG1h
+cnZlbGwsYXJtYWRhLWFwODA2LXRoZXJtYWwKPiA+ID4gICAgICAqIG1hcnZlbGwsYXJtYWRhLWNw
+MTEwLXRoZXJtYWwKPiA+Cj4gPiBSZWFsbHkgeW91IHNob3VsZCBub3QgYmUgdXNpbmcgdGhlIHNh
+bWUgY29tcGF0aWJsZSBmb3IgYm90aC4gTm93IHlvdQo+ID4gaGF2ZSAyIGRyaXZlcnMgbWF0Y2hp
+bmcgdG8gc2FtZSBjb21wYXRpYmxlcy4KPiA+Cj4gPiBDYW4ndCB5b3UgbWFrZSB0aGlzIGEgY2hp
+bGQgb2YgdGhlIHN5c2NvbiB3aXRob3V0IGJyZWFraW5nIHRoZSBiaW5kaW5nPwo+Cj4gV2UgYXJl
+IHRhbGtpbmcgYWJvdXQgb25seSAxIGRyaXZlciBoZXJlLCBzbyBJJ20gbm90IHN1cmUgaG93IEkg
+c2hvdWxkCj4gdW5kZXJzdGFuZCB5b3VyIGxhc3Qgc2VudGVuY2UuIERvIHlvdSB3YW50IG1lIHRv
+IGFkZCBhIHNlY29uZAo+IGNvbXBhdGlibGUgKGZvciB0aGUgc2FtZSBwaWVjZSBvZiBoYXJkd2Fy
+ZSkgZm9yIHRoZXJtYWwgbm9kZSBkZWNsYXJlZAo+IGFzIGEgY2hpbGQgb2YgdGhlIHN5c2Nvbj8K
+CkkgZG9uJ3Qga25vdyB3aGF0IEknbSBzdWdnZXN0aW5nLiBZb3VyIGNoYW5nZXMgbG9vayBsaWtl
+IHRoZXkgYnJlYWsKY29tcGF0aWJpbGl0eSB0byBtZS4gV2hhdCBoYXBwZW5zIGlmIHlvdSB1c2Ug
+dGhpcyBuZXcgYmluZGluZyB3aXRob3V0CmFueSBrZXJuZWwgY2hhbmdlPwoKPiBJIGNvdWxkIGhh
+bmRsZSB0aGlzIHNpdHVhdGlvbiBpbiB0aGUgZHJpdmVyIGJ5IGNyZWF0aW5nIHRoZSBtaXNzaW5n
+Cj4gcmVnbWFwIGluIGNhc2Ugd2UgYXJlIHVzaW5nIHRoZSBvbGQgY29tcGF0aWJsZS4gSWYgdGhp
+cyBpcyB0aGUgc29sdXRpb24KPiB5b3UgcHJlZmVyLCBob3cgc2hvdWxkIEkgbmFtZSB0aGUgbmV3
+IGNvbXBhdGlibGVzID8KPgo+ID4KPiA+ID4KPiA+ID4gK05vdGU6IHRoZXNlIGJpbmRpbmdzIGFy
+ZSBkZXByZWNhdGVkIGZvciBBUDgwNi9DUDExMCBhbmQgc2hvdWxkIGluc3RlYWQKPiA+ID4gK2Zv
+bGxvdyB0aGUgcnVsZXMgZGVzY3JpYmVkIGluOgo+ID4gPiArRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2FybS9tYXJ2ZWxsL2FwODA2LXN5c3RlbS1jb250cm9sbGVyLnR4dAo+ID4g
+PiArRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tYXJ2ZWxsL2NwMTEwLXN5
+c3RlbS1jb250cm9sbGVyLnR4dAo+ID4gPiArCj4gPiA+ICAtIHJlZzogRGV2aWNlJ3MgcmVnaXN0
+ZXIgc3BhY2UuCj4gPiA+ICAgIFR3byBlbnRyaWVzIGFyZSBleHBlY3RlZCwgc2VlIHRoZSBleGFt
+cGxlcyBiZWxvdy4gVGhlIGZpcnN0IG9uZSBwb2ludHMKPiA+ID4gICAgdG8gdGhlIHN0YXR1cyBy
+ZWdpc3RlciAoNEIpLiBUaGUgc2Vjb25kIG9uZSBwb2ludHMgdG8gdGhlIGNvbnRyb2wKPiA+ID4g
+LS0KPiA+ID4gMi4xNC4xCj4gPiA+Cj4KPiBUaGFua3MsCj4gTWlxdcOobAoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
+aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
