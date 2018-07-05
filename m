@@ -1,15 +1,15 @@
 From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 2/3] ARM: dts: imx31: add device tree description of basic
- controllers
-Date: Wed, 4 Jul 2018 22:01:20 -0300
-Message-ID: <CAOMZO5AW6QryKAjcG_kE011G1anLD=-EaJFhAaWzaqbf3aKNUQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] ARM: dts: imx31: add LogicPD MX31Lite board
+ description
+Date: Wed, 4 Jul 2018 22:03:09 -0300
+Message-ID: <CAOMZO5CFDUJPoTLppwD6+E5x8gficanore-T-6bGpSEdCwNW0g@mail.gmail.com>
 References: <20180703192934.6080-1-vz@mleia.com>
- <20180703192934.6080-3-vz@mleia.com>
+ <20180703192934.6080-4-vz@mleia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180703192934.6080-3-vz@mleia.com>
+In-Reply-To: <20180703192934.6080-4-vz@mleia.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,22 +24,16 @@ Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vge
 List-Id: devicetree@vger.kernel.org
 
 On Tue, Jul 3, 2018 at 4:29 PM, Vladimir Zapolskiy <vz@mleia.com> wrote:
-> The change adds a number of basic peripherals found on i.MX31 SoC:
-> * GPIO controllers,
-> * I2C master controllers,
-> * SPI master controllers,
-> * ATA controller,
-> * SDHC controllers,
-> * RTC, watchdog and PWM contollers,
-> * SDMA,
-> * IRAM,
-> * NAND and WEIM controllers on EMI.
->
-> The added controller devices were tested on Freescale i.MX31 powered
-> LogicPD Lite SoM and baseboard.
->
-> DMA functionality was tested on SDHC and SPI controllers so far,
-> thus dmas properties are added to those device nodes only.
+> The added DTS contains a combined description of LogicPD MX31 Lite
+> SoM devices, peripherals are routed to ports on a baseboard:
+> * PATA controller,
+> * SD/MMC controller,
+> * 2 GPIO LEDs,
+> * UART controllers,
+> * Freescale MC13783 MFD connected over SPI,
+> * SMSC LAN9117,
+> * ST Micro NAND SLC, 64 MiB,
+> * Intel NOR flash, 16 MiB.
 >
 > Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 
