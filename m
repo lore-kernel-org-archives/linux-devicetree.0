@@ -1,38 +1,90 @@
-From: Chen Zhong <chen.zhong@mediatek.com>
-Subject: Re: [RESEND PATCH] dt-bindings: input: Add common keyboard document
- bindings
-Date: Thu, 5 Jul 2018 09:27:14 +0800
-Message-ID: <1530754034.14396.19.camel@mhfsdcap03>
-References: <1529648198-14231-1-git-send-email-chen.zhong@mediatek.com>
-         <1529649595.14396.18.camel@mhfsdcap03>
-         <20180704152514.33h52ujqp34hpj2o@penguin>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: Re: [PATCH 0/3] pinctrl: meson-g12a: add pinctrl driver support
+Date: Thu, 5 Jul 2018 10:52:12 +0800
+Message-ID: <886462fa-1833-a99a-a2fa-5b7dd58341fd@amlogic.com>
+References: <20180704224511.29350-1-yixun.lan@amlogic.com>
+ <78da7e13-e80b-d714-86d0-7c5f6fc0d9f5@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180704152514.33h52ujqp34hpj2o@penguin>
+In-Reply-To: <78da7e13-e80b-d714-86d0-7c5f6fc0d9f5@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Cc: yixun.lan@amlogic.com, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh@kernel.org>, Xingyu Chen <xingyu.chen@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-07-04 at 15:25 +0000, Dmitry Torokhov wrote:
-> On Fri, Jun 22, 2018 at 02:39:55PM +0800, Chen Zhong wrote:
-> > Hi Dmitry,
-> > 
-> > The other patches in the series to add mediatek pmic keys support are
-> > now available in 4.18-rc1, but this patch seems not being merged.
-> > 
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git
-> > ib-mfd-input-rtc-v4.18
-> > 
-> > I have resend the patch, and rebase to 4.18-rc1.
-> > Could you help to see if it is good enough to be merged into your tree?
+HI Neil
+
+On 07/04/18 22:57, Neil Armstrong wrote:
+> Hi Yixun,
 > 
-> I thought Rob would pick it up, but since he hasn't I'll do it.
+> On 05/07/2018 00:45, Yixun Lan wrote:
+>> This patch series try to add pinctrl driver support for
+>> the Meson-G12A SoC.
 > 
-> Thanks.
+> Thanks for submitting these patches.
+> 
+> Can you explicit this patchset with more details on the G12A SoC family ?
+> It's relationship with AXG and the differences in term of pinmuxing with the other SoC families ?
+> 
+I thought this was already discussed while we doing pinctrl driver for
+Meson-AXG SoC.
+
+Anyway, here it is:
+
+Starting from Meson-AXG SoC, the pinctrl controller block using 4
+continues bit to specific pin mux function, while comparing to old
+generation SoC which kind of using various length bits for the pin mux
+definition. The new design would greatly simplify the software model..
+
+for detail example, one 32bit register can describe 8 pins, and each of
+them has 0-7 value to set, start from value 0 to 7.
+
+partition the register into 8 parts:
+bit[3:0]
+bit[7:4]
+bit[11:8]
+bit[15:12]
+bit[19:16]
+bit[23:20]
+bit[27:24]
+bit[31:28]
+
+
+for each value:
+value == 0, means the pin is GPIO
+value = {1, 2, ... 7 } is one of specific PIN function
+
+I could put this info into cover-letter or commit message?
+
+> Why is there a GPIOE bank within the AO controller ?
 > 
 
-That would be great helpful.
-Thank you.
+It actually sit in the AO domain, although it's sounds strange from the
+naming..
+
+I'm not sure if it's good idea to append a AO suffix? since the
+documentation just use the plain GPIOE
+
+> Thanks,
+> Neil
+> 
+>>
+>> Yixun Lan (3):
+>>   documentation: Add compatibles for Amlogic Meson G12A pin controllers
+>>   dt-bindings: pinctrl: meson-g12a: document pin name
+>>   pinctrl: meson-g12a: add pinctrl driver support
+>>
+>>  .../bindings/pinctrl/meson,pinctrl.txt        |    2 +
+>>  drivers/pinctrl/meson/Kconfig                 |    6 +
+>>  drivers/pinctrl/meson/Makefile                |    1 +
+>>  drivers/pinctrl/meson/pinctrl-meson-g12a.c    | 1432 +++++++++++++++++
+>>  include/dt-bindings/gpio/meson-g12a-gpio.h    |  114 ++
+>>  5 files changed, 1555 insertions(+)
+>>  create mode 100644 drivers/pinctrl/meson/pinctrl-meson-g12a.c
+>>  create mode 100644 include/dt-bindings/gpio/meson-g12a-gpio.h
+>>
+> 
+> .
+> 
