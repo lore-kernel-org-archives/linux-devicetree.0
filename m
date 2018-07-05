@@ -1,170 +1,86 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v22 1/4] dt-bindings: soc: Add documentation for the
- MediaTek GCE unit
-Date: Thu, 5 Jul 2018 14:08:13 -0600
-Message-ID: <CAL_JsqLZ-+-kY2QSY3cZMoR2zZuuZA8C9VUoHG=F7rpa4s5fgA@mail.gmail.com>
-References: <1530098172-31385-1-git-send-email-houlong.wei@mediatek.com>
- <1530098172-31385-2-git-send-email-houlong.wei@mediatek.com>
- <20180703023040.GA24508@rob-hp-laptop> <1530661158.21991.45.camel@mhfsdcap03>
+Subject: Re: [PATCH v4 4/6] thermal: tsens: Add support for SDM845
+Date: Thu, 5 Jul 2018 14:37:12 -0600
+Message-ID: <20180705203712.GA29531@rob-hp-laptop>
+References: <cover.1530533998.git.amit.kucheria@linaro.org>
+ <43e3ae530334efab3fa0151430879f03731e9daa.1530533998.git.amit.kucheria@linaro.org>
+ <20180703162619.GA17238@rob-hp-laptop>
+ <CAHLCerNpifvM9nGXiE63-DQ0okP8+1wdxq52qo-K1TWzoYzjtQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530661158.21991.45.camel@mhfsdcap03>
+Content-Disposition: inline
+In-Reply-To: <CAHLCerNpifvM9nGXiE63-DQ0okP8+1wdxq52qo-K1TWzoYzjtQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Houlong Wei <houlong.wei@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK Hu <ck.hu@mediatek.com>, Bibby Hsieh <Bibby.Hsieh@mediatek.com>, YT Shen <Yt.Shen@mediatek.com>, Daoyuan Huang <Daoyuan.Huang@mediatek.com>, Jiaguang Zhang <Jiaguang.Zhang@mediatek.com>, Dennis-YC
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Kees Cook <keescook@chromium.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 3, 2018 at 5:39 PM houlong wei <houlong.wei@mediatek.com> wrote:
->
-> On Tue, 2018-07-03 at 10:30 +0800, Rob Herring wrote:
-> > On Wed, Jun 27, 2018 at 07:16:09PM +0800, Houlong Wei wrote:
-> > > This adds documentation for the MediaTek Global Command Engine (GCE) unit
-> > > found in MT8173 SoCs.
-> > >
-> > > Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
-> > > Signed-off-by: HS Liao <hs.liao@mediatek.com>
-> > > ---
-> > > Hi Rob,
-> > >   I don't add your ACK in this version since the dt-binding description
-> > > has been changed. Thanks.
-> > > ---
-> > >  .../devicetree/bindings/mailbox/mtk-gce.txt        |   65 ++++++++++++++++++++
-> > >  include/dt-bindings/gce/mt8173-gce.h               |   48 +++++++++++++++
-> > >  2 files changed, 113 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> > >  create mode 100644 include/dt-bindings/gce/mt8173-gce.h
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> > > new file mode 100644
-> > > index 0000000..26f65a4
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> > > @@ -0,0 +1,65 @@
-> > > +MediaTek GCE
-> > > +===============
-> > > +
-> > > +The Global Command Engine (GCE) is used to help read/write registers with
-> > > +critical time limitation, such as updating display configuration during the
-> > > +vblank. The GCE can be used to implement the Command Queue (CMDQ) driver.
-> > > +
-> > > +CMDQ driver uses mailbox framework for communication. Please refer to
-> > > +mailbox.txt for generic information about mailbox device-tree bindings.
-> > > +
-> > > +Required properties:
-> > > +- compatible: Must be "mediatek,mt8173-gce"
-> > > +- reg: Address range of the GCE unit
-> > > +- interrupts: The interrupt signal from the GCE block
-> > > +- clock: Clocks according to the common clock binding
-> > > +- clock-names: Must be "gce" to stand for GCE clock
-> > > +- thread-num: Maximum threads count of GCE.
+On Wed, Jul 04, 2018 at 10:56:26PM +0530, Amit Kucheria wrote:
+> On Tue, Jul 3, 2018 at 9:56 PM, Rob Herring <robh@kernel.org> wrote:
+> > On Mon, Jul 02, 2018 at 06:14:07PM +0530, Amit Kucheria wrote:
+> >> SDM845 uses v2.4.0 of the TSENS IP block but the get_temp() function
+> >> appears to be identical across v2.x.y in code seen so far. We use the
+> >> generic get_temp() function.
+> >>
+> >> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> >> ---
+> >>  Documentation/devicetree/bindings/thermal/qcom-tsens.txt | 2 ++
+> >>  drivers/thermal/qcom/tsens-v2.c                          | 6 +++++-
+> >>  drivers/thermal/qcom/tsens.c                             | 6 ++++++
+> >>  drivers/thermal/qcom/tsens.h                             | 5 ++++-
+> >>  4 files changed, 17 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> >> index 06195e8..075182e 100644
+> >> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> >> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> >> @@ -5,6 +5,8 @@ Required properties:
+> >>   - "qcom,msm8916-tsens" : For 8916 Family of SoCs
+> >>   - "qcom,msm8974-tsens" : For 8974 Family of SoCs
+> >>   - "qcom,msm8996-tsens" : For 8996 Family of SoCs
+> >> + - "qcom,tsens-v2.4.0"  : For SDM845 Family of SoCs
+> >> + - "qcom,tsens-v2"      : Generic fallback binding for any Soc using 2.x.y version of the tsens IP
 > >
-> > mediatek,thread-num
-> >
-> > Is this needed for anything other than error checking the thread id in
-> > the mbox cells? if that's it, then drop it.
-> >
->
-> 'thread-num' is used to configure the GCE thread number, which is the
-> channel number of gce mailbox. This property is read in
-> cmdq_probe()/mtk-cmdq-mailbox.c and a mailbox's channel array is
-> allocated according to the number.
-> Since the thread number may be different on different SoC, we wish it
-> could be configured in device tree.
+> > You need to show what are valid combinations of compatibles. Does v2
+> > apply to 8996? One valid combination per line.
+> 
+> I've restructured qcom-tsens.txt to look like this:
+> 
+> -----%<-------
+> 
+> * QCOM SoC Temperature Sensor (TSENS)
+> 
+> Required properties:
+> - compatible: must be one of the following:
+>     - "qcom,msm8916-tsens" (MSM8916)
+>     - "qcom,msm8974-tsens" (MSM8974)
+>     - "qcom,msm8996-tsens" (MSM8996)
+>     - "qcom,tsens-<ip_version>", "qcom,tsens-v2" (TSENS IP version and a
+>        generic v2 property as fallback except for MSM8996)
+> 
+>   Examples with ip_version are:
+>     - "qcom,tsens-v2.4.0", "qcom,tsens-v2" (SDM845)
+>     - "qcom,tsens-v2.2.1", "qcom,tsens-v2" (MSM8998)
+> 
+> -----%<-------
+> 
+> 8996 would end up being something like this if needed, though we're
+> stuck with "qcom,msm8996-tsens":
+> "qcom,msm8996-tsens", "qcom,tsens-v2.1.0", "qcom,tsens-v2" (MSM8996)
 
-You should have different compatible strings for different SoCs and
-can imply the number of threads from that.
+3 versions here for 3 SoCs. I'm not getting that convinced version 
+numbers really are better. I would assume that other QCom IP blocks 
+have versions too, but pretty much *every* *other* binding uses SoC names. 
+Why is this one special? The other problem with versions is the mapping 
+of versions to SoCs most likely can't be validated outside of QCom 
+unless there's a version register.
 
-Or if the number of threads doesn't vary greatly, just allocate the
-max # of channels. Or allocate the per thread data when a thread is
-actually in use.
+So, sorry to go in circles, but can you go back to qcom,<soc>-tsens. You 
+can keep qcom,tsens-v2 as a fallback.
 
->
-> > > +- #mbox-cells: Should be 4.
-> > > +   <&phandle channel timeout priority atomic_exec>
-> > > +   phandle: Label name of a gce node.
-> > > +   channel: Channel of mailbox. Be equal to the thread id of GCE.
-> > > +   timeout: Maximum time of software waiting GCE processing done, in unit
-> > > +           of millisecond.
-> > > +   priority: Priority of GCE thread.
-> > > +   atomic_exec: GCE processing continuous packets of commands in atomic
-> > > +           way.
-> > > +
-> > > +Required properties for a client device:
-> > > +- mboxes: Client use mailbox to communicate with GCE, it should have this
-> > > +  property and list of phandle, mailbox specifiers.
-> > > +- gce-subsys: Specify the sub-system id which is corresponding to the register
-> > > +  address.
-> >
-> > What is this for?
->
-> You mean the new added property 'gce-subsys'?
-> It is used for GCE to distinguish the high 16-bit of a hardware register
-> address. When a client driver packets a register setting into a GCE
-> instruction, it uses a sub-system code and register offset instead of
-> the 32-bit register address.
-> Since sub-system code may be different on different SoC, we wish it
-> could be configured in device tree.
+Yes, it's annoying to have to update bindings for new SoCs. But it's 
+trivial one line patches. Look at Renesas bindings. Maybe adding new 
+ones will be scriptable once we move to json-schema binding docs.
 
-Okay. It needs a vendor prefix and to specify the size and type of the value.
-
->
-> >
-> > > +
-> > > +Optional properties for a client device:
-> > > +- gce-event: Specify the event if the client has any. Because the event is
-> > > +  parsed by client, so client can replace 'gce-event' with other meaningful
-> > > +  name.
-> >
-> > If the client sets the name, then no point having here. It must be
-> > documented in the client binding. But then, what is this for in the
-> > first place?
->
-> Since display driver will use GCE firstly, so we will move the
-> description to
-> 'Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt'
-> when display driver start using the GCE driver.
-> Is that ok?
-
-Not sure. I don't understand how it is used.
-
-> > > +
-> > > +Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'. Such as
-> > > +thread number, sub-system ids, thread priority, event ids.
-> > > +
-> > > +Example:
-> > > +
-> > > +   gce: gce@10212000 {
-> >
-> > mailbox@...
->
-> Will do.
->
-> >
-> > > +           compatible = "mediatek,mt8173-gce";
-> > > +           reg = <0 0x10212000 0 0x1000>;
-> > > +           interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
-> > > +           clocks = <&infracfg CLK_INFRA_GCE>;
-> > > +           clock-names = "gce";
-> > > +           thread-num = CMDQ_THR_MAX_COUNT;
-> > > +           #mbox-cells = <4>;
-> > > +   };
-> > > +
-> > > +Example for a client device:
-> > > +
-> > > +   mmsys: clock-controller@14000000 {
-> > > +           compatible = "mediatek,mt8173-mmsys";
-> > > +           mboxes = <&gce 0 2000 CMDQ_THR_PRIO_LOWEST 1>,
-> > > +                    <&gce 1 2000 CMDQ_THR_PRIO_LOWEST 1>;
-> > > +           gce-subsys = <SUBSYS_1400XXXX>;
-> > > +           mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
-> > > +                           CMDQ_EVENT_MUTEX1_STREAM_EOF>;
-> > > +
-> > > +           ...
-> > > +   };
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
