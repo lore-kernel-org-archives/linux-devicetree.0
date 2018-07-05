@@ -1,35 +1,90 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 09/10] dt-bindings: counter: Adjust dt-bindings for
- STM32 lptimer move
-Date: Thu, 5 Jul 2018 15:13:31 -0600
-Message-ID: <20180705211331.GA2404@rob-hp-laptop>
-References: <cover.1529607879.git.vilhelm.gray@gmail.com>
- <4bf9f5233a46e0dc195c27be19b76687448c17ff.1529607879.git.vilhelm.gray@gmail.com>
+Subject: Re: [PATCH v7 1/5] clocksource/drivers/timer-mediatek: Add system
+ timer bindings
+Date: Thu, 5 Jul 2018 15:15:52 -0600
+Message-ID: <20180705211552.GA3699@rob-hp-laptop>
+References: <1530752972-833-1-git-send-email-stanley.chu@mediatek.com>
+ <1530752972-833-2-git-send-email-stanley.chu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4bf9f5233a46e0dc195c27be19b76687448c17ff.1529607879.git.vilhelm.gray@gmail.com>
+In-Reply-To: <1530752972-833-2-git-send-email-stanley.chu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc: gregkh@linuxfoundation.org, jic23@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, fabrice.gasnier@st.com, benjamin.gaignard@st.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com
+To: Stanley Chu <stanley.chu@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 21, 2018 at 05:08:57PM -0400, William Breathitt Gray wrote:
-> From: Fabrice Gasnier <fabrice.gasnier@st.com>
+On Thu, Jul 05, 2018 at 09:09:28AM +0800, Stanley Chu wrote:
+> This patch fixes bindings of existed "General Purpose Timer",
+> and then add bindings of new "System Timer" on Mediatek SoCs.
 > 
-> The STM32 LP Timer counter driver now resides under the Counter
-> subsystem. This patch adjusts dt-bindings to account for the STM32
-> lptimer driver move.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
 > ---
->  .../devicetree/bindings/{iio => }/counter/stm32-lptimer-cnt.txt | 0
->  Documentation/devicetree/bindings/mfd/stm32-lptimer.txt         | 2 +-
->  2 files changed, 1 insertion(+), 1 deletion(-)
->  rename Documentation/devicetree/bindings/{iio => }/counter/stm32-lptimer-cnt.txt (100%)
+>  .../bindings/timer/mediatek,mtk-timer.txt          |   36 ++++++++++++--------
+>  1 file changed, 21 insertions(+), 15 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+> index b1fe7e9..0f3b8a1 100644
+> --- a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+> +++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+> @@ -1,19 +1,25 @@
+> -Mediatek MT6577, MT6572 and MT6589 Timers
+> ----------------------------------------
+> +Mediatek Timers
+> +---------------
+> +
+> +Mediatek SoCs have two different timers on different platforms,
+> +- GPT (General Purpose Timer)
+> +- SYST (System Timer)
+> +
+> +The proper timer will be selected automatically by driver.
+>  
+>  Required properties:
+>  - compatible should contain:
+> -	* "mediatek,mt2701-timer" for MT2701 compatible timers
+> -	* "mediatek,mt6580-timer" for MT6580 compatible timers
+> -	* "mediatek,mt6589-timer" for MT6589 compatible timers
+> -	* "mediatek,mt7623-timer" for MT7623 compatible timers
+> -	* "mediatek,mt8127-timer" for MT8127 compatible timers
+> -	* "mediatek,mt8135-timer" for MT8135 compatible timers
+> -	* "mediatek,mt8173-timer" for MT8173 compatible timers
+> -	* "mediatek,mt6577-timer" for MT6577 and all above compatible timers
+> -- reg: Should contain location and length for timers register.
+> -- clocks: Clocks driving the timer hardware. This list should include two
+> -	clocks. The order is system clock and as second clock the RTC clock.
+> +	* "mediatek,mt2701-timer" for MT2701 compatible timers (GPT)
+> +	* "mediatek,mt6580-timer" for MT6580 compatible timers (GPT)
+> +	* "mediatek,mt6589-timer" for MT6589 compatible timers (GPT)
+> +	* "mediatek,mt7623-timer" for MT7623 compatible timers (GPT)
+> +	* "mediatek,mt8127-timer" for MT8127 compatible timers (GPT)
+> +	* "mediatek,mt8135-timer" for MT8135 compatible timers (GPT)
+> +	* "mediatek,mt8173-timer" for MT8173 compatible timers (GPT)
+> +	* "mediatek,mt6577-timer" for MT6577 and all above compatible timers (GPT)
+> +	* "mediatek,mt6765-timer" for MT6765 compatible timers (SYST)
+> +- reg: Should contain location and length for timer register.
+> +- clocks: Both timers are driven by system clock.
 
-Acked-by: Rob Herring <robh@kernel.org> 
+The binding just needs to say how many clocks, what they are and the 
+order.
+
+You need to explain in the commit message why you remove the RTC clock.
+
+>  
+>  Examples:
+>  
+> @@ -21,5 +27,5 @@ Examples:
+>  		compatible = "mediatek,mt6577-timer";
+>  		reg = <0x10008000 0x80>;
+>  		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
+> -		clocks = <&system_clk>, <&rtc_clk>;
+> -	};
+> +		clocks = <&system_clk>;
+> +	};
+> \ No newline at end of file
+
+Fix this.
+
+> -- 
+> 1.7.9.5
+> 
