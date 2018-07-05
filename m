@@ -1,172 +1,170 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: Re: [PATCH v3 09/24] drm/sun4i: Don't skip TCONs if
- they don't have channel 0
-Date: Thu, 05 Jul 2018 22:03:35 +0200
-Message-ID: <1699738.FoQmAThxyL@jernej-laptop>
-References: <20180625120304.7543-1-jernej.skrabec@siol.net> <CAGb2v66_6RoYk6MRtTJeqg0Z09A7y+pvSxs7qeeND+iKPE_+BA@mail.gmail.com> <20180705070358.7ng4shuo3pxp62q6@flea>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v22 1/4] dt-bindings: soc: Add documentation for the
+ MediaTek GCE unit
+Date: Thu, 5 Jul 2018 14:08:13 -0600
+Message-ID: <CAL_JsqLZ-+-kY2QSY3cZMoR2zZuuZA8C9VUoHG=F7rpa4s5fgA@mail.gmail.com>
+References: <1530098172-31385-1-git-send-email-houlong.wei@mediatek.com>
+ <1530098172-31385-2-git-send-email-houlong.wei@mediatek.com>
+ <20180703023040.GA24508@rob-hp-laptop> <1530661158.21991.45.camel@mhfsdcap03>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBA7U7HMQKGQER3DF24Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180705070358.7ng4shuo3pxp62q6@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1530661158.21991.45.camel@mhfsdcap03>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Houlong Wei <houlong.wei@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK Hu <ck.hu@mediatek.com>, Bibby Hsieh <Bibby.Hsieh@mediatek.com>, YT Shen <Yt.Shen@mediatek.com>, Daoyuan Huang <Daoyuan.Huang@mediatek.com>, Jiaguang Zhang <Jiaguang.Zhang@mediatek.com>, Dennis-YC
 List-Id: devicetree@vger.kernel.org
 
-Dne =C4=8Detrtek, 05. julij 2018 ob 09:03:58 CEST je Maxime Ripard napisal(=
-a):
-> On Sun, Jul 01, 2018 at 11:11:06PM +0800, Chen-Yu Tsai wrote:
-> > On Sun, Jul 1, 2018 at 4:27 PM, Jernej =C5=A0krabec <jernej.skrabec@sio=
-l.net>=20
-wrote:
-> > > Dne =C4=8Detrtek, 28. junij 2018 ob 08:24:34 CEST je Chen-Yu Tsai nap=
-isal(a):
-> > >> On Thu, Jun 28, 2018 at 12:45 PM, Jernej =C5=A0krabec
-> > >>=20
-> > >> <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> > >> > Dne =C4=8Detrtek, 28. junij 2018 ob 03:51:31 CEST je Chen-Yu Tsai=
-=20
-napisal(a):
-> > >> >> On Mon, Jun 25, 2018 at 8:02 PM, Jernej Skrabec
-> > >> >> <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> > >> >=20
-> > >> > wrote:
-> > >> >> > TV TCONs (channel 1 only) are always connected to TV or HDMI
-> > >> >> > encoder.
-> > >> >> > Because of that, all output endpoints on such TCON node will po=
-int
-> > >> >> > to a
-> > >> >> > encoder which is part of component framework.
-> > >> >> >=20
-> > >> >> > Correct current graph traversing algorithm in such way that it
-> > >> >> > doesn't
-> > >> >> > skip output enpoints with id 0 on TV TCONs.
-> > >> >>=20
-> > >> >> No. Our bindings say that endpoint 0 _is_ channel 0. For TCONs th=
-at
-> > >> >> don't
-> > >> >> have channel 0, it must be skipped.
-> > >> >=20
-> > >> > I'm not sure where this is stated. I read TCON binding again. Can =
-you
-> > >> > please point me to it?
-> > >>=20
-> > >> https://elixir.bootlin.com/linux/latest/source/Documentation/devicet=
-ree
-> > >> /bind ings/display/sunxi/sun4i-drm.txt#L169
-> > >>=20
-> > >> Our TCON driver still expects RGB or LVDS panel / bridges on endpoin=
-t
-> > >> 0.
-> > >=20
-> > > Yes, but that can only happen on TCON which has channel 0. TV TCONs
-> > > (those
-> > > with channel 1 only) can't have panels or bridges connected to them,
-> > > because they are internally always connected to either HDMI or TV
-> > > encoder or both. Actually, R40 is the only SoC, where same TV TCON ca=
-n
-> > > be connected to TV encoder or HDMI. Others have specialized TV TCONs,
-> > > which are connect to only one encoder.
-> > >=20
-> > > IMO TV TCONs are really just stripped down LCD TCONs to support one (=
-or
-> > > max
-> > > two) specific encoder.
-> >=20
-> > I agree. We've seen these first in the H3, and the reverse, TCONs only
-> > with
-> > LCD, on the A23/A33.
-> >=20
-> > >> So I guess this was sort of implied historically. It's no longer tru=
-e.
-> > >> This is something we should probably fix.
-> > >=20
-> > > Fixed in what way? You mean update bindings to mention that TCON outp=
-ut
-> > > endpoint 0 is reserved for panels or bridges?
-> >=20
-> > Either that, or have the drm driver look at other endpoints. I guess we
-> > should ask Maxime if this is already done or not, since the DSI driver
-> > isn't endpoint 0 in the A33 dtsi.
->=20
-> The DSI driver isn't really a good example for this, since the panel
-> isn't described as part of the OF graph, but DSI binding require that
-> it's a child of the DSI controller node.
+On Tue, Jul 3, 2018 at 5:39 PM houlong wei <houlong.wei@mediatek.com> wrote:
+>
+> On Tue, 2018-07-03 at 10:30 +0800, Rob Herring wrote:
+> > On Wed, Jun 27, 2018 at 07:16:09PM +0800, Houlong Wei wrote:
+> > > This adds documentation for the MediaTek Global Command Engine (GCE) unit
+> > > found in MT8173 SoCs.
+> > >
+> > > Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
+> > > Signed-off-by: HS Liao <hs.liao@mediatek.com>
+> > > ---
+> > > Hi Rob,
+> > >   I don't add your ACK in this version since the dt-binding description
+> > > has been changed. Thanks.
+> > > ---
+> > >  .../devicetree/bindings/mailbox/mtk-gce.txt        |   65 ++++++++++++++++++++
+> > >  include/dt-bindings/gce/mt8173-gce.h               |   48 +++++++++++++++
+> > >  2 files changed, 113 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> > >  create mode 100644 include/dt-bindings/gce/mt8173-gce.h
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> > > new file mode 100644
+> > > index 0000000..26f65a4
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> > > @@ -0,0 +1,65 @@
+> > > +MediaTek GCE
+> > > +===============
+> > > +
+> > > +The Global Command Engine (GCE) is used to help read/write registers with
+> > > +critical time limitation, such as updating display configuration during the
+> > > +vblank. The GCE can be used to implement the Command Queue (CMDQ) driver.
+> > > +
+> > > +CMDQ driver uses mailbox framework for communication. Please refer to
+> > > +mailbox.txt for generic information about mailbox device-tree bindings.
+> > > +
+> > > +Required properties:
+> > > +- compatible: Must be "mediatek,mt8173-gce"
+> > > +- reg: Address range of the GCE unit
+> > > +- interrupts: The interrupt signal from the GCE block
+> > > +- clock: Clocks according to the common clock binding
+> > > +- clock-names: Must be "gce" to stand for GCE clock
+> > > +- thread-num: Maximum threads count of GCE.
+> >
+> > mediatek,thread-num
+> >
+> > Is this needed for anything other than error checking the thread id in
+> > the mbox cells? if that's it, then drop it.
+> >
+>
+> 'thread-num' is used to configure the GCE thread number, which is the
+> channel number of gce mailbox. This property is read in
+> cmdq_probe()/mtk-cmdq-mailbox.c and a mailbox's channel array is
+> allocated according to the number.
+> Since the thread number may be different on different SoC, we wish it
+> could be configured in device tree.
 
-So should be new behaviour reverted? I mean ignoring endpoint 0 on TV TCONs=
-.
+You should have different compatible strings for different SoCs and
+can imply the number of threads from that.
 
-For me, it doesn't make sense to check for panel or bridges on TV TCONs,=20
-because they are never exposed on physical pins. They are always connected =
-to=20
-TVE or HDMI encoder internally.
+Or if the number of threads doesn't vary greatly, just allocate the
+max # of channels. Or allocate the per thread data when a thread is
+actually in use.
 
->=20
-> > >> In practice our drivers don't look at it (yet), but rely on the
-> > >> downstream
-> > >> encoder type to determine which channel to use.
-> > >>=20
-> > >> But please add the "allwinner,tcon-channel" property as specified in
-> > >> the binding.
-> > >=20
-> > > It's my understanding of TCON binding documentation that property
-> > > "allwinner,tcon-channel" is needed only if TCON supports both channel=
-s.
-> > > TV
-> > > TCON clearly supports only channel 1. In that case, there is no doubt=
- to
-> > > which channel output endpoint belongs.
-> > >=20
-> > > If that's not true, dt bindings documentation should be reworded to
-> > > contain
-> > > word "needed" or something similar. Currently, no DT for newer SoC
-> > > contains
-> > > that property (for example, A83T, H3, H5 or even A33).
->=20
-> Yeah, but that's mainly because we have a single output enabled for
-> each channel on those newer SoCs. When / if we enable the RGB and LVDS
-> output for example, we will have to set this.
+>
+> > > +- #mbox-cells: Should be 4.
+> > > +   <&phandle channel timeout priority atomic_exec>
+> > > +   phandle: Label name of a gce node.
+> > > +   channel: Channel of mailbox. Be equal to the thread id of GCE.
+> > > +   timeout: Maximum time of software waiting GCE processing done, in unit
+> > > +           of millisecond.
+> > > +   priority: Priority of GCE thread.
+> > > +   atomic_exec: GCE processing continuous packets of commands in atomic
+> > > +           way.
+> > > +
+> > > +Required properties for a client device:
+> > > +- mboxes: Client use mailbox to communicate with GCE, it should have this
+> > > +  property and list of phandle, mailbox specifiers.
+> > > +- gce-subsys: Specify the sub-system id which is corresponding to the register
+> > > +  address.
+> >
+> > What is this for?
+>
+> You mean the new added property 'gce-subsys'?
+> It is used for GCE to distinguish the high 16-bit of a hardware register
+> address. When a client driver packets a register setting into a GCE
+> instruction, it uses a sub-system code and register offset instead of
+> the 32-bit register address.
+> Since sub-system code may be different on different SoC, we wish it
+> could be configured in device tree.
 
-So just to be clear, before I send follow up series, I have to add=20
-"allwinner,tcon-channel" property to DT, because both TV TCONs can be=20
-connected to either TVE or HDMI (trough TCON TOP)?
+Okay. It needs a vendor prefix and to specify the size and type of the value.
 
-BTW, since this property is not used at all in the code, why not just simpl=
-y=20
-deprecate it and remove it from existing DTs? I noticed this is standard=20
-practice for obsolete properties.
+>
+> >
+> > > +
+> > > +Optional properties for a client device:
+> > > +- gce-event: Specify the event if the client has any. Because the event is
+> > > +  parsed by client, so client can replace 'gce-event' with other meaningful
+> > > +  name.
+> >
+> > If the client sets the name, then no point having here. It must be
+> > documented in the client binding. But then, what is this for in the
+> > first place?
+>
+> Since display driver will use GCE firstly, so we will move the
+> description to
+> 'Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt'
+> when display driver start using the GCE driver.
+> Is that ok?
 
-Best regards,
-Jernej
+Not sure. I don't understand how it is used.
 
->=20
-> > > On A33 this is even more interesting, since tcon0 has only channel
-> > > 0 and has DSI output endpoint with number 1. According to TCON
-> > > binding docs, if "allwinner,tcon-channel" is not preset, endpoint
-> > > number represent channel. So, that would mean DSI needs channel 1
-> > > on tcon which supports clearly only channel 0. So either there
-> > > TCON bindings documentation needs updates or DT for A33 has to be
-> > > updated.
-> >=20
-> > Maxime? You did the A33 DSI stuff.
->=20
-> I guess it's missing on the A33 DSI endpoint.
->=20
-> Maxime
-
-
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> > > +
+> > > +Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'. Such as
+> > > +thread number, sub-system ids, thread priority, event ids.
+> > > +
+> > > +Example:
+> > > +
+> > > +   gce: gce@10212000 {
+> >
+> > mailbox@...
+>
+> Will do.
+>
+> >
+> > > +           compatible = "mediatek,mt8173-gce";
+> > > +           reg = <0 0x10212000 0 0x1000>;
+> > > +           interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
+> > > +           clocks = <&infracfg CLK_INFRA_GCE>;
+> > > +           clock-names = "gce";
+> > > +           thread-num = CMDQ_THR_MAX_COUNT;
+> > > +           #mbox-cells = <4>;
+> > > +   };
+> > > +
+> > > +Example for a client device:
+> > > +
+> > > +   mmsys: clock-controller@14000000 {
+> > > +           compatible = "mediatek,mt8173-mmsys";
+> > > +           mboxes = <&gce 0 2000 CMDQ_THR_PRIO_LOWEST 1>,
+> > > +                    <&gce 1 2000 CMDQ_THR_PRIO_LOWEST 1>;
+> > > +           gce-subsys = <SUBSYS_1400XXXX>;
+> > > +           mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
+> > > +                           CMDQ_EVENT_MUTEX1_STREAM_EOF>;
+> > > +
+> > > +           ...
+> > > +   };
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
