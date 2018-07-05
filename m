@@ -1,54 +1,50 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sun8i: h3: Enable dwmac-sun8i
- on the Beelink X2
-Date: Thu, 5 Jul 2018 16:53:14 +0200
-Message-ID: <20180705145314.mo3zaux6duxig3zc@flea>
-References: <20180704083003.26849-1-codekipper@gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v3 0/2] arm64: rockchip: support RK3399 Ficus board
+Date: Thu,  5 Jul 2018 12:08:16 -0300
+Message-ID: <20180705150818.29931-1-ezequiel@collabora.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jx6nqydhjw34hgf2"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZXB7DMQKGQEEOPDO6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180704083003.26849-1-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: wens-jdAy2FN1RRM@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Here's the third spin for the RK3399 Ficus support.
 
---jx6nqydhjw34hgf2
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Changes from v2:
+ * Dropped rk3399.dtsi changes and rebased on top of Randy's patch.
+ * Removed double empty line.
+ * Coalesced schematics comment
 
-On Wed, Jul 04, 2018 at 10:30:03AM +0200, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> The enabling of the EMAC was reverted as there was an issue on how
-> to handle the integrated PHY and it was getting close to the release
-> window (fe45174b72ae ("arm: dts: sunxi: Revert EMAC changes")).
-> 
-> When a solution was found, then the changes were restored in
-> 4b236a0fe512 ("arm: dts: sunxi: h3/h5: Restore EMAC changes") and
-> 4904337fe34f ("ARM: dts: sunxi: Restore EMAC changes (boards)").
-> Unfortunately enabling for the Beelink X2 was missed.
-> 
-> This reverts partially commit 6b0e06df5cad (Revert "ARM: dts:
-> sun8i: h3: Enable dwmac-sun8i on the Beelink X2")
-> 
-> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Changes from v1:
+ * Dropoed USB support as it's not working.
+ * Added schematics.
+ * Splitted rk3399.dtsi from new ficus.dts file.
+ * Added new vendor.
+ * Cleaned regulators syntax and stlye.
 
-Applied, thanks!
-Maxime
+Series based on: 600b359d2b98 ("arm64: dts: rockchip: add some common pin-settings to rk3399").
+
+Ezequiel Garcia (2):
+  dt-bindings: Add vendor prefix for Vamrs Ltd.
+  arm64: dts: rockchip: add 96boards RK3399 Ficus board
+
+ .../devicetree/bindings/arm/rockchip.txt      |   5 +
+ .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ arch/arm64/boot/dts/rockchip/rk3399-ficus.dts | 514 ++++++++++++++++++
+ 4 files changed, 521 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
 
 -- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---jx6nqydhjw34hgf2--
+2.18.0.rc2
