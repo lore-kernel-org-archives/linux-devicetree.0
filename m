@@ -1,84 +1,439 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v12 5/5] dt-bindings: drm/panel: Document Innolux
- TV123WAM panel bindings
-Date: Thu, 5 Jul 2018 12:18:25 +0200
-Message-ID: <20180705101827eucas1p2fcc767335aee02c1735e045ebefabc84~_cawUMmOH2040620406eucas1p22@eucas1p2.samsung.com>
-References: <1529584329-632-1-git-send-email-spanda@codeaurora.org>
- <CGME20180622072307epcas4p48b7b94318be80d6a6c732d3fd908c3fc@epcas4p4.samsung.com>
- <1529584329-632-6-git-send-email-spanda@codeaurora.org>
- <20180629121414eucas1p21171a1eab3ee081c8b4114ca58264669~8oIIwEXJJ1824018240eucas1p2G@eucas1p2.samsung.com>
- <f9d9174dbf1355c7a407c03b718a87b3@codeaurora.org>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH v9 1/2] mfd: bd71837: mfd driver for ROHM BD71837 PMIC
+Date: Thu, 5 Jul 2018 13:34:42 +0300
+Message-ID: <20180705103442.GA8426@localhost.localdomain>
+References: <cover.1530776326.git.matti.vaittinen@fi.rohmeurope.com>
+ <a304164cc3c1b31c7c6b62f8e233ce321a82cdd6.1530776326.git.matti.vaittinen@fi.rohmeurope.com>
+ <20180705091813.GK496@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <f9d9174dbf1355c7a407c03b718a87b3@codeaurora.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: spanda@codeaurora.org
-Cc: devicetree@vger.kernel.org, ryadav@codeaurora.org, linux-arm-msm@vger.kernel.org, abhinavk@codeaurora.org, dri-devel@lists.freedesktop.org, hoegsberg@chromium.org, freedreno@lists.freedesktop.org, chandanu@codeaurora.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180705091813.GK496@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, arnd@arndb.de, dmitry.torokhov@gmail.com, sre@kernel.org, chenjh@rock-chips.com, andrew.smirnov@gmail.com, linus.walleij@linaro.org, kstewart@linuxfoundation.org, heiko@sntech.de, gregkh@linuxfoundation.org, eballetbo@gmail.com, sboyd@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUuMDcuMjAxOCAwODozOCwgc3BhbmRhQGNvZGVhdXJvcmEub3JnIHdyb3RlOgo+IE9uIDIw
-MTgtMDYtMjkgMTc6NDQsIEFuZHJ6ZWogSGFqZGEgd3JvdGU6Cj4+IE9uIDIxLjA2LjIwMTggMTQ6
-MzIsIFNhbmRlZXAgUGFuZGEgd3JvdGU6Cj4+PiBJbm5vbHV4IFRWMTIzV0FNIGlzIGEgMTIuMyIg
-ZURQIGRpc3BsYXkgcGFuZWwgd2l0aAo+Pj4gMjE2MHgxNDQwIHJlc29sdXRpb24sIHdoaWNoIGNh
-biBiZSBzdXBwb3J0ZWQgYnkgc2ltcGxlCj4+PiBwYW5lbCBkcml2ZXIuCj4+IEFyZSB5b3Ugc3Vy
-ZSB0aGlzIGlzIElubm9sdXg/IFF1aWNrIGdyZXAgb24gSW50ZXJuZXQgZmluZHMgb25seSBCT0UK
-Pj4gcGFuZWwgd2l0aCB0aGlzIFRWMTIzV0FNWzFdLgo+Pgo+PiBbMV06Cj4+IGh0dHBzOi8vZTJl
-LnRpLmNvbS9jZnMtZmlsZS9fX2tleS9jb21tdW5pdHlzZXJ2ZXItZGlzY3Vzc2lvbnMtY29tcG9u
-ZW50cy1maWxlcy8xMzgvVFYxMjNXQU1fMkQwMF9ORDBfNUYwMF9Qcm9kdWN0LXNwZWNfNUYwMF9C
-T0VfNUYwMF8yMDE2MTExNV8yRDAwX0EwMC5wZGYKPj4KPiBUaGUgcGFuZWwgdXNlZCBoZXJlIGlz
-IGlubm9sdXgsIHdoaWNoIGlzIGEgMmsgcGFuZWwuIFdoZXJlIHRoZSBCT0Ugb25lIAo+IGlzIGEg
-MTA4MHAgcGFuZWwuCgpNeSBkb3VidHMgY29tZXMgZnJvbSB0aGUgZmFjdCB0aGF0IElubm9sdXgg
-dXNlcyBkaWZmZXJlbnQgY29udmVudGlvbiBmb3IKcGFuZWwgbmFtaW5nLCBzZWUgZm9yIGV4YW1w
-bGUgWzFdLgoKQWNjb3JkaW5nIHRvIHRoaXMgY29udmVudGlvbiB5b3VyIHBhbmVsIHNob3VsZCBo
-YXZlIG5hbWUgc3RhcnRpbmcgd2l0aDoKTjEyM1pERy0KClRWMTIzV0FNIGZvbGxvd3MgQk9FJ3Mg
-Y29udmVudGlvbi4KCkRvIHlvdSBoYXZlIGRhdGFzaGVldCwgcGh5c2ljYWwgcGFuZWwgb3Igc29t
-ZXRoaW5nIHRvIGVuc3VyZSB0aGUgbmFtZSBpcwpjb3JyZWN0PwoKWzFdOgpodHRwOi8vd3d3LnBh
-bmVsb29rLmNvbS9icmFtb2RsaXN0LnBocD9zdD0mcGw9JmJyYW5kc1tdPTYzJnNpZ25hbF90eXBl
-X2NhdGVnb3J5PTcwCgpSZWdhcmRzCkFuZHJ6ZWoKCj4KPj4gUmVnYXJkcwo+PiBBbmRyemVqCj4+
-PiBDaGFuZ2VzIGluIHYxOgo+Pj4gIC0gTWFrZSB1c2Ugb2Ygc2ltcGxlIHBhbmVsIGRyaXZlciBp
-bnN0ZWFkIG9mIGNyZWF0aW5nCj4+PiAgICBhIG5ldyBkcml2ZXIgZm9yIHRoaXMgcGFuZWwgKFNl
-YW4gUGF1bCkuCj4+PiAgLSBDb21iaW5lIGR0LWJpbmRpbmcgYW5kIGRyaXZlciBjaGFuZ2VzIGlu
-dG8gb25lIHBhdGNoCj4+PiAgICBhcyBkb25lIGJ5IG90aGVyIGV4aXN0aW5nIHBhbmVsIHN1cHBv
-cnQgY2hhbmdlcy4KPj4+Cj4+PiBDaGFuZ2VzIGluIHYyOgo+Pj4gIC0gU2VwYXJhdGUgZHJpdmVy
-IGNoYW5nZSBmcm9tIGR0LWJpbmRpbmcgZG9jdW1lbnRhdGlvbiAoUm9iIEhlcnJpbmcpLgo+Pj4g
-IC0gQWRkIHRoZSBwcm9wZXJ0aWVzIGZyb20gc2ltcGxlLXBhbmVsIGJpbmRpbmcgdGhhdCBhcmUg
-YXBwbGljYWJsZSB0bwo+Pj4gICAgdGhpcyBwYW5lbCAoUm9iIEhlcnJpbmcpLgo+Pj4KPj4+IFNp
-Z25lZC1vZmYtYnk6IFNhbmRlZXAgUGFuZGEgPHNwYW5kYUBjb2RlYXVyb3JhLm9yZz4KPj4+IFJl
-dmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+Pj4gLS0tCj4+PiAgLi4u
-L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQgICAgICB8IDIwIAo+
-Pj4gKysrKysrKysrKysrKysrKysrKysKPj4+ICAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9u
-cygrKQo+Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCAKPj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsdHYxMjN3YW0udHh0Cj4+Pgo+Pj4gZGlm
-ZiAtLWdpdCAKPj4+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQgCj4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsdHYxMjN3YW0udHh0Cj4+PiBuZXcgZmls
-ZSBtb2RlIDEwMDY0NAo+Pj4gaW5kZXggMDAwMDAwMDAwMDAwLi5hOWIzNTI2NWZhMTMKPj4+IC0t
-LSAvZGV2L251bGwKPj4+ICsrKyAKPj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQKPj4+IEBAIC0wLDAgKzEsMjAg
-QEAKPj4+ICtJbm5vbHV4IFRWMTIzV0FNIDEyLjMgaW5jaCBlRFAgMksgZGlzcGxheSBwYW5lbAo+
-Pj4gKwo+Pj4gK1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5l
-bCBiaW5kaW5nLCB3aGljaCBpcyAKPj4+IHNwZWNpZmllZAo+Pj4gK2luIHNpbXBsZS1wYW5lbC50
-eHQgaW4gdGhpcyBkaXJlY3RvcnkuCj4+PiArCj4+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4+
-ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZSAiaW5ub2x1eCx0djEyM3dhbSIKPj4+ICstIHBvd2Vy
-LXN1cHBseTogcmVndWxhdG9yIHRvIHByb3ZpZGUgdGhlIHN1cHBseSB2b2x0YWdlCj4+PiArCj4+
-PiArT3B0aW9uYWwgcHJvcGVydGllczoKPj4+ICstIGVuYWJsZS1ncGlvczogR1BJTyBwaW4gdG8g
-ZW5hYmxlIG9yIGRpc2FibGUgdGhlIHBhbmVsCj4+PiArLSBiYWNrbGlnaHQ6IHBoYW5kbGUgb2Yg
-dGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQgdG8gdGhlIHBhbmVsCj4+PiArCj4+PiArRXhh
-bXBsZToKPj4+ICsJcGFuZWxfZWRwOiBwYW5lbC1lZHAgewo+Pj4gKwkJY29tcGF0aWJsZSA9ICJp
-bm5vbHV4LHR2MTIzd2FtIjsKPj4+ICsJCWVuYWJsZS1ncGlvcyA9IDwmbXNtZ3BpbyAzMSBHUElP
-X0FDVElWRV9MT1c+Owo+Pj4gKwkJcG93ZXItc3VwcGx5ID0gPCZwbTg5MTZfbDI+Owo+Pj4gKwkJ
-YmFja2xpZ2h0ID0gPCZiYWNrbGlnaHQ+Owo+Pj4gKwl9Owo+Cj4KCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Thanks for taking the time to check this =)
+
+On Thu, Jul 05, 2018 at 10:18:13AM +0100, Lee Jones wrote:
+> On Thu, 05 Jul 2018, Matti Vaittinen wrote:
+> 
+> > --- a/drivers/mfd/Kconfig
+> > +++ b/drivers/mfd/Kconfig
+> > @@ -1787,6 +1787,19 @@ config MFD_STW481X
+> >  	  in various ST Microelectronics and ST-Ericsson embedded
+> >  	  Nomadik series.
+> >  
+> > +config MFD_BD71837
+> 
+> It's be nice if you prefix this with the manufacturer.  Rohm?
+
+Like MFD_ROHM_BD71837, right? How important this is? The already applied
+regulator part has depends_on for MFD_BD71837 in Kconfig so changing
+this will require change in regulator tree too. I guess it's doable if
+this is important though =)
+> 
+> > +	tristate "BD71837 Power Management chip"
+> 
+> Again, missing manufacturer.
+> 
+> This should also be "Power Management IC"
+
+I'll fix this
+
+> > +	select MFD_CORE
+> > +	help
+> > +	  Select this option to get support for the ROHM BD71837
+> > +	  Power Management chips. BD71837 is designed to power processors like
+> 
+> "chips" is slang.  Should be "ICs".
+
+I'll fix this
+ 
+> > +obj-$(CONFIG_MFD_BD71837)	+= bd71837.o
+> >  
+> > diff --git a/drivers/mfd/bd71837.c b/drivers/mfd/bd71837.c
+> 
+> rohm-bd71837.c would be nicer.
+
+I'll fix this
+
+> > new file mode 100644
+> > index 000000000000..677097bcea17
+> > --- /dev/null
+> > +++ b/drivers/mfd/bd71837.c
+> > @@ -0,0 +1,215 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> 
+> '\n' here please.
+> > +// Copyright (C) 2018 ROHM Semiconductors
+> 
+> '\n' here please.
+
+As an empty line after licence line? Ok.
+
+> > +// bd71837.c -- ROHM BD71837MWV mfd driver
+> 
+> Remove the filename -- they have a habit of becoming incorrect.
+> 
+> Also, and 'MFD driver' isn't a thing -- this is a PMIC driver. 
+
+I'll fix this
+
+> > +// Datasheet available from
+> > +// https://www.rohm.com/datasheet/BD71837MWV/bd71837mwv-e
+> > +
+> > +#include <linux/i2c.h>
+> > +#include <linux/input.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/mfd/bd71837.h>
+> > +#include <linux/mfd/core.h>
+> > +#include <linux/module.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/gpio_keys.h>
+> 
+> Alphabetical please.
+> 
+
+There is a problem with gpio_key.h - it uses bool but does not include
+the header defining this type. So I get comple error when compiling this
+using my GCC arm cross-compiler. I've submitted a patch to fix this but
+as it is not yet accepted.
+https://lore.kernel.org/lkml/20180627073458.GA27800@localhost.localdomain/
+ Hence the gpio_keys.h is last one.
+
+> > +static struct gpio_keys_button btns[] = {
+> > +	{
+> > +		.code = KEY_POWER,
+> > +		.gpio = -1,
+> > +		.type = EV_KEY,
+> > +	},
+> > +};
+> 
+> Does this need to be an array?
+
+https://elixir.bootlin.com/linux/v4.17-rc1/source/include/linux/gpio_keys.h#L39
+gpio_keys_platform_data documentation states the buttons to be a pointer
+to an array. Thus I did an array. Do you think I should change this to
+single struct?
+
+> > +static struct gpio_keys_platform_data bd718xx_powerkey_data = {
+> > +	.buttons = &btns[0],
+> 
+> Why not just "btns"?
+> 
+> Also, I don't see any reason not to just call this 'buttons'.
+> 
+> Or even, 'button' if there will only ever be one of them.
+> 
+
+I can rename this - and if I make the array to not be an array - well,
+then the &foo[0] gets cleared too =)
+
+> > +static struct mfd_cell bd71837_mfd_cells[] = {
+> > +	{
+> > +		.name = "bd71837-clk",
+> > +	}, {
+> > +		.name = "gpio-keys",
+> > +		.platform_data = &bd718xx_powerkey_data,
+> > +		.pdata_size = sizeof(bd718xx_powerkey_data),
+> > +	}, {
+> > +		.name = "bd71837-pmic",
+> > +	},
+> > +};
+> 
+> Place the one line entries on one line, like this:
+> 
+> 	{ .name = "bd71837-pmic", },
+> 
+> ... and if ordering is not important, place them at the bottom.
+
+I'll fix this
+
+> > +static int bd71837_i2c_probe(struct i2c_client *i2c,
+> > +			    const struct i2c_device_id *id)
+> > +{
+> > +	struct bd71837 *bd71837;
+> > +	struct bd71837_board *board_info;
+> > +	int ret = -EINVAL;
+> 
+> I'd prefer it if you set the error at the location it happened for
+> readability.
+
+I'll fix this
+
+> > +	bd71837 = devm_kzalloc(&i2c->dev, sizeof(struct bd71837), GFP_KERNEL);
+> > +
+> 
+> Drop this line.
+
+I'll fix this
+
+> > +	ret = bd71837_reg_read(bd71837, BD71837_REG_REV);
+> > +	if (ret < 0) {
+> 
+> Is 0 return a successful read?  I suggest that it isn't.
+> 
+> > +	ret = devm_regmap_add_irq_chip(&i2c->dev, bd71837->regmap,
+> > +				       bd71837->chip_irq, IRQF_ONESHOT, 0,
+> > +				       &bd71837_irq_chip, &bd71837->irq_data);
+> > +	if (ret < 0) {
+> 
+> Is a >0 return valid?  If not, perhaps "if (ret)" would be better.
+> 
+> > +	ret = regmap_update_bits(bd71837->regmap,
+> > +				 BD71837_REG_PWRONCONFIG0,
+> > +				 BD718XX_PWRBTN_PRESS_DURATION_MASK,
+> > +				 BD718XX_PWRBTN_SHORT_PRESS_10MS);
+> > +	if (ret < 0) {
+> 
+> As above.
+> 
+
+I will check these. Thanks.
+
+> > +
+> > +	/*
+> > +	 * According to BD71847 datasheet the HW default for long press
+> > +	 * detection is 10ms. So lets change it to 10 sec so we can actually
+> > +	 * get the short push and allow gracefull shut down
+> > +	 */
+> 
+> I don't think this comment is necessary.
+> 
+> If anything it only needs to say "Configure long press to 10 seconds".
+> 
+> And if you do that, please add one for short press too.
+Difference between short and long push is that if PMIC detects log push
+it will kill the power without any gracefull handling. And the chip I am
+supporting right now is BD71837 - which has more sane default value (10
+seconds). But I am going to add support for BD71847 - which was shipped
+to me yesterday - and according the draft data-sheet the default on it
+is 10ms - which makes short push unusable. So comment is intended to
+point out _why_ I configure the long push here. Also someone might want
+to use the HW default (I guess such default was selected for some
+specific reason) so comment helps on removing this configuration for
+specific use-cases. But I guess I can reduce the comment to "Configure
+long press to 10 seconds" as you suggested - or do you think I should
+make difference between ICs BD71837 and BD71847 more visible here?
+> 
+> > +	ret = regmap_update_bits(bd71837->regmap,
+> > +				 BD71837_REG_PWRONCONFIG1,
+> > +				 BD718XX_PWRBTN_PRESS_DURATION_MASK,
+> > +				 BD718XX_PWRBTN_LONG_PRESS_10S);
+> > +
+> > +	if (ret < 0) {
+> > +		dev_err(&i2c->dev, "Failed to configure button long press timeout\n");
+> > +		goto err_out;
+> > +	}
+> > +
+> > +	btns[0].irq = regmap_irq_get_virq(bd71837->irq_data,
+> > +					  BD71837_INT_PWRBTN_S);
+> > +
+> > +	if (btns[0].irq < 0) {
+> > +		ret = btns[0].irq;
+> > +		dev_err(&i2c->dev, "Failed to get the IRQ\n");
+> > +		goto err_out;
+> 
+> No unwinding to be done, just return directly and save yourself an
+> superflouous goto.
+
+So should I replace _all_ the gotos by in-place returns as Enric suggested
+yesterday? As I explained yesterday, my preference is to have only one
+point of exit but I can change gotos to returns if needed.
+
+> > +static const struct i2c_device_id bd71837_i2c_id[] = {
+> > +	{ .name = "bd71837", },
+> > +	{ }
+> > +};
+> > +MODULE_DEVICE_TABLE(i2c, bd71837_i2c_id);
+> 
+> You shouldn't need this table anymore.
+> 
+> See da10c06a044b ("i2c: Make I2C ID tables non-mandatory for DT'ed devices")
+
+So if I read this correctly the 
+> > +		.of_match_table = bd71837_of_match,
+is now sufficient. Thanks.
+
+> > +static struct i2c_driver bd71837_i2c_driver = {
+> > +	.driver = {
+> > +		.name = "bd71837-mfd",
+> 
+> And "MFD" isn't really a thing.  It's more common to just mention the
+> board name, or something like 'rohm-bd7183'.
+
+I'll fix this
+
+> > +/*
+> > + * init early so consumer devices can complete system boot
+> > + */
+> 
+> This is a single line commit.  Please use the correct format.
+> 
+>   /* Single line comment */
+
+I'll fix this. I misinterpreted your comment yesterday.
+
+> > +MODULE_DESCRIPTION("BD71837 chip multi-function driver");
+> 
+> 'PMIC' or 'Power Management IC' rather than MFD.
+
+I'll fix this
+
+> > +MODULE_LICENSE("GPL");
+> > diff --git a/include/linux/mfd/bd71837.h b/include/linux/mfd/bd71837.h
+> > new file mode 100644
+> > index 000000000000..10b0dfe90f27
+> > --- /dev/null
+> > +++ b/include/linux/mfd/bd71837.h
+> > @@ -0,0 +1,391 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> 
+> I thought these were meant to use C++ (//) comments?
+
+The checkpatch.pl did complain if I used // comment on SPDX line for
+header file. OTOH for c-file it required // comments and complained
+about /* */ - version. So I did as it suggested and used 
+
+> > +/* Copyright (C) 2018 ROHM Semiconductors */
+> > +
+> > +/*
+> > + * ROHM BD71837MWV header file
+> > + */
+> 
+> If you prefix the mentions of (BD,bd)71837 with (ROHM,rohm) then this
+> comment becomes redundant and you can remove it.
+
+I am sorry but I am not sure what you suggest here. Do you mean I should
+add ROHM or rohm to all definitions here? I think that would make
+definitions pretty long so I would certinly need to split more lines.
+Such cange would also impact already applied patches. So maybe I
+misinterpreted your comment? And in case I did not - can this prefixing of
+types - be done as a separate patch set as it impacts to regulators and
+clk too? (clk is not yet applied so that is easy to change though).
+
+> > +/* Even though the bit zero is not SWRESET type we still want to write zero
+> > + * to it when changing type. Bit zero is 'SWRESET' trigger bit and if we
+> > + * write 1 to it we will trigger the action. So always write 0 to it when
+> > + * changning SWRESET action - no matter what we read from it.
+> > + */
+> 
+> Please use the correct format for multi-line comments.
+> 
+> Hint: The first line should be empty.
+
+I'll fix this
+
+> > +#define BD71837_SWRESET_TYPE_MASK 7
+> > +#define BD71837_SWRESET_TYPE_DISABLED 0
+> > +#define BD71837_SWRESET_TYPE_COLD 4
+> > +#define BD71837_SWRESET_TYPE_WARM 6
+> > +
+> > +#define BD71837_SWRESET_RESET_MASK 1
+> > +#define BD71837_SWRESET_RESET 1
+> > +
+> > +/* Poweroff state transition conditions */
+> > +
+> > +#define BD718XX_ON_REQ_POWEROFF_MASK 1
+> > +#define BD718XX_SWRESET_POWEROFF_MASK 2
+> > +#define BD718XX_WDOG_POWEROFF_MASK 4
+> > +#define BD718XX_KEY_L_POWEROFF_MASK 8
+> > +
+> > +#define BD718XX_POWOFF_TO_SNVS 0
+> > +#define BD718XX_POWOFF_TO_RDY 0xF
+> 
+> Please align each of the values with tabs.
+
+I'll fix this
+
+> > +#define BD718XX_PWR_TRIG_KEY_L 1
+> > +#define BD718XX_PWR_TRIG_KEY_S 2
+> > +#define BD718XX_PWR_TRIG_PMIC_ON 4
+> > +#define BD718XX_PWR_TRIG_VSYS_UVLO 8
+> > +#define BD718XX_RDY_TO_SNVS_SIFT 0
+> > +#define BD718XX_SNVS_TO_RUN_SIFT 4
+> 
+> As above.
+
+I'll fix this
+
+> > +
+> > +
+> 
+> No need for 2 '\n'.
+
+I'll fix this
+
+> > +	BD718XX_PWRBTN_LONG_PRESS_15S
+> > +};
+> > +
+> > +
+> > +
+> 
+> Certainly no need for 3 '\n'.
+
+I'll fix this
+
+> > +struct bd71837;
+> 
+> Why is this necessary?
+> 
+
+I think it's not. I'll remove it.
+
+> > +struct bd71837_pmic;
+> > +struct bd71837_clk;
+> > +struct bd718xx_pwrkey;
+> 
+> Where are these forward declared from?
+
+bd71837_pmic is in drivers/regulator/bd71837-regulator.c
+clk will be in clk subdevice patch that is not yet applied.
+It is pending some fixes. Pwrkey must be dropped as the power-key driver
+I originally wrote was replaced using gpio_keys instead. Should there be
+some comment explaining this? Suggestions on how to do this without
+referring to file names which are subject to change... Should I just say
+they are defined in subdevice drivers? 
+
+> > +/*
+> > + * Board platform data may be used to initialize regulators.
+> > + */
+> > +
+> > +struct bd71837_board {
+> > +	struct regulator_init_data *init_data[BD71837_REGULATOR_CNT];
+> > +	int	gpio_intr;
+> > +};
+> 
+> Where is this populated?
+> 
+Currently nowhere as I use device-tree for getting the regulator/irq
+config. This is for architectures which do not use DT - but as I don't
+have one for testing I did leave the depends_on OF. If it was populated
+I would expect it to be done in some setup code.
+
+> > +/*
+> > + * bd71837 sub-driver chip access routines
+> > + */
+> > +
+> 
+> Please don't abstract APIs for no reason.
+> 
+> Use the regmap_* API directly instead.
+> 
+
+Yes. This was already pointed out by Stephen Boyd. But again, as part of
+the patches (reguators) were already applied using the wrappers - I asked
+if I can remove these in separate patch set after getting this initial
+version out.
+
+> > +#endif /* __LINUX_MFD_BD71837_H__ */
+> 
+> -- 
+> Lee Jones [李琼斯]
+> Linaro Services Technical Lead
+> Linaro.org │ Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
