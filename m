@@ -1,30 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 1/2] dt-binding: hwmon: Add NPCM7xx PWM and Fan
- controller documentation
-Date: Thu, 5 Jul 2018 14:43:31 -0600
-Message-ID: <20180705204331.GA1778@rob-hp-laptop>
-References: <20180703232326.355718-1-tmaimon77@gmail.com>
- <20180703232326.355718-2-tmaimon77@gmail.com>
+From: Luis Araneda <luaraneda@gmail.com>
+Subject: Re: [RFC PATCH 2/5] dt-bindings: xilinx: Add missing zynq boards
+Date: Thu, 5 Jul 2018 17:10:48 -0400
+Message-ID: <CAHbBuxrTSL0B-dC=gh_EOYAvk41mYJq6XsHEnWJi453Fq9Lu3Q@mail.gmail.com>
+References: <20180628054205.17737-1-luaraneda@gmail.com> <20180628054205.17737-3-luaraneda@gmail.com>
+ <20180703230410.GA31330@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180703232326.355718-2-tmaimon77@gmail.com>
+In-Reply-To: <20180703230410.GA31330@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: mark.rutland@arm.com, jdelvare@suse.com, linux@roeck-us.net, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org
+To: robh@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 04, 2018 at 02:23:25AM +0300, Tomer Maimon wrote:
-> Added device tree binding documentation for Nuvoton BMC
-> NPCM7xx Pulse Width Modulation (PWM)  and Fan tach controller.
-> The Nuvoton BMC NPCM7XX supports 8 PWM controller outputs
-> and 16 Fan tachometer controller inputs.
-> 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
->  .../devicetree/bindings/hwmon/npcm750-pwm-fan.txt  | 84 ++++++++++++++++++++++
->  1 file changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/npcm750-pwm-fan.txt
+Hi Rob,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks for reviewing.
+
+On Tue, Jul 3, 2018 at 7:04 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu, Jun 28, 2018 at 01:42:02AM -0400, Luis Araneda wrote:
+> > +- Adapteva Parallella board
+> > +  "adapteva,parallella"
+>
+> This is documented in adapteva.txt, but I'd prefer if you put it
+> here and remove adapteva.txt.
+
+Ouch, I should have used git grep to find that.
+I'll remove the adapteva.txt file on v2, which I'll be sending later today.
+
+Thanks,
+
+Luis Araneda.
