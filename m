@@ -1,150 +1,73 @@
-From: Todor Tomov <todor.tomov@linaro.org>
-Subject: [PATCH v2 08/34] media: camss: Unify the clock names
-Date: Thu,  5 Jul 2018 16:32:39 +0300
-Message-ID: <1530797585-8555-9-git-send-email-todor.tomov@linaro.org>
-References: <1530797585-8555-1-git-send-email-todor.tomov@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530797585-8555-1-git-send-email-todor.tomov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, linux-media@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Subject: [PATCH v4 0/2] gpio: mediatek: driver for gpio chip in MT7621 SoC
+Date: Thu,  5 Jul 2018 15:43:09 +0200
+Message-ID: <1530798191-25471-1-git-send-email-sergio.paracuellos@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: linus.walleij@linaro.org
+Cc: devicetree@vger.kernel.org, gregkh@linuxfoundation.org, driverdev-devel@linuxdriverproject.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, neil@brown.name
 List-Id: devicetree@vger.kernel.org
 
-Unify the clock names - use names closer to the clock
-definitions.
+This patch series add support for gpio driver in mediatek MT7621
+SoC. This driver has been in staging for a while and after some
+cleanups cycles we consider to give it a new try to get mainlined.
 
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: devicetree@vger.kernel.org
-Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
----
- .../devicetree/bindings/media/qcom,camss.txt       | 24 +++++++++++-----------
- drivers/media/platform/qcom/camss/camss.c          | 20 ++++++++----------
- 2 files changed, 20 insertions(+), 24 deletions(-)
+Previous comments from Linus Walleij are here:
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
-index cadeceb..032e8ed 100644
---- a/Documentation/devicetree/bindings/media/qcom,camss.txt
-+++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
-@@ -53,7 +53,7 @@ Qualcomm Camera Subsystem
- 	Usage: required
- 	Value type: <stringlist>
- 	Definition: Should contain the following entries:
--                - "camss_top_ahb"
-+                - "top_ahb"
-                 - "ispif_ahb"
-                 - "csiphy0_timer"
-                 - "csiphy1_timer"
-@@ -67,11 +67,11 @@ Qualcomm Camera Subsystem
-                 - "csi1_phy"
-                 - "csi1_pix"
-                 - "csi1_rdi"
--                - "camss_ahb"
--                - "camss_vfe_vfe"
--                - "camss_csi_vfe"
--                - "iface"
--                - "bus"
-+                - "ahb"
-+                - "vfe0"
-+                - "csi_vfe0"
-+                - "vfe_ahb"
-+                - "vfe_axi"
- - vdda-supply:
- 	Usage: required
- 	Value type: <phandle>
-@@ -161,7 +161,7 @@ Qualcomm Camera Subsystem
- 			<&gcc GCC_CAMSS_CSI_VFE0_CLK>,
- 			<&gcc GCC_CAMSS_VFE_AHB_CLK>,
- 			<&gcc GCC_CAMSS_VFE_AXI_CLK>;
--                clock-names = "camss_top_ahb",
-+                clock-names = "top_ahb",
-                         "ispif_ahb",
-                         "csiphy0_timer",
-                         "csiphy1_timer",
-@@ -175,11 +175,11 @@ Qualcomm Camera Subsystem
-                         "csi1_phy",
-                         "csi1_pix",
-                         "csi1_rdi",
--                        "camss_ahb",
--                        "camss_vfe_vfe",
--                        "camss_csi_vfe",
--                        "iface",
--                        "bus";
-+                        "ahb",
-+                        "vfe0",
-+                        "csi_vfe0",
-+                        "vfe_ahb",
-+                        "vfe_axi";
- 		vdda-supply = <&pm8916_l2>;
- 		iommus = <&apps_iommu 3>;
- 		ports {
-diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
-index abf6184..0b663e0 100644
---- a/drivers/media/platform/qcom/camss/camss.c
-+++ b/drivers/media/platform/qcom/camss/camss.c
-@@ -32,8 +32,7 @@ static const struct resources csiphy_res[] = {
- 	/* CSIPHY0 */
- 	{
- 		.regulator = { NULL },
--		.clock = { "camss_top_ahb", "ispif_ahb",
--			   "camss_ahb", "csiphy0_timer" },
-+		.clock = { "top_ahb", "ispif_ahb", "ahb", "csiphy0_timer" },
- 		.clock_rate = { { 0 },
- 				{ 0 },
- 				{ 0 },
-@@ -45,8 +44,7 @@ static const struct resources csiphy_res[] = {
- 	/* CSIPHY1 */
- 	{
- 		.regulator = { NULL },
--		.clock = { "camss_top_ahb", "ispif_ahb",
--			   "camss_ahb", "csiphy1_timer" },
-+		.clock = { "top_ahb", "ispif_ahb", "ahb", "csiphy1_timer" },
- 		.clock_rate = { { 0 },
- 				{ 0 },
- 				{ 0 },
-@@ -60,8 +58,7 @@ static const struct resources csid_res[] = {
- 	/* CSID0 */
- 	{
- 		.regulator = { "vdda" },
--		.clock = { "camss_top_ahb", "ispif_ahb",
--			   "csi0_ahb", "camss_ahb",
-+		.clock = { "top_ahb", "ispif_ahb", "csi0_ahb", "ahb",
- 			   "csi0", "csi0_phy", "csi0_pix", "csi0_rdi" },
- 		.clock_rate = { { 0 },
- 				{ 0 },
-@@ -78,8 +75,7 @@ static const struct resources csid_res[] = {
- 	/* CSID1 */
- 	{
- 		.regulator = { "vdda" },
--		.clock = { "camss_top_ahb", "ispif_ahb",
--			   "csi1_ahb", "camss_ahb",
-+		.clock = { "top_ahb", "ispif_ahb", "csi1_ahb", "ahb",
- 			   "csi1", "csi1_phy", "csi1_pix", "csi1_rdi" },
- 		.clock_rate = { { 0 },
- 				{ 0 },
-@@ -96,10 +92,10 @@ static const struct resources csid_res[] = {
- 
- static const struct resources_ispif ispif_res = {
- 	/* ISPIF */
--	.clock = { "camss_top_ahb", "camss_ahb", "ispif_ahb",
-+	.clock = { "top_ahb", "ahb", "ispif_ahb",
- 		   "csi0", "csi0_pix", "csi0_rdi",
- 		   "csi1", "csi1_pix", "csi1_rdi" },
--	.clock_for_reset = { "camss_vfe_vfe", "camss_csi_vfe" },
-+	.clock_for_reset = { "vfe0", "csi_vfe0" },
- 	.reg = { "ispif", "csi_clk_mux" },
- 	.interrupt = "ispif"
- 
-@@ -108,8 +104,8 @@ static const struct resources_ispif ispif_res = {
- static const struct resources vfe_res = {
- 	/* VFE0 */
- 	.regulator = { NULL },
--	.clock = { "camss_top_ahb", "camss_vfe_vfe", "camss_csi_vfe",
--		   "iface", "bus", "camss_ahb" },
-+	.clock = { "top_ahb", "vfe0", "csi_vfe0",
-+		   "vfe_ahb", "vfe_axi", "ahb" },
- 	.clock_rate = { { 0 },
- 			{ 50000000, 80000000, 100000000, 160000000,
- 			  177780000, 200000000, 266670000, 320000000,
+http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/2018-June/121742.html
+
+Comments from Rob Herring are here:
+
+http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/2018-June/121974.html
+
+Changes in v4:
+ - Fix gpio banks naming issues
+ - Use custom xlate to be able to use only one node in DT.
+ - Add Reviewed-by: NeilBrown <neil at brown.name> to the patches.
+
+Changes in v3:
+ - Fix added Makefile entry which was wrong.
+
+Changes in v2 are the ones pointed out in previous mails:
+
+ - use bgpio_init
+ - avoid custom irq_domain using IRQF_SHARED and
+   gpiochip_set_chained_irqchip from GPIOLIB_IRQCHIP
+ - use only one node in the device tree making it simple
+ - Implement high and low level irqs
+ - avoid include gpio.h
+ - use builtin_platform_driver
+ - add COMPILE_TEST
+ - cleanups after this changes
+
+
+Hope this helps and thanks in advance.
+
+Best regards,
+    Sergio Paracuellos
+
+Sergio Paracuellos (2):
+  gpio: mediatek: add driver for MT7621
+  dt-bindings: document gpio-mt7621 bindings
+
+ .../bindings/gpio/mediatek,mt7621-gpio.txt         |  35 +++
+ drivers/gpio/Kconfig                               |   8 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-mt7621.c                         | 331 +++++++++++++++++++++
+ 4 files changed, 375 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
+ create mode 100644 drivers/gpio/gpio-mt7621.c
+
 -- 
 2.7.4
