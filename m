@@ -1,28 +1,94 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] arm64: dts: rockchip: corrected uart1 clock-names for rk3328
-Date: Fri, 06 Jul 2018 10:52:33 +0200
-Message-ID: <4047306.zuHpop0b3Q@phil>
-References: <1530864237-14891-1-git-send-email-huibin.hong@rock-chips.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC] ARM: dts: r8a7791: Move enable-method to CPU nodes
+Date: Fri, 6 Jul 2018 10:53:22 +0200
+Message-ID: <CAMuHMdV8McM-V5zME1DKE0nsdtVLU25mk9QQCNwNL74V9c2Cag@mail.gmail.com>
+References: <1526995765-29693-1-git-send-email-geert+renesas@glider.be>
+ <20180523083746.f4nkz4uhjwfgw7yz@verge.net.au> <CAMuHMdV2VwoD3Le=T4-+Ek2E9tL+hmiR0r4cXxG9EH4GXV-uTw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530864237-14891-1-git-send-email-huibin.hong@rock-chips.com>
+In-Reply-To: <CAMuHMdV2VwoD3Le=T4-+Ek2E9tL+hmiR0r4cXxG9EH4GXV-uTw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Huibin Hong <huibin.hong@rock-chips.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, sugar.zhang@rock-chips.com, david.wu@rock-chips.com, finley.xiao@rock-chips.com, robin.murphy@arm.com, william.wu@rock-chips.com, rocky.hao@rock-chips.com, klaus.goger@theobroma-systems.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Stephen Boyd <sboyd@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Huibin,
+On Wed, May 23, 2018 at 10:50 AM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> On Wed, May 23, 2018 at 10:37 AM, Simon Horman <horms@verge.net.au> wrote:
+> > On Tue, May 22, 2018 at 03:29:25PM +0200, Geert Uytterhoeven wrote:
+> >> According to Documentation/devicetree/bindings/arm/cpus.txt, the
+> >> "enable-method" property should be a property of the individual CPU
+> >> nodes, not of the parent "cpus" node.  However, on R-Car M2-W (and on
+> >> several other arm32 SoCs), the property is tied to the "cpus" node
+> >> instead.
+> >>
+> >> Secondary CPU bringup and CPU hot (un)plug work regardless, as
+> >> arm_dt_init_cpu_maps() falls back to looking in the "cpus" node.
+> >>
+> >> The cpuidle code does not have such a fallback, so it does not detect
+> >> the enable-method.  Note that cpuidle does not support the
+> >> "renesas,apmu" enable-method yet, so for now this does not make any
+> >> difference.
+> >
+> > Is the implication that if we keep the current binding for cpu nodes
+> > then at some point we will need to update the cpuidle binding?
+>
+> If we keep the current binding for cpu nodes, we indeed have to update
+> (common) Documentation/devicetree/bindings/arm/cpus.txt.
+>
+> In addition, if we want to add renesas,apmu-based cpuidle support later,
+> we will have to update the common cpuidle code to look in /cpus, too.
 
-Am Freitag, 6. Juli 2018, 10:03:57 CEST schrieb Huibin Hong:
-> Corrected the uart clock-names or the uart driver might fail.
-> 
-> Signed-off-by: Huibin Hong <huibin.hong@rock-chips.com>
+Any comments from the DT/ARM people?
+Thanks!
 
-thanks for catching that issue. I've added a Fixes-tag and a stable-cc
-and applied the patch for 4.19
+> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >> ---
+> >> Arm64 and powerpc do not have such a fallback, but SH has, like arm32.
+> >>
+> >> This is marked RFC, as the alternative is to update the DT bindings to
+> >> keep the status quo.
+> >> ---
+> >>  arch/arm/boot/dts/r8a7791.dtsi | 3 ++-
+> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
+> >> index d568bd22d6cbd855..b214cb8f52e47109 100644
+> >> --- a/arch/arm/boot/dts/r8a7791.dtsi
+> >> +++ b/arch/arm/boot/dts/r8a7791.dtsi
+> >> @@ -71,7 +71,6 @@
+> >>       cpus {
+> >>               #address-cells = <1>;
+> >>               #size-cells = <0>;
+> >> -             enable-method = "renesas,apmu";
+> >>
+> >>               cpu0: cpu@0 {
+> >>                       device_type = "cpu";
+> >> @@ -83,6 +82,7 @@
+> >>                       clock-latency = <300000>; /* 300 us */
+> >>                       power-domains = <&sysc R8A7791_PD_CA15_CPU0>;
+> >>                       next-level-cache = <&L2_CA15>;
+> >> +                     enable-method = "renesas,apmu";
+> >>
+> >>                       /* kHz - uV - OPPs unknown yet */
+> >>                       operating-points = <1500000 1000000>,
+> >> @@ -101,6 +101,7 @@
+> >>                       clocks = <&cpg CPG_CORE R8A7791_CLK_Z>;
+> >>                       power-domains = <&sysc R8A7791_PD_CA15_CPU1>;
+> >>                       next-level-cache = <&L2_CA15>;
+> >> +                     enable-method = "renesas,apmu";
+> >>               };
+> >>
+> >>               L2_CA15: cache-controller-0 {
 
+Gr{oetje,eeting}s,
 
-Thanks
-Heiko
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
