@@ -1,32 +1,56 @@
-From: Huibin Hong <huibin.hong@rock-chips.com>
-Subject: [PATCH] arm64: dts: rockchip: corrected uart1 clock-names for rk3328
-Date: Fri,  6 Jul 2018 16:03:57 +0800
-Message-ID: <1530864237-14891-1-git-send-email-huibin.hong@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, heiko@sntech.de
-Cc: mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, sugar.zhang@rock-chips.com, david.wu@rock-chips.com, finley.xiao@rock-chips.com, robin.murphy@arm.com, william.wu@rock-chips.com, rocky.hao@rock-chips.com, klaus.goger@theobroma-systems.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Huibin Hong <huibin.hong@rock-chips.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v5 3/4] dt-bindings: display: amlogic: DT fix
+ s/resets-names/reset-names/
+Date: Fri,  6 Jul 2018 10:32:48 +0200
+Message-ID: <20180706083249.25399-4-geert+renesas@glider.be>
+References: <20180706083249.25399-1-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180706083249.25399-1-geert+renesas@glider.be>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, "David S . Miller" <davem@davemloft.net>, Chanho Min <chanho.min@lge.com>
+Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Neil Armstrong <narmstrong@baylibre.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Corrected the uart clock-names or the uart driver might fail.
-
-Signed-off-by: Huibin Hong <huibin.hong@rock-chips.com>
+Fixes: 8cceda5349377e30 ("dt-bindings: Add bindings for the Amlogic Meson dw-hdmi extension")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 2 +-
+v5:
+  - Add Acked-by,
+
+v4:
+  - Add Acked-by,
+
+v3:
+  - New.
+---
+ .../devicetree/bindings/display/amlogic,meson-dw-hdmi.txt       | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 2f38ff2..3f5a294 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -297,7 +297,7 @@
- 		reg = <0x0 0xff120000 0x0 0x100>;
- 		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru SCLK_UART1>, <&cru PCLK_UART1>;
--		clock-names = "sclk_uart", "pclk_uart";
-+		clock-names = "baudclk", "apb_pclk";
- 		dmas = <&dmac 4>, <&dmac 5>;
- 		dma-names = "tx", "rx";
- 		pinctrl-names = "default";
+diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
+index bf4a18047309a5f8..d8f6268849f43621 100644
+--- a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
++++ b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
+@@ -43,7 +43,7 @@ Required properties:
+   and the Amlogic Meson venci clocks as described in
+   Documentation/devicetree/bindings/clock/clock-bindings.txt,
+   the clocks are soc specific, the clock-names should be "iahb", "isfr", "venci"
+-- resets, resets-names: must have the phandles to the HDMI apb, glue and phy
++- resets, reset-names: must have the phandles to the HDMI apb, glue and phy
+   resets as described in :
+   Documentation/devicetree/bindings/reset/reset.txt,
+   the reset-names should be "hdmitx_apb", "hdmitx", "hdmitx_phy"
 -- 
-1.9.1
+2.17.1
