@@ -1,23 +1,25 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] clk: aspeed: Fix SDCLK name
-Date: Fri, 06 Jul 2018 13:57:10 -0700
-Message-ID: <153091063090.143105.8837363425750284918@swboyd.mtv.corp.google.com>
-References: <1529978125-28712-1-git-send-email-mine260309@gmail.com>
+Subject: Re: [PATCH 1/2] clk: imx6sll: add GPIO LPCGs
+Date: Fri, 06 Jul 2018 13:58:46 -0700
+Message-ID: <153091072630.143105.2849049240391576710@swboyd.mtv.corp.google.com>
+References: <1529649154-5724-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529978125-28712-1-git-send-email-mine260309@gmail.com>
+In-Reply-To: <1529649154-5724-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Joel Stanley <joel@jms.id.au>, Lei YU <mine260309@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Anson Huang <Anson.Huang@nxp.com>, aisheng.dong@nxp.com, fabio.estevam@nxp.com, kernel@pengutronix.de, mark.rutland@arm.com, mturquette@baylibre.com, ping.bai@nxp.com, robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Lei YU (2018-06-25 18:55:25)
-> The SDCLK was named SDCLKCLK, and no one has used this yet.
-> Fix it.
+Quoting Anson Huang (2018-06-21 23:32:33)
+> According to Reference Manual Rev.0, 06/2017,
+> there are GPIO LPCGs defined in CCM CCGRs,
+> add them into clock tree.
 > =
 
-> Signed-off-by: Lei YU <mine260309@gmail.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
 
 Applied to clk-next
