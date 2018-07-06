@@ -1,41 +1,29 @@
-Return-Path: <SRS0=cA9l=JW=bitwise.fi=anssi.hannula@kernel.org>
-From: Anssi Hannula <anssi.hannula@bitwise.fi>
-Subject: [PATCH 0/3 v2] can: xilinx_can: CAN FD core support 
-Date: Fri,  6 Jul 2018 17:18:14 +0300
-Message-Id: <20180706141817.19729-1-anssi.hannula@bitwise.fi>
-To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Michal Simek <michal.simek@xilinx.com>, linux-can@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Return-Path: <SRS0=inSU=JW=zonque.org=daniel@kernel.org>
+Subject: Re: [PATCH v4 0/2] clk: Add driver for MAX9485
+References: <20180617120535.2529-1-daniel@zonque.org>
+ <153090225913.143105.355057835367872610@swboyd.mtv.corp.google.com>
+From: Daniel Mack <daniel@zonque.org>
+Message-ID: <7c828667-3095-0cf6-eb22-335115cba7b0@zonque.org>
+Date: Fri, 6 Jul 2018 20:53:00 +0200
+MIME-Version: 1.0
+In-Reply-To: <153090225913.143105.355057835367872610@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Stephen Boyd <sboyd@kernel.org>, mturquette@baylibre.com
+Cc: linux-clk@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi all,
+On Friday, July 06, 2018 08:37 PM, Stephen Boyd wrote:
+> Quoting Daniel Mack (2018-06-17 05:05:33)
+>> This is v4 of the driver for Maxim's MAX9485 programmable audio clock
+>> generator.
+>>
+> 
+> Please resend the clk driver. I already applied the binding.
+> 
 
-This patchset adds support for the Xilinx CAN FD core to the
-xilinx_can driver.
-
-v2: Removed unnecessary "rx-mode" DT property and wrapped some long
-lines.
-
-This is on top of my previous patchsets:
-- 2018-01-26 "[PATCH 0/5 resend] can: various fixes to xilinx_can driver"
-- 2018-01-29 "[PATCH] can: xilinx_can: use can_change_state()"
-- 2018-05-18 "[PATCH 0/4] can: fixes to xilinx_can".
-
-All the changes are also here, rebased on top of linux-can master
-(trivial rebase as there have been no other changes to the driver
-recently):
-https://github.com/anssih/linux/commits/dbf8cecccc8c8f0cfdf26a115b5a06f7497abf02
-
-Let me know if you want me to post the previous patchsets again.
+Thanks for the reviews! v5 is coming up in a minute :)
 
 
-Anssi Hannula (3):
-      dt-bindings: can: xilinx_can: add Xilinx CAN FD bindings
-      can: xilinx_can: refactor code in preparation for CAN FD support
-      can: xilinx_can: add support for Xilinx CAN FD core
-
- Documentation/devicetree/bindings/net/can/xilinx_can.txt |   35 -
- drivers/net/can/xilinx_can.c                             |  469 +++++++++++----
- 2 files changed, 383 insertions(+), 121 deletions(-)
-
--- 
-Anssi Hannula / Bitwise Oy
+Daniel
