@@ -1,7 +1,8 @@
 From: Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 6/6] drm/i2c: tda998x: cleanup from previous changes
-Date: Fri, 06 Jul 2018 15:59:15 +0100
-Message-ID: <E1fbSCZ-000773-0U@rmk-PC.armlinux.org.uk>
+Subject: [PATCH 5/6] drm/i2c: tda998x: allocate tda998x_priv inside
+ tda998x_create()
+Date: Fri, 06 Jul 2018 15:59:09 +0100
+Message-ID: <E1fbSCT-00076w-SL@rmk-PC.armlinux.org.uk>
 References: <20180706145748.GA17271@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -14,161 +15,104 @@ To: Peter Rosin <peda@axentia.se>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Andrzej Hajda <a.hajda@samsung.com>, David Airlie <airlied@linux.ie>, Jyri Sarha <jsarha@ti.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel@ffwll.ch>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Cleanup the code a little from the effects of the previous changes:
-- Move tda998x_destroy() to be above tda998x_create()
-- Use 'dev' directly in tda998x_create() where appropriate.
+Move the tda998x_priv allocation inside tda998x_create() and simplify
+the tda998x_create()'s arguments.  Pass the same to tda998x_destroy().
 
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 ---
- drivers/gpu/drm/i2c/tda998x_drv.c | 76 +++++++++++++++++++--------------------
- 1 file changed, 36 insertions(+), 40 deletions(-)
+ drivers/gpu/drm/i2c/tda998x_drv.c | 32 +++++++++++++++++---------------
+ 1 file changed, 17 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-index 08ccaf8cf852..6f74b3451567 100644
+index 53f110e7d433..08ccaf8cf852 100644
 --- a/drivers/gpu/drm/i2c/tda998x_drv.c
 +++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-@@ -1562,31 +1562,6 @@ static const struct drm_bridge_funcs tda998x_bridge_funcs = {
+@@ -1562,8 +1562,10 @@ static const struct drm_bridge_funcs tda998x_bridge_funcs = {
  	.enable = tda998x_bridge_enable,
  };
  
--static void tda998x_destroy(struct device *dev)
--{
--	struct tda998x_priv *priv = dev_get_drvdata(dev);
--
--	drm_bridge_remove(&priv->bridge);
--
--	/* disable all IRQs and free the IRQ handler */
--	cec_write(priv, REG_CEC_RXSHPDINTENA, 0);
--	reg_clear(priv, REG_INT_FLAGS_2, INT_FLAGS_2_EDID_BLK_RD);
--
--	if (priv->audio_pdev)
--		platform_device_unregister(priv->audio_pdev);
--
--	if (priv->hdmi->irq)
--		free_irq(priv->hdmi->irq, priv);
--
--	del_timer_sync(&priv->edid_delay_timer);
--	cancel_work_sync(&priv->detect_work);
--
--	i2c_unregister_device(priv->cec);
--
--	if (priv->cec_notify)
--		cec_notifier_put(priv->cec_notify);
--}
--
- /* I2C driver functions */
+-static void tda998x_destroy(struct tda998x_priv *priv)
++static void tda998x_destroy(struct device *dev)
+ {
++	struct tda998x_priv *priv = dev_get_drvdata(dev);
++
+ 	drm_bridge_remove(&priv->bridge);
  
- static int tda998x_get_audio_ports(struct tda998x_priv *priv,
-@@ -1650,6 +1625,31 @@ static void tda998x_set_config(struct tda998x_priv *priv,
+ 	/* disable all IRQs and free the IRQ handler */
+@@ -1648,13 +1650,21 @@ static void tda998x_set_config(struct tda998x_priv *priv,
  	priv->audio_params = p->audio_params;
  }
  
-+static void tda998x_destroy(struct device *dev)
-+{
-+	struct tda998x_priv *priv = dev_get_drvdata(dev);
-+
-+	drm_bridge_remove(&priv->bridge);
-+
-+	/* disable all IRQs and free the IRQ handler */
-+	cec_write(priv, REG_CEC_RXSHPDINTENA, 0);
-+	reg_clear(priv, REG_INT_FLAGS_2, INT_FLAGS_2_EDID_BLK_RD);
-+
-+	if (priv->audio_pdev)
-+		platform_device_unregister(priv->audio_pdev);
-+
-+	if (priv->hdmi->irq)
-+		free_irq(priv->hdmi->irq, priv);
-+
-+	del_timer_sync(&priv->edid_delay_timer);
-+	cancel_work_sync(&priv->detect_work);
-+
-+	i2c_unregister_device(priv->cec);
-+
-+	if (priv->cec_notify)
-+		cec_notifier_put(priv->cec_notify);
-+}
-+
- static int tda998x_create(struct device *dev)
+-static int tda998x_create(struct i2c_client *client, struct tda998x_priv *priv)
++static int tda998x_create(struct device *dev)
  {
- 	struct i2c_client *client = to_i2c_client(dev);
-@@ -1691,13 +1691,13 @@ static int tda998x_create(struct device *dev)
- 	/* read version: */
- 	rev_lo = reg_read(priv, REG_VERSION_LSB);
- 	if (rev_lo < 0) {
--		dev_err(&client->dev, "failed to read version: %d\n", rev_lo);
-+		dev_err(dev, "failed to read version: %d\n", rev_lo);
- 		return rev_lo;
- 	}
++	struct i2c_client *client = to_i2c_client(dev);
+ 	struct device_node *np = client->dev.of_node;
+ 	struct i2c_board_info cec_info;
++	struct tda998x_priv *priv;
+ 	u32 video;
+ 	int rev_lo, rev_hi, ret;
  
- 	rev_hi = reg_read(priv, REG_VERSION_MSB);
- 	if (rev_hi < 0) {
--		dev_err(&client->dev, "failed to read version: %d\n", rev_hi);
-+		dev_err(dev, "failed to read version: %d\n", rev_hi);
- 		return rev_hi;
- 	}
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	dev_set_drvdata(dev, priv);
++
+ 	mutex_init(&priv->mutex);	/* protect the page access */
+ 	mutex_init(&priv->audio_mutex); /* protect access from audio thread */
+ 	mutex_init(&priv->edid_mutex);
+@@ -1831,7 +1841,7 @@ static int tda998x_create(struct i2c_client *client, struct tda998x_priv *priv)
+ 	return 0;
  
-@@ -1708,20 +1708,19 @@ static int tda998x_create(struct device *dev)
+ fail:
+-	tda998x_destroy(priv);
++	tda998x_destroy(dev);
+ err_irq:
+ 	return ret;
+ }
+@@ -1883,30 +1893,22 @@ static int tda998x_encoder_init(struct device *dev, struct drm_device *drm)
  
- 	switch (priv->rev) {
- 	case TDA9989N2:
--		dev_info(&client->dev, "found TDA9989 n2");
-+		dev_info(dev, "found TDA9989 n2");
- 		break;
- 	case TDA19989:
--		dev_info(&client->dev, "found TDA19989");
-+		dev_info(dev, "found TDA19989");
- 		break;
- 	case TDA19989N2:
--		dev_info(&client->dev, "found TDA19989 n2");
-+		dev_info(dev, "found TDA19989 n2");
- 		break;
- 	case TDA19988:
--		dev_info(&client->dev, "found TDA19988");
-+		dev_info(dev, "found TDA19988");
- 		break;
- 	default:
--		dev_err(&client->dev, "found unsupported device: %04x\n",
--			priv->rev);
-+		dev_err(dev, "found unsupported device: %04x\n", priv->rev);
- 		return -ENXIO;
- 	}
+ static int tda998x_bind(struct device *dev, struct device *master, void *data)
+ {
+-	struct i2c_client *client = to_i2c_client(dev);
+ 	struct drm_device *drm = data;
+-	struct tda998x_priv *priv;
+ 	int ret;
  
-@@ -1764,8 +1763,7 @@ static int tda998x_create(struct device *dev)
- 					   tda998x_irq_thread, irq_flags,
- 					   "tda998x", priv);
- 		if (ret) {
--			dev_err(&client->dev,
--				"failed to request IRQ#%u: %d\n",
-+			dev_err(dev, "failed to request IRQ#%u: %d\n",
- 				client->irq, ret);
- 			goto err_irq;
- 		}
-@@ -1774,13 +1772,13 @@ static int tda998x_create(struct device *dev)
- 		cec_write(priv, REG_CEC_RXSHPDINTENA, CEC_RXSHPDLEV_HPD);
- 	}
- 
--	priv->cec_notify = cec_notifier_get(&client->dev);
-+	priv->cec_notify = cec_notifier_get(dev);
- 	if (!priv->cec_notify) {
- 		ret = -ENOMEM;
- 		goto fail;
- 	}
- 
--	priv->cec_glue.parent = &client->dev;
-+	priv->cec_glue.parent = dev;
- 	priv->cec_glue.data = priv;
- 	priv->cec_glue.init = tda998x_cec_hook_init;
- 	priv->cec_glue.exit = tda998x_cec_hook_exit;
-@@ -1826,9 +1824,7 @@ static int tda998x_create(struct device *dev)
- 		if (priv->audio_port[0].format != AFMT_UNUSED)
- 			tda998x_audio_codec_init(priv, &client->dev);
- 	} else {
--		struct tda998x_encoder_params *params;
+-	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+-	if (!priv)
+-		return -ENOMEM;
 -
--		params = client->dev.platform_data;
-+		struct tda998x_encoder_params *params = dev->platform_data;
- 		if (params)
- 			tda998x_set_config(priv, params);
+-	dev_set_drvdata(dev, priv);
+-
+-	ret = tda998x_create(client, priv);
++	ret = tda998x_create(dev);
+ 	if (ret)
+ 		return ret;
+ 
+ 	ret = tda998x_encoder_init(dev, drm);
+ 	if (ret) {
+-		tda998x_destroy(priv);
++		tda998x_destroy(dev);
+ 		return ret;
  	}
+ 	return 0;
+ 
+ err_encoder:
+-	tda998x_destroy(priv);
++	tda998x_destroy(dev);
+ 	return ret;
+ }
+ 
+@@ -1917,7 +1919,7 @@ static void tda998x_unbind(struct device *dev, struct device *master,
+ 
+ 	drm_connector_cleanup(&priv->connector);
+ 	drm_encoder_cleanup(&priv->encoder);
+-	tda998x_destroy(priv);
++	tda998x_destroy(dev);
+ }
+ 
+ static const struct component_ops tda998x_ops = {
 -- 
 2.7.4
