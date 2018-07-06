@@ -1,107 +1,57 @@
-From: Luis Araneda <luaraneda@gmail.com>
-Subject: [PATCH v2 2/3] dt-bindings: xilinx: Add missing zynq boards and sort
- entries
-Date: Fri,  6 Jul 2018 02:01:57 -0400
-Message-ID: <20180706060158.24155-3-luaraneda@gmail.com>
-References: <20180706060158.24155-1-luaraneda@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v10 1/2] mfd: bd71837: mfd driver for ROHM BD71837 PMIC
+Date: Fri, 6 Jul 2018 07:09:13 +0100
+Message-ID: <20180706060913.GU496@dell>
+References: <cover.1530800707.git.matti.vaittinen@fi.rohmeurope.com>
+ <e737bb13d17b75ea5e55f59005ef3181d428e704.1530800707.git.matti.vaittinen@fi.rohmeurope.com>
+ <CAFqH_53DbfFTRt2xST6RXg_qu0+LayXjQL2y024We1LHGB3yQA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180706060158.24155-1-luaraneda@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Luis Araneda <luaraneda@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAFqH_53DbfFTRt2xST6RXg_qu0+LayXjQL2y024We1LHGB3yQA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo Serra <eballetbo@gmail.com>
+Cc: matti.vaittinen@fi.rohmeurope.com, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, sboyd@kernel.org, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Matti Vaittinen <mazziesaccount@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>, chenjh@rock-chips.com, Andrey Smirnov <andrew.smirnov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Kate Stewart <kstewart@linuxfoundation.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kerne>
 List-Id: devicetree@vger.kernel.org
 
-The bindings were missing when adding the device-tree files
+On Thu, 05 Jul 2018, Enric Balletbo Serra wrote:
 
-Also, improve description of existing boards, sort them
-alphabetically by manufacturer, and migrate the contents
-of adapteva dt dindigns into Xilinx's
+> Missatge de Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com> del
+> dia dj., 5 de jul. 2018 a les 16:32:
+> >
+> > ROHM BD71837 PMIC MFD driver providing interrupts and support
+> > for three subsystems:
+> > - clk
+> > - Regulators
+> > - input/power-key
+> >
+> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > ---
+> >  drivers/mfd/Kconfig              |  13 ++
+> >  drivers/mfd/Makefile             |   1 +
+> >  drivers/mfd/rohm-bd718x7.c       | 198 +++++++++++++++++++++++
+> >  include/linux/mfd/rohm-bd718x7.h | 333 +++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 545 insertions(+)
+> >  create mode 100644 drivers/mfd/rohm-bd718x7.c
+> >  create mode 100644 include/linux/mfd/rohm-bd718x7.h
 
-Signed-off-by: Luis Araneda <luaraneda@gmail.com>
----
+[snipping ~550 lines of code]
 
-Changes since v1 (RFC):
-- Don't remove "internal" word from Xilinx boards on dt-bindings
-- Migrate content of adapteva dt-binding file into Xilinx's
-- Sort additional compatible strings alphabetically
-  by manufacturer
+> The main changes I requested are done so I think you can maintain my
+> reviewed-by.
+> 
+> Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
- .../devicetree/bindings/arm/adapteva.txt      |  7 -----
- .../devicetree/bindings/arm/xilinx.txt        | 30 +++++++++++++++----
- 2 files changed, 25 insertions(+), 12 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/adapteva.txt
+Thanks for your review, it's much appreciated.
 
-diff --git a/Documentation/devicetree/bindings/arm/adapteva.txt b/Documentation/devicetree/bindings/arm/adapteva.txt
-deleted file mode 100644
-index 1d8af9e36065..000000000000
---- a/Documentation/devicetree/bindings/arm/adapteva.txt
-+++ /dev/null
-@@ -1,7 +0,0 @@
--Adapteva Platforms Device Tree Bindings
-----------------------------------------
--
--Parallella board
--
--Required root node properties:
--    - compatible = "adapteva,parallella";
-diff --git a/Documentation/devicetree/bindings/arm/xilinx.txt b/Documentation/devicetree/bindings/arm/xilinx.txt
-index b9043bc35c14..26fe5ecc4332 100644
---- a/Documentation/devicetree/bindings/arm/xilinx.txt
-+++ b/Documentation/devicetree/bindings/arm/xilinx.txt
-@@ -8,18 +8,38 @@ Required root node properties:
- 
- Additional compatible strings:
- 
--- Xilinx internal board cc108
-+- Adapteva Parallella board
-+  "adapteva,parallella"
-+
-+- Avnet MicroZed board
-+  "avnet,zynq-microzed"
-+  "xlnx,zynq-microzed"
-+
-+- Avnet ZedBoard board
-+  "avnet,zynq-zed"
-+  "xlnx,zynq-zed"
-+
-+- Digilent Zybo board
-+  "digilent,zynq-zybo"
-+
-+- Digilent Zybo Z7 board
-+  "digilent,zynq-zybo-z7"
-+
-+- Xilinx CC108 internal board
-   "xlnx,zynq-cc108"
- 
--- Xilinx internal board zc770 with different FMC cards
-+- Xilinx ZC702 internal board
-+  "xlnx,zynq-zc702"
-+
-+- Xilinx ZC706 internal board
-+  "xlnx,zynq-zc706"
-+
-+- Xilinx ZC770 internal board, with different FMC cards
-   "xlnx,zynq-zc770-xm010"
-   "xlnx,zynq-zc770-xm011"
-   "xlnx,zynq-zc770-xm012"
-   "xlnx,zynq-zc770-xm013"
- 
--- Digilent Zybo Z7 board
--  "digilent,zynq-zybo-z7"
--
- ---------------------------------------------------------------
- 
- Xilinx Zynq UltraScale+ MPSoC Platforms Device Tree Bindings
+In future would you mind trimming your mails back to only include
+relevant sections please?  Going through ~550 lines of code page by
+page trying to find your response was a little painful.  TIA.
+
 -- 
-2.18.0
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
