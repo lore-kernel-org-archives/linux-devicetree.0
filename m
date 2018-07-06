@@ -1,54 +1,46 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH] ARM: dts: da850: Add power-domains to CPPI 4.1 node
-Date: Mon, 9 Jul 2018 08:58:03 +0200
-Message-ID: <CAMpxmJWCUn7Dcg3ygupnyFGyBdZ_DuuqmjLAh4UfP0ANSZeRfA@mail.gmail.com>
-References: <20180704094432.5424-1-nsekhar@ti.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH v3 0/2] gpu: drm/panel: Add DLC DLC0700YZG-1 support
+Date: Fri, 6 Jul 2018 10:34:11 +0200
+Message-ID: <20180706083411.uu2sp2n5oq3p4poa@pengutronix.de>
+References: <20180523092504.5142-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180704094432.5424-1-nsekhar@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, David Lechner <david@lechnology.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20180523092504.5142-1-m.felsch@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-2018-07-04 11:44 GMT+02:00 Sekhar Nori <nsekhar@ti.com>:
-> This adds the power-domains property to CPPI 4.1 node.
->
-> The CPPI 4.1 DMA driver uses pm_runtime to manage the clocks,
-> so it needs this property in order to find and enable the clock
-> properly.
->
-> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-> ---
-> Applies for v4.19/dt branch of my tree.
->
->  arch/arm/boot/dts/da850.dtsi | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-> index 9e05a5a709c0..07f215e7e5b8 100644
-> --- a/arch/arm/boot/dts/da850.dtsi
-> +++ b/arch/arm/boot/dts/da850.dtsi
-> @@ -637,6 +637,7 @@
->                                 interrupts = <58>;
->                                 #dma-cells = <2>;
->                                 #dma-channels = <4>;
-> +                               power-domains = <&psc1 1>;
->                                 status = "okay";
->                         };
->                 };
-> --
-> 2.16.2
->
-
-Tested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+SGkgVGhpZXJyeSwKCm1heWJlIHRoZXNlIHR3byBwYXRjaGVzIGdvdCBsb3N0LiBQbGVhc2UsIGNh
+biB5b3UgaGF2ZSBhIGxvb2sgb24/CgpSZWdhcmRzLApNYXJjbwoKT24gMTgtMDUtMjMgMTE6MjUs
+IE1hcmNvIEZlbHNjaCB3cm90ZToKPiBUaGlzIHNlcmllIGFkZHMgc3VwcG9ydCBmb3IgdGhlIERM
+QyBEaXNwbGF5IENvLiBETEMwNzAwWVpHLTEgNy4wIiBXU1ZHQQo+IFRGVCBMQ0QgcGFuZWwuIFRo
+ZSBjdXN0b21lciBpc24ndCBsaXN0ZWQgYXMgdmVuZG9yIHNvIHdlIGhhdmUgdG8gYWRkIHRoZQo+
+IHZlbmRvciBwcmVmaXggdG9vLgo+IAo+IFBoaWxpcHAgWmFiZWwgKDIpOgo+ICAgZHQtYmluZGlu
+Z3M6IEFkZCB2ZW5kb3IgcHJlZml4IGZvciBETEMgRGlzcGxheSBDby4sIEx0ZC4KPiAgIGdwdTog
+ZHJtL3BhbmVsOiBBZGQgRExDIERMQzA3MDBZWkctMSBwYW5lbAo+IAo+ICAuLi4vZGlzcGxheS9w
+YW5lbC9kbGMsZGxjMDcwMHl6Zy0xLnR4dCAgICAgICAgfCAgNyArKysrCj4gIC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgICB8ICAxICsKPiAgZHJpdmVycy9ncHUv
+ZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgIHwgMzIgKysrKysrKysrKysrKysrKysr
+Kwo+ICAzIGZpbGVzIGNoYW5nZWQsIDQwIGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2RsYyxk
+bGMwNzAweXpnLTEudHh0Cj4gCj4gLS0gCj4gMi4xNy4wCj4gCj4gCj4gCgotLSAKUGVuZ3V0cm9u
+aXggZS5LLiAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwKSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAgICAgICAgICAgIHwgaHR0
+cDovL3d3dy5wZW5ndXRyb25peC5kZS8gIHwKUGVpbmVyIFN0ci4gNi04LCAzMTEzNyBIaWxkZXNo
+ZWltLCBHZXJtYW55IHwgUGhvbmU6ICs0OS01MTIxLTIwNjkxNy0wICAgIHwKQW10c2dlcmljaHQg
+SGlsZGVzaGVpbSwgSFJBIDI2ODYgICAgICAgICAgIHwgRmF4OiAgICs0OS01MTIxLTIwNjkxNy01
+NTU1IHwKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
