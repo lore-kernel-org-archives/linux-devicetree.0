@@ -1,181 +1,122 @@
-From: houlong wei <houlong.wei@mediatek.com>
-Subject: Re: [PATCH v22 1/4] dt-bindings: soc: Add documentation for the
- MediaTek GCE unit
-Date: Fri, 6 Jul 2018 10:29:37 +0800
-Message-ID: <1530844177.28645.49.camel@mhfsdcap03>
-References: <1530098172-31385-1-git-send-email-houlong.wei@mediatek.com>
-         <1530098172-31385-2-git-send-email-houlong.wei@mediatek.com>
-         <20180703023040.GA24508@rob-hp-laptop>
-         <1530661158.21991.45.camel@mhfsdcap03>
-         <CAL_JsqLZ-+-kY2QSY3cZMoR2zZuuZA8C9VUoHG=F7rpa4s5fgA@mail.gmail.com>
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: Re: [PATCH 2/3] k3dma: add support to reserved minimum channels
+Date: Fri, 6 Jul 2018 11:05:21 +0800
+Message-ID: <CAFGCpxwkdJQAf9bwHTLp+Zc5ASbnFQn9UDsA+zFCH7UZJy9aBQ@mail.gmail.com>
+References: <20180622032416.20133-1-guodong.xu@linaro.org> <20180622032416.20133-3-guodong.xu@linaro.org>
+ <20180628060239.GO22377@vkoul-mobl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLZ-+-kY2QSY3cZMoR2zZuuZA8C9VUoHG=F7rpa4s5fgA@mail.gmail.com>
+In-Reply-To: <20180628060239.GO22377@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK Hu =?UTF-8?Q?=28=E8=83=A1=E4=BF=8A=E5=85=89=29?= <ck.hu@mediatek.com>Bibby Hsieh =?UTF-8?Q?=28=E8=AC=9D=E6=BF=9F=E9=81=A0=29?= <B>
+To: vkoul@kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dan.j.williams@intel.com, liyu65@hisilicon.com, Suzhuangluan <suzhuangluan@hisilicon.com>, "xuhongtao (A)" <xuhongtao8@hisilicon.com>, zhongkaihua <zhongkaihua@huawei.com>, Xuezhiliang <xuezhiliang@hisilicon.com>, "xupeng (Q)" <xupeng7@huawei.com>, sunliang10@huawei.com, "Fengbaopeng (kevin, Kirin Solution Dept)" <fengbaopeng@hisilicon.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-07-06 at 04:08 +0800, Rob Herring wrote:
-> On Tue, Jul 3, 2018 at 5:39 PM houlong wei <houlong.wei@mediatek.com> wrote:
+On Thu, Jun 28, 2018 at 2:02 PM Vinod <vkoul@kernel.org> wrote:
+>
+> On 22-06-18, 11:24, Guodong Xu wrote:
+> > From: Li Yu <liyu65@hisilicon.com>
 > >
-> > On Tue, 2018-07-03 at 10:30 +0800, Rob Herring wrote:
-> > > On Wed, Jun 27, 2018 at 07:16:09PM +0800, Houlong Wei wrote:
-> > > > This adds documentation for the MediaTek Global Command Engine (GCE) unit
-> > > > found in MT8173 SoCs.
-> > > >
-> > > > Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
-> > > > Signed-off-by: HS Liao <hs.liao@mediatek.com>
-> > > > ---
-> > > > Hi Rob,
-> > > >   I don't add your ACK in this version since the dt-binding description
-> > > > has been changed. Thanks.
-> > > > ---
-> > > >  .../devicetree/bindings/mailbox/mtk-gce.txt        |   65 ++++++++++++++++++++
-> > > >  include/dt-bindings/gce/mt8173-gce.h               |   48 +++++++++++++++
-> > > >  2 files changed, 113 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> > > >  create mode 100644 include/dt-bindings/gce/mt8173-gce.h
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> > > > new file mode 100644
-> > > > index 0000000..26f65a4
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> > > > @@ -0,0 +1,65 @@
-> > > > +MediaTek GCE
-> > > > +===============
-> > > > +
-> > > > +The Global Command Engine (GCE) is used to help read/write registers with
-> > > > +critical time limitation, such as updating display configuration during the
-> > > > +vblank. The GCE can be used to implement the Command Queue (CMDQ) driver.
-> > > > +
-> > > > +CMDQ driver uses mailbox framework for communication. Please refer to
-> > > > +mailbox.txt for generic information about mailbox device-tree bindings.
-> > > > +
-> > > > +Required properties:
-> > > > +- compatible: Must be "mediatek,mt8173-gce"
-> > > > +- reg: Address range of the GCE unit
-> > > > +- interrupts: The interrupt signal from the GCE block
-> > > > +- clock: Clocks according to the common clock binding
-> > > > +- clock-names: Must be "gce" to stand for GCE clock
-> > > > +- thread-num: Maximum threads count of GCE.
-> > >
-> > > mediatek,thread-num
-> > >
-> > > Is this needed for anything other than error checking the thread id in
-> > > the mbox cells? if that's it, then drop it.
-> > >
+> > On k3 series of SoC, DMA controller reserves some channels for
+> > other on-chip coprocessors. By adding support to dma_min_chan, kernel
+> > will not be able to use these reserved channels.
 > >
-> > 'thread-num' is used to configure the GCE thread number, which is the
-> > channel number of gce mailbox. This property is read in
-> > cmdq_probe()/mtk-cmdq-mailbox.c and a mailbox's channel array is
-> > allocated according to the number.
-> > Since the thread number may be different on different SoC, we wish it
-> > could be configured in device tree.
-> 
-> You should have different compatible strings for different SoCs and
-> can imply the number of threads from that.
-> 
+> > One example is on Hi3660 platform, channel 0 is reserved to lpm3.
+> >
+> > Please also refer to Documentation/devicetree/bindings/dma/k3dma.txt
+>
+> and if some other platform has channel X marked for co-processor, maybe
+> a last channel or something in middle, how will this work then?
+>
+Hi=EF=BC=8C Vinod
 
-Thanks. Will remove 'thread-num' form device tree and put it in match
-table of cmdq dirver.
+Sorry for delayed response. We checked with Kirin hardware design
+team, so far their design strategy is all Kirin SoC series reserve
+only from minimum side, saying channel 0, then 1, then 2. That impacts
+the current SoC in upstreaming, Kirin960 (Hi3660), and next versions
+in Kirin SoC, Kirin970 and 980, which may hit upstream later.
 
-> Or if the number of threads doesn't vary greatly, just allocate the
-> max # of channels. Or allocate the per thread data when a thread is
-> actually in use.
-> 
-> >
-> > > > +- #mbox-cells: Should be 4.
-> > > > +   <&phandle channel timeout priority atomic_exec>
-> > > > +   phandle: Label name of a gce node.
-> > > > +   channel: Channel of mailbox. Be equal to the thread id of GCE.
-> > > > +   timeout: Maximum time of software waiting GCE processing done, in unit
-> > > > +           of millisecond.
-> > > > +   priority: Priority of GCE thread.
-> > > > +   atomic_exec: GCE processing continuous packets of commands in atomic
-> > > > +           way.
-> > > > +
-> > > > +Required properties for a client device:
-> > > > +- mboxes: Client use mailbox to communicate with GCE, it should have this
-> > > > +  property and list of phandle, mailbox specifiers.
-> > > > +- gce-subsys: Specify the sub-system id which is corresponding to the register
-> > > > +  address.
-> > >
-> > > What is this for?
-> >
-> > You mean the new added property 'gce-subsys'?
-> > It is used for GCE to distinguish the high 16-bit of a hardware register
-> > address. When a client driver packets a register setting into a GCE
-> > instruction, it uses a sub-system code and register offset instead of
-> > the 32-bit register address.
-> > Since sub-system code may be different on different SoC, we wish it
-> > could be configured in device tree.
-> 
-> Okay. It needs a vendor prefix and to specify the size and type of the value.
-> 
+> I am thinking this should be a mask, rather than min.
+>
 
-Will do.
+So, since this driver k3dma.c is only used by Kirin SoC DMA
+controllers, I would prefer to keep the current design dma_min_chan
+unchanged.
+
+What do you think?
+
+-Guodong
+
 
 > >
-> > >
-> > > > +
-> > > > +Optional properties for a client device:
-> > > > +- gce-event: Specify the event if the client has any. Because the event is
-> > > > +  parsed by client, so client can replace 'gce-event' with other meaningful
-> > > > +  name.
-> > >
-> > > If the client sets the name, then no point having here. It must be
-> > > documented in the client binding. But then, what is this for in the
-> > > first place?
+> > Signed-off-by: Li Yu <liyu65@hisilicon.com>
+> > Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
+> > ---
+> >  drivers/dma/k3dma.c | 13 ++++++++-----
+> >  1 file changed, 8 insertions(+), 5 deletions(-)
 > >
-> > Since display driver will use GCE firstly, so we will move the
-> > description to
-> > 'Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt'
-> > when display driver start using the GCE driver.
-> > Is that ok?
-> 
-> Not sure. I don't understand how it is used.
-> 
-> > > > +
-> > > > +Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'. Such as
-> > > > +thread number, sub-system ids, thread priority, event ids.
-> > > > +
-> > > > +Example:
-> > > > +
-> > > > +   gce: gce@10212000 {
-> > >
-> > > mailbox@...
+> > diff --git a/drivers/dma/k3dma.c b/drivers/dma/k3dma.c
+> > index fa31cccbe04f..13cec12742e3 100644
+> > --- a/drivers/dma/k3dma.c
+> > +++ b/drivers/dma/k3dma.c
+> > @@ -113,6 +113,7 @@ struct k3_dma_dev {
+> >       struct dma_pool         *pool;
+> >       u32                     dma_channels;
+> >       u32                     dma_requests;
+> > +     u32                     dma_min_chan;
+> >       unsigned int            irq;
+> >  };
 > >
-> > Will do.
+> > @@ -309,7 +310,7 @@ static void k3_dma_tasklet(unsigned long arg)
 > >
-> > >
-> > > > +           compatible = "mediatek,mt8173-gce";
-> > > > +           reg = <0 0x10212000 0 0x1000>;
-> > > > +           interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
-> > > > +           clocks = <&infracfg CLK_INFRA_GCE>;
-> > > > +           clock-names = "gce";
-> > > > +           thread-num = CMDQ_THR_MAX_COUNT;
-> > > > +           #mbox-cells = <4>;
-> > > > +   };
-> > > > +
-> > > > +Example for a client device:
-> > > > +
-> > > > +   mmsys: clock-controller@14000000 {
-> > > > +           compatible = "mediatek,mt8173-mmsys";
-> > > > +           mboxes = <&gce 0 2000 CMDQ_THR_PRIO_LOWEST 1>,
-> > > > +                    <&gce 1 2000 CMDQ_THR_PRIO_LOWEST 1>;
-> > > > +           gce-subsys = <SUBSYS_1400XXXX>;
-> > > > +           mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
-> > > > +                           CMDQ_EVENT_MUTEX1_STREAM_EOF>;
-> > > > +
-> > > > +           ...
-> > > > +   };
+> >       /* check new channel request in d->chan_pending */
+> >       spin_lock_irq(&d->lock);
+> > -     for (pch =3D 0; pch < d->dma_channels; pch++) {
+> > +     for (pch =3D d->dma_min_chan; pch < d->dma_channels; pch++) {
+> >               p =3D &d->phy[pch];
 > >
+> >               if (p->vchan =3D=3D NULL && !list_empty(&d->chan_pending)=
+) {
+> > @@ -326,7 +327,7 @@ static void k3_dma_tasklet(unsigned long arg)
+> >       }
+> >       spin_unlock_irq(&d->lock);
 > >
+> > -     for (pch =3D 0; pch < d->dma_channels; pch++) {
+> > +     for (pch =3D d->dma_min_chan; pch < d->dma_channels; pch++) {
+> >               if (pch_alloc & (1 << pch)) {
+> >                       p =3D &d->phy[pch];
+> >                       c =3D p->vchan;
+> > @@ -825,6 +826,8 @@ static int k3_dma_probe(struct platform_device *op)
+> >                               "dma-channels", &d->dma_channels);
+> >               of_property_read_u32((&op->dev)->of_node,
+> >                               "dma-requests", &d->dma_requests);
+> > +             of_property_read_u32((&op->dev)->of_node,
+> > +                             "dma-min-chan", &d->dma_min_chan);
+> >       }
+> >
+> >       d->clk =3D devm_clk_get(&op->dev, NULL);
+> > @@ -848,12 +851,12 @@ static int k3_dma_probe(struct platform_device *o=
+p)
+> >               return -ENOMEM;
+> >
+> >       /* init phy channel */
+> > -     d->phy =3D devm_kcalloc(&op->dev,
+> > -             d->dma_channels, sizeof(struct k3_dma_phy), GFP_KERNEL);
+> > +     d->phy =3D devm_kcalloc(&op->dev, (d->dma_channels - d->dma_min_c=
+han),
+> > +                     sizeof(struct k3_dma_phy), GFP_KERNEL);
+> >       if (d->phy =3D=3D NULL)
+> >               return -ENOMEM;
+> >
+> > -     for (i =3D 0; i < d->dma_channels; i++) {
+> > +     for (i =3D d->dma_min_chan; i < d->dma_channels; i++) {
+> >               struct k3_dma_phy *p =3D &d->phy[i];
+> >
+> >               p->idx =3D i;
 > > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > 2.17.1
+>
+> --
+> ~Vinod
