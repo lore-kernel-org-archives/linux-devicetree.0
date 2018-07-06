@@ -1,75 +1,92 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 1/2] reset: meson: add dt-bindings for meson-axg audio arb
-Date: Fri,  6 Jul 2018 16:31:21 +0200
-Message-ID: <20180706143122.7612-2-jbrunet@baylibre.com>
-References: <20180706143122.7612-1-jbrunet@baylibre.com>
+Subject: [PATCH RESEND] ARM64: dts: meson-axg: add the audio clock controller
+Date: Fri,  6 Jul 2018 16:43:05 +0200
+Message-ID: <20180706144305.30116-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180706143122.7612-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add dt-bindings for the audio memory arbitror found on Amlogic's
-A113 based SoCs
+Add the audio clock controller which is part of the audio bus
+This controller takes 8 input plls, and the usual clock gate, from the
+main clock controller. It provides the clocs for the all the devices of
+the audio subsystem, such as tdms, spdif, pdm, etc.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- .../bindings/reset/amlogic,meson-axg-audio-arb.txt  | 21 +++++++++++++++++++++
- .../dt-bindings/reset/amlogic,meson-axg-audio-arb.h | 17 +++++++++++++++++
- 2 files changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt
- create mode 100644 include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h
 
-diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt b/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt
-new file mode 100644
-index 000000000000..e29b3463f2e1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt
-@@ -0,0 +1,21 @@
-+* Amlogic audio memory arbitror controller
+Resend to fix typo reported by Martin in the commit description.
+(Thx Martin !)
+
+Kevin,
+
+Please note that this change depends on the axg audio clock bindings [0].
+It explains the problem reported by kbuild robot
+It will be part of our PR to clock in this cycle.
+
+As usual, I've prepared a topic branch with the DT changes for you.
+Please, let me know when you need a tag on it.
+
+Cheers
+Jerome
+
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 36 ++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index aa1a42407466..56d334be9f85 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -6,6 +6,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/axg-audio-clkc.h>
+ #include <dt-bindings/clock/axg-clkc.h>
+ #include <dt-bindings/clock/axg-aoclkc.h>
+ #include <dt-bindings/gpio/meson-axg-gpio.h>
+@@ -155,6 +156,41 @@
+ 			};
+ 		};
+ 
++		audio: bus@ff642000 {
++			compatible = "simple-bus";
++			reg = <0x0 0xff642000 0x0 0x2000>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges = <0x0 0x0 0x0 0xff642000 0x0 0x2000>;
 +
-+The Amlogic Audio ARB is a simple device which enables or
-+disables the access of Audio FIFOs to DDR on AXG based SoC.
++			clkc_audio: clock-controller@0 {
++				compatible = "amlogic,axg-audio-clkc";
++				reg = <0x0 0x0 0x0 0xb4>;
++				#clock-cells = <1>;
 +
-+Required properties:
-+- compatible: 'amlogic,meson-axg-audio-arb'
-+- reg: physical base address of the controller and length of memory
-+       mapped region.
-+- clocks: phandle to the fifo peripheral clock provided by the audio
-+	  clock controller.
-+- #reset-cells: must be 1.
++				clocks = <&clkc CLKID_AUDIO>,
++					 <&clkc CLKID_MPLL0>,
++					 <&clkc CLKID_MPLL1>,
++					 <&clkc CLKID_MPLL2>,
++					 <&clkc CLKID_MPLL3>,
++					 <&clkc CLKID_HIFI_PLL>,
++					 <&clkc CLKID_FCLK_DIV3>,
++					 <&clkc CLKID_FCLK_DIV4>,
++					 <&clkc CLKID_GP0_PLL>;
++				clock-names = "pclk",
++					      "mst_in0",
++					      "mst_in1",
++					      "mst_in2",
++					      "mst_in3",
++					      "mst_in4",
++					      "mst_in5",
++					      "mst_in6",
++					      "mst_in7";
 +
-+Example on the A113 SoC:
++				resets = <&reset RESET_AUDIO>;
++			};
++		};
 +
-+arb: reset-controller@280 {
-+	compatible = "amlogic,meson-axg-audio-arb";
-+	reg = <0x0 0x280 0x0 0x4>;
-+	#reset-cells = <1>;
-+	clocks = <&clkc_audio AUD_CLKID_DDR_ARB>;
-+};
-diff --git a/include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h b/include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h
-new file mode 100644
-index 000000000000..05c36367875c
---- /dev/null
-+++ b/include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+ *
-+ * Copyright (c) 2018 Baylibre SAS.
-+ * Author: Jerome Brunet <jbrunet@baylibre.com>
-+ */
-+
-+#ifndef _DT_BINDINGS_AMLOGIC_MESON_AXG_AUDIO_ARB_H
-+#define _DT_BINDINGS_AMLOGIC_MESON_AXG_AUDIO_ARB_H
-+
-+#define AXG_ARB_TODDR_A	0
-+#define AXG_ARB_TODDR_B	1
-+#define AXG_ARB_TODDR_C	2
-+#define AXG_ARB_FRDDR_A	3
-+#define AXG_ARB_FRDDR_B	4
-+#define AXG_ARB_FRDDR_C	5
-+
-+#endif /* _DT_BINDINGS_AMLOGIC_MESON_AXG_AUDIO_ARB_H */
+ 		cbus: bus@ffd00000 {
+ 			compatible = "simple-bus";
+ 			reg = <0x0 0xffd00000 0x0 0x25000>;
 -- 
 2.14.4
