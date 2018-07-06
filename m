@@ -1,131 +1,52 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 4/6] thermal: tsens: Add support for SDM845
-Date: Fri, 6 Jul 2018 11:47:41 -0600
-Message-ID: <CAL_JsqKXX6j3d1ErtXN1sTybXFx3diTusaiA8RC8reO_Lz0rSA@mail.gmail.com>
-References: <cover.1530533998.git.amit.kucheria@linaro.org>
- <43e3ae530334efab3fa0151430879f03731e9daa.1530533998.git.amit.kucheria@linaro.org>
- <20180703162619.GA17238@rob-hp-laptop> <CAHLCerNpifvM9nGXiE63-DQ0okP8+1wdxq52qo-K1TWzoYzjtQ@mail.gmail.com>
- <20180705203712.GA29531@rob-hp-laptop> <CAP245DVvdswALtZj0XTOsntHC4kz6a63DJ8qxeiry+9N77=CGw@mail.gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 3/4] clk: rockchip: add support for half divider
+Date: Fri, 06 Jul 2018 10:49:11 -0700
+Message-ID: <153089935104.143105.9532329321820731513@swboyd.mtv.corp.google.com>
+References: <1529029011-15021-1-git-send-email-zhangqing@rock-chips.com>
+ <1529029011-15021-4-git-send-email-zhangqing@rock-chips.com>
+ <153089585197.143105.10633953093490493144@swboyd.mtv.corp.google.com>
+ <5208192.saTfdjLqfi@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAP245DVvdswALtZj0XTOsntHC4kz6a63DJ8qxeiry+9N77=CGw@mail.gmail.com>
+In-Reply-To: <5208192.saTfdjLqfi@phil>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Siddartha Mohanadoss <smohanad@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Kees Cook <keescook@chromium.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Elaine Zhang <zhangqing@rock-chips.com>, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, cl@rock-chips.com, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 5, 2018 at 11:13 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
->
-> On Fri, Jul 6, 2018 at 2:07 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Wed, Jul 04, 2018 at 10:56:26PM +0530, Amit Kucheria wrote:
-> > > On Tue, Jul 3, 2018 at 9:56 PM, Rob Herring <robh@kernel.org> wrote:
-> > > > On Mon, Jul 02, 2018 at 06:14:07PM +0530, Amit Kucheria wrote:
-> > > >> SDM845 uses v2.4.0 of the TSENS IP block but the get_temp() function
-> > > >> appears to be identical across v2.x.y in code seen so far. We use the
-> > > >> generic get_temp() function.
-> > > >>
-> > > >> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > >> ---
-> > > >>  Documentation/devicetree/bindings/thermal/qcom-tsens.txt | 2 ++
-> > > >>  drivers/thermal/qcom/tsens-v2.c                          | 6 +++++-
-> > > >>  drivers/thermal/qcom/tsens.c                             | 6 ++++++
-> > > >>  drivers/thermal/qcom/tsens.h                             | 5 ++++-
-> > > >>  4 files changed, 17 insertions(+), 2 deletions(-)
-> > > >>
-> > > >> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> > > >> index 06195e8..075182e 100644
-> > > >> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> > > >> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> > > >> @@ -5,6 +5,8 @@ Required properties:
-> > > >>   - "qcom,msm8916-tsens" : For 8916 Family of SoCs
-> > > >>   - "qcom,msm8974-tsens" : For 8974 Family of SoCs
-> > > >>   - "qcom,msm8996-tsens" : For 8996 Family of SoCs
-> > > >> + - "qcom,tsens-v2.4.0"  : For SDM845 Family of SoCs
-> > > >> + - "qcom,tsens-v2"      : Generic fallback binding for any Soc using 2.x.y version of the tsens IP
-> > > >
-> > > > You need to show what are valid combinations of compatibles. Does v2
-> > > > apply to 8996? One valid combination per line.
-> > >
-> > > I've restructured qcom-tsens.txt to look like this:
-> > >
-> > > -----%<-------
-> > >
-> > > * QCOM SoC Temperature Sensor (TSENS)
-> > >
-> > > Required properties:
-> > > - compatible: must be one of the following:
-> > >     - "qcom,msm8916-tsens" (MSM8916)
-> > >     - "qcom,msm8974-tsens" (MSM8974)
-> > >     - "qcom,msm8996-tsens" (MSM8996)
-> > >     - "qcom,tsens-<ip_version>", "qcom,tsens-v2" (TSENS IP version and a
-> > >        generic v2 property as fallback except for MSM8996)
-> > >
-> > >   Examples with ip_version are:
-> > >     - "qcom,tsens-v2.4.0", "qcom,tsens-v2" (SDM845)
-> > >     - "qcom,tsens-v2.2.1", "qcom,tsens-v2" (MSM8998)
-> > >
-> > > -----%<-------
-> > >
-> > > 8996 would end up being something like this if needed, though we're
-> > > stuck with "qcom,msm8996-tsens":
-> > > "qcom,msm8996-tsens", "qcom,tsens-v2.1.0", "qcom,tsens-v2" (MSM8996)
-> >
-> > 3 versions here for 3 SoCs. I'm not getting that convinced version
-> > numbers really are better. I would assume that other QCom IP blocks
->
-> Yeah, it is a bit unfortunate that the 3-4 SoCs we're focusing on
-> getting supported upstream have different versions of the TSENS IP.
-> The other goal of this work was to make the upstream driver
-> feature-complete so we can make a case to switch to it in the
-> downstream trees, even on platforms that aren't being active
-> upstreamed. They'll still need to keep around those SoC-specific
-> one-liner patches in the downstream trees.
+Quoting Heiko Stuebner (2018-07-06 10:19:11)
+> Am Freitag, 6. Juli 2018, 18:50:51 CEST schrieb Stephen Boyd:
+> > Quoting Elaine Zhang (2018-06-14 19:16:50)
+> > > =
 
-Why? They can just use the "v2" fallback (which was sufficient for
-your original version). That's not my recommendation, but what do I
-care for downstream. Only upstream needs the specific strings to
-appease the annoying DT maintainers.
+> > > diff --git a/drivers/clk/rockchip/clk-half-divider.c b/drivers/clk/ro=
+ckchip/clk-half-divider.c
+> > > new file mode 100644
+> > > index 000000000000..fb7a6501e0c1
+> > > --- /dev/null
+> > > +++ b/drivers/clk/rockchip/clk-half-divider.c
+> > > @@ -0,0 +1,230 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Copyright (c) 2018 Fuzhou Rockchip Electronics Co., Ltd
+> > > + */
+> > > +
+> > > +#include <linux/slab.h>
+> > > +#include <linux/bitops.h>
+> > > +#include <linux/regmap.h>
+> > > +#include <linux/clk.h>
+> > =
 
-Plus, if it's not upstream, it doesn't exist. :)
+> > Is this include used?
+> =
 
-> > have versions too, but pretty much *every* *other* binding uses SoC names.
-> > Why is this one special?
->
-> I'm not an expert on all QC IPs, but this one _seems_ to be reused a
-> lot more than others.
->
-> > The other problem with versions is the mapping
-> > of versions to SoCs most likely can't be validated outside of QCom
-> > unless there's a version register.
->
-> There is in fact a HW version register that I was hoping to add
-> support for later.
+> nope, and so are bitops and regmap as well.
+> I've amended the commit patch accordingly.
+> =
 
-Yes, you should rely on that as much as possible. But I have seen h/w
-designers forget to update revision registers or there can be
-integration differences even if the IP version is the same.
+> =
 
-> > So, sorry to go in circles, but can you go back to qcom,<soc>-tsens. You
-> > can keep qcom,tsens-v2 as a fallback.
->
-> OK.
->
-> > Yes, it's annoying to have to update bindings for new SoCs. But it's
-> > trivial one line patches. Look at Renesas bindings. Maybe adding new
-> > ones will be scriptable once we move to json-schema binding docs.
->
-> I did look at the Renesas RCar bindings when restructuring the
-> documentation. They seem to have settled upon a 3-level fallback:
-> "soc-specific", "generic-no TZ", "generic-TZ". But
-> drivers/thermal/rcar_thermal.c seems to be compatible with only one
-> soc-specific property (thermal-r8a77995) and all other SoCs seem to be
-> just relying the fallbacks.
->
-> Anyways, I'll respin.
->
-> Thanks.
->
-> Regards,
-> Amit
+
+Cool. Thanks!
