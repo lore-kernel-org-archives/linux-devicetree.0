@@ -1,79 +1,64 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v4 1/5] dt-bindings: w1: document generic onewire bindings
-Date: Fri,  6 Jul 2018 07:35:48 +0200
-Message-ID: <20180706053552.11438-2-daniel@zonque.org>
-References: <20180706053552.11438-1-daniel@zonque.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180706053552.11438-1-daniel@zonque.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: zbr@ioremap.net, robh+dt@kernel.org, mark.rutland@arm.com, szabolcs.gyurko@tlt.hu
-Cc: sre@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, robert.jarzmik@free.fr, Daniel Mack <daniel@zonque.org>
+From: Luis Araneda <luaraneda@gmail.com>
+Subject: [PATCH v2 0/3] arm: dts: zynq: improvements and cleanup
+Date: Fri,  6 Jul 2018 02:01:55 -0400
+Message-ID: <20180706060158.24155-1-luaraneda@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Luis Araneda <luaraneda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a generic w1 bindings document that describes how w1
-slave deviceses are grouped under master nodes. It also augments the
-existing w1-gpio.txt document a bit.
+This series attempts to standardize device naming and improve
+its information for better identification
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- .../devicetree/bindings/w1/w1-gpio.txt        | 11 +++++---
- Documentation/devicetree/bindings/w1/w1.txt   | 25 +++++++++++++++++++
- 2 files changed, 33 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/w1/w1.txt
+The values of the "compatible" and "model" device-tree properties
+are corrected for some devices, adding complementary information
+when necessary
 
-diff --git a/Documentation/devicetree/bindings/w1/w1-gpio.txt b/Documentation/devicetree/bindings/w1/w1-gpio.txt
-index 6e09c35d9f1a..3d6554eac240 100644
---- a/Documentation/devicetree/bindings/w1/w1-gpio.txt
-+++ b/Documentation/devicetree/bindings/w1/w1-gpio.txt
-@@ -13,10 +13,15 @@ Optional properties:
-  - linux,open-drain: if specified, the data pin is considered in
- 		     open-drain mode.
- 
-+Also refer to the generic w1.txt document.
-+
- Examples:
- 
--	onewire@0 {
-+	onewire {
- 		compatible = "w1-gpio";
--		gpios = <&gpio 126 0>, <&gpio 105 0>;
--	};
-+		gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
- 
-+		battery {
-+			// ...
-+		};
-+	};
-diff --git a/Documentation/devicetree/bindings/w1/w1.txt b/Documentation/devicetree/bindings/w1/w1.txt
-new file mode 100644
-index 000000000000..05f26b27d898
---- /dev/null
-+++ b/Documentation/devicetree/bindings/w1/w1.txt
-@@ -0,0 +1,25 @@
-+Generic devicetree bindings for onewire (w1) busses
-+===================================================
-+
-+Onewire busses are described through nodes of their master bus controller.
-+Slave devices are listed as sub-nodes of such master devices. For now, only
-+one slave is allowed per bus master.
-+
-+
-+Example:
-+
-+	charger: charger {
-+		compatible = "gpio-charger";
-+		charger-type = "mains";
-+		gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	onewire {
-+		compatible = "w1-gpio";
-+		gpios = <&gpio 100 0>, <&gpio 101 0>;
-+
-+		battery {
-+			compatible = "maxim,ds2760";
-+			power-supplies = <&charger>;
-+		};
-+	};
+Changes since v1 (RFC):
+- Add values to compatible property instead of replacing them
+- Don't remove "internal" word from Xilinx boards on dt-bindings
+- Migrate content of adapteva dt-binding file into Xilinx's
+- Sort additional compatible strings alphabetically
+  by manufacturer
+- Dropped patch that renamed the zedboard development board
+  (no apparent benefit)
+- Dropped the patch that removed the "zynq" value from the
+  compatible strings (breaks the ABI)
+
+Luis Araneda (3):
+  arm: dts: zynq: Set correct manufacturer for ZedBoard and MicroZed
+    boards
+  dt-bindings: xilinx: Add missing zynq boards and sort entries
+  arm: dts: zynq: correct and improve the model property of dt files
+
+ .../devicetree/bindings/arm/adapteva.txt      |  7 -----
+ .../devicetree/bindings/arm/xilinx.txt        | 30 +++++++++++++++----
+ arch/arm/boot/dts/zynq-cc108.dts              |  2 +-
+ arch/arm/boot/dts/zynq-microzed.dts           |  4 +--
+ arch/arm/boot/dts/zynq-parallella.dts         |  2 +-
+ arch/arm/boot/dts/zynq-zc702.dts              |  2 +-
+ arch/arm/boot/dts/zynq-zc706.dts              |  2 +-
+ arch/arm/boot/dts/zynq-zc770-xm010.dts        |  2 +-
+ arch/arm/boot/dts/zynq-zc770-xm011.dts        |  2 +-
+ arch/arm/boot/dts/zynq-zc770-xm012.dts        |  2 +-
+ arch/arm/boot/dts/zynq-zc770-xm013.dts        |  2 +-
+ arch/arm/boot/dts/zynq-zed.dts                |  4 +--
+ arch/arm/boot/dts/zynq-zybo-z7.dts            |  2 +-
+ arch/arm/boot/dts/zynq-zybo.dts               |  2 +-
+ 14 files changed, 39 insertions(+), 26 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/adapteva.txt
+
 -- 
-2.17.1
+2.18.0
