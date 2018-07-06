@@ -1,79 +1,45 @@
-From: Rohit kumar <rohitkr@codeaurora.org>
-Subject: [PATCH v3 4/5] ASoC: dt-bindings: Update dt binding
-	name for apq8096
-Date: Fri,  6 Jul 2018 15:13:14 +0530
-Message-ID: <1530870195-13576-5-git-send-email-rohitkr@codeaurora.org>
-References: <1530870195-13576-1-git-send-email-rohitkr@codeaurora.org>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: Re: [PATCH v4 4/6] bus: ti-sysc: Add support for software reset
+Date: Fri, 6 Jul 2018 15:34:31 +0530
+Message-ID: <cf8652a1-019c-d423-9b44-0d62006734f8@ti.com>
+References: <20180705142319.19583-1-faiz_abbas@ti.com>
+ <20180705142319.19583-5-faiz_abbas@ti.com>
+ <20180705154758.GA112168@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1530870195-13576-1-git-send-email-rohitkr@codeaurora.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, plai@codeaurora.org, bgoswami@codeaurora.org, perex@perex.cz, srinivas.kandagatla@linaro.org, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rohit kumar <rohitkr@codeaurora.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180705154758.GA112168@atomide.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, paul@pwsan.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, robh+dt@kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Remove qcom prefix from machine driver dt bindings of
-apq8096 SoC.
+Hi,
 
-Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
----
- Documentation/devicetree/bindings/sound/qcom,apq8096.txt | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+On Thursday 05 July 2018 09:17 PM, Tony Lindgren wrote:
+> * Faiz Abbas <faiz_abbas@ti.com> [180705 14:24]:
+>> +static int sysc_reset(struct sysc *ddata)
+>> +{
+>> +	int offset = ddata->offsets[SYSC_SYSCONFIG];
+>> +	int val = sysc_read(ddata, offset);
+> 
+> Can you please just warn and return early for now if no
+> syss_mask is specified? Otherwise we'll have mysterious
+> errors if somebody leaves out "ti,hwmods" for module types
+> we do not yet support reset for.
 
-diff --git a/Documentation/devicetree/bindings/sound/qcom,apq8096.txt b/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
-index c7600a9..c814e86 100644
---- a/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
-+++ b/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
-@@ -7,7 +7,7 @@ This binding describes the APQ8096 sound card, which uses qdsp for audio.
- 	Value type: <stringlist>
- 	Definition: must be "qcom,apq8096-sndcard"
- 
--- qcom,audio-routing:
-+- audio-routing:
- 	Usage: Optional
- 	Value type: <stringlist>
- 	Definition:  A list of the connections between audio components.
-@@ -49,6 +49,12 @@ This binding describes the APQ8096 sound card, which uses qdsp for audio.
- 			"DMIC1"
- 			"DMIC2"
- 			"DMIC3"
-+
-+- model:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: The user-visible name of this sound card.
-+
- = dailinks
- Each subnode of sndcard represents either a dailink, and subnodes of each
- dailinks would be cpu/codec/platform dais.
-@@ -79,11 +85,16 @@ dailinks would be cpu/codec/platform dais.
- 	Value type: <phandle with arguments>
- 	Definition: dai phandle/s and port of CPU/CODEC/PLATFORM node.
- 
-+Obsolete:
-+	qcom,model: String for soundcard name (Use model instead)
-+	qcom,audio-routing: A list of the connections between audio components.
-+			    (Use audio-routing instead)
-+
- Example:
- 
- audio {
- 	compatible = "qcom,apq8096-sndcard";
--	qcom,model = "DB820c";
-+	model = "DB820c";
- 
- 	mm1-dai-link {
- 		link-name = "MultiMedia1";
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+RESET write to sysconfig can still happen even if there's no syss_mask
+right? Not all modules need to poll on reset status.
+
+Thanks,
+Faiz
