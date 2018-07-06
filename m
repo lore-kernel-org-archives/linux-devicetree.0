@@ -1,53 +1,28 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v5 1/4] arm64: dts: lg1312: DT fix
- s/#interrupts-cells/#interrupt-cells/
-Date: Fri,  6 Jul 2018 10:32:46 +0200
-Message-ID: <20180706083249.25399-2-geert+renesas@glider.be>
-References: <20180706083249.25399-1-geert+renesas@glider.be>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] arm64: dts: rockchip: corrected uart1 clock-names for rk3328
+Date: Fri, 06 Jul 2018 10:52:33 +0200
+Message-ID: <4047306.zuHpop0b3Q@phil>
+References: <1530864237-14891-1-git-send-email-huibin.hong@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180706083249.25399-1-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, "David S . Miller" <davem@davemloft.net>, Chanho Min <chanho.min@lge.com>
-Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Neil Armstrong <narmstrong@baylibre.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1530864237-14891-1-git-send-email-huibin.hong@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Huibin Hong <huibin.hong@rock-chips.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, sugar.zhang@rock-chips.com, david.wu@rock-chips.com, finley.xiao@rock-chips.com, robin.murphy@arm.com, william.wu@rock-chips.com, rocky.hao@rock-chips.com, klaus.goger@theobroma-systems.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Chanho Min <chanho.min@lge.com>
----
-v3:
-  - Add Acked-by,
+Hi Huibin,
 
-v2:
-  - Add Acked-by,
-  - Rebased.
----
- arch/arm64/boot/dts/lg/lg1312.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Am Freitag, 6. Juli 2018, 10:03:57 CEST schrieb Huibin Hong:
+> Corrected the uart clock-names or the uart driver might fail.
+> 
+> Signed-off-by: Huibin Hong <huibin.hong@rock-chips.com>
 
-diff --git a/arch/arm64/boot/dts/lg/lg1312.dtsi b/arch/arm64/boot/dts/lg/lg1312.dtsi
-index 860c8fb10795011f..052c8a1906ae737e 100644
---- a/arch/arm64/boot/dts/lg/lg1312.dtsi
-+++ b/arch/arm64/boot/dts/lg/lg1312.dtsi
-@@ -124,7 +124,7 @@
- 	amba {
- 		#address-cells = <2>;
- 		#size-cells = <1>;
--		#interrupts-cells = <3>;
-+		#interrupt-cells = <3>;
- 
- 		compatible = "simple-bus";
- 		interrupt-parent = <&gic>;
--- 
-2.17.1
+thanks for catching that issue. I've added a Fixes-tag and a stable-cc
+and applied the patch for 4.19
+
+
+Thanks
+Heiko
