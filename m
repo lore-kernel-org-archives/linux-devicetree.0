@@ -1,222 +1,201 @@
-Return-Path: <SRS0=G0Eu=JT=linaro.org=mathieu.poirier@kernel.org>
+Return-Path: <SRS0=WJ9a=JW=collabora.co.uk=sebastian.reichel@kernel.org>
+Date: Fri, 6 Jul 2018 15:58:31 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCH v5 2/6] power: reset: qcom-pon: Add Qcom PON driver
+Message-ID: <20180706135831.eernik77yvxts2r3@earth.universe>
+References: <20180628150850.15358-1-vkoul@kernel.org>
+ <20180628150850.15358-3-vkoul@kernel.org>
 MIME-Version: 1.0
-References: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
- <1527858967-16047-7-git-send-email-suzuki.poulose@arm.com>
- <20180612204802.GA15817@rob-hp-laptop> <a1c0749b-9c97-b45f-716f-a62ae07af278@arm.com>
- <5448BBB7-93FE-400F-9D87-FABF5DE0539C@arm.com> <c0d531ec-9201-bfd8-e6c3-9140698b0697@arm.com>
- <HE1PR0802MB24127EC935B9AF6F82AB3B6EEE7E0@HE1PR0802MB2412.eurprd08.prod.outlook.com>
- <075b99a1-2a29-f6dc-e9f2-99f895c27d35@arm.com> <CANLsYkx9cjV-bWg7aLg-kJT7x7DtwTHdsYzzM8A3+cFFnu_mNg@mail.gmail.com>
- <HE1PR0802MB24121F0EEF8D7D643BC391A1EE7E0@HE1PR0802MB2412.eurprd08.prod.outlook.com>
- <5e013d65-9931-6b8d-ce7c-4333309d4ada@arm.com> <CAL_Jsq+0kExVY33kdDoR6bAxbr2VzRUzW2j0k+2wmv4CSNVnpQ@mail.gmail.com>
- <79d24815-278a-5465-65eb-afd3535236e7@arm.com>
-In-Reply-To: <79d24815-278a-5465-65eb-afd3535236e7@arm.com>
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Date: Tue, 3 Jul 2018 10:15:32 -0600
-Message-ID: <CANLsYkzh7i165qYCCHWkdNbNPpwGSFgcL0358o3LZmdvmG_2Mg@mail.gmail.com>
-Subject: Re: [RFC PATCH 6/8] dts: coresight: Clean up the device tree graph bindings
-Content-Type: multipart/alternative; boundary="0000000000003bb44a05701aa02e"
-To: "Suzuki K. Poulose" <Suzuki.Poulose@arm.com>
-Cc: Rob Herring <robh@kernel.org>, Matt Sealey <Matt.Sealey@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, John Horley <John.Horley@arm.com>, Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ncwu3dd6n6scj4rx"
+Content-Disposition: inline
+In-Reply-To: <20180628150850.15358-3-vkoul@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: linux-input@vger.kernel.org, linux-pm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---0000000000003bb44a05701aa02e
-Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 3 Jul 2018 at 03:44, Suzuki K Poulose <Suzuki.Poulose@arm.com>
-wrote:
-
-> Hi Rob,
->
-> On 14/06/18 14:59, Rob Herring wrote:
-> > On Thu, Jun 14, 2018 at 2:53 AM, Suzuki K Poulose
-> > <Suzuki.Poulose@arm.com> wrote:
-> >> On 13/06/18 22:07, Matt Sealey wrote:
-> >>>
-> >>>
-> >>>
-> >>>> -----Original Message-----
-> >>>> From: Mathieu Poirier <mathieu.poirier@linaro.org>
-> >>>>
-> >>>>> So, if the suggestion is to use an existing property "unit", I am
-> fine
-> >>>>> with it, if people agree to it.
-> >>>>
-> >>>>
-> >>>> If we're going to have something sharply different than ACPI I prefer
-> >>>> Rob's idea.
-> >>
-> >>
-> >> No, the above comment is about using "unit" ( if it is a standard
-> property
-> >> for specifying something specific to hardware) instead of
-> "coresight,hwid".
-> >> I would prefer to stick to the DT graph bindings, because :
-> >
-> > "unit" is not a standard property and I don't like it either.
-> >
-> >>
-> >> 1) The connections are bi-directional => Well, not necessarily
-> >> bi-directional
-> >> in terms of the data flow. But the connection information is critical.
-> i.e,
-> >> we need information about both the end-points of a connection, which
-> the DT
-> >> graph bindings solves.
-> >>
-> >> All we are missing is a way for specifying the "hardware port" number
-> and
-> >> the
-> >> direction of flow. I don't see why do we need to create something new
-> just
-> >> for
-> >> these two properties for something that exists today and works
-> reasonably
-> >> well
-> >> for the usecase.
-> >
-> > If you have "in-ports" and "out-ports" nodes, then that gives you
-> > direction and you can use reg for the "hardware port".
-> >
-> > in-ports {
-> >    port@0 {
-> >      reg = <0>;
-> >      endpoint {...};
-> >    };
-> >    port@1 {
-> >      reg = <1>;
-> >      endpoint {...};
-> >    };
-> > };
-> > out-ports {
-> >    port@0 {
-> >      reg = <0>;
-> >      endpoint {...};
-> >    };
-> > };
-> >
-> > I'll need to check, but dtc may need an update to not warn about this.
-> >
->
-> I did a quick check with the upstream dtc tool and the above form is
-> doesn't generate any errors.
->
-> Mathieu, Rob,
->
-> Shall I proceed with the proposal above ?
->
-
-
-Yes - at the very least it will provide a new reference point to work form.
-
-Thanks,
-Mathieu
-
-
->
->
-Suzuki
->
-
---0000000000003bb44a05701aa02e
-Content-Type: text/html; charset="UTF-8"
+--ncwu3dd6n6scj4rx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><br><br><div class=3D"gmail_quote"><div dir=3D"ltr">On Tue=
-, 3 Jul 2018 at 03:44, Suzuki K Poulose &lt;<a href=3D"mailto:Suzuki.Poulos=
-e@arm.com">Suzuki.Poulose@arm.com</a>&gt; wrote:<br></div><blockquote class=
-=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padd=
-ing-left:1ex">Hi Rob,<br>
-<br>
-On 14/06/18 14:59, Rob Herring wrote:<br>
-&gt; On Thu, Jun 14, 2018 at 2:53 AM, Suzuki K Poulose<br>
-&gt; &lt;<a href=3D"mailto:Suzuki.Poulose@arm.com" target=3D"_blank">Suzuki=
-.Poulose@arm.com</a>&gt; wrote:<br>
-&gt;&gt; On 13/06/18 22:07, Matt Sealey wrote:<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt;&gt; -----Original Message-----<br>
-&gt;&gt;&gt;&gt; From: Mathieu Poirier &lt;<a href=3D"mailto:mathieu.poirie=
-r@linaro.org" target=3D"_blank">mathieu.poirier@linaro.org</a>&gt;<br>
-&gt;&gt;&gt;&gt;<br>
-&gt;&gt;&gt;&gt;&gt; So, if the suggestion is to use an existing property &=
-quot;unit&quot;, I am fine<br>
-&gt;&gt;&gt;&gt;&gt; with it, if people agree to it.<br>
-&gt;&gt;&gt;&gt;<br>
-&gt;&gt;&gt;&gt;<br>
-&gt;&gt;&gt;&gt; If we&#39;re going to have something sharply different tha=
-n ACPI I prefer<br>
-&gt;&gt;&gt;&gt; Rob&#39;s idea.<br>
-&gt;&gt;<br>
-&gt;&gt;<br>
-&gt;&gt; No, the above comment is about using &quot;unit&quot; ( if it is a=
- standard property<br>
-&gt;&gt; for specifying something specific to hardware) instead of &quot;co=
-resight,hwid&quot;.<br>
-&gt;&gt; I would prefer to stick to the DT graph bindings, because :<br>
-&gt; <br>
-&gt; &quot;unit&quot; is not a standard property and I don&#39;t like it ei=
-ther.<br>
-&gt; <br>
-&gt;&gt;<br>
-&gt;&gt; 1) The connections are bi-directional =3D&gt; Well, not necessaril=
-y<br>
-&gt;&gt; bi-directional<br>
-&gt;&gt; in terms of the data flow. But the connection information is criti=
-cal. i.e,<br>
-&gt;&gt; we need information about both the end-points of a connection, whi=
-ch the DT<br>
-&gt;&gt; graph bindings solves.<br>
-&gt;&gt;<br>
-&gt;&gt; All we are missing is a way for specifying the &quot;hardware port=
-&quot; number and<br>
-&gt;&gt; the<br>
-&gt;&gt; direction of flow. I don&#39;t see why do we need to create someth=
-ing new just<br>
-&gt;&gt; for<br>
-&gt;&gt; these two properties for something that exists today and works rea=
-sonably<br>
-&gt;&gt; well<br>
-&gt;&gt; for the usecase.<br>
-&gt; <br>
-&gt; If you have &quot;in-ports&quot; and &quot;out-ports&quot; nodes, then=
- that gives you<br>
-&gt; direction and you can use reg for the &quot;hardware port&quot;.<br>
-&gt; <br>
-&gt; in-ports {<br>
-&gt;=C2=A0 =C2=A0 port@0 {<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 reg =3D &lt;0&gt;;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 endpoint {...};<br>
-&gt;=C2=A0 =C2=A0 };<br>
-&gt;=C2=A0 =C2=A0 port@1 {<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 reg =3D &lt;1&gt;;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 endpoint {...};<br>
-&gt;=C2=A0 =C2=A0 };<br>
-&gt; };<br>
-&gt; out-ports {<br>
-&gt;=C2=A0 =C2=A0 port@0 {<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 reg =3D &lt;0&gt;;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 endpoint {...};<br>
-&gt;=C2=A0 =C2=A0 };<br>
-&gt; };<br>
-&gt; <br>
-&gt; I&#39;ll need to check, but dtc may need an update to not warn about t=
-his.<br>
-&gt; <br>
-<br>
-I did a quick check with the upstream dtc tool and the above form is<br>
-doesn&#39;t generate any errors.<br>
-<br>
-Mathieu, Rob,<br>
-<br>
-Shall I proceed with the proposal above ?<br>=C2=A0</blockquote><div><br></=
-div><div>Yes - at the very least it will provide a new reference point to w=
-ork form.</div><div><br></div><div>Thanks,</div><div>Mathieu</div><div>=C2=
-=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;borde=
-r-left:1px #ccc solid;padding-left:1ex">=C2=A0<br></blockquote><blockquote =
-class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid=
-;padding-left:1ex">
-Suzuki<br>
-</blockquote></div></div>
+Hi,
 
---0000000000003bb44a05701aa02e--
+On Thu, Jun 28, 2018 at 08:38:46PM +0530, Vinod Koul wrote:
+> Add support Qualcomm PM8xxx PON which is responsible for reboot
+> mode support.
+>=20
+> Co-developed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+
+Thanks, queued to power-supply-next.
+
+-- Sebastian
+
+>  drivers/power/reset/Kconfig    | 11 +++++
+>  drivers/power/reset/Makefile   |  1 +
+>  drivers/power/reset/qcom-pon.c | 91 ++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 103 insertions(+)
+>  create mode 100644 drivers/power/reset/qcom-pon.c
+>=20
+> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+> index df58fc878b3e..6533aa560aa1 100644
+> --- a/drivers/power/reset/Kconfig
+> +++ b/drivers/power/reset/Kconfig
+> @@ -104,6 +104,17 @@ config POWER_RESET_MSM
+>  	help
+>  	  Power off and restart support for Qualcomm boards.
+> =20
+> +config POWER_RESET_QCOM_PON
+> +	tristate "Qualcomm power-on driver"
+> +	depends on ARCH_QCOM
+> +	depends on MFD_SPMI_PMIC
+> +	select REBOOT_MODE
+> +	help
+> +	  Power On support for Qualcomm boards.
+> +	  If you have a Qualcomm platform and need support for
+> +	  power-on and reboot reason, Say Y.
+> +	  If unsure, Say N.
+> +
+>  config POWER_RESET_OCELOT_RESET
+>  	bool "Microsemi Ocelot reset driver"
+>  	depends on MSCC_OCELOT || COMPILE_TEST
+> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+> index 7778c7485cf1..0aebee954ac1 100644
+> --- a/drivers/power/reset/Makefile
+> +++ b/drivers/power/reset/Makefile
+> @@ -11,6 +11,7 @@ obj-$(CONFIG_POWER_RESET_GPIO) +=3D gpio-poweroff.o
+>  obj-$(CONFIG_POWER_RESET_GPIO_RESTART) +=3D gpio-restart.o
+>  obj-$(CONFIG_POWER_RESET_HISI) +=3D hisi-reboot.o
+>  obj-$(CONFIG_POWER_RESET_MSM) +=3D msm-poweroff.o
+> +obj-$(CONFIG_POWER_RESET_QCOM_PON) +=3D qcom-pon.o
+>  obj-$(CONFIG_POWER_RESET_OCELOT_RESET) +=3D ocelot-reset.o
+>  obj-$(CONFIG_POWER_RESET_PIIX4_POWEROFF) +=3D piix4-poweroff.o
+>  obj-$(CONFIG_POWER_RESET_LTC2952) +=3D ltc2952-poweroff.o
+> diff --git a/drivers/power/reset/qcom-pon.c b/drivers/power/reset/qcom-po=
+n.c
+> new file mode 100644
+> index 000000000000..0c4caaa7e88f
+> --- /dev/null
+> +++ b/drivers/power/reset/qcom-pon.c
+> @@ -0,0 +1,91 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2017-18 Linaro Limited
+> +
+> +#include <linux/delay.h>
+> +#include <linux/errno.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reboot.h>
+> +#include <linux/reboot-mode.h>
+> +#include <linux/regmap.h>
+> +
+> +#define PON_SOFT_RB_SPARE		0x8f
+> +
+> +struct pm8916_pon {
+> +	struct device *dev;
+> +	struct regmap *regmap;
+> +	u32 baseaddr;
+> +	struct reboot_mode_driver reboot_mode;
+> +};
+> +
+> +static int pm8916_reboot_mode_write(struct reboot_mode_driver *reboot,
+> +				    unsigned int magic)
+> +{
+> +	struct pm8916_pon *pon =3D container_of
+> +			(reboot, struct pm8916_pon, reboot_mode);
+> +	int ret;
+> +
+> +	ret =3D regmap_update_bits(pon->regmap,
+> +				 pon->baseaddr + PON_SOFT_RB_SPARE,
+> +				 0xfc, magic << 2);
+> +	if (ret < 0)
+> +		dev_err(pon->dev, "update reboot mode bits failed\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static int pm8916_pon_probe(struct platform_device *pdev)
+> +{
+> +	struct pm8916_pon *pon;
+> +	int error;
+> +
+> +	pon =3D devm_kzalloc(&pdev->dev, sizeof(*pon), GFP_KERNEL);
+> +	if (!pon)
+> +		return -ENOMEM;
+> +
+> +	pon->dev =3D &pdev->dev;
+> +
+> +	pon->regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!pon->regmap) {
+> +		dev_err(&pdev->dev, "failed to locate regmap\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	error =3D of_property_read_u32(pdev->dev.of_node, "reg",
+> +				     &pon->baseaddr);
+> +	if (error)
+> +		return error;
+> +
+> +	pon->reboot_mode.dev =3D &pdev->dev;
+> +	pon->reboot_mode.write =3D pm8916_reboot_mode_write;
+> +	error =3D devm_reboot_mode_register(&pdev->dev, &pon->reboot_mode);
+> +	if (error) {
+> +		dev_err(&pdev->dev, "can't register reboot mode\n");
+> +		return error;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, pon);
+> +
+> +	return devm_of_platform_populate(&pdev->dev);
+> +}
+> +
+> +static const struct of_device_id pm8916_pon_id_table[] =3D {
+> +	{ .compatible =3D "qcom,pm8916-pon" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, pm8916_pon_id_table);
+> +
+> +static struct platform_driver pm8916_pon_driver =3D {
+> +	.probe =3D pm8916_pon_probe,
+> +	.driver =3D {
+> +		.name =3D "pm8916-pon",
+> +		.of_match_table =3D of_match_ptr(pm8916_pon_id_table),
+> +	},
+> +};
+> +module_platform_driver(pm8916_pon_driver);
+> +
+> +MODULE_DESCRIPTION("pm8916 Power On driver");
+> +MODULE_LICENSE("GPL v2");
+> --=20
+> 2.14.4
+>=20
+
+--ncwu3dd6n6scj4rx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAls/dYcACgkQ2O7X88g7
++pqumg//a1O3wRUn5uez0MOMzZp134Sg2+l4jl9bf5n3lI8NzbKtrnnWD0Q7y0tP
+KwTZntzO/wPqysz9s6Ab3wSkNFz085TgqSQ01oYswPMqhV2JUWw4J2YNKAxcdX+5
+6YiDqEbo2qMGnvuFmeGiO/Xelw+5Y+rQeuoQvqJYUty2h4OaHwalzuJzVuBeAciM
+KICfGgNxh9WiLJ7D9H1T02Fm2LZUDli0EXN/3UA8OtiYjaJEn9d2YQVPa6HVeGro
+sW5wgbYGy4y5/OLX1WQtp/K+1MrDUhH4IhpkFZuc6LrtByqFyEX3AUM01V+er1Mo
+D6kQb0ODnVcVHForT6S4aZa2Hfy7Dj8H37ES0yMihtdiOk66MAF4zcIh5Kh2mzhu
+sDaMhU4S5tRYXHl1esqTW+pwXSerTwyGTX2CgiZ1cTEDAdMOoS1STa5aRZduARL8
+FhO0xriRQGs/yjs6KhmiIaF/c2fq6EQ0CYROrO9WmZk4c1xmUdpL6I37swk1wgrQ
+CVwZClkPnqa0tlq7K2vk7sLlZnvxg2iu9b6tQr72sT3Iu1aKN2Vd/iaGlly1HhDV
+JM0LAK+xpKAnc5rSrKn8Rsa+ggkdfCIL+RO9UXZLvgpAhDJFmba3TOhlZ7CXAcOQ
+QY2eGEtMBivstUmHY3ZBpF6lMXLK7/Q/YTAhT8mEtjEg4PTcM44=
+=Xrsv
+-----END PGP SIGNATURE-----
+
+--ncwu3dd6n6scj4rx--
