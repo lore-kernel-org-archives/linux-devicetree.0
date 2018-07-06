@@ -1,12 +1,15 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH 00/17] Allwinner R40 HDMI refactoring
-Date: Fri,  6 Jul 2018 19:50:56 +0200
-Message-ID: <20180706175113.26698-1-jernej.skrabec@siol.net>
+Subject: [PATCH 03/17] ARM: dts: sun8i: r40: Remove fallback
+ display engine compatible
+Date: Fri,  6 Jul 2018 19:50:59 +0200
+Message-ID: <20180706175113.26698-4-jernej.skrabec@siol.net>
+References: <20180706175113.26698-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBBGZ73MQKGQERFOA5GQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBCWZ73MQKGQEBPDGMHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180706175113.26698-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -17,56 +20,29 @@ To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@publ
 Cc: airlied-cv59FeDIM0c@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This series fixes several issues found in R40 HDMI patch series after
-it was applied. Conversation can be found here:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2018-June/586011.html
+R40 has pretty unique display pipeline. Because of that, H3 display
+engine compatible fallback should be removed.
 
-One issue raised in that thread is probably not solved (conversation
-still on going), but I want to send these patches for review before
-I'm going on vacation.
+Fixes: 05a43a262d03 ("ARM: dts: sun8i: r40: Add HDMI pipeline")
 
-There is also additional DW HDMI driver fix not mentioned in mails.
+Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-r40.dtsi | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Patches are based on latest linux-next (next-20180706) and are ordered
-in such way that they don't break R40 HDMI at any time. Because of that
-I suggest that whole series goes through drm-misc to preserve that order.
-
-I also tested those patches on H3 to make sure it doesn't break other
-platforms. However, it would be nice to test for regressions also on
-older SoCs (with DE1).
-
-Best regards,
-Jernej
-
-Jernej Skrabec (17):
-  dt-bindings: display: sun4i-drm: Add R40 display engine compatible
-  drm/sun4i: Add R40 display engine compatible
-  ARM: dts: sun8i: r40: Remove fallback display engine compatible
-  drm/sun4i: tcon-top: Cleanup clock handling
-  drm/sun4i: tcon: Release node when traversing of graph
-  dt-bindings: display: sun4i-drm: Add R40 TV TCON description
-  drm/sun4i: DW HDMI: Release nodes if error happens during CRTC search
-  ARM: dts: sun8i: r40: Add mixer ids to TCON TOP
-  drm/sun4i: mixer: Read id from DT
-  drm/sun4i: tcon-top: Add helpers for switching mux
-  drm/sun4i: tcon: Add another way for matching mixers with tcon
-  drm/sun4i: tcon: Add support for R40 TCON
-  ARM: dts: sun8i: r40: Remove fallback compatible for TCON TV
-  ARM: dts: sun8i: r40: Add missing TCON-TOP - TCON connections
-  ARM: dts: sun8i: r40: Disable TCONs by default.
-  drm/sun4i: tcon-top: Remove mux configuration at probe time
-  dt-bindings: display: sun4i-drm: Fix order of DW HDMI PHY compatibles
-
- .../bindings/display/sunxi/sun4i-drm.txt      |   6 +-
- .../boot/dts/sun8i-r40-bananapi-m2-ultra.dts  |  20 +-
- arch/arm/boot/dts/sun8i-r40.dtsi              |  65 ++++++-
- drivers/gpu/drm/sun4i/sun4i_drv.c             |   1 +
- drivers/gpu/drm/sun4i/sun4i_tcon.c            |  92 ++++++++-
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         |  15 +-
- drivers/gpu/drm/sun4i/sun8i_mixer.c           |  35 +++-
- drivers/gpu/drm/sun4i/sun8i_tcon_top.c        | 183 ++++++++----------
- drivers/gpu/drm/sun4i/sun8i_tcon_top.h        |   4 +
- 9 files changed, 278 insertions(+), 143 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+index c95a59aac48f..2afb079a3776 100644
+--- a/arch/arm/boot/dts/sun8i-r40.dtsi
++++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+@@ -102,8 +102,7 @@
+ 	};
+ 
+ 	de: display-engine {
+-		compatible = "allwinner,sun8i-r40-display-engine",
+-			     "allwinner,sun8i-h3-display-engine";
++		compatible = "allwinner,sun8i-r40-display-engine";
+ 		allwinner,pipelines = <&mixer0>, <&mixer1>;
+ 		status = "disabled";
+ 	};
 -- 
 2.18.0
