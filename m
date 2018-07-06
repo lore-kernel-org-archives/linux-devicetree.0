@@ -1,92 +1,29 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH RESEND] ARM64: dts: meson-axg: add the audio clock controller
-Date: Fri,  6 Jul 2018 16:43:05 +0200
-Message-ID: <20180706144305.30116-1-jbrunet@baylibre.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v4 3/5] w1: core: match sub-nodes of bus masters in
+ devicetree
+Date: Fri, 6 Jul 2018 16:51:33 +0200
+Message-ID: <20180706145133.GA8930@kroah.com>
+References: <20180706053552.11438-1-daniel@zonque.org>
+ <20180706053552.11438-4-daniel@zonque.org>
+ <20180706135205.dkcrhbmaak2iteyw@earth.universe>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180706135205.dkcrhbmaak2iteyw@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Evgeniy Polyakov <zbr@ioremap.net>, Daniel Mack <daniel@zonque.org>, robh+dt@kernel.org, mark.rutland@arm.com, szabolcs.gyurko@tlt.hu, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, robert.jarzmik@free.fr
 List-Id: devicetree@vger.kernel.org
 
-Add the audio clock controller which is part of the audio bus
-This controller takes 8 input plls, and the usual clock gate, from the
-main clock controller. It provides the clocs for the all the devices of
-the audio subsystem, such as tdms, spdif, pdm, etc.
+On Fri, Jul 06, 2018 at 03:52:05PM +0200, Sebastian Reichel wrote:
+> Hi Greg & Evgeniy,
+> 
+> I suggest, that I take this patch and the DT bindings together
+> with the power-supply changes, once the bindings have been
+> reviewed by Rob (Herring). I will prepare an immutable branch,
+> that can be pulled into w1 as needed. Are you fine with this?
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
+You can take it, no need to mess with me :)
 
-Resend to fix typo reported by Martin in the commit description.
-(Thx Martin !)
-
-Kevin,
-
-Please note that this change depends on the axg audio clock bindings [0].
-It explains the problem reported by kbuild robot
-It will be part of our PR to clock in this cycle.
-
-As usual, I've prepared a topic branch with the DT changes for you.
-Please, let me know when you need a tag on it.
-
-Cheers
-Jerome
-
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 36 ++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index aa1a42407466..56d334be9f85 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -6,6 +6,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/axg-audio-clkc.h>
- #include <dt-bindings/clock/axg-clkc.h>
- #include <dt-bindings/clock/axg-aoclkc.h>
- #include <dt-bindings/gpio/meson-axg-gpio.h>
-@@ -155,6 +156,41 @@
- 			};
- 		};
- 
-+		audio: bus@ff642000 {
-+			compatible = "simple-bus";
-+			reg = <0x0 0xff642000 0x0 0x2000>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x0 0x0 0x0 0xff642000 0x0 0x2000>;
-+
-+			clkc_audio: clock-controller@0 {
-+				compatible = "amlogic,axg-audio-clkc";
-+				reg = <0x0 0x0 0x0 0xb4>;
-+				#clock-cells = <1>;
-+
-+				clocks = <&clkc CLKID_AUDIO>,
-+					 <&clkc CLKID_MPLL0>,
-+					 <&clkc CLKID_MPLL1>,
-+					 <&clkc CLKID_MPLL2>,
-+					 <&clkc CLKID_MPLL3>,
-+					 <&clkc CLKID_HIFI_PLL>,
-+					 <&clkc CLKID_FCLK_DIV3>,
-+					 <&clkc CLKID_FCLK_DIV4>,
-+					 <&clkc CLKID_GP0_PLL>;
-+				clock-names = "pclk",
-+					      "mst_in0",
-+					      "mst_in1",
-+					      "mst_in2",
-+					      "mst_in3",
-+					      "mst_in4",
-+					      "mst_in5",
-+					      "mst_in6",
-+					      "mst_in7";
-+
-+				resets = <&reset RESET_AUDIO>;
-+			};
-+		};
-+
- 		cbus: bus@ffd00000 {
- 			compatible = "simple-bus";
- 			reg = <0x0 0xffd00000 0x0 0x25000>;
--- 
-2.14.4
+greg k-h
