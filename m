@@ -1,118 +1,54 @@
-From: Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 5/6] drm/i2c: tda998x: allocate tda998x_priv inside
- tda998x_create()
-Date: Fri, 06 Jul 2018 15:59:09 +0100
-Message-ID: <E1fbSCT-00076w-SL@rmk-PC.armlinux.org.uk>
-References: <20180706145748.GA17271@n2100.armlinux.org.uk>
+From: Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v4 0/2] arm64: rockchip: support RK3399 Ficus board
+Date: Fri,  6 Jul 2018 12:08:16 -0300
+Message-ID: <20180706150818.5631-1-ezequiel@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180706145748.GA17271@n2100.armlinux.org.uk>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Andrzej Hajda <a.hajda@samsung.com>, David Airlie <airlied@linux.ie>, Jyri Sarha <jsarha@ti.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel@ffwll.ch>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Move the tda998x_priv allocation inside tda998x_create() and simplify
-the tda998x_create()'s arguments.  Pass the same to tda998x_destroy().
+Fourth round for the RK3399 Ficus support.
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
----
- drivers/gpu/drm/i2c/tda998x_drv.c | 32 +++++++++++++++++---------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+Changes from v3:
+ * Fixed a regulator node name, as noted by Rob.
+ * Fixed wrong alphabetical order in vendors prefix patch, also noted by Rob.
 
-diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-index 53f110e7d433..08ccaf8cf852 100644
---- a/drivers/gpu/drm/i2c/tda998x_drv.c
-+++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-@@ -1562,8 +1562,10 @@ static const struct drm_bridge_funcs tda998x_bridge_funcs = {
- 	.enable = tda998x_bridge_enable,
- };
- 
--static void tda998x_destroy(struct tda998x_priv *priv)
-+static void tda998x_destroy(struct device *dev)
- {
-+	struct tda998x_priv *priv = dev_get_drvdata(dev);
-+
- 	drm_bridge_remove(&priv->bridge);
- 
- 	/* disable all IRQs and free the IRQ handler */
-@@ -1648,13 +1650,21 @@ static void tda998x_set_config(struct tda998x_priv *priv,
- 	priv->audio_params = p->audio_params;
- }
- 
--static int tda998x_create(struct i2c_client *client, struct tda998x_priv *priv)
-+static int tda998x_create(struct device *dev)
- {
-+	struct i2c_client *client = to_i2c_client(dev);
- 	struct device_node *np = client->dev.of_node;
- 	struct i2c_board_info cec_info;
-+	struct tda998x_priv *priv;
- 	u32 video;
- 	int rev_lo, rev_hi, ret;
- 
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(dev, priv);
-+
- 	mutex_init(&priv->mutex);	/* protect the page access */
- 	mutex_init(&priv->audio_mutex); /* protect access from audio thread */
- 	mutex_init(&priv->edid_mutex);
-@@ -1831,7 +1841,7 @@ static int tda998x_create(struct i2c_client *client, struct tda998x_priv *priv)
- 	return 0;
- 
- fail:
--	tda998x_destroy(priv);
-+	tda998x_destroy(dev);
- err_irq:
- 	return ret;
- }
-@@ -1883,30 +1893,22 @@ static int tda998x_encoder_init(struct device *dev, struct drm_device *drm)
- 
- static int tda998x_bind(struct device *dev, struct device *master, void *data)
- {
--	struct i2c_client *client = to_i2c_client(dev);
- 	struct drm_device *drm = data;
--	struct tda998x_priv *priv;
- 	int ret;
- 
--	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
--	if (!priv)
--		return -ENOMEM;
--
--	dev_set_drvdata(dev, priv);
--
--	ret = tda998x_create(client, priv);
-+	ret = tda998x_create(dev);
- 	if (ret)
- 		return ret;
- 
- 	ret = tda998x_encoder_init(dev, drm);
- 	if (ret) {
--		tda998x_destroy(priv);
-+		tda998x_destroy(dev);
- 		return ret;
- 	}
- 	return 0;
- 
- err_encoder:
--	tda998x_destroy(priv);
-+	tda998x_destroy(dev);
- 	return ret;
- }
- 
-@@ -1917,7 +1919,7 @@ static void tda998x_unbind(struct device *dev, struct device *master,
- 
- 	drm_connector_cleanup(&priv->connector);
- 	drm_encoder_cleanup(&priv->encoder);
--	tda998x_destroy(priv);
-+	tda998x_destroy(dev);
- }
- 
- static const struct component_ops tda998x_ops = {
+Changes from v2:
+ * Dropped rk3399.dtsi changes and rebased on top of Randy's patch.
+ * Removed double empty line.
+ * Coalesced schematics comment
+
+Changes from v1:
+ * Dropoed USB support as it's not working.
+ * Added schematics.
+ * Splitted rk3399.dtsi from new ficus.dts file.
+ * Added new vendor.
+ * Cleaned regulators syntax and stlye.
+
+Series based on: 600b359d2b98 ("arm64: dts: rockchip: add some common pin-settings to rk3399").
+
+Ezequiel Garcia (2):
+  dt-bindings: Add vendor prefix for Vamrs Ltd.
+  arm64: dts: rockchip: add 96boards RK3399 Ficus board
+
+ .../devicetree/bindings/arm/rockchip.txt      |   5 +
+ .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ arch/arm64/boot/dts/rockchip/rk3399-ficus.dts | 514 ++++++++++++++++++
+ 4 files changed, 521 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
+
 -- 
-2.7.4
+2.18.0.rc2
