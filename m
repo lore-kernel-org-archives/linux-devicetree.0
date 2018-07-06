@@ -1,74 +1,70 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCH 2/2] dt-bindings: power: sbs-battery: re-document
- "ti,bq20z75"
-Date: Fri, 6 Jul 2018 13:31:14 +0200
-Message-ID: <20180706113114.sm5ntnoxozp3xo67@earth.universe>
-References: <20180612202042.107603-1-briannorris@chromium.org>
- <20180612202042.107603-2-briannorris@chromium.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fimiip3atuknqmhj"
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] of/fdt: avoid undefined behaviour in populate_properties()
+Date: Fri,  6 Jul 2018 12:37:15 +0100
+Message-ID: <20180706113715.30053-1-mark.rutland@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180612202042.107603-2-briannorris@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Rhyland Klein <rklein@nvidia.com>, Alexandru Stan <amstan@chromium.org>, Guenter Roeck <linux@roeck-us.net>, Doug Anderson <dianders@chromium.org>, Phil Reid <preid@electromag.com.au>
+To: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+We unflatten a device tree in two passes: the first calculating the size
+of the unflattened tree, and the second performing the actual
+unflattening into a suitably-sized buffer.
 
---fimiip3atuknqmhj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+During the first (dryrun) pass, the memory pool is NULL, and we derive
+other pointers from this. Mostly these are done though intermediate
+casts to unsigned long, which prevents the compiler from being able to
+observe this as undefined behaviour. However, in populate_properties()
+we derive the pprev pointer from the np pointer, which is NULL if it is
+the first element allocated from the memory pool.
 
-Hi,
+This is detected by UBSAN:
 
-On Tue, Jun 12, 2018 at 01:20:42PM -0700, Brian Norris wrote:
-> This compatible property was documented before the driver was renamed to
-> "SBS" (see commit e57f1b68c406 ("devicetree-bindings: Propagate
-> bq20z75->sbs rename to dt bindings")). The driver has continued to
-> support this property as an alternative to "sbs,sbs-battery", and
-> because we've noticed there are some lingering TI specifics (in the
-> manufacturer-specific portion of the SBS spec), we'd like to start using
-> this property again to differentiate.
->=20
-> In typical DT fashion, the <vendor>,<part-number> specifics should be
-> used ahead of the generic "sbs,sbs-battery" string, so we can handle
-> vendor specifics -- so document this. Language borrowed mostly from
-> Documentation/devicetree/bindings/power/supply/sbs_sbs-charger.txt
->=20
-> Also fixup the example to use this property (it's already implying that
-> it's "bq20z75@b"); fixup the node name to be generic ("battery", not
-> "<part-number>"); and fixup some whitespace.
->=20
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> Acked-by: Rhyland Klein <rklein@nvidia.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
+================================================================================
+UBSAN: Undefined behaviour in drivers/of/fdt.c:190:8
+member access within null pointer of type 'struct device_node'
+CPU: 0 PID: 0 Comm: swapper Not tainted 4.18.0-rc3+ #13
+Hardware name: ARM Juno development board (r1) (DT)
+Call trace:
+ dump_backtrace+0x0/0x458
+ show_stack+0x20/0x30
+ dump_stack+0x18c/0x248
+ ubsan_epilogue+0x18/0x94
+ handle_null_ptr_deref+0x1d4/0x228
+ __ubsan_handle_type_mismatch_v1+0x188/0x1e0
+ unflatten_dt_nodes+0xd40/0x1000
+ __unflatten_device_tree+0x58/0x248
+ unflatten_device_tree+0x38/0x4c
+ setup_arch+0x3b0/0xcc4
+ start_kernel+0xd8/0xb9c
+================================================================================
 
-Thanks, queued to power-supply-next.
+In the dryrun pass we don't actually use the pprev value, so let's only
+set it when !dryrun, and avoid the undefined behaviour.
 
--- Sebastian
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org
+---
+ drivers/of/fdt.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---fimiip3atuknqmhj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAls/UwEACgkQ2O7X88g7
-+popIxAAgLipLBdCr+5abWLW73hZoUSBRmAc5EfVLON3EgaX3h9FFwZq0zAWiP17
-UAaVzQTwrK2zBmNjQjuv593Fpq4SalNThcZheIt11TuMgobpmCUa1Qjd5PIlAZ0V
-iFPLRzuURaQESFDgJUyELmWT2al13A8P6BYvC1yoSG7KB3jmIqCoAZdbMvY1N+w0
-S2bnMxINjR+ViDJFl9VzG5sYqzYDTsWUYlnJMsbe36u7ed4ZFPdsAtyMQ2u7+huf
-wtDZdjLz7pdcrBkU//UbBJ9m+oP+917lkUKkISjjAA5i8vqYhvZF79+uFwI2YBSf
-3RB5FBabv3RYJr08tjtqnXtfOUn9bpPtFhZNM5B5JcK1Dh+5ZexI+vVR7BnLfnUd
-1jfLkY26bJqKcjifUEGVtZ3H4gQtd391Wpcd+C2t2sHnJxV0b1ToENTju2YR7Wwr
-UvMa0y9w4XtXgG11rvnEQSnvm76+5y+sRB+sv4HB6/7FpRG0UoOHdtRdMbe2e3JF
-xP7qPa6hodz7+3Kx8WuReCNGc7I28iIB8Hf+/krp26JjcKjSQelnpAdWiq/lllQ2
-Gynja4qIBo4zbAWCNBCWJ9PT/iUhmryZdc2MbQD1x9RquATaZWiZjJ6jTDhOnMzE
-Nw+SSo4I8iJRrwO24SG6ADjHnDlNCoYIzwITzrb+0KHtO0tS2Lo=
-=BPX4
------END PGP SIGNATURE-----
-
---fimiip3atuknqmhj--
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 6da20b9688f7..c1d0c348f2b3 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -187,7 +187,9 @@ static void populate_properties(const void *blob,
+ 	int cur;
+ 	bool has_name = false;
+ 
+-	pprev = &np->properties;
++	if (!dryrun)
++		pprev = &np->properties;
++
+ 	for (cur = fdt_first_property_offset(blob, offset);
+ 	     cur >= 0;
+ 	     cur = fdt_next_property_offset(blob, cur)) {
+-- 
+2.11.0
