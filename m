@@ -1,169 +1,223 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V5 1/2] scsi: ufs: set the device reference clock setting
-Date: Fri, 6 Jul 2018 15:07:29 -0600
-Message-ID: <20180706210729.GA22391@rob-hp-laptop>
-References: <1530858040-13971-1-git-send-email-sayalil@codeaurora.org>
- <1530858040-13971-2-git-send-email-sayalil@codeaurora.org>
+Subject: Re: [PATCH v3 2/5] gpio: syscon: rockchip: add GPIO_MUTE support for rk3328
+Date: Fri, 6 Jul 2018 15:10:27 -0600
+Message-ID: <CAL_JsqJympQtBJ2vgkik2Rjc-55TP8jEvcn=cBTBLc7cTUtMrA@mail.gmail.com>
+References: <1527737273-8387-1-git-send-email-djw@t-chip.com.cn>
+ <1527737273-8387-3-git-send-email-djw@t-chip.com.cn> <CAL_JsqJK4vrmLBeN_ZeGCXAyqshshL16B0KN_+8uvt+=-O9TEw@mail.gmail.com>
+ <0d08ba26-77f2-6c42-8fb1-214aaf6085e9@t-chip.com.cn> <CAL_JsqKSy4q5dfVfXbRMLa7koTWufpAt3yNdE-9mwyJ-VzVQRQ@mail.gmail.com>
+ <87zi0d8tue.fsf@t-chip.com.cn> <20180605195854.GA16394@rob-hp-laptop>
+ <8736xz8jph.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me> <87y3eze5pf.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1530858040-13971-2-git-send-email-sayalil@codeaurora.org>
+In-Reply-To: <87y3eze5pf.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sayali Lokhande <sayalil@codeaurora.org>
-Cc: subhashj@codeaurora.org, cang@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, asutoshd@codeaurora.org, evgreen@chromium.org, riteshh@codeaurora.org, linux-scsi@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Levin Du <djw@t-chip.com.cn>
+Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Wayne Chou <zxf@t-chip.com.cn>, "heiko@sntech.de" <heiko@sntech.de>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 06, 2018 at 11:50:39AM +0530, Sayali Lokhande wrote:
-> From: Subhash Jadavani <subhashj@codeaurora.org>
-> 
-> UFS host supplies the reference clock to UFS device and UFS device
-> specification allows host to provide one of the 4 frequencies (19.2 MHz,
-> 26 MHz, 38.4 MHz, 52 MHz) for reference clock. Host should set the
-> device reference clock frequency setting in the device based on what
-> frequency it is supplying to UFS device.
-> 
-> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
-> ---
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  7 +++
->  drivers/scsi/ufs/ufs.h                             |  9 ++++
->  drivers/scsi/ufs/ufshcd-pltfrm.c                   |  2 +
->  drivers/scsi/ufs/ufshcd.c                          | 62 ++++++++++++++++++++++
->  drivers/scsi/ufs/ufshcd.h                          |  2 +
->  5 files changed, 82 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> index c39dfef..bc20f59 100644
-> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> @@ -41,6 +41,12 @@ Optional properties:
->  -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
->  			  Note that it is assume same number of lanes is used both
->  			  directions at once. If not specified, default is 2 lanes per direction.
-> +- assigned-clock-rates 	: Specify the device reference clock frequency, must be one of the following:
-> +			  0: 19.2 MHz
-> +			  1: 26 MHz
-> +			  2: 38.4 MHz
-> +			  3: 52 MHz
-> +			  Defaults to 26 MHz if not specified.
+On Thu, Jun 28, 2018 at 1:22 AM
+<djw@archiso.i-did-not-set--mail-host-address--so-tickle-me> wrote:
+>
+> Levin <djw@t-chip.com.cn> writes:
+>
+> > Rob Herring <robh@kernel.org> writes:
+> >
+> >> On Sat, Jun 02, 2018 at 04:40:09PM +0800, Levin Du wrote:
+> >>>
+> >>> Rob Herring <robh+dt@kernel.org> writes:
+> >>>
+> >>> > On Thu, May 31, 2018 at 9:05 PM, Levin <djw@t-chip.com.cn> wrote:
+> >>> > > Hi Rob,
+> >>> > >
+> >>> > >
+> >>> > > On 2018-05-31 10:45 PM, Rob Herring wrote:
+> >>> > > >
+> >>> > > > On Wed, May 30, 2018 at 10:27 PM,  <djw@t-chip.com.cn> wrote:
+> >>> > > > >
+> >>> > > > > From: Levin Du <djw@t-chip.com.cn>
+> >>> > > > >
+> >>> > > > > In Rockchip RK3328, the output only GPIO_MUTE pin,
+> >>> > > > > originally for codec
+> >>> > > > > mute control, can also be used for general purpose. It is
+> >>> > > > > manipulated by
+> >>> > > > > the GRF_SOC_CON10 register.
+> >>> > > > >
+> >>> > > > > Signed-off-by: Levin Du <djw@t-chip.com.cn>
+> >>> > > > >
+> >>> > > > > ---
+> >>> > > > >
+> >>> > > > > Changes in v3:
+> >>> > > > > - Change from general gpio-syscon to specific
+> >>> > > > > rk3328-gpio-mute
+> >>> > > > >
+> >>> > > > > Changes in v2:
+> >>> > > > > - Rename gpio_syscon10 to gpio_mute in doc
+> >>> > > > >
+> >>> > > > > Changes in v1:
+> >>> > > > > - Refactured for general gpio-syscon usage for Rockchip SoCs.
+> >>> > > > > - Add doc rockchip,gpio-syscon.txt
+> >>> > > > >
+> >>> > > > >   .../bindings/gpio/rockchip,rk3328-gpio-mute.txt    | 28
+> >>> > > > > +++++++++++++++++++
+> >>> > > > >   drivers/gpio/gpio-syscon.c                         | 31
+> >>> > > > > ++++++++++++++++++++++
+> >>> > > > >   2 files changed, 59 insertions(+)
+> >>> > > > >   create mode 100644
+> >>> > > > > Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
+> >>> > > > >
+> >>> > > > > diff --git
+> >>> > > > > a/Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
+> >>> > > > > b/Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
+> >>> > > > > new file mode 100644
+> >>> > > > > index 0000000..10bc632
+> >>> > > > > --- /dev/null
+> >>> > > > > +++
+> >>> > > > > b/Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
+> >>> > > > > @@ -0,0 +1,28 @@
+> >>> > > > > +Rockchip RK3328 GPIO controller dedicated for the GPIO_MUTE
+> >>> > > > > pin.
+> >>> > > > > +
+> >>> > > > > +In Rockchip RK3328, the output only GPIO_MUTE pin,
+> >>> > > > > originally for codec
+> >>> > > > > mute
+> >>> > > > > +control, can also be used for general purpose. It is
+> >>> > > > > manipulated by the
+> >>> > > > > +GRF_SOC_CON10 register.
+> >>> > > > > +
+> >>> > > > > +Required properties:
+> >>> > > > > +- compatible: Should contain "rockchip,rk3328-gpio-mute".
+> >>> > > > > +- gpio-controller: Marks the device node as a gpio
+> >>> > > > > controller.
+> >>> > > > > +- #gpio-cells: Should be 2. The first cell is the pin
+> >>> > > > > number and
+> >>> > > > > +  the second cell is used to specify the gpio polarity:
+> >>> > > > > +    0 = Active high,
+> >>> > > > > +    1 = Active low.
+> >>> > > > > +
+> >>> > > > > +Example:
+> >>> > > > > +
+> >>> > > > > +       grf: syscon@ff100000 {
+> >>> > > > > +               compatible = "rockchip,rk3328-grf", "syscon",
+> >>> > > > > "simple-mfd";
+> >>> > > > > +
+> >>> > > > > +               gpio_mute: gpio-mute {
+> >>> > > >
+> >>> > > > Node names should be generic:
+> >>> > > >
+> >>> > > > gpio {
+> >>> > > >
+> >>> > > > This also means you can't add another GPIO node in the future
+> >>> > > > and
+> >>> > > > you'll have to live with "rockchip,rk3328-gpio-mute" covering
+> >>> > > > more
+> >>> > > > than 1 GPIO if you do need to add more GPIOs.
+> >>> > >
+> >>> > >
+> >>> > > As the first line describes, this GPIO controller is dedicated for
+> >>> > > the
+> >>> > > GPIO_MUTE pin.
+> >>> > > There's only one GPIO pin in the GRF_SOC_CON10 register. Therefore
+> >>> > > the
+> >>> > > gpio_mute
+> >>> > > name is proper IMHO.
+> >>> >
+> >>> > It's how many GPIOs in the GRF, not this register. What I'm saying is
+> >>> > when you come along later to add another GPIO in the GRF, you had
+> >>> > better just add it to this same node. I'm not going to accept another
+> >>> > GPIO controller node within the GRF. You have the cells to support
+> >>> > more than 1, so it would only be a driver change. The compatible
+> >>> > string would then not be ideally named at that point. But compatible
+> >>> > strings are just unique identifiers, so it doesn't really matter what
+> >>> > the string is.
+> >>> >
+> >>>
+> >>> I'll try my best to introduce the situation here. The GRF, GPIO0~GPIO3
+> >>> are register blocks in the RK3328 Soc. The GPIO0~GPIO3 contain registers
+> >>> for GPIO operations like reading/writing data, setting direction,
+> >>> interruption etc, which corresponds to the GPIO banks (gpio0~gpio3)
+> >>> defined in rk3328.dtsi:
+> >>
+> >> I'm only talking about GRF functions, not "regular" GPIOs.
+> >>
+> >>>     pinctrl: pinctrl {
+> >>>             compatible = "rockchip,rk3328-pinctrl";
+> >>>             rockchip,grf = <&grf>;
+> >>>             #address-cells = <2>;
+> >>>             #size-cells = <2>;
+> >>>             ranges;
+> >>>
+> >>>             gpio0: gpio0@ff210000 {
+> >>>                     compatible = "rockchip,gpio-bank";
+> >>>                     reg = <0x0 0xff210000 0x0 0x100>;
+> >>>                     interrupts = <GIC_SPI 51                        IRQ_TYPE_LEVEL_HIGH>;
+> >>>                     clocks = <&cru PCLK_GPIO0>;
+> >>>
+> >>>                     gpio-controller;
+> >>>                     #gpio-cells = <2>;
+> >>>
+> >>>                     interrupt-controller;
+> >>>                     #interrupt-cells = <2>;
+> >>>             };
+> >>>
+> >>>             gpio1: gpio1@ff220000 {
+> >>>                //...
+> >>>             };
+> >>>
+> >>>             gpio2: gpio2@ff230000 {
+> >>>                //...
+> >>>             };
+> >>>
+> >>>             gpio3: gpio3@ff240000 {
+> >>>                //...
+> >>>             };
+> >>>         }
+> >>>
+> >>> However, these general GPIO pins has multiplexed functions and their
+> >>> pull up/down and driving strength can also be configured. These settings
+> >>> are manipulated by the GRF registers in pinctrl driver. Quoted from the
+> >>> TRM, the GRF has the following function:
+> >>>
+> >>> - IOMUX control
+> >>> - Control the state of GPIO in power-down mode
+> >>> - GPIO PAD pull down and pull up control
+> >>> - Used for common system control
+> >>> - Used to record the system state
+> >>>
+> >>> Therefore the functions of the GRF are messy and scattered in different
+> >>> nodes. The so-called GPIO_MUTE does not belong to GPIO0~GPIO3. It is
+> >>> manipulated by the GRF_SOC_CON10 register in the GRF block.
+> >>>
+> >>> > I'm being told both "this is the only GPIO" and "the GRF has too many
+> >>> > different functions for us to tell you what they all are". So which is
+> >>> > it?
+> >>> >
+> >>> > Rob
+> >>>
+> >>> They are both true, but lack of context. See the above description.
+> >>
+> >> What I meant was "only GPIO in GRF registers"...
+> >>
+> >> Rob
+> >
+> > I check the TRM and schematic once again. In GRF resters, there are also
+> > HDMI GPIOs, which are already covered by the HDMI driver. Aside from
+> > those, MUTE_GPIO is the only GPIO.
 
-Sigh. You obviously did not read the definition of assigned-clock-rates 
-and understand how it works. I don't think you want the frequency to be 
-0-3 Hz.
+So if some board uses the HDMI GPIOs for some other function, then you
+would need to model them as GPIOs. Presumably there's just a syscon
+phandle and the HDMI driver touches those registers directly which is
+not ideal.
 
+> > Levin
+>
+> Hi Rob,
+>
+> Is there anything I can do to move forward? I know that this patch is
+> far from a perfect solution. But it can be refactored later on.
 
->  Note: If above properties are not defined it can be assumed that the supply
->  regulators or clocks are always on.
-> @@ -66,4 +72,5 @@ Example:
->  		freq-table-hz = <100000000 200000000>, <0 0>, <0 0>;
->  		phys = <&ufsphy1>;
->  		phy-names = "ufsphy";
-> +		assigned-clock-rates = <0>; /* reference clock freq: 19.2 MHz */
->  	};
-> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-> index 14e5bf7..e15deb0 100644
-> --- a/drivers/scsi/ufs/ufs.h
-> +++ b/drivers/scsi/ufs/ufs.h
-> @@ -378,6 +378,15 @@ enum query_opcode {
->  	UPIU_QUERY_OPCODE_TOGGLE_FLAG	= 0x8,
->  };
->  
-> +/* bRefClkFreq attribute values */
-> +enum ref_clk_freq {
-> +	REF_CLK_FREQ_19_2_MHZ	= 0x0,
-> +	REF_CLK_FREQ_26_MHZ	= 0x1,
-> +	REF_CLK_FREQ_38_4_MHZ	= 0x2,
-> +	REF_CLK_FREQ_52_MHZ	= 0x3,
-> +	REF_CLK_FREQ_MAX	= REF_CLK_FREQ_52_MHZ,
-> +};
-> +
->  /* Query response result code */
->  enum {
->  	QUERY_RESULT_SUCCESS                    = 0x00,
-> diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
-> index e82bde0..0953563 100644
-> --- a/drivers/scsi/ufs/ufshcd-pltfrm.c
-> +++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
-> @@ -343,6 +343,8 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
->  	pm_runtime_set_active(&pdev->dev);
->  	pm_runtime_enable(&pdev->dev);
->  
-> +	ufshcd_parse_dev_ref_clk_freq(hba);
-> +
->  	ufshcd_init_lanes_per_dir(hba);
->  
->  	err = ufshcd_init(hba, mmio_base, irq);
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index c5b1bf1..455a6ad 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -6296,6 +6296,62 @@ static void ufshcd_def_desc_sizes(struct ufs_hba *hba)
->  	hba->desc_size.hlth_desc = QUERY_DESC_HEALTH_DEF_SIZE;
->  }
->  
-> +void ufshcd_parse_dev_ref_clk_freq(struct ufs_hba *hba)
-> +{
-> +	struct device *dev = hba->dev;
-> +	int ret;
-> +
-> +	if (!dev)
-> +		return;
-> +
-> +	ret = device_property_read_u32(dev, "assigned-clock-rates",
-> +				   &hba->dev_ref_clk_freq);
-> +	if (ret ||
-> +	    (hba->dev_ref_clk_freq > REF_CLK_FREQ_52_MHZ)) {
-> +		dev_err(hba->dev,
-> +		"%s: invalid ref_clk setting = %d\n",
-> +		__func__, hba->dev_ref_clk_freq);
-> +		hba->dev_ref_clk_freq = REF_CLK_FREQ_MAX + 1;
-> +	}
-> +}
-> +
-> +static int ufshcd_set_dev_ref_clk(struct ufs_hba *hba)
-> +{
-> +	int err = 0;
-> +	int ref_clk = -1;
-> +	static const char * const ref_clk_freqs[] = {"19.2 MHz", "26 MHz",
-> +						     "38.4 MHz", "52 MHz"};
-> +
-> +	err = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_READ_ATTR,
-> +			QUERY_ATTR_IDN_REF_CLK_FREQ, 0, 0, &ref_clk);
-> +
-> +	if (err) {
-> +		dev_err(hba->dev, "%s: failed reading bRefClkFreq. err = %d\n",
-> +			 __func__, err);
-> +		goto out;
-> +	}
-> +
-> +	if (ref_clk == hba->dev_ref_clk_freq)
-> +		goto out; /* nothing to update */
-> +
-> +	err = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_WRITE_ATTR,
-> +			QUERY_ATTR_IDN_REF_CLK_FREQ, 0, 0,
-> +			&hba->dev_ref_clk_freq);
-> +
-> +	if (err)
-> +		dev_err(hba->dev, "%s: bRefClkFreq setting to %s failed\n",
-> +			__func__, ref_clk_freqs[hba->dev_ref_clk_freq]);
-> +	/*
-> +	 * It is good to print this out here to debug any later failures
-> +	 * related to gear switch.
-> +	 */
-> +	dev_dbg(hba->dev, "%s: bRefClkFreq setting to %s succeeded\n",
-> +			__func__, ref_clk_freqs[hba->dev_ref_clk_freq]);
-> +
+But you can't refactor bindings later on. Extend yes, refactor no.
+That's what I'm trying to make sure you avoid.
 
-I still don't understand how you think this is supposed to work. All 
-this does is copy whatever freq setting you put into DT to this 
-device attr. That does nothing to actually set the frequency of the 
-ref_clk. It's frequency could be anything before and after this 
-function.
-
-Also, according to the spec, isn't QUERY_ATTR_IDN_REF_CLK_FREQ 
-write-once? So if you can read the value, wouldn't that mean you can't 
-set it.
-
-Rob
+So if you don't want to be stuck with the "mute" name later on, call
+this "...-grf-gpio" to make it future proof.
