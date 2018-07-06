@@ -1,46 +1,46 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v4 4/6] bus: ti-sysc: Add support for software reset
-Date: Fri, 6 Jul 2018 03:35:41 -0700
-Message-ID: <20180706103541.GC112168@atomide.com>
-References: <20180705142319.19583-1-faiz_abbas@ti.com>
- <20180705142319.19583-5-faiz_abbas@ti.com>
- <20180705154758.GA112168@atomide.com>
- <cf8652a1-019c-d423-9b44-0d62006734f8@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v10 1/2] mfd: bd71837: mfd driver for ROHM BD71837 PMIC
+Date: Fri, 6 Jul 2018 11:56:33 +0100
+Message-ID: <20180706105633.GX496@dell>
+References: <cover.1530800707.git.matti.vaittinen@fi.rohmeurope.com>
+ <e737bb13d17b75ea5e55f59005ef3181d428e704.1530800707.git.matti.vaittinen@fi.rohmeurope.com>
+ <CAFqH_53DbfFTRt2xST6RXg_qu0+LayXjQL2y024We1LHGB3yQA@mail.gmail.com>
+ <20180706060913.GU496@dell>
+ <20180706102312.GB11209@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cf8652a1-019c-d423-9b44-0d62006734f8@ti.com>
+In-Reply-To: <20180706102312.GB11209@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, bcousson@baylibre.com, paul@pwsan.com, t-kristo@ti.com, mark.rutland@arm.com
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Enric Balletbo Serra <eballetbo@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, sboyd@kernel.org, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Matti Vaittinen <mazziesaccount@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>, chenjh@rock-chips.com, Andrey Smirnov <andrew.smirnov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Kate Stewart <kstewart@linuxfoundation.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>linux-kernel <li>
 List-Id: devicetree@vger.kernel.org
 
-* Faiz Abbas <faiz_abbas@ti.com> [180706 10:05]:
-> Hi,
+On Fri, 06 Jul 2018, Matti Vaittinen wrote:
+
+> On Fri, Jul 06, 2018 at 07:09:13AM +0100, Lee Jones wrote:
 > 
-> On Thursday 05 July 2018 09:17 PM, Tony Lindgren wrote:
-> > * Faiz Abbas <faiz_abbas@ti.com> [180705 14:24]:
-> >> +static int sysc_reset(struct sysc *ddata)
-> >> +{
-> >> +	int offset = ddata->offsets[SYSC_SYSCONFIG];
-> >> +	int val = sysc_read(ddata, offset);
-> > 
-> > Can you please just warn and return early for now if no
-> > syss_mask is specified? Otherwise we'll have mysterious
-> > errors if somebody leaves out "ti,hwmods" for module types
-> > we do not yet support reset for.
+> [snip]
+> '
+> > page trying to find your response was a little painful.  TIA.
 > 
-> RESET write to sysconfig can still happen even if there's no syss_mask
-> right? Not all modules need to poll on reset status.
+> Acronyms can be confusing for non native english speakers like me.
+> Luckily we have the internet =)
+> 
+> https://www.acronymfinder.com/Slang/TIA.html
+> 
+> From these options I would go for:
+> "This Is Awkward" or "That Is Alright" - depending on my mood =] Or
+> maybe it was "Today I Ate"?
 
-It can but we currently don't have anything similar to
-srst_udelay like we have in _ocp_softreset(). And we don't
-currently have suport for sysc reset done bit.
+Ha, fair point.
 
-So we want to warn and return error except in the known
-working case for now.
+In this instance it means, "thanks in advance". :)
 
-Regards,
-
-Tony
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
