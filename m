@@ -1,36 +1,30 @@
-Return-Path: <SRS0=7VqK=JZ=amarulasolutions.com=anthony@kernel.org>
-From: Anthony Brandon <anthony@amarulasolutions.com>
-Subject: [PATCH v2 3/4] dt-bindings: sound: wm8994: document wlf,csnaddr-pd property
-Date: Mon,  9 Jul 2018 19:46:45 +0200
-Message-Id: <1531158406-18646-3-git-send-email-anthony@amarulasolutions.com>
-In-Reply-To: <1531158406-18646-1-git-send-email-anthony@amarulasolutions.com>
-References: <20180709160631.GU18740@imbe.wolfsonmicro.main>
- <1531158406-18646-1-git-send-email-anthony@amarulasolutions.com>
-To: robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, patches@opensource.cirrus.com, ckeepax@opensource.cirrus.com, alberto@amarulasolutions.com, devicetree@vger.kernel.org
-Cc: Anthony Brandon <anthony@amarulasolutions.com>
+Return-Path: <robherring2@gmail.com>
+Date: Fri, 6 Jul 2018 14:27:07 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: Add DT binding document
+ for PMIC5 ADC
+Message-ID: <20180706202707.GA3658@rob-hp-laptop>
+References: <1530210611-16434-1-git-send-email-smohanad@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1530210611-16434-1-git-send-email-smohanad@codeaurora.org>
+To: Siddartha Mohanadoss <smohanad@codeaurora.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
 List-ID: <devicetree@vger.kernel.org>
 
-Add the wlf,csnaddr-pd property to allow the CS/Addr pull-down to be
-controlled from the device tree.
+On Thu, Jun 28, 2018 at 11:30:11AM -0700, Siddartha Mohanadoss wrote:
+> PMIC5 ADC has support for clients to measure voltage and current
+> on inputs connected to the PMIC. Clients include reading voltage
+> phone power and on board system thermistors for thermal management.
+> ADC5 on certain PMIC has support to read battery current.
+> 
+> This change adds documentation.
+> 
+> Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
+> ---
+>  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  77 ++++++++++----
+>  include/dt-bindings/iio/qcom,spmi-vadc.h           | 115 ++++++++++++++++++++-
+>  2 files changed, 172 insertions(+), 20 deletions(-)
 
-Signed-off-by: Anthony Brandon <anthony@amarulasolutions.com>
----
- Documentation/devicetree/bindings/sound/wm8994.txt | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/sound/wm8994.txt b/Documentation/devicetree/bindings/sound/wm8994.txt
-index b74a221..0795931 100644
---- a/Documentation/devicetree/bindings/sound/wm8994.txt
-+++ b/Documentation/devicetree/bindings/sound/wm8994.txt
-@@ -60,6 +60,9 @@ Optional properties:
-   - wlf,spkmode-pu : If present enable the internal pull-up resistor on
-     the SPKMODE pin.
- 
-+  - wlf,csnaddr-pd : If present enable the internal pull-down resistor on
-+    the CS/ADDR pin.
-+
- Example:
- 
- wm8994: codec@1a {
--- 
-2.7.4
+Reviewed-by: Rob Herring <robh@kernel.org>
