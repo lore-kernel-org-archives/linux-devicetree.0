@@ -1,29 +1,29 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v4 2/6] clk: ti: dra7: Add clkctrl clock data for the mcan clocks
-Date: Fri, 06 Jul 2018 13:47:19 -0700
-Message-ID: <153091003956.143105.6661322668517577461@swboyd.mtv.corp.google.com>
-References: <20180705142319.19583-1-faiz_abbas@ti.com>
- <20180705142319.19583-3-faiz_abbas@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v9 1/5] clocksource/drivers/timer-mediatek: Add system
+ timer bindings
+Date: Fri, 6 Jul 2018 14:51:37 -0600
+Message-ID: <20180706205137.GA20617@rob-hp-laptop>
+References: <1530832288-8156-1-git-send-email-stanley.chu@mediatek.com>
+ <1530832288-8156-2-git-send-email-stanley.chu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180705142319.19583-3-faiz_abbas@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1530832288-8156-2-git-send-email-stanley.chu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: mark.rutland@arm.com, paul@pwsan.com, tony@atomide.com, faiz_abbas@ti.com, t-kristo@ti.com, robh+dt@kernel.org, bcousson@baylibre.com
+To: Stanley Chu <stanley.chu@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Faiz Abbas (2018-07-05 07:23:15)
-> Add clkctrl data for the m_can clocks and register it within the
-> clkctrl driver
-> =
-
-> Acked-by: Rob Herring <robh@kernel.org>
-> CC: Tero Kristo <t-kristo@ti.com>
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+On Fri, Jul 06, 2018 at 07:11:24AM +0800, Stanley Chu wrote:
+> This patch adds bindings of new "System Timer" on Mediatek SoCs.
+> 
+> Remove RTC clock in the same time because it is not used by
+> both "General Purpose Timer" and "System Timer" now.
+> 
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
 > ---
+>  .../bindings/timer/mediatek,mtk-timer.txt          |   34 ++++++++++++--------
+>  1 file changed, 20 insertions(+), 14 deletions(-)
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-
-but Tero should ack it too.
+Reviewed-by: Rob Herring <robh@kernel.org>
