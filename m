@@ -1,25 +1,25 @@
-Return-Path: <SRS0=LrHL=J4=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 0/2] ARM: shmobile: Add support for RZ/A2
-Date: Wed, 11 Jul 2018 22:01:47 -0500
-Message-Id: <20180712030149.91385-1-chris.brandt@renesas.com>
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+From: Stephen Boyd <sboyd@kernel.org>
+In-Reply-To: <20180617120535.2529-2-daniel@zonque.org>
+References: <20180617120535.2529-1-daniel@zonque.org>
+ <20180617120535.2529-2-daniel@zonque.org>
+Message-ID: <153090221757.143105.3822118434988532946@swboyd.mtv.corp.google.com>
+Subject: Re: [PATCH v4 1/2] dts: clk: add devicetree bindings for MAX9485
+Date: Fri, 06 Jul 2018 11:36:57 -0700
+To: Daniel Mack <daniel@zonque.org>, mturquette@baylibre.com
+Cc: linux-clk@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Introduce RZ/A2 (R7S9210) as an SoC that can be selected.
+Quoting Daniel Mack (2018-06-17 05:05:34)
+> This patch adds the devicetree bindings for MAX9485, a programmable audio
+> clock generator.
+> =
 
+> Signed-off-by: Daniel Mack <daniel@zonque.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
 
-Chris Brandt (2):
-  ARM: shmobile: Add basic RZ/A2 SoC support
-  dt-bindings: arm: Document RZ/A2 SoC DT bindings
-
- Documentation/devicetree/bindings/arm/shmobile.txt |  2 ++
- arch/arm/mach-shmobile/Kconfig                     |  6 +++++
- arch/arm/mach-shmobile/Makefile                    |  1 +
- arch/arm/mach-shmobile/setup-r7s9210.c             | 27 ++++++++++++++++++++++
- 4 files changed, 36 insertions(+)
- create mode 100644 arch/arm/mach-shmobile/setup-r7s9210.c
-
--- 
-2.16.1
+Applied to clk-next
