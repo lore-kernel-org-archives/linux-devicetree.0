@@ -1,59 +1,58 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v3 2/5] ASoC: qcom: Add support to parse
- common audio device nodes
-Date: Fri, 6 Jul 2018 18:51:20 +0100
-Message-ID: <84b6f1f7-b9c1-fd0c-b684-1e07d35663ba@linaro.org>
-References: <1530870195-13576-1-git-send-email-rohitkr@codeaurora.org>
- <1530870195-13576-3-git-send-email-rohitkr@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 18/23] dt-bindings: thermal: armada: add reference to
+ new bindings
+Date: Fri, 6 Jul 2018 11:51:48 -0600
+Message-ID: <CAL_JsqL8Lc3r7d5b2tnngJksRSiDqDzXjxyK8n1htGbUa6nE6g@mail.gmail.com>
+References: <20180625151239.20976-1-miquel.raynal@bootlin.com>
+ <20180625151239.20976-19-miquel.raynal@bootlin.com>
+ <20180703213011.GA13190@rob-hp-laptop>
+ <20180705120528.4b923e16@xps13>
+ <CAL_JsqL9h4RExZtm5cER-5kNvMpDzH-4MwcmY7VOLXB9-uEYYA@mail.gmail.com>
+ <20180706085458.6ed1a483@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1530870195-13576-3-git-send-email-rohitkr@codeaurora.org>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rohit kumar <rohitkr@codeaurora.org>, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, plai@codeaurora.org, bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180706085458.6ed1a483@xps13>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>, David Sniatkiwicz <davidsn@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jul 6, 2018 at 12:55 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+>
+> Hi Rob,
+>
+> Rob Herring <robh@kernel.org> wrote on Thu, 5 Jul 2018 12:03:04 -0600:
+>
+> > On Thu, Jul 5, 2018 at 4:05 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> > >
+> > > Hi Rob,
+> > >
+> > > Rob Herring <robh@kernel.org> wrote on Tue, 3 Jul 2018 15:30:11 -0600:
+> > >
+> > > > On Mon, Jun 25, 2018 at 05:12:34PM +0200, Miquel Raynal wrote:
+> > > > > New bindings (with the syscon and the overheat interrupt) are available
+> > > >
+> > > > What interrupt? It's not in your new binding.
+> >
+> > ???
+>
+> I forgot that point, my bad.
+>
+> Initially this series introduced an overheat interrupt. Due to some
+> dependencies I split the original series in two: this one and another
+> one just to add support for the interrupt.
 
+You can split up the driver support, but please make the binding
+complete as possible.
 
-On 06/07/18 10:43, Rohit kumar wrote:
-> This adds support to parse cpu, platform and codec
-> device nodes and add them in dai-links. Also, add
-> API to add slave components associated with machine
-> driver.
-> 
-> Signed-off-by: Rohit kumar<rohitkr@codeaurora.org>
-> ---
->   sound/soc/qcom/Kconfig  |   3 +
->   sound/soc/qcom/Makefile |   1 +
->   sound/soc/qcom/common.c | 150 ++++++++++++++++++++++++++++++++++++++++++++++++
->   sound/soc/qcom/common.h |  14 +++++
->   4 files changed, 168 insertions(+)
->   create mode 100644 sound/soc/qcom/common.c
-
-common.c seems to miss
-
-MODULE_LICENSE("GPL v2");
-
-this will be an issue for snd card module auto-loading!
-
-Also patch 5/5 can go with this.
-
-Other than that it looks good.
-
-Once these 2 fixed you can add my Ack
-
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-
---srini
-
->   create mode 100644 sound/soc/qcom/common.h
+Rob
