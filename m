@@ -1,162 +1,195 @@
-From: Asutosh Das <asutoshd@codeaurora.org>
-Subject: [PATCH v1 4/9] scsi: ufs: add option to change default UFS power management level
-Date: Fri,  6 Jul 2018 18:00:31 +0530
-Message-ID: <ff2b648007a400c60ba804a0c5cab0166bd268e7.1530880006.git.asutoshd@codeaurora.org>
-References: <cover.1530880006.git.asutoshd@codeaurora.org>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v4 7/8] drm/i2c: tda998x: register as a drm bridge
+Date: Fri, 6 Jul 2018 13:43:05 +0100
+Message-ID: <20180706124305.GX17271@n2100.armlinux.org.uk>
+References: <20180423160833.GF16141@n2100.armlinux.org.uk>
+ <5d6866d0-75bc-4de8-9b87-4fee5430e9dd@axentia.se>
+ <20180424080833.GJ16141@n2100.armlinux.org.uk>
+ <8448e90a-4562-b564-c160-1b5c67e0f92f@axentia.se>
+ <0cbee3bd-8987-5f2f-519d-f8d1b426f2a3@ti.com>
+ <20180424170625.GL16141@n2100.armlinux.org.uk>
+ <b7a7ffb6-b282-cbc5-435e-9ca1cd405e33@ti.com>
+ <20180424232523.GN16141@n2100.armlinux.org.uk>
+ <7e8cdcf6-c816-1e01-24f1-a526fb0a591f@ti.com>
+ <20180706100346.GV17271@n2100.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1530880006.git.asutoshd@codeaurora.org>
-In-Reply-To: <cover.1530880006.git.asutoshd@codeaurora.org>
-References: <cover.1530880006.git.asutoshd@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20180706100346.GV17271@n2100.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: subhashj@codeaurora.org, cang@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, linux-scsi@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Asutosh Das <asutoshd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Peter Rosin <peda@axentia.se>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Subhash Jadavani <subhashj@codeaurora.org>
+On Fri, Jul 06, 2018 at 11:03:46AM +0100, Russell King - ARM Linux wrote:
+> On Wed, Apr 25, 2018 at 11:01:15PM +0300, Jyri Sarha wrote:
+> > Oh yes. But in this case the substandard solution is already there and
+> > it is already widely used, despite it being severely broken. I am merely
+> > trying to fix the existing substandard solution.
+> > 
+> > I admit that a full integration with component helpers would probably be
+> > more elegant solution to the problem, but the amount of work is just too
+> > much. The change would impact the way all the master drm drivers pull
+> > them selves together. The drivers that already use the component helpers
+> > for some internal stuff will add their own challenge. Separate component
+> > matching implementations are needed for device-tree and ACPI (are ther
+> > more flavors?) etc. I just do not see this happening any time soon (am
+> > happy to be wrong about this).
+> 
+> The issue is actually worse than that:
+> 
+> - drivers that are already componentised can't use bridges
+> - drivers that use bridges can't use componentised stuff
+> 
+> because bridges don't register themselves with the component helper,
+> and the helpers in drm_of.c assume that all graph nodes will be
+> components.
+> 
+> The whole thing about whether stuff is componentised or bridge based
+> is really getting out of hand, and the push is towards bridge based
+> stuff even though that is technically inferior when it comes to being
+> able to develop and test (which involves being able to remove and
+> re-insert modules.)
+> 
+> Consequently more and more code is being written for bridges, and
+> the component helper ignored, and the problems with bridges are
+> being ignored.  This is not healthy.
+> 
+> The problem is only going to get worse.  Someone needs to bite the
+> bullet and fix bridges before the problem gets any more out of hand.
 
-UFS device and link can be put in multiple different low power modes hence
-UFS driver supports multiple different low power modes. By default UFS
-driver selects the default (optimal) low power mode (which gives moderate
-power savings and have relatively less enter and exit latencies) but
-we might have to tune this default power mode for different chipset
-platforms to meet the low power requirements/goals. Hence this patch
-adds option to change default UFS low power mode (level).
+This patch (which is actually two patches locally) allows the component
+helper to know what's going on inside the bridge code wrt bridge
+availability, and takes the appropriate action at the correct time.
+No need for device links or similar, or incompatibilities between
+bridges and components.  The only requirement is that bridges set the
+"device" member of struct drm_bridge to opt-in to this.
 
-Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-Signed-off-by: Venkat Gopalakrishnan <venkatg@codeaurora.org>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
----
- .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      | 11 ++++++++
- drivers/scsi/ufs/ufshcd-pltfrm.c                   | 14 +++++++++++
- drivers/scsi/ufs/ufshcd.c                          | 29 +++++++++++++++-------
- drivers/scsi/ufs/ufshcd.h                          |  4 +--
- 4 files changed, 47 insertions(+), 11 deletions(-)
+Tested with Armada converted to support bridges, TDA998x as a
+componentised bridge, and dumb-vga-dac as a non-componentised bridge:
 
-diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-index c39dfef..f564d9a 100644
---- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-+++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-@@ -38,6 +38,15 @@ Optional properties:
- 			  defined or a value in the array is "0" then it is assumed
- 			  that the frequency is set by the parent clock or a
- 			  fixed rate clock source.
-+- rpm-level		: UFS Runtime power management level. Following PM levels are supported:
-+			  0 - Both UFS device and Link in active state (Highest power consumption)
-+			  1 - UFS device in active state but Link in Hibern8 state
-+			  2 - UFS device in Sleep state but Link in active state
-+			  3 - UFS device in Sleep state and Link in hibern8 state (default PM level)
-+			  4 - UFS device in Power-down state and Link in Hibern8 state
-+			  5 - UFS device in Power-down state and Link in OFF state (Lowest power consumption)
-+- spm-level		: UFS System power management level. Allowed PM levels are same as rpm-level.
-+
- -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
- 			  Note that it is assume same number of lanes is used both
- 			  directions at once. If not specified, default is 2 lanes per direction.
-@@ -66,4 +75,6 @@ Example:
- 		freq-table-hz = <100000000 200000000>, <0 0>, <0 0>;
- 		phys = <&ufsphy1>;
- 		phy-names = "ufsphy";
-+		rpm-level = <3>;
-+		spm-level = <5>;
- 	};
-diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
-index e82bde0..7dba799 100644
---- a/drivers/scsi/ufs/ufshcd-pltfrm.c
-+++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
-@@ -221,6 +221,19 @@ static int ufshcd_parse_regulator_info(struct ufs_hba *hba)
- 	return err;
+root@cubox:~# less /sys/kernel/debug/device_component/display-subsystem
+master name                                            status
+-------------------------------------------------------------
+display-subsystem                                       bound
+
+device name                                            status
+-------------------------------------------------------------
+port                                               registered
+port                                               registered
+hdmi-encoder                                       registered
+vga-bridge                                         registered
+root@cubox:~# dmesg |grep bound
+[    1.921798] armada-drm display-subsystem: bound f1820000.lcd-controller (ops
+armada_lcd_ops)
+[    1.931014] armada-drm display-subsystem: bound f1810000.lcd-controller (ops
+armada_lcd_ops)
+[    2.069231] armada-drm display-subsystem: bound 1-0070 (ops tda998x_ops)
+[    2.076059] armada-drm display-subsystem: bound vga-bridge (ops dummy_ops)
+
+Without this, the same DT fails because "vga-bridge" is never added
+to the component helpers.
+
+diff --git a/drivers/base/component.c b/drivers/base/component.c
+index 8946dfee4768..b14b3a3655ea 100644
+--- a/drivers/base/component.c
++++ b/drivers/base/component.c
+@@ -602,4 +602,32 @@ void component_del(struct device *dev, const struct component_ops *ops)
  }
+ EXPORT_SYMBOL_GPL(component_del);
  
-+static void ufshcd_parse_pm_levels(struct ufs_hba *hba)
++static int component_dummy_bind(struct device *comp, struct device *master,
++				void *master_data)
 +{
-+	struct device *dev = hba->dev;
-+	struct device_node *np = dev->of_node;
-+
-+	if (np) {
-+		if (of_property_read_u32(np, "rpm-level", &hba->rpm_lvl))
-+			hba->rpm_lvl = -1;
-+		if (of_property_read_u32(np, "spm-level", &hba->spm_lvl))
-+			hba->spm_lvl = -1;
-+	}
++	return 0;
 +}
 +
- #ifdef CONFIG_PM
- /**
-  * ufshcd_pltfrm_suspend - suspend power management function
-@@ -340,6 +353,7 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
- 		goto dealloc_host;
- 	}
- 
-+	ufshcd_parse_pm_levels(hba);
- 	pm_runtime_set_active(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index b03f3ea..e950204 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -192,6 +192,14 @@ struct ufs_pm_lvl_states ufs_pm_lvl_states[] = {
- 	return UFS_PM_LVL_0;
- }
- 
-+static inline bool ufshcd_is_valid_pm_lvl(int lvl)
++static void component_dummy_unbind(struct device *comp, struct device *master,
++				   void *master_data)
 +{
-+	if (lvl >= 0 && lvl < ARRAY_SIZE(ufs_pm_lvl_states))
-+		return true;
-+	else
-+		return false;
 +}
 +
- static struct ufs_dev_fix ufs_fixups[] = {
- 	/* UFS cards deviations table */
- 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
-@@ -8051,16 +8059,19 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
- 	}
++static const struct component_ops dummy_ops = {
++	.bind = component_dummy_bind,
++	.unbind = component_dummy_unbind,
++};
++
++int component_mark_available(struct device *dev)
++{
++	return component_add(dev, &dummy_ops);
++}
++EXPORT_SYMBOL_GPL(component_mark_available);
++
++void component_mark_unavailable(struct device *dev)
++{
++	component_del(dev, &dummy_ops);
++}
++EXPORT_SYMBOL_GPL(component_mark_unavailable);
++
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+index 1638bfe9627c..ce3ccd327916 100644
+--- a/drivers/gpu/drm/drm_bridge.c
++++ b/drivers/gpu/drm/drm_bridge.c
+@@ -21,6 +21,7 @@
+  * DEALINGS IN THE SOFTWARE.
+  */
  
- 	/*
--	 * Set the default power management level for runtime and system PM.
--	 * Default power saving mode is to keep UFS link in Hibern8 state
--	 * and UFS device in sleep state.
-+	 * If rpm_lvl and and spm_lvl are not already set to valid levels,
-+	 * set the default power management level for UFS runtime and system
-+	 * suspend. Default power saving mode selected is keeping UFS link in
-+	 * Hibern8 state and UFS device in sleep state.
- 	 */
--	hba->rpm_lvl = ufs_get_desired_pm_lvl_for_dev_link_state(
--						UFS_SLEEP_PWR_MODE,
--						UIC_LINK_HIBERN8_STATE);
--	hba->spm_lvl = ufs_get_desired_pm_lvl_for_dev_link_state(
--						UFS_SLEEP_PWR_MODE,
--						UIC_LINK_HIBERN8_STATE);
-+	if (!ufshcd_is_valid_pm_lvl(hba->rpm_lvl))
-+		hba->rpm_lvl = ufs_get_desired_pm_lvl_for_dev_link_state(
-+							UFS_SLEEP_PWR_MODE,
-+							UIC_LINK_HIBERN8_STATE);
-+	if (!ufshcd_is_valid_pm_lvl(hba->spm_lvl))
-+		hba->spm_lvl = ufs_get_desired_pm_lvl_for_dev_link_state(
-+							UFS_SLEEP_PWR_MODE,
-+							UIC_LINK_HIBERN8_STATE);
++#include <linux/component.h>
+ #include <linux/err.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+@@ -73,6 +74,9 @@ void drm_bridge_add(struct drm_bridge *bridge)
+ 	mutex_lock(&bridge_lock);
+ 	list_add_tail(&bridge->list, &bridge_list);
+ 	mutex_unlock(&bridge_lock);
++
++	if (bridge->device)
++		WARN_ON(component_mark_available(bridge->device));
+ }
+ EXPORT_SYMBOL(drm_bridge_add);
  
- 	/* Set the default auto-hiberate idle timer value to 150 ms */
- 	if (hba->capabilities & MASK_AUTO_HIBERN8_SUPPORT) {
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index e996a08..a2e1d5c 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -526,9 +526,9 @@ struct ufs_hba {
- 	enum ufs_dev_pwr_mode curr_dev_pwr_mode;
- 	enum uic_link_state uic_link_state;
- 	/* Desired UFS power management level during runtime PM */
--	enum ufs_pm_level rpm_lvl;
-+	int rpm_lvl;
- 	/* Desired UFS power management level during system PM */
--	enum ufs_pm_level spm_lvl;
-+	int spm_lvl;
- 	struct device_attribute rpm_lvl_attr;
- 	struct device_attribute spm_lvl_attr;
- 	int pm_op_in_progress;
+@@ -83,6 +87,9 @@ EXPORT_SYMBOL(drm_bridge_add);
+  */
+ void drm_bridge_remove(struct drm_bridge *bridge)
+ {
++	if (bridge->device)
++		component_mark_unavailable(bridge->device);
++
+ 	mutex_lock(&bridge_lock);
+ 	list_del_init(&bridge->list);
+ 	mutex_unlock(&bridge_lock);
+diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+index 3270fec46979..e863da14d4d9 100644
+--- a/include/drm/drm_bridge.h
++++ b/include/drm/drm_bridge.h
+@@ -268,6 +268,7 @@ struct drm_bridge {
+ 	struct drm_device *dev;
+ 	struct drm_encoder *encoder;
+ 	struct drm_bridge *next;
++	struct device *device;
+ #ifdef CONFIG_OF
+ 	struct device_node *of_node;
+ #endif
+diff --git a/include/linux/component.h b/include/linux/component.h
+index e71fbbbc74e2..a1c824485f54 100644
+--- a/include/linux/component.h
++++ b/include/linux/component.h
+@@ -16,6 +16,10 @@ struct component_ops {
+ int component_add(struct device *, const struct component_ops *);
+ void component_del(struct device *, const struct component_ops *);
+ 
++/* For subsystems where drivers do not call component_add()/component_del() */
++int component_mark_available(struct device *dev);
++void component_mark_unavailable(struct device *dev);
++
+ int component_bind_all(struct device *master, void *master_data);
+ void component_unbind_all(struct device *master, void *master_data);
+ 
+
+
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps up
+According to speedtest.net: 13Mbps down 490kbps up
