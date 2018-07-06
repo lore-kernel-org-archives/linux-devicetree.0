@@ -1,239 +1,226 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] arm64: dts: rockchip: add 96boards RK3399 Ficus
- board
-Date: Thu, 5 Jul 2018 17:41:24 -0600
-Message-ID: <20180705234124.GA32051@rob-hp-laptop>
-References: <20180705150818.29931-1-ezequiel@collabora.com>
- <20180705150818.29931-3-ezequiel@collabora.com>
+From: houlong wei <houlong.wei@mediatek.com>
+Subject: Re: [PATCH v22 4/4] soc: mediatek: Add Mediatek CMDQ helper
+Date: Fri, 6 Jul 2018 09:22:30 +0800
+Message-ID: <1530840150.28645.26.camel@mhfsdcap03>
+References: <1530098172-31385-1-git-send-email-houlong.wei@mediatek.com>
+         <1530098172-31385-5-git-send-email-houlong.wei@mediatek.com>
+         <1530182516.8518.11.camel@mtksdaap41>
+         <1530228739.21991.14.camel@mhfsdcap03>
+         <1530264123.22098.12.camel@mtksdaap41>
+         <1530665257.24157.7.camel@mhfsdcap03> <1530671954.8732.10.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180705150818.29931-3-ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1530671954.8732.10.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: CK Hu <ck.hu@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh =?UTF-8?Q?=28=E8=AC=9D=E6=BF=9F=E9=81=A0=29?= <Bibby.Hsieh@mediatek.com>, YT
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 05, 2018 at 12:08:18PM -0300, Ezequiel Garcia wrote:
-> The RK3399 Ficus board is an Enterprise Edition board
-> manufactured by Vamrs Ltd., based on the Rockchip RK3399 SoC.
+On Wed, 2018-07-04 at 10:39 +0800, CK Hu wrote:
+> Hi, Houlong:
 > 
-> The board exposes a bunch of nice peripherals, including
-> SATA, HDMI, MIPI CSI, Ethernet, WiFi, and PCIe.
+> On Wed, 2018-07-04 at 08:47 +0800, houlong wei wrote:
+> > On Fri, 2018-06-29 at 17:22 +0800, CK Hu wrote:
+> > > Hi, Houlong:
+> > > 
+> > > On Fri, 2018-06-29 at 07:32 +0800, houlong wei wrote:
+> > > > On Thu, 2018-06-28 at 18:41 +0800, CK Hu wrote:
+> > > > > Hi, Houlong:
+> > > > > 
+> > > > > Some inline comment.
+> > > > > 
+> > > > > On Wed, 2018-06-27 at 19:16 +0800, Houlong Wei wrote:
+> > > > > > Add Mediatek CMDQ helper to create CMDQ packet and assemble GCE op code.
+> > > > > > 
+> > > > > > Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
+> > > > > > Signed-off-by: HS Liao <hs.liao@mediatek.com>
+> > > > > > ---
+> > > > > >  drivers/soc/mediatek/Kconfig           |   12 ++
+> > > > > >  drivers/soc/mediatek/Makefile          |    1 +
+> > > > > >  drivers/soc/mediatek/mtk-cmdq-helper.c |  258 ++++++++++++++++++++++++++++++++
+> > > > > >  include/linux/soc/mediatek/mtk-cmdq.h  |  132 ++++++++++++++++
+> > > > > >  4 files changed, 403 insertions(+)
+> > > > > >  create mode 100644 drivers/soc/mediatek/mtk-cmdq-helper.c
+> > > > > >  create mode 100644 include/linux/soc/mediatek/mtk-cmdq.h
+> > > > > > 
+> > > > > > diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
+> > > > > > index a7d0667..17bd759 100644
+> > > > > > --- a/drivers/soc/mediatek/Kconfig
+> > > > > > +++ b/drivers/soc/mediatek/Kconfig
+> > > > > > @@ -4,6 +4,18 @@
+> > > > > >  menu "MediaTek SoC drivers"
+> > > > > >  	depends on ARCH_MEDIATEK || COMPILE_TEST
+> > > > > >  
+> > > > > 
+> > > 
+> > > [...]
+> > > 
+> > > > > > +
+> > > > > > +static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+> > > > > > +{
+> > > > > > +	int err;
+> > > > > > +
+> > > > > > +	if (cmdq_pkt_is_finalized(pkt))
+> > > > > > +		return 0;
+> > > > > > +
+> > > > > > +	/* insert EOC and generate IRQ for each command iteration */
+> > > > > > +	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
+> > > > > > +	if (err < 0)
+> > > > > > +		return err;
+> > > > > > +
+> > > > > > +	/* JUMP to end */
+> > > > > > +	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
+> > > > > > +	if (err < 0)
+> > > > > > +		return err;
+> > > > > > +
+> > > > > > +	return 0;
+> > > > > > +}
+> > > > > > +
+> > > > > > +int cmdq_pkt_flush_async(struct cmdq_client *client, struct cmdq_pkt *pkt,
+> > > > > > +			 cmdq_async_flush_cb cb, void *data)
+> > > > > > +{
+> > > > > > +	int err;
+> > > > > > +	struct device *dev;
+> > > > > > +	dma_addr_t dma_addr;
+> > > > > > +
+> > > > > > +	err = cmdq_pkt_finalize(pkt);
+> > > > > > +	if (err < 0)
+> > > > > > +		return err;
+> > > > > > +
+> > > > > > +	dev = client->chan->mbox->dev;
+> > > > > > +	dma_addr = dma_map_single(dev, pkt->va_base, pkt->cmd_buf_size,
+> > > > > > +		DMA_TO_DEVICE);
+> > > > > 
+> > > > > You map here, but I could not find unmap, so the unmap should be done in
+> > > > > client driver. I would prefer a symmetric map/unmap which means that
+> > > > > both map and unmap are done in client driver. I think you put map here
+> > > > > because you should map after finalize. 
+> > > > 
+> > > > The unmap is done before callback to client, in function
+> > > > cmdq_task_exec_done, mtk-cmdq-mailbox.c.
+> > > 
+> > > You put unmap in mailbox controller, and map here (here would be mailbox
+> > > client), so this is not symmetric. If the code is asymmetric, it's easy
+> > > to cause bug and not easy to maintain. So I would like move both
+> > > map/unmap to client driver.
+> > > 
+> > 
+> > Since map/unmap is common code for client drivers, can we move unmap to
+> > CMDQ helper and do not put in client driver?
+> > 
+> > > > 
+> > > > > Therefore, export
+> > > > > cmdq_pkt_finalize() to client driver and let client do finalize, so
+> > > > > there is no finalize in flush function. This method have a benefit that
+> > > > > if client reuse command buffer, it need not to map/unmap frequently.
+> > > > 
+> > > > If client reuse command buffer or cmdq_pkt(command queue packet), client
+> > > > will add new commands to the cmdq_pkt, so map/unmap are necessary for
+> > > > each cmdq_pkt flush.
+> > > 
+> > > If the buffer size is 4K bytes, client driver could map the whole 4K at
+> > > initialization. Before it write new command, it call
+> > > dma_sync_single_for_cpu(), after it write new command, it call
+> > > dma_sync_single_for_device(). And then it could flush this buffer to
+> > > mailbox controller. So client driver just call dma sync function when it
+> > > reuse the command buffer. dma sync function is much lightweight then dma
+> > > map because map would search the memory area which could be mapped.
+> > > 
+> > > Regards,
+> > > CK
+> > 
+> > Maybe we can do dma map/unmap/sync in cmdq helper, and make client
+> > driver simple.
+> > 
 > 
-> Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/arm/rockchip.txt      |   5 +
->  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
->  arch/arm64/boot/dts/rockchip/rk3399-ficus.dts | 514 ++++++++++++++++++
->  3 files changed, 520 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
+> Why are map/unmap common code for client drivers? I've mentioned that
+> some client driver may just call dma sync function before flush, so it
+> does not map for every flush. Frequently map/unmap has some drawback:
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
-> index 1c1d62d03c4f..d46c5d43e27f 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
-> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-> @@ -1,5 +1,10 @@
->  Rockchip platforms device tree bindings
->  ---------------------------------------
-> +
-> +- 96boards RK3399 Ficus (ROCK960 Enterprise Edition)
-> +    Required root node properties:
-> +      - compatible = "vamrs,ficus", "rockchip,rk3399";
-> +
->  - Amarula Vyasa RK3288 board
->      Required root node properties:
->        - compatible = "amarula,vyasa-rk3288", "rockchip,rk3288";
-> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-> index 48a83f882947..2811fb701f12 100644
-> --- a/arch/arm64/boot/dts/rockchip/Makefile
-> +++ b/arch/arm64/boot/dts/rockchip/Makefile
-> @@ -9,6 +9,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-orion-r68-meta.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-px5-evb.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-r88.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-evb.dtb
-> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-ficus.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-firefly.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-kevin.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou.dtb
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
-> new file mode 100644
-> index 000000000000..b17b831df90e
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
-> @@ -0,0 +1,514 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2018 Collabora Ltd.
-> + * Copyright (c) 2018 Fuzhou Rockchip Electronics Co., Ltd.
-> + *
-> + * Schematics available at https://dl.vamrs.com/products/ficus/docs/hw
-> + */
-> +
-> +/dts-v1/;
-> +#include "rk3399.dtsi"
-> +#include "rk3399-opp.dtsi"
-> +
-> +/ {
-> +	model = "96boards RK3399 Ficus";
-> +	compatible = "vamrs,ficus", "rockchip,rk3399";
-> +
-> +	chosen {
-> +		stdout-path = "serial2:1500000n8";
-> +	};
-> +
-> +	clkin_gmac: external-gmac-clock {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <125000000>;
-> +		clock-output-names = "clkin_gmac";
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	vcc1v8_s0: vcc1v8-s0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc1v8_s0";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		regulator-always-on;
-> +	};
-> +
-> +	vcc_sys: vcc-sys {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc_sys";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-always-on;
-> +	};
-> +
-> +	vcc3v3_sys: vcc3v3-sys {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc3v3_sys";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-always-on;
-> +		vin-supply = <&vcc_sys>;
-> +	};
-> +
-> +	vcc3v3_pcie: vcc3v3-pcie-regulator {
-> +		compatible = "regulator-fixed";
-> +		enable-active-high;
-> +		gpio = <&gpio1 24 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pcie_drv>;
-> +		regulator-boot-on;
-> +		regulator-name = "vcc3v3_pcie";
-> +		vin-supply = <&vcc3v3_sys>;
-> +	};
-> +
-> +	vdd_log: vdd-log {
-> +		compatible = "pwm-regulator";
-> +		pwms = <&pwm2 0 25000 0>;
-> +		regulator-name = "vdd_log";
-> +		regulator-min-microvolt = <800000>;
-> +		regulator-max-microvolt = <1400000>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +
-> +		/* for rockchip boot on */
-> +		rockchip,pwm_id= <2>;
-> +		rockchip,pwm_voltage = <900000>;
-> +
-> +		vin-supply = <&vcc_sys>;
-> +	};
-> +
-> +};
-> +
-> +&cpu_l0 {
-> +	cpu-supply = <&vdd_cpu_l>;
-> +};
-> +
-> +&cpu_l1 {
-> +	cpu-supply = <&vdd_cpu_l>;
-> +};
-> +
-> +&cpu_l2 {
-> +	cpu-supply = <&vdd_cpu_l>;
-> +};
-> +
-> +&cpu_l3 {
-> +	cpu-supply = <&vdd_cpu_l>;
-> +};
-> +
-> +&cpu_b0 {
-> +	cpu-supply = <&vdd_cpu_b>;
-> +};
-> +
-> +&cpu_b1 {
-> +	cpu-supply = <&vdd_cpu_b>;
-> +};
-> +
-> +&emmc_phy {
-> +	status = "okay";
-> +};
-> +
-> +&gmac {
-> +	assigned-clocks = <&cru SCLK_RMII_SRC>;
-> +	assigned-clock-parents = <&clkin_gmac>;
-> +	clock_in_out = "input";
-> +	phy-supply = <&vcc3v3_sys>;
-> +	phy-mode = "rgmii";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&rgmii_pins>;
-> +	snps,reset-gpio = <&gpio3 RK_PB7 GPIO_ACTIVE_LOW>;
-> +	snps,reset-active-low;
-> +	snps,reset-delays-us = <0 10000 50000>;
-> +	tx_delay = <0x28>;
-> +	rx_delay = <0x11>;
-> +	status = "okay";
-> +};
-> +
-> +&hdmi {
-> +	ddc-i2c-bus = <&i2c3>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&hdmi_cec>;
-> +	status = "okay";
-> +};
-> +
-> +&i2c0 {
-> +	clock-frequency = <400000>;
-> +	i2c-scl-rising-time-ns = <168>;
-> +	i2c-scl-falling-time-ns = <4>;
-> +	status = "okay";
-> +
-> +	vdd_cpu_b: syr827@40 {
+> 1. Waste CPU resource: this also waste power.
+> 2. Risk of mapping fail: to reduce this risk, client driver could map at
+> initialization.
+> 
 
-regulator@40
+Thanks for your advice. One way to achieve this is as follows.
+1. do dma map immediately after the cmdq buffer is allocated in
+cmdq_pkt_create(), and do dma unmap in cmdq_pkt_destroy.
+2. do dma sync for device before a cmdq packet is sent to mailbox in
+cmdq_pkt_flush_async().
+3. do dma sync for cpu after a cmdq packet is executed by GCE HW in
+callback function which will be revised and moved to cmdq helper.
 
-> +		compatible = "silergy,syr827";
-> +		reg = <0x40>;
-> +		fcs,suspend-voltage-selector = <1>;
+Thus, a cmdq packet will be flushed more efficiently if client driver
+would reuse the cmdq packet.
 
-Strange to have a different vendor for this property...
 
-Otherwise,
-
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-> +		regulator-name = "vdd_cpu_b";
-> +		regulator-min-microvolt = <712500>;
-> +		regulator-max-microvolt = <1500000>;
-> +		regulator-ramp-delay = <1000>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		vin-supply = <&vcc_sys>;
-> +		status = "okay";
-> +
-> +		regulator-state-mem {
-> +			regulator-off-in-suspend;
-> +		};
-> +	};
+> I think reducing these drawback is more important than making client
+> driver simple.
+> 
+> Regards,
+> CK
+> 
+> > > 
+> > > > 
+> > > > > 
+> > > > > Regards,
+> > > > > CK
+> > > > > 
+> > > > > > +	if (dma_mapping_error(dev, dma_addr)) {
+> > > > > > +		dev_err(client->chan->mbox->dev, "dma map failed\n");
+> > > > > > +		return -ENOMEM;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	pkt->pa_base = dma_addr;
+> > > > > > +	pkt->cb.cb = cb;
+> > > > > > +	pkt->cb.data = data;
+> > > > > > +
+> > > > > > +	mbox_send_message(client->chan, pkt);
+> > > > > > +	/* We can send next packet immediately, so just call txdone. */
+> > > > > > +	mbox_client_txdone(client->chan, 0);
+> > > > > > +
+> > > > > > +	return 0;
+> > > > > > +}
+> > > > > > +EXPORT_SYMBOL(cmdq_pkt_flush_async);
+> > > > > > +
+> > > > > > +struct cmdq_flush_completion {
+> > > > > > +	struct completion cmplt;
+> > > > > > +	bool err;
+> > > > > > +};
+> > > > > > +
+> > > > > > +static void cmdq_pkt_flush_cb(struct cmdq_cb_data data)
+> > > > > > +{
+> > > > > > +	struct cmdq_flush_completion *cmplt = data.data;
+> > > > > > +
+> > > > > > +	cmplt->err = data.err;
+> > > > > > +	complete(&cmplt->cmplt);
+> > > > > > +}
+> > > > > > +
+> > > > > > +int cmdq_pkt_flush(struct cmdq_client *client, struct cmdq_pkt *pkt)
+> > > > > > +{
+> > > > > > +	struct cmdq_flush_completion cmplt;
+> > > > > > +	int err;
+> > > > > > +
+> > > > > > +	init_completion(&cmplt.cmplt);
+> > > > > > +	err = cmdq_pkt_flush_async(client, pkt, cmdq_pkt_flush_cb, &cmplt);
+> > > > > > +	if (err < 0)
+> > > > > > +		return err;
+> > > > > > +	wait_for_completion(&cmplt.cmplt);
+> > > > > > +
+> > > > > > +	return cmplt.err ? -EFAULT : 0;
+> > > > > > +}
+> > > > > > +EXPORT_SYMBOL(cmdq_pkt_flush);
+> > > > > 
+> > > > > [...]
+> > > > > 
+> > > > > 
+> > > > 
+> > > > 
+> > > 
+> > > 
+> > 
+> > 
+> 
+> 
