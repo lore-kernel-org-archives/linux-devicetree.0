@@ -1,94 +1,56 @@
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH v7 00/10] Introduce the Counter subsystem
-Date: Fri, 6 Jul 2018 18:21:54 +0100
-Message-ID: <20180706182154.0000002d@huawei.com>
-References: <cover.1529607879.git.vilhelm.gray@gmail.com>
-        <603b0373-f1e1-5938-fa53-8328c9a5964f@lechnology.com>
-        <20180703024835.GA9493@sophia>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v4 6/6] arm64: dts: sdm845: Add tsens nodes
+Date: Fri, 06 Jul 2018 10:31:15 -0700
+Message-ID: <153089827550.143105.2506072427444330254@swboyd.mtv.corp.google.com>
+References: <cover.1530533998.git.amit.kucheria@linaro.org>
+ <a52b77ad84867774a0659f51ccb79b17ba7638ab.1530533998.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180703024835.GA9493@sophia>
+In-Reply-To: <a52b77ad84867774a0659f51ccb79b17ba7638ab.1530533998.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc: David Lechner <david@lechnology.com>, gregkh@linuxfoundation.org, jic23@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, fabrice.gasnier@st.com, benjamin.gaignard@st.com, robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com
+To: Amit Kucheria <amit.kucheria@linaro.org>, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, smohanad@codeaurora.org, bjorn.andersson@linaro.org, edubezval@gmail.com, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, vivek.gautam@codeaurora.org, Catalin Marinas <catalin.marinas@arm.com>, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2 Jul 2018 22:48:35 -0400
-William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
+Quoting Amit Kucheria (2018-07-02 05:44:09)
+> SDM845 has two tsens blocks, one with 13 sensors and the other with 8
+> sensors.
+> =
 
-> On Mon, Jul 02, 2018 at 01:13:40PM -0500, David Lechner wrote:
-> >On 06/21/2018 04:06 PM, William Breathitt Gray wrote:  
-> >> I decided to strip down these devices to arrive at the core essence of
-> >> what constitutes a "counter device" and therefore design a "generic
-> >> counter" abstraction to better represent these devices and prevent the
-> >> ambiguity we discovered with the existing IIO Counter interface. This
-> >> abstraction became the Generic Counter paradigm, which is explained in
-> >> detail within the Documentation/driver-api/generic-counter.rst file
-> >> introduced by this patchset.  
-> >
-> >I'm curious if you have given any thought to the time aspect of counters.
-> >I am interested in the rate at which the counters are counting (e.g. how
-> >many counts per second). I realize that you can calculate this in
-> >userspace or in the kernel using the system timer, but it is not very
-> >accurate since Linux is not a realtime OS. So, I would like to get the
-> >rate directly from the hardware. For example, the TI eQEP[1], like the
-> >one found in BeagleBones, has a couple ways of measuring time (see link
-> >for details).
-> >
-> >[1]: http://www.ti.com/lit/ug/sprug05a/sprug05a.pdf  
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> =
 
-Cool in eQEP if that is what you are targetting - been wanting to see
-nice kernel support implemented for that for a long time, but never
-got the spare cycles to do it myself!
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/q=
+com/sdm845.dtsi
+> index cdaabeb..edf8505 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -221,6 +221,22 @@
+>                         #interrupt-cells =3D <2>;
+>                 };
+>  =
 
-> 
-> Ah yes, I see you initially attempted adding a frequency channel type to
-> the IIO code. I agree with you that this calculation is best kept away
-> from the operating system, not just because of the realtime requirement
-> considerations, but also because the hardware likely knows best its own
-> data, so let's expose it!
-> 
-> Regarding the Generic Counter interface, a frequency attribute can be
-> added quite easily in a technical sense, so this discussion should be
-> focused more on the warrant for exposing this data. I understand from
-> the discussion thread on your initial patch submission that you're
-> working with hot-swappable encoder wheels and would like to expose a
-> counting rate since you have trouble otherwise knowing the number of
-> counts equal to one revolution due to the various possible encoder
-> wheels that could be installed -- do I understand this correctly?
-> 
-> Luckily the Generic Counter interface is a more abstract paradigm, so
-> the hot-swappable encoder wheels should not be a problem for us as long
-> as we nail down a consistent and thorough definition for this attribute.
-> To that end, since the Generic Counter paradigm is designed to abstract
-> away specifics of counter devices in order to present the final data of
-> interest to users (e.g. the count value, the mode of operation, etc.),
-> let's make sure frequency is actually what we want to expose and not
-> just a middle-step datum on the path to the final result.
-> 
-> What is the real life use-case for this information (are you tracking
-> position)? Does the relevant hardware report the number of counts equal
-> to one revolution, or are you calculating this from frequency? Are you
-> using this frequency to simply track the number of revolutions? Should
-> revolution count also be exposed? Is frequency useful for other
-> applications on its own (perhaps velocity of an automobile device
-> equipped with an encoder wheel for some reason or other)?
-> 
-> Once we figure out how this data is used, we can determine the best
-> design and place to introduce it into the Generic Counter interface,
-> then move on to integration from there.
+> +               tsens0: tsens@c222000 {
 
-Great - as long as this fits reasonably well in ABI wise (whatever the
-details) sounds like we don't need to solve it today.  I'm anxious not
-to delay merging this counter subsystem for another cycle.
+These unit addresses should match the first reg property, not the second
+one.
 
-Jonathan
-
-> 
-> William Breathitt Gray
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +                       compatible =3D "qcom,tsens-v2.4.0", "qcom,tsens-v=
+2";
+> +                       reg =3D <0xc263000 0x1ff>, /* TM */
+> +                             <0xc222000 0x1ff>; /* SROT */
+> +                       #qcom,sensors =3D <13>;
+> +                       #thermal-sensor-cells =3D <1>;
+> +               };
+> +
+> +               tsens1: tsens@c223000 {
+> +                       compatible =3D "qcom,tsens-v2.4.0", "qcom,tsens-v=
+2";
+> +                       reg =3D <0xc265000 0x1ff>, /* TM */
+> +                             <0xc223000 0x1ff>; /* SROT */
+> +                       #qcom,sensors =3D <8>;
