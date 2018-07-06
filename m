@@ -1,8 +1,7 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH 13/17] ARM: dts: sun8i: r40: Remove fallback
- compatible for TCON TV
-Date: Fri,  6 Jul 2018 19:51:09 +0200
-Message-ID: <20180706175113.26698-14-jernej.skrabec@siol.net>
+Subject: [PATCH 15/17] ARM: dts: sun8i: r40: Disable TCONs by default.
+Date: Fri,  6 Jul 2018 19:51:11 +0200
+Message-ID: <20180706175113.26698-16-jernej.skrabec@siol.net>
 References: <20180706175113.26698-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
@@ -20,38 +19,50 @@ To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@publ
 Cc: airlied-cv59FeDIM0c@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-While registers between A83T and R40 TV TCON are the same, R40 TCON TV
-driver has to set additional muxes in TCON TOP. Because of that, remove
-fallback A83T TCON TV compatible.
+R40 has 4 TCONs, but only 2 of them can receive some kind of output at
+the same time. Let's disable them by default, so only those which are
+really connected on board can be enabled in board dts file.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-r40.dtsi | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 4 ++++
+ arch/arm/boot/dts/sun8i-r40.dtsi                  | 2 ++
+ 2 files changed, 6 insertions(+)
 
+diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+index 737cf01b1acd..c39b9169ea64 100644
+--- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
++++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+@@ -251,6 +251,10 @@
+ 	regulator-name = "vcc-wifi";
+ };
+ 
++&tcon_tv0 {
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pb_pins>;
 diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index 1dd088d82773..6b4fe8eeee99 100644
+index e5c7e4804384..e2cbd4f645c5 100644
 --- a/arch/arm/boot/dts/sun8i-r40.dtsi
 +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -666,8 +666,7 @@
- 		};
+@@ -679,6 +679,7 @@
+ 			clock-names = "ahb", "tcon-ch1";
+ 			resets = <&ccu RST_BUS_TCON_TV0>;
+ 			reset-names = "lcd";
++			status = "disabled";
  
- 		tcon_tv0: lcd-controller@1c73000 {
--			compatible = "allwinner,sun8i-r40-tcon-tv",
--				     "allwinner,sun8i-a83t-tcon-tv";
-+			compatible = "allwinner,sun8i-r40-tcon-tv";
- 			reg = <0x01c73000 0x1000>;
- 			interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_TCON_TV0>, <&tcon_top 0>;
-@@ -690,8 +689,7 @@
- 		};
+ 			ports {
+ 				#address-cells = <1>;
+@@ -721,6 +722,7 @@
+ 			clock-names = "ahb", "tcon-ch1";
+ 			resets = <&ccu RST_BUS_TCON_TV1>;
+ 			reset-names = "lcd";
++			status = "disabled";
  
- 		tcon_tv1: lcd-controller@1c74000 {
--			compatible = "allwinner,sun8i-r40-tcon-tv",
--				     "allwinner,sun8i-a83t-tcon-tv";
-+			compatible = "allwinner,sun8i-r40-tcon-tv";
- 			reg = <0x01c74000 0x1000>;
- 			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_TCON_TV1>, <&tcon_top 1>;
+ 			ports {
+ 				#address-cells = <1>;
 -- 
 2.18.0
