@@ -1,250 +1,187 @@
-From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH v4 6/6] dt-bindings: media: rcar-vin: Clarify optional
- props
-Date: Fri, 6 Jul 2018 17:54:27 +0200
-Message-ID: <20180706155427.GE5237@bigcity.dyn.berto.se>
-References: <1528813566-17927-1-git-send-email-jacopo+renesas@jmondi.org>
- <20180613085455.GC4952@w540>
- <20180627052431.GO5237@bigcity.dyn.berto.se>
- <39247463.ySXe3lkPXm@avalon> <20180703195238.GD5611@w540>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v5 02/12] PM / devfreq: Fix handling of min/max_freq == 0
+Date: Fri, 6 Jul 2018 09:36:24 -0700
+Message-ID: <20180706163624.GE129942@google.com>
+References: <20180703234705.227473-1-mka@chromium.org>
+ <CGME20180703235032epcas3p3443729f2230e205f1a0a4b03e6e8f62b@epcas3p3.samsung.com>
+ <20180703234705.227473-3-mka@chromium.org>
+ <5B3C2EEF.4080309@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180703195238.GD5611@w540>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@glider.be, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+In-Reply-To: <5B3C2EEF.4080309@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+Hi Chanwoo,
 
-Thanks for not giving up on this work :-)
+On Wed, Jul 04, 2018 at 11:20:31AM +0900, Chanwoo Choi wrote:
+> Hi Matthias,
+> 
+> On 2018년 07월 04일 08:46, Matthias Kaehlcke wrote:
+> > Commit ab8f58ad72c4 ("PM / devfreq: Set min/max_freq when adding the
+> > devfreq device") initializes df->min/max_freq with the min/max OPP when
+> > the device is added. Later commit f1d981eaecf8 ("PM / devfreq: Use the
+> > available min/max frequency") adds df->scaling_min/max_freq and the
+> > following to the frequency adjustment code:
+> > 
+> >   max_freq = MIN(devfreq->scaling_max_freq, devfreq->max_freq);
+> > 
+> > With the current handling of min/max_freq this is incorrect:
+> > 
+> > Even though df->max_freq is now initialized to a value != 0 user space
+> > can still set it to 0, in this case max_freq would be 0 instead of
+> > df->scaling_max_freq as intended. In consequence the frequency adjustment
+> > is not performed:
+> > 
+> >   if (max_freq && freq > max_freq) {
+> > 	freq = max_freq;
+> > 
+> > To fix this set df->min/max freq to the min/max OPP in max/max_freq_store,
+> > when the user passes a value of 0. This also prevents df->max_freq from
+> > being set below the min OPP when df->min_freq is 0, and similar for
+> > min_freq. Since it is now guaranteed that df->min/max_freq can't be 0 the
+> > checks for this case can be removed.
+> > 
+> > Fixes: f1d981eaecf8 ("PM / devfreq: Use the available min/max frequency")
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > Reviewed-by: Brian Norris <briannorris@chromium.org>
+> > ---
+> > Changes in v5:
+> > - none
+> > 
+> > Changes in v4:
+> > - added 'Reviewed-by: Brian Norris <briannorris@chromium.org>' tag
+> > 
+> > Changes in v3:
+> > - none
+> > 
+> > Changes in v2:
+> > - handle freq tables sorted in ascending and descending order in
+> >   min/max_freq_store()
+> > - use same order for conditional statements in min/max_freq_store()
+> > ---
+> >  drivers/devfreq/devfreq.c | 42 ++++++++++++++++++++++++++++-----------
+> >  1 file changed, 30 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> > index 0057ef5b0a98..6f604f8b2b81 100644
+> > --- a/drivers/devfreq/devfreq.c
+> > +++ b/drivers/devfreq/devfreq.c
+> > @@ -283,11 +283,11 @@ int update_devfreq(struct devfreq *devfreq)
+> >  	max_freq = MIN(devfreq->scaling_max_freq, devfreq->max_freq);
+> >  	min_freq = MAX(devfreq->scaling_min_freq, devfreq->min_freq);
+> >  
+> > -	if (min_freq && freq < min_freq) {
+> > +	if (freq < min_freq) {
+> >  		freq = min_freq;
+> >  		flags &= ~DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use GLB */
+> >  	}
+> > -	if (max_freq && freq > max_freq) {
+> > +	if (freq > max_freq) {
+> >  		freq = max_freq;
+> >  		flags |= DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use LUB */
+> >  	}
+> > @@ -1122,18 +1122,27 @@ static ssize_t min_freq_store(struct device *dev, struct device_attribute *attr,
+> >  {
+> >  	struct devfreq *df = to_devfreq(dev);
+> >  	unsigned long value;
+> > +	unsigned long *freq_table;
+> 
+> You can move 'freq_table' under 'else' statement.
 
-On 2018-07-03 21:52:38 +0200, Jacopo Mondi wrote:
-> Hi Laurent, Niklas,
-> =
+Will do
 
-> On Mon, Jul 02, 2018 at 10:19:25AM +0300, Laurent Pinchart wrote:
-> > Hi Niklas,
-> >
-> > On Wednesday, 27 June 2018 08:24:31 EEST Niklas S=F6derlund wrote:
-> > > On 2018-06-13 10:54:55 +0200, Jacopo Mondi wrote:
-> > > > On Tue, Jun 12, 2018 at 06:45:53PM +0300, Sakari Ailus wrote:
-> > > >> On Tue, Jun 12, 2018 at 04:26:06PM +0200, Jacopo Mondi wrote:
-> > > >>> Add a note to the R-Car VIN interface bindings to clarify that all
-> > > >>> properties listed as generic properties in video-interfaces.txt c=
-an
-> > > >>> be included in port@0 endpoint, but if not explicitly listed in t=
-he
-> > > >>> interface bindings documentation, they do not modify it behaviour.
-> > > >>>
-> > > >>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > >>> ---
-> > > >>>
-> > > >>>  Documentation/devicetree/bindings/media/rcar_vin.txt | 6 ++++++
-> > > >>>  1 file changed, 6 insertions(+)
-> > > >>>
-> > > >>> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt
-> > > >>> b/Documentation/devicetree/bindings/media/rcar_vin.txt index
-> > > >>> 8130849..03544c7 100644
-> > > >>> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-> > > >>> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> > > >>> @@ -55,6 +55,12 @@ from local SoC CSI-2 receivers (port1) dependi=
-ng on
-> > > >>> SoC.
-> > > >>>
-> > > >>>        instances that are connected to external pins should have =
-port
-> > > >>>        0.
-> > > >>>
-> > > >>>        - Optional properties for endpoint nodes of port@0:
-> > > >>> +
-> > > >>> +        All properties described in [1] and which apply to the
-> > > >>> selected
-> > > >>> +        media bus type could be optionally listed here to better
-> > > >>> describe
-> > > >>> +        the current hardware configuration, but only the followi=
-ng
-> > > >>> ones do
-> > > >>> +        actually modify the VIN interface behaviour:
-> > > >>> +
-> > >
-> > > I'm not sure the description have to be as explicit to that the
-> > > properties in 'video-interfaces.txt' are not currently used by the
-> > > driver. I find it not relevant which ones are used or not, what is
-> > > important for me is that all properties in 'video-interfaces.txt' whi=
-ch
-> > > can be used to describe the specific bus are valid for the DT
-> > > description.
-> >
-> > I agree with you. The driver is irrelevant in this context. What matter=
-s is
-> > which properties are applicable to the bus. For instance, if the VIN pa=
-rallel
-> > input supports configurable polarities for the h/v sync signals, hsync-=
-active
-> > and vsync-active should be listed in the bindings. On the other hand, i=
-f the
-> > polarities are fixed, then the properties are not needed.
-> >
-> =
+> >  	int ret;
+> > -	unsigned long max;
+> >  
+> >  	ret = sscanf(buf, "%lu", &value);
+> >  	if (ret != 1)
+> >  		return -EINVAL;
+> >  
+> >  	mutex_lock(&df->lock);
+> > -	max = df->max_freq;
+> > -	if (value && max && value > max) {
+> > -		ret = -EINVAL;
+> > -		goto unlock;
+> > +
+> > +	if (value) {
+> > +		if (value > df->max_freq) {
+> > +			ret = -EINVAL;
+> > +			goto unlock;
+> > +		}
+> > +	} else {
+> > +		freq_table = df->profile->freq_table;
+> > +		/* typical order is ascending, some drivers use descending */
+> 
+> You better to explain what is doing of following code.
+> How about modifying it as following?
+> 
+> 		/* Get minimum frequency according to sorting way */
 
-> Fine, I'll surrender then, you're too many to fight against :p
-> =
+Ok, will slightly modify it to 'sorting order' if you don't mind.
 
-> Joking aside, I see your points, and I'll resend dropping this last
-> bit and documenting which properties applies to the interface.
-> =
+> > +		if (freq_table[0] < freq_table[df->profile->max_state - 1])
+> > +			value = freq_table[0];
+> > +		else
+> > +			value = freq_table[df->profile->max_state - 1];
+> >  	}
+> >  
+> >  	df->min_freq = value;
+> > @@ -1157,18 +1166,27 @@ static ssize_t max_freq_store(struct device *dev, struct device_attribute *attr,
+> >  {
+> >  	struct devfreq *df = to_devfreq(dev);
+> >  	unsigned long value;
+> > +	unsigned long *freq_table;
+> 
+> ditto. You can move 'freq_table' under 'else' statement.
 
-> I can list:
-> - vsync-active (added by this series)
-> - hsync-active (added by this series)
-> - data-enable-active (added by this series)
-> - field-active-even (to be added)
-> =
+Will do
 
-> I haven't find a way to configure the plck-sample value in the VINs
-> registers. Should we skip it?
+> >  	int ret;
+> > -	unsigned long min;
+> >  
+> >  	ret = sscanf(buf, "%lu", &value);
+> >  	if (ret != 1)
+> >  		return -EINVAL;
+> >  
+> >  	mutex_lock(&df->lock);
+> > -	min = df->min_freq;
+> > -	if (value && min && value < min) {
+> > -		ret = -EINVAL;
+> > -		goto unlock;
+> > +
+> > +	if (value) {
+> > +		if (value < df->min_freq) {
+> > +			ret = -EINVAL;
+> > +			goto unlock;
+> > +		}
+> > +	} else {
+> > +		freq_table = df->profile->freq_table;
+> > +		/* typical order is ascending, some drivers use descending */
+> 
+> ditto.
+> 		/* Get maximum frequency according to sorting way */
 
-IIRC my findings agree with yours, no register to control plck-sample in =
+Ok
 
-the VIN register set.
+> > +		if (freq_table[0] < freq_table[df->profile->max_state - 1])
+> > +			value = freq_table[df->profile->max_state - 1];
+> > +		else
+> > +			value = freq_table[0];
+> >  	}
+> >  
+> >  	df->max_freq = value;
+> > 
+> 
+> If you agree my comment and modify this patch according to my comment,
+> feel free to add my review tag.
+> - Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-> =
+Thanks for the review!
 
-> I also think 'bus-width' and 'data-shift' are not directly configurable in
-> registers but depends on SoC, the selected input interface, and the
-> input image format (see tables at 26.3.1 datasheet revision 1.00), so
-> it makes sense list them as acceptable properties.
-> =
-
-> Do I have your ack on this so I can re-spin?
-
-I think I understand your plan and I think it sounds ok, please try it =
-
-:-)
-
-> =
-
-> > > On a side note, in rcar_vin.txt we have this section describing the G=
-en2
-> > > bindings:
-> > >
-> > >   The per-board settings Gen2 platforms:
-> > >    - port sub-node describing a single endpoint connected to the vin
-> > >      as described in video-interfaces.txt[1]. Only the first one will
-> > >      be considered as each vin interface has one input port.
-> > >
-> > > This whole series only deals with documenting the Gen3 optional
-> > > properties and not the Gen2. Maybe with parallel input support for Ge=
-n3
-> > > patches on there way to making it upstream this series should be
-> > > extended to in a good way merge the port@0 optional properties for bo=
-th
-> > > generations of hardware?
-> >
-> > That would be nice too :-)
-> =
-
-> I see..
-> =
-
-> Well, I would keep the Gen2/Gen3 sections separate, as they have a
-> different layout of port nodes (Gen2 has a single 'port' node, while Gen3=
- could
-> have several 'port' nodes enclosed in a 'ports' one).
-> =
-
-> But I could indeed reference the optional endpoint properties of
-> 'port@0' of Gen3 bindings in Gen2 ones. Or the other way around. Do
-> you have any preference?
-
-My preference would be to list the properties in the Gen2 section and in =
-
-the Gen3 port@0 section refer to the Gen2 optional properties.
-
-> =
-
-> Thanks
->    j
-> =
-
-> =
-
-> >
-> > > >> I don't think this should be needed. You should only have properti=
-es
-> > > >> that describe the hardware configuration in a given system.
-> > > >
-> > > > There has been quite some debate on this, and please bear with me
-> > > > here for re-proposing it: I started by removing properties in some =
-DT
-> > > > files for older Renesas board which listed endpoint properties not
-> > > > documented in the VIN's bindings and not parsed by the VIN driver [=
-1]
-> > > > Niklas (but Simon and Geert seems to agree here) opposed to that
-> > > > patch, as those properties where described in 'video-interfaces.txt=
-' and
-> > > > even if not parsed by the current driver implementation, they actua=
-lly
-> > > > describe hardware. I rebated that only properties listed in the dev=
-ice
-> > > > bindings documentation should actually be used, and having properti=
-es
-> > > > not parsed by the driver confuses users, which may expect changing
-> > > > them modifies the interface configuration, which does not happens at
-> > > > the moment.
-> > > >
-> > > > This came out as a middle ground from a discussion with Niklas. As
-> > > > stated in the cover letter if this patch makes someone uncomfortabl=
-e, feel
-> > > > free to drop it not to hold back the rest of the series which has b=
-een
-> > > > well received instead.
-> > >
-> > > What I don't agree with and sparked this debate from my side was the
-> > > deletion of properties in dts files which correctly does describe the
-> > > bus but which are not currently parsed by the driver. To me that is
-> > > decreasing the value of the dts. If on the other hand the goal is to
-> > > deprecate a property from the video-interfaces.txt by slowly removing
-> > > them from dts where the driver don't use them I'm all for it. But I
-> > > don't think this is the case here right?
-> >
-> > I think you're right, I don't think that's the case.
-> >
-> > We should not remove properties from the dts files when they correctly
-> > describe the hardware and have an added-value. On the other hand, if a
-> > property correctly describes the hardware, but is constrained to a sing=
-le
-> > value due to hardware limitations, then we can omit it.
-> >
-> > > > [1] https://www.spinics.net/lists/arm-kernel/msg656302.html
-> > > >
-> > > >>> - hsync-active: see [1] for description. Default is active high.
-> > > >>> - vsync-active: see [1] for description. Default is active high.
-> > > >>> - data-enable-active: polarity of CLKENB signal, see [1] for
-> >
-> > --
-> > Regards,
-> >
-> > Laurent Pinchart
-> >
-> >
-> >
-
-
-
--- =
-
-Regards,
-Niklas S=F6derlund
+Matthias
