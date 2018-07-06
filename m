@@ -1,52 +1,39 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 3/4] clk: rockchip: add support for half divider
-Date: Fri, 06 Jul 2018 10:49:11 -0700
-Message-ID: <153089935104.143105.9532329321820731513@swboyd.mtv.corp.google.com>
-References: <1529029011-15021-1-git-send-email-zhangqing@rock-chips.com>
- <1529029011-15021-4-git-send-email-zhangqing@rock-chips.com>
- <153089585197.143105.10633953093490493144@swboyd.mtv.corp.google.com>
- <5208192.saTfdjLqfi@phil>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 4/5] ASoC: dt-bindings: Update dt
+ binding name for apq8096
+Date: Fri, 6 Jul 2018 18:51:14 +0100
+Message-ID: <cf28657d-3ca7-f0d6-8614-04d021ce909f@linaro.org>
+References: <1530870195-13576-1-git-send-email-rohitkr@codeaurora.org>
+ <1530870195-13576-5-git-send-email-rohitkr@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5208192.saTfdjLqfi@phil>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Elaine Zhang <zhangqing@rock-chips.com>, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, cl@rock-chips.com, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1530870195-13576-5-git-send-email-rohitkr@codeaurora.org>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rohit kumar <rohitkr@codeaurora.org>, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, plai@codeaurora.org, bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Heiko Stuebner (2018-07-06 10:19:11)
-> Am Freitag, 6. Juli 2018, 18:50:51 CEST schrieb Stephen Boyd:
-> > Quoting Elaine Zhang (2018-06-14 19:16:50)
-> > > =
-
-> > > diff --git a/drivers/clk/rockchip/clk-half-divider.c b/drivers/clk/ro=
-ckchip/clk-half-divider.c
-> > > new file mode 100644
-> > > index 000000000000..fb7a6501e0c1
-> > > --- /dev/null
-> > > +++ b/drivers/clk/rockchip/clk-half-divider.c
-> > > @@ -0,0 +1,230 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Copyright (c) 2018 Fuzhou Rockchip Electronics Co., Ltd
-> > > + */
-> > > +
-> > > +#include <linux/slab.h>
-> > > +#include <linux/bitops.h>
-> > > +#include <linux/regmap.h>
-> > > +#include <linux/clk.h>
-> > =
-
-> > Is this include used?
-> =
-
-> nope, and so are bitops and regmap as well.
-> I've amended the commit patch accordingly.
-> =
-
-> =
 
 
-Cool. Thanks!
+On 06/07/18 10:43, Rohit kumar wrote:
+> Remove qcom prefix from machine driver dt bindings of
+> apq8096 SoC.
+Yes, this is a good move to make everything inline!
+
+> 
+> Signed-off-by: Rohit kumar<rohitkr@codeaurora.org>
+> ---
+>   Documentation/devicetree/bindings/sound/qcom,apq8096.txt | 15 +++++++++++++--
+>   1 file changed, 13 insertions(+), 2 deletions(-)
+
+Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
