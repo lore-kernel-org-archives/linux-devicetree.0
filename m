@@ -1,48 +1,185 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 18/23] dt-bindings: thermal: armada: add reference to
- new bindings
-Date: Fri, 6 Jul 2018 08:54:58 +0200
-Message-ID: <20180706085458.6ed1a483@xps13>
-References: <20180625151239.20976-1-miquel.raynal@bootlin.com>
- <20180625151239.20976-19-miquel.raynal@bootlin.com>
- <20180703213011.GA13190@rob-hp-laptop>
- <20180705120528.4b923e16@xps13>
- <CAL_JsqL9h4RExZtm5cER-5kNvMpDzH-4MwcmY7VOLXB9-uEYYA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqL9h4RExZtm5cER-5kNvMpDzH-4MwcmY7VOLXB9-uEYYA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>, David Sniatkiwicz <davidsn@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM
- ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH] arm64: hikey960: update idle-states
+Date: Fri,  6 Jul 2018 08:57:26 +0200
+Message-ID: <1530860246-29072-1-git-send-email-vincent.guittot@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: xuwei5@hisilicon.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: leo.yan@linaro.org, daniel.lezcano@linaro.org, Vincent Guittot <vincent.guittot@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGUgb24gVGh1LCA1IEp1
-bCAyMDE4IDEyOjAzOjA0IC0wNjAwOgoKPiBPbiBUaHUsIEp1bCA1LCAyMDE4IGF0IDQ6MDUgQU0g
-TWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4gd3JvdGU6Cj4gPgo+ID4g
-SGkgUm9iLAo+ID4KPiA+IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+IHdyb3RlIG9uIFR1
-ZSwgMyBKdWwgMjAxOCAxNTozMDoxMSAtMDYwMDoKPiA+ICAKPiA+ID4gT24gTW9uLCBKdW4gMjUs
-IDIwMTggYXQgMDU6MTI6MzRQTSArMDIwMCwgTWlxdWVsIFJheW5hbCB3cm90ZTogIAo+ID4gPiA+
-IE5ldyBiaW5kaW5ncyAod2l0aCB0aGUgc3lzY29uIGFuZCB0aGUgb3ZlcmhlYXQgaW50ZXJydXB0
-KSBhcmUgYXZhaWxhYmxlICAKPiA+ID4KPiA+ID4gV2hhdCBpbnRlcnJ1cHQ/IEl0J3Mgbm90IGlu
-IHlvdXIgbmV3IGJpbmRpbmcuICAKPiAKPiA/Pz8KCkkgZm9yZ290IHRoYXQgcG9pbnQsIG15IGJh
-ZC4KCkluaXRpYWxseSB0aGlzIHNlcmllcyBpbnRyb2R1Y2VkIGFuIG92ZXJoZWF0IGludGVycnVw
-dC4gRHVlIHRvIHNvbWUKZGVwZW5kZW5jaWVzIEkgc3BsaXQgdGhlIG9yaWdpbmFsIHNlcmllcyBp
-biB0d286IHRoaXMgb25lIGFuZCBhbm90aGVyCm9uZSBqdXN0IHRvIGFkZCBzdXBwb3J0IGZvciB0
-aGUgaW50ZXJydXB0LgoKVGhpcyBpcyBhIHN0YWxlIGNvbW1lbnQgSSBmb3Jnb3QgdG8gcmVtb3Zl
-IChhZ2FpbiBpbiB0aGUgdjMpLCBzb3JyeS4KCkknbGwgd2FpdCBmb3IgRWR1YXJkbydzIGZlZWRi
-YWNrIGFuZCByZXBvc3QgZXZlbnR1YWxseSB3aXRob3V0IHRoZQpwYXJlbnRoZXNpcy4KClRoYW5r
-cywKTWlxdcOobAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
-bGludXgtYXJtLWtlcm5lbAo=
+Update entry/exit latency and residency time of hikey960 to use more
+realistic figures based on unitary tests done on the platform.
+
+The complete results (in us) :
+                  big cluster
+                  cluster  CPU
+max entry latency     800  400
+max exit latency     2900  550
+residency  903Mhz    5000 1500
+residency 2363Mhz       0 1500
+
+                  little cluster
+                  cluster  CPU
+max entry latency     500  400
+max exit latency     1600  650
+residency  533Mhz    8000 4500
+residency 1844Mhz       0 1500
+
+We can see that the residency time depends of the running OPP which is not
+handled for now. Then we also have to take into account the constraint of
+a residency time shorter than the tick to get full advantage of idle loop
+reordering(tick is stopped if idle duration is higher than tick period).
+Finally the selected residency value are :
+                 big cluster
+                  cluster  CPU
+residency            3700 1500
+
+                  little cluster
+                  cluster  CPU
+residency            3500 1500
+
+A simple test with a task waking up every 11,111ms shows improvement:
+- 5% a lowest OPP
+- 22% at highest OPP
+
+The period has been chosen:
+- to be shorter than old cluster residency time and longer than new
+residency time od cluster off C-state
+- to prevent any sync with tick (4ms) when running tests that can add
+some variances between tests
+
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+---
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 45 ++++++++++++++++++-------------
+ 1 file changed, 27 insertions(+), 18 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index 421d454..890d23e 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -61,7 +61,7 @@
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
+-			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
++			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+ 			capacity-dmips-mhz = <592>;
+ 			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER0>;
+ 			operating-points-v2 = <&cluster0_opp>;
+@@ -75,7 +75,7 @@
+ 			reg = <0x0 0x1>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
+-			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
++			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+ 			capacity-dmips-mhz = <592>;
+ 			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER0>;
+ 			operating-points-v2 = <&cluster0_opp>;
+@@ -87,7 +87,7 @@
+ 			reg = <0x0 0x2>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
+-			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
++			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+ 			capacity-dmips-mhz = <592>;
+ 			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER0>;
+ 			operating-points-v2 = <&cluster0_opp>;
+@@ -99,7 +99,7 @@
+ 			reg = <0x0 0x3>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
+-			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
++			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+ 			capacity-dmips-mhz = <592>;
+ 			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER0>;
+ 			operating-points-v2 = <&cluster0_opp>;
+@@ -111,7 +111,7 @@
+ 			reg = <0x0 0x100>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A73_L2>;
+-			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_1>;
++			cpu-idle-states = <&CPU_SLEEP_1 &CLUSTER_SLEEP_1>;
+ 			capacity-dmips-mhz = <1024>;
+ 			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER1>;
+ 			operating-points-v2 = <&cluster1_opp>;
+@@ -125,7 +125,7 @@
+ 			reg = <0x0 0x101>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A73_L2>;
+-			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_1>;
++			cpu-idle-states = <&CPU_SLEEP_1 &CLUSTER_SLEEP_1>;
+ 			capacity-dmips-mhz = <1024>;
+ 			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER1>;
+ 			operating-points-v2 = <&cluster1_opp>;
+@@ -137,7 +137,7 @@
+ 			reg = <0x0 0x102>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A73_L2>;
+-			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_1>;
++			cpu-idle-states = <&CPU_SLEEP_1 &CLUSTER_SLEEP_1>;
+ 			capacity-dmips-mhz = <1024>;
+ 			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER1>;
+ 			operating-points-v2 = <&cluster1_opp>;
+@@ -149,7 +149,7 @@
+ 			reg = <0x0 0x103>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A73_L2>;
+-			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_1>;
++			cpu-idle-states = <&CPU_SLEEP_1 &CLUSTER_SLEEP_1>;
+ 			capacity-dmips-mhz = <1024>;
+ 			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER1>;
+ 			operating-points-v2 = <&cluster1_opp>;
+@@ -158,31 +158,40 @@
+ 		idle-states {
+ 			entry-method = "psci";
+ 
+-			CPU_SLEEP: cpu-sleep {
++			CPU_SLEEP_0: cpu-sleep-0 {
+ 				compatible = "arm,idle-state";
+ 				local-timer-stop;
+ 				arm,psci-suspend-param = <0x0010000>;
+-				entry-latency-us = <40>;
+-				exit-latency-us = <70>;
+-				min-residency-us = <3000>;
++				entry-latency-us = <400>;
++				exit-latency-us = <650>;
++				min-residency-us = <1500>;
+ 			};
+-
+ 			CLUSTER_SLEEP_0: cluster-sleep-0 {
+ 				compatible = "arm,idle-state";
+ 				local-timer-stop;
+ 				arm,psci-suspend-param = <0x1010000>;
+ 				entry-latency-us = <500>;
+-				exit-latency-us = <5000>;
+-				min-residency-us = <20000>;
++				exit-latency-us = <1600>;
++				min-residency-us = <3500>;
++			};
++
++
++			CPU_SLEEP_1: cpu-sleep-1 {
++				compatible = "arm,idle-state";
++				local-timer-stop;
++				arm,psci-suspend-param = <0x0010000>;
++				entry-latency-us = <400>;
++				exit-latency-us = <550>;
++				min-residency-us = <1500>;
+ 			};
+ 
+ 			CLUSTER_SLEEP_1: cluster-sleep-1 {
+ 				compatible = "arm,idle-state";
+ 				local-timer-stop;
+ 				arm,psci-suspend-param = <0x1010000>;
+-				entry-latency-us = <1000>;
+-				exit-latency-us = <5000>;
+-				min-residency-us = <20000>;
++				entry-latency-us = <800>;
++				exit-latency-us = <2900>;
++				min-residency-us = <3500>;
+ 			};
+ 		};
+ 
+-- 
+2.7.4
