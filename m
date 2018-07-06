@@ -1,13 +1,13 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH 03/17] ARM: dts: sun8i: r40: Remove fallback
+Subject: [PATCH 01/17] dt-bindings: display: sun4i-drm: Add R40
  display engine compatible
-Date: Fri,  6 Jul 2018 19:50:59 +0200
-Message-ID: <20180706175113.26698-4-jernej.skrabec@siol.net>
+Date: Fri,  6 Jul 2018 19:50:57 +0200
+Message-ID: <20180706175113.26698-2-jernej.skrabec@siol.net>
 References: <20180706175113.26698-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBCWZ73MQKGQEBPDGMHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBBWZ73MQKGQEMSDIGHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180706175113.26698-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,29 +20,35 @@ To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@publ
 Cc: airlied-cv59FeDIM0c@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-R40 has pretty unique display pipeline. Because of that, H3 display
-engine compatible fallback should be removed.
+R40 has pretty unique display pipeline. It supports two outputs at the
+same time.
 
-Fixes: 05a43a262d03 ("ARM: dts: sun8i: r40: Add HDMI pipeline")
+Possible outputs:
+- 1x HDMI,
+- 2x TV output
+- 1x VGA,
+- 1x MIPI DSI and
+- 2x LCD outputs
+
+That is the biggest number of possible outputs from all Allwinner SoC.
+Because of that, add new compatible for it.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-r40.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index c95a59aac48f..2afb079a3776 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -102,8 +102,7 @@
- 	};
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+index 5a9319ad8861..288b4cbc255e 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+@@ -399,6 +399,7 @@ Required properties:
+     * allwinner,sun8i-a33-display-engine
+     * allwinner,sun8i-a83t-display-engine
+     * allwinner,sun8i-h3-display-engine
++    * allwinner,sun8i-r40-display-engine
+     * allwinner,sun8i-v3s-display-engine
+     * allwinner,sun9i-a80-display-engine
  
- 	de: display-engine {
--		compatible = "allwinner,sun8i-r40-display-engine",
--			     "allwinner,sun8i-h3-display-engine";
-+		compatible = "allwinner,sun8i-r40-display-engine";
- 		allwinner,pipelines = <&mixer0>, <&mixer1>;
- 		status = "disabled";
- 	};
 -- 
 2.18.0
