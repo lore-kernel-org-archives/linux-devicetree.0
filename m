@@ -1,58 +1,72 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 18/23] dt-bindings: thermal: armada: add reference to
- new bindings
-Date: Fri, 6 Jul 2018 11:51:48 -0600
-Message-ID: <CAL_JsqL8Lc3r7d5b2tnngJksRSiDqDzXjxyK8n1htGbUa6nE6g@mail.gmail.com>
-References: <20180625151239.20976-1-miquel.raynal@bootlin.com>
- <20180625151239.20976-19-miquel.raynal@bootlin.com>
- <20180703213011.GA13190@rob-hp-laptop>
- <20180705120528.4b923e16@xps13>
- <CAL_JsqL9h4RExZtm5cER-5kNvMpDzH-4MwcmY7VOLXB9-uEYYA@mail.gmail.com>
- <20180706085458.6ed1a483@xps13>
+From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: [PATCH 00/17] Allwinner R40 HDMI refactoring
+Date: Fri,  6 Jul 2018 19:50:56 +0200
+Message-ID: <20180706175113.26698-1-jernej.skrabec@siol.net>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180706085458.6ed1a483@xps13>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>, David Sniatkiwicz <davidsn@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBBGZ73MQKGQERFOA5GQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: airlied-cv59FeDIM0c@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 6, 2018 at 12:55 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
->
-> Hi Rob,
->
-> Rob Herring <robh@kernel.org> wrote on Thu, 5 Jul 2018 12:03:04 -0600:
->
-> > On Thu, Jul 5, 2018 at 4:05 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > >
-> > > Hi Rob,
-> > >
-> > > Rob Herring <robh@kernel.org> wrote on Tue, 3 Jul 2018 15:30:11 -0600:
-> > >
-> > > > On Mon, Jun 25, 2018 at 05:12:34PM +0200, Miquel Raynal wrote:
-> > > > > New bindings (with the syscon and the overheat interrupt) are available
-> > > >
-> > > > What interrupt? It's not in your new binding.
-> >
-> > ???
->
-> I forgot that point, my bad.
->
-> Initially this series introduced an overheat interrupt. Due to some
-> dependencies I split the original series in two: this one and another
-> one just to add support for the interrupt.
+This series fixes several issues found in R40 HDMI patch series after
+it was applied. Conversation can be found here:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2018-June/586011.html
 
-You can split up the driver support, but please make the binding
-complete as possible.
+One issue raised in that thread is probably not solved (conversation
+still on going), but I want to send these patches for review before
+I'm going on vacation.
 
-Rob
+There is also additional DW HDMI driver fix not mentioned in mails.
+
+Patches are based on latest linux-next (next-20180706) and are ordered
+in such way that they don't break R40 HDMI at any time. Because of that
+I suggest that whole series goes through drm-misc to preserve that order.
+
+I also tested those patches on H3 to make sure it doesn't break other
+platforms. However, it would be nice to test for regressions also on
+older SoCs (with DE1).
+
+Best regards,
+Jernej
+
+Jernej Skrabec (17):
+  dt-bindings: display: sun4i-drm: Add R40 display engine compatible
+  drm/sun4i: Add R40 display engine compatible
+  ARM: dts: sun8i: r40: Remove fallback display engine compatible
+  drm/sun4i: tcon-top: Cleanup clock handling
+  drm/sun4i: tcon: Release node when traversing of graph
+  dt-bindings: display: sun4i-drm: Add R40 TV TCON description
+  drm/sun4i: DW HDMI: Release nodes if error happens during CRTC search
+  ARM: dts: sun8i: r40: Add mixer ids to TCON TOP
+  drm/sun4i: mixer: Read id from DT
+  drm/sun4i: tcon-top: Add helpers for switching mux
+  drm/sun4i: tcon: Add another way for matching mixers with tcon
+  drm/sun4i: tcon: Add support for R40 TCON
+  ARM: dts: sun8i: r40: Remove fallback compatible for TCON TV
+  ARM: dts: sun8i: r40: Add missing TCON-TOP - TCON connections
+  ARM: dts: sun8i: r40: Disable TCONs by default.
+  drm/sun4i: tcon-top: Remove mux configuration at probe time
+  dt-bindings: display: sun4i-drm: Fix order of DW HDMI PHY compatibles
+
+ .../bindings/display/sunxi/sun4i-drm.txt      |   6 +-
+ .../boot/dts/sun8i-r40-bananapi-m2-ultra.dts  |  20 +-
+ arch/arm/boot/dts/sun8i-r40.dtsi              |  65 ++++++-
+ drivers/gpu/drm/sun4i/sun4i_drv.c             |   1 +
+ drivers/gpu/drm/sun4i/sun4i_tcon.c            |  92 ++++++++-
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         |  15 +-
+ drivers/gpu/drm/sun4i/sun8i_mixer.c           |  35 +++-
+ drivers/gpu/drm/sun4i/sun8i_tcon_top.c        | 183 ++++++++----------
+ drivers/gpu/drm/sun4i/sun8i_tcon_top.h        |   4 +
+ 9 files changed, 278 insertions(+), 143 deletions(-)
+
+-- 
+2.18.0
