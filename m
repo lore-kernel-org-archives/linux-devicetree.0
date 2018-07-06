@@ -1,64 +1,104 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] arm64: dts: rockchip: add 96boards RK3399 Ficus
- board
-Date: Fri, 06 Jul 2018 15:49:41 +0200
-Message-ID: <5173203.kQ7HMvCHTa@phil>
-References: <20180705150818.29931-1-ezequiel@collabora.com>
- <20180705234124.GA32051@rob-hp-laptop>
- <cceccdfefbcf9a5dcc5d683e7c7d4a2d16949344.camel@collabora.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCH v4 3/5] w1: core: match sub-nodes of bus masters in
+ devicetree
+Date: Fri, 6 Jul 2018 15:52:05 +0200
+Message-ID: <20180706135205.dkcrhbmaak2iteyw@earth.universe>
+References: <20180706053552.11438-1-daniel@zonque.org>
+ <20180706053552.11438-4-daniel@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <cceccdfefbcf9a5dcc5d683e7c7d4a2d16949344.camel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jr34mizs65dijvag"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180706053552.11438-4-daniel@zonque.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Evgeniy Polyakov <zbr@ioremap.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Daniel Mack <daniel@zonque.org>, robh+dt@kernel.org, mark.rutland@arm.com, szabolcs.gyurko@tlt.hu, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, robert.jarzmik@free.fr
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 6. Juli 2018, 15:46:55 CEST schrieb Ezequiel Garcia:
-> On Thu, 2018-07-05 at 17:41 -0600, Rob Herring wrote:
-> > On Thu, Jul 05, 2018 at 12:08:18PM -0300, Ezequiel Garcia wrote:
-> > > The RK3399 Ficus board is an Enterprise Edition board
-> > > manufactured by Vamrs Ltd., based on the Rockchip RK3399 SoC.
-> > > 
-> > > The board exposes a bunch of nice peripherals, including
-> > > SATA, HDMI, MIPI CSI, Ethernet, WiFi, and PCIe.
-> > > 
-> > > Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> > > 
-> [snip]
-> > > +
-> > > +&i2c0 {
-> > > +	clock-frequency = <400000>;
-> > > +	i2c-scl-rising-time-ns = <168>;
-> > > +	i2c-scl-falling-time-ns = <4>;
-> > > +	status = "okay";
-> > > +
-> > > +	vdd_cpu_b: syr827@40 {
-> > 
-> > regulator@40
-> > 
-> 
-> OK.
-> 
-> > > +		compatible = "silergy,syr827";
-> > > +		reg = <0x40>;
-> > > +		fcs,suspend-voltage-selector = <1>;
-> > 
-> > Strange to have a different vendor for this property...
-> > 
-> 
-> It's because this driver has also a Fairchild compatible
-> "fcs,fan53555".
 
-The Silergy regulators seem to be some sort of clone of
-the Fairchild fan53555.
+--jr34mizs65dijvag
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Greg & Evgeniy,
+
+I suggest, that I take this patch and the DT bindings together
+with the power-supply changes, once the bindings have been
+reviewed by Rob (Herring). I will prepare an immutable branch,
+that can be pulled into w1 as needed. Are you fine with this?
+
+-- Sebastian
+
+On Fri, Jul 06, 2018 at 07:35:50AM +0200, Daniel Mack wrote:
+> Once a new slave device is detected, match it against all sub-nodes of the
+> master bus controller. If a match is found, set the slave device's of_node
+> pointer.
+>=20
+> Signed-off-by: Daniel Mack <daniel@zonque.org>
+> ---
+>  drivers/w1/w1.c    | 3 +++
+>  include/linux/w1.h | 2 ++
+>  2 files changed, 5 insertions(+)
+>=20
+> diff --git a/drivers/w1/w1.c b/drivers/w1/w1.c
+> index caef0e0fd817..890c038c25f8 100644
+> --- a/drivers/w1/w1.c
+> +++ b/drivers/w1/w1.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/kthread.h>
+>  #include <linux/freezer.h>
+>  #include <linux/hwmon.h>
+> +#include <linux/of.h>
+> =20
+>  #include <linux/atomic.h>
+> =20
+> @@ -686,6 +687,8 @@ static int __w1_attach_slave_device(struct w1_slave *=
+sl)
+>  	sl->dev.bus =3D &w1_bus_type;
+>  	sl->dev.release =3D &w1_slave_release;
+>  	sl->dev.groups =3D w1_slave_groups;
+> +	sl->dev.of_node =3D of_find_matching_node(sl->master->dev.of_node,
+> +						sl->family->of_match_table);
+> =20
+>  	dev_set_name(&sl->dev, "%02x-%012llx",
+>  		 (unsigned int) sl->reg_num.family,
+> diff --git a/include/linux/w1.h b/include/linux/w1.h
+> index 694101f744c7..3111585c371f 100644
+> --- a/include/linux/w1.h
+> +++ b/include/linux/w1.h
+> @@ -274,6 +274,8 @@ struct w1_family {
+> =20
+>  	struct w1_family_ops	*fops;
+> =20
+> +	const struct of_device_id *of_match_table;
+> +
+>  	atomic_t		refcnt;
+>  };
+> =20
+> --=20
+> 2.17.1
+>=20
+
+--jr34mizs65dijvag
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAls/dAUACgkQ2O7X88g7
++po/Gw/+Jzss71qx02l0mYdd3zWj50h8YdC+iQ6kVQJEPqFGbEeh0wArZw1dZ84k
+HNRlFpwHstfMyIkp1+BF1Snv6sYg5MuAkFhQCLrQac7oFiYGLBGdLx8LBYhbwgW5
+qZhlPftWHbe9lkWZhw//V3hajzYFJS/9PBuTlJh50WsFU3wfgdMUwmezk6idKVHX
+SJw7JdK2j5Y/p/IjhJwLWsd2pkZ3/mFPW3Ut2/XSeV4gkqWoEzr5XqNu8KjXBMoA
+P1Oipc8tikjqYZ2TyRln/xwBOpOe3fXmqFvXkLc6AjFdtS61Exw68EmKd2jr+QuH
+qHUA1rjnNmmMZ3BENMvMgPjQRyuR/flRMR6bN0U9BW08s2NwF0UowWyCRUX4Gxcg
+TYsdQn4Rftc8yDtzWw0EgdS4Hkr+yVzZzob0lstMdaeiAQ3i0krs+I4Btq/g5uXk
+OcUP6MJ50q0KpCTbFXF7ISIdmyoJdx4y1AF4jDqj9stfUwqpPzRq0duotaS9YAPE
+3zt5mSgJpZYjThmdiYK5OBC1OVBISLrsUL1UCKyU768lAnqmXob1hhUSodQlpSPa
+5J+j7JhVIEMqjP1VEArw8aG7CM8VXKsHyK3bkkmiQc4Alu2YANiZuKDHy1hdnA/J
+XcXIyFhCPyh6VrrVndjCn2DwG3All1Kexz0WzZ81PKi0/lVuq9Q=
+=/Cs2
+-----END PGP SIGNATURE-----
+
+--jr34mizs65dijvag--
