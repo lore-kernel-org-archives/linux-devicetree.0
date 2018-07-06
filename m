@@ -1,12 +1,13 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v2 2/9] phy: sun4i-usb: add support for H6 USB2 PHY
-Date: Fri,  6 Jul 2018 23:37:58 +0800
-Message-ID: <20180706153805.25842-3-icenowy@aosc.io>
+Subject: [PATCH v2 3/9] arm64: allwinner: dts: h6: add
+ USB2-related device nodes
+Date: Fri,  6 Jul 2018 23:37:59 +0800
+Message-ID: <20180706153805.25842-4-icenowy@aosc.io>
 References: <20180706153805.25842-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBHE473MQKGQEJTPOKLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBT4473MQKGQE2FA7JZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180706153805.25842-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,73 +20,115 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The USB 2.0 PHY on Allwinner H6 SoC is similar to older Allwinner SoCs,
-with some USB0 quirk like A83T and PHY index 1/2 missing.
+Allwinner H6 has two USB2 ports, one OTG and one host-only.
 
-Add support for it.
+Add device tree nodes related to them.
 
 Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
- drivers/phy/allwinner/phy-sun4i-usb.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 90 ++++++++++++++++++++
+ 1 file changed, 90 insertions(+)
 
-diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
-index 881078ff73f6..ae16854a770a 100644
---- a/drivers/phy/allwinner/phy-sun4i-usb.c
-+++ b/drivers/phy/allwinner/phy-sun4i-usb.c
-@@ -115,6 +115,7 @@ enum sun4i_usb_phy_type {
- 	sun8i_r40_phy,
- 	sun8i_v3s_phy,
- 	sun50i_a64_phy,
-+	sun50i_h6_phy,
- };
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index c72da8cd9ef5..62fc0f5e10ba 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -174,6 +174,96 @@
+ 			status = "disabled";
+ 		};
  
- struct sun4i_usb_phy_cfg {
-@@ -295,7 +296,8 @@ static int sun4i_usb_phy_init(struct phy *_phy)
- 		return ret;
- 	}
- 
--	if (data->cfg->type == sun8i_a83t_phy) {
-+	if (data->cfg->type == sun8i_a83t_phy ||
-+	    data->cfg->type == sun50i_h6_phy) {
- 		if (phy->index == 0) {
- 			val = readl(data->base + data->cfg->phyctl_offset);
- 			val |= PHY_CTL_VBUSVLDEXT;
-@@ -344,7 +346,8 @@ static int sun4i_usb_phy_exit(struct phy *_phy)
- 	struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
- 
- 	if (phy->index == 0) {
--		if (data->cfg->type == sun8i_a83t_phy) {
-+		if (data->cfg->type == sun8i_a83t_phy ||
-+		    data->cfg->type == sun50i_h6_phy) {
- 			void __iomem *phyctl = data->base +
- 				data->cfg->phyctl_offset;
- 
-@@ -959,6 +962,17 @@ static const struct sun4i_usb_phy_cfg sun50i_a64_cfg = {
- 	.phy0_dual_route = true,
- };
- 
-+static const struct sun4i_usb_phy_cfg sun50i_h6_cfg = {
-+	.num_phys = 4,
-+	.type = sun50i_h6_phy,
-+	.disc_thresh = 3,
-+	.phyctl_offset = REG_PHYCTL_A33,
-+	.dedicated_clocks = true,
-+	.enable_pmu_unk1 = true,
-+	.phy0_dual_route = true,
-+	.missing_phys = BIT(1) | BIT(2),
-+};
++		usb2otg: usb@5100000 {
++			compatible = "allwinner,sun8i-a33-musb";
++			reg = <0x05100000 0x0400>;
++			clocks = <&ccu CLK_BUS_OTG>;
++			resets = <&ccu RST_BUS_OTG>;
++			interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "mc";
++			phys = <&usb2phy 0>;
++			phy-names = "usb";
++			extcon = <&usb2phy 0>;
++			status = "disabled";
++		};
 +
- static const struct of_device_id sun4i_usb_phy_of_match[] = {
- 	{ .compatible = "allwinner,sun4i-a10-usb-phy", .data = &sun4i_a10_cfg },
- 	{ .compatible = "allwinner,sun5i-a13-usb-phy", .data = &sun5i_a13_cfg },
-@@ -972,6 +986,7 @@ static const struct of_device_id sun4i_usb_phy_of_match[] = {
- 	{ .compatible = "allwinner,sun8i-v3s-usb-phy", .data = &sun8i_v3s_cfg },
- 	{ .compatible = "allwinner,sun50i-a64-usb-phy",
- 	  .data = &sun50i_a64_cfg},
-+	{ .compatible = "allwinner,sun50i-h6-usb-phy", .data = &sun50i_h6_cfg },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
++		usb2phy: phy@5100400 {
++			compatible = "allwinner,sun50i-h6-usb-phy";
++			reg = <0x05100400 0x14>,
++			      <0x05101800 0x4>,
++			      <0x05311800 0x4>;
++			reg-names = "phy_ctrl",
++				    "pmu0",
++				    "pmu3";
++			clocks = <&ccu CLK_USB_PHY0>,
++				 <&ccu CLK_USB_PHY3>;
++			clock-names = "usb0_phy",
++				      "usb3_phy";
++			resets = <&ccu RST_USB_PHY0>,
++				 <&ccu RST_USB_PHY3>;
++			reset-names = "usb0_reset",
++				      "usb3_reset";
++			status = "disabled";
++			#phy-cells = <1>;
++		};
++
++		ehci0: usb@5101000 {
++			compatible = "allwinner,sun50i-h6-ehci", "generic-ehci";
++			reg = <0x05101000 0x100>;
++			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_OHCI0>,
++				 <&ccu CLK_BUS_EHCI0>,
++				 <&ccu CLK_USB_OHCI0>;
++			resets = <&ccu RST_BUS_OHCI0>,
++				 <&ccu RST_BUS_EHCI0>;
++			status = "disabled";
++		};
++
++		ohci0: usb@5101400 {
++			compatible = "allwinner,sun50i-h6-ohci", "generic-ohci";
++			reg = <0x05101400 0x100>;
++			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_OHCI0>,
++				 <&ccu CLK_USB_OHCI0>;
++			resets = <&ccu RST_BUS_OHCI0>;
++			status = "disabled";
++		};
++
++		usb3phy: phy@5210000 {
++			compatible = "allwinner,sun50i-h6-usb3-phy";
++			reg = <0x5210000 0x10000>;
++			clocks = <&ccu CLK_USB_PHY1>;
++			resets = <&ccu RST_USB_PHY1>;
++			#phy-cells = <0>;
++			status = "disabled";
++		};
++
++		ehci3: usb@5311000 {
++			compatible = "allwinner,sun50i-h6-ehci", "generic-ehci";
++			reg = <0x05311000 0x100>;
++			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_OHCI3>,
++				 <&ccu CLK_BUS_EHCI3>,
++				 <&ccu CLK_USB_OHCI3>;
++			resets = <&ccu RST_BUS_OHCI3>,
++				 <&ccu RST_BUS_EHCI3>;
++			phys = <&usb2phy 3>;
++			phy-names = "usb";
++			status = "disabled";
++		};
++
++		ohci3: usb@5311400 {
++			compatible = "allwinner,sun50i-h6-ohci", "generic-ohci";
++			reg = <0x05311400 0x100>;
++			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_OHCI3>,
++				 <&ccu CLK_USB_OHCI3>;
++			resets = <&ccu RST_BUS_OHCI3>;
++			phys = <&usb2phy 3>;
++			phy-names = "usb";
++			status = "disabled";
++		};
++
+ 		r_ccu: clock@7010000 {
+ 			compatible = "allwinner,sun50i-h6-r-ccu";
+ 			reg = <0x07010000 0x400>;
 -- 
 2.17.1
