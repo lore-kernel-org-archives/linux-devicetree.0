@@ -1,11 +1,13 @@
 From: Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v4 0/2] arm64: rockchip: support RK3399 Ficus board
-Date: Fri,  6 Jul 2018 12:08:16 -0300
-Message-ID: <20180706150818.5631-1-ezequiel@collabora.com>
+Subject: [PATCH v4 1/2] dt-bindings: Add vendor prefix for Vamrs Ltd.
+Date: Fri,  6 Jul 2018 12:08:17 -0300
+Message-ID: <20180706150818.5631-2-ezequiel@collabora.com>
+References: <20180706150818.5631-1-ezequiel@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180706150818.5631-1-ezequiel@collabora.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,36 +21,26 @@ To: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, de
 Cc: Mark Rutland <mark.rutland@arm.com>, kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Fourth round for the RK3399 Ficus support.
+Vamrs Ltd. is a hardware solutions provider based in China.
 
-Changes from v3:
- * Fixed a regulator node name, as noted by Rob.
- * Fixed wrong alphabetical order in vendors prefix patch, also noted by Rob.
+Website: http://vamrs.com/
 
-Changes from v2:
- * Dropped rk3399.dtsi changes and rebased on top of Randy's patch.
- * Removed double empty line.
- * Coalesced schematics comment
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes from v1:
- * Dropoed USB support as it's not working.
- * Added schematics.
- * Splitted rk3399.dtsi from new ficus.dts file.
- * Added new vendor.
- * Cleaned regulators syntax and stlye.
-
-Series based on: 600b359d2b98 ("arm64: dts: rockchip: add some common pin-settings to rk3399").
-
-Ezequiel Garcia (2):
-  dt-bindings: Add vendor prefix for Vamrs Ltd.
-  arm64: dts: rockchip: add 96boards RK3399 Ficus board
-
- .../devicetree/bindings/arm/rockchip.txt      |   5 +
- .../devicetree/bindings/vendor-prefixes.txt   |   1 +
- arch/arm64/boot/dts/rockchip/Makefile         |   1 +
- arch/arm64/boot/dts/rockchip/rk3399-ficus.dts | 514 ++++++++++++++++++
- 4 files changed, 521 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 7cad066191ee..1868dc89884b 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -392,6 +392,7 @@ upisemi	uPI Semiconductor Corp.
+ urt	United Radiant Technology Corporation
+ usi	Universal Scientific Industrial Co., Ltd.
+ v3	V3 Semiconductor
++vamrs	Vamrs Ltd.
+ variscite	Variscite Ltd.
+ via	VIA Technologies, Inc.
+ virtio	Virtual I/O Device Specification, developed by the OASIS consortium
 -- 
 2.18.0.rc2
