@@ -1,24 +1,73 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 3/5] clk: actions: Add REGMAP as dependency
-Date: Fri, 06 Jul 2018 11:46:52 -0700
-Message-ID: <153090281264.143105.2922773144286373098@swboyd.mtv.corp.google.com>
-References: <20180703092524.1697111-1-sravanhome@gmail.com>
- <20180703092524.1697111-4-sravanhome@gmail.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: [PATCH v2] drm/panel: simple: Add Sharp LQ035Q7DB03 panel support
+Date: Fri,  6 Jul 2018 21:51:01 +0300
+Message-ID: <20180706185101.31186-1-vz@mleia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180703092524.1697111-4-sravanhome@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: afaerber@suse.de, manivannan.sadhasivam@linaro.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@cubietech.com, sravanhome@gmail.com, support@cubietech.com, catalin.marinas@arm.com, mturquette@baylibre.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, darren@cubietech.com, robh+dt@kernel.org, jeff.chen@actions-semi.com, pn@denx.de, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mp-cs@actions-semi.com
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Saravanan Sekar (2018-07-03 02:25:22)
-> Add REGMAP as dependency to avoid undefined reference to regmap symbol
-> =
-
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-
-Fixes tag? This should come earlier in the series, or even at the
-beginning.
+VGhlIGNoYW5nZSBhZGRzIHN1cHBvcnQgZm9yIFNoYXJwIExRMDM1UTdEQjAzIDMuNSIgUVZHQSBU
+RlQgcGFuZWwuCgpOb3RlIHRoYXQgdGhpcyBhZ2VkIHBhbmVsIGlzIGFscmVhZHkgZm91bmQgaW4g
+dGhlIGtlcm5lbCBzb3VyY2VzLApmb3IgaW5zdGFuY2UgaW4gYm9hcmQgbWFjaCBmaWxlcyBtYWNo
+LW14MjFhZHMuYywgbWFjaC1teDI3YWRzLmMsCm1hY2gtcGNtMDQzLmMsIGxwZDI3MC5jIGFuZCBp
+bXgyNy1waHl0ZWMtcGh5Y29yZS1yZGsuZHRzLgoKU2lnbmVkLW9mZi1ieTogVmxhZGltaXIgWmFw
+b2xza2l5IDx2ekBtbGVpYS5jb20+Ci0tLQpDaGFuZ2VzIGZyb20gdjEgdG8gdjI6CiogYWRkZWQg
+ZGVzY3JpcHRpb24gb2YgcG93ZXItc3VwcGx5LCBlbmFibGUtZ3Bpb3MgYW5kIGJhY2tsaWdodCBw
+cm9wZXJ0aWVzCgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2hhcnAsbHEwMzVxN2RiMDMu
+dHh0ICAgfCAxMiArKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxl
+LmMgICAgICAgICAgICAgICB8IDI3ICsrKysrKysrKysrKysrKysrKysrKysKIDIgZmlsZXMgY2hh
+bmdlZCwgMzkgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxxMDM1cTdkYjAzLnR4dAoK
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Bh
+bmVsL3NoYXJwLGxxMDM1cTdkYjAzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxxMDM1cTdkYjAzLnR4dApuZXcgZmlsZSBtb2RlIDEw
+MDY0NAppbmRleCAwMDAwMDAwLi4wNzUzZjY5Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2hhcnAsbHEwMzVxN2RiMDMu
+dHh0CkBAIC0wLDAgKzEsMTIgQEAKK1NoYXJwIExRMDM1UTdEQjAzIDMuNSIgUVZHQSBURlQgTENE
+IHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IHNob3VsZCBiZSAi
+c2hhcnAsbHEwMzVxN2RiMDMiCistIHBvd2VyLXN1cHBseTogcGhhbmRsZSBvZiB0aGUgcmVndWxh
+dG9yIHRoYXQgcHJvdmlkZXMgdGhlIHN1cHBseSB2b2x0YWdlCisKK09wdGlvbmFsIHByb3BlcnRp
+ZXM6CistIGVuYWJsZS1ncGlvczogR1BJTyBwaW4gdG8gZW5hYmxlIG9yIGRpc2FibGUgdGhlIHBh
+bmVsCistIGJhY2tsaWdodDogcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hl
+ZCB0byB0aGUgcGFuZWwKKworVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgc2lt
+cGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAoraW4gc2ltcGxlLXBhbmVsLnR4
+dCBpbiB0aGlzIGRpcmVjdG9yeS4KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9w
+YW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwppbmRl
+eCBjYmYxYWI0Li44OTcwMjYxIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFu
+ZWwtc2ltcGxlLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCkBA
+IC0xNzY0LDYgKzE3NjQsMzAgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIHNhbXN1
+bmdfbHRuMTQwYXQyOV8zMDEgPSB7CiAJfSwKIH07CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJt
+X2Rpc3BsYXlfbW9kZSBzaGFycF9scTAzNXE3ZGIwM19tb2RlID0geworCS5jbG9jayA9IDU1MDAs
+CisJLmhkaXNwbGF5ID0gMjQwLAorCS5oc3luY19zdGFydCA9IDI0MCArIDE2LAorCS5oc3luY19l
+bmQgPSAyNDAgKyAxNiArIDcsCisJLmh0b3RhbCA9IDI0MCArIDE2ICsgNyArIDUsCisJLnZkaXNw
+bGF5ID0gMzIwLAorCS52c3luY19zdGFydCA9IDMyMCArIDksCisJLnZzeW5jX2VuZCA9IDMyMCAr
+IDkgKyAxLAorCS52dG90YWwgPSAzMjAgKyA5ICsgMSArIDcsCisJLnZyZWZyZXNoID0gNjAsCit9
+OworCitzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2Mgc2hhcnBfbHEwMzVxN2RiMDMgPSB7
+CisJLm1vZGVzID0gJnNoYXJwX2xxMDM1cTdkYjAzX21vZGUsCisJLm51bV9tb2RlcyA9IDEsCisJ
+LmJwYyA9IDYsCisJLnNpemUgPSB7CisJCS53aWR0aCA9IDU0LAorCQkuaGVpZ2h0ID0gNzIsCisJ
+fSwKKwkuYnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdCNjY2XzFYMTgsCit9OworCiBzdGF0
+aWMgY29uc3Qgc3RydWN0IGRpc3BsYXlfdGltaW5nIHNoYXJwX2xxMTAxazFseTA0X3RpbWluZyA9
+IHsKIAkucGl4ZWxjbG9jayA9IHsgNjAwMDAwMDAsIDY1MDAwMDAwLCA4MDAwMDAwMCB9LAogCS5o
+YWN0aXZlID0geyAxMjgwLCAxMjgwLCAxMjgwIH0sCkBAIC0yMjM2LDYgKzIyNjAsOSBAQCBzdGF0
+aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBwbGF0Zm9ybV9vZl9tYXRjaFtdID0gewogCQku
+Y29tcGF0aWJsZSA9ICJzYW1zdW5nLGx0bjE0MGF0MjktMzAxIiwKIAkJLmRhdGEgPSAmc2Ftc3Vu
+Z19sdG4xNDBhdDI5XzMwMSwKIAl9LCB7CisJCS5jb21wYXRpYmxlID0gInNoYXJwLGxxMDM1cTdk
+YjAzIiwKKwkJLmRhdGEgPSAmc2hhcnBfbHEwMzVxN2RiMDMsCisJfSwgewogCQkuY29tcGF0aWJs
+ZSA9ICJzaGFycCxscTEwMWsxbHkwNCIsCiAJCS5kYXRhID0gJnNoYXJwX2xxMTAxazFseTA0LAog
+CX0sIHsKLS0gCjIuMTAuMgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
