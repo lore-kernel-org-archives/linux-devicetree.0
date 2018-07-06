@@ -1,63 +1,250 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v2 9/9] arm64: allwinner: dts: h6: enable USB3
- port on Pine H64
-Date: Fri,  6 Jul 2018 23:38:05 +0800
-Message-ID: <20180706153805.25842-10-icenowy@aosc.io>
-References: <20180706153805.25842-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
+Subject: Re: [PATCH v4 6/6] dt-bindings: media: rcar-vin: Clarify optional
+ props
+Date: Fri, 6 Jul 2018 17:54:27 +0200
+Message-ID: <20180706155427.GE5237@bigcity.dyn.berto.se>
+References: <1528813566-17927-1-git-send-email-jacopo+renesas@jmondi.org>
+ <20180613085455.GC4952@w540>
+ <20180627052431.GO5237@bigcity.dyn.berto.se>
+ <39247463.ySXe3lkPXm@avalon> <20180703195238.GD5611@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBRM573MQKGQEVBO2ICQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180706153805.25842-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180703195238.GD5611@w540>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@glider.be, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Pine H64 board have a USB3 port, which is connected to the USB3 pins of
-the H6 SoC, and the 5V power supply is controlled via GPIO (shared with
-the power USB ports).
+Hi Jacopo,
 
-Enable this port.
+Thanks for not giving up on this work :-)
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
-Changes in v2:
-- Rebased on top of the USB2 support patches.
-- Dropped the enable of the dwc3-of-simple node.
+On 2018-07-03 21:52:38 +0200, Jacopo Mondi wrote:
+> Hi Laurent, Niklas,
+> =
 
- arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> On Mon, Jul 02, 2018 at 10:19:25AM +0300, Laurent Pinchart wrote:
+> > Hi Niklas,
+> >
+> > On Wednesday, 27 June 2018 08:24:31 EEST Niklas S=F6derlund wrote:
+> > > On 2018-06-13 10:54:55 +0200, Jacopo Mondi wrote:
+> > > > On Tue, Jun 12, 2018 at 06:45:53PM +0300, Sakari Ailus wrote:
+> > > >> On Tue, Jun 12, 2018 at 04:26:06PM +0200, Jacopo Mondi wrote:
+> > > >>> Add a note to the R-Car VIN interface bindings to clarify that all
+> > > >>> properties listed as generic properties in video-interfaces.txt c=
+an
+> > > >>> be included in port@0 endpoint, but if not explicitly listed in t=
+he
+> > > >>> interface bindings documentation, they do not modify it behaviour.
+> > > >>>
+> > > >>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > >>> ---
+> > > >>>
+> > > >>>  Documentation/devicetree/bindings/media/rcar_vin.txt | 6 ++++++
+> > > >>>  1 file changed, 6 insertions(+)
+> > > >>>
+> > > >>> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> > > >>> b/Documentation/devicetree/bindings/media/rcar_vin.txt index
+> > > >>> 8130849..03544c7 100644
+> > > >>> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> > > >>> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> > > >>> @@ -55,6 +55,12 @@ from local SoC CSI-2 receivers (port1) dependi=
+ng on
+> > > >>> SoC.
+> > > >>>
+> > > >>>        instances that are connected to external pins should have =
+port
+> > > >>>        0.
+> > > >>>
+> > > >>>        - Optional properties for endpoint nodes of port@0:
+> > > >>> +
+> > > >>> +        All properties described in [1] and which apply to the
+> > > >>> selected
+> > > >>> +        media bus type could be optionally listed here to better
+> > > >>> describe
+> > > >>> +        the current hardware configuration, but only the followi=
+ng
+> > > >>> ones do
+> > > >>> +        actually modify the VIN interface behaviour:
+> > > >>> +
+> > >
+> > > I'm not sure the description have to be as explicit to that the
+> > > properties in 'video-interfaces.txt' are not currently used by the
+> > > driver. I find it not relevant which ones are used or not, what is
+> > > important for me is that all properties in 'video-interfaces.txt' whi=
+ch
+> > > can be used to describe the specific bus are valid for the DT
+> > > description.
+> >
+> > I agree with you. The driver is irrelevant in this context. What matter=
+s is
+> > which properties are applicable to the bus. For instance, if the VIN pa=
+rallel
+> > input supports configurable polarities for the h/v sync signals, hsync-=
+active
+> > and vsync-active should be listed in the bindings. On the other hand, i=
+f the
+> > polarities are fixed, then the properties are not needed.
+> >
+> =
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 104369228994..28eeb8dcfa35 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -51,6 +51,10 @@
- 	};
- };
- 
-+&dwc3 {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -93,3 +97,8 @@
- 	usb3_vbus-supply = <&reg_usb_vbus>;
- 	status = "okay";
- };
-+
-+&usb3phy {
-+	phy-supply = <&reg_usb_vbus>;
-+	status = "okay";
-+};
--- 
-2.17.1
+> Fine, I'll surrender then, you're too many to fight against :p
+> =
+
+> Joking aside, I see your points, and I'll resend dropping this last
+> bit and documenting which properties applies to the interface.
+> =
+
+> I can list:
+> - vsync-active (added by this series)
+> - hsync-active (added by this series)
+> - data-enable-active (added by this series)
+> - field-active-even (to be added)
+> =
+
+> I haven't find a way to configure the plck-sample value in the VINs
+> registers. Should we skip it?
+
+IIRC my findings agree with yours, no register to control plck-sample in =
+
+the VIN register set.
+
+> =
+
+> I also think 'bus-width' and 'data-shift' are not directly configurable in
+> registers but depends on SoC, the selected input interface, and the
+> input image format (see tables at 26.3.1 datasheet revision 1.00), so
+> it makes sense list them as acceptable properties.
+> =
+
+> Do I have your ack on this so I can re-spin?
+
+I think I understand your plan and I think it sounds ok, please try it =
+
+:-)
+
+> =
+
+> > > On a side note, in rcar_vin.txt we have this section describing the G=
+en2
+> > > bindings:
+> > >
+> > >   The per-board settings Gen2 platforms:
+> > >    - port sub-node describing a single endpoint connected to the vin
+> > >      as described in video-interfaces.txt[1]. Only the first one will
+> > >      be considered as each vin interface has one input port.
+> > >
+> > > This whole series only deals with documenting the Gen3 optional
+> > > properties and not the Gen2. Maybe with parallel input support for Ge=
+n3
+> > > patches on there way to making it upstream this series should be
+> > > extended to in a good way merge the port@0 optional properties for bo=
+th
+> > > generations of hardware?
+> >
+> > That would be nice too :-)
+> =
+
+> I see..
+> =
+
+> Well, I would keep the Gen2/Gen3 sections separate, as they have a
+> different layout of port nodes (Gen2 has a single 'port' node, while Gen3=
+ could
+> have several 'port' nodes enclosed in a 'ports' one).
+> =
+
+> But I could indeed reference the optional endpoint properties of
+> 'port@0' of Gen3 bindings in Gen2 ones. Or the other way around. Do
+> you have any preference?
+
+My preference would be to list the properties in the Gen2 section and in =
+
+the Gen3 port@0 section refer to the Gen2 optional properties.
+
+> =
+
+> Thanks
+>    j
+> =
+
+> =
+
+> >
+> > > >> I don't think this should be needed. You should only have properti=
+es
+> > > >> that describe the hardware configuration in a given system.
+> > > >
+> > > > There has been quite some debate on this, and please bear with me
+> > > > here for re-proposing it: I started by removing properties in some =
+DT
+> > > > files for older Renesas board which listed endpoint properties not
+> > > > documented in the VIN's bindings and not parsed by the VIN driver [=
+1]
+> > > > Niklas (but Simon and Geert seems to agree here) opposed to that
+> > > > patch, as those properties where described in 'video-interfaces.txt=
+' and
+> > > > even if not parsed by the current driver implementation, they actua=
+lly
+> > > > describe hardware. I rebated that only properties listed in the dev=
+ice
+> > > > bindings documentation should actually be used, and having properti=
+es
+> > > > not parsed by the driver confuses users, which may expect changing
+> > > > them modifies the interface configuration, which does not happens at
+> > > > the moment.
+> > > >
+> > > > This came out as a middle ground from a discussion with Niklas. As
+> > > > stated in the cover letter if this patch makes someone uncomfortabl=
+e, feel
+> > > > free to drop it not to hold back the rest of the series which has b=
+een
+> > > > well received instead.
+> > >
+> > > What I don't agree with and sparked this debate from my side was the
+> > > deletion of properties in dts files which correctly does describe the
+> > > bus but which are not currently parsed by the driver. To me that is
+> > > decreasing the value of the dts. If on the other hand the goal is to
+> > > deprecate a property from the video-interfaces.txt by slowly removing
+> > > them from dts where the driver don't use them I'm all for it. But I
+> > > don't think this is the case here right?
+> >
+> > I think you're right, I don't think that's the case.
+> >
+> > We should not remove properties from the dts files when they correctly
+> > describe the hardware and have an added-value. On the other hand, if a
+> > property correctly describes the hardware, but is constrained to a sing=
+le
+> > value due to hardware limitations, then we can omit it.
+> >
+> > > > [1] https://www.spinics.net/lists/arm-kernel/msg656302.html
+> > > >
+> > > >>> - hsync-active: see [1] for description. Default is active high.
+> > > >>> - vsync-active: see [1] for description. Default is active high.
+> > > >>> - data-enable-active: polarity of CLKENB signal, see [1] for
+> >
+> > --
+> > Regards,
+> >
+> > Laurent Pinchart
+> >
+> >
+> >
+
+
+
+-- =
+
+Regards,
+Niklas S=F6derlund
