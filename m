@@ -1,157 +1,56 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v9 3/7] Bluetooth: btqca: Redefine qca_uart_setup() to
- generic function.
-Date: Fri, 6 Jul 2018 15:35:24 -0700
-Message-ID: <20180706223524.GL129942@google.com>
-References: <20180705165515.13340-1-bgodavar@codeaurora.org>
- <20180705165515.13340-4-bgodavar@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH] phy: qcom-qmp: Fix dts bindings to reflect reality
+Date: Fri,  6 Jul 2018 16:31:42 -0700
+Message-ID: <20180706233142.166296-1-dianders@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180705165515.13340-4-bgodavar@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
+To: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Manu Gautam <mgautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 05, 2018 at 10:25:11PM +0530, Balakrishna Godavarthi wrote:
-> Redefinition of qca_uart_setup will help future Qualcomm Bluetooth
-> SoC, to use the same function instead of duplicating the function.
-> Added new arguments soc_type and soc_ver to the functions.
-> 
-> These arguments will help to decide type of firmware files
-> to be loaded into Bluetooth chip.
-> soc_type holds the Bluetooth chip connected to APPS processor.
-> soc_ver holds the Bluetooth chip version.
-> 
-> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-> ---
-> Changes in v9:
->    * moved qca_read_soc_ver() to qca_setup().
-> 
-> Changes in v8:
->     * updated soc_type with enum.
-> 
-> Changes in v7:
->     * initial patch
->     * redefined qca_uart_setup function to generic.
-> ---
->  drivers/bluetooth/btqca.c   | 17 ++++-------------
->  drivers/bluetooth/btqca.h   | 13 +++++++++++--
->  drivers/bluetooth/hci_qca.c | 11 ++++++++++-
->  3 files changed, 25 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-> index c5cf9cab438a..03bcbaaf1ae9 100644
-> --- a/drivers/bluetooth/btqca.c
-> +++ b/drivers/bluetooth/btqca.c
-> @@ -327,9 +327,9 @@ int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdaddr)
->  }
->  EXPORT_SYMBOL_GPL(qca_set_bdaddr_rome);
->  
-> -int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate)
-> +int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
-> +		   enum qca_btsoc_type soc_type, u32 soc_ver)
->  {
-> -	u32 rome_ver = 0;
->  	struct rome_config config;
->  	int err;
->  
-> @@ -337,19 +337,10 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate)
->  
->  	config.user_baud_rate = baudrate;
->  
-> -	/* Get QCA version information */
-> -	err = qca_read_soc_version(hdev, &rome_ver);
-> -	if (err < 0 || rome_ver == 0) {
-> -		bt_dev_err(hdev, "QCA Failed to get version %d", err);
-> -		return err;
-> -	}
-> -
-> -	bt_dev_info(hdev, "QCA controller version 0x%08x", rome_ver);
-> -
->  	/* Download rampatch file */
->  	config.type = TLV_TYPE_PATCH;
->  	snprintf(config.fwname, sizeof(config.fwname), "qca/rampatch_%08x.bin",
-> -		 rome_ver);
-> +		 soc_ver);
->  	err = qca_download_firmware(hdev, &config);
->  	if (err < 0) {
->  		bt_dev_err(hdev, "QCA Failed to download patch (%d)", err);
-> @@ -359,7 +350,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate)
->  	/* Download NVM configuration */
->  	config.type = TLV_TYPE_NVM;
->  	snprintf(config.fwname, sizeof(config.fwname), "qca/nvm_%08x.bin",
-> -		 rome_ver);
-> +		 soc_ver);
->  	err = qca_download_firmware(hdev, &config);
->  	if (err < 0) {
->  		bt_dev_err(hdev, "QCA Failed to download NVM (%d)", err);
-> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
-> index 5c9851b11838..a9c2779f3e07 100644
-> --- a/drivers/bluetooth/btqca.h
-> +++ b/drivers/bluetooth/btqca.h
-> @@ -124,10 +124,18 @@ struct tlv_type_hdr {
->  	__u8   data[0];
->  } __packed;
->  
-> +enum qca_btsoc_type {
-> +	QCA_INVALID = -1,
-> +	QCA_AR3002,
-> +	QCA_ROME,
-> +	QCA_WCN3990
-> +};
-> +
->  #if IS_ENABLED(CONFIG_BT_QCA)
->  
->  int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdaddr);
-> -int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate);
-> +int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
-> +		   enum qca_btsoc_type soc_type, u32 soc_ver);
->  int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version);
->  
->  #else
-> @@ -137,7 +145,8 @@ static inline int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdad
->  	return -EOPNOTSUPP;
->  }
->  
-> -static inline int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate)
-> +static inline int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
-> +				 enum qca_btsoc_type soc_type, u32 soc_ver)
->  {
->  	return -EOPNOTSUPP;
->  }
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index d7b60669b656..c02e1d465cca 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -929,6 +929,7 @@ static int qca_setup(struct hci_uart *hu)
->  	struct qca_data *qca = hu->priv;
->  	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
->  	int ret;
-> +	int soc_ver = 0;
->  
->  	bt_dev_info(hdev, "ROME setup");
->  
-> @@ -965,8 +966,16 @@ static int qca_setup(struct hci_uart *hu)
->  		host_set_baudrate(hu, speed);
->  	}
->  
-> +	/* Get QCA version information */
-> +	ret = qca_read_soc_version(hdev, &soc_ver);
-> +	if (ret < 0 || soc_ver == 0) {
-> +		bt_dev_err(hdev, "QCA Failed to get version (%d)", ret);
-> +		return ret;
-> +	}
-> +	bt_dev_info(hdev, "QCA controller version 0x%08x", soc_ver);
+A few patches have landed for the qcom-qmp PHY that affect how you
+would write a device tree node.  ...yet the bindings weren't updated.
+Let's remedy the situation and make the bindings refelect reality.
 
-As commented on [1] I'd suggest to move some of the logging and error
-handling to qca_read_soc_version(), especially since this sequence is
-duplicated later in this series.
+Fixes: efb05a50c956 ("phy: qcom-qmp: Add support for QMP V3 USB3 PHY")
+Fixes: ac0d239936bd ("phy: qcom-qmp: Add support for runtime PM")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-Not really the scope of this patch though, so:
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-
-[1] https://patchwork.kernel.org/patch/10510029/
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+index 266a1bb8bb6e..0c7629e88bf3 100644
+--- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
++++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+@@ -12,7 +12,14 @@ Required properties:
+ 	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
+ 	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845.
+ 
+- - reg: offset and length of register set for PHY's common serdes block.
++ - reg:
++   - For "qcom,sdm845-qmp-usb3-phy":
++     - index 0: address and length of register set for PHY's common serdes
++       block.
++     - named register "dp_com" (using reg-names): address and length of the
++       DP_COM control block.
++   - For all others:
++     - offset and length of register set for PHY's common serdes block.
+ 
+  - #clock-cells: must be 1
+     - Phy pll outputs a bunch of clocks for Tx, Rx and Pipe
+@@ -60,7 +67,10 @@ Required nodes:
+ 
+ Required properties for child node:
+  - reg: list of offset and length pairs of register sets for PHY blocks -
+-	tx, rx and pcs.
++	- index 0: tx
++	- index 1: rx
++	- index 2: pcs
++	- index 3: pcs_misc (optional)
+ 
+  - #phy-cells: must be 0
+ 
+-- 
+2.18.0.203.gfac676dfb9-goog
