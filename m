@@ -1,49 +1,118 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v2 4/4] k3dma: delete axi_config
-Date: Fri,  6 Jul 2018 11:55:21 +0800
-Message-ID: <20180706035521.13736-5-guodong.xu@linaro.org>
-References: <20180706035521.13736-1-guodong.xu@linaro.org>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v4 4/6] thermal: tsens: Add support for SDM845
+Date: Fri, 6 Jul 2018 10:43:14 +0530
+Message-ID: <CAP245DVvdswALtZj0XTOsntHC4kz6a63DJ8qxeiry+9N77=CGw@mail.gmail.com>
+References: <cover.1530533998.git.amit.kucheria@linaro.org>
+ <43e3ae530334efab3fa0151430879f03731e9daa.1530533998.git.amit.kucheria@linaro.org>
+ <20180703162619.GA17238@rob-hp-laptop> <CAHLCerNpifvM9nGXiE63-DQ0okP8+1wdxq52qo-K1TWzoYzjtQ@mail.gmail.com>
+ <20180705203712.GA29531@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180706035521.13736-1-guodong.xu@linaro.org>
+In-Reply-To: <20180705203712.GA29531@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, dan.j.williams@intel.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: liyu65@hisilicon.com, suzhuangluan@hisilicon.com, xuhongtao8@hisilicon.com, zhongkaihua@huawei.com, xuezhiliang@hisilicon.com, xupeng7@huawei.com, sunliang10@huawei.com, fengbaopeng@hisilicon.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Guodong Xu <guodong.xu@linaro.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Kees Cook <keescook@chromium.org>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Li Yu <liyu65@hisilicon.com>
+On Fri, Jul 6, 2018 at 2:07 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Jul 04, 2018 at 10:56:26PM +0530, Amit Kucheria wrote:
+> > On Tue, Jul 3, 2018 at 9:56 PM, Rob Herring <robh@kernel.org> wrote:
+> > > On Mon, Jul 02, 2018 at 06:14:07PM +0530, Amit Kucheria wrote:
+> > >> SDM845 uses v2.4.0 of the TSENS IP block but the get_temp() function
+> > >> appears to be identical across v2.x.y in code seen so far. We use the
+> > >> generic get_temp() function.
+> > >>
+> > >> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > >> ---
+> > >>  Documentation/devicetree/bindings/thermal/qcom-tsens.txt | 2 ++
+> > >>  drivers/thermal/qcom/tsens-v2.c                          | 6 +++++-
+> > >>  drivers/thermal/qcom/tsens.c                             | 6 ++++++
+> > >>  drivers/thermal/qcom/tsens.h                             | 5 ++++-
+> > >>  4 files changed, 17 insertions(+), 2 deletions(-)
+> > >>
+> > >> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > >> index 06195e8..075182e 100644
+> > >> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > >> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > >> @@ -5,6 +5,8 @@ Required properties:
+> > >>   - "qcom,msm8916-tsens" : For 8916 Family of SoCs
+> > >>   - "qcom,msm8974-tsens" : For 8974 Family of SoCs
+> > >>   - "qcom,msm8996-tsens" : For 8996 Family of SoCs
+> > >> + - "qcom,tsens-v2.4.0"  : For SDM845 Family of SoCs
+> > >> + - "qcom,tsens-v2"      : Generic fallback binding for any Soc using 2.x.y version of the tsens IP
+> > >
+> > > You need to show what are valid combinations of compatibles. Does v2
+> > > apply to 8996? One valid combination per line.
+> >
+> > I've restructured qcom-tsens.txt to look like this:
+> >
+> > -----%<-------
+> >
+> > * QCOM SoC Temperature Sensor (TSENS)
+> >
+> > Required properties:
+> > - compatible: must be one of the following:
+> >     - "qcom,msm8916-tsens" (MSM8916)
+> >     - "qcom,msm8974-tsens" (MSM8974)
+> >     - "qcom,msm8996-tsens" (MSM8996)
+> >     - "qcom,tsens-<ip_version>", "qcom,tsens-v2" (TSENS IP version and a
+> >        generic v2 property as fallback except for MSM8996)
+> >
+> >   Examples with ip_version are:
+> >     - "qcom,tsens-v2.4.0", "qcom,tsens-v2" (SDM845)
+> >     - "qcom,tsens-v2.2.1", "qcom,tsens-v2" (MSM8998)
+> >
+> > -----%<-------
+> >
+> > 8996 would end up being something like this if needed, though we're
+> > stuck with "qcom,msm8996-tsens":
+> > "qcom,msm8996-tsens", "qcom,tsens-v2.1.0", "qcom,tsens-v2" (MSM8996)
+>
+> 3 versions here for 3 SoCs. I'm not getting that convinced version
+> numbers really are better. I would assume that other QCom IP blocks
 
-Axi_config controls whether DMA resources can be accessed in non-secure
-mode, such as linux kernel. The setting is actually done in
-bootloader stage.
+Yeah, it is a bit unfortunate that the 3-4 SoCs we're focusing on
+getting supported upstream have different versions of the TSENS IP.
+The other goal of this work was to make the upstream driver
+feature-complete so we can make a case to switch to it in the
+downstream trees, even on platforms that aren't being active
+upstreamed. They'll still need to keep around those SoC-specific
+one-liner patches in the downstream trees.
 
-This patch removes axi_config from k3dma driver.
+> have versions too, but pretty much *every* *other* binding uses SoC names.
+> Why is this one special?
 
-Signed-off-by: Li Yu <liyu65@hisilicon.com>
-Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
----
- drivers/dma/k3dma.c | 3 ---
- 1 file changed, 3 deletions(-)
+I'm not an expert on all QC IPs, but this one _seems_ to be reused a
+lot more than others.
 
-diff --git a/drivers/dma/k3dma.c b/drivers/dma/k3dma.c
-index 33efb541acb2..4542e703ec85 100644
---- a/drivers/dma/k3dma.c
-+++ b/drivers/dma/k3dma.c
-@@ -52,8 +52,6 @@
- #define CX_SRC			0x814
- #define CX_DST			0x818
- #define CX_CFG			0x81c
--#define AXI_CFG			0x820
--#define AXI_CFG_DEFAULT		0x201201
- 
- #define CX_LLI_CHAIN_EN		0x2
- #define CX_CFG_EN		0x1
-@@ -158,7 +156,6 @@ static void k3_dma_set_desc(struct k3_dma_phy *phy, struct k3_desc_hw *hw)
- 	writel_relaxed(hw->count, phy->base + CX_CNT0);
- 	writel_relaxed(hw->saddr, phy->base + CX_SRC);
- 	writel_relaxed(hw->daddr, phy->base + CX_DST);
--	writel_relaxed(AXI_CFG_DEFAULT, phy->base + AXI_CFG);
- 	writel_relaxed(hw->config, phy->base + CX_CFG);
- }
- 
--- 
-2.17.1
+> The other problem with versions is the mapping
+> of versions to SoCs most likely can't be validated outside of QCom
+> unless there's a version register.
+
+There is in fact a HW version register that I was hoping to add
+support for later.
+
+> So, sorry to go in circles, but can you go back to qcom,<soc>-tsens. You
+> can keep qcom,tsens-v2 as a fallback.
+
+OK.
+
+> Yes, it's annoying to have to update bindings for new SoCs. But it's
+> trivial one line patches. Look at Renesas bindings. Maybe adding new
+> ones will be scriptable once we move to json-schema binding docs.
+
+I did look at the Renesas RCar bindings when restructuring the
+documentation. They seem to have settled upon a 3-level fallback:
+"soc-specific", "generic-no TZ", "generic-TZ". But
+drivers/thermal/rcar_thermal.c seems to be compatible with only one
+soc-specific property (thermal-r8a77995) and all other SoCs seem to be
+just relying the fallbacks.
+
+Anyways, I'll respin.
+
+Thanks.
+
+Regards,
+Amit
