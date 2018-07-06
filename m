@@ -1,132 +1,40 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v5 5/7] drm/i2c: tda998x: split tda998x_encoder_dpms into
- enable/disable
-Date: Fri, 6 Jul 2018 11:57:17 +0100
-Message-ID: <20180706105717.GW17271@n2100.armlinux.org.uk>
-References: <20180523093122.27859-1-peda@axentia.se>
- <20180523093122.27859-6-peda@axentia.se>
+From: "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/7 v5] Support for fsl-mc bus and its devices in SMMU
+Date: Fri, 6 Jul 2018 13:13:28 +0200
+Message-ID: <20180706111327.7gkerhkk6udfeirr@8bytes.org>
+References: <1526824191-7000-1-git-send-email-nipun.gupta@nxp.com>
+	<HE1PR0401MB24250CEFBC0B7CC919C4388AE6760@HE1PR0401MB2425.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180523093122.27859-6-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+In-Reply-To: <HE1PR0401MB24250CEFBC0B7CC919C4388AE6760-B0v07Ae2taqTjcJO+iVGAo3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "hch-jcswGhMUV9g@public.gmane.org" <hch-jcswGhMUV9g@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 23, 2018 at 11:31:20AM +0200, Peter Rosin wrote:
-> This fits better with the drm_bridge callbacks for when this
-> driver becomes a drm_bridge.
-> 
-> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-> ---
->  drivers/gpu/drm/i2c/tda998x_drv.c | 64 ++++++++++++++++++++++-----------------
->  1 file changed, 37 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-> index 933d309d2e0f..3dda07a2fd2f 100644
-> --- a/drivers/gpu/drm/i2c/tda998x_drv.c
-> +++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-> @@ -1163,36 +1163,42 @@ static int tda998x_connector_init(struct tda998x_priv *priv,
->  
->  /* DRM encoder functions */
->  
-> -static void tda998x_encoder_dpms(struct drm_encoder *encoder, int mode)
-> +static void tda998x_enable(struct tda998x_priv *priv)
->  {
-> -	struct tda998x_priv *priv = enc_to_tda998x_priv(encoder);
-> -	bool on;
-> +	if (priv->is_on)
-> +		return;
->  
-> -	/* we only care about on or off: */
-> -	on = mode == DRM_MODE_DPMS_ON;
-> +	/* enable video ports, audio will be enabled later */
-> +	reg_write(priv, REG_ENA_VP_0, 0xff);
-> +	reg_write(priv, REG_ENA_VP_1, 0xff);
-> +	reg_write(priv, REG_ENA_VP_2, 0xff);
-> +	/* set muxing after enabling ports: */
-> +	reg_write(priv, REG_VIP_CNTRL_0, priv->vip_cntrl_0);
-> +	reg_write(priv, REG_VIP_CNTRL_1, priv->vip_cntrl_1);
-> +	reg_write(priv, REG_VIP_CNTRL_2, priv->vip_cntrl_2);
->  
-> -	if (on == priv->is_on)
-> -		return;
-> +	priv->is_on = true;
-> +}
->  
-> -	if (on) {
-> -		/* enable video ports, audio will be enabled later */
-> -		reg_write(priv, REG_ENA_VP_0, 0xff);
-> -		reg_write(priv, REG_ENA_VP_1, 0xff);
-> -		reg_write(priv, REG_ENA_VP_2, 0xff);
-> -		/* set muxing after enabling ports: */
-> -		reg_write(priv, REG_VIP_CNTRL_0, priv->vip_cntrl_0);
-> -		reg_write(priv, REG_VIP_CNTRL_1, priv->vip_cntrl_1);
-> -		reg_write(priv, REG_VIP_CNTRL_2, priv->vip_cntrl_2);
-> -
-> -		priv->is_on = true;
-> -	} else {
-> -		/* disable video ports */
-> -		reg_write(priv, REG_ENA_VP_0, 0x00);
-> -		reg_write(priv, REG_ENA_VP_1, 0x00);
-> -		reg_write(priv, REG_ENA_VP_2, 0x00);
-> +static void tda998x_disable(struct tda998x_priv *priv)
-> +{
-> +	/* disable video ports */
-> +	reg_write(priv, REG_ENA_VP_0, 0x00);
-> +	reg_write(priv, REG_ENA_VP_1, 0x00);
-> +	reg_write(priv, REG_ENA_VP_2, 0x00);
->  
-> -		priv->is_on = false;
-> -	}
-> +	priv->is_on = false;
-> +}
-> +
-> +static void tda998x_encoder_dpms(struct drm_encoder *encoder, int mode)
-> +{
-> +	struct tda998x_priv *priv = enc_to_tda998x_priv(encoder);
-> +
-> +	/* we only care about on or off: */
-> +	if (mode == DRM_MODE_DPMS_ON)
-> +		tda998x_enable(priv);
-> +	else
-> +		tda998x_disable(priv);
->  }
->  
->  static void
-> @@ -1606,12 +1612,16 @@ static int tda998x_create(struct i2c_client *client, struct tda998x_priv *priv)
->  
->  static void tda998x_encoder_prepare(struct drm_encoder *encoder)
->  {
-> -	tda998x_encoder_dpms(encoder, DRM_MODE_DPMS_OFF);
-> +	struct tda998x_priv *priv = enc_to_tda998x_priv(encoder);
-> +
-> +	tda998x_disable(priv);
->  }
->  
->  static void tda998x_encoder_commit(struct drm_encoder *encoder)
->  {
-> -	tda998x_encoder_dpms(encoder, DRM_MODE_DPMS_ON);
-> +	struct tda998x_priv *priv = enc_to_tda998x_priv(encoder);
-> +
-> +	tda998x_enable(priv);
->  }
->  
->  static const struct drm_encoder_helper_funcs tda998x_encoder_helper_funcs = {
+Hi Nipun,
 
-Please group the tda998x_encoder_* functions together, and in order of
-their use in the function vtables, and just above the function vtables.
-That'll mean that all the encoder veneers are together, all the bridge
-veneers are together, etc, and probably means later on it's easier to
-remove the encoder stuff (as all the encoder code will be in one hunk
-rather than scattered throughout the file.)
+On Thu, Jun 21, 2018 at 03:59:27AM +0000, Nipun Gupta wrote:
+> Will this patch-set be taken for the next kernel release (and via which tree)?
 
-Thanks.
+I can take this through IOMMU tree if nobody objects. Please work out
+the last remaining comment on patch 7 with Robin and then re-send with
+all Acks and Reviewed-by: tags included.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps up
-According to speedtest.net: 13Mbps down 490kbps up
+Oh, and please use 'iommu/of:' prefix instead of 'iommu: of:' and follow
+that sheme for the other patches/prefixes as well.
+
+Thanks,
+
+	Joerg
