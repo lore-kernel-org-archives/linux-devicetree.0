@@ -1,115 +1,131 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/3] iio: hx711: add clock-frequency property in DT
-Date: Fri, 6 Jul 2018 11:38:41 -0600
-Message-ID: <CAL_JsqLGn=iTbD+qDasyNN8qpPzsTWp0ZQSK68GaDPx1OBG9xw@mail.gmail.com>
-References: <20180704123638.GA30535@arbeit> <20180705213019.GA12792@rob-hp-laptop>
- <20180706062147.GA1950@arbeit>
+Subject: Re: [PATCH v4 4/6] thermal: tsens: Add support for SDM845
+Date: Fri, 6 Jul 2018 11:47:41 -0600
+Message-ID: <CAL_JsqKXX6j3d1ErtXN1sTybXFx3diTusaiA8RC8reO_Lz0rSA@mail.gmail.com>
+References: <cover.1530533998.git.amit.kucheria@linaro.org>
+ <43e3ae530334efab3fa0151430879f03731e9daa.1530533998.git.amit.kucheria@linaro.org>
+ <20180703162619.GA17238@rob-hp-laptop> <CAHLCerNpifvM9nGXiE63-DQ0okP8+1wdxq52qo-K1TWzoYzjtQ@mail.gmail.com>
+ <20180705203712.GA29531@rob-hp-laptop> <CAP245DVvdswALtZj0XTOsntHC4kz6a63DJ8qxeiry+9N77=CGw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180706062147.GA1950@arbeit>
+In-Reply-To: <CAP245DVvdswALtZj0XTOsntHC4kz6a63DJ8qxeiry+9N77=CGw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Klinger <ak@it-klinger.de>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, David Miller <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Siddartha Mohanadoss <smohanad@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Kees Cook <keescook@chromium.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 6, 2018 at 12:22 AM Andreas Klinger <ak@it-klinger.de> wrote:
+On Thu, Jul 5, 2018 at 11:13 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
 >
-> Hi Rob,
->
-> please see explanation below. Thanks.
->
-> Rob Herring <robh@kernel.org> schrieb am Thu, 05. Jul 15:30:
-> > On Wed, Jul 04, 2018 at 02:36:38PM +0200, Andreas Klinger wrote:
-> > > Add clock-frequency property for hx711 ADC
+> On Fri, Jul 6, 2018 at 2:07 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Wed, Jul 04, 2018 at 10:56:26PM +0530, Amit Kucheria wrote:
+> > > On Tue, Jul 3, 2018 at 9:56 PM, Rob Herring <robh@kernel.org> wrote:
+> > > > On Mon, Jul 02, 2018 at 06:14:07PM +0530, Amit Kucheria wrote:
+> > > >> SDM845 uses v2.4.0 of the TSENS IP block but the get_temp() function
+> > > >> appears to be identical across v2.x.y in code seen so far. We use the
+> > > >> generic get_temp() function.
+> > > >>
+> > > >> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > >> ---
+> > > >>  Documentation/devicetree/bindings/thermal/qcom-tsens.txt | 2 ++
+> > > >>  drivers/thermal/qcom/tsens-v2.c                          | 6 +++++-
+> > > >>  drivers/thermal/qcom/tsens.c                             | 6 ++++++
+> > > >>  drivers/thermal/qcom/tsens.h                             | 5 ++++-
+> > > >>  4 files changed, 17 insertions(+), 2 deletions(-)
+> > > >>
+> > > >> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > > >> index 06195e8..075182e 100644
+> > > >> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > > >> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > > >> @@ -5,6 +5,8 @@ Required properties:
+> > > >>   - "qcom,msm8916-tsens" : For 8916 Family of SoCs
+> > > >>   - "qcom,msm8974-tsens" : For 8974 Family of SoCs
+> > > >>   - "qcom,msm8996-tsens" : For 8996 Family of SoCs
+> > > >> + - "qcom,tsens-v2.4.0"  : For SDM845 Family of SoCs
+> > > >> + - "qcom,tsens-v2"      : Generic fallback binding for any Soc using 2.x.y version of the tsens IP
+> > > >
+> > > > You need to show what are valid combinations of compatibles. Does v2
+> > > > apply to 8996? One valid combination per line.
 > > >
-> > > This is the frequency of PD_SCK. It affects only the high value duration
-> > > since low value duration is not relevant and we are not able to switch
-> > > faster than the minimum duration specified.
+> > > I've restructured qcom-tsens.txt to look like this:
 > > >
-> > > After PD_SCK goes high DOUT is read just before PD_SCK goes down again.
-> > > This is necessary because of parasitic capacities on the wiring.
-> >
-> > s/capacities/capacitance/
->
-> I'll change.
->
-> >
+> > > -----%<-------
 > > >
-> > > Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> > > ---
-> > >  Documentation/devicetree/bindings/iio/adc/avia-hx711.txt | 10 ++++++++++
-> > >  1 file changed, 10 insertions(+)
+> > > * QCOM SoC Temperature Sensor (TSENS)
 > > >
-> > > diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-> > > index b3629405f568..4bee51d536e1 100644
-> > > --- a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-> > > +++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-> > > @@ -8,11 +8,21 @@ Required properties:
-> > >             See Documentation/devicetree/bindings/gpio/gpio.txt
-> > >   - avdd-supply:    Definition of the regulator used as analog supply
+> > > Required properties:
+> > > - compatible: must be one of the following:
+> > >     - "qcom,msm8916-tsens" (MSM8916)
+> > >     - "qcom,msm8974-tsens" (MSM8974)
+> > >     - "qcom,msm8996-tsens" (MSM8996)
+> > >     - "qcom,tsens-<ip_version>", "qcom,tsens-v2" (TSENS IP version and a
+> > >        generic v2 property as fallback except for MSM8996)
 > > >
-> > > +Optional properties:
-> > > + - clock-frequency:        Frequency of PD_SCK
-> > > +                   This setting affects the duration of the high value
-> > > +                   phase of the clock (PD_SCK). The low value phase is
-> > > +                   not affected since it is not relevant for the
-> > > +                   measurement.
+> > >   Examples with ip_version are:
+> > >     - "qcom,tsens-v2.4.0", "qcom,tsens-v2" (SDM845)
+> > >     - "qcom,tsens-v2.2.1", "qcom,tsens-v2" (MSM8998)
+> > >
+> > > -----%<-------
+> > >
+> > > 8996 would end up being something like this if needed, though we're
+> > > stuck with "qcom,msm8996-tsens":
+> > > "qcom,msm8996-tsens", "qcom,tsens-v2.1.0", "qcom,tsens-v2" (MSM8996)
 > >
-> > That's not how frequency works. The high time should be equal to the low
-> > time. If you have parasitic capacitance affecting the rise time, then it
-> > is going to affect the fall time too.
-> >
-> > Perhaps there could be some reason not to have a square wave, but I
-> > didn't see one in the datasheet.
+> > 3 versions here for 3 SoCs. I'm not getting that convinced version
+> > numbers really are better. I would assume that other QCom IP blocks
 >
-> When PD_SCK goes high the ADC sets DOUT to the corresponding value. Only after a
-> rising edge DOUT is set. The falling edge doesn't matter.
+> Yeah, it is a bit unfortunate that the 3-4 SoCs we're focusing on
+> getting supported upstream have different versions of the TSENS IP.
+> The other goal of this work was to make the upstream driver
+> feature-complete so we can make a case to switch to it in the
+> downstream trees, even on platforms that aren't being active
+> upstreamed. They'll still need to keep around those SoC-specific
+> one-liner patches in the downstream trees.
 
-When bit-banging yes, but the simplest h/w implementation would shift
-data on one edge and sample on the other.
+Why? They can just use the "v2" fallback (which was sufficient for
+your original version). That's not my recommendation, but what do I
+care for downstream. Only upstream needs the specific strings to
+appease the annoying DT maintainers.
 
-> The parasitic capacitance is occuring only on DOUT line, but not on PD_SCK. The
-> difference is that PD_SCK is driven by the microcontroller, and DOUT by the ADC.
+Plus, if it's not upstream, it doesn't exist. :)
 
-Maybe for you, but for someone else's design? I just don't want to see
-the binding evolving fixing one problem at a time.
-
-> So after i set the rising edge on PD_SCK i have to wait until DOUT reaches its
-> value. Datasheet says this can take at maximum 0.1 us. This might be true, but
-> without wiring between ADC and microcontroller. With wiring of a 10 m cable i
-> saw 1 us on the oscilloscope.
+> > have versions too, but pretty much *every* *other* binding uses SoC names.
+> > Why is this one special?
 >
-> If required i can post a screenshot of the oscilloscope.
+> I'm not an expert on all QC IPs, but this one _seems_ to be reused a
+> lot more than others.
 >
-> The code which is executed in the driver on PD_SCK during low value takes much
-> more than the requested 0.2 us (measured 0.56 us). Of course i can make it a
-> square wave with equal low and high time, but i don't see it's needed and it'll
-> slow down the communication speed.
+> > The other problem with versions is the mapping
+> > of versions to SoCs most likely can't be validated outside of QCom
+> > unless there's a version register.
 >
-> Out of my frequency generator i can get a rectangular waveform with different
-> low and high times and it's still called frequency. A don't have another
-> expression for it.
+> There is in fact a HW version register that I was hoping to add
+> support for later.
 
-Yes, but the frequency is not 1/(high time) as you defined. But I
-wasn't expecting 2 orders of magnitude difference.
+Yes, you should rely on that as much as possible. But I have seen h/w
+designers forget to update revision registers or there can be
+integration differences even if the IP version is the same.
 
-> Do you have a suggestion how to call this attribute in the DT if frequency is
-> not suitable?
-
-If you really want to not have 50% duty cycle, then of course you
-would need to define an additional property.
-
-> >
-> > > +                   Minimum value allowed is 20 kHz because of maximum
-> > > +                   high time of 50 microseconds.
-> >
-> > So 10kHz should be minimum.
-> >
+> > So, sorry to go in circles, but can you go back to qcom,<soc>-tsens. You
+> > can keep qcom,tsens-v2 as a fallback.
 >
-> Because the low time is very short (0.5 us) in comparison to the high time
-> (50 us) in the actual waveform i neglected it.
-
-Okay, that's not obvious.
-
-Rob
+> OK.
+>
+> > Yes, it's annoying to have to update bindings for new SoCs. But it's
+> > trivial one line patches. Look at Renesas bindings. Maybe adding new
+> > ones will be scriptable once we move to json-schema binding docs.
+>
+> I did look at the Renesas RCar bindings when restructuring the
+> documentation. They seem to have settled upon a 3-level fallback:
+> "soc-specific", "generic-no TZ", "generic-TZ". But
+> drivers/thermal/rcar_thermal.c seems to be compatible with only one
+> soc-specific property (thermal-r8a77995) and all other SoCs seem to be
+> just relying the fallbacks.
+>
+> Anyways, I'll respin.
+>
+> Thanks.
+>
+> Regards,
+> Amit
