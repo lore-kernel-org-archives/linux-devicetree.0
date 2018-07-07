@@ -1,156 +1,71 @@
-From: Jun Gao <jun.gao@mediatek.com>
-Subject: [PATCH v2 3/3] i2c: mediatek: Use DMA safe buffers for i2c
- transactions
-Date: Sat, 7 Jul 2018 17:29:55 +0800
-Message-ID: <1530955795-17714-4-git-send-email-jun.gao@mediatek.com>
-References: <1530955795-17714-1-git-send-email-jun.gao@mediatek.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH V2 1/2] dt-bindings: mtd: document Broadcom's TRX
+ firmware format binding
+Date: Sat, 7 Jul 2018 12:01:04 +0200
+Message-ID: <20180707120104.34687f91@bbrezillon>
+References: <20180612104434.15232-1-zajec5@gmail.com>
+ <20180625220508.21242-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1530955795-17714-1-git-send-email-jun.gao@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Jun Gao <jun.gao@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180625220508.21242-1-zajec5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Jonas Gorski <jonas.gorski@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jun Gao <jun.gao@mediatek.com>
-
-DMA mode will always be used in i2c transactions, try to allocate
-a DMA safe buffer if the buf of struct i2c_msg used is not DMA safe.
-
-Signed-off-by: Jun Gao <jun.gao@mediatek.com>
----
- drivers/i2c/busses/i2c-mt65xx.c | 62 ++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 55 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-index 806e8b90..c92cae7 100644
---- a/drivers/i2c/busses/i2c-mt65xx.c
-+++ b/drivers/i2c/busses/i2c-mt65xx.c
-@@ -441,6 +441,8 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
- 	u16 control_reg;
- 	u16 restart_flag = 0;
- 	u32 reg_4g_mode;
-+	u8 *dma_rd_buf = NULL;
-+	u8 *dma_wr_buf = NULL;
- 	dma_addr_t rpaddr = 0;
- 	dma_addr_t wpaddr = 0;
- 	int ret;
-@@ -500,10 +502,18 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
- 	if (i2c->op == I2C_MASTER_RD) {
- 		writel(I2C_DMA_INT_FLAG_NONE, i2c->pdmabase + OFFSET_INT_FLAG);
- 		writel(I2C_DMA_CON_RX, i2c->pdmabase + OFFSET_CON);
--		rpaddr = dma_map_single(i2c->dev, msgs->buf,
-+
-+		dma_rd_buf = i2c_get_dma_safe_msg_buf(msgs, 0);
-+		if (!dma_rd_buf)
-+			return -ENOMEM;
-+
-+		rpaddr = dma_map_single(i2c->dev, dma_rd_buf,
- 					msgs->len, DMA_FROM_DEVICE);
--		if (dma_mapping_error(i2c->dev, rpaddr))
-+		if (dma_mapping_error(i2c->dev, rpaddr)) {
-+			i2c_free_dma_safe_msg_buf(msgs, dma_rd_buf);
-+
- 			return -ENOMEM;
-+		}
- 
- 		if (i2c->dev_comp->support_33bits) {
- 			reg_4g_mode = mtk_i2c_set_4g_mode(rpaddr);
-@@ -515,10 +525,18 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
- 	} else if (i2c->op == I2C_MASTER_WR) {
- 		writel(I2C_DMA_INT_FLAG_NONE, i2c->pdmabase + OFFSET_INT_FLAG);
- 		writel(I2C_DMA_CON_TX, i2c->pdmabase + OFFSET_CON);
--		wpaddr = dma_map_single(i2c->dev, msgs->buf,
-+
-+		dma_wr_buf = i2c_get_dma_safe_msg_buf(msgs, 0);
-+		if (!dma_wr_buf)
-+			return -ENOMEM;
-+
-+		wpaddr = dma_map_single(i2c->dev, dma_wr_buf,
- 					msgs->len, DMA_TO_DEVICE);
--		if (dma_mapping_error(i2c->dev, wpaddr))
-+		if (dma_mapping_error(i2c->dev, wpaddr)) {
-+			i2c_free_dma_safe_msg_buf(msgs, dma_wr_buf);
-+
- 			return -ENOMEM;
-+		}
- 
- 		if (i2c->dev_comp->support_33bits) {
- 			reg_4g_mode = mtk_i2c_set_4g_mode(wpaddr);
-@@ -530,16 +548,39 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
- 	} else {
- 		writel(I2C_DMA_CLR_FLAG, i2c->pdmabase + OFFSET_INT_FLAG);
- 		writel(I2C_DMA_CLR_FLAG, i2c->pdmabase + OFFSET_CON);
--		wpaddr = dma_map_single(i2c->dev, msgs->buf,
-+
-+		dma_wr_buf = i2c_get_dma_safe_msg_buf(msgs, 0);
-+		if (!dma_wr_buf)
-+			return -ENOMEM;
-+
-+		wpaddr = dma_map_single(i2c->dev, dma_wr_buf,
- 					msgs->len, DMA_TO_DEVICE);
--		if (dma_mapping_error(i2c->dev, wpaddr))
-+		if (dma_mapping_error(i2c->dev, wpaddr)) {
-+			i2c_free_dma_safe_msg_buf(msgs, dma_wr_buf);
-+
- 			return -ENOMEM;
--		rpaddr = dma_map_single(i2c->dev, (msgs + 1)->buf,
-+		}
-+
-+		dma_rd_buf = i2c_get_dma_safe_msg_buf((msgs + 1), 0);
-+		if (!dma_rd_buf) {
-+			dma_unmap_single(i2c->dev, wpaddr,
-+					 msgs->len, DMA_TO_DEVICE);
-+
-+			i2c_free_dma_safe_msg_buf(msgs, dma_wr_buf);
-+
-+			return -ENOMEM;
-+		}
-+
-+		rpaddr = dma_map_single(i2c->dev, dma_rd_buf,
- 					(msgs + 1)->len,
- 					DMA_FROM_DEVICE);
- 		if (dma_mapping_error(i2c->dev, rpaddr)) {
- 			dma_unmap_single(i2c->dev, wpaddr,
- 					 msgs->len, DMA_TO_DEVICE);
-+
-+			i2c_free_dma_safe_msg_buf(msgs, dma_wr_buf);
-+			i2c_free_dma_safe_msg_buf((msgs + 1), dma_rd_buf);
-+
- 			return -ENOMEM;
- 		}
- 
-@@ -578,14 +619,21 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
- 	if (i2c->op == I2C_MASTER_WR) {
- 		dma_unmap_single(i2c->dev, wpaddr,
- 				 msgs->len, DMA_TO_DEVICE);
-+
-+		i2c_release_dma_safe_msg_buf(msgs, dma_wr_buf);
- 	} else if (i2c->op == I2C_MASTER_RD) {
- 		dma_unmap_single(i2c->dev, rpaddr,
- 				 msgs->len, DMA_FROM_DEVICE);
-+
-+		i2c_release_dma_safe_msg_buf(msgs, dma_rd_buf);
- 	} else {
- 		dma_unmap_single(i2c->dev, wpaddr, msgs->len,
- 				 DMA_TO_DEVICE);
- 		dma_unmap_single(i2c->dev, rpaddr, (msgs + 1)->len,
- 				 DMA_FROM_DEVICE);
-+
-+		i2c_release_dma_safe_msg_buf(msgs, dma_wr_buf);
-+		i2c_release_dma_safe_msg_buf((msgs + 1), dma_rd_buf);
- 	}
- 
- 	if (ret == 0) {
--- 
-1.8.1.1
+T24gVHVlLCAyNiBKdW4gMjAxOCAwMDowNTowNyArMDIwMApSYWZhxYIgTWnFgmVja2kgPHphamVj
+NUBnbWFpbC5jb20+IHdyb3RlOgoKPiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVj
+a2kucGw+Cj4gCj4gQnJvYWRjb20gYmFzZWQgaG9tZSByb3V0ZXIgZGV2aWNlcyB1c2UgVFJYIGZp
+cm13YXJlIGZvcm1hdC4gSXQncyBhCj4gY29udGFpbmVyIHRoYXQgY2FuIGhvbGQgZmV3IHBhcnRp
+dGlvbnMuIElmIG9wZXJhdGluZyBzeXN0ZW0gaXMgZXhwZWN0ZWQKPiB0byBhY2Nlc3MgdGhlbSBp
+dCBoYXMgdG8gdW5kZXJzdGFuZCB0aGF0IGZvcm1hdCBhbmQgcGFyc2UgZmxhc2ggZGF0YQo+IGFj
+Y29yZGluZ2x5Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWls
+ZWNraS5wbD4KCkFwcGxpZWQgYm90aCBwYXRjaGVzLgoKVGhhbmtzLAoKQm9yaXMKCj4gLS0tCj4g
+VjI6IERyb3AgdW5uZWVkZWQgImJyY20sdHJ4LXYxIiBhbmQgImJyY20sdHJ4LXYyIiBiaW5kaW5n
+cy4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL210ZC9wYXJ0aXRpb25zL2JyY20sdHJ4LnR4dCAgICAg
+ICAgICAgfCAzNyArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAzNyBp
+bnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbXRkL3BhcnRpdGlvbnMvYnJjbSx0cngudHh0Cj4gCj4gZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9ucy9icmNtLHRy
+eC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3BhcnRpdGlvbnMv
+YnJjbSx0cngudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAu
+LmI2NzcxNDdjYTRlMQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvbXRkL3BhcnRpdGlvbnMvYnJjbSx0cngudHh0Cj4gQEAgLTAsMCArMSwz
+NyBAQAo+ICtCcm9hZGNvbSBUUlggQ29udGFpbmVyIFBhcnRpdGlvbgo+ICs9PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PQo+ICsKPiArVFJYIGlzIEJyb2FkY29tJ3Mgb2ZmaWNpYWwgZmly
+bXdhcmUgZm9ybWF0IGZvciB0aGUgQkNNOTQ3eHggYm9hcmRzLiBJdCdzIHVzZWQgYnkKPiArbW9z
+dCBvZiB0aGUgdmVuZG9ycyBidWlsZGluZyBkZXZpY2VzIGJhc2VkIG9uIEJyb2FkY29tJ3MgQkNN
+NDd4eCBTb0NzIGFuZCBpcwo+ICtzdXBwb3J0ZWQgYnkgdGhlIENGRSBib290bG9hZGVyLgo+ICsK
+PiArRGVzaWduIG9mIHRoZSBUUlggZm9ybWF0IGlzIHZlcnkgbWluaW1hbGlzdGljLiBJdHMgaGVh
+ZGVyIGNvbnRhaW5zCj4gK2lkZW50aWZpY2F0aW9uIGZpZWxkcywgQ1JDMzIgY2hlY2tzdW0gYW5k
+IHRoZSBsb2NhdGlvbnMgb2YgZW1iZWRkZWQgcGFydGl0aW9ucy4KPiArSXRzIHB1cnBvc2UgaXMg
+dG8gc3RvcmUgYSBmZXcgcGFydGl0aW9ucyBpbiBhIGZvcm1hdCB0aGF0IGNhbiBiZSBkaXN0cmli
+dXRlZCBhcwo+ICthIHN0YW5kYWxvbmUgZmlsZSBhbmQgd3JpdHRlbiBpbiBhIGZsYXNoIG1lbW9y
+eS4KPiArCj4gK0NvbnRhaW5lciBjYW4gaG9sZCB1cCB0byA0IHBhcnRpdGlvbnMuIFRoZSBmaXJz
+dCBwYXJ0aXRpb24gaGFzIHRvIGNvbnRhaW4gYQo+ICtkZXZpY2UgZXhlY3V0YWJsZSBiaW5hcnkg
+KGUuZy4gYSBrZXJuZWwpIGFzIGl0J3Mgd2hhdCB0aGUgQ0ZFIGJvb3Rsb2FkZXIgc3RhcnRzCj4g
+K2V4ZWN1dGluZy4gT3RoZXIgcGFydGl0aW9ucyBjYW4gYmUgdXNlZCBmb3Igb3BlcmF0aW5nIHN5
+c3RlbSBwdXJwb3Nlcy4gVGhpcyBpcwo+ICt1c2VmdWwgZm9yIHN5c3RlbXMgdGhhdCBrZWVwIGtl
+cm5lbCBhbmQgcm9vdGZzIHNlcGFyYXRlZC4KPiArCj4gK1RSWCBkb2Vzbid0IGVuZm9yY2UgYW55
+IHN0cmljdCBwYXJ0aXRpb24gYm91bmRhcmllcyBvciBzaXplIGxpbWl0cy4gQWxsCj4gK3BhcnRp
+dGlvbnMgaGF2ZSB0byBiZSBsZXNzIHRoYW4gdGhlIDRHaUIgbWF4IHNpemUgbGltaXQuCj4gKwo+
+ICtUaGVyZSBhcmUgdHdvIGV4aXN0aW5nL2tub3duIFRSWCB2YXJpYW50czoKPiArMSkgdjEgd2hp
+Y2ggY29udGFpbnMgMyBwYXJ0aXRpb25zCj4gKzIpIHYyIHdoaWNoIGNvbnRhaW5zIDQgcGFydGl0
+aW9ucwo+ICsKPiArVGhlcmUgYXJlbid0IHNlcGFyYXRlZCBjb21wYXRpYmxlIGJpbmRpbmdzIGZv
+ciB0aGVtIGFzIHZlcnNpb24gY2FuIGJlIHRyaXZpYWx5Cj4gK2RldGVjdGVkIGJ5IGEgc29mdHdh
+cmUgcGFyc2luZyBUUlggaGVhZGVyLgo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArLSBj
+b21wYXRpYmxlIDogKHJlcXVpcmVkKSBtdXN0IGJlICJicmNtLHRyeCIKPiArCj4gK0V4YW1wbGU6
+Cj4gKwo+ICtmbGFzaEAwIHsKPiArCXBhcnRpdGlvbnMgewo+ICsJCWNvbXBhdGlibGUgPSAiYnJj
+bSx0cngiOwo+ICsJfTsKPiArfTsKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KTGludXggTVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
