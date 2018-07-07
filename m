@@ -1,90 +1,83 @@
-From: Parthiban Nallathambi <pn@denx.de>
-Subject: Re: [PATCH v2 2/2] iio: light: Add device tree binding for vishay
- vcnl4035
-Date: Sat, 7 Jul 2018 19:06:40 +0200
-Message-ID: <2205f688-748a-2f68-490d-2225839cad91@denx.de>
-References: <20180628123021.1628338-1-pn@denx.de>
- <20180629153802.1639514-1-pn@denx.de> <20180629153802.1639514-2-pn@denx.de>
- <20180706203439.GA30529@rob-hp-laptop>
+From: Simon Shields <simon@lineageos.org>
+Subject: Re: [PATCH] ARM: dts: exynos: add max77693 irq configuration for
+ midas
+Date: Sun, 8 Jul 2018 03:08:48 +1000
+Message-ID: <20180707170848.GA29870@lineageos.org>
+References: <20180707144527.6662-1-simon@lineageos.org>
+ <CAJKOXPfUav7URsCDHFzMbtBiw5id+szVj_VtGJ-iu5ymmgWoXw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180706203439.GA30529@rob-hp-laptop>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAJKOXPfUav7URsCDHFzMbtBiw5id+szVj_VtGJ-iu5ymmgWoXw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, matthias.bgg@gmail.com, wd@denx.de, sbabic@denx.de, hs@denx.de, pn@denx.de
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 07/06/2018 10:34 PM, Rob Herring wrote:
-> On Fri, Jun 29, 2018 at 05:38:02PM +0200, Parthiban Nallathambi wrote:
->> Adding device tree binding for vcnl4035 and vendor
->> prefix for Vishay Intertechnology
->>
->> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
->> ---
->>  .../devicetree/bindings/iio/light/vcnl4035.txt        | 19 +++++++++++++++++++
->>  Documentation/devicetree/bindings/vendor-prefixes.txt |  1 +
->>  2 files changed, 20 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4035.txt
->>
->> diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4035.txt b/Documentation/devicetree/bindings/iio/light/vcnl4035.txt
->> new file mode 100644
->> index 000000000000..7ffdc0246300
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/light/vcnl4035.txt
->> @@ -0,0 +1,19 @@
->> +VISHAY VCNL4035 -  Ambient Light and proximity sensor
->> +
->> +Link to datasheet: https://www.vishay.com/docs/84251/vcnl4035x01.pdf
->> +
->> +Required properties:
->> +
->> +	-compatible: should be "vishay,vcnl4035"
->> +	-reg: I2C address of the sensor, should be 0x60
->> +	- interrupt-parent: should be the phandle for the interrupt controller
+On Sat, Jul 07, 2018 at 05:34:08PM +0200, Krzysztof Kozlowski wrote:
+> On 7 July 2018 at 16:45, Simon Shields <simon@lineageos.org> wrote:
+> > Currently, we assume that the bootloader has correctly configured
+> > the interrupt pin for max77693. This might not actually be the case -
+> > so it's better to configure it explicitly.
+> >
+> > Signed-off-by: Simon Shields <simon@lineageos.org>
+> > ---
+> >  arch/arm/boot/dts/exynos4412-midas.dtsi | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/exynos4412-midas.dtsi b/arch/arm/boot/dts/exynos4412-midas.dtsi
+> > index f35176a35a15..30760bf2eb71 100644
+> > --- a/arch/arm/boot/dts/exynos4412-midas.dtsi
+> > +++ b/arch/arm/boot/dts/exynos4412-midas.dtsi
+> > @@ -156,6 +156,8 @@
+> >                         compatible = "maxim,max77693";
+> >                         interrupt-parent = <&gpx1>;
+> >                         interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
+> > +                       pinctrl-names = "default";
+> > +                       pinctrl-0 = <&max77693_irq>;
+> >                         reg = <0x66>;
+> >
+> >                         regulators {
+> > @@ -1117,6 +1119,13 @@
+> >                 samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
+> >         };
+> >
+> > +       max77693_irq: max77693-irq {
+> > +               samsung,pins = "gpx1-5";
+> > +               samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
+> > +               samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> > +               samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> > +       };
+> > +
 > 
-> Don't need to document this as it could be in a parent node.
+> Please put it before hdmi-hpd (gpx3-7).
 
-Will remove it in v3, thanks.
+OK.
+
+> What about the interrupt for max77693 fuel gauge? 
+> Maybe another patch for it as well?
+
+Yes - in fact, it looks like most interrupt pins are configured by the
+vendor kernel to have PULL_NONE, something which (as far as i can tell)
+mainline doesn't do.
+
+Maybe I should just prepare a series (or a single patch) which fixes all of them?
+Or would you prefer I added the (remaining) eint configurations to
+exynos4412-pinctrl.dtsi, and then used those?
 
 > 
->> +	- interrupts: interrupt mapping for GPIO IRQ (level active low)
->> +
->> +Example:
->> +
->> +vcnl4035@60 {
-> 
-> light-sensor@60
-
-Sure, thanks.
-
-> 
->> +	compatible = "vishay,vcnl4035";
->> +	reg = <0x60>;
->> +	interrupt-parent = <&gpio4>;
->> +	interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
->> +};
->> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> index 7cad066191ee..3cc46d5735a9 100644
->> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> @@ -395,6 +395,7 @@ v3	V3 Semiconductor
->>  variscite	Variscite Ltd.
->>  via	VIA Technologies, Inc.
->>  virtio	Virtual I/O Device Specification, developed by the OASIS consortium
->> +vishay	Vishay Intertechnology, Inc
->>  vivante	Vivante Corporation
->>  vocore VoCore Studio
->>  voipac	Voipac Technologies s.r.o.
->> -- 
->> 2.14.4
->>
+> Best regards,
+> Krzysztof
 > 
 
--- 
-Thanks,
-Parthiban N
+Cheers,
+Simon
+
+> 
+> >         sleep1: sleep-states {
+> >                 PIN_SLP(gpk0-0, PREV, NONE);
+> >                 PIN_SLP(gpk0-1, PREV, NONE);
+> > --
+> > 2.18.0
+> >
