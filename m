@@ -1,41 +1,80 @@
 From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v4 1/2] clk: pxa: export 32kHz PLL
-Date: Sat, 07 Jul 2018 21:30:25 +0200
-Message-ID: <87d0vyg7xq.fsf@belgarion.home>
-References: <20180627194124.26366-1-robert.jarzmik@free.fr>
-        <87d0w2gsa5.fsf@belgarion.home>
-        <153091032623.143105.13689700534218065371@swboyd.mtv.corp.google.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+Subject: [PATCH v2 1/2] ARM: dts: pxa: add pincontrol helpers
+Date: Sat,  7 Jul 2018 21:42:46 +0200
+Message-ID: <20180707194247.31143-1-robert.jarzmik@free.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Stephen Boyd <sboyd@kernel.org> writes:
+Add 3 helpers so that pincontrol definitions for pxa25x and pxa27x are
+easier, and can be easily converted from old mfp mach-pxa code to
+devicetree.
 
-> Quoting Robert Jarzmik (2018-07-04 22:34:10)
->> Robert Jarzmik <robert.jarzmik@free.fr> writes:
->> 
->> > This clock is especially used by the RTC driver, so export it so that
->> > devicetree users can use it.
->> >
->> > Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
->> > ---
->> > Since v2: fix missing parenthesis in clk-pxa25x.c and clk-pxa3xx.c
->> 
->> Hi Michael and Stephen,
->> 
->> Could you have a look please ?
->> 
->
-> I'll apply patch 1, and leave patch 2 to someone else?
-As there is a dependency of patch 2 on patch 1, and with the Reviewed-by
-provided by Rob, I'd appreciate you take it as well. If not, I'll queue it up
-for the next cycle in my pxa tree.
+An example of such conversion would be :
+static unsigned long mioa701_pin_config[] = {
+	GPIO32_MMC_CLK,
+	GPIO92_MMC_DAT_0,
+	GPIO109_MMC_DAT_1,
+	GPIO110_MMC_DAT_2,
+	GPIO111_MMC_DAT_3,
+	GPIO112_MMC_CMD,
+	MIO_CFG_IN(GPIO78_SDIO_RO, AF0),
+	MIO_CFG_IN(GPIO15_SDIO_INSERT, AF0),
+	MIO_CFG_OUT(GPIO91_SDIO_EN, AF0, DRIVE_LOW),
+};
+into:
+	pinctrl_mmc_default: mmc-default {
+		PMMUX(sd-insert, 15, gpio_in);
+		PMMUX(mmclk, 32, MMCLK);
+		PMMUX(sd-ro, 78, gpio_in);
+		PMMUX_LPM_LOW(sd-enable, 91, gpio_out);
+		PMMUX(mmdat0, 92, MMDAT<0>);
+		PMMUX(mmdat1, 109, MMDAT<1>);
+		PMMUX(mmdat2, 110, MMDAT<2>);
+		PMMUX(mmdat3, 111, MMDAT<3>);
+		PMMUX(mmcmd, 112, MMCMD);
+	};
 
-Cheers.
+The third column of PMMUX*() helpers can be found in pincontrol muxing
+functions, either in pinctrl-pxa27x.c (or pinctrl-pxa25x.c), or by
+inspecting the pincontrol once booted in debugfs.
 
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+---
+ arch/arm/boot/dts/pxa2xx.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/arch/arm/boot/dts/pxa2xx.dtsi b/arch/arm/boot/dts/pxa2xx.dtsi
+index e4ebcde17837..f609dbb86abf 100644
+--- a/arch/arm/boot/dts/pxa2xx.dtsi
++++ b/arch/arm/boot/dts/pxa2xx.dtsi
+@@ -9,6 +9,25 @@
+ #include "skeleton.dtsi"
+ #include "dt-bindings/clock/pxa-clock.h"
+ 
++#define PMGROUP(pin) #pin
++#define PMMUX(func, pin, af)			\
++	mux- ## func {				\
++		groups = PMGROUP(P ## pin);	\
++		function = #af;			\
++	}
++#define PMMUX_LPM_LOW(func, pin, af)		\
++	mux- ## func {				\
++		groups = PMGROUP(P ## pin);	\
++		function = #af;			\
++		low-power-disable;		\
++	}
++#define PMMUX_LPM_HIGH(func, pin, af)		\
++	mux- ## func {				\
++		groups = PMGROUP(P ## pin);	\
++		function = #af;			\
++		low-power-enable;		\
++	}
++
+ / {
+ 	model = "Marvell PXA2xx family SoC";
+ 	compatible = "marvell,pxa2xx";
 -- 
-Robert
+2.11.0
