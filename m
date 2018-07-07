@@ -1,28 +1,145 @@
-From: Jun Gao <jun.gao@mediatek.com>
-Subject: [PATCH 0/3] Register i2c adapter driver earlier and use DMA safe buffers
-Date: Sat, 7 Jul 2018 10:49:10 +0800
-Message-ID: <1530931753-8264-1-git-send-email-jun.gao@mediatek.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 3/9] arm64: allwinner: dts: h6: add
+ USB2-related device nodes
+Date: Sat, 7 Jul 2018 11:31:39 +0800
+Message-ID: <CAGb2v663fgFQTHGCMmKwuf4RyW59YSbhtyr5nLBRRxakkEfRzw@mail.gmail.com>
+References: <20180706153805.25842-1-icenowy@aosc.io> <20180706153805.25842-4-icenowy@aosc.io>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBMXIQDNAKGQER6JLTJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180706153805.25842-4-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series based on v4.18-rc1, include i2c adapter driver register time
-modification, DMA safe buffer free function and DMA safe buffers used for i2c
-transactions.
+On Fri, Jul 6, 2018 at 11:37 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> Allwinner H6 has two USB2 ports, one OTG and one host-only.
+>
+> Add device tree nodes related to them.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 90 ++++++++++++++++++++
+>  1 file changed, 90 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> index c72da8cd9ef5..62fc0f5e10ba 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> @@ -174,6 +174,96 @@
+>                         status = "disabled";
+>                 };
+>
+> +               usb2otg: usb@5100000 {
+> +                       compatible = "allwinner,sun8i-a33-musb";
+> +                       reg = <0x05100000 0x0400>;
+> +                       clocks = <&ccu CLK_BUS_OTG>;
+> +                       resets = <&ccu RST_BUS_OTG>;
+> +                       interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+> +                       interrupt-names = "mc";
+> +                       phys = <&usb2phy 0>;
+> +                       phy-names = "usb";
+> +                       extcon = <&usb2phy 0>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               usb2phy: phy@5100400 {
+> +                       compatible = "allwinner,sun50i-h6-usb-phy";
+> +                       reg = <0x05100400 0x14>,
+> +                             <0x05101800 0x4>,
+> +                             <0x05311800 0x4>;
+> +                       reg-names = "phy_ctrl",
+> +                                   "pmu0",
+> +                                   "pmu3";
+> +                       clocks = <&ccu CLK_USB_PHY0>,
+> +                                <&ccu CLK_USB_PHY3>;
+> +                       clock-names = "usb0_phy",
+> +                                     "usb3_phy";
+> +                       resets = <&ccu RST_USB_PHY0>,
+> +                                <&ccu RST_USB_PHY3>;
+> +                       reset-names = "usb0_reset",
+> +                                     "usb3_reset";
+> +                       status = "disabled";
+> +                       #phy-cells = <1>;
+> +               };
+> +
+> +               ehci0: usb@5101000 {
+> +                       compatible = "allwinner,sun50i-h6-ehci", "generic-ehci";
+> +                       reg = <0x05101000 0x100>;
+> +                       interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&ccu CLK_BUS_OHCI0>,
+> +                                <&ccu CLK_BUS_EHCI0>,
+> +                                <&ccu CLK_USB_OHCI0>;
+> +                       resets = <&ccu RST_BUS_OHCI0>,
+> +                                <&ccu RST_BUS_EHCI0>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               ohci0: usb@5101400 {
+> +                       compatible = "allwinner,sun50i-h6-ohci", "generic-ohci";
+> +                       reg = <0x05101400 0x100>;
+> +                       interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&ccu CLK_BUS_OHCI0>,
+> +                                <&ccu CLK_USB_OHCI0>;
+> +                       resets = <&ccu RST_BUS_OHCI0>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               usb3phy: phy@5210000 {
 
-Jun Gao (3):
-  i2c: mediatek: Register i2c adapter driver earlier
-  i2c: Add helper to ease DMA handling
-  i2c: mediatek: Use DMA safe buffers for i2c transactions
+Maybe you should split this one out and put it in the USB 3.0 patch?
 
- drivers/i2c/busses/i2c-mt65xx.c | 74 ++++++++++++++++++++++++++++++++++++-----
- drivers/i2c/i2c-core-base.c     | 14 ++++++++
- include/linux/i2c.h             |  1 +
- 3 files changed, 81 insertions(+), 8 deletions(-)
+ChenYu
 
---
-1.8.1.1
+> +                       compatible = "allwinner,sun50i-h6-usb3-phy";
+> +                       reg = <0x5210000 0x10000>;
+> +                       clocks = <&ccu CLK_USB_PHY1>;
+> +                       resets = <&ccu RST_USB_PHY1>;
+> +                       #phy-cells = <0>;
+> +                       status = "disabled";
+> +               };
+> +
+> +               ehci3: usb@5311000 {
+> +                       compatible = "allwinner,sun50i-h6-ehci", "generic-ehci";
+> +                       reg = <0x05311000 0x100>;
+> +                       interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&ccu CLK_BUS_OHCI3>,
+> +                                <&ccu CLK_BUS_EHCI3>,
+> +                                <&ccu CLK_USB_OHCI3>;
+> +                       resets = <&ccu RST_BUS_OHCI3>,
+> +                                <&ccu RST_BUS_EHCI3>;
+> +                       phys = <&usb2phy 3>;
+> +                       phy-names = "usb";
+> +                       status = "disabled";
+> +               };
+> +
+> +               ohci3: usb@5311400 {
+> +                       compatible = "allwinner,sun50i-h6-ohci", "generic-ohci";
+> +                       reg = <0x05311400 0x100>;
+> +                       interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&ccu CLK_BUS_OHCI3>,
+> +                                <&ccu CLK_USB_OHCI3>;
+> +                       resets = <&ccu RST_BUS_OHCI3>;
+> +                       phys = <&usb2phy 3>;
+> +                       phy-names = "usb";
+> +                       status = "disabled";
+> +               };
+> +
+>                 r_ccu: clock@7010000 {
+>                         compatible = "allwinner,sun50i-h6-r-ccu";
+>                         reg = <0x07010000 0x400>;
+> --
+> 2.17.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
