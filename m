@@ -1,40 +1,41 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 8/9] ARM: dts: exynos5250: add DSI node
-Date: Sat, 7 Jul 2018 10:55:27 +0200
-Message-ID: <20180707085527.vdnbqy5digndxc7i@kozik-lap>
-References: <1529396370-18761-1-git-send-email-m.purski@samsung.com>
- <CGME20180619082003eucas1p1ee69166282872a3c031caf08cb550269@eucas1p1.samsung.com>
- <1529396370-18761-9-git-send-email-m.purski@samsung.com>
+From: Jun Gao <jun.gao@mediatek.com>
+Subject: [PATCH v2 0/3] Register i2c adapter driver earlier and use DMA safe
+ buffers
+Date: Sat, 7 Jul 2018 17:29:52 +0800
+Message-ID: <1530955795-17714-1-git-send-email-jun.gao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1529396370-18761-9-git-send-email-m.purski@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maciej Purski <m.purski@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, Seung-Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-arm-kernel@lists.infradead.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdW4gMTksIDIwMTggYXQgMTA6MTk6MjlBTSArMDIwMCwgTWFjaWVqIFB1cnNraSB3
-cm90ZToKPiBGcm9tOiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgo+IAo+IFRo
-ZSBwYXRjaCBhZGRzIGNvbW1vbiBwYXJ0IG9mIERTSSBub2RlIGZvciBFeHlub3M1MjUwIHBsYXRm
-b3Jtcwo+IGFuZCBhIHJlcXVpcmVkIG1pcGktcGh5IG5vZGUuCj4gCj4gU2lnbmVkLW9mZi1ieTog
-QW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBNYWNp
-ZWogUHVyc2tpIDxtLnB1cnNraUBzYW1zdW5nLmNvbT4KPiAtLS0KPiAgYXJjaC9hcm0vYm9vdC9k
-dHMvZXh5bm9zNTI1MC5kdHNpIHwgMjEgKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBj
-aGFuZ2VkLCAyMSBpbnNlcnRpb25zKCspCj4KCkkgc2VlIHRoYXQgYmluZGluZ3MgZ290IFJvYidz
-IGFjayBidXQga2J1aWxkIGNvbXBsYWluZWQgYWJvdXQgZHJpdmVyCmNoYW5nZXMgc28gSSBndWVz
-cyB5b3UgYXJlIGdvaW5nIHJlc2VuZCBldmVyeXRoaW5nPyBJJ2xsIHdhaXQgd2l0aAphcHBseWlu
-ZyB0aGVzZSBmb3IgdjQuCgpCZXN0IHJlZ2FyZHMsCktyenlzenRvZgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+This patch series based on v4.18-rc1, include i2c adapter driver register time
+modification, DMA safe buffer free function and DMA safe buffers used for i2c
+transactions.
+
+changes since v1:
+- Add the initializations for DMA safe buffer pointers
+
+Jun Gao (3):
+  i2c: mediatek: Register i2c adapter driver earlier
+  i2c: Add helper to ease DMA handling
+  i2c: mediatek: Use DMA safe buffers for i2c transactions
+
+ drivers/i2c/busses/i2c-mt65xx.c | 74 ++++++++++++++++++++++++++++++++++++-----
+ drivers/i2c/i2c-core-base.c     | 14 ++++++++
+ include/linux/i2c.h             |  1 +
+ 3 files changed, 81 insertions(+), 8 deletions(-)
+
+--
+1.8.1.1
