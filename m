@@ -1,83 +1,59 @@
-From: Simon Shields <simon@lineageos.org>
-Subject: Re: [PATCH] ARM: dts: exynos: add max77693 irq configuration for
- midas
-Date: Sun, 8 Jul 2018 03:08:48 +1000
-Message-ID: <20180707170848.GA29870@lineageos.org>
-References: <20180707144527.6662-1-simon@lineageos.org>
- <CAJKOXPfUav7URsCDHFzMbtBiw5id+szVj_VtGJ-iu5ymmgWoXw@mail.gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v5 2/2] dt-bindings: iio: dac: Add docs for AD5758 DAC
+Date: Sat, 7 Jul 2018 18:21:02 +0100
+Message-ID: <20180707182102.4ae47234@archlinux>
+References: <1530714773-18956-1-git-send-email-stefan.popa@analog.com>
+        <20180705211858.GA7441@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJKOXPfUav7URsCDHFzMbtBiw5id+szVj_VtGJ-iu5ymmgWoXw@mail.gmail.com>
+In-Reply-To: <20180705211858.GA7441@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Stefan Popa <stefan.popa@analog.com>, Michael.Hennerich@analog.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 07, 2018 at 05:34:08PM +0200, Krzysztof Kozlowski wrote:
-> On 7 July 2018 at 16:45, Simon Shields <simon@lineageos.org> wrote:
-> > Currently, we assume that the bootloader has correctly configured
-> > the interrupt pin for max77693. This might not actually be the case -
-> > so it's better to configure it explicitly.
-> >
-> > Signed-off-by: Simon Shields <simon@lineageos.org>
+On Thu, 5 Jul 2018 15:18:58 -0600
+Rob Herring <robh@kernel.org> wrote:
+
+> On Wed, Jul 04, 2018 at 05:32:53PM +0300, Stefan Popa wrote:
+> > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
 > > ---
-> >  arch/arm/boot/dts/exynos4412-midas.dtsi | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/exynos4412-midas.dtsi b/arch/arm/boot/dts/exynos4412-midas.dtsi
-> > index f35176a35a15..30760bf2eb71 100644
-> > --- a/arch/arm/boot/dts/exynos4412-midas.dtsi
-> > +++ b/arch/arm/boot/dts/exynos4412-midas.dtsi
-> > @@ -156,6 +156,8 @@
-> >                         compatible = "maxim,max77693";
-> >                         interrupt-parent = <&gpx1>;
-> >                         interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
-> > +                       pinctrl-names = "default";
-> > +                       pinctrl-0 = <&max77693_irq>;
-> >                         reg = <0x66>;
-> >
-> >                         regulators {
-> > @@ -1117,6 +1119,13 @@
-> >                 samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
-> >         };
-> >
-> > +       max77693_irq: max77693-irq {
-> > +               samsung,pins = "gpx1-5";
-> > +               samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
-> > +               samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> > +               samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-> > +       };
-> > +
+> > Changes in v5:
+> > 	- used a dac@0 as a more generic node name instead of ad5758@0.
+> > Changes in v4:
+> > 	- Nothing changed, just to follow the patch set version.
+> > Changes in v3:
+> > 	- AD5758 can be both a current and voltage output DAC. The
+> > 	  decision is made based on the DT and the channel type is set
+> > 	  during probe.
+> > 	- range was replaced by range-microvolt and range-microamp
+> > 	- dc-dc-mode, range-microvolt and range-microamp are required
+> > 	  properties.
+> > 	- Introduced a slew-time-us property from which slew rate clock
+> > 	  and slew rate step are calculated using a best match algorithm.
+> > 	- Added units in the name of the properties.
+> > 	- Offered more explanation for the various modes of operation.
+> > 
+> > Changes in v2:
+> > 	- Nothing changed, just to follow the patch set version.
+> > 
+> >  .../devicetree/bindings/iio/dac/ad5758.txt         | 73 ++++++++++++++++++++++
+> >  MAINTAINERS                                        |  1 +
+> >  2 files changed, 74 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5758.txt  
 > 
-> Please put it before hdmi-hpd (gpx3-7).
+> Reviewed-by: Rob Herring <robh@kernel.org> 
 
-OK.
+There was a bit of white space weirdness in here and some lines that needed
+breaking.  I fixed up whilst applying.
 
-> What about the interrupt for max77693 fuel gauge? 
-> Maybe another patch for it as well?
+Applied to the togreg branch of iio.git and pushed out as testing for the
+autobuilders to play with it.
 
-Yes - in fact, it looks like most interrupt pins are configured by the
-vendor kernel to have PULL_NONE, something which (as far as i can tell)
-mainline doesn't do.
+Also feels like I haven't explicitly thanked Rob in a while, so... thanks Rob
+for your tireless work on making sure we keep idiocy in device tree bindings
+to a minimum!
 
-Maybe I should just prepare a series (or a single patch) which fixes all of them?
-Or would you prefer I added the (remaining) eint configurations to
-exynos4412-pinctrl.dtsi, and then used those?
-
-> 
-> Best regards,
-> Krzysztof
-> 
-
-Cheers,
-Simon
-
-> 
-> >         sleep1: sleep-states {
-> >                 PIN_SLP(gpk0-0, PREV, NONE);
-> >                 PIN_SLP(gpk0-1, PREV, NONE);
-> > --
-> > 2.18.0
-> >
+Jonathan
