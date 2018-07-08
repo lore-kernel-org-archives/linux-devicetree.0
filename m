@@ -1,52 +1,30 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH] arm64: hikey960: update idle-states
-Date: Sun, 8 Jul 2018 23:15:22 +0200
-Message-ID: <948f033f-aef2-4d6c-170d-a1ff2113f258@linaro.org>
-References: <1530860246-29072-1-git-send-email-vincent.guittot@linaro.org>
- <20180708140157.GA28878@leoy-ThinkPad-X240s>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [v8, 1/2] dt-binding: hwmon: Add NPCM7xx PWM and Fan controller
+ documentation
+Date: Sun, 8 Jul 2018 16:14:43 -0700
+Message-ID: <20180708231443.GA25802@roeck-us.net>
+References: <20180703232326.355718-2-tmaimon77@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180708140157.GA28878@leoy-ThinkPad-X240s>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180703232326.355718-2-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: leo.yan@linaro.org, Vincent Guittot <vincent.guittot@linaro.org>
-Cc: xuwei5@hisilicon.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Leo,
-
-
-On 08/07/2018 16:01, leo.yan@linaro.org wrote:
-
-[ ... ]
-
->> A simple test with a task waking up every 11,111ms shows improvement:
+On Wed, Jul 04, 2018 at 02:23:25AM +0300, Tomer Maimon wrote:
+> Added device tree binding documentation for Nuvoton BMC
+> NPCM7xx Pulse Width Modulation (PWM)  and Fan tach controller.
+> The Nuvoton BMC NPCM7XX supports 8 PWM controller outputs
+> and 16 Fan tachometer controller inputs.
 > 
-> Should s/11,111ms/11.111ms ?
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Actually the French notation is ',' for decimal :)
+Applied to hwmon-next; while doing so, fixed a couple of whitespace errors
+recognixed by git.
 
-English and French are inverted.
-
-For example one million is noted:
-
-French  : 1.000.000 (or 1 000 000)
-English : 1,000,000
-
-And one milli is noted:
-
-French  : 0,001
-English : 0.001
-
-:)
-
-  -- Daniel
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Thanks,
+Guenter
