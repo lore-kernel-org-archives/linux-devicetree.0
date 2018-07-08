@@ -1,204 +1,50 @@
-From: leo.yan@linaro.org
-Subject: Re: [PATCH] arm64: hikey960: update idle-states
-Date: Sun, 8 Jul 2018 22:01:57 +0800
-Message-ID: <20180708140157.GA28878@leoy-ThinkPad-X240s>
-References: <1530860246-29072-1-git-send-email-vincent.guittot@linaro.org>
+From: Dong Aisheng <aisheng.dong@nxp.com>
+Subject: [PATCH V4 1/5] dt-bindings: mailbox: allow mbox-cells to be equal to 0
+Date: Sun,  8 Jul 2018 22:56:53 +0800
+Message-ID: <1531061817-1980-2-git-send-email-aisheng.dong@nxp.com>
+References: <1531061817-1980-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1530860246-29072-1-git-send-email-vincent.guittot@linaro.org>
+In-Reply-To: <1531061817-1980-1-git-send-email-aisheng.dong@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: xuwei5@hisilicon.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: dongas86@gmail.com, kernel@pengutronix.de, shawnguo@kernel.org, fabio.estevam@nxp.com, linux-imx@nxp.com, Dong Aisheng <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vincent,
+Mailbox devices may have only one channel which means the mbox-cells
+at least 1 does not make sense for this type devices. Let's remove
+that limitation to allow the mbox-cells to be equal to 0.
 
-On Fri, Jul 06, 2018 at 08:57:26AM +0200, Vincent Guittot wrote:
-> Update entry/exit latency and residency time of hikey960 to use more
-> realistic figures based on unitary tests done on the platform.
-> 
-> The complete results (in us) :
->                   big cluster
->                   cluster  CPU
-> max entry latency     800  400
-> max exit latency     2900  550
-> residency  903Mhz    5000 1500
-> residency 2363Mhz       0 1500
-> 
->                   little cluster
->                   cluster  CPU
-> max entry latency     500  400
-> max exit latency     1600  650
-> residency  533Mhz    8000 4500
-> residency 1844Mhz       0 1500
-> 
-> We can see that the residency time depends of the running OPP which is not
-> handled for now. Then we also have to take into account the constraint of
-> a residency time shorter than the tick to get full advantage of idle loop
-> reordering(tick is stopped if idle duration is higher than tick period).
-> Finally the selected residency value are :
->                  big cluster
->                   cluster  CPU
-> residency            3700 1500
-> 
->                   little cluster
->                   cluster  CPU
-> residency            3500 1500
-> 
-> A simple test with a task waking up every 11,111ms shows improvement:
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+ChangeLog:
+ * New patch introduced in v3 series
+ * Actually there're already users in kernel with mbox-cells set to 0.
+   See:
+   arch/arm/boot/dts/bcm283x.dtsi:145: #mbox-cells = <0>;
+---
+ Documentation/devicetree/bindings/mailbox/mailbox.txt | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Should s/11,111ms/11.111ms ?
-
-> - 5% a lowest OPP
-> - 22% at highest OPP
-> 
-> The period has been chosen:
-> - to be shorter than old cluster residency time and longer than new
-> residency time od cluster off C-state
-
-Should s/od/of/ ?
-
-Except these two minor typos, the patch is very good improvement.
-
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-
-> - to prevent any sync with tick (4ms) when running tests that can add
-> some variances between tests
-> 
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> ---
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 45 ++++++++++++++++++-------------
->  1 file changed, 27 insertions(+), 18 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> index 421d454..890d23e 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> @@ -61,7 +61,7 @@
->  			reg = <0x0 0x0>;
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
-> -			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
-> +			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
->  			capacity-dmips-mhz = <592>;
->  			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER0>;
->  			operating-points-v2 = <&cluster0_opp>;
-> @@ -75,7 +75,7 @@
->  			reg = <0x0 0x1>;
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
-> -			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
-> +			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
->  			capacity-dmips-mhz = <592>;
->  			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER0>;
->  			operating-points-v2 = <&cluster0_opp>;
-> @@ -87,7 +87,7 @@
->  			reg = <0x0 0x2>;
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
-> -			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
-> +			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
->  			capacity-dmips-mhz = <592>;
->  			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER0>;
->  			operating-points-v2 = <&cluster0_opp>;
-> @@ -99,7 +99,7 @@
->  			reg = <0x0 0x3>;
->  			enable-method = "psci";
->  			next-level-cache = <&A53_L2>;
-> -			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
-> +			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
->  			capacity-dmips-mhz = <592>;
->  			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER0>;
->  			operating-points-v2 = <&cluster0_opp>;
-> @@ -111,7 +111,7 @@
->  			reg = <0x0 0x100>;
->  			enable-method = "psci";
->  			next-level-cache = <&A73_L2>;
-> -			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_1>;
-> +			cpu-idle-states = <&CPU_SLEEP_1 &CLUSTER_SLEEP_1>;
->  			capacity-dmips-mhz = <1024>;
->  			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER1>;
->  			operating-points-v2 = <&cluster1_opp>;
-> @@ -125,7 +125,7 @@
->  			reg = <0x0 0x101>;
->  			enable-method = "psci";
->  			next-level-cache = <&A73_L2>;
-> -			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_1>;
-> +			cpu-idle-states = <&CPU_SLEEP_1 &CLUSTER_SLEEP_1>;
->  			capacity-dmips-mhz = <1024>;
->  			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER1>;
->  			operating-points-v2 = <&cluster1_opp>;
-> @@ -137,7 +137,7 @@
->  			reg = <0x0 0x102>;
->  			enable-method = "psci";
->  			next-level-cache = <&A73_L2>;
-> -			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_1>;
-> +			cpu-idle-states = <&CPU_SLEEP_1 &CLUSTER_SLEEP_1>;
->  			capacity-dmips-mhz = <1024>;
->  			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER1>;
->  			operating-points-v2 = <&cluster1_opp>;
-> @@ -149,7 +149,7 @@
->  			reg = <0x0 0x103>;
->  			enable-method = "psci";
->  			next-level-cache = <&A73_L2>;
-> -			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_1>;
-> +			cpu-idle-states = <&CPU_SLEEP_1 &CLUSTER_SLEEP_1>;
->  			capacity-dmips-mhz = <1024>;
->  			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER1>;
->  			operating-points-v2 = <&cluster1_opp>;
-> @@ -158,31 +158,40 @@
->  		idle-states {
->  			entry-method = "psci";
->  
-> -			CPU_SLEEP: cpu-sleep {
-> +			CPU_SLEEP_0: cpu-sleep-0 {
->  				compatible = "arm,idle-state";
->  				local-timer-stop;
->  				arm,psci-suspend-param = <0x0010000>;
-> -				entry-latency-us = <40>;
-> -				exit-latency-us = <70>;
-> -				min-residency-us = <3000>;
-> +				entry-latency-us = <400>;
-> +				exit-latency-us = <650>;
-> +				min-residency-us = <1500>;
->  			};
-> -
->  			CLUSTER_SLEEP_0: cluster-sleep-0 {
->  				compatible = "arm,idle-state";
->  				local-timer-stop;
->  				arm,psci-suspend-param = <0x1010000>;
->  				entry-latency-us = <500>;
-> -				exit-latency-us = <5000>;
-> -				min-residency-us = <20000>;
-> +				exit-latency-us = <1600>;
-> +				min-residency-us = <3500>;
-> +			};
-> +
-> +
-> +			CPU_SLEEP_1: cpu-sleep-1 {
-> +				compatible = "arm,idle-state";
-> +				local-timer-stop;
-> +				arm,psci-suspend-param = <0x0010000>;
-> +				entry-latency-us = <400>;
-> +				exit-latency-us = <550>;
-> +				min-residency-us = <1500>;
->  			};
->  
->  			CLUSTER_SLEEP_1: cluster-sleep-1 {
->  				compatible = "arm,idle-state";
->  				local-timer-stop;
->  				arm,psci-suspend-param = <0x1010000>;
-> -				entry-latency-us = <1000>;
-> -				exit-latency-us = <5000>;
-> -				min-residency-us = <20000>;
-> +				entry-latency-us = <800>;
-> +				exit-latency-us = <2900>;
-> +				min-residency-us = <3500>;
->  			};
->  		};
->  
-> -- 
-> 2.7.4
-> 
+diff --git a/Documentation/devicetree/bindings/mailbox/mailbox.txt b/Documentation/devicetree/bindings/mailbox/mailbox.txt
+index af8ecee..c2fcd05 100644
+--- a/Documentation/devicetree/bindings/mailbox/mailbox.txt
++++ b/Documentation/devicetree/bindings/mailbox/mailbox.txt
+@@ -6,8 +6,7 @@ assign appropriate mailbox channel to client drivers.
+ * Mailbox Controller
+ 
+ Required property:
+-- #mbox-cells: Must be at least 1. Number of cells in a mailbox
+-		specifier.
++- #mbox-cells: Number of cells in a mailbox specifier.
+ 
+ Example:
+ 	mailbox: mailbox {
+-- 
+2.7.4
