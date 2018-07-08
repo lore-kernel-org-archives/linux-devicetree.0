@@ -1,620 +1,144 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH v2 2/2] ARM: dts: pxa: add mioa701 board description
-Date: Sat,  7 Jul 2018 21:42:47 +0200
-Message-ID: <20180707194247.31143-2-robert.jarzmik@free.fr>
-References: <20180707194247.31143-1-robert.jarzmik@free.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180707194247.31143-1-robert.jarzmik@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Hyun Kwon <hyun.kwon@xilinx.com>
+Subject: [PATCH v8 5/5] drm: xlnx: ZynqMP DP subsystem DRM KMS driver
+Date: Sat, 7 Jul 2018 19:05:38 -0700
+Message-ID: <1531015538-32268-6-git-send-email-hyun.kwon@xilinx.com>
+References: <1531015538-32268-1-git-send-email-hyun.kwon@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1531015538-32268-1-git-send-email-hyun.kwon@xilinx.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>, Hyun Kwon <hyun.kwon@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device-tree description of the Mitac MIO A701 board.
-This is aimed at replacing mioa701.c board file, and once stabilized,
-the leftover, such as the suspend resume mechanics will rely on a new
-IPL, and not the legacy Windows CE one.
-
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
----
-Since v1: fix lcd_supply and lcd_backlight
-          These were depending on my internal tree changes, fit it.
-
-This patch deserves some special "love review". As it will probably
-serve for a more broad pxa conversion to devicetree of the other boards,
-and because it touches almost all domains for a pxa platform (camera,
-video, audio, i2c, ...), it should be as clean as possible so that
-mistakes are not carried on ...
-
-Therefore I expect the review of this one to be long (ie. it won't land
-for v4.19), until it looks good enough.
----
- arch/arm/boot/dts/Makefile    |   1 +
- arch/arm/boot/dts/mioa701.dts | 564 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 565 insertions(+)
- create mode 100644 arch/arm/boot/dts/mioa701.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 37a3de760d40..6b12ab50c8d1 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -756,6 +756,7 @@ dtb-$(CONFIG_ARCH_PRIMA2) += \
- dtb-$(CONFIG_ARCH_OXNAS) += \
- 	ox810se-wd-mbwe.dtb \
- 	ox820-cloudengines-pogoplug-series-3.dtb
-+dtb-$(CONFIG_ARCH_PXA) += mioa701.dtb
- dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-apq8060-dragonboard.dtb \
- 	qcom-apq8064-arrow-sd-600eval.dtb \
-diff --git a/arch/arm/boot/dts/mioa701.dts b/arch/arm/boot/dts/mioa701.dts
-new file mode 100644
-index 000000000000..a6893226e20e
---- /dev/null
-+++ b/arch/arm/boot/dts/mioa701.dts
-@@ -0,0 +1,564 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Copyright (C) 2018 Robert Jarzmik <robert.jarzmik@free.fr>
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License version 2 as
-+ *  publishhed by the Free Software Foundation.
-+ */
-+
-+/dts-v1/;
-+#include "pxa27x.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/clock/pxa-clock.h>
-+
-+/ {
-+	model = "Mitac Mio A701 Board";
-+	/* compatible = "mitac,mioa701"; */
-+	compatible = "marvell,pxa270";
-+
-+	chosen {
-+		bootargs = "mtdparts=docg3.0:256k@3456k(barebox)ro,256k(barebox-logo),128k(barebox-env),4M(kernel),-(root) ubi.mtd=4 rootfstype=ubifs root=ubi0:linux_root ro";
-+	};
-+
-+	memory {
-+		reg = <0xa0000000 0x04000000>;
-+
-+		reserved-memory {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			pstore_region:region@0xa2000000 {
-+				compatible = "linux,contiguous-memory-region";
-+				reg = <0xa2000000 1048576>;
-+			};
-+		};
-+	};
-+
-+	cpus {
-+		cpu {
-+			cpu-supply = <&vcc_core>;
-+		};
-+	};
-+
-+	pxabus {
-+		pinctrl: pinctrl@40e00000 {
-+			status = "okay";
-+			pinctrl_ac97_default: ac97-default {
-+				PMMUX(hpjack-detect, 12, gpio_in);
-+				PMMUX(ac97-bitclk, 28, AC97_BITCLK);
-+				PMMUX(ac97-sdata-in-0, 29, AC97_SDATA_IN_0);
-+				PMMUX(ac97-sdata-out, 30, AC97_SDATA_OUT);
-+				PMMUX(ac97-sync, 31, AC97_SYNC);
-+				PMMUX(ac97-sysclk, 89, AC97_SYSCLK);
-+			};
-+			pinctrl_btuart_default: btuart-default {
-+				PMMUX(btuart-nactivity, 14, gpio_in);
-+				PMMUX(btuart-rxd, 42, BTRXD);
-+				PMMUX(btuart-txd, 43, BTTXD);
-+				PMMUX(btuart-cts, 44, BTCTS);
-+				PMMUX(btuart-rts, 45, BTRTS);
-+				PMMUX_LPM_LOW(bt-on, 83, gpio_out);
-+				PMMUX_LPM_HIGH(bt-unknown, 77, gpio_out);
-+				PMMUX_LPM_HIGH(bt-nreset, 86, gpio_out);
-+			};
-+			pinctrl_ffuart_default: ffuart-default {
-+				PMMUX(ffuart-rxd, 34, FFRXD);
-+				PMMUX(ffuart-cts, 35, FFCTS);
-+				PMMUX(ffuart-dcd, 36, FFDCD);
-+				PMMUX(ffuart-dsr, 37, FFDSR);
-+				PMMUX(ffuart-txd, 39, FFTXD);
-+				PMMUX(ffuart-dtr, 40, FFDTR);
-+				PMMUX(ffuart-rts, 41, FFRTS);
-+				PMMUX_LPM_LOW(gsm-reset, 24, gpio_out);
-+				PMMUX(gsm-is-on, 25, gpio_in);
-+				PMMUX_LPM_HIGH(gsm-nset-on, 88, gpio_out);
-+				PMMUX_LPM_HIGH(gsm-nset-off, 90, gpio_out);
-+				PMMUX(gsm-event-available, 113, gpio_in);
-+				PMMUX_LPM_HIGH(gsm-dte-state, 114, gpio_out);
-+			};
-+			pinctrl_gpiokeys_default: gpiokeys-default {
-+				PMMUX(key-power, 0, gpio_in);
-+				PMMUX(key-volume_up, 93, gpio_in);
-+				PMMUX(key-volume_down, 94, gpio_in);
-+			};
-+			pinctrl_keypad_default: keypad-default {
-+				PMMUX(keypad-mkin0, 100, KP_MKIN<0>);
-+				PMMUX(keypad-mkin1, 101, KP_MKIN<1>);
-+				PMMUX(keypad-mkin2, 102, KP_MKIN<2>);
-+				PMMUX(keypad-mkout0, 103, KP_MKOUT<0>);
-+				PMMUX(keypad-mkout1, 104, KP_MKOUT<1>);
-+				PMMUX(keypad-mkout2, 105, KP_MKOUT<2>);
-+			};
-+			pinctrl_i2c_default: i2c-default {
-+				PMMUX(i2c-scl, 117, SCL);
-+				PMMUX(i2c-sda, 118, SDA);
-+			};
-+			pinctrl_lcd_default: lcd-default {
-+				PMMUX(ldd0, 58, LDD<0>);
-+				PMMUX(ldd1, 59, LDD<1>);
-+				PMMUX(ldd2, 60, LDD<2>);
-+				PMMUX(ldd3, 61, LDD<3>);
-+				PMMUX(ldd4, 62, LDD<4>);
-+				PMMUX(ldd5, 63, LDD<5>);
-+				PMMUX(ldd6, 64, LDD<6>);
-+				PMMUX(ldd7, 65, LDD<7>);
-+				PMMUX(ldd8, 66, LDD<8>);
-+				PMMUX(ldd9, 67, LDD<9>);
-+				PMMUX(ldd10, 68, LDD<10>);
-+				PMMUX(ldd11, 69, LDD<11>);
-+				PMMUX(ldd12, 70, LDD<12>);
-+				PMMUX(ldd13, 71, LDD<13>);
-+				PMMUX(ldd14, 72, LDD<14>);
-+				PMMUX(ldd16, 73, LDD<15>);
-+				PMMUX(lcd-fclk, 74, L_FCLK_RD);
-+				PMMUX(lcd-lclk, 75, L_LCLK_A0);
-+				PMMUX(lcd-pclk, 76, L_PCLK_WR);
-+				PMMUX(lcd-power, 87, gpio_out);
-+			};
-+			pinctrl_leds_default: leds-default {
-+				PMMUX_LPM_HIGH(led-charging, 10, gpio_out);
-+				PMMUX_LPM_HIGH(led-vibra, 82, gpio_out);
-+				PMMUX_LPM_HIGH(led-blue, 97, gpio_out);
-+				PMMUX_LPM_HIGH(led-orange, 98, gpio_out);
-+				PMMUX_LPM_HIGH(led-keyboard, 115, gpio_out);
-+			};
-+			pinctrl_pwm0_default: pwm0-defaut {
-+				PMMUX(pwm0, 16, PWM_OUT<0>);
-+			};
-+			pinctrl_qci_default: qci-defaut {
-+				PMMUX(cif-dd6, 17, CIF_DD<6>);
-+				PMMUX(cif-dd3, 50, CIF_DD<3>);
-+				PMMUX(cif-dd2, 51, CIF_DD<2>);
-+				PMMUX(cif-dd4, 52, CIF_DD<4>);
-+				PMMUX(cif-mclk, 53, CIF_MCLK);
-+				PMMUX(cif-pclk, 54, CIF_PCLK);
-+				PMMUX_LPM_HIGH(mt9m111-nOE, 56, gpio_out);
-+				PMMUX(cif-dd1, 55, CIF_DD<1>);
-+				PMMUX(cif-dd0, 81, CIF_DD<0>);
-+				PMMUX(cif-dd5, 48, CIF_DD<5>);
-+				PMMUX(cif-fv, 84, CIF_FV);
-+				PMMUX(cif-lv, 85, CIF_LV);
-+				PMMUX(cif-dd7, 108, CIF_DD<7>);
-+			};
-+			pinctrl_mmc_default: mmc-default {
-+				PMMUX(sd-insert, 15, gpio_in);
-+				PMMUX(mmclk, 32, MMCLK);
-+				PMMUX(sd-ro, 78, gpio_in);
-+				PMMUX_LPM_LOW(sd-enable, 91, gpio_out);
-+				PMMUX(mmdat0, 92, MMDAT<0>);
-+				PMMUX(mmdat1, 109, MMDAT<1>);
-+				PMMUX(mmdat2, 110, MMDAT<2>);
-+				PMMUX(mmdat3, 111, MMDAT<3>);
-+				PMMUX(mmcmd, 112, MMCMD);
-+			};
-+			pinctrl_stuart_default: stuart-default {
-+				PMMUX_LPM_LOW(gps-unknown1, 23, gpio_out);
-+				PMMUX_LPM_LOW(gps-on, 26, gpio_out);
-+				PMMUX_LPM_LOW(gps-nreset, 27, gpio_out);
-+				PMMUX(stuart-rxd, 46, STRXD);
-+				PMMUX(stuart-txd, 47, STTXD);
-+				PMMUX_LPM_LOW(gps-unknown2, 106, gpio_out);
-+				PMMUX_LPM_LOW(gps-unknown3, 107, gpio_out);
-+			};
-+			pinctrl_usb_default: usb-default {
-+				PMMUX(n-usb-detect, 13, gpio_in);
-+				PMMUX_LPM_LOW(n-dplus-pullup, 22, gpio_out);
-+			};
-+			pinctrl_power_default: power-default {
-+				PMMUX_LPM_LOW(charge-enable, 9, gpio_out);
-+				PMMUX(charge-vdrop, 80, gpio_out);
-+				PMMUX(ac-detect, 96, gpio_in);
-+			};
-+		};
-+
-+		pwm0: pwm@40b00000 {
-+		      status = "okay";
-+		};
-+
-+		gpio: gpio@40e00000 {
-+			status = "okay";
-+		};
-+
-+		ffuart: uart@40100000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_ffuart_default>;
-+			status = "okay";
-+		};
-+
-+		btuart: uart@40200000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_btuart_default>;
-+			status = "okay";
-+		};
-+
-+		stuart: uart@40700000 {
-+			status = "okay";
-+		};
-+
-+		usb2phy: gpio-vbus@13 {
-+			compatible = "usb-nop-xceiv";
-+			#phy-cells = <1>;
-+			vbus-detect-gpio = <&gpio 13 GPIO_ACTIVE_LOW>;
-+			wakeup;
-+		};
-+
-+		pxa27x_udc: udc@40600000 {
-+			status = "okay";
-+			gpios = <&gpio 22 0>;
-+			phys = <&usb2phy>;
-+			phys-names = "usb2phy";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb_default>;
-+		};
-+
-+		pwri2c: i2c@40f000180 {
-+			status = "okay";
-+
-+			core_regulator@14 {
-+				compatible = "maxim,max1586";
-+				reg = <0x14>;
-+				v3-gain = <1000000>;
-+
-+				regulators {
-+					vcc_core: v3 {
-+						regulator-name = "vcc_core";
-+						regulator-compatible = "Output_V3";
-+						regulator-min-microvolt = <1000000>;
-+						regulator-max-microvolt = <1705000>;
-+						regulator-always-on;
-+					};
-+				};
-+			};
-+		};
-+
-+		pxai2c1: i2c@40301680 {
-+			mrvl,i2c-fast-mode;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_i2c_default>;
-+			status = "okay";
-+
-+			mt9m111: camera@5d {
-+				compatible = "micron,mt9m111";
-+				reg = <0x5d>;
-+				gpios = <&gpio 56 GPIO_ACTIVE_HIGH>;
-+
-+				remote = <&pxa_camera>;
-+				port {
-+					mt9m111_1: endpoint {
-+						bus-width = <8>;
-+						remote-endpoint = <&pxa_camera>;
-+					};
-+				};
-+			};
-+		};
-+
-+		keypad: keypad@41500000 {
-+			status = "okay";
-+
-+			keypad,num-rows = <3>;
-+			keypad,num-columns = <3>;
-+			linux,keymap = <
-+				0x00000067	/* KEY_UP */
-+				0x0001006a	/* KEY_RIGHT */
-+				0x000200e2	/* KEY_MEDIA */
-+				0x0100006c	/* KEY_DOWN */
-+				0x0101001c	/* KEY_ENTER */
-+				0x010200da	/* KEY_CONNECT */
-+				0x02000069	/* KEY_LEFT */
-+				0x020100a9	/* KEY_PHONE */
-+				0x020200d4>;	/* KEY_CAMERA */
-+			marvell,debounce-interval = <0>;
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_keypad_default>;
-+		};
-+
-+		gpio-keys {
-+			compatible = "gpio-keys";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			autorepeat;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_gpiokeys_default>;
-+			status = "okay";
-+
-+			button@0 {
-+				label = "GPIO Key Power";
-+				linux,code = <174>;
-+				gpios = <&gpio 0 0>;
-+				gpio-key,wakeup;
-+			};
-+			button@12 {
-+				label = "HP jack detect";
-+				linux,code = <211>;
-+				gpios = <&gpio 12 0>;
-+			};
-+			button@93 {
-+				label = "Volume Up Key";
-+				linux,code = <115>;
-+				gpios = <&gpio 93 0>;
-+			};
-+			button@94 {
-+				label = "Volume Down Key";
-+				linux,code = <114>;
-+				gpios = <&gpio 94 0>;
-+			};
-+		};
-+
-+		mmc0: mmc@41100000 {
-+			vmmc-supply = <&reg_vmmc>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_mmc_default>;
-+			bus-width = <4>;
-+			cd-gpios = <&gpio 15 0>;
-+			wp-gpios = <&gpio 78 0>;
-+			status = "okay";
-+		};
-+
-+		pxa_camera: imaging@50000000 {
-+			status = "okay";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_qci_default>;
-+
-+			port {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				/* Parallel bus endpoint */
-+				qci: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&mt9m111_1>;
-+					bus-width = <8>;
-+
-+					hsync-active = <0>;
-+					vsync-active = <0>;
-+					pclk-sample = <1>;
-+				};
-+			};
-+		};
-+
-+		rtc@40900000 {
-+			status = "okay";
-+		};
-+
-+		lcd-controller@40500000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_lcd_default>;
-+			status = "okay";
-+			port {
-+				lcdc_out: endpoint {
-+					remote-endpoint = <&panel_in>;
-+					bus-width = <16>;
-+				};
-+			};
-+		};
-+
-+		ac97: sound@40500000 {
-+			compatible = "marvell,pxa270-ac97";
-+			reg = < 0x40500000 0x1000 >;
-+			interrupts = <14>;
-+			reset-gpios = <&gpio 95 GPIO_ACTIVE_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = < &pinctrl_ac97_default >;
-+			clocks = <&clks CLK_AC97>, <&clks CLK_AC97CONF>;
-+			clock-names = "AC97CLK", "AC97CONFCLK";
-+			dmas = <&pdma 8 0
-+				&pdma 9 0
-+				&pdma 10 0
-+				&pdma 11 0
-+				&pdma 12 0>;
-+			dma-names = "pcm_pcm_mic_mono", "pcm_pcm_aux_mono_in",
-+				    "pcm_pcm_aux_mono_out", "pcm_pcm_stereo_in",
-+				    "pcm_pcm_stereo_out";
-+
-+			#sound-dai-cells = <0>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			wm9713: audio-codec@0 {
-+				reg = <0>;
-+				compatible = "ac97,574d,4c13";
-+				clocks = <&wm9713_bitclk>;
-+				clock-names = "ac97_clk";
-+				#sound-dai-cells = <0>;
-+
-+				wm9713_bitclk: ac97_bitclk {
-+					compatible = "fixed-clock";
-+					#clock-cells = <0>;
-+					clock-frequency = <12285000>;
-+					status = "okay";
-+				};
-+			};
-+		};
-+
-+		pxa_pcm_audio: snd_soc_pxa_audio {
-+			compatible = "mrvl,pxa-pcm-audio";
-+			#sound-dai-cells = <0>;
-+			status = "okay";
-+		};
-+
-+		lcd-controller@40500000 {
-+			lcd-supply = <&lcd_vmmc>;
-+		};
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		reg_vmmc: regulator@0 {
-+			compatible = "regulator-fixed";
-+			regulator-name = "vmmc";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+
-+			gpio = <&gpio 91 GPIO_ACTIVE_HIGH>;
-+			enable-active-high;
-+		};
-+
-+		lcd_vmmc: regulator@1 {
-+			compatible = "regulator-fixed";
-+			regulator-name = "lcd-supply";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-boot-on;
-+
-+			gpio = <&gpio 87 GPIO_ACTIVE_HIGH>;
-+			enable-active-high;
-+		};
-+	};
-+
-+	lcd_backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm0 4096000>;
-+		pwm-names = "backlight";
-+
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <2>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_pwm0_default>;
-+	};
-+
-+	docg3: flash@0 {
-+		compatible = "m-systems,diskonchip-g3";
-+		reg = <0x0 0x2000>;
-+	};
-+
-+	panel {
-+		compatible = "toshiba,ltm0305a776";
-+		lcd-type = "color-tft";
-+
-+		backlight = <&lcd_backlight>;
-+
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&lcdc_out>;
-+			};
-+		};
-+
-+		display-timings {
-+			native-mode = <&timing0>;
-+			timing0: 240p {
-+				/* 240x320p24 */
-+				clock-frequency = <4545000>;
-+				hactive = <240>;
-+				vactive = <320>;
-+				hfront-porch = <4>;
-+				hback-porch = <6>;
-+				hsync-len = <4>;
-+				vback-porch = <5>;
-+				vfront-porch = <3>;
-+				vsync-len = <2>;
-+			};
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_leds_default>;
-+
-+		charger-led {
-+			label = "mioa701:charging";
-+			gpios = <&gpio 10 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+
-+		vibrator {
-+			label = "mioa701:vibra";
-+			gpios = <&gpio 82 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+
-+		bluetooth-led {
-+			label = "mioa701:blue";
-+			gpios = <&gpio 97 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+
-+		orange-led {
-+			label = "mioa701:orange";
-+			gpios = <&gpio 98 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+
-+		keyboard-led {
-+			label = "mioa701:keyboard";
-+			gpios = <&gpio 115 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "MioA701";
-+		simple-audio-card,widgets =
-+		"Speaker", "Front Speaker",
-+		"Speaker", "Rear Speaker",
-+		"Microphone", "Headset",
-+		"Microphone", "GSM Line Out",
-+		"Line", "GSM Line In",
-+		"Microphone", "Headset Mic",
-+		"Microphone", "Front Mic";
-+		simple-audio-card,routing =
-+		/* Call Mic */
-+		"Mic Bias", "Front Mic",
-+		"MIC1", "Mic Bias",
-+		/* Headset Mic */
-+		"LINEL", "Headset Mic",
-+		"LINER", "Headset Mic",
-+		/* GSM Module */
-+		"MONOIN", "GSM Line Out",
-+		"PCBEEP", "GSM Line Out",
-+		"GSM Line In", "MONO",
-+		/* headphone connected to HPL, HPR */
-+		"Headset", "HPL",
-+		"Headset", "HPR",
-+		/* front speaker connected to HPL, OUT3 */
-+		"Front Speaker", "HPL",
-+		"Front Speaker", "OUT3",
-+		/* rear speaker connected to SPKL, SPKR */
-+		"Rear Speaker", "SPKL",
-+		"Rear Speaker", "SPKR";
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&ac97>;
-+		};
-+		simple-audio-card,codec {
-+			sound-dai = <&wm9713>;
-+		};
-+		simple-audio-card,plat {
-+			sound-dai = <&pxa_pcm_audio>;
-+		};
-+	};
-+
-+	ac_charger: charger@1 {
-+		compatible = "gpio-charger";
-+		charger-type = "usb-aca";
-+		gpios = <&gpio 96 GPIO_ACTIVE_HIGH>;
-+	};
-+};
--- 
-2.11.0
+VGhpcyBpcyBhIHdyYXBwZXIgYXJvdW5kIHRoZSBaeW5xTVAgRGlzcGxheSBhbmQgRGlzcGxheVBv
+cnQgZHJpdmVycy4KClNpZ25lZC1vZmYtYnk6IEh5dW4gS3dvbiA8aHl1bi5rd29uQHhpbGlueC5j
+b20+CkFja2VkLWJ5OiBEYW5pZWwgVmV0dGVyIDxkYW5pZWwudmV0dGVyQGZmd2xsLmNoPgotLS0K
+djgKLSBTdXBwb3J0IHJlc2VydmVkIG1lbW9yeSB0aHJvdWdoIG1lbW9yeS1yZWdpb24gZHQgYmlu
+ZGluZwp2NgotIEFjY29tb2RhdGUgdGhlIG1pZ3JhdGlvbiBvZiBsb2dpY2FsIG1hc3RlciBmcm9t
+IHBsYXRmb3JtIGRldmljZSB0byBkZXZpY2UKLSBSZW1vdmUgdGhlIGR1cGxpY2F0ZSBsaWNlbnNl
+IHBhcmFncmFwaHMKLSBEbyBjb21wbGV0ZSBmb3J3YXJkIGRlY2xhcmF0aW9uIGluIHRoZSBoZWFk
+ZXIKdjUKLSBBZGQgYW4gZXJyb3IgaGFuZGxpbmcgb2YgcGlwZWxpbmUgaW5pdGlhbGl6YXRpb24K
+djQKLSBVc2UgdGhlIG5ld2x5IGFkZGVkIHhsbnggcGlwZWxpbmUgY2FsbHMgdG8gaW5pdGlhbGl6
+ZSBkcm0gZGV2aWNlCnYyCi0gQ2hhbmdlIHRoZSBTUERYIGlkZW50aWZpZXIgZm9ybWF0Ci0tLQot
+LS0KIGRyaXZlcnMvZ3B1L2RybS94bG54L0tjb25maWcgICAgICAgIHwgIDExICsrKwogZHJpdmVy
+cy9ncHUvZHJtL3hsbngvTWFrZWZpbGUgICAgICAgfCAgIDMgKwogZHJpdmVycy9ncHUvZHJtL3hs
+bngvenlucW1wX2Rwc3ViLmMgfCAxNTggKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrCiBkcml2ZXJzL2dwdS9kcm0veGxueC96eW5xbXBfZHBzdWIuaCB8ICAyMyArKysrKysKIDQg
+ZmlsZXMgY2hhbmdlZCwgMTk1IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
+ZXJzL2dwdS9kcm0veGxueC96eW5xbXBfZHBzdWIuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvZ3B1L2RybS94bG54L3p5bnFtcF9kcHN1Yi5oCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
+ZHJtL3hsbngvS2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS94bG54L0tjb25maWcKaW5kZXggMTlm
+ZDdjZC4uN2M1NTI5YyAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3hsbngvS2NvbmZpZwor
+KysgYi9kcml2ZXJzL2dwdS9kcm0veGxueC9LY29uZmlnCkBAIC0xMCwzICsxMCwxNCBAQCBjb25m
+aWcgRFJNX1hMTlgKIAkgIGRpc3BsYXkgcGlwZWxpbmUgdXNpbmcgWGlsaW54IElQcyBpbiBGUEdB
+LiBUaGlzIG1vZHVsZQogCSAgcHJvdmlkZXMgdGhlIGtlcm5lbCBtb2RlIHNldHRpbmcgZnVuY3Rp
+b25hbGl0aWVzCiAJICBmb3IgWGlsaW54IGRpc3BsYXkgZHJpdmVycy4KKworY29uZmlnIERSTV9a
+WU5RTVBfRFBTVUIKKwl0cmlzdGF0ZSAiWnlucU1QIERQIFN1YnN5c3RlbSBEcml2ZXIiCisJZGVw
+ZW5kcyBvbiBBUkNIX1pZTlFNUCAmJiBPRiAmJiBEUk1fWExOWCAmJiBDT01NT05fQ0xLCisJc2Vs
+ZWN0IERNQV9FTkdJTkUKKwlzZWxlY3QgR0VORVJJQ19QSFkKKwloZWxwCisJICBEUk0gS01TIGRy
+aXZlciBmb3IgWnlucU1QIERQIFN1YnN5c3RlbSBjb250cm9sbGVyLiBDaG9vc2UKKwkgIHRoaXMg
+b3B0aW9uIGlmIHlvdSBoYXZlIGEgWGlsaW54IFp5bnFNUCBTb0Mgd2l0aCBEaXNwbGF5UG9ydAor
+CSAgc3Vic3lzdGVtLiBUaGUgZHJpdmVyIHByb3ZpZGVzIHRoZSBrZXJuZWwgbW9kZSBzZXR0aW5n
+CisJICBmdW5jdGlvbmxhaXRpZXMgZm9yIFp5bnFNUCBEUCBzdWJzeXN0ZW0uCmRpZmYgLS1naXQg
+YS9kcml2ZXJzL2dwdS9kcm0veGxueC9NYWtlZmlsZSBiL2RyaXZlcnMvZ3B1L2RybS94bG54L01h
+a2VmaWxlCmluZGV4IGM2MGEyODEuLjA2NGEwNWEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS94bG54L01ha2VmaWxlCisrKyBiL2RyaXZlcnMvZ3B1L2RybS94bG54L01ha2VmaWxlCkBAIC0x
+LDIgKzEsNSBAQAogeGxueF9kcm0tb2JqcyArPSB4bG54X2NydGMubyB4bG54X2Rydi5vIHhsbnhf
+ZmIubyB4bG54X2dlbS5vCiBvYmotJChDT05GSUdfRFJNX1hMTlgpICs9IHhsbnhfZHJtLm8KKwor
+enlucW1wLWRwc3ViLW9ianMgKz0genlucW1wX2Rpc3AubyB6eW5xbXBfZHBzdWIubyB6eW5xbXBf
+ZHAubworb2JqLSQoQ09ORklHX0RSTV9aWU5RTVBfRFBTVUIpICs9IHp5bnFtcC1kcHN1Yi5vCmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0veGxueC96eW5xbXBfZHBzdWIuYyBiL2RyaXZlcnMv
+Z3B1L2RybS94bG54L3p5bnFtcF9kcHN1Yi5jCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAw
+MDAwMDAuLjM0ZTgxZDAKLS0tIC9kZXYvbnVsbAorKysgYi9kcml2ZXJzL2dwdS9kcm0veGxueC96
+eW5xbXBfZHBzdWIuYwpAQCAtMCwwICsxLDE1OCBAQAorLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZp
+ZXI6IEdQTC0yLjAKKy8qCisgKiBaeW5xTVAgRFAgU3Vic3lzdGVtIERyaXZlcgorICoKKyAqICBD
+b3B5cmlnaHQgKEMpIDIwMTcgLSAyMDE4IFhpbGlueCwgSW5jLgorICoKKyAqICBBdXRob3I6IEh5
+dW4gV29vIEt3b24gPGh5dW4ua3dvbkB4aWxpbnguY29tPgorICovCisKKyNpbmNsdWRlIDxsaW51
+eC9jb21wb25lbnQuaD4KKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KKyNpbmNsdWRlIDxsaW51
+eC9vZl9wbGF0Zm9ybS5oPgorI2luY2x1ZGUgPGxpbnV4L29mX3Jlc2VydmVkX21lbS5oPgorI2lu
+Y2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgorI2luY2x1ZGUgPGxpbnV4L3BtX3J1bnRp
+bWUuaD4KKworI2luY2x1ZGUgInhsbnhfZHJ2LmgiCisKKyNpbmNsdWRlICJ6eW5xbXBfZGlzcC5o
+IgorI2luY2x1ZGUgInp5bnFtcF9kcC5oIgorI2luY2x1ZGUgInp5bnFtcF9kcHN1Yi5oIgorCitz
+dGF0aWMgaW50Cit6eW5xbXBfZHBzdWJfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBk
+ZXZpY2UgKm1hc3Rlciwgdm9pZCAqZGF0YSkKK3sKKwlpbnQgcmV0OworCisJcmV0ID0genlucW1w
+X2Rpc3BfYmluZChkZXYsIG1hc3RlciwgZGF0YSk7CisJaWYgKHJldCkKKwkJcmV0dXJuIHJldDsK
+KworCS8qIHp5bnFtcF9kaXNwIHNob3VsZCBiaW5kIGZpcnN0LCBzbyB6eW5xbXBfZHAgZW5jb2Rl
+ciBjYW4gZmluZCBjcnRjICovCisJcmV0ID0genlucW1wX2RwX2JpbmQoZGV2LCBtYXN0ZXIsIGRh
+dGEpOworCWlmIChyZXQpCisJCXJldHVybiByZXQ7CisKKwlyZXR1cm4gMDsKK30KKworc3RhdGlj
+IHZvaWQKK3p5bnFtcF9kcHN1Yl91bmJpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2
+aWNlICptYXN0ZXIsIHZvaWQgKmRhdGEpCit7CisJenlucW1wX2RwX3VuYmluZChkZXYsIG1hc3Rl
+ciwgZGF0YSk7CisJenlucW1wX2Rpc3BfdW5iaW5kKGRldiwgbWFzdGVyLCBkYXRhKTsKK30KKwor
+c3RhdGljIGNvbnN0IHN0cnVjdCBjb21wb25lbnRfb3BzIHp5bnFtcF9kcHN1Yl9jb21wb25lbnRf
+b3BzID0geworCS5iaW5kCT0genlucW1wX2Rwc3ViX2JpbmQsCisJLnVuYmluZAk9IHp5bnFtcF9k
+cHN1Yl91bmJpbmQsCit9OworCitzdGF0aWMgaW50IHp5bnFtcF9kcHN1Yl9wcm9iZShzdHJ1Y3Qg
+cGxhdGZvcm1fZGV2aWNlICpwZGV2KQoreworCXN0cnVjdCB6eW5xbXBfZHBzdWIgKmRwc3ViOwor
+CWludCByZXQ7CisKKwlkcHN1YiA9IGRldm1fa3phbGxvYygmcGRldi0+ZGV2LCBzaXplb2YoKmRw
+c3ViKSwgR0ZQX0tFUk5FTCk7CisJaWYgKCFkcHN1YikKKwkJcmV0dXJuIC1FTk9NRU07CisKKwkv
+KiBTdWItZHJpdmVyIHdpbGwgYWNjZXNzIGRwc3ViIGZyb20gZHJ2ZGF0YSAqLworCXBsYXRmb3Jt
+X3NldF9kcnZkYXRhKHBkZXYsIGRwc3ViKTsKKwlwbV9ydW50aW1lX2VuYWJsZSgmcGRldi0+ZGV2
+KTsKKworCS8qCisJICogRFAgc2hvdWxkIGJlIHByb2JlZCBmaXJzdCBzbyB0aGF0IHRoZSB6eW5x
+bXBfZGlzcCBjYW4gc2V0IHRoZSBvdXRwdXQKKwkgKiBmb3JtYXQgYWNjb3JkaW5nbHkuCisJICov
+CisJcmV0ID0genlucW1wX2RwX3Byb2JlKHBkZXYpOworCWlmIChyZXQpCisJCWdvdG8gZXJyX3Bt
+OworCisJcmV0ID0genlucW1wX2Rpc3BfcHJvYmUocGRldik7CisJaWYgKHJldCkKKwkJZ290byBl
+cnJfZHA7CisKKwlyZXQgPSBjb21wb25lbnRfYWRkKCZwZGV2LT5kZXYsICZ6eW5xbXBfZHBzdWJf
+Y29tcG9uZW50X29wcyk7CisJaWYgKHJldCkKKwkJZ290byBlcnJfZGlzcDsKKworCS8qIFRyeSB0
+aGUgcmVzZXJ2ZWQgbWVtb3J5LiBQcm9jZWVkIGlmIHRoZXJlJ3Mgbm9uZSAqLworCW9mX3Jlc2Vy
+dmVkX21lbV9kZXZpY2VfaW5pdCgmcGRldi0+ZGV2KTsKKworCS8qIFBvcHVsYXRlIHRoZSBzb3Vu
+ZCBjaGlsZCBub2RlcyAqLworCXJldCA9IG9mX3BsYXRmb3JtX3BvcHVsYXRlKHBkZXYtPmRldi5v
+Zl9ub2RlLCBOVUxMLCBOVUxMLCAmcGRldi0+ZGV2KTsKKwlpZiAocmV0KSB7CisJCWRldl9lcnIo
+JnBkZXYtPmRldiwgImZhaWxlZCB0byBwb3B1bGF0ZSBjaGlsZCBub2Rlc1xuIik7CisJCWdvdG8g
+ZXJyX3JtZW07CisJfQorCisJZHBzdWItPm1hc3RlciA9IHhsbnhfZHJtX3BpcGVsaW5lX2luaXQo
+JnBkZXYtPmRldik7CisJaWYgKElTX0VSUihkcHN1Yi0+bWFzdGVyKSkgeworCQlkZXZfZXJyKCZw
+ZGV2LT5kZXYsICJmYWlsZWQgdG8gaW5pdGlhbGl6ZSB0aGUgZHJtIHBpcGVsaW5lXG4iKTsKKwkJ
+Z290byBlcnJfcG9wdWxhdGU7CisJfQorCisJZGV2X2luZm8oJnBkZXYtPmRldiwgIlp5bnFNUCBE
+aXNwbGF5UG9ydCBTdWJzeXN0ZW0gZHJpdmVyIHByb2JlZCIpOworCisJcmV0dXJuIDA7CisKK2Vy
+cl9wb3B1bGF0ZToKKwlvZl9wbGF0Zm9ybV9kZXBvcHVsYXRlKCZwZGV2LT5kZXYpOworZXJyX3Jt
+ZW06CisJb2ZfcmVzZXJ2ZWRfbWVtX2RldmljZV9yZWxlYXNlKCZwZGV2LT5kZXYpOworCWNvbXBv
+bmVudF9kZWwoJnBkZXYtPmRldiwgJnp5bnFtcF9kcHN1Yl9jb21wb25lbnRfb3BzKTsKK2Vycl9k
+aXNwOgorCXp5bnFtcF9kaXNwX3JlbW92ZShwZGV2KTsKK2Vycl9kcDoKKwl6eW5xbXBfZHBfcmVt
+b3ZlKHBkZXYpOworZXJyX3BtOgorCXBtX3J1bnRpbWVfZGlzYWJsZSgmcGRldi0+ZGV2KTsKKwly
+ZXR1cm4gcmV0OworfQorCitzdGF0aWMgaW50IHp5bnFtcF9kcHN1Yl9yZW1vdmUoc3RydWN0IHBs
+YXRmb3JtX2RldmljZSAqcGRldikKK3sKKwlzdHJ1Y3QgenlucW1wX2Rwc3ViICpkcHN1YiA9IHBs
+YXRmb3JtX2dldF9kcnZkYXRhKHBkZXYpOworCWludCBlcnIsIHJldCA9IDA7CisKKwl4bG54X2Ry
+bV9waXBlbGluZV9leGl0KGRwc3ViLT5tYXN0ZXIpOworCW9mX3BsYXRmb3JtX2RlcG9wdWxhdGUo
+JnBkZXYtPmRldik7CisJb2ZfcmVzZXJ2ZWRfbWVtX2RldmljZV9yZWxlYXNlKCZwZGV2LT5kZXYp
+OworCWNvbXBvbmVudF9kZWwoJnBkZXYtPmRldiwgJnp5bnFtcF9kcHN1Yl9jb21wb25lbnRfb3Bz
+KTsKKworCWVyciA9IHp5bnFtcF9kaXNwX3JlbW92ZShwZGV2KTsKKwlpZiAoZXJyKQorCQlyZXQg
+PSAtRUlPOworCisJZXJyID0genlucW1wX2RwX3JlbW92ZShwZGV2KTsKKwlpZiAoZXJyKQorCQly
+ZXQgPSAtRUlPOworCisJcG1fcnVudGltZV9kaXNhYmxlKCZwZGV2LT5kZXYpOworCisJcmV0dXJu
+IGVycjsKK30KKworc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgenlucW1wX2Rwc3Vi
+X29mX21hdGNoW10gPSB7CisJeyAuY29tcGF0aWJsZSA9ICJ4bG54LHp5bnFtcC1kcHN1Yi0xLjci
+LCB9LAorCXsgLyogZW5kIG9mIHRhYmxlICovIH0sCit9OworTU9EVUxFX0RFVklDRV9UQUJMRShv
+ZiwgenlucW1wX2Rwc3ViX29mX21hdGNoKTsKKworc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2
+ZXIgenlucW1wX2Rwc3ViX2RyaXZlciA9IHsKKwkucHJvYmUJCQk9IHp5bnFtcF9kcHN1Yl9wcm9i
+ZSwKKwkucmVtb3ZlCQkJPSB6eW5xbXBfZHBzdWJfcmVtb3ZlLAorCS5kcml2ZXIJCQk9IHsKKwkJ
+Lm93bmVyCQk9IFRISVNfTU9EVUxFLAorCQkubmFtZQkJPSAienlucW1wLWRpc3BsYXkiLAorCQku
+b2ZfbWF0Y2hfdGFibGUJPSB6eW5xbXBfZHBzdWJfb2ZfbWF0Y2gsCisJfSwKK307CisKK21vZHVs
+ZV9wbGF0Zm9ybV9kcml2ZXIoenlucW1wX2Rwc3ViX2RyaXZlcik7CisKK01PRFVMRV9BVVRIT1Io
+IlhpbGlueCwgSW5jLiIpOworTU9EVUxFX0RFU0NSSVBUSU9OKCJaeW5xTVAgRFAgU3Vic3lzdGVt
+IERyaXZlciIpOworTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIpOwpkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9ncHUvZHJtL3hsbngvenlucW1wX2Rwc3ViLmggYi9kcml2ZXJzL2dwdS9kcm0veGxueC96eW5x
+bXBfZHBzdWIuaApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi45NTIzOWJiCi0t
+LSAvZGV2L251bGwKKysrIGIvZHJpdmVycy9ncHUvZHJtL3hsbngvenlucW1wX2Rwc3ViLmgKQEAg
+LTAsMCArMSwyMyBAQAorLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAKKy8qCisg
+KiBaeW5xTVAgRFBTVUIgU3Vic3lzdGVtIERyaXZlcgorICoKKyAqICBDb3B5cmlnaHQgKEMpIDIw
+MTcgLSAyMDE4IFhpbGlueCwgSW5jLgorICoKKyAqICBBdXRob3I6IEh5dW4gV29vIEt3b24gPGh5
+dW4ua3dvbkB4aWxpbnguY29tPgorICovCisKKyNpZm5kZWYgX1pZTlFNUF9EUFNVQl9IXworI2Rl
+ZmluZSBfWllOUU1QX0RQU1VCX0hfCisKK3N0cnVjdCBkZXZpY2U7CitzdHJ1Y3QgenlucW1wX2Rw
+Oworc3RydWN0IHp5bnFtcF9kaXNwOworCitzdHJ1Y3QgenlucW1wX2Rwc3ViIHsKKwlzdHJ1Y3Qg
+enlucW1wX2RwICpkcDsKKwlzdHJ1Y3QgenlucW1wX2Rpc3AgKmRpc3A7CisJc3RydWN0IGRldmlj
+ZSAqbWFzdGVyOworfTsKKworI2VuZGlmIC8qIF9aWU5RTVBfRFBTVUJfSF8gKi8KLS0gCjIuNy40
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
