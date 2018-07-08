@@ -1,7 +1,7 @@
 From: Dong Aisheng <aisheng.dong@nxp.com>
-Subject: [PATCH V4 4/5] dt-bindings: arm: fsl: add scu binding doc
-Date: Sun,  8 Jul 2018 22:56:56 +0800
-Message-ID: <1531061817-1980-5-git-send-email-aisheng.dong@nxp.com>
+Subject: [PATCH V4 2/5] dt-bindings: arm: fsl: add mu binding doc
+Date: Sun,  8 Jul 2018 22:56:54 +0800
+Message-ID: <1531061817-1980-3-git-send-email-aisheng.dong@nxp.com>
 References: <1531061817-1980-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,10 +21,9 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: Dong Aisheng <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, dongas86@gmail.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The System Controller Firmware (SCFW) is a low-level system function
-which runs on a dedicated Cortex-M core to provide power, clock, and
-resource management. It exists on some i.MX8 processors. e.g. i.MX8QM
-(QM, QP), and i.MX8QX (QXP, DX).
+The Messaging Unit module enables two processors within
+the SoC to communicate and coordinate by passing messages
+(e.g. data, status and control) through the MU interface.
 
 Cc: Shawn Guo <shawnguo@kernel.org>
 Cc: Sascha Hauer <kernel@pengutronix.de>
@@ -35,88 +34,60 @@ Cc: devicetree@vger.kernel.org
 Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
 v3->v4:
- * fully change to mailbox binding
- * add child node description
+ * move into Documentation/devicetree/bindings/mailbox/fsl,mu.txt
 v2->v3:
- * update a bit to mailbox binding
+ * change to mailbox binding
+   Currently mbox-cells has to be 0 for SCU MU.
+   Generic MU Mailbox support binding could be extended later.
 v1->v2:
- * remove status
- * changed to mu1
+ * typo fixes
+ * remove status property
+ * remove imx6&7 compatible string which may be added later for
+   the generic mailbox binding
 ---
- .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 65 ++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+ .../devicetree/bindings/mailbox/fsl,mu.txt         | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/fsl,mu.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
 new file mode 100644
-index 0000000..11e732a
+index 0000000..90e4905
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -0,0 +1,65 @@
-+NXP i.MX System Controller Firmware (SCFW)
++++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+@@ -0,0 +1,34 @@
++NXP i.MX Messaging Unit (MU)
 +--------------------------------------------------------------------
 +
-+The System Controller Firmware (SCFW) is a low-level system function
-+which runs on a dedicated Cortex-M core to provide power, clock, and
-+resource management. It exists on some i.MX8 processors. e.g. i.MX8QM
-+(QM, QP), and i.MX8QX (QXP, DX).
++The Messaging Unit module enables two processors within the SoC to
++communicate and coordinate by passing messages (e.g. data, status
++and control) through the MU interface. The MU also provides the ability
++for one processor to signal the other processor using interrupts.
 +
-+The AP communicates with the SC using a multi-ported MU module found
-+in the LSIO subsystem. The current definition of this MU module provides
-+5 remote AP connections to the SC to support up to 5 execution environments
-+(TZ, HV, standard Linux, etc.). The SC side of this MU module interfaces
-+with the LSIO DSC IP bus. The SC firmware will communicate with this MU
-+using the MSI bus.
++Because the MU manages the messaging between processors, the MU uses
++different clocks (from each side of the different peripheral buses).
++Therefore, the MU must synchronize the accesses from one side to the
++other. The MU accomplishes synchronization using two sets of matching
++registers (Processor A-facing, Processor B-facing).
 +
-+System Controller Device Node:
++Messaging Unit Device Node:
 +=============================
 +
 +Required properties:
 +-------------------
-+- compatible: should be "fsl,imx-scu"
-+- mboxes: List of phandle of MU mailbox. Should be one of LSIO
-+	  MU0~M4 for imx8qxp and imx8qm. Users need to make
-+	  sure not use the one which is conflict with other
-+	  execution environments. e.g. ATF.
++- compatible :	should be "fsl,<chip>-mu", the supported chips include
++		imx8qxp, imx8qm.
++- reg :		Should contain the registers location and length
++- interrupts :	Interrupt number. The interrupt specifier format depends
++		on the interrupt controller parent.
++- #mbox-cells:  Must be 0. Number of cells in a mailbox
 +
 +Examples:
 +--------
-+lsio_mu1: mailbox@5d1c0000 {
++lsio_mu0: mailbox@5d1b0000 {
 +	compatible = "fsl,imx8qxp-mu";
-+	reg = <0x0 0x5d1c0000 0x0 0x10000>;
++	reg = <0x0 0x5d1b0000 0x0 0x10000>;
 +	interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
 +	#mbox-cells = <0>;
-+};
-+
-+scu {
-+	compatible = "fsl,imx-scu";
-+	mboxes = <&lsio_mu1>;
-+};
-+
-+
-+i.MX SCU Client Device Node:
-+=========================
-+
-+Client nodes are maintained as children of the relevant IMX-SCU device node.
-+
-+Example (imx8qxp):
-+-------------
-+scu {
-+	compatible = "fsl,imx-scu";
-+	...
-+
-+	clk: clk {
-+		...
-+	};
-+
-+	iomuxc: iomuxc {
-+		...
-+	};
-+
-+	imx8qx-pm {
-+		...
-+	}
-+	...
 +};
 -- 
 2.7.4
