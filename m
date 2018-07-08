@@ -1,121 +1,83 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v12 4/4] iommu/arm-smmu: Add support for qcom,
- smmu-v2 variant
-Date: Sun,  8 Jul 2018 23:04:13 +0530
-Message-ID: <20180708173413.1965-5-vivek.gautam@codeaurora.org>
-References: <20180708173413.1965-1-vivek.gautam@codeaurora.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v6 2/4] resource: Use list_head to link sibling resource
+Date: Sun, 8 Jul 2018 20:48:22 +0300
+Message-ID: <CAHp75VcjGQutVtZ90C0huUGCY6yj8H0Wo0tMdrbLmLsRQ+x4XQ@mail.gmail.com>
+References: <20180704041038.8190-3-bhe@redhat.com>
+ <201807042347.hfDcKxmG%fengguang.wu@intel.com>
+ <20180708025946.GI3047@MiWiFi-R3L-srv>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180708173413.1965-1-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20180708025946.GI3047@MiWiFi-R3L-srv>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, brijesh.singh@amd.com, Tom Lendacky <thomas.lendacky@amd.com>, David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, Keith Busch <keith.busch@intel.com>, Max Filippov <jcmvbkbc@gmail.com>, baiyaowei@cmss.chinamobile.com, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stephen Hemminger <sthemmin@microsoft.com>, linux-nvdimm@lists.01.org, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, linux-input <linux-input@vger.kernel.org>, Gustavo Padovan <gustavo@padovan.org>, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, devicetree <devicetree@vger.kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>, Maarten Lankhorst <maarten.lankhorst@linux.>
 List-Id: devicetree@vger.kernel.org
 
-cWNvbSxzbW11LXYyIGlzIGFuIGFybSxzbW11LXYyIGltcGxlbWVudGF0aW9uIHdpdGggc3BlY2lm
-aWMKY2xvY2sgYW5kIHBvd2VyIHJlcXVpcmVtZW50cy4gVGhpcyBzbW11IGNvcmUgaXMgdXNlZCB3
-aXRoCm11bHRpcGxlIG1hc3RlcnMgb24gbXNtODk5Niwgdml6LiBtZHNzLCB2aWRlbywgZXRjLgpB
-ZGQgYmluZGluZ3MgZm9yIHRoZSBzYW1lLgoKU2lnbmVkLW9mZi1ieTogVml2ZWsgR2F1dGFtIDx2
-aXZlay5nYXV0YW1AY29kZWF1cm9yYS5vcmc+ClJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9i
-aEBrZXJuZWwub3JnPgpSZXZpZXdlZC1ieTogVG9tYXN6IEZpZ2EgPHRmaWdhQGNocm9taXVtLm9y
-Zz4KLS0tCgogLSBObyBjaGFuZ2Ugc2luY2UgdjExLgoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2lvbW11L2FybSxzbW11LnR4dCAgICAgICAgIHwgNDIgKysrKysrKysrKysrKysrKysrKysrKwog
-ZHJpdmVycy9pb21tdS9hcm0tc21tdS5jICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAxNCAr
-KysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCA1NiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lvbW11L2FybSxzbW11LnR4dCBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pb21tdS9hcm0sc21tdS50eHQKaW5kZXgg
-OGE2ZmZjZTEyYWY1Li43YzcxYTZlZDQ2NWEgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9pb21tdS9hcm0sc21tdS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2lvbW11L2FybSxzbW11LnR4dApAQCAtMTcsMTAgKzE3LDE5IEBA
-IGNvbmRpdGlvbnMuCiAgICAgICAgICAgICAgICAgICAgICAgICAiYXJtLG1tdS00MDEiCiAgICAg
-ICAgICAgICAgICAgICAgICAgICAiYXJtLG1tdS01MDAiCiAgICAgICAgICAgICAgICAgICAgICAg
-ICAiY2F2aXVtLHNtbXUtdjIiCisgICAgICAgICAgICAgICAgICAgICAgICAicWNvbSw8c29jPi1z
-bW11LXYyIiwgInFjb20sc21tdS12MiIKIAogICAgICAgICAgICAgICAgICAgZGVwZW5kaW5nIG9u
-IHRoZSBwYXJ0aWN1bGFyIGltcGxlbWVudGF0aW9uIGFuZC9vciB0aGUKICAgICAgICAgICAgICAg
-ICAgIHZlcnNpb24gb2YgdGhlIGFyY2hpdGVjdHVyZSBpbXBsZW1lbnRlZC4KIAorICAgICAgICAg
-ICAgICAgICAgQSBudW1iZXIgb2YgUWNvbSBTb0NzIHVzZSBxY29tLHNtbXUtdjIgdmVyc2lvbiBv
-ZiB0aGUgSVAuCisgICAgICAgICAgICAgICAgICAicWNvbSw8c29jPi1zbW11LXYyIiByZXByZXNl
-bnRzIGEgc29jIHNwZWNpZmljIGNvbXBhdGlibGUKKyAgICAgICAgICAgICAgICAgIHN0cmluZyB0
-aGF0IHNob3VsZCBiZSBwcmVzZW50IGFsb25nIHdpdGggdGhlICJxY29tLHNtbXUtdjIiCisgICAg
-ICAgICAgICAgICAgICB0byBmYWNpbGl0YXRlIFNvQyBzcGVjaWZpYyBjbG9ja3MvcG93ZXIgY29u
-bmVjdGlvbnMgYW5kIHRvCisgICAgICAgICAgICAgICAgICBhZGRyZXNzIHNwZWNpZmljIGJ1ZyBm
-aXhlcy4KKyAgICAgICAgICAgICAgICAgIEFuIGV4YW1wbGUgc3RyaW5nIHdvdWxkIGJlIC0KKyAg
-ICAgICAgICAgICAgICAgICJxY29tLG1zbTg5OTYtc21tdS12MiIsICJxY29tLHNtbXUtdjIiLgor
-CiAtIHJlZyAgICAgICAgICAgOiBCYXNlIGFkZHJlc3MgYW5kIHNpemUgb2YgdGhlIFNNTVUuCiAK
-IC0gI2dsb2JhbC1pbnRlcnJ1cHRzIDogVGhlIG51bWJlciBvZiBnbG9iYWwgaW50ZXJydXB0cyBl
-eHBvc2VkIGJ5IHRoZQpAQCAtNzEsNiArODAsMjIgQEAgY29uZGl0aW9ucy4KICAgICAgICAgICAg
-ICAgICAgIG9yIHVzaW5nIHN0cmVhbSBtYXRjaGluZyB3aXRoICNpb21tdS1jZWxscyA9IDwyPiwg
-YW5kCiAgICAgICAgICAgICAgICAgICBtYXkgYmUgaWdub3JlZCBpZiBwcmVzZW50IGluIHN1Y2gg
-Y2FzZXMuCiAKKy0gY2xvY2stbmFtZXM6ICAgIExpc3Qgb2YgdGhlIG5hbWVzIG9mIGNsb2NrcyBp
-bnB1dCB0byB0aGUgZGV2aWNlLiBUaGUKKyAgICAgICAgICAgICAgICAgIHJlcXVpcmVkIGxpc3Qg
-ZGVwZW5kcyBvbiBwYXJ0aWN1bGFyIGltcGxlbWVudGF0aW9uIGFuZAorICAgICAgICAgICAgICAg
-ICAgaXMgYXMgZm9sbG93czoKKyAgICAgICAgICAgICAgICAgIC0gZm9yICJxY29tLHNtbXUtdjIi
-OgorICAgICAgICAgICAgICAgICAgICAtICJidXMiOiBjbG9jayByZXF1aXJlZCBmb3IgZG93bnN0
-cmVhbSBidXMgYWNjZXNzIGFuZAorICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3IgdGhl
-IHNtbXUgcHR3LAorICAgICAgICAgICAgICAgICAgICAtICJpZmFjZSI6IGNsb2NrIHJlcXVpcmVk
-IHRvIGFjY2VzcyBzbW11J3MgcmVnaXN0ZXJzCisgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgdGhyb3VnaCB0aGUgVENVJ3MgcHJvZ3JhbW1pbmcgaW50ZXJmYWNlLgorICAgICAgICAgICAg
-ICAgICAgLSB1bnNwZWNpZmllZCBmb3Igb3RoZXIgaW1wbGVtZW50YXRpb25zLgorCistIGNsb2Nr
-czogICAgICAgICBTcGVjaWZpZXJzIGZvciBhbGwgY2xvY2tzIGxpc3RlZCBpbiB0aGUgY2xvY2st
-bmFtZXMgcHJvcGVydHksCisgICAgICAgICAgICAgICAgICBhcyBwZXIgZ2VuZXJpYyBjbG9jayBi
-aW5kaW5ncy4KKworLSBwb3dlci1kb21haW5zOiAgU3BlY2lmaWVycyBmb3IgcG93ZXIgZG9tYWlu
-cyByZXF1aXJlZCB0byBiZSBwb3dlcmVkIG9uIGZvcgorICAgICAgICAgICAgICAgICAgdGhlIFNN
-TVUgdG8gb3BlcmF0ZSwgYXMgcGVyIGdlbmVyaWMgcG93ZXIgZG9tYWluIGJpbmRpbmdzLgorCiAq
-KiBEZXByZWNhdGVkIHByb3BlcnRpZXM6CiAKIC0gbW11LW1hc3RlcnMgKGRlcHJlY2F0ZWQgaW4g
-ZmF2b3VyIG9mIHRoZSBnZW5lcmljICJpb21tdXMiIGJpbmRpbmcpIDoKQEAgLTEzNywzICsxNjIs
-MjAgQEAgY29uZGl0aW9ucy4KICAgICAgICAgICAgICAgICBpb21tdS1tYXAgPSA8MCAmc21tdTMg
-MCAweDQwMD47CiAgICAgICAgICAgICAgICAgLi4uCiAgICAgICAgIH07CisKKwkvKiBRY29tJ3Mg
-YXJtLHNtbXUtdjIgaW1wbGVtZW50YXRpb24gKi8KKwlzbW11NDogaW9tbXUgeworCQljb21wYXRp
-YmxlID0gInFjb20sbXNtODk5Ni1zbW11LXYyIiwgInFjb20sc21tdS12MiI7CisJCXJlZyA9IDww
-eGQwMDAwMCAweDEwMDAwPjsKKworCQkjZ2xvYmFsLWludGVycnVwdHMgPSA8MT47CisJCWludGVy
-cnVwdHMgPSA8R0lDX1NQSSA3MyBJUlFfVFlQRV9MRVZFTF9ISUdIPiwKKwkJCSAgICAgPEdJQ19T
-UEkgMzIwIElSUV9UWVBFX0xFVkVMX0hJR0g+LAorCQkJICAgICA8R0lDX1NQSSAzMjEgSVJRX1RZ
-UEVfTEVWRUxfSElHSD47CisJCSNpb21tdS1jZWxscyA9IDwxPjsKKwkJcG93ZXItZG9tYWlucyA9
-IDwmbW1jYyBNRFNTX0dEU0M+OworCisJCWNsb2NrcyA9IDwmbW1jYyBTTU1VX01EUF9BWElfQ0xL
-PiwKKwkJCSA8Jm1tY2MgU01NVV9NRFBfQUhCX0NMSz47CisJCWNsb2NrLW5hbWVzID0gImJ1cyIs
-ICJpZmFjZSI7CisJfTsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvaW9tbXUvYXJtLXNtbXUuYyBiL2Ry
-aXZlcnMvaW9tbXUvYXJtLXNtbXUuYwppbmRleCA5MTZjZGU0OTU0ZDIuLmE5ZWRiMTdmMDliZiAx
-MDA2NDQKLS0tIGEvZHJpdmVycy9pb21tdS9hcm0tc21tdS5jCisrKyBiL2RyaXZlcnMvaW9tbXUv
-YXJtLXNtbXUuYwpAQCAtMTE5LDYgKzExOSw3IEBAIGVudW0gYXJtX3NtbXVfaW1wbGVtZW50YXRp
-b24gewogCUdFTkVSSUNfU01NVSwKIAlBUk1fTU1VNTAwLAogCUNBVklVTV9TTU1VVjIsCisJUUNP
-TV9TTU1VVjIsCiB9OwogCiBzdHJ1Y3QgYXJtX3NtbXVfczJjciB7CkBAIC0xOTgwLDYgKzE5ODEs
-MTcgQEAgQVJNX1NNTVVfTUFUQ0hfREFUQShhcm1fbW11NDAxLCBBUk1fU01NVV9WMV82NEssIEdF
-TkVSSUNfU01NVSk7CiBBUk1fU01NVV9NQVRDSF9EQVRBKGFybV9tbXU1MDAsIEFSTV9TTU1VX1Yy
-LCBBUk1fTU1VNTAwKTsKIEFSTV9TTU1VX01BVENIX0RBVEEoY2F2aXVtX3NtbXV2MiwgQVJNX1NN
-TVVfVjIsIENBVklVTV9TTU1VVjIpOwogCitzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IHFjb21f
-c21tdXYyX2Nsa3NbXSA9IHsKKwkiYnVzIiwgImlmYWNlIiwKK307CisKK3N0YXRpYyBjb25zdCBz
-dHJ1Y3QgYXJtX3NtbXVfbWF0Y2hfZGF0YSBxY29tX3NtbXV2MiA9IHsKKwkudmVyc2lvbiA9IEFS
-TV9TTU1VX1YyLAorCS5tb2RlbCA9IFFDT01fU01NVVYyLAorCS5jbGtzID0gcWNvbV9zbW11djJf
-Y2xrcywKKwkubnVtX2Nsa3MgPSBBUlJBWV9TSVpFKHFjb21fc21tdXYyX2Nsa3MpLAorfTsKKwog
-c3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYXJtX3NtbXVfb2ZfbWF0Y2hbXSA9IHsK
-IAl7IC5jb21wYXRpYmxlID0gImFybSxzbW11LXYxIiwgLmRhdGEgPSAmc21tdV9nZW5lcmljX3Yx
-IH0sCiAJeyAuY29tcGF0aWJsZSA9ICJhcm0sc21tdS12MiIsIC5kYXRhID0gJnNtbXVfZ2VuZXJp
-Y192MiB9LApAQCAtMTk4Nyw2ICsxOTk5LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZp
-Y2VfaWQgYXJtX3NtbXVfb2ZfbWF0Y2hbXSA9IHsKIAl7IC5jb21wYXRpYmxlID0gImFybSxtbXUt
-NDAxIiwgLmRhdGEgPSAmYXJtX21tdTQwMSB9LAogCXsgLmNvbXBhdGlibGUgPSAiYXJtLG1tdS01
-MDAiLCAuZGF0YSA9ICZhcm1fbW11NTAwIH0sCiAJeyAuY29tcGF0aWJsZSA9ICJjYXZpdW0sc21t
-dS12MiIsIC5kYXRhID0gJmNhdml1bV9zbW11djIgfSwKKwl7IC5jb21wYXRpYmxlID0gInFjb20s
-c21tdS12MiIsIC5kYXRhID0gJnFjb21fc21tdXYyIH0sCiAJeyB9LAogfTsKIE1PRFVMRV9ERVZJ
-Q0VfVEFCTEUob2YsIGFybV9zbW11X29mX21hdGNoKTsKQEAgLTIzNjEsNiArMjM3NCw3IEBAIElP
-TU1VX09GX0RFQ0xBUkUoYXJtX21tdTQwMCwgImFybSxtbXUtNDAwIik7CiBJT01NVV9PRl9ERUNM
-QVJFKGFybV9tbXU0MDEsICJhcm0sbW11LTQwMSIpOwogSU9NTVVfT0ZfREVDTEFSRShhcm1fbW11
-NTAwLCAiYXJtLG1tdS01MDAiKTsKIElPTU1VX09GX0RFQ0xBUkUoY2F2aXVtX3NtbXV2MiwgImNh
-dml1bSxzbW11LXYyIik7CitJT01NVV9PRl9ERUNMQVJFKHFjb21fc21tdXYyLCAicWNvbSxzbW11
-LXYyIik7CiAKIE1PRFVMRV9ERVNDUklQVElPTigiSU9NTVUgQVBJIGZvciBBUk0gYXJjaGl0ZWN0
-ZWQgU01NVSBpbXBsZW1lbnRhdGlvbnMiKTsKIE1PRFVMRV9BVVRIT1IoIldpbGwgRGVhY29uIDx3
-aWxsLmRlYWNvbkBhcm0uY29tPiIpOwotLSAKUVVBTENPTU0gSU5ESUEsIG9uIGJlaGFsZiBvZiBR
-dWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlcgpvZiBDb2RlIEF1cm9y
-YSBGb3J1bSwgaG9zdGVkIGJ5IFRoZSBMaW51eCBGb3VuZGF0aW9uCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZy
-ZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+On Sun, Jul 8, 2018 at 5:59 AM, Baoquan He <bhe@redhat.com> wrote:
+> On 07/05/18 at 01:00am, kbuild test robot wrote:
+
+> However, I didn't find below branch. And tried to open it in web
+> broswer, also failed.
+
+While this is kinda valid point...
+
+> Could you help have a look at this?
+
+...isn't obvious that you didn't change the file mentioned in a report?
+Just take latest linux-next and you will see.
+
+
+>> All error/warnings (new ones prefixed by >>):
+>>
+>> >> arch/mips/pci/pci-rc32434.c:57:11: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+>>      .child = &rc32434_res_pci_mem2
+>>               ^
+>>    arch/mips/pci/pci-rc32434.c:57:11: note: (near initialization for 'rc32434_res_pci_mem1.child.next')
+>> >> arch/mips/pci/pci-rc32434.c:51:47: warning: missing braces around initializer [-Wmissing-braces]
+>>     static struct resource rc32434_res_pci_mem1 = {
+>>                                                   ^
+>>    arch/mips/pci/pci-rc32434.c:60:47: warning: missing braces around initializer [-Wmissing-braces]
+>>     static struct resource rc32434_res_pci_mem2 = {
+>>                                                   ^
+>>    cc1: some warnings being treated as errors
+>>
+>> vim +57 arch/mips/pci/pci-rc32434.c
+>>
+>> 73b4390f Ralf Baechle 2008-07-16  50
+>> 73b4390f Ralf Baechle 2008-07-16 @51  static struct resource rc32434_res_pci_mem1 = {
+>> 73b4390f Ralf Baechle 2008-07-16  52          .name = "PCI MEM1",
+>> 73b4390f Ralf Baechle 2008-07-16  53          .start = 0x50000000,
+>> 73b4390f Ralf Baechle 2008-07-16  54          .end = 0x5FFFFFFF,
+>> 73b4390f Ralf Baechle 2008-07-16  55          .flags = IORESOURCE_MEM,
+>> 73b4390f Ralf Baechle 2008-07-16  56          .sibling = NULL,
+>> 73b4390f Ralf Baechle 2008-07-16 @57          .child = &rc32434_res_pci_mem2
+>> 73b4390f Ralf Baechle 2008-07-16  58  };
+>> 73b4390f Ralf Baechle 2008-07-16  59
+>>
+>> :::::: The code at line 57 was first introduced by commit
+>> :::::: 73b4390fb23456964201abda79f1210fe337d01a [MIPS] Routerboard 532: Support for base system
+>>
+>> :::::: TO: Ralf Baechle <ralf@linux-mips.org>
+>> :::::: CC: Ralf Baechle <ralf@linux-mips.org>
+>>
+>> ---
+>> 0-DAY kernel test infrastructure                Open Source Technology Center
+>> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+>
+>
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
