@@ -1,104 +1,218 @@
-From: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6 2/4] resource: Use list_head to link sibling resource
-Date: Sun, 8 Jul 2018 10:59:46 +0800
-Message-ID: <20180708025946.GI3047@MiWiFi-R3L-srv>
-References: <20180704041038.8190-3-bhe@redhat.com>
- <201807042347.hfDcKxmG%fengguang.wu@intel.com>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH v2] display: panel: Add KOE tx14d24vm1bpa display
+ support (320x240)
+Date: Sun, 8 Jul 2018 10:43:12 +0200
+Message-ID: <20180708104312.2e4d7586@jawa>
+References: <20180412143715.6828-1-lukma@denx.de>
+        <20180529150528.22136-1-lukma@denx.de>
+        <20180622105605.3018453c@jawa>
+        <20180629190529.0f59db98@jawa>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201807042347.hfDcKxmG%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, brijesh.singh-5C7GfCeVMHo@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ebiederm-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org, jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, linux-parisc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Pd96HfQpOJh9uaaFTej=n_N"; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180629190529.0f59db98@jawa>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+--Sig_/Pd96HfQpOJh9uaaFTej=n_N
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 07/05/18 at 01:00am, kbuild test robot wrote:
-> Hi Baoquan,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v4.18-rc3 next-20180704]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+Hi Thierry,
 
-Thanks for telling. 
+> Hi Thierry,
+>=20
+> > Hi Thierry,
+> >  =20
+> > > This commit adds support for KOE's 5.7" display.
+> > >=20
+> > > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > > Changes for v2:
+> > > - Add Reviewed-by tag   =20
+> >=20
+> > Could you apply this patch to your tree? =20
+>=20
+> If I may gentle ping on this patch..... It is quite mature now... :-)
 
-I cloned 0day-ci/linut to my local pc.
-https://github.com/0day-ci/linux.git
+If I may gentle ping on this patch...
 
-However, I didn't find below branch. And tried to open it in web
-broswer, also failed.
+Thanks in advance,
+=C5=81ukasz Majewski
+
+>=20
+> Best regards,
+> =C5=81ukasz
+>=20
+> >=20
+> > Thanks in advance,
+> > =C5=81ukasz
+> >  =20
+> > >=20
+> > > ---
+> > >  .../bindings/display/panel/koe,tx14d24vm1bpa.txt   | 42
+> > > ++++++++++++++++++++++
+> > > drivers/gpu/drm/panel/panel-simple.c               | 26
+> > > ++++++++++++++ 2 files changed, 68 insertions(+) create mode
+> > > 100644
+> > > Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+> > >=20
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.t=
+xt
+> > > b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.t=
+xt
+> > > new file mode 100644 index 000000000000..be7ac666807b
+> > > --- /dev/null +++
+> > > b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.t=
+xt
+> > > @@ -0,0 +1,42 @@ +Kaohsiung Opto-Electronics Inc. 5.7" QVGA (320 x
+> > > 240) TFT LCD panel +
+> > > +Required properties:
+> > > +- compatible: should be "koe,tx14d24vm1bpa"
+> > > +- backlight: phandle of the backlight device attached to the
+> > > panel +- power-supply: single regulator to provide the supply
+> > > voltage +
+> > > +Required nodes:
+> > > +- port: Parallel port mapping to connect this display
+> > > +
+> > > +This panel needs single power supply voltage. Its backlight is
+> > > conntrolled +via PWM signal.
+> > > +
+> > > +Example:
+> > > +--------
+> > > +
+> > > +Example device-tree definition when connected to iMX53 based
+> > > board +
+> > > +	lcd_panel: lcd-panel {
+> > > +		compatible =3D "koe,tx14d24vm1bpa";
+> > > +		backlight =3D <&backlight_lcd>;
+> > > +		power-supply =3D <&reg_3v3>;
+> > > +
+> > > +		port {
+> > > +			lcd_panel_in: endpoint {
+> > > +				remote-endpoint =3D
+> > > <&lcd_display_out>;
+> > > +			};
+> > > +		};
+> > > +	};
+> > > +
+> > > +Then one needs to extend the dispX node:
+> > > +
+> > > +	lcd_display: disp1 {
+> > > +
+> > > +		port@1 {
+> > > +			reg =3D <1>;
+> > > +
+> > > +			lcd_display_out: endpoint {
+> > > +				remote-endpoint =3D
+> > > <&lcd_panel_in>;
+> > > +			};
+> > > +		};
+> > > +	};
+> > > diff --git a/drivers/gpu/drm/panel/panel-simple.c
+> > > b/drivers/gpu/drm/panel/panel-simple.c index
+> > > d9984bdb5bb5..103b43ce7dee 100644 ---
+> > > a/drivers/gpu/drm/panel/panel-simple.c +++
+> > > b/drivers/gpu/drm/panel/panel-simple.c @@ -1268,6 +1268,29 @@
+> > > static const struct panel_desc innolux_zj070na_01p =3D { },
+> > >  };
+> > > =20
+> > > +static const struct display_timing koe_tx14d24vm1bpa_timing =3D {
+> > > +	.pixelclock =3D { 5580000, 5850000, 6200000 },
+> > > +	.hactive =3D { 320, 320, 320 },
+> > > +	.hfront_porch =3D { 30, 30, 30 },
+> > > +	.hback_porch =3D { 30, 30, 30 },
+> > > +	.hsync_len =3D { 1, 5, 17 },
+> > > +	.vactive =3D { 240, 240, 240 },
+> > > +	.vfront_porch =3D { 6, 6, 6 },
+> > > +	.vback_porch =3D { 5, 5, 5 },
+> > > +	.vsync_len =3D { 1, 2, 11 },
+> > > +	.flags =3D DISPLAY_FLAGS_DE_HIGH,
+> > > +};
+> > > +
+> > > +static const struct panel_desc koe_tx14d24vm1bpa =3D {
+> > > +	.timings =3D &koe_tx14d24vm1bpa_timing,
+> > > +	.num_timings =3D 1,
+> > > +	.bpc =3D 6,
+> > > +	.size =3D {
+> > > +		.width =3D 115,
+> > > +		.height =3D 86,
+> > > +	},
+> > > +};
+> > > +
+> > >  static const struct display_timing koe_tx31d200vm0baa_timing =3D {
+> > >  	.pixelclock =3D { 39600000, 43200000, 48000000 },
+> > >  	.hactive =3D { 1280, 1280, 1280 },
+> > > @@ -2204,6 +2227,9 @@ static const struct of_device_id
+> > > platform_of_match[] =3D { .compatible =3D "innolux,zj070na-01p",
+> > >  		.data =3D &innolux_zj070na_01p,
+> > >  	}, {
+> > > +		.compatible =3D "koe,tx14d24vm1bpa",
+> > > +		.data =3D &koe_tx14d24vm1bpa,
+> > > +	}, {
+> > >  		.compatible =3D "koe,tx31d200vm0baa",
+> > >  		.data =3D &koe_tx31d200vm0baa,
+> > >  	}, {   =20
+> >=20
+> >=20
+> >=20
+> >=20
+> > Best regards,
+> >=20
+> > Lukasz Majewski
+> >=20
+> > --
+> >=20
+> > DENX Software Engineering GmbH,      Managing Director: Wolfgang
+> > Denk HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell,
+> > Germany Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email:
+> > wd@denx.de =20
+>=20
+>=20
+>=20
+>=20
+> Best regards,
+>=20
+> Lukasz Majewski
+>=20
+> --
+>=20
+> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+> Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
 
 
-> url:    https://github.com/0day-ci/linux/commits/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180704-121402
-> config: mips-rb532_defconfig (attached as .config)
-> compiler: mipsel-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.2.0 make.cross ARCH=mips 
 
-I did find a old one which is for the old version 5 post.
 
-[bhe@linux]$ git remote -v
-0day-ci	https://github.com/0day-ci/linux.git (fetch)
-0day-ci	https://github.com/0day-ci/linux.git (push)
-[bhe@dhcp-128-28 linux]$ git branch -a| grep Baoquan| grep resource
-  remotes/0day-ci/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180612-113600
+Best regards,
 
-Could you help have a look at this?
+Lukasz Majewski
 
-Thanks
-Baoquan
+--
 
-> 
-> All error/warnings (new ones prefixed by >>):
-> 
-> >> arch/mips/pci/pci-rc32434.c:57:11: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
->      .child = &rc32434_res_pci_mem2
->               ^
->    arch/mips/pci/pci-rc32434.c:57:11: note: (near initialization for 'rc32434_res_pci_mem1.child.next')
-> >> arch/mips/pci/pci-rc32434.c:51:47: warning: missing braces around initializer [-Wmissing-braces]
->     static struct resource rc32434_res_pci_mem1 = {
->                                                   ^
->    arch/mips/pci/pci-rc32434.c:60:47: warning: missing braces around initializer [-Wmissing-braces]
->     static struct resource rc32434_res_pci_mem2 = {
->                                                   ^
->    cc1: some warnings being treated as errors
-> 
-> vim +57 arch/mips/pci/pci-rc32434.c
-> 
-> 73b4390f Ralf Baechle 2008-07-16  50  
-> 73b4390f Ralf Baechle 2008-07-16 @51  static struct resource rc32434_res_pci_mem1 = {
-> 73b4390f Ralf Baechle 2008-07-16  52  	.name = "PCI MEM1",
-> 73b4390f Ralf Baechle 2008-07-16  53  	.start = 0x50000000,
-> 73b4390f Ralf Baechle 2008-07-16  54  	.end = 0x5FFFFFFF,
-> 73b4390f Ralf Baechle 2008-07-16  55  	.flags = IORESOURCE_MEM,
-> 73b4390f Ralf Baechle 2008-07-16  56  	.sibling = NULL,
-> 73b4390f Ralf Baechle 2008-07-16 @57  	.child = &rc32434_res_pci_mem2
-> 73b4390f Ralf Baechle 2008-07-16  58  };
-> 73b4390f Ralf Baechle 2008-07-16  59  
-> 
-> :::::: The code at line 57 was first introduced by commit
-> :::::: 73b4390fb23456964201abda79f1210fe337d01a [MIPS] Routerboard 532: Support for base system
-> 
-> :::::: TO: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-> :::::: CC: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+
+--Sig_/Pd96HfQpOJh9uaaFTej=n_N
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAltBzqAACgkQAR8vZIA0
+zr1aQQgAkRJhSLKDmF6fpZxqm8vLD8M2/HzIEDize+EHOOGZhvQzUXzLVlvUfhha
+JWVYXCwlilA6uv5NbaJCLoXf2/GbVaNIW61oEUH+vqnhq8fFjHP8eCKiUumQlGyd
+DPyVO12MFkAtrRBVhXlEcs4EImh1pEKdd1uaRZraj9WOkRM0GuUMkuGILzSXrZjG
+v0Wq9NjnJtIfqxyPU6M3hIcvb4CcvdTNb2JFrZoGQAQXplvPqX6Cu6J6BVwhwC0L
+GqunldqmXAk9q89sHBhsH0OWyS0MXjrLZ8kd3qX/DkZstmF5G8Yerp22qld4FESV
+DQgUGwW4OYzR7K7q0ZjK2jYI3MLOeQ==
+=AC4z
+-----END PGP SIGNATURE-----
+
+--Sig_/Pd96HfQpOJh9uaaFTej=n_N--
