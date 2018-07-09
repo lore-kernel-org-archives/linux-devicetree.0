@@ -1,66 +1,74 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v4 1/1] arm64: dts: mediatek: add mt6765 support
-Date: Mon, 9 Jul 2018 17:43:14 +0100
-Message-ID: <d439eb7d-6365-7a0a-2969-1ddecc51defc@arm.com>
-References: <1531116302-29921-1-git-send-email-mars.cheng@mediatek.com>
- <1531116302-29921-2-git-send-email-mars.cheng@mediatek.com>
- <7fb13f45-4e33-6efc-467b-c7256a40cbc9@gmail.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: [PATCH v5 0/6] Add MCAN Support for dra76x
+Date: Mon, 9 Jul 2018 22:18:35 +0530
+Message-ID: <20180709164841.14182-1-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7fb13f45-4e33-6efc-467b-c7256a40cbc9@gmail.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Mars Cheng <mars.cheng@mediatek.com>, Rob Herring <robh+dt@kernel.org>
-Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Cc: mark.rutland@arm.com, paul@pwsan.com, tony@atomide.com, faiz_abbas@ti.com, t-kristo@ti.com, sboyd@kernel.org, robh+dt@kernel.org, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/07/18 11:20, Matthias Brugger wrote:
-> 
-> 
-> On 09/07/18 08:05, Mars Cheng wrote:
->> This adds basic chip support for MT6765 SoC.
->>
->> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
->> ---
->>  arch/arm64/boot/dts/mediatek/Makefile       |    1 +
->>  arch/arm64/boot/dts/mediatek/mt6765-evb.dts |   33 ++++++
->>  arch/arm64/boot/dts/mediatek/mt6765.dtsi    |  156 +++++++++++++++++++++++++++
->>  3 files changed, 190 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6765-evb.dts
->>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6765.dtsi
->>
->> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
->> index ac17f60..7506b0d 100644
->> --- a/arch/arm64/boot/dts/mediatek/Makefile
->> +++ b/arch/arm64/boot/dts/mediatek/Makefile
->> @@ -1,6 +1,7 @@
->>  # SPDX-License-Identifier: GPL-2.0
->>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
->>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
->> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6765-evb.dtb
->>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
->>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
->>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
-> 
-> As you can see, we have a long list of SoCs which are poorly supported.
-> I'm not very keen to just add another SoC which supports booting into a ramdisk
-> using the serial console. Do you have a roadmap adding mainline support for this
-> SoC?
+The following patches add dts and sysconfig support
+for MCAN on TI's dra76 SOCs
 
-Yes, that's a valid concern.
+Changes in v5:
+ Return from sysc_reset() with error if syss_mask is not
+ present. That is the only supported way of reset
 
-mt6755 and mt6795 are in a similar state, the latter after three years.
-I'm all for supporting new SoCs, but this feels looks a box-ticking
-exercise ("hey, look, our SoC is supported in mainline") which doesn't
-help anyone.
+Changes in v4:
+ 1. Rebased to latest kernel
+ 2. Using ddata->cfg.syss_mask instead of ddata->cfg.quirks
+    for checking if poll on reset status is required.
 
-My Ack still stands, but I'd definitely like to see some more complete
-support before this patch goes in.
+Changes in v3:
+ 1. Added reset functionality to the ti-sysc
+    driver. This enables me to drop the hwmod
+    data patch as everything is being done in dt.
 
-Thanks,
+ 2. Dropped ti,hwmods from the dts nodes
 
-	M.
+ 3. Fixed the unit address of target-module
+    and mcan
+
+ 4. Removed the status="disabled" in dtsi
+    followed by status="okay" in dts.
+
+Changes in v2:
+ 1. Added Support for mcan in the ti-sysc driver
+    Also added the target-module node for the same
+
+ 2. Added clkctrl data for mcan clocks
+
+Faiz Abbas (5):
+  clk: ti: dra7: Add clkctrl clock data for the mcan clocks
+  bus: ti-sysc: Add support for using ti-sysc for MCAN on dra76x
+  bus: ti-sysc: Add support for software reset
+  ARM: dts: Add generic interconnect target module node for MCAN
+  ARM: dts: dra76x: Add MCAN node
+
+Lokesh Vutla (1):
+  ARM: dts: dra762: Add MCAN clock support
+
+ .../devicetree/bindings/bus/ti-sysc.txt       |  1 +
+ arch/arm/boot/dts/dra76-evm.dts               |  6 ++
+ arch/arm/boot/dts/dra76x.dtsi                 | 64 +++++++++++++++++++
+ drivers/bus/ti-sysc.c                         | 62 ++++++++++++++++++
+ drivers/clk/ti/clk-7xx.c                      |  1 +
+ include/dt-bindings/bus/ti-sysc.h             |  2 +
+ include/dt-bindings/clock/dra7.h              |  1 +
+ include/linux/platform_data/ti-sysc.h         |  1 +
+ 8 files changed, 138 insertions(+)
+
 -- 
-Jazz is not dead. It just smells funny...
+2.17.0
