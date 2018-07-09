@@ -1,86 +1,70 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v4 6/6] arm64: dts: sdm845: Add tsens nodes
-Date: Mon, 9 Jul 2018 09:10:19 -0700
-Message-ID: <20180709161019.GN129942@google.com>
-References: <cover.1530533998.git.amit.kucheria@linaro.org>
- <a52b77ad84867774a0659f51ccb79b17ba7638ab.1530533998.git.amit.kucheria@linaro.org>
- <20180703214822.GD129942@google.com>
- <CAHLCerMZw8mftQb8iRc5+RqGGjf26ebwynPfORz0hAPxp05YfA@mail.gmail.com>
- <20180709160131.GM129942@google.com>
- <CAHLCerP0z-G+YqXOe8VYSTVPfSYiR+yywskijiD7y0Lz=2AQQQ@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 3/5] ASoC: qcom: add sdm845 sound card support
+Date: Mon, 9 Jul 2018 17:33:26 +0100
+Message-ID: <20180709163326.GI16082@sirena.org.uk>
+References: <1530870195-13576-1-git-send-email-rohitkr@codeaurora.org>
+ <1530870195-13576-4-git-send-email-rohitkr@codeaurora.org>
+ <20180709111437.GB16082@sirena.org.uk>
+ <b5a3f0e2-d420-603d-f9a0-f93bdbd2619f@linaro.org>
+ <20180709124117.GG16082@sirena.org.uk>
+ <887331ff-8892-66a7-20bc-0fce447c792f@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gJNQRAHI5jiYqw2y"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHLCerP0z-G+YqXOe8VYSTVPfSYiR+yywskijiD7y0Lz=2AQQQ@mail.gmail.com>
+In-Reply-To: <887331ff-8892-66a7-20bc-0fce447c792f@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>, Douglas Anderson <dianders@chromium.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Rohit kumar <rohitkr@codeaurora.org>, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, plai@codeaurora.org, bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 09, 2018 at 09:34:55PM +0530, Amit Kucheria wrote:
-> On Mon, Jul 9, 2018 at 9:31 PM, Matthias Kaehlcke <mka@chromium.org> wrote:
-> > On Mon, Jul 09, 2018 at 04:56:51PM +0530, Amit Kucheria wrote:
-> >> On Wed, Jul 4, 2018 at 3:18 AM, Matthias Kaehlcke <mka@chromium.org> wrote:
-> >> > Hi,
-> >> >
-> >> > On Mon, Jul 02, 2018 at 06:14:09PM +0530, Amit Kucheria wrote:
-> >> >> SDM845 has two tsens blocks, one with 13 sensors and the other with 8
-> >> >> sensors.
-> >> >>
-> >> >> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> >> >> ---
-> >> >>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 16 ++++++++++++++++
-> >> >>  1 file changed, 16 insertions(+)
-> >> >>
-> >> >> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> >> >> index cdaabeb..edf8505 100644
-> >> >> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> >> >> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> >> >> @@ -221,6 +221,22 @@
-> >> >>                       #interrupt-cells = <2>;
-> >> >>               };
-> >> >>
-> >> >> +             tsens0: tsens@c222000 {
-> >> >> +                     compatible = "qcom,tsens-v2.4.0", "qcom,tsens-v2";
-> >> >> +                     reg = <0xc263000 0x1ff>, /* TM */
-> >> >> +                           <0xc222000 0x1ff>; /* SROT */
-> >> >> +                     #qcom,sensors = <13>;
-> >> >> +                     #thermal-sensor-cells = <1>;
-> >> >> +             };
-> >> >> +
-> >> >> +             tsens1: tsens@c223000 {
-> >> >> +                     compatible = "qcom,tsens-v2.4.0", "qcom,tsens-v2";
-> >> >> +                     reg = <0xc265000 0x1ff>, /* TM */
-> >> >> +                           <0xc223000 0x1ff>; /* SROT */
-> >> >> +                     #qcom,sensors = <8>;
-> >> >> +                     #thermal-sensor-cells = <1>;
-> >> >> +             };
-> >> >> +
-> >> >>               spmi_bus: spmi@c440000 {
-> >> >>                       compatible = "qcom,spmi-pmic-arb";
-> >> >>                       reg = <0xc440000 0x1100>,
-> >> >
-> >> > I tested this series on an SDM845 board. Temperatures can be read from
-> >> > the tsens0 sensors, however for tsens1 sensors I get:
-> >> >
-> >> > cat temp
-> >> > cat: temp: No data available
-> >> >
-> >> > TRDY_READY_BIT set when reading TRDY_OFFSET in get_temp_tsens_v2().
-> >> > Unfortunately I currently have no documentation of the registers or the
-> >> > thermal sensors in general and couldn't investigate further.
-> >> >
-> >> > Any idea what could be the problem?
-> >>
-> >> Strangely enough, I'm seeing this now after rebuilding my integration
-> >> branch to test some other bits.
-> >>
-> >> I've sent another version with this patch removed while I investigate
-> >> this. Could you check if you're able to read all 8 sensors with v5?
-> >
-> > With v6 all sensors can be read, thanks!
-> 
-> Great! Would it be OK to add your Tested-by tag?
 
-Yep
+--gJNQRAHI5jiYqw2y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Jul 09, 2018 at 03:02:11PM +0100, Srinivas Kandagatla wrote:
+> On 09/07/18 13:41, Mark Brown wrote:
+> > > AFAIU, The issue with that mechanism or EPROBEDEFER is that it works only
+
+> > This is not the case, the card will be unbound at the ASoC level when
+> > any of the components are removed and then probed again when they
+> > reappear.
+
+> I did try this and It works only for first time! May be am missing
+> something!
+
+> snd_soc_component_del_unlocked() unregisters the sound card totally. so for
+> the second time (After DSP stop) there is no registered sound card in
+> place.. Am not sure how this is supposed to work?
+
+> The reason I think it works for the first time is because of EPROBEDEFER
+> from the machine driver.
+
+Ugh, right - we ripped out that code because there's no sensible use
+case for it so now we don't keep the cards on a list.  The expectation
+is that if someone is going around removing bits of the card they can
+probably figure out that they should be removing the card first.
+
+In any case the place to implement this is in the core, there's nothing
+special about your cards here.  Either the core should be using the
+component framework or the card list should be resurrected and we open
+code it.  This isn't something that's unique to your device.
+
+--gJNQRAHI5jiYqw2y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltDjlUACgkQJNaLcl1U
+h9Dzuwf/d8/yNOtgkhwg3Bv3BDHETSOvAfCUMJtd6SdcTKImYMto5yWnVT74gOte
+VNG18sOnmCo5DVWhEZigXVlOPVXiueXfgOUWJvcO5Rokb1u/XuueXsNQKnlRRwkr
+unW0xlN3DKpYR+eOVHYvZR5P3WWrMiFS58yjT8QtOTtV4F8P6z7mfRUfIqpiDj5B
+YWva+v+2U8ZqhM/hiU6wmh28jXLKfUUH2j2uLMxH0nO/LZBZQ++C4WVhwQYf6oIq
+Pxv+CkXvOWAYvpZApXIVuRH4BcsgyERQMgBcV2SOyRdpiz9HX4CgN6nQcJfRbkKG
+HhUFLQ9DeN8m+NfuPDe4Yvd3uskATg==
+=8mIg
+-----END PGP SIGNATURE-----
+
+--gJNQRAHI5jiYqw2y--
