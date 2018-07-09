@@ -1,30 +1,28 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2 1/4] clk: imx7d: add IMX7D_MU_ROOT_CLK
-Date: Mon, 9 Jul 2018 09:47:38 -0300
-Message-ID: <CAOMZO5CngXA-t9=2dczwxqV53Bdjh=9S8vgVEw96_COw4eiK4A@mail.gmail.com>
-References: <20180615095107.24610-1-o.rempel@pengutronix.de>
- <20180615095107.24610-2-o.rempel@pengutronix.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH V2] bindings: add clocks optional binding for imx gpio
+Date: Mon, 9 Jul 2018 15:03:17 +0200
+Message-ID: <CACRpkdbE25NeZ_GuJOxSsC90Wog2LGmYuACydEUB7qx-CO2orw@mail.gmail.com>
+References: <1530580694-8649-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180615095107.24610-2-o.rempel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1530580694-8649-1-git-send-email-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, NXP Linux Team <Linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 15, 2018 at 6:51 AM, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
-> This clock is needed for iMX mailbox driver
->
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+On Tue, Jul 3, 2018 at 3:22 AM Anson Huang <Anson.Huang@nxp.com> wrote:
 
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+> Some i.MX SoCs have GPIO clock gate in CCM, accessing
+> GPIO registers needs to enable GPIO clock gate first,
+> i.MX GPIO driver will enable clock gate if there is
+> clock property in GPIO node of dtb, add optional property
+> to i.MX GPIO binding doc.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+
+Patch applied as pretty uncontroversial.
+
+Yours,
+Linus Walleij
