@@ -1,124 +1,87 @@
-Return-Path: <SRS0=2DrZ=JT=jmondi.org=jacopo+renesas@kernel.org>
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH] ARM: dts: gr-peach: Add GR-Peach audiocamerashield support
-Date: Tue,  3 Jul 2018 22:41:09 +0200
-Message-Id: <1530650469-29201-1-git-send-email-jacopo+renesas@jmondi.org>
-To: horms@verge.net.au, geert@linux-m68k.org
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-media@lists.infradead.org
+Return-Path: <SRS0=UTzV=JZ=atomide.com=tony@kernel.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 5/5] ARM: dts: omap4: Add l4 ranges for 4460
+Date: Sun,  8 Jul 2018 23:36:12 -0700
+Message-Id: <20180709063612.12025-6-tony@atomide.com>
+In-Reply-To: <20180709063612.12025-1-tony@atomide.com>
+References: <20180709063612.12025-1-tony@atomide.com>
+To: linux-omap@vger.kernel.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree header for GR-Peach's audiocamerashield with MT9V111
-image sensor.
+Compared to 4430, 4460 and 4470 just have slightly different
+l4 cfg ranges.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
+ arch/arm/boot/dts/omap4-l4.dtsi |  4 ++--
+ arch/arm/boot/dts/omap4460.dtsi | 36 +++++++++++++++++++++++++++++++++
+ 2 files changed, 38 insertions(+), 2 deletions(-)
 
-The GR-Peach audiocamera shield is an expansion board for the GR-Peach that
-comes with an MT9V111 camera module.
-
-https://www.core.co.jp/product/m2m/gr-peach/audio-camera.html
-https://www.digikey.com/product-detail/en/renesas-electronics-america/YGRPEACHAUDIOCAMERASHIELD/YGRPEACHAUDIOCAMERASHIELD-ND/5800301
-
-The series functionally depends on the already sent support for the MT9V111
-sensor, but does not have any compile time dependency on it (a checkpatch
-warning on the un-documented "aptina-mt9v111" compatible string apart).
-
-https://lkml.org/lkml/2018/6/11/469
-
-(copied the linux-media list to which I'll send a gentle ping for the
-driver later ;)
-
-Thanks
-   j
----
- arch/arm/boot/dts/gr-peach-audiocamerashield.dtsi | 79 +++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
- create mode 100644 arch/arm/boot/dts/gr-peach-audiocamerashield.dtsi
-
-diff --git a/arch/arm/boot/dts/gr-peach-audiocamerashield.dtsi b/arch/arm/boot/dts/gr-peach-audiocamerashield.dtsi
-new file mode 100644
-index 0000000..e31a9e3
---- /dev/null
-+++ b/arch/arm/boot/dts/gr-peach-audiocamerashield.dtsi
-@@ -0,0 +1,79 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the GR-Peach audiocamera shield expansion board
-+ *
-+ * Copyright (C) 2017 Jacopo Mondi <jacopo+renesas@jmondi.org>
-+ */
-+
-+#include "r7s72100.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/r7s72100-pinctrl.h>
-+
-+/ {
-+	/* On-board camera clock. */
-+	camera_clk: camera_clk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <27000000>;
-+	};
+diff --git a/arch/arm/boot/dts/omap4-l4.dtsi b/arch/arm/boot/dts/omap4-l4.dtsi
+--- a/arch/arm/boot/dts/omap4-l4.dtsi
++++ b/arch/arm/boot/dts/omap4-l4.dtsi
+@@ -888,7 +888,7 @@
+ 		#size-cells = <1>;
+ 	};
+ 
+-	segment@300000 {					/* 0x4a300000 */
++	l4_cfg_segment_300000: segment@300000 {			/* 0x4a300000 */
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -904,7 +904,7 @@
+ 			 <0x0002a000 0x0032a000 0x002000>,	/* ap 90 */
+ 			 <0x0002c000 0x0032c000 0x004000>;	/* ap 91 */
+ 
+-		target-module@0 {			/* 0x4a300000, ap 67 14.0 */
++		l4_cfg_target_0: target-module@0 {	/* 0x4a300000, ap 67 14.0 */
+ 			compatible = "ti,sysc";
+ 			status = "disabled";
+ 			#address-cells = <1>;
+diff --git a/arch/arm/boot/dts/omap4460.dtsi b/arch/arm/boot/dts/omap4460.dtsi
+--- a/arch/arm/boot/dts/omap4460.dtsi
++++ b/arch/arm/boot/dts/omap4460.dtsi
+@@ -92,4 +92,40 @@
+ 	coefficients = <348 (-9301)>;
+ };
+ 
++/* Only some L4 CFG interconnect ranges are different on 4460 */
++&l4_cfg_segment_300000 {
++	ranges = <0x00000000 0x00300000 0x020000>,	/* ap 67 */
++		 <0x00040000 0x00340000 0x001000>,	/* ap 68 */
++		 <0x00020000 0x00320000 0x004000>,	/* ap 71 */
++		 <0x00024000 0x00324000 0x002000>,	/* ap 72 */
++		 <0x00026000 0x00326000 0x001000>,	/* ap 73 */
++		 <0x00027000 0x00327000 0x001000>,	/* ap 74 */
++		 <0x00028000 0x00328000 0x001000>,	/* ap 75 */
++		 <0x00029000 0x00329000 0x001000>,	/* ap 76 */
++		 <0x00030000 0x00330000 0x010000>,	/* ap 77 */
++		 <0x0002a000 0x0032a000 0x002000>,	/* ap 90 */
++		 <0x0002c000 0x0032c000 0x004000>,	/* ap 91 */
++		 <0x00010000 0x00310000 0x008000>,	/* ap 92 */
++		 <0x00018000 0x00318000 0x004000>,	/* ap 93 */
++		 <0x0001c000 0x0031c000 0x002000>,	/* ap 94 */
++		 <0x0001e000 0x0031e000 0x002000>;	/* ap 95 */
 +};
 +
-+&pinctrl {
-+	i2c1_pins: i2c1 {
-+		/* P1_2 as SCL; P1_3 as SDA */
-+		pinmux = <RZA1_PINMUX(1, 2, 1)>, <RZA1_PINMUX(1, 3, 1)>;
-+	};
-+
-+	vio_pins: vio {
-+		/* CEU pins: VIO_D[0-10], VIO_VD, VIO_HD, VIO_CLK */
-+		pinmux = <RZA1_PINMUX(1, 0, 5)>, /* VIO_VD */
-+			 <RZA1_PINMUX(1, 1, 5)>, /* VIO_HD */
-+			 <RZA1_PINMUX(2, 0, 7)>, /* VIO_D0 */
-+			 <RZA1_PINMUX(2, 1, 7)>, /* VIO_D1 */
-+			 <RZA1_PINMUX(2, 2, 7)>, /* VIO_D2 */
-+			 <RZA1_PINMUX(2, 3, 7)>, /* VIO_D3 */
-+			 <RZA1_PINMUX(2, 4, 7)>, /* VIO_D4 */
-+			 <RZA1_PINMUX(2, 5, 7)>, /* VIO_D5 */
-+			 <RZA1_PINMUX(2, 6, 7)>, /* VIO_D6 */
-+			 <RZA1_PINMUX(2, 7, 7)>, /* VIO_D7 */
-+			 <RZA1_PINMUX(10, 0, 6)>; /* VIO_CLK */
-+	};
++&l4_cfg_target_0 {
++	ranges = <0x00000000 0x00000000 0x00010000>,
++		 <0x00010000 0x00010000 0x00008000>,
++		 <0x00018000 0x00018000 0x00004000>,
++		 <0x0001c000 0x0001c000 0x00002000>,
++		 <0x0001e000 0x0001e000 0x00002000>,
++		 <0x00020000 0x00020000 0x00004000>,
++		 <0x00024000 0x00024000 0x00002000>,
++		 <0x00026000 0x00026000 0x00001000>,
++		 <0x00027000 0x00027000 0x00001000>,
++		 <0x00028000 0x00028000 0x00001000>,
++		 <0x00029000 0x00029000 0x00001000>,
++		 <0x0002a000 0x0002a000 0x00002000>,
++		 <0x0002c000 0x0002c000 0x00004000>,
++		 <0x00030000 0x00030000 0x00010000>;
 +};
 +
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+
-+	status = "okay";
-+	clock-frequency = <100000>;
-+
-+	camera@48 {
-+		compatible = "aptina,mt9v111";
-+		reg = <0x48>;
-+
-+		clocks = <&camera_clk>;
-+
-+		port {
-+			mt9v111_out: endpoint {
-+				remote-endpoint = <&ceu_in>;
-+			};
-+		};
-+	};
-+};
-+
-+&ceu {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&vio_pins>;
-+
-+	status = "okay";
-+
-+	port {
-+		ceu_in: endpoint {
-+			hsync-active = <1>;
-+			vsync-active = <1>;
-+			bus-width = <8>;
-+			pclk-sample = <1>;
-+			remote-endpoint = <&mt9v111_out>;
-+		};
-+	};
-+};
---
-2.7.4
+ /include/ "omap446x-clocks.dtsi"
+-- 
+2.17.1
