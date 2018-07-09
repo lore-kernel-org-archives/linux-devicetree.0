@@ -1,52 +1,36 @@
 From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH 05/14] dmaengine: dma-jz4780: Add support for the JZ4740
+Subject: Re: [PATCH 06/14] dmaengine: dma-jz4780: Add support for the JZ4725B
  SoC
-Date: Mon, 9 Jul 2018 22:42:26 +0530
-Message-ID: <20180709171226.GK22377@vkoul-mobl>
+Date: Mon, 9 Jul 2018 22:44:58 +0530
+Message-ID: <20180709171458.GL22377@vkoul-mobl>
 References: <20180703123214.23090-1-paul@crapouillou.net>
- <20180703123214.23090-6-paul@crapouillou.net>
+ <20180703123214.23090-7-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180703123214.23090-6-paul@crapouillou.net>
+In-Reply-To: <20180703123214.23090-7-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Paul Cercueil <paul@crapouillou.net>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
 On 03-07-18, 14:32, Paul Cercueil wrote:
+> The JZ4725B has one DMA core starring six DMA channels.
+> As for the JZ4770, each DMA channel's clock can be enabled with
+> a register write, the difference here being that once started, it
+> is not possible to turn it off.
 
->  enum jz_version {
-> +	ID_JZ4740,
->  	ID_JZ4770,
->  	ID_JZ4780,
->  };
-> @@ -247,6 +248,7 @@ static void jz4780_dma_desc_free(struct virt_dma_desc *vdesc)
->  }
->  
->  static const unsigned int jz4780_dma_ord_max[] = {
-> +	[ID_JZ4740] = 5,
->  	[ID_JZ4770] = 6,
->  	[ID_JZ4780] = 7,
->  };
-> @@ -801,11 +803,13 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
->  }
->  
->  static const unsigned int jz4780_dma_nb_channels[] = {
-> +	[ID_JZ4740] = 6,
->  	[ID_JZ4770] = 6,
->  	[ID_JZ4780] = 32,
->  };
+ok so disable for this, right..
 
-I feel these should be done away with if we describe hardware in DT
+> @@ -204,6 +205,8 @@ static inline void jz4780_dma_chan_enable(struct jz4780_dma_dev *jzdma,
+>  {
+>  	if (jzdma->version == ID_JZ4770)
+>  		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKES, BIT(chn));
+> +	else if (jzdma->version == ID_JZ4725B)
+> +		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKE, BIT(chn));
 
->  
->  static const struct of_device_id jz4780_dma_dt_match[] = {
-> +	{ .compatible = "ingenic,jz4740-dma", .data = (void *)ID_JZ4740 },
-
-adding .compatible should be the only thing required, if at all for this
-addition :)
+but you are writing to a different register here.. 
 
 -- 
 ~Vinod
