@@ -1,106 +1,104 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: xilinx: Add missing zynq boards and
- sort entries
-Date: Mon, 9 Jul 2018 10:18:36 +0200
-Message-ID: <1088d908-eaa1-78a8-f1a5-1a7d82eb5afb@xilinx.com>
-References: <20180706060158.24155-1-luaraneda@gmail.com>
- <20180706060158.24155-3-luaraneda@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [RESEND PATCH v4 1/2] dt-bindings: at24: Add address-width property
+Date: Mon, 9 Jul 2018 10:52:44 +0200
+Message-ID: <CAMRc=Mc4s6tJw6dAHYCPQdsPox9V8sBTqY3LHi5XMWALwOZdyA@mail.gmail.com>
+References: <1530522740-2798-1-git-send-email-alanx.chiang@intel.com>
+ <1530522740-2798-2-git-send-email-alanx.chiang@intel.com> <20180705212204.GA10449@rob-hp-laptop>
+ <alpine.LFD.2.21.1807051623400.12206@localhost.localdomain> <0772C36F3434E145A062D024A4869A09010B1E4D@PGSMSX101.gar.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180706060158.24155-3-luaraneda@gmail.com>
-Content-Language: en-US
+In-Reply-To: <0772C36F3434E145A062D024A4869A09010B1E4D@PGSMSX101.gar.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luis Araneda <luaraneda@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "Chiang, AlanX" <alanx.chiang@intel.com>
+Cc: "Robert P. J. Day" <rpjday@crashcourse.ca>, Rob Herring <robh@kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "Yeh, Andy" <andy.yeh@intel.com>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "Mani, Rajmohan" <rajmohan.mani@intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "tfiga@chromium.org" <tfiga@chromium.org>, "jcliang@chromium.org" <jcliang@chromium.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.ker
 List-Id: devicetree@vger.kernel.org
 
-On 6.7.2018 08:01, Luis Araneda wrote:
-> The bindings were missing when adding the device-tree files
-> 
-> Also, improve description of existing boards, sort them
-> alphabetically by manufacturer, and migrate the contents
-> of adapteva dt dindigns into Xilinx's
-> 
-> Signed-off-by: Luis Araneda <luaraneda@gmail.com>
-> ---
-> 
-> Changes since v1 (RFC):
-> - Don't remove "internal" word from Xilinx boards on dt-bindings
-> - Migrate content of adapteva dt-binding file into Xilinx's
-> - Sort additional compatible strings alphabetically
->   by manufacturer
-> 
->  .../devicetree/bindings/arm/adapteva.txt      |  7 -----
->  .../devicetree/bindings/arm/xilinx.txt        | 30 +++++++++++++++----
->  2 files changed, 25 insertions(+), 12 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/adapteva.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/adapteva.txt b/Documentation/devicetree/bindings/arm/adapteva.txt
-> deleted file mode 100644
-> index 1d8af9e36065..000000000000
-> --- a/Documentation/devicetree/bindings/arm/adapteva.txt
-> +++ /dev/null
-> @@ -1,7 +0,0 @@
-> -Adapteva Platforms Device Tree Bindings
-> ----------------------------------------
-> -
-> -Parallella board
-> -
-> -Required root node properties:
-> -    - compatible = "adapteva,parallella";
-> diff --git a/Documentation/devicetree/bindings/arm/xilinx.txt b/Documentation/devicetree/bindings/arm/xilinx.txt
-> index b9043bc35c14..26fe5ecc4332 100644
-> --- a/Documentation/devicetree/bindings/arm/xilinx.txt
-> +++ b/Documentation/devicetree/bindings/arm/xilinx.txt
-> @@ -8,18 +8,38 @@ Required root node properties:
->  
->  Additional compatible strings:
->  
-> -- Xilinx internal board cc108
-> +- Adapteva Parallella board
-> +  "adapteva,parallella"
-> +
-> +- Avnet MicroZed board
-> +  "avnet,zynq-microzed"
-> +  "xlnx,zynq-microzed"
-> +
-> +- Avnet ZedBoard board
-> +  "avnet,zynq-zed"
-> +  "xlnx,zynq-zed"
-> +
-> +- Digilent Zybo board
-> +  "digilent,zynq-zybo"
-> +
-> +- Digilent Zybo Z7 board
-> +  "digilent,zynq-zybo-z7"
-> +
-> +- Xilinx CC108 internal board
->    "xlnx,zynq-cc108"
->  
-> -- Xilinx internal board zc770 with different FMC cards
-> +- Xilinx ZC702 internal board
-> +  "xlnx,zynq-zc702"
-> +
-> +- Xilinx ZC706 internal board
-> +  "xlnx,zynq-zc706"
-> +
-> +- Xilinx ZC770 internal board, with different FMC cards
->    "xlnx,zynq-zc770-xm010"
->    "xlnx,zynq-zc770-xm011"
->    "xlnx,zynq-zc770-xm012"
->    "xlnx,zynq-zc770-xm013"
->  
-> -- Digilent Zybo Z7 board
-> -  "digilent,zynq-zybo-z7"
-> -
->  ---------------------------------------------------------------
->  
->  Xilinx Zynq UltraScale+ MPSoC Platforms Device Tree Bindings
-> 
+2018-07-09 5:12 GMT+02:00 Chiang, AlanX <alanx.chiang@intel.com>:
+> Hi Robert,
+>
+>> -----Original Message-----
+>> From: Robert P. J. Day [mailto:rpjday@crashcourse.ca]
+>> Sent: Friday, July 6, 2018 4:24 AM
+>> To: Rob Herring <robh@kernel.org>
+>> Cc: Chiang, AlanX <alanx.chiang@intel.com>; linux-i2c@vger.kernel.org; Yeh,
+>> Andy <andy.yeh@intel.com>; sakari.ailus@linux.intel.com;
+>> andriy.shevchenko@linux.intel.com; Shevchenko, Andriy
+>> <andriy.shevchenko@intel.com>; Mani, Rajmohan
+>> <rajmohan.mani@intel.com>; andy.shevchenko@gmail.com;
+>> tfiga@chromium.org; jcliang@chromium.org; brgl@bgdev.pl;
+>> mark.rutland@arm.com; arnd@arndb.de; gregkh@linuxfoundation.org;
+>> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org
+>> Subject: Re: [RESEND PATCH v4 1/2] dt-bindings: at24: Add address-width
+>> property
+>>
+>> On Thu, 5 Jul 2018, Rob Herring wrote:
+>>
+>> > On Mon, Jul 02, 2018 at 05:12:19PM +0800, alanx.chiang@intel.com wrote:
+>> > > From: Alan Chiang <alanx.chiang@intel.com>
+>> > >
+>> > > The AT24 series chips use 8-bit address by default. If some chips
+>> > > would like to support more than 8 bits, the at24 driver should be
+>> > > added the compatible field for specfic chips.
+>> > >
+>> > > Provide a flexible way to determine the addressing bits through
+>> > > address-width in this patch.
+>> > >
+>> > > Signed-off-by: Alan Chiang <alanx.chiang@intel.com>
+>> > > Signed-off-by: Andy Yeh <andy.yeh@intel.com>
+>> > > Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> > >
+>> > > ---
+>> > > since v1:
+>> > > -- Remove the address-width field in the example.
+>> > > since v2:
+>> > > -- Remove redundant space.
+>> > > since v3:
+>> > > -- Add Acked-by.
+>> > >
+>> > > ---
+>> > >  Documentation/devicetree/bindings/eeprom/at24.txt | 2 ++
+>> > >  1 file changed, 2 insertions(+)
+>> >
+>> > Reviewed-by: Rob Herring <robh@kernel.org>
+>>
+>>   "... should be added the compatible field ..."??
+>>
+>> rday
+>
+> Maybe I should modify the sentence as below that makes it clear.
+> "The compatible field should be added in the at24.c for specific chips.".
+>
+> I quote Andy's words in patch v2:
+> "The current at24 driver has no address width support, thus, reusing same
+> (allocated) IDs (non-DT case) is hard."
+>
+> This is the reason that I submitted the patch.
+>
+> Thanks
+>
 
-Please do it with more patches. There are 3 changes in one patch.
+Make it something like:
 
-Thanks,
-Michal
+Currently the only way to use a variant of a supported model with
+a different address width is to define a new compatible string and the
+corresponding chip data structure.
+
+Provide a flexible way to specify the size of the address pointer by
+defining a new property: address-width.
+
+Best regards,
+Bartosz Golaszewski
+
+>>
+>> --
+>>
+>> ==========================================================
+>> ==============
+>> Robert P. J. Day                                 Ottawa, Ontario, CANADA
+>>                   http://crashcourse.ca/dokuwiki
+>>
+>> Twitter:                                       http://twitter.com/rpjday
+>> LinkedIn:                               http://ca.linkedin.com/in/rpjday
+>> ==========================================================
+>> ==============
