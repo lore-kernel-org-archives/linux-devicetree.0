@@ -1,56 +1,71 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v11 5/8] i2c: fsi: Add transfer implementation
-Date: Tue, 10 Jul 2018 00:41:14 +0200
-Message-ID: <20180709224114.4h47enyt4tucqcou@ninjato>
-References: <1530816030-13010-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1530816030-13010-6-git-send-email-eajames@linux.vnet.ibm.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCH 1/2] ARM: dts: arria10: update NAND clocking
+Date: Mon,  9 Jul 2018 17:41:02 -0500
+Message-ID: <1531176063-30140-1-git-send-email-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4ypmot53gvpiu2yo"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1530816030-13010-6-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.vnet.ibm.com>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, benh@kernel.crashing.org, joel@jms.id.au, mark.rutland@arm.com, gregkh@linuxfoundation.org, rdunlap@infradead.org, andy.shevchenko@gmail.com, peda@axentia.se
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, marex@denx.de, yamada.masahiro@socionext.com, dinguyen@kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The NAND IP needs 2 clocks(nand_x_clk and nand_clk). This patch adds a
+nand_x_clk, which is derived from the nand_clk, but has a fixed divider
+of 4.
 
---4ypmot53gvpiu2yo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Update the NAND node to use the additional clock.
 
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+ arch/arm/boot/dts/socfpga_arria10.dtsi | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-> +	cmd |= FIELD_PREP(I2C_CMD_ADDR, msg->addr >> 1);
-
-I just noticed this and wonder: Don't you need the LSB of the address?
-It is not the RW flag, this is encoded in msg->flags.
-
-Also, no seperate handling for 10 bit addresses? Technically, 7-bit 0x50
-is different on the wire from 10-bit 0x050. This is minor, though. There
-are no 10-bit devices out there. Still, did you test 10-bit support?
-
-Rest looks good.
-
-
---4ypmot53gvpiu2yo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAltD5IoACgkQFA3kzBSg
-KbZJ6RAAoLCJ9apVqLEc7GDPJY2mLHft6olFHgNIy0dPlaZ/cNNEcbDRZusWNeU9
-x2HKAqPCEkfiCIEhvOU+BVAje54YhZyldfvbtK6pkWah4qNeTgRMeHnGLEyQU/EJ
-8ig76atDgt/NewStqm/+Rrof6W7jDY20ZWNBdN4DyIr6RFfjb9idbtjj9HgNJ+a8
-Wwptu/LwTKsYYyiHuNKl6l4UvXJcsjTqH/NO1vHaFR6nq/1yEly0CwZPzb7fse1Y
-6jNHQc9LlI+teCbZqkGYB638WUioeFkDlwgdnAyO369P/zDQfCa3RmAQ8aEOmPFu
-TTODXkF+a+28EA9fvxlxlDIYUwrY8f7LY2aIHruosXYGjBwi15tLOnS7SnXkY2MD
-SygxZGkPMabvYTLLS3xPsx5OZOC4yvFWURiIDvA34xCHvFqeoQuvIk96EoH3nC2o
-TY5TPbrZZfS65ahcZzZTRRwf1LkWpybzsy8p+8kbcR1xOCPWm/ak955BLeHSNomC
-NrZMYMSRjZ8heAFetjRoUb2pKTm8XW+DeaYkAMlYZg4yhkX+pXhazsBnaFDC5QGW
-X5nqk8/D3QjalTgHTUqDjoezvt1qi1g5QFUWHcbtKSn/RsbkL3E0d7DLvEqQagzY
-CA8Nnsj2IG1WgfRpYwbx5WQHMFCEYT6t6yz2j6LZgsAox/fa1pI=
-=/cd/
------END PGP SIGNATURE-----
-
---4ypmot53gvpiu2yo--
+diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+index a4dcb68..558b5ea 100644
+--- a/arch/arm/boot/dts/socfpga_arria10.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+@@ -377,13 +377,21 @@
+ 						clk-gate = <0xC8 11>;
+ 					};
+ 
+-					nand_clk: nand_clk {
++					nand_x_clk: nand_x_clk {
+ 						#clock-cells = <0>;
+ 						compatible = "altr,socfpga-a10-gate-clk";
+ 						clocks = <&l4_mp_clk>;
+ 						clk-gate = <0xC8 10>;
+ 					};
+ 
++					nand_clk: nand_clk {
++						#clock-cells = <0>;
++						compatible = "altr,socfpga-a10-gate-clk";
++						clocks = <&nand_x_clk>;
++						fixed-divider = <4>;
++						clk-gate = <0xC8 10>;
++					};
++
+ 					spi_m_clk: spi_m_clk {
+ 						#clock-cells = <0>;
+ 						compatible = "altr,socfpga-a10-gate-clk";
+@@ -650,7 +658,8 @@
+ 			reg-names = "nand_data", "denali_reg";
+ 			interrupts = <0 99 4>;
+ 			dma-mask = <0xffffffff>;
+-			clocks = <&nand_clk>;
++			clocks = <&nand_clk>, <&nand_x_clk>;
++			clock-names = "nand", "nand_x";
+ 			status = "disabled";
+ 		};
+ 
+-- 
+2.7.4
