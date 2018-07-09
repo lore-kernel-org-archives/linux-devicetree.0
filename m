@@ -1,103 +1,56 @@
-Return-Path: <SRS0=klVN=JU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wm0-f65.google.com ([74.125.82.65]:38519 "EHLO
-        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932363AbeGDIik (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Jul 2018 04:38:40 -0400
-From: Peter Robinson <pbrobinson@gmail.com>
-Subject: [PATCH] ARM: dts: pandaboard: add gpio user button
-Date: Wed,  4 Jul 2018 09:37:38 +0100
-Message-Id: <20180704083738.32452-1-pbrobinson@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Peter Robinson <pbrobinson@gmail.com>
+Return-Path: <SRS0=sZ+Y=JZ=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <20180706085508.30791-1-geert+renesas@glider.be> <d72596f7-e03f-26c4-742b-face854a00c9@roeck-us.net>
+In-Reply-To: <d72596f7-e03f-26c4-742b-face854a00c9@roeck-us.net>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 9 Jul 2018 08:43:33 +0200
+Message-ID: <CAMuHMdUV9kRHs9TxOEyhrWAVzDf5SBN8qiF7pysys29-_wCDbg@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: watchdog: renesas-wdt: Add support for
+ the R8A77990 wdt
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The PandaBoard has a user button connected to GPIO. On the ES this is connected
-to GPIO 113, on all the other Panda editons this is GPIO 121.
+Hi G=C3=BCnter,
 
-Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
----
- arch/arm/boot/dts/omap4-panda-common.dtsi | 22 ++++++++++++++++++++++
- arch/arm/boot/dts/omap4-panda-es.dts      | 12 ++++++++++++
- 2 files changed, 34 insertions(+)
+On Mon, Jul 9, 2018 at 12:43 AM Guenter Roeck <linux@roeck-us.net> wrote:
+> On 07/06/2018 01:55 AM, Geert Uytterhoeven wrote:
+> > From: Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>
+> >
+> > Document support for the Watchdog Timer (WDT) Controller in the Renesas
+> > R-Car E3 (R8A77990) SoC.
+> >
+> > No driver update is needed.
+> >
+> > Signed-off-by: Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> > Acked-by: Rob Herring <robh@kernel.org>
+>
+> The patch is queued in my tree, so there should be no need to resend it a=
+nymore.
 
-diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
-index 5501d1b4e6cdf..9be08db960feb 100644
---- a/arch/arm/boot/dts/omap4-panda-common.dtsi
-+++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
-@@ -5,6 +5,7 @@
-  * it under the terms of the GNU General Public License version 2 as
-  * published by the Free Software Foundation.
-  */
-+#include <dt-bindings/input/input.h>
- #include "elpida_ecb240abacn.dtsi"
- 
- / {
-@@ -43,6 +44,21 @@
- 		};
- 	};
- 
-+	gpio_keys: gpio_keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <
-+			&button_pins
-+		>;
-+
-+		buttonS2 {
-+			label = "button S2";
-+			gpios = <&gpio4 25 GPIO_ACTIVE_LOW>;	/* gpio_121 */
-+			linux,code = <BTN_0>;
-+			wakeup-source;
-+		};
-+	};
-+
- 	sound: sound {
- 		compatible = "ti,abe-twl6040";
- 		ti,model = "PandaBoard";
-@@ -357,6 +373,12 @@
- 			OMAP4_IOPAD(0x152, PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc5_dat3.sdmmc5_dat3 */
- 		>;
- 	};
-+
-+	button_pins: pinmux_button_pins {
-+		pinctrl-single,pins = <
-+			OMAP4_IOPAD(0x114, PIN_INPUT_PULLUP | MUX_MODE3)	/* gpio_121 */
-+		>;
-+	};
- };
- 
- &omap4_pmx_wkup {
-diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts/omap4-panda-es.dts
-index 940fe4f7c5f6e..984f642639fab 100644
---- a/arch/arm/boot/dts/omap4-panda-es.dts
-+++ b/arch/arm/boot/dts/omap4-panda-es.dts
-@@ -46,6 +46,12 @@
- 			OMAP4_IOPAD(0x0f6, PIN_OUTPUT | MUX_MODE3)	/* gpio_110 */
- 		>;
- 	};
-+
-+	button_pins: pinmux_button_pins {
-+		pinctrl-single,pins = <
-+			OMAP4_IOPAD(0x11b, PIN_INPUT_PULLUP | MUX_MODE3) /* gpio_113 */
-+		>;
-+	};
- };
- 
- &led_wkgpio_pins {
-@@ -68,6 +74,12 @@
- 	};
- };
- 
-+&gpio_keys {
-+	buttonS2 {
-+		gpios = <&gpio4 17 GPIO_ACTIVE_LOW>; /* gpio_113 */
-+	};
-+};
-+
- &gpio1 {
- 	 ti,no-reset-on-init;
- };
--- 
-2.17.1
+Thank you, I wasn't aware of that. Your last reply was "it doesn't apply",
+and the patch is not in linux-watchdog-next.git.
 
+Aha, it's in your linux-staging.git#watchdog-next.
+Perhaps that should be documented in MAINTAINERS, and be included in
+linux-next, too?
+
+BTW, the git links on https://linux-watchdog.org/ give 404.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
