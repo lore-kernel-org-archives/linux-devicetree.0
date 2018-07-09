@@ -1,87 +1,68 @@
 Return-Path: <SRS0=UTzV=JZ=atomide.com=tony@kernel.org>
 From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 5/5] ARM: dts: omap4: Add l4 ranges for 4460
-Date: Sun,  8 Jul 2018 23:36:12 -0700
-Message-Id: <20180709063612.12025-6-tony@atomide.com>
+Subject: [PATCH 3/5] ARM: dts: omap4: Probe watchdog 3 with ti-sysc
+Date: Sun,  8 Jul 2018 23:36:10 -0700
+Message-Id: <20180709063612.12025-4-tony@atomide.com>
 In-Reply-To: <20180709063612.12025-1-tony@atomide.com>
 References: <20180709063612.12025-1-tony@atomide.com>
 To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Compared to 4430, 4460 and 4470 just have slightly different
-l4 cfg ranges.
+Before updating wdt2 to probe with ti-sysc we want to have wdt3
+probed with ti-sysc to avoid having them unnecessarily swap order.
 
+With ti-sysc, we probe child devices at module_init time while
+and until l4 abe interconnect is converted to use ti-sysc, wdt3
+will probe earlier with legacy platform data.
+
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- arch/arm/boot/dts/omap4-l4.dtsi |  4 ++--
- arch/arm/boot/dts/omap4460.dtsi | 36 +++++++++++++++++++++++++++++++++
- 2 files changed, 38 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/omap4.dtsi | 31 ++++++++++++++++++++++++++-----
+ 1 file changed, 26 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap4-l4.dtsi b/arch/arm/boot/dts/omap4-l4.dtsi
---- a/arch/arm/boot/dts/omap4-l4.dtsi
-+++ b/arch/arm/boot/dts/omap4-l4.dtsi
-@@ -888,7 +888,7 @@
- 		#size-cells = <1>;
- 	};
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -787,12 +787,33 @@
+ 			ti,hwmods = "wd_timer2";
+ 		};
  
--	segment@300000 {					/* 0x4a300000 */
-+	l4_cfg_segment_300000: segment@300000 {			/* 0x4a300000 */
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -904,7 +904,7 @@
- 			 <0x0002a000 0x0032a000 0x002000>,	/* ap 90 */
- 			 <0x0002c000 0x0032c000 0x004000>;	/* ap 91 */
- 
--		target-module@0 {			/* 0x4a300000, ap 67 14.0 */
-+		l4_cfg_target_0: target-module@0 {	/* 0x4a300000, ap 67 14.0 */
- 			compatible = "ti,sysc";
- 			status = "disabled";
- 			#address-cells = <1>;
-diff --git a/arch/arm/boot/dts/omap4460.dtsi b/arch/arm/boot/dts/omap4460.dtsi
---- a/arch/arm/boot/dts/omap4460.dtsi
-+++ b/arch/arm/boot/dts/omap4460.dtsi
-@@ -92,4 +92,40 @@
- 	coefficients = <348 (-9301)>;
- };
- 
-+/* Only some L4 CFG interconnect ranges are different on 4460 */
-+&l4_cfg_segment_300000 {
-+	ranges = <0x00000000 0x00300000 0x020000>,	/* ap 67 */
-+		 <0x00040000 0x00340000 0x001000>,	/* ap 68 */
-+		 <0x00020000 0x00320000 0x004000>,	/* ap 71 */
-+		 <0x00024000 0x00324000 0x002000>,	/* ap 72 */
-+		 <0x00026000 0x00326000 0x001000>,	/* ap 73 */
-+		 <0x00027000 0x00327000 0x001000>,	/* ap 74 */
-+		 <0x00028000 0x00328000 0x001000>,	/* ap 75 */
-+		 <0x00029000 0x00329000 0x001000>,	/* ap 76 */
-+		 <0x00030000 0x00330000 0x010000>,	/* ap 77 */
-+		 <0x0002a000 0x0032a000 0x002000>,	/* ap 90 */
-+		 <0x0002c000 0x0032c000 0x004000>,	/* ap 91 */
-+		 <0x00010000 0x00310000 0x008000>,	/* ap 92 */
-+		 <0x00018000 0x00318000 0x004000>,	/* ap 93 */
-+		 <0x0001c000 0x0031c000 0x002000>,	/* ap 94 */
-+		 <0x0001e000 0x0031e000 0x002000>;	/* ap 95 */
-+};
+-		wdt3: wdt@40130000 {
+-			compatible = "ti,omap4-wdt", "ti,omap3-wdt";
+-			reg = <0x40130000 0x80>, /* MPU private access */
+-			      <0x49030000 0x80>; /* L3 Interconnect */
+-			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
++		target-module@40130000 {
++			compatible = "ti,sysc-omap2", "ti,sysc";
+ 			ti,hwmods = "wd_timer3";
++			reg = <0x40130000 0x4>,
++			      <0x40130010 0x4>,
++			      <0x40130014 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			ti,sysc-mask = <(SYSC_OMAP2_EMUFREE |
++					 SYSC_OMAP2_SOFTRESET)>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>,
++					<SYSC_IDLE_SMART_WKUP>;
++			ti,syss-mask = <1>;
++			/* Domains (V, P, C): abe, abe_pwrdm, abe_clkdm */
++			clocks = <&abe_clkctrl OMAP4_WD_TIMER3_CLKCTRL 0>;
++			clock-names = "fck";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x00000000 0x40130000 0x1000>, /* MPU private access */
++				 <0x49030000 0x49030000 0x0080>; /* L3 Interconnect */
 +
-+&l4_cfg_target_0 {
-+	ranges = <0x00000000 0x00000000 0x00010000>,
-+		 <0x00010000 0x00010000 0x00008000>,
-+		 <0x00018000 0x00018000 0x00004000>,
-+		 <0x0001c000 0x0001c000 0x00002000>,
-+		 <0x0001e000 0x0001e000 0x00002000>,
-+		 <0x00020000 0x00020000 0x00004000>,
-+		 <0x00024000 0x00024000 0x00002000>,
-+		 <0x00026000 0x00026000 0x00001000>,
-+		 <0x00027000 0x00027000 0x00001000>,
-+		 <0x00028000 0x00028000 0x00001000>,
-+		 <0x00029000 0x00029000 0x00001000>,
-+		 <0x0002a000 0x0002a000 0x00002000>,
-+		 <0x0002c000 0x0002c000 0x00004000>,
-+		 <0x00030000 0x00030000 0x00010000>;
-+};
-+
- /include/ "omap446x-clocks.dtsi"
++			wdt3: wdt@0 {
++				compatible = "ti,omap4-wdt", "ti,omap3-wdt";
++				reg = <0x0 0x80>;
++				interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
++			};
+ 		};
+ 
+ 		mcpdm: mcpdm@40132000 {
 -- 
 2.17.1
