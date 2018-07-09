@@ -1,670 +1,215 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/2] ARM: dts: pxa: add mioa701 board description
-Date: Mon, 9 Jul 2018 12:00:26 -0600
-Message-ID: <CAL_JsqJU2jyfN3PyvXRCTO4xXQmUbU3tJ0uLok10KONULpJwXg@mail.gmail.com>
-References: <20180702055733.18578-1-robert.jarzmik@free.fr> <20180702055733.18578-2-robert.jarzmik@free.fr>
+Subject: Re: [PATCH 21/21] arm64: dts: qcom: sdm845: Add dpu to sdm845 dts file
+Date: Mon, 9 Jul 2018 12:07:11 -0600
+Message-ID: <CAL_Jsq+OnWnJ2BtTOKfiAHRF=xuKhLJqtROYc5Er-n56PxTBLA@mail.gmail.com>
+References: <20180709173200.238457-1-seanpaul@chromium.org>
+ <20180709173200.238457-22-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180702055733.18578-2-robert.jarzmik@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: Mark Rutland <mark.rutland@arm.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180709173200.238457-22-seanpaul@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sean Paul <seanpaul@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, David Brown <david.brown@linaro.org>, "Kristian H. Kristensen" <hoegsberg@chromium.org>, chandanu@codeaurora.org, Andy Gross <andy.gross@linaro.org>, dovizu@chromium.org, devicetree@vger.kernel.org, ryadav@codeaurora.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, abhinavk@codeaurora.org, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, freedreno <freedreno@lists.freedesktop.org>, Sravanthi Kollukuduru <skolluku@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 1, 2018 at 11:58 PM Robert Jarzmik <robert.jarzmik@free.fr> wrote:
->
-> Add device-tree description of the Mitac MIO A701 board.
-> This is aimed at replacing mioa701.c board file, and once stabilized,
-> the leftover, such as the suspend resume mechanics will rely on a new
-> IPL, and not the legacy Windows CE one.
->
-> Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
-> ---
-> This patch deserves some special "love review". As it will probably
-> serve for a more broad pxa conversion to devicetree of the other boards,
-> and because it touches almost all domains for a pxa platform (camera,
-> video, audio, i2c, ...), it should be as clean as possible so that
-> mistakes are not carried on ...
->
-> Therefore I expect the review of this one to be long (ie. it won't land
-> for v4.19), until it looks good enough.
-> ---
->  arch/arm/boot/dts/Makefile    |   1 +
->  arch/arm/boot/dts/mioa701.dts | 565 ++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 566 insertions(+)
->  create mode 100644 arch/arm/boot/dts/mioa701.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 37a3de760d40..6b12ab50c8d1 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -756,6 +756,7 @@ dtb-$(CONFIG_ARCH_PRIMA2) += \
->  dtb-$(CONFIG_ARCH_OXNAS) += \
->         ox810se-wd-mbwe.dtb \
->         ox820-cloudengines-pogoplug-series-3.dtb
-> +dtb-$(CONFIG_ARCH_PXA) += mioa701.dtb
->  dtb-$(CONFIG_ARCH_QCOM) += \
->         qcom-apq8060-dragonboard.dtb \
->         qcom-apq8064-arrow-sd-600eval.dtb \
-> diff --git a/arch/arm/boot/dts/mioa701.dts b/arch/arm/boot/dts/mioa701.dts
-> new file mode 100644
-> index 000000000000..680e0e44d526
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/mioa701.dts
-> @@ -0,0 +1,565 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + *  Copyright (C) 2018 Robert Jarzmik <robert.jarzmik@free.fr>
-> + *
-> + *  This program is free software; you can redistribute it and/or modify
-> + *  it under the terms of the GNU General Public License version 2 as
-> + *  publishhed by the Free Software Foundation.
-> + */
-> +
-> +/dts-v1/;
-> +#include "pxa27x.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/clock/pxa-clock.h>
-> +
-> +/ {
-> +       model = "Mitac Mio A701 Board";
-> +       /* compatible = "mitac,mioa701"; */
-> +       compatible = "marvell,pxa270";
-
-Why the comment?
-
-> +
-> +       chosen {
-> +               bootargs = "mtdparts=docg3.0:256k@3456k(barebox)ro,256k(barebox-logo),128k(barebox-env),4M(kernel),-(root) ubi.mtd=4 rootfstype=ubifs root=ubi0:linux_root ro";
-> +       };
-> +
-> +       memory {
-> +               reg = <0xa0000000 0x04000000>;
-> +
-> +               reserved-memory {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +
-> +                       pstore_region:region@0xa2000000 {
-
-Drop the 0x
-
-> +                               compatible = "linux,contiguous-memory-region";
-> +                               reg = <0xa2000000 1048576>;
-
-Use hex for the size.
-
-> +                       };
-> +               };
-> +       };
-> +
-> +       cpus {
-> +               cpu {
-> +                       cpu-supply = <&vcc_core>;
-> +               };
-> +       };
-> +
-> +       pxabus {
-> +               pinctrl: pinctrl@40e00000 {
-> +                       status = "okay";
-> +                       pinctrl_ac97_default: ac97-default {
-> +                               PMMUX(hpjack-detect, 12, gpio_in);
-> +                               PMMUX(ac97-bitclk, 28, AC97_BITCLK);
-> +                               PMMUX(ac97-sdata-in-0, 29, AC97_SDATA_IN_0);
-> +                               PMMUX(ac97-sdata-out, 30, AC97_SDATA_OUT);
-> +                               PMMUX(ac97-sync, 31, AC97_SYNC);
-> +                               PMMUX(ac97-sysclk, 89, AC97_SYSCLK);
-> +                       };
-> +                       pinctrl_btuart_default: btuart-default {
-> +                               PMMUX(btuart-nactivity, 14, gpio_in);
-> +                               PMMUX(btuart-rxd, 42, BTRXD);
-> +                               PMMUX(btuart-txd, 43, BTTXD);
-> +                               PMMUX(btuart-cts, 44, BTCTS);
-> +                               PMMUX(btuart-rts, 45, BTRTS);
-> +                               PMMUX_LPM_LOW(bt-on, 83, gpio_out);
-> +                               PMMUX_LPM_HIGH(bt-unknown, 77, gpio_out);
-> +                               PMMUX_LPM_HIGH(bt-nreset, 86, gpio_out);
-> +                       };
-> +                       pinctrl_ffuart_default: ffuart-default {
-> +                               PMMUX(ffuart-rxd, 34, FFRXD);
-> +                               PMMUX(ffuart-cts, 35, FFCTS);
-> +                               PMMUX(ffuart-dcd, 36, FFDCD);
-> +                               PMMUX(ffuart-dsr, 37, FFDSR);
-> +                               PMMUX(ffuart-txd, 39, FFTXD);
-> +                               PMMUX(ffuart-dtr, 40, FFDTR);
-> +                               PMMUX(ffuart-rts, 41, FFRTS);
-> +                               PMMUX_LPM_LOW(gsm-reset, 24, gpio_out);
-> +                               PMMUX(gsm-is-on, 25, gpio_in);
-> +                               PMMUX_LPM_HIGH(gsm-nset-on, 88, gpio_out);
-> +                               PMMUX_LPM_HIGH(gsm-nset-off, 90, gpio_out);
-> +                               PMMUX(gsm-event-available, 113, gpio_in);
-> +                               PMMUX_LPM_HIGH(gsm-dte-state, 114, gpio_out);
-> +                       };
-> +                       pinctrl_gpiokeys_default: gpiokeys-default {
-> +                               PMMUX(key-power, 0, gpio_in);
-> +                               PMMUX(key-volume_up, 93, gpio_in);
-> +                               PMMUX(key-volume_down, 94, gpio_in);
-> +                       };
-> +                       pinctrl_keypad_default: keypad-default {
-> +                               PMMUX(keypad-mkin0, 100, KP_MKIN<0>);
-> +                               PMMUX(keypad-mkin1, 101, KP_MKIN<1>);
-> +                               PMMUX(keypad-mkin2, 102, KP_MKIN<2>);
-> +                               PMMUX(keypad-mkout0, 103, KP_MKOUT<0>);
-> +                               PMMUX(keypad-mkout1, 104, KP_MKOUT<1>);
-> +                               PMMUX(keypad-mkout2, 105, KP_MKOUT<2>);
-> +                       };
-> +                       pinctrl_i2c_default: i2c-default {
-> +                               PMMUX(i2c-scl, 117, SCL);
-> +                               PMMUX(i2c-sda, 118, SDA);
-> +                       };
-> +                       pinctrl_lcd_default: lcd-default {
-> +                               PMMUX(ldd0, 58, LDD<0>);
-> +                               PMMUX(ldd1, 59, LDD<1>);
-> +                               PMMUX(ldd2, 60, LDD<2>);
-> +                               PMMUX(ldd3, 61, LDD<3>);
-> +                               PMMUX(ldd4, 62, LDD<4>);
-> +                               PMMUX(ldd5, 63, LDD<5>);
-> +                               PMMUX(ldd6, 64, LDD<6>);
-> +                               PMMUX(ldd7, 65, LDD<7>);
-> +                               PMMUX(ldd8, 66, LDD<8>);
-> +                               PMMUX(ldd9, 67, LDD<9>);
-> +                               PMMUX(ldd10, 68, LDD<10>);
-> +                               PMMUX(ldd11, 69, LDD<11>);
-> +                               PMMUX(ldd12, 70, LDD<12>);
-> +                               PMMUX(ldd13, 71, LDD<13>);
-> +                               PMMUX(ldd14, 72, LDD<14>);
-> +                               PMMUX(ldd16, 73, LDD<15>);
-> +                               PMMUX(lcd-fclk, 74, L_FCLK_RD);
-> +                               PMMUX(lcd-lclk, 75, L_LCLK_A0);
-> +                               PMMUX(lcd-pclk, 76, L_PCLK_WR);
-> +                               PMMUX(lcd-power, 87, gpio_out);
-> +                       };
-> +                       pinctrl_leds_default: leds-default {
-> +                               PMMUX_LPM_HIGH(led-charging, 10, gpio_out);
-> +                               PMMUX_LPM_HIGH(led-vibra, 82, gpio_out);
-> +                               PMMUX_LPM_HIGH(led-blue, 97, gpio_out);
-> +                               PMMUX_LPM_HIGH(led-orange, 98, gpio_out);
-> +                               PMMUX_LPM_HIGH(led-keyboard, 115, gpio_out);
-> +                       };
-> +                       pinctrl_pwm0_default: pwm0-defaut {
-> +                               PMMUX(pwm0, 16, PWM_OUT<0>);
-> +                       };
-> +                       pinctrl_qci_default: qci-defaut {
-> +                               PMMUX(cif-dd6, 17, CIF_DD<6>);
-> +                               PMMUX(cif-dd3, 50, CIF_DD<3>);
-> +                               PMMUX(cif-dd2, 51, CIF_DD<2>);
-> +                               PMMUX(cif-dd4, 52, CIF_DD<4>);
-> +                               PMMUX(cif-mclk, 53, CIF_MCLK);
-> +                               PMMUX(cif-pclk, 54, CIF_PCLK);
-> +                               PMMUX_LPM_HIGH(mt9m111-nOE, 56, gpio_out);
-> +                               PMMUX(cif-dd1, 55, CIF_DD<1>);
-> +                               PMMUX(cif-dd0, 81, CIF_DD<0>);
-> +                               PMMUX(cif-dd5, 48, CIF_DD<5>);
-> +                               PMMUX(cif-fv, 84, CIF_FV);
-> +                               PMMUX(cif-lv, 85, CIF_LV);
-> +                               PMMUX(cif-dd7, 108, CIF_DD<7>);
-> +                       };
-> +                       pinctrl_mmc_default: mmc-default {
-> +                               PMMUX(sd-insert, 15, gpio_in);
-> +                               PMMUX(mmclk, 32, MMCLK);
-> +                               PMMUX(sd-ro, 78, gpio_in);
-> +                               PMMUX_LPM_LOW(sd-enable, 91, gpio_out);
-> +                               PMMUX(mmdat0, 92, MMDAT<0>);
-> +                               PMMUX(mmdat1, 109, MMDAT<1>);
-> +                               PMMUX(mmdat2, 110, MMDAT<2>);
-> +                               PMMUX(mmdat3, 111, MMDAT<3>);
-> +                               PMMUX(mmcmd, 112, MMCMD);
-> +                       };
-> +                       pinctrl_stuart_default: stuart-default {
-> +                               PMMUX_LPM_LOW(gps-unknown1, 23, gpio_out);
-> +                               PMMUX_LPM_LOW(gps-on, 26, gpio_out);
-> +                               PMMUX_LPM_LOW(gps-nreset, 27, gpio_out);
-> +                               PMMUX(stuart-rxd, 46, STRXD);
-> +                               PMMUX(stuart-txd, 47, STTXD);
-> +                               PMMUX_LPM_LOW(gps-unknown2, 106, gpio_out);
-> +                               PMMUX_LPM_LOW(gps-unknown3, 107, gpio_out);
-> +                       };
-> +                       pinctrl_usb_default: usb-default {
-> +                               PMMUX(n-usb-detect, 13, gpio_in);
-> +                               PMMUX_LPM_LOW(n-dplus-pullup, 22, gpio_out);
-> +                       };
-> +                       pinctrl_power_default: power-default {
-> +                               PMMUX_LPM_LOW(charge-enable, 9, gpio_out);
-> +                               PMMUX(charge-vdrop, 80, gpio_out);
-> +                               PMMUX(ac-detect, 96, gpio_in);
-> +                       };
-> +               };
-> +
-> +               pwm0: pwm@40b00000 {
-> +                     status = "okay";
-> +               };
-> +
-> +               gpio: gpio@40e00000 {
-> +                       status = "okay";
-> +               };
-> +
-> +               ffuart: uart@40100000 {
-
-Should be "serial@...". You'll have to fix in the base dtsi.
-
-> +                       pinctrl-names = "default";
-> +                       pinctrl-0 = <&pinctrl_ffuart_default>;
-> +                       status = "okay";
-> +               };
-> +
-> +               btuart: uart@40200000 {
-
-ditto
-
-> +                       pinctrl-names = "default";
-> +                       pinctrl-0 = <&pinctrl_btuart_default>;
-> +                       status = "okay";
-> +               };
-> +
-> +               stuart: uart@40700000 {
-
-ditto
-
-> +                       status = "okay";
-> +               };
-> +
-> +               usb2phy: gpio-vbus@13 {
-> +                       compatible = "usb-nop-xceiv";
-> +                       #phy-cells = <1>;
-> +                       vbus-detect-gpio = <&gpio 13 GPIO_ACTIVE_LOW>;
-> +                       wakeup;
-> +               };
-> +
-> +               pxa27x_udc: udc@40600000 {
-> +                       status = "okay";
-> +                       gpios = <&gpio 22 0>;
-> +                       phys = <&usb2phy>;
-> +                       phys-names = "usb2phy";
-> +                       pinctrl-names = "default";
-> +                       pinctrl-0 = <&pinctrl_usb_default>;
-> +               };
-> +
-> +               pwri2c: i2c@40f000180 {
-> +                       status = "okay";
-> +
-> +                       core_regulator@14 {
-> +                               compatible = "maxim,max1586";
-> +                               reg = <0x14>;
-> +                               v3-gain = <1000000>;
-> +
-> +                               regulators {
-> +                                       vcc_core: v3 {
-> +                                               regulator-name = "vcc_core";
-> +                                               regulator-compatible = "Output_V3";
-> +                                               regulator-min-microvolt = <1000000>;
-> +                                               regulator-max-microvolt = <1705000>;
-> +                                               regulator-always-on;
-> +                                       };
-> +                               };
-> +                       };
-> +               };
-> +
-> +               pxai2c1: i2c@40301680 {
-> +                       mrvl,i2c-fast-mode;
-> +                       pinctrl-names = "default";
-> +                       pinctrl-0 = <&pinctrl_i2c_default>;
-> +                       status = "okay";
-> +
-> +                       mt9m111: camera@5d {
-> +                               compatible = "micron,mt9m111";
-> +                               reg = <0x5d>;
-> +                               gpios = <&gpio 56 GPIO_ACTIVE_HIGH>;
-> +
-> +                               remote = <&pxa_camera>;
-
-Not needed with the graph:
-
-> +                               port {
-> +                                       mt9m111_1: endpoint {
-> +                                               bus-width = <8>;
-> +                                               remote-endpoint = <&pxa_camera>;
-> +                                       };
-> +                               };
-> +                       };
-> +               };
-> +
-> +               keypad: keypad@41500000 {
-> +                       status = "okay";
-> +
-> +                       keypad,num-rows = <3>;
-> +                       keypad,num-columns = <3>;
-> +                       linux,keymap = <
-> +                               0x00000067      /* KEY_UP */
-> +                               0x0001006a      /* KEY_RIGHT */
-> +                               0x000200e2      /* KEY_MEDIA */
-> +                               0x0100006c      /* KEY_DOWN */
-> +                               0x0101001c      /* KEY_ENTER */
-> +                               0x010200da      /* KEY_CONNECT */
-> +                               0x02000069      /* KEY_LEFT */
-> +                               0x020100a9      /* KEY_PHONE */
-> +                               0x020200d4>;    /* KEY_CAMERA */
-> +                       marvell,debounce-interval = <0>;
-> +
-> +                       pinctrl-names = "default";
-> +                       pinctrl-0 = <&pinctrl_keypad_default>;
-> +               };
-> +
-> +               gpio-keys {
-> +                       compatible = "gpio-keys";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       autorepeat;
-> +                       pinctrl-names = "default";
-> +                       pinctrl-0 = <&pinctrl_gpiokeys_default>;
-> +                       status = "okay";
-
-Don't need status here? It shouldn't be defined in the base dtsi.
-
-> +
-> +                       button@0 {
-
-If you have unit-address there should also be a reg property. Just
-drop and name the node 'power' or 'power-button'. And similarly for
-the rest.
-
-> +                               label = "GPIO Key Power";
-> +                               linux,code = <174>;
-> +                               gpios = <&gpio 0 0>;
-> +                               gpio-key,wakeup;
-> +                       };
-> +                       button@12 {
-> +                               label = "HP jack detect";
-> +                               linux,code = <211>;
-> +                               gpios = <&gpio 12 0>;
-> +                       };
-> +                       button@93 {
-> +                               label = "Volume Up Key";
-> +                               linux,code = <115>;
-> +                               gpios = <&gpio 93 0>;
-> +                       };
-> +                       button@94 {
-> +                               label = "Volume Down Key";
-> +                               linux,code = <114>;
-> +                               gpios = <&gpio 94 0>;
-> +                       };
-> +               };
-> +
-> +               mmc0: mmc@41100000 {
-> +                       vmmc-supply = <&reg_vmmc>;
-> +                       pinctrl-names = "default";
-> +                       pinctrl-0 = <&pinctrl_mmc_default>;
-> +                       bus-width = <4>;
-> +                       cd-gpios = <&gpio 15 0>;
-> +                       wp-gpios = <&gpio 78 0>;
-> +                       status = "okay";
-> +               };
-> +
-> +               pxa_camera: imaging@50000000 {
-> +                       status = "okay";
-> +                       pinctrl-names = "default";
-> +                       pinctrl-0 = <&pinctrl_qci_default>;
-> +
-> +                       port {
-> +                               #address-cells = <1>;
-> +                               #size-cells = <0>;
-> +
-> +                               /* Parallel bus endpoint */
-> +                               qci: endpoint@0 {
-> +                                       reg = <0>;
-> +                                       remote-endpoint = <&mt9m111_1>;
-> +                                       bus-width = <8>;
-> +
-> +                                       hsync-active = <0>;
-> +                                       vsync-active = <0>;
-> +                                       pclk-sample = <1>;
-> +                               };
-> +                       };
-> +               };
-> +
-> +               rtc@40900000 {
-> +                       status = "okay";
-> +               };
-> +
-> +               lcd-controller@40500000 {
-> +                       pinctrl-names = "default";
-> +                       pinctrl-0 = <&pinctrl_lcd_default>;
-> +                       status = "okay";
-> +                       port {
-> +                               lcdc_out: endpoint {
-> +                                       remote-endpoint = <&panel_in>;
-> +                                       bus-width = <16>;
-> +                               };
-> +                       };
-> +               };
-> +
-> +               ac97: sound@40500000 {
-> +                       compatible = "marvell,pxa270-ac97";
-> +                       reg = < 0x40500000 0x1000 >;
-> +                       interrupts = <14>;
-> +                       reset-gpios = <&gpio 95 GPIO_ACTIVE_HIGH>;
-> +                       pinctrl-names = "default";
-> +                       pinctrl-0 = < &pinctrl_ac97_default >;
-> +                       clocks = <&clks CLK_AC97>, <&clks CLK_AC97CONF>;
-> +                       clock-names = "AC97CLK", "AC97CONFCLK";
-> +                       dmas = <&pdma 8 0
-> +                               &pdma 9 0
-> +                               &pdma 10 0
-> +                               &pdma 11 0
-> +                               &pdma 12 0>;
-> +                       dma-names = "pcm_pcm_mic_mono", "pcm_pcm_aux_mono_in",
-> +                                   "pcm_pcm_aux_mono_out", "pcm_pcm_stereo_in",
-> +                                   "pcm_pcm_stereo_out";
-> +
-> +                       #sound-dai-cells = <0>;
-> +
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       wm9713: audio-codec@0 {
-> +                               reg = <0>;
-> +                               compatible = "ac97,574d,4c13";
-> +                               clocks = <&wm9713_bitclk>;
-> +                               clock-names = "ac97_clk";
-> +                               #sound-dai-cells = <0>;
-> +
-> +                               wm9713_bitclk: ac97_bitclk {
-> +                                       compatible = "fixed-clock";
-> +                                       #clock-cells = <0>;
-> +                                       clock-frequency = <12285000>;
-> +                                       status = "okay";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               pxa_pcm_audio: snd_soc_pxa_audio {
-> +                       compatible = "mrvl,pxa-pcm-audio";
-> +                       #sound-dai-cells = <0>;
-> +                       status = "okay";
-> +               };
-> +
-> +               lcd-controller@40500000 {
-> +                       lcd-supply = <&lcd_vmmc>;
-> +               };
-> +       };
-> +
-> +       regulators {
-> +               compatible = "simple-bus";
-
-Drop this and move children to the top level. This is not an mmio bus.
-
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               reg_vmmc: regulator@0 {
-> +                       compatible = "regulator-fixed";
-> +                       regulator-name = "vmmc";
-> +                       regulator-min-microvolt = <3300000>;
-> +                       regulator-max-microvolt = <3300000>;
-> +
-> +                       gpio = <&gpio 91 GPIO_ACTIVE_HIGH>;
-> +                       enable-active-high;
-> +               };
-> +
-> +               lcd_vmmc: regulator@1 {
-> +                       compatible = "regulator-fixed";
-> +                       regulator-name = "lcd-supply";
-> +                       regulator-min-microvolt = <3300000>;
-> +                       regulator-max-microvolt = <3300000>;
-> +                       regulator-boot-on;
-> +
-> +                       gpio = <&gpio 87 GPIO_ACTIVE_HIGH>;
-> +                       enable-active-high;
-> +               };
-> +       };
-> +
-> +       backlight {
-> +               compatible = "pwm-backlight";
-> +               pwms = <&pwm0 4096000>;
-> +               pwm-names = "backlight";
-> +
-> +               brightness-levels = <0 4 8 16 32 64 128 255>;
-> +               default-brightness-level = <2>;
-> +
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_pwm0_default>;
-> +       };
-> +
-> +       docg3: flash@0 {
-
-This probably should be a child of the bus controller.
-
-> +               compatible = "m-systems,diskonchip-g3";
-> +               reg = <0x0 0x2000>;
-> +       };
-> +
-> +       panel {
-> +               compatible = "toshiba,ltm0305a776";
-> +               lcd-type = "color-tft";
-
-This should be implied by the compatible.
-
-> +
-> +               power-supply = <&lcd_supply>;
-> +               backlight = <&lcd_backlight>;
-> +
-> +               port {
-> +                       panel_in: endpoint {
-> +                               remote-endpoint = <&lcdc_out>;
-> +                       };
-> +               };
-> +
-> +               display-timings {
-> +                       native-mode = <&timing0>;
-
-We generally imply this from the compatible (i.e. use simple-panel).
-
-> +                       timing0: 240p {
-> +                               /* 240x320p24 */
-> +                               clock-frequency = <4545000>;
-> +                               hactive = <240>;
-> +                               vactive = <320>;
-> +                               hfront-porch = <4>;
-> +                               hback-porch = <6>;
-> +                               hsync-len = <4>;
-> +                               vback-porch = <5>;
-> +                               vfront-porch = <3>;
-> +                               vsync-len = <2>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       leds {
-> +               compatible = "gpio-leds";
-> +
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_leds_default>;
-> +
-> +               charger-led {
-> +                       label = "mioa701:charging";
-> +                       gpios = <&gpio 10 GPIO_ACTIVE_LOW>;
-> +                       default-state = "off";
-> +               };
-> +
-> +               vibrator {
-> +                       label = "mioa701:vibra";
-> +                       gpios = <&gpio 82 GPIO_ACTIVE_LOW>;
-> +                       default-state = "off";
-> +               };
-> +
-> +               bluetooth-led {
-> +                       label = "mioa701:blue";
-> +                       gpios = <&gpio 97 GPIO_ACTIVE_LOW>;
-> +                       default-state = "off";
-> +               };
-> +
-> +               orange-led {
-> +                       label = "mioa701:orange";
-> +                       gpios = <&gpio 98 GPIO_ACTIVE_LOW>;
-> +                       default-state = "off";
-> +               };
-> +
-> +               keyboard-led {
-> +                       label = "mioa701:keyboard";
-> +                       gpios = <&gpio 115 GPIO_ACTIVE_LOW>;
-> +                       default-state = "off";
-> +               };
-> +       };
-> +
-> +       sound {
-> +               compatible = "simple-audio-card";
-> +               simple-audio-card,name = "MioA701";
-> +               simple-audio-card,widgets =
-> +               "Speaker", "Front Speaker",
-
-Could use another level of indentation.
-
-> +               "Speaker", "Rear Speaker",
-> +               "Microphone", "Headset",
-> +               "Microphone", "GSM Line Out",
-> +               "Line", "GSM Line In",
-> +               "Microphone", "Headset Mic",
-> +               "Microphone", "Front Mic";
-> +               simple-audio-card,routing =
-> +               /* Call Mic */
-> +               "Mic Bias", "Front Mic",
-> +               "MIC1", "Mic Bias",
-> +               /* Headset Mic */
-> +               "LINEL", "Headset Mic",
-> +               "LINER", "Headset Mic",
-> +               /* GSM Module */
-> +               "MONOIN", "GSM Line Out",
-> +               "PCBEEP", "GSM Line Out",
-> +               "GSM Line In", "MONO",
-> +               /* headphone connected to HPL, HPR */
-> +               "Headset", "HPL",
-> +               "Headset", "HPR",
-> +               /* front speaker connected to HPL, OUT3 */
-> +               "Front Speaker", "HPL",
-> +               "Front Speaker", "OUT3",
-> +               /* rear speaker connected to SPKL, SPKR */
-> +               "Rear Speaker", "SPKL",
-> +               "Rear Speaker", "SPKR";
-> +
-> +               simple-audio-card,cpu {
-> +                       sound-dai = <&ac97>;
-> +               };
-> +               simple-audio-card,codec {
-> +                       sound-dai = <&wm9713>;
-> +               };
-> +               simple-audio-card,plat {
-> +                       sound-dai = <&pxa_pcm_audio>;
-> +               };
-> +       };
-> +
-> +       ac_charger: charger@1 {
-
-Drop the unit-address.
-
-> +               compatible = "gpio-charger";
-> +               charger-type = "usb-aca";
-> +               gpios = <&gpio 96 GPIO_ACTIVE_HIGH>;
-> +       };
-> +};
-> --
-> 2.11.0
->
+T24gTW9uLCBKdWwgOSwgMjAxOCBhdCAxMTo0MCBBTSBTZWFuIFBhdWwgPHNlYW5wYXVsQGNocm9t
+aXVtLm9yZz4gd3JvdGU6Cj4KPiBTaWduZWQtb2ZmLWJ5OiBTZWFuIFBhdWwgPHNlYW5wYXVsQGNo
+cm9taXVtLm9yZz4KPiAtLS0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNp
+IHwgMTk0ICsrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMTk0
+IGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20v
+c2RtODQ1LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiBpbmRl
+eCBjZGFhYmViM2M5OTUuLjMzOWFmZWQ4NTZkZSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jv
+b3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20v
+c2RtODQ1LmR0c2kKPiBAQCAtNSw2ICs1LDggQEAKPiAgICogQ29weXJpZ2h0IChjKSAyMDE4LCBU
+aGUgTGludXggRm91bmRhdGlvbi4gQWxsIHJpZ2h0cyByZXNlcnZlZC4KPiAgICovCj4KPiArI2lu
+Y2x1ZGUgPGR0LWJpbmRpbmdzL2Nsb2NrL3Fjb20sZGlzcGNjLXNkbTg0NS5oPgo+ICsjaW5jbHVk
+ZSA8ZHQtYmluZGluZ3MvY2xvY2svcWNvbSxnY2Mtc2RtODQ1Lmg+Cj4gICNpbmNsdWRlIDxkdC1i
+aW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hcm0tZ2ljLmg+Cj4KPiAgLyB7Cj4gQEAgLTIy
+MSw2ICsyMjMsMTk4IEBACj4gICAgICAgICAgICAgICAgICAgICAgICAgI2ludGVycnVwdC1jZWxs
+cyA9IDwyPjsKPiAgICAgICAgICAgICAgICAgfTsKPgo+ICsgICAgICAgICAgICAgICBtZHNzOiBt
+ZHNzQGFlMDAwMDAgewo+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicWNv
+bSxkcHUtbWRzcyI7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4YWUwMDAwMCAw
+eDEwMDA+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJtZHNzX3BoeXMi
+Owo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICBwb3dlci1kb21haW5zID0gPCZkaXNwY2Mg
+MD47Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmZ2NjIEdDQ19ESVNQ
+X0FIQl9DTEs+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwmZ2NjIEdDQ19E
+SVNQX0FYSV9DTEs+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwmZGlzcGNj
+IERJU1BfQ0NfTURTU19NRFBfQ0xLPjsKPiArICAgICAgICAgICAgICAgICAgICAgICBjbG9jay1u
+YW1lcyA9ICJpZmFjZSIsICJidXMiLCAiY29yZSI7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+Y2xvY2stZnJlcXVlbmN5ID0gPDAgMCAzMDAwMDAwMDA+Owo+ICsKPiArICAgICAgICAgICAgICAg
+ICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODMgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0LWNvbnRyb2xsZXI7Cj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgI2ludGVycnVwdC1jZWxscyA9IDwxPjsKPiArCj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgLyogaW9tbXVzID0gPCZhcHBzX2lvbW11IDA+OyAqLwo+ICsKPiArICAgICAg
+ICAgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArICAgICAgICAgICAgICAg
+ICAgICAgICAjc2l6ZS1jZWxscyA9IDwxPjsKPiArICAgICAgICAgICAgICAgICAgICAgICByYW5n
+ZXM7Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgIG1kc3NfbWRwOiBtZHBAYWUwMTAwMCB7
+Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInFjb20sZHB1
+IjsKCk5lZWRzIGFuIFNvQyBzcGVjaWZpYyBjb21wYXRpYmxlLiBEaWQgdGhpcyBiaW5kaW5nIGdl
+dCByZXZpZXdlZD8KCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgw
+YWUwMTAwMCAweDhmMDAwPiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IDwweDBhZWIwMDAwIDB4MjAwOD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBy
+ZWctbmFtZXMgPSAibWRwX3BoeXMiLCAidmJpZl9waHlzIjsKPiArCj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JmRpc3BjYyBESVNQX0NDX01EU1NfQUhCX0NMSz4s
+Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmRpc3BjYyBESVNQ
+X0NDX01EU1NfQVhJX0NMSz4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICA8JmRpc3BjYyBESVNQX0NDX01EU1NfTURQX0NMSz4sCj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICA8JmRpc3BjYyBESVNQX0NDX01EU1NfVlNZTkNfQ0xLPjsK
+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gImlmYWNlIiwg
+ImJ1cyIsICJjb3JlIiwgInZzeW5jIjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IGNsb2NrLWZyZXF1ZW5jeSA9IDwwIDAgMzAwMDAwMDAwIDE5MjAwMDAwPjsKClRoYXQncyBhYnVz
+aW5nIGNsb2NrLWZyZXF1ZW5jeSB3aGljaCBpcyBnZW5lcmFsbHkgMSB2YWx1ZS4gVXNlCmFzc2ln
+bmVkLWNsb2NrLXJhdGVzIGluc3RlYWQuCgo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIGludGVycnVwdC1wYXJlbnQgPSA8Jm1kc3M+Owo+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgaW50ZXJydXB0cyA9IDwwIElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ICsKPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvcnRzIHsKPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9ydEAwIHsKPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MD47Cj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZHB1X2ludGYxX291
+dDogZW5kcG9pbnQgewo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZkc2kwX2luPjsKPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsKPiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgcG9ydEAxIHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICByZWcgPSA8MT47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgZHB1X2ludGYyX291dDogZW5kcG9pbnQgewo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3Rl
+LWVuZHBvaW50ID0gPCZkc2kxX2luPjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB9Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiArICAgICAgICAg
+ICAgICAgICAgICAgICB9Owo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICBkc2kwOiBkc2lA
+YWU5NDAwMCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0g
+InFjb20sbWRzcy1kc2ktY3RybCI7CgpOZWVkcyBhbiBTb0Mgc3BlY2lmaWMgY29tcGF0aWJsZS4K
+Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHhhZTk0MDAwIDB4NDAw
+PjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJkc2lfY3Ry
+bCI7Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0LXBhcmVu
+dCA9IDwmbWRzcz47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRz
+ID0gPDQgMD47Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0g
+PCZkaXNwY2MgRElTUF9DQ19NRFNTX0JZVEUwX0NMSz4sCj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICA8JmRpc3BjYyBESVNQX0NDX01EU1NfQllURTBfSU5URl9DTEs+
+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZkaXNwY2MgRElT
+UF9DQ19NRFNTX1BDTEswX0NMSz4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICA8JmRpc3BjYyBESVNQX0NDX01EU1NfRVNDMF9DTEs+LAo+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZkaXNwY2MgRElTUF9DQ19NRFNTX0FIQl9DTEs+
+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZkaXNwY2MgRElT
+UF9DQ19NRFNTX0FYSV9DTEs+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xv
+Y2stbmFtZXMgPSAiYnl0ZV9jbGsiLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAiYnl0ZV9pbnRmX2NsayIsCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICJwaXhlbF9jbGsiLAo+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAiY29yZV9jbGsiLAo+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiaWZhY2VfY2xrIiwKPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImJ1c19jbGsiOwoKU2hvdWxkIGhhdmUg
+Zm91bmQgdGhpcyBpbiBiaW5kaW5nIHJldmlldywgYnV0IHRoZSAiX2NsayIgcGFydCBpcyByZWR1
+bmRhbnQuCgo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBoeXMgPSA8JmRz
+aTBfcGh5PjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBoeS1uYW1lcyA9ICJk
+c2ktcGh5IjsKPiArCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjYWRkcmVzcy1j
+ZWxscyA9IDwxPjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxz
+ID0gPDA+Owo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvcnRzIHsKPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8
+MT47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxz
+ID0gPDA+Owo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9y
+dEAwIHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBy
+ZWcgPSA8MD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgZHNpMF9pbjogZW5kcG9pbnQgewo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZkcHVfaW50ZjFfb3V0
+PjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsKPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9ydEAxIHsKPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MT47Cj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZHNpMF9vdXQ6IGVuZHBvaW50
+IHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgfTsKPiArICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsK
+PiArICAgICAgICAgICAgICAgICAgICAgICBkc2kwX3BoeTogZHNpLXBoeUBhZTk0NDAwIHsKPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicWNvbSxkc2ktcGh5
+LTEwbm0iOwo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4YWU5NDQw
+MCAweDIwMD4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MHhhZTk0
+YTAwIDB4MWUwPiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwweGFl
+OTQ2MDAgMHgyODA+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnLW5hbWVz
+ID0gImRzaV9waHkiLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgImRzaV9wbGwiLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgImRzaV9waHlfbGFuZSI7Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+I2Nsb2NrLWNlbGxzID0gPDE+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3Bo
+eS1jZWxscyA9IDwwPjsKPiArCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9j
+a3MgPSA8JmRpc3BjYyBESVNQX0NDX01EU1NfQUhCX0NMSz47Cj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJpZmFjZV9jbGsiOwo+ICsgICAgICAgICAgICAg
+ICAgICAgICAgIH07Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgIGRzaTE6IGRzaUBhZTk2
+MDAwIHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicWNv
+bSxtZHNzLWRzaS1jdHJsIjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9
+IDwweGFlOTYwMDAgMHg0MDA+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVn
+LW5hbWVzID0gImRzaV9jdHJsIjsKPiArCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZtZHNzPjsKPiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIGludGVycnVwdHMgPSA8NSAwPjsKPiArCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBjbG9ja3MgPSA8JmRpc3BjYyBESVNQX0NDX01EU1NfQllURTFfQ0xLPiwKPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwmZGlzcGNjIERJU1BfQ0NfTURT
+U19CWVRFMV9JTlRGX0NMSz4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICA8JmRpc3BjYyBESVNQX0NDX01EU1NfUENMSzFfQ0xLPiwKPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIDwmZGlzcGNjIERJU1BfQ0NfTURTU19FU0MxX0NMSz4s
+Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmRpc3BjYyBESVNQ
+X0NDX01EU1NfQUhCX0NMSz4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICA8JmRpc3BjYyBESVNQX0NDX01EU1NfQVhJX0NMSz47Cj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJieXRlX2NsayIsCj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJieXRlX2ludGZfY2xrIiwKPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInBpeGVsX2NsayIsCj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJjb3JlX2NsayIsCj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJpZmFjZV9jbGsi
+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiYnVzX2Ns
+ayI7Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGh5cyA9IDwmZHNpMV9w
+aHk+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGh5LW5hbWVzID0gImRzaS1w
+aHkiOwo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxz
+ID0gPDE+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8
+MD47Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9ydHMgewo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsK
+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8
+MD47Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwb3J0QDAg
+ewo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9
+IDwwPjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBk
+c2kxX2luOiBlbmRwb2ludCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmRwdV9pbnRmMl9vdXQ+Owo+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gKwo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwb3J0QDEgewo+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwxPjsKPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkc2kxX291dDogZW5kcG9pbnQgewo+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gKwo+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIGRzaTFfcGh5OiBkc2ktcGh5QGFlOTY0MDAgewo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJxY29tLGRzaS1waHktMTBu
+bSI7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHhhZTk2NDAwIDB4
+MjAwPiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwweGFlOTZhMDAg
+MHgxMGU+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDB4YWU5NjYw
+MCAweDI4MD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWctbmFtZXMgPSAi
+ZHNpX3BoeSIsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAi
+ZHNpX3BsbCIsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAi
+ZHNpX3BoeV9sYW5lIjsKPiArCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjY2xv
+Y2stY2VsbHMgPSA8MT47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjcGh5LWNl
+bGxzID0gPDA+Owo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9
+IDwmZGlzcGNjIERJU1BfQ0NfTURTU19BSEJfQ0xLPjsKPiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIGNsb2NrLW5hbWVzID0gImlmYWNlX2NsayI7Cj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgfTsKPiArICAgICAgICAgICAgICAgfTsKPiArCj4gKyAgICAgICAgICAgICAgIGRpc3Bj
+YzogcWNvbSxkaXNwY2NAYWYwMDAwMCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0
+aWJsZSA9ICJxY29tLHNkbTg0NS1kaXNwY2MiOwo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJl
+ZyA9IDwweGFmMDAwMDAgMHgxMDAwMD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgI2Nsb2Nr
+LWNlbGxzID0gPDE+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICNyZXNldC1jZWxscyA9IDwx
+PjsKPiArICAgICAgICAgICAgICAgICAgICAgICAjcG93ZXItZG9tYWluLWNlbGxzID0gPDE+Owo+
+ICsgICAgICAgICAgICAgICB9Owo+ICsKPiAgICAgICAgICAgICAgICAgc3BtaV9idXM6IHNwbWlA
+YzQ0MDAwMCB7Cj4gICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJxY29tLHNw
+bWktcG1pYy1hcmIiOwo+ICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweGM0NDAwMDAg
+MHgxMTAwPiwKPiAtLQo+IFNlYW4gUGF1bCwgU29mdHdhcmUgRW5naW5lZXIsIEdvb2dsZSAvIENo
+cm9taXVtIE9TCj4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
