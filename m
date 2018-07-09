@@ -1,63 +1,45 @@
-From: Bhushan Shah <bshah@kde.org>
-Subject: [PATCH] ARM: dts: qcom: msm8974-hammerhead: increase load on l20 for
- sdhci
-Date: Mon, 9 Jul 2018 14:46:28 +0530
-Message-ID: <20180709091628.GA8854@orion>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2 2/2] nvmem: Add Spreadtrum SC27XX efuse support
+Date: Mon, 9 Jul 2018 10:41:08 +0100
+Message-ID: <068e3671-2624-7e16-7387-185e688cb6ed@linaro.org>
+References: <a469ed55cb7c43901eaa8881cdd2a8845616d987.1529908086.git.baolin.wang@linaro.org>
+ <d49c27421b2166dc5d535fb448e6cc11475a2a79.1529908086.git.baolin.wang@linaro.org>
+ <CAMz4kuLWAT0aXy=xNPaeBDdixZCxUoE+joWsLMXb6MrmRiBr1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <CAMz4kuLWAT0aXy=xNPaeBDdixZCxUoE+joWsLMXb6MrmRiBr1Q@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Masney <masneyb@onstation.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+To: Baolin Wang <baolin.wang@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Mark Brown <broonie@kernel.org>, freeman.liu@spreadtrum.com, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The kernel would not boot on the hammerhead hardware due to the
-following error:
 
-mmc0: Timeout waiting for hardware interrupt.
-mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
-mmc0: sdhci: Sys addr:  0x00000200 | Version:  0x00003802
-mmc0: sdhci: Blk size:  0x00000200 | Blk cnt:  0x00000200
-mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000023
-mmc0: sdhci: Present:   0x03e80000 | Host ctl: 0x00000034
-mmc0: sdhci: Power:     0x00000001 | Blk gap:  0x00000000
-mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x00000007
-mmc0: sdhci: Timeout:   0x0000000e | Int stat: 0x00000000
-mmc0: sdhci: Int enab:  0x02ff900b | Sig enab: 0x02ff100b
-mmc0: sdhci: AC12 err:  0x00000000 | Slot int: 0x00000000
-mmc0: sdhci: Caps:      0x642dc8b2 | Caps_1:   0x00008007
-mmc0: sdhci: Cmd:       0x00000c1b | Max curr: 0x00000000
-mmc0: sdhci: Resp[0]:   0x00000c00 | Resp[1]:  0x00000000
-mmc0: sdhci: Resp[2]:   0x00000000 | Resp[3]:  0x00000000
-mmc0: sdhci: Host ctl2: 0x00000008
-mmc0: sdhci: ADMA Err:  0x00000000 | ADMA Ptr: 0x70040220
-mmc0: sdhci: ============================================
-mmc0: Card stuck in wrong state! mmcblk0 card_busy_detect status: 0xe00
-mmc0: cache flush error -110
-mmc0: Reset 0x1 never completed.
 
-This patch increases the load on l20 to 0.2 amps for the sdhci
-and allows the device to boot normally.
+On 09/07/18 10:26, Baolin Wang wrote:
+> Hi Srinivas,
+> 
+> On 25 June 2018 at 14:31, Baolin Wang<baolin.wang@linaro.org>  wrote:
+>> From: Freeman Liu<freeman.liu@spreadtrum.com>
+>>
+>> This patch add the efuse driver which is embeded in Spreadtrum SC27XX
+>> series PMICs. The sc27xx efuse contains 32 blocks and each block's
+>> data width is 16 bits.
+>>
+>> Signed-off-by: Freeman Liu<freeman.liu@spreadtrum.com>
+>> Signed-off-by: Baolin Wang<baolin.wang@linaro.org>
+>> ---
+>> Changes since v1:
+>>   - Fix one typo.
+>> ---
+> Do you have any comments for this patch set? Thanks.
+Thanks for your patience!
 
-Signed-off-by: Bhushan Shah <bshah@kde.org>
-Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Tested-by: Brian Masney <masneyb@onstation.org>
----
- arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts | 2 ++
- 1 file changed, 2 insertions(+)
+These patches look good!, Normally I tend to send nvmem patches to Greg 
+K.H just before rc5! I will queue them by end of this week!
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-index 4dc0b347b1ee..c2dc9d09484a 100644
---- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-@@ -189,6 +189,8 @@
- 						regulator-max-microvolt = <2950000>;
- 
- 						regulator-boot-on;
-+						regulator-system-load = <200000>;
-+						regulator-allow-set-load;
- 					};
- 
- 					l21 {
--- 
-2.17.1
+Thanks
+Srini
+> 
