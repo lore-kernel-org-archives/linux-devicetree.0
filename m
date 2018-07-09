@@ -1,45 +1,55 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 2/2] nvmem: Add Spreadtrum SC27XX efuse support
-Date: Mon, 9 Jul 2018 10:41:08 +0100
-Message-ID: <068e3671-2624-7e16-7387-185e688cb6ed@linaro.org>
-References: <a469ed55cb7c43901eaa8881cdd2a8845616d987.1529908086.git.baolin.wang@linaro.org>
- <d49c27421b2166dc5d535fb448e6cc11475a2a79.1529908086.git.baolin.wang@linaro.org>
- <CAMz4kuLWAT0aXy=xNPaeBDdixZCxUoE+joWsLMXb6MrmRiBr1Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Esben Haabendal <esben.haabendal@gmail.com>
+Subject: [PATCH v2 4/4] arm: dts: ls1021a: Enable I2C DMA support
+Date: Mon,  9 Jul 2018 11:43:04 +0200
+Message-ID: <20180709094304.8814-5-esben.haabendal@gmail.com>
+References: <20180709094304.8814-1-esben.haabendal@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMz4kuLWAT0aXy=xNPaeBDdixZCxUoE+joWsLMXb6MrmRiBr1Q@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180709094304.8814-1-esben.haabendal@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Mark Brown <broonie@kernel.org>, freeman.liu@spreadtrum.com, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: linux-i2c@vger.kernel.org
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yuan Yao <yao.yuan@freescale.com>, Esben Haabendal <eha@deif.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Esben Haabendal <eha@deif.com>
 
+Gives substantial performance improvement for transfers larger than 16
+bytes (DMA_THRESHOLD).  Smaller transfers are unaffected.
 
-On 09/07/18 10:26, Baolin Wang wrote:
-> Hi Srinivas,
-> 
-> On 25 June 2018 at 14:31, Baolin Wang<baolin.wang@linaro.org>  wrote:
->> From: Freeman Liu<freeman.liu@spreadtrum.com>
->>
->> This patch add the efuse driver which is embeded in Spreadtrum SC27XX
->> series PMICs. The sc27xx efuse contains 32 blocks and each block's
->> data width is 16 bits.
->>
->> Signed-off-by: Freeman Liu<freeman.liu@spreadtrum.com>
->> Signed-off-by: Baolin Wang<baolin.wang@linaro.org>
->> ---
->> Changes since v1:
->>   - Fix one typo.
->> ---
-> Do you have any comments for this patch set? Thanks.
-Thanks for your patience!
+Signed-off-by: Esben Haabendal <eha@deif.com>
+---
+ arch/arm/boot/dts/ls1021a.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-These patches look good!, Normally I tend to send nvmem patches to Greg 
-K.H just before rc5! I will queue them by end of this week!
-
-Thanks
-Srini
-> 
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index c55d479971cc..1e5640701c65 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -363,6 +363,8 @@
+ 			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "i2c";
+ 			clocks = <&clockgen 4 1>;
++			dma-names = "tx", "rx";
++			dmas = <&edma0 1 39>, <&edma0 1 38>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -374,6 +376,8 @@
+ 			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "i2c";
+ 			clocks = <&clockgen 4 1>;
++			dma-names = "tx", "rx";
++			dmas = <&edma0 1 37>, <&edma0 1 36>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -385,6 +389,8 @@
+ 			interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "i2c";
+ 			clocks = <&clockgen 4 1>;
++			dma-names = "tx", "rx";
++			dmas = <&edma0 1 35>, <&edma0 1 34>;
+ 			status = "disabled";
+ 		};
+ 
+-- 
+2.18.0
