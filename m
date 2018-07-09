@@ -1,124 +1,59 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v8 4/4] ARM: dts: tegra: Work safely with 256 MB Colibri-T20 modules
-Date: Mon,  9 Jul 2018 18:05:19 +0200
-Message-ID: <20180709160519.23497-4-krzk@kernel.org>
-References: <20180709160519.23497-1-krzk@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180709160519.23497-1-krzk@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>, Krzysztof Kozlowski <krzk@kernel.org>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Subject: Re: [PATCH v4 1/2] gpio: mediatek: add driver for MT7621
+Date: Mon, 9 Jul 2018 18:07:32 +0200
+Message-ID: <CAMhs-H9t6OQ=ibsPW8AeYpE-gcwMKLRNDioYN9YTBtsp+PHtfA@mail.gmail.com>
+References: <1530798191-25471-1-git-send-email-sergio.paracuellos@gmail.com>
+ <1530798191-25471-2-git-send-email-sergio.paracuellos@gmail.com>
+ <CACRpkdbWbFi-vzHqSu3T2iE89BJaQNCfZHVNvV7Crqq-TsLnmg@mail.gmail.com>
+ <20180709132850.GB2529@foobar> <20180709133030.fciif2sqxfavo6o3@mwanda>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20180709133030.fciif2sqxfavo6o3@mwanda>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, driverdev-devel@linuxdriverproject.org, juhosg@freemail.hu, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, John Crispin <john@phrozen.org>, NeilBrown <neil@brown.name>
 List-Id: devicetree@vger.kernel.org
 
-Colibri-T20 can come in 256 MB RAM (with 512 MB NAND) or 512 MB RAM
-(with 1024 MB NAND) flavors.  Both of them will use the same DTSI
-expecting the bootloader to do the fixup of /memory node.  However in
-case it does not happen, let's stay on safe side by limiting the memory
-to 256 MB for both versions of Colibri-T20.
+On Mon, Jul 9, 2018 at 3:30 PM, Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> On Mon, Jul 09, 2018 at 03:28:50PM +0200, Sergio Paracuellos wrote:
+>> On Mon, Jul 09, 2018 at 01:45:22PM +0200, Linus Walleij wrote:
+>> > On Thu, Jul 5, 2018 at 3:43 PM Sergio Paracuellos
+>> > <sergio.paracuellos@gmail.com> wrote:
+>> >
+>> > > Add driver support for gpio of MT7621 SoC.
+>> > >
+>> > > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+>> > > Reviewed-by: NeilBrown <neil@brown.name>
+>> >
+>> > This is looking really good.
+>> >
+>> > Patch applied: anything remaining can surely be patched up
+>> > in-tree.
+>> >
+>>
+>> Sound good, thanks.
+>>
+>> Should I send a patch to remove the driver from staging or just
+>> is removed by Greg? How is this achieved?
+>
+> Send a patch.
+>
 
-Rename to remove the unnecessary memory size from the device tree file
-name.  While at it, also follow the typical Toradex SoC, module, carrier
-board hierarchy.
+Thanks, Dan. Done.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Stefan Agner <stefan@agner.ch>
-Tested-by: Stefan Agner <stefan@agner.ch>
+> regards,
+> dan carpenter
+>
 
----
-
-Changes since v7:
-1. Add tags.
-
-Changes since v6:
-1. Only adjust commit msg.
-
-Changes since v5:
-1. Add "colibri" suffix to iris DTS (suggested by Stefan).
-
-Changes since v4:
-1. Drop the 512 suffix from file names (suggested by Stefan).
-
-Changes since v3:
-1. Reduce the memory in existing DTSI instead of creating a new one
-   (suggested by Marcel).
-
-Changes since v2:
-1. Do not add new compatible but use everywhere existing
-   "toradex,colibri_t20-512" (suggested by Rob).
-
-Changes since v1:
-1. Fix memory size in tegra20-colibri-256.dtsi (was working fine because
-   my bootloader uses mem= argument).
----
- arch/arm/boot/dts/Makefile                                       | 2 +-
- .../boot/dts/{tegra20-iris-512.dts => tegra20-colibri-iris.dts}  | 4 ++--
- .../boot/dts/{tegra20-colibri-512.dtsi => tegra20-colibri.dtsi}  | 9 +++++++--
- 3 files changed, 10 insertions(+), 5 deletions(-)
- rename arch/arm/boot/dts/{tegra20-iris-512.dts => tegra20-colibri-iris.dts} (95%)
- rename arch/arm/boot/dts/{tegra20-colibri-512.dtsi => tegra20-colibri.dtsi} (98%)
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 89a84e5ca637..749caca383ed 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1048,7 +1048,7 @@ dtb-$(CONFIG_ARCH_TANGO) += \
- 	tango4-vantage-1172.dtb
- dtb-$(CONFIG_ARCH_TEGRA_2x_SOC) += \
- 	tegra20-harmony.dtb \
--	tegra20-iris-512.dtb \
-+	tegra20-colibri-iris.dtb \
- 	tegra20-medcom-wide.dtb \
- 	tegra20-paz00.dtb \
- 	tegra20-plutux.dtb \
-diff --git a/arch/arm/boot/dts/tegra20-iris-512.dts b/arch/arm/boot/dts/tegra20-colibri-iris.dts
-similarity index 95%
-rename from arch/arm/boot/dts/tegra20-iris-512.dts
-rename to arch/arm/boot/dts/tegra20-colibri-iris.dts
-index 40126388946d..57f16c0e9917 100644
---- a/arch/arm/boot/dts/tegra20-iris-512.dts
-+++ b/arch/arm/boot/dts/tegra20-colibri-iris.dts
-@@ -1,10 +1,10 @@
- // SPDX-License-Identifier: GPL-2.0
- /dts-v1/;
- 
--#include "tegra20-colibri-512.dtsi"
-+#include "tegra20-colibri.dtsi"
- 
- / {
--	model = "Toradex Colibri T20 512MB on Iris";
-+	model = "Toradex Colibri T20 256/512 MB on Iris";
- 	compatible = "toradex,iris", "toradex,colibri_t20-512", "nvidia,tegra20";
- 
- 	aliases {
-diff --git a/arch/arm/boot/dts/tegra20-colibri-512.dtsi b/arch/arm/boot/dts/tegra20-colibri.dtsi
-similarity index 98%
-rename from arch/arm/boot/dts/tegra20-colibri-512.dtsi
-rename to arch/arm/boot/dts/tegra20-colibri.dtsi
-index 5623ff8d128c..dc06b23183e1 100644
---- a/arch/arm/boot/dts/tegra20-colibri-512.dtsi
-+++ b/arch/arm/boot/dts/tegra20-colibri.dtsi
-@@ -2,7 +2,7 @@
- #include "tegra20.dtsi"
- 
- / {
--	model = "Toradex Colibri T20 512MB";
-+	model = "Toradex Colibri T20 256/512 MB";
- 	compatible = "toradex,colibri_t20-512", "nvidia,tegra20";
- 
- 	aliases {
-@@ -11,7 +11,12 @@
- 	};
- 
- 	memory@0 {
--		reg = <0x00000000 0x20000000>;
-+		/*
-+		 * Set memory to 256 MB to be safe as this could be used on
-+		 * 256 or 512 MB module. It is expected from bootloader
-+		 * to fix this up for 512 MB version.
-+		 */
-+		reg = <0x00000000 0x10000000>;
- 	};
- 
- 	host1x@50000000 {
--- 
-2.14.1
+Best regards,
+    Sergio Paracuellos
