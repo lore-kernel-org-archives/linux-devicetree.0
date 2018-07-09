@@ -1,43 +1,49 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 1/7] mhi_bus: core: initial checkin for modem host
- interface bus driver
-Date: Mon, 9 Jul 2018 22:52:54 +0200
-Message-ID: <20180709205254.GB1202@kroah.com>
-References: <1524795811-21399-1-git-send-email-sdias@codeaurora.org>
- <1531166894-30984-1-git-send-email-sdias@codeaurora.org>
- <1531166894-30984-2-git-send-email-sdias@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH] arm64: dts: rockchip: remove deprecated Type-C PHY properties on rk3399
+Date: Mon,  9 Jul 2018 22:57:54 +0200
+Message-ID: <20180709205754.29132-1-enric.balletbo@collabora.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1531166894-30984-2-git-send-email-sdias@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sujeev Dias <sdias@codeaurora.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Tony Truong <truong@codeaurora.org>, Siddartha Mohanadoss <smohanad@codeaurora.org>
+To: linux-kernel@vger.kernel.org
+Cc: kernel@collabora.com, Nickey Yang <nickey.yang@rock-chips.com>, Simon Xue <xxm@rock-chips.com>, Yakir Yang <kuankuan.y@gmail.com>, Mark Yao <markyao0591@gmail.com>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Jacob Chen <jacob-chen@iotwrt.com>, Brian Norris <briannorris@chromium.org>, Lin Huang <hl@rock-chips.com>, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, linux-rockchip@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Caesar Wang <wxt@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 09, 2018 at 01:08:08PM -0700, Sujeev Dias wrote:
-> This is the initial skeleton driver for mhi bus stack. MHI Host
-> Interface is a communication protocol to be used by the host to
-> control and communcate with modem over a high speed peripheral bus.
-> This module will allow host to communicate with external devices that
-> support MHI protocol.
-> 
-> Signed-off-by: Sujeev Dias <sdias@codeaurora.org>
-> Reviewed-by: Tony Truong <truong@codeaurora.org>
-> Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
-> ---
->  Documentation/00-INDEX                        |   2 +
->  Documentation/devicetree/bindings/bus/mhi.txt | 258 ++++++++++++
->  Documentation/mhi.txt                         | 235 +++++++++++
+Commit 0fbc47d9e426 ("phy: rockchip-typec: deprecate some DT properties
+for various register fields.") deprecates some Rockchip Type-C
+properties. As these are now not needed, remove from the device tree
+file.
 
-Do not put .txt files in the root of the documentation directory for no
-reason.  They should be in .rst and hopefully in the proper location for
-where the documentation belongs.
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
 
-And dt bindings always belong in a separate patch, you all know better
-than to mush it into a large one like this...
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 --------
+ 1 file changed, 8 deletions(-)
 
-thanks,
-
-greg k-h
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index e0040b648f43..180dd9d2cc23 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1446,10 +1446,6 @@
+ 			 <&cru SRST_P_UPHY0_TCPHY>;
+ 		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
+ 		rockchip,grf = <&grf>;
+-		rockchip,typec-conn-dir = <0xe580 0 16>;
+-		rockchip,usb3tousb2-en = <0xe580 3 19>;
+-		rockchip,external-psm = <0xe588 14 30>;
+-		rockchip,pipe-status = <0xe5c0 0 0>;
+ 		status = "disabled";
+ 
+ 		tcphy0_dp: dp-port {
+@@ -1475,10 +1471,6 @@
+ 			 <&cru SRST_P_UPHY1_TCPHY>;
+ 		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
+ 		rockchip,grf = <&grf>;
+-		rockchip,typec-conn-dir = <0xe58c 0 16>;
+-		rockchip,usb3tousb2-en = <0xe58c 3 19>;
+-		rockchip,external-psm = <0xe594 14 30>;
+-		rockchip,pipe-status = <0xe5c0 16 16>;
+ 		status = "disabled";
+ 
+ 		tcphy1_dp: dp-port {
+-- 
+2.18.0
