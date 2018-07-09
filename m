@@ -1,107 +1,74 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [alsa-devel] [PATCH v3 3/5] ASoC: qcom: add sdm845 sound card
- support
-Date: Mon, 9 Jul 2018 13:18:35 +0530
-Message-ID: <20180709074835.GB22377@vkoul-mobl>
-References: <1530870195-13576-1-git-send-email-rohitkr@codeaurora.org>
- <1530870195-13576-4-git-send-email-rohitkr@codeaurora.org>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v2 1/4] clk: imx7d: add IMX7D_MU_ROOT_CLK
+Date: Mon, 9 Jul 2018 08:18:40 +0000
+Message-ID: <AM0PR04MB4211C3AFCCF832121B88492B80440@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20180615095107.24610-1-o.rempel@pengutronix.de>
+ <20180615095107.24610-2-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1530870195-13576-4-git-send-email-rohitkr@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rohit kumar <rohitkr@codeaurora.org>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, plai@codeaurora.org, bgoswami@codeaurora.org, perex@perex.cz, srinivas.kandagatla@linaro.org, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180615095107.24610-2-o.rempel@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06-07-18, 15:13, Rohit kumar wrote:
+> -----Original Message-----
+> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
+> Sent: Friday, June 15, 2018 5:51 PM
+> To: Shawn Guo <shawnguo@kernel.org>; Fabio Estevam
+> <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>; Mark
+> Rutland <mark.rutland@arm.com>; A.s. Dong <aisheng.dong@nxp.com>
+> Cc: Oleksij Rempel <o.rempel@pengutronix.de>; kernel@pengutronix.de;
+> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
+> clk@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>
+> Subject: [PATCH v2 1/4] clk: imx7d: add IMX7D_MU_ROOT_CLK
+> 
+> This clock is needed for iMX mailbox driver
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-> +static void sdm845_init_supplies(struct device *dev)
-> +{
-> +	struct snd_soc_card *card = dev_get_drvdata(dev);
-> +	struct sdm845_snd_data *data = snd_soc_card_get_drvdata(card);
-> +
-> +	data->vdd_supply = regulator_get(dev, "cdc-vdd");
-> +	if (IS_ERR(data->vdd_supply)) {
-> +		dev_err(dev, "Unable to get regulator supplies\n");
-> +		data->vdd_supply = NULL;
-> +		return;
-> +	}
-> +
-> +	if (regulator_enable(data->vdd_supply))
-> +		dev_err(dev, "Unable to enable vdd supply\n");
-> +}
-> +
-> +static void sdm845_deinit_supplies(struct device *dev)
-> +{
-> +	struct snd_soc_card *card = dev_get_drvdata(dev);
-> +	struct sdm845_snd_data *data = snd_soc_card_get_drvdata(card);
-> +
-> +	if (!data->vdd_supply)
-> +		return;
-> +
-> +	regulator_disable(data->vdd_supply);
-> +	regulator_put(data->vdd_supply);
-> +}
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-these two can be made generic, cant we make these common when we have
-supplies present?
+I think this can go separately through CLK tree.
 
-> +static int sdm845_bind(struct device *dev)
-> +{
-> +	struct snd_soc_card *card;
-> +	struct sdm845_snd_data *data;
-> +	int ret;
-> +
-> +	card = kzalloc(sizeof(*card), GFP_KERNEL);
-> +	if (!card)
-> +		return -ENOMEM;
-> +
-> +	/* Allocate the private data */
-> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	ret = component_bind_all(dev, card);
-> +	if (ret) {
-> +		dev_err(dev, "Audio components bind failed: %d\n", ret);
-> +		goto bind_fail;
-> +	}
-> +
-> +	dev_set_drvdata(dev, card);
-> +	card->dev = dev;
-> +	ret = qcom_snd_parse_of(card);
-> +	if (ret) {
-> +		dev_err(dev, "Error parsing OF data\n");
-> +		goto parse_dt_fail;
-> +	}
-> +
-> +	data->card = card;
-> +	snd_soc_card_set_drvdata(card, data);
-> +
-> +	sdm845_add_be_ops(card);
-> +
-> +	sdm845_init_supplies(dev);
-> +
-> +	ret = snd_soc_register_card(card);
-> +	if (ret) {
-> +		dev_err(dev, "Sound card registration failed\n");
-> +		goto register_card_fail;
-> +	}
-> +	return ret;
-> +
-> +register_card_fail:
-> +	sdm845_deinit_supplies(dev);
-> +	kfree(card->dai_link);
-> +parse_dt_fail:
-> +	component_unbind_all(dev, card);
-> +bind_fail:
-> +	kfree(data);
-> +	kfree(card);
-> +	return ret;
-> +}
+Regards
+Dong Aisheng
 
-I would make a case for this to be moved into common too :)
--- 
-~Vinod
+> ---
+>  drivers/clk/imx/clk-imx7d.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c index
+> 975a20d3cc94..c7159bfac77a 100644
+> --- a/drivers/clk/imx/clk-imx7d.c
+> +++ b/drivers/clk/imx/clk-imx7d.c
+> @@ -795,6 +795,7 @@ static void __init imx7d_clocks_init(struct
+> device_node *ccm_node)
+>  	clks[IMX7D_DRAM_ALT_ROOT_CLK] =
+> imx_clk_gate4("dram_alt_root_clk", "dram_alt_post_div", base + 0x4130, 0);
+>  	clks[IMX7D_OCOTP_CLK] = imx_clk_gate4("ocotp_clk",
+> "ipg_root_clk", base + 0x4230, 0);
+>  	clks[IMX7D_SNVS_CLK] = imx_clk_gate4("snvs_clk", "ipg_root_clk",
+> base + 0x4250, 0);
+> +	clks[IMX7D_MU_ROOT_CLK] = imx_clk_gate4("mu_root_clk",
+> "ipg_root_clk",
+> +base + 0x4270, 0);
+>  	clks[IMX7D_CAAM_CLK] = imx_clk_gate4("caam_clk", "ipg_root_clk",
+> base + 0x4240, 0);
+>  	clks[IMX7D_USB_HSIC_ROOT_CLK] =
+> imx_clk_gate4("usb_hsic_root_clk", "usb_hsic_post_div", base + 0x4690, 0);
+>  	clks[IMX7D_SDMA_CORE_CLK] = imx_clk_gate4("sdma_root_clk",
+> "ahb_root_clk", base + 0x4480, 0);
+> --
+> 2.17.1
