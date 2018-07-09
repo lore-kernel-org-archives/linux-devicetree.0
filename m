@@ -1,12 +1,14 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 0/2] gpu: drm/panel: Add DLC DLC0700YZG-1 support
-Date: Mon, 9 Jul 2018 19:29:45 +0200
-Message-ID: <20180709172945.GI26651@ulmo>
-References: <20180523092504.5142-1-m.felsch@pengutronix.de>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: [PATCH 01/21] dt-bindings: msm/dsi: Add mdp transfer time to msm dsi
+ binding
+Date: Mon,  9 Jul 2018 13:31:37 -0400
+Message-ID: <20180709173200.238457-2-seanpaul@chromium.org>
+References: <20180709173200.238457-1-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1580242300=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180523092504.5142-1-m.felsch@pengutronix.de>
+In-Reply-To: <20180709173200.238457-1-seanpaul@chromium.org>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -16,72 +18,46 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, dri-devel@lists.freedesktop.org
+To: abhinavk@codeaurora.org, architt@codeaurora.org, chandanu@codeaurora.org, jsanka@codeaurora.org, jcrouse@codeaurora.org, ryadav@codeaurora.org, seanpaul@chromium.org, skolluku@codeaurora.org, dri-devel@lists.freedesktop.org, robdclark@gmail.com, airlied@linux.ie, freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, nganji@codeaurora.org, hoegsberg@chromium.org, dovizu@chromium.org, robh+dt@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---===============1580242300==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="oxV4ZoPwBLqAyY+a"
-Content-Disposition: inline
-
-
---oxV4ZoPwBLqAyY+a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, May 23, 2018 at 11:25:02AM +0200, Marco Felsch wrote:
-> This serie adds support for the DLC Display Co. DLC0700YZG-1 7.0" WSVGA
-> TFT LCD panel. The customer isn't listed as vendor so we have to add the
-> vendor prefix too.
->=20
-> Philipp Zabel (2):
->   dt-bindings: Add vendor prefix for DLC Display Co., Ltd.
->   gpu: drm/panel: Add DLC DLC0700YZG-1 panel
->=20
->  .../display/panel/dlc,dlc0700yzg-1.txt        |  7 ++++
->  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
->  drivers/gpu/drm/panel/panel-simple.c          | 32 +++++++++++++++++++
->  3 files changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/dlc,d=
-lc0700yzg-1.txt
-
-Applied, thanks.
-
-Thierry
-
---oxV4ZoPwBLqAyY+a
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltDm4kACgkQ3SOs138+
-s6Gbsg//fjB1Vkwd0crJtULTnh5WZcBe2bjB7Z1iIle+LQAtK/UeOj/glLMEbazp
-ZN31LHwEZjb4S9A3k5SbquT17G/gQwW4rGNBUBH0i1derAW55yhV16xuiKRDItBr
-JmL0XBjZiF+BmegBlWP1oOMXygFIeHHI/OcPp6DxltSPm8505rG0Zw2L5yWUprhK
-VCZzenkX734iLEkGR05ocvCK5HJVBcHBgF0bz+FYESkuN7Av9Q5xHcgKnb7RI8gZ
-EyLc9W++DAPt2OYHmgagIsLPSbhnkSzBE7mhMU4dIuVrsLO0vtQRGEeyb/M/0ari
-QI7CD8QXLLgZXQEIpfAncySyleJxIcv/HtDnrSJPJxI5rSrtstbBhSFXVtelWY3R
-bZl3uSYoKkjzyxbcLIBGXDsGXy3fM5YkiyF3bDw45joP3vt2I+L2yA4hZ0vEN8Em
-nJSYmXS7SKVKJbRWzWhKpjFGqSQGzHuZdW+sb/XPHUxqGbyS3MeUCo8FswWhiG4m
-uQeskDC/Bl/RHtRiyRxOoW9ELGExTur1sZ7YNgNoRrRC0MX+vodfE6Pgv8IbVG1o
-HwHXf+VB12Bv/PYT8PvzT7hUkLxOXzXNT74IBPuwQL1LmrIsxYsziPQ1HyPgrk6H
-H3ZVDAAqUt3wdU8pMLMxeDeTR6apa0OR7u705CypjNCxumXtAGQ=
-=o5D5
------END PGP SIGNATURE-----
-
---oxV4ZoPwBLqAyY+a--
-
---===============1580242300==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1580242300==--
+RnJvbTogSmV5a3VtYXIgU2Fua2FyYW4gPGpzYW5rYUBjb2RlYXVyb3JhLm9yZz4KCkFkZHMgbWRw
+IHRyYW5zZmVyIHRpbWUgdG8gbXNtIGRzaSBiaW5kaW5nCgpTaWduZWQtb2ZmLWJ5OiBKZXlrdW1h
+ciBTYW5rYXJhbiA8anNhbmthQGNvZGVhdXJvcmEub3JnPgpTaWduZWQtb2ZmLWJ5OiBSYWplc2gg
+WWFkYXYgPHJ5YWRhdkBjb2RlYXVyb3JhLm9yZz4KU2lnbmVkLW9mZi1ieTogU2VhbiBQYXVsIDxz
+ZWFucGF1bEBjaHJvbWl1bS5vcmc+Ci0tLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9tc20vZHNpLnR4dCAgICAgIHwgMTYgKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQs
+IDE2IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0CmluZGV4IDUxOGU5Y2RmMGQ0Yi4uZDIyMjM3YTg4
+ZWFlIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9tc20vZHNpLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9tc20vZHNpLnR4dApAQCAtMTIxLDYgKzEyMSwyMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVz
+OgogT3B0aW9uYWwgcHJvcGVydGllczoKIC0gcWNvbSxkc2ktcGh5LXJlZ3VsYXRvci1sZG8tbW9k
+ZTogQm9vbGVhbiB2YWx1ZSBpbmRpY2F0aW5nIGlmIHRoZSBMRE8gbW9kZSBQSFkKICAgcmVndWxh
+dG9yIGlzIHdhbnRlZC4KKy0gcWNvbSxtZHNzLW1kcC10cmFuc2Zlci10aW1lLXVzOglTcGVjaWZp
+ZXMgdGhlIGRzaSB0cmFuc2ZlciB0aW1lIGZvciBjb21tYW5kIG1vZGUKKwkJCQkJcGFuZWxzIGlu
+IG1pY3Jvc2Vjb25kcy4gRHJpdmVyIHVzZXMgdGhpcyBudW1iZXIgdG8gYWRqdXN0CisJCQkJCXRo
+ZSBjbG9jayByYXRlIGFjY29yZGluZyB0byB0aGUgZXhwZWN0ZWQgdHJhbnNmZXIgdGltZS4KKwkJ
+CQkJSW5jcmVhc2luZyB0aGlzIHZhbHVlIHdvdWxkIHNsb3cgZG93biB0aGUgbWRwIHByb2Nlc3Np
+bmcKKwkJCQkJYW5kIGNhbiByZXN1bHQgaW4gc2xvd2VyIHBlcmZvcm1hbmNlLgorCQkJCQlEZWNy
+ZWFzaW5nIHRoaXMgdmFsdWUgY2FuIHNwZWVkIHVwIHRoZSBtZHAgcHJvY2Vzc2luZywKKwkJCQkJ
+YnV0IHRoaXMgY2FuIGFsc28gaW1wYWN0IHBvd2VyIGNvbnN1bXB0aW9uLgorCQkJCQlBcyBhIHJ1
+bGUgdGhpcyB0aW1lIHNob3VsZCBub3QgYmUgaGlnaGVyIHRoYW4gdGhlIHRpbWUKKwkJCQkJdGhh
+dCB3b3VsZCBiZSBleHBlY3RlZCB3aXRoIHRoZSBwcm9jZXNzaW5nIGF0IHRoZQorCQkJCQlkc2kg
+bGluayByYXRlIHNpbmNlIGFueXdheXMgdGhpcyB3b3VsZCBiZSB0aGUgbWF4aW11bQorCQkJCQl0
+cmFuc2ZlciB0aW1lIHRoYXQgY291bGQgYmUgYWNoaWV2ZWQuCisJCQkJCUlmIHBpbmcgcG9uZyBz
+cGxpdCBpcyBlbmFibGVkLCB0aGlzIHRpbWUgc2hvdWxkIG5vdCBiZSBoaWdoZXIKKwkJCQkJdGhh
+biB0d28gdGltZXMgdGhlIGRzaSBsaW5rIHJhdGUgdGltZS4KKwkJCQkJSWYgdGhlIHByb3BlcnR5
+IGlzIG5vdCBzcGVjaWZpZWQsIHRoZW4gdGhlIGRlZmF1bHQgdmFsdWUgaXMgMTQwMDAgdXMuCiAK
+IFsxXSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmluZGlu
+Z3MudHh0CiBbMl0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dApA
+QCAtMTcxLDYgKzE4NSw4IEBAIEV4YW1wbGU6CiAJCXFjb20sbWFzdGVyLWRzaTsKIAkJcWNvbSxz
+eW5jLWR1YWwtZHNpOwogCisJCXFjb20sbWRzcy1tZHAtdHJhbnNmZXItdGltZS11cyA9IDwxMjAw
+MD47CisKIAkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IiwgInNsZWVwIjsKIAkJcGluY3RybC0w
+ID0gPCZkc2lfYWN0aXZlPjsKIAkJcGluY3RybC0xID0gPCZkc2lfc3VzcGVuZD47Ci0tIApTZWFu
+IFBhdWwsIFNvZnR3YXJlIEVuZ2luZWVyLCBHb29nbGUgLyBDaHJvbWl1bSBPUwoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
