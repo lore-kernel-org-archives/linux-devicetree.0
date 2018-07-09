@@ -1,133 +1,57 @@
-From: Jian Hu <jian.hu@amlogic.com>
-Subject: [PATCH 2/3] dt-bindings: clk: meson-g12a: Add G12A EE Clock Bindings
-Date: Mon, 9 Jul 2018 19:12:46 +0800
-Message-ID: <1531134767-29927-3-git-send-email-jian.hu@amlogic.com>
-References: <1531134767-29927-1-git-send-email-jian.hu@amlogic.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 3/5] ASoC: qcom: add sdm845 sound card support
+Date: Mon, 9 Jul 2018 12:14:37 +0100
+Message-ID: <20180709111437.GB16082@sirena.org.uk>
+References: <1530870195-13576-1-git-send-email-rohitkr@codeaurora.org>
+ <1530870195-13576-4-git-send-email-rohitkr@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1531134767-29927-1-git-send-email-jian.hu@amlogic.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: "Qianggui, song" <qianggui.song@amlogic.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Yixun Lan <yixun.lan@amlogic.com>, linux-kernel@vger.kernel.org, "Bo.yang" <bo.yang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-arm-kernel@lists.infradead.org, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, "Sunny.luo" <sunny.luo@amlogic.com>, linux-clk@vger.kernel.org, "Xingyu.chen" <xingyu.chen@amlogic.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="KFztAG8eRSV9hGtP"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1530870195-13576-4-git-send-email-rohitkr@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rohit kumar <rohitkr@codeaurora.org>
+Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, plai@codeaurora.org, bgoswami@codeaurora.org, perex@perex.cz, srinivas.kandagatla@linaro.org, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add dt-bindings headers for the Meson-G12A's Everything-Else
-part clock controller.
 
-Signed-off-by: Jian Hu <jian.hu@amlogic.com>
----
- include/dt-bindings/clock/g12a-clkc.h | 93 +++++++++++++++++++++++++++++++++++
- 1 file changed, 93 insertions(+)
- create mode 100644 include/dt-bindings/clock/g12a-clkc.h
+--KFztAG8eRSV9hGtP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
-new file mode 100644
-index 0000000..1473225
---- /dev/null
-+++ b/include/dt-bindings/clock/g12a-clkc.h
-@@ -0,0 +1,93 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-+/*
-+ * Meson-G12A clock tree IDs
-+ *
-+ * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
-+ */
-+
-+#ifndef __G12A_CLKC_H
-+#define __G12A_CLKC_H
-+
-+#define CLKID_SYS_PLL				0
-+#define CLKID_FIXED_PLL				1
-+#define CLKID_FCLK_DIV2				2
-+#define CLKID_FCLK_DIV3				3
-+#define CLKID_FCLK_DIV4				4
-+#define CLKID_FCLK_DIV5				5
-+#define CLKID_FCLK_DIV7				6
-+#define CLKID_GP0_PLL				7
-+#define CLKID_CLK81					10
-+#define CLKID_MPLL0					11
-+#define CLKID_MPLL1					12
-+#define CLKID_MPLL2					13
-+#define CLKID_MPLL3					14
-+#define CLKID_DDR					15
-+#define CLKID_DOS					16
-+#define CLKID_AUDIO_LOCKER			17
-+#define CLKID_MIPI_DSI_HOST			18
-+#define CLKID_ETH_PHY				19
-+#define CLKID_ISA					20
-+#define CLKID_PL301					21
-+#define CLKID_PERIPHS				22
-+#define CLKID_SPICC0				23
-+#define CLKID_I2C					24
-+#define CLKID_SANA					25
-+#define CLKID_SD					26
-+#define CLKID_RNG0					27
-+#define CLKID_UART0					28
-+#define CLKID_SPICC1				29
-+#define CLKID_HIU_IFACE				30
-+#define CLKID_MIPI_DSI_PHY			31
-+#define CLKID_ASSIST_MISC			32
-+#define CLKID_SD_EMMC_A				33
-+#define CLKID_SD_EMMC_B				34
-+#define CLKID_SD_EMMC_C				35
-+#define CLKID_AUDIO_CODEC			36
-+#define CLKID_AUDIO					37
-+#define CLKID_ETH					38
-+#define CLKID_DEMUX					39
-+#define CLKID_AUDIO_IFIFO			40
-+#define CLKID_ADC					41
-+#define CLKID_UART1					42
-+#define CLKID_G2D					43
-+#define CLKID_RESET					44
-+#define CLKID_PCIE_COMB				45
-+#define CLKID_PARSER				46
-+#define CLKID_USB					47
-+#define CLKID_PCIE_PHY				48
-+#define CLKID_AHB_ARB0				49
-+#define CLKID_AHB_DATA_BUS			50
-+#define CLKID_AHB_CTRL_BUS			51
-+#define CLKID_HTX_HDCP22			52
-+#define CLKID_HTX_PCLK				53
-+#define CLKID_BT656					54
-+#define CLKID_USB1_DDR_BRIDGE		55
-+#define CLKID_MMC_PCLK				56
-+#define CLKID_UART2					57
-+#define CLKID_VPU_INTR				58
-+#define CLKID_GIC					59
-+#define CLKID_SD_EMMC_B_CLK0		60
-+#define CLKID_SD_EMMC_C_CLK0		61
-+#define CLKID_HIFI_PLL				71
-+
-+#define CLKID_VCLK2_VENCI0			77
-+#define CLKID_VCLK2_VENCI1			78
-+#define CLKID_VCLK2_VENCP0			79
-+#define CLKID_VCLK2_VENCP1			80
-+#define CLKID_VCLK2_VENCT0			81
-+#define CLKID_VCLK2_VENCT1			82
-+#define CLKID_VCLK2_OTHER			83
-+#define CLKID_VCLK2_ENCI			84
-+#define CLKID_VCLK2_ENCP			85
-+#define CLKID_DAC_CLK				86
-+#define CLKID_AOCLK					87
-+#define CLKID_IEC958				88
-+#define CLKID_ENC480P				89
-+#define CLKID_RNG1					90
-+#define CLKID_VCLK2_ENCT			91
-+#define CLKID_VCLK2_ENCL			92
-+#define CLKID_VCLK2_VENCLMMC		93
-+#define CLKID_VCLK2_VENCL			94
-+#define CLKID_VCLK2_OTHER1			95
-+
-+#endif /* __G12A_CLKC_H */
--- 
-1.9.1
+On Fri, Jul 06, 2018 at 03:13:13PM +0530, Rohit kumar wrote:
+
+> @@ -0,0 +1,390 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + */
+
+Please make the entire comment block a C++ comment, it makes it look
+more intentional.
+
+> +static const struct component_master_ops sdm845_ops = {
+> +	.bind = sdm845_bind,
+> +	.unbind = sdm845_unbind,
+> +};
+
+Why is this using the component stuff rather than the normal support for
+finding the components of audio cards?
+
+--KFztAG8eRSV9hGtP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltDQ50ACgkQJNaLcl1U
+h9C5OAf+JveqZrxXpoXe/VjhXg8RPbyzezTyG8ZWYflQEQpM1UzQpr4pSbyc7ozz
+CicbBkK5P6StaY1SUURd9NNmiQXay51izpf20Gne+nhDXxeIsi98J0eDtzypAgVX
+aOiAfKkFlsySKOJf79Cq1Co1BpS1HOe9ve7mauaFP6lmI8qiAtc3fuhD03WAB3ku
+FYNNCHSn2bV0A3EA3q1EX1j0xyO5PA8Kt0fTHqyCkDguA+DBhvoSGHD/HXYgibcH
+210gSXCQ4LwKNmHQ/QS0m2MCoS0HNgBM4xO3/PU/EbSQ/hvoS987B+xrNv/JE9SZ
+ZaluCT8Yre/yyA3YicLCSF48vWYuvA==
+=bYhV
+-----END PGP SIGNATURE-----
+
+--KFztAG8eRSV9hGtP--
