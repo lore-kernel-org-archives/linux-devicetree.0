@@ -1,7 +1,7 @@
 From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v3 8/8] drm/rockchip: dsi: add dual mipi support
-Date: Mon,  9 Jul 2018 15:48:34 +0200
-Message-ID: <20180709134834.11035-9-heiko@sntech.de>
+Subject: [PATCH v3 7/8] drm/bridge/synopsys: dsi: add dual-dsi support
+Date: Mon,  9 Jul 2018 15:48:33 +0200
+Message-ID: <20180709134834.11035-8-heiko@sntech.de>
 References: <20180709134834.11035-1-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,234 +21,196 @@ To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, philippe.cornu-qxv4g6HH51o@public.gmane.org, yannick.fertre-qxv4g6HH51o@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the Rockchip-sepcific dual-dsi setup and hook it into the VOP as well.
-As described in the general dual-dsi devicetree binding, the panel should
-define two input ports and point each of them to one of the used dsi-
-controllers, as well as declare one of them as clock-master.
-This is used to determine the dual-dsi state and get access to both
-controller instances.
+From: Nickey Yang <nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
+Allow to also drive a slave dw-mipi-dsi controller in a dual-dsi
+setup. This will require additional implementation-specific
+code to look up the slave instance and do specific setup.
+Also will probably need code in the specific crtcs as dual-dsi
+does not equal two separate dsi outputs.
+
+To activate, the implementation-specific code should set the slave
+using dw_mipi_dsi_set_slave() before calling __dw_mipi_dsi_bind().
+
+v2:
+- expect real interface number of lanes
+- keep links to both master and slave
+v3:
+- remove unneeded separate variables
+- remove unneeded second slave settings
+- disable slave before master
+- lane-sum calculation comments
+
+Signed-off-by: Nickey Yang <nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Tested-by: Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>
 ---
- .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   | 76 ++++++++++++++++++-
- drivers/gpu/drm/rockchip/rockchip_drm_drv.h   |  1 +
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c   |  3 +
- drivers/gpu/drm/rockchip/rockchip_drm_vop.h   |  4 +
- drivers/gpu/drm/rockchip/rockchip_vop_reg.c   |  1 +
- 5 files changed, 83 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 80 +++++++++++++++++--
+ include/drm/bridge/dw_mipi_dsi.h              |  1 +
+ 2 files changed, 75 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
-index 46e159524ec8..483b753ad5a2 100644
---- a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
-@@ -218,6 +218,10 @@ struct dw_mipi_dsi_rockchip {
- 	struct clk *grf_clk;
- 	struct clk *phy_cfg_clk;
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+index 88fed22ff3f6..286fa6f5788c 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+@@ -232,9 +232,20 @@ struct dw_mipi_dsi {
+ 	u32 format;
+ 	unsigned long mode_flags;
  
-+	/* dual-channel */
-+	bool is_slave;
-+	struct dw_mipi_dsi_rockchip *slave;
++	struct dw_mipi_dsi *master; /* dual-dsi master ptr */
++	struct dw_mipi_dsi *slave; /* dual-dsi slave ptr */
 +
- 	unsigned int lane_mbps; /* per lane */
- 	u16 input_div;
- 	u16 feedback_div;
-@@ -602,6 +606,8 @@ dw_mipi_dsi_encoder_atomic_check(struct drm_encoder *encoder,
+ 	const struct dw_mipi_dsi_plat_data *plat_data;
+ };
+ 
++/*
++ * Check if either a link to a master or slave is present
++ */
++static inline bool dw_mipi_is_dual_mode(struct dw_mipi_dsi *dsi)
++{
++	return dsi->slave || dsi->master;
++}
++
+ /*
+  * The controller should generate 2 frames before
+  * preparing the peripheral.
+@@ -464,10 +475,17 @@ static ssize_t dw_mipi_dsi_host_transfer(struct mipi_dsi_host *host,
  	}
  
- 	s->output_type = DRM_MODE_CONNECTOR_DSI;
+ 	dw_mipi_message_config(dsi, msg);
 +	if (dsi->slave)
-+		s->output_flags = ROCKCHIP_OUTPUT_DSI_DUAL;
++		dw_mipi_message_config(dsi->slave, msg);
  
- 	return 0;
+ 	ret = dw_mipi_dsi_write(dsi, &packet);
+ 	if (ret)
+ 		return ret;
++	if (dsi->slave) {
++		ret = dw_mipi_dsi_write(dsi->slave, &packet);
++		if (ret)
++			return ret;
++	}
+ 
+ 	if (msg->rx_buf && msg->rx_len) {
+ 		ret = dw_mipi_dsi_read(dsi, msg);
+@@ -606,7 +624,11 @@ static void dw_mipi_dsi_video_packet_config(struct dw_mipi_dsi *dsi,
+ 	 * DSI_VNPCR.NPSIZE... especially because this driver supports
+ 	 * non-burst video modes, see dw_mipi_dsi_video_mode_config()...
+ 	 */
+-	dsi_write(dsi, DSI_VID_PKT_SIZE, VID_PKT_SIZE(mode->hdisplay));
++
++	dsi_write(dsi, DSI_VID_PKT_SIZE,
++		       dw_mipi_is_dual_mode(dsi) ?
++				VID_PKT_SIZE(mode->hdisplay / 2) :
++				VID_PKT_SIZE(mode->hdisplay));
  }
-@@ -617,6 +623,8 @@ static void dw_mipi_dsi_encoder_enable(struct drm_encoder *encoder)
- 		return;
  
- 	pm_runtime_get_sync(dsi->dev);
-+	if (dsi->slave)
-+		pm_runtime_get_sync(dsi->slave->dev);
+ static void dw_mipi_dsi_command_mode_config(struct dw_mipi_dsi *dsi)
+@@ -778,24 +800,43 @@ static void dw_mipi_dsi_bridge_post_disable(struct drm_bridge *bridge)
+ 	 */
+ 	dsi->panel_bridge->funcs->post_disable(dsi->panel_bridge);
  
- 	/*
- 	 * For the RK3399, the clk of grf must be enabled before writing grf
-@@ -630,6 +638,8 @@ static void dw_mipi_dsi_encoder_enable(struct drm_encoder *encoder)
- 	}
- 
- 	dw_mipi_dsi_rockchip_config(dsi, mux);
-+	if (dsi->slave)
-+		dw_mipi_dsi_rockchip_config(dsi->slave, mux);
- 
- 	clk_disable_unprepare(dsi->grf_clk);
- }
-@@ -638,6 +648,8 @@ static void dw_mipi_dsi_encoder_disable(struct drm_encoder *encoder)
- {
- 	struct dw_mipi_dsi_rockchip *dsi = to_dsi(encoder);
- 
-+	if (dsi->slave)
++	if (dsi->slave) {
++		dw_mipi_dsi_disable(dsi->slave);
++		clk_disable_unprepare(dsi->slave->pclk);
 +		pm_runtime_put(dsi->slave->dev);
++	}
+ 	dw_mipi_dsi_disable(dsi);
++
+ 	clk_disable_unprepare(dsi->pclk);
  	pm_runtime_put(dsi->dev);
  }
  
-@@ -679,25 +691,82 @@ static int dw_mipi_dsi_rockchip_bind(struct device *dev,
+-static void dw_mipi_dsi_bridge_mode_set(struct drm_bridge *bridge,
+-					struct drm_display_mode *mode,
+-					struct drm_display_mode *adjusted_mode)
++static unsigned int dw_mipi_dsi_get_lanes(struct dw_mipi_dsi *dsi)
++{
++	/* this instance is the slave, so add the master's lanes */
++	if (dsi->master)
++		return dsi->master->lanes + dsi->lanes;
++
++	/* this instance is the master, so add the slave's lanes */
++	if (dsi->slave)
++		return dsi->lanes + dsi->slave->lanes;
++
++	/* single-dsi, so no other instance to consider */
++	return dsi->lanes;
++}
++
++static void dw_mipi_dsi_mode_set(struct dw_mipi_dsi *dsi,
++				struct drm_display_mode *adjusted_mode)
  {
- 	struct dw_mipi_dsi_rockchip *dsi = dev_get_drvdata(dev);
- 	struct drm_device *drm_dev = data;
-+	struct device_node *second_np;
- 	struct drm_bridge *bridge;
- 	struct drm_panel *panel;
-+	bool master1, master2;
+-	struct dw_mipi_dsi *dsi = bridge_to_dsi(bridge);
+ 	const struct dw_mipi_dsi_phy_ops *phy_ops = dsi->plat_data->phy_ops;
+ 	void *priv_data = dsi->plat_data->priv_data;
  	int ret;
++	u32 lanes = dw_mipi_dsi_get_lanes(dsi);
  
- 	/*
--	 * Handle probe-deferrals due to missing display.
-+	 * At this point both DSIs (if in use) should have probed and found
-+	 * any connected displays or bridges.
-+	 * This also takes care of handling possible probe-deferrals.
- 	 */
- 	ret = drm_of_find_panel_or_bridge(dsi->dev->of_node, 1, 0,
- 					  &panel, &bridge);
+ 	clk_prepare_enable(dsi->pclk);
+ 
+ 	ret = phy_ops->get_lane_mbps(priv_data, adjusted_mode, dsi->mode_flags,
+-				     dsi->lanes, dsi->format, &dsi->lane_mbps);
++				     lanes, dsi->format, &dsi->lane_mbps);
  	if (ret)
- 		return ret;
+ 		DRM_DEBUG_DRIVER("Phy get_lane_mbps() failed\n");
  
-+	second_np = of_mipi_dsi_find_second_host(dsi->dev->of_node, 1, 0);
-+	if (IS_ERR(second_np))
-+		return PTR_ERR(second_np);
-+
- 	/*
- 	 * We know that there is a panel present but it may not have
- 	 * finished attaching to the host. Defer in that case.
-+	 * Single-DSI case.
- 	 */
--	if (!dw_mipi_dsi_device_attached(dsi->dmd))
-+	if (!second_np && !dw_mipi_dsi_device_attached(dsi->dmd))
- 		return -EPROBE_DEFER;
+@@ -827,12 +868,25 @@ static void dw_mipi_dsi_bridge_mode_set(struct drm_bridge *bridge,
+ 	dw_mipi_dsi_set_mode(dsi, 0);
+ }
  
-+	if (second_np) {
-+		struct platform_device *pdev;
++static void dw_mipi_dsi_bridge_mode_set(struct drm_bridge *bridge,
++					struct drm_display_mode *mode,
++					struct drm_display_mode *adjusted_mode)
++{
++	struct dw_mipi_dsi *dsi = bridge_to_dsi(bridge);
 +
-+		master1 = of_property_read_bool(dsi->dev->of_node,
-+						"clock-master");
-+		master2 = of_property_read_bool(second_np, "clock-master");
++	dw_mipi_dsi_mode_set(dsi, adjusted_mode);
++	if (dsi->slave)
++		dw_mipi_dsi_mode_set(dsi->slave, adjusted_mode);
++}
 +
-+		if (master1 && master2) {
-+			DRM_DEV_ERROR(dsi->dev, "only one clock-master allowed\n");
-+			of_node_put(second_np);
-+			return -EINVAL;
-+		}
-+
-+		if (!master1 && !master2) {
-+			DRM_DEV_ERROR(dsi->dev, "no clock-master defined\n");
-+			of_node_put(second_np);
-+			return -EINVAL;
-+		}
-+
-+		/* we are the slave in dual-DSI */
-+		if (!master1) {
-+			dsi->is_slave = true;
-+			of_node_put(second_np);
-+			return 0;
-+		}
-+
-+		/* make sure, panel is attached to the master */
-+		if (!dw_mipi_dsi_device_attached(dsi->dmd))
-+			return -EPROBE_DEFER;
-+
-+		pdev = of_find_device_by_node(second_np);
-+		if (!pdev) {
-+			DRM_DEV_ERROR(dev, "could not find slave controller\n");
-+			return -ENODEV;
-+		}
-+
-+		dsi->slave = platform_get_drvdata(pdev);
-+		if (!dsi->slave) {
-+			DRM_DEV_ERROR(dev, "could not get slaves platform-data\n");
-+			return -ENODEV;
-+		}
-+
-+		dsi->slave->is_slave = true;
-+		dw_mipi_dsi_set_slave(dsi->dmd, dsi->slave->dmd);
-+
-+		of_node_put(second_np);
-+	}
-+
- 	ret = clk_prepare_enable(dsi->pllref_clk);
- 	if (ret) {
- 		DRM_DEV_ERROR(dev, "Failed to enable pllref_clk: %d\n", ret);
-@@ -725,6 +794,9 @@ static void dw_mipi_dsi_rockchip_unbind(struct device *dev,
+ static void dw_mipi_dsi_bridge_enable(struct drm_bridge *bridge)
  {
- 	struct dw_mipi_dsi_rockchip *dsi = dev_get_drvdata(dev);
+ 	struct dw_mipi_dsi *dsi = bridge_to_dsi(bridge);
  
-+	if (dsi->is_slave)
-+		return;
+ 	/* Switch to video mode for panel-bridge enable & panel enable */
+ 	dw_mipi_dsi_set_mode(dsi, MIPI_DSI_MODE_VIDEO);
++	if (dsi->slave)
++		dw_mipi_dsi_set_mode(dsi->slave, MIPI_DSI_MODE_VIDEO);
+ }
+ 
+ static enum drm_mode_status
+@@ -971,6 +1025,20 @@ static void __dw_mipi_dsi_remove(struct dw_mipi_dsi *dsi)
+ 	pm_runtime_disable(dsi->dev);
+ }
+ 
++void dw_mipi_dsi_set_slave(struct dw_mipi_dsi *dsi, struct dw_mipi_dsi *slave)
++{
++	/* introduce controllers to each other */
++	dsi->slave = slave;
++	dsi->slave->master = dsi;
 +
- 	dw_mipi_dsi_unbind(dsi->dmd);
- 
- 	clk_disable_unprepare(dsi->pllref_clk);
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.h b/drivers/gpu/drm/rockchip/rockchip_drm_drv.h
-index 96bb4ca8febf..2e6d2d4d1b65 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.h
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.h
-@@ -37,6 +37,7 @@ struct rockchip_crtc_state {
- 	int output_type;
- 	int output_mode;
- 	int output_bpc;
-+	int output_flags;
- };
- #define to_rockchip_crtc_state(s) \
- 		container_of(s, struct rockchip_crtc_state, base)
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-index effecbed2d11..313b163a346b 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-@@ -916,6 +916,7 @@ static void vop_crtc_atomic_enable(struct drm_crtc *crtc,
- 	pin_pol |= (adjusted_mode->flags & DRM_MODE_FLAG_PVSYNC) ?
- 		   BIT(VSYNC_POSITIVE) : 0;
- 	VOP_REG_SET(vop, output, pin_pol, pin_pol);
-+	VOP_REG_SET(vop, output, mipi_dual_channel_en, 0);
- 
- 	switch (s->output_type) {
- 	case DRM_MODE_CONNECTOR_LVDS:
-@@ -933,6 +934,8 @@ static void vop_crtc_atomic_enable(struct drm_crtc *crtc,
- 	case DRM_MODE_CONNECTOR_DSI:
- 		VOP_REG_SET(vop, output, mipi_pin_pol, pin_pol);
- 		VOP_REG_SET(vop, output, mipi_en, 1);
-+		VOP_REG_SET(vop, output, mipi_dual_channel_en,
-+			    !!(s->output_flags & ROCKCHIP_OUTPUT_DSI_DUAL));
- 		break;
- 	case DRM_MODE_CONNECTOR_DisplayPort:
- 		pin_pol &= ~BIT(DCLK_INVERT);
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-index fcb91041a666..361e4c7d225c 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-@@ -60,6 +60,7 @@ struct vop_output {
- 	struct vop_reg edp_en;
- 	struct vop_reg hdmi_en;
- 	struct vop_reg mipi_en;
-+	struct vop_reg mipi_dual_channel_en;
- 	struct vop_reg rgb_en;
- };
- 
-@@ -213,6 +214,9 @@ struct vop_data {
- /* for use special outface */
- #define ROCKCHIP_OUT_MODE_AAAA	15
- 
-+/* output flags */
-+#define ROCKCHIP_OUTPUT_DSI_DUAL	BIT(0)
++	/* migrate settings for already attached displays */
++	dsi->slave->lanes = dsi->lanes;
++	dsi->slave->channel = dsi->channel;
++	dsi->slave->format = dsi->format;
++	dsi->slave->mode_flags = dsi->mode_flags;
++}
++EXPORT_SYMBOL_GPL(dw_mipi_dsi_set_slave);
 +
- enum alpha_mode {
- 	ALPHA_STRAIGHT,
- 	ALPHA_INVERSE,
-diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-index 08023d3ecb76..56d83f1c2599 100644
---- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-@@ -421,6 +421,7 @@ static const struct vop_output rk3399_output = {
- 	.hdmi_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 13),
- 	.edp_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 14),
- 	.mipi_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 15),
-+	.mipi_dual_channel_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 3),
- };
+ /*
+  * Probe/remove API, used from platforms based on the DRM bridge API.
+  */
+diff --git a/include/drm/bridge/dw_mipi_dsi.h b/include/drm/bridge/dw_mipi_dsi.h
+index 131ff2569ed4..ba34966848b8 100644
+--- a/include/drm/bridge/dw_mipi_dsi.h
++++ b/include/drm/bridge/dw_mipi_dsi.h
+@@ -38,5 +38,6 @@ struct dw_mipi_dsi *dw_mipi_dsi_probe(struct platform_device *pdev,
+ void dw_mipi_dsi_remove(struct dw_mipi_dsi *dsi);
+ int dw_mipi_dsi_bind(struct dw_mipi_dsi *dsi, struct drm_encoder *encoder);
+ void dw_mipi_dsi_unbind(struct dw_mipi_dsi *dsi);
++void dw_mipi_dsi_set_slave(struct dw_mipi_dsi *dsi, struct dw_mipi_dsi *slave);
  
- static const struct vop_data rk3399_vop_big = {
+ #endif /* __DW_MIPI_DSI__ */
 -- 
 2.17.0
