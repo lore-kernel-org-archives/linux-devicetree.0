@@ -1,52 +1,85 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: clk: g12a: New binding for Meson-G12A SoC
-Date: Mon, 9 Jul 2018 23:57:49 +0200
-Message-ID: <CAFBinCBJp1xzo-CNW1HU-Odhrug31yQ7c3khB+XwvsNXp5-gTA@mail.gmail.com>
-References: <1531134767-29927-1-git-send-email-jian.hu@amlogic.com> <1531134767-29927-2-git-send-email-jian.hu@amlogic.com>
+Subject: Re: [PATCH 0/3] pinctrl: meson-g12a: add pinctrl driver support
+Date: Tue, 10 Jul 2018 00:02:52 +0200
+Message-ID: <CAFBinCCZzvn5XNiPHhYK+BxGw6J7KJxEuSXF9ZeT8cFi84FjRQ@mail.gmail.com>
+References: <20180704224511.29350-1-yixun.lan@amlogic.com> <78da7e13-e80b-d714-86d0-7c5f6fc0d9f5@baylibre.com>
+ <886462fa-1833-a99a-a2fa-5b7dd58341fd@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531134767-29927-2-git-send-email-jian.hu@amlogic.com>
+In-Reply-To: <886462fa-1833-a99a-a2fa-5b7dd58341fd@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jian.hu@amlogic.com, robh@kernel.org
-Cc: jbrunet@baylibre.com, Neil Armstrong <narmstrong@baylibre.com>, qianggui.song@amlogic.com, devicetree@vger.kernel.org, sboyd@kernel.org, khilman@baylibre.com, mturquette@baylibre.com, yixun.lan@amlogic.com, linux-kernel@vger.kernel.org, bo.yang@amlogic.com, qiufang.dai@amlogic.com, linux-arm-kernel@lists.infradead.org, carlo@caione.org, linux-amlogic@lists.infradead.org, sunny.luo@amlogic.com, linux-clk@vger.kernel.org, xingyu.chen@amlogic.com
+To: yixun.lan@amlogic.com
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, khilman@baylibre.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, carlo@caione.org, linux-amlogic@lists.infradead.org, xingyu.chen@amlogic.com, jbrunet@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-adding Rob Herring so it doesn't get lost on the devicetree mailing list
+Hi Yixun,
 
-On Mon, Jul 9, 2018 at 1:13 PM Jian Hu <jian.hu@amlogic.com> wrote:
+On Thu, Jul 5, 2018 at 4:53 AM Yixun Lan <yixun.lan@amlogic.com> wrote:
 >
-> Add new binding for Meson-G12A SoC Everything-Else part
+> HI Neil
 >
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
-> ---
->  Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt | 1 +
->  1 file changed, 1 insertion(+)
+> On 07/04/18 22:57, Neil Armstrong wrote:
+> > Hi Yixun,
+> >
+> > On 05/07/2018 00:45, Yixun Lan wrote:
+> >> This patch series try to add pinctrl driver support for
+> >> the Meson-G12A SoC.
+> >
+> > Thanks for submitting these patches.
+> >
+> > Can you explicit this patchset with more details on the G12A SoC family ?
+> > It's relationship with AXG and the differences in term of pinmuxing with the other SoC families ?
+> >
+> I thought this was already discussed while we doing pinctrl driver for
+> Meson-AXG SoC.
 >
-> diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-> index e950599..0833006 100644
-> --- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-> +++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-> @@ -9,6 +9,7 @@ Required Properties:
->                 "amlogic,gxbb-clkc" for GXBB SoC,
->                 "amlogic,gxl-clkc" for GXL and GXM SoC,
->                 "amlogic,axg-clkc" for AXG SoC.
-> +               "amlogic,g12a-clkc" for G12A SoC.
-should this be "amlogic,meson-g12a-clkc" instead?
-that would make it consistent with virtually all other bindings which
-use the schema "amlogic,meson<chip>-<ip-block>" (where chip is 8, 8b,
-8m2, -gxbb, -gxl, ...)
+> Anyway, here it is:
+>
+> Starting from Meson-AXG SoC, the pinctrl controller block using 4
+> continues bit to specific pin mux function, while comparing to old
+> generation SoC which kind of using various length bits for the pin mux
+> definition. The new design would greatly simplify the software model..
+>
+> for detail example, one 32bit register can describe 8 pins, and each of
+> them has 0-7 value to set, start from value 0 to 7.
+>
+> partition the register into 8 parts:
+> bit[3:0]
+> bit[7:4]
+> bit[11:8]
+> bit[15:12]
+> bit[19:16]
+> bit[23:20]
+> bit[27:24]
+> bit[31:28]
+>
+>
+> for each value:
+> value == 0, means the pin is GPIO
+> value = {1, 2, ... 7 } is one of specific PIN function
+OK, so AXG and G12A use the same register layout -> thus the same
+pinmux ops are re-used
 
-see also: $ grep -R "amlogic," Documentation/devicetree/bindings/
 
+
+> I could put this info into cover-letter or commit message?
+if you have to resend this series anyways then it would be great if
+you could add it to the commit description
+
+> > Why is there a GPIOE bank within the AO controller ?
+> >
 >
->  - #clock-cells: should be 1.
+> It actually sit in the AO domain, although it's sounds strange from the
+> naming..
 >
-> --
-> 1.9.1
->
->
-> _______________________________________________
-> linux-amlogic mailing list
-> linux-amlogic@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+> I'm not sure if it's good idea to append a AO suffix? since the
+> documentation just use the plain GPIOE
+I am fine with plain GPIOE if that's what your internal documentation uses
+it would be great if you could add a comment (or at least a note in
+the commit message) indicating that this is how the hardware is
+designed (initially I thought this was a bug since I have no
+documentation for the G12A chipset)
+
+Regards
+Martin
