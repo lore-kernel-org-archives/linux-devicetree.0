@@ -1,29 +1,36 @@
 From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 0/3] ARM64: dts: meson-axg: first round of daughter card updates
-Date: Mon, 09 Jul 2018 14:46:07 -0700
-Message-ID: <7hsh4snkv4.fsf@baylibre.com>
-References: <20180628095054.13433-1-jbrunet@baylibre.com>
+Subject: Re: [PATCH v2] ARM64: dts: meson-axg: add saradc support
+Date: Mon, 09 Jul 2018 14:47:31 -0700
+Message-ID: <7hmuv0nkss.fsf@baylibre.com>
+References: <20180702222515.13924-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180628095054.13433-1-jbrunet@baylibre.com> (Jerome Brunet's
-        message of "Thu, 28 Jun 2018 11:50:51 +0200")
+In-Reply-To: <20180702222515.13924-1-yixun.lan@amlogic.com> (Yixun Lan's
+        message of "Mon, 2 Jul 2018 22:25:15 +0000")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Yixun Lan <yixun.lan@amlogic.com>
+Cc: Xingyu Chen <xingyu.chen@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+Yixun Lan <yixun.lan@amlogic.com> writes:
 
-> This patchset adds a speaker amplifier and some leds present on daughter
-> cards which are connected to the s400 board.
+> From: Xingyu Chen <xingyu.chen@amlogic.com>
 >
-> Kevin, please note that the bindings documentation update for the tas5707
-> has been queued for next in Mark Brown's ASoC tree. Not having it won't
-> break anything but you may get checkpatch warning.
+> Add the DT info for SAR ADC of the Amlogic's Meson-AXG SoC.
+>
+> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> ---
+> Hi kevin
+>   I just re-send this patch which rebased to your khilman/v4.18/integ branch
+>   Thanks
+> Yixun
+>
+> nothing changed since patch v1 [1]:
 
-Thanks for the warning.
+Applied to v4.19/dt64,
 
-Series applied to v4.19/dt64,
+Thanks,
 
 Kevin
