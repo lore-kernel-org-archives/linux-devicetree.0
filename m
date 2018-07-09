@@ -1,31 +1,40 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 0/3] pinctrl: meson-g12a: add pinctrl driver support
-Date: Mon, 9 Jul 2018 15:35:40 +0200
-Message-ID: <CACRpkdauMRnLpfiARG-BWkuJfArri68e9BYx56SCUxJaYWsYYA@mail.gmail.com>
-References: <20180704224511.29350-1-yixun.lan@amlogic.com>
+Subject: Re: [PATCH v2] pinctrl: at91-pio4: add support for drive strength
+Date: Mon, 9 Jul 2018 15:40:26 +0200
+Message-ID: <CACRpkdYyeFTsPe+pR26DCO5uOkLZu-+Nz8vDdEg47NWn4f-4Rw@mail.gmail.com>
+References: <20180629081533.31885-1-ludovic.desroches@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180704224511.29350-1-yixun.lan@amlogic.com>
+In-Reply-To: <20180629081533.31885-1-ludovic.desroches@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>, Carlo Caione <carlo@caione.org>, Beniamino Galvani <b.galvani@gmail.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Xingyu Chen <xingyu.chen@amlogic.com>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 4, 2018 at 4:48 PM Yixun Lan <yixun.lan@amlogic.com> wrote:
->
-> This patch series try to add pinctrl driver support for
-> the Meson-G12A SoC.
->
->
-> Yixun Lan (3):
->   documentation: Add compatibles for Amlogic Meson G12A pin controllers
->   dt-bindings: pinctrl: meson-g12a: document pin name
->   pinctrl: meson-g12a: add pinctrl driver support
+On Fri, Jun 29, 2018 at 10:19 AM Ludovic Desroches
+<ludovic.desroches@microchip.com> wrote:
 
-Overall this looks good to me, could we get some review or ACKs
-from Beniamino, Martin and/or Carlo as an indication that everything
-seems all right before I apply the series?
+> Add support for the drive strength configuration. Usually, this value is
+> expressed in mA. Since the numeric value depends on VDDIOP voltage, a
+> value we can't retrieve at runtime, the controller uses low, medium and
+> high to define the drive strength.
+>
+> The PIO controller accepts two values for the low drive configuration: 0
+> and 1. Most of the time, we don't care about the drive strength. So we
+> keep the default value which is 0. The drive strength is advertised
+> through the sysfs only when it has been explicitly set in the device
+> tree i.e. if its value is different from 0.
+>
+> Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> ---
+>
+> Changes:
+> - v2: use atmel,drive-strength property instead of drive-strengh one
+> since it is not expressend in mA and there is no way to retrieve this
+> value at runtime.
+
+Patch applied with Rob's ACK!
 
 Yours,
 Linus Walleij
