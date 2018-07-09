@@ -1,75 +1,46 @@
-Return-Path: <SRS0=MQyj=JZ=gmail.com=tmaimon77@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20180708231507.GA26077@roeck-us.net>
-References: <20180703232326.355718-3-tmaimon77@gmail.com> <20180708231507.GA26077@roeck-us.net>
-From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Mon, 9 Jul 2018 17:00:44 +0300
-Message-ID: <CAP6Zq1i8Owmp847HvgC5=WGHzSBOS7Ne2G2m8Gotmk8zHkJmKw@mail.gmail.com>
-Subject: Re: [v8,2/2] hwmon: npcm750: add NPCM7xx PWM and Fan driver
-Content-Type: multipart/alternative; boundary="000000000000927786057091707b"
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Avi Fishman <avifishman70@gmail.com>, Nancy Yuen <yuenn@google.com>, Brendan Higgins <brendanhiggins@google.com>, Patrick Venture <venture@google.com>, Joel Stanley <joel@jms.id.au>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux HWMON List <linux-hwmon@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Date: Mon, 9 Jul 2018 08:36:25 -0600
+References: <1530102225-6459-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+	<1530102225-6459-3-git-send-email-shubhrajyoti.datta@xilinx.com>
+	<20180703224239.GA6756@rob-hp-laptop>
+	<cbcc75219d9c9721341f237f31f44549@vanmierlo.com>
+In-Reply-To: <cbcc75219d9c9721341f237f31f44549@vanmierlo.com>
+Message-ID: <CAL_JsqJdFj+Dxy=8rt0FnXNPDyMQLLcMtM98okm4boY3w0YR_A@mail.gmail.com>
+Subject: Re: [PATCH 3/4] doc: uartlite: Add binding for the driver
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: m.brock@vanmierlo.com
+Cc: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>, linux-serial-owner@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---000000000000927786057091707b
-Content-Type: text/plain; charset="UTF-8"
-
-Great!
-
-thanks a lot!
-
-Tomer
-
-On 9 July 2018 at 02:15, Guenter Roeck <linux@roeck-us.net> wrote:
-
-> On Wed, Jul 04, 2018 at 02:23:26AM +0300, Tomer Maimon wrote:
-> > Add Nuvoton BMC NPCM750/730/715/705 Pulse Width Modulation (PWM)
-> > and Fan tacho driver.
-> >
-> > The Nuvoton BMC NPCM750/730/715/705 supports 8 PWM controller outputs
-> > and 16 Fan controller inputs.
-> >
-> > The driver provides a sysfs entries through which the user can
-> > configure the duty-cycle value from 0(off) and 255(full speed)
-> > and read the fan tacho rpm value.
-> >
-> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+On Mon, Jul 9, 2018 at 8:15 AM Maarten Brock <m.brock@vanmierlo.com> wrote:
 >
-> Applied to hwmon-next.
+> On 2018-07-04 00:42, Rob Herring wrote:
+> > On Wed, Jun 27, 2018 at 05:53:44PM +0530, Shubhrajyoti Datta wrote:
+> >> +
+> >> +Optional properties:
+> >> +- port-number          : Set Uart port number
+> >
+> > Nope. Use aliases.
 >
-> Thanks,
-> Guenter
->
+> You may not like the current implementation, but that is no reason to
+> deny
+> this documentation of the current state.
 
---000000000000927786057091707b
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Okay, didn't realize it was already in use.
 
-<div dir=3D"ltr">Great!=C2=A0<div><br></div><div>thanks a lot!</div><div><b=
-r></div><div>Tomer</div></div><div class=3D"gmail_extra"><br><div class=3D"=
-gmail_quote">On 9 July 2018 at 02:15, Guenter Roeck <span dir=3D"ltr">&lt;<=
-a href=3D"mailto:linux@roeck-us.net" target=3D"_blank">linux@roeck-us.net</=
-a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0=
- 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><span class=3D"">On =
-Wed, Jul 04, 2018 at 02:23:26AM +0300, Tomer Maimon wrote:<br>
-&gt; Add Nuvoton BMC NPCM750/730/715/705 Pulse Width Modulation (PWM)<br>
-&gt; and Fan tacho driver.<br>
-&gt; <br>
-&gt; The Nuvoton BMC NPCM750/730/715/705 supports 8 PWM controller outputs<=
-br>
-&gt; and 16 Fan controller inputs.<br>
-&gt; <br>
-&gt; The driver provides a sysfs entries through which the user can<br>
-&gt; configure the duty-cycle value from 0(off) and 255(full speed)<br>
-&gt; and read the fan tacho rpm value.<br>
-&gt; <br>
-&gt; Signed-off-by: Tomer Maimon &lt;<a href=3D"mailto:tmaimon77@gmail.com"=
->tmaimon77@gmail.com</a>&gt;<br>
-<br>
-</span>Applied to hwmon-next.<br>
-<br>
-Thanks,<br>
-Guenter<br>
-</blockquote></div><br></div>
+> Personally I don't get this preference for aliases. It is a one way
+> mapping
+> in the wrong direction if you ask me. If e.g. you have serial0 pointing
+> to
+> a 16550 it will give /dev/ttyS0. This prevents you to create
+> /dev/ttyUL0,
+> because serial0 is already taken. Note that ttySx and ttyULx are in
+> different namespaces. It would only make sense if ttyULx was an illegal
+> name for a UART.
 
---000000000000927786057091707b--
+The problem here is that each UART defines its own namespace. We don't
+do that for any other type of device. The problem hasn't been fixed
+because doing so without breaking userspace is hard.
+
+Rob
