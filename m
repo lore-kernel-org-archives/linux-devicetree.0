@@ -1,109 +1,47 @@
-From: Bhushan Shah <bshah@kde.org>
-Subject: Re: [PATCH] ARM: dts: qcom: msm8974-hammerhead: increase load on l20
- for sdhci
-Date: Mon, 9 Jul 2018 17:48:50 +0530
-Message-ID: <20180709121850.GC1774@orion>
-References: <20180709091628.GA8854@orion>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 3/5] ASoC: qcom: add sdm845 sound card support
+Date: Mon, 9 Jul 2018 13:34:42 +0100
+Message-ID: <b5a3f0e2-d420-603d-f9a0-f93bdbd2619f@linaro.org>
+References: <1530870195-13576-1-git-send-email-rohitkr@codeaurora.org>
+ <1530870195-13576-4-git-send-email-rohitkr@codeaurora.org>
+ <20180709111437.GB16082@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="GZVR6ND4mMseVXL/"
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180709091628.GA8854@orion>
+In-Reply-To: <20180709111437.GB16082@sirena.org.uk>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Masney <masneyb@onstation.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+To: Mark Brown <broonie@kernel.org>, Rohit kumar <rohitkr@codeaurora.org>
+Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, plai@codeaurora.org, bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---GZVR6ND4mMseVXL/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On 09/07/18 12:14, Mark Brown wrote:
+>> +static const struct component_master_ops sdm845_ops = {
+>> +	.bind = sdm845_bind,
+>> +	.unbind = sdm845_unbind,
+>> +};
+> Why is this using the component stuff rather than the normal support for
+> finding the components of audio cards?
+Could you elaborate this please?
+Do you mean something like snd_soc_lookup_component()?  Or in general 
+audio card binding during startup.
 
-On Mon, Jul 09, 2018 at 02:46:28PM +0530, Bhushan Shah wrote:
-> The kernel would not boot on the hammerhead hardware due to the
-> following error:
->=20
-> mmc0: Timeout waiting for hardware interrupt.
-> mmc0: sdhci: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D SDHCI REGISTER DUMP =3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> mmc0: sdhci: Sys addr:  0x00000200 | Version:  0x00003802
-> mmc0: sdhci: Blk size:  0x00000200 | Blk cnt:  0x00000200
-> mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000023
-> mmc0: sdhci: Present:   0x03e80000 | Host ctl: 0x00000034
-> mmc0: sdhci: Power:     0x00000001 | Blk gap:  0x00000000
-> mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x00000007
-> mmc0: sdhci: Timeout:   0x0000000e | Int stat: 0x00000000
-> mmc0: sdhci: Int enab:  0x02ff900b | Sig enab: 0x02ff100b
-> mmc0: sdhci: AC12 err:  0x00000000 | Slot int: 0x00000000
-> mmc0: sdhci: Caps:      0x642dc8b2 | Caps_1:   0x00008007
-> mmc0: sdhci: Cmd:       0x00000c1b | Max curr: 0x00000000
-> mmc0: sdhci: Resp[0]:   0x00000c00 | Resp[1]:  0x00000000
-> mmc0: sdhci: Resp[2]:   0x00000000 | Resp[3]:  0x00000000
-> mmc0: sdhci: Host ctl2: 0x00000008
-> mmc0: sdhci: ADMA Err:  0x00000000 | ADMA Ptr: 0x70040220
-> mmc0: sdhci: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> mmc0: Card stuck in wrong state! mmcblk0 card_busy_detect status: 0xe00
-> mmc0: cache flush error -110
-> mmc0: Reset 0x1 never completed.
->=20
-> This patch increases the load on l20 to 0.2 amps for the sdhci
-> and allows the device to boot normally.
->=20
-> Signed-off-by: Bhushan Shah <bshah@kde.org>
+AFAIU, The issue with that mechanism or EPROBEDEFER is that it works 
+only for first time.. for the second time(restart usecase) there are no 
+hooks like bind/unbind.
 
-Please also add,
+The reason why we chose to use component framework is because of bind 
+and unbind functionality. Am more than happy to rework on this if there 
+is already a alternative mechanism in ASoC which can provide this.
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
+The design we are aiming at is:
+1> audio card to deregister when any of the DSP audio services go DOWN.
+2> re-register audio card only when all the DSP audio services are UP.
 
-which I missed in previous patch.
+Usecase is something like DSP start-stop or restart due to fatal errors.
 
-> Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Tested-by: Brian Masney <masneyb@onstation.org>
-> ---
->  arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/a=
-rch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> index 4dc0b347b1ee..c2dc9d09484a 100644
-> --- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> +++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> @@ -189,6 +189,8 @@
->  						regulator-max-microvolt =3D <2950000>;
-> =20
->  						regulator-boot-on;
-> +						regulator-system-load =3D <200000>;
-> +						regulator-allow-set-load;
->  					};
-> =20
->  					l21 {
-> --=20
-> 2.17.1
->=20
-
---=20
-Bhushan Shah
-http://blog.bshah.in
-IRC Nick : bshah on Freenode
-GPG key fingerprint : 0AAC 775B B643 7A8D 9AF7 A3AC FE07 8411 7FBC E11D
-
---GZVR6ND4mMseVXL/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEs8s2ZVJUC+Bu6a2XEZaMRJKMrvwFAltDUoAACgkQEZaMRJKM
-rvxGxQf8Du3m/uwcEpcrpY8yWnAspG6QNKqJKX4F2+JJHCcu0tgKQlh8OkAaH8Mf
-LSxAxoVpk1uDTn4zAs1NqivaRVLBjJlt7IzFbppJd67YY6b/GC0tsy1eUWzoWPnC
-WiBLnytFCCUCWWZgxCNXkopg4HKoLjLJhAZV16kq+SAfCFOMg1RX2QUfWTlVb42V
-KebonWPQ3DP6ksrluD5reK6zpaeqoGRLHs+fC9dLgsxJTaJ+7iUQUQ8zcaivqp0O
-Kvo17dLJuuOqnKO8VAoH4bLdjf6Vc5g81GNywsWuQ+Xqopd9HAPVx8RaDyzXHeEX
-l9yVbxd6wN5hGH9m+Js90aVZXBkySQ==
-=JoZ8
------END PGP SIGNATURE-----
-
---GZVR6ND4mMseVXL/--
+thanks,
+srini
