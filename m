@@ -1,94 +1,175 @@
-From: "Chiang, AlanX" <alanx.chiang@intel.com>
-Subject: RE: [RESEND PATCH v4 1/2] dt-bindings: at24: Add address-width
- property
-Date: Mon, 9 Jul 2018 03:12:18 +0000
-Message-ID: <0772C36F3434E145A062D024A4869A09010B1E4D@PGSMSX101.gar.corp.intel.com>
-References: <1530522740-2798-1-git-send-email-alanx.chiang@intel.com>
- <1530522740-2798-2-git-send-email-alanx.chiang@intel.com>
- <20180705212204.GA10449@rob-hp-laptop>
- <alpine.LFD.2.21.1807051623400.12206@localhost.localdomain>
+From: "'Kishon Vijay Abraham I' via linux-sunxi" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: [PATCH v2 7/9] phy: allwinner: add phy driver for
+ USB3 PHY on Allwinner H6 SoC
+Date: Mon, 9 Jul 2018 10:01:24 +0530
+Message-ID: <438f1123-a619-61d0-36cd-d65c1430435a@ti.com>
+References: <20180706153805.25842-1-icenowy@aosc.io>
+ <20180706153805.25842-8-icenowy@aosc.io>
+Reply-To: kishon-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.LFD.2.21.1807051623400.12206@localhost.localdomain>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Robert P. J. Day" <rpjday@crashcourse.ca>, Rob Herring <robh@kernel.org>
-Cc: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "Yeh, Andy" <andy.yeh@intel.com>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "Mani, Rajmohan" <rajmohan.mani@intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "tfiga@chromium.org" <tfiga@chromium.org>, "jcliang@chromium.org" <jcliang@chromium.org>, "brgl@bgdev.pl" <brgl@bgdev.pl>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCOOP4VF5IDRBL6KRPNAKGQEZO4QD6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20180706153805.25842-8-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Robert,
+Hi,
 
-> -----Original Message-----
-> From: Robert P. J. Day [mailto:rpjday@crashcourse.ca]
-> Sent: Friday, July 6, 2018 4:24 AM
-> To: Rob Herring <robh@kernel.org>
-> Cc: Chiang, AlanX <alanx.chiang@intel.com>; linux-i2c@vger.kernel.org; Yeh,
-> Andy <andy.yeh@intel.com>; sakari.ailus@linux.intel.com;
-> andriy.shevchenko@linux.intel.com; Shevchenko, Andriy
-> <andriy.shevchenko@intel.com>; Mani, Rajmohan
-> <rajmohan.mani@intel.com>; andy.shevchenko@gmail.com;
-> tfiga@chromium.org; jcliang@chromium.org; brgl@bgdev.pl;
-> mark.rutland@arm.com; arnd@arndb.de; gregkh@linuxfoundation.org;
-> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org
-> Subject: Re: [RESEND PATCH v4 1/2] dt-bindings: at24: Add address-width
-> property
+On Friday 06 July 2018 09:08 PM, Icenowy Zheng wrote:
+> Allwinner H6 SoC contains a USB3 PHY (with USB2 DP/DM lines also
+> controlled).
 > 
-> On Thu, 5 Jul 2018, Rob Herring wrote:
+> Add a driver for it.
 > 
-> > On Mon, Jul 02, 2018 at 05:12:19PM +0800, alanx.chiang@intel.com wrote:
-> > > From: Alan Chiang <alanx.chiang@intel.com>
-> > >
-> > > The AT24 series chips use 8-bit address by default. If some chips
-> > > would like to support more than 8 bits, the at24 driver should be
-> > > added the compatible field for specfic chips.
-> > >
-> > > Provide a flexible way to determine the addressing bits through
-> > > address-width in this patch.
-> > >
-> > > Signed-off-by: Alan Chiang <alanx.chiang@intel.com>
-> > > Signed-off-by: Andy Yeh <andy.yeh@intel.com>
-> > > Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > >
-> > > ---
-> > > since v1:
-> > > -- Remove the address-width field in the example.
-> > > since v2:
-> > > -- Remove redundant space.
-> > > since v3:
-> > > -- Add Acked-by.
-> > >
-> > > ---
-> > >  Documentation/devicetree/bindings/eeprom/at24.txt | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
+> The register operations in this driver is mainly extracted from the BSP
+> USB3 driver.
 > 
->   "... should be added the compatible field ..."??
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+> Changes in v2:
+> - Splitted out the DT binding.
 > 
-> rday
+>  drivers/phy/allwinner/Kconfig           |  13 ++
+>  drivers/phy/allwinner/Makefile          |   1 +
+>  drivers/phy/allwinner/phy-sun50i-usb3.c | 194 ++++++++++++++++++++++++
+>  3 files changed, 208 insertions(+)
+>  create mode 100644 drivers/phy/allwinner/phy-sun50i-usb3.c
+> 
+> diff --git a/drivers/phy/allwinner/Kconfig b/drivers/phy/allwinner/Kconfig
+> index cdc1e745ba47..cf373bcee034 100644
+> --- a/drivers/phy/allwinner/Kconfig
+> +++ b/drivers/phy/allwinner/Kconfig
+> @@ -29,3 +29,16 @@ config PHY_SUN9I_USB
+>  	  sun9i SoCs.
+>  
+>  	  This driver controls each individual USB 2 host PHY.
+> +
+> +config PHY_SUN50I_USB3
+> +	tristate "Allwinner sun50i SoC USB3 PHY driver"
+> +	depends on ARCH_SUNXI && HAS_IOMEM && OF
+> +	depends on RESET_CONTROLLER
+> +	depends on USB_SUPPORT
+> +	select USB_COMMON
 
-Maybe I should modify the sentence as below that makes it clear.
-"The compatible field should be added in the at24.c for specific chips.".
+Doesn't look like this driver depends on USB_SUPPORT.
+> +	select GENERIC_PHY
+> +	help
+> +	  Enable this to support the USB3.0-capable transceiver that is
+> +	  part of some Allwinner sun50i SoCs.
+> +
+> +	  This driver controls each individual USB 2+3 host PHY combo.
+> diff --git a/drivers/phy/allwinner/Makefile b/drivers/phy/allwinner/Makefile
+> index 8605529c01a1..a8d01e9073c2 100644
+> --- a/drivers/phy/allwinner/Makefile
+> +++ b/drivers/phy/allwinner/Makefile
+> @@ -1,2 +1,3 @@
+>  obj-$(CONFIG_PHY_SUN4I_USB)		+= phy-sun4i-usb.o
+>  obj-$(CONFIG_PHY_SUN9I_USB)		+= phy-sun9i-usb.o
+> +obj-$(CONFIG_PHY_SUN50I_USB3)		+= phy-sun50i-usb3.o
+> diff --git a/drivers/phy/allwinner/phy-sun50i-usb3.c b/drivers/phy/allwinner/phy-sun50i-usb3.c
+> new file mode 100644
+> index 000000000000..226c99c2d664
+> --- /dev/null
+> +++ b/drivers/phy/allwinner/phy-sun50i-usb3.c
+> @@ -0,0 +1,194 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Allwinner sun50i(H6) USB 3.0 phy driver
+> + *
+> + * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> + *
+> + * Based on phy-sun9i-usb.c, which is:
+> + *
+> + * Copyright (C) 2014-2015 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> + *
+> + * Based on code from Allwinner BSP, which is:
+> + *
+> + * Copyright (c) 2010-2015 Allwinner Technology Co., Ltd.
 
-I quote Andy's words in patch v2:
-"The current at24 driver has no address width support, thus, reusing same
-(allocated) IDs (non-DT case) is hard."
+Does the BSP also use GPL license?
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/usb/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset.h>
+> +
+> +/* Interface Status and Control Registers */
+> +#define SUNXI_ISCR			0x00
+> +#define SUNXI_PIPE_CLOCK_CONTROL	0x14
+> +#define SUNXI_PHY_TUNE_LOW		0x18
+> +#define SUNXI_PHY_TUNE_HIGH		0x1c
+> +#define SUNXI_PHY_EXTERNAL_CONTROL	0x20
+> +
+> +/* USB2.0 Interface Status and Control Register */
+> +#define SUNXI_ISCR_FORCE_VBUS		(3 << 12)
+> +
+> +/* PIPE Clock Control Register */
+> +#define SUNXI_PCC_PIPE_CLK_OPEN		(1 << 6)
+> +
+> +/* PHY External Control Register */
+> +#define SUNXI_PEC_EXTERN_VBUS		(3 << 1)
+> +#define SUNXI_PEC_SSC_EN		(1 << 24)
+> +#define SUNXI_PEC_REF_SSP_EN		(1 << 26)
+> +
+> +/* PHY Tune High Register */
+> +#define SUNXI_TX_DEEMPH_3P5DB(n)	((n) << 19)
+> +#define SUNXI_TX_DEEMPH_3P5DB_MASK	GENMASK(24, 19)
+> +#define SUNXI_TX_DEEMPH_6DB(n)		((n) << 13)
+> +#define SUNXI_TX_DEEMPH_6GB_MASK	GENMASK(18, 13)
+> +#define SUNXI_TX_SWING_FULL(n)		((n) << 6)
+> +#define SUNXI_TX_SWING_FULL_MASK	GENMASK(12, 6)
+> +#define SUNXI_LOS_BIAS(n)		((n) << 3)
+> +#define SUNXI_LOS_BIAS_MASK		GENMASK(5, 3)
+> +#define SUNXI_TXVBOOSTLVL(n)		((n) << 0)
+> +#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(0, 2)
+> +
+> +struct sun50i_usb3_phy {
+> +	struct phy *phy;
+> +	void __iomem *regs;
+> +	struct reset_control *reset;
+> +	struct clk *clk;
+> +};
+> +
+> +static void sun50i_usb3_phy_open(struct sun50i_usb3_phy *phy)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(phy->regs + SUNXI_PHY_EXTERNAL_CONTROL);
+> +	val |= SUNXI_PEC_EXTERN_VBUS;
+> +	val |= SUNXI_PEC_SSC_EN | SUNXI_PEC_REF_SSP_EN;
+> +	writel(val, phy->regs + SUNXI_PHY_EXTERNAL_CONTROL);
+> +
+> +	val = readl(phy->regs + SUNXI_PIPE_CLOCK_CONTROL);
+> +	val |= SUNXI_PCC_PIPE_CLK_OPEN;
+> +	writel(val, phy->regs + SUNXI_PIPE_CLOCK_CONTROL);
+> +
+> +	val = readl(phy->regs + SUNXI_ISCR);
+> +	val |= SUNXI_ISCR_FORCE_VBUS;
+> +	writel(val, phy->regs + SUNXI_ISCR);
+> +
+> +	/*
+> +	 * All the magic numbers written to the PHY_TUNE_{LOW_HIGH}
+> +	 * registers are directly taken from the BSP USB3 driver from
+> +	 * Allwiner.
 
-This is the reason that I submitted the patch.
+%s/Allwiner/Allwinner/
+> +	 */
+> +	writel(0x0047fc87, phy->regs + SUNXI_PHY_TUNE_LOW);
+
+PHY_TUNE_LOW should also configure individual parameters like how you've done
+below for PHY_TUNE_HIGH.
 
 Thanks
-
-> 
-> --
-> 
-> ==========================================================
-> ==============
-> Robert P. J. Day                                 Ottawa, Ontario, CANADA
->                   http://crashcourse.ca/dokuwiki
-> 
-> Twitter:                                       http://twitter.com/rpjday
-> LinkedIn:                               http://ca.linkedin.com/in/rpjday
-> ==========================================================
-> ==============
+Kishon
