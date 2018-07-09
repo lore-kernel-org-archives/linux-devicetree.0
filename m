@@ -1,123 +1,94 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 8/8] ARM: dts: imx6qdl-apalis/-colibri: remove unused pinctrl
- groups
-Date: Mon,  9 Jul 2018 17:48:48 +0200
-Message-ID: <20180709154848.5401-8-stefan@agner.ch>
-References: <20180709154848.5401-1-stefan@agner.ch>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v4 1/6] driver core: allow stopping deferred probe after
+ init
+Date: Mon, 9 Jul 2018 16:52:01 +0100
+Message-ID: <20180709155201.GG17271@n2100.armlinux.org.uk>
+References: <20180709154153.15742-1-robh@kernel.org>
+ <20180709154153.15742-2-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180709154848.5401-1-stefan@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, s.hauer@pengutronix.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, max.krummenacher@toradex.com, marcel.ziswiler@toradex.com, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, maitysanchayan@gmail.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180709154153.15742-2-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, boot-architecture@lists.linaro.org, Kevin Hilman <khilman@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-100/200MHz states for USDHC3 are not required since the SoC
-does not support modes faster than DDR52 for the on board eMMC.
+On Mon, Jul 09, 2018 at 09:41:48AM -0600, Rob Herring wrote:
+> Deferred probe will currently wait forever on dependent devices to probe,
+> but sometimes a driver will never exist. It's also not always critical for
+> a driver to exist. Platforms can rely on default configuration from the
+> bootloader or reset defaults for things such as pinctrl and power domains.
+> This is often the case with initial platform support until various drivers
+> get enabled. There's at least 2 scenarios where deferred probe can render
+> a platform broken. Both involve using a DT which has more devices and
+> dependencies than the kernel supports. The 1st case is a driver may be
+> disabled in the kernel config. The 2nd case is the kernel version may
+> simply not have the dependent driver. This can happen if using a newer DT
+> (provided by firmware perhaps) with a stable kernel version. Deferred
+> probe issues can be difficult to debug especially if the console has
+> dependencies or userspace fails to boot to a shell.
+> 
+> There are also cases like IOMMUs where only built-in drivers are
+> supported, so deferring probe after initcalls is not needed. The IOMMU
+> subsystem implemented its own mechanism to handle this using OF_DECLARE
+> linker sections.
+> 
+> This commit adds makes ending deferred probe conditional on initcalls
+> being completed or a debug timeout. Subsystems or drivers may opt-in by
+> calling driver_deferred_probe_check_init_done() instead of
+> unconditionally returning -EPROBE_DEFER. They may use additional
+> information from DT or kernel's config to decide whether to continue to
+> defer probe or not.
+> 
+> The timeout mechanism is intended for debug purposes and WARNs loudly.
+> The remaining deferred probe pending list will also be dumped after the
+> timeout. Not that this timeout won't work for the console which needs
+> to be enabled before userspace starts. However, if the console's
+> dependencies are resolved, then the kernel log will be printed (as
+> opposed to no output).
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- arch/arm/boot/dts/imx6qdl-apalis.dtsi  | 34 --------------------------
- arch/arm/boot/dts/imx6qdl-colibri.dtsi | 34 --------------------------
- 2 files changed, 68 deletions(-)
+So what happens if we have a set of modules which use deferred probing
+in order to work?
 
-diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-index 8c04f42fdb71..05f07ea3e8c8 100644
---- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-@@ -947,38 +947,4 @@
- 			MX6QDL_PAD_SD3_RST__SD3_RESET  0x17059
- 		>;
- 	};
--
--	pinctrl_usdhc3_100mhz: usdhc3100mhzgrp {
--		fsl,pins = <
--			MX6QDL_PAD_SD3_CMD__SD3_CMD    0x170b9
--			MX6QDL_PAD_SD3_CLK__SD3_CLK    0x100b9
--			MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x170b9
--			MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x170b9
--			MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x170b9
--			MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x170b9
--			MX6QDL_PAD_SD3_DAT4__SD3_DATA4 0x170b9
--			MX6QDL_PAD_SD3_DAT5__SD3_DATA5 0x170b9
--			MX6QDL_PAD_SD3_DAT6__SD3_DATA6 0x170b9
--			MX6QDL_PAD_SD3_DAT7__SD3_DATA7 0x170b9
--			/* eMMC reset */
--			MX6QDL_PAD_SD3_RST__SD3_RESET  0x170b9
--		>;
--	};
--
--	pinctrl_usdhc3_200mhz: usdhc3200mhzgrp {
--		fsl,pins = <
--			MX6QDL_PAD_SD3_CMD__SD3_CMD    0x170f9
--			MX6QDL_PAD_SD3_CLK__SD3_CLK    0x100f9
--			MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x170f9
--			MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x170f9
--			MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x170f9
--			MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x170f9
--			MX6QDL_PAD_SD3_DAT4__SD3_DATA4 0x170f9
--			MX6QDL_PAD_SD3_DAT5__SD3_DATA5 0x170f9
--			MX6QDL_PAD_SD3_DAT6__SD3_DATA6 0x170f9
--			MX6QDL_PAD_SD3_DAT7__SD3_DATA7 0x170f9
--			/* eMMC reset */
--			MX6QDL_PAD_SD3_RST__SD3_RESET  0x170f9
--		>;
--	};
- };
-diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-index 6821ea511051..87e15e7cb32b 100644
---- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-@@ -692,40 +692,6 @@
- 		>;
- 	};
- 
--	pinctrl_usdhc3_100mhz: usdhc3100mhzgrp {
--		fsl,pins = <
--			MX6QDL_PAD_SD3_CMD__SD3_CMD	0x170b9
--			MX6QDL_PAD_SD3_CLK__SD3_CLK	0x100b9
--			MX6QDL_PAD_SD3_DAT0__SD3_DATA0	0x170b9
--			MX6QDL_PAD_SD3_DAT1__SD3_DATA1	0x170b9
--			MX6QDL_PAD_SD3_DAT2__SD3_DATA2	0x170b9
--			MX6QDL_PAD_SD3_DAT3__SD3_DATA3	0x170b9
--			MX6QDL_PAD_SD3_DAT4__SD3_DATA4	0x170b9
--			MX6QDL_PAD_SD3_DAT5__SD3_DATA5	0x170b9
--			MX6QDL_PAD_SD3_DAT6__SD3_DATA6	0x170b9
--			MX6QDL_PAD_SD3_DAT7__SD3_DATA7	0x170b9
--			/* eMMC reset */
--			MX6QDL_PAD_SD3_RST__SD3_RESET	0x170b9
--		>;
--	};
--
--	pinctrl_usdhc3_200mhz: usdhc3200mhzgrp {
--		fsl,pins = <
--			MX6QDL_PAD_SD3_CMD__SD3_CMD	0x170f9
--			MX6QDL_PAD_SD3_CLK__SD3_CLK	0x100f9
--			MX6QDL_PAD_SD3_DAT0__SD3_DATA0	0x170f9
--			MX6QDL_PAD_SD3_DAT1__SD3_DATA1	0x170f9
--			MX6QDL_PAD_SD3_DAT2__SD3_DATA2	0x170f9
--			MX6QDL_PAD_SD3_DAT3__SD3_DATA3	0x170f9
--			MX6QDL_PAD_SD3_DAT4__SD3_DATA4	0x170f9
--			MX6QDL_PAD_SD3_DAT5__SD3_DATA5	0x170f9
--			MX6QDL_PAD_SD3_DAT6__SD3_DATA6	0x170f9
--			MX6QDL_PAD_SD3_DAT7__SD3_DATA7	0x170f9
--			/* eMMC reset */
--			MX6QDL_PAD_SD3_RST__SD3_RESET	0x170f9
--		>;
--	};
--
- 	pinctrl_weim_cs0: weimcs0grp {
- 		fsl,pins = <
- 			/* nEXT_CS0 */
+For example, with sound stuff built as modules, and auto-loaded in
+parallel by udev, the modules get added in a random order.  The
+modules have non-udev obvious dependencies between them (resource
+dependencies) which result in deferred probing being necessary to
+bring the device up.
+
+Eg,
+
+snd_soc_kirkwood_spdif module declares the ASoC card.
+snd_soc_spdif_tx is a codec as a loadable module.
+snd_soc_kirkwood is the CPU digital audio interface module.
+
+What I commonly see is this module load order:
+
+snd_soc_kirkwood_spdif, then snd_soc_kirkwood and then snd_soc_spdif_tx.
+
+This results at boot in:
+
+kirkwood-spdif-audio audio-subsystem: ASoC: CPU DAI kirkwood-fe not registered
+kirkwood-spdif-audio audio-subsystem: ASoC: CPU DAI kirkwood-fe not registered
+kirkwood-spdif-audio audio-subsystem: ASoC: CPU DAI kirkwood-fe not registered
+kirkwood-spdif-audio audio-subsystem: ASoC: CPU DAI kirkwood-fe not registered
+kirkwood-spdif-audio audio-subsystem: ASoC: CPU DAI kirkwood-fe not registered
+kirkwood-spdif-audio audio-subsystem: ASoC: CODEC DAI dit-hifi not registered
+kirkwood-spdif-audio audio-subsystem: ASoC: CODEC DAI dit-hifi not registered
+kirkwood-spdif-audio audio-subsystem: snd-soc-dummy-dai <-> kirkwood-fe mapping ok
+kirkwood-spdif-audio audio-subsystem: multicodec <-> kirkwood-spdif mapping ok
+
+at boot, where most of these are deferred probe attempts.
+
+So, disabling deferred probing after all the kernel-internal initcalls
+are run is wrong.  You can have deferred probing required due to
+external modules, and this can kick in at any time (think about
+hot-pluggable hardware with a driver that's somehow componentised,
+like an audio device...)
+
 -- 
-2.18.0
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps up
+According to speedtest.net: 13Mbps down 490kbps up
