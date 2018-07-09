@@ -1,28 +1,44 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v4 1/1] arm64: dts: mediatek: add mt6765 support
-Date: Mon, 9 Jul 2018 08:27:41 +0100
-Message-ID: <20180709082741.7cd71bae@why.wild-wind.fr.eu.org>
-References: <1531116302-29921-1-git-send-email-mars.cheng@mediatek.com>
-        <1531116302-29921-2-git-send-email-mars.cheng@mediatek.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [alsa-devel] [PATCH v3 2/5] ASoC: qcom: Add support to parse
+ common audio device nodes
+Date: Mon, 9 Jul 2018 13:13:15 +0530
+Message-ID: <20180709074315.GA22377@vkoul-mobl>
+References: <1530870195-13576-1-git-send-email-rohitkr@codeaurora.org>
+ <1530870195-13576-3-git-send-email-rohitkr@codeaurora.org>
+ <84b6f1f7-b9c1-fd0c-b684-1e07d35663ba@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531116302-29921-2-git-send-email-mars.cheng@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <84b6f1f7-b9c1-fd0c-b684-1e07d35663ba@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mars Cheng <mars.cheng@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Rohit kumar <rohitkr@codeaurora.org>, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, plai@codeaurora.org, bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 9 Jul 2018 14:05:02 +0800
-Mars Cheng <mars.cheng@mediatek.com> wrote:
-
-> This adds basic chip support for MT6765 SoC.
+On 06-07-18, 18:51, Srinivas Kandagatla wrote:
 > 
-> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> 
+> On 06/07/18 10:43, Rohit kumar wrote:
+> > This adds support to parse cpu, platform and codec
+> > device nodes and add them in dai-links. Also, add
+> > API to add slave components associated with machine
+> > driver.
+> > 
+> > Signed-off-by: Rohit kumar<rohitkr@codeaurora.org>
+> > ---
+> >   sound/soc/qcom/Kconfig  |   3 +
+> >   sound/soc/qcom/Makefile |   1 +
+> >   sound/soc/qcom/common.c | 150 ++++++++++++++++++++++++++++++++++++++++++++++++
+> >   sound/soc/qcom/common.h |  14 +++++
+> >   4 files changed, 168 insertions(+)
+> >   create mode 100644 sound/soc/qcom/common.c
+> 
+> common.c seems to miss
 
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Btw do you need a new Kconfig symbol for this?
 
-	M.
+Alternate option would be to just add common.o to wherever it is needed
+
 -- 
-Without deviation from the norm, progress is not possible.
+~Vinod
