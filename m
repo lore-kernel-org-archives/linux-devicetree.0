@@ -1,40 +1,26 @@
-Return-Path: <SRS0=P2HZ=KB=xs4all.nl=hverkuil@kernel.org>
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCH 0/5] cec/cec-gpio: add support for 5V testing
-Date: Tue, 17 Jul 2018 15:29:04 +0200
-Message-Id: <20180717132909.92158-1-hverkuil@xs4all.nl>
-To: linux-media@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Return-Path: <SRS0=djlV=JZ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:50766 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1754425AbeGIKpi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Jul 2018 06:45:38 -0400
+Date: Mon, 9 Jul 2018 03:45:31 -0700
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: pandaboard: add gpio user button
+Message-ID: <20180709104531.GA99251@atomide.com>
+References: <20180704083738.32452-1-pbrobinson@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180704083738.32452-1-pbrobinson@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Peter Robinson <pbrobinson@gmail.com>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Hans Verkuil <hans.verkuil@cisco.com>
+* Peter Robinson <pbrobinson@gmail.com> [180704 01:41]:
+> The PandaBoard has a user button connected to GPIO. On the ES this is connected
+> to GPIO 113, on all the other Panda editons this is GPIO 121.
 
-Some displays disable CEC if the HDMI 5V is not detected. In order
-to test issues related to this you want to be able to optionally
-detect when the 5V line changes in the cec-gpio driver.
+Applying into omap-for-v4.19/dt thanks.
 
-This patch series adds support for this feature.
-
-Regards,
-
-	Hans
-
-Hans Verkuil (5):
-  cec-gpio.txt: add v5-gpios for testing the 5V line
-  cec-ioc-dqevent.rst: document the new 5V events
-  uapi/linux/cec.h: add 5V events
-  cec: add support for 5V signal testing
-  cec-gpio: support 5v testing
-
- .../devicetree/bindings/media/cec-gpio.txt    | 17 +++---
- .../media/uapi/cec/cec-ioc-dqevent.rst        | 18 +++++++
- drivers/media/cec/cec-adap.c                  | 18 ++++++-
- drivers/media/cec/cec-api.c                   |  8 +++
- drivers/media/platform/cec-gpio/cec-gpio.c    | 54 +++++++++++++++++++
- include/media/cec-pin.h                       |  4 ++
- include/media/cec.h                           | 12 ++++-
- include/uapi/linux/cec.h                      |  2 +
- 8 files changed, 124 insertions(+), 9 deletions(-)
-
--- 
-2.18.0
+Tony
