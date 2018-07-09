@@ -1,8 +1,8 @@
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Subject: Re: [PATCH v2 1/7] mhi_bus: core: initial checkin for modem host
  interface bus driver
-Date: Mon, 9 Jul 2018 22:50:47 +0200
-Message-ID: <20180709205047.GA1202@kroah.com>
+Date: Mon, 9 Jul 2018 22:52:54 +0200
+Message-ID: <20180709205254.GB1202@kroah.com>
 References: <1524795811-21399-1-git-send-email-sdias@codeaurora.org>
  <1531166894-30984-1-git-send-email-sdias@codeaurora.org>
  <1531166894-30984-2-git-send-email-sdias@codeaurora.org>
@@ -30,25 +30,14 @@ On Mon, Jul 09, 2018 at 01:08:08PM -0700, Sujeev Dias wrote:
 >  Documentation/00-INDEX                        |   2 +
 >  Documentation/devicetree/bindings/bus/mhi.txt | 258 ++++++++++++
 >  Documentation/mhi.txt                         | 235 +++++++++++
->  drivers/bus/Kconfig                           |   8 +
->  drivers/bus/Makefile                          |   1 +
->  drivers/bus/mhi/Makefile                      |   6 +
->  drivers/bus/mhi/core/Makefile                 |   1 +
->  drivers/bus/mhi/core/mhi_init.c               | 538 ++++++++++++++++++++++++++
->  drivers/bus/mhi/core/mhi_internal.h           | 238 ++++++++++++
->  drivers/bus/mhi/core/mhi_main.c               | 122 ++++++
->  include/linux/mhi.h                           | 341 ++++++++++++++++
->  include/linux/mod_devicetable.h               |  12 +
->  12 files changed, 1762 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/mhi.txt
->  create mode 100644 Documentation/mhi.txt
->  create mode 100644 drivers/bus/mhi/Makefile
->  create mode 100644 drivers/bus/mhi/core/Makefile
->  create mode 100644 drivers/bus/mhi/core/mhi_init.c
->  create mode 100644 drivers/bus/mhi/core/mhi_internal.h
->  create mode 100644 drivers/bus/mhi/core/mhi_main.c
->  create mode 100644 include/linux/mhi.h
 
-You don't say what changed from v1 here :(
+Do not put .txt files in the root of the documentation directory for no
+reason.  They should be in .rst and hopefully in the proper location for
+where the documentation belongs.
 
-Please do so...
+And dt bindings always belong in a separate patch, you all know better
+than to mush it into a large one like this...
+
+thanks,
+
+greg k-h
