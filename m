@@ -1,67 +1,83 @@
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Subject: Re: [PATCH v4 1/2] gpio: mediatek: add driver for MT7621
-Date: Mon, 9 Jul 2018 15:28:50 +0200
-Message-ID: <20180709132850.GB2529@foobar>
-References: <1530798191-25471-1-git-send-email-sergio.paracuellos@gmail.com>
- <1530798191-25471-2-git-send-email-sergio.paracuellos@gmail.com>
- <CACRpkdbWbFi-vzHqSu3T2iE89BJaQNCfZHVNvV7Crqq-TsLnmg@mail.gmail.com>
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: Re: [PATCH v5 4/5] ARM: dts: at91: sama5d2: add nodes for I2S
+ controllers
+Date: Mon, 9 Jul 2018 16:29:43 +0300
+Message-ID: <e056ed7d-521d-54ab-2e5d-0f5259a09ec6@microchip.com>
+References: <20180618141239.10892-1-codrin.ciubotariu@microchip.com>
+ <20180618141239.10892-5-codrin.ciubotariu@microchip.com>
+ <20180706193923.GC16084@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbWbFi-vzHqSu3T2iE89BJaQNCfZHVNvV7Crqq-TsLnmg@mail.gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, driverdev-devel@linuxdriverproject.org, juhosg@freemail.hu, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, John Crispin <john@phrozen.org>, NeilBrown <neil@brown.name>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180706193923.GC16084@piout.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, alsa-devel@alsa-project.org, nicolas.ferre@microchip.com, boris.brezillon@bootlin.com, robh+dt@kernel.org, broonie@kernel.org, sboyd@kernel.org, Cristian.Birsan@microchip.com, Cyrille Pitchen <cyrille.pitchen@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 09, 2018 at 01:45:22PM +0200, Linus Walleij wrote:
-> On Thu, Jul 5, 2018 at 3:43 PM Sergio Paracuellos
-> <sergio.paracuellos@gmail.com> wrote:
+On 06.07.2018 22:39, Alexandre Belloni wrote:
+> Hi Codrin,
 > 
-> > Add driver support for gpio of MT7621 SoC.
-> >
-> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> > Reviewed-by: NeilBrown <neil@brown.name>
+> On 18/06/2018 17:12:38+0300, Codrin Ciubotariu wrote:
+>> From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+>>
+>> This patch adds DT nodes for I2S0 and I2S1. It also adds an alias for
+>> each I2S node.
+>>
+>> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+>> [codrin.ciubotariu@microchip.com: added phandle to new mux clock]
+>> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+>> ---
+>>
+>> The bindings for the I2S node are applied to broonie/sound.git .
+>>
+>> Changes in v5:
+>> 	- the previous name was:
+>> 	  [PATCH v4 6/7] ARM: dts: at91: sama5d2: add nodes for I2S controllers
+>>
+>>   arch/arm/boot/dts/sama5d2.dtsi | 34 ++++++++++++++++++++++++++++++++++
+>>   1 file changed, 34 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+>> index eeb6afa1cda7..eca73ce40bc5 100644
+>> --- a/arch/arm/boot/dts/sama5d2.dtsi
+>> +++ b/arch/arm/boot/dts/sama5d2.dtsi
+>> @@ -58,6 +58,8 @@
+>>   		serial1 = &uart3;
+>>   		tcb0 = &tcb0;
+>>   		tcb1 = &tcb1;
+>> +		i2s0 = &i2s0;
+>> +		i2s1 = &i2s1;
+>>   	};
+>>   
+>>   	cpus {
+>> @@ -1313,6 +1315,22 @@
+>>   				clocks = <&clk32k>;
+>>   			};
+>>   
+>> +			i2s0: i2s@f8050000 {
+>> +				compatible = "atmel,sama5d2-i2s";
+>> +				reg = <0xf8050000 0x100>;
+>> +				interrupts = <54 IRQ_TYPE_LEVEL_HIGH 7>;
+>> +				dmas = <&dma0
+>> +					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) |
+>> +					 AT91_XDMAC_DT_PERID(31))>,
+>> +				       <&dma0
+>> +					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) |
+>> +					 AT91_XDMAC_DT_PERID(32))>;
+>> +				dma-names = "tx", "rx";
+>> +				clocks = <&i2s0_clk>, <&i2s0_gclk>, <&audio_pll_pmc>, <&i2s0muxck>;
+>> +				clock-names = "pclk", "gclk", "aclk", "muxclk";
+>> +				status = "disabled";
+>> +			};
+>> +
 > 
-> This is looking really good.
-> 
-> Patch applied: anything remaining can surely be patched up
-> in-tree.
->
+> Can you resend the DTS patches after removing the unnecessary clocks?
 
-Sound good, thanks.
+I will. Should I also make the "muxclk" clock an assigned clock to 
+assign its parent ?
 
-Should I send a patch to remove the driver from staging or just
-is removed by Greg? How is this achieved?
- 
-> > +/*
-> > + * Copyright (C) 2009-2011 Gabor Juhos <juhosg@openwrt.org>
-> > + * Copyright (C) 2013 John Crispin <blogic@openwrt.org>
-> > + */
-> 
-> All OpenWRT drivers are moving upstream and I like it :)
-> Gabo and John wrote like 90% of them on their own :D
-> 
-> > +#define GPIO_BANK_WIDE 0x04
-> 
-> Nitpick: we usually call this "stride" rather than "wide".
-> I changed it while applying the patch.
-
-Thanks :-)
-
-> 
-> Yours,
-> Linus Walleij
-
-Best regards,
-    Sergio Paracuellos
+Thanks and best regards,
+Codrin
