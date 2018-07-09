@@ -1,64 +1,49 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RESEND PATCH] apalis_t30: fix can2
-Date: Mon, 9 Jul 2018 17:08:34 +0200
-Message-ID: <20180709150834.GC18353@ulmo>
-References: <20180703150340.29580-1-marcel@ziswiler.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7gGkHNMELEOhSGF6"
+From: Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH v2 0/4] sun8i: r40: add AHCI
+Date: Mon,  9 Jul 2018 15:20:54 +0000
+Message-ID: <1531149658-27030-1-git-send-email-clabbe@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180703150340.29580-1-marcel@ziswiler.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel@ziswiler.com>
-Cc: linux-tegra@vger.kernel.org, linux-can@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, devicetree@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: linux@armlinux.org.uk, mark.rutland@arm.com, maxime.ripard@free-electrons.com, robh+dt@kernel.org, tj@kernel.org, wens@csie.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, icenowy@aosc.io, Corentin Labbe <clabbe@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello
 
---7gGkHNMELEOhSGF6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+With Moeicenowy's agreement, I have take leadership ot this patchset.
 
-On Tue, Jul 03, 2018 at 05:03:39PM +0200, Marcel Ziswiler wrote:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
->=20
-> CAN2 currently fails on probe as follows:
->=20
-> mcp251x spi1.1: Probe failed, err=3D19
->=20
-> Fix this by enabling input on pin mux of resp. SPI4 pins.
->=20
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
->=20
-> Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
-> ---
->=20
->  arch/arm/boot/dts/tegra30-apalis.dtsi | 1 +
->  1 file changed, 1 insertion(+)
+There are no really changes appart renaming struct quirck to variant.
 
-Applied to for-4.19/arm/dt, thanks.
+Since the last serie is really old, I will answer comment here.
+The two regulator (1.2 and 2.5V) are not for the PHY since:
+- nothing in the schematic said that they are for the PHY, they seems
+  only for controller
+- all other AHCI driver use 5V for the target/PHY (vs 1.2/2.5 which
+  cannot be used for target)
 
-Thierry
+Furthermore, the AHCI binding support only one regulator per PHY, so
+using the "target" regulator is out of question for registring this two
+non-phy regulator.
 
---7gGkHNMELEOhSGF6
-Content-Type: application/pgp-signature; name="signature.asc"
+I hope this answer all comments done on last version.
 
------BEGIN PGP SIGNATURE-----
+Regards
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltDem8ACgkQ3SOs138+
-s6FatA//Q3UsiK6S5OcpY2UDUoYQ8QzjfrGpvdIuFNXKQc1SOqme3oCTDaWwgRrU
-j3B+9NXTG1NMrm7/sB/1J6CwEM4B0Hz3d08AF88D9G/xNElzBtH8N23VMthRRprZ
-8a5wZ2gnQ7a6K6/X2apx3XRXExmQeDFyQqe/WCW0w+0ieVz1lrcxsn+QtFmc7URJ
-1MvFxGUyIsChXVJyXOUeAAvLypQxopkOvonMMg0Nbamav/blFZ0VzcKGLduQUptH
-Bxd7qPNAQ6cImWPMrsuWEMUK8Y+EjG8Lhc89eVQ3DNFfb0xUMWigp2eXa5Wzhh+h
-+53ITy4uSwVqh9MqEWcC8t02dBiHpBIi5V0odYMT3vLgaL9paQ6m9q/gcJa9Lswr
-sLAyxVqtqDOfrjxl0prV7cYIlZoOffUhTKPIEB72GNcXUGORPzf6obtoRUblyEL6
-Cs7mi3GX38XqnxJZzF43wuY8pRh/9ehhTYc2BrtZUW8frc5zy/527ZdK1xa6QZLS
-PsfYDI9CbPfzGSwdQUFNj+uAQR5P6nh4sNZbnd1YzHAqcprCHLNbrhZKyQywpBpm
-zxtlw2fSZMCTyBHLlnigGnGCea9Xz0OVc16gLpXXPA6atNiMXsViLKTcTgQ3RzSu
-ilIDzgh1yYE16QgP/OpD2PR88uSNoWBqV4jv16hcYxO0CeBtus4=
-=v0+e
------END PGP SIGNATURE-----
+Corentin Labbe (3):
+  ata: ahci_sunxi: add support for R40 SATA controller
+  ARM: dts: sun8i: r40: add sata node
+  ARM: dts: sun8i: sun8i-r40-bananapi-m2-ultra: enable AHCI
 
---7gGkHNMELEOhSGF6--
+Icenowy Zheng (1):
+  dt-bindings: add binding for Allwinner R40 SATA AHCI controller
+
+ .../devicetree/bindings/ata/ahci-platform.txt      |   1 -
+ .../bindings/ata/allwinner,sun4i-a10-ahci.txt      |  40 +++++++
+ arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts  |  18 +++
+ arch/arm/boot/dts/sun8i-r40.dtsi                   |   9 ++
+ drivers/ata/ahci_sunxi.c                           | 124 ++++++++++++++++++++-
+ 5 files changed, 188 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ata/allwinner,sun4i-a10-ahci.txt
+
+-- 
+2.16.4
