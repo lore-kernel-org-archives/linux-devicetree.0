@@ -1,49 +1,29 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH] arm64: dts: rockchip: remove deprecated Type-C PHY properties on rk3399
-Date: Mon,  9 Jul 2018 22:57:54 +0200
-Message-ID: <20180709205754.29132-1-enric.balletbo@collabora.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 0/3] ARM64: dts: meson-axg: first round of daughter card updates
+Date: Mon, 09 Jul 2018 14:46:07 -0700
+Message-ID: <7hsh4snkv4.fsf@baylibre.com>
+References: <20180628095054.13433-1-jbrunet@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180628095054.13433-1-jbrunet@baylibre.com> (Jerome Brunet's
+        message of "Thu, 28 Jun 2018 11:50:51 +0200")
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: kernel@collabora.com, Nickey Yang <nickey.yang@rock-chips.com>, Simon Xue <xxm@rock-chips.com>, Yakir Yang <kuankuan.y@gmail.com>, Mark Yao <markyao0591@gmail.com>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Jacob Chen <jacob-chen@iotwrt.com>, Brian Norris <briannorris@chromium.org>, Lin Huang <hl@rock-chips.com>, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, linux-rockchip@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Caesar Wang <wxt@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Commit 0fbc47d9e426 ("phy: rockchip-typec: deprecate some DT properties
-for various register fields.") deprecates some Rockchip Type-C
-properties. As these are now not needed, remove from the device tree
-file.
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+> This patchset adds a speaker amplifier and some leds present on daughter
+> cards which are connected to the s400 board.
+>
+> Kevin, please note that the bindings documentation update for the tas5707
+> has been queued for next in Mark Brown's ASoC tree. Not having it won't
+> break anything but you may get checkpatch warning.
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 --------
- 1 file changed, 8 deletions(-)
+Thanks for the warning.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index e0040b648f43..180dd9d2cc23 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1446,10 +1446,6 @@
- 			 <&cru SRST_P_UPHY0_TCPHY>;
- 		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
- 		rockchip,grf = <&grf>;
--		rockchip,typec-conn-dir = <0xe580 0 16>;
--		rockchip,usb3tousb2-en = <0xe580 3 19>;
--		rockchip,external-psm = <0xe588 14 30>;
--		rockchip,pipe-status = <0xe5c0 0 0>;
- 		status = "disabled";
- 
- 		tcphy0_dp: dp-port {
-@@ -1475,10 +1471,6 @@
- 			 <&cru SRST_P_UPHY1_TCPHY>;
- 		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
- 		rockchip,grf = <&grf>;
--		rockchip,typec-conn-dir = <0xe58c 0 16>;
--		rockchip,usb3tousb2-en = <0xe58c 3 19>;
--		rockchip,external-psm = <0xe594 14 30>;
--		rockchip,pipe-status = <0xe5c0 16 16>;
- 		status = "disabled";
- 
- 		tcphy1_dp: dp-port {
--- 
-2.18.0
+Series applied to v4.19/dt64,
+
+Kevin
