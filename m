@@ -1,23 +1,21 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
 Subject: Re: [PATCH v4 6/6] arm64: dts: sdm845: Add tsens nodes
-Date: Mon, 9 Jul 2018 16:56:51 +0530
-Message-ID: <CAHLCerMZw8mftQb8iRc5+RqGGjf26ebwynPfORz0hAPxp05YfA@mail.gmail.com>
+Date: Mon, 9 Jul 2018 16:57:29 +0530
+Message-ID: <CAHLCerMDxhFkoK_yXznOi-ZnDskiD0-xtqEb9Pz5MRFTdbx1ew@mail.gmail.com>
 References: <cover.1530533998.git.amit.kucheria@linaro.org>
  <a52b77ad84867774a0659f51ccb79b17ba7638ab.1530533998.git.amit.kucheria@linaro.org>
- <20180703214822.GD129942@google.com>
+ <153089827550.143105.2506072427444330254@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180703214822.GD129942@google.com>
+In-Reply-To: <153089827550.143105.2506072427444330254@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>, Douglas Anderson <dianders@chromium.org>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, smohanad@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Andy Gross <andy.gross@linaro.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 4, 2018 at 3:18 AM, Matthias Kaehlcke <mka@chromium.org> wrote:
-> Hi,
->
-> On Mon, Jul 02, 2018 at 06:14:09PM +0530, Amit Kucheria wrote:
+On Fri, Jul 6, 2018 at 11:01 PM, Stephen Boyd <swboyd@chromium.org> wrote:
+> Quoting Amit Kucheria (2018-07-02 05:44:09)
 >> SDM845 has two tsens blocks, one with 13 sensors and the other with 8
 >> sensors.
 >>
@@ -31,46 +29,29 @@ On Wed, Jul 4, 2018 at 3:18 AM, Matthias Kaehlcke <mka@chromium.org> wrote:
 >> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
 >> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
 >> @@ -221,6 +221,22 @@
->>                       #interrupt-cells = <2>;
->>               };
+>>                         #interrupt-cells = <2>;
+>>                 };
 >>
->> +             tsens0: tsens@c222000 {
->> +                     compatible = "qcom,tsens-v2.4.0", "qcom,tsens-v2";
->> +                     reg = <0xc263000 0x1ff>, /* TM */
->> +                           <0xc222000 0x1ff>; /* SROT */
->> +                     #qcom,sensors = <13>;
->> +                     #thermal-sensor-cells = <1>;
->> +             };
+>> +               tsens0: tsens@c222000 {
+>
+> These unit addresses should match the first reg property, not the second
+> one.
+
+Fixed in v5. Thanks.
+
+>> +                       compatible = "qcom,tsens-v2.4.0", "qcom,tsens-v2";
+>> +                       reg = <0xc263000 0x1ff>, /* TM */
+>> +                             <0xc222000 0x1ff>; /* SROT */
+>> +                       #qcom,sensors = <13>;
+>> +                       #thermal-sensor-cells = <1>;
+>> +               };
 >> +
->> +             tsens1: tsens@c223000 {
->> +                     compatible = "qcom,tsens-v2.4.0", "qcom,tsens-v2";
->> +                     reg = <0xc265000 0x1ff>, /* TM */
->> +                           <0xc223000 0x1ff>; /* SROT */
->> +                     #qcom,sensors = <8>;
->> +                     #thermal-sensor-cells = <1>;
->> +             };
->> +
->>               spmi_bus: spmi@c440000 {
->>                       compatible = "qcom,spmi-pmic-arb";
->>                       reg = <0xc440000 0x1100>,
->
-> I tested this series on an SDM845 board. Temperatures can be read from
-> the tsens0 sensors, however for tsens1 sensors I get:
->
-> cat temp
-> cat: temp: No data available
->
-> TRDY_READY_BIT set when reading TRDY_OFFSET in get_temp_tsens_v2().
-> Unfortunately I currently have no documentation of the registers or the
-> thermal sensors in general and couldn't investigate further.
->
-> Any idea what could be the problem?
-
-Strangely enough, I'm seeing this now after rebuilding my integration
-branch to test some other bits.
-
-I've sent another version with this patch removed while I investigate
-this. Could you check if you're able to read all 8 sensors with v5?
-
-Regards,
-Amit
+>> +               tsens1: tsens@c223000 {
+>> +                       compatible = "qcom,tsens-v2.4.0", "qcom,tsens-v2";
+>> +                       reg = <0xc265000 0x1ff>, /* TM */
+>> +                             <0xc223000 0x1ff>; /* SROT */
+>> +                       #qcom,sensors = <8>;
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
