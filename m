@@ -1,45 +1,75 @@
-Return-Path: <SRS0=MUa+=J2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-io0-f193.google.com ([209.85.223.193]:34411 "EHLO
-        mail-io0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S933688AbeGJPDe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Jul 2018 11:03:34 -0400
+Return-Path: <SRS0=MQyj=JZ=gmail.com=tmaimon77@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <87in64s97v.fsf@linux.intel.com>
-References: <20180531104710.23965-1-mgautam@codeaurora.org>
- <d98cd884-f25d-ee2e-58cf-400993e0d213@codeaurora.org> <CADGp=Qc8EEHEHiUZA2W9x67Micy-af5xND6Mb-0f+387TvMGeQ@mail.gmail.com>
- <c13e4dae-aba3-727a-9242-a968af450794@codeaurora.org> <CADGp=QdjwY=9C26NtehXLk5V=k7f1fqorzQcx98Gtc4jK0hc+A@mail.gmail.com>
- <CADb+VZKtAspuvO64FVEBHUbcB0Nr57jWpBmpS5GfCE+QKD4CcA@mail.gmail.com>
- <87r2ksshod.fsf@linux.intel.com> <CADb+VZJVtfgSDD+7F1J6p2YG0dguN7BhP=bzz3r8jO7FT7dk8w@mail.gmail.com>
- <87in64s97v.fsf@linux.intel.com>
-From: Pierre Le Magourou <lemagoup@gmail.com>
-Date: Tue, 10 Jul 2018 17:03:32 +0200
-Message-ID: <CAEz4NHpAYwgW0s7euAw4kWrc=V4Z9Oritu9+1rmkxmSwuZ5=ow@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: msm8996: Use dwc3-qcom glue driver for USB
-Content-Type: text/plain; charset="UTF-8"
-Sender: devicetree-owner@vger.kernel.org
-To: Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Vivek Gautam <vivek.gautam@codeaurora.org>, Manu Gautam <mgautam@codeaurora.org>, andy.gross@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dianders@chromium.org, linux-usb@vger.kernel.org, gregkh@linuxfoundation.org, bjorn.andersson@linaro.org
+In-Reply-To: <20180708231507.GA26077@roeck-us.net>
+References: <20180703232326.355718-3-tmaimon77@gmail.com> <20180708231507.GA26077@roeck-us.net>
+From: Tomer Maimon <tmaimon77@gmail.com>
+Date: Mon, 9 Jul 2018 17:00:44 +0300
+Message-ID: <CAP6Zq1i8Owmp847HvgC5=WGHzSBOS7Ne2G2m8Gotmk8zHkJmKw@mail.gmail.com>
+Subject: Re: [v8,2/2] hwmon: npcm750: add NPCM7xx PWM and Fan driver
+Content-Type: multipart/alternative; boundary="000000000000927786057091707b"
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Avi Fishman <avifishman70@gmail.com>, Nancy Yuen <yuenn@google.com>, Brendan Higgins <brendanhiggins@google.com>, Patrick Venture <venture@google.com>, Joel Stanley <joel@jms.id.au>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux HWMON List <linux-hwmon@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Felipe,
+--000000000000927786057091707b
+Content-Type: text/plain; charset="UTF-8"
 
-2018-06-27 14:30 GMT+02:00 Felipe Balbi <felipe.balbi@linux.intel.com>:
+Great!
+
+thanks a lot!
+
+Tomer
+
+On 9 July 2018 at 02:15, Guenter Roeck <linux@roeck-us.net> wrote:
+
+> On Wed, Jul 04, 2018 at 02:23:26AM +0300, Tomer Maimon wrote:
+> > Add Nuvoton BMC NPCM750/730/715/705 Pulse Width Modulation (PWM)
+> > and Fan tacho driver.
+> >
+> > The Nuvoton BMC NPCM750/730/715/705 supports 8 PWM controller outputs
+> > and 16 Fan controller inputs.
+> >
+> > The driver provides a sysfs entries through which the user can
+> > configure the duty-cycle value from 0(off) and 255(full speed)
+> > and read the fan tacho rpm value.
+> >
+> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 >
-> looks like we need to do away with the wait_event_lock_irq()
-> call. usb_ep_dequeue() can be called from within the controller's
-> interrupt handler, so we can't rely on wait_event_lock_irq(). I guess
-> the best thing here would be to mark TRBs as dirty (and not increment
-> dequeue pointer), so they aren't reused by accident, then let endpoint
-> continue processing. Once command completion interrupt fires, we
-> increment dequeue pointer.
+> Applied to hwmon-next.
 >
-> This should work better, I suppose. Do you want a shot at implementing
-> this?
+> Thanks,
+> Guenter
+>
 
-I wrote a patch to implement this last week, and sent it to linux-arm-msm.
-Feel free to review it and tell me if this complies with what you
-suggested to me.
+--000000000000927786057091707b
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
+<div dir=3D"ltr">Great!=C2=A0<div><br></div><div>thanks a lot!</div><div><b=
+r></div><div>Tomer</div></div><div class=3D"gmail_extra"><br><div class=3D"=
+gmail_quote">On 9 July 2018 at 02:15, Guenter Roeck <span dir=3D"ltr">&lt;<=
+a href=3D"mailto:linux@roeck-us.net" target=3D"_blank">linux@roeck-us.net</=
+a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0=
+ 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><span class=3D"">On =
+Wed, Jul 04, 2018 at 02:23:26AM +0300, Tomer Maimon wrote:<br>
+&gt; Add Nuvoton BMC NPCM750/730/715/705 Pulse Width Modulation (PWM)<br>
+&gt; and Fan tacho driver.<br>
+&gt; <br>
+&gt; The Nuvoton BMC NPCM750/730/715/705 supports 8 PWM controller outputs<=
+br>
+&gt; and 16 Fan controller inputs.<br>
+&gt; <br>
+&gt; The driver provides a sysfs entries through which the user can<br>
+&gt; configure the duty-cycle value from 0(off) and 255(full speed)<br>
+&gt; and read the fan tacho rpm value.<br>
+&gt; <br>
+&gt; Signed-off-by: Tomer Maimon &lt;<a href=3D"mailto:tmaimon77@gmail.com"=
+>tmaimon77@gmail.com</a>&gt;<br>
+<br>
+</span>Applied to hwmon-next.<br>
+<br>
+Thanks,<br>
+Guenter<br>
+</blockquote></div><br></div>
 
-Pierre Le Magourou
+--000000000000927786057091707b--
