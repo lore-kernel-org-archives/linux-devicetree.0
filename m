@@ -1,45 +1,69 @@
-From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: Re: [PATCH v5 2/5] clk: at91: add I2S clock mux driver
-Date: Mon, 9 Jul 2018 18:55:01 +0300
-Message-ID: <b7a379b3-0cfe-7a8e-fa13-3d152beb5e32@microchip.com>
-References: <20180618141239.10892-1-codrin.ciubotariu@microchip.com>
- <20180618141239.10892-3-codrin.ciubotariu@microchip.com>
- <153090076533.143105.11588903392800697432@swboyd.mtv.corp.google.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v5 1/7] dt-bindings: net: bluetooth: Add mediatek-bluetooth
+Date: Mon, 9 Jul 2018 23:56:57 +0800
+Message-ID: <d8a5b34513cf2187a2b23a513feaa358d719bc14.1531150733.git.sean.wang@mediatek.com>
+References: <cover.1531150733.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <153090076533.143105.11588903392800697432@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+In-Reply-To: <cover.1531150733.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, alexandre.belloni@bootlin.com, alsa-devel@alsa-project.org, boris.brezillon@bootlin.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com, robh+dt@kernel.org
-Cc: Cristian.Birsan@microchip.com
+To: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com
+Cc: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06.07.2018 21:12, Stephen Boyd wrote:
-> Quoting Codrin Ciubotariu (2018-06-18 07:12:36)
->> This driver is a simple muxing driver that controls the
->> I2S's clock input by using syscon/regmap to change the parent.
->> The available inputs can be peripheral clock and generated clock.
->>
->> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
->> ---
-> 
-> Applied to clk-next
-> 
-> But I had to fix:
-> 
-> WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
-> #56: FILE: drivers/clk/at91/clk-i2s-mux.c:1:
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> 
-> so I did. Please run checkpatch next time.
-> 
+From: Sean Wang <sean.wang@mediatek.com>
 
-Sorry about that. I did run checkpatch, but I saw some files that 
-commented the License-Identifier the same way I did. Didn't notice back 
-then that were only the headers...
-Thank you for applying my patches.
+Add binding document for a SoC built-in device using MediaTek protocol.
+Which could be found on MT7622 SoC or other similar MediaTek SoCs.
 
-Best regards,
-Codrin
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/net/mediatek-bluetooth.txt | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+
+diff --git a/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt b/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+new file mode 100644
+index 0000000..1335429
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+@@ -0,0 +1,35 @@
++MediaTek SoC built-in Bluetooth Devices
++==================================
++
++This device is a serial attached device to BTIF device and thus it must be a
++child node of the serial node with BTIF. The dt-bindings details for BTIF
++device can be known via Documentation/devicetree/bindings/serial/8250.txt.
++
++Required properties:
++
++- compatible:	Must be one of
++		  "mediatek,mt7622-bluetooth"": for MT7622 SoC
++- clocks:	Should be the clock specifiers corresponding to the entry in
++		clock-names property.
++- clock-names:	Should contain "ref" entries.
++- power-domains: Phandle to the power domain that the device is part of
++
++Example:
++
++	btif: serial@1100c000 {
++		compatible = "mediatek,mt7622-btif",
++			     "mediatek,mtk-btif";
++		reg = <0 0x1100c000 0 0x1000>;
++		interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&pericfg CLK_PERI_BTIF_PD>;
++		clock-names = "main";
++		reg-shift = <2>;
++		reg-io-width = <4>;
++
++		bluetooth {
++			compatible = "mediatek,mt7622-bluetooth";
++			power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
++			clocks = <&clk25m>;
++			clock-names = "ref";
++		};
++	};
+-- 
+2.7.4
