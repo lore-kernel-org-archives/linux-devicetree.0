@@ -1,74 +1,106 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v2 1/4] clk: imx7d: add IMX7D_MU_ROOT_CLK
-Date: Mon, 9 Jul 2018 08:18:40 +0000
-Message-ID: <AM0PR04MB4211C3AFCCF832121B88492B80440@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20180615095107.24610-1-o.rempel@pengutronix.de>
- <20180615095107.24610-2-o.rempel@pengutronix.de>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: xilinx: Add missing zynq boards and
+ sort entries
+Date: Mon, 9 Jul 2018 10:18:36 +0200
+Message-ID: <1088d908-eaa1-78a8-f1a5-1a7d82eb5afb@xilinx.com>
+References: <20180706060158.24155-1-luaraneda@gmail.com>
+ <20180706060158.24155-3-luaraneda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180615095107.24610-2-o.rempel@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180706060158.24155-3-luaraneda@gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luis Araneda <luaraneda@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
-> Sent: Friday, June 15, 2018 5:51 PM
-> To: Shawn Guo <shawnguo@kernel.org>; Fabio Estevam
-> <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>; Mark
-> Rutland <mark.rutland@arm.com>; A.s. Dong <aisheng.dong@nxp.com>
-> Cc: Oleksij Rempel <o.rempel@pengutronix.de>; kernel@pengutronix.de;
-> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
-> clk@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>
-> Subject: [PATCH v2 1/4] clk: imx7d: add IMX7D_MU_ROOT_CLK
+On 6.7.2018 08:01, Luis Araneda wrote:
+> The bindings were missing when adding the device-tree files
 > 
-> This clock is needed for iMX mailbox driver
+> Also, improve description of existing boards, sort them
+> alphabetically by manufacturer, and migrate the contents
+> of adapteva dt dindigns into Xilinx's
 > 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-
-I think this can go separately through CLK tree.
-
-Regards
-Dong Aisheng
-
+> Signed-off-by: Luis Araneda <luaraneda@gmail.com>
 > ---
->  drivers/clk/imx/clk-imx7d.c | 1 +
->  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c index
-> 975a20d3cc94..c7159bfac77a 100644
-> --- a/drivers/clk/imx/clk-imx7d.c
-> +++ b/drivers/clk/imx/clk-imx7d.c
-> @@ -795,6 +795,7 @@ static void __init imx7d_clocks_init(struct
-> device_node *ccm_node)
->  	clks[IMX7D_DRAM_ALT_ROOT_CLK] =
-> imx_clk_gate4("dram_alt_root_clk", "dram_alt_post_div", base + 0x4130, 0);
->  	clks[IMX7D_OCOTP_CLK] = imx_clk_gate4("ocotp_clk",
-> "ipg_root_clk", base + 0x4230, 0);
->  	clks[IMX7D_SNVS_CLK] = imx_clk_gate4("snvs_clk", "ipg_root_clk",
-> base + 0x4250, 0);
-> +	clks[IMX7D_MU_ROOT_CLK] = imx_clk_gate4("mu_root_clk",
-> "ipg_root_clk",
-> +base + 0x4270, 0);
->  	clks[IMX7D_CAAM_CLK] = imx_clk_gate4("caam_clk", "ipg_root_clk",
-> base + 0x4240, 0);
->  	clks[IMX7D_USB_HSIC_ROOT_CLK] =
-> imx_clk_gate4("usb_hsic_root_clk", "usb_hsic_post_div", base + 0x4690, 0);
->  	clks[IMX7D_SDMA_CORE_CLK] = imx_clk_gate4("sdma_root_clk",
-> "ahb_root_clk", base + 0x4480, 0);
-> --
-> 2.17.1
+> Changes since v1 (RFC):
+> - Don't remove "internal" word from Xilinx boards on dt-bindings
+> - Migrate content of adapteva dt-binding file into Xilinx's
+> - Sort additional compatible strings alphabetically
+>   by manufacturer
+> 
+>  .../devicetree/bindings/arm/adapteva.txt      |  7 -----
+>  .../devicetree/bindings/arm/xilinx.txt        | 30 +++++++++++++++----
+>  2 files changed, 25 insertions(+), 12 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/adapteva.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/adapteva.txt b/Documentation/devicetree/bindings/arm/adapteva.txt
+> deleted file mode 100644
+> index 1d8af9e36065..000000000000
+> --- a/Documentation/devicetree/bindings/arm/adapteva.txt
+> +++ /dev/null
+> @@ -1,7 +0,0 @@
+> -Adapteva Platforms Device Tree Bindings
+> ----------------------------------------
+> -
+> -Parallella board
+> -
+> -Required root node properties:
+> -    - compatible = "adapteva,parallella";
+> diff --git a/Documentation/devicetree/bindings/arm/xilinx.txt b/Documentation/devicetree/bindings/arm/xilinx.txt
+> index b9043bc35c14..26fe5ecc4332 100644
+> --- a/Documentation/devicetree/bindings/arm/xilinx.txt
+> +++ b/Documentation/devicetree/bindings/arm/xilinx.txt
+> @@ -8,18 +8,38 @@ Required root node properties:
+>  
+>  Additional compatible strings:
+>  
+> -- Xilinx internal board cc108
+> +- Adapteva Parallella board
+> +  "adapteva,parallella"
+> +
+> +- Avnet MicroZed board
+> +  "avnet,zynq-microzed"
+> +  "xlnx,zynq-microzed"
+> +
+> +- Avnet ZedBoard board
+> +  "avnet,zynq-zed"
+> +  "xlnx,zynq-zed"
+> +
+> +- Digilent Zybo board
+> +  "digilent,zynq-zybo"
+> +
+> +- Digilent Zybo Z7 board
+> +  "digilent,zynq-zybo-z7"
+> +
+> +- Xilinx CC108 internal board
+>    "xlnx,zynq-cc108"
+>  
+> -- Xilinx internal board zc770 with different FMC cards
+> +- Xilinx ZC702 internal board
+> +  "xlnx,zynq-zc702"
+> +
+> +- Xilinx ZC706 internal board
+> +  "xlnx,zynq-zc706"
+> +
+> +- Xilinx ZC770 internal board, with different FMC cards
+>    "xlnx,zynq-zc770-xm010"
+>    "xlnx,zynq-zc770-xm011"
+>    "xlnx,zynq-zc770-xm012"
+>    "xlnx,zynq-zc770-xm013"
+>  
+> -- Digilent Zybo Z7 board
+> -  "digilent,zynq-zybo-z7"
+> -
+>  ---------------------------------------------------------------
+>  
+>  Xilinx Zynq UltraScale+ MPSoC Platforms Device Tree Bindings
+> 
+
+Please do it with more patches. There are 3 changes in one patch.
+
+Thanks,
+Michal
