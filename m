@@ -1,72 +1,67 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] ARM: tegra: Fix Tegra30 Cardhu PCA954x reset
-Date: Mon, 9 Jul 2018 16:01:10 +0200
-Message-ID: <20180709140110.GA18353@ulmo>
-References: <1530608387-9591-1-git-send-email-jonathanh@nvidia.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 3/5] ASoC: qcom: add sdm845 sound card
+	support
+Date: Mon, 9 Jul 2018 15:02:11 +0100
+Message-ID: <887331ff-8892-66a7-20bc-0fce447c792f@linaro.org>
+References: <1530870195-13576-1-git-send-email-rohitkr@codeaurora.org>
+ <1530870195-13576-4-git-send-email-rohitkr@codeaurora.org>
+ <20180709111437.GB16082@sirena.org.uk>
+ <b5a3f0e2-d420-603d-f9a0-f93bdbd2619f@linaro.org>
+ <20180709124117.GG16082@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
-Return-path: <stable-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1530608387-9591-1-git-send-email-jonathanh@nvidia.com>
-Sender: stable-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180709124117.GG16082@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, robh+dt@kernel.org, Rohit kumar <rohitkr@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 
---uAKRQypu60I7Lcqm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 03, 2018 at 09:59:47AM +0100, Jon Hunter wrote:
-> On all versions of Tegra30 Cardhu, the reset signal to the NXP PCA9546
-> I2C mux is connected to the Tegra GPIO BB0. Currently, this pin on the
-> Tegra is not configured as a GPIO but as a special-function IO (SFIO)
-> that is multiplexing the pin to an I2S controller. On exiting system
-> suspend, I2C commands sent to the PCA9546 are failing because there is
-> no ACK. Although it is not possible to see exactly what is happening
-> to the reset during suspend, by ensuring it is configured as a GPIO
-> and driven high, to de-assert the reset, the failures are no longer
-> seen.
->=20
-> Please note that this GPIO is also used to drive the reset signal
-> going to the camera connector on the board. However, given that there
-> is no camera support currently for Cardhu, this should not have any
-> impact.
->=20
-> Fixes: 40431d16ff11 ("ARM: tegra: enable PCA9546 on Cardhu")
->=20
-> Cc: stable@vger.kernel.org
->=20
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->  arch/arm/boot/dts/tegra30-cardhu.dtsi | 1 +
->  1 file changed, 1 insertion(+)
+On 09/07/18 13:41, Mark Brown wrote:
+>> AFAIU, The issue with that mechanism or EPROBEDEFER is that it works only
+>> for first time.. for the second time(restart usecase) there are no hooks
+>> like bind/unbind.
+> This is not the case, the card will be unbound at the ASoC level when
+> any of the components are removed and then probed again when they
+> reappear.
+> 
+I did try this and It works only for first time! May be am missing 
+something!
 
-Applied to for-4.19/arm/dt, thanks.
+snd_soc_component_del_unlocked() unregisters the sound card totally. so 
+for the second time (After DSP stop) there is no registered sound card 
+in place.. Am not sure how this is supposed to work?
 
-Thierry
+The reason I think it works for the first time is because of EPROBEDEFER 
+from the machine driver.
 
---uAKRQypu60I7Lcqm
-Content-Type: application/pgp-signature; name="signature.asc"
+Here are the steps I do with DSP:
 
------BEGIN PGP SIGNATURE-----
+Step1: Start DSP, can see sound card after all the services are ON.
+Step2: Stop DSP, there is no audio card.
+Step3: Start DSP, I can see all the components in debugfs but not the 
+sound card.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltDaqMACgkQ3SOs138+
-s6EX6xAAocrOM1kiT0+nW38/scu1cJYnxCuLQ/nBmsgblrAtFL4u1Nl4arD8mJ7M
-JuyLS2QbSdk6sgX7kDWKYV4wl+fo9JXlBVVKWXZ6Oz6GxlnHyocaIjCnrLwQPmA0
-Ro3aXlKFWDiVoCo+ygVmS4YJ6XvBcF/1cKWOJwCz9X6brsN/4xzqMqiObogmBT/s
-YEVF+SejNlDblK2xnhyEfae2X29MtdSAzuV0+loPQOePA5XVHBQvnr7REsFJ4b9I
-0zDGELzKNs4XI7tkqD06HOAkB6h8+tqyPaW504u4eFh1ZEIaEu6CY91n5wxt9MCV
-Th37TPs608u6UZDKAvbTeNc6BA++7wlE/2SEUlDOFjfVLJupiBgJNIy5dVo+0lwl
-meIP8iU6OmphVP1akJvVWWnQOkAW6u/FRkJPaPaYvv5XWynEtLOZ4dHVID34Juwm
-kjo0kVPwD+P9F91ONqFoYS+aBGyAUdksVxLFEVxdwmJGs2zSYWxkvc4HFFK47O8G
-3+X8R2L5XzbalmFzUSB89HoZWA8SRAAQCWeHE0ncfWrr3bHwO2TEb0q2NE952C/8
-CdVHI773kQFuN75IwBMwcjcLgHMupbBW/FB2xZ9ChmxJCWBherfTf7WO03EkrIaF
-UbvS9A4rw71/XYHhrbrDMcwE2krCWTBrB+EDnvFeIuqlC/7bFZw=
-=qTb9
------END PGP SIGNATURE-----
+This is what I do w.r.t code:
+ From machine driver in snd_soc_register_card() in probe()
+ From Audio services driver snd_soc_register_component() in probe() and
+snd_soc_unregister_component() in remove()
 
---uAKRQypu60I7Lcqm--
+When DSP is stopped the audio services disappear and 
+snd_soc_unregister_component() is invoked.
+
+
+thanks,
+srini
