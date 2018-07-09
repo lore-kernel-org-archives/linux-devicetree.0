@@ -1,51 +1,78 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: [PATCH v5 2/6] clk: ti: dra7: Add clkctrl clock data for the mcan clocks
-Date: Mon, 9 Jul 2018 22:18:37 +0530
-Message-ID: <20180709164841.14182-3-faiz_abbas@ti.com>
-References: <20180709164841.14182-1-faiz_abbas@ti.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v8 1/4] ARM: dts: tegra: Remove usage of deprecated
+ skeleton.dtsi
+Date: Mon, 9 Jul 2018 18:54:05 +0200
+Message-ID: <20180709165405.GA26651@ulmo>
+References: <20180709160519.23497-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cNdxnHkX5QqsyA0e"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180709164841.14182-1-faiz_abbas@ti.com>
+Content-Disposition: inline
+In-Reply-To: <20180709160519.23497-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Cc: robh+dt@kernel.org, bcousson@baylibre.com, tony@atomide.com, paul@pwsan.com, t-kristo@ti.com, mark.rutland@arm.com, faiz_abbas@ti.com, sboyd@kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>
 List-Id: devicetree@vger.kernel.org
 
-Add clkctrl data for the m_can clocks and register it within the
-clkctrl driver
 
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-CC: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- drivers/clk/ti/clk-7xx.c         | 1 +
- include/dt-bindings/clock/dra7.h | 1 +
- 2 files changed, 2 insertions(+)
+--cNdxnHkX5QqsyA0e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/clk/ti/clk-7xx.c b/drivers/clk/ti/clk-7xx.c
-index fb249a1637a5..71a122b2dc67 100644
---- a/drivers/clk/ti/clk-7xx.c
-+++ b/drivers/clk/ti/clk-7xx.c
-@@ -708,6 +708,7 @@ static const struct omap_clkctrl_reg_data dra7_wkupaon_clkctrl_regs[] __initcons
- 	{ DRA7_COUNTER_32K_CLKCTRL, NULL, 0, "wkupaon_iclk_mux" },
- 	{ DRA7_UART10_CLKCTRL, dra7_uart10_bit_data, CLKF_SW_SUP, "wkupaon_cm:clk:0060:24" },
- 	{ DRA7_DCAN1_CLKCTRL, dra7_dcan1_bit_data, CLKF_SW_SUP, "wkupaon_cm:clk:0068:24" },
-+	{ DRA7_ADC_CLKCTRL, NULL, CLKF_SW_SUP, "mcan_clk"},
- 	{ 0 },
- };
- 
-diff --git a/include/dt-bindings/clock/dra7.h b/include/dt-bindings/clock/dra7.h
-index 5e1061b15aed..d7549c57cac3 100644
---- a/include/dt-bindings/clock/dra7.h
-+++ b/include/dt-bindings/clock/dra7.h
-@@ -168,5 +168,6 @@
- #define DRA7_COUNTER_32K_CLKCTRL	DRA7_CLKCTRL_INDEX(0x50)
- #define DRA7_UART10_CLKCTRL	DRA7_CLKCTRL_INDEX(0x80)
- #define DRA7_DCAN1_CLKCTRL	DRA7_CLKCTRL_INDEX(0x88)
-+#define DRA7_ADC_CLKCTRL	DRA7_CLKCTRL_INDEX(0xa0)
- 
- #endif
--- 
-2.17.0
+On Mon, Jul 09, 2018 at 06:05:16PM +0200, Krzysztof Kozlowski wrote:
+> Remove the usage of skeleton.dtsi because it was deprecated since commit
+> 9c0da3cc61f1 ("ARM: dts: explicitly mark skeleton.dtsi as deprecated").
+> It also allows later to fix DTC warnings for missing unit name in
+> /memory nodes.
+>=20
+> Compiled DTBs are the same as before this commit.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Stefan Agner <stefan@agner.ch>
+>=20
+> ---
+>=20
+> Changes since v7:
+> 1. Remove adding of chosen and aliases (suggested by Thierry).
+>=20
+> Changes since v6:
+> 1. Add Stefan's reviewed-by tag.
+>=20
+> Changes since v5:
+> 1. New patch, split with skeleton.dtsi removal (suggested by
+> Stefan).
+> ---
+>  arch/arm/boot/dts/tegra114.dtsi       | 8 ++++++--
+>  arch/arm/boot/dts/tegra124.dtsi       | 6 ++++--
+>  arch/arm/boot/dts/tegra20.dtsi        | 8 ++++++--
+>  arch/arm/boot/dts/tegra30-apalis.dtsi | 4 ++++
+>  arch/arm/boot/dts/tegra30.dtsi        | 8 ++++++--
+>  5 files changed, 26 insertions(+), 8 deletions(-)
+
+Series applied to for-4.19/arm/dt, thanks.
+
+Thierry
+
+--cNdxnHkX5QqsyA0e
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltDkysACgkQ3SOs138+
+s6HqOA//QmEj+qn0rD3Jw+uLZyLCsVsTFSI9mMUK5jBELy9LS1YNgKskKlYVavtD
+8XDhU46rWmGlsE7WcJVKbdTlvYHNGvsvtczZ0D8vdSOhmjgyP9nOr4uI8+sCCyXD
+xa4H2sHqn66AJQHNOCcqRiuXL2Bee6V4Qd84J0xnyabeF/cXqUDkBzkU9bryzFNk
+SVGhjJaUAaBvk/fazY5ZwkJX3iSyhqXaeMw9deIpMDfV+zdOiC4nBHygQJkwXw6G
+ziw2N67k07s6VI/9FX6i78GGX1dfA7iayVcTyv5AFPs5pzkttkndVciIU98Dy2cF
+PZu6uC52V7DeAReFCCmJOVjKiqptaSqrSOfcwBHRif7y2Rr4sZJ7g1pY0uvR4WLy
+iEleSu38QI2nZu0lUVTDeElki/3fhm6/9/I/DyGaz4am8eMhWIENodSsxbqYL8FE
+ZaSxHwjTkNY7LMimEWqN1E0cmRnpOj6tthdEiPLu1uvv3yKfs+BESJ8nF1pJ7zme
+o01oYlOe8OSSDkFMzAUFauN9L15pL5xOY9p2M8Qly8pUgdl79SuKDL2LnQ9gEgv7
+X9sa5a4WvVfQS1Aet0lmdSaOw2TORVVVmYD9/xAQrnaBHPPK1LdPJjAgmOaoMPxh
+EhryoTz7OCY/v2bJF8qicVjoREgNBE6GzVUDYaIQ0B/c3RmdRTA=
+=3PJ3
+-----END PGP SIGNATURE-----
+
+--cNdxnHkX5QqsyA0e--
