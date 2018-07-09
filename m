@@ -1,52 +1,57 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 1/2] gpio: mediatek: add driver for MT7621
-Date: Mon, 9 Jul 2018 13:45:22 +0200
-Message-ID: <CACRpkdbWbFi-vzHqSu3T2iE89BJaQNCfZHVNvV7Crqq-TsLnmg@mail.gmail.com>
-References: <1530798191-25471-1-git-send-email-sergio.paracuellos@gmail.com>
- <1530798191-25471-2-git-send-email-sergio.paracuellos@gmail.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v2] Add DT support for Octavo Systems OSD3358-SM-RED
+ based on TI AM335x
+Date: Mon, 9 Jul 2018 12:43:04 +0100
+Message-ID: <20180709114304.GE6920@n2100.armlinux.org.uk>
+References: <20180706200051.1115-1-neeraj.dantu@octavosystems.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1530798191-25471-2-git-send-email-sergio.paracuellos@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Sergio Paracuellos <sergio.paracuellos@gmail.com>, juhosg@freemail.hu, John Crispin <john@phrozen.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, driverdev-devel@linuxdriverproject.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NeilBrown <neil@brown.name>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180706200051.1115-1-neeraj.dantu@octavosystems.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neeraj Dantu <dantuguf14105@gmail.com>
+Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Jason Kridner <jkridner@gmail.com>, Neeraj Dantu <neeraj.dantu@octavosystems.com>, linux-omap@vger.kernel.org, Robert Nelson <robertcnelson@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 5, 2018 at 3:43 PM Sergio Paracuellos
-<sergio.paracuellos@gmail.com> wrote:
+On Fri, Jul 06, 2018 at 08:00:51PM +0000, Neeraj Dantu wrote:
+> +&lcdc {
+> +	status = "okay";
+> +
+> +	/* If you want to get 24 bit RGB and 16 BGR mode instead of
+> +	 * current 16 bit RGB and 24 BGR modes, set the propety
+> +	 * below to "crossed" and uncomment the video-ports -property
+> +	 * in tda19988 node.
+> +	 */
+> +	blue-and-red-wiring = "straight";
+...
+> +&i2c0 {
+> +	tda19988: tda19988 {
 
-> Add driver support for gpio of MT7621 SoC.
->
-> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> Reviewed-by: NeilBrown <neil@brown.name>
+This should not be "tda19988" as the node name - DT requires generic
+names, like "hdmi-encoder".
 
-This is looking really good.
+...
+> +		/* Convert 24bit BGR to RGB, e.g. cross red and blue wiring */
+> +		/* video-ports = <0x234501>; */
 
-Patch applied: anything remaining can surely be patched up
-in-tree.
+Please explain more what's going on here.
 
-> +/*
-> + * Copyright (C) 2009-2011 Gabor Juhos <juhosg@openwrt.org>
-> + * Copyright (C) 2013 John Crispin <blogic@openwrt.org>
-> + */
+Can you set 24-bit RGB mode with the above configuration - presumably
+the colours will come out wrong?
 
-All OpenWRT drivers are moving upstream and I like it :)
-Gabo and John wrote like 90% of them on their own :D
+Exactly what is the wiring between the lcdc and tda998x?
 
-> +#define GPIO_BANK_WIDE 0x04
-
-Nitpick: we usually call this "stride" rather than "wide".
-I changed it while applying the patch.
-
-Yours,
-Linus Walleij
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps up
+According to speedtest.net: 13Mbps down 490kbps up
