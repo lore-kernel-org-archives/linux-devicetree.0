@@ -1,64 +1,48 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 6/8] clk: tegra20: Turn EMC clock gate into divider
-Date: Sun, 08 Jul 2018 17:00:17 -0700
-Message-ID: <153109441777.143105.8459253820659446035@swboyd.mtv.corp.google.com>
-References: <20180617145539.4758-1-digetx@gmail.com>
- <20180617145539.4758-7-digetx@gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 0/9] Allwinner H6 USB support
+Date: Mon, 9 Jul 2018 10:52:00 +0800
+Message-ID: <CAGb2v6613vcxaA0J5L_bm=ZCU_bkCkeK-icrq_y7Mmd1+MMrHQ@mail.gmail.com>
+References: <20180706153805.25842-1-icenowy@aosc.io>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180617145539.4758-7-digetx@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBZ43RPNAKGQEEOUR2YY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180706153805.25842-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Dmitry Osipenko (2018-06-17 07:55:37)
-> Kernel should never gate the EMC clock as it causes immediate lockup, so
-> removing clk-gate functionality doesn't affect anything. Turning EMC clk
-> gate into divider allows to implement glitch-less EMC scaling, avoiding
-> reparenting to a backup clock.
-> =
+On Fri, Jul 6, 2018 at 11:37 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> This patchset introduces support for the USB ports (both USB2 and USB3)
+> on the Allwinner H6 SoC.
+>
+> This revision adds the USB2 support, and places it before the USB3
+> support. So only the USB3 part will have changelog in this revision.
+>
+> The first 5 PATCHes are the USB2 part, and the latter 4 PATCHes are the
+> USB3 part.
+>
+> PATCH 1, 2, 6, 7 should go through the PHY tree, and the remaining
+> patches should go through the armsoc tree via sunxi tree.
+>
+> Icenowy Zheng (9):
+>   phy: sun4i-usb: add support for missing USB PHY index
+>   phy: sun4i-usb: add support for H6 USB2 PHY
+>   arm64: allwinner: dts: h6: add USB2-related device nodes
+>   arm64: allwinner: dts: h6: add USB Vbus regulator
+>   arm64: allwinner: dts: h6: enable USB2 on Pine H64
+>   dt-bindings: phy: add binding for Allwinner USB3 PHY
+>   phy: allwinner: add phy driver for USB3 PHY on Allwinner H6 SoC
+>   arm64: allwinner: dts: h6: add USB3 device nodes
+>   arm64: allwinner: dts: h6: enable USB3 port on Pine H64
 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> ---
+Apart from my comments in a few patches, this series is
 
-Who's supposed to apply this? Me? Thierry? The "To:" line is not
-useful when every maintainer is there.
-
-> diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegr=
-a20.c
-> index cc857d4d4a86..2bd35418716a 100644
-> --- a/drivers/clk/tegra/clk-tegra20.c
-> +++ b/drivers/clk/tegra/clk-tegra20.c
-> @@ -799,6 +798,31 @@ static struct tegra_periph_init_data tegra_periph_no=
-div_clk_list[] =3D {
->         TEGRA_INIT_DATA_NODIV("disp2",  mux_pllpdc_clkm, CLK_SOURCE_DISP2=
-, 30, 2, 26,  0, TEGRA20_CLK_DISP2),
->  };
->  =
-
-> +static void __init tegra20_emc_clk_init(void)
-> +{
-> +       struct clk *clk;
-> +
-> +       clk =3D clk_register_mux(NULL, "emc_mux", mux_pllmcp_clkm,
-> +                              ARRAY_SIZE(mux_pllmcp_clkm),
-> +                              CLK_SET_RATE_NO_REPARENT,
-> +                              clk_base + CLK_SOURCE_EMC,
-> +                              30, 2, 0, &emc_lock);
-> +
-> +       clk =3D tegra_clk_register_mc("mc", "emc_mux", clk_base + CLK_SOU=
-RCE_EMC,
-> +                                   &emc_lock);
-> +       clks[TEGRA20_CLK_MC] =3D clk;
-> +
-> +       /*
-> +        * Note that 'emc_mux' source and 'emc' rate shouldn't be changed=
- at
-> +        * the same time due to a HW bug, this won't happen because we're
-> +        * defining 'emc_mux' and 'emc' as a distinct clocks.
-
-s/ a//
+Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
