@@ -1,57 +1,83 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 3/5] ASoC: qcom: add sdm845 sound card support
-Date: Mon, 9 Jul 2018 12:14:37 +0100
-Message-ID: <20180709111437.GB16082@sirena.org.uk>
-References: <1530870195-13576-1-git-send-email-rohitkr@codeaurora.org>
- <1530870195-13576-4-git-send-email-rohitkr@codeaurora.org>
+From: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 0/7 v6] Support for fsl-mc bus and its devices in SMMU
+Date: Mon,  9 Jul 2018 16:48:16 +0530
+Message-ID: <1531135103-10699-1-git-send-email-nipun.gupta@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="KFztAG8eRSV9hGtP"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1530870195-13576-4-git-send-email-rohitkr@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rohit kumar <rohitkr@codeaurora.org>
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, plai@codeaurora.org, bgoswami@codeaurora.org, perex@perex.cz, srinivas.kandagatla@linaro.org, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: robin.murphy-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, laurentiu.tudor-3arQi8VN3Tc@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This patchset defines IOMMU DT binding for fsl-mc bus and adds
+support in SMMU for fsl-mc bus.
 
---KFztAG8eRSV9hGtP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The patch series is based on top of dma-mapping tree (for-next branch):
+http://git.infradead.org/users/hch/dma-mapping.git
 
-On Fri, Jul 06, 2018 at 03:13:13PM +0530, Rohit kumar wrote:
+These patches
+  - Define property 'iommu-map' for fsl-mc bus (patch 1)
+  - Integrates the fsl-mc bus with the SMMU using this
+    IOMMU binding (patch 2,3,4)
+  - Adds the dma configuration support for fsl-mc bus (patch 5, 6)
+  - Updates the fsl-mc device node with iommu/dma related changes (patch 7)
 
-> @@ -0,0 +1,390 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> + */
+Changes in v2:
+  - use iommu-map property for fsl-mc bus
+  - rebase over patchset https://patchwork.kernel.org/patch/10317337/
+    and make corresponding changes for dma configuration of devices on
+    fsl-mc bus
 
-Please make the entire comment block a C++ comment, it makes it look
-more intentional.
+Changes in v3:
+  - move of_map_rid in drivers/of/address.c
 
-> +static const struct component_master_ops sdm845_ops = {
-> +	.bind = sdm845_bind,
-> +	.unbind = sdm845_unbind,
-> +};
+Changes in v4:
+  - move of_map_rid in drivers/of/base.c
 
-Why is this using the component stuff rather than the normal support for
-finding the components of audio cards?
+Changes in v5:
+  - break patch 5 in two separate patches (now patch 5/7 and patch 6/7)
+  - add changelog text in patch 3/7 and patch 5/7
+  - typo fix
 
---KFztAG8eRSV9hGtP
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes in v6:
+  - Updated fsl_mc_device_group() API to be more rational
+  - Added dma-coherent property in the LS2 smmu device node
+  - Minor fixes in the device-tree documentation
 
------BEGIN PGP SIGNATURE-----
+Nipun Gupta (7):
+  Documentation: fsl-mc: add iommu-map device-tree binding for fsl-mc
+    bus
+  iommu/of: make of_pci_map_rid() available for other devices too
+  iommu/of: support iommu configuration for fsl-mc devices
+  iommu/arm-smmu: Add support for the fsl-mc bus
+  bus: fsl-mc: support dma configure for devices on fsl-mc bus
+  bus: fsl-mc: set coherent dma mask for devices on fsl-mc bus
+  arm64: dts: ls208xa: comply with the iommu map binding for fsl_mc
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltDQ50ACgkQJNaLcl1U
-h9C5OAf+JveqZrxXpoXe/VjhXg8RPbyzezTyG8ZWYflQEQpM1UzQpr4pSbyc7ozz
-CicbBkK5P6StaY1SUURd9NNmiQXay51izpf20Gne+nhDXxeIsi98J0eDtzypAgVX
-aOiAfKkFlsySKOJf79Cq1Co1BpS1HOe9ve7mauaFP6lmI8qiAtc3fuhD03WAB3ku
-FYNNCHSn2bV0A3EA3q1EX1j0xyO5PA8Kt0fTHqyCkDguA+DBhvoSGHD/HXYgibcH
-210gSXCQ4LwKNmHQ/QS0m2MCoS0HNgBM4xO3/PU/EbSQ/hvoS987B+xrNv/JE9SZ
-ZaluCT8Yre/yyA3YicLCSF48vWYuvA==
-=bYhV
------END PGP SIGNATURE-----
+ .../devicetree/bindings/misc/fsl,qoriq-mc.txt      |  39 ++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi     |   7 +-
+ drivers/bus/fsl-mc/fsl-mc-bus.c                    |  16 +++-
+ drivers/iommu/arm-smmu.c                           |   7 ++
+ drivers/iommu/iommu.c                              |  13 +++
+ drivers/iommu/of_iommu.c                           |  25 ++++-
+ drivers/of/base.c                                  | 102 +++++++++++++++++++++
+ drivers/of/irq.c                                   |   5 +-
+ drivers/pci/of.c                                   | 101 --------------------
+ include/linux/fsl/mc.h                             |   8 ++
+ include/linux/iommu.h                              |   2 +
+ include/linux/of.h                                 |  11 +++
+ include/linux/of_pci.h                             |  10 --
+ 13 files changed, 224 insertions(+), 122 deletions(-)
 
---KFztAG8eRSV9hGtP--
+-- 
+1.9.1
