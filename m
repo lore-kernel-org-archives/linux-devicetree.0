@@ -1,67 +1,43 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v3 3/5] ASoC: qcom: add sdm845 sound card
-	support
-Date: Mon, 9 Jul 2018 15:02:11 +0100
-Message-ID: <887331ff-8892-66a7-20bc-0fce447c792f@linaro.org>
-References: <1530870195-13576-1-git-send-email-rohitkr@codeaurora.org>
- <1530870195-13576-4-git-send-email-rohitkr@codeaurora.org>
- <20180709111437.GB16082@sirena.org.uk>
- <b5a3f0e2-d420-603d-f9a0-f93bdbd2619f@linaro.org>
- <20180709124117.GG16082@sirena.org.uk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6 0/2] pinctrl: imx: Add driver for i.MX8MQ
+Date: Mon, 9 Jul 2018 16:02:00 +0200
+Message-ID: <CACRpkdb=0uR4uYF_N8HcySJGPct6q5zT+fd6ZfnMqS4OCT_=GA@mail.gmail.com>
+References: <1530532746-619-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180709124117.GG16082@sirena.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, robh+dt@kernel.org, Rohit kumar <rohitkr@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1530532746-619-1-git-send-email-abel.vesa@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: abel.vesa@nxp.com, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>
+Cc: Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh@kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, abelvesa@linux.com, Pengutronix Kernel Team <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jul 2, 2018 at 1:59 PM Abel Vesa <abel.vesa@nxp.com> wrote:
 
+> This is the sixth version for the patch series sent by Lucas.
+>
+> https://www.spinics.net/lists/devicetree/msg212752.html
+>
+> Fifth version can be found here:
+>
+> https://lkml.org/lkml/2018/6/22/501
+>
+> Changes since v5:
+>  * implemented Rob's review comments related to bindings
 
-On 09/07/18 13:41, Mark Brown wrote:
->> AFAIU, The issue with that mechanism or EPROBEDEFER is that it works only
->> for first time.. for the second time(restart usecase) there are no hooks
->> like bind/unbind.
-> This is not the case, the card will be unbound at the ASoC level when
-> any of the components are removed and then probed again when they
-> reappear.
-> 
-I did try this and It works only for first time! May be am missing 
-something!
+Can I get some review tag from one of the listed maintainers so
+we can proceed with Abel's patches? It all looks fine to me.
 
-snd_soc_component_del_unlocked() unregisters the sound card totally. so 
-for the second time (After DSP stop) there is no registered sound card 
-in place.. Am not sure how this is supposed to work?
+PIN CONTROLLER - FREESCALE
+M:      Dong Aisheng <aisheng.dong@nxp.com>
+M:      Fabio Estevam <festevam@gmail.com>
+M:      Shawn Guo <shawnguo@kernel.org>
+M:      Stefan Agner <stefan@agner.ch>
+R:      Pengutronix Kernel Team <kernel@pengutronix.de>
+L:      linux-gpio@vger.kernel.org
+S:      Maintained
+F:      drivers/pinctrl/freescale/
+F:      Documentation/devicetree/bindings/pinctrl/fsl,*
 
-The reason I think it works for the first time is because of EPROBEDEFER 
-from the machine driver.
-
-Here are the steps I do with DSP:
-
-Step1: Start DSP, can see sound card after all the services are ON.
-Step2: Stop DSP, there is no audio card.
-Step3: Start DSP, I can see all the components in debugfs but not the 
-sound card.
-
-This is what I do w.r.t code:
- From machine driver in snd_soc_register_card() in probe()
- From Audio services driver snd_soc_register_component() in probe() and
-snd_soc_unregister_component() in remove()
-
-When DSP is stopped the audio services disappear and 
-snd_soc_unregister_component() is invoked.
-
-
-thanks,
-srini
+Yours,
+Linus Walleij
