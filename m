@@ -1,66 +1,163 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 7/8] ARM: dts: imx6qdl-apalis/-colibri: assign VDDD to SGTL5000
-Date: Mon,  9 Jul 2018 17:48:47 +0200
-Message-ID: <20180709154848.5401-7-stefan@agner.ch>
+Subject: [PATCH 6/8] ARM: dts: imx6qdl-apalis/-colibri: fix on-module
+ regulators
+Date: Mon,  9 Jul 2018 17:48:46 +0200
+Message-ID: <20180709154848.5401-6-stefan@agner.ch>
 References: <20180709154848.5401-1-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180709154848.5401-1-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: shawnguo@kernel.org, s.hauer@pengutronix.de
-Cc: kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, marcel.ziswiler@toradex.com, max.krummenacher@toradex.com, maitysanchayan@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, max.krummenacher@toradex.com, marcel.ziswiler@toradex.com, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, maitysanchayan@gmail.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-VDDD is connected to VGEN4 of the PF0100. This rail should only
-run at 1.8V since there are multiple consumer and they all
-expect the rail to be at 1.8V.
+Remove the 2.5V regulator, it does not exist. There is 3.3V and
+3.3V_AUDIO provided to the module through the edge connector,
+model those as fixed regulators like we use to do in other
+Colibri device trees. The SGTL5000 uses 3.3V_AUDIO as VDDA. Note
+that the driver derives the analog ground voltage (VAG) from this
+supply. The new value should allow higher output swings before
+clipping occurs. Refer to the SGTL5000 datasheet for details.
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/boot/dts/imx6qdl-apalis.dtsi  | 3 ++-
- arch/arm/boot/dts/imx6qdl-colibri.dtsi | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6qdl-apalis.dtsi  | 22 +++++++++++-----------
+ arch/arm/boot/dts/imx6qdl-colibri.dtsi | 20 ++++++++++----------
+ 2 files changed, 21 insertions(+), 21 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-index 6813f4326807..8c04f42fdb71 100644
+index 2f711fffa06e..6813f4326807 100644
 --- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-@@ -289,7 +289,7 @@
+@@ -61,17 +61,17 @@
+ 		status = "disabled";
+ 	};
  
- 			vgen4_reg: vgen4 {
- 				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3300000>;
-+				regulator-max-microvolt = <1800000>;
- 				regulator-boot-on;
- 				regulator-always-on;
- 			};
-@@ -316,6 +316,7 @@
+-	reg_2p5v: regulator-2p5v {
++	reg_module_3v3: regulator-module-3v3 {
+ 		compatible = "regulator-fixed";
+-		regulator-name = "2P5V";
+-		regulator-min-microvolt = <2500000>;
+-		regulator-max-microvolt = <2500000>;
++		regulator-name = "+V3.3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
+ 		regulator-always-on;
+ 	};
+ 
+-	reg_3p3v: regulator-3p3v {
++	reg_module_3v3_audio: regulator-module-3v3-audio {
+ 		compatible = "regulator-fixed";
+-		regulator-name = "3P3V";
++		regulator-name = "+V3.3_AUDIO";
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 		regulator-always-on;
+@@ -314,8 +314,8 @@
+ 		compatible = "fsl,sgtl5000";
+ 		reg = <0x0a>;
  		clocks = <&clks IMX6QDL_CLK_CKO>;
- 		VDDA-supply = <&reg_module_3v3_audio>;
- 		VDDIO-supply = <&reg_module_3v3>;
-+		VDDD-supply = <&vgen4_reg>;
+-		VDDA-supply = <&reg_2p5v>;
+-		VDDIO-supply = <&reg_3p3v>;
++		VDDA-supply = <&reg_module_3v3_audio>;
++		VDDIO-supply = <&reg_module_3v3>;
  	};
  
  	/* STMPE811 touch screen controller */
+@@ -447,7 +447,7 @@
+ &usdhc1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usdhc1_4bit &pinctrl_usdhc1_8bit>;
+-	vqmmc-supply = <&reg_3p3v>;
++	vqmmc-supply = <&reg_module_3v3>;
+ 	bus-width = <8>;
+ 	disable-wp;
+ 	no-1-8-v;
+@@ -458,7 +458,7 @@
+ &usdhc2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usdhc2>;
+-	vqmmc-supply = <&reg_3p3v>;
++	vqmmc-supply = <&reg_module_3v3>;
+ 	bus-width = <4>;
+ 	disable-wp;
+ 	no-1-8-v;
+@@ -469,7 +469,7 @@
+ &usdhc3 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usdhc3>;
+-	vqmmc-supply = <&reg_3p3v>;
++	vqmmc-supply = <&reg_module_3v3>;
+ 	bus-width = <8>;
+ 	no-1-8-v;
+ 	non-removable;
 diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-index 9a3bac5be5e2..6821ea511051 100644
+index 1a147cb0bed0..9a3bac5be5e2 100644
 --- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-@@ -219,7 +219,7 @@
+@@ -56,17 +56,17 @@
+ 		status = "disabled";
+ 	};
  
- 			vgen4_reg: vgen4 {
- 				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3300000>;
-+				regulator-max-microvolt = <1800000>;
- 				regulator-boot-on;
- 				regulator-always-on;
- 			};
-@@ -246,6 +246,7 @@
+-	reg_2p5v: regulator-2p5v {
++	reg_module_3v3: regulator-module-3v3 {
+ 		compatible = "regulator-fixed";
+-		regulator-name = "2P5V";
+-		regulator-min-microvolt = <2500000>;
+-		regulator-max-microvolt = <2500000>;
++		regulator-name = "+V3.3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
+ 		regulator-always-on;
+ 	};
+ 
+-	reg_3p3v: regulator-3p3v {
++	reg_module_3v3_audio: regulator-module-3v3-audio {
+ 		compatible = "regulator-fixed";
+-		regulator-name = "3P3V";
++		regulator-name = "+V3.3_AUDIO";
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 		regulator-always-on;
+@@ -244,8 +244,8 @@
+ 		compatible = "fsl,sgtl5000";
+ 		reg = <0x0a>;
  		clocks = <&clks IMX6QDL_CLK_CKO>;
- 		VDDA-supply = <&reg_module_3v3_audio>;
- 		VDDIO-supply = <&reg_module_3v3>;
-+		VDDD-supply = <&vgen4_reg>;
+-		VDDA-supply = <&reg_2p5v>;
+-		VDDIO-supply = <&reg_3p3v>;
++		VDDA-supply = <&reg_module_3v3_audio>;
++		VDDIO-supply = <&reg_module_3v3>;
  		lrclk-strength = <3>;
  	};
  
+@@ -380,7 +380,7 @@
+ 	pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_mmc_cd>;
+ 	cd-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>; /* MMCD */
+ 	disable-wp;
+-	vqmmc-supply = <&reg_3p3v>;
++	vqmmc-supply = <&reg_module_3v3>;
+ 	bus-width = <4>;
+ 	no-1-8-v;
+ 	status = "disabled";
+@@ -390,7 +390,7 @@
+ &usdhc3 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usdhc3>;
+-	vqmmc-supply = <&reg_3p3v>;
++	vqmmc-supply = <&reg_module_3v3>;
+ 	bus-width = <8>;
+ 	no-1-8-v;
+ 	non-removable;
 -- 
 2.18.0
