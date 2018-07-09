@@ -1,94 +1,45 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v4 1/6] driver core: allow stopping deferred probe after
- init
-Date: Mon, 9 Jul 2018 16:52:01 +0100
-Message-ID: <20180709155201.GG17271@n2100.armlinux.org.uk>
-References: <20180709154153.15742-1-robh@kernel.org>
- <20180709154153.15742-2-robh@kernel.org>
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: Re: [PATCH v5 2/5] clk: at91: add I2S clock mux driver
+Date: Mon, 9 Jul 2018 18:55:01 +0300
+Message-ID: <b7a379b3-0cfe-7a8e-fa13-3d152beb5e32@microchip.com>
+References: <20180618141239.10892-1-codrin.ciubotariu@microchip.com>
+ <20180618141239.10892-3-codrin.ciubotariu@microchip.com>
+ <153090076533.143105.11588903392800697432@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180709154153.15742-2-robh@kernel.org>
+In-Reply-To: <153090076533.143105.11588903392800697432@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, boot-architecture@lists.linaro.org, Kevin Hilman <khilman@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, alexandre.belloni@bootlin.com, alsa-devel@alsa-project.org, boris.brezillon@bootlin.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com, robh+dt@kernel.org
+Cc: Cristian.Birsan@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 09, 2018 at 09:41:48AM -0600, Rob Herring wrote:
-> Deferred probe will currently wait forever on dependent devices to probe,
-> but sometimes a driver will never exist. It's also not always critical for
-> a driver to exist. Platforms can rely on default configuration from the
-> bootloader or reset defaults for things such as pinctrl and power domains.
-> This is often the case with initial platform support until various drivers
-> get enabled. There's at least 2 scenarios where deferred probe can render
-> a platform broken. Both involve using a DT which has more devices and
-> dependencies than the kernel supports. The 1st case is a driver may be
-> disabled in the kernel config. The 2nd case is the kernel version may
-> simply not have the dependent driver. This can happen if using a newer DT
-> (provided by firmware perhaps) with a stable kernel version. Deferred
-> probe issues can be difficult to debug especially if the console has
-> dependencies or userspace fails to boot to a shell.
+On 06.07.2018 21:12, Stephen Boyd wrote:
+> Quoting Codrin Ciubotariu (2018-06-18 07:12:36)
+>> This driver is a simple muxing driver that controls the
+>> I2S's clock input by using syscon/regmap to change the parent.
+>> The available inputs can be peripheral clock and generated clock.
+>>
+>> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+>> ---
 > 
-> There are also cases like IOMMUs where only built-in drivers are
-> supported, so deferring probe after initcalls is not needed. The IOMMU
-> subsystem implemented its own mechanism to handle this using OF_DECLARE
-> linker sections.
+> Applied to clk-next
 > 
-> This commit adds makes ending deferred probe conditional on initcalls
-> being completed or a debug timeout. Subsystems or drivers may opt-in by
-> calling driver_deferred_probe_check_init_done() instead of
-> unconditionally returning -EPROBE_DEFER. They may use additional
-> information from DT or kernel's config to decide whether to continue to
-> defer probe or not.
+> But I had to fix:
 > 
-> The timeout mechanism is intended for debug purposes and WARNs loudly.
-> The remaining deferred probe pending list will also be dumped after the
-> timeout. Not that this timeout won't work for the console which needs
-> to be enabled before userspace starts. However, if the console's
-> dependencies are resolved, then the kernel log will be printed (as
-> opposed to no output).
+> WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
+> #56: FILE: drivers/clk/at91/clk-i2s-mux.c:1:
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> 
+> so I did. Please run checkpatch next time.
+> 
 
-So what happens if we have a set of modules which use deferred probing
-in order to work?
+Sorry about that. I did run checkpatch, but I saw some files that 
+commented the License-Identifier the same way I did. Didn't notice back 
+then that were only the headers...
+Thank you for applying my patches.
 
-For example, with sound stuff built as modules, and auto-loaded in
-parallel by udev, the modules get added in a random order.  The
-modules have non-udev obvious dependencies between them (resource
-dependencies) which result in deferred probing being necessary to
-bring the device up.
-
-Eg,
-
-snd_soc_kirkwood_spdif module declares the ASoC card.
-snd_soc_spdif_tx is a codec as a loadable module.
-snd_soc_kirkwood is the CPU digital audio interface module.
-
-What I commonly see is this module load order:
-
-snd_soc_kirkwood_spdif, then snd_soc_kirkwood and then snd_soc_spdif_tx.
-
-This results at boot in:
-
-kirkwood-spdif-audio audio-subsystem: ASoC: CPU DAI kirkwood-fe not registered
-kirkwood-spdif-audio audio-subsystem: ASoC: CPU DAI kirkwood-fe not registered
-kirkwood-spdif-audio audio-subsystem: ASoC: CPU DAI kirkwood-fe not registered
-kirkwood-spdif-audio audio-subsystem: ASoC: CPU DAI kirkwood-fe not registered
-kirkwood-spdif-audio audio-subsystem: ASoC: CPU DAI kirkwood-fe not registered
-kirkwood-spdif-audio audio-subsystem: ASoC: CODEC DAI dit-hifi not registered
-kirkwood-spdif-audio audio-subsystem: ASoC: CODEC DAI dit-hifi not registered
-kirkwood-spdif-audio audio-subsystem: snd-soc-dummy-dai <-> kirkwood-fe mapping ok
-kirkwood-spdif-audio audio-subsystem: multicodec <-> kirkwood-spdif mapping ok
-
-at boot, where most of these are deferred probe attempts.
-
-So, disabling deferred probing after all the kernel-internal initcalls
-are run is wrong.  You can have deferred probing required due to
-external modules, and this can kick in at any time (think about
-hot-pluggable hardware with a driver that's somehow componentised,
-like an audio device...)
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps up
-According to speedtest.net: 13Mbps down 490kbps up
+Best regards,
+Codrin
