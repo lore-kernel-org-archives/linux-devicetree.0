@@ -1,56 +1,72 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: [PATCH 2/2] ARM: dts: socfpga: update NAND clocking for c5/a5
-Date: Mon,  9 Jul 2018 17:41:03 -0500
-Message-ID: <1531176063-30140-2-git-send-email-dinguyen@kernel.org>
-References: <1531176063-30140-1-git-send-email-dinguyen@kernel.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v4 6/6] PM / Domains: Stop deferring probe at the end of initcall
+Date: Tue, 10 Jul 2018 00:49:03 +0200
+Message-ID: <CAPDyKFoN1=16dGKmkFp6Khgs5zx+BguOs3qOcm+rAZw=b38JVg@mail.gmail.com>
+References: <20180709154153.15742-1-robh@kernel.org> <20180709154153.15742-7-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1531176063-30140-1-git-send-email-dinguyen@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, marex@denx.de, yamada.masahiro@socionext.com, dinguyen@kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180709154153.15742-7-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, boot-architecture@lists.linaro.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Linux PM <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The nand_x_clk is derived from the nand_clk. Also, update the NAND dts property
-with the correct clocks property.
+On 9 July 2018 at 17:41, Rob Herring <robh@kernel.org> wrote:
+> All PM domain drivers must be built-in (at least those using DT), so
+> there is no point deferring probe after initcalls are done. Continuing
+> to defer probe may prevent booting successfully even if managing PM
+> domains is not required. This can happen if the user failed to enable
+> the driver or if power-domains are added to a platform's DT, but there
+> is not yet a driver (e.g. a new DTB with an old kernel).
+>
+> Call the driver core function driver_deferred_probe_check_init_done()
+> instead of just returning -EPROBE_DEFER to stop deferring probe when
+> initcalls are done.
+>
+> Acked-by: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Kevin Hilman <khilman@kernel.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Len Brown <len.brown@intel.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> v4:
+>  - Add Rafael's ack
+>
+> v3:
+>   - Update to new function name
+>
+>  drivers/base/power/domain.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index 4925af5c4cf0..8c12213875c6 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -2253,7 +2253,7 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device_node *np,
+>                 mutex_unlock(&gpd_list_lock);
+>                 dev_dbg(dev, "%s() failed to find PM domain: %ld\n",
+>                         __func__, PTR_ERR(pd));
+> -               return -EPROBE_DEFER;
+> +               return driver_deferred_probe_check_state(dev);
+>         }
 
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
----
- arch/arm/boot/dts/socfpga.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+This isn't the only error path where -EPROBE_DEFER may be returned
+during attach in genpd.
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index b38f8c2..ae432b9 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -486,7 +486,7 @@
- 					nand_clk: nand_clk {
- 						#clock-cells = <0>;
- 						compatible = "altr,socfpga-gate-clk";
--						clocks = <&f2s_periph_ref_clk>, <&main_nand_sdmmc_clk>, <&per_nand_mmc_clk>;
-+						clocks = <&nand_x_clk>;
- 						clk-gate = <0xa0 10>;
- 						fixed-divider = <4>;
- 					};
-@@ -754,7 +754,8 @@
- 			reg-names = "nand_data", "denali_reg";
- 			interrupts = <0x0 0x90 0x4>;
- 			dma-mask = <0xffffffff>;
--			clocks = <&nand_x_clk>;
-+			clocks = <&nand_clk>, <&nand_x_clk>;
-+			clock-names = "nand", "nand_x";
- 			status = "disabled";
- 		};
- 
--- 
-2.7.4
+Have a look at the callers of __genpd_dev_pm_attach() and also have a
+second look inside __genpd_dev_pm_attach() itself. And in Rafael's
+tree.
+
+>
+>         dev_dbg(dev, "adding to PM domain %s\n", pd->name);
+> --
+> 2.17.1
+
+Besides the above, I am fine with the approach as such.
+
+Kind regards
+Uffe
