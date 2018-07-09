@@ -1,62 +1,109 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [alsa-devel] [PATCH v3 3/5] ASoC: qcom: add sdm845 sound card
- support
-Date: Mon, 9 Jul 2018 13:03:31 +0100
-Message-ID: <20180709120331.GD16082@sirena.org.uk>
-References: <1530870195-13576-1-git-send-email-rohitkr@codeaurora.org>
- <1530870195-13576-4-git-send-email-rohitkr@codeaurora.org>
- <20180709111437.GB16082@sirena.org.uk>
- <2110bdcf-96ad-deb5-a5cb-767d7b2e242d@codeaurora.org>
+From: Bhushan Shah <bshah@kde.org>
+Subject: Re: [PATCH] ARM: dts: qcom: msm8974-hammerhead: increase load on l20
+ for sdhci
+Date: Mon, 9 Jul 2018 17:48:50 +0530
+Message-ID: <20180709121850.GC1774@orion>
+References: <20180709091628.GA8854@orion>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hoZxPH4CaxYzWscb"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="GZVR6ND4mMseVXL/"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2110bdcf-96ad-deb5-a5cb-767d7b2e242d@codeaurora.org>
+In-Reply-To: <20180709091628.GA8854@orion>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rohit Kumar <rohitkr@codeaurora.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, robh+dt@kernel.org, srinivas.kandagatla@linaro.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Masney <masneyb@onstation.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 
---hoZxPH4CaxYzWscb
+--GZVR6ND4mMseVXL/
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 09, 2018 at 05:31:04PM +0530, Rohit Kumar wrote:
-> On 7/9/2018 4:44 PM, Mark Brown wrote:
-> > On Fri, Jul 06, 2018 at 03:13:13PM +0530, Rohit kumar wrote:
+Hi,
 
-> > > +static const struct component_master_ops sdm845_ops = {
-> > > +	.bind = sdm845_bind,
-> > > +	.unbind = sdm845_unbind,
-> > > +};
+On Mon, Jul 09, 2018 at 02:46:28PM +0530, Bhushan Shah wrote:
+> The kernel would not boot on the hammerhead hardware due to the
+> following error:
+>=20
+> mmc0: Timeout waiting for hardware interrupt.
+> mmc0: sdhci: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D SDHCI REGISTER DUMP =3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> mmc0: sdhci: Sys addr:  0x00000200 | Version:  0x00003802
+> mmc0: sdhci: Blk size:  0x00000200 | Blk cnt:  0x00000200
+> mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000023
+> mmc0: sdhci: Present:   0x03e80000 | Host ctl: 0x00000034
+> mmc0: sdhci: Power:     0x00000001 | Blk gap:  0x00000000
+> mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x00000007
+> mmc0: sdhci: Timeout:   0x0000000e | Int stat: 0x00000000
+> mmc0: sdhci: Int enab:  0x02ff900b | Sig enab: 0x02ff100b
+> mmc0: sdhci: AC12 err:  0x00000000 | Slot int: 0x00000000
+> mmc0: sdhci: Caps:      0x642dc8b2 | Caps_1:   0x00008007
+> mmc0: sdhci: Cmd:       0x00000c1b | Max curr: 0x00000000
+> mmc0: sdhci: Resp[0]:   0x00000c00 | Resp[1]:  0x00000000
+> mmc0: sdhci: Resp[2]:   0x00000000 | Resp[3]:  0x00000000
+> mmc0: sdhci: Host ctl2: 0x00000008
+> mmc0: sdhci: ADMA Err:  0x00000000 | ADMA Ptr: 0x70040220
+> mmc0: sdhci: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> mmc0: Card stuck in wrong state! mmcblk0 card_busy_detect status: 0xe00
+> mmc0: cache flush error -110
+> mmc0: Reset 0x1 never completed.
+>=20
+> This patch increases the load on l20 to 0.2 amps for the sdhci
+> and allows the device to boot normally.
+>=20
+> Signed-off-by: Bhushan Shah <bshah@kde.org>
 
-> > Why is this using the component stuff rather than the normal support for
-> > finding the components of audio cards?
+Please also add,
 
-> QCOM soundcard is dependent on platform and cpu dais which gets registered
-> only when ADSP is up.
+Signed-off-by: Brian Masney <masneyb@onstation.org>
 
-This doesn't answer the question...
+which I missed in previous patch.
 
-> This is the design being followed in https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/sound/soc/qcom/apq8096.c?h=v4.18-rc4#n132
+> Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Tested-by: Brian Masney <masneyb@onstation.org>
+> ---
+>  arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/a=
+rch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+> index 4dc0b347b1ee..c2dc9d09484a 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+> +++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+> @@ -189,6 +189,8 @@
+>  						regulator-max-microvolt =3D <2950000>;
+> =20
+>  						regulator-boot-on;
+> +						regulator-system-load =3D <200000>;
+> +						regulator-allow-set-load;
+>  					};
+> =20
+>  					l21 {
+> --=20
+> 2.17.1
+>=20
 
-Oh dear, missed that :(  This is also broken and should be fixed.
+--=20
+Bhushan Shah
+http://blog.bshah.in
+IRC Nick : bshah on Freenode
+GPG key fingerprint : 0AAC 775B B643 7A8D 9AF7 A3AC FE07 8411 7FBC E11D
 
---hoZxPH4CaxYzWscb
+--GZVR6ND4mMseVXL/
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltDTxIACgkQJNaLcl1U
-h9Bf9QfzBxfpdaf3Kgqek9OEaRg8qCwBJTPClTwxSL64WDXtnM9oqDQxuxgQW/3q
-z9HMBar0c5vcZoaqfhDGD2Zh0ZFryjPrij/GMJEDmzi3P2X71c27yzWXu5zImwLI
-3DjgmHs/Sbnu6XiSdadvPIRTqy8zXCT7jX8+OSfDDymzlAROQ8PqcFFDfHwY+PLe
-lKvQgqv+k7DGQBCDktZOOA2LbrskCg2TlEkdT3LxXBEJWyNcY6lrpxvuhEOUdoWl
-VeYsm91cvGYBmRJA4QUMCHzLOp3nL61k9hTaSGXhoQLtumubpsOHHz2Ovnmg2JR2
-4TjGGhaf6JhB9wesxiHaW1t6cldK
-=g8ov
+iQEzBAEBCAAdFiEEs8s2ZVJUC+Bu6a2XEZaMRJKMrvwFAltDUoAACgkQEZaMRJKM
+rvxGxQf8Du3m/uwcEpcrpY8yWnAspG6QNKqJKX4F2+JJHCcu0tgKQlh8OkAaH8Mf
+LSxAxoVpk1uDTn4zAs1NqivaRVLBjJlt7IzFbppJd67YY6b/GC0tsy1eUWzoWPnC
+WiBLnytFCCUCWWZgxCNXkopg4HKoLjLJhAZV16kq+SAfCFOMg1RX2QUfWTlVb42V
+KebonWPQ3DP6ksrluD5reK6zpaeqoGRLHs+fC9dLgsxJTaJ+7iUQUQ8zcaivqp0O
+Kvo17dLJuuOqnKO8VAoH4bLdjf6Vc5g81GNywsWuQ+Xqopd9HAPVx8RaDyzXHeEX
+l9yVbxd6wN5hGH9m+Js90aVZXBkySQ==
+=JoZ8
 -----END PGP SIGNATURE-----
 
---hoZxPH4CaxYzWscb--
+--GZVR6ND4mMseVXL/--
