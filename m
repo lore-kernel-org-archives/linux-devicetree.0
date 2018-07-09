@@ -1,52 +1,42 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v5 7/7] arm64: dts: sdm845: Add tsens nodes
-Date: Mon,  9 Jul 2018 16:57:40 +0530
-Message-ID: <742cf44d162523a66bb4ce60e15449dfbf88800a.1531133612.git.amit.kucheria@linaro.org>
-References: <cover.1531133611.git.amit.kucheria@linaro.org>
+Subject: Re: [PATCH v4 0/6] thermal: tsens: Refactoring for TSENSv2 IP
+Date: Mon, 9 Jul 2018 17:00:46 +0530
+Message-ID: <CAHLCerM1t-xO-zpYn3twb14VMGoC3+Pyv8LHuzYt7NVJWF0n4w@mail.gmail.com>
+References: <cover.1530533998.git.amit.kucheria@linaro.org> <20180702175357.GA28713@localhost.localdomain>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1531133611.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1531133611.git.amit.kucheria@linaro.org>
-References: <cover.1531133611.git.amit.kucheria@linaro.org>
+In-Reply-To: <20180702175357.GA28713@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, smohanad@codeaurora.org, vivek.gautam@codeaurora.org, andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, smohanad@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Kees Cook <keescook@chromium.org>, Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SDM845 has two tsens blocks, one with 13 sensors and the other with 8
-sensors. It uses version 2 of the TSENS IP, so use the fallback property to
-allow more common code.
+On Mon, Jul 2, 2018 at 11:23 PM, Eduardo Valentin <edubezval@gmail.com> wrote:
+> On Mon, Jul 02, 2018 at 06:14:03PM +0530, Amit Kucheria wrote:
+>> This series is a mixed bag:
+>> - Some code moves to allow code sharing between various v2.x.y versions of
+>>   the TSENS IP,
+>> - new qcom,tsens-v2.4.0 DT property for SDM845 and a generic qcom,tsens-v2
+>>   property as a fallback compatible for all v2.x.y platforms,
+>> - new platform support (sdm845)
+>> - a cleanup patch and
+>> - a DT change to have a common way to deal with the SROT and TM registers
+>>   despite slightly different features across the IP family and different
+>>   register offsets.
+>>
+>> Rob mentioned offline that we should expose the full version string of the
+>> TSENS IP (x.y.z) and have a fallback compatible. I hope patch 4 does what
+>> you were looking for.
+>
+> Applied patches 1, 3, and 4. Patch 5 needs a description. Patches 2 and
+> 6 go via your arch tree.
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Hi Eduardo,
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index cdaabeb..d97ee00 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -221,6 +221,22 @@
- 			#interrupt-cells = <2>;
- 		};
- 
-+		tsens0: tsens@c222000 {
-+			compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
-+			reg = <0xc263000 0x1ff>, /* TM */
-+			      <0xc222000 0x1ff>; /* SROT */
-+			#qcom,sensors = <13>;
-+			#thermal-sensor-cells = <1>;
-+		};
-+
-+		tsens1: tsens@c223000 {
-+			compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
-+			reg = <0xc265000 0x1ff>, /* TM */
-+			      <0xc223000 0x1ff>; /* SROT */
-+			#qcom,sensors = <8>;
-+			#thermal-sensor-cells = <1>;
-+		};
-+
- 		spmi_bus: spmi@c440000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg = <0xc440000 0x1100>,
--- 
-2.7.4
+I've sent v5 for this series. It fixes a breakage for old DTs with new
+code. Also, Rob decided he was happier with the earlier single
+fallback binding. Please consider applying the new series.
+
+Regards,
+Amit
