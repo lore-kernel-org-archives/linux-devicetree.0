@@ -1,110 +1,53 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v5 0/7] add support for Bluetooth on MT7622 SoC
-Date: Mon, 9 Jul 2018 23:56:56 +0800
-Message-ID: <cover.1531150733.git.sean.wang@mediatek.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v5 7/7] MAINTAINERS: add an entry for MediaTek Bluetooth driver
+Date: Mon, 9 Jul 2018 23:57:03 +0800
+Message-ID: <12d1a2d1e533266e242f5912d8649908dceb231b.1531150733.git.sean.wang@mediatek.com>
+References: <cover.1531150733.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com
-Cc: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <cover.1531150733.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-v5 and changes since v4:
- - add Reviewed-by Tag from Ulf Hansson for patch 2.
- - remove default y in Kconfig for btmtkuart selection to avoid overkill for
-   users which would like to have less an amount on stuff in kernel.
- - list header declarations in alphabetical order and add a proper blank line
-   within.
- - remove unused macro.
- - use sizeof to calculate structure size instead of an aextra macro to hardcode.
- - use struct hci_dev * as input paraments for mtk_hci_wmt_sync and mtk_setup_fw
-   for that can be reused in mtk bluetooth with other interfaces.
- - remove unused local variabled in mtk_btuart_recv.
- - remove superfluous :8 for dlen2 in struct mtk_stp_hdr definition.
- - give a reasonable naming for these labels and add a pm_runtime_put_noidle()
-   in the path undoing failing pm_runtime_get_sync().
- - Turn __u8 into u8 in struct mtk_stp_hdr.
- - Change coding style for align 80-chars wrap
+Add an entry for the MediaTek Bluetooth driver.
 
- Really thanks for these reviews by Johan Hovold and Andy Shevchenko
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-v4 and changes since v3:
- - refine patch 2 based on commit 919b7308fcc4 to allow that
-   dev_pm_domain_attach() will return better error codes. 
-
-v3 and changes since v2
-* all changes happen on patch 6
- - fix up SPDX license style for btmtkuart.h.
- - change firmware download from in ACL data to in HCI commands
-   and then remove unused mtk_acl_wmt_sync and related code.
- - add a workaround replacing bad vendor event id 0xe4 with 0xff every
-   vendor should use.
- - add a sanity check for mtk_hci_wmt_sync to verifying if
-   input parameters are valid.
- - add an atomic_inc(&bdev->hdev->cmd_cnt) for __hci_cmd_sync_ev.
- - be changed to use firmware with a header called mt7622pr2h.bin.
-
-v2 and changes since v1
- - Dropped patches already being applied
- - Rewirte the whole driver using btuart [1], and add slight extension
-   of btuart to fit into btmtkuart driver. Beware that [1] is also pulled
-   into one part of the series for avoiding any breakage when the patchset
-   is being compiled.
-
-[1] btuart 
-	https://www.spinics.net/lists/linux-bluetooth/msg74918.html
-
-v1:
-
-Hi,
-
-This patchset introduces built-in Bluetooth support on MT7622 SoC.
-And, it should be simple to make an extension to support other
-MediaTek SoCs with adjusting a few of changes on the initialization
-sequence of the device.
-
-Before the main driver is being introduced, a few of things about
-power-domain management should be re-worked for serdev core and MediaTek
-SCPSYS to allow the Bluetooth to properly power up.
-
-Patch 2: add a generic way attaching power domain to serdev
-Patch 3 and 4: add cleanups with reuse APIs from Linux core
-Patch 5: fix a limitation about power enablement Bluetooth depends on
-Patch 1, 6 and 7: the major part of adding Bluetooth support to MT7622
-	
-	Sean
-
-Marcel Holtmann (1):
-  Bluetooth: Add new serdev based driver for UART attached controllers
-
-Sean Wang (6):
-  dt-bindings: net: bluetooth: Add mediatek-bluetooth
-  serdev: add dev_pm_domain_attach|detach()
-  Bluetooth: Add new quirk for non-persistent setup settings
-  Bluetooth: Extend btuart driver for join more vendor devices
-  Bluetooth: mediatek: Add protocol support for MediaTek serial devices
-  MAINTAINERS: add an entry for MediaTek Bluetooth driver
-
- .../devicetree/bindings/net/mediatek-bluetooth.txt |  35 ++
- MAINTAINERS                                        |   8 +
- drivers/bluetooth/Kconfig                          |  22 +
- drivers/bluetooth/Makefile                         |   3 +
- drivers/bluetooth/btmtkuart.c                      | 352 ++++++++++++++
- drivers/bluetooth/btmtkuart.h                      | 116 +++++
- drivers/bluetooth/btuart.c                         | 527 +++++++++++++++++++++
- drivers/bluetooth/btuart.h                         |  30 ++
- drivers/tty/serdev/core.c                          |  15 +-
- include/net/bluetooth/hci.h                        |   9 +
- net/bluetooth/hci_core.c                           |   3 +-
- 11 files changed, 1118 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
- create mode 100644 drivers/bluetooth/btmtkuart.c
- create mode 100644 drivers/bluetooth/btmtkuart.h
- create mode 100644 drivers/bluetooth/btuart.c
- create mode 100644 drivers/bluetooth/btuart.h
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2ad887b..c3d5c2e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9044,6 +9044,14 @@ F:	include/uapi/linux/meye.h
+ F:	include/uapi/linux/ivtv*
+ F:	include/uapi/linux/uvcvideo.h
+ 
++MEDIATEK BLUETOOTH DRIVER
++M:	Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++L:	linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
++L:	linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
++S:	Maintained
++F:	Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
++F:	drivers/bluetooth/btmtkuart.c
++
+ MEDIATEK CIR DRIVER
+ M:	Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+ S:	Maintained
 -- 
 2.7.4
