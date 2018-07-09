@@ -1,42 +1,52 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH RESEND] ARM64: dts: meson-axg: add the audio clock controller
-Date: Mon, 09 Jul 2018 14:53:13 -0700
-Message-ID: <7h7em4nkja.fsf@baylibre.com>
-References: <20180706144305.30116-1-jbrunet@baylibre.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: clk: g12a: New binding for Meson-G12A SoC
+Date: Mon, 9 Jul 2018 23:57:49 +0200
+Message-ID: <CAFBinCBJp1xzo-CNW1HU-Odhrug31yQ7c3khB+XwvsNXp5-gTA@mail.gmail.com>
+References: <1531134767-29927-1-git-send-email-jian.hu@amlogic.com> <1531134767-29927-2-git-send-email-jian.hu@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180706144305.30116-1-jbrunet@baylibre.com> (Jerome Brunet's
-        message of "Fri, 6 Jul 2018 16:43:05 +0200")
+In-Reply-To: <1531134767-29927-2-git-send-email-jian.hu@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: jian.hu@amlogic.com, robh@kernel.org
+Cc: jbrunet@baylibre.com, Neil Armstrong <narmstrong@baylibre.com>, qianggui.song@amlogic.com, devicetree@vger.kernel.org, sboyd@kernel.org, khilman@baylibre.com, mturquette@baylibre.com, yixun.lan@amlogic.com, linux-kernel@vger.kernel.org, bo.yang@amlogic.com, qiufang.dai@amlogic.com, linux-arm-kernel@lists.infradead.org, carlo@caione.org, linux-amlogic@lists.infradead.org, sunny.luo@amlogic.com, linux-clk@vger.kernel.org, xingyu.chen@amlogic.com
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+adding Rob Herring so it doesn't get lost on the devicetree mailing list
 
-> Add the audio clock controller which is part of the audio bus
-> This controller takes 8 input plls, and the usual clock gate, from the
-> main clock controller. It provides the clocs for the all the devices of
-> the audio subsystem, such as tdms, spdif, pdm, etc.
+On Mon, Jul 9, 2018 at 1:13 PM Jian Hu <jian.hu@amlogic.com> wrote:
 >
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> Add new binding for Meson-G12A SoC Everything-Else part
+>
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
 > ---
+>  Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> Resend to fix typo reported by Martin in the commit description.
-> (Thx Martin !)
->
-> Kevin,
->
-> Please note that this change depends on the axg audio clock bindings [0].
->
-> It explains the problem reported by kbuild robot
-> It will be part of our PR to clock in this cycle.
->
-> As usual, I've prepared a topic branch with the DT changes for you.
-> Please, let me know when you need a tag on it.
+> diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+> index e950599..0833006 100644
+> --- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+> +++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+> @@ -9,6 +9,7 @@ Required Properties:
+>                 "amlogic,gxbb-clkc" for GXBB SoC,
+>                 "amlogic,gxl-clkc" for GXL and GXM SoC,
+>                 "amlogic,axg-clkc" for AXG SoC.
+> +               "amlogic,g12a-clkc" for G12A SoC.
+should this be "amlogic,meson-g12a-clkc" instead?
+that would make it consistent with virtually all other bindings which
+use the schema "amlogic,meson<chip>-<ip-block>" (where chip is 8, 8b,
+8m2, -gxbb, -gxl, ...)
 
-Unless you're expecting some more dependencies for the v4.19 cycle,
-please tag it now, then I will queue it up.
+see also: $ grep -R "amlogic," Documentation/devicetree/bindings/
 
-Kevin
+>
+>  - #clock-cells: should be 1.
+>
+> --
+> 1.9.1
+>
+>
+> _______________________________________________
+> linux-amlogic mailing list
+> linux-amlogic@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-amlogic
