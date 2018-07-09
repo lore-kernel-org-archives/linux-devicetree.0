@@ -1,124 +1,87 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v7 1/4] ARM: dts: tegra: Remove usage of deprecated skeleton.dtsi
-Date: Mon, 9 Jul 2018 17:59:17 +0200
-Message-ID: <CAJKOXPeQVXWwE=aeZ32WMkJ4BCMs8rTM2RTbfJnNdkJ14z089Q@mail.gmail.com>
-References: <1527144833-24285-1-git-send-email-krzk@kernel.org> <20180709152758.GD18353@ulmo>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v4 6/6] arm64: dts: sdm845: Add tsens nodes
+Date: Mon, 9 Jul 2018 09:01:31 -0700
+Message-ID: <20180709160131.GM129942@google.com>
+References: <cover.1530533998.git.amit.kucheria@linaro.org>
+ <a52b77ad84867774a0659f51ccb79b17ba7638ab.1530533998.git.amit.kucheria@linaro.org>
+ <20180703214822.GD129942@google.com>
+ <CAHLCerMZw8mftQb8iRc5+RqGGjf26ebwynPfORz0hAPxp05YfA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180709152758.GD18353@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAHLCerMZw8mftQb8iRc5+RqGGjf26ebwynPfORz0hAPxp05YfA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, smohanad@codeaurora.org, Eduardo Valentin <edubezval@gmail.com>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9 July 2018 at 17:27, Thierry Reding <thierry.reding@gmail.com> wrote:
-> On Thu, May 24, 2018 at 08:53:50AM +0200, Krzysztof Kozlowski wrote:
->> Remove the usage of skeleton.dtsi because it was deprecated since commit
->> 9c0da3cc61f1 ("ARM: dts: explicitly mark skeleton.dtsi as deprecated").
->> It also allows later to fix DTC warnings for missing unit name in
->> /memory nodes.
->>
->> The /chosen and /aliases nodes are added only when dependent DTSes do
->> not define them.  Compiled DTB is the same as before this commit.
->>
->> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->> Reviewed-by: Stefan Agner <stefan@agner.ch>
->>
->> ---
->>
->> Changes since v6:
->> 1. Add Stefan's reviewed-by tag.
->>
->> Changes since v5:
->> 1. New patch, split with skeleton.dtsi removal (suggested by Stefan).
->> ---
->>  arch/arm/boot/dts/tegra114.dtsi       |  8 ++++++--
->>  arch/arm/boot/dts/tegra124.dtsi       |  6 ++++--
->>  arch/arm/boot/dts/tegra20.dtsi        | 11 +++++++++--
->>  arch/arm/boot/dts/tegra30-apalis.dtsi |  4 ++++
->>  arch/arm/boot/dts/tegra30.dtsi        | 11 +++++++++--
->>  5 files changed, 32 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/tegra114.dtsi b/arch/arm/boot/dts/tegra114.dtsi
->> index 0e4a13295d8a..27ef515e5640 100644
->> --- a/arch/arm/boot/dts/tegra114.dtsi
->> +++ b/arch/arm/boot/dts/tegra114.dtsi
->> @@ -5,11 +5,15 @@
->>  #include <dt-bindings/pinctrl/pinctrl-tegra.h>
->>  #include <dt-bindings/interrupt-controller/arm-gic.h>
->>
->> -#include "skeleton.dtsi"
->> -
->>  / {
->>       compatible = "nvidia,tegra114";
->>       interrupt-parent = <&lic>;
->> +     #address-cells = <1>;
->> +     #size-cells = <1>;
->> +
->> +     memory {
->> +             device_type = "memory";
->> +     };
->>
->>       host1x@50000000 {
->>               compatible = "nvidia,tegra114-host1x", "simple-bus";
->> diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
->> index 174092bfac90..951feea784af 100644
->> --- a/arch/arm/boot/dts/tegra124.dtsi
->> +++ b/arch/arm/boot/dts/tegra124.dtsi
->> @@ -7,14 +7,16 @@
->>  #include <dt-bindings/reset/tegra124-car.h>
->>  #include <dt-bindings/thermal/tegra124-soctherm.h>
->>
->> -#include "skeleton.dtsi"
->> -
->>  / {
->>       compatible = "nvidia,tegra124";
->>       interrupt-parent = <&lic>;
->>       #address-cells = <2>;
->>       #size-cells = <2>;
->>
->> +     memory {
->> +             device_type = "memory";
->> +     };
->> +
->>       pcie@1003000 {
->>               compatible = "nvidia,tegra124-pcie";
->>               device_type = "pci";
->> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
->> index 0a7136462a1a..88dd1afb5877 100644
->> --- a/arch/arm/boot/dts/tegra20.dtsi
->> +++ b/arch/arm/boot/dts/tegra20.dtsi
->> @@ -4,11 +4,18 @@
->>  #include <dt-bindings/pinctrl/pinctrl-tegra.h>
->>  #include <dt-bindings/interrupt-controller/arm-gic.h>
->>
->> -#include "skeleton.dtsi"
->> -
->>  / {
->>       compatible = "nvidia,tegra20";
->>       interrupt-parent = <&lic>;
->> +     #address-cells = <1>;
->> +     #size-cells = <1>;
->> +
->> +     chosen { };
->> +     aliases { };
->> +
->> +     memory {
->> +             device_type = "memory";
->> +     };
->>
->>       iram@40000000 {
->>               compatible = "mmio-sram";
-> Any idea why Tegra20 here and Tegra30 below get empty chosen and aliases
-> nodes while Tegra114 and Tegra124 don't?
+On Mon, Jul 09, 2018 at 04:56:51PM +0530, Amit Kucheria wrote:
+> On Wed, Jul 4, 2018 at 3:18 AM, Matthias Kaehlcke <mka@chromium.org> wrote:
+> > Hi,
+> >
+> > On Mon, Jul 02, 2018 at 06:14:09PM +0530, Amit Kucheria wrote:
+> >> SDM845 has two tsens blocks, one with 13 sensors and the other with 8
+> >> sensors.
+> >>
+> >> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> >> ---
+> >>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 16 ++++++++++++++++
+> >>  1 file changed, 16 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> >> index cdaabeb..edf8505 100644
+> >> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> >> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> >> @@ -221,6 +221,22 @@
+> >>                       #interrupt-cells = <2>;
+> >>               };
+> >>
+> >> +             tsens0: tsens@c222000 {
+> >> +                     compatible = "qcom,tsens-v2.4.0", "qcom,tsens-v2";
+> >> +                     reg = <0xc263000 0x1ff>, /* TM */
+> >> +                           <0xc222000 0x1ff>; /* SROT */
+> >> +                     #qcom,sensors = <13>;
+> >> +                     #thermal-sensor-cells = <1>;
+> >> +             };
+> >> +
+> >> +             tsens1: tsens@c223000 {
+> >> +                     compatible = "qcom,tsens-v2.4.0", "qcom,tsens-v2";
+> >> +                     reg = <0xc265000 0x1ff>, /* TM */
+> >> +                           <0xc223000 0x1ff>; /* SROT */
+> >> +                     #qcom,sensors = <8>;
+> >> +                     #thermal-sensor-cells = <1>;
+> >> +             };
+> >> +
+> >>               spmi_bus: spmi@c440000 {
+> >>                       compatible = "qcom,spmi-pmic-arb";
+> >>                       reg = <0xc440000 0x1100>,
+> >
+> > I tested this series on an SDM845 board. Temperatures can be read from
+> > the tsens0 sensors, however for tsens1 sensors I get:
+> >
+> > cat temp
+> > cat: temp: No data available
+> >
+> > TRDY_READY_BIT set when reading TRDY_OFFSET in get_temp_tsens_v2().
+> > Unfortunately I currently have no documentation of the registers or the
+> > thermal sensors in general and couldn't investigate further.
+> >
+> > Any idea what could be the problem?
+> 
+> Strangely enough, I'm seeing this now after rebuilding my integration
+> branch to test some other bits.
+> 
+> I've sent another version with this patch removed while I investigate
+> this. Could you check if you're able to read all 8 sensors with v5?
 
-I double checked... and it is my mistake. Previously I thought that
-the board DTS do not define them therefore removal of skeleton.dtsi
-would affect them. However now I see that it is not aliases and chosen
-are everywhere.
-
-I'll send v8.
-
-Best regards,
-Krzysztof
+With v6 all sensors can be read, thanks!
