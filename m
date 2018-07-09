@@ -1,59 +1,86 @@
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Subject: Re: [PATCH v4 1/2] gpio: mediatek: add driver for MT7621
-Date: Mon, 9 Jul 2018 18:07:32 +0200
-Message-ID: <CAMhs-H9t6OQ=ibsPW8AeYpE-gcwMKLRNDioYN9YTBtsp+PHtfA@mail.gmail.com>
-References: <1530798191-25471-1-git-send-email-sergio.paracuellos@gmail.com>
- <1530798191-25471-2-git-send-email-sergio.paracuellos@gmail.com>
- <CACRpkdbWbFi-vzHqSu3T2iE89BJaQNCfZHVNvV7Crqq-TsLnmg@mail.gmail.com>
- <20180709132850.GB2529@foobar> <20180709133030.fciif2sqxfavo6o3@mwanda>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v4 6/6] arm64: dts: sdm845: Add tsens nodes
+Date: Mon, 9 Jul 2018 09:10:19 -0700
+Message-ID: <20180709161019.GN129942@google.com>
+References: <cover.1530533998.git.amit.kucheria@linaro.org>
+ <a52b77ad84867774a0659f51ccb79b17ba7638ab.1530533998.git.amit.kucheria@linaro.org>
+ <20180703214822.GD129942@google.com>
+ <CAHLCerMZw8mftQb8iRc5+RqGGjf26ebwynPfORz0hAPxp05YfA@mail.gmail.com>
+ <20180709160131.GM129942@google.com>
+ <CAHLCerP0z-G+YqXOe8VYSTVPfSYiR+yywskijiD7y0Lz=2AQQQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180709133030.fciif2sqxfavo6o3@mwanda>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, driverdev-devel@linuxdriverproject.org, juhosg@freemail.hu, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, John Crispin <john@phrozen.org>, NeilBrown <neil@brown.name>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHLCerP0z-G+YqXOe8VYSTVPfSYiR+yywskijiD7y0Lz=2AQQQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 9, 2018 at 3:30 PM, Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> On Mon, Jul 09, 2018 at 03:28:50PM +0200, Sergio Paracuellos wrote:
->> On Mon, Jul 09, 2018 at 01:45:22PM +0200, Linus Walleij wrote:
->> > On Thu, Jul 5, 2018 at 3:43 PM Sergio Paracuellos
->> > <sergio.paracuellos@gmail.com> wrote:
->> >
->> > > Add driver support for gpio of MT7621 SoC.
->> > >
->> > > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
->> > > Reviewed-by: NeilBrown <neil@brown.name>
->> >
->> > This is looking really good.
->> >
->> > Patch applied: anything remaining can surely be patched up
->> > in-tree.
->> >
->>
->> Sound good, thanks.
->>
->> Should I send a patch to remove the driver from staging or just
->> is removed by Greg? How is this achieved?
->
-> Send a patch.
->
+On Mon, Jul 09, 2018 at 09:34:55PM +0530, Amit Kucheria wrote:
+> On Mon, Jul 9, 2018 at 9:31 PM, Matthias Kaehlcke <mka@chromium.org> wrote:
+> > On Mon, Jul 09, 2018 at 04:56:51PM +0530, Amit Kucheria wrote:
+> >> On Wed, Jul 4, 2018 at 3:18 AM, Matthias Kaehlcke <mka@chromium.org> wrote:
+> >> > Hi,
+> >> >
+> >> > On Mon, Jul 02, 2018 at 06:14:09PM +0530, Amit Kucheria wrote:
+> >> >> SDM845 has two tsens blocks, one with 13 sensors and the other with 8
+> >> >> sensors.
+> >> >>
+> >> >> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> >> >> ---
+> >> >>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 16 ++++++++++++++++
+> >> >>  1 file changed, 16 insertions(+)
+> >> >>
+> >> >> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> >> >> index cdaabeb..edf8505 100644
+> >> >> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> >> >> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> >> >> @@ -221,6 +221,22 @@
+> >> >>                       #interrupt-cells = <2>;
+> >> >>               };
+> >> >>
+> >> >> +             tsens0: tsens@c222000 {
+> >> >> +                     compatible = "qcom,tsens-v2.4.0", "qcom,tsens-v2";
+> >> >> +                     reg = <0xc263000 0x1ff>, /* TM */
+> >> >> +                           <0xc222000 0x1ff>; /* SROT */
+> >> >> +                     #qcom,sensors = <13>;
+> >> >> +                     #thermal-sensor-cells = <1>;
+> >> >> +             };
+> >> >> +
+> >> >> +             tsens1: tsens@c223000 {
+> >> >> +                     compatible = "qcom,tsens-v2.4.0", "qcom,tsens-v2";
+> >> >> +                     reg = <0xc265000 0x1ff>, /* TM */
+> >> >> +                           <0xc223000 0x1ff>; /* SROT */
+> >> >> +                     #qcom,sensors = <8>;
+> >> >> +                     #thermal-sensor-cells = <1>;
+> >> >> +             };
+> >> >> +
+> >> >>               spmi_bus: spmi@c440000 {
+> >> >>                       compatible = "qcom,spmi-pmic-arb";
+> >> >>                       reg = <0xc440000 0x1100>,
+> >> >
+> >> > I tested this series on an SDM845 board. Temperatures can be read from
+> >> > the tsens0 sensors, however for tsens1 sensors I get:
+> >> >
+> >> > cat temp
+> >> > cat: temp: No data available
+> >> >
+> >> > TRDY_READY_BIT set when reading TRDY_OFFSET in get_temp_tsens_v2().
+> >> > Unfortunately I currently have no documentation of the registers or the
+> >> > thermal sensors in general and couldn't investigate further.
+> >> >
+> >> > Any idea what could be the problem?
+> >>
+> >> Strangely enough, I'm seeing this now after rebuilding my integration
+> >> branch to test some other bits.
+> >>
+> >> I've sent another version with this patch removed while I investigate
+> >> this. Could you check if you're able to read all 8 sensors with v5?
+> >
+> > With v6 all sensors can be read, thanks!
+> 
+> Great! Would it be OK to add your Tested-by tag?
 
-Thanks, Dan. Done.
-
-> regards,
-> dan carpenter
->
-
-Best regards,
-    Sergio Paracuellos
+Yep
