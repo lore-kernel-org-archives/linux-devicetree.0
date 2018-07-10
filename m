@@ -1,117 +1,149 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v4 1/1] arm64: dts: mediatek: add mt6765 support
-Date: Tue, 10 Jul 2018 12:52:32 +0200
-Message-ID: <7a3becb3-510b-5763-5b66-5e14ebf7c974@gmail.com>
-References: <1531116302-29921-1-git-send-email-mars.cheng@mediatek.com>
- <1531116302-29921-2-git-send-email-mars.cheng@mediatek.com>
- <7fb13f45-4e33-6efc-467b-c7256a40cbc9@gmail.com>
- <d439eb7d-6365-7a0a-2969-1ddecc51defc@arm.com>
- <1531177443.7777.18.camel@mtkswgap22>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v5 1/4] drm/panel: p079zca: refactor panel driver to
+ support multiple panels
+Date: Tue, 10 Jul 2018 12:57:43 +0200
+Message-ID: <20180710105743.GK1504@ulmo>
+References: <20180702102721.3546-1-heiko@sntech.de>
+ <20180702102721.3546-2-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531177443.7777.18.camel@mtkswgap22>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mars Cheng <mars.cheng@mediatek.com>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============0689894041=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180702102721.3546-2-heiko@sntech.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, hl@rock-chips.com, briannorris@chromium.org, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--===============0689894041==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="W2ydbIOJmkm74tJ2"
+Content-Disposition: inline
 
-On 10/07/18 01:04, Mars Cheng wrote:
-> Hi Matthias/Marc
-> 
-> On Mon, 2018-07-09 at 17:43 +0100, Marc Zyngier wrote:
->> On 09/07/18 11:20, Matthias Brugger wrote:
->>>
->>>
->>> On 09/07/18 08:05, Mars Cheng wrote:
->>>> This adds basic chip support for MT6765 SoC.
->>>>
->>>> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
->>>> ---
->>>>  arch/arm64/boot/dts/mediatek/Makefile       |    1 +
->>>>  arch/arm64/boot/dts/mediatek/mt6765-evb.dts |   33 ++++++
->>>>  arch/arm64/boot/dts/mediatek/mt6765.dtsi    |  156 +++++++++++++++++++++++++++
->>>>  3 files changed, 190 insertions(+)
->>>>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6765-evb.dts
->>>>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6765.dtsi
->>>>
->>>> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
->>>> index ac17f60..7506b0d 100644
->>>> --- a/arch/arm64/boot/dts/mediatek/Makefile
->>>> +++ b/arch/arm64/boot/dts/mediatek/Makefile
->>>> @@ -1,6 +1,7 @@
->>>>  # SPDX-License-Identifier: GPL-2.0
->>>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
->>>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
->>>> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6765-evb.dtb
->>>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
->>>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
->>>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
->>>
->>> As you can see, we have a long list of SoCs which are poorly supported.
->>> I'm not very keen to just add another SoC which supports booting into a ramdisk
->>> using the serial console. Do you have a roadmap adding mainline support for this
->>> SoC?
->>
->> Yes, that's a valid concern.
->>
->> mt6755 and mt6795 are in a similar state, the latter after three years.
->> I'm all for supporting new SoCs, but this feels looks a box-ticking
->> exercise ("hey, look, our SoC is supported in mainline") which doesn't
->> help anyone.
->>
->> My Ack still stands, but I'd definitely like to see some more complete
->> support before this patch goes in.
->>
->> Thanks,
->>
->> 	M.
-> 
-> Yes, we do arrange more resources to do upstream task for mt6765,
-> clk/pinctrl drivers are almost ready to submit. systimer is under
-> reviewing (v9).
-> http://lists.infradead.org/pipermail/linux-mediatek/2018-July/013989.html
-> 
-> other drivers including
-> pmic/pwrap/i2c/rtc/kpd/spi/wdt/cqdma/auxadc/pwm/cmdq/disp. We have
-> dedicated owners to handle them and will cowork tightly with members to
-> make sure things happen in the following weeks.
-> 
 
-Ok, so let's wait until pinctrl driver is submitted. I'd prefer if you could add
-the clk driver to this series. This way we can get rid of the dummy clocks in
-the device tree.
+--W2ydbIOJmkm74tJ2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> For previous chips, we did have no enough support after shell. It is due
-> to fast pace of smartphone SoC and other resource issues. We also know
-> that is no excuse so that we already confirmed owners and their
-> schedules for mt6765.
-> 
-> If there is any suggestion, please let us know.
-> 
+On Mon, Jul 02, 2018 at 12:27:18PM +0200, Heiko Stuebner wrote:
+> From: huang lin <hl@rock-chips.com>
+>=20
+> Refactor Innolux P079ZCA panel driver, let it support
+> multi panels from Innolux that share similar power sequences.
+>=20
+> Panels may require different power supplies so use regulator bulk
+> interfaces and define per panel supply-names.
+>=20
+> Changes in v2:
+> - Change regulator property name to meet the panel datasheet
+> Changes in v3:
+> - this patch only refactor P079ZCA panel to support multi panel,
+>   support P097PFG panel in another patch
+> Changes in v4:
+> - Modify the patch which suggest by Thierry
+> Changes in v5:
+> - use regulator_bulk to handle different supply number
+>=20
+> Signed-off-by: Lin Huang <hl@rock-chips.com>
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+>  drivers/gpu/drm/panel/panel-innolux-p079zca.c | 143 ++++++++++++------
+>  1 file changed, 100 insertions(+), 43 deletions(-)
 
-I know that smartphone SoC is a fast paced business. Never the less I'm
-convinced that the basic building blocks won't change much from one version to
-another. And that mainline support for the previous version of your SoC will
-help you to get your new drivers faster upstream.
+Applied with minor changes, see below.
 
-For me the best example is the mt7622 which got to a reasonable upstream support
-quite fast, thanks to a good foundation of mt7623 in mainline. I'd love to see
-that happen on the smartphone SoCs as well.
+> diff --git a/drivers/gpu/drm/panel/panel-innolux-p079zca.c b/drivers/gpu/=
+drm/panel/panel-innolux-p079zca.c
+> index bb53e0850764..840ad4a6a6a6 100644
+> --- a/drivers/gpu/drm/panel/panel-innolux-p079zca.c
+> +++ b/drivers/gpu/drm/panel/panel-innolux-p079zca.c
+> @@ -20,12 +20,29 @@
+> =20
+>  #include <video/mipi_display.h>
+> =20
+> +struct panel_desc {
+> +	const struct drm_display_mode *modes;
 
-Not to mention that upstream support will help you internally when you have to
-rebase your BSP code-base to a new kernel version.
+I renamed this to "mode" because there is always only one.
 
-That said I think it is good news that you have already defined owner for the
-different devices and hope to see submissions for them in the near future :)
-As a suggestion I would say that upstream submission takes time and effort and
-it will help your engineers if they can allocate some time to do so. But that's
-most probably a management decision and all engineers know that management bases
-it's decision on some hard-to-understandable abbreviations like EBITDA etc. ;)
+> +	unsigned int bpc;
+> +	struct {
+> +		unsigned int width;
+> +		unsigned int height;
+> +	} size;
+> +
+> +	unsigned long flags;
+> +	enum mipi_dsi_pixel_format format;
+> +	unsigned int lanes;
+> +	const char * const *supply_names;
+> +	unsigned int num_supplies;
+> +};
+> +
+>  struct innolux_panel {
+>  	struct drm_panel base;
+>  	struct mipi_dsi_device *link;
+> +	const struct panel_desc *desc;
+> =20
+>  	struct backlight_device *backlight;
+> -	struct regulator *supply;
+> +	struct regulator_bulk_data *supplies;
+> +	unsigned int num_supplies;
+>  	struct gpio_desc *enable_gpio;
+> =20
+>  	bool prepared;
+> @@ -77,9 +94,7 @@ static int innolux_panel_unprepare(struct drm_panel *pa=
+nel)
+>  	/* T8: 80ms - 1000ms */
+>  	msleep(80);
+> =20
+> -	err =3D regulator_disable(innolux->supply);
+> -	if (err < 0)
+> -		return err;
+> +	regulator_bulk_disable(innolux->desc->num_supplies, innolux->supplies);
 
-Best regards,
-Matthias
+I kept the error check and return here.
+
+Thierry
+
+--W2ydbIOJmkm74tJ2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltEkSUACgkQ3SOs138+
+s6G5yA//f2D9uNuTm2WZxbSpNglRCQnqDnGKXpoRObsJpnLHrPmPO6U8hvr+OtOE
+iyQRjIAmmWTM/LnEPv1VYcYaQFaxNgJ9GzYCUPE6pdxYOZ86yJUyGwpjJrzaHEGN
+WMYta4vuwgDJNX2MzZUuVwm7EtXr93BzQa7myz0qpVGHaXMUi/+fR5ilL12J4upD
+KwRw0zmqzAi+vVkstpnr5gTV6mLr3KF1FV1V/Y7iv7kCizZXLOyx6GWVAL3dvWTK
+nmrxs+CWbzpH/zWRAETbpwbpfD7OHIoKiUP0PazuIkcm61xOJClpqKDr/TDtSmLa
+ikZnPM8C7GNryVwpTk/qK0uUHLbRg7z5tp9CTUFm+T46pb7XpAHCZkGGDEX2q8q/
+/qdS7xZg94JTN6KVd9O2GyBzNbrjceq+iawhHs+/dFmXlTmH/q2pVcd2np0m4yCC
+Zkf8BdAz032Utaxbs2LgyKynPPN814JVac4YTTE21Mv0q9LQrv300Kq577MsR0Ph
+Tj6VFpEh+gDkmT3OINCUoU3L5IqLGwotx88526tVE06i737V6E8dMV5uG8TPSpfB
+S5gdhuNdxVO8ZYVI8/C1tfF02t+z5rzebwit0VM/BY6XDYwt+A5AFiwqDhvrmyKh
+nH/vQUZidJR9hCt+8fnTZx0aoDkjeJGL+v2aS2gvcftj4Fh9Q4Q=
+=08iG
+-----END PGP SIGNATURE-----
+
+--W2ydbIOJmkm74tJ2--
+
+--===============0689894041==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0689894041==--
