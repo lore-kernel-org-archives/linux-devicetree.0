@@ -1,74 +1,108 @@
-Return-Path: <robherring2@gmail.com>
-Date: Tue, 3 Jul 2018 16:42:39 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] doc: uartlite: Add binding for the driver
-Message-ID: <20180703224239.GA6756@rob-hp-laptop>
-References: <1530102225-6459-1-git-send-email-shubhrajyoti.datta@xilinx.com>
- <1530102225-6459-3-git-send-email-shubhrajyoti.datta@xilinx.com>
+Return-Path: <SRS0=MUa+=J2=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr10088.outbound.protection.outlook.com ([40.107.1.88]:44607
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751149AbeGJGg7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 10 Jul 2018 02:36:59 -0400
+From: Wen He <wen.he_1@nxp.com>
+Subject: RE: [v6 3/7] dmaengine: fsl-qdma: Add qDMA controller driver for
+ Layerscape SoCs
+Date: Tue, 10 Jul 2018 06:36:56 +0000
+Message-ID: <AM6PR0402MB338283931B24CB23ECE09A9CE25B0@AM6PR0402MB3382.eurprd04.prod.outlook.com>
+References: <20180615102236.32859-1-wen.he_1@nxp.com>
+ <20180615102236.32859-3-wen.he_1@nxp.com> <20180628051642.GK22377@vkoul-mobl>
+In-Reply-To: <20180628051642.GK22377@vkoul-mobl>
+Content-Language: en-US
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1530102225-6459-3-git-send-email-shubhrajyoti.datta@xilinx.com>
-To: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, shubhrajyoti.datta@gmail.com
+Sender: devicetree-owner@vger.kernel.org
+To: Vinod <vkoul@kernel.org>
+Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Jiaheng Fan <jiaheng.fan@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Jun 27, 2018 at 05:53:44PM +0530, Shubhrajyoti Datta wrote:
-> Add uartlite binding for the driver
-> 
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> ---
->  .../bindings/serial/xlnx,opb-uartlite.txt          | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt b/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt
-> new file mode 100644
-> index 0000000..df8aba0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt
-> @@ -0,0 +1,24 @@
-> +Xilinx Axi Uartlite controller Device Tree Bindings
-> +---------------------------------------------------------
-> +
-> +Required properties:
-> +- compatible           : Can be either of
-> +                               "xlnx,xps-uartlite-1.00.a"
-> +                               "xlnx,opb-uartlite-1.00.b"
-> +- reg                  : Physical base address and size of the Axi Uartlite
-> +                         registers map.
-> +- interrupts           : Property with a value describing the interrupt
-> +                         number.
-
-Just describe how many interrupts, what they are and order.
-
-> +- interrupt-parent     : Must be core interrupt controller.
-
-Doesn't match the example already in bindings/xilinx.txt...
-
-> +
-> +Optional properties:
-> +- port-number          : Set Uart port number
-
-Nope. Use aliases.
-
-> +
-> +Example:
-> +serial@800C0000 {
-
-Lower case hex please.
-
-> +       compatible = "xlnx,xps-uartlite-1.00.a";
-> +       reg = <0x0 0x800c0000 0x10000>;
-> +       interrupt-parent = <&gic>;
-> +       interrupts = <0x0 0x6e 0x1>;
-> +       port-number = <0>;
-> +};
-> --
-> 2.7.4
-> 
-> This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogVmlub2QgW21haWx0bzp2
+a291bEBrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE4xOo21MIyOMjVIDEzOjE3DQo+IFRvOiBXZW4g
+SGUgPHdlbi5oZV8xQG54cC5jb20+DQo+IENjOiBkbWFlbmdpbmVAdmdlci5rZXJuZWwub3JnOyBy
+b2JoK2R0QGtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBMZW8gTGkg
+PGxlb3lhbmcubGlAbnhwLmNvbT47IEppYWZlaSBQYW4NCj4gPGppYWZlaS5wYW5AbnhwLmNvbT47
+IEppYWhlbmcgRmFuIDxqaWFoZW5nLmZhbkBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW3Y2IDMv
+N10gZG1hZW5naW5lOiBmc2wtcWRtYTogQWRkIHFETUEgY29udHJvbGxlciBkcml2ZXIgZm9yDQo+
+IExheWVyc2NhcGUgU29Dcw0KPiANCj4gT24gMTUtMDYtMTgsIDE4OjIyLCBXZW4gSGUgd3JvdGU6
+DQo+IA0KPiA+ICtzdGF0aWMgc3RydWN0IGZzbF9xZG1hX2NvbXAgKmZzbF9xZG1hX3JlcXVlc3Rf
+ZW5xdWV1ZV9kZXNjKA0KPiA+ICsJCQkJCXN0cnVjdCBmc2xfcWRtYV9jaGFuICpmc2xfY2hhbiwN
+Cj4gPiArCQkJCQl1bnNpZ25lZCBpbnQgZHN0X25lbnRzLA0KPiA+ICsJCQkJCXVuc2lnbmVkIGlu
+dCBzcmNfbmVudHMpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBmc2xfcWRtYV9jb21wICpjb21wX3Rl
+bXA7DQo+ID4gKwlzdHJ1Y3QgZnNsX3FkbWFfcXVldWUgKnF1ZXVlID0gZnNsX2NoYW4tPnF1ZXVl
+Ow0KPiA+ICsJdW5zaWduZWQgbG9uZyBmbGFnczsNCj4gPiArDQo+ID4gKwlzcGluX2xvY2tfaXJx
+c2F2ZSgmcXVldWUtPnF1ZXVlX2xvY2ssIGZsYWdzKTsNCj4gPiArCWlmIChsaXN0X2VtcHR5KCZx
+dWV1ZS0+Y29tcF9mcmVlKSkgew0KPiA+ICsJCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJnF1ZXVl
+LT5xdWV1ZV9sb2NrLCBmbGFncyk7DQo+ID4gKwkJY29tcF90ZW1wID0ga3phbGxvYyhzaXplb2Yo
+KmNvbXBfdGVtcCksIEdGUF9LRVJORUwpOw0KPiANCj4gdGhpcyBpcyBpbnZva2VkIGZyb20gZnNs
+X3FkbWFfcHJlcF9tZW1jcHksIHNvIG5lZWRzIHRvIGJlIEdGUF9OT1dBSVQNCj4gZmxhZw0KPiAN
+Cg0KT0sNCg0KPiA+ICsJCWlmICghY29tcF90ZW1wKQ0KPiA+ICsJCQlyZXR1cm4gTlVMTDsNCj4g
+PiArDQo+ID4gKwkJY29tcF90ZW1wLT52aXJ0X2FkZHIgPSBkbWFfcG9vbF9hbGxvYyhxdWV1ZS0+
+Y29tcF9wb29sLA0KPiA+ICsJCQkJCQkgICAgICBHRlBfS0VSTkVMLA0KPiANCj4gaGVyZSBhcyB3
+ZWxsDQo+IA0KPiA+ICtzdGF0aWMgc3RydWN0IGZzbF9xZG1hX3F1ZXVlICpmc2xfcWRtYV9hbGxv
+Y19xdWV1ZV9yZXNvdXJjZXMoDQo+ID4gKwkJCQkJc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
+diwNCj4gPiArCQkJCQl1bnNpZ25lZCBpbnQgcXVldWVfbnVtKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1
+Y3QgZnNsX3FkbWFfcXVldWUgKnF1ZXVlX2hlYWQsICpxdWV1ZV90ZW1wOw0KPiA+ICsJaW50IHJl
+dCwgbGVuLCBpOw0KPiA+ICsJdW5zaWduZWQgaW50IHF1ZXVlX3NpemVbRlNMX1FETUFfUVVFVUVf
+TUFYXTsNCj4gPiArDQo+ID4gKwlpZiAocXVldWVfbnVtID4gRlNMX1FETUFfUVVFVUVfTUFYKQ0K
+PiA+ICsJCXF1ZXVlX251bSA9IEZTTF9RRE1BX1FVRVVFX01BWDsNCj4gPiArCWxlbiA9IHNpemVv
+ZigqcXVldWVfaGVhZCkgKiBxdWV1ZV9udW07DQo+ID4gKwlxdWV1ZV9oZWFkID0gZGV2bV9remFs
+bG9jKCZwZGV2LT5kZXYsIGxlbiwgR0ZQX0tFUk5FTCk7DQo+IA0KPiB3ZSBoYXZlIGtjYWxsb2Mg
+dmFyaWFudCBmb3IgdGhpcw0KPiANCg0KT0sNCg0KPiA+ICsJaWYgKCFxdWV1ZV9oZWFkKQ0KPiA+
+ICsJCXJldHVybiBOVUxMOw0KPiA+ICsNCj4gPiArCXJldCA9IGRldmljZV9wcm9wZXJ0eV9yZWFk
+X3UzMl9hcnJheSgmcGRldi0+ZGV2LCAicXVldWUtc2l6ZXMiLA0KPiA+ICsJCQkJCXF1ZXVlX3Np
+emUsIHF1ZXVlX251bSk7DQo+ID4gKwlpZiAocmV0KSB7DQo+ID4gKwkJZGV2X2VycigmcGRldi0+
+ZGV2LCAiQ2FuJ3QgZ2V0IHF1ZXVlLXNpemVzLlxuIik7DQo+ID4gKwkJcmV0dXJuIE5VTEw7DQo+
+ID4gKwl9DQo+ID4gKw0KPiA+ICsJZm9yIChpID0gMDsgaSA8IHF1ZXVlX251bTsgaSsrKSB7DQo+
+ID4gKwkJaWYgKHF1ZXVlX3NpemVbaV0gPiBGU0xfUURNQV9DSVJDVUxBUl9ERVNDX1NJWkVfTUFY
+IHx8DQo+ID4gKwkJCSAgICBxdWV1ZV9zaXplW2ldIDwgRlNMX1FETUFfQ0lSQ1VMQVJfREVTQ19T
+SVpFX01JTikNCj4gew0KPiA+ICsJCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJHZXQgd3JvbmcgcXVl
+dWUtc2l6ZXMuXG4iKTsNCj4gPiArCQkJcmV0dXJuIE5VTEw7DQo+ID4gKwkJfQ0KPiA+ICsJCXF1
+ZXVlX3RlbXAgPSBxdWV1ZV9oZWFkICsgaTsNCj4gPiArCQlxdWV1ZV90ZW1wLT5jcSA9IGRtYV9h
+bGxvY19jb2hlcmVudCgmcGRldi0+ZGV2LA0KPiA+ICsJCQkJCQlzaXplb2Yoc3RydWN0IGZzbF9x
+ZG1hX2Zvcm1hdCkgKg0KPiA+ICsJCQkJCQlxdWV1ZV9zaXplW2ldLA0KPiA+ICsJCQkJCQkmcXVl
+dWVfdGVtcC0+YnVzX2FkZHIsDQo+ID4gKwkJCQkJCUdGUF9LRVJORUwpOw0KPiA+ICsJCWlmICgh
+cXVldWVfdGVtcC0+Y3EpIHsNCj4gPiArCQkJZGV2bV9rZnJlZSgmcGRldi0+ZGV2LCBxdWV1ZV9o
+ZWFkKTsNCj4gDQo+IGFueSByZWFzb24gdGhpcyBpcyBmcmVlZCBleHBsaWNpdGx5DQo+IA0KPiA+
+ICtzdGF0aWMgaW50IGZzbF9xZG1hX2hhbHQoc3RydWN0IGZzbF9xZG1hX2VuZ2luZSAqZnNsX3Fk
+bWEpIHsNCj4gPiArCXZvaWQgX19pb21lbSAqY3RybCA9IGZzbF9xZG1hLT5jdHJsX2Jhc2U7DQo+
+ID4gKwl2b2lkIF9faW9tZW0gKmJsb2NrID0gZnNsX3FkbWEtPmJsb2NrX2Jhc2U7DQo+ID4gKwlp
+bnQgaSwgY291bnQgPSA1Ow0KPiANCj4gd2h5IDUNCj4gDQoNCk5vdGhpbmcsIGEgY29uZGl0aW9u
+Lg0KTWF5YmUgSSBzaG91bGQgYmUgc2V0IGEgc2FmZWd1YXJkcyB0aW1lcnMgaW4gaGVyZShjb3Vu
+dD1OKS4NCg0KPiA+ICtzdGF0aWMgaW50IGZzbF9xZG1hX3F1ZXVlX3RyYW5zZmVyX2NvbXBsZXRl
+KHN0cnVjdCBmc2xfcWRtYV9lbmdpbmUNCj4gPiArKmZzbF9xZG1hKSB7DQo+ID4gKwlzdHJ1Y3Qg
+ZnNsX3FkbWFfcXVldWUgKmZzbF9xdWV1ZSA9IGZzbF9xZG1hLT5xdWV1ZTsNCj4gPiArCXN0cnVj
+dCBmc2xfcWRtYV9xdWV1ZSAqZnNsX3N0YXR1cyA9IGZzbF9xZG1hLT5zdGF0dXM7DQo+ID4gKwlz
+dHJ1Y3QgZnNsX3FkbWFfcXVldWUgKnRlbXBfcXVldWU7DQo+ID4gKwlzdHJ1Y3QgZnNsX3FkbWFf
+Y29tcCAqZnNsX2NvbXA7DQo+ID4gKwlzdHJ1Y3QgZnNsX3FkbWFfZm9ybWF0ICpzdGF0dXNfYWRk
+cjsNCj4gPiArCXN0cnVjdCBmc2xfcWRtYV9mb3JtYXQgKmNzZ2Zfc3JjOw0KPiA+ICsJc3RydWN0
+IGZzbF9wcmVfc3RhdHVzIHByZTsNCj4gPiArCXZvaWQgX19pb21lbSAqYmxvY2sgPSBmc2xfcWRt
+YS0+YmxvY2tfYmFzZTsNCj4gPiArCXUzMiByZWcsIGk7DQo+ID4gKwlib29sIGR1cGxpY2F0ZSwg
+ZHVwbGljYXRlX2hhbmRsZTsNCj4gPiArDQo+ID4gKwltZW1zZXQoJnByZSwgMCwgc2l6ZW9mKHN0
+cnVjdCBmc2xfcHJlX3N0YXR1cykpOw0KPiA+ICsNCj4gPiArCXdoaWxlICgxKSB7DQo+IA0KPiB0
+aGlzIGxvb3AgY2FuIHBvdGVudGlhbGx5IHJlYWQgYmFkIGRhdGEgZnJvbSBIVyBhbmQga2VlcCBz
+cGluaW5nIGZvcmV2ZXIuDQo+IEdvb2QgcHJhY3RpY2Ugd291bGQgYmUgdG8gYWRkIHNhZmVndWFy
+ZHMgYW5kIGxvb3AgJ04nIHRpbWVzIHdoaWNoIHlvdSBkZWVtDQo+IGlzIGxhcmdlIGVub3VnaCB0
+byBwcm9jZXNzDQo+IA0KDQpZZXMsIGl0J3MgYSBnb29kIGlkZWEuDQoNCj4gPiArCQlkdXBsaWNh
+dGUgPSAwOw0KPiA+ICsJCWR1cGxpY2F0ZV9oYW5kbGUgPSAwOw0KPiANCj4gZW1wdHkgbGluZSBo
+ZXJlDQo+IA0KPiA+ICsJCXJlZyA9IHFkbWFfcmVhZGwoZnNsX3FkbWEsIGJsb2NrICsgRlNMX1FE
+TUFfQlNRU1IpOw0KPiA+ICsJCWlmIChyZWcgJiBGU0xfUURNQV9CU1FTUl9RRSkNCj4gPiArCQkJ
+cmV0dXJuIDA7DQo+IA0KPiBoZXJlLi4NCj4gDQo+ID4gKwkJc3RhdHVzX2FkZHIgPSBmc2xfc3Rh
+dHVzLT52aXJ0X2hlYWQ7DQo+ID4gKwkJaWYgKHFkbWFfY2NkZl9nZXRfcXVldWUoc3RhdHVzX2Fk
+ZHIpID09IHByZS5xdWV1ZSAmJg0KPiA+ICsJCQlxZG1hX2NjZGZfYWRkcl9nZXQ2NChzdGF0dXNf
+YWRkcikgPT0gcHJlLmFkZHIpDQo+ID4gKwkJCWR1cGxpY2F0ZSA9IDE7DQo+IA0KPiBoZXJlIChi
+YXNpY2FsbHkgYWZ0ZXIgZWFjaCBsb2dpY2FsIGJsb2NrIHRvIGhlbHAgcmVhZCkNCj4gDQoNCmdv
+dCBpdC4NCg0KPiA+ICsJCWkgPSBxZG1hX2NjZGZfZ2V0X3F1ZXVlKHN0YXR1c19hZGRyKTsNCj4g
+PiArCQlwcmUucXVldWUgPSBxZG1hX2NjZGZfZ2V0X3F1ZXVlKHN0YXR1c19hZGRyKTsNCj4gPiAr
+CQlwcmUuYWRkciA9IHFkbWFfY2NkZl9hZGRyX2dldDY0KHN0YXR1c19hZGRyKTsNCj4gPiArCQl0
+ZW1wX3F1ZXVlID0gZnNsX3F1ZXVlICsgaTsNCj4gPiArCQlzcGluX2xvY2soJnRlbXBfcXVldWUt
+PnF1ZXVlX2xvY2spOw0KPiA+ICsJCWlmIChsaXN0X2VtcHR5KCZ0ZW1wX3F1ZXVlLT5jb21wX3Vz
+ZWQpKSB7DQo+ID4gKwkJCWlmIChkdXBsaWNhdGUpIHsNCj4gPiArCQkJCWR1cGxpY2F0ZV9oYW5k
+bGUgPSAxOw0KPiANCj4gd2h5IGRvIHRoaXMsIHlvdSBjYW4gcmVtb3ZlIGR1cGxpY2F0ZV9oYW5k
+bGUgYW5kIHVzZSBkdXBsaWNhdGUgYmVsb3c/DQoNClRoYW5rIHlvdSwgSSB3aWxsIHJlbW92ZSBp
+dCBpbiBuZXh0IHZlcnNpb24uDQpCZXN0IFJlZ2FyZHMsDQpXZW4NCg0KPiANCj4gLS0NCj4gflZp
+bm9kDQo=
