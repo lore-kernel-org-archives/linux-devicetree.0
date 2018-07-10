@@ -1,131 +1,74 @@
-Return-Path: <SRS0=Ds5d=JZ=arm.com=lorenzo.pieralisi@kernel.org>
-Date: Mon, 9 Jul 2018 16:33:51 +0100
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 4/5] PCI: cadence: Add Power Management ops for host and
- EP
-Message-ID: <20180709153351.GA16292@red-moon>
-References: <1529915453-4633-1-git-send-email-adouglas@cadence.com>
- <1529915453-4633-5-git-send-email-adouglas@cadence.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1529915453-4633-5-git-send-email-adouglas@cadence.com>
-To: Alan Douglas <adouglas@cadence.com>
-Cc: bhelgaas@google.com, kishon@ti.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
+Return-Path: <vkoul@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 1/2] dt-bindings: i2c: Add binding document for Qualcomm CCI
+Date: Tue, 10 Jul 2018 18:14:42 +0530
+Message-Id: <20180710124443.24932-1-vkoul@kernel.org>
+To: linux-i2c@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, devicetree@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Vinod Koul <vkoul@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Jun 25, 2018 at 09:30:52AM +0100, Alan Douglas wrote:
-> These PM ops will enable/disable the optional PHYs if present.  The
-> AXI link-down register in the host driver is now cleared in
-> cdns_pci_map_bus since the link-down bit will be set if the PHY has
-> been disabled.  It is not cleared when enabling the PHY, since the
-> link will not yet be up.
+From: Todor Tomov <todor.tomov@linaro.org>
 
-It is not entirely clear what you mean here, can you elaborate please ?
+Add DT binding document for Qualcomm Camera Control Interface device
 
-Thank you,
-Lorenzo
+Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ .../devicetree/bindings/i2c/i2c-qcom-cci.txt       | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
 
-> Signed-off-by: Alan Douglas <adouglas@cadence.com>
-> ---
->  drivers/pci/controller/pcie-cadence-ep.c   |    1 +
->  drivers/pci/controller/pcie-cadence-host.c |    3 ++
->  drivers/pci/controller/pcie-cadence.c      |   30 ++++++++++++++++++++++++++++
->  drivers/pci/controller/pcie-cadence.h      |    4 +++
->  4 files changed, 38 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/pcie-cadence-ep.c
-> index c02f33d..3eabd99 100644
-> --- a/drivers/pci/controller/pcie-cadence-ep.c
-> +++ b/drivers/pci/controller/pcie-cadence-ep.c
-> @@ -555,6 +555,7 @@ static void cdns_pcie_ep_shutdown(struct platform_device *pdev)
->  	.driver = {
->  		.name = "cdns-pcie-ep",
->  		.of_match_table = cdns_pcie_ep_of_match,
-> +		.pm	= &cdns_pcie_pm_ops,
->  	},
->  	.probe = cdns_pcie_ep_probe,
->  	.shutdown = cdns_pcie_ep_shutdown,
-> diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/pcie-cadence-host.c
-> index 36f3109..e3e9b7d 100644
-> --- a/drivers/pci/controller/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/pcie-cadence-host.c
-> @@ -61,6 +61,8 @@ struct cdns_pcie_rc {
->  	/* Check that the link is up */
->  	if (!(cdns_pcie_readl(pcie, CDNS_PCIE_LM_BASE) & 0x1))
->  		return NULL;
-> +	/* Clear AXI link-down status */
-> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_LINKDOWN, 0x0);
->  
->  	/* Update Output registers for AXI region 0. */
->  	addr0 = CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_NBITS(12) |
-> @@ -345,6 +347,7 @@ static int cdns_pcie_host_probe(struct platform_device *pdev)
->  	.driver = {
->  		.name = "cdns-pcie-host",
->  		.of_match_table = cdns_pcie_host_of_match,
-> +		.pm	= &cdns_pcie_pm_ops,
->  	},
->  	.probe = cdns_pcie_host_probe,
->  };
-> diff --git a/drivers/pci/controller/pcie-cadence.c b/drivers/pci/controller/pcie-cadence.c
-> index 2edc126..86f1b00 100644
-> --- a/drivers/pci/controller/pcie-cadence.c
-> +++ b/drivers/pci/controller/pcie-cadence.c
-> @@ -217,3 +217,33 @@ int cdns_pcie_init_phy(struct device *dev, struct cdns_pcie *pcie)
->  
->  	return ret;
->  }
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int cdns_pcie_suspend_noirq(struct device *dev)
-> +{
-> +	struct cdns_pcie *pcie = dev_get_drvdata(dev);
-> +
-> +	cdns_pcie_disable_phy(pcie);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cdns_pcie_resume_noirq(struct device *dev)
-> +{
-> +	struct cdns_pcie *pcie = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = cdns_pcie_enable_phy(pcie);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable phy\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
-> +const struct dev_pm_ops cdns_pcie_pm_ops = {
-> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(cdns_pcie_suspend_noirq,
-> +				      cdns_pcie_resume_noirq)
-> +};
-> diff --git a/drivers/pci/controller/pcie-cadence.h b/drivers/pci/controller/pcie-cadence.h
-> index b342c80..ae6bf2a 100644
-> --- a/drivers/pci/controller/pcie-cadence.h
-> +++ b/drivers/pci/controller/pcie-cadence.h
-> @@ -166,6 +166,9 @@
->  #define CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar) \
->  	(CDNS_PCIE_AT_BASE + 0x0804 + (bar) * 0x0008)
->  
-> +/* AXI link down register */
-> +#define CDNS_PCIE_AT_LINKDOWN (CDNS_PCIE_AT_BASE + 0x0824)
-> +
->  enum cdns_pcie_rp_bar {
->  	RP_BAR0,
->  	RP_BAR1,
-> @@ -314,5 +317,6 @@ void cdns_pcie_set_outbound_region_for_normal_msg(struct cdns_pcie *pcie, u8 fn,
->  void cdns_pcie_disable_phy(struct cdns_pcie *pcie);
->  int cdns_pcie_enable_phy(struct cdns_pcie *pcie);
->  int cdns_pcie_init_phy(struct device *dev, struct cdns_pcie *pcie);
-> +extern const struct dev_pm_ops cdns_pcie_pm_ops;
->  
->  #endif /* _PCIE_CADENCE_H */
-> -- 
-> 1.7.1
-> 
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt b/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
+new file mode 100644
+index 000000000000..cb1fe158fba3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
+@@ -0,0 +1,46 @@
++Qualcomm Camera Control Interface controller
++
++Required properties:
++ - compatible: Should be one of:
++   - "qcom,cci-v1.0.8" for 8916;
++   - "qcom,cci-v1.4.0" for 8996.
++ - #address-cells: Should be <1>.
++ - #size-cells: Should be <0>.
++ - reg: Base address of the controller and length of memory mapped region.
++ - interrupts: Specifier for CCI interrupt.
++ - clocks: List of clock specifiers, one for each entry in clock-names.
++ - clock-names: Should contain:
++   - "mmss_mmagic_ahb" - on 8996 only;
++   - "camss_top_ahb";
++   - "cci_ahb";
++   - "cci";
++   - "camss_ahb".
++
++Required properties on 8996:
++ - power-domains: Power domain specifier.
++
++Optional:
++ - clock-frequency: Desired I2C bus clock frequency in Hz, defaults to 100 kHz
++   if omitted.
++
++Example:
++
++                cci@a0c000 {
++                        compatible = "qcom,cci-v1.4.0";
++                        #address-cells = <1>;
++                        #size-cells = <0>;
++                        reg = <0xa0c000 0x1000>;
++                        interrupts = <GIC_SPI 295 IRQ_TYPE_EDGE_RISING>;
++                        power-domains = <&mmcc CAMSS_GDSC>;
++                        clocks = <&mmcc MMSS_MMAGIC_AHB_CLK>,
++                                        <&mmcc CAMSS_TOP_AHB_CLK>,
++                                        <&mmcc CAMSS_CCI_AHB_CLK>,
++                                        <&mmcc CAMSS_CCI_CLK>,
++                                        <&mmcc CAMSS_AHB_CLK>;
++                        clock-names = "mmss_mmagic_ahb",
++                                        "camss_top_ahb",
++                                        "cci_ahb",
++                                        "cci",
++                                        "camss_ahb";
++                        clock-frequency = <400000>;
++                };
+-- 
+2.14.4
