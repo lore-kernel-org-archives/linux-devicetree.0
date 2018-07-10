@@ -1,365 +1,196 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v7 4/5] clocksource: add driver for i.MX EPIT timer
-Date: Tue, 10 Jul 2018 18:20:13 +0200
-Message-ID: <27e8d6f0-b415-f31e-ae89-0b35397d0cf2@linaro.org>
-References: <20180611155001.3506-1-peron.clem@gmail.com>
- <20180611155001.3506-5-peron.clem@gmail.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCH v3 6/6] ARM: mx5: Set the DBGEN bit in ARM_GPC register
+Date: Tue, 10 Jul 2018 18:23:38 +0200
+Message-ID: <20180710162338.xchmiqm3xfvy6slo@earth.universe>
+References: <1531238927-19579-1-git-send-email-fabio.estevam@nxp.com>
+ <1531238927-19579-6-git-send-email-fabio.estevam@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180611155001.3506-5-peron.clem@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Stefan Agner <stefan@agner.ch>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?UTF-8?Q?Cl=c3=a9ment_Peron?= <clement.peron@devialet.com>
+Content-Type: multipart/mixed; boundary="===============9216561480565100639=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1531238927-19579-6-git-send-email-fabio.estevam@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 11/06/2018 17:50, Clément Péron wrote:
-> From: Colin Didier <colin.didier@devialet.com>
-> 
-> Add driver for NXP's EPIT timer used in i.MX SoC.
 
-Give a description on how works this timer.
+--===============9216561480565100639==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="axr4l7db6rsbn5kr"
+Content-Disposition: inline
 
 
-> Signed-off-by: Colin Didier <colin.didier@devialet.com>
-> Signed-off-by: Clément Peron <clement.peron@devialet.com>
-> Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
-> Tested-by: Vladimir Zapolskiy <vz@mleia.com>
+--axr4l7db6rsbn5kr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Tue, Jul 10, 2018 at 01:08:47PM -0300, Fabio Estevam wrote:
+> On i.MX51/i.MX53 it is necessary to set the DBGEN bit in=20
+> ARM_GPC register in order to turn on the debug clocks.
+>=20
+> The DBGEN bit of ARM_GPC register has the following description
+> in the i.MX53 Reference Manual:
+>=20
+> "This allows the user to manually activate clocks within the debug
+> system. This register bit directly controls the platform's dbgen_out
+> output signal which connects to the DAP_SYS to enable all debug clocks.
+> Once enabled, the clocks cannot be disabled except by asserting the
+> disable_trace input of the DAP_SYS."
+>=20
+> Based on a previous patch from Sebastian Reichel.
+>=20
+> Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
 > ---
->  drivers/clocksource/Kconfig          |  11 ++
->  drivers/clocksource/Makefile         |   1 +
->  drivers/clocksource/timer-imx-epit.c | 265 +++++++++++++++++++++++++++
->  3 files changed, 277 insertions(+)
->  create mode 100644 drivers/clocksource/timer-imx-epit.c
-> 
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index 8e8a09755d10..790478afd02c 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -576,6 +576,17 @@ config H8300_TPU
->  	  This enables the clocksource for the H8300 platform with the
->  	  H8S2678 cpu.
->  
-> +config CLKSRC_IMX_EPIT
-> +	bool "Clocksource using i.MX EPIT"
-> +	depends on CLKDEV_LOOKUP && (ARCH_MXC || COMPILE_TEST)
-> +	select CLKSRC_MMIO
-> +	help
-> +	  This enables EPIT support available on some i.MX platforms.
-> +	  Normally you don't have a reason to do so as the EPIT has
-> +	  the same features and uses the same clocks as the GPT.
-> +	  Anyway, on some systems the GPT may be in use for other
-> +	  purposes.
+> Changes since v2:
+> - Also check for "secure-reg-access" presence (Sebastian)
+> - Call of_node_put() (Sebastian)
+>=20
+>  arch/arm/mach-imx/common.h     |  1 +
+>  arch/arm/mach-imx/cpu-imx5.c   | 43 ++++++++++++++++++++++++++++++++++++=
+++++++
+>  arch/arm/mach-imx/mach-imx51.c |  2 +-
+>  arch/arm/mach-imx/mach-imx53.c |  2 +-
+>  4 files changed, 46 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
+> index 93225db7..423dd76 100644
+> --- a/arch/arm/mach-imx/common.h
+> +++ b/arch/arm/mach-imx/common.h
+> @@ -62,6 +62,7 @@ void imx_gpc_set_arm_power_up_timing(u32 sw2iso, u32 sw=
+);
+>  void imx_gpc_set_arm_power_down_timing(u32 sw2iso, u32 sw);
+>  void imx25_pm_init(void);
+>  void imx27_pm_init(void);
+> +void imx5_pmu_init(void);
+> =20
+>  enum mxc_cpu_pwr_mode {
+>  	WAIT_CLOCKED,		/* wfi only */
+> diff --git a/arch/arm/mach-imx/cpu-imx5.c b/arch/arm/mach-imx/cpu-imx5.c
+> index 4f2d1c7..bba6e9b 100644
+> --- a/arch/arm/mach-imx/cpu-imx5.c
+> +++ b/arch/arm/mach-imx/cpu-imx5.c
+> @@ -117,3 +117,46 @@ int mx53_revision(void)
+>  	return mx5_cpu_rev;
+>  }
+>  EXPORT_SYMBOL(mx53_revision);
 > +
->  config CLKSRC_IMX_GPT
->  	bool "Clocksource using i.MX GPT" if COMPILE_TEST
->  	depends on ARM && CLKDEV_LOOKUP
-> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-> index 00caf37e52f9..d9426f69ec69 100644
-> --- a/drivers/clocksource/Makefile
-> +++ b/drivers/clocksource/Makefile
-> @@ -69,6 +69,7 @@ obj-$(CONFIG_INTEGRATOR_AP_TIMER)	+= timer-integrator-ap.o
->  obj-$(CONFIG_CLKSRC_VERSATILE)		+= versatile.o
->  obj-$(CONFIG_CLKSRC_MIPS_GIC)		+= mips-gic-timer.o
->  obj-$(CONFIG_CLKSRC_TANGO_XTAL)		+= tango_xtal.o
-> +obj-$(CONFIG_CLKSRC_IMX_EPIT)		+= timer-imx-epit.o
->  obj-$(CONFIG_CLKSRC_IMX_GPT)		+= timer-imx-gpt.o
->  obj-$(CONFIG_CLKSRC_IMX_TPM)		+= timer-imx-tpm.o
->  obj-$(CONFIG_ASM9260_TIMER)		+= asm9260_timer.o
-> diff --git a/drivers/clocksource/timer-imx-epit.c b/drivers/clocksource/timer-imx-epit.c
-> new file mode 100644
-> index 000000000000..7f1c8e2e00aa
-> --- /dev/null
-> +++ b/drivers/clocksource/timer-imx-epit.c
-> @@ -0,0 +1,265 @@
-> +// SPDX-License-Identifier: GPL-2.0
+> +#define ARM_GPC		0x4
+> +#define DBGEN		BIT(16)
+> +
 > +/*
-> + * i.MX EPIT Timer
-> + *
-> + * Copyright (C) 2010 Sascha Hauer <s.hauer@pengutronix.de>
-> + * Copyright (C) 2018 Colin Didier <colin.didier@devialet.com>
-> + * Copyright (C) 2018 Clément Péron <clement.peron@devialet.com>
+> + * This enables the DBGEN bit in ARM_GPC register, which is
+> + * required for accessing some performance counter features.
+> + * Technically it is only required while perf is used, but to
+> + * keep the source code simple we just enable it all the time
+> + * when the kernel configuration allows using the feature.
 > + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/clockchips.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/sched_clock.h>
-> +#include <linux/slab.h>
-> +
-> +#define EPITCR				0x00
-> +#define EPITSR				0x04
-> +#define EPITLR				0x08
-> +#define EPITCMPR			0x0c
-> +#define EPITCNR				0x10
-> +
-> +#define EPITCR_EN			BIT(0)
-> +#define EPITCR_ENMOD			BIT(1)
-> +#define EPITCR_OCIEN			BIT(2)
-> +#define EPITCR_RLD			BIT(3)
-> +#define EPITCR_PRESC(x)			(((x) & 0xfff) << 4)
-> +#define EPITCR_SWR			BIT(16)
-> +#define EPITCR_IOVW			BIT(17)
-> +#define EPITCR_DBGEN			BIT(18)
-> +#define EPITCR_WAITEN			BIT(19)
-> +#define EPITCR_RES			BIT(20)
-> +#define EPITCR_STOPEN			BIT(21)
-> +#define EPITCR_OM_DISCON		(0 << 22)
-> +#define EPITCR_OM_TOGGLE		(1 << 22)
-> +#define EPITCR_OM_CLEAR			(2 << 22)
-> +#define EPITCR_OM_SET			(3 << 22)
-> +#define EPITCR_CLKSRC_OFF		(0 << 24)
-> +#define EPITCR_CLKSRC_PERIPHERAL	(1 << 24)
-> +#define EPITCR_CLKSRC_REF_HIGH		(2 << 24)
-> +#define EPITCR_CLKSRC_REF_LOW		(3 << 24)
-> +
-> +#define EPITSR_OCIF			BIT(0)
-> +
-> +struct epit_timer {
-> +	void __iomem *base;
-> +	int irq;
-> +	struct clk *clk;
-> +	struct clock_event_device ced;
-> +	struct irqaction act;
-> +};
-> +
-> +static void __iomem *sched_clock_reg;
-> +
-> +static inline struct epit_timer *to_epit_timer(struct clock_event_device *ced)
+> +void __init imx5_pmu_init(void)
 > +{
-> +	return container_of(ced, struct epit_timer, ced);
+> +	void __iomem *tigerp_base;
+> +	struct device_node *np;
+> +	u32 gpc;
+> +
+> +	if (!IS_ENABLED(CONFIG_ARM_PMU))
+> +		return;
+> +
+> +	np =3D of_find_compatible_node(NULL, NULL, "arm,cortex-a8-pmu");
+> +	if (!np)
+> +		return;
+> +
+> +	if (!of_property_read_bool(np, "secure-reg-access"))
+> +		goto exit;
+
+There is still a missing of_node_put() here. Otherwise
+
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+
+> +	np =3D of_find_compatible_node(NULL, NULL, "fsl,imx51-tigerp");
+> +	if (!np)
+> +		goto exit;
+> +
+> +	tigerp_base =3D of_iomap(np, 0);
+> +	if (!tigerp_base)
+> +		goto exit;
+> +
+> +	gpc =3D readl_relaxed(tigerp_base + ARM_GPC);
+> +	gpc |=3D DBGEN;
+> +	writel_relaxed(gpc, tigerp_base + ARM_GPC);
+> +	iounmap(tigerp_base);
+> +exit:
+> +	of_node_put(np);
+> +
 > +}
-> +
-> +static inline void epit_irq_disable(struct epit_timer *epittm)
-> +{
-> +	u32 val;
-> +
-> +	val = readl_relaxed(epittm->base + EPITCR);
-> +	writel_relaxed(val & ~EPITCR_OCIEN, epittm->base + EPITCR);
-> +}
-> +
-> +static inline void epit_irq_enable(struct epit_timer *epittm)
-> +{
-> +	u32 val;
-> +
-> +	val = readl_relaxed(epittm->base + EPITCR);
-> +	writel_relaxed(val | EPITCR_OCIEN, epittm->base + EPITCR);
-> +}
-> +
-> +static void epit_irq_acknowledge(struct epit_timer *epittm)
-> +{
-> +	writel_relaxed(EPITSR_OCIF, epittm->base + EPITSR);
-> +}
-> +
-> +static u64 notrace epit_read_sched_clock(void)
-> +{
-> +	return ~readl_relaxed(sched_clock_reg);
-> +}
-> +
-> +static int epit_set_next_event(unsigned long cycles,
-> +			       struct clock_event_device *ced)
-> +{
-> +	struct epit_timer *epittm = to_epit_timer(ced);
-> +	unsigned long tcmp;
-> +
-> +	tcmp = readl_relaxed(epittm->base + EPITCNR) - cycles;
-> +	writel_relaxed(tcmp, epittm->base + EPITCMPR);
-> +
-> +	return 0;
-> +}
-> +
-> +/* Left event sources disabled, no more interrupts appear */
-> +static int epit_shutdown(struct clock_event_device *ced)
-> +{
-> +	struct epit_timer *epittm = to_epit_timer(ced);
-> +	unsigned long flags;
-> +
-> +	/*
-> +	 * The timer interrupt generation is disabled at least
-> +	 * for enough time to call epit_set_next_event()
-> +	 */
-> +	local_irq_save(flags);
+> diff --git a/arch/arm/mach-imx/mach-imx51.c b/arch/arm/mach-imx/mach-imx5=
+1.c
+> index 3835b6a..8838fba 100644
+> --- a/arch/arm/mach-imx/mach-imx51.c
+> +++ b/arch/arm/mach-imx/mach-imx51.c
+> @@ -52,7 +52,7 @@ static void __init imx51_dt_init(void)
+>  {
+>  	imx51_ipu_mipi_setup();
+>  	imx_src_init();
+> -
+> +	imx5_pmu_init();
+>  	imx_aips_allow_unprivileged_access("fsl,imx51-aipstz");
+>  }
+> =20
+> diff --git a/arch/arm/mach-imx/mach-imx53.c b/arch/arm/mach-imx/mach-imx5=
+3.c
+> index 07c2e8d..5ec7100 100644
+> --- a/arch/arm/mach-imx/mach-imx53.c
+> +++ b/arch/arm/mach-imx/mach-imx53.c
+> @@ -31,7 +31,7 @@ static void __init imx53_init_early(void)
+>  static void __init imx53_dt_init(void)
+>  {
+>  	imx_src_init();
+> -
+> +	imx5_pmu_init();
+>  	imx_aips_allow_unprivileged_access("fsl,imx53-aipstz");
+>  }
 
-This is not necessary. This function is called with interrupt disabled.
+--axr4l7db6rsbn5kr
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +	/* Disable interrupt in EPIT module */
-> +	epit_irq_disable(epittm);
-> +
-> +	/* Clear pending interrupt */
-> +	epit_irq_acknowledge(epittm);
+-----BEGIN PGP SIGNATURE-----
 
-No irq ack is needed here. Neither disabling the interrupt.
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAltE3YoACgkQ2O7X88g7
++ppFfQ//dAuGTHCKgetlfkdfKxgzcXrV/NXnTPm3qVlABfm7BDFTiyOc3yuo+6jo
+6qP8USRMMjDODG8YZk7MgsIAgwu7JeLguJ8YKICu/fLBaHY1u6td/YETJ0u9TvHP
+CSGzJimfBT6ZSi8DFNQuKtxtUa2U6pMprSk4UQ0hmrEpx7JW4NbfxZisLCgZP0Dm
+c6SOPuVWukWSP6TTCXdcgwoEUsLr860Bout7rVdh+u3u32V11tBzRVvnHi8w4kTY
+LEWvqHziGdaLHvN+edr/qCy4fRQCoHJ/cqg3ctW8lqf+jKezhbtTMFMsS/c6ALf+
+CeEyvxpgVUbN2A5ZQ6yjG8cT9UOBvqeZ8TMlrzKuxuaAgO4IYpNpBLGReLGL+qzX
+DtISPqrrKoO17owqvgBOT2AlmhuW6JbC/CqPgC04bl88wobfTiko6nk9t1wLjrDg
+wAmOUWD2VE1YWjgjfcx0+fufSZ5UuRx+WfwlY46R6yWP8wP9B8625tVeuaxibex+
+v5FhFPIZvaQ5N7rrNfGM2UTNiqQ9Lj/cr14NZ38GWwd1Hb3r9ITjJJHZSrfvQg+h
+mGkRsWnH1UwikmGMnLr3qgBlj2Viocojxew6W/gfJ2YOUpf/GL3OjuTOjNA8lRrA
+4Yk8qbC8tJapVZleoXWK//ovwi6cUjO33+J61K3qTYJY7b01O4c=
+=iMGN
+-----END PGP SIGNATURE-----
 
-Why not just stop the counter ?
-
-> +	local_irq_restore(flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int epit_set_oneshot(struct clock_event_device *ced)
-> +{
-> +	struct epit_timer *epittm = to_epit_timer(ced);
-> +	unsigned long flags;
-> +
-> +	/*
-> +	 * The timer interrupt generation is disabled at least
-> +	 * for enough time to call epit_set_next_event()
-> +	 */
-> +	local_irq_save(flags);
-
-This is not necessary. This function is called with interrupt disabled.
-
-> +	/* Disable interrupt in EPIT module */
-> +	epit_irq_disable(epittm);
-> +
-> +	/* Clear pending interrupt, only while switching mode */
-> +	if (!clockevent_state_oneshot(ced))
-> +		epit_irq_acknowledge(epittm);
-
-Why do you need to ack the interrupt here ?
-
-> +	/*
-> +	 * Do not put overhead of interrupt enable/disable into
-> +	 * epit_set_next_event(), the core has about 4 minutes
-> +	 * to call epit_set_next_event() or shutdown clock after
-> +	 * mode switching
-> +	 */
-> +	epit_irq_enable(epittm);
-> +	local_irq_restore(flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static irqreturn_t epit_timer_interrupt(int irq, void *dev_id)
-> +{
-> +	struct clock_event_device *ced = dev_id;
-> +	struct epit_timer *epittm = to_epit_timer(ced);
-> +
-> +	epit_irq_acknowledge(epittm);
-> +
-> +	ced->event_handler(ced);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int __init epit_clocksource_init(struct epit_timer *epittm)
-> +{
-> +	unsigned int c = clk_get_rate(epittm->clk);
-> +
-> +	sched_clock_reg = epittm->base + EPITCNR;
-> +	sched_clock_register(epit_read_sched_clock, 32, c);
-> +
-> +	return clocksource_mmio_init(epittm->base + EPITCNR, "epit", c, 200, 32,
-> +				     clocksource_mmio_readl_down);
-> +}
-> +
-> +static int __init epit_clockevent_init(struct epit_timer *epittm)
-> +{
-> +	struct clock_event_device *ced = &epittm->ced;
-> +	struct irqaction *act = &epittm->act;
-> +
-> +	ced->name = "epit";
-> +	ced->features = CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_DYNIRQ;
-> +	ced->set_state_shutdown = epit_shutdown;
-> +	ced->tick_resume = epit_shutdown;
-> +	ced->set_state_oneshot = epit_set_oneshot;
-> +	ced->set_next_event = epit_set_next_event;
-> +	ced->rating = 200;
-> +	ced->cpumask = cpumask_of(0);
-> +	ced->irq = epittm->irq;
-> +	clockevents_config_and_register(ced, clk_get_rate(epittm->clk),
-> +					0xff, 0xfffffffe);
-> +
-> +	act->name = "i.MX EPIT Timer Tick",
-> +	act->flags = IRQF_TIMER | IRQF_IRQPOLL;
-> +	act->handler = epit_timer_interrupt;
-> +	act->dev_id = ced;
-> +
-> +	/* Make irqs happen */
-> +	return setup_irq(epittm->irq, act);
-> +}
-> +
-> +static int __init epit_timer_init(struct device_node *np)
-> +{
-> +	struct epit_timer *epittm;
-> +	int ret;
-> +
-> +	epittm = kzalloc(sizeof(*epittm), GFP_KERNEL);
-> +	if (!epittm)
-> +		return -ENOMEM;
-> +
-> +	epittm->base = of_iomap(np, 0);
-> +	if (!epittm->base) {
-> +		ret = -ENXIO;
-> +		goto out_kfree;
-> +	}
-> +
-> +	epittm->irq = irq_of_parse_and_map(np, 0);
-> +	if (!epittm->irq) {
-> +		ret = -EINVAL;
-> +		goto out_iounmap;
-> +	}
-> +
-> +	/* Get EPIT clock */
-> +	epittm->clk = of_clk_get(np, 0);
-> +	if (IS_ERR(epittm->clk)) {
-> +		pr_err("i.MX EPIT: unable to get clk\n");
-> +		ret = PTR_ERR(epittm->clk);
-> +		goto out_iounmap;
-> +	}
-> +
-> +	ret = clk_prepare_enable(epittm->clk);
-> +	if (ret) {
-> +		pr_err("i.MX EPIT: unable to prepare+enable clk\n");
-> +		goto out_iounmap;
-> +	}
-
-Please replace all the above with the timer-of API as:
-
-https://patchwork.kernel.org/patch/10510443/
+--axr4l7db6rsbn5kr--
 
 
-> +	/* Initialise to a known state (all timers off, and timing reset) */
-> +	writel_relaxed(0x0, epittm->base + EPITCR);
-> +	writel_relaxed(0xffffffff, epittm->base + EPITLR);
-> +	writel_relaxed(EPITCR_EN | EPITCR_CLKSRC_REF_HIGH | EPITCR_WAITEN,
-> +		       epittm->base + EPITCR);
-> +
-> +	ret = epit_clocksource_init(epittm);
-> +	if (ret) {
-> +		pr_err("i.MX EPIT: failed to init clocksource\n");
-> +		goto out_clk_disable;
-> +	}
-> +
-> +	ret = epit_clockevent_init(epittm);
-> +	if (ret) {
-> +		pr_err("i.MX EPIT: failed to init clockevent\n");
-> +		goto out_clk_disable;
-> +	}
-> +
-> +	return 0;
-> +
-> +out_clk_disable:
-> +	clk_disable_unprepare(epittm->clk);
-> +out_iounmap:
-> +	iounmap(epittm->base);
-> +out_kfree:
-> +	kfree(epittm);
-> +
-> +	return ret;
-> +}
-> +TIMER_OF_DECLARE(epit_timer, "fsl,imx31-epit", epit_timer_init);
-> 
+--===============9216561480565100639==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+--===============9216561480565100639==--
