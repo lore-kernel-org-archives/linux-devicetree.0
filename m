@@ -1,165 +1,30 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 1/1] drm/panel: Add support for Olimex LCD-OLinuXino
- panel
-Date: Tue, 10 Jul 2018 16:48:45 +0200
-Message-ID: <20180710144845.GA25784@ulmo>
-References: <1529909093-17021-1-git-send-email-stefan@olimex.com>
- <20180710103250.GG1504@ulmo>
- <e1229a90-1bdb-0c8e-c371-cde0bc30ea56@gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v5 06/22] soc: sunxi: sram: Add dt match for
+ the A10 system-control compatible
+Date: Tue, 10 Jul 2018 22:48:43 +0800
+Message-ID: <CAGb2v67=TizoRQ9uKMPyXPu5fjYFG9bg3DtJ4mBQT2Zm_eZh9w@mail.gmail.com>
+References: <20180710080114.31469-1-paul.kocialkowski@bootlin.com> <20180710080114.31469-7-paul.kocialkowski@bootlin.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0068614652=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <e1229a90-1bdb-0c8e-c371-cde0bc30ea56@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stefan Mavrodiev <stefan.mavrodiev@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Stefan Mavrodiev <stefan@olimex.com>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, open list <linux-kernel@vger.kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBY4OSPNAKGQEMSC2EZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180710080114.31469-7-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Keiichi Watanabe <keiichiw-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tom Saeger <tom.saeger-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jul 10, 2018 at 4:00 PM, Paul Kocialkowski
+<paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> This binds the new A10 system-control compatible to the associated
+> driver, with the same driver data as the previous compatible.
+>
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
---===============0068614652==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
-Content-Disposition: inline
-
-
---T4sUOijqQbZv57TR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jul 10, 2018 at 04:08:54PM +0300, Stefan Mavrodiev wrote:
-> On 07/10/2018 01:32 PM, Thierry Reding wrote:
-> > On Mon, Jun 25, 2018 at 09:44:35AM +0300, Stefan Mavrodiev wrote:
-[...]
-> > > diff --git a/drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c b/dri=
-vers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c
-[...]
-> > > +static int lcd_olinuxino_get_modes(struct drm_panel *panel)
-> > > +{
-> > > +	struct lcd_olinuxino *lcd =3D to_lcd_olinuxino(panel);
-> > > +	struct drm_connector *connector =3D lcd->panel.connector;
-> > > +	struct lcd_olinuxino_info *lcd_info =3D &lcd->eeprom.info;
-> > > +	struct drm_device *drm =3D lcd->panel.drm;
-> > > +	struct lcd_olinuxino_mode *lcd_mode;
-> > > +	struct drm_display_mode *mode;
-> > > +	int i, num =3D 0;
-> > These two can be unsigned.
-> >=20
-> > > +
-> > > +	/* Read up to 4 modes */
-> > > +	for (i =3D 0; i < lcd->eeprom.num_modes && i < 4; i++) {
-> > Can it happen that lcd->eeprom.num_modes >=3D 4? Seems to me like that
-> > would be a serious bug. Perhaps move that check to where the EEPROM is
-> > read and output a warning, then overwrite lcd->eeprom.num_modes with 4?
-> If num_modes is bigger than 4, then lcd_mode pointer will point to invalid
-> location. This can happen if someone overwrite the eeprom and apply
-> correct checksum at the end. Then i < 4 makes sure this won't happen.
-
-I still think that this should be checked earlier in the code, like at
-->probe() time. That way you can output a warning once so that people
-have a chance to notice a broken EEPROM and potentially do something
-about it. You can then also sanitize the EEPROM contents so that the
-rest of the code (i.e. ->get_modes()) doesn't have to check for this
-error case.
-
-> >=20
-> > > +		lcd_mode =3D (struct lcd_olinuxino_mode *)
-> > > +			   &lcd->eeprom.reserved[i * sizeof(*lcd_mode)];
-> > > +
-> > > +		mode =3D drm_mode_create(drm);
-> > > +		if (!mode) {
-> > > +			dev_err(drm->dev, "failed to add mode %ux%u@%u\n",
-> > > +				lcd_mode->hactive,
-> > > +				lcd_mode->vactive,
-> > > +				lcd_mode->refresh);
-> > > +				continue;
-> > > +		}
-> > > +
-> > > +		mode->clock =3D lcd_mode->pixelclock;
-> > > +		mode->hdisplay =3D lcd_mode->hactive;
-> > > +		mode->hsync_start =3D lcd_mode->hactive + lcd_mode->hfp;
-> > > +		mode->hsync_end =3D lcd_mode->hactive + lcd_mode->hfp +
-> > > +				  lcd_mode->hpw;
-> > > +		mode->htotal =3D lcd_mode->hactive + lcd_mode->hfp +
-> > > +			       lcd_mode->hpw + lcd_mode->hbp;
-> > > +		mode->vdisplay =3D lcd_mode->vactive;
-> > > +		mode->vsync_start =3D lcd_mode->vactive + lcd_mode->vfp;
-> > > +		mode->vsync_end =3D lcd_mode->vactive + lcd_mode->vfp +
-> > > +				  lcd_mode->vpw;
-> > > +		mode->vtotal =3D lcd_mode->vactive + lcd_mode->vfp +
-> > > +			       lcd_mode->vpw + lcd_mode->vbp;
-> > > +		mode->vrefresh =3D lcd_mode->refresh;
-> > > +
-> > > +		if (lcd->eeprom.num_modes =3D=3D 1)
-> > > +			mode->type |=3D DRM_MODE_TYPE_PREFERRED;
-> > Is there no way to determine the preferred mode if there are more than
-> > one? Perhaps always prefer the first mode?
-> My idea here is what if the first mode is not supported by the host? That=
-'s
-> why
-> we will be storing multiple modes, one with the most strict timings
-> (e.g rounded to 10kHz or less, according to the lcd datesheet), and others
-> with less strict.
-
-Its not the panel driver's responsibility to take into account the host
-capabilities. The panel driver should, to the best of its abilities,
-report the supported modes and the host driver is responsible for
-dealing with the mode list. If any of the modes are not within its
-capabilities, then it can filter them out (using the ->mode_valid()
-callback).
-
-In this particular case, if there is no clearly defined preferred mode
-I'd argue that either you don't mark any mode as preferred, or you
-choose the one with the strictest timings. I had hoped that perhaps the
-first mode would always be the one with the strictest timings and hence
-would be the preferred mode, but it seems like that's not a guarantee.
-If so, it's pretty much impossible for the driver to determine a
-preferred mode, so can't do much about it.
-
-As for the special case of a single mode being present in the EEPROM,
-I'm not sure if that's something worth considering. If there's only one
-it doesn't really matter that it's preferred.
-
-Thierry
-
---T4sUOijqQbZv57TR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltEx0sACgkQ3SOs138+
-s6ECKQ//dBryPS/+3xB2zXCWHrz7hkRTj+r4FZHQg9NWA7MlEA9bRMeamyfh2PyV
-uYvUGl7ihg3uDx3hm1lE7+DESVQbJCVfBJ+0K9gKf4Gb7gluuFcSP0niyhd6Qlbt
-pldetrdcG1CSnbEvPSv73Fg2vEaS6DUrJ861swcSgYfToXaAmyj/v+JuCRXMqvkm
-5BU/ZRLfZrsfCJyMe83enoqPaW44MY/p5DzGq3nVDSAPOJ49n/iX4g+DeqEzzZJt
-bru3GaeL9ovU6iR4H6M1p0vsjN73ESTqCFzuWElc8WEHDzBjUEcJW2YTy4yoOeAp
-yrPJ8YMiQkBWUDMKN59lMK/ZtgBvaVcyxDnjnC2dn1oME2Rh/tFYQgTBEVA882qA
-lSe0+8dam7P0XoSAy2nE2FQIHmJQ/6ijU2N2op8a08lXRfSNjWvr2tn3/kxBuJQx
-1LtdUr9ARS/mo+Ru0HiyuaHv/3BN+Gi42w+H8sZFxrJlGKZs/dv0dw8bypkjw/8Y
-P6KT4Epd7eJBLEWvxWDmvoaYINzGvlH48ORiQhpOJe6l2Wt0flL3djPImlYI2qaB
-QINz+eosPS6fb7Fc2XeR4+yUhp/HpDZvrbZZGC9/xrwTWfzRGtExfS5PyxXwsrr0
-cC2A3nnHg3YBtbXSF56mpL5y7Duv6tXE2VTFI621CRqNKQLga5M=
-=8uar
------END PGP SIGNATURE-----
-
---T4sUOijqQbZv57TR--
-
---===============0068614652==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0068614652==--
+Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
