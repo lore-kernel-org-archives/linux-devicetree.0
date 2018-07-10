@@ -1,12 +1,14 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: Add DataImage, Inc. vendor prefix
-Date: Tue, 10 Jul 2018 12:40:43 +0200
-Message-ID: <20180710104043.GH1504@ulmo>
+Subject: Re: [PATCH 2/2] drm/panel: simple: Add support for DataImage
+ SCF0700C48GGU18
+Date: Tue, 10 Jul 2018 12:40:54 +0200
+Message-ID: <20180710104054.GI1504@ulmo>
 References: <1529930490-11874-1-git-send-email-michal.vokac@ysoft.com>
+ <1529930490-11874-2-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1314742989=="
+Content-Type: multipart/mixed; boundary="===============1998035329=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1529930490-11874-1-git-send-email-michal.vokac@ysoft.com>
+In-Reply-To: <1529930490-11874-2-git-send-email-michal.vokac@ysoft.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -21,52 +23,58 @@ Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-ke
 List-Id: devicetree@vger.kernel.org
 
 
---===============1314742989==
+--===============1998035329==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="CNfT9TXqV7nd4cfk"
+	protocol="application/pgp-signature"; boundary="MFZs98Tklfu0WsCO"
 Content-Disposition: inline
 
 
---CNfT9TXqV7nd4cfk
+--MFZs98Tklfu0WsCO
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 25, 2018 at 02:41:29PM +0200, Michal Vok=C3=A1=C4=8D wrote:
-> DataImage is a Taiwan-based manufacturer of LCD panels.
+On Mon, Jun 25, 2018 at 02:41:30PM +0200, Michal Vok=C3=A1=C4=8D wrote:
+> This adds support for the DataImage SCF0700C48GGU18 7.0" WVGA (800x480)
+> TFT LCD panel. The panel has 24-bit parallel interface and can be
+> supported by the simple panel driver.
 >=20
 > Signed-off-by: Michal Vok=C3=A1=C4=8D <michal.vokac@ysoft.com>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../display/panel/dataimage,scf0700c48ggu18.txt    |  8 ++++++
+>  drivers/gpu/drm/panel/panel-simple.c               | 29 ++++++++++++++++=
+++++++
+>  2 files changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/datai=
+mage,scf0700c48ggu18.txt
 
 Applied, thanks.
 
 Thierry
 
---CNfT9TXqV7nd4cfk
+--MFZs98Tklfu0WsCO
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltEjSsACgkQ3SOs138+
-s6H4lw//dKcbehB51HlHzjmDWDA+WU6I6J/Tul8lab4KTbUnEDomqqMSnFDk2QbJ
-Lg/FxidKclveZUdEPOH8whbO+QnDephWDR1lHIeMq2Oo6WDQZmu0ZcSveH+hr3s5
-6Pk24hT0LFccd93FK23vOKSdHgQwoagGm0trdndGB6jwuQvjQYhTrBbKwGBLuw+y
-axe5SYAeB2wZs60x8s+t8efXIL5FSEwDzeApAzDB5/iW5MWg0bGqzBh47sAo75p9
-YGBhvlv7vOj7f2R4d6g0K4rL2+ftOLR+rkJ4F77vMB/vHvw6zYzZz0y+C+8qN6Dr
-gFs1yErBauayV54RKX9dVAvDHVeQUjHTc5xiu4k33oX4TlJSAqgpRRqLBVnMtw5H
-pgcydp2RSEq09tcbv8XQNW1t/AFdMDl4wdlsli+8uNPUf5eN0+0viPTHRmd86W/M
-eLrxMSV7Gt3e+HkWa11/eZU7zEJ+1lLr6YqB5i1/QpH8OC/xxeLd2ppQNI777VXG
-3XficI4AGAro0ngMxaBBzp7kwpmKBsOb+3tokmQBTN81xp4T+6FMccT4/IGqzXOR
-ReI9sF1tc3CpcDK9xVJSUSJ6PORXhqkZJfxNSokKO6KqJsG81P5Hqohd/RQ9q6Wh
-xt1xJda8xJSYMRmjL/xpfGAuH8o3T93WdNIJ9cCHmOZZwGaDEA8=
-=TSH6
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltEjTYACgkQ3SOs138+
+s6HT5hAAmihXkLqsEB8gSfrSbIcFkJHceU/B0I0gnc4TPuzV/qL4St6H4mpdYOzW
+k3DYlC0O/l0Qep91UrYWc3qc8GdfYERhYMtLdGa2MFuLKl5eDPjaq1LzAMl9N73u
+TjsSAahca+VbKoAZPPKYMVaUYf+pqxmpvkDqP/0aPhQbx2qVtXZig0KsEMqmmWSt
++lt8+GlmlvTThGuJPrsP5+h9r8/gIgf89nTjqBiWkCSogDccAkJ4ueBBmufDg7l0
+d69V0hexSde6K+AXeY/0fWs1R2k0y5PV9Y0tWisWCp9gr9jWFiPz6l3AXztbCbd2
++A/a0gN0mx9BGkhTRWWuz7Rsf3q9NLBWThegaIYzx2ncMEzsEQcWF0734LZ1ckpH
+8KrAITYUDSJzygyQ5e07Wwr/lz7P4arq0BeYti/l0MG7x+1dOPdTc8TTVjfaa6Gs
+UmakjdigJa8e1goD9dlp5HnzbKXGKjVqucGutdRsEtrAY/wT1K2mH9kwXRzyjJwn
+m3XnYC7fj09O3l4G/SN9aOCZQsJu6jeBrYhU+7pgROuikVkW9njl+MjxDyt3bmBP
+7b+fqBOTm6RoilPDNyOPbbQDX3kjHsHSIwJmfddy762z0NdHMCyQN9Aj9qeRyNO5
+Vg2vK9DyB6Y7HMGUvi1M/8/qqvsylo9S1DPzm35KJV4RrUDIgRk=
+=xiZK
 -----END PGP SIGNATURE-----
 
---CNfT9TXqV7nd4cfk--
+--MFZs98Tklfu0WsCO--
 
---===============1314742989==
+--===============1998035329==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -76,4 +84,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
 IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
 dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
---===============1314742989==--
+--===============1998035329==--
