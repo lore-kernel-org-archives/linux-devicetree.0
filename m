@@ -1,84 +1,208 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v11 5/8] i2c: fsi: Add transfer implementation
-Date: Tue, 10 Jul 2018 21:39:44 +0200
-Message-ID: <20180710193944.34phe4zafzvwjm5v@ninjato>
-References: <1530816030-13010-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1530816030-13010-6-git-send-email-eajames@linux.vnet.ibm.com>
- <20180709224114.4h47enyt4tucqcou@ninjato>
- <d7128886-148f-d255-fb33-3727cad01569@linux.vnet.ibm.com>
- <20180710185042.x3slnms5wzocobqu@ninjato>
- <cda1b231-eeff-626d-5c79-a07c9bc5a9ec@linux.vnet.ibm.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Re: [PATCH 16/17] drm/sun4i: tcon-top: Remove mux
+ configuration at probe time
+Date: Tue, 10 Jul 2018 21:41:58 +0200
+Message-ID: <1819290.nadSthU6Yv@jernej-laptop>
+References: <20180706175113.26698-1-jernej.skrabec@siol.net> <CAGb2v64rjUnwnXbWxTSYJyhMyCV5QmV9YSr+Jryx3nEeMP8GJg@mail.gmail.com> <1843348.gnui32CGBV@jernej-laptop>
+Reply-To: jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="iy6h4fc4vvkdlifj"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cda1b231-eeff-626d-5c79-a07c9bc5a9ec@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.vnet.ibm.com>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, benh@kernel.crashing.org, joel@jms.id.au, mark.rutland@arm.com, gregkh@linuxfoundation.org, rdunlap@infradead.org, andy.shevchenko@gmail.com, peda@axentia.se
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDP4JJM5QYGRBCUYSTNAKGQEVURBHQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1843348.gnui32CGBV@jernej-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---iy6h4fc4vvkdlifj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> Sorry, what do you mean "show up as"? Yes, we could first shift all our
-> addresses in user-space before passing them to the driver, so that the
-> msg->addr field is exactly what the hardware expects already... This would
-> be non-trivial for our users considering all our documentation represents
-> the addresses as the top 7 bits of a byte :(
-
-Ah, now I understand the whole situation! Good that I asked. But I have
-bad news for you:
-
-msg->addr is 7 bit and LSB aligned. No way around that. This is how
-Linux I2C worked since the beginning. You have to adapt to it.
-
-I know what you mean. Most doumentation I get has the addresses in 8
-bit, i.e. 7 bit address shifted + RW bit. But sorry again, the Linux
-representation is different and all drivers have to adhere to that.
-
-An EEPROM ist at 0x50 in Linux. There is no write addr 0xa0 and read
-addr 0xa1.
-
-> > > Indeed, real 10-bit addresses require some additional manipulation of=
- this
-> > > I2C master in order to work. We don't support it right now.
-> > Then you should remove the associated FUNC flag.
+Dne torek, 10. julij 2018 ob 18:18:43 CEST je Jernej =C5=A0krabec napisal(a=
+):
+> Dne torek, 10. julij 2018 ob 18:09:26 CEST je Chen-Yu Tsai napisal(a):
+> > On Sat, Jul 7, 2018 at 1:51 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org=
+>
 >=20
-> Ah, but due to the addressing situation, tools like i2cget don't work with
-> our addresses unless the 10 bit flag is specified. For example, we may wa=
+> wrote:
+> > > Now that R40 TCON migrated to runtime mux configuration, old code can=
+ be
+> > > removed.
+> > >=20
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> > > ---
+> > >=20
+> > >  drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 81 +++---------------------=
+--
+> > >  1 file changed, 7 insertions(+), 74 deletions(-)
+> > >=20
+> > > diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > > b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c index
+> > > c09b15b64192..78795d6cb174
+> > > 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > > +++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > > @@ -87,34 +87,6 @@ int sun8i_tcon_top_de_config(struct device *dev, i=
 nt
-> to access 0xA0.
+> > > mixer, int tcon)>
+> > >=20
+> > >  }
+> > >  EXPORT_SYMBOL(sun8i_tcon_top_de_config);
+> > >=20
+> > > -static int sun8i_tcon_top_get_connected_ep_id(struct device_node *no=
+de,
+> > > -                                             int port_id)
+> > > -{
+> > > -       struct device_node *ep, *remote, *port;
+> > > -       struct of_endpoint endpoint;
+> > > -
+> > > -       port =3D of_graph_get_port_by_id(node, port_id);
+> > > -       if (!port)
+> > > -               return -ENOENT;
+> > > -
+> > > -       for_each_available_child_of_node(port, ep) {
+> > > -               remote =3D of_graph_get_remote_port_parent(ep);
+> > > -               if (!remote)
+> > > -                       continue;
+> > > -
+> > > -               if (of_device_is_available(remote)) {
+> > > -                       of_graph_parse_endpoint(ep, &endpoint);
+> > > -
+> > > -                       of_node_put(remote);
+> > > -
+> > > -                       return endpoint.id;
+> > > -               }
+> > > -
+> > > -               of_node_put(remote);
+> > > -       }
+> > > -
+> > > -       return -ENOENT;
+> > > -}
+> > >=20
+> > >  static struct clk_hw *sun8i_tcon_top_register_gate(struct device *de=
+v,
+> > > =20
+> > >                                                    const char *parent=
+,
+> > >=20
+> > > @@ -149,11 +121,9 @@ static int sun8i_tcon_top_bind(struct device *de=
+v,
+> > > struct device *master,>
+> > >=20
+> > >         struct platform_device *pdev =3D to_platform_device(dev);
+> > >         struct clk_hw_onecell_data *clk_data;
+> > >         struct sun8i_tcon_top *tcon_top;
+> > >=20
+> > > -       bool mixer0_unused =3D false;
+> > >=20
+> > >         struct resource *res;
+> > >         void __iomem *regs;
+> > >=20
+> > > -       int ret, i, id;
+> > > -       u32 val;
+> > > +       int ret, i;
+> > >=20
+> > >         tcon_top =3D devm_kzalloc(dev, sizeof(*tcon_top), GFP_KERNEL)=
+;
+> > >         if (!tcon_top)
+> > >=20
+> > > @@ -198,49 +168,12 @@ static int sun8i_tcon_top_bind(struct device *d=
+ev,
+> > > struct device *master,>
+> > >=20
+> > >                 goto err_assert_reset;
+> > >        =20
+> > >         }
+> > >=20
+> > > -       val =3D 0;
+> > > -
+> > > -       /* check if HDMI mux output is connected */
+> > > -       if (sun8i_tcon_top_get_connected_ep_id(dev->of_node, 5) >=3D =
+0) {
+> > > -               /* find HDMI input endpoint id, if it is connected at
+> > > all*/
+> > > -               id =3D sun8i_tcon_top_get_connected_ep_id(dev->of_nod=
+e,
+> > > 4);
+> > > -               if (id >=3D 0)
+> > > -                       val =3D FIELD_PREP(TCON_TOP_HDMI_SRC_MSK, id =
++ 1);
+> > > -               else
+> > > -                       DRM_DEBUG_DRIVER("TCON TOP HDMI input is not
+> > > connected\n"); -       } else {
+> > > -               DRM_DEBUG_DRIVER("TCON TOP HDMI output is not
+> > > connected\n"); -       }
+> > > -
+> > > -       writel(val, regs + TCON_TOP_GATE_SRC_REG);
+> > > -
+> > > -       val =3D 0;
+> > > -
+> > > -       /* process mixer0 mux output */
+> > > -       id =3D sun8i_tcon_top_get_connected_ep_id(dev->of_node, 1);
+> > > -       if (id >=3D 0) {
+> > > -               val =3D FIELD_PREP(TCON_TOP_PORT_DE0_MSK, id);
+> > > -       } else {
+> > > -               DRM_DEBUG_DRIVER("TCON TOP mixer0 output is not
+> > > connected\n"); -               mixer0_unused =3D true;
+> > > -       }
+> > > -
+> > > -       /* process mixer1 mux output */
+> > > -       id =3D sun8i_tcon_top_get_connected_ep_id(dev->of_node, 3);
+> > > -       if (id >=3D 0) {
+> > > -               val |=3D FIELD_PREP(TCON_TOP_PORT_DE1_MSK, id);
+> > > -
+> > > -               /*
+> > > -                * mixer0 mux has priority over mixer1 mux. We have t=
+o
+> > > -                * make sure mixer0 doesn't overtake TCON from mixer1=
+.
+> > > -                */
+> > > -               if (mixer0_unused && id =3D=3D 0)
+> > > -                       val |=3D FIELD_PREP(TCON_TOP_PORT_DE0_MSK, 1)=
+;
+> > > -       } else {
+> > > -               DRM_DEBUG_DRIVER("TCON TOP mixer1 output is not
+> > > connected\n"); -       }
+> > > -
+> > > -       writel(val, regs + TCON_TOP_PORT_SEL_REG);
+> > > +       /*
+> > > +        * Default register values might have some reserved bits set,
+> > > which
+> > > +        * prevents TCON TOP from working properly. Set them to 0 her=
+e.
+> > > +        */
+> > > +       writel(0, regs + TCON_TOP_GATE_SRC_REG);
+> > > +       writel(0, regs + TCON_TOP_PORT_SEL_REG);
+> >=20
+> > Would it make sense to just force a reset using the reset control?
+>=20
+> I wrote TCON TOP driver for H6 at first. For some reason, some registers =
+had
+> reserved bits set after reset line was released. TCON TOP was not used in
+> U- Boot, so I guess this counts as full reset.
+>=20
+> I never tried to find out how it behaves on R40 because setting those
+> registers to 0 seems like simple, good enough solution, which works
+> everywhere.
 
-This is a kinda dirty workaround to the above problem. It is even wrong
-because 10-bit addresses look totally different on the wire.
+It seems those bits are not needed for R40. I'll leave them out for now. TC=
+ON=20
+TOP will need some adjustments for H6 anyway and I'll take a look at that=
+=20
+then.
+=20
+Best regards,
+Jernej
 
-Sorry for the hazzle with the docs, but there is no way around that.
 
 
---iy6h4fc4vvkdlifj
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAltFC3wACgkQFA3kzBSg
-KbYUlw/+P+yaoYck29Vb1xu2t8LvZhr4HGDJlnjCyGMHy93cragQfDf/Wh6Q3tcX
-moehkb/k7Bgv2UnqAp4oYyNklMVZzfeoCbQAfBHN+qIcIh6G6T4Aqle0AtboucrU
-2UecWaKFClaqIuEihXfCWbVAFlmliLMTfGdqDXlycPbNVYOXcdQ5a3tfmq1QUcLV
-UfzoXlvtXLr9YcWjgYGNHStOQjRmpt5RonjsmueoHKUQd0GF5HyqpDrxTsYRsCEs
-CMgB+M7fsuh/OwW00H59NYXlMXcnmSiM2mzD3KOOs8VNYDw13Af1//XZWSZnpdud
-rZ5sEd+OvT4SvNFIyDE+9n0a1AYcup4SCLQVDfn4g3bLpp0lgix+vnI4Rz9o57DD
-favWSvG0VTPkEkuYQGeDT1Mv0Yuld9/ZEzAkOj1pL7lG0iOfEvvXWssAhoa/eoA6
-eIKYFSPbI7PZXtW5Hg9eOCy/oBKaFcVnn1VMtqIjDQIy/xcoELCyI1eJi0IjMnkp
-hwXJcc7l8vvLt2IgG+8gZpLGYhPAdDZFvvQagF/xwmMyKNNqook47uS8uEuRd1Zt
-TeuxGE8qg+a6mMQl6YZKIwfbujByjghNLDYL0kirHzVbVb04XAUxT5gJTD1gt2F5
-1gFtGPOLQhT2m/8sHRcGK759DUGnT0BtKh+EKDq8Qx1lORuHk0U=
-=w5AV
------END PGP SIGNATURE-----
-
---iy6h4fc4vvkdlifj--
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
