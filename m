@@ -1,45 +1,37 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v11 5/8] i2c: fsi: Add transfer implementation
-Date: Wed, 11 Jul 2018 09:39:15 +1000
-Message-ID: <f3085f807e19d9c5d36ef9cded2b3ee59e560899.camel@kernel.crashing.org>
-References: <1530816030-13010-1-git-send-email-eajames@linux.vnet.ibm.com>
-         <1530816030-13010-6-git-send-email-eajames@linux.vnet.ibm.com>
-         <20180709224114.4h47enyt4tucqcou@ninjato>
-         <d7128886-148f-d255-fb33-3727cad01569@linux.vnet.ibm.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v3 3/6] dt: bindings: add bindings for msa memory region
+Date: Tue, 10 Jul 2018 16:44:41 -0700
+Message-ID: <20180710234440.GB40352@ban.mtv.corp.google.com>
+References: <20180706090043.28363-1-govinds@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d7128886-148f-d255-fb33-3727cad01569@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.vnet.ibm.com>, Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, joel@jms.id.au, mark.rutland@arm.com, gregkh@linuxfoundation.org, rdunlap@infradead.org, andy.shevchenko@gmail.com, peda@axentia.se
+Return-path: <ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180706090043.28363-1-govinds@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/ath10k>,
+ <mailto:ath10k-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/ath10k/>
+List-Post: <mailto:ath10k@lists.infradead.org>
+List-Help: <mailto:ath10k-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/ath10k>,
+ <mailto:ath10k-request@lists.infradead.org?subject=subscribe>
+Sender: "ath10k" <ath10k-bounces@lists.infradead.org>
+Errors-To: ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org
+To: Govind Singh <govinds@codeaurora.org>
+Cc: devicetree@vger.kernel.org, niklas.cassel@linaro.org, linux-wireless@vger.kernel.org, ath10k@lists.infradead.org, bjorn.andersson@linaro.org, david.brown@linaro.org, andy.gross@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-07-10 at 12:52 -0500, Eddie James wrote:
-> 
-> On 07/09/2018 05:41 PM, Wolfram Sang wrote:
-> > > +	cmd |= FIELD_PREP(I2C_CMD_ADDR, msg->addr >> 1);
-> > 
-> > I just noticed this and wonder: Don't you need the LSB of the address?
-> > It is not the RW flag, this is encoded in msg->flags.
-> 
-> So, the hardware interprets the LSB as the RW flag. It wouldn't be 
-> possible to have a device addressed with the LSB set on this I2C master.
+On Fri, Jul 06, 2018 at 02:30:43PM +0530, Govind Singh wrote:
+[snip]
 
-What do you mean ? That doesn't sound right... 
-> 
-> > 
-> > Also, no seperate handling for 10 bit addresses? Technically, 7-bit 0x50
-> > is different on the wire from 10-bit 0x050. This is minor, though. There
-> > are no 10-bit devices out there. Still, did you test 10-bit support?
-> 
-> Indeed, real 10-bit addresses require some additional manipulation of 
-> this I2C master in order to work. We don't support it right now.
-> 
-> Thanks,
-> Eddie
-> 
-> > 
-> > Rest looks good.
-> > 
+You still don't quite have the threading right on this series. All the
+other patches seem OK -- they have this in the header, which links them
+to the cover letter:
+
+In-Reply-To: <20180706085622.27945-1-govinds@codeaurora.org>
+References: <20180706085622.27945-1-govinds@codeaurora.org>
+
+But you seem to have missed that on this one patch for some reason.
+
+Brian
