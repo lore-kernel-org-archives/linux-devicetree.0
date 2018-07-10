@@ -1,35 +1,55 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: [PATCH 0/3] Finish Armada DRM DT support
-Date: Tue, 10 Jul 2018 11:23:44 +0100
-Message-ID: <20180710102344.GH17271@n2100.armlinux.org.uk>
+From: Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: [PATCH 3/3] ARM: dts: cubox: add LCD controller and TDA998x
+ configuration
+Date: Tue, 10 Jul 2018 11:24:24 +0100
+Message-ID: <E1fcpom-0003ZI-FL@rmk-PC.armlinux.org.uk>
+References: <20180710102344.GH17271@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180710102344.GH17271@n2100.armlinux.org.uk>
 Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, David Airlie <airlied@linux.ie>, Gregory Clement <gregory.clement@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Gregory Clement <gregory.clement@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Finish Armada DRM support for DT, finally allowing mainline kernels to
-use this driver unimpeded.
-
- arch/arm/boot/dts/dove-cubox.dts     | 43 +++++++++++++++++++++++++++++++
- drivers/gpu/drm/armada/Makefile      |  3 +++
- drivers/gpu/drm/armada/armada_drv.c  | 29 ++++++++++++++++++---
- drivers/gpu/drm/armada/armada_rmem.c | 49 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 121 insertions(+), 3 deletions(-)
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps up
-According to speedtest.net: 13Mbps down 490kbps up
+QWRkIERUIGNvbmZpZ3VyYXRpb24gZm9yIHRoZSBIRE1JIGRpc3BsYXkgb3V0cHV0IG9uIHRoZSBE
+b3ZlIEN1Ym94LgpUaGlzIGFkZHMgc3VwcG9ydCBmb3IgdGhlIExDRDAgY29udHJvbGxlciB3aGlj
+aCBpcyBjb25uZWN0ZWQgdG8gYQpUREExOTk4OCBIRE1JIGVuY29kZXIuCgpTaWduZWQtb2ZmLWJ5
+OiBSdXNzZWxsIEtpbmcgPHJtaytrZXJuZWxAYXJtLmxpbnV4Lm9yZy51az4KLS0tCiBhcmNoL2Fy
+bS9ib290L2R0cy9kb3ZlLWN1Ym94LmR0cyB8IDQzICsrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA0MyBpbnNlcnRpb25zKCspCgpkaWZmIC0t
+Z2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZG92ZS1jdWJveC5kdHMgYi9hcmNoL2FybS9ib290L2R0
+cy9kb3ZlLWN1Ym94LmR0cwppbmRleCA1ODBlM2NiY2ZiZjcuLmY2ZGQ1NmY2M2QwOSAxMDA2NDQK
+LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZG92ZS1jdWJveC5kdHMKKysrIGIvYXJjaC9hcm0vYm9v
+dC9kdHMvZG92ZS1jdWJveC5kdHMKQEAgLTY3LDYgKzY3LDI1IEBACiAJZ3B1LXN1YnN5c3RlbSB7
+CiAJCXN0YXR1cyA9ICJva2F5IjsKIAl9OworCisJcmVzZXJ2ZWQtbWVtb3J5IHsKKwkJI2FkZHJl
+c3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0gPDE+OworCQlyYW5nZXM7CisKKwkJZGlz
+cGxheV9yZXNlcnZlZDogZnJhbWVidWZmZXIgeworCQkJY29tcGF0aWJsZSA9ICJtYXJ2ZWxsLGRv
+dmUtZnJhbWVidWZmZXIiOworCQkJc2l6ZSA9IDwweDAyMDAwMDAwPjsKKwkJCWFsaWdubWVudCA9
+IDwweDAyMDAwMDAwPjsKKwkJCW5vLW1hcDsKKwkJfTsKKwl9OworCisJZGlzcGxheS1zdWJzeXN0
+ZW0geworCQljb21wYXRpYmxlID0gIm1hcnZlbGwsZG92ZS1kaXNwbGF5LXN1YnN5c3RlbSI7CisJ
+CW1lbW9yeS1yZWdpb24gPSA8JmRpc3BsYXlfcmVzZXJ2ZWQ+OworCQlwb3J0cyA9IDwmbGNkMF9w
+b3J0PjsKKwl9OwogfTsKIAogJnVhcnQwIHsgc3RhdHVzID0gIm9rYXkiOyB9OwpAQCAtMTE3LDYg
+KzEzNiwzMCBAQAogCQkJc2lsYWJzLHBsbC1tYXN0ZXI7CiAJCX07CiAJfTsKKworCXRkYTk5OHg6
+IGhkbWktZW5jb2RlciB7CisJCWNvbXBhdGlibGUgPSAibnhwLHRkYTk5OHgiOworCQlyZWcgPSA8
+MHg3MD47CisJCXZpZGVvLXBvcnRzID0gPDB4MjM0NTAxPjsKKwkJaW50ZXJydXB0cy1leHRlbmRl
+ZCA9IDwmZ3BpbzAgMjcgSVJRX1RZUEVfTEVWRUxfTE9XPjsKKworCQlwb3J0IHsKKwkJCXRkYTk5
+OHhfdmlkZW86IGVuZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmxjZDBfcmdiPjsK
+KwkJCX07CisJCX07CisJfTsKK307CisKKyZsY2QwIHsKKwlzdGF0dXMgPSAib2theSI7CisJY2xv
+Y2tzID0gPCZzaTUzNTEgMD47CisJY2xvY2stbmFtZXMgPSAiZXh0X3JlZl9jbGsxIjsKKwlsY2Qw
+X3BvcnQ6IHBvcnQgeworCQlsY2QwX3JnYjogZW5kcG9pbnQgeworCQkJcmVtb3RlLWVuZHBvaW50
+ID0gPCZ0ZGE5OTh4X3ZpZGVvPjsKKwkJfTsKKwl9OwogfTsKIAogJnNkaW8wIHsKLS0gCjIuNy40
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
