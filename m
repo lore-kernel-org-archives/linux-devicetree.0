@@ -1,87 +1,117 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 2/2] drm/panel: simple: Add support for DataImage
- SCF0700C48GGU18
-Date: Tue, 10 Jul 2018 12:40:54 +0200
-Message-ID: <20180710104054.GI1504@ulmo>
-References: <1529930490-11874-1-git-send-email-michal.vokac@ysoft.com>
- <1529930490-11874-2-git-send-email-michal.vokac@ysoft.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v4 1/1] arm64: dts: mediatek: add mt6765 support
+Date: Tue, 10 Jul 2018 12:52:32 +0200
+Message-ID: <7a3becb3-510b-5763-5b66-5e14ebf7c974@gmail.com>
+References: <1531116302-29921-1-git-send-email-mars.cheng@mediatek.com>
+ <1531116302-29921-2-git-send-email-mars.cheng@mediatek.com>
+ <7fb13f45-4e33-6efc-467b-c7256a40cbc9@gmail.com>
+ <d439eb7d-6365-7a0a-2969-1ddecc51defc@arm.com>
+ <1531177443.7777.18.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1998035329=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1529930490-11874-2-git-send-email-michal.vokac@ysoft.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1531177443.7777.18.camel@mtkswgap22>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mars Cheng <mars.cheng@mediatek.com>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============1998035329==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MFZs98Tklfu0WsCO"
-Content-Disposition: inline
 
+On 10/07/18 01:04, Mars Cheng wrote:
+> Hi Matthias/Marc
+> 
+> On Mon, 2018-07-09 at 17:43 +0100, Marc Zyngier wrote:
+>> On 09/07/18 11:20, Matthias Brugger wrote:
+>>>
+>>>
+>>> On 09/07/18 08:05, Mars Cheng wrote:
+>>>> This adds basic chip support for MT6765 SoC.
+>>>>
+>>>> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+>>>> ---
+>>>>  arch/arm64/boot/dts/mediatek/Makefile       |    1 +
+>>>>  arch/arm64/boot/dts/mediatek/mt6765-evb.dts |   33 ++++++
+>>>>  arch/arm64/boot/dts/mediatek/mt6765.dtsi    |  156 +++++++++++++++++++++++++++
+>>>>  3 files changed, 190 insertions(+)
+>>>>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6765-evb.dts
+>>>>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6765.dtsi
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+>>>> index ac17f60..7506b0d 100644
+>>>> --- a/arch/arm64/boot/dts/mediatek/Makefile
+>>>> +++ b/arch/arm64/boot/dts/mediatek/Makefile
+>>>> @@ -1,6 +1,7 @@
+>>>>  # SPDX-License-Identifier: GPL-2.0
+>>>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
+>>>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
+>>>> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6765-evb.dtb
+>>>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
+>>>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
+>>>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
+>>>
+>>> As you can see, we have a long list of SoCs which are poorly supported.
+>>> I'm not very keen to just add another SoC which supports booting into a ramdisk
+>>> using the serial console. Do you have a roadmap adding mainline support for this
+>>> SoC?
+>>
+>> Yes, that's a valid concern.
+>>
+>> mt6755 and mt6795 are in a similar state, the latter after three years.
+>> I'm all for supporting new SoCs, but this feels looks a box-ticking
+>> exercise ("hey, look, our SoC is supported in mainline") which doesn't
+>> help anyone.
+>>
+>> My Ack still stands, but I'd definitely like to see some more complete
+>> support before this patch goes in.
+>>
+>> Thanks,
+>>
+>> 	M.
+> 
+> Yes, we do arrange more resources to do upstream task for mt6765,
+> clk/pinctrl drivers are almost ready to submit. systimer is under
+> reviewing (v9).
+> http://lists.infradead.org/pipermail/linux-mediatek/2018-July/013989.html
+> 
+> other drivers including
+> pmic/pwrap/i2c/rtc/kpd/spi/wdt/cqdma/auxadc/pwm/cmdq/disp. We have
+> dedicated owners to handle them and will cowork tightly with members to
+> make sure things happen in the following weeks.
+> 
 
---MFZs98Tklfu0WsCO
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok, so let's wait until pinctrl driver is submitted. I'd prefer if you could add
+the clk driver to this series. This way we can get rid of the dummy clocks in
+the device tree.
 
-On Mon, Jun 25, 2018 at 02:41:30PM +0200, Michal Vok=C3=A1=C4=8D wrote:
-> This adds support for the DataImage SCF0700C48GGU18 7.0" WVGA (800x480)
-> TFT LCD panel. The panel has 24-bit parallel interface and can be
-> supported by the simple panel driver.
->=20
-> Signed-off-by: Michal Vok=C3=A1=C4=8D <michal.vokac@ysoft.com>
-> ---
->  .../display/panel/dataimage,scf0700c48ggu18.txt    |  8 ++++++
->  drivers/gpu/drm/panel/panel-simple.c               | 29 ++++++++++++++++=
-++++++
->  2 files changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/datai=
-mage,scf0700c48ggu18.txt
+> For previous chips, we did have no enough support after shell. It is due
+> to fast pace of smartphone SoC and other resource issues. We also know
+> that is no excuse so that we already confirmed owners and their
+> schedules for mt6765.
+> 
+> If there is any suggestion, please let us know.
+> 
 
-Applied, thanks.
+I know that smartphone SoC is a fast paced business. Never the less I'm
+convinced that the basic building blocks won't change much from one version to
+another. And that mainline support for the previous version of your SoC will
+help you to get your new drivers faster upstream.
 
-Thierry
+For me the best example is the mt7622 which got to a reasonable upstream support
+quite fast, thanks to a good foundation of mt7623 in mainline. I'd love to see
+that happen on the smartphone SoCs as well.
 
---MFZs98Tklfu0WsCO
-Content-Type: application/pgp-signature; name="signature.asc"
+Not to mention that upstream support will help you internally when you have to
+rebase your BSP code-base to a new kernel version.
 
------BEGIN PGP SIGNATURE-----
+That said I think it is good news that you have already defined owner for the
+different devices and hope to see submissions for them in the near future :)
+As a suggestion I would say that upstream submission takes time and effort and
+it will help your engineers if they can allocate some time to do so. But that's
+most probably a management decision and all engineers know that management bases
+it's decision on some hard-to-understandable abbreviations like EBITDA etc. ;)
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltEjTYACgkQ3SOs138+
-s6HT5hAAmihXkLqsEB8gSfrSbIcFkJHceU/B0I0gnc4TPuzV/qL4St6H4mpdYOzW
-k3DYlC0O/l0Qep91UrYWc3qc8GdfYERhYMtLdGa2MFuLKl5eDPjaq1LzAMl9N73u
-TjsSAahca+VbKoAZPPKYMVaUYf+pqxmpvkDqP/0aPhQbx2qVtXZig0KsEMqmmWSt
-+lt8+GlmlvTThGuJPrsP5+h9r8/gIgf89nTjqBiWkCSogDccAkJ4ueBBmufDg7l0
-d69V0hexSde6K+AXeY/0fWs1R2k0y5PV9Y0tWisWCp9gr9jWFiPz6l3AXztbCbd2
-+A/a0gN0mx9BGkhTRWWuz7Rsf3q9NLBWThegaIYzx2ncMEzsEQcWF0734LZ1ckpH
-8KrAITYUDSJzygyQ5e07Wwr/lz7P4arq0BeYti/l0MG7x+1dOPdTc8TTVjfaa6Gs
-UmakjdigJa8e1goD9dlp5HnzbKXGKjVqucGutdRsEtrAY/wT1K2mH9kwXRzyjJwn
-m3XnYC7fj09O3l4G/SN9aOCZQsJu6jeBrYhU+7pgROuikVkW9njl+MjxDyt3bmBP
-7b+fqBOTm6RoilPDNyOPbbQDX3kjHsHSIwJmfddy762z0NdHMCyQN9Aj9qeRyNO5
-Vg2vK9DyB6Y7HMGUvi1M/8/qqvsylo9S1DPzm35KJV4RrUDIgRk=
-=xiZK
------END PGP SIGNATURE-----
-
---MFZs98Tklfu0WsCO--
-
---===============1998035329==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1998035329==--
+Best regards,
+Matthias
