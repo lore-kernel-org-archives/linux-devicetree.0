@@ -1,68 +1,46 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: Re: [PATCH 0/3] pinctrl: meson-g12a: add pinctrl driver support
-Date: Tue, 10 Jul 2018 17:19:32 +0800
-Message-ID: <eafc9b41-597e-fa0f-5e30-95ce0b75f6fd@amlogic.com>
-References: <20180704224511.29350-1-yixun.lan@amlogic.com>
- <CACRpkdauMRnLpfiARG-BWkuJfArri68e9BYx56SCUxJaYWsYYA@mail.gmail.com>
- <CAFBinCAVSGTWFzW6nikbnC+K9n5KRYjun9bnEp7YsKbGRHJorg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v5 20/22] ARM: dts: sun7i-a20: Add Video
+ Engine and reserved memory nodes
+Date: Tue, 10 Jul 2018 11:23:10 +0200
+Message-ID: <20180710092310.2hzoc7shmfykr3n5@flea>
+References: <20180710080114.31469-1-paul.kocialkowski@bootlin.com>
+ <20180710080114.31469-21-paul.kocialkowski@bootlin.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCAVSGTWFzW6nikbnC+K9n5KRYjun9bnEp7YsKbGRHJorg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linus.walleij@linaro.org
-Cc: yixun.lan@amlogic.com, carlo@caione.org, b.galvani@gmail.com, linux-gpio@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, jbrunet@baylibre.com, khilman@baylibre.com, robh@kernel.org, xingyu.chen@amlogic.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mu7kkrbfxwnu6dth"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBCPWSHNAKGQEBNGCL7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180710080114.31469-21-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Keiichi Watanabe <keiichiw-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tom Saeger <tom.saeger-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Jaco
 List-Id: devicetree@vger.kernel.org
 
-HI Martin
 
-On 07/10/18 06:07, Martin Blumenstingl wrote:
-> Hi Linus,
-> 
-> On Mon, Jul 9, 2018 at 3:35 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->>
->> On Wed, Jul 4, 2018 at 4:48 PM Yixun Lan <yixun.lan@amlogic.com> wrote:
->>>
->>> This patch series try to add pinctrl driver support for
->>> the Meson-G12A SoC.
->>>
->>>
->>> Yixun Lan (3):
->>>   documentation: Add compatibles for Amlogic Meson G12A pin controllers
->>>   dt-bindings: pinctrl: meson-g12a: document pin name
->>>   pinctrl: meson-g12a: add pinctrl driver support
->>
->> Overall this looks good to me, could we get some review or ACKs
->> from Beniamino, Martin and/or Carlo as an indication that everything
->> seems all right before I apply the series?
-> I do not have any documentation for this hardware (I'm not even sure
-> if this is the successor to AXG/"the Audio SoCs" or rather a successor
-> of GXL or GXM/"the OTT/STB SoCs" - I assume it's their new OTT/STB
-> SoCs since G12A is mentioned here and it seems to have a GPU: [0])
-> 
-yes, it's more like a new generation of OTT/STB SoCs..
+--mu7kkrbfxwnu6dth
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-> I will try to have a look in the next few days and see if I can spot
-> anything obvious
+On Tue, Jul 10, 2018 at 10:01:12AM +0200, Paul Kocialkowski wrote:
+> +		vpu: video-codec@1c0e000 {
+> +			compatible = "allwinner,sun7i-a20-video-engine";
+> +			reg = <0x01c0e000 0x1000>;
+> +
 
-generally the pinctrl IP hasn't changed, so only pinctrl data need to be
-updated (the pin mux IP is same as AXG SoC which already explain in
-another thread).
+The issue is here with all your patches, but you should drop the node
+label and the extra new line.
 
-> not sure if Neil or Kevin have access to the documentation, so it'd be
-> great if they could give feedback as well
-> 
-we are preparing documention to baylibre guys..
+Maxime
 
-I think there is not many boards available in the public?
-
-> 
-> Regards
-> Martin
-> 
-> 
-> [0] http://openlinux.amlogic.com:8000/download/doc/Linux_BSP_Kernel4.9_Buildroot_OpenLinux_Release_Notes_V20180330.pdf
-> 
-> .
-> 
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--mu7kkrbfxwnu6dth--
