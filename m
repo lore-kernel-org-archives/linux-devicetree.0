@@ -1,31 +1,140 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 17/17] dt-bindings: display: sun4i-drm: Fix
- order of DW HDMI PHY compatibles
-Date: Wed, 11 Jul 2018 00:09:47 +0800
-Message-ID: <CAGb2v65x3CBw009gFTH-DmAFjfX_xSbSzOXLWbkyJU1PQ1yD+g@mail.gmail.com>
-References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-18-jernej.skrabec@siol.net>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Fabio Estevam <fabio.estevam@nxp.com>
+Subject: [PATCH v3 6/6] ARM: mx5: Set the DBGEN bit in ARM_GPC register
+Date: Tue, 10 Jul 2018 13:08:47 -0300
+Message-ID: <1531238927-19579-6-git-send-email-fabio.estevam@nxp.com>
+References: <1531238927-19579-1-git-send-email-fabio.estevam@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBYNUSPNAKGQE5JJ3PRY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180706175113.26698-18-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1531238927-19579-1-git-send-email-fabio.estevam@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, robh+dt@kernel.org, kernel@pengutronix.de, sebastian.reichel@collabora.co.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 7, 2018 at 1:51 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> They are currently sorted alphabetically. However, they should be sorted
-> by release date of the family and then alphabetically.
->
-> Fixes: 03c35dbf73e0 ("dt-bindings: display: sun4i-drm: Add description of A64 HDMI PHY")
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+On i.MX51/i.MX53 it is necessary to set the DBGEN bit in 
+ARM_GPC register in order to turn on the debug clocks.
 
-Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+The DBGEN bit of ARM_GPC register has the following description
+in the i.MX53 Reference Manual:
+
+"This allows the user to manually activate clocks within the debug
+system. This register bit directly controls the platform's dbgen_out
+output signal which connects to the DAP_SYS to enable all debug clocks.
+Once enabled, the clocks cannot be disabled except by asserting the
+disable_trace input of the DAP_SYS."
+
+Based on a previous patch from Sebastian Reichel.
+
+Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+---
+Changes since v2:
+- Also check for "secure-reg-access" presence (Sebastian)
+- Call of_node_put() (Sebastian)
+
+ arch/arm/mach-imx/common.h     |  1 +
+ arch/arm/mach-imx/cpu-imx5.c   | 43 ++++++++++++++++++++++++++++++++++++++++++
+ arch/arm/mach-imx/mach-imx51.c |  2 +-
+ arch/arm/mach-imx/mach-imx53.c |  2 +-
+ 4 files changed, 46 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
+index 93225db7..423dd76 100644
+--- a/arch/arm/mach-imx/common.h
++++ b/arch/arm/mach-imx/common.h
+@@ -62,6 +62,7 @@ void imx_gpc_set_arm_power_up_timing(u32 sw2iso, u32 sw);
+ void imx_gpc_set_arm_power_down_timing(u32 sw2iso, u32 sw);
+ void imx25_pm_init(void);
+ void imx27_pm_init(void);
++void imx5_pmu_init(void);
+ 
+ enum mxc_cpu_pwr_mode {
+ 	WAIT_CLOCKED,		/* wfi only */
+diff --git a/arch/arm/mach-imx/cpu-imx5.c b/arch/arm/mach-imx/cpu-imx5.c
+index 4f2d1c7..bba6e9b 100644
+--- a/arch/arm/mach-imx/cpu-imx5.c
++++ b/arch/arm/mach-imx/cpu-imx5.c
+@@ -117,3 +117,46 @@ int mx53_revision(void)
+ 	return mx5_cpu_rev;
+ }
+ EXPORT_SYMBOL(mx53_revision);
++
++#define ARM_GPC		0x4
++#define DBGEN		BIT(16)
++
++/*
++ * This enables the DBGEN bit in ARM_GPC register, which is
++ * required for accessing some performance counter features.
++ * Technically it is only required while perf is used, but to
++ * keep the source code simple we just enable it all the time
++ * when the kernel configuration allows using the feature.
++ */
++void __init imx5_pmu_init(void)
++{
++	void __iomem *tigerp_base;
++	struct device_node *np;
++	u32 gpc;
++
++	if (!IS_ENABLED(CONFIG_ARM_PMU))
++		return;
++
++	np = of_find_compatible_node(NULL, NULL, "arm,cortex-a8-pmu");
++	if (!np)
++		return;
++
++	if (!of_property_read_bool(np, "secure-reg-access"))
++		goto exit;
++
++	np = of_find_compatible_node(NULL, NULL, "fsl,imx51-tigerp");
++	if (!np)
++		goto exit;
++
++	tigerp_base = of_iomap(np, 0);
++	if (!tigerp_base)
++		goto exit;
++
++	gpc = readl_relaxed(tigerp_base + ARM_GPC);
++	gpc |= DBGEN;
++	writel_relaxed(gpc, tigerp_base + ARM_GPC);
++	iounmap(tigerp_base);
++exit:
++	of_node_put(np);
++
++}
+diff --git a/arch/arm/mach-imx/mach-imx51.c b/arch/arm/mach-imx/mach-imx51.c
+index 3835b6a..8838fba 100644
+--- a/arch/arm/mach-imx/mach-imx51.c
++++ b/arch/arm/mach-imx/mach-imx51.c
+@@ -52,7 +52,7 @@ static void __init imx51_dt_init(void)
+ {
+ 	imx51_ipu_mipi_setup();
+ 	imx_src_init();
+-
++	imx5_pmu_init();
+ 	imx_aips_allow_unprivileged_access("fsl,imx51-aipstz");
+ }
+ 
+diff --git a/arch/arm/mach-imx/mach-imx53.c b/arch/arm/mach-imx/mach-imx53.c
+index 07c2e8d..5ec7100 100644
+--- a/arch/arm/mach-imx/mach-imx53.c
++++ b/arch/arm/mach-imx/mach-imx53.c
+@@ -31,7 +31,7 @@ static void __init imx53_init_early(void)
+ static void __init imx53_dt_init(void)
+ {
+ 	imx_src_init();
+-
++	imx5_pmu_init();
+ 	imx_aips_allow_unprivileged_access("fsl,imx53-aipstz");
+ }
+ 
+-- 
+2.7.4
