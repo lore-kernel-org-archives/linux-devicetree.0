@@ -1,45 +1,36 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH 2/2] dt-bindings: arm: mediatek: cleanup MT7623N
- reference boards
-Date: Tue, 10 Jul 2018 14:38:31 +0800
-Message-ID: <1531204711.26214.1.camel@mtkswgap22>
-References: <34e4c13bd1deeb8e090a74b4e7e9192512b3eff0.1531199139.git.ryder.lee@mediatek.com>
-         <99c1fce76e7ec4984c232bc0bdbd0fadbb86b0dc.1531199139.git.ryder.lee@mediatek.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH 2/2] arm64: dts: mt7622: update a clock property for UART0
+Date: Tue, 10 Jul 2018 15:55:48 +0800
+Message-ID: <b96deaa9f54a0ae3f62ec30d858be7abd1ed873f.1531209126.git.ryder.lee@mediatek.com>
+References: <2ff39c40ef6bc3054667e63c785a1d28527b5ddf.1531209126.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <99c1fce76e7ec4984c232bc0bdbd0fadbb86b0dc.1531199139.git.ryder.lee@mediatek.com>
+In-Reply-To: <2ff39c40ef6bc3054667e63c785a1d28527b5ddf.1531209126.git.ryder.lee@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, John Crispin <john@phrozen.org>
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-07-10 at 13:09 +0800, Ryder Lee wrote:
-> Cleanup binding document to get rid of unsupported reference boards
-> for MT7623N.
-> 
-> Cc: John Crispin <john@phrozen.org>
-> Cc: Sean Wang <sean.wang@mediatek.com>
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/arm/mediatek.txt | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
-> index 7d21ab3..c07ddf4 100644
-> --- a/Documentation/devicetree/bindings/arm/mediatek.txt
-> +++ b/Documentation/devicetree/bindings/arm/mediatek.txt
-> @@ -59,9 +59,6 @@ Supported boards:
->  - Reference board for MT7623n with eMMC:
->      Required root node properties:
->        - compatible = "mediatek,mt7623n-rfb-emmc", "mediatek,mt7623";
-> -- Reference  board for MT7623n with NAND:
-> -    Required root node properties:
-> -      - compatible = "mediatek,mt7623n-rfb-nand", "mediatek,mt7623";
+The input clock of UART0 should be CLK_PERI_UART0_PD.
 
-Acked-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->  - Bananapi BPI-R2 board:
->        - compatible = "bananapi,bpi-r2", "mediatek,mt7623";
->  - MTK mt8127 tablet moose EVB:
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+index 8cdec52..4caa9b4 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+@@ -367,7 +367,7 @@
+ 		reg = <0 0x11002000 0 0x400>;
+ 		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
+ 		clocks = <&topckgen CLK_TOP_UART_SEL>,
+-			 <&pericfg CLK_PERI_UART1_PD>;
++			 <&pericfg CLK_PERI_UART0_PD>;
+ 		clock-names = "baud", "bus";
+ 		status = "disabled";
+ 	};
+-- 
+1.9.1
