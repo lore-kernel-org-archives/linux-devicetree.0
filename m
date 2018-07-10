@@ -1,15 +1,15 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 14/17] ARM: dts: sun8i: r40: Add missing
- TCON-TOP - TCON connections
-Date: Tue, 10 Jul 2018 23:53:55 +0800
-Message-ID: <CAGb2v6442VWvuWnK1JCnxNqwRhp6pS+tVZkaRfs6xjYYxTRwfw@mail.gmail.com>
-References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-15-jernej.skrabec@siol.net>
+Subject: Re: [PATCH 10/17] drm/sun4i: tcon-top: Add helpers for
+ switching mux
+Date: Tue, 10 Jul 2018 23:56:27 +0800
+Message-ID: <CAGb2v65TTC_JmcrAvd0fYDuMs4H+MwvqrL+LUfGpp_zY+qsavQ@mail.gmail.com>
+References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-11-jernej.skrabec@siol.net>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBK5NSPNAKGQECVJGDKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBQNOSPNAKGQEPVXLT2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180706175113.26698-15-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+In-Reply-To: <20180706175113.26698-11-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -21,12 +21,11 @@ Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob H
 List-Id: devicetree@vger.kernel.org
 
 On Sat, Jul 7, 2018 at 1:51 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> Current R40 is missing some graph connections between TCON TOP and
-> TCONs.
+> We want to be able to set TCON TOP muxes at runtime. Add helpers for
+> that.
 >
-> Add them.
->
-> Fixes: 05a43a262d03 ("ARM: dts: sun8i: r40: Add HDMI pipeline")
+> Old, static configuration of muxes at probe time is preserved for now.
+> It will be removed when R40 TCON starts using them.
 >
 > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 
