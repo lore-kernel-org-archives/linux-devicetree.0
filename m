@@ -1,100 +1,64 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/2] regulator: uniphier: add regulator driver for
- UniPhier SoC
-Date: Tue, 10 Jul 2018 18:44:51 +0100
-Message-ID: <20180710174451.GE8104@sirena.org.uk>
-References: <1531186037-16630-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1531186037-16630-3-git-send-email-hayashi.kunihiko@socionext.com>
+From: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
+Subject: Re: [RFC PATCH 0/4] Stop losing firmware-set DMA masks
+Date: Tue, 10 Jul 2018 20:02:32 +0200
+Message-ID: <20180710180232.GA26285@lst.de>
+References: <cover.1531239284.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3223342288137316936=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1531186037-16630-3-git-send-email-hayashi.kunihiko@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1531239284.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Palmer Dabbelt <palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>, sudeep.holla-5wv7dgnIgG8@public.gmane.org, linux-riscv-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+> These patches attempt to deal with this in the simplest way possible by
+> generalising the specific quirk for 32-bit bridges into an arbitrary
+> mask which can then also be plumbed into the firmware code. In the
+> interest of being minimally invasive, I've only included a point fix
+> for the IOMMU issue as seen on arm64 - there may be further tweaks
+> needed in DMA ops to catch all possible incarnations of this problem,
+> but this initial RFC is mostly about the impact beyond the dma-mapping
+> subsystem itself.
 
---===============3223342288137316936==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="AjmyJqqohANyBN/e"
-Content-Disposition: inline
+Thanks, this looks very nice to me.
 
+In fact it probably solves the RISC-V/Xiling problem as well if we can
+just add the dma-ranges property to the device tree for the affected
+systems.  Palmer, do you know how easily the DT could be updated for
+that case?
 
---AjmyJqqohANyBN/e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Jul 10, 2018 at 10:27:17AM +0900, Kunihiko Hayashi wrote:
-
-> +static int uniphier_regulator_enable(struct regulator_dev *rdev)
-> +{
-> +	struct uniphier_regulator_priv *priv = rdev_get_drvdata(rdev);
-> +
-> +	return regmap_update_bits(priv->regmap, rdev->desc->enable_reg,
-> +				  rdev->desc->enable_mask,
-> +				  rdev->desc->enable_val);
-> +}
-
-This is just regulator_enable_regmap() isn't it?  Same for disable,
-unless I'm missing something (which is possible).
-
-> +static int uniphier_regulator_is_enabled(struct regulator_dev *rdev)
-> +{
-> +	struct uniphier_regulator_priv *priv = rdev_get_drvdata(rdev);
-> +	unsigned int val;
-> +	int ret = -EINVAL;
-> +
-> +	regmap_read(priv->regmap, rdev->desc->enable_reg, &val);
-> +	val &= rdev->desc->enable_mask;
-> +
-> +	if (val == rdev->desc->enable_val)
-> +		ret = 1;
-> +	else if (val == rdev->desc->disable_val)
-> +		ret = 0;
-> +
-> +	return ret;
-> +}
-
-This isn't *quite* regulator_is_enabled_regmap() as it explicitly checks
-if the disable value is set and errors otherwise which would be a good
-fix for that.  Could you do a patch for that?
-
---AjmyJqqohANyBN/e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltE8JMACgkQJNaLcl1U
-h9C0lAf9EN7tiUq+OQLkqrSK5NlvtDJpVLLFZf7YOZnTyPDjYxPlWsJCfEOTkk0g
-Sbz0YPx+oeyjNrmrBQR/lbBbyNRmYCHQusBRRpCBuUsIM2Cd425NfHeXoTf7syQX
-PYqPNQO0T8X4lc4S6pxppvOI+lqQjQXeIVQ+DXjQZt93jVsjIf7VGzdVVNatYyRe
-EcthOmX3lr6C4rDWQqkFTdl1NRqibzWnzA0HRaH4vtNeVarWemNRB6KGVMaTF3Pv
-w+Y1iwJSF5H5j/NLRIHgi2IBIbqMmz1EixmxR64YC13MpxAilFv4vJV2s+xLYzZb
-OCbVychkBg9G50+dypHDtaIis8qSdA==
-=+Iz7
------END PGP SIGNATURE-----
-
---AjmyJqqohANyBN/e--
-
-
---===============3223342288137316936==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============3223342288137316936==--
+> 
+> Robin.
+> 
+> 
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-May/580804.html
+> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-December/474443.html
+> 
+> Robin Murphy (4):
+>   dma-mapping: Generalise dma_32bit_limit flag
+>   ACPI/IORT: Set bus DMA mask as appropriate
+>   of/device: Set bus DMA mask as appropriate
+>   iommu/dma: Respect bus DMA limit for IOVAs
+> 
+>  arch/x86/kernel/pci-dma.c | 2 +-
+>  drivers/acpi/arm64/iort.c | 1 +
+>  drivers/iommu/dma-iommu.c | 3 +++
+>  drivers/of/device.c       | 1 +
+>  include/linux/device.h    | 6 +++---
+>  kernel/dma/direct.c       | 2 +-
+>  6 files changed, 10 insertions(+), 5 deletions(-)
+> 
+> -- 
+> 2.17.1.dirty
+---end quoted text---
