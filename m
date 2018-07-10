@@ -1,134 +1,60 @@
-From: Neeraj Kumar Reddy Dantu <dantuguf14105@gmail.com>
-Subject: Re: [PATCH v2] Add DT support for Octavo Systems OSD3358-SM-RED based
- on TI AM335x
-Date: Tue, 10 Jul 2018 15:54:19 -0500
-Message-ID: <CADO55X_wCd1o9Tfze08fJixsUuA2y7EDDQ3hRwy2bR1nktgx1A@mail.gmail.com>
-References: <20180706200051.1115-1-neeraj.dantu@octavosystems.com>
- <20180709114304.GE6920@n2100.armlinux.org.uk>
- <CADO55X8_tbz-O8AuHwqCGnV0g2oDiGHzAug6g3PFqRth5U2H=w@mail.gmail.com>
- <20180710082624.GA16036@n2100.armlinux.org.uk>
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: Re: [PATCH v11 5/8] i2c: fsi: Add transfer implementation
+Date: Tue, 10 Jul 2018 15:59:23 -0500
+Message-ID: <479b3c82-ffe7-9e6a-569c-64fcb1b43d32@linux.vnet.ibm.com>
+References: <1530816030-13010-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1530816030-13010-6-git-send-email-eajames@linux.vnet.ibm.com>
+ <20180709224114.4h47enyt4tucqcou@ninjato>
+ <d7128886-148f-d255-fb33-3727cad01569@linux.vnet.ibm.com>
+ <20180710185042.x3slnms5wzocobqu@ninjato>
+ <cda1b231-eeff-626d-5c79-a07c9bc5a9ec@linux.vnet.ibm.com>
+ <20180710193944.34phe4zafzvwjm5v@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180710082624.GA16036@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux@armlinux.org.uk
-Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Jason Kridner <jkridner@gmail.com>, Neeraj Dantu <neeraj.dantu@octavosystems.com>, linux-omap@vger.kernel.org, Robert Nelson <robertcnelson@gmail.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180710193944.34phe4zafzvwjm5v@ninjato>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, benh@kernel.crashing.org, joel@jms.id.au, mark.rutland@arm.com, gregkh@linuxfoundation.org, rdunlap@infradead.org, andy.shevchenko@gmail.com, peda@axentia.se
 List-Id: devicetree@vger.kernel.org
 
-> As maintainer of the TDA998x driver, I know what the TDA998x is
-> capable of, I already have the datasheets, and I know the binding
-> document.
 
-> What I'm asking about is about the specifics of your board's
-> implementation and why you've written what you have in your DT
-> file.  You haven't answered my specific questions either.
-I am sorry I was unclear. My apologies.
 
-Here is the wiring between LCD controller and the framer:
-
-LCD[11:15] ====> VPA[3:7]
-LCD[5:10]   ====> VPB[2:7]
-LCD[0:4]     ====> VPC[3:7]
-Here is the schematic:
-https://octavosystems.com/docs/osd3358-sm-red-schematics-pdf/
-And yes, the colors will come out wrong for the 24 bit for the
-configuration set. See "blue-and-red-wiring" in tilcdc bindings:
-https://www.kernel.org/doc/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
-AM335x errata providing wiring info for 24 bit mode:
-http://www.ti.com/lit/er/sprz360i/sprz360i.pdf
-
-We used the same interface design as the BeagleBone Black:
-https://github.com/torvalds/linux/blob/master/arch/arm/boot/dts/am335x-boneblack-common.dtsi
-
-Hope this is helpful.
-
-Thanks,
-Neeraj
-
-On Tue, Jul 10, 2018 at 3:26 AM Russell King - ARM Linux
-<linux@armlinux.org.uk> wrote:
+On 07/10/2018 02:39 PM, Wolfram Sang wrote:
+>> Sorry, what do you mean "show up as"? Yes, we could first shift all our
+>> addresses in user-space before passing them to the driver, so that the
+>> msg->addr field is exactly what the hardware expects already... This would
+>> be non-trivial for our users considering all our documentation represents
+>> the addresses as the top 7 bits of a byte :(
+> Ah, now I understand the whole situation! Good that I asked. But I have
+> bad news for you:
 >
-> On Mon, Jul 09, 2018 at 02:45:17PM -0500, Neeraj Kumar Reddy Dantu wrote:
-> >  > This should not be "tda19988" as the node name - DT requires generic
-> > > names, like "hdmi-encoder".
-> >
-> > Thanks.Will fix in v3
-> >
-> > > Can you set 24-bit RGB mode with the above configuration - presumably
-> > > the colours will come out wrong?
-> > > Exactly what is the wiring between the lcdc and tda998x?
-> >
-> > You can set mapping for lcd interface between pins with video-ports. See
-> > TDA19988 datasheet, Table 4:
-> > https://media.digikey.com/pdf/Data%20Sheets/NXP%20PDFs/TDA19988_DS_21_july_2011.pdf
-> > .
-> > The property is optional and not used in the board. DT bindings:
-> > https://www.kernel.org/doc/Documentation/devicetree/bindings/display/bridge/tda998x.txt
-> >
-> > This board uses 15 pin RGB565 interface.
+> msg->addr is 7 bit and LSB aligned. No way around that. This is how
+> Linux I2C worked since the beginning. You have to adapt to it.
 >
-> As maintainer of the TDA998x driver, I know what the TDA998x is
-> capable of, I already have the datasheets, and I know the binding
-> document.
+> I know what you mean. Most doumentation I get has the addresses in 8
+> bit, i.e. 7 bit address shifted + RW bit. But sorry again, the Linux
+> representation is different and all drivers have to adhere to that.
 >
-> What I'm asking about is about the specifics of your board's
-> implementation and why you've written what you have in your DT
-> file.  You haven't answered my specific questions either.
+> An EEPROM ist at 0x50 in Linux. There is no write addr 0xa0 and read
+> addr 0xa1.
+
+OK, I understand! Will test and resend with conforming addressing. 
+Thanks for all the feedback!
+
+Eddie
+
 >
-> >
-> > Regards,
-> > Neeraj
-> >
-> > On Mon, Jul 9, 2018 at 6:43 AM Russell King - ARM Linux <
-> > linux@armlinux.org.uk> wrote:
-> >
-> > > On Fri, Jul 06, 2018 at 08:00:51PM +0000, Neeraj Dantu wrote:
-> > > > +&lcdc {
-> > > > +     status = "okay";
-> > > > +
-> > > > +     /* If you want to get 24 bit RGB and 16 BGR mode instead of
-> > > > +      * current 16 bit RGB and 24 BGR modes, set the propety
-> > > > +      * below to "crossed" and uncomment the video-ports -property
-> > > > +      * in tda19988 node.
-> > > > +      */
-> > > > +     blue-and-red-wiring = "straight";
-> > > ...
-> > > > +&i2c0 {
-> > > > +     tda19988: tda19988 {
-> > >
-> > > This should not be "tda19988" as the node name - DT requires generic
-> > > names, like "hdmi-encoder".
-> > >
-> > > ...
-> > > > +             /* Convert 24bit BGR to RGB, e.g. cross red and blue
-> > > wiring */
-> > > > +             /* video-ports = <0x234501>; */
-> > >
-> > > Please explain more what's going on here.
-> > >
-> > > Can you set 24-bit RGB mode with the above configuration - presumably
-> > > the colours will come out wrong?
-> > >
-> > > Exactly what is the wiring between the lcdc and tda998x?
-> > >
-> > > --
-> > > RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-> > > FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps
-> > > up
-> > > According to speedtest.net: 13Mbps down 490kbps up
-> > >
+>>>> Indeed, real 10-bit addresses require some additional manipulation of this
+>>>> I2C master in order to work. We don't support it right now.
+>>> Then you should remove the associated FUNC flag.
+>> Ah, but due to the addressing situation, tools like i2cget don't work with
+>> our addresses unless the 10 bit flag is specified. For example, we may want
+>> to access 0xA0.
+> This is a kinda dirty workaround to the above problem. It is even wrong
+> because 10-bit addresses look totally different on the wire.
 >
-> --
-> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps up
-> According to speedtest.net: 13Mbps down 490kbps up
+> Sorry for the hazzle with the docs, but there is no way around that.
+>
