@@ -1,86 +1,47 @@
 From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v2 1/2] dt-bindings: reset: uniphier: add USB3 core reset support
-Date: Tue, 10 Jul 2018 10:14:16 +0900
-Message-ID: <1531185257-16444-2-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1531185257-16444-1-git-send-email-hayashi.kunihiko@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531185257-16444-1-git-send-email-hayashi.kunihiko@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v2 0/2]  reset: uniphier: add USB3 core reset support
+Date: Tue, 10 Jul 2018 10:14:15 +0900
+Message-ID: <1531185257-16444-1-git-send-email-hayashi.kunihiko@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: devicetree@vger.kernel.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for reset control of USB3 core implemented in UniPhier SoCs.
-The reset control belongs to USB3 glue layer.
+This series add new USB3 core reset control support for UniPhier SoCs.
+This reset line belongs to USB3 glue layer.
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- .../devicetree/bindings/reset/uniphier-reset.txt   | 56 ++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+Changes since v1:
+- dt-bindings: fix a typo, not "clock-names" but "reset-names"
+- dt-bindings: add description of glue layer
+- reuse soc_data for pxs2, ld20 and pxs3
+- put reset_simple_data into uniphier_usb3_reset_priv
+- replace clk operations with clk_bulk
+- move nclks and nrsts to soc_data
+- rewrite a header with C++ comment style
+- change the subject 'USB3 controller reset' to 'USB3 core reset'
 
-diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-index 93efed6..101743d 100644
---- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-+++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-@@ -118,3 +118,59 @@ Example:
- 
- 		other nodes ...
- 	};
-+
-+
-+USB3 core reset
-+---------------
-+
-+USB3 core reset belongs to USB3 glue layer. Before using the core reset,
-+it is necessary to control the clocks and resets to enable this layer.
-+These clocks and resets should be described in each property.
-+
-+Required properties:
-+- compatible: Should be
-+    "socionext,uniphier-pro4-usb3-reset" - for Pro4 SoC
-+    "socionext,uniphier-pxs2-usb3-reset" - for PXs2 SoC
-+    "socionext,uniphier-ld20-usb3-reset" - for LD20 SoC
-+    "socionext,uniphier-pxs3-usb3-reset" - for PXs3 SoC
-+- #reset-cells: Should be 1.
-+- reg: Specifies offset and length of the register set for the device.
-+- clocks: A list of phandles to the clock gate for USB3 glue layer.
-+	According to the clock-names, appropriate clocks are required.
-+- clock-names: Should contain
-+    "gio", "link" - for Pro4 SoC
-+    "link"        - for others
-+- resets: A list of phandles to the reset control for USB3 glue layer.
-+	According to the reset-names, appropriate resets are required.
-+- reset-names: Should contain
-+    "gio", "link" - for Pro4 SoC
-+    "link"        - for others
-+
-+Example:
-+
-+	usb-glue@65b00000 {
-+		compatible = "socionext,uniphier-ld20-dwc3-glue",
-+			     "simple-mfd";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x65b00000 0x400>;
-+
-+		usb_rst: reset@0 {
-+			compatible = "socionext,uniphier-ld20-usb3-reset";
-+			reg = <0x0 0x4>;
-+			#reset-cells = <1>;
-+			clock-names = "link";
-+			clocks = <&sys_clk 14>;
-+			reset-names = "link";
-+			resets = <&sys_rst 14>;
-+		};
-+
-+		regulator {
-+			...
-+		};
-+
-+		phy {
-+			...
-+		};
-+		...
-+	};
+Kunihiko Hayashi (2):
+  dt-bindings: reset: uniphier: add USB3 core reset support
+  reset: uniphier: add USB3 core reset control
+
+ .../devicetree/bindings/reset/uniphier-reset.txt   |  56 +++++++
+ drivers/reset/Kconfig                              |  10 ++
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-uniphier-usb3.c                | 171 +++++++++++++++++++++
+ 4 files changed, 238 insertions(+)
+ create mode 100644 drivers/reset/reset-uniphier-usb3.c
+
 -- 
 2.7.4
