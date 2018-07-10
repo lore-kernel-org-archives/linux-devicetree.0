@@ -1,101 +1,95 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [RFC PATCH 3/3] sdhci: arasan: Add support to read Tap Delay
- values from DT
-Date: Tue, 10 Jul 2018 10:31:39 +0200
-Message-ID: <CAPDyKFoGJOE-h4rLqzMO=wzNjkfcuU_oQ3NLK5=OQfSMj3dDHg@mail.gmail.com>
-References: <1528373500-24663-1-git-send-email-manish.narani@xilinx.com> <1528373500-24663-3-git-send-email-manish.narani@xilinx.com>
+From: Sean Young <sean@mess.org>
+Subject: Re: [RESEND PATCH v5 0/6] IR support for A83T
+Date: Tue, 10 Jul 2018 09:36:37 +0100
+Message-ID: <20180710083637.6s36rfbi2old5uxo@gofer.mess.org>
+References: <20180213122952.8420-1-embed3d@gmail.com>
+ <85ddc129-d0f8-6299-dca0-81f79f3d04a9@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528373500-24663-3-git-send-email-manish.narani@xilinx.com>
+Content-Disposition: inline
+In-Reply-To: <85ddc129-d0f8-6299-dca0-81f79f3d04a9@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Narani <manish.narani@xilinx.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Moritz Fischer <mdf@kernel.org>, stefan.krsmanovic@aggios.com, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Michal Simek <michal.simek@xilinx.com>
+To: Philipp Rossak <embed3d@gmail.com>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, p.zabel@pengutronix.de, andi.shyti@samsung.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On 7 June 2018 at 14:11, Manish Narani <manish.narani@xilinx.com> wrote:
-> This patch adds support for reading Tap Delay values from Device Tree
-> and write them via eemi calls. The macros containing these tap delay
-> values are removed from the driver.
->
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
->  drivers/mmc/host/sdhci-of-arasan.c | 131 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 131 insertions(+)
->
-> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-> index e3332a5..fc0fd01 100644
-> --- a/drivers/mmc/host/sdhci-of-arasan.c
-> +++ b/drivers/mmc/host/sdhci-of-arasan.c
-> @@ -36,6 +36,8 @@
->
->  #define PHY_CLK_TOO_SLOW_HZ            400000
->
-> +#define MMC_BANK2              0x2
-> +
->  /*
->   * On some SoCs the syscon area has a feature where the upper 16-bits of
->   * each 32-bit register act as a write mask for the lower 16-bits.  This allows
-> @@ -90,6 +92,10 @@ struct sdhci_arasan_data {
->         struct sdhci_host *host;
->         struct clk      *clk_ahb;
->         struct phy      *phy;
-> +       u32 mio_bank;
-> +       u32 device_id;
-> +       u32 itapdly[MMC_TIMING_MMC_HS400 + 1];
-> +       u32 otapdly[MMC_TIMING_MMC_HS400 + 1];
->         bool            is_phy_on;
->
->         bool            has_cqe;
-> @@ -160,11 +166,36 @@ static int sdhci_arasan_syscon_write(struct sdhci_host *host,
->         return ret;
->  }
->
-> +/**
-> + * arasan_zynqmp_set_tap_delay - Program the tap delays.
-> + * @deviceid:          Unique Id of device
-> + * @itap_delay:                Input Tap Delay
-> + * @oitap_delay:       Output Tap Delay
-> + */
-> +static void arasan_zynqmp_set_tap_delay(u8 deviceid, u8 itap_delay, u8 otap_delay)
-> +{
-> +       const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
+On Fri, Mar 02, 2018 at 01:11:34PM +0100, Philipp Rossak wrote:
+> 
+> 
+> On 13.02.2018 13:29, Philipp Rossak wrote:
+> > This patch series adds support for the sunxi A83T ir module and enhances
+> > the sunxi-ir driver. Right now the base clock frequency for the ir driver
+> > is a hard coded define and is set to 8 MHz.
+> > This works for the most common ir receivers. On the Sinovoip Bananapi M3
+> > the ir receiver needs, a 3 MHz base clock frequency to work without
+> > problems with this driver.
+> > 
+> > This patch series adds support for an optinal property that makes it able
+> > to override the default base clock frequency and enables the ir interface
+> > on the a83t and the Bananapi M3.
+> > 
+> > changes since v4:
+> > * rename cir pin from cir_pins to r_cir_pin
+> > * drop unit-adress from r_cir_pin
+> > * add a83t compatible to the cir node
+> > * move muxing options to dtsi
+> > * rename cir label and reorder it in the bananpim3.dts file
+> > 
+> > changes since v3:
+> > * collecting all acks & reviewd by
+> > * fixed typos
+> > 
+> > changes since v2:
+> > * reorder cir pin (alphabetical)
+> > * fix typo in documentation
+> > 
+> > changes since v1:
+> > * fix typos, reword Documentation
+> > * initialize 'b_clk_freq' to 'SUNXI_IR_BASE_CLK' & remove if statement
+> > * change dev_info() to dev_dbg()
+> > * change naming to cir* in dts/dtsi
+> > * Added acked Ackedi-by to related patch
+> > * use whole memory block instead of registers needed + fix for h3/h5
+> > 
+> > changes since rfc:
+> > * The property is now optinal. If the property is not available in
+> >    the dtb the driver uses the default base clock frequency.
+> > * the driver prints out the the selected base clock frequency.
+> > * changed devicetree property from base-clk-frequency to clock-frequency
+> > 
+> > Regards,
+> > Philipp
+> > 
+> > Philipp Rossak (6):
+> >    media: rc: update sunxi-ir driver to get base clock frequency from
+> >      devicetree
+> >    media: dt: bindings: Update binding documentation for sunxi IR
+> >      controller
+> >    arm: dts: sun8i: a83t: Add the cir pin for the A83T
+> >    arm: dts: sun8i: a83t: Add support for the cir interface
+> >    arm: dts: sun8i: a83t: bananapi-m3: Enable IR controller
+> >    arm: dts: sun8i: h3-h5: ir register size should be the whole memory
+> >      block
+> > 
+> >   Documentation/devicetree/bindings/media/sunxi-ir.txt |  3 +++
+> >   arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts         |  5 +++++
+> >   arch/arm/boot/dts/sun8i-a83t.dtsi                    | 18 ++++++++++++++++++
+> >   arch/arm/boot/dts/sunxi-h3-h5.dtsi                   |  2 +-
+> >   drivers/media/rc/sunxi-cir.c                         | 19 +++++++++++--------
+> >   5 files changed, 38 insertions(+), 9 deletions(-)
+> > 
+> 
+> I talked yesterday with Maxime about this patch series. And he told me if
+> the first to patches got merged, he will apply the dts patches to the sunxi
+> tree.
+> 
+> Sean, can you merge the first two patches through the rc-core?
 
-No thanks!
+So I merged the first two patches, but the rest never made it upstream.
 
-Isn't there a more generic framework we can use to change the tap
-values, rather than calling SoC specific functions from the driver?
+Should they be resubmitted?
 
-BTW, what is a tap value, more exactly?
+Thanks,
 
-What does changing a tap value mean and where does the property belong, really?
-
-Of course this doesn't even compile, as you have a dependency to
-another series. Next time, please clarify that in a cover-letter
-(maybe you did, but I can't find it).
-
-> +       u32 node_id = (deviceid == 0) ? NODE_SD_0 : NODE_SD_1;
-> +
-> +       if (!eemi_ops || !eemi_ops->ioctl)
-> +               return;
-> +
-> +       if (itap_delay)
-> +               eemi_ops->ioctl(node_id, IOCTL_SET_SD_TAPDELAY,
-> +                               PM_TAPDELAY_INPUT, itap_delay, NULL);
-> +
-> +       if (otap_delay)
-> +               eemi_ops->ioctl(node_id, IOCTL_SET_SD_TAPDELAY,
-> +                               PM_TAPDELAY_OUTPUT, otap_delay, NULL);
-> +}
-
-Another overall comment for the series.
-
-I would recommend to change the order of the patches in the series.
-Let the DT doc change come first, next the driver change and finally
-the change to the DTS file(s). This makes it easier to follow and
-review.
-
-[...]
-
-Kind regards
-Uffe
+Sean
