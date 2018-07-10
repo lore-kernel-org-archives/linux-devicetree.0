@@ -1,86 +1,68 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 1/3] drm: mxsfb: Change driver.name to mxsfb-drm
-Date: Tue, 10 Jul 2018 11:06:36 +0200
-Message-ID: <fd22085f646d97f66cff5b7f22785500@agner.ch>
-References: <cover.1529091248.git.leonard.crestez@nxp.com>
- <47ea7572011735b68a8a70f0e11bdf00cb2fd86a.1529091248.git.leonard.crestez@nxp.com>
- <CAOMZO5B8i0gN+rCq-yPrd112NkwJWTxYCtsLVeLhD1JLRuX6EQ@mail.gmail.com>
- <07be6d9a85b6be655fc2b084be81d8bf9715b57a.camel@nxp.com>
- <638457fd-85da-8fec-d146-517c43f71813@denx.de>
- <b3fa74c5110b45e5992920485749869ab1f7ebce.camel@nxp.com>
- <6995fa4b-47a9-887b-5e4f-4284ca6a2c79@gmail.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: Re: [PATCH 0/3] pinctrl: meson-g12a: add pinctrl driver support
+Date: Tue, 10 Jul 2018 17:19:32 +0800
+Message-ID: <eafc9b41-597e-fa0f-5e30-95ce0b75f6fd@amlogic.com>
+References: <20180704224511.29350-1-yixun.lan@amlogic.com>
+ <CACRpkdauMRnLpfiARG-BWkuJfArri68e9BYx56SCUxJaYWsYYA@mail.gmail.com>
+ <CAFBinCAVSGTWFzW6nikbnC+K9n5KRYjun9bnEp7YsKbGRHJorg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <6995fa4b-47a9-887b-5e4f-4284ca6a2c79@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: marex@denx.de, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, marcofrk@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, dl-linux-imx <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFBinCAVSGTWFzW6nikbnC+K9n5KRYjun9bnEp7YsKbGRHJorg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linus.walleij@linaro.org
+Cc: yixun.lan@amlogic.com, carlo@caione.org, b.galvani@gmail.com, linux-gpio@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, jbrunet@baylibre.com, khilman@baylibre.com, robh@kernel.org, xingyu.chen@amlogic.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTYuMDYuMjAxOCAwMTozMiwgTWFyZWsgVmFzdXQgd3JvdGU6Cj4gT24gMDYvMTYvMjAxOCAx
-Mjo0MiBBTSwgTGVvbmFyZCBDcmVzdGV6IHdyb3RlOgo+PiBPbiBGcmksIDIwMTgtMDYtMTUgYXQg
-MjM6MzYgKzAyMDAsIE1hcmVrIFZhc3V0IHdyb3RlOgo+Pj4gT24gMDYvMTUvMjAxOCAxMDo1OCBQ
-TSwgTGVvbmFyZCBDcmVzdGV6IHdyb3RlOgo+Pj4+IE9uIEZyaSwgMjAxOC0wNi0xNSBhdCAxNjo0
-NyAtMDMwMCwgRmFiaW8gRXN0ZXZhbSB3cm90ZToKPj4+Pj4gT24gRnJpLCBKdW4gMTUsIDIwMTgg
-YXQgNDo0MyBQTSwgTGVvbmFyZCBDcmVzdGV6Cj4+Pj4+IDxsZW9uYXJkLmNyZXN0ZXpAbnhwLmNv
-bT4gd3JvdGU6Cj4+Cj4+Pj4+PiBUaGUgRkJERVYgZHJpdmVyIHVzZXMgdGhlIHNhbWUgbmFtZSBh
-bmQgYm90aCBjYW4ndCBiZSByZWdpc3RlcmVkIGF0IHRoZQo+Pj4+Pj4gc2FtZSB0aW1lLiBGaXgg
-dGhpcyBieSByZW5hbWluZyB0aGUgZHJtIGRyaXZlciB0byBteHNmYi1kcm0KPj4+Pj4KPj4+Pj4g
-U3RlZmFuIHNlbnQgdGhlIHNhbWUgcGF0Y2ggYSBmZXcgZGF5cyBhZ286Cj4+Pj4KPj4+PiBJbiB0
-aGF0IHRocmVhZCB0aGVyZSBpcyBhIHByb3Bvc2FsIGZvciByZW1vdmluZyB0aGUgb2xkIGZiZGV2
-L214c2ZiCj4+Pj4gZHJpdmVyIGVudGlyZWx5Lgo+Pj4+Cj4+Pj4gVGhhdCB3b3VsZCBicmVhayBv
-bGQgRFRCcywgaXNuJ3QgdGhpcyBnZW5lcmFsbHkgY29uc2lkZXJlZCBiYWQ/IEFsc28sCj4+Pj4g
-YXJlIHdlIHN1cmUgdGhlIHJlbW92YWwgb2YgZmJkZXYvbXhzZmIgd291bGRuJ3QgbG9zZSBhbnkg
-ZmVhdHVyZXM/Cj4+Pj4KPj4+PiBXaGF0IG15IHNlcmllcyBkb2VzIGlzIG1ha2UgYm90aCBkcml2
-ZXJzIHdvcmsgd2l0aCB0aGUgc2FtZSBrZXJuZWwKPj4+PiBpbWFnZSBhbmQgdHVybnMgdGhlIGNo
-b2ljZSBpbnRvIGEgYm9hcmQtbGV2ZWwgZHRiIGRlY2lzaW9uLiBTdXBwb3J0aW5nCj4+Pj4gZXZl
-cnl0aGluZyBhdCBvbmNlIHNlZW1zIGRlc2lyYWJsZSB0byBtZSBhbmQgaXQgYWxsb3dzIGZvciBh
-IHZlcnkKPj4+PiBzbW9vdGggdXBncmFkZSBwYXRoLgo+Pj4KPj4+IEhhdmluZyB0d28gZHJpdmVy
-cyBpbiB0aGUga2VybmVsIHdpdGggZGlmZmVyZW50IHNldCBvZiBidWdzIGlzIGFsd2F5cyBiYWQu
-Cj4+Pgo+Pj4+IFRoZSBvbGQgZHJpdmVyIGNvdWxkIGJlIHJlbW92ZWQgbGF0ZXIsIGFmdGVyIGFs
-bCB1c2VycyBhcmUgY29udmVydGVkLgo+Pj4KPj4+IEJvdGggZHJpdmVycyB3ZXJlIGluIGZvciBs
-b25nIGVub3VnaCBhbHJlYWR5LiBBbmQgbGV0J3MgYmUgcmVhbGlzdGljLAo+Pj4gaG93IG1hbnkg
-TVgyMy9NWDI4IHVzZXJzIG9mIG9sZCBEVHMgd2l0aCBuZXcga2VybmVscyBhcmUgdGhlcmUgd2hv
-Cj4+PiBjYW5ub3QgdXBkYXRlIHRoZSBEVCBhcyB3ZWxsID8KPj4KPj4gR3JlcHBpbmcgZm9yICJk
-aXNwbGF5ID0iIGluIGFyY2gvYXJtL2Jvb3QvZHRzL2lteCogSSBzZWUgdGhhdCBvbGQKPj4gYmlu
-ZGluZ3MgYXJlIGFsc28gdXNlZCBieSAzcmQtcGFydHkgYm9hcmRzIGZvciBpbXg2Lzc6Cj4+ICAq
-IGlteDZzeC1uaXRyb2dlbjZzeAo+PiAgKiBpbXg2dWwtZ2VhbQo+PiAgKiBpbXg2dWwtaXNpb3QK
-Pj4gICogaW14NnVsLW9wb3M2dWxkZXYKPj4gICogaW14NnVsLXBpY28taG9iYml0Cj4+ICAqIGlt
-eDZ1bC10eDZ1bAo+PiAgKiBpbXg3ZC1uaXRyb2dlbjcKPiAKPiBFciwgeWVzLCBhIGhhbmRmdWwg
-b2YgYm9hcmRzIHdoaWNoIGNvdWxkIGJlIHVwZGF0ZWQgOikKPiAKPj4gQ29udmVydGluZyBldmVy
-eXRoaW5nIG1pZ2h0IGJlIHF1aXRlIGEgYml0IG9mIHdvcmssIGFuZCBleHBsaWNpdGx5Cj4+IHN1
-cHBvcnRpbmcgb2xkIGJpbmRpbmdzIGlzIGFsc28gd29yay4KPiAKPiBEb2VzIGFkZGluZyBzdXBw
-b3J0IGZvciBvbGQgYmluZGluZ3MganVzdGlmeSB0aGUgZWZmb3J0IGludmVzdGVkID8gSQo+IGRv
-dWJ0IHNvLCBpdCBvbmx5IGFkZHMgbW9yZSBjb2RlIHRvIG1haW50YWluLgo+IAo+PiBJdCBpcyB2
-ZXJ5IGNvbmZ1c2luZyB0aGF0IHRoZXJlIGlzIGEgd2hvbGUgc2V0IG9mIGRpc3BsYXlzIGZvciBp
-bXg2LzcKPj4gd2hpY2ggYXJlIHN1cHBvcnRlZCBieSB1cHN0cmVhbSBidXQgb25seSB3aXRoIGEg
-bm9uLWRlZmF1bHQgY29uZmlnLgo+PiBXaGlsZSBpdCBpcyBleHRyZW1lbHkgY29tbW9uIGluIHRo
-ZSBlbWJlZGRlZCBmaWVsZCB0byBoYXZlIGN1c3RvbQo+PiBjb25maWdzIHRoZSBkZWZhdWx0IG9u
-ZSBpbiB0aGUga2VybmVsIHNob3VsZCB0cnkgdG8gImp1c3Qgd29yayIuCj4+Cj4+IENvdWxkbid0
-IHRoaXMgcGF0Y2ggc2VyaWVzIGJlIGNvbnNpZGVyZWQgYSBidWdmaXg/IEl0IHdhcyBhbHNvCj4+
-IHN1cnByaXNpbmdseSBzbWFsbC4KPiAKPiBJIHRoaW5rIGl0J3MganVzdCBhIHdvcmthcm91bmQg
-d2hpY2ggYWxsb3dzIHlvdSB0byBwb3N0cG9uZSB0aGUgcmVhbAo+IGZpeCwgYW5kIEkgZG9uJ3Qg
-bGlrZSB0aGF0LgoKVGhpcyBpcyBvbmUgb2YgdGhlIHNpdHVhdGlvbiB3aGVyZSBzdGF0ZXMgcXVv
-IGlzIGtpbmRhIHRoZSB3b3JzdApzaXR1YXRpb24uCgpDdXJyZW50bHkgaW14X3Y2X3Y3X2RlZmNv
-bmZpZyBhbmQgbXhzX2RlZmNvbmZpZyBhY3R1YWxseSBzdGlsbCB1c2VzCkNPTkZJR19GQl9NWFMu
-CgpJIHVuZGVyc3RhbmQgdGhhdCB5b3UnZCByYXRoZXIgcHJlZmVyIHRvIG1vdmUgZm9yd2FyZC4g
-SSBzdWdnZXN0IHdlIGRvCml0IGluIHN0ZXBzLgoKSW4gNC4xOToKCi0gQ2hhbmdlIERSTSBkcml2
-ZXIubmFtZSB0byBteHNmYi1kcm0gc28gd2UgYXZvaWQgY29uZmxpY3RzIGZvciBub3cKLSBSZW1v
-dmUgQ09ORklHX0ZCX01YUyBmcm9tIGlteF92Nl92N19kZWZjb25maWcvbXhzX2RlZmNvbmZpZyBu
-b3csIGFuZApvbmx5IGVuYWJsZSBDT05GSUdfRFJNX01YU0ZCPXkKLSBBZGQgKGRlcHJlY2F0ZWQp
-IHRvIENPTkZJR19GQl9NWFMKCkluIDQuMTkvNC4yMDoKLSBGaXggdGhlIGFib3ZlIGRldmljZSB0
-cmVlcwoKSW4gNC4yMC80LjIxOgotIFJlbW92ZSBGQl9NWFMKCkRvZXMgdGhhdCBzb3VuZCByZWFz
-b25hYmxlPyBJZiB5ZXMsIEkgY2FuIHNlbmQgdGhlIHBhdGNoIHNldCB0byBkbyBzdGVwCjEuCgot
-LQpTdGVmYW4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+HI Martin
+
+On 07/10/18 06:07, Martin Blumenstingl wrote:
+> Hi Linus,
+> 
+> On Mon, Jul 9, 2018 at 3:35 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>>
+>> On Wed, Jul 4, 2018 at 4:48 PM Yixun Lan <yixun.lan@amlogic.com> wrote:
+>>>
+>>> This patch series try to add pinctrl driver support for
+>>> the Meson-G12A SoC.
+>>>
+>>>
+>>> Yixun Lan (3):
+>>>   documentation: Add compatibles for Amlogic Meson G12A pin controllers
+>>>   dt-bindings: pinctrl: meson-g12a: document pin name
+>>>   pinctrl: meson-g12a: add pinctrl driver support
+>>
+>> Overall this looks good to me, could we get some review or ACKs
+>> from Beniamino, Martin and/or Carlo as an indication that everything
+>> seems all right before I apply the series?
+> I do not have any documentation for this hardware (I'm not even sure
+> if this is the successor to AXG/"the Audio SoCs" or rather a successor
+> of GXL or GXM/"the OTT/STB SoCs" - I assume it's their new OTT/STB
+> SoCs since G12A is mentioned here and it seems to have a GPU: [0])
+> 
+yes, it's more like a new generation of OTT/STB SoCs..
+
+> I will try to have a look in the next few days and see if I can spot
+> anything obvious
+
+generally the pinctrl IP hasn't changed, so only pinctrl data need to be
+updated (the pin mux IP is same as AXG SoC which already explain in
+another thread).
+
+> not sure if Neil or Kevin have access to the documentation, so it'd be
+> great if they could give feedback as well
+> 
+we are preparing documention to baylibre guys..
+
+I think there is not many boards available in the public?
+
+> 
+> Regards
+> Martin
+> 
+> 
+> [0] http://openlinux.amlogic.com:8000/download/doc/Linux_BSP_Kernel4.9_Buildroot_OpenLinux_Release_Notes_V20180330.pdf
+> 
+> .
+> 
