@@ -1,69 +1,89 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v5 08/22] ARM: dts: sun4i-a10: Use
- system-control compatible
-Date: Tue, 10 Jul 2018 22:52:39 +0800
-Message-ID: <CAGb2v65JP8fBvD6Sbexjg2cv5AXVufWxjMVuOPa7J1A9qQjZ2g@mail.gmail.com>
-References: <20180710080114.31469-1-paul.kocialkowski@bootlin.com> <20180710080114.31469-9-paul.kocialkowski@bootlin.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [linux-sunxi] [PATCH v5 09/22] ARM: dts: sun5i: Use
+ most-qualified system control compatibles
+Date: Tue, 10 Jul 2018 22:53:44 +0800
+Message-ID: <CAGb2v64HbpvJhy5KQOepc61nU7NECaWMPvhZ16dk5hJXiPBHxA@mail.gmail.com>
+References: <20180710080114.31469-1-paul.kocialkowski@bootlin.com>
+ <20180710080114.31469-10-paul.kocialkowski@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBT4QSPNAKGQEMPW3FLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180710080114.31469-9-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Keiichi Watanabe <keiichiw-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tom Saeger <tom.saeger-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180710080114.31469-10-paul.kocialkowski@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Tom Saeger <tom.saeger@oracle.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Hans Verkuil <hverkuil@xs4all.nl>, Andrzej Hajda <a.hajda@samsung.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, Marco Franchi <marco.franchi@nxp.com>, Pawel Osciak <posciak@chromium.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Jonathan Corbet <corbet@lwn.net>, Neil Armstrong <narmstrong@baylibre.com>, Keiichi Watanabe <keiichiw@chromium.org>, Jacob Chen <jacob-chen@iotwrt.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Sami Tolvanen <samitolvanen@google.com>, Icenowy Zheng <icenowy@aosc.io>, devicetree <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Smitha
 List-Id: devicetree@vger.kernel.org
 
 On Tue, Jul 10, 2018 at 4:01 PM, Paul Kocialkowski
-<paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+<paul.kocialkowski@bootlin.com> wrote:
+> This switches the sun5i dtsi to use the most qualified compatibles for
+> the system-control block (previously named SRAM controller) as well as
+> the SRAM blocks. The sun4i-a10 compatibles are kept since these hardware
+> blocks are backward-compatible.
 
-Subject prefix should be "ARM: dts: sun4i:"
-
-We don't need the "a10" part since the A10 owns into this category
-all by itself.
-
-Also, it doesn't say what the system control compatible is for.
-"Switch to new system control compatible string" would be slightly
-better.
-
-> This switches the sun4i-a10 dtsi to use the new compatible for the
-> system-control block (previously named SRAM controller) instead of
-> the deprecated one.
->
-> The phandle is also updated to reflect the fact that the controller
-
-The label actually.
+Not quite sure why they are backward-compatible. The A13 has less SRAM
+mapping controls than the A10.
 
 ChenYu
 
-> described is really about system control rather than SRAM control.
+> The phandle for system control is also updated to reflect the fact that
+> the controller described is really about system control rather than SRAM
+> control.
 >
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 > ---
->  arch/arm/boot/dts/sun4i-a10.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  arch/arm/boot/dts/sun5i.dtsi | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
 >
-> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-> index 3a1c6b45c9a1..82f81f06f201 100644
-> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
-> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-> @@ -190,8 +190,8 @@
+> diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
+> index 07f2248ed5f8..68711954c293 100644
+> --- a/arch/arm/boot/dts/sun5i.dtsi
+> +++ b/arch/arm/boot/dts/sun5i.dtsi
+> @@ -114,8 +114,9 @@
 >                 #size-cells = <1>;
 >                 ranges;
 >
 > -               sram-controller@1c00000 {
 > -                       compatible = "allwinner,sun4i-a10-sram-controller";
 > +               system-control@1c00000 {
-> +                       compatible = "allwinner,sun4i-a10-system-control";
+> +                       compatible = "allwinner,sun5i-a13-system-control",
+> +                                    "allwinner,sun4i-a10-system-control";
 >                         reg = <0x01c00000 0x30>;
 >                         #address-cells = <1>;
 >                         #size-cells = <1>;
+> @@ -130,7 +131,8 @@
+>                         };
+>
+>                         emac_sram: sram-section@8000 {
+> -                               compatible = "allwinner,sun4i-a10-sram-a3-a4";
+> +                               compatible = "allwinner,sun5i-a13-sram-a3-a4",
+> +                                            "allwinner,sun4i-a10-sram-a3-a4";
+>                                 reg = <0x8000 0x4000>;
+>                                 status = "disabled";
+>                         };
+> @@ -143,7 +145,8 @@
+>                                 ranges = <0 0x00010000 0x1000>;
+>
+>                                 otg_sram: sram-section@0 {
+> -                                       compatible = "allwinner,sun4i-a10-sram-d";
+> +                                       compatible = "allwinner,sun5i-a13-sram-d",
+> +                                                    "allwinner,sun4i-a10-sram-d";
+>                                         reg = <0x0000 0x1000>;
+>                                         status = "disabled";
+>                                 };
 > --
 > 2.17.1
 >
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> For more options, visit https://groups.google.com/d/optout.
