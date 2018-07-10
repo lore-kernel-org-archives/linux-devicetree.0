@@ -1,38 +1,42 @@
-From: Andreas Klinger <ak@it-klinger.de>
-Subject: [PATCH v5 3/3] iio: hx711: fix spurious unit-address in example
-Date: Tue, 10 Jul 2018 20:19:37 +0200
-Message-ID: <20180710181937.GA5398@arbeit>
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: Re: [PATCH v11 5/8] i2c: fsi: Add transfer implementation
+Date: Tue, 10 Jul 2018 12:52:58 -0500
+Message-ID: <d7128886-148f-d255-fb33-3727cad01569@linux.vnet.ibm.com>
+References: <1530816030-13010-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1530816030-13010-6-git-send-email-eajames@linux.vnet.ibm.com>
+ <20180709224114.4h47enyt4tucqcou@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <20180709224114.4h47enyt4tucqcou@ninjato>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, benh@kernel.crashing.org, joel@jms.id.au, mark.rutland@arm.com, gregkh@linuxfoundation.org, rdunlap@infradead.org, andy.shevchenko@gmail.com, peda@axentia.se
 List-Id: devicetree@vger.kernel.org
 
-Device tree compiler (dtc) gives a warning if a device node has "@" with a
-following number as it's name but no reg property.
 
-Fix the example in the documentation of avia,hx711 to conform to dtc
-behavior.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- Documentation/devicetree/bindings/iio/adc/avia-hx711.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 07/09/2018 05:41 PM, Wolfram Sang wrote:
+>> +	cmd |= FIELD_PREP(I2C_CMD_ADDR, msg->addr >> 1);
+> I just noticed this and wonder: Don't you need the LSB of the address?
+> It is not the RW flag, this is encoded in msg->flags.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-index 2c1b67d33c49..7222328a3d0d 100644
---- a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-@@ -14,7 +14,7 @@ Optional properties:
- 			high time of 50 microseconds.
- 
- Example:
--weight@0 {
-+weight {
- 	compatible = "avia,hx711";
- 	sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
- 	dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
--- 
-2.1.4
+So, the hardware interprets the LSB as the RW flag. It wouldn't be 
+possible to have a device addressed with the LSB set on this I2C master.
+
+>
+> Also, no seperate handling for 10 bit addresses? Technically, 7-bit 0x50
+> is different on the wire from 10-bit 0x050. This is minor, though. There
+> are no 10-bit devices out there. Still, did you test 10-bit support?
+
+Indeed, real 10-bit addresses require some additional manipulation of 
+this I2C master in order to work. We don't support it right now.
+
+Thanks,
+Eddie
+
+>
+> Rest looks good.
+>
