@@ -1,38 +1,165 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 15/17] ARM: dts: sun8i: r40: Disable TCONs by default.
-Date: Wed, 11 Jul 2018 00:16:15 +0800
-Message-ID: <CAGb2v64=Mzwz6eZxvHO6XuCNa5XQcQDt8HkOrFqRO8MXTVSRjg@mail.gmail.com>
-References: <20180706175113.26698-1-jernej.skrabec@siol.net>
- <20180706175113.26698-16-jernej.skrabec@siol.net>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH 16/17] drm/sun4i: tcon-top: Remove mux
+ configuration at probe time
+Date: Tue, 10 Jul 2018 18:18:43 +0200
+Message-ID: <1843348.gnui32CGBV@jernej-laptop>
+References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-17-jernej.skrabec@siol.net> <CAGb2v64rjUnwnXbWxTSYJyhMyCV5QmV9YSr+Jryx3nEeMP8GJg@mail.gmail.com>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180706175113.26698-16-jernej.skrabec@siol.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBZ5YSPNAKGQEMB63SQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v64rjUnwnXbWxTSYJyhMyCV5QmV9YSr+Jryx3nEeMP8GJg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBKdWwgNywgMjAxOCBhdCAxOjUxIEFNLCBKZXJuZWogU2tyYWJlYyA8amVybmVqLnNr
-cmFiZWNAc2lvbC5uZXQ+IHdyb3RlOgo+IFI0MCBoYXMgNCBUQ09OcywgYnV0IG9ubHkgMiBvZiB0
-aGVtIGNhbiByZWNlaXZlIHNvbWUga2luZCBvZiBvdXRwdXQgYXQKPiB0aGUgc2FtZSB0aW1lLiBM
-ZXQncyBkaXNhYmxlIHRoZW0gYnkgZGVmYXVsdCwgc28gb25seSB0aG9zZSB3aGljaCBhcmUKPiBy
-ZWFsbHkgY29ubmVjdGVkIG9uIGJvYXJkIGNhbiBiZSBlbmFibGVkIGluIGJvYXJkIGR0cyBmaWxl
-Lgo+Cj4gU2lnbmVkLW9mZi1ieTogSmVybmVqIFNrcmFiZWMgPGplcm5lai5za3JhYmVjQHNpb2wu
-bmV0PgoKT3JpZ2luYWxseSBJIGhhZCB3YW50ZWQgYWxsIFRDT05zIGVuYWJsZWQgYnkgZGVmYXVs
-dC4gQnV0IHRoYXQgd291bGQKcmVxdWlyZSBzb21lIG1vcmUgd29yayBmb3IgZHluYW1pYyBhc3Np
-Z25tZW50IG9mIFRDT05zIHRvIENSVENzLCB3aGljaAppcyB3YXkgb3V0IG9mIHNjb3BlIGZvciB0
-aGlzIHNlcmllcy4gU28sCgpSZXZpZXdlZC1ieTogQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3Jn
-PgoKSSdsbCB0aGluayBhYm91dCBpZiBhbmQgaG93IHRoaXMgY291bGQgYmUgZG9uZS4KX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Dne torek, 10. julij 2018 ob 18:09:26 CEST je Chen-Yu Tsai napisal(a):
+> On Sat, Jul 7, 2018 at 1:51 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> 
+wrote:
+> > Now that R40 TCON migrated to runtime mux configuration, old code can be
+> > removed.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> > ---
+> > 
+> >  drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 81 +++-----------------------
+> >  1 file changed, 7 insertions(+), 74 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c index c09b15b64192..78795d6cb174
+> > 100644
+> > --- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > +++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > @@ -87,34 +87,6 @@ int sun8i_tcon_top_de_config(struct device *dev, int
+> > mixer, int tcon)> 
+> >  }
+> >  EXPORT_SYMBOL(sun8i_tcon_top_de_config);
+> > 
+> > -static int sun8i_tcon_top_get_connected_ep_id(struct device_node *node,
+> > -                                             int port_id)
+> > -{
+> > -       struct device_node *ep, *remote, *port;
+> > -       struct of_endpoint endpoint;
+> > -
+> > -       port = of_graph_get_port_by_id(node, port_id);
+> > -       if (!port)
+> > -               return -ENOENT;
+> > -
+> > -       for_each_available_child_of_node(port, ep) {
+> > -               remote = of_graph_get_remote_port_parent(ep);
+> > -               if (!remote)
+> > -                       continue;
+> > -
+> > -               if (of_device_is_available(remote)) {
+> > -                       of_graph_parse_endpoint(ep, &endpoint);
+> > -
+> > -                       of_node_put(remote);
+> > -
+> > -                       return endpoint.id;
+> > -               }
+> > -
+> > -               of_node_put(remote);
+> > -       }
+> > -
+> > -       return -ENOENT;
+> > -}
+> > 
+> >  static struct clk_hw *sun8i_tcon_top_register_gate(struct device *dev,
+> >  
+> >                                                    const char *parent,
+> > 
+> > @@ -149,11 +121,9 @@ static int sun8i_tcon_top_bind(struct device *dev,
+> > struct device *master,> 
+> >         struct platform_device *pdev = to_platform_device(dev);
+> >         struct clk_hw_onecell_data *clk_data;
+> >         struct sun8i_tcon_top *tcon_top;
+> > 
+> > -       bool mixer0_unused = false;
+> > 
+> >         struct resource *res;
+> >         void __iomem *regs;
+> > 
+> > -       int ret, i, id;
+> > -       u32 val;
+> > +       int ret, i;
+> > 
+> >         tcon_top = devm_kzalloc(dev, sizeof(*tcon_top), GFP_KERNEL);
+> >         if (!tcon_top)
+> > 
+> > @@ -198,49 +168,12 @@ static int sun8i_tcon_top_bind(struct device *dev,
+> > struct device *master,> 
+> >                 goto err_assert_reset;
+> >         
+> >         }
+> > 
+> > -       val = 0;
+> > -
+> > -       /* check if HDMI mux output is connected */
+> > -       if (sun8i_tcon_top_get_connected_ep_id(dev->of_node, 5) >= 0) {
+> > -               /* find HDMI input endpoint id, if it is connected at
+> > all*/
+> > -               id = sun8i_tcon_top_get_connected_ep_id(dev->of_node, 4);
+> > -               if (id >= 0)
+> > -                       val = FIELD_PREP(TCON_TOP_HDMI_SRC_MSK, id + 1);
+> > -               else
+> > -                       DRM_DEBUG_DRIVER("TCON TOP HDMI input is not
+> > connected\n"); -       } else {
+> > -               DRM_DEBUG_DRIVER("TCON TOP HDMI output is not
+> > connected\n"); -       }
+> > -
+> > -       writel(val, regs + TCON_TOP_GATE_SRC_REG);
+> > -
+> > -       val = 0;
+> > -
+> > -       /* process mixer0 mux output */
+> > -       id = sun8i_tcon_top_get_connected_ep_id(dev->of_node, 1);
+> > -       if (id >= 0) {
+> > -               val = FIELD_PREP(TCON_TOP_PORT_DE0_MSK, id);
+> > -       } else {
+> > -               DRM_DEBUG_DRIVER("TCON TOP mixer0 output is not
+> > connected\n"); -               mixer0_unused = true;
+> > -       }
+> > -
+> > -       /* process mixer1 mux output */
+> > -       id = sun8i_tcon_top_get_connected_ep_id(dev->of_node, 3);
+> > -       if (id >= 0) {
+> > -               val |= FIELD_PREP(TCON_TOP_PORT_DE1_MSK, id);
+> > -
+> > -               /*
+> > -                * mixer0 mux has priority over mixer1 mux. We have to
+> > -                * make sure mixer0 doesn't overtake TCON from mixer1.
+> > -                */
+> > -               if (mixer0_unused && id == 0)
+> > -                       val |= FIELD_PREP(TCON_TOP_PORT_DE0_MSK, 1);
+> > -       } else {
+> > -               DRM_DEBUG_DRIVER("TCON TOP mixer1 output is not
+> > connected\n"); -       }
+> > -
+> > -       writel(val, regs + TCON_TOP_PORT_SEL_REG);
+> > +       /*
+> > +        * Default register values might have some reserved bits set,
+> > which
+> > +        * prevents TCON TOP from working properly. Set them to 0 here.
+> > +        */
+> > +       writel(0, regs + TCON_TOP_GATE_SRC_REG);
+> > +       writel(0, regs + TCON_TOP_PORT_SEL_REG);
+> 
+> Would it make sense to just force a reset using the reset control?
+
+I wrote TCON TOP driver for H6 at first. For some reason, some registers had 
+reserved bits set after reset line was released. TCON TOP was not used in U-
+Boot, so I guess this counts as full reset.
+
+I never tried to find out how it behaves on R40 because setting those 
+registers to 0 seems like simple, good enough solution, which works 
+everywhere.
+
+Best regards,
+Jernej
