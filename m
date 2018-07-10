@@ -1,7 +1,7 @@
 From: Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: [PATCH v2 08/18] ARM: dts: sun8i: r40: Add mixer ids to TCON TOP
-Date: Tue, 10 Jul 2018 22:35:01 +0200
-Message-ID: <20180710203511.18454-9-jernej.skrabec@siol.net>
+Subject: [PATCH v2 09/18] drm/sun4i: mixer: Order includes alphabetically
+Date: Tue, 10 Jul 2018 22:35:02 +0200
+Message-ID: <20180710203511.18454-10-jernej.skrabec@siol.net>
 References: <20180710203511.18454-1-jernej.skrabec@siol.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180710203511.18454-1-jernej.skrabec@siol.net>
@@ -10,53 +10,28 @@ To: maxime.ripard@bootlin.com, wens@csie.org, robh+dt@kernel.org
 Cc: airlied@linux.ie, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-sun4i-drm DT binding, second paragraph of the first section says:
+Includes are not alphabetically ordered.
 
-For all connections between components up to the TCONs in the display
-pipeline, when there are multiple components of the same type at the
-same depth, the local endpoint ID must be the same as the remote
-component's index.
-
-Add mixer ids in R40 DT as mandated by DT binding.
-
-Fixes: 05a43a262d03 ("ARM: dts: sun8i: r40: Add HDMI pipeline")
+Reorder them.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 ---
- arch/arm/boot/dts/sun8i-r40.dtsi | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/sun4i/sun8i_mixer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index 2afb079a3776..1dd088d82773 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -576,9 +576,12 @@
- 				#size-cells = <0>;
+diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+index ee8febb25903..aa81b9838ae8 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
++++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+@@ -21,8 +21,8 @@
  
- 				tcon_top_mixer0_in: port@0 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
- 					reg = <0>;
+ #include <linux/component.h>
+ #include <linux/dma-mapping.h>
+-#include <linux/reset.h>
+ #include <linux/of_device.h>
++#include <linux/reset.h>
  
--					tcon_top_mixer0_in_mixer0: endpoint {
-+					tcon_top_mixer0_in_mixer0: endpoint@0 {
-+						reg = <0>;
- 						remote-endpoint = <&mixer0_out_tcon_top>;
- 					};
- 				};
-@@ -606,9 +609,12 @@
- 				};
- 
- 				tcon_top_mixer1_in: port@2 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
- 					reg = <2>;
- 
--					tcon_top_mixer1_in_mixer1: endpoint {
-+					tcon_top_mixer1_in_mixer1: endpoint@1 {
-+						reg = <1>;
- 						remote-endpoint = <&mixer1_out_tcon_top>;
- 					};
- 				};
+ #include "sun4i_drv.h"
+ #include "sun8i_mixer.h"
 -- 
 2.18.0
