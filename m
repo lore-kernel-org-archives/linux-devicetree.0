@@ -1,107 +1,60 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 09/17] drm/sun4i: mixer: Read id from DT
-Date: Tue, 10 Jul 2018 23:40:14 +0800
-Message-ID: <CAGb2v64zBrzpqV9pvJPeaxbpLai8Ky0gTcwbSPv0m-vS-2JXKg@mail.gmail.com>
-References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-10-jernej.skrabec@siol.net>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 04/14] dmaengine: dma-jz4780: Add support for the JZ4770
+ SoC
+Date: Tue, 10 Jul 2018 17:41:26 +0200
+Message-ID: <1531237286.17118.2@crapouillou.net>
+References: <20180703123214.23090-1-paul@crapouillou.net>
+        <20180703123214.23090-5-paul@crapouillou.net>
+        <20180709171032.GJ22377@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180706175113.26698-10-jernej.skrabec@siol.net>
+In-Reply-To: <20180709171032.GJ22377@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+To: Vinod <vkoul@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 7, 2018 at 1:51 AM, Jernej Skrabec <jernej.skrabec@siol.net> wrote:
-> Currently, TCON supports 2 ways to match TCON with engine (mixer in this
-> case). Old way is to just traverse of graph backwards and compare node
-> pointer. New way is to match TCON and engine by their respective ids.
-> All SoCs with DE2 enabled till now used the old way, which means mixer
-> id was never used and thus never implemented.
->
-> However, for R40, only the new way will be used. To prepare for that,
-> implemend fetching mixer id from DT.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  drivers/gpu/drm/sun4i/sun8i_mixer.c | 35 +++++++++++++++++++++++++++--
->  1 file changed, 33 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> index ee8febb25903..11221f96746d 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> @@ -23,6 +23,7 @@
->  #include <linux/dma-mapping.h>
->  #include <linux/reset.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_graph.h>
 
-These should be alphabetically ordered.
 
->
->  #include "sun4i_drv.h"
->  #include "sun8i_mixer.h"
-> @@ -322,6 +323,37 @@ static struct regmap_config sun8i_mixer_regmap_config = {
->         .max_register   = 0xbfffc, /* guessed */
->  };
->
-> +static int sun8i_mixer_of_get_id(struct device_node *node)
-> +{
-> +       struct device_node *port, *ep;
-> +       int ret = -EINVAL;
-> +
-> +       /* output is port 1 */
-> +       port = of_graph_get_port_by_id(node, 1);
-> +       if (!port)
-> +               return -EINVAL;
-> +
-> +       /* try finding an upstream endpoint */
+Le lun. 9 juil. 2018 =E0 19:10, Vinod <vkoul@kernel.org> a =E9crit :
+> On 03-07-18, 14:32, Paul Cercueil wrote:
+>=20
+>>  +static inline void jz4780_dma_chan_disable(struct jz4780_dma_dev=20
+>> *jzdma,
+>>  +	unsigned int chn)
+>>  +{
+>>  +	if (jzdma->version =3D=3D ID_JZ4770)
+>>  +		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKEC, BIT(chn));
+>>  +}
+>=20
+> this sounds as hardware behaviour, so why not describe as a property=20
+> in
+> DT?
 
-You mean downstream.
+See my response to your message on patch 1.
 
-> +       for_each_available_child_of_node(port, ep) {
-> +               struct device_node *remote;
-> +               u32 reg;
-> +
-> +               remote = of_graph_get_remote_endpoint(ep);
-> +               if (!remote)
-> +                       continue;
-> +
-> +               ret = of_property_read_u32(remote, "reg", &reg);
-> +               if (ret)
-> +                       continue;
+>>  +
+>>   static struct jz4780_dma_desc *jz4780_dma_desc_alloc(
+>>   	struct jz4780_dma_chan *jzchan, unsigned int count,
+>>   	enum dma_transaction_type type)
+>>  @@ -228,8 +246,15 @@ static void jz4780_dma_desc_free(struct=20
+>> virt_dma_desc *vdesc)
+>>   	kfree(desc);
+>>   }
+>>=20
+>>  -static uint32_t jz4780_dma_transfer_size(unsigned long val,=20
+>> uint32_t *shift)
+>>  +static const unsigned int jz4780_dma_ord_max[] =3D {
+>>  +	[ID_JZ4770] =3D 6,
+>>  +	[ID_JZ4780] =3D 7,
+>>  +};
+>=20
+> So this gives the transfer length supported?
 
-This is somewhat redundant, given the current code structure will loop
-over all available child nodes. What you want is probably an early
-termination condition instead, i.e. if (!ret).
+Yes, exactly. The maximum transfer size is (1 << ord).
 
-Also, remember to call of_node_put on the remote node.
-
-ChenYu
-
-> +
-> +               ret = reg;
-> +       }
-> +
-> +       of_node_put(port);
-> +
-> +       return ret;
-> +}
-> +
->  static int sun8i_mixer_bind(struct device *dev, struct device *master,
->                               void *data)
->  {
-> @@ -353,8 +385,7 @@ static int sun8i_mixer_bind(struct device *dev, struct device *master,
->         dev_set_drvdata(dev, mixer);
->         mixer->engine.ops = &sun8i_engine_ops;
->         mixer->engine.node = dev->of_node;
-> -       /* The ID of the mixer currently doesn't matter */
-> -       mixer->engine.id = -1;
-> +       mixer->engine.id = sun8i_mixer_of_get_id(dev->of_node);
->
->         mixer->cfg = of_device_get_match_data(dev);
->         if (!mixer->cfg)
 > --
-> 2.18.0
->
+> ~Vinod
+=
