@@ -1,88 +1,134 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: Add KINGDISPLAY KD097D04 panel
- bindings
-Date: Tue, 10 Jul 2018 13:05:12 +0200
-Message-ID: <20180710110512.GP1504@ulmo>
-References: <20180702103229.3952-1-heiko@sntech.de>
- <20180702103229.3952-3-heiko@sntech.de>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH RFC 1/2] mmc: sdhci: Allow platform controlled voltage
+ switching
+Date: Tue, 10 Jul 2018 14:07:18 +0300
+Message-ID: <53c6d61f-47f5-2e4e-8280-6f76f707799e@intel.com>
+References: <1529583826-42020-1-git-send-email-vviswana@codeaurora.org>
+ <1529583826-42020-2-git-send-email-vviswana@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1245122638=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180702103229.3952-3-heiko@sntech.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, hl@rock-chips.com, briannorris@chromium.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, nickey.yang@rock-chips.com, robh+dt@kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1529583826-42020-2-git-send-email-vviswana@codeaurora.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vijay Viswanath <vviswana@codeaurora.org>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, dianders@google.com, sayalil@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-
---===============1245122638==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="wg9FEZT+WCTrEXgJ"
-Content-Disposition: inline
-
-
---wg9FEZT+WCTrEXgJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jul 02, 2018 at 12:32:28PM +0200, Heiko Stuebner wrote:
-> From: Nickey Yang <nickey.yang@rock-chips.com>
->=20
-> The KINGDISPLAY KD097D04 is a 9.7" panel with a 1536x2048
-> resolution and connected to DSI using 8 lanes.
->=20
-> Signed-off-by: Nickey Yang <nickey.yang@rock-chips.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+On 21/06/18 15:23, Vijay Viswanath wrote:
+> Some controllers can have internal mechanism to inform the SW that it
+> is ready for voltage switching. For such controllers, changing voltage
+> before the HW is ready can result in various issues.
+> 
+> Add a quirk, which can be used by drivers of such controllers.
+> 
+> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
 > ---
->  .../display/panel/kingdisplay,kd097d04.txt    | 22 +++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/kingd=
-isplay,kd097d04.txt
+>  drivers/mmc/host/sdhci.c | 20 +++++++++++++++-----
+>  drivers/mmc/host/sdhci.h |  2 ++
+>  2 files changed, 17 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 1c828e0..f0346d4 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -1615,7 +1615,8 @@ void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
+>  void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
+>  		     unsigned short vdd)
+>  {
+> -	if (IS_ERR(host->mmc->supply.vmmc))
+> +	if (IS_ERR(host->mmc->supply.vmmc) ||
+> +			(host->quirks2 & SDHCI_QUIRK2_INTERNAL_PWR_CTL))
 
-Applied, thanks.
+I think you should provide your own ->set_power() instead of this
 
-Thierry
+>  		sdhci_set_power_noreg(host, mode, vdd);
+>  	else
+>  		sdhci_set_power_reg(host, mode, vdd);
+> @@ -2009,7 +2010,9 @@ int sdhci_start_signal_voltage_switch(struct mmc_host *mmc,
+>  		ctrl &= ~SDHCI_CTRL_VDD_180;
+>  		sdhci_writew(host, ctrl, SDHCI_HOST_CONTROL2);
+>  
+> -		if (!IS_ERR(mmc->supply.vqmmc)) {
+> +		if (!IS_ERR(mmc->supply.vqmmc) &&
+> +				!(host->quirks2 &
+> +					SDHCI_QUIRK2_INTERNAL_PWR_CTL)) {
 
---wg9FEZT+WCTrEXgJ
-Content-Type: application/pgp-signature; name="signature.asc"
+And your own ->start_signal_voltage_switch()
 
------BEGIN PGP SIGNATURE-----
+>  			ret = mmc_regulator_set_vqmmc(mmc, ios);
+>  			if (ret) {
+>  				pr_warn("%s: Switching to 3.3V signalling voltage failed\n",
+> @@ -2032,7 +2035,8 @@ int sdhci_start_signal_voltage_switch(struct mmc_host *mmc,
+>  	case MMC_SIGNAL_VOLTAGE_180:
+>  		if (!(host->flags & SDHCI_SIGNALING_180))
+>  			return -EINVAL;
+> -		if (!IS_ERR(mmc->supply.vqmmc)) {
+> +		if (!IS_ERR(mmc->supply.vqmmc) &&
+> +			!(host->quirks2 & SDHCI_QUIRK2_INTERNAL_PWR_CTL)) {
+>  			ret = mmc_regulator_set_vqmmc(mmc, ios);
+>  			if (ret) {
+>  				pr_warn("%s: Switching to 1.8V signalling voltage failed\n",
+> @@ -3485,7 +3489,10 @@ int sdhci_setup_host(struct sdhci_host *host)
+>  	 * the host can take the appropriate action if regulators are not
+>  	 * available.
+>  	 */
+> -	ret = mmc_regulator_get_supply(mmc);
+> +	if (!(host->quirks2 & SDHCI_QUIRK2_INTERNAL_PWR_CTL))
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltEkugACgkQ3SOs138+
-s6FLCw/+IW5ycgyk9TiWVBIurrQDhG2/XUgcfQmtRmO0gEvvGKNPLuT4A1bCX3S+
-lJp/uRWCyi6utFVYBpr0H9k2kKV+lVq4WSI26cE/A5haCJa/nknjBXfzz6o7nADR
-w0/tMxvkJ0/Toj0urFCZUhMx8cpTveOWUVMMXINHKL6wSBGq7+4SlDoJ+hsUx4C9
-xm7cDjUex1Y0eCIsksPO7I8YuoFleqEAOlYmp1nbCazKh/pqIcfOJiDaeWcKNAJ2
-Xx0tmIPxq+2+8OzgZd08m570iSdn1BffcCkO6OqAddx0b+1vmnmSC4jxDPgaQxEP
-ie1rxlSd1IaGP3wS//xmT9xiCd+dF1EJQ8AAv7zis+qQHCBICtKD3Mpb9B53/36v
-r4CUN/OYsR3s7GgMWX8KFoYjFrD0zsS4hz+uAH1d85pLX/hFjyAlpz30b9KbaEVM
-5DlruZZuLGSewW2XAM7xeuPHXPzdlNlErSnPCu92qywmIJekM6g0Q8nueVnf0egh
-hMLBgTbdhO8SD83vL6xdl+uEN93hwID/G1Tr0ZzlKAp0GU2cHPlsYbkyU8Pr4aFU
-Fi3fGBxxhljE2VlJiSACnioSNmR2BANBGx96SEE3CX7mHATOnZyVBj9FDFxfWjit
-y1Ook6PrD3qsLM/kiILorkw0+djSUgWSJ+6ptd3tT95/qbgCZDw=
-=WVH9
------END PGP SIGNATURE-----
+Since we expect mmc_regulator_get_supply() to have been called, this could be:
 
---wg9FEZT+WCTrEXgJ--
+	if (!mmc->supply.vmmc) {
+		ret = mmc_regulator_get_supply(mmc);
+		enable_vqmmc = true;
+	} else {
+		ret = 0;
+	}
 
---===============1245122638==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
+> +		ret = mmc_regulator_get_supply(mmc);
+> +	else
+> +		ret = 0;
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -3736,7 +3743,10 @@ int sdhci_setup_host(struct sdhci_host *host)
+>  
+>  	/* If vqmmc regulator and no 1.8V signalling, then there's no UHS */
+>  	if (!IS_ERR(mmc->supply.vqmmc)) {
+> -		ret = regulator_enable(mmc->supply.vqmmc);
+> +		if (!(host->quirks2 & SDHCI_QUIRK2_INTERNAL_PWR_CTL))
 
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+And this could be:
 
---===============1245122638==--
+		if (enable_vqmmc)
+			ret = regulator_enable(mmc->supply.vqmmc);
+		else
+			ret = 0;
+
+However, you still need to ensure regulator_disable(mmc->supply.vqmmc) is
+only called if regulator_enable() was called.
+
+> +			ret = regulator_enable(mmc->supply.vqmmc);
+> +		else
+> +			ret = 0;
+>  		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 1700000,
+>  						    1950000))
+>  			host->caps1 &= ~(SDHCI_SUPPORT_SDR104 |
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index 23966f8..3b0c97a 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -450,6 +450,8 @@ struct sdhci_host {
+>   * obtainable timeout.
+>   */
+>  #define SDHCI_QUIRK2_DISABLE_HW_TIMEOUT			(1<<17)
+> +/* Regulator voltage changes are being done from platform layer */
+> +#define SDHCI_QUIRK2_INTERNAL_PWR_CTL				(1<<18)
+
+So maybe the quirk is not needed.
+
+>  
+>  	int irq;		/* Device IRQ */
+>  	void __iomem *ioaddr;	/* Mapped address */
+> 
