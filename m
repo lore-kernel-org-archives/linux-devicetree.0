@@ -1,38 +1,53 @@
-From: Stefan Mavrodiev <stefan@olimex.com>
-Subject: Re: [PATCH v2 1/1] drm/panel: Add support for Olimex LCD-OLinuXino
- panel
-Date: Tue, 10 Jul 2018 16:41:54 +0300
-Message-ID: <a5aaf30e-4fd5-b47c-664b-55d00b862262@olimex.com>
-References: <1529909093-17021-1-git-send-email-stefan@olimex.com>
- <20180710103250.GG1504@ulmo> <e1229a90-1bdb-0c8e-c371-cde0bc30ea56@gmail.com>
- <20180710132740.GA19600@kroah.com>
+From: Fabio Estevam <fabio.estevam@nxp.com>
+Subject: [PATCH v2 1/6] dt-bindings: freescale: Add bindings for the tigerp
+ module
+Date: Tue, 10 Jul 2018 10:47:31 -0300
+Message-ID: <1531230456-27717-1-git-send-email-fabio.estevam@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180710132740.GA19600@kroah.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Stefan Mavrodiev <stefan@olimex.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, robh+dt@kernel.org, kernel@pengutronix.de, sebastian.reichel@collabora.co.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Add bindings for the tigerp module present on i.MX51.
 
+Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+---
+Changes since v1:
+- Newly introduced in this series.
 
-On 07/10/2018 04:27 PM, Greg Kroah-Hartman wrote:
-> On Tue, Jul 10, 2018 at 04:08:54PM +0300, Stefan Mavrodiev wrote:
->> On 07/10/2018 01:32 PM, Thierry Reding wrote:
->>>> +MODULE_AUTHOR("Stefan Mavrodiev <stefan@olimex.com>");
->>>> +MODULE_DESCRIPTION("LCD-OLinuXino driver");
->>>> +MODULE_LICENSE("GPL v2");
->>> This seems to contradict the GPL-2.0+ in the SPDX header.
->> Can you elaborate on this?
-> Please read module.h for what this string means.
-Oh.... My bad. License should be "GPL", not "GPL v2".
->
-> thanks,
->
-> greg k-h
+ Documentation/devicetree/bindings/arm/freescale/tigerp.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/tigerp.txt
 
-Regards,
-Stefan Mavrodiev
+diff --git a/Documentation/devicetree/bindings/arm/freescale/tigerp.txt b/Documentation/devicetree/bindings/arm/freescale/tigerp.txt
+new file mode 100644
+index 0000000..19e2aad
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/freescale/tigerp.txt
+@@ -0,0 +1,12 @@
++* Freescale Tigerp platform module
++
++Required properties:
++- compatible : Should be "fsl,imx51-tigerp"
++- reg : Address and length of the register set for the device
++
++Example:
++
++tigerp: tigerp@83fa0000 {
++	compatible = "fsl,imx51-tigerp";
++	reg = <0x83fa0000 0x28>;
++};
+-- 
+2.7.4
