@@ -1,15 +1,15 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v5 06/22] soc: sunxi: sram: Add dt match for
- the A10 system-control compatible
-Date: Tue, 10 Jul 2018 22:48:43 +0800
-Message-ID: <CAGb2v67=TizoRQ9uKMPyXPu5fjYFG9bg3DtJ4mBQT2Zm_eZh9w@mail.gmail.com>
-References: <20180710080114.31469-1-paul.kocialkowski@bootlin.com> <20180710080114.31469-7-paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v5 07/22] drivers: soc: sunxi: Add support
+ for the C1 SRAM region
+Date: Tue, 10 Jul 2018 22:49:17 +0800
+Message-ID: <CAGb2v65fgkG0hiSuX_VyD1TBCw7OQLoBBJLpun1GK4yUCnPwNg@mail.gmail.com>
+References: <20180710080114.31469-1-paul.kocialkowski@bootlin.com> <20180710080114.31469-8-paul.kocialkowski@bootlin.com>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBY4OSPNAKGQEMSC2EZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBBMPSPNAKGQEJ6ZAOLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180710080114.31469-7-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20180710080114.31469-8-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -22,9 +22,17 @@ List-Id: devicetree@vger.kernel.org
 
 On Tue, Jul 10, 2018 at 4:00 PM, Paul Kocialkowski
 <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> This binds the new A10 system-control compatible to the associated
-> driver, with the same driver data as the previous compatible.
+> From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 >
+> This introduces support for the SRAM C1 section, that is controlled by
+> the system controller. This SRAM area can be muxed either to the CPU
+> or the Video Engine, that needs this area to store various tables (e.g.
+> the Huffman VLD decoding tables).
+>
+> This only supports devices with the same layout as the A10 (which also
+> includes the A13, A20, A33 and other SoCs).
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
 Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
