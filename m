@@ -1,62 +1,69 @@
-From: Denis OSTERLAND <denis.osterland@diehl.com>
-Subject: Re: [PATCH v4 2/5] rtc: isl1208: add support for isl1219 with tamper
- detection
-Date: Tue, 10 Jul 2018 14:06:57 +0000
-Message-ID: <1531231616.7366.2.camel@diehl.com>
-References: <20180710090710.9066-3-Denis.Osterland@diehl.com>
-         <201807102100.7IWfwFfW%fengguang.wu@intel.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 6/6] PM / Domains: Stop deferring probe at the end of initcall
+Date: Tue, 10 Jul 2018 08:25:19 -0600
+Message-ID: <CAL_Jsq+dcwZHKFGy+BGOyV+Yyz0qgmeq8zoT=DkB+c+DsXdApQ@mail.gmail.com>
+References: <20180709154153.15742-1-robh@kernel.org> <20180709154153.15742-7-robh@kernel.org>
+ <CAPDyKFoN1=16dGKmkFp6Khgs5zx+BguOs3qOcm+rAZw=b38JVg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201807102100.7IWfwFfW%fengguang.wu@intel.com>
-Content-Language: en-US
-Content-ID: <E3167535FD5AFB41B9C55D2C3830842C@diehl.internal>
+In-Reply-To: <CAPDyKFoN1=16dGKmkFp6Khgs5zx+BguOs3qOcm+rAZw=b38JVg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "lkp@intel.com" <lkp@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kbuild-all@01.org" <kbuild-all@01.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Architecture Mailman List <boot-architecture@lists.linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCnNlZW1zIDIvNSB3YXMgYXBwbGllZCBiZWZvcmUgMS81Lg0KMS81IGludHJvZHVj
-ZXMgcnRjX2FkZF9ncm91cC4NCg0KUmVnYXJkcyBEZW5pcw0KDQpBbSBEaWVuc3RhZywgZGVu
-IDEwLjA3LjIwMTgsIDIxOjIwICswODAwIHNjaHJpZWIga2J1aWxkIHRlc3Qgcm9ib3Q6DQo+
-IEhpIE1pY2hhZWwsDQo+IA0KPiBJIGxvdmUgeW91ciBwYXRjaCEgWWV0IHNvbWV0aGluZyB0
-byBpbXByb3ZlOg0KPiANCj4gW2F1dG8gYnVpbGQgdGVzdCBFUlJPUiBvbiBhYmVsbG9uaS9y
-dGMtbmV4dF0NCj4gW2Fsc28gYnVpbGQgdGVzdCBFUlJPUiBvbiB2NC4xOC1yYzQgbmV4dC0y
-MDE4MDcwOV0NCj4gW2lmIHlvdXIgcGF0Y2ggaXMgYXBwbGllZCB0byB0aGUgd3JvbmcgZ2l0
-IHRyZWUsIHBsZWFzZSBkcm9wIHVzIGEgbm90ZSB0byBoZWxwIGltcHJvdmUgdGhlIHN5c3Rl
-bV0NCj4gDQo+IHVybDrCoMKgwqDCoGh0dHBzOi8vZ2l0aHViLmNvbS8wZGF5LWNpL2xpbnV4
-L2NvbW1pdHMvRGVuaXMtT1NURVJMQU5EL3J0Yy1pc2wxMjA4LWZpeGVzLWRvY3VtZW50YXRp
-b24tYW5kLWlzbDEyMTktc3VwcG9ydC8yMDE4MDcxMC0xODE3MDkNCj4gYmFzZTrCoMKgwqBo
-dHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9hYmVsbG9u
-aS9saW51eC5naXQgcnRjLW5leHQNCj4gY29uZmlnOiB4ODZfNjQtcmFuZGNvbmZpZy1zNC0w
-NzEwMTg1NyAoYXR0YWNoZWQgYXMgLmNvbmZpZykNCj4gY29tcGlsZXI6IGdjYy03IChEZWJp
-YW4gNy4zLjAtMTYpIDcuMy4wDQo+IHJlcHJvZHVjZToNCj4gwqDCoMKgwqDCoMKgwqDCoCMg
-c2F2ZSB0aGUgYXR0YWNoZWQgLmNvbmZpZyB0byBsaW51eCBidWlsZCB0cmVlDQo+IMKgwqDC
-oMKgwqDCoMKgwqBtYWtlIEFSQ0g9eDg2XzY0wqANCj4gDQo+IEFsbCBlcnJvcnMgKG5ldyBv
-bmVzIHByZWZpeGVkIGJ5ID4+KToNCj4gDQo+ID4gDQo+ID4gPiANCj4gPiA+IEVSUk9SOiAi
-cnRjX2FkZF9ncm91cCIgW2RyaXZlcnMvcnRjL3J0Yy1pc2wxMjA4LmtvXSB1bmRlZmluZWQh
-DQo+IC0tLQ0KPiAwLURBWSBrZXJuZWwgdGVzdCBpbmZyYXN0cnVjdHVyZcKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgT3BlbiBTb3VyY2UgVGVjaG5vbG9neSBDZW50ZXINCj4g
-aHR0cHM6Ly9saXN0cy4wMS5vcmcvcGlwZXJtYWlsL2tidWlsZC1hbGzCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoEludGVsIENvcnBvcmF0aW9uDQoNCkRpZWhsIENv
-bm5lY3Rpdml0eSBTb2x1dGlvbnMgR21iSA0KR2VzY2jDpGZ0c2bDvGhydW5nOiBIb3JzdCBM
-ZW9uYmVyZ2VyDQpTaXR6IGRlciBHZXNlbGxzY2hhZnQ6IE7DvHJuYmVyZyAtIFJlZ2lzdGVy
-Z2VyaWNodDogQW10c2dlcmljaHQNCk7DvHJuYmVyZzogSFJCIDMyMzE1DQpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCg0KRGVyIEluaGFsdCBkZXIg
-dm9yc3RlaGVuZGVuIEUtTWFpbCBpc3QgbmljaHQgcmVjaHRsaWNoIGJpbmRlbmQuIERpZXNl
-IEUtTWFpbCBlbnRoYWVsdCB2ZXJ0cmF1bGljaGUgdW5kL29kZXIgcmVjaHRsaWNoIGdlc2No
-dWV0enRlIEluZm9ybWF0aW9uZW4uDQpJbmZvcm1pZXJlbiBTaWUgdW5zIGJpdHRlLCB3ZW5u
-IFNpZSBkaWVzZSBFLU1haWwgZmFlbHNjaGxpY2hlcndlaXNlIGVyaGFsdGVuIGhhYmVuLiBC
-aXR0ZSBsb2VzY2hlbiBTaWUgaW4gZGllc2VtIEZhbGwgZGllIE5hY2hyaWNodC4NCkplZGUg
-dW5lcmxhdWJ0ZSBGb3JtIGRlciBSZXByb2R1a3Rpb24sIEJla2FubnRnYWJlLCBBZW5kZXJ1
-bmcsIFZlcnRlaWx1bmcgdW5kL29kZXIgUHVibGlrYXRpb24gZGllc2VyIEUtTWFpbCBpc3Qg
-c3RyZW5nc3RlbnMgdW50ZXJzYWd0Lg0KVGhlIGNvbnRlbnRzIG9mIHRoZSBhYm92ZSBtZW50
-aW9uZWQgZS1tYWlsIGlzIG5vdCBsZWdhbGx5IGJpbmRpbmcuIFRoaXMgZS1tYWlsIGNvbnRh
-aW5zIGNvbmZpZGVudGlhbCBhbmQvb3IgbGVnYWxseSBwcm90ZWN0ZWQgaW5mb3JtYXRpb24u
-IFBsZWFzZSBpbmZvcm0gdXMgaWYgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1haWwgYnkN
-Cm1pc3Rha2UgYW5kIGRlbGV0ZSBpdCBpbiBzdWNoIGEgY2FzZS4gRWFjaCB1bmF1dGhvcml6
-ZWQgcmVwcm9kdWN0aW9uLCBkaXNjbG9zdXJlLCBhbHRlcmF0aW9uLCBkaXN0cmlidXRpb24g
-YW5kL29yIHB1YmxpY2F0aW9uIG9mIHRoaXMgZS1tYWlsIGlzIHN0cmljdGx5IHByb2hpYml0
-ZWQuIA0K
+On Mon, Jul 9, 2018 at 4:49 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On 9 July 2018 at 17:41, Rob Herring <robh@kernel.org> wrote:
+> > All PM domain drivers must be built-in (at least those using DT), so
+> > there is no point deferring probe after initcalls are done. Continuing
+> > to defer probe may prevent booting successfully even if managing PM
+> > domains is not required. This can happen if the user failed to enable
+> > the driver or if power-domains are added to a platform's DT, but there
+> > is not yet a driver (e.g. a new DTB with an old kernel).
+> >
+> > Call the driver core function driver_deferred_probe_check_init_done()
+> > instead of just returning -EPROBE_DEFER to stop deferring probe when
+> > initcalls are done.
+> >
+> > Acked-by: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > Cc: Kevin Hilman <khilman@kernel.org>
+> > Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> > Cc: Pavel Machek <pavel@ucw.cz>
+> > Cc: Len Brown <len.brown@intel.com>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: linux-pm@vger.kernel.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> > v4:
+> >  - Add Rafael's ack
+> >
+> > v3:
+> >   - Update to new function name
+> >
+> >  drivers/base/power/domain.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> > index 4925af5c4cf0..8c12213875c6 100644
+> > --- a/drivers/base/power/domain.c
+> > +++ b/drivers/base/power/domain.c
+> > @@ -2253,7 +2253,7 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device_node *np,
+> >                 mutex_unlock(&gpd_list_lock);
+> >                 dev_dbg(dev, "%s() failed to find PM domain: %ld\n",
+> >                         __func__, PTR_ERR(pd));
+> > -               return -EPROBE_DEFER;
+> > +               return driver_deferred_probe_check_state(dev);
+> >         }
+>
+> This isn't the only error path where -EPROBE_DEFER may be returned
+> during attach in genpd.
+
+Yes, but I think this is the only place you can fail to get the PD
+device from DT. The case we care about is properties exist in the DT,
+but no driver exists.
+
+What would cause deferring in the latter cases?
+
+Rob
