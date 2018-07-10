@@ -1,50 +1,134 @@
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v2 18/18] dt-bindings: display: sun4i-drm: Fix
- order of DW HDMI PHY compatibles
-Date: Tue, 10 Jul 2018 22:35:11 +0200
-Message-ID: <20180710203511.18454-19-jernej.skrabec@siol.net>
-References: <20180710203511.18454-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Neeraj Kumar Reddy Dantu <dantuguf14105@gmail.com>
+Subject: Re: [PATCH v2] Add DT support for Octavo Systems OSD3358-SM-RED based
+ on TI AM335x
+Date: Tue, 10 Jul 2018 15:54:19 -0500
+Message-ID: <CADO55X_wCd1o9Tfze08fJixsUuA2y7EDDQ3hRwy2bR1nktgx1A@mail.gmail.com>
+References: <20180706200051.1115-1-neeraj.dantu@octavosystems.com>
+ <20180709114304.GE6920@n2100.armlinux.org.uk>
+ <CADO55X8_tbz-O8AuHwqCGnV0g2oDiGHzAug6g3PFqRth5U2H=w@mail.gmail.com>
+ <20180710082624.GA16036@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBRFRSTNAKGQEN2HUXHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180710203511.18454-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: airlied-cv59FeDIM0c@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180710082624.GA16036@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux@armlinux.org.uk
+Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Jason Kridner <jkridner@gmail.com>, Neeraj Dantu <neeraj.dantu@octavosystems.com>, linux-omap@vger.kernel.org, Robert Nelson <robertcnelson@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-They are currently sorted alphabetically. However, they should be sorted
-by release date of the family and then alphabetically.
+> As maintainer of the TDA998x driver, I know what the TDA998x is
+> capable of, I already have the datasheets, and I know the binding
+> document.
 
-Fixes: 03c35dbf73e0 ("dt-bindings: display: sun4i-drm: Add description of A64 HDMI PHY")
+> What I'm asking about is about the specifics of your board's
+> implementation and why you've written what you have in your DT
+> file.  You haven't answered my specific questions either.
+I am sorry I was unclear. My apologies.
 
-Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
----
- Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Here is the wiring between LCD controller and the framer:
 
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-index 7e2451396a28..f8773ecb7525 100644
---- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-@@ -101,9 +101,9 @@ DWC HDMI PHY
- 
- Required properties:
-   - compatible: value must be one of:
--    * allwinner,sun50i-a64-hdmi-phy
-     * allwinner,sun8i-a83t-hdmi-phy
-     * allwinner,sun8i-h3-hdmi-phy
-+    * allwinner,sun50i-a64-hdmi-phy
-   - reg: base address and size of memory-mapped region
-   - clocks: phandles to the clocks feeding the HDMI PHY
-     * bus: the HDMI PHY interface clock
--- 
-2.18.0
+LCD[11:15] ====> VPA[3:7]
+LCD[5:10]   ====> VPB[2:7]
+LCD[0:4]     ====> VPC[3:7]
+Here is the schematic:
+https://octavosystems.com/docs/osd3358-sm-red-schematics-pdf/
+And yes, the colors will come out wrong for the 24 bit for the
+configuration set. See "blue-and-red-wiring" in tilcdc bindings:
+https://www.kernel.org/doc/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
+AM335x errata providing wiring info for 24 bit mode:
+http://www.ti.com/lit/er/sprz360i/sprz360i.pdf
+
+We used the same interface design as the BeagleBone Black:
+https://github.com/torvalds/linux/blob/master/arch/arm/boot/dts/am335x-boneblack-common.dtsi
+
+Hope this is helpful.
+
+Thanks,
+Neeraj
+
+On Tue, Jul 10, 2018 at 3:26 AM Russell King - ARM Linux
+<linux@armlinux.org.uk> wrote:
+>
+> On Mon, Jul 09, 2018 at 02:45:17PM -0500, Neeraj Kumar Reddy Dantu wrote:
+> >  > This should not be "tda19988" as the node name - DT requires generic
+> > > names, like "hdmi-encoder".
+> >
+> > Thanks.Will fix in v3
+> >
+> > > Can you set 24-bit RGB mode with the above configuration - presumably
+> > > the colours will come out wrong?
+> > > Exactly what is the wiring between the lcdc and tda998x?
+> >
+> > You can set mapping for lcd interface between pins with video-ports. See
+> > TDA19988 datasheet, Table 4:
+> > https://media.digikey.com/pdf/Data%20Sheets/NXP%20PDFs/TDA19988_DS_21_july_2011.pdf
+> > .
+> > The property is optional and not used in the board. DT bindings:
+> > https://www.kernel.org/doc/Documentation/devicetree/bindings/display/bridge/tda998x.txt
+> >
+> > This board uses 15 pin RGB565 interface.
+>
+> As maintainer of the TDA998x driver, I know what the TDA998x is
+> capable of, I already have the datasheets, and I know the binding
+> document.
+>
+> What I'm asking about is about the specifics of your board's
+> implementation and why you've written what you have in your DT
+> file.  You haven't answered my specific questions either.
+>
+> >
+> > Regards,
+> > Neeraj
+> >
+> > On Mon, Jul 9, 2018 at 6:43 AM Russell King - ARM Linux <
+> > linux@armlinux.org.uk> wrote:
+> >
+> > > On Fri, Jul 06, 2018 at 08:00:51PM +0000, Neeraj Dantu wrote:
+> > > > +&lcdc {
+> > > > +     status = "okay";
+> > > > +
+> > > > +     /* If you want to get 24 bit RGB and 16 BGR mode instead of
+> > > > +      * current 16 bit RGB and 24 BGR modes, set the propety
+> > > > +      * below to "crossed" and uncomment the video-ports -property
+> > > > +      * in tda19988 node.
+> > > > +      */
+> > > > +     blue-and-red-wiring = "straight";
+> > > ...
+> > > > +&i2c0 {
+> > > > +     tda19988: tda19988 {
+> > >
+> > > This should not be "tda19988" as the node name - DT requires generic
+> > > names, like "hdmi-encoder".
+> > >
+> > > ...
+> > > > +             /* Convert 24bit BGR to RGB, e.g. cross red and blue
+> > > wiring */
+> > > > +             /* video-ports = <0x234501>; */
+> > >
+> > > Please explain more what's going on here.
+> > >
+> > > Can you set 24-bit RGB mode with the above configuration - presumably
+> > > the colours will come out wrong?
+> > >
+> > > Exactly what is the wiring between the lcdc and tda998x?
+> > >
+> > > --
+> > > RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+> > > FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps
+> > > up
+> > > According to speedtest.net: 13Mbps down 490kbps up
+> > >
+>
+> --
+> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps up
+> According to speedtest.net: 13Mbps down 490kbps up
