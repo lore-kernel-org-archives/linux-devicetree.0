@@ -1,86 +1,54 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 5/9] drm/panel: add support for BOE HV070WSA-100 panel
- to simple-panel
-Date: Tue, 10 Jul 2018 11:57:23 +0200
-Message-ID: <20180710095723.GD1504@ulmo>
-References: <1529396370-18761-1-git-send-email-m.purski@samsung.com>
- <CGME20180619082000eucas1p1ed44d7aea857b12ce2c92c240be4dedd@eucas1p1.samsung.com>
- <1529396370-18761-6-git-send-email-m.purski@samsung.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH] ARM: dts: da850: Add power-domains to CPPI 4.1 node
+Date: Tue, 10 Jul 2018 15:35:01 +0530
+Message-ID: <facfdccd-d06a-5286-d740-26cab6ba8e03@ti.com>
+References: <20180704094432.5424-1-nsekhar@ti.com>
+ <e0fc938e-36f9-655f-4d4a-910527a2cc08@lechnology.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0780996976=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1529396370-18761-6-git-send-email-m.purski@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maciej Purski <m.purski@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, Seung-Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-arm-kernel@lists.infradead.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <e0fc938e-36f9-655f-4d4a-910527a2cc08@lechnology.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Lechner <david@lechnology.com>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Device Tree Mailing List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============0780996976==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="NklN7DEeGtkPCoo3"
-Content-Disposition: inline
-
-
---NklN7DEeGtkPCoo3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jun 19, 2018 at 10:19:26AM +0200, Maciej Purski wrote:
-> From: Andrzej Hajda <a.hajda@samsung.com>
->=20
-> The patch adds support for BOE HV070WSA-100 WSVGA 7.01 inch panel
-> in panel-simple driver. The panel is used in Exynos5250-arndale boards.
->=20
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> Signed-off-by: Maciej Purski <m.purski@samsung.com>
-> ---
->  drivers/gpu/drm/panel/panel-simple.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
-
-Applied, thanks.
-
-Thierry
-
---NklN7DEeGtkPCoo3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltEgwMACgkQ3SOs138+
-s6FJ+A//R3kB2aIQR/0l2UYT1W9bP/NUjtwBs1aAT9jkyxzVI3XtGJOxEWWBue8w
-HH3lEbE1ybBOCQZPuuJ/RDou/NNJDFB/9ES1IkTse1CEC2bzvfgl7yl/hb/NOpZc
-UrL88wC048OxM5B/3MHlDt4KFFELOc9SQyiqTdTqDd+rLjdlrSELsWAkGrFfnUa5
-PMA5CTG27yMyYBIkZjw3M/C9VTfvXoLx2dtMmiwlGPuOlNHpZBSLK/1Dn6MRInAL
-OaNjYCuuPSbeCSEEOpeIZ6tCMdgA459vqVTowyxPYPKB+TC4HM5Y/efdoGKbcVFl
-lUwOk53X/1FHMsRq9AFYlTgoUzJJDgpJ7vN/tb8J4cy1NBw93Fs1ifof+N/tlx/E
-OhrhxsdiRLDU6/RLCrLAUcJXIlcscYEfZVXO1NfHewNN9o0kXRKQf8KMRUIyTqxd
-40V3TqLtkuScq/0sSZ/XsZsGAHRFtTemg015IfQPVabMgANKnVduOV+kEjQLAZos
-vFo8BiFoJ87euUco0My9WSgoP5S4Lr4P0fXxeL7VeO4uSgRh6s6sXk7RCAixDPeq
-hxoOQdrI55bZZ2ZvNpE9Avrn8Zaqj/izG46ahQ2/C0G0ai7w7vo1kb0HZqyUhYAs
-zO2nVxl5fVuySfQKkClAVSleorVfF4N5ZgN5Hp/PzSVHx4+4qAY=
-=uHWE
------END PGP SIGNATURE-----
-
---NklN7DEeGtkPCoo3--
-
---===============0780996976==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0780996976==--
+T24gRnJpZGF5IDA2IEp1bHkgMjAxOCAxMDozMiBQTSwgRGF2aWQgTGVjaG5lciB3cm90ZToKPiBP
+biAwNy8wNC8yMDE4IDA0OjQ0IEFNLCBTZWtoYXIgTm9yaSB3cm90ZToKPj4gVGhpcyBhZGRzIHRo
+ZSBwb3dlci1kb21haW5zIHByb3BlcnR5IHRvIENQUEkgNC4xIG5vZGUuCj4+Cj4+IFRoZSBDUFBJ
+IDQuMSBETUEgZHJpdmVyIHVzZXMgcG1fcnVudGltZSB0byBtYW5hZ2UgdGhlIGNsb2NrcywKPj4g
+c28gaXQgbmVlZHMgdGhpcyBwcm9wZXJ0eSBpbiBvcmRlciB0byBmaW5kIGFuZCBlbmFibGUgdGhl
+IGNsb2NrCj4+IHByb3Blcmx5Lgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBTZWtoYXIgTm9yaSA8bnNl
+a2hhckB0aS5jb20+Cj4+IC0tLQo+PiBBcHBsaWVzIGZvciB2NC4xOS9kdCBicmFuY2ggb2YgbXkg
+dHJlZS4KPj4KPj4gwqAgYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaSB8IDEgKwo+PiDCoCAx
+IGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPj4KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
+L2Jvb3QvZHRzL2RhODUwLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpCj4+IGlu
+ZGV4IDllMDVhNWE3MDljMC4uMDdmMjE1ZTdlNWI4IDEwMDY0NAo+PiAtLS0gYS9hcmNoL2FybS9i
+b290L2R0cy9kYTg1MC5kdHNpCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kK
+Pj4gQEAgLTYzNyw2ICs2MzcsNyBAQAo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIGludGVycnVwdHMgPSA8NTg+Owo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgICNkbWEtY2VsbHMgPSA8Mj47Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgI2RtYS1jaGFubmVscyA9IDw0PjsKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCBwb3dlci1kb21haW5zID0gPCZwc2MxIDE+Owo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIHN0YXR1cyA9ICJva2F5IjsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+fTsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgIH07Cj4+Cj4gCj4gUmV2aWV3ZWQtYnk6IERhdmlkIExl
+Y2huZXIgPGRhdmlkQGxlY2hub2xvZ3kuY29tPgoKVGhhbmtzLCBhcHBsaWVkIHdpdGggdGhpcyBh
+bmQgQmFydG9zeidzIFRlc3RlZC1ieS4KCj4gQWx0aG91Z2ggdGhpcyBoYXMgbWUgd29uZGVyaW5n
+IGlmIHdlIGNhbiBub3cgcmVtb3ZlIHRoZSBjbG9jay1yYW5nZXMKPiBwcm9wZXJ0eSBpbiB0aGUg
+cGFyZW50IG5vZGUuCgpBZ3JlZSBpdHMgbm90IHJlYWxseSB1c2VkLiBCdXQgcHJvYmFibHkgbGVh
+dmUgaXQgdGhlcmUgc2luY2UgaXRzIGNvcnJlY3QKYW55d2F5IGFuZCB3ZSBkb24ndCB3YW50IHRv
+IGFkZCBpdCBiYWNrIGlmIHRoZSBETUEgZHJpdmVyIG5lZWRzIGFjY2Vzcwp0byBjbG9jayBhdCBz
+b21lIHBvaW50LgoKVGhhbmtzLApTZWtoYXIKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
