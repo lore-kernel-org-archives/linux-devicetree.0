@@ -1,13 +1,12 @@
 From: Fabio Estevam <fabio.estevam@nxp.com>
-Subject: [PATCH v3 3/6] ARM: dts: imx51: Add tigerp support
-Date: Tue, 10 Jul 2018 13:08:44 -0300
-Message-ID: <1531238927-19579-3-git-send-email-fabio.estevam@nxp.com>
-References: <1531238927-19579-1-git-send-email-fabio.estevam@nxp.com>
+Subject: [PATCH v3 1/6] dt-bindings: freescale: Add bindings for the tigerp
+ module
+Date: Tue, 10 Jul 2018 13:08:42 -0300
+Message-ID: <1531238927-19579-1-git-send-email-fabio.estevam@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1531238927-19579-1-git-send-email-fabio.estevam@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,35 +20,34 @@ To: shawnguo@kernel.org
 Cc: devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, robh+dt@kernel.org, kernel@pengutronix.de, sebastian.reichel@collabora.co.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-As per the i.MX51 Reference Manual add an entry for the
-'tigerp' region in the device tree.
-
-This is needed for accessing the ARM_GPC register to set the
-DBGEN bit, so that the debug clocks can be turned on.
+Add bindings for the tigerp module present on i.MX51.
 
 Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
 ---
 Changes since v2:
 - None
 
- arch/arm/boot/dts/imx51.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ Documentation/devicetree/bindings/arm/freescale/tigerp.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/tigerp.txt
 
-diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
-index 113ddbc..da9d4ce 100644
---- a/arch/arm/boot/dts/imx51.dtsi
-+++ b/arch/arm/boot/dts/imx51.dtsi
-@@ -451,6 +451,11 @@
- 				clocks = <&clks IMX5_CLK_IIM_GATE>;
- 			};
- 
-+			tigerp: tigerp@83fa0000 {
-+				compatible = "fsl,imx51-tigerp";
-+				reg = <0x83fa0000 0x28>;
-+			};
+diff --git a/Documentation/devicetree/bindings/arm/freescale/tigerp.txt b/Documentation/devicetree/bindings/arm/freescale/tigerp.txt
+new file mode 100644
+index 0000000..19e2aad
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/freescale/tigerp.txt
+@@ -0,0 +1,12 @@
++* Freescale Tigerp platform module
 +
- 			owire: owire@83fa4000 {
- 				compatible = "fsl,imx51-owire", "fsl,imx21-owire";
- 				reg = <0x83fa4000 0x4000>;
++Required properties:
++- compatible : Should be "fsl,imx51-tigerp"
++- reg : Address and length of the register set for the device
++
++Example:
++
++tigerp: tigerp@83fa0000 {
++	compatible = "fsl,imx51-tigerp";
++	reg = <0x83fa0000 0x28>;
++};
 -- 
 2.7.4
