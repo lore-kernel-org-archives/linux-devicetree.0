@@ -1,49 +1,48 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH] dt-bindings: rcar-gen3-phy-usb2: Add bindings for
- r8a77990
-Date: Tue, 10 Jul 2018 07:58:56 +0000
-Message-ID: <OSBPR01MB2293646B55B7C7ECA13BD37FD85B0@OSBPR01MB2293.jpnprd01.prod.outlook.com>
-References: <1528267348-18960-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20180612214433.GA28082@rob-hp-laptop>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v2 1/3] dt-bindings: freescale: Add bindings for the
+ M4IF module
+Date: Tue, 10 Jul 2018 09:59:52 +0200
+Message-ID: <1531209592.3163.28.camel@pengutronix.de>
+References: <1531160355-12384-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180612214433.GA28082@rob-hp-laptop>
-Content-Language: ja-JP
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, "kishon@ti.com" <kishon@ti.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1531160355-12384-1-git-send-email-festevam@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>, shawnguo@kernel.org
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
-
-Would you review this patch?
-
-
-Hi Rob,
-
-Thank you for your review!
-
-Best regards,
-Yoshihiro Shimoda
-
-> -----Original Message-----
-> From: Rob Herring <robh@kernel.org>
-> Sent: Wednesday, June 13, 2018 6:45 AM
-> To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Cc: kishon@ti.com; mark.rutland@arm.com; linux-kernel@vger.kernel.org; de=
-vicetree@vger.kernel.org;
-> linux-renesas-soc@vger.kernel.org
-> Subject: Re: [PATCH] dt-bindings: rcar-gen3-phy-usb2: Add bindings for r8=
-a77990
->=20
-> On Wed, Jun 06, 2018 at 03:42:28PM +0900, Yoshihiro Shimoda wrote:
-> > This patch adds suuport for r8a77990 (R-Car E3).
-> >
-> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > ---
-> >  Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
->=20
-> Acked-by: Rob Herring <robh@kernel.org>
+QW0gTW9udGFnLCBkZW4gMDkuMDcuMjAxOCwgMTU6MTkgLTAzMDAgc2NocmllYiBGYWJpbyBFc3Rl
+dmFtOgo+ID4gRnJvbTogRmFiaW8gRXN0ZXZhbSA8ZmFiaW8uZXN0ZXZhbUBueHAuY29tPgo+IAo+
+IEFkZCBiaW5kaW5ncyBmb3IgdGhlIE00SUYgbW9kdWxlIHByZXNlbnQgb24gaS5NWDUxLgo+IAo+
+IFNpZ25lZC1vZmYtYnk6IEZhYmlvIEVzdGV2YW0gPGZhYmlvLmVzdGV2YW1AbnhwLmNvbT4KClJl
+dmlld2VkLWJ5OiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT4KCj4gLS0tCj4g
+Q2hhbmdlcyBzaW5jZSB2MToKPiAtIE5ld2x5IGludHJvZHVjZWQgaW4gdGhpcyBzZXJpZXMgKEx1
+Y2FzKQo+IAo+IMKgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2Nh
+bGUvbTRpZi50eHQgfCAxMiArKysrKysrKysrKysKPiDCoDEgZmlsZSBjaGFuZ2VkLCAxMiBpbnNl
+cnRpb25zKCspCj4gwqBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvbTRpZi50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvbTRpZi50eHQgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9tNGlmLnR4dAo+IG5l
+dyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uOTNiZDdiOAo+IC0tLSAvZGV2L251
+bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2Fs
+ZS9tNGlmLnR4dAo+IEBAIC0wLDAgKzEsMTIgQEAKPiArKiBGcmVlc2NhbGUgTXVsdGkgTWFzdGVy
+IE11bHRpIE1lbW9yeSBJbnRlcmZhY2UgKE00SUYpIG1vZHVsZQo+ICsKPiArUmVxdWlyZWQgcHJv
+cGVydGllczoKPiArLSBjb21wYXRpYmxlIDogU2hvdWxkIGJlICJmc2wsaW14NTEtbTRpZiIKPiAr
+LSByZWcgOiBBZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIHJlZ2lzdGVyIHNldCBmb3IgdGhlIGRl
+dmljZQo+ICsKPiArRXhhbXBsZToKPiArCj4gPiArbTRpZjogbTRpZkA4M2ZkODAwMCB7Cj4gPiAr
+CWNvbXBhdGlibGUgPSAiZnNsLGlteDUxLW00aWYiOwo+ID4gKwlyZWcgPSA8MHg4M2ZkODAwMCAw
+eDEwMDA+Owo+ICt9OwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtYXJtLWtlcm5lbAo=
