@@ -1,91 +1,67 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v3 RESEND 1/2] dt-bindings: add binding for Rockchip hdmi phy
- using an Innosilicon IP
-Date: Tue, 10 Jul 2018 15:49:48 +0200
-Message-ID: <20180710134949.25203-1-heiko@sntech.de>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [v4.14-stable] arm64: dts: stratix10: Fix SPI IRQ for Stratix10
+Date: Tue, 10 Jul 2018 15:50:33 +0200
+Message-ID: <20180710135033.GC1123@kroah.com>
+References: <1530829114-16889-1-git-send-email-thor.thayer@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: kishon@ti.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <stable-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1530829114-16889-1-git-send-email-thor.thayer@linux.intel.com>
+Sender: stable-owner@vger.kernel.org
+To: thor.thayer@linux.intel.com
+Cc: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "# 4 . 9 . x" <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Zheng Yang <zhengyang@rock-chips.com>
+On Thu, Jul 05, 2018 at 05:18:34PM -0500, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
+> 
+> Fix the SPI interrupt numbers for Stratix10.
+> 
+> This is a backport for stable 4.9.x and 4.14.x branches.
+> (original includes other changes that are not relevant
+> to this branch):
+> 
+> [backport 'commit 889d15090420 ("arm64: dts: stratix10:
+>     fix SPI settings")']
+> 
+> Cc: <stable@vger.kernel.org>  # 4.9.x
+> Cc: <stable@vger.kernel.org>  # 4.14.x
+> Fixes: 78cd6a9d8e154 ("arm64: dts: Add base stratix 10 dtsi")
+> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+> ---
+>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> index 57f75453ee93..5db972c0492f 100644
+> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> @@ -230,7 +230,7 @@
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  			reg = <0xffda4000 0x1000>;
+> -			interrupts = <0 101 4>;
+> +			interrupts = <0 99 4>;
+>  			num-cs = <4>;
+>  			status = "disabled";
+>  		};
+> @@ -240,7 +240,7 @@
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  			reg = <0xffda5000 0x1000>;
+> -			interrupts = <0 102 4>;
+> +			interrupts = <0 100 4>;
+>  			num-cs = <4>;
+>  			status = "disabled";
+>  		};
+> -- 
+> 2.7.4
 
-The phy is used so far in two Rockchip socs the rk3228 and the rk3328.
+This patch does not apply at all to 4.14.y :(
 
-Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-This is an unmodified resend of the hdmiphy driver sent
-originally on 2018-05-14.
+Please fix up and resend.  Same for 4.9.
 
-changes in v3:
-- describe both refclks supplied to the phy block
+thanks,
 
- .../bindings/phy/phy-rockchip-inno-hdmi.txt   | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-hdmi.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-hdmi.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-hdmi.txt
-new file mode 100644
-index 000000000000..710cccd5ee56
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-hdmi.txt
-@@ -0,0 +1,43 @@
-+ROCKCHIP HDMI PHY WITH INNO IP BLOCK
-+
-+Required properties:
-+ - compatible : should be one of the listed compatibles:
-+	* "rockchip,rk3228-hdmi-phy",
-+	* "rockchip,rk3328-hdmi-phy";
-+ - reg : Address and length of the hdmi phy control register set
-+ - clocks : phandle + clock specifier for the phy clocks
-+ - clock-names : string, clock name, must contain "sysclk" for system
-+	  control and register configuration, "refoclk" for crystal-
-+	  oscillator reference PLL clock input and "refpclk" for pclk-
-+	  based refeference PLL clock input.
-+ - #clock-cells: should be 0.
-+ - clock-output-names : shall be the name for the output clock.
-+ - interrupts : phandle + interrupt specified for the hdmiphy interrupt
-+ - #phy-cells : must be 0. See ./phy-bindings.txt for details.
-+
-+Optional properties for rk3328-hdmi-phy:
-+ - nvmem-cells = phandle + nvmem specifier for the cpu-version efuse
-+ - nvmem-cell-names : "cpu-version" to read the chip version, required
-+	  for adjustment to some frequency settings
-+
-+Example:
-+	hdmi_phy: hdmi-phy@12030000 {
-+		compatible = "rockchip,rk3228-hdmi-phy";
-+		reg = <0x12030000 0x10000>;
-+		#phy-cells = <0>;
-+		clocks = <&cru PCLK_HDMI_PHY>, <&xin24m>, <&cru DCLK_HDMIPHY>;
-+		clock-names = "sysclk", "refoclk", "refpclk";
-+		#clock-cells = <0>;
-+		clock-output-names = "hdmi_phy";
-+		status = "disabled";
-+	};
-+
-+Then the PHY can be used in other nodes such as:
-+
-+	hdmi: hdmi@200a0000 {
-+		compatible = "rockchip,rk3228-dw-hdmi";
-+		...
-+		phys = <&hdmi_phy>;
-+		phy-names = "hdmi";
-+		...
-+	};
--- 
-2.17.0
+greg k-h
