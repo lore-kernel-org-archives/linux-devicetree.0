@@ -1,101 +1,101 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v2] Add DT support for Octavo Systems OSD3358-SM-RED
- based on TI AM335x
-Date: Tue, 10 Jul 2018 09:26:24 +0100
-Message-ID: <20180710082624.GA16036@n2100.armlinux.org.uk>
-References: <20180706200051.1115-1-neeraj.dantu@octavosystems.com>
- <20180709114304.GE6920@n2100.armlinux.org.uk>
- <CADO55X8_tbz-O8AuHwqCGnV0g2oDiGHzAug6g3PFqRth5U2H=w@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [RFC PATCH 3/3] sdhci: arasan: Add support to read Tap Delay
+ values from DT
+Date: Tue, 10 Jul 2018 10:31:39 +0200
+Message-ID: <CAPDyKFoGJOE-h4rLqzMO=wzNjkfcuU_oQ3NLK5=OQfSMj3dDHg@mail.gmail.com>
+References: <1528373500-24663-1-git-send-email-manish.narani@xilinx.com> <1528373500-24663-3-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CADO55X8_tbz-O8AuHwqCGnV0g2oDiGHzAug6g3PFqRth5U2H=w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neeraj Kumar Reddy Dantu <dantuguf14105@gmail.com>
-Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Jason Kridner <jkridner@gmail.com>, Neeraj Dantu <neeraj.dantu@octavosystems.com>, linux-omap@vger.kernel.org, Robert Nelson <robertcnelson@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1528373500-24663-3-git-send-email-manish.narani@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manish Narani <manish.narani@xilinx.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Moritz Fischer <mdf@kernel.org>, stefan.krsmanovic@aggios.com, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Michal Simek <michal.simek@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 09, 2018 at 02:45:17PM -0500, Neeraj Kumar Reddy Dantu wrote:
->  > This should not be "tda19988" as the node name - DT requires generic
-> > names, like "hdmi-encoder".
-> 
-> Thanks.Will fix in v3
-> 
-> > Can you set 24-bit RGB mode with the above configuration - presumably
-> > the colours will come out wrong?
-> > Exactly what is the wiring between the lcdc and tda998x?
-> 
-> You can set mapping for lcd interface between pins with video-ports. See
-> TDA19988 datasheet, Table 4:
-> https://media.digikey.com/pdf/Data%20Sheets/NXP%20PDFs/TDA19988_DS_21_july_2011.pdf
-> .
-> The property is optional and not used in the board. DT bindings:
-> https://www.kernel.org/doc/Documentation/devicetree/bindings/display/bridge/tda998x.txt
-> 
-> This board uses 15 pin RGB565 interface.
+On 7 June 2018 at 14:11, Manish Narani <manish.narani@xilinx.com> wrote:
+> This patch adds support for reading Tap Delay values from Device Tree
+> and write them via eemi calls. The macros containing these tap delay
+> values are removed from the driver.
+>
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> ---
+>  drivers/mmc/host/sdhci-of-arasan.c | 131 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 131 insertions(+)
+>
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+> index e3332a5..fc0fd01 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -36,6 +36,8 @@
+>
+>  #define PHY_CLK_TOO_SLOW_HZ            400000
+>
+> +#define MMC_BANK2              0x2
+> +
+>  /*
+>   * On some SoCs the syscon area has a feature where the upper 16-bits of
+>   * each 32-bit register act as a write mask for the lower 16-bits.  This allows
+> @@ -90,6 +92,10 @@ struct sdhci_arasan_data {
+>         struct sdhci_host *host;
+>         struct clk      *clk_ahb;
+>         struct phy      *phy;
+> +       u32 mio_bank;
+> +       u32 device_id;
+> +       u32 itapdly[MMC_TIMING_MMC_HS400 + 1];
+> +       u32 otapdly[MMC_TIMING_MMC_HS400 + 1];
+>         bool            is_phy_on;
+>
+>         bool            has_cqe;
+> @@ -160,11 +166,36 @@ static int sdhci_arasan_syscon_write(struct sdhci_host *host,
+>         return ret;
+>  }
+>
+> +/**
+> + * arasan_zynqmp_set_tap_delay - Program the tap delays.
+> + * @deviceid:          Unique Id of device
+> + * @itap_delay:                Input Tap Delay
+> + * @oitap_delay:       Output Tap Delay
+> + */
+> +static void arasan_zynqmp_set_tap_delay(u8 deviceid, u8 itap_delay, u8 otap_delay)
+> +{
+> +       const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
 
-As maintainer of the TDA998x driver, I know what the TDA998x is
-capable of, I already have the datasheets, and I know the binding
-document.
+No thanks!
 
-What I'm asking about is about the specifics of your board's
-implementation and why you've written what you have in your DT
-file.  You haven't answered my specific questions either.
+Isn't there a more generic framework we can use to change the tap
+values, rather than calling SoC specific functions from the driver?
 
-> 
-> Regards,
-> Neeraj
-> 
-> On Mon, Jul 9, 2018 at 6:43 AM Russell King - ARM Linux <
-> linux@armlinux.org.uk> wrote:
-> 
-> > On Fri, Jul 06, 2018 at 08:00:51PM +0000, Neeraj Dantu wrote:
-> > > +&lcdc {
-> > > +     status = "okay";
-> > > +
-> > > +     /* If you want to get 24 bit RGB and 16 BGR mode instead of
-> > > +      * current 16 bit RGB and 24 BGR modes, set the propety
-> > > +      * below to "crossed" and uncomment the video-ports -property
-> > > +      * in tda19988 node.
-> > > +      */
-> > > +     blue-and-red-wiring = "straight";
-> > ...
-> > > +&i2c0 {
-> > > +     tda19988: tda19988 {
-> >
-> > This should not be "tda19988" as the node name - DT requires generic
-> > names, like "hdmi-encoder".
-> >
-> > ...
-> > > +             /* Convert 24bit BGR to RGB, e.g. cross red and blue
-> > wiring */
-> > > +             /* video-ports = <0x234501>; */
-> >
-> > Please explain more what's going on here.
-> >
-> > Can you set 24-bit RGB mode with the above configuration - presumably
-> > the colours will come out wrong?
-> >
-> > Exactly what is the wiring between the lcdc and tda998x?
-> >
-> > --
-> > RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-> > FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps
-> > up
-> > According to speedtest.net: 13Mbps down 490kbps up
-> >
+BTW, what is a tap value, more exactly?
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps up
-According to speedtest.net: 13Mbps down 490kbps up
+What does changing a tap value mean and where does the property belong, really?
+
+Of course this doesn't even compile, as you have a dependency to
+another series. Next time, please clarify that in a cover-letter
+(maybe you did, but I can't find it).
+
+> +       u32 node_id = (deviceid == 0) ? NODE_SD_0 : NODE_SD_1;
+> +
+> +       if (!eemi_ops || !eemi_ops->ioctl)
+> +               return;
+> +
+> +       if (itap_delay)
+> +               eemi_ops->ioctl(node_id, IOCTL_SET_SD_TAPDELAY,
+> +                               PM_TAPDELAY_INPUT, itap_delay, NULL);
+> +
+> +       if (otap_delay)
+> +               eemi_ops->ioctl(node_id, IOCTL_SET_SD_TAPDELAY,
+> +                               PM_TAPDELAY_OUTPUT, otap_delay, NULL);
+> +}
+
+Another overall comment for the series.
+
+I would recommend to change the order of the patches in the series.
+Let the DT doc change come first, next the driver change and finally
+the change to the DTS file(s). This makes it easier to follow and
+review.
+
+[...]
+
+Kind regards
+Uffe
