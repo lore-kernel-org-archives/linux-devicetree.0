@@ -1,32 +1,82 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 10/17] drm/sun4i: tcon-top: Add helpers for
- switching mux
-Date: Tue, 10 Jul 2018 23:56:27 +0800
-Message-ID: <CAGb2v65TTC_JmcrAvd0fYDuMs4H+MwvqrL+LUfGpp_zY+qsavQ@mail.gmail.com>
-References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-11-jernej.skrabec@siol.net>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v7 0/5] Reintroduce i.MX EPIT Timer
+Date: Tue, 10 Jul 2018 18:05:49 +0200
+Message-ID: <CAJiuCce7yBA+_s44RboKr9x-Ts5qk4T4vCXyVbVuUUxMSc+ScQ@mail.gmail.com>
+References: <20180611155001.3506-1-peron.clem@gmail.com> <CAJiuCcf3g2fzrR2_4mthjwKRcyZ8KVPX+EZ5_Uifh2E6TkzusQ@mail.gmail.com>
+ <52591c2d-e9df-7078-7cdf-0fd8d06c9ee0@linaro.org> <CAJiuCcc-eGRr_RT01dNfhQso5PbXfWy+YZS4PHHcL=_yhA-3Sw@mail.gmail.com>
+ <c9db3848-378f-8e1e-c194-53d878894716@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBQNOSPNAKGQEPVXLT2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180706175113.26698-11-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c9db3848-378f-8e1e-c194-53d878894716@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?UTF-8?Q?Cl=C3=A9ment_Peron?= <clement.peron@devialet.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 7, 2018 at 1:51 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> We want to be able to set TCON TOP muxes at runtime. Add helpers for
-> that.
->
-> Old, static configuration of muxes at probe time is preserved for now.
-> It will be removed when R40 TCON starts using them.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+HI Daniel,
 
-Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+
+On Tue, 10 Jul 2018 at 17:37, Daniel Lezcano <daniel.lezcano@linaro.org> wr=
+ote:
+>
+> On 10/07/2018 17:22, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Hi Daniel,
+> >
+> > On Tue, 10 Jul 2018 at 17:12, Daniel Lezcano <daniel.lezcano@linaro.org=
+> wrote:
+> >>
+> >> On 10/07/2018 16:55, Cl=C3=A9ment P=C3=A9ron wrote:
+> >>> Hi,
+> >>>
+> >>> Is there still some remark against merging this ?
+> >>
+> >> How do you want this to be merged ?
+> >>
+> >> Shall I take the two patches related to the timer ? Or Ack them ?
+> >
+> > I'm not an expert on how submitting patches works, it's the first
+> > driver I submit.
+>
+> Ok, so usually this is what happens when there is a set of changes:
+>
+>  1.  they all touch the same subsystem (eg. drivers/clocksource), you
+> just send all the patches to the maintainer(s) + mailing list + related
+> people
+>
+>  2. they touch different subsystems:
+>
+>    2.1) the changes are not connected (not related together), you have
+> to split in smaller parts and send the patches to the right subsystem
+> maintainer (so falling back to 1.)
+>
+>    2.2) the changes are connected:
+>
+>       2.2.1) Ask all the different subsystem maintainers to acknowledge
+> the changes and submit the patches to arm-soc@
+>
+>       2.2.2) Ask each maintainer to take their part if the changes are
+> connected but not interdependent (patches individually won't break the
+> system)
+>
+>
+> You are in the 2.2) situation. My question is do you want 2.2.1) or 2.2.2=
+) ?
+
+Thanks for the explanation, I think in 2.2.1 as I still need an Ack
+for the "ARM: dts" patch
+
+Regards,
+Clement
+
+>
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
