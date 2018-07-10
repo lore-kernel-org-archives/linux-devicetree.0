@@ -1,15 +1,14 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 11/17] drm/sun4i: tcon: Add another way for
- matching mixers with tcon
-Date: Wed, 11 Jul 2018 00:12:45 +0800
-Message-ID: <CAGb2v64-hz6=6H1HhJJogaK8TTtsG4x1LXkA5QX_b3J0pKOAEQ@mail.gmail.com>
-References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-12-jernej.skrabec@siol.net>
+Subject: Re: [PATCH 12/17] drm/sun4i: tcon: Add support for R40 TCON
+Date: Wed, 11 Jul 2018 00:14:40 +0800
+Message-ID: <CAGb2v67neknTdGyKLu=bMyXw7_M9Ji2GnVmqK1d20VWUsq2ROQ@mail.gmail.com>
+References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-13-jernej.skrabec@siol.net>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBE5WSPNAKGQEQA2NNEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBB5XSPNAKGQEUNJL2XY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180706175113.26698-12-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+In-Reply-To: <20180706175113.26698-13-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -21,19 +20,11 @@ Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob H
 List-Id: devicetree@vger.kernel.org
 
 On Sat, Jul 7, 2018 at 1:51 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> Till now, new way of matching engines with TCONs was reading their
-> respective ids and match them by those ids. However, with introduction
-> of TCON TOP, that might not be so straightforward anymore.
-> - there might be more TCONs that engines (mixers)
-> - TCON ids might have non-consecutive ids
->
-> Workaround that by matching mixer id with TCON index from TCON list.
->
-> For example, R40 has 2 mixers and 4 TCONs. Board designer can choose
-> 2 outputs, which are connected to any of those 4 TCONs. As long as there
-> are only 2 TCONs enabled in DT, using index in list as alternative id,
-> will allow to match them with mixer 0 and 1.
+> R40 TV TCON is basically the same as on A83T. However, it needs special
+> handling, because it has to set up TCON TOP muxes at runtime.
 >
 > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 
 Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+
+The runtime muxing of mixer <-> TCON is quite clever.
