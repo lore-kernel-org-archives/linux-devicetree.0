@@ -1,95 +1,62 @@
-From: Sean Young <sean@mess.org>
-Subject: Re: [RESEND PATCH v5 0/6] IR support for A83T
-Date: Tue, 10 Jul 2018 09:36:37 +0100
-Message-ID: <20180710083637.6s36rfbi2old5uxo@gofer.mess.org>
-References: <20180213122952.8420-1-embed3d@gmail.com>
- <85ddc129-d0f8-6299-dca0-81f79f3d04a9@gmail.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH v2 1/3] clk: meson: add DT documentation for emmc clock controller
+Date: Tue, 10 Jul 2018 16:36:56 +0000
+Message-ID: <20180710163658.6175-2-yixun.lan@amlogic.com>
+References: <20180710163658.6175-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <85ddc129-d0f8-6299-dca0-81f79f3d04a9@gmail.com>
+In-Reply-To: <20180710163658.6175-1-yixun.lan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Rossak <embed3d@gmail.com>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, p.zabel@pengutronix.de, andi.shyti@samsung.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@bootlin.com>
+To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: Yixun Lan <yixun.lan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 02, 2018 at 01:11:34PM +0100, Philipp Rossak wrote:
-> 
-> 
-> On 13.02.2018 13:29, Philipp Rossak wrote:
-> > This patch series adds support for the sunxi A83T ir module and enhances
-> > the sunxi-ir driver. Right now the base clock frequency for the ir driver
-> > is a hard coded define and is set to 8 MHz.
-> > This works for the most common ir receivers. On the Sinovoip Bananapi M3
-> > the ir receiver needs, a 3 MHz base clock frequency to work without
-> > problems with this driver.
-> > 
-> > This patch series adds support for an optinal property that makes it able
-> > to override the default base clock frequency and enables the ir interface
-> > on the a83t and the Bananapi M3.
-> > 
-> > changes since v4:
-> > * rename cir pin from cir_pins to r_cir_pin
-> > * drop unit-adress from r_cir_pin
-> > * add a83t compatible to the cir node
-> > * move muxing options to dtsi
-> > * rename cir label and reorder it in the bananpim3.dts file
-> > 
-> > changes since v3:
-> > * collecting all acks & reviewd by
-> > * fixed typos
-> > 
-> > changes since v2:
-> > * reorder cir pin (alphabetical)
-> > * fix typo in documentation
-> > 
-> > changes since v1:
-> > * fix typos, reword Documentation
-> > * initialize 'b_clk_freq' to 'SUNXI_IR_BASE_CLK' & remove if statement
-> > * change dev_info() to dev_dbg()
-> > * change naming to cir* in dts/dtsi
-> > * Added acked Ackedi-by to related patch
-> > * use whole memory block instead of registers needed + fix for h3/h5
-> > 
-> > changes since rfc:
-> > * The property is now optinal. If the property is not available in
-> >    the dtb the driver uses the default base clock frequency.
-> > * the driver prints out the the selected base clock frequency.
-> > * changed devicetree property from base-clk-frequency to clock-frequency
-> > 
-> > Regards,
-> > Philipp
-> > 
-> > Philipp Rossak (6):
-> >    media: rc: update sunxi-ir driver to get base clock frequency from
-> >      devicetree
-> >    media: dt: bindings: Update binding documentation for sunxi IR
-> >      controller
-> >    arm: dts: sun8i: a83t: Add the cir pin for the A83T
-> >    arm: dts: sun8i: a83t: Add support for the cir interface
-> >    arm: dts: sun8i: a83t: bananapi-m3: Enable IR controller
-> >    arm: dts: sun8i: h3-h5: ir register size should be the whole memory
-> >      block
-> > 
-> >   Documentation/devicetree/bindings/media/sunxi-ir.txt |  3 +++
-> >   arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts         |  5 +++++
-> >   arch/arm/boot/dts/sun8i-a83t.dtsi                    | 18 ++++++++++++++++++
-> >   arch/arm/boot/dts/sunxi-h3-h5.dtsi                   |  2 +-
-> >   drivers/media/rc/sunxi-cir.c                         | 19 +++++++++++--------
-> >   5 files changed, 38 insertions(+), 9 deletions(-)
-> > 
-> 
-> I talked yesterday with Maxime about this patch series. And he told me if
-> the first to patches got merged, he will apply the dts patches to the sunxi
-> tree.
-> 
-> Sean, can you merge the first two patches through the rc-core?
+Document the MMC sub clock controller driver, the potential consumer
+of this driver is MMC or NAND.
 
-So I merged the first two patches, but the rest never made it upstream.
+Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+---
+ .../bindings/clock/amlogic,mmc-clkc.txt       | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
 
-Should they be resubmitted?
-
-Thanks,
-
-Sean
+diff --git a/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
+new file mode 100644
+index 000000000000..ff6b4bf3ecf9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
+@@ -0,0 +1,31 @@
++* Amlogic MMC Sub Clock Controller Driver
++
++The Amlogic MMC clock controller generates and supplies clock to support
++MMC and NAND controller
++
++Required Properties:
++
++- compatible: should be:
++		"amlogic,meson-gx-mmc-clkc"
++		"amlogic,meson-axg-mmc-clkc"
++
++- #clock-cells: should be 1.
++- clocks: phandles to clocks corresponding to the clock-names property
++- clock-names: list of parent clock names
++	- "clkin0", "clkin1"
++
++Parent node should have the following properties :
++- compatible: "syscon", "simple-mfd, and "amlogic,meson-axg-mmc-clkc"
++- reg: base address and size of the MMC control register space.
++
++Example: Clock controller node:
++
++sd_mmc_c_clkc: clock-controller@7000 {
++	compatible = "amlogic,mmc-clkc", "syscon", "simple-mfd";
++	reg = <0x0 0x7000 0x0 0x4>;
++	#clock-cells = <1>;
++
++	clock-names = "clkin0", "clkin1";
++	clocks = <&clkc CLKID_SD_MMC_C_CLK0>,
++			<&clkc CLKID_FCLK_DIV2>;
++};
+-- 
+2.18.0
