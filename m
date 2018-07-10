@@ -1,15 +1,14 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 01/17] dt-bindings: display: sun4i-drm: Add
- R40 display engine compatible
-Date: Tue, 10 Jul 2018 23:20:30 +0800
-Message-ID: <CAGb2v6556Gqs0H+L7W1oiyevep8aTwMWJs8ipBOcX+-=BdNYfA@mail.gmail.com>
-References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-2-jernej.skrabec@siol.net>
+Subject: Re: [PATCH 02/17] drm/sun4i: Add R40 display engine compatible
+Date: Tue, 10 Jul 2018 23:20:53 +0800
+Message-ID: <CAGb2v65E=U5nQ=b-yDKKwwt16ra2z9rwNJt_hmQtpLcN6ONLTQ@mail.gmail.com>
+References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-3-jernej.skrabec@siol.net>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBVM5SPNAKGQEV6FXRQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB245SPNAKGQEBAHXAGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180706175113.26698-2-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+In-Reply-To: <20180706175113.26698-3-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -21,18 +20,8 @@ Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob H
 List-Id: devicetree@vger.kernel.org
 
 On Sat, Jul 7, 2018 at 1:50 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> R40 has pretty unique display pipeline. It supports two outputs at the
-> same time.
->
-> Possible outputs:
-> - 1x HDMI,
-> - 2x TV output
-> - 1x VGA,
-> - 1x MIPI DSI and
-> - 2x LCD outputs
->
-> That is the biggest number of possible outputs from all Allwinner SoC.
-> Because of that, add new compatible for it.
+> R40 has versatile display pipeline. It supports two simultanious outputs
+> on various outputs (TVE, VGA, HDMI, MIPI DSI, LCD).
 >
 > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 
