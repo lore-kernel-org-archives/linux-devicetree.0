@@ -1,13 +1,13 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v5 3/4] dt-bindings: Add Innolux P097PFG panel bindings
-Date: Tue, 10 Jul 2018 12:58:12 +0200
-Message-ID: <20180710105812.GM1504@ulmo>
+Subject: Re: [PATCH v5 4/4] drm/panel: p079zca: support Innolux P097PFG panel
+Date: Tue, 10 Jul 2018 12:59:28 +0200
+Message-ID: <20180710105928.GN1504@ulmo>
 References: <20180702102721.3546-1-heiko@sntech.de>
- <20180702102721.3546-4-heiko@sntech.de>
+ <20180702102721.3546-5-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0225045865=="
+Content-Type: multipart/mixed; boundary="===============1149338656=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180702102721.3546-4-heiko@sntech.de>
+In-Reply-To: <20180702102721.3546-5-heiko@sntech.de>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -22,23 +22,22 @@ Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, hl@rock-chips.com, brianno
 List-Id: devicetree@vger.kernel.org
 
 
---===============0225045865==
+--===============1149338656==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yklP1rR72f9kjNtc"
+	protocol="application/pgp-signature"; boundary="qi3SIpffvxS/TM8d"
 Content-Disposition: inline
 
 
---yklP1rR72f9kjNtc
+--qi3SIpffvxS/TM8d
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 02, 2018 at 12:27:20PM +0200, Heiko Stuebner wrote:
-> From: huang lin <hl@rock-chips.com>
+On Mon, Jul 02, 2018 at 12:27:21PM +0200, Heiko Stuebner wrote:
+> From: Lin Huang <hl@rock-chips.com>
 >=20
-> The Innolux P097PFG panel is 9.7" panel with 1536X2048
-> resolution, it reuse P079ZCA panel driver, so improve
-> p079ZCA dt-binding to support P097PFG.
+> Support Innolux P097PFG 9.7" 1536x2048 TFT LCD panel, it reuse
+> the Innolux P079ZCA panel driver.
 >=20
 > Changes in v2:
 > - None
@@ -47,44 +46,98 @@ On Mon, Jul 02, 2018 at 12:27:20PM +0200, Heiko Stuebner wrote:
 > Changes in v4:
 > - None
 > Changes in v5:
-> - use separate file for binding
-> - keep power supplies as required
+> - Document source of init-commands
+> - 4 lanes per DSI interface
 >=20
 > Signed-off-by: Lin Huang <hl@rock-chips.com>
 > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 > ---
->  .../display/panel/innolux,p097pfg.txt         | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/innol=
-ux,p097pfg.txt
+>  drivers/gpu/drm/panel/panel-innolux-p079zca.c | 200 +++++++++++++++++-
+>  1 file changed, 196 insertions(+), 4 deletions(-)
 
-Applied, thanks.
+Applied with two small changes, see below.
+
+> diff --git a/drivers/gpu/drm/panel/panel-innolux-p079zca.c b/drivers/gpu/=
+drm/panel/panel-innolux-p079zca.c
+> index 630b0c2549ef..8d25b87bfbd6 100644
+> --- a/drivers/gpu/drm/panel/panel-innolux-p079zca.c
+> +++ b/drivers/gpu/drm/panel/panel-innolux-p079zca.c
+> @@ -20,6 +20,15 @@
+> =20
+>  #include <video/mipi_display.h>
+> =20
+> +struct panel_init_cmd {
+> +	int len;
+
+I changed the type here to size_t for consistency.
+
+> +	const char *data;
+> +};
+> +
+> +#define _INIT_CMD(...) { \
+> +	.len =3D sizeof((char[]){__VA_ARGS__}), \
+> +	.data =3D (char[]){__VA_ARGS__} }
+> +
+>  struct panel_desc {
+>  	const struct drm_display_mode *modes;
+>  	unsigned int bpc;
+> @@ -30,6 +39,7 @@ struct panel_desc {
+> =20
+>  	unsigned long flags;
+>  	enum mipi_dsi_pixel_format format;
+> +	const struct panel_init_cmd *init_cmds;
+>  	unsigned int lanes;
+>  	const char * const *supply_names;
+>  	unsigned int num_supplies;
+> @@ -121,13 +131,43 @@ static int innolux_panel_prepare(struct drm_panel *=
+panel)
+>  	if (err < 0)
+>  		return err;
+> =20
+> -	/* T2: 15ms - 1000ms */
+> -	usleep_range(15000, 16000);
+> +	/* p079zca: t2 (20ms), p097pfg: t4 (15ms) */
+> +	usleep_range(20000, 21000);
+> =20
+>  	gpiod_set_value_cansleep(innolux->enable_gpio, 1);
+> =20
+> -	/* T4: 15ms - 1000ms */
+> -	usleep_range(15000, 16000);
+> +	/* p079zca: t4, p097pfg: t5 */
+> +	usleep_range(20000, 21000);
+> +
+> +	if (innolux->desc->init_cmds) {
+> +		const struct panel_init_cmd *cmds =3D
+> +					innolux->desc->init_cmds;
+> +		int i;
+
+I made this unsigned.
 
 Thierry
 
---yklP1rR72f9kjNtc
+--qi3SIpffvxS/TM8d
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltEkUMACgkQ3SOs138+
-s6GnaA/+IbOAdh4Ukf/wjiUROgmRLBJRTU90II48NoI+3zWI8QHxd/K7P+ePjOee
-REiJ5elHYuQzefyIHPvJs/ScpNOs10HiY4xN3B7YsUpljQucuut0G4/WVSL/eOLL
-iqnbsgXjkzAeHhE/ss3cFB09VeYNpl8JxJTzsf8DuD/xbcbqcMei1XOOg7lWLuZp
-1nPve0nOfyf6bzlD8FJBYxbp2KD17cH6qwFyutEA2HvPmc2LxiLLd9EcPgvvtn8M
-RjjmFytwGO5vf2fqp6rXWjz4Lha0afHjcbWcWjZhHH14iohA2Ec63tR+P3K+JBvH
-wsgRhpsuqppEsB7Y0zekqN4++3MRgcj/YqUqvV4+UJlpwq/0kyd6bMG0AqE9K1X3
-C+HzXc8mfb6fN5bCD+qkAR15vHy7wPuKyj34iyQ8zAd6GFMfQ4/CaB3hGuqRjhbh
-TlENvRoOzYdmAbE3tiB+Vm+QZ1rBNpwjlhvHcUSloBx5RugTCJA8znwyWcFfUh98
-rLYEN9cd5di/jH8riMf1UEsCqLdFfEIzL/WCnyMM31MBHAMWLZWnGcuzUVW2R7b6
-doWhrVGfDh4UZlHxu9mAKBt0labIBFjL81nOA+dGSiXFwgKBRUJjBApnmmNTDNfN
-1VvqB5dQvYUm0IeKp15VbiWOYcdyAZ8XH7Zuc285tujg6X2RySw=
-=NN3k
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltEkZAACgkQ3SOs138+
+s6FwsQ/+N/cFVjeZX8z087RvxJQ+AU8jhZzuE9DxbqUyfLMGoM9a1WpW5MT4QP8c
+wCNY/K68aB3Ipt4BUf2hz/YZZJc3C/V9G5OhABTcwf0OVNzE0IVwUsb3J2gvu3XU
+CU/MsvvHu9etFJ9am4kkm5QQHwYXO5i1ZCuJWSrenBfL6IaWS6k3ZTYKl4t+f9mA
+p+K5qxqCnlA2kQXzLu3b1FcogjP5HUX7k/ghFoNh8PeAVNoMZpPqSFLePGxem4z+
+ITcht2pwKDKpE+ovETw6jRhCVETM37RhX7LYwg1emuOz114hprvnj87D8eWG3TSD
+fb39I8ACR+IfK+sT8/ppX4TR5F41++07OdL8TriUcUuuuHq1Vm6cidqVKokFzfY4
+iymNaFmZPKGCU3MDwMI+PuSGo9aPgIM+fo0Y+XkZyajDGqNCZcZrasCoTF78tGjV
+YhcOHff49dgCbJNjwZ6nnKu9tI0VzA2YfOnBpKONdzIgJUnQJEEhlzuBMY2zT9K9
+chkNAdnOeOGaaewL2IcoBda2h1MgGrmoNlMWGUNJe4T1gp2FTDOiQc+uyrl6BmMI
+OXAe5Lgm/bUkUL5MJ6KT1UYmkFOZigp6g//CVPnkHKoLGXnFoGGyEtaCVSt4wsyH
+NfTvRtQIFSIUTTw+Ap/Su2Wj0vVrj/Qm9otDMukiC6s39gEMHN8=
+=HoHv
 -----END PGP SIGNATURE-----
 
---yklP1rR72f9kjNtc--
+--qi3SIpffvxS/TM8d--
 
---===============0225045865==
+--===============1149338656==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -94,4 +147,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
 IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
 dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
---===============0225045865==--
+--===============1149338656==--
