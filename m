@@ -1,51 +1,82 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 06/14] dmaengine: dma-jz4780: Add support for the JZ4725B
- SoC
-Date: Tue, 10 Jul 2018 17:45:02 +0200
-Message-ID: <1531237502.17118.3@crapouillou.net>
-References: <20180703123214.23090-1-paul@crapouillou.net>
-        <20180703123214.23090-7-paul@crapouillou.net>
-        <20180709171458.GL22377@vkoul-mobl>
+From: Chris Healy <cphealy@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx: Add ZII SCU2 Mezz board
+Date: Tue, 10 Jul 2018 08:47:28 -0700
+Message-ID: <CAFXsbZqgc7B-YE-aFgT=Qz20u+JRvvfdQFgh77Zv-+w62GA7XA@mail.gmail.com>
+References: <20180707024902.439-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180709171458.GL22377@vkoul-mobl>
+In-Reply-To: <20180707024902.439-1-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
+Successfully tested on an SCU2 Mezz board.
 
+Tested-by: Chris Healy <cphealy@gmail.com>
 
-Le lun. 9 juil. 2018 =E0 19:14, Vinod <vkoul@kernel.org> a =E9crit :
-> On 03-07-18, 14:32, Paul Cercueil wrote:
->>  The JZ4725B has one DMA core starring six DMA channels.
->>  As for the JZ4770, each DMA channel's clock can be enabled with
->>  a register write, the difference here being that once started, it
->>  is not possible to turn it off.
->=20
-> ok so disable for this, right..
->=20
->>  @@ -204,6 +205,8 @@ static inline void=20
->> jz4780_dma_chan_enable(struct jz4780_dma_dev *jzdma,
->>   {
->>   	if (jzdma->version =3D=3D ID_JZ4770)
->>   		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKES, BIT(chn));
->>  +	else if (jzdma->version =3D=3D ID_JZ4725B)
->>  +		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKE, BIT(chn));
->=20
-> but you are writing to a different register here..
-
-Yes. SoCs >=3D JZ4770 have the DCKE read-only register, and DCKES/DCKEC=20
-to set/clear bits in DCKE.
-On JZ4725B, DCKE is read/write, but the zeros written are ignored (at=20
-least that's what the
-documentation says).
-
-> --
-> ~Vinod
-
-Thanks,
--Paul
-=
+On Fri, Jul 6, 2018 at 7:49 PM, Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+> Add support for the Zodiac Inflight Innovations SCU2 Mezz
+> board (i.MX51-based).
+>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: cphealy@gmail.com
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+> Signed-off-by: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> ---
+>
+> Shawn:
+>
+> This is a spin-off of SCU2 Mezz board support originally found in [v0]
+> as per out off-list (Fabio, Chris, Nikita, myself) to add support for
+> ZII hardware fist and worry about factoring out commonalites later.
+>
+> Original submission was done by Andrey Gusakov, but he is too busy on
+> other projects, so the honors of submitting this were delegated to me.
+>
+> NOTE: RAVE SP ("zii,rave-sp-mezz") node is technically supported by
+> upstream, but it needs some fixes from [rave-sp-fixes] to work
+> correctly. If you want me to drop that node until [rave-sp-fixes] is
+> merged, let me know.
+>
+> Changes since [v0]:
+>
+>  - Patch converted to be a standalone file not dependent on any
+>    ZII-specific .dtsi
+>
+>  - Added RAVE SP node with all the children that are currently
+>    supported by upstream
+>
+>  - Droppped ecspi2 node. That node didn't have any child devices in
+>    [v0] because none of the chips connected to that bus are supported
+>    upstream. This node can be added later once anything attached to it
+>    has upstream drivers.
+>
+>  - Dropped i2c_gpio. That bus was originally added for RAVE SP related
+>    prototyping and is unused in actual product.
+>
+>  - Various newline fixes pointed out in [v0]
+>
+>  - Most of then nodes should be sorted alphabetically (I might have
+>    missed some)
+>
+>  - Collected Reviewed-by from Fabio (Fabio, I assumed you won't mind,
+>    but let me know if you want me to drop it)
+>
+> [v0] lkml.kernel.org/r/1529603100-31958-4-git-send-email-andrey.gusakov@cogentembedded.com
+> [rave-sp-fixes] lkml.kernel.org/r/20180707024108.32373-1-andrew.smirnov@gmail.com
+>
+>  arch/arm/boot/dts/Makefile                |   3 +-
+>  arch/arm/boot/dts/imx51-zii-scu2-mezz.dts | 448 ++++++++++++++++++++++
+>  2 files changed, 450 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/imx51-zii-scu2-mezz.dts
