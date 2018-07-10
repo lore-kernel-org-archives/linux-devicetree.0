@@ -1,14 +1,15 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 04/17] drm/sun4i: tcon-top: Cleanup clock handling
-Date: Tue, 10 Jul 2018 23:23:14 +0800
-Message-ID: <CAGb2v644vnkyG=zOLH43Ty7sprMTCnFTeXspgJv_=Z_rNvsg0Q@mail.gmail.com>
-References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-5-jernej.skrabec@siol.net>
+Subject: Re: [PATCH 05/17] drm/sun4i: tcon: Release node when
+ traversing of graph
+Date: Tue, 10 Jul 2018 23:23:38 +0800
+Message-ID: <CAGb2v660yji16F_EyoezyZrAJaC9_MWF3giCfGXVcL3RJ6c5fw@mail.gmail.com>
+References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-6-jernej.skrabec@siol.net>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB6M6SPNAKGQE5JTPLGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBEE7SPNAKGQEL7G464Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180706175113.26698-5-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+In-Reply-To: <20180706175113.26698-6-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -20,9 +21,12 @@ Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob H
 List-Id: devicetree@vger.kernel.org
 
 On Sat, Jul 7, 2018 at 1:51 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> There is no need to acquire reference to clock just to get its name.
+> Function sun4i_tcon_find_engine_traverse() doesn't release node if it
+> needs to traverse of graph deeper than 1 level.
 >
-> This commit just cleans up the code. There is no functional change.
+> Fix this by calling of_node_put().
+>
+> Fixes: 49836b11fe71 ("drm/sun4i: tcon: Generalize engine search algorithm")
 >
 > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 
