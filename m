@@ -1,52 +1,108 @@
 From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 0/3] arm64: dts: sdm845: Add RPMh-regulators and usb
-Date: Tue, 10 Jul 2018 15:01:59 -0700
-Message-ID: <20180710220202.116404-1-dianders@chromium.org>
+Subject: [PATCH 3/3] arm64: dts: qcom: sdm845-mtp: Add nodes for USB
+Date: Tue, 10 Jul 2018 15:02:02 -0700
+Message-ID: <20180710220202.116404-4-dianders@chromium.org>
+References: <20180710220202.116404-1-dianders@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180710220202.116404-1-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, swboyd@chromium.org, tfiga@chromium.org, Manu Gautam <mgautam@codeaurora.org>, David Collins <collinsd@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Set the various nodes to "okay" and hook up the regulators.
 
-This series adds device tree nodes for the RPMh regulators and USB.  These
-patches are based on patches in various downstream kernels from Manu Gautam
-and David Collins.
+NOTE: For now the main USB port (the one that goes out the Type C
+connector) is forced to host.  Eventually someone will need to get the
+Type C detection hooked up and get this all integrated with the
+PMI8998 PMIC.  The reason for forcing to "host" in the meantime is
+that this will leave us with one "host" and one "peripheral" port.
 
-This series was tested on SDM845-MTP (with no-AC firmware) atop Andy Gross's
-current "for-next" branch with some patches picked from list:
+In order for host mode this to work, we assume that the bootloader
+left things configured enough for us.  Apparently the magic for that
+is is to do these writes on pmi8998:
+- pm_comm_write_byte(2, 0x1153, 0x2C, 0);
+- pm_comm_write_byte(2, 0x1152, 0x07, 0);
+- pm_comm_write_byte(2, 0x1140, 0x00, 0);
+- pm_comm_write_byte(2, 0x1140, 0x01, 0);
 
-1. clk: qcom: clk-rpmh: Add QCOM RPMh clock driver
-   https://patchwork.kernel.org/patch/10388151/
-2. regulator: add QCOM RPMh regulator driver
-   https://patchwork.kernel.org/patch/10483369/
-3. nvmem: Don't let a NULL cell_id for nvmem_cell_get() crash us
-   https://patchwork.kernel.org/patch/10401993/
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-I also needed a few patches that haven't yet posted to-list to keep things
-from crashing at boot (these patches weren't needed when using Coreboot as
-the BIOS):
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 61 +++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
 
-1. arm64: dts: sdm845: Enable smmu support
-   https://chromium.googlesource.com/chromiumos/third_party/kernel/+/8046f638b4
-2. HACK: iommu/arm-smmu: make a mismatch in CBs and CB interrupts non-fatal
-   https://chromium.googlesource.com/chromiumos/third_party/kernel/+/8c0b634f48
-
-Given the above caveats these three patches are probably not quite ready for
-landing, but I wanted to at least get them out there to start the review
-process.
-
-
-Douglas Anderson (2):
-  arm64: dts: qcom: sdm845-mtp: Add RPMh VRM/XOB regulators
-  arm64: dts: qcom: sdm845-mtp: Add nodes for USB
-
-Manu Gautam (1):
-  arm64: dts: qcom: sdm845: Add USB-related nodes
-
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 507 ++++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/sdm845.dtsi    | 189 +++++++++
- 2 files changed, 696 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+index 1db4b9735e70..4e14f5f5c2f7 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+@@ -481,6 +481,67 @@
+ 	status = "okay";
+ };
+ 
++&usb_1 {
++	status = "okay";
++};
++
++&usb_1_dwc3 {
++	/* Until we have Type C hooked up we'll force this as host. */
++	dr_mode = "host";
++};
++
++&usb_1_hsphy {
++	status = "okay";
++
++	vdd-supply = <&vdda_usb1_ss_core>;
++	vdda-pll-supply = <&vdda_qusb_hs0_1p8>;
++	vdda-phy-dpdm-supply = <&vdda_qusb_hs0_3p1>;
++
++	qcom,imp-res-offset-value = <8>;
++	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
++	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
++	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
++};
++
++&usb_1_qmpphy {
++	status = "okay";
++
++	vdda-phy-supply = <&vdda_usb1_ss_1p2>;
++	vdda-pll-supply = <&vdda_usb1_ss_core>;
++};
++
++&usb_2 {
++	status = "okay";
++};
++
++&usb_2_dwc3 {
++	/*
++	 * Though the USB block on SDM845 can support host, there's no vbus
++	 * signal for this port on MTP.  Thus (unless you have a non-compliant
++	 * hub that works without vbus) the only sensible thing is to force
++	 * peripheral mode.
++	 */
++	dr_mode = "peripheral";
++};
++
++&usb_2_hsphy {
++	status = "okay";
++
++	vdd-supply = <&vdda_usb2_ss_core>;
++	vdda-pll-supply = <&vdda_qusb_hs0_1p8>;
++	vdda-phy-dpdm-supply = <&vdda_qusb_hs0_3p1>;
++
++	qcom,imp-res-offset-value = <8>;
++	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_22_8_MA>;
++};
++
++&usb_2_qmpphy {
++	status = "okay";
++
++	vdda-phy-supply = <&vdda_usb2_ss_1p2>;
++	vdda-pll-supply = <&vdda_usb2_ss_core>;
++};
++
+ /* PINCTRL - additions to nodes defined in sdm845.dtsi */
+ 
+ &qup_i2c10_default {
 -- 
 2.18.0.203.gfac676dfb9-goog
