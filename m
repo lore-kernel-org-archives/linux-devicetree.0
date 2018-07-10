@@ -1,221 +1,147 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH RFC 2/2] mmc: sdhci-msm: Use internal voltage control
-Date: Tue, 10 Jul 2018 14:26:54 +0300
-Message-ID: <42c8405c-6218-7d0a-3236-ec787d11537d@intel.com>
-References: <1529583826-42020-1-git-send-email-vviswana@codeaurora.org>
- <1529583826-42020-3-git-send-email-vviswana@codeaurora.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v5 4/6] bus: ti-sysc: Add support for software reset
+Date: Tue, 10 Jul 2018 04:42:48 -0700
+Message-ID: <20180710114248.GI99251@atomide.com>
+References: <20180709164841.14182-1-faiz_abbas@ti.com>
+ <20180709164841.14182-5-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529583826-42020-3-git-send-email-vviswana@codeaurora.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180709164841.14182-5-faiz_abbas@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vijay Viswanath <vviswana@codeaurora.org>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, dianders@google.com, sayalil@codeaurora.org
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, bcousson@baylibre.com, paul@pwsan.com, t-kristo@ti.com, mark.rutland@arm.com, sboyd@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 21/06/18 15:23, Vijay Viswanath wrote:
-> Some sdhci-msm controllers require that voltage switching be done after
-> the HW is ready for it. The HW informs its readiness through power irq.
-> The voltage switching should happen only then.
-> 
-> Use the quirk for internal voltage switching and then control the
-> voltage switching using power irq.
-> 
-> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
-> ---
->  drivers/mmc/host/sdhci-msm.c | 99 ++++++++++++++++++++++++++++++++++++++------
->  1 file changed, 87 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index a0dc3e1..ebdde29 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -43,7 +43,9 @@
->  #define CORE_PWRCTL_IO_LOW	BIT(2)
->  #define CORE_PWRCTL_IO_HIGH	BIT(3)
->  #define CORE_PWRCTL_BUS_SUCCESS BIT(0)
-> +#define CORE_PWRCTL_BUS_FAIL    BIT(1)
->  #define CORE_PWRCTL_IO_SUCCESS	BIT(2)
-> +#define CORE_PWRCTL_IO_FAIL     BIT(3)
->  #define REQ_BUS_OFF		BIT(0)
->  #define REQ_BUS_ON		BIT(1)
->  #define REQ_IO_LOW		BIT(2)
-> @@ -258,6 +260,7 @@ struct sdhci_msm_host {
->  	bool mci_removed;
->  	const struct sdhci_msm_variant_ops *var_ops;
->  	const struct sdhci_msm_offset *offset;
-> +	bool pltfm_init_done;
+Hi,
 
-Wouldn't hurt to explain what 'pltfm_init_done' is for
-
->  };
->  
->  static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
-> @@ -1314,8 +1317,9 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
->  {
->  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->  	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> +	struct mmc_host *mmc = host->mmc;
->  	u32 irq_status, irq_ack = 0;
-> -	int retry = 10;
-> +	int retry = 10, ret = 0;
->  	u32 pwr_state = 0, io_level = 0;
->  	u32 config;
->  	const struct sdhci_msm_offset *msm_offset = msm_host->offset;
-> @@ -1351,14 +1355,59 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
->  
->  	/* Handle BUS ON/OFF*/
->  	if (irq_status & CORE_PWRCTL_BUS_ON) {
-> -		pwr_state = REQ_BUS_ON;
-> -		io_level = REQ_IO_HIGH;
-> -		irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
-> +		if (mmc->supply.vmmc) {
-
-Since you call mmc_regulator_get_supply() first, mmc->supply.vmmc will never
-be NULL.  Did you mean:
-
-		if (!IS_ERR(mmc->supply.vmmc))
-
-> +			ret = regulator_set_load(mmc->supply.vmmc, 800000);
-> +			ret |= mmc_regulator_set_ocr(mmc, mmc->supply.vmmc,
-> +					mmc->ios.vdd);
-> +			if (ret)
-> +				pr_err("%s: vmmc enable failed: %d\n",
-> +						mmc_hostname(mmc), ret);
-> +		}
-> +		if (mmc->supply.vqmmc && !ret) {
-
-Ditto for mmc->supply.vqmmc
-
-> +			ret = regulator_set_load(mmc->supply.vqmmc, 22000);
-> +			ret |= mmc_regulator_set_ocr(mmc, mmc->supply.vqmmc,
-> +					mmc->ios.vdd);
-> +			if (!ret)
-> +				ret = regulator_enable(mmc->supply.vqmmc);
-> +			if (ret)
-> +				pr_err("%s: vqmmc enable failed: %d\n",
-> +						mmc_hostname(mmc), ret);
-> +		}
-> +		if (!ret) {
-> +			pwr_state = REQ_BUS_ON;
-> +			io_level = REQ_IO_HIGH;
-> +			irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
-> +		} else {
-> +			pr_err("%s: BUS_ON req failed(%d). irq_status: 0x%08x\n",
-> +					mmc_hostname(mmc), ret, irq_status);
-> +			irq_ack |= CORE_PWRCTL_BUS_FAIL;
-> +		}
->  	}
->  	if (irq_status & CORE_PWRCTL_BUS_OFF) {
-> -		pwr_state = REQ_BUS_OFF;
-> -		io_level = REQ_IO_LOW;
-> -		irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
-> +		if (mmc->supply.vmmc && msm_host->pltfm_init_done) {
-> +			ret = regulator_set_load(mmc->supply.vmmc, 0);
-> +			ret |= mmc_regulator_set_ocr(mmc, mmc->supply.vmmc,
-> +					mmc->ios.vdd);
-> +			if (ret)
-> +				pr_err("%s: vqmmc disabling failed: %d\n",
-> +						mmc_hostname(mmc), ret);
-> +		}
-> +		if (mmc->supply.vqmmc && msm_host->pltfm_init_done && !ret) {
-> +			ret = regulator_set_load(mmc->supply.vqmmc, 0);
-> +			ret |= regulator_disable(mmc->supply.vqmmc);
-> +			if (ret)
-> +				pr_err("%s: vqmmc disabling failed: %d\n",
-> +						mmc_hostname(mmc), ret);
-> +		}
-> +		if (!ret) {
-> +			pwr_state = REQ_BUS_OFF;
-> +			io_level = REQ_IO_LOW;
-> +			irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
-> +		} else {
-> +			pr_err("%s: BUS_ON req failed(%d). irq_status: 0x%08x\n",
-> +					mmc_hostname(mmc), ret, irq_status);
-> +			irq_ack |= CORE_PWRCTL_BUS_FAIL;
-> +		}
->  	}
->  	/* Handle IO LOW/HIGH */
->  	if (irq_status & CORE_PWRCTL_IO_LOW) {
-> @@ -1370,6 +1419,15 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
->  		irq_ack |= CORE_PWRCTL_IO_SUCCESS;
->  	}
->  
-> +	if (io_level && mmc->supply.vqmmc && !pwr_state) {
-> +		ret = mmc_regulator_set_vqmmc(mmc, &mmc->ios);
-> +		if (ret)
-> +			pr_err("%s: IO_level setting failed(%d). signal_voltage: %d, vdd: %d irq_status: 0x%08x\n",
-> +					mmc_hostname(mmc), ret,
-> +					mmc->ios.signal_voltage, mmc->ios.vdd,
-> +					irq_status);
-> +	}
-> +
->  	/*
->  	 * The driver has to acknowledge the interrupt, switch voltages and
->  	 * report back if it succeded or not to this register. The voltage
-> @@ -1415,10 +1473,9 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
->  		msm_host->curr_pwr_state = pwr_state;
->  	if (io_level)
->  		msm_host->curr_io_level = io_level;
-> -
->  	pr_debug("%s: %s: Handled IRQ(%d), irq_status=0x%x, ack=0x%x\n",
-> -		mmc_hostname(msm_host->mmc), __func__, irq, irq_status,
-> -		irq_ack);
-> +			mmc_hostname(msm_host->mmc), __func__,
-> +			irq, irq_status, irq_ack);
->  }
->  
->  static irqreturn_t sdhci_msm_pwr_irq(int irq, void *data)
-> @@ -1605,6 +1662,19 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
->  	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
->  }
->  
-> +static int sdhci_msm_register_vreg(struct sdhci_msm_host *msm_host)
+* Faiz Abbas <faiz_abbas@ti.com> [180709 16:50]:
+> Add support for the software reset of a target interconnect
+> module using its sysconfig and sysstatus registers.
+...
+> --- a/drivers/bus/ti-sysc.c
+> +++ b/drivers/bus/ti-sysc.c
+...
+> +static int sysc_reset(struct sysc *ddata)
 > +{
-> +	int ret = 0;
-> +
-> +	ret = mmc_regulator_get_supply(msm_host->mmc);
-> +	if (ret)
-> +		return ret;
-> +	sdhci_msm_set_regulator_caps(msm_host);
-> +
-> +	return 0;
-> +
-> +}
-> +
->  static const struct sdhci_msm_variant_ops mci_var_ops = {
->  	.msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
->  	.msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
-> @@ -1650,7 +1720,8 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
->  	.quirks = SDHCI_QUIRK_BROKEN_CARD_DETECTION |
->  		  SDHCI_QUIRK_SINGLE_POWER_WRITE |
->  		  SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
-> -	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-> +	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
-> +		   SDHCI_QUIRK2_INTERNAL_PWR_CTL,
->  	.ops = &sdhci_msm_ops,
->  };
->  
-> @@ -1819,6 +1890,10 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->  				msm_offset->core_vendor_spec_capabilities0);
->  	}
->  
-> +	ret = sdhci_msm_register_vreg(msm_host);
-> +	if (ret == -EPROBE_DEFER)
-> +		goto clk_disable;
-> +
->  	/*
->  	 * Power on reset state may trigger power irq if previous status of
->  	 * PWRCTL was either BUS_ON or IO_HIGH_V. So before enabling pwr irq
-> @@ -1867,7 +1942,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->  	ret = sdhci_add_host(host);
->  	if (ret)
->  		goto pm_runtime_disable;
-> -	sdhci_msm_set_regulator_caps(msm_host);
-> +	msm_host->pltfm_init_done = true;
->  
->  	pm_runtime_mark_last_busy(&pdev->dev);
->  	pm_runtime_put_autosuspend(&pdev->dev);
-> 
+> +	int offset = ddata->offsets[SYSC_SYSCONFIG];
+> +	int val = sysc_read(ddata, offset);
+
+Testing with omap4 sysc dts data I noticed we already
+have modules where there is only rev register and no
+SYSC_SYSCONFIG. So not using legacy mode. The
+above offset with -ENODEV value will not work :)
+
+I added some more checks and moved them to the reset
+function.
+
+Updated patch below for reference, I've pushed out
+new branches omap-for-v4.19/ti-sysc-v2 and
+omap-for-v4.19/dt-mcan-v2. I've also updated my
+for-next branch.
+
+Regards,
+
+Tony
+
+8< -----------
+>From tony Mon Sep 17 00:00:00 2001
+From: Faiz Abbas <faiz_abbas@ti.com>
+Date: Mon, 9 Jul 2018 22:18:39 +0530
+Subject: [PATCH] bus: ti-sysc: Add support for software reset
+
+Add support for the software reset of a target interconnect
+module using its sysconfig and sysstatus registers.
+
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+[tony@atomide.com: updated to check if sysconfig exists]
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ drivers/bus/ti-sysc.c | 46 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -23,11 +23,14 @@
+ #include <linux/of_address.h>
+ #include <linux/of_platform.h>
+ #include <linux/slab.h>
++#include <linux/iopoll.h>
+ 
+ #include <linux/platform_data/ti-sysc.h>
+ 
+ #include <dt-bindings/bus/ti-sysc.h>
+ 
++#define MAX_MODULE_SOFTRESET_WAIT		10000
++
+ static const char * const reg_names[] = { "rev", "sysc", "syss", };
+ 
+ enum sysc_clocks {
+@@ -88,6 +91,11 @@ struct sysc {
+ 	struct delayed_work idle_work;
+ };
+ 
++void sysc_write(struct sysc *ddata, int offset, u32 value)
++{
++	writel_relaxed(value, ddata->module_va + offset);
++}
++
+ static u32 sysc_read(struct sysc *ddata, int offset)
+ {
+ 	if (ddata->cfg.quirks & SYSC_QUIRK_16BIT) {
+@@ -943,6 +951,36 @@ static void sysc_init_revision_quirks(struct sysc *ddata)
+ 	}
+ }
+ 
++static int sysc_reset(struct sysc *ddata)
++{
++	int offset = ddata->offsets[SYSC_SYSCONFIG];
++	int val;
++
++	if (ddata->legacy_mode || offset < 0 ||
++	    ddata->cfg.quirks & SYSC_QUIRK_NO_RESET_ON_INIT)
++		return 0;
++
++	/*
++	 * Currently only support reset status in sysstatus.
++	 * Warn and return error in all other cases
++	 */
++	if (!ddata->cfg.syss_mask) {
++		dev_err(ddata->dev, "No ti,syss-mask. Reset failed\n");
++		return -EINVAL;
++	}
++
++	val = sysc_read(ddata, offset);
++	val |= (0x1 << ddata->cap->regbits->srst_shift);
++	sysc_write(ddata, offset, val);
++
++	/* Poll on reset status */
++	offset = ddata->offsets[SYSC_SYSSTATUS];
++
++	return readl_poll_timeout(ddata->module_va + offset, val,
++				  (val & ddata->cfg.syss_mask) == 0x0,
++				  100, MAX_MODULE_SOFTRESET_WAIT);
++}
++
+ /* At this point the module is configured enough to read the revision */
+ static int sysc_init_module(struct sysc *ddata)
+ {
+@@ -960,6 +998,14 @@ static int sysc_init_module(struct sysc *ddata)
+ 		return 0;
+ 	}
+ 
++	error = sysc_reset(ddata);
++	if (error) {
++		dev_err(ddata->dev, "Reset failed with %d\n", error);
++		pm_runtime_put_sync(ddata->dev);
++
++		return error;
++	}
++
+ 	ddata->revision = sysc_read_revision(ddata);
+ 	pm_runtime_put_sync(ddata->dev);
+ 
+-- 
+2.17.1
