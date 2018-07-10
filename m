@@ -1,239 +1,100 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v2 2/2] reset: uniphier: add USB3 core reset control
-Date: Tue, 10 Jul 2018 10:14:17 +0900
-Message-ID: <1531185257-16444-3-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1531185257-16444-1-git-send-email-hayashi.kunihiko@socionext.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: Re: [PATCH 0/3] pinctrl: meson-g12a: add pinctrl driver support
+Date: Tue, 10 Jul 2018 09:26:10 +0800
+Message-ID: <9fa17a38-236f-1d83-97fa-beb06046f023@amlogic.com>
+References: <20180704224511.29350-1-yixun.lan@amlogic.com>
+ <78da7e13-e80b-d714-86d0-7c5f6fc0d9f5@baylibre.com>
+ <886462fa-1833-a99a-a2fa-5b7dd58341fd@amlogic.com>
+ <CAFBinCCZzvn5XNiPHhYK+BxGw6J7KJxEuSXF9ZeT8cFi84FjRQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531185257-16444-1-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <CAFBinCCZzvn5XNiPHhYK+BxGw6J7KJxEuSXF9ZeT8cFi84FjRQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: yixun.lan@amlogic.com, Neil Armstrong <narmstrong@baylibre.com>, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, khilman@baylibre.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, carlo@caione.org, linux-amlogic@lists.infradead.org, xingyu.chen@amlogic.com, jbrunet@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-Add a reset line to enable USB3 core implemented in UniPhier SoCs.
+HI Martin:
+ thanks for your suggestion
 
-This reuses only the reset operations in reset-simple, because
-the reset-simple doesn't handle any SoC-dependent clocks and resets.
-This reset line is included in the USB3 glue layer, and it's necessary
-to enable clocks and deassert resets of the layer before using this
-reset line.
+On 07/10/18 06:02, Martin Blumenstingl wrote:
+> Hi Yixun,
+> 
+> On Thu, Jul 5, 2018 at 4:53 AM Yixun Lan <yixun.lan@amlogic.com> wrote:
+>>
+>> HI Neil
+>>
+>> On 07/04/18 22:57, Neil Armstrong wrote:
+>>> Hi Yixun,
+>>>
+>>> On 05/07/2018 00:45, Yixun Lan wrote:
+>>>> This patch series try to add pinctrl driver support for
+>>>> the Meson-G12A SoC.
+>>>
+>>> Thanks for submitting these patches.
+>>>
+>>> Can you explicit this patchset with more details on the G12A SoC family ?
+>>> It's relationship with AXG and the differences in term of pinmuxing with the other SoC families ?
+>>>
+>> I thought this was already discussed while we doing pinctrl driver for
+>> Meson-AXG SoC.
+>>
+>> Anyway, here it is:
+>>
+>> Starting from Meson-AXG SoC, the pinctrl controller block using 4
+>> continues bit to specific pin mux function, while comparing to old
+>> generation SoC which kind of using various length bits for the pin mux
+>> definition. The new design would greatly simplify the software model..
+>>
+>> for detail example, one 32bit register can describe 8 pins, and each of
+>> them has 0-7 value to set, start from value 0 to 7.
+>>
+>> partition the register into 8 parts:
+>> bit[3:0]
+>> bit[7:4]
+>> bit[11:8]
+>> bit[15:12]
+>> bit[19:16]
+>> bit[23:20]
+>> bit[27:24]
+>> bit[31:28]
+>>
+>>
+>> for each value:
+>> value == 0, means the pin is GPIO
+>> value = {1, 2, ... 7 } is one of specific PIN function
+> OK, so AXG and G12A use the same register layout -> thus the same
+> pinmux ops are re-used
+> 
+Yes
+> 
+> 
+>> I could put this info into cover-letter or commit message?
+> if you have to resend this series anyways then it would be great if
+> you could add it to the commit description
+> 
+sure
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/reset/Kconfig               |  10 +++
- drivers/reset/Makefile              |   1 +
- drivers/reset/reset-uniphier-usb3.c | 171 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 182 insertions(+)
- create mode 100644 drivers/reset/reset-uniphier-usb3.c
+>>> Why is there a GPIOE bank within the AO controller ?
+>>>
+>>
+>> It actually sit in the AO domain, although it's sounds strange from the
+>> naming..
+>>
+>> I'm not sure if it's good idea to append a AO suffix? since the
+>> documentation just use the plain GPIOE
+> I am fine with plain GPIOE if that's what your internal documentation uses
+> it would be great if you could add a comment (or at least a note in
+> the commit message) indicating that this is how the hardware is
+> designed (initially I thought this was a bug since I have no
+> documentation for the G12A chipset)
 
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index c0b292b..6b45067 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -138,6 +138,16 @@ config RESET_UNIPHIER
- 	  Say Y if you want to control reset signals provided by System Control
- 	  block, Media I/O block, Peripheral Block.
- 
-+config RESET_UNIPHIER_USB3
-+	tristate "USB3 reset driver for UniPhier SoCs"
-+	depends on (ARCH_UNIPHIER || COMPILE_TEST) && OF
-+	default ARCH_UNIPHIER
-+	select RESET_SIMPLE
-+	help
-+	  Support for the USB3 core reset on UniPhier SoCs.
-+	  Say Y if you want to control reset signals provided by
-+	  USB3 glue layer.
-+
- config RESET_ZYNQ
- 	bool "ZYNQ Reset Driver" if COMPILE_TEST
- 	default ARCH_ZYNQ
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index c1261dc..2638ac4 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -20,5 +20,6 @@ obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
- obj-$(CONFIG_RESET_TI_SCI) += reset-ti-sci.o
- obj-$(CONFIG_RESET_TI_SYSCON) += reset-ti-syscon.o
- obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
-+obj-$(CONFIG_RESET_UNIPHIER_USB3) += reset-uniphier-usb3.o
- obj-$(CONFIG_RESET_ZYNQ) += reset-zynq.o
- 
-diff --git a/drivers/reset/reset-uniphier-usb3.c b/drivers/reset/reset-uniphier-usb3.c
-new file mode 100644
-index 0000000..ffa1b19
---- /dev/null
-+++ b/drivers/reset/reset-uniphier-usb3.c
-@@ -0,0 +1,171 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// reset-uniphier-usb3.c - USB3 reset driver for UniPhier
-+// Copyright 2018 Socionext Inc.
-+// Author: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-+
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset.h>
-+
-+#include "reset-simple.h"
-+
-+#define MAX_CLKS	2
-+#define MAX_RSTS	2
-+
-+struct uniphier_usb3_reset_soc_data {
-+	int nclks;
-+	const char * const *clock_names;
-+	int nrsts;
-+	const char * const *reset_names;
-+};
-+
-+struct uniphier_usb3_reset_priv {
-+	struct clk_bulk_data clk[MAX_CLKS];
-+	struct reset_control *rst[MAX_RSTS];
-+	struct reset_simple_data rdata;
-+	const struct uniphier_usb3_reset_soc_data *data;
-+};
-+
-+static int uniphier_usb3_reset_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct uniphier_usb3_reset_priv *priv;
-+	struct resource *res;
-+	resource_size_t size;
-+	const char *name;
-+	int i, ret, nr;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->data = of_device_get_match_data(dev);
-+	if (WARN_ON(!priv->data || priv->data->nclks > MAX_CLKS ||
-+		    priv->data->nrsts > MAX_RSTS))
-+		return -EINVAL;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	size = resource_size(res);
-+	priv->rdata.membase = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(priv->rdata.membase))
-+		return PTR_ERR(priv->rdata.membase);
-+
-+	for (i = 0; i < priv->data->nclks; i++)
-+		priv->clk[i].id = priv->data->clock_names[i];
-+	ret = devm_clk_bulk_get(dev, priv->data->nclks, priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < priv->data->nrsts; i++) {
-+		name = priv->data->reset_names[i];
-+		priv->rst[i] = devm_reset_control_get_shared(dev, name);
-+		if (IS_ERR(priv->rst[i]))
-+			return PTR_ERR(priv->rst[i]);
-+	}
-+
-+	ret = clk_bulk_prepare_enable(priv->data->nclks, priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	for (nr = 0; nr < priv->data->nrsts; nr++) {
-+		ret = reset_control_deassert(priv->rst[nr]);
-+		if (ret)
-+			goto out_rst_assert;
-+	}
-+
-+	spin_lock_init(&priv->rdata.lock);
-+	priv->rdata.rcdev.owner = THIS_MODULE;
-+	priv->rdata.rcdev.nr_resets = size * BITS_PER_BYTE;
-+	priv->rdata.rcdev.ops = &reset_simple_ops;
-+	priv->rdata.rcdev.of_node = dev->of_node;
-+	priv->rdata.active_low = true;
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	ret = devm_reset_controller_register(dev, &priv->rdata.rcdev);
-+	if (ret)
-+		goto out_rst_assert;
-+
-+	return 0;
-+
-+out_rst_assert:
-+	while (nr--)
-+		reset_control_assert(priv->rst[nr]);
-+
-+	clk_bulk_disable_unprepare(priv->data->nclks, priv->clk);
-+
-+	return ret;
-+}
-+
-+static int uniphier_usb3_reset_remove(struct platform_device *pdev)
-+{
-+	struct uniphier_usb3_reset_priv *priv = platform_get_drvdata(pdev);
-+	int i;
-+
-+	for (i = 0; i < priv->data->nrsts; i++)
-+		reset_control_assert(priv->rst[i]);
-+
-+	clk_bulk_disable_unprepare(priv->data->nclks, priv->clk);
-+
-+	return 0;
-+}
-+
-+static const char * const uniphier_pro4_clock_reset_names[] = {
-+	"gio", "link",
-+};
-+
-+static const struct uniphier_usb3_reset_soc_data uniphier_pro4_data = {
-+	.nclks = ARRAY_SIZE(uniphier_pro4_clock_reset_names),
-+	.clock_names = uniphier_pro4_clock_reset_names,
-+	.nrsts = ARRAY_SIZE(uniphier_pro4_clock_reset_names),
-+	.reset_names = uniphier_pro4_clock_reset_names,
-+};
-+
-+static const char * const uniphier_pxs2_clock_reset_names[] = {
-+	"link",
-+};
-+
-+static const struct uniphier_usb3_reset_soc_data uniphier_pxs2_data = {
-+	.nclks = ARRAY_SIZE(uniphier_pxs2_clock_reset_names),
-+	.clock_names = uniphier_pxs2_clock_reset_names,
-+	.nrsts = ARRAY_SIZE(uniphier_pxs2_clock_reset_names),
-+	.reset_names = uniphier_pxs2_clock_reset_names,
-+};
-+
-+static const struct of_device_id uniphier_usb3_reset_match[] = {
-+	{
-+		.compatible = "socionext,uniphier-pro4-usb3-reset",
-+		.data = &uniphier_pro4_data,
-+	},
-+	{
-+		.compatible = "socionext,uniphier-pxs2-usb3-reset",
-+		.data = &uniphier_pxs2_data,
-+	},
-+	{
-+		.compatible = "socionext,uniphier-ld20-usb3-reset",
-+		.data = &uniphier_pxs2_data,
-+	},
-+	{
-+		.compatible = "socionext,uniphier-pxs3-usb3-reset",
-+		.data = &uniphier_pxs2_data,
-+	},
-+	{ /* Sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, uniphier_usb3_reset_match);
-+
-+static struct platform_driver uniphier_usb3_reset_driver = {
-+	.probe = uniphier_usb3_reset_probe,
-+	.remove = uniphier_usb3_reset_remove,
-+	.driver = {
-+		.name = "uniphier-usb3-reset",
-+		.of_match_table = uniphier_usb3_reset_match,
-+	},
-+};
-+module_platform_driver(uniphier_usb3_reset_driver);
-+
-+MODULE_AUTHOR("Kunihiko Hayashi <hayashi.kunihiko@socionext.com>");
-+MODULE_DESCRIPTION("UniPhier USB3 Reset Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.7.4
+I can add a comment
+> 
+> Regards
+> Martin
+> 
+> .
+> 
