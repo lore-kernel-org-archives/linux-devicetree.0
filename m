@@ -1,15 +1,15 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 13/17] ARM: dts: sun8i: r40: Remove fallback
- compatible for TCON TV
-Date: Tue, 10 Jul 2018 23:49:50 +0800
-Message-ID: <CAGb2v64E-mzbf0gL91=51ZfTrb=+8QwNr1SXMi8Vj547jC4t9w@mail.gmail.com>
-References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-14-jernej.skrabec@siol.net>
+Subject: Re: [PATCH 14/17] ARM: dts: sun8i: r40: Add missing
+ TCON-TOP - TCON connections
+Date: Tue, 10 Jul 2018 23:53:55 +0800
+Message-ID: <CAGb2v6442VWvuWnK1JCnxNqwRhp6pS+tVZkaRfs6xjYYxTRwfw@mail.gmail.com>
+References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-15-jernej.skrabec@siol.net>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBNNLSPNAKGQEN6YQPNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBK5NSPNAKGQECVJGDKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180706175113.26698-14-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+In-Reply-To: <20180706175113.26698-15-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -21,15 +21,13 @@ Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob H
 List-Id: devicetree@vger.kernel.org
 
 On Sat, Jul 7, 2018 at 1:51 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> While registers between A83T and R40 TV TCON are the same, R40 TCON TV
-> driver has to set additional muxes in TCON TOP. Because of that, remove
-> fallback A83T TCON TV compatible.
-
-Nit: device tree doesn't care about the implementation. You can however
-mention that hardware interaction makes it not so compatible. :)
-
+> Current R40 is missing some graph connections between TCON TOP and
+> TCONs.
+>
+> Add them.
+>
+> Fixes: 05a43a262d03 ("ARM: dts: sun8i: r40: Add HDMI pipeline")
+>
 > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-
-Otherwise,
 
 Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
