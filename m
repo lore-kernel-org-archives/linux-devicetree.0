@@ -1,67 +1,55 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [v4.14-stable] arm64: dts: stratix10: Fix SPI IRQ for Stratix10
-Date: Tue, 10 Jul 2018 15:50:33 +0200
-Message-ID: <20180710135033.GC1123@kroah.com>
-References: <1530829114-16889-1-git-send-email-thor.thayer@linux.intel.com>
+From: Fabio Estevam <fabio.estevam@nxp.com>
+Subject: [PATCH v2 3/6] ARM: dts: imx51: Add tigerp support
+Date: Tue, 10 Jul 2018 10:47:33 -0300
+Message-ID: <1531230456-27717-3-git-send-email-fabio.estevam@nxp.com>
+References: <1531230456-27717-1-git-send-email-fabio.estevam@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <stable-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1530829114-16889-1-git-send-email-thor.thayer@linux.intel.com>
-Sender: stable-owner@vger.kernel.org
-To: thor.thayer@linux.intel.com
-Cc: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "# 4 . 9 . x" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1531230456-27717-1-git-send-email-fabio.estevam@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, robh+dt@kernel.org, kernel@pengutronix.de, sebastian.reichel@collabora.co.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 05, 2018 at 05:18:34PM -0500, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
-> 
-> Fix the SPI interrupt numbers for Stratix10.
-> 
-> This is a backport for stable 4.9.x and 4.14.x branches.
-> (original includes other changes that are not relevant
-> to this branch):
-> 
-> [backport 'commit 889d15090420 ("arm64: dts: stratix10:
->     fix SPI settings")']
-> 
-> Cc: <stable@vger.kernel.org>  # 4.9.x
-> Cc: <stable@vger.kernel.org>  # 4.14.x
-> Fixes: 78cd6a9d8e154 ("arm64: dts: Add base stratix 10 dtsi")
-> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-> ---
->  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> index 57f75453ee93..5db972c0492f 100644
-> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> @@ -230,7 +230,7 @@
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			reg = <0xffda4000 0x1000>;
-> -			interrupts = <0 101 4>;
-> +			interrupts = <0 99 4>;
->  			num-cs = <4>;
->  			status = "disabled";
->  		};
-> @@ -240,7 +240,7 @@
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			reg = <0xffda5000 0x1000>;
-> -			interrupts = <0 102 4>;
-> +			interrupts = <0 100 4>;
->  			num-cs = <4>;
->  			status = "disabled";
->  		};
-> -- 
-> 2.7.4
+As per the i.MX51 Reference Manual add an entry for the
+'tigerp' region in the device tree.
 
-This patch does not apply at all to 4.14.y :(
+This is needed for accessing the ARM_GPC register to set the
+DBGEN bit, so that the debug clocks can be turned on.
 
-Please fix up and resend.  Same for 4.9.
+Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+---
+Changes since v1:
+- Newly introduced in this series.
 
-thanks,
+ arch/arm/boot/dts/imx51.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-greg k-h
+diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
+index 113ddbc..da9d4ce 100644
+--- a/arch/arm/boot/dts/imx51.dtsi
++++ b/arch/arm/boot/dts/imx51.dtsi
+@@ -451,6 +451,11 @@
+ 				clocks = <&clks IMX5_CLK_IIM_GATE>;
+ 			};
+ 
++			tigerp: tigerp@83fa0000 {
++				compatible = "fsl,imx51-tigerp";
++				reg = <0x83fa0000 0x28>;
++			};
++
+ 			owire: owire@83fa4000 {
+ 				compatible = "fsl,imx51-owire", "fsl,imx21-owire";
+ 				reg = <0x83fa4000 0x4000>;
+-- 
+2.7.4
