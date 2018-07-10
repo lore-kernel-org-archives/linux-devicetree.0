@@ -1,38 +1,83 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 1/1] drm/panel: Add support for Olimex LCD-OLinuXino
- panel
-Date: Tue, 10 Jul 2018 15:27:40 +0200
-Message-ID: <20180710132740.GA19600@kroah.com>
-References: <1529909093-17021-1-git-send-email-stefan@olimex.com>
- <20180710103250.GG1504@ulmo>
- <e1229a90-1bdb-0c8e-c371-cde0bc30ea56@gmail.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [PATCH 1/2] ARM: dts: arria10: update NAND clocking
+Date: Tue, 10 Jul 2018 08:35:10 -0500
+Message-ID: <b33d18b2-1956-50a4-9a3f-6d2a0abd4b81@kernel.org>
+References: <1531176063-30140-1-git-send-email-dinguyen@kernel.org>
+ <CAK7LNARAVSK5VY=_RfO2PXJCAnXJN3sXoAY=ijSwVojeo=c66w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <e1229a90-1bdb-0c8e-c371-cde0bc30ea56@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stefan Mavrodiev <stefan.mavrodiev@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Stefan Mavrodiev <stefan@olimex.com>, David Airlie <airlied@linux.ie>, Randy Dunlap <rdunlap@infradead.org>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK7LNARAVSK5VY=_RfO2PXJCAnXJN3sXoAY=ijSwVojeo=c66w@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Marek Vasut <marex@denx.de>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdWwgMTAsIDIwMTggYXQgMDQ6MDg6NTRQTSArMDMwMCwgU3RlZmFuIE1hdnJvZGll
-diB3cm90ZToKPiBPbiAwNy8xMC8yMDE4IDAxOjMyIFBNLCBUaGllcnJ5IFJlZGluZyB3cm90ZToK
-PiA+ID4gK01PRFVMRV9BVVRIT1IoIlN0ZWZhbiBNYXZyb2RpZXYgPHN0ZWZhbkBvbGltZXguY29t
-PiIpOwo+ID4gPiArTU9EVUxFX0RFU0NSSVBUSU9OKCJMQ0QtT0xpbnVYaW5vIGRyaXZlciIpOwo+
-ID4gPiArTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIpOwo+ID4gVGhpcyBzZWVtcyB0byBjb250cmFk
-aWN0IHRoZSBHUEwtMi4wKyBpbiB0aGUgU1BEWCBoZWFkZXIuCj4gQ2FuIHlvdSBlbGFib3JhdGUg
-b24gdGhpcz8KClBsZWFzZSByZWFkIG1vZHVsZS5oIGZvciB3aGF0IHRoaXMgc3RyaW5nIG1lYW5z
-LgoKdGhhbmtzLAoKZ3JlZyBrLWgKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVsCg==
+
+
+On 07/09/2018 08:31 PM, Masahiro Yamada wrote:
+> 2018-07-10 7:41 GMT+09:00 Dinh Nguyen <dinguyen@kernel.org>:
+>> The NAND IP needs 2 clocks(nand_x_clk and nand_clk). This patch adds a
+>> nand_x_clk, which is derived from the nand_clk, but has a fixed divider
+>> of 4.
+>>
+>> Update the NAND node to use the additional clock.
+>>
+>> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+>> ---
+>>  arch/arm/boot/dts/socfpga_arria10.dtsi | 13 +++++++++++--
+>>  1 file changed, 11 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+>> index a4dcb68..558b5ea 100644
+>> --- a/arch/arm/boot/dts/socfpga_arria10.dtsi
+>> +++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+>> @@ -377,13 +377,21 @@
+>>                                                 clk-gate = <0xC8 11>;
+>>                                         };
+>>
+>> -                                       nand_clk: nand_clk {
+>> +                                       nand_x_clk: nand_x_clk {
+>>                                                 #clock-cells = <0>;
+>>                                                 compatible = "altr,socfpga-a10-gate-clk";
+>>                                                 clocks = <&l4_mp_clk>;
+>>                                                 clk-gate = <0xC8 10>;
+>>                                         };
+>>
+>> +                                       nand_clk: nand_clk {
+>> +                                               #clock-cells = <0>;
+>> +                                               compatible = "altr,socfpga-a10-gate-clk";
+>> +                                               clocks = <&nand_x_clk>;
+>> +                                               fixed-divider = <4>;
+>> +                                               clk-gate = <0xC8 10>;
+>> +                                       };
+>> +
+>>                                         spi_m_clk: spi_m_clk {
+>>                                                 #clock-cells = <0>;
+>>                                                 compatible = "altr,socfpga-a10-gate-clk";
+>> @@ -650,7 +658,8 @@
+>>                         reg-names = "nand_data", "denali_reg";
+>>                         interrupts = <0 99 4>;
+>>                         dma-mask = <0xffffffff>;
+>> -                       clocks = <&nand_clk>;
+>> +                       clocks = <&nand_clk>, <&nand_x_clk>;
+>> +                       clock-names = "nand", "nand_x";
+> 
+> 
+> Doesn't SOCFPGA really need the ECC clock?
+> 
+
+I don't see any mentions of an ECC clock in any of the SoCFPGA
+documentation for the NAND IP.
+
+Dinh
