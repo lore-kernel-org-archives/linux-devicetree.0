@@ -1,54 +1,84 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH] ARM: dts: da850: Add power-domains to CPPI 4.1 node
-Date: Tue, 10 Jul 2018 15:35:01 +0530
-Message-ID: <facfdccd-d06a-5286-d740-26cab6ba8e03@ti.com>
-References: <20180704094432.5424-1-nsekhar@ti.com>
- <e0fc938e-36f9-655f-4d4a-910527a2cc08@lechnology.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] drm/panel: simple: Add support for Innolux G070Y2-L01
+Date: Tue, 10 Jul 2018 12:16:35 +0200
+Message-ID: <20180710101635.GF1504@ulmo>
+References: <1528111008.2818.20.camel@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e0fc938e-36f9-655f-4d4a-910527a2cc08@lechnology.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Lechner <david@lechnology.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Device Tree Mailing List <devicetree@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============0348446602=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1528111008.2818.20.camel@googlemail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Christoph Fritz <chf.fritz@googlemail.com>
+Cc: David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpZGF5IDA2IEp1bHkgMjAxOCAxMDozMiBQTSwgRGF2aWQgTGVjaG5lciB3cm90ZToKPiBP
-biAwNy8wNC8yMDE4IDA0OjQ0IEFNLCBTZWtoYXIgTm9yaSB3cm90ZToKPj4gVGhpcyBhZGRzIHRo
-ZSBwb3dlci1kb21haW5zIHByb3BlcnR5IHRvIENQUEkgNC4xIG5vZGUuCj4+Cj4+IFRoZSBDUFBJ
-IDQuMSBETUEgZHJpdmVyIHVzZXMgcG1fcnVudGltZSB0byBtYW5hZ2UgdGhlIGNsb2NrcywKPj4g
-c28gaXQgbmVlZHMgdGhpcyBwcm9wZXJ0eSBpbiBvcmRlciB0byBmaW5kIGFuZCBlbmFibGUgdGhl
-IGNsb2NrCj4+IHByb3Blcmx5Lgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBTZWtoYXIgTm9yaSA8bnNl
-a2hhckB0aS5jb20+Cj4+IC0tLQo+PiBBcHBsaWVzIGZvciB2NC4xOS9kdCBicmFuY2ggb2YgbXkg
-dHJlZS4KPj4KPj4gwqAgYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaSB8IDEgKwo+PiDCoCAx
-IGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPj4KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL2RhODUwLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpCj4+IGlu
-ZGV4IDllMDVhNWE3MDljMC4uMDdmMjE1ZTdlNWI4IDEwMDY0NAo+PiAtLS0gYS9hcmNoL2FybS9i
-b290L2R0cy9kYTg1MC5kdHNpCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kK
-Pj4gQEAgLTYzNyw2ICs2MzcsNyBAQAo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIGludGVycnVwdHMgPSA8NTg+Owo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgICNkbWEtY2VsbHMgPSA8Mj47Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgI2RtYS1jaGFubmVscyA9IDw0PjsKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCBwb3dlci1kb21haW5zID0gPCZwc2MxIDE+Owo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIHN0YXR1cyA9ICJva2F5IjsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-fTsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgIH07Cj4+Cj4gCj4gUmV2aWV3ZWQtYnk6IERhdmlkIExl
-Y2huZXIgPGRhdmlkQGxlY2hub2xvZ3kuY29tPgoKVGhhbmtzLCBhcHBsaWVkIHdpdGggdGhpcyBh
-bmQgQmFydG9zeidzIFRlc3RlZC1ieS4KCj4gQWx0aG91Z2ggdGhpcyBoYXMgbWUgd29uZGVyaW5n
-IGlmIHdlIGNhbiBub3cgcmVtb3ZlIHRoZSBjbG9jay1yYW5nZXMKPiBwcm9wZXJ0eSBpbiB0aGUg
-cGFyZW50IG5vZGUuCgpBZ3JlZSBpdHMgbm90IHJlYWxseSB1c2VkLiBCdXQgcHJvYmFibHkgbGVh
-dmUgaXQgdGhlcmUgc2luY2UgaXRzIGNvcnJlY3QKYW55d2F5IGFuZCB3ZSBkb24ndCB3YW50IHRv
-IGFkZCBpdCBiYWNrIGlmIHRoZSBETUEgZHJpdmVyIG5lZWRzIGFjY2Vzcwp0byBjbG9jayBhdCBz
-b21lIHBvaW50LgoKVGhhbmtzLApTZWtoYXIKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+--===============0348446602==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="AH+kv8CCoFf6qPuz"
+Content-Disposition: inline
+
+
+--AH+kv8CCoFf6qPuz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jun 04, 2018 at 01:16:48PM +0200, Christoph Fritz wrote:
+> This patch adds support for Innolux G070Y2-L01 7" WVGA (800x480) TFT LCD
+> panel.
+>=20
+> Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
+> ---
+>  .../bindings/display/panel/innolux,g070y2-l01.txt  | 12 +++++++
+>  drivers/gpu/drm/panel/panel-simple.c               | 37 ++++++++++++++++=
+++++--
+>  2 files changed, 47 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/innol=
+ux,g070y2-l01.txt
+
+Applied, thanks.
+
+Thierry
+
+--AH+kv8CCoFf6qPuz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltEh4MACgkQ3SOs138+
+s6HgqA//Raonwnfii7eveMucgOKr+WHemFYqVBx6bngVnSpFdZVgjtRG+nArYjnX
+YbcLKxJ37W6wdwIJuiP4UgZwequ4mP7NQTcOoha9D52Wv17RJQRLUnHcjzFjuagi
+emWMDY6pCpNDZbL8yPuprtFvhA61wc8VsdHHSKfP7C5mEx1uEFQg+zMzR6WvNkJD
+XnugPdhyVu/diXSwCLPLM7iLsQvsdOtWvjFstp+MNbwUpih2nEaqgeriIw0cT6AF
+/hczsdMooeWwaTj0r0Ig8xpP6aqxOodwvWSRw6uuOy31k3AhhMUOrDOMyT6FPKwl
+UqIg7RV4UnkcN+13Z6c5VuWQSRq9A1Z1A/hd/YY0Y7nVTkCNu9rHMDD9qPXF0kPh
+I256dv2PBbtE/zMrLEYaoewUhj9UsQ0Sk0lgmde22MRn6/4Vfu+viHjq/+ZBulkN
+AgVWkesDCYm0fdhV6oRE+QJ7P46kGp3tugV2A48LxVAwaPwYHYOs/Zc1LnIR+VOL
+0/BiTpcfvT3rQVWl68UMxZXj2Mu5pKf6JKndSdTsIZKgFKN96KaQccoZaSCIuu+F
+NO6Ko7WJj3b4Wmut3iePWYQc7/KiMGc74aTSYvZzrzWZzEkXLUHZJK23hqL+nCqN
+9Ji6g7zh2caGizYvAgIZHxwhgexIqdQ9yW/N9uPaxUfSc98brf4=
+=YBBz
+-----END PGP SIGNATURE-----
+
+--AH+kv8CCoFf6qPuz--
+
+--===============0348446602==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0348446602==--
