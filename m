@@ -1,89 +1,97 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [linux-sunxi] [PATCH v5 09/22] ARM: dts: sun5i: Use
- most-qualified system control compatibles
-Date: Tue, 10 Jul 2018 22:53:44 +0800
-Message-ID: <CAGb2v64HbpvJhy5KQOepc61nU7NECaWMPvhZ16dk5hJXiPBHxA@mail.gmail.com>
-References: <20180710080114.31469-1-paul.kocialkowski@bootlin.com>
- <20180710080114.31469-10-paul.kocialkowski@bootlin.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v7 0/5] Reintroduce i.MX EPIT Timer
+Date: Tue, 10 Jul 2018 16:55:36 +0200
+Message-ID: <CAJiuCcf3g2fzrR2_4mthjwKRcyZ8KVPX+EZ5_Uifh2E6TkzusQ@mail.gmail.com>
+References: <20180611155001.3506-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180710080114.31469-10-paul.kocialkowski@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Tom Saeger <tom.saeger@oracle.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Hans Verkuil <hverkuil@xs4all.nl>, Andrzej Hajda <a.hajda@samsung.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, Marco Franchi <marco.franchi@nxp.com>, Pawel Osciak <posciak@chromium.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Jonathan Corbet <corbet@lwn.net>, Neil Armstrong <narmstrong@baylibre.com>, Keiichi Watanabe <keiichiw@chromium.org>, Jacob Chen <jacob-chen@iotwrt.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Sami Tolvanen <samitolvanen@google.com>, Icenowy Zheng <icenowy@aosc.io>, devicetree <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Smitha
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180611155001.3506-1-peron.clem@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Stefan Agner <stefan@agner.ch>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?UTF-8?Q?Cl=C3=A9ment_Peron?= <clement.peron@devialet.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 10, 2018 at 4:01 PM, Paul Kocialkowski
-<paul.kocialkowski@bootlin.com> wrote:
-> This switches the sun5i dtsi to use the most qualified compatibles for
-> the system-control block (previously named SRAM controller) as well as
-> the SRAM blocks. The sun4i-a10 compatibles are kept since these hardware
-> blocks are backward-compatible.
+Hi,
 
-Not quite sure why they are backward-compatible. The A13 has less SRAM
-mapping controls than the A10.
+Is there still some remark against merging this ?
 
-ChenYu
+Thanks,
+Clement
 
-> The phandle for system control is also updated to reflect the fact that
-> the controller described is really about system control rather than SRAM
-> control.
+On Mon, 11 Jun 2018 at 17:50, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
+> wrote:
 >
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> ---
->  arch/arm/boot/dts/sun5i.dtsi | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
+> From: Cl=C3=A9ment Peron <clement.peron@devialet.com>
 >
-> diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
-> index 07f2248ed5f8..68711954c293 100644
-> --- a/arch/arm/boot/dts/sun5i.dtsi
-> +++ b/arch/arm/boot/dts/sun5i.dtsi
-> @@ -114,8 +114,9 @@
->                 #size-cells = <1>;
->                 ranges;
+> As suggested in the commit message we have added the device tree support,
+> proper bindings and we moved the driver into the correct folder.
 >
-> -               sram-controller@1c00000 {
-> -                       compatible = "allwinner,sun4i-a10-sram-controller";
-> +               system-control@1c00000 {
-> +                       compatible = "allwinner,sun5i-a13-system-control",
-> +                                    "allwinner,sun4i-a10-system-control";
->                         reg = <0x01c00000 0x30>;
->                         #address-cells = <1>;
->                         #size-cells = <1>;
-> @@ -130,7 +131,8 @@
->                         };
+> Moreover we made some changes like use of relaxed IO accesor,
+> implement sched_clock, delay_timer and reduce the clockevents min_delta.
 >
->                         emac_sram: sram-section@8000 {
-> -                               compatible = "allwinner,sun4i-a10-sram-a3-a4";
-> +                               compatible = "allwinner,sun5i-a13-sram-a3-a4",
-> +                                            "allwinner,sun4i-a10-sram-a3-a4";
->                                 reg = <0x8000 0x4000>;
->                                 status = "disabled";
->                         };
-> @@ -143,7 +145,8 @@
->                                 ranges = <0 0x00010000 0x1000>;
+> Changes since v6:
+> -fix indent
 >
->                                 otg_sram: sram-section@0 {
-> -                                       compatible = "allwinner,sun4i-a10-sram-d";
-> +                                       compatible = "allwinner,sun5i-a13-sram-d",
-> +                                                    "allwinner,sun4i-a10-sram-d";
->                                         reg = <0x0000 0x1000>;
->                                         status = "disabled";
->                                 };
+> Changes since v5:
+> - change epit to timer in doc example
+> - fix typo in imx6sl.dtsi
+>
+> Changes since v4:
+> - removed ipg clk
+> - change in dt epit to timer
+> - add introduction in doc
+> - add all compatibles in doc
+> - update epit entry for other i.MX device-trees
+>
+> Changes since v3:
+> - Clean Kconfig
+> - Rename imx6q-epit to imx31-epit
+> - Update doc and bindings
+> - Indent and fix
+>
+> Changes since v2 (Thanks Fabio Estevam):
+> - Removed unused ckil clock
+> - Add out_iounmap
+> - Check and handle if clk_prepare_enable failed
+> - Fix comment typo
+>
+> Changes since v1 (Thanks Vladimir Zapolskiy):
+> - Add OF dependency in Kconfig
+> - Sort header
+> - Use BIT macro
+> - Remove useless comments
+> - Fix incorrect indent
+> - Fix memory leak
+> - Add check and handle possible returned error
+>
+> Cl=C3=A9ment Peron (2):
+>   ARM: imx: remove inexistant EPIT timer init
+>   dt-bindings: timer: add i.MX EPIT timer binding
+>
+> Colin Didier (3):
+>   clk: imx6: add EPIT clock support
+>   clocksource: add driver for i.MX EPIT timer
+>   ARM: dts: imx: add missing compatible and clock properties for EPIT
+>
+>  .../devicetree/bindings/timer/fsl,imxepit.txt |  21 ++
+>  arch/arm/boot/dts/imx25.dtsi                  |   8 +-
+>  arch/arm/boot/dts/imx6qdl.dtsi                |  10 +-
+>  arch/arm/boot/dts/imx6sl.dtsi                 |  10 +-
+>  arch/arm/boot/dts/imx6sx.dtsi                 |  10 +-
+>  arch/arm/boot/dts/imx6ul.dtsi                 |  10 +-
+>  arch/arm/mach-imx/common.h                    |   1 -
+>  drivers/clk/imx/clk-imx6q.c                   |   2 +
+>  drivers/clocksource/Kconfig                   |  11 +
+>  drivers/clocksource/Makefile                  |   1 +
+>  drivers/clocksource/timer-imx-epit.c          | 265 ++++++++++++++++++
+>  include/dt-bindings/clock/imx6qdl-clock.h     |   4 +-
+>  12 files changed, 341 insertions(+), 12 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/timer/fsl,imxepit.t=
+xt
+>  create mode 100644 drivers/clocksource/timer-imx-epit.c
+>
 > --
 > 2.17.1
 >
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> For more options, visit https://groups.google.com/d/optout.
