@@ -1,14 +1,15 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 02/17] drm/sun4i: Add R40 display engine compatible
-Date: Tue, 10 Jul 2018 23:20:53 +0800
-Message-ID: <CAGb2v65E=U5nQ=b-yDKKwwt16ra2z9rwNJt_hmQtpLcN6ONLTQ@mail.gmail.com>
-References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-3-jernej.skrabec@siol.net>
+Subject: Re: [PATCH 03/17] ARM: dts: sun8i: r40: Remove fallback
+ display engine compatible
+Date: Tue, 10 Jul 2018 23:21:07 +0800
+Message-ID: <CAGb2v67NgyW8ATtfS_abjYhLkRa8L-cJZ5=xHurZ+tJJ=0uijg@mail.gmail.com>
+References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-4-jernej.skrabec@siol.net>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB245SPNAKGQEBAHXAGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB6M5SPNAKGQECPQZYSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180706175113.26698-3-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+In-Reply-To: <20180706175113.26698-4-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -20,8 +21,10 @@ Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob H
 List-Id: devicetree@vger.kernel.org
 
 On Sat, Jul 7, 2018 at 1:50 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> R40 has versatile display pipeline. It supports two simultanious outputs
-> on various outputs (TVE, VGA, HDMI, MIPI DSI, LCD).
+> R40 has pretty unique display pipeline. Because of that, H3 display
+> engine compatible fallback should be removed.
+>
+> Fixes: 05a43a262d03 ("ARM: dts: sun8i: r40: Add HDMI pipeline")
 >
 > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 
