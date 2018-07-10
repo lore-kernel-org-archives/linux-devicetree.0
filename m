@@ -1,541 +1,250 @@
-From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Subject: Re: [PATCH v9 7/7] Bluetooth: hci_qca: Add support for Qualcomm
- Bluetooth chip wcn3990
-Date: Tue, 10 Jul 2018 18:22:02 +0530
-Message-ID: <a5d87ad5d916df5b5ca7c0c69a786e4a@codeaurora.org>
-References: <20180705165515.13340-1-bgodavar@codeaurora.org>
- <20180705165515.13340-8-bgodavar@codeaurora.org>
- <20180706222110.GK129942@google.com>
+From: Aapo Vienamo <avienamo@nvidia.com>
+Subject: [PATCH 5/6] dt-bindings: Add Tegra PMC pad configuration bindings
+Date: Tue, 10 Jul 2018 15:54:26 +0300
+Message-ID: <1531227266-12648-1-git-send-email-avienamo@nvidia.com>
+References: <1531226879-11802-1-git-send-email-avienamo@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180706222110.GK129942@google.com>
+In-Reply-To: <1531226879-11802-1-git-send-email-avienamo@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>
+Cc: Aapo Vienamo <avienamo@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
+Document the pinctrl bindings used by the PMC driver for performing pad
+configuration. Both nvidia,tegra186-pmc.txt and nvidia,tegra20-pmc.txt
+are modified as they both cover SoC generations for which these bindings
+apply.
 
-On 2018-07-07 03:51, Matthias Kaehlcke wrote:
-> On Thu, Jul 05, 2018 at 10:25:15PM +0530, Balakrishna Godavarthi wrote:
->> Add support to set voltage/current of various regulators
->> to power up/down Bluetooth chip wcn3990.
->> 
->> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
->> ---
->> changes in v9:
->>     * moved flow control to vendor and set_baudarte functions.
->>     * removed parent regs.
->> 
->> changes in v8:
->>     * closing qca buffer, if qca_power_setup fails
->>     * chnaged ibs start timer function call location.
->>     * updated review comments.
->> 
->> changes in v7:
->>     * addressed review comments.
->> 
->> changes in v6:
->>     * Hooked up qca_power to qca_serdev.
->>     * renamed all the naming inconsistency functions with qca_*
->>     * leveraged common code of ROME for wcn3990.
->>     * created wrapper functions for re-usable blocks.
->>     * updated function of _*regulator_enable and _*regualtor_disable.
->>     * removed redundant comments and functions.
->>     * addressed review comments.
->> 
->> Changes in v5:
->>     * updated regulator vddpa min_uV to 1304000.
->>       * addressed review comments.
->> 
->> Changes in v4:
->>     * Segregated the changes of btqca from hci_qca
->>     * rebased all changes on top of bluetooth-next.
->>     * addressed review comments.
->> 
->> ---
->>  drivers/bluetooth/btqca.h   |   3 +
->>  drivers/bluetooth/hci_qca.c | 387 
->> +++++++++++++++++++++++++++++++-----
->>  2 files changed, 345 insertions(+), 45 deletions(-)
->> 
->> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
->> index a9c2779f3e07..0c01f375fe83 100644
->> --- a/drivers/bluetooth/btqca.h
->> +++ b/drivers/bluetooth/btqca.h
->> @@ -37,6 +37,9 @@
->>  #define EDL_TAG_ID_HCI			(17)
->>  #define EDL_TAG_ID_DEEP_SLEEP		(27)
->> 
->> +#define QCA_WCN3990_POWERON_PULSE	0xFC
->> +#define QCA_WCN3990_POWEROFF_PULSE	0xC0
->> +
->>  enum qca_bardrate {
->>  	QCA_BAUDRATE_115200 	= 0,
->>  	QCA_BAUDRATE_57600,
->> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->> index 7ebfaa0edf3f..d62c7785a618 100644
->> --- a/drivers/bluetooth/hci_qca.c
->> +++ b/drivers/bluetooth/hci_qca.c
->> @@ -5,7 +5,7 @@
->>   *  protocol extension to H4.
->>   *
->>   *  Copyright (C) 2007 Texas Instruments, Inc.
->> - *  Copyright (c) 2010, 2012 The Linux Foundation. All rights 
->> reserved.
->> + *  Copyright (c) 2010, 2012, 2018 The Linux Foundation. All rights 
->> reserved.
->>   *
->>   *  Acknowledgements:
->>   *  This file is based on hci_ll.c, which was...
->> @@ -31,9 +31,14 @@
->>  #include <linux/kernel.h>
->>  #include <linux/clk.h>
->>  #include <linux/debugfs.h>
->> +#include <linux/delay.h>
->> +#include <linux/device.h>
->>  #include <linux/gpio/consumer.h>
->>  #include <linux/mod_devicetable.h>
->>  #include <linux/module.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regulator/consumer.h>
->>  #include <linux/serdev.h>
->> 
->>  #include <net/bluetooth/bluetooth.h>
->> @@ -124,12 +129,46 @@ enum qca_speed_type {
->>  	QCA_OPER_SPEED
->>  };
->> 
->> +/*
->> + * Voltage regulator information required for configuring the
->> + * QCA Bluetooth chipset
->> + */
->> +struct qca_vreg {
->> +	const char *name;
->> +	unsigned int min_uV;
->> +	unsigned int max_uV;
->> +	unsigned int load_uA;
->> +};
->> +
->> +struct qca_vreg_data {
->> +	enum qca_btsoc_type soc_type;
->> +	struct qca_vreg *vregs;
->> +	size_t num_vregs;
->> +};
->> +
->> +/*
->> + * Platform data for the QCA Bluetooth power driver.
->> + */
->> +struct qca_power {
->> +	struct device *dev;
->> +	const struct qca_vreg_data *vreg_data;
->> +	struct regulator_bulk_data *vreg_bulk;
->> +	bool vregs_on;
->> +};
->> +
->>  struct qca_serdev {
->>  	struct hci_uart	 serdev_hu;
->>  	struct gpio_desc *bt_en;
->>  	struct clk	 *susclk;
->> +	enum qca_btsoc_type btsoc_type;
->> +	struct qca_power *bt_power;
->> +	u32 init_speed;
->> +	u32 oper_speed;
->>  };
->> 
->> +static int qca_power_setup(struct hci_uart *hu, bool on);
->> +static void qca_power_shutdown(struct hci_uart *hu);
->> +
->>  static void __serial_clock_on(struct tty_struct *tty)
->>  {
->>  	/* TODO: Some chipset requires to enable UART clock on client
->> @@ -407,6 +446,7 @@ static int qca_open(struct hci_uart *hu)
->>  {
->>  	struct qca_serdev *qcadev;
->>  	struct qca_data *qca;
->> +	int ret;
->> 
->>  	BT_DBG("hu %p qca_open", hu);
->> 
->> @@ -458,19 +498,32 @@ static int qca_open(struct hci_uart *hu)
->> 
->>  	hu->priv = qca;
->> 
->> -	timer_setup(&qca->wake_retrans_timer, hci_ibs_wake_retrans_timeout, 
->> 0);
->> -	qca->wake_retrans = IBS_WAKE_RETRANS_TIMEOUT_MS;
->> -
->> -	timer_setup(&qca->tx_idle_timer, hci_ibs_tx_idle_timeout, 0);
->> -	qca->tx_idle_delay = IBS_TX_IDLE_TIMEOUT_MS;
->> -
->>  	if (hu->serdev) {
->>  		serdev_device_open(hu->serdev);
->> 
->>  		qcadev = serdev_device_get_drvdata(hu->serdev);
->> -		gpiod_set_value_cansleep(qcadev->bt_en, 1);
->> +		if (qcadev->btsoc_type != QCA_WCN3990) {
->> +			gpiod_set_value_cansleep(qcadev->bt_en, 1);
->> +		} else {
->> +			hu->init_speed = qcadev->init_speed;
->> +			hu->oper_speed = qcadev->oper_speed;
->> +			ret = qca_power_setup(hu, true);
->> +			if (ret) {
->> +				destroy_workqueue(qca->workqueue);
->> +				kfree_skb(qca->rx_skb);
->> +				hu->priv = NULL;
->> +				kfree(qca);
->> +				return ret;
->> +			}
->> +		}
->>  	}
->> 
->> +	timer_setup(&qca->wake_retrans_timer, hci_ibs_wake_retrans_timeout, 
->> 0);
->> +	qca->wake_retrans = IBS_WAKE_RETRANS_TIMEOUT_MS;
->> +
->> +	timer_setup(&qca->tx_idle_timer, hci_ibs_tx_idle_timeout, 0);
->> +	qca->tx_idle_delay = IBS_TX_IDLE_TIMEOUT_MS;
->> +
->>  	BT_DBG("HCI_UART_QCA open, tx_idle_delay=%u, wake_retrans=%u",
->>  	       qca->tx_idle_delay, qca->wake_retrans);
->> 
->> @@ -554,10 +607,13 @@ static int qca_close(struct hci_uart *hu)
->>  	qca->hu = NULL;
->> 
->>  	if (hu->serdev) {
->> -		serdev_device_close(hu->serdev);
->> -
->>  		qcadev = serdev_device_get_drvdata(hu->serdev);
->> -		gpiod_set_value_cansleep(qcadev->bt_en, 0);
->> +		if (qcadev->btsoc_type == QCA_WCN3990)
->> +			qca_power_shutdown(hu);
->> +		else
->> +			gpiod_set_value_cansleep(qcadev->bt_en, 0);
->> +
->> +		serdev_device_close(hu->serdev);
->>  	}
->> 
->>  	kfree_skb(qca->rx_skb);
->> @@ -891,6 +947,7 @@ static int qca_set_baudrate(struct hci_dev *hdev, 
->> uint8_t baudrate)
->>  	struct hci_uart *hu = hci_get_drvdata(hdev);
->>  	struct qca_data *qca = hu->priv;
->>  	struct sk_buff *skb;
->> +	struct qca_serdev *qcadev;
->>  	u8 cmd[] = { 0x01, 0x48, 0xFC, 0x01, 0x00 };
->> 
->>  	if (baudrate > QCA_BAUDRATE_3200000)
->> @@ -904,6 +961,13 @@ static int qca_set_baudrate(struct hci_dev *hdev, 
->> uint8_t baudrate)
->>  		return -ENOMEM;
->>  	}
->> 
->> +	/* Disabling hardware flow control is mandate while
-> 
-> nit: s/mandate/mandatory|required/
-> 
-[Bala]: will update.
+Add a header defining Tegra PMC pad voltage configurations.
 
->> +	 * sending change baudrate request to wcn3990 SoC.
->> +	 */
->> +	qcadev = serdev_device_get_drvdata(hu->serdev);
->> +	if (qcadev->btsoc_type == QCA_WCN3990)
->> +		hci_uart_set_flow_control(hu, true);
->> +
->>  	/* Assign commands to change baudrate and packet type. */
->>  	skb_put_data(skb, cmd, sizeof(cmd));
->>  	hci_skb_pkt_type(skb) = HCI_COMMAND_PKT;
->> @@ -919,6 +983,9 @@ static int qca_set_baudrate(struct hci_dev *hdev, 
->> uint8_t baudrate)
->>  	schedule_timeout(msecs_to_jiffies(BAUDRATE_SETTLE_TIMEOUT_MS));
->>  	set_current_state(TASK_RUNNING);
->> 
->> +	if (qcadev->btsoc_type == QCA_WCN3990)
->> +		hci_uart_set_flow_control(hu, false);
->> +
->>  	return 0;
->>  }
->> 
->> @@ -930,6 +997,36 @@ static inline void host_set_baudrate(struct 
->> hci_uart *hu, unsigned int speed)
->>  		hci_uart_set_baudrate(hu, speed);
->>  }
->> 
->> +static int qca_send_vendor_cmd(struct hci_dev *hdev, u8 cmd)
->> +{
->> +	struct hci_uart *hu = hci_get_drvdata(hdev);
->> +	struct qca_data *qca = hu->priv;
->> +	struct sk_buff *skb;
->> +
->> +	bt_dev_dbg(hdev, "sending command %02x to SoC", cmd);
->> +
->> +	skb = bt_skb_alloc(sizeof(cmd), GFP_KERNEL);
->> +	if (!skb)
->> +		return -ENOMEM;
->> +
->> +	/* Disabling hardware flow control is mandate while
-> 
-> Same nit as above
-> 
+Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+---
+ .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     | 84 +++++++++++++++++++
+ .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 95 ++++++++++++++++++++++
+ include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h | 18 ++++
+ 3 files changed, 197 insertions(+)
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h
 
-[Bala]: will update.
-
->> +	 * sending vendor power on and off pulse to SoC.
->> +	 */
-> 
-> The function is called qca_send_vendor_cmd(), the comment about power
-> on/off pulses seems misplaced here. Are there other 'vendor commands'
-> that require a different flow control behavior?
-> 
-> Perhaps the function should have a different name or we need another
-> wrapper.
-> 
-
-[Bala]: this function is used to send single byte vendor commands. like 
-power on and off pulse.
-         and all single byte vendor commands require an flow control off 
-and on.
-         so might be function name change is required.
-         instead of qca_send_vendor_cmd(). i want to change function name 
-to qca_send_pulse() as this will be generic.
-
->> +	hci_uart_set_flow_control(hu, true);
-> 
-> Should the changing of the flow control be limited to wcn3990? As of
-> now the function is only called for wcn3990, however this is not
-> stated as a requirement and might change in the future.
-> 
->> +	skb_put_u8(skb, cmd);
->> +	hci_skb_pkt_type(skb) = HCI_COMMAND_PKT;
->> +
->> +	skb_queue_tail(&qca->txq, skb);
->> +	hci_uart_tx_wakeup(hu);
->> +
->> +	/* Wait for 100 uS for SoC to settle down */
->> +	usleep_range(100, 200);
-> 
-> Is this needed for any 'vendor command' or directly related with the
-> power on/off pulses?
-> 
-
-[Bala] : flow control  off/on is needed for power on and off pulses 
-along with
-          command to set baudrate.. this is common across all the present 
-chips and chips which are in development stages.
-          might be function name is confusing will update the function 
-name.
-
->> +	hci_uart_set_flow_control(hu, false);
->> +
->> +	return 0;
->> +}
->> +
->>  static unsigned int qca_get_speed(struct hci_uart *hu,
->>  				  enum qca_speed_type speed_type)
->>  {
->> @@ -952,10 +1049,19 @@ static unsigned int qca_get_speed(struct 
->> hci_uart *hu,
->> 
->>  static int qca_check_speeds(struct hci_uart *hu)
->>  {
->> -	/* One or the other speeds should be non zero. */
->> -	if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
->> -	    !qca_get_speed(hu, QCA_OPER_SPEED))
->> +	struct qca_serdev *qcadev;
->> +
->> +	qcadev = serdev_device_get_drvdata(hu->serdev);
->> +	if ((qcadev->btsoc_type == QCA_WCN3990 &&
->> +	    !qca_get_speed(hu, QCA_INIT_SPEED)) ||
->> +	    !qca_get_speed(hu, QCA_OPER_SPEED)) {
->> +		/* Both INIT and OPER speed should be non zero. */
->>  		return -EINVAL;
->> +	} else if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
->> +		    !qca_get_speed(hu, QCA_OPER_SPEED)) {
->> +		/* One or the other speeds should be non zero. */
->> +		return -EINVAL;
->> +	}
-> 
-> It is questionable if the comments are useful, they are basically
-> stating the same as the conditions.
-> 
-> if-else statements with a single statement in all branches shouldn't
-> use curly braces. Personally I don't dislike them in this case with
-> the multi-line conditions, but in principle they shoulnd't be there.
-> 
-> nit: this would be easier to read with nested if statements:
-> 
-[Bala]: will update
-
-> 	if (qcadev->btsoc_type == QCA_WCN3990)
-> 		if (!qca_get_speed(hu, QCA_INIT_SPEED)) ||
-> 		    !qca_get_speed(hu, QCA_OPER_SPEED))
-> 			return -EINVAL;
-> 	else
-> 		if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
-> 		    !qca_get_speed(hu, QCA_OPER_SPEED)) {
-> 			return -EINVAL;
-> 
->>  	return 0;
->>  }
->> @@ -986,15 +1092,40 @@ static int qca_set_speed(struct hci_uart *hu, 
->> enum qca_speed_type speed_type)
->>  	return 0;
->>  }
->> 
->> +static int qca_wcn3990_init(struct hci_uart *hu)
->> +{
->> +	int ret;
->> +
->> +	ret = qca_send_vendor_cmd(hu->hdev, QCA_WCN3990_POWERON_PULSE);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* Wait for 100 ms for SoC to boot up */
->> +	msleep(100);
->> +	serdev_device_close(hu->serdev);
->> +	ret = serdev_device_open(hu->serdev);
->> +	if (ret) {
->> +		bt_dev_err(hu->hdev, "failed to open port");
->> +		return ret;
->> +	}
->> +
->> +	/* Setup initial baudrate */
->> +	qca_set_speed(hu, QCA_INIT_SPEED);
-> 
-> The comment is a bit redundant.
-> 
-[Bala]: will update
-
->> +	hci_uart_set_flow_control(hu, false);
->> +
->> +	return 0;
->> +}
->> +
->>  static int qca_setup(struct hci_uart *hu)
->>  {
->>  	struct hci_dev *hdev = hu->hdev;
->>  	struct qca_data *qca = hu->priv;
->>  	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
->> +	struct qca_serdev *qcadev;
->>  	int ret;
->>  	int soc_ver = 0;
->> 
->> -	bt_dev_info(hdev, "ROME setup");
->> +	qcadev = serdev_device_get_drvdata(hu->serdev);
->> 
->>  	ret = qca_check_speeds(hu);
->>  	if (ret)
->> @@ -1006,6 +1137,21 @@ static int qca_setup(struct hci_uart *hu)
->>  	/* Setup initial baudrate */
->>  	qca_set_speed(hu, QCA_INIT_SPEED);
->> 
->> +	if (qcadev->btsoc_type == QCA_WCN3990) {
->> +		bt_dev_dbg(hdev, "setting up wcn3990");
-> 
-> Seems like this should be bt_dev_info() for consistency with Rome.
-> 
-[Bala]: will update
-
->> +		ret = qca_wcn3990_init(hu);
->> +		if (ret)
->> +			return ret;
->> +
->> +		ret = qca_read_soc_version(hdev, &soc_ver);
->> +		if (ret < 0 || soc_ver == 0) {
->> +			bt_dev_err(hdev, "Failed to get version %d", ret);
->> +			return ret;
->> +		}
->> +	} else {
->> +		bt_dev_info(hdev, "ROME setup");
->> +	}
->> +
->>  	/* Setup user speed if needed */
->>  	speed = qca_get_speed(hu, QCA_OPER_SPEED);
->>  	if (speed) {
->> @@ -1016,16 +1162,18 @@ static int qca_setup(struct hci_uart *hu)
->>  		qca_baudrate = qca_get_baudrate_value(speed);
->>  	}
->> 
->> -	/* Get QCA version information */
->> -	ret = qca_read_soc_version(hdev, &soc_ver);
->> -	if (ret < 0 || soc_ver == 0) {
->> -		bt_dev_err(hdev, "QCA Failed to get version (%d)", ret);
->> -		return ret;
->> +	if (!soc_ver) {
-> 
-> 
-> The following would probably be clearer:
-> 
->   	if (qcadev->btsoc_type != QCA_WCN3990) {
-> 
->> +		/* Get QCA version information */
->> +		ret = qca_read_soc_version(hdev, &soc_ver);
->> +		if (ret < 0 || soc_ver == 0) {
->> +			bt_dev_err(hdev, "QCA Failed to get version (%d)", ret);
->> +			return ret;
->> +		}
->> +		bt_dev_info(hdev, "QCA controller version 0x%08x", soc_ver);
-> 
-> Couldn't we hide some of this in qca_read_soc_version()?
-> 
-
-[Bala]: we can hide soc_ver==0 in qca_read_soc_version()
-         will update.
-
-> qca_read_soc_version() could at least do the logging in the error case
-> (the 'soc_ver == 0' case could be handled there as well), which would
-> leave us with:
-> 
-> 
-> 	ret = qca_read_soc_version(hdev, &soc_ver);
-> 	if (ret)
-> 		return ret;
-> 
-> And the same above.
-> 
-> The controller version can be logged outside of the branch for both
-> wcn3990 and Rome.
-> 
-
-[Bala]: will update.
-
-
->>  	}
->> -	bt_dev_info(hdev, "QCA controller version 0x%08x", soc_ver);
->> 
->>  	/* Setup patch / NVM configurations */
->> -	ret = qca_uart_setup(hdev, qca_baudrate, QCA_ROME, soc_ver);
->> +	ret = qca_uart_setup(hdev, qca_baudrate, qcadev->btsoc_type, 
->> soc_ver);
->>  	if (!ret) {
->>  		set_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
->>  		qca_debugfs_init(hdev);
->> @@ -1061,9 +1209,123 @@ static struct hci_uart_proto qca_proto = {
->>  	.dequeue	= qca_dequeue,
->>  };
->> 
->> +static const struct qca_vreg_data qca_soc_data = {
->> +	.soc_type = QCA_WCN3990,
->> +	.vregs = (struct qca_vreg []) {
->> +		{ "vddio",   1800000, 1800000,  0 },
->> +		{ "vddxo",   1800000, 1800000,  1 },
->> +		{ "vddrf",   1304000, 1304000,  1 },
->> +		{ "vddch0",  3000000, 3312000,  1 },
->> +	},
->> +	.num_vregs = 4,
->> +};
-> 
-> I didn't chime in earlier in the discussion with Stephen on the
-> regulators (https://patchwork.kernel.org/patch/10467911/), however I
-> agree with him that specifying at load of 1uA doesn't seem to make
-> much sense. What would happen if the load remained unspecified (or 0)?
-
-[Bala]: will test and get back to you on this.
-
+diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
+index 5a3bf7c..baa31f7 100644
+--- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
++++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
+@@ -34,3 +34,87 @@ Board DTS:
+ 	pmc@c360000 {
+ 		nvidia,invert-interrupt;
+ 	};
++
++== Pad Control Nodes ==
++
++The PMC can be used to set pad power state and voltage configuration.
++The pad configuration is done via the pinctrl framework. The driver
++implements power-source, low-power-enable, and low-power-disable pinconf
++pin configuration node properties. Each pinctrl pin corresponds to a
++single Tegra PMC pad. Thus, in the following sections of this document
++pin refers to the pinctrl frameworks notion of a Tegra PMC pad.
++
++The pad configuration state nodes are placed under the pmc node and they
++are referred to by the pinctrl client device properties. For more
++information see the examples presented later and
++Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt.
++
++The values accepted by power-source property are
++TEGRA_IO_PAD_VOLTAGE_1V8 and TEGRA_IO_PAD_VOLTAGE_3V3, which are defined
++in dt-bindings/pinctrl/pinctrl-tegra-io-pad.h.
++
++Following pinctrl pin name strings are present on Tegra186:
++csia		csib		dsi		mipi-bias
++pex-clk-bias	pex-clk3	pex-clk2	pex-clk1
++usb0		usb1		usb2		usb-bias
++uart		audio		hsic		dbg
++hdmi-dp0	hdmi-dp1	pex-cntrl	sdmmc2-hv
++sdmmc4		cam		dsib		dsic
++dsid		csic		csid		csie
++dsif		spi		ufs		dmic-hv
++edp		sdmmc1-hv	sdmmc3-hv	conn
++audio-hv
++
++All of the listed Tegra186 pins support the low-power-enable and
++low-power-disable properties. The power-source property is supported
++following Tegra210 pins: sdmmc2-hv, dmic-hv, sdmmc1-hv, sdmmc3-hv, and
++audio-hv.
++
++Pad configuration state example:
++	pmc: pmc@7000e400 {
++		compatible = "nvidia,tegra186-pmc";
++		reg = <0 0x0c360000 0 0x10000>,
++		      <0 0x0c370000 0 0x10000>,
++		      <0 0x0c380000 0 0x10000>,
++		      <0 0x0c390000 0 0x10000>;
++		reg-names = "pmc", "wake", "aotag", "scratch";
++
++		...
++
++		sdmmc1_3v3: sdmmc1-3v3 {
++			pins = "sdmmc1-hv";
++			power-source = <TEGRA_IO_PAD_VOLTAGE_3V3>;
++		};
++
++		sdmmc1_1v8: sdmmc1-1v8 {
++			pins = "sdmmc1-hv";
++			power-source = <TEGRA_IO_PAD_VOLTAGE_1V8>;
++		};
++
++		hdmi_off: hdmi-off {
++			pins = "hdmi";
++			low-power-enable;
++		}
++
++		hdmi_on: hdmi-on {
++			pins = "hdmi";
++			low-power-disable;
++		}
++	};
++
++Pinctrl client example:
++	sdmmc1: sdhci@3400000 {
++		...
++		pinctrl-names = "sdmmc-3v3", "sdmmc-1v8";
++		pinctrl-0 = <&sdmmc1_3v3>;
++		pinctrl-1 = <&sdmmc1_1v8>;
++	};
++
++	...
++
++	sor0: sor@15540000 {
++		...
++		pinctrl-0 = <&hdmi_off>;
++		pinctrl-1 = <&hdmi_on>;
++		pinctrl-names = "hdmi-on", "hdmi-off";
++	};
+diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+index a74b37b..d50a505 100644
+--- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
++++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+@@ -195,3 +195,98 @@ Example:
+ 		power-domains = <&pd_audio>;
+ 		...
+ 	};
++
++== Pad Control Nodes ==
++
++The PMC can be used to set pad power state and voltage configuration.
++This functionality is present on SoCs from Tegra124 onwards. The pad
++configuration is done via the pinctrl framework. The driver implements
++power-source, low-power-enable, and low-power-disable pinconf pin
++configuration node properties. Each pinctrl pin corresponds to a single
++Tegra PMC pad. Thus, in the following sections of this document pin
++refers to the pinctrl frameworks notion of a Tegra PMC pad.
++
++The pad configuration state nodes are placed under the pmc node and they
++are referred to by the pinctrl client device properties. For more
++information see the examples presented later and
++Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt.
++
++The values accepted by power-source property are
++TEGRA_IO_PAD_VOLTAGE_1V8 and TEGRA_IO_PAD_VOLTAGE_3V3, which are defined
++in dt-bindings/pinctrl/pinctrl-tegra-io-pad.h.
++
++Following pinctrl pin name strings are present on Tegra124 and Tegra132:
++audio		bb		cam		comp
++csia		csb		cse		dsi
++dsib		dsic		dsid		hdmi
++hsic		hv		lvds		mipi-bias
++nand		pex-bias	pex-clk1	pex-clk2
++pex-cntrl	sdmmc1		sdmmc3		sdmmc4
++sys_ddc		uart		usb0		usb1
++usb2		usb_bias
++
++All of the listed Tegra124 and Tegra132 pins support the
++low-power-enable and low-power-disable properties. None of the pins
++support the power-source property.
++
++Following pinctrl pin name strings are present on Tegra210:
++audio		audio-hv	cam		csia
++csib		csic		csid		csie
++csif		dbg		debug-nonao	dmic
++dp		dsi		dsib		dsic
++dsid		emmc		emmc2		gpio
++hdmi		hsic		lvds		mipi-bias
++pex-bias	pex-clk1	pex-clk2	pex-cntrl
++sdmmc1		sdmmc3		spi		spi-hv
++uart		usb0		usb1		usb2
++usb3		usb-bias
++
++All of the listed Tegra210 pins except pex-cntrl support the
++low-power-enable and low-power-disable properties. The power-source
++property is supported following Tegra210 pins: audio, audio-hv, cam,
++dbg, dmic, gpio, pex-cntrl, sdmmc1, sdmmc3, spi, spi-hv, and uart.
++
++Pad configuration state example:
++	pmc: pmc@7000e400 {
++		compatible = "nvidia,tegra210-pmc";
++		reg = <0x0 0x7000e400 0x0 0x400>;
++		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
++		clock-names = "pclk", "clk32k_in";
++
++		...
++
++		sdmmc1_3v3: sdmmc1-3v3 {
++			pins = "sdmmc1";
++			power-source = <TEGRA_IO_PAD_VOLTAGE_3V3>;
++		};
++
++		sdmmc1_1v8: sdmmc1-1v8 {
++			pins = "sdmmc1";
++			power-source = <TEGRA_IO_PAD_VOLTAGE_1V8>;
++		};
++
++		hdmi_off: hdmi-off {
++			pins = "hdmi";
++			low-power-enable;
++		}
++
++		hdmi_on: hdmi-on {
++			pins = "hdmi";
++			low-power-disable;
++		}
++	};
++
++Pinctrl client example:
++	sdmmc1: sdhci@700b0000 {
++		...
++		pinctrl-names = "sdmmc-3v3", "sdmmc-1v8";
++		pinctrl-0 = <&sdmmc1_3v3>;
++		pinctrl-1 = <&sdmmc1_1v8>;
++	};
++	...
++	sor@54540000 {
++		...
++		pinctrl-0 = <&hdmi_off>;
++		pinctrl-1 = <&hdmi_on>;
++		pinctrl-names = "hdmi-on", "hdmi-off";
++	};
+diff --git a/include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h b/include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h
+new file mode 100644
+index 0000000..20f4340
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * pinctrl-tegra-io-pad.h: Tegra I/O pad source voltage configuration constants
++ * pinctrl bindings.
++ *
++ * Copyright (c) 2018, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * Author: Aapo Vienamo <avienamo@nvidia.com>
++ */
++
++#ifndef _DT_BINDINGS_PINCTRL_TEGRA_IO_PAD_H
++#define _DT_BINDINGS_PINCTRL_TEGRA_IO_PAD_H
++
++/* Voltage levels of the I/O pad's source rail */
++#define TEGRA_IO_PAD_VOLTAGE_1V8	0
++#define TEGRA_IO_PAD_VOLTAGE_3V3	1
++
++#endif
 -- 
-Regards
-Balakrishna.
+2.7.4
