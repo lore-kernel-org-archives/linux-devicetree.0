@@ -1,70 +1,240 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: [PATCH 2/2] arm64: dts: stingray: add bcm958802a802x dts
-Date: Tue, 10 Jul 2018 14:25:31 -0700
-Message-ID: <1531257931-11591-3-git-send-email-ray.jui@broadcom.com>
-References: <1531257931-11591-1-git-send-email-ray.jui@broadcom.com>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH 1/3] arm64: dts: qcom: sdm845: Add USB-related nodes
+Date: Tue, 10 Jul 2018 15:02:00 -0700
+Message-ID: <20180710220202.116404-2-dianders@chromium.org>
+References: <20180710220202.116404-1-dianders@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531257931-11591-1-git-send-email-ray.jui@broadcom.com>
+In-Reply-To: <20180710220202.116404-1-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <ray.jui@broadcom.com>, Vladimir Olovyannikov <vladimir.olovyannikov@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>
+To: Andy Gross <andy.gross@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, swboyd@chromium.org, tfiga@chromium.org, Manu Gautam <mgautam@codeaurora.org>, David Collins <collinsd@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Vladimir Olovyannikov <vladimir.olovyannikov@broadcom.com>
+From: Manu Gautam <mgautam@codeaurora.org>
 
-Add bcm958802a802x dts to be used on all Stingray smart NIC PS225 board
-variants
+This adds nodes for USB and related PHYs.
 
-Signed-off-by: Vladimir Olovyannikov <vladimir.olovyannikov@broadcom.com>
-Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
-Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+[dianders: reworked quite a bit]
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
- arch/arm64/boot/dts/broadcom/stingray/Makefile     |  2 ++
- .../boot/dts/broadcom/stingray/bcm958802a802x.dts  | 26 ++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
- create mode 100644 arch/arm64/boot/dts/broadcom/stingray/bcm958802a802x.dts
 
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/Makefile b/arch/arm64/boot/dts/broadcom/stingray/Makefile
-index c4d06cf..20c7d0a 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/Makefile
-+++ b/arch/arm64/boot/dts/broadcom/stingray/Makefile
-@@ -1,3 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_ARCH_BCM_IPROC) += bcm958742k.dtb
- dtb-$(CONFIG_ARCH_BCM_IPROC) += bcm958742t.dtb
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 189 +++++++++++++++++++++++++++
+ 1 file changed, 189 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 15188d34a2ab..1de59a39f4fa 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -8,6 +8,7 @@
+ #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+ #include <dt-bindings/clock/qcom,rpmh.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/phy/phy-qcom-qusb2.h>
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+ 
+ / {
+@@ -249,6 +250,18 @@
+ 			#power-domain-cells = <1>;
+ 		};
+ 
++		qfprom@780000 {
++			compatible = "qcom,qfprom";
++			reg = <0x780000 0x8ff>;
++			#address-cells = <1>;
++			#size-cells = <1>;
 +
-+dtb-$(CONFIG_ARCH_BCM_IPROC) += bcm958802a802x.dtb
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/bcm958802a802x.dts b/arch/arm64/boot/dts/broadcom/stingray/bcm958802a802x.dts
-new file mode 100644
-index 0000000..a41facd
---- /dev/null
-+++ b/arch/arm64/boot/dts/broadcom/stingray/bcm958802a802x.dts
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: (GPL-2.0 or BSD-3-Clause)
-+/*
-+ *Copyright(c) 2018 Broadcom
-+ */
++			qusb2p_hstx_trim: hstx-trim@1eb {
++				reg = <0x1eb 0x1>;
++				bits = <1 4>;
++			};
++		};
 +
-+/dts-v1/;
+ 		qupv3_id_0: geniqup@8c0000 {
+ 			compatible = "qcom,geni-se-qup";
+ 			reg = <0x8c0000 0x6000>;
+@@ -961,6 +974,182 @@
+ 			};
+ 		};
+ 
++		usb_1_hsphy: phy@88e2000 {
++			compatible = "qcom,sdm845-qusb2-phy";
++			reg = <0x88e2000 0x400>;
++			status = "disabled";
++			#phy-cells = <0>;
 +
-+#include "stingray-board-base.dtsi"
++			clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
++				 <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "cfg_ahb", "ref";
 +
-+/ {
-+	compatible = "brcm,bcm958802a802x", "brcm,stingray";
-+	model = "Stingray PS225xx (BCM958802A802x)";
-+};
++			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
 +
-+&enet {
-+	status = "disabled";
-+};
++			nvmem-cells = <&qusb2p_hstx_trim>;
++		};
 +
-+&sdio0 {
-+	no-1-8-v;
-+	status = "okay";
-+};
++		usb_2_hsphy: phy@88e3000 {
++			compatible = "qcom,sdm845-qusb2-phy";
++			reg = <0x88e3000 0x400>;
++			status = "disabled";
++			#phy-cells = <0>;
 +
-+&uart0 {
-+	status = "okay";
-+};
++			clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
++				 <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "cfg_ahb", "ref";
++
++			resets = <&gcc GCC_QUSB2PHY_SEC_BCR>;
++		};
++
++		usb_1_qmpphy: phy@88e9000 {
++			compatible = "qcom,sdm845-qmp-usb3-phy";
++			reg = <0x88e9000 0x18c>,
++			      <0x88e8000 0x10>;
++			reg-names = "reg-base", "dp_com";
++			status = "disabled";
++			#clock-cells = <1>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
++				 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
++				 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
++				 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
++			clock-names = "aux", "cfg_ahb", "ref", "com_aux";
++
++			resets = <&gcc GCC_USB3_DP_PHY_PRIM_BCR>,
++				 <&gcc GCC_USB3_PHY_PRIM_BCR>;
++			reset-names = "phy", "common";
++
++			usb_1_ssphy: lane@88e9200 {
++				reg = <0x88e9200 0x128>,
++				      <0x88e9400 0x200>,
++				      <0x88e9c00 0x218>,
++				      <0x88e9a00 0x100>;
++				#phy-cells = <0>;
++				clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
++				clock-names = "pipe0";
++				clock-output-names = "usb3_phy_pipe_clk_src";
++			};
++		};
++
++		usb_2_qmpphy: phy@88eb000 {
++			compatible = "qcom,sdm845-qmp-usb3-uni-phy";
++			reg = <0x88eb000 0x18c>;
++			status = "disabled";
++			#clock-cells = <1>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			clocks = <&gcc GCC_USB3_SEC_PHY_AUX_CLK>,
++				 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
++				 <&gcc GCC_USB3_SEC_CLKREF_CLK>,
++				 <&gcc GCC_USB3_SEC_PHY_COM_AUX_CLK>;
++			clock-names = "aux", "cfg_ahb", "ref", "com_aux";
++
++			resets = <&gcc GCC_USB3PHY_PHY_SEC_BCR>,
++				 <&gcc GCC_USB3_PHY_SEC_BCR>;
++			reset-names = "phy", "common";
++
++			usb_2_ssphy: lane@88eb200 {
++				reg = <0x88eb200 0x128>,
++				      <0x88eb400 0x1fc>,
++				      <0x88eb800 0x218>,
++				      <0x88e9600 0x70>;
++				#phy-cells = <0>;
++				clocks = <&gcc GCC_USB3_SEC_PHY_PIPE_CLK>;
++				clock-names = "pipe0";
++				clock-output-names = "usb3_uni_phy_pipe_clk_src";
++			};
++		};
++
++		usb_1: usb@a6f8800 {
++			compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
++			reg = <0xa6f8800 0x400>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
++				 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
++				 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
++				 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
++				 <&gcc GCC_USB30_PRIM_SLEEP_CLK>;
++			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
++				      "sleep";
++
++			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
++					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
++			assigned-clock-rates = <19200000>, <150000000>;
++
++			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 486 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 488 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 489 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hs_phy_irq", "ss_phy_irq",
++					  "dm_hs_phy_irq", "dp_hs_phy_irq";
++
++			power-domains = <&gcc USB30_PRIM_GDSC>;
++
++			resets = <&gcc GCC_USB30_PRIM_BCR>;
++
++			usb_1_dwc3: dwc3@a600000 {
++				compatible = "snps,dwc3";
++				reg = <0xa600000 0xcd00>;
++				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
++				snps,dis_u2_susphy_quirk;
++				snps,dis_enblslpm_quirk;
++				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
++				phy-names = "usb2-phy", "usb3-phy";
++			};
++		};
++
++		usb_2: usb@a8f8800 {
++			compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
++			reg = <0xa8f8800 0x400>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			clocks = <&gcc GCC_CFG_NOC_USB3_SEC_AXI_CLK>,
++				 <&gcc GCC_USB30_SEC_MASTER_CLK>,
++				 <&gcc GCC_AGGRE_USB3_SEC_AXI_CLK>,
++				 <&gcc GCC_USB30_SEC_MOCK_UTMI_CLK>,
++				 <&gcc GCC_USB30_SEC_SLEEP_CLK>;
++			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
++				      "sleep";
++
++			assigned-clocks = <&gcc GCC_USB30_SEC_MOCK_UTMI_CLK>,
++					  <&gcc GCC_USB30_SEC_MASTER_CLK>;
++			assigned-clock-rates = <19200000>, <150000000>;
++
++			interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 487 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 490 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 491 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hs_phy_irq", "ss_phy_irq",
++					  "dm_hs_phy_irq", "dp_hs_phy_irq";
++
++			power-domains = <&gcc USB30_SEC_GDSC>;
++
++			resets = <&gcc GCC_USB30_SEC_BCR>;
++
++			usb_2_dwc3: dwc3@a800000 {
++				compatible = "snps,dwc3";
++				reg = <0xa800000 0xcd00>;
++				interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
++				snps,dis_u2_susphy_quirk;
++				snps,dis_enblslpm_quirk;
++				phys = <&usb_2_hsphy>, <&usb_2_ssphy>;
++				phy-names = "usb2-phy", "usb3-phy";
++			};
++		};
++
+ 		spmi_bus: spmi@c440000 {
+ 			compatible = "qcom,spmi-pmic-arb";
+ 			reg = <0xc440000 0x1100>,
 -- 
-2.1.4
+2.18.0.203.gfac676dfb9-goog
