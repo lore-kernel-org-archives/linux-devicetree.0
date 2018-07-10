@@ -1,140 +1,287 @@
-From: Fabio Estevam <fabio.estevam@nxp.com>
-Subject: [PATCH v3 6/6] ARM: mx5: Set the DBGEN bit in ARM_GPC register
-Date: Tue, 10 Jul 2018 13:08:47 -0300
-Message-ID: <1531238927-19579-6-git-send-email-fabio.estevam@nxp.com>
-References: <1531238927-19579-1-git-send-email-fabio.estevam@nxp.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v9 4/7] Bluetooth: hci_qca: Add wrapper functions for
+ setting UART speed
+Date: Tue, 10 Jul 2018 09:12:46 -0700
+Message-ID: <20180710161246.GP129942@google.com>
+References: <20180705165515.13340-1-bgodavar@codeaurora.org>
+ <20180705165515.13340-5-bgodavar@codeaurora.org>
+ <20180706194059.GJ129942@google.com>
+ <55c70cb40b421ab87c36dd2ecf886c1b@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1531238927-19579-1-git-send-email-fabio.estevam@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, robh+dt@kernel.org, kernel@pengutronix.de, sebastian.reichel@collabora.co.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55c70cb40b421ab87c36dd2ecf886c1b@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On i.MX51/i.MX53 it is necessary to set the DBGEN bit in 
-ARM_GPC register in order to turn on the debug clocks.
+On Tue, Jul 10, 2018 at 05:49:20PM +0530, Balakrishna Godavarthi wrote:
+> Hi Matthias,
+> 
+> On 2018-07-07 01:10, Matthias Kaehlcke wrote:
+> > On Thu, Jul 05, 2018 at 10:25:12PM +0530, Balakrishna Godavarthi wrote:
+> > > In function qca_setup, we set initial and operating speeds for
+> > > Qualcomm
+> > > Bluetooth SoC's. This block of code is common across different
+> > > Qualcomm Bluetooth SoC's. Instead of duplicating the code, created
+> > > a wrapper function to set the speeds. So that future coming SoC's
+> > > can use these wrapper functions to set speeds.
+> > > 
+> > > Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+> > > ---
+> > > Changes in v9:
+> > >     * added corner case to fail driver if speeds are missing.
+> > > 
+> > > Changes in v8:
+> > >     * common function to set INIT and operating speeds.
+> > > 
+> > > Changes in v7:
+> > >     * initial patch
+> > >     * created wrapper functions for init and operating speeds.
+> > > ---
+> > >  drivers/bluetooth/hci_qca.c | 94
+> > > ++++++++++++++++++++++++++++---------
+> > >  1 file changed, 71 insertions(+), 23 deletions(-)
+> > > 
+> > > diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> > > index c02e1d465cca..9106547324fa 100644
+> > > --- a/drivers/bluetooth/hci_qca.c
+> > > +++ b/drivers/bluetooth/hci_qca.c
+> > > @@ -119,6 +119,11 @@ struct qca_data {
+> > >  	u64 votes_off;
+> > >  };
+> > > 
+> > > +enum qca_speed_type {
+> > > +	QCA_INIT_SPEED = 1,
+> > > +	QCA_OPER_SPEED
+> > > +};
+> > > +
+> > >  struct qca_serdev {
+> > >  	struct hci_uart	 serdev_hu;
+> > >  	struct gpio_desc *bt_en;
+> > > @@ -923,6 +928,62 @@ static inline void host_set_baudrate(struct
+> > > hci_uart *hu, unsigned int speed)
+> > >  		hci_uart_set_baudrate(hu, speed);
+> > >  }
+> > > 
+> > > +static unsigned int qca_get_speed(struct hci_uart *hu,
+> > > +				  enum qca_speed_type speed_type)
+> > > +{
+> > > +	unsigned int speed = 0;
+> > > +
+> > > +	if (speed_type == QCA_INIT_SPEED) {
+> > > +		if (hu->init_speed)
+> > > +			speed = hu->init_speed;
+> > > +		else if (hu->proto->init_speed)
+> > > +			speed = hu->proto->init_speed;
+> > > +	} else {
+> > > +		if (hu->oper_speed)
+> > > +			speed = hu->oper_speed;
+> > > +		else if (hu->proto->oper_speed)
+> > > +			speed = hu->proto->oper_speed;
+> > > +	}
+> > > +
+> > > +	return speed;
+> > > +}
+> > > +
+> > > +static int qca_check_speeds(struct hci_uart *hu)
+> > > +{
+> > > +	/* One or the other speeds should be non zero. */
+> > > +	if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
+> > > +	    !qca_get_speed(hu, QCA_OPER_SPEED))
+> > > +		return -EINVAL;
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type
+> > > speed_type)
+> > > +{
+> > > +	unsigned int speed, qca_baudrate;
+> > > +	int ret;
+> > > +
+> > > +	if (speed_type == QCA_INIT_SPEED) {
+> > > +		speed = qca_get_speed(hu, QCA_INIT_SPEED);
+> > > +		if (speed)
+> > > +			host_set_baudrate(hu, speed);
+> > 
+> > mega-nit: for consistency with the 'else' branch you could return if
+> > 'speed == 0'. Not important though, feel free to ignore.
+> > 
+> > > +	} else {
+> > > +		speed = qca_get_speed(hu, QCA_OPER_SPEED);
+> > > +		if (!speed)
+> > > +			return 0;
+> > > +
+> > > +		qca_baudrate = qca_get_baudrate_value(speed);
+> > > +		bt_dev_info(hu->hdev, "Set UART speed to %d", speed);
+> > > +		ret = qca_set_baudrate(hu->hdev, qca_baudrate);
+> > > +		if (ret)
+> > > +			return ret;
+> > > +
+> > > +		host_set_baudrate(hu, speed);
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > >  static int qca_setup(struct hci_uart *hu)
+> > >  {
+> > >  	struct hci_dev *hdev = hu->hdev;
+> > > @@ -933,37 +994,24 @@ static int qca_setup(struct hci_uart *hu)
+> > > 
+> > >  	bt_dev_info(hdev, "ROME setup");
+> > > 
+> > > +	ret = qca_check_speeds(hu);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > >  	/* Patch downloading has to be done without IBS mode */
+> > >  	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+> > > 
+> > >  	/* Setup initial baudrate */
+> > > -	speed = 0;
+> > > -	if (hu->init_speed)
+> > > -		speed = hu->init_speed;
+> > > -	else if (hu->proto->init_speed)
+> > > -		speed = hu->proto->init_speed;
+> > > -
+> > > -	if (speed)
+> > > -		host_set_baudrate(hu, speed);
+> > > +	qca_set_speed(hu, QCA_INIT_SPEED);
+> > > 
+> > >  	/* Setup user speed if needed */
+> > > -	speed = 0;
+> > > -	if (hu->oper_speed)
+> > > -		speed = hu->oper_speed;
+> > > -	else if (hu->proto->oper_speed)
+> > > -		speed = hu->proto->oper_speed;
+> > > -
+> > > +	speed = qca_get_speed(hu, QCA_OPER_SPEED);
+> > >  	if (speed) {
+> > > -		qca_baudrate = qca_get_baudrate_value(speed);
+> > > -
+> > > -		bt_dev_info(hdev, "Set UART speed to %d", speed);
+> > > -		ret = qca_set_baudrate(hdev, qca_baudrate);
+> > > -		if (ret) {
+> > > -			bt_dev_err(hdev, "Failed to change the baud rate (%d)",
+> > > -				   ret);
+> > > +		ret = qca_set_speed(hu, QCA_OPER_SPEED);
+> > > +		if (ret)
+> > >  			return ret;
+> > > -		}
+> > > -		host_set_baudrate(hu, speed);
+> > > +
+> > > +		qca_baudrate = qca_get_baudrate_value(speed);
+> > >  	}
+> > 
+> > One doubt, the outcome of this change is:
+> > 
+> > 	qca_set_speed(hu, QCA_INIT_SPEED);
+> > 
+> > 	/* Setup user speed if needed */
+> > 	speed = qca_get_speed(hu, QCA_OPER_SPEED);
+> > 	if (speed) {
+> > 		ret = qca_set_speed(hu, QCA_OPER_SPEED);
+> > 		if (ret)
+> > 			return ret;
+> > 
+> > 		qca_baudrate = qca_get_baudrate_value(speed);
+> > 	}
+> > 
+> > So we set the init speed and then directly switch to operating speed
+> > if it is defined.
+> > 
+> > Couldn't we do this instead:
+> > 
+> > 	/* Setup user speed if needed */
+> > 	speed = qca_get_speed(hu, QCA_OPER_SPEED);
+> > 	if (speed) {
+> > 		ret = qca_set_speed(hu, QCA_OPER_SPEED);
+> > 		if (ret)
+> > 			return ret;
+> > 
+> > 		qca_baudrate = qca_get_baudrate_value(speed);
+> > 	} else {
+> > 	       qca_set_speed(hu, QCA_INIT_SPEED);
+> > 	}
+> > 
+> > 
+> 
+> [Bala]: above else block is not required.
+>         if we have operating speed to set, then we need to send the baud
+> rate change request to BT chip on INIT baud rate. so before sending or
+> setting operating baud rate.. HOST driver should be on the HOST init baud
+> rate.
+>         Pls refer below for more info how we set speed and hci driver works.
+> > 
+> > Or is setting the init speed needed before the operating speed can be
+> > set? Sorry if we discussed this earlier in this series, I know I had a
+> > few doubts about the speed management but don't recall this one
+> > specifically.
+> > 
+> 
+> [Bala]: Let me give a big picture how we make BT work via serdev HCI arch.
+> (qca chip is taken as reference)
+> 
+>         1. first of all, probe is called when we have compatible string
+> matches in qca_bluetooth_of_match table.
+>         2. that will call qca_serdev_probe() in which based on BT device
+> connected to the platform, we decide IO's
+>            which required from HOST to chip i.e.. controls required to turn
+> ON/OFF BT. which includes clocks and regulators and GPIO's.
+>         3. in qca_serdev_probe() we call  hci_uart_register_device() and
+> pass ops (operations handler) handler for driver registration.
+>         4. in hci_uart_register_device(), we call qca_open().. where we open
+> the port via serdev_device_open() that
+>            intern will call Qualcomm specific lower level UART driver i.e..
+> where we read and write to port register address.
+>            so serdev_device_open() is a common function to all BT chip
+> vendor, but the open routine in the low level driver is completely vendor
+> dependent.
+>            for example, some vendors will set an default UART speed (speed
+> can be any) while opening the uart_port(). where as other will not set. Just
+> open the port with basic configurations.
+> 
+>         5. coming back to qca_open(), we try to make chip to boot up by
+> enabling clock from HOST for BT chip to operate..  it is purely chip
+> defined.
+>         6. moving back to hci_uart_register_device()... we will call
+> hci_register_dev() in that function we call hci_power_on().. that will call
+> hci_dev_do_open()
+>         7. in hci_dev_do_open() we call hdev->setup() i.e. hci_uart_setup()
+> in that function we set initial baud rate and operating bartender if we have
+> protos defined for setting chip baud rate.(in our case it is null)
+> 
+>         8. so it will call setup function will be vendor specific.. as we
+> are using an UART, HOST and chip need to stick to the agreement of initial
+> UART speed for commands to send until and change baud rate request is
+>            sent.
+>         9. now in qca_setup(), we setup an initial host baud rate i.e. what
+> we have agreement with BT chip for initial communication. Now here the
+> question comes why are we setting init speed again and again
+>            i.e uart_open() and hci_uart_setup().. here is the answer, wt
+> ever layer we have are common to all vendors may also tend to change. we
+> can't take a risk, we will setup init baud rate in vendor layer i.e.
+>            qca_setup().
+>         10. then we need to change the baud rate of chip..so we need to send
+> commands to chip. at wt speed we need to send change baud rate request is
+> totally based on agreement with BT Chip. so here we use initial
+>             baud rate.
+>         11. we need to change baud rate request command to chip on init baud
+> rate. if command sending is successful we change the host baud rate from
+> init to operating baud rate.. else we operate on init baud rate.
+> 
+> 
+>         the above is based on my understanding. Pls let me know if i have
+> cleared your doubt.
 
-The DBGEN bit of ARM_GPC register has the following description
-in the i.MX53 Reference Manual:
+Thanks for the explanation. I focussed on the final outcome (operating
+speed is set) and ignored that the host port needs to be at init speed
+in order to send the baud rate change command to the chip.
 
-"This allows the user to manually activate clocks within the debug
-system. This register bit directly controls the platform's dbgen_out
-output signal which connects to the DAP_SYS to enable all debug clocks.
-Once enabled, the clocks cannot be disabled except by asserting the
-disable_trace input of the DAP_SYS."
+Cheers
 
-Based on a previous patch from Sebastian Reichel.
-
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
----
-Changes since v2:
-- Also check for "secure-reg-access" presence (Sebastian)
-- Call of_node_put() (Sebastian)
-
- arch/arm/mach-imx/common.h     |  1 +
- arch/arm/mach-imx/cpu-imx5.c   | 43 ++++++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-imx/mach-imx51.c |  2 +-
- arch/arm/mach-imx/mach-imx53.c |  2 +-
- 4 files changed, 46 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
-index 93225db7..423dd76 100644
---- a/arch/arm/mach-imx/common.h
-+++ b/arch/arm/mach-imx/common.h
-@@ -62,6 +62,7 @@ void imx_gpc_set_arm_power_up_timing(u32 sw2iso, u32 sw);
- void imx_gpc_set_arm_power_down_timing(u32 sw2iso, u32 sw);
- void imx25_pm_init(void);
- void imx27_pm_init(void);
-+void imx5_pmu_init(void);
- 
- enum mxc_cpu_pwr_mode {
- 	WAIT_CLOCKED,		/* wfi only */
-diff --git a/arch/arm/mach-imx/cpu-imx5.c b/arch/arm/mach-imx/cpu-imx5.c
-index 4f2d1c7..bba6e9b 100644
---- a/arch/arm/mach-imx/cpu-imx5.c
-+++ b/arch/arm/mach-imx/cpu-imx5.c
-@@ -117,3 +117,46 @@ int mx53_revision(void)
- 	return mx5_cpu_rev;
- }
- EXPORT_SYMBOL(mx53_revision);
-+
-+#define ARM_GPC		0x4
-+#define DBGEN		BIT(16)
-+
-+/*
-+ * This enables the DBGEN bit in ARM_GPC register, which is
-+ * required for accessing some performance counter features.
-+ * Technically it is only required while perf is used, but to
-+ * keep the source code simple we just enable it all the time
-+ * when the kernel configuration allows using the feature.
-+ */
-+void __init imx5_pmu_init(void)
-+{
-+	void __iomem *tigerp_base;
-+	struct device_node *np;
-+	u32 gpc;
-+
-+	if (!IS_ENABLED(CONFIG_ARM_PMU))
-+		return;
-+
-+	np = of_find_compatible_node(NULL, NULL, "arm,cortex-a8-pmu");
-+	if (!np)
-+		return;
-+
-+	if (!of_property_read_bool(np, "secure-reg-access"))
-+		goto exit;
-+
-+	np = of_find_compatible_node(NULL, NULL, "fsl,imx51-tigerp");
-+	if (!np)
-+		goto exit;
-+
-+	tigerp_base = of_iomap(np, 0);
-+	if (!tigerp_base)
-+		goto exit;
-+
-+	gpc = readl_relaxed(tigerp_base + ARM_GPC);
-+	gpc |= DBGEN;
-+	writel_relaxed(gpc, tigerp_base + ARM_GPC);
-+	iounmap(tigerp_base);
-+exit:
-+	of_node_put(np);
-+
-+}
-diff --git a/arch/arm/mach-imx/mach-imx51.c b/arch/arm/mach-imx/mach-imx51.c
-index 3835b6a..8838fba 100644
---- a/arch/arm/mach-imx/mach-imx51.c
-+++ b/arch/arm/mach-imx/mach-imx51.c
-@@ -52,7 +52,7 @@ static void __init imx51_dt_init(void)
- {
- 	imx51_ipu_mipi_setup();
- 	imx_src_init();
--
-+	imx5_pmu_init();
- 	imx_aips_allow_unprivileged_access("fsl,imx51-aipstz");
- }
- 
-diff --git a/arch/arm/mach-imx/mach-imx53.c b/arch/arm/mach-imx/mach-imx53.c
-index 07c2e8d..5ec7100 100644
---- a/arch/arm/mach-imx/mach-imx53.c
-+++ b/arch/arm/mach-imx/mach-imx53.c
-@@ -31,7 +31,7 @@ static void __init imx53_init_early(void)
- static void __init imx53_dt_init(void)
- {
- 	imx_src_init();
--
-+	imx5_pmu_init();
- 	imx_aips_allow_unprivileged_access("fsl,imx53-aipstz");
- }
- 
--- 
-2.7.4
+Matthias
