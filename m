@@ -1,116 +1,209 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: Qualcomm Quad SPI(QSPI) documentation
-Date: Tue, 10 Jul 2018 08:03:53 -0700
-Message-ID: <153123503305.143105.13357813628465667911@swboyd.mtv.corp.google.com>
-References: <1530827202-9997-1-git-send-email-girishm@codeaurora.org>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCH v2 6/6] ARM: mx5: Set the DBGEN bit in ARM_GPC register
+Date: Tue, 10 Jul 2018 17:04:19 +0200
+Message-ID: <20180710150419.4sir7fy3uz2ke4jm@earth.universe>
+References: <1531230456-27717-1-git-send-email-fabio.estevam@nxp.com>
+ <1531230456-27717-6-git-send-email-fabio.estevam@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530827202-9997-1-git-send-email-girishm@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: Girish Mahadevan <girishm@codeaurora.org>, dianders@chromium.org, sdharia@codeaurora.org, kramasub@codeaurora.org, linux-arm-msm@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============8041161260722256731=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1531230456-27717-6-git-send-email-fabio.estevam@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Quoting Girish Mahadevan (2018-07-05 14:46:41)
-> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
+
+--===============8041161260722256731==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="b6bhrweet6tfmzya"
+Content-Disposition: inline
+
+
+--b6bhrweet6tfmzya
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Tue, Jul 10, 2018 at 10:47:36AM -0300, Fabio Estevam wrote:
+> On i.MX51/i.MX53 it is necessary to set the DBGEN bit in=20
+> ARM_GPC register in order to turn on the debug clocks.
+>=20
+> The DBGEN bit of ARM_GPC register has the following description
+> in the i.MX53 Reference Manual:
+>=20
+> "This allows the user to manually activate clocks within the debug
+> system. This register bit directly controls the platform's dbgen_out
+> output signal which connects to the DAP_SYS to enable all debug clocks.
+> Once enabled, the clocks cannot be disabled except by asserting the
+> disable_trace input of the DAP_SYS."
+>=20
+> Based on a previous patch from Sebastian Reichel.
+>=20
+> Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
 > ---
->  .../devicetree/bindings/spi/qcom,spi-qcom-qspi.txt | 36 ++++++++++++++++=
-++++++
->  err.txt                                            | 27 ----------------
->  2 files changed, 36 insertions(+), 27 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-qcom-q=
-spi.txt
->  delete mode 100644 err.txt
-> =
+> Changes since v1:
+> - Annonate __init in mx5_pmu_init()
+> - Unmap tigerp_base after use
+> - Also touch mx51
+>=20
+>  arch/arm/mach-imx/common.h     |  1 +
+>  arch/arm/mach-imx/cpu-imx5.c   | 38 ++++++++++++++++++++++++++++++++++++=
+++
+>  arch/arm/mach-imx/mach-imx51.c |  2 +-
+>  arch/arm/mach-imx/mach-imx53.c |  2 +-
+>  4 files changed, 41 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
+> index 93225db7..423dd76 100644
+> --- a/arch/arm/mach-imx/common.h
+> +++ b/arch/arm/mach-imx/common.h
+> @@ -62,6 +62,7 @@ void imx_gpc_set_arm_power_up_timing(u32 sw2iso, u32 sw=
+);
+>  void imx_gpc_set_arm_power_down_timing(u32 sw2iso, u32 sw);
+>  void imx25_pm_init(void);
+>  void imx27_pm_init(void);
+> +void imx5_pmu_init(void);
+> =20
+>  enum mxc_cpu_pwr_mode {
+>  	WAIT_CLOCKED,		/* wfi only */
+> diff --git a/arch/arm/mach-imx/cpu-imx5.c b/arch/arm/mach-imx/cpu-imx5.c
+> index 4f2d1c7..d093017 100644
+> --- a/arch/arm/mach-imx/cpu-imx5.c
+> +++ b/arch/arm/mach-imx/cpu-imx5.c
+> @@ -117,3 +117,41 @@ int mx53_revision(void)
+>  	return mx5_cpu_rev;
+>  }
+>  EXPORT_SYMBOL(mx53_revision);
+> +
+> +#define ARM_GPC		0x4
+> +#define DBGEN		BIT(16)
+> +
+> +/*
+> + * This enables the DBGEN bit in ARM_GPC register, which is
+> + * required for accessing some performance counter features.
+> + * Technically it is only required while perf is used, but to
+> + * keep the source code simple we just enable it all the time
+> + * when the kernel configuration allows using the feature.
+> + */
+> +void __init imx5_pmu_init(void)
+> +{
+> +	void __iomem *tigerp_base;
+> +	struct device_node *np;
+> +	u32 gpc;
+> +
+> +	if (!IS_ENABLED(CONFIG_ARM_PMU))
+> +		return;
+> +
+> +	np =3D of_find_compatible_node(NULL, NULL, "arm,cortex-a8-pmu");
+> +	if (!np)
+> +		return;
+> +
 
-> diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt=
- b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
-> new file mode 100644
-> index 0000000..3baa893
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
-> @@ -0,0 +1,36 @@
-> +QTI [Qualcomm Technologies Inc] Quad Serial Peripheral Interface (QSPI)
+This should also check for "secure-reg-access" property in the
+PMU node. Without that property the DBGEN is not required.
+AFAICT. Also:
 
-Just write out the TLA?
+of_node_put(np);
+
+> +	np =3D of_find_compatible_node(NULL, NULL, "fsl,imx51-tigerp");
+> +	if (!np)
+> +		return;
+> +
+> +	tigerp_base =3D of_iomap(np, 0);
+> +	if (!tigerp_base)
+> +		return;
+
+goto exit;
 
 > +
-> +QSPI [Quad Serial Peripheral Interface] allows single dual and quad read=
-/write
-> +access to slaves. QTI's QSPI controller implements the QSPI protocol to =
-interface
+> +	gpc =3D readl_relaxed(tigerp_base + ARM_GPC);
+> +	gpc |=3D DBGEN;
+> +	writel_relaxed(gpc, tigerp_base + ARM_GPC);
+> +	iounmap(tigerp_base);
 
-This QSPI controller?
+exit:
+of_node_put(np);
 
-> +with slaves like NOR Flash devices.
 > +
-> +Required properties:
-> +- compatible:  Should contain:
-> +               "qcom,qspi-v1"
-> +- reg:         Contains the base register location and length
-> +- interrupts:  Interrupt number used by the controller.
-> +- clocks:      Contains the core and AHB clock names.
-> +- clock-names: "core" for core clock and "iface" for AHB clock.
-> +- spi-max-frequency:   Maximum SPI core clock frequency in Hz.
-> +
-> +SPI slave nodes must be children of the SPI master node and can contain
-> +properties described in Documentation/devicetree/bindings/spi/spi-bus.txt
-> +
-> +Example:
-> +
-> +       qspi: qspi@7418000 {
-> +               compatible =3D "qcom,qspi-v1";
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <0>;
-> +               reg =3D <0x7418000 0x600>;
-> +               interrupts =3D <0 459 0>;
-> +               clock-names =3D "iface", "core";
-> +               clocks =3D <&clock_gcc clk_gcc_qspi_ahb_clk>,
-> +                        <&clock_gcc clk_gcc_qspi_ser_clk>;
-> +
-> +               device@0 {
-> +                       compatible =3D "dummy_device";
-> +                       reg =3D <x>; /* CS for the device */
-> +                       spi-max-frequency =3D <f>; /* Max supported frequ=
-ency of the slave (Hz) */
-> +               };
-> +       };
-> diff --git a/err.txt b/err.txt
-> deleted file mode 100644
-> index 09000e4..0000000
+> +}
 
-This part of the patch shouldn't be here.
+-- Sebastian
 
-> --- a/err.txt
-> +++ /dev/null
-> @@ -1,27 +0,0 @@
-> -Skipping hidl generation
-> -arch/arm64/Makefile:23: ld does not support --fix-cortex-a53-843419; ker=
-nel may be susceptible to erratum
-> -arch/arm64/Makefile:44: Detected assembler with broken .inst; disassembl=
-y will be unreliable
-> -  CHK     include/config/kernel.release
-> -  CHK     include/generated/uapi/linux/version.h
-> -  CHK     include/generated/utsrelease.h
-> -  CHK     include/generated/bounds.h
-> -  CHK     include/generated/timeconst.h
-> -  CHK     include/generated/asm-offsets.h
-> -  CALL    scripts/checksyscalls.sh
-> -  CHK     scripts/mod/devicetable-offsets.h
-> -  CHK     include/generated/compile.h
-> -  CHK     kernel/config_data.h
-> -  CC      drivers/mtd/devices/m25p80.o
-> -  AR      drivers/mtd/devices/built-in.o
-> -  AR      drivers/mtd/built-in.o
-> -  CC      drivers/spi/spi-mem.o
-> -drivers/spi/spi-mem.c:12:23: fatal error: internals.h: No such file or d=
-irectory
-> - #include "internals.h"
-> -                       ^
-> -compilation terminated.
-> -make[2]: *** [drivers/spi/spi-mem.o] Error 1
-> -make[1]: *** [drivers/spi] Error 2
-> -make: *** [drivers] Error 2
+> diff --git a/arch/arm/mach-imx/mach-imx51.c b/arch/arm/mach-imx/mach-imx5=
+1.c
+> index 3835b6a..8838fba 100644
+> --- a/arch/arm/mach-imx/mach-imx51.c
+> +++ b/arch/arm/mach-imx/mach-imx51.c
+> @@ -52,7 +52,7 @@ static void __init imx51_dt_init(void)
+>  {
+>  	imx51_ipu_mipi_setup();
+>  	imx_src_init();
 > -
+> +	imx5_pmu_init();
+>  	imx_aips_allow_unprivileged_access("fsl,imx51-aipstz");
+>  }
+> =20
+> diff --git a/arch/arm/mach-imx/mach-imx53.c b/arch/arm/mach-imx/mach-imx5=
+3.c
+> index 07c2e8d..5ec7100 100644
+> --- a/arch/arm/mach-imx/mach-imx53.c
+> +++ b/arch/arm/mach-imx/mach-imx53.c
+> @@ -31,7 +31,7 @@ static void __init imx53_init_early(void)
+>  static void __init imx53_dt_init(void)
+>  {
+>  	imx_src_init();
+> -
+> +	imx5_pmu_init();
+>  	imx_aips_allow_unprivileged_access("fsl,imx53-aipstz");
+>  }
+> =20
+> --=20
+> 2.7.4
+>=20
+
+--b6bhrweet6tfmzya
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAltEyvAACgkQ2O7X88g7
++posiw/8CXrOeOt27ucs0ATjd3T7lGmaucI4WD+5NAlERVCiguZSrxL8J5GS7YqS
+kmBi9GTBF1Dh9uQcG9LGwWEBWaVIeFjIUWxspSU9TNqVnlvTe84kRC5zATaUWmJv
+DE/Nj2f0eOIHMsDfBon5Ia2yzpnuzrpAr+Eaiod0f4UOtbPJOhNt6GKrVa1VmXJv
+NZkEGg5IbvsDe5uQWpjlRyhxm1/jHMcc/l8bLfTyU6TXMA0kdpNu/s7YZKoJRnXA
+usLlCPqFm0By9dN5y5A/XNDcbdtvWQi9BAmWRfxtN7hZ5ke80KQ1g+mJ0gBpoVHV
+WGOs2nslqMu0oez2x2RhJ9YRhgkXyaeb5zSJ+1nncmMUHRL/Q68F53JBlol4UoVc
+pcFw29dbKHNTe0VKVdCLXGkA9zLf9RA17ydPceaeaeEor6QZ3Sx0T19/pN08nUzs
+Z41FAPmbSGjYFv3Vhrab/X7AAdIcIkX5CCdML78Xmx0RxelblGe9XFrRW3OiGZ1W
+H4t26sZhaO74qHSOPr9rb2LOXBcO/w/WuVT2OB9a/vdwSuFSiDG1cTtwUomKRb+Z
+a5VFdS/T3+xJpfupQkzM6NCSkQWxxOkEFFz8AYz38cr3YeF6AwZYlSqoZIaJGGON
+ARUkhsfOFholXAcrtfzli+nQQc/8GDLfZI/d5JxKDaHtRKMD710=
+=j77y
+-----END PGP SIGNATURE-----
+
+--b6bhrweet6tfmzya--
+
+
+--===============8041161260722256731==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8041161260722256731==--
