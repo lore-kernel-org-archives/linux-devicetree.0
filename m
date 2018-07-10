@@ -1,30 +1,38 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 12/17] drm/sun4i: tcon: Add support for R40 TCON
-Date: Wed, 11 Jul 2018 00:14:40 +0800
-Message-ID: <CAGb2v67neknTdGyKLu=bMyXw7_M9Ji2GnVmqK1d20VWUsq2ROQ@mail.gmail.com>
-References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-13-jernej.skrabec@siol.net>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 15/17] ARM: dts: sun8i: r40: Disable TCONs by default.
+Date: Wed, 11 Jul 2018 00:16:15 +0800
+Message-ID: <CAGb2v64=Mzwz6eZxvHO6XuCNa5XQcQDt8HkOrFqRO8MXTVSRjg@mail.gmail.com>
+References: <20180706175113.26698-1-jernej.skrabec@siol.net>
+ <20180706175113.26698-16-jernej.skrabec@siol.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBB5XSPNAKGQEUNJL2XY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180706175113.26698-13-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180706175113.26698-16-jernej.skrabec@siol.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 7, 2018 at 1:51 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> R40 TV TCON is basically the same as on A83T. However, it needs special
-> handling, because it has to set up TCON TOP muxes at runtime.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-
-Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
-The runtime muxing of mixer <-> TCON is quite clever.
+T24gU2F0LCBKdWwgNywgMjAxOCBhdCAxOjUxIEFNLCBKZXJuZWogU2tyYWJlYyA8amVybmVqLnNr
+cmFiZWNAc2lvbC5uZXQ+IHdyb3RlOgo+IFI0MCBoYXMgNCBUQ09OcywgYnV0IG9ubHkgMiBvZiB0
+aGVtIGNhbiByZWNlaXZlIHNvbWUga2luZCBvZiBvdXRwdXQgYXQKPiB0aGUgc2FtZSB0aW1lLiBM
+ZXQncyBkaXNhYmxlIHRoZW0gYnkgZGVmYXVsdCwgc28gb25seSB0aG9zZSB3aGljaCBhcmUKPiBy
+ZWFsbHkgY29ubmVjdGVkIG9uIGJvYXJkIGNhbiBiZSBlbmFibGVkIGluIGJvYXJkIGR0cyBmaWxl
+Lgo+Cj4gU2lnbmVkLW9mZi1ieTogSmVybmVqIFNrcmFiZWMgPGplcm5lai5za3JhYmVjQHNpb2wu
+bmV0PgoKT3JpZ2luYWxseSBJIGhhZCB3YW50ZWQgYWxsIFRDT05zIGVuYWJsZWQgYnkgZGVmYXVs
+dC4gQnV0IHRoYXQgd291bGQKcmVxdWlyZSBzb21lIG1vcmUgd29yayBmb3IgZHluYW1pYyBhc3Np
+Z25tZW50IG9mIFRDT05zIHRvIENSVENzLCB3aGljaAppcyB3YXkgb3V0IG9mIHNjb3BlIGZvciB0
+aGlzIHNlcmllcy4gU28sCgpSZXZpZXdlZC1ieTogQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3Jn
+PgoKSSdsbCB0aGluayBhYm91dCBpZiBhbmQgaG93IHRoaXMgY291bGQgYmUgZG9uZS4KX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
