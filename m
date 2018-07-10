@@ -1,71 +1,47 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [PATCH v2 0/4] sun8i: r40: add AHCI
-Date: Tue, 10 Jul 2018 21:15:05 +0800
-Message-ID: <A588EEB5-5305-4EFC-8DDD-369F0751E382@aosc.io>
-References: <1531149658-27030-1-git-send-email-clabbe@baylibre.com> <EF718AB4-DD07-4D67-BE2E-1B9EBA5EB25F@aosc.io> <20180710130517.GA27236@Red>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: Re: [PATCH v5 4/6] bus: ti-sysc: Add support for software reset
+Date: Tue, 10 Jul 2018 18:50:14 +0530
+Message-ID: <0ece4ef9-1306-d36a-acff-6ee4b98337c8@ti.com>
+References: <20180709164841.14182-1-faiz_abbas@ti.com>
+ <20180709164841.14182-5-faiz_abbas@ti.com>
+ <20180710114248.GI99251@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180710130517.GA27236@Red>
+In-Reply-To: <20180710114248.GI99251@atomide.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, LABBE Corentin <clabbe@baylibre.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, tj@kernel.org, maxime.ripard@free-electrons.com
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, bcousson@baylibre.com, paul@pwsan.com, t-kristo@ti.com, mark.rutland@arm.com, sboyd@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Tony,
 
+On Tuesday 10 July 2018 05:12 PM, Tony Lindgren wrote:
+> Hi,
+> 
+> * Faiz Abbas <faiz_abbas@ti.com> [180709 16:50]:
+>> Add support for the software reset of a target interconnect
+>> module using its sysconfig and sysstatus registers.
+> ...
+>> --- a/drivers/bus/ti-sysc.c
+>> +++ b/drivers/bus/ti-sysc.c
+> ...
+>> +static int sysc_reset(struct sysc *ddata)
+>> +{
+>> +	int offset = ddata->offsets[SYSC_SYSCONFIG];
+>> +	int val = sysc_read(ddata, offset);
+> 
+> Testing with omap4 sysc dts data I noticed we already
+> have modules where there is only rev register and no
+> SYSC_SYSCONFIG. So not using legacy mode. The
+> above offset with -ENODEV value will not work :)
+> 
+> I added some more checks and moved them to the reset
+> function.
 
-于 2018年7月10日 GMT+08:00 下午9:05:17, LABBE Corentin <clabbe@baylibre.com> 写到:
->On Mon, Jul 09, 2018 at 11:44:20PM +0800, Icenowy Zheng wrote:
->> 
->> 
->> 于 2018年7月9日 GMT+08:00 下午11:20:54, Corentin Labbe
-><clabbe@baylibre.com> 写到:
->> >Hello
->> >
->> >With Moeicenowy's agreement, I have take leadership ot this
->patchset.
->> >
->> >There are no really changes appart renaming struct quirck to
->variant.
->> >
->> >Since the last serie is really old, I will answer comment here.
->> >The two regulator (1.2 and 2.5V) are not for the PHY since:
->> >- nothing in the schematic said that they are for the PHY, they
->seems
->> >  only for controller
->> >- all other AHCI driver use 5V for the target/PHY (vs 1.2/2.5 which
->> >  cannot be used for target)
->> 
->> Target is not equal to PHY. Target means the supply
->> of the disk, which can be usually 5v (for 2.5" HDD) or
->> 12v (3.5" HDD).
->> 
->> By reading Wikipedia articles  about SATA and LVDS, I assume
->> 2.5V is for PHY and 1.2V is for internal digital logic (VDD-SYS
->> is commonly 1.2V on 40nm Allwinner SoCs; 2.5V VDD can be
->> used to efficiently deliver ~1.2V LVDS.)
->> 
->> P.S. VDD-SATA and VDD25-SATA also exist on A20, and by checking
->> Banana Pi M1 (the original Banana Pi) schematics, VDD-SATA
->> is connected to common VDD-SYS (called INTVDD on the
->> schematics) and VDD25-SATA is connected to an always-on
->> fixed LDO, maybe due to the lack of power outputs on AXP209.
->> 
->
->So we still need to add a regulator on the controller and add an
->optionnal "phy" regulator for AHCI port.
+Great. Thanks for the fix.
 
-No, phy is not a part of the port. From the perspective of
-the users, phy is part of the controller.
-
-I still suggest generic multiple regulator support, to
-reduce sunxi-specified code.
-
->
->
->_______________________________________________
->linux-arm-kernel mailing list
->linux-arm-kernel@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Thanks,
+Faiz
