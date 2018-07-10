@@ -1,68 +1,61 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] sun8i: r40: add AHCI
-Date: Tue, 10 Jul 2018 20:32:27 +0800
-Message-ID: <3F7BD4FD-D8D8-4900-BC53-E2C1928616A4@aosc.io>
-References: <1531149658-27030-1-git-send-email-clabbe@baylibre.com> <20180710122922.6sgmgfislqwhn3tt@flea>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Ilia Lin <ilia.lin@gmail.com>
+Subject: Re: [PATCH v11 2/2] dt: qcom: Add qcom-cpufreq-kryo driver configuration
+Date: Tue, 10 Jul 2018 15:43:57 +0300
+Message-ID: <CA+5LGR36xwVWKytv=NGaeS+S7L3ryFgpWWz_dgqH3SHi9XCqaw@mail.gmail.com>
+References: <1527081091-13389-1-git-send-email-ilialin@codeaurora.org>
+ <1527081091-13389-3-git-send-email-ilialin@codeaurora.org> <20180710092900.GA26718@centauri.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB6WOSLNAKGQE2WTVXHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180710122922.6sgmgfislqwhn3tt@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Corentin Labbe <clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180710092900.GA26718@centauri.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: niklas.cassel@linaro.org
+Cc: Ilia Lin <ilialin@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, robh@kernel.org, Mark Rutland <mark.rutland@arm.com>, catalin.marinas@arm.com, Will Deacon <will.deacon@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Niklas,
 
+The frequency list in the DT is correct, but the initial frequency for
+the CPUs 0,1 is configured by the XBL, while the CPUs 2,3 stay at XO
+rate. Both rates are unlisted in the DT and that's OK.
 
-=E4=BA=8E 2018=E5=B9=B47=E6=9C=8810=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=888:=
-29:22, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
->On Mon, Jul 09, 2018 at 03:20:54PM +0000, Corentin Labbe wrote:
->> Hello
->>=20
->> With Moeicenowy's agreement, I have take leadership ot this patchset.
->>=20
->> There are no really changes appart renaming struct quirck to variant.
->>=20
->> Since the last serie is really old, I will answer comment here.
->> The two regulator (1.2 and 2.5V) are not for the PHY since:
->> - nothing in the schematic said that they are for the PHY, they seems
->>   only for controller
->> - all other AHCI driver use 5V for the target/PHY (vs 1.2/2.5 which
->>   cannot be used for target)
+BR,
+Ilia Lin
+
+On Tue, Jul 10, 2018 at 12:29 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
 >
->That's a pretty bad thing to do, especially for old series. You just
->dropped all the context that you reply to, and there's no way for any
->reviewer to tell if your answers make any kind of sense, or addresses
->any question one might have had.
+> On Wed, May 23, 2018 at 04:11:31PM +0300, Ilia Lin wrote:
+> > 1. Add NVMEM node for the speedbin
+> > 2. Add definitions for all possible MSM8996 CPU OPPs.
+> > The qcom-cpufreq-kryo driver will select the appropriate subset.
+> >
+> > Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
+> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/apq8096-db820c.dts |   2 +-
+> >  arch/arm64/boot/dts/qcom/msm8996.dtsi       | 281 ++++++++++++++++++++++++++--
+> >  2 files changed, 270 insertions(+), 13 deletions(-)
+> >
 >
->> Furthermore, the AHCI binding support only one regulator per PHY, so
->> using the "target" regulator is out of question for registring this
->two
->> non-phy regulator.
+> Hello Ilia, Viresh
 >
->Nothing is "out of question", we have the source code and can change
->it if needed.
-
-The main problem is that he misunderstood the meaning
-of target regulator -- it's not for PHY but for disk. And if a
-device is designed to accept both 2.5" and 3.5" HDD at
-the same port multiple target regulator might really
-be useful -- one 5v and one 12v.
-
 >
->Maxime
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> I tried this patch series (together with you cpu clock driver).
+>
+> The first problem is that the driver fails to create debugfs entries.
+>
+> The second problem appears to be that it runs on unlisted frequency.
+> Is this simply because of missing entries in the opp table?
+>
+> [    4.538513] cpu cpu1: opp_list_debug_create_link: Failed to create link
+> [    4.538567] cpu cpu1: _add_opp_dev: Failed to register opp debugfs (-12)
+> [    4.544514] cpufreq: cpufreq_online: CPU0: Running at unlisted freq: 614400 KHz
+> [    4.551441] cpufreq: cpufreq_online: CPU0: Unlisted initial frequency changed to: 652800 KHz
+> [    4.563219] cpu cpu3: opp_list_debug_create_link: Failed to create link
+> [    4.566937] cpu cpu3: _add_opp_dev: Failed to register opp debugfs (-12)
+> [    4.573489] cpufreq: cpufreq_online: CPU2: Running at unlisted freq: 19200 KHz
+> [    4.580368] cpufreq: cpufreq_online: CPU2: Unlisted initial frequency changed to: 307200 KHz
+>
+>
+> Kind regards,
+> Niklas
