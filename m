@@ -1,67 +1,107 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v7 0/5] Reintroduce i.MX EPIT Timer
-Date: Tue, 10 Jul 2018 17:37:26 +0200
-Message-ID: <c9db3848-378f-8e1e-c194-53d878894716@linaro.org>
-References: <20180611155001.3506-1-peron.clem@gmail.com>
- <CAJiuCcf3g2fzrR2_4mthjwKRcyZ8KVPX+EZ5_Uifh2E6TkzusQ@mail.gmail.com>
- <52591c2d-e9df-7078-7cdf-0fd8d06c9ee0@linaro.org>
- <CAJiuCcc-eGRr_RT01dNfhQso5PbXfWy+YZS4PHHcL=_yhA-3Sw@mail.gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 09/17] drm/sun4i: mixer: Read id from DT
+Date: Tue, 10 Jul 2018 23:40:14 +0800
+Message-ID: <CAGb2v64zBrzpqV9pvJPeaxbpLai8Ky0gTcwbSPv0m-vS-2JXKg@mail.gmail.com>
+References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-10-jernej.skrabec@siol.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJiuCcc-eGRr_RT01dNfhQso5PbXfWy+YZS4PHHcL=_yhA-3Sw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180706175113.26698-10-jernej.skrabec@siol.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?UTF-8?Q?Cl=c3=a9ment_Peron?= <clement.peron@devialet.com>
+To: Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/2018 17:22, Clément Péron wrote:
-> Hi Daniel,
-> 
-> On Tue, 10 Jul 2018 at 17:12, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->>
->> On 10/07/2018 16:55, Clément Péron wrote:
->>> Hi,
->>>
->>> Is there still some remark against merging this ?
->>
->> How do you want this to be merged ?
->>
->> Shall I take the two patches related to the timer ? Or Ack them ?
-> 
-> I'm not an expert on how submitting patches works, it's the first
-> driver I submit.
+On Sat, Jul 7, 2018 at 1:51 AM, Jernej Skrabec <jernej.skrabec@siol.net> wrote:
+> Currently, TCON supports 2 ways to match TCON with engine (mixer in this
+> case). Old way is to just traverse of graph backwards and compare node
+> pointer. New way is to match TCON and engine by their respective ids.
+> All SoCs with DE2 enabled till now used the old way, which means mixer
+> id was never used and thus never implemented.
+>
+> However, for R40, only the new way will be used. To prepare for that,
+> implemend fetching mixer id from DT.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  drivers/gpu/drm/sun4i/sun8i_mixer.c | 35 +++++++++++++++++++++++++++--
+>  1 file changed, 33 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> index ee8febb25903..11221f96746d 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/dma-mapping.h>
+>  #include <linux/reset.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_graph.h>
 
-Ok, so usually this is what happens when there is a set of changes:
+These should be alphabetically ordered.
 
- 1.  they all touch the same subsystem (eg. drivers/clocksource), you
-just send all the patches to the maintainer(s) + mailing list + related
-people
+>
+>  #include "sun4i_drv.h"
+>  #include "sun8i_mixer.h"
+> @@ -322,6 +323,37 @@ static struct regmap_config sun8i_mixer_regmap_config = {
+>         .max_register   = 0xbfffc, /* guessed */
+>  };
+>
+> +static int sun8i_mixer_of_get_id(struct device_node *node)
+> +{
+> +       struct device_node *port, *ep;
+> +       int ret = -EINVAL;
+> +
+> +       /* output is port 1 */
+> +       port = of_graph_get_port_by_id(node, 1);
+> +       if (!port)
+> +               return -EINVAL;
+> +
+> +       /* try finding an upstream endpoint */
 
- 2. they touch different subsystems:
+You mean downstream.
 
-   2.1) the changes are not connected (not related together), you have
-to split in smaller parts and send the patches to the right subsystem
-maintainer (so falling back to 1.)
+> +       for_each_available_child_of_node(port, ep) {
+> +               struct device_node *remote;
+> +               u32 reg;
+> +
+> +               remote = of_graph_get_remote_endpoint(ep);
+> +               if (!remote)
+> +                       continue;
+> +
+> +               ret = of_property_read_u32(remote, "reg", &reg);
+> +               if (ret)
+> +                       continue;
 
-   2.2) the changes are connected:
+This is somewhat redundant, given the current code structure will loop
+over all available child nodes. What you want is probably an early
+termination condition instead, i.e. if (!ret).
 
-      2.2.1) Ask all the different subsystem maintainers to acknowledge
-the changes and submit the patches to arm-soc@
+Also, remember to call of_node_put on the remote node.
 
-      2.2.2) Ask each maintainer to take their part if the changes are
-connected but not interdependent (patches individually won't break the
-system)
+ChenYu
 
-
-You are in the 2.2) situation. My question is do you want 2.2.1) or 2.2.2) ?
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> +
+> +               ret = reg;
+> +       }
+> +
+> +       of_node_put(port);
+> +
+> +       return ret;
+> +}
+> +
+>  static int sun8i_mixer_bind(struct device *dev, struct device *master,
+>                               void *data)
+>  {
+> @@ -353,8 +385,7 @@ static int sun8i_mixer_bind(struct device *dev, struct device *master,
+>         dev_set_drvdata(dev, mixer);
+>         mixer->engine.ops = &sun8i_engine_ops;
+>         mixer->engine.node = dev->of_node;
+> -       /* The ID of the mixer currently doesn't matter */
+> -       mixer->engine.id = -1;
+> +       mixer->engine.id = sun8i_mixer_of_get_id(dev->of_node);
+>
+>         mixer->cfg = of_device_get_match_data(dev);
+>         if (!mixer->cfg)
+> --
+> 2.18.0
+>
