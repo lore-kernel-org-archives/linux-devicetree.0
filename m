@@ -1,68 +1,61 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v5 08/12] cpufreq: Add stub for cpufreq_update_policy()
-Date: Tue, 10 Jul 2018 15:24:19 -0700
-Message-ID: <20180710222419.GR129942@google.com>
-References: <20180703234705.227473-1-mka@chromium.org>
- <20180703234705.227473-9-mka@chromium.org>
- <2392356.ug1cyb9g3O@aspire.rjw.lan>
+From: David Collins <collinsd@codeaurora.org>
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: sdm845-mtp: Add RPMh VRM/XOB
+ regulators
+Date: Tue, 10 Jul 2018 15:32:11 -0700
+Message-ID: <0d334051-2ba5-075d-df8c-affe3e617e8d@codeaurora.org>
+References: <20180710220202.116404-1-dianders@chromium.org>
+ <20180710220202.116404-3-dianders@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2392356.ug1cyb9g3O@aspire.rjw.lan>
+In-Reply-To: <20180710220202.116404-3-dianders@chromium.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
+To: Douglas Anderson <dianders@chromium.org>, Andy Gross <andy.gross@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, swboyd@chromium.org, tfiga@chromium.org, Manu Gautam <mgautam@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 04, 2018 at 12:41:21PM +0200, Rafael J. Wysocki wrote:
-> On Wednesday, July 4, 2018 1:47:01 AM CEST Matthias Kaehlcke wrote:
-> > cpufreq stubs out some functions when CONFIG_CPU_FREQ=n , but
-> > cpufreq_update_policy() is not among them. The throttler driver
-> > (https://patchwork.kernel.org/patch/10453351/) uses cpufreq as one
-> > possible throttling mechanism, but it can still be useful without
-> > cpufreq. Stubbing out cpufreq_update_policy() allows the throttler
-> > driver to be built without ugly #ifdef'ery when cpufreq is disabled.
-> > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > Reviewed-by: Brian Norris <briannorris@chromium.org>
-> > ---
-> > Changes in v5:
-> > - none
-> > 
-> > Changes in v4:
-> > - added 'Reviewed-by: Brian Norris <briannorris@chromium.org>' tag
-> > 
-> > Changes in v3:
-> > - patch added to series
-> > ---
-> >  include/linux/cpufreq.h | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-> > index 882a9b9e34bc..dba8c4951e2e 100644
-> > --- a/include/linux/cpufreq.h
-> > +++ b/include/linux/cpufreq.h
-> > @@ -210,6 +210,7 @@ static inline unsigned int cpufreq_quick_get_max(unsigned int cpu)
-> >  	return 0;
-> >  }
-> >  static inline void disable_cpufreq(void) { }
-> > +static inline void cpufreq_update_policy(unsigned int cpu) { }
-> >  #endif
-> >  
-> >  #ifdef CONFIG_CPU_FREQ_STAT
-> > 
-> 
-> I can take this patch if you want me to.
+Hello Doug,
 
-Sounds good.
+On 07/10/2018 03:02 PM, Douglas Anderson wrote:
+...
+> +		vdd-s1-supply = <&vph_pwr>;
+> +		vdd-s2-supply = <&vph_pwr>;
+> +		vdd-s3-supply = <&vph_pwr>;
+> +		vdd-s4-supply = <&vph_pwr>;
+> +		vdd-s5-supply = <&vph_pwr>;
+> +		vdd-s6-supply = <&vph_pwr>;
+> +		vdd-s7-supply = <&vph_pwr>;
+> +		vdd-s8-supply = <&vph_pwr>;
+> +		vdd-s9-supply = <&vph_pwr>;
+> +		vdd-s10-supply = <&vph_pwr>;
+> +		vdd-s11-supply = <&vph_pwr>;
+> +		vdd-s12-supply = <&vph_pwr>;
+> +		vdd-s13-supply = <&vph_pwr>;
+> +		vdd-l1-l27-supply = <&vreg_s7a_1p025>;
+> +		vdd-l2-l8-l17-supply = <&vreg_s3a_1p35>;
+> +		vdd-l3-l11-supply = <&vreg_s7a_1p025>;
+> +		vdd-l4-l5-supply = <&vreg_s7a_1p025>;
+> +		vdd-l6-supply = <&vph_pwr>;
+> +		vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p04>;
+> +		vdd-l9-supply = <&vreg_bob>;
+> +		vdd-l10-l23-l25-supply = <&vreg_bob>;
+> +		vdd-l13-l19-l21-supply = <&vreg_bob>;
+> +		vdd-l16-l28-supply = <&vreg_bob>;
+> +		vdd-l18-l22-supply = <&vreg_bob>;
+> +		vdd-l20-l24-supply = <&vreg_bob>;
+> +		vdd-l26-supply = <&vreg_s3a_1p35>;
+> +		vin-lvs-1-2-supply = <&vreg_s4a_1p8>;
 
-This series is moving forward slower than I had hoped and there are a
-few patches that are useful independently of the throttler at the end
-of the series. It probably makes sense to start integrating them
-rather than carrying them around unchanged from version to version and
-repeatedly spam <world>.
+I would suggest not specifying any of these regulator parent supplies in
+device tree.  RPMh will be enforcing all regulator parent-child
+dependencies.  Therefore, handling the dependencies in Linux is redundant.
+ It will result in additional RPMh requests as well as more time spent in
+regulator framework calls.  Overall, it will lead to slightly lower
+performance.  Note that while specifying the parent supplies results in
+less efficient runtime behavior, it is not technically wrong so you could
+keep them in place if you prefer.
 
-Thanks
-
-Matthias
+Take care,
+David
