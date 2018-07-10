@@ -1,79 +1,119 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 08/17] ARM: dts: sun8i: r40: Add mixer ids
- to TCON TOP
-Date: Tue, 10 Jul 2018 23:35:54 +0800
-Message-ID: <CAGb2v65YsW+SiP6_sV9Hd6eQE6ZF0+Lm6CWfNdmwpgMEHBTDgQ@mail.gmail.com>
-References: <20180706175113.26698-1-jernej.skrabec@siol.net> <20180706175113.26698-9-jernej.skrabec@siol.net>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 02/14] dmaengine: dma-jz4780: Separate chan/ctrl registers
+Date: Tue, 10 Jul 2018 17:36:58 +0200
+Message-ID: <1531237019.17118.1@crapouillou.net>
+References: <20180703123214.23090-1-paul@crapouillou.net>
+        <20180703123214.23090-3-paul@crapouillou.net>
+        <20180709170359.GI22377@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB4VESPNAKGQE367QAPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180706175113.26698-9-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180709170359.GI22377@vkoul-mobl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod <vkoul@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 7, 2018 at 1:51 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> Mixer has to have a way to read its id, if needed.
 
-You should mention that this is required by the device tree binding sun4i-drm,
-in the second paragraph of the first section:
 
-    For all connections between components up to the TCONs in the display
-    pipeline, when there are multiple components of the same type at the
-    same depth, the local endpoint ID must be the same as the remote
-    component's index.
+Le lun. 9 juil. 2018 =E0 19:03, Vinod <vkoul@kernel.org> a =E9crit :
+> On 03-07-18, 14:32, Paul Cercueil wrote:
+>>  The register area of the JZ4780 DMA core can be split into different
+>>  sections for different purposes:
+>>=20
+>>  * one set of registers is used to perform actions at the DMA core=20
+>> level,
+>>  that will generally affect all channels;
+>>=20
+>>  * one set of registers per DMA channel, to perform actions at the=20
+>> DMA
+>>  channel level, that will only affect the channel in question.
+>>=20
+>>  The problem rises when trying to support new versions of the JZ47xx
+>>  Ingenic SoC. For instance, the JZ4770 has two DMA cores, each one
+>>  with six DMA channels, and the register sets are interleaved:
+>>  <DMA0 chan regs> <DMA1 chan regs> <DMA0 ctrl regs> <DMA1 ctrl regs>
+>>=20
+>>  By using one memory resource for the channel-specific registers and
+>>  one memory resource for the core-specific registers, we can support
+>>  the JZ4770, by initializing the driver once per DMA core with=20
+>> different
+>>  addresses.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>   .../devicetree/bindings/dma/jz4780-dma.txt    |   6 +-
+>=20
+> Pls move to separate patch.
 
-You might also want to update the diagram for TCON TOP in the binding doc.
+OK.
 
-ChenYu
+>>   drivers/dma/dma-jz4780.c                      | 106=20
+>> +++++++++++-------
+>>   2 files changed, 69 insertions(+), 43 deletions(-)
+>>=20
+>>  diff --git a/Documentation/devicetree/bindings/dma/jz4780-dma.txt=20
+>> b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
+>>  index f25feee62b15..f9b1864f5b77 100644
+>>  --- a/Documentation/devicetree/bindings/dma/jz4780-dma.txt
+>>  +++ b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
+>>  @@ -3,7 +3,8 @@
+>>   Required properties:
+>>=20
+>>   - compatible: Should be "ingenic,jz4780-dma"
+>>  -- reg: Should contain the DMA controller registers location and=20
+>> length.
+>>  +- reg: Should contain the DMA channel registers location and=20
+>> length, followed
+>>  +  by the DMA controller registers location and length.
+>>   - interrupts: Should contain the interrupt specifier of the DMA=20
+>> controller.
+>>   - interrupt-parent: Should be the phandle of the interrupt=20
+>> controller that
+>>   - clocks: Should contain a clock specifier for the JZ4780 PDMA=20
+>> clock.
+>>  @@ -22,7 +23,8 @@ Example:
+>>=20
+>>   dma: dma@13420000 {
+>>   	compatible =3D "ingenic,jz4780-dma";
+>>  -	reg =3D <0x13420000 0x10000>;
+>>  +	reg =3D <0x13420000 0x400
+>>  +	       0x13421000 0x40>;
+>=20
+> Second should be optional or we break platform which may not have
+> updated DT..
 
-> Add them in R40 DT.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-r40.dtsi | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-> index 2afb079a3776..1dd088d82773 100644
-> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-> @@ -576,9 +576,12 @@
->                                 #size-cells = <0>;
->
->                                 tcon_top_mixer0_in: port@0 {
-> +                                       #address-cells = <1>;
-> +                                       #size-cells = <0>;
->                                         reg = <0>;
->
-> -                                       tcon_top_mixer0_in_mixer0: endpoint {
-> +                                       tcon_top_mixer0_in_mixer0: endpoint@0 {
-> +                                               reg = <0>;
->                                                 remote-endpoint = <&mixer0_out_tcon_top>;
->                                         };
->                                 };
-> @@ -606,9 +609,12 @@
->                                 };
->
->                                 tcon_top_mixer1_in: port@2 {
-> +                                       #address-cells = <1>;
-> +                                       #size-cells = <0>;
->                                         reg = <2>;
->
-> -                                       tcon_top_mixer1_in_mixer1: endpoint {
-> +                                       tcon_top_mixer1_in_mixer1: endpoint@1 {
-> +                                               reg = <1>;
->                                                 remote-endpoint = <&mixer1_out_tcon_top>;
->                                         };
->                                 };
+See comment below.
+
+>>  -	jzdma->base =3D devm_ioremap_resource(dev, res);
+>>  -	if (IS_ERR(jzdma->base))
+>>  -		return PTR_ERR(jzdma->base);
+>>  +	jzdma->chn_base =3D devm_ioremap_resource(dev, res);
+>>  +	if (IS_ERR(jzdma->chn_base))
+>>  +		return PTR_ERR(jzdma->chn_base);
+>>  +
+>>  +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>>  +	if (!res) {
+>>  +		dev_err(dev, "failed to get I/O memory\n");
+>>  +		return -EINVAL;
+>>  +	}
+>=20
+> okay and this breaks if you happen to get probed on older DT. I think=20
+> DT
+> is treated as ABI so you need to continue support older method while
+> finding if DT has split resources
+
+See my response to PrasannaKumar. All the Ingenic-based boards do=20
+compile
+the devicetree within the kernel, so I think it's still fine to add=20
+breaking
+changes. I'll wait on @Rob to give his point of view on this, though.
+
+(It's not something hard to change, but I'd like to know what's the=20
+policy
+in that case. I have other DT-breaking patches to submit)
+
 > --
-> 2.18.0
->
+> ~Vinod
+=
