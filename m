@@ -1,13 +1,13 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v2 03/18] ARM: dts: sun8i: r40: Remove fallback
- display engine compatible
-Date: Tue, 10 Jul 2018 22:34:56 +0200
-Message-ID: <20180710203511.18454-4-jernej.skrabec@siol.net>
+Subject: [PATCH v2 05/18] drm/sun4i: tcon: Release node when
+ traversing of graph
+Date: Tue, 10 Jul 2018 22:34:58 +0200
+Message-ID: <20180710203511.18454-6-jernej.skrabec@siol.net>
 References: <20180710203511.18454-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBENRSTNAKGQEFAHPCAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBFVRSTNAKGQEB6PN4WQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180710203511.18454-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,30 +20,30 @@ To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@publ
 Cc: airlied-cv59FeDIM0c@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-R40 has pretty unique display pipeline. Because of that, H3 display
-engine compatible fallback should be removed.
+Function sun4i_tcon_find_engine_traverse() doesn't release node if it
+needs to traverse of graph deeper than 1 level.
 
-Fixes: 05a43a262d03 ("ARM: dts: sun8i: r40: Add HDMI pipeline")
+Fix this by calling of_node_put().
+
+Fixes: 49836b11fe71 ("drm/sun4i: tcon: Generalize engine search algorithm")
 
 Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-r40.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index c95a59aac48f..2afb079a3776 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -102,8 +102,7 @@
- 	};
- 
- 	de: display-engine {
--		compatible = "allwinner,sun8i-r40-display-engine",
--			     "allwinner,sun8i-h3-display-engine";
-+		compatible = "allwinner,sun8i-r40-display-engine";
- 		allwinner,pipelines = <&mixer0>, <&mixer1>;
- 		status = "disabled";
- 	};
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index aacc841d3dc6..3fb084f802e2 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -811,6 +811,7 @@ sun4i_tcon_find_engine_traverse(struct sun4i_drv *drv,
+ 	 * remote output id. If this for some reason can't be done, 0
+ 	 * is used as input port id.
+ 	 */
++	of_node_put(port);
+ 	port = of_graph_get_remote_port(ep);
+ 	if (!of_property_read_u32(port, "reg", &reg) && reg > 0)
+ 		reg -= 1;
 -- 
 2.18.0
