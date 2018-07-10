@@ -1,41 +1,86 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH 2/2] ARM: dts: imx6sx: add ocram_s support
-Date: Tue, 10 Jul 2018 16:39:39 +0800
-Message-ID: <1531211979-2179-2-git-send-email-Anson.Huang@nxp.com>
-References: <1531211979-2179-1-git-send-email-Anson.Huang@nxp.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 1/3] drm: mxsfb: Change driver.name to mxsfb-drm
+Date: Tue, 10 Jul 2018 11:06:36 +0200
+Message-ID: <fd22085f646d97f66cff5b7f22785500@agner.ch>
+References: <cover.1529091248.git.leonard.crestez@nxp.com>
+ <47ea7572011735b68a8a70f0e11bdf00cb2fd86a.1529091248.git.leonard.crestez@nxp.com>
+ <CAOMZO5B8i0gN+rCq-yPrd112NkwJWTxYCtsLVeLhD1JLRuX6EQ@mail.gmail.com>
+ <07be6d9a85b6be655fc2b084be81d8bf9715b57a.camel@nxp.com>
+ <638457fd-85da-8fec-d146-517c43f71813@denx.de>
+ <b3fa74c5110b45e5992920485749869ab1f7ebce.camel@nxp.com>
+ <6995fa4b-47a9-887b-5e4f-4284ca6a2c79@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531211979-2179-1-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, shengjiu.wang@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: Linux-imx@nxp.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <6995fa4b-47a9-887b-5e4f-4284ca6a2c79@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: marex@denx.de, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, marcofrk@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, dl-linux-imx <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-i.MX6SX has a 16KB always-on ocram bank called
-ocram_s, enable it as another mmio sram.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6sx.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 596763c..9923739 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -172,6 +172,12 @@
- 			clocks = <&clks IMX6SX_CLK_OCRAM>;
- 		};
- 
-+		ocram_s: sram@8f8000 {
-+			compatible = "mmio-sram";
-+			reg = <0x008f8000 0x4000>;
-+			clocks = <&clks IMX6SX_CLK_OCRAM_S>;
-+		};
-+
- 		L2: l2-cache@a02000 {
- 			compatible = "arm,pl310-cache";
- 			reg = <0x00a02000 0x1000>;
--- 
-2.7.4
+T24gMTYuMDYuMjAxOCAwMTozMiwgTWFyZWsgVmFzdXQgd3JvdGU6Cj4gT24gMDYvMTYvMjAxOCAx
+Mjo0MiBBTSwgTGVvbmFyZCBDcmVzdGV6IHdyb3RlOgo+PiBPbiBGcmksIDIwMTgtMDYtMTUgYXQg
+MjM6MzYgKzAyMDAsIE1hcmVrIFZhc3V0IHdyb3RlOgo+Pj4gT24gMDYvMTUvMjAxOCAxMDo1OCBQ
+TSwgTGVvbmFyZCBDcmVzdGV6IHdyb3RlOgo+Pj4+IE9uIEZyaSwgMjAxOC0wNi0xNSBhdCAxNjo0
+NyAtMDMwMCwgRmFiaW8gRXN0ZXZhbSB3cm90ZToKPj4+Pj4gT24gRnJpLCBKdW4gMTUsIDIwMTgg
+YXQgNDo0MyBQTSwgTGVvbmFyZCBDcmVzdGV6Cj4+Pj4+IDxsZW9uYXJkLmNyZXN0ZXpAbnhwLmNv
+bT4gd3JvdGU6Cj4+Cj4+Pj4+PiBUaGUgRkJERVYgZHJpdmVyIHVzZXMgdGhlIHNhbWUgbmFtZSBh
+bmQgYm90aCBjYW4ndCBiZSByZWdpc3RlcmVkIGF0IHRoZQo+Pj4+Pj4gc2FtZSB0aW1lLiBGaXgg
+dGhpcyBieSByZW5hbWluZyB0aGUgZHJtIGRyaXZlciB0byBteHNmYi1kcm0KPj4+Pj4KPj4+Pj4g
+U3RlZmFuIHNlbnQgdGhlIHNhbWUgcGF0Y2ggYSBmZXcgZGF5cyBhZ286Cj4+Pj4KPj4+PiBJbiB0
+aGF0IHRocmVhZCB0aGVyZSBpcyBhIHByb3Bvc2FsIGZvciByZW1vdmluZyB0aGUgb2xkIGZiZGV2
+L214c2ZiCj4+Pj4gZHJpdmVyIGVudGlyZWx5Lgo+Pj4+Cj4+Pj4gVGhhdCB3b3VsZCBicmVhayBv
+bGQgRFRCcywgaXNuJ3QgdGhpcyBnZW5lcmFsbHkgY29uc2lkZXJlZCBiYWQ/IEFsc28sCj4+Pj4g
+YXJlIHdlIHN1cmUgdGhlIHJlbW92YWwgb2YgZmJkZXYvbXhzZmIgd291bGRuJ3QgbG9zZSBhbnkg
+ZmVhdHVyZXM/Cj4+Pj4KPj4+PiBXaGF0IG15IHNlcmllcyBkb2VzIGlzIG1ha2UgYm90aCBkcml2
+ZXJzIHdvcmsgd2l0aCB0aGUgc2FtZSBrZXJuZWwKPj4+PiBpbWFnZSBhbmQgdHVybnMgdGhlIGNo
+b2ljZSBpbnRvIGEgYm9hcmQtbGV2ZWwgZHRiIGRlY2lzaW9uLiBTdXBwb3J0aW5nCj4+Pj4gZXZl
+cnl0aGluZyBhdCBvbmNlIHNlZW1zIGRlc2lyYWJsZSB0byBtZSBhbmQgaXQgYWxsb3dzIGZvciBh
+IHZlcnkKPj4+PiBzbW9vdGggdXBncmFkZSBwYXRoLgo+Pj4KPj4+IEhhdmluZyB0d28gZHJpdmVy
+cyBpbiB0aGUga2VybmVsIHdpdGggZGlmZmVyZW50IHNldCBvZiBidWdzIGlzIGFsd2F5cyBiYWQu
+Cj4+Pgo+Pj4+IFRoZSBvbGQgZHJpdmVyIGNvdWxkIGJlIHJlbW92ZWQgbGF0ZXIsIGFmdGVyIGFs
+bCB1c2VycyBhcmUgY29udmVydGVkLgo+Pj4KPj4+IEJvdGggZHJpdmVycyB3ZXJlIGluIGZvciBs
+b25nIGVub3VnaCBhbHJlYWR5LiBBbmQgbGV0J3MgYmUgcmVhbGlzdGljLAo+Pj4gaG93IG1hbnkg
+TVgyMy9NWDI4IHVzZXJzIG9mIG9sZCBEVHMgd2l0aCBuZXcga2VybmVscyBhcmUgdGhlcmUgd2hv
+Cj4+PiBjYW5ub3QgdXBkYXRlIHRoZSBEVCBhcyB3ZWxsID8KPj4KPj4gR3JlcHBpbmcgZm9yICJk
+aXNwbGF5ID0iIGluIGFyY2gvYXJtL2Jvb3QvZHRzL2lteCogSSBzZWUgdGhhdCBvbGQKPj4gYmlu
+ZGluZ3MgYXJlIGFsc28gdXNlZCBieSAzcmQtcGFydHkgYm9hcmRzIGZvciBpbXg2Lzc6Cj4+ICAq
+IGlteDZzeC1uaXRyb2dlbjZzeAo+PiAgKiBpbXg2dWwtZ2VhbQo+PiAgKiBpbXg2dWwtaXNpb3QK
+Pj4gICogaW14NnVsLW9wb3M2dWxkZXYKPj4gICogaW14NnVsLXBpY28taG9iYml0Cj4+ICAqIGlt
+eDZ1bC10eDZ1bAo+PiAgKiBpbXg3ZC1uaXRyb2dlbjcKPiAKPiBFciwgeWVzLCBhIGhhbmRmdWwg
+b2YgYm9hcmRzIHdoaWNoIGNvdWxkIGJlIHVwZGF0ZWQgOikKPiAKPj4gQ29udmVydGluZyBldmVy
+eXRoaW5nIG1pZ2h0IGJlIHF1aXRlIGEgYml0IG9mIHdvcmssIGFuZCBleHBsaWNpdGx5Cj4+IHN1
+cHBvcnRpbmcgb2xkIGJpbmRpbmdzIGlzIGFsc28gd29yay4KPiAKPiBEb2VzIGFkZGluZyBzdXBw
+b3J0IGZvciBvbGQgYmluZGluZ3MganVzdGlmeSB0aGUgZWZmb3J0IGludmVzdGVkID8gSQo+IGRv
+dWJ0IHNvLCBpdCBvbmx5IGFkZHMgbW9yZSBjb2RlIHRvIG1haW50YWluLgo+IAo+PiBJdCBpcyB2
+ZXJ5IGNvbmZ1c2luZyB0aGF0IHRoZXJlIGlzIGEgd2hvbGUgc2V0IG9mIGRpc3BsYXlzIGZvciBp
+bXg2LzcKPj4gd2hpY2ggYXJlIHN1cHBvcnRlZCBieSB1cHN0cmVhbSBidXQgb25seSB3aXRoIGEg
+bm9uLWRlZmF1bHQgY29uZmlnLgo+PiBXaGlsZSBpdCBpcyBleHRyZW1lbHkgY29tbW9uIGluIHRo
+ZSBlbWJlZGRlZCBmaWVsZCB0byBoYXZlIGN1c3RvbQo+PiBjb25maWdzIHRoZSBkZWZhdWx0IG9u
+ZSBpbiB0aGUga2VybmVsIHNob3VsZCB0cnkgdG8gImp1c3Qgd29yayIuCj4+Cj4+IENvdWxkbid0
+IHRoaXMgcGF0Y2ggc2VyaWVzIGJlIGNvbnNpZGVyZWQgYSBidWdmaXg/IEl0IHdhcyBhbHNvCj4+
+IHN1cnByaXNpbmdseSBzbWFsbC4KPiAKPiBJIHRoaW5rIGl0J3MganVzdCBhIHdvcmthcm91bmQg
+d2hpY2ggYWxsb3dzIHlvdSB0byBwb3N0cG9uZSB0aGUgcmVhbAo+IGZpeCwgYW5kIEkgZG9uJ3Qg
+bGlrZSB0aGF0LgoKVGhpcyBpcyBvbmUgb2YgdGhlIHNpdHVhdGlvbiB3aGVyZSBzdGF0ZXMgcXVv
+IGlzIGtpbmRhIHRoZSB3b3JzdApzaXR1YXRpb24uCgpDdXJyZW50bHkgaW14X3Y2X3Y3X2RlZmNv
+bmZpZyBhbmQgbXhzX2RlZmNvbmZpZyBhY3R1YWxseSBzdGlsbCB1c2VzCkNPTkZJR19GQl9NWFMu
+CgpJIHVuZGVyc3RhbmQgdGhhdCB5b3UnZCByYXRoZXIgcHJlZmVyIHRvIG1vdmUgZm9yd2FyZC4g
+SSBzdWdnZXN0IHdlIGRvCml0IGluIHN0ZXBzLgoKSW4gNC4xOToKCi0gQ2hhbmdlIERSTSBkcml2
+ZXIubmFtZSB0byBteHNmYi1kcm0gc28gd2UgYXZvaWQgY29uZmxpY3RzIGZvciBub3cKLSBSZW1v
+dmUgQ09ORklHX0ZCX01YUyBmcm9tIGlteF92Nl92N19kZWZjb25maWcvbXhzX2RlZmNvbmZpZyBu
+b3csIGFuZApvbmx5IGVuYWJsZSBDT05GSUdfRFJNX01YU0ZCPXkKLSBBZGQgKGRlcHJlY2F0ZWQp
+IHRvIENPTkZJR19GQl9NWFMKCkluIDQuMTkvNC4yMDoKLSBGaXggdGhlIGFib3ZlIGRldmljZSB0
+cmVlcwoKSW4gNC4yMC80LjIxOgotIFJlbW92ZSBGQl9NWFMKCkRvZXMgdGhhdCBzb3VuZCByZWFz
+b25hYmxlPyBJZiB5ZXMsIEkgY2FuIHNlbmQgdGhlIHBhdGNoIHNldCB0byBkbyBzdGVwCjEuCgot
+LQpTdGVmYW4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
