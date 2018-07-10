@@ -1,13 +1,13 @@
 From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v5 20/22] ARM: dts: sun7i-a20: Add Video Engine
+Subject: [PATCH v5 22/22] ARM: dts: sun8i-h3: Add Video Engine
  and reserved memory nodes
-Date: Tue, 10 Jul 2018 10:01:12 +0200
-Message-ID: <20180710080114.31469-21-paul.kocialkowski@bootlin.com>
+Date: Tue, 10 Jul 2018 10:01:14 +0200
+Message-ID: <20180710080114.31469-23-paul.kocialkowski@bootlin.com>
 References: <20180710080114.31469-1-paul.kocialkowski@bootlin.com>
 Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBDGQSHNAKGQEXJFCPEY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRBJWQSHNAKGQEG2QN3GI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180710080114.31469-1-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,24 +21,19 @@ Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob
 List-Id: devicetree@vger.kernel.org
 
 This adds nodes for the Video Engine and the associated reserved memory
-for the A20. Up to 96 MiB of memory are dedicated to the CMA pool.
-
-The VPU can only map the first 256 MiB of DRAM, so the reserved memory
-pool has to be located in that area. Following Allwinner's decision in
-downstream software, the last 96 MiB of the first 256 MiB of RAM are
-reserved for this purpose.
+for the H3. Up to 96 MiB of memory are dedicated to the CMA pool.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/sun7i-a20.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm/boot/dts/sun8i-h3.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 38999d791cb5..cb6e10196118 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -161,6 +161,21 @@
- 		reg = <0x40000000 0x80000000>;
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index c93f6be40533..02ed77b311e5 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -110,6 +110,20 @@
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
  	};
  
 +	reserved-memory {
@@ -46,7 +41,6 @@ index 38999d791cb5..cb6e10196118 100644
 +		#size-cells = <1>;
 +		ranges;
 +
-+		/* Address must be kept in the lower 256 MiBs of DRAM for VE. */
 +		cma_pool: cma@4a000000 {
 +			compatible = "shared-dma-pool";
 +			size = <0x6000000>;
@@ -56,28 +50,28 @@ index 38999d791cb5..cb6e10196118 100644
 +		};
 +	};
 +
- 	timer {
- 		compatible = "arm,armv7-timer";
- 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-@@ -466,6 +481,19 @@
+ 	soc {
+ 		system-control@1c00000 {
+ 			compatible = "allwinner,sun8i-h3-system-control",
+@@ -134,6 +148,19 @@
  			};
  		};
  
-+		vpu: video-codec@1c0e000 {
-+			compatible = "allwinner,sun7i-a20-video-engine";
++		vpu: video-codec@01c0e000 {
++			compatible = "allwinner,sun8i-h3-video-engine";
 +			reg = <0x01c0e000 0x1000>;
 +
-+			clocks = <&ccu CLK_AHB_VE>, <&ccu CLK_VE>,
++			clocks = <&ccu CLK_BUS_VE>, <&ccu CLK_VE>,
 +				 <&ccu CLK_DRAM_VE>;
 +			clock-names = "ahb", "mod", "ram";
 +
-+			resets = <&ccu RST_VE>;
-+			interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
++			resets = <&ccu RST_BUS_VE>;
++			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
 +			allwinner,sram = <&ve_sram 1>;
 +		};
 +
- 		mmc0: mmc@1c0f000 {
- 			compatible = "allwinner,sun7i-a20-mmc";
- 			reg = <0x01c0f000 0x1000>;
+ 		mali: gpu@1c40000 {
+ 			compatible = "allwinner,sun8i-h3-mali", "arm,mali-400";
+ 			reg = <0x01c40000 0x10000>;
 -- 
 2.17.1
