@@ -1,46 +1,132 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 20/22] ARM: dts: sun7i-a20: Add Video
- Engine and reserved memory nodes
-Date: Tue, 10 Jul 2018 11:23:10 +0200
-Message-ID: <20180710092310.2hzoc7shmfykr3n5@flea>
-References: <20180710080114.31469-1-paul.kocialkowski@bootlin.com>
- <20180710080114.31469-21-paul.kocialkowski@bootlin.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 2/3] dt-bindings: clk: meson-g12a: Add G12A EE Clock
+ Bindings
+Date: Tue, 10 Jul 2018 11:26:14 +0200
+Message-ID: <1531214774.2708.49.camel@baylibre.com>
+References: <1531134767-29927-1-git-send-email-jian.hu@amlogic.com>
+         <1531134767-29927-3-git-send-email-jian.hu@amlogic.com>
+         <CAFBinCB6LS=PT1cw-j-LZ+vWo-RFe81qVZ6uLeGfWKtKfHz7ag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mu7kkrbfxwnu6dth"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBCPWSHNAKGQEBNGCL7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180710080114.31469-21-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Keiichi Watanabe <keiichiw-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tom Saeger <tom.saeger-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Jaco
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFBinCB6LS=PT1cw-j-LZ+vWo-RFe81qVZ6uLeGfWKtKfHz7ag@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, jian.hu@amlogic.com
+Cc: Neil Armstrong <narmstrong@baylibre.com>, qianggui.song@amlogic.com, devicetree@vger.kernel.org, sboyd@kernel.org, khilman@baylibre.com, mturquette@baylibre.com, yixun.lan@amlogic.com, linux-kernel@vger.kernel.org, bo.yang@amlogic.com, qiufang.dai@amlogic.com, linux-arm-kernel@lists.infradead.org, carlo@caione.org, linux-amlogic@lists.infradead.org, sunny.luo@amlogic.com, linux-clk@vger.kernel.org, xingyu.chen@amlogic.com
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2018-07-10 at 00:13 +0200, Martin Blumenstingl wrote:
+> On Mon, Jul 9, 2018 at 1:13 PM Jian Hu <jian.hu@amlogic.com> wrote:
+> > 
+> > Add dt-bindings headers for the Meson-G12A's Everything-Else
+> > part clock controller.
+> 
+> I wonder if this should be folded into patch #1 along with an update
+> to Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt so
+> it's clear which header has to be used for G12A
+> 
 
---mu7kkrbfxwnu6dth
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Yes, please squash patch 1 and 2.
 
-On Tue, Jul 10, 2018 at 10:01:12AM +0200, Paul Kocialkowski wrote:
-> +		vpu: video-codec@1c0e000 {
-> +			compatible = "allwinner,sun7i-a20-video-engine";
-> +			reg = <0x01c0e000 0x1000>;
-> +
+> > 
+> > Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> > ---
+> >  include/dt-bindings/clock/g12a-clkc.h | 93 +++++++++++++++++++++++++++++++++++
+> >  1 file changed, 93 insertions(+)
+> >  create mode 100644 include/dt-bindings/clock/g12a-clkc.h
+> > 
+> > diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
+> > new file mode 100644
+> > index 0000000..1473225
+> > --- /dev/null
+> > +++ b/include/dt-bindings/clock/g12a-clkc.h
+> > @@ -0,0 +1,93 @@
+> > +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+> > +/*
+> > + * Meson-G12A clock tree IDs
+> > + *
+> > + * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
+> > + */
+> > +
+> > +#ifndef __G12A_CLKC_H
+> > +#define __G12A_CLKC_H
+> > +
+> > +#define CLKID_SYS_PLL                          0
+> > +#define CLKID_FIXED_PLL                                1
+> > +#define CLKID_FCLK_DIV2                                2
+> > +#define CLKID_FCLK_DIV3                                3
+> > +#define CLKID_FCLK_DIV4                                4
+> > +#define CLKID_FCLK_DIV5                                5
+> > +#define CLKID_FCLK_DIV7                                6
+> > +#define CLKID_GP0_PLL                          7
 
-The issue is here with all your patches, but you should drop the node
-label and the extra new line.
+Please fix the alignement.
 
-Maxime
+> > +#define CLKID_CLK81                                    10
+> > +#define CLKID_MPLL0                                    11
+> > +#define CLKID_MPLL1                                    12
+> > +#define CLKID_MPLL2                                    13
+> > +#define CLKID_MPLL3                                    14
+> > +#define CLKID_DDR                                      15
+> > +#define CLKID_DOS                                      16
+> > +#define CLKID_AUDIO_LOCKER                     17
+> > +#define CLKID_MIPI_DSI_HOST                    18
+> > +#define CLKID_ETH_PHY                          19
+> > +#define CLKID_ISA                                      20
+> > +#define CLKID_PL301                                    21
+> > +#define CLKID_PERIPHS                          22
+> > +#define CLKID_SPICC0                           23
+> > +#define CLKID_I2C                                      24
+> > +#define CLKID_SANA                                     25
+> > +#define CLKID_SD                                       26
+> > +#define CLKID_RNG0                                     27
+> > +#define CLKID_UART0                                    28
+> > +#define CLKID_SPICC1                           29
+> > +#define CLKID_HIU_IFACE                                30
+> > +#define CLKID_MIPI_DSI_PHY                     31
+> > +#define CLKID_ASSIST_MISC                      32
+> > +#define CLKID_SD_EMMC_A                                33
+> > +#define CLKID_SD_EMMC_B                                34
+> > +#define CLKID_SD_EMMC_C                                35
+> > +#define CLKID_AUDIO_CODEC                      36
+> > +#define CLKID_AUDIO                                    37
+> > +#define CLKID_ETH                                      38
+> > +#define CLKID_DEMUX                                    39
+> > +#define CLKID_AUDIO_IFIFO                      40
+> > +#define CLKID_ADC                                      41
+> > +#define CLKID_UART1                                    42
+> > +#define CLKID_G2D                                      43
+> > +#define CLKID_RESET                                    44
+> > +#define CLKID_PCIE_COMB                                45
+> > +#define CLKID_PARSER                           46
+> > +#define CLKID_USB                                      47
+> > +#define CLKID_PCIE_PHY                         48
+> > +#define CLKID_AHB_ARB0                         49
+> > +#define CLKID_AHB_DATA_BUS                     50
+> > +#define CLKID_AHB_CTRL_BUS                     51
+> > +#define CLKID_HTX_HDCP22                       52
+> > +#define CLKID_HTX_PCLK                         53
+> > +#define CLKID_BT656                                    54
+> > +#define CLKID_USB1_DDR_BRIDGE          55
+> > +#define CLKID_MMC_PCLK                         56
+> > +#define CLKID_UART2                                    57
+> > +#define CLKID_VPU_INTR                         58
+> > +#define CLKID_GIC                                      59
+> > +#define CLKID_SD_EMMC_B_CLK0           60
+> > +#define CLKID_SD_EMMC_C_CLK0           61
+> > +#define CLKID_HIFI_PLL                         71
+> > +
+> 
+> is this empty line here on purpose? a comment would be great if
+> there's a reason behind it (there's already a gap in the numbering
+> between CLKID_GP0_PLL and CLKID_CLK81, but there's no empty line there
+> - either way is fine, please just keep it consistent)
 
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---mu7kkrbfxwnu6dth--
+Please drop the empty line.
+Otherwise, looks good.
+
+> 
+> 
+> Regards
+> Martin
