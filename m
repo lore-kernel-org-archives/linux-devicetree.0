@@ -1,88 +1,101 @@
-From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 02/22] fixup! v4l2-ctrls: add
- v4l2_ctrl_request_hdl_find/put/ctrl_find functions
-Date: Tue, 10 Jul 2018 10:21:09 +0200
-Message-ID: <c5e337620887838c2de702888bbed755f2c1d868.camel@bootlin.com>
-References: <20180710080114.31469-1-paul.kocialkowski@bootlin.com>
-	 <20180710080114.31469-3-paul.kocialkowski@bootlin.com>
-	 <CAMuHMdVgJuK5G0+szV0BAWDBybxWV0iDWE5kZKuTdgNiGjpnEg@mail.gmail.com>
-	 <5adf8a6aa70fd6f7f4326ccb068b66d6221d8d8b.camel@bootlin.com>
-	 <eb5fb671-4589-e0cf-5385-84a5cc912905@xs4all.nl>
-Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v2] Add DT support for Octavo Systems OSD3358-SM-RED
+ based on TI AM335x
+Date: Tue, 10 Jul 2018 09:26:24 +0100
+Message-ID: <20180710082624.GA16036@n2100.armlinux.org.uk>
+References: <20180706200051.1115-1-neeraj.dantu@octavosystems.com>
+ <20180709114304.GE6920@n2100.armlinux.org.uk>
+ <CADO55X8_tbz-O8AuHwqCGnV0g2oDiGHzAug6g3PFqRth5U2H=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-tr9K18b3srFCX1uet9wE"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBAOZSHNAKGQEJHICAWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <eb5fb671-4589-e0cf-5385-84a5cc912905-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN
- FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, marco.franchi-3arQi8VN3Tc@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, keiichiw-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tom.saeger-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, jaco
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CADO55X8_tbz-O8AuHwqCGnV0g2oDiGHzAug6g3PFqRth5U2H=w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neeraj Kumar Reddy Dantu <dantuguf14105@gmail.com>
+Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Jason Kridner <jkridner@gmail.com>, Neeraj Dantu <neeraj.dantu@octavosystems.com>, linux-omap@vger.kernel.org, Robert Nelson <robertcnelson@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---=-tr9K18b3srFCX1uet9wE
-Content-Type: text/plain; charset="UTF-8"
-
-Hi,
-
-On Tue, 2018-07-10 at 10:17 +0200, Hans Verkuil wrote:
-> On 10/07/18 10:13, Paul Kocialkowski wrote:
-> > Hi,
-> > 
-> > On Tue, 2018-07-10 at 10:07 +0200, Geert Uytterhoeven wrote:
-> > > On Tue, Jul 10, 2018 at 10:02 AM Paul Kocialkowski
-> > > <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > > [PATCH v5 02/22] fixup! v4l2-ctrls: add v4l2_ctrl_request_hdl_find/put/ctrl_find functions
-> > > 
-> > > git rebase -i ;-)
-> > 
-> > Although I should have mentionned it (and did not), this is totally
-> > intentional! The first patch (from Hans Verkuil) requires said fixup to
-> > work properly. I didn't want to squash that change into the commit to
-> > make the diff obvious.
+On Mon, Jul 09, 2018 at 02:45:17PM -0500, Neeraj Kumar Reddy Dantu wrote:
+>  > This should not be "tda19988" as the node name - DT requires generic
+> > names, like "hdmi-encoder".
 > 
-> Just squash the two for the next version you post.
-
-That works for me! I must admit I was rather unsure this was a sensible
-way to do things.
-
-> > Ultimately, this framework patch is not really part of the series but is
-> > one of its underlying requirements, that should be merged separately (as
-> > part of the requests API series).
+> Thanks.Will fix in v3
 > 
-> There is a good chance that this patch will go in via your series anyway
-> since it is not needed by vivid or vim2m.
+> > Can you set 24-bit RGB mode with the above configuration - presumably
+> > the colours will come out wrong?
+> > Exactly what is the wiring between the lcdc and tda998x?
+> 
+> You can set mapping for lcd interface between pins with video-ports. See
+> TDA19988 datasheet, Table 4:
+> https://media.digikey.com/pdf/Data%20Sheets/NXP%20PDFs/TDA19988_DS_21_july_2011.pdf
+> .
+> The property is optional and not used in the board. DT bindings:
+> https://www.kernel.org/doc/Documentation/devicetree/bindings/display/bridge/tda998x.txt
+> 
+> This board uses 15 pin RGB565 interface.
 
-Alright, I will keep it around then.
+As maintainer of the TDA998x driver, I know what the TDA998x is
+capable of, I already have the datasheets, and I know the binding
+document.
 
-Cheers,
+What I'm asking about is about the specifics of your board's
+implementation and why you've written what you have in your DT
+file.  You haven't answered my specific questions either.
 
-Paul
-
+> 
 > Regards,
+> Neeraj
 > 
-> 	Hans
+> On Mon, Jul 9, 2018 at 6:43 AM Russell King - ARM Linux <
+> linux@armlinux.org.uk> wrote:
 > 
-> > 
-> > I hope this clears up some of the confusion about this patch :)
-> > 
-> > Cheers!
-> > 
-> > > Gr{oetje,eeting}s,
-> > > 
-> > >                         Geert
-> > > 
-> 
-> 
+> > On Fri, Jul 06, 2018 at 08:00:51PM +0000, Neeraj Dantu wrote:
+> > > +&lcdc {
+> > > +     status = "okay";
+> > > +
+> > > +     /* If you want to get 24 bit RGB and 16 BGR mode instead of
+> > > +      * current 16 bit RGB and 24 BGR modes, set the propety
+> > > +      * below to "crossed" and uncomment the video-ports -property
+> > > +      * in tda19988 node.
+> > > +      */
+> > > +     blue-and-red-wiring = "straight";
+> > ...
+> > > +&i2c0 {
+> > > +     tda19988: tda19988 {
+> >
+> > This should not be "tda19988" as the node name - DT requires generic
+> > names, like "hdmi-encoder".
+> >
+> > ...
+> > > +             /* Convert 24bit BGR to RGB, e.g. cross red and blue
+> > wiring */
+> > > +             /* video-ports = <0x234501>; */
+> >
+> > Please explain more what's going on here.
+> >
+> > Can you set 24-bit RGB mode with the above configuration - presumably
+> > the colours will come out wrong?
+> >
+> > Exactly what is the wiring between the lcdc and tda998x?
+> >
+> > --
+> > RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+> > FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps
+> > up
+> > According to speedtest.net: 13Mbps down 490kbps up
+> >
+
 -- 
-Paul Kocialkowski, Bootlin (formerly Free Electrons)
-Embedded Linux and kernel engineering
-https://bootlin.com
---=-tr9K18b3srFCX1uet9wE--
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps up
+According to speedtest.net: 13Mbps down 490kbps up
