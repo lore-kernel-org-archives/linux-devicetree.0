@@ -1,15 +1,15 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v5 11/22] ARM: sun5i: Add support for the C1
- SRAM region with the SRAM controller
-Date: Tue, 10 Jul 2018 22:56:23 +0800
-Message-ID: <CAGb2v65swXpLwAo3M9X=MJeVmUrjT=FPFZxp=eCzMrfopqHKjA@mail.gmail.com>
-References: <20180710080114.31469-1-paul.kocialkowski@bootlin.com> <20180710080114.31469-12-paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v5 10/22] ARM: dts: sun7i-a20: Use
+ most-qualified system control compatibles
+Date: Tue, 10 Jul 2018 22:54:30 +0800
+Message-ID: <CAGb2v67APUGDu=KM8opavOEKCjorXRyzshdqzZAifPkQzJHNjQ@mail.gmail.com>
+References: <20180710080114.31469-1-paul.kocialkowski@bootlin.com> <20180710080114.31469-11-paul.kocialkowski@bootlin.com>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBFMVSPNAKGQE3LGHWFQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBHMVSPNAKGQEWPRWM4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180710080114.31469-12-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20180710080114.31469-11-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -22,15 +22,17 @@ List-Id: devicetree@vger.kernel.org
 
 On Tue, Jul 10, 2018 at 4:01 PM, Paul Kocialkowski
 <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> This switches the sun7i-a20 dtsi to use the most qualified compatibles
+> for the system-control block (previously named SRAM controller) as well
+> as the SRAM blocks. The sun4i-a10 compatibles are kept since these
+> hardware blocks are backward-compatible.
 >
-> This adds support for the C1 SRAM region (to be used with the SRAM
-> controller driver) for sun5i-based platforms. The region is shared
-> between the Video Engine and the CPU.
+> The phandle for system control is also updated to reflect the fact that
+> the controller described is really about system control rather than SRAM
+> control.
 >
-> Signed-off-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
 Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-But again, see discussion about SRAM compatibles.
+But see discussion about the SRAM mapping compatibles.
