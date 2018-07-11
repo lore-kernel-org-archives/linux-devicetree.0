@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 13/22] ARM: sun8i-a23-a33: Add SRAM
- controller node and C1 SRAM region
-Date: Wed, 11 Jul 2018 11:14:06 +0200
-Message-ID: <20180711091405.mkhzamcmimhofryo@flea>
+Subject: Re: [PATCH v5 14/22] ARM: sun8i-h3: Add SRAM controller
+ node and C1 SRAM region
+Date: Wed, 11 Jul 2018 11:15:43 +0200
+Message-ID: <20180711091543.f36t3llqz6ptlcir@flea>
 References: <20180710080114.31469-1-paul.kocialkowski@bootlin.com>
- <20180710080114.31469-14-paul.kocialkowski@bootlin.com>
+ <20180710080114.31469-15-paul.kocialkowski@bootlin.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="7gn7zc3tutiqnnqt"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBYEUS7NAKGQEJPS5HUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="rg7scobloivjv74w"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQEVS7NAKGQE6OVOISI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180710080114.31469-14-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20180710080114.31469-15-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,25 +24,21 @@ Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY7
 List-Id: devicetree@vger.kernel.org
 
 
---7gn7zc3tutiqnnqt
+--rg7scobloivjv74w
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Tue, Jul 10, 2018 at 10:01:05AM +0200, Paul Kocialkowski wrote:
-> From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+On Tue, Jul 10, 2018 at 10:01:06AM +0200, Paul Kocialkowski wrote:
+> This adds a SRAM controller node for the H3, with support for the C1
+> SRAM region that is shared between the Video Engine and the CPU.
 > 
-> This adds a SRAM controller node for the A23 and A33, with support for
-> the C1 SRAM region that is shared between the Video Engine and the CPU.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
-Fixed the compatible and the commit prefix and applied.
-
+Fixed the commit prefix and the compatible and applied, thanks!
 Maxime
 
 -- 
 Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
---7gn7zc3tutiqnnqt--
+--rg7scobloivjv74w--
