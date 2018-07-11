@@ -1,95 +1,125 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 1/2] ARM: dts: arria10: update NAND clocking
-Date: Wed, 11 Jul 2018 11:43:46 +0900
-Message-ID: <CAK7LNATNjPuGmzA_mS+yvVC8TpPsvQNvKedJ6emt114xGy7m3Q@mail.gmail.com>
-References: <1531176063-30140-1-git-send-email-dinguyen@kernel.org>
- <CAK7LNARAVSK5VY=_RfO2PXJCAnXJN3sXoAY=ijSwVojeo=c66w@mail.gmail.com>
- <b33d18b2-1956-50a4-9a3f-6d2a0abd4b81@kernel.org>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v4 0/6] Add Actions Semiconductor Owl S900 I2C support
+Date: Wed, 11 Jul 2018 08:15:02 +0530
+Message-ID: <20180711024502.GA4739@Mani-XPS-13-9360>
+References: <20180701172305.15663-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <b33d18b2-1956-50a4-9a3f-6d2a0abd4b81@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dinh Nguyen <dinguyen@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Marek Vasut <marex@denx.de>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180701172305.15663-1-manivannan.sadhasivam@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wsa@the-dreams.de, peda@axentia.se
+Cc: linus.walleij@linaro.org, linux-i2c@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, afaerber@suse.de
 List-Id: devicetree@vger.kernel.org
 
-MjAxOC0wNy0xMCAyMjozNSBHTVQrMDk6MDAgRGluaCBOZ3V5ZW4gPGRpbmd1eWVuQGtlcm5lbC5v
-cmc+Ogo+Cj4KPiBPbiAwNy8wOS8yMDE4IDA4OjMxIFBNLCBNYXNhaGlybyBZYW1hZGEgd3JvdGU6
-Cj4+IDIwMTgtMDctMTAgNzo0MSBHTVQrMDk6MDAgRGluaCBOZ3V5ZW4gPGRpbmd1eWVuQGtlcm5l
-bC5vcmc+Ogo+Pj4gVGhlIE5BTkQgSVAgbmVlZHMgMiBjbG9ja3MobmFuZF94X2NsayBhbmQgbmFu
-ZF9jbGspLiBUaGlzIHBhdGNoIGFkZHMgYQo+Pj4gbmFuZF94X2Nsaywgd2hpY2ggaXMgZGVyaXZl
-ZCBmcm9tIHRoZSBuYW5kX2NsaywgYnV0IGhhcyBhIGZpeGVkIGRpdmlkZXIKPj4+IG9mIDQuCj4+
-Pgo+Pj4gVXBkYXRlIHRoZSBOQU5EIG5vZGUgdG8gdXNlIHRoZSBhZGRpdGlvbmFsIGNsb2NrLgo+
-Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IERpbmggTmd1eWVuIDxkaW5ndXllbkBrZXJuZWwub3JnPgo+
-Pj4gLS0tCj4+PiAgYXJjaC9hcm0vYm9vdC9kdHMvc29jZnBnYV9hcnJpYTEwLmR0c2kgfCAxMyAr
-KysrKysrKysrKy0tCj4+PiAgMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyksIDIgZGVs
-ZXRpb25zKC0pCj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3NvY2ZwZ2Ff
-YXJyaWExMC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvc29jZnBnYV9hcnJpYTEwLmR0c2kKPj4+
-IGluZGV4IGE0ZGNiNjguLjU1OGI1ZWEgMTAwNjQ0Cj4+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0
-cy9zb2NmcGdhX2FycmlhMTAuZHRzaQo+Pj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc29jZnBn
-YV9hcnJpYTEwLmR0c2kKPj4+IEBAIC0zNzcsMTMgKzM3NywyMSBAQAo+Pj4gICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xrLWdhdGUgPSA8MHhDOCAxMT47
-Cj4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPj4+Cj4+PiAt
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbmFuZF9jbGs6IG5hbmRfY2xr
-IHsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBuYW5kX3hfY2xr
-OiBuYW5kX3hfY2xrIHsKPj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICNjbG9jay1jZWxscyA9IDwwPjsKPj4+ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYWx0cixzb2NmcGdhLWExMC1n
-YXRlLWNsayI7Cj4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBjbG9ja3MgPSA8Jmw0X21wX2Nsaz47Cj4+PiAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBjbGstZ2F0ZSA9IDwweEM4IDEwPjsKPj4+ICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+Pj4KPj4+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBuYW5kX2NsazogbmFuZF9jbGsgewo+Pj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI2Nsb2NrLWNlbGxzID0g
-PDA+Owo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-Y29tcGF0aWJsZSA9ICJhbHRyLHNvY2ZwZ2EtYTEwLWdhdGUtY2xrIjsKPj4+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmbmFuZF94X2Ns
-az47Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBm
-aXhlZC1kaXZpZGVyID0gPDQ+Owo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgY2xrLWdhdGUgPSA8MHhDOCAxMD47Cj4+PiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgfTsKPj4+ICsKPj4+ICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBzcGlfbV9jbGs6IHNwaV9tX2NsayB7Cj4+PiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjY2xvY2stY2VsbHMgPSA8MD47
-Cj4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21w
-YXRpYmxlID0gImFsdHIsc29jZnBnYS1hMTAtZ2F0ZS1jbGsiOwo+Pj4gQEAgLTY1MCw3ICs2NTgs
-OCBAQAo+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgcmVnLW5hbWVzID0gIm5hbmRfZGF0YSIs
-ICJkZW5hbGlfcmVnIjsKPj4+ICAgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8
-MCA5OSA0PjsKPj4+ICAgICAgICAgICAgICAgICAgICAgICAgIGRtYS1tYXNrID0gPDB4ZmZmZmZm
-ZmY+Owo+Pj4gLSAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZuYW5kX2Nsaz47Cj4+
-PiArICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8Jm5hbmRfY2xrPiwgPCZuYW5kX3hf
-Y2xrPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gIm5hbmQiLCAi
-bmFuZF94IjsKPj4KPj4KPj4gRG9lc24ndCBTT0NGUEdBIHJlYWxseSBuZWVkIHRoZSBFQ0MgY2xv
-Y2s/Cj4+Cj4KPiBJIGRvbid0IHNlZSBhbnkgbWVudGlvbnMgb2YgYW4gRUNDIGNsb2NrIGluIGFu
-eSBvZiB0aGUgU29DRlBHQQo+IGRvY3VtZW50YXRpb24gZm9yIHRoZSBOQU5EIElQLgoKCkknZCBs
-aWtlIHlvdSB0byBjaGVjayB0aGUgSVAgZG9jdW1lbnRhdGlvbgpwdWJsaXNoZWQgYnkgRGVuYWxp
-IChvciBDYWRlbmNlKSwKbm90IHB1Ymxpc2hlZCBieSBBbHRlcmEuCgpJcyBpdCBhdmFpbGFibGUg
-Zm9yIHlvdT8KCgoKSW4gbXkgU29DcywgdGhlIHNhbWUgY2xvY2sgc2lnbmFsIChuYW5kLWNsay0y
-MDBtKQppcyBjb25uZWN0ZWQgdG8gY2xrX3ggYW5kIGVjY19jbGssIGxpa2UgdGhpczoKCiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0tLS0tLS0tLQotLS0tLS0t
-LS0tLS0tLSAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgREVOQUxJIElQIHwKfCAgICAgICAg
-ICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgICAgICAgICB8CnwgY2xrICAgICAg
-ICB8LS0tKG5hbmQtY2xrLTUwbSktLS0tLS0tLS0+fCBjbGsgICAgICAgfAp8IGNvbnRyb2xsZXIg
-fCAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAgIHwKfCAgICAgICAgICAgIHwt
-LS0obmFuZC1jbGstMjAwbSktLS0tLS0tLT58IGNsa194ICAgICB8Ci0tLS0tLS0tLS0tLS0t44CA
-ICAgICAgICAgICAgICAgICAgICAgIHwgICB8ICAgICAgICAgICB8CiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAtLS0+fCBlY2NfY2xrICAgfAogICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAgIHwKICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAtLS0tLS0tLS0tLS0tCgoKU29tZSBjbG9jayBsaW5lcyBhcmUg
-b2Z0ZW4gdGllZC11cCwKYnV0IHN1Y2ggbG93LWxldmVsIGluZm9ybWF0aW9uIGRvZXMgbm90IGFw
-cGVhciBpbgp1c2VyIGRvY3VtZW50cy4KSSB0YWxrZWQgdG8gYSBoYXJkd2FyZSBlbmdpbmVlciB0
-byBnZXQgdGhpcyBpbmZvcm1hdGlvbi4KCgoKSSBndWVzcyB0aGUgc2l0dWF0aW9uIGlzIHNpbWls
-YXIgZm9yIHlvdXIgY2FzZSwKYnV0IEkgZG8gbm90IGhhdmUgaW5mb3JtYXRpb24gZW5vdWdoIHRv
-IGFyZ3VlIHRoaXMuCgoKLS0gCkJlc3QgUmVnYXJkcwpNYXNhaGlybyBZYW1hZGEKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwg
-bWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Sun, Jul 01, 2018 at 10:52:59PM +0530, Manivannan Sadhasivam wrote:
+> This patchset adds I2C controller support for Actions Semiconductor S900 SoC.
+> This driver has been structured in a way such that there will be only
+> one controller driver for the whole Owl family series (S500, S700 and
+> S900 SoCs).
+> 
+> There are 6 I2C controllers with separate memory mapped register space.
+> The I2C controller can handle atmost two messages concatenated by a
+> repeated start via its internal address feature. Hence the driver
+> uses this feature for messages of length greater than 1. In those cases,
+> the first message of the combined message should be a `write` with maximum
+> message length 6 and the second message's maximum length should be 240 bytes.
+> 
+> As far as the bus speed is concerned, this driver only supports
+> Standard (100KHz) and High speed (400KHz) for now.
+> 
+> The pinctrl definitions are only available for I2C0, I2C1 and I2C2.
+> With the mux option available only for I2C0.
+> 
+> For Bubblegum-96 board utilizing the S900 SoC, only I2C1 and I2C2 which
+> are exposed on the Low speed expansion connector are enabled.
+> 
+> This series depends on the pinctrl patch [1] is still not merged by the
+> platform maintainer Andreas but it has been reviewed by the pinctrl maintainer
+> Linus Walleij. For the reference, I have queued up all reviewed dts patches
+> in my tree [2] from which Andreas is picking them for 4.19.
+> 
+> For this series, since the dts patches will go through the ARM SoC tree,
+> Andreas will pick it up once it is reviewed.
+> 
+> Thanks,
+> Mani
+> 
+> [1] https://patchwork.kernel.org/patch/10322937/
+> [2] https://git.linaro.org/people/manivannan.sadhasivam/linux.git/log/?h=s900-for-next
+> 
+
+Hi Andy, Peter,
+
+Just a gentle ping on this v4!
+
+Thanks,
+Mani
+
+> Changes in v4:
+> 
+> As per Andy and Peter review:
+> 
+> * Used spinlock for accessing most of the register access (only parts
+>   involved sleep/long-busy-wait has been excluded)
+> * Removed returning 0 and added -ENXIO if the msg_ptr not equals to
+>   message length
+> * Added DIV_ROUND_UP for setting clock frequency
+> * Changed one non-atomic mdelay instance to usleep_range
+> * Moved pinctrl definition patch before dts patch
+> * Fixed the driver to support only 100KHz and 400KHz frequencies
+> 
+> Changes in v3:
+> 
+> As per Peter, Andy and Andreas review:
+> 
+> * Removed owl_i2c_reset function from interrupt handler since it
+>   involves the use of delays.
+> * Fixed the return path in owl_i2c_master_xfer and added a note
+> * Changed "base" parameter to "reg" in owl_i2c_update_reg for better
+>   understandability
+> * Ordered the includes in alphabetical order
+> * Small changes to defines and added comma at the end of struct members
+> * Removed rendundant 0 assignment in owl_i2c_master_xfer
+> * Changed all OWL naming convention to Owl and also changed Actions Semi
+>   naming to Actions Semiconductor
+> 
+> Changes in v2:
+> 
+> As per Andy's review:
+> * Modified infinite loops to fixed number of retries
+> * Used i2c_8bit_addr_from_msg for constructing the slave address
+> * Removed unnecessary parenthesis around defines
+> * Modified certain dev_warn to dev_dbg
+> * Modified the error handling to more generic pattern
+> 
+> * Fixed the return value in owl_i2c_master_xfer
+> * Added MAINTAINERS patch for I2C driver and its binding
+> 
+> Manivannan Sadhasivam (6):
+>   dt-bindings: i2c: Add binding for Actions Semiconductor Owl I2C
+>     controller
+>   arm64: dts: actions: Add pinctrl definition for S900 I2C controller
+>   arm64: dts: actions: Add Actions Semiconductor S900 I2C controller
+>     nodes
+>   arm64: dts: actions: Enable I2C1 and I2C2 in Bubblegum-96 board
+>   i2c: Add Actions Semiconductor Owl family S900 I2C driver
+>   MAINTAINERS: Add entry for Actions Semiconductor Owl I2C driver
+> 
+>  .../devicetree/bindings/i2c/i2c-owl.txt       |  27 +
+>  MAINTAINERS                                   |   2 +
+>  .../dts/actions/s900-bubblegum-96-pins.dtsi   |  29 +
+>  .../boot/dts/actions/s900-bubblegum-96.dts    |  11 +
+>  arch/arm64/boot/dts/actions/s900.dtsi         |  60 +++
+>  drivers/i2c/busses/Kconfig                    |   7 +
+>  drivers/i2c/busses/Makefile                   |   1 +
+>  drivers/i2c/busses/i2c-owl.c                  | 504 ++++++++++++++++++
+>  8 files changed, 641 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-owl.txt
+>  create mode 100644 arch/arm64/boot/dts/actions/s900-bubblegum-96-pins.dtsi
+>  create mode 100644 drivers/i2c/busses/i2c-owl.c
+> 
+> -- 
+> 2.17.1
+> 
