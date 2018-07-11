@@ -1,65 +1,107 @@
 From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v6 3/7] dt: qcom: 8996: thermal: Move to DT initialisation
-Date: Wed, 11 Jul 2018 11:39:23 -0700
-Message-ID: <CAD=FV=X3B3wKv3jNLM8f9YvdRNkp6CNF1JmE+bMTBnR4CMvyww@mail.gmail.com>
-References: <cover.1531135999.git.amit.kucheria@linaro.org> <ee06e59ae84a9b9013480c58bd4678e44d201a42.1531135999.git.amit.kucheria@linaro.org>
+Subject: Re: [PATCH v6 6/7] dt: thermal: tsens: Document the fallback DT
+ property for v2 of TSENS IP
+Date: Wed, 11 Jul 2018 11:42:19 -0700
+Message-ID: <CAD=FV=W-snhM9L9Ez-ypAJwn2NhNJ1X=s5wDvu-gbQvmLZY9Qg@mail.gmail.com>
+References: <cover.1531135999.git.amit.kucheria@linaro.org> <bf1147fa417314b2fbf5c0cfb682445587fe39bb.1531136000.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ee06e59ae84a9b9013480c58bd4678e44d201a42.1531135999.git.amit.kucheria@linaro.org>
+In-Reply-To: <bf1147fa417314b2fbf5c0cfb682445587fe39bb.1531136000.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
 On Mon, Jul 9, 2018 at 4:43 AM, Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> We also split up the regmap address space into two, one for the TM
-> registers, the other for the SROT registers. This was required to deal with
-> different address offsets for the TM and SROT registers across different
-> SoC families.
+> We want to create common code for v2 of the TSENS IP block that is used in
+> a large number of Qualcomm SoCs. "qcom,tsens-v2" should be able to handle
+> most of the common functionality start with a common get_temp() function.
+>
+> It is also necessary to split out the memory regions for the TM and SROT
+> register banks because their offsets are not constant across SoC families.
 
-The splitting into two regions is actually optional and that should
-probably be mentioned in the commit message.
-
-
-> Since tsens-common.c/init_common() currently only registers one address
-> space, the order is important (TM before SROT). This is OK since the code
-> doesn't really use the SROT functionality yet.
-
-Nowhere in the commit message does this say you're also adding a 2nd
-block of thermal sensors.  It seems like you should say that
-somewhere.
-
-...and it should also be obvious in ${SUBJECT}.
+nit that bindings should be earlier in the patch series than the code
+implementing the bindings.
 
 
 > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 > ---
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/thermal/qcom-tsens.txt     | 25 +++++++++++++++++-----
+>  1 file changed, 20 insertions(+), 5 deletions(-)
 >
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index 8c7f9ca..6c8a857 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -461,7 +461,17 @@
+> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> index 06195e8..8f963b1 100644
+> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> @@ -1,10 +1,16 @@
+>  * QCOM SoC Temperature Sensor (TSENS)
 >
->                 tsens0: thermal-sensor@4a8000 {
->                         compatible = "qcom,msm8996-tsens";
-> -                       reg = <0x4a8000 0x2000>;
-> +                       reg = <0x4a9000 0x1000>, /* TM */
-> +                             <0x4a8000 0x1000>; /* SROT */
+>  Required properties:
+> -- compatible :
+> - - "qcom,msm8916-tsens" : For 8916 Family of SoCs
+> - - "qcom,msm8974-tsens" : For 8974 Family of SoCs
+> - - "qcom,msm8996-tsens" : For 8996 Family of SoCs
+> +- compatible:
+> +  Must be one of the following:
+> +    - "qcom,msm8916-tsens" (MSM8916)
+> +    - "qcom,msm8974-tsens" (MSM8974)
+> +    - "qcom,msm8996-tsens" (MSM8996)
+> +    - "qcom,msm8998-tsens", "qcom,tsens-v2" (MSM8998)
+> +    - "qcom,sdm845-tsens", "qcom,tsens-v2" (SDM845)
+> +  The generic "qcom,tsens-v2" property must be used as a fallback for any SoC with
+> +  version 2 of the TSENS IP. MSM8996 is the only exception beacause the generic
+> +  property did not exist when support was added.
+>
+>  - reg: Address range of the thermal registers
 
-Note that the unit address is supposed to match the first "reg"
-address, so either these should be reversed or you should update your
-node name.  AKA your node name should be this now:
+You need to document that for old SoCs where TM / SROT were 0x1000
+apart (SROT first) that one "reg" field was OK.  ...and that for new
+SoCs you specify two reg ranges: the first for TM and the second for
+SROT.
 
-tsens0: thermal-sensor@4a9000
 
+>  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
+> @@ -12,7 +18,7 @@ Required properties:
+>  - Refer to Documentation/devicetree/bindings/nvmem/nvmem.txt to know how to specify
+>  nvmem cells
+>
+> -Example:
+> +Example 1 (legacy support before a fallback tsens-v2 propoerty was introduced):
+>  tsens: thermal-sensor@900000 {
+>                 compatible = "qcom,msm8916-tsens";
+>                 reg = <0x4a8000 0x2000>;
+> @@ -20,3 +26,12 @@ tsens: thermal-sensor@900000 {
+>                 nvmem-cell-names = "caldata", "calsel";
+>                 #thermal-sensor-cells = <1>;
+>         };
+> +
+> +Example 2 (for any platform containing v2 of the TSENS IP):
+> +tsens0: tsens@c222000 {
 
-> +                       #qcom,sensors = <13>;
+A) Use a generic name for the node, not a specific one.  Thus the node
+should be "thermal-sensor", not "tsens".
 
-As per my responses to other patches, " #qcom,sensors" is undocumented
-and doesn't appear to be read by the driver.
+B) This unit address needs to match the _first_ reg address listed.
+Give your reg below, this should be @c263000
+
+Thus your node name should be:
+
+tsens0: thermal-sensor@c263000 {
+
+> +               compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+> +               reg = <0xc263000 0x1ff>, /* TM */
+> +                       <0xc222000 0x1ff>; /* SROT */
+> +               #qcom,sensors = <13>;
+
+The "#qcom,sensors" property seems wrong in a few ways:
+
+A) I wouldn't have expected it to start with a "#".  I only expect to
+see that on things specifying sizes / lengths.  Rob can feel free to
+override me, though.
+
+B) It's not documented above.  Just putting something in an example
+doesn't document it--it needs to be listed in the "Optional
+properties".
