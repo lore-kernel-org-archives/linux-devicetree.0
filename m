@@ -1,74 +1,197 @@
-From: Ye Xiaolong <xiaolong.ye@intel.com>
-Subject: Re: [PATCH v4 2/5] rtc: isl1208: add support for isl1219 with tamper
- detection
-Date: Wed, 11 Jul 2018 14:01:54 +0800
-Message-ID: <20180711060154.GD7170@yexl-desktop>
-References: <20180710090710.9066-3-Denis.Osterland@diehl.com>
- <201807102100.7IWfwFfW%fengguang.wu@intel.com>
- <1531231616.7366.2.camel@diehl.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Koen Kooi <koen@dominion.thruhere.net>
+Subject: [PATCH 2/2] ARM: dts: am335x: add am335x-sancloud-bbe board support
+Date: Wed, 11 Jul 2018 08:53:10 +0200
+Message-ID: <1531291992-30512-3-git-send-email-koen@dominion.thruhere.net>
+References: <1531291992-30512-1-git-send-email-koen@dominion.thruhere.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1531231616.7366.2.camel@diehl.com>
+In-Reply-To: <1531291992-30512-1-git-send-email-koen@dominion.thruhere.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Denis OSTERLAND <denis.osterland@diehl.com>
-Cc: "lkp@intel.com" <lkp@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kbuild-all@01.org" <kbuild-all@01.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+To: linux-omap@vger.kernel.org
+Cc: Koen Kooi <koen@dominion.thruhere.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Denis
+The "Beaglebone Enhanced" by Sancloud is based on the Beaglebone Black,
+but with the following differences:
 
-The patch was applied in correct sequence as you can see in the github link.
+ * Gigabit capable PHY
+ * Extra USB hub, optional i2c control
+ * lps3331ap barometer connected over i2c
+ * MPU6050 6 axis MEMS accelerometer/gyro connected over i2c
+ * 1GiB DDR3 RAM
+ * RTL8723 Wifi/Bluetooth connected over USB
 
-I think the question here is rtc-isl1208 can be built as a built-in module,
-but it would fail if it was built as a ko.
+Tested on a revision G board.
 
-Thanks,
-Xiaolong
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+---
+ arch/arm/boot/dts/Makefile                |   1 +
+ arch/arm/boot/dts/am335x-sancloud-bbe.dts | 146 ++++++++++++++++++++++++++++++
+ 2 files changed, 147 insertions(+)
+ create mode 100644 arch/arm/boot/dts/am335x-sancloud-bbe.dts
 
-On 07/10, Denis OSTERLAND wrote:
->Hi,
->
->seems 2/5 was applied before 1/5.
->1/5 introduces rtc_add_group.
->
->Regards Denis
->
->Am Dienstag, den 10.07.2018, 21:20 +0800 schrieb kbuild test robot:
->> Hi Michael,
->> 
->> I love your patch! Yet something to improve:
->> 
->> [auto build test ERROR on abelloni/rtc-next]
->> [also build test ERROR on v4.18-rc4 next-20180709]
->> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
->> 
->> url:    https://github.com/0day-ci/linux/commits/Denis-OSTERLAND/rtc-isl1208-fixes-documentation-and-isl1219-support/20180710-181709
->> base:   https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git rtc-next
->> config: x86_64-randconfig-s4-07101857 (attached as .config)
->> compiler: gcc-7 (Debian 7.3.0-16) 7.3.0
->> reproduce:
->>         # save the attached .config to linux build tree
->>         make ARCH=x86_64 
->> 
->> All errors (new ones prefixed by >>):
->> 
->> > 
->> > > 
->> > > ERROR: "rtc_add_group" [drivers/rtc/rtc-isl1208.ko] undefined!
->> ---
->> 0-DAY kernel test infrastructure                Open Source Technology Center
->> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
->
->Diehl Connectivity Solutions GmbH
->Geschäftsführung: Horst Leonberger
->Sitz der Gesellschaft: Nürnberg - Registergericht: Amtsgericht
->Nürnberg: HRB 32315
->___________________________________________________________________________________________________
->
->Der Inhalt der vorstehenden E-Mail ist nicht rechtlich bindend. Diese E-Mail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen.
->Informieren Sie uns bitte, wenn Sie diese E-Mail faelschlicherweise erhalten haben. Bitte loeschen Sie in diesem Fall die Nachricht.
->Jede unerlaubte Form der Reproduktion, Bekanntgabe, Aenderung, Verteilung und/oder Publikation dieser E-Mail ist strengstens untersagt.
->The contents of the above mentioned e-mail is not legally binding. This e-mail contains confidential and/or legally protected information. Please inform us if you have received this e-mail by
->mistake and delete it in such a case. Each unauthorized reproduction, disclosure, alteration, distribution and/or publication of this e-mail is strictly prohibited. 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 37a3de7..83a4d61 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -695,6 +695,7 @@ dtb-$(CONFIG_SOC_AM33XX) += \
+ 	am335x-pepper.dtb \
+ 	am335x-phycore-rdk.dtb \
+ 	am335x-pocketbeagle.dtb \
++	am335x-sancloud-bbe.dtb \
+ 	am335x-shc.dtb \
+ 	am335x-sbc-t335.dtb \
+ 	am335x-sl50.dtb \
+diff --git a/arch/arm/boot/dts/am335x-sancloud-bbe.dts b/arch/arm/boot/dts/am335x-sancloud-bbe.dts
+new file mode 100644
+index 0000000..3d4f413
+--- /dev/null
++++ b/arch/arm/boot/dts/am335x-sancloud-bbe.dts
+@@ -0,0 +1,146 @@
++/*
++ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++/dts-v1/;
++
++#include "am33xx.dtsi"
++#include "am335x-bone-common.dtsi"
++#include "am335x-boneblack-common.dtsi"
++
++/ {
++	model = "SanCloud BeagleBone Enhanced";
++	compatible = "sancloud,am335x-boneenhanced", "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
++};
++
++&cpu0_opp_table {
++	/*
++	 * All PG 2.0 silicon may not support 1GHz but some of the early
++	 * BeagleBone Blacks have PG 2.0 silicon which is guaranteed
++	 * to support 1GHz OPP so enable it for PG 2.0 on this board.
++	 */
++	oppnitro-1000000000 {
++		opp-supported-hw = <0x06 0x0100>;
++	};
++};
++
++&am33xx_pinmux {
++	pinctrl-names = "default";
++
++	cpsw_default: cpsw_default {
++		pinctrl-single,pins = <
++			/* Slave 1 */
++			AM33XX_IOPAD(0x914, PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txen.rgmii1_tctl */
++			AM33XX_IOPAD(0x918, PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxdv.rgmii1_rctl */
++			AM33XX_IOPAD(0x91c, PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd3.rgmii1_td3 */
++			AM33XX_IOPAD(0x920, PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd2.rgmii1_td2 */
++			AM33XX_IOPAD(0x924, PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd1.rgmii1_td1 */
++			AM33XX_IOPAD(0x928, PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd0.rgmii1_td0 */
++			AM33XX_IOPAD(0x92c, PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txclk.rgmii1_tclk */
++			AM33XX_IOPAD(0x930, PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxclk.rgmii1_rclk */
++			AM33XX_IOPAD(0x934, PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd3.rgmii1_rd3 */
++			AM33XX_IOPAD(0x938, PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd2.rgmii1_rd2 */
++			AM33XX_IOPAD(0x93c, PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd1.rgmii1_rd1 */
++			AM33XX_IOPAD(0x940, PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd0.rgmii1_rd0 */
++		>;
++	};
++
++	cpsw_sleep: cpsw_sleep {
++		pinctrl-single,pins = <
++			/* Slave 1 reset value */
++			AM33XX_IOPAD(0x914, PIN_INPUT_PULLDOWN | MUX_MODE7)
++			AM33XX_IOPAD(0x918, PIN_INPUT_PULLDOWN | MUX_MODE7)
++			AM33XX_IOPAD(0x91c, PIN_INPUT_PULLDOWN | MUX_MODE7)
++			AM33XX_IOPAD(0x920, PIN_INPUT_PULLDOWN | MUX_MODE7)
++			AM33XX_IOPAD(0x924, PIN_INPUT_PULLDOWN | MUX_MODE7)
++			AM33XX_IOPAD(0x928, PIN_INPUT_PULLDOWN | MUX_MODE7)
++			AM33XX_IOPAD(0x92c, PIN_INPUT_PULLDOWN | MUX_MODE7)
++			AM33XX_IOPAD(0x930, PIN_INPUT_PULLDOWN | MUX_MODE7)
++			AM33XX_IOPAD(0x934, PIN_INPUT_PULLDOWN | MUX_MODE7)
++			AM33XX_IOPAD(0x938, PIN_INPUT_PULLDOWN | MUX_MODE7)
++			AM33XX_IOPAD(0x93c, PIN_INPUT_PULLDOWN | MUX_MODE7)
++			AM33XX_IOPAD(0x940, PIN_INPUT_PULLDOWN | MUX_MODE7)
++		>;
++	};
++
++	davinci_mdio_default: davinci_mdio_default {
++		pinctrl-single,pins = <
++			/* MDIO */
++			AM33XX_IOPAD(0x948, PIN_INPUT_PULLUP | SLEWCTRL_FAST | MUX_MODE0)	/* mdio_data.mdio_data */
++			AM33XX_IOPAD(0x94c, PIN_OUTPUT_PULLUP | MUX_MODE0)			/* mdio_clk.mdio_clk */
++		>;
++	};
++
++	davinci_mdio_sleep: davinci_mdio_sleep {
++		pinctrl-single,pins = <
++			/* MDIO reset value */
++			AM33XX_IOPAD(0x948, PIN_INPUT_PULLDOWN | MUX_MODE7)
++			AM33XX_IOPAD(0x94c, PIN_INPUT_PULLDOWN | MUX_MODE7)
++		>;
++	};
++
++	usb_hub_ctrl: usb_hub_ctrl {
++		pinctrl-single,pins = <
++			AM33XX_IOPAD(0x944, PIN_OUTPUT_PULLUP | MUX_MODE7)     /* rmii1_refclk.gpio0_29 */
++		>;
++	};
++
++	mpu6050_pins: pinmux_mpu6050_pins {
++		pinctrl-single,pins = <
++			AM33XX_IOPAD(0x968, PIN_INPUT | MUX_MODE7)    /* uart0_ctsn.gpio1_8 */
++		>;
++	};
++
++	lps3331ap_pins: pinmux_lps3331ap_pins {
++		pinctrl-single,pins = <
++			AM33XX_IOPAD(0x868, PIN_INPUT | MUX_MODE7)     /* gpmc_a10.gpio1_26 */
++		>;
++	};
++};
++
++&mac {
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&cpsw_default>;
++	pinctrl-1 = <&cpsw_sleep>;
++	status = "okay";
++};
++
++&davinci_mdio {
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&davinci_mdio_default>;
++	pinctrl-1 = <&davinci_mdio_sleep>;
++	status = "okay";
++};
++
++&cpsw_emac0 {
++	phy_id = <&davinci_mdio>, <0>;
++	phy-mode = "rgmii-txid";
++};
++
++&i2c0 {
++	lps331ap: lps331ap@5C {
++		compatible = "st,lps331ap";
++		st,drdy-int-pin = <1>;
++		reg = <0x5C>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <26 IRQ_TYPE_EDGE_RISING>;
++	};
++
++	mpu6050: mpu6050@68 {
++		compatible = "invensense,mpu6050";
++		reg = <0x68>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <2 IRQ_TYPE_EDGE_RISING>;
++		orientation = <0xff 0 0 0 1 0 0 0 0xff>;
++	};
++
++	usb2512b@2c {
++		compatible = "microchip,usb2512b";
++		reg = <0x2c>;
++		reset-gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
++		/* wifi on port 4 */
++	};
++};
+-- 
+2.0.1
