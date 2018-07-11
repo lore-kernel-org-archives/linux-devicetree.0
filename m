@@ -1,54 +1,92 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH V2 2/2] ARM: dts: imx6ul: add GPIO clocks
-Date: Wed, 11 Jul 2018 16:28:28 +0800
-Message-ID: <20180711082827.GA6959@dragon>
-References: <1527990245-13619-1-git-send-email-Anson.Huang@nxp.com>
- <1527990245-13619-2-git-send-email-Anson.Huang@nxp.com>
- <AM3PR04MB1315D8B57E1A5D47BECBDCD3F54A0@AM3PR04MB1315.eurprd04.prod.outlook.com>
- <20180628005217.GC22683@dragon>
- <153029757874.143105.17774476792947607999@swboyd.mtv.corp.google.com>
- <20180701021947.GA4348@dragon>
- <153089733418.143105.7025289108790540252@swboyd.mtv.corp.google.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 00/18] Allwinner R40 HDMI refactoring
+Date: Wed, 11 Jul 2018 10:30:36 +0200
+Message-ID: <20180711083036.7attjq4hm5ay5gmn@flea>
+References: <20180710203511.18454-1-jernej.skrabec@siol.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <153089733418.143105.7025289108790540252@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Anson Huang <anson.huang@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "matteo.lisi@engicam.com" <matteo.lisi@engicam.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "michael@amarulasolutions.com" <michael@amarulasolutions.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============0934681799=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180710203511.18454-1-jernej.skrabec@siol.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 06, 2018 at 10:15:34AM -0700, Stephen Boyd wrote:
-> Quoting Shawn Guo (2018-06-30 19:19:49)
-> > On Fri, Jun 29, 2018 at 11:39:38AM -0700, Stephen Boyd wrote:
-> > > Quoting Shawn Guo (2018-06-27 17:52:18)
-> > > > On Mon, Jun 25, 2018 at 03:14:39AM +0000, Anson Huang wrote:
-> > > > > Gentle Ping...
-> > > > 
-> > > > I cannot apply this dts patch until the clock patch is landed on
-> > > > mainline, because it has a dependency on new clock ID IMX6UL_CLK_GPIO1
-> > > > created by clock patch.
-> > > > 
-> > > 
-> > > Does it matter if that clk ID changes across branches? Or is everything
-> > > good if it just exists as some number?
-> > 
-> > We use macro IMX6UL_CLK_GPIO1 instead of hard-coded number in DTS.  So
-> > it doesn't matter if IMX6UL_CLK_GPIO1 changes.
-> > 
-> > > The patch adding the define
-> > > conflicts with another patch to fix the numbering scheme to be
-> > > incremental instead of changing IMX6UL and IMX6ULL which is annoying.
-> > > I'll probably make a topic branch just for the fix and merge it into
-> > > clk-fixes and this branch so you can pick it up from there if you like.
-> > 
-> > It will be good if you can have a topic branch.  Otherwise, we are also
-> > fine to wait till the clock patches lands on mainline.
-> > 
-> 
-> Ok. The topic branch is out there as clk-imx-gpio-gates
 
-Thanks.  I applied dts patch now.
+--===============0934681799==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yshce36do3zzws6q"
+Content-Disposition: inline
 
-Shawn
+
+--yshce36do3zzws6q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jul 10, 2018 at 10:34:53PM +0200, Jernej Skrabec wrote:
+> This series fixes several issues found in R40 HDMI patch series after
+> it was applied. Conversation can be found here:
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2018-June/586011.ht=
+ml
+>=20
+> Patches are based on latest linux-next (next-20180710) and are ordered
+> in such way that they don't break R40 HDMI at any time. Because of that
+> I suggest that whole series goes through drm-misc to preserve that order.
+>=20
+> I also tested those patches on H3 to make sure it doesn't break other
+> platforms. However, it would be nice to test for regressions also on
+> older SoCs (with DE1).
+>=20
+> Best regards,
+> Jernej
+
+Applied all patches but the patch 10, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--yshce36do3zzws6q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAltFwCsACgkQ0rTAlCFN
+r3Q4sxAAkIOSDcrUdytnfHPJ0n99IJRimkUTwMFyKEGTrYoyr6ODMxuVnO200zQ2
+eudqI2vuHRhxkkDXeSq5LCyYqhI2aYEF6Efyg5k/nX6C1ySgCME2ExXSwCVfDn+u
+MHBQn04IXTERwHeZT5RzBOd9Ys33YaYeDBNdzW9EL1sbAz55+wNT6Y7zxyOCeZV0
+KDZpbExJY9Sc/FB7gu9XEvEuzsVpzNkaLlupqnTFHSbu8US5eRnRhqhXBFpWrJYH
+I1SgzObx1/w7N5427O4QdmA4snjTQzozbWjgU0nnTeCYYAPbWS6uOk/oAGAcCY9c
+B1G0s0fLp6EjyFQWj12iubS/6reDhz3Zg2Yov3/YK3SyYv83E91MFg+gg1RLm940
+RcYoImg/n0JEHICYhduLKESrT2biwdAlLdUkOTXRckh2tADVByU/9q5cKcoP72KP
+rGmMOICBJ3POaKiUcdk2Q8e+1Dy087d3XgbyoHke62Tfe8UUPOLOrttrCEt0J78+
+vkCpF/n4stglxAQvXvlBXO3vx1WLHHuGs8R9QLAGV/9bM1cHo1doBirCaRr1i7pK
+vTXLhJOarfDK9u6IVBZRY8fv1nREf+F7qBA6wdZOqqCadvtuQFJL9/NbSg8FmPQD
+p5G+cfAUnKhENiHqzJy+O36sbIUqJTyejC5ZemhGyKNfLmwpxuM=
+=Os8I
+-----END PGP SIGNATURE-----
+
+--yshce36do3zzws6q--
+
+--===============0934681799==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0934681799==--
