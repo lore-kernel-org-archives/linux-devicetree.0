@@ -1,169 +1,207 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v1 4/9] scsi: ufs: add option to change default UFS power
- management level
-Date: Wed, 11 Jul 2018 13:50:51 +0300
-Message-ID: <0673f807-bc3c-e401-ae12-07bfafb55bf7@intel.com>
-References: <cover.1530880006.git.asutoshd@codeaurora.org>
- <ff2b648007a400c60ba804a0c5cab0166bd268e7.1530880006.git.asutoshd@codeaurora.org>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v12 1/4] iommu/arm-smmu: Add pm_runtime/sleep ops
+Date: Wed, 11 Jul 2018 16:25:26 +0530
+Message-ID: <CAFp+6iHxJucfzJJeEvSToG4p2zADjDb9F0L8h053x-JKAy55mg@mail.gmail.com>
+References: <20180708173413.1965-1-vivek.gautam@codeaurora.org>
+	<20180708173413.1965-2-vivek.gautam@codeaurora.org>
+	<17407514.unFVTGoGrn@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ff2b648007a400c60ba804a0c5cab0166bd268e7.1530880006.git.asutoshd@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Asutosh Das <asutoshd@codeaurora.org>, subhashj@codeaurora.org, cang@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, linux-scsi@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <17407514.unFVTGoGrn-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/07/18 15:30, Asutosh Das wrote:
-> From: Subhash Jadavani <subhashj@codeaurora.org>
-> 
-> UFS device and link can be put in multiple different low power modes hence
-> UFS driver supports multiple different low power modes. By default UFS
-> driver selects the default (optimal) low power mode (which gives moderate
-> power savings and have relatively less enter and exit latencies) but
-> we might have to tune this default power mode for different chipset
-> platforms to meet the low power requirements/goals. Hence this patch
-> adds option to change default UFS low power mode (level).
-> 
-> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-> Signed-off-by: Venkat Gopalakrishnan <venkatg@codeaurora.org>
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-> ---
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      | 11 ++++++++
->  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 14 +++++++++++
->  drivers/scsi/ufs/ufshcd.c                          | 29 +++++++++++++++-------
->  drivers/scsi/ufs/ufshcd.h                          |  4 +--
->  4 files changed, 47 insertions(+), 11 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> index c39dfef..f564d9a 100644
-> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> @@ -38,6 +38,15 @@ Optional properties:
->  			  defined or a value in the array is "0" then it is assumed
->  			  that the frequency is set by the parent clock or a
->  			  fixed rate clock source.
-> +- rpm-level		: UFS Runtime power management level. Following PM levels are supported:
-> +			  0 - Both UFS device and Link in active state (Highest power consumption)
-> +			  1 - UFS device in active state but Link in Hibern8 state
-> +			  2 - UFS device in Sleep state but Link in active state
-> +			  3 - UFS device in Sleep state and Link in hibern8 state (default PM level)
-> +			  4 - UFS device in Power-down state and Link in Hibern8 state
-> +			  5 - UFS device in Power-down state and Link in OFF state (Lowest power consumption)
-> +- spm-level		: UFS System power management level. Allowed PM levels are same as rpm-level.
-> +
->  -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
->  			  Note that it is assume same number of lanes is used both
->  			  directions at once. If not specified, default is 2 lanes per direction.
-> @@ -66,4 +75,6 @@ Example:
->  		freq-table-hz = <100000000 200000000>, <0 0>, <0 0>;
->  		phys = <&ufsphy1>;
->  		phy-names = "ufsphy";
-> +		rpm-level = <3>;
-> +		spm-level = <5>;
->  	};
-> diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
-> index e82bde0..7dba799 100644
-> --- a/drivers/scsi/ufs/ufshcd-pltfrm.c
-> +++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
-> @@ -221,6 +221,19 @@ static int ufshcd_parse_regulator_info(struct ufs_hba *hba)
->  	return err;
->  }
->  
-> +static void ufshcd_parse_pm_levels(struct ufs_hba *hba)
-> +{
-> +	struct device *dev = hba->dev;
-> +	struct device_node *np = dev->of_node;
-> +
-> +	if (np) {
-> +		if (of_property_read_u32(np, "rpm-level", &hba->rpm_lvl))
-> +			hba->rpm_lvl = -1;
-> +		if (of_property_read_u32(np, "spm-level", &hba->spm_lvl))
-> +			hba->spm_lvl = -1;
+Hi Rafael,
 
-These are generically useful to all UFSHC drivers, so they should be
-device_property_read_u32() and they should be read for all drivers not just
-pltfrm i.e. move this code into ufshcd.c
 
-> +	}
-> +}
-> +
->  #ifdef CONFIG_PM
->  /**
->   * ufshcd_pltfrm_suspend - suspend power management function
-> @@ -340,6 +353,7 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
->  		goto dealloc_host;
->  	}
->  
-> +	ufshcd_parse_pm_levels(hba);
->  	pm_runtime_set_active(&pdev->dev);
->  	pm_runtime_enable(&pdev->dev);
->  
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index b03f3ea..e950204 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -192,6 +192,14 @@ struct ufs_pm_lvl_states ufs_pm_lvl_states[] = {
->  	return UFS_PM_LVL_0;
->  }
->  
-> +static inline bool ufshcd_is_valid_pm_lvl(int lvl)
-> +{
-> +	if (lvl >= 0 && lvl < ARRAY_SIZE(ufs_pm_lvl_states))
-> +		return true;
-> +	else
-> +		return false;
-> +}
-> +
->  static struct ufs_dev_fix ufs_fixups[] = {
->  	/* UFS cards deviations table */
->  	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
-> @@ -8051,16 +8059,19 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
->  	}
->  
->  	/*
-> -	 * Set the default power management level for runtime and system PM.
-> -	 * Default power saving mode is to keep UFS link in Hibern8 state
-> -	 * and UFS device in sleep state.
-> +	 * If rpm_lvl and and spm_lvl are not already set to valid levels,
-> +	 * set the default power management level for UFS runtime and system
-> +	 * suspend. Default power saving mode selected is keeping UFS link in
-> +	 * Hibern8 state and UFS device in sleep state.
->  	 */
-> -	hba->rpm_lvl = ufs_get_desired_pm_lvl_for_dev_link_state(
-> -						UFS_SLEEP_PWR_MODE,
-> -						UIC_LINK_HIBERN8_STATE);
-> -	hba->spm_lvl = ufs_get_desired_pm_lvl_for_dev_link_state(
-> -						UFS_SLEEP_PWR_MODE,
-> -						UIC_LINK_HIBERN8_STATE);
-> +	if (!ufshcd_is_valid_pm_lvl(hba->rpm_lvl))
-> +		hba->rpm_lvl = ufs_get_desired_pm_lvl_for_dev_link_state(
-> +							UFS_SLEEP_PWR_MODE,
-> +							UIC_LINK_HIBERN8_STATE);
-> +	if (!ufshcd_is_valid_pm_lvl(hba->spm_lvl))
-> +		hba->spm_lvl = ufs_get_desired_pm_lvl_for_dev_link_state(
-> +							UFS_SLEEP_PWR_MODE,
-> +							UIC_LINK_HIBERN8_STATE);
->  
->  	/* Set the default auto-hiberate idle timer value to 150 ms */
->  	if (hba->capabilities & MASK_AUTO_HIBERN8_SUPPORT) {
-> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-> index e996a08..a2e1d5c 100644
-> --- a/drivers/scsi/ufs/ufshcd.h
-> +++ b/drivers/scsi/ufs/ufshcd.h
-> @@ -526,9 +526,9 @@ struct ufs_hba {
->  	enum ufs_dev_pwr_mode curr_dev_pwr_mode;
->  	enum uic_link_state uic_link_state;
->  	/* Desired UFS power management level during runtime PM */
-> -	enum ufs_pm_level rpm_lvl;
-> +	int rpm_lvl;
->  	/* Desired UFS power management level during system PM */
-> -	enum ufs_pm_level spm_lvl;
-> +	int spm_lvl;
->  	struct device_attribute rpm_lvl_attr;
->  	struct device_attribute spm_lvl_attr;
->  	int pm_op_in_progress;
-> 
+On Wed, Jul 11, 2018 at 3:20 PM, Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> wrote:
+> On Sunday, July 8, 2018 7:34:10 PM CEST Vivek Gautam wrote:
+>> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>
+>> The smmu needs to be functional only when the respective
+>> master's using it are active. The device_link feature
+>> helps to track such functional dependencies, so that the
+>> iommu gets powered when the master device enables itself
+>> using pm_runtime. So by adapting the smmu driver for
+>> runtime pm, above said dependency can be addressed.
+>>
+>> This patch adds the pm runtime/sleep callbacks to the
+>> driver and also the functions to parse the smmu clocks
+>> from DT and enable them in resume/suspend.
+>>
+>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> [vivek: Clock rework to request bulk of clocks]
+>> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> ---
+>>
+>>  - No change since v11.
+>>
+>>  drivers/iommu/arm-smmu.c | 60 ++++++++++++++++++++++++++++++++++++++++++++++--
+>>  1 file changed, 58 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>> index f7a96bcf94a6..a01d0dde21dd 100644
+>> --- a/drivers/iommu/arm-smmu.c
+>> +++ b/drivers/iommu/arm-smmu.c
+>> @@ -48,6 +48,7 @@
+>>  #include <linux/of_iommu.h>
+>>  #include <linux/pci.h>
+>>  #include <linux/platform_device.h>
+>> +#include <linux/pm_runtime.h>
+>>  #include <linux/slab.h>
+>>  #include <linux/spinlock.h>
+>>
+>> @@ -205,6 +206,8 @@ struct arm_smmu_device {
+>>       u32                             num_global_irqs;
+>>       u32                             num_context_irqs;
+>>       unsigned int                    *irqs;
+>> +     struct clk_bulk_data            *clks;
+>> +     int                             num_clks;
+>>
+>>       u32                             cavium_id_base; /* Specific to Cavium */
+>>
+>> @@ -1897,10 +1900,12 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
+>>  struct arm_smmu_match_data {
+>>       enum arm_smmu_arch_version version;
+>>       enum arm_smmu_implementation model;
+>> +     const char * const *clks;
+>> +     int num_clks;
+>>  };
+>>
+>>  #define ARM_SMMU_MATCH_DATA(name, ver, imp)  \
+>> -static struct arm_smmu_match_data name = { .version = ver, .model = imp }
+>> +static const struct arm_smmu_match_data name = { .version = ver, .model = imp }
+>>
+>>  ARM_SMMU_MATCH_DATA(smmu_generic_v1, ARM_SMMU_V1, GENERIC_SMMU);
+>>  ARM_SMMU_MATCH_DATA(smmu_generic_v2, ARM_SMMU_V2, GENERIC_SMMU);
+>> @@ -1919,6 +1924,23 @@ static const struct of_device_id arm_smmu_of_match[] = {
+>>  };
+>>  MODULE_DEVICE_TABLE(of, arm_smmu_of_match);
+>>
+>> +static void arm_smmu_fill_clk_data(struct arm_smmu_device *smmu,
+>> +                                const char * const *clks)
+>> +{
+>> +     int i;
+>> +
+>> +     if (smmu->num_clks < 1)
+>> +             return;
+>> +
+>> +     smmu->clks = devm_kcalloc(smmu->dev, smmu->num_clks,
+>> +                               sizeof(*smmu->clks), GFP_KERNEL);
+>> +     if (!smmu->clks)
+>> +             return;
+>> +
+>> +     for (i = 0; i < smmu->num_clks; i++)
+>> +             smmu->clks[i].id = clks[i];
+>> +}
+>> +
+>>  #ifdef CONFIG_ACPI
+>>  static int acpi_smmu_get_data(u32 model, struct arm_smmu_device *smmu)
+>>  {
+>> @@ -2001,6 +2023,9 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev,
+>>       data = of_device_get_match_data(dev);
+>>       smmu->version = data->version;
+>>       smmu->model = data->model;
+>> +     smmu->num_clks = data->num_clks;
+>> +
+>> +     arm_smmu_fill_clk_data(smmu, data->clks);
+>>
+>>       parse_driver_options(smmu);
+>>
+>> @@ -2099,6 +2124,14 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+>>               smmu->irqs[i] = irq;
+>>       }
+>>
+>> +     err = devm_clk_bulk_get(smmu->dev, smmu->num_clks, smmu->clks);
+>> +     if (err)
+>> +             return err;
+>> +
+>> +     err = clk_bulk_prepare(smmu->num_clks, smmu->clks);
+>> +     if (err)
+>> +             return err;
+>> +
+>>       err = arm_smmu_device_cfg_probe(smmu);
+>>       if (err)
+>>               return err;
+>> @@ -2181,6 +2214,9 @@ static int arm_smmu_device_remove(struct platform_device *pdev)
+>>
+>>       /* Turn the thing off */
+>>       writel(sCR0_CLIENTPD, ARM_SMMU_GR0_NS(smmu) + ARM_SMMU_GR0_sCR0);
+>> +
+>> +     clk_bulk_unprepare(smmu->num_clks, smmu->clks);
+>> +
+>>       return 0;
+>>  }
+>>
+>> @@ -2197,7 +2233,27 @@ static int __maybe_unused arm_smmu_pm_resume(struct device *dev)
+>>       return 0;
+>>  }
+>>
+>> -static SIMPLE_DEV_PM_OPS(arm_smmu_pm_ops, NULL, arm_smmu_pm_resume);
+>> +static int __maybe_unused arm_smmu_runtime_resume(struct device *dev)
+>> +{
+>> +     struct arm_smmu_device *smmu = dev_get_drvdata(dev);
+>> +
+>> +     return clk_bulk_enable(smmu->num_clks, smmu->clks);
+>> +}
+>> +
+>> +static int __maybe_unused arm_smmu_runtime_suspend(struct device *dev)
+>> +{
+>> +     struct arm_smmu_device *smmu = dev_get_drvdata(dev);
+>> +
+>> +     clk_bulk_disable(smmu->num_clks, smmu->clks);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static const struct dev_pm_ops arm_smmu_pm_ops = {
+>> +     SET_SYSTEM_SLEEP_PM_OPS(NULL, arm_smmu_pm_resume)
+>
+> This is suspicious.
+>
+> If you need a runtime suspend method, why do you think that it is not necessary
+> to suspend the device during system-wide transitions?
+
+Okay, so you suggest to put clock disabling in say arm_smmu_pm_suspend()?
+In that case the clocks have to be enabled in the resume path too.
+
+I remember Tomasz pointed to that we shouldn't need clock enable in resume
+path [1].
+
+[1] https://lkml.org/lkml/2018/3/15/60
+
+
+Best regards
+Vivek
+
+>
+>> +     SET_RUNTIME_PM_OPS(arm_smmu_runtime_suspend,
+>> +                        arm_smmu_runtime_resume, NULL)
+>> +};
+>>
+>>  static struct platform_driver arm_smmu_driver = {
+>>       .driver = {
+>>
+>
+>
+
+
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
