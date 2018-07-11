@@ -1,7 +1,7 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH 3/3] ARM: dts: qcom: msm8974-hammerhead: add device tree bindings for mpu6515
-Date: Tue, 10 Jul 2018 21:09:32 -0400
-Message-ID: <20180711010932.20313-4-masneyb@onstation.org>
+Subject: [PATCH 2/3] iio: imu: mpu6050: add support for regulator framework
+Date: Tue, 10 Jul 2018 21:09:31 -0400
+Message-ID: <20180711010932.20313-3-masneyb@onstation.org>
 References: <20180711010932.20313-1-masneyb@onstation.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180711010932.20313-1-masneyb@onstation.org>
@@ -10,125 +10,231 @@ To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linar
 Cc: jonathan@marek.ca, jmaneyrol@invensense.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mkelly@xevo.com, fischerdouglasc@gmail.com, bshah@kde.org, ctatlor97@gmail.com, masneyb@onstation.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree bindings for the mpu6515 to the LG Nexus 5
-(hammerhead) phone. Confirmed that the gyroscope / accelerometer
-(mpu6515), magnetometer (ak8963), and temperature / pressure (bmp280)
-sensors are available on the phone.
-
-Interrupts are not working properly on the ak8963 magnetometer so they
-are currently not configured.
-
-The bmp280 retuns temperature/pressure measurement skipped errors but
-will reliably work if I run:
-
-    echo 1 > in_pressure_oversampling_ratio
-    echo 1 > in_temp_oversampling_ratio
+This patch adds support for the regulator framework to the mpu6050
+driver.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
 Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
-I'll send follow up patch(es) once I investigate why the skipped errors
-are occurring with the bmp280 with the default oversampling ratios.
+This is a variation of Jonathan Marek's patch from postmarketOS
+https://gitlab.com/postmarketOS/linux-postmarketos/commit/b8ad1ec1859c8bbcbce94944b3f4dd68f8f9fc37
+with the following changes:
 
- .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 56 +++++++++++++++++++
- arch/arm/boot/dts/qcom-msm8974.dtsi           | 11 ++++
- 2 files changed, 67 insertions(+)
+- Stripped out 6515 variant code. (See my previous patch in this series)
+- Add the regulator to the mpu core instead of only the i2c variant.
+- Add error handling.
+- Release the regulator on suspend, device remove, etc.
+- Device tree documentation.
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-index c2dc9d09484a..96158044ca10 100644
---- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-@@ -241,6 +241,24 @@
- 				bias-pull-up;
- 			};
- 		};
-+
-+		i2c12_pins: i2c12 {
-+			mux {
-+				pins = "gpio87", "gpio88";
-+				function = "blsp_i2c12";
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
-+		};
-+
-+		mpu6515_pin: mpu6515 {
-+			irq {
-+				pins = "gpio73";
-+				function = "gpio";
-+				bias-disable;
-+				input-enable;
-+			};
-+		};
- 	};
+ .../bindings/iio/imu/inv_mpu6050.txt          |  1 +
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c    | 57 +++++++++++++++++--
+ drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c     |  2 +-
+ drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h     |  3 +
+ drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c     |  9 +++
+ 5 files changed, 66 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+index b7def51c8ad9..d39907b12a46 100644
+--- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
++++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+@@ -21,6 +21,7 @@ Required properties:
+   bindings.
  
- 	sdhci@f9824900 {
-@@ -277,6 +295,44 @@
- 			linux,code = <KEY_VOLUMEDOWN>;
- 		};
- 	};
+ Optional properties:
++ - vddio-supply: regulator phandle for VDDIO supply
+  - mount-matrix: an optional 3x3 mounting rotation matrix
+  - i2c-gate node.  These devices also support an auxiliary i2c bus.  This is
+    simple enough to be described using the i2c-gate binding. See
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+index 12c1b9507007..ec276b7bcc69 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+@@ -23,6 +23,7 @@
+ #include <linux/iio/iio.h>
+ #include <linux/acpi.h>
+ #include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
+ #include "inv_mpu_iio.h"
+ 
+ /*
+@@ -926,6 +927,19 @@ static int inv_check_and_setup_chip(struct inv_mpu6050_state *st)
+ 	return result;
+ }
+ 
++static int inv_mpu_core_enable_regulator(struct inv_mpu6050_state *st)
++{
++	int result;
 +
-+	i2c@f9968000 {
-+		status = "ok";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c12_pins>;
-+		clock-frequency = <100000>;
-+		qcom,src-freq = <50000000>;
++	result = regulator_enable(st->vddio_supply);
++	if (result == 0) {
++		/* Give the device a little bit of time to start up. */
++		usleep_range(35000, 70000);
++	}
 +
-+		mpu6515@68 {
-+			compatible = "invensense,mpu6515";
-+			reg = <0x68>;
-+			interrupts-extended = <&msmgpio 73 IRQ_TYPE_EDGE_FALLING>;
-+			vddio-supply = <&pm8941_lvs1>;
++	return result;
++}
 +
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&mpu6515_pin>;
+ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
+ 		int (*inv_mpu_bus_setup)(struct iio_dev *), int chip_type)
+ {
+@@ -990,15 +1004,28 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
+ 		return -EINVAL;
+ 	}
+ 
++	st->vddio_supply = devm_regulator_get_optional(dev, "vddio");
++	if (IS_ERR(st->vddio_supply)) {
++		if (PTR_ERR(st->vddio_supply) != -EPROBE_DEFER)
++			dev_err(dev, "Failed to get vddio regulator %d\n",
++				(int)PTR_ERR(st->vddio_supply));
 +
-+			i2c-gate {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				ak8963@f {
-+					compatible = "asahi-kasei,ak8963";
-+					reg = <0x0f>;
-+					// Device currently only works in polling mode.
-+					// gpios = <&msmgpio 61 0>;
-+					vid-supply = <&pm8941_lvs1>;
-+					vdd-supply = <&pm8941_l17>;
-+				};
++		return PTR_ERR(st->vddio_supply);
++	}
 +
-+				bmp280@76 {
-+					compatible = "bosch,bmp280";
-+					reg = <0x76>;
-+					vdda-supply = <&pm8941_lvs1>;
-+					vddd-supply = <&pm8941_l17>;
-+				};
-+			};
-+		};
-+	};
++	result = inv_mpu_core_enable_regulator(st);
++	if (result)
++		return result;
++
+ 	/* power is turned on inside check chip type*/
+ 	result = inv_check_and_setup_chip(st);
+ 	if (result)
+-		return result;
++		goto out_disable_regulator;
+ 
+ 	result = inv_mpu6050_init_config(indio_dev);
+ 	if (result) {
+ 		dev_err(dev, "Could not initialize device.\n");
+-		return result;
++		goto out_disable_regulator;
+ 	}
+ 
+ 	if (inv_mpu_bus_setup)
+@@ -1023,24 +1050,34 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
+ 						 NULL);
+ 	if (result) {
+ 		dev_err(dev, "configure buffer fail %d\n", result);
+-		return result;
++		goto out_disable_regulator;
+ 	}
+ 	result = inv_mpu6050_probe_trigger(indio_dev, irq_type);
+ 	if (result) {
+ 		dev_err(dev, "trigger probe fail %d\n", result);
+-		return result;
++		goto out_disable_regulator;
+ 	}
+ 
+ 	result = devm_iio_device_register(dev, indio_dev);
+ 	if (result) {
+ 		dev_err(dev, "IIO register fail %d\n", result);
+-		return result;
++		goto out_disable_regulator;
+ 	}
+ 
+ 	return 0;
++
++out_disable_regulator:
++	regulator_disable(st->vddio_supply);
++	return result;
++
+ }
+ EXPORT_SYMBOL_GPL(inv_mpu_core_probe);
+ 
++int inv_mpu_core_remove(struct inv_mpu6050_state *st)
++{
++	return regulator_disable(st->vddio_supply);
++}
++
+ #ifdef CONFIG_PM_SLEEP
+ 
+ static int inv_mpu_resume(struct device *dev)
+@@ -1050,6 +1087,11 @@ static int inv_mpu_resume(struct device *dev)
+ 
+ 	mutex_lock(&st->lock);
+ 	result = inv_mpu6050_set_power_itg(st, true);
++	if (result)
++		goto out_unlock;
++
++	result = inv_mpu_core_enable_regulator(st);
++out_unlock:
+ 	mutex_unlock(&st->lock);
+ 
+ 	return result;
+@@ -1062,6 +1104,11 @@ static int inv_mpu_suspend(struct device *dev)
+ 
+ 	mutex_lock(&st->lock);
+ 	result = inv_mpu6050_set_power_itg(st, false);
++	if (result)
++		goto out_unlock;
++
++	result = regulator_disable(st->vddio_supply);
++out_unlock:
+ 	mutex_unlock(&st->lock);
+ 
+ 	return result;
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
+index dd758e3d403d..ce227038c61c 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
+@@ -164,7 +164,7 @@ static int inv_mpu_remove(struct i2c_client *client)
+ 		i2c_mux_del_adapters(st->muxc);
+ 	}
+ 
+-	return 0;
++	return inv_mpu_core_remove(st);
+ }
+ 
+ /*
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
+index e69a59659dbc..0289615a6135 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
+@@ -129,6 +129,7 @@ struct inv_mpu6050_hw {
+  *  @chip_period:	chip internal period estimation (~1kHz).
+  *  @it_timestamp:	timestamp from previous interrupt.
+  *  @data_timestamp:	timestamp for next data sample.
++ *  @vddio_supply	voltage regulator for the chip.
+  */
+ struct inv_mpu6050_state {
+ 	struct mutex lock;
+@@ -149,6 +150,7 @@ struct inv_mpu6050_state {
+ 	s64 chip_period;
+ 	s64 it_timestamp;
+ 	s64 data_timestamp;
++	struct regulator *vddio_supply;
  };
  
- &spmi_bus {
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index d9019a49b292..cebb6ae9143a 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -737,6 +737,17 @@
- 			dma-names = "tx", "rx";
- 		};
+ /*register and associated bit definition*/
+@@ -321,4 +323,5 @@ int inv_mpu_acpi_create_mux_client(struct i2c_client *client);
+ void inv_mpu_acpi_delete_mux_client(struct i2c_client *client);
+ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
+ 		int (*inv_mpu_bus_setup)(struct iio_dev *), int chip_type);
++int inv_mpu_core_remove(struct inv_mpu6050_state *st);
+ extern const struct dev_pm_ops inv_mpu_pmops;
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
+index 227f50afff22..fce935f8f1e4 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
+@@ -70,6 +70,14 @@ static int inv_mpu_probe(struct spi_device *spi)
+ 				  inv_mpu_i2c_disable, chip_type);
+ }
  
-+		blsp_i2c12: i2c@f9968000 {
-+			status = "disabled";
-+			compatible = "qcom,i2c-qup-v2.1.1";
-+			reg = <0xf9968000 0x1000>;
-+			interrupts = <0 106 IRQ_TYPE_NONE>;
-+			clocks = <&gcc GCC_BLSP2_QUP6_I2C_APPS_CLK>, <&gcc GCC_BLSP2_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
++static int inv_mpu_remove(struct spi_device *spi)
++{
++	struct iio_dev *indio_dev = spi_get_drvdata(spi);
++	struct inv_mpu6050_state *st = iio_priv(indio_dev);
 +
- 		spmi_bus: spmi@fc4cf000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg-names = "core", "intr", "cnfg";
++	return inv_mpu_core_remove(st);
++}
++
+ /*
+  * device id table is used to identify what device can be
+  * supported by this driver
+@@ -94,6 +102,7 @@ MODULE_DEVICE_TABLE(acpi, inv_acpi_match);
+ 
+ static struct spi_driver inv_mpu_driver = {
+ 	.probe		=	inv_mpu_probe,
++	.remove		=	inv_mpu_remove,
+ 	.id_table	=	inv_mpu_id,
+ 	.driver = {
+ 		.acpi_match_table = ACPI_PTR(inv_acpi_match),
 -- 
 2.17.1
