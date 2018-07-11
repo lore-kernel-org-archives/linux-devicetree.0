@@ -1,134 +1,69 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH 2/4] phy: socionext: add USB3 PHY driver for UniPhier SoC
-Date: Wed, 11 Jul 2018 21:05:14 +0900
-Message-ID: <20180711210514.BB32.4A936039@socionext.com>
-References: <4b436a46-9046-25ad-ee6d-ad2cdb16e2ca@ti.com> <20180709202319.1091.4A936039@socionext.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH 01/14] dmaengine: dma-jz4780: Avoid hardcoding number of
+ channels
+Date: Wed, 11 Jul 2018 17:44:03 +0530
+Message-ID: <20180711121403.GR3219@vkoul-mobl>
+References: <20180703123214.23090-1-paul@crapouillou.net>
+ <20180703123214.23090-2-paul@crapouillou.net>
+ <20180709165945.GH22377@vkoul-mobl>
+ <1531236550.17118.0@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180709202319.1091.4A936039@socionext.com>
+Content-Disposition: inline
+In-Reply-To: <1531236550.17118.0@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+To: Paul Cercueil <paul@crapouillou.net>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 9 Jul 2018 20:23:19 +0900 <hayashi.kunihiko@socionext.com> wrote:
+Hi Paul,
 
-> Hi Kishon,
-> Thank you for your comments.
-> 
-> On Mon, 9 Jul 2018 10:49:50 +0530 <kishon@ti.com> wrote:
-> 
-> > Hi,
+On 10-07-18, 17:29, Paul Cercueil wrote:
+> > >  +static const unsigned int jz4780_dma_nb_channels[] = {
+> > >  +	[ID_JZ4780] = 32,
+> > >  +};
+> > >  +
+> > >  +static const struct of_device_id jz4780_dma_dt_match[] = {
+> > >  +	{ .compatible = "ingenic,jz4780-dma", .data = (void *)ID_JZ4780 },
+> > >  +	{},
+> > >  +};
 > > 
-> > On Friday 29 June 2018 02:08 PM, Kunihiko Hayashi wrote:
-> > > Add a driver for PHY interface built into USB3 controller
-> > > implemented in UniPhier SoCs.
-> > > This driver supports High-Speed PHY and Super-Speed PHY.
-> > > 
-> > > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> > > Signed-off-by: Motoya Tanigawa <tanigawa.motoya@socionext.com>
-> > > Signed-off-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
-> > > ---
-> > >  drivers/phy/Kconfig                         |   1 +
-> > >  drivers/phy/Makefile                        |   1 +
-> > >  drivers/phy/socionext/Kconfig               |  12 +
-> > >  drivers/phy/socionext/Makefile              |   6 +
-> > >  drivers/phy/socionext/phy-uniphier-usb3hs.c | 422 ++++++++++++++++++++++++++++
-> > >  drivers/phy/socionext/phy-uniphier-usb3ss.c | 369 ++++++++++++++++++++++++
-> > >  6 files changed, 811 insertions(+)
-> > >  create mode 100644 drivers/phy/socionext/Kconfig
-> > >  create mode 100644 drivers/phy/socionext/Makefile
-> > >  create mode 100644 drivers/phy/socionext/phy-uniphier-usb3hs.c
-> > >  create mode 100644 drivers/phy/socionext/phy-uniphier-usb3ss.c
+> > Looking at description I was hoping that channels would be in DT,
+> > channels is hardware information, so should come from DT rather than
+> > coding the kernel...
 > 
-> (snip...)
+> I had a talk with Linus Walleij (GPIO maintainer) about that:
+> http://lkml.iu.edu/hypermail/linux/kernel/1701.3/05422.html
 > 
-> > > --- /dev/null
-> > > +++ b/drivers/phy/socionext/phy-uniphier-usb3hs.c
-> > > @@ -0,0 +1,422 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * phy-uniphier-usb3hs.c - HS-PHY driver for Socionext UniPhier USB3 controller
-> > > + * Copyright 2015-2018 Socionext Inc.
-> > > + * Author:
-> > > + *	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> > > + * Contributors:
-> > > + *      Motoya Tanigawa <tanigawa.motoya@socionext.com>
-> > > + *      Masami Hiramatsu <masami.hiramatsu@linaro.org>
-> > > + */
-> > > +
-> > > +#include <linux/bitfield.h>
-> > > +#include <linux/bitops.h>
-> > > +#include <linux/clk.h>
-> > > +#include <linux/io.h>
-> > > +#include <linux/mfd/syscon.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/nvmem-consumer.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/of_platform.h>
-> > > +#include <linux/phy/phy.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/reset.h>
-> > > +#include <linux/slab.h>
-> > > +
-> > > +#define HSPHY_CFG0		0x0
-> > > +#define HSPHY_CFG0_HS_I_MASK	GENMASK(31, 28)
-> > > +#define HSPHY_CFG0_HSDISC_MASK	GENMASK(27, 26)
-> > > +#define HSPHY_CFG0_SWING_MASK	GENMASK(17, 16)
-> > > +#define HSPHY_CFG0_SEL_T_MASK	GENMASK(15, 12)
-> > > +#define HSPHY_CFG0_RTERM_MASK	GENMASK(7, 6)
-> > > +#define HSPHY_CFG0_TRIMMASK	(HSPHY_CFG0_HS_I_MASK \
-> > > +				 | HSPHY_CFG0_SEL_T_MASK \
-> > > +				 | HSPHY_CFG0_RTERM_MASK)
-> > > +
-> > > +#define HSPHY_CFG1		0x4
-> > > +#define HSPHY_CFG1_DAT_EN	BIT(29)
-> > > +#define HSPHY_CFG1_ADR_EN	BIT(28)
-> > > +#define HSPHY_CFG1_ADR_MASK	GENMASK(27, 16)
-> > > +#define HSPHY_CFG1_DAT_MASK	GENMASK(23, 16)
-> > > +
-> > > +#define MAX_CLKS	3
-> > > +#define MAX_RSTS	2
-> > > +#define MAX_PHY_PARAMS	1
-> > > +
-> > > +struct uniphier_u3hsphy_param {
-> > > +	u32 addr;
-> > > +	u32 mask;
-> > > +	u32 val;
-> > > +};
+> And I agree with him, we shouldn't have in devicetree what we can deduce
+> from the compatible string. But there doesn't seem to be an enforced
+> policy about it.
+
+Looking at this, yes that can be done as you have implemented but adding
+new compatible and tables every time seems not so great to me.
+
+If DT can describe these hardware features then driver can take action generically
+and we avoid these tables and skip some patches here..
+
+> 
+> @Rob, what do you think?
+
+Rob what is the recommendation here?
+
+> 
+> > >  -	jzdma = devm_kzalloc(dev, sizeof(*jzdma), GFP_KERNEL);
+> > >  +	if (of_id)
+> > >  +		version = (enum jz_version)of_id->data;
+> > >  +	else
+> > >  +		version = ID_JZ4780; /* Default when not probed from DT */
 > > 
-> > I'd like to avoid configure the PHY this way, since it's impossible to know
-> > which register is being configured.
+> > where else would it be probed from.... ?
 > 
+> Platform, MFD driver, etc. But not likely to happen.
+> I can remove these lines if you want.
 
-This way might be misunderstood.
-These HS-PHY and SS-PHY have "internal" registers, which are not memory-mapped.
+Lets add when we land support for those.
 
-And to access these internal registers, we need to specify the number
-corresponding to the register.
-
-The "addr" in "uniphier_u3hsphy_param" is just the number of the register.
-The "mask" shows a bitfield of the register, that means one of PHY parameters.
-The "value" shows a parameter value to set to the bitfield.
-
-
-> I see. 
-> In order to know which register is set, I'll add definitions for address
-> and mask.
-> And I think the driver might have functions for each SoC to configure
-> the registers instead of uniphier_u3hsphy_param.
-
-Then, I think it's sufficient to define a macro with a meaningful label for
-each bitfield, and PHY parameters are expressed like that.
-
-  { 10, FOO_BAR_MODE, 0x2 }, /* set 2 to FOO_BAR_MODE in register 10 */
-
-In this case, we need to shift "value" according to "mask".
-
-Thank you,
-
----
-Best Regards,
-Kunihiko Hayashi
+-- 
+~Vinod
