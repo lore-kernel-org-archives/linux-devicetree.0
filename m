@@ -1,67 +1,166 @@
-From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v12 2/4] iommu/arm-smmu: Invoke pm_runtime
- during probe, add/remove device
-Date: Wed, 11 Jul 2018 19:05:06 +0900
-Message-ID: <CAAFQd5COVfXRBuq2ofHoOvNb+cMVmAFDaekh5KM4DBB1ZEf5pA@mail.gmail.com>
-References: <20180708173413.1965-1-vivek.gautam@codeaurora.org>
- <20180708173413.1965-3-vivek.gautam@codeaurora.org>
- <1694664.FhRBrgajmF@aspire.rjw.lan>
+From: Aapo Vienamo <avienamo@nvidia.com>
+Subject: Re: [PATCH 6/6] soc/tegra: pmc: Implement pad configuration via
+ pinctrl
+Date: Wed, 11 Jul 2018 13:12:06 +0300
+Message-ID: <20180711131206.31d83143@dhcp-10-21-25-168>
+References: <1531226879-11802-1-git-send-email-avienamo@nvidia.com>
+        <1531227295-12752-1-git-send-email-avienamo@nvidia.com>
+        <d9a55862-39eb-5c67-1c24-83b8e2850c2a@nvidia.com>
+        <20180711123818.0a62f93a@dhcp-10-21-25-168>
+        <8a666c2b-09d3-9d25-a846-bdaccbfbefa9@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1694664.FhRBrgajmF-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
- Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>"list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
- Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Marek Szyprowski <m.szyprow>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8a666c2b-09d3-9d25-a846-bdaccbfbefa9@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Mikko Perttunen <mperttunen@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUmFmYWVsLAoKVGhhbmtzIGZvciByZXZpZXcuCgpPbiBXZWQsIEp1bCAxMSwgMjAxOCBhdCA2
-OjUzIFBNIFJhZmFlbCBKLiBXeXNvY2tpIDxyandAcmp3eXNvY2tpLm5ldD4gd3JvdGU6Cj4KPiBP
-biBTdW5kYXksIEp1bHkgOCwgMjAxOCA3OjM0OjExIFBNIENFU1QgVml2ZWsgR2F1dGFtIHdyb3Rl
-Ogo+ID4gRnJvbTogU3JpY2hhcmFuIFIgPHNyaWNoYXJhbkBjb2RlYXVyb3JhLm9yZz4KPiA+Cj4g
-PiBUaGUgc21tdSBkZXZpY2UgcHJvYmUvcmVtb3ZlIGFuZCBhZGQvcmVtb3ZlIG1hc3RlciBkZXZp
-Y2UgY2FsbGJhY2tzCj4gPiBnZXRzIGNhbGxlZCB3aGVuIHRoZSBzbW11IGlzIG5vdCBsaW5rZWQg
-dG8gaXRzIG1hc3RlciwgdGhhdCBpcyB3aXRob3V0Cj4gPiB0aGUgY29udGV4dCBvZiB0aGUgbWFz
-dGVyIGRldmljZS4gU28gY2FsbGluZyBydW50aW1lIGFwaXMgaW4gdGhvc2UgcGxhY2VzCj4gPiBz
-ZXBhcmF0ZWx5Lgo+ID4KPiA+IFNpZ25lZC1vZmYtYnk6IFNyaWNoYXJhbiBSIDxzcmljaGFyYW5A
-Y29kZWF1cm9yYS5vcmc+Cj4gPiBbdml2ZWs6IENsZWFudXAgcG0gcnVudGltZSBjYWxsc10KPiA+
-IFNpZ25lZC1vZmYtYnk6IFZpdmVrIEdhdXRhbSA8dml2ZWsuZ2F1dGFtQGNvZGVhdXJvcmEub3Jn
-Pgo+ID4gUmV2aWV3ZWQtYnk6IFRvbWFzeiBGaWdhIDx0ZmlnYUBjaHJvbWl1bS5vcmc+Cj4gPiAt
-LS0KPiA+Cj4gPiAgLSBDaGFuZ2Ugc2luY2UgdjExCj4gPiAgICAqIFJlcGxhY2VkIHBtX3J1bnRp
-bWVfZGlzYWJsZSgpIHdpdGggcG1fcnVudGltZV9mb3JjZV9zdXNwZW5kKCkKPiA+ICAgICAgdG8g
-YXZvaWQgd2FybmluZyBhYm91dCAiIFVucHJlcGFyaW5nIGVuYWJsZWQgY2xvY2siLgo+ID4gICAg
-ICBGdWxsIHdhcm5pbmcgdGV4dCBtZW50aW9uZWQgaW4gY292ZXIgcGF0Y2guCj4gPgo+ID4gIGRy
-aXZlcnMvaW9tbXUvYXJtLXNtbXUuYyB8IDkyICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKystLS0tLQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA4NCBpbnNlcnRpb25zKCsp
-LCA4IGRlbGV0aW9ucygtKQo+ID4KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L2FybS1z
-bW11LmMgYi9kcml2ZXJzL2lvbW11L2FybS1zbW11LmMKPiA+IGluZGV4IGEwMWQwZGRlMjFkZC4u
-MDkyNjVlMjA2ZTJkIDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9pb21tdS9hcm0tc21tdS5jCj4g
-PiArKysgYi9kcml2ZXJzL2lvbW11L2FybS1zbW11LmMKPiA+IEBAIC0yNjgsNiArMjY4LDIwIEBA
-IHN0YXRpYyBzdHJ1Y3QgYXJtX3NtbXVfb3B0aW9uX3Byb3AgYXJtX3NtbXVfb3B0aW9uc1tdID0g
-ewo+ID4gICAgICAgeyAwLCBOVUxMfSwKPiA+ICB9Owo+ID4KPiA+ICtzdGF0aWMgaW5saW5lIGlu
-dCBhcm1fc21tdV9ycG1fZ2V0KHN0cnVjdCBhcm1fc21tdV9kZXZpY2UgKnNtbXUpCj4gPiArewo+
-ID4gKyAgICAgaWYgKHBtX3J1bnRpbWVfZW5hYmxlZChzbW11LT5kZXYpKQo+Cj4gV2h5IGRvIHlv
-dSBuZWVkIHRoZSBwbV9ydW50aW1lX2VuYWJsZWQoKSBjaGVja3MgaGVyZSBhbmQgYmVsb3c/Cj4K
-PiBwbV9ydW50aW1lX2dldF9zeW5jKCkgYW5kIHBtX3J1bnRpbWVfcHV0KCkgc2hvdWxkIHdvcmsg
-anVzdCBmaW5lIGlmCj4gcnVudGltZSBQTSBpcyBub3QgZW5hYmxlZC4KCkJlY2F1c2UgcG1fcnVu
-dGltZV9nZXRfc3luYygpIGFjcXVpcmVzIGEgc3BpbiBsb2NrLCBldmVuIGlmIG9ubHkgZm9yCnRo
-ZSBzaG9ydCB0aW1lIG9mIGNoZWNraW5nIGlmIHJ1bnRpbWUgUE0gaXMgZW5hYmxlZCBhbmQgU01N
-VSBkcml2ZXIKbWFpbnRhaW5lcnMgZGlkbid0IHdhbnQgYW55IHNwaW4gbG9ja3MgaW4gY2VydGFp
-biBJT01NVSBBUEkgY29kZSBwYXRocwpvbiBoYXJkd2FyZSBpbXBsZW1lbnRhdGlvbnMgdGhhdCBk
-b24ndCBuZWVkIHJ1bnRpbWUgUE0sIHdoaWxlIHdlIHN0aWxsCm5lZWQgdG8gYmUgYWJsZSB0byBj
-b250cm9sIHJ1bnRpbWUgUE0gdGhlcmUgb24gaGFyZHdhcmUKaW1wbGVtZW50YXRpb25zIHRoYXQg
-bmVlZCBzby4KCkJlc3QgcmVnYXJkcywKVG9tYXN6Cl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2ZyZWVkcmVubwo=
+On Wed, 11 Jul 2018 10:46:21 +0100
+Jon Hunter <jonathanh@nvidia.com> wrote:
+
+> On 11/07/18 10:38, Aapo Vienamo wrote:
+> > On Wed, 11 Jul 2018 09:40:01 +0100
+> > Jon Hunter <jonathanh@nvidia.com> wrote:
+> >   
+> >> On 10/07/18 13:54, Aapo Vienamo wrote:  
+> >>> Register a pinctrl device and implement get and set functions for
+> >>> PIN_CONFIG_LOW_POWER_MODE and PIN_CONFIG_POWER_SOURCE parameters.
+> >>>
+> >>> Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+> >>> ---
+> >>>  drivers/soc/tegra/pmc.c | 192 +++++++++++++++++++++++++++++++++++++++++++++++-
+> >>>  1 file changed, 190 insertions(+), 2 deletions(-)
+> >>>
+> >>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> >>> index b833334..8677391 100644
+> >>> --- a/drivers/soc/tegra/pmc.c
+> >>> +++ b/drivers/soc/tegra/pmc.c
+> >>> @@ -33,6 +33,9 @@
+> >>>  #include <linux/of_address.h>
+> >>>  #include <linux/of_clk.h>
+> >>>  #include <linux/of_platform.h>
+> >>> +#include <linux/pinctrl/pinctrl.h>
+> >>> +#include <linux/pinctrl/pinconf.h>
+> >>> +#include <linux/pinctrl/pinconf-generic.h>
+> >>>  #include <linux/platform_device.h>
+> >>>  #include <linux/pm_domain.h>
+> >>>  #include <linux/reboot.h>
+> >>> @@ -45,6 +48,8 @@
+> >>>  #include <soc/tegra/fuse.h>
+> >>>  #include <soc/tegra/pmc.h>
+> >>>  
+> >>> +#include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
+> >>> +
+> >>>  #define PMC_CNTRL			0x0
+> >>>  #define  PMC_CNTRL_INTR_POLARITY	BIT(17) /* inverts INTR polarity */
+> >>>  #define  PMC_CNTRL_CPU_PWRREQ_OE	BIT(16) /* CPU pwr req enable */
+> >>> @@ -162,6 +167,9 @@ struct tegra_pmc_soc {
+> >>>  	const struct tegra_io_pad_soc *io_pads;
+> >>>  	unsigned int num_io_pads;
+> >>>  
+> >>> +	const struct pinctrl_pin_desc *pin_descs;
+> >>> +	unsigned int num_pin_descs;
+> >>> +
+> >>>  	const struct tegra_pmc_regs *regs;
+> >>>  	void (*init)(struct tegra_pmc *pmc);
+> >>>  	void (*setup_irq_polarity)(struct tegra_pmc *pmc,
+> >>> @@ -220,6 +228,8 @@ struct tegra_pmc {
+> >>>  	DECLARE_BITMAP(powergates_available, TEGRA_POWERGATE_MAX);
+> >>>  
+> >>>  	struct mutex powergates_lock;
+> >>> +
+> >>> +	struct pinctrl_dev *pctl_dev;
+> >>>  };
+> >>>  
+> >>>  static struct tegra_pmc *pmc = &(struct tegra_pmc) {
+> >>> @@ -1400,6 +1410,145 @@ static void tegra_pmc_init_tsense_reset(struct tegra_pmc *pmc)
+> >>>  	of_node_put(np);
+> >>>  }
+> >>>  
+> >>> +static int tegra_io_pad_pinctrl_get_groups_count(struct pinctrl_dev *pctl_dev)
+> >>> +{
+> >>> +	return pmc->soc->num_io_pads;
+> >>> +}
+> >>> +
+> >>> +static const char *tegra_io_pad_pinctrl_get_group_name(
+> >>> +		struct pinctrl_dev *pctl, unsigned int group)
+> >>> +{
+> >>> +	return pmc->soc->io_pads[group].name;
+> >>> +}
+> >>> +
+> >>> +static int tegra_io_pad_pinctrl_get_group_pins(struct pinctrl_dev *pctl_dev,
+> >>> +					       unsigned int group,
+> >>> +					       const unsigned int **pins,
+> >>> +					       unsigned int *num_pins)
+> >>> +{
+> >>> +	*pins = &pmc->soc->io_pads[group].id;
+> >>> +	*num_pins = 1;
+> >>> +	return 0;
+> >>> +}
+> >>> +
+> >>> +static const struct pinctrl_ops tegra_io_pad_pinctrl_ops = {
+> >>> +	.get_groups_count = tegra_io_pad_pinctrl_get_groups_count,
+> >>> +	.get_group_name = tegra_io_pad_pinctrl_get_group_name,
+> >>> +	.get_group_pins = tegra_io_pad_pinctrl_get_group_pins,
+> >>> +	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
+> >>> +	.dt_free_map = pinconf_generic_dt_free_map,
+> >>> +};
+> >>> +
+> >>> +static int tegra_io_pad_pinconf_get(struct pinctrl_dev *pctl_dev,
+> >>> +				    unsigned int pin, unsigned long *config)
+> >>> +{
+> >>> +	const struct tegra_io_pad_soc *pad = tegra_io_pad_find(pmc, pin);
+> >>> +	enum pin_config_param param = pinconf_to_config_param(*config);
+> >>> +	int ret;
+> >>> +	u32 arg;
+> >>> +
+> >>> +	switch (param) {
+> >>> +	case PIN_CONFIG_POWER_SOURCE:
+> >>> +		ret = tegra_io_pad_get_voltage(pad->id);
+> >>> +		if (ret == TEGRA_IO_PAD_1800000UV)
+> >>> +			arg = TEGRA_IO_PAD_VOLTAGE_1V8;
+> >>> +		else if (ret == TEGRA_IO_PAD_3300000UV)
+> >>> +			arg = TEGRA_IO_PAD_VOLTAGE_3V3;    
+> >>
+> >> It looks like we have two definitions for the same thing here.
+> >> Can we get rid of one of these?   
+> > 
+> > They are indeed pretty much the same thing, however
+> > TEGRA_IO_PAD_1800000UV is part of the pmc.h api and
+> > TEGRA_IO_PAD_VOLTAGE_1V8 comes from the device tree binding abi headers.
+> > The key difference between them is that TEGRA_IO_PAD_VOLTAGE_1V8 is a
+> > macro and TEGRA_IO_PAD_1800000UV is an enum and it's used like this in
+> > the pmc api:
+> > 
+> > int tegra_io_pad_set_voltage(enum tegra_io_pad id,
+> >                              enum tegra_io_pad_voltage voltage);
+> > 
+> > where it's obvious that the function takes this enum as an argument. If
+> > the enum definitions were replaced with macros usable from the dts
+> > files, the enum from the function prototype would have to be changed to
+> > an int. This makes the api more ambiguous because other parts of the
+> > kernel have the convention where "int voltage" means voltage in
+> > microvolts.  
+> 
+> Raises the question, do we need these legacy APIs? I don't see them being
+> used.
+> 
+
+True, however other parts of the pmc pad configuration API are used, for
+example tegra_io_pad_power_enable() and _disable() are used by the sor
+driver.
+
+I see couple of options here: For sake of consistency we could merge
+this as is and later replace all of the existing usage of the pmc.h pad
+control API with pinctrl in a separate series and clean that part up.
+Or I could remove the pad voltage configuration API as part of this
+series and leave the pmc.h pad power state API the way it is. Or I could
+transition the existing usage of pmc pad control to use the pinctrl API
+but I'm not sure if that's within the scope of this series.
+
+Any thoughts?
+
+ -Aapo
