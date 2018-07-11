@@ -1,182 +1,200 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 6/6] soc/tegra: pmc: Implement pad configuration via
- pinctrl
-Date: Wed, 11 Jul 2018 12:42:53 +0100
-Message-ID: <741dc12e-d9b6-2aa5-6126-077f02c28d44@nvidia.com>
-References: <1531226879-11802-1-git-send-email-avienamo@nvidia.com>
- <1531227295-12752-1-git-send-email-avienamo@nvidia.com>
- <d9a55862-39eb-5c67-1c24-83b8e2850c2a@nvidia.com>
- <20180711123818.0a62f93a@dhcp-10-21-25-168>
- <8a666c2b-09d3-9d25-a846-bdaccbfbefa9@nvidia.com>
- <20180711131206.31d83143@dhcp-10-21-25-168>
+From: Helmut Tschemernjak <helmut@helios.de>
+Subject: Re: [RFC net-next 00/15] net: A socket API for LoRa
+Date: Wed, 11 Jul 2018 13:45:22 +0200
+Message-ID: <5fed8b9a-20a3-4677-0213-ac2814c4aaa9@helios.de>
+References: <20180701110804.32415-1-afaerber@suse.de>
+ <487df785-ddf5-ed81-a253-6afb7f2de811@datenfreihafen.org>
+ <5aac9ea5-484c-1b3b-8058-50e11e8d7a9a@helios.de>
+ <23213cab-dc87-118c-1750-cd30d60ce9f8@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180711131206.31d83143@dhcp-10-21-25-168>
+In-Reply-To: <23213cab-dc87-118c-1750-cd30d60ce9f8@suse.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Aapo Vienamo <avienamo@nvidia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Mikko Perttunen <mperttunen@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Cc: Stefan Schmidt <stefan@datenfreihafen.org>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jian-Hong Pan <starnight@g.ncu.edu.tw>, Jiri Pirko <jiri@resnulli.us>, Marcel Holtmann <marcel@holtmann.org>, "David S . Miller" <davem@davemloft.net>, Matthias Brugger <mbrugger@suse.com>, Janus Piwek <jpiwek@arroweurope.com>, =?UTF-8?Q?Michael_R=c3=b6der?= <michael.roeder@avnet.eu>, Dollar Chen <dollar.chen@wtmec.com>, Ken Yu <ken.yu@rakwireless.com>, =?UTF-8?Q?Konstantin_B=c3=b6hm?= <konstantin.boehm@ancud.de>, Jan Jongboom <jan.jongboom@arm.com>, Jon Ortego <Jon.Ortego@imst.de>, contact@snootlab.com, Ben Whitten <ben.whitten@lairdtech.com>, Brian Ray <brian.ray@link-labs.com>, lora@globalsat.com.tw, lora@radioshuttle.de
 List-Id: devicetree@vger.kernel.org
 
+Dear Andreas,
 
-On 11/07/18 11:12, Aapo Vienamo wrote:
-> On Wed, 11 Jul 2018 10:46:21 +0100
-> Jon Hunter <jonathanh@nvidia.com> wrote:
-> 
->> On 11/07/18 10:38, Aapo Vienamo wrote:
->>> On Wed, 11 Jul 2018 09:40:01 +0100
->>> Jon Hunter <jonathanh@nvidia.com> wrote:
->>>   
->>>> On 10/07/18 13:54, Aapo Vienamo wrote:  
->>>>> Register a pinctrl device and implement get and set functions for
->>>>> PIN_CONFIG_LOW_POWER_MODE and PIN_CONFIG_POWER_SOURCE parameters.
->>>>>
->>>>> Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
->>>>> ---
->>>>>  drivers/soc/tegra/pmc.c | 192 +++++++++++++++++++++++++++++++++++++++++++++++-
->>>>>  1 file changed, 190 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>>>> index b833334..8677391 100644
->>>>> --- a/drivers/soc/tegra/pmc.c
->>>>> +++ b/drivers/soc/tegra/pmc.c
->>>>> @@ -33,6 +33,9 @@
->>>>>  #include <linux/of_address.h>
->>>>>  #include <linux/of_clk.h>
->>>>>  #include <linux/of_platform.h>
->>>>> +#include <linux/pinctrl/pinctrl.h>
->>>>> +#include <linux/pinctrl/pinconf.h>
->>>>> +#include <linux/pinctrl/pinconf-generic.h>
->>>>>  #include <linux/platform_device.h>
->>>>>  #include <linux/pm_domain.h>
->>>>>  #include <linux/reboot.h>
->>>>> @@ -45,6 +48,8 @@
->>>>>  #include <soc/tegra/fuse.h>
->>>>>  #include <soc/tegra/pmc.h>
->>>>>  
->>>>> +#include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
->>>>> +
->>>>>  #define PMC_CNTRL			0x0
->>>>>  #define  PMC_CNTRL_INTR_POLARITY	BIT(17) /* inverts INTR polarity */
->>>>>  #define  PMC_CNTRL_CPU_PWRREQ_OE	BIT(16) /* CPU pwr req enable */
->>>>> @@ -162,6 +167,9 @@ struct tegra_pmc_soc {
->>>>>  	const struct tegra_io_pad_soc *io_pads;
->>>>>  	unsigned int num_io_pads;
->>>>>  
->>>>> +	const struct pinctrl_pin_desc *pin_descs;
->>>>> +	unsigned int num_pin_descs;
->>>>> +
->>>>>  	const struct tegra_pmc_regs *regs;
->>>>>  	void (*init)(struct tegra_pmc *pmc);
->>>>>  	void (*setup_irq_polarity)(struct tegra_pmc *pmc,
->>>>> @@ -220,6 +228,8 @@ struct tegra_pmc {
->>>>>  	DECLARE_BITMAP(powergates_available, TEGRA_POWERGATE_MAX);
->>>>>  
->>>>>  	struct mutex powergates_lock;
->>>>> +
->>>>> +	struct pinctrl_dev *pctl_dev;
->>>>>  };
->>>>>  
->>>>>  static struct tegra_pmc *pmc = &(struct tegra_pmc) {
->>>>> @@ -1400,6 +1410,145 @@ static void tegra_pmc_init_tsense_reset(struct tegra_pmc *pmc)
->>>>>  	of_node_put(np);
->>>>>  }
->>>>>  
->>>>> +static int tegra_io_pad_pinctrl_get_groups_count(struct pinctrl_dev *pctl_dev)
->>>>> +{
->>>>> +	return pmc->soc->num_io_pads;
->>>>> +}
->>>>> +
->>>>> +static const char *tegra_io_pad_pinctrl_get_group_name(
->>>>> +		struct pinctrl_dev *pctl, unsigned int group)
->>>>> +{
->>>>> +	return pmc->soc->io_pads[group].name;
->>>>> +}
->>>>> +
->>>>> +static int tegra_io_pad_pinctrl_get_group_pins(struct pinctrl_dev *pctl_dev,
->>>>> +					       unsigned int group,
->>>>> +					       const unsigned int **pins,
->>>>> +					       unsigned int *num_pins)
->>>>> +{
->>>>> +	*pins = &pmc->soc->io_pads[group].id;
->>>>> +	*num_pins = 1;
->>>>> +	return 0;
->>>>> +}
->>>>> +
->>>>> +static const struct pinctrl_ops tegra_io_pad_pinctrl_ops = {
->>>>> +	.get_groups_count = tegra_io_pad_pinctrl_get_groups_count,
->>>>> +	.get_group_name = tegra_io_pad_pinctrl_get_group_name,
->>>>> +	.get_group_pins = tegra_io_pad_pinctrl_get_group_pins,
->>>>> +	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
->>>>> +	.dt_free_map = pinconf_generic_dt_free_map,
->>>>> +};
->>>>> +
->>>>> +static int tegra_io_pad_pinconf_get(struct pinctrl_dev *pctl_dev,
->>>>> +				    unsigned int pin, unsigned long *config)
->>>>> +{
->>>>> +	const struct tegra_io_pad_soc *pad = tegra_io_pad_find(pmc, pin);
->>>>> +	enum pin_config_param param = pinconf_to_config_param(*config);
->>>>> +	int ret;
->>>>> +	u32 arg;
->>>>> +
->>>>> +	switch (param) {
->>>>> +	case PIN_CONFIG_POWER_SOURCE:
->>>>> +		ret = tegra_io_pad_get_voltage(pad->id);
->>>>> +		if (ret == TEGRA_IO_PAD_1800000UV)
->>>>> +			arg = TEGRA_IO_PAD_VOLTAGE_1V8;
->>>>> +		else if (ret == TEGRA_IO_PAD_3300000UV)
->>>>> +			arg = TEGRA_IO_PAD_VOLTAGE_3V3;    
->>>>
->>>> It looks like we have two definitions for the same thing here.
->>>> Can we get rid of one of these?   
->>>
->>> They are indeed pretty much the same thing, however
->>> TEGRA_IO_PAD_1800000UV is part of the pmc.h api and
->>> TEGRA_IO_PAD_VOLTAGE_1V8 comes from the device tree binding abi headers.
->>> The key difference between them is that TEGRA_IO_PAD_VOLTAGE_1V8 is a
->>> macro and TEGRA_IO_PAD_1800000UV is an enum and it's used like this in
->>> the pmc api:
->>>
->>> int tegra_io_pad_set_voltage(enum tegra_io_pad id,
->>>                              enum tegra_io_pad_voltage voltage);
->>>
->>> where it's obvious that the function takes this enum as an argument. If
->>> the enum definitions were replaced with macros usable from the dts
->>> files, the enum from the function prototype would have to be changed to
->>> an int. This makes the api more ambiguous because other parts of the
->>> kernel have the convention where "int voltage" means voltage in
->>> microvolts.  
+here are a few comments in response to your answer.
+
+The SX1276 can do MTU sizes up to 2048 bytes, there is a FIFO and 
+corresponding interrupts to handle this, details are in datasheet.
+
+Regarding the LoRaWAN concept, when companies like Semtech and IBM 
+designing such a thing, and other companies (Stackforce) implementing 
+the code for it. This does not mean automatically that it is good for 
+most use cases. Specifically the idea of the concentrator has major 
+limits. Check out our article and picture: "Protocols: LoRaWANTM vs 
+RadioShuttle" at http://www.radioshuttle.de/en/radioshuttle-2/protocol/
+
+Again my opinion is that that such a specific driver is not needed in 
+the kernel.
+
+I am happy to provide further feedback, when you have questions about 
+the SX1276Generic driver which I maintain, I am available to discuss 
+this. And again the open source driver works on mbed, arduino and can be 
+easily adopted to Linux user space and other environments.
+
+Regards
+Helmut
+
+
+On 11/07/18 04:07, Andreas Färber wrote:
+> Dear Helmut,
+>
+> Am 05.07.2018 um 12:43 schrieb Helmut Tschemernjak:
+>> I put the kernel support for the SX1276 LoRa chip in question. I don’t
+>> think that this kind of device should be in the Linux kernel.
+> Thanks for sharing your opinion.
+>
+>> Here are a few facts to consider:
+>> - A LoRa transaction is very slow  (e.g. SF7 needs about 210 ms, for
+>> SF12 6280 ms) for 12 bytes user data with acknowledge.
+> Where do you see a problem? If you look at my SX1276 patch, you will
+> find that it queues a work item for the transmission (asynchronously)
+> and has an interrupt handler to get notified of the TX interrupt. It
+> surely won't get quicker in userspace - and as you point out, we're not
+> speaking about DPDK performance here, so no need for polling.
+>
+>> - There are many different implementations for the antenna switch,
+>> switching between receiving/sending, PA-BOOST, 433, 868/915 MHz. (I know
+>> SX1276 Heltec ESP32, SX1276 Murata, RFM95-(1276), SX1276 Heltec
+>> STM32-L4) they are all different regarding this.
+> Yes, and as demonstrated with this patch series, the kernel is well able
+> to handle this variety of interfaces. I would say better than userspace!
+>
+> As noted, I've tested both 868 MHz and 433 MHz modules. My SX1276 driver
+> uses the Device Tree (radio-frequency) to configure the driver when this
+> was a property of the module. RN2483 by contrast supports two, so a
+> netlink interface was suggested to configure this at runtime.
+>
+>> - The LoRa chip device ID is only 8-bit which is not sufficient for
+>> larger networks, e.g. our RadioShuttle protocol uses compressed 32-bit
+>> device IDs.
+> What does that have to do with anything? The whole reason that you're
+> CC'ed on this patchset is to make sure that you or someone else can
+> implement your custom protocol on top of the APIs being proposed. So
+> my-protocol-is-better-than-theirs is no argument against this project.
+>
+> The way I understand LoRa and thus designed the struct sockaddr_lora is
+> that there is no ID involved for LoRa at all - it is essentially a
+> broadcast. The 8-byte (not 8-bit) EUIs only come into play for LoRaWAN
+> AFAIU. Am I missing anything?
+>
+> LoRaWAN, RadioShuttle, RadioHead and LR Base all have their own ways of
+> addressing - the question here is how to model that in Linux, whether as
+> one PF_LORA with different protocol options and a growing union
+> lora_addr inside sockaddr_lora covering all of them, or a protocol
+> family (requiring global number allocation) for each one of them.
+>
+>> - The chip can do MTU sizes up to 2048 bytes, most protocols use less
+>> than 250 bytes.
+> How would 2048 bytes work? The FIFO buffer fits a maximum of 256 bytes.
+>
+> IIRC the recommended MTU is also restricted by the airtime, i.e. SF,
+> bandwidth, preamble and other factors...
+>
+> Some UART based modules allow a maximum of 64 bytes.
+>
+>> - Applications do on-the-fly channel and spreading factor switching
+>> which makes it more difficult for the configuration.
+> That's exactly the question of how to implement individual options -
+> Device Tree would be fixed for the system's hardware, netlink would be
+> user-configurable for the whole network device, whereas socket options
+> would be per socket/application, and ioctls might be yet another
+> implementation layer.
+>
+>> - The chip supports Lora modulation as well as  FSK, GFSK, MSK, GMSK,
+>> and OOK modulation, for some use cases the other modulations are of
+>> interest, e.g. to communicated with other devices.
+> Yes, therefore I raised it in the cover letter as open point 5).
+>
+>> - Power saving modes, like sleep, suspend may be required for battery
+>> operation.
+> The Linux kernel can deal with that much better than userspace. There's
+> pm hooks that one could implement. And SX1276 returns to standby mode
+> whenever an operation such as TX is completed. In sleep mode not all
+> settings get preserved, so they would need to be saved in the private
+> struct and restored on resume.
+>
+>> - Cad detection is very flexible and can be differently used.
 >>
->> Raises the question, do we need these legacy APIs? I don't see them being
->> used.
+>> - LoRa preamble may be different depending on the protocol used.
 >>
-> 
-> True, however other parts of the pmc pad configuration API are used, for
-> example tegra_io_pad_power_enable() and _disable() are used by the sor
-> driver.
-> 
-> I see couple of options here: For sake of consistency we could merge
-> this as is and later replace all of the existing usage of the pmc.h pad
-> control API with pinctrl in a separate series and clean that part up.
-> Or I could remove the pad voltage configuration API as part of this
-> series and leave the pmc.h pad power state API the way it is. Or I could
-> transition the existing usage of pmc pad control to use the pinctrl API
-> but I'm not sure if that's within the scope of this series.
-> 
-> Any thoughts?
-
-My preference would be option #2 ...
-
-"remove the pad voltage configuration API as part of this series and
- leave the pmc.h pad power state API the way it is".
-
-If someone is using the tegra_io_pad_power_enable/disable then we cannot
-get rid of it, but we can get rid of the other legacy APIs.
-
-Cheers
-Jon
+>> - The new Lora chip SX1262 / 68 (successor of the SX1276) has different
+>> hardware and all different registers, it is driver incompatible with the
+>> SX1276. It needs an entire new driver.
+> Not unexpected, same as SX1301 being different. As this series shows,
+> multiple drivers can easily be implemented as necessary.
+>
+>> - The device is not multi-process capable (only a single process can
+>> communicate with it).
+> How is that different from other half-duplex network interfaces? The
+> driver needs to take care of appropriate locking of its operations, and
+> the socket subsystem should make sure packets get queued accordingly.
+>
+>> - There are SX1276 LoRa modules with a build-in protocol (LoRaWAN and
+>> RAW) via a serial connection only, again complete different API compared
+>> the SX1276 chip. Software updates for this devices are difficult.
+> Drivers for such modules are already demonstrated in this series.
+>
+>> - I am even convinced that the LoRaWAN protocol with the concentrator
+>> concept is not good, the peer to peer communication and a standard MQTT
+>> gateway (what we do) is way more flexible.
+> Your opinion in all honors, LoRaWAN is an open specification, whereas
+> yours is closed. So whatever benefits yours may have, that way you're
+> unlikely to make LoRaWAN go away. People are rolling out LoRaWAN
+> gateways, and therefore the question is not which protocol is more
+> flexible but rather how all of them can be enabled equally for those
+> that want to use them.
+>
+>> For all this reasons, I feel a user level driver task implementation is
+>> way more flexible. I did a lot of work/enhancements on the SX1276 link
+>> level driver from Semtech, it is available and maintained on mbed.org
+>> and supports mbed-os, Arduino and is prepared for Linux.
+>> https://os.mbed.com/users/Helmut64/code/SX1276GenericLib/
+>>
+>> Protocols e.g. our RadioShuttle LoRa peer to peer protocol or the
+>> LoRaWAN protocol can run on top of the SX1276GenericLib. We may should
+>> focus on such a driver library getting supported for multiple OS's (Win,
+>> Linux, mbed, Ardino, etc.)
+>>
+>> Again I feel a Linux kernel device driver for the SX1276 chip make
+>> little sense for me.
+> Well, feel free to use spidev if you prefer. As I pointed out, the Linux
+> spi maintainers don't seem to share your view - instead of white-listing
+> chipsets for concrete kernel drivers (as you appear to suggest here)
+> they rather black-list chipsets to be "allowed" to use spidev if all
+> else fails.
+>
+> Having already done part of the implementation work, for me the question
+> is not whether to do a kernel driver but how to do it properly, keeping
+> all corner cases in mind, such as non-standard protocols like yours.
+> It's great that you're writing an Open Source library for mbed, but its
+> name indicates that it offers no abstraction like proposed here.
+>
+> I'll drop you from v2 then, to not bother you about this Linux kernel
+> implementation anymore.
+>
+> Regards,
+> Andreas
+>
 
 -- 
-nvpublic
+best regards / mit freundlichen Gruessen,
+
+Helmut Tschemernjak
+
+
+HELIOS Software GmbH
+Steinriede 3
+30827 Garbsen (Hannover)
+Phone:    +49-5131-709320
+Fax:      +49-5131-709325
+Internet    Mail: helmut@helios.de
+             Web: http://www.helios.de
+             Google+: http://helios.de/helmut
