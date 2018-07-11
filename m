@@ -1,28 +1,64 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/5] dt-bindings: w1: document bindings for ds2760
- battery monitor
-Date: Wed, 11 Jul 2018 09:02:35 -0600
-Message-ID: <20180711150235.GA24824@rob-hp-laptop>
-References: <20180706053552.11438-1-daniel@zonque.org>
- <20180706053552.11438-3-daniel@zonque.org>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v4 01/10] i3c: Add core I3C infrastructure
+Date: Wed, 11 Jul 2018 17:03:20 +0200
+Message-ID: <20180711170320.5b2b0114@bbrezillon>
+References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
+        <20180330074751.25987-2-boris.brezillon@bootlin.com>
+        <CAK8P3a1aZXf2sQW2mgwJScycKPhdoOAwxRjm5cQG83513uc3fg@mail.gmail.com>
+        <20180711164120.3e32fb08@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180706053552.11438-3-daniel@zonque.org>
+In-Reply-To: <20180711164120.3e32fb08@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Mack <daniel@zonque.org>
-Cc: zbr@ioremap.net, mark.rutland@arm.com, szabolcs.gyurko@tlt.hu, sre@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, robert.jarzmik@free.fr
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.or>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 06, 2018 at 07:35:49AM +0200, Daniel Mack wrote:
-> This patch adds the devicetree bindings for Maxim's ds2760 battery
-> monitors.
-> 
-> Signed-off-by: Daniel Mack <daniel@zonque.org>
-> ---
->  .../bindings/power/supply/maxim,ds2760.txt    | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/maxim,ds2760.txt
+On Wed, 11 Jul 2018 16:41:20 +0200
+Boris Brezillon <boris.brezillon@bootlin.com> wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> > > +/**
+> > > + * i3cdev_to_dev() - Returns the device embedded in @i3cdev
+> > > + * @i3cdev: I3C device
+> > > + *
+> > > + * Return: a pointer to a device object.
+> > > + */
+> > > +struct device *i3cdev_to_dev(struct i3c_device *i3cdev)
+> > > +{
+> > > +       return &i3cdev->dev;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(i3cdev_to_dev);
+> > > +
+> > > +/**
+> > > + * dev_to_i3cdev() - Returns the I3C device containing @dev
+> > > + * @dev: device object
+> > > + *
+> > > + * Return: a pointer to an I3C device object.
+> > > + */
+> > > +struct i3c_device *dev_to_i3cdev(struct device *dev)
+> > > +{
+> > > +       return container_of(dev, struct i3c_device, dev);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(dev_to_i3cdev);    
+> > 
+> > Many other subsystems just make the device structure available
+> > to all client drivers so this can be an inline operation. Is there
+> > a strong reason to hide it here?  
+> 
+> No, but I think most subsystem do provide dev_to_xxxdev() at least
+> (to_platform_device() for instance)
+> 
+
+My bad. I misunderstood you question. The main reason I did that was
+because I didn't want to expose i3c_device internals to the I3C device
+drivers. Anyway, this part will be reworked in my v6 to address one
+problem we had when re-attaching a pre-existing device that had lost
+its dynamic address and acquired a new one.
+Since we want that operation to be transparent to I3C device drivers, I
+had to decouple the I3C device driver representation from the I3C master
+controller one. I thus end up with struct i3C_dev_desc on the controller
+API side, and struct i3c_device on the driver side with a link between
+the 2 object that can be updated at runtime. And as you can imagine,
+i3c_device does not contain a lot of information now.
