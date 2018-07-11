@@ -1,74 +1,169 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v12 3/4] iommu/arm-smmu: Add the device_link
- between masters and smmu
-Date: Wed, 11 Jul 2018 16:06:14 +0530
-Message-ID: <741cc78b-59a7-5289-e42f-1511ebedb15d@codeaurora.org>
-References: <20180708173413.1965-1-vivek.gautam@codeaurora.org>
- <20180708173413.1965-4-vivek.gautam@codeaurora.org>
- <5179668.PHK6S3sxLu@aspire.rjw.lan>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v1 4/9] scsi: ufs: add option to change default UFS power
+ management level
+Date: Wed, 11 Jul 2018 13:50:51 +0300
+Message-ID: <0673f807-bc3c-e401-ae12-07bfafb55bf7@intel.com>
+References: <cover.1530880006.git.asutoshd@codeaurora.org>
+ <ff2b648007a400c60ba804a0c5cab0166bd268e7.1530880006.git.asutoshd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <5179668.PHK6S3sxLu-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ff2b648007a400c60ba804a0c5cab0166bd268e7.1530880006.git.asutoshd@codeaurora.org>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Asutosh Das <asutoshd@codeaurora.org>, subhashj@codeaurora.org, cang@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, linux-scsi@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUmFmYWVsLAoKCk9uIDcvMTEvMjAxOCAzOjIzIFBNLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90
-ZToKPiBPbiBTdW5kYXksIEp1bHkgOCwgMjAxOCA3OjM0OjEyIFBNIENFU1QgVml2ZWsgR2F1dGFt
-IHdyb3RlOgo+PiBGcm9tOiBTcmljaGFyYW4gUiA8c3JpY2hhcmFuQGNvZGVhdXJvcmEub3JnPgo+
-Pgo+PiBGaW5hbGx5IGFkZCB0aGUgZGV2aWNlIGxpbmsgYmV0d2VlbiB0aGUgbWFzdGVyIGRldmlj
-ZSBhbmQKPj4gc21tdSwgc28gdGhhdCB0aGUgc21tdSBnZXRzIHJ1bnRpbWUgZW5hYmxlZC9kaXNh
-YmxlZCBvbmx5IHdoZW4gdGhlCj4+IG1hc3RlciBuZWVkcyBpdC4gVGhpcyBpcyBkb25lIGZyb20g
-YWRkX2RldmljZSBjYWxsYmFjayB3aGljaCBnZXRzCj4+IGNhbGxlZCBvbmNlIHdoZW4gdGhlIG1h
-c3RlciBpcyBhZGRlZCB0byB0aGUgc21tdS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogU3JpY2hhcmFu
-IFIgPHNyaWNoYXJhbkBjb2RlYXVyb3JhLm9yZz4KPj4gU2lnbmVkLW9mZi1ieTogVml2ZWsgR2F1
-dGFtIDx2aXZlay5nYXV0YW1AY29kZWF1cm9yYS5vcmc+Cj4+IFJldmlld2VkLWJ5OiBUb21hc3og
-RmlnYSA8dGZpZ2FAY2hyb21pdW0ub3JnPgo+PiBDYzogUmFmYWVsIEouIFd5c29ja2kgPHJqd0By
-and5c29ja2kubmV0Pgo+PiBDYzogTHVrYXMgV3VubmVyIDxsdWthc0B3dW5uZXIuZGU+Cj4+IC0t
-LQo+Pgo+PiAgIC0gQ2hhbmdlIHNpbmNlIHYxMQo+PiAgICAgKiBSZXBsYWNlZCBETF9GTEFHX0FV
-VE9SRU1PVkUgZmxhZyB3aXRoIERMX0ZMQUdfQVVUT1JFTU9WRV9TVVBQTElFUi4KPj4KPj4gICBk
-cml2ZXJzL2lvbW11L2FybS1zbW11LmMgfCAxMiArKysrKysrKysrKysKPj4gICAxIGZpbGUgY2hh
-bmdlZCwgMTIgaW5zZXJ0aW9ucygrKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pb21tdS9h
-cm0tc21tdS5jIGIvZHJpdmVycy9pb21tdS9hcm0tc21tdS5jCj4+IGluZGV4IDA5MjY1ZTIwNmUy
-ZC4uOTE2Y2RlNDk1NGQyIDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL2lvbW11L2FybS1zbW11LmMK
-Pj4gKysrIGIvZHJpdmVycy9pb21tdS9hcm0tc21tdS5jCj4+IEBAIC0xNDYxLDggKzE0NjEsMjAg
-QEAgc3RhdGljIGludCBhcm1fc21tdV9hZGRfZGV2aWNlKHN0cnVjdCBkZXZpY2UgKmRldikKPj4g
-ICAKPj4gICAJaW9tbXVfZGV2aWNlX2xpbmsoJnNtbXUtPmlvbW11LCBkZXYpOwo+PiAgIAo+PiAr
-CWlmIChwbV9ydW50aW1lX2VuYWJsZWQoc21tdS0+ZGV2KSAmJgo+IFdoeSBkb2VzIHRoZSBjcmVh
-dGlvbiBvZiB0aGUgbGluayBkZXBlbmQgb24gd2hldGhlciBvciBub3QgcnVudGltZSBQTQo+IGlz
-IGVuYWJsZWQgZm9yIHRoZSBNTVUgZGV2aWNlPwoKVGhlIG1haW4gcHVycG9zZSBvZiB0aGlzIGRl
-dmljZSBsaW5rIGlzIHRvIGhhbmRsZSB0aGUgcnVudGltZSBQTSAKc3luY2hyb25pemF0aW9uCmJl
-dHdlZW4gdGhlIHN1cHBsaWVyIChpb21tdSkgYW5kIGNvbnN1bWVyIChjbGllbnQgZGV2aWNlcywg
-c3VjaCBhcyAKR1BVL2Rpc3BsYXkpLgpNb3Jlb3ZlciwgdGhlIHJ1bnRpbWUgcG0gaXMgY29uZGl0
-aW9uYWxseSBlbmFibGVkIGZvciBzbW11IGRldmljZXMgdGhhdCAKc3VwcG9ydApzdWNoIFsxXS4K
-Pgo+IFdoYXQgYWJvdXQgc3lzdGVtLXdpZGUgUE0gYW5kIHN5c3RlbSBzaHV0ZG93bj8gIEFyZSB0
-aGV5IGFsd2F5cyBndWFyYW50ZWVkCj4gdG8gaGFwcGVuIGluIHRoZSByaWdodCBvcmRlciB3aXRo
-b3V0IHRoZSBsaW5rPwoKV2hlbiB0aGVyZSdzIG5vIHJ1bnRpbWUgUE0sIHRoZXJlJ3Mgbm8gY2xv
-Y2tzLCBhbmQgb3RoZXIgcmVzb3VyY2VzIHRvIGJlIApoYW5kbGVkLgpTbywgd2UgZG9uJ3QgbmVl
-ZCBkZXZpY2UgbGluayBmb3Igc3lzdGVtLXdpZGUgUE0gYW5kIHN5c3RlbSBzaHV0ZG93biB0byAK
-d29yayBjb3JyZWN0bHkuClRoYXQncyB0aGUgY2FzZSB3aXRoIGN1cnJlbnQgYXJtLXNtbXUgZHJp
-dmVyLgpJcyBpdCBzb21ldGhpbmcgdGhhdCBpIGFtIG1pc3NpbmcgaGVyZT8KClsxXSBodHRwczov
-L2xrbWwub3JnL2xrbWwvMjAxOC8zLzgvNzc1CgpUaGFua3MKVml2ZWsKPj4gKwkgICAgIWRldmlj
-ZV9saW5rX2FkZChkZXYsIHNtbXUtPmRldiwKPj4gKwkJCURMX0ZMQUdfUE1fUlVOVElNRSB8IERM
-X0ZMQUdfQVVUT1JFTU9WRV9TVVBQTElFUikpIHsKPj4gKwkJZGV2X2VycihzbW11LT5kZXYsICJV
-bmFibGUgdG8gYWRkIGxpbmsgdG8gdGhlIGNvbnN1bWVyICVzXG4iLAo+PiArCQkJZGV2X25hbWUo
-ZGV2KSk7Cj4+ICsJCXJldCA9IC1FTk9ERVY7Cj4+ICsJCWdvdG8gb3V0X3VubGluazsKPj4gKwl9
-Cj4+ICsKPj4gICAJcmV0dXJuIDA7Cj4+ICAgCj4+ICtvdXRfdW5saW5rOgo+PiArCWlvbW11X2Rl
-dmljZV91bmxpbmsoJnNtbXUtPmlvbW11LCBkZXYpOwo+PiArCWFybV9zbW11X21hc3Rlcl9mcmVl
-X3NtZXMoZndzcGVjKTsKPj4gICBvdXRfY2ZnX2ZyZWU6Cj4+ICAgCWtmcmVlKGNmZyk7Cj4+ICAg
-b3V0X2ZyZWU6Cj4+Cj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVk
-cmVubwo=
+On 06/07/18 15:30, Asutosh Das wrote:
+> From: Subhash Jadavani <subhashj@codeaurora.org>
+> 
+> UFS device and link can be put in multiple different low power modes hence
+> UFS driver supports multiple different low power modes. By default UFS
+> driver selects the default (optimal) low power mode (which gives moderate
+> power savings and have relatively less enter and exit latencies) but
+> we might have to tune this default power mode for different chipset
+> platforms to meet the low power requirements/goals. Hence this patch
+> adds option to change default UFS low power mode (level).
+> 
+> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+> Signed-off-by: Venkat Gopalakrishnan <venkatg@codeaurora.org>
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+> ---
+>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      | 11 ++++++++
+>  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 14 +++++++++++
+>  drivers/scsi/ufs/ufshcd.c                          | 29 +++++++++++++++-------
+>  drivers/scsi/ufs/ufshcd.h                          |  4 +--
+>  4 files changed, 47 insertions(+), 11 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> index c39dfef..f564d9a 100644
+> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> @@ -38,6 +38,15 @@ Optional properties:
+>  			  defined or a value in the array is "0" then it is assumed
+>  			  that the frequency is set by the parent clock or a
+>  			  fixed rate clock source.
+> +- rpm-level		: UFS Runtime power management level. Following PM levels are supported:
+> +			  0 - Both UFS device and Link in active state (Highest power consumption)
+> +			  1 - UFS device in active state but Link in Hibern8 state
+> +			  2 - UFS device in Sleep state but Link in active state
+> +			  3 - UFS device in Sleep state and Link in hibern8 state (default PM level)
+> +			  4 - UFS device in Power-down state and Link in Hibern8 state
+> +			  5 - UFS device in Power-down state and Link in OFF state (Lowest power consumption)
+> +- spm-level		: UFS System power management level. Allowed PM levels are same as rpm-level.
+> +
+>  -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
+>  			  Note that it is assume same number of lanes is used both
+>  			  directions at once. If not specified, default is 2 lanes per direction.
+> @@ -66,4 +75,6 @@ Example:
+>  		freq-table-hz = <100000000 200000000>, <0 0>, <0 0>;
+>  		phys = <&ufsphy1>;
+>  		phy-names = "ufsphy";
+> +		rpm-level = <3>;
+> +		spm-level = <5>;
+>  	};
+> diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
+> index e82bde0..7dba799 100644
+> --- a/drivers/scsi/ufs/ufshcd-pltfrm.c
+> +++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
+> @@ -221,6 +221,19 @@ static int ufshcd_parse_regulator_info(struct ufs_hba *hba)
+>  	return err;
+>  }
+>  
+> +static void ufshcd_parse_pm_levels(struct ufs_hba *hba)
+> +{
+> +	struct device *dev = hba->dev;
+> +	struct device_node *np = dev->of_node;
+> +
+> +	if (np) {
+> +		if (of_property_read_u32(np, "rpm-level", &hba->rpm_lvl))
+> +			hba->rpm_lvl = -1;
+> +		if (of_property_read_u32(np, "spm-level", &hba->spm_lvl))
+> +			hba->spm_lvl = -1;
+
+These are generically useful to all UFSHC drivers, so they should be
+device_property_read_u32() and they should be read for all drivers not just
+pltfrm i.e. move this code into ufshcd.c
+
+> +	}
+> +}
+> +
+>  #ifdef CONFIG_PM
+>  /**
+>   * ufshcd_pltfrm_suspend - suspend power management function
+> @@ -340,6 +353,7 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
+>  		goto dealloc_host;
+>  	}
+>  
+> +	ufshcd_parse_pm_levels(hba);
+>  	pm_runtime_set_active(&pdev->dev);
+>  	pm_runtime_enable(&pdev->dev);
+>  
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index b03f3ea..e950204 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -192,6 +192,14 @@ struct ufs_pm_lvl_states ufs_pm_lvl_states[] = {
+>  	return UFS_PM_LVL_0;
+>  }
+>  
+> +static inline bool ufshcd_is_valid_pm_lvl(int lvl)
+> +{
+> +	if (lvl >= 0 && lvl < ARRAY_SIZE(ufs_pm_lvl_states))
+> +		return true;
+> +	else
+> +		return false;
+> +}
+> +
+>  static struct ufs_dev_fix ufs_fixups[] = {
+>  	/* UFS cards deviations table */
+>  	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
+> @@ -8051,16 +8059,19 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+>  	}
+>  
+>  	/*
+> -	 * Set the default power management level for runtime and system PM.
+> -	 * Default power saving mode is to keep UFS link in Hibern8 state
+> -	 * and UFS device in sleep state.
+> +	 * If rpm_lvl and and spm_lvl are not already set to valid levels,
+> +	 * set the default power management level for UFS runtime and system
+> +	 * suspend. Default power saving mode selected is keeping UFS link in
+> +	 * Hibern8 state and UFS device in sleep state.
+>  	 */
+> -	hba->rpm_lvl = ufs_get_desired_pm_lvl_for_dev_link_state(
+> -						UFS_SLEEP_PWR_MODE,
+> -						UIC_LINK_HIBERN8_STATE);
+> -	hba->spm_lvl = ufs_get_desired_pm_lvl_for_dev_link_state(
+> -						UFS_SLEEP_PWR_MODE,
+> -						UIC_LINK_HIBERN8_STATE);
+> +	if (!ufshcd_is_valid_pm_lvl(hba->rpm_lvl))
+> +		hba->rpm_lvl = ufs_get_desired_pm_lvl_for_dev_link_state(
+> +							UFS_SLEEP_PWR_MODE,
+> +							UIC_LINK_HIBERN8_STATE);
+> +	if (!ufshcd_is_valid_pm_lvl(hba->spm_lvl))
+> +		hba->spm_lvl = ufs_get_desired_pm_lvl_for_dev_link_state(
+> +							UFS_SLEEP_PWR_MODE,
+> +							UIC_LINK_HIBERN8_STATE);
+>  
+>  	/* Set the default auto-hiberate idle timer value to 150 ms */
+>  	if (hba->capabilities & MASK_AUTO_HIBERN8_SUPPORT) {
+> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> index e996a08..a2e1d5c 100644
+> --- a/drivers/scsi/ufs/ufshcd.h
+> +++ b/drivers/scsi/ufs/ufshcd.h
+> @@ -526,9 +526,9 @@ struct ufs_hba {
+>  	enum ufs_dev_pwr_mode curr_dev_pwr_mode;
+>  	enum uic_link_state uic_link_state;
+>  	/* Desired UFS power management level during runtime PM */
+> -	enum ufs_pm_level rpm_lvl;
+> +	int rpm_lvl;
+>  	/* Desired UFS power management level during system PM */
+> -	enum ufs_pm_level spm_lvl;
+> +	int spm_lvl;
+>  	struct device_attribute rpm_lvl_attr;
+>  	struct device_attribute spm_lvl_attr;
+>  	int pm_op_in_progress;
+> 
