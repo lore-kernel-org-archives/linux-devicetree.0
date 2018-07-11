@@ -1,34 +1,47 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3] drm/sun4i: mixer: Read id from DT
-Date: Wed, 11 Jul 2018 21:55:31 +0800
-Message-ID: <CAGb2v67ShNTqYAKXRWwhKxzcyVw512bVmNrr-Kv-oDdVq+=yEQ@mail.gmail.com>
-References: <20180711112706.30222-1-jernej.skrabec@siol.net>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Aapo Vienamo <avienamo@nvidia.com>
+Subject: [PATCH v2 0/7] Tegra PMC pinctrl pad configuration
+Date: Wed, 11 Jul 2018 17:01:26 +0300
+Message-ID: <1531317693-3520-1-git-send-email-avienamo@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB2UYTDNAKGQEMWFVBGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180711112706.30222-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>
+Cc: Aapo Vienamo <avienamo@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 11, 2018 at 7:27 PM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> Currently, TCON supports 2 ways to match TCON with engine (mixer in this
-> case). Old way is to just traverse of graph backwards and compare node
-> pointer. New way is to match TCON and engine by their respective ids.
-> All SoCs with DE2 enabled till now used the old way, which means mixer
-> id was never used and thus never implemented.
->
-> However, for R40, only the new way will be used. To prepare for that,
-> implement mixer id fetching from DT.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Hi all,
 
-Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+The Tegra Power Management Controller (PMC) can set pad power states
+and voltage configuration. This series implements pinctrl interfaces
+for configuring said pad properties.
+
+Changelog
+v2:
+	- Add Tegra186 AO_HV pad
+	- Make the IO pad tables narrower
+	- Add parens to TEGRA_IO_PAD() and TEGRA_IO_PIN_DESC()
+	- Fix a typo in the dt-bindings docs
+	- Remove old pmc pad voltage configuration APIs
+	- Check return value of tegra_io_pad_find() in
+	  tegra_io_pad_pinconf_get()/_set()
+
+Aapo Vienamo (7):
+  soc/tegra: pmc: Fix pad voltage configuration for Tegra186
+  soc/tegra: pmc: Factor out DPD register bit calculation
+  soc/tegra: pmc: Implement tegra_io_pad_is_powered()
+  soc/tegra: pmc: Use X macro to generate IO pad tables
+  dt-bindings: Add Tegra PMC pad configuration bindings
+  soc/tegra: pmc: Remove public pad voltage APIs
+  soc/tegra: pmc: Implement pad configuration via pinctrl
+
+ .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     |  84 ++++
+ .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      |  95 ++++
+ drivers/soc/tegra/pmc.c                            | 513 +++++++++++++++------
+ include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h |  18 +
+ include/soc/tegra/pmc.h                            |  15 +-
+ 5 files changed, 583 insertions(+), 142 deletions(-)
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h
+
+-- 
+2.7.4
