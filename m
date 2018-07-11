@@ -1,15 +1,14 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 08/18] ARM: dts: sun8i: r40: Add mixer
- ids to TCON TOP
-Date: Wed, 11 Jul 2018 10:55:26 +0800
-Message-ID: <CAGb2v64N__6BctU5cxUHUxGtnc14ps18VrWfMC=kykOn8C+fKg@mail.gmail.com>
-References: <20180710203511.18454-1-jernej.skrabec@siol.net> <20180710203511.18454-9-jernej.skrabec@siol.net>
+Subject: Re: [PATCH v2 09/18] drm/sun4i: mixer: Order includes alphabetically
+Date: Wed, 11 Jul 2018 10:56:34 +0800
+Message-ID: <CAGb2v671bqg2+kAZg=ibczAhCYDh39g8RX2bfKr+biDY7xCdfg@mail.gmail.com>
+References: <20180710203511.18454-1-jernej.skrabec@siol.net> <20180710203511.18454-10-jernej.skrabec@siol.net>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBNHDSXNAKGQE65EK6CA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB6HDSXNAKGQE2A3VWXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180710203511.18454-9-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+In-Reply-To: <20180710203511.18454-10-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -21,16 +20,9 @@ Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob H
 List-Id: devicetree@vger.kernel.org
 
 On Wed, Jul 11, 2018 at 4:35 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> sun4i-drm DT binding, second paragraph of the first section says:
+> Includes are not alphabetically ordered.
 >
-> For all connections between components up to the TCONs in the display
-> pipeline, when there are multiple components of the same type at the
-> same depth, the local endpoint ID must be the same as the remote
-> component's index.
->
-> Add mixer ids in R40 DT as mandated by DT binding.
->
-> Fixes: 05a43a262d03 ("ARM: dts: sun8i: r40: Add HDMI pipeline")
+> Reorder them.
 >
 > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 
