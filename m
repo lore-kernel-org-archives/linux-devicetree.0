@@ -1,34 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 04/12] dt-bindings: spi: Move the bindings for the FSL
- QSPI driver
-Date: Wed, 11 Jul 2018 09:54:04 -0600
-Message-ID: <20180711155404.GA15363@rob-hp-laptop>
-References: <1530789310-16254-1-git-send-email-frieder.schrempf@exceet.de>
- <1530789310-16254-5-git-send-email-frieder.schrempf@exceet.de>
+Subject: Re: [PATCH v4 1/6] dt-bindings: freescale: Add bindings for the
+ tigerp module
+Date: Wed, 11 Jul 2018 09:25:28 -0600
+Message-ID: <20180711152528.GA8439@rob-hp-laptop>
+References: <1531240308-24798-1-git-send-email-fabio.estevam@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1530789310-16254-5-git-send-email-frieder.schrempf@exceet.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frieder Schrempf <frieder.schrempf@exceet.de>
-Cc: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com, linux-spi@vger.kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, miquel.raynal@bootlin.com, broonie@kernel.org, david.wolfe@nxp.com, fabio.estevam@nxp.com, prabhakar.kushwaha@nxp.com, yogeshnarayan.gaur@nxp.com, han.xu@nxp.com, shawnguo@kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1531240308-24798-1-git-send-email-fabio.estevam@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: sebastian.reichel@collabora.co.uk, devicetree@vger.kernel.org, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 05, 2018 at 01:15:00PM +0200, Frieder Schrempf wrote:
-> Move the documentation of the old SPI NOR driver to the place of the new
-> SPI memory interface based driver.
+On Tue, Jul 10, 2018 at 01:31:43PM -0300, Fabio Estevam wrote:
+> Add bindings for the tigerp module present on i.MX51.
 > 
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
+> Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
 > ---
-> Changes in v2:
-> ==============
-> * Split the moving and editing of the dt-bindings in two patches
+> Changes since v3:
+> - None
 > 
->  .../devicetree/bindings/mtd/fsl-quadspi.txt     | 65 --------------------
->  .../devicetree/bindings/spi/spi-fsl-qspi.txt    | 65 ++++++++++++++++++++
->  2 files changed, 65 insertions(+), 65 deletions(-)
+>  Documentation/devicetree/bindings/arm/freescale/tigerp.txt | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/freescale/tigerp.txt
 
-Next time, use the -M option so the move shows any real diffs.
-
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
