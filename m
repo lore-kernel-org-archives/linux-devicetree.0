@@ -1,74 +1,31 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 2/2] ARM: sun8i: h3: add SY8113B regulator on
- Banana Pi M2 Zero board
-Date: Wed, 11 Jul 2018 21:44:50 +0800
-Message-ID: <20180711134450.43148-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 6/7] dt: thermal: tsens: Document the fallback DT
+ property for v2 of TSENS IP
+Date: Wed, 11 Jul 2018 07:49:39 -0600
+Message-ID: <20180711134939.GA10268@rob-hp-laptop>
+References: <cover.1531135999.git.amit.kucheria@linaro.org>
+ <bf1147fa417314b2fbf5c0cfb682445587fe39bb.1531136000.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBGMUTDNAKGQEO4PNTTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <bf1147fa417314b2fbf5c0cfb682445587fe39bb.1531136000.git.amit.kucheria@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: linux-kernel@vger.kernel.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, smohanad@codeaurora.org, vivek.gautam@codeaurora.org, andy.gross@linaro.org, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Banana Pi M2 Zero board has a SY8113B regulator, which is controlled via
-GPIO and capable of outputing 1.1V when the PL1 GPIO is set to output 0
-or 1.1V when the PL6 GPIO is set to input or output 1, and the output is
-the power supply of the ARM cores in H3 SoC.
+On Mon, Jul 09, 2018 at 05:13:28PM +0530, Amit Kucheria wrote:
+> We want to create common code for v2 of the TSENS IP block that is used in
+> a large number of Qualcomm SoCs. "qcom,tsens-v2" should be able to handle
+> most of the common functionality start with a common get_temp() function.
+> 
+> It is also necessary to split out the memory regions for the TM and SROT
+> register banks because their offsets are not constant across SoC families.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  .../devicetree/bindings/thermal/qcom-tsens.txt     | 25 +++++++++++++++++-----
+>  1 file changed, 20 insertions(+), 5 deletions(-)
 
-Add the device tree node of this regulator and set the cpu's cpu-supply
-property to it.
-
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- .../dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-index eb61dcf32797..abc8dc750f4b 100644
---- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-+++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-@@ -59,6 +59,23 @@
- 		};
- 	};
- 
-+	reg_vdd_cpux: vdd-cpux-regulator {
-+		compatible = "regulator-gpio";
-+		regulator-name = "vdd-cpux";
-+		regulator-type = "voltage";
-+		regulator-boot-on;
-+		regulator-always-on;
-+		regulator-min-microvolt = <1100000>;
-+		regulator-max-microvolt = <1300000>;
-+		regulator-ramp-delay = <50>; /* 4ms */
-+
-+		gpios = <&r_pio 0 1 GPIO_ACTIVE_HIGH>; /* PL1 */
-+		enable-active-high;
-+		gpios-states = <0x1>;
-+		states = <1100000 0x0
-+			  1300000 0x1>;
-+	};
-+
- 	wifi_pwrseq: wifi_pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		pinctrl-names = "default";
-@@ -66,6 +83,10 @@
- 	};
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_vdd_cpux>;
-+};
-+
- &de {
- 	status = "okay";
- };
--- 
-2.17.1
+Reviewed-by: Rob Herring <robh@kernel.org>
