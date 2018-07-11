@@ -1,45 +1,108 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v5 04/10] dt-bindings: i3c: Document core bindings
-Date: Wed, 11 Jul 2018 16:45:29 +0200
-Message-ID: <20180711164529.3388d045@bbrezillon>
-References: <20180622104930.32050-1-boris.brezillon@bootlin.com>
-        <20180622104930.32050-5-boris.brezillon@bootlin.com>
-        <CAK8P3a1gyvvpKdVV+STOJXd-=BFdiFF638F0agXur0kLYP7ksw@mail.gmail.com>
+From: Dinh Nguyen <dinh.linux@gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: arria10: update NAND clocking
+Date: Wed, 11 Jul 2018 09:51:29 -0500
+Message-ID: <CADhT+wfJ2Kq9Lq4_eA9uDgmRLoS8hHaWsr8cskUxWC5xh=vdRw@mail.gmail.com>
+References: <1531176063-30140-1-git-send-email-dinguyen@kernel.org>
+ <CAK7LNARAVSK5VY=_RfO2PXJCAnXJN3sXoAY=ijSwVojeo=c66w@mail.gmail.com>
+ <b33d18b2-1956-50a4-9a3f-6d2a0abd4b81@kernel.org>
+ <CAK7LNATNjPuGmzA_mS+yvVC8TpPsvQNvKedJ6emt114xGy7m3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a1gyvvpKdVV+STOJXd-=BFdiFF638F0agXur0kLYP7ksw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.or>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK7LNATNjPuGmzA_mS+yvVC8TpPsvQNvKedJ6emt114xGy7m3Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Marek Vasut <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 11 Jul 2018 16:10:10 +0200
-Arnd Bergmann <arnd@arndb.de> wrote:
-
-> On Fri, Jun 22, 2018 at 12:49 PM, Boris Brezillon
-> <boris.brezillon@bootlin.com> wrote:
-> > A new I3C subsystem has been added and a generic description has been
-> > created to represent the I3C bus and the devices connected on it.
-> >  
-> 
-> > +I2C devices
-> > +===========
-> > +
-> > +Each I2C device connected to the bus should be described in a subnode. All
-> > +properties described in Documentation/devicetree/bindings/i2c/i2c.txt are
-> > +valid here, but several new properties have been added.
-> > +
-> > +New constraint on existing properties:
-> > +--------------------------------------  
-> ...
-> > +  + third cell: should be 0  
-> 
-> What for? Just to be future-proof, or do you have something specific
-> in mind here?
-
-Even if I2C devices only need 1 cell, I3C devices need 3 (1 for the
-static address and 2 for the PID). Since both type of devices are
-described under the same bus node, and we can have different
-#address-cells, I had to put 0-padding in the last cell.
+SGkgTWFzYWhpcm8sCgpPbiBUdWUsIEp1bCAxMCwgMjAxOCBhdCA5OjQ1IFBNIE1hc2FoaXJvIFlh
+bWFkYQo8eWFtYWRhLm1hc2FoaXJvQHNvY2lvbmV4dC5jb20+IHdyb3RlOgo+Cj4gMjAxOC0wNy0x
+MCAyMjozNSBHTVQrMDk6MDAgRGluaCBOZ3V5ZW4gPGRpbmd1eWVuQGtlcm5lbC5vcmc+Ogo+ID4K
+PiA+Cj4gPiBPbiAwNy8wOS8yMDE4IDA4OjMxIFBNLCBNYXNhaGlybyBZYW1hZGEgd3JvdGU6Cj4g
+Pj4gMjAxOC0wNy0xMCA3OjQxIEdNVCswOTowMCBEaW5oIE5ndXllbiA8ZGluZ3V5ZW5Aa2VybmVs
+Lm9yZz46Cj4gPj4+IFRoZSBOQU5EIElQIG5lZWRzIDIgY2xvY2tzKG5hbmRfeF9jbGsgYW5kIG5h
+bmRfY2xrKS4gVGhpcyBwYXRjaCBhZGRzIGEKPiA+Pj4gbmFuZF94X2Nsaywgd2hpY2ggaXMgZGVy
+aXZlZCBmcm9tIHRoZSBuYW5kX2NsaywgYnV0IGhhcyBhIGZpeGVkIGRpdmlkZXIKPiA+Pj4gb2Yg
+NC4KPiA+Pj4KPiA+Pj4gVXBkYXRlIHRoZSBOQU5EIG5vZGUgdG8gdXNlIHRoZSBhZGRpdGlvbmFs
+IGNsb2NrLgo+ID4+Pgo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBEaW5oIE5ndXllbiA8ZGluZ3V5ZW5A
+a2VybmVsLm9yZz4KPiA+Pj4gLS0tCj4gPj4+ICBhcmNoL2FybS9ib290L2R0cy9zb2NmcGdhX2Fy
+cmlhMTAuZHRzaSB8IDEzICsrKysrKysrKysrLS0KPiA+Pj4gIDEgZmlsZSBjaGFuZ2VkLCAxMSBp
+bnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+ID4+Pgo+ID4+PiBkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm0vYm9vdC9kdHMvc29jZnBnYV9hcnJpYTEwLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9z
+b2NmcGdhX2FycmlhMTAuZHRzaQo+ID4+PiBpbmRleCBhNGRjYjY4Li41NThiNWVhIDEwMDY0NAo+
+ID4+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9zb2NmcGdhX2FycmlhMTAuZHRzaQo+ID4+PiAr
+KysgYi9hcmNoL2FybS9ib290L2R0cy9zb2NmcGdhX2FycmlhMTAuZHRzaQo+ID4+PiBAQCAtMzc3
+LDEzICszNzcsMjEgQEAKPiA+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgY2xrLWdhdGUgPSA8MHhDOCAxMT47Cj4gPj4+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICB9Owo+ID4+Pgo+ID4+PiAtICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgbmFuZF9jbGs6IG5hbmRfY2xrIHsKPiA+Pj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG5hbmRfeF9jbGs6IG5hbmRfeF9jbGsgewo+
+ID4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjY2xv
+Y2stY2VsbHMgPSA8MD47Cj4gPj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYWx0cixzb2NmcGdhLWExMC1nYXRlLWNsayI7Cj4g
+Pj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsb2Nr
+cyA9IDwmbDRfbXBfY2xrPjsKPiA+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgY2xrLWdhdGUgPSA8MHhDOCAxMD47Cj4gPj4+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ID4+Pgo+ID4+PiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgbmFuZF9jbGs6IG5hbmRfY2xrIHsKPiA+Pj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI2Nsb2NrLWNlbGxzID0g
+PDA+Owo+ID4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBjb21wYXRpYmxlID0gImFsdHIsc29jZnBnYS1hMTAtZ2F0ZS1jbGsiOwo+ID4+PiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8Jm5hbmRf
+eF9jbGs+Owo+ID4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBmaXhlZC1kaXZpZGVyID0gPDQ+Owo+ID4+PiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBjbGstZ2F0ZSA9IDwweEM4IDEwPjsKPiA+Pj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gPj4+ICsKPiA+Pj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNwaV9tX2Nsazogc3BpX21fY2xrIHsK
+PiA+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI2Ns
+b2NrLWNlbGxzID0gPDA+Owo+ID4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImFsdHIsc29jZnBnYS1hMTAtZ2F0ZS1jbGsiOwo+
+ID4+PiBAQCAtNjUwLDcgKzY1OCw4IEBACj4gPj4+ICAgICAgICAgICAgICAgICAgICAgICAgIHJl
+Zy1uYW1lcyA9ICJuYW5kX2RhdGEiLCAiZGVuYWxpX3JlZyI7Cj4gPj4+ICAgICAgICAgICAgICAg
+ICAgICAgICAgIGludGVycnVwdHMgPSA8MCA5OSA0PjsKPiA+Pj4gICAgICAgICAgICAgICAgICAg
+ICAgICAgZG1hLW1hc2sgPSA8MHhmZmZmZmZmZj47Cj4gPj4+IC0gICAgICAgICAgICAgICAgICAg
+ICAgIGNsb2NrcyA9IDwmbmFuZF9jbGs+Owo+ID4+PiArICAgICAgICAgICAgICAgICAgICAgICBj
+bG9ja3MgPSA8Jm5hbmRfY2xrPiwgPCZuYW5kX3hfY2xrPjsKPiA+Pj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgY2xvY2stbmFtZXMgPSAibmFuZCIsICJuYW5kX3giOwo+ID4+Cj4gPj4KPiA+PiBE
+b2Vzbid0IFNPQ0ZQR0EgcmVhbGx5IG5lZWQgdGhlIEVDQyBjbG9jaz8KPiA+Pgo+ID4KPiA+IEkg
+ZG9uJ3Qgc2VlIGFueSBtZW50aW9ucyBvZiBhbiBFQ0MgY2xvY2sgaW4gYW55IG9mIHRoZSBTb0NG
+UEdBCj4gPiBkb2N1bWVudGF0aW9uIGZvciB0aGUgTkFORCBJUC4KPgo+Cj4gSSdkIGxpa2UgeW91
+IHRvIGNoZWNrIHRoZSBJUCBkb2N1bWVudGF0aW9uCj4gcHVibGlzaGVkIGJ5IERlbmFsaSAob3Ig
+Q2FkZW5jZSksCj4gbm90IHB1Ymxpc2hlZCBieSBBbHRlcmEuCj4KPiBJcyBpdCBhdmFpbGFibGUg
+Zm9yIHlvdT8KPgo+Cj4KPiBJbiBteSBTb0NzLCB0aGUgc2FtZSBjbG9jayBzaWduYWwgKG5hbmQt
+Y2xrLTIwMG0pCj4gaXMgY29ubmVjdGVkIHRvIGNsa194IGFuZCBlY2NfY2xrLCBsaWtlIHRoaXM6
+Cj4KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0t
+LS0KPiAtLS0tLS0tLS0tLS0tLSAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgREVOQUxJIElQ
+IHwKPiB8ICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAg
+IHwKPiB8IGNsayAgICAgICAgfC0tLShuYW5kLWNsay01MG0pLS0tLS0tLS0tPnwgY2xrICAgICAg
+IHwKPiB8IGNvbnRyb2xsZXIgfCAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAg
+IHwKPiB8ICAgICAgICAgICAgfC0tLShuYW5kLWNsay0yMDBtKS0tLS0tLS0tPnwgY2xrX3ggICAg
+IHwKPiAtLS0tLS0tLS0tLS0tLeOAgCAgICAgICAgICAgICAgICAgICAgICB8ICAgfCAgICAgICAg
+ICAgfAo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLS0+fCBlY2NfY2xr
+ICAgfAo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAgICAg
+ICAgfAo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0tLS0t
+LS0tLQo+Cj4KPiBTb21lIGNsb2NrIGxpbmVzIGFyZSBvZnRlbiB0aWVkLXVwLAo+IGJ1dCBzdWNo
+IGxvdy1sZXZlbCBpbmZvcm1hdGlvbiBkb2VzIG5vdCBhcHBlYXIgaW4KPiB1c2VyIGRvY3VtZW50
+cy4KPiBJIHRhbGtlZCB0byBhIGhhcmR3YXJlIGVuZ2luZWVyIHRvIGdldCB0aGlzIGluZm9ybWF0
+aW9uLgo+Cj4KPgo+IEkgZ3Vlc3MgdGhlIHNpdHVhdGlvbiBpcyBzaW1pbGFyIGZvciB5b3VyIGNh
+c2UsCj4gYnV0IEkgZG8gbm90IGhhdmUgaW5mb3JtYXRpb24gZW5vdWdoIHRvIGFyZ3VlIHRoaXMu
+Cj4KCkkgZG9uJ3QgZGlzYWdyZWUgd2l0aCB0aGlzIHJlcHJlc2VudGF0aW9uLiBCdXQgYWZ0ZXIg
+YXNraW5nIGFyb3VuZCwKSSdtIGdldHRpbmcgdGhlIGltcHJlc3Npb24gdGhhdCB0aGUgRUNDIGNs
+b2NrIGlzIG5vdCBleHBvc2VkIHRvIHRoZQpjbG9jayBtYW5hZ2VyLiBUaGlzIGltcGxpZXMgdGhh
+dCB0aGUgY2xvY2sgaXMgYWx3YXlzIHR1cm5lZCBvbiBhbmQKdGhlcmUgZG9lc24ndCBzZWVtIHRv
+IGJlIGFueSBzb2Z0d2FyZSBjb250cm9sIGZvciBpdC4gSSB0ZXN0ZWQgRUNDCndpdGggdGhpcyBw
+YXRjaCBhbmQgaXQgbG9va3MgdG8gYmUgd29ya2luZyBjb3JyZWN0bHksIHdpdGhvdXQgYW55IGVj
+YwpjbG9jayByZXByZXNlbnRhdGlvbi4KCkknbSBub3Qgc3VyZSBpZiBJIHNob3VsZCBleHBvc2Ug
+YSBkdW1teSBlY2NfY2xrIHRvIHNhdGlzZnkgdGhlIGJpbmRpbmc/CgpEaW5oCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
