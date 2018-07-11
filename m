@@ -1,69 +1,97 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 0/4] Stop losing firmware-set DMA masks
-Date: Wed, 11 Jul 2018 17:03:33 +0100
-Message-ID: <9a54d956-927e-68f7-5c3b-af7cd0616dc2@arm.com>
-References: <cover.1531239284.git.robin.murphy@arm.com>
-	<CABGGisxVqLMu3TUpbJGWnUFgzUor-8tdyV8KJeU0YT7y=BHrAQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 05/12] dt-bindings: spi: Adjust the bindings for the
+ FSL QSPI driver
+Date: Wed, 11 Jul 2018 10:05:21 -0600
+Message-ID: <20180711160521.GA16884@rob-hp-laptop>
+References: <1530789310-16254-1-git-send-email-frieder.schrempf@exceet.de>
+ <1530789310-16254-6-git-send-email-frieder.schrempf@exceet.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CABGGisxVqLMu3TUpbJGWnUFgzUor-8tdyV8KJeU0YT7y=BHrAQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1530789310-16254-6-git-send-email-frieder.schrempf@exceet.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frieder Schrempf <frieder.schrempf@exceet.de>
+Cc: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com, linux-spi@vger.kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, miquel.raynal@bootlin.com, broonie@kernel.org, david.wolfe@nxp.com, fabio.estevam@nxp.com, prabhakar.kushwaha@nxp.com, yogeshnarayan.gaur@nxp.com, han.xu@nxp.com, shawnguo@kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/07/18 15:40, Rob Herring wrote:
-> On Tue, Jul 10, 2018 at 12:43 PM Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
->>
->> Whilst the common firmware code invoked by dma_configure() initialises
->> devices' DMA masks according to limitations described by the respective
->> properties ("dma-ranges" for OF and _DMA/IORT for ACPI), the nature of
->> the dma_set_mask() API leads to that information getting lost when
->> well-behaved drivers probe and set a 64-bit mask, since in general
->> there's no way to tell the difference between a firmware-described mask
->> (which should be respected) and whatever default may have come from the
->> bus code (which should be replaced outright). This can break DMA on
->> systems with certain IOMMU topologies (e.g. [1]) where the IOMMU driver
->> only knows its maximum supported address size, not how many of those
->> address bits might actually be wired up between any of its input
->> interfaces and the associated DMA master devices. Similarly, some PCIe
->> root complexes only have a 32-bit native interface on their host bridge,
->> which leads to the same DMA-address-truncation problem in systems with a
->> larger physical memory map and RAM above 4GB (e.g. [2]).
->>
->> These patches attempt to deal with this in the simplest way possible by
->> generalising the specific quirk for 32-bit bridges into an arbitrary
->> mask which can then also be plumbed into the firmware code. In the
->> interest of being minimally invasive, I've only included a point fix
->> for the IOMMU issue as seen on arm64 - there may be further tweaks
->> needed in DMA ops to catch all possible incarnations of this problem,
->> but this initial RFC is mostly about the impact beyond the dma-mapping
->> subsystem itself.
+On Thu, Jul 05, 2018 at 01:15:01PM +0200, Frieder Schrempf wrote:
+> Adjust the documentation of the new SPI memory interface based
+> driver to reflect the new drivers settings.
+
+Bindings shouldn't change (other than new properties) due to driver 
+changes.
+
 > 
-> Couldn't you set and use the device's parent's dma_mask instead. At
-> least for DT, we should always have a parent device representing the
-> bus. That would avoid further bloating of struct device.
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
+> ---
+> Changes in v2:
+> ==============
+> * Split the moving and editing of the dt-bindings in two patches
+> 
+>  .../devicetree/bindings/spi/spi-fsl-qspi.txt    | 22 ++++++++++----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
+> index 483e9cf..8b4eed7 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
+> @@ -3,9 +3,8 @@
+>  Required properties:
+>    - compatible : Should be "fsl,vf610-qspi", "fsl,imx6sx-qspi",
+>  		 "fsl,imx7d-qspi", "fsl,imx6ul-qspi",
+> -		 "fsl,ls1021a-qspi"
+> +		 "fsl,ls1021a-qspi", "fsl,ls2080a-qspi"
+>  		 or
+> -		 "fsl,ls2080a-qspi" followed by "fsl,ls1021a-qspi",
+>  		 "fsl,ls1043a-qspi" followed by "fsl,ls1021a-qspi"
 
-But then if the parent device did have a non-trivial driver which calls 
-dma_set_mask(), we'd be back at square 1 :/
+So the 2080a h/w was compatible with the 1021a h/w, but now it is not? 
+How did the h/w change?
 
-More realistically, I don't think that's viable for ACPI, at least with 
-IORT, since the memory address size limit belongs to the endpoint 
-itself, thus two devices with the same nominal parent in the Linux 
-device model could still have different limits (where in DT you'd have 
-to have to insert intermediate simple-bus nodes to model the same 
-topology with dma-ranges). Plus either way it seems somewhat fragile for 
-PCI where the host bridge may be some distance up the hierarchy.
+>    - reg : the first contains the register location and length,
+>            the second contains the memory mapping address and length
+> @@ -15,14 +14,15 @@ Required properties:
+>    - clock-names : Should contain the name of the clocks: "qspi_en" and "qspi".
+>  
+>  Optional properties:
+> -  - fsl,qspi-has-second-chip: The controller has two buses, bus A and bus B.
+> -                              Each bus can be connected with two NOR flashes.
+> -			      Most of the time, each bus only has one NOR flash
+> -			      connected, this is the default case.
+> -			      But if there are two NOR flashes connected to the
+> -			      bus, you should enable this property.
+> -			      (Please check the board's schematic.)
 
-Robin.
+You can't just remove properties without explanation. Why is this no 
+longer needed? What about backwards compatibility with existing dtbs?
+
+> -  - big-endian : That means the IP register is big endian
+> +  - big-endian : That means the IP registers format is big endian
+
+This is a standard property so it doesn't really need to be redefined 
+here, but just reference the definition.
+
+> +
+> +Required SPI slave node properties:
+> +  - reg: There are two buses (A and B) with two chip selects each.
+> +	 This encodes to which bus and CS the flash is connected:
+> +		<0>: Bus A, CS 0
+> +		<1>: Bus A, CS 1
+> +		<2>: Bus B, CS 0
+> +		<3>: Bus B, CS 1
+>  
+>  Example:
+>  
+> @@ -40,7 +40,7 @@ qspi0: quadspi@40044000 {
+>  	};
+>  };
+>  
+> -Example showing the usage of two SPI NOR devices:
+> +Example showing the usage of two SPI NOR devices on bus A:
+>  
+>  &qspi2 {
+>  	pinctrl-names = "default";
+> -- 
+> 2.7.4
+> 
