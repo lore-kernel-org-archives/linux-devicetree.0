@@ -1,203 +1,97 @@
-From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v12 1/4] iommu/arm-smmu: Add pm_runtime/sleep ops
-Date: Wed, 11 Jul 2018 13:11:11 +0200
-Message-ID: <CAJZ5v0gbkdkx_+oHYiPz=SFdFCLm38hsi1TmJ2Jdc7j73TNtzg@mail.gmail.com>
-References: <20180708173413.1965-1-vivek.gautam@codeaurora.org>
-	<20180708173413.1965-2-vivek.gautam@codeaurora.org>
-	<17407514.unFVTGoGrn@aspire.rjw.lan>
-	<CAFp+6iHxJucfzJJeEvSToG4p2zADjDb9F0L8h053x-JKAy55mg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v10 2/2] media: V3s: Add support for
+ Allwinner CSI.
+Date: Wed, 11 Jul 2018 13:12:30 +0200
+Message-ID: <20180711111230.gpv7ww2nhaha5hou@flea>
+References: <1525417745-37964-1-git-send-email-yong.deng@magewell.com>
+ <20180626110821.wkal6fcnoncsze6y@valkosipuli.retiisi.org.uk>
+ <20180705154802.03604f156709be11892b19c0@magewell.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAFp+6iHxJucfzJJeEvSToG4p2zADjDb9F0L8h053x-JKAy55mg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
-	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="wbnyxjafmaafjrkv"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBKWMS7NAKGQEYMDKU4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180705154802.03604f156709be11892b19c0-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-media
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 11, 2018 at 12:55 PM, Vivek Gautam
-<vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> Hi Rafael,
->
->
-> On Wed, Jul 11, 2018 at 3:20 PM, Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> wrote:
->> On Sunday, July 8, 2018 7:34:10 PM CEST Vivek Gautam wrote:
->>> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>>
->>> The smmu needs to be functional only when the respective
->>> master's using it are active. The device_link feature
->>> helps to track such functional dependencies, so that the
->>> iommu gets powered when the master device enables itself
->>> using pm_runtime. So by adapting the smmu driver for
->>> runtime pm, above said dependency can be addressed.
->>>
->>> This patch adds the pm runtime/sleep callbacks to the
->>> driver and also the functions to parse the smmu clocks
->>> from DT and enable them in resume/suspend.
->>>
->>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>> Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>> [vivek: Clock rework to request bulk of clocks]
->>> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>> Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>> ---
->>>
->>>  - No change since v11.
->>>
->>>  drivers/iommu/arm-smmu.c | 60 ++++++++++++++++++++++++++++++++++++++++++++++--
->>>  1 file changed, 58 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
->>> index f7a96bcf94a6..a01d0dde21dd 100644
->>> --- a/drivers/iommu/arm-smmu.c
->>> +++ b/drivers/iommu/arm-smmu.c
->>> @@ -48,6 +48,7 @@
->>>  #include <linux/of_iommu.h>
->>>  #include <linux/pci.h>
->>>  #include <linux/platform_device.h>
->>> +#include <linux/pm_runtime.h>
->>>  #include <linux/slab.h>
->>>  #include <linux/spinlock.h>
->>>
->>> @@ -205,6 +206,8 @@ struct arm_smmu_device {
->>>       u32                             num_global_irqs;
->>>       u32                             num_context_irqs;
->>>       unsigned int                    *irqs;
->>> +     struct clk_bulk_data            *clks;
->>> +     int                             num_clks;
->>>
->>>       u32                             cavium_id_base; /* Specific to Cavium */
->>>
->>> @@ -1897,10 +1900,12 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
->>>  struct arm_smmu_match_data {
->>>       enum arm_smmu_arch_version version;
->>>       enum arm_smmu_implementation model;
->>> +     const char * const *clks;
->>> +     int num_clks;
->>>  };
->>>
->>>  #define ARM_SMMU_MATCH_DATA(name, ver, imp)  \
->>> -static struct arm_smmu_match_data name = { .version = ver, .model = imp }
->>> +static const struct arm_smmu_match_data name = { .version = ver, .model = imp }
->>>
->>>  ARM_SMMU_MATCH_DATA(smmu_generic_v1, ARM_SMMU_V1, GENERIC_SMMU);
->>>  ARM_SMMU_MATCH_DATA(smmu_generic_v2, ARM_SMMU_V2, GENERIC_SMMU);
->>> @@ -1919,6 +1924,23 @@ static const struct of_device_id arm_smmu_of_match[] = {
->>>  };
->>>  MODULE_DEVICE_TABLE(of, arm_smmu_of_match);
->>>
->>> +static void arm_smmu_fill_clk_data(struct arm_smmu_device *smmu,
->>> +                                const char * const *clks)
->>> +{
->>> +     int i;
->>> +
->>> +     if (smmu->num_clks < 1)
->>> +             return;
->>> +
->>> +     smmu->clks = devm_kcalloc(smmu->dev, smmu->num_clks,
->>> +                               sizeof(*smmu->clks), GFP_KERNEL);
->>> +     if (!smmu->clks)
->>> +             return;
->>> +
->>> +     for (i = 0; i < smmu->num_clks; i++)
->>> +             smmu->clks[i].id = clks[i];
->>> +}
->>> +
->>>  #ifdef CONFIG_ACPI
->>>  static int acpi_smmu_get_data(u32 model, struct arm_smmu_device *smmu)
->>>  {
->>> @@ -2001,6 +2023,9 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev,
->>>       data = of_device_get_match_data(dev);
->>>       smmu->version = data->version;
->>>       smmu->model = data->model;
->>> +     smmu->num_clks = data->num_clks;
->>> +
->>> +     arm_smmu_fill_clk_data(smmu, data->clks);
->>>
->>>       parse_driver_options(smmu);
->>>
->>> @@ -2099,6 +2124,14 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
->>>               smmu->irqs[i] = irq;
->>>       }
->>>
->>> +     err = devm_clk_bulk_get(smmu->dev, smmu->num_clks, smmu->clks);
->>> +     if (err)
->>> +             return err;
->>> +
->>> +     err = clk_bulk_prepare(smmu->num_clks, smmu->clks);
->>> +     if (err)
->>> +             return err;
->>> +
->>>       err = arm_smmu_device_cfg_probe(smmu);
->>>       if (err)
->>>               return err;
->>> @@ -2181,6 +2214,9 @@ static int arm_smmu_device_remove(struct platform_device *pdev)
->>>
->>>       /* Turn the thing off */
->>>       writel(sCR0_CLIENTPD, ARM_SMMU_GR0_NS(smmu) + ARM_SMMU_GR0_sCR0);
->>> +
->>> +     clk_bulk_unprepare(smmu->num_clks, smmu->clks);
->>> +
->>>       return 0;
->>>  }
->>>
->>> @@ -2197,7 +2233,27 @@ static int __maybe_unused arm_smmu_pm_resume(struct device *dev)
->>>       return 0;
->>>  }
->>>
->>> -static SIMPLE_DEV_PM_OPS(arm_smmu_pm_ops, NULL, arm_smmu_pm_resume);
->>> +static int __maybe_unused arm_smmu_runtime_resume(struct device *dev)
->>> +{
->>> +     struct arm_smmu_device *smmu = dev_get_drvdata(dev);
->>> +
->>> +     return clk_bulk_enable(smmu->num_clks, smmu->clks);
->>> +}
->>> +
->>> +static int __maybe_unused arm_smmu_runtime_suspend(struct device *dev)
->>> +{
->>> +     struct arm_smmu_device *smmu = dev_get_drvdata(dev);
->>> +
->>> +     clk_bulk_disable(smmu->num_clks, smmu->clks);
->>> +
->>> +     return 0;
->>> +}
->>> +
->>> +static const struct dev_pm_ops arm_smmu_pm_ops = {
->>> +     SET_SYSTEM_SLEEP_PM_OPS(NULL, arm_smmu_pm_resume)
->>
->> This is suspicious.
->>
->> If you need a runtime suspend method, why do you think that it is not necessary
->> to suspend the device during system-wide transitions?
->
-> Okay, so you suggest to put clock disabling in say arm_smmu_pm_suspend()?
-> In that case the clocks have to be enabled in the resume path too.
->
-> I remember Tomasz pointed to that we shouldn't need clock enable in resume
-> path [1].
->
-> [1] https://lkml.org/lkml/2018/3/15/60
 
-Honestly, I just don't know. :-)
+--wbnyxjafmaafjrkv
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-It just looks odd the way it is done.  I think the clock should be
-gated during system-wide suspend too, because the system can spend
-much more time in a sleep state than in the working state, on average.
+Hi Sakari,
 
-And note that you cannot rely on runtime PM to always do it for you,
-because it may be disabled at a client device or even blocked by user
-space via power/control in sysfs and that shouldn't matter for
-system-wide PM.
+On Thu, Jul 05, 2018 at 03:48:02PM +0800, Yong wrote:
+> > > +
+> > > +/* -----------------------------------------------------------------------------
+> > > + * Media Operations
+> > > + */
+> > > +static int sun6i_video_formats_init(struct sun6i_video *video,
+> > > +				    const struct media_pad *remote)
+> > > +{
+> > > +	struct v4l2_subdev_mbus_code_enum mbus_code = { 0 };
+> > > +	struct sun6i_csi *csi = video->csi;
+> > > +	struct v4l2_format format;
+> > > +	struct v4l2_subdev *subdev;
+> > > +	u32 pad;
+> > > +	const u32 *pixformats;
+> > > +	int pixformat_count = 0;
+> > > +	u32 subdev_codes[32]; /* subdev format codes, 32 should be enough */
+> > > +	int codes_count = 0;
+> > > +	int num_fmts = 0;
+> > > +	int i, j;
+> > > +
+> > > +	pad = remote->index;
+> > > +	subdev = media_entity_to_v4l2_subdev(remote->entity);
+> > > +	if (subdev == NULL)
+> > > +		return -ENXIO;
+> > > +
+> > > +	/* Get supported pixformats of CSI */
+> > > +	pixformat_count = sun6i_csi_get_supported_pixformats(csi, &pixformats);
+> > > +	if (pixformat_count <= 0)
+> > > +		return -ENXIO;
+> > > +
+> > > +	/* Get subdev formats codes */
+> > > +	mbus_code.pad = pad;
+> > > +	mbus_code.which = V4L2_SUBDEV_FORMAT_ACTIVE;
+> > > +	while (!v4l2_subdev_call(subdev, pad, enum_mbus_code, NULL,
+> > > +				 &mbus_code)) {
+> > 
+> > The formats supported by the external sub-device may depend on horizontal
+> > and vertical flipping. You shouldn't assume any particular configuration
+> > here: instead, bridge drivers generally just need to make sure the formats
+> > match in link validation when streaming is started. At least the CSI-2
+> > receiver driver and the DMA engine driver (video device) should check the
+> > configuration is valid. See e.g. the IPU3 driver:
+> > drivers/media/pci/intel/ipu3/ipu3-cio2.c .
+> 
+> Can mbus_code be added dynamically ?
+> The code here only enum the mbus code and get the possible supported
+> pairs of pixformat and mbus by SoC. Not try to check if the formats
+> (width height ...) is valid or not. The formats validation will be 
+> in link validation when streaming is started as per your advise. 
 
-Thanks,
-Rafael
+Can you reply to this so that Yong has a chance to resubmit his serie
+before the 4.19 merge window starts?
+
+Or alternatively, is this something we can fix later on, once it's
+merged?
+
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--wbnyxjafmaafjrkv--
