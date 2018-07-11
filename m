@@ -1,115 +1,76 @@
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v3] drm/sun4i: mixer: Read id from DT
-Date: Wed, 11 Jul 2018 13:27:06 +0200
-Message-ID: <20180711112706.30222-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v12 2/4] iommu/arm-smmu: Invoke pm_runtime
+ during probe, add/remove device
+Date: Wed, 11 Jul 2018 17:00:14 +0530
+Message-ID: <1bc641d5-a5d0-e459-57cf-07b6b7e055f4@codeaurora.org>
+References: <20180708173413.1965-1-vivek.gautam@codeaurora.org>
+ <20180708173413.1965-3-vivek.gautam@codeaurora.org>
+ <1694664.FhRBrgajmF@aspire.rjw.lan>
+ <CAAFQd5COVfXRBuq2ofHoOvNb+cMVmAFDaekh5KM4DBB1ZEf5pA@mail.gmail.com>
+ <CAJZ5v0hMQJQ0Z-H2OLaeCdT+-MW_eSWmg7saVzkpDqJ-=i3DnQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBE6TS7NAKGQEWPAYHFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: airlied-cv59FeDIM0c@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <CAJZ5v0hMQJQ0Z-H2OLaeCdT+-MW_eSWmg7saVzkpDqJ-=i3DnQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently, TCON supports 2 ways to match TCON with engine (mixer in this
-case). Old way is to just traverse of graph backwards and compare node
-pointer. New way is to match TCON and engine by their respective ids.
-All SoCs with DE2 enabled till now used the old way, which means mixer
-id was never used and thus never implemented.
-
-However, for R40, only the new way will be used. To prepare for that,
-implement mixer id fetching from DT.
-
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
----
-Hi all,
-
-since all other patches were already applied, I'm sending this without
-cover letter. Change from previous version is that I added comment why
-there is no error handling when reading mixer id.
-
- drivers/gpu/drm/sun4i/sun8i_mixer.c | 49 +++++++++++++++++++++++++++--
- 1 file changed, 47 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-index aa81b9838ae8..da34fc394902 100644
---- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-@@ -22,6 +22,7 @@
- #include <linux/component.h>
- #include <linux/dma-mapping.h>
- #include <linux/of_device.h>
-+#include <linux/of_graph.h>
- #include <linux/reset.h>
- 
- #include "sun4i_drv.h"
-@@ -322,6 +323,42 @@ static struct regmap_config sun8i_mixer_regmap_config = {
- 	.max_register	= 0xbfffc, /* guessed */
- };
- 
-+static int sun8i_mixer_of_get_id(struct device_node *node)
-+{
-+	struct device_node *port, *ep;
-+	int ret = -EINVAL;
-+
-+	/* output is port 1 */
-+	port = of_graph_get_port_by_id(node, 1);
-+	if (!port)
-+		return -EINVAL;
-+
-+	/* try to find downstream endpoint */
-+	for_each_available_child_of_node(port, ep) {
-+		struct device_node *remote;
-+		u32 reg;
-+
-+		remote = of_graph_get_remote_endpoint(ep);
-+		if (!remote)
-+			continue;
-+
-+		ret = of_property_read_u32(remote, "reg", &reg);
-+		if (!ret) {
-+			of_node_put(remote);
-+			of_node_put(ep);
-+			of_node_put(port);
-+
-+			return reg;
-+		}
-+
-+		of_node_put(remote);
-+	}
-+
-+	of_node_put(port);
-+
-+	return ret;
-+}
-+
- static int sun8i_mixer_bind(struct device *dev, struct device *master,
- 			      void *data)
- {
-@@ -353,8 +390,16 @@ static int sun8i_mixer_bind(struct device *dev, struct device *master,
- 	dev_set_drvdata(dev, mixer);
- 	mixer->engine.ops = &sun8i_engine_ops;
- 	mixer->engine.node = dev->of_node;
--	/* The ID of the mixer currently doesn't matter */
--	mixer->engine.id = -1;
-+
-+	/*
-+	 * While this function can fail, we shouldn't do anything
-+	 * if this happens. Some early DE2 DT entries don't provide
-+	 * mixer id but work nevertheless because matching between
-+	 * TCON and mixer is done by comparing node pointers (old
-+	 * way) instead comparing ids. If this function fails and
-+	 * id is needed, it will fail during id matching anyway.
-+	 */
-+	mixer->engine.id = sun8i_mixer_of_get_id(dev->of_node);
- 
- 	mixer->cfg = of_device_get_match_data(dev);
- 	if (!mixer->cfg)
--- 
-2.18.0
+CgpPbiA3LzExLzIwMTggNDoyOSBQTSwgUmFmYWVsIEouIFd5c29ja2kgd3JvdGU6Cj4gT24gV2Vk
+LCBKdWwgMTEsIDIwMTggYXQgMTI6MDUgUE0sIFRvbWFzeiBGaWdhIDx0ZmlnYUBjaHJvbWl1bS5v
+cmc+IHdyb3RlOgo+PiBIaSBSYWZhZWwsCj4+Cj4+IFRoYW5rcyBmb3IgcmV2aWV3Lgo+Pgo+PiBP
+biBXZWQsIEp1bCAxMSwgMjAxOCBhdCA2OjUzIFBNIFJhZmFlbCBKLiBXeXNvY2tpIDxyandAcmp3
+eXNvY2tpLm5ldD4gd3JvdGU6Cj4+PiBPbiBTdW5kYXksIEp1bHkgOCwgMjAxOCA3OjM0OjExIFBN
+IENFU1QgVml2ZWsgR2F1dGFtIHdyb3RlOgo+Pj4+IEZyb206IFNyaWNoYXJhbiBSIDxzcmljaGFy
+YW5AY29kZWF1cm9yYS5vcmc+Cj4+Pj4KPj4+PiBUaGUgc21tdSBkZXZpY2UgcHJvYmUvcmVtb3Zl
+IGFuZCBhZGQvcmVtb3ZlIG1hc3RlciBkZXZpY2UgY2FsbGJhY2tzCj4+Pj4gZ2V0cyBjYWxsZWQg
+d2hlbiB0aGUgc21tdSBpcyBub3QgbGlua2VkIHRvIGl0cyBtYXN0ZXIsIHRoYXQgaXMgd2l0aG91
+dAo+Pj4+IHRoZSBjb250ZXh0IG9mIHRoZSBtYXN0ZXIgZGV2aWNlLiBTbyBjYWxsaW5nIHJ1bnRp
+bWUgYXBpcyBpbiB0aG9zZSBwbGFjZXMKPj4+PiBzZXBhcmF0ZWx5Lgo+Pj4+Cj4+Pj4gU2lnbmVk
+LW9mZi1ieTogU3JpY2hhcmFuIFIgPHNyaWNoYXJhbkBjb2RlYXVyb3JhLm9yZz4KPj4+PiBbdml2
+ZWs6IENsZWFudXAgcG0gcnVudGltZSBjYWxsc10KPj4+PiBTaWduZWQtb2ZmLWJ5OiBWaXZlayBH
+YXV0YW0gPHZpdmVrLmdhdXRhbUBjb2RlYXVyb3JhLm9yZz4KPj4+PiBSZXZpZXdlZC1ieTogVG9t
+YXN6IEZpZ2EgPHRmaWdhQGNocm9taXVtLm9yZz4KPj4+PiAtLS0KPj4+Pgo+Pj4+ICAgLSBDaGFu
+Z2Ugc2luY2UgdjExCj4+Pj4gICAgICogUmVwbGFjZWQgcG1fcnVudGltZV9kaXNhYmxlKCkgd2l0
+aCBwbV9ydW50aW1lX2ZvcmNlX3N1c3BlbmQoKQo+Pj4+ICAgICAgIHRvIGF2b2lkIHdhcm5pbmcg
+YWJvdXQgIiBVbnByZXBhcmluZyBlbmFibGVkIGNsb2NrIi4KPj4+PiAgICAgICBGdWxsIHdhcm5p
+bmcgdGV4dCBtZW50aW9uZWQgaW4gY292ZXIgcGF0Y2guCj4+Pj4KPj4+PiAgIGRyaXZlcnMvaW9t
+bXUvYXJtLXNtbXUuYyB8IDkyICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKystLS0tLQo+Pj4+ICAgMSBmaWxlIGNoYW5nZWQsIDg0IGluc2VydGlvbnMoKyksIDggZGVs
+ZXRpb25zKC0pCj4+Pj4KPj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pb21tdS9hcm0tc21tdS5j
+IGIvZHJpdmVycy9pb21tdS9hcm0tc21tdS5jCj4+Pj4gaW5kZXggYTAxZDBkZGUyMWRkLi4wOTI2
+NWUyMDZlMmQgMTAwNjQ0Cj4+Pj4gLS0tIGEvZHJpdmVycy9pb21tdS9hcm0tc21tdS5jCj4+Pj4g
+KysrIGIvZHJpdmVycy9pb21tdS9hcm0tc21tdS5jCj4+Pj4gQEAgLTI2OCw2ICsyNjgsMjAgQEAg
+c3RhdGljIHN0cnVjdCBhcm1fc21tdV9vcHRpb25fcHJvcCBhcm1fc21tdV9vcHRpb25zW10gPSB7
+Cj4+Pj4gICAgICAgIHsgMCwgTlVMTH0sCj4+Pj4gICB9Owo+Pj4+Cj4+Pj4gK3N0YXRpYyBpbmxp
+bmUgaW50IGFybV9zbW11X3JwbV9nZXQoc3RydWN0IGFybV9zbW11X2RldmljZSAqc21tdSkKPj4+
+PiArewo+Pj4+ICsgICAgIGlmIChwbV9ydW50aW1lX2VuYWJsZWQoc21tdS0+ZGV2KSkKPj4+IFdo
+eSBkbyB5b3UgbmVlZCB0aGUgcG1fcnVudGltZV9lbmFibGVkKCkgY2hlY2tzIGhlcmUgYW5kIGJl
+bG93Pwo+Pj4KPj4+IHBtX3J1bnRpbWVfZ2V0X3N5bmMoKSBhbmQgcG1fcnVudGltZV9wdXQoKSBz
+aG91bGQgd29yayBqdXN0IGZpbmUgaWYKPj4+IHJ1bnRpbWUgUE0gaXMgbm90IGVuYWJsZWQuCj4+
+IEJlY2F1c2UgcG1fcnVudGltZV9nZXRfc3luYygpIGFjcXVpcmVzIGEgc3BpbiBsb2NrLCBldmVu
+IGlmIG9ubHkgZm9yCj4+IHRoZSBzaG9ydCB0aW1lIG9mIGNoZWNraW5nIGlmIHJ1bnRpbWUgUE0g
+aXMgZW5hYmxlZCBhbmQgU01NVSBkcml2ZXIKPj4gbWFpbnRhaW5lcnMgZGlkbid0IHdhbnQgYW55
+IHNwaW4gbG9ja3MgaW4gY2VydGFpbiBJT01NVSBBUEkgY29kZSBwYXRocwo+PiBvbiBoYXJkd2Fy
+ZSBpbXBsZW1lbnRhdGlvbnMgdGhhdCBkb24ndCBuZWVkIHJ1bnRpbWUgUE0sIHdoaWxlIHdlIHN0
+aWxsCj4+IG5lZWQgdG8gYmUgYWJsZSB0byBjb250cm9sIHJ1bnRpbWUgUE0gdGhlcmUgb24gaGFy
+ZHdhcmUKPj4gaW1wbGVtZW50YXRpb25zIHRoYXQgbmVlZCBzby4KPiBPSywgc28gaXQgaXMgYW4g
+b3B0aW1pemF0aW9uLiAgSXQgd291bGQgYmUgZ29vZCB0byBwdXQgYSBjb21tZW50IGluCj4gdGhl
+cmUgdG8gdGhhdCBlZmZlY3QuCgpZZWEsIGFjdHVhbGx5IHRoZXJlJ3MgYSBjb21tZW50IHBsYWNl
+ZCBpbiBhcm1fc21tdV9kZXZpY2VfcHJvYmUoKQogwqB3aGVyZSB0aGUgcnVudGltZSBQTSBpcyBj
+b25kaXRpb25hbGx5IGVuYWJsZWQuCkkgY2FuIGFkZCBjb21tZW50cyBmb3IgdGhlc2Ugd3JhcHBl
+cnMgdG9vIGlmIHlvdSB3b3VsZCBsaWtlLgoKVGhhbmtzICYgUmVnYXJkcwpWaXZlawpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGlu
+ZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
