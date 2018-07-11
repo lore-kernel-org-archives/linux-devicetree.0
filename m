@@ -1,101 +1,75 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH v4 2/9] Documentation: hwmon: Add OCC documentation
-Date: Wed, 11 Jul 2018 16:01:31 -0500
-Message-ID: <1531342898-15790-3-git-send-email-eajames@linux.vnet.ibm.com>
-References: <1531342898-15790-1-git-send-email-eajames@linux.vnet.ibm.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v6 7/7] arm64: dts: sdm845: Add tsens nodes
+Date: Wed, 11 Jul 2018 14:51:29 -0700
+Message-ID: <20180711215129.GT129942@google.com>
+References: <cover.1531135999.git.amit.kucheria@linaro.org>
+ <65c39c405076627bd43ec94c211c6998191b9f16.1531136000.git.amit.kucheria@linaro.org>
+ <CAD=FV=XpfJyd8hUT45+J=EVY1Bs28Mk7m2TBJy8J=HO63n2_qw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531342898-15790-1-git-send-email-eajames@linux.vnet.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=XpfJyd8hUT45+J=EVY1Bs28Mk7m2TBJy8J=HO63n2_qw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, benh@kernel.crashing.org, linux@roeck-us.net, jdelvare@suse.com, mark.rutland@arm.com, openbmc@lists.ozlabs.org, robh+dt@kernel.org, joel@jms.id.au, Eddie James <eajames@linux.vnet.ibm.com>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Amit Kucheria <amit.kucheria@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the hwmon interface for the OCC.
+On Wed, Jul 11, 2018 at 11:44:13AM -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Mon, Jul 9, 2018 at 4:43 AM, Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> > SDM845 has two tsens blocks, one with 13 sensors and the other with 8
+> > sensors. It uses version 2 of the TSENS IP, so use the fallback property to
+> > allow more common code.
+> >
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > index cdaabeb..ba2899c 100644
+> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > @@ -221,6 +221,22 @@
+> >                         #interrupt-cells = <2>;
+> >                 };
+> >
+> > +               tsens0: tsens@c263000 {
+> 
+> As per my comments in the bindings, nit that this should probably be
+> "thermal-sensor" not "tsens", AKA:
+> 
+> tsens0: thermal-sensor@c263000 {
+> 
+> > +                       compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+> > +                       reg = <0xc263000 0x1ff>, /* TM */
+> > +                             <0xc222000 0x1ff>; /* SROT */
+> > +                       #qcom,sensors = <13>;
+> 
+> As per my comment in the bindings and the code, I'm confused about the
+> whole "#qcom,sensors" bit.  It's not documented and doesn't seem
+> hooked up in the code either.
+> 
+> ...but if people have tested this, perhaps I'm confused.  How can
+> things work if num_sensors is 0???
 
-Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
----
- Documentation/hwmon/occ | 73 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 73 insertions(+)
- create mode 100644 Documentation/hwmon/occ
+The mystery is resolved by:
 
-diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ
-new file mode 100644
-index 0000000..465fa1a
---- /dev/null
-+++ b/Documentation/hwmon/occ
-@@ -0,0 +1,73 @@
-+Kernel driver occ-hwmon
-+=======================
-+
-+Supported chips:
-+  * POWER8
-+  * POWER9
-+
-+Author: Eddie James <eajames@linux.vnet.ibm.com>
-+
-+Description
-+-----------
-+
-+This driver supports hardware monitoring for the On-Chip Controller (OCC)
-+embedded on POWER processors. The OCC is a device that collects and aggregates
-+sensor data from the processor and the system. The OCC can provide the raw
-+sensor data as well as perform thermal and power management on the system.
-+
-+The P8 version of this driver is a client driver of I2C. It may be probed
-+manually if an "ibm,p8-occ-hwmon" compatible device is found under the
-+appropriate I2C bus node in the device-tree.
-+
-+The P9 version of this driver is a client driver of the FSI-based OCC driver.
-+It will be probed automatically by the FSI-based OCC driver.
-+
-+Sysfs entries
-+-------------
-+
-+The following attributes are supported. All attributes are read-only unless
-+specified.
-+
-+temp[1-n]_label		OCC sensor id.
-+temp[1-n]_input		Measured temperature in millidegrees C.
-+[with temperature sensor version 2+]
-+    temp[1-n]_fru_type		Given FRU (Field Replaceable Unit) type.
-+    temp[1-n]_fault		Temperature sensor fault.
-+
-+freq[1-n]_label		OCC sensor id.
-+freq[1-n]_input		Measured frequency.
-+
-+power[1-n]_label	OCC sensor id.
-+power[1-n]_input	Measured power in microwatts.
-+power[1-n]_update_tag	Number of 250us samples represented in accumulator.
-+power[1-n]_accumulator	Accumulation of 250us power readings.
-+[with power sensor version 2+]
-+    power[1-n]_function_id	Identifies what the power reading is for.
-+    power[1-n]_apss_channel	Indicates APSS channel.
-+
-+[power version 0xa0 only]
-+power1_id			OCC sensor id.
-+power[1-n]_label		Sensor type, "system", "proc", "vdd", or "vdn".
-+power[1-n]_input		Most recent power reading in microwatts.
-+power[1-n]_update_tag		Number of samples in the accumulator.
-+power[1-n]_accumulator		Accumulation of power readings.
-+[with sensor type "system" and "proc" only]
-+    power[1-n]_update_time	Time in us that the power value is read.
-+
-+caps1_current		Current OCC power cap in watts.
-+caps1_reading		Current system output power in watts.
-+caps1_norm		Power cap without redundant power.
-+caps1_max		Maximum power cap.
-+[caps version 1 and 2 only]
-+    caps1_min		Minimum power cap.
-+[caps version 3+]
-+    caps1_min_hard		Hard minimum cap that can be set and held.
-+    caps1_min_soft		Soft minimum cap below hard, not guaranteed.
-+caps1_user		The powercap specified by the user. Will be 0 if no
-+			user powercap exists. This attribute is read-write.
-+[caps version 1+]
-+    caps1_user_source	Indicates how the user power limit was set.
-+
-+extn[1-n]_label		ASCII id or sensor id.
-+extn[1-n]_flags		Indicates type of label attribute.
-+extn[1-n]_input		Data.
--- 
-1.8.3.1
+commit 6d7c70d1cd6526dc79e3d3b3faae1c40c1681168
+Author: Bjorn Andersson <bjorn.andersson@linaro.org>
+Date:   Mon May 7 16:53:39 2018 -0700
+
+    thermal: qcom: tsens: Allow number of sensors to come from DT
+
+    For platforms that has multiple copies of the TSENS hardware block it's
+    necessary to be able to specify the number of sensors per block in DeviceTree.
+
+    Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+    Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+    Reviewed-by: Rob Herring <robh@kernel.org>
+    Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+
+
+I bumped into this during testing ;-)
