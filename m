@@ -1,163 +1,141 @@
-From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v12 1/4] iommu/arm-smmu: Add
- pm_runtime/sleep ops
-Date: Wed, 11 Jul 2018 21:51:39 +0900
-Message-ID: <CAAFQd5Cqd=J+_nqRc_sx=sq2ayxwSRMgygvffuHH9nC5R_LjdA@mail.gmail.com>
-References: <20180708173413.1965-1-vivek.gautam@codeaurora.org>
- <20180708173413.1965-2-vivek.gautam@codeaurora.org>
- <17407514.unFVTGoGrn@aspire.rjw.lan>
- <CAFp+6iHxJucfzJJeEvSToG4p2zADjDb9F0L8h053x-JKAy55mg@mail.gmail.com>
- <CAJZ5v0gbkdkx_+oHYiPz=SFdFCLm38hsi1TmJ2Jdc7j73TNtzg@mail.gmail.com>
+From: Jian Hu <jian.hu@amlogic.com>
+Subject: Re: [PATCH 2/3] dt-bindings: clk: meson-g12a: Add G12A EE Clock
+ Bindings
+Date: Wed, 11 Jul 2018 20:53:35 +0800
+Message-ID: <d09961d5-2674-fd8c-ee90-05dd423391f3@amlogic.com>
+References: <1531134767-29927-1-git-send-email-jian.hu@amlogic.com>
+ <1531134767-29927-3-git-send-email-jian.hu@amlogic.com>
+ <CAFBinCB6LS=PT1cw-j-LZ+vWo-RFe81qVZ6uLeGfWKtKfHz7ag@mail.gmail.com>
+ <1531214774.2708.49.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <CAJZ5v0gbkdkx_+oHYiPz=SFdFCLm38hsi1TmJ2Jdc7j73TNtzg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
- Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>"list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
- Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Marek Szyprowski <m.szyprowsk>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1531214774.2708.49.camel@baylibre.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, qianggui.song@amlogic.com, devicetree@vger.kernel.org, sboyd@kernel.org, khilman@baylibre.com, mturquette@baylibre.com, yixun.lan@amlogic.com, linux-kernel@vger.kernel.org, bo.yang@amlogic.com, qiufang.dai@amlogic.com, linux-arm-kernel@lists.infradead.org, carlo@caione.org, linux-amlogic@lists.infradead.org, sunny.luo@amlogic.com, linux-clk@vger.kernel.org, xingyu.chen@amlogic.com
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdWwgMTEsIDIwMTggYXQgODoxMSBQTSBSYWZhZWwgSi4gV3lzb2NraSA8cmFmYWVs
-QGtlcm5lbC5vcmc+IHdyb3RlOgo+Cj4gT24gV2VkLCBKdWwgMTEsIDIwMTggYXQgMTI6NTUgUE0s
-IFZpdmVrIEdhdXRhbQo+IDx2aXZlay5nYXV0YW1AY29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+ID4g
-SGkgUmFmYWVsLAo+ID4KPiA+Cj4gPiBPbiBXZWQsIEp1bCAxMSwgMjAxOCBhdCAzOjIwIFBNLCBS
-YWZhZWwgSi4gV3lzb2NraSA8cmp3QHJqd3lzb2NraS5uZXQ+IHdyb3RlOgo+ID4+IE9uIFN1bmRh
-eSwgSnVseSA4LCAyMDE4IDc6MzQ6MTAgUE0gQ0VTVCBWaXZlayBHYXV0YW0gd3JvdGU6Cj4gPj4+
-IEZyb206IFNyaWNoYXJhbiBSIDxzcmljaGFyYW5AY29kZWF1cm9yYS5vcmc+Cj4gPj4+Cj4gPj4+
-IFRoZSBzbW11IG5lZWRzIHRvIGJlIGZ1bmN0aW9uYWwgb25seSB3aGVuIHRoZSByZXNwZWN0aXZl
-Cj4gPj4+IG1hc3RlcidzIHVzaW5nIGl0IGFyZSBhY3RpdmUuIFRoZSBkZXZpY2VfbGluayBmZWF0
-dXJlCj4gPj4+IGhlbHBzIHRvIHRyYWNrIHN1Y2ggZnVuY3Rpb25hbCBkZXBlbmRlbmNpZXMsIHNv
-IHRoYXQgdGhlCj4gPj4+IGlvbW11IGdldHMgcG93ZXJlZCB3aGVuIHRoZSBtYXN0ZXIgZGV2aWNl
-IGVuYWJsZXMgaXRzZWxmCj4gPj4+IHVzaW5nIHBtX3J1bnRpbWUuIFNvIGJ5IGFkYXB0aW5nIHRo
-ZSBzbW11IGRyaXZlciBmb3IKPiA+Pj4gcnVudGltZSBwbSwgYWJvdmUgc2FpZCBkZXBlbmRlbmN5
-IGNhbiBiZSBhZGRyZXNzZWQuCj4gPj4+Cj4gPj4+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgcG0gcnVu
-dGltZS9zbGVlcCBjYWxsYmFja3MgdG8gdGhlCj4gPj4+IGRyaXZlciBhbmQgYWxzbyB0aGUgZnVu
-Y3Rpb25zIHRvIHBhcnNlIHRoZSBzbW11IGNsb2Nrcwo+ID4+PiBmcm9tIERUIGFuZCBlbmFibGUg
-dGhlbSBpbiByZXN1bWUvc3VzcGVuZC4KPiA+Pj4KPiA+Pj4gU2lnbmVkLW9mZi1ieTogU3JpY2hh
-cmFuIFIgPHNyaWNoYXJhbkBjb2RlYXVyb3JhLm9yZz4KPiA+Pj4gU2lnbmVkLW9mZi1ieTogQXJj
-aGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4KPiA+Pj4gW3ZpdmVrOiBDbG9jayBy
-ZXdvcmsgdG8gcmVxdWVzdCBidWxrIG9mIGNsb2Nrc10KPiA+Pj4gU2lnbmVkLW9mZi1ieTogVml2
-ZWsgR2F1dGFtIDx2aXZlay5nYXV0YW1AY29kZWF1cm9yYS5vcmc+Cj4gPj4+IFJldmlld2VkLWJ5
-OiBUb21hc3ogRmlnYSA8dGZpZ2FAY2hyb21pdW0ub3JnPgo+ID4+PiAtLS0KPiA+Pj4KPiA+Pj4g
-IC0gTm8gY2hhbmdlIHNpbmNlIHYxMS4KPiA+Pj4KPiA+Pj4gIGRyaXZlcnMvaW9tbXUvYXJtLXNt
-bXUuYyB8IDYwICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKyst
-LQo+ID4+PiAgMSBmaWxlIGNoYW5nZWQsIDU4IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
-Cj4gPj4+Cj4gPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L2FybS1zbW11LmMgYi9kcml2
-ZXJzL2lvbW11L2FybS1zbW11LmMKPiA+Pj4gaW5kZXggZjdhOTZiY2Y5NGE2Li5hMDFkMGRkZTIx
-ZGQgMTAwNjQ0Cj4gPj4+IC0tLSBhL2RyaXZlcnMvaW9tbXUvYXJtLXNtbXUuYwo+ID4+PiArKysg
-Yi9kcml2ZXJzL2lvbW11L2FybS1zbW11LmMKPiA+Pj4gQEAgLTQ4LDYgKzQ4LDcgQEAKPiA+Pj4g
-ICNpbmNsdWRlIDxsaW51eC9vZl9pb21tdS5oPgo+ID4+PiAgI2luY2x1ZGUgPGxpbnV4L3BjaS5o
-Pgo+ID4+PiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgo+ID4+PiArI2luY2x1
-ZGUgPGxpbnV4L3BtX3J1bnRpbWUuaD4KPiA+Pj4gICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+Cj4g
-Pj4+ICAjaW5jbHVkZSA8bGludXgvc3BpbmxvY2suaD4KPiA+Pj4KPiA+Pj4gQEAgLTIwNSw2ICsy
-MDYsOCBAQCBzdHJ1Y3QgYXJtX3NtbXVfZGV2aWNlIHsKPiA+Pj4gICAgICAgdTMyICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBudW1fZ2xvYmFsX2lycXM7Cj4gPj4+ICAgICAgIHUzMiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgbnVtX2NvbnRleHRfaXJxczsKPiA+Pj4gICAgICAgdW5z
-aWduZWQgaW50ICAgICAgICAgICAgICAgICAgICAqaXJxczsKPiA+Pj4gKyAgICAgc3RydWN0IGNs
-a19idWxrX2RhdGEgICAgICAgICAgICAqY2xrczsKPiA+Pj4gKyAgICAgaW50ICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBudW1fY2xrczsKPiA+Pj4KPiA+Pj4gICAgICAgdTMyICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBjYXZpdW1faWRfYmFzZTsgLyogU3BlY2lmaWMgdG8gQ2F2aXVt
-ICovCj4gPj4+Cj4gPj4+IEBAIC0xODk3LDEwICsxOTAwLDEyIEBAIHN0YXRpYyBpbnQgYXJtX3Nt
-bXVfZGV2aWNlX2NmZ19wcm9iZShzdHJ1Y3QgYXJtX3NtbXVfZGV2aWNlICpzbW11KQo+ID4+PiAg
-c3RydWN0IGFybV9zbW11X21hdGNoX2RhdGEgewo+ID4+PiAgICAgICBlbnVtIGFybV9zbW11X2Fy
-Y2hfdmVyc2lvbiB2ZXJzaW9uOwo+ID4+PiAgICAgICBlbnVtIGFybV9zbW11X2ltcGxlbWVudGF0
-aW9uIG1vZGVsOwo+ID4+PiArICAgICBjb25zdCBjaGFyICogY29uc3QgKmNsa3M7Cj4gPj4+ICsg
-ICAgIGludCBudW1fY2xrczsKPiA+Pj4gIH07Cj4gPj4+Cj4gPj4+ICAjZGVmaW5lIEFSTV9TTU1V
-X01BVENIX0RBVEEobmFtZSwgdmVyLCBpbXApICBcCj4gPj4+IC1zdGF0aWMgc3RydWN0IGFybV9z
-bW11X21hdGNoX2RhdGEgbmFtZSA9IHsgLnZlcnNpb24gPSB2ZXIsIC5tb2RlbCA9IGltcCB9Cj4g
-Pj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGFybV9zbW11X21hdGNoX2RhdGEgbmFtZSA9IHsgLnZl
-cnNpb24gPSB2ZXIsIC5tb2RlbCA9IGltcCB9Cj4gPj4+Cj4gPj4+ICBBUk1fU01NVV9NQVRDSF9E
-QVRBKHNtbXVfZ2VuZXJpY192MSwgQVJNX1NNTVVfVjEsIEdFTkVSSUNfU01NVSk7Cj4gPj4+ICBB
-Uk1fU01NVV9NQVRDSF9EQVRBKHNtbXVfZ2VuZXJpY192MiwgQVJNX1NNTVVfVjIsIEdFTkVSSUNf
-U01NVSk7Cj4gPj4+IEBAIC0xOTE5LDYgKzE5MjQsMjMgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBv
-Zl9kZXZpY2VfaWQgYXJtX3NtbXVfb2ZfbWF0Y2hbXSA9IHsKPiA+Pj4gIH07Cj4gPj4+ICBNT0RV
-TEVfREVWSUNFX1RBQkxFKG9mLCBhcm1fc21tdV9vZl9tYXRjaCk7Cj4gPj4+Cj4gPj4+ICtzdGF0
-aWMgdm9pZCBhcm1fc21tdV9maWxsX2Nsa19kYXRhKHN0cnVjdCBhcm1fc21tdV9kZXZpY2UgKnNt
-bXUsCj4gPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IGNoYXIgKiBj
-b25zdCAqY2xrcykKPiA+Pj4gK3sKPiA+Pj4gKyAgICAgaW50IGk7Cj4gPj4+ICsKPiA+Pj4gKyAg
-ICAgaWYgKHNtbXUtPm51bV9jbGtzIDwgMSkKPiA+Pj4gKyAgICAgICAgICAgICByZXR1cm47Cj4g
-Pj4+ICsKPiA+Pj4gKyAgICAgc21tdS0+Y2xrcyA9IGRldm1fa2NhbGxvYyhzbW11LT5kZXYsIHNt
-bXUtPm51bV9jbGtzLAo+ID4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNpemVv
-Zigqc21tdS0+Y2xrcyksIEdGUF9LRVJORUwpOwo+ID4+PiArICAgICBpZiAoIXNtbXUtPmNsa3Mp
-Cj4gPj4+ICsgICAgICAgICAgICAgcmV0dXJuOwo+ID4+PiArCj4gPj4+ICsgICAgIGZvciAoaSA9
-IDA7IGkgPCBzbW11LT5udW1fY2xrczsgaSsrKQo+ID4+PiArICAgICAgICAgICAgIHNtbXUtPmNs
-a3NbaV0uaWQgPSBjbGtzW2ldOwo+ID4+PiArfQo+ID4+PiArCj4gPj4+ICAjaWZkZWYgQ09ORklH
-X0FDUEkKPiA+Pj4gIHN0YXRpYyBpbnQgYWNwaV9zbW11X2dldF9kYXRhKHUzMiBtb2RlbCwgc3Ry
-dWN0IGFybV9zbW11X2RldmljZSAqc21tdSkKPiA+Pj4gIHsKPiA+Pj4gQEAgLTIwMDEsNiArMjAy
-Myw5IEBAIHN0YXRpYyBpbnQgYXJtX3NtbXVfZGV2aWNlX2R0X3Byb2JlKHN0cnVjdCBwbGF0Zm9y
-bV9kZXZpY2UgKnBkZXYsCj4gPj4+ICAgICAgIGRhdGEgPSBvZl9kZXZpY2VfZ2V0X21hdGNoX2Rh
-dGEoZGV2KTsKPiA+Pj4gICAgICAgc21tdS0+dmVyc2lvbiA9IGRhdGEtPnZlcnNpb247Cj4gPj4+
-ICAgICAgIHNtbXUtPm1vZGVsID0gZGF0YS0+bW9kZWw7Cj4gPj4+ICsgICAgIHNtbXUtPm51bV9j
-bGtzID0gZGF0YS0+bnVtX2Nsa3M7Cj4gPj4+ICsKPiA+Pj4gKyAgICAgYXJtX3NtbXVfZmlsbF9j
-bGtfZGF0YShzbW11LCBkYXRhLT5jbGtzKTsKPiA+Pj4KPiA+Pj4gICAgICAgcGFyc2VfZHJpdmVy
-X29wdGlvbnMoc21tdSk7Cj4gPj4+Cj4gPj4+IEBAIC0yMDk5LDYgKzIxMjQsMTQgQEAgc3RhdGlj
-IGludCBhcm1fc21tdV9kZXZpY2VfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikK
-PiA+Pj4gICAgICAgICAgICAgICBzbW11LT5pcnFzW2ldID0gaXJxOwo+ID4+PiAgICAgICB9Cj4g
-Pj4+Cj4gPj4+ICsgICAgIGVyciA9IGRldm1fY2xrX2J1bGtfZ2V0KHNtbXUtPmRldiwgc21tdS0+
-bnVtX2Nsa3MsIHNtbXUtPmNsa3MpOwo+ID4+PiArICAgICBpZiAoZXJyKQo+ID4+PiArICAgICAg
-ICAgICAgIHJldHVybiBlcnI7Cj4gPj4+ICsKPiA+Pj4gKyAgICAgZXJyID0gY2xrX2J1bGtfcHJl
-cGFyZShzbW11LT5udW1fY2xrcywgc21tdS0+Y2xrcyk7Cj4gPj4+ICsgICAgIGlmIChlcnIpCj4g
-Pj4+ICsgICAgICAgICAgICAgcmV0dXJuIGVycjsKPiA+Pj4gKwo+ID4+PiAgICAgICBlcnIgPSBh
-cm1fc21tdV9kZXZpY2VfY2ZnX3Byb2JlKHNtbXUpOwo+ID4+PiAgICAgICBpZiAoZXJyKQo+ID4+
-PiAgICAgICAgICAgICAgIHJldHVybiBlcnI7Cj4gPj4+IEBAIC0yMTgxLDYgKzIyMTQsOSBAQCBz
-dGF0aWMgaW50IGFybV9zbW11X2RldmljZV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAq
-cGRldikKPiA+Pj4KPiA+Pj4gICAgICAgLyogVHVybiB0aGUgdGhpbmcgb2ZmICovCj4gPj4+ICAg
-ICAgIHdyaXRlbChzQ1IwX0NMSUVOVFBELCBBUk1fU01NVV9HUjBfTlMoc21tdSkgKyBBUk1fU01N
-VV9HUjBfc0NSMCk7Cj4gPj4+ICsKPiA+Pj4gKyAgICAgY2xrX2J1bGtfdW5wcmVwYXJlKHNtbXUt
-Pm51bV9jbGtzLCBzbW11LT5jbGtzKTsKPiA+Pj4gKwo+ID4+PiAgICAgICByZXR1cm4gMDsKPiA+
-Pj4gIH0KPiA+Pj4KPiA+Pj4gQEAgLTIxOTcsNyArMjIzMywyNyBAQCBzdGF0aWMgaW50IF9fbWF5
-YmVfdW51c2VkIGFybV9zbW11X3BtX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gPj4+ICAg
-ICAgIHJldHVybiAwOwo+ID4+PiAgfQo+ID4+Pgo+ID4+PiAtc3RhdGljIFNJTVBMRV9ERVZfUE1f
-T1BTKGFybV9zbW11X3BtX29wcywgTlVMTCwgYXJtX3NtbXVfcG1fcmVzdW1lKTsKPiA+Pj4gK3N0
-YXRpYyBpbnQgX19tYXliZV91bnVzZWQgYXJtX3NtbXVfcnVudGltZV9yZXN1bWUoc3RydWN0IGRl
-dmljZSAqZGV2KQo+ID4+PiArewo+ID4+PiArICAgICBzdHJ1Y3QgYXJtX3NtbXVfZGV2aWNlICpz
-bW11ID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4gPj4+ICsKPiA+Pj4gKyAgICAgcmV0dXJuIGNs
-a19idWxrX2VuYWJsZShzbW11LT5udW1fY2xrcywgc21tdS0+Y2xrcyk7Cj4gPj4+ICt9Cj4gPj4+
-ICsKPiA+Pj4gK3N0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgYXJtX3NtbXVfcnVudGltZV9zdXNw
-ZW5kKHN0cnVjdCBkZXZpY2UgKmRldikKPiA+Pj4gK3sKPiA+Pj4gKyAgICAgc3RydWN0IGFybV9z
-bW11X2RldmljZSAqc21tdSA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOwo+ID4+PiArCj4gPj4+ICsg
-ICAgIGNsa19idWxrX2Rpc2FibGUoc21tdS0+bnVtX2Nsa3MsIHNtbXUtPmNsa3MpOwo+ID4+PiAr
-Cj4gPj4+ICsgICAgIHJldHVybiAwOwo+ID4+PiArfQo+ID4+PiArCj4gPj4+ICtzdGF0aWMgY29u
-c3Qgc3RydWN0IGRldl9wbV9vcHMgYXJtX3NtbXVfcG1fb3BzID0gewo+ID4+PiArICAgICBTRVRf
-U1lTVEVNX1NMRUVQX1BNX09QUyhOVUxMLCBhcm1fc21tdV9wbV9yZXN1bWUpCj4gPj4KPiA+PiBU
-aGlzIGlzIHN1c3BpY2lvdXMuCj4gPj4KPiA+PiBJZiB5b3UgbmVlZCBhIHJ1bnRpbWUgc3VzcGVu
-ZCBtZXRob2QsIHdoeSBkbyB5b3UgdGhpbmsgdGhhdCBpdCBpcyBub3QgbmVjZXNzYXJ5Cj4gPj4g
-dG8gc3VzcGVuZCB0aGUgZGV2aWNlIGR1cmluZyBzeXN0ZW0td2lkZSB0cmFuc2l0aW9ucz8KPiA+
-Cj4gPiBPa2F5LCBzbyB5b3Ugc3VnZ2VzdCB0byBwdXQgY2xvY2sgZGlzYWJsaW5nIGluIHNheSBh
-cm1fc21tdV9wbV9zdXNwZW5kKCk/Cj4gPiBJbiB0aGF0IGNhc2UgdGhlIGNsb2NrcyBoYXZlIHRv
-IGJlIGVuYWJsZWQgaW4gdGhlIHJlc3VtZSBwYXRoIHRvby4KPiA+Cj4gPiBJIHJlbWVtYmVyIFRv
-bWFzeiBwb2ludGVkIHRvIHRoYXQgd2Ugc2hvdWxkbid0IG5lZWQgY2xvY2sgZW5hYmxlIGluIHJl
-c3VtZQo+ID4gcGF0aCBbMV0uCj4gPgo+ID4gWzFdIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE4
-LzMvMTUvNjAKClRoYXQgd2FzIGFuIGFuc3dlciBmb3IgYSBkaWZmZXJlbnQgcXVlc3Rpb24uIEkg
-ZG9uJ3QgcmVtZW1iZXIKc3VnZ2VzdGluZyBoYXZpbmcgbm8gc3VzcGVuZCBmdW5jdGlvbi4gQWx0
-aG91Z2gsIGdpdmVuIHRoZSBQTQpzdWJzeXN0ZW0gaW50ZXJuYWxzLCB0aGUgc3VzcGVuZCBmdW5j
-dGlvbiB3b3VsZG4ndCBiZSBjYWxsZWQgb24gU01NVQppbXBsZW1lbnRhdGlvbiBuZWVkZWQgcG93
-ZXIgY29udHJvbCAoc2luY2UgdGhleSB3b3VsZCBoYXZlIHJ1bnRpbWUgUE0KZW5hYmxlZCkgYW5k
-IG9uIG90aGVycywgaXQgd291bGQgYmUgY2FsbGVkIGJ1dCBkbyBub3RoaW5nIChzaW5jZSBubwpj
-bG9ja3MpLgoKPgo+IEhvbmVzdGx5LCBJIGp1c3QgZG9uJ3Qga25vdy4gOi0pCj4KPiBJdCBqdXN0
-IGxvb2tzIG9kZCB0aGUgd2F5IGl0IGlzIGRvbmUuICBJIHRoaW5rIHRoZSBjbG9jayBzaG91bGQg
-YmUKPiBnYXRlZCBkdXJpbmcgc3lzdGVtLXdpZGUgc3VzcGVuZCB0b28sIGJlY2F1c2UgdGhlIHN5
-c3RlbSBjYW4gc3BlbmQKPiBtdWNoIG1vcmUgdGltZSBpbiBhIHNsZWVwIHN0YXRlIHRoYW4gaW4g
-dGhlIHdvcmtpbmcgc3RhdGUsIG9uIGF2ZXJhZ2UuCj4KPiBBbmQgbm90ZSB0aGF0IHlvdSBjYW5u
-b3QgcmVseSBvbiBydW50aW1lIFBNIHRvIGFsd2F5cyBkbyBpdCBmb3IgeW91LAo+IGJlY2F1c2Ug
-aXQgbWF5IGJlIGRpc2FibGVkIGF0IGEgY2xpZW50IGRldmljZSBvciBldmVuIGJsb2NrZWQgYnkg
-dXNlcgo+IHNwYWNlIHZpYSBwb3dlci9jb250cm9sIGluIHN5c2ZzIGFuZCB0aGF0IHNob3VsZG4n
-dCBtYXR0ZXIgZm9yCj4gc3lzdGVtLXdpZGUgUE0uCgpVc2VyIHNwYWNlIGJsb2NraW5nIHJ1bnRp
-bWUgUE0gdGhyb3VnaCBzeXNmcyBpcyBhIGdvb2QgcG9pbnQuIEknbSBub3QKMTAwJSBzdXJlIGhv
-dyB0aGUgUE0gc3Vic3lzdGVtIGRlYWxzIHdpdGggdGhhdCBpbiBjYXNlIG9mIHN5c3RlbS13aWRl
-CnN1c3BlbmQuIEkgZ3Vlc3MgZm9yIGNvbnNpc3RlbmN5IGFuZCBzYWZldHksIHdlIHNob3VsZCBo
-YXZlIHRoZQpzdXNwZW5kIGNhbGxiYWNrLgoKQmVzdCByZWdhcmRzLApUb21hc3oKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcg
-bGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+
+
+On 2018/7/10 17:26, Jerome Brunet wrote:
+> On Tue, 2018-07-10 at 00:13 +0200, Martin Blumenstingl wrote:
+>> On Mon, Jul 9, 2018 at 1:13 PM Jian Hu <jian.hu@amlogic.com> wrote:
+>>>
+>>> Add dt-bindings headers for the Meson-G12A's Everything-Else
+>>> part clock controller.
+>>
+>> I wonder if this should be folded into patch #1 along with an update
+>> to Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt so
+>> it's clear which header has to be used for G12A
+>>
+> 
+> Yes, please squash patch 1 and 2.
+I have squashed patch 1 and 2.
+> 
+>>>
+>>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>>> ---
+>>>   include/dt-bindings/clock/g12a-clkc.h | 93 +++++++++++++++++++++++++++++++++++
+>>>   1 file changed, 93 insertions(+)
+>>>   create mode 100644 include/dt-bindings/clock/g12a-clkc.h
+>>>
+>>> diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
+>>> new file mode 100644
+>>> index 0000000..1473225
+>>> --- /dev/null
+>>> +++ b/include/dt-bindings/clock/g12a-clkc.h
+>>> @@ -0,0 +1,93 @@
+>>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+>>> +/*
+>>> + * Meson-G12A clock tree IDs
+>>> + *
+>>> + * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
+>>> + */
+>>> +
+>>> +#ifndef __G12A_CLKC_H
+>>> +#define __G12A_CLKC_H
+>>> +
+>>> +#define CLKID_SYS_PLL                          0
+>>> +#define CLKID_FIXED_PLL                                1
+>>> +#define CLKID_FCLK_DIV2                                2
+>>> +#define CLKID_FCLK_DIV3                                3
+>>> +#define CLKID_FCLK_DIV4                                4
+>>> +#define CLKID_FCLK_DIV5                                5
+>>> +#define CLKID_FCLK_DIV7                                6
+>>> +#define CLKID_GP0_PLL                          7
+> 
+> Please fix the alignement.
+> 
+>>> +#define CLKID_CLK81                                    10
+>>> +#define CLKID_MPLL0                                    11
+>>> +#define CLKID_MPLL1                                    12
+>>> +#define CLKID_MPLL2                                    13
+>>> +#define CLKID_MPLL3                                    14
+>>> +#define CLKID_DDR                                      15
+>>> +#define CLKID_DOS                                      16
+>>> +#define CLKID_AUDIO_LOCKER                     17
+>>> +#define CLKID_MIPI_DSI_HOST                    18
+>>> +#define CLKID_ETH_PHY                          19
+>>> +#define CLKID_ISA                                      20
+>>> +#define CLKID_PL301                                    21
+>>> +#define CLKID_PERIPHS                          22
+>>> +#define CLKID_SPICC0                           23
+>>> +#define CLKID_I2C                                      24
+>>> +#define CLKID_SANA                                     25
+>>> +#define CLKID_SD                                       26
+>>> +#define CLKID_RNG0                                     27
+>>> +#define CLKID_UART0                                    28
+>>> +#define CLKID_SPICC1                           29
+>>> +#define CLKID_HIU_IFACE                                30
+>>> +#define CLKID_MIPI_DSI_PHY                     31
+>>> +#define CLKID_ASSIST_MISC                      32
+>>> +#define CLKID_SD_EMMC_A                                33
+>>> +#define CLKID_SD_EMMC_B                                34
+>>> +#define CLKID_SD_EMMC_C                                35
+>>> +#define CLKID_AUDIO_CODEC                      36
+>>> +#define CLKID_AUDIO                                    37
+>>> +#define CLKID_ETH                                      38
+>>> +#define CLKID_DEMUX                                    39
+>>> +#define CLKID_AUDIO_IFIFO                      40
+>>> +#define CLKID_ADC                                      41
+>>> +#define CLKID_UART1                                    42
+>>> +#define CLKID_G2D                                      43
+>>> +#define CLKID_RESET                                    44
+>>> +#define CLKID_PCIE_COMB                                45
+>>> +#define CLKID_PARSER                           46
+>>> +#define CLKID_USB                                      47
+>>> +#define CLKID_PCIE_PHY                         48
+>>> +#define CLKID_AHB_ARB0                         49
+>>> +#define CLKID_AHB_DATA_BUS                     50
+>>> +#define CLKID_AHB_CTRL_BUS                     51
+>>> +#define CLKID_HTX_HDCP22                       52
+>>> +#define CLKID_HTX_PCLK                         53
+>>> +#define CLKID_BT656                                    54
+>>> +#define CLKID_USB1_DDR_BRIDGE          55
+>>> +#define CLKID_MMC_PCLK                         56
+>>> +#define CLKID_UART2                                    57
+>>> +#define CLKID_VPU_INTR                         58
+>>> +#define CLKID_GIC                                      59
+>>> +#define CLKID_SD_EMMC_B_CLK0           60
+>>> +#define CLKID_SD_EMMC_C_CLK0           61
+>>> +#define CLKID_HIFI_PLL                         71
+>>> +
+>>
+>> is this empty line here on purpose? a comment would be great if
+>> there's a reason behind it (there's already a gap in the numbering
+>> between CLKID_GP0_PLL and CLKID_CLK81, but there's no empty line there
+>> - either way is fine, please just keep it consistent)
+> 
+> Please drop the empty line.
+> Otherwise, looks good.
+> I have dropped it ,and I will push another email later.Thanks.
+>>
+>>
+>> Regards
+>> Martin
+> 
+> .
+> 
