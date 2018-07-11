@@ -1,90 +1,53 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2] drm/panel: simple: Add Sharp LQ035Q7DB03 panel support
-Date: Wed, 11 Jul 2018 18:44:43 +0200
-Message-ID: <20180711164443.GA12951@ulmo>
-References: <20180706185101.31186-1-vz@mleia.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [RFC PATCH 1/4] dma-mapping: Generalise dma_32bit_limit flag
+Date: Wed, 11 Jul 2018 17:56:40 +0100
+Message-ID: <868cead9-88a7-e58d-3452-a78e19be5f47@arm.com>
+References: <cover.1531239284.git.robin.murphy@arm.com>
+ <a85a5fe22fced65b2960251fc6e8d8f1e68f828a.1531239284.git.robin.murphy@arm.com>
+ <20180710180433.GB26285@lst.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1758991881=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180706185101.31186-1-vz@mleia.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180710180433.GB26285@lst.de>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christoph Hellwig <hch@lst.de>
+Cc: m.szyprowski@samsung.com, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, robh+dt@kernel.org, frowand.list@gmail.com, gregkh@linuxfoundation.org, joro@8bytes.org, x86@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 10/07/18 19:04, Christoph Hellwig wrote:
+> On Tue, Jul 10, 2018 at 06:17:16PM +0100, Robin Murphy wrote:
+>> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+>> index 8be8106270c2..95e185347e34 100644
+>> --- a/kernel/dma/direct.c
+>> +++ b/kernel/dma/direct.c
+>> @@ -183,7 +183,7 @@ int dma_direct_supported(struct device *dev, u64 mask)
+>>   	 * Various PCI/PCIe bridges have broken support for > 32bit DMA even
+>>   	 * if the device itself might support it.
+>>   	 */
+>> -	if (dev->dma_32bit_limit && mask > DMA_BIT_MASK(32))
+>> +	if (dev->bus_dma_mask && mask > dev->bus_dma_mask)
+>>   		return 0;
+> 
+> The comment above this check needs an updated (or just be removed).
 
---===============1758991881==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
-Content-Disposition: inline
+Right, I'll give it a tweak. I could also do with actually getting the 
+field name correct in via_no_dac_cb()...
+
+> Also we still have a few architectures not using dma-direct. I guess
+> most were doing fine without such limits anyway, but at least arm
+> will probably need an equivalent check.
+
+Indeed, once we've found an approach that everyone's happy with we can 
+have a more thorough audit of exactly where else it needs to be applied. 
+FWIW I'm not aware of any 32-bit Arm systems affected by this*, but if 
+they do exist then at least there's no risk of regression since they've 
+always been busted.
+
+Robin.
 
 
---liOOAslEiF7prFVr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jul 06, 2018 at 09:51:01PM +0300, Vladimir Zapolskiy wrote:
-> The change adds support for Sharp LQ035Q7DB03 3.5" QVGA TFT panel.
->=20
-> Note that this aged panel is already found in the kernel sources,
-> for instance in board mach files mach-mx21ads.c, mach-mx27ads.c,
-> mach-pcm043.c, lpd270.c and imx27-phytec-phycore-rdk.dts.
->=20
-> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
-> ---
-> Changes from v1 to v2:
-> * added description of power-supply, enable-gpios and backlight properties
->=20
->  .../bindings/display/panel/sharp,lq035q7db03.txt   | 12 ++++++++++
->  drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++=
-++++++
->  2 files changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/sharp=
-,lq035q7db03.txt
-
-Applied, thanks.
-
-Thierry
-
---liOOAslEiF7prFVr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltGM/gACgkQ3SOs138+
-s6FjohAAhHuDSu4/G7sogO97cWIuU+PaxyzgSqKEcPT2KDFxLSEVjkT3Wck5VZCY
-hCnCTkD8SAysvYMy8JrLpDnM9wpHdQ1a5ROLHT20qJuyvGsG8RxLtQpNRBzek9qW
-nBEa/kGzbwwNJJLaz8JkjZOH5sOBkKUJzfUmDL29pZhm9/g+xOfwXqfnJ+wH23jC
-TAQuxV8589tfLUT5K0H7nxaLJrO/zu7wdwjzOgw6mNlWnFoGrk7Kiz1btUjSRVXI
-rFv+xRUNALrRaGedFzYoZA4M0pkMiQoS9LcJLHtxbr/NP4W1+lBALAVdTpCkNDnt
-zFDtwVEB89zqjsnghhEgQhOCFcCBmfCMbfnh9yVD4XgcZh+XuVZqFiBz0BIsq14S
-G2KRXlqkib3/o22jsCuMZArXTo+m4Bo2HPynnPixvQRe/6i8MDrBL8elwT0YmNKC
-UzvkDlepjBuCAWstZntHj4VEuZnG8CWRgXteraG3iVf7/QsvpTw1W5K4Gm2YCZQs
-bw1YHBDxESIJDayKaE/B5eNHELb63pgwkA8Cy2PHUa+dawFFQkl7iVoc8HAgiBkU
-u/IoBMgo3cOia9ymHsjAOf0zBsGqb0zpzm3nc63XXv4+yBY+4vorAhoG0xjxH16C
-Wc5JYBJUyXmL7iX1Vy3ccJKkrGmUiVswNeyCqWPrzzJUYaggO50=
-=rTbv
------END PGP SIGNATURE-----
-
---liOOAslEiF7prFVr--
-
---===============1758991881==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1758991881==--
+* Not counting the somewhat-similar StrongArm DMA controller bug where 
+one bit in the *middle* of the mask is unusable. Let's keep that 
+confined to the Arm dmabounce code and never speak of it...
