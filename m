@@ -1,243 +1,74 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [RFC PATCH v2 4/4] dts: aspeed-g5: Describe VGA, SIO scratch and DAC mux fields
-Date: Wed, 11 Jul 2018 15:01:22 +0930
-Message-ID: <20180711053122.30773-5-andrew@aj.id.au>
-References: <20180711053122.30773-1-andrew@aj.id.au>
+From: Ye Xiaolong <xiaolong.ye@intel.com>
+Subject: Re: [PATCH v4 2/5] rtc: isl1208: add support for isl1219 with tamper
+ detection
+Date: Wed, 11 Jul 2018 14:01:54 +0800
+Message-ID: <20180711060154.GD7170@yexl-desktop>
+References: <20180710090710.9066-3-Denis.Osterland@diehl.com>
+ <201807102100.7IWfwFfW%fengguang.wu@intel.com>
+ <1531231616.7366.2.camel@diehl.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180711053122.30773-1-andrew@aj.id.au>
+Content-Disposition: inline
+In-Reply-To: <1531231616.7366.2.camel@diehl.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Andrew Jeffery <andrew@aj.id.au>, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, gregkh@linuxfoundation.org, Eugene.Cho@dell.com, a.amelkin@yadro.com, stewart@linux.ibm.com, benh@kernel.crashing.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Denis OSTERLAND <denis.osterland@diehl.com>
+Cc: "lkp@intel.com" <lkp@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kbuild-all@01.org" <kbuild-all@01.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-The AST2500 has VGA scratch registers that are read-only, SuperIO
-scratch registers that are a mix of read-only and read-write, and a
-graphics DAC mux that must be read or configured in the process of
-booting e.g. an OpenPOWER system.
+Hi, Denis
 
-These capabilities do not really have a place in other drivers, so
-expose them as fields via bmc-misc-ctrl.
+The patch was applied in correct sequence as you can see in the github link.
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
+I think the question here is rtc-isl1208 can be built as a built-in module,
+but it would fail if it was built as a ko.
 
-Since RFC v1:
+Thanks,
+Xiaolong
 
-* Rework labels to what is documented in the bindings
-* Fix an incorrect offset property
-
- arch/arm/boot/dts/aspeed-g5.dtsi | 192 +++++++++++++++++++++++++++++++
- 1 file changed, 192 insertions(+)
-
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 17f2714d18a7..c484ac637328 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -187,6 +187,77 @@
- 					aspeed,external-nodes = <&gfx &lhc>;
- 
- 				};
-+
-+				field@2c.16 {
-+					compatible = "bmc-misc-ctrl";
-+					offset = <0x2c>;
-+					mask = <0x00030000>;
-+					label = "dac-mux";
-+				};
-+
-+				field@50.0 {
-+					compatible = "bmc-misc-ctrl";
-+					offset = <0x50>;
-+					mask = <0xffffffff>;
-+					label = "vga0";
-+					read-only;
-+				};
-+
-+				field@54.0 {
-+					compatible = "bmc-misc-ctrl";
-+					offset = <0x54>;
-+					mask = <0xffffffff>;
-+					label = "vga1";
-+					read-only;
-+				};
-+
-+				field@58.0 {
-+					compatible = "bmc-misc-ctrl";
-+					offset = <0x58>;
-+					mask = <0xffffffff>;
-+					label = "vga2";
-+					read-only;
-+				};
-+
-+				field@5c.0 {
-+					compatible = "bmc-misc-ctrl";
-+					offset = <0x5c>;
-+					mask = <0xffffffff>;
-+					label = "vga3";
-+					read-only;
-+				};
-+
-+				field@60.0 {
-+					compatible = "bmc-misc-ctrl";
-+					offset = <0x60>;
-+					mask = <0xffffffff>;
-+					label = "vga4";
-+					read-only;
-+				};
-+
-+				field@64.0 {
-+					compatible = "bmc-misc-ctrl";
-+					offset = <0x64>;
-+					mask = <0xffffffff>;
-+					label = "vga5";
-+					read-only;
-+				};
-+
-+				field@68.0 {
-+					compatible = "bmc-misc-ctrl";
-+					offset = <0x68>;
-+					mask = <0xffffffff>;
-+					label = "vga6";
-+					read-only;
-+				};
-+
-+				field@6c.0 {
-+					compatible = "bmc-misc-ctrl";
-+					offset = <0x6c>;
-+					mask = <0xffffffff>;
-+					label = "vga7";
-+					read-only;
-+				};
- 			};
- 
- 			rng: hwrng@1e6e2078 {
-@@ -343,6 +414,127 @@
- 						#reset-cells = <1>;
- 					};
- 
-+					field@f0.24 {
-+						compatible = "bmc-misc-ctrl";
-+						offset = <0xf0>;
-+						mask = <0xff000000>;
-+						label = "sio2b";
-+					};
-+
-+					field@f0.16 {
-+						compatible = "bmc-misc-ctrl";
-+						offset = <0xf0>;
-+						mask = <0x00ff0000>;
-+						label = "sio2a";
-+					};
-+
-+					field@f0.8 {
-+						compatible = "bmc-misc-ctrl";
-+						offset = <0xf0>;
-+						mask = <0x0000ff00>;
-+						bit-shift = <8>;
-+						label = "sio29";
-+					};
-+
-+					field@f0.0 {
-+						compatible = "bmc-misc-ctrl";
-+						offset = <0xf0>;
-+						mask = <0x000000ff>;
-+						label = "sio28";
-+					};
-+
-+					field@f4.24 {
-+						compatible = "bmc-misc-ctrl";
-+						offset = <0xf4>;
-+						mask = <0xff000000>;
-+						label = "sio2f";
-+					};
-+
-+					field@f4.16 {
-+						compatible = "bmc-misc-ctrl";
-+						offset = <0xf4>;
-+						mask = <0x00ff0000>;
-+						label = "sio2e";
-+					};
-+
-+					field@f4.8 {
-+						compatible = "bmc-misc-ctrl";
-+						offset = <0xf4>;
-+						mask = <0x0000ff00>;
-+						label = "sio2d";
-+					};
-+
-+					field@f4.0 {
-+						compatible = "bmc-misc-ctrl";
-+						offset = <0xf4>;
-+						mask = <0x000000ff>;
-+						label = "sio2c";
-+					};
-+
-+					field@f8.24 {
-+						compatible = "bmc-misc-ctrl";
-+						offset = <0xf8>;
-+						mask = <0xff000000>;
-+						read-only;
-+						label = "sio23";
-+					};
-+
-+					field@f8.16 {
-+						compatible = "bmc-misc-ctrl";
-+						offset = <0xf8>;
-+						mask = <0x00ff0000>;
-+						read-only;
-+						label = "sio22";
-+					};
-+
-+					field@f8.8 {
-+						compatible = "bmc-misc-ctrl";
-+						offset = <0xf8>;
-+						mask = <0x0000ff00>;
-+						read-only;
-+						label = "sio21";
-+					};
-+
-+					field@f8.0 {
-+						compatible = "bmc-misc-ctrl";
-+						offset = <0xf8>;
-+						mask = <0x000000ff>;
-+						read-only;
-+						label = "sio20";
-+					};
-+
-+					field@fc.24 {
-+						compatible = "bmc-misc-ctrl";
-+						offset = <0xfc>;
-+						mask = <0xff000000>;
-+						read-only;
-+						label = "sio27";
-+					};
-+
-+					field@fc.16 {
-+						compatible = "bmc-misc-ctrl";
-+						offset = <0xfc>;
-+						mask = <0x00ff0000>;
-+						read-only;
-+						label = "sio26";
-+					};
-+
-+					field@fc.8 {
-+						compatible = "bmc-misc-ctrl";
-+						offset = <0xfc>;
-+						mask = <0x0000ff00>;
-+						read-only;
-+						label = "sio25";
-+					};
-+
-+					field@fc.0 {
-+						compatible = "bmc-misc-ctrl";
-+						offset = <0xfc>;
-+						mask = <0x000000ff>;
-+						read-only;
-+						label = "sio24";
-+					};
-+
- 					ibt: ibt@c0 {
- 						compatible = "aspeed,ast2500-ibt-bmc";
- 						reg = <0xc0 0x18>;
--- 
-2.17.1
+On 07/10, Denis OSTERLAND wrote:
+>Hi,
+>
+>seems 2/5 was applied before 1/5.
+>1/5 introduces rtc_add_group.
+>
+>Regards Denis
+>
+>Am Dienstag, den 10.07.2018, 21:20 +0800 schrieb kbuild test robot:
+>> Hi Michael,
+>> 
+>> I love your patch! Yet something to improve:
+>> 
+>> [auto build test ERROR on abelloni/rtc-next]
+>> [also build test ERROR on v4.18-rc4 next-20180709]
+>> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>> 
+>> url:    https://github.com/0day-ci/linux/commits/Denis-OSTERLAND/rtc-isl1208-fixes-documentation-and-isl1219-support/20180710-181709
+>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git rtc-next
+>> config: x86_64-randconfig-s4-07101857 (attached as .config)
+>> compiler: gcc-7 (Debian 7.3.0-16) 7.3.0
+>> reproduce:
+>>         # save the attached .config to linux build tree
+>>         make ARCH=x86_64 
+>> 
+>> All errors (new ones prefixed by >>):
+>> 
+>> > 
+>> > > 
+>> > > ERROR: "rtc_add_group" [drivers/rtc/rtc-isl1208.ko] undefined!
+>> ---
+>> 0-DAY kernel test infrastructure                Open Source Technology Center
+>> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+>
+>Diehl Connectivity Solutions GmbH
+>Geschäftsführung: Horst Leonberger
+>Sitz der Gesellschaft: Nürnberg - Registergericht: Amtsgericht
+>Nürnberg: HRB 32315
+>___________________________________________________________________________________________________
+>
+>Der Inhalt der vorstehenden E-Mail ist nicht rechtlich bindend. Diese E-Mail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen.
+>Informieren Sie uns bitte, wenn Sie diese E-Mail faelschlicherweise erhalten haben. Bitte loeschen Sie in diesem Fall die Nachricht.
+>Jede unerlaubte Form der Reproduktion, Bekanntgabe, Aenderung, Verteilung und/oder Publikation dieser E-Mail ist strengstens untersagt.
+>The contents of the above mentioned e-mail is not legally binding. This e-mail contains confidential and/or legally protected information. Please inform us if you have received this e-mail by
+>mistake and delete it in such a case. Each unauthorized reproduction, disclosure, alteration, distribution and/or publication of this e-mail is strictly prohibited. 
