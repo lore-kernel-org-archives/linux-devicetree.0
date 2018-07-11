@@ -1,42 +1,67 @@
-From: Himanshu Jha <himanshujha199640@gmail.com>
-Subject: Re: [PATCH 2/3] iio: imu: mpu6050: add support for regulator
- framework
-Date: Wed, 11 Jul 2018 15:34:43 +0530
-Message-ID: <20180711100442.GA30019@himanshu-Vostro-3559>
-References: <20180711010932.20313-1-masneyb@onstation.org>
- <20180711010932.20313-3-masneyb@onstation.org>
+From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v12 2/4] iommu/arm-smmu: Invoke pm_runtime
+ during probe, add/remove device
+Date: Wed, 11 Jul 2018 19:05:06 +0900
+Message-ID: <CAAFQd5COVfXRBuq2ofHoOvNb+cMVmAFDaekh5KM4DBB1ZEf5pA@mail.gmail.com>
+References: <20180708173413.1965-1-vivek.gautam@codeaurora.org>
+ <20180708173413.1965-3-vivek.gautam@codeaurora.org>
+ <1694664.FhRBrgajmF@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180711010932.20313-3-masneyb@onstation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, jonathan@marek.ca, jmaneyrol@invensense.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mkelly@xevo.com, fischerdouglasc@gmail.com, bshah@kde.org, ctatlor97@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <1694664.FhRBrgajmF-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+ Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>"list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+ Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Marek Szyprowski <m.szyprow>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brain,
-
-On Tue, Jul 10, 2018 at 09:09:31PM -0400, Brian Masney wrote:
-> This patch adds support for the regulator framework to the mpu6050
-> driver.
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->  }
->  EXPORT_SYMBOL_GPL(inv_mpu_core_probe);
->  
-> +int inv_mpu_core_remove(struct inv_mpu6050_state *st)
-> +{
-> +	return regulator_disable(st->vddio_supply);
-> +}
-EXPORT_SYMBOL_GPL(inv_mpu_core_remove); ?
-
-This is causing 0-day test build failure perhaps.
-
--- 
-Himanshu Jha
-Undergraduate Student
-Department of Electronics & Communication
-Guru Tegh Bahadur Institute of Technology
+SGkgUmFmYWVsLAoKVGhhbmtzIGZvciByZXZpZXcuCgpPbiBXZWQsIEp1bCAxMSwgMjAxOCBhdCA2
+OjUzIFBNIFJhZmFlbCBKLiBXeXNvY2tpIDxyandAcmp3eXNvY2tpLm5ldD4gd3JvdGU6Cj4KPiBP
+biBTdW5kYXksIEp1bHkgOCwgMjAxOCA3OjM0OjExIFBNIENFU1QgVml2ZWsgR2F1dGFtIHdyb3Rl
+Ogo+ID4gRnJvbTogU3JpY2hhcmFuIFIgPHNyaWNoYXJhbkBjb2RlYXVyb3JhLm9yZz4KPiA+Cj4g
+PiBUaGUgc21tdSBkZXZpY2UgcHJvYmUvcmVtb3ZlIGFuZCBhZGQvcmVtb3ZlIG1hc3RlciBkZXZp
+Y2UgY2FsbGJhY2tzCj4gPiBnZXRzIGNhbGxlZCB3aGVuIHRoZSBzbW11IGlzIG5vdCBsaW5rZWQg
+dG8gaXRzIG1hc3RlciwgdGhhdCBpcyB3aXRob3V0Cj4gPiB0aGUgY29udGV4dCBvZiB0aGUgbWFz
+dGVyIGRldmljZS4gU28gY2FsbGluZyBydW50aW1lIGFwaXMgaW4gdGhvc2UgcGxhY2VzCj4gPiBz
+ZXBhcmF0ZWx5Lgo+ID4KPiA+IFNpZ25lZC1vZmYtYnk6IFNyaWNoYXJhbiBSIDxzcmljaGFyYW5A
+Y29kZWF1cm9yYS5vcmc+Cj4gPiBbdml2ZWs6IENsZWFudXAgcG0gcnVudGltZSBjYWxsc10KPiA+
+IFNpZ25lZC1vZmYtYnk6IFZpdmVrIEdhdXRhbSA8dml2ZWsuZ2F1dGFtQGNvZGVhdXJvcmEub3Jn
+Pgo+ID4gUmV2aWV3ZWQtYnk6IFRvbWFzeiBGaWdhIDx0ZmlnYUBjaHJvbWl1bS5vcmc+Cj4gPiAt
+LS0KPiA+Cj4gPiAgLSBDaGFuZ2Ugc2luY2UgdjExCj4gPiAgICAqIFJlcGxhY2VkIHBtX3J1bnRp
+bWVfZGlzYWJsZSgpIHdpdGggcG1fcnVudGltZV9mb3JjZV9zdXNwZW5kKCkKPiA+ICAgICAgdG8g
+YXZvaWQgd2FybmluZyBhYm91dCAiIFVucHJlcGFyaW5nIGVuYWJsZWQgY2xvY2siLgo+ID4gICAg
+ICBGdWxsIHdhcm5pbmcgdGV4dCBtZW50aW9uZWQgaW4gY292ZXIgcGF0Y2guCj4gPgo+ID4gIGRy
+aXZlcnMvaW9tbXUvYXJtLXNtbXUuYyB8IDkyICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKystLS0tLQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA4NCBpbnNlcnRpb25zKCsp
+LCA4IGRlbGV0aW9ucygtKQo+ID4KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L2FybS1z
+bW11LmMgYi9kcml2ZXJzL2lvbW11L2FybS1zbW11LmMKPiA+IGluZGV4IGEwMWQwZGRlMjFkZC4u
+MDkyNjVlMjA2ZTJkIDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9pb21tdS9hcm0tc21tdS5jCj4g
+PiArKysgYi9kcml2ZXJzL2lvbW11L2FybS1zbW11LmMKPiA+IEBAIC0yNjgsNiArMjY4LDIwIEBA
+IHN0YXRpYyBzdHJ1Y3QgYXJtX3NtbXVfb3B0aW9uX3Byb3AgYXJtX3NtbXVfb3B0aW9uc1tdID0g
+ewo+ID4gICAgICAgeyAwLCBOVUxMfSwKPiA+ICB9Owo+ID4KPiA+ICtzdGF0aWMgaW5saW5lIGlu
+dCBhcm1fc21tdV9ycG1fZ2V0KHN0cnVjdCBhcm1fc21tdV9kZXZpY2UgKnNtbXUpCj4gPiArewo+
+ID4gKyAgICAgaWYgKHBtX3J1bnRpbWVfZW5hYmxlZChzbW11LT5kZXYpKQo+Cj4gV2h5IGRvIHlv
+dSBuZWVkIHRoZSBwbV9ydW50aW1lX2VuYWJsZWQoKSBjaGVja3MgaGVyZSBhbmQgYmVsb3c/Cj4K
+PiBwbV9ydW50aW1lX2dldF9zeW5jKCkgYW5kIHBtX3J1bnRpbWVfcHV0KCkgc2hvdWxkIHdvcmsg
+anVzdCBmaW5lIGlmCj4gcnVudGltZSBQTSBpcyBub3QgZW5hYmxlZC4KCkJlY2F1c2UgcG1fcnVu
+dGltZV9nZXRfc3luYygpIGFjcXVpcmVzIGEgc3BpbiBsb2NrLCBldmVuIGlmIG9ubHkgZm9yCnRo
+ZSBzaG9ydCB0aW1lIG9mIGNoZWNraW5nIGlmIHJ1bnRpbWUgUE0gaXMgZW5hYmxlZCBhbmQgU01N
+VSBkcml2ZXIKbWFpbnRhaW5lcnMgZGlkbid0IHdhbnQgYW55IHNwaW4gbG9ja3MgaW4gY2VydGFp
+biBJT01NVSBBUEkgY29kZSBwYXRocwpvbiBoYXJkd2FyZSBpbXBsZW1lbnRhdGlvbnMgdGhhdCBk
+b24ndCBuZWVkIHJ1bnRpbWUgUE0sIHdoaWxlIHdlIHN0aWxsCm5lZWQgdG8gYmUgYWJsZSB0byBj
+b250cm9sIHJ1bnRpbWUgUE0gdGhlcmUgb24gaGFyZHdhcmUKaW1wbGVtZW50YXRpb25zIHRoYXQg
+bmVlZCBzby4KCkJlc3QgcmVnYXJkcywKVG9tYXN6Cl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2ZyZWVkcmVubwo=
