@@ -1,35 +1,40 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: [PATCH] ARM: DTS: am3517.dtsi:  Disable reference to OMAP3 OTG controller
-Date: Wed, 11 Jul 2018 12:54:54 -0500
-Message-ID: <20180711175454.9464-1-aford173@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: adam.ford@logicpd.com
-Cc: Adam Ford <aford173@gmail.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 2/4] ACPI/IORT: Set bus DMA mask as appropriate
+Date: Wed, 11 Jul 2018 19:03:55 +0100
+Message-ID: <da218bdf-198e-b064-356d-3354869a670a@arm.com>
+References: <cover.1531239284.git.robin.murphy@arm.com>
+	<c604b3eae4103ee0ad6da84baa1bc893a81ef5f8.1531239284.git.robin.murphy@arm.com>
+	<20180710180458.GC26285@lst.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180710180458.GC26285-jcswGhMUV9g@public.gmane.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The AM3517 has a different OTG controller location than the OMAP3,
-which is included from omap3.dtsi.  This results in a hwmod error.
-Since the AM3517 has a different OTG controller address, this patch
-disabes one that is isn't available.
+On 10/07/18 19:04, Christoph Hellwig wrote:
+> On Tue, Jul 10, 2018 at 06:17:17PM +0100, Robin Murphy wrote:
+>> When an explicit DMA limit is described by firmware, we need to remember
+>> it regardless of how drivers might subsequently update their devices'
+>> masks. The new bus_dma_mask field does that.
+> 
+> Shouldn't we also stop presetting the dma mask after this?
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+I guess initialising the device masks here only really has any effect if 
+drivers fail to set their own, so if we're getting stricter about that 
+then it would make sense to stop; I'll add a couple of patches on top to 
+clean that up.
 
-diff --git a/arch/arm/boot/dts/am3517.dtsi b/arch/arm/boot/dts/am3517.dtsi
-index c17cfe6a2132..cb264220dcb8 100644
---- a/arch/arm/boot/dts/am3517.dtsi
-+++ b/arch/arm/boot/dts/am3517.dtsi
-@@ -87,6 +87,11 @@
- 	};
- };
- 
-+/* Table Table 5-79 of the TRM shows 480ab000 is reserved */
-+&usb_otg_hs {
-+	status = "disabled";
-+};
-+
- &iva {
- 	status = "disabled";
- };
--- 
-2.17.1
+Robin.
