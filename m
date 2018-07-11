@@ -1,34 +1,100 @@
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH] ARM: dts: at91: fix typo for PIN_PB22
-Date: Wed, 11 Jul 2018 19:25:37 +0300
-Message-ID: <1531326337-15504-1-git-send-email-claudiu.beznea@microchip.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH v2] ARM64: dts: meson-axg: add saradc support
+Date: Wed, 11 Jul 2018 18:25:49 +0200
+Message-ID: <1531326349.2708.136.camel@baylibre.com>
+References: <20180702222515.13924-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180702222515.13924-1-yixun.lan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Claudiu Beznea <claudiu.beznea@microchip.com>
+To: Yixun Lan <yixun.lan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: Xingyu Chen <xingyu.chen@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Fix typo for PIN_PB22 on TD function.
+On Mon, 2018-07-02 at 22:25 +0000, Yixun Lan wrote:
+> From: Xingyu Chen <xingyu.chen@amlogic.com>
+> 
+> Add the DT info for SAR ADC of the Amlogic's Meson-AXG SoC.
+> 
+> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> ---
+> Hi kevin
+>   I just re-send this patch which rebased to your khilman/v4.18/integ branch
+>   Thanks
+> Yixun
+> 
+> nothing changed since patch v1 [1]:
+>  -
+> 
+> [1] https://lkml.kernel.org/r/20180326092117.208416-1-yixun.lan@amlogic.com
+> 
+> ---
+>  .../arm64/boot/dts/amlogic/meson-axg-s400.dts |  5 +++++
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    | 21 +++++++++++++++++++
+>  2 files changed, 26 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> index 4b3331fbfe39..6041f68b32ae 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> @@ -153,3 +153,8 @@
+>  		compatible = "brcm,bcm4329-fmac";
+>  	};
+>  };
+> +
+> +&saradc {
+> +	status = "okay";
+> +	vref-supply = <&vddio_ao18>;
+> +};
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> index 67d7115e4eff..52678a69dbf8 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> @@ -91,6 +91,13 @@
+>  		method = "smc";
+>  	};
+>  
+> +	vddio_ao18: regulator-vddio_ao18 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDDIO_AO18";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +	};
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- arch/arm/boot/dts/sama5d2-pinfunc.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Kevin, Yixun,
 
-diff --git a/arch/arm/boot/dts/sama5d2-pinfunc.h b/arch/arm/boot/dts/sama5d2-pinfunc.h
-index e57191fb83de..ac61491c9d7f 100644
---- a/arch/arm/boot/dts/sama5d2-pinfunc.h
-+++ b/arch/arm/boot/dts/sama5d2-pinfunc.h
-@@ -375,7 +375,7 @@
- #define PIN_PB22__GPIO			PINMUX_PIN(PIN_PB22, 0, 0)
- #define PIN_PB22__LCDDAT11		PINMUX_PIN(PIN_PB22, 1, 1)
- #define PIN_PB22__A11			PINMUX_PIN(PIN_PB22, 2, 1)
--#define PIN_PB22__TDO			PINMUX_PIN(PIN_PB22, 3, 1)
-+#define PIN_PB22__TD0			PINMUX_PIN(PIN_PB22, 3, 1)
- #define PIN_PB22__TIOA2			PINMUX_PIN(PIN_PB22, 4, 2)
- #define PIN_PB22__FLEXCOM3_IO1		PINMUX_PIN(PIN_PB22, 5, 3)
- #define PIN_PB22__GMDC			PINMUX_PIN(PIN_PB22, 6, 3)
--- 
-2.7.4
+I find odd that we are adding a regulator to SoC device tree file.
+Those regulator are usually part of board file
+
+Unless the regulator is actually inside the SoC, this is not the place for it.
+
+Sorry for not catching this earlier.
+
+> +
+>  	timer {
+>  		compatible = "arm,armv8-timer";
+>  		interrupts = <GIC_PPI 13
+> @@ -1194,6 +1201,20 @@
+>  				interrupts = <GIC_SPI 196 IRQ_TYPE_EDGE_RISING>;
+>  				status = "disabled";
+>  			};
+> +
+> +			saradc: adc@9000 {
+> +				compatible = "amlogic,meson-axg-saradc",
+> +					"amlogic,meson-saradc";
+> +				reg = <0x0 0x9000 0x0 0x38>;
+> +				#io-channel-cells = <1>;
+> +				interrupts = <GIC_SPI 73 IRQ_TYPE_EDGE_RISING>;
+> +				clocks = <&xtal>,
+> +					<&clkc_AO CLKID_AO_SAR_ADC>,
+> +					<&clkc_AO CLKID_AO_SAR_ADC_CLK>,
+> +					<&clkc_AO CLKID_AO_SAR_ADC_SEL>;
+> +				clock-names = "clkin", "core", "adc_clk", "adc_sel";
+> +				status = "disabled";
+> +			};
+>  		};
+>  	};
+>  };
