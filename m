@@ -1,41 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: marvell: Add documentation for the
- Armada 3700 AVS binding
-Date: Wed, 11 Jul 2018 09:51:53 -0600
-Message-ID: <20180711155153.GA13702@rob-hp-laptop>
-References: <20180704132524.23640-1-gregory.clement@bootlin.com>
+Subject: Re: [PATCH v2 04/12] dt-bindings: spi: Move the bindings for the FSL
+ QSPI driver
+Date: Wed, 11 Jul 2018 09:54:04 -0600
+Message-ID: <20180711155404.GA15363@rob-hp-laptop>
+References: <1530789310-16254-1-git-send-email-frieder.schrempf@exceet.de>
+ <1530789310-16254-5-git-send-email-frieder.schrempf@exceet.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180704132524.23640-1-gregory.clement@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Ken Ma <make@marvell.com>, Victor Gu <xigu@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>, Hua Jing <jinghua@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+In-Reply-To: <1530789310-16254-5-git-send-email-frieder.schrempf@exceet.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frieder Schrempf <frieder.schrempf@exceet.de>
+Cc: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com, linux-spi@vger.kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, miquel.raynal@bootlin.com, broonie@kernel.org, david.wolfe@nxp.com, fabio.estevam@nxp.com, prabhakar.kushwaha@nxp.com, yogeshnarayan.gaur@nxp.com, han.xu@nxp.com, shawnguo@kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 04, 2018 at 03:25:24PM +0200, Gregory CLEMENT wrote:
-> Extend the documentation of the Armada 37xx SoC with the Adaptive Voltage
-> Scaling (AVS) registers.
+On Thu, Jul 05, 2018 at 01:15:00PM +0200, Frieder Schrempf wrote:
+> Move the documentation of the old SPI NOR driver to the place of the new
+> SPI memory interface based driver.
 > 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
 > ---
-> Changelog:
-> v1 -> v2:
->  - Add Acked-by: from Viresh Kumar
->  - Add the dt mailing list in copy
+> Changes in v2:
+> ==============
+> * Split the moving and editing of the dt-bindings in two patches
 > 
->  .../bindings/arm/marvell/armada-37xx.txt         | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  .../devicetree/bindings/mtd/fsl-quadspi.txt     | 65 --------------------
+>  .../devicetree/bindings/spi/spi-fsl-qspi.txt    | 65 ++++++++++++++++++++
+>  2 files changed, 65 insertions(+), 65 deletions(-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Next time, use the -M option so the move shows any real diffs.
+
+Acked-by: Rob Herring <robh@kernel.org>
