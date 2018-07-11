@@ -1,64 +1,65 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v4 01/10] i3c: Add core I3C infrastructure
-Date: Wed, 11 Jul 2018 17:03:20 +0200
-Message-ID: <20180711170320.5b2b0114@bbrezillon>
-References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
-        <20180330074751.25987-2-boris.brezillon@bootlin.com>
-        <CAK8P3a1aZXf2sQW2mgwJScycKPhdoOAwxRjm5cQG83513uc3fg@mail.gmail.com>
-        <20180711164120.3e32fb08@bbrezillon>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: sun8i: h3: enable HDMI output on
+ Banana Pi M2 Zero
+Date: Wed, 11 Jul 2018 17:05:32 +0200
+Message-ID: <20180711150532.6gzm7krouriddreh@flea>
+References: <20180711132233.42301-1-icenowy@aosc.io>
+ <20180711132233.42301-2-icenowy@aosc.io>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180711164120.3e32fb08@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.or>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="6lvpsmo4jnvzdq3b"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBPVZTDNAKGQER667VDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180711132233.42301-2-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 11 Jul 2018 16:41:20 +0200
-Boris Brezillon <boris.brezillon@bootlin.com> wrote:
 
-> > > +/**
-> > > + * i3cdev_to_dev() - Returns the device embedded in @i3cdev
-> > > + * @i3cdev: I3C device
-> > > + *
-> > > + * Return: a pointer to a device object.
-> > > + */
-> > > +struct device *i3cdev_to_dev(struct i3c_device *i3cdev)
-> > > +{
-> > > +       return &i3cdev->dev;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(i3cdev_to_dev);
-> > > +
-> > > +/**
-> > > + * dev_to_i3cdev() - Returns the I3C device containing @dev
-> > > + * @dev: device object
-> > > + *
-> > > + * Return: a pointer to an I3C device object.
-> > > + */
-> > > +struct i3c_device *dev_to_i3cdev(struct device *dev)
-> > > +{
-> > > +       return container_of(dev, struct i3c_device, dev);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(dev_to_i3cdev);    
-> > 
-> > Many other subsystems just make the device structure available
-> > to all client drivers so this can be an inline operation. Is there
-> > a strong reason to hide it here?  
-> 
-> No, but I think most subsystem do provide dev_to_xxxdev() at least
-> (to_platform_device() for instance)
-> 
+--6lvpsmo4jnvzdq3b
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-My bad. I misunderstood you question. The main reason I did that was
-because I didn't want to expose i3c_device internals to the I3C device
-drivers. Anyway, this part will be reworked in my v6 to address one
-problem we had when re-attaching a pre-existing device that had lost
-its dynamic address and acquired a new one.
-Since we want that operation to be transparent to I3C device drivers, I
-had to decouple the I3C device driver representation from the I3C master
-controller one. I thus end up with struct i3C_dev_desc on the controller
-API side, and struct i3c_device on the driver side with a link between
-the 2 object that can be updated at runtime. And as you can imagine,
-i3c_device does not contain a lot of information now.
+Hi,
+
+On Wed, Jul 11, 2018 at 09:22:32PM +0800, Icenowy Zheng wrote:
+> Banana Pi M2 Zero board has a miniHDMI port connected to the HDMI
+> controller of Allwinner H3 SoC.
+> 
+> Enable the HDMI output in Banana Pi M2 Zero device tree.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  .../dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 25 +++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> index 7d01f9322658..eb61dcf32797 100644
+> --- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> +++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> @@ -26,6 +26,17 @@
+>  		stdout-path = "serial0:115200n8";
+>  	};
+>  
+> +	hdmi-connector {
+> +		compatible = "hdmi-connector";
+> +		type = "c";
+
+This is not one of the connector type declared in DRM, how is it
+exposed to the userspace?
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--6lvpsmo4jnvzdq3b--
