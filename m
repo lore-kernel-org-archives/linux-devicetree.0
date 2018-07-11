@@ -1,78 +1,104 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 2/6] soc/tegra: pmc: Factor out DPD register bit
- calculation
-Date: Wed, 11 Jul 2018 09:24:57 +0100
-Message-ID: <040dce71-36c8-f2e6-cdf0-a848294862c4@nvidia.com>
-References: <1531226879-11802-1-git-send-email-avienamo@nvidia.com>
- <1531226879-11802-3-git-send-email-avienamo@nvidia.com>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: Re: [PATCH v10 0/6] Driver for at91 usart in spi mode
+Date: Wed, 11 Jul 2018 10:26:42 +0200
+Message-ID: <aecba39e-deba-c64b-9542-a446e074e95e@microchip.com>
+References: <20180625172230.29686-1-radu.pirea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531226879-11802-3-git-send-email-avienamo@nvidia.com>
+In-Reply-To: <20180625172230.29686-1-radu.pirea@microchip.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Aapo Vienamo <avienamo@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Mikko Perttunen <mperttunen@nvidia.com>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Radu Pirea <radu.pirea@microchip.com>, lee.jones@linaro.org
+Cc: broonie@kernel.org, alexandre.belloni@bootlin.com, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 10/07/18 13:47, Aapo Vienamo wrote:
-> Factor out the the code to calculate the correct DPD register and bit
-> number for a given pad. This logic will be needed to query the status
-> register.
+On 25/06/2018 at 19:22, Radu Pirea wrote:
+> Hello,
 > 
-> Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
-> ---
->  drivers/soc/tegra/pmc.c | 20 +++++++++++++++++---
->  1 file changed, 17 insertions(+), 3 deletions(-)
+> This is the second version of driver. I added a mfd driver which by
+> default probes atmel_serial driver and if in dt is specified to probe
+> the spi driver, then the spi-at91-usart driver will be probed. The
+> compatible for atmel_serial is now the compatible for at91-usart mfd
+> driver and compatilbe for atmel_serial driver was changed in order to
+> keep the bindings for serial as they are.
 > 
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index 5bea3b9..83b39cd 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -922,11 +922,12 @@ tegra_io_pad_find(struct tegra_pmc *pmc, enum tegra_io_pad id)
->  	return NULL;
->  }
->  
-> -static int tegra_io_pad_prepare(enum tegra_io_pad id, unsigned long *request,
-> -				unsigned long *status, u32 *mask)
-> +static int tegra_io_pad_get_dpd_register_bit(enum tegra_io_pad id,
-> +					     unsigned long *request,
-> +					     unsigned long *status,
-> +					     u32 *mask)
->  {
->  	const struct tegra_io_pad_soc *pad;
-> -	unsigned long rate, value;
->  
->  	pad = tegra_io_pad_find(pmc, id);
->  	if (!pad) {
-> @@ -947,6 +948,19 @@ static int tegra_io_pad_prepare(enum tegra_io_pad id, unsigned long *request,
->  		*request = pmc->soc->regs->dpd2_req;
->  	}
->  
-> +	return 0;
-> +}
-> +
-> +static int tegra_io_pad_prepare(enum tegra_io_pad id, unsigned long *request,
-> +				unsigned long *status, u32 *mask)
-> +{
-> +	unsigned long rate, value;
-> +	int err;
-> +
-> +	err = tegra_io_pad_get_dpd_register_bit(id, request, status, mask);
-> +	if (err)
-> +		return err;
-> +
->  	if (pmc->clk) {
->  		rate = clk_get_rate(pmc->clk);
->  		if (!rate) {
+> Changes in v10:
+> -fixed kbuild test robot warning
+> 
+> Changes in v9:
+> - minor changes
+> - rebased on top of broonie/for-4.19
+> 
+> Changes in v8:
+> - fixed passing an empty mfd cell if "atmel,usart-mode" value is invalid
+> 
+> Changes in v7:
+> - synced up  SPDIX license with module license
+> - numbering of usart modes starts from 0 insteand of 1
+> 
+> Changes in v6:
+> - removed unused compatible strings from serial and spi drivers
+> 
+> Changes in v5:
+> - fixed usage of stdout-path property with atmel_serial driver
+> 
+> Changes in v4:
+> - modified the spi driver to use cs gpio support form spi subsystem
+> - fixed dma transfers for serial driver
+> - squashed binding for spi and serial and moved them to mfd/atmel-usart.txt
+> 
+> Changes in v3:
+> - fixed spi slaves probing
+> 
+> Changes in v2:
+> - added at91-usart mfd driver
+> - modified spi-at91-usart driver to work as mfd driver child
+> - modified atmel_serial driver to work as mfd driver child
+> 
+> Changes in v1:
+> - added spi-at91-usart driver
+> 
+> 
+> Radu Pirea (6):
+>    MAINTAINERS: add at91 usart mfd driver
+>    dt-bindings: add binding for atmel-usart in SPI mode
+>    mfd: at91-usart: added mfd driver for usart
+>    MAINTAINERS: add at91 usart spi driver
+>    spi: at91-usart: add driver for at91-usart as spi
+>    tty/serial: atmel: change the driver to work under at91-usart mfd
+
+For the record or if needed by the MAINTAINERS changes, you can add my:
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+for the whole series.
+
+Once the remarks by Mark are addressed, you can certainly re-send the 
+series with all tags collected for Lee to take it, if he is okay with 
+this process, of course...
+
+Thanks, best regards,
+   Nicolas
+
+
+>   .../bindings/{serial => mfd}/atmel-usart.txt  |  25 +-
+>   MAINTAINERS                                   |  16 +
+>   drivers/mfd/Kconfig                           |   9 +
+>   drivers/mfd/Makefile                          |   1 +
+>   drivers/mfd/at91-usart.c                      |  71 +++
+>   drivers/spi/Kconfig                           |   9 +
+>   drivers/spi/Makefile                          |   1 +
+>   drivers/spi/spi-at91-usart.c                  | 432 ++++++++++++++++++
+>   drivers/tty/serial/Kconfig                    |   1 +
+>   drivers/tty/serial/atmel_serial.c             |  42 +-
+>   include/dt-bindings/mfd/at91-usart.h          |  17 +
+>   11 files changed, 607 insertions(+), 17 deletions(-)
+>   rename Documentation/devicetree/bindings/{serial => mfd}/atmel-usart.txt (76%)
+>   create mode 100644 drivers/mfd/at91-usart.c
+>   create mode 100644 drivers/spi/spi-at91-usart.c
+>   create mode 100644 include/dt-bindings/mfd/at91-usart.h
 > 
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-
-Cheers
-Jon
 
 -- 
-nvpublic
+Nicolas Ferre
