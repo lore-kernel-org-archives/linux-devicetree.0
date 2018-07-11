@@ -1,55 +1,38 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [PATCH v2 00/18] Allwinner R40 HDMI refactoring
-Date: Wed, 11 Jul 2018 10:41:54 +0200
-Message-ID: <2406320.TaIT7vHipu@jernej-laptop>
-References: <20180710203511.18454-1-jernej.skrabec@siol.net> <20180711083036.7attjq4hm5ay5gmn@flea>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/2] clk: imx6sll: add GPIO LPCGs
+Date: Wed, 11 Jul 2018 16:43:03 +0800
+Message-ID: <20180711084302.GB6959@dragon>
+References: <1529649154-5724-1-git-send-email-Anson.Huang@nxp.com>
+ <153091072630.143105.2849049240391576710@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBVMFS7NAKGQEAOKKJEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180711083036.7attjq4hm5ay5gmn@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <153091072630.143105.2849049240391576710@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Anson Huang <Anson.Huang@nxp.com>, aisheng.dong@nxp.com, fabio.estevam@nxp.com, kernel@pengutronix.de, mark.rutland@arm.com, mturquette@baylibre.com, ping.bai@nxp.com, robh+dt@kernel.org, s.hauer@pengutronix.de, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dne sreda, 11. julij 2018 ob 10:30:36 CEST je Maxime Ripard napisal(a):
-> On Tue, Jul 10, 2018 at 10:34:53PM +0200, Jernej Skrabec wrote:
-> > This series fixes several issues found in R40 HDMI patch series after
-> > it was applied. Conversation can be found here:
-> > http://lists.infradead.org/pipermail/linux-arm-kernel/2018-June/586011.htm
-> > l
+On Fri, Jul 06, 2018 at 01:58:46PM -0700, Stephen Boyd wrote:
+> Quoting Anson Huang (2018-06-21 23:32:33)
+> > According to Reference Manual Rev.0, 06/2017,
+> > there are GPIO LPCGs defined in CCM CCGRs,
+> > add them into clock tree.
 > > 
-> > Patches are based on latest linux-next (next-20180710) and are ordered
-> > in such way that they don't break R40 HDMI at any time. Because of that
-> > I suggest that whole series goes through drm-misc to preserve that order.
-> > 
-> > I also tested those patches on H3 to make sure it doesn't break other
-> > platforms. However, it would be nice to test for regressions also on
-> > older SoCs (with DE1).
-> > 
-> > Best regards,
-> > Jernej
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
 > 
-> Applied all patches but the patch 10, thanks!
-> Maxime
+> Applied to clk-next
 
-Ok, I'll send patch 10 separately. However,  patch 4 needs a fix according to 
-test build robot:
+Stephen,
 
-if (IS_ERR_VALUE(index))
-should be:
-if (index < 0)
+If you can apply this patch to topic branch 'clk-imx-gpio-gates', I will
+be able to pick up patch #2 for this cycle.
 
-Additionally, due to Arnds patch merged (drm/sun4i: fix build failure with 
-CONFIG_DRM_SUN8I_MIXER=m), sun4i_tcon.c needs additional handling if TCON_TOP 
-driver is not build.
+For future cycles, I think the topic branch can be named more generic,
+so that any clk patches that DT ones have a dependency on can go there.
+And then I can apply all those DT patches by pulling in this topic
+branch.
 
-Best regards,
-Jernej
+Shawn
