@@ -1,224 +1,94 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v4 01/10] i3c: Add core I3C infrastructure
-Date: Wed, 11 Jul 2018 19:12:12 +0200
-Message-ID: <20180711191212.3855bb25@bbrezillon>
-References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
-        <20180330074751.25987-2-boris.brezillon@bootlin.com>
-        <CAK8P3a1aZXf2sQW2mgwJScycKPhdoOAwxRjm5cQG83513uc3fg@mail.gmail.com>
-        <20180711164120.3e32fb08@bbrezillon>
-        <CAK8P3a2EZB_tMS_47wv6M2Qpm79ZocxxhG5zLxXsBM_YjZgkyA@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 6/9] dt-bindings: phy: add binding for
+ Allwinner USB3 PHY
+Date: Wed, 11 Jul 2018 11:39:23 -0600
+Message-ID: <CAL_Jsq+AMJMf1-LPXHj7i_6_E+iRQ9nBa1FMd19RqJ+eAQxizQ@mail.gmail.com>
+References: <20180706153805.25842-1-icenowy@aosc.io> <20180706153805.25842-7-icenowy@aosc.io>
+ <20180711161356.GA4685@rob-hp-laptop> <C01136F1-594C-4459-B9C6-6E0434855234@aosc.io>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a2EZB_tMS_47wv6M2Qpm79ZocxxhG5zLxXsBM_YjZgkyA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.or>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDJIP47K7MERBWMBTHNAKGQEQM7VGTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <C01136F1-594C-4459-B9C6-6E0434855234-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 11 Jul 2018 17:39:56 +0200
-Arnd Bergmann <arnd@arndb.de> wrote:
-
-> On Wed, Jul 11, 2018 at 4:41 PM, Boris Brezillon
-> <boris.brezillon@bootlin.com> wrote:
-> > On Wed, 11 Jul 2018 16:01:56 +0200 Arnd Bergmann <arnd@arndb.de> wrote:  
-> >> > - the bus element is a separate object and is not implicitly described
-> >> >   by the master (as done in I2C). The reason is that I want to be able
-> >> >   to handle multiple master connected to the same bus and visible to
-> >> >   Linux.
-> >> >   In this situation, we should only have one instance of the device and
-> >> >   not one per master, and sharing the bus object would be part of the
-> >> >   solution to gracefully handle this case.
-> >> >   I'm not sure we will ever need to deal with multiple masters
-> >> >   controlling the same bus and exposed under Linux, but separating the
-> >> >   bus and master concept is pretty easy, hence the decision to do it
-> >> >   like that.
-> >> >   The other benefit of separating the bus and master concepts is that
-> >> >   master devices appear under the bus directory in sysfs.  
+On Wed, Jul 11, 2018 at 10:20 AM Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+>
+>
+>
+> =E4=BA=8E 2018=E5=B9=B47=E6=9C=8812=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=88=
+12:13:56, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> =E5=86=99=E5=88=B0:
+> >On Fri, Jul 06, 2018 at 11:38:02PM +0800, Icenowy Zheng wrote:
+> >> The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
+> >> external USB3 pins of the SoC.
 > >>
-> >> I'm not following here at all, sorry for missing prior discussion if this
-> >> was already explained. What is the "multiple master" case? Do you
-> >> mean multiple devices that are controlled by Linux and that each talk
-> >> to other devices on the same bus, multiple operating systems that
-> >> have talk to are able to own the bus with the kernel being one of
-> >> them, a controller that controls multiple independent buses,
-> >> or something else?  
-> >
-> > I mean several masters connected to the same bus and all exposed to the
-> > same Linux instance. In this case, the question is, should we have X
-> > I3C buses exposed (X being the number of masters) or should we only
-> > have one?
-> >
-> > Having a bus represented as a separate object allows us to switch to
-> > the "one bus : X masters" representation if we need too.  
-> ...
+> >> Add a device tree binding for the PHY.
 > >>
-> >> This feels a bit odd: so you have bus_type that can contain devices
-> >> of three (?) different device types: i3c_device_type, i3c_master_type
-> >> and i3c_busdev_type.
+> >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> >> ---
+> >> Splitted from the PHY driver patch in v1.
 > >>
-> >> Generally speaking, we don't have a lot of subsystems that even
-> >> use device_types. I assume that the i3c_device_type for a
-> >> device that corresponds to an endpoint on the bus, but I'm
-> >> still confused about the other two, and why they are part of
-> >> the same bus_type.  
-> >
-> > i3c_busdev is just a virtual device representing the bus itself.
-> > i3c_master is representing the I3C master driving the bus. The reason
-> > for having a different type here is to avoid attaching this device to a
-> > driver but still being able to see the master controller as a device on
-> > the bus. And finally, i3c_device are all remote devices that can be
-> > accessed through a given i3c_master.
-> >
-> > This all comes from the design choice I made to represent the bus as a
-> > separate object in order to be able to share it between different
-> > master controllers exposed through the same Linux instance. Since
-> > master controllers are also remote devices for other controllers, we
-> > need to represent them.  
-> 
-> Ok, so I think this is the most important question to resolve: do we
-> actually need to control multiple masters on a single bus from one OS
-> or not?
-> 
-> The problem that I see is that it breaks the tree abstraction that
-> we use in the dtb interface, in the driver model and in sysfs.
-> If we need to deal with a hardware bus structure like
-> 
->               cpu
->              /   \
->             /     \
->        platdev   platdev
->            |        |
->      i3c-master   i3c-master
->             \      /
->              \    /
->             i3c-bus
->              /    \
->          device   device
-> 
-> then that abstraction no longer holds. Clearly you could build
-> a system like that, and if we have to support it, the i3c infrastructure
-> should be prepared for it, since we wouldn't be able to retrofit
-> it later.
-
-Exactly. For the DT representation I thought we could have the primary
-master hold the device nodes, and then have secondary masters reference
-the main master with a phandle (i3c-bus = <&main_i3c_master>;). For the
-sysfs representation, it would be the same. Only one of the master
-would create the i3c_bus object and the other masters would just
-reference it.
-
-> 
-> What would be the point of building such a system though?
-
-This, I don't know. But as you said, if we go for a "one bus per
-master" representation, going back will be difficult.
-
-> Is this for performance, failover, or something else?
-
-No, I don't think so, especially since the mastership handover
-operation is not free. So keeping the same master in control is
-probably better in term of perfs.
-
-One case I can think of is when the primary master does not have enough
-resources to address all devices on the bus, and let the secondary
-master handle all transactions targeting those devices.
-
-> IOW, what feature would we lose if we were to declare that
-> setup above invalid (and ensure you cannot represent it in DT)?
-
-That's exactly the sort of discussion I wanted to trigger. Maybe we
-shouldn't care and expose this use case as if it was X different I3C
-buses (with all devices present on the bus being exposed X times to the
-system).
-
-> 
-> >> > +/**
-> >> > + * struct i3c_ccc_mwl - payload passed to SETMWL/GETMWL CCC
-> >> > + *
-> >> > + * @len: maximum write length in bytes
-> >> > + *
-> >> > + * The maximum write length is only applicable to SDR private messages or
-> >> > + * extended Write CCCs (like SETXTIME).
-> >> > + */
-> >> > +struct i3c_ccc_mwl {
-> >> > +       __be16 len;
-> >> > +} __packed;  
+> >>  .../bindings/phy/sun50i-usb3-phy.txt          | 24
+> >+++++++++++++++++++
+> >>  1 file changed, 24 insertions(+)
+> >>  create mode 100644
+> >Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
 > >>
-> >> I would suggest only marking structures as __packed that are not already
-> >> naturally packed. Note that a side-effect of __packed is that here
-> >> alignof(struct i3c_ccc_mwl) will be '1', and architectures without efficient
-> >> unaligned access will have to access the field one byte at a time because
-> >> they assume that it may be misaligned.  
+> >> diff --git
+> >a/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
+> >b/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
+> >> new file mode 100644
+> >> index 000000000000..912d55f9f69d
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
+> >> @@ -0,0 +1,24 @@
+> >> +Allwinner sun50i USB3 PHY
+> >> +-----------------------
+> >> +
+> >> +Required properties:
+> >> +- compatible : should be one of
+> >> +  * allwinner,sun60i-h6-usb3-phy
+> >> +- reg : a list of offset + length pairs
+> >> +- #phy-cells : from the generic phy bindings, must be 0
+> >> +- clocks : phandle + clock specifier for the phy clock
+> >> +- resets : phandle + reset specifier for the phy reset
+> >> +
+> >> +Optional Properties:
+> >> +- phy-supply : from the generic phy bindings, a phandle to a
+> >regulator that
+> >> +           provides power to VBUS.
 > >
-> > These are structure used to create packets to be sent on the wire.
-> > Making sure that everything is packed correctly is important, so I'm
-> > not sure I can remove the __packed everywhere.  
-> 
-> I mean just the ones for which the __packed attribute only changes
-> the alignment of the outer structure but not the layout inside of the
-> structure. Alternatively, set both __packed and __aligned().
-
-Ok.
-
-> 
-> >> > +/**
-> >> > + * struct i3c_i2c_dev - I3C/I2C common information
-> >> > + * @node: node element used to insert the device into the I2C or I3C device
-> >> > + *       list
-> >> > + * @bus: I3C bus this device is connected to
-> >> > + * @master: I3C master that instantiated this device. Will be used to send
-> >> > + *         I2C/I3C frames on the bus
-> >> > + * @master_priv: master private data assigned to the device. Can be used to
-> >> > + *              add master specific information
-> >> > + *
-> >> > + * This structure is describing common I3C/I2C dev information.
-> >> > + */
-> >> > +struct i3c_i2c_dev {
-> >> > +       struct list_head node;
-> >> > +       struct i3c_bus *bus;
-> >> > +       struct i3c_master_controller *master;
-> >> > +       void *master_priv;
-> >> > +};  
-> >>
-> >> I find this hard to follow, which means either this has to be complicated
-> >> and I just didn't take enough time to think it through, or maybe it can
-> >> be simplified.
-> >>
-> >> The 'node' field seems particularly odd, can you explain what it's
-> >> for? Normally all children of a bus device can be enumerated by
-> >> walking the device model structures. Are you doing this just so
-> >> you can walk a single list rather than walking the i3c and i2c
-> >> devices separately?  
+> >Power to the phy or Vbus? If the latter only, then this property should
 > >
-> > The devices discovered on the bus are not directly registered to the
-> > device model, and I need to store them in a list to do some operations
-> > before exposing them. Once everything is ready to be used, I then
-> > iterate the list and register all not-yet-registered I3C devs.  
-> 
-> Can you explain what those operations are and why we can't
-> register everything directly? This seems rather unconventional,
-> so I want to make sure it's done for a good reason.
+> >be elsewhere (like a connector node).
+>
+> I don't think there's connector nodes for USB ports now.
 
-When we start a DAA operation (used to discover all devices on the
-bus), we have the bus lock held in maintenance mode (AKA exclusive
-mode). During this DAA the controller will add all the devices it has
-discovered on the bus and let the core query information about those
-devices (PID, DCR, HDR capabilies, SDR speed limitations, ...). It
-might also happen that a device that had been discovered previously is
-re-discovered because it had lost its dynamic address (i.e. when
-the device had been reset but not by Linux). In this case the I3C
-framework does not expose a new device but instead updates the dynamic
-address of the device already registered to the device model, so that
-new transactions initiated by the I3C device driver work correctly.
-This is the very reason we hold the lock in exclusive mode (we want all
-transactions to be stopped until we have updated dynamic addresses if
-needed).
+Yes, there's a recently added binding.
 
-Now, let's imagine you register the device when the bus lock is held in
-exclusive mode, and the ->probe() function of the I3C driver needs to
-do an I3C transfer => you end up with a deadlock.
+> And by checking existed device trees, use phy-supply on USB
+> phy is common. It's seen on Meson GXBB, RK3399 and Hi6220
+> in arch/arm64/boot/dts.
 
-So what we do instead is add new devices to the i3c bus list, release
-the bus lock and then register all new devices.
+I don't doubt that the phy needs a supply, but that's not how you
+described it. If it is needed for the phy, then it's okay to have it.
+If it is for Vbus and not connected to the phy, then it is not okay.
+
+Rob
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
