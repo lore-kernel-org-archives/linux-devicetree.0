@@ -1,46 +1,36 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 07/10] i3c: master: Add driver for Cadence IP
-Date: Wed, 11 Jul 2018 16:19:51 +0200
-Message-ID: <CAK8P3a1D_crzMT8-2R9bMvMuq8F58=BgHUFSq2nntRHF0sZUQg@mail.gmail.com>
-References: <20180622104930.32050-1-boris.brezillon@bootlin.com> <20180622104930.32050-8-boris.brezillon@bootlin.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/6] dt-bindings: media: rcar-vin: Align Gen2 and Gen3
+Date: Wed, 11 Jul 2018 07:51:12 -0600
+Message-ID: <20180711135112.GA12419@rob-hp-laptop>
+References: <1531145962-1540-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1531145962-1540-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180622104930.32050-8-boris.brezillon@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.or>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1531145962-1540-2-git-send-email-jacopo+renesas@jmondi.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@glider.be, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, niklas.soderlund@ragnatech.se, hans.verkuil@cisco.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 22, 2018 at 12:49 PM, Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
-> Add a driver for Cadence I3C master IP.
+On Mon, Jul 09, 2018 at 04:19:16PM +0200, Jacopo Mondi wrote:
+> Align description of the Gen2 and Gen3 bindings for parallel input.
+> This commit prepares for description of optional endpoint properties in ports
+> subnodes accepting parallel video connections.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  Documentation/devicetree/bindings/media/rcar_vin.txt | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
 
-The driver seems very well-written and shows that the framework got that side
-of the interface right. Just one thing I noticed:
-
-> +
-> +static void cdns_i3c_master_handle_ibi(struct cdns_i3c_master *master,
-> +                                      u32 ibir)
-
-> +
-> +       for (i = 0; i < IBIR_XFER_BYTES(ibir); i += 4) {
-> +               u32 tmp = readl(master->regs + IBI_DATA_FIFO);
-> +
-> +               for (j = 0; j < 4 && i + j < dev->ibi->max_payload_len; j++)
-> +                       buf[i + j] = tmp >> (j * 8);
-> +       }
-
-This seems to be a rather inefficient way to open-code a readsl().
-I suppose you need to handle length that is not a multiple of 4, right?
-
-Maybe do it like
-
-      size_t length = IBIR_XFER_BYTES(ibir);
-      readsl(master->regs + IBI_DATA_FIFO, buf, length & ~3);
-      if (length & 3) {
-            u32 tmp = __raw_readl(master->regs + IBI_DATA_FIFO);
-            memcpy(buf + length & ~3, length & 3);
-      }
-
-     Arnd
+Reviewed-by: Rob Herring <robh@kernel.org>
