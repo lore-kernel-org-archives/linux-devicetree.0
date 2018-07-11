@@ -1,51 +1,36 @@
-Return-Path: <SRS0=MUa+=J2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from inva021.nxp.com ([92.121.34.21]:45148 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S933343AbeGJNp6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Jul 2018 09:45:58 -0400
-From: Fabio Estevam <fabio.estevam@nxp.com>
-Subject: [PATCH v2 5/6] ARM: dts: imx53: Add a label for the PMU node
-Date: Tue, 10 Jul 2018 10:46:36 -0300
-Message-Id: <1531230397-27659-5-git-send-email-fabio.estevam@nxp.com>
-In-Reply-To: <1531230397-27659-1-git-send-email-fabio.estevam@nxp.com>
-References: <1531230397-27659-1-git-send-email-fabio.estevam@nxp.com>
-Sender: devicetree-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: kernel@pengutronix.de, sebastian.reichel@collabora.co.uk, robh+dt@kernel.org, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>
+Return-Path: <SRS0=Hqmr=J3=linaro.org=loic.poulain@kernel.org>
+From: Loic Poulain <loic.poulain@linaro.org>
+Subject: [PATCH v2] arm: dts: qcom: db410c: Fix Bluetooth LED trigger
+Date: Wed, 11 Jul 2018 14:18:23 +0200
+Message-Id: <1531311503-2777-1-git-send-email-loic.poulain@linaro.org>
+To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org
+Cc: niklas.cassel@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Loic Poulain <loic.poulain@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add a label for the PMU node so that the board dts may be able to
-pass the 'secure-reg-access' property like this:
+Current LED trigger, 'bt', is not known/used by any existing driver.
+Fix this by renaming it to 'bluetooth-power' trigger which is
+controlled by the Bluetooth subsystem.
 
-&pmu {
-	secure-reg-access;
-};
-
-This also makes it consistent with the PMU node in imx6qdl.dtsi
-
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Tested-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Fixes: 9943230c8860 ("arm64: dts: qcom: Add apq8016-sbc board LED's related device nodes")
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
 ---
-Changes since v1:
-- None
+ v2: add 'Fixes' tag
 
- arch/arm/boot/dts/imx53.dtsi | 2 +-
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index 3fd553c..6386185 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -113,7 +113,7 @@
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+index 9ff8487..78ce397 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+@@ -338,7 +338,7 @@
+ 			led@6 {
+ 				label = "apq8016-sbc:blue:bt";
+ 				gpios = <&pm8916_mpps 3 GPIO_ACTIVE_HIGH>;
+-				linux,default-trigger = "bt";
++				linux,default-trigger = "bluetooth-power";
+ 				default-state = "off";
+ 			};
  		};
- 	};
- 
--	pmu {
-+	pmu: pmu {
- 		compatible = "arm,cortex-a8-pmu";
- 		interrupt-parent = <&tzic>;
- 		interrupts = <77>;
 -- 
 2.7.4
-
