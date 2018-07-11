@@ -1,41 +1,64 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 1/2] clk: imx6sll: add GPIO LPCGs
-Date: Wed, 11 Jul 2018 09:33:45 -0700
-Message-ID: <153132682598.143105.16881098765923078751@swboyd.mtv.corp.google.com>
-References: <1529649154-5724-1-git-send-email-Anson.Huang@nxp.com>
- <153091072630.143105.2849049240391576710@swboyd.mtv.corp.google.com>
- <20180711084302.GB6959@dragon>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v6 3/7] dt: qcom: 8996: thermal: Move to DT initialisation
+Date: Wed, 11 Jul 2018 09:37:29 -0700
+Message-ID: <20180711163729.GB545@tuxbook-pro>
+References: <cover.1531135999.git.amit.kucheria@linaro.org>
+ <ee06e59ae84a9b9013480c58bd4678e44d201a42.1531135999.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180711084302.GB6959@dragon>
+Content-Disposition: inline
+In-Reply-To: <ee06e59ae84a9b9013480c58bd4678e44d201a42.1531135999.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Anson Huang <Anson.Huang@nxp.com>, aisheng.dong@nxp.com, fabio.estevam@nxp.com, kernel@pengutronix.de, mark.rutland@arm.com, mturquette@baylibre.com, ping.bai@nxp.com, robh+dt@kernel.org, s.hauer@pengutronix.de, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: linux-kernel@vger.kernel.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, edubezval@gmail.com, smohanad@codeaurora.org, vivek.gautam@codeaurora.org, andy.gross@linaro.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Shawn Guo (2018-07-11 01:43:03)
-> On Fri, Jul 06, 2018 at 01:58:46PM -0700, Stephen Boyd wrote:
-> > Quoting Anson Huang (2018-06-21 23:32:33)
-> > > According to Reference Manual Rev.0, 06/2017,
-> > > there are GPIO LPCGs defined in CCM CCGRs,
-> > > add them into clock tree.
-> > > =
+On Mon 09 Jul 04:43 PDT 2018, Amit Kucheria wrote:
 
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > ---
-> > =
+> We also split up the regmap address space into two, one for the TM
+> registers, the other for the SROT registers. This was required to deal with
+> different address offsets for the TM and SROT registers across different
+> SoC families.
+> 
+> Since tsens-common.c/init_common() currently only registers one address
+> space, the order is important (TM before SROT). This is OK since the code
+> doesn't really use the SROT functionality yet.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-> > Applied to clk-next
-> =
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-> Stephen,
-> =
+Regards,
+Bjorn
 
-> If you can apply this patch to topic branch 'clk-imx-gpio-gates', I will
-> be able to pick up patch #2 for this cycle.
-
-Can you merge in clk-imx6sll-gpio topic branch to your tree? I'm making
-topics for all patch series, so that's why this got stuck into a
-different topic branch.
+> ---
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> index 8c7f9ca..6c8a857 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> @@ -461,7 +461,17 @@
+>  
+>  		tsens0: thermal-sensor@4a8000 {
+>  			compatible = "qcom,msm8996-tsens";
+> -			reg = <0x4a8000 0x2000>;
+> +			reg = <0x4a9000 0x1000>, /* TM */
+> +			      <0x4a8000 0x1000>; /* SROT */
+> +			#qcom,sensors = <13>;
+> +			#thermal-sensor-cells = <1>;
+> +		};
+> +
+> +		tsens1: thermal-sensor@4ac000 {
+> +			compatible = "qcom,msm8996-tsens";
+> +			reg = <0x4ad000 0x1000>, /* TM */
+> +			      <0x4ac000 0x1000>; /* SROT */
+> +			#qcom,sensors = <8>;
+>  			#thermal-sensor-cells = <1>;
+>  		};
+>  
+> -- 
+> 2.7.4
+> 
