@@ -1,27 +1,77 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: reset: uniphier: add USB3 core reset
- support
-Date: Wed, 11 Jul 2018 13:37:30 -0600
-Message-ID: <20180711193730.GA31593@rob-hp-laptop>
-References: <1531185257-16444-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1531185257-16444-2-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH v2 1/3] clk: meson: add DT documentation for emmc clock
+ controller
+Date: Wed, 11 Jul 2018 13:43:46 -0600
+Message-ID: <20180711194346.GA32414@rob-hp-laptop>
+References: <20180710163658.6175-1-yixun.lan@amlogic.com>
+ <20180710163658.6175-2-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1531185257-16444-2-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <20180710163658.6175-2-yixun.lan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+To: Yixun Lan <yixun.lan@amlogic.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 10, 2018 at 10:14:16AM +0900, Kunihiko Hayashi wrote:
-> Add DT bindings for reset control of USB3 core implemented in UniPhier SoCs.
-> The reset control belongs to USB3 glue layer.
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  .../devicetree/bindings/reset/uniphier-reset.txt   | 56 ++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
+On Tue, Jul 10, 2018 at 04:36:56PM +0000, Yixun Lan wrote:
+> Document the MMC sub clock controller driver, the potential consumer
+> of this driver is MMC or NAND.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+So you all have decided to properly model this now?
+
+> 
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> ---
+>  .../bindings/clock/amlogic,mmc-clkc.txt       | 31 +++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
+> new file mode 100644
+> index 000000000000..ff6b4bf3ecf9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
+> @@ -0,0 +1,31 @@
+> +* Amlogic MMC Sub Clock Controller Driver
+> +
+> +The Amlogic MMC clock controller generates and supplies clock to support
+> +MMC and NAND controller
+> +
+> +Required Properties:
+> +
+> +- compatible: should be:
+> +		"amlogic,meson-gx-mmc-clkc"
+> +		"amlogic,meson-axg-mmc-clkc"
+> +
+> +- #clock-cells: should be 1.
+> +- clocks: phandles to clocks corresponding to the clock-names property
+> +- clock-names: list of parent clock names
+> +	- "clkin0", "clkin1"
+> +
+> +Parent node should have the following properties :
+> +- compatible: "syscon", "simple-mfd, and "amlogic,meson-axg-mmc-clkc"
+
+You don't need "simple-mfd" and probably not syscon either. The order is 
+wrong too. Most specific first.
+
+> +- reg: base address and size of the MMC control register space.
+> +
+> +Example: Clock controller node:
+> +
+> +sd_mmc_c_clkc: clock-controller@7000 {
+> +	compatible = "amlogic,mmc-clkc", "syscon", "simple-mfd";
+
+Doesn't match the binding...
+
+> +	reg = <0x0 0x7000 0x0 0x4>;
+> +	#clock-cells = <1>;
+> +
+> +	clock-names = "clkin0", "clkin1";
+> +	clocks = <&clkc CLKID_SD_MMC_C_CLK0>,
+> +			<&clkc CLKID_FCLK_DIV2>;
+> +};
+> -- 
+> 2.18.0
+> 
