@@ -1,79 +1,42 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 6/9] dt-bindings: phy: add binding for
- Allwinner USB3 PHY
-Date: Wed, 11 Jul 2018 10:13:56 -0600
-Message-ID: <20180711161356.GA4685@rob-hp-laptop>
-References: <20180706153805.25842-1-icenowy@aosc.io>
- <20180706153805.25842-7-icenowy@aosc.io>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] drm/panel: simple: Add Sharp LQ035Q7DB03 panel support
+Date: Wed, 11 Jul 2018 10:17:37 -0600
+Message-ID: <20180711161737.GA7490@rob-hp-laptop>
+References: <20180706185101.31186-1-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBR6ZTDNAKGQE6EFU7QI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20180706153805.25842-7-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180706185101.31186-1-vz@mleia.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 06, 2018 at 11:38:02PM +0800, Icenowy Zheng wrote:
-> The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
-> external USB3 pins of the SoC.
-> 
-> Add a device tree binding for the PHY.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
-> Splitted from the PHY driver patch in v1.
-> 
->  .../bindings/phy/sun50i-usb3-phy.txt          | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt b/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
-> new file mode 100644
-> index 000000000000..912d55f9f69d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
-> @@ -0,0 +1,24 @@
-> +Allwinner sun50i USB3 PHY
-> +-----------------------
-> +
-> +Required properties:
-> +- compatible : should be one of
-> +  * allwinner,sun60i-h6-usb3-phy
-> +- reg : a list of offset + length pairs
-> +- #phy-cells : from the generic phy bindings, must be 0
-> +- clocks : phandle + clock specifier for the phy clock
-> +- resets : phandle + reset specifier for the phy reset
-> +
-> +Optional Properties:
-> +- phy-supply : from the generic phy bindings, a phandle to a regulator that
-> +	       provides power to VBUS.
-
-Power to the phy or Vbus? If the latter only, then this property should 
-be elsewhere (like a connector node).
-
-> +
-> +Example:
-> +	usb3phy: phy@5210000 {
-> +		compatible = "allwinner,sun50i-h6-usb3-phy";
-> +		reg = <0x5210000 0x10000>;
-> +		clocks = <&ccu CLK_USB_PHY1>;
-> +		resets = <&ccu RST_USB_PHY1>;
-> +		#phy-cells = <0>;
-> +		status = "disabled";
-> +	};
-> -- 
-> 2.17.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBKdWwgMDYsIDIwMTggYXQgMDk6NTE6MDFQTSArMDMwMCwgVmxhZGltaXIgWmFwb2xz
+a2l5IHdyb3RlOgo+IFRoZSBjaGFuZ2UgYWRkcyBzdXBwb3J0IGZvciBTaGFycCBMUTAzNVE3REIw
+MyAzLjUiIFFWR0EgVEZUIHBhbmVsLgo+IAo+IE5vdGUgdGhhdCB0aGlzIGFnZWQgcGFuZWwgaXMg
+YWxyZWFkeSBmb3VuZCBpbiB0aGUga2VybmVsIHNvdXJjZXMsCj4gZm9yIGluc3RhbmNlIGluIGJv
+YXJkIG1hY2ggZmlsZXMgbWFjaC1teDIxYWRzLmMsIG1hY2gtbXgyN2Fkcy5jLAo+IG1hY2gtcGNt
+MDQzLmMsIGxwZDI3MC5jIGFuZCBpbXgyNy1waHl0ZWMtcGh5Y29yZS1yZGsuZHRzLgo+IAo+IFNp
+Z25lZC1vZmYtYnk6IFZsYWRpbWlyIFphcG9sc2tpeSA8dnpAbWxlaWEuY29tPgo+IC0tLQo+IENo
+YW5nZXMgZnJvbSB2MSB0byB2MjoKPiAqIGFkZGVkIGRlc2NyaXB0aW9uIG9mIHBvd2VyLXN1cHBs
+eSwgZW5hYmxlLWdwaW9zIGFuZCBiYWNrbGlnaHQgcHJvcGVydGllcwo+IAo+ICAuLi4vYmluZGlu
+Z3MvZGlzcGxheS9wYW5lbC9zaGFycCxscTAzNXE3ZGIwMy50eHQgICB8IDEyICsrKysrKysrKysK
+PiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgICAgICAgfCAy
+NyArKysrKysrKysrKysrKysrKysrKysrCj4gIDIgZmlsZXMgY2hhbmdlZCwgMzkgaW5zZXJ0aW9u
+cygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvcGFuZWwvc2hhcnAsbHEwMzVxN2RiMDMudHh0CgpSZXZpZXdlZC1ieTogUm9i
+IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
