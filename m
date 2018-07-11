@@ -1,174 +1,71 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 01/10] i3c: Add core I3C infrastructure
-Date: Wed, 11 Jul 2018 22:10:26 +0200
-Message-ID: <CAK8P3a2djk8c6STaxJC0MCkBddyOafk4WbG2LdfPf0V1EYiqmQ@mail.gmail.com>
-References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
- <20180330074751.25987-2-boris.brezillon@bootlin.com> <CAK8P3a1aZXf2sQW2mgwJScycKPhdoOAwxRjm5cQG83513uc3fg@mail.gmail.com>
- <20180711164120.3e32fb08@bbrezillon> <CAK8P3a2EZB_tMS_47wv6M2Qpm79ZocxxhG5zLxXsBM_YjZgkyA@mail.gmail.com>
- <20180711191212.3855bb25@bbrezillon>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 1/2] dt-binding: bmc: Add NPCM7xx LPC BPC documentation
+Date: Wed, 11 Jul 2018 14:21:07 -0600
+Message-ID: <20180711202107.GA29980@rob-hp-laptop>
+References: <20180704091427.409971-1-tmaimon77@gmail.com>
+ <20180704091427.409971-2-tmaimon77@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180711191212.3855bb25@bbrezillon>
+Content-Disposition: inline
+In-Reply-To: <20180704091427.409971-2-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.or>
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: mark.rutland@arm.com, arnd@arnd.de, gregkh@linuxfoundation.org, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-n Wed, Jul 11, 2018 at 7:12 PM, Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
-> On Wed, 11 Jul 2018 17:39:56 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
->> On Wed, Jul 11, 2018 at 4:41 PM, Boris Brezillon <boris.brezillon@bootlin.com> wrote:
->>
->> The problem that I see is that it breaks the tree abstraction that
->> we use in the dtb interface, in the driver model and in sysfs.
->> If we need to deal with a hardware bus structure like
->>
->>               cpu
->>              /   \
->>             /     \
->>        platdev   platdev
->>            |        |
->>      i3c-master   i3c-master
->>             \      /
->>              \    /
->>             i3c-bus
->>              /    \
->>          device   device
->>
->> then that abstraction no longer holds. Clearly you could build
->> a system like that, and if we have to support it, the i3c infrastructure
->> should be prepared for it, since we wouldn't be able to retrofit
->> it later.
->
-> Exactly. For the DT representation I thought we could have the primary
-> master hold the device nodes, and then have secondary masters reference
-> the main master with a phandle (i3c-bus = <&main_i3c_master>;). For the
-> sysfs representation, it would be the same. Only one of the master
-> would create the i3c_bus object and the other masters would just
-> reference it.
+On Wed, Jul 04, 2018 at 12:14:26PM +0300, Tomer Maimon wrote:
+> Added device tree binding documentation for Nuvoton BMC
+> NPCM7xx BIOS Post Code (BPC).
+> The NPCM7xx BPC monitoring two configurable I/O addresses
+> written by the host on Low Pin Count (LPC) bus.
+> 
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> ---
+>  .../devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt    | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt b/Documentation/devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt
+> new file mode 100644
+> index 000000000000..0832c9cbea32
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt
+> @@ -0,0 +1,26 @@
+> +Nuvoton NPCM7xx LPC BPC interface
+> +
+> +Nuvoton BMC NPCM7xx BIOS Post Code (BPC) monitoring two
+> +configurable I/O addresses written by the host on the
+> +Low Pin Count (LPC) bus, the capure data stored in 128-word FIFO.
 
-Ok.
+s/capure/capture/
 
->> What would be the point of building such a system though?
->
-> This, I don't know. But as you said, if we go for a "one bus per
-> master" representation, going back will be difficult.
->
->> Is this for performance, failover, or something else?
->
-> No, I don't think so, especially since the mastership handover
-> operation is not free. So keeping the same master in control is
-> probably better in term of perfs.
+Otherwise,
 
-Right.
-
-> One case I can think of is when the primary master does not have enough
-> resources to address all devices on the bus, and let the secondary
-> master handle all transactions targeting those devices.
->
+Reviewed-by: Rob Herring <robh@kernel.org>
 
 
-I've read the specification a bit more, and from what I found there,
-it seems extremely unlikely that there was an intended use case where
-one OS instance would control more than one master on a single bus
-and flip them between primary and secondary mode.
-
-In particular, the protocol for the handover is defined in a way that
-intentionally avoids requiring a side channel to communicate data
-about the slave devices, and instead the secondary master(s) get
-informed about any changes of the topology as they happen
-through explicit messages.
-
-The description of the secondary master labels the introduction section
-of says
-
-     "I3C Smart Sensor(s) / Hub(s) / Engine(s)"
-
-which sounds like some microcontroller that can act as a master of
-some sort, rather than being part of the OS itself.
-
-I can see several use cases for this, e.g.
-
-* A baseboard management controller booting first, reading all
-  the sensors and possibly loading its own OS from an i3c flash
-  before handing off control to the main CPU of a server and
-  no longer being a master
-
-* A fan controller that occasionally wants to read temperature
-  sensors and control fan speed, while normally being a
-  secondary master. It periodically asks the OS to become
-  a master to read the sensors and then immediately hands back
-  control to the host OS as the master
-
-* Two controllers inside of the same SoC, but one of them owned
-  by ARM Trustzone firmware or the Intel equivalent, the other
-  owned by the OS, both accessing the same slaves.
-
-All of these require implementing handover between primary
-and secondary master, but Linux would still see a hierarchical
-bus structure, with the secondary masters looking like slave
-devices that might request being masters during some time.
-
-We may also run into the requirement that a master we probe
-is currently the secondary master and has to probe the bus
-by asking the current master for the available devices, and
-then taking over.
-
->> IOW, what feature would we lose if we were to declare that
->> setup above invalid (and ensure you cannot represent it in DT)?
->
-> That's exactly the sort of discussion I wanted to trigger. Maybe we
-> shouldn't care and expose this use case as if it was X different I3C
-> buses (with all devices present on the bus being exposed X times
-> to the system).
-
-That's probably fine for many slave devices (you could read a
-single sensor multiple times if you iterate through all i2c sensors
-on all buses) but might not work for others (a slave device sending
-an interrupt to the current master for a request that was started
-from the previous master).
-My impression however is that this is actually a corner case that
-we can leave to be undefined, and not prepare to handle well,
-as long as we can deal with the interesting examples above.
-
->> > The devices discovered on the bus are not directly registered to the
->> > device model, and I need to store them in a list to do some operations
->> > before exposing them. Once everything is ready to be used, I then
->> > iterate the list and register all not-yet-registered I3C devs.
->>
->> Can you explain what those operations are and why we can't
->> register everything directly? This seems rather unconventional,
->> so I want to make sure it's done for a good reason.
->
-> When we start a DAA operation (used to discover all devices on the
-> bus), we have the bus lock held in maintenance mode (AKA exclusive
-> mode). During this DAA the controller will add all the devices it has
-> discovered on the bus and let the core query information about those
-> devices (PID, DCR, HDR capabilies, SDR speed limitations, ...). It
-> might also happen that a device that had been discovered previously is
-> re-discovered because it had lost its dynamic address (i.e. when
-> the device had been reset but not by Linux). In this case the I3C
-> framework does not expose a new device but instead updates the dynamic
-> address of the device already registered to the device model, so that
-> new transactions initiated by the I3C device driver work correctly.
-> This is the very reason we hold the lock in exclusive mode (we want all
-> transactions to be stopped until we have updated dynamic addresses if
-> needed).
->
-> Now, let's imagine you register the device when the bus lock is held in
-> exclusive mode, and the ->probe() function of the I3C driver needs to
-> do an I3C transfer => you end up with a deadlock.
->
-> So what we do instead is add new devices to the i3c bus list, release
-> the bus lock and then register all new devices.
-
-Ok, but maybe you could you put the information about those devices
-on a local list on the stack rather than the controller? I suppose this
-would not change the logic much, but it would slightly simplify the
-data structures for the bus and stop others from wondering about
-them. ;-)
-This is a really minor point though, let's work out the problem of the
-multiple masters first.
-
-      Arnd
+> +
+> +NPCM7xx BPC supports capture double words, when using capture
+> +double word only I/O address 1 is monitored.
+> +
+> +Required properties for lpc_bpc node
+> +- compatible	: "nuvoton,npcm750-lpc-bpc" for Poleg NPCM7XX.
+> +- reg 			: specifies physical base address and size of the registers.
+> +- interrupts	: contain the LPC BPC with flags for falling edge.
+> +- monitor-ports : contain monitor I/O addresses, at least one monitor I/O
+> +				  address required
+> +
+> +Optional property for lpc_bpc node
+> +- bpc-en-dwcapture : enable capture double words support.
+> +
+> +Example:
+> +	lpc_bpc: lpc-bpc@f0007040 {
+> +		compatible = "nuvoton,npcm7xx-lpc-bpc";
+> +		reg = <0xf0007040 0x14>;
+> +		monitor-ports = <0x80>;
+> +		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> -- 
+> 2.14.1
+> 
