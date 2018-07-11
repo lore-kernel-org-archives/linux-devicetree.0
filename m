@@ -1,42 +1,41 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: mipi-dsi: Add dual-channel DSI
- related info
-Date: Wed, 11 Jul 2018 09:48:57 -0600
-Message-ID: <20180711154857.GA25232@rob-hp-laptop>
-References: <20171205103356.9917-1-architt@codeaurora.org>
- <20180709090751.10221-1-architt@codeaurora.org>
- <20180709090751.10221-3-architt@codeaurora.org>
+Subject: Re: [PATCH v2] mfd: as3722: disable auto power on when AC OK
+Date: Wed, 11 Jul 2018 09:51:02 -0600
+Message-ID: <20180711155102.GA12132@rob-hp-laptop>
+References: <20180703150411.29709-1-marcel@ziswiler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180709090751.10221-3-architt@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: devicetree@vger.kernel.org, boris.brezillon@free-electrons.com, linux-arm-msm@vger.kernel.org, briannorris@chromium.org, philippe.cornu@st.com, dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, maxime.ripard@free-electrons.com
+In-Reply-To: <20180703150411.29709-1-marcel@ziswiler.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marcel Ziswiler <marcel@ziswiler.com>
+Cc: linux-tegra@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Laxman Dewangan <ldewangan@nvidia.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdWwgMDksIDIwMTggYXQgMDI6Mzc6NTFQTSArMDUzMCwgQXJjaGl0IFRhbmVqYSB3
-cm90ZToKPiBBZGQgYmluZGluZyBpbmZvIGZvciBwZXJpcGhlcmFscyB0aGF0IHN1cHBvcnQgZHVh
-bC1jaGFubmVsIERTSS4gQWRkCj4gY29ycmVzcG9uZGluZyBvcHRpb25hbCBiaW5kaW5ncyBmb3Ig
-RFNJIGhvc3QgY29udHJvbGxlcnMgdGhhdCBtYXkKPiBiZSBjb25maWd1cmVkIGluIHRoaXMgbW9k
-ZS4gQWRkIGFuIGV4YW1wbGUgb2YgYW4gSTJDIGNvbnRyb2xsZWQKPiBkZXZpY2Ugb3BlcmF0aW5n
-IGluIGR1YWwtY2hhbm5lbCBEU0kgbW9kZS4KPiAKPiBSZXZpZXdlZC1ieTogUGhpbGlwcGUgQ29y
-bnUgPHBoaWxpcHBlLmNvcm51QHN0LmNvbT4KPiBSZXZpZXdlZC1ieTogU2VhbiBQYXVsIDxzZWFu
-cGF1bEBjaHJvbWl1bS5vcmc+Cj4gUmV2aWV3ZWQtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0Bz
-bnRlY2guZGU+Cj4gU2lnbmVkLW9mZi1ieTogQXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVy
-b3JhLm9yZz4KPiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9taXBpLWRz
-aS1idXMudHh0ICAgfCA4MCArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2Vk
-LCA4MCBpbnNlcnRpb25zKCspCgpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
-Lm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Jul 03, 2018 at 05:04:11PM +0200, Marcel Ziswiler wrote:
+> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> On ams AS3722, power on when AC OK is enabled by default.
+> Making this option as disable by default and enable only
+> when platform need this explicitly.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> Reviewed-by: Bibek Basu <bbasu@nvidia.com>
+> Tested-by: Bibek Basu <bbasu@nvidia.com>
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> ---
+> 
+> Changes in v2:
+> - Document device tree property as suggested by Stefan.
+> - Rename SEQ1 to SEQU1 as per datasheet as suggested by Stefan.
+> - Drop reference to downstream commit as suggested by Lee.
+> 
+>  Documentation/devicetree/bindings/mfd/as3722.txt |  2 ++
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/mfd/as3722.c                             | 12 ++++++++++++
+>  include/linux/mfd/as3722.h                       |  3 +++
+>  3 files changed, 17 insertions(+)
