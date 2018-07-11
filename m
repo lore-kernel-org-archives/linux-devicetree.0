@@ -1,181 +1,66 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 1/6] soc/tegra: pmc: Fix pad voltage configuration for
- Tegra186
-Date: Wed, 11 Jul 2018 09:08:04 +0100
-Message-ID: <085d3c6f-2239-d0e4-24b9-544c1b89c0e8@nvidia.com>
-References: <1531226879-11802-1-git-send-email-avienamo@nvidia.com>
- <1531226879-11802-2-git-send-email-avienamo@nvidia.com>
+From: Jian Hu <jian.hu@amlogic.com>
+Subject: Re: [PATCH 1/3] dt-bindings: clk: g12a: New binding for Meson-G12A
+ SoC
+Date: Wed, 11 Jul 2018 16:10:18 +0800
+Message-ID: <024e6d89-b60d-ba85-4d62-c3358e2cab6c@amlogic.com>
+References: <1531134767-29927-1-git-send-email-jian.hu@amlogic.com>
+ <1531134767-29927-2-git-send-email-jian.hu@amlogic.com>
+ <CAFBinCBJp1xzo-CNW1HU-Odhrug31yQ7c3khB+XwvsNXp5-gTA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531226879-11802-2-git-send-email-avienamo@nvidia.com>
+In-Reply-To: <CAFBinCBJp1xzo-CNW1HU-Odhrug31yQ7c3khB+XwvsNXp5-gTA@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Aapo Vienamo <avienamo@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Mikko Perttunen <mperttunen@nvidia.com>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, robh@kernel.org
+Cc: jbrunet@baylibre.com, Neil Armstrong <narmstrong@baylibre.com>, qianggui.song@amlogic.com, devicetree@vger.kernel.org, sboyd@kernel.org, khilman@baylibre.com, mturquette@baylibre.com, yixun.lan@amlogic.com, linux-kernel@vger.kernel.org, bo.yang@amlogic.com, qiufang.dai@amlogic.com, linux-arm-kernel@lists.infradead.org, carlo@caione.org, linux-amlogic@lists.infradead.org, sunny.luo@amlogic.com, linux-clk@vger.kernel.org, xingyu.chen@amlogic.com
 List-Id: devicetree@vger.kernel.org
 
 
-On 10/07/18 13:47, Aapo Vienamo wrote:
-> Implement support for the PMC_IMPL_E_33V_PWR register which replaces
-> PMC_PWR_DET register interface of the SoC generations preceding
-> Tegra186. Also add the voltage bit offsets to the tegra186_io_pads[]
-> table.
+
+On 2018/7/10 5:57, Martin Blumenstingl wrote:
+> adding Rob Herring so it doesn't get lost on the devicetree mailing list
 > 
-> Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
-> ---
->  drivers/soc/tegra/pmc.c | 54 +++++++++++++++++++++++++++++++++----------------
->  1 file changed, 37 insertions(+), 17 deletions(-)
+> On Mon, Jul 9, 2018 at 1:13 PM Jian Hu <jian.hu@amlogic.com> wrote:
+>>
+>> Add new binding for Meson-G12A SoC Everything-Else part
+>>
+>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>> ---
+>>   Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+>> index e950599..0833006 100644
+>> --- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+>> +++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+>> @@ -9,6 +9,7 @@ Required Properties:
+>>                  "amlogic,gxbb-clkc" for GXBB SoC,
+>>                  "amlogic,gxl-clkc" for GXL and GXM SoC,
+>>                  "amlogic,axg-clkc" for AXG SoC.
+>> +               "amlogic,g12a-clkc" for G12A SoC.
+> should this be "amlogic,meson-g12a-clkc" instead?
+> that would make it consistent with virtually all other bindings which
+> use the schema "amlogic,meson<chip>-<ip-block>" (where chip is 8, 8b,
+> 8m2, -gxbb, -gxl, ...)
 > 
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index 2d6f3fc..5bea3b9 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -65,6 +65,8 @@
->  
->  #define PWRGATE_STATUS			0x38
->  
-> +#define PMC_IMPL_E_33V_PWR		0x40
-> +
->  #define PMC_PWR_DET			0x48
->  
->  #define PMC_SCRATCH0_MODE_RECOVERY	BIT(31)
-> @@ -154,6 +156,7 @@ struct tegra_pmc_soc {
->  	bool has_tsense_reset;
->  	bool has_gpu_clamps;
->  	bool needs_mbist_war;
-> +	bool has_impl_33v_pwr;
->  
->  	const struct tegra_io_pad_soc *io_pads;
->  	unsigned int num_io_pads;
-> @@ -1073,20 +1076,29 @@ int tegra_io_pad_set_voltage(enum tegra_io_pad id,
->  
->  	mutex_lock(&pmc->powergates_lock);
->  
-> -	/* write-enable PMC_PWR_DET_VALUE[pad->voltage] */
-> -	value = tegra_pmc_readl(PMC_PWR_DET);
-> -	value |= BIT(pad->voltage);
-> -	tegra_pmc_writel(value, PMC_PWR_DET);
-> +	if (pmc->soc->has_impl_33v_pwr) {
-> +		value = tegra_pmc_readl(PMC_IMPL_E_33V_PWR);
-> +		if (voltage == TEGRA_IO_PAD_1800000UV)
-> +			value &= ~BIT(pad->voltage);
-> +		else
-> +			value |= BIT(pad->voltage);
-> +		tegra_pmc_writel(value, PMC_IMPL_E_33V_PWR);
-> +	} else {
-> +		/* write-enable PMC_PWR_DET_VALUE[pad->voltage] */
-> +		value = tegra_pmc_readl(PMC_PWR_DET);
-> +		value |= BIT(pad->voltage);
-> +		tegra_pmc_writel(value, PMC_PWR_DET);
->  
-> -	/* update I/O voltage */
-> -	value = tegra_pmc_readl(PMC_PWR_DET_VALUE);
-> +		/* update I/O voltage */
-> +		value = tegra_pmc_readl(PMC_PWR_DET_VALUE);
->  
-> -	if (voltage == TEGRA_IO_PAD_1800000UV)
-> -		value &= ~BIT(pad->voltage);
-> -	else
-> -		value |= BIT(pad->voltage);
-> +		if (voltage == TEGRA_IO_PAD_1800000UV)
-> +			value &= ~BIT(pad->voltage);
-> +		else
-> +			value |= BIT(pad->voltage);
->  
-> -	tegra_pmc_writel(value, PMC_PWR_DET_VALUE);
-> +		tegra_pmc_writel(value, PMC_PWR_DET_VALUE);
-> +	}
->  
->  	mutex_unlock(&pmc->powergates_lock);
->  
-> @@ -1108,7 +1120,10 @@ int tegra_io_pad_get_voltage(enum tegra_io_pad id)
->  	if (pad->voltage == UINT_MAX)
->  		return -ENOTSUPP;
->  
-> -	value = tegra_pmc_readl(PMC_PWR_DET_VALUE);
-> +	if (pmc->soc->has_impl_33v_pwr)
-> +		value = tegra_pmc_readl(PMC_IMPL_E_33V_PWR);
-> +	else
-> +		value = tegra_pmc_readl(PMC_PWR_DET_VALUE);
->  
->  	if ((value & BIT(pad->voltage)) == 0)
->  		return TEGRA_IO_PAD_1800000UV;
-> @@ -1567,6 +1582,7 @@ static const struct tegra_pmc_soc tegra30_pmc_soc = {
->  	.cpu_powergates = tegra30_cpu_powergates,
->  	.has_tsense_reset = true,
->  	.has_gpu_clamps = false,
-> +	.has_impl_33v_pwr = false,
->  	.num_io_pads = 0,
->  	.io_pads = NULL,
->  	.regs = &tegra20_pmc_regs,
-> @@ -1609,6 +1625,7 @@ static const struct tegra_pmc_soc tegra114_pmc_soc = {
->  	.cpu_powergates = tegra114_cpu_powergates,
->  	.has_tsense_reset = true,
->  	.has_gpu_clamps = false,
-> +	.has_impl_33v_pwr = false,
->  	.num_io_pads = 0,
->  	.io_pads = NULL,
->  	.regs = &tegra20_pmc_regs,
-> @@ -1689,6 +1706,7 @@ static const struct tegra_pmc_soc tegra124_pmc_soc = {
->  	.cpu_powergates = tegra124_cpu_powergates,
->  	.has_tsense_reset = true,
->  	.has_gpu_clamps = true,
-> +	.has_impl_33v_pwr = false,
->  	.num_io_pads = ARRAY_SIZE(tegra124_io_pads),
->  	.io_pads = tegra124_io_pads,
->  	.regs = &tegra20_pmc_regs,
-> @@ -1778,6 +1796,7 @@ static const struct tegra_pmc_soc tegra210_pmc_soc = {
->  	.cpu_powergates = tegra210_cpu_powergates,
->  	.has_tsense_reset = true,
->  	.has_gpu_clamps = true,
-> +	.has_impl_33v_pwr = false,
->  	.needs_mbist_war = true,
->  	.num_io_pads = ARRAY_SIZE(tegra210_io_pads),
->  	.io_pads = tegra210_io_pads,
-> @@ -1806,7 +1825,7 @@ static const struct tegra_io_pad_soc tegra186_io_pads[] = {
->  	{ .id = TEGRA_IO_PAD_HDMI_DP0, .dpd = 28, .voltage = UINT_MAX },
->  	{ .id = TEGRA_IO_PAD_HDMI_DP1, .dpd = 29, .voltage = UINT_MAX },
->  	{ .id = TEGRA_IO_PAD_PEX_CNTRL, .dpd = 32, .voltage = UINT_MAX },
-> -	{ .id = TEGRA_IO_PAD_SDMMC2_HV, .dpd = 34, .voltage = UINT_MAX },
-> +	{ .id = TEGRA_IO_PAD_SDMMC2_HV, .dpd = 34, .voltage = 5 },
->  	{ .id = TEGRA_IO_PAD_SDMMC4, .dpd = 36, .voltage = UINT_MAX },
->  	{ .id = TEGRA_IO_PAD_CAM, .dpd = 38, .voltage = UINT_MAX },
->  	{ .id = TEGRA_IO_PAD_DSIB, .dpd = 40, .voltage = UINT_MAX },
-> @@ -1818,12 +1837,12 @@ static const struct tegra_io_pad_soc tegra186_io_pads[] = {
->  	{ .id = TEGRA_IO_PAD_CSIF, .dpd = 46, .voltage = UINT_MAX },
->  	{ .id = TEGRA_IO_PAD_SPI, .dpd = 47, .voltage = UINT_MAX },
->  	{ .id = TEGRA_IO_PAD_UFS, .dpd = 49, .voltage = UINT_MAX },
-> -	{ .id = TEGRA_IO_PAD_DMIC_HV, .dpd = 52, .voltage = UINT_MAX },
-> +	{ .id = TEGRA_IO_PAD_DMIC_HV, .dpd = 52, .voltage = 2 },
->  	{ .id = TEGRA_IO_PAD_EDP, .dpd = 53, .voltage = UINT_MAX },
-> -	{ .id = TEGRA_IO_PAD_SDMMC1_HV, .dpd = 55, .voltage = UINT_MAX },
-> -	{ .id = TEGRA_IO_PAD_SDMMC3_HV, .dpd = 56, .voltage = UINT_MAX },
-> +	{ .id = TEGRA_IO_PAD_SDMMC1_HV, .dpd = 55, .voltage = 4 },
-> +	{ .id = TEGRA_IO_PAD_SDMMC3_HV, .dpd = 56, .voltage = 6 },
->  	{ .id = TEGRA_IO_PAD_CONN, .dpd = 60, .voltage = UINT_MAX },
-> -	{ .id = TEGRA_IO_PAD_AUDIO_HV, .dpd = 61, .voltage = UINT_MAX },
-> +	{ .id = TEGRA_IO_PAD_AUDIO_HV, .dpd = 61, .voltage = 1 },
->  };
-
-Should we add support for the AO_HV rail while we are at it?
-  
->  static const struct tegra_pmc_regs tegra186_pmc_regs = {
-> @@ -1876,6 +1895,7 @@ static const struct tegra_pmc_soc tegra186_pmc_soc = {
->  	.cpu_powergates = NULL,
->  	.has_tsense_reset = false,
->  	.has_gpu_clamps = false,
-> +	.has_impl_33v_pwr = true,
->  	.num_io_pads = ARRAY_SIZE(tegra186_io_pads),
->  	.io_pads = tegra186_io_pads,
->  	.regs = &tegra186_pmc_regs,
+> see also: $ grep -R "amlogic," Documentation/devicetree/bindings/
 > 
-
-Otherwise, looks good to me.
-
-Cheers
-Jon
-
--- 
-nvpublic
+Which type should we choose,have a discussion?
+.compatible = "amlogic,g12a-clkc or
+.compatible = "amlogic,meson-g12a-clkc
+>>
+>>   - #clock-cells: should be 1.
+>>
+>> --
+>> 1.9.1
+>>
+>>
+>> _______________________________________________
+>> linux-amlogic mailing list
+>> linux-amlogic@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+> 
+> .
+> 
