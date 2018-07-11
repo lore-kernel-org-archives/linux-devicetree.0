@@ -1,21 +1,67 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V2 2/2] ARM: dts: imx6sx: add ocram_s support
-Date: Tue, 10 Jul 2018 23:18:57 -0300
-Message-ID: <CAOMZO5BLjAes7K-nGQFj9TeDOnTooJ-eZugpmGdNwktMS5Pd-g@mail.gmail.com>
-References: <1531270739-3075-1-git-send-email-Anson.Huang@nxp.com> <1531270739-3075-2-git-send-email-Anson.Huang@nxp.com>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH v2 2/2] regulator: uniphier: add regulator driver for UniPhier SoC
+Date: Wed, 11 Jul 2018 11:31:35 +0900
+Message-ID: <20180711113134.497A.4A936039@socionext.com>
+References: <1531186037-16630-3-git-send-email-hayashi.kunihiko@socionext.com> <20180710174451.GE8104@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531270739-3075-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20180710174451.GE8104@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, NXP Linux Team <Linux-imx@nxp.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 10, 2018 at 9:58 PM, Anson Huang <Anson.Huang@nxp.com> wrote:
-> i.MX6SX has a 16KB always-on ocram bank called
-> ocram_s, enable it as another mmio sram.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Hi Mark,
 
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+On Tue, 10 Jul 2018 18:44:51 +0100 <broonie@kernel.org> wrote:
+
+> On Tue, Jul 10, 2018 at 10:27:17AM +0900, Kunihiko Hayashi wrote:
+> 
+> > +static int uniphier_regulator_enable(struct regulator_dev *rdev)
+> > +{
+> > +	struct uniphier_regulator_priv *priv = rdev_get_drvdata(rdev);
+> > +
+> > +	return regmap_update_bits(priv->regmap, rdev->desc->enable_reg,
+> > +				  rdev->desc->enable_mask,
+> > +				  rdev->desc->enable_val);
+> > +}
+> 
+> This is just regulator_enable_regmap() isn't it?  Same for disable,
+> unless I'm missing something (which is possible).
+
+Exactly, it's reasonable to replace this with the helper function.
+I'll check and apply it.
+
+> > +static int uniphier_regulator_is_enabled(struct regulator_dev *rdev)
+> > +{
+> > +	struct uniphier_regulator_priv *priv = rdev_get_drvdata(rdev);
+> > +	unsigned int val;
+> > +	int ret = -EINVAL;
+> > +
+> > +	regmap_read(priv->regmap, rdev->desc->enable_reg, &val);
+> > +	val &= rdev->desc->enable_mask;
+> > +
+> > +	if (val == rdev->desc->enable_val)
+> > +		ret = 1;
+> > +	else if (val == rdev->desc->disable_val)
+> > +		ret = 0;
+> > +
+> > +	return ret;
+> > +}
+> 
+> This isn't *quite* regulator_is_enabled_regmap() as it explicitly checks
+> if the disable value is set and errors otherwise which would be a good
+> fix for that.  Could you do a patch for that?
+
+Although I'm worried that the register have a value that is neither
+enable_val or disable_val, the "is_enabled" function returns whether
+the regulator is enabled or not, so I can apply regulator_is_enabled_regmap().
+I'll apply it in v3.
+
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
