@@ -1,191 +1,78 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 01/19] mmc: mmci: regroup and define dma operations
-Date: Wed, 11 Jul 2018 14:16:00 +0200
-Message-ID: <CAPDyKFo0q5Yps1whPmaUQJAV3tXx91WPmxtMF_ov43qP=djQfg@mail.gmail.com>
-References: <1528809280-31116-1-git-send-email-ludovic.Barre@st.com>
- <1528809280-31116-2-git-send-email-ludovic.Barre@st.com> <CAPDyKFpt5HUeUqaoS9icDodM+r64jB9vQ=zTecO0tuBv=TtOXg@mail.gmail.com>
- <d93e6886-1dee-7915-459f-466a54d0c242@st.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH 02/14] dmaengine: dma-jz4780: Separate chan/ctrl registers
+Date: Wed, 11 Jul 2018 17:46:55 +0530
+Message-ID: <20180711121655.GS3219@vkoul-mobl>
+References: <20180703123214.23090-1-paul@crapouillou.net>
+ <20180703123214.23090-3-paul@crapouillou.net>
+ <20180709170359.GI22377@vkoul-mobl>
+ <1531237019.17118.1@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d93e6886-1dee-7915-459f-466a54d0c242@st.com>
+Content-Disposition: inline
+In-Reply-To: <1531237019.17118.1@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic BARRE <ludovic.barre@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On 11 July 2018 at 11:41, Ludovic BARRE <ludovic.barre@st.com> wrote:
->
->
-> On 07/05/2018 05:17 PM, Ulf Hansson wrote:
->>
->> On 12 June 2018 at 15:14, Ludovic Barre <ludovic.Barre@st.com> wrote:
->>>
->>> From: Ludovic Barre <ludovic.barre@st.com>
->>>
->>> Prepare mmci driver to manage dma interface by new property.
->>> This patch defines and regroups dma operations for mmci drivers.
->>> mmci_dma_XX prototypes are added to call member of mmci_dma_ops
->>> if not null. Based on legacy need, a mmci dma interface has been
->>> defined with:
->>> -mmci_dma_setup
->>> -mmci_dma_release
->>> -mmci_dma_pre_req
->>> -mmci_dma_start
->>> -mmci_dma_finalize
->>> -mmci_dma_post_req
->>> -mmci_dma_error
->>> -mmci_dma_get_next_data
->>
->>
->> As I suggested for one of the other patches, I would rather turn core
->> mmci functions into library functions, which can be either invoked
->> from variant callbacks or assigned directly to them.
->>
->> In other words, I would leave the functions that you move in this
->> patch to stay in mmci.c. Although some needs to be re-factored and we
->> also needs to make some of them available to be called from another
->> file, hence the functions needs to be shared via mmci.h rather than
->> being declared static.
->
->
-> In previous exchange mail "STM32MP1 SDMMC driver review"
-> we are said:
->
->>>> -dma variant =C3=A0 should fit in Qualcomm implementation, reuse (rena=
-me)
->>>> mmci_qcom_dml.c file and integrate ST dma in.
+On 10-07-18, 17:36, Paul Cercueil wrote:
 
-Apologize if I may have lead you in a wrong direction, that was not my inte=
-nt.
+> > >  @@ -3,7 +3,8 @@
+> > >   Required properties:
+> > > 
+> > >   - compatible: Should be "ingenic,jz4780-dma"
+> > >  -- reg: Should contain the DMA controller registers location and
+> > > length.
+> > >  +- reg: Should contain the DMA channel registers location and
+> > > length, followed
+> > >  +  by the DMA controller registers location and length.
+> > >   - interrupts: Should contain the interrupt specifier of the DMA
+> > > controller.
+> > >   - interrupt-parent: Should be the phandle of the interrupt
+> > > controller that
+> > >   - clocks: Should contain a clock specifier for the JZ4780 PDMA
+> > > clock.
+> > >  @@ -22,7 +23,8 @@ Example:
+> > > 
+> > >   dma: dma@13420000 {
+> > >   	compatible = "ingenic,jz4780-dma";
+> > >  -	reg = <0x13420000 0x10000>;
+> > >  +	reg = <0x13420000 0x400
+> > >  +	       0x13421000 0x40>;
+> > 
+> > Second should be optional or we break platform which may not have
+> > updated DT..
+> 
+> See comment below.
+> 
+> > >  -	jzdma->base = devm_ioremap_resource(dev, res);
+> > >  -	if (IS_ERR(jzdma->base))
+> > >  -		return PTR_ERR(jzdma->base);
+> > >  +	jzdma->chn_base = devm_ioremap_resource(dev, res);
+> > >  +	if (IS_ERR(jzdma->chn_base))
+> > >  +		return PTR_ERR(jzdma->chn_base);
+> > >  +
+> > >  +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> > >  +	if (!res) {
+> > >  +		dev_err(dev, "failed to get I/O memory\n");
+> > >  +		return -EINVAL;
+> > >  +	}
+> > 
+> > okay and this breaks if you happen to get probed on older DT. I think DT
+> > is treated as ABI so you need to continue support older method while
+> > finding if DT has split resources
+> 
+> See my response to PrasannaKumar. All the Ingenic-based boards do compile
+> the devicetree within the kernel, so I think it's still fine to add breaking
+> changes. I'll wait on @Rob to give his point of view on this, though.
+> 
+> (It's not something hard to change, but I'd like to know what's the policy
+> in that case. I have other DT-breaking patches to submit)
 
-However, by looking at $subject patch, your seems to be unnecessarily
-shuffling code around. I would like to avoid that.
+The policy is that DT is an ABI and should not break :)
 
->>>
->>> stm32 sdmmc has an internal dma, no need to use dmaengine API;
->>> So some modifications in mmci (pre/post request, mmci_dma_xx). perhaps
->>> should be done with an ops or not.
->>
->>Yes.
->>
->>The Qualcomm variant is also using an internal DMA, hence I thought
->>there may be something we could re-use, or at least have some new
->>common ops for.
->
-> It's not crystal clear for me.
-> Do you always agree with a dma ops which allow to address different
-> DMA transfer:
-> -with dmaengine API
-> -sdmmc idma, without dmaengine API
-> -...
+Who maintains Ingenic arch. MAINTAINERS doesn't tell me.
 
-If we can use a mmci ops callback to manage the variant differences,
-that would be perfect. That combined with making the existing DMA
-functions in mmci.c converted to "library" functions, which the mmci
-ops callbacks can call, in order to re-use code.
-
-When that isn't really suitable, we may need to add a "quirk" instead,
-which would be specific for that particular variant. Along the lines
-of what we already do for variant specifics inside mmci.c.
-
-I think we have to decide on case by case basis, what fits best.
-
-Hope this makes a better explanation. If not, please tell, and I can
-take an initial stab and post a patch to show you with code how I mean
-to move forward.
-
->
->
->>
->> Let me take a concrete example on how I would move forward, hopefully
->> that explains it a bit better. Please see below.
->>
->> [...]
->>
->>> -/*
->>> - * All the DMA operation mode stuff goes inside this ifdef.
->>> - * This assumes that you have a generic DMA device interface,
->>> - * no custom DMA interfaces are supported.
->>> - */
->>> -#ifdef CONFIG_DMA_ENGINE
->>> -static void mmci_dma_setup(struct mmci_host *host)
->>> -{
->>> -       const char *rxname, *txname;
->>> -       struct variant_data *variant =3D host->variant;
->>> -
->>> -       host->dma_rx_channel =3D
->>> dma_request_slave_channel(mmc_dev(host->mmc), "rx");
->>> -       host->dma_tx_channel =3D
->>> dma_request_slave_channel(mmc_dev(host->mmc), "tx");
->>> -
->>> -       /* initialize pre request cookie */
->>> -       host->next_data.cookie =3D 1;
->>> -
->>> -       /*
->>> -        * If only an RX channel is specified, the driver will
->>> -        * attempt to use it bidirectionally, however if it is
->>> -        * is specified but cannot be located, DMA will be disabled.
->>> -        */
->>> -       if (host->dma_rx_channel && !host->dma_tx_channel)
->>> -               host->dma_tx_channel =3D host->dma_rx_channel;
->>> -
->>> -       if (host->dma_rx_channel)
->>> -               rxname =3D dma_chan_name(host->dma_rx_channel);
->>> -       else
->>> -               rxname =3D "none";
->>> -
->>> -       if (host->dma_tx_channel)
->>> -               txname =3D dma_chan_name(host->dma_tx_channel);
->>> -       else
->>> -               txname =3D "none";
->>> -
->>> -       dev_info(mmc_dev(host->mmc), "DMA channels RX %s, TX %s\n",
->>> -                rxname, txname);
->>> -
->>> -       /*
->>> -        * Limit the maximum segment size in any SG entry according to
->>> -        * the parameters of the DMA engine device.
->>> -        */
->>> -       if (host->dma_tx_channel) {
->>> -               struct device *dev =3D host->dma_tx_channel->device->de=
-v;
->>> -               unsigned int max_seg_size =3D dma_get_max_seg_size(dev)=
-;
->>> -
->>> -               if (max_seg_size < host->mmc->max_seg_size)
->>> -                       host->mmc->max_seg_size =3D max_seg_size;
->>> -       }
->>> -       if (host->dma_rx_channel) {
->>> -               struct device *dev =3D host->dma_rx_channel->device->de=
-v;
->>> -               unsigned int max_seg_size =3D dma_get_max_seg_size(dev)=
-;
->>> -
->>> -               if (max_seg_size < host->mmc->max_seg_size)
->>> -                       host->mmc->max_seg_size =3D max_seg_size;
->>> -       }
->>
->>
->> Everything above shall be left as generic library function,
->> mmci_dma_setup() and I would share it via mmci.h and thus change it
->> from being static.
->>
->
-> each interfaces mmci_dma_XXX have very different needs depending
-> dma_ops (legacy, sdmmc idma)
-
-Right. This was just one example.
-
-If I understand, what you are suggesting is to make all of them being
-variant specific callbacks, so I assume that would solve the problems.
-Just to be clear, I have no problem with that.
-
-Although, that doesn't mean we can't re-use existing dma functions in
-mmci.c, when that makes sense.
-
-[...]
-
-Kind regards
-Uffe
+-- 
+~Vinod
