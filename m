@@ -1,30 +1,32 @@
-Return-Path: <SRS0=f8OU=J5=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <20180711144131.73552-1-chris.brandt@renesas.com> <20180711144131.73552-3-chris.brandt@renesas.com>
-In-Reply-To: <20180711144131.73552-3-chris.brandt@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 13 Jul 2018 17:50:01 +0200
-Message-ID: <CAMuHMdVCA0MrD4QRZb7VPR_Dqmghfd83j4WY_oZnfqVyx++rEw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] serial: sh-sci: Document r7s9210 bindings
-Content-Type: text/plain; charset="UTF-8"
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+Return-Path: <SRS0=m83C=J3=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH 2/2] serial: sh-sci: Document r7s9210 bindings
+Date: Wed, 11 Jul 2018 09:41:31 -0500
+Message-Id: <20180711144131.73552-3-chris.brandt@renesas.com>
+In-Reply-To: <20180711144131.73552-1-chris.brandt@renesas.com>
+References: <20180711144131.73552-1-chris.brandt@renesas.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Jul 11, 2018 at 4:42 PM Chris Brandt <chris.brandt@renesas.com> wrote:
-> Add R7S9210 (RZ/A2) support
->
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Add R7S9210 (RZ/A2) support
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+---
+ Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+index 106808b55b6d..5c002bce8f42 100644
+--- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
++++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+@@ -5,6 +5,7 @@ Required properties:
+   - compatible: Must contain one or more of the following:
+ 
+     - "renesas,scif-r7s72100" for R7S72100 (RZ/A1H) SCIF compatible UART.
++    - "renesas,scif-r7s9210" for R7S9210 (RZ/A2) SCIF compatible UART.
+     - "renesas,scifa-r8a73a4" for R8A73A4 (R-Mobile APE6) SCIFA compatible UART.
+     - "renesas,scifb-r8a73a4" for R8A73A4 (R-Mobile APE6) SCIFB compatible UART.
+     - "renesas,scifa-r8a7740" for R8A7740 (R-Mobile A1) SCIFA compatible UART.
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.16.1
