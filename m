@@ -1,238 +1,268 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v4 2/2] cpufreq: qcom-fw: Add support for QCOM cpufreq FW
- driver
-Date: Wed, 11 Jul 2018 13:37:17 -0700
-Message-ID: <20180711203717.GS129942@google.com>
-References: <1528801355-18719-1-git-send-email-tdas@codeaurora.org>
- <1528801355-18719-3-git-send-email-tdas@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 1/2] dt-binding: pinctrl: Add NPCM7xx pinctrl and GPIO
+ documentation
+Date: Wed, 11 Jul 2018 14:40:15 -0600
+Message-ID: <20180711204015.GA28359@rob-hp-laptop>
+References: <20180710125604.14458-1-tmaimon77@gmail.com>
+ <20180710125604.14458-2-tmaimon77@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1528801355-18719-3-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <20180710125604.14458-2-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: mark.rutland@arm.com, linus.walleij@linaro.org, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tue, Jun 12, 2018 at 04:32:35PM +0530, Taniya Das wrote:
-> The CPUfreq FW present in some QCOM chipsets offloads the steps necessary
-> for changing the frequency of CPUs. The driver implements the cpufreq
-> driver interface for this firmware.
+On Tue, Jul 10, 2018 at 03:56:03PM +0300, Tomer Maimon wrote:
+> Added device tree binding documentation for Nuvoton BMC
+> NPCM750/730/715/705 pinmux and GPIO controller.
 > 
-> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 > ---
->  drivers/cpufreq/Kconfig.arm       |   9 +
->  drivers/cpufreq/Makefile          |   1 +
->  drivers/cpufreq/qcom-cpufreq-fw.c | 336 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 346 insertions(+)
->  create mode 100644 drivers/cpufreq/qcom-cpufreq-fw.c
+>  .../bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt   | 216 +++++++++++++++++++++
+>  1 file changed, 216 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt
 > 
-> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-> index 52f5f1a..2683716 100644
-> --- a/drivers/cpufreq/Kconfig.arm
-> +++ b/drivers/cpufreq/Kconfig.arm
-> @@ -312,3 +312,12 @@ config ARM_PXA2xx_CPUFREQ
->  	  This add the CPUFreq driver support for Intel PXA2xx SOCs.
-> 
->  	  If in doubt, say N.
-> +
-> +config ARM_QCOM_CPUFREQ_FW
-> +	bool "QCOM CPUFreq FW driver"
-> +	help
-> +	 Support for the CPUFreq FW driver.
-> +	 The CPUfreq FW preset in some QCOM chipsets offloads the steps
-> +	 necessary for changing the frequency of CPUs. The driver
-> +	 implements the cpufreq driver interface for this firmware.
-> +	 Say Y if you want to support CPUFreq FW.
-> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-> index fb4a2ec..34691a2 100644
-> --- a/drivers/cpufreq/Makefile
-> +++ b/drivers/cpufreq/Makefile
-> @@ -86,6 +86,7 @@ obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)	+= tegra124-cpufreq.o
->  obj-$(CONFIG_ARM_TEGRA186_CPUFREQ)	+= tegra186-cpufreq.o
->  obj-$(CONFIG_ARM_TI_CPUFREQ)		+= ti-cpufreq.o
->  obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ)	+= vexpress-spc-cpufreq.o
-> +obj-$(CONFIG_ARM_QCOM_CPUFREQ_FW)	+= qcom-cpufreq-fw.o
-> 
-> 
->  ##################################################################################
-> diff --git a/drivers/cpufreq/qcom-cpufreq-fw.c b/drivers/cpufreq/qcom-cpufreq-fw.c
+> diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt
 > new file mode 100644
-> index 0000000..62f4452
+> index 000000000000..3a8f62ac7619
 > --- /dev/null
-> +++ b/drivers/cpufreq/qcom-cpufreq-fw.c
-> @@ -0,0 +1,336 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> + */
+> +++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt
+> @@ -0,0 +1,216 @@
+> +Nuvoton NPCM7XX Pin Controllers
 > +
-> +#include <linux/cpufreq.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_platform.h>
+> +The Nuvoton BMC NPCM7XX Pin Controller multi-function routed through
+> +the multiplexing block, Each pin supports GPIO functionality (GPIOx)
+> +and multiple functions that directly connect the pin to different
+> +hardware blocks.
 > +
-> +#define INIT_RATE			300000000UL
-> +#define XO_RATE				19200000UL
-> +#define LUT_MAX_ENTRIES			40U
-> +#define CORE_COUNT_VAL(val)		(((val) & (GENMASK(18, 16))) >> 16)
-> +#define LUT_ROW_SIZE			32
+> +Required properties:
+> +- #address-cells : should be 1.
+> +- #size-cells	 : should be 1.
+> +- compatible	 : "nuvoton,npcm750-pinctrl" for Poleg NPCM7XX.
+> +- ranges	 : defines mapping ranges between pin controller node (parent)
+> +			to GPIO bank node (children).
 > +
-> +struct cpufreq_qcom {
-> +	struct cpufreq_frequency_table *table;
-> +	struct device *dev;
-> +	void __iomem *perf_base;
-> +	void __iomem *lut_base;
-> +	cpumask_t related_cpus;
-> +	unsigned int max_cores;
+> +=== GPIO Bank Subnode ===
+> +
+> +The NPCM7XX has 8 GPIO Banks each GPIO bank support 32 GPIO.
 
-Why *max*_cores? This seems to be the number of CPUs in a cluster and
-qcom_read_lut() expects the core count read from the LUT to match
-exactly.
+s/support/supports/
 
-> +static int qcom_read_lut(struct platform_device *pdev,
-> +			 struct cpufreq_qcom *c)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	u32 data, src, lval, i, core_count, prev_cc, prev_freq, cur_freq;
 > +
-> +	c->table = devm_kcalloc(dev, LUT_MAX_ENTRIES + 1,
-> +				sizeof(*c->table), GFP_KERNEL);
-> +	if (!c->table)
-> +		return -ENOMEM;
+> +Required GPIO Bank subnode-properties:
+> +- reg 			: specifies physical base address and size of the GPIO
+> +				bank registers.
+> +- gpio-controller	: Marks the device node as a GPIO controller.
+> +- #gpio-cells		: Must be <2>. The first cell is the gpio pin number
+> +				and the second cell is used for optional parameters.
+> +- interrupts		: contain the GPIO bank interrupt with flags for falling edge.
+> +- gpio-ranges		: defines the range of pins managed by the GPIO bank controller.
 > +
-> +	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-> +		data = readl_relaxed(c->lut_base + i * LUT_ROW_SIZE);
-> +		src = ((data & GENMASK(31, 30)) >> 30);
-> +		lval = (data & GENMASK(7, 0));
-> +		core_count = CORE_COUNT_VAL(data);
-> +
-> +		if (!src)
-> +			c->table[i].frequency = INIT_RATE / 1000;
-> +		else
-> +			c->table[i].frequency = XO_RATE * lval / 1000;
+> +For example, GPIO bank subnodes like the following:
+> +	gpio0: gpio@f0010000 {
 
-nit: any particular reason to use negative logic here? Why not check
-for 'src[ != NULL]', which also seems to be the more common case.
+Might want to have a compatible string here. Makes it easier to iterate 
+thru gpio nodes if needed.
 
-> +static int qcom_get_related_cpus(struct device_node *np, struct cpumask *m)
-> +{
-> +	struct device_node *cpu_np, *freq_np;
-> +	int cpu;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		reg = <0x0 0x80>;
+> +		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
+> +		gpio-ranges = <&pinctrl 0 0 32>;
+> +	};
 > +
-> +	for_each_possible_cpu(cpu) {
-> +		cpu_np = of_cpu_device_node_get(cpu);
-> +		if (!cpu_np)
-> +			continue;
-> +		freq_np = of_parse_phandle(cpu_np, "qcom,freq-domain", 0);
-> +		if (!freq_np)
-> +			continue;
-> +		if (freq_np == np)
-> +			cpumask_set_cpu(cpu, m);
+> +=== Pin Mux Subnode ===
+> +
+> +- pin: A string containing the name of the pin
+> +	An array of strings, each string containing the name of a pin.
+> +	These pin are used for selecting pin configuration.
+> +
+> +The following are the list of pins available:
+> +	"GPIO0/IOX1DI", "GPIO1/IOX1LD",	"GPIO2/IOX1CK", "GPIO3/IOX1D0",
+> +	"GPIO4/IOX2DI/SMB1DSDA", "GPIO5/IOX2LD/SMB1DSCL", "GPIO6/IOX2CK/SMB2DSDA",
+> +	"GPIO7/IOX2D0/SMB2DSCL", "GPIO8/LKGPO1", "GPIO9/LKGPO2", "GPIO10/IOXHLD",
+> +	"GPIO11/IOXHCK", "GPIO12/GSPICK/SMB5BSCL", "GPIO13/GSPIDO/SMB5BSDA",
+> +	"GPIO14/GSPIDI/SMB5CSCL", "GPIO15/GSPICS/SMB5CSDA", "GPIO16/LKGPO0",
+> +	"GPIO17/PSPI2DI/SMB4DEN","GPIO18/PSPI2D0/SMB4BSDA", "GPIO19/PSPI2CK/SMB4BSCL",
+> +	"GPIO20/SMB4CSDA/SMB15SDA", "GPIO21/SMB4CSCL/SMB15SCL", "GPIO22/SMB4DSDA/SMB14SDA",
+> +	"GPIO23/SMB4DSCL/SMB14SCL", "GPIO24/IOXHDO", "GPIO25/IOXHDI", "GPIO26/SMB5SDA",
+> +	"GPIO27/SMB5SCL", "GPIO28/SMB4SDA", "GPIO29/SMB4SCL", "GPIO30/SMB3SDA",
+> +	"GPIO31/SMB3SCL", "GPIO32/nSPI0CS1","SPI0D2", "SPI0D3", "GPIO37/SMB3CSDA",
+> +	"GPIO38/SMB3CSCL", "GPIO39/SMB3BSDA", "GPIO40/SMB3BSCL", "GPIO41/BSPRXD",
+> +	"GPO42/BSPTXD/STRAP11", "GPIO43/RXD1/JTMS2/BU1RXD", "GPIO44/nCTS1/JTDI2/BU1CTS",
+> +	"GPIO45/nDCD1/JTDO2", "GPIO46/nDSR1/JTCK2", "GPIO47/nRI1/JCP_RDY2",
+> +	"GPIO48/TXD2/BSPTXD", "GPIO49/RXD2/BSPRXD", "GPIO50/nCTS2", "GPO51/nRTS2/STRAP2",
+> +	"GPIO52/nDCD2", "GPO53/nDTR2_BOUT2/STRAP1", "GPIO54/nDSR2", "GPIO55/nRI2",
+> +	"GPIO56/R1RXERR", "GPIO57/R1MDC", "GPIO58/R1MDIO", "GPIO59/SMB3DSDA",
+> +	"GPIO60/SMB3DSCL", "GPO61/nDTR1_BOUT1/STRAP6", "GPO62/nRTST1/STRAP5",
+> +	"GPO63/TXD1/STRAP4", "GPIO64/FANIN0", "GPIO65/FANIN1", "GPIO66/FANIN2",
+> +	"GPIO67/FANIN3", "GPIO68/FANIN4", "GPIO69/FANIN5", "GPIO70/FANIN6", "GPIO71/FANIN7",
+> +	"GPIO72/FANIN8", "GPIO73/FANIN9", "GPIO74/FANIN10", "GPIO75/FANIN11",
+> +	"GPIO76/FANIN12", "GPIO77/FANIN13","GPIO78/FANIN14", "GPIO79/FANIN15",
+> +	"GPIO80/PWM0", "GPIO81/PWM1", "GPIO82/PWM2", "GPIO83/PWM3", "GPIO84/R2TXD0",
+> +	"GPIO85/R2TXD1", "GPIO86/R2TXEN", "GPIO87/R2RXD0", "GPIO88/R2RXD1", "GPIO89/R2CRSDV",
+> +	"GPIO90/R2RXERR", "GPIO91/R2MDC", "GPIO92/R2MDIO", "GPIO93/GA20/SMB5DSCL",
+> +	"GPIO94/nKBRST/SMB5DSDA", "GPIO95/nLRESET/nESPIRST", "GPIO96/RG1TXD0",
+> +	"GPIO97/RG1TXD1", "GPIO98/RG1TXD2", "GPIO99/RG1TXD3","GPIO100/RG1TXC",
+> +	"GPIO101/RG1TXCTL", "GPIO102/RG1RXD0", "GPIO103/RG1RXD1", "GPIO104/RG1RXD2",
+> +	"GPIO105/RG1RXD3", "GPIO106/RG1RXC", "GPIO107/RG1RXCTL", "GPIO108/RG1MDC",
+> +	"GPIO109/RG1MDIO", "GPIO110/RG2TXD0/DDRV0", "GPIO111/RG2TXD1/DDRV1",
+> +	"GPIO112/RG2TXD2/DDRV2", "GPIO113/RG2TXD3/DDRV3", "GPIO114/SMB0SCL",
+> +	"GPIO115/SMB0SDA", "GPIO116/SMB1SCL", "GPIO117/SMB1SDA", "GPIO118/SMB2SCL",
+> +	"GPIO119/SMB2SDA", "GPIO120/SMB2CSDA", "GPIO121/SMB2CSCL", "GPIO122/SMB2BSDA",
+> +	"GPIO123/SMB2BSCL", "GPIO124/SMB1CSDA", "GPIO125/SMB1CSCL","GPIO126/SMB1BSDA",
+> +	"GPIO127/SMB1BSCL", "GPIO128/SMB8SCL", "GPIO129/SMB8SDA", "GPIO130/SMB9SCL",
+> +	"GPIO131/SMB9SDA", "GPIO132/SMB10SCL", "GPIO133/SMB10SDA","GPIO134/SMB11SCL",
+> +	"GPIO135/SMB11SDA", "GPIO136/SD1DT0", "GPIO137/SD1DT1", "GPIO138/SD1DT2",
+> +	"GPIO139/SD1DT3", "GPIO140/SD1CLK", "GPIO141/SD1WP", "GPIO142/SD1CMD",
+> +	"GPIO143/SD1CD/SD1PWR", "GPIO144/PWM4",	"GPIO145/PWM5",	"GPIO146/PWM6",
+> +	"GPIO147/PWM7",	"GPIO148/MMCDT4", "GPIO149/MMCDT5", "GPIO150/MMCDT6",
+> +	"GPIO151/MMCDT7", "GPIO152/MMCCLK", "GPIO153/MMCWP", "GPIO154/MMCCMD",
+> +	"GPIO155/nMMCCD/nMMCRST", "GPIO156/MMCDT0", "GPIO157/MMCDT1", "GPIO158/MMCDT2",
+> +	"GPIO159/MMCDT3", "GPIO160/CLKOUT/RNGOSCOUT", "GPIO161/nLFRAME/nESPICS",
+> +	"GPIO162/SERIRQ", "GPIO163/LCLK/ESPICLK", "GPIO164/LAD0/ESPI_IO0",
+> +	"GPIO165/LAD1/ESPI_IO1", "GPIO166/LAD2/ESPI_IO2", "GPIO167/LAD3/ESPI_IO3",
+> +	"GPIO168/nCLKRUN/nESPIALERT", "GPIO169/nSCIPME", "GPIO170/nSMI", "GPIO171/SMB6SCL",
+> +	"GPIO172/SMB6SDA", "GPIO173/SMB7SCL", "GPIO174/SMB7SDA", "GPIO175/PSPI1CK/FANIN19",
+> +	"GPIO176/PSPI1DO/FANIN18", "GPIO177/PSPI1DI/FANIN17", "GPIO178/R1TXD0",
+> +	"GPIO179/R1TXD1", "GPIO180/R1TXEN", "GPIO181/R1RXD0", "GPIO182/R1RXD1",
+> +	"GPIO183/SPI3CK", "GPO184/SPI3D0/STRAP9", "GPO185/SPI3D1/STRAP10",
+> +	"GPIO186/nSPI3CS0", "GPIO187/nSPI3CS1",	"GPIO188/SPI3D2/nSPI3CS2",
+> +	"GPIO189/SPI3D3/nSPI3CS3", "GPIO190/nPRD_SMI", "GPIO191", "GPIO192", "GPIO193/R1CRSDV",
+> +	"GPIO194/SMB0BSCL", "GPIO195/SMB0BSDA", "GPIO196/SMB0CSCL", "GPIO197/SMB0DEN",
+> +	"GPIO198/SMB0DSDA", "GPIO199/SMB0DSCL", "GPIO200/R2CK", "GPIO201/R1CK",
+> +	"GPIO202/SMB0CSDA", "GPIO203/FANIN16", "GPIO204/DDC2SCL", "GPIO205/DDC2SDA",
+> +	"GPIO206/HSYNC2", "GPIO207/VSYNC2", "GPIO208/RG2TXC/DVCK", "GPIO209/RG2TXCTL/DDRV4",
+> +	"GPIO210/RG2RXD0/DDRV5", "GPIO211/RG2RXD1/DDRV6", "GPIO212/RG2RXD2/DDRV7",
+> +	"GPIO213/RG2RXD3/DDRV8", "GPIO214/RG2RXC/DDRV9", "GPIO215/RG2RXCTL/DDRV10",
+> +	"GPIO216/RG2MDC/DDRV11", "GPIO217/RG2MDIO/DVHSYNC", "GPIO218/nWDO1",
+> +	"GPIO219/nWDO2", "GPIO220/SMB12SCL", "GPIO221/SMB12SDA", "GPIO222/SMB13SCL",
+> +	"GPIO223/SMB13SDA", "GPIO224/SPIXCK", "GPO225/SPIXD0/STRAP12", "GPO226/SPIXD1/STRAP13",
+> +	"GPIO227/nSPIXCS0", "GPIO228/nSPIXCS1",	"GPO229/SPIXD2/STRAP3", "GPIO230/SPIXD3",
+> +	"GPIO231/nCLKREQ", "GPI255/DACOSEL"
+> +
+> +Optional Properties:
+> + bias-disable, bias-pull-down, bias-pull-up, input-enable,
+> + input-disable, output-high, output-low, drive-push-pull,
+> + drive-open-drain, input-debounce, slew-rate, drive-strength
+> +
+> + slew-rate valid arguments are:
+> +				<0> - slow
+> +				<1> - fast
+> + drive-strength valid arguments are:
+> +				<2> - 2mA
+> +				<4> - 4mA
+> +				<8> - 8mA
+> +				<12> - 12mA
+> +				<16> - 16mA
+> +				<24> - 24mA
+> +
+> +For example, pinctrl might have pinmux subnodes like the following:
+> +
+> +	gpio0_iox1d1_pin: gpio0_iox1d1_pin {
+> +		pins = "GPIO0/IOX1DI";
+> +		output-high;
+> +	};
+> +	gpio0_iox1ck_pin: gpio0_iox1ck_pin {
+> +		pins = "GPIO2/IOX1CK";
+> +		output_high;
+> +	};
+> +
+> +=== Pin Group Subnode ===
+> +
+> +Required pin group subnode-properties:
+> +- groups : A string containing the name of the group to mux.
+> +- function: A string containing the name of the function to mux to the
+> +  group.
+> +
+> +The following are the list of the available groups and functions :
+> +	smb0, smb0b, smb0c, smb0d, smb0den, smb1, smb1b, smb1c, smb1d,
+> +	smb2, smb2b, smb2c, smb2d, smb3, smb3b, smb3c, smb3d, smb4, smb4b,
+> +	smb4c, smb4d, smb4den, smb5, smb5b, smb5c, smb5d, ga20kbc, smb6,
+> +	smb7, smb8, smb9, smb10, smb11, smb12, smb13, smb14, smb15, fanin0,
+> +	fanin1, fanin2, fanin3, fanin4, fanin5, fanin6, fanin7, fanin8,
+> +	fanin9, fanin10, fanin11 fanin12 fanin13, fanin14, fanin15, faninx,
+> +	pwm0, pwm1, pwm2, pwm3, pwm4, pwm5, pwm6, pwm7, rg1, rg1mdio, rg2,
+> +	rg2mdio, ddr, uart1, uart2, bmcuart0a, bmcuart0b, bmcuart1, iox1,
+> +	iox2, ioxh, gspi, mmc, mmcwp, mmccd, mmcrst, mmc8, r1, r1err, r1md,
+> +	r2, r2err, r2md, sd1, sd1pwr, wdog1, wdog2, scipme, sci, serirq,
+> +	jtag2, spix, spixcs1, pspi1, pspi2, ddc, clkreq, clkout, spi3, spi3cs1,
+> +	spi3quad, spi3cs2, spi3cs3, spi0cs1, lpc, lpcclk, espi, lkgpo0, lkgpo1,
+> +	lkgpo2, nprd_smi
+> +
+> +For example, pinctrl might have group subnodes like the following:
+> +	r1err_pins: r1err_pins {
+> +		groups = "r1err";
+> +		function = "r1err";
+> +	};
+> +	r1md_pins: r1md_pins {
+> +		groups = "r1md";
+> +		function = "r1md";
+> +	};
+> +	r1_pins: r1_pins {
+> +		groups = "r1";
+> +		function = "r1";
+> +	};
+> +
+> +Examples
+> +========
+> +pinctrl: pinctrl@0 {
 
-missing 'of_node_put(cpu_np)'. You might want to do it at the end of
-the loop and use a 'goto' above instead of 'continue'.
+pinctrl@f0010000
 
-> +static int qcom_cpu_resources_init(struct platform_device *pdev,
-> +				   struct device_node *np, unsigned int cpu)
-> +{
-> +	struct cpufreq_qcom *c;
-> +	struct resource res;
-> +	struct device *dev = &pdev->dev;
-> +	void __iomem *en_base;
-> +	int index, ret;
-> +
-> +	c = devm_kzalloc(dev, sizeof(*c), GFP_KERNEL);
-> +	if (!c)
-> +		return -ENOMEM;
-> +
-> +	index = of_property_match_string(np, "reg-names", "enable");
-> +	if (index < 0)
-> +		return index;
-> +
-> +	if (of_address_to_resource(np, index, &res))
-> +		return -ENOMEM;
-> +
-> +	en_base = devm_ioremap(dev, res.start, resource_size(&res));
-> +	if (!en_base) {
-> +		dev_err(dev, "Unable to map %s enable-base\n", np->name);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	/* FW should be in enabled state to proceed */
-> +	if (!(readl_relaxed(en_base) & 0x1)) {
-> +		dev_err(dev, "%s firmware not enabled\n", np->name);
-> +		return -ENODEV;
-> +	}
-> +	devm_iounmap(&pdev->dev, en_base);
-> +
-> +	index = of_property_match_string(np, "reg-names", "perf");
-> +	if (index < 0)
-> +		return index;
-> +
-> +	if (of_address_to_resource(np, index, &res))
-> +		return -ENOMEM;
-> +
-> +	c->perf_base = devm_ioremap(dev, res.start, resource_size(&res));
-> +	if (!c->perf_base) {
-> +		dev_err(dev, "Unable to map %s perf-base\n", np->name);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	index = of_property_match_string(np, "reg-names", "lut");
-> +	if (index < 0)
-> +		return index;
-> +
-> +	if (of_address_to_resource(np, index, &res))
-> +		return -ENOMEM;
-> +
-> +	c->lut_base = devm_ioremap(dev, res.start, resource_size(&res));
-> +	if (!c->lut_base) {
-> +		dev_err(dev, "Unable to map %s lut-base\n", np->name);
-> +		return -ENOMEM;
-> +	}
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	compatible = "nuvoton,npcm750-pinctrl", "syscon", "simple-mfd";
 
-The of_property_match_string() - of_address_to_resource() -
-devm_ioremap() pattern is repeated 3x. In case the binding doesn't
-change (there is discussion on the DT patch) you might want to move
-this to a helper.
+syscon and simple-mfd aren't documented and shouldn't be needed.
 
-> +static int qcom_resources_init(struct platform_device *pdev)
-> +{
-> +	struct device_node *np, *cpu_np;
-> +	unsigned int cpu;
-> +	int ret;
+> +	ranges = <0 0xf0010000 0x8000>;
 > +
-> +	for_each_possible_cpu(cpu) {
-> +		cpu_np = of_cpu_device_node_get(cpu);
-> +		if (!cpu_np) {
-> +			dev_err(&pdev->dev, "Failed to get cpu %d device\n",
-> +				cpu);
-> +			continue;
-> +		}
+> +	gpio0: gpio@f0010000 {
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		reg = <0x0 0x80>;
+> +		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
+> +		gpio-ranges = <&pinctrl 0 0 32>;
+> +	};
 > +
-> +		np = of_parse_phandle(cpu_np, "qcom,freq-domain", 0);
-> +		if (!np) {
-> +			dev_err(&pdev->dev, "Failed to get freq-domain device\n");
-			of_node_put(cpu_np);
-> +			return -EINVAL;
-> +		}
+> +	....
 > +
-> +		of_node_put(cpu_np);
+> +	gpio7: gpio@f0017000 {
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		reg = <0x7000 0x80>;
+> +		interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
+> +		gpio-ranges = <&pinctrl 0 224 32>;
+> +	};
 > +
-> +		ret = qcom_cpu_resources_init(pdev, np, cpu);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
+> +	gpio0_iox1d1_pin: gpio0_iox1d1_pin {
 
-Cheers
+Use '-' rather than '_' in node names.
 
-Matthias
+> +		pins = "GPIO0/IOX1DI";
+> +		output-high;
+> +	};
+> +
+> +	iox1_pins: iox1_pins {
+> +		groups = "iox1";
+> +		function = "iox1";
+> +	};
+> +	iox2_pins: iox2_pins {
+> +		groups = "iox2";
+> +		function = "iox2";
+> +	};
+> +
+> +	....
+> +
+> +	clkreq_pins: clkreq_pins {
+> +		groups = "clkreq";
+> +		function = "clkreq";
+> +	};
+> +};
+> \ No newline at end of file
+
+^^^
