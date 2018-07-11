@@ -1,92 +1,263 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 00/18] Allwinner R40 HDMI refactoring
-Date: Wed, 11 Jul 2018 10:30:36 +0200
-Message-ID: <20180711083036.7attjq4hm5ay5gmn@flea>
-References: <20180710203511.18454-1-jernej.skrabec@siol.net>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 5/6] dt-bindings: Add Tegra PMC pad configuration bindings
+Date: Wed, 11 Jul 2018 09:32:08 +0100
+Message-ID: <d0d5d100-8cc6-2e8d-06c1-1ec87e1f3f2e@nvidia.com>
+References: <1531226879-11802-1-git-send-email-avienamo@nvidia.com>
+ <1531227266-12648-1-git-send-email-avienamo@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0934681799=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180710203511.18454-1-jernej.skrabec@siol.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1531227266-12648-1-git-send-email-avienamo@nvidia.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Aapo Vienamo <avienamo@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Mikko Perttunen <mperttunen@nvidia.com>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============0934681799==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yshce36do3zzws6q"
-Content-Disposition: inline
+On 10/07/18 13:54, Aapo Vienamo wrote:
+> Document the pinctrl bindings used by the PMC driver for performing pad
+> configuration. Both nvidia,tegra186-pmc.txt and nvidia,tegra20-pmc.txt
+> are modified as they both cover SoC generations for which these bindings
+> apply.
+> 
+> Add a header defining Tegra PMC pad voltage configurations.
+> 
+> Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+> ---
+>  .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     | 84 +++++++++++++++++++
+>  .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 95 ++++++++++++++++++++++
+>  include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h | 18 ++++
+>  3 files changed, 197 insertions(+)
+>  create mode 100644 include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
+> index 5a3bf7c..baa31f7 100644
+> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
+> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
+> @@ -34,3 +34,87 @@ Board DTS:
+>  	pmc@c360000 {
+>  		nvidia,invert-interrupt;
+>  	};
+> +
+> +== Pad Control Nodes ==
+> +
+> +The PMC can be used to set pad power state and voltage configuration.
+> +The pad configuration is done via the pinctrl framework. The driver
+> +implements power-source, low-power-enable, and low-power-disable pinconf
+> +pin configuration node properties. Each pinctrl pin corresponds to a
+> +single Tegra PMC pad. Thus, in the following sections of this document
+> +pin refers to the pinctrl frameworks notion of a Tegra PMC pad.
+> +
+> +The pad configuration state nodes are placed under the pmc node and they
+> +are referred to by the pinctrl client device properties. For more
+> +information see the examples presented later and
+> +Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt.
+> +
+> +The values accepted by power-source property are
+> +TEGRA_IO_PAD_VOLTAGE_1V8 and TEGRA_IO_PAD_VOLTAGE_3V3, which are defined
+> +in dt-bindings/pinctrl/pinctrl-tegra-io-pad.h.
+> +
+> +Following pinctrl pin name strings are present on Tegra186:
+> +csia		csib		dsi		mipi-bias
+> +pex-clk-bias	pex-clk3	pex-clk2	pex-clk1
+> +usb0		usb1		usb2		usb-bias
+> +uart		audio		hsic		dbg
+> +hdmi-dp0	hdmi-dp1	pex-cntrl	sdmmc2-hv
+> +sdmmc4		cam		dsib		dsic
+> +dsid		csic		csid		csie
+> +dsif		spi		ufs		dmic-hv
+> +edp		sdmmc1-hv	sdmmc3-hv	conn
+> +audio-hv
+> +
+> +All of the listed Tegra186 pins support the low-power-enable and
+> +low-power-disable properties. The power-source property is supported
+> +following Tegra210 pins: sdmmc2-hv, dmic-hv, sdmmc1-hv, sdmmc3-hv, and
+> +audio-hv.
+> +
+> +Pad configuration state example:
+> +	pmc: pmc@7000e400 {
+> +		compatible = "nvidia,tegra186-pmc";
+> +		reg = <0 0x0c360000 0 0x10000>,
+> +		      <0 0x0c370000 0 0x10000>,
+> +		      <0 0x0c380000 0 0x10000>,
+> +		      <0 0x0c390000 0 0x10000>;
+> +		reg-names = "pmc", "wake", "aotag", "scratch";
+> +
+> +		...
+> +
+> +		sdmmc1_3v3: sdmmc1-3v3 {
+> +			pins = "sdmmc1-hv";
+> +			power-source = <TEGRA_IO_PAD_VOLTAGE_3V3>;
+> +		};
+> +
+> +		sdmmc1_1v8: sdmmc1-1v8 {
+> +			pins = "sdmmc1-hv";
+> +			power-source = <TEGRA_IO_PAD_VOLTAGE_1V8>;
+> +		};
+> +
+> +		hdmi_off: hdmi-off {
+> +			pins = "hdmi";
+> +			low-power-enable;
+> +		}
+> +
+> +		hdmi_on: hdmi-on {
+> +			pins = "hdmi";
+> +			low-power-disable;
+> +		}
+> +	};
+> +
+> +Pinctrl client example:
+> +	sdmmc1: sdhci@3400000 {
+> +		...
+> +		pinctrl-names = "sdmmc-3v3", "sdmmc-1v8";
+> +		pinctrl-0 = <&sdmmc1_3v3>;
+> +		pinctrl-1 = <&sdmmc1_1v8>;
+> +	};
+> +
+> +	...
+> +
+> +	sor0: sor@15540000 {
+> +		...
+> +		pinctrl-0 = <&hdmi_off>;
+> +		pinctrl-1 = <&hdmi_on>;
+> +		pinctrl-names = "hdmi-on", "hdmi-off";
+> +	};
+> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+> index a74b37b..d50a505 100644
+> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+> @@ -195,3 +195,98 @@ Example:
+>  		power-domains = <&pd_audio>;
+>  		...
+>  	};
+> +
+> +== Pad Control Nodes ==
+> +
+> +The PMC can be used to set pad power state and voltage configuration.
+> +This functionality is present on SoCs from Tegra124 onwards. The pad
+> +configuration is done via the pinctrl framework. The driver implements
+> +power-source, low-power-enable, and low-power-disable pinconf pin
+> +configuration node properties. Each pinctrl pin corresponds to a single
+> +Tegra PMC pad. Thus, in the following sections of this document pin
+> +refers to the pinctrl frameworks notion of a Tegra PMC pad.
+> +
+> +The pad configuration state nodes are placed under the pmc node and they
+> +are referred to by the pinctrl client device properties. For more
+> +information see the examples presented later and
+> +Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt.
+> +
+> +The values accepted by power-source property are
+> +TEGRA_IO_PAD_VOLTAGE_1V8 and TEGRA_IO_PAD_VOLTAGE_3V3, which are defined
+> +in dt-bindings/pinctrl/pinctrl-tegra-io-pad.h.
+> +
+> +Following pinctrl pin name strings are present on Tegra124 and Tegra132:
+> +audio		bb		cam		comp
+> +csia		csb		cse		dsi
+> +dsib		dsic		dsid		hdmi
+> +hsic		hv		lvds		mipi-bias
+> +nand		pex-bias	pex-clk1	pex-clk2
+> +pex-cntrl	sdmmc1		sdmmc3		sdmmc4
+> +sys_ddc		uart		usb0		usb1
+> +usb2		usb_bias
+> +
+> +All of the listed Tegra124 and Tegra132 pins support the
+> +low-power-enable and low-power-disable properties. None of the pins
+> +support the power-source property.
+> +
+> +Following pinctrl pin name strings are present on Tegra210:
+> +audio		audio-hv	cam		csia
+> +csib		csic		csid		csie
+> +csif		dbg		debug-nonao	dmic
+> +dp		dsi		dsib		dsic
+> +dsid		emmc		emmc2		gpio
+> +hdmi		hsic		lvds		mipi-bias
+> +pex-bias	pex-clk1	pex-clk2	pex-cntrl
+> +sdmmc1		sdmmc3		spi		spi-hv
+> +uart		usb0		usb1		usb2
+> +usb3		usb-bias
+> +
+> +All of the listed Tegra210 pins except pex-cntrl support the
+> +low-power-enable and low-power-disable properties. The power-source
+> +property is supported following Tegra210 pins: audio, audio-hv, cam,
+> +dbg, dmic, gpio, pex-cntrl, sdmmc1, sdmmc3, spi, spi-hv, and uart.
+> +
+> +Pad configuration state example:
+> +	pmc: pmc@7000e400 {
+> +		compatible = "nvidia,tegra210-pmc";
+> +		reg = <0x0 0x7000e400 0x0 0x400>;
+> +		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
+> +		clock-names = "pclk", "clk32k_in";
+> +
+> +		...
+> +
+> +		sdmmc1_3v3: sdmmc1-3v3 {
+> +			pins = "sdmmc1";
+> +			power-source = <TEGRA_IO_PAD_VOLTAGE_3V3>;
+> +		};
+> +
+> +		sdmmc1_1v8: sdmmc1-1v8 {
+> +			pins = "sdmmc1";
+> +			power-source = <TEGRA_IO_PAD_VOLTAGE_1V8>;
+> +		};
+> +
+> +		hdmi_off: hdmi-off {
+> +			pins = "hdmi";
+> +			low-power-enable;
+> +		}
+> +
+> +		hdmi_on: hdmi-on {
+> +			pins = "hdmi";
+> +			low-power-disable;
+> +		}
+> +	};
+> +
+> +Pinctrl client example:
+> +	sdmmc1: sdhci@700b0000 {
+> +		...
+> +		pinctrl-names = "sdmmc-3v3", "sdmmc-1v8";
+> +		pinctrl-0 = <&sdmmc1_3v3>;
+> +		pinctrl-1 = <&sdmmc1_1v8>;
+> +	};
+> +	...
+> +	sor@54540000 {
+> +		...
+> +		pinctrl-0 = <&hdmi_off>;
+> +		pinctrl-1 = <&hdmi_on>;
+> +		pinctrl-names = "hdmi-on", "hdmi-off";
+> +	};
+> diff --git a/include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h b/include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h
+> new file mode 100644
+> index 0000000..20f4340
+> --- /dev/null
+> +++ b/include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h
+> @@ -0,0 +1,18 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * pinctrl-tegra-io-pad.h: Tegra I/O pad source voltage configuration constants
+> + * pinctrl bindings.
+> + *
+> + * Copyright (c) 2018, NVIDIA CORPORATION.  All rights reserved.
+> + *
+> + * Author: Aapo Vienamo <avienamo@nvidia.com>
+> + */
+> +
+> +#ifndef _DT_BINDINGS_PINCTRL_TEGRA_IO_PAD_H
+> +#define _DT_BINDINGS_PINCTRL_TEGRA_IO_PAD_H
+> +
+> +/* Voltage levels of the I/O pad's source rail */
+> +#define TEGRA_IO_PAD_VOLTAGE_1V8	0
+> +#define TEGRA_IO_PAD_VOLTAGE_3V3	1
+> +
+> +#endif
 
+Looks good to me.
 
---yshce36do3zzws6q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 
-On Tue, Jul 10, 2018 at 10:34:53PM +0200, Jernej Skrabec wrote:
-> This series fixes several issues found in R40 HDMI patch series after
-> it was applied. Conversation can be found here:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2018-June/586011.ht=
-ml
->=20
-> Patches are based on latest linux-next (next-20180710) and are ordered
-> in such way that they don't break R40 HDMI at any time. Because of that
-> I suggest that whole series goes through drm-misc to preserve that order.
->=20
-> I also tested those patches on H3 to make sure it doesn't break other
-> platforms. However, it would be nice to test for regressions also on
-> older SoCs (with DE1).
->=20
-> Best regards,
-> Jernej
-
-Applied all patches but the patch 10, thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---yshce36do3zzws6q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAltFwCsACgkQ0rTAlCFN
-r3Q4sxAAkIOSDcrUdytnfHPJ0n99IJRimkUTwMFyKEGTrYoyr6ODMxuVnO200zQ2
-eudqI2vuHRhxkkDXeSq5LCyYqhI2aYEF6Efyg5k/nX6C1ySgCME2ExXSwCVfDn+u
-MHBQn04IXTERwHeZT5RzBOd9Ys33YaYeDBNdzW9EL1sbAz55+wNT6Y7zxyOCeZV0
-KDZpbExJY9Sc/FB7gu9XEvEuzsVpzNkaLlupqnTFHSbu8US5eRnRhqhXBFpWrJYH
-I1SgzObx1/w7N5427O4QdmA4snjTQzozbWjgU0nnTeCYYAPbWS6uOk/oAGAcCY9c
-B1G0s0fLp6EjyFQWj12iubS/6reDhz3Zg2Yov3/YK3SyYv83E91MFg+gg1RLm940
-RcYoImg/n0JEHICYhduLKESrT2biwdAlLdUkOTXRckh2tADVByU/9q5cKcoP72KP
-rGmMOICBJ3POaKiUcdk2Q8e+1Dy087d3XgbyoHke62Tfe8UUPOLOrttrCEt0J78+
-vkCpF/n4stglxAQvXvlBXO3vx1WLHHuGs8R9QLAGV/9bM1cHo1doBirCaRr1i7pK
-vTXLhJOarfDK9u6IVBZRY8fv1nREf+F7qBA6wdZOqqCadvtuQFJL9/NbSg8FmPQD
-p5G+cfAUnKhENiHqzJy+O36sbIUqJTyejC5ZemhGyKNfLmwpxuM=
-=Os8I
------END PGP SIGNATURE-----
-
---yshce36do3zzws6q--
-
---===============0934681799==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0934681799==--
+Cheers
+Jon
+ 
+-- 
+nvpublic
