@@ -1,89 +1,55 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: Re: [PATCH 1/2] ARM: sun8i: h3: enable HDMI output
- on Banana Pi M2 Zero
-Date: Wed, 11 Jul 2018 23:19:00 +0800
-Message-ID: <2D440118-7036-4AA3-976C-A43116F459E7@aosc.io>
-References: <20180711132233.42301-1-icenowy@aosc.io> <20180711132233.42301-2-icenowy@aosc.io> <20180711150532.6gzm7krouriddreh@flea> <3039364.lZKhBVCAIj@jernej-laptop>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V4 2/5] dt-bindings: arm: fsl: add mu binding doc
+Date: Wed, 11 Jul 2018 09:09:35 -0600
+Message-ID: <20180711150935.GB27284@rob-hp-laptop>
+References: <1531061817-1980-1-git-send-email-aisheng.dong@nxp.com>
+ <1531061817-1980-3-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB657TDNAKGQEA5MSHIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <3039364.lZKhBVCAIj@jernej-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org=?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1531061817-1980-3-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dongas86@gmail.com, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Jul 08, 2018 at 10:56:54PM +0800, Dong Aisheng wrote:
+> The Messaging Unit module enables two processors within
+> the SoC to communicate and coordinate by passing messages
+> (e.g. data, status and control) through the MU interface.
+> 
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
+> v3->v4:
+>  * move into Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> v2->v3:
+>  * change to mailbox binding
+>    Currently mbox-cells has to be 0 for SCU MU.
+>    Generic MU Mailbox support binding could be extended later.
+> v1->v2:
+>  * typo fixes
+>  * remove status property
+>  * remove imx6&7 compatible string which may be added later for
+>    the generic mailbox binding
+> ---
+>  .../devicetree/bindings/mailbox/fsl,mu.txt         | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/fsl,mu.txt
 
-
-=E4=BA=8E 2018=E5=B9=B47=E6=9C=8811=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=8811=
-:14:19, "Jernej =C5=A0krabec" <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =E5=86=99=E5=88=B0=
-:
->Dne sreda, 11. julij 2018 ob 17:05:32 CEST je Maxime Ripard napisal(a):
->> Hi,
->>=20
->> On Wed, Jul 11, 2018 at 09:22:32PM +0800, Icenowy Zheng wrote:
->> > Banana Pi M2 Zero board has a miniHDMI port connected to the HDMI
->> > controller of Allwinner H3 SoC.
->> >=20
->> > Enable the HDMI output in Banana Pi M2 Zero device tree.
->> >=20
->> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> > ---
->> >=20
->> >  .../dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 25
->+++++++++++++++++++
->> >  1 file changed, 25 insertions(+)
->> >=20
->> > diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
->> > b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts index
->> > 7d01f9322658..eb61dcf32797 100644
->> > --- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
->> > +++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
->> > @@ -26,6 +26,17 @@
->> >=20
->> >  		stdout-path =3D "serial0:115200n8";
->> >  =09
->> >  	};
->> >=20
->> > +	hdmi-connector {
->> > +		compatible =3D "hdmi-connector";
->> > +		type =3D "c";
->>=20
->> This is not one of the connector type declared in DRM, how is it
->> exposed to the userspace?
->
->DT binding allows it:
->
->HDMI Connector
->=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
->Required properties:
->- compatible: "hdmi-connector"
->- type: the HDMI connector type: "a", "b", "c", "d" or "e"
->
->but DW HDMI bridge driver hardcodes it to type A. Actually, kernel has
->defines=20
->only for type A and B.
-
-I assume it's for single link/dual link.
-
->
->Actually, many HDMI drivers have type A hardcoded...
->
->Best regards,
->Jernej
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Reviewed-by: Rob Herring <robh@kernel.org>
