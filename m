@@ -1,67 +1,95 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH v2 2/2] regulator: uniphier: add regulator driver for UniPhier SoC
-Date: Wed, 11 Jul 2018 11:31:35 +0900
-Message-ID: <20180711113134.497A.4A936039@socionext.com>
-References: <1531186037-16630-3-git-send-email-hayashi.kunihiko@socionext.com> <20180710174451.GE8104@sirena.org.uk>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 1/2] ARM: dts: arria10: update NAND clocking
+Date: Wed, 11 Jul 2018 11:43:46 +0900
+Message-ID: <CAK7LNATNjPuGmzA_mS+yvVC8TpPsvQNvKedJ6emt114xGy7m3Q@mail.gmail.com>
+References: <1531176063-30140-1-git-send-email-dinguyen@kernel.org>
+ <CAK7LNARAVSK5VY=_RfO2PXJCAnXJN3sXoAY=ijSwVojeo=c66w@mail.gmail.com>
+ <b33d18b2-1956-50a4-9a3f-6d2a0abd4b81@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180710174451.GE8104@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b33d18b2-1956-50a4-9a3f-6d2a0abd4b81@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dinh Nguyen <dinguyen@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Marek Vasut <marex@denx.de>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On Tue, 10 Jul 2018 18:44:51 +0100 <broonie@kernel.org> wrote:
-
-> On Tue, Jul 10, 2018 at 10:27:17AM +0900, Kunihiko Hayashi wrote:
-> 
-> > +static int uniphier_regulator_enable(struct regulator_dev *rdev)
-> > +{
-> > +	struct uniphier_regulator_priv *priv = rdev_get_drvdata(rdev);
-> > +
-> > +	return regmap_update_bits(priv->regmap, rdev->desc->enable_reg,
-> > +				  rdev->desc->enable_mask,
-> > +				  rdev->desc->enable_val);
-> > +}
-> 
-> This is just regulator_enable_regmap() isn't it?  Same for disable,
-> unless I'm missing something (which is possible).
-
-Exactly, it's reasonable to replace this with the helper function.
-I'll check and apply it.
-
-> > +static int uniphier_regulator_is_enabled(struct regulator_dev *rdev)
-> > +{
-> > +	struct uniphier_regulator_priv *priv = rdev_get_drvdata(rdev);
-> > +	unsigned int val;
-> > +	int ret = -EINVAL;
-> > +
-> > +	regmap_read(priv->regmap, rdev->desc->enable_reg, &val);
-> > +	val &= rdev->desc->enable_mask;
-> > +
-> > +	if (val == rdev->desc->enable_val)
-> > +		ret = 1;
-> > +	else if (val == rdev->desc->disable_val)
-> > +		ret = 0;
-> > +
-> > +	return ret;
-> > +}
-> 
-> This isn't *quite* regulator_is_enabled_regmap() as it explicitly checks
-> if the disable value is set and errors otherwise which would be a good
-> fix for that.  Could you do a patch for that?
-
-Although I'm worried that the register have a value that is neither
-enable_val or disable_val, the "is_enabled" function returns whether
-the regulator is enabled or not, so I can apply regulator_is_enabled_regmap().
-I'll apply it in v3.
-
-Thank you,
-
----
-Best Regards,
-Kunihiko Hayashi
+MjAxOC0wNy0xMCAyMjozNSBHTVQrMDk6MDAgRGluaCBOZ3V5ZW4gPGRpbmd1eWVuQGtlcm5lbC5v
+cmc+Ogo+Cj4KPiBPbiAwNy8wOS8yMDE4IDA4OjMxIFBNLCBNYXNhaGlybyBZYW1hZGEgd3JvdGU6
+Cj4+IDIwMTgtMDctMTAgNzo0MSBHTVQrMDk6MDAgRGluaCBOZ3V5ZW4gPGRpbmd1eWVuQGtlcm5l
+bC5vcmc+Ogo+Pj4gVGhlIE5BTkQgSVAgbmVlZHMgMiBjbG9ja3MobmFuZF94X2NsayBhbmQgbmFu
+ZF9jbGspLiBUaGlzIHBhdGNoIGFkZHMgYQo+Pj4gbmFuZF94X2Nsaywgd2hpY2ggaXMgZGVyaXZl
+ZCBmcm9tIHRoZSBuYW5kX2NsaywgYnV0IGhhcyBhIGZpeGVkIGRpdmlkZXIKPj4+IG9mIDQuCj4+
+Pgo+Pj4gVXBkYXRlIHRoZSBOQU5EIG5vZGUgdG8gdXNlIHRoZSBhZGRpdGlvbmFsIGNsb2NrLgo+
+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IERpbmggTmd1eWVuIDxkaW5ndXllbkBrZXJuZWwub3JnPgo+
+Pj4gLS0tCj4+PiAgYXJjaC9hcm0vYm9vdC9kdHMvc29jZnBnYV9hcnJpYTEwLmR0c2kgfCAxMyAr
+KysrKysrKysrKy0tCj4+PiAgMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyksIDIgZGVs
+ZXRpb25zKC0pCj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3NvY2ZwZ2Ff
+YXJyaWExMC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvc29jZnBnYV9hcnJpYTEwLmR0c2kKPj4+
+IGluZGV4IGE0ZGNiNjguLjU1OGI1ZWEgMTAwNjQ0Cj4+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0
+cy9zb2NmcGdhX2FycmlhMTAuZHRzaQo+Pj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc29jZnBn
+YV9hcnJpYTEwLmR0c2kKPj4+IEBAIC0zNzcsMTMgKzM3NywyMSBAQAo+Pj4gICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xrLWdhdGUgPSA8MHhDOCAxMT47
+Cj4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPj4+Cj4+PiAt
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbmFuZF9jbGs6IG5hbmRfY2xr
+IHsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBuYW5kX3hfY2xr
+OiBuYW5kX3hfY2xrIHsKPj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICNjbG9jay1jZWxscyA9IDwwPjsKPj4+ICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYWx0cixzb2NmcGdhLWExMC1n
+YXRlLWNsayI7Cj4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBjbG9ja3MgPSA8Jmw0X21wX2Nsaz47Cj4+PiAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBjbGstZ2F0ZSA9IDwweEM4IDEwPjsKPj4+ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+Pj4KPj4+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBuYW5kX2NsazogbmFuZF9jbGsgewo+Pj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI2Nsb2NrLWNlbGxzID0g
+PDA+Owo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+Y29tcGF0aWJsZSA9ICJhbHRyLHNvY2ZwZ2EtYTEwLWdhdGUtY2xrIjsKPj4+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmbmFuZF94X2Ns
+az47Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBm
+aXhlZC1kaXZpZGVyID0gPDQ+Owo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgY2xrLWdhdGUgPSA8MHhDOCAxMD47Cj4+PiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgfTsKPj4+ICsKPj4+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBzcGlfbV9jbGs6IHNwaV9tX2NsayB7Cj4+PiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjY2xvY2stY2VsbHMgPSA8MD47
+Cj4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21w
+YXRpYmxlID0gImFsdHIsc29jZnBnYS1hMTAtZ2F0ZS1jbGsiOwo+Pj4gQEAgLTY1MCw3ICs2NTgs
+OCBAQAo+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgcmVnLW5hbWVzID0gIm5hbmRfZGF0YSIs
+ICJkZW5hbGlfcmVnIjsKPj4+ICAgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8
+MCA5OSA0PjsKPj4+ICAgICAgICAgICAgICAgICAgICAgICAgIGRtYS1tYXNrID0gPDB4ZmZmZmZm
+ZmY+Owo+Pj4gLSAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZuYW5kX2Nsaz47Cj4+
+PiArICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8Jm5hbmRfY2xrPiwgPCZuYW5kX3hf
+Y2xrPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gIm5hbmQiLCAi
+bmFuZF94IjsKPj4KPj4KPj4gRG9lc24ndCBTT0NGUEdBIHJlYWxseSBuZWVkIHRoZSBFQ0MgY2xv
+Y2s/Cj4+Cj4KPiBJIGRvbid0IHNlZSBhbnkgbWVudGlvbnMgb2YgYW4gRUNDIGNsb2NrIGluIGFu
+eSBvZiB0aGUgU29DRlBHQQo+IGRvY3VtZW50YXRpb24gZm9yIHRoZSBOQU5EIElQLgoKCkknZCBs
+aWtlIHlvdSB0byBjaGVjayB0aGUgSVAgZG9jdW1lbnRhdGlvbgpwdWJsaXNoZWQgYnkgRGVuYWxp
+IChvciBDYWRlbmNlKSwKbm90IHB1Ymxpc2hlZCBieSBBbHRlcmEuCgpJcyBpdCBhdmFpbGFibGUg
+Zm9yIHlvdT8KCgoKSW4gbXkgU29DcywgdGhlIHNhbWUgY2xvY2sgc2lnbmFsIChuYW5kLWNsay0y
+MDBtKQppcyBjb25uZWN0ZWQgdG8gY2xrX3ggYW5kIGVjY19jbGssIGxpa2UgdGhpczoKCiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0tLS0tLS0tLQotLS0tLS0t
+LS0tLS0tLSAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgREVOQUxJIElQIHwKfCAgICAgICAg
+ICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgICAgICAgICB8CnwgY2xrICAgICAg
+ICB8LS0tKG5hbmQtY2xrLTUwbSktLS0tLS0tLS0+fCBjbGsgICAgICAgfAp8IGNvbnRyb2xsZXIg
+fCAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAgIHwKfCAgICAgICAgICAgIHwt
+LS0obmFuZC1jbGstMjAwbSktLS0tLS0tLT58IGNsa194ICAgICB8Ci0tLS0tLS0tLS0tLS0t44CA
+ICAgICAgICAgICAgICAgICAgICAgIHwgICB8ICAgICAgICAgICB8CiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAtLS0+fCBlY2NfY2xrICAgfAogICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAgIHwKICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAtLS0tLS0tLS0tLS0tCgoKU29tZSBjbG9jayBsaW5lcyBhcmUg
+b2Z0ZW4gdGllZC11cCwKYnV0IHN1Y2ggbG93LWxldmVsIGluZm9ybWF0aW9uIGRvZXMgbm90IGFw
+cGVhciBpbgp1c2VyIGRvY3VtZW50cy4KSSB0YWxrZWQgdG8gYSBoYXJkd2FyZSBlbmdpbmVlciB0
+byBnZXQgdGhpcyBpbmZvcm1hdGlvbi4KCgoKSSBndWVzcyB0aGUgc2l0dWF0aW9uIGlzIHNpbWls
+YXIgZm9yIHlvdXIgY2FzZSwKYnV0IEkgZG8gbm90IGhhdmUgaW5mb3JtYXRpb24gZW5vdWdoIHRv
+IGFyZ3VlIHRoaXMuCgoKLS0gCkJlc3QgUmVnYXJkcwpNYXNhaGlybyBZYW1hZGEKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwg
+bWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
+bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
