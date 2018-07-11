@@ -1,29 +1,55 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 17/18] drm/sun4i: tcon-top: Remove mux
- configuration at probe time
-Date: Wed, 11 Jul 2018 11:15:29 +0800
-Message-ID: <CAGb2v66nDZqN86Rxr3CoUXkeeiSD2DdF7diuxo9rJEK6ypOsWA@mail.gmail.com>
-References: <20180710203511.18454-1-jernej.skrabec@siol.net> <20180710203511.18454-18-jernej.skrabec@siol.net>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH v11 5/8] i2c: fsi: Add transfer implementation
+Date: Wed, 11 Jul 2018 14:29:03 +1000
+Message-ID: <CACPK8Xf7mCuksfgH4jfxcgbT2h0-WH236=pWchzbucrrVsLF3A@mail.gmail.com>
+References: <1530816030-13010-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1530816030-13010-6-git-send-email-eajames@linux.vnet.ibm.com>
+ <20180709224114.4h47enyt4tucqcou@ninjato> <d7128886-148f-d255-fb33-3727cad01569@linux.vnet.ibm.com>
+ <20180710185042.x3slnms5wzocobqu@ninjato> <cda1b231-eeff-626d-5c79-a07c9bc5a9ec@linux.vnet.ibm.com>
+ <20180710193944.34phe4zafzvwjm5v@ninjato> <479b3c82-ffe7-9e6a-569c-64fcb1b43d32@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBZ7MSXNAKGQEKSOBUNI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180710203511.18454-18-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <479b3c82-ffe7-9e6a-569c-64fcb1b43d32@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eddie James <eajames@linux.vnet.ibm.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 11, 2018 at 4:35 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> Now that R40 TCON migrated to runtime mux configuration, old code can be
-> removed.
+On 11 July 2018 at 06:59, Eddie James <eajames@linux.vnet.ibm.com> wrote:
 >
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+>
+> On 07/10/2018 02:39 PM, Wolfram Sang wrote:
+>>>
+>>> Sorry, what do you mean "show up as"? Yes, we could first shift all our
+>>> addresses in user-space before passing them to the driver, so that the
+>>> msg->addr field is exactly what the hardware expects already... This
+>>> would
+>>> be non-trivial for our users considering all our documentation represents
+>>> the addresses as the top 7 bits of a byte :(
+>>
+>> Ah, now I understand the whole situation! Good that I asked. But I have
+>> bad news for you:
+>>
+>> msg->addr is 7 bit and LSB aligned. No way around that. This is how
+>> Linux I2C worked since the beginning. You have to adapt to it.
+>>
+>> I know what you mean. Most doumentation I get has the addresses in 8
+>> bit, i.e. 7 bit address shifted + RW bit. But sorry again, the Linux
+>> representation is different and all drivers have to adhere to that.
+>>
+>> An EEPROM ist at 0x50 in Linux. There is no write addr 0xa0 and read
+>> addr 0xa1.
+>
+>
+> OK, I understand! Will test and resend with conforming addressing. Thanks
+> for all the feedback!
 
-Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Nice one Wolfram. I wondered why the standard tools didn't work, but
+hadn't gotten around to working out what was going on.
+
+Thanks for taking a close look.
+
+Cheers,
+
+Joel
