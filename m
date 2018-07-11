@@ -1,57 +1,25 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] clk: meson: add sub MMC clock dt-bindings IDs
-Date: Wed, 11 Jul 2018 13:45:46 -0600
-Message-ID: <20180711194546.GA7090@rob-hp-laptop>
-References: <20180710163658.6175-1-yixun.lan@amlogic.com>
- <20180710163658.6175-3-yixun.lan@amlogic.com>
+Subject: Re: [PATCH 1/2] dt-bindings: Add vendor prefix for Sancloud
+Date: Wed, 11 Jul 2018 13:54:44 -0600
+Message-ID: <20180711195444.GA17291@rob-hp-laptop>
+References: <1531291992-30512-1-git-send-email-koen@dominion.thruhere.net>
+ <1531291992-30512-2-git-send-email-koen@dominion.thruhere.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180710163658.6175-3-yixun.lan@amlogic.com>
+In-Reply-To: <1531291992-30512-2-git-send-email-koen@dominion.thruhere.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Koen Kooi <koen@dominion.thruhere.net>
+Cc: linux-omap@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>, David Lechner <david@lechnology.com>, Shawn Guo <shawnguo@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, SZ Lin <sz.lin@moxa.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 10, 2018 at 04:36:57PM +0000, Yixun Lan wrote:
-> Add two clock bindings IDs which provided by the MMC clock controller,
-> These two clocks will be used by MMC or NAND driver.
-
-I count 3 ids.
-
+On Wed, Jul 11, 2018 at 08:53:09AM +0200, Koen Kooi wrote:
+> Add vendor prefix for Sancloud Ltd.
 > 
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
 > ---
->  .../dt-bindings/clock/amlogic,meson-mmc-clkc.h   | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->  create mode 100644 include/dt-bindings/clock/amlogic,meson-mmc-clkc.h
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-This can go with the binding patch.
-
-> 
-> diff --git a/include/dt-bindings/clock/amlogic,meson-mmc-clkc.h b/include/dt-bindings/clock/amlogic,meson-mmc-clkc.h
-> new file mode 100644
-> index 000000000000..2ae988ebc3ae
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/amlogic,meson-mmc-clkc.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-> +/*
-> + * Meson MMC sub clock tree IDs
-> + *
-> + * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
-> + * Author: Yixun Lan <yixun.lan@amlogic.com>
-> + */
-> +
-> +#ifndef __MMC_CLKC_H
-> +#define __MMC_CLKC_H
-> +
-> +#define CLKID_MMC_DIV				1
-> +#define CLKID_MMC_PHASE_TX			3
-> +#define CLKID_MMC_PHASE_RX			4
-> +
-> +#endif
-> -- 
-> 2.18.0
-> 
+Acked-by: Rob Herring <robh@kernel.org>
