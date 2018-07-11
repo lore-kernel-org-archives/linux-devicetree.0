@@ -1,50 +1,78 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: sun8i-a83t-bananapi-m3:
- enhance vcc-pd to 3.3v
-Date: Wed, 11 Jul 2018 10:24:34 +0200
-Message-ID: <20180711082434.euhakdczf56p3fia@flea>
-References: <1531165914-29760-1-git-send-email-clabbe@baylibre.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 2/6] soc/tegra: pmc: Factor out DPD register bit
+ calculation
+Date: Wed, 11 Jul 2018 09:24:57 +0100
+Message-ID: <040dce71-36c8-f2e6-cdf0-a848294862c4@nvidia.com>
+References: <1531226879-11802-1-git-send-email-avienamo@nvidia.com>
+ <1531226879-11802-3-git-send-email-avienamo@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5c33dao3eatkslbo"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQ75S3NAKGQEVDMZCCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1531165914-29760-1-git-send-email-clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Corentin Labbe <clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1531226879-11802-3-git-send-email-avienamo@nvidia.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Aapo Vienamo <avienamo@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Mikko Perttunen <mperttunen@nvidia.com>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---5c33dao3eatkslbo
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+On 10/07/18 13:47, Aapo Vienamo wrote:
+> Factor out the the code to calculate the correct DPD register and bit
+> number for a given pad. This logic will be needed to query the status
+> register.
+> 
+> Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+> ---
+>  drivers/soc/tegra/pmc.c | 20 +++++++++++++++++---
+>  1 file changed, 17 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index 5bea3b9..83b39cd 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -922,11 +922,12 @@ tegra_io_pad_find(struct tegra_pmc *pmc, enum tegra_io_pad id)
+>  	return NULL;
+>  }
+>  
+> -static int tegra_io_pad_prepare(enum tegra_io_pad id, unsigned long *request,
+> -				unsigned long *status, u32 *mask)
+> +static int tegra_io_pad_get_dpd_register_bit(enum tegra_io_pad id,
+> +					     unsigned long *request,
+> +					     unsigned long *status,
+> +					     u32 *mask)
+>  {
+>  	const struct tegra_io_pad_soc *pad;
+> -	unsigned long rate, value;
+>  
+>  	pad = tegra_io_pad_find(pmc, id);
+>  	if (!pad) {
+> @@ -947,6 +948,19 @@ static int tegra_io_pad_prepare(enum tegra_io_pad id, unsigned long *request,
+>  		*request = pmc->soc->regs->dpd2_req;
+>  	}
+>  
+> +	return 0;
+> +}
+> +
+> +static int tegra_io_pad_prepare(enum tegra_io_pad id, unsigned long *request,
+> +				unsigned long *status, u32 *mask)
+> +{
+> +	unsigned long rate, value;
+> +	int err;
+> +
+> +	err = tegra_io_pad_get_dpd_register_bit(id, request, status, mask);
+> +	if (err)
+> +		return err;
+> +
+>  	if (pmc->clk) {
+>  		rate = clk_get_rate(pmc->clk);
+>  		if (!rate) {
+> 
 
-On Mon, Jul 09, 2018 at 07:51:54PM +0000, Corentin Labbe wrote:
-> Since commit d7c5f6863550 ("ARM: dts: sun8i: a83t: bananapi-m3: Add AXP813 regulator nodes")
-> my BPIM3 no longer works at gigabit speed.
-> 
-> With the default setting, dldo3 is regulated at 2.9v which seems
-> sufficient for the PHy but d7c5f6863550 drop it to 2.5 which is insufficient.
-> Note that this behaviour is random for all BPIM3 (some works with 2.5, some not)
-> 
-> Finnaly, someone from bananapi confirmed that this regulator must be set to 3.3
-> 
-> Fixes: d7c5f6863550 ("ARM: dts: sun8i: a83t: bananapi-m3: Add AXP813 regulator nodes")
-> Signed-off-by: Corentin Labbe <clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 
-Applied, thanks!
-Maxime
+Cheers
+Jon
 
 -- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---5c33dao3eatkslbo--
+nvpublic
