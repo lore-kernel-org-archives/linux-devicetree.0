@@ -1,100 +1,41 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v2] ARM64: dts: meson-axg: add saradc support
-Date: Wed, 11 Jul 2018 18:25:49 +0200
-Message-ID: <1531326349.2708.136.camel@baylibre.com>
-References: <20180702222515.13924-1-yixun.lan@amlogic.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 1/2] clk: imx6sll: add GPIO LPCGs
+Date: Wed, 11 Jul 2018 09:33:45 -0700
+Message-ID: <153132682598.143105.16881098765923078751@swboyd.mtv.corp.google.com>
+References: <1529649154-5724-1-git-send-email-Anson.Huang@nxp.com>
+ <153091072630.143105.2849049240391576710@swboyd.mtv.corp.google.com>
+ <20180711084302.GB6959@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180702222515.13924-1-yixun.lan@amlogic.com>
+In-Reply-To: <20180711084302.GB6959@dragon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: Xingyu Chen <xingyu.chen@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Anson Huang <Anson.Huang@nxp.com>, aisheng.dong@nxp.com, fabio.estevam@nxp.com, kernel@pengutronix.de, mark.rutland@arm.com, mturquette@baylibre.com, ping.bai@nxp.com, robh+dt@kernel.org, s.hauer@pengutronix.de, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-07-02 at 22:25 +0000, Yixun Lan wrote:
-> From: Xingyu Chen <xingyu.chen@amlogic.com>
-> 
-> Add the DT info for SAR ADC of the Amlogic's Meson-AXG SoC.
-> 
-> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-> ---
-> Hi kevin
->   I just re-send this patch which rebased to your khilman/v4.18/integ branch
->   Thanks
-> Yixun
-> 
-> nothing changed since patch v1 [1]:
->  -
-> 
-> [1] https://lkml.kernel.org/r/20180326092117.208416-1-yixun.lan@amlogic.com
-> 
-> ---
->  .../arm64/boot/dts/amlogic/meson-axg-s400.dts |  5 +++++
->  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    | 21 +++++++++++++++++++
->  2 files changed, 26 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> index 4b3331fbfe39..6041f68b32ae 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> @@ -153,3 +153,8 @@
->  		compatible = "brcm,bcm4329-fmac";
->  	};
->  };
-> +
-> +&saradc {
-> +	status = "okay";
-> +	vref-supply = <&vddio_ao18>;
-> +};
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> index 67d7115e4eff..52678a69dbf8 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> @@ -91,6 +91,13 @@
->  		method = "smc";
->  	};
->  
-> +	vddio_ao18: regulator-vddio_ao18 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDIO_AO18";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +	};
+Quoting Shawn Guo (2018-07-11 01:43:03)
+> On Fri, Jul 06, 2018 at 01:58:46PM -0700, Stephen Boyd wrote:
+> > Quoting Anson Huang (2018-06-21 23:32:33)
+> > > According to Reference Manual Rev.0, 06/2017,
+> > > there are GPIO LPCGs defined in CCM CCGRs,
+> > > add them into clock tree.
+> > > =
 
-Kevin, Yixun,
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > ---
+> > =
 
-I find odd that we are adding a regulator to SoC device tree file.
-Those regulator are usually part of board file
+> > Applied to clk-next
+> =
 
-Unless the regulator is actually inside the SoC, this is not the place for it.
+> Stephen,
+> =
 
-Sorry for not catching this earlier.
+> If you can apply this patch to topic branch 'clk-imx-gpio-gates', I will
+> be able to pick up patch #2 for this cycle.
 
-> +
->  	timer {
->  		compatible = "arm,armv8-timer";
->  		interrupts = <GIC_PPI 13
-> @@ -1194,6 +1201,20 @@
->  				interrupts = <GIC_SPI 196 IRQ_TYPE_EDGE_RISING>;
->  				status = "disabled";
->  			};
-> +
-> +			saradc: adc@9000 {
-> +				compatible = "amlogic,meson-axg-saradc",
-> +					"amlogic,meson-saradc";
-> +				reg = <0x0 0x9000 0x0 0x38>;
-> +				#io-channel-cells = <1>;
-> +				interrupts = <GIC_SPI 73 IRQ_TYPE_EDGE_RISING>;
-> +				clocks = <&xtal>,
-> +					<&clkc_AO CLKID_AO_SAR_ADC>,
-> +					<&clkc_AO CLKID_AO_SAR_ADC_CLK>,
-> +					<&clkc_AO CLKID_AO_SAR_ADC_SEL>;
-> +				clock-names = "clkin", "core", "adc_clk", "adc_sel";
-> +				status = "disabled";
-> +			};
->  		};
->  	};
->  };
+Can you merge in clk-imx6sll-gpio topic branch to your tree? I'm making
+topics for all patch series, so that's why this got stuck into a
+different topic branch.
