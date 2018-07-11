@@ -1,7 +1,7 @@
 From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [RFC PATCH v2 3/4] misc: Add bmc-misc-ctrl
-Date: Wed, 11 Jul 2018 15:01:21 +0930
-Message-ID: <20180711053122.30773-4-andrew@aj.id.au>
+Subject: [RFC PATCH v2 4/4] dts: aspeed-g5: Describe VGA, SIO scratch and DAC mux fields
+Date: Wed, 11 Jul 2018 15:01:22 +0930
+Message-ID: <20180711053122.30773-5-andrew@aj.id.au>
 References: <20180711053122.30773-1-andrew@aj.id.au>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180711053122.30773-1-andrew@aj.id.au>
@@ -10,529 +10,234 @@ To: linux-kernel@vger.kernel.org
 Cc: Andrew Jeffery <andrew@aj.id.au>, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, gregkh@linuxfoundation.org, Eugene.Cho@dell.com, a.amelkin@yadro.com, stewart@linux.ibm.com, benh@kernel.crashing.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The bmc-misc-ctrl platform driver stitches together the associated
-devicetree bindings and the sysfs-devices-platform-field ABI to expose
-fields described in the devicetree to userspace via sysfs.
+The AST2500 has VGA scratch registers that are read-only, SuperIO
+scratch registers that are a mix of read-only and read-write, and a
+graphics DAC mux that must be read or configured in the process of
+booting e.g. an OpenPOWER system.
 
-While the userspace interface does not provide an abstraction over the
-hardware, it does provide some improvements over devmem:
-
-1. Removal of read-modify-write races, as register access is atomic
-2. Reduced foot-gun, as only the defined field is accessible
-3. Improved discoverability, as the fields are named
-
-Userspace is expected to use its own means to discover fields of
-interest in /sys/devices/platform, either via udev events or search.
+These capabilities do not really have a place in other drivers, so
+expose them as fields via bmc-misc-ctrl.
 
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
 
 Since RFC v1:
 
-* Fix issues pointed out by Greg
-* Drop the device class
+* Rework labels to what is documented in the bindings
+* Fix an incorrect offset property
 
- MAINTAINERS                  |   1 +
- drivers/misc/Kconfig         |  11 +
- drivers/misc/Makefile        |   1 +
- drivers/misc/bmc-misc-ctrl.c | 446 +++++++++++++++++++++++++++++++++++
- 4 files changed, 459 insertions(+)
- create mode 100644 drivers/misc/bmc-misc-ctrl.c
+ arch/arm/boot/dts/aspeed-g5.dtsi | 192 +++++++++++++++++++++++++++++++
+ 1 file changed, 192 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d167f0340c11..c29136614cb8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2742,6 +2742,7 @@ L:	openbmc@lists.ozlabs.org (moderated for non-subscribers)
- S:	Supported
- F:	Documentation/devicetree/bindings/misc/bmc-misc-ctrl.txt
- F:	Documentation/ABI/testing/sysfs-devices-platform-field
-+F:	drivers/misc/bmc-misc-ctrl.c
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index 17f2714d18a7..c484ac637328 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -187,6 +187,77 @@
+ 					aspeed,external-nodes = <&gfx &lhc>;
  
- BPF (Safe dynamic programs and tools)
- M:	Alexei Starovoitov <ast@kernel.org>
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 3726eacdf65d..914f8d37645d 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -513,6 +513,17 @@ config MISC_RTSX
- 	tristate
- 	default MISC_RTSX_PCI || MISC_RTSX_USB
+ 				};
++
++				field@2c.16 {
++					compatible = "bmc-misc-ctrl";
++					offset = <0x2c>;
++					mask = <0x00030000>;
++					label = "dac-mux";
++				};
++
++				field@50.0 {
++					compatible = "bmc-misc-ctrl";
++					offset = <0x50>;
++					mask = <0xffffffff>;
++					label = "vga0";
++					read-only;
++				};
++
++				field@54.0 {
++					compatible = "bmc-misc-ctrl";
++					offset = <0x54>;
++					mask = <0xffffffff>;
++					label = "vga1";
++					read-only;
++				};
++
++				field@58.0 {
++					compatible = "bmc-misc-ctrl";
++					offset = <0x58>;
++					mask = <0xffffffff>;
++					label = "vga2";
++					read-only;
++				};
++
++				field@5c.0 {
++					compatible = "bmc-misc-ctrl";
++					offset = <0x5c>;
++					mask = <0xffffffff>;
++					label = "vga3";
++					read-only;
++				};
++
++				field@60.0 {
++					compatible = "bmc-misc-ctrl";
++					offset = <0x60>;
++					mask = <0xffffffff>;
++					label = "vga4";
++					read-only;
++				};
++
++				field@64.0 {
++					compatible = "bmc-misc-ctrl";
++					offset = <0x64>;
++					mask = <0xffffffff>;
++					label = "vga5";
++					read-only;
++				};
++
++				field@68.0 {
++					compatible = "bmc-misc-ctrl";
++					offset = <0x68>;
++					mask = <0xffffffff>;
++					label = "vga6";
++					read-only;
++				};
++
++				field@6c.0 {
++					compatible = "bmc-misc-ctrl";
++					offset = <0x6c>;
++					mask = <0xffffffff>;
++					label = "vga7";
++					read-only;
++				};
+ 			};
  
-+config BMC_MISC_CTRL
-+	tristate "Miscellaneous BMC Control Interfaces"
-+	depends on REGMAP && MFD_SYSCON
-+	help
-+	  Say yes to expose scratch registers used to communicate between the
-+	  host and BMC along with other miscellaneous control interfaces
-+	  provided by BMC SoCs.
-+
-+	  Attributes for controlling the fields are exposed in sysfs according
-+	  to the sysfs-devices-platform-field ABI.
-+
- source "drivers/misc/c2port/Kconfig"
- source "drivers/misc/eeprom/Kconfig"
- source "drivers/misc/cb710/Kconfig"
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index af22bbc3d00c..4fb2fac7a486 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -58,3 +58,4 @@ obj-$(CONFIG_ASPEED_LPC_SNOOP)	+= aspeed-lpc-snoop.o
- obj-$(CONFIG_PCI_ENDPOINT_TEST)	+= pci_endpoint_test.o
- obj-$(CONFIG_OCXL)		+= ocxl/
- obj-$(CONFIG_MISC_RTSX)		+= cardreader/
-+obj-$(CONFIG_BMC_MISC_CTRL)     += bmc-misc-ctrl.o
-diff --git a/drivers/misc/bmc-misc-ctrl.c b/drivers/misc/bmc-misc-ctrl.c
-new file mode 100644
-index 000000000000..93e1412f7087
---- /dev/null
-+++ b/drivers/misc/bmc-misc-ctrl.c
-@@ -0,0 +1,446 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+// Copyright 2018 IBM Corp.
-+
-+#include <linux/bitops.h>
-+#include <linux/device.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+struct bmc_misc_label {
-+	const char *label;
-+	struct device_attribute label_attr;
-+};
-+
-+struct bmc_misc_field {
-+	u32 shift;
-+	u32 mask;
-+	struct device_attribute mask_attr;
-+};
-+
-+struct bmc_misc_type {
-+	const char *type;
-+	struct device_attribute type_attr;
-+};
-+
-+struct bmc_misc_rw {
-+	struct regmap *map;
-+
-+	struct bmc_misc_field field;
-+	struct bmc_misc_label label;
-+	struct bmc_misc_type type;
-+
-+	u32 value;
-+	struct device_attribute value_attr;
-+
-+	struct attribute_group attr_grp;
-+	struct attribute *attrs[5];
-+};
-+
-+struct bmc_misc_sc {
-+	struct regmap *map;
-+
-+	struct bmc_misc_field field;
-+	struct bmc_misc_label label;
-+	struct bmc_misc_type type;
-+
-+	u32 read;
-+	u32 set;
-+	u32 clear;
-+
-+	struct device_attribute read_attr;
-+	struct device_attribute set_attr;
-+	struct device_attribute clear_attr;
-+
-+	struct attribute_group attr_grp;
-+	struct attribute *attrs[7];
-+};
-+
-+static ssize_t bmc_misc_label_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct bmc_misc_label *priv;
-+
-+	priv = container_of(attr, struct bmc_misc_label, label_attr);
-+
-+	return sprintf(buf, "%s\n", priv->label);
-+}
-+
-+static int bmc_misc_label_init(struct device_node *node,
-+			       struct bmc_misc_label *priv)
-+{
-+	int rc;
-+
-+	rc = of_property_read_string(node, "label", &priv->label);
-+	if (rc < 0)
-+		return rc;
-+
-+	sysfs_attr_init(&priv->label_attr.attr);
-+	priv->label_attr.attr.name = "label";
-+	priv->label_attr.attr.mode = 0440;
-+	priv->label_attr.show = bmc_misc_label_show;
-+
-+	return 0;
-+}
-+
-+static ssize_t bmc_misc_mask_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
-+{
-+	struct bmc_misc_field *priv;
-+
-+	priv = container_of(attr, struct bmc_misc_field, mask_attr);
-+
-+	return sprintf(buf, "0x%x\n", priv->mask >> priv->shift);
-+}
-+
-+static int bmc_misc_field_init(struct device_node *node,
-+			       struct bmc_misc_field *priv)
-+{
-+	int rc;
-+
-+	rc = of_property_read_u32(node, "mask", &priv->mask);
-+	if (rc < 0)
-+		return rc;
-+
-+	priv->shift = __ffs(priv->mask);
-+
-+	sysfs_attr_init(&priv->mask_attr.attr);
-+	priv->mask_attr.attr.name = "mask";
-+	priv->mask_attr.attr.mode = 0440;
-+	priv->mask_attr.show = bmc_misc_mask_show;
-+
-+	return 0;
-+}
-+
-+static ssize_t bmc_misc_type_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
-+{
-+	struct bmc_misc_type *priv;
-+
-+	priv = container_of(attr, struct bmc_misc_type, type_attr);
-+
-+	return sprintf(buf, "%s\n", priv->type);
-+}
-+
-+static int bmc_misc_type_init(struct device_node *node,
-+			      struct bmc_misc_type *priv)
-+{
-+	bool ro, w1sc;
-+
-+	ro = of_property_read_bool(node, "read-only");
-+	w1sc = of_property_read_bool(node, "set-clear");
-+
-+	if (ro && !w1sc)
-+		priv->type = "ro";
-+	else if (!ro && w1sc)
-+		priv->type = "w1sc";
-+	else if (!ro && !w1sc)
-+		priv->type = "rw";
-+	else
-+		return -EINVAL;
-+
-+	sysfs_attr_init(&priv->type_attr.attr);
-+	priv->type_attr.attr.name = "type";
-+	priv->type_attr.attr.mode = 0440;
-+	priv->type_attr.show = bmc_misc_type_show;
-+
-+	return 0;
-+}
-+
-+static ssize_t bmc_misc_rw_show(struct device *dev,
-+				 struct device_attribute *attr, char *buf)
-+{
-+	struct bmc_misc_rw *rw;
-+	unsigned int val;
-+	int rc;
-+
-+	rw = container_of(attr, struct bmc_misc_rw, value_attr);
-+	rc = regmap_read(rw->map, rw->value, &val);
-+	if (rc)
-+		return rc;
-+
-+	val = (val & rw->field.mask) >> rw->field.shift;
-+
-+	return sprintf(buf, "%u\n", val);
-+}
-+
-+static ssize_t bmc_misc_rw_store(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf, size_t count)
-+{
-+	struct bmc_misc_rw *rw;
-+	long val;
-+	int rc;
-+
-+	rc = kstrtol(buf, 0, &val);
-+	if (rc)
-+		return rc;
-+
-+	rw = container_of(attr, struct bmc_misc_rw, value_attr);
-+	val <<= rw->field.shift;
-+	if (val & ~rw->field.mask)
-+		return -EINVAL;
-+	rc = regmap_update_bits(rw->map, rw->value, rw->field.mask,
-+				val);
-+
-+	return rc < 0 ? rc : count;
-+}
-+
-+static int bmc_misc_rw_init(struct platform_device *pdev)
-+{
-+	struct device_node *node;
-+	struct bmc_misc_rw *priv;
-+	u32 val;
-+	int rc;
-+
-+	node = pdev->dev.of_node;
-+
-+	priv = devm_kmalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
-+
-+	rc = of_property_read_u32(node, "offset", &priv->value);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = bmc_misc_label_init(node, &priv->label);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = bmc_misc_field_init(node, &priv->field);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = bmc_misc_type_init(node, &priv->type);
-+	if (rc < 0)
-+		return rc;
-+
-+	if (!of_property_read_u32(node, "default-value", &val)) {
-+		val <<= priv->field.shift;
-+		if (val & ~priv->field.mask)
-+			return -EINVAL;
-+		val &= priv->field.mask;
-+		regmap_update_bits(priv->map, priv->value, priv->field.mask,
-+				   val);
-+	}
-+
-+	sysfs_attr_init(&priv->value_attr.attr);
-+	priv->value_attr.attr.name = "value";
-+	priv->value_attr.attr.mode = 0440;
-+	if (!of_property_read_bool(node, "read-only"))
-+		priv->value_attr.attr.mode |= 0220;
-+	priv->value_attr.show = bmc_misc_rw_show;
-+	priv->value_attr.store = bmc_misc_rw_store;
-+
-+	priv->attrs[0] = &priv->label.label_attr.attr;
-+	priv->attrs[1] = &priv->field.mask_attr.attr;
-+	priv->attrs[2] = &priv->type.type_attr.attr;
-+	priv->attrs[3] = &priv->value_attr.attr;
-+	priv->attrs[4] = NULL;
-+
-+	memset(&priv->attr_grp, 0, sizeof(priv->attr_grp));
-+	priv->attr_grp.name = priv->label.label;
-+	priv->attr_grp.attrs = priv->attrs;
-+
-+
-+	rc = sysfs_create_group(&pdev->dev.kobj, &priv->attr_grp);
-+	if (rc < 0)
-+		return rc;
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	dev_info(&pdev->dev, "%s field %s\n", priv->type.type,
-+		 priv->label.label);
-+
-+	return 0;
-+}
-+
-+static ssize_t bmc_misc_sc_read_show(struct device *dev,
-+				     struct device_attribute *attr, char *buf)
-+{
-+	struct bmc_misc_sc *priv;
-+	unsigned int val;
-+	int rc;
-+
-+	priv = container_of(attr, struct bmc_misc_sc, read_attr);
-+	rc = regmap_read(priv->map, priv->read, &val);
-+	if (rc)
-+		return rc;
-+
-+	val = (val & priv->field.mask) >> priv->field.shift;
-+
-+	return sprintf(buf, "%u\n", val);
-+}
-+
-+static ssize_t bmc_misc_sc_set_store(struct device *dev,
-+				     struct device_attribute *attr,
-+				     const char *buf, size_t count)
-+{
-+	struct bmc_misc_sc *priv;
-+	long val;
-+	int rc;
-+
-+	rc = kstrtol(buf, 0, &val);
-+	if (rc)
-+		return rc;
-+
-+	priv = container_of(attr, struct bmc_misc_sc, set_attr);
-+	val <<= priv->field.shift;
-+	if (val & ~priv->field.mask)
-+		return -EINVAL;
-+	val &= priv->field.mask;
-+	rc = regmap_write(priv->map, priv->set, val);
-+
-+	return rc < 0 ? rc : count;
-+}
-+
-+static ssize_t bmc_misc_sc_clear_store(struct device *dev,
-+				       struct device_attribute *attr,
-+				       const char *buf, size_t count)
-+{
-+	struct bmc_misc_sc *priv;
-+	long val;
-+	int rc;
-+
-+	rc = kstrtol(buf, 0, &val);
-+	if (rc)
-+		return rc;
-+
-+	priv = container_of(attr, struct bmc_misc_sc, clear_attr);
-+	val <<= priv->field.shift;
-+	if (val & ~priv->field.mask)
-+		return -EINVAL;
-+	val &= priv->field.mask;
-+	rc = regmap_write(priv->map, priv->clear, val);
-+
-+	return rc < 0 ? rc : count;
-+}
-+
-+static int bmc_misc_sc_init(struct platform_device *pdev)
-+{
-+	struct device_node *node;
-+	struct bmc_misc_sc *priv;
-+	int rc;
-+
-+	node = pdev->dev.of_node;
-+
-+	priv = devm_kmalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
-+
-+	rc = of_property_read_u32_array(node, "offset", &priv->read, 3);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = bmc_misc_label_init(node, &priv->label);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = bmc_misc_field_init(node, &priv->field);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = bmc_misc_type_init(node, &priv->type);
-+	if (rc < 0)
-+		return rc;
-+
-+	if (of_property_read_bool(node, "default-set"))
-+		regmap_write(priv->map, priv->set, priv->field.mask);
-+	else if (of_property_read_bool(node, "default-clear"))
-+		regmap_write(priv->map, priv->clear, priv->field.mask);
-+
-+	sysfs_attr_init(&priv->read_attr.attr);
-+	priv->read_attr.attr.name = "value";
-+	priv->read_attr.attr.mode = 0440;
-+	priv->read_attr.show = bmc_misc_sc_read_show;
-+
-+	sysfs_attr_init(&priv->set_attr.attr);
-+	priv->set_attr.attr.name = "set";
-+	priv->set_attr.attr.mode = 0220;
-+	priv->set_attr.store = bmc_misc_sc_set_store;
-+
-+	sysfs_attr_init(&priv->clear_attr.attr);
-+	priv->clear_attr.attr.name = "clear";
-+	priv->clear_attr.attr.mode = 0220;
-+	priv->clear_attr.store = bmc_misc_sc_clear_store;
-+
-+	priv->attrs[0] = &priv->label.label_attr.attr;
-+	priv->attrs[1] = &priv->field.mask_attr.attr;
-+	priv->attrs[2] = &priv->type.type_attr.attr;
-+	priv->attrs[3] = &priv->read_attr.attr;
-+	priv->attrs[4] = &priv->set_attr.attr;
-+	priv->attrs[5] = &priv->clear_attr.attr;
-+	priv->attrs[6] = NULL;
-+
-+	memset(&priv->attr_grp, 0, sizeof(priv->attr_grp));
-+	priv->attr_grp.name = priv->label.label;
-+	priv->attr_grp.attrs = priv->attrs;
-+
-+	rc = sysfs_create_group(&pdev->dev.kobj, &priv->attr_grp);
-+	if (rc < 0)
-+		return rc;
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	dev_info(&pdev->dev, "%s field %s\n", priv->type.type,
-+		 priv->label.label);
-+
-+	return 0;
-+}
-+
-+static int bmc_misc_probe(struct platform_device *pdev)
-+{
-+	if (of_property_read_bool(pdev->dev.of_node, "set-clear"))
-+		return bmc_misc_sc_init(pdev);
-+
-+	return bmc_misc_rw_init(pdev);
-+}
-+
-+static void bmc_misc_sc_del(struct platform_device *pdev)
-+{
-+	struct bmc_misc_sc *priv = platform_get_drvdata(pdev);
-+
-+	sysfs_remove_group(&pdev->dev.kobj, &priv->attr_grp);
-+}
-+
-+static void bmc_misc_rw_del(struct platform_device *pdev)
-+{
-+	struct bmc_misc_rw *priv = platform_get_drvdata(pdev);
-+
-+	sysfs_remove_group(&pdev->dev.kobj, &priv->attr_grp);
-+}
-+
-+static int bmc_misc_remove(struct platform_device *pdev)
-+{
-+	if (of_property_read_bool(pdev->dev.of_node, "set-clear"))
-+		bmc_misc_sc_del(pdev);
-+	else
-+		bmc_misc_rw_del(pdev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id bmc_misc_ctrl_match[] = {
-+	{ .compatible = "bmc-misc-ctrl", },
-+	{ },
-+};
-+
-+static struct platform_driver bmc_misc_ctrl = {
-+	.driver = {
-+		.name		=  "bmc-misc-ctrl",
-+		.of_match_table = bmc_misc_ctrl_match,
-+	},
-+	.probe = bmc_misc_probe,
-+	.remove = bmc_misc_remove,
-+};
-+
-+module_platform_driver(bmc_misc_ctrl);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Andrew Jeffery <andrew@aj.id.au>");
+ 			rng: hwrng@1e6e2078 {
+@@ -343,6 +414,127 @@
+ 						#reset-cells = <1>;
+ 					};
+ 
++					field@f0.24 {
++						compatible = "bmc-misc-ctrl";
++						offset = <0xf0>;
++						mask = <0xff000000>;
++						label = "sio2b";
++					};
++
++					field@f0.16 {
++						compatible = "bmc-misc-ctrl";
++						offset = <0xf0>;
++						mask = <0x00ff0000>;
++						label = "sio2a";
++					};
++
++					field@f0.8 {
++						compatible = "bmc-misc-ctrl";
++						offset = <0xf0>;
++						mask = <0x0000ff00>;
++						bit-shift = <8>;
++						label = "sio29";
++					};
++
++					field@f0.0 {
++						compatible = "bmc-misc-ctrl";
++						offset = <0xf0>;
++						mask = <0x000000ff>;
++						label = "sio28";
++					};
++
++					field@f4.24 {
++						compatible = "bmc-misc-ctrl";
++						offset = <0xf4>;
++						mask = <0xff000000>;
++						label = "sio2f";
++					};
++
++					field@f4.16 {
++						compatible = "bmc-misc-ctrl";
++						offset = <0xf4>;
++						mask = <0x00ff0000>;
++						label = "sio2e";
++					};
++
++					field@f4.8 {
++						compatible = "bmc-misc-ctrl";
++						offset = <0xf4>;
++						mask = <0x0000ff00>;
++						label = "sio2d";
++					};
++
++					field@f4.0 {
++						compatible = "bmc-misc-ctrl";
++						offset = <0xf4>;
++						mask = <0x000000ff>;
++						label = "sio2c";
++					};
++
++					field@f8.24 {
++						compatible = "bmc-misc-ctrl";
++						offset = <0xf8>;
++						mask = <0xff000000>;
++						read-only;
++						label = "sio23";
++					};
++
++					field@f8.16 {
++						compatible = "bmc-misc-ctrl";
++						offset = <0xf8>;
++						mask = <0x00ff0000>;
++						read-only;
++						label = "sio22";
++					};
++
++					field@f8.8 {
++						compatible = "bmc-misc-ctrl";
++						offset = <0xf8>;
++						mask = <0x0000ff00>;
++						read-only;
++						label = "sio21";
++					};
++
++					field@f8.0 {
++						compatible = "bmc-misc-ctrl";
++						offset = <0xf8>;
++						mask = <0x000000ff>;
++						read-only;
++						label = "sio20";
++					};
++
++					field@fc.24 {
++						compatible = "bmc-misc-ctrl";
++						offset = <0xfc>;
++						mask = <0xff000000>;
++						read-only;
++						label = "sio27";
++					};
++
++					field@fc.16 {
++						compatible = "bmc-misc-ctrl";
++						offset = <0xfc>;
++						mask = <0x00ff0000>;
++						read-only;
++						label = "sio26";
++					};
++
++					field@fc.8 {
++						compatible = "bmc-misc-ctrl";
++						offset = <0xfc>;
++						mask = <0x0000ff00>;
++						read-only;
++						label = "sio25";
++					};
++
++					field@fc.0 {
++						compatible = "bmc-misc-ctrl";
++						offset = <0xfc>;
++						mask = <0x000000ff>;
++						read-only;
++						label = "sio24";
++					};
++
+ 					ibt: ibt@c0 {
+ 						compatible = "aspeed,ast2500-ibt-bmc";
+ 						reg = <0xc0 0x18>;
 -- 
 2.17.1
