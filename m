@@ -1,28 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 3/3] iio: hx711: fix spurious unit-address in example
-Date: Wed, 11 Jul 2018 07:54:32 -0600
-Message-ID: <20180711135432.GA16230@rob-hp-laptop>
-References: <20180710181937.GA5398@arbeit>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3] drm/sun4i: mixer: Read id from DT
+Date: Wed, 11 Jul 2018 21:55:31 +0800
+Message-ID: <CAGb2v67ShNTqYAKXRWwhKxzcyVw512bVmNrr-Kv-oDdVq+=yEQ@mail.gmail.com>
+References: <20180711112706.30222-1-jernej.skrabec@siol.net>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180710181937.GA5398@arbeit>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Klinger <ak@it-klinger.de>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB2UYTDNAKGQEMWFVBGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180711112706.30222-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 10, 2018 at 08:19:37PM +0200, Andreas Klinger wrote:
-> Device tree compiler (dtc) gives a warning if a device node has "@" with a
-> following number as it's name but no reg property.
-> 
-> Fix the example in the documentation of avia,hx711 to conform to dtc
-> behavior.
-> 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> ---
->  Documentation/devicetree/bindings/iio/adc/avia-hx711.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, Jul 11, 2018 at 7:27 PM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
+> Currently, TCON supports 2 ways to match TCON with engine (mixer in this
+> case). Old way is to just traverse of graph backwards and compare node
+> pointer. New way is to match TCON and engine by their respective ids.
+> All SoCs with DE2 enabled till now used the old way, which means mixer
+> id was never used and thus never implemented.
+>
+> However, for R40, only the new way will be used. To prepare for that,
+> implement mixer id fetching from DT.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
