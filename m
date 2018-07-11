@@ -1,125 +1,139 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v4 0/6] Add Actions Semiconductor Owl S900 I2C support
-Date: Wed, 11 Jul 2018 08:15:02 +0530
-Message-ID: <20180711024502.GA4739@Mani-XPS-13-9360>
-References: <20180701172305.15663-1-manivannan.sadhasivam@linaro.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 04/18] drm/sun4i: tcon-top: Cleanup clock handling
+Date: Wed, 11 Jul 2018 10:54:46 +0800
+Message-ID: <CAGb2v64h4PvgGkn_q7WW5k0mEjv9_bQ40zOK6KK+S3xdpJCzgg@mail.gmail.com>
+References: <20180710203511.18454-5-jernej.skrabec@siol.net> <201807110632.6k3QA7Vs%fengguang.wu@intel.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180701172305.15663-1-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, peda@axentia.se
-Cc: linus.walleij@linaro.org, linux-i2c@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, afaerber@suse.de
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBDPDSXNAKGQEZCGSRLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <201807110632.6k3QA7Vs%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 01, 2018 at 10:52:59PM +0530, Manivannan Sadhasivam wrote:
-> This patchset adds I2C controller support for Actions Semiconductor S900 SoC.
-> This driver has been structured in a way such that there will be only
-> one controller driver for the whole Owl family series (S500, S700 and
-> S900 SoCs).
-> 
-> There are 6 I2C controllers with separate memory mapped register space.
-> The I2C controller can handle atmost two messages concatenated by a
-> repeated start via its internal address feature. Hence the driver
-> uses this feature for messages of length greater than 1. In those cases,
-> the first message of the combined message should be a `write` with maximum
-> message length 6 and the second message's maximum length should be 240 bytes.
-> 
-> As far as the bus speed is concerned, this driver only supports
-> Standard (100KHz) and High speed (400KHz) for now.
-> 
-> The pinctrl definitions are only available for I2C0, I2C1 and I2C2.
-> With the mux option available only for I2C0.
-> 
-> For Bubblegum-96 board utilizing the S900 SoC, only I2C1 and I2C2 which
-> are exposed on the Low speed expansion connector are enabled.
-> 
-> This series depends on the pinctrl patch [1] is still not merged by the
-> platform maintainer Andreas but it has been reviewed by the pinctrl maintainer
-> Linus Walleij. For the reference, I have queued up all reviewed dts patches
-> in my tree [2] from which Andreas is picking them for 4.19.
-> 
-> For this series, since the dts patches will go through the ARM SoC tree,
-> Andreas will pick it up once it is reviewed.
-> 
-> Thanks,
-> Mani
-> 
-> [1] https://patchwork.kernel.org/patch/10322937/
-> [2] https://git.linaro.org/people/manivannan.sadhasivam/linux.git/log/?h=s900-for-next
-> 
+On Wed, Jul 11, 2018 at 7:20 AM, kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Jernej,
+>
+> Thank you for the patch! Perhaps something to improve:
+>
+> [auto build test WARNING on next-20180710]
+> [cannot apply to sunxi/sunxi/for-next drm/drm-next robh/for-next v4.18-rc4 v4.18-rc3 v4.18-rc2 v4.18-rc4]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>
+> url:    https://github.com/0day-ci/linux/commits/Jernej-Skrabec/Allwinner-R40-HDMI-refactoring/20180711-043932
+> config: arm64-allyesconfig (attached as .config)
+> compiler: aarch64-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.2.0 make.cross ARCH=arm64
+>
+> All warnings (new ones prefixed by >>):
+>
+>    In file included from include/linux/kernel.h:10:0,
+>                     from include/linux/list.h:9,
+>                     from include/linux/agp_backend.h:33,
+>                     from include/drm/drmP.h:35,
+>                     from drivers/gpu//drm/sun4i/sun8i_tcon_top.c:4:
+>    drivers/gpu//drm/sun4i/sun8i_tcon_top.c: In function 'sun8i_tcon_top_register_gate':
+>    include/linux/err.h:22:49: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+>     #define IS_ERR_VALUE(x) unlikely((unsigned long)(void *)(x) >= (unsigned long)-MAX_ERRNO)
+>                                                     ^
+>    include/linux/compiler.h:77:42: note: in definition of macro 'unlikely'
+>     # define unlikely(x) __builtin_expect(!!(x), 0)
+>                                              ^
+>>> drivers/gpu//drm/sun4i/sun8i_tcon_top.c:56:6: note: in expansion of macro 'IS_ERR_VALUE'
+>      if (IS_ERR_VALUE(index))
+>          ^~~~~~~~~~~~
+>
+> vim +/IS_ERR_VALUE +56 drivers/gpu//drm/sun4i/sun8i_tcon_top.c
+>
+>      3
+>    > 4  #include <drm/drmP.h>
+>      5
+>      6  #include <dt-bindings/clock/sun8i-tcon-top.h>
+>      7
+>      8  #include <linux/bitfield.h>
+>      9  #include <linux/component.h>
+>     10  #include <linux/device.h>
+>     11  #include <linux/module.h>
+>     12  #include <linux/of_graph.h>
+>     13  #include <linux/platform_device.h>
+>     14
+>     15  #include "sun8i_tcon_top.h"
+>     16
+>     17  static int sun8i_tcon_top_get_connected_ep_id(struct device_node *node,
+>     18                                                int port_id)
+>     19  {
+>     20          struct device_node *ep, *remote, *port;
+>     21          struct of_endpoint endpoint;
+>     22
+>     23          port = of_graph_get_port_by_id(node, port_id);
+>     24          if (!port)
+>     25                  return -ENOENT;
+>     26
+>     27          for_each_available_child_of_node(port, ep) {
+>     28                  remote = of_graph_get_remote_port_parent(ep);
+>     29                  if (!remote)
+>     30                          continue;
+>     31
+>     32                  if (of_device_is_available(remote)) {
+>     33                          of_graph_parse_endpoint(ep, &endpoint);
+>     34
+>     35                          of_node_put(remote);
+>     36
+>     37                          return endpoint.id;
+>     38                  }
+>     39
+>     40                  of_node_put(remote);
+>     41          }
+>     42
+>     43          return -ENOENT;
+>     44  }
+>     45
+>     46  static struct clk_hw *sun8i_tcon_top_register_gate(struct device *dev,
+>     47                                                     const char *parent,
+>     48                                                     void __iomem *regs,
+>     49                                                     spinlock_t *lock,
+>     50                                                     u8 bit, int name_index)
+>     51  {
+>     52          const char *clk_name, *parent_name;
+>     53          int ret, index;
+>     54
+>     55          index = of_property_match_string(dev->of_node, "clock-names", parent);
+>   > 56          if (IS_ERR_VALUE(index))
 
-Hi Andy, Peter,
+Yeah. This is incorrect usage. IS_ERR_VALUE should be used on pointers.
+Checking for a negative value here should suffice.
 
-Just a gentle ping on this v4!
+ChenYu
 
-Thanks,
-Mani
-
-> Changes in v4:
-> 
-> As per Andy and Peter review:
-> 
-> * Used spinlock for accessing most of the register access (only parts
->   involved sleep/long-busy-wait has been excluded)
-> * Removed returning 0 and added -ENXIO if the msg_ptr not equals to
->   message length
-> * Added DIV_ROUND_UP for setting clock frequency
-> * Changed one non-atomic mdelay instance to usleep_range
-> * Moved pinctrl definition patch before dts patch
-> * Fixed the driver to support only 100KHz and 400KHz frequencies
-> 
-> Changes in v3:
-> 
-> As per Peter, Andy and Andreas review:
-> 
-> * Removed owl_i2c_reset function from interrupt handler since it
->   involves the use of delays.
-> * Fixed the return path in owl_i2c_master_xfer and added a note
-> * Changed "base" parameter to "reg" in owl_i2c_update_reg for better
->   understandability
-> * Ordered the includes in alphabetical order
-> * Small changes to defines and added comma at the end of struct members
-> * Removed rendundant 0 assignment in owl_i2c_master_xfer
-> * Changed all OWL naming convention to Owl and also changed Actions Semi
->   naming to Actions Semiconductor
-> 
-> Changes in v2:
-> 
-> As per Andy's review:
-> * Modified infinite loops to fixed number of retries
-> * Used i2c_8bit_addr_from_msg for constructing the slave address
-> * Removed unnecessary parenthesis around defines
-> * Modified certain dev_warn to dev_dbg
-> * Modified the error handling to more generic pattern
-> 
-> * Fixed the return value in owl_i2c_master_xfer
-> * Added MAINTAINERS patch for I2C driver and its binding
-> 
-> Manivannan Sadhasivam (6):
->   dt-bindings: i2c: Add binding for Actions Semiconductor Owl I2C
->     controller
->   arm64: dts: actions: Add pinctrl definition for S900 I2C controller
->   arm64: dts: actions: Add Actions Semiconductor S900 I2C controller
->     nodes
->   arm64: dts: actions: Enable I2C1 and I2C2 in Bubblegum-96 board
->   i2c: Add Actions Semiconductor Owl family S900 I2C driver
->   MAINTAINERS: Add entry for Actions Semiconductor Owl I2C driver
-> 
->  .../devicetree/bindings/i2c/i2c-owl.txt       |  27 +
->  MAINTAINERS                                   |   2 +
->  .../dts/actions/s900-bubblegum-96-pins.dtsi   |  29 +
->  .../boot/dts/actions/s900-bubblegum-96.dts    |  11 +
->  arch/arm64/boot/dts/actions/s900.dtsi         |  60 +++
->  drivers/i2c/busses/Kconfig                    |   7 +
->  drivers/i2c/busses/Makefile                   |   1 +
->  drivers/i2c/busses/i2c-owl.c                  | 504 ++++++++++++++++++
->  8 files changed, 641 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-owl.txt
->  create mode 100644 arch/arm64/boot/dts/actions/s900-bubblegum-96-pins.dtsi
->  create mode 100644 drivers/i2c/busses/i2c-owl.c
-> 
-> -- 
-> 2.17.1
-> 
+>     57                  return ERR_PTR(index);
+>     58
+>     59          parent_name = of_clk_get_parent_name(dev->of_node, index);
+>     60
+>     61          ret = of_property_read_string_index(dev->of_node,
+>     62                                              "clock-output-names", name_index,
+>     63                                              &clk_name);
+>     64          if (ret)
+>     65                  return ERR_PTR(ret);
+>     66
+>     67          return clk_hw_register_gate(dev, clk_name, parent_name,
+>     68                                      CLK_SET_RATE_PARENT,
+>     69                                      regs + TCON_TOP_GATE_SRC_REG,
+>     70                                      bit, 0, lock);
+>     71  };
+>     72
+>
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
