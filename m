@@ -1,58 +1,64 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: k3dma: add optional property
- hisilicon,dma-min-chan
-Date: Wed, 11 Jul 2018 10:09:27 -0600
-Message-ID: <20180711160927.GA31359@rob-hp-laptop>
-References: <20180706035521.13736-1-guodong.xu@linaro.org>
- <20180706035521.13736-2-guodong.xu@linaro.org>
- <20180709103438.GC22377@vkoul-mobl>
+Subject: Re: [PATCH v2 1/2] dt: bindings: Add bindings for SDHCI Synopsys DWC
+ MSHC
+Date: Wed, 11 Jul 2018 10:12:06 -0600
+Message-ID: <20180711161206.GA1558@rob-hp-laptop>
+References: <20180706151930.78b3024b@xhacker.debian>
+ <20180706152047.0b0a4944@xhacker.debian>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180709103438.GC22377@vkoul-mobl>
+In-Reply-To: <20180706152047.0b0a4944@xhacker.debian>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>, Guodong Xu <guodong.xu@linaro.org>
-Cc: mark.rutland@arm.com, dan.j.williams@intel.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, liyu65@hisilicon.com, suzhuangluan@hisilicon.com, xuhongtao8@hisilicon.com, zhongkaihua@huawei.com, xuezhiliang@hisilicon.com, xupeng7@huawei.com, sunliang10@huawei.com, fengbaopeng@hisilicon.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Manjunath M B <Manjunath.MB@synopsys.com>, Prabu Thangamuthu <Prabu.T@synopsys.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 09, 2018 at 04:04:38PM +0530, Vinod wrote:
-> On 06-07-18, 11:55, Guodong Xu wrote:
-> > From: Li Yu <liyu65@hisilicon.com>
-> > 
-> > Add optional property hisilicon,dma-min-chan for k3dma.
-> > 
-> > Signed-off-by: Li Yu <liyu65@hisilicon.com>
-> > Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/dma/k3dma.txt | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/dma/k3dma.txt b/Documentation/devicetree/bindings/dma/k3dma.txt
-> > index 4945aeac4dc4..f34202a80f3c 100644
-> > --- a/Documentation/devicetree/bindings/dma/k3dma.txt
-> > +++ b/Documentation/devicetree/bindings/dma/k3dma.txt
-> > @@ -12,6 +12,11 @@ Required properties:
-> >  		have specific request line
-> >  - clocks: clock required
-> >  
-> > +Optional properties:
-> > +- hisilicon,dma-min-chan: the minimum DMA channel number which is usable
-> > +		Default value is 0, but in some platform it is
-> > +		configured 1, like in hi3660 platform
-> > +
-> >  Example:
-> >  
-> >  Controller:
-> > @@ -21,6 +26,7 @@ Controller:
-> >  			#dma-cells = <1>;
-> >  			dma-channels = <16>;
-> >  			dma-requests = <27>;
-> > +			hisilicon,dma-min-chan = <1>;
+On Fri, Jul 06, 2018 at 03:20:47PM +0800, Jisheng Zhang wrote:
+> Synopsys SDHCI compatible DesignWare Cores Mobile Storage Host
+> Controller can support eMMC/SD/SDIO. Add the bindings.
 > 
-> Am still expecting this to be a mask
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> ---
+>  .../bindings/mmc/sdhci-of-dwcmshc.txt         | 20 +++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-of-dwcmshc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-of-dwcmshc.txt b/Documentation/devicetree/bindings/mmc/sdhci-of-dwcmshc.txt
+> new file mode 100644
+> index 000000000000..ee4253b33be2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-of-dwcmshc.txt
+> @@ -0,0 +1,20 @@
+> +* Synopsys DesignWare Cores Mobile Storage Host Controller
+> +
+> +Required properties:
+> +- compatible: should be one of the following:
+> +    "snps,dwcmshc-sdhci"
 
-If so calling it 'min' doesn't make sense. And a mask should have 'mask' 
-in the name.
+Needs to note that there must also be an SoC specific compatible.
 
-Rob
+> +- reg: offset and length of the register set for the device.
+> +- interrupts: a single interrupt specifier.
+> +- clocks: Array of clocks required for SDHCI; requires at least one for
+> +    core clock.
+> +- clock-names: Array of names corresponding to clocks property; shall be
+> +    "core" for core clock and "bus" for optional bus clock.
+> +
+> +Example:
+> +	sdhci2: sdhci@aa0000 {
+> +		compatible = "snps,dwcmshc-sdhci";
+> +		reg = <0xaa0000 0x1000>;
+> +		interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&emmcclk>;
+> +		bus-width = <8>;
+> +	}
+> -- 
+> 2.18.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
