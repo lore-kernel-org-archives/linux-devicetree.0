@@ -1,41 +1,41 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] mfd: as3722: disable auto power on when AC OK
-Date: Wed, 11 Jul 2018 09:51:02 -0600
-Message-ID: <20180711155102.GA12132@rob-hp-laptop>
-References: <20180703150411.29709-1-marcel@ziswiler.com>
+Subject: Re: [PATCH v2] dt-bindings: marvell: Add documentation for the
+ Armada 3700 AVS binding
+Date: Wed, 11 Jul 2018 09:51:53 -0600
+Message-ID: <20180711155153.GA13702@rob-hp-laptop>
+References: <20180704132524.23640-1-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180703150411.29709-1-marcel@ziswiler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel@ziswiler.com>
-Cc: linux-tegra@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Laxman Dewangan <ldewangan@nvidia.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+In-Reply-To: <20180704132524.23640-1-gregory.clement@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Ken Ma <make@marvell.com>, Victor Gu <xigu@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>, Hua Jing <jinghua@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 03, 2018 at 05:04:11PM +0200, Marcel Ziswiler wrote:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+On Wed, Jul 04, 2018 at 03:25:24PM +0200, Gregory CLEMENT wrote:
+> Extend the documentation of the Armada 37xx SoC with the Adaptive Voltage
+> Scaling (AVS) registers.
 > 
-> On ams AS3722, power on when AC OK is enabled by default.
-> Making this option as disable by default and enable only
-> when platform need this explicitly.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> Reviewed-by: Bibek Basu <bbasu@nvidia.com>
-> Tested-by: Bibek Basu <bbasu@nvidia.com>
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 > ---
+> Changelog:
+> v1 -> v2:
+>  - Add Acked-by: from Viresh Kumar
+>  - Add the dt mailing list in copy
 > 
-> Changes in v2:
-> - Document device tree property as suggested by Stefan.
-> - Rename SEQ1 to SEQU1 as per datasheet as suggested by Stefan.
-> - Drop reference to downstream commit as suggested by Lee.
-> 
->  Documentation/devicetree/bindings/mfd/as3722.txt |  2 ++
+>  .../bindings/arm/marvell/armada-37xx.txt         | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/mfd/as3722.c                             | 12 ++++++++++++
->  include/linux/mfd/as3722.h                       |  3 +++
->  3 files changed, 17 insertions(+)
+Reviewed-by: Rob Herring <robh@kernel.org>
