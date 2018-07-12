@@ -1,231 +1,157 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3] Add DT support for Octavo Systems OSD3358-SM-RED
- based on TI AM335x
-Date: Thu, 12 Jul 2018 09:01:33 +0100
-Message-ID: <20180712080133.GI6920@n2100.armlinux.org.uk>
-References: <20180711145822.1090-1-neeraj.dantu@octavosystems.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v4 01/10] i3c: Add core I3C infrastructure
+Date: Thu, 12 Jul 2018 10:04:34 +0200
+Message-ID: <20180712100434.79f1e962@bbrezillon>
+References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
+        <20180330074751.25987-2-boris.brezillon@bootlin.com>
+        <CAK8P3a1aZXf2sQW2mgwJScycKPhdoOAwxRjm5cQG83513uc3fg@mail.gmail.com>
+        <20180711164120.3e32fb08@bbrezillon>
+        <CAK8P3a2EZB_tMS_47wv6M2Qpm79ZocxxhG5zLxXsBM_YjZgkyA@mail.gmail.com>
+        <20180711191212.3855bb25@bbrezillon>
+        <a31dc625-56bf-7a59-d9a3-2841360b864e@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180711145822.1090-1-neeraj.dantu@octavosystems.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neeraj Dantu <dantuguf14105@gmail.com>
-Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Jason Kridner <jkridner@gmail.com>, Neeraj Dantu <neeraj.dantu@octavosystems.com>, linux-omap@vger.kernel.org, Robert Nelson <robertcnelson@gmail.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a31dc625-56bf-7a59-d9a3-2841360b864e@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Arnd Bergmann <arnd@arndb.de>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 11, 2018 at 02:58:22PM +0000, Neeraj Dantu wrote:
-> OSD3358-SM-RED is a dev board for OSD335x System-in-Package(SiP) devices from
-> Octavo Systems.
-> 
-> This board family can be indentified by the A335BNLTOS00 in the at24 eeprom:
-> A2: [aa 55 33 ee 41 33 33 35  42 4e 4c 54 4f 53 30 30 |.U3.A335BNLTOS00|]
-> 
-> https://octavosystems.com/octavo_products/osd3358-sm-red/
-> 
-> Signed-off-by: Neeraj Dantu <neeraj.dantu@octavosystems.com>
-> CC: Tony Lindgren <tony@atomide.com>
-> CC: Robert Nelson <robertcnelson@gmail.com>
-> CC: Jason Kridner <jkridner@gmail.com>
-> ---
-> Changes in v2:
-> - Fix: Add patch description.
-> Changes in v3:
-> - Add include file for IRQ definitions
-> - Add comment about AM335x LCD errata
-> - Fix HDMI encoder node name
-> 
-> Signed-off-by: Neeraj Dantu <neeraj.dantu@octavosystems.com>
-> ---
->  arch/arm/boot/dts/Makefile                  |   3 +-
->  arch/arm/boot/dts/am335x-osd3358-sm-red.dts | 457 ++++++++++++++++++++++++++++
->  2 files changed, 459 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/am335x-osd3358-sm-red.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 37a3de7..d1ff69c 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -698,7 +698,8 @@ dtb-$(CONFIG_SOC_AM33XX) += \
->  	am335x-shc.dtb \
->  	am335x-sbc-t335.dtb \
->  	am335x-sl50.dtb \
-> -	am335x-wega-rdk.dtb
-> +	am335x-wega-rdk.dtb \
-> +	am335x-osd3358-sm-red.dtb
->  dtb-$(CONFIG_ARCH_OMAP4) += \
->  	omap4-droid4-xt894.dtb \
->  	omap4-duovero-parlor.dtb \
-> diff --git a/arch/arm/boot/dts/am335x-osd3358-sm-red.dts b/arch/arm/boot/dts/am335x-osd3358-sm-red.dts
-> new file mode 100644
-> index 0000000..65a9bcb
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/am335x-osd3358-sm-red.dts
-> @@ -0,0 +1,457 @@
-> +//SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (C) 2018 Octavo Systems LLC - http://www.octavosystems.com/
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "am33xx.dtsi"
-> +#include "am335x-osd335x-common.dtsi"
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +#include <dt-bindings/display/tda998x.h>
-> +
-> +/ {
-> +	model = "Octavo Systems OSD3358-SM-RED";
-> +	compatible = "oct,osd3358-sm-refdesign", "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
-> +};
-> +
-> +&ldo3_reg {
-> +	regulator-min-microvolt = <1800000>;
-> +	regulator-max-microvolt = <1800000>;
-> +	regulator-always-on;
-> +};
-> +
-> +&mmc1 {
-> +	vmmc-supply = <&vmmcsd_fixed>;
-> +};
-> +
-> +&mmc2 {
-> +	vmmc-supply = <&vmmcsd_fixed>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&emmc_pins>;
-> +	bus-width = <8>;
-> +	status = "okay";
-> +};
-> +
-> +&am33xx_pinmux {
-> +	nxp_hdmi_bonelt_pins: nxp-hdmi-bonelt-pins {
-> +		pinctrl-single,pins = <
-> +			AM33XX_IOPAD(0x9b0, PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* xdma_event_intr0 */
-> +			AM33XX_IOPAD(0x8a0, PIN_OUTPUT | MUX_MODE0)		/* lcd_data0.lcd_data0 */
-> +			AM33XX_IOPAD(0x8a4, PIN_OUTPUT | MUX_MODE0)		/* lcd_data1.lcd_data1 */
-> +			AM33XX_IOPAD(0x8a8, PIN_OUTPUT | MUX_MODE0)		/* lcd_data2.lcd_data2 */
-> +			AM33XX_IOPAD(0x8ac, PIN_OUTPUT | MUX_MODE0)		/* lcd_data3.lcd_data3 */
-> +			AM33XX_IOPAD(0x8b0, PIN_OUTPUT | MUX_MODE0)		/* lcd_data4.lcd_data4 */
-> +			AM33XX_IOPAD(0x8b4, PIN_OUTPUT | MUX_MODE0)		/* lcd_data5.lcd_data5 */
-> +			AM33XX_IOPAD(0x8b8, PIN_OUTPUT | MUX_MODE0)		/* lcd_data6.lcd_data6 */
-> +			AM33XX_IOPAD(0x8bc, PIN_OUTPUT | MUX_MODE0)		/* lcd_data7.lcd_data7 */
-> +			AM33XX_IOPAD(0x8c0, PIN_OUTPUT | MUX_MODE0)		/* lcd_data8.lcd_data8 */
-> +			AM33XX_IOPAD(0x8c4, PIN_OUTPUT | MUX_MODE0)		/* lcd_data9.lcd_data9 */
-> +			AM33XX_IOPAD(0x8c8, PIN_OUTPUT | MUX_MODE0)		/* lcd_data10.lcd_data10 */
-> +			AM33XX_IOPAD(0x8cc, PIN_OUTPUT | MUX_MODE0)		/* lcd_data11.lcd_data11 */
-> +			AM33XX_IOPAD(0x8d0, PIN_OUTPUT | MUX_MODE0)		/* lcd_data12.lcd_data12 */
-> +			AM33XX_IOPAD(0x8d4, PIN_OUTPUT | MUX_MODE0)		/* lcd_data13.lcd_data13 */
-> +			AM33XX_IOPAD(0x8d8, PIN_OUTPUT | MUX_MODE0)		/* lcd_data14.lcd_data14 */
-> +			AM33XX_IOPAD(0x8dc, PIN_OUTPUT | MUX_MODE0)		/* lcd_data15.lcd_data15 */
-> +			AM33XX_IOPAD(0x8e0, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* lcd_vsync.lcd_vsync */
-> +			AM33XX_IOPAD(0x8e4, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* lcd_hsync.lcd_hsync */
-> +			AM33XX_IOPAD(0x8e8, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* lcd_pclk.lcd_pclk */
-> +			AM33XX_IOPAD(0x8ec, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* lcd_ac_bias_en.lcd_ac_bias_en */
-> +		>;
-> +	};
-> +
-> +	nxp_hdmi_bonelt_off_pins: nxp-hdmi-bonelt-off-pins {
-> +		pinctrl-single,pins = <
-> +			AM33XX_IOPAD(0x9b0, PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* xdma_event_intr0 */
-> +		>;
-> +	};
-> +
-> +	mcasp0_pins: mcasp0-pins {
-> +		pinctrl-single,pins = <
-> +			AM33XX_IOPAD(0x9ac, PIN_INPUT_PULLUP | MUX_MODE0) /* mcasp0_ahcklx.mcasp0_ahclkx */
-> +			AM33XX_IOPAD(0x99c, PIN_OUTPUT_PULLDOWN | MUX_MODE2) /* mcasp0_ahclkr.mcasp0_axr2*/
-> +			AM33XX_IOPAD(0x994, PIN_OUTPUT_PULLUP | MUX_MODE0) /* mcasp0_fsx.mcasp0_fsx */
-> +			AM33XX_IOPAD(0x990, PIN_OUTPUT_PULLDOWN | MUX_MODE0) /* mcasp0_aclkx.mcasp0_aclkx */
-> +			AM33XX_IOPAD(0x86c, PIN_OUTPUT_PULLDOWN | MUX_MODE7) /* gpmc_a11.GPIO1_27 */
-> +		>;
-> +	};
-> +
-> +	flash_enable: flash-enable {
-> +		pinctrl-single,pins = <
-> +			AM33XX_IOPAD(0x944, PIN_OUTPUT_PULLDOWN | MUX_MODE7) 	/* rmii1_ref_clk.gpio0_29 */
-> +		>;
-> +	};
-> +
-> +	imu_interrupt: imu-interrupt {
-> +		pinctrl-single,pins = <
-> +			AM33XX_IOPAD(0x910, PIN_INPUT_PULLDOWN | MUX_MODE7) 		/* mii1_rx_er.gpio3_2 */
-> +		>;
-> +	};
-> +
-> +	ethernet_interrupt: ethernet-interrupt{
-> +		pinctrl-single,pins = <
-> +			AM33XX_IOPAD(0x908, PIN_INPUT_PULLDOWN | MUX_MODE7) 		/* mii1_col.gpio3_0 */
-> +		>;
-> +	};
-> +};
-> +
-> +&lcdc {
-> +	status = "okay";
-> +
-> +	/* If you want to get 24 bit RGB and 16 BGR mode instead of
-> +	 * current 16 bit RGB and 24 BGR modes, set the propety
-> +	 * below to "crossed" and uncomment the video-ports -property
-> +	 * in tda19988 node.
-> +	 */
-> +	blue-and-red-wiring = "straight";
-> +
-> +	port {
-> +		lcdc_0: endpoint@0 {
-> +			remote-endpoint = <&hdmi_0>;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c0 {
-> +	hdmiencoder: tda19988 {
-> +		compatible = "nxp,tda998x";
-> +		reg = <0x70>;
-> +
-> +		pinctrl-names = "default", "off";
-> +		pinctrl-0 = <&nxp_hdmi_bonelt_pins>;
-> +		pinctrl-1 = <&nxp_hdmi_bonelt_off_pins>;
-> +
-> +		/* Convert 24bit BGR to RGB, e.g. cross red and blue wiring */
-> +		/* AM335x errata for wiring: http://www.ti.com/lit/er/sprz360i/sprz360i.pdf */
+On Thu, 12 Jul 2018 06:41:15 +0200
+Peter Rosin <peda@axentia.se> wrote:
 
-Please place the errata comment in the lcdc node above, where it's more
-relevant, thanks.
+> [tried to send something like this yesterday, but it appears to have been
+> lost, sorry for any duplicate]
+> 
+> On 2018-07-11 19:12, Boris Brezillon wrote:
+> > On Wed, 11 Jul 2018 17:39:56 +0200
+> > Arnd Bergmann <arnd@arndb.de> wrote:
+> >   
+> >> On Wed, Jul 11, 2018 at 4:41 PM, Boris Brezillon
+> >> <boris.brezillon@bootlin.com> wrote:  
+> >>> On Wed, 11 Jul 2018 16:01:56 +0200 Arnd Bergmann <arnd@arndb.de> wrote:    
+> >>>>> - the bus element is a separate object and is not implicitly described
+> >>>>>   by the master (as done in I2C). The reason is that I want to be able
+> >>>>>   to handle multiple master connected to the same bus and visible to
+> >>>>>   Linux.
+> >>>>>   In this situation, we should only have one instance of the device and
+> >>>>>   not one per master, and sharing the bus object would be part of the
+> >>>>>   solution to gracefully handle this case.
+> >>>>>   I'm not sure we will ever need to deal with multiple masters
+> >>>>>   controlling the same bus and exposed under Linux, but separating the
+> >>>>>   bus and master concept is pretty easy, hence the decision to do it
+> >>>>>   like that.
+> >>>>>   The other benefit of separating the bus and master concepts is that
+> >>>>>   master devices appear under the bus directory in sysfs.    
+> >>>>
+> >>>> I'm not following here at all, sorry for missing prior discussion if this
+> >>>> was already explained. What is the "multiple master" case? Do you
+> >>>> mean multiple devices that are controlled by Linux and that each talk
+> >>>> to other devices on the same bus, multiple operating systems that
+> >>>> have talk to are able to own the bus with the kernel being one of
+> >>>> them, a controller that controls multiple independent buses,
+> >>>> or something else?    
+> >>>
+> >>> I mean several masters connected to the same bus and all exposed to the
+> >>> same Linux instance. In this case, the question is, should we have X
+> >>> I3C buses exposed (X being the number of masters) or should we only
+> >>> have one?
+> >>>
+> >>> Having a bus represented as a separate object allows us to switch to
+> >>> the "one bus : X masters" representation if we need too.    
+> >> ...  
+> >>>>
+> >>>> This feels a bit odd: so you have bus_type that can contain devices
+> >>>> of three (?) different device types: i3c_device_type, i3c_master_type
+> >>>> and i3c_busdev_type.
+> >>>>
+> >>>> Generally speaking, we don't have a lot of subsystems that even
+> >>>> use device_types. I assume that the i3c_device_type for a
+> >>>> device that corresponds to an endpoint on the bus, but I'm
+> >>>> still confused about the other two, and why they are part of
+> >>>> the same bus_type.    
+> >>>
+> >>> i3c_busdev is just a virtual device representing the bus itself.
+> >>> i3c_master is representing the I3C master driving the bus. The reason
+> >>> for having a different type here is to avoid attaching this device to a
+> >>> driver but still being able to see the master controller as a device on
+> >>> the bus. And finally, i3c_device are all remote devices that can be
+> >>> accessed through a given i3c_master.
+> >>>
+> >>> This all comes from the design choice I made to represent the bus as a
+> >>> separate object in order to be able to share it between different
+> >>> master controllers exposed through the same Linux instance. Since
+> >>> master controllers are also remote devices for other controllers, we
+> >>> need to represent them.    
+> >>
+> >> Ok, so I think this is the most important question to resolve: do we
+> >> actually need to control multiple masters on a single bus from one OS
+> >> or not?
+> >>
+> >> The problem that I see is that it breaks the tree abstraction that
+> >> we use in the dtb interface, in the driver model and in sysfs.
+> >> If we need to deal with a hardware bus structure like
+> >>
+> >>               cpu
+> >>              /   \
+> >>             /     \
+> >>        platdev   platdev
+> >>            |        |
+> >>      i3c-master   i3c-master
+> >>             \      /
+> >>              \    /
+> >>             i3c-bus
+> >>              /    \
+> >>          device   device
+> >>
+> >> then that abstraction no longer holds. Clearly you could build
+> >> a system like that, and if we have to support it, the i3c infrastructure
+> >> should be prepared for it, since we wouldn't be able to retrofit
+> >> it later.  
+> > 
+> > Exactly. For the DT representation I thought we could have the primary
+> > master hold the device nodes, and then have secondary masters reference
+> > the main master with a phandle (i3c-bus = <&main_i3c_master>;). For the
+> > sysfs representation, it would be the same. Only one of the master
+> > would create the i3c_bus object and the other masters would just
+> > reference it.
+> >   
+> >>
+> >> What would be the point of building such a system though?  
+> > 
+> > This, I don't know. But as you said, if we go for a "one bus per
+> > master" representation, going back will be difficult.
+> >   
+> >> Is this for performance, failover, or something else?  
+> > 
+> > No, I don't think so, especially since the mastership handover
+> > operation is not free. So keeping the same master in control is
+> > probably better in term of perfs.
+> > 
+> > One case I can think of is when the primary master does not have enough
+> > resources to address all devices on the bus, and let the secondary
+> > master handle all transactions targeting those devices.
+> >   
+> >> IOW, what feature would we lose if we were to declare that
+> >> setup above invalid (and ensure you cannot represent it in DT)?  
+> > 
+> > That's exactly the sort of discussion I wanted to trigger. Maybe we
+> > shouldn't care and expose this use case as if it was X different I3C
+> > buses (with all devices present on the bus being exposed X times to the
+> > system).  
+> 
+> For I2C, this multiple masters for one bus case was retrofitted in
+> the i2c-demux-pinctrl driver. It's a huge kludge with a number of
+> undesirable quirks. I don't know if the circumstances for adding
+> this I2C driver also applies for I3C,
 
-> +		/* video-ports = <0x234501>; */
-> +
-> +		#sound-dai-cells = <0>;
-> +		audio-ports = <	TDA998x_I2S	0x03>;
-> +
-> +		ports {
-> +			port@0 {
-> +				hdmi_0: endpoint@0 {
-> +					remote-endpoint = <&lcdc_0>;
-> +				};
-> +			};
-> +		};
+It's hard to guess now.
 
-Most ignore the "ports" and drop the @0 on the port and endpoint nodes
-here.  If a node name has a @<addr>, it's usual to also have a reg=
-property, which also means you need to add #address-cells to the
-parent node.  It's simpler for bindings that only contain one
-port and endpoint to just omit the address entirely (as you've
-already done in the lcdc description above.)  For a minimal example,
-see arch/arm64/boot/dts/arm/juno-base.dtsi
+> but it might be an argument
+> in favor of the proposed extra bus object...
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps up
-According to speedtest.net: 13Mbps down 490kbps up
+I know that Wolfram was in favor of this separate bus <-> master
+representation, probably because of his experience with this particular
+driver.
