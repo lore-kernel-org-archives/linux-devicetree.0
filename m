@@ -1,63 +1,58 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pfuze100: add optional pfuze-disable-sw
- binding
-Date: Thu, 12 Jul 2018 16:31:21 +0100
-Message-ID: <20180712153121.GF10369@sirena.org.uk>
-References: <20180712110240.3006-1-m.felsch@pengutronix.de>
- <20180712110240.3006-2-m.felsch@pengutronix.de>
+From: Stefan Popa <stefan.popa@analog.com>
+Subject: [PATCH 2/5] dt-bindings: iio: accel: Add docs for ADXL372
+Date: Thu, 12 Jul 2018 18:34:57 +0300
+Message-ID: <1531409697-19957-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="m1UC1K4AOz1Ywdkx"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180712110240.3006-2-m.felsch@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, fabio.estevam@nxp.com, Anson.Huang@nxp.com, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: jic23@kernel.org
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, rdunlap@infradead.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
 List-Id: devicetree@vger.kernel.org
 
+Add the device tree binding documentation for the ADXL372 3-axis digital
+accelerometer.
 
---m1UC1K4AOz1Ywdkx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+ Documentation/devicetree/bindings/iio/accel/adxl372.txt | 16 ++++++++++++++++
+ MAINTAINERS                                             |  1 +
+ 2 files changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/adxl372.txt
 
-On Thu, Jul 12, 2018 at 01:02:39PM +0200, Marco Felsch wrote:
-
-> +Optional properties:
-> +- pfuze-disable-sw: Disable all unused switch regulators to save power
-> +  consumption. Attention, some platforms are using the switch regulators as DDR
-> +  ref or supply voltage. Mark these regulators as "regulator-always-on" to skip
-> +  disabling these regulators. If not specified, the driver simualtes the
-> +  disabling. This means the state of the regulator is set to 'disabled' but the
-> +  driver don't disable the regulator.
-
-This is a bit of a confused way of specifying things that depends on the
-Linux implementation, and the property sounds like a double negative
-too.  I'd say something like "pfuze-support-disable" and then explicitly
-say that this is a workaround for backwards compatibility.
-
-I'd also recommend changing the implementation patch to just register a
-different version of the desc and ops that just doesn't have the disable
-operation so that the framework knows what's going on.  While the
-current implementation works now there's the possibility that at some
-point in the future we might start relying on the disable actually
-having taken effect somehow and will get confused.  There's some
-existing drivers that optimize their resume paths if they know power
-wasn't removed.
-
---m1UC1K4AOz1Ywdkx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltHdEgACgkQJNaLcl1U
-h9CaAAf/UU9njCozGSkAnCo5ZtAkrPB4iKYggp6MKxZsOBJgAXqMRBdJrWlI58As
-aWTfq7UaLaaqOsumRWDt/NeX3Q39bRimIJaN0KXBWdFwUz/+/4x2NDpGAe9FQFPW
-S7l4SwVATYbdqQdeJi5QRDgyTJwrjrlTixK4P9LLB8gS49UwIDG/PbKfHIxBrNRG
-NPrZfavFaEEy8HZ4E0vmnNEJkrpTnzndsEBOi/mWT3CkaGpVUJRvUjDQgU+8bj1p
-VHv1AD0pX+eJdClr7oMdGJhcbUScZrXRD1cKs7zG8gSAAgvTG3muhoWvB1pLYLrt
-H7Fmx6YMLkVQ/L9KCPAsErpDhplZgw==
-=fT4z
------END PGP SIGNATURE-----
-
---m1UC1K4AOz1Ywdkx--
+diff --git a/Documentation/devicetree/bindings/iio/accel/adxl372.txt b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
+new file mode 100644
+index 0000000..fea4baf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
+@@ -0,0 +1,16 @@
++Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer
++
++http://www.analog.com/media/en/technical-documentation/data-sheets/adxl372.pdf
++
++Required properties:
++ - compatible : should be "adi,adxl372"
++ - reg: SPI chip select number for the device
++ - spi-max-frequency: Max SPI frequency to use
++
++Example:
++
++	accelerometer@0 {
++		compatible = "adi,adxl372";
++		reg = <0>;
++		spi-max-frequency = <1000000>;
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2ba47bb..c8dd09c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -548,6 +548,7 @@ M:	Stefan Popa <stefan.popa@analog.com>
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+ F:	drivers/iio/accel/adxl372.c
++F:	Documentation/devicetree/bindings/iio/accel/adxl372.txt
+ 
+ AF9013 MEDIA DRIVER
+ M:	Antti Palosaari <crope@iki.fi>
+-- 
+2.7.4
