@@ -1,93 +1,58 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Re: [PATCH 1/2] ARM: sun8i: h3: enable HDMI output
- on Banana Pi M2 Zero
-Date: Thu, 12 Jul 2018 16:53:06 +0200
-Message-ID: <20180712145306.ootqt7dfh3nxsamy@flea>
-References: <20180711132233.42301-1-icenowy@aosc.io>
- <20180711132233.42301-2-icenowy@aosc.io>
- <20180711150532.6gzm7krouriddreh@flea>
- <8F6CDF5C-2AC1-43EC-858A-5C6345CF279A@aosc.io>
- <20180712064601.m3bdd46wzac5fpgh@flea>
- <A7CA2831-7117-415C-BC59-3FB4AE425598@aosc.io>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: RFC: tegra2/tegra3 automotive part changes
+Date: Thu, 12 Jul 2018 16:07:15 +0100
+Message-ID: <23296983-7620-617c-50a0-e3f0c971b14b@codethink.co.uk>
+References: <3916c0ea-964e-42ab-8bfd-8e8edc5110ee@codethink.co.uk>
+ <62581f70-4f55-05b4-5210-221698d501c7@kapsi.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBU6WTXNAKGQE6SRSM2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <A7CA2831-7117-415C-BC59-3FB4AE425598-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <62581f70-4f55-05b4-5210-221698d501c7@kapsi.fi>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mikko Perttunen <cyndis@kapsi.fi>, linux-tegra <linux-tegra@vger.kernel.org>, Device Tree list <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Preston <thomas.preston@codethink.co.uk>, Terry Hu <kejia.hu@codethink.co.uk>, jorgesanjuan <jorge.sanjuan@codethink.co.uk>, Beth White <beth.white@codethink.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 12, 2018 at 03:09:55PM +0800, Icenowy Zheng wrote:
-> =E4=BA=8E 2018=E5=B9=B47=E6=9C=8812=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
-2:46:01, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
-> >On Wed, Jul 11, 2018 at 11:15:50PM +0800, Icenowy Zheng wrote:
-> >>=20
-> >>=20
-> >> =E4=BA=8E 2018=E5=B9=B47=E6=9C=8811=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
-=8811:05:32, Maxime Ripard
-> ><maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
-> >> >Hi,
-> >> >
-> >> >On Wed, Jul 11, 2018 at 09:22:32PM +0800, Icenowy Zheng wrote:
-> >> >> Banana Pi M2 Zero board has a miniHDMI port connected to the HDMI
-> >> >> controller of Allwinner H3 SoC.
-> >> >>=20
-> >> >> Enable the HDMI output in Banana Pi M2 Zero device tree.
-> >> >>=20
-> >> >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> >> >> ---
-> >> >>  .../dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 25
-> >> >+++++++++++++++++++
-> >> >>  1 file changed, 25 insertions(+)
-> >> >>=20
-> >> >> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> >> >b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> >> >> index 7d01f9322658..eb61dcf32797 100644
-> >> >> --- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> >> >> +++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> >> >> @@ -26,6 +26,17 @@
-> >> >>  		stdout-path =3D "serial0:115200n8";
-> >> >>  	};
-> >> >> =20
-> >> >> +	hdmi-connector {
-> >> >> +		compatible =3D "hdmi-connector";
-> >> >> +		type =3D "c";
-> >> >
-> >> >This is not one of the connector type declared in DRM, how is it
-> >> >exposed to the userspace?
-> >>=20
-> >> So just use "A" here (because of single link)?
-> >
-> >If the connector type is C, it should be C, and DRM / driver adjusted
-> >to handle it.
->=20
-> Okay I won't change this property, if there's any further revisions.
->=20
-> For DRM driver, I think it can be an independent patchset.
-
-Not really, since it's going to break userspace as soon as you merge
-that other patchset.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+T24gMTIvMDcvMTggMTQ6NTAsIE1pa2tvIFBlcnR0dW5lbiB3cm90ZToKPiBPbiAwNy8xMi8yMDE4
+IDA0OjM2IFBNLCBCZW4gRG9va3Mgd3JvdGU6Cj4+IEhlbGxvLCB3ZSBhcmUgbG9va2luZyBhdCB1
+cC1zdHJlYW1pbmcgc29tZSBvZiB0aGUgd29yayB3ZSBoYXZlCj4+IGRvbmUgb24gdGhlIHRlZ3Jh
+MiBhbmQgdGVncmEzIGF1dG9tb3RpdmUgZGV2aWNlcy4gVGhlIGF1dG9tb3RpdmUKPj4gZ3JhZGUg
+ZGV2aWNlcyBhcmUgY2xvc2UgdGhlIGNvbW1lcmNpYWwgcGFydHMgc28gd2Ugd291bGQgbGlrZSB0
+bwo+PiBkaXNjdXNzIHRoZSBjb3JlIGNoYW5nZXMgYmVmb3JlIHN1Ym1pdHRpbmcuCj4+Cj4+IFRo
+ZSBjaGFuZ2VzIGFyZSBtb3N0bHkgd2l0aCB0aGluZ3MgbGlrZSB0aGUgY2xvY2sgc2V0dXAgYW5k
+IGEKPj4gZmV3IHBlcmlwaGVyYWwgcXVpcmtzIChJSVJDIHRoZXNlIGFyZSBtb3N0bHkgTU1DKS4K
+Pj4KPj4gV2UgYXJlIHByb3Bvc2luZyB0byBjaGFuZ2UgdGhlIGRldmljZS10cmVlIHByb3BlcnRp
+ZXMgZm9yIHRoZSByb290Cj4+IG5vZGUgYW5kIGFueSBvdGhlciBhZmZlY3RlZCBkZXZpY2VzIGZy
+b20gIm52aWRpYSx0ZWdyYVhYIiB0byBhIG5ldwo+PiAibnZpZGlhLHRlZ3JhWFhhIi4gV2Ugd291
+bGQgd2VsY29tZSBkaXNjdXNzaW9uIG9uIHdoZXRoZXIgdG8gdXBkYXRlCj4+IGFsbCB0aGUgZGV2
+aWNlcyBhdCB0aGUgc3RhcnQKPj4KPj4gQW4gZXhhbXBsZSBvZiB0ZWdyYTMwYS5kdHNpOgo+Pgo+
+PiAjaW5jbHVkZSAidGVncmEzMC5kdHNpIgo+Pgo+PiAvIHsKPj4gwqDCoMKgwqDCoMKgwqDCoCBj
+b21wYXRpYmxlID0gIm52aWRpYSx0ZWdyYTMwYSI7Cj4+Cj4+IMKgwqDCoMKgwqDCoMKgwqAgY2xv
+Y2tANjAwMDYwMDAgewo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjb21wYXRp
+YmxlID0gIm52aWRpYSx0ZWdyYTMwYS1jYXIiOwo+PiDCoMKgwqDCoMKgwqDCoMKgIH07Cj4+IH0K
+Pj4KPj4gV2UgZG9uJ3QgdGhpbmsgdGhlIGNoYW5nZXMgYXJlIGJpZyBlbm91Z2ggdG8gd2FycmFu
+dCB0aGVpciBvd24KPj4gS2NvbmZpZy9kZWZjb25maWcgdXBkYXRlcy4KPj4KPiAKPiBXaGF0IGtp
+bmQgb2YgY2hhbmdlcyBkbyB5b3UgaGF2ZT8gVGVncmEzMGEgd291bGQgcG9pbnQgdG8gYSBzZXBh
+cmF0ZSBTb0MgCj4gcmV2aXNpb24gb2YgVGVncmEzIHRoZSBleGlzdGVuY2Ugb2Ygd2hpY2ggSSdt
+IG5vdCBhd2FyZSBvZi4gSWYgeW91IGNhbiAKPiBzaG93IHNvbWUgb2YgdGhlIGNoYW5nZXMgaXQg
+d291bGQgYmUgZWFzaWVyIHRvIHNheSBob3cgdGhlIHN5c3RlbSBzaG91bGQgCj4gYmUgc3BlY2lm
+aWVkLgoKSSdtIGp1c3Qgd29ya2luZyBvbiB0aGUgY29yZSBjbG9jayBpbml0aWFsaXNhdGlvbiBw
+YXRjaGVzIGFzIG91cgpvcmlnaW5hbCB3b3JrIHdhcyBqdXN0IHBhdGNoaW5nIHRoZSB0ZWdyYTIw
+IGFuZCB0ZWdyYTMwIGNsb2NrIGluaXQKdGFibGVzLgoKQXMgZmFyIGFzIHdlIGNhbiBzZWUgdGhl
+IHRlZ3JhMzAgYXV0b21vdGl2ZSBncmFkZSBzaWxpY29uIGlzIG1vc3RseQpjb21wYXRpYmxlIHdp
+dGggdGhlIHRlZ3JhMzAgYnV0IGhhcyBzb21lIGNsb2NrIHJlc3RyaWN0aW9ucyBhbmQKaW5pdGlh
+bGlzYXRpb24gY2hhbmdlcy4KCgotLSAKQmVuIERvb2tzCQkJCWh0dHA6Ly93d3cuY29kZXRoaW5r
+LmNvLnVrLwpTZW5pb3IgRW5naW5lZXIJCQkJQ29kZXRoaW5rIC0gUHJvdmlkaW5nIEdlbml1cwoK
+aHR0cHM6Ly93d3cuY29kZXRoaW5rLmNvLnVrL3ByaXZhY3kuaHRtbAoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
+IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
