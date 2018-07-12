@@ -1,162 +1,87 @@
-From: Frieder Schrempf <frieder.schrempf@exceet.de>
-Subject: Re: [PATCH v2 05/12] dt-bindings: spi: Adjust the bindings for the
- FSL QSPI driver
-Date: Thu, 12 Jul 2018 10:13:57 +0200
-Message-ID: <9fd871dd-3d10-044c-db80-d65df161a7d9@exceet.de>
-References: <1530789310-16254-1-git-send-email-frieder.schrempf@exceet.de>
- <1530789310-16254-6-git-send-email-frieder.schrempf@exceet.de>
- <20180711160521.GA16884@rob-hp-laptop>
+From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
+Subject: Re: [PATCH v5 1/6] dt-bindings: media: rcar-vin: Align Gen2 and Gen3
+Date: Thu, 12 Jul 2018 10:14:19 +0200
+Message-ID: <20180712081419.GU5237@bigcity.dyn.berto.se>
+References: <1531145962-1540-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1531145962-1540-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180711160521.GA16884@rob-hp-laptop>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, yogeshnarayan.gaur@nxp.com, boris.brezillon@bootlin.com, richard@nod.at, prabhakar.kushwaha@nxp.com, linux-kernel@vger.kernel.org, shawnguo@kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, han.xu@nxp.com, broonie@kernel.org, linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com, fabio.estevam@nxp.com, david.wolfe@nxp.com, computersforpeace@gmail.com, dwmw2@infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1531145962-1540-2-git-send-email-jacopo+renesas@jmondi.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, geert@glider.be, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Jacopo,
 
-On 11.07.2018 18:05, Rob Herring wrote:
-> On Thu, Jul 05, 2018 at 01:15:01PM +0200, Frieder Schrempf wrote:
->> Adjust the documentation of the new SPI memory interface based
->> driver to reflect the new drivers settings.
-> 
-> Bindings shouldn't change (other than new properties) due to driver
-> changes.
+On 2018-07-09 16:19:16 +0200, Jacopo Mondi wrote:
+> Align description of the Gen2 and Gen3 bindings for parallel input.
+> This commit prepares for description of optional endpoint properties in p=
+orts
+> subnodes accepting parallel video connections.
+> =
 
-Right, I added an explanation below, why I think the changes are necessary.
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-> 
->>
->> Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
->> ---
->> Changes in v2:
->> ==============
->> * Split the moving and editing of the dt-bindings in two patches
->>
->>   .../devicetree/bindings/spi/spi-fsl-qspi.txt    | 22 ++++++++++----------
->>   1 file changed, 11 insertions(+), 11 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
->> index 483e9cf..8b4eed7 100644
->> --- a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
->> +++ b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
->> @@ -3,9 +3,8 @@
->>   Required properties:
->>     - compatible : Should be "fsl,vf610-qspi", "fsl,imx6sx-qspi",
->>   		 "fsl,imx7d-qspi", "fsl,imx6ul-qspi",
->> -		 "fsl,ls1021a-qspi"
->> +		 "fsl,ls1021a-qspi", "fsl,ls2080a-qspi"
->>   		 or
->> -		 "fsl,ls2080a-qspi" followed by "fsl,ls1021a-qspi",
->>   		 "fsl,ls1043a-qspi" followed by "fsl,ls1021a-qspi"
-> 
-> So the 2080a h/w was compatible with the 1021a h/w, but now it is not?
-> How did the h/w change?
+Acked-by: Niklas S=F6derlund <niklas.soderlund+renesas@ragnatech.se>
 
-I guess this should be posted as a separate fix. Formerly there was only 
-"fsl,ls1021a-qspi" handled in the driver and the bindings here claimed 
-that "fsl,ls2080a-qspi" is compatible.
+> ---
+>  Documentation/devicetree/bindings/media/rcar_vin.txt | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> =
 
-Some time ago a separate entry for "fsl,ls2080a-qspi" was added to the 
-driver [1] and it adds a quirk, that is not set for "fsl,ls1021a-qspi". 
-That's why I concluded, that these two are actually not compatible.
+> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Docum=
+entation/devicetree/bindings/media/rcar_vin.txt
+> index e25ab07..39c4e6a 100644
+> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> @@ -39,9 +39,11 @@ Additionally, an alias named vinX will need to be crea=
+ted to specify
+>  which video input device this is.
+>  =
 
-> 
->>     - reg : the first contains the register location and length,
->>             the second contains the memory mapping address and length
->> @@ -15,14 +14,15 @@ Required properties:
->>     - clock-names : Should contain the name of the clocks: "qspi_en" and "qspi".
->>   
->>   Optional properties:
->> -  - fsl,qspi-has-second-chip: The controller has two buses, bus A and bus B.
->> -                              Each bus can be connected with two NOR flashes.
->> -			      Most of the time, each bus only has one NOR flash
->> -			      connected, this is the default case.
->> -			      But if there are two NOR flashes connected to the
->> -			      bus, you should enable this property.
->> -			      (Please check the board's schematic.)
-> 
-> You can't just remove properties without explanation. Why is this no
-> longer needed? What about backwards compatibility with existing dtbs?
+>  The per-board settings Gen2 platforms:
+> - - port sub-node describing a single endpoint connected to the vin
+> -   as described in video-interfaces.txt[1]. Only the first one will
+> -   be considered as each vin interface has one input port.
+> +
+> +- port - sub-node describing a single endpoint connected to the VIN
+> +  from external SoC pins as described in video-interfaces.txt[1].
+> +  Only the first one will be considered as each vin interface has one
+> +  input port.
+>  =
 
-You're right, the explanation is missing here.
+>  The per-board settings Gen3 platforms:
+>  =
 
-The "old" driver was using this property to select one of two dual chip 
-setups (two chips on one bus or two chips on separate buses). And it 
-used the order in which the subnodes are defined in the dt to select the 
-CS, the chip is connected to.
+> @@ -52,7 +54,7 @@ from local SoC CSI-2 receivers (port@1) depending on So=
+C.
+>  - renesas,id - ID number of the VIN, VINx in the documentation.
+>  - ports
+>      - port@0 - sub-node describing a single endpoint connected to the VIN
+> -      from external SoC pins described in video-interfaces.txt[1].
+> +      from external SoC pins as described in video-interfaces.txt[1].
+>        Describing more than one endpoint in port@0 is invalid. Only VIN
+>        instances that are connected to external pins should have port@0.
+>      - port@1 - sub-nodes describing one or more endpoints connected to
+> -- =
 
-Both methods are wrong and in fact the "reg" property should be used to 
-determine which bus and CS a chip is connected to. This also enables us 
-to use different setups than just single chip, or symmetric dual chip.
+> 2.7.4
+> =
 
-So the porting of the driver from the MTD to the SPI framework actually 
-enforces the use of the "reg" properties and makes 
-"fsl,qspi-has-second-chip" superfluous.
 
-As all boards that have "fsl,qspi-has-second-chip" set, also have 
-correct "reg" properties, the removal of this property shouldn't lead to 
-any incompatibilities.
+-- =
 
-The only compatibility issues I can see are with imx6sx-sdb.dts and 
-imx6sx-sdb-reva.dts, which have their reg properties set incorrectly 
-(see explanation here: [2]), all other boards should stay compatible.
-
-> 
->> -  - big-endian : That means the IP register is big endian
->> +  - big-endian : That means the IP registers format is big endian
-> 
-> This is a standard property so it doesn't really need to be redefined
-> here, but just reference the definition.
-
-So I will change that to:
-
-	big-endian : See common-properties.txt for a definition
-
-Thanks,
-Frieder
-
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/mtd/spi-nor/fsl-quadspi.c?h=v4.18-rc4&id=d728a7ea9037c2df085bf9494d56e90d0ff69d7d
-[2] https://patchwork.ozlabs.org/patch/922817/#1925445
-
-> 
->> +
->> +Required SPI slave node properties:
->> +  - reg: There are two buses (A and B) with two chip selects each.
->> +	 This encodes to which bus and CS the flash is connected:
->> +		<0>: Bus A, CS 0
->> +		<1>: Bus A, CS 1
->> +		<2>: Bus B, CS 0
->> +		<3>: Bus B, CS 1
->>   
->>   Example:
->>   
->> @@ -40,7 +40,7 @@ qspi0: quadspi@40044000 {
->>   	};
->>   };
->>   
->> -Example showing the usage of two SPI NOR devices:
->> +Example showing the usage of two SPI NOR devices on bus A:
->>   
->>   &qspi2 {
->>   	pinctrl-names = "default";
->> -- 
->> 2.7.4
->>
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Regards,
+Niklas S=F6derlund
