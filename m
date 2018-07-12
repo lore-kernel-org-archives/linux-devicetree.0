@@ -1,95 +1,51 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH 06/14] fsi: master-gpio: Add more tracepoints
-Date: Thu, 12 Jul 2018 12:01:29 +1000
-Message-ID: <e25f7a0b1d529b57a2994681101a3633849cdc1b.camel@kernel.crashing.org>
-References: <20180626232605.13420-1-benh@kernel.crashing.org>
-         <20180626232605.13420-7-benh@kernel.crashing.org>
-         <CACPK8XfZPCiCPeNL5-TpPMcHrA_fyiLu=5pArSxBXd6wT8jkFA@mail.gmail.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Subject: Re: [PATCH v2 1/2] dt: bindings: Add bindings for SDHCI Synopsys
+ DWC MSHC
+Date: Thu, 12 Jul 2018 10:06:11 +0800
+Message-ID: <20180712100611.5887a195@xhacker.debian>
+References: <20180706151930.78b3024b@xhacker.debian>
+        <20180706152047.0b0a4944@xhacker.debian>
+        <20180711161206.GA1558@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACPK8XfZPCiCPeNL5-TpPMcHrA_fyiLu=5pArSxBXd6wT8jkFA@mail.gmail.com>
+In-Reply-To: <20180711161206.GA1558@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: linux-aspeed@lists.ozlabs.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, devicetree <devicetree@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Manjunath M B <Manjunath.MB@synopsys.com>, Prabu Thangamuthu <Prabu.T@synopsys.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-06-28 at 13:41 +0930, Joel Stanley wrote:
-> On 27 June 2018 at 08:55, Benjamin Herrenschmidt
-> <benh@kernel.crashing.org> wrote:
-> > This adds a few more tracepoints that have proven useful when
-> > debugging issues with the FSI bus.
-> > 
-> > Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> 
-> Reviewed-by: Joel Stanley <joel@jms.id.au>
-> 
-> > ---
-> >  drivers/fsi/fsi-master-gpio.c          | 16 ++++---
-> >  include/trace/events/fsi_master_gpio.h | 59 ++++++++++++++++++++++++++
-> >  2 files changed, 69 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/fsi/fsi-master-gpio.c b/drivers/fsi/fsi-master-gpio.c
-> > index 48e0e65b2982..a00a85aa6d56 100644
-> > --- a/drivers/fsi/fsi-master-gpio.c
-> > +++ b/drivers/fsi/fsi-master-gpio.c
-> > @@ -130,10 +130,17 @@ static void set_sda_output(struct fsi_master_gpio *master, int value)
-> > 
-> >  static void clock_zeros(struct fsi_master_gpio *master, int count)
-> >  {
-> > +       trace_fsi_master_gpio_clock_zeros(master, count);
-> >         set_sda_output(master, 1);
-> >         clock_toggle(master, count);
-> >  }
-> > 
-> > +static void echo_delay(struct fsi_master_gpio *master)
-> > +{
-> > +       clock_zeros(master, master->t_echo_delay);
-> > +}
-> 
-> This doesn't look like it belongs in this patch.
-> 
-> You've just moved it up. Not worth a re-spin.
+Hi Rob,
 
-I've done more, I made it use clock_zeros() instead of open coding it
-in order to share the tracepoint.
+On Wed, 11 Jul 2018 10:12:06 -0600 Rob Herring wrote:
+
+> On Fri, Jul 06, 2018 at 03:20:47PM +0800, Jisheng Zhang wrote:
+> > Synopsys SDHCI compatible DesignWare Cores Mobile Storage Host
+> > Controller can support eMMC/SD/SDIO. Add the bindings.
+> > 
+> > Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> > ---
+> >  .../bindings/mmc/sdhci-of-dwcmshc.txt         | 20 +++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-of-dwcmshc.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mmc/sdhci-of-dwcmshc.txt b/Documentation/devicetree/bindings/mmc/sdhci-of-dwcmshc.txt
+> > new file mode 100644
+> > index 000000000000..ee4253b33be2
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mmc/sdhci-of-dwcmshc.txt
+> > @@ -0,0 +1,20 @@
+> > +* Synopsys DesignWare Cores Mobile Storage Host Controller
+> > +
+> > +Required properties:
+> > +- compatible: should be one of the following:
+> > +    "snps,dwcmshc-sdhci"  
 > 
-> > +
-> > +
-> >  static void serial_in(struct fsi_master_gpio *master, struct fsi_gpio_msg *msg,
-> >                         uint8_t num_bits)
-> >  {
-> > @@ -279,16 +286,19 @@ static void build_ar_command(struct fsi_master_gpio *master,
-> >                 addr_bits = 2;
-> >                 opcode_bits = 2;
-> >                 opcode = FSI_GPIO_CMD_SAME_AR;
-> > +               trace_fsi_master_gpio_cmd_same_addr(master);
-> > 
-> >         } else if (check_relative_address(master, id, addr, &rel_addr)) {
-> >                 /* 8 bits plus sign */
-> >                 addr_bits = 9;
-> >                 addr = rel_addr;
-> >                 opcode = FSI_GPIO_CMD_REL_AR;
-> > +               trace_fsi_master_gpio_cmd_rel_addr(master, rel_addr);
-> > 
-> >         } else {
-> >                 addr_bits = 21;
-> >                 opcode = FSI_GPIO_CMD_ABS_AR;
-> > +               trace_fsi_master_gpio_cmd_abs_addr(master, addr);
-> >         }
-> > 
-> >         /*
-> > @@ -337,12 +347,6 @@ static void build_epoll_command(struct fsi_gpio_msg *cmd, uint8_t slave_id)
-> >         msg_push_crc(cmd);
-> >  }
-> > 
-> > -static void echo_delay(struct fsi_master_gpio *master)
-> > -{
-> > -       set_sda_output(master, 1);
-> > -       clock_toggle(master, master->t_echo_delay);
-> > -}
-> > -
-> >  static void build_term_command(struct fsi_gpio_msg *cmd, uint8_t slave_id)
-> >  {
-> >         cmd->bits = 0;
+> Needs to note that there must also be an SoC specific compatible.
+
+Currently, there's no SoC specific code in this driver, so the binding could
+be extended to SoC compatible if necessary. What do you think?
+
+Thanks,
+Jisheng
