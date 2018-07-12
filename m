@@ -1,99 +1,54 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 1/3] drm: mxsfb: Change driver.name to mxsfb-drm
-Date: Thu, 12 Jul 2018 11:21:57 +0200
-Message-ID: <617c0a7e9132b929877b8cbcf116b1ea@agner.ch>
-References: <cover.1529091248.git.leonard.crestez@nxp.com>
- <47ea7572011735b68a8a70f0e11bdf00cb2fd86a.1529091248.git.leonard.crestez@nxp.com>
- <CAOMZO5B8i0gN+rCq-yPrd112NkwJWTxYCtsLVeLhD1JLRuX6EQ@mail.gmail.com>
- <07be6d9a85b6be655fc2b084be81d8bf9715b57a.camel@nxp.com>
- <638457fd-85da-8fec-d146-517c43f71813@denx.de>
- <b3fa74c5110b45e5992920485749869ab1f7ebce.camel@nxp.com>
- <6995fa4b-47a9-887b-5e4f-4284ca6a2c79@gmail.com>
- <fd22085f646d97f66cff5b7f22785500@agner.ch>
- <6fdba55b-0be6-9e28-d87a-43d876a1fd09@denx.de>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] arm64: rockchip: support RK3399 Ficus board
+Date: Thu, 12 Jul 2018 11:31:06 +0200
+Message-ID: <31262174.ngUfOPmpOk@diego>
+References: <20180706150818.5631-1-ezequiel@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <6fdba55b-0be6-9e28-d87a-43d876a1fd09@denx.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marek Vasut <marex@denx.de>
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, marcofrk@gmail.com, shawnguo@kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Marek Vasut <marek.vasut@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20180706150818.5631-1-ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAuMDcuMjAxOCAxMToxMSwgTWFyZWsgVmFzdXQgd3JvdGU6Cj4gT24gMDcvMTAvMjAxOCAx
-MTowNiBBTSwgU3RlZmFuIEFnbmVyIHdyb3RlOgo+PiBPbiAxNi4wNi4yMDE4IDAxOjMyLCBNYXJl
-ayBWYXN1dCB3cm90ZToKPj4+IE9uIDA2LzE2LzIwMTggMTI6NDIgQU0sIExlb25hcmQgQ3Jlc3Rl
-eiB3cm90ZToKPj4+PiBPbiBGcmksIDIwMTgtMDYtMTUgYXQgMjM6MzYgKzAyMDAsIE1hcmVrIFZh
-c3V0IHdyb3RlOgo+Pj4+PiBPbiAwNi8xNS8yMDE4IDEwOjU4IFBNLCBMZW9uYXJkIENyZXN0ZXog
-d3JvdGU6Cj4+Pj4+PiBPbiBGcmksIDIwMTgtMDYtMTUgYXQgMTY6NDcgLTAzMDAsIEZhYmlvIEVz
-dGV2YW0gd3JvdGU6Cj4+Pj4+Pj4gT24gRnJpLCBKdW4gMTUsIDIwMTggYXQgNDo0MyBQTSwgTGVv
-bmFyZCBDcmVzdGV6Cj4+Pj4+Pj4gPGxlb25hcmQuY3Jlc3RlekBueHAuY29tPiB3cm90ZToKPj4+
-Pgo+Pj4+Pj4+PiBUaGUgRkJERVYgZHJpdmVyIHVzZXMgdGhlIHNhbWUgbmFtZSBhbmQgYm90aCBj
-YW4ndCBiZSByZWdpc3RlcmVkIGF0IHRoZQo+Pj4+Pj4+PiBzYW1lIHRpbWUuIEZpeCB0aGlzIGJ5
-IHJlbmFtaW5nIHRoZSBkcm0gZHJpdmVyIHRvIG14c2ZiLWRybQo+Pj4+Pj4+Cj4+Pj4+Pj4gU3Rl
-ZmFuIHNlbnQgdGhlIHNhbWUgcGF0Y2ggYSBmZXcgZGF5cyBhZ286Cj4+Pj4+Pgo+Pj4+Pj4gSW4g
-dGhhdCB0aHJlYWQgdGhlcmUgaXMgYSBwcm9wb3NhbCBmb3IgcmVtb3ZpbmcgdGhlIG9sZCBmYmRl
-di9teHNmYgo+Pj4+Pj4gZHJpdmVyIGVudGlyZWx5Lgo+Pj4+Pj4KPj4+Pj4+IFRoYXQgd291bGQg
-YnJlYWsgb2xkIERUQnMsIGlzbid0IHRoaXMgZ2VuZXJhbGx5IGNvbnNpZGVyZWQgYmFkPyBBbHNv
-LAo+Pj4+Pj4gYXJlIHdlIHN1cmUgdGhlIHJlbW92YWwgb2YgZmJkZXYvbXhzZmIgd291bGRuJ3Qg
-bG9zZSBhbnkgZmVhdHVyZXM/Cj4+Pj4+Pgo+Pj4+Pj4gV2hhdCBteSBzZXJpZXMgZG9lcyBpcyBt
-YWtlIGJvdGggZHJpdmVycyB3b3JrIHdpdGggdGhlIHNhbWUga2VybmVsCj4+Pj4+PiBpbWFnZSBh
-bmQgdHVybnMgdGhlIGNob2ljZSBpbnRvIGEgYm9hcmQtbGV2ZWwgZHRiIGRlY2lzaW9uLiBTdXBw
-b3J0aW5nCj4+Pj4+PiBldmVyeXRoaW5nIGF0IG9uY2Ugc2VlbXMgZGVzaXJhYmxlIHRvIG1lIGFu
-ZCBpdCBhbGxvd3MgZm9yIGEgdmVyeQo+Pj4+Pj4gc21vb3RoIHVwZ3JhZGUgcGF0aC4KPj4+Pj4K
-Pj4+Pj4gSGF2aW5nIHR3byBkcml2ZXJzIGluIHRoZSBrZXJuZWwgd2l0aCBkaWZmZXJlbnQgc2V0
-IG9mIGJ1Z3MgaXMgYWx3YXlzIGJhZC4KPj4+Pj4KPj4+Pj4+IFRoZSBvbGQgZHJpdmVyIGNvdWxk
-IGJlIHJlbW92ZWQgbGF0ZXIsIGFmdGVyIGFsbCB1c2VycyBhcmUgY29udmVydGVkLgo+Pj4+Pgo+
-Pj4+PiBCb3RoIGRyaXZlcnMgd2VyZSBpbiBmb3IgbG9uZyBlbm91Z2ggYWxyZWFkeS4gQW5kIGxl
-dCdzIGJlIHJlYWxpc3RpYywKPj4+Pj4gaG93IG1hbnkgTVgyMy9NWDI4IHVzZXJzIG9mIG9sZCBE
-VHMgd2l0aCBuZXcga2VybmVscyBhcmUgdGhlcmUgd2hvCj4+Pj4+IGNhbm5vdCB1cGRhdGUgdGhl
-IERUIGFzIHdlbGwgPwo+Pj4+Cj4+Pj4gR3JlcHBpbmcgZm9yICJkaXNwbGF5ID0iIGluIGFyY2gv
-YXJtL2Jvb3QvZHRzL2lteCogSSBzZWUgdGhhdCBvbGQKPj4+PiBiaW5kaW5ncyBhcmUgYWxzbyB1
-c2VkIGJ5IDNyZC1wYXJ0eSBib2FyZHMgZm9yIGlteDYvNzoKPj4+PiAgKiBpbXg2c3gtbml0cm9n
-ZW42c3gKPj4+PiAgKiBpbXg2dWwtZ2VhbQo+Pj4+ICAqIGlteDZ1bC1pc2lvdAo+Pj4+ICAqIGlt
-eDZ1bC1vcG9zNnVsZGV2Cj4+Pj4gICogaW14NnVsLXBpY28taG9iYml0Cj4+Pj4gICogaW14NnVs
-LXR4NnVsCj4+Pj4gICogaW14N2Qtbml0cm9nZW43Cj4+Pgo+Pj4gRXIsIHllcywgYSBoYW5kZnVs
-IG9mIGJvYXJkcyB3aGljaCBjb3VsZCBiZSB1cGRhdGVkIDopCj4+Pgo+Pj4+IENvbnZlcnRpbmcg
-ZXZlcnl0aGluZyBtaWdodCBiZSBxdWl0ZSBhIGJpdCBvZiB3b3JrLCBhbmQgZXhwbGljaXRseQo+
-Pj4+IHN1cHBvcnRpbmcgb2xkIGJpbmRpbmdzIGlzIGFsc28gd29yay4KPj4+Cj4+PiBEb2VzIGFk
-ZGluZyBzdXBwb3J0IGZvciBvbGQgYmluZGluZ3MganVzdGlmeSB0aGUgZWZmb3J0IGludmVzdGVk
-ID8gSQo+Pj4gZG91YnQgc28sIGl0IG9ubHkgYWRkcyBtb3JlIGNvZGUgdG8gbWFpbnRhaW4uCj4+
-Pgo+Pj4+IEl0IGlzIHZlcnkgY29uZnVzaW5nIHRoYXQgdGhlcmUgaXMgYSB3aG9sZSBzZXQgb2Yg
-ZGlzcGxheXMgZm9yIGlteDYvNwo+Pj4+IHdoaWNoIGFyZSBzdXBwb3J0ZWQgYnkgdXBzdHJlYW0g
-YnV0IG9ubHkgd2l0aCBhIG5vbi1kZWZhdWx0IGNvbmZpZy4KPj4+PiBXaGlsZSBpdCBpcyBleHRy
-ZW1lbHkgY29tbW9uIGluIHRoZSBlbWJlZGRlZCBmaWVsZCB0byBoYXZlIGN1c3RvbQo+Pj4+IGNv
-bmZpZ3MgdGhlIGRlZmF1bHQgb25lIGluIHRoZSBrZXJuZWwgc2hvdWxkIHRyeSB0byAianVzdCB3
-b3JrIi4KPj4+Pgo+Pj4+IENvdWxkbid0IHRoaXMgcGF0Y2ggc2VyaWVzIGJlIGNvbnNpZGVyZWQg
-YSBidWdmaXg/IEl0IHdhcyBhbHNvCj4+Pj4gc3VycHJpc2luZ2x5IHNtYWxsLgo+Pj4KPj4+IEkg
-dGhpbmsgaXQncyBqdXN0IGEgd29ya2Fyb3VuZCB3aGljaCBhbGxvd3MgeW91IHRvIHBvc3Rwb25l
-IHRoZSByZWFsCj4+PiBmaXgsIGFuZCBJIGRvbid0IGxpa2UgdGhhdC4KPj4KPj4gVGhpcyBpcyBv
-bmUgb2YgdGhlIHNpdHVhdGlvbiB3aGVyZSBzdGF0ZXMgcXVvIGlzIGtpbmRhIHRoZSB3b3JzdAo+
-PiBzaXR1YXRpb24uCj4+Cj4+IEN1cnJlbnRseSBpbXhfdjZfdjdfZGVmY29uZmlnIGFuZCBteHNf
-ZGVmY29uZmlnIGFjdHVhbGx5IHN0aWxsIHVzZXMKPj4gQ09ORklHX0ZCX01YUy4KPj4KPj4gSSB1
-bmRlcnN0YW5kIHRoYXQgeW91J2QgcmF0aGVyIHByZWZlciB0byBtb3ZlIGZvcndhcmQuIEkgc3Vn
-Z2VzdCB3ZSBkbwo+PiBpdCBpbiBzdGVwcy4KPj4KPj4gSW4gNC4xOToKPj4KPj4gLSBDaGFuZ2Ug
-RFJNIGRyaXZlci5uYW1lIHRvIG14c2ZiLWRybSBzbyB3ZSBhdm9pZCBjb25mbGljdHMgZm9yIG5v
-dwo+IAo+IEJ1dCB0aGlzIHdpbGwgYnJlYWsgbWVzYSBpZiBpdCBkZXBlbmRzIG9uIG14c2ZiIG5h
-bWUgZm9yIGllLiBldG5hdml2Cj4gYmluZGluZy4KPiAKCkRvZXMgaXQ/IGdyZXAgLXIgLWUgbXhz
-ZmIgaW4gbGliZHJtIGFuZCBtZXNhIG1hc3RlciByZXR1cm5zIG5vdGhpbmcuCgpUaGVyZSBpcyBh
-bHNvIC5uYW1lIGluIHN0cnVjdCBkcm1fZHJpdmVyLCB3aGljaCBpcyBhbHJlYWR5IHNldCB0bwpt
-eHNmYi1kcm0uLi4gSXMgdGhhdCB0aGUgb25lIGV4cG9zZWQgdG8gdXNlciBzcGFjZT8KCj4+IC0g
-UmVtb3ZlIENPTkZJR19GQl9NWFMgZnJvbSBpbXhfdjZfdjdfZGVmY29uZmlnL214c19kZWZjb25m
-aWcgbm93LCBhbmQKPj4gb25seSBlbmFibGUgQ09ORklHX0RSTV9NWFNGQj15Cj4+IC0gQWRkIChk
-ZXByZWNhdGVkKSB0byBDT05GSUdfRkJfTVhTCj4+Cj4+IEluIDQuMTkvNC4yMDoKPj4gLSBGaXgg
-dGhlIGFib3ZlIGRldmljZSB0cmVlcwo+Pgo+PiBJbiA0LjIwLzQuMjE6Cj4+IC0gUmVtb3ZlIEZC
-X01YUwo+Pgo+PiBEb2VzIHRoYXQgc291bmQgcmVhc29uYWJsZT8gSWYgeWVzLCBJIGNhbiBzZW5k
-IHRoZSBwYXRjaCBzZXQgdG8gZG8gc3RlcAo+PiAxLgo+IAo+IENhbiB5b3UgZml4IHRoZSBEVHMg
-Zm9yIDQuMTkgdG9vID8KCkdldHRpbmcgdGlnaHQsIGJ1dCB3aWxsIHRyeS4KCi0tClN0ZWZhbgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Am Freitag, 6. Juli 2018, 17:08:16 CEST schrieb Ezequiel Garcia:
+> Fourth round for the RK3399 Ficus support.
+> 
+> Changes from v3:
+>  * Fixed a regulator node name, as noted by Rob.
+>  * Fixed wrong alphabetical order in vendors prefix patch, also noted by
+> Rob.
+> 
+> Changes from v2:
+>  * Dropped rk3399.dtsi changes and rebased on top of Randy's patch.
+>  * Removed double empty line.
+>  * Coalesced schematics comment
+> 
+> Changes from v1:
+>  * Dropoed USB support as it's not working.
+>  * Added schematics.
+>  * Splitted rk3399.dtsi from new ficus.dts file.
+>  * Added new vendor.
+>  * Cleaned regulators syntax and stlye.
+> 
+> Series based on: 600b359d2b98 ("arm64: dts: rockchip: add some common
+> pin-settings to rk3399").
+> 
+> Ezequiel Garcia (2):
+>   dt-bindings: Add vendor prefix for Vamrs Ltd.
+>   arm64: dts: rockchip: add 96boards RK3399 Ficus board
+
+applied both for 4.19
+
+Thanks
+Heiko
