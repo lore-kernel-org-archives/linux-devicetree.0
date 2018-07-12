@@ -1,25 +1,79 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: DTS: am3517.dtsi:  Disable reference to OMAP3 OTG
- controller
-Date: Thu, 12 Jul 2018 06:57:22 -0700
-Message-ID: <20180712135722.GQ99251@atomide.com>
-References: <20180711175454.9464-1-aford173@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] clk: meson: add DT documentation for emmc clock controller
+Date: Thu, 12 Jul 2018 08:17:29 -0600
+Message-ID: <CABGGisw64MpYx7Pvp+XGt6gfZzie6EKeHdchqS6CPDjmAHBuVA@mail.gmail.com>
+References: <20180710163658.6175-1-yixun.lan@amlogic.com> <20180710163658.6175-2-yixun.lan@amlogic.com>
+ <20180711194346.GA32414@rob-hp-laptop> <f2eb8632-1113-3bb8-506f-ac0d4e838fd4@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180711175454.9464-1-aford173@gmail.com>
+In-Reply-To: <f2eb8632-1113-3bb8-506f-ac0d4e838fd4@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Ford <aford173@gmail.com>
-Cc: adam.ford@logicpd.com, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: yixun.lan@amlogic.com
+Cc: jbrunet@baylibre.com, narmstrong@baylibre.com, khilman@baylibre.com, carlo@caione.org, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, miquel.raynal@bootlin.com, boris.brezillon@bootlin.com, martin.blumenstingl@googlemail.com, liang.yang@amlogic.com, qiufang.dai@amlogic.com, jian.hu@amlogic.com, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Adam Ford <aford173@gmail.com> [180711 10:58]:
-> The AM3517 has a different OTG controller location than the OMAP3,
-> which is included from omap3.dtsi.  This results in a hwmod error.
-> Since the AM3517 has a different OTG controller address, this patch
-> disabes one that is isn't available.
+On Wed, Jul 11, 2018 at 8:47 PM Yixun Lan <yixun.lan@amlogic.com> wrote:
+>
+> Hi Rob
+>
+> see my comments
+>
+> On 07/12/18 03:43, Rob Herring wrote:
+> > On Tue, Jul 10, 2018 at 04:36:56PM +0000, Yixun Lan wrote:
+> >> Document the MMC sub clock controller driver, the potential consumer
+> >> of this driver is MMC or NAND.
+> >
+> > So you all have decided to properly model this now?
+> >
+> Yes, ;-)
+>
+> >>
+> >> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> >> ---
+> >>  .../bindings/clock/amlogic,mmc-clkc.txt       | 31 +++++++++++++++++++
+> >>  1 file changed, 31 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
+> >> new file mode 100644
+> >> index 000000000000..ff6b4bf3ecf9
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
+> >> @@ -0,0 +1,31 @@
+> >> +* Amlogic MMC Sub Clock Controller Driver
+> >> +
+> >> +The Amlogic MMC clock controller generates and supplies clock to support
+> >> +MMC and NAND controller
+> >> +
+> >> +Required Properties:
+> >> +
+> >> +- compatible: should be:
+> >> +            "amlogic,meson-gx-mmc-clkc"
+> >> +            "amlogic,meson-axg-mmc-clkc"
+> >> +
+> >> +- #clock-cells: should be 1.
+> >> +- clocks: phandles to clocks corresponding to the clock-names property
+> >> +- clock-names: list of parent clock names
+> >> +    - "clkin0", "clkin1"
+> >> +
+> >> +Parent node should have the following properties :
+> >> +- compatible: "syscon", "simple-mfd, and "amlogic,meson-axg-mmc-clkc"
+> >
+> > You don't need "simple-mfd" and probably not syscon either. The order is
+> > wrong too. Most specific first.
+> >
+> Ok, I will drop "simple-mfd"..
+>
+> but the syscon is a must, since this mmc clock model access registers
+> via the regmap interface
 
-Applying into omap-for-v4.18/fixes thanks.
+A syscon compatible should not be the only way to get a regmap.
+Removing lines 56/57 of drivers/mfd/syscon.c should be sufficient.
 
-Tony
+Why do you need a regmap in the first place? What else needs to access
+this register directly? Don't you need a patch removing the clock code
+from within the emmc driver? It's not even using regmap, so using
+regmap here doesn't help.
+
+Rob
