@@ -1,61 +1,54 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH v3 3/5] fsi: master-ast-cf: Add new FSI master using
- Aspeed ColdFire
-Date: Thu, 12 Jul 2018 17:53:17 +1000
-Message-ID: <CACPK8XdZKbh2NLQaiZOx66FAo+3csS_D9-BXjJKeppKm8aEM6w@mail.gmail.com>
-References: <20180712034847.12878-1-benh@kernel.crashing.org> <20180712034847.12878-4-benh@kernel.crashing.org>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3] Add DT support for Octavo Systems OSD3358-SM-RED
+ based on TI AM335x
+Date: Thu, 12 Jul 2018 08:53:25 +0100
+Message-ID: <20180712075325.GH6920@n2100.armlinux.org.uk>
+References: <20180711145822.1090-1-neeraj.dantu@octavosystems.com>
+ <20180712053155.GP99251@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180712034847.12878-4-benh@kernel.crashing.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: linux-aspeed@lists.ozlabs.org, devicetree <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180712053155.GP99251@atomide.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, Jason Kridner <jkridner@gmail.com>, Neeraj Dantu <dantuguf14105@gmail.com>, Neeraj Dantu <neeraj.dantu@octavosystems.com>, linux-omap@vger.kernel.org, Robert Nelson <robertcnelson@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12 July 2018 at 13:48, Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
-> The Aspeed AST2x00 can contain a ColdFire v1 coprocessor which
-> is currently unused on OpenPower systems.
->
-> This adds an alternative to the fsi-master-gpio driver that
-> uses that coprocessor instead of bit banging from the ARM
-> core itself. The end result is about 4 times faster.
->
-> The firmware for the coprocessor and its source code can be
-> found at https://github.com/ozbenh/cf-fsi and is system specific.
->
-> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> ---
->  drivers/fsi/Kconfig                      |    9 +
->  drivers/fsi/Makefile                     |    1 +
->  drivers/fsi/cf-fsi-fw.h                  |  157 +++
->  drivers/fsi/fsi-master-ast-cf.c          | 1438 ++++++++++++++++++++++
->  include/trace/events/fsi_master_ast_cf.h |  150 +++
->  5 files changed, 1755 insertions(+)
->  create mode 100644 drivers/fsi/cf-fsi-fw.h
->  create mode 100644 drivers/fsi/fsi-master-ast-cf.c
->  create mode 100644 include/trace/events/fsi_master_ast_cf.h
->
-> diff --git a/drivers/fsi/Kconfig b/drivers/fsi/Kconfig
-> index 322cec393cf2..e0220d1e1357 100644
-> --- a/drivers/fsi/Kconfig
-> +++ b/drivers/fsi/Kconfig
-> @@ -27,6 +27,15 @@ config FSI_MASTER_HUB
->         allow chaining of FSI links to an arbitrary depth.  This allows for
->         a high target device fanout.
->
-> +config FSI_MASTER_AST_CF
-> +       tristate "FSI master based on Aspeed ColdFire coprocessor"
-> +       depends on GPIOLIB
-> +       depends on GPIO_ASPEED
-> +       ---help---
-> +       This option enables a FSI master using the AST2400 and AST2500 GPIO
-> +       lines driven by the internal ColdFire coprocessor. This requires
-> +       the corresponding machine specific ColdFire firmware to be available.
+On Wed, Jul 11, 2018 at 10:31:55PM -0700, Tony Lindgren wrote:
+> Hi,
+> 
+> * Neeraj Dantu <dantuguf14105@gmail.com> [180711 15:13]:
+> > OSD3358-SM-RED is a dev board for OSD335x System-in-Package(SiP) devices from
+> > Octavo Systems.
+> ...
+> > - Fix HDMI encoder node name
+> 
+> I think you got this the wrong way around :) See below.
+> 
+> > +&i2c0 {
+> > +	hdmiencoder: tda19988 {
+> > +		compatible = "nxp,tda998x";
+> 
+> 	tda19988: hdmiencoder {
+> 		...
+> 	};
+> 
+> So the generic type for the node. Please check the
+> other devices for that too.
 
-The "machine specific" part isn't true anymore, is it?
+In the binding doc, we use "hdmi-encoder" for the node name.
 
-I gave this a spin on a palmetto and it appeared to work fine for me.
-
-Tested-by: Joel Stanley <joel@jms.id.au>
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps up
+According to speedtest.net: 13Mbps down 490kbps up
