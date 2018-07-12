@@ -1,127 +1,479 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 01/10] i3c: Add core I3C infrastructure
-Date: Thu, 12 Jul 2018 10:21:40 +0200
-Message-ID: <CAK8P3a13GX67YEci2J8Rxn6O4FBjjD82X+w3hyGMT3TDbtFkTg@mail.gmail.com>
-References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
- <20180330074751.25987-2-boris.brezillon@bootlin.com> <CAK8P3a1aZXf2sQW2mgwJScycKPhdoOAwxRjm5cQG83513uc3fg@mail.gmail.com>
- <20180711164120.3e32fb08@bbrezillon> <CAK8P3a2EZB_tMS_47wv6M2Qpm79ZocxxhG5zLxXsBM_YjZgkyA@mail.gmail.com>
- <20180711191212.3855bb25@bbrezillon> <CAK8P3a2djk8c6STaxJC0MCkBddyOafk4WbG2LdfPf0V1EYiqmQ@mail.gmail.com>
- <20180712000932.3b04ee9d@bbrezillon>
+From: Stefan Mavrodiev <stefan@olimex.com>
+Subject: [PATCH v3 1/1] drm/panel: Add support for Olimex LCD-OLinuXino panel
+Date: Thu, 12 Jul 2018 11:21:53 +0300
+Message-ID: <1531383729-13932-1-git-send-email-stefan@olimex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180712000932.3b04ee9d@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.or>
+To: Stefan Mavrodiev <stefan@olimex.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 12, 2018 at 12:09 AM, Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
-> On Wed, 11 Jul 2018 22:10:26 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
->> On Wed, Jul 11, 2018 at 7:12 PM, Boris Brezillon <boris.brezillon@bootlin.com> wrote:
->> > On Wed, 11 Jul 2018 17:39:56 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
->> >> On Wed, Jul 11, 2018 at 4:41 PM, Boris Brezillon <boris.brezillon@bootlin.com> wrote:
+This patch adds Olimex Ltd. LCD-OLinuXino bridge panel driver. The
+panel is used with different LCDs (currently from 480x272 to 1280x800).
+Small EEPROM chip is used for identification, which holds some
+factory data and timing requirements.
 
->> >> IOW, what feature would we lose if we were to declare that
->> >> setup above invalid (and ensure you cannot represent it in DT)?
->> >
->> > That's exactly the sort of discussion I wanted to trigger. Maybe we
->> > shouldn't care and expose this use case as if it was X different I3C
->> > buses (with all devices present on the bus being exposed X times
->> > to the system).
->>
->> That's probably fine for many slave devices (you could read a
->> single sensor multiple times if you iterate through all i2c sensors
->> on all buses) but might not work for others (a slave device sending
->> an interrupt to the current master for a request that was started
->> from the previous master).
->> My impression however is that this is actually a corner case that
->> we can leave to be undefined, and not prepare to handle well,
->> as long as we can deal with the interesting examples above.
->
-> Mastership handover/takeover is something I already thought about.
-> Actually, that's the reason for the i3c_bus->cur_master field (so that
-> the master being asked to do a transfer on the bus can request bus
-> ownership it bus->cur_master != master->this->info.pid).
->
-> I guess this would be replaced by something simpler if we get rid of
-> the i3c_bus object (just a bool i3c_master->owns_bus).
+Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+---
+Changes for v3:
+  - Change module license from "GPL v2" to "GPL"
+  - Make use of backlight_enable()/backlight_disable() helpers
+  - Rework backlight device request
+  - Remove drm_panel_detach()
+  - Use module_i2c_driver() for initialization
+  - Make the first mode preferred
+  - If num_modes value is invalid, overwrite it with 4, which is the maximum
+  - Some variable types optimizations
 
-If we can ignore the case of handing over between two masters that
-we both own, we end up being in just one of two states:
+Changes for v2:
+  - Changed lcd_olinuxino_funcs to static const
 
-a) currently we are the master
-b) we are not currently the master but have asked the current
-    master to transfer ownership back to us. For this, we have to
-    know who the current master is of course.
+ .../display/panel/olimex,lcd-olinuxino.txt         |  42 +++
+ MAINTAINERS                                        |   6 +
+ drivers/gpu/drm/panel/Kconfig                      |  10 +
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c | 331 +++++++++++++++++++++
+ 5 files changed, 390 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt
+ create mode 100644 drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c
 
-I think that's the simplest case that would work with the specification,
-but it relies on the assumption that the master controlled by Linux
-is always more important than any other master, and that we just
-hand over ownership for as long as the others want it.
-
-If that is not the case, we also need a third state
-
-c) we have handed ownership to another master that is equally
-    important, but no i2c device driver is currently trying to talk
-    to a device, so we don't need ownership back until a slave driver
-    changes state.
-
-The main difference between b) and c) that I see would be what
-happens with in-band interrupts. If I understand the specification
-correctly, only the current master receives them, so if you have
-any i2c device that uses interrupts to talk to a Linux driver, we
-want to be in b) rather than c). An example of this would be
-an input device on a PC: If the user operateds the keyboard
-or pointer and we have handed off ownership to a sensor hub,
-we never get an input event, right?
-
->> Ok, but maybe you could you put the information about those devices
->> on a local list on the stack rather than the controller? I suppose this
->> would not change the logic much, but it would slightly simplify the
->> data structures for the bus and stop others from wondering about
->> them. ;-)
->
-> This has changed a bit in the v6 I'm about to send (probably next week).
-> I now have 2 different objects which do not necessarily have the same
-> lifetime:
->
-> * i3c_dev_desc: an I3C device descriptor. This is the representation
->   exposed to I3C master controller drivers which usually reserve one
->   slot in the HW device table per-device on the bus. Since the same
->   device can be re-discovered with a different address, we have a short
->   period in time during which the controller will have 2
->   slots/descriptors used to control the same device, except one would
->   be inactive (any transfer to the old dynamic address would fail) and
->   the other one would be active. The core then takes care of releasing
->   the old descriptor/slot and attaching the new one to the i3c_device
->   object exposed to I3C device drivers
->
-> * i3c_device: this is the object exposed to I3C device drivers. It's
->   lifetime is usually the same as the i3c_dev_desc it's attached to,
->   except when the device lose its dynamic address and get a new one
->   assigned. In this case we keep the same i3c_device object, but
->   dynamically re-attach it to a new i3c_dev_desc before releasing the
->   old dev desc. This way the I3C does not even see that the device
->   address has changed and can keep doing transfers to it.
->
-> With these 2 distinct representations, the handling on the controller
-> side is greatly simplified: the core takes care of the resource
-> migration steps, while it was up to the controller to do that my
-> previous versions (look at the ->reattach_i3c_dev() hook in the Cadence
-> driver, and I think it's even more complicated with other controllers,
-> like the HCI one).
->
->> This is a really minor point though, let's work out the problem of the
->> multiple masters first.
->
-> I agree. This being said, moving to a representation where the bus is
-> implicitly represented by the master_controller instance shouldn't be
-> too difficult. So, if you think we should try this approach I can do
-> the modifications in my v6.
-
-I'd say let's wait before you do that change, possibly add a comment
-in there now to remind us of what an alternative would be.
-
-       Arnd
+diff --git a/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt b/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt
+new file mode 100644
+index 0000000..a89f9c8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt
+@@ -0,0 +1,42 @@
++Binding for Olimex Ltd. LCD-OLinuXino bridge panel.
++
++This device can be used as bridge between a host controller and LCD panels.
++Currently supported LCDs are:
++  - LCD-OLinuXino-4.3TS
++  - LCD-OLinuXino-5
++  - LCD-OLinuXino-7
++  - LCD-OLinuXino-10
++
++The panel itself contains:
++  - AT24C16C EEPROM holding panel identification and timing requirements
++  - AR1021 resistive touch screen controller (optional)
++  - FT5x6 capacitive touch screnn controller (optional)
++  - GT911/GT928 capacitive touch screen controller (optional)
++
++The above chips share same I2C bus. The EEPROM is factory preprogrammed with
++device information (id, serial, etc.) and timing requirements.
++
++Touchscreen bingings can be found in these files:
++  - input/touchscreen/goodix.txt
++  - input/touchscreen/edt-ft5x06.txt
++  - input/touchscreen/ar1021.txt
++
++Required properties:
++  - compatible: should be "olimex,lcd-olinuxino"
++  - reg: address of the configuration EEPROM, should be <0x50>
++  - power-supply: phandle of the regulator that provides the supply voltage
++
++Optional properties:
++  - enable-gpios: GPIO pin to enable or disable the panel
++  - backlight: phandle of the backlight device attacked to the panel
++
++Example:
++&i2c2 {
++	panel@50 {
++		compatible = "olimex,lcd-olinuxino";
++		reg = <0x50>;
++		power-supply = <&reg_vcc5v0>;
++		enable-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;
++		backlight = <&backlight>;
++	};
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 624c3fd..30343f1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4557,6 +4557,12 @@ S:	Supported
+ F:	drivers/gpu/drm/nouveau/
+ F:	include/uapi/drm/nouveau_drm.h
+ 
++DRM DRIVER FOR OLIMEX LCD-OLINUXINO PANELS
++M:	Stefan Mavrodiev <stefan@olimex.com>
++S:	Maintained
++F:	drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c
++F:	Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt
++
+ DRM DRIVER FOR PERVASIVE DISPLAYS REPAPER PANELS
+ M:	Noralf Trønnes <noralf@tronnes.org>
+ S:	Maintained
+diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+index 25682ff..0292994 100644
+--- a/drivers/gpu/drm/panel/Kconfig
++++ b/drivers/gpu/drm/panel/Kconfig
+@@ -81,6 +81,16 @@ config DRM_PANEL_LG_LG4573
+ 	  Say Y here if you want to enable support for LG4573 RGB panel.
+ 	  To compile this driver as a module, choose M here.
+ 
++config DRM_PANEL_OLIMEX_LCD_OLINUXINO
++	tristate "Olimex LCD-OLinuXino panel"
++	depends on OF
++	depends on I2C
++	depends on BACKLIGHT_CLASS_DEVICE
++	help
++	  Say Y here if you want to enable support for Olimex Ltd.
++	  LCD-OLinuXino panel. The panel is used with different sizes LCDs,
++	  from 480x272 to 1280x800, and 24 bit per pixel.
++
+ config DRM_PANEL_ORISETECH_OTM8009A
+ 	tristate "Orise Technology otm8009a 480x800 dsi 2dl panel"
+ 	depends on OF
+diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+index f26efc1..185027f 100644
+--- a/drivers/gpu/drm/panel/Makefile
++++ b/drivers/gpu/drm/panel/Makefile
+@@ -6,6 +6,7 @@ obj-$(CONFIG_DRM_PANEL_ILITEK_IL9322) += panel-ilitek-ili9322.o
+ obj-$(CONFIG_DRM_PANEL_INNOLUX_P079ZCA) += panel-innolux-p079zca.o
+ obj-$(CONFIG_DRM_PANEL_JDI_LT070ME05000) += panel-jdi-lt070me05000.o
+ obj-$(CONFIG_DRM_PANEL_LG_LG4573) += panel-lg-lg4573.o
++obj-$(CONFIG_DRM_PANEL_OLIMEX_LCD_OLINUXINO) += panel-olimex-lcd-olinuxino.o
+ obj-$(CONFIG_DRM_PANEL_ORISETECH_OTM8009A) += panel-orisetech-otm8009a.o
+ obj-$(CONFIG_DRM_PANEL_PANASONIC_VVX10F034N00) += panel-panasonic-vvx10f034n00.o
+ obj-$(CONFIG_DRM_PANEL_RASPBERRYPI_TOUCHSCREEN) += panel-raspberrypi-touchscreen.o
+diff --git a/drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c b/drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c
+new file mode 100644
+index 0000000..16b27a4
+--- /dev/null
++++ b/drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c
+@@ -0,0 +1,331 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * LCD-OLinuXino support for panel driver
++ *
++ * Copyright (C) 2018 Olimex Ltd.
++ *   Author: Stefan Mavrodiev <stefan@olimex.com>
++ */
++
++#include <linux/backlight.h>
++#include <linux/crc32.h>
++#include <linux/gpio/consumer.h>
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/of.h>
++#include <linux/regulator/consumer.h>
++
++#include <drm/drm_modes.h>
++#include <drm/drm_panel.h>
++#include <drm/drmP.h>
++
++#include <video/videomode.h>
++#include <video/display_timing.h>
++
++
++#define LCD_OLINUXINO_HEADER_MAGIC	0x4F4CB727
++#define LCD_OLINUXINO_DATA_LEN		256
++
++struct lcd_olinuxino_mode {
++	u32 pixelclock;
++	u32 hactive;
++	u32 hfp;
++	u32 hbp;
++	u32 hpw;
++	u32 vactive;
++	u32 vfp;
++	u32 vbp;
++	u32 vpw;
++	u32 refresh;
++	u32 flags;
++};
++
++struct lcd_olinuxino_info {
++	char name[32];
++	u32 width_mm;
++	u32 height_mm;
++	u32 bpc;
++	u32 bus_format;
++	u32 bus_flag;
++} __attribute__((__packed__));
++
++struct lcd_olinuxino_eeprom {
++	u32 header;
++	u32 id;
++	char revision[4];
++	u32 serial;
++	struct lcd_olinuxino_info info;
++	u32 num_modes;
++	u8 reserved[180];
++	u32 checksum;
++} __attribute__((__packed__));
++
++struct lcd_olinuxino {
++	struct drm_panel panel;
++	struct device *dev;
++	struct i2c_client *client;
++	struct mutex mutex;
++
++	bool prepared;
++	bool enabled;
++
++	struct backlight_device *backlight;
++	struct regulator *supply;
++	struct gpio_desc *enable_gpio;
++
++	struct lcd_olinuxino_eeprom eeprom;
++};
++
++static inline struct lcd_olinuxino *to_lcd_olinuxino(struct drm_panel *panel)
++{
++	return container_of(panel, struct lcd_olinuxino, panel);
++}
++
++static int lcd_olinuxino_disable(struct drm_panel *panel)
++{
++	struct lcd_olinuxino *lcd = to_lcd_olinuxino(panel);
++
++	if (!lcd->enabled)
++		return 0;
++
++	backlight_disable(lcd->backlight);
++
++	lcd->enabled = false;
++
++	return 0;
++}
++
++static int lcd_olinuxino_unprepare(struct drm_panel *panel)
++{
++	struct lcd_olinuxino *lcd = to_lcd_olinuxino(panel);
++
++	if (!lcd->prepared)
++		return 0;
++
++	gpiod_set_value_cansleep(lcd->enable_gpio, 0);
++	regulator_disable(lcd->supply);
++
++	lcd->prepared = false;
++
++	return 0;
++}
++
++static int lcd_olinuxino_prepare(struct drm_panel *panel)
++{
++	struct lcd_olinuxino *lcd = to_lcd_olinuxino(panel);
++	int ret;
++
++	if (lcd->prepared)
++		return 0;
++
++	ret = regulator_enable(lcd->supply);
++	if (ret < 0)
++		return ret;
++
++	gpiod_set_value_cansleep(lcd->enable_gpio, 1);
++	lcd->prepared = true;
++
++	return 0;
++}
++
++static int lcd_olinuxino_enable(struct drm_panel *panel)
++{
++	struct lcd_olinuxino *lcd = to_lcd_olinuxino(panel);
++
++	if (lcd->enabled)
++		return 0;
++
++	backlight_enable(lcd->backlight);
++
++	lcd->enabled = true;
++
++	return 0;
++}
++
++static int lcd_olinuxino_get_modes(struct drm_panel *panel)
++{
++	struct lcd_olinuxino *lcd = to_lcd_olinuxino(panel);
++	struct drm_connector *connector = lcd->panel.connector;
++	struct lcd_olinuxino_info *lcd_info = &lcd->eeprom.info;
++	struct drm_device *drm = lcd->panel.drm;
++	struct lcd_olinuxino_mode *lcd_mode;
++	struct drm_display_mode *mode;
++	u32 i, num = 0;
++
++	for (i = 0; i < lcd->eeprom.num_modes; i++) {
++		lcd_mode = (struct lcd_olinuxino_mode *)
++			   &lcd->eeprom.reserved[i * sizeof(*lcd_mode)];
++
++		mode = drm_mode_create(drm);
++		if (!mode) {
++			dev_err(drm->dev, "failed to add mode %ux%u@%u\n",
++				lcd_mode->hactive,
++				lcd_mode->vactive,
++				lcd_mode->refresh);
++				continue;
++		}
++
++		mode->clock = lcd_mode->pixelclock;
++		mode->hdisplay = lcd_mode->hactive;
++		mode->hsync_start = lcd_mode->hactive + lcd_mode->hfp;
++		mode->hsync_end = lcd_mode->hactive + lcd_mode->hfp +
++				  lcd_mode->hpw;
++		mode->htotal = lcd_mode->hactive + lcd_mode->hfp +
++			       lcd_mode->hpw + lcd_mode->hbp;
++		mode->vdisplay = lcd_mode->vactive;
++		mode->vsync_start = lcd_mode->vactive + lcd_mode->vfp;
++		mode->vsync_end = lcd_mode->vactive + lcd_mode->vfp +
++				  lcd_mode->vpw;
++		mode->vtotal = lcd_mode->vactive + lcd_mode->vfp +
++			       lcd_mode->vpw + lcd_mode->vbp;
++		mode->vrefresh = lcd_mode->refresh;
++
++		/* Always make the first mode preferred */
++		if (i == 0)
++			mode->type |= DRM_MODE_TYPE_PREFERRED;
++		mode->type |= DRM_MODE_TYPE_DRIVER;
++
++		drm_mode_set_name(mode);
++		drm_mode_probed_add(connector, mode);
++
++		num++;
++	}
++
++	memcpy(connector->display_info.name, lcd_info->name, 32);
++	connector->display_info.width_mm = lcd_info->width_mm;
++	connector->display_info.height_mm = lcd_info->height_mm;
++	connector->display_info.bpc = lcd_info->bpc;
++
++	if (lcd_info->bus_format)
++		drm_display_info_set_bus_formats(&connector->display_info,
++						 &lcd_info->bus_format, 1);
++	connector->display_info.bus_flags = lcd_info->bus_flag;
++
++	return num;
++}
++
++static const struct drm_panel_funcs lcd_olinuxino_funcs = {
++	.disable = lcd_olinuxino_disable,
++	.unprepare = lcd_olinuxino_unprepare,
++	.prepare = lcd_olinuxino_prepare,
++	.enable = lcd_olinuxino_enable,
++	.get_modes = lcd_olinuxino_get_modes,
++};
++
++static int lcd_olinuxino_probe(struct i2c_client *client,
++			       const struct i2c_device_id *id)
++{
++	struct device *dev = &client->dev;
++	struct lcd_olinuxino *lcd;
++	u32 checksum, i;
++	int ret = 0;
++
++	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C |
++				     I2C_FUNC_SMBUS_READ_I2C_BLOCK))
++		return -ENODEV;
++
++	lcd = devm_kzalloc(dev, sizeof(*lcd), GFP_KERNEL);
++	if (!lcd)
++		return -ENOMEM;
++
++	i2c_set_clientdata(client, lcd);
++	lcd->dev = dev;
++	lcd->client = client;
++
++	mutex_init(&lcd->mutex);
++
++	/* Copy data into buffer */
++	for (i = 0; i < LCD_OLINUXINO_DATA_LEN; i += I2C_SMBUS_BLOCK_MAX) {
++		mutex_lock(&lcd->mutex);
++		ret = i2c_smbus_read_i2c_block_data(client,
++						    i,
++						    I2C_SMBUS_BLOCK_MAX,
++						    (u8 *)&lcd->eeprom + i);
++		mutex_unlock(&lcd->mutex);
++		if (ret < 0) {
++			dev_err(dev, "error reading from device at %02x\n", i);
++			return ret;
++		}
++	}
++
++	/* Check configuration checksum */
++	checksum = ~crc32(~0, (u8 *)&lcd->eeprom, 252);
++	if (checksum != lcd->eeprom.checksum) {
++		dev_err(dev, "configuration checksum does not match!\n");
++		return -EINVAL;
++	}
++
++	/* Check magic header */
++	if (lcd->eeprom.header != LCD_OLINUXINO_HEADER_MAGIC) {
++		dev_err(dev, "magic header does not match\n");
++		return -EINVAL;
++	}
++
++	dev_info(dev, "Detected %s, Rev. %s, Serial: %08x\n",
++		 lcd->eeprom.info.name,
++		 lcd->eeprom.revision,
++		 lcd->eeprom.serial);
++
++	/*
++	 * The eeprom can hold up to 4 modes.
++	 * If the stored value is bigger, overwrite it.
++	 */
++	if (lcd->eeprom.num_modes > 4) {
++		dev_warn(dev, "invalid number of modes, falling back to 4\n");
++		lcd->eeprom.num_modes = 4;
++	}
++
++	lcd->enabled = false;
++	lcd->prepared = false;
++
++	lcd->supply = devm_regulator_get(dev, "power");
++	if (IS_ERR(lcd->supply))
++		return PTR_ERR(lcd->supply);
++
++	lcd->enable_gpio = devm_gpiod_get(dev, "enable", GPIOD_OUT_LOW);
++	if (IS_ERR(lcd->enable_gpio))
++		return PTR_ERR(lcd->enable_gpio);
++
++	lcd->backlight = devm_of_find_backlight(dev);
++	if (IS_ERR(lcd->backlight))
++		return PTR_ERR(lcd->backlight);
++
++	drm_panel_init(&lcd->panel);
++	lcd->panel.dev = dev;
++	lcd->panel.funcs = &lcd_olinuxino_funcs;
++
++	return drm_panel_add(&lcd->panel);
++}
++
++static int lcd_olinuxino_remove(struct i2c_client *client)
++{
++	struct lcd_olinuxino *panel = i2c_get_clientdata(client);
++
++	drm_panel_remove(&panel->panel);
++
++	lcd_olinuxino_disable(&panel->panel);
++	lcd_olinuxino_unprepare(&panel->panel);
++
++	return 0;
++}
++
++static const struct of_device_id lcd_olinuxino_of_ids[] = {
++	{ .compatible = "olimex,lcd-olinuxino" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, lcd_olinuxino_of_ids);
++
++static struct i2c_driver lcd_olinuxino_driver = {
++	.driver = {
++		.name = "lcd_olinuxino",
++		.of_match_table = lcd_olinuxino_of_ids,
++	},
++	.probe = lcd_olinuxino_probe,
++	.remove = lcd_olinuxino_remove,
++};
++
++module_i2c_driver(lcd_olinuxino_driver);
++
++MODULE_AUTHOR("Stefan Mavrodiev <stefan@olimex.com>");
++MODULE_DESCRIPTION("LCD-OLinuXino driver");
++MODULE_LICENSE("GPL");
+-- 
+2.7.4
