@@ -1,59 +1,97 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH 1/2] ARM: dts: imx51-zii-scu3-esb: Add switch IRQ line pinumx config
-Date: Wed, 11 Jul 2018 19:33:36 -0700
-Message-ID: <20180712023337.30112-2-andrew.smirnov@gmail.com>
-References: <20180712023337.30112-1-andrew.smirnov@gmail.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: Re: [PATCH v2 1/3] clk: meson: add DT documentation for emmc clock
+ controller
+Date: Thu, 12 Jul 2018 10:47:12 +0800
+Message-ID: <f2eb8632-1113-3bb8-506f-ac0d4e838fd4@amlogic.com>
+References: <20180710163658.6175-1-yixun.lan@amlogic.com>
+ <20180710163658.6175-2-yixun.lan@amlogic.com>
+ <20180711194346.GA32414@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180712023337.30112-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20180711194346.GA32414@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Lucas Stach <l.stach@pengutronix.de>, cphealy@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
+To: Rob Herring <robh@kernel.org>
+Cc: yixun.lan@amlogic.com, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT code to explicitly configure PAD_AUD3_BB_CK and avoid relying
-on defaults.
+Hi Rob
 
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: cphealy@gmail.com
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- arch/arm/boot/dts/imx51-zii-scu3-esb.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+see my comments
 
-diff --git a/arch/arm/boot/dts/imx51-zii-scu3-esb.dts b/arch/arm/boot/dts/imx51-zii-scu3-esb.dts
-index 2941a92d40f1..0bb42c00d72b 100644
---- a/arch/arm/boot/dts/imx51-zii-scu3-esb.dts
-+++ b/arch/arm/boot/dts/imx51-zii-scu3-esb.dts
-@@ -221,6 +221,8 @@
- 			interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_switch>;
- 
- 			ports {
- 				#address-cells = <1>;
-@@ -426,6 +428,12 @@
- 		>;
- 	};
- 
-+	pinctrl_switch: switchgrp {
-+		fsl,pins = <
-+			MX51_PAD_AUD3_BB_CK__GPIO4_20		0xc5
-+		>;
-+	};
-+
- 	pinctrl_uart1: uart1grp {
- 		fsl,pins = <
- 			MX51_PAD_UART1_RXD__UART1_RXD		0x1c5
--- 
-2.17.1
+On 07/12/18 03:43, Rob Herring wrote:
+> On Tue, Jul 10, 2018 at 04:36:56PM +0000, Yixun Lan wrote:
+>> Document the MMC sub clock controller driver, the potential consumer
+>> of this driver is MMC or NAND.
+> 
+> So you all have decided to properly model this now?
+> 
+Yes, ;-)
+
+>>
+>> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+>> ---
+>>  .../bindings/clock/amlogic,mmc-clkc.txt       | 31 +++++++++++++++++++
+>>  1 file changed, 31 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
+>> new file mode 100644
+>> index 000000000000..ff6b4bf3ecf9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
+>> @@ -0,0 +1,31 @@
+>> +* Amlogic MMC Sub Clock Controller Driver
+>> +
+>> +The Amlogic MMC clock controller generates and supplies clock to support
+>> +MMC and NAND controller
+>> +
+>> +Required Properties:
+>> +
+>> +- compatible: should be:
+>> +		"amlogic,meson-gx-mmc-clkc"
+>> +		"amlogic,meson-axg-mmc-clkc"
+>> +
+>> +- #clock-cells: should be 1.
+>> +- clocks: phandles to clocks corresponding to the clock-names property
+>> +- clock-names: list of parent clock names
+>> +	- "clkin0", "clkin1"
+>> +
+>> +Parent node should have the following properties :
+>> +- compatible: "syscon", "simple-mfd, and "amlogic,meson-axg-mmc-clkc"
+> 
+> You don't need "simple-mfd" and probably not syscon either. The order is 
+> wrong too. Most specific first.
+> 
+Ok, I will drop "simple-mfd"..
+
+but the syscon is a must, since this mmc clock model access registers
+via the regmap interface
+
+I will fix the order, thanks for pointing this out
+
+>> +- reg: base address and size of the MMC control register space.
+>> +
+>> +Example: Clock controller node:
+>> +
+>> +sd_mmc_c_clkc: clock-controller@7000 {
+>> +	compatible = "amlogic,mmc-clkc", "syscon", "simple-mfd";
+> 
+> Doesn't match the binding...
+> 
+oops, I will update this
+
+>> +	reg = <0x0 0x7000 0x0 0x4>;
+>> +	#clock-cells = <1>;
+>> +
+>> +	clock-names = "clkin0", "clkin1";
+>> +	clocks = <&clkc CLKID_SD_MMC_C_CLK0>,
+>> +			<&clkc CLKID_FCLK_DIV2>;
+>> +};
+>> -- 
+>> 2.18.0
+>>
+> 
+> .
+> 
