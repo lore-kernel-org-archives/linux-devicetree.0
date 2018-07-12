@@ -1,56 +1,79 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH 02/14] dmaengine: dma-jz4780: Separate chan/ctrl registers
-Date: Wed, 11 Jul 2018 16:27:15 -0700
-Message-ID: <20180711232715.djxrbgmcski5xtjp@pburton-laptop>
-References: <20180703123214.23090-1-paul@crapouillou.net>
- <20180703123214.23090-3-paul@crapouillou.net>
- <20180709170359.GI22377@vkoul-mobl>
- <1531237019.17118.1@crapouillou.net>
- <20180711121655.GS3219@vkoul-mobl>
+From: Mars Cheng <mars.cheng@mediatek.com>
+Subject: Re: [PATCH v4 1/1] arm64: dts: mediatek: add mt6765 support
+Date: Thu, 12 Jul 2018 08:06:17 +0800
+Message-ID: <1531353977.25499.9.camel@mtkswgap22>
+References: <1531116302-29921-1-git-send-email-mars.cheng@mediatek.com>
+ <1531116302-29921-2-git-send-email-mars.cheng@mediatek.com>
+ <7fb13f45-4e33-6efc-467b-c7256a40cbc9@gmail.com>
+ <d439eb7d-6365-7a0a-2969-1ddecc51defc@arm.com>
+ <1531177443.7777.18.camel@mtkswgap22>
+ <7a3becb3-510b-5763-5b66-5e14ebf7c974@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180711121655.GS3219@vkoul-mobl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Paul Cercueil <paul@crapouillou.net>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <7a3becb3-510b-5763-5b66-5e14ebf7c974@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: devicetree@vger.kernel.org, CC Hwang <cc.hwang@mediatek.com>, wsd_upstream@mediatek.com, Marc Zyngier <marc.zyngier@arm.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+Hi Matthias
 
-On Wed, Jul 11, 2018 at 05:46:55PM +0530, Vinod wrote:
-> > > >  -	jzdma->base = devm_ioremap_resource(dev, res);
-> > > >  -	if (IS_ERR(jzdma->base))
-> > > >  -		return PTR_ERR(jzdma->base);
-> > > >  +	jzdma->chn_base = devm_ioremap_resource(dev, res);
-> > > >  +	if (IS_ERR(jzdma->chn_base))
-> > > >  +		return PTR_ERR(jzdma->chn_base);
-> > > >  +
-> > > >  +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > > >  +	if (!res) {
-> > > >  +		dev_err(dev, "failed to get I/O memory\n");
-> > > >  +		return -EINVAL;
-> > > >  +	}
-> > > 
-> > > okay and this breaks if you happen to get probed on older DT. I think DT
-> > > is treated as ABI so you need to continue support older method while
-> > > finding if DT has split resources
-> > 
-> > See my response to PrasannaKumar. All the Ingenic-based boards do compile
-> > the devicetree within the kernel, so I think it's still fine to add breaking
-> > changes. I'll wait on @Rob to give his point of view on this, though.
-> > 
-> > (It's not something hard to change, but I'd like to know what's the policy
-> > in that case. I have other DT-breaking patches to submit)
+On Tue, 2018-07-10 at 12:52 +0200, Matthias Brugger wrote:
 > 
-> The policy is that DT is an ABI and should not break :)
+> On 10/07/18 01:04, Mars Cheng wrote:
+[...]
 
-I think in general that's a good policy to have for compatibility, but
-if it's known for certain that the DT for all users of a driver is
-always built into the kernel then I don't see why we shouldn't feel free
-to change a binding. I agree with Paul that it'd be interesting to hear
-the DT binding maintainers take on this.
+> > pmic/pwrap/i2c/rtc/kpd/spi/wdt/cqdma/auxadc/pwm/cmdq/disp. We have
+> > dedicated owners to handle them and will cowork tightly with members to
+> > make sure things happen in the following weeks.
+> > 
+> 
+> Ok, so let's wait until pinctrl driver is submitted. I'd prefer if you could add
+> the clk driver to this series. This way we can get rid of the dummy clocks in
+> the device tree.
+> 
 
-Thanks,
-    Paul
+Got it, I will submit this series with clk support in v5. and pinctrl
+after that.
+
+> > For previous chips, we did have no enough support after shell. It is due
+> > to fast pace of smartphone SoC and other resource issues. We also know
+> > that is no excuse so that we already confirmed owners and their
+> > schedules for mt6765.
+> > 
+> > If there is any suggestion, please let us know.
+> > 
+> 
+> I know that smartphone SoC is a fast paced business. Never the less I'm
+> convinced that the basic building blocks won't change much from one version to
+> another. And that mainline support for the previous version of your SoC will
+> help you to get your new drivers faster upstream.
+> 
+> For me the best example is the mt7622 which got to a reasonable upstream support
+> quite fast, thanks to a good foundation of mt7623 in mainline. I'd love to see
+> that happen on the smartphone SoCs as well.
+> 
+> Not to mention that upstream support will help you internally when you have to
+> rebase your BSP code-base to a new kernel version.
+> 
+> That said I think it is good news that you have already defined owner for the
+> different devices and hope to see submissions for them in the near future :)
+> As a suggestion I would say that upstream submission takes time and effort and
+> it will help your engineers if they can allocate some time to do so. But that's
+> most probably a management decision and all engineers know that management bases
+> it's decision on some hard-to-understandable abbreviations like EBITDA etc. ;)
+> 
+> Best regards,
+> Matthias
+
+Thanks for your suggestions. We will try to catch up on this mission :-)
