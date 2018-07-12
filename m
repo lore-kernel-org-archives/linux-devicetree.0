@@ -1,52 +1,116 @@
-From: Luis Araneda <luaraneda@gmail.com>
-Subject: [PATCH 3/3] arm: dts: zynq: Add LEDs to the Zybo Z7 board
-Date: Thu, 12 Jul 2018 01:50:48 -0400
-Message-ID: <20180712055049.5098-4-luaraneda@gmail.com>
-References: <20180712055049.5098-1-luaraneda@gmail.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v6 6/7] dt: thermal: tsens: Document the fallback DT
+ property for v2 of TSENS IP
+Date: Thu, 12 Jul 2018 11:26:25 +0530
+Message-ID: <CAP245DVpOPhuCZ4OJ0t=izquND2mUrQ8ekkU8M+sMeyUJ_fjYw@mail.gmail.com>
+References: <cover.1531135999.git.amit.kucheria@linaro.org>
+ <bf1147fa417314b2fbf5c0cfb682445587fe39bb.1531136000.git.amit.kucheria@linaro.org>
+ <CAD=FV=W-snhM9L9Ez-ypAJwn2NhNJ1X=s5wDvu-gbQvmLZY9Qg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180712055049.5098-1-luaraneda@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Luis Araneda <luaraneda@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=W-snhM9L9Ez-ypAJwn2NhNJ1X=s5wDvu-gbQvmLZY9Qg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add an LED node, connected to the Processing System (PS)
+On Thu, Jul 12, 2018 at 12:12 AM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Mon, Jul 9, 2018 at 4:43 AM, Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> > We want to create common code for v2 of the TSENS IP block that is used in
+> > a large number of Qualcomm SoCs. "qcom,tsens-v2" should be able to handle
+> > most of the common functionality start with a common get_temp() function.
+> >
+> > It is also necessary to split out the memory regions for the TM and SROT
+> > register banks because their offsets are not constant across SoC families.
+>
+> nit that bindings should be earlier in the patch series than the code
+> implementing the bindings.
 
-Signed-off-by: Luis Araneda <luaraneda@gmail.com>
----
- arch/arm/boot/dts/zynq-zybo-z7.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Will reorder.
 
-diff --git a/arch/arm/boot/dts/zynq-zybo-z7.dts b/arch/arm/boot/dts/zynq-zybo-z7.dts
-index b68a5e921464..710076c9bc19 100644
---- a/arch/arm/boot/dts/zynq-zybo-z7.dts
-+++ b/arch/arm/boot/dts/zynq-zybo-z7.dts
-@@ -22,6 +22,15 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+
-+		ld4 {
-+			label = "zynq-zybo-z7:green:ld4";
-+			gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
- 	usb_phy0: phy0 {
- 		#phy-cells = <0>;
- 		compatible = "usb-nop-xceiv";
--- 
-2.18.0
+>
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+> >  .../devicetree/bindings/thermal/qcom-tsens.txt     | 25 +++++++++++++++++-----
+> >  1 file changed, 20 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > index 06195e8..8f963b1 100644
+> > --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > @@ -1,10 +1,16 @@
+> >  * QCOM SoC Temperature Sensor (TSENS)
+> >
+> >  Required properties:
+> > -- compatible :
+> > - - "qcom,msm8916-tsens" : For 8916 Family of SoCs
+> > - - "qcom,msm8974-tsens" : For 8974 Family of SoCs
+> > - - "qcom,msm8996-tsens" : For 8996 Family of SoCs
+> > +- compatible:
+> > +  Must be one of the following:
+> > +    - "qcom,msm8916-tsens" (MSM8916)
+> > +    - "qcom,msm8974-tsens" (MSM8974)
+> > +    - "qcom,msm8996-tsens" (MSM8996)
+> > +    - "qcom,msm8998-tsens", "qcom,tsens-v2" (MSM8998)
+> > +    - "qcom,sdm845-tsens", "qcom,tsens-v2" (SDM845)
+> > +  The generic "qcom,tsens-v2" property must be used as a fallback for any SoC with
+> > +  version 2 of the TSENS IP. MSM8996 is the only exception beacause the generic
+> > +  property did not exist when support was added.
+> >
+> >  - reg: Address range of the thermal registers
+>
+> You need to document that for old SoCs where TM / SROT were 0x1000
+> apart (SROT first) that one "reg" field was OK.  ...and that for new
+> SoCs you specify two reg ranges: the first for TM and the second for
+> SROT.
+
+OK.
+
+> >  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
+> > @@ -12,7 +18,7 @@ Required properties:
+> >  - Refer to Documentation/devicetree/bindings/nvmem/nvmem.txt to know how to specify
+> >  nvmem cells
+> >
+> > -Example:
+> > +Example 1 (legacy support before a fallback tsens-v2 propoerty was introduced):
+> >  tsens: thermal-sensor@900000 {
+> >                 compatible = "qcom,msm8916-tsens";
+> >                 reg = <0x4a8000 0x2000>;
+> > @@ -20,3 +26,12 @@ tsens: thermal-sensor@900000 {
+> >                 nvmem-cell-names = "caldata", "calsel";
+> >                 #thermal-sensor-cells = <1>;
+> >         };
+> > +
+> > +Example 2 (for any platform containing v2 of the TSENS IP):
+> > +tsens0: tsens@c222000 {
+>
+> A) Use a generic name for the node, not a specific one.  Thus the node
+> should be "thermal-sensor", not "tsens".
+>
+> B) This unit address needs to match the _first_ reg address listed.
+> Give your reg below, this should be @c263000
+>
+> Thus your node name should be:
+>
+> tsens0: thermal-sensor@c263000 {
+
+Fixed
+
+> > +               compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+> > +               reg = <0xc263000 0x1ff>, /* TM */
+> > +                       <0xc222000 0x1ff>; /* SROT */
+> > +               #qcom,sensors = <13>;
+>
+> The "#qcom,sensors" property seems wrong in a few ways:
+>
+> A) I wouldn't have expected it to start with a "#".  I only expect to
+> see that on things specifying sizes / lengths.  Rob can feel free to
+> override me, though.
+>
+> B) It's not documented above.  Just putting something in an example
+> doesn't document it--it needs to be listed in the "Optional
+> properties".
