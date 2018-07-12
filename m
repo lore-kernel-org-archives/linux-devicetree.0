@@ -1,45 +1,58 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 01/10] i3c: Add core I3C infrastructure
-Date: Thu, 12 Jul 2018 10:08:05 +0200
-Message-ID: <CAK8P3a2oMDw2zHzE5vFFHDqzKVKEzOga6v0ExdYVawnMtcdbrQ@mail.gmail.com>
-References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
- <20180330074751.25987-2-boris.brezillon@bootlin.com> <CAK8P3a1aZXf2sQW2mgwJScycKPhdoOAwxRjm5cQG83513uc3fg@mail.gmail.com>
- <20180711164120.3e32fb08@bbrezillon> <CAK8P3a2EZB_tMS_47wv6M2Qpm79ZocxxhG5zLxXsBM_YjZgkyA@mail.gmail.com>
- <20180711191212.3855bb25@bbrezillon> <a31dc625-56bf-7a59-d9a3-2841360b864e@axentia.se>
+From: Frieder Schrempf <frieder.schrempf@exceet.de>
+Subject: Re: [PATCH v2 04/12] dt-bindings: spi: Move the bindings for the FSL
+ QSPI driver
+Date: Thu, 12 Jul 2018 10:11:20 +0200
+Message-ID: <6ea89c5c-0a50-fade-7d72-ca5b804da418@exceet.de>
+References: <1530789310-16254-1-git-send-email-frieder.schrempf@exceet.de>
+ <1530789310-16254-5-git-send-email-frieder.schrempf@exceet.de>
+ <20180711155404.GA15363@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a31dc625-56bf-7a59-d9a3-2841360b864e@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Boris Brezillon <boris.brezillon@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@ar>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180711155404.GA15363@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, yogeshnarayan.gaur@nxp.com, boris.brezillon@bootlin.com, richard@nod.at, prabhakar.kushwaha@nxp.com, linux-kernel@vger.kernel.org, shawnguo@kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, han.xu@nxp.com, broonie@kernel.org, linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com, fabio.estevam@nxp.com, david.wolfe@nxp.com, computersforpeace@gmail.com, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 12, 2018 at 6:41 AM, Peter Rosin <peda@axentia.se> wrote:
-> On 2018-07-11 19:12, Boris Brezillon wrote:
->> On Wed, 11 Jul 2018 17:39:56 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
+Hi Rob,
+
+On 11.07.2018 17:54, Rob Herring wrote:
+> On Thu, Jul 05, 2018 at 01:15:00PM +0200, Frieder Schrempf wrote:
+>> Move the documentation of the old SPI NOR driver to the place of the new
+>> SPI memory interface based driver.
 >>
->> That's exactly the sort of discussion I wanted to trigger. Maybe we
->> shouldn't care and expose this use case as if it was X different I3C
->> buses (with all devices present on the bus being exposed X times to the
->> system).
->
-> For I2C, this multiple masters for one bus case was retrofitted in
-> the i2c-demux-pinctrl driver. It's a huge kludge with a number of
-> undesirable quirks. I don't know if the circumstances for adding
-> this I2C driver also applies for I3C, but it might be an argument
-> in favor of the proposed extra bus object...
+>> Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
+>> ---
+>> Changes in v2:
+>> ==============
+>> * Split the moving and editing of the dt-bindings in two patches
+>>
+>>   .../devicetree/bindings/mtd/fsl-quadspi.txt     | 65 --------------------
+>>   .../devicetree/bindings/spi/spi-fsl-qspi.txt    | 65 ++++++++++++++++++++
+>>   2 files changed, 65 insertions(+), 65 deletions(-)
+> 
+> Next time, use the -M option so the move shows any real diffs.
 
->From reading the documentation and git history on that driver,
-it seems to be used only for static configuration, i.e. you use
-one driver or the other, but don't flip between them at runtime,
-right?
+Ok, I'll keep that in mind.
 
-I'm guessing that even with i3c we may have to support something
-like that, as a likely scenario might be that the i3c controller is
-multiplexed with a traditional i2c controller and/or gpios, but you
-would not be able to perform the i3c standard secondary master
-transition with the latter two because they are (by definition) not
-i3c compatible.
+Thanks,
+Frieder
 
-       Arnd
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> 
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
