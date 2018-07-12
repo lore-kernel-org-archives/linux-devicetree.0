@@ -1,120 +1,481 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: Re: [PATCH v2 1/3] clk: meson: add DT documentation for emmc clock
- controller
-Date: Fri, 13 Jul 2018 07:29:26 +0800
-Message-ID: <5442a2e8-eb49-2aa8-e53e-8db88cd0bd58@amlogic.com>
-References: <20180710163658.6175-1-yixun.lan@amlogic.com>
- <20180710163658.6175-2-yixun.lan@amlogic.com>
- <20180711194346.GA32414@rob-hp-laptop>
- <f2eb8632-1113-3bb8-506f-ac0d4e838fd4@amlogic.com>
- <CABGGisw64MpYx7Pvp+XGt6gfZzie6EKeHdchqS6CPDjmAHBuVA@mail.gmail.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v5 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW driver
+Date: Thu, 12 Jul 2018 16:44:00 -0700
+Message-ID: <153143904032.48062.5226250425566383129@swboyd.mtv.corp.google.com>
+References: <1531418745-19742-1-git-send-email-tdas@codeaurora.org>
+ <1531418745-19742-3-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABGGisw64MpYx7Pvp+XGt6gfZzie6EKeHdchqS6CPDjmAHBuVA@mail.gmail.com>
+In-Reply-To: <1531418745-19742-3-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: yixun.lan@amlogic.com, jbrunet@baylibre.com, narmstrong@baylibre.com, khilman@baylibre.com, carlo@caione.org, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, miquel.raynal@bootlin.com, boris.brezillon@bootlin.com, martin.blumenstingl@googlemail.com, liang.yang@amlogic.com, qiufang.dai@amlogic.com, jian.hu@amlogic.com, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, amit.kucheria@linaro.org, evgreen@google.com, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-HI Rob
+Quoting Taniya Das (2018-07-12 11:05:45)
+> The CPUfreq HW present in some QCOM chipsets offloads the steps necessary
+> for changing the frequency of CPUs. The driver implements the cpufreq
+> driver interface for this hardware engine.
+> =
 
-see my comments
+> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> index 52f5f1a..141ec3e 100644
+> --- a/drivers/cpufreq/Kconfig.arm
+> +++ b/drivers/cpufreq/Kconfig.arm
+> @@ -312,3 +312,13 @@ config ARM_PXA2xx_CPUFREQ
+>           This add the CPUFreq driver support for Intel PXA2xx SOCs.
+> =
 
-On 07/12/2018 10:17 PM, Rob Herring wrote:
-> On Wed, Jul 11, 2018 at 8:47 PM Yixun Lan <yixun.lan@amlogic.com> wrote:
->>
->> Hi Rob
->>
->> see my comments
->>
->> On 07/12/18 03:43, Rob Herring wrote:
->>> On Tue, Jul 10, 2018 at 04:36:56PM +0000, Yixun Lan wrote:
->>>> Document the MMC sub clock controller driver, the potential consumer
->>>> of this driver is MMC or NAND.
->>>
->>> So you all have decided to properly model this now?
->>>
->> Yes, ;-)
->>
->>>>
->>>> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
->>>> ---
->>>>  .../bindings/clock/amlogic,mmc-clkc.txt       | 31 +++++++++++++++++++
->>>>  1 file changed, 31 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
->>>> new file mode 100644
->>>> index 000000000000..ff6b4bf3ecf9
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
->>>> @@ -0,0 +1,31 @@
->>>> +* Amlogic MMC Sub Clock Controller Driver
->>>> +
->>>> +The Amlogic MMC clock controller generates and supplies clock to support
->>>> +MMC and NAND controller
->>>> +
->>>> +Required Properties:
->>>> +
->>>> +- compatible: should be:
->>>> +            "amlogic,meson-gx-mmc-clkc"
->>>> +            "amlogic,meson-axg-mmc-clkc"
->>>> +
->>>> +- #clock-cells: should be 1.
->>>> +- clocks: phandles to clocks corresponding to the clock-names property
->>>> +- clock-names: list of parent clock names
->>>> +    - "clkin0", "clkin1"
->>>> +
->>>> +Parent node should have the following properties :
->>>> +- compatible: "syscon", "simple-mfd, and "amlogic,meson-axg-mmc-clkc"
->>>
->>> You don't need "simple-mfd" and probably not syscon either. The order is
->>> wrong too. Most specific first.
->>>
->> Ok, I will drop "simple-mfd"..
->>
->> but the syscon is a must, since this mmc clock model access registers
->> via the regmap interface
-> 
-> A syscon compatible should not be the only way to get a regmap.
-do you have any suggestion about other function that I can use? is
-devm_regmap_init_mmio() feasible
+>           If in doubt, say N.
+> +
+> +config ARM_QCOM_CPUFREQ_HW
+> +       bool "QCOM CPUFreq HW driver"
 
-> Removing lines 56/57 of drivers/mfd/syscon.c should be sufficient.
-> 
-I'm not sure what's the valid point of removing compatible 'syscon' in
-driver/mfd/syscon.c, sounds this will break a lot DT/or need to fix?
-will you propose a patch for this? then I can certainly adjust here
+Why can't it be a module?
 
-> Why do you need a regmap in the first place? What else needs to access
-> this register directly?
-Yes, the SD_EMMC_CLOCK register contain several bits which not fit well
-into common clock model, and they need to be access in the NAND or eMMC
-driver itself, Martin had explained this in early thread[1]
+> +       help
+> +        Support for the CPUFreq HW driver.
+> +        Some QCOM chipsets have a HW engine to offload the steps
+> +        necessary for changing the frequency of the CPUs. Firmware loaded
+> +        in this engine exposes a programming interafce to the High-level=
+ OS.
 
-In this register
-Bit[31] select NAND or eMMC function
-Bit[25] enable SDIO IRQ
-Bit[24] Clock always on
-Bit[15:14] SRAM Power down
+typo on interface. Why is High capitalized? Just say OS?
 
-[1]
-https://lkml.kernel.org/r/CAFBinCBeyXf6LNaZzAw6WnsxzDAv8E=Yp2eem0xCPWMEUi6pnQ@mail.gmail.com
+> +        The driver implements the cpufreq driver interface for this HW e=
+ngine.
 
-> Don't you need a patch removing the clock code
-> from within the emmc driver? It's not even using regmap, so using
-> regmap here doesn't help.
->
-No, and current eMMC driver still use iomap to access the register
+So much 'driver'.
 
-I think we probably would like to take two steps approach.
-first, from the hardware perspective, the NAND and eMMC(port C) driver
-can't exist at same time, since they share the pins, clock, internal
-ram, So we have to only enable one of NAND or eMMC in DT, not enable
-both of them.
-Second, we might like to convert eMMC driver to also use mmc-clkc model.
+> +        Say Y if you want to support CPUFreq HW.
+> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpu=
+freq-hw.c
+> new file mode 100644
+> index 0000000..fa25a95
+> --- /dev/null
+> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+> @@ -0,0 +1,344 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/cpufreq.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+> +
+> +#define INIT_RATE                      300000000UL
 
+This doesn't need to be configured from DT? Or more likely be specified
+as some sort of PLL that is part of the clocks property so we know what
+the 'safe' or 'default' frequency is?
 
-Yixun
+> +#define XO_RATE                                19200000UL
+
+This should come from DT via some clocks property.
+
+> +#define LUT_MAX_ENTRIES                        40U
+> +#define CORE_COUNT_VAL(val)            (((val) & (GENMASK(18, 16))) >> 1=
+6)
+> +#define LUT_ROW_SIZE                   32
+> +
+> +enum {
+> +       REG_ENABLE,
+> +       REG_LUT_TABLE,
+> +       REG_PERF_STATE,
+> +
+> +       REG_ARRAY_SIZE,
+> +};
+> +
+> +struct cpufreq_qcom {
+> +       struct cpufreq_frequency_table *table;
+> +       struct device *dev;
+> +       const u16 *reg_offset;
+> +       void __iomem *base;
+> +       cpumask_t related_cpus;
+> +       unsigned int max_cores;
+> +};
+> +
+> +static u16 cpufreq_qcom_std_offsets[REG_ARRAY_SIZE] =3D {
+
+const?
+
+> +       [REG_ENABLE]            =3D 0x0,
+> +       [REG_LUT_TABLE]         =3D 0x110,
+> +       [REG_PERF_STATE]        =3D 0x920,
+
+Is the register map going to change again for the next device? It may be
+better to precalculate the offset for the fast switch so that the
+addition isn't in the hotpath.
+
+> +};
+> +
+> +static struct cpufreq_qcom *qcom_freq_domain_map[NR_CPUS];
+> +
+> +static int
+> +qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
+> +                            unsigned int index)
+> +{
+> +       struct cpufreq_qcom *c =3D policy->driver_data;
+> +       unsigned int offset =3D c->reg_offset[REG_PERF_STATE];
+> +
+> +       writel_relaxed(index, c->base + offset);
+> +
+> +       return 0;
+> +}
+> +
+> +static unsigned int qcom_cpufreq_hw_get(unsigned int cpu)
+> +{
+> +       struct cpufreq_qcom *c;
+> +       struct cpufreq_policy *policy;
+> +       unsigned int index, offset;
+> +
+> +       policy =3D cpufreq_cpu_get_raw(cpu);
+> +       if (!policy)
+> +               return 0;
+> +
+> +       c =3D policy->driver_data;
+> +       offset =3D c->reg_offset[REG_PERF_STATE];
+> +
+> +       index =3D readl_relaxed(c->base + offset);
+> +       index =3D min(index, LUT_MAX_ENTRIES - 1);
+> +
+> +       return policy->freq_table[index].frequency;
+> +}
+> +
+> +static unsigned int
+> +qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
+> +                           unsigned int target_freq)
+> +{
+> +       struct cpufreq_qcom *c =3D policy->driver_data;
+> +       unsigned int offset;
+> +       int index;
+> +
+> +       index =3D cpufreq_table_find_index_l(policy, target_freq);
+
+It's unfortunate that we have to search the table in software again.
+Why can't we use policy->cached_resolved_idx to avoid this search twice?
+
+> +       if (index < 0)
+> +               return 0;
+> +
+> +       offset =3D c->reg_offset[REG_PERF_STATE];
+> +
+> +       writel_relaxed(index, c->base + offset);
+> +
+> +       return policy->freq_table[index].frequency;
+> +}
+> +
+> +static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
+> +{
+> +       struct cpufreq_qcom *c;
+> +
+> +       c =3D qcom_freq_domain_map[policy->cpu];
+> +       if (!c) {
+> +               pr_err("No scaling support for CPU%d\n", policy->cpu);
+> +               return -ENODEV;
+> +       }
+> +
+> +       cpumask_copy(policy->cpus, &c->related_cpus);
+> +
+> +       policy->fast_switch_possible =3D true;
+> +       policy->freq_table =3D c->table;
+> +       policy->driver_data =3D c;
+> +
+> +       return 0;
+> +}
+> +
+> +static struct freq_attr *qcom_cpufreq_hw_attr[] =3D {
+> +       &cpufreq_freq_attr_scaling_available_freqs,
+> +       &cpufreq_freq_attr_scaling_boost_freqs,
+> +       NULL
+> +};
+> +
+> +static struct cpufreq_driver cpufreq_qcom_hw_driver =3D {
+> +       .flags          =3D CPUFREQ_STICKY | CPUFREQ_NEED_INITIAL_FREQ_CH=
+ECK |
+> +                         CPUFREQ_HAVE_GOVERNOR_PER_POLICY,
+> +       .verify         =3D cpufreq_generic_frequency_table_verify,
+> +       .target_index   =3D qcom_cpufreq_hw_target_index,
+> +       .get            =3D qcom_cpufreq_hw_get,
+> +       .init           =3D qcom_cpufreq_hw_cpu_init,
+> +       .fast_switch    =3D qcom_cpufreq_hw_fast_switch,
+> +       .name           =3D "qcom-cpufreq-hw",
+> +       .attr           =3D qcom_cpufreq_hw_attr,
+> +       .boost_enabled  =3D true,
+> +};
+> +
+> +static int qcom_read_lut(struct platform_device *pdev,
+> +                        struct cpufreq_qcom *c)
+> +{
+> +       struct device *dev =3D &pdev->dev;
+> +       unsigned int offset;
+> +       u32 data, src, lval, i, core_count, prev_cc, prev_freq, cur_freq;
+> +
+> +       c->table =3D devm_kcalloc(dev, LUT_MAX_ENTRIES + 1,
+> +                               sizeof(*c->table), GFP_KERNEL);
+> +       if (!c->table)
+> +               return -ENOMEM;
+> +
+> +       offset =3D c->reg_offset[REG_LUT_TABLE];
+> +
+> +       for (i =3D 0; i < LUT_MAX_ENTRIES; i++) {
+> +               data =3D readl_relaxed(c->base + offset + i * LUT_ROW_SIZ=
+E);
+> +               src =3D ((data & GENMASK(31, 30)) >> 30);
+
+One too many parenthesis.
+
+> +               lval =3D (data & GENMASK(7, 0));
+
+One too many parenthesis.
+
+> +               core_count =3D CORE_COUNT_VAL(data);
+> +
+> +               if (src =3D=3D 0)
+> +                       c->table[i].frequency =3D INIT_RATE / 1000;
+> +               else
+> +                       c->table[i].frequency =3D XO_RATE * lval / 1000;
+> +
+> +               cur_freq =3D c->table[i].frequency;
+> +
+> +               dev_dbg(dev, "index=3D%d freq=3D%d, core_count %d\n",
+> +                       i, c->table[i].frequency, core_count);
+> +
+> +               if (core_count !=3D c->max_cores)
+> +                       cur_freq =3D CPUFREQ_ENTRY_INVALID;
+> +
+> +               /*
+> +                * Two of the same frequencies with the same core counts =
+means
+> +                * end of table.
+> +                */
+> +               if (i > 0 && c->table[i - 1].frequency =3D=3D
+> +                  c->table[i].frequency && prev_cc =3D=3D core_count) {
+> +                       struct cpufreq_frequency_table *prev =3D &c->tabl=
+e[i - 1];
+> +
+> +                       if (prev_freq =3D=3D CPUFREQ_ENTRY_INVALID)
+> +                               prev->flags =3D CPUFREQ_BOOST_FREQ;
+> +                       break;
+> +               }
+> +               prev_cc =3D core_count;
+> +               prev_freq =3D cur_freq;
+> +       }
+> +
+> +       c->table[i].frequency =3D CPUFREQ_TABLE_END;
+> +
+> +       return 0;
+> +}
+> +
+> +static int qcom_get_related_cpus(struct device_node *np, struct cpumask =
+*m)
+> +{
+> +       struct device_node *cpu_np, *freq_np;
+> +       int cpu;
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               cpu_np =3D of_cpu_device_node_get(cpu);
+> +               if (!cpu_np)
+> +                       continue;
+> +               freq_np =3D of_parse_phandle(cpu_np, "qcom,freq-domain", =
+0);
+
+Put the of_node_put(cpu_np) here? And then remove it from the other two
+places below?
+
+> +               if (!freq_np) {
+> +                       of_node_put(cpu_np);
+> +                       continue;
+> +               }
+> +               if (freq_np =3D=3D np)
+> +                       cpumask_set_cpu(cpu, m);
+> +
+> +               of_node_put(cpu_np);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int qcom_cpu_resources_init(struct platform_device *pdev,
+> +                                  struct device_node *np, unsigned int c=
+pu)
+> +{
+> +       struct cpufreq_qcom *c;
+> +       struct resource res;
+> +       struct device *dev =3D &pdev->dev;
+> +       unsigned int offset, cpu_r;
+> +       int ret;
+> +
+> +       c =3D devm_kzalloc(dev, sizeof(*c), GFP_KERNEL);
+> +       if (!c)
+> +               return -ENOMEM;
+> +
+> +       c->reg_offset =3D of_device_get_match_data(&pdev->dev);
+> +       if (!c->reg_offset)
+> +               return -EINVAL;
+> +
+> +       if (of_address_to_resource(np, 0, &res))
+
+This is unfortunate that it can't use platform APIs.
+
+> +               return -ENOMEM;
+> +
+> +       c->base =3D devm_ioremap(dev, res.start, resource_size(&res));
+
+No devm_ioremap_resource? And we don't put the reg properties in the
+top-level node?
+
+> +       if (!c->base) {
+> +               dev_err(dev, "Unable to map %s base\n", np->name);
+
+We don't need error messages like this for mapping failures when it will
+spew a kmalloc error.
+
+> +               return -ENOMEM;
+> +       }
+> +
+> +       offset =3D c->reg_offset[REG_ENABLE];
+> +
+> +       /* HW should be in enabled state to proceed */
+> +       if (!(readl_relaxed(c->base + offset) & 0x1)) {
+> +               dev_err(dev, "%s cpufreq hardware not enabled\n", np->nam=
+e);
+> +               return -ENODEV;
+> +       }
+> +
+> +       ret =3D qcom_get_related_cpus(np, &c->related_cpus);
+> +       if (ret) {
+> +               dev_err(dev, "%s failed to get related CPUs\n", np->name);
+> +               return ret;
+> +       }
+> +
+> +       c->max_cores =3D cpumask_weight(&c->related_cpus);
+> +       if (!c->max_cores)
+> +               return -ENOENT;
+> +
+> +       ret =3D qcom_read_lut(pdev, c);
+
+qcom_cpufreq_hw_read_lut?
+
+> +       if (ret) {
+> +               dev_err(dev, "%s failed to read LUT\n", np->name);
+> +               return ret;
+> +       }
+> +
+> +       qcom_freq_domain_map[cpu] =3D c;
+> +
+> +       /* Related CPUs to keep a single copy */
+
+What does this comment mean?
+
+> +       cpu_r =3D cpumask_first(&c->related_cpus);
+> +       if (cpu !=3D cpu_r) {
+> +               qcom_freq_domain_map[cpu] =3D qcom_freq_domain_map[cpu_r];
+> +               devm_kfree(dev, c);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int qcom_resources_init(struct platform_device *pdev)
+> +{
+> +       struct device_node *np, *cpu_np;
+> +       unsigned int cpu;
+> +       int ret;
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               cpu_np =3D of_cpu_device_node_get(cpu);
+> +               if (!cpu_np) {
+> +                       dev_err(&pdev->dev, "Failed to get cpu %d device\=
+n",
+> +                               cpu);
+> +                       continue;
+
+An error, but we continue? Why not dev_dbg level?
+
+> +               }
+> +
+> +               np =3D of_parse_phandle(cpu_np, "qcom,freq-domain", 0);
+> +               if (!np) {
+> +                       dev_err(&pdev->dev, "Failed to get freq-domain de=
+vice\n");
+> +                       return -EINVAL;
+> +               }
+> +
+> +               of_node_put(cpu_np);
+> +
+> +               ret =3D qcom_cpu_resources_init(pdev, np, cpu);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int qcom_cpufreq_hw_driver_probe(struct platform_device *pdev)
+> +{
+> +       int rc;
+> +
+> +       /* Get the bases of cpufreq for domains */
+> +       rc =3D qcom_resources_init(pdev);
+> +       if (rc) {
+> +               dev_err(&pdev->dev, "CPUFreq resource init failed\n");
+> +               return rc;
+> +       }
+> +
+> +       rc =3D cpufreq_register_driver(&cpufreq_qcom_hw_driver);
+> +       if (rc) {
+> +               dev_err(&pdev->dev, "CPUFreq HW driver failed to register=
+\n");
+> +               return rc;
+> +       }
+> +
+> +       dev_info(&pdev->dev, "QCOM CPUFreq HW driver initialized\n");
+
+Move to dev_dbg? We have other ways to know if a driver probes
+successfully so the whole line isn't really needed.
+
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id match_table[] =3D {
+
+Please call it something besides 'match_table'. qcom_cpufreq_hw_match?
+
+> +       { .compatible =3D "qcom,cpufreq-hw", .data =3D &cpufreq_qcom_std_=
+offsets },
+> +       {}
+> +};
+> +
+> +static struct platform_driver qcom_cpufreq_hw_driver =3D {
+> +       .probe =3D qcom_cpufreq_hw_driver_probe,
+> +       .driver =3D {
+> +               .name =3D "qcom-cpufreq-hw",
+> +               .of_match_table =3D match_table,
+> +               .owner =3D THIS_MODULE,
+
+platform_driver_register() already assigns this. This should be dropped
+from here.
+
+> +       },
+> +};
+> +
+> +static int __init qcom_cpufreq_hw_init(void)
+> +{
+> +       return platform_driver_register(&qcom_cpufreq_hw_driver);
+> +}
+> +subsys_initcall(qcom_cpufreq_hw_init);
+> +
+> +MODULE_DESCRIPTION("QCOM firmware-based CPU Frequency driver");
+> +MODULE_LICENSE("GPL v2");
+
+It should be tristate then in the Kconfig.
