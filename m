@@ -1,203 +1,60 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v5 05/12] PM / devfreq: Add support for policy notifiers
-Date: Thu, 12 Jul 2018 17:44:33 +0900
-Message-ID: <5399c191-e140-e2b8-629b-72ddfbf99b0f@samsung.com>
-References: <20180703234705.227473-1-mka@chromium.org>
-        <CGME20180703234900epcas1p1cda806bab6bbe69228ca5ee56bc33f36@epcas1p1.samsung.com>
-        <20180703234705.227473-6-mka@chromium.org> <5B3C6C2A.1070205@samsung.com>
-        <20180706175301.GG129942@google.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v4 01/10] i3c: Add core I3C infrastructure
+Date: Thu, 12 Jul 2018 10:44:59 +0200
+Message-ID: <bd07430a-8ec6-e2b5-64fd-c4361fe5760f@axentia.se>
+References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
+ <20180330074751.25987-2-boris.brezillon@bootlin.com>
+ <CAK8P3a1aZXf2sQW2mgwJScycKPhdoOAwxRjm5cQG83513uc3fg@mail.gmail.com>
+ <20180711164120.3e32fb08@bbrezillon>
+ <CAK8P3a2EZB_tMS_47wv6M2Qpm79ZocxxhG5zLxXsBM_YjZgkyA@mail.gmail.com>
+ <20180711191212.3855bb25@bbrezillon>
+ <a31dc625-56bf-7a59-d9a3-2841360b864e@axentia.se>
+ <CAK8P3a2oMDw2zHzE5vFFHDqzKVKEzOga6v0ExdYVawnMtcdbrQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180706175301.GG129942@google.com>
-Content-language: en-US
+In-Reply-To: <CAK8P3a2oMDw2zHzE5vFFHDqzKVKEzOga6v0ExdYVawnMtcdbrQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@ar>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-
-On 2018년 07월 07일 02:53, Matthias Kaehlcke wrote:
-> Hi Chanwoo,
-> 
-> On Wed, Jul 04, 2018 at 03:41:46PM +0900, Chanwoo Choi wrote:
-> 
->> Firstly,
->> I'm not sure why devfreq needs the devfreq_verify_within_limits() function.
->>
->> devfreq already used the OPP interface as default. It means that
->> the outside of 'drivers/devfreq' can disable/enable the frequency
->> such as drivers/thermal/devfreq_cooling.c. Also, when some device
->> drivers disable/enable the specific frequency, the devfreq core
->> consider them.
->>
->> So, devfreq doesn't need to devfreq_verify_within_limits() because
->> already support some interface to change the minimum/maximum frequency
->> of devfreq device. 
->>
->> In case of cpufreq subsystem, cpufreq only provides 'cpufreq_verify_with_limits()'
->> to change the minimum/maximum frequency of cpu. some device driver cannot
->> change the minimum/maximum frequency through OPP interface.
->>
->> But, in case of devfreq subsystem, as I explained already, devfreq support
->> the OPP interface as default way. devfreq subsystem doesn't need to add
->> other way to change the minimum/maximum frequency.
-> 
-> Using the OPP interface exclusively works as long as a
-> enabling/disabling of OPPs is limited to a single driver
-> (drivers/thermal/devfreq_cooling.c). When multiple drivers are
-> involved you need a way to resolve conflicts, that's the purpose of
-> devfreq_verify_within_limits(). Please let me know if there are
-> existing mechanisms for conflict resolution that I overlooked.
-> 
-> Possibly drivers/thermal/devfreq_cooling.c could be migrated to use
-> devfreq_verify_within_limits() instead of the OPP interface if
-> desired, however this seems beyond the scope of this series.
-
-Actually, if we uses this approach, it doesn't support the multiple drivers too.
-If non throttler drivers uses devfreq_verify_within_limits(), the conflict
-happen.
-
-To resolve the conflict for multiple device driver, maybe OPP interface
-have to support 'usage_count' such as clk_enable/disable().
-
-> 
->> Secondly,
->> This patch send the 'struct devfreq_policy' instance as the data
->> when sending the notification as following:
->>
->> 	srcu_notifier_call_chain(&devfreq->policy_notifier_list,
->> 			DEVFREQ_ADJUST, policy);
->>
->> But, I think that if devfreq core sends the 'struct devfreq_freq_limits'
->> instance instead of 'struct devfreq_policy', it is enough.
->> Because receiver of DEVFREQ_ADJUST just will use the min_freq/max_freq variables.
->>
->> So, I tried to find the cpufreq's case. The some device drivers using
->> CPUFREQ_POLICY_NOTIFIER uses following variables of 'struct cpufreq_policy'.
->> It means that receiver of CPUFREQ_POLICY_NOTIFIER don't need to other
->> information/variables except for min/max frequency.
->>
->> - policy->min
->> - policy->max
->> - policy->cpuinfo.max_freq
->> - policy->cpuinfo.min_freq
->> - policy->cpu : not related to devfreq)
->> - policy->related_cpus : not related to devfreq)
->>
->> - list of device drivers using CPUFREQ_POLICY_NOTIFIER (linux kernel is v4.18-rc1)
->> $ grep -rn "CPUFREQ_POLICY_NOTIFIER" .
->> ./drivers/macintosh/windfarm_cpufreq_clamp.c
->> ./drivers/thermal/cpu_cooling.c
->> ./drivers/thermal/cpu_cooling.c
->> ./drivers/acpi/processor_thermal.c
->> ./drivers/acpi/processor_thermal.c
->> ./drivers/acpi/processor_perflib.c
->> ./drivers/acpi/processor_perflib.c
->> ./drivers/base/arch_topology.c
->> ./drivers/base/arch_topology.c
->> ./drivers/video/fbdev/sa1100fb.c
->> ./drivers/video/fbdev/pxafb.c
->> ./drivers/cpufreq/ppc_cbe_cpufreq_pmi.c
->> ./drivers/cpufreq/cpufreq.c
->> ./drivers/cpufreq/cpufreq.c
->> ./drivers/cpufreq/cpufreq.c
->> ./drivers/cpufreq/cpufreq.c
-> 
-> Thanks for your investigation.
-> 
-> I decided to mirror the cpufreq interface for consistency, but I agree
-> that 'struct devfreq_freq_limits' could be passed instead of the
-> policy object. I'm fine with changing that.
-> 
->> On 2018년 07월 04일 08:46, Matthias Kaehlcke wrote:
->>> Policy notifiers are called before a frequency change and may narrow
->>> the min/max frequency range in devfreq_policy, which is used to adjust
->>> the target frequency if it is beyond this range.
+On 2018-07-12 10:08, Arnd Bergmann wrote:
+> On Thu, Jul 12, 2018 at 6:41 AM, Peter Rosin <peda@axentia.se> wrote:
+>> On 2018-07-11 19:12, Boris Brezillon wrote:
+>>> On Wed, 11 Jul 2018 17:39:56 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
 >>>
->>> Also add a few helpers:
->>>  - devfreq_verify_within_[dev_]limits()
->>>     - should be used by the notifiers for policy adjustments.
->>>  - dev_to_devfreq()
->>>     - lookup a devfreq strict from a device pointer
->>>
->>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
->>> Reviewed-by: Brian Norris <briannorris@chromium.org>
->>> ---
->>> Changes in v5:
->>> - none
->>>
->>> Changes in v4:
->>> - Fixed typo in commit message: devfreg => devfreq
->>> - added 'Reviewed-by: Brian Norris <briannorris@chromium.org>' tag
->>>
->>> Changes in v3:
->>> - devfreq.h: fixed misspelling of struct devfreq_policy
->>>
->>> Changes in v2:
->>> - performance, powersave and simpleondemand governors don't need changes
->>>   with "PM / devfreq: Don't adjust to user limits in governors"
->>> - formatting fixes
->>> ---
->>>  drivers/devfreq/devfreq.c | 48 ++++++++++++++++++++++-------
->>>  include/linux/devfreq.h   | 65 +++++++++++++++++++++++++++++++++++++++
->>>  2 files changed, 102 insertions(+), 11 deletions(-)
->>>
->>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
->>> index 21604d6ae2b8..4cbaa7ad1972 100644
->>> --- a/drivers/devfreq/devfreq.c
->>> +++ b/drivers/devfreq/devfreq.c
->>> @@ -72,6 +72,21 @@ static struct devfreq *find_device_devfreq(struct device *dev)
->>>  	return ERR_PTR(-ENODEV);
->>>  }
->>>  
->>> +/**
->>> + * dev_to_devfreq() - find devfreq struct using device pointer
->>> + * @dev:	device pointer used to lookup device devfreq.
->>> + */
->>> +struct devfreq *dev_to_devfreq(struct device *dev)
->>> +{
->>> +	struct devfreq *devfreq;
->>> +
->>> +	mutex_lock(&devfreq_list_lock);
->>> +	devfreq = find_device_devfreq(dev);
->>> +	mutex_unlock(&devfreq_list_lock);
->>> +
->>> +	return devfreq;
->>> +}
->>> +
->>>  static unsigned long find_available_min_freq(struct devfreq *devfreq)
->>>  {
->>>  	struct dev_pm_opp *opp;
->>> @@ -269,20 +284,21 @@ int update_devfreq(struct devfreq *devfreq)
->>>  	if (!policy->governor)
->>>  		return -EINVAL;
->>>  
->>> +	policy->min = policy->devinfo.min_freq;
->>> +	policy->max = policy->devinfo.max_freq;
+>>> That's exactly the sort of discussion I wanted to trigger. Maybe we
+>>> shouldn't care and expose this use case as if it was X different I3C
+>>> buses (with all devices present on the bus being exposed X times to the
+>>> system).
 >>
->> Why don't you consider 'policy->user.max/min_freq' as following?
->> As I already commented, I think that 'struct devfreq_freq_limits' is enough
->> instead of 'struct devfreq_policy'.
->>
->> 	->max_freq = MIN(policy->devinfo.max_freq, policy->user.max_freq);
->> 	->min_freq = MAX(policy->devinfo.min_freq, policy->user.min_freq);
+>> For I2C, this multiple masters for one bus case was retrofitted in
+>> the i2c-demux-pinctrl driver. It's a huge kludge with a number of
+>> undesirable quirks. I don't know if the circumstances for adding
+>> this I2C driver also applies for I3C, but it might be an argument
+>> in favor of the proposed extra bus object...
 > 
-> You mean limiting the frequency range with user.min/max before
-> DEVFREQ_ADJUST instead of adjusting it afterwards? That's fine with
-> me.
-> 
-> Thanks
-> 
-> Matthias
-> 
-> 
-> 
+> From reading the documentation and git history on that driver,
+> it seems to be used only for static configuration, i.e. you use
+> one driver or the other, but don't flip between them at runtime,
+> right?
 
+There is a sysfs file that can be used to change master at runtime
+(current_master). This causes all client drivers to be reprobed,
+which may not be the best thing to do for every client out there...
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+> I'm guessing that even with i3c we may have to support something
+> like that, as a likely scenario might be that the i3c controller is
+> multiplexed with a traditional i2c controller and/or gpios, but you
+> would not be able to perform the i3c standard secondary master
+> transition with the latter two because they are (by definition) not
+> i3c compatible.
+
+i2c-demux-pinctrl should probably not be used as template for something
+else, but it is a good argument for some other design IMHO...
+
+Cheers,
+Peter
