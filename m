@@ -1,87 +1,39 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v3 1/2] clk: meson: add DT documentation for emmc clock controller
-Date: Thu, 12 Jul 2018 21:12:43 +0000
-Message-ID: <20180712211244.11428-2-yixun.lan@amlogic.com>
-References: <20180712211244.11428-1-yixun.lan@amlogic.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 1/2] ARM: dts: imx51-zii-scu3-esb: Add switch IRQ line
+ pinumx config
+Date: Thu, 12 Jul 2018 15:30:27 +0200
+Message-ID: <20180712133027.GD11553@lunn.ch>
+References: <20180712023337.30112-1-andrew.smirnov@gmail.com>
+ <20180712023337.30112-2-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180712211244.11428-1-yixun.lan@amlogic.com>
+Content-Disposition: inline
+In-Reply-To: <20180712023337.30112-2-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Yixun Lan <yixun.lan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Lucas Stach <l.stach@pengutronix.de>, cphealy@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document the MMC sub clock controller driver, the potential consumer
-of this driver is MMC or NAND. Also add three clock bindings IDs which
-provided by this driver.
+On Wed, Jul 11, 2018 at 07:33:36PM -0700, Andrey Smirnov wrote:
+> Add DT code to explicitly configure PAD_AUD3_BB_CK and avoid relying
+> on defaults.
+> 
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: cphealy@gmail.com
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
----
- .../bindings/clock/amlogic,mmc-clkc.txt       | 31 +++++++++++++++++++
- .../clock/amlogic,meson-mmc-clkc.h            | 16 ++++++++++
- 2 files changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
- create mode 100644 include/dt-bindings/clock/amlogic,meson-mmc-clkc.h
+Thanks for adding this.
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
-new file mode 100644
-index 000000000000..91018221df1a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
-@@ -0,0 +1,31 @@
-+* Amlogic MMC Sub Clock Controller Driver
-+
-+The Amlogic MMC clock controller generates and supplies clock to support
-+MMC and NAND controller
-+
-+Required Properties:
-+
-+- compatible: should be:
-+		"amlogic,meson-gx-mmc-clkc"
-+		"amlogic,meson-axg-mmc-clkc"
-+
-+- #clock-cells: should be 1.
-+- clocks: phandles to clocks corresponding to the clock-names property
-+- clock-names: list of parent clock names
-+	- "clkin0", "clkin1"
-+
-+Parent node should have the following properties :
-+- compatible: "amlogic,meson-axg-mmc-clkc", "syscon".
-+- reg: base address and size of the MMC control register space.
-+
-+Example: Clock controller node:
-+
-+sd_mmc_c_clkc: clock-controller@7000 {
-+	compatible = "amlogic,meson-axg-mmc-clkc", "syscon";
-+	reg = <0x0 0x7000 0x0 0x4>;
-+	#clock-cells = <1>;
-+
-+	clock-names = "clkin0", "clkin1";
-+	clocks = <&clkc CLKID_SD_MMC_C_CLK0>,
-+		 <&clkc CLKID_FCLK_DIV2>;
-+};
-diff --git a/include/dt-bindings/clock/amlogic,meson-mmc-clkc.h b/include/dt-bindings/clock/amlogic,meson-mmc-clkc.h
-new file mode 100644
-index 000000000000..2ae988ebc3ae
---- /dev/null
-+++ b/include/dt-bindings/clock/amlogic,meson-mmc-clkc.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-+/*
-+ * Meson MMC sub clock tree IDs
-+ *
-+ * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
-+ * Author: Yixun Lan <yixun.lan@amlogic.com>
-+ */
-+
-+#ifndef __MMC_CLKC_H
-+#define __MMC_CLKC_H
-+
-+#define CLKID_MMC_DIV				1
-+#define CLKID_MMC_PHASE_TX			3
-+#define CLKID_MMC_PHASE_RX			4
-+
-+#endif
--- 
-2.18.0
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
