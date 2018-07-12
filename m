@@ -1,7 +1,7 @@
 From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH 2/2] ARM: dts: imx51-zii-scu3-esb: Fix RAVE SP watchdog compatible string
-Date: Wed, 11 Jul 2018 19:33:37 -0700
-Message-ID: <20180712023337.30112-3-andrew.smirnov@gmail.com>
+Subject: [PATCH 1/2] ARM: dts: imx51-zii-scu3-esb: Add switch IRQ line pinumx config
+Date: Wed, 11 Jul 2018 19:33:36 -0700
+Message-ID: <20180712023337.30112-2-andrew.smirnov@gmail.com>
 References: <20180712023337.30112-1-andrew.smirnov@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180712023337.30112-1-andrew.smirnov@gmail.com>
@@ -10,8 +10,8 @@ To: Shawn Guo <shawnguo@kernel.org>
 Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Lucas Stach <l.stach@pengutronix.de>, cphealy@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-It looks like I made a nasty typo in the original patch which resulted
-in missing watchdog device. Fix it.
+Add DT code to explicitly configure PAD_AUD3_BB_CK and avoid relying
+on defaults.
 
 Cc: Fabio Estevam <fabio.estevam@nxp.com>
 Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
@@ -26,21 +26,34 @@ Cc: linux-kernel@vger.kernel.org
 Cc: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 ---
- arch/arm/boot/dts/imx51-zii-scu3-esb.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/imx51-zii-scu3-esb.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx51-zii-scu3-esb.dts b/arch/arm/boot/dts/imx51-zii-scu3-esb.dts
-index 0bb42c00d72b..dffb761a1cc8 100644
+index 2941a92d40f1..0bb42c00d72b 100644
 --- a/arch/arm/boot/dts/imx51-zii-scu3-esb.dts
 +++ b/arch/arm/boot/dts/imx51-zii-scu3-esb.dts
-@@ -325,7 +325,7 @@
- 		#size-cells = <1>;		
+@@ -221,6 +221,8 @@
+ 			interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_switch>;
  
- 		watchdog {
--			compatible = "zii,rave-sp-watchodg-legacy";
-+			compatible = "zii,rave-sp-watchdog-legacy";
- 		};
+ 			ports {
+ 				#address-cells = <1>;
+@@ -426,6 +428,12 @@
+ 		>;
+ 	};
  
- 		eeprom@a4 {
++	pinctrl_switch: switchgrp {
++		fsl,pins = <
++			MX51_PAD_AUD3_BB_CK__GPIO4_20		0xc5
++		>;
++	};
++
+ 	pinctrl_uart1: uart1grp {
+ 		fsl,pins = <
+ 			MX51_PAD_UART1_RXD__UART1_RXD		0x1c5
 -- 
 2.17.1
