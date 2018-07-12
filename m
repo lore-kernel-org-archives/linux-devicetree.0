@@ -1,251 +1,127 @@
-From: Alex Gonzalez <alex.gonzalez@digi.com>
-Subject: [PATCH v2 2/2] ARM: dts: imx6ul: Add DTS for ConnectCore 6UL SBC Express
-Date: Thu, 12 Jul 2018 10:20:36 +0200
-Message-ID: <1531383636-3406-3-git-send-email-alex.gonzalez@digi.com>
-References: <1531383636-3406-1-git-send-email-alex.gonzalez@digi.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 01/10] i3c: Add core I3C infrastructure
+Date: Thu, 12 Jul 2018 10:21:40 +0200
+Message-ID: <CAK8P3a13GX67YEci2J8Rxn6O4FBjjD82X+w3hyGMT3TDbtFkTg@mail.gmail.com>
+References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
+ <20180330074751.25987-2-boris.brezillon@bootlin.com> <CAK8P3a1aZXf2sQW2mgwJScycKPhdoOAwxRjm5cQG83513uc3fg@mail.gmail.com>
+ <20180711164120.3e32fb08@bbrezillon> <CAK8P3a2EZB_tMS_47wv6M2Qpm79ZocxxhG5zLxXsBM_YjZgkyA@mail.gmail.com>
+ <20180711191212.3855bb25@bbrezillon> <CAK8P3a2djk8c6STaxJC0MCkBddyOafk4WbG2LdfPf0V1EYiqmQ@mail.gmail.com>
+ <20180712000932.3b04ee9d@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531383636-3406-1-git-send-email-alex.gonzalez@digi.com>
+In-Reply-To: <20180712000932.3b04ee9d@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alex.gonzalez@digi.com
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.or>
 List-Id: devicetree@vger.kernel.org
 
-The ConnectCore 6UL Single Board Computer (SBC) Express contains the
-ConnectCore 6UL System-On-Module.
+On Thu, Jul 12, 2018 at 12:09 AM, Boris Brezillon
+<boris.brezillon@bootlin.com> wrote:
+> On Wed, 11 Jul 2018 22:10:26 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Wed, Jul 11, 2018 at 7:12 PM, Boris Brezillon <boris.brezillon@bootlin.com> wrote:
+>> > On Wed, 11 Jul 2018 17:39:56 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
+>> >> On Wed, Jul 11, 2018 at 4:41 PM, Boris Brezillon <boris.brezillon@bootlin.com> wrote:
 
-Its hardware specifications are:
+>> >> IOW, what feature would we lose if we were to declare that
+>> >> setup above invalid (and ensure you cannot represent it in DT)?
+>> >
+>> > That's exactly the sort of discussion I wanted to trigger. Maybe we
+>> > shouldn't care and expose this use case as if it was X different I3C
+>> > buses (with all devices present on the bus being exposed X times
+>> > to the system).
+>>
+>> That's probably fine for many slave devices (you could read a
+>> single sensor multiple times if you iterate through all i2c sensors
+>> on all buses) but might not work for others (a slave device sending
+>> an interrupt to the current master for a request that was started
+>> from the previous master).
+>> My impression however is that this is actually a corner case that
+>> we can leave to be undefined, and not prepare to handle well,
+>> as long as we can deal with the interesting examples above.
+>
+> Mastership handover/takeover is something I already thought about.
+> Actually, that's the reason for the i3c_bus->cur_master field (so that
+> the master being asked to do a transfer on the bus can request bus
+> ownership it bus->cur_master != master->this->info.pid).
+>
+> I guess this would be replaced by something simpler if we get rid of
+> the i3c_bus object (just a bool i3c_master->owns_bus).
 
-* 256MB DDR3 memory
-* 256MB NAND flash
-* Single Ethernet
-* USB Host and USB-OTG
-* MicroSD external storage
-* Groove connectors and Raspberry Pi Hat compatible expansion header
+If we can ignore the case of handing over between two masters that
+we both own, we end up being in just one of two states:
 
-Signed-off-by: Alex Gonzalez <alex.gonzalez@digi.com>
----
- arch/arm/boot/dts/Makefile                      |   1 +
- arch/arm/boot/dts/imx6ul-ccimx6ulsbcexpress.dts | 200 ++++++++++++++++++++++++
- 2 files changed, 201 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6ul-ccimx6ulsbcexpress.dts
+a) currently we are the master
+b) we are not currently the master but have asked the current
+    master to transfer ownership back to us. For this, we have to
+    know who the current master is of course.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 37a3de760d40..6135d3dc381c 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -533,6 +533,7 @@ dtb-$(CONFIG_SOC_IMX6SX) += \
- 	imx6sx-udoo-neo-full.dtb
- dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-14x14-evk.dtb \
-+	imx6ul-ccimx6ulsbcexpress.dtb \
- 	imx6ul-geam.dtb \
- 	imx6ul-isiot-emmc.dtb \
- 	imx6ul-isiot-nand.dtb \
-diff --git a/arch/arm/boot/dts/imx6ul-ccimx6ulsbcexpress.dts b/arch/arm/boot/dts/imx6ul-ccimx6ulsbcexpress.dts
-new file mode 100644
-index 000000000000..3792679c0c90
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-ccimx6ulsbcexpress.dts
-@@ -0,0 +1,200 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Digi International's ConnectCore6UL SBC Express board device tree source
-+ *
-+ * Copyright 2018 Digi International, Inc.
-+ *
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include "imx6ul.dtsi"
-+#include "imx6ul-ccimx6ulsom.dtsi"
-+
-+/ {
-+	model = "Digi International ConnectCore 6UL SBC Express.";
-+	compatible = "digi,ccimx6ulsbcexpress", "digi,ccimx6ulsom",
-+		     "fsl,imx6ul";
-+};
-+
-+&adc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc1>;
-+	status = "okay";
-+};
-+
-+&can1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+	xceiver-supply = <&ext_3v3>;
-+	status = "okay";
-+};
-+
-+&ecspi3 {
-+	cs-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi3_master>;
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet1>;
-+	phy-mode = "rmii";
-+	phy-handle = <&ethphy0>;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			smsc,disable-energy-detect;
-+			reg = <0>;
-+		};
-+	};
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+};
-+
-+&pwm1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm1>;
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>;
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart5>;
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	dr_mode = "host";
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&usbotg2 {
-+	dr_mode = "host";
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	broken-cd;      /* no carrier detect line (use polling) */
-+	no-1-8-v;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog>;
-+
-+	pinctrl_adc1: adc1grp {
-+		fsl,pins = <
-+			/* GPIO1_4/ADC1_IN4 (pin 7 of the expansion header) */
-+			MX6UL_PAD_GPIO1_IO04__GPIO1_IO04        0xb0
-+		>;
-+	};
-+
-+	pinctrl_ecspi3_master: ecspi3grp1 {
-+		fsl,pins = <
-+			MX6UL_PAD_UART2_RX_DATA__ECSPI3_SCLK	0x10b0
-+			MX6UL_PAD_UART2_CTS_B__ECSPI3_MOSI	0x10b0
-+			MX6UL_PAD_UART2_RTS_B__ECSPI3_MISO	0x10b0
-+			MX6UL_PAD_UART2_TX_DATA__GPIO1_IO20	0x10b0 /* Chip Select */
-+		>;
-+	};
-+
-+	pinctrl_ecspi3_slave: ecspi3grp2 {
-+		fsl,pins = <
-+			MX6UL_PAD_UART2_RX_DATA__ECSPI3_SCLK	0x10b0
-+			MX6UL_PAD_UART2_CTS_B__ECSPI3_MOSI	0x10b0
-+			MX6UL_PAD_UART2_RTS_B__ECSPI3_MISO	0x10b0
-+			MX6UL_PAD_UART2_TX_DATA__ECSPI3_SS0	0x10b0 /* Chip Select */
-+		>;
-+	};
-+
-+	pinctrl_enet1: enet1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO07__ENET1_MDC		0x1b0b0
-+			MX6UL_PAD_GPIO1_IO06__ENET1_MDIO	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x40017051
-+		>;
-+	};
-+
-+	pinctrl_flexcan1: flexcan1grp{
-+		fsl,pins = <
-+			MX6UL_PAD_LCD_DATA08__FLEXCAN1_TX	0x1b020
-+			MX6UL_PAD_LCD_DATA09__FLEXCAN1_RX	0x1b020
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO00__I2C2_SCL 0x4001b8b0
-+			MX6UL_PAD_GPIO1_IO01__I2C2_SDA 0x4001b8b0
-+		>;
-+	};
-+
-+	pinctrl_pwm1: pwm1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_LCD_DATA00__PWM1_OUT		0x10b0
-+		>;
-+	};
-+
-+	pinctrl_uart4: uart4grp {
-+		fsl,pins = <
-+			MX6UL_PAD_LCD_CLK__UART4_DCE_TX		0x1b0b1
-+			MX6UL_PAD_LCD_ENABLE__UART4_DCE_RX	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart5: uart5grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART5_TX_DATA__UART5_DCE_TX	0x1b0b1
-+			MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_CSI_HSYNC__USDHC2_CMD		0x17059
-+			MX6UL_PAD_CSI_VSYNC__USDHC2_CLK		0x10071
-+			MX6UL_PAD_CSI_DATA00__USDHC2_DATA0	0x17059
-+			MX6UL_PAD_CSI_DATA01__USDHC2_DATA1	0x17059
-+			MX6UL_PAD_CSI_DATA02__USDHC2_DATA2	0x17059
-+			MX6UL_PAD_CSI_DATA03__USDHC2_DATA3	0x17059
-+		>;
-+	};
-+
-+	/* General purpose pinctrl */
-+	pinctrl_hog: hoggrp {
-+		fsl,pins = <
-+			/* GPIOs BANK 3 */
-+			MX6UL_PAD_LCD_RESET__GPIO3_IO04		0xf030
-+		>;
-+	};
-+};
+I think that's the simplest case that would work with the specification,
+but it relies on the assumption that the master controlled by Linux
+is always more important than any other master, and that we just
+hand over ownership for as long as the others want it.
+
+If that is not the case, we also need a third state
+
+c) we have handed ownership to another master that is equally
+    important, but no i2c device driver is currently trying to talk
+    to a device, so we don't need ownership back until a slave driver
+    changes state.
+
+The main difference between b) and c) that I see would be what
+happens with in-band interrupts. If I understand the specification
+correctly, only the current master receives them, so if you have
+any i2c device that uses interrupts to talk to a Linux driver, we
+want to be in b) rather than c). An example of this would be
+an input device on a PC: If the user operateds the keyboard
+or pointer and we have handed off ownership to a sensor hub,
+we never get an input event, right?
+
+>> Ok, but maybe you could you put the information about those devices
+>> on a local list on the stack rather than the controller? I suppose this
+>> would not change the logic much, but it would slightly simplify the
+>> data structures for the bus and stop others from wondering about
+>> them. ;-)
+>
+> This has changed a bit in the v6 I'm about to send (probably next week).
+> I now have 2 different objects which do not necessarily have the same
+> lifetime:
+>
+> * i3c_dev_desc: an I3C device descriptor. This is the representation
+>   exposed to I3C master controller drivers which usually reserve one
+>   slot in the HW device table per-device on the bus. Since the same
+>   device can be re-discovered with a different address, we have a short
+>   period in time during which the controller will have 2
+>   slots/descriptors used to control the same device, except one would
+>   be inactive (any transfer to the old dynamic address would fail) and
+>   the other one would be active. The core then takes care of releasing
+>   the old descriptor/slot and attaching the new one to the i3c_device
+>   object exposed to I3C device drivers
+>
+> * i3c_device: this is the object exposed to I3C device drivers. It's
+>   lifetime is usually the same as the i3c_dev_desc it's attached to,
+>   except when the device lose its dynamic address and get a new one
+>   assigned. In this case we keep the same i3c_device object, but
+>   dynamically re-attach it to a new i3c_dev_desc before releasing the
+>   old dev desc. This way the I3C does not even see that the device
+>   address has changed and can keep doing transfers to it.
+>
+> With these 2 distinct representations, the handling on the controller
+> side is greatly simplified: the core takes care of the resource
+> migration steps, while it was up to the controller to do that my
+> previous versions (look at the ->reattach_i3c_dev() hook in the Cadence
+> driver, and I think it's even more complicated with other controllers,
+> like the HCI one).
+>
+>> This is a really minor point though, let's work out the problem of the
+>> multiple masters first.
+>
+> I agree. This being said, moving to a representation where the bus is
+> implicitly represented by the master_controller instance shouldn't be
+> too difficult. So, if you think we should try this approach I can do
+> the modifications in my v6.
+
+I'd say let's wait before you do that change, possibly add a comment
+in there now to remind us of what an alternative would be.
+
+       Arnd
