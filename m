@@ -1,46 +1,60 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: [PATCH 0/5] fsi: Coldfire coprocessor offload
-Date: Thu, 12 Jul 2018 13:48:42 +1000
-Message-ID: <20180712034847.12878-1-benh@kernel.crashing.org>
+From: Luis Araneda <luaraneda@gmail.com>
+Subject: [PATCH v3 0/6] arm: dts: zynq: improvements and cleanup
+Date: Thu, 12 Jul 2018 00:10:18 -0400
+Message-ID: <20180712041024.20583-1-luaraneda@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-aspeed@lists.ozlabs.org
-Cc: devicetree@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Luis Araneda <luaraneda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This series implements support for offloading the FSI protocol bitbanging
-to the ColdFire secondary core of the Aspeed SoCs. The result increases
-FSI performance by a factor of 4, and on systems that don't support async
-FSI clock, provide much more regular and continuous clocking which helps
-reliability.
+This series attempts to standardize device naming and improve
+its information for better identification
 
-This series is much smaller than the previous submissions as I already
-merged all the "preparatory" work into the FSI tree. This is now strictly
-the coldfire support and is now only waiting for ack of the DT bindings
-(and whatever other review comments might come my way) before I put it
-into the FSI tree and sends it to Greg.
+The values of the "compatible" and "model" device-tree properties
+are corrected for some devices, adding complementary information
+when necessary
 
-There are two dependencies to be able to build/use this. The above
-prep work:
+Changes since v2:
+- Split dt-bindings patch (too many changes)
+- Apply dts patches first (reorder)
 
-      https://git.kernel.org/pub/scm/linux/kernel/git/benh/linux-fsi.git/log/
+Changes since v1 (RFC):
+- Add values to compatible property instead of replacing them
+- Don't remove "internal" word from Xilinx boards on dt-bindings
+- Migrate content of adapteva dt-binding file into Xilinx's
+- Sort additional compatible strings alphabetically
+  by manufacturer
+- Dropped patch that renamed the zedboard development board
+  (no apparent benefit)
+- Dropped the patch that removed the "zynq" value from the
+  compatible strings (breaks the ABI)
 
-And the Aspeed GPIO driver changes for handling with GPIO lines ownership and
-handshaking. The patches have been merged into the GPIO tree and a dedicated
-immutable topic branch and can be found here:
+Luis Araneda (6):
+  arm: dts: zynq: Set correct manufacturer for ZedBoard and MicroZed
+    boards
+  arm: dts: zynq: correct and improve the model property of dt files
+  dt-bindings: xilinx: zynq: Improve boards description
+  dt-bindings: xilinx: zynq: Sort entries alphabetically
+  dt-bindings: Move Paralella board to Xilinx
+  dt-bindings: xilinx: zynq: Add missing boards
 
-      https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/log/?h=ib-aspeed
+ .../devicetree/bindings/arm/adapteva.txt      |  7 -----
+ .../devicetree/bindings/arm/xilinx.txt        | 30 +++++++++++++++----
+ arch/arm/boot/dts/zynq-cc108.dts              |  2 +-
+ arch/arm/boot/dts/zynq-microzed.dts           |  4 +--
+ arch/arm/boot/dts/zynq-parallella.dts         |  2 +-
+ arch/arm/boot/dts/zynq-zc702.dts              |  2 +-
+ arch/arm/boot/dts/zynq-zc706.dts              |  2 +-
+ arch/arm/boot/dts/zynq-zc770-xm010.dts        |  2 +-
+ arch/arm/boot/dts/zynq-zc770-xm011.dts        |  2 +-
+ arch/arm/boot/dts/zynq-zc770-xm012.dts        |  2 +-
+ arch/arm/boot/dts/zynq-zc770-xm013.dts        |  2 +-
+ arch/arm/boot/dts/zynq-zed.dts                |  4 +--
+ arch/arm/boot/dts/zynq-zybo-z7.dts            |  2 +-
+ arch/arm/boot/dts/zynq-zybo.dts               |  2 +-
+ 14 files changed, 39 insertions(+), 26 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/adapteva.txt
 
-Finally, the driver needs a machine specific firmware file. The firwmare
-is open source and available at:
-
-	https://github.com/ozbenh/cf-fsi
-
-I will submit it to linux-firmware if there's enough popular demand ;-)
-
-v2. Fix misuse of devm_kzalloc for objects containing a struct device
-    in fsi-master-gpio and fsi-master-ast-cf (similar fixes for the
-    various FSI drivers will come later a part of rework to move away
-    from misc devs).
-
-v3. Sparse fix and updated DT bindings as per Rob's comments.
+-- 
+2.18.0
