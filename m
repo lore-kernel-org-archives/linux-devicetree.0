@@ -1,330 +1,109 @@
-From: Aapo Vienamo <avienamo@nvidia.com>
-Subject: [PATCH v3 7/7] soc/tegra: pmc: Implement pad configuration via pinctrl
-Date: Thu, 12 Jul 2018 15:00:13 +0300
-Message-ID: <1531396813-6581-8-git-send-email-avienamo@nvidia.com>
-References: <1531396813-6581-1-git-send-email-avienamo@nvidia.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 1/3] drm: mxsfb: Change driver.name to mxsfb-drm
+Date: Thu, 12 Jul 2018 14:15:57 +0200
+Message-ID: <0b5e15ff6aa7dd7dcb96bd9bdcc81f4d@agner.ch>
+References: <cover.1529091248.git.leonard.crestez@nxp.com>
+ <47ea7572011735b68a8a70f0e11bdf00cb2fd86a.1529091248.git.leonard.crestez@nxp.com>
+ <CAOMZO5B8i0gN+rCq-yPrd112NkwJWTxYCtsLVeLhD1JLRuX6EQ@mail.gmail.com>
+ <07be6d9a85b6be655fc2b084be81d8bf9715b57a.camel@nxp.com>
+ <638457fd-85da-8fec-d146-517c43f71813@denx.de>
+ <b3fa74c5110b45e5992920485749869ab1f7ebce.camel@nxp.com>
+ <6995fa4b-47a9-887b-5e4f-4284ca6a2c79@gmail.com>
+ <fd22085f646d97f66cff5b7f22785500@agner.ch>
+ <6fdba55b-0be6-9e28-d87a-43d876a1fd09@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531396813-6581-1-git-send-email-avienamo@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Aapo Vienamo <avienamo@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <6fdba55b-0be6-9e28-d87a-43d876a1fd09@denx.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@nxp.com>, gary.bisson@boundarydevices.com, LW@KARO-electronics.de, sebastien.szymanski@armadeus.com, jagan@amarulasolutions.com
+Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, marcofrk@gmail.com, shawnguo@kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Marek Vasut <marek.vasut@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, kernel@pengutronix.de, Leonard Crestez <leonard.crestez@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Register a pinctrl device and implement get and set functions for
-PIN_CONFIG_LOW_POWER_MODE and PIN_CONFIG_POWER_SOURCE parameters.
-
-Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
----
- drivers/soc/tegra/pmc.c | 187 +++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 185 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index 7d3c3de..6bfd00d 100644
---- a/drivers/soc/tegra/pmc.c
-+++ b/drivers/soc/tegra/pmc.c
-@@ -33,6 +33,9 @@
- #include <linux/of_address.h>
- #include <linux/of_clk.h>
- #include <linux/of_platform.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinconf-generic.h>
- #include <linux/platform_device.h>
- #include <linux/pm_domain.h>
- #include <linux/reboot.h>
-@@ -164,6 +167,9 @@ struct tegra_pmc_soc {
- 	const struct tegra_io_pad_soc *io_pads;
- 	unsigned int num_io_pads;
- 
-+	const struct pinctrl_pin_desc *pin_descs;
-+	unsigned int num_pin_descs;
-+
- 	const struct tegra_pmc_regs *regs;
- 	void (*init)(struct tegra_pmc *pmc);
- 	void (*setup_irq_polarity)(struct tegra_pmc *pmc,
-@@ -222,6 +228,8 @@ struct tegra_pmc {
- 	DECLARE_BITMAP(powergates_available, TEGRA_POWERGATE_MAX);
- 
- 	struct mutex powergates_lock;
-+
-+	struct pinctrl_dev *pctl_dev;
- };
- 
- static struct tegra_pmc *pmc = &(struct tegra_pmc) {
-@@ -1398,6 +1406,142 @@ static void tegra_pmc_init_tsense_reset(struct tegra_pmc *pmc)
- 	of_node_put(np);
- }
- 
-+static int tegra_io_pad_pinctrl_get_groups_count(struct pinctrl_dev *pctl_dev)
-+{
-+	return pmc->soc->num_io_pads;
-+}
-+
-+static const char *tegra_io_pad_pinctrl_get_group_name(
-+		struct pinctrl_dev *pctl, unsigned int group)
-+{
-+	return pmc->soc->io_pads[group].name;
-+}
-+
-+static int tegra_io_pad_pinctrl_get_group_pins(struct pinctrl_dev *pctl_dev,
-+					       unsigned int group,
-+					       const unsigned int **pins,
-+					       unsigned int *num_pins)
-+{
-+	*pins = &pmc->soc->io_pads[group].id;
-+	*num_pins = 1;
-+	return 0;
-+}
-+
-+static const struct pinctrl_ops tegra_io_pad_pinctrl_ops = {
-+	.get_groups_count = tegra_io_pad_pinctrl_get_groups_count,
-+	.get_group_name = tegra_io_pad_pinctrl_get_group_name,
-+	.get_group_pins = tegra_io_pad_pinctrl_get_group_pins,
-+	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
-+	.dt_free_map = pinconf_generic_dt_free_map,
-+};
-+
-+static int tegra_io_pad_pinconf_get(struct pinctrl_dev *pctl_dev,
-+				    unsigned int pin, unsigned long *config)
-+{
-+	const struct tegra_io_pad_soc *pad = tegra_io_pad_find(pmc, pin);
-+	enum pin_config_param param = pinconf_to_config_param(*config);
-+	int ret;
-+	u32 arg;
-+
-+	if (!pad)
-+		return -EINVAL;
-+
-+	switch (param) {
-+	case PIN_CONFIG_POWER_SOURCE:
-+		ret = tegra_io_pad_get_voltage(pad->id);
-+		if (ret < 0)
-+			return ret;
-+		arg = ret;
-+		break;
-+	case PIN_CONFIG_LOW_POWER_MODE:
-+		ret = tegra_io_pad_is_powered(pad->id);
-+		if (ret < 0)
-+			return ret;
-+		arg = !ret;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	*config = pinconf_to_config_packed(param, arg);
-+
-+	return 0;
-+}
-+
-+static int tegra_io_pad_pinconf_set(struct pinctrl_dev *pctl_dev,
-+				    unsigned int pin, unsigned long *configs,
-+				    unsigned int num_configs)
-+{
-+	const struct tegra_io_pad_soc *pad = tegra_io_pad_find(pmc, pin);
-+	enum pin_config_param param;
-+	unsigned int i;
-+	int err;
-+	u32 arg;
-+
-+	if (!pad)
-+		return -EINVAL;
-+
-+	for (i = 0; i < num_configs; ++i) {
-+		param = pinconf_to_config_param(configs[i]);
-+		arg = pinconf_to_config_argument(configs[i]);
-+
-+		switch (param) {
-+		case PIN_CONFIG_LOW_POWER_MODE:
-+			if (arg)
-+				err = tegra_io_pad_power_disable(pad->id);
-+			else
-+				err = tegra_io_pad_power_enable(pad->id);
-+			if (err)
-+				return err;
-+			break;
-+		case PIN_CONFIG_POWER_SOURCE:
-+			if (arg != TEGRA_IO_PAD_VOLTAGE_1V8 &&
-+			    arg != TEGRA_IO_PAD_VOLTAGE_3V3)
-+				return -EINVAL;
-+			err = tegra_io_pad_set_voltage(pad->id, arg);
-+			if (err)
-+				return err;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pinconf_ops tegra_io_pad_pinconf_ops = {
-+	.pin_config_get = tegra_io_pad_pinconf_get,
-+	.pin_config_set = tegra_io_pad_pinconf_set,
-+	.is_generic = true,
-+};
-+
-+static struct pinctrl_desc tegra_pmc_pctl_desc = {
-+	.pctlops = &tegra_io_pad_pinctrl_ops,
-+	.confops = &tegra_io_pad_pinconf_ops,
-+};
-+
-+static int tegra_pmc_pinctrl_init(struct tegra_pmc *pmc)
-+{
-+	int err = 0;
-+
-+	if (!pmc->soc->num_pin_descs)
-+		return 0;
-+
-+	tegra_pmc_pctl_desc.name = dev_name(pmc->dev);
-+	tegra_pmc_pctl_desc.pins = pmc->soc->pin_descs;
-+	tegra_pmc_pctl_desc.npins = pmc->soc->num_pin_descs;
-+
-+	pmc->pctl_dev = devm_pinctrl_register(pmc->dev, &tegra_pmc_pctl_desc,
-+					      pmc);
-+	if (IS_ERR(pmc->pctl_dev)) {
-+		err = PTR_ERR(pmc->pctl_dev);
-+		dev_err(pmc->dev, "unable to register pinctrl, %d\n", err);
-+	}
-+
-+	return err;
-+}
-+
- static int tegra_pmc_probe(struct platform_device *pdev)
- {
- 	void __iomem *base;
-@@ -1475,18 +1619,27 @@ static int tegra_pmc_probe(struct platform_device *pdev)
- 
- 	err = register_restart_handler(&tegra_pmc_restart_handler);
- 	if (err) {
--		debugfs_remove(pmc->debugfs);
- 		dev_err(&pdev->dev, "unable to register restart handler, %d\n",
- 			err);
--		return err;
-+		goto cleanup_debugfs;
- 	}
- 
-+	err = tegra_pmc_pinctrl_init(pmc);
-+	if (err)
-+		goto cleanup_restart_handler;
-+
- 	mutex_lock(&pmc->powergates_lock);
- 	iounmap(pmc->base);
- 	pmc->base = base;
- 	mutex_unlock(&pmc->powergates_lock);
- 
- 	return 0;
-+
-+cleanup_restart_handler:
-+	unregister_restart_handler(&tegra_pmc_restart_handler);
-+cleanup_debugfs:
-+	debugfs_remove(pmc->debugfs);
-+	return err;
- }
- 
- #if defined(CONFIG_PM_SLEEP) && defined(CONFIG_ARM)
-@@ -1576,6 +1729,8 @@ static const struct tegra_pmc_soc tegra20_pmc_soc = {
- 	.has_gpu_clamps = false,
- 	.num_io_pads = 0,
- 	.io_pads = NULL,
-+	.num_pin_descs = 0,
-+	.pin_descs = NULL,
- 	.regs = &tegra20_pmc_regs,
- 	.init = tegra20_pmc_init,
- 	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
-@@ -1615,6 +1770,8 @@ static const struct tegra_pmc_soc tegra30_pmc_soc = {
- 	.has_impl_33v_pwr = false,
- 	.num_io_pads = 0,
- 	.io_pads = NULL,
-+	.num_pin_descs = 0,
-+	.pin_descs = NULL,
- 	.regs = &tegra20_pmc_regs,
- 	.init = tegra20_pmc_init,
- 	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
-@@ -1658,6 +1815,8 @@ static const struct tegra_pmc_soc tegra114_pmc_soc = {
- 	.has_impl_33v_pwr = false,
- 	.num_io_pads = 0,
- 	.io_pads = NULL,
-+	.num_pin_descs = 0,
-+	.pin_descs = NULL,
- 	.regs = &tegra20_pmc_regs,
- 	.init = tegra20_pmc_init,
- 	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
-@@ -1704,6 +1863,12 @@ static const u8 tegra124_cpu_powergates[] = {
- 		.name	= (_name),			\
- 	})
- 
-+#define TEGRA_IO_PIN_DESC(_id, _dpd, _voltage, _name)	\
-+	((struct pinctrl_pin_desc) {			\
-+		.number = (_id),			\
-+		.name	= (_name)			\
-+	})
-+
- #define TEGRA124_IO_PAD_TABLE(_pad)					\
- 	/* .id                          .dpd    .voltage  .name	*/	\
- 	_pad(TEGRA_IO_PAD_AUDIO,	17,	UINT_MAX, "audio"),	\
-@@ -1741,6 +1906,10 @@ static const struct tegra_io_pad_soc tegra124_io_pads[] = {
- 	TEGRA124_IO_PAD_TABLE(TEGRA_IO_PAD)
- };
- 
-+static const struct pinctrl_pin_desc tegra124_pin_descs[] = {
-+	TEGRA124_IO_PAD_TABLE(TEGRA_IO_PIN_DESC)
-+};
-+
- static const struct tegra_pmc_soc tegra124_pmc_soc = {
- 	.num_powergates = ARRAY_SIZE(tegra124_powergates),
- 	.powergates = tegra124_powergates,
-@@ -1751,6 +1920,8 @@ static const struct tegra_pmc_soc tegra124_pmc_soc = {
- 	.has_impl_33v_pwr = false,
- 	.num_io_pads = ARRAY_SIZE(tegra124_io_pads),
- 	.io_pads = tegra124_io_pads,
-+	.num_pin_descs = ARRAY_SIZE(tegra124_pin_descs),
-+	.pin_descs = tegra124_pin_descs,
- 	.regs = &tegra20_pmc_regs,
- 	.init = tegra20_pmc_init,
- 	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
-@@ -1835,6 +2006,10 @@ static const struct tegra_io_pad_soc tegra210_io_pads[] = {
- 	TEGRA210_IO_PAD_TABLE(TEGRA_IO_PAD)
- };
- 
-+static const struct pinctrl_pin_desc tegra210_pin_descs[] = {
-+	TEGRA210_IO_PAD_TABLE(TEGRA_IO_PIN_DESC)
-+};
-+
- static const struct tegra_pmc_soc tegra210_pmc_soc = {
- 	.num_powergates = ARRAY_SIZE(tegra210_powergates),
- 	.powergates = tegra210_powergates,
-@@ -1846,6 +2021,8 @@ static const struct tegra_pmc_soc tegra210_pmc_soc = {
- 	.needs_mbist_war = true,
- 	.num_io_pads = ARRAY_SIZE(tegra210_io_pads),
- 	.io_pads = tegra210_io_pads,
-+	.num_pin_descs = ARRAY_SIZE(tegra210_pin_descs),
-+	.pin_descs = tegra210_pin_descs,
- 	.regs = &tegra20_pmc_regs,
- 	.init = tegra20_pmc_init,
- 	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
-@@ -1896,6 +2073,10 @@ static const struct tegra_io_pad_soc tegra186_io_pads[] = {
- 	TEGRA186_IO_PAD_TABLE(TEGRA_IO_PAD)
- };
- 
-+static const struct pinctrl_pin_desc tegra186_pin_descs[] = {
-+	TEGRA186_IO_PAD_TABLE(TEGRA_IO_PIN_DESC)
-+};
-+
- static const struct tegra_pmc_regs tegra186_pmc_regs = {
- 	.scratch0 = 0x2000,
- 	.dpd_req = 0x74,
-@@ -1949,6 +2130,8 @@ static const struct tegra_pmc_soc tegra186_pmc_soc = {
- 	.has_impl_33v_pwr = true,
- 	.num_io_pads = ARRAY_SIZE(tegra186_io_pads),
- 	.io_pads = tegra186_io_pads,
-+	.num_pin_descs = ARRAY_SIZE(tegra186_pin_descs),
-+	.pin_descs = tegra186_pin_descs,
- 	.regs = &tegra186_pmc_regs,
- 	.init = NULL,
- 	.setup_irq_polarity = tegra186_pmc_setup_irq_polarity,
--- 
-2.7.4
+W2FkZGluZyBBdXRob3JzIG9mIHRoZSBwcm9ibGVtYXRpYyBkZXZpY2UgdHJlZXNdCgpPbiAxMC4w
+Ny4yMDE4IDExOjExLCBNYXJlayBWYXN1dCB3cm90ZToKPiBPbiAwNy8xMC8yMDE4IDExOjA2IEFN
+LCBTdGVmYW4gQWduZXIgd3JvdGU6Cj4+IE9uIDE2LjA2LjIwMTggMDE6MzIsIE1hcmVrIFZhc3V0
+IHdyb3RlOgo+Pj4gT24gMDYvMTYvMjAxOCAxMjo0MiBBTSwgTGVvbmFyZCBDcmVzdGV6IHdyb3Rl
+Ogo+Pj4+IE9uIEZyaSwgMjAxOC0wNi0xNSBhdCAyMzozNiArMDIwMCwgTWFyZWsgVmFzdXQgd3Jv
+dGU6Cj4+Pj4+IE9uIDA2LzE1LzIwMTggMTA6NTggUE0sIExlb25hcmQgQ3Jlc3RleiB3cm90ZToK
+Pj4+Pj4+IE9uIEZyaSwgMjAxOC0wNi0xNSBhdCAxNjo0NyAtMDMwMCwgRmFiaW8gRXN0ZXZhbSB3
+cm90ZToKPj4+Pj4+PiBPbiBGcmksIEp1biAxNSwgMjAxOCBhdCA0OjQzIFBNLCBMZW9uYXJkIENy
+ZXN0ZXoKPj4+Pj4+PiA8bGVvbmFyZC5jcmVzdGV6QG54cC5jb20+IHdyb3RlOgo+Pj4+Cj4+Pj4+
+Pj4+IFRoZSBGQkRFViBkcml2ZXIgdXNlcyB0aGUgc2FtZSBuYW1lIGFuZCBib3RoIGNhbid0IGJl
+IHJlZ2lzdGVyZWQgYXQgdGhlCj4+Pj4+Pj4+IHNhbWUgdGltZS4gRml4IHRoaXMgYnkgcmVuYW1p
+bmcgdGhlIGRybSBkcml2ZXIgdG8gbXhzZmItZHJtCj4+Pj4+Pj4KPj4+Pj4+PiBTdGVmYW4gc2Vu
+dCB0aGUgc2FtZSBwYXRjaCBhIGZldyBkYXlzIGFnbzoKPj4+Pj4+Cj4+Pj4+PiBJbiB0aGF0IHRo
+cmVhZCB0aGVyZSBpcyBhIHByb3Bvc2FsIGZvciByZW1vdmluZyB0aGUgb2xkIGZiZGV2L214c2Zi
+Cj4+Pj4+PiBkcml2ZXIgZW50aXJlbHkuCj4+Pj4+Pgo+Pj4+Pj4gVGhhdCB3b3VsZCBicmVhayBv
+bGQgRFRCcywgaXNuJ3QgdGhpcyBnZW5lcmFsbHkgY29uc2lkZXJlZCBiYWQ/IEFsc28sCj4+Pj4+
+PiBhcmUgd2Ugc3VyZSB0aGUgcmVtb3ZhbCBvZiBmYmRldi9teHNmYiB3b3VsZG4ndCBsb3NlIGFu
+eSBmZWF0dXJlcz8KPj4+Pj4+Cj4+Pj4+PiBXaGF0IG15IHNlcmllcyBkb2VzIGlzIG1ha2UgYm90
+aCBkcml2ZXJzIHdvcmsgd2l0aCB0aGUgc2FtZSBrZXJuZWwKPj4+Pj4+IGltYWdlIGFuZCB0dXJu
+cyB0aGUgY2hvaWNlIGludG8gYSBib2FyZC1sZXZlbCBkdGIgZGVjaXNpb24uIFN1cHBvcnRpbmcK
+Pj4+Pj4+IGV2ZXJ5dGhpbmcgYXQgb25jZSBzZWVtcyBkZXNpcmFibGUgdG8gbWUgYW5kIGl0IGFs
+bG93cyBmb3IgYSB2ZXJ5Cj4+Pj4+PiBzbW9vdGggdXBncmFkZSBwYXRoLgo+Pj4+Pgo+Pj4+PiBI
+YXZpbmcgdHdvIGRyaXZlcnMgaW4gdGhlIGtlcm5lbCB3aXRoIGRpZmZlcmVudCBzZXQgb2YgYnVn
+cyBpcyBhbHdheXMgYmFkLgo+Pj4+Pgo+Pj4+Pj4gVGhlIG9sZCBkcml2ZXIgY291bGQgYmUgcmVt
+b3ZlZCBsYXRlciwgYWZ0ZXIgYWxsIHVzZXJzIGFyZSBjb252ZXJ0ZWQuCj4+Pj4+Cj4+Pj4+IEJv
+dGggZHJpdmVycyB3ZXJlIGluIGZvciBsb25nIGVub3VnaCBhbHJlYWR5LiBBbmQgbGV0J3MgYmUg
+cmVhbGlzdGljLAo+Pj4+PiBob3cgbWFueSBNWDIzL01YMjggdXNlcnMgb2Ygb2xkIERUcyB3aXRo
+IG5ldyBrZXJuZWxzIGFyZSB0aGVyZSB3aG8KPj4+Pj4gY2Fubm90IHVwZGF0ZSB0aGUgRFQgYXMg
+d2VsbCA/Cj4+Pj4KPj4+PiBHcmVwcGluZyBmb3IgImRpc3BsYXkgPSIgaW4gYXJjaC9hcm0vYm9v
+dC9kdHMvaW14KiBJIHNlZSB0aGF0IG9sZAo+Pj4+IGJpbmRpbmdzIGFyZSBhbHNvIHVzZWQgYnkg
+M3JkLXBhcnR5IGJvYXJkcyBmb3IgaW14Ni83Ogo+Pj4+ICAqIGlteDZzeC1uaXRyb2dlbjZzeAo+
+Pj4+ICAqIGlteDZ1bC1nZWFtCj4+Pj4gICogaW14NnVsLWlzaW90Cj4+Pj4gICogaW14NnVsLW9w
+b3M2dWxkZXYKPj4+PiAgKiBpbXg2dWwtcGljby1ob2JiaXQKPj4+PiAgKiBpbXg2dWwtdHg2dWwK
+Pj4+PiAgKiBpbXg3ZC1uaXRyb2dlbjcKPj4+Cj4+PiBFciwgeWVzLCBhIGhhbmRmdWwgb2YgYm9h
+cmRzIHdoaWNoIGNvdWxkIGJlIHVwZGF0ZWQgOikKPj4+Cj4+Pj4gQ29udmVydGluZyBldmVyeXRo
+aW5nIG1pZ2h0IGJlIHF1aXRlIGEgYml0IG9mIHdvcmssIGFuZCBleHBsaWNpdGx5Cj4+Pj4gc3Vw
+cG9ydGluZyBvbGQgYmluZGluZ3MgaXMgYWxzbyB3b3JrLgo+Pj4KPj4+IERvZXMgYWRkaW5nIHN1
+cHBvcnQgZm9yIG9sZCBiaW5kaW5ncyBqdXN0aWZ5IHRoZSBlZmZvcnQgaW52ZXN0ZWQgPyBJCj4+
+PiBkb3VidCBzbywgaXQgb25seSBhZGRzIG1vcmUgY29kZSB0byBtYWludGFpbi4KPj4+Cj4+Pj4g
+SXQgaXMgdmVyeSBjb25mdXNpbmcgdGhhdCB0aGVyZSBpcyBhIHdob2xlIHNldCBvZiBkaXNwbGF5
+cyBmb3IgaW14Ni83Cj4+Pj4gd2hpY2ggYXJlIHN1cHBvcnRlZCBieSB1cHN0cmVhbSBidXQgb25s
+eSB3aXRoIGEgbm9uLWRlZmF1bHQgY29uZmlnLgo+Pj4+IFdoaWxlIGl0IGlzIGV4dHJlbWVseSBj
+b21tb24gaW4gdGhlIGVtYmVkZGVkIGZpZWxkIHRvIGhhdmUgY3VzdG9tCj4+Pj4gY29uZmlncyB0
+aGUgZGVmYXVsdCBvbmUgaW4gdGhlIGtlcm5lbCBzaG91bGQgdHJ5IHRvICJqdXN0IHdvcmsiLgo+
+Pj4+Cj4+Pj4gQ291bGRuJ3QgdGhpcyBwYXRjaCBzZXJpZXMgYmUgY29uc2lkZXJlZCBhIGJ1Z2Zp
+eD8gSXQgd2FzIGFsc28KPj4+PiBzdXJwcmlzaW5nbHkgc21hbGwuCj4+Pgo+Pj4gSSB0aGluayBp
+dCdzIGp1c3QgYSB3b3JrYXJvdW5kIHdoaWNoIGFsbG93cyB5b3UgdG8gcG9zdHBvbmUgdGhlIHJl
+YWwKPj4+IGZpeCwgYW5kIEkgZG9uJ3QgbGlrZSB0aGF0Lgo+Pgo+PiBUaGlzIGlzIG9uZSBvZiB0
+aGUgc2l0dWF0aW9uIHdoZXJlIHN0YXRlcyBxdW8gaXMga2luZGEgdGhlIHdvcnN0Cj4+IHNpdHVh
+dGlvbi4KPj4KPj4gQ3VycmVudGx5IGlteF92Nl92N19kZWZjb25maWcgYW5kIG14c19kZWZjb25m
+aWcgYWN0dWFsbHkgc3RpbGwgdXNlcwo+PiBDT05GSUdfRkJfTVhTLgo+Pgo+PiBJIHVuZGVyc3Rh
+bmQgdGhhdCB5b3UnZCByYXRoZXIgcHJlZmVyIHRvIG1vdmUgZm9yd2FyZC4gSSBzdWdnZXN0IHdl
+IGRvCj4+IGl0IGluIHN0ZXBzLgo+Pgo+PiBJbiA0LjE5Ogo+Pgo+PiAtIENoYW5nZSBEUk0gZHJp
+dmVyLm5hbWUgdG8gbXhzZmItZHJtIHNvIHdlIGF2b2lkIGNvbmZsaWN0cyBmb3Igbm93Cj4gCj4g
+QnV0IHRoaXMgd2lsbCBicmVhayBtZXNhIGlmIGl0IGRlcGVuZHMgb24gbXhzZmIgbmFtZSBmb3Ig
+aWUuIGV0bmF2aXYKPiBiaW5kaW5nLgo+IAo+PiAtIFJlbW92ZSBDT05GSUdfRkJfTVhTIGZyb20g
+aW14X3Y2X3Y3X2RlZmNvbmZpZy9teHNfZGVmY29uZmlnIG5vdywgYW5kCj4+IG9ubHkgZW5hYmxl
+IENPTkZJR19EUk1fTVhTRkI9eQo+PiAtIEFkZCAoZGVwcmVjYXRlZCkgdG8gQ09ORklHX0ZCX01Y
+Uwo+Pgo+PiBJbiA0LjE5LzQuMjA6Cj4+IC0gRml4IHRoZSBhYm92ZSBkZXZpY2UgdHJlZXMKPj4K
+Pj4gSW4gNC4yMC80LjIxOgo+PiAtIFJlbW92ZSBGQl9NWFMKPj4KPj4gRG9lcyB0aGF0IHNvdW5k
+IHJlYXNvbmFibGU/IElmIHllcywgSSBjYW4gc2VuZCB0aGUgcGF0Y2ggc2V0IHRvIGRvIHN0ZXAK
+Pj4gMS4KPiAKPiBDYW4geW91IGZpeCB0aGUgRFRzIGZvciA0LjE5IHRvbyA/CgpVbmZvcnR1bmF0
+ZWx5IHVwZGF0aW5nIHRoZSBkZXZpY2UgdHJlZXMgdHVybmVkIG91dCB0byBiZSBhIG5vbiB0cml2
+aWFsCnRhc2sgZXNwZWNpYWxseSBhcyBhbiBvdXRzaWRlci4gVGhlIGRpc3BsYXkgbmVlZHMgdG8g
+YmUgc3VwcG9ydGVkIGluCmRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYy4gU29t
+ZSBkaXNwbGF5cyBtaWdodCBiZSBhbHJlYWR5IGluCnBsYWNlLCBidXQgaWYgbm90LCB0aGUgZGlz
+cGxheSBuZWVkIHRvIGJlIGFkZGVkLiBTaW5jZSBmb3IgcGFuZWwKYmluZGluZ3MgdmVuZG9yIGFu
+ZCBwcm9kdWN0IGluZm9ybWF0aW9uIGFyZSBuZWVkZWQsIGl0IGlzIG5vdCBwb3NzaWJsZQphcyBh
+biBvdXRzaWRlcnMgdG8gbWFrZSB0aGUgY29udmVyc2lvbi4KCkphZ2FuLCBTZWJhc3RpZW4sIEZh
+YmlvLCBMb3RoYXIgYW5kIEdhcnksIGNvdWxkIHlvdSBtYXliZSB1cGRhdGUgdGhlCnJlc3BlY3Rp
+dmUgZGV2aWNlIHRyZWVzPwoKQSBjb252ZXJzaW9uIHRvIHRoZSBuZXcgYmluZGluZ3Mgc2ltaWxh
+ciB0byBjb21taXQgYTAyN2Q0OWZjMTkzICgiQVJNOgpkdHM6IGlteDctY29saWJyaTogdXNlIE9G
+IGdyYXBoIHRvIGRlc2NyaWJlIHRoZSBkaXNwbGF5IikgaXMgd2hhdCB3ZSBhcmUKbG9va2luZyBm
+b3IuCgpUaGlzIHdpbGwgbWFrZSBzdXJlIHRoYXQgdGhlIGJvYXJkcyBrZWVwIHdvcmtpbmcgdXNp
+bmcgdGhlIG5ldyBNWFNGQiBEUk0KZHJpdmVyLgoKLS0KU3RlZmFuCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
