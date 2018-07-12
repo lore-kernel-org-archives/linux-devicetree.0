@@ -1,7 +1,7 @@
 From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: [PATCH v3 1/5] dt-bindings: fsi: Document binding for the fsi-master-ast-cf "device"
-Date: Thu, 12 Jul 2018 13:48:43 +1000
-Message-ID: <20180712034847.12878-2-benh@kernel.crashing.org>
+Subject: [PATCH v3 4/5] arm: dts: OpenPower Romulus system can use coprocessor for FSI
+Date: Thu, 12 Jul 2018 13:48:46 +1000
+Message-ID: <20180712034847.12878-5-benh@kernel.crashing.org>
 References: <20180712034847.12878-1-benh@kernel.crashing.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180712034847.12878-1-benh@kernel.crashing.org>
@@ -10,63 +10,42 @@ To: linux-aspeed@lists.ozlabs.org
 Cc: devicetree@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-This isn't per-se a real device, it's a pseudo-device that
-represents the use of the Aspeed built-in ColdFire to
-implement the FSI protocol by bitbanging the GPIOs instead
-of doing it from the ARM core.
-
-Thus it's a drop-in replacement for the existing
-fsi-master-gpio pseudo-device for use on systems based
-on the Aspeed chips. It has most of the same properties,
-plus some more needed to operate the coprocessor.
-
 Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 ---
- .../bindings/fsi/fsi-master-ast-cf.txt        | 36 +++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
+ arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt b/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
-new file mode 100644
-index 000000000000..431bf8a423ce
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
-@@ -0,0 +1,36 @@
-+Device-tree bindings for ColdFire offloaded gpio-based FSI master driver
-+------------------------------------------------------------------------
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+index 347938673c83..4f4e42e47e3f 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+@@ -37,6 +37,11 @@
+ 			compatible = "shared-dma-pool";
+ 			reusable;
+ 		};
 +
-+Required properties:
-+ - compatible =
-+	"aspeed,ast2400-cf-fsi-master" for an AST2400 based system
-+   or
-+	"aspeed,ast2500-cf-fsi-master" for an AST2500 based system
++		coldfire_memory: codefire_memory@9ef00000 {
++			reg = <0x9ef00000 0x00100000>;
++			no-map;
++		};
+ 	};
+ 
+ 	leds {
+@@ -56,10 +61,13 @@
+ 	};
+ 
+ 	fsi: gpio-fsi {
+-		compatible = "fsi-master-gpio", "fsi-master";
++		compatible = "aspeed,ast2500-cf-fsi-master", "fsi-master";
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
+-		no-gpio-delays;
 +
-+ - clock-gpios = <gpio-descriptor>;	: GPIO for FSI clock
-+ - data-gpios = <gpio-descriptor>;	: GPIO for FSI data signal
-+ - enable-gpios = <gpio-descriptor>;	: GPIO for enable signal
-+ - trans-gpios = <gpio-descriptor>;	: GPIO for voltage translator enable
-+ - mux-gpios = <gpio-descriptor>;	: GPIO for pin multiplexing with other
-+                                          functions (eg, external FSI masters)
-+ - memory-region = <phandle>;		: Reference to the reserved memory for
-+                                          the ColdFire. Must be 2M aligned on
-+					  AST2400 and 1M aligned on AST2500
-+ - aspeed,sram = <phandle>;		: Reference to the SRAM node.
-+ - aspeed,cvic = <phandle>;		: Reference to the CVIC node.
-+
-+Examples:
-+
-+    fsi-master {
-+        compatible = "aspeed,ast2500-cf-fsi-master", "fsi-master";
-+
-+	clock-gpios = <&gpio 0>;
-+        data-gpios = <&gpio 1>;
-+        enable-gpios = <&gpio 2>;
-+        trans-gpios = <&gpio 3>;
-+        mux-gpios = <&gpio 4>;
-+
-+	memory-region = <&coldfire_memory>;
-+	sram = <&sram>;
-+	cvic = <&cvic>;
-+    }
++		memory-region = <&coldfire_memory>;
++		aspeed,sram = <&sram>;
++		aspeed,cvic = <&cvic>;
+ 
+ 		clock-gpios = <&gpio ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIGH>;
+ 		data-gpios = <&gpio ASPEED_GPIO(AA, 2) GPIO_ACTIVE_HIGH>;
 -- 
 2.17.1
