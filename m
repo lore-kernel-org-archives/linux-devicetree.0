@@ -1,123 +1,93 @@
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH 1/3] iio: imu: mpu6050: add support for 6515 variant
-Date: Thu, 12 Jul 2018 15:47:38 +0100
-Message-ID: <20180712154738.00002918@huawei.com>
-References: <20180711010932.20313-1-masneyb@onstation.org>
-        <20180711010932.20313-2-masneyb@onstation.org>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Re: [PATCH 1/2] ARM: sun8i: h3: enable HDMI output
+ on Banana Pi M2 Zero
+Date: Thu, 12 Jul 2018 16:53:06 +0200
+Message-ID: <20180712145306.ootqt7dfh3nxsamy@flea>
+References: <20180711132233.42301-1-icenowy@aosc.io>
+ <20180711132233.42301-2-icenowy@aosc.io>
+ <20180711150532.6gzm7krouriddreh@flea>
+ <8F6CDF5C-2AC1-43EC-858A-5C6345CF279A@aosc.io>
+ <20180712064601.m3bdd46wzac5fpgh@flea>
+ <A7CA2831-7117-415C-BC59-3FB4AE425598@aosc.io>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180711010932.20313-2-masneyb@onstation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, jonathan@marek.ca, jmaneyrol@invensense.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mkelly@xevo.com, fischerdouglasc@gmail.com, bshah@kde.org, ctatlor97@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBU6WTXNAKGQE6SRSM2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <A7CA2831-7117-415C-BC59-3FB4AE425598-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 10 Jul 2018 21:09:30 -0400
-Brian Masney <masneyb@onstation.org> wrote:
+On Thu, Jul 12, 2018 at 03:09:55PM +0800, Icenowy Zheng wrote:
+> =E4=BA=8E 2018=E5=B9=B47=E6=9C=8812=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
+2:46:01, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
+> >On Wed, Jul 11, 2018 at 11:15:50PM +0800, Icenowy Zheng wrote:
+> >>=20
+> >>=20
+> >> =E4=BA=8E 2018=E5=B9=B47=E6=9C=8811=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
+=8811:05:32, Maxime Ripard
+> ><maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
+> >> >Hi,
+> >> >
+> >> >On Wed, Jul 11, 2018 at 09:22:32PM +0800, Icenowy Zheng wrote:
+> >> >> Banana Pi M2 Zero board has a miniHDMI port connected to the HDMI
+> >> >> controller of Allwinner H3 SoC.
+> >> >>=20
+> >> >> Enable the HDMI output in Banana Pi M2 Zero device tree.
+> >> >>=20
+> >> >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> >> >> ---
+> >> >>  .../dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 25
+> >> >+++++++++++++++++++
+> >> >>  1 file changed, 25 insertions(+)
+> >> >>=20
+> >> >> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> >> >b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> >> >> index 7d01f9322658..eb61dcf32797 100644
+> >> >> --- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> >> >> +++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> >> >> @@ -26,6 +26,17 @@
+> >> >>  		stdout-path =3D "serial0:115200n8";
+> >> >>  	};
+> >> >> =20
+> >> >> +	hdmi-connector {
+> >> >> +		compatible =3D "hdmi-connector";
+> >> >> +		type =3D "c";
+> >> >
+> >> >This is not one of the connector type declared in DRM, how is it
+> >> >exposed to the userspace?
+> >>=20
+> >> So just use "A" here (because of single link)?
+> >
+> >If the connector type is C, it should be C, and DRM / driver adjusted
+> >to handle it.
+>=20
+> Okay I won't change this property, if there's any further revisions.
+>=20
+> For DRM driver, I think it can be an independent patchset.
 
-> This patch adds support for the MPU 6515 variant. Confirmed that the
-> driver functions correctly on a LG Nexus 5 (hammerhead) phone.
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
-> This is a variation of Jonathan Marek's patch from postmarketOS
-> https://gitlab.com/postmarketOS/linux-postmarketos/commit/b8ad1ec1859c8bbcbce94944b3f4dd68f8f9fc37
-> with the following changes:
-> 
-> - The driver was previously throwing a 'whoami mismatch got XXX' error.
->   Corrected ordering of hw_info variable to match the index of the
->   inv_devices enum. The mpu6515 needed to come after mpu6500, not
->   mpu6050.
-> - Removed regulator code. See next patch in this series.
-> 
-> I got confirmation from Jonathan M. that it was ok for me to submit his
-> patch upstream with these changes.
-> 
-> Jonathan C.: I assume that it is ok for the device tree binding
-> documentation to go through IIO? If not, I can split this out into a
-> separate patch if needed.
-A single ID addition is normally uncontroversial enough that we don't bother
-the DT maintainers (though of course they are welcome to look!).
-So this is fine.
-> 
->  Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt | 1 +
->  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c                | 6 ++++++
->  drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c                 | 5 +++++
->  drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h                 | 2 ++
->  4 files changed, 14 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-> index 5f4777e8cc9e..b7def51c8ad9 100644
-> --- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-> +++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-> @@ -6,6 +6,7 @@ Required properties:
->   - compatible : should be one of
->  		"invensense,mpu6050"
->   		"invensense,mpu6500"
-> +		"invensense,mpu6515"
->  		"invensense,mpu9150"
->  		"invensense,mpu9250"
->  		"invensense,mpu9255"
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> index de68e83fc52d..12c1b9507007 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> @@ -103,6 +103,12 @@ static const struct inv_mpu6050_hw hw_info[] = {
->  		.reg = &reg_set_6500,
->  		.config = &chip_config_6050,
->  	},
-> +	{
-> +		.whoami = INV_MPU6515_WHOAMI_VALUE,
-> +		.name = "MPU6515",
-> +		.reg = &reg_set_6500,
-> +		.config = &chip_config_6050,
-> +	},
->  	{
->  		.whoami = INV_MPU6000_WHOAMI_VALUE,
->  		.name = "MPU6000",
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-> index 495409d56207..dd758e3d403d 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-> @@ -174,6 +174,7 @@ static int inv_mpu_remove(struct i2c_client *client)
->  static const struct i2c_device_id inv_mpu_id[] = {
->  	{"mpu6050", INV_MPU6050},
->  	{"mpu6500", INV_MPU6500},
-> +	{"mpu6515", INV_MPU6515},
->  	{"mpu9150", INV_MPU9150},
->  	{"mpu9250", INV_MPU9250},
->  	{"mpu9255", INV_MPU9255},
-> @@ -192,6 +193,10 @@ static const struct of_device_id inv_of_match[] = {
->  		.compatible = "invensense,mpu6500",
->  		.data = (void *)INV_MPU6500
->  	},
-> +	{
-> +		.compatible = "invensense,mpu6515",
-> +		.data = (void *)INV_MPU6515
-> +	},
->  	{
->  		.compatible = "invensense,mpu9150",
->  		.data = (void *)INV_MPU9150
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-> index de8391693e17..e69a59659dbc 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-> @@ -71,6 +71,7 @@ struct inv_mpu6050_reg_map {
->  enum inv_devices {
->  	INV_MPU6050,
->  	INV_MPU6500,
-> +	INV_MPU6515,
->  	INV_MPU6000,
->  	INV_MPU9150,
->  	INV_MPU9250,
-> @@ -256,6 +257,7 @@ struct inv_mpu6050_state {
->  #define INV_MPU9150_WHOAMI_VALUE		0x68
->  #define INV_MPU9250_WHOAMI_VALUE		0x71
->  #define INV_MPU9255_WHOAMI_VALUE		0x73
-> +#define INV_MPU6515_WHOAMI_VALUE		0x74
->  #define INV_ICM20608_WHOAMI_VALUE		0xAF
->  
->  /* scan element definition */
+Not really, since it's going to break userspace as soon as you merge
+that other patchset.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
