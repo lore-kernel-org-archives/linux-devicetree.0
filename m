@@ -1,58 +1,76 @@
-From: Frieder Schrempf <frieder.schrempf@exceet.de>
-Subject: Re: [PATCH v2 04/12] dt-bindings: spi: Move the bindings for the FSL
- QSPI driver
-Date: Thu, 12 Jul 2018 10:11:20 +0200
-Message-ID: <6ea89c5c-0a50-fade-7d72-ca5b804da418@exceet.de>
-References: <1530789310-16254-1-git-send-email-frieder.schrempf@exceet.de>
- <1530789310-16254-5-git-send-email-frieder.schrempf@exceet.de>
- <20180711155404.GA15363@rob-hp-laptop>
+From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
+Subject: Re: [PATCH v5 3/6] dt-bindings: media: Document data-enable-active
+ property
+Date: Thu, 12 Jul 2018 10:13:28 +0200
+Message-ID: <20180712081328.GT5237@bigcity.dyn.berto.se>
+References: <1531145962-1540-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1531145962-1540-4-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180711155404.GA15363@rob-hp-laptop>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, yogeshnarayan.gaur@nxp.com, boris.brezillon@bootlin.com, richard@nod.at, prabhakar.kushwaha@nxp.com, linux-kernel@vger.kernel.org, shawnguo@kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, han.xu@nxp.com, broonie@kernel.org, linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com, fabio.estevam@nxp.com, david.wolfe@nxp.com, computersforpeace@gmail.com, dwmw2@infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1531145962-1540-4-git-send-email-jacopo+renesas@jmondi.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, geert@glider.be, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Jacopo,
 
-On 11.07.2018 17:54, Rob Herring wrote:
-> On Thu, Jul 05, 2018 at 01:15:00PM +0200, Frieder Schrempf wrote:
->> Move the documentation of the old SPI NOR driver to the place of the new
->> SPI memory interface based driver.
->>
->> Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
->> ---
->> Changes in v2:
->> ==============
->> * Split the moving and editing of the dt-bindings in two patches
->>
->>   .../devicetree/bindings/mtd/fsl-quadspi.txt     | 65 --------------------
->>   .../devicetree/bindings/spi/spi-fsl-qspi.txt    | 65 ++++++++++++++++++++
->>   2 files changed, 65 insertions(+), 65 deletions(-)
-> 
-> Next time, use the -M option so the move shows any real diffs.
+On 2018-07-09 16:19:18 +0200, Jacopo Mondi wrote:
+> Add 'data-enable-active' property to endpoint node properties list.
+> =
 
-Ok, I'll keep that in mind.
+> The property allows to specify the polarity of the data-enable signal, wh=
+ich
+> when in active state determinates when data lines have to sampled for val=
+id
+> pixel data.
+> =
 
-Thanks,
-Frieder
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
+Acked-by: Niklas S=F6derlund <niklas.soderlund+renesas@ragnatech.se>
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> ---
+>  Documentation/devicetree/bindings/media/video-interfaces.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> =
+
+> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt=
+ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> index 52b7c7b..baf9d97 100644
+> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> @@ -113,6 +113,8 @@ Optional endpoint properties
+>    Note, that if HSYNC and VSYNC polarities are not specified, embedded
+>    synchronization may be required, where supported.
+>  - data-active: similar to HSYNC and VSYNC, specifies data line polarity.
+> +- data-enable-active: similar to HSYNC and VSYNC, specifies the data ena=
+ble
+> +  signal polarity.
+>  - field-even-active: field signal level during the even field data trans=
+mission.
+>  - pclk-sample: sample data on rising (1) or falling (0) edge of the pixe=
+l clock
+>    signal.
+> -- =
+
+> 2.7.4
+> =
+
+
+-- =
+
+Regards,
+Niklas S=F6derlund
