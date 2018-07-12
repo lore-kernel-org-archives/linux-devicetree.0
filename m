@@ -1,51 +1,49 @@
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Subject: Re: [PATCH v2 1/2] dt: bindings: Add bindings for SDHCI Synopsys
- DWC MSHC
-Date: Thu, 12 Jul 2018 10:06:11 +0800
-Message-ID: <20180712100611.5887a195@xhacker.debian>
-References: <20180706151930.78b3024b@xhacker.debian>
-        <20180706152047.0b0a4944@xhacker.debian>
-        <20180711161206.GA1558@rob-hp-laptop>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/2] clk: imx6sll: add GPIO LPCGs
+Date: Thu, 12 Jul 2018 10:25:46 +0800
+Message-ID: <20180712022544.GP6959@dragon>
+References: <1529649154-5724-1-git-send-email-Anson.Huang@nxp.com>
+ <153091072630.143105.2849049240391576710@swboyd.mtv.corp.google.com>
+ <20180711084302.GB6959@dragon>
+ <153132682598.143105.16881098765923078751@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180711161206.GA1558@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <153132682598.143105.16881098765923078751@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Manjunath M B <Manjunath.MB@synopsys.com>, Prabu Thangamuthu <Prabu.T@synopsys.com>, linux-arm-kernel@lists.infradead.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Anson Huang <Anson.Huang@nxp.com>, aisheng.dong@nxp.com, fabio.estevam@nxp.com, kernel@pengutronix.de, mark.rutland@arm.com, mturquette@baylibre.com, ping.bai@nxp.com, robh+dt@kernel.org, s.hauer@pengutronix.de, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Wed, 11 Jul 2018 10:12:06 -0600 Rob Herring wrote:
-
-> On Fri, Jul 06, 2018 at 03:20:47PM +0800, Jisheng Zhang wrote:
-> > Synopsys SDHCI compatible DesignWare Cores Mobile Storage Host
-> > Controller can support eMMC/SD/SDIO. Add the bindings.
+On Wed, Jul 11, 2018 at 09:33:45AM -0700, Stephen Boyd wrote:
+> Quoting Shawn Guo (2018-07-11 01:43:03)
+> > On Fri, Jul 06, 2018 at 01:58:46PM -0700, Stephen Boyd wrote:
+> > > Quoting Anson Huang (2018-06-21 23:32:33)
+> > > > According to Reference Manual Rev.0, 06/2017,
+> > > > there are GPIO LPCGs defined in CCM CCGRs,
+> > > > add them into clock tree.
+> > > > 
+> > > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > > ---
+> > > 
+> > > Applied to clk-next
 > > 
-> > Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> > ---
-> >  .../bindings/mmc/sdhci-of-dwcmshc.txt         | 20 +++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-of-dwcmshc.txt
+> > Stephen,
 > > 
-> > diff --git a/Documentation/devicetree/bindings/mmc/sdhci-of-dwcmshc.txt b/Documentation/devicetree/bindings/mmc/sdhci-of-dwcmshc.txt
-> > new file mode 100644
-> > index 000000000000..ee4253b33be2
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mmc/sdhci-of-dwcmshc.txt
-> > @@ -0,0 +1,20 @@
-> > +* Synopsys DesignWare Cores Mobile Storage Host Controller
-> > +
-> > +Required properties:
-> > +- compatible: should be one of the following:
-> > +    "snps,dwcmshc-sdhci"  
+> > If you can apply this patch to topic branch 'clk-imx-gpio-gates', I will
+> > be able to pick up patch #2 for this cycle.
 > 
-> Needs to note that there must also be an SoC specific compatible.
+> Can you merge in clk-imx6sll-gpio topic branch to your tree? I'm making
+> topics for all patch series, so that's why this got stuck into a
+> different topic branch.
 
-Currently, there's no SoC specific code in this driver, so the binding could
-be extended to SoC compatible if necessary. What do you think?
+Ah, okay.  I thought you apply patches directly to clk-next, and make
+topic branches only for those having dependencies involved.
 
-Thanks,
-Jisheng
+For future DT patches depending on clk ones, I will check clk tree and
+merge corresponding topic branch to resolve dependency.
+
+Thanks for clarifying.
+
+Shawn
