@@ -1,116 +1,53 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v6 6/7] dt: thermal: tsens: Document the fallback DT
- property for v2 of TSENS IP
-Date: Thu, 12 Jul 2018 11:26:25 +0530
-Message-ID: <CAP245DVpOPhuCZ4OJ0t=izquND2mUrQ8ekkU8M+sMeyUJ_fjYw@mail.gmail.com>
-References: <cover.1531135999.git.amit.kucheria@linaro.org>
- <bf1147fa417314b2fbf5c0cfb682445587fe39bb.1531136000.git.amit.kucheria@linaro.org>
- <CAD=FV=W-snhM9L9Ez-ypAJwn2NhNJ1X=s5wDvu-gbQvmLZY9Qg@mail.gmail.com>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH] ARM: dts: at91: fix typo for PIN_PB22
+Date: Thu, 12 Jul 2018 08:30:21 +0200
+Message-ID: <20180712063021.h7t424iksdulj74a@M43218.corp.atmel.com>
+References: <1531326337-15504-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=W-snhM9L9Ez-ypAJwn2NhNJ1X=s5wDvu-gbQvmLZY9Qg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1531326337-15504-1-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+To: Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 12, 2018 at 12:12 AM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Mon, Jul 9, 2018 at 4:43 AM, Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> > We want to create common code for v2 of the TSENS IP block that is used in
-> > a large number of Qualcomm SoCs. "qcom,tsens-v2" should be able to handle
-> > most of the common functionality start with a common get_temp() function.
-> >
-> > It is also necessary to split out the memory regions for the TM and SROT
-> > register banks because their offsets are not constant across SoC families.
->
-> nit that bindings should be earlier in the patch series than the code
-> implementing the bindings.
+Hi Claudiu,
 
-Will reorder.
+On Wed, Jul 11, 2018 at 07:25:37PM +0300, Claudiu Beznea wrote:
+> Fix typo for PIN_PB22 on TD function.
 
->
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
-> >  .../devicetree/bindings/thermal/qcom-tsens.txt     | 25 +++++++++++++++++-----
-> >  1 file changed, 20 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> > index 06195e8..8f963b1 100644
-> > --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> > +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> > @@ -1,10 +1,16 @@
-> >  * QCOM SoC Temperature Sensor (TSENS)
-> >
-> >  Required properties:
-> > -- compatible :
-> > - - "qcom,msm8916-tsens" : For 8916 Family of SoCs
-> > - - "qcom,msm8974-tsens" : For 8974 Family of SoCs
-> > - - "qcom,msm8996-tsens" : For 8996 Family of SoCs
-> > +- compatible:
-> > +  Must be one of the following:
-> > +    - "qcom,msm8916-tsens" (MSM8916)
-> > +    - "qcom,msm8974-tsens" (MSM8974)
-> > +    - "qcom,msm8996-tsens" (MSM8996)
-> > +    - "qcom,msm8998-tsens", "qcom,tsens-v2" (MSM8998)
-> > +    - "qcom,sdm845-tsens", "qcom,tsens-v2" (SDM845)
-> > +  The generic "qcom,tsens-v2" property must be used as a fallback for any SoC with
-> > +  version 2 of the TSENS IP. MSM8996 is the only exception beacause the generic
-> > +  property did not exist when support was added.
-> >
-> >  - reg: Address range of the thermal registers
->
-> You need to document that for old SoCs where TM / SROT were 0x1000
-> apart (SROT first) that one "reg" field was OK.  ...and that for new
-> SoCs you specify two reg ranges: the first for TM and the second for
-> SROT.
+In fact, this typo is present in several places in this file. It could
+be worth fixing all those occurences in a single patch.
 
-OK.
+Regards
 
-> >  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
-> > @@ -12,7 +18,7 @@ Required properties:
-> >  - Refer to Documentation/devicetree/bindings/nvmem/nvmem.txt to know how to specify
-> >  nvmem cells
-> >
-> > -Example:
-> > +Example 1 (legacy support before a fallback tsens-v2 propoerty was introduced):
-> >  tsens: thermal-sensor@900000 {
-> >                 compatible = "qcom,msm8916-tsens";
-> >                 reg = <0x4a8000 0x2000>;
-> > @@ -20,3 +26,12 @@ tsens: thermal-sensor@900000 {
-> >                 nvmem-cell-names = "caldata", "calsel";
-> >                 #thermal-sensor-cells = <1>;
-> >         };
-> > +
-> > +Example 2 (for any platform containing v2 of the TSENS IP):
-> > +tsens0: tsens@c222000 {
->
-> A) Use a generic name for the node, not a specific one.  Thus the node
-> should be "thermal-sensor", not "tsens".
->
-> B) This unit address needs to match the _first_ reg address listed.
-> Give your reg below, this should be @c263000
->
-> Thus your node name should be:
->
-> tsens0: thermal-sensor@c263000 {
+Ludovic
 
-Fixed
-
-> > +               compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
-> > +               reg = <0xc263000 0x1ff>, /* TM */
-> > +                       <0xc222000 0x1ff>; /* SROT */
-> > +               #qcom,sensors = <13>;
->
-> The "#qcom,sensors" property seems wrong in a few ways:
->
-> A) I wouldn't have expected it to start with a "#".  I only expect to
-> see that on things specifying sizes / lengths.  Rob can feel free to
-> override me, though.
->
-> B) It's not documented above.  Just putting something in an example
-> doesn't document it--it needs to be listed in the "Optional
-> properties".
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> ---
+>  arch/arm/boot/dts/sama5d2-pinfunc.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/sama5d2-pinfunc.h b/arch/arm/boot/dts/sama5d2-pinfunc.h
+> index e57191fb83de..ac61491c9d7f 100644
+> --- a/arch/arm/boot/dts/sama5d2-pinfunc.h
+> +++ b/arch/arm/boot/dts/sama5d2-pinfunc.h
+> @@ -375,7 +375,7 @@
+>  #define PIN_PB22__GPIO			PINMUX_PIN(PIN_PB22, 0, 0)
+>  #define PIN_PB22__LCDDAT11		PINMUX_PIN(PIN_PB22, 1, 1)
+>  #define PIN_PB22__A11			PINMUX_PIN(PIN_PB22, 2, 1)
+> -#define PIN_PB22__TDO			PINMUX_PIN(PIN_PB22, 3, 1)
+> +#define PIN_PB22__TD0			PINMUX_PIN(PIN_PB22, 3, 1)
+>  #define PIN_PB22__TIOA2			PINMUX_PIN(PIN_PB22, 4, 2)
+>  #define PIN_PB22__FLEXCOM3_IO1		PINMUX_PIN(PIN_PB22, 5, 3)
+>  #define PIN_PB22__GMDC			PINMUX_PIN(PIN_PB22, 6, 3)
+> -- 
+> 2.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
