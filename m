@@ -1,73 +1,39 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v3 3/5] fsi: master-ast-cf: Add new FSI master using
- Aspeed ColdFire
-Date: Thu, 12 Jul 2018 21:45:08 +1000
-Message-ID: <a51a3b8168a30379bf7528aeb387ca03e682eea2.camel@kernel.crashing.org>
-References: <20180712034847.12878-1-benh@kernel.crashing.org>
-         <20180712034847.12878-4-benh@kernel.crashing.org>
-         <CACPK8XdZKbh2NLQaiZOx66FAo+3csS_D9-BXjJKeppKm8aEM6w@mail.gmail.com>
+From: Janek Kotas <jank@cadence.com>
+Subject: [PATCH v2 0/2] scsi: ufs: Add UFS platform driver for Cadence UFS
+Date: Thu, 12 Jul 2018 11:57:02 +0000
+Message-ID: <EDC29990-235B-4F52-AE46-2F9EA0603F64@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACPK8XdZKbh2NLQaiZOx66FAo+3csS_D9-BXjJKeppKm8aEM6w@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <CB3AB15AA3894E4CB26CB4E89F1D45C8@namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: linux-aspeed@lists.ozlabs.org, devicetree <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-07-12 at 17:53 +1000, Joel Stanley wrote:
-> On 12 July 2018 at 13:48, Benjamin Herrenschmidt
-> <benh@kernel.crashing.org> wrote:
-> > The Aspeed AST2x00 can contain a ColdFire v1 coprocessor which
-> > is currently unused on OpenPower systems.
-> > 
-> > This adds an alternative to the fsi-master-gpio driver that
-> > uses that coprocessor instead of bit banging from the ARM
-> > core itself. The end result is about 4 times faster.
-> > 
-> > The firmware for the coprocessor and its source code can be
-> > found at https://github.com/ozbenh/cf-fsi and is system specific.
-> > 
-> > Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> > ---
-> >  drivers/fsi/Kconfig                      |    9 +
-> >  drivers/fsi/Makefile                     |    1 +
-> >  drivers/fsi/cf-fsi-fw.h                  |  157 +++
-> >  drivers/fsi/fsi-master-ast-cf.c          | 1438 ++++++++++++++++++++++
-> >  include/trace/events/fsi_master_ast_cf.h |  150 +++
-> >  5 files changed, 1755 insertions(+)
-> >  create mode 100644 drivers/fsi/cf-fsi-fw.h
-> >  create mode 100644 drivers/fsi/fsi-master-ast-cf.c
-> >  create mode 100644 include/trace/events/fsi_master_ast_cf.h
-> > 
-> > diff --git a/drivers/fsi/Kconfig b/drivers/fsi/Kconfig
-> > index 322cec393cf2..e0220d1e1357 100644
-> > --- a/drivers/fsi/Kconfig
-> > +++ b/drivers/fsi/Kconfig
-> > @@ -27,6 +27,15 @@ config FSI_MASTER_HUB
-> >         allow chaining of FSI links to an arbitrary depth.  This allows for
-> >         a high target device fanout.
-> > 
-> > +config FSI_MASTER_AST_CF
-> > +       tristate "FSI master based on Aspeed ColdFire coprocessor"
-> > +       depends on GPIOLIB
-> > +       depends on GPIO_ASPEED
-> > +       ---help---
-> > +       This option enables a FSI master using the AST2400 and AST2500 GPIO
-> > +       lines driven by the internal ColdFire coprocessor. This requires
-> > +       the corresponding machine specific ColdFire firmware to be available.
-> 
-> The "machine specific" part isn't true anymore, is it?
+This patchset adds a driver support for Cadence UFS controller.
+It was verified on Cadence Palladium emulation platform.
 
-Right, I'll fixup the changelog before pushing if that's the last spin.
+Changes since V1:
+	Renamed the documentation file name to cdns,ufshc.txt.
+	Updated interrupt and register mapping.
+	Added license information.
+	Added a missing PHY clock.
 
-> I gave this a spin on a palmetto and it appeared to work fine for me.
-> 
-> Tested-by: Joel Stanley <joel@jms.id.au>
+Jan Kotas (2):
+  dt-bindings: ufs: Add UFS platform driver for Cadence UFS
+  scsi: ufs: Add UFS platform driver for Cadence UFS
 
-Thanks !
+ .../devicetree/bindings/ufs/cdns,ufshc.txt         |  31 +++++
+ drivers/scsi/ufs/Kconfig                           |   8 ++
+ drivers/scsi/ufs/Makefile                          |   1 +
+ drivers/scsi/ufs/cdns-pltfrm.c                     | 149 +++++++++++++++++=
+++++
+ 4 files changed, 189 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ufs/cdns,ufshc.txt
+ create mode 100644 drivers/scsi/ufs/cdns-pltfrm.c
 
-Cheers,
-Ben
-.
+--=20
+1.9.0
