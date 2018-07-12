@@ -1,149 +1,72 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v4 01/10] i3c: Add core I3C infrastructure
-Date: Thu, 12 Jul 2018 06:41:15 +0200
-Message-ID: <a31dc625-56bf-7a59-d9a3-2841360b864e@axentia.se>
-References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
- <20180330074751.25987-2-boris.brezillon@bootlin.com>
- <CAK8P3a1aZXf2sQW2mgwJScycKPhdoOAwxRjm5cQG83513uc3fg@mail.gmail.com>
- <20180711164120.3e32fb08@bbrezillon>
- <CAK8P3a2EZB_tMS_47wv6M2Qpm79ZocxxhG5zLxXsBM_YjZgkyA@mail.gmail.com>
- <20180711191212.3855bb25@bbrezillon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: [PATCH v3 1/5] dt-bindings: fsi: Document binding for the fsi-master-ast-cf "device"
+Date: Thu, 12 Jul 2018 13:48:43 +1000
+Message-ID: <20180712034847.12878-2-benh@kernel.crashing.org>
+References: <20180712034847.12878-1-benh@kernel.crashing.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180711191212.3855bb25@bbrezillon>
-Content-Language: en-US
+In-Reply-To: <20180712034847.12878-1-benh@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.or>
+To: linux-aspeed@lists.ozlabs.org
+Cc: devicetree@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-[tried to send something like this yesterday, but it appears to have been
-lost, sorry for any duplicate]
+This isn't per-se a real device, it's a pseudo-device that
+represents the use of the Aspeed built-in ColdFire to
+implement the FSI protocol by bitbanging the GPIOs instead
+of doing it from the ARM core.
 
-On 2018-07-11 19:12, Boris Brezillon wrote:
-> On Wed, 11 Jul 2018 17:39:56 +0200
-> Arnd Bergmann <arnd@arndb.de> wrote:
-> 
->> On Wed, Jul 11, 2018 at 4:41 PM, Boris Brezillon
->> <boris.brezillon@bootlin.com> wrote:
->>> On Wed, 11 Jul 2018 16:01:56 +0200 Arnd Bergmann <arnd@arndb.de> wrote:  
->>>>> - the bus element is a separate object and is not implicitly described
->>>>>   by the master (as done in I2C). The reason is that I want to be able
->>>>>   to handle multiple master connected to the same bus and visible to
->>>>>   Linux.
->>>>>   In this situation, we should only have one instance of the device and
->>>>>   not one per master, and sharing the bus object would be part of the
->>>>>   solution to gracefully handle this case.
->>>>>   I'm not sure we will ever need to deal with multiple masters
->>>>>   controlling the same bus and exposed under Linux, but separating the
->>>>>   bus and master concept is pretty easy, hence the decision to do it
->>>>>   like that.
->>>>>   The other benefit of separating the bus and master concepts is that
->>>>>   master devices appear under the bus directory in sysfs.  
->>>>
->>>> I'm not following here at all, sorry for missing prior discussion if this
->>>> was already explained. What is the "multiple master" case? Do you
->>>> mean multiple devices that are controlled by Linux and that each talk
->>>> to other devices on the same bus, multiple operating systems that
->>>> have talk to are able to own the bus with the kernel being one of
->>>> them, a controller that controls multiple independent buses,
->>>> or something else?  
->>>
->>> I mean several masters connected to the same bus and all exposed to the
->>> same Linux instance. In this case, the question is, should we have X
->>> I3C buses exposed (X being the number of masters) or should we only
->>> have one?
->>>
->>> Having a bus represented as a separate object allows us to switch to
->>> the "one bus : X masters" representation if we need too.  
->> ...
->>>>
->>>> This feels a bit odd: so you have bus_type that can contain devices
->>>> of three (?) different device types: i3c_device_type, i3c_master_type
->>>> and i3c_busdev_type.
->>>>
->>>> Generally speaking, we don't have a lot of subsystems that even
->>>> use device_types. I assume that the i3c_device_type for a
->>>> device that corresponds to an endpoint on the bus, but I'm
->>>> still confused about the other two, and why they are part of
->>>> the same bus_type.  
->>>
->>> i3c_busdev is just a virtual device representing the bus itself.
->>> i3c_master is representing the I3C master driving the bus. The reason
->>> for having a different type here is to avoid attaching this device to a
->>> driver but still being able to see the master controller as a device on
->>> the bus. And finally, i3c_device are all remote devices that can be
->>> accessed through a given i3c_master.
->>>
->>> This all comes from the design choice I made to represent the bus as a
->>> separate object in order to be able to share it between different
->>> master controllers exposed through the same Linux instance. Since
->>> master controllers are also remote devices for other controllers, we
->>> need to represent them.  
->>
->> Ok, so I think this is the most important question to resolve: do we
->> actually need to control multiple masters on a single bus from one OS
->> or not?
->>
->> The problem that I see is that it breaks the tree abstraction that
->> we use in the dtb interface, in the driver model and in sysfs.
->> If we need to deal with a hardware bus structure like
->>
->>               cpu
->>              /   \
->>             /     \
->>        platdev   platdev
->>            |        |
->>      i3c-master   i3c-master
->>             \      /
->>              \    /
->>             i3c-bus
->>              /    \
->>          device   device
->>
->> then that abstraction no longer holds. Clearly you could build
->> a system like that, and if we have to support it, the i3c infrastructure
->> should be prepared for it, since we wouldn't be able to retrofit
->> it later.
-> 
-> Exactly. For the DT representation I thought we could have the primary
-> master hold the device nodes, and then have secondary masters reference
-> the main master with a phandle (i3c-bus = <&main_i3c_master>;). For the
-> sysfs representation, it would be the same. Only one of the master
-> would create the i3c_bus object and the other masters would just
-> reference it.
-> 
->>
->> What would be the point of building such a system though?
-> 
-> This, I don't know. But as you said, if we go for a "one bus per
-> master" representation, going back will be difficult.
-> 
->> Is this for performance, failover, or something else?
-> 
-> No, I don't think so, especially since the mastership handover
-> operation is not free. So keeping the same master in control is
-> probably better in term of perfs.
-> 
-> One case I can think of is when the primary master does not have enough
-> resources to address all devices on the bus, and let the secondary
-> master handle all transactions targeting those devices.
-> 
->> IOW, what feature would we lose if we were to declare that
->> setup above invalid (and ensure you cannot represent it in DT)?
-> 
-> That's exactly the sort of discussion I wanted to trigger. Maybe we
-> shouldn't care and expose this use case as if it was X different I3C
-> buses (with all devices present on the bus being exposed X times to the
-> system).
+Thus it's a drop-in replacement for the existing
+fsi-master-gpio pseudo-device for use on systems based
+on the Aspeed chips. It has most of the same properties,
+plus some more needed to operate the coprocessor.
 
-For I2C, this multiple masters for one bus case was retrofitted in
-the i2c-demux-pinctrl driver. It's a huge kludge with a number of
-undesirable quirks. I don't know if the circumstances for adding
-this I2C driver also applies for I3C, but it might be an argument
-in favor of the proposed extra bus object...
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+---
+ .../bindings/fsi/fsi-master-ast-cf.txt        | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
 
-Cheers,
-Peter
+diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt b/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
+new file mode 100644
+index 000000000000..431bf8a423ce
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
+@@ -0,0 +1,36 @@
++Device-tree bindings for ColdFire offloaded gpio-based FSI master driver
++------------------------------------------------------------------------
++
++Required properties:
++ - compatible =
++	"aspeed,ast2400-cf-fsi-master" for an AST2400 based system
++   or
++	"aspeed,ast2500-cf-fsi-master" for an AST2500 based system
++
++ - clock-gpios = <gpio-descriptor>;	: GPIO for FSI clock
++ - data-gpios = <gpio-descriptor>;	: GPIO for FSI data signal
++ - enable-gpios = <gpio-descriptor>;	: GPIO for enable signal
++ - trans-gpios = <gpio-descriptor>;	: GPIO for voltage translator enable
++ - mux-gpios = <gpio-descriptor>;	: GPIO for pin multiplexing with other
++                                          functions (eg, external FSI masters)
++ - memory-region = <phandle>;		: Reference to the reserved memory for
++                                          the ColdFire. Must be 2M aligned on
++					  AST2400 and 1M aligned on AST2500
++ - aspeed,sram = <phandle>;		: Reference to the SRAM node.
++ - aspeed,cvic = <phandle>;		: Reference to the CVIC node.
++
++Examples:
++
++    fsi-master {
++        compatible = "aspeed,ast2500-cf-fsi-master", "fsi-master";
++
++	clock-gpios = <&gpio 0>;
++        data-gpios = <&gpio 1>;
++        enable-gpios = <&gpio 2>;
++        trans-gpios = <&gpio 3>;
++        mux-gpios = <&gpio 4>;
++
++	memory-region = <&coldfire_memory>;
++	sram = <&sram>;
++	cvic = <&cvic>;
++    }
+-- 
+2.17.1
