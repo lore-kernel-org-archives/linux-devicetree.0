@@ -1,48 +1,37 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3] drm/sun4i: mixer: Read id from DT
-Date: Thu, 12 Jul 2018 09:35:10 +0200
-Message-ID: <20180712073510.ssl43bjgv5n5mrwb@flea>
-References: <20180711112706.30222-1-jernej.skrabec@siol.net>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Aapo Vienamo <avienamo@nvidia.com>
+Subject: Re: [PATCH v2 3/7] soc/tegra: pmc: Implement
+ tegra_io_pad_is_powered()
+Date: Thu, 12 Jul 2018 10:52:47 +0300
+Message-ID: <20180712105247.121a5d13@dhcp-10-21-25-168>
+References: <1531317693-3520-1-git-send-email-avienamo@nvidia.com>
+        <1531317693-3520-4-git-send-email-avienamo@nvidia.com>
+        <3ced704b-2a8b-b78c-3b1e-6c2d7562edcc@nvidia.com>
+        <2d669942-0b4d-f48b-a8ba-67794485bf5f@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="magllo6lzj3ubyto"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBOMJTTNAKGQEZ75WZAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180711112706.30222-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2d669942-0b4d-f48b-a8ba-67794485bf5f@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Mikko Perttunen <mperttunen@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 11 Jul 2018 16:26:42 +0100
+Jon Hunter <jonathanh@nvidia.com> wrote:
 
---magllo6lzj3ubyto
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Wed, Jul 11, 2018 at 01:27:06PM +0200, Jernej Skrabec wrote:
-> Currently, TCON supports 2 ways to match TCON with engine (mixer in this
-> case). Old way is to just traverse of graph backwards and compare node
-> pointer. New way is to match TCON and engine by their respective ids.
-> All SoCs with DE2 enabled till now used the old way, which means mixer
-> id was never used and thus never implemented.
+> On 11/07/18 16:23, Jon Hunter wrote:
+> > 
+> > On 11/07/18 15:01, Aapo Vienamo wrote:  
+> >> Implement a function to query whether a pad is in deep power down mode.  
+> > Can you elaborate on why this public function is needed and who will be
+> > using this?  
 > 
-> However, for R40, only the new way will be used. To prepare for that,
-> implement mixer id fetching from DT.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> Or I should say does this need to be public?
 
-Applied, thanks!
-Maxime
+It's only called from the pinconf callbacks and exposing it doesn't
+indeed make much sense if we intend to replace direct calls to pmc.c
+with pinctrl anyway. I'll make it private on the next iteration of the
+series.
 
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---magllo6lzj3ubyto--
+ -Aapo
