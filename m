@@ -1,54 +1,31 @@
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: RFC: tegra2/tegra3 automotive part changes
-Date: Thu, 12 Jul 2018 14:36:08 +0100
-Message-ID: <3916c0ea-964e-42ab-8bfd-8e8edc5110ee@codethink.co.uk>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: imx51-zii-scu3-esb: Add switch IRQ line
+ pinumx config
+Date: Thu, 12 Jul 2018 10:37:47 -0300
+Message-ID: <CAOMZO5DfHqKjF6xykJtoC-aA-ATWM6mCZR0VzPVpSDOt-Fs6bQ@mail.gmail.com>
+References: <20180712023337.30112-1-andrew.smirnov@gmail.com> <20180712023337.30112-2-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-tegra <linux-tegra@vger.kernel.org>, Device Tree list <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Preston <thomas.preston@codethink.co.uk>, Terry Hu <kejia.hu@codethink.co.uk>, jorgesanjuan <jorge.sanjuan@codethink.co.uk>, Beth White <beth.white@codethink.co.uk>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180712023337.30112-2-andrew.smirnov@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello, we are looking at up-streaming some of the work we have
-done on the tegra2 and tegra3 automotive devices. The automotive
-grade devices are close the commercial parts so we would like to
-discuss the core changes before submitting.
+Hi Andrey,
 
-The changes are mostly with things like the clock setup and a
-few peripheral quirks (IIRC these are mostly MMC).
+On Wed, Jul 11, 2018 at 11:33 PM, Andrey Smirnov
+<andrew.smirnov@gmail.com> wrote:
 
-We are proposing to change the device-tree properties for the root
-node and any other affected devices from "nvidia,tegraXX" to a new
-"nvidia,tegraXXa". We would welcome discussion on whether to update
-all the devices at the start
+> +       pinctrl_switch: switchgrp {
+> +               fsl,pins = <
+> +                       MX51_PAD_AUD3_BB_CK__GPIO4_20           0xc5
 
-An example of tegra30a.dtsi:
+The i.MX51 Reference Manual states that 0xa5 is the default reset
+value for the register IOMUXC_SW_PAD_CTL_PAD_AUD3_BB_CK.
 
-#include "tegra30.dtsi"
+By reading your commit log I had the impression you wanted to provide
+the default value explicitly.
 
-/ {
-         compatible = "nvidia,tegra30a";
-
-         clock@60006000 {
-                 compatible = "nvidia,tegra30a-car";
-         };
-}
-
-We don't think the changes are big enough to warrant their own
-Kconfig/defconfig updates.
-
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
-
-https://www.codethink.co.uk/privacy.html
+Please clarify.
