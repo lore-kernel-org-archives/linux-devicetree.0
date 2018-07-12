@@ -1,343 +1,53 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v3 7/7] soc/tegra: pmc: Implement pad configuration via
- pinctrl
-Date: Thu, 12 Jul 2018 14:01:41 +0100
-Message-ID: <15f51c53-ca40-b59b-992e-d4ae89601ca5@nvidia.com>
-References: <1531396813-6581-1-git-send-email-avienamo@nvidia.com>
- <1531396813-6581-8-git-send-email-avienamo@nvidia.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH 1/3] drm: mxsfb: Change driver.name to mxsfb-drm
+Date: Thu, 12 Jul 2018 13:03:14 +0000
+Message-ID: <7f40f34a401ced78703b1a151d9f5fe4ed8c209f.camel@nxp.com>
+References: <cover.1529091248.git.leonard.crestez@nxp.com>
+         <47ea7572011735b68a8a70f0e11bdf00cb2fd86a.1529091248.git.leonard.crestez@nxp.com>
+         <CAOMZO5B8i0gN+rCq-yPrd112NkwJWTxYCtsLVeLhD1JLRuX6EQ@mail.gmail.com>
+         <07be6d9a85b6be655fc2b084be81d8bf9715b57a.camel@nxp.com>
+         <638457fd-85da-8fec-d146-517c43f71813@denx.de>
+         <b3fa74c5110b45e5992920485749869ab1f7ebce.camel@nxp.com>
+         <6995fa4b-47a9-887b-5e4f-4284ca6a2c79@gmail.com>
+         <fd22085f646d97f66cff5b7f22785500@agner.ch>
+         <6fdba55b-0be6-9e28-d87a-43d876a1fd09@denx.de>
+         <617c0a7e9132b929877b8cbcf116b1ea@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531396813-6581-8-git-send-email-avienamo@nvidia.com>
+In-Reply-To: <617c0a7e9132b929877b8cbcf116b1ea@agner.ch>
 Content-Language: en-US
+Content-ID: <3036EF3E555E4E4899EEA9E98FC6126B@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Aapo Vienamo <avienamo@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Mikko Perttunen <mperttunen@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "stefan@agner.ch" <stefan@agner.ch>, "marex@denx.de" <marex@denx.de>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "marcofrk@gmail.com" <marcofrk@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 12/07/18 13:00, Aapo Vienamo wrote:
-> Register a pinctrl device and implement get and set functions for
-> PIN_CONFIG_LOW_POWER_MODE and PIN_CONFIG_POWER_SOURCE parameters.
-> 
-> Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
-> ---
->  drivers/soc/tegra/pmc.c | 187 +++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 185 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index 7d3c3de..6bfd00d 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -33,6 +33,9 @@
->  #include <linux/of_address.h>
->  #include <linux/of_clk.h>
->  #include <linux/of_platform.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +#include <linux/pinctrl/pinconf.h>
-> +#include <linux/pinctrl/pinconf-generic.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_domain.h>
->  #include <linux/reboot.h>
-> @@ -164,6 +167,9 @@ struct tegra_pmc_soc {
->  	const struct tegra_io_pad_soc *io_pads;
->  	unsigned int num_io_pads;
->  
-> +	const struct pinctrl_pin_desc *pin_descs;
-> +	unsigned int num_pin_descs;
-> +
->  	const struct tegra_pmc_regs *regs;
->  	void (*init)(struct tegra_pmc *pmc);
->  	void (*setup_irq_polarity)(struct tegra_pmc *pmc,
-> @@ -222,6 +228,8 @@ struct tegra_pmc {
->  	DECLARE_BITMAP(powergates_available, TEGRA_POWERGATE_MAX);
->  
->  	struct mutex powergates_lock;
-> +
-> +	struct pinctrl_dev *pctl_dev;
->  };
->  
->  static struct tegra_pmc *pmc = &(struct tegra_pmc) {
-> @@ -1398,6 +1406,142 @@ static void tegra_pmc_init_tsense_reset(struct tegra_pmc *pmc)
->  	of_node_put(np);
->  }
->  
-> +static int tegra_io_pad_pinctrl_get_groups_count(struct pinctrl_dev *pctl_dev)
-> +{
-> +	return pmc->soc->num_io_pads;
-> +}
-> +
-> +static const char *tegra_io_pad_pinctrl_get_group_name(
-> +		struct pinctrl_dev *pctl, unsigned int group)
-> +{
-> +	return pmc->soc->io_pads[group].name;
-> +}
-> +
-> +static int tegra_io_pad_pinctrl_get_group_pins(struct pinctrl_dev *pctl_dev,
-> +					       unsigned int group,
-> +					       const unsigned int **pins,
-> +					       unsigned int *num_pins)
-> +{
-> +	*pins = &pmc->soc->io_pads[group].id;
-> +	*num_pins = 1;
-> +	return 0;
-> +}
-> +
-> +static const struct pinctrl_ops tegra_io_pad_pinctrl_ops = {
-> +	.get_groups_count = tegra_io_pad_pinctrl_get_groups_count,
-> +	.get_group_name = tegra_io_pad_pinctrl_get_group_name,
-> +	.get_group_pins = tegra_io_pad_pinctrl_get_group_pins,
-> +	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
-> +	.dt_free_map = pinconf_generic_dt_free_map,
-> +};
-> +
-> +static int tegra_io_pad_pinconf_get(struct pinctrl_dev *pctl_dev,
-> +				    unsigned int pin, unsigned long *config)
-> +{
-> +	const struct tegra_io_pad_soc *pad = tegra_io_pad_find(pmc, pin);
-> +	enum pin_config_param param = pinconf_to_config_param(*config);
-> +	int ret;
-> +	u32 arg;
-> +
-> +	if (!pad)
-> +		return -EINVAL;
-> +
-> +	switch (param) {
-> +	case PIN_CONFIG_POWER_SOURCE:
-> +		ret = tegra_io_pad_get_voltage(pad->id);
-> +		if (ret < 0)
-> +			return ret;
-> +		arg = ret;
-> +		break;
-> +	case PIN_CONFIG_LOW_POWER_MODE:
-> +		ret = tegra_io_pad_is_powered(pad->id);
-> +		if (ret < 0)
-> +			return ret;
-> +		arg = !ret;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	*config = pinconf_to_config_packed(param, arg);
-> +
-> +	return 0;
-> +}
-> +
-> +static int tegra_io_pad_pinconf_set(struct pinctrl_dev *pctl_dev,
-> +				    unsigned int pin, unsigned long *configs,
-> +				    unsigned int num_configs)
-> +{
-> +	const struct tegra_io_pad_soc *pad = tegra_io_pad_find(pmc, pin);
-> +	enum pin_config_param param;
-> +	unsigned int i;
-> +	int err;
-> +	u32 arg;
-> +
-> +	if (!pad)
-> +		return -EINVAL;
-> +
-> +	for (i = 0; i < num_configs; ++i) {
-> +		param = pinconf_to_config_param(configs[i]);
-> +		arg = pinconf_to_config_argument(configs[i]);
-> +
-> +		switch (param) {
-> +		case PIN_CONFIG_LOW_POWER_MODE:
-> +			if (arg)
-> +				err = tegra_io_pad_power_disable(pad->id);
-> +			else
-> +				err = tegra_io_pad_power_enable(pad->id);
-> +			if (err)
-> +				return err;
-> +			break;
-> +		case PIN_CONFIG_POWER_SOURCE:
-> +			if (arg != TEGRA_IO_PAD_VOLTAGE_1V8 &&
-> +			    arg != TEGRA_IO_PAD_VOLTAGE_3V3)
-> +				return -EINVAL;
-> +			err = tegra_io_pad_set_voltage(pad->id, arg);
-> +			if (err)
-> +				return err;
-> +			break;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct pinconf_ops tegra_io_pad_pinconf_ops = {
-> +	.pin_config_get = tegra_io_pad_pinconf_get,
-> +	.pin_config_set = tegra_io_pad_pinconf_set,
-> +	.is_generic = true,
-> +};
-> +
-> +static struct pinctrl_desc tegra_pmc_pctl_desc = {
-> +	.pctlops = &tegra_io_pad_pinctrl_ops,
-> +	.confops = &tegra_io_pad_pinconf_ops,
-> +};
-> +
-> +static int tegra_pmc_pinctrl_init(struct tegra_pmc *pmc)
-> +{
-> +	int err = 0;
-> +
-> +	if (!pmc->soc->num_pin_descs)
-> +		return 0;
-> +
-> +	tegra_pmc_pctl_desc.name = dev_name(pmc->dev);
-> +	tegra_pmc_pctl_desc.pins = pmc->soc->pin_descs;
-> +	tegra_pmc_pctl_desc.npins = pmc->soc->num_pin_descs;
-> +
-> +	pmc->pctl_dev = devm_pinctrl_register(pmc->dev, &tegra_pmc_pctl_desc,
-> +					      pmc);
-> +	if (IS_ERR(pmc->pctl_dev)) {
-> +		err = PTR_ERR(pmc->pctl_dev);
-> +		dev_err(pmc->dev, "unable to register pinctrl, %d\n", err);
-> +	}
-> +
-> +	return err;
-> +}
-> +
->  static int tegra_pmc_probe(struct platform_device *pdev)
->  {
->  	void __iomem *base;
-> @@ -1475,18 +1619,27 @@ static int tegra_pmc_probe(struct platform_device *pdev)
->  
->  	err = register_restart_handler(&tegra_pmc_restart_handler);
->  	if (err) {
-> -		debugfs_remove(pmc->debugfs);
->  		dev_err(&pdev->dev, "unable to register restart handler, %d\n",
->  			err);
-> -		return err;
-> +		goto cleanup_debugfs;
->  	}
->  
-> +	err = tegra_pmc_pinctrl_init(pmc);
-> +	if (err)
-> +		goto cleanup_restart_handler;
-> +
->  	mutex_lock(&pmc->powergates_lock);
->  	iounmap(pmc->base);
->  	pmc->base = base;
->  	mutex_unlock(&pmc->powergates_lock);
->  
->  	return 0;
-> +
-> +cleanup_restart_handler:
-> +	unregister_restart_handler(&tegra_pmc_restart_handler);
-> +cleanup_debugfs:
-> +	debugfs_remove(pmc->debugfs);
-> +	return err;
->  }
->  
->  #if defined(CONFIG_PM_SLEEP) && defined(CONFIG_ARM)
-> @@ -1576,6 +1729,8 @@ static const struct tegra_pmc_soc tegra20_pmc_soc = {
->  	.has_gpu_clamps = false,
->  	.num_io_pads = 0,
->  	.io_pads = NULL,
-> +	.num_pin_descs = 0,
-> +	.pin_descs = NULL,
->  	.regs = &tegra20_pmc_regs,
->  	.init = tegra20_pmc_init,
->  	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
-> @@ -1615,6 +1770,8 @@ static const struct tegra_pmc_soc tegra30_pmc_soc = {
->  	.has_impl_33v_pwr = false,
->  	.num_io_pads = 0,
->  	.io_pads = NULL,
-> +	.num_pin_descs = 0,
-> +	.pin_descs = NULL,
->  	.regs = &tegra20_pmc_regs,
->  	.init = tegra20_pmc_init,
->  	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
-> @@ -1658,6 +1815,8 @@ static const struct tegra_pmc_soc tegra114_pmc_soc = {
->  	.has_impl_33v_pwr = false,
->  	.num_io_pads = 0,
->  	.io_pads = NULL,
-> +	.num_pin_descs = 0,
-> +	.pin_descs = NULL,
->  	.regs = &tegra20_pmc_regs,
->  	.init = tegra20_pmc_init,
->  	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
-> @@ -1704,6 +1863,12 @@ static const u8 tegra124_cpu_powergates[] = {
->  		.name	= (_name),			\
->  	})
->  
-> +#define TEGRA_IO_PIN_DESC(_id, _dpd, _voltage, _name)	\
-> +	((struct pinctrl_pin_desc) {			\
-> +		.number = (_id),			\
-> +		.name	= (_name)			\
-> +	})
-> +
->  #define TEGRA124_IO_PAD_TABLE(_pad)					\
->  	/* .id                          .dpd    .voltage  .name	*/	\
->  	_pad(TEGRA_IO_PAD_AUDIO,	17,	UINT_MAX, "audio"),	\
-> @@ -1741,6 +1906,10 @@ static const struct tegra_io_pad_soc tegra124_io_pads[] = {
->  	TEGRA124_IO_PAD_TABLE(TEGRA_IO_PAD)
->  };
->  
-> +static const struct pinctrl_pin_desc tegra124_pin_descs[] = {
-> +	TEGRA124_IO_PAD_TABLE(TEGRA_IO_PIN_DESC)
-> +};
-> +
->  static const struct tegra_pmc_soc tegra124_pmc_soc = {
->  	.num_powergates = ARRAY_SIZE(tegra124_powergates),
->  	.powergates = tegra124_powergates,
-> @@ -1751,6 +1920,8 @@ static const struct tegra_pmc_soc tegra124_pmc_soc = {
->  	.has_impl_33v_pwr = false,
->  	.num_io_pads = ARRAY_SIZE(tegra124_io_pads),
->  	.io_pads = tegra124_io_pads,
-> +	.num_pin_descs = ARRAY_SIZE(tegra124_pin_descs),
-> +	.pin_descs = tegra124_pin_descs,
->  	.regs = &tegra20_pmc_regs,
->  	.init = tegra20_pmc_init,
->  	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
-> @@ -1835,6 +2006,10 @@ static const struct tegra_io_pad_soc tegra210_io_pads[] = {
->  	TEGRA210_IO_PAD_TABLE(TEGRA_IO_PAD)
->  };
->  
-> +static const struct pinctrl_pin_desc tegra210_pin_descs[] = {
-> +	TEGRA210_IO_PAD_TABLE(TEGRA_IO_PIN_DESC)
-> +};
-> +
->  static const struct tegra_pmc_soc tegra210_pmc_soc = {
->  	.num_powergates = ARRAY_SIZE(tegra210_powergates),
->  	.powergates = tegra210_powergates,
-> @@ -1846,6 +2021,8 @@ static const struct tegra_pmc_soc tegra210_pmc_soc = {
->  	.needs_mbist_war = true,
->  	.num_io_pads = ARRAY_SIZE(tegra210_io_pads),
->  	.io_pads = tegra210_io_pads,
-> +	.num_pin_descs = ARRAY_SIZE(tegra210_pin_descs),
-> +	.pin_descs = tegra210_pin_descs,
->  	.regs = &tegra20_pmc_regs,
->  	.init = tegra20_pmc_init,
->  	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
-> @@ -1896,6 +2073,10 @@ static const struct tegra_io_pad_soc tegra186_io_pads[] = {
->  	TEGRA186_IO_PAD_TABLE(TEGRA_IO_PAD)
->  };
->  
-> +static const struct pinctrl_pin_desc tegra186_pin_descs[] = {
-> +	TEGRA186_IO_PAD_TABLE(TEGRA_IO_PIN_DESC)
-> +};
-> +
->  static const struct tegra_pmc_regs tegra186_pmc_regs = {
->  	.scratch0 = 0x2000,
->  	.dpd_req = 0x74,
-> @@ -1949,6 +2130,8 @@ static const struct tegra_pmc_soc tegra186_pmc_soc = {
->  	.has_impl_33v_pwr = true,
->  	.num_io_pads = ARRAY_SIZE(tegra186_io_pads),
->  	.io_pads = tegra186_io_pads,
-> +	.num_pin_descs = ARRAY_SIZE(tegra186_pin_descs),
-> +	.pin_descs = tegra186_pin_descs,
->  	.regs = &tegra186_pmc_regs,
->  	.init = NULL,
->  	.setup_irq_polarity = tegra186_pmc_setup_irq_polarity,
-> 
-
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-
-Cheers
-Jon
-
--- 
-nvpublic
+T24gVGh1LCAyMDE4LTA3LTEyIGF0IDExOjIxICswMjAwLCBTdGVmYW4gQWduZXIgd3JvdGU6DQo+
+IE9uIDEwLjA3LjIwMTggMTE6MTEsIE1hcmVrIFZhc3V0IHdyb3RlOg0KPiA+IE9uIDA3LzEwLzIw
+MTggMTE6MDYgQU0sIFN0ZWZhbiBBZ25lciB3cm90ZToNCj4gPiA+IFRoaXMgaXMgb25lIG9mIHRo
+ZSBzaXR1YXRpb24gd2hlcmUgc3RhdGVzIHF1byBpcyBraW5kYSB0aGUgd29yc3QNCj4gPiA+IHNp
+dHVhdGlvbi4NCj4gPiA+IA0KPiA+ID4gQ3VycmVudGx5IGlteF92Nl92N19kZWZjb25maWcgYW5k
+IG14c19kZWZjb25maWcgYWN0dWFsbHkgc3RpbGwgdXNlcw0KPiA+ID4gQ09ORklHX0ZCX01YUy4N
+Cj4gPiA+IA0KPiA+ID4gSSB1bmRlcnN0YW5kIHRoYXQgeW91J2QgcmF0aGVyIHByZWZlciB0byBt
+b3ZlIGZvcndhcmQuIEkgc3VnZ2VzdCB3ZSBkbw0KPiA+ID4gaXQgaW4gc3RlcHMuDQo+ID4gPiAN
+Cj4gPiA+IEluIDQuMTk6DQo+ID4gPiANCj4gPiA+IC0gQ2hhbmdlIERSTSBkcml2ZXIubmFtZSB0
+byBteHNmYi1kcm0gc28gd2UgYXZvaWQgY29uZmxpY3RzIGZvciBub3cNCj4gPiANCj4gPiBCdXQg
+dGhpcyB3aWxsIGJyZWFrIG1lc2EgaWYgaXQgZGVwZW5kcyBvbiBteHNmYiBuYW1lIGZvciBpZS4g
+ZXRuYXZpdg0KPiA+IGJpbmRpbmcuDQo+IA0KPiBEb2VzIGl0PyBncmVwIC1yIC1lIG14c2ZiIGlu
+IGxpYmRybSBhbmQgbWVzYSBtYXN0ZXIgcmV0dXJucyBub3RoaW5nLg0KPiANCj4gVGhlcmUgaXMg
+YWxzbyAubmFtZSBpbiBzdHJ1Y3QgZHJtX2RyaXZlciwgd2hpY2ggaXMgYWxyZWFkeSBzZXQgdG8N
+Cj4gbXhzZmItZHJtLi4uIElzIHRoYXQgdGhlIG9uZSBleHBvc2VkIHRvIHVzZXIgc3BhY2U/DQoN
+ClJ1bm5pbmcgZXRuYXZpdit4MTEgd2l0aCBhIHJlbmFtZWQgbXhzZmIgZHJpdmVyIHdvcmtzIGZp
+bmUgb24gaW14NnN4LQ0Kc2RiLg0KDQpUb29scyBsaWtlIG1vZGV0ZXN0IGFscmVhZHkgbmVlZCAt
+TSBteHNmYi1kcm0sIHRoZSBkcm1fZHJpdmVyLm5hbWUNCnNlZW1zIHRvIGJlIHdoYXQgbWF0dGVy
+cy4NCg0KPiAtIFJlbW92ZSBDT05GSUdfRkJfTVhTIGZyb20gaW14X3Y2X3Y3X2RlZmNvbmZpZy9t
+eHNfZGVmY29uZmlnIG5vdywgYW5kDQo+IG9ubHkgZW5hYmxlIENPTkZJR19EUk1fTVhTRkI9eQ0K
+DQpJZiBvbmUgb2YgdGhlIGRyaXZlcnMgaXMgcmVuYW1lZCB0aGVuIHRoZXkgY2FuIGNvZXhpc3Q6
+IHNpbmNlIHRoZQ0KYmluZGluZ3MgYXJlIGRpc3RpbmN0IG9uZSBkcml2ZXIgd2lsbCByZXR1cm4g
+YSBwcm9iZSBlcnJvciBhbmQgdGhlDQpvdGhlciB3aWxsIGJpbmQgc3VjY2Vzc2Z1bGx5LiBUaGlz
+IGNhbiBldmVuIGJlIGFkanVzdGVkIHNvIHRoYXQgaXQNCmRvZXNuJ3QgZXZlbiBwcmludCB1Z2x5
+IHNjYXJ5IGVycm9ycy4NCg0KVGhpcyBjYW4gbGFzdCB1bnRpbCBzb21lYm9keSBpbXBsZW1lbnRz
+IHN1cHBvcnQgZm9yIG9sZCBiaW5kaW5ncyBpbiB0aGUNCmRybSBkcml2ZXIgYW5kIHRoZW4gRkJf
+TVhTIGNhbiBqdXN0IGJlIGRlbGV0ZWQu
