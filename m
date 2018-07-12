@@ -1,37 +1,61 @@
-From: Aapo Vienamo <avienamo@nvidia.com>
-Subject: Re: [PATCH v2 3/7] soc/tegra: pmc: Implement
- tegra_io_pad_is_powered()
-Date: Thu, 12 Jul 2018 10:52:47 +0300
-Message-ID: <20180712105247.121a5d13@dhcp-10-21-25-168>
-References: <1531317693-3520-1-git-send-email-avienamo@nvidia.com>
-        <1531317693-3520-4-git-send-email-avienamo@nvidia.com>
-        <3ced704b-2a8b-b78c-3b1e-6c2d7562edcc@nvidia.com>
-        <2d669942-0b4d-f48b-a8ba-67794485bf5f@nvidia.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH v3 3/5] fsi: master-ast-cf: Add new FSI master using
+ Aspeed ColdFire
+Date: Thu, 12 Jul 2018 17:53:17 +1000
+Message-ID: <CACPK8XdZKbh2NLQaiZOx66FAo+3csS_D9-BXjJKeppKm8aEM6w@mail.gmail.com>
+References: <20180712034847.12878-1-benh@kernel.crashing.org> <20180712034847.12878-4-benh@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2d669942-0b4d-f48b-a8ba-67794485bf5f@nvidia.com>
+In-Reply-To: <20180712034847.12878-4-benh@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Mikko Perttunen <mperttunen@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: linux-aspeed@lists.ozlabs.org, devicetree <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 11 Jul 2018 16:26:42 +0100
-Jon Hunter <jonathanh@nvidia.com> wrote:
+On 12 July 2018 at 13:48, Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+> The Aspeed AST2x00 can contain a ColdFire v1 coprocessor which
+> is currently unused on OpenPower systems.
+>
+> This adds an alternative to the fsi-master-gpio driver that
+> uses that coprocessor instead of bit banging from the ARM
+> core itself. The end result is about 4 times faster.
+>
+> The firmware for the coprocessor and its source code can be
+> found at https://github.com/ozbenh/cf-fsi and is system specific.
+>
+> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> ---
+>  drivers/fsi/Kconfig                      |    9 +
+>  drivers/fsi/Makefile                     |    1 +
+>  drivers/fsi/cf-fsi-fw.h                  |  157 +++
+>  drivers/fsi/fsi-master-ast-cf.c          | 1438 ++++++++++++++++++++++
+>  include/trace/events/fsi_master_ast_cf.h |  150 +++
+>  5 files changed, 1755 insertions(+)
+>  create mode 100644 drivers/fsi/cf-fsi-fw.h
+>  create mode 100644 drivers/fsi/fsi-master-ast-cf.c
+>  create mode 100644 include/trace/events/fsi_master_ast_cf.h
+>
+> diff --git a/drivers/fsi/Kconfig b/drivers/fsi/Kconfig
+> index 322cec393cf2..e0220d1e1357 100644
+> --- a/drivers/fsi/Kconfig
+> +++ b/drivers/fsi/Kconfig
+> @@ -27,6 +27,15 @@ config FSI_MASTER_HUB
+>         allow chaining of FSI links to an arbitrary depth.  This allows for
+>         a high target device fanout.
+>
+> +config FSI_MASTER_AST_CF
+> +       tristate "FSI master based on Aspeed ColdFire coprocessor"
+> +       depends on GPIOLIB
+> +       depends on GPIO_ASPEED
+> +       ---help---
+> +       This option enables a FSI master using the AST2400 and AST2500 GPIO
+> +       lines driven by the internal ColdFire coprocessor. This requires
+> +       the corresponding machine specific ColdFire firmware to be available.
 
-> On 11/07/18 16:23, Jon Hunter wrote:
-> > 
-> > On 11/07/18 15:01, Aapo Vienamo wrote:  
-> >> Implement a function to query whether a pad is in deep power down mode.  
-> > Can you elaborate on why this public function is needed and who will be
-> > using this?  
-> 
-> Or I should say does this need to be public?
+The "machine specific" part isn't true anymore, is it?
 
-It's only called from the pinconf callbacks and exposing it doesn't
-indeed make much sense if we intend to replace direct calls to pmc.c
-with pinctrl anyway. I'll make it private on the next iteration of the
-series.
+I gave this a spin on a palmetto and it appeared to work fine for me.
 
- -Aapo
+Tested-by: Joel Stanley <joel@jms.id.au>
