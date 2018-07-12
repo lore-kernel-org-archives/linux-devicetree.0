@@ -1,16 +1,15 @@
 From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: Re: [PATCH v2 1/3] clk: meson: add DT documentation for emmc clock
- controller
-Date: Thu, 12 Jul 2018 10:47:12 +0800
-Message-ID: <f2eb8632-1113-3bb8-506f-ac0d4e838fd4@amlogic.com>
+Subject: Re: [PATCH v2 2/3] clk: meson: add sub MMC clock dt-bindings IDs
+Date: Thu, 12 Jul 2018 10:51:28 +0800
+Message-ID: <84511d9a-5d29-ae6f-de0b-4701bafe2ab7@amlogic.com>
 References: <20180710163658.6175-1-yixun.lan@amlogic.com>
- <20180710163658.6175-2-yixun.lan@amlogic.com>
- <20180711194346.GA32414@rob-hp-laptop>
+ <20180710163658.6175-3-yixun.lan@amlogic.com>
+ <20180711194546.GA7090@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180711194346.GA32414@rob-hp-laptop>
+In-Reply-To: <20180711194546.GA7090@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
 Cc: yixun.lan@amlogic.com, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
@@ -18,80 +17,24 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Rob
 
-see my comments
-
-On 07/12/18 03:43, Rob Herring wrote:
-> On Tue, Jul 10, 2018 at 04:36:56PM +0000, Yixun Lan wrote:
->> Document the MMC sub clock controller driver, the potential consumer
->> of this driver is MMC or NAND.
+On 07/12/18 03:45, Rob Herring wrote:
+> On Tue, Jul 10, 2018 at 04:36:57PM +0000, Yixun Lan wrote:
+>> Add two clock bindings IDs which provided by the MMC clock controller,
+>> These two clocks will be used by MMC or NAND driver.
 > 
-> So you all have decided to properly model this now?
-> 
-Yes, ;-)
+> I count 3 ids.
+I will update this
 
+> 
 >>
 >> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 >> ---
->>  .../bindings/clock/amlogic,mmc-clkc.txt       | 31 +++++++++++++++++++
->>  1 file changed, 31 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
->> new file mode 100644
->> index 000000000000..ff6b4bf3ecf9
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
->> @@ -0,0 +1,31 @@
->> +* Amlogic MMC Sub Clock Controller Driver
->> +
->> +The Amlogic MMC clock controller generates and supplies clock to support
->> +MMC and NAND controller
->> +
->> +Required Properties:
->> +
->> +- compatible: should be:
->> +		"amlogic,meson-gx-mmc-clkc"
->> +		"amlogic,meson-axg-mmc-clkc"
->> +
->> +- #clock-cells: should be 1.
->> +- clocks: phandles to clocks corresponding to the clock-names property
->> +- clock-names: list of parent clock names
->> +	- "clkin0", "clkin1"
->> +
->> +Parent node should have the following properties :
->> +- compatible: "syscon", "simple-mfd, and "amlogic,meson-axg-mmc-clkc"
+>>  .../dt-bindings/clock/amlogic,meson-mmc-clkc.h   | 16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
+>>  create mode 100644 include/dt-bindings/clock/amlogic,meson-mmc-clkc.h
 > 
-> You don't need "simple-mfd" and probably not syscon either. The order is 
-> wrong too. Most specific first.
+> This can go with the binding patch.
 > 
-Ok, I will drop "simple-mfd"..
+sure
 
-but the syscon is a must, since this mmc clock model access registers
-via the regmap interface
-
-I will fix the order, thanks for pointing this out
-
->> +- reg: base address and size of the MMC control register space.
->> +
->> +Example: Clock controller node:
->> +
->> +sd_mmc_c_clkc: clock-controller@7000 {
->> +	compatible = "amlogic,mmc-clkc", "syscon", "simple-mfd";
-> 
-> Doesn't match the binding...
-> 
-oops, I will update this
-
->> +	reg = <0x0 0x7000 0x0 0x4>;
->> +	#clock-cells = <1>;
->> +
->> +	clock-names = "clkin0", "clkin1";
->> +	clocks = <&clkc CLKID_SD_MMC_C_CLK0>,
->> +			<&clkc CLKID_FCLK_DIV2>;
->> +};
->> -- 
->> 2.18.0
->>
-> 
-> .
-> 
+.
