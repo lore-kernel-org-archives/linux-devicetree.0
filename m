@@ -1,29 +1,83 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v7 7/7] arm64: dts: sdm845: Add tsens nodes
-Date: Thu, 12 Jul 2018 10:18:30 -0700
-Message-ID: <CAD=FV=UHQ2SDC9WbS2=D_ka3OxnxPPrQt6tLx5Yy6Lf_bnVqrg@mail.gmail.com>
-References: <cover.1531384019.git.amit.kucheria@linaro.org> <0dfdbfa82edced85ea5be02e1d74d73d232c7a08.1531384019.git.amit.kucheria@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v5 0/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW driver
+Date: Thu, 12 Jul 2018 23:35:43 +0530
+Message-ID: <1531418745-19742-1-git-send-email-tdas@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0dfdbfa82edced85ea5be02e1d74d73d232c7a08.1531384019.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Matthias Kaehlcke <mka@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, amit.kucheria@linaro.org, evgreen@google.com, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+[v5]
+  * Remove mapping different register regions of perf/lut/enable,
+    instead map the entire HW region.
+  * Add reg_offset/cpufreq_qcom_std_offsets to be supplied as device data.
+  * Check of src == 0 during lut read.
+  * Add of_node_put(cpu_np) in qcom_get_related_cpus
+  * Update the qcom_cpu_resources_init for register offset data,
+    and cleanup the related cpus to keep a single copy of CPUfreq.
+  * Replace FW with HW, update Kconfig, rename filename qcom-cpufreq-hw.c
+  * Update the documentation binding to reflect the changes of mapping the
+  * entire HW region.
 
-On Thu, Jul 12, 2018 at 1:39 AM, Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> SDM845 has two tsens blocks, one with 13 sensors and the other with 8
-> sensors. It uses version 2 of the TSENS IP, so use the fallback property to
-> allow more common code.
->
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Tested-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+[v4]
+  * Fixed console messages as per comments.
+  * Return error from qcom_resources_init()
+    in the cases where failed to get frequency domain.
+  * Rename cpu_dev to cpu_np in qcom_resources_init,
+    qcom_get_related_cpus(). Also use temp variable freq_np in
+    qcom_get_related_cpus().
+  * Update qcom_cpufreq_fw_get() to use the policy data to incoporate
+    the hotplug use case.
+  * Update code to use of fast_switching.
+  * Check for !c->max_cores instead of cpumask_empty in
+    qcom_get_related_cpus().
+  * Update the logic of assigning 'c' to qcom_freq_domain_map[cpu].
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+ [v3]
+  * Remove index check from 'qcom_cpufreq_fw_target_index'.
+  * Update the Documentation binding to add the platform specific properties in
+    the CPU nodes, node name "qcom,freq-domain".
+  * Update return value to '0' from -ENODEV from 'qcom_cpufreq_fw_get'.
+  * Update the logic for boost frequency to use local variables instead of
+    cpufreq driver data in 'qcom_read_lut'.
+  * Update the logic in 'qcom_get_related_cpus' to find the related cpus.
+  * Update the reg-names to remove "_base" and also update the binding with the
+    description of these registers.
+  * Update the logic in 'qcom_resources_init' to address the new device tree
+    notation of handling the frequency domain phandles.
+
+ [v2]
+ * Fixed the alignment issues in "qcom_cpufreq_fw_target_index" for dev_err and
+   also for "qcom_cpu_resources_init".
+ * Removed ret = 0 from qcom_get_related_cpus and added to check for
+   cpu_mask_empty to return -ENOENT.
+ * Fixes qcom_cpu_resources_init function
+   * Remove initialization of 'index'
+   * Check for valid 'c'
+ * Removed initialization of 'prev_cc' from 'qcom_read_lut'.
+ * Remove initialization of 'ret' from function qcom_resources_init and add
+   return -ENODEV based on 'of_get_available_child_count'.
+ * Removed initialization of 'rc' from qcom_cpufreq_fw_driver_probe
+ * Removed module_exit as this driver would not be used as module, also updated
+   the Kconfig to bool from tristate.
+ * Updated the subsystem in device tree bindings.
+
+ [v1]
+   * Fixed compilation reported by Amit K.
+
+Taniya Das (2):
+  dt-bindings: cpufreq: Introduce QCOM CPUFREQ Firmware bindings
+  cpufreq: qcom-hw: Add support for QCOM cpufreq HW driver
+
+ .../bindings/cpufreq/cpufreq-qcom-hw.txt           | 158 ++++++++++
+ drivers/cpufreq/Kconfig.arm                        |  10 +
+ drivers/cpufreq/Makefile                           |   1 +
+ drivers/cpufreq/qcom-cpufreq-hw.c                  | 344 +++++++++++++++++++++
+ 4 files changed, 513 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+ create mode 100644 drivers/cpufreq/qcom-cpufreq-hw.c
+
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
