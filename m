@@ -1,31 +1,73 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 1/2] ARM: dts: imx51-zii-scu3-esb: Add switch IRQ line
- pinumx config
-Date: Thu, 12 Jul 2018 10:37:47 -0300
-Message-ID: <CAOMZO5DfHqKjF6xykJtoC-aA-ATWM6mCZR0VzPVpSDOt-Fs6bQ@mail.gmail.com>
-References: <20180712023337.30112-1-andrew.smirnov@gmail.com> <20180712023337.30112-2-andrew.smirnov@gmail.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 1/3] drm: mxsfb: Change driver.name to mxsfb-drm
+Date: Thu, 12 Jul 2018 15:46:33 +0200
+Message-ID: <ce461f1f192de0648feb2db148edf60b@agner.ch>
+References: <cover.1529091248.git.leonard.crestez@nxp.com>
+ <47ea7572011735b68a8a70f0e11bdf00cb2fd86a.1529091248.git.leonard.crestez@nxp.com>
+ <CAOMZO5B8i0gN+rCq-yPrd112NkwJWTxYCtsLVeLhD1JLRuX6EQ@mail.gmail.com>
+ <07be6d9a85b6be655fc2b084be81d8bf9715b57a.camel@nxp.com>
+ <638457fd-85da-8fec-d146-517c43f71813@denx.de>
+ <b3fa74c5110b45e5992920485749869ab1f7ebce.camel@nxp.com>
+ <6995fa4b-47a9-887b-5e4f-4284ca6a2c79@gmail.com>
+ <fd22085f646d97f66cff5b7f22785500@agner.ch>
+ <6fdba55b-0be6-9e28-d87a-43d876a1fd09@denx.de>
+ <617c0a7e9132b929877b8cbcf116b1ea@agner.ch>
+ <7f40f34a401ced78703b1a151d9f5fe4ed8c209f.camel@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180712023337.30112-2-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <7f40f34a401ced78703b1a151d9f5fe4ed8c209f.camel@nxp.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: marex@denx.de, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, marcofrk@gmail.com, shawnguo@kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, marek.vasut@gmail.com, dl-linux-imx <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrey,
-
-On Wed, Jul 11, 2018 at 11:33 PM, Andrey Smirnov
-<andrew.smirnov@gmail.com> wrote:
-
-> +       pinctrl_switch: switchgrp {
-> +               fsl,pins = <
-> +                       MX51_PAD_AUD3_BB_CK__GPIO4_20           0xc5
-
-The i.MX51 Reference Manual states that 0xa5 is the default reset
-value for the register IOMUXC_SW_PAD_CTL_PAD_AUD3_BB_CK.
-
-By reading your commit log I had the impression you wanted to provide
-the default value explicitly.
-
-Please clarify.
+T24gMTIuMDcuMjAxOCAxNTowMywgTGVvbmFyZCBDcmVzdGV6IHdyb3RlOgo+IE9uIFRodSwgMjAx
+OC0wNy0xMiBhdCAxMToyMSArMDIwMCwgU3RlZmFuIEFnbmVyIHdyb3RlOgo+PiBPbiAxMC4wNy4y
+MDE4IDExOjExLCBNYXJlayBWYXN1dCB3cm90ZToKPj4gPiBPbiAwNy8xMC8yMDE4IDExOjA2IEFN
+LCBTdGVmYW4gQWduZXIgd3JvdGU6Cj4+ID4gPiBUaGlzIGlzIG9uZSBvZiB0aGUgc2l0dWF0aW9u
+IHdoZXJlIHN0YXRlcyBxdW8gaXMga2luZGEgdGhlIHdvcnN0Cj4+ID4gPiBzaXR1YXRpb24uCj4+
+ID4gPgo+PiA+ID4gQ3VycmVudGx5IGlteF92Nl92N19kZWZjb25maWcgYW5kIG14c19kZWZjb25m
+aWcgYWN0dWFsbHkgc3RpbGwgdXNlcwo+PiA+ID4gQ09ORklHX0ZCX01YUy4KPj4gPiA+Cj4+ID4g
+PiBJIHVuZGVyc3RhbmQgdGhhdCB5b3UnZCByYXRoZXIgcHJlZmVyIHRvIG1vdmUgZm9yd2FyZC4g
+SSBzdWdnZXN0IHdlIGRvCj4+ID4gPiBpdCBpbiBzdGVwcy4KPj4gPiA+Cj4+ID4gPiBJbiA0LjE5
+Ogo+PiA+ID4KPj4gPiA+IC0gQ2hhbmdlIERSTSBkcml2ZXIubmFtZSB0byBteHNmYi1kcm0gc28g
+d2UgYXZvaWQgY29uZmxpY3RzIGZvciBub3cKPj4gPgo+PiA+IEJ1dCB0aGlzIHdpbGwgYnJlYWsg
+bWVzYSBpZiBpdCBkZXBlbmRzIG9uIG14c2ZiIG5hbWUgZm9yIGllLiBldG5hdml2Cj4+ID4gYmlu
+ZGluZy4KPj4KPj4gRG9lcyBpdD8gZ3JlcCAtciAtZSBteHNmYiBpbiBsaWJkcm0gYW5kIG1lc2Eg
+bWFzdGVyIHJldHVybnMgbm90aGluZy4KPj4KPj4gVGhlcmUgaXMgYWxzbyAubmFtZSBpbiBzdHJ1
+Y3QgZHJtX2RyaXZlciwgd2hpY2ggaXMgYWxyZWFkeSBzZXQgdG8KPj4gbXhzZmItZHJtLi4uIElz
+IHRoYXQgdGhlIG9uZSBleHBvc2VkIHRvIHVzZXIgc3BhY2U/Cj4gCj4gUnVubmluZyBldG5hdml2
+K3gxMSB3aXRoIGEgcmVuYW1lZCBteHNmYiBkcml2ZXIgd29ya3MgZmluZSBvbiBpbXg2c3gtCj4g
+c2RiLgo+IAo+IFRvb2xzIGxpa2UgbW9kZXRlc3QgYWxyZWFkeSBuZWVkIC1NIG14c2ZiLWRybSwg
+dGhlIGRybV9kcml2ZXIubmFtZQo+IHNlZW1zIHRvIGJlIHdoYXQgbWF0dGVycy4KCk9rLCBhbG1v
+c3QgdGhvdWdodCBzbywgdGhhbmtzIGZvciB0aGUgY29uZmlybWF0aW9uISBTbyB3ZSBzaG91bGQg
+YmUKZ29vZC4KCj4gCj4+IC0gUmVtb3ZlIENPTkZJR19GQl9NWFMgZnJvbSBpbXhfdjZfdjdfZGVm
+Y29uZmlnL214c19kZWZjb25maWcgbm93LCBhbmQKPj4gb25seSBlbmFibGUgQ09ORklHX0RSTV9N
+WFNGQj15Cj4gCj4gSWYgb25lIG9mIHRoZSBkcml2ZXJzIGlzIHJlbmFtZWQgdGhlbiB0aGV5IGNh
+biBjb2V4aXN0OiBzaW5jZSB0aGUKPiBiaW5kaW5ncyBhcmUgZGlzdGluY3Qgb25lIGRyaXZlciB3
+aWxsIHJldHVybiBhIHByb2JlIGVycm9yIGFuZCB0aGUKPiBvdGhlciB3aWxsIGJpbmQgc3VjY2Vz
+c2Z1bGx5LiBUaGlzIGNhbiBldmVuIGJlIGFkanVzdGVkIHNvIHRoYXQgaXQKPiBkb2Vzbid0IGV2
+ZW4gcHJpbnQgdWdseSBzY2FyeSBlcnJvcnMuCj4gCj4gVGhpcyBjYW4gbGFzdCB1bnRpbCBzb21l
+Ym9keSBpbXBsZW1lbnRzIHN1cHBvcnQgZm9yIG9sZCBiaW5kaW5ncyBpbiB0aGUKPiBkcm0gZHJp
+dmVyIGFuZCB0aGVuIEZCX01YUyBjYW4ganVzdCBiZSBkZWxldGVkLgoKWWVhaCBJIGd1ZXNzIHRo
+YXQgaXMgd2hhdCBNYXJlayBkb24ndCB3YW50IGJlY2F1c2UgaXQgcHJvbW90ZXMgdXNpbmcKRkJf
+TVhTIGZvciBsb25nZXIgdGhhbiBuZWVkZWQuCgpJIGRvbid0IGNhcmUgYXMgbXVjaCBzaW5jZSB3
+ZSBhbnl3YXkgdXNlIHRoZSBNWFNGQiBEUk0gZHJpdmVyLiBIb3dldmVyLAp3aGF0IEkgcmVhbGx5
+IGRpc2xpa2UgaXMgdGhhdCBhIGtlcm5lbCBjb21waWxlZCB3aXRoIGJvdGggZHJpdmVycwpjdXJy
+ZW50bHkgbGVhZHMgdG8gTVhTRkIgRFJNIGJlaW5nIHVudXNhYmxlIChiZWNhdXNlIGZiZGV2IGdl
+dHMgcHJvYmVkCmZpcnN0KS4gSSBmZWVsIHJlbW92aW5nIHRoZSBNWFNfRkIgaXMgcmF0aGVyIGhh
+cnNoLCBzbyBJICpyZWFsbHkqIHdvdWxkCmxvdmUgdG8gc2VlIHRoZSBNWFNGQiBEUk0gZHJpdmVy
+IHJlbmFtZWQuCgotLQpTdGVmYW4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVsCg==
