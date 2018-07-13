@@ -1,41 +1,38 @@
-Return-Path: <SRS0=0L2k=JW=linux-m68k.org=geert@kernel.org>
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] dt-bindings: watchdog: renesas-wdt: Add support for the R8A77990 wdt
-Date: Fri,  6 Jul 2018 10:55:08 +0200
-Message-Id: <20180706085508.30791-1-geert+renesas@glider.be>
-To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <SRS0=ehaR=J5=linaro.org=lee.jones@kernel.org>
+Date: Fri, 13 Jul 2018 08:38:24 +0100
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 2/4] mfd: wm8994: Allow to configure Speaker Mode
+ Pullup from dts
+Message-ID: <20180713073824.GU4641@dell>
+References: <20180709160631.GU18740@imbe.wolfsonmicro.main>
+ <1531158406-18646-1-git-send-email-anthony@amarulasolutions.com>
+ <1531158406-18646-2-git-send-email-anthony@amarulasolutions.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1531158406-18646-2-git-send-email-anthony@amarulasolutions.com>
+To: Anthony Brandon <anthony@amarulasolutions.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, patches@opensource.cirrus.com, ckeepax@opensource.cirrus.com, alberto@amarulasolutions.com, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>
+On Mon, 09 Jul 2018, Anthony Brandon wrote:
 
-Document support for the Watchdog Timer (WDT) Controller in the Renesas
-R-Car E3 (R8A77990) SoC.
+> From: Alberto Panizzo <alberto@amarulasolutions.com>
+> 
+> Configuring Speaker Mode Pullup was already supported in pdata, but not
+> in the dts.
+> 
+> Signed-off-by: Alberto Panizzo <alberto@amarulasolutions.com>
+> Signed-off-by: Anthony Brandon <anthony@amarulasolutions.com>
+> ---
+>  drivers/mfd/wm8994-core.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
-No driver update is needed.
+Applied, thanks.
 
-Signed-off-by: Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Acked-by: Rob Herring <robh@kernel.org>
----
-v2:
-  - Add Reviewed-by, Acked-by.
----
- Documentation/devicetree/bindings/watchdog/renesas-wdt.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-index f24d802b8056f6c6..5d47a262474cfe0e 100644
---- a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-@@ -16,6 +16,7 @@ Required properties:
- 	         - "renesas,r8a7796-wdt" (R-Car M3-W)
- 		 - "renesas,r8a77965-wdt" (R-Car M3-N)
- 	         - "renesas,r8a77970-wdt" (R-Car V3M)
-+	         - "renesas,r8a77990-wdt" (R-Car E3)
- 	         - "renesas,r8a77995-wdt" (R-Car D3)
- 	         - "renesas,r7s72100-wdt" (RZ/A1)
- 		The generic compatible string must be:
 -- 
-2.17.1
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
