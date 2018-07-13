@@ -1,45 +1,79 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH] irqchip: ingenic: Add support for the JZ4725B SoC
-Date: Fri, 13 Jul 2018 16:49:09 +0200
-Message-ID: <20180713144909.10657-1-paul@crapouillou.net>
+Subject: [PATCH] rtc: jz4740: Add support for the JZ4725B, JZ4760, JZ4770
+Date: Fri, 13 Jul 2018 17:14:24 +0200
+Message-ID: <20180713151424.13000-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-The interrupt controller of the JZ4725B works the same way as the other
-JZ SoCs from Ingenic; so we just add a new compatible string.
+The RTC in the JZ4725B works just like the one in the JZ4740.
+
+The RTC in the JZ4760 and JZ4770 work just like the one in the JZ4780.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt | 1 +
- drivers/irqchip/irq-ingenic.c                                           | 1 +
- 2 files changed, 2 insertions(+)
+ Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt |  3 +++
+ drivers/rtc/rtc-jz4740.c                                     | 11 ++++++++++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
-index 5f89fb635a1b..f97fd8ab5e45 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
-@@ -4,6 +4,7 @@ Required properties:
+diff --git a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+index 41c7ae18fd7b..a9e821de84f2 100644
+--- a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
++++ b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+@@ -4,6 +4,9 @@ Required properties:
  
- - compatible : should be "ingenic,<socname>-intc". Valid strings are:
-     ingenic,jz4740-intc
-+    ingenic,jz4725b-intc
-     ingenic,jz4770-intc
-     ingenic,jz4775-intc
-     ingenic,jz4780-intc
-diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
-index fc5953dea509..2ff08986b536 100644
---- a/drivers/irqchip/irq-ingenic.c
-+++ b/drivers/irqchip/irq-ingenic.c
-@@ -165,6 +165,7 @@ static int __init intc_1chip_of_init(struct device_node *node,
- 	return ingenic_intc_of_init(node, 1);
- }
- IRQCHIP_DECLARE(jz4740_intc, "ingenic,jz4740-intc", intc_1chip_of_init);
-+IRQCHIP_DECLARE(jz4725b_intc, "ingenic,jz4725b-intc", intc_1chip_of_init);
+ - compatible: One of:
+   - "ingenic,jz4740-rtc" - for use with the JZ4740 SoC
++  - "ingenic,jz4725b-rtc" - for use with the JZ4725B SoC
++  - "ingenic,jz4760-rtc" - for use with the JZ4760 SoC
++  - "ingenic,jz4770-rtc" - for use with the JZ4770 SoC
+   - "ingenic,jz4780-rtc" - for use with the JZ4780 SoC
+ - reg: Address range of rtc register set
+ - interrupts: IRQ number for the alarm interrupt
+diff --git a/drivers/rtc/rtc-jz4740.c b/drivers/rtc/rtc-jz4740.c
+index d0a891777f44..1c867e3a0ea5 100644
+--- a/drivers/rtc/rtc-jz4740.c
++++ b/drivers/rtc/rtc-jz4740.c
+@@ -54,6 +54,9 @@
  
- static int __init intc_2chip_of_init(struct device_node *node,
- 	struct device_node *parent)
+ enum jz4740_rtc_type {
+ 	ID_JZ4740,
++	ID_JZ4725B,
++	ID_JZ4760,
++	ID_JZ4770,
+ 	ID_JZ4780,
+ };
+ 
+@@ -114,7 +117,7 @@ static inline int jz4740_rtc_reg_write(struct jz4740_rtc *rtc, size_t reg,
+ {
+ 	int ret = 0;
+ 
+-	if (rtc->type >= ID_JZ4780)
++	if (rtc->type >= ID_JZ4760)
+ 		ret = jz4780_rtc_enable_write(rtc);
+ 	if (ret == 0)
+ 		ret = jz4740_rtc_wait_write_ready(rtc);
+@@ -300,6 +303,9 @@ static void jz4740_rtc_power_off(void)
+ 
+ static const struct of_device_id jz4740_rtc_of_match[] = {
+ 	{ .compatible = "ingenic,jz4740-rtc", .data = (void *)ID_JZ4740 },
++	{ .compatible = "ingenic,jz4725b-rtc", .data = (void *)ID_JZ4725B },
++	{ .compatible = "ingenic,jz4760-rtc", .data = (void *)ID_JZ4760 },
++	{ .compatible = "ingenic,jz4770-rtc", .data = (void *)ID_JZ4770 },
+ 	{ .compatible = "ingenic,jz4780-rtc", .data = (void *)ID_JZ4780 },
+ 	{},
+ };
+@@ -428,6 +434,9 @@ static const struct dev_pm_ops jz4740_pm_ops = {
+ 
+ static const struct platform_device_id jz4740_rtc_ids[] = {
+ 	{ "jz4740-rtc", ID_JZ4740 },
++	{ "jz4725b-rtc", ID_JZ4725B },
++	{ "jz4760-rtc", ID_JZ4760 },
++	{ "jz4770-rtc", ID_JZ4770 },
+ 	{ "jz4780-rtc", ID_JZ4780 },
+ 	{}
+ };
 -- 
 2.11.0
