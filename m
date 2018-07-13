@@ -1,42 +1,62 @@
-Return-Path: <SRS0=koBt=JU=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v2 1/2] dt-bindings: display: add devicetree bindings for pxa300-gcu
-Date: Wed,  4 Jul 2018 21:35:01 +0200
-Message-Id: <20180704193502.3805-1-daniel@zonque.org>
-To: robh+dt@kernel.org, airlied@linux.ie, mark.rutland@arm.com, b.zolnierkie@samsung.com
-Cc: linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, robert.jarzmik@free.fr, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=f8OU=J5=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <20180712030149.91385-1-chris.brandt@renesas.com>
+ <20180712030149.91385-2-chris.brandt@renesas.com> <CAMuHMdX4BPxQY__2DYrUGMBFZPMm_x_jxaBvG+EAPR0fWreAew@mail.gmail.com>
+ <TY1PR01MB156277033682C5749AE209368A590@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <CAMuHMdU6HwCF_W71D=kJn8DEzMjJepM19-3tO3dkVPKKJbYmQg@mail.gmail.com> <TY1PR01MB1562F7AD3087B21EBF325C0D8A590@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB1562F7AD3087B21EBF325C0D8A590@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 13 Jul 2018 12:06:03 +0200
+Message-ID: <CAMuHMdWs=s4CHdYhj6BbFUPUkTNMv5r1mFJ8WAjnV6MtupLMTA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ARM: shmobile: Add basic RZ/A2 SoC support
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds the binding documentation for the pxa300 gcu.
+Hi Chris,
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- .../bindings/display/marvell,pxa300-gcu.txt     | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/marvell,pxa300-gcu.txt
+On Thu, Jul 12, 2018 at 7:34 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> On Thursday, July 12, 2018, Geert Uytterhoeven wrote:
+> > Yeah, that's why I asked: setup-r7s72100.c is the smallest setup file.
+> >
+> > It uses shmobile_init_delay() to preset loops-per-jiffy, to avoid
+> > calibrating the
+> > delay loop, and shmobile_init_late() to make s2ram do more than s2idle.
+> > As RZ/A doesn't have SMP, and thus there's no use for disabling secondary
+> > CPU cores, the impact of the latter is small (read: I don't know what's
+> > the real
+> > impact of calling cpu_idle_poll_ctrl()).
+>
+> It's been quite a while, but I remember when porting RZ/A1 code that
+> without those two functions, things didn't work right. Of course that was
+> many releases ago.
 
-diff --git a/Documentation/devicetree/bindings/display/marvell,pxa300-gcu.txt b/Documentation/devicetree/bindings/display/marvell,pxa300-gcu.txt
-new file mode 100644
-index 000000000000..9cfae5c4e8ec
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/marvell,pxa300-gcu.txt
-@@ -0,0 +1,17 @@
-+PXA3xx GCU Controller
-+---------------------
-+
-+Required properties:
-+ - compatible : "marvell,pxa300-gcu"
-+ - reg : should contain the register range (address and length).
-+ - interrupts : Controller interrupt.
-+ - clocks: phandle to the PXA specific input clock.
-+
-+Example for PXA300:
-+
-+	display-controller@54000000 {
-+		compatible = "marvell,pxa300-gcu";
-+		reg = <0x54000000 0x1000>;
-+		interrupts = <39>;
-+		clocks = <&clks CLK_PXA300_GCU>;
-+	};
--- 
-2.17.1
+Right, you may not have had an early timer running yet, causing the loop
+calibration to hang. May have been fixed by ostm support.
+
+> However, one thing that I know I need is
+>
+> +       .l2c_aux_val    = 0,
+> +       .l2c_aux_mask   = ~0,
+>
+> Without that, I don't get my L2C driver loaded.
+>
+> Hence:
+> a96bb197693e ("ARM: 8660/1: shmobile: r7s72100: Enable L2 cache")
+>
+> So at least for now, I would say I still need the setup file.
+
+I forgot about the L2C. Yeah, it's a pity we still need board code to
+enable the PL310 cache with default settings.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
