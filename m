@@ -1,23 +1,41 @@
 From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: imx6sll-evk: enable SEIKO 43WVF1G lcdif panel
-Date: Fri, 13 Jul 2018 15:01:22 -0300
-Message-ID: <CAOMZO5CBaO7agXqdqcxrdmJMqM4rvYc2VsMSXBtyMZNN8fzAtg@mail.gmail.com>
-References: <1531468707-25737-1-git-send-email-Anson.Huang@nxp.com> <1531468707-25737-3-git-send-email-Anson.Huang@nxp.com>
+Subject: Re: [PATCH] ARM: dts: imx6sx-udoo-neo: enable i2c-2 and i2c-4 for
+ onboard sensors
+Date: Fri, 13 Jul 2018 15:08:14 -0300
+Message-ID: <CAOMZO5B+1atjr3Ur7EGMJSEbqT8zqWdKZWNHrkyCGvgGM4nJFg@mail.gmail.com>
+References: <20180713171151.24699-1-pbrobinson@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531468707-25737-3-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, NXP Linux Team <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180713171151.24699-1-pbrobinson@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Robinson <pbrobinson@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 13, 2018 at 4:58 AM, Anson Huang <Anson.Huang@nxp.com> wrote:
-> Enable SEIKO 43WVF1G lcdif panel for DRM driver,
-> add necessary properties according to SEIKO 43WVF1G
-> driver's requirement, such as "dvdd-supply", "avdd-supply"
-> and "backlight" etc..
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Hi Peter,
 
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+On Fri, Jul 13, 2018 at 2:11 PM, Peter Robinson <pbrobinson@gmail.com> wrote:
+
+> +&i2c4 { /* Onboard Motion sensors */
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_i2c4>;
+> +       clock-frequency = <100000>;
+> +       status = "okay";
+> +};
+
+Would it be possible to add i2c4 to the common dtsi file instead?
+
+I haven't checked the schematics, but if it is only the
+imx6sx-udoo-neo-basic.dts that does not have the i2c4 node, then
+maybe you could add i2c4 to the dtsi and disable it inside
+imx6sx-udoo-neo-basic.dts?
