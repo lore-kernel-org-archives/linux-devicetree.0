@@ -1,74 +1,39 @@
-Return-Path: <SRS0=VNen=KA=huawei.com=jonathan.cameron@kernel.org>
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 0/3] Hisilicon SEC crypto driver (hip06 / hip07)
-Date: Mon, 16 Jul 2018 11:43:39 +0100
-Message-ID: <20180716104342.24192-1-Jonathan.Cameron@huawei.com>
+Return-Path: <SRS0=ehaR=J5=linaro.org=lee.jones@kernel.org>
+Date: Fri, 13 Jul 2018 08:38:39 +0100
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 4/4] mfd: wm8994: Allow to configure CS/ADDR Pulldown
+ from dts
+Message-ID: <20180713073839.GV4641@dell>
+References: <20180709160631.GU18740@imbe.wolfsonmicro.main>
+ <1531158406-18646-1-git-send-email-anthony@amarulasolutions.com>
+ <1531158406-18646-4-git-send-email-anthony@amarulasolutions.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: linux-crypto@vger.kernel.org
-Cc: herbert@gondor.apana.org.au, davem@davemloft.net, smueller@chronox.de, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linuxarm@huawei.com, xuzaibo@huwei.com, fanghao11@huawei.com, liguozhu@hisilicon.com, wangxiongfeng2@huawei.com, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1531158406-18646-4-git-send-email-anthony@amarulasolutions.com>
+To: Anthony Brandon <anthony@amarulasolutions.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, patches@opensource.cirrus.com, ckeepax@opensource.cirrus.com, alberto@amarulasolutions.com, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The driver provides in kernel support for hte Hisilicon SEC accelerator
-found in the hip06 and hip07 SoCs.  There are 4 such units on the D05
-board for which an appropriate DT binding has been provided.  ACPI also
-works with an appropriate UEFI build.
+On Mon, 09 Jul 2018, Anthony Brandon wrote:
 
-The hardware does not update the IV in chaining or counting modes.
-This is done in the drive ron completion of the cipher operation.
+> From: Alberto Panizzo <alberto@amarulasolutions.com>
+> 
+> For designs where CS/ADDR pin is floating, it is useful to
+> allow dts to define whether to keep internal pull down or not.
+> 
+> Signed-off-by: Alberto Panizzo <alberto@amarulasolutions.com>
+> Signed-off-by: Anthony Brandon <anthony@amarulasolutions.com>
+> ---
+>  drivers/mfd/wm8994-core.c        | 4 ++++
+>  include/linux/mfd/wm8994/pdata.h | 6 ++++++
+>  2 files changed, 10 insertions(+)
 
-The driver support AES, DES and 3DES block ciphers in a range of
-modes (others to follow). Hash and AAED support to follow.
-
-Sorry for the delay on this one, other priorities and all that...
-
-Changes since RFC.
-1) Addition of backlog queuing as needed to support dm-crypt usecases.
-2) iommu presence tests now done as Robin Murphy suggested.
-3) Hardware limiation to 32MB requests worked aroud in driver so it will
-   now support very large requests (512*32MB).  Larger request handling
-   than this would require a longer queue with the associate overheads and
-   is considered unlikely to be necessary.
-4) The specific handling related to the inline IV patch set from Stephan
-   has been dropped for now.
-5) Interrupt handler was previous more complex than necessary so has been
-   reworked.
-6) Use of the bounce buffer for small packeets is dropped for now.  This is a
-   performance optimization that made the code harder to review and can be
-   reintroduced as necessary at a later date.
-7) Restructuring of some code to simplify hash and aaed (hash implemented
-   but not ready fo upstream at this time)
-8) Various minor fixes and reworks of the code
-   * several off by one errors in the cleanup paths
-   * single template for enc and dec
-   * drop dec_key as not used (enc_key was used in both cases)
-   * drop dma pool for IVs as it breaks chaining.
-   * lots of spinlocks changed to mutexes as not taken in atomic context.
-   * nasty memory leak cleaned up.
-
-Jonathan Cameron (3):
-  dt-bindings: Add bindings for Hisilicon SEC crypto accelerators.
-  crypto: hisilicon SEC security accelerator driver
-  arm64: dts: hisi: add SEC crypto accelerator nodes for hip07 SoC
-
- .../bindings/crypto/hisilicon,hip07-sec.txt        |   69 +
- arch/arm64/boot/dts/hisilicon/hip07.dtsi           |  285 +++++
- drivers/crypto/Kconfig                             |    2 +
- drivers/crypto/Makefile                            |    1 +
- drivers/crypto/hisilicon/Kconfig                   |   14 +
- drivers/crypto/hisilicon/Makefile                  |    2 +
- drivers/crypto/hisilicon/sec/Makefile              |    3 +
- drivers/crypto/hisilicon/sec/sec_algs.c            | 1116 +++++++++++++++++
- drivers/crypto/hisilicon/sec/sec_drv.c             | 1323 ++++++++++++++++++++
- drivers/crypto/hisilicon/sec/sec_drv.h             |  428 +++++++
- 10 files changed, 3243 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/hisilicon,hip07-sec.txt
- create mode 100644 drivers/crypto/hisilicon/Kconfig
- create mode 100644 drivers/crypto/hisilicon/Makefile
- create mode 100644 drivers/crypto/hisilicon/sec/Makefile
- create mode 100644 drivers/crypto/hisilicon/sec/sec_algs.c
- create mode 100644 drivers/crypto/hisilicon/sec/sec_drv.c
- create mode 100644 drivers/crypto/hisilicon/sec/sec_drv.h
+Applied, thanks.
 
 -- 
-2.16.2
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
