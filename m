@@ -1,260 +1,239 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v5 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
- driver
-Date: Thu, 12 Jul 2018 17:19:59 -0700
-Message-ID: <20180713001959.GV129942@google.com>
-References: <1531418745-19742-1-git-send-email-tdas@codeaurora.org>
- <1531418745-19742-3-git-send-email-tdas@codeaurora.org>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [RFC PATCH v2 1/4] dt-bindings: misc: Add bindings for misc.
+ BMC control fields
+Date: Fri, 13 Jul 2018 10:55:02 +1000
+Message-ID: <b6ced4cad4d7ff78330181b2c893855c23103953.camel@kernel.crashing.org>
+References: <20180711053122.30773-1-andrew@aj.id.au>
+ <20180711053122.30773-2-andrew@aj.id.au>
+ <20180711200450.GB17291@rob-hp-laptop>
+ <1531356830.3551458.1437853280.551CA8C5@webmail.messagingengine.com>
+ <CAL_JsqKpXxR4t_-3BOy-0mFePXkaSck_4PfHRD=OZQ-_-T5P=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1531418745-19742-3-git-send-email-tdas@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, amit.kucheria@linaro.org, evgreen@google.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqKpXxR4t_-3BOy-0mFePXkaSck_4PfHRD=OZQ-_-T5P=w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Andrew Jeffery <andrew@aj.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Eugene.Cho@dell.com, a.amelkin@yadro.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Joel Stanley <joel@jms.id.au>, stewart@linux.ibm.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, Jul 12, 2018 at 11:35:45PM +0530, Taniya Das wrote:
-> The CPUfreq HW present in some QCOM chipsets offloads the steps necessary
-> for changing the frequency of CPUs. The driver implements the cpufreq
-> driver interface for this hardware engine.
+On Thu, 2018-07-12 at 09:11 -0600, Rob Herring wrote:
+> On Wed, Jul 11, 2018 at 6:54 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+> > 
+> > Hi Rob,
+> > 
+> > Thanks for the response.
+> > 
+> > On Thu, 12 Jul 2018, at 05:34, Rob Herring wrote:
+> > > On Wed, Jul 11, 2018 at 03:01:19PM +0930, Andrew Jeffery wrote:
+> > > > Baseboard Management Controllers (BMCs) are embedded SoCs that exist to
+> > > > provide remote management of (primarily) server platforms. BMCs are
+> > > > often tightly coupled to the platform in terms of behaviour and provide
+> > > > many hardware features integral to booting and running the host system.
+> > > > 
+> > > > Some of these hardware features are simple, for example scratch
+> > > > registers provided by the BMC that are exposed to both the host and the
+> > > > BMC. In other cases there's a single bit switch to enable or disable
+> > > > some of the provided functionality.
+> > > > 
+> > > > The documentation defines bindings for fields in registers that do not
+> > > > integrate well into other driver models yet must be described to allow
+> > > > the BMC kernel to assume control of these features.
+> > > 
+> > > So we'll get a new binding when that happens? That will break
+> > > compatibility.
+> > 
+> > Can you please expand on this? I'm not following.
 > 
-> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  drivers/cpufreq/Kconfig.arm       |  10 ++
->  drivers/cpufreq/Makefile          |   1 +
->  drivers/cpufreq/qcom-cpufreq-hw.c | 344 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 355 insertions(+)
->  create mode 100644 drivers/cpufreq/qcom-cpufreq-hw.c
+> If we have a subsystem in the future, then there would likely be an
+> associated binding which would be different. So if you update the DT,
+> then old kernels won't work with it.
+
+What kind of "subsystem" ? There is almost no way there could be one
+for that sort of BMC tunables. We've look at several BMC chips out
+there and requirements from several vendors, BIOS and system
+manufacturers and it's all over the place.
+
+> > I feel like this is an argument of tradition. Maybe people have
+> > been dissuaded from doing so when they don't have a reasonable use-
+> > case? I'm not saying that what I'm proposing is unquestionably
+> > reasonable, but I don't want to dismiss it out of hand.
 > 
-> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-> index 52f5f1a..141ec3e 100644
-> --- a/drivers/cpufreq/Kconfig.arm
-> +++ b/drivers/cpufreq/Kconfig.arm
-> @@ -312,3 +312,13 @@ config ARM_PXA2xx_CPUFREQ
->  	  This add the CPUFreq driver support for Intel PXA2xx SOCs.
+> One of experience. The one that stands out is clock bindings.
+> Initially we were doing a node per clock modelling which could end up
+> being 100s of nodes and is difficult to get right (with DT being an
+> ABI).
 > 
->  	  If in doubt, say N.
-> +
-> +config ARM_QCOM_CPUFREQ_HW
-> +	bool "QCOM CPUFreq HW driver"
-> +	help
-> +	 Support for the CPUFreq HW driver.
-> +	 Some QCOM chipsets have a HW engine to offload the steps
-> +	 necessary for changing the frequency of the CPUs. Firmware loaded
-> +	 in this engine exposes a programming interafce to the High-level OS.
-> +	 The driver implements the cpufreq driver interface for this HW engine.
-> +	 Say Y if you want to support CPUFreq HW.
-> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-> index fb4a2ec..1226a3e 100644
-> --- a/drivers/cpufreq/Makefile
-> +++ b/drivers/cpufreq/Makefile
-> @@ -86,6 +86,7 @@ obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)	+= tegra124-cpufreq.o
->  obj-$(CONFIG_ARM_TEGRA186_CPUFREQ)	+= tegra186-cpufreq.o
->  obj-$(CONFIG_ARM_TI_CPUFREQ)		+= ti-cpufreq.o
->  obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ)	+= vexpress-spc-cpufreq.o
-> +obj-$(CONFIG_ARM_QCOM_CPUFREQ_HW)	+= qcom-cpufreq-hw.o
+> It comes up with system controller type blocks too that just have a
+> bunch of random registers. Those change in every SoC and not in any
+> controlled or ordered way that would make describing the individual
+> sub-functions in DT worthwhile.
+
+So what's the alternative ? Because without something like what we
+propose, what's going to happen is /dev/mem ... that's what people do
+today.
+
+> > > A node per register bit doesn't scale.
+> > 
+> > It isn't meant to scale in terms of a single system. Using it
+> > extensively is very likely wrong. Separately, register-bit-led does
+> > pretty much the same thing. Doesn't the scale argument apply there?
+> > Who is to stop me from attaching an insane number of LEDs to a
+> > system?
 > 
+> Review.
 > 
->  ##################################################################################
-> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
-> new file mode 100644
-> index 0000000..fa25a95
-> --- /dev/null
-> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-> @@ -0,0 +1,344 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/cpufreq.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_platform.h>
-> +
-> +#define INIT_RATE			300000000UL
-> +#define XO_RATE				19200000UL
-> +#define LUT_MAX_ENTRIES			40U
-> +#define CORE_COUNT_VAL(val)		(((val) & (GENMASK(18, 16))) >> 16)
-> +#define LUT_ROW_SIZE			32
-> +
-> +enum {
-> +	REG_ENABLE,
-> +	REG_LUT_TABLE,
-> +	REG_PERF_STATE,
-> +
-> +	REG_ARRAY_SIZE,
-> +};
-> +
-> +struct cpufreq_qcom {
-> +	struct cpufreq_frequency_table *table;
-> +	struct device *dev;
-> +	const u16 *reg_offset;
-> +	void __iomem *base;
-> +	cpumask_t related_cpus;
-> +	unsigned int max_cores;
+> If you look, register-bit-led is rarely used outside of some ARM, Ltd.
+> boards. It's simply quite rare to have MMIO register bits that have a
+> fixed function of LED control.
 
-Same comment as on v4:
+Well, same here, we hope to review what goes upstream to make it
+reasonable. Otherwise it doens't matter. If a random vendor, let's say
+IBM, chose to chip a system where they put an insane amount of cruft in
+there, it will only affect those systems's BMC and the userspace stack
+on it.
 
-Why *max*_cores? This seems to be the number of CPUs in a cluster and
-qcom_read_lut() expects the core count read from the LUT to match
-exactly. Maybe it's the name from the datasheet? Should it still be
-'num_cores' or similer?
+Thankfully that stack is OpenBMC and IBM is aiming at having their
+device-tree's upstream, thus reviewed, thus it won't happen.
 
-> +static struct cpufreq_qcom *qcom_freq_domain_map[NR_CPUS];
+*Anything* can be abused. The point here is that we have a number,
+thankfully rather small, maybe a dozen or two, of tunables that are
+quite specific to a combination (system vendor, bmc vendor, system
+model) which control a few HW features that essentially do *NOT* fit in
+a subsystem.
 
-It would be an option to limit this to the number of CPU clusters and
-allocate it dynamically when the driver is initialized (key = first
-core in the cluster). Probably not worth the hassle with the limited
-number of cores though.
+For everything that does, we have created proper drivers (and are doing
+more).
 
-> +static int qcom_read_lut(struct platform_device *pdev,
-> +			 struct cpufreq_qcom *c)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	unsigned int offset;
-> +	u32 data, src, lval, i, core_count, prev_cc, prev_freq, cur_freq;
-> +
-> +	c->table = devm_kcalloc(dev, LUT_MAX_ENTRIES + 1,
-> +				sizeof(*c->table), GFP_KERNEL);
-> +	if (!c->table)
-> +		return -ENOMEM;
-> +
-> +	offset = c->reg_offset[REG_LUT_TABLE];
-> +
-> +	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-> +		data = readl_relaxed(c->base + offset + i * LUT_ROW_SIZE);
-> +		src = ((data & GENMASK(31, 30)) >> 30);
-> +		lval = (data & GENMASK(7, 0));
-> +		core_count = CORE_COUNT_VAL(data);
-> +
-> +		if (src == 0)
-> +			c->table[i].frequency = INIT_RATE / 1000;
-> +		else
-> +			c->table[i].frequency = XO_RATE * lval / 1000;
 
-You changed the condition from '!src' to 'src == 0'. My suggestion on
-v4 was in part about a negative condition, but also about the
-order. If it doesn't obstruct the code otherwise I think for an if-else
-branch it is good practice to handle the more common case first and
-then the 'exception'. I would expect most entries to have an actual
-rate. Just a nit in any case, feel free to ignore if you prefer as is.
+> > Obviously if there are lots of systems using it sparingly and
+> > legitimately then maybe there's a scale issue, but isn't that just
+> > a reality of different hardware designs? Whoever is implementing
+> > support for the system is going to have to describe the hardware
+> > one way or another.
+> > 
+> > > 
+> > > Maybe this should be modelled using GPIO binding? There's a line there
+> > > too as whether the signals are "general purpose" or not.
+> > 
+> > I don't think so, mainly because some of the things it is intended to be used for are not GPIOs. For instance, take the DAC mux I've described in the patch. It doesn't directly influence anything external to the SoC (i.e. it's certainly not a traditional GPIO in any sense). However, it does *indirectly* influence the SoC's behaviour by muxing the DAC internally between:
+> > 
+> > 0. VGA device exposed on the host PCIe bus
+> > 1. The "Graphics CRT" controller
+> > 2. VGA port A
+> > 3. VGA port B
+> 
+> And this mux control is fixed in the SoC design?
 
-> +static int qcom_cpu_resources_init(struct platform_device *pdev,
-> +				   struct device_node *np, unsigned int cpu)
-> +{
-> +	struct cpufreq_qcom *c;
-> +	struct resource res;
-> +	struct device *dev = &pdev->dev;
-> +	unsigned int offset, cpu_r;
-> +	int ret;
-> +
-> +	c = devm_kzalloc(dev, sizeof(*c), GFP_KERNEL);
-> +	if (!c)
-> +		return -ENOMEM;
-> +
-> +	c->reg_offset = of_device_get_match_data(&pdev->dev);
-> +	if (!c->reg_offset)
-> +		return -EINVAL;
-> +
-> +	if (of_address_to_resource(np, 0, &res))
-> +		return -ENOMEM;
-> +
-> +	c->base = devm_ioremap(dev, res.start, resource_size(&res));
-> +	if (!c->base) {
-> +		dev_err(dev, "Unable to map %s base\n", np->name);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	offset = c->reg_offset[REG_ENABLE];
-> +
-> +	/* HW should be in enabled state to proceed */
-> +	if (!(readl_relaxed(c->base + offset) & 0x1)) {
-> +		dev_err(dev, "%s cpufreq hardware not enabled\n", np->name);
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = qcom_get_related_cpus(np, &c->related_cpus);
-> +	if (ret) {
-> +		dev_err(dev, "%s failed to get related CPUs\n", np->name);
-> +		return ret;
-> +	}
-> +
-> +	c->max_cores = cpumask_weight(&c->related_cpus);
-> +	if (!c->max_cores)
-> +		return -ENOENT;
-> +
-> +	ret = qcom_read_lut(pdev, c);
-> +	if (ret) {
-> +		dev_err(dev, "%s failed to read LUT\n", np->name);
-> +		return ret;
-> +	}
-> +
-> +	qcom_freq_domain_map[cpu] = c;
+This specific family of SoC (Aspeed) support those 4 configurations.
+How they need to be configured at runtime depends on the combination of
+system vendor and system model, along with in some cases the need to
+switch it at runtime.
 
-If the general code structure remains as is (see my comment below)
-the assignment could be done in a 'if (cpu == cpu_r)' branch instead
-of first assigning and then overwriting it for 'cpu != cpu_r'.
+This is just one example. Another one is the handful of scratch
+registers that need to be populated with the "right" values for the
+host system BIOS, VGA BIOS and VGA driver. (The host bits access them
+via LPC IO space).
 
-> +
-> +	/* Related CPUs to keep a single copy */
-> +	cpu_r = cpumask_first(&c->related_cpus);
-> +	if (cpu != cpu_r) {
-> +		qcom_freq_domain_map[cpu] = qcom_freq_domain_map[cpu_r];
-> +		devm_kfree(dev, c);
-> +	}
+The host system BIOS will read some basic config info there before its
+IPMI stack is up (and some BIOSes already rely on that). The VGA BIOS
+will get some strapping info and panel info. The VGA driver (which is
+already upstream, has been for a long time) will look for other things
+in some of these guys, such as connector configuration.
 
-Couldn't we do this at the beginning of the function instead of going
-through allocation, ioremap, read_lut for every core only to throw the
-information away later for the 'related' CPUs?
+Andrew, if it helps, we could put together a list of what we typically
+need on an OpenPower system today. That would give people like Rob a
+better idea of what this is all about.
 
-qcom_cpu_resources_init() is called with increasing 'cpu' values, hence the
-'first' CPU of the cluster is already initialized when the 'related'
-ones are processed.
+> > 
+> > Maybe this could be modelled by pinmux, but then we still need some
+> > way to expose the mux functions to userspace for selection
+> > (userspace needs to transition arbitrarily between at least options
+> > 0 and 1 at runtime), at which point we haven't achieved much beyond
+> > adding a whole heap of infrastructure in the chain.
+> > 
+> > Given 0 and 1, maybe exposing attributes in relevant drivers would
+> > be reasonable, except 0 isn't exposed on the SoC's internal bus so
+> > there is no driver on the BMC-side to do so. Taking into account 2
+> > and 3 are also purely hardware paths further dashes the idea, as
+> > the configuration doesn't really "belong" to the Graphics CRT
+> > device more than it belongs anywhere else, except for the fact that
+> > there isn't anywhere else to expose it.
+> > 
+> > Further, the BMC's kernel can't make the decision as to when to
+> > switch the mux as it knows nothing of the host's state. The BMC
+> > userspace is controlling the host's boot state and so *does* know
+> > when to flip the switch. Finally, the mux is in separate IP to the
+> > CRT or VGA blocks: It lives in the System Control Unit.
+> > 
+> > My current point of view is the DAC mux field is effectively its
+> > own device, and we need to control it from userspace, so we need
+> > some way to describe it (i.e. not ignore it) in order for its
+> > capability to be exposed.
+> > 
+> > I'm fully aware what I'm proposing isn't awesome as it's not
+> > providing any real abstraction, but the problem(s) at hand also
+> > seem to defy abstraction, and in order to avoid a plethora of
+> > bespoke bindings I thought it was reasonable to define something
+> > generic.
+> > 
+> > All-in-all I appreciate the suggestion, but assuming you agree with
+> > my reasoning above do you have thoughts on other alternatives?
+> 
+> Seems the controls are more fixed than I first thought. All the data
+> you have here could simply be within a driver. Help me understand what
+> functions are fixed (in the SoC) and which ones vary by board. Only
+> what's changing per board really needs to go into DT.
 
-> +	return 0;
-> +}
-> +
-> +static int qcom_resources_init(struct platform_device *pdev)
-> +{
-> +	struct device_node *np, *cpu_np;
-> +	unsigned int cpu;
-> +	int ret;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		cpu_np = of_cpu_device_node_get(cpu);
-> +		if (!cpu_np) {
-> +			dev_err(&pdev->dev, "Failed to get cpu %d device\n",
-> +				cpu);
-> +			continue;
-> +		}
-> +
-> +		np = of_parse_phandle(cpu_np, "qcom,freq-domain", 0);
-> +		if (!np) {
-> +			dev_err(&pdev->dev, "Failed to get freq-domain device\n");
+Most of these things is specific to a given board or may even need to
+be changed at runtime.
 
-			of_node_put(cpu_np);
+For example the VGA mux is system specific, *and* will change at
+runtime on some systems. For example, on IBM systems, the BMC will
+route its internal CRT display controller to the VGA port in order to
+display early boot progress information when the host hasn't
+initialized its graphics driver yet, and route the host VGA to the VGA
+port when the host has.
 
-> +			return -EINVAL;
-> +		}
-> +
-> +		of_node_put(cpu_np);
-> +
-> +		ret = qcom_cpu_resources_init(pdev, np, cpu);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
+(To clarify, the BMC has 2 display controllers: one for use by the SoC
+ARM itself, and one exposed to the host via PCIe, this routes which one
+gets to output to the VGA port).
 
-Thanks
+The scratch registers are similar. Their content tend to be specific to
+a specific BIOS vendor/system manufacturer. It might need to change
+from boot to boot based configuration changes the user might do via the
+BMC IPMI or web interface.
 
-Matthias
+Another example is that the SoC can expose a couple of PCIe devices to
+the host, a given vendor will want to control whether to do that and
+which ones to expose. This can be fixed or tunable. Some vendors want
+the user to be able to control (via IPMI or web UI or some other
+mechanism) whether the SoC internal VGA shows up or not depending on
+whether they chose to use a separate discrete GPU, as some OSes get
+confused when in the presence of multiple different graphic adapters.
+
+Talking of which: Andrew, did you put "default values" in your binding
+? That would be a nice way to deal with system specific immutables, so
+that userspace doesn't even have to care.
+
+So to clarify once and for all, *anything* that fits in a subsystem,
+we're putting in one. All the random board control is all GPIOs and
+that's fine as well. For some things that require a bit of fiddly usage
+like the "MBOX" logic between BIOS and BMC we are also doing a
+dedicated driver.
+
+But there's a few stragglers here, and they tend to be so
+board/system/BIOS specific that it's not sustainable to create/change
+random drivers all the time just for exposing those few tunables.
+
+Cheers,
+Ben.
