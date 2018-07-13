@@ -1,65 +1,142 @@
-Return-Path: <SRS0=7VqK=JZ=amarulasolutions.com=anthony@kernel.org>
-From: Anthony Brandon <anthony@amarulasolutions.com>
-Subject: [PATCH v2 4/4] mfd: wm8994: Allow to configure CS/ADDR Pulldown from dts
-Date: Mon,  9 Jul 2018 19:46:46 +0200
-Message-Id: <1531158406-18646-4-git-send-email-anthony@amarulasolutions.com>
-In-Reply-To: <1531158406-18646-1-git-send-email-anthony@amarulasolutions.com>
-References: <20180709160631.GU18740@imbe.wolfsonmicro.main>
- <1531158406-18646-1-git-send-email-anthony@amarulasolutions.com>
-To: robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, patches@opensource.cirrus.com, ckeepax@opensource.cirrus.com, alberto@amarulasolutions.com, devicetree@vger.kernel.org
-Cc: Anthony Brandon <anthony@amarulasolutions.com>
+Return-Path: <SRS0=tHxF=J5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-co1nam03on0042.outbound.protection.outlook.com ([104.47.40.42]:52672
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727255AbeGMLEV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Jul 2018 07:04:21 -0400
+From: <shubhrajyoti.datta@gmail.com>
+Subject: [PATCHv2 1/4] tty: serial: uartlite: Add structure for private data
+Date: Fri, 13 Jul 2018 16:17:26 +0530
+Message-ID: <1531478849-29480-1-git-send-email-shubhrajyoti.datta@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, jacmet@sunsite.dk, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, Tanvi Desai <tanvi.desai@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Alberto Panizzo <alberto@amarulasolutions.com>
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-For designs where CS/ADDR pin is floating, it is useful to
-allow dts to define whether to keep internal pull down or not.
+Add struct uartlite_data, to store the private data of the Uartlite
+driver.
 
-Signed-off-by: Alberto Panizzo <alberto@amarulasolutions.com>
-Signed-off-by: Anthony Brandon <anthony@amarulasolutions.com>
+Signed-off-by: Tanvi Desai <tanvi.desai@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 ---
- drivers/mfd/wm8994-core.c        | 4 ++++
- include/linux/mfd/wm8994/pdata.h | 6 ++++++
- 2 files changed, 10 insertions(+)
+ drivers/tty/serial/uartlite.c | 29 +++++++++++++++++++++--------
+ 1 file changed, 21 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
-index fa4b1b7..22bd652 100644
---- a/drivers/mfd/wm8994-core.c
-+++ b/drivers/mfd/wm8994-core.c
-@@ -304,6 +304,8 @@ static int wm8994_set_pdata_from_of(struct wm8994 *wm8994)
+diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
+index c47db78..0f798f7 100644
+--- a/drivers/tty/serial/uartlite.c
++++ b/drivers/tty/serial/uartlite.c
+@@ -54,6 +54,10 @@
+ #define ULITE_CONTROL_RST_RX	0x02
+ #define ULITE_CONTROL_IE	0x10
  
- 	pdata->spkmode_pu = of_property_read_bool(np, "wlf,spkmode-pu");
- 
-+	pdata->csnaddr_pd = of_property_read_bool(np, "wlf,csnaddr-pd");
++struct uartlite_data {
++	const struct uartlite_reg_ops *reg_ops;
++};
 +
- 	pdata->ldo[0].enable = of_get_named_gpio(np, "wlf,ldo1ena", 0);
- 	if (pdata->ldo[0].enable < 0)
- 		pdata->ldo[0].enable = 0;
-@@ -562,6 +564,8 @@ static int wm8994_device_init(struct wm8994 *wm8994, int irq)
+ struct uartlite_reg_ops {
+ 	u32 (*in)(void __iomem *addr);
+ 	void (*out)(u32 val, void __iomem *addr);
+@@ -91,16 +95,16 @@ static const struct uartlite_reg_ops uartlite_le = {
  
- 	if (pdata->spkmode_pu)
- 		pulls |= WM8994_SPKMODE_PU;
-+	if (pdata->csnaddr_pd)
-+		pulls |= WM8994_CSNADDR_PD;
+ static inline u32 uart_in32(u32 offset, struct uart_port *port)
+ {
+-	const struct uartlite_reg_ops *reg_ops = port->private_data;
++	struct uartlite_data *pdata = port->private_data;
  
- 	/* Disable unneeded pulls */
- 	wm8994_set_bits(wm8994, WM8994_PULL_CONTROL_2,
-diff --git a/include/linux/mfd/wm8994/pdata.h b/include/linux/mfd/wm8994/pdata.h
-index 90c6052..b19c370 100644
---- a/include/linux/mfd/wm8994/pdata.h
-+++ b/include/linux/mfd/wm8994/pdata.h
-@@ -222,6 +222,12 @@ struct wm8994_pdata {
- 	 */
- 	bool spkmode_pu;
+-	return reg_ops->in(port->membase + offset);
++	return pdata->reg_ops->in(port->membase + offset);
+ }
  
-+	/*
-+	 * CS/ADDR must be pulled internally by the device on this
-+	 * system.
-+	 */
-+	bool csnaddr_pd;
-+
- 	/**
- 	 * Maximum number of channels clocks will be generated for,
- 	 * useful for systems where and I2S bus with multiple data
+ static inline void uart_out32(u32 val, u32 offset, struct uart_port *port)
+ {
+-	const struct uartlite_reg_ops *reg_ops = port->private_data;
++	struct uartlite_data *pdata = port->private_data;
+ 
+-	reg_ops->out(val, port->membase + offset);
++	pdata->reg_ops->out(val, port->membase + offset);
+ }
+ 
+ static struct uart_port ulite_ports[ULITE_NR_UARTS];
+@@ -325,6 +329,7 @@ static void ulite_release_port(struct uart_port *port)
+ 
+ static int ulite_request_port(struct uart_port *port)
+ {
++	struct uartlite_data *pdata = port->private_data;
+ 	int ret;
+ 
+ 	pr_debug("ulite console: port=%p; port->mapbase=%llx\n",
+@@ -342,13 +347,13 @@ static int ulite_request_port(struct uart_port *port)
+ 		return -EBUSY;
+ 	}
+ 
+-	port->private_data = (void *)&uartlite_be;
++	pdata->reg_ops = &uartlite_be;
+ 	ret = uart_in32(ULITE_CONTROL, port);
+ 	uart_out32(ULITE_CONTROL_RST_TX, ULITE_CONTROL, port);
+ 	ret = uart_in32(ULITE_STATUS, port);
+ 	/* Endianess detection */
+ 	if ((ret & ULITE_STATUS_TXEMPTY) != ULITE_STATUS_TXEMPTY)
+-		port->private_data = (void *)&uartlite_le;
++		pdata->reg_ops = &uartlite_le;
+ 
+ 	return 0;
+ }
+@@ -585,10 +590,12 @@ static struct uart_driver ulite_uart_driver = {
+  * @id: requested id number.  Pass -1 for automatic port assignment
+  * @base: base address of uartlite registers
+  * @irq: irq number for uartlite
++ * @pdata: private data for uartlite
+  *
+  * Returns: 0 on success, <0 otherwise
+  */
+-static int ulite_assign(struct device *dev, int id, u32 base, int irq)
++static int ulite_assign(struct device *dev, int id, u32 base, int irq,
++			struct uartlite_data *pdata)
+ {
+ 	struct uart_port *port;
+ 	int rc;
+@@ -625,6 +632,7 @@ static int ulite_assign(struct device *dev, int id, u32 base, int irq)
+ 	port->dev = dev;
+ 	port->type = PORT_UNKNOWN;
+ 	port->line = id;
++	port->private_data = pdata;
+ 
+ 	dev_set_drvdata(dev, port);
+ 
+@@ -675,6 +683,7 @@ MODULE_DEVICE_TABLE(of, ulite_of_match);
+ static int ulite_probe(struct platform_device *pdev)
+ {
+ 	struct resource *res;
++	struct uartlite_data *pdata;
+ 	int irq;
+ 	int id = pdev->id;
+ #ifdef CONFIG_OF
+@@ -684,6 +693,10 @@ static int ulite_probe(struct platform_device *pdev)
+ 	if (prop)
+ 		id = be32_to_cpup(prop);
+ #endif
++	pdata = devm_kzalloc(&pdev->dev, sizeof(struct uartlite_data),
++			     GFP_KERNEL);
++	if (!pdata)
++		return -ENOMEM;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!res)
+@@ -693,7 +706,7 @@ static int ulite_probe(struct platform_device *pdev)
+ 	if (irq <= 0)
+ 		return -ENXIO;
+ 
+-	return ulite_assign(&pdev->dev, id, res->start, irq);
++	return ulite_assign(&pdev->dev, id, res->start, irq, pdata);
+ }
+ 
+ static int ulite_remove(struct platform_device *pdev)
 -- 
 2.7.4
+
