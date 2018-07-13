@@ -1,89 +1,136 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v10 0/6] Driver for at91 usart in spi mode
-Date: Fri, 13 Jul 2018 08:37:05 +0100
-Message-ID: <20180713073705.GT4641@dell>
-References: <20180625172230.29686-1-radu.pirea@microchip.com>
- <aecba39e-deba-c64b-9542-a446e074e95e@microchip.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Re: [PATCH 1/2] ARM: sun8i: h3: enable HDMI output
+ on Banana Pi M2 Zero
+Date: Fri, 13 Jul 2018 09:45:50 +0200
+Message-ID: <20180713074550.mna4nqbjringf2xn@flea.home>
+References: <20180711132233.42301-1-icenowy@aosc.io>
+ <20180711132233.42301-2-icenowy@aosc.io>
+ <20180711150532.6gzm7krouriddreh@flea>
+ <8F6CDF5C-2AC1-43EC-858A-5C6345CF279A@aosc.io>
+ <20180712064601.m3bdd46wzac5fpgh@flea>
+ <A7CA2831-7117-415C-BC59-3FB4AE425598@aosc.io>
+ <20180712145306.ootqt7dfh3nxsamy@flea>
+ <82CD0BCE-9DE4-45D7-8DF4-FCCFBC70BECF@aosc.io>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="m4qdj5cmxwskf2b4"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBL5RUHNAKGQETEOSFUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <aecba39e-deba-c64b-9542-a446e074e95e@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Radu Pirea <radu.pirea@microchip.com>, broonie@kernel.org, alexandre.belloni@bootlin.com, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+In-Reply-To: <82CD0BCE-9DE4-45D7-8DF4-FCCFBC70BECF-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 11 Jul 2018, Nicolas Ferre wrote:
 
-> On 25/06/2018 at 19:22, Radu Pirea wrote:
-> > Hello,
-> > 
-> > This is the second version of driver. I added a mfd driver which by
-> > default probes atmel_serial driver and if in dt is specified to probe
-> > the spi driver, then the spi-at91-usart driver will be probed. The
-> > compatible for atmel_serial is now the compatible for at91-usart mfd
-> > driver and compatilbe for atmel_serial driver was changed in order to
-> > keep the bindings for serial as they are.
-> > 
-> > Changes in v10:
-> > -fixed kbuild test robot warning
-> > 
-> > Changes in v9:
-> > - minor changes
-> > - rebased on top of broonie/for-4.19
-> > 
-> > Changes in v8:
-> > - fixed passing an empty mfd cell if "atmel,usart-mode" value is invalid
-> > 
-> > Changes in v7:
-> > - synced up  SPDIX license with module license
-> > - numbering of usart modes starts from 0 insteand of 1
-> > 
-> > Changes in v6:
-> > - removed unused compatible strings from serial and spi drivers
-> > 
-> > Changes in v5:
-> > - fixed usage of stdout-path property with atmel_serial driver
-> > 
-> > Changes in v4:
-> > - modified the spi driver to use cs gpio support form spi subsystem
-> > - fixed dma transfers for serial driver
-> > - squashed binding for spi and serial and moved them to mfd/atmel-usart.txt
-> > 
-> > Changes in v3:
-> > - fixed spi slaves probing
-> > 
-> > Changes in v2:
-> > - added at91-usart mfd driver
-> > - modified spi-at91-usart driver to work as mfd driver child
-> > - modified atmel_serial driver to work as mfd driver child
-> > 
-> > Changes in v1:
-> > - added spi-at91-usart driver
-> > 
-> > 
-> > Radu Pirea (6):
-> >    MAINTAINERS: add at91 usart mfd driver
-> >    dt-bindings: add binding for atmel-usart in SPI mode
-> >    mfd: at91-usart: added mfd driver for usart
-> >    MAINTAINERS: add at91 usart spi driver
-> >    spi: at91-usart: add driver for at91-usart as spi
-> >    tty/serial: atmel: change the driver to work under at91-usart mfd
-> 
-> For the record or if needed by the MAINTAINERS changes, you can add my:
-> Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-> for the whole series.
-> 
-> Once the remarks by Mark are addressed, you can certainly re-send the series
-> with all tags collected for Lee to take it, if he is okay with this process,
-> of course...
+--m4qdj5cmxwskf2b4
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That's fine.  No problem.
+On Fri, Jul 13, 2018 at 10:28:08AM +0800, Icenowy Zheng wrote:
+>=20
+>=20
+> =E4=BA=8E 2018=E5=B9=B47=E6=9C=8812=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
+10:53:06, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
+> >On Thu, Jul 12, 2018 at 03:09:55PM +0800, Icenowy Zheng wrote:
+> >> =E4=BA=8E 2018=E5=B9=B47=E6=9C=8812=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
+=882:46:01, Maxime Ripard
+> ><maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
+> >> >On Wed, Jul 11, 2018 at 11:15:50PM +0800, Icenowy Zheng wrote:
+> >> >>=20
+> >> >>=20
+> >> >> =E4=BA=8E 2018=E5=B9=B47=E6=9C=8811=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=
+=8D=8811:05:32, Maxime Ripard
+> >> ><maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
+> >> >> >Hi,
+> >> >> >
+> >> >> >On Wed, Jul 11, 2018 at 09:22:32PM +0800, Icenowy Zheng wrote:
+> >> >> >> Banana Pi M2 Zero board has a miniHDMI port connected to the
+> >HDMI
+> >> >> >> controller of Allwinner H3 SoC.
+> >> >> >>=20
+> >> >> >> Enable the HDMI output in Banana Pi M2 Zero device tree.
+> >> >> >>=20
+> >> >> >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> >> >> >> ---
+> >> >> >>  .../dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 25
+> >> >> >+++++++++++++++++++
+> >> >> >>  1 file changed, 25 insertions(+)
+> >> >> >>=20
+> >> >> >> diff --git
+> >a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> >> >> >b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> >> >> >> index 7d01f9322658..eb61dcf32797 100644
+> >> >> >> --- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> >> >> >> +++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> >> >> >> @@ -26,6 +26,17 @@
+> >> >> >>  		stdout-path =3D "serial0:115200n8";
+> >> >> >>  	};
+> >> >> >> =20
+> >> >> >> +	hdmi-connector {
+> >> >> >> +		compatible =3D "hdmi-connector";
+> >> >> >> +		type =3D "c";
+> >> >> >
+> >> >> >This is not one of the connector type declared in DRM, how is it
+> >> >> >exposed to the userspace?
+> >> >>=20
+> >> >> So just use "A" here (because of single link)?
+> >> >
+> >> >If the connector type is C, it should be C, and DRM / driver
+> >adjusted
+> >> >to handle it.
+> >>=20
+> >> Okay I won't change this property, if there's any further revisions.
+> >>=20
+> >> For DRM driver, I think it can be an independent patchset.
+> >
+> >Not really, since it's going to break userspace as soon as you merge
+> >that other patchset.
+>=20
+> Should we bother the DRM maintainer to ask for any advice?
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+You can if you want.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--m4qdj5cmxwskf2b4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAltIWK0ACgkQ0rTAlCFN
+r3RzMw/+NOkagve5cYYwxlSLdNY9jj3qM5FjCUr/TmXaI0Nt6pTkex/h/leNZzQn
++sudTr+MqPSsvvlHFSJYHPBB/rvWLbIm2VJmv6dZityvXag24GPN0B+yz1V0fjs2
+Z9pNembUi6dc09AjqPU9JJOG5pDok2ve4xMk9l4wOKkLUIiWiyCm31zWuivBGpmN
+KkvbzDtRIsmUX6ECusEtBQbmaSlqr7HoAdfepahqo6Be7IeGuL6RyFip7ys4VHAR
+VZ0eWogahg0tFAXGGCtfjuG5CojTuw92AF89LzbXq/5YzEuJoyZJ1l547qn+fhVH
+TCSTAwvBmRPyQAprwGndcmHSiYeBp1bdIcBUVncLHBiRbtaC+y8xd72d3OAHMd81
+4QF5SNXuFmegY3EelXCbfoZaMXewZEwvBYKRKbHUS/NRpf5s1P7+5y5RKDRQtFq7
+VwDCb2NW1Z4ettMyELMgVi1ubt3essug701dg3BpwEiG/mROb/TDC5cNo9Ob2BwN
+Nu70XyNZ4prVjYEPLuwjmivniJGndj8R1CHBPYYt7l/zE6qQEDnGZ60NCPn6ISWU
+5FIfi1oveUX5a0iiFBjeq3tPg0hc9Ehy8mVdd3EH7C/hzFBpZRROTWfYx83fTOEe
++cn4IQG8MM2ZPXw0By77wGaiX8IGuul5yb7pUoVXc0z74gFnoF4=
+=rPGU
+-----END PGP SIGNATURE-----
+
+--m4qdj5cmxwskf2b4--
