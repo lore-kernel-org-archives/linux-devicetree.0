@@ -1,53 +1,61 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH] ARM64: dts: meson-axg: remove vddio_ao18 from SoC dtsi
-Date: Fri, 13 Jul 2018 13:49:57 +0200
-Message-ID: <20180713114957.32361-1-jbrunet@baylibre.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pfuze100: add optional pfuze-disable-sw
+ binding
+Date: Fri, 13 Jul 2018 12:50:10 +0100
+Message-ID: <20180713115010.GA16228@sirena.org.uk>
+References: <20180712110240.3006-1-m.felsch@pengutronix.de>
+ <20180712110240.3006-2-m.felsch@pengutronix.de>
+ <20180712153121.GF10369@sirena.org.uk>
+ <20180713083039.4z3ulwtg2ekx5n23@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VbJkn9YxBvnuCH5J"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180713083039.4z3ulwtg2ekx5n23@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, fabio.estevam@nxp.com, Anson.Huang@nxp.com, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Regulator should not be defined inside the SoC dtsi file.
-vddio_ao18 is already defined in the S400 board dts anyway.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
+--VbJkn9YxBvnuCH5J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Kevin,
+On Fri, Jul 13, 2018 at 10:30:39AM +0200, Marco Felsch wrote:
+> On 18-07-12 16:31, Mark Brown wrote:
+> > On Thu, Jul 12, 2018 at 01:02:39PM +0200, Marco Felsch wrote:
 
-This patch fixes a problem in a patch [0] you have applied recently.
-I did not put a Fixes tag because the branch on which you've applied it
-is not public yet (unknown sha1)
+> > > +Optional properties:
+> > > +- pfuze-disable-sw: Disable all unused switch regulators to save power
 
-If you decide to pick this patch, could you please add the Fixes tag?
-You could also squash the two patches together, if you prefer.
+> > This is a bit of a confused way of specifying things that depends on the
+> > Linux implementation, and the property sounds like a double negative
+> > too.  I'd say something like "pfuze-support-disable" and then explicitly
+> > say that this is a workaround for backwards compatibility.
 
-Cheers
-Jerome
+> I can't find the double negative. Anyway your binding sounds better. So
+> I will use yours. Should we add a vendor prefix too to be clear? I will
+> also add some more informations to mark it as workaround.
 
-[0] https://lkml.kernel.org/r/7hmuv0nkss.fsf@baylibre.com
+The property doesn't disable the use of switch regulators, it enables
+their disabling.  A vendor prefix is probably required but I can't
+entirely follow the DT rules there, it certainly shouldn't hurt anyway.
 
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 7 -------
- 1 file changed, 7 deletions(-)
+--VbJkn9YxBvnuCH5J
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index a936d6535ce7..d4dc87ae72a4 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -92,13 +92,6 @@
- 		method = "smc";
- 	};
- 
--	vddio_ao18: regulator-vddio_ao18 {
--		compatible = "regulator-fixed";
--		regulator-name = "VDDIO_AO18";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
--	};
--
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13
--- 
-2.14.4
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltIke8ACgkQJNaLcl1U
+h9ASxwf+I+jR/6P3ZK6bGKjK57+MO7Nxv16hDmOm0MCk3VaH5worcAEZpTBIkWk5
+FvlNmlzEtJnKWmLaIk1mKw895Yrjel1ZqicsXrV2lrE8ic/E2xJJ4UGsoRWcws4G
+a+Mm4ZoxlxNfowNQhDzH08dxFBdDh3xDcQ1Z+HGzsjFDTsBhXEyg6Hi20k2ZO6bP
+jEwNQYdS8Y6Pn+v8f71+wlccLsXHQupnSgidQbVlUsBoTZOn5B6V5fVjZZPLhYcN
+NsZkmzJieJv/qQTqpfQvfUc4oTOPZPKs0gW/Nrh3dFq6ygAoXwWCDVurn+tD2uCE
+9WyqcbDLSpmfpRFDdRKnjDoppZBq/g==
+=5Yj7
+-----END PGP SIGNATURE-----
+
+--VbJkn9YxBvnuCH5J--
