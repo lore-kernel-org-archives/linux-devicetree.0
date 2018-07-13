@@ -1,104 +1,36 @@
-From: Peter Robinson <pbrobinson@gmail.com>
-Subject: [PATCH] ARM: dts: imx6sx-udoo-neo: enable i2c-2 and i2c-4 for onboard
- sensors
-Date: Fri, 13 Jul 2018 18:11:51 +0100
-Message-ID: <20180713171151.24699-1-pbrobinson@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Peter Robinson <pbrobinson@gmail.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v2 0/2] Follow up fixes for SCU3 ESB
+Date: Fri, 13 Jul 2018 10:30:03 -0700
+Message-ID: <20180713173005.19552-1-andrew.smirnov@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Lucas Stach <l.stach@pengutronix.de>, cphealy@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-The i2c2 bus has a external plug which enables the easy connection of external
-"bricks" with sensors of various kinds, while i2c4 on the Extended/Full boards
-has a pair of on board motion sensors, accelerometer and magnetometer on one chip
-and gyroscope on another so it makes sense to enable these i2c buses for use.
-Tested on UDOO Neo Full.
+Shawn:
 
-Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
----
- .../arm/boot/dts/imx6sx-udoo-neo-extended.dts |  7 +++++++
- arch/arm/boot/dts/imx6sx-udoo-neo-full.dts    |  7 +++++++
- arch/arm/boot/dts/imx6sx-udoo-neo.dtsi        | 19 +++++++++++++++++++
- 3 files changed, 33 insertions(+)
+Here's a couple of fixes for things I missed in the
+[original-submission]. Sorry about the inconvenience.
 
-diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts b/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts
-index 42bfc8f8f7f6b..9ef424f48c523 100644
---- a/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts
-+++ b/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts
-@@ -52,3 +52,10 @@
- 		reg = <0x80000000 0x40000000>;
- 	};
- };
-+
-+&i2c4 { /* Onboard Motion sensors */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c4>;
-+	clock-frequency = <100000>;
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts b/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts
-index c84c877f09d49..a3d3b731ac9ed 100644
---- a/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts
-+++ b/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts
-@@ -67,3 +67,10 @@
- 		};
- 	};
- };
-+
-+&i2c4 { /* Onboard Motion sensors */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c4>;
-+	clock-frequency = <100000>;
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
-index 53b3eac94f0de..dad8611cc2851 100644
---- a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
-+++ b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
-@@ -225,6 +225,13 @@
- 	};
- };
- 
-+&i2c2 { /* Brick snap in sensors connector */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	clock-frequency = <100000>;
-+	status = "okay";
-+};
-+
- &iomuxc {
- 	pinctrl_bt_reg: btreggrp {
- 		fsl,pins =
-@@ -256,6 +263,18 @@
- 			<MX6SX_PAD_GPIO1_IO01__I2C1_SDA		0x4001b8b1>;
- 	};
- 
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins =
-+			<MX6SX_PAD_GPIO1_IO03__I2C2_SDA          0x4001b8b1>,
-+			<MX6SX_PAD_GPIO1_IO02__I2C2_SCL          0x4001b8b1>;
-+	};
-+
-+	pinctrl_i2c4: i2c4grp {
-+		fsl,pins =
-+			<MX6SX_PAD_USB_H_DATA__I2C4_SDA		0x4001b8b1>,
-+			<MX6SX_PAD_USB_H_STROBE__I2C4_SCL	0x4001b8b1>;
-+	};
-+
- 	pinctrl_uart1: uart1grp {
- 		fsl,pins =
- 			<MX6SX_PAD_GPIO1_IO04__UART1_TX		0x1b0b1>,
+
+Changes since [v1]:
+
+    - Reword commit message for patch 2/2
+
+Thanks,
+Andrey Smirnov
+
+[v1] lkml.kernel.org/r/20180712023337.30112-1-andrew.smirnov@gmail.com
+[original-submission] lkml.kernel.org/r/20180711050704.11492-1-andrew.smirnov@gmail.com
+
+
+Andrey Smirnov (2):
+  ARM: dts: imx51-zii-scu3-esb: Add switch IRQ line pinumx config
+  ARM: dts: imx51-zii-scu3-esb: Fix RAVE SP watchdog compatible string
+
+ arch/arm/boot/dts/imx51-zii-scu3-esb.dts | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
 -- 
 2.17.1
