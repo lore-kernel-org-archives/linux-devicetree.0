@@ -1,40 +1,91 @@
-Return-Path: <SRS0=yFiC=J3=renesas.com=phil.edworthy@kernel.org>
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: [PATCH 1/2] dt: serial: Add Renesas RZ/N1 binding documentation
-Date: Wed, 11 Jul 2018 13:29:33 +0100
-Message-Id: <1531312174-17489-2-git-send-email-phil.edworthy@renesas.com>
-In-Reply-To: <1531312174-17489-1-git-send-email-phil.edworthy@renesas.com>
-References: <1531312174-17489-1-git-send-email-phil.edworthy@renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>, linux-serial@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org
+Return-Path: <SRS0=tHxF=J5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-cys01nam02on0050.outbound.protection.outlook.com ([104.47.37.50]:2209
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727269AbeGMLEf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Jul 2018 07:04:35 -0400
+From: <shubhrajyoti.datta@gmail.com>
+Subject: [PATCHv2 3/4] tty: serial: uartlite: Add support for suspend and resume
+Date: Fri, 13 Jul 2018 16:17:28 +0530
+Message-ID: <1531478849-29480-3-git-send-email-shubhrajyoti.datta@gmail.com>
+In-Reply-To: <1531478849-29480-1-git-send-email-shubhrajyoti.datta@gmail.com>
+References: <1531478849-29480-1-git-send-email-shubhrajyoti.datta@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, jacmet@sunsite.dk, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The RZ/N1 UART is a modified Synopsys DesignWare UART.
-The modifications only relate to DMA so you could actually use the
-controller with the Synopsys compatible string if you are not using
-DMA, but you should not do so.
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+Add suspend and resume handlers for uartlite
+
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 ---
- Documentation/devicetree/bindings/serial/renesas,rzn1-uart.txt | 10 ++++++++++
- 1 file changed, 10 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/renesas,rzn1-uart.txt
+v2:
+patch added
 
-diff --git a/Documentation/devicetree/bindings/serial/renesas,rzn1-uart.txt b/Documentation/devicetree/bindings/serial/renesas,rzn1-uart.txt
-new file mode 100644
-index 0000000..4d40587
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/renesas,rzn1-uart.txt
-@@ -0,0 +1,10 @@
-+Renesas RZ/N1 UART
+ drivers/tty/serial/uartlite.c | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+
+diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
+index b3a12be..98d3ead 100644
+--- a/drivers/tty/serial/uartlite.c
++++ b/drivers/tty/serial/uartlite.c
+@@ -690,9 +690,44 @@ static int ulite_release(struct device *dev)
+ 	return rc;
+ }
+ 
++/**
++ * ulite_suspend - Stop the device.
++ *
++ * @dev: handle to the device structure.
++ * Return: 0 always.
++ */
++static int __maybe_unused ulite_suspend(struct device *dev)
++{
++	struct uart_port *port = dev_get_drvdata(dev);
 +
-+This controller is based on the Synopsys DesignWare ABP UART and inherits all
-+properties defined in snps-dw-apb-uart.txt except for the compatible property.
++	if (port)
++		uart_suspend_port(&ulite_uart_driver, port);
 +
-+Required properties:
-+- compatible : The device specific string followed by the generic RZ/N1 string.
-+   Therefore it must be one of:
-+   "renesas,uart-r9a06g032", "renesas,uart-rzn1"
-+   "renesas,uart-r9a06g033", "renesas,uart-rzn1"
++	return 0;
++}
++
++/**
++ * ulite_resume - Resume the device.
++ *
++ * @dev: handle to the device structure.
++ * Return: 0 on success, errno otherwise.
++ */
++static int __maybe_unused ulite_resume(struct device *dev)
++{
++	struct uart_port *port = dev_get_drvdata(dev);
++
++	if (port)
++		uart_resume_port(&ulite_uart_driver, port);
++
++	return 0;
++}
++
+ /* ---------------------------------------------------------------------
+  * Platform bus binding
+  */
++
++static SIMPLE_DEV_PM_OPS(ulite_pm_ops, ulite_suspend, ulite_resume);
++
+ #if defined(CONFIG_OF)
+ /* Match table for of_platform binding */
+ static const struct of_device_id ulite_of_match[] = {
+@@ -768,6 +803,7 @@ static struct platform_driver ulite_platform_driver = {
+ 	.driver = {
+ 		.name  = "uartlite",
+ 		.of_match_table = of_match_ptr(ulite_of_match),
++		.pm = &ulite_pm_ops,
+ 	},
+ };
+ 
 -- 
 2.7.4
+
