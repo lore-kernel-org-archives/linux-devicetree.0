@@ -1,15 +1,15 @@
 Return-Path: <SRS0=tHxF=J5=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-cys01nam02on0050.outbound.protection.outlook.com ([104.47.37.50]:2209
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+Received: from mail-co1nam03on0079.outbound.protection.outlook.com ([104.47.40.79]:29874
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727269AbeGMLEf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Jul 2018 07:04:35 -0400
+        id S1727307AbeGMKtR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Jul 2018 06:49:17 -0400
 From: <shubhrajyoti.datta@gmail.com>
-Subject: [PATCHv2 3/4] tty: serial: uartlite: Add support for suspend and resume
-Date: Fri, 13 Jul 2018 16:17:28 +0530
-Message-ID: <1531478849-29480-3-git-send-email-shubhrajyoti.datta@gmail.com>
-In-Reply-To: <1531478849-29480-1-git-send-email-shubhrajyoti.datta@gmail.com>
-References: <1531478849-29480-1-git-send-email-shubhrajyoti.datta@gmail.com>
+Subject: [PATCHv2 4/5] tty: serial: uartlite: Add support for suspend and resume
+Date: Fri, 13 Jul 2018 16:00:09 +0530
+Message-ID: <1531477810-23346-4-git-send-email-shubhrajyoti.datta@gmail.com>
+In-Reply-To: <1531477810-23346-1-git-send-email-shubhrajyoti.datta@gmail.com>
+References: <1531477810-23346-1-git-send-email-shubhrajyoti.datta@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
@@ -23,9 +23,6 @@ Add suspend and resume handlers for uartlite
 
 Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 ---
-v2:
-patch added
-
  drivers/tty/serial/uartlite.c | 36 ++++++++++++++++++++++++++++++++++++
  1 file changed, 36 insertions(+)
 
