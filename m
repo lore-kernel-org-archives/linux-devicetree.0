@@ -1,40 +1,36 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH 1/2] dt-bindings: pfuze100: add optional pfuze-disable-sw
- binding
-Date: Fri, 13 Jul 2018 09:58:32 +0200
-Message-ID: <20180713075832.5ncb2yvqn4z6mvqy@pengutronix.de>
-References: <20180712110240.3006-1-m.felsch@pengutronix.de>
- <20180712110240.3006-2-m.felsch@pengutronix.de>
- <CAOMZO5Cx-ooNJ8hseTYBvBvWx6mMX0jOsFTmRxC1yogXk0ZZuA@mail.gmail.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx6sl-evk: add missing GPIO iomux setting
+Date: Fri, 13 Jul 2018 15:55:30 +0800
+Message-ID: <1531468530-25667-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5Cx-ooNJ8hseTYBvBvWx6mMX0jOsFTmRxC1yogXk0ZZuA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Yongcai Huang <Anson.Huang@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+On i.MX6SL EVK board, the MX6SL_PAD_KEY_ROW5 pin is
+used as lcd 3v3 regulator control pin, need to make
+sure MX6SL_PAD_KEY_ROW5 is muxed as GPIO function
+for controlling lcd 3v3 regulator.
 
-On 18-07-12 12:19, Fabio Estevam wrote:
-> On Thu, Jul 12, 2018 at 8:02 AM, Marco Felsch <m.felsch@pengutronix.de> wrote:
-> 
-> > +Optional properties:
-> > +- pfuze-disable-sw: Disable all unused switch regulators to save power
-> > +  consumption. Attention, some platforms are using the switch regulators as DDR
-> > +  ref or supply voltage. Mark these regulators as "regulator-always-on" to skip
-> > +  disabling these regulators. If not specified, the driver simualtes the
-> 
-> s/simualtes/simulates/
-> 
-> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6sl-evk.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks for the feedback, I'll fix it in v2.
-
+diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
+index 50bdc65..1294fba 100644
+--- a/arch/arm/boot/dts/imx6sl-evk.dts
++++ b/arch/arm/boot/dts/imx6sl-evk.dts
+@@ -283,6 +283,7 @@
+ 	imx6sl-evk {
+ 		pinctrl_hog: hoggrp {
+ 			fsl,pins = <
++				MX6SL_PAD_KEY_ROW5__GPIO4_IO03    0x17059
+ 				MX6SL_PAD_KEY_ROW7__GPIO4_IO07    0x17059
+ 				MX6SL_PAD_KEY_COL7__GPIO4_IO06    0x17059
+ 				MX6SL_PAD_SD2_DAT7__GPIO5_IO00    0x17059
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.7.4
