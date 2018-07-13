@@ -1,43 +1,40 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 3/5] mfd: axp20x: Support AXP806 in I2C mode
-Date: Fri, 13 Jul 2018 08:53:19 +0100
-Message-ID: <20180713075319.GZ4641@dell>
-References: <20180712160452.5516-1-wens@csie.org>
- <20180712160452.5516-4-wens@csie.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH 1/2] dt-bindings: pfuze100: add optional pfuze-disable-sw
+ binding
+Date: Fri, 13 Jul 2018 09:58:32 +0200
+Message-ID: <20180713075832.5ncb2yvqn4z6mvqy@pengutronix.de>
+References: <20180712110240.3006-1-m.felsch@pengutronix.de>
+ <20180712110240.3006-2-m.felsch@pengutronix.de>
+ <CAOMZO5Cx-ooNJ8hseTYBvBvWx6mMX0jOsFTmRxC1yogXk0ZZuA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180712160452.5516-4-wens@csie.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+In-Reply-To: <CAOMZO5Cx-ooNJ8hseTYBvBvWx6mMX0jOsFTmRxC1yogXk0ZZuA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Yongcai Huang <Anson.Huang@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAxMyBKdWwgMjAxOCwgQ2hlbi1ZdSBUc2FpIHdyb3RlOgoKPiBUaGUgUGluZTY0IEg2
-NCBib2FyZCB1c2VzIGFuIEFYUDgwNiBQTUlDIGluIEkyQyBhbmQgc2VsZi13b3JraW5nIG1vZGUu
-Cj4gVGhlIEg2NCBTb0MgZG9lcyBub3QgaGF2ZSB0aGUgdXN1YWwgUlNCIGNvbnRyb2xsZXIuCj4g
-Cj4gVGhpcyBwYXRjaCBhZGRzIEFYUDgwNiB0byB0aGUgbGlzdCBvZiBkZXZpY2VzIHN1cHBvcnRl
-ZCBpbiBJMkMgbW9kZS4KPiBJbiB0aGVvcnksIGFsbCBSU0ItYmFzZWQgUE1JQ3MgY2FuIGFsc28g
-YmUgdXNlZCBpbiBJMkMgbW9kZS4KPiAKPiBSZXZpZXdlZC1ieTogSWNlbm93eSBaaGVuZyA8aWNl
-bm93eUBhb3NjLmlvPgo+IFRlc3RlZC1ieTogSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLmlv
-Pgo+IEFja2VkLWZvci1NRkQtYnk6IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+Cj4g
-QWNrZWQtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAYm9vdGxpbi5jb20+Cj4gU2ln
-bmVkLW9mZi1ieTogQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3JnPgo+IC0tLQo+ICBkcml2ZXJz
-L21mZC9heHAyMHgtaTJjLmMgfCAyICsrCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMo
-KykKCkFwcGxpZWQsIHRoYW5rcy4KCi0tIApMZWUgSm9uZXMgW+adjueQvOaWr10KTGluYXJvIFNl
-cnZpY2VzIFRlY2huaWNhbCBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJl
-IGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0t
-a2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
-bmVsCg==
+Hi Fabio,
+
+On 18-07-12 12:19, Fabio Estevam wrote:
+> On Thu, Jul 12, 2018 at 8:02 AM, Marco Felsch <m.felsch@pengutronix.de> wrote:
+> 
+> > +Optional properties:
+> > +- pfuze-disable-sw: Disable all unused switch regulators to save power
+> > +  consumption. Attention, some platforms are using the switch regulators as DDR
+> > +  ref or supply voltage. Mark these regulators as "regulator-always-on" to skip
+> > +  disabling these regulators. If not specified, the driver simualtes the
+> 
+> s/simualtes/simulates/
+> 
+> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+
+Thanks for the feedback, I'll fix it in v2.
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
