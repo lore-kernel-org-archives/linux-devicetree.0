@@ -1,14 +1,18 @@
-From: Gary Bisson <gary.bisson@boundarydevices.com>
-Subject: [PATCH 3/3] ARM: dts: imx6sx-nitrogen6sx: remove obsolete display
- configuration
-Date: Fri, 13 Jul 2018 14:49:04 +0200
-Message-ID: <20180713124904.9285-4-gary.bisson@boundarydevices.com>
-References: <20180713124904.9285-1-gary.bisson@boundarydevices.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH 02/19] mmc: mmci: merge qcom dml feature into mmci dma
+Date: Fri, 13 Jul 2018 15:08:45 +0200
+Message-ID: <ed45398d-552c-7bae-d77a-4e0d99b21759@st.com>
+References: <1528809280-31116-1-git-send-email-ludovic.Barre@st.com>
+ <1528809280-31116-3-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFqOOvbNc79hdWhdS4pxkYrh48At-BLuGmX0jDMER3Akdw@mail.gmail.com>
+ <c09e8f7a-3bf7-abb3-b49c-011ae29f8d67@st.com>
+ <CAPDyKFrN3GMez1vyc6xQUH_Qp7UrDj88rG9pAP_oTLHOB6k91g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180713124904.9285-1-gary.bisson@boundarydevices.com>
+In-Reply-To: <CAPDyKFrN3GMez1vyc6xQUH_Qp7UrDj88rG9pAP_oTLHOB6k91g@mail.gmail.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,114 +22,78 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: s.hauer@pengutronix.de, stefan@agner.ch, Gary Bisson <gary.bisson@boundarydevices.com>, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gerald Baeza <gerald.baeza@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This display configuration isn't working as-is as it depends on the
-tfp410 LCD to HDMI bridge. This will need to be updated later once
-the DRM MXSFB driver will be the default.
 
-Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
----
- arch/arm/boot/dts/imx6sx-nitrogen6sx.dts | 71 ------------------------
- 1 file changed, 71 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts b/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
-index f81ddfa46ace..adb5cc7d8ce2 100644
---- a/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
-+++ b/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
-@@ -11,11 +11,6 @@
- 	model = "Boundary Devices i.MX6 SoloX Nitrogen6sx Board";
- 	compatible = "boundary,imx6sx-nitrogen6sx", "fsl,imx6sx";
- 
--	aliases {
--		fb-lcd = &lcdif1;
--		t-lcd = &t_lcd;
--	};
--
- 	memory@80000000 {
- 		reg = <0x80000000 0x40000000>;
- 	};
-@@ -225,38 +220,6 @@
- 	status = "okay";
- };
- 
--&lcdif1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_lcdif1>;
--	lcd-supply = <&reg_3p3v>;
--	display = <&display0>;
--	status = "okay";
--
--	display0: display0 {
--		bits-per-pixel = <16>;
--		bus-width = <24>;
--
--		display-timings {
--			native-mode = <&t_lcd>;
--			t_lcd: t_lcd_default {
--				clock-frequency = <74160000>;
--				hactive = <1280>;
--				vactive = <720>;
--				hback-porch = <220>;
--				hfront-porch = <110>;
--				vback-porch = <20>;
--				vfront-porch = <5>;
--				hsync-len = <40>;
--				vsync-len = <5>;
--				hsync-active = <0>;
--				vsync-active = <0>;
--				de-active = <1>;
--				pixelclk-active = <0>;
--			};
--		};
--	};
--};
--
- &pcie {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pcie>;
-@@ -488,40 +451,6 @@
- 		>;
- 	};
- 
--	pinctrl_lcdif1: lcdif1grp {
--		fsl,pins = <
--			MX6SX_PAD_LCD1_CLK__LCDIF1_CLK		0x4001b0b0
--			MX6SX_PAD_LCD1_ENABLE__LCDIF1_ENABLE	0x4001b0b0
--			MX6SX_PAD_LCD1_HSYNC__LCDIF1_HSYNC	0x4001b0b0
--			MX6SX_PAD_LCD1_VSYNC__LCDIF1_VSYNC	0x4001b0b0
--			MX6SX_PAD_LCD1_RESET__GPIO3_IO_27	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA00__LCDIF1_DATA_0	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA01__LCDIF1_DATA_1	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA02__LCDIF1_DATA_2	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA03__LCDIF1_DATA_3	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA04__LCDIF1_DATA_4	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA05__LCDIF1_DATA_5	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA06__LCDIF1_DATA_6	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA07__LCDIF1_DATA_7	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA08__LCDIF1_DATA_8	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA09__LCDIF1_DATA_9	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA10__LCDIF1_DATA_10	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA11__LCDIF1_DATA_11	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA12__LCDIF1_DATA_12	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA13__LCDIF1_DATA_13	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA14__LCDIF1_DATA_14	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA15__LCDIF1_DATA_15	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA16__LCDIF1_DATA_16	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA17__LCDIF1_DATA_17	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA18__LCDIF1_DATA_18	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA19__LCDIF1_DATA_19	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA20__LCDIF1_DATA_20	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA21__LCDIF1_DATA_21	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA22__LCDIF1_DATA_22	0x4001b0b0
--			MX6SX_PAD_LCD1_DATA23__LCDIF1_DATA_23	0x4001b0b0
--		>;
--	};
--
- 	pinctrl_pcie: pciegrp {
- 		fsl,pins = <
- 			MX6SX_PAD_NAND_DATA05__GPIO4_IO_9	0xb0b0
--- 
-2.18.0
+On 07/13/2018 01:17 PM, Ulf Hansson wrote:
+> On 11 July 2018 at 17:19, Ludovic BARRE <ludovic.barre@st.com> wrote:
+>>
+>>
+>> On 07/05/2018 05:26 PM, Ulf Hansson wrote:
+>>>
+>>> On 12 June 2018 at 15:14, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>>>>
+>>>> From: Ludovic Barre <ludovic.barre@st.com>
+>>>>
+>>>> This patch integrates qcom dml feature into mmci_dma file.
+>>>> Qualcomm Data Mover lite/local is already a variant of mmci dmaengine.
+>>>>
+>>>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>>>> ---
+>>>>    drivers/mmc/host/Makefile        |   1 -
+>>>>    drivers/mmc/host/mmci.c          |   1 -
+>>>>    drivers/mmc/host/mmci.h          |  35 ++++++++
+>>>>    drivers/mmc/host/mmci_dma.c      | 135 ++++++++++++++++++++++++++++-
+>>>>    drivers/mmc/host/mmci_qcom_dml.c | 177
+>>>> ---------------------------------------
+>>>>    drivers/mmc/host/mmci_qcom_dml.h |  31 -------
+>>>>    6 files changed, 169 insertions(+), 211 deletions(-)
+>>>>    delete mode 100644 drivers/mmc/host/mmci_qcom_dml.c
+>>>>    delete mode 100644 drivers/mmc/host/mmci_qcom_dml.h
+>>>
+>>>
+>>> No, this is not the way to go. Instead I I think there are two options.
+>>>
+>>> 1) Keep mmci_qcom_dml.c|h and thus add new files for the stm32 dma
+>>> variant.
+>>>
+>>> 2) Start by renaming mmci_qcom_dml.* to mmc_dma.* and then in the next
+>>> step add the code for stm32 dma into the renamed files.
+>>>
+>>> I guess if there is some overlap in functionality, 2) may be best as
+>>> it could easier avoid open coding. However, I am fine with whatever
+>>> option and I expect that you knows what is best.
+>>
+>>
+>> After patch 01 & 05 comments:
+>> I will try to define a mmci_ops which contain some functions pointer
+>> called by mmci.c (core).
+>> A variant defines its mmci_ops.
+>> where do you define the specific function:
+>> -in a single file, mmci-ops.c or other (for the name, I'm not inspirated)
+>> -or in specific file for each variant mmci-qcom.c or mmci-stm32.c
+>>
+>> following the comment (above), I think we define a single file?
+> 
+> If I understand the question, the problem is how we should assign the
+> mmc host ops, which corresponds to the probed variant data!?
+> 
+> I took a stub at it and posted two patches which I think you should be
+> able to build upon. Please have a look.
+
+I review your patch on mmci_host_ops and init, I agree with your series,
+I was going in the same direction.
+The comment above was on file organization, what do you prefer?
+-a single file with: all callback and all mmci_host_ops of each variant
+-or each variant in specific file (like sdhci): mmci-qcom.c | 
+mmci-stm32.c ...
+
+> 
+> [...]
+> 
+> Kind regards
+> Uffe
+> 
