@@ -1,154 +1,144 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH 3/3] ARM: dts: imx6sll-evk: enable SEIKO 43WVF1G lcdif panel
-Date: Fri, 13 Jul 2018 15:58:27 +0800
-Message-ID: <1531468707-25737-3-git-send-email-Anson.Huang@nxp.com>
-References: <1531468707-25737-1-git-send-email-Anson.Huang@nxp.com>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH] usb: dwc3: of-simple: reset host controller at suspend/resume
+Date: Fri, 13 Jul 2018 10:14:59 +0200
+Message-ID: <CAFqH_51EvuJmU2rxcndWdyYj6CAhzDv_o6YPnUHJb6ctM+k8VQ@mail.gmail.com>
+References: <20180709150844.32505-1-enric.balletbo@collabora.com>
+ <536642654ca55f08877497c86a5cb106d5458384.camel@collabora.com> <d9ea42a39a80c12b9d5730376d2f8e5a953771ef.camel@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531468707-25737-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <d9ea42a39a80c12b9d5730376d2f8e5a953771ef.camel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+To: ezequiel@collabora.com
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, linux-kernel <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, kernel@collabora.com, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable SEIKO 43WVF1G lcdif panel for DRM driver,
-add necessary properties according to SEIKO 43WVF1G
-driver's requirement, such as "dvdd-supply", "avdd-supply"
-and "backlight" etc..
+Hi,
+Missatge de Ezequiel Garcia <ezequiel@collabora.com> del dia dt., 10
+de jul. 2018 a les 0:10:
+>
+> Sigh, now actually Cc devicetree folks
+>
+> On Mon, 2018-07-09 at 19:04 -0300, Ezequiel Garcia wrote:
+> > (Cc devicetree folks)
+> >
+> > Hi Enric,
+> >
+> > Thanks for the patch.
+> >
+> > On Mon, 2018-07-09 at 17:08 +0200, Enric Balletbo i Serra wrote:
+> > > If we power off the SoC logic rail in S3, we can find that the
+> > > Type-C
+> > > PHY can't initialize correctly after system resume. We need to
+> > > toggle
+> > > the USB3-OTG reset before trying to initialize the PHY, or else it
+> > > times out.
+> > >
+> > >     phy phy-ff800000.phy.9: phy poweron failed --> -110
+> > >     dwc3 fe900000.dwc3: failed to initialize core
+> > >     dwc3: probe of fe900000.dwc3 failed with error -110
+> > >
+> > > Note that the RK3399 TRM suggests that we should keep the whole
+> > > usb3
+> > > controller in reset for the duration of the Type-C PHY
+> > > initialization.
+> > > However, it's hard to assert the reset in the current framework of
+> > > reset. We're still skeptical about that, and we haven't yet found a
+> > > case where this seems to have mattered. This approach is much
+> > > easier,
+> > > it
+> > > simply holds the USB3-OTG reset while device is supended.
+> > >
+> > > The dwc3 core is going to reinitialize the controller at
+> > > suspend/resume
+> > > anyway (including a "soft reset"), so it should be safe to do this.
+> > >
+> > > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com
+> > > >
+> > > ---
+> > > Dear all,
+> > >
+> > > Now that the usb3-phy otg port support for rk3399 has been merged
+> > > [1]
+> > > we
+> > > found that suspend/resume is broken. The problem is well known for
+> > > ChromeOS kernels, they solved it in a similar way adding a reset
+> > > pulse on
+> > > resume in the specific usb glue layer (dwc3-rockchip). In mainline,
+> > > though, we use the dwc3-of-simple glue layer instead of a specific
+> > > layer
+> > > for rockchip. The patch is based on the Brian Norris work but
+> > > slightly
+> > > different, it holds the reset while device is suspended. It was
+> > > tested
+> > > on a Samsung Chromebook Plus with usbc docking station attached by
+> > > doing
+> > > different suspend/resume cycles and checking no usb devices has
+> > > been
+> > > lost.
+> > >
+> > > I am not sure this is the better way to solve this but I did not
+> > > find
+> > > any other way, and, as I am not sure this can be generic, the reset
+> > > is only
+> > > done on rockchip platforms.
+> > >
+> >
+> > I don't really understand why there are per-platform hacks in glue
+> > drivers, instead of having per-platform glue drivers, or some other
+> > pluggable hooks.
+> >
+> > > Best regards,
+> > >  Enric
+> > >
+> > > [1] bfdca1736ea76345071bbc5607d18928e54909ac ('arm64: dts:
+> > > rockchip:
+> > > add
+> > >     usb3-phy otg-port support for rk3399')
+> > >
+> > >  drivers/usb/dwc3/dwc3-of-simple.c | 21 +++++++++++++++++++++
+> > >  1 file changed, 21 insertions(+)
+> > >
+> > > diff --git a/drivers/usb/dwc3/dwc3-of-simple.c
+> > > b/drivers/usb/dwc3/dwc3-of-simple.c
+> > > index dbeff5e6ad14..1d1ece99ed94 100644
+> > > --- a/drivers/usb/dwc3/dwc3-of-simple.c
+> > > +++ b/drivers/usb/dwc3/dwc3-of-simple.c
+> > > @@ -201,9 +201,30 @@ static int
+> > > dwc3_of_simple_runtime_resume(struct
+> > > device *dev)
+> > >
+> > >     return 0;
+> > >  }
+> > > +
+> > > +static int dwc3_of_simple_suspend(struct device *dev)
+> > > +{
+> > > +   struct dwc3_of_simple *simple = dev_get_drvdata(dev);
+> > > +
+> > > +   if (of_device_is_compatible(dev->of_node,
+> > > "rockchip,rk3399-
+> > > dwc3"))
+> > >
+> >
+> > Instead of calling of_device_is_compatible in each suspend/resume,
+> > which seems quite expensive, how about having a per-device boolean
+> > 'needs_reset' or something like that?
+> >
+Yep, not sure how much, but probably use a boolean will be faster. I
+am also wondering if we can remove the of_device_is_compatible call
+and do the reset on all platforms. This will need lots of tests on
+different platforms, of course. i'd like to hear maintainers feedback
+here.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6sll-evk.dts | 76 ++++++++++++++++++++++++++++++++++++---
- 1 file changed, 71 insertions(+), 5 deletions(-)
+> > Or maybe just have a boolean devicetree property for this?
 
-diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-evk.dts
-index 41e87e6..dc34da5 100644
---- a/arch/arm/boot/dts/imx6sll-evk.dts
-+++ b/arch/arm/boot/dts/imx6sll-evk.dts
-@@ -23,7 +23,7 @@
- 		reg = <0x80000000 0x80000000>;
- 	};
- 
--	backlight {
-+	backlight_display: backlight-display {
- 		compatible = "pwm-backlight";
- 		pwms = <&pwm1 0 5000000>;
- 		brightness-levels = <0 4 8 16 32 64 128 255>;
-@@ -69,15 +69,22 @@
- 		regulator-boot-on;
- 	};
- 
--	reg_lcd: regulator-lcd {
-+	reg_lcd_3v3: regulator-lcd-3v3 {
- 		compatible = "regulator-fixed";
- 		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_reg_lcd>;
--		regulator-name = "lcd-pwr";
-+		pinctrl-0 = <&pinctrl_reg_lcd_3v3>;
-+		regulator-name = "lcd-3v3";
- 		gpio = <&gpio4 3 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 	};
- 
-+	reg_lcd_5v: regulator-lcd-5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "lcd-5v0";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+	};
-+
- 	reg_sd1_vmmc: regulator-sd1-vmmc {
- 		compatible = "regulator-fixed";
- 		pinctrl-names = "default";
-@@ -99,6 +106,19 @@
- 		gpio = <&gpio4 4 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 	};
-+
-+	panel {
-+		compatible = "sii,43wvf1g";
-+		backlight = <&backlight_display>;
-+		dvdd-supply = <&reg_lcd_3v3>;
-+		avdd-supply = <&reg_lcd_5v>;
-+
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&display_out>;
-+			};
-+		};
-+	};
- };
- 
- &cpu0 {
-@@ -213,6 +233,18 @@
- 	};
- };
- 
-+&lcdif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lcd>;
-+	status = "okay";
-+
-+	port {
-+		display_out: endpoint {
-+			remote-endpoint = <&panel_in>;
-+		};
-+	};
-+};
-+
- &pwm1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
-@@ -287,7 +319,7 @@
- 		>;
- 	};
- 
--	pinctrl_reg_lcd: reglcdgrp {
-+	pinctrl_reg_lcd_3v3: reglcd3v3grp {
- 		fsl,pins = <
- 			MX6SLL_PAD_KEY_ROW5__GPIO4_IO03 0x17059
- 		>;
-@@ -388,6 +420,40 @@
- 		>;
- 	};
- 
-+	pinctrl_lcd: lcdgrp {
-+		fsl,pins = <
-+			MX6SLL_PAD_LCD_DATA00__LCD_DATA00	0x79
-+			MX6SLL_PAD_LCD_DATA01__LCD_DATA01	0x79
-+			MX6SLL_PAD_LCD_DATA02__LCD_DATA02	0x79
-+			MX6SLL_PAD_LCD_DATA03__LCD_DATA03	0x79
-+			MX6SLL_PAD_LCD_DATA04__LCD_DATA04	0x79
-+			MX6SLL_PAD_LCD_DATA05__LCD_DATA05	0x79
-+			MX6SLL_PAD_LCD_DATA06__LCD_DATA06	0x79
-+			MX6SLL_PAD_LCD_DATA07__LCD_DATA07	0x79
-+			MX6SLL_PAD_LCD_DATA08__LCD_DATA08	0x79
-+			MX6SLL_PAD_LCD_DATA09__LCD_DATA09	0x79
-+			MX6SLL_PAD_LCD_DATA10__LCD_DATA10	0x79
-+			MX6SLL_PAD_LCD_DATA11__LCD_DATA11	0x79
-+			MX6SLL_PAD_LCD_DATA12__LCD_DATA12	0x79
-+			MX6SLL_PAD_LCD_DATA13__LCD_DATA13	0x79
-+			MX6SLL_PAD_LCD_DATA14__LCD_DATA14	0x79
-+			MX6SLL_PAD_LCD_DATA15__LCD_DATA15	0x79
-+			MX6SLL_PAD_LCD_DATA16__LCD_DATA16	0x79
-+			MX6SLL_PAD_LCD_DATA17__LCD_DATA17	0x79
-+			MX6SLL_PAD_LCD_DATA18__LCD_DATA18	0x79
-+			MX6SLL_PAD_LCD_DATA19__LCD_DATA19	0x79
-+			MX6SLL_PAD_LCD_DATA20__LCD_DATA20	0x79
-+			MX6SLL_PAD_LCD_DATA21__LCD_DATA21	0x79
-+			MX6SLL_PAD_LCD_DATA22__LCD_DATA22	0x79
-+			MX6SLL_PAD_LCD_DATA23__LCD_DATA23	0x79
-+			MX6SLL_PAD_LCD_CLK__LCD_CLK		0x79
-+			MX6SLL_PAD_LCD_ENABLE__LCD_ENABLE	0x79
-+			MX6SLL_PAD_LCD_HSYNC__LCD_HSYNC		0x79
-+			MX6SLL_PAD_LCD_VSYNC__LCD_VSYNC		0x79
-+			MX6SLL_PAD_LCD_RESET__LCD_RESET		0x79
-+		>;
-+	};
-+
- 	pinctrl_pwm1: pmw1grp {
- 		fsl,pins = <
- 			MX6SLL_PAD_PWM1__PWM1_OUT   0x110b0
--- 
-2.7.4
+I don't think moving the "hack" to the devicetree will be acceptable
+for the DT maintainers, this is not really a hardware property.
+
+Thanks,
+  Enric.
+
+> >
+> > Regards,
+> > Eze
+> >
