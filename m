@@ -1,7 +1,7 @@
 From: Ryan Grachek <ryan@edited.us>
-Subject: [PATCH] arm64: dts: hikey960: Remove keep-power-in-suspend property
-Date: Fri, 13 Jul 2018 10:53:48 -0500
-Message-ID: <20180713155348.24343-1-ryan@edited.us>
+Subject: [PATCH] arm64: dts: hikey: Remove keep-power-in-suspend property
+Date: Fri, 13 Jul 2018 11:02:31 -0500
+Message-ID: <20180713160231.25165-1-ryan@edited.us>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Cc: john.stultz@linaro.org, Ryan Grachek <ryan@edited.us>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -9,37 +9,24 @@ List-Id: devicetree@vger.kernel.org
 
 Remove the keep-power-in-suspend property because it keeps wifi power
 on during suspend. This property is only required when enabling WoWLAN
-and should only be enabled based on need. Also remove dupplicate property
+and should only be enabled based on need.
 
 Signed-off-by: Ryan Grachek <ryan@edited.us>
 ---
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 1 -
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 1 -
- 2 files changed, 2 deletions(-)
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-index 68c5a6c819ae..a927ce4ec40b 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-@@ -586,7 +586,6 @@
- 	ti,non-removable;
- 	non-removable;
- 	cap-power-off-card;
--	keep-power-in-suspend;
- 	#address-cells = <0x1>;
- 	#size-cells = <0x0>;
- 	status = "ok";
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index 8d477dcbfa58..4588fe4e00a8 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -1050,7 +1050,6 @@
- 			reset-names = "reset";
- 			card-detect-delay = <200>;
- 			supports-highspeed;
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index 7f12624f6c8e..f4964bee6a1a 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -323,7 +323,6 @@
+ 			bus-width = <0x4>;
+ 			non-removable;
+ 			cap-power-off-card;
 -			keep-power-in-suspend;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&sdio_pmx_func
- 				     &sdio_clk_cfg_func
+ 			vmmc-supply = <&reg_vdd_3v3>;
+ 			mmc-pwrseq = <&wl1835_pwrseq>;
+ 
 -- 
 2.11.0
