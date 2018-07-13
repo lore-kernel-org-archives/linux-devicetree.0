@@ -1,13 +1,15 @@
 Return-Path: <SRS0=tHxF=J5=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-co1nam03on0042.outbound.protection.outlook.com ([104.47.40.42]:52672
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+Received: from mail-by2nam03on0067.outbound.protection.outlook.com ([104.47.42.67]:13872
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727255AbeGMLEV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Jul 2018 07:04:21 -0400
+        id S1727161AbeGMKt1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Jul 2018 06:49:27 -0400
 From: <shubhrajyoti.datta@gmail.com>
-Subject: [PATCHv2 1/4] tty: serial: uartlite: Add structure for private data
-Date: Fri, 13 Jul 2018 16:17:26 +0530
-Message-ID: <1531478849-29480-1-git-send-email-shubhrajyoti.datta@gmail.com>
+Subject: [PATCHv2 2/5] tty: serial: uartlite: Add structure for private data
+Date: Fri, 13 Jul 2018 16:00:07 +0530
+Message-ID: <1531477810-23346-2-git-send-email-shubhrajyoti.datta@gmail.com>
+In-Reply-To: <1531477810-23346-1-git-send-email-shubhrajyoti.datta@gmail.com>
+References: <1531477810-23346-1-git-send-email-shubhrajyoti.datta@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
@@ -17,7 +19,7 @@ List-ID: <devicetree@vger.kernel.org>
 
 From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-Add struct uartlite_data, to store the private data of the Uartlite
+Add struct uartlite_data, to store the private data of the uartlite
 driver.
 
 Signed-off-by: Tanvi Desai <tanvi.desai@xilinx.com>
