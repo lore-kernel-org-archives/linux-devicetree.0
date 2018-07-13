@@ -1,15 +1,15 @@
 From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 1/3] ARM: dts: imx: Switch Boundary Devices boards to SPDX
- identifier
-Date: Fri, 13 Jul 2018 15:53:31 -0300
-Message-ID: <CAOMZO5CtewY3tMqPHs=6mW-0cJFDjFgYZdJW=qnYabAKXJwG8Q@mail.gmail.com>
+Subject: Re: [PATCH 2/3] ARM: dts: imx7d-nitrogen7: use OF graph to describe
+ the display
+Date: Fri, 13 Jul 2018 15:53:53 -0300
+Message-ID: <CAOMZO5DreNgRRQGgVpiF4aEufpoaUC8_0RrW-TSSw4ifAhxVNw@mail.gmail.com>
 References: <20180713124904.9285-1-gary.bisson@boundarydevices.com>
- <20180713124904.9285-2-gary.bisson@boundarydevices.com>
+ <20180713124904.9285-3-gary.bisson@boundarydevices.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180713124904.9285-2-gary.bisson@boundarydevices.com>
+In-Reply-To: <20180713124904.9285-3-gary.bisson@boundarydevices.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,8 +25,8 @@ List-Id: devicetree@vger.kernel.org
 
 On Fri, Jul 13, 2018 at 9:49 AM, Gary Bisson
 <gary.bisson@boundarydevices.com> wrote:
-> Adopt the SPDX license identifier headers to ease license compliance
-> management.
+> To make use of the new eLCDIF DRM driver OF graph description is
+> required. Describe the display using OF graph nodes.
 >
 > Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
 
