@@ -1,17 +1,14 @@
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: RFC: tegra2/tegra3 automotive part changes
-Date: Fri, 13 Jul 2018 13:51:31 +0100
-Message-ID: <9c0ee90e-6608-e57c-aba7-3feccde33b29@codethink.co.uk>
-References: <3916c0ea-964e-42ab-8bfd-8e8edc5110ee@codethink.co.uk>
- <fecd5597-1b04-6409-b87c-5cda54d43ce0@wwwdotorg.org>
- <4f215c76-6539-1130-6c1f-75f0a3df068a@codethink.co.uk>
- <8f050541-6b4c-34ed-2462-066313156180@nvidia.com>
+From: Gary Bisson <gary.bisson@boundarydevices.com>
+Subject: [PATCH 3/3] ARM: dts: imx6sx-nitrogen6sx: remove obsolete display
+ configuration
+Date: Fri, 13 Jul 2018 14:49:04 +0200
+Message-ID: <20180713124904.9285-4-gary.bisson@boundarydevices.com>
+References: <20180713124904.9285-1-gary.bisson@boundarydevices.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <8f050541-6b4c-34ed-2462-066313156180@nvidia.com>
-Content-Language: en-GB
+In-Reply-To: <20180713124904.9285-1-gary.bisson@boundarydevices.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,61 +18,114 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Hunter <jonathanh@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: Terry Hu <kejia.hu@codethink.co.uk>, Device Tree list <devicetree@vger.kernel.org>, jorgesanjuan <jorge.sanjuan@codethink.co.uk>, Thomas Preston <thomas.preston@codethink.co.uk>, linux-tegra <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Beth White <beth.white@codethink.co.uk>
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: s.hauer@pengutronix.de, stefan@agner.ch, Gary Bisson <gary.bisson@boundarydevices.com>, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTMvMDcvMTggMTA6NTgsIEpvbiBIdW50ZXIgd3JvdGU6Cj4gCj4gT24gMTMvMDcvMTggMTA6
-NDEsIEJlbiBEb29rcyB3cm90ZToKPj4gT24gMTIvMDcvMTggMTY6NTYsIFN0ZXBoZW4gV2FycmVu
-IHdyb3RlOgo+Pj4gT24gMDcvMTIvMjAxOCAwNzozNiBBTSwgQmVuIERvb2tzIHdyb3RlOgo+Pj4+
-IEhlbGxvLCB3ZSBhcmUgbG9va2luZyBhdCB1cC1zdHJlYW1pbmcgc29tZSBvZiB0aGUgd29yayB3
-ZSBoYXZlCj4+Pj4gZG9uZSBvbiB0aGUgdGVncmEyIGFuZCB0ZWdyYTMgYXV0b21vdGl2ZSBkZXZp
-Y2VzLiBUaGUgYXV0b21vdGl2ZQo+Pj4+IGdyYWRlIGRldmljZXMgYXJlIGNsb3NlIHRoZSBjb21t
-ZXJjaWFsIHBhcnRzIHNvIHdlIHdvdWxkIGxpa2UgdG8KPj4+PiBkaXNjdXNzIHRoZSBjb3JlIGNo
-YW5nZXMgYmVmb3JlIHN1Ym1pdHRpbmcuCj4+Pj4KPj4+PiBUaGUgY2hhbmdlcyBhcmUgbW9zdGx5
-IHdpdGggdGhpbmdzIGxpa2UgdGhlIGNsb2NrIHNldHVwIGFuZCBhCj4+Pj4gZmV3IHBlcmlwaGVy
-YWwgcXVpcmtzIChJSVJDIHRoZXNlIGFyZSBtb3N0bHkgTU1DKS4KPj4+Pgo+Pj4+IFdlIGFyZSBw
-cm9wb3NpbmcgdG8gY2hhbmdlIHRoZSBkZXZpY2UtdHJlZSBwcm9wZXJ0aWVzIGZvciB0aGUgcm9v
-dAo+Pj4+IG5vZGUgYW5kIGFueSBvdGhlciBhZmZlY3RlZCBkZXZpY2VzIGZyb20gIm52aWRpYSx0
-ZWdyYVhYIiB0byBhIG5ldwo+Pj4+ICJudmlkaWEsdGVncmFYWGEiLiBXZSB3b3VsZCB3ZWxjb21l
-IGRpc2N1c3Npb24gb24gd2hldGhlciB0byB1cGRhdGUKPj4+PiBhbGwgdGhlIGRldmljZXMgYXQg
-dGhlIHN0YXJ0Cj4+Pj4KPj4+PiBBbiBleGFtcGxlIG9mIHRlZ3JhMzBhLmR0c2k6Cj4+Pj4KPj4+
-PiAjaW5jbHVkZSAidGVncmEzMC5kdHNpIgo+Pj4+Cj4+Pj4gLyB7Cj4+Pj4gIMKgwqDCoMKgwqDC
-oMKgwqAgY29tcGF0aWJsZSA9ICJudmlkaWEsdGVncmEzMGEiOwo+Pj4+Cj4+Pj4gIMKgwqDCoMKg
-wqDCoMKgwqAgY2xvY2tANjAwMDYwMDAgewo+Pj4+ICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCBjb21wYXRpYmxlID0gIm52aWRpYSx0ZWdyYTMwYS1jYXIiOwo+Pj4+ICDCoMKgwqDC
-oMKgwqDCoMKgIH07Cj4+Pj4gfQo+Pj4KPj4+IFRoaXMgZG9lc24ndCBzb3VuZCByaWdodC4gQXV0
-byBhbmQgY29tbWVyY2lhbCBwYXJ0cyBhcmUgaWRlbnRpY2FsIEFGQUlLOyBpdCdzIGp1c3QgcXVh
-bGlmaWNhdGlvbiBkaWZmZXJlbmNlcy4gSGVuY2UgYXQgbW9zdCB5b3UnZCBhZGQgYW4gZXh0cmEg
-Y29tcGF0aWJsZSB2YWx1ZSBhbmQgbm90IHJlbW92ZSB0aGUgb2xkIG9uZS4gQmV0dGVyIG1pZ2h0
-IGJlIHRvIGRldGVjdCB0aGlzIGF0IHJ1bi10aW1lIGZyb20gdGhlIGZ1c2VzLiBJIHRoaW5rIHdl
-IGFscmVhZHkgZG8gc29tZSBvZiB0aGF0IGFscmVhZHk7IHNlYXJjaCBmb3Igc3BlZWRvIHJlbGF0
-ZWQgY29kZSBpbiBhcmNoL2FybS9tYWNoLXRlZ3JhLy4KPj4KPj4gVGhlIG52aWRpYSBwZGsgZm9y
-IHRoZSBhdXRvbW90aXZlIGRpZG4ndCBzZXQgdGhlIGNsb2NrcyB1cCBpbiB0aGUKPj4gc2FtZSB3
-YXkgYW5kIHdlIHdoZXJlIHRvbGQgdGhhdCB0aGVyZSBhcmUgY2VydGFpbiBjbG9jayByZXN0cmlj
-dGlvbnMKPj4gZm9yIHRoZSBhdXRvbW90aXZlIHBhcnRzIHRoYXQgdGhlIGNvbW1lcmNpYWwgb25l
-cyBkbyBub3QgaGF2ZS4gU29tZSBvZgo+PiB0aGlzIGNhbWUgZnJvbSBpbnRlcm5hbCBkaXNjdXNz
-aW9ucyB3aXRoIG52aWRpYSBhbmQgTkRBJ2QgZGF0YXNoZWV0cwo+PiBzbyBJIGRvbid0IGtub3cg
-aG93IG11Y2ggYWN0dWFsIGRhdGEgSSBjYW4gc2hhcmUuCj4+Cj4+IFRvIGdldCB0aGUgNC40IGtl
-cm5lbCB0byBiZSBzaW1pbGFyIGVub3VnaCB0byB3b3JrIHdpdGggdGhlIHRlZ3JhMzBhCj4+IHdl
-IGhhZCB0byBkbyBzb21lIGNoYW5nZXMgdG8gdGhlIGNsb2NrIGluaXRpYWxpc2F0aW9uLiBGb3Ig
-dGhpbmdzCj4+IGxpa2UgdGhlIGNsb2NrIEkgYW0gbm90IHN1cmUgaWYgbGVhdmluZyBhIHRlZ3Jh
-MzAtY2FyIGluIHRoZXJlIHdvdWxkCj4+IGJlIGEgZ29vZCBpZGVhLCBpdCBtYXkgYm9vdCBidXQg
-cHJvYmFibHkgd29uJ3QgYmUgc3RhYmxlLgo+Pgo+PiBGb3IgdGhlIGZ1c2VzLCBpcyB0aGUgZnVz
-ZSBkcml2ZXIgdXAgZWFybHkgZW5vdWdoIHRvIGFsbG93IHRoZSBjbG9jawo+PiBkcml2ZXIgY291
-bGQgdXNlIHRoaXM/IG90aGVyd2lzZSBJIHRoaW5rIHRoZSBkZXZpY2UtdHJlZSBjaGFuZ2Ugd291
-bGQKPj4gYmUgdGhlIG9ubHkgd2F5LiBJJ20gbm90IHN1cmUgaWYgSSBoYXZlIHRoZSBpbmZvcm1h
-dGlvbiB0byBoYW5kIG9uCj4+IGhvdyB0byBkaWZmZXJlbnRpYXRlIHRoZSB0ZWdyYTMwIGFuZCB0
-ZWdyYTIwLgo+IAo+IEl0IHNob3VsZCBiZSwgaWYgeW91IHNlZSBkcml2ZXJzL3NvYy90ZWdyYS9m
-dXNlL2Z1c2UtdGVncmEuYyB0aGVyZSBpcyBhbgo+ICdlYXJseV9pbml0Y2FsbCh0ZWdyYV9pbml0
-X2Z1c2UpJyBhbmQgdGhlcmUgaXMgYSAndGVncmFfZnVzZV9yZWFkX2Vhcmx5KCknCj4gZnVuY3Rp
-b24gdGhhdCBjYW4gYmUgdXNlZC4KCk9rLCBJJ3ZlIHRyaWVkIGxvb2tpbmcgdGhyb3VnaCBhbGwg
-dGhlIGRhdGEtc2hlZXRzIEkgaGF2ZSBhbmQgSSBjYW4ndApmaW5kIGFueSBkYXRhIG9uIHdoaWNo
-IGZ1c2UtYml0cyB3b3VsZCBiZSBuZWVkZWQgdG8gaWRlbnRpZnkgdGhlIHR3bwp2ZXJzaW9ucy4g
-RG9lcyBhbnlvbmUgZWxzZSBrbm93IHdoZXJlIHRvIGxvb2s/CgotLSAKQmVuIERvb2tzCQkJCWh0
-dHA6Ly93d3cuY29kZXRoaW5rLmNvLnVrLwpTZW5pb3IgRW5naW5lZXIJCQkJQ29kZXRoaW5rIC0g
-UHJvdmlkaW5nIEdlbml1cwoKaHR0cHM6Ly93d3cuY29kZXRoaW5rLmNvLnVrL3ByaXZhY3kuaHRt
-bAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgt
-YXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJt
-LWtlcm5lbAo=
+This display configuration isn't working as-is as it depends on the
+tfp410 LCD to HDMI bridge. This will need to be updated later once
+the DRM MXSFB driver will be the default.
+
+Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
+---
+ arch/arm/boot/dts/imx6sx-nitrogen6sx.dts | 71 ------------------------
+ 1 file changed, 71 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts b/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
+index f81ddfa46ace..adb5cc7d8ce2 100644
+--- a/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
++++ b/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
+@@ -11,11 +11,6 @@
+ 	model = "Boundary Devices i.MX6 SoloX Nitrogen6sx Board";
+ 	compatible = "boundary,imx6sx-nitrogen6sx", "fsl,imx6sx";
+ 
+-	aliases {
+-		fb-lcd = &lcdif1;
+-		t-lcd = &t_lcd;
+-	};
+-
+ 	memory@80000000 {
+ 		reg = <0x80000000 0x40000000>;
+ 	};
+@@ -225,38 +220,6 @@
+ 	status = "okay";
+ };
+ 
+-&lcdif1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_lcdif1>;
+-	lcd-supply = <&reg_3p3v>;
+-	display = <&display0>;
+-	status = "okay";
+-
+-	display0: display0 {
+-		bits-per-pixel = <16>;
+-		bus-width = <24>;
+-
+-		display-timings {
+-			native-mode = <&t_lcd>;
+-			t_lcd: t_lcd_default {
+-				clock-frequency = <74160000>;
+-				hactive = <1280>;
+-				vactive = <720>;
+-				hback-porch = <220>;
+-				hfront-porch = <110>;
+-				vback-porch = <20>;
+-				vfront-porch = <5>;
+-				hsync-len = <40>;
+-				vsync-len = <5>;
+-				hsync-active = <0>;
+-				vsync-active = <0>;
+-				de-active = <1>;
+-				pixelclk-active = <0>;
+-			};
+-		};
+-	};
+-};
+-
+ &pcie {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_pcie>;
+@@ -488,40 +451,6 @@
+ 		>;
+ 	};
+ 
+-	pinctrl_lcdif1: lcdif1grp {
+-		fsl,pins = <
+-			MX6SX_PAD_LCD1_CLK__LCDIF1_CLK		0x4001b0b0
+-			MX6SX_PAD_LCD1_ENABLE__LCDIF1_ENABLE	0x4001b0b0
+-			MX6SX_PAD_LCD1_HSYNC__LCDIF1_HSYNC	0x4001b0b0
+-			MX6SX_PAD_LCD1_VSYNC__LCDIF1_VSYNC	0x4001b0b0
+-			MX6SX_PAD_LCD1_RESET__GPIO3_IO_27	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA00__LCDIF1_DATA_0	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA01__LCDIF1_DATA_1	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA02__LCDIF1_DATA_2	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA03__LCDIF1_DATA_3	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA04__LCDIF1_DATA_4	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA05__LCDIF1_DATA_5	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA06__LCDIF1_DATA_6	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA07__LCDIF1_DATA_7	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA08__LCDIF1_DATA_8	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA09__LCDIF1_DATA_9	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA10__LCDIF1_DATA_10	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA11__LCDIF1_DATA_11	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA12__LCDIF1_DATA_12	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA13__LCDIF1_DATA_13	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA14__LCDIF1_DATA_14	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA15__LCDIF1_DATA_15	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA16__LCDIF1_DATA_16	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA17__LCDIF1_DATA_17	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA18__LCDIF1_DATA_18	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA19__LCDIF1_DATA_19	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA20__LCDIF1_DATA_20	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA21__LCDIF1_DATA_21	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA22__LCDIF1_DATA_22	0x4001b0b0
+-			MX6SX_PAD_LCD1_DATA23__LCDIF1_DATA_23	0x4001b0b0
+-		>;
+-	};
+-
+ 	pinctrl_pcie: pciegrp {
+ 		fsl,pins = <
+ 			MX6SX_PAD_NAND_DATA05__GPIO4_IO_9	0xb0b0
+-- 
+2.18.0
