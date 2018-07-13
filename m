@@ -1,103 +1,110 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: Re: [PATCH 1/2] ARM: sun8i: h3: enable HDMI output
- on Banana Pi M2 Zero
-Date: Fri, 13 Jul 2018 10:28:08 +0800
-Message-ID: <82CD0BCE-9DE4-45D7-8DF4-FCCFBC70BECF@aosc.io>
-References: <20180711132233.42301-1-icenowy@aosc.io> <20180711132233.42301-2-icenowy@aosc.io> <20180711150532.6gzm7krouriddreh@flea> <8F6CDF5C-2AC1-43EC-858A-5C6345CF279A@aosc.io> <20180712064601.m3bdd46wzac5fpgh@flea> <A7CA2831-7117-415C-BC59-3FB4AE425598@aosc.io> <20180712145306.ootqt7dfh3nxsamy@flea>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: thermal: Add binding document for SR thermal
+Date: Fri, 13 Jul 2018 08:33:50 +0530
+Message-ID: <CABe79T5qp_+K3MXSHsB=6Lm2S7x=QuxNEE_dFFKoFNskJSfVgA@mail.gmail.com>
+References: <1529310679-13482-1-git-send-email-srinath.mannam@broadcom.com>
+ <1529310679-13482-2-git-send-email-srinath.mannam@broadcom.com>
+ <20180620195214.GA10436@rob-hp-laptop> <CABe79T74ycjqCAo5gnKkdMKZfcVGSuOX-EiUuhiwZ-iMtacPzQ@mail.gmail.com>
+ <CABe79T77VSHCbtApO=kgX5hbL8FXeCAPEcdf9wYo+CwOTDk35A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBSU4UDNAKGQEG5NDI7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180712145306.ootqt7dfh3nxsamy@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABe79T77VSHCbtApO=kgX5hbL8FXeCAPEcdf9wYo+CwOTDk35A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Vikram Prakash <vikram.prakash@broadcom.com>, Ray Jui <ray.jui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
+I have provided my inputs for the purpose of having multiple nodes.
+Please get back if you have any comments or suggestions.
 
-=E4=BA=8E 2018=E5=B9=B47=E6=9C=8812=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=8810=
-:53:06, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
->On Thu, Jul 12, 2018 at 03:09:55PM +0800, Icenowy Zheng wrote:
->> =E4=BA=8E 2018=E5=B9=B47=E6=9C=8812=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
-=882:46:01, Maxime Ripard
-><maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
->> >On Wed, Jul 11, 2018 at 11:15:50PM +0800, Icenowy Zheng wrote:
->> >>=20
->> >>=20
->> >> =E4=BA=8E 2018=E5=B9=B47=E6=9C=8811=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=
-=8D=8811:05:32, Maxime Ripard
->> ><maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
->> >> >Hi,
->> >> >
->> >> >On Wed, Jul 11, 2018 at 09:22:32PM +0800, Icenowy Zheng wrote:
->> >> >> Banana Pi M2 Zero board has a miniHDMI port connected to the
->HDMI
->> >> >> controller of Allwinner H3 SoC.
->> >> >>=20
->> >> >> Enable the HDMI output in Banana Pi M2 Zero device tree.
->> >> >>=20
->> >> >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> >> >> ---
->> >> >>  .../dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 25
->> >> >+++++++++++++++++++
->> >> >>  1 file changed, 25 insertions(+)
->> >> >>=20
->> >> >> diff --git
->a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
->> >> >b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
->> >> >> index 7d01f9322658..eb61dcf32797 100644
->> >> >> --- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
->> >> >> +++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
->> >> >> @@ -26,6 +26,17 @@
->> >> >>  		stdout-path =3D "serial0:115200n8";
->> >> >>  	};
->> >> >> =20
->> >> >> +	hdmi-connector {
->> >> >> +		compatible =3D "hdmi-connector";
->> >> >> +		type =3D "c";
->> >> >
->> >> >This is not one of the connector type declared in DRM, how is it
->> >> >exposed to the userspace?
->> >>=20
->> >> So just use "A" here (because of single link)?
->> >
->> >If the connector type is C, it should be C, and DRM / driver
->adjusted
->> >to handle it.
->>=20
->> Okay I won't change this property, if there's any further revisions.
->>=20
->> For DRM driver, I think it can be an independent patchset.
+Regards,
+Srinath.
+
+On Tue, Jul 3, 2018 at 4:15 PM, Srinath Mannam
+<srinath.mannam@broadcom.com> wrote:
+> Hi Rob,
 >
->Not really, since it's going to break userspace as soon as you merge
->that other patchset.
-
-Should we bother the DRM maintainer to ask for any advice?
-
+> Kindly provide your feedback.
 >
->Maxime
+> Regards,
+> Srinath.
 >
->--=20
->Maxime Ripard, Bootlin (formerly Free Electrons)
->Embedded Linux and Kernel engineering
->https://bootlin.com
->
->_______________________________________________
->linux-arm-kernel mailing list
->linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> On Fri, Jun 22, 2018 at 11:21 AM, Srinath Mannam
+> <srinath.mannam@broadcom.com> wrote:
+>> Hi Rob,
+>>
+>> Please find my comments for the reason to have multiple DT nodes.
+>>
+>> On Thu, Jun 21, 2018 at 1:22 AM, Rob Herring <robh@kernel.org> wrote:
+>>> On Mon, Jun 18, 2018 at 02:01:17PM +0530, Srinath Mannam wrote:
+>>>> From: Pramod Kumar <pramod.kumar@broadcom.com>
+>>>>
+>>>> Add binding document for supported thermal implementation
+>>>> in Stingray.
+>>>>
+>>>> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+>>>> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+>>>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+>>>> Reviewed-by: Srinath Mannam <srinath.mannam@broadcom.com>
+>>>> ---
+>>>>  .../bindings/thermal/brcm,sr-thermal.txt           | 45 ++++++++++++++++++++++
+>>>>  1 file changed, 45 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>>>> new file mode 100644
+>>>> index 0000000..33f9e11
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>>>> @@ -0,0 +1,45 @@
+>>>> +* Broadcom Stingray Thermal
+>>>> +
+>>>> +This binding describes thermal sensors that is part of Stingray SoCs.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible : Must be "brcm,sr-thermal"
+>>>> +- reg : memory where tmon data will be available.
+>>>> +
+>>>> +Example:
+>>>> +     tmons {
+>>>> +             compatible = "simple-bus";
+>>>> +             #address-cells = <1>;
+>>>> +             #size-cells = <1>;
+>>>> +             ranges;
+>>>> +
+>>>> +             tmon_ihost0: thermal@8f100000 {
+>>>> +                     compatible = "brcm,sr-thermal";
+>>>> +                     reg = <0x8f100000 0x4>;
+>>>> +             };
+>>>
+>>> You still haven't given me a compelling reason why you need a node per
+>>> register.
+>>>
+>>> You have a single range of registers. Make this 1 node.
+>>>
+>>
+>> We Have two reasons to have multiple nodes..
+>> 1. Our chip has multiple functional blocks. Each functional block has
+>> its own thermal zone.
+>> Functional blocks and their thermal zones enabled/disabled based on end product.
+>> Few functional blocks need to disabled for few products so thermal
+>> zones also need to disable.
+>> In that case, nodes of specific thermal zones are removed from DTS
+>> file of corresponding product.
+>>
+>> 2. Thermal framework provides sysfs interface to configure thermal
+>> zones and read temperature of thermal zone.
+>> To configure individual thermal zone, we need to have separate DT node.
+>> Same to read temperature of individual thermal zone.
+>> Ex: To read temperature of thermal zone 0.
+>>          cat /sys/class/thermal/thermal_zone0/temp
+>>      To configure trip temperature of thermal zone 0.
+>>           echo 110000 > /sys/class/thermal/thermal_zone0/trip_point_0_temp
+>>
+>> Also to avoid driver source change for the multiple products it is
+>> clean to have multiple DT nodes.
+>>
+>>> Rob
