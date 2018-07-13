@@ -1,135 +1,85 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 2/4] phy: socionext: add USB3 PHY driver for UniPhier SoC
-Date: Fri, 13 Jul 2018 12:45:06 +0530
-Message-ID: <52b96200-2234-9017-a317-f929eac9b266@ti.com>
-References: <4b436a46-9046-25ad-ee6d-ad2cdb16e2ca@ti.com>
- <20180709202319.1091.4A936039@socionext.com>
- <20180711210514.BB32.4A936039@socionext.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 1/3] drm: mxsfb: Change driver.name to mxsfb-drm
+Date: Fri, 13 Jul 2018 09:25:36 +0200
+Message-ID: <20180713072536.GX3008@phenom.ffwll.local>
+References: <CAOMZO5B8i0gN+rCq-yPrd112NkwJWTxYCtsLVeLhD1JLRuX6EQ@mail.gmail.com>
+ <07be6d9a85b6be655fc2b084be81d8bf9715b57a.camel@nxp.com>
+ <638457fd-85da-8fec-d146-517c43f71813@denx.de>
+ <b3fa74c5110b45e5992920485749869ab1f7ebce.camel@nxp.com>
+ <6995fa4b-47a9-887b-5e4f-4284ca6a2c79@gmail.com>
+ <fd22085f646d97f66cff5b7f22785500@agner.ch>
+ <6fdba55b-0be6-9e28-d87a-43d876a1fd09@denx.de>
+ <617c0a7e9132b929877b8cbcf116b1ea@agner.ch>
+ <7f40f34a401ced78703b1a151d9f5fe4ed8c209f.camel@nxp.com>
+ <039b2914-3393-5e81-82a6-7d517c5818a9@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180711210514.BB32.4A936039@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <039b2914-3393-5e81-82a6-7d517c5818a9@denx.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Marek Vasut <marex@denx.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "marcofrk@gmail.com" <marcofrk@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wednesday 11 July 2018 05:35 PM, Kunihiko Hayashi wrote:
-> On Mon, 9 Jul 2018 20:23:19 +0900 <hayashi.kunihiko@socionext.com> wrote:
-> 
->> Hi Kishon,
->> Thank you for your comments.
->>
->> On Mon, 9 Jul 2018 10:49:50 +0530 <kishon@ti.com> wrote:
->>
->>> Hi,
->>>
->>> On Friday 29 June 2018 02:08 PM, Kunihiko Hayashi wrote:
->>>> Add a driver for PHY interface built into USB3 controller
->>>> implemented in UniPhier SoCs.
->>>> This driver supports High-Speed PHY and Super-Speed PHY.
->>>>
->>>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->>>> Signed-off-by: Motoya Tanigawa <tanigawa.motoya@socionext.com>
->>>> Signed-off-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
->>>> ---
->>>>  drivers/phy/Kconfig                         |   1 +
->>>>  drivers/phy/Makefile                        |   1 +
->>>>  drivers/phy/socionext/Kconfig               |  12 +
->>>>  drivers/phy/socionext/Makefile              |   6 +
->>>>  drivers/phy/socionext/phy-uniphier-usb3hs.c | 422 ++++++++++++++++++++++++++++
->>>>  drivers/phy/socionext/phy-uniphier-usb3ss.c | 369 ++++++++++++++++++++++++
->>>>  6 files changed, 811 insertions(+)
->>>>  create mode 100644 drivers/phy/socionext/Kconfig
->>>>  create mode 100644 drivers/phy/socionext/Makefile
->>>>  create mode 100644 drivers/phy/socionext/phy-uniphier-usb3hs.c
->>>>  create mode 100644 drivers/phy/socionext/phy-uniphier-usb3ss.c
->>
->> (snip...)
->>
->>>> --- /dev/null
->>>> +++ b/drivers/phy/socionext/phy-uniphier-usb3hs.c
->>>> @@ -0,0 +1,422 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +/*
->>>> + * phy-uniphier-usb3hs.c - HS-PHY driver for Socionext UniPhier USB3 controller
->>>> + * Copyright 2015-2018 Socionext Inc.
->>>> + * Author:
->>>> + *	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->>>> + * Contributors:
->>>> + *      Motoya Tanigawa <tanigawa.motoya@socionext.com>
->>>> + *      Masami Hiramatsu <masami.hiramatsu@linaro.org>
->>>> + */
->>>> +
->>>> +#include <linux/bitfield.h>
->>>> +#include <linux/bitops.h>
->>>> +#include <linux/clk.h>
->>>> +#include <linux/io.h>
->>>> +#include <linux/mfd/syscon.h>
->>>> +#include <linux/module.h>
->>>> +#include <linux/nvmem-consumer.h>
->>>> +#include <linux/of.h>
->>>> +#include <linux/of_platform.h>
->>>> +#include <linux/phy/phy.h>
->>>> +#include <linux/platform_device.h>
->>>> +#include <linux/reset.h>
->>>> +#include <linux/slab.h>
->>>> +
->>>> +#define HSPHY_CFG0		0x0
->>>> +#define HSPHY_CFG0_HS_I_MASK	GENMASK(31, 28)
->>>> +#define HSPHY_CFG0_HSDISC_MASK	GENMASK(27, 26)
->>>> +#define HSPHY_CFG0_SWING_MASK	GENMASK(17, 16)
->>>> +#define HSPHY_CFG0_SEL_T_MASK	GENMASK(15, 12)
->>>> +#define HSPHY_CFG0_RTERM_MASK	GENMASK(7, 6)
->>>> +#define HSPHY_CFG0_TRIMMASK	(HSPHY_CFG0_HS_I_MASK \
->>>> +				 | HSPHY_CFG0_SEL_T_MASK \
->>>> +				 | HSPHY_CFG0_RTERM_MASK)
->>>> +
->>>> +#define HSPHY_CFG1		0x4
->>>> +#define HSPHY_CFG1_DAT_EN	BIT(29)
->>>> +#define HSPHY_CFG1_ADR_EN	BIT(28)
->>>> +#define HSPHY_CFG1_ADR_MASK	GENMASK(27, 16)
->>>> +#define HSPHY_CFG1_DAT_MASK	GENMASK(23, 16)
->>>> +
->>>> +#define MAX_CLKS	3
->>>> +#define MAX_RSTS	2
->>>> +#define MAX_PHY_PARAMS	1
->>>> +
->>>> +struct uniphier_u3hsphy_param {
->>>> +	u32 addr;
->>>> +	u32 mask;
->>>> +	u32 val;
->>>> +};
->>>
->>> I'd like to avoid configure the PHY this way, since it's impossible to know
->>> which register is being configured.
->>
-> 
-> This way might be misunderstood.
-> These HS-PHY and SS-PHY have "internal" registers, which are not memory-mapped.
-> 
-> And to access these internal registers, we need to specify the number
-> corresponding to the register.
-> 
-> The "addr" in "uniphier_u3hsphy_param" is just the number of the register.
-> The "mask" shows a bitfield of the register, that means one of PHY parameters.
-> The "value" shows a parameter value to set to the bitfield.
-
-What does each of these bitfields represent? Which PHY parameter does it
-configure. Are they really PHY parameters or they also configure clocks/mux
-etc? I would like the configurations to be more descriptive so that we get to
-know at least what's getting configured here.
-
-Thanks
-Kishon
+T24gVGh1LCBKdWwgMTIsIDIwMTggYXQgMDM6MTQ6NTdQTSArMDIwMCwgTWFyZWsgVmFzdXQgd3Jv
+dGU6Cj4gT24gMDcvMTIvMjAxOCAwMzowMyBQTSwgTGVvbmFyZCBDcmVzdGV6IHdyb3RlOgo+ID4g
+T24gVGh1LCAyMDE4LTA3LTEyIGF0IDExOjIxICswMjAwLCBTdGVmYW4gQWduZXIgd3JvdGU6Cj4g
+Pj4gT24gMTAuMDcuMjAxOCAxMToxMSwgTWFyZWsgVmFzdXQgd3JvdGU6Cj4gPj4+IE9uIDA3LzEw
+LzIwMTggMTE6MDYgQU0sIFN0ZWZhbiBBZ25lciB3cm90ZToKPiA+Pj4+IFRoaXMgaXMgb25lIG9m
+IHRoZSBzaXR1YXRpb24gd2hlcmUgc3RhdGVzIHF1byBpcyBraW5kYSB0aGUgd29yc3QKPiA+Pj4+
+IHNpdHVhdGlvbi4KPiA+Pj4+Cj4gPj4+PiBDdXJyZW50bHkgaW14X3Y2X3Y3X2RlZmNvbmZpZyBh
+bmQgbXhzX2RlZmNvbmZpZyBhY3R1YWxseSBzdGlsbCB1c2VzCj4gPj4+PiBDT05GSUdfRkJfTVhT
+Lgo+ID4+Pj4KPiA+Pj4+IEkgdW5kZXJzdGFuZCB0aGF0IHlvdSdkIHJhdGhlciBwcmVmZXIgdG8g
+bW92ZSBmb3J3YXJkLiBJIHN1Z2dlc3Qgd2UgZG8KPiA+Pj4+IGl0IGluIHN0ZXBzLgo+ID4+Pj4K
+PiA+Pj4+IEluIDQuMTk6Cj4gPj4+Pgo+ID4+Pj4gLSBDaGFuZ2UgRFJNIGRyaXZlci5uYW1lIHRv
+IG14c2ZiLWRybSBzbyB3ZSBhdm9pZCBjb25mbGljdHMgZm9yIG5vdwo+ID4+Pgo+ID4+PiBCdXQg
+dGhpcyB3aWxsIGJyZWFrIG1lc2EgaWYgaXQgZGVwZW5kcyBvbiBteHNmYiBuYW1lIGZvciBpZS4g
+ZXRuYXZpdgo+ID4+PiBiaW5kaW5nLgo+ID4+Cj4gPj4gRG9lcyBpdD8gZ3JlcCAtciAtZSBteHNm
+YiBpbiBsaWJkcm0gYW5kIG1lc2EgbWFzdGVyIHJldHVybnMgbm90aGluZy4KPiA+Pgo+ID4+IFRo
+ZXJlIGlzIGFsc28gLm5hbWUgaW4gc3RydWN0IGRybV9kcml2ZXIsIHdoaWNoIGlzIGFscmVhZHkg
+c2V0IHRvCj4gPj4gbXhzZmItZHJtLi4uIElzIHRoYXQgdGhlIG9uZSBleHBvc2VkIHRvIHVzZXIg
+c3BhY2U/Cj4gPiAKPiA+IFJ1bm5pbmcgZXRuYXZpdit4MTEgd2l0aCBhIHJlbmFtZWQgbXhzZmIg
+ZHJpdmVyIHdvcmtzIGZpbmUgb24gaW14NnN4LQo+ID4gc2RiLgo+ID4gCj4gPiBUb29scyBsaWtl
+IG1vZGV0ZXN0IGFscmVhZHkgbmVlZCAtTSBteHNmYi1kcm0sIHRoZSBkcm1fZHJpdmVyLm5hbWUK
+PiA+IHNlZW1zIHRvIGJlIHdoYXQgbWF0dGVycy4KPiA+IAo+ID4+IC0gUmVtb3ZlIENPTkZJR19G
+Ql9NWFMgZnJvbSBpbXhfdjZfdjdfZGVmY29uZmlnL214c19kZWZjb25maWcgbm93LCBhbmQKPiA+
+PiBvbmx5IGVuYWJsZSBDT05GSUdfRFJNX01YU0ZCPXkKPiA+IAo+ID4gSWYgb25lIG9mIHRoZSBk
+cml2ZXJzIGlzIHJlbmFtZWQgdGhlbiB0aGV5IGNhbiBjb2V4aXN0OiBzaW5jZSB0aGUKPiA+IGJp
+bmRpbmdzIGFyZSBkaXN0aW5jdCBvbmUgZHJpdmVyIHdpbGwgcmV0dXJuIGEgcHJvYmUgZXJyb3Ig
+YW5kIHRoZQo+ID4gb3RoZXIgd2lsbCBiaW5kIHN1Y2Nlc3NmdWxseS4gVGhpcyBjYW4gZXZlbiBi
+ZSBhZGp1c3RlZCBzbyB0aGF0IGl0Cj4gPiBkb2Vzbid0IGV2ZW4gcHJpbnQgdWdseSBzY2FyeSBl
+cnJvcnMuCj4gPiAKPiA+IFRoaXMgY2FuIGxhc3QgdW50aWwgc29tZWJvZHkgaW1wbGVtZW50cyBz
+dXBwb3J0IGZvciBvbGQgYmluZGluZ3MgaW4gdGhlCj4gPiBkcm0gZHJpdmVyIGFuZCB0aGVuIEZC
+X01YUyBjYW4ganVzdCBiZSBkZWxldGVkLgo+IAo+IFNvIHdoeSBkb24ndCB3ZSBqdXN0IGNvbnZl
+cnQgdGhlIERUIGJpbmRpbmdzIG9uIGJvYXJkcyBzdXBwb3J0ZWQKPiB1cHN0cmVhbSBhbmQgemFw
+IHRoZSBvbGQgZHJpdmVyID8gV2hhdCBpcyB0aGUgcHJvYmxlbSB3aXRoIHRoYXQ/CgorMSBvbiB6
+YXBwaW5nIGRyaXZlcnMgOi0pCgo+IFJlYWxpc3RpY2FsbHksIGhvdyBtYW55IE1YUyBib2FyZHMg
+aW4gdGhlIGZpZWxkIHVzZSBvbGQgRFQgYW5kIG5ldyBrZXJuZWwgPwoKWWVhaCBJIHRoaW5rIG9j
+Y2FzaW9uYWxseSB0aGF0IGVudGlyZSAiRFQgaXMgQVBJLCBjYW4ndCBldmVyIGNoYW5nZSBpdCIK
+c29uZyBpcyBvdmVyYmxvd24uIFRoZSBydWxlIHdpdGggcmVncmVzc2lvbnMgaXNuJ3QgdGhhdCB5
+b3UncmUgbmV2ZXIKYWxsb3dlZCB0byBicmVhayBhbnl0aGluZywgYnV0IHRoYXQgeW91J3JlIG9u
+bHkgYWxsb3dlZCB0byBicmVhayBzdHVmZiBubwpvbmUgd2lsbCBub3RpY2UgYW5kIHJlcG9ydC4K
+CklmIHRoZXJlJ3MgcmVhbGlzdGljYWxseSBubyB1c2VycywgZ28gYWhlYWQgYW5kIGJyZWFrIChp
+bnN0ZWFkIG9mIGh1Z2UgYW5kCmRyYXduLW91dCBjb21wYXQgcGxhbikuCgpJZiB0aGVyZSdzIGEg
+c29saWQgKGFuZCBhdXRvbWF0aWMgZW5vdWdoKSBmYWxsYmFjayBsaWtlIHRoZSBkcm0gZHJpdmVy
+LApnbyBhaGVhZCBhbmQgYnJlYWsuCgpXZSdyZSBkb2luZyB0aGlzIGFsbCB0aGUgdGltZSBpbiBn
+cmFwaGljcyB3aXRoIHVzZXJzcGFjZSBBQkksIEkgZG9uJ3QKdGhpbmsgRFQgaXMgYW55IGRpZmZl
+cmVudC4gRXZlcnkgb25jZSBpbiBhIHdoaWxlIHRoZXJlJ3MgYSBiaXQgb2YgcmVncmV0cwphbmQg
+YSByZXZlcnQgYmVjYXVzZSB3ZSBtaXNzZWQgc29tZXRoaW5nLCBidXQgb3ZlcmFsIGl0J3MgbXVj
+aCBsZXNzIGVmZm9ydAp0aGFuIGFsd2F5cyB0cnlpbmcgdG8gZG8gYSBwZXJmZWN0IGpvYiB3aXRo
+IGJhY2t3YXJkcyBjb21wYXQuCgpJcyBpdCByZWFsbHkgYSByZWdyZXNzaW9uIGlmIG5vIG9uZSBy
+ZXBvcnRzIGl0PyBOby4KCkNoZWVycywgRGFuaWVsCi0tIApEYW5pZWwgVmV0dGVyClNvZnR3YXJl
+IEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbgpodHRwOi8vYmxvZy5mZndsbC5jaApfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
