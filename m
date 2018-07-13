@@ -1,113 +1,259 @@
-From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 18/22] media: platform: Add Sunxi-Cedrus
- VPU decoder driver
-Date: Fri, 13 Jul 2018 10:40:58 +0200
-Message-ID: <2a64aec733392cd15d87b53a268fb8328af0a82c.camel@bootlin.com>
-References: <20180710080114.31469-1-paul.kocialkowski@bootlin.com>
-	 <20180710080114.31469-19-paul.kocialkowski@bootlin.com>
-	 <e31090c371ae7f7999b0aa983a20f33451cc89fb.camel@collabora.com>
-Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/2] pinctrl: nuvoton: add NPCM7xx pinctrl and GPIO driver
+Date: Fri, 13 Jul 2018 10:51:40 +0200
+Message-ID: <CACRpkdYOQMkA6BHtY3-NSXhyhoG7KzDg8SkqL2B6M8GQrvXgMA@mail.gmail.com>
+References: <20180712214203.114844-1-tmaimon77@gmail.com> <20180712214203.114844-3-tmaimon77@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-Hb1cmEa3+oOsZx1t5cjo"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBHOLUHNAKGQE772NRTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <e31090c371ae7f7999b0aa983a20f33451cc89fb.camel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Keiichi Watanabe <keiichiw-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tom Saeger <tom.saeger-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "David
- S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Benoit
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180712214203.114844-3-tmaimon77@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tmaimon77@gmail.com
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, Joel Stanley <joel@jms.id.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jul 12, 2018 at 11:42 PM Tomer Maimon <tmaimon77@gmail.com> wrote:
 
---=-Hb1cmEa3+oOsZx1t5cjo
-Content-Type: text/plain; charset="UTF-8"
+> Add Nuvoton BMC NPCM750/730/715/705 Pinmux and
+> GPIO controller driver.
+>
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 
-Hi,
+(...)
+> +++ b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+> @@ -0,0 +1,2089 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2016-2018 Nuvoton Technology corporation.
+> +// Copyright (c) 2016, Dell Inc
+> +
+> +#include <linux/device.h>
+> +#include <linux/gpio.h>
 
-On Tue, 2018-07-10 at 16:57 -0300, Ezequiel Garcia wrote:
-> Hey Paul,
-> 
-> My comments on v4 of course apply here as well.
+As this is a driver you should only include <linux/gpio/driver.h>
 
-Yes, it seems that most of your comments were not already adressed by
-this v5. I will answer your remarks and suggestions on the v4 thread.
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/mfd/syscon.h>
 
-> One other thing...
-> 
-> On Tue, 2018-07-10 at 10:01 +0200, Paul Kocialkowski wrote:
-> > This introduces the Sunxi-Cedrus VPU driver that supports the VPU
-> > found
-> > in Allwinner SoCs, also known as Video Engine. It is implemented
-> > through
-> > a v4l2 m2m decoder device and a media device (used for media
-> > requests).
-> > So far, it only supports MPEG2 decoding.
-> > 
-> > Since this VPU is stateless, synchronization with media requests is
-> > required in order to ensure consistency between frame headers that
-> > contain metadata about the frame to process and the raw slice data
-> > that
-> > is used to generate the frame.
-> > 
-> > This driver was made possible thanks to the long-standing effort
-> > carried out by the linux-sunxi community in the interest of reverse
-> > engineering, documenting and implementing support for Allwinner VPU.
-> > 
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> > 
-> 
-> [..]
-> > +
-> > +static irqreturn_t cedrus_bh(int irq, void *data)
-> > +{
-> > +	struct cedrus_dev *dev = data;
-> > +	struct cedrus_ctx *ctx;
-> > +
-> > +	ctx = v4l2_m2m_get_curr_priv(dev->m2m_dev);
-> > +	if (!ctx) {
-> > +		v4l2_err(&dev->v4l2_dev,
-> > +			 "Instance released before the end of
-> > transaction\n");
-> > +		return IRQ_HANDLED;
-> > +	}
-> > +
-> > +	v4l2_m2m_job_finish(ctx->dev->m2m_dev, ctx->fh.m2m_ctx);
-> > +
-> 
-> I don't like the fact that v4l2_m2m_job_finish calls .device_run
-> reentrantly. Let me try to make v4l2_m2m_job_finish() safe to be called
-> in atomic context, so hopefully drivers can just call it in the top-
-> half.
+If you need syscon then the driver should select or depend
+on MFD_SYSCON in Kconfig.
 
-Thanks for your patches in this direction, I will try them and hopefully
-base our next Sunxi-Cedrus version on them, if it seems that this
-framework change will be picked-up by maintainers.
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
 
-> You are returning the buffers in the top-half, so this is just a matter
-> or better design, not a performance improvement.
+Do you really need this include?
 
-This is definitely a nice design improvement IMO (if not only for
-avoiding reentrancy)! 
+> +/* Structure for register banks */
+> +struct NPCM7XX_GPIO {
 
-And this reduces our code path between starting decoding and userspace
-notification that decoding finished. Starting the worker thread is no
-longer required before notifying userspace, so I think we are going to
-see performance improvements from this. Hopefully, the worker thread
-will run while userspace is busy preparing the next frame, so this
-should work a lot better for us!
+Can we have this lowercase? Please?
 
-Cheers,
+> +       void __iomem            *base;
+> +       struct gpio_chip        gc;
+> +       int                     irqbase;
+> +       int                     irq;
+> +       spinlock_t              lock;
+> +       void                    *priv;
+> +       struct irq_chip         irq_chip;
+> +       u32                     pinctrl_id;
+> +};
 
-Paul
+So each GPIO bank has its own gpio chip and register
+base, that is NICE! Because then it looks like you can
+select GPIO_GENERIC and use the MMIO GPIO helper
+library to handle the registers. Let's look into that
+option!
 
--- 
-Paul Kocialkowski, Bootlin (formerly Free Electrons)
-Embedded Linux and kernel engineering
-https://bootlin.com
---=-Hb1cmEa3+oOsZx1t5cjo--
+> +struct NPCM7xx_pinctrl {
+> +       struct pinctrl_dev      *pctldev;
+> +       struct device           *dev;
+> +       struct NPCM7XX_GPIO     gpio_bank[NPCM7XX_GPIO_BANK_NUM];
+> +       struct irq_domain       *domain;
+
+I wonder why the pin controller needs and IRQ domain but
+I keep reading the code and I might find out...
+
+> +enum operand {
+> +       op_set,
+> +       op_getbit,
+> +       op_setbit,
+> +       op_clrbit,
+> +};
+
+This looks complicated. I suspect you can use GPIO_GENERIC
+to set/get and clear bits in the register(s).
+
+> +/* Perform locked bit operations on GPIO registers */
+> +static int gpio_bitop(struct NPCM7XX_GPIO *bank, int op, unsigned int offset,
+> +                     int reg)
+> +{
+> +       unsigned long flags;
+> +       u32 mask, val;
+> +
+> +       mask = (1L << offset);
+> +       spin_lock_irqsave(&bank->lock, flags);
+> +       switch (op) {
+> +       case op_set:
+> +               iowrite32(mask, bank->base + reg);
+> +               break;
+> +       case op_getbit:
+> +               mask &= ioread32(bank->base + reg);
+> +               break;
+> +       case op_setbit:
+> +               val = ioread32(bank->base + reg);
+> +               iowrite32(val | mask, bank->base + reg);
+> +               break;
+> +       case op_clrbit:
+> +               val = ioread32(bank->base + reg);
+> +               iowrite32(val & (~mask), bank->base + reg);
+> +               break;
+> +       }
+> +       spin_unlock_irqrestore(&bank->lock, flags);
+> +       return !!mask;
+> +}
+
+This is essentially a reimplementation of drivers/gpio/gpio-mmio.c
+(GPIO_GENERIC, also using a spinlock to protect the registers)
+so let's use that instead :)
+
+There are drivers already that reuse the spinlock inside the
+generic GPIO chip to protect their other registers like for
+IRQ registers.
+
+> +static int npcmgpio_get_direction(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       struct NPCM7XX_GPIO *bank = gpiochip_get_data(chip);
+> +       u32 oe, ie;
+> +
+> +       /* Get Input & Output state */
+> +       ie = gpio_bitop(bank, op_getbit, offset, NPCM7XX_GP_N_IEM);
+> +       oe = gpio_bitop(bank, op_getbit, offset, NPCM7XX_GP_N_OE);
+> +       if (ie && !oe)
+> +               return GPIOF_DIR_IN;
+> +       else if (oe && !ie)
+> +               return GPIOF_DIR_OUT;
+
+These are consumer flags and should not be used in drivers.
+Use plain 0/1 instead.
+
+Anyways the problem goes away with GPIO_GENERIC.
+
+> +static int npcmgpio_direction_input(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       return pinctrl_gpio_direction_input(offset + chip->base);
+> +}
+
+It's a bit tricksy to get this to work with GPIO_GENERIC.
+
+After calling bgpio_init() you need to overwrite the assigned
+.direction_input handler with this and then direct back to the
+one assigned by GPIO_GENERIC.
+
+Something like this:
+
+1. Add two indirection pointers to the npcm7xx_gpio state container:
+
+struct npcm7xx_gpio {
+     (...)
+      int (*direction_input)(struct gpio_chip *chip, unsigned offset);
+      int (*direction_output)(struct gpio_chip *chip, unsigned offset,
+int value);
+     (...)
+};
+
+2. Save the pointers
+
+struct npcm7xx_gpio *npcm;
+
+bgpio_init( ... register setup ...)
+npcm->direction_input = npcm->gc.direction_input;
+npcm->direction_output = npcm->gc.direction_output;
+npcm->gc.direction_input = npcmgpio_direction_input;
+npcm->gc.direction_output = npcmgpio_direction_output;
+
+3. Modify the functions like that:
+
+static int npcmgpio_direction_input(struct gpio_chip *chip, unsigned int offset)
+{
+    struct npcm7xx_gpio *npcm = gpiochip_get_data(chip);
+    int ret;
+
+    ret = pinctrl_gpio_direction_input(offset + chip->base);
+    if (ret)
+        return ret;
+    return npcm->direction_input(chip);
+}
+
+I'm sure you get the idea... if you think we can modify gpio-mmio
+to be more helpful with this, suggestions are welcome!
+
+> +/* Set GPIO to Output with initial value */
+> +static int npcmgpio_direction_output(struct gpio_chip *chip,
+> +                                    unsigned int offset, int value)
+> +{
+> +       struct NPCM7XX_GPIO *bank = gpiochip_get_data(chip);
+> +
+> +       dev_dbg(chip->parent, "gpio_direction_output: offset%d = %x\n", offset,
+> +               value);
+> +
+> +       /* Check if we're enabled as an interrupt.. */
+> +       if (gpio_bitop(bank, op_getbit, offset, NPCM7XX_GP_N_EVEN) &&
+> +           gpio_bitop(bank, op_getbit, offset, NPCM7XX_GP_N_IEM)) {
+> +               dev_dbg(chip->parent,
+> +                       "gpio_direction_output: IRQ enabled on offset%d\n",
+> +                       offset);
+> +               return -EINVAL;
+> +       }
+
+This should not be necessary as you are using GPIOLIB_IRQCHIP,
+which locks the GPIO for interrupt and disallows this to happen.
+
+> +static int npcmgpio_gpio_request(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       dev_dbg(chip->parent, "gpio_request: offset%d\n", offset);
+> +       return pinctrl_gpio_request(offset + chip->base);
+> +}
+> +
+> +static void npcmgpio_gpio_free(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       dev_dbg(chip->parent, "gpio_free: offset%d\n", offset);
+> +       pinctrl_gpio_free(offset + chip->base);
+> +}
+
+This needs the same pattern as the direction functions above, then
+you can use GPIO_GENERIC (mmio).
+
+> +static unsigned int npcmgpio_irq_startup(struct irq_data *d)
+> +{
+> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +       unsigned int gpio = d->hwirq;
+> +
+> +       /* active-high, input, clear interrupt, enable interrupt */
+> +       dev_dbg(d->chip->parent_device, "startup: %u.%u\n", gpio, d->irq);
+> +       npcmgpio_direction_output(gc, gpio, 1);
+> +       npcmgpio_direction_input(gc, gpio);
+
+Interesting dance. So it is required to set the line to
+1 and then switch to input?
+
+> +static struct irq_chip npcmgpio_irqchip = {
+> +       .name = "NPCM7XX-GPIO-IRQ",
+> +       .irq_ack = npcmgpio_irq_ack,
+> +       .irq_unmask = npcmgpio_irq_unmask,
+> +       .irq_mask = npcmgpio_irq_mask,
+> +       .irq_set_type = npcmgpio_set_irq_type,
+> +       .irq_startup = npcmgpio_irq_startup,
+> +};
+
+This code is looking good BTW.
+
+The patch in my inbox just ends in the middle of everything, I wonder
+why :( suspect the new gmail interface I'm using.
+
+Anyways: the pointers above should keep you busy for the next
+iteration of the patch, the pin control part seems pretty straight-forward.
+
+Yours,
+Linus Walleij
