@@ -1,61 +1,79 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pfuze100: add optional pfuze-disable-sw
- binding
-Date: Fri, 13 Jul 2018 12:50:10 +0100
-Message-ID: <20180713115010.GA16228@sirena.org.uk>
-References: <20180712110240.3006-1-m.felsch@pengutronix.de>
- <20180712110240.3006-2-m.felsch@pengutronix.de>
- <20180712153121.GF10369@sirena.org.uk>
- <20180713083039.4z3ulwtg2ekx5n23@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="VbJkn9YxBvnuCH5J"
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] ARM64: dts: meson-axg: add adc buttons the S400
+Date: Fri, 13 Jul 2018 13:54:47 +0200
+Message-ID: <20180713115447.2868-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180713083039.4z3ulwtg2ekx5n23@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, fabio.estevam@nxp.com, Anson.Huang@nxp.com, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add the 6 adc buttons of the amlogic S400
 
---VbJkn9YxBvnuCH5J
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 44 ++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-On Fri, Jul 13, 2018 at 10:30:39AM +0200, Marco Felsch wrote:
-> On 18-07-12 16:31, Mark Brown wrote:
-> > On Thu, Jul 12, 2018 at 01:02:39PM +0200, Marco Felsch wrote:
-
-> > > +Optional properties:
-> > > +- pfuze-disable-sw: Disable all unused switch regulators to save power
-
-> > This is a bit of a confused way of specifying things that depends on the
-> > Linux implementation, and the property sounds like a double negative
-> > too.  I'd say something like "pfuze-support-disable" and then explicitly
-> > say that this is a workaround for backwards compatibility.
-
-> I can't find the double negative. Anyway your binding sounds better. So
-> I will use yours. Should we add a vendor prefix too to be clear? I will
-> also add some more informations to mark it as workaround.
-
-The property doesn't disable the use of switch regulators, it enables
-their disabling.  A vendor prefix is probably required but I can't
-entirely follow the DT rules there, it certainly shouldn't hurt anyway.
-
---VbJkn9YxBvnuCH5J
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltIke8ACgkQJNaLcl1U
-h9ASxwf+I+jR/6P3ZK6bGKjK57+MO7Nxv16hDmOm0MCk3VaH5worcAEZpTBIkWk5
-FvlNmlzEtJnKWmLaIk1mKw895Yrjel1ZqicsXrV2lrE8ic/E2xJJ4UGsoRWcws4G
-a+Mm4ZoxlxNfowNQhDzH08dxFBdDh3xDcQ1Z+HGzsjFDTsBhXEyg6Hi20k2ZO6bP
-jEwNQYdS8Y6Pn+v8f71+wlccLsXHQupnSgidQbVlUsBoTZOn5B6V5fVjZZPLhYcN
-NsZkmzJieJv/qQTqpfQvfUc4oTOPZPKs0gW/Nrh3dFq6ygAoXwWCDVurn+tD2uCE
-9WyqcbDLSpmfpRFDdRKnjDoppZBq/g==
-=5Yj7
------END PGP SIGNATURE-----
-
---VbJkn9YxBvnuCH5J--
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+index f389f84be2e2..fd90fa4a282c 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+@@ -6,11 +6,55 @@
+ /dts-v1/;
+ 
+ #include "meson-axg.dtsi"
++#include <dt-bindings/input/input.h>
+ 
+ / {
+ 	compatible = "amlogic,s400", "amlogic,a113d", "amlogic,meson-axg";
+ 	model = "Amlogic Meson AXG S400 Development Board";
+ 
++	adc_keys {
++		compatible = "adc-keys";
++		io-channels = <&saradc 0>;
++		io-channel-names = "buttons";
++		keyup-threshold-microvolt = <1800000>;
++
++		button-next {
++			label = "Next";
++			linux,code = <KEY_NEXT>;
++			press-threshold-microvolt = <1116000>; /* 62% */
++		};
++
++		button-prev {
++			label = "Previous";
++			linux,code = <KEY_PREVIOUS>;
++			press-threshold-microvolt = <900000>; /* 50% */
++		};
++
++		button-wifi {
++			label = "Wifi";
++			linux,code = <KEY_WLAN>;
++			press-threshold-microvolt = <684000>; /* 38% */
++		};
++
++		button-up {
++			label = "Volume Up";
++			linux,code = <KEY_VOLUMEUP>;
++			press-threshold-microvolt = <468000>; /* 26% */
++		};
++
++		button-down {
++			label = "Volume Down";
++			linux,code = <KEY_VOLUMEDOWN>;
++			press-threshold-microvolt = <252000>; /* 14% */
++		};
++
++		button-voice {
++			label = "Voice";
++			linux,code = <KEY_VOICECOMMAND>;
++			press-threshold-microvolt = <0>; /* 0% */
++		};
++	};
++
+ 	aliases {
+ 		serial0 = &uart_AO;
+ 		serial1 = &uart_A;
+-- 
+2.14.4
