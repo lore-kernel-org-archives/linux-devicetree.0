@@ -1,56 +1,29 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH 1/2] dt-bindings: pfuze100: add optional pfuze-disable-sw
- binding
-Date: Fri, 13 Jul 2018 10:30:39 +0200
-Message-ID: <20180713083039.4z3ulwtg2ekx5n23@pengutronix.de>
-References: <20180712110240.3006-1-m.felsch@pengutronix.de>
- <20180712110240.3006-2-m.felsch@pengutronix.de>
- <20180712153121.GF10369@sirena.org.uk>
+From: Ben Whitten <Ben.Whitten@lairdtech.com>
+Subject: RE: [PATCH v2 4/6] arm: dts: add support for Laird WB50N cpu module
+ and DVK
+Date: Fri, 13 Jul 2018 08:37:35 +0000
+Message-ID: <CY1PR02MB11204031D35B61A5CD6B5940E7580@CY1PR02MB1120.namprd02.prod.outlook.com>
+References: <1529070055-18701-1-git-send-email-ben.whitten@lairdtech.com>
+ <1529070055-18701-4-git-send-email-ben.whitten@lairdtech.com>
+ <20180712215435.GL16084@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180712153121.GF10369@sirena.org.uk>
+In-Reply-To: <20180712215435.GL16084@piout.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, fabio.estevam@nxp.com, Anson.Huang@nxp.com, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Ben Whitten <ben.whitten@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On 18-07-12 16:31, Mark Brown wrote:
-> On Thu, Jul 12, 2018 at 01:02:39PM +0200, Marco Felsch wrote:
-> 
-> > +Optional properties:
-> > +- pfuze-disable-sw: Disable all unused switch regulators to save power
-> > +  consumption. Attention, some platforms are using the switch regulators as DDR
-> > +  ref or supply voltage. Mark these regulators as "regulator-always-on" to skip
-> > +  disabling these regulators. If not specified, the driver simualtes the
-> > +  disabling. This means the state of the regulator is set to 'disabled' but the
-> > +  driver don't disable the regulator.
-> 
-> This is a bit of a confused way of specifying things that depends on the
-> Linux implementation, and the property sounds like a double negative
-> too.  I'd say something like "pfuze-support-disable" and then explicitly
-> say that this is a workaround for backwards compatibility.
-
-I can't find the double negative. Anyway your binding sounds better. So
-I will use yours. Should we add a vendor prefix too to be clear? I will
-also add some more informations to mark it as workaround.
-
-> I'd also recommend changing the implementation patch to just register a
-> different version of the desc and ops that just doesn't have the disable
-> operation so that the framework knows what's going on.  While the
-> current implementation works now there's the possibility that at some
-> point in the future we might start relying on the disable actually
-> having taken effect somehow and will get confused.  There's some
-> existing drivers that optimize their resume paths if they know power
-> wasn't removed.
-
-Okay I will change that too. I didn't know that there are drivers with
-optimized resume paths.
-
-Thanks for your feedback.
-
-Regards,
-Marco
+PiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDQvNl0gYXJtOiBkdHM6IGFkZCBzdXBwb3J0IGZvciBM
+YWlyZA0KPiBXQjUwTiBjcHUgbW9kdWxlIGFuZCBEVksNCj4gDQo+IEhpLA0KPiANCj4gSSd2ZSBu
+b3cgYXBwbGllZCB0aGUgd2hvbGUgc2VyaWVzIGFmdGVyIGZpeGluZyB0d28gc21hbGwNCj4gd2hp
+dGVzcGFjZQ0KPiBpc3N1ZXMuDQoNClRoYW5rcyENCg0KPiBPbiAxNS8wNi8yMDE4IDE0OjQwOjUz
+KzAxMDAsIEJlbiBXaGl0dGVuIHdyb3RlOg0KPiA+ICsmdXNhcnQxX2NsayB7DQo+ID4gKwlhdG1l
+bCxjbGstb3V0cHV0LXJhbmdlID0gPDAgMTMyMDAwMDAwPjsNCj4gPiArfTsNCj4gPiArDQo+IA0K
+PiBCdXQgdGhpcyBpcyBub3QgYWN0dWFsbHkgYWxsb3dlZCBieSB0aGUgaGFyZHdhcmUgKHdlbGws
+IGl0IGlzDQo+IGJ1dCBpdA0KPiB3aWxsIGxlYWQgdG8gaXNzdWVzKSBhbmQgd2lsbCBiZSByZW1v
+dmVkIG9uY2UgdGhlIGNsb2NrDQo+IGJpbmRpbmcgaXMNCj4gcmV3b3JrZWQuDQoNCk9mIGNvdXJz
+ZSBubyBwcm9ibGVtLCB0aGFua3MgYWdhaW4uDQoNCkJlbg0K
