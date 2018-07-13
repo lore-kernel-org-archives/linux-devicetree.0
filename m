@@ -1,108 +1,160 @@
-Return-Path: <SRS0=5CrG=KA=gmail.com=tmaimon77@kernel.org>
+Return-Path: <SRS0=tHxF=J5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr730040.outbound.protection.outlook.com ([40.107.73.40]:18624
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727307AbeGMLEW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Jul 2018 07:04:22 -0400
+From: <shubhrajyoti.datta@gmail.com>
+Subject: [PATCHv2 2/4] tty: serial: uartlite: Add clock adaptation
+Date: Fri, 13 Jul 2018 16:17:27 +0530
+Message-ID: <1531478849-29480-2-git-send-email-shubhrajyoti.datta@gmail.com>
+In-Reply-To: <1531478849-29480-1-git-send-email-shubhrajyoti.datta@gmail.com>
+References: <1531478849-29480-1-git-send-email-shubhrajyoti.datta@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20180716113357.GA30937@kroah.com>
-References: <20180704091427.409971-1-tmaimon77@gmail.com> <20180704091427.409971-3-tmaimon77@gmail.com>
- <20180716113357.GA30937@kroah.com>
-From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Mon, 16 Jul 2018 15:31:50 +0300
-Message-ID: <CAP6Zq1hUr_3X-B1wPZpk5o88hibusJ2w04VUeR8Tw+OqftQuZg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] misc: npcm7xx: add NPCM7xx LPC BPC driver
-Content-Type: multipart/alternative; boundary="0000000000008ee45705711d033c"
-To: Greg KH <gregkh@linuxfoundation.org>, benjaminfair@google.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, arnd@arnd.de, Avi Fishman <avifishman70@gmail.com>, Nancy Yuen <yuenn@google.com>, Brendan Higgins <brendanhiggins@google.com>, Patrick Venture <venture@google.com>, Joel Stanley <joel@jms.id.au>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux HWMON List <linux-hwmon@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, jacmet@sunsite.dk, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
---0000000000008ee45705711d033c
-Content-Type: text/plain; charset="UTF-8"
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-[+Benjamin Fair]
+Add support of Common Clock Framework for Uartlite driver.
 
-Hi Greg,
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+---
+v2:
+removed the suspend resume changes to separate driver
 
-This hardware is working in the same manner that Aspeed lpc snooping driver
-(/drivers/misc/aspeed-lpc-snoop.c)
+ drivers/tty/serial/uartlite.c | 49 +++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 47 insertions(+), 2 deletions(-)
 
-On 16 July 2018 at 14:33, Greg KH <gregkh@linuxfoundation.org> wrote:
+diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
+index 0f798f7..b3a12be 100644
+--- a/drivers/tty/serial/uartlite.c
++++ b/drivers/tty/serial/uartlite.c
+@@ -21,6 +21,7 @@
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
+ #include <linux/of_platform.h>
++#include <linux/clk.h>
+ 
+ #define ULITE_NAME		"ttyUL"
+ #define ULITE_MAJOR		204
+@@ -56,6 +57,7 @@
+ 
+ struct uartlite_data {
+ 	const struct uartlite_reg_ops *reg_ops;
++	struct clk *clk;
+ };
+ 
+ struct uartlite_reg_ops {
+@@ -261,8 +263,15 @@ static void ulite_break_ctl(struct uart_port *port, int ctl)
+ 
+ static int ulite_startup(struct uart_port *port)
+ {
++	struct uartlite_data *pdata = port->private_data;
+ 	int ret;
+ 
++	ret = clk_enable(pdata->clk);
++	if (ret) {
++		dev_err(port->dev, "Failed to enable clock\n");
++		return ret;
++	}
++
+ 	ret = request_irq(port->irq, ulite_isr, IRQF_SHARED | IRQF_TRIGGER_RISING,
+ 			  "uartlite", port);
+ 	if (ret)
+@@ -277,9 +286,12 @@ static int ulite_startup(struct uart_port *port)
+ 
+ static void ulite_shutdown(struct uart_port *port)
+ {
++	struct uartlite_data *pdata = port->private_data;
++
+ 	uart_out32(0, ULITE_CONTROL, port);
+ 	uart_in32(ULITE_CONTROL, port); /* dummy */
+ 	free_irq(port->irq, port);
++	clk_disable(pdata->clk);
+ }
+ 
+ static void ulite_set_termios(struct uart_port *port, struct ktermios *termios,
+@@ -370,6 +382,17 @@ static int ulite_verify_port(struct uart_port *port, struct serial_struct *ser)
+ 	return -EINVAL;
+ }
+ 
++static void ulite_pm(struct uart_port *port, unsigned int state,
++		     unsigned int oldstate)
++{
++	struct uartlite_data *pdata = port->private_data;
++
++	if (!state)
++		clk_enable(pdata->clk);
++	else
++		clk_disable(pdata->clk);
++}
++
+ #ifdef CONFIG_CONSOLE_POLL
+ static int ulite_get_poll_char(struct uart_port *port)
+ {
+@@ -405,6 +428,7 @@ static const struct uart_ops ulite_ops = {
+ 	.request_port	= ulite_request_port,
+ 	.config_port	= ulite_config_port,
+ 	.verify_port	= ulite_verify_port,
++	.pm		= ulite_pm,
+ #ifdef CONFIG_CONSOLE_POLL
+ 	.poll_get_char	= ulite_get_poll_char,
+ 	.poll_put_char	= ulite_put_poll_char,
+@@ -669,7 +693,6 @@ static int ulite_release(struct device *dev)
+ /* ---------------------------------------------------------------------
+  * Platform bus binding
+  */
+-
+ #if defined(CONFIG_OF)
+ /* Match table for of_platform binding */
+ static const struct of_device_id ulite_of_match[] = {
+@@ -684,7 +707,7 @@ static int ulite_probe(struct platform_device *pdev)
+ {
+ 	struct resource *res;
+ 	struct uartlite_data *pdata;
+-	int irq;
++	int irq, ret;
+ 	int id = pdev->id;
+ #ifdef CONFIG_OF
+ 	const __be32 *prop;
+@@ -706,11 +729,33 @@ static int ulite_probe(struct platform_device *pdev)
+ 	if (irq <= 0)
+ 		return -ENXIO;
+ 
++	pdata->clk = devm_clk_get(&pdev->dev, "s_axi_aclk");
++	if (IS_ERR(pdata->clk)) {
++		if (PTR_ERR(pdata->clk) != -ENOENT)
++			return PTR_ERR(pdata->clk);
++
++		/*
++		 * Clock framework support is optional, continue on
++		 * anyways if we don't find a matching clock.
++		 */
++		pdata->clk = NULL;
++	}
++
++	ret = clk_prepare(pdata->clk);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to prepare clock\n");
++		return ret;
++	}
++
+ 	return ulite_assign(&pdev->dev, id, res->start, irq, pdata);
+ }
+ 
+ static int ulite_remove(struct platform_device *pdev)
+ {
++	struct uart_port *port = dev_get_drvdata(&pdev->dev);
++	struct uartlite_data *pdata = port->private_data;
++
++	clk_disable_unprepare(pdata->clk);
+ 	return ulite_release(&pdev->dev);
+ }
+ 
+-- 
+2.7.4
 
-> On Wed, Jul 04, 2018 at 12:14:27PM +0300, Tomer Maimon wrote:
-> > Add Nuvoton BMC NPCM7xx BIOS post code (BPC) driver.
-> >
-> > The NPCM7xx BPC monitoring two I/O address written by
-> > the host on the Low Pin Count (LPC) bus, the capure
-> > data stored in 128-word FIFO.
-> >
-> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
->
-> It would be great to get someone else who knows that this hardware is
-> supposed to be doing to ack or sign-off on this patch, as I don't know
-> if this really is providing the correct api for it or not.
->
-
-Joel could you sign-off this patch please.
-
-Right now it's just reading data from the hardware, what good is that?
-> Who uses this?  What userspace tools connect up to it?
->
-
-BMC is logging a configurable I/O port (for example 0x80 port which is BIOS
-post code) and remote management can get.
-
-about tools, the OpenBMC is using it.
-https://github.com/openbmc/phosphor-host-postd
-
-
-> thanks,
->
-> greg k-h
->
-
-thanks,
-
-Tomer
-
---0000000000008ee45705711d033c
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">[+Benjamin Fair]=C2=A0<div><br></div><div>Hi Greg,</div><d=
-iv><br></div><div>This hardware is working in the same manner that Aspeed l=
-pc snooping driver (/drivers/misc/aspeed-lpc-snoop.c)</div><div><br></div><=
-div class=3D"gmail_extra"><div class=3D"gmail_quote">On 16 July 2018 at 14:=
-33, Greg KH <span dir=3D"ltr">&lt;<a href=3D"mailto:gregkh@linuxfoundation.=
-org" target=3D"_blank">gregkh@linuxfoundation.org</a>&gt;</span> wrote:<br>=
-<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
-left:1px solid rgb(204,204,204);padding-left:1ex"><span class=3D"gmail-">On=
- Wed, Jul 04, 2018 at 12:14:27PM +0300, Tomer Maimon wrote:<br>
-&gt; Add Nuvoton BMC NPCM7xx BIOS post code (BPC) driver.<br>
-&gt; <br>
-&gt; The NPCM7xx BPC monitoring two I/O address written by<br>
-&gt; the host on the Low Pin Count (LPC) bus, the capure<br>
-&gt; data stored in 128-word FIFO.<br>
-&gt; <br>
-&gt; Signed-off-by: Tomer Maimon &lt;<a href=3D"mailto:tmaimon77@gmail.com"=
->tmaimon77@gmail.com</a>&gt;<br>
-<br>
-</span>It would be great to get someone else who knows that this hardware i=
-s<br>
-supposed to be doing to ack or sign-off on this patch, as I don&#39;t know<=
-br>
-if this really is providing the correct api for it or not.=C2=A0<br></block=
-quote><div>=C2=A0</div><div>Joel could you sign-off this patch please.</div=
-><div><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0=
-px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-Right now it&#39;s just reading data from the hardware, what good is that?<=
-br>
-Who uses this?=C2=A0 What userspace tools connect up to it?<br></blockquote=
-><div><br></div><div>BMC is logging a configurable I/O port (for example 0x=
-80 port which is BIOS post code) and remote management can get.=C2=A0</div>=
-<div><br></div><div>about tools, the OpenBMC is using it.</div><div><a href=
-=3D"https://github.com/openbmc/phosphor-host-postd">https://github.com/open=
-bmc/phosphor-host-postd</a><br></div><div>=C2=A0</div><blockquote class=3D"=
-gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(20=
-4,204,204);padding-left:1ex">
-thanks,<br>
-<br>
-greg k-h<br></blockquote><div><br></div><div>thanks,</div><div><br></div><d=
-iv>Tomer=C2=A0</div></div><br></div></div>
-
---0000000000008ee45705711d033c--
