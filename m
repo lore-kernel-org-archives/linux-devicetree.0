@@ -1,83 +1,49 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: add DT documentation for the sound-name-prefix property" to the asoc tree
-Date: Fri, 13 Jul 2018 16:10:14 +0100 (BST)
-Message-ID: <20180713151014.D9E5444007E@finisterre.ee.mobilebroadband>
-References: <20180713125043.13242-2-jbrunet@baylibre.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pfuze100: add optional disable
+ switch-regulators binding
+Date: Fri, 13 Jul 2018 16:03:14 +0100
+Message-ID: <20180713150314.GD16228@sirena.org.uk>
+References: <20180713125002.24331-1-m.felsch@pengutronix.de>
+ <20180713125002.24331-2-m.felsch@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="C+ts3FVlLX8+P6JN"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180713125043.13242-2-jbrunet@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <20180713125002.24331-2-m.felsch@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.orgalsa-devel@alsa-project.org
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, fabio.estevam@nxp.com, Anson.Huang@nxp.com, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
 
-   ASoC: add DT documentation for the sound-name-prefix property
+--C+ts3FVlLX8+P6JN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-has been applied to the asoc tree at
+On Fri, Jul 13, 2018 at 02:50:01PM +0200, Marco Felsch wrote:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+> +Optional properties:
+> +- fsl,pfuze-support-disable: Boolean, if present disable all unused switch
+> +  regulators to save power consumption. Attention, till 4.18 these regulators
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+The property name sounds like it affects all the regulators but really
+it's just the sw ones - how about adding -sw at the end?  Bit of a
+bikeshed but it does end up in an ABI.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+--C+ts3FVlLX8+P6JN
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+-----BEGIN PGP SIGNATURE-----
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltIvzEACgkQJNaLcl1U
+h9DQzQgAg4+A2buzEZeWVLozK89w3p8isr1qmFeTm9xW9OW/UT+i7waDOYhOaRbo
+UKqpmjMfgZOhDcMV3JSxUy3Ji8EbhnqeuBzAXWO8lz221sYGgzgveIatwnM0t5VH
+McjsglbkOBr8rxRAc55b64CL4Yj7A/oyxCJmN4fiQPnzTDYUYQpj92dy2l3na08l
+XQI8XNbeu/FO9y+Wg5WeHrAHuUuOFtpC4hK89n8AHvI8XFhg8L4MmR2/j4Jm4Nt4
+fXNIoy+tjgujza7xhgvfimD/g984Biv20c2tri7YhZBURF/IUXPC+a0sjJFHlwcD
+40ISgJQT6r8Y+tprxtd6QsGQe2B1Pw==
+=In62
+-----END PGP SIGNATURE-----
 
-Thanks,
-Mark
-
->From d5418ae3f9443f911d4324c0cade988ced39cfbe Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Fri, 13 Jul 2018 14:50:42 +0200
-Subject: [PATCH] ASoC: add DT documentation for the sound-name-prefix property
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/sound/name-prefix.txt | 24 +++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/name-prefix.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/name-prefix.txt b/Documentation/devicetree/bindings/sound/name-prefix.txt
-new file mode 100644
-index 000000000000..645775908657
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/name-prefix.txt
-@@ -0,0 +1,24 @@
-+Name prefix:
-+
-+Card implementing the routing property define the connection between
-+audio components as list of string pair. Component using the same
-+sink/source names may use the name prefix property to prepend the
-+name of their sinks/sources with the provided string.
-+
-+Optional name prefix property:
-+- sound-name-prefix : string using as prefix for the sink/source names of
-+		      the component.
-+
-+Example: Two instances of the same component.
-+
-+amp0: analog-amplifier@0 {
-+	compatible = "simple-audio-amplifier";
-+	enable-gpios = <&gpio GPIOH_3 0>;
-+	sound-name-prefix = "FRONT";
-+};
-+
-+amp1: analog-amplifier@1 {
-+	compatible = "simple-audio-amplifier";
-+	enable-gpios = <&gpio GPIOH_4 0>;
-+	sound-name-prefix = "BACK";
-+};
--- 
-2.18.0
+--C+ts3FVlLX8+P6JN--
