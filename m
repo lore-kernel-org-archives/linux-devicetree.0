@@ -1,60 +1,73 @@
-From: Radu Pirea <radu.pirea@microchip.com>
-Subject: Re: [PATCH v10 5/6] spi: at91-usart: add driver for at91-usart as spi
-Date: Fri, 13 Jul 2018 12:56:22 +0300
-Message-ID: <dc410321-5dfd-7c26-2a3e-d2b2840da214@microchip.com>
-References: <20180625172230.29686-1-radu.pirea@microchip.com>
- <20180625172230.29686-6-radu.pirea@microchip.com>
- <20180710181559.GG8104@sirena.org.uk>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: RFC: tegra2/tegra3 automotive part changes
+Date: Fri, 13 Jul 2018 10:58:07 +0100
+Message-ID: <8f050541-6b4c-34ed-2462-066313156180@nvidia.com>
+References: <3916c0ea-964e-42ab-8bfd-8e8edc5110ee@codethink.co.uk>
+ <fecd5597-1b04-6409-b87c-5cda54d43ce0@wwwdotorg.org>
+ <4f215c76-6539-1130-6c1f-75f0a3df068a@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180710181559.GG8104@sirena.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4f215c76-6539-1130-6c1f-75f0a3df068a@codethink.co.uk>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, lee.jones@linaro.org, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>, Stephen Warren <swarren@wwwdotorg.org>
+Cc: Terry Hu <kejia.hu@codethink.co.uk>, Device Tree list <devicetree@vger.kernel.org>, jorgesanjuan <jorge.sanjuan@codethink.co.uk>, Thomas Preston <thomas.preston@codethink.co.uk>, linux-tegra <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Beth White <beth.white@codethink.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 07/10/2018 09:15 PM, Mark Brown wrote:
-> On Mon, Jun 25, 2018 at 08:22:29PM +0300, Radu Pirea wrote:
-> 
-> This is mostly good, just a couple of small things:
-> 
->> +config SPI_AT91_USART
->> +	tristate "Atmel USART Controller SPI driver"
->> +	depends on HAS_DMA
->> +	depends on (ARCH_AT91 || COMPILE_TEST)
->> +	select MFD_AT91_USART
-> 
-> Why is this selecting rather than depending on the MFD like we normally
-> do?
-> 
-
-Hi Mark,
-
-If I add depends instead of select, current defconfigs will be broken 
-and the proper driver will not be selected. Like this, there is no 
-required change in any defconfig. Selecting the serial or spi driver 
-from menuconfig makes the MFD completely transparent.
->> @@ -0,0 +1,432 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Driver for AT91 USART Controllers as SPI
->> + *
->> + * Copyright (C) 2018 Microchip Technology Inc.
->> + * Author: Radu Pirea <radu.pirea@microchip.com>
->> + */
-> 
-> Please use C++ comments for the whole block so it looks a bit more
-> intentional.
-
-Ok. I will change it.
-
-> 
-> Otherwise
-> 
-> Reviwed-by: Mark Brown <broonie@kernel.org>
-> 
+Ck9uIDEzLzA3LzE4IDEwOjQxLCBCZW4gRG9va3Mgd3JvdGU6Cj4gT24gMTIvMDcvMTggMTY6NTYs
+IFN0ZXBoZW4gV2FycmVuIHdyb3RlOgo+PiBPbiAwNy8xMi8yMDE4IDA3OjM2IEFNLCBCZW4gRG9v
+a3Mgd3JvdGU6Cj4+PiBIZWxsbywgd2UgYXJlIGxvb2tpbmcgYXQgdXAtc3RyZWFtaW5nIHNvbWUg
+b2YgdGhlIHdvcmsgd2UgaGF2ZQo+Pj4gZG9uZSBvbiB0aGUgdGVncmEyIGFuZCB0ZWdyYTMgYXV0
+b21vdGl2ZSBkZXZpY2VzLiBUaGUgYXV0b21vdGl2ZQo+Pj4gZ3JhZGUgZGV2aWNlcyBhcmUgY2xv
+c2UgdGhlIGNvbW1lcmNpYWwgcGFydHMgc28gd2Ugd291bGQgbGlrZSB0bwo+Pj4gZGlzY3VzcyB0
+aGUgY29yZSBjaGFuZ2VzIGJlZm9yZSBzdWJtaXR0aW5nLgo+Pj4KPj4+IFRoZSBjaGFuZ2VzIGFy
+ZSBtb3N0bHkgd2l0aCB0aGluZ3MgbGlrZSB0aGUgY2xvY2sgc2V0dXAgYW5kIGEKPj4+IGZldyBw
+ZXJpcGhlcmFsIHF1aXJrcyAoSUlSQyB0aGVzZSBhcmUgbW9zdGx5IE1NQykuCj4+Pgo+Pj4gV2Ug
+YXJlIHByb3Bvc2luZyB0byBjaGFuZ2UgdGhlIGRldmljZS10cmVlIHByb3BlcnRpZXMgZm9yIHRo
+ZSByb290Cj4+PiBub2RlIGFuZCBhbnkgb3RoZXIgYWZmZWN0ZWQgZGV2aWNlcyBmcm9tICJudmlk
+aWEsdGVncmFYWCIgdG8gYSBuZXcKPj4+ICJudmlkaWEsdGVncmFYWGEiLiBXZSB3b3VsZCB3ZWxj
+b21lIGRpc2N1c3Npb24gb24gd2hldGhlciB0byB1cGRhdGUKPj4+IGFsbCB0aGUgZGV2aWNlcyBh
+dCB0aGUgc3RhcnQKPj4+Cj4+PiBBbiBleGFtcGxlIG9mIHRlZ3JhMzBhLmR0c2k6Cj4+Pgo+Pj4g
+I2luY2x1ZGUgInRlZ3JhMzAuZHRzaSIKPj4+Cj4+PiAvIHsKPj4+IMKgwqDCoMKgwqDCoMKgwqAg
+Y29tcGF0aWJsZSA9ICJudmlkaWEsdGVncmEzMGEiOwo+Pj4KPj4+IMKgwqDCoMKgwqDCoMKgwqAg
+Y2xvY2tANjAwMDYwMDAgewo+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29t
+cGF0aWJsZSA9ICJudmlkaWEsdGVncmEzMGEtY2FyIjsKPj4+IMKgwqDCoMKgwqDCoMKgwqAgfTsK
+Pj4+IH0KPj4KPj4gVGhpcyBkb2Vzbid0IHNvdW5kIHJpZ2h0LiBBdXRvIGFuZCBjb21tZXJjaWFs
+IHBhcnRzIGFyZSBpZGVudGljYWwgQUZBSUs7IGl0J3MganVzdCBxdWFsaWZpY2F0aW9uIGRpZmZl
+cmVuY2VzLiBIZW5jZSBhdCBtb3N0IHlvdSdkIGFkZCBhbiBleHRyYSBjb21wYXRpYmxlIHZhbHVl
+IGFuZCBub3QgcmVtb3ZlIHRoZSBvbGQgb25lLiBCZXR0ZXIgbWlnaHQgYmUgdG8gZGV0ZWN0IHRo
+aXMgYXQgcnVuLXRpbWUgZnJvbSB0aGUgZnVzZXMuIEkgdGhpbmsgd2UgYWxyZWFkeSBkbyBzb21l
+IG9mIHRoYXQgYWxyZWFkeTsgc2VhcmNoIGZvciBzcGVlZG8gcmVsYXRlZCBjb2RlIGluIGFyY2gv
+YXJtL21hY2gtdGVncmEvLgo+IAo+IFRoZSBudmlkaWEgcGRrIGZvciB0aGUgYXV0b21vdGl2ZSBk
+aWRuJ3Qgc2V0IHRoZSBjbG9ja3MgdXAgaW4gdGhlCj4gc2FtZSB3YXkgYW5kIHdlIHdoZXJlIHRv
+bGQgdGhhdCB0aGVyZSBhcmUgY2VydGFpbiBjbG9jayByZXN0cmljdGlvbnMKPiBmb3IgdGhlIGF1
+dG9tb3RpdmUgcGFydHMgdGhhdCB0aGUgY29tbWVyY2lhbCBvbmVzIGRvIG5vdCBoYXZlLiBTb21l
+IG9mCj4gdGhpcyBjYW1lIGZyb20gaW50ZXJuYWwgZGlzY3Vzc2lvbnMgd2l0aCBudmlkaWEgYW5k
+IE5EQSdkIGRhdGFzaGVldHMKPiBzbyBJIGRvbid0IGtub3cgaG93IG11Y2ggYWN0dWFsIGRhdGEg
+SSBjYW4gc2hhcmUuCj4gCj4gVG8gZ2V0IHRoZSA0LjQga2VybmVsIHRvIGJlIHNpbWlsYXIgZW5v
+dWdoIHRvIHdvcmsgd2l0aCB0aGUgdGVncmEzMGEKPiB3ZSBoYWQgdG8gZG8gc29tZSBjaGFuZ2Vz
+IHRvIHRoZSBjbG9jayBpbml0aWFsaXNhdGlvbi4gRm9yIHRoaW5ncwo+IGxpa2UgdGhlIGNsb2Nr
+IEkgYW0gbm90IHN1cmUgaWYgbGVhdmluZyBhIHRlZ3JhMzAtY2FyIGluIHRoZXJlIHdvdWxkCj4g
+YmUgYSBnb29kIGlkZWEsIGl0IG1heSBib290IGJ1dCBwcm9iYWJseSB3b24ndCBiZSBzdGFibGUu
+Cj4gCj4gRm9yIHRoZSBmdXNlcywgaXMgdGhlIGZ1c2UgZHJpdmVyIHVwIGVhcmx5IGVub3VnaCB0
+byBhbGxvdyB0aGUgY2xvY2sKPiBkcml2ZXIgY291bGQgdXNlIHRoaXM/IG90aGVyd2lzZSBJIHRo
+aW5rIHRoZSBkZXZpY2UtdHJlZSBjaGFuZ2Ugd291bGQKPiBiZSB0aGUgb25seSB3YXkuIEknbSBu
+b3Qgc3VyZSBpZiBJIGhhdmUgdGhlIGluZm9ybWF0aW9uIHRvIGhhbmQgb24KPiBob3cgdG8gZGlm
+ZmVyZW50aWF0ZSB0aGUgdGVncmEzMCBhbmQgdGVncmEyMC4KCkl0IHNob3VsZCBiZSwgaWYgeW91
+IHNlZSBkcml2ZXJzL3NvYy90ZWdyYS9mdXNlL2Z1c2UtdGVncmEuYyB0aGVyZSBpcyBhbgonZWFy
+bHlfaW5pdGNhbGwodGVncmFfaW5pdF9mdXNlKScgYW5kIHRoZXJlIGlzIGEgJ3RlZ3JhX2Z1c2Vf
+cmVhZF9lYXJseSgpJwpmdW5jdGlvbiB0aGF0IGNhbiBiZSB1c2VkLiAKCkNoZWVycwpKb24KCi0t
+IApudnB1YmxpYwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+bGludXgtYXJtLWtlcm5lbAo=
