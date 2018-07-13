@@ -1,29 +1,72 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 0/2] Stingray Smart NIC DT support
-Date: Fri, 13 Jul 2018 07:25:50 -0700
-Message-ID: <bbc882af-10e3-a077-cd36-bb5553a8aefe@gmail.com>
-References: <1531257931-11591-1-git-send-email-ray.jui@broadcom.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH V2 1/2] dt-bindings: mtd: explicitly document nesting
+ partitions descriptions
+Date: Fri, 13 Jul 2018 16:32:20 +0200
+Message-ID: <20180713143221.8474-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531257931-11591-1-git-send-email-ray.jui@broadcom.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>, linux-arm-kernel@lists.infradead.org, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Jonas Gorski <jonas.gorski@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 07/10/2018 02:25 PM, Ray Jui wrote:
-> This patch series adds DT support for Stingray smart NIC boards
-> 
-> This patch series is based off v4.18-rc3 and is available on GIHUB:
-> repo: https://github.com/Broadcom/arm64-linux.git
-> branch: sr-smartnic-dt-v1
-
-Series applied to devicetree-arm64/next, thanks. I will be sending an
-update set of 4.19 pull requests with those included.
--- 
-Florian
+RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKRG9jdW1lbnRhdGlvbiB3
+YXMgYWxyZWFkeSBzYXlpbmcgdGhhdCBmaXhlZCBhbmQgZHluYW1pYyBwYXJ0aXRpb25pbmcgY2Fu
+CmJlIG1peGVkIGJ1dCB3YXMgbWlzc2luZyBhIGNsZWFyIGRlc2NyaXB0aW9uIGFuZCBleGFtcGxl
+cy4gVGhpcyBjb21taXQKYWRkcyBhIHByb3BlciBkb2N1bWVudGF0aW9uIG9mIGhvdyBkZXNjcmlw
+dGlvbnMgY2FuIGJlIG5lc3RlZCBhbmQgaG93CmxheW91dHMgY2FuIGJlIG1peGVkLgoKVGhpcyBh
+ZGRpdGlvbiBpcyBpbXBvcnRhbnQgZm9yIHBhcnRpdGlvbnMgdGhhdCBjb250YWluIHN1YnBhcnRp
+dGlvbnMuCkluIHN1Y2ggY2FzZXMgcGFydGl0aW9ucyBoYXZlIHRvIGJlIHByb3Blcmx5IGRlc2Ny
+aWJlZCBpbiBvcmRlciB0byBsZXQKc3lzdGVtIGhhbmRsZSB0aGVtIGNvcnJlY3RseS4KCkRlcGVu
+ZGluZyBvbiBzaXR1YXRpb24sIG5lc3RpbmcgZGVzY3JpcHRpb25zIG1heSBwcm92aWRlIG1vcmUg
+YWNjdXJhdGUKbG9naWMvc3RydWN0dXJlIGFuZC9vciBhbGxvdyBtaXhpbmcgcGFydGl0aW9uaW5n
+IHR5cGVzICh2YXJpb3VzCiJjb21wYXRpYmxlIiB2YWx1ZXMpLgoKU2lnbmVkLW9mZi1ieTogUmFm
+YcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgotLS0KVjI6IFJld3JvdGUgZXhhbXBsZTog
+SSBjYW4gaW5jbHVkZSAiYnJjbSx0cngiIG5vdyBhcyBpdHMgRG9jdW1lbnRhdGlvbgogICAgaGFz
+IGJlZW4gcHVzaGVkIGludG8gbXRkIGdpdCB0cmVlLgogICAgVXBkYXRlZCBjb21taXQgbWVzc2Fn
+ZS4KLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9uLnR4dCAgICAgICAg
+ICB8IDQ2ICsrKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA0NiBpbnNlcnRp
+b25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210
+ZC9wYXJ0aXRpb24udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9w
+YXJ0aXRpb24udHh0CmluZGV4IGE4ZjM4MjY0MmJhOS4uYWZiYmQ4NzA0OTZkIDEwMDY0NAotLS0g
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3BhcnRpdGlvbi50eHQKKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0aXRpb24udHh0CkBA
+IC0xNCw2ICsxNCwxMyBAQCBtZXRob2QgaXMgdXNlZCBmb3IgYSBnaXZlbiBmbGFzaCBkZXZpY2Uu
+IFRvIGRlc2NyaWJlIHRoZSBtZXRob2QgdGhlcmUgc2hvdWxkIGJlCiBhIHN1Ym5vZGUgb2YgdGhl
+IGZsYXNoIGRldmljZSB0aGF0IGlzIG5hbWVkICdwYXJ0aXRpb25zJy4gSXQgbXVzdCBoYXZlIGEK
+ICdjb21wYXRpYmxlJyBwcm9wZXJ0eSwgd2hpY2ggaXMgdXNlZCB0byBpZGVudGlmeSB0aGUgbWV0
+aG9kIHRvIHVzZS4KIAorV2hlbiBhIHNpbmdsZSBwYXJ0aXRpb24gaXMgcmVwcmVzZW50ZWQgd2l0
+aCBhIERUIG5vZGUgKGl0IGRlcGVuZHMgb24gYSB1c2VkCitmb3JtYXQpIGl0IG1heSBhbHNvIGJl
+IGRlc2NyaWJlZCB1c2luZyBhYm92ZSBydWxlcyAoJ2NvbXBhdGlibGUnIGFuZCBvcHRpb25hbGx5
+Citzb21lIGV4dHJhIHByb3BlcnRpZXMgLyBzdWJub2RlcykuIEl0IGFsbG93cyBkZXNjcmliaW5n
+IG1vcmUgY29tcGxleCwKK2hpZXJhcmNoaWNhbCAobXVsdGktbGV2ZWwpIGxheW91dHMgYW5kIHNo
+b3VsZCBiZSB1c2VkIGlmIHRoZXJlIGlzIHNvbWUKK3NpZ25pZmljYW50IHJlbGF0aW9uIGJldHdl
+ZW4gcGFydGl0aW9ucyBvciBzb21lIHBhcnRpdGlvbiBpbnRlcm5hbGx5IHVzZXMKK2Fub3RoZXIg
+cGFydGl0aW9uaW5nIG1ldGhvZC4KKwogQXZhaWxhYmxlIGJpbmRpbmdzIGFyZSBsaXN0ZWQgaW4g
+dGhlICJwYXJ0aXRpb25zIiBzdWJkaXJlY3RvcnkuCiAKIApAQCAtMTA5LDMgKzExNiw0MiBAQCBm
+bGFzaEAyIHsKIAkJfTsKIAl9OwogfTsKKworZmxhc2hAMyB7CisJcGFydGl0aW9ucyB7CisJCWNv
+bXBhdGlibGUgPSAiZml4ZWQtcGFydGl0aW9ucyI7CisJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owor
+CQkjc2l6ZS1jZWxscyA9IDwxPjsKKworCQlwYXJ0aXRpb25AMCB7CisJCQlsYWJlbCA9ICJib290
+bG9hZGVyIjsKKwkJCXJlZyA9IDwweDAwMDAwMCAweDEwMDAwMD47CisJCQlyZWFkLW9ubHk7CisJ
+CX07CisKKwkJZmlybXdhcmVAMTAwMDAwIHsKKwkJCWxhYmVsID0gImZpcm13YXJlIjsKKwkJCXJl
+ZyA9IDwweDEwMDAwMCAweGUwMDAwMD47CisJCQljb21wYXRpYmxlID0gImJyY20sdHJ4IjsKKwkJ
+fTsKKworCQljYWxpYnJhdGlvbkBmMDAwMDAgeworCQkJbGFiZWwgPSAiY2FsaWJyYXRpb24iOwor
+CQkJcmVnID0gPDB4ZjAwMDAwIDB4MTAwMDAwPjsKKwkJCWNvbXBhdGlibGUgPSAiZml4ZWQtcGFy
+dGl0aW9ucyI7CisJCQlyYW5nZXMgPSA8MCAweGYwMDAwMCAweDEwMDAwMD47CisJCQkjYWRkcmVz
+cy1jZWxscyA9IDwxPjsKKwkJCSNzaXplLWNlbGxzID0gPDE+OworCisJCQlwYXJ0aXRpb25AMCB7
+CisJCQkJbGFiZWwgPSAid2lmaTAiOworCQkJCXJlZyA9IDwweDAwMDAwMCAweDA4MDAwMD47CisJ
+CQl9OworCisJCQlwYXJ0aXRpb25AODAwMDAgeworCQkJCWxhYmVsID0gIndpZmkxIjsKKwkJCQly
+ZWcgPSA8MHgwODAwMDAgMHgwODAwMDA+OworCQkJfTsKKwkJfTsKKwl9OworfTsKLS0gCjIuMTMu
+NwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tdGQvCg==
