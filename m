@@ -1,136 +1,58 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Re: [PATCH 1/2] ARM: sun8i: h3: enable HDMI output
- on Banana Pi M2 Zero
-Date: Fri, 13 Jul 2018 09:45:50 +0200
-Message-ID: <20180713074550.mna4nqbjringf2xn@flea.home>
-References: <20180711132233.42301-1-icenowy@aosc.io>
- <20180711132233.42301-2-icenowy@aosc.io>
- <20180711150532.6gzm7krouriddreh@flea>
- <8F6CDF5C-2AC1-43EC-858A-5C6345CF279A@aosc.io>
- <20180712064601.m3bdd46wzac5fpgh@flea>
- <A7CA2831-7117-415C-BC59-3FB4AE425598@aosc.io>
- <20180712145306.ootqt7dfh3nxsamy@flea>
- <82CD0BCE-9DE4-45D7-8DF4-FCCFBC70BECF@aosc.io>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 1/5] dt-bindings: mfd: axp20x: Add "self-working" mode
+ for AXP806
+Date: Fri, 13 Jul 2018 08:52:45 +0100
+Message-ID: <20180713075245.GX4641@dell>
+References: <20180712160452.5516-1-wens@csie.org>
+ <20180712160452.5516-2-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="m4qdj5cmxwskf2b4"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBL5RUHNAKGQETEOSFUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <82CD0BCE-9DE4-45D7-8DF4-FCCFBC70BECF-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20180712160452.5516-2-wens@csie.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-
---m4qdj5cmxwskf2b4
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jul 13, 2018 at 10:28:08AM +0800, Icenowy Zheng wrote:
->=20
->=20
-> =E4=BA=8E 2018=E5=B9=B47=E6=9C=8812=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
-10:53:06, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
-> >On Thu, Jul 12, 2018 at 03:09:55PM +0800, Icenowy Zheng wrote:
-> >> =E4=BA=8E 2018=E5=B9=B47=E6=9C=8812=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
-=882:46:01, Maxime Ripard
-> ><maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
-> >> >On Wed, Jul 11, 2018 at 11:15:50PM +0800, Icenowy Zheng wrote:
-> >> >>=20
-> >> >>=20
-> >> >> =E4=BA=8E 2018=E5=B9=B47=E6=9C=8811=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=
-=8D=8811:05:32, Maxime Ripard
-> >> ><maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
-> >> >> >Hi,
-> >> >> >
-> >> >> >On Wed, Jul 11, 2018 at 09:22:32PM +0800, Icenowy Zheng wrote:
-> >> >> >> Banana Pi M2 Zero board has a miniHDMI port connected to the
-> >HDMI
-> >> >> >> controller of Allwinner H3 SoC.
-> >> >> >>=20
-> >> >> >> Enable the HDMI output in Banana Pi M2 Zero device tree.
-> >> >> >>=20
-> >> >> >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> >> >> >> ---
-> >> >> >>  .../dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 25
-> >> >> >+++++++++++++++++++
-> >> >> >>  1 file changed, 25 insertions(+)
-> >> >> >>=20
-> >> >> >> diff --git
-> >a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> >> >> >b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> >> >> >> index 7d01f9322658..eb61dcf32797 100644
-> >> >> >> --- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> >> >> >> +++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> >> >> >> @@ -26,6 +26,17 @@
-> >> >> >>  		stdout-path =3D "serial0:115200n8";
-> >> >> >>  	};
-> >> >> >> =20
-> >> >> >> +	hdmi-connector {
-> >> >> >> +		compatible =3D "hdmi-connector";
-> >> >> >> +		type =3D "c";
-> >> >> >
-> >> >> >This is not one of the connector type declared in DRM, how is it
-> >> >> >exposed to the userspace?
-> >> >>=20
-> >> >> So just use "A" here (because of single link)?
-> >> >
-> >> >If the connector type is C, it should be C, and DRM / driver
-> >adjusted
-> >> >to handle it.
-> >>=20
-> >> Okay I won't change this property, if there's any further revisions.
-> >>=20
-> >> For DRM driver, I think it can be an independent patchset.
-> >
-> >Not really, since it's going to break userspace as soon as you merge
-> >that other patchset.
->=20
-> Should we bother the DRM maintainer to ask for any advice?
-
-You can if you want.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---m4qdj5cmxwskf2b4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAltIWK0ACgkQ0rTAlCFN
-r3RzMw/+NOkagve5cYYwxlSLdNY9jj3qM5FjCUr/TmXaI0Nt6pTkex/h/leNZzQn
-+sudTr+MqPSsvvlHFSJYHPBB/rvWLbIm2VJmv6dZityvXag24GPN0B+yz1V0fjs2
-Z9pNembUi6dc09AjqPU9JJOG5pDok2ve4xMk9l4wOKkLUIiWiyCm31zWuivBGpmN
-KkvbzDtRIsmUX6ECusEtBQbmaSlqr7HoAdfepahqo6Be7IeGuL6RyFip7ys4VHAR
-VZ0eWogahg0tFAXGGCtfjuG5CojTuw92AF89LzbXq/5YzEuJoyZJ1l547qn+fhVH
-TCSTAwvBmRPyQAprwGndcmHSiYeBp1bdIcBUVncLHBiRbtaC+y8xd72d3OAHMd81
-4QF5SNXuFmegY3EelXCbfoZaMXewZEwvBYKRKbHUS/NRpf5s1P7+5y5RKDRQtFq7
-VwDCb2NW1Z4ettMyELMgVi1ubt3essug701dg3BpwEiG/mROb/TDC5cNo9Ob2BwN
-Nu70XyNZ4prVjYEPLuwjmivniJGndj8R1CHBPYYt7l/zE6qQEDnGZ60NCPn6ISWU
-5FIfi1oveUX5a0iiFBjeq3tPg0hc9Ehy8mVdd3EH7C/hzFBpZRROTWfYx83fTOEe
-+cn4IQG8MM2ZPXw0By77wGaiX8IGuul5yb7pUoVXc0z74gFnoF4=
-=rPGU
------END PGP SIGNATURE-----
-
---m4qdj5cmxwskf2b4--
+T24gRnJpLCAxMyBKdWwgMjAxOCwgQ2hlbi1ZdSBUc2FpIHdyb3RlOgoKPiBUaGUgQVhQODA2IGhh
+cyB0aHJlZSBvcGVyYXRpb24gbW9kZXM6Cj4gCj4gICAtIG1hc3RlciBtb2RlOiBUaGUgUE1JQyBp
+cyB0aGUgZmlyc3Qgb3Igb25seSBBWFAgUE1JQyBpbiB0aGUgc3lzdGVtLAo+IAkJIGJ1dCBpcyBu
+b3QgaW4gY2hhcmdlIG9mIHBvd2VyIG1hbmFnZW1lbnQsIGkuZS4gb25seQo+IAkJIHByb3ZpZGVz
+IHJlZ3VsYXRvciBmdW5jdGlvbnMuCj4gCj4gICAtIHNsYXZlIG1vZGU6IFRoZSBQTUlDIGlzIHRo
+ZSBzZWNvbmQgQVhQIFBNSUMgaW4gdGhlIHN5c3RlbSwgY2hhaW5lZAo+IAkJdG8gdGhlIGZpcnN0
+LCBvciBtYXN0ZXIsIG9uZS4KPiAKPiAgIC0gc2VsZi13b3JraW5nIG1vZGU6IFRoZSBQTUlDIGlz
+IHRoZSBvbmx5IEFYUCBQTUlDIGluIHRoZSBzeXN0ZW0sIGFuZAo+IAkJICAgICAgIGlzIGluIGNo
+YXJnZSBvZiBwb3dlciBzZXF1ZW5jaW5nLgo+IAo+IFRoZSBmdW5jdGlvbmFsIGRpZmZlcmVuY2Vz
+IGJldHdlZW4gdGhlc2UgbW9kZXMgY2FuIGJlIGZvdW5kIGluIHRoZQo+ICJDb250cm9sIGFuZCBP
+cGVyYXRpb24iIGNoYXB0ZXIgb2YgdGhlIEFYUDgwNiAoaW4gQ2hpbmVzZSkgYW5kIEFYUDgwNQo+
+IChpbiBFbmdsaXNoKSBkYXRhc2hlZXRzLiBUaGVzZSBpbmNsdWRlIGhvdyB0aGUgUE1JQyByZXNw
+b25kcyB0byBleHRlcm5hbAo+IHNpZ25hbHMsIHdoZXRoZXIgaXQgdGFrZXMgYW4gZXh0ZXJuYWwg
+dm9sdGFnZSByZWZlcmVuY2Ugb3IgdXNlcyBpdHMgb3duLAo+IGFuZCB3aGV0aGVyIHRoZSBFTi9Q
+V1JPTiBwaW4gZnVuY3Rpb25zIGFzIGFuIGVuYWJsZSBzd2l0Y2ggb3IgcG93ZXIgYnV0dG9uLgo+
+IAo+IFdlIGFscmVhZHkgc3VwcG9ydCBib3RoIHNsYXZlIGFuZCBtYXN0ZXIgbW9kZS4gVGhpcyBw
+YXRjaCBhZGRzIGEgcHJvcGVydHkKPiBmb3IgZGVzY3JpYmluZyB0aGUgc2VsZi13b3JraW5nIG1v
+ZGUsIGFuZCByZXdvcmtzIHRoZSBkZXNjcmlwdGlvbiBmb3IKPiB0aGUgbW9kZSBwcm9wZXJ0aWVz
+Lgo+IAo+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+IFJldmll
+d2VkLWJ5OiBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFvc2MuaW8+Cj4gVGVzdGVkLWJ5OiBJY2Vu
+b3d5IFpoZW5nIDxpY2Vub3d5QGFvc2MuaW8+Cj4gQWNrZWQtZm9yLU1GRC1ieTogTGVlIEpvbmVz
+IDxsZWUuam9uZXNAbGluYXJvLm9yZz4KPiBBY2tlZC1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1l
+LnJpcGFyZEBib290bGluLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBDaGVuLVl1IFRzYWkgPHdlbnNA
+Y3NpZS5vcmc+Cj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQv
+YXhwMjB4LnR4dCB8IDcgKysrKystLQo+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCsp
+LCAyIGRlbGV0aW9ucygtKQoKQXBwbGllZCwgdGhhbmtzLgoKLS0gCkxlZSBKb25lcyBb5p2O55C8
+5pavXQpMaW5hcm8gU2VydmljZXMgVGVjaG5pY2FsIExlYWQKTGluYXJvLm9yZyDilIIgT3BlbiBz
+b3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCkZvbGxvdyBMaW5hcm86IEZhY2Vib29rIHwgVHdp
+dHRlciB8IEJsb2cKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2xpbnV4LWFybS1rZXJuZWwK
