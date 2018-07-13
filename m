@@ -1,14 +1,15 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH V5 0/5] add iwdg2 support for stm32mp157c
-Date: Fri, 13 Jul 2018 11:30:28 +0200
-Message-ID: <f9a5836b-f740-6fb2-85c6-f77608283cf5@st.com>
-References: <1529941383-8653-1-git-send-email-ludovic.Barre@st.com>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: RFC: tegra2/tegra3 automotive part changes
+Date: Fri, 13 Jul 2018 10:41:58 +0100
+Message-ID: <4f215c76-6539-1130-6c1f-75f0a3df068a@codethink.co.uk>
+References: <3916c0ea-964e-42ab-8bfd-8e8edc5110ee@codethink.co.uk>
+ <fecd5597-1b04-6409-b87c-5cda54d43ce0@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1529941383-8653-1-git-send-email-ludovic.Barre@st.com>
-Content-Language: en-US
+In-Reply-To: <fecd5597-1b04-6409-b87c-5cda54d43ce0@wwwdotorg.org>
+Content-Language: en-GB
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,44 +19,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ludovic Barre <ludovic.Barre@st.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-kernel@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Terry Hu <kejia.hu@codethink.co.uk>, Device Tree list <devicetree@vger.kernel.org>, jorgesanjuan <jorge.sanjuan@codethink.co.uk>, Thomas Preston <thomas.preston@codethink.co.uk>, linux-tegra <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Beth White <beth.white@codethink.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ludovic
-
-On 06/25/2018 05:42 PM, Ludovic Barre wrote:
-> From: Ludovic Barre <ludovic.barre@st.com>
-> 
-> This patch series updates stm32_iwdg driver to manage pclk
-> clock by compatible. stm32mp1 requires a pclk clock.
-> 
-> v5:
-> -update stm32f429.dtsi
-> 
-> v4:
-> -dt-bindings: split and review
-> 
-> v3:
-> -remove stm32_iwdg_config structure, just assign the
->   boolean directly to .dat
-> 
-> Ludovic Barre (5):
->    dt-bindings: watchdog: add stm32mp1 support
->    watchdog: stm32: add pclk feature for stm32mp1
->    ARM: dts: stm32: add iwdg2 support for stm32mp157c
->    ARM: dts: stm32: add iwdg2 support for stm32mp157c-ed1
->    ARM: dts: stm32: update iwdg with lsi clock name for stm32f429
-> 
->   .../devicetree/bindings/watchdog/st,stm32-iwdg.txt |  13 ++-
->   arch/arm/boot/dts/stm32f429.dtsi                   |   1 +
->   arch/arm/boot/dts/stm32mp157c-ed1.dts              |   5 +
->   arch/arm/boot/dts/stm32mp157c.dtsi                 |   8 ++
->   drivers/watchdog/stm32_iwdg.c                      | 116 +++++++++++++--------
->   5 files changed, 98 insertions(+), 45 deletions(-)
-> 
-
-STM32 DT patches applied on stm32-next.
-
-Regards
-Alex
+T24gMTIvMDcvMTggMTY6NTYsIFN0ZXBoZW4gV2FycmVuIHdyb3RlOgo+IE9uIDA3LzEyLzIwMTgg
+MDc6MzYgQU0sIEJlbiBEb29rcyB3cm90ZToKPj4gSGVsbG8sIHdlIGFyZSBsb29raW5nIGF0IHVw
+LXN0cmVhbWluZyBzb21lIG9mIHRoZSB3b3JrIHdlIGhhdmUKPj4gZG9uZSBvbiB0aGUgdGVncmEy
+IGFuZCB0ZWdyYTMgYXV0b21vdGl2ZSBkZXZpY2VzLiBUaGUgYXV0b21vdGl2ZQo+PiBncmFkZSBk
+ZXZpY2VzIGFyZSBjbG9zZSB0aGUgY29tbWVyY2lhbCBwYXJ0cyBzbyB3ZSB3b3VsZCBsaWtlIHRv
+Cj4+IGRpc2N1c3MgdGhlIGNvcmUgY2hhbmdlcyBiZWZvcmUgc3VibWl0dGluZy4KPj4KPj4gVGhl
+IGNoYW5nZXMgYXJlIG1vc3RseSB3aXRoIHRoaW5ncyBsaWtlIHRoZSBjbG9jayBzZXR1cCBhbmQg
+YQo+PiBmZXcgcGVyaXBoZXJhbCBxdWlya3MgKElJUkMgdGhlc2UgYXJlIG1vc3RseSBNTUMpLgo+
+Pgo+PiBXZSBhcmUgcHJvcG9zaW5nIHRvIGNoYW5nZSB0aGUgZGV2aWNlLXRyZWUgcHJvcGVydGll
+cyBmb3IgdGhlIHJvb3QKPj4gbm9kZSBhbmQgYW55IG90aGVyIGFmZmVjdGVkIGRldmljZXMgZnJv
+bSAibnZpZGlhLHRlZ3JhWFgiIHRvIGEgbmV3Cj4+ICJudmlkaWEsdGVncmFYWGEiLiBXZSB3b3Vs
+ZCB3ZWxjb21lIGRpc2N1c3Npb24gb24gd2hldGhlciB0byB1cGRhdGUKPj4gYWxsIHRoZSBkZXZp
+Y2VzIGF0IHRoZSBzdGFydAo+Pgo+PiBBbiBleGFtcGxlIG9mIHRlZ3JhMzBhLmR0c2k6Cj4+Cj4+
+ICNpbmNsdWRlICJ0ZWdyYTMwLmR0c2kiCj4+Cj4+IC8gewo+PiDCoMKgwqDCoMKgwqDCoMKgIGNv
+bXBhdGlibGUgPSAibnZpZGlhLHRlZ3JhMzBhIjsKPj4KPj4gwqDCoMKgwqDCoMKgwqDCoCBjbG9j
+a0A2MDAwNjAwMCB7Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbXBhdGli
+bGUgPSAibnZpZGlhLHRlZ3JhMzBhLWNhciI7Cj4+IMKgwqDCoMKgwqDCoMKgwqAgfTsKPj4gfQo+
+IAo+IFRoaXMgZG9lc24ndCBzb3VuZCByaWdodC4gQXV0byBhbmQgY29tbWVyY2lhbCBwYXJ0cyBh
+cmUgaWRlbnRpY2FsIEFGQUlLOyAKPiBpdCdzIGp1c3QgcXVhbGlmaWNhdGlvbiBkaWZmZXJlbmNl
+cy4gSGVuY2UgYXQgbW9zdCB5b3UnZCBhZGQgYW4gZXh0cmEgCj4gY29tcGF0aWJsZSB2YWx1ZSBh
+bmQgbm90IHJlbW92ZSB0aGUgb2xkIG9uZS4gQmV0dGVyIG1pZ2h0IGJlIHRvIGRldGVjdCAKPiB0
+aGlzIGF0IHJ1bi10aW1lIGZyb20gdGhlIGZ1c2VzLiBJIHRoaW5rIHdlIGFscmVhZHkgZG8gc29t
+ZSBvZiB0aGF0IAo+IGFscmVhZHk7IHNlYXJjaCBmb3Igc3BlZWRvIHJlbGF0ZWQgY29kZSBpbiBh
+cmNoL2FybS9tYWNoLXRlZ3JhLy4KClRoZSBudmlkaWEgcGRrIGZvciB0aGUgYXV0b21vdGl2ZSBk
+aWRuJ3Qgc2V0IHRoZSBjbG9ja3MgdXAgaW4gdGhlCnNhbWUgd2F5IGFuZCB3ZSB3aGVyZSB0b2xk
+IHRoYXQgdGhlcmUgYXJlIGNlcnRhaW4gY2xvY2sgcmVzdHJpY3Rpb25zCmZvciB0aGUgYXV0b21v
+dGl2ZSBwYXJ0cyB0aGF0IHRoZSBjb21tZXJjaWFsIG9uZXMgZG8gbm90IGhhdmUuIFNvbWUgb2YK
+dGhpcyBjYW1lIGZyb20gaW50ZXJuYWwgZGlzY3Vzc2lvbnMgd2l0aCBudmlkaWEgYW5kIE5EQSdk
+IGRhdGFzaGVldHMKc28gSSBkb24ndCBrbm93IGhvdyBtdWNoIGFjdHVhbCBkYXRhIEkgY2FuIHNo
+YXJlLgoKVG8gZ2V0IHRoZSA0LjQga2VybmVsIHRvIGJlIHNpbWlsYXIgZW5vdWdoIHRvIHdvcmsg
+d2l0aCB0aGUgdGVncmEzMGEKd2UgaGFkIHRvIGRvIHNvbWUgY2hhbmdlcyB0byB0aGUgY2xvY2sg
+aW5pdGlhbGlzYXRpb24uIEZvciB0aGluZ3MKbGlrZSB0aGUgY2xvY2sgSSBhbSBub3Qgc3VyZSBp
+ZiBsZWF2aW5nIGEgdGVncmEzMC1jYXIgaW4gdGhlcmUgd291bGQKYmUgYSBnb29kIGlkZWEsIGl0
+IG1heSBib290IGJ1dCBwcm9iYWJseSB3b24ndCBiZSBzdGFibGUuCgpGb3IgdGhlIGZ1c2VzLCBp
+cyB0aGUgZnVzZSBkcml2ZXIgdXAgZWFybHkgZW5vdWdoIHRvIGFsbG93IHRoZSBjbG9jawpkcml2
+ZXIgY291bGQgdXNlIHRoaXM/IG90aGVyd2lzZSBJIHRoaW5rIHRoZSBkZXZpY2UtdHJlZSBjaGFu
+Z2Ugd291bGQKYmUgdGhlIG9ubHkgd2F5LiBJJ20gbm90IHN1cmUgaWYgSSBoYXZlIHRoZSBpbmZv
+cm1hdGlvbiB0byBoYW5kIG9uCmhvdyB0byBkaWZmZXJlbnRpYXRlIHRoZSB0ZWdyYTMwIGFuZCB0
+ZWdyYTIwLgoKUFMsIHdlJ2xsIHdhbnQgdG8gZG8gdGhlIHNhbWUgZm9yIHRoZSB0ZWdyYTIwLgoK
+LS0gCkJlbiBEb29rcwkJCQlodHRwOi8vd3d3LmNvZGV0aGluay5jby51ay8KU2VuaW9yIEVuZ2lu
+ZWVyCQkJCUNvZGV0aGluayAtIFByb3ZpZGluZyBHZW5pdXMKCmh0dHBzOi8vd3d3LmNvZGV0aGlu
+ay5jby51ay9wcml2YWN5Lmh0bWwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
