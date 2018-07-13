@@ -1,116 +1,47 @@
-From: Gary Bisson <gary.bisson@boundarydevices.com>
-Subject: [PATCH 2/3] ARM: dts: imx7d-nitrogen7: use OF graph to describe the
- display
-Date: Fri, 13 Jul 2018 14:49:03 +0200
-Message-ID: <20180713124904.9285-3-gary.bisson@boundarydevices.com>
-References: <20180713124904.9285-1-gary.bisson@boundarydevices.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180713124904.9285-1-gary.bisson@boundarydevices.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: s.hauer@pengutronix.de, stefan@agner.ch, Gary Bisson <gary.bisson@boundarydevices.com>, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v2 0/2] Re-Enable support to disable switch regulators
+Date: Fri, 13 Jul 2018 14:50:00 +0200
+Message-ID: <20180713125002.24331-1-m.felsch@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: fabio.estevam@nxp.com, Anson.Huang@nxp.com, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-To make use of the new eLCDIF DRM driver OF graph description is
-required. Describe the display using OF graph nodes.
+Hi,
 
-Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
----
- arch/arm/boot/dts/imx7d-nitrogen7.dts | 48 +++++++++------------------
- 1 file changed, 15 insertions(+), 33 deletions(-)
+Anson had added the support to disable the switched regulators, but
+there were regressions [1] with old dtb's, so the commit was reverted [2].
+At all, the support to disable the switch regulators seems to me to be a
+good feature. But we have to add a special dt-property to avoid
+regressions with older kernels. The property allows the user to decide if
+the switch regulators should be disabled or not.
 
-diff --git a/arch/arm/boot/dts/imx7d-nitrogen7.dts b/arch/arm/boot/dts/imx7d-nitrogen7.dts
-index 9c6a3fdfcf78..d8aac4a2d02a 100644
---- a/arch/arm/boot/dts/imx7d-nitrogen7.dts
-+++ b/arch/arm/boot/dts/imx7d-nitrogen7.dts
-@@ -11,11 +11,6 @@
- 	model = "Boundary Devices i.MX7 Nitrogen7 Board";
- 	compatible = "boundary,imx7d-nitrogen7", "fsl,imx7d";
- 
--	aliases {
--		fb-lcd = &lcdif;
--		t-lcd = &t_lcd;
--	};
--
- 	memory@80000000 {
- 		reg = <0x80000000 0x40000000>;
- 	};
-@@ -28,7 +23,7 @@
- 		default-on;
- 	};
- 
--	backlight-j20 {
-+	backlight_lcd: backlight-j20 {
- 		compatible = "pwm-backlight";
- 		pwms = <&pwm1 0 5000000 0>;
- 		brightness-levels = <0 4 8 16 32 64 128 255>;
-@@ -36,6 +31,17 @@
- 		status = "okay";
- 	};
- 
-+	panel-lcd {
-+		compatible = "okaya,rs800480t-7x0gp";
-+		backlight = <&backlight_lcd>;
-+
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&lcdif_out>;
-+			};
-+		};
-+	};
-+
- 	reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
- 		compatible = "regulator-fixed";
- 		regulator-name = "usb_otg1_vbus";
-@@ -280,35 +286,11 @@
- };
- 
- &lcdif {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_lcdif_dat
--		     &pinctrl_lcdif_ctrl>;
--	lcd-supply = <&reg_vref_3v3>;
--	display = <&display0>;
- 	status = "okay";
- 
--	display0: lcd-display {
--		bits-per-pixel = <16>;
--		bus-width = <18>;
--
--		display-timings {
--			native-mode = <&t_lcd>;
--			t_lcd: t_lcd_default {
--				/* default to Okaya display */
--				clock-frequency = <30000000>;
--				hactive = <800>;
--				vactive = <480>;
--				hfront-porch = <40>;
--				hback-porch = <40>;
--				hsync-len = <48>;
--				vback-porch = <29>;
--				vfront-porch = <13>;
--				vsync-len = <3>;
--				hsync-active = <0>;
--				vsync-active = <0>;
--				de-active = <1>;
--				pixelclk-active = <0>;
--			};
-+	port {
-+		lcdif_out: endpoint {
-+			remote-endpoint = <&panel_in>;
- 		};
- 	};
- };
+Since the revert patch is on Marks regulator repo, my patches are based
+on his repo too. Each commit has a changelog, so I ommit it here. I
+tested it on a custom board.
+
+Used Kernel:
+Repo:
+git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git
+Branch:
+regulator/for-4.19
+
+Regards,
+Marco
+
+[1] https://patchwork.kernel.org/patch/10490381/
+[2] https://patchwork.kernel.org/patch/10500333/
+
+
+Marco Felsch (3):
+  dt-bindings: pfuze100: add optional disable switch-regulators binding
+  regulator: pfuze100: add support to en-/disable switch regulators
+
+ .../bindings/regulator/pfuze100.txt           | 11 ++++++
+ drivers/regulator/core.c                      |  2 ++
+ drivers/regulator/pfuze100-regulator.c        | 36 +++++++++++++++++++
+ 3 files changed, 49 insertions(+)
+
 -- 
 2.18.0
