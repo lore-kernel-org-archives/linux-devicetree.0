@@ -1,88 +1,56 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH V2 2/2] mtd: partitions: use DT info for parsing partitions
- with "compatible" prop
-Date: Fri, 13 Jul 2018 16:32:21 +0200
-Message-ID: <20180713143221.8474-2-zajec5@gmail.com>
-References: <20180713143221.8474-1-zajec5@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180713143221.8474-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Jonas Gorski <jonas.gorski@gmail.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] serial: 8250_ingenic: Add support for the JZ4725B SoC
+Date: Fri, 13 Jul 2018 16:38:40 +0200
+Message-ID: <20180713143840.9721-1-paul@crapouillou.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jslaby@suse.com>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKU28gZmFyIG9ubHkgZmxh
-c2ggZGV2aWNlcyBjb3VsZCBiZSBkZXNjcmliZWQgaW4gRFQgcmVnYXJkaW5nIHBhcnRpdGlvbnMK
-cGFyc2luZy4gVGhhdCBjb3VsZCBiZSBkb25lIHdpdGggInBhcnRpdGlvbnMiIHN1Ym5vZGUgYW5k
-IGEgcHJvcGVyCiJjb21wYXRpYmxlIiBzdHJpbmcuCgpTb21lIGRldmljZXMgbWF5IHVzZSBoaWVy
-YXJjaGljYWwgKG11bHRpLWxldmVsKSBsYXlvdXRzIGFuZCBtYXkgbWl4IHVzZWQKbGF5b3V0cyAo
-Zml4ZWQgYW5kIGR5bmFtaWMpLiBEZXNjcmliaW5nIHRoYXQgaW4gRFQgaXMgZG9uZSBieSBzcGVj
-aWZ5aW5nCiJjb21wYXRpYmxlIiBmb3IgRFQtcmVwcmVzZW50ZWQgcGFydGl0aW9uIHBsdXMgb3B0
-aW9uYWxseSBtb3JlCnByb3BlcnRpZXMgYW5kL29yIHN1Ym5vZGVzLgoKVG8gc3VwcG9ydCBzdWNo
-IGxheW91dHMgZWFjaCBEVCBwYXJ0aXRpb24gaGFzIHRvIGJlIGNoZWNrZWQgZm9yCmFkZGl0aW9u
-YWwgZGVzY3JpcHRpb24uCgpQbGVhc2Ugbm90ZSB0aGlzIGltcGxlbWVudGF0aW9uIHdpbGwgd29y
-ayBpbiBwYXJhbGxlbCB3aXRoIHN1cHBvcnQgZm9yCnBhcnRpdGlvbiB0eXBlIHNwZWNpZmllZCBm
-b3Igbm9uLURUIHNldHVwcy4gVGhhdCBhbHJlYWR5IHdvcmtzIHNpbmNlCmNvbW1pdCAxYTA5MTVi
-ZTE5MjYgKCJtdGQ6IHBhcnRpdGlvbnM6IGFkZCBzdXBwb3J0IGZvciBwYXJ0aXRpb24KcGFyc2Vy
-cyIpLgoKU2lnbmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgot
-LS0KVjI6IFVwZGF0ZWQgY29tbWl0IG1lc3NhZ2UgKG1vcmUgZGV0YWlscyArIGluZm8gYWJvdXQg
-bm9uLURUIGNhc2VzKQotLS0KIGRyaXZlcnMvbXRkL210ZHBhcnQuYyB8IDMzICsrKysrKysrKysr
-KystLS0tLS0tLS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKyks
-IDIwIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL210ZHBhcnQuYyBiL2Ry
-aXZlcnMvbXRkL210ZHBhcnQuYwppbmRleCBmOGQzYTAxNWNkYWQuLjUyZTJjYjM1ZmM3OSAxMDA2
-NDQKLS0tIGEvZHJpdmVycy9tdGQvbXRkcGFydC5jCisrKyBiL2RyaXZlcnMvbXRkL210ZHBhcnQu
-YwpAQCAtMzIyLDIyICszMjIsNiBAQCBzdGF0aWMgaW5saW5lIHZvaWQgZnJlZV9wYXJ0aXRpb24o
-c3RydWN0IG10ZF9wYXJ0ICpwKQogCWtmcmVlKHApOwogfQogCi0vKioKLSAqIG10ZF9wYXJzZV9w
-YXJ0IC0gcGFyc2UgTVREIHBhcnRpdGlvbiBsb29raW5nIGZvciBzdWJwYXJ0aXRpb25zCi0gKgot
-ICogQHNsYXZlOiBwYXJ0IHRoYXQgaXMgc3VwcG9zZWQgdG8gYmUgYSBjb250YWluZXIgYW5kIHNo
-b3VsZCBiZSBwYXJzZWQKLSAqIEB0eXBlczogTlVMTC10ZXJtaW5hdGVkIGFycmF5IHdpdGggbmFt
-ZXMgb2YgcGFydGl0aW9uIHBhcnNlcnMgdG8gdHJ5Ci0gKgotICogU29tZSBwYXJ0aXRpb25zIGFy
-ZSBraW5kIG9mIGNvbnRhaW5lcnMgd2l0aCBleHRyYSBzdWJwYXJ0aXRpb25zICh2b2x1bWVzKS4K
-LSAqIFRoZXJlIGNhbiBiZSB2YXJpb3VzIGZvcm1hdHMgb2Ygc3VjaCBjb250YWluZXJzLiBUaGlz
-IGZ1bmN0aW9uIHRyaWVzIHRvIHVzZQotICogc3BlY2lmaWVkIHBhcnNlcnMgdG8gYW5hbHl6ZSBn
-aXZlbiBwYXJ0aXRpb24gYW5kIHJlZ2lzdGVycyBmb3VuZAotICogc3VicGFydGl0aW9ucyBvbiBz
-dWNjZXNzLgotICovCi1zdGF0aWMgaW50IG10ZF9wYXJzZV9wYXJ0KHN0cnVjdCBtdGRfcGFydCAq
-c2xhdmUsIGNvbnN0IGNoYXIgKmNvbnN0ICp0eXBlcykKLXsKLQlyZXR1cm4gcGFyc2VfbXRkX3Bh
-cnRpdGlvbnMoJnNsYXZlLT5tdGQsIHR5cGVzLCBOVUxMKTsKLX0KLQogc3RhdGljIHN0cnVjdCBt
-dGRfcGFydCAqYWxsb2NhdGVfcGFydGl0aW9uKHN0cnVjdCBtdGRfaW5mbyAqcGFyZW50LAogCQkJ
-Y29uc3Qgc3RydWN0IG10ZF9wYXJ0aXRpb24gKnBhcnQsIGludCBwYXJ0bm8sCiAJCQl1aW50NjRf
-dCBjdXJfb2Zmc2V0KQpAQCAtNzM1LDggKzcxOSw4IEBAIGludCBhZGRfbXRkX3BhcnRpdGlvbnMo
-c3RydWN0IG10ZF9pbmZvICptYXN0ZXIsCiAKIAkJYWRkX210ZF9kZXZpY2UoJnNsYXZlLT5tdGQp
-OwogCQltdGRfYWRkX3BhcnRpdGlvbl9hdHRycyhzbGF2ZSk7Ci0JCWlmIChwYXJ0c1tpXS50eXBl
-cykKLQkJCW10ZF9wYXJzZV9wYXJ0KHNsYXZlLCBwYXJ0c1tpXS50eXBlcyk7CisJCS8qIExvb2sg
-Zm9yIHN1YnBhcnRpdGlvbnMgKi8KKwkJcGFyc2VfbXRkX3BhcnRpdGlvbnMoJnNsYXZlLT5tdGQs
-IHBhcnRzW2ldLnR5cGVzLCBOVUxMKTsKIAogCQljdXJfb2Zmc2V0ID0gc2xhdmUtPm9mZnNldCAr
-IHNsYXZlLT5tdGQuc2l6ZTsKIAl9CkBAIC04MTIsNiArNzk2LDEyIEBAIHN0YXRpYyBjb25zdCBj
-aGFyICogY29uc3QgZGVmYXVsdF9tdGRfcGFydF90eXBlc1tdID0gewogCU5VTEwKIH07CiAKKy8q
-IENoZWNrIERUIG9ubHkgd2hlbiBsb29raW5nIGZvciBzdWJwYXJ0aXRpb25zLiAqLworc3RhdGlj
-IGNvbnN0IGNoYXIgKiBjb25zdCBkZWZhdWx0X3N1YnBhcnRpdGlvbl90eXBlc1tdID0geworCSJv
-ZnBhcnQiLAorCU5VTEwKK307CisKIHN0YXRpYyBpbnQgbXRkX3BhcnRfZG9fcGFyc2Uoc3RydWN0
-IG10ZF9wYXJ0X3BhcnNlciAqcGFyc2VyLAogCQkJICAgICBzdHJ1Y3QgbXRkX2luZm8gKm1hc3Rl
-ciwKIAkJCSAgICAgc3RydWN0IG10ZF9wYXJ0aXRpb25zICpwcGFydHMsCkBAIC04ODIsNyArODcy
-LDkgQEAgc3RhdGljIGludCBtdGRfcGFydF9vZl9wYXJzZShzdHJ1Y3QgbXRkX2luZm8gKm1hc3Rl
-ciwKIAljb25zdCBjaGFyICpmaXhlZCA9ICJmaXhlZC1wYXJ0aXRpb25zIjsKIAlpbnQgcmV0LCBl
-cnIgPSAwOwogCi0JbnAgPSBvZl9nZXRfY2hpbGRfYnlfbmFtZShtdGRfZ2V0X29mX25vZGUobWFz
-dGVyKSwgInBhcnRpdGlvbnMiKTsKKwlucCA9IG10ZF9nZXRfb2Zfbm9kZShtYXN0ZXIpOworCWlm
-ICghbXRkX2lzX3BhcnRpdGlvbihtYXN0ZXIpKQorCQlucCA9IG9mX2dldF9jaGlsZF9ieV9uYW1l
-KG5wLCAicGFydGl0aW9ucyIpOwogCW9mX3Byb3BlcnR5X2Zvcl9lYWNoX3N0cmluZyhucCwgImNv
-bXBhdGlibGUiLCBwcm9wLCBjb21wYXQpIHsKIAkJcGFyc2VyID0gbXRkX3BhcnRfZ2V0X2NvbXBh
-dGlibGVfcGFyc2VyKGNvbXBhdCk7CiAJCWlmICghcGFyc2VyKQpAQCAtOTQ1LDcgKzkzNyw4IEBA
-IGludCBwYXJzZV9tdGRfcGFydGl0aW9ucyhzdHJ1Y3QgbXRkX2luZm8gKm1hc3RlciwgY29uc3Qg
-Y2hhciAqY29uc3QgKnR5cGVzLAogCWludCByZXQsIGVyciA9IDA7CiAKIAlpZiAoIXR5cGVzKQot
-CQl0eXBlcyA9IGRlZmF1bHRfbXRkX3BhcnRfdHlwZXM7CisJCXR5cGVzID0gbXRkX2lzX3BhcnRp
-dGlvbihtYXN0ZXIpID8gZGVmYXVsdF9zdWJwYXJ0aXRpb25fdHlwZXMgOgorCQkJZGVmYXVsdF9t
-dGRfcGFydF90eXBlczsKIAogCWZvciAoIDsgKnR5cGVzOyB0eXBlcysrKSB7CiAJCS8qCi0tIAoy
-LjEzLjcKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KTGludXggTVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
+The UART in the jz4725b works just like in the other JZ SoCs, so this
+commit simply adds a new compatible string.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ Documentation/devicetree/bindings/serial/ingenic,uart.txt | 1 +
+ drivers/tty/serial/8250/8250_ingenic.c                    | 5 +++++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/serial/ingenic,uart.txt b/Documentation/devicetree/bindings/serial/ingenic,uart.txt
+index c3c6406d5cfe..a0b34fd3b602 100644
+--- a/Documentation/devicetree/bindings/serial/ingenic,uart.txt
++++ b/Documentation/devicetree/bindings/serial/ingenic,uart.txt
+@@ -3,6 +3,7 @@
+ Required properties:
+ - compatible : One of:
+   - "ingenic,jz4740-uart",
++  - "ingenic,jz4725b-uart",
+   - "ingenic,jz4760-uart",
+   - "ingenic,jz4770-uart",
+   - "ingenic,jz4775-uart",
+diff --git a/drivers/tty/serial/8250/8250_ingenic.c b/drivers/tty/serial/8250/8250_ingenic.c
+index 15a8c8dfa92b..760266559a5a 100644
+--- a/drivers/tty/serial/8250/8250_ingenic.c
++++ b/drivers/tty/serial/8250/8250_ingenic.c
+@@ -133,6 +133,10 @@ EARLYCON_DECLARE(jz4740_uart, ingenic_early_console_setup);
+ OF_EARLYCON_DECLARE(jz4740_uart, "ingenic,jz4740-uart",
+ 		    ingenic_early_console_setup);
+ 
++EARLYCON_DECLARE(jz4725b_uart, ingenic_early_console_setup);
++OF_EARLYCON_DECLARE(jz4725b_uart, "ingenic,jz4725b-uart",
++		    ingenic_early_console_setup);
++
+ EARLYCON_DECLARE(jz4770_uart, ingenic_early_console_setup);
+ OF_EARLYCON_DECLARE(jz4770_uart, "ingenic,jz4770-uart",
+ 		    ingenic_early_console_setup);
+@@ -330,6 +334,7 @@ static const struct ingenic_uart_config jz4780_uart_config = {
+ 
+ static const struct of_device_id of_match[] = {
+ 	{ .compatible = "ingenic,jz4740-uart", .data = &jz4740_uart_config },
++	{ .compatible = "ingenic,jz4725b-uart", .data = &jz4740_uart_config },
+ 	{ .compatible = "ingenic,jz4760-uart", .data = &jz4760_uart_config },
+ 	{ .compatible = "ingenic,jz4770-uart", .data = &jz4760_uart_config },
+ 	{ .compatible = "ingenic,jz4775-uart", .data = &jz4760_uart_config },
+-- 
+2.11.0
