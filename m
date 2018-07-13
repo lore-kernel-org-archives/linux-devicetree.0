@@ -1,12 +1,16 @@
-Return-Path: <SRS0=0z1H=J5=gmail.com=shubhrajyoti.datta@kernel.org>
+Return-Path: <SRS0=tHxF=J5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr690089.outbound.protection.outlook.com ([40.107.69.89]:5666
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727147AbeGMKxE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Jul 2018 06:53:04 -0400
 From: <shubhrajyoti.datta@gmail.com>
-Subject: [PATCHv2 4/4] dt-bindings: serial: Add binding for uartlite
-Date: Fri, 13 Jul 2018 16:17:29 +0530
-Message-ID: <1531478849-29480-4-git-send-email-shubhrajyoti.datta@gmail.com>
-In-Reply-To: <1531478849-29480-1-git-send-email-shubhrajyoti.datta@gmail.com>
-References: <1531478849-29480-1-git-send-email-shubhrajyoti.datta@gmail.com>
+Subject: [PATCHv2 1/5] dt-bindings: serial: Add binding for uartlite
+Date: Fri, 13 Jul 2018 16:00:06 +0530
+Message-ID: <1531477810-23346-1-git-send-email-shubhrajyoti.datta@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
 To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, jacmet@sunsite.dk, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
@@ -18,20 +22,19 @@ Add binding doc for uartlite
 Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 ---
 v2:
-lowercase for hex values
-interrupt description updated
-squashed the clock changes
+fixed the interrupt description
+use lower case in hex
 
- .../bindings/serial/xlnx,opb-uartlite.txt          | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ .../bindings/serial/xlnx,opb-uartlite.txt           | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt
 
 diff --git a/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt b/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt
 new file mode 100644
-index 0000000..52719b9
+index 0000000..cae95e6
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt
-@@ -0,0 +1,23 @@
+@@ -0,0 +1,21 @@
 +Xilinx Axi Uartlite controller Device Tree Bindings
 +---------------------------------------------------------
 +
@@ -45,8 +48,6 @@ index 0000000..52719b9
 +
 +Optional properties:
 +- port-number		: Set Uart port number
-+- clock-names		: Should be "s_axi_aclk"
-+- clocks		: Input clock specifier. Refer to common clock bindings.
 +
 +Example:
 +serial@800c0000 {
@@ -57,3 +58,4 @@ index 0000000..52719b9
 +};
 -- 
 2.7.4
+
