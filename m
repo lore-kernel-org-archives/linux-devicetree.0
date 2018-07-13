@@ -1,144 +1,52 @@
-From: Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH] usb: dwc3: of-simple: reset host controller at suspend/resume
-Date: Fri, 13 Jul 2018 10:14:59 +0200
-Message-ID: <CAFqH_51EvuJmU2rxcndWdyYj6CAhzDv_o6YPnUHJb6ctM+k8VQ@mail.gmail.com>
-References: <20180709150844.32505-1-enric.balletbo@collabora.com>
- <536642654ca55f08877497c86a5cb106d5458384.camel@collabora.com> <d9ea42a39a80c12b9d5730376d2f8e5a953771ef.camel@collabora.com>
+From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v5 20/22] ARM: dts: sun7i-a20: Add Video
+ Engine and reserved memory nodes
+Date: Fri, 13 Jul 2018 10:28:17 +0200
+Message-ID: <d9cc498c058b34b46eaf910de2f6ba4dd4ca4838.camel@bootlin.com>
+References: <20180710080114.31469-1-paul.kocialkowski@bootlin.com>
+	 <20180710080114.31469-21-paul.kocialkowski@bootlin.com>
+	 <20180710092310.2hzoc7shmfykr3n5@flea>
+Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d9ea42a39a80c12b9d5730376d2f8e5a953771ef.camel@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ezequiel@collabora.com
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, linux-kernel <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, kernel@collabora.com, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-mUToiGCHY1cIrP6GveCh"
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRBJGFUHNAKGQE6DKX2SY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180710092310.2hzoc7shmfykr3n5@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Keiichi Watanabe <keiichiw-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tom Saeger <tom.saeger-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Jacob
 List-Id: devicetree@vger.kernel.org
 
+
+--=-mUToiGCHY1cIrP6GveCh
+Content-Type: text/plain; charset="UTF-8"
+
 Hi,
-Missatge de Ezequiel Garcia <ezequiel@collabora.com> del dia dt., 10
-de jul. 2018 a les 0:10:
->
-> Sigh, now actually Cc devicetree folks
->
-> On Mon, 2018-07-09 at 19:04 -0300, Ezequiel Garcia wrote:
-> > (Cc devicetree folks)
-> >
-> > Hi Enric,
-> >
-> > Thanks for the patch.
-> >
-> > On Mon, 2018-07-09 at 17:08 +0200, Enric Balletbo i Serra wrote:
-> > > If we power off the SoC logic rail in S3, we can find that the
-> > > Type-C
-> > > PHY can't initialize correctly after system resume. We need to
-> > > toggle
-> > > the USB3-OTG reset before trying to initialize the PHY, or else it
-> > > times out.
-> > >
-> > >     phy phy-ff800000.phy.9: phy poweron failed --> -110
-> > >     dwc3 fe900000.dwc3: failed to initialize core
-> > >     dwc3: probe of fe900000.dwc3 failed with error -110
-> > >
-> > > Note that the RK3399 TRM suggests that we should keep the whole
-> > > usb3
-> > > controller in reset for the duration of the Type-C PHY
-> > > initialization.
-> > > However, it's hard to assert the reset in the current framework of
-> > > reset. We're still skeptical about that, and we haven't yet found a
-> > > case where this seems to have mattered. This approach is much
-> > > easier,
-> > > it
-> > > simply holds the USB3-OTG reset while device is supended.
-> > >
-> > > The dwc3 core is going to reinitialize the controller at
-> > > suspend/resume
-> > > anyway (including a "soft reset"), so it should be safe to do this.
-> > >
-> > > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com
-> > > >
-> > > ---
-> > > Dear all,
-> > >
-> > > Now that the usb3-phy otg port support for rk3399 has been merged
-> > > [1]
-> > > we
-> > > found that suspend/resume is broken. The problem is well known for
-> > > ChromeOS kernels, they solved it in a similar way adding a reset
-> > > pulse on
-> > > resume in the specific usb glue layer (dwc3-rockchip). In mainline,
-> > > though, we use the dwc3-of-simple glue layer instead of a specific
-> > > layer
-> > > for rockchip. The patch is based on the Brian Norris work but
-> > > slightly
-> > > different, it holds the reset while device is suspended. It was
-> > > tested
-> > > on a Samsung Chromebook Plus with usbc docking station attached by
-> > > doing
-> > > different suspend/resume cycles and checking no usb devices has
-> > > been
-> > > lost.
-> > >
-> > > I am not sure this is the better way to solve this but I did not
-> > > find
-> > > any other way, and, as I am not sure this can be generic, the reset
-> > > is only
-> > > done on rockchip platforms.
-> > >
-> >
-> > I don't really understand why there are per-platform hacks in glue
-> > drivers, instead of having per-platform glue drivers, or some other
-> > pluggable hooks.
-> >
-> > > Best regards,
-> > >  Enric
-> > >
-> > > [1] bfdca1736ea76345071bbc5607d18928e54909ac ('arm64: dts:
-> > > rockchip:
-> > > add
-> > >     usb3-phy otg-port support for rk3399')
-> > >
-> > >  drivers/usb/dwc3/dwc3-of-simple.c | 21 +++++++++++++++++++++
-> > >  1 file changed, 21 insertions(+)
-> > >
-> > > diff --git a/drivers/usb/dwc3/dwc3-of-simple.c
-> > > b/drivers/usb/dwc3/dwc3-of-simple.c
-> > > index dbeff5e6ad14..1d1ece99ed94 100644
-> > > --- a/drivers/usb/dwc3/dwc3-of-simple.c
-> > > +++ b/drivers/usb/dwc3/dwc3-of-simple.c
-> > > @@ -201,9 +201,30 @@ static int
-> > > dwc3_of_simple_runtime_resume(struct
-> > > device *dev)
-> > >
-> > >     return 0;
-> > >  }
-> > > +
-> > > +static int dwc3_of_simple_suspend(struct device *dev)
-> > > +{
-> > > +   struct dwc3_of_simple *simple = dev_get_drvdata(dev);
-> > > +
-> > > +   if (of_device_is_compatible(dev->of_node,
-> > > "rockchip,rk3399-
-> > > dwc3"))
-> > >
-> >
-> > Instead of calling of_device_is_compatible in each suspend/resume,
-> > which seems quite expensive, how about having a per-device boolean
-> > 'needs_reset' or something like that?
-> >
-Yep, not sure how much, but probably use a boolean will be faster. I
-am also wondering if we can remove the of_device_is_compatible call
-and do the reset on all platforms. This will need lots of tests on
-different platforms, of course. i'd like to hear maintainers feedback
-here.
 
-> > Or maybe just have a boolean devicetree property for this?
+On Tue, 2018-07-10 at 11:23 +0200, Maxime Ripard wrote:
+> On Tue, Jul 10, 2018 at 10:01:12AM +0200, Paul Kocialkowski wrote:
+> > +		vpu: video-codec@1c0e000 {
+> > +			compatible = "allwinner,sun7i-a20-video-engine";
+> > +			reg = <0x01c0e000 0x1000>;
+> > +
+> 
+> The issue is here with all your patches, but you should drop the node
+> label and the extra new line.
 
-I don't think moving the "hack" to the devicetree will be acceptable
-for the DT maintainers, this is not really a hardware property.
+Noted, this will be fixed in the next revision.
 
-Thanks,
-  Enric.
+Cheers,
 
-> >
-> > Regards,
-> > Eze
-> >
+Paul
+
+-- 
+Paul Kocialkowski, Bootlin (formerly Free Electrons)
+Embedded Linux and kernel engineering
+https://bootlin.com
+--=-mUToiGCHY1cIrP6GveCh--
