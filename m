@@ -1,50 +1,47 @@
 From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH 1/3] ARM: dts: imx6sll-evk: enable PWM1 for backlight driver
-Date: Fri, 13 Jul 2018 15:58:25 +0800
-Message-ID: <1531468707-25737-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 2/3] ARM: dts: imx6sll-evk: correct lcd regulator GPIO pin
+Date: Fri, 13 Jul 2018 15:58:26 +0800
+Message-ID: <1531468707-25737-2-git-send-email-Anson.Huang@nxp.com>
+References: <1531468707-25737-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1531468707-25737-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Enable pwm1 module on i.MX6SLL EVK board to make
-backlight driver really work with LCD panel connected.
+On i.MX6SLL EVK board, lcd regulator is controlled
+by GPIO4 IO03 using MX6SLL_PAD_KEY_ROW5__GPIO4_IO03 pin,
+NOT MX6SLL_PAD_ECSPI1_SCLK__GPIO4_IO08, correct it.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm/boot/dts/imx6sll-evk.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/imx6sll-evk.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-evk.dts
-index bc8d155..cc5cf5e 100644
+index cc5cf5e..41e87e6 100644
 --- a/arch/arm/boot/dts/imx6sll-evk.dts
 +++ b/arch/arm/boot/dts/imx6sll-evk.dts
-@@ -213,6 +213,12 @@
+@@ -74,7 +74,7 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_reg_lcd>;
+ 		regulator-name = "lcd-pwr";
+-		gpio = <&gpio4 8 GPIO_ACTIVE_HIGH>;
++		gpio = <&gpio4 3 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
  	};
- };
  
-+&pwm1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm1>;
-+	status = "okay";
-+};
-+
- &uart1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart1>;
-@@ -381,4 +387,10 @@
- 			MX6SLL_PAD_I2C1_SDA__I2C1_SDA	 0x4001b8b1
+@@ -289,7 +289,7 @@
+ 
+ 	pinctrl_reg_lcd: reglcdgrp {
+ 		fsl,pins = <
+-			MX6SLL_PAD_ECSPI1_SCLK__GPIO4_IO08 0x17059
++			MX6SLL_PAD_KEY_ROW5__GPIO4_IO03 0x17059
  		>;
  	};
-+
-+	pinctrl_pwm1: pmw1grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_PWM1__PWM1_OUT   0x110b0
-+		>;
-+	};
- };
+ 
 -- 
 2.7.4
