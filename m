@@ -1,16 +1,14 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: RFC: tegra2/tegra3 automotive part changes
-Date: Fri, 13 Jul 2018 10:53:43 -0600
-Message-ID: <c8d947bb-a790-56f4-8ab4-2259f736d445@wwwdotorg.org>
-References: <3916c0ea-964e-42ab-8bfd-8e8edc5110ee@codethink.co.uk>
- <fecd5597-1b04-6409-b87c-5cda54d43ce0@wwwdotorg.org>
- <4f215c76-6539-1130-6c1f-75f0a3df068a@codethink.co.uk>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 0/3] SOCFPGA Stratix10 SMMU Support
+Date: Fri, 13 Jul 2018 18:05:53 +0100
+Message-ID: <01919396-a3a5-6978-0aec-c2a747cb0475@arm.com>
+References: <1531499278-32132-1-git-send-email-thor.thayer@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4f215c76-6539-1130-6c1f-75f0a3df068a@codethink.co.uk>
-Content-Language: en-US
+In-Reply-To: <1531499278-32132-1-git-send-email-thor.thayer@linux.intel.com>
+Content-Language: en-GB
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,68 +18,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Terry Hu <kejia.hu@codethink.co.uk>, Device Tree list <devicetree@vger.kernel.org>, jorgesanjuan <jorge.sanjuan@codethink.co.uk>, Thomas Preston <thomas.preston@codethink.co.uk>, linux-tegra <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Beth White <beth.white@codethink.co.uk>
+To: thor.thayer@linux.intel.com, dinguyen@kernel.org, robh+dt@kernel.org, joro@8bytes.org, mark.rutland@arm.com
+Cc: catalin.marinas@arm.com, iommu@lists.linux-foundation.org, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDcvMTMvMjAxOCAwMzo0MSBBTSwgQmVuIERvb2tzIHdyb3RlOgo+IE9uIDEyLzA3LzE4IDE2
-OjU2LCBTdGVwaGVuIFdhcnJlbiB3cm90ZToKPj4gT24gMDcvMTIvMjAxOCAwNzozNiBBTSwgQmVu
-IERvb2tzIHdyb3RlOgo+Pj4gSGVsbG8sIHdlIGFyZSBsb29raW5nIGF0IHVwLXN0cmVhbWluZyBz
-b21lIG9mIHRoZSB3b3JrIHdlIGhhdmUKPj4+IGRvbmUgb24gdGhlIHRlZ3JhMiBhbmQgdGVncmEz
-IGF1dG9tb3RpdmUgZGV2aWNlcy4gVGhlIGF1dG9tb3RpdmUKPj4+IGdyYWRlIGRldmljZXMgYXJl
-IGNsb3NlIHRoZSBjb21tZXJjaWFsIHBhcnRzIHNvIHdlIHdvdWxkIGxpa2UgdG8KPj4+IGRpc2N1
-c3MgdGhlIGNvcmUgY2hhbmdlcyBiZWZvcmUgc3VibWl0dGluZy4KPj4+Cj4+PiBUaGUgY2hhbmdl
-cyBhcmUgbW9zdGx5IHdpdGggdGhpbmdzIGxpa2UgdGhlIGNsb2NrIHNldHVwIGFuZCBhCj4+PiBm
-ZXcgcGVyaXBoZXJhbCBxdWlya3MgKElJUkMgdGhlc2UgYXJlIG1vc3RseSBNTUMpLgo+Pj4KPj4+
-IFdlIGFyZSBwcm9wb3NpbmcgdG8gY2hhbmdlIHRoZSBkZXZpY2UtdHJlZSBwcm9wZXJ0aWVzIGZv
-ciB0aGUgcm9vdAo+Pj4gbm9kZSBhbmQgYW55IG90aGVyIGFmZmVjdGVkIGRldmljZXMgZnJvbSAi
-bnZpZGlhLHRlZ3JhWFgiIHRvIGEgbmV3Cj4+PiAibnZpZGlhLHRlZ3JhWFhhIi4gV2Ugd291bGQg
-d2VsY29tZSBkaXNjdXNzaW9uIG9uIHdoZXRoZXIgdG8gdXBkYXRlCj4+PiBhbGwgdGhlIGRldmlj
-ZXMgYXQgdGhlIHN0YXJ0Cj4+Pgo+Pj4gQW4gZXhhbXBsZSBvZiB0ZWdyYTMwYS5kdHNpOgo+Pj4K
-Pj4+ICNpbmNsdWRlICJ0ZWdyYTMwLmR0c2kiCj4+Pgo+Pj4gLyB7Cj4+PiDCoMKgwqDCoMKgwqDC
-oMKgIGNvbXBhdGlibGUgPSAibnZpZGlhLHRlZ3JhMzBhIjsKPj4+Cj4+PiDCoMKgwqDCoMKgwqDC
-oMKgIGNsb2NrQDYwMDA2MDAwIHsKPj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IGNvbXBhdGlibGUgPSAibnZpZGlhLHRlZ3JhMzBhLWNhciI7Cj4+PiDCoMKgwqDCoMKgwqDCoMKg
-IH07Cj4+PiB9Cj4+Cj4+IFRoaXMgZG9lc24ndCBzb3VuZCByaWdodC4gQXV0byBhbmQgY29tbWVy
-Y2lhbCBwYXJ0cyBhcmUgaWRlbnRpY2FsIAo+PiBBRkFJSzsgaXQncyBqdXN0IHF1YWxpZmljYXRp
-b24gZGlmZmVyZW5jZXMuIEhlbmNlIGF0IG1vc3QgeW91J2QgYWRkIGFuIAo+PiBleHRyYSBjb21w
-YXRpYmxlIHZhbHVlIGFuZCBub3QgcmVtb3ZlIHRoZSBvbGQgb25lLiBCZXR0ZXIgbWlnaHQgYmUg
-dG8gCj4+IGRldGVjdCB0aGlzIGF0IHJ1bi10aW1lIGZyb20gdGhlIGZ1c2VzLiBJIHRoaW5rIHdl
-IGFscmVhZHkgZG8gc29tZSBvZiAKPj4gdGhhdCBhbHJlYWR5OyBzZWFyY2ggZm9yIHNwZWVkbyBy
-ZWxhdGVkIGNvZGUgaW4gYXJjaC9hcm0vbWFjaC10ZWdyYS8uCj4gCj4gVGhlIG52aWRpYSBwZGsg
-Zm9yIHRoZSBhdXRvbW90aXZlIGRpZG4ndCBzZXQgdGhlIGNsb2NrcyB1cCBpbiB0aGUKPiBzYW1l
-IHdheSBhbmQgd2Ugd2hlcmUgdG9sZCB0aGF0IHRoZXJlIGFyZSBjZXJ0YWluIGNsb2NrIHJlc3Ry
-aWN0aW9ucwo+IGZvciB0aGUgYXV0b21vdGl2ZSBwYXJ0cyB0aGF0IHRoZSBjb21tZXJjaWFsIG9u
-ZXMgZG8gbm90IGhhdmUuIFNvbWUgb2YKPiB0aGlzIGNhbWUgZnJvbSBpbnRlcm5hbCBkaXNjdXNz
-aW9ucyB3aXRoIG52aWRpYSBhbmQgTkRBJ2QgZGF0YXNoZWV0cwo+IHNvIEkgZG9uJ3Qga25vdyBo
-b3cgbXVjaCBhY3R1YWwgZGF0YSBJIGNhbiBzaGFyZS4KCkkgYmVsaWV2ZSB0aGlzIGp1c3QgY2hh
-bmdlcyB0aGUgKnNlbGVjdGlvbiogb2YgdmFsdWVzIHRvIHVzZSAoY2xvY2sgCnJhdGVzLCBjbG9j
-ayBzb3VyY2VzKSwgbm90ICpob3cqIHRvIHByb2dyYW0gdGhlbSAoc2V0IG9mIHJlZ2lzdGVycyBh
-bmQgCmZpZWxkcywgcHJvZ3JhbW1pbmcgYWxnb3JpdGhtKSwgd2hpY2ggaXMgd2hhdCB0aGUgRFQg
-Y29tcGF0aWJsZSBpcyAKbWFpbmx5IGFib3V0LiBJbiBvdGhlciB3b3JkcywgaXQncyBtYWlubHkg
-YSBwZXJmb3JtYW5jZS9jb25maWd1cmF0aW9uIApkZWNpc2lvbiBub3QgZGlmZmVyZW50IEhXLgoK
-PiBUbyBnZXQgdGhlIDQuNCBrZXJuZWwgdG8gYmUgc2ltaWxhciBlbm91Z2ggdG8gd29yayB3aXRo
-IHRoZSB0ZWdyYTMwYQo+IHdlIGhhZCB0byBkbyBzb21lIGNoYW5nZXMgdG8gdGhlIGNsb2NrIGlu
-aXRpYWxpc2F0aW9uLiBGb3IgdGhpbmdzCj4gbGlrZSB0aGUgY2xvY2sgSSBhbSBub3Qgc3VyZSBp
-ZiBsZWF2aW5nIGEgdGVncmEzMC1jYXIgaW4gdGhlcmUgd291bGQKPiBiZSBhIGdvb2QgaWRlYSwg
-aXQgbWF5IGJvb3QgYnV0IHByb2JhYmx5IHdvbid0IGJlIHN0YWJsZS4KPiAKPiBGb3IgdGhlIGZ1
-c2VzLCBpcyB0aGUgZnVzZSBkcml2ZXIgdXAgZWFybHkgZW5vdWdoIHRvIGFsbG93IHRoZSBjbG9j
-awo+IGRyaXZlciBjb3VsZCB1c2UgdGhpcz8gb3RoZXJ3aXNlIEkgdGhpbmsgdGhlIGRldmljZS10
-cmVlIGNoYW5nZSB3b3VsZAo+IGJlIHRoZSBvbmx5IHdheS4gSSdtIG5vdCBzdXJlIGlmIEkgaGF2
-ZSB0aGUgaW5mb3JtYXRpb24gdG8gaGFuZCBvbgo+IGhvdyB0byBkaWZmZXJlbnRpYXRlIHRoZSB0
-ZWdyYTMwIGFuZCB0ZWdyYTIwLgo+IAo+IFBTLCB3ZSdsbCB3YW50IHRvIGRvIHRoZSBzYW1lIGZv
-ciB0aGUgdGVncmEyMC4KCkFzIEpvYiBtZW50aW9uZWQsIHRoZSBmdXNlIGRyaXZlciBzaG91bGQv
-Y291bGQgYmUgYXZhaWxhYmxlIGVhcmx5IGVub3VnaCAKd2l0aG91dCBpc3N1ZS4gSXQgbWF5IGhh
-dmUgdG8gKGFuZCBwcm9iYWJseSBhbHJlYWR5IGRvZXMpIGhhcmQtY29kZSB0aGUgCnBoeXNpY2Fs
-IGFkZHJlc3Mgb2YgdGhlIGZ1c2VzIHJhdGhlciB0aGFuIGJlaW5nIGNvbmZpZ3VyZWQgZnJvbSBE
-VCBmb3IgCnRoaXMuIEkgdGhpbmsgaWYgeW91IHJlYWQgdGhlIGNoaXAgIlNLVSIgdmFsdWUgZnJv
-bSBmdXNlcywgdGhhdCBzaG91bGQgCmluZGljYXRlIHdoaWNoIHNldHMgb2YgcmVzdHJpY3Rpb25z
-IG9uIGNsb2Nrcy8uLi4gYXJlIHJlcXVpcmVkLCBhbmQgCnRoZXJlIGFyZSBtYW55IG1vcmUgU0tV
-cyB0aGFuIGp1c3QgInJlZ3VsYXIiIGFuZCAiYXV0b21vdGl2ZSIsIGFsdGhvdWdoIAphbGwgdGhl
-IGRpZmZlcmVudCBTS1VzIG1heSBiZSBidWNrZXRlZCBpbnRvIGZld2VyIHNldHMgb2YgCnJlc3Ry
-aWN0aW9uL2NvbmZpZ3VyYXRpb24gZGF0YS4KCkJyaWVmbHkgbG9va2luZyBhdCBkcml2ZXJzL3Nv
-Yy90ZWdyYS9mdXNlL3NwZWVkby10ZWdyYTIwLmMsIHNvbWUgKGEgdmVyeSAKbGl0dGxlKSBvZiB0
-aGlzIG1heSBhbHJlYWR5IGJlIHRoZXJlCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Thor,
+
+On 13/07/18 17:27, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
+> 
+> This patch series adds SMMU support to the SOCFPGA Stratix10 family
+> of parts. The addition of a clock parameter was required to ungate
+> the SMMU clock.
+
+Please see the latest version of Vivek's runtime PM series[1] - there's 
+already been an awful lot of discussion over how to handle clocks, since 
+they're not part of the SMMU architecture and different implementations 
+can have very different requirements (and even different configurations 
+of the same implementation may vary, e.g. MMU-500 could technically have 
+up to 33 separate clocks).
+
+Thanks,
+Robin.
+
+[1] 
+https://www.mail-archive.com/freedreno@lists.freedesktop.org/msg02422.html
+
+> Thor Thayer (3):
+>    Docs: dt: arm-smmu: Add optional clock parameter
+>    iommu/arm-smmu: Add optional SMMU clock
+>    arm64: dts: stratix10: Add SMMU Node
+> 
+>   .../devicetree/bindings/iommu/arm,smmu.txt         | 16 ++++++++
+>   arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  | 44 ++++++++++++++++++++++
+>   drivers/iommu/arm-smmu.c                           | 17 +++++++++
+>   3 files changed, 77 insertions(+)
+> 
