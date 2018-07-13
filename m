@@ -1,31 +1,22 @@
-Return-Path: <SRS0=tHxF=J5=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr730040.outbound.protection.outlook.com ([40.107.73.40]:18624
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727307AbeGMLEW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Jul 2018 07:04:22 -0400
+Return-Path: <SRS0=0z1H=J5=gmail.com=shubhrajyoti.datta@kernel.org>
 From: <shubhrajyoti.datta@gmail.com>
-Subject: [PATCHv2 2/4] tty: serial: uartlite: Add clock adaptation
-Date: Fri, 13 Jul 2018 16:17:27 +0530
-Message-ID: <1531478849-29480-2-git-send-email-shubhrajyoti.datta@gmail.com>
-In-Reply-To: <1531478849-29480-1-git-send-email-shubhrajyoti.datta@gmail.com>
-References: <1531478849-29480-1-git-send-email-shubhrajyoti.datta@gmail.com>
+Subject: [PATCHv2 3/5] tty: serial: uartlite: Add clock adaptation
+Date: Fri, 13 Jul 2018 16:00:08 +0530
+Message-ID: <1531477810-23346-3-git-send-email-shubhrajyoti.datta@gmail.com>
+In-Reply-To: <1531477810-23346-1-git-send-email-shubhrajyoti.datta@gmail.com>
+References: <1531477810-23346-1-git-send-email-shubhrajyoti.datta@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
 To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, jacmet@sunsite.dk, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
 From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-Add support of Common Clock Framework for Uartlite driver.
+Add support of Common Clock Framework for uartlite driver.
 
 Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 ---
-v2:
-removed the suspend resume changes to separate driver
-
  drivers/tty/serial/uartlite.c | 49 +++++++++++++++++++++++++++++++++++++++++--
  1 file changed, 47 insertions(+), 2 deletions(-)
 
@@ -157,4 +148,3 @@ index 0f798f7..b3a12be 100644
  
 -- 
 2.7.4
-
