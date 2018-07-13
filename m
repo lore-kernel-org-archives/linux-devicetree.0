@@ -1,32 +1,39 @@
-From: Ryan Grachek <ryan@edited.us>
-Subject: [PATCH] arm64: dts: hikey: Remove keep-power-in-suspend property
-Date: Fri, 13 Jul 2018 11:02:31 -0500
-Message-ID: <20180713160231.25165-1-ryan@edited.us>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: john.stultz@linaro.org, Ryan Grachek <ryan@edited.us>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Subject: [PATCH 0/3] SOCFPGA Stratix10 SMMU Support
+Date: Fri, 13 Jul 2018 11:27:55 -0500
+Message-ID: <1531499278-32132-1-git-send-email-thor.thayer@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Remove the keep-power-in-suspend property because it keeps wifi power
-on during suspend. This property is only required when enabling WoWLAN
-and should only be enabled based on need.
+From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-Signed-off-by: Ryan Grachek <ryan@edited.us>
----
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 1 -
- 1 file changed, 1 deletion(-)
+This patch series adds SMMU support to the SOCFPGA Stratix10 family
+of parts. The addition of a clock parameter was required to ungate
+the SMMU clock.
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index 7f12624f6c8e..f4964bee6a1a 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -323,7 +323,6 @@
- 			bus-width = <0x4>;
- 			non-removable;
- 			cap-power-off-card;
--			keep-power-in-suspend;
- 			vmmc-supply = <&reg_vdd_3v3>;
- 			mmc-pwrseq = <&wl1835_pwrseq>;
- 
+Thor Thayer (3):
+  Docs: dt: arm-smmu: Add optional clock parameter
+  iommu/arm-smmu: Add optional SMMU clock
+  arm64: dts: stratix10: Add SMMU Node
+
+ .../devicetree/bindings/iommu/arm,smmu.txt         | 16 ++++++++
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  | 44 ++++++++++++++++++++++
+ drivers/iommu/arm-smmu.c                           | 17 +++++++++
+ 3 files changed, 77 insertions(+)
+
 -- 
-2.11.0
+2.7.4
