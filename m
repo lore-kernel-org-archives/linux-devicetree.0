@@ -1,74 +1,81 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 2/2] ASoC: allow soc-core to pick up name prefixes from component nodes
-Date: Fri, 13 Jul 2018 14:50:43 +0200
-Message-ID: <20180713125043.13242-3-jbrunet@baylibre.com>
-References: <20180713125043.13242-1-jbrunet@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180713125043.13242-1-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: RFC: tegra2/tegra3 automotive part changes
+Date: Fri, 13 Jul 2018 13:51:31 +0100
+Message-ID: <9c0ee90e-6608-e57c-aba7-3feccde33b29@codethink.co.uk>
+References: <3916c0ea-964e-42ab-8bfd-8e8edc5110ee@codethink.co.uk>
+ <fecd5597-1b04-6409-b87c-5cda54d43ce0@wwwdotorg.org>
+ <4f215c76-6539-1130-6c1f-75f0a3df068a@codethink.co.uk>
+ <8f050541-6b4c-34ed-2462-066313156180@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <8f050541-6b4c-34ed-2462-066313156180@nvidia.com>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jon Hunter <jonathanh@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>
+Cc: Terry Hu <kejia.hu@codethink.co.uk>, Device Tree list <devicetree@vger.kernel.org>, jorgesanjuan <jorge.sanjuan@codethink.co.uk>, Thomas Preston <thomas.preston@codethink.co.uk>, linux-tegra <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Beth White <beth.white@codethink.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-When the component does not match the configuration table provided
-by the card, let soc-core check the component node for a name prefix
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- sound/soc/soc-core.c | 28 +++++++++++++++++++++++-----
- 1 file changed, 23 insertions(+), 5 deletions(-)
-
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index 00bd58d167dd..3be0310d5c81 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -1193,15 +1193,27 @@ void snd_soc_remove_dai_link(struct snd_soc_card *card,
- }
- EXPORT_SYMBOL_GPL(snd_soc_remove_dai_link);
- 
-+static void soc_set_of_name_prefix(struct snd_soc_component *component)
-+{
-+	struct device_node *component_of_node = component->dev->of_node;
-+	const char *str;
-+	int ret;
-+
-+	if (!component_of_node && component->dev->parent)
-+		component_of_node = component->dev->parent->of_node;
-+
-+	ret = of_property_read_string(component_of_node, "sound-name-prefix",
-+				      &str);
-+	if (!ret)
-+		component->name_prefix = str;
-+}
-+
- static void soc_set_name_prefix(struct snd_soc_card *card,
- 				struct snd_soc_component *component)
- {
- 	int i;
- 
--	if (card->codec_conf == NULL)
--		return;
--
--	for (i = 0; i < card->num_configs; i++) {
-+	for (i = 0; i < card->num_configs && card->codec_conf; i++) {
- 		struct snd_soc_codec_conf *map = &card->codec_conf[i];
- 		struct device_node *component_of_node = component->dev->of_node;
- 
-@@ -1213,8 +1225,14 @@ static void soc_set_name_prefix(struct snd_soc_card *card,
- 		if (map->dev_name && strcmp(component->name, map->dev_name))
- 			continue;
- 		component->name_prefix = map->name_prefix;
--		break;
-+		return;
- 	}
-+
-+	/*
-+	 * If there is no configuration table or no match in the table,
-+	 * check if a prefix is provided in the node
-+	 */
-+	soc_set_of_name_prefix(component);
- }
- 
- static int soc_probe_component(struct snd_soc_card *card,
--- 
-2.14.4
+T24gMTMvMDcvMTggMTA6NTgsIEpvbiBIdW50ZXIgd3JvdGU6Cj4gCj4gT24gMTMvMDcvMTggMTA6
+NDEsIEJlbiBEb29rcyB3cm90ZToKPj4gT24gMTIvMDcvMTggMTY6NTYsIFN0ZXBoZW4gV2FycmVu
+IHdyb3RlOgo+Pj4gT24gMDcvMTIvMjAxOCAwNzozNiBBTSwgQmVuIERvb2tzIHdyb3RlOgo+Pj4+
+IEhlbGxvLCB3ZSBhcmUgbG9va2luZyBhdCB1cC1zdHJlYW1pbmcgc29tZSBvZiB0aGUgd29yayB3
+ZSBoYXZlCj4+Pj4gZG9uZSBvbiB0aGUgdGVncmEyIGFuZCB0ZWdyYTMgYXV0b21vdGl2ZSBkZXZp
+Y2VzLiBUaGUgYXV0b21vdGl2ZQo+Pj4+IGdyYWRlIGRldmljZXMgYXJlIGNsb3NlIHRoZSBjb21t
+ZXJjaWFsIHBhcnRzIHNvIHdlIHdvdWxkIGxpa2UgdG8KPj4+PiBkaXNjdXNzIHRoZSBjb3JlIGNo
+YW5nZXMgYmVmb3JlIHN1Ym1pdHRpbmcuCj4+Pj4KPj4+PiBUaGUgY2hhbmdlcyBhcmUgbW9zdGx5
+IHdpdGggdGhpbmdzIGxpa2UgdGhlIGNsb2NrIHNldHVwIGFuZCBhCj4+Pj4gZmV3IHBlcmlwaGVy
+YWwgcXVpcmtzIChJSVJDIHRoZXNlIGFyZSBtb3N0bHkgTU1DKS4KPj4+Pgo+Pj4+IFdlIGFyZSBw
+cm9wb3NpbmcgdG8gY2hhbmdlIHRoZSBkZXZpY2UtdHJlZSBwcm9wZXJ0aWVzIGZvciB0aGUgcm9v
+dAo+Pj4+IG5vZGUgYW5kIGFueSBvdGhlciBhZmZlY3RlZCBkZXZpY2VzIGZyb20gIm52aWRpYSx0
+ZWdyYVhYIiB0byBhIG5ldwo+Pj4+ICJudmlkaWEsdGVncmFYWGEiLiBXZSB3b3VsZCB3ZWxjb21l
+IGRpc2N1c3Npb24gb24gd2hldGhlciB0byB1cGRhdGUKPj4+PiBhbGwgdGhlIGRldmljZXMgYXQg
+dGhlIHN0YXJ0Cj4+Pj4KPj4+PiBBbiBleGFtcGxlIG9mIHRlZ3JhMzBhLmR0c2k6Cj4+Pj4KPj4+
+PiAjaW5jbHVkZSAidGVncmEzMC5kdHNpIgo+Pj4+Cj4+Pj4gLyB7Cj4+Pj4gIMKgwqDCoMKgwqDC
+oMKgwqAgY29tcGF0aWJsZSA9ICJudmlkaWEsdGVncmEzMGEiOwo+Pj4+Cj4+Pj4gIMKgwqDCoMKg
+wqDCoMKgwqAgY2xvY2tANjAwMDYwMDAgewo+Pj4+ICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCBjb21wYXRpYmxlID0gIm52aWRpYSx0ZWdyYTMwYS1jYXIiOwo+Pj4+ICDCoMKgwqDC
+oMKgwqDCoMKgIH07Cj4+Pj4gfQo+Pj4KPj4+IFRoaXMgZG9lc24ndCBzb3VuZCByaWdodC4gQXV0
+byBhbmQgY29tbWVyY2lhbCBwYXJ0cyBhcmUgaWRlbnRpY2FsIEFGQUlLOyBpdCdzIGp1c3QgcXVh
+bGlmaWNhdGlvbiBkaWZmZXJlbmNlcy4gSGVuY2UgYXQgbW9zdCB5b3UnZCBhZGQgYW4gZXh0cmEg
+Y29tcGF0aWJsZSB2YWx1ZSBhbmQgbm90IHJlbW92ZSB0aGUgb2xkIG9uZS4gQmV0dGVyIG1pZ2h0
+IGJlIHRvIGRldGVjdCB0aGlzIGF0IHJ1bi10aW1lIGZyb20gdGhlIGZ1c2VzLiBJIHRoaW5rIHdl
+IGFscmVhZHkgZG8gc29tZSBvZiB0aGF0IGFscmVhZHk7IHNlYXJjaCBmb3Igc3BlZWRvIHJlbGF0
+ZWQgY29kZSBpbiBhcmNoL2FybS9tYWNoLXRlZ3JhLy4KPj4KPj4gVGhlIG52aWRpYSBwZGsgZm9y
+IHRoZSBhdXRvbW90aXZlIGRpZG4ndCBzZXQgdGhlIGNsb2NrcyB1cCBpbiB0aGUKPj4gc2FtZSB3
+YXkgYW5kIHdlIHdoZXJlIHRvbGQgdGhhdCB0aGVyZSBhcmUgY2VydGFpbiBjbG9jayByZXN0cmlj
+dGlvbnMKPj4gZm9yIHRoZSBhdXRvbW90aXZlIHBhcnRzIHRoYXQgdGhlIGNvbW1lcmNpYWwgb25l
+cyBkbyBub3QgaGF2ZS4gU29tZSBvZgo+PiB0aGlzIGNhbWUgZnJvbSBpbnRlcm5hbCBkaXNjdXNz
+aW9ucyB3aXRoIG52aWRpYSBhbmQgTkRBJ2QgZGF0YXNoZWV0cwo+PiBzbyBJIGRvbid0IGtub3cg
+aG93IG11Y2ggYWN0dWFsIGRhdGEgSSBjYW4gc2hhcmUuCj4+Cj4+IFRvIGdldCB0aGUgNC40IGtl
+cm5lbCB0byBiZSBzaW1pbGFyIGVub3VnaCB0byB3b3JrIHdpdGggdGhlIHRlZ3JhMzBhCj4+IHdl
+IGhhZCB0byBkbyBzb21lIGNoYW5nZXMgdG8gdGhlIGNsb2NrIGluaXRpYWxpc2F0aW9uLiBGb3Ig
+dGhpbmdzCj4+IGxpa2UgdGhlIGNsb2NrIEkgYW0gbm90IHN1cmUgaWYgbGVhdmluZyBhIHRlZ3Jh
+MzAtY2FyIGluIHRoZXJlIHdvdWxkCj4+IGJlIGEgZ29vZCBpZGVhLCBpdCBtYXkgYm9vdCBidXQg
+cHJvYmFibHkgd29uJ3QgYmUgc3RhYmxlLgo+Pgo+PiBGb3IgdGhlIGZ1c2VzLCBpcyB0aGUgZnVz
+ZSBkcml2ZXIgdXAgZWFybHkgZW5vdWdoIHRvIGFsbG93IHRoZSBjbG9jawo+PiBkcml2ZXIgY291
+bGQgdXNlIHRoaXM/IG90aGVyd2lzZSBJIHRoaW5rIHRoZSBkZXZpY2UtdHJlZSBjaGFuZ2Ugd291
+bGQKPj4gYmUgdGhlIG9ubHkgd2F5LiBJJ20gbm90IHN1cmUgaWYgSSBoYXZlIHRoZSBpbmZvcm1h
+dGlvbiB0byBoYW5kIG9uCj4+IGhvdyB0byBkaWZmZXJlbnRpYXRlIHRoZSB0ZWdyYTMwIGFuZCB0
+ZWdyYTIwLgo+IAo+IEl0IHNob3VsZCBiZSwgaWYgeW91IHNlZSBkcml2ZXJzL3NvYy90ZWdyYS9m
+dXNlL2Z1c2UtdGVncmEuYyB0aGVyZSBpcyBhbgo+ICdlYXJseV9pbml0Y2FsbCh0ZWdyYV9pbml0
+X2Z1c2UpJyBhbmQgdGhlcmUgaXMgYSAndGVncmFfZnVzZV9yZWFkX2Vhcmx5KCknCj4gZnVuY3Rp
+b24gdGhhdCBjYW4gYmUgdXNlZC4KCk9rLCBJJ3ZlIHRyaWVkIGxvb2tpbmcgdGhyb3VnaCBhbGwg
+dGhlIGRhdGEtc2hlZXRzIEkgaGF2ZSBhbmQgSSBjYW4ndApmaW5kIGFueSBkYXRhIG9uIHdoaWNo
+IGZ1c2UtYml0cyB3b3VsZCBiZSBuZWVkZWQgdG8gaWRlbnRpZnkgdGhlIHR3bwp2ZXJzaW9ucy4g
+RG9lcyBhbnlvbmUgZWxzZSBrbm93IHdoZXJlIHRvIGxvb2s/CgotLSAKQmVuIERvb2tzCQkJCWh0
+dHA6Ly93d3cuY29kZXRoaW5rLmNvLnVrLwpTZW5pb3IgRW5naW5lZXIJCQkJQ29kZXRoaW5rIC0g
+UHJvdmlkaW5nIEdlbml1cwoKaHR0cHM6Ly93d3cuY29kZXRoaW5rLmNvLnVrL3ByaXZhY3kuaHRt
+bAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgt
+YXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJt
+LWtlcm5lbAo=
