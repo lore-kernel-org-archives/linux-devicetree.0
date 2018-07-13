@@ -1,85 +1,89 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 1/3] drm: mxsfb: Change driver.name to mxsfb-drm
-Date: Fri, 13 Jul 2018 09:25:36 +0200
-Message-ID: <20180713072536.GX3008@phenom.ffwll.local>
-References: <CAOMZO5B8i0gN+rCq-yPrd112NkwJWTxYCtsLVeLhD1JLRuX6EQ@mail.gmail.com>
- <07be6d9a85b6be655fc2b084be81d8bf9715b57a.camel@nxp.com>
- <638457fd-85da-8fec-d146-517c43f71813@denx.de>
- <b3fa74c5110b45e5992920485749869ab1f7ebce.camel@nxp.com>
- <6995fa4b-47a9-887b-5e4f-4284ca6a2c79@gmail.com>
- <fd22085f646d97f66cff5b7f22785500@agner.ch>
- <6fdba55b-0be6-9e28-d87a-43d876a1fd09@denx.de>
- <617c0a7e9132b929877b8cbcf116b1ea@agner.ch>
- <7f40f34a401ced78703b1a151d9f5fe4ed8c209f.camel@nxp.com>
- <039b2914-3393-5e81-82a6-7d517c5818a9@denx.de>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v10 0/6] Driver for at91 usart in spi mode
+Date: Fri, 13 Jul 2018 08:37:05 +0100
+Message-ID: <20180713073705.GT4641@dell>
+References: <20180625172230.29686-1-radu.pirea@microchip.com>
+ <aecba39e-deba-c64b-9542-a446e074e95e@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <039b2914-3393-5e81-82a6-7d517c5818a9@denx.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marek Vasut <marex@denx.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "marcofrk@gmail.com" <marcofrk@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+In-Reply-To: <aecba39e-deba-c64b-9542-a446e074e95e@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Radu Pirea <radu.pirea@microchip.com>, broonie@kernel.org, alexandre.belloni@bootlin.com, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBKdWwgMTIsIDIwMTggYXQgMDM6MTQ6NTdQTSArMDIwMCwgTWFyZWsgVmFzdXQgd3Jv
-dGU6Cj4gT24gMDcvMTIvMjAxOCAwMzowMyBQTSwgTGVvbmFyZCBDcmVzdGV6IHdyb3RlOgo+ID4g
-T24gVGh1LCAyMDE4LTA3LTEyIGF0IDExOjIxICswMjAwLCBTdGVmYW4gQWduZXIgd3JvdGU6Cj4g
-Pj4gT24gMTAuMDcuMjAxOCAxMToxMSwgTWFyZWsgVmFzdXQgd3JvdGU6Cj4gPj4+IE9uIDA3LzEw
-LzIwMTggMTE6MDYgQU0sIFN0ZWZhbiBBZ25lciB3cm90ZToKPiA+Pj4+IFRoaXMgaXMgb25lIG9m
-IHRoZSBzaXR1YXRpb24gd2hlcmUgc3RhdGVzIHF1byBpcyBraW5kYSB0aGUgd29yc3QKPiA+Pj4+
-IHNpdHVhdGlvbi4KPiA+Pj4+Cj4gPj4+PiBDdXJyZW50bHkgaW14X3Y2X3Y3X2RlZmNvbmZpZyBh
-bmQgbXhzX2RlZmNvbmZpZyBhY3R1YWxseSBzdGlsbCB1c2VzCj4gPj4+PiBDT05GSUdfRkJfTVhT
-Lgo+ID4+Pj4KPiA+Pj4+IEkgdW5kZXJzdGFuZCB0aGF0IHlvdSdkIHJhdGhlciBwcmVmZXIgdG8g
-bW92ZSBmb3J3YXJkLiBJIHN1Z2dlc3Qgd2UgZG8KPiA+Pj4+IGl0IGluIHN0ZXBzLgo+ID4+Pj4K
-PiA+Pj4+IEluIDQuMTk6Cj4gPj4+Pgo+ID4+Pj4gLSBDaGFuZ2UgRFJNIGRyaXZlci5uYW1lIHRv
-IG14c2ZiLWRybSBzbyB3ZSBhdm9pZCBjb25mbGljdHMgZm9yIG5vdwo+ID4+Pgo+ID4+PiBCdXQg
-dGhpcyB3aWxsIGJyZWFrIG1lc2EgaWYgaXQgZGVwZW5kcyBvbiBteHNmYiBuYW1lIGZvciBpZS4g
-ZXRuYXZpdgo+ID4+PiBiaW5kaW5nLgo+ID4+Cj4gPj4gRG9lcyBpdD8gZ3JlcCAtciAtZSBteHNm
-YiBpbiBsaWJkcm0gYW5kIG1lc2EgbWFzdGVyIHJldHVybnMgbm90aGluZy4KPiA+Pgo+ID4+IFRo
-ZXJlIGlzIGFsc28gLm5hbWUgaW4gc3RydWN0IGRybV9kcml2ZXIsIHdoaWNoIGlzIGFscmVhZHkg
-c2V0IHRvCj4gPj4gbXhzZmItZHJtLi4uIElzIHRoYXQgdGhlIG9uZSBleHBvc2VkIHRvIHVzZXIg
-c3BhY2U/Cj4gPiAKPiA+IFJ1bm5pbmcgZXRuYXZpdit4MTEgd2l0aCBhIHJlbmFtZWQgbXhzZmIg
-ZHJpdmVyIHdvcmtzIGZpbmUgb24gaW14NnN4LQo+ID4gc2RiLgo+ID4gCj4gPiBUb29scyBsaWtl
-IG1vZGV0ZXN0IGFscmVhZHkgbmVlZCAtTSBteHNmYi1kcm0sIHRoZSBkcm1fZHJpdmVyLm5hbWUK
-PiA+IHNlZW1zIHRvIGJlIHdoYXQgbWF0dGVycy4KPiA+IAo+ID4+IC0gUmVtb3ZlIENPTkZJR19G
-Ql9NWFMgZnJvbSBpbXhfdjZfdjdfZGVmY29uZmlnL214c19kZWZjb25maWcgbm93LCBhbmQKPiA+
-PiBvbmx5IGVuYWJsZSBDT05GSUdfRFJNX01YU0ZCPXkKPiA+IAo+ID4gSWYgb25lIG9mIHRoZSBk
-cml2ZXJzIGlzIHJlbmFtZWQgdGhlbiB0aGV5IGNhbiBjb2V4aXN0OiBzaW5jZSB0aGUKPiA+IGJp
-bmRpbmdzIGFyZSBkaXN0aW5jdCBvbmUgZHJpdmVyIHdpbGwgcmV0dXJuIGEgcHJvYmUgZXJyb3Ig
-YW5kIHRoZQo+ID4gb3RoZXIgd2lsbCBiaW5kIHN1Y2Nlc3NmdWxseS4gVGhpcyBjYW4gZXZlbiBi
-ZSBhZGp1c3RlZCBzbyB0aGF0IGl0Cj4gPiBkb2Vzbid0IGV2ZW4gcHJpbnQgdWdseSBzY2FyeSBl
-cnJvcnMuCj4gPiAKPiA+IFRoaXMgY2FuIGxhc3QgdW50aWwgc29tZWJvZHkgaW1wbGVtZW50cyBz
-dXBwb3J0IGZvciBvbGQgYmluZGluZ3MgaW4gdGhlCj4gPiBkcm0gZHJpdmVyIGFuZCB0aGVuIEZC
-X01YUyBjYW4ganVzdCBiZSBkZWxldGVkLgo+IAo+IFNvIHdoeSBkb24ndCB3ZSBqdXN0IGNvbnZl
-cnQgdGhlIERUIGJpbmRpbmdzIG9uIGJvYXJkcyBzdXBwb3J0ZWQKPiB1cHN0cmVhbSBhbmQgemFw
-IHRoZSBvbGQgZHJpdmVyID8gV2hhdCBpcyB0aGUgcHJvYmxlbSB3aXRoIHRoYXQ/CgorMSBvbiB6
-YXBwaW5nIGRyaXZlcnMgOi0pCgo+IFJlYWxpc3RpY2FsbHksIGhvdyBtYW55IE1YUyBib2FyZHMg
-aW4gdGhlIGZpZWxkIHVzZSBvbGQgRFQgYW5kIG5ldyBrZXJuZWwgPwoKWWVhaCBJIHRoaW5rIG9j
-Y2FzaW9uYWxseSB0aGF0IGVudGlyZSAiRFQgaXMgQVBJLCBjYW4ndCBldmVyIGNoYW5nZSBpdCIK
-c29uZyBpcyBvdmVyYmxvd24uIFRoZSBydWxlIHdpdGggcmVncmVzc2lvbnMgaXNuJ3QgdGhhdCB5
-b3UncmUgbmV2ZXIKYWxsb3dlZCB0byBicmVhayBhbnl0aGluZywgYnV0IHRoYXQgeW91J3JlIG9u
-bHkgYWxsb3dlZCB0byBicmVhayBzdHVmZiBubwpvbmUgd2lsbCBub3RpY2UgYW5kIHJlcG9ydC4K
-CklmIHRoZXJlJ3MgcmVhbGlzdGljYWxseSBubyB1c2VycywgZ28gYWhlYWQgYW5kIGJyZWFrIChp
-bnN0ZWFkIG9mIGh1Z2UgYW5kCmRyYXduLW91dCBjb21wYXQgcGxhbikuCgpJZiB0aGVyZSdzIGEg
-c29saWQgKGFuZCBhdXRvbWF0aWMgZW5vdWdoKSBmYWxsYmFjayBsaWtlIHRoZSBkcm0gZHJpdmVy
-LApnbyBhaGVhZCBhbmQgYnJlYWsuCgpXZSdyZSBkb2luZyB0aGlzIGFsbCB0aGUgdGltZSBpbiBn
-cmFwaGljcyB3aXRoIHVzZXJzcGFjZSBBQkksIEkgZG9uJ3QKdGhpbmsgRFQgaXMgYW55IGRpZmZl
-cmVudC4gRXZlcnkgb25jZSBpbiBhIHdoaWxlIHRoZXJlJ3MgYSBiaXQgb2YgcmVncmV0cwphbmQg
-YSByZXZlcnQgYmVjYXVzZSB3ZSBtaXNzZWQgc29tZXRoaW5nLCBidXQgb3ZlcmFsIGl0J3MgbXVj
-aCBsZXNzIGVmZm9ydAp0aGFuIGFsd2F5cyB0cnlpbmcgdG8gZG8gYSBwZXJmZWN0IGpvYiB3aXRo
-IGJhY2t3YXJkcyBjb21wYXQuCgpJcyBpdCByZWFsbHkgYSByZWdyZXNzaW9uIGlmIG5vIG9uZSBy
-ZXBvcnRzIGl0PyBOby4KCkNoZWVycywgRGFuaWVsCi0tIApEYW5pZWwgVmV0dGVyClNvZnR3YXJl
-IEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbgpodHRwOi8vYmxvZy5mZndsbC5jaApfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Wed, 11 Jul 2018, Nicolas Ferre wrote:
+
+> On 25/06/2018 at 19:22, Radu Pirea wrote:
+> > Hello,
+> > 
+> > This is the second version of driver. I added a mfd driver which by
+> > default probes atmel_serial driver and if in dt is specified to probe
+> > the spi driver, then the spi-at91-usart driver will be probed. The
+> > compatible for atmel_serial is now the compatible for at91-usart mfd
+> > driver and compatilbe for atmel_serial driver was changed in order to
+> > keep the bindings for serial as they are.
+> > 
+> > Changes in v10:
+> > -fixed kbuild test robot warning
+> > 
+> > Changes in v9:
+> > - minor changes
+> > - rebased on top of broonie/for-4.19
+> > 
+> > Changes in v8:
+> > - fixed passing an empty mfd cell if "atmel,usart-mode" value is invalid
+> > 
+> > Changes in v7:
+> > - synced up  SPDIX license with module license
+> > - numbering of usart modes starts from 0 insteand of 1
+> > 
+> > Changes in v6:
+> > - removed unused compatible strings from serial and spi drivers
+> > 
+> > Changes in v5:
+> > - fixed usage of stdout-path property with atmel_serial driver
+> > 
+> > Changes in v4:
+> > - modified the spi driver to use cs gpio support form spi subsystem
+> > - fixed dma transfers for serial driver
+> > - squashed binding for spi and serial and moved them to mfd/atmel-usart.txt
+> > 
+> > Changes in v3:
+> > - fixed spi slaves probing
+> > 
+> > Changes in v2:
+> > - added at91-usart mfd driver
+> > - modified spi-at91-usart driver to work as mfd driver child
+> > - modified atmel_serial driver to work as mfd driver child
+> > 
+> > Changes in v1:
+> > - added spi-at91-usart driver
+> > 
+> > 
+> > Radu Pirea (6):
+> >    MAINTAINERS: add at91 usart mfd driver
+> >    dt-bindings: add binding for atmel-usart in SPI mode
+> >    mfd: at91-usart: added mfd driver for usart
+> >    MAINTAINERS: add at91 usart spi driver
+> >    spi: at91-usart: add driver for at91-usart as spi
+> >    tty/serial: atmel: change the driver to work under at91-usart mfd
+> 
+> For the record or if needed by the MAINTAINERS changes, you can add my:
+> Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+> for the whole series.
+> 
+> Once the remarks by Mark are addressed, you can certainly re-send the series
+> with all tags collected for Lee to take it, if he is okay with this process,
+> of course...
+
+That's fine.  No problem.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
