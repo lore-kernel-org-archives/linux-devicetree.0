@@ -1,259 +1,32 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/2] pinctrl: nuvoton: add NPCM7xx pinctrl and GPIO driver
-Date: Fri, 13 Jul 2018 10:51:40 +0200
-Message-ID: <CACRpkdYOQMkA6BHtY3-NSXhyhoG7KzDg8SkqL2B6M8GQrvXgMA@mail.gmail.com>
-References: <20180712214203.114844-1-tmaimon77@gmail.com> <20180712214203.114844-3-tmaimon77@gmail.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Subject: [PATCH 0/3] arm64: dts: add Synaptics AS370 SoC support
+Date: Fri, 13 Jul 2018 17:17:12 +0800
+Message-ID: <20180713171712.05f58a74@xhacker.debian>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180712214203.114844-3-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tmaimon77@gmail.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, Joel Stanley <joel@jms.id.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 12, 2018 at 11:42 PM Tomer Maimon <tmaimon77@gmail.com> wrote:
+Add initial dtsi file for Synaptics AS370 SoC.
 
-> Add Nuvoton BMC NPCM750/730/715/705 Pinmux and
-> GPIO controller driver.
->
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+patch1 moves berlin binding to syna.txt.
+patch2 add dt-binding for the AS370 SoC.
+patch3 add the initial dtsi file for the SoC.
 
-(...)
-> +++ b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
-> @@ -0,0 +1,2089 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2016-2018 Nuvoton Technology corporation.
-> +// Copyright (c) 2016, Dell Inc
-> +
-> +#include <linux/device.h>
-> +#include <linux/gpio.h>
+Jisheng Zhang (3):
+  dt-bindings: arm: move berlin binding documentation to syna.txt
+  dt-bindings: arm: syna: add support for the AS370 SoC
+  arm64: dts: synaptics: add dtsi file for Synaptics AS370 SoC
 
-As this is a driver you should only include <linux/gpio/driver.h>
+ .../{marvell/marvell,berlin.txt => syna.txt}  |   6 +-
+ arch/arm64/boot/dts/synaptics/as370.dtsi      | 177 ++++++++++++++++++
+ 2 files changed, 182 insertions(+), 1 deletion(-)
+ rename Documentation/devicetree/bindings/arm/{marvell/marvell,berlin.txt => syna.txt} (94%)
+ create mode 100644 arch/arm64/boot/dts/synaptics/as370.dtsi
 
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/mfd/syscon.h>
-
-If you need syscon then the driver should select or depend
-on MFD_SYSCON in Kconfig.
-
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-
-Do you really need this include?
-
-> +/* Structure for register banks */
-> +struct NPCM7XX_GPIO {
-
-Can we have this lowercase? Please?
-
-> +       void __iomem            *base;
-> +       struct gpio_chip        gc;
-> +       int                     irqbase;
-> +       int                     irq;
-> +       spinlock_t              lock;
-> +       void                    *priv;
-> +       struct irq_chip         irq_chip;
-> +       u32                     pinctrl_id;
-> +};
-
-So each GPIO bank has its own gpio chip and register
-base, that is NICE! Because then it looks like you can
-select GPIO_GENERIC and use the MMIO GPIO helper
-library to handle the registers. Let's look into that
-option!
-
-> +struct NPCM7xx_pinctrl {
-> +       struct pinctrl_dev      *pctldev;
-> +       struct device           *dev;
-> +       struct NPCM7XX_GPIO     gpio_bank[NPCM7XX_GPIO_BANK_NUM];
-> +       struct irq_domain       *domain;
-
-I wonder why the pin controller needs and IRQ domain but
-I keep reading the code and I might find out...
-
-> +enum operand {
-> +       op_set,
-> +       op_getbit,
-> +       op_setbit,
-> +       op_clrbit,
-> +};
-
-This looks complicated. I suspect you can use GPIO_GENERIC
-to set/get and clear bits in the register(s).
-
-> +/* Perform locked bit operations on GPIO registers */
-> +static int gpio_bitop(struct NPCM7XX_GPIO *bank, int op, unsigned int offset,
-> +                     int reg)
-> +{
-> +       unsigned long flags;
-> +       u32 mask, val;
-> +
-> +       mask = (1L << offset);
-> +       spin_lock_irqsave(&bank->lock, flags);
-> +       switch (op) {
-> +       case op_set:
-> +               iowrite32(mask, bank->base + reg);
-> +               break;
-> +       case op_getbit:
-> +               mask &= ioread32(bank->base + reg);
-> +               break;
-> +       case op_setbit:
-> +               val = ioread32(bank->base + reg);
-> +               iowrite32(val | mask, bank->base + reg);
-> +               break;
-> +       case op_clrbit:
-> +               val = ioread32(bank->base + reg);
-> +               iowrite32(val & (~mask), bank->base + reg);
-> +               break;
-> +       }
-> +       spin_unlock_irqrestore(&bank->lock, flags);
-> +       return !!mask;
-> +}
-
-This is essentially a reimplementation of drivers/gpio/gpio-mmio.c
-(GPIO_GENERIC, also using a spinlock to protect the registers)
-so let's use that instead :)
-
-There are drivers already that reuse the spinlock inside the
-generic GPIO chip to protect their other registers like for
-IRQ registers.
-
-> +static int npcmgpio_get_direction(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       struct NPCM7XX_GPIO *bank = gpiochip_get_data(chip);
-> +       u32 oe, ie;
-> +
-> +       /* Get Input & Output state */
-> +       ie = gpio_bitop(bank, op_getbit, offset, NPCM7XX_GP_N_IEM);
-> +       oe = gpio_bitop(bank, op_getbit, offset, NPCM7XX_GP_N_OE);
-> +       if (ie && !oe)
-> +               return GPIOF_DIR_IN;
-> +       else if (oe && !ie)
-> +               return GPIOF_DIR_OUT;
-
-These are consumer flags and should not be used in drivers.
-Use plain 0/1 instead.
-
-Anyways the problem goes away with GPIO_GENERIC.
-
-> +static int npcmgpio_direction_input(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       return pinctrl_gpio_direction_input(offset + chip->base);
-> +}
-
-It's a bit tricksy to get this to work with GPIO_GENERIC.
-
-After calling bgpio_init() you need to overwrite the assigned
-.direction_input handler with this and then direct back to the
-one assigned by GPIO_GENERIC.
-
-Something like this:
-
-1. Add two indirection pointers to the npcm7xx_gpio state container:
-
-struct npcm7xx_gpio {
-     (...)
-      int (*direction_input)(struct gpio_chip *chip, unsigned offset);
-      int (*direction_output)(struct gpio_chip *chip, unsigned offset,
-int value);
-     (...)
-};
-
-2. Save the pointers
-
-struct npcm7xx_gpio *npcm;
-
-bgpio_init( ... register setup ...)
-npcm->direction_input = npcm->gc.direction_input;
-npcm->direction_output = npcm->gc.direction_output;
-npcm->gc.direction_input = npcmgpio_direction_input;
-npcm->gc.direction_output = npcmgpio_direction_output;
-
-3. Modify the functions like that:
-
-static int npcmgpio_direction_input(struct gpio_chip *chip, unsigned int offset)
-{
-    struct npcm7xx_gpio *npcm = gpiochip_get_data(chip);
-    int ret;
-
-    ret = pinctrl_gpio_direction_input(offset + chip->base);
-    if (ret)
-        return ret;
-    return npcm->direction_input(chip);
-}
-
-I'm sure you get the idea... if you think we can modify gpio-mmio
-to be more helpful with this, suggestions are welcome!
-
-> +/* Set GPIO to Output with initial value */
-> +static int npcmgpio_direction_output(struct gpio_chip *chip,
-> +                                    unsigned int offset, int value)
-> +{
-> +       struct NPCM7XX_GPIO *bank = gpiochip_get_data(chip);
-> +
-> +       dev_dbg(chip->parent, "gpio_direction_output: offset%d = %x\n", offset,
-> +               value);
-> +
-> +       /* Check if we're enabled as an interrupt.. */
-> +       if (gpio_bitop(bank, op_getbit, offset, NPCM7XX_GP_N_EVEN) &&
-> +           gpio_bitop(bank, op_getbit, offset, NPCM7XX_GP_N_IEM)) {
-> +               dev_dbg(chip->parent,
-> +                       "gpio_direction_output: IRQ enabled on offset%d\n",
-> +                       offset);
-> +               return -EINVAL;
-> +       }
-
-This should not be necessary as you are using GPIOLIB_IRQCHIP,
-which locks the GPIO for interrupt and disallows this to happen.
-
-> +static int npcmgpio_gpio_request(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       dev_dbg(chip->parent, "gpio_request: offset%d\n", offset);
-> +       return pinctrl_gpio_request(offset + chip->base);
-> +}
-> +
-> +static void npcmgpio_gpio_free(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       dev_dbg(chip->parent, "gpio_free: offset%d\n", offset);
-> +       pinctrl_gpio_free(offset + chip->base);
-> +}
-
-This needs the same pattern as the direction functions above, then
-you can use GPIO_GENERIC (mmio).
-
-> +static unsigned int npcmgpio_irq_startup(struct irq_data *d)
-> +{
-> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +       unsigned int gpio = d->hwirq;
-> +
-> +       /* active-high, input, clear interrupt, enable interrupt */
-> +       dev_dbg(d->chip->parent_device, "startup: %u.%u\n", gpio, d->irq);
-> +       npcmgpio_direction_output(gc, gpio, 1);
-> +       npcmgpio_direction_input(gc, gpio);
-
-Interesting dance. So it is required to set the line to
-1 and then switch to input?
-
-> +static struct irq_chip npcmgpio_irqchip = {
-> +       .name = "NPCM7XX-GPIO-IRQ",
-> +       .irq_ack = npcmgpio_irq_ack,
-> +       .irq_unmask = npcmgpio_irq_unmask,
-> +       .irq_mask = npcmgpio_irq_mask,
-> +       .irq_set_type = npcmgpio_set_irq_type,
-> +       .irq_startup = npcmgpio_irq_startup,
-> +};
-
-This code is looking good BTW.
-
-The patch in my inbox just ends in the middle of everything, I wonder
-why :( suspect the new gmail interface I'm using.
-
-Anyways: the pointers above should keep you busy for the next
-iteration of the patch, the pin control part seems pretty straight-forward.
-
-Yours,
-Linus Walleij
+-- 
+2.18.0
