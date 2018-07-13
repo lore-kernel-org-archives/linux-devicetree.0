@@ -1,43 +1,38 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH 1/2] ARM: dts: imx51-zii-scu3-esb: Add switch IRQ line
- pinumx config
-Date: Thu, 12 Jul 2018 22:15:28 -0700
-Message-ID: <CAHQ1cqEXBfs1B6Jr1NvUY6WoyX9oG=0haJpiTLVH7t-37ht10Q@mail.gmail.com>
-References: <20180712023337.30112-1-andrew.smirnov@gmail.com>
- <20180712023337.30112-2-andrew.smirnov@gmail.com> <CAOMZO5DfHqKjF6xykJtoC-aA-ATWM6mCZR0VzPVpSDOt-Fs6bQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Koen Kooi <koen@dominion.thruhere.net>
+Subject: [PATCH v3 1/2] dt-bindings: Add vendor prefix for Sancloud
+Date: Fri, 13 Jul 2018 08:22:20 +0200
+Message-ID: <1531462943-26226-2-git-send-email-koen@dominion.thruhere.net>
+References: <1531462943-26226-1-git-send-email-koen@dominion.thruhere.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5DfHqKjF6xykJtoC-aA-ATWM6mCZR0VzPVpSDOt-Fs6bQ@mail.gmail.com>
+In-Reply-To: <1531462943-26226-1-git-send-email-koen@dominion.thruhere.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
+To: linux-omap@vger.kernel.org
+Cc: Koen Kooi <koen@dominion.thruhere.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, David Lechner <david@lechnology.com>, Shawn Guo <shawnguo@kernel.org>, SZ Lin <sz.lin@moxa.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 12, 2018 at 6:37 AM Fabio Estevam <festevam@gmail.com> wrote:
->
-> Hi Andrey,
->
-> On Wed, Jul 11, 2018 at 11:33 PM, Andrey Smirnov
-> <andrew.smirnov@gmail.com> wrote:
->
-> > +       pinctrl_switch: switchgrp {
-> > +               fsl,pins = <
-> > +                       MX51_PAD_AUD3_BB_CK__GPIO4_20           0xc5
->
-> The i.MX51 Reference Manual states that 0xa5 is the default reset
-> value for the register IOMUXC_SW_PAD_CTL_PAD_AUD3_BB_CK.
->
-> By reading your commit log I had the impression you wanted to provide
-> the default value explicitly.
->
-> Please clarify.
+Add vendor prefix for Sancloud Ltd.
 
-I wanted to avoid relying on defaults be it register reset values or
-settings that bootloader left us with. Default value of 0xa5 works,
-but, given how the pin is IRQ_TYPE_LEVEL_HIGH, I though it would be
-better to configure it to have a pulldown. Do you want me to add that
-to commit log?
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+---
 
-Thanks,
-Andrey Smirnov
+v3: No changes
+v2: No changes
+v1: Initial submission
+
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 7cad066..c7aaa1f 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -314,6 +314,7 @@ rohm	ROHM Semiconductor Co., Ltd
+ roofull	Shenzhen Roofull Technology Co, Ltd
+ samsung	Samsung Semiconductor
+ samtec	Samtec/Softing company
++sancloud	Sancloud Ltd
+ sandisk	Sandisk Corporation
+ sbs	Smart Battery System
+ schindler	Schindler
+-- 
+2.0.1
