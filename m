@@ -1,72 +1,100 @@
-From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH v2 3/3] dt-bindings: mfd: max8998: Add charger subnode binding
-Date: Sat, 14 Jul 2018 14:26:53 +0200
-Message-ID: <1531571213-30593-4-git-send-email-pawel.mikolaj.chmiel@gmail.com>
-References: <1531571213-30593-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH] rtc: jz4740: Add support for the JZ4725B, JZ4760, JZ4770
+Date: Sat, 14 Jul 2018 15:19:20 +0200
+Message-ID: <20180714131920.GU16084@piout.net>
+References: <20180713151424.13000-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531571213-30593-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180713151424.13000-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds devicetree bindings documentation for
-battery charging controller as the subnode of MAX8998 PMIC.
+Hello,
 
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
----
-Changes from v1:
-  - Removed unneeded Fixes tag
-  - Correct description of all charger values
-  - Added missing property unit
----
- Documentation/devicetree/bindings/mfd/max8998.txt | 24 +++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+On 13/07/2018 17:14:24+0200, Paul Cercueil wrote:
+> The RTC in the JZ4725B works just like the one in the JZ4740.
+> 
+> The RTC in the JZ4760 and JZ4770 work just like the one in the JZ4780.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt |  3 +++
+>  drivers/rtc/rtc-jz4740.c                                     | 11 ++++++++++-
+>  2 files changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+> index 41c7ae18fd7b..a9e821de84f2 100644
+> --- a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+> +++ b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+> @@ -4,6 +4,9 @@ Required properties:
+>  
+>  - compatible: One of:
+>    - "ingenic,jz4740-rtc" - for use with the JZ4740 SoC
+> +  - "ingenic,jz4725b-rtc" - for use with the JZ4725B SoC
+> +  - "ingenic,jz4760-rtc" - for use with the JZ4760 SoC
+> +  - "ingenic,jz4770-rtc" - for use with the JZ4770 SoC
+>    - "ingenic,jz4780-rtc" - for use with the JZ4780 SoC
+>  - reg: Address range of rtc register set
+>  - interrupts: IRQ number for the alarm interrupt
+> diff --git a/drivers/rtc/rtc-jz4740.c b/drivers/rtc/rtc-jz4740.c
+> index d0a891777f44..1c867e3a0ea5 100644
+> --- a/drivers/rtc/rtc-jz4740.c
+> +++ b/drivers/rtc/rtc-jz4740.c
+> @@ -54,6 +54,9 @@
+>  
+>  enum jz4740_rtc_type {
+>  	ID_JZ4740,
+> +	ID_JZ4725B,
+> +	ID_JZ4760,
+> +	ID_JZ4770,
 
-diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Documentation/devicetree/bindings/mfd/max8998.txt
-index 23a3650ff2a2..196e50097a36 100644
---- a/Documentation/devicetree/bindings/mfd/max8998.txt
-+++ b/Documentation/devicetree/bindings/mfd/max8998.txt
-@@ -50,6 +50,23 @@ Additional properties required if max8998,pmic-buck2-dvs-gpio is defined:
- - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in microvolts
-   for buck2 regulator that can be selected using dvs gpio.
- 
-+Charger: Configuration for battery charging controller should be added
-+inside a child node named 'charger'.
-+  Required properties:
-+  - max8998,charge-eoc-percent: Setup End of Charge Level.
-+    If value equals 0, leave it unchanged.
-+    Otherwise it should be value from 10 to 45 by 5 step.
-+
-+  - max8998,charge-restart-level-microvolt: Setup Charge Restart Level.
-+    If value equals 0, leave it unchanged.
-+    If value equals -1, it will be disabled.
-+    Otherwise it should be one of following values: 100, 150, 200.
-+
-+  - max8998,charge-timeout-hours: Setup Charge Full Timeout.
-+    If value equals 0, leave it unchanged.
-+    If value equals -1, it will be disabled.
-+    Otherwise it should be one of following values: 5, 6, 7.
-+
- Regulators: All the regulators of MAX8998 to be instantiated shall be
- listed in a child node named 'regulators'. Each regulator is represented
- by a child node of the 'regulators' node.
-@@ -99,6 +116,13 @@ Example:
- 		max8998,pmic-buck2-dvs-gpio = <&gpx0 0 3 0 0>; /* SET3 */
- 		max8998,pmic-buck2-dvs-voltage = <1350000>, <1300000>;
- 
-+		/* Charger configuration */
-+		charger {
-+			max8998,charge-eoc-percent = <0>;
-+			max8998,charge-restart-level-microvolt = <(-1)>;
-+			max8998,charge-timeout-hours = <7>;
-+		};
-+
- 		/* Regulators to instantiate */
- 		regulators {
- 			ldo2_reg: LDO2 {
+I wouldn't introduce those ids unless there are handling differences at
+some point.
+
+>  	ID_JZ4780,
+>  };
+>  
+> @@ -114,7 +117,7 @@ static inline int jz4740_rtc_reg_write(struct jz4740_rtc *rtc, size_t reg,
+>  {
+>  	int ret = 0;
+>  
+> -	if (rtc->type >= ID_JZ4780)
+> +	if (rtc->type >= ID_JZ4760)
+
+This would avoid that change (and the test would preferably be (rtc->type == ID_JZ4780))
+
+>  		ret = jz4780_rtc_enable_write(rtc);
+>  	if (ret == 0)
+>  		ret = jz4740_rtc_wait_write_ready(rtc);
+> @@ -300,6 +303,9 @@ static void jz4740_rtc_power_off(void)
+>  
+>  static const struct of_device_id jz4740_rtc_of_match[] = {
+>  	{ .compatible = "ingenic,jz4740-rtc", .data = (void *)ID_JZ4740 },
+> +	{ .compatible = "ingenic,jz4725b-rtc", .data = (void *)ID_JZ4725B },
+> +	{ .compatible = "ingenic,jz4760-rtc", .data = (void *)ID_JZ4760 },
+> +	{ .compatible = "ingenic,jz4770-rtc", .data = (void *)ID_JZ4770 },
+>  	{ .compatible = "ingenic,jz4780-rtc", .data = (void *)ID_JZ4780 },
+>  	{},
+>  };
+> @@ -428,6 +434,9 @@ static const struct dev_pm_ops jz4740_pm_ops = {
+>  
+>  static const struct platform_device_id jz4740_rtc_ids[] = {
+>  	{ "jz4740-rtc", ID_JZ4740 },
+> +	{ "jz4725b-rtc", ID_JZ4725B },
+> +	{ "jz4760-rtc", ID_JZ4760 },
+> +	{ "jz4770-rtc", ID_JZ4770 },
+>  	{ "jz4780-rtc", ID_JZ4780 },
+>  	{}
+>  };
+> -- 
+> 2.11.0
+> 
+
 -- 
-2.7.4
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
