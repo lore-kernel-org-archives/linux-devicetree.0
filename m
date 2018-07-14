@@ -1,63 +1,78 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH] rtc: jz4740: Add support for the JZ4725B, JZ4760, JZ4770
-Date: Sat, 14 Jul 2018 18:24:19 +0200
-Message-ID: <20180714162419.GX16084@piout.net>
-References: <20180713151424.13000-1-paul@crapouillou.net>
- <20180714131920.GU16084@piout.net>
- <1531574734.2831.0@smtp.crapouillou.net>
- <20180714133250.GW16084@piout.net>
- <1531576208.2831.1@smtp.crapouillou.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCH v5 1/7] dt-bindings: net: bluetooth: Add
+ mediatek-bluetooth
+Date: Sat, 14 Jul 2018 18:26:24 +0200
+Message-ID: <7E55939D-7F8A-4832-9DD5-EFB3B19ACF0B@holtmann.org>
+References: <cover.1531150733.git.sean.wang@mediatek.com>
+ <d8a5b34513cf2187a2b23a513feaa358d719bc14.1531150733.git.sean.wang@mediatek.com>
+Mime-Version: 1.0 (Mac OS X Mail 11.4 \(3445.8.2\))
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1531576208.2831.1@smtp.crapouillou.net>
+In-Reply-To: <d8a5b34513cf2187a2b23a513feaa358d719bc14.1531150733.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: sean.wang@mediatek.com
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 14/07/2018 15:50:08+0200, Paul Cercueil wrote:
-> > >  > This would avoid that change (and the test would preferably be
-> > >  > (rtc->type == ID_JZ4780))
-> > > 
-> > >  That branch should be taken if the SoC is JZ4760, JZ4770 or JZ4780.
-> > >  It should not be taken if the SoC is JZ4740 or JZ4725B.
-> > 
-> > Sure but you can achieve that with only 2 ids...
-> > 
-> > > 
-> > >  > >   		ret = jz4780_rtc_enable_write(rtc);
-> > >  > >   	if (ret == 0)
-> > >  > >   		ret = jz4740_rtc_wait_write_ready(rtc);
-> > >  > >  @@ -300,6 +303,9 @@ static void jz4740_rtc_power_off(void)
-> > >  > >
-> > >  > >   static const struct of_device_id jz4740_rtc_of_match[] = {
-> > >  > >   	{ .compatible = "ingenic,jz4740-rtc", .data = (void
-> > > *)ID_JZ4740 },
-> > >  > >  +	{ .compatible = "ingenic,jz4725b-rtc", .data = (void
-> > > *)ID_JZ4725B
-> > >  > > },
-> > >  > >  +	{ .compatible = "ingenic,jz4760-rtc", .data = (void
-> > > *)ID_JZ4760 },
-> > >  > >  +	{ .compatible = "ingenic,jz4770-rtc", .data = (void
-> > > *)ID_JZ4770 },
-> > 
-> > By doing the correct mapping here e.g:
-> > 
-> > { .compatible = "ingenic,jz4725b-rtc", .data = (void *)ID_JZ4740 },
+Hi Sean,
+
+> Add binding document for a SoC built-in device using MediaTek protocol.
+> Which could be found on MT7622 SoC or other similar MediaTek SoCs.
 > 
-> Not very pretty and future-proof if you ask me...
-> But you're the boss...
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> .../devicetree/bindings/net/mediatek-bluetooth.txt | 35 ++++++++++++++++++++++
+> 1 file changed, 35 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt b/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+> new file mode 100644
+> index 0000000..1335429
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+> @@ -0,0 +1,35 @@
+> +MediaTek SoC built-in Bluetooth Devices
+> +==================================
+> +
+> +This device is a serial attached device to BTIF device and thus it must be a
+> +child node of the serial node with BTIF. The dt-bindings details for BTIF
+> +device can be known via Documentation/devicetree/bindings/serial/8250.txt.
+> +
+> +Required properties:
+> +
+> +- compatible:	Must be one of
+> +		  "mediatek,mt7622-bluetooth"": for MT7622 SoC
 
-I think it makes the code simpler to follow . Regarding future
-proofness, you will have to add code and probably use a switch case at
-the time you need to handle an RTC differently. At that time, the >=
-test trick will not work anymore anyway.
+this does not match with the example below. And one of, should be normally be a list.
 
+> +- clocks:	Should be the clock specifiers corresponding to the entry in
+> +		clock-names property.
+> +- clock-names:	Should contain "ref" entries.
+> +- power-domains: Phandle to the power domain that the device is part of
+> +
+> +Example:
+> +
+> +	btif: serial@1100c000 {
+> +		compatible = "mediatek,mt7622-btif",
+> +			     "mediatek,mtk-btif";
+> +		reg = <0 0x1100c000 0 0x1000>;
+> +		interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&pericfg CLK_PERI_BTIF_PD>;
+> +		clock-names = "main";
+> +		reg-shift = <2>;
+> +		reg-io-width = <4>;
+> +
+> +		bluetooth {
+> +			compatible = "mediatek,mt7622-bluetooth";
+> +			power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
+> +			clocks = <&clk25m>;
+> +			clock-names = "ref";
+> +		};
+> +	};
 
--- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Regards
+
+Marcel
