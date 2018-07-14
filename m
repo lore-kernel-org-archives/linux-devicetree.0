@@ -1,134 +1,165 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH 2/2] ARM: dts: pxa: add mioa701 board description
-Date: Sat, 14 Jul 2018 22:15:45 +0200
-Message-ID: <87lgada80e.fsf@belgarion.home>
-References: <20180702055733.18578-1-robert.jarzmik@free.fr>
-        <20180702055733.18578-2-robert.jarzmik@free.fr>
-        <CAL_JsqJU2jyfN3PyvXRCTO4xXQmUbU3tJ0uLok10KONULpJwXg@mail.gmail.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v2] arm64: dts: rockchip: add USB 2.0 and 3.0 support on Ficus
+ board
+Date: Sat, 14 Jul 2018 14:09:22 -0300
+Message-ID: <20180714170922.4433-1-ezequiel@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJU2jyfN3PyvXRCTO4xXQmUbU3tJ0uLok10KONULpJwXg@mail.gmail.com>
-        (Rob Herring's message of "Mon, 9 Jul 2018 12:00:26 -0600")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh+dt@kernel.org> writes:
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-Hi Rob,
+The board exposes two types A ports, one is USB 3.0, up to 5.0Gbps and
+another one is USB 2.0 up to 480Mbps. Enable the USB PHYs and the USB
+controllers to enable theses devices.
 
->> +       /* compatible = "mitac,mioa701"; */
->> +       compatible = "marvell,pxa270";
->
-> Why the comment?
-Leftover, I'll remove it.
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+---
+Changes from v1:
+ * Provide voltage for vcc5v0_host and vcc3v3_pcie regulators
+ * Provide vin_supply for vcc5v0_host.
 
->> +                       pstore_region:region@0xa2000000 {
->
-> Drop the 0x
-Done.
+ arch/arm64/boot/dts/rockchip/rk3399-ficus.dts | 90 +++++++++++++++++++
+ 1 file changed, 90 insertions(+)
 
->> +                               compatible = "linux,contiguous-memory-region";
->> +                               reg = <0xa2000000 1048576>;
->
-> Use hex for the size.
-Ok.
-
->> +               ffuart: uart@40100000 {
->
-> Should be "serial@...". You'll have to fix in the base dtsi.
-Ok for all of these.
->> +               pxai2c1: i2c@40301680 {
->> +                       mrvl,i2c-fast-mode;
->> +                       pinctrl-names = "default";
->> +                       pinctrl-0 = <&pinctrl_i2c_default>;
->> +                       status = "okay";
->> +
->> +                       mt9m111: camera@5d {
->> +                               compatible = "micron,mt9m111";
->> +                               reg = <0x5d>;
->> +                               gpios = <&gpio 56 GPIO_ACTIVE_HIGH>;
->> +
->> +                               remote = <&pxa_camera>;
->
-> Not needed with the graph:
-I don't understand that, do you mean the port node is not needed ?
-
->
->> +                               port {
->> +                                       mt9m111_1: endpoint {
->> +                                               bus-width = <8>;
->> +                                               remote-endpoint = <&pxa_camera>;
->> +                                       };
->> +                               };
->> +                       };
->> +               };
->> +               gpio-keys {
->> +                       compatible = "gpio-keys";
->> +                       #address-cells = <1>;
->> +                       #size-cells = <0>;
->> +                       autorepeat;
->> +                       pinctrl-names = "default";
->> +                       pinctrl-0 = <&pinctrl_gpiokeys_default>;
->> +                       status = "okay";
->
-> Don't need status here? It shouldn't be defined in the base dtsi.
-Heuh what ? The status is just above, and gpio-keys is not defined in any dtsi.
-
->> +
->> +                       button@0 {
->
-> If you have unit-address there should also be a reg property. Just
-> drop and name the node 'power' or 'power-button'. And similarly for
-> the rest.
-Ok.
-
->> +
->> +       regulators {
->> +               compatible = "simple-bus";
->
-> Drop this and move children to the top level. This is not an mmio bus.
-Ok.
-
->> +       docg3: flash@0 {
->
-> This probably should be a child of the bus controller.
-Most certainly yes.
-
->
->> +               compatible = "m-systems,diskonchip-g3";
->> +               reg = <0x0 0x2000>;
->> +       };
->> +
->> +       panel {
->> +               compatible = "toshiba,ltm0305a776";
->> +               lcd-type = "color-tft";
->
-> This should be implied by the compatible.
-Mmm no. Actually, this is used by the framebuffer controller, ie. pxafb to set
-it up. And I don't think adding a list of panel compatibles in pxafb is a good
-idea.
-The corresponding code is in : drivers/video/fbdev/pxafb.c, see
-"static const char * const lcd_types[]".
-
->> +               display-timings {
->> +                       native-mode = <&timing0>;
->
-> We generally imply this from the compatible (i.e. use simple-panel).
-But you suppose there is an actual driver for the panel, right ? But there is
-none.
-
-> Could use another level of indentation.
-Sure.
-
->> +       ac_charger: charger@1 {
->
-> Drop the unit-address.
-Ok.
-
-Thanks for the review.
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
+index 0d14183dd4a9..6295483b701f 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
+@@ -58,9 +58,24 @@
+ 		pinctrl-0 = <&pcie_drv>;
+ 		regulator-boot-on;
+ 		regulator-name = "vcc3v3_pcie";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
+ 		vin-supply = <&vcc3v3_sys>;
+ 	};
+ 
++	vcc5v0_host: vcc5v0-host-regulator {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio4 27 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&host_vbus_drv>;
++		regulator-name = "vcc5v0_host";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++		vin-supply = <&vcc_sys>;
++	};
++
+ 	vdd_log: vdd-log {
+ 		compatible = "pwm-regulator";
+ 		pwms = <&pwm2 0 25000 0>;
+@@ -454,6 +469,13 @@
+ 				<1 14 RK_FUNC_GPIO &pcfg_pull_down>;
+ 		};
+ 	};
++
++	usb2 {
++		host_vbus_drv: host-vbus-drv {
++			rockchip,pins =
++				<4 27 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
+ };
+ 
+ &pwm2 {
+@@ -487,6 +509,40 @@
+ 	status = "okay";
+ };
+ 
++&tcphy0 {
++	status = "okay";
++};
++
++&tcphy1 {
++	status = "okay";
++};
++
++&u2phy0 {
++	status = "okay";
++};
++
++&u2phy1 {
++	status = "okay";
++};
++
++&u2phy0_host {
++	phy-supply = <&vcc5v0_host>;
++	status = "okay";
++};
++
++&u2phy1_host {
++	phy-supply = <&vcc5v0_host>;
++	status = "okay";
++};
++
++&u2phy0_otg {
++	status = "okay";
++};
++
++&u2phy1_otg {
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_xfer &uart0_cts>;
+@@ -497,6 +553,40 @@
+ 	status = "okay";
+ };
+ 
++&usb_host0_ehci {
++	status = "okay";
++};
++
++&usb_host0_ohci {
++	status = "okay";
++};
++
++&usb_host1_ehci {
++	status = "okay";
++};
++
++&usb_host1_ohci {
++	status = "okay";
++};
++
++&usbdrd3_0 {
++	status = "okay";
++};
++
++&usbdrd_dwc3_0 {
++	status = "okay";
++	dr_mode = "host";
++};
++
++&usbdrd3_1 {
++	status = "okay";
++};
++
++&usbdrd_dwc3_1 {
++	status = "okay";
++	dr_mode = "host";
++};
++
+ &vopb {
+ 	status = "okay";
+ };
 -- 
-Robert
+2.18.0
