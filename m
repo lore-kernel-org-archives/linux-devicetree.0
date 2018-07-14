@@ -1,36 +1,63 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V2] ARM: dts: imx6sl-evk: add missing GPIO iomux setting
-Date: Sat, 14 Jul 2018 13:09:59 -0300
-Message-ID: <CAOMZO5AcJSMyh3Y51K+4P2Ha-aX9kbeZCT6gFN9tV90p-6F2hg@mail.gmail.com>
-References: <1531533238-8816-1-git-send-email-Anson.Huang@nxp.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH] rtc: jz4740: Add support for the JZ4725B, JZ4760, JZ4770
+Date: Sat, 14 Jul 2018 18:24:19 +0200
+Message-ID: <20180714162419.GX16084@piout.net>
+References: <20180713151424.13000-1-paul@crapouillou.net>
+ <20180714131920.GU16084@piout.net>
+ <1531574734.2831.0@smtp.crapouillou.net>
+ <20180714133250.GW16084@piout.net>
+ <1531576208.2831.1@smtp.crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1531533238-8816-1-git-send-email-Anson.Huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <Linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1531576208.2831.1@smtp.crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anson,
+On 14/07/2018 15:50:08+0200, Paul Cercueil wrote:
+> > >  > This would avoid that change (and the test would preferably be
+> > >  > (rtc->type == ID_JZ4780))
+> > > 
+> > >  That branch should be taken if the SoC is JZ4760, JZ4770 or JZ4780.
+> > >  It should not be taken if the SoC is JZ4740 or JZ4725B.
+> > 
+> > Sure but you can achieve that with only 2 ids...
+> > 
+> > > 
+> > >  > >   		ret = jz4780_rtc_enable_write(rtc);
+> > >  > >   	if (ret == 0)
+> > >  > >   		ret = jz4740_rtc_wait_write_ready(rtc);
+> > >  > >  @@ -300,6 +303,9 @@ static void jz4740_rtc_power_off(void)
+> > >  > >
+> > >  > >   static const struct of_device_id jz4740_rtc_of_match[] = {
+> > >  > >   	{ .compatible = "ingenic,jz4740-rtc", .data = (void
+> > > *)ID_JZ4740 },
+> > >  > >  +	{ .compatible = "ingenic,jz4725b-rtc", .data = (void
+> > > *)ID_JZ4725B
+> > >  > > },
+> > >  > >  +	{ .compatible = "ingenic,jz4760-rtc", .data = (void
+> > > *)ID_JZ4760 },
+> > >  > >  +	{ .compatible = "ingenic,jz4770-rtc", .data = (void
+> > > *)ID_JZ4770 },
+> > 
+> > By doing the correct mapping here e.g:
+> > 
+> > { .compatible = "ingenic,jz4725b-rtc", .data = (void *)ID_JZ4740 },
+> 
+> Not very pretty and future-proof if you ask me...
+> But you're the boss...
+> 
 
-On Fri, Jul 13, 2018 at 10:53 PM, Anson Huang <Anson.Huang@nxp.com> wrote:
-> On i.MX6SL EVK board, the MX6SL_PAD_KEY_ROW5 pin is
-> used as lcd 3v3 regulator control pin, need to make
-> sure MX6SL_PAD_KEY_ROW5 is muxed as GPIO function
-> for controlling lcd 3v3 regulator.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+I think it makes the code simpler to follow . Regarding future
+proofness, you will have to add code and probably use a switch case at
+the time you need to handle an RTC differently. At that time, the >=
+test trick will not work anymore anyway.
 
-Looks good now, thanks:
 
-Reviewed-by; Fabio Estevam <fabio.estevam@nxp.com>
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
