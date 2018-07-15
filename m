@@ -1,139 +1,37 @@
-From: William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: [PATCH v8 11/11] iio: counter: Add deprecation markings for IIO Counter attributes
-Date: Sun, 15 Jul 2018 16:47:30 -0400
-Message-ID: <8815656bba012cc91b8cd0802d744c54917b6f3d.1531685025.git.vilhelm.gray@gmail.com>
-References: <cover.1531685024.git.vilhelm.gray@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1531685024.git.vilhelm.gray@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, jic23@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, fabrice.gasnier@st.com, benjamin.gaignard@st.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, William Breathitt Gray <vilhelm.gray@gmail.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v6 1/5] clk: actions: Add missing REGMAP_MMIO dependency
+Date: Sun, 15 Jul 2018 23:39:41 +0200
+Message-ID: <9b580b0c-3cbe-a608-fb21-e8950e259c2f@suse.de>
+References: <20180715203524.11948-1-sravanhome@gmail.com>
+ <20180715203524.11948-2-sravanhome@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180715203524.11948-2-sravanhome@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Saravanan Sekar <sravanhome@gmail.com>, manivannan.sadhasivam@linaro.org, sboyd@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@cubietech.com, support@cubietech.com, catalin.marinas@arm.com, mturquette@baylibre.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, darren@cubietech.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, pn@denx.de, linux-clk@vger.kernel.org, jeff.chen@actions-semi.com, mp-cs@actions-semi.com
 List-Id: devicetree@vger.kernel.org
 
-The IIO counter subdirectory is now superceded by the Counter subsystem.
-This patch adds deprecation warnings to the documentation of the
-relevant IIO Counter sysfs attributes.
-
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
----
- Documentation/ABI/testing/sysfs-bus-iio          |  8 ++++++++
- .../ABI/testing/sysfs-bus-iio-counter-104-quad-8 | 16 ++++++++++++++++
- 2 files changed, 24 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index c7353030670a..fc50adf08e47 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -1649,6 +1649,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_raw
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Raw counter device counts from channel Y. For quadrature
- 		counters, multiplication by an available [Y]_scale results in
- 		the counts of a single quadrature signal phase from channel Y.
-@@ -1657,6 +1659,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_indexY_raw
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Raw counter device index value from channel Y. This attribute
- 		provides an absolute positional reference (e.g. a pulse once per
- 		revolution) which may be used to home positional systems as
-@@ -1666,6 +1670,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_count_count_direction_available
- KernelVersion:	4.12
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		A list of possible counting directions which are:
- 		- "up"	: counter device is increasing.
- 		- "down": counter device is decreasing.
-@@ -1674,4 +1680,6 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_count_direction
- KernelVersion:	4.12
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Raw counter device counters direction for channel Y.
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-counter-104-quad-8 b/Documentation/ABI/testing/sysfs-bus-iio-counter-104-quad-8
-index 7fac2c268d9a..bac3d0d48b7b 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio-counter-104-quad-8
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-counter-104-quad-8
-@@ -6,6 +6,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_index_synchronous_mode_available
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Discrete set of available values for the respective counter
- 		configuration are listed in this file.
- 
-@@ -13,6 +15,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_count_mode
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Count mode for channel Y. Four count modes are available:
- 		normal, range limit, non-recycle, and modulo-n. The preset value
- 		for channel Y is used by the count mode where required.
-@@ -47,6 +51,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_noise_error
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Read-only attribute that indicates whether excessive noise is
- 		present at the channel Y count inputs in quadrature clock mode;
- 		irrelevant in non-quadrature clock mode.
-@@ -55,6 +61,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_preset
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		If the counter device supports preset registers, the preset
- 		count for channel Y is provided by this attribute.
- 
-@@ -62,6 +70,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_quadrature_mode
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Configure channel Y counter for non-quadrature or quadrature
- 		clock mode. Selecting non-quadrature clock mode will disable
- 		synchronous load mode. In quadrature clock mode, the channel Y
-@@ -83,6 +93,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_set_to_preset_on_index
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Whether to set channel Y counter with channel Y preset value
- 		when channel Y index input is active, or continuously count.
- 		Valid attribute values are boolean.
-@@ -91,6 +103,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_indexY_index_polarity
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Active level of channel Y index input; irrelevant in
- 		non-synchronous load mode.
- 
-@@ -98,6 +112,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_indexY_synchronous_mode
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Configure channel Y counter for non-synchronous or synchronous
- 		load mode. Synchronous load mode cannot be selected in
- 		non-quadrature clock mode.
--- 
-2.18.0
+QW0gMTUuMDcuMjAxOCB1bSAyMjozNSBzY2hyaWViIFNhcmF2YW5hbiBTZWthcjoKPiBBZGQgUkVH
+TUFQX01NSU8gYXMgZGVwZW5kZW5jeSB0byBhdm9pZCB1bmRlZmluZWQKPiByZWZlcmVuY2UgdG8g
+cmVnbWFwIHN5bWJvbHMuCj4gCj4gRml4ZXM6IGQ4NWQyMDA1M2UxOSAoImNsazogYWN0aW9uczog
+QWRkIFM5MDAgU29DIGNsb2NrIHN1cHBvcnQiKQo+IFNpZ25lZC1vZmYtYnk6IFNhcmF2YW5hbiBT
+ZWthciA8c3JhdmFuaG9tZUBnbWFpbC5jb20+CgpSZXZpZXdlZC1ieTogQW5kcmVhcyBGw6RyYmVy
+IDxhZmFlcmJlckBzdXNlLmRlPgoKVGhhbmtzLApBbmRyZWFzCgotLSAKU1VTRSBMaW51eCBHbWJI
+LCBNYXhmZWxkc3RyLiA1LCA5MDQwOSBOw7xybmJlcmcsIEdlcm1hbnkKR0Y6IEZlbGl4IEltZW5k
+w7ZyZmZlciwgSmFuZSBTbWl0aGFyZCwgR3JhaGFtIE5vcnRvbgpIUkIgMjEyODQgKEFHIE7DvHJu
+YmVyZykKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
+bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
+LWFybS1rZXJuZWwK
