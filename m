@@ -1,61 +1,29 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v4 1/5] clk: actions: Add REGMAP as dependency
-Date: Sun, 15 Jul 2018 19:45:51 +0530
-Message-ID: <20180715141551.GA9980@Mani-XPS-13-9360>
-References: <20180715123145.16975-1-sravanhome@gmail.com>
- <20180715123145.16975-2-sravanhome@gmail.com>
- <b0e29fe8-c16a-e783-8877-d01f052ba963@suse.de>
+From: Avi Fishman <avifishman70@gmail.com>
+Subject: Re: [RFC PATCH v2 1/4] dt-bindings: misc: Add bindings for misc. BMC
+ control fields
+Date: Sun, 15 Jul 2018 17:21:31 +0300
+Message-ID: <CAKKbWA4xBwZJir0DJ+GnXYs+b9bkark4QZO-QxSkKqsRYoQ=yA@mail.gmail.com>
+References: <20180711053122.30773-1-andrew@aj.id.au> <20180711053122.30773-2-andrew@aj.id.au>
+ <20180711200450.GB17291@rob-hp-laptop> <1531356830.3551458.1437853280.551CA8C5@webmail.messagingengine.com>
+ <CAL_JsqKpXxR4t_-3BOy-0mFePXkaSck_4PfHRD=OZQ-_-T5P=w@mail.gmail.com>
+ <b6ced4cad4d7ff78330181b2c893855c23103953.camel@kernel.crashing.org>
+ <1531463489.747186.1439263128.075AECE1@webmail.messagingengine.com>
+ <a521b9fc-4c10-06c1-fd73-5c64379538f6@yadro.com> <bc2d6bd30ce243768d07b2aa5ed9cee4@AUSX13MPC105.AMER.DELL.COM>
+ <20180713190320.GB30539@kroah.com> <8dfaea969aeb4b0fbd049b4e48389b43@AUSX13MPC105.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <b0e29fe8-c16a-e783-8877-d01f052ba963@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: mark.rutland@arm.com, support@cubietech.com, linux@cubietech.com, Saravanan Sekar <sravanhome@gmail.com>, devicetree@vger.kernel.org, sboyd@kernel.org, catalin.marinas@arm.com, mturquette@baylibre.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, darren@cubietech.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, pn@denx.de, linux-clk@vger.kernel.org, jeff.chen@actions-semi.com, mp-cs@actions-semi.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8dfaea969aeb4b0fbd049b4e48389b43@AUSX13MPC105.AMER.DELL.COM>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eugene.Cho@dell.com
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Andrew Jeffery <andrew@aj.id.au>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, a.amelkin@yadro.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, stewart@linux.ibm.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Sun, Jul 15, 2018 at 02:35:53PM +0200, Andreas F=E4rber wrote:
-> Hi,
-> =
-
-> Am 15.07.2018 um 14:31 schrieb Saravanan Sekar:
-> > Add REGMAP as dependency to avoid undefined reference to regmap symbol
-> =
-
-> Is this a bugfix for S900? Then please add a Fixes: line. If not, why is
-> it a separate patch and not in 3/5?
-> =
-
-
-Yes, this is a bug fix for S900 clk and should have Fixes tag.
-
-Thanks,
-Mani
-
-> Also, the subject is fine as is, but please add a full stop at the end
-> of the sentence in the commit message.
-> =
-
-> Regards,
-> Andreas
-> =
-
-> =
-
-> -- =
-
-> SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-> GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton
-> HRB 21284 (AG N=FCrnberg)
++ my vote as Nuvoton's BMC FW provider.
+On Fri, Jul 13, 2018 at 10:07 PM <Eugene.Cho@dell.com> wrote:
+>
+> >> Dell - Internal Use - Confidential
+> >Really?  To a public mailing list?  odd...
+>
+> Ha yea sorry - I was so excited to show my support, that I jumped the gun :)
+>
