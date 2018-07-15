@@ -1,140 +1,36 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 1/3] iio: imu: mpu6050: add support for 6515 variant
-Date: Sun, 15 Jul 2018 09:41:58 +0100
-Message-ID: <20180715094158.08115f93@archlinux>
-References: <20180711010932.20313-1-masneyb@onstation.org>
-        <20180711010932.20313-2-masneyb@onstation.org>
-        <20180712154738.00002918@huawei.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v5 2/7] serdev: add dev_pm_domain_attach|detach()
+Date: Sun, 15 Jul 2018 10:56:28 +0200
+Message-ID: <20180715085628.GI10204@localhost>
+References: <cover.1531150733.git.sean.wang@mediatek.com>
+ <d5904115ff1da38fe79b45fa3d59ef0688cea124.1531150733.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180712154738.00002918@huawei.com>
+Content-Disposition: inline
+In-Reply-To: <d5904115ff1da38fe79b45fa3d59ef0688cea124.1531150733.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Brian Masney <masneyb@onstation.org>, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, jonathan@marek.ca, jmaneyrol@invensense.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mkelly@xevo.com, fischerdouglasc@gmail.com, bshah@kde.org, ctatlor97@gmail.com
+To: sean.wang@mediatek.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Jul 2018 15:47:38 +0100
-Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
-
-> On Tue, 10 Jul 2018 21:09:30 -0400
-> Brian Masney <masneyb@onstation.org> wrote:
+On Mon, Jul 09, 2018 at 11:56:58PM +0800, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
 > 
-> > This patch adds support for the MPU 6515 variant. Confirmed that the
-> > driver functions correctly on a LG Nexus 5 (hammerhead) phone.
-> > 
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
-
-thanks,
-
-Jonathan
-
-> > ---
-> > This is a variation of Jonathan Marek's patch from postmarketOS
-> > https://gitlab.com/postmarketOS/linux-postmarketos/commit/b8ad1ec1859c8bbcbce94944b3f4dd68f8f9fc37
-> > with the following changes:
-> > 
-> > - The driver was previously throwing a 'whoami mismatch got XXX' error.
-> >   Corrected ordering of hw_info variable to match the index of the
-> >   inv_devices enum. The mpu6515 needed to come after mpu6500, not
-> >   mpu6050.
-> > - Removed regulator code. See next patch in this series.
-> > 
-> > I got confirmation from Jonathan M. that it was ok for me to submit his
-> > patch upstream with these changes.
-> > 
-> > Jonathan C.: I assume that it is ok for the device tree binding
-> > documentation to go through IIO? If not, I can split this out into a
-> > separate patch if needed.  
-> A single ID addition is normally uncontroversial enough that we don't bother
-> the DT maintainers (though of course they are welcome to look!).
-> So this is fine.
-> > 
-> >  Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt | 1 +
-> >  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c                | 6 ++++++
-> >  drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c                 | 5 +++++
-> >  drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h                 | 2 ++
-> >  4 files changed, 14 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-> > index 5f4777e8cc9e..b7def51c8ad9 100644
-> > --- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-> > +++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-> > @@ -6,6 +6,7 @@ Required properties:
-> >   - compatible : should be one of
-> >  		"invensense,mpu6050"
-> >   		"invensense,mpu6500"
-> > +		"invensense,mpu6515"
-> >  		"invensense,mpu9150"
-> >  		"invensense,mpu9250"
-> >  		"invensense,mpu9255"
-> > diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> > index de68e83fc52d..12c1b9507007 100644
-> > --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> > +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> > @@ -103,6 +103,12 @@ static const struct inv_mpu6050_hw hw_info[] = {
-> >  		.reg = &reg_set_6500,
-> >  		.config = &chip_config_6050,
-> >  	},
-> > +	{
-> > +		.whoami = INV_MPU6515_WHOAMI_VALUE,
-> > +		.name = "MPU6515",
-> > +		.reg = &reg_set_6500,
-> > +		.config = &chip_config_6050,
-> > +	},
-> >  	{
-> >  		.whoami = INV_MPU6000_WHOAMI_VALUE,
-> >  		.name = "MPU6000",
-> > diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-> > index 495409d56207..dd758e3d403d 100644
-> > --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-> > +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-> > @@ -174,6 +174,7 @@ static int inv_mpu_remove(struct i2c_client *client)
-> >  static const struct i2c_device_id inv_mpu_id[] = {
-> >  	{"mpu6050", INV_MPU6050},
-> >  	{"mpu6500", INV_MPU6500},
-> > +	{"mpu6515", INV_MPU6515},
-> >  	{"mpu9150", INV_MPU9150},
-> >  	{"mpu9250", INV_MPU9250},
-> >  	{"mpu9255", INV_MPU9255},
-> > @@ -192,6 +193,10 @@ static const struct of_device_id inv_of_match[] = {
-> >  		.compatible = "invensense,mpu6500",
-> >  		.data = (void *)INV_MPU6500
-> >  	},
-> > +	{
-> > +		.compatible = "invensense,mpu6515",
-> > +		.data = (void *)INV_MPU6515
-> > +	},
-> >  	{
-> >  		.compatible = "invensense,mpu9150",
-> >  		.data = (void *)INV_MPU9150
-> > diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-> > index de8391693e17..e69a59659dbc 100644
-> > --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-> > +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-> > @@ -71,6 +71,7 @@ struct inv_mpu6050_reg_map {
-> >  enum inv_devices {
-> >  	INV_MPU6050,
-> >  	INV_MPU6500,
-> > +	INV_MPU6515,
-> >  	INV_MPU6000,
-> >  	INV_MPU9150,
-> >  	INV_MPU9250,
-> > @@ -256,6 +257,7 @@ struct inv_mpu6050_state {
-> >  #define INV_MPU9150_WHOAMI_VALUE		0x68
-> >  #define INV_MPU9250_WHOAMI_VALUE		0x71
-> >  #define INV_MPU9255_WHOAMI_VALUE		0x73
-> > +#define INV_MPU6515_WHOAMI_VALUE		0x74
-> >  #define INV_ICM20608_WHOAMI_VALUE		0xAF
-> >  
-> >  /* scan element definition */  
+> In order to open up the required power gate before any operation can be
+> effectively performed over the serial bus between CPU and serdev, it's
+> clearly essential to add common attach functions for PM domains to serdev
+> at the probe phase.
 > 
+> Similarly, the relevant dettach function for the PM domains should be
+> properly and reversely added at the remove phase.
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Jiri Slaby <jslaby@suse.com>
+> Cc: linux-serial@vger.kernel.org
+
+Reviewed-by: Johan Hovold <johan@kernel.org>
