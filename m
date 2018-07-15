@@ -1,100 +1,118 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v5 5/7] Bluetooth: Extend btuart driver for join more
- vendor devices
-Date: Sun, 15 Jul 2018 15:52:14 +0800
-Message-ID: <1531641134.3955.19.camel@mtkswgap22>
-References: <cover.1531150733.git.sean.wang@mediatek.com>
- <85d449cdd34bf47d72935a821915e825c64a2145.1531150733.git.sean.wang@mediatek.com>
- <70616B99-5A2D-417A-8815-246700EEF4E2@holtmann.org>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: REGRESSION: [RESEND PATCH v3 1/4] backlight: pwm_bl: linear
+ interpolation between brightness-levels
+Date: Sun, 15 Jul 2018 08:57:32 +0100
+Message-ID: <20180715075732.GA2989@wychelm.lan>
+References: <20180409083333.1249-1-enric.balletbo@collabora.com>
+ <20180409083333.1249-2-enric.balletbo@collabora.com>
+ <1531580895.7579.7.camel@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <70616B99-5A2D-417A-8815-246700EEF4E2@holtmann.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Johan Hedberg <johan.hedberg@gmail.com>, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1531580895.7579.7.camel@toradex.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc: "dianders@google.com" <dianders@google.com>, "pavel@ucw.cz" <pavel@ucw.cz>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@collabora.com" <kernel@collabora.com>, "briannorris@google.com" <briannorris@google.com>, "amstan@google.com" <amstan@google.com>, "groeck@google.com" <groeck@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2018-07-14 at 18:44 +0200, Marcel Holtmann wrote:
-> Hi Sean,
-> 
-> > Adding an independent btuart.h header allows these essential definitions
-> > can be reused in vendor driver. Also, struct btuart_vnd is extended with
-> > additional callbacks such as .init initializing vendor data, .shtudown,
-> > .recv and .send supporting SoC specific framing for that btuart can
-> > simply adapt to various Bluetooth uart-based devices.
-> > 
-> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> > ---
-> > drivers/bluetooth/btuart.c | 73 ++++++++++++++++++++++++----------------------
-> > drivers/bluetooth/btuart.h | 30 +++++++++++++++++++
-> > 2 files changed, 68 insertions(+), 35 deletions(-)
-> > create mode 100644 drivers/bluetooth/btuart.h
-> > 
-> > diff --git a/drivers/bluetooth/btuart.c b/drivers/bluetooth/btuart.c
-> > index a900aac..65d0086 100644
-> > --- a/drivers/bluetooth/btuart.c
-> > +++ b/drivers/bluetooth/btuart.c
-> > @@ -33,35 +33,11 @@
-> > #include <net/bluetooth/hci_core.h>
-> > 
-> > #include "h4_recv.h"
-> > +#include "btuart.h"
-> > #include "btbcm.h"
-> > 
-> > #define VERSION "1.0"
-> > 
-> > -struct btuart_vnd {
-> > -	const struct h4_recv_pkt *recv_pkts;
-> > -	int recv_pkts_cnt;
-> > -	unsigned int manufacturer;
-> > -	int (*open)(struct hci_dev *hdev);
-> > -	int (*close)(struct hci_dev *hdev);
-> > -	int (*setup)(struct hci_dev *hdev);
-> > -};
-> > -
-> > -struct btuart_dev {
-> > -	struct hci_dev *hdev;
-> > -	struct serdev_device *serdev;
-> > -
-> > -	struct work_struct tx_work;
-> > -	unsigned long tx_state;
-> > -	struct sk_buff_head txq;
-> > -
-> > -	struct sk_buff *rx_skb;
-> > -
-> > -	const struct btuart_vnd *vnd;
-> > -};
-> 
-> I really like to avoid this since it is not clean. Frankly I prefer to keep the btuart.c driver for drivers that really just use H:4 as transport protocol. If the protocol is only H:4 alike and has extra headers, then it should be a separate driver.
-> 
+On Sat, Jul 14, 2018 at 03:08:17PM +0000, Marcel Ziswiler wrote:
+> On Mon, 2018-04-09 at 10:33 +0200, Enric Balletbo i Serra wrote:
+> > diff --git a/drivers/video/backlight/pwm_bl.c
+> > b/drivers/video/backlight/pwm_bl.c
+> > index 8e3f1245f5c5..f0a108ab570a 100644
+> > --- a/drivers/video/backlight/pwm_bl.c
+> > +++ b/drivers/video/backlight/pwm_bl.c
+> > @@ -147,7 +147,11 @@ static int pwm_backlight_parse_dt(struct device
+> > *dev,
+> >  				  struct platform_pwm_backlight_data
+> > *data)
+> >  {
+> >  	struct device_node *node = dev->of_node;
+> > +	unsigned int num_levels = 0;
+> > +	unsigned int levels_count;
+> > +	unsigned int num_steps;
 
-thanks for letting me know your concern. I think I'm a little over in reusing these existing methods and break something generic and its beauty.
-
-I'll make the driver be a separate one based on btuart in the next version.
+num_steps is not initialized...
 
 
-> The common H:4 handling is abstracted in h4_recv.h already anyway and we can add more pieces if needed. However I also wonder since you have extra framing that the complex H:4 state keeping might be not needed at all. So it could be simplified.
-> 
+> >  	struct property *prop;
+> > +	unsigned int *table;
+> >  	int length;
+> >  	u32 value;
+> >  	int ret;
+> > @@ -167,6 +171,7 @@ static int pwm_backlight_parse_dt(struct device
+> > *dev,
+> >  	/* read brightness levels from DT property */
+> >  	if (data->max_brightness > 0) {
+> >  		size_t size = sizeof(*data->levels) * data-
+> > >max_brightness;
+> > +		unsigned int i, j, n = 0;
+> >  
+> >  		data->levels = devm_kzalloc(dev, size, GFP_KERNEL);
+> >  		if (!data->levels)
+> > @@ -184,6 +189,84 @@ static int pwm_backlight_parse_dt(struct device
+> > *dev,
+> >  			return ret;
+> >  
+> >  		data->dft_brightness = value;
+> > +
+> > +		/*
+> > +		 * This property is optional, if is set enables
+> > linear
+> > +		 * interpolation between each of the values of
+> > brightness levels
+> > +		 * and creates a new pre-computed table.
+> > +		 */
+> > +		of_property_read_u32(node, "num-interpolated-steps",
+> > +				     &num_steps);
 
-okay, I will get rid of h4_recv.h and consider to use more simplified logic to handle the extra framing and its payload.
+... this is not guaranteed to initialized num_steps ...
 
-> Regards
-> 
-> Marcel
+> > +
+> > +		/*
+> > +		 * Make sure that there is at least two entries in
+> > the
+> > +		 * brightness-levels table, otherwise we can't
+> > interpolate
+> > +		 * between two points.
+> > +		 */
+> > +		if (num_steps) {
 
+... and we make a decision on it here.
 
-> 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+Marcel: Can you try the following quick fix? It's untested on my side
+        but very simple...
+
+>From 6fa2fbeb017086147ac61981107a95cb8ae7b4e7 Mon Sep 17 00:00:00 2001
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Date: Sun, 15 Jul 2018 08:49:05 +0100
+Subject: [PATCH] backlight: pwm_bl: Fix uninitialized variable
+
+Currently, if the DT does not define num-interpolated-steps then
+num_steps is undefined meaning the interpolation code will deploy
+randomly. Fix this.
+
+Fixes: 573fe6d1c25c ("backlight: pwm_bl: Linear interpolation between
+brightness-levels")
+Reported-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+---
+ drivers/video/backlight/pwm_bl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index 9ee4c1b735b2..bdfcc0a71db1 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -250,7 +250,7 @@ static int pwm_backlight_parse_dt(struct device *dev,
+ 	struct device_node *node = dev->of_node;
+ 	unsigned int num_levels = 0;
+ 	unsigned int levels_count;
+-	unsigned int num_steps;
++	unsigned int num_steps = 0;
+ 	struct property *prop;
+ 	unsigned int *table;
+ 	int length;
+-- 
+2.17.1
