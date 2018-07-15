@@ -1,120 +1,95 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: allow soc-core to pick up name prefixes
-	from component nodes" to the asoc tree
-Date: Fri, 13 Jul 2018 16:10:12 +0100 (BST)
-Message-ID: <20180713151012.162C444007A@finisterre.ee.mobilebroadband>
-References: <20180713125043.13242-3-jbrunet@baylibre.com>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v5 1/7] dt-bindings: net: bluetooth: Add
+ mediatek-bluetooth
+Date: Sun, 15 Jul 2018 13:10:49 +0800
+Message-ID: <1531631449.26214.28.camel@mtkswgap22>
+References: <cover.1531150733.git.sean.wang@mediatek.com>
+         <d8a5b34513cf2187a2b23a513feaa358d719bc14.1531150733.git.sean.wang@mediatek.com>
+         <7E55939D-7F8A-4832-9DD5-EFB3B19ACF0B@holtmann.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180713125043.13242-3-jbrunet@baylibre.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7E55939D-7F8A-4832-9DD5-EFB3B19ACF0B@holtmann.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Sat, 2018-07-14 at 18:26 +0200, Marcel Holtmann wrote:
+> Hi Sean,
+> 
+> > Add binding document for a SoC built-in device using MediaTek protocol.
+> > Which could be found on MT7622 SoC or other similar MediaTek SoCs.
+> > 
+> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> > .../devicetree/bindings/net/mediatek-bluetooth.txt | 35 ++++++++++++++++++++++
+> > 1 file changed, 35 insertions(+)
+> > create mode 100644 Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt b/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+> > new file mode 100644
+> > index 0000000..1335429
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+> > @@ -0,0 +1,35 @@
+> > +MediaTek SoC built-in Bluetooth Devices
+> > +==================================
+> > +
+> > +This device is a serial attached device to BTIF device and thus it must be a
+> > +child node of the serial node with BTIF. The dt-bindings details for BTIF
+> > +device can be known via Documentation/devicetree/bindings/serial/8250.txt.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible:	Must be one of
+> > +		  "mediatek,mt7622-bluetooth"": for MT7622 SoC
+> 
+> this does not match with the example below. And one of, should be normally be a list.
+> 
 
-   ASoC: allow soc-core to pick up name prefixes from component nodes
+Thanks! I'll remove the words "one of" from the compatible description,
+and the extra " being added accidentally.
 
-has been applied to the asoc tree at
+And the below example fully shows the bluetooth device and its attached
+bus (mediatek,mt7622-btif) to let people know clearly how to enable the
+bluetooth device.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+The current document just describes the bluetooth device and as for the
+attached bus, it is already present at
+Documentation/devicetree/bindings/serial/8250.txt.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+	Sean
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From aefba45539bc4868c1fae336410aec907ee0882a Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Fri, 13 Jul 2018 14:50:43 +0200
-Subject: [PATCH] ASoC: allow soc-core to pick up name prefixes from component
- nodes
-
-When the component does not match the configuration table provided
-by the card, let soc-core check the component node for a name prefix
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/soc-core.c | 28 +++++++++++++++++++++++-----
- 1 file changed, 23 insertions(+), 5 deletions(-)
-
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index 00bd58d167dd..3be0310d5c81 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -1193,15 +1193,27 @@ void snd_soc_remove_dai_link(struct snd_soc_card *card,
- }
- EXPORT_SYMBOL_GPL(snd_soc_remove_dai_link);
- 
-+static void soc_set_of_name_prefix(struct snd_soc_component *component)
-+{
-+	struct device_node *component_of_node = component->dev->of_node;
-+	const char *str;
-+	int ret;
-+
-+	if (!component_of_node && component->dev->parent)
-+		component_of_node = component->dev->parent->of_node;
-+
-+	ret = of_property_read_string(component_of_node, "sound-name-prefix",
-+				      &str);
-+	if (!ret)
-+		component->name_prefix = str;
-+}
-+
- static void soc_set_name_prefix(struct snd_soc_card *card,
- 				struct snd_soc_component *component)
- {
- 	int i;
- 
--	if (card->codec_conf == NULL)
--		return;
--
--	for (i = 0; i < card->num_configs; i++) {
-+	for (i = 0; i < card->num_configs && card->codec_conf; i++) {
- 		struct snd_soc_codec_conf *map = &card->codec_conf[i];
- 		struct device_node *component_of_node = component->dev->of_node;
- 
-@@ -1213,8 +1225,14 @@ static void soc_set_name_prefix(struct snd_soc_card *card,
- 		if (map->dev_name && strcmp(component->name, map->dev_name))
- 			continue;
- 		component->name_prefix = map->name_prefix;
--		break;
-+		return;
- 	}
-+
-+	/*
-+	 * If there is no configuration table or no match in the table,
-+	 * check if a prefix is provided in the node
-+	 */
-+	soc_set_of_name_prefix(component);
- }
- 
- static int soc_probe_component(struct snd_soc_card *card,
--- 
-2.18.0
+> > +- clocks:	Should be the clock specifiers corresponding to the entry in
+> > +		clock-names property.
+> > +- clock-names:	Should contain "ref" entries.
+> > +- power-domains: Phandle to the power domain that the device is part of
+> > +
+> > +Example:
+> > +
+> > +	btif: serial@1100c000 {
+> > +		compatible = "mediatek,mt7622-btif",
+> > +			     "mediatek,mtk-btif";
+> > +		reg = <0 0x1100c000 0 0x1000>;
+> > +		interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_LOW>;
+> > +		clocks = <&pericfg CLK_PERI_BTIF_PD>;
+> > +		clock-names = "main";
+> > +		reg-shift = <2>;
+> > +		reg-io-width = <4>;
+> > +
+> > +		bluetooth {
+> > +			compatible = "mediatek,mt7622-bluetooth";
+> > +			power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
+> > +			clocks = <&clk25m>;
+> > +			clock-names = "ref";
+> > +		};
+> > +	};
+> 
+> Regards
+> 
+> Marcel
+> 
