@@ -1,118 +1,67 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: REGRESSION: [RESEND PATCH v3 1/4] backlight: pwm_bl: linear
- interpolation between brightness-levels
-Date: Sun, 15 Jul 2018 08:57:32 +0100
-Message-ID: <20180715075732.GA2989@wychelm.lan>
-References: <20180409083333.1249-1-enric.balletbo@collabora.com>
- <20180409083333.1249-2-enric.balletbo@collabora.com>
- <1531580895.7579.7.camel@toradex.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [SPAM]Re: [PATCH v5 2/7] serdev: add dev_pm_domain_attach|detach()
+Date: Sun, 15 Jul 2018 10:12:10 +0200
+Message-ID: <20180715081210.GB20758@kroah.com>
+References: <cover.1531150733.git.sean.wang@mediatek.com>
+ <d5904115ff1da38fe79b45fa3d59ef0688cea124.1531150733.git.sean.wang@mediatek.com>
+ <ED7E5A98-81DC-41B9-9B9A-3EF4EBBED854@holtmann.org>
+ <1531632595.26214.31.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1531580895.7579.7.camel@toradex.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc: "dianders@google.com" <dianders@google.com>, "pavel@ucw.cz" <pavel@ucw.cz>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@collabora.com" <kernel@collabora.com>, "briannorris@google.com" <briannorris@google.com>, "amstan@google.com" <amstan@google.com>, "groeck@google.com" <groeck@google.com>
+In-Reply-To: <1531632595.26214.31.camel@mtkswgap22>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sean Wang <sean.wang@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 14, 2018 at 03:08:17PM +0000, Marcel Ziswiler wrote:
-> On Mon, 2018-04-09 at 10:33 +0200, Enric Balletbo i Serra wrote:
-> > diff --git a/drivers/video/backlight/pwm_bl.c
-> > b/drivers/video/backlight/pwm_bl.c
-> > index 8e3f1245f5c5..f0a108ab570a 100644
-> > --- a/drivers/video/backlight/pwm_bl.c
-> > +++ b/drivers/video/backlight/pwm_bl.c
-> > @@ -147,7 +147,11 @@ static int pwm_backlight_parse_dt(struct device
-> > *dev,
-> >  				  struct platform_pwm_backlight_data
-> > *data)
-> >  {
-> >  	struct device_node *node = dev->of_node;
-> > +	unsigned int num_levels = 0;
-> > +	unsigned int levels_count;
-> > +	unsigned int num_steps;
+On Sun, Jul 15, 2018 at 01:29:55PM +0800, Sean Wang wrote:
+> On Sat, 2018-07-14 at 18:27 +0200, Marcel Holtmann wrote:
+> > Hi Sean,
+> > 
+> > > In order to open up the required power gate before any operation can be
+> > > effectively performed over the serial bus between CPU and serdev, it's
+> > > clearly essential to add common attach functions for PM domains to serdev
+> > > at the probe phase.
+> > > 
+> > > Similarly, the relevant dettach function for the PM domains should be
+> > > properly and reversely added at the remove phase.
+> > > 
+> > > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> > > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > > Cc: Rob Herring <robh@kernel.org>
+> > > Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: Jiri Slaby <jslaby@suse.com>
+> > > Cc: linux-serial@vger.kernel.org
+> > > ---
+> > > drivers/tty/serdev/core.c | 15 ++++++++++++++-
+> > > 1 file changed, 14 insertions(+), 1 deletion(-)
+> > 
+> > can we take this through the serial subsystem? Or should I just take it when the driver is ready to be included?
+> > 
+> > Regards
+> > 
+> > Marcel
+> > 
+> 
+> I think it's better if the change is taken through serial subsystem
+> first.
+> 
+> Hi, Rob
+> 
+> do you have any comment? 
 
-num_steps is not initialized...
+Yeah, I've been ignoring it to wait to get an ack from someone...
 
-
-> >  	struct property *prop;
-> > +	unsigned int *table;
-> >  	int length;
-> >  	u32 value;
-> >  	int ret;
-> > @@ -167,6 +171,7 @@ static int pwm_backlight_parse_dt(struct device
-> > *dev,
-> >  	/* read brightness levels from DT property */
-> >  	if (data->max_brightness > 0) {
-> >  		size_t size = sizeof(*data->levels) * data-
-> > >max_brightness;
-> > +		unsigned int i, j, n = 0;
-> >  
-> >  		data->levels = devm_kzalloc(dev, size, GFP_KERNEL);
-> >  		if (!data->levels)
-> > @@ -184,6 +189,84 @@ static int pwm_backlight_parse_dt(struct device
-> > *dev,
-> >  			return ret;
-> >  
-> >  		data->dft_brightness = value;
-> > +
-> > +		/*
-> > +		 * This property is optional, if is set enables
-> > linear
-> > +		 * interpolation between each of the values of
-> > brightness levels
-> > +		 * and creates a new pre-computed table.
-> > +		 */
-> > +		of_property_read_u32(node, "num-interpolated-steps",
-> > +				     &num_steps);
-
-... this is not guaranteed to initialized num_steps ...
-
-> > +
-> > +		/*
-> > +		 * Make sure that there is at least two entries in
-> > the
-> > +		 * brightness-levels table, otherwise we can't
-> > interpolate
-> > +		 * between two points.
-> > +		 */
-> > +		if (num_steps) {
-
-... and we make a decision on it here.
-
-Marcel: Can you try the following quick fix? It's untested on my side
-        but very simple...
-
->From 6fa2fbeb017086147ac61981107a95cb8ae7b4e7 Mon Sep 17 00:00:00 2001
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Date: Sun, 15 Jul 2018 08:49:05 +0100
-Subject: [PATCH] backlight: pwm_bl: Fix uninitialized variable
-
-Currently, if the DT does not define num-interpolated-steps then
-num_steps is undefined meaning the interpolation code will deploy
-randomly. Fix this.
-
-Fixes: 573fe6d1c25c ("backlight: pwm_bl: Linear interpolation between
-brightness-levels")
-Reported-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
----
- drivers/video/backlight/pwm_bl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 9ee4c1b735b2..bdfcc0a71db1 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -250,7 +250,7 @@ static int pwm_backlight_parse_dt(struct device *dev,
- 	struct device_node *node = dev->of_node;
- 	unsigned int num_levels = 0;
- 	unsigned int levels_count;
--	unsigned int num_steps;
-+	unsigned int num_steps = 0;
- 	struct property *prop;
- 	unsigned int *table;
- 	int length;
--- 
-2.17.1
+greg k-h
