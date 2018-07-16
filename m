@@ -1,89 +1,64 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] drm/panel: simple: Support simple VGA panels
-Date: Mon, 16 Jul 2018 16:50:47 -0600
-Message-ID: <CAL_JsqLeZX6zJoMYp9drskx-UN8Na2LLhnHjbgZOVgw8D-y9wQ@mail.gmail.com>
-References: <20180716092339.9736-1-linus.walleij@linaro.org>
+From: Evan Green <evgreen@google.com>
+Subject: Re: [PATCH v5 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW driver
+Date: Mon, 16 Jul 2018 16:02:33 -0700
+Message-ID: <CAE=gft7pVnhbEtOyR7Q8n_WuL_RsttrxN+sp=_EPyR=D3NPv9g@mail.gmail.com>
+References: <1531418745-19742-1-git-send-email-tdas@codeaurora.org> <1531418745-19742-3-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180716092339.9736-1-linus.walleij@linaro.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1531418745-19742-3-git-send-email-tdas@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tdas@codeaurora.org
+Cc: rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, sboyd@kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, anischal@codeaurora.org, devicetree@vger.kernel.org, robh@kernel.org, Saravana Kannan <skannan@codeaurora.org>, amit.kucheria@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdWwgMTYsIDIwMTggYXQgMzoyMyBBTSBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxs
-ZWlqQGxpbmFyby5vcmc+IHdyb3RlOgo+Cj4gVGhlIG5lZWQgdG8gc3VwcG9ydCBzb21lIHN0cmFp
-Z2h0LWZvcndhcmQgVkdBIHBhbmVscyB0aGF0IGFyZQo+IG5vdCBhZGhlcmluZyB0byBhbnkgc3Rh
-bmRhcmQgbGlrZSBEUEkgYXJpc2UgaW4gdGhlIEFSTSBSVFNNIFZFCj4gUmVhbC1UaW1lIFN5c3Rl
-bXMgTW9kZWwgVmlydHVhbCBFeGVjdXRpdmUuIFRoaXMgZW11bGF0b3IgKHdoaWNoCj4gaXMgbm90
-IFFFTVUpIGRvZXMgbm90IG1vZGVsIGFueSBicmlkZ2Ugb3IgcGFuZWwgb3RoZXIgdGhhbgo+IGRp
-c3BsYXlpbmcgd2hhdGV2ZXIgdGhlIHVzZXIgZGVmaW5lcyB0aGF0IHRoZXkgaGF2ZS4KPgo+IEN1
-cnJlbnRseSBhIGZha2UgIkRQSSBwYW5lbCIgaXMgdXNlZCBmb3IgdGhpcyB3aXRoIHRoZSBvbGQK
-PiBGQkRFViBkcml2ZXIsIGJ1dCB0aGlzIGlzIHdyb25nIGFzIGl0IGlzIG5vdCBjb25mb3JtaW5n
-IHRvIGFueQo+IE1JUEkgRFBJIHN0YW5kYXJkcy4gSG93ZXZlciB0aGUgcmVzb2x1dGlvbiBjaG9z
-ZW4gdGhlcmUgaXMKPiBzdGFuZGFyZCBWR0EsIGFuZCB3ZSBjYW4gY292ZXIgdGhpcyB3aXRoIHRo
-ZSBzaW1wbGUgcGFuZWwKPiBieSBzaW1wbHkgYWRkaW5nIHRoZSBtb3N0IGNvbW1vbiBWR0EgcmVz
-b2x1dGlvbnMgYXMgYSBraW5kCj4gb2YgInNpbXBsZSBwYW5lbCIuCj4KPiBJbiBkaWZmZXJlbmNl
-IGZyb20gb3RoZXIgY2FzZXMgd2hlcmUgInNpbXBsZSBwYW5lbCIgbWlnaHQgYmUKPiBoaWRpbmcg
-c29tZXRoaW5nIG1vcmUgY29tcGxleCAoc3VjaCBhcyBhIHBhbmVsIGRyaXZlciBvciBicmlkZ2Up
-Cj4gdGhpcyBjYXNlIGlzIGFjdHVhbGx5IGFwcGxpY2FibGUsIHNpbmNlIHdlIGFyZSBydW5uaW5n
-IGluc2lkZQo+IGEgc2ltdWxhdGlvbiB3aXRoIG5vIHJlYWwgaGFyZHdhcmUgb24gdGhlIG91dHB1
-dC4KPgo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+IENjOiBTdWRlZXAgSG9sbGEg
-PHN1ZGVlcC5ob2xsYUBhcm0uY29tPgo+IENjOiBMb3JlbnpvIFBpZXJhbGlzaSA8bG9yZW56by5w
-aWVyYWxpc2lAYXJtLmNvbT4KPiBDYzogTGl2aXUgRHVkYXUgPGxpdml1LmR1ZGF1QGFybS5jb20+
-Cj4gQ2M6IFJvYmluIE11cnBoeSA8cm9iaW4ubXVycGh5QGFybS5jb20+Cj4gU2lnbmVkLW9mZi1i
-eTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPgo+IC0tLQo+ICAuLi4v
-ZGlzcGxheS9wYW5lbC92aWRlby1ncmFwaGljcy1hcnJheS50eHQgICAgfCAyMSArKysrKysKPiAg
-ZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgIHwgNjYgKysrKysr
-KysrKysrKysrKysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDg3IGluc2VydGlvbnMoKykKPiAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3BhbmVsL3ZpZGVvLWdyYXBoaWNzLWFycmF5LnR4dAo+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3ZpZGVvLWdyYXBoaWNzLWFy
-cmF5LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
-L3ZpZGVvLWdyYXBoaWNzLWFycmF5LnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXgg
-MDAwMDAwMDAwMDAwLi4xOTNkMjRlYmUwNTIKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvdmlkZW8tZ3JhcGhpY3Mt
-YXJyYXkudHh0Cj4gQEAgLTAsMCArMSwyMSBAQAo+ICtWaWRlbyBHcmFwaGljcyBBcnJheQoKVkdB
-IGlzIG1vcmUgYSBjb250cm9sbGVyIGludGVyZmFjZSB0aGFuIGEgcGFuZWwuLi4KCj4gKwo+ICtU
-aGlzIGJpbmRpbmcgaXMgZm9yIHNpbXBsZSBwYW5lbHMgdXNpbmcgdGhlIHN0YW5kYXJkaXplZCBW
-R0EgcmVzb2x1dGlvbnMKPiArZGVmaW5lZCBieSBkZSBmYWN0byBzdGFuZGFyZHMgYmVnaW5uaW5n
-IHdpdGggdGhlIElCTSBQUy8yIGluIDE5ODcuCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+
-ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZSAidmlkZW8tZ3JhcGhpY3MtYXJyYXkiCj4gKwo+ICtU
-aGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywg
-d2hpY2ggaXMgc3BlY2lmaWVkCj4gK2luIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3Rv
-cnkuCj4gKwo+ICtFeGFtcGxlOgo+ICsKPiArcGFuZWwgewo+ICsgICAgICAgY29tcGF0aWJsZSA9
-ICJ2aWRlby1ncmFwaGljcy1hcnJheSI7Cj4gKyAgICAgICBwb3J0IHsKPiArICAgICAgICAgICAg
-ICAgdmdhX3BhbmVsX2luOiBlbmRwb2ludCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVt
-b3RlLWVuZHBvaW50ID0gPCZmb28+Owo+ICsgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgfTsK
-PiArfTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5j
-IGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4gaW5kZXggY2JmMWFiNDA0
-ZWU3Li5kYjRkYjVhM2Y3NWUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3Bh
-bmVsLXNpbXBsZS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5j
-Cj4gQEAgLTIwNjksNiArMjA2OSw2OSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2Mg
-d2luc3Rhcl93ZjM1bHRpYWNkID0gewo+ICAgICAgICAgLmJ1c19mb3JtYXQgPSBNRURJQV9CVVNf
-Rk1UX1JHQjg4OF8xWDI0LAo+ICB9Owo+Cj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3Bs
-YXlfbW9kZSB2aWRlb19ncmFwaGljc19hcnJheV9tb2Rlc1tdID0gewo+ICsgICAgICAgewo+ICsg
-ICAgICAgICAgICAgICAvKgo+ICsgICAgICAgICAgICAgICAgKiBUaGlzIGlzIHRoZSBtb3N0IHN0
-YW5kYXJkaXplZCAidmFuaWxsYSIgVkdBIG1vZGUgdGhlcmUgaXM6Cj4gKyAgICAgICAgICAgICAg
-ICAqIDY0MHg0ODAgQCA2MCBIegoKRG9uJ3Qgd2UgaGF2ZSBzdGFuZGFyZCBWRVNBIHRpbWluZ3Mg
-YWxyZWFkeSBkZWZpbmVkIGFzIHdlbGwgYXMgdGltaW5ncwp0aGF0IGNhbiBiZSBjYWxjdWxhdGVk
-IGJhc2VkIG9uIHJlc29sdXRpb24gYW5kIHJlZnJlc2ggcmF0ZSAoY2FsbGVkCkNWVCBJSVJDKS4g
-V2h5IGR1cGxpY2F0ZSBoZXJlPwoKV2h5IGRvbid0IHlvdSBqdXN0IGRlZmluZSBhICd2Z2EtY29u
-bmVjdG9yJyBub2RlIGFuZCBJSVJDLCB5b3UgY2FuCmp1c3QgZm9yY2UgdGhlIHN0YW5kYXJkIG1v
-ZGVzIGZyb20gdXNlcnNwYWNlIHdpdGggRFJNLiBNYXliZSB5b3UgbmVlZApzb21lIGZsYWcgdG8g
-Zm9yY2UgYSBjb25uZWN0aW9uIGluIHRoZSBlbXVsYXRvciBhbmQgcGVyaGFwcyBzb21lIGZha2UK
-RURJRCBkYXRhIHRvIHNldCBhIGRlZmF1bHQgbW9kZS4gVGhlcmUncyBhbHNvIHNvbWUgb3RoZXIg
-Y2FzZXMgb2YKInRyYW5zcGFyZW50IiBicmlkZ2VzIHdoaWNoIGRvbid0IGhhdmUgYW55IGRyaXZl
-ci4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Taniya,
+On Thu, Jul 12, 2018 at 11:06 AM Taniya Das <tdas@codeaurora.org> wrote:
+>
+> The CPUfreq HW present in some QCOM chipsets offloads the steps necessary
+> for changing the frequency of CPUs. The driver implements the cpufreq
+> driver interface for this hardware engine.
+>
+> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  drivers/cpufreq/Kconfig.arm       |  10 ++
+>  drivers/cpufreq/Makefile          |   1 +
+>  drivers/cpufreq/qcom-cpufreq-hw.c | 344 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 355 insertions(+)
+>  create mode 100644 drivers/cpufreq/qcom-cpufreq-hw.c
+>
+...
+> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+> new file mode 100644
+> index 0000000..fa25a95
+> --- /dev/null
+> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+...
+> +static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
+> +{
+> +       struct cpufreq_qcom *c;
+> +
+> +       c = qcom_freq_domain_map[policy->cpu];
+> +       if (!c) {
+> +               pr_err("No scaling support for CPU%d\n", policy->cpu);
+> +               return -ENODEV;
+> +       }
+> +
+> +       cpumask_copy(policy->cpus, &c->related_cpus);
+> +
+> +       policy->fast_switch_possible = true;
+> +       policy->freq_table = c->table;
+> +       policy->driver_data = c;
+> +
+> +       return 0;
+I haven't looked at this driver in detail, but I have tested it.
+Instead of the line above, I needed:
+
+return cpufreq_table_validate_and_show(policy, c->table);
+
+Without this the framework thinks that the min and max frequencies are
+zero, and then you get a warning about an invalid table. I also
+removed "policy->freq_table = c->table", since validate_and_show does
+this.
+-Evan
