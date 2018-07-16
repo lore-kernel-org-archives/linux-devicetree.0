@@ -1,122 +1,67 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V2 2/2] firmware: ti_sci: Provide host-id as an optional dt parameter
-Date: Mon, 16 Jul 2018 12:13:28 -0500
-Message-ID: <20180716171328.11674-3-nm@ti.com>
-References: <20180716171328.11674-1-nm@ti.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
+Subject: Re: [PATCH v2] arm64: dts: rockchip: add USB 2.0 and 3.0 support on
+ Ficus board
+Date: Mon, 16 Jul 2018 14:29:40 -0300
+Message-ID: <68cdc26d1e58797080ce9939c173148eb9f15a52.camel@collabora.com>
+References: <20180714170922.4433-1-ezequiel@collabora.com>
+ <2487041.HPaZN1uVBU@phil>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180716171328.11674-1-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, geert@linux-m68k.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2487041.HPaZN1uVBU@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, kernel@collabora.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Texas Instrument's System Control Interface (TISCI) permits the
-ability for Operating Systems to running in virtual machines to be
-able to independently communicate with the firmware without the need
-going through an hypervisor.
+On Mon, 2018-07-16 at 19:02 +0200, Heiko Stuebner wrote:
+> Hi Enric, Ezequiel,
+> 
+> Am Samstag, 14. Juli 2018, 19:09:22 CEST schrieb Ezequiel Garcia:
+> > From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > 
+> > The board exposes two types A ports, one is USB 3.0, up to 5.0Gbps and
+> > another one is USB 2.0 up to 480Mbps. Enable the USB PHYs and the USB
+> > controllers to enable theses devices.
+> > 
+> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> > Changes from v1:
+> >  * Provide voltage for vcc5v0_host and vcc3v3_pcie regulators
+> >  * Provide vin_supply for vcc5v0_host.
+> > 
+> >  arch/arm64/boot/dts/rockchip/rk3399-ficus.dts | 90 +++++++++++++++++++
+> >  1 file changed, 90 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
+> > index 0d14183dd4a9..6295483b701f 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
+> > @@ -58,9 +58,24 @@
+> >  		pinctrl-0 = <&pcie_drv>;
+> >  		regulator-boot-on;
+> >  		regulator-name = "vcc3v3_pcie";
+> > +		regulator-min-microvolt = <3300000>;
+> > +		regulator-max-microvolt = <3300000>;
+> >  		vin-supply = <&vcc3v3_sys>;
+> >  	};
+> 
+> I've split this out into a separate patch, as it isn't part of what
+> the commit message describes and thus should be separate
+> and applied both resulting patches for 4.19.
+> 
+> And also cleaned up a vendor-property that shouldn't be
+> part of mainline.
+> 
 
-The "host-id" in effect is the hardware representation of the
-host (example: VMs locked to a core) as identified to the System
-Controller.
-
-Provide support as an optional parameter implementation and use the
-compatible data as default if one is not provided by device tree.
-
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
-Changes since V1:
-* None
-
-V1: https://patchwork.kernel.org/patch/10475309/
-RFC: https://patchwork.kernel.org/patch/10447715/
-
- drivers/firmware/ti_sci.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-index 7fa744793bc5..69ed1464175c 100644
---- a/drivers/firmware/ti_sci.c
-+++ b/drivers/firmware/ti_sci.c
-@@ -66,14 +66,14 @@ struct ti_sci_xfers_info {
- 
- /**
-  * struct ti_sci_desc - Description of SoC integration
-- * @host_id:		Host identifier representing the compute entity
-+ * @default_host_id:	Host identifier representing the compute entity
-  * @max_rx_timeout_ms:	Timeout for communication with SoC (in Milliseconds)
-  * @max_msgs: Maximum number of messages that can be pending
-  *		  simultaneously in the system
-  * @max_msg_size: Maximum size of data per message that can be handled.
-  */
- struct ti_sci_desc {
--	u8 host_id;
-+	u8 default_host_id;
- 	int max_rx_timeout_ms;
- 	int max_msgs;
- 	int max_msg_size;
-@@ -94,6 +94,7 @@ struct ti_sci_desc {
-  * @chan_rx:	Receive mailbox channel
-  * @minfo:	Message info
-  * @node:	list head
-+ * @host_id:	Host ID
-  * @users:	Number of users of this instance
-  */
- struct ti_sci_info {
-@@ -110,6 +111,7 @@ struct ti_sci_info {
- 	struct mbox_chan *chan_rx;
- 	struct ti_sci_xfers_info minfo;
- 	struct list_head node;
-+	u8 host_id;
- 	/* protected by ti_sci_list_mutex */
- 	int users;
- 
-@@ -370,7 +372,7 @@ static struct ti_sci_xfer *ti_sci_get_one_xfer(struct ti_sci_info *info,
- 
- 	hdr->seq = xfer_id;
- 	hdr->type = msg_type;
--	hdr->host = info->desc->host_id;
-+	hdr->host = info->host_id;
- 	hdr->flags = msg_flags;
- 
- 	return xfer;
-@@ -1793,7 +1795,7 @@ static int tisci_reboot_handler(struct notifier_block *nb, unsigned long mode,
- 
- /* Description for K2G */
- static const struct ti_sci_desc ti_sci_pmmc_k2g_desc = {
--	.host_id = 2,
-+	.default_host_id = 2,
- 	/* Conservative duration */
- 	.max_rx_timeout_ms = 1000,
- 	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
-@@ -1819,6 +1821,7 @@ static int ti_sci_probe(struct platform_device *pdev)
- 	int ret = -EINVAL;
- 	int i;
- 	int reboot = 0;
-+	u32 h_id;
- 
- 	of_id = of_match_device(ti_sci_of_match, dev);
- 	if (!of_id) {
-@@ -1833,6 +1836,19 @@ static int ti_sci_probe(struct platform_device *pdev)
- 
- 	info->dev = dev;
- 	info->desc = desc;
-+	ret = of_property_read_u32(dev->of_node, "ti,host-id", &h_id);
-+	/* if the property is not present in DT, use a default from desc */
-+	if (ret < 0) {
-+		info->host_id = info->desc->default_host_id;
-+	} else {
-+		if (!h_id) {
-+			dev_warn(dev, "Host ID 0 is reserved for firmware\n");
-+			info->host_id = info->desc->default_host_id;
-+		} else {
-+			info->host_id = h_id;
-+		}
-+	}
-+
- 	reboot = of_property_read_bool(dev->of_node,
- 				       "ti,system-reboot-controller");
- 	INIT_LIST_HEAD(&info->node);
--- 
-2.15.1
+Thanks a lot!
