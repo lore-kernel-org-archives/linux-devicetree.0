@@ -1,99 +1,76 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: Re: [PATCH v1 1/2] dt-binding: bmc: Add NPCM7xx LPC BPC documentation
-Date: Mon, 16 Jul 2018 12:20:52 +0930
-Message-ID: <1531709452.1037890.1441737864.7E216D02@webmail.messagingengine.com>
-References: <20180704091427.409971-1-tmaimon77@gmail.com>
- <20180704091427.409971-2-tmaimon77@gmail.com>
- <20180711202107.GA29980@rob-hp-laptop>
+From: Honghui Zhang <honghui.zhang@mediatek.com>
+Subject: Re: [PATCH v3 0/4] PCI: mediatek: fixup find_port, enable_msi and
+ add pm, module support
+Date: Mon, 16 Jul 2018 11:35:34 +0800
+Message-ID: <1531712134.31406.1.camel@mhfsdcap03>
+References: <1530518264-6125-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180711202107.GA29980@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Tomer Maimon <tmaimon77@gmail.com>
-Cc: mark.rutland@arm.com, arnd@arnd.de, gregkh@linuxfoundation.org, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1530518264-6125-1-git-send-email-honghui.zhang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: lorenzo.pieralisi@arm.com
+Cc: youlin.pei@mediatek.com, devicetree@vger.kernel.org, hongkun.cao@mediatek.com, ryder.lee@mediatek.com, marc.zyngier@arm.com, linux-pci@vger.kernel.org, sean.wang@mediatek.com, linux-kernel@vger.kernel.org, yt.shen@mediatek.com, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, yong.wu@mediatek.com, bhelgaas@google.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Jul 2018, at 05:51, Rob Herring wrote:
-> On Wed, Jul 04, 2018 at 12:14:26PM +0300, Tomer Maimon wrote:
-> > Added device tree binding documentation for Nuvoton BMC
-> > NPCM7xx BIOS Post Code (BPC).
-> > The NPCM7xx BPC monitoring two configurable I/O addresses
-> > written by the host on Low Pin Count (LPC) bus.
-> > 
-> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> > ---
-> >  .../devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt    | 26 ++++++++++++++++++++++
-> >  1 file changed, 26 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt b/Documentation/devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt
-> > new file mode 100644
-> > index 000000000000..0832c9cbea32
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt
-> > @@ -0,0 +1,26 @@
-> > +Nuvoton NPCM7xx LPC BPC interface
-> > +
-> > +Nuvoton BMC NPCM7xx BIOS Post Code (BPC) monitoring two
-> > +configurable I/O addresses written by the host on the
-> > +Low Pin Count (LPC) bus, the capure data stored in 128-word FIFO.
+Hi, Bjorn, Lorenzo,
+
+could you kindly take a look at this serial?
+
+thanks.
+
+On Mon, 2018-07-02 at 15:57 +0800, honghui.zhang@mediatek.com wrote:
+> From: Honghui Zhang <honghui.zhang@mediatek.com>
 > 
-> s/capure/capture/
+> This patchset includes misc patchs:
 > 
-> Otherwise,
+> The first patch fixup the mtk_pcie_find_port logical which will cause system
+> could not touch the EP's configuration space which was connected to PCIe slot 1.
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-
-So uncovering a bit of a dirty secret here, we should probably consider this in the context of the ASPEED snoop function. A driver snuck into the misc tree without an associated bindings document:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/misc/aspeed-lpc-snoop.c
-
-(it wasn't me, I'm happy to discuss my proposed bindings, please don't shoot the messenger :))
-
-The devicetree node looks something like:
-
-					lpc_snoop: lpc-snoop@0 {
-						compatible = "aspeed,ast2500-lpc-snoop";
-						reg = <0x0 0x80>;
-						interrupts = <8>;
-						status = "disabled";
-					};
-
-and also has a required "snoop-ports" property with at least one and up to two cells that describe the channels to snoop. Channel values are either 0 or 1. It's feasible that the double-word capture could also be supported as both supported channels have their data captured in different fields of the same register.
-
-Do we go with what's already in the tree in supporting 'snoop-ports' or keep 'monitor-ports' as proposed by Tomer?
-
-Andrew
-
+> The second patch fixup the enable msi logical, the operation to enable msi
+> should be after system clock is enabled. The function of mtk_pcie_startup_port_v2's
+> define location is re-arranged to avoid mtk_pcie_enable_msi's forward declaration.
+> And call mtk_pcie_enable_msi in mtk_pcie_startup_port_v2 since the clock was all
+> enabled at that time.
 > 
+> The third patch was rebased and refactor of the v4 patch[1], changes are:
+>  -Add PM support for MT7622.
+>  -Using mtk_pcie_enable_port to re-establish the link when resumed.
+>  -Rebase on the previous two patches.
 > 
-> > +
-> > +NPCM7xx BPC supports capture double words, when using capture
-> > +double word only I/O address 1 is monitored.
-> > +
-> > +Required properties for lpc_bpc node
-> > +- compatible	: "nuvoton,npcm750-lpc-bpc" for Poleg NPCM7XX.
-> > +- reg 			: specifies physical base address and size of the registers.
-> > +- interrupts	: contain the LPC BPC with flags for falling edge.
-> > +- monitor-ports : contain monitor I/O addresses, at least one monitor I/O
-> > +				  address required
-> > +
-> > +Optional property for lpc_bpc node
-> > +- bpc-en-dwcapture : enable capture double words support.
-> > +
-> > +Example:
-> > +	lpc_bpc: lpc-bpc@f0007040 {
-> > +		compatible = "nuvoton,npcm7xx-lpc-bpc";
-> > +		reg = <0xf0007040 0x14>;
-> > +		monitor-ports = <0x80>;
-> > +		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> > +	};
-> > -- 
-> > 2.14.1
-> > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-hwmon" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> The fourth patch add loadable kernel module support.
+> 
+> Some of those patches was already reviewed-by Ryder Lee <ryder.lee@mediatek.com>,
+> so I just add the Reviewed-by tags in those patches.
+> 
+> [1] https://patchwork.kernel.org/patch/10479079
+> 
+> Change since v2:
+>  - Fix the list_for_each_entry_safe parameter error.
+>  - Add Ryder's Acked-by flag.
+> 
+> Change since v1:
+>  - A bit of code refact of the first patch suggested by Andy Shevchenko, and
+>    commit message updated.
+>  - Using __maybe_unused.
+>  - Remove the redundant list_empty check of the fourth patch.
+> 
+> Honghui Zhang (4):
+>   PCI: mediatek: fixup mtk_pcie_find_port logical
+>   PCI: mediatek: enable msi after clock enabled
+>   PCI: mediatek: Add system pm support for MT2712 and MT7622
+>   PCI: mediatek: Add loadable kernel module support
+> 
+>  drivers/pci/controller/Kconfig         |   2 +-
+>  drivers/pci/controller/pcie-mediatek.c | 289 ++++++++++++++++++++++++---------
+>  2 files changed, 213 insertions(+), 78 deletions(-)
+> 
