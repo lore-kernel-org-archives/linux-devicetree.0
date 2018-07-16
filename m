@@ -1,160 +1,66 @@
-Return-Path: <SRS0=K2f+=KA=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-co1nam03on0087.outbound.protection.outlook.com ([104.47.40.87]:6751
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726677AbeGPGFv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Jul 2018 02:05:51 -0400
-From: <shubhrajyoti.datta@gmail.com>
-Subject: [PATCHv3 2/4] tty: serial: uartlite: Add clock adaptation
-Date: Mon, 16 Jul 2018 10:53:52 +0530
-Message-ID: <1531718634-17939-2-git-send-email-shubhrajyoti.datta@gmail.com>
-In-Reply-To: <1531718634-17939-1-git-send-email-shubhrajyoti.datta@gmail.com>
-References: <1531718634-17939-1-git-send-email-shubhrajyoti.datta@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, jacmet@sunsite.dk, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Date: Mon, 16 Jul 2018 09:07:11 -0600
+References: <20180618074556.6944-1-linus.walleij@linaro.org>
+	<CAK8P3a2KqoX-squhGc8TBuJ==8xxELsuy-H+c1+C7Fu7Z4OjDA@mail.gmail.com>
+In-Reply-To: <CAK8P3a2KqoX-squhGc8TBuJ==8xxELsuy-H+c1+C7Fu7Z4OjDA@mail.gmail.com>
+Message-ID: <CAL_JsqJM1APEXt3HECSn=pcMKQfD5BWzDkbr03kcaWHuD-=dLw@mail.gmail.com>
+Subject: Re: [PATCH 0/5] RFC: Mezzanine handling for 96boards
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, dev@lists.96boards.org, John Stultz <john.stultz@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Mark Brown <broonie@kernel.org>, Michal Simek <michal.simek@xilinx.com>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+On Mon, Jun 18, 2018 at 6:21 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Mon, Jun 18, 2018 at 9:45 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>> This is a proposal for how to handle the non-discoverable
+>> 96boards plug-in expansion boards called "mezzanines" in the
+>> Linux kernel. It is a working RFC series meant for discussion
+>> at the moment.
+>>
+>> The RFC was done on the brand new Ultra96 board from Xilinx
+>> with a Secure96 mezzanine expansion board. The main part
+>> is in patch 4, the rest is enabling and examples.
+>>
+>> The code can be obtained from here:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-integrator.git/log/?h=ultra96
+>>
+>> You can for example probably augment the DTS file for any
+>> upstream-supported 96board and get the Secure96 going with
+>> it with minor efforts.
+>
+> Hi Linus,
+>
+> Thanks for your work on solving this long-standing problem. I've just
+> read through your patches briefly and have a few thoughts:
+>
+> - I really like the idea of having C code deal with the mezzanine
+>   connector itself, acting as an intermediate to tie a number of
+>   boards to a number of add-on cards, this seems much simpler than
+>   trying to do everything with overlays or one of the other more
+>   generic mechanisms.
 
-Add support of Common Clock Framework for Uartlite driver.
+Certainly we need at least some code to trigger probing devices under a connector. I suspect some connectors can be handled generically and some will need connector specific drivers.
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
----
-v2:
-removed the suspend resume changes to separate driver
+> - I don't like the idea of having the bus driver contain a list of possible
+>   add-ons, this seems to go against our usual driver model. What
+>   I think we want instead is to make the connector itself a proper
+>   bus_type, to allow drivers to register against it as loadable modules,
+>   and devices (maybe limited to one device) being created as probed
+>   from DT or some other method as you describe.
 
- drivers/tty/serial/uartlite.c | 49 +++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 47 insertions(+), 2 deletions(-)
+Why a bus versus just a platform device? The infrastructure is already there to instantiate platform devices and match to compatible strings and a platform driver can create child devices. So what would we gain from a new bus?
 
-diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
-index 0f798f7..b3a12be 100644
---- a/drivers/tty/serial/uartlite.c
-+++ b/drivers/tty/serial/uartlite.c
-@@ -21,6 +21,7 @@
- #include <linux/of_address.h>
- #include <linux/of_device.h>
- #include <linux/of_platform.h>
-+#include <linux/clk.h>
- 
- #define ULITE_NAME		"ttyUL"
- #define ULITE_MAJOR		204
-@@ -56,6 +57,7 @@
- 
- struct uartlite_data {
- 	const struct uartlite_reg_ops *reg_ops;
-+	struct clk *clk;
- };
- 
- struct uartlite_reg_ops {
-@@ -261,8 +263,15 @@ static void ulite_break_ctl(struct uart_port *port, int ctl)
- 
- static int ulite_startup(struct uart_port *port)
- {
-+	struct uartlite_data *pdata = port->private_data;
- 	int ret;
- 
-+	ret = clk_enable(pdata->clk);
-+	if (ret) {
-+		dev_err(port->dev, "Failed to enable clock\n");
-+		return ret;
-+	}
-+
- 	ret = request_irq(port->irq, ulite_isr, IRQF_SHARED | IRQF_TRIGGER_RISING,
- 			  "uartlite", port);
- 	if (ret)
-@@ -277,9 +286,12 @@ static int ulite_startup(struct uart_port *port)
- 
- static void ulite_shutdown(struct uart_port *port)
- {
-+	struct uartlite_data *pdata = port->private_data;
-+
- 	uart_out32(0, ULITE_CONTROL, port);
- 	uart_in32(ULITE_CONTROL, port); /* dummy */
- 	free_irq(port->irq, port);
-+	clk_disable(pdata->clk);
- }
- 
- static void ulite_set_termios(struct uart_port *port, struct ktermios *termios,
-@@ -370,6 +382,17 @@ static int ulite_verify_port(struct uart_port *port, struct serial_struct *ser)
- 	return -EINVAL;
- }
- 
-+static void ulite_pm(struct uart_port *port, unsigned int state,
-+		     unsigned int oldstate)
-+{
-+	struct uartlite_data *pdata = port->private_data;
-+
-+	if (!state)
-+		clk_enable(pdata->clk);
-+	else
-+		clk_disable(pdata->clk);
-+}
-+
- #ifdef CONFIG_CONSOLE_POLL
- static int ulite_get_poll_char(struct uart_port *port)
- {
-@@ -405,6 +428,7 @@ static const struct uart_ops ulite_ops = {
- 	.request_port	= ulite_request_port,
- 	.config_port	= ulite_config_port,
- 	.verify_port	= ulite_verify_port,
-+	.pm		= ulite_pm,
- #ifdef CONFIG_CONSOLE_POLL
- 	.poll_get_char	= ulite_get_poll_char,
- 	.poll_put_char	= ulite_put_poll_char,
-@@ -669,7 +693,6 @@ static int ulite_release(struct device *dev)
- /* ---------------------------------------------------------------------
-  * Platform bus binding
-  */
--
- #if defined(CONFIG_OF)
- /* Match table for of_platform binding */
- static const struct of_device_id ulite_of_match[] = {
-@@ -684,7 +707,7 @@ static int ulite_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
- 	struct uartlite_data *pdata;
--	int irq;
-+	int irq, ret;
- 	int id = pdev->id;
- #ifdef CONFIG_OF
- 	const __be32 *prop;
-@@ -706,11 +729,33 @@ static int ulite_probe(struct platform_device *pdev)
- 	if (irq <= 0)
- 		return -ENXIO;
- 
-+	pdata->clk = devm_clk_get(&pdev->dev, "s_axi_aclk");
-+	if (IS_ERR(pdata->clk)) {
-+		if (PTR_ERR(pdata->clk) != -ENOENT)
-+			return PTR_ERR(pdata->clk);
-+
-+		/*
-+		 * Clock framework support is optional, continue on
-+		 * anyways if we don't find a matching clock.
-+		 */
-+		pdata->clk = NULL;
-+	}
-+
-+	ret = clk_prepare(pdata->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to prepare clock\n");
-+		return ret;
-+	}
-+
- 	return ulite_assign(&pdev->dev, id, res->start, irq, pdata);
- }
- 
- static int ulite_remove(struct platform_device *pdev)
- {
-+	struct uart_port *port = dev_get_drvdata(&pdev->dev);
-+	struct uartlite_data *pdata = port->private_data;
-+
-+	clk_disable_unprepare(pdata->clk);
- 	return ulite_release(&pdev->dev);
- }
- 
--- 
-2.7.4
+We have 2 cases to consider I think: discoverable and non-discoverable boards. But discoverable here only provides us what overlay to load and/or driver to enumerate.
 
+>
+> - You export symbols in the mezzanine_* namespace, which I think
+>    is a bit too generic and should perhaps contain something related
+>    to  96boards in its name to make it less ambiguous. I suspect we
+>    would add a number of further connectors for hats, capes, lures etc,
+>    which could all be described as mezzanines. One open question
+>    is how we structure the commonality between the various
+>    connectors, but we can defer that until we have more than one
+>    or two of them.
+>
+>           Arnd
