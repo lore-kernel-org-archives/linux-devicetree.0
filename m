@@ -1,126 +1,93 @@
-From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm64: dts: stratix10: Add SMMU Node
-Date: Mon, 16 Jul 2018 13:56:23 -0500
-Message-ID: <847f8f94-5108-47a3-bb08-c5f50b64e6e6@linux.intel.com>
-References: <1531499278-32132-1-git-send-email-thor.thayer@linux.intel.com>
-	<1531499278-32132-4-git-send-email-thor.thayer@linux.intel.com>
-	<2d17b3b1-96a1-8a0a-521e-134de9df72d0@arm.com>
-Reply-To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+From: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Subject: Re: [PATCH v2 3/3] dt-bindings: mfd: max8998: Add charger subnode binding
+Date: Mon, 16 Jul 2018 20:59:20 +0200
+Message-ID: <2652044.7dgYAUSR2v@acerlaptop>
+References: <1531571213-30593-1-git-send-email-pawel.mikolaj.chmiel@gmail.com> <1531571213-30593-4-git-send-email-pawel.mikolaj.chmiel@gmail.com> <20180716180003.GA16037@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <2d17b3b1-96a1-8a0a-521e-134de9df72d0-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180716180003.GA16037@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, lee.jones@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iaW4sCgpPbiAwNy8xMy8yMDE4IDAxOjA5IFBNLCBSb2JpbiBNdXJwaHkgd3JvdGU6Cj4g
-T24gMTMvMDcvMTggMTc6MjcsIHRob3IudGhheWVyQGxpbnV4LmludGVsLmNvbSB3cm90ZToKPj4g
-RnJvbTogVGhvciBUaGF5ZXIgPHRob3IudGhheWVyQGxpbnV4LmludGVsLmNvbT4KPj4KPj4gQWRk
-IHRoZSBTTU1VIG5vZGUgYW5kIElPTU1VIHBhcmFtZXRlcnMgdG8gdGhlCj4+IFN0cmF0aXgxMCBE
-ZXZpY2UgVHJlZS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogVGhvciBUaGF5ZXIgPHRob3IudGhheWVy
-QGxpbnV4LmludGVsLmNvbT4KPj4gLS0tCj4+IMKgIGFyY2gvYXJtNjQvYm9vdC9kdHMvYWx0ZXJh
-L3NvY2ZwZ2Ffc3RyYXRpeDEwLmR0c2kgfCA0NCAKPj4gKysrKysrKysrKysrKysrKysrKysrKysK
-Pj4gwqAgMSBmaWxlIGNoYW5nZWQsIDQ0IGluc2VydGlvbnMoKykKPj4KPj4gZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvYWx0ZXJhL3NvY2ZwZ2Ffc3RyYXRpeDEwLmR0c2kgCj4+IGIv
-YXJjaC9hcm02NC9ib290L2R0cy9hbHRlcmEvc29jZnBnYV9zdHJhdGl4MTAuZHRzaQo+PiBpbmRl
-eCBjYTY3ZWNiNTg2NmUuLjliNmVhZDg3YWU3MCAxMDA2NDQKPj4gLS0tIGEvYXJjaC9hcm02NC9i
-b290L2R0cy9hbHRlcmEvc29jZnBnYV9zdHJhdGl4MTAuZHRzaQo+PiArKysgYi9hcmNoL2FybTY0
-L2Jvb3QvZHRzL2FsdGVyYS9zb2NmcGdhX3N0cmF0aXgxMC5kdHNpCj4+IEBAIC0xNjIsNiArMTYy
-LDggQEAKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVzZXQtbmFtZXMgPSAic3RtbWFj
-ZXRoIiwgInN0bW1hY2V0aC1vY3AiOwo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjbG9j
-a3MgPSA8JmNsa21nciBTVFJBVElYMTBfRU1BQzBfQ0xLPjsKPj4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgY2xvY2stbmFtZXMgPSAic3RtbWFjZXRoIjsKPj4gK8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgI3N0cmVhbS1pZC1jZWxscyA9IDwxPjsKPiAKPiBUaGUgI3N0cmVhbS1pZC1jZWxscyBw
-cm9wZXJ0eSBpcyBwYXJ0IG9mIHRoZSBkZXByZWNhdGVkIG1tdS1tYXN0ZXJzIAo+IGJpbmRpbmcs
-IHNvIHlvdSBkb24ndCBuZWVkIHRvIGFkZCB0aGVzZS4KPiAKT0suIFRoYW5rIHlvdS4KCj4+ICvC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlvbW11cyA9IDwmc21tdSAxPjsKPj4gwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgc3RhdHVzID0gImRpc2FibGVkIjsKPj4gwqDCoMKgwqDCoMKgwqDCoMKg
-IH07Cgo8U05JUD4KCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0YXR1cyA9ICJkaXNh
-YmxlZCI7Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoCB9Owo+PiBAQCAtMzIzLDYgKzMzMSw4IEBACj4+
-IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICNkbWEtcmVxdWVzdHMgPSA8MzI+Owo+PiDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjbG9ja3MgPSA8JmNsa21nciBTVFJBVElYMTBfTDRfTUFJ
-Tl9DTEs+Owo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjbG9jay1uYW1lcyA9ICJhcGJf
-cGNsayI7Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICNzdHJlYW0taWQtY2VsbHMgPSA8MT47
-Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlvbW11cyA9IDwmc21tdSA4PjsKPiAKPiBKdXN0
-IHRvIGRvdWJsZS1jaGVjaywgYWxsIHRoZSBjaGFubmVsIHRocmVhZHMgYW5kIHRoZSBtYW5hZ2Vy
-IHRocmVhZCAKPiBzaGFyZSB0aGUgb25lIHN0cmVhbSBJRD8gKEknbSBhY2N1c3RvbWVkIHRvIHNl
-ZWluZyBETUEtMzMwIGludGVncmF0ZWQgCj4gd2l0aCBhbiBTTU1VIGJ5IHRhcHBpbmcgdGhlIEF4
-SUQgb3V0cHV0cyBvZmYgdG8gdGhlIHN0cmVhbSBJRCBpbnB1dC4pCj4gClllcywgd2UgaGF2ZSBv
-bmx5IG9uZSBzdHJlYW0gSUQgZm9yIHRoZSBETUEuIEknbGwgZm9yd2FyZCB0aGUgCmRpZmZlcmVu
-Y2VzIHlvdSBub3RlZCB0byBvdXIgYXJjaGl0ZWN0dXJlIHRlYW0gYXMgc29tZXRoaW5nIHRvIGNv
-bnNpZGVyIApmb3IgZnV0dXJlIGNoaXBzLgoKPj4gwqDCoMKgwqDCoMKgwqDCoMKgIH07Cj4+IMKg
-wqDCoMKgwqDCoMKgwqDCoCByc3Q6IHJzdG1nckBmZmQxMTAwMCB7Cj4+IEBAIC0zMzIsNiArMzQy
-LDM2IEBACj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGFsdHIsbW9kcnN0LW9mZnNldCA9
-IDwweDIwPjsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgIH07Cj4+ICvCoMKgwqDCoMKgwqDCoCBzbW11
-OiBpb21tdUBmYTAwMDAwMCB7Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbXBhdGlibGUg
-PSAiYXJtLG1tdS01MDAiLCAiYXJtLHNtbXUtdjIiOwo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCByZWcgPSA8MHhmYTAwMDAwMCAweDQwMDAwPjsKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-I2dsb2JhbC1pbnRlcnJ1cHRzID0gPDk+Owo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjaW9t
-bXUtY2VsbHMgPSA8MT47Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNsb2NrcyA9IDwmY2xr
-bWdyIFNUUkFUSVgxMF9MNF9NQUlOX0NMSz47Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNs
-b2NrLW5hbWVzID0gInNtbXVfY2xrIjsKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaW50ZXJy
-dXB0LXBhcmVudCA9IDwmaW50Yz47Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGludGVycnVw
-dHMgPSA8MCAxMjggND4swqDCoMKgIC8qIEdsb2JhbCBTZWN1cmUgRmF1bHQgKi8KPj4gK8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA8MCAxMjkgND4sIC8qIEdsb2JhbCBOb24tc2VjdXJl
-IEZhdWx0ICovCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgPDAgMTMwIDQ+LCAv
-KiBGUEdBIFBlcmZvcm1hbmNlIENvdW50ZXIgKi8KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCA8MCAxMzEgND4sIC8qIERNQSBQZXJmb3JtYW5jZSBDb3VudGVyICovCj4+ICvCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgPDAgMTMyIDQ+LCAvKiBFTUFDIFBlcmZvcm1hbmNl
-IENvdW50ZXIgKi8KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA8MCAxMzMgND4s
-IC8qIElPIFBlcmZvcm1hbmNlIENvdW50ZXIgKi8KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCA8MCAxMzQgND4sIC8qIFNETSBQZXJmb3JtYW5jZSBDb3VudGVyICovCj4gCj4gTm90
-ZSB0aGF0IHRoZXJlIGlzbid0IG11Y2ggYmVuZWZpdCB0byBhZGRpbmcgdGhlIHNlY3VyZSBvciBQ
-TVUgCj4gaW50ZXJydXB0cyBoZXJlIG90aGVyIHRoYW4gdG8gZG9jdW1lbnQgdGhlIGhhcmR3YXJl
-IC0gRldJVyBJIGhhdmUgCj4gYWN0dWFsbHkgYmVlbiB3b3JraW5nIG9uIGEgUE1VIGRyaXZlciwg
-YW5kIG5lZWRsZXNzIHRvIHNheSBpdCB0dXJucyBvdXQgCj4gbm90IHRvIGJlIHN1ZmZpY2llbnQg
-anVzdCBoYXZpbmcgdGhvc2UgbXVuZ2VkIGludG8gdGhlIFNNTVUgZ2xvYmFsIGZhdWx0IAo+IGhh
-bmRsZXIuCj4gClRoYW5rcyBmb3IgcG9pbnRpbmcgdGhpcyBvdXQuIEkgd2FzIGZvbGxvd2luZyBv
-dGhlciBTTU1VLTUwMCBkZXZpY2UgCnRyZWVzLiBKdXN0IHRvIGNsYXJpZnksIGhvdyBzaG91bGQg
-SSBzaW1wbGlmeSB0aGlzPyBTaG91bGQgSSByZXBsYWNlIGFsbCAKdGhlIGFib3ZlIHdpdGggdGhl
-IGZvbGxvd2luZz8KCgk8MCAxMjkgND4sIC8qIEdsb2JhbCBOb24tc2VjdXJlIEZhdWx0ICovCgpP
-ciB3aWxsIHlvdXIgdXBjb21pbmcgUE1VIGRyaXZlciBuZWVkIHRoZSBQTVUgdW5pdHM/IEl0IHNv
-dW5kZWQgbGlrZSAKdXNpbmcgdGhlIGp1c3QgR2xvYmFsIGZhdWx0IHdhcyBub3Qgc3VmZmljaWVu
-dC4KCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgPDAgMTM2IDQ+LCAvKiBOb24t
-c2VjdXJlIENvbWJpbmVkIEludGVycnVwdCAqLwo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIDwwIDEzNyA0PiwgLyogU2VjdXJlIENvbWJpbmVkIEludGVycnVwdCAqLwo+IAo+IFNp
-bWlsYXJseSB0aGUgY29tYmluZWQgaW50ZXJydXB0OyB0aGF0J3MgbGl0ZXJhbGx5IGp1c3QgYWxs
-IHRoZXNlIG90aGVyIAo+IGludGVycnVwdCBsaW5lcyBPUmVkIHRvZ2V0aGVyIGF0IHRoZSBTTU1V
-IGVuZCwgYW5kIHdvdWxkIGdlbmVyYWxseSBvbmx5IAo+IGJlIHVzZWZ1bCBpZiB5b3UgKmRpZG4n
-dCogaGF2ZSB0aGUgaW5kaXZpZHVhbCBsaW5lcyB3aXJlZCB1cC4gQXMgaXQgCj4gc3RhbmRzIHdp
-dGggZXZlcnl0aGluZyBsaXN0ZWQsIGFueSBldmVudCB3aWxsIGFsc28gZ2VuZXJhdGUgYSBzcHVy
-aW91cyAKPiBnbG9iYWwgZmF1bHQgSVJRLCB3aGljaCBpc24ndCBpZGVhbCAobm90IHRoYXQgeW91
-IHNob3VsZCBnZXQgbWFueSAKPiBpbnRlcnJ1cHRzIGR1cmluZyBub3JtYWwgb3BlcmF0aW9uLCBi
-dXQgc3RpbGwuLi4pCj4gCkFuZCBJJ2QgcmVtb3ZlIGJvdGggb2YgdGhlc2UgdGhlbiwgcmlnaHQ/
-CgpUaGFua3MgZm9yIHRoZSByZXZpZXcgYW5kIGhlbHBmdWwgY29tbWVudHMgKGFuZCBhbHNvIHBv
-aW50aW5nIG91dCB0aGUgCmV4aXN0aW5nIGNsb2NrIHBhdGNoIGluIG15IHBhdGNoIHNlcmllcyBz
-dW1tYXJ5KSEKClRob3IKCj4gUm9iaW4uCj4gCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgLyogTm9uLXNlY3VyZSBDb250ZXh0IEludGVycnVwdHMgKDMyKSAqLwo+PiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDwwIDEzOCA0PiwgPDAgMTM5IDQ+LCA8MCAxNDAgND4s
-IDwwIDE0MSA0PiwKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA8MCAxNDIgND4s
-IDwwIDE0MyA0PiwgPDAgMTQ0IDQ+LCA8MCAxNDUgND4sCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgPDAgMTQ2IDQ+LCA8MCAxNDcgND4sIDwwIDE0OCA0PiwgPDAgMTQ5IDQ+LAo+
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDwwIDE1MCA0PiwgPDAgMTUxIDQ+LCA8
-MCAxNTIgND4sIDwwIDE1MyA0PiwKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA8
-MCAxNTQgND4sIDwwIDE1NSA0PiwgPDAgMTU2IDQ+LCA8MCAxNTcgND4sCj4+ICvCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgPDAgMTU4IDQ+LCA8MCAxNTkgND4sIDwwIDE2MCA0PiwgPDAg
-MTYxIDQ+LAo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDwwIDE2MiA0PiwgPDAg
-MTYzIDQ+LCA8MCAxNjQgND4sIDwwIDE2NSA0PiwKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCA8MCAxNjYgND4sIDwwIDE2NyA0PiwgPDAgMTY4IDQ+LCA8MCAxNjkgND47Cj4+ICvC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0cmVhbS1tYXRjaC1tYXNrID0gPDB4N2ZmMD47Cj4+ICvC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4+ICvCoMKgwqDCoMKg
-wqDCoCB9Owo+PiArCjxzbmlwPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KaW9tbXUgbWFpbGluZyBsaXN0CmlvbW11QGxpc3RzLmxpbnV4LWZvdW5kYXRp
-b24ub3JnCmh0dHBzOi8vbGlzdHMubGludXhmb3VuZGF0aW9uLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2lvbW11
+On Monday, July 16, 2018 12:00:03 PM CEST Rob Herring wrote:
+> On Sat, Jul 14, 2018 at 02:26:53PM +0200, Pawe=C5=82 Chmiel wrote:
+> > This patch adds devicetree bindings documentation for
+> > battery charging controller as the subnode of MAX8998 PMIC.
+> >=20
+> > Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> > ---
+> > Changes from v1:
+> >   - Removed unneeded Fixes tag
+> >   - Correct description of all charger values
+> >   - Added missing property unit
+> > ---
+> >  Documentation/devicetree/bindings/mfd/max8998.txt | 24 +++++++++++++++=
+++++++++
+> >  1 file changed, 24 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Docume=
+ntation/devicetree/bindings/mfd/max8998.txt
+> > index 23a3650ff2a2..196e50097a36 100644
+> > --- a/Documentation/devicetree/bindings/mfd/max8998.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/max8998.txt
+> > @@ -50,6 +50,23 @@ Additional properties required if max8998,pmic-buck2=
+=2Ddvs-gpio is defined:
+> >  - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in micr=
+ovolts
+> >    for buck2 regulator that can be selected using dvs gpio.
+> > =20
+> > +Charger: Configuration for battery charging controller should be added
+> > +inside a child node named 'charger'.
+> > +  Required properties:
+> > +  - max8998,charge-eoc-percent: Setup End of Charge Level.
+> > +    If value equals 0, leave it unchanged.
+> > +    Otherwise it should be value from 10 to 45 by 5 step.
+> > +
+> > +  - max8998,charge-restart-level-microvolt: Setup Charge Restart Level.
+> > +    If value equals 0, leave it unchanged.
+> > +    If value equals -1, it will be disabled.
+>=20
+> -1 is a bit strange. Why not 'not present' is disabled?
+I wanted to make it work the same way, as it was in case of using it from p=
+latform_data.=20
+But this is good idea, to change it a bit.
+So we would have:
+=2D 0 -> leave unchanged
+=2D property not present in devicetree -> disabled (and set to -1 - driver =
+is expecting it)
+=2D value from 10-45 or (5,6,7 in case of second property)
+I'll update both documentation and driver parsing code (for both properties=
+ - restart level and full timeout) and send v3 version.
+
+Thanks for suggestion.
+>=20
+> > +    Otherwise it should be one of following values: 100, 150, 200.
+> > +
+> > +  - max8998,charge-timeout-hours: Setup Charge Full Timeout.
+> > +    If value equals 0, leave it unchanged.
+> > +    If value equals -1, it will be disabled.
+> > +    Otherwise it should be one of following values: 5, 6, 7.
+> > +
+> >  Regulators: All the regulators of MAX8998 to be instantiated shall be
+> >  listed in a child node named 'regulators'. Each regulator is represent=
+ed
+> >  by a child node of the 'regulators' node.
+> > @@ -99,6 +116,13 @@ Example:
+> >  		max8998,pmic-buck2-dvs-gpio =3D <&gpx0 0 3 0 0>; /* SET3 */
+> >  		max8998,pmic-buck2-dvs-voltage =3D <1350000>, <1300000>;
+> > =20
+> > +		/* Charger configuration */
+> > +		charger {
+> > +			max8998,charge-eoc-percent =3D <0>;
+> > +			max8998,charge-restart-level-microvolt =3D <(-1)>;
+> > +			max8998,charge-timeout-hours =3D <7>;
+> > +		};
+> > +
+> >  		/* Regulators to instantiate */
+> >  		regulators {
+> >  			ldo2_reg: LDO2 {
+>=20
