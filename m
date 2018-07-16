@@ -1,122 +1,79 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/8] dt-bindings: regulator: document stpmu1 pmic
- regulators
-Date: Mon, 16 Jul 2018 16:21:28 -0600
-Message-ID: <20180716222128.GA4766@rob-hp-laptop>
-References: <1530803657-17684-1-git-send-email-p.paillet@st.com>
- <1530803657-17684-4-git-send-email-p.paillet@st.com>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: Qualcomm Quad SPI(QSPI)
+ documentation
+Date: Mon, 16 Jul 2018 16:27:21 -0600
+Message-ID: <20180716222721.GA12854@rob-hp-laptop>
+References: <1530827202-9997-1-git-send-email-girishm@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1530803657-17684-4-git-send-email-p.paillet@st.com>
+In-Reply-To: <1530827202-9997-1-git-send-email-girishm@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pascal PAILLET-LME <p.paillet@st.com>
-Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>
+To: Girish Mahadevan <girishm@codeaurora.org>
+Cc: broonie@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@chromium.org, swboyd@chromium.org, sdharia@codeaurora.org, kramasub@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 05, 2018 at 03:14:23PM +0000, Pascal PAILLET-LME wrote:
-> From: pascal paillet <p.paillet@st.com>
-> 
-> The STPMU1 regulators supply power to the application processor as well as
-> to the external system peripherals such as DDR, Flash memories and system
-> devices.
-> 
-> Signed-off-by: pascal paillet <p.paillet@st.com>
+On Thu, Jul 05, 2018 at 03:46:41PM -0600, Girish Mahadevan wrote:
+> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
 > ---
->  .../bindings/regulator/st,stpmu1-regulator.txt     | 72 ++++++++++++++++++++++
->  1 file changed, 72 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/st,stpmu1-regulator.txt
+>  .../devicetree/bindings/spi/qcom,spi-qcom-qspi.txt | 36 ++++++++++++++++++++++
+>  err.txt                                            | 27 ----------------
+>  2 files changed, 36 insertions(+), 27 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
+>  delete mode 100644 err.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/regulator/st,stpmu1-regulator.txt b/Documentation/devicetree/bindings/regulator/st,stpmu1-regulator.txt
+> diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
 > new file mode 100644
-> index 0000000..888e759
+> index 0000000..3baa893
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/st,stpmu1-regulator.txt
-> @@ -0,0 +1,72 @@
-> +STMicroelectronics STPMU1 Voltage regulators
+> +++ b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
+> @@ -0,0 +1,36 @@
+> +QTI [Qualcomm Technologies Inc] Quad Serial Peripheral Interface (QSPI)
 > +
-> +Regulator Nodes are optional depending on needs.
+> +QSPI [Quad Serial Peripheral Interface] allows single dual and quad read/write
+> +access to slaves. QTI's QSPI controller implements the QSPI protocol to interface
+> +with slaves like NOR Flash devices.
 > +
-> +Available Regulators in STPMU1 device are:
-> +  - buck1 for Buck BUCK1
-> +  - buck2 for Buck BUCK2
-> +  - buck3 for Buck BUCK3
-> +  - buck4 for Buck BUCK4
-> +  - ldo1 for LDO LDO1
-> +  - ldo2 for LDO LDO2
-> +  - ldo3 for LDO LDO3
-> +  - ldo4 for LDO LDO4
-> +  - ldo5 for LDO LDO5
-> +  - ldo6 for LDO LDO6
-> +  - vref_ddr for LDO Vref DDR
-> +  - boost for Buck BOOST
-> +  - pwr_sw1 for VBUS_OTG switch
-> +  - pwr_sw2 for SW_OUT switch
-> +
-> +Switches are fixed voltage regulators with only enable/disable capability.
-> +
-> +Optional properties:
-> +- st,mask_reset: stay on during Reset for particular regulator
+> +Required properties:
+> +- compatible:	Should contain:
+> +		"qcom,qspi-v1"
 
-s/_/-/
+Needs an SoC specific compatible string.
 
-What's the type? 'mask' in the name makes it sound like a bitmask.
+> +- reg:		Contains the base register location and length
+> +- interrupts:	Interrupt number used by the controller.
+> +- clocks:	Contains the core and AHB clock names.
+> +- clock-names:	"core" for core clock and "iface" for AHB clock.
+> +- spi-max-frequency:	Maximum SPI core clock frequency in Hz.
 
-> +- regulator-pull-down: enable high pull down
-> +  if not specified light pull down is used
-> +- regulator-over-current-protection:
-> +    if set, all regulators are switched off in case of over-current detection
-> +    on this regulator,
-> +    if not set, the driver only send an over-current event.
-> +- interrupt-parent: phandle to the parent interrupt controller
-> +- interrupts: index of current limit detection interrupt
-> +- <regulator>-supply: phandle to the parent supply/regulator node
-> +	each regulator supply can be described except vref_ddr.
+This goes in the slave device nodes.
+
+> +
+> +SPI slave nodes must be children of the SPI master node and can contain
+> +properties described in Documentation/devicetree/bindings/spi/spi-bus.txt
 > +
 > +Example:
-> +regulators {
-> +	compatible = "st,stpmu1-regulators";
 > +
-> +	ldo6-supply = <&v3v3>;
+> +	qspi: qspi@7418000 {
+> +		compatible = "qcom,qspi-v1";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0x7418000 0x600>;
+> +		interrupts = <0 459 0>;
+> +		clock-names = "iface", "core";
+> +		clocks = <&clock_gcc clk_gcc_qspi_ahb_clk>,
+> +			 <&clock_gcc clk_gcc_qspi_ser_clk>;
 > +
-> +	vdd_core: regulator@0 {
+> +		device@0 {
+> +			compatible = "dummy_device";
 
-Drop the unit address.
+Why don't you use an actual NOR flash chip here.
 
-> +		regulator-compatible = "buck1";
-> +		regulator-name = "vdd_core";
+> +			reg = <x>; /* CS for the device */
 
-I think you have the names backwards here. Plus, regulator-compatible is 
-not generally used.
+It's an example, show a CS#.
 
-> +		interrupts = <IT_CURLIM_BUCK1 0>;
-> +		interrupt-parent = <&pmic>;
-> +		st,mask_reset;
-> +		regulator-pull-down;
-> +		st,pulldown_config = <2>;
-> +		regulator-min-microvolt = <700000>;
-> +		regulator-max-microvolt = <1200000>;
+> +			spi-max-frequency = <f>; /* Max supported frequency of the slave (Hz) */
+> +		};
 > +	};
-> +
-> +	v3v3: buck4 {
-> +		regulator-compatible = "buck4";
-> +		regulator-name = "v3v3";
-> +		interrupts = <IT_CURLIM_BUCK4 0>;
-> +		interrupt-parent = <&mypmic>;
-> +
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +
-> +	v1v8: ldo6 {
-> +		regulator-compatible = "ldo6";
-> +		regulator-name = "v1v8";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		regulator-over-current-protection;
-> +	};
-> +
-> +};
-> -- 
-> 1.9.1
