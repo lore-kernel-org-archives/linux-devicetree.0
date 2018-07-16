@@ -1,52 +1,137 @@
 From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V2 0/6] mailbox: ti-msgmgr: Add support for AM654 Secure Proxy
-Date: Mon, 16 Jul 2018 13:06:01 -0500
-Message-ID: <20180716180607.16526-1-nm@ti.com>
+Subject: [PATCH V2 3/6] mailbox: ti-msgmgr: Change message count mask to be descriptor based
+Date: Mon, 16 Jul 2018 13:06:04 -0500
+Message-ID: <20180716180607.16526-4-nm@ti.com>
+References: <20180716180607.16526-1-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180716180607.16526-1-nm@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jassi Brar <jassisinghbrar@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 Cc: Nishanth Menon <nm@ti.com>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The V2 of the series updates a minor comment in binding and picks up Rob's Reviewed-by
+Change mask used to extract the message count to be descriptor based.
 
-Since I have'nt seen additional comments, I am assuming things are fine for v4.19.
+This is to support changes for count location for various SoC
+solutions.
 
-The following series enables support for Secure Proxy in newest addition in TI's SoC
-portfolio - AM654 SoC (posted previously as RFC).
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+Changes since V1: None
+V1: https://patchwork.kernel.org/patch/10475341/
+RFC:  https://patchwork.kernel.org/patch/10447671/
 
-The series is based on v4.18-rc1 and is available here:
-https://github.com/nmenon/linux-2.6-playground/commits/upstream/v4.18-rc1/k3-1-am6-sproxy
+ drivers/mailbox/ti-msgmgr.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-There are a couple of follow on patches to be posted as well (Kconfig changes
-for K3_ARCH and actual dts node changes).
-
-Changes since RFC are highlighted in each of the patches, but overall:
-* The K3 dependency has been broken out into a seperate series independent of
-  this.
-* Binding has been seperated out as it's own file (even though the driver is
-  reused).
-
-Consolidated all patches (including all series) are available here:
-https://github.com/nmenon/linux-2.6-playground/commits/upstream/v4.18-rc1/k3-am6-integ
-
-Full Boot log  on AM654 (integrated with all patch series) is available here:
-   https://pastebin.ubuntu.com/p/bBFmnzYtCd/
-
-Nishanth Menon (6):
-  mailbox: ti-msgmgr: Get rid of unused structure members
-  mailbox: ti-msgmgr: Allocate Rx channel resources only on request
-  mailbox: ti-msgmgr: Change message count mask to be descriptor based
-  mailbox: ti-msgmgr: Move the memory region name to descriptor
-  dt-bindings: mailbox: Add support for secure proxy threads
-  mailbox: ti-msgmgr: Add support for Secure Proxy
-
- .../bindings/mailbox/ti,secure-proxy.txt           |  50 +++
- drivers/mailbox/ti-msgmgr.c                        | 353 +++++++++++++++++----
- 2 files changed, 336 insertions(+), 67 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mailbox/ti,secure-proxy.txt
-
+diff --git a/drivers/mailbox/ti-msgmgr.c b/drivers/mailbox/ti-msgmgr.c
+index 91c955979008..7d2eb4b359ba 100644
+--- a/drivers/mailbox/ti-msgmgr.c
++++ b/drivers/mailbox/ti-msgmgr.c
+@@ -44,6 +44,7 @@ struct ti_msgmgr_valid_queue_desc {
+  * @max_messages:	Number of messages
+  * @data_first_reg:	First data register for proxy data region
+  * @data_last_reg:	Last data register for proxy data region
++ * @status_cnt_mask:	Mask for getting the status value
+  * @tx_polled:		Do I need to use polled mechanism for tx
+  * @tx_poll_timeout_ms: Timeout in ms if polled
+  * @valid_queues:	List of Valid queues that the processor can access
+@@ -58,6 +59,7 @@ struct ti_msgmgr_desc {
+ 	u8 max_messages;
+ 	u8 data_first_reg;
+ 	u8 data_last_reg;
++	u32 status_cnt_mask;
+ 	bool tx_polled;
+ 	int tx_poll_timeout_ms;
+ 	const struct ti_msgmgr_valid_queue_desc *valid_queues;
+@@ -116,20 +118,24 @@ struct ti_msgmgr_inst {
+ 
+ /**
+  * ti_msgmgr_queue_get_num_messages() - Get the number of pending messages
++ * @d:		Description of message manager
+  * @qinst:	Queue instance for which we check the number of pending messages
+  *
+  * Return: number of messages pending in the queue (0 == no pending messages)
+  */
+-static inline int ti_msgmgr_queue_get_num_messages(struct ti_queue_inst *qinst)
++static inline int
++ti_msgmgr_queue_get_num_messages(const struct ti_msgmgr_desc *d,
++				 struct ti_queue_inst *qinst)
+ {
+ 	u32 val;
++	u32 status_cnt_mask = d->status_cnt_mask;
+ 
+ 	/*
+ 	 * We cannot use relaxed operation here - update may happen
+ 	 * real-time.
+ 	 */
+-	val = readl(qinst->queue_state) & Q_STATE_ENTRY_COUNT_MASK;
+-	val >>= __ffs(Q_STATE_ENTRY_COUNT_MASK);
++	val = readl(qinst->queue_state) & status_cnt_mask;
++	val >>= __ffs(status_cnt_mask);
+ 
+ 	return val;
+ }
+@@ -167,8 +173,9 @@ static irqreturn_t ti_msgmgr_queue_rx_interrupt(int irq, void *p)
+ 		return IRQ_NONE;
+ 	}
+ 
++	desc = inst->desc;
+ 	/* Do I actually have messages to read? */
+-	msg_count = ti_msgmgr_queue_get_num_messages(qinst);
++	msg_count = ti_msgmgr_queue_get_num_messages(desc, qinst);
+ 	if (!msg_count) {
+ 		/* Shared IRQ? */
+ 		dev_dbg(dev, "Spurious event - 0 pending data!\n");
+@@ -181,7 +188,6 @@ static irqreturn_t ti_msgmgr_queue_rx_interrupt(int irq, void *p)
+ 	 * of how many bytes I should be reading. Let the client figure this
+ 	 * out.. I just read the full message and pass it on..
+ 	 */
+-	desc = inst->desc;
+ 	message.len = desc->max_message_size;
+ 	message.buf = (u8 *)qinst->rx_buff;
+ 
+@@ -224,12 +230,14 @@ static irqreturn_t ti_msgmgr_queue_rx_interrupt(int irq, void *p)
+ static bool ti_msgmgr_queue_peek_data(struct mbox_chan *chan)
+ {
+ 	struct ti_queue_inst *qinst = chan->con_priv;
++	struct device *dev = chan->mbox->dev;
++	struct ti_msgmgr_inst *inst = dev_get_drvdata(dev);
+ 	int msg_count;
+ 
+ 	if (qinst->is_tx)
+ 		return false;
+ 
+-	msg_count = ti_msgmgr_queue_get_num_messages(qinst);
++	msg_count = ti_msgmgr_queue_get_num_messages(inst->desc, qinst);
+ 
+ 	return msg_count ? true : false;
+ }
+@@ -243,12 +251,14 @@ static bool ti_msgmgr_queue_peek_data(struct mbox_chan *chan)
+ static bool ti_msgmgr_last_tx_done(struct mbox_chan *chan)
+ {
+ 	struct ti_queue_inst *qinst = chan->con_priv;
++	struct device *dev = chan->mbox->dev;
++	struct ti_msgmgr_inst *inst = dev_get_drvdata(dev);
+ 	int msg_count;
+ 
+ 	if (!qinst->is_tx)
+ 		return false;
+ 
+-	msg_count = ti_msgmgr_queue_get_num_messages(qinst);
++	msg_count = ti_msgmgr_queue_get_num_messages(inst->desc, qinst);
+ 
+ 	/* if we have any messages pending.. */
+ 	return msg_count ? false : true;
+@@ -523,6 +533,7 @@ static const struct ti_msgmgr_desc k2g_desc = {
+ 	.max_messages = 128,
+ 	.data_first_reg = 16,
+ 	.data_last_reg = 31,
++	.status_cnt_mask = Q_STATE_ENTRY_COUNT_MASK,
+ 	.tx_polled = false,
+ 	.valid_queues = k2g_valid_queues,
+ 	.num_valid_queues = ARRAY_SIZE(k2g_valid_queues),
 -- 
 2.15.1
