@@ -1,61 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt: bindings: Add bindings for SDHCI Synopsys DWC
- MSHC
-Date: Mon, 16 Jul 2018 15:59:13 -0600
-Message-ID: <20180716215913.GA4269@rob-hp-laptop>
-References: <20180706151930.78b3024b@xhacker.debian>
- <20180706152047.0b0a4944@xhacker.debian>
- <20180711161206.GA1558@rob-hp-laptop>
- <20180712100611.5887a195@xhacker.debian>
+Subject: Re: [PATCH 1/2] dt-bindings: thermal: Allow multiple devices to
+ share cooling map
+Date: Mon, 16 Jul 2018 16:02:45 -0600
+Message-ID: <20180716220245.GA20750@rob-hp-laptop>
+References: <cover.1530766981.git.viresh.kumar@linaro.org>
+ <bdd735da9a3c8159756b084ca96b555437057fa4.1530766981.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180712100611.5887a195@xhacker.debian>
+In-Reply-To: <bdd735da9a3c8159756b084ca96b555437057fa4.1530766981.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Manjunath M B <Manjunath.MB@synopsys.com>, Prabu Thangamuthu <Prabu.T@synopsys.com>, linux-arm-kernel@lists.infradead.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, olof@lixom.net, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 12, 2018 at 10:06:11AM +0800, Jisheng Zhang wrote:
-> Hi Rob,
+On Thu, Jul 05, 2018 at 10:39:23AM +0530, Viresh Kumar wrote:
+> Allow cooling devices sharing same trip point with same contribution
+> value to share the cooling map as well. Otherwise the same information
+> will be duplicated for each device sharing the trip point.
 > 
-> On Wed, 11 Jul 2018 10:12:06 -0600 Rob Herring wrote:
-> 
-> > On Fri, Jul 06, 2018 at 03:20:47PM +0800, Jisheng Zhang wrote:
-> > > Synopsys SDHCI compatible DesignWare Cores Mobile Storage Host
-> > > Controller can support eMMC/SD/SDIO. Add the bindings.
-> > > 
-> > > Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> > > ---
-> > >  .../bindings/mmc/sdhci-of-dwcmshc.txt         | 20 +++++++++++++++++++
-> > >  1 file changed, 20 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-of-dwcmshc.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/mmc/sdhci-of-dwcmshc.txt b/Documentation/devicetree/bindings/mmc/sdhci-of-dwcmshc.txt
-> > > new file mode 100644
-> > > index 000000000000..ee4253b33be2
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mmc/sdhci-of-dwcmshc.txt
-> > > @@ -0,0 +1,20 @@
-> > > +* Synopsys DesignWare Cores Mobile Storage Host Controller
-> > > +
-> > > +Required properties:
-> > > +- compatible: should be one of the following:
-> > > +    "snps,dwcmshc-sdhci"  
-> > 
-> > Needs to note that there must also be an SoC specific compatible.
-> 
-> Currently, there's no SoC specific code in this driver, so the binding could
-> be extended to SoC compatible if necessary. What do you think?
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/thermal/thermal.txt | 11 +++--------
+>  1 file changed, 3 insertions(+), 8 deletions(-)
 
-Doesn't matter what's in the driver, it can use this compatible.
-
-But experience has shown that a compatible for a licensed IP is never 
-sufficient. There are versions of the blocks, configuration options, and 
-integration differences.
-
-I'm not asking you to add any SoC specific compatible now unless you 
-are working on a particular SoC, but just state one is needed. 
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
