@@ -1,14 +1,15 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 16/23] dt-bindings: ap806: add the thermal node in the
- syscon file
-Date: Mon, 16 Jul 2018 16:41:59 +0200
-Message-ID: <20180716144206.30985-17-miquel.raynal@bootlin.com>
-References: <20180716144206.30985-1-miquel.raynal@bootlin.com>
+From: Peter Robinson <pbrobinson@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6sx-udoo-neo: enable i2c-2 and i2c-4 for
+ onboard sensors
+Date: Mon, 16 Jul 2018 15:43:21 +0100
+Message-ID: <CALeDE9N5AnQba5LirHegWgz2_3Rr6cCT_ttTUtg38OdvdegpFA@mail.gmail.com>
+References: <20180713171151.24699-1-pbrobinson@gmail.com>
+ <CAOMZO5B+1atjr3Ur7EGMJSEbqT8zqWdKZWNHrkyCGvgGM4nJFg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180716144206.30985-1-miquel.raynal@bootlin.com>
+In-Reply-To: <CAOMZO5B+1atjr3Ur7EGMJSEbqT8zqWdKZWNHrkyCGvgGM4nJFg@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,71 +19,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Explain the thermal bindings now that the thermal IP is described being
-inside of a system controller. Add a reference to the thermal-zone node.
+Hi Fabio,
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../arm/marvell/ap806-system-controller.txt        | 38 ++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+On Fri, Jul 13, 2018 at 7:08 PM, Fabio Estevam <festevam@gmail.com> wrote:
+> Hi Peter,
+>
+> On Fri, Jul 13, 2018 at 2:11 PM, Peter Robinson <pbrobinson@gmail.com> wrote:
+>
+>> +&i2c4 { /* Onboard Motion sensors */
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&pinctrl_i2c4>;
+>> +       clock-frequency = <100000>;
+>> +       status = "okay";
+>> +};
+>
+> Would it be possible to add i2c4 to the common dtsi file instead?
+>
+> I haven't checked the schematics, but if it is only the
+> imx6sx-udoo-neo-basic.dts that does not have the i2c4 node, then
+> maybe you could add i2c4 to the dtsi and disable it inside
+> imx6sx-udoo-neo-basic.dts?
 
-diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-index a856eb9a4e05..3fd21bb7cb37 100644
---- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-+++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-@@ -11,6 +11,9 @@ For the top level node:
-  - compatible: must be: "syscon", "simple-mfd";
-  - reg: register area of the AP806 system controller
- 
-+SYSTEM CONTROLLER 0
-+===================
-+
- Clocks:
- -------
- 
-@@ -98,3 +101,38 @@ ap_syscon: system-controller@6f4000 {
- 		gpio-ranges = <&ap_pinctrl 0 0 19>;
- 	};
- };
-+
-+SYSTEM CONTROLLER 1
-+===================
-+
-+Thermal:
-+--------
-+
-+For common binding part and usage, refer to
-+Documentation/devicetree/bindings/thermal/thermal.txt
-+
-+The thermal IP can probe the temperature all around the processor. It
-+may feature several channels, each of them wired to one sensor.
-+
-+Required properties:
-+- compatible: must be one of:
-+  * marvell,armada-ap806-thermal
-+- reg: register range associated with the thermal functions.
-+
-+Optional properties:
-+- #thermal-sensor-cells: shall be <1> when thermal-zones subnodes refer
-+  to this IP and represents the channel ID. There is one sensor per
-+  channel. O refers to the thermal IP internal channel, while positive
-+  IDs refer to each CPU.
-+
-+Example:
-+ap_syscon1: system-controller@6f8000 {
-+	compatible = "syscon", "simple-mfd";
-+	reg = <0x6f8000 0x1000>;
-+
-+	ap_thermal: thermal-sensor@80 {
-+		compatible = "marvell,armada-ap806-thermal";
-+		reg = <0x80 0x10>;
-+		#thermal-sensor-cells = <1>;
-+	};
-+};
--- 
-2.14.1
+Enabling it to turn around and then disable it again seemed counter
+intuitive to me hence the way I did, the WiFi in done that way even
+though it's not on all boards and I would imagine it would cause
+errors on the devices where there isn't wifi although I don't have
+those model(s) to verify.
+
+Peter
