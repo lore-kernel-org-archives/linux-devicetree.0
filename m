@@ -1,228 +1,50 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 1/2] arm: dts: mt7623: cleanup MT7623N NAND dts file
-Date: Mon, 16 Jul 2018 15:59:09 +0200
-Message-ID: <53d30dd0-d805-1ff9-c0f0-4029e7ee453f@gmail.com>
-References: <34e4c13bd1deeb8e090a74b4e7e9192512b3eff0.1531199139.git.ryder.lee@mediatek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 08/34] media: camss: Unify the clock names
+Date: Mon, 16 Jul 2018 08:00:47 -0600
+Message-ID: <CAL_JsqLm7bMf5PgQa0vQR4ERApzdv+wOHfayOG7GdMtDKDJdbw@mail.gmail.com>
+References: <1530797585-8555-1-git-send-email-todor.tomov@linaro.org>
+ <1530797585-8555-9-git-send-email-todor.tomov@linaro.org> <20180711160713.GA29354@rob-hp-laptop>
+ <CAA3CUABj_udpu1yAGGd070_uLNYLbTYEHb_sbHLheUErkPnYtQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <34e4c13bd1deeb8e090a74b4e7e9192512b3eff0.1531199139.git.ryder.lee@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <CAA3CUABj_udpu1yAGGd070_uLNYLbTYEHb_sbHLheUErkPnYtQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, John Crispin <john@phrozen.org>, Sean Wang <sean.wang@mediatek.com>
+To: Todor Tomov <todor.tomov@linaro.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jul 16, 2018 at 2:53 AM Todor Tomov <todor.tomov@linaro.org> wrote:
+>
+> Hi Rob,
+>
+> Thank you for review.
+>
+> On 11 July 2018 at 19:07, Rob Herring <robh@kernel.org> wrote:
+> > On Thu, Jul 05, 2018 at 04:32:39PM +0300, Todor Tomov wrote:
+> >> Unify the clock names - use names closer to the clock
+> >> definitions.
+> >
+> > Why? You can't just change names. You are breaking an ABI.
+>
+> Main reason is that this change allows more logical names and
+> handling in the driver when support for 8996 is added.
+> To clarify by example:
+> - we used to have "camss_vfe_vfe" in 8916;
+> - now we will have "vfe0" in 8916 and "vfe0" and "vfe1" in 8996.
+>
+> To achieve this I have changed the names to match more closely
+> the definitions in the clock driver, which are based on the
+> documentation. Yes, I should have done this the first time...
+>
+> I have used to update the dt and kernel code together. Yes, the
+> change breaks the ABI but does this cause difficulties in practice?
 
+That's up to the platform maintainers to decide. As a user of these
+boards, yes, it would bother me. However, camera I don't care so much
+about.
 
-On 10/07/18 07:09, Ryder Lee wrote:
-> Normally, we didn't release this kind of baord to user. This specific
-> board exists only in the early stage of development inside MediaTek -
-> and that may confuse peoples.
-> 
-> Hence this patch removes related files accordingly.
-> 
-> Cc: John Crispin <john@phrozen.org>
-> Cc: Sean Wang <sean.wang@mediatek.com>
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+In any case, the commit message should make this crystal clear and
+justify why breaking compatibility is okay.
 
-Whole series pushed to v4.18-next/dts32
-
-Thanks a lot to everybody who provided feedback.
-
-Regards,
-Matthias
-
-> ---
->  arch/arm/boot/dts/Makefile             |  1 -
->  arch/arm/boot/dts/mt7623n-rfb-nand.dts | 73 -----------------------------
->  arch/arm/boot/dts/mt7623n-rfb.dtsi     | 86 ----------------------------------
->  3 files changed, 160 deletions(-)
->  delete mode 100644 arch/arm/boot/dts/mt7623n-rfb-nand.dts
->  delete mode 100644 arch/arm/boot/dts/mt7623n-rfb.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 37a3de7..dde494e 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1168,7 +1168,6 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
->  	mt7623a-rfb-emmc.dtb \
->  	mt7623a-rfb-nand.dtb \
->  	mt7623n-rfb-emmc.dtb \
-> -	mt7623n-rfb-nand.dtb \
->  	mt7623n-bananapi-bpi-r2.dtb \
->  	mt8127-moose.dtb \
->  	mt8135-evbp1.dtb
-> diff --git a/arch/arm/boot/dts/mt7623n-rfb-nand.dts b/arch/arm/boot/dts/mt7623n-rfb-nand.dts
-> deleted file mode 100644
-> index 96ff3c9..0000000
-> --- a/arch/arm/boot/dts/mt7623n-rfb-nand.dts
-> +++ /dev/null
-> @@ -1,73 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -/*
-> - * Copyright (c) 2017 MediaTek Inc.
-> - * Author: John Crispin <john@phrozen.org>
-> - *
-> - */
-> -
-> -/dts-v1/;
-> -#include "mt7623n-rfb.dtsi"
-> -
-> -/ {
-> -	model = "MediaTek MT7623N NAND reference board";
-> -	compatible = "mediatek,mt7623n-rfb-nand", "mediatek,mt7623";
-> -};
-> -
-> -&bch {
-> -	status = "okay";
-> -};
-> -
-> -&nandc {
-> -	status = "okay";
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&nand_pins_default>;
-> -
-> -	nand@0 {
-> -		reg = <0>;
-> -		spare_per_sector = <64>;
-> -		nand-ecc-mode = "hw";
-> -		nand-ecc-strength = <12>;
-> -		nand-ecc-step-size = <1024>;
-> -
-> -		partitions {
-> -			compatible = "fixed-partitions";
-> -			#address-cells = <1>;
-> -			#size-cells = <1>;
-> -
-> -			partition@0 {
-> -				label = "preloader";
-> -				reg = <0x0 0x40000>;
-> -			};
-> -
-> -			partition@40000 {
-> -				label = "uboot";
-> -				reg = <0x40000 0x80000>;
-> -			};
-> -
-> -			partition@c0000 {
-> -				label = "uboot-env";
-> -				reg = <0xC0000 0x40000>;
-> -			};
-> -
-> -			partition@140000 {
-> -				label = "bootimg";
-> -				reg = <0x140000 0x2000000>;
-> -			};
-> -
-> -			partition@2140000 {
-> -				label = "recovery";
-> -				reg = <0x2140000 0x2000000>;
-> -			};
-> -
-> -			partition@4140000 {
-> -				label = "rootfs";
-> -				reg = <0x4140000 0x1000000>;
-> -			};
-> -
-> -			partition@5140000 {
-> -				label = "usrdata";
-> -				reg = <0x5140000 0x1000000>;
-> -			};
-> -		};
-> -	};
-> -};
-> diff --git a/arch/arm/boot/dts/mt7623n-rfb.dtsi b/arch/arm/boot/dts/mt7623n-rfb.dtsi
-> deleted file mode 100644
-> index 5c5cc7d..0000000
-> --- a/arch/arm/boot/dts/mt7623n-rfb.dtsi
-> +++ /dev/null
-> @@ -1,86 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -/*
-> - * Copyright (c) 2017 MediaTek Inc.
-> - * Author: John Crispin <john@phrozen.org>
-> - *	   Sean Wang <sean.wang@mediatek.com>
-> - *
-> - */
-> -
-> -/dts-v1/;
-> -#include "mt7623.dtsi"
-> -#include "mt6323.dtsi"
-> -
-> -/ {
-> -	aliases {
-> -		serial0 = &uart0;
-> -		serial1 = &uart1;
-> -		serial2 = &uart2;
-> -	};
-> -
-> -	chosen {
-> -		stdout-path = "serial2:115200n8";
-> -	};
-> -
-> -	cpus {
-> -		cpu0 {
-> -			proc-supply = <&mt6323_vproc_reg>;
-> -		};
-> -
-> -		cpu1 {
-> -			proc-supply = <&mt6323_vproc_reg>;
-> -		};
-> -
-> -		cpu2 {
-> -			proc-supply = <&mt6323_vproc_reg>;
-> -		};
-> -
-> -		cpu3 {
-> -			proc-supply = <&mt6323_vproc_reg>;
-> -		};
-> -	};
-> -
-> -	memory@80000000 {
-> -		device_type = "memory";
-> -		reg = <0 0x80000000 0 0x40000000>;
-> -	};
-> -
-> -	usb_p1_vbus: regulator-5v {
-> -		compatible = "regulator-fixed";
-> -		regulator-name = "usb_vbus";
-> -		regulator-min-microvolt = <5000000>;
-> -		regulator-max-microvolt = <5000000>;
-> -		gpio = <&pio 135 GPIO_ACTIVE_HIGH>;
-> -		enable-active-high;
-> -	};
-> -};
-> -
-> -&mmc0 {
-> -	vmmc-supply = <&mt6323_vemc3v3_reg>;
-> -	vqmmc-supply = <&mt6323_vio18_reg>;
-> -};
-> -
-> -&mmc1 {
-> -	vmmc-supply = <&mt6323_vmch_reg>;
-> -	vqmmc-supply = <&mt6323_vmc_reg>;
-> -};
-> -
-> -&uart0 {
-> -	status = "okay";
-> -};
-> -
-> -&uart1 {
-> -	status = "okay";
-> -};
-> -
-> -&uart2 {
-> -	status = "okay";
-> -};
-> -
-> -&usb1 {
-> -	vbus-supply = <&usb_p1_vbus>;
-> -	status = "okay";
-> -};
-> -
-> -&u3phy1 {
-> -	status = "okay";
-> -};
-> 
+Rob
