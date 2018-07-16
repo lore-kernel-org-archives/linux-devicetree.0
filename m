@@ -1,28 +1,40 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: thermal: Allow multiple devices to
- share cooling map
-Date: Mon, 16 Jul 2018 16:02:45 -0600
-Message-ID: <20180716220245.GA20750@rob-hp-laptop>
-References: <cover.1530766981.git.viresh.kumar@linaro.org>
- <bdd735da9a3c8159756b084ca96b555437057fa4.1530766981.git.viresh.kumar@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: amlogic: Add support for GXL S805X and
+ the P241 board
+Date: Mon, 16 Jul 2018 16:04:35 -0600
+Message-ID: <20180716220435.GA22633@rob-hp-laptop>
+References: <1530784243-20823-1-git-send-email-narmstrong@baylibre.com>
+ <1530784243-20823-2-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <bdd735da9a3c8159756b084ca96b555437057fa4.1530766981.git.viresh.kumar@linaro.org>
+In-Reply-To: <1530784243-20823-2-git-send-email-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, olof@lixom.net, linux-kernel@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: khilman@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, martin.blumenstingl@googlemail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 05, 2018 at 10:39:23AM +0530, Viresh Kumar wrote:
-> Allow cooling devices sharing same trip point with same contribution
-> value to share the cooling map as well. Otherwise the same information
-> will be duplicated for each device sharing the trip point.
+On Thu, Jul 05, 2018 at 11:50:42AM +0200, Neil Armstrong wrote:
+> The S805X is a variant of the Amlogic Meson GXL SoC family with the
+> following physical limitations :
+> - No SDCard interface
+> - No GPIOCLK pins
+> - No USB OTG ID pin (but Gadget feature can stil be forced)
+> - No 5V regulator
+> - Reduced ADC inputs (only ADC0 and ADC1)
+> - GPIODV_26, GPIOAO_3, GPIOAO_4, GPIOAO_5, GPIOAO_6, GPIOX_14,
+>   GPIOX_15, GPIOH_3 are no more exposed on the package
 > 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Amlogic exposes the following SW limitations :
+> - HDMI max resolution should be 1080p60, VPU clock should be downgraded
+> - Video Decoding should be limited to 1080p60, VDEC clock should be downgraded
+> - CPU speed should be limited by SCPI OPP table to 1.2GHz
+> - DRAM interface is limited to DDR4 16bit up to 1GiB
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  Documentation/devicetree/bindings/thermal/thermal.txt | 11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
+>  Documentation/devicetree/bindings/arm/amlogic.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
