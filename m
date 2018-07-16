@@ -1,42 +1,48 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v5 2/7] serdev: add dev_pm_domain_attach|detach()
-Date: Mon, 16 Jul 2018 11:50:18 +0200
-Message-ID: <20180716095018.GA11078@kroah.com>
-References: <cover.1531150733.git.sean.wang@mediatek.com>
- <d5904115ff1da38fe79b45fa3d59ef0688cea124.1531150733.git.sean.wang@mediatek.com>
- <20180715085628.GI10204@localhost>
+From: Tali Perry <tali.perry1@gmail.com>
+Subject: [PATCH v1 0/1] clk: npcm7xx: fix base address and of_clk_get_by_name
+Date: Mon, 16 Jul 2018 13:10:06 +0300
+Message-ID: <20180716101007.11721-1-tali.perry1@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180715085628.GI10204@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: sean.wang@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sboyd@kernel.org, brendanhiggins@google.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, weiyongjunl@huawei.com, avifishman70@gmail.com, tmaimon77@gmail.com, raltherr@google.com
+Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>, Wei Yongjun <weiyongjun1@huawei.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 15, 2018 at 10:56:28AM +0200, Johan Hovold wrote:
-> On Mon, Jul 09, 2018 at 11:56:58PM +0800, sean.wang@mediatek.com wrote:
-> > From: Sean Wang <sean.wang@mediatek.com>
-> > 
-> > In order to open up the required power gate before any operation can be
-> > effectively performed over the serial bus between CPU and serdev, it's
-> > clearly essential to add common attach functions for PM domains to serdev
-> > at the probe phase.
-> > 
-> > Similarly, the relevant dettach function for the PM domains should be
-> > properly and reversely added at the remove phase.
-> > 
-> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > Cc: Rob Herring <robh@kernel.org>
-> > Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Jiri Slaby <jslaby@suse.com>
-> > Cc: linux-serial@vger.kernel.org
-> 
-> Reviewed-by: Johan Hovold <johan@kernel.org>
+Nuvoton NPCM7XX Clock Controller
+fix base address and of_clk_get_by_name error handling.
+    Also update error messages to be more informative.
+    
+    In case clk_base allocation is erronoeous the return value is null.
+    Also fix handling of of_clk_get_by_name returns an error. 
+    Print a better error message pointing to the dt-binding documention.
 
-Thanks, now applied.
+This patch is re-submitted since it was already pushed to main 
+(just the diff, without the full driver which is already in 
+master branch.)
 
-greg k-h
+
+Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+
+---
+
+Tali Perry (1):
+  clk: npcm7xx: get fixed clocks from DT
+
+ drivers/clk/clk-npcm7xx.c | 102 +++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 87 insertions(+), 15 deletions(-)
+
+-- 
+2.14.1
