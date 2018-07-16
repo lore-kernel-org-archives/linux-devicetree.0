@@ -1,39 +1,49 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH v2 1/3] dt-bindings: pfuze100: add optional disable
- switch-regulators binding
-Date: Mon, 16 Jul 2018 09:25:16 +0200
-Message-ID: <20180716072516.bvsp54yoeqp3ih6s@pengutronix.de>
-References: <20180713125002.24331-1-m.felsch@pengutronix.de>
- <20180713125002.24331-2-m.felsch@pengutronix.de>
- <20180713150314.GD16228@sirena.org.uk>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3 2/2] arm64: dts: renesas: condor/v3hsk: add
+ DU/LVDS/HDMI support
+Date: Mon, 16 Jul 2018 09:53:25 +0200
+Message-ID: <20180716075325.y7jtwyqxwerdmfy3@verge.net.au>
+References: <95d0db34-713d-8206-00c2-ee9a42aab823@cogentembedded.com>
+ <c78f1228-afb0-54cf-5d9e-5c812b678de3@cogentembedded.com>
+ <20180614072426.vq42mmb3gsmv6z5k@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180713150314.GD16228@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, fabio.estevam@nxp.com, Anson.Huang@nxp.com, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20180614072426.vq42mmb3gsmv6z5k@verge.net.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-thanks for the review.
-
-On 18-07-13 16:03, Mark Brown wrote:
-> On Fri, Jul 13, 2018 at 02:50:01PM +0200, Marco Felsch wrote:
+On Thu, Jun 14, 2018 at 09:24:27AM +0200, Simon Horman wrote:
+> On Wed, Jun 13, 2018 at 11:12:40PM +0300, Sergei Shtylyov wrote:
+> > Define the Condor/V3HSK board dependent parts of the DU and  LVDS device
+> > nodes. Also add the device nodes for Thine THC63LVD1024 LVDS decoder and
+> > Analog Devices ADV7511W HDMI transmitter...
+> > 
+> > Based on the original (and large) patch by Vladimir Barinov.
+> > 
+> > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> > 
+> > ---
+> > Changes in version 2:
+> > - added the V3HSK DT update, reworded the description, renamed the patch;
+> > - added a space between the HDMI node name and a brace.
+> > 
+> >  arch/arm64/boot/dts/renesas/r8a77980-condor.dts |  106 +++++++++++++++++++++
+> >  arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts  |  120 ++++++++++++++++++++++++
 > 
-> > +Optional properties:
-> > +- fsl,pfuze-support-disable: Boolean, if present disable all unused switch
-> > +  regulators to save power consumption. Attention, till 4.18 these regulators
-> 
-> The property name sounds like it affects all the regulators but really
-> it's just the sw ones - how about adding -sw at the end?  Bit of a
-> bikeshed but it does end up in an ABI.
+> Laurent, could you review this?
 
-You're right, it sounds better. So the new binding will be
-fsl,pfuze-support-disable-sw. Are there any other comments about the
-implementation?
-
-Regards,
-Marco
+Ping
