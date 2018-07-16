@@ -1,62 +1,187 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 02/14] dmaengine: dma-jz4780: Separate chan/ctrl registers
-Date: Mon, 16 Jul 2018 15:28:52 -0600
-Message-ID: <20180716212852.GA6323@rob-hp-laptop>
-References: <20180703123214.23090-1-paul@crapouillou.net>
- <20180703123214.23090-3-paul@crapouillou.net>
- <20180709170359.GI22377@vkoul-mobl>
- <1531237019.17118.1@crapouillou.net>
- <20180711121655.GS3219@vkoul-mobl>
- <20180711232715.djxrbgmcski5xtjp@pburton-laptop>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v6 3/4] rtc: ds1307: add offset sysfs for mt41txx chips.
+Date: Mon, 16 Jul 2018 23:33:02 +0200
+Message-ID: <20180716213302.GA2751@piout.net>
+References: <20180516210842.5874-1-giulio.benetti@micronovasrl.com>
+ <20180516210842.5874-3-giulio.benetti@micronovasrl.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180711232715.djxrbgmcski5xtjp@pburton-laptop>
+In-Reply-To: <20180516210842.5874-3-giulio.benetti@micronovasrl.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Burton <paul.burton@mips.com>
-Cc: Vinod <vkoul@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Paul Cercueil <paul@crapouillou.net>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+To: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Cc: a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 11, 2018 at 04:27:15PM -0700, Paul Burton wrote:
-> Hi Vinod,
-> 
-> On Wed, Jul 11, 2018 at 05:46:55PM +0530, Vinod wrote:
-> > > > >  -	jzdma->base = devm_ioremap_resource(dev, res);
-> > > > >  -	if (IS_ERR(jzdma->base))
-> > > > >  -		return PTR_ERR(jzdma->base);
-> > > > >  +	jzdma->chn_base = devm_ioremap_resource(dev, res);
-> > > > >  +	if (IS_ERR(jzdma->chn_base))
-> > > > >  +		return PTR_ERR(jzdma->chn_base);
-> > > > >  +
-> > > > >  +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > > > >  +	if (!res) {
-> > > > >  +		dev_err(dev, "failed to get I/O memory\n");
-> > > > >  +		return -EINVAL;
-> > > > >  +	}
-> > > > 
-> > > > okay and this breaks if you happen to get probed on older DT. I think DT
-> > > > is treated as ABI so you need to continue support older method while
-> > > > finding if DT has split resources
-> > > 
-> > > See my response to PrasannaKumar. All the Ingenic-based boards do compile
-> > > the devicetree within the kernel, so I think it's still fine to add breaking
-> > > changes. I'll wait on @Rob to give his point of view on this, though.
-> > > 
-> > > (It's not something hard to change, but I'd like to know what's the policy
-> > > in that case. I have other DT-breaking patches to submit)
-> > 
-> > The policy is that DT is an ABI and should not break :)
-> 
-> I think in general that's a good policy to have for compatibility, but
-> if it's known for certain that the DT for all users of a driver is
-> always built into the kernel then I don't see why we shouldn't feel free
-> to change a binding. I agree with Paul that it'd be interesting to hear
-> the DT binding maintainers take on this.
+Hi,
 
-If the platform maintainers (and their users) don't care, then I don't 
-have an issue with the change. It should still be an exception and not 
-just any change goes. The commit message should still highlight that 
-compatibility is being broken and why.
+On 16/05/2018 23:08:41+0200, Giulio Benetti wrote:
+> m41txx chips can hold a calibration value to get correct clock bias.
+> 
+> Add offset handling (ranging between -63ppm and 126ppm) via sysfs.
+> 
+> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+> ---
+>  drivers/rtc/rtc-ds1307.c | 81 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 81 insertions(+)
+> 
+> diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+> index 0ab0c166da83..2797d01bfa1d 100644
+> --- a/drivers/rtc/rtc-ds1307.c
+> +++ b/drivers/rtc/rtc-ds1307.c
+> @@ -114,6 +114,20 @@ enum ds_type {
+>  #	define RX8025_BIT_VDET		0x40
+>  #	define RX8025_BIT_XST		0x20
+>  
+> +#define M41TXX_REG_CONTROL	0x07
+> +#	define M41TXX_BIT_OUT		0x80
+> +#	define M41TXX_BIT_FT		0x40
+> +#	define M41TXX_BIT_CALIB_SIGN	0x20
 
-Rob
+Please use BIT()
+
+> +#	define M41TXX_M_CALIBRATION	0x1f
+> +
+> +/* negative offset step is -2.034ppm */
+> +#define M41TXX_NEG_OFFSET_STEP_PPM	2034
+
+This should be named M41TXX_NEG_OFFSET_STEP_PPB
+
+> +/* positive offset step is +4.068ppm */
+> +#define M41TXX_POS_OFFSET_STEP_PPM	4068
+
+and M41TXX_POS_OFFSET_STEP_PPB
+
+> +/* Min and max values supported with 'offset' interface by M41TXX */
+> +#define M41TXX_MIN_OFFSET	(((-31) * M41TXX_NEG_OFFSET_STEP_PPM) / 1000)
+> +#define M41TXX_MAX_OFFSET	(((31) * M41TXX_POS_OFFSET_STEP_PPM) / 1000)
+> +
+
+I don't see the point of dividing by 1000 here, it is definitively
+better to keep everything in PPB.
+
+>  struct ds1307 {
+>  	enum ds_type		type;
+>  	unsigned long		flags;
+> @@ -146,6 +160,9 @@ struct chip_desc {
+>  
+>  static int ds1307_get_time(struct device *dev, struct rtc_time *t);
+>  static int ds1307_set_time(struct device *dev, struct rtc_time *t);
+> +static int ds1337_read_alarm(struct device *dev, struct rtc_wkalrm *t);
+> +static int ds1337_set_alarm(struct device *dev, struct rtc_wkalrm *t);
+> +static int ds1307_alarm_irq_enable(struct device *dev, unsigned int enabled);
+>  static u8 do_trickle_setup_ds1339(struct ds1307 *, u32 ohms, bool diode);
+>  static irqreturn_t rx8130_irq(int irq, void *dev_id);
+>  static int rx8130_read_alarm(struct device *dev, struct rtc_wkalrm *t);
+> @@ -155,6 +172,8 @@ static irqreturn_t mcp794xx_irq(int irq, void *dev_id);
+>  static int mcp794xx_read_alarm(struct device *dev, struct rtc_wkalrm *t);
+>  static int mcp794xx_set_alarm(struct device *dev, struct rtc_wkalrm *t);
+>  static int mcp794xx_alarm_irq_enable(struct device *dev, unsigned int enabled);
+> +static int m41txx_rtc_read_offset(struct device *dev, long *offset);
+> +static int m41txx_rtc_set_offset(struct device *dev, long offset);
+>  
+>  static const struct rtc_class_ops rx8130_rtc_ops = {
+>  	.read_time      = ds1307_get_time,
+> @@ -172,6 +191,16 @@ static const struct rtc_class_ops mcp794xx_rtc_ops = {
+>  	.alarm_irq_enable = mcp794xx_alarm_irq_enable,
+>  };
+>  
+> +static const struct rtc_class_ops m41txx_rtc_ops = {
+> +	.read_time      = ds1307_get_time,
+> +	.set_time       = ds1307_set_time,
+> +	.read_alarm	= ds1337_read_alarm,
+> +	.set_alarm	= ds1337_set_alarm,
+> +	.alarm_irq_enable = ds1307_alarm_irq_enable,
+> +	.read_offset	= m41txx_rtc_read_offset,
+> +	.set_offset	= m41txx_rtc_set_offset,
+> +};
+> +
+>  static const struct chip_desc chips[last_ds_type] = {
+>  	[ds_1307] = {
+>  		.nvram_offset	= 8,
+> @@ -227,10 +256,17 @@ static const struct chip_desc chips[last_ds_type] = {
+>  		.irq_handler = rx8130_irq,
+>  		.rtc_ops = &rx8130_rtc_ops,
+>  	},
+> +	[m41t0] = {
+> +		.rtc_ops	= &m41txx_rtc_ops,
+> +	},
+> +	[m41t00] = {
+> +		.rtc_ops	= &m41txx_rtc_ops,
+> +	},
+>  	[m41t11] = {
+>  		/* this is battery backed SRAM */
+>  		.nvram_offset	= 8,
+>  		.nvram_size	= 56,
+> +		.rtc_ops	= &m41txx_rtc_ops,
+>  	},
+>  	[mcp794xx] = {
+>  		.alarm		= 1,
+> @@ -972,6 +1008,51 @@ static int mcp794xx_alarm_irq_enable(struct device *dev, unsigned int enabled)
+>  				  enabled ? MCP794XX_BIT_ALM0_EN : 0);
+>  }
+>  
+> +static int m41txx_rtc_read_offset(struct device *dev, long *offset)
+> +{
+> +	struct ds1307 *ds1307 = dev_get_drvdata(dev);
+> +	unsigned int ctrl_reg;
+> +	u8 val;
+> +
+> +	regmap_read(ds1307->regmap, M41TXX_REG_CONTROL, &ctrl_reg);
+> +
+> +	val = ctrl_reg & M41TXX_M_CALIBRATION;
+> +
+> +	/* check if positive */
+> +	if (ctrl_reg & M41TXX_BIT_CALIB_SIGN)
+> +		*offset = (val * M41TXX_POS_OFFSET_STEP_PPM);
+> +	else
+> +		*offset = -(val * M41TXX_NEG_OFFSET_STEP_PPM);
+> +
+> +	*offset = DIV_ROUND_CLOSEST(*offset, 1000);
+> +
+
+This is definitively not necessary, the whole subsystem handles PPB, not
+PPM.
+
+> +	return 0;
+> +}
+> +
+> +static int m41txx_rtc_set_offset(struct device *dev, long offset)
+> +{
+> +	struct ds1307 *ds1307 = dev_get_drvdata(dev);
+> +	unsigned int ctrl_reg;
+> +
+> +	if ((offset < M41TXX_MIN_OFFSET) || (offset > M41TXX_MAX_OFFSET))
+> +		return -ERANGE;
+> +
+> +	offset *= 1000;
+> +
+
+ditto
+
+> +	if (offset >= 0) {
+> +		ctrl_reg = DIV_ROUND_CLOSEST(offset,
+> +					     M41TXX_POS_OFFSET_STEP_PPM);
+> +		ctrl_reg |= M41TXX_BIT_CALIB_SIGN;
+> +	} else {
+> +		ctrl_reg = DIV_ROUND_CLOSEST(abs(offset),
+> +					     M41TXX_NEG_OFFSET_STEP_PPM);
+> +	}
+> +
+> +	return regmap_update_bits(ds1307->regmap, M41TXX_REG_CONTROL,
+> +				  M41TXX_M_CALIBRATION | M41TXX_BIT_CALIB_SIGN,
+> +				  ctrl_reg);
+> +}
+> +
+>  /*----------------------------------------------------------------------*/
+>  
+>  static int ds1307_nvram_read(void *priv, unsigned int offset, void *val,
+> -- 
+> 2.17.0
+> 
+
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
