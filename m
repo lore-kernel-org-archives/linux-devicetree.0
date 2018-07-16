@@ -1,58 +1,148 @@
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 10/14] dt-bindings/interrupt-controller: update
- Marvell ICU bindings
-Date: Mon, 16 Jul 2018 21:38:19 +0200
-Message-ID: <20180716213819.48e13e4d@windsurf>
-References: <20180705124011.7661-1-miquel.raynal@bootlin.com>
- <20180705124011.7661-11-miquel.raynal@bootlin.com>
- <20180716152734.GA4581@rob-hp-laptop>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v5 07/12] PM / devfreq: export devfreq_class
+Date: Mon, 16 Jul 2018 12:41:14 -0700
+Message-ID: <20180716194114.GA129942@google.com>
+References: <20180703234705.227473-1-mka@chromium.org>
+ <CGME20180703234837epcas5p1da751e0394c16816b95ac1956bf6de20@epcas5p1.samsung.com>
+ <20180703234705.227473-8-mka@chromium.org>
+ <5B3C5B78.6020401@samsung.com>
+ <20180706180923.GH129942@google.com>
+ <41164a91-b271-5f3b-b461-21ff5997cc84@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180716152734.GA4581@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <41164a91-b271-5f3b-b461-21ff5997cc84@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sCgpPbiBNb24sIDE2IEp1bCAyMDE4IDA5OjI3OjM0IC0wNjAwLCBSb2IgSGVycmluZyB3
-cm90ZToKCj4gPiArUmVxdWlyZWQgcHJvcGVydGllcyBmb3IgdGhlIGljdV9uc3IvaWN1X3NlaSBz
-dWJub2RlczoKPiA+ICsKPiA+ICstIGNvbXBhdGlibGU6IFNob3VsZCBiZSAibWFydmVsbCxjcDEx
-MC1pY3UtbnNyIiBvciAibWFydmVsbCxjcDExMC1pY3Utc2VpIi4KPiA+ICsgIAo+IAo+IEkgcmFp
-c2VkIHRoaXMgYmVmb3JlIGFuZCBzdGlsbCBkb24ndCB1bmRlcnN0YW5kLiBZb3UgaGFkIDQgdHlw
-ZXMgYmVmb3JlIAo+IGFuZCBub3cgeW91IG9ubHkgaGF2ZSAyIHR5cGVzPyBIb3cgZG8geW91IGhh
-bmRsZSBTUiBhbmQgUkVJIHdpdGggdGhlIG5ldyAKPiBiaW5kaW5nPwoKQXMgSSByZXBsaWVkIHRv
-IGEgZGlmZmVyZW50IGUtbWFpbCwgdGhlIGN1cnJlbnQgYmluZGluZyBwcmV0ZW5kZWQgdG8Kc3Vw
-cG9ydCBTUiwgU0VJIGFuZCBSRUksIGJ1dCBpdCBkZWZpbml0ZWx5IGNvdWxkIG5vdC4KClRoZSBJ
-Q1UgY29sbGVjdHMgd2lyZWQgaW50ZXJydXB0cyBmcm9tIHRoZSBDUCwgYW5kIGZvcndhcmRzIHRo
-ZW0gdG8gdGhlCkFQIGFzIE1TSXMuIEFuZCBjb250cmFyeSB0byB3aGF0IHdlIHRob3VnaHQgd2hl
-biBkZXNpZ25pbmcgdGhlIGN1cnJlbnQKYmluZGluZywgdGhlIHRhcmdldCBvZiB0aGUgTVNJcyBp
-cyBkaWZmZXJlbnQgZGVwZW5kaW5nIG9uIHRoZSB0eXBlIG9mCmludGVycnVwdC4gTlNScyBnbyB0
-byB0aGUgR0lDUCBjb250cm9sbGVyIGluIHRoZSBBUCwgU0VJcyBnbyB0byBhCnNwZWNpYWwgU0VJ
-IGNvbnRyb2xsZXIgaW4gdGhlIEFQLCBSRUlzIGdvIHRvIGEgc3BlY2lhbCBSRUkgY29udHJvbGxl
-cgppbiB0aGUgQVAuCgpJbiBvcmRlciB0byByZXByZXNlbnQgdGhhdCBpbiB0aGUgRGV2aWNlIFRy
-ZWUsIHlvdSBuZWVkIHRvIGhhdmUgYQpkaWZmZXJlbnQgbXNpLXBhcmVudCBwcm9wZXJ0eSBmb3Ig
-ZWFjaCBvZiBOU1IsIFNFSSBhbmQgUkVJLiBUaGlzIGlzIG5vdApzb21ldGhpbmcgdGhhdCB0aGUg
-Y3VycmVudCBicm9rZW4gYmluZGluZyBhbGxvd3MgdG8gZXhwcmVzcywgYW5kIGl0J3MKdGhlIHJl
-YXNvbiB3aHkgd2UncmUgbWlncmF0aW5nIHRvIHRoaXMgbmV3IGJpbmRpbmcuCgpTbyBldmVuIGlm
-IHRoZSBjdXJyZW50IGJpbmRpbmcgZG9jdW1lbnRzIHRoYXQgaXQgc3VwcG9ydHMgTlNSLCBTRUks
-IFJFSQphbmQgU1IsIGl0IGRlZmluaXRlbHkgY2Fubm90IHN1cHBvcnQgYW55dGhpbmcgYnV0IE5T
-Ui4gVGhlcmVmb3JlLCB0aGUKaW50cm9kdWN0aW9uIG9mIHRoZSBuZXcgYmluZGluZyBieSBNaXF1
-w6hsIGRvZXMgbm90IGludHJvZHVjZSBhbnkKcmVncmVzc2lvbiBpbiBmdW5jdGlvbmFsaXR5OiBp
-dCBzaW1wbHkgYWxsb3dzIHRvIHJlYWxseSBzdXBwb3J0IFNFSXMuCgpEb2VzIHRoaXMgZXhwbGFu
-YXRpb24gY2xhcmlmeSB0aGUgc2l0dWF0aW9uLCBhbmQgd2hhdCB3ZSdyZSB0cnlpbmcgdG8KYWNo
-aWV2ZSA/CgpUaGFua3MhCgpUaG9tYXMKLS0gClRob21hcyBQZXRhenpvbmksIENUTywgQm9vdGxp
-biAoZm9ybWVybHkgRnJlZSBFbGVjdHJvbnMpCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5n
-aW5lZXJpbmcKaHR0cHM6Ly9ib290bGluLmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi Chanwoo,
+
+On Thu, Jul 12, 2018 at 06:08:36PM +0900, Chanwoo Choi wrote:
+> Hi Matthias,
+> 
+> On 2018년 07월 07일 03:09, Matthias Kaehlcke wrote:
+> > Hi,
+> > 
+> > On Wed, Jul 04, 2018 at 02:30:32PM +0900, Chanwoo Choi wrote:
+> > 
+> >> I didn't see any framework which exporting the class instance.
+> >> It is very dangerous. Unknown device drivers is able to reset
+> >> the 'devfreq_class' instance. I can't agree this approach.
+> > 
+> > While I agree that it is potential dangerous it is actually a common
+> > practice to export the class:
+> > 
+> 
+> I tried to find the real usage of exported class instance
+> and I add the comment for each class instance. Almost exported class
+> instance are used in the their own director or some exported class
+> like rio_mport_class/switchtec_class are created from specific device driver
+> instead of subsystem.
+> 
+> Only following two cases are used on outside of subsystem directory.
+> devtmpfs.c and alarmtimer.c are core feature of linux kernel.
+> 
+> 	drivers/base/devtmpfs.c uses 'block_class'.
+> 	kernel/time/alarmtimer.c uses 'rtc_class'.
+> 
+> I cannot yet agree this approach due to only block_class and rtc_class.
+
+I thought your main concern was that the class is exported, which is
+what several other subsystems do. That the class isn't used outside of
+the subsystem directory most likely means that there is no need for
+it, rather than that it shouldn't be done at all (depending on the
+type of use of course).
+
+In any case not exporting the class object provides a limited
+protection against potential abuse of the class at best. To use the
+class API all that is needed is a 'struct device' of a devfreq device,
+which has a pointer to the class object (dev->class).
+
+Theoretically I could register a fake devfreq device to obtain access
+to the class object, though that doesn't seem a very neat approach ;-)
+
+> You added the following comment why devfreq_class instance is necessary.
+> Actullay, I don't know the best solution right now. But, all device drivers
+> can be added or removed if driver uses the module type. It is not a problem
+> for only devfreq instance.
+
+Certainly it's not a problem limited to devfreq devices. In many other
+cases bus notifiers can be used, but since devfreq devices areen't
+tied to a specific bus this is not an option here.
+
+If you really don't want to export the class we could add wrappers
+for (un)registering a class interface:
+
+int devfreq_class_interface_register(struct class_interface *)
+void devfreq_class_interface_unregister(struct class_interface *)
+
+The wrappers would have to assign ci->class since the throttler
+can't see the class object.
+
+Or add notifiers for device addition/removal, though the throttler
+relies on the behavior of the class_interface which also notifies
+about devices added before registration. This might not be what other
+potential users of the notifiers expect.
+
+Thanks
+
+Matthias
+
+> /*
+> +	 * devfreq devices can be added and removed at runtime, hence they
+> +	 * must also be handled dynamically. The class_interface notifies us
+> +	 * whenever a device is added or removed. When the interface is
+> +	 * registered ci->add_dev() is called for all existing devfreq
+> +	 * devices.
+> */
+> 
+> 
+> > grep "extern struct class " include/linux/ -R
+> > include/linux/rio.h:extern struct class rio_mport_class;
+> rio_mport_class is created on drivers/rapidio/rio-drivers.c.
+> It means that just device driver create the 'rio_mport_class' class
+> instead of any linux kernel subsystem.
+> 
+> > include/linux/tty.h:extern struct class *tty_class;
+> tty_class is not used on outside of drivers/tty
+> 
+> > include/linux/fb.h:extern struct class *fb_class;
+> fb_class is not used on outside of drivers/video/fbdev
+> 
+> > include/linux/ide.h:extern struct class *ide_port_class;
+> ide_port_class is not used on outside of drivers/ide.
+> 
+> > include/linux/device.h:extern struct class * __must_check __class_create(struct module *owner,
+> 
+> > include/linux/devfreq.h:extern struct class *devfreq_class;
+> not yet
+> 
+> > include/linux/switchtec.h:extern struct class *switchtec_class;
+> switchtec_class is created on drivers/pci/switch/switchtec.c
+> and then switchtec_class is only used on drivers/ntb/hw/mscc/ntb_hw_switchtec.c.
+> It is not subsystem. Just switchtec.c device driver makes the their own class.
+> 
+> > include/linux/input.h:extern struct class input_class;
+> 	input_class is not used on outside of drivers/input.
+> 
+> > include/linux/power_supply.h:extern struct class *power_supply_class;
+> 	power_supply_class is not used on outside of drivers/power/supply.
+> 
+> 
+> > include/linux/genhd.h:extern struct class block_class;
+> 	drivers/base/devtmpfs.c uses 'block_class'.
+> 
+> > include/linux/rtc.h:extern struct class *rtc_class;
+> 	kernel/time/alarmtimer.c uses 'rtc_class'.
+> 
+> > 
+> > struct class_interface and class_interface_register() would be
+> > pointless without exported classes.
+> > 
+> > My understanding is that the kernel is often lax on encapsulation and
+> > exposes private/delicate data pragmatically within the kernel when
+> > needed because "the kernel trusts itself".
