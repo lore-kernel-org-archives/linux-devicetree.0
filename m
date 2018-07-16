@@ -1,126 +1,136 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [SPAM]Re: [PATCH v5 4/7] Bluetooth: Add new quirk for
- non-persistent setup settings
-Date: Tue, 17 Jul 2018 00:15:38 +0800
-Message-ID: <1531757738.8953.17.camel@mtkswgap22>
-References: <cover.1531150733.git.sean.wang@mediatek.com>
- <4b188c8a508340598dda233f6d49a16c9ac8784e.1531150733.git.sean.wang@mediatek.com>
- <2825B722-E75C-4A3C-8110-879205E46C0E@holtmann.org>
- <1531638169.3955.5.camel@mtkswgap22>
- <6571C864-B2EC-4806-BC5D-F531792737F6@holtmann.org>
- <1531757114.8953.12.camel@mtkswgap22>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 19/21] dt-bindings: msm/disp: Add
+ bindings for Snapdragon 845 DPU
+Date: Mon, 16 Jul 2018 10:21:45 -0600
+Message-ID: <20180716162145.GA23985@rob-hp-laptop>
+References: <20180709173200.238457-20-seanpaul@chromium.org>
+ <20180712210849.146638-1-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1531757114.8953.12.camel@mtkswgap22>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Johan Hedberg <johan.hedberg@gmail.com>, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180712210849.146638-1-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dovizu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-07-17 at 00:05 +0800, Sean Wang wrote:
-> On Mon, 2018-07-16 at 14:56 +0200, Marcel Holtmann wrote:
-> > Hi Sean,
-> > 
-> > >>> Add a new quirk HCI_QUIRK_NON_PERSISTENT_SETUP allowing that a quirk that
-> > >>> runs setup() after every open() and not just after the first open().
-> > >>> 
-> > >>> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> > >>> ---
-> > >>> include/net/bluetooth/hci.h | 9 +++++++++
-> > >>> net/bluetooth/hci_core.c    | 3 ++-
-> > >>> 2 files changed, 11 insertions(+), 1 deletion(-)
-> > >>> 
-> > >>> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-> > >>> index 73e48be..d3ec5b2a8 100644
-> > >>> --- a/include/net/bluetooth/hci.h
-> > >>> +++ b/include/net/bluetooth/hci.h
-> > >>> @@ -183,6 +183,15 @@ enum {
-> > >>> 	 * during the hdev->setup vendor callback.
-> > >>> 	 */
-> > >>> 	HCI_QUIRK_NON_PERSISTENT_DIAG,
-> > >>> +
-> > >>> +	/* When this quirk is set, setup() would be run after every
-> > >>> +	 * open() and not just after the first open().
-> > >>> +	 *
-> > >>> +	 * This quirk can be set before hci_register_dev is called or
-> > >>> +	 * during the hdev->setup vendor callback.
-> > >>> +	 *
-> > >>> +	 */
-> > >>> +	HCI_QUIRK_NON_PERSISTENT_SETUP,
-> > >>> };
-> > >>> 
-> > >>> /* HCI device flags */
-> > >>> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> > >>> index f5c21004..0111280 100644
-> > >>> --- a/net/bluetooth/hci_core.c
-> > >>> +++ b/net/bluetooth/hci_core.c
-> > >>> @@ -1396,7 +1396,8 @@ static int hci_dev_do_open(struct hci_dev *hdev)
-> > >>> 	atomic_set(&hdev->cmd_cnt, 1);
-> > >>> 	set_bit(HCI_INIT, &hdev->flags);
-> > >>> 
-> > >>> -	if (hci_dev_test_flag(hdev, HCI_SETUP)) {
-> > >>> +	if (hci_dev_test_flag(hdev, HCI_SETUP) ||
-> > >>> +	    test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks)) {
-> > >>> 		hci_sock_dev_event(hdev, HCI_DEV_SETUP);
-> > >> 
-> > >> can you include the extract of btmon on how the HCI_DEV_SETUP event shows up in the traces? I remember that I asked about something like that.
-> > >> 
-> > >> Regards
-> > >> 
-> > >> Marcel
-> > >> 
-> > > 
-> > > No, I cannot see any event about HCI_DEV_SETUP in btmon trace, the trace I posted as below is doing some rounds of power off and then on
-> > 
-> > it will result in this:
-> > 
-> >         case HCI_DEV_SETUP:
-> >                 if (hdev->manufacturer == 0xffff)
-> >                         return NULL;
-> >                                                                                  
-> >         case HCI_DEV_UP:
-> >                 skb = bt_skb_alloc(HCI_MON_INDEX_INFO_SIZE, GFP_ATOMIC);
-> > 
-> > So we will see extra index info events, but I assume that is just fine this we also see them on DEV_UP. They also do not hurt as long as not magically the manufacturer information changes.
-> > 
-> > I do wonder though if this quirk is set, then hdev->manufacturer needs to be reset and allow hdev->setup() to reset it. This goes with a log of other information as well. Maybe just a look if there are no races here.
-> > 
-> > Regards
-> > 
-> > Marcel
-> > 
-> 
-> I didn't set a value to hdev->manufacture.
-> 
-> Should I set it in hdev->setup() ? MediaTek is 0x46 according to [1].
-
-sorry, something needs be corrected.
-
-what I means is that should I set hdev->manufacture as 0x46 at probe ? 
-
-> [1]
-> https://www.bluetooth.com/specifications/assigned-numbers/company-identifiers
-> 
-> 
-> > 
-> > _______________________________________________
-> > Linux-mediatek mailing list
-> > Linux-mediatek@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
-> 
-> 
-> 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+T24gVGh1LCBKdWwgMTIsIDIwMTggYXQgMDU6MDg6MzdQTSAtMDQwMCwgU2VhbiBQYXVsIHdyb3Rl
+Ogo+IEZyb206IEpleWt1bWFyIFNhbmthcmFuIDxqc2Fua2FAY29kZWF1cm9yYS5vcmc+Cj4gCj4g
+QWRkcyBiaW5kaW5ncyBmb3IgU25hcGRyYWdvbiA4NDUgZGlzcGxheSBwcm9jZXNzaW5nIHVuaXQK
+PiAKPiBDaGFuZ2VzIGluIHYyOgo+ICAtIFVzZSBTb0Mgc3BlY2lmaWMgY29tcGF0aWJsZXMgZm9y
+IG1kc3MgYW5kIGRwdQo+ICAtIFVzZSBhc3NpZ25lZC1jbG9ja3MgdG8gc2V0IGluaXRpYWwgY2xv
+Y2sgZnJlcXVlbmN5Cj4gCj4gU2lnbmVkLW9mZi1ieTogSmV5a3VtYXIgU2Fua2FyYW4gPGpzYW5r
+YUBjb2RlYXVyb3JhLm9yZz4KPiBTaWduZWQtb2ZmLWJ5OiBSYWplc2ggWWFkYXYgPHJ5YWRhdkBj
+b2RlYXVyb3JhLm9yZz4KPiBTaWduZWQtb2ZmLWJ5OiBTZWFuIFBhdWwgPHNlYW5wYXVsQGNocm9t
+aXVtLm9yZz4KPiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZHB1
+LnR4dCAgIHwgMTM2ICsrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMTM2IGlu
+c2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kcHUudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kcHUudHh0IGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RwdS50eHQKPiBuZXcgZmlsZSBt
+b2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uYTk5ODAyODg5NmJhCj4gLS0tIC9kZXYv
+bnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21z
+bS9kcHUudHh0Cj4gQEAgLTAsMCArMSwxMzYgQEAKPiArUXVhbGNvbW0gVGVjaG5vbG9naWVzLCBJ
+bmMuIERQVSBLTVMKPiArCj4gK0Rlc2NyaXB0aW9uOgo+ICsKPiArRGV2aWNlIHRyZWUgYmluZGlu
+Z3MgZm9yIE1TTSBNb2JpbGUgRGlzcGxheSBTdWJzeXRlbShNRFNTKSB0aGF0IGVuY2Fwc3VsYXRl
+cwo+ICtzdWItYmxvY2tzIGxpa2UgRFBVIGRpc3BsYXkgY29udHJvbGxlciwgRFNJIGFuZCBEUCBp
+bnRlcmZhY2VzIGV0Yy4KPiArVGhlIERQVSBkaXNwbGF5IGNvbnRyb2xsZXIgaXMgZm91bmQgaW4g
+U0RNODQ1IFNvQy4KPiArCj4gK01EU1M6Cj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29t
+cGF0aWJsZTogInFjb20sc2RtODQ1LW1kc3MiCj4gKy0gcmVnOiBwaHlzaWNhbCBiYXNlIGFkZHJl
+c3MgYW5kIGxlbmd0aCBvZiBjb250b2xsZXIncyByZWdpc3RlcnMuCj4gKy0gcmVnLW5hbWVzOiBy
+ZWdpc3RlciByZWdpb24gbmFtZXMuIFRoZSBmb2xsb3dpbmcgcmVnaW9uIGlzIHJlcXVpcmVkOgo+
+ICsgICogIm1kc3NfcGh5cyIKCnBoeXMgYXMgaW4gcGh5c2ljYWwgYWRkcmVzcz8gSWYgc28sIHRo
+YXQncyBhbHdheXMgdGhlIGNhc2UuICotbmFtZXMgaXMgCnBvaW50bGVzcyB3aGVuIHRoZXJlIGlz
+IG9ubHkgb25lIGFueXdheXMuCgo+ICstIHBvd2VyLWRvbWFpbnM6IGEgcG93ZXIgZG9tYWluIGNv
+bnN1bWVyIHNwZWNpZmllciBhY2NvcmRpbmcgdG8KPiArICBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvcG93ZXIvcG93ZXJfZG9tYWluLnR4dAo+ICstIGNsb2NrczogbGlzdCBvZiBw
+aGFuZGxlcyBmb3IgY2xvY2sgZGV2aWNlIG5vZGVzIG5lZWRlZCBieSB0aGUgZGV2aWNlLgo+ICst
+IGNsb2NrLW5hbWVzOiBkZXZpY2UgY2xvY2sgbmFtZXMsIG11c3QgYmUgaW4gc2FtZSBvcmRlciBh
+cyBjbG9ja3MgcHJvcGVydHkuCj4gKyAgVGhlIGZvbGxvd2luZyBjbG9ja3MgYXJlIHJlcXVpcmVk
+Ogo+ICsgICogImlmYWNlIgo+ICsgICogImJ1cyIKPiArICAqICJjb3JlIgo+ICstIGludGVycnVw
+dHM6IGludGVycnVwdCBzaWduYWwgZnJvbSBNRFNTLgo+ICstIGludGVycnVwdC1jb250cm9sbGVy
+OiBpZGVudGlmaWVzIHRoZSBub2RlIGFzIGFuIGludGVycnVwdCBjb250cm9sbGVyLgo+ICstICNp
+bnRlcnJ1cHQtY2VsbHM6IHNwZWNpZmllcyB0aGUgbnVtYmVyIG9mIGNlbGxzIG5lZWRlZCB0byBl
+bmNvZGUgYW4gaW50ZXJydXB0Cj4gKyAgc291cmNlLCBzaG91bGQgYmUgMS4KPiArLSBpb21tdXM6
+IHBoYW5kbGUgb2YgaW9tbXUgZGV2aWNlIG5vZGUuCj4gKy0gI2FkZHJlc3MtY2VsbHM6IG51bWJl
+ciBvZiBhZGRyZXNzIGNlbGxzIGZvciB0aGUgTURTUyBjaGlsZHJlbi4gU2hvdWxkIGJlIDEuCj4g
+Ky0gI3NpemUtY2VsbHM6IFNob3VsZCBiZSAxLgo+ICstIHJhbmdlczogcGFyZW50IGJ1cyBhZGRy
+ZXNzIHNwYWNlIGlzIHRoZSBzYW1lIGFzIHRoZSBjaGlsZCBidXMgYWRkcmVzcyBzcGFjZS4KPiAr
+Cj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gYXNzaWduZWQtY2xvY2tzOiBsaXN0IG9mIHBo
+YW5kbGVzIGZvciBjbG9jayBkZXZpY2Ugbm9kZXMgbmVlZGluZyByYXRlCgpJdCdzIGEgbGlzdCBv
+ZiBjbG9jayBzcGVjaWZpZXJzIChwaGFuZGxlIGFuZCBpZCksIG5vdCBkZXZpY2Ugbm9kZXMuCgo+
+ICsJCSAgIGFzc2lnbm1lbnQKPiArLSBhc3NpZ25lZC1jbG9jay1yYXRlczogbGlzdCBvZiBjbG9j
+ayBmcmVxdWVuY2llcyBzb3J0ZWQgaW4gdGhlIHNhbWUgb3JkZXIgYXMKPiArICB0aGUgYXNzaWdu
+ZWQtY2xvY2tzIHByb3BlcnR5Lgo+ICsKPiArTURQOgo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+
+ICstIGNvbXBhdGlibGU6ICJxY29tLHNkbTg0NS1kcHUiCj4gKy0gcmVnOiBwaHlzaWNhbCBiYXNl
+IGFkZHJlc3MgYW5kIGxlbmd0aCBvZiBjb250cm9sbGVyJ3MgcmVnaXN0ZXJzLgo+ICstIHJlZy1u
+YW1lcyA6IHJlZ2lzdGVyIHJlZ2lvbiBuYW1lcy4gVGhlIGZvbGxvd2luZyByZWdpb24gaXMgcmVx
+dWlyZWQ6Cj4gKyAgKiAibWRwX3BoeXMiCj4gKyAgKiAidmJpZl9waHlzIgoKU2FtZSBjb21tZW50
+IG9uICJfcGh5cyIgaGVyZS4KCj4gKy0gY2xvY2tzOiBsaXN0IG9mIHBoYW5kbGVzIGZvciBjbG9j
+ayBkZXZpY2Ugbm9kZXMgbmVlZGVkIGJ5IHRoZSBkZXZpY2UuCj4gKy0gY2xvY2stbmFtZXM6IGRl
+dmljZSBjbG9jayBuYW1lcywgbXVzdCBiZSBpbiBzYW1lIG9yZGVyIGFzIGNsb2NrcyBwcm9wZXJ0
+eS4KPiArICBUaGUgZm9sbG93aW5nIGNsb2NrcyBhcmUgcmVxdWlyZWQuCj4gKyAgKiAiYnVzIgo+
+ICsgICogImlmYWNlIgo+ICsgICogImNvcmUiCj4gKyAgKiAidnN5bmMiCj4gKy0gaW50ZXJydXB0
+LXBhcmVudDogcGhhbmRsZSB0byBNRFNTIGJsb2NrLgoKQWN0dWFsbHksIHlvdSBkb24ndCBuZWVk
+IHRoaXMgaWYgYSBwYXJlbnQgbm9kZSBjb250YWlucyAKImludGVycnVwdC1jb250cm9sbGVyIiBw
+cm9wZXJ0eS4KCj4gKy0gaW50ZXJydXB0czogaW50ZXJydXB0IGxpbmUgZnJvbSBEUFUgdG8gTURT
+Uy4KPiArLSBwb3J0czogY29udGFpbnMgdGhlIGxpc3Qgb2Ygb3V0cHV0IHBvcnRzIGZyb20gRFBV
+IGRldmljZS4gVGhlc2UgcG9ydHMgY29ubmVjdAo+ICsgIHRvIGludGVyZmFjZXMgdGhhdCBhcmUg
+ZXh0ZXJuYWwgdG8gdGhlIERQVSBoYXJkd2FyZSwgc3VjaCBhcyBEU0ksIERQIGV0Yy4KPiArCj4g
+KyAgRWFjaCBvdXRwdXQgcG9ydCBjb250YWlucyBhbiBlbmRwb2ludCB0aGF0IGRlc2NyaWJlcyBo
+b3cgaXQgaXMgY29ubmVjdGVkIHRvIGFuCj4gKyAgZXh0ZXJuYWwgaW50ZXJmYWNlLiBUaGVzZSBh
+cmUgZGVzY3JpYmVkIGJ5IHRoZSBzdGFuZGFyZCBwcm9wZXJ0aWVzIGRvY3VtZW50ZWQKPiArICBo
+ZXJlOgo+ICsJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dAo+ICsJ
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMu
+dHh0Cj4gKwo+ICsJUG9ydCAwIC0+IERQVV9JTlRGMSAoRFNJMSkKPiArCVBvcnQgMSAtPiBEUFVf
+SU5URjIgKERTSTIpCj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICstIGFzc2lnbmVkLWNs
+b2NrczogbGlzdCBvZiBwaGFuZGxlcyBmb3IgY2xvY2sgZGV2aWNlIG5vZGVzIG5lZWRpbmcgcmF0
+ZQo+ICsJCSAgIGFzc2lnbm1lbnQKPiArLSBhc3NpZ25lZC1jbG9jay1yYXRlczogbGlzdCBvZiBj
+bG9jayBmcmVxdWVuY2llcyBzb3J0ZWQgaW4gdGhlIHNhbWUgb3JkZXIgYXMKPiArICB0aGUgYXNz
+aWduZWQtY2xvY2tzIHByb3BlcnR5Lgo+ICsKPiArRXhhbXBsZToKPiArCj4gKwltZHNzOiBtZHNz
+QGFlMDAwMDAgewo+ICsJCWNvbXBhdGlibGUgPSAicWNvbSxzZG04NDUtbWRzcyI7Cj4gKwkJcmVn
+ID0gPDB4YWUwMDAwMCAweDEwMDA+Owo+ICsJCXJlZy1uYW1lcyA9ICJtZHNzX3BoeXMiOwo+ICsK
+PiArCQlwb3dlci1kb21haW5zID0gPCZjbG9ja19kaXNwY2MgMD47Cj4gKwo+ICsJCWNsb2NrcyA9
+IDwmZ2NjIEdDQ19ESVNQX0FIQl9DTEs+LCA8JmdjYyBHQ0NfRElTUF9BWElfQ0xLPiwKPiArCQkJ
+IDwmY2xvY2tfZGlzcGNjIERJU1BfQ0NfTURTU19NRFBfQ0xLPjsKPiArCQljbG9jay1uYW1lcyA9
+ICJpZmFjZSIsICJidXMiLCAiY29yZSI7Cj4gKwo+ICsJCWFzc2lnbmVkLWNsb2NrcyA9IDwmY2xv
+Y2tfZGlzcGNjIERJU1BfQ0NfTURTU19NRFBfQ0xLPjsKPiArCQlhc3NpZ25lZC1jbG9jay1yYXRl
+cyA9IDwzMDAwMDAwMDA+Owo+ICsKPiArCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODMgSVJRX1RZ
+UEVfTEVWRUxfSElHSD47Cj4gKwkJaW50ZXJydXB0LWNvbnRyb2xsZXI7Cj4gKwkJI2ludGVycnVw
+dC1jZWxscyA9IDwxPjsKPiArCj4gKwkJaW9tbXVzID0gPCZhcHBzX2lvbW11IDA+Owo+ICsKPiAr
+CQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkjc2l6ZS1jZWxscyA9IDwxPjsKPiArCQlyYW5n
+ZXM7CgpJdCdzIHByZWZlcnJlZCB0byBwdXQgYWN0dWFsIHZhbHVlcyBpbiBhbmQgbGltaXQgdGhl
+IHJhbmdlIG9mIGNoaWxkIApub2Rlcy4gSXMgdGhlcmUgYW55dGhpbmcgaW4gMHhhZTkwMDAwLTB4
+YWVhZmZmZj8KCj4gKwo+ICsJCW1kc3NfbWRwOiBtZHBAYWUwMTAwMCB7Cj4gKwkJCWNvbXBhdGli
+bGUgPSAicWNvbSxzZG04NDUtZHB1IjsKPiArCQkJcmVnID0gPDB4MGFlMDEwMDAgMHg4ZjAwMD4s
+Cj4gKwkJCSAgICAgIDwweDBhZWIwMDAwIDB4MjAwOD47Cj4gKwkJCXJlZy1uYW1lcyA9ICJtZHBf
+cGh5cyIsICJ2YmlmX3BoeXMiOwo+ICsKPiArCQkJY2xvY2tzID0gPCZjbG9ja19kaXNwY2MgRElT
+UF9DQ19NRFNTX0FIQl9DTEs+LAo+ICsJCQkJIDwmY2xvY2tfZGlzcGNjIERJU1BfQ0NfTURTU19B
+WElfQ0xLPiwKPiArCQkJCSA8JmNsb2NrX2Rpc3BjYyBESVNQX0NDX01EU1NfTURQX0NMSz4sCj4g
+KwkJCQkgPCZjbG9ja19kaXNwY2MgRElTUF9DQ19NRFNTX1ZTWU5DX0NMSz47Cj4gKwkJCWNsb2Nr
+LW5hbWVzID0gImlmYWNlIiwgImJ1cyIsICJjb3JlIiwgInZzeW5jIjsKPiArCj4gKwkJCWFzc2ln
+bmVkLWNsb2NrcyA9IDwmY2xvY2tfZGlzcGNjIERJU1BfQ0NfTURTU19NRFBfQ0xLPiwKPiArCQkJ
+CQkgIDwmY2xvY2tfZGlzcGNjIERJU1BfQ0NfTURTU19WU1lOQ19DTEs+Owo+ICsJCQlhc3NpZ25l
+ZC1jbG9jay1yYXRlcyA9IDwwIDAgMzAwMDAwMDAwIDE5MjAwMDAwPjsKPiArCj4gKwkJCWludGVy
+cnVwdC1wYXJlbnQgPSA8Jm1kc3M+Owo+ICsJCQlpbnRlcnJ1cHRzID0gPDAgSVJRX1RZUEVfTEVW
+RUxfSElHSD47Cj4gKwo+ICsJCQlwb3J0cyB7Cj4gKwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsK
+PiArCQkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiArCQkJCXBvcnRAMCB7Cj4gKwkJCQkJcmVn
+ID0gPDA+Owo+ICsJCQkJCWRwdV9pbnRmMV9vdXQ6IGVuZHBvaW50IHsKPiArCQkJCQkJcmVtb3Rl
+LWVuZHBvaW50ID0gPCZkc2kwX2luPjsKPiArCQkJCQl9Owo+ICsJCQkJfTsKPiArCj4gKwkJCQlw
+b3J0QDEgewo+ICsJCQkJCXJlZyA9IDwxPjsKPiArCQkJCQlkcHVfaW50ZjJfb3V0OiBlbmRwb2lu
+dCB7Cj4gKwkJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHNpMV9pbj47Cj4gKwkJCQkJfTsKPiAr
+CQkJCX07Cj4gKwkJCX07Cj4gKwkJfTsKPiArCX07Cj4gLS0gCj4gU2VhbiBQYXVsLCBTb2Z0d2Fy
+ZSBFbmdpbmVlciwgR29vZ2xlIC8gQ2hyb21pdW0gT1MKPiAKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJl
+bm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
