@@ -1,86 +1,141 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v5 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
- driver
-Date: Mon, 16 Jul 2018 10:42:19 +0530
-Message-ID: <20180716051219.36rdvxux3lz3rjed@vireshk-i7>
-References: <1531418745-19742-1-git-send-email-tdas@codeaurora.org>
- <1531418745-19742-3-git-send-email-tdas@codeaurora.org>
+From: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [PATCH v13 3/3] dt-bindings: drm/bridge: Document
+ sn65dsi86 bridge bindings
+Date: Mon, 16 Jul 2018 11:34:47 +0530
+Message-ID: <c18892b8bc949062cace2602f10ed45b@codeaurora.org>
+References: <20180627095735.24517-1-spanda@codeaurora.org>
+ <CGME20180628082251epcas5p42c16eb85256d87fb02feb64f530f03b3@epcas5p4.samsung.com>
+ <20180627095735.24517-4-spanda@codeaurora.org>
+ <20180629120143eucas1p11f18a87dc8afb1a495c8f2d9d0453401~8n9NXi96V1714617146eucas1p1P@eucas1p1.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1531418745-19742-3-git-send-email-tdas@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, amit.kucheria@linaro.org, evgreen@google.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180629120143eucas1p11f18a87dc8afb1a495c8f2d9d0453401~8n9NXi96V1714617146eucas1p1P-MHMrYXj8g+pqW5MlFJXMulaTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12-07-18, 23:35, Taniya Das wrote:
-> +static int qcom_cpu_resources_init(struct platform_device *pdev,
-> +				   struct device_node *np, unsigned int cpu)
-> +{
-> +	struct cpufreq_qcom *c;
-> +	struct resource res;
-> +	struct device *dev = &pdev->dev;
-> +	unsigned int offset, cpu_r;
-> +	int ret;
-> +
-> +	c = devm_kzalloc(dev, sizeof(*c), GFP_KERNEL);
-> +	if (!c)
-> +		return -ENOMEM;
-> +
-> +	c->reg_offset = of_device_get_match_data(&pdev->dev);
-> +	if (!c->reg_offset)
-> +		return -EINVAL;
-> +
-> +	if (of_address_to_resource(np, 0, &res))
-> +		return -ENOMEM;
-> +
-> +	c->base = devm_ioremap(dev, res.start, resource_size(&res));
-> +	if (!c->base) {
-> +		dev_err(dev, "Unable to map %s base\n", np->name);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	offset = c->reg_offset[REG_ENABLE];
-> +
-> +	/* HW should be in enabled state to proceed */
-> +	if (!(readl_relaxed(c->base + offset) & 0x1)) {
-> +		dev_err(dev, "%s cpufreq hardware not enabled\n", np->name);
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = qcom_get_related_cpus(np, &c->related_cpus);
-> +	if (ret) {
-> +		dev_err(dev, "%s failed to get related CPUs\n", np->name);
-> +		return ret;
-> +	}
-> +
-> +	c->max_cores = cpumask_weight(&c->related_cpus);
-> +	if (!c->max_cores)
-> +		return -ENOENT;
-> +
-> +	ret = qcom_read_lut(pdev, c);
-> +	if (ret) {
-> +		dev_err(dev, "%s failed to read LUT\n", np->name);
-> +		return ret;
-> +	}
-> +
-> +	qcom_freq_domain_map[cpu] = c;
-> +
-> +	/* Related CPUs to keep a single copy */
-> +	cpu_r = cpumask_first(&c->related_cpus);
-> +	if (cpu != cpu_r) {
-> +		qcom_freq_domain_map[cpu] = qcom_freq_domain_map[cpu_r];
-> +		devm_kfree(dev, c);
-> +	}
-
-Sorry about missing this, you have actually worked on my comments.
-
-But I think this isn't the clever way of doing it. You allocate the
-structures, fill everything and then finally free them because we were
-related. Why can't we have similar check at the top of this routine
-and skip everything then ?
-
--- 
-viresh
+T24gMjAxOC0wNi0yOSAxNzozMSwgQW5kcnplaiBIYWpkYSB3cm90ZToKPiBPbiAyNy4wNi4yMDE4
+IDExOjU3LCBTYW5kZWVwIFBhbmRhIHdyb3RlOgo+PiBEb2N1bWVudCB0aGUgYmluZGluZ3MgdXNl
+ZCBmb3IgdGhlIHNuNjVkc2k4NiBEU0kgdG8gZURQIGJyaWRnZS4KPj4gCj4+IENoYW5nZXMgaW4g
+djE6Cj4+ICAtIFJlcGhyYXNlIHRoZSBkdC1iaW5kaW5nIGRlc2NyaXB0aW9ucyB0byBiZSBtb3Jl
+IGlubGluZSB3aXRoIAo+PiBleGlzdGluZwo+PiAgICBiaW5kaW5ncyAoQW5kcnplaiBIYWpkYSku
+Cj4+ICAtIEFkZCBtaXNzaW5nIGR0LWJpbmRpbmcgdGhhdCBhcmUgcGFyc2VkIGJ5IGNvcnJlc3Bv
+bmRpbmcgZHJpdmVyCj4+ICAgIChBbmRyemVqIEhhamRhKS4KPj4gCj4+IENoYW5nZXMgaW4gdjI6
+Cj4+ICAtIFJlbW92ZSBlZHAgcGFuZWwgc3BlY2lmaWMgZHQtYmluZGluZyBlbnRyaWVzLiBPbmx5
+IGtlZXAgYnJpZGdlCj4+ICAgIHNwZWNpZmljIGVudHJpZXMgKFNlYW4gUGF1bCkuCj4+ICAtIFJl
+bW92ZSBjdXN0b20tbW9kZXMgZHQgZW50cnkgc2luY2UgaXRzIHVzYWdlIGlzIHJlbW92ZWQgZnJv
+bSBkcml2ZXIgCj4+IGFsc28gKFNlYW4gUGF1bCkuCj4+ICAtIFJlbW92ZSBpcy1wbHVnZ2FibGUg
+ZHQgZW50cnkgc2luY2UgdGhpcyB3aWxsIG5vdCBiZSBuZWVkZWQgYW55bW9yZSAKPj4gKFNlYW4g
+UGF1bCkuCj4+IAo+PiBDaGFuZ2VzIGluIHYzOgo+PiAgLSBSZW1vdmUgaXJxLWdwaW8gZHQgZW50
+cnkgYW5kIGluc3RlYWQgcG9wdWxhdGUgaXMgYW4gaW50ZXJydXB0Cj4+ICAgIHByb3BlcnR5IChS
+b2IgSGVycmluZykuCj4+IAo+PiBDaGFuZ2VzIGluIHY0Ogo+PiAgLSBBZGQgbGluayB0byBicmlk
+Z2UgY2hpcCBkYXRhc2hlZXQgKFN0ZXBoZW4gQm95ZCkKPj4gIC0gQWRkIHZwbGwgYW5kIHZjYyBy
+ZWd1bGF0b3Igc3VwcGx5IGJpbmRpbmdzIChTdGVwaGVuIEJveWQpCj4+ICAtIEFkZCByZWYgY2xr
+IG9wdGlvbmFsIGR0IGJpbmRpbmcgKFN0ZXBoZW4gQm95ZCkKPj4gIC0gQWRkIGdwaW8tY29udHJv
+bGxlciBvcHRpb25hbCBkdCBiaW5kaW5nIChTdGVwaGVuIEJveWQpCj4+IAo+PiBDaGFuZ2VzIGlu
+IHY1Ogo+PiAgLSBVc2UgY2xvY2sgcHJvcGVydHkgdG8gc3BlY2lmeSB0aGUgaW5wdXQgcmVmY2xr
+IChTdGVwaGVuIEJveWQpLgo+PiAgLSBVcGRhdGUgZ3BpbyBjZWxsIGFuZCBwd20gY2VsbCBudW1i
+ZXJzIChTdGVwaGVuIEJveWQpLgo+PiAKPj4gQ2hhbmdlcyBpbiB2NjoKPj4gIC0gQWRkIHByb3Bl
+cnR5IHRvIG1lbnRpb24gdGhlIGxhbmUgbWFwcGluZyBzY2hlbWUgYW5kIHBvbGFyaXR5IAo+PiBp
+bnZlcnNpb24KPj4gICAgKFN0ZXBoZW4gQm95ZCkuCj4+IAo+PiBDaGFuZ2VzIGluIHY3Ogo+PiAg
+LSBEZXRhaWwgZGVzY3JpcHRpb24gb2YgbGFuZSBtYXBwaW5nIHNjaGVtZSBkdCBwcm9wZXJ0eSAo
+QW5kcnplago+PiAgICBIYWpkYS8gUm9iIEhlcnJpbmcpLgo+PiAgLSBSZW1vdmVkIEhEUCBncGlv
+IGJpbmRpbmcsIHNpbmNlIHRoZSBicmlkZ2UgdXNlcyBJUlEgc2lnbmFsIHRvCj4+ICAgIGRldGVy
+bWluZSBIUEQsIGFuZCBJUlEgcHJvcGVydHkgaXMgYWxyZWFkeSBkb2N1bWVudGVkIGluIGJpbmRp
+bmcuCj4+IAo+PiBDaGFuZ2VzIGluIHY4Ogo+PiAgLSBSZW1vdmVkIHVubmVjZXNzYXJ5IGV4cGxh
+bmF0aW9uIG9mIGxhbmUgbWFwcGluZyBhbmQgcG9sYXJpdHkgZHQKPj4gICAgcHJvcGVydHksIHNp
+bmNlIHRoZXNlIGFyZSBhbHJlYWR5IGV4cGxhaW5lZCBpbiAKPj4gbWVkaWEvdmlkZW8taW50ZXJm
+YWNlCj4+ICAgIGR0IGJpbmlkbmcgKFJvYiBIZXJyaW5nKS4KPj4gCj4+IENoYW5nZXMgaW4gdjk6
+Cj4+ICAtIEF2b2lkIHB1dHRpbmcgcmUtZGVmaW5pdGlvbiBvZiBsYW5lIG1hcHBpbmcgYW5kIHBv
+bGFyaXR5IGR0IGJpbmRpbmcKPj4gICAgKFJvYiBIZXJyaW5nKS4KPj4gCj4+IENoYW5nZXMgaW4g
+djEwOgo+PiAgLSBVc2UgaW50ZXJydXB0cy1leHRlbmRlZCBwcm9wZXJ0eSBpbnN0ZWFkIG9mIGlu
+dGVycnVwdHMgdG8gc3BlY2lmeQo+PiAgICBpbnRlcnJ1cHQgbGluZSAoQW5kcnplaiBIYWpkYSku
+Cj4+ICAtIE1vdmUgZGF0YS1sYW5lcyBhbmQgbGFuZS1wb2xhcml0eSBwcm9wZXJ0eSBleGFtcGxl
+IHRvIHByb3BlciBwbGFjZSAKPj4gKEFuZHJ6ZWogSGFqZGEpLgo+PiAKPj4gQ2hhbmdlcyBpbiB2
+MTE6Cj4+ICAtIEFkZCBhIHByb3BlcnR5IGZvciBzdXNwZW5kIGdwaW8gZnVuY3Rpb24gb2YgR1BJ
+TzEgcGluIG9uIGJyaWRnZSAKPj4gY2hpcAo+PiAgICAoU3RlcGhlbiBCb3lkKS4KPj4gCj4+IFNp
+Z25lZC1vZmYtYnk6IFNhbmRlZXAgUGFuZGEgPHNwYW5kYUBjb2RlYXVyb3JhLm9yZz4KPj4gLS0t
+Cj4+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dCAgICAgICB8
+IDg5IAo+PiArKysrKysrKysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgODkgaW5z
+ZXJ0aW9ucygrKQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IAo+PiBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dAo+PiAKPj4gZGlm
+ZiAtLWdpdCAKPj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
+cmlkZ2UvdGksc242NWRzaTg2LnR4dCAKPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEw
+MDY0NAo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjY3ODdmNWYyYzdjZAo+PiAtLS0gL2Rldi9udWxs
+Cj4+ICsrKyAKPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
+cmlkZ2UvdGksc242NWRzaTg2LnR4dAo+PiBAQCAtMCwwICsxLDg5IEBACj4+ICtTTjY1RFNJODYg
+RFNJIHRvIGVEUCBicmlkZ2UgY2hpcAo+PiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0KPj4gKwo+PiArVGhpcyBpcyB0aGUgYmluZGluZyBmb3IgVGV4YXMgSW5zdHJ1bWVudHMgU042
+NURTSTg2IGJyaWRnZS4KPj4gK2h0dHA6Ly93d3cudGkuY29tL2dlbmVyYWwvZG9jcy9saXQvZ2V0
+bGl0ZXJhdHVyZS50c3A/Z2VuZXJpY1BhcnROdW1iZXI9c242NWRzaTg2JmZpbGVUeXBlPXBkZgo+
+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiArLSBjb21wYXRpYmxlOiBNdXN0IGJlICJ0
+aSxzbjY1ZHNpODYiCj4+ICstIHJlZzogaTJjIGFkZHJlc3Mgb2YgdGhlIGNoaXAsIDB4MmQgYXMg
+cGVyIGRhdGFzaGVldAo+PiArLSBlbmFibGUtZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3Bl
+Y2lmaWNhdGlvbiBmb3IgYnJpZGdlX2VuIHBpbiAKPj4gKGFjdGl2ZSBoaWdoKQo+PiArCj4+ICst
+IHZjY2lvLXN1cHBseTogQSAxLjhWIHN1cHBseSB0aGF0IHBvd2VycyB1cCB0aGUgZGlnaXRhbCBJ
+T3MuCj4+ICstIHZwbGwtc3VwcGx5OiBBIDEuOFYgc3VwcGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBk
+aXNwbGF5cG9ydCBQTEwuCj4+ICstIHZjY2Etc3VwcGx5OiBBIDEuMlYgc3VwcGx5IHRoYXQgcG93
+ZXJzIHVwIHRoZSBhbmFsb2cgY2lyY3VpdHMuCj4+ICstIHZjYy1zdXBwbHk6IEEgMS4yViBzdXBw
+bHkgdGhhdCBwb3dlcnMgdXAgdGhlIGRpZ2l0YWwgY29yZS4KPj4gKwo+PiArT3B0aW9uYWwgcHJv
+cGVydGllczoKPj4gKy0gaW50ZXJydXB0cy1leHRlbmRlZDogU3BlY2lmaWVyIGZvciB0aGUgU042
+NURTSTg2IGludGVycnVwdCBsaW5lLgo+PiArCj4+ICstIGRkYy1pMmMtYnVzOiBwaGFuZGxlIG9m
+IHRoZSBJMkMgY29udHJvbGxlciB1c2VkIGZvciBEREMgRURJRCAKPj4gcHJvYmluZwo+IAo+IE9u
+ZSBtb3JlIHRoaW5nLCBJIGhhdmUgb3Zlcmxvb2tlZDogd2h5IGRvIHlvdSBuZWVkIHRoaXMgcHJv
+cGVydHk/IGVEUAo+IHBhbmVscyBwYXNzZXMgaXRzIEVESUQgdmlhIERQLUFVWCBjaGFubmVsLCBk
+byB5b3UgaGF2ZSBzb21lIHN0cmFuZ2UKPiBwYW5lbD8KCk9LIGkgd2lsbCByZW1vdmUgdGhpcyBw
+cm9wZXJ0eSBpbiBuZXh0IHBhdGNoc2V0LgoKCiAgSSBoYXZlIGxvb2tlZCBmb3IgdGhlIHBhbmVs
+IHlvdSB3YW50IHRvIGFkZCBpbiB0aGlzIHBhdGNoc2V0IC0KPiAiSW5ub2x1eCBUVjEyM1dBTSIg
+YW5kIGZvdW5kIG5vdGhpbmcsIHRoZXJlIGlzIFRWMTIzV0FNIG1hZGUgYnkgQk9FIChpdAo+IGlz
+IHRoZSBzYW1lIHBhbmVsPz8pIGFuZCBpdCByZXBvcnRzIEVESUQgdmlhIERQLUFVWCwgbm8gSTJD
+IGxpbmVzIGZvciAKPiBEREMuCj4gCj4gUmVnYXJkcwo+IEFuZHJ6ZWoKPiAKPj4gKwo+PiArLSBn
+cGlvLWNvbnRyb2xsZXI6IE1hcmtzIHRoZSBkZXZpY2UgaGFzIGEgR1BJTyBjb250cm9sbGVyLgo+
+PiArLSAjZ3Bpby1jZWxscyAgICA6IFNob3VsZCBiZSB0d28uIFRoZSBmaXJzdCBjZWxsIGlzIHRo
+ZSBwaW4gbnVtYmVyIAo+PiBhbmQKPj4gKyAgICAgICAgICAgICAgICAgICB0aGUgc2Vjb25kIGNl
+bGwgaXMgdXNlZCB0byBzcGVjaWZ5IGZsYWdzLgo+PiArICAgICAgICAgICAgICAgICAgIFNlZSAu
+Li8uLi9ncGlvL2dwaW8udHh0IGZvciBtb3JlIGluZm9ybWF0aW9uLgo+PiArLSAjcHdtLWNlbGxz
+IDogU2hvdWxkIGJlIG9uZS4gU2VlIC4uLy4uL3B3bS9wd20udHh0IGZvciBkZXNjcmlwdGlvbiAK
+Pj4gb2YKPj4gKyAgICAgICAgICAgICAgIHRoZSBjZWxsIGZvcm1hdHMuCj4+ICsKPj4gKy0gY2xv
+Y2stbmFtZXM6IHNob3VsZCBiZSAicmVmY2xrIgo+PiArLSBjbG9ja3M6IFNwZWNpZmljYXRpb24g
+Zm9yIGlucHV0IHJlZmVyZW5jZSBjbG9jay4gVGhlIHJlZmVyZW5jZQo+PiArCSAgY2xvY2sgcmF0
+ZSBtdXN0IGJlIDEyIE1IeiwgMTkuMiBNSHosIDI2IE1IeiwgMjcgTUh6IG9yIDM4LjQgTUh6Lgo+
+PiArCj4+ICstIGRhdGEtbGFuZXM6IFNlZSAuLi8uLi9tZWRpYS92aWRlby1pbnRlcmZhY2UudHh0
+Cj4+ICstIGxhbmUtcG9sYXJpdGllczogU2VlIC4uLy4uL21lZGlhL3ZpZGVvLWludGVyZmFjZS50
+eHQKPj4gKwo+PiArLSBzdXNwZW5kLWdwaW9zOiBPRiBkZXZpY2UtdHJlZSBzcGVjaWZpY2F0aW9u
+IGZvciBHUElPMSBwaW4gb24gYnJpZGdlIAo+PiAoYWN0aXZlIGxvdykKPj4gKwo+PiArUmVxdWly
+ZWQgbm9kZXM6Cj4+ICtUaGlzIGRldmljZSBoYXMgdHdvIHZpZGVvIHBvcnRzLiBUaGVpciBjb25u
+ZWN0aW9ucyBhcmUgbW9kZWxsZWQgdXNpbmcgCj4+IHRoZQo+PiArT0YgZ3JhcGggYmluZGluZ3Mg
+c3BlY2lmaWVkIGluIAo+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgu
+dHh0Lgo+PiArCj4+ICstIFZpZGVvIHBvcnQgMCBmb3IgRFNJIGlucHV0Cj4+ICstIFZpZGVvIHBv
+cnQgMSBmb3IgZURQIG91dHB1dAo+PiArCj4+ICtFeGFtcGxlCj4+ICstLS0tLS0tCj4+ICsKPj4g
+K2VkcC1icmlkZ2VAMmQgewo+PiArCWNvbXBhdGlibGUgPSAidGksc242NWRzaTg2IjsKPj4gKwkj
+YWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gKwkjc2l6ZS1jZWxscyA9IDwwPjsKPj4gKwlyZWcgPSA8
+MHgyZD47Cj4+ICsKPj4gKwllbmFibGUtZ3Bpb3MgPSA8Jm1zbWdwaW8gMzMgR1BJT19BQ1RJVkVf
+SElHSD47Cj4+ICsJc3VzcGVuZC1ncGlvcyA9IDwmbXNtZ3BpbyAzNCBHUElPX0FDVElWRV9MT1c+
+Owo+PiArCj4+ICsJaW50ZXJydXB0cy1leHRlbmRlZCA9IDwmZ3BpbzMgNCBJUlFfVFlQRV9FREdF
+X0ZBTExJTkc+Owo+PiArCj4+ICsJdmNjaW8tc3VwcGx5ID0gPCZwbTg5MTZfbDE3PjsKPj4gKwl2
+Y2NhLXN1cHBseSA9IDwmcG04OTE2X2w2PjsKPj4gKwl2cGxsLXN1cHBseSA9IDwmcG04OTE2X2wx
+Nz47Cj4+ICsJdmNjLXN1cHBseSA9IDwmcG04OTE2X2w2PjsKPj4gKwo+PiArCWNsb2NrLW5hbWVz
+ID0gInJlZmNsayI7Cj4+ICsJY2xvY2tzID0gPCZpbnB1dF9yZWZjbGs+Owo+PiArCj4+ICsJcG9y
+dHMgewo+PiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gKwkJI3NpemUtY2VsbHMgPSA8MD47
+Cj4+ICsKPj4gKwkJcG9ydEAwIHsKPj4gKwkJCXJlZyA9IDwwPjsKPj4gKwo+PiArCQkJZWRwX2Jy
+aWRnZV9pbjogZW5kcG9pbnQgewo+PiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHNpX291dD47
+Cj4+ICsJCQl9Owo+PiArCQl9Owo+PiArCj4+ICsJCXBvcnRAMSB7Cj4+ICsJCQlyZWcgPSA8MT47
+Cj4+ICsKPj4gKwkJCWVkcF9icmlkZ2Vfb3V0OiBlbmRwb2ludCB7Cj4+ICsJCQkJZGF0YS1sYW5l
+cyA9IDwyIDEgMyAwPjsKPj4gKwkJCQlsYW5lLXBvbGFyaXRpZXMgPSA8MCAxIDAgMT47Cj4+ICsJ
+CQkJcmVtb3RlLWVuZHBvaW50ID0gPCZlZHBfcGFuZWxfaW4+Owo+PiArCQkJfTsKPj4gKwkJfTsK
+Pj4gKwl9Owo+PiArfQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJl
+bm8K
