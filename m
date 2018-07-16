@@ -1,172 +1,119 @@
 From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V2 2/6] mailbox: ti-msgmgr: Allocate Rx channel resources only on request
-Date: Mon, 16 Jul 2018 13:06:03 -0500
-Message-ID: <20180716180607.16526-3-nm@ti.com>
+Subject: [PATCH V2 5/6] dt-bindings: mailbox: Add support for secure proxy
+ threads
+Date: Mon, 16 Jul 2018 13:06:06 -0500
+Message-ID: <20180716180607.16526-6-nm@ti.com>
 References: <20180716180607.16526-1-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180716180607.16526-1-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Jassi Brar <jassisinghbrar@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Nishanth Menon <nm@ti.com>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In a much bigger system SoCs, the number of Rx channels can be
-many and mostly unused based on the system of choice, and not all
-Rx channels need IRQs and allocating all memory at probe will be
-inefficient. Some SoCs could have total threads in the 100s and usage
-would be just 1 Rx thread.
+Secure Proxy is another communication scheme in Texas Instrument's
+devices intended to provide an unique communication path from various
+processors in the System on Chip(SoC) to a central System Controller.
 
-Thus, request and map the IRQs and allocate memory only when needed.
+Secure proxy is, in effect, an evolution of current generation Message
+Manager hardware block found in K2G devices. However the following
+changes have taken place:
 
-Since these channels are requested by client drivers on need, our
-utilization will be optimal.
+Secure Proxy instance exposes "threads" or "proxies" which is
+primary representation of "a" communication channel. Each thread is
+preconfigured by System controller configuration based on SoC usage
+requirements. Secure proxy by itself represents a single "queue" of
+communication but allows the proxies to be independently operated.
 
+Each Secure proxy thread can uniquely have their own error and threshold
+interrupts allowing for more fine control of IRQ handling.
+
+Provide an hardware description of the same for device tree
+representation.
+
+See AM65x Technical Reference Manual (SPRUID7, April 2018)
+for further details: http://www.ti.com/lit/pdf/spruid7
+
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Nishanth Menon <nm@ti.com>
 ---
-Changes since V1: None
-V1: https://patchwork.kernel.org/patch/10475301/
-RFC: https://patchwork.kernel.org/patch/10447701/
+Changes since V1:
+* Example changed to indicate mailbox instead of secure_proxy
+* Picked up Rob's Reviewed-by
 
- drivers/mailbox/ti-msgmgr.c | 91 ++++++++++++++++++++++++++++++---------------
- 1 file changed, 61 insertions(+), 30 deletions(-)
+V1: https://patchwork.kernel.org/patch/10475343/
+RFC: https://patchwork.kernel.org/patch/10447695/
 
-diff --git a/drivers/mailbox/ti-msgmgr.c b/drivers/mailbox/ti-msgmgr.c
-index 5fe6ce200264..91c955979008 100644
---- a/drivers/mailbox/ti-msgmgr.c
-+++ b/drivers/mailbox/ti-msgmgr.c
-@@ -310,6 +310,51 @@ static int ti_msgmgr_send_data(struct mbox_chan *chan, void *data)
- 	return 0;
- }
- 
-+/**
-+ *  ti_msgmgr_queue_rx_irq_req() - RX IRQ request
-+ *  @dev:	device pointer
-+ *  @qinst:	Queue instance
-+ *  @chan:	Channel pointer
-+ */
-+static int ti_msgmgr_queue_rx_irq_req(struct device *dev,
-+				      struct ti_queue_inst *qinst,
-+				      struct mbox_chan *chan)
-+{
-+	int ret = 0;
-+	char of_rx_irq_name[7];
-+	struct device_node *np;
+ .../bindings/mailbox/ti,secure-proxy.txt           | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/ti,secure-proxy.txt
+
+diff --git a/Documentation/devicetree/bindings/mailbox/ti,secure-proxy.txt b/Documentation/devicetree/bindings/mailbox/ti,secure-proxy.txt
+new file mode 100644
+index 000000000000..6c9c7daf0f5c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/ti,secure-proxy.txt
+@@ -0,0 +1,50 @@
++Texas Instruments' Secure Proxy
++========================================
 +
-+	snprintf(of_rx_irq_name, sizeof(of_rx_irq_name),
-+		 "rx_%03d", qinst->queue_id);
++The Texas Instruments' secure proxy is a mailbox controller that has
++configurable queues selectable at SoC(System on Chip) integration. The
++Message manager is broken up into different address regions that are
++called "threads" or "proxies" - each instance is unidirectional and is
++instantiated at SoC integration level by system controller to indicate
++receive or transmit path.
 +
-+	/* Get the IRQ if not found */
-+	if (qinst->irq < 0) {
-+		np = of_node_get(dev->of_node);
-+		if (!np)
-+			return -ENODATA;
-+		qinst->irq = of_irq_get_byname(np, of_rx_irq_name);
-+		of_node_put(np);
++Message Manager Device Node:
++===========================
++Required properties:
++--------------------
++- compatible:		Shall be "ti,am654-secure-proxy"
++- reg-names 		target_data - Map the proxy data region
++			rt - Map the realtime status region
++			scfg - Map the configuration region
++- reg:			Contains the register map per reg-names.
++- #mbox-cells		Shall be 1 and shall refer to the transfer path
++			called thread.
++- interrupt-names:	Contains interrupt names matching the rx transfer path
++			for a given SoC. Receive interrupts shall be of the
++			format: "rx_<PID>".
++- interrupts:		Contains the interrupt information corresponding to
++			interrupt-names property.
 +
-+		if (qinst->irq < 0) {
-+			dev_err(dev,
-+				"QID %d PID %d:No IRQ[%s]: %d\n",
-+				qinst->queue_id, qinst->proxy_id,
-+				of_rx_irq_name, qinst->irq);
-+			return qinst->irq;
-+		}
-+	}
++Example(AM654):
++------------
 +
-+	/* With the expectation that the IRQ might be shared in SoC */
-+	ret = request_irq(qinst->irq, ti_msgmgr_queue_rx_interrupt,
-+			  IRQF_SHARED, qinst->name, chan);
-+	if (ret) {
-+		dev_err(dev, "Unable to get IRQ %d on %s(res=%d)\n",
-+			qinst->irq, qinst->name, ret);
-+	}
++	secure_proxy: mailbox@32c00000 {
++		compatible = "ti,am654-secure-proxy";
++		#mbox-cells = <1>;
++		reg-names = "target_data", "rt", "scfg";
++		reg = <0x0 0x32c00000 0x0 0x100000>,
++		      <0x0 0x32400000 0x0 0x100000>,
++		      <0x0 0x32800000 0x0 0x100000>;
++		interrupt-names = "rx_011";
++		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++	};
 +
-+	return ret;
-+}
-+
- /**
-  * ti_msgmgr_queue_startup() - Startup queue
-  * @chan:	Channel pointer
-@@ -318,19 +363,21 @@ static int ti_msgmgr_send_data(struct mbox_chan *chan, void *data)
-  */
- static int ti_msgmgr_queue_startup(struct mbox_chan *chan)
- {
--	struct ti_queue_inst *qinst = chan->con_priv;
- 	struct device *dev = chan->mbox->dev;
-+	struct ti_msgmgr_inst *inst = dev_get_drvdata(dev);
-+	struct ti_queue_inst *qinst = chan->con_priv;
-+	const struct ti_msgmgr_desc *d = inst->desc;
- 	int ret;
- 
- 	if (!qinst->is_tx) {
--		/*
--		 * With the expectation that the IRQ might be shared in SoC
--		 */
--		ret = request_irq(qinst->irq, ti_msgmgr_queue_rx_interrupt,
--				  IRQF_SHARED, qinst->name, chan);
-+		/* Allocate usage buffer for rx */
-+		qinst->rx_buff = kzalloc(d->max_message_size, GFP_KERNEL);
-+		if (!qinst->rx_buff)
-+			return -ENOMEM;
-+		/* Request IRQ */
-+		ret = ti_msgmgr_queue_rx_irq_req(dev, qinst, chan);
- 		if (ret) {
--			dev_err(dev, "Unable to get IRQ %d on %s(res=%d)\n",
--				qinst->irq, qinst->name, ret);
-+			kfree(qinst->rx_buff);
- 			return ret;
- 		}
- 	}
-@@ -346,8 +393,10 @@ static void ti_msgmgr_queue_shutdown(struct mbox_chan *chan)
- {
- 	struct ti_queue_inst *qinst = chan->con_priv;
- 
--	if (!qinst->is_tx)
-+	if (!qinst->is_tx) {
- 		free_irq(qinst->irq, chan);
-+		kfree(qinst->rx_buff);
-+	}
- }
- 
- /**
-@@ -425,27 +474,6 @@ static int ti_msgmgr_queue_setup(int idx, struct device *dev,
- 		 dev_name(dev), qinst->is_tx ? "tx" : "rx", qinst->queue_id,
- 		 qinst->proxy_id);
- 
--	if (!qinst->is_tx) {
--		char of_rx_irq_name[7];
--
--		snprintf(of_rx_irq_name, sizeof(of_rx_irq_name),
--			 "rx_%03d", qinst->queue_id);
--
--		qinst->irq = of_irq_get_byname(np, of_rx_irq_name);
--		if (qinst->irq < 0) {
--			dev_crit(dev,
--				 "[%d]QID %d PID %d:No IRQ[%s]: %d\n",
--				 idx, qinst->queue_id, qinst->proxy_id,
--				 of_rx_irq_name, qinst->irq);
--			return qinst->irq;
--		}
--		/* Allocate usage buffer for rx */
--		qinst->rx_buff = devm_kzalloc(dev,
--					      d->max_message_size, GFP_KERNEL);
--		if (!qinst->rx_buff)
--			return -ENOMEM;
--	}
--
- 	qinst->queue_buff_start = inst->queue_proxy_region +
- 	    Q_DATA_OFFSET(qinst->proxy_id, qinst->queue_id, d->data_first_reg);
- 	qinst->queue_buff_end = inst->queue_proxy_region +
-@@ -454,6 +482,9 @@ static int ti_msgmgr_queue_setup(int idx, struct device *dev,
- 	    Q_STATE_OFFSET(qinst->queue_id);
- 	qinst->chan = chan;
- 
-+	/* Setup an error value for IRQ - Lazy allocation */
-+	qinst->irq = -EINVAL;
-+
- 	chan->con_priv = qinst;
- 
- 	dev_dbg(dev, "[%d] qidx=%d pidx=%d irq=%d q_s=%p q_e = %p\n",
++	dmsc: dmsc {
++		[...]
++		mbox-names = "rx", "tx";
++		# RX Thread ID is 11
++		# TX Thread ID is 13
++		mboxes= <&secure_proxy 11>,
++			<&secure_proxy 13>;
++		[...]
++	};
 -- 
 2.15.1
