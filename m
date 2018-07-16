@@ -1,96 +1,69 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 10/14] dt-bindings/interrupt-controller: update
- Marvell ICU bindings
-Date: Mon, 16 Jul 2018 11:44:02 -0600
-Message-ID: <20180716174402.GA28988@rob-hp-laptop>
-References: <20180705124011.7661-1-miquel.raynal@bootlin.com>
- <20180705124011.7661-11-miquel.raynal@bootlin.com>
- <20180716152734.GA4581@rob-hp-laptop>
- <20180716183935.36f48f76@xps13>
+From: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v14 2/2] dt-bindings: drm/bridge: Document
+ sn65dsi86 bridge bindings
+Date: Mon, 16 Jul 2018 10:45:44 -0700
+Message-ID: <153176314466.48062.1884251261900664287@swboyd.mtv.corp.google.com>
+References: <20180716084330.26698-1-spanda@codeaurora.org>
+ <20180716084330.26698-3-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180716183935.36f48f76@xps13>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180716084330.26698-3-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 16, 2018 at 06:39:35PM +0200, Miquel Raynal wrote:
-> Hi Rob,
-> 
-> Rob Herring <robh@kernel.org> wrote on Mon, 16 Jul 2018 09:27:34 -0600:
-> 
-> > On Thu, Jul 05, 2018 at 02:40:07PM +0200, Miquel Raynal wrote:
-> > > Change the documentation to reflect the new bindings used for Marvell
-> > > ICU. This involves describing each interrupt group as a subnode of the
-> > > ICU node. Each of them having their own compatible.
-> > > 
-> > > The DT binding documentation still documents the legacy binding, where
-> > > there was a single node with no subnode.
-> > > 
-> > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > > ---
-> > >  .../bindings/interrupt-controller/marvell,icu.txt  | 83 ++++++++++++++++++----
-> > >  1 file changed, 71 insertions(+), 12 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
-> > > index 649b7ec9d9b1..83b4fbf8af65 100644
-> > > --- a/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
-> > > +++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
-> > > @@ -5,6 +5,8 @@ The Marvell ICU (Interrupt Consolidation Unit) controller is
-> > >  responsible for collecting all wired-interrupt sources in the CP and
-> > >  communicating them to the GIC in the AP, the unit translates interrupt
-> > >  requests on input wires to MSG memory mapped transactions to the GIC.
-> > > +These messages will access a different GIC memory area depending on
-> > > +their type (NSR, SR, SEI, REI, etc).
-> > >  
-> > >  Required properties:
-> > >  
-> > > @@ -12,20 +14,19 @@ Required properties:
-> > >  
-> > >  - reg: Should contain ICU registers location and length.
-> > >  
-> > > +Subnodes: Each group of interrupt is declared as a subnode of the ICU,
-> > > +with their own compatible.
-> > > +
-> > > +Required properties for the icu_nsr/icu_sei subnodes:
-> > > +
-> > > +- compatible: Should be "marvell,cp110-icu-nsr" or "marvell,cp110-icu-sei".
-> > > +  
-> > 
-> > I raised this before and still don't understand. You had 4 types before 
-> > and now you only have 2 types? How do you handle SR and REI with the new 
-> > binding?
-> 
-> Indeed there are 4 types: NSR, SR, SEI, REI.
-> 
-> Until now only NSR were supported.
-
-All 4 were supported by the binding and now only 2 though.
-
-> I'm adding SEI support.
-> 
-> In the future, people might want to add support for SR/REI as well but
-> they have never been supported in mainline. When support for these
-> interrupts will have been contributed, I suppose it will easy to add
-> two other compatibles with the same formatting "marvell,cp110-icu-xxx"?
-
-Perhaps, but I have know way to tell.
-
-> I hope the changes in the driver will make such contribution almost
-> trivial.
-
-You can add bindings without adding driver.
-
-Rob
+UXVvdGluZyBTYW5kZWVwIFBhbmRhICgyMDE4LTA3LTE2IDAxOjQzOjMwKQo+IERvY3VtZW50IHRo
+ZSBiaW5kaW5ncyB1c2VkIGZvciB0aGUgc242NWRzaTg2IERTSSB0byBlRFAgYnJpZGdlLgo+IAo+
+IENoYW5nZXMgaW4gdjE6Cj4gIC0gUmVwaHJhc2UgdGhlIGR0LWJpbmRpbmcgZGVzY3JpcHRpb25z
+IHRvIGJlIG1vcmUgaW5saW5lIHdpdGggZXhpc3RpbmcKPiAgICBiaW5kaW5ncyAoQW5kcnplaiBI
+YWpkYSkuCj4gIC0gQWRkIG1pc3NpbmcgZHQtYmluZGluZyB0aGF0IGFyZSBwYXJzZWQgYnkgY29y
+cmVzcG9uZGluZyBkcml2ZXIKPiAgICAoQW5kcnplaiBIYWpkYSkuCj4gCj4gQ2hhbmdlcyBpbiB2
+MjoKPiAgLSBSZW1vdmUgZWRwIHBhbmVsIHNwZWNpZmljIGR0LWJpbmRpbmcgZW50cmllcy4gT25s
+eSBrZWVwIGJyaWRnZQo+ICAgIHNwZWNpZmljIGVudHJpZXMgKFNlYW4gUGF1bCkuCj4gIC0gUmVt
+b3ZlIGN1c3RvbS1tb2RlcyBkdCBlbnRyeSBzaW5jZSBpdHMgdXNhZ2UgaXMgcmVtb3ZlZCBmcm9t
+IGRyaXZlciBhbHNvIChTZWFuIFBhdWwpLgo+ICAtIFJlbW92ZSBpcy1wbHVnZ2FibGUgZHQgZW50
+cnkgc2luY2UgdGhpcyB3aWxsIG5vdCBiZSBuZWVkZWQgYW55bW9yZSAoU2VhbiBQYXVsKS4KPiAK
+PiBDaGFuZ2VzIGluIHYzOgo+ICAtIFJlbW92ZSBpcnEtZ3BpbyBkdCBlbnRyeSBhbmQgaW5zdGVh
+ZCBwb3B1bGF0ZSBpcyBhbiBpbnRlcnJ1cHQKPiAgICBwcm9wZXJ0eSAoUm9iIEhlcnJpbmcpLgo+
+IAo+IENoYW5nZXMgaW4gdjQ6Cj4gIC0gQWRkIGxpbmsgdG8gYnJpZGdlIGNoaXAgZGF0YXNoZWV0
+IChTdGVwaGVuIEJveWQpCj4gIC0gQWRkIHZwbGwgYW5kIHZjYyByZWd1bGF0b3Igc3VwcGx5IGJp
+bmRpbmdzIChTdGVwaGVuIEJveWQpCj4gIC0gQWRkIHJlZiBjbGsgb3B0aW9uYWwgZHQgYmluZGlu
+ZyAoU3RlcGhlbiBCb3lkKQo+ICAtIEFkZCBncGlvLWNvbnRyb2xsZXIgb3B0aW9uYWwgZHQgYmlu
+ZGluZyAoU3RlcGhlbiBCb3lkKQo+IAo+IENoYW5nZXMgaW4gdjU6Cj4gIC0gVXNlIGNsb2NrIHBy
+b3BlcnR5IHRvIHNwZWNpZnkgdGhlIGlucHV0IHJlZmNsayAoU3RlcGhlbiBCb3lkKS4KPiAgLSBV
+cGRhdGUgZ3BpbyBjZWxsIGFuZCBwd20gY2VsbCBudW1iZXJzIChTdGVwaGVuIEJveWQpLgo+IAo+
+IENoYW5nZXMgaW4gdjY6Cj4gIC0gQWRkIHByb3BlcnR5IHRvIG1lbnRpb24gdGhlIGxhbmUgbWFw
+cGluZyBzY2hlbWUgYW5kIHBvbGFyaXR5IGludmVyc2lvbgo+ICAgIChTdGVwaGVuIEJveWQpLgo+
+IAo+IENoYW5nZXMgaW4gdjc6Cj4gIC0gRGV0YWlsIGRlc2NyaXB0aW9uIG9mIGxhbmUgbWFwcGlu
+ZyBzY2hlbWUgZHQgcHJvcGVydHkgKEFuZHJ6ZWoKPiAgICBIYWpkYS8gUm9iIEhlcnJpbmcpLgo+
+ICAtIFJlbW92ZWQgSERQIGdwaW8gYmluZGluZywgc2luY2UgdGhlIGJyaWRnZSB1c2VzIElSUSBz
+aWduYWwgdG8KPiAgICBkZXRlcm1pbmUgSFBELCBhbmQgSVJRIHByb3BlcnR5IGlzIGFscmVhZHkg
+ZG9jdW1lbnRlZCBpbiBiaW5kaW5nLgo+IAo+IENoYW5nZXMgaW4gdjg6Cj4gIC0gUmVtb3ZlZCB1
+bm5lY2Vzc2FyeSBleHBsYW5hdGlvbiBvZiBsYW5lIG1hcHBpbmcgYW5kIHBvbGFyaXR5IGR0Cj4g
+ICAgcHJvcGVydHksIHNpbmNlIHRoZXNlIGFyZSBhbHJlYWR5IGV4cGxhaW5lZCBpbiBtZWRpYS92
+aWRlby1pbnRlcmZhY2UKPiAgICBkdCBiaW5pZG5nIChSb2IgSGVycmluZykuCj4gCj4gQ2hhbmdl
+cyBpbiB2OToKPiAgLSBBdm9pZCBwdXR0aW5nIHJlLWRlZmluaXRpb24gb2YgbGFuZSBtYXBwaW5n
+IGFuZCBwb2xhcml0eSBkdCBiaW5kaW5nCj4gICAgKFJvYiBIZXJyaW5nKS4KPiAKPiBDaGFuZ2Vz
+IGluIHYxMDoKPiAgLSBVc2UgaW50ZXJydXB0cy1leHRlbmRlZCBwcm9wZXJ0eSBpbnN0ZWFkIG9m
+IGludGVycnVwdHMgdG8gc3BlY2lmeQo+ICAgIGludGVycnVwdCBsaW5lIChBbmRyemVqIEhhamRh
+KS4KPiAgLSBNb3ZlIGRhdGEtbGFuZXMgYW5kIGxhbmUtcG9sYXJpdHkgcHJvcGVydHkgZXhhbXBs
+ZSB0byBwcm9wZXIgcGxhY2UgKEFuZHJ6ZWogSGFqZGEpLgo+IAo+IENoYW5nZXMgaW4gdjExOgo+
+ICAtIEFkZCBhIHByb3BlcnR5IGZvciBzdXNwZW5kIGdwaW8gZnVuY3Rpb24gb2YgR1BJTzEgcGlu
+IG9uIGJyaWRnZSBjaGlwCj4gICAgKFN0ZXBoZW4gQm95ZCkuCj4gCj4gQ2hhbmdlcyBpbiB2MTI6
+Cj4gIC0gUmVtb3ZlIGJpbmRpbmcgZm9yIGRlZGljYXRlZCBEREMgbGluZSAoQW5kcnplaiBIYWpk
+YSkuCj4gCj4gU2lnbmVkLW9mZi1ieTogU2FuZGVlcCBQYW5kYSA8c3BhbmRhQGNvZGVhdXJvcmEu
+b3JnPgo+IC0tLQoKUmV2aWV3ZWQtYnk6IFN0ZXBoZW4gQm95ZCA8c3dib3lkQGNocm9taXVtLm9y
+Zz4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVk
+cmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
