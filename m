@@ -1,37 +1,52 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v6 1/5] clk: actions: Add missing REGMAP_MMIO dependency
-Date: Sun, 15 Jul 2018 23:39:41 +0200
-Message-ID: <9b580b0c-3cbe-a608-fb21-e8950e259c2f@suse.de>
-References: <20180715203524.11948-1-sravanhome@gmail.com>
- <20180715203524.11948-2-sravanhome@gmail.com>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: Re: [RFC PATCH v2 1/4] dt-bindings: misc: Add bindings for misc. BMC
+ control fields
+Date: Mon, 16 Jul 2018 10:27:30 +0930
+Message-ID: <1531702650.981120.1441646240.2E63DD09@webmail.messagingengine.com>
+References: <20180711053122.30773-1-andrew@aj.id.au>
+ <20180711053122.30773-2-andrew@aj.id.au>
+ <20180711200450.GB17291@rob-hp-laptop>
+ <1531356830.3551458.1437853280.551CA8C5@webmail.messagingengine.com>
+ <CAL_JsqKpXxR4t_-3BOy-0mFePXkaSck_4PfHRD=OZQ-_-T5P=w@mail.gmail.com>
+ <b6ced4cad4d7ff78330181b2c893855c23103953.camel@kernel.crashing.org>
+ <1531463489.747186.1439263128.075AECE1@webmail.messagingengine.com>
+ <a521b9fc-4c10-06c1-fd73-5c64379538f6@yadro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180715203524.11948-2-sravanhome@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Saravanan Sekar <sravanhome@gmail.com>, manivannan.sadhasivam@linaro.org, sboyd@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@cubietech.com, support@cubietech.com, catalin.marinas@arm.com, mturquette@baylibre.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, darren@cubietech.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, pn@denx.de, linux-clk@vger.kernel.org, jeff.chen@actions-semi.com, mp-cs@actions-semi.com
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a521b9fc-4c10-06c1-fd73-5c64379538f6@yadro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexander Amelkin <a.amelkin@yadro.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Eugene.Cho@dell.com, linux-kernel@vger.kernel.org, Joel Stanley <joel@jms.id.au>, stewart@linux.ibm.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, avi.fishman@nuvoton.com
 List-Id: devicetree@vger.kernel.org
 
-QW0gMTUuMDcuMjAxOCB1bSAyMjozNSBzY2hyaWViIFNhcmF2YW5hbiBTZWthcjoKPiBBZGQgUkVH
-TUFQX01NSU8gYXMgZGVwZW5kZW5jeSB0byBhdm9pZCB1bmRlZmluZWQKPiByZWZlcmVuY2UgdG8g
-cmVnbWFwIHN5bWJvbHMuCj4gCj4gRml4ZXM6IGQ4NWQyMDA1M2UxOSAoImNsazogYWN0aW9uczog
-QWRkIFM5MDAgU29DIGNsb2NrIHN1cHBvcnQiKQo+IFNpZ25lZC1vZmYtYnk6IFNhcmF2YW5hbiBT
-ZWthciA8c3JhdmFuaG9tZUBnbWFpbC5jb20+CgpSZXZpZXdlZC1ieTogQW5kcmVhcyBGw6RyYmVy
-IDxhZmFlcmJlckBzdXNlLmRlPgoKVGhhbmtzLApBbmRyZWFzCgotLSAKU1VTRSBMaW51eCBHbWJI
-LCBNYXhmZWxkc3RyLiA1LCA5MDQwOSBOw7xybmJlcmcsIEdlcm1hbnkKR0Y6IEZlbGl4IEltZW5k
-w7ZyZmZlciwgSmFuZSBTbWl0aGFyZCwgR3JhaGFtIE5vcnRvbgpIUkIgMjEyODQgKEFHIE7DvHJu
-YmVyZykKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
-bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWFybS1rZXJuZWwK
+Hi Alexander,
+
+I've rearranged your reply slightly :)
+
+On Sat, 14 Jul 2018, at 00:44, Alexander Amelkin wrote:
+
+> 
+> So I'm writing this to support your position in this discussion and to
+> let Rob and other reviewers know that this feature is actually needed.
+
+Thanks.
+
+So to summarise some other replies so far, YADRO (Alexander) and Dell (Eugene) - platform vendors integrating BMCs - are interested in a solution, and the patches are seen useful for ASPEED and Nuvoton (Avi) BMCs.
+
+> 
+> From the discussion it looks to me like Rob is not familiar with
+> specifics of BMC-managed servers and tries to apply to them the rules
+> that have proven to be good for workstations and laptops.
+> 
+
+Whatever Rob's familiarity with BMCs or other systems, I'm keen to listen to, explore and gain from his experience. I was certainly expecting push back on these patches and in different circumstances I'd probably say no to them as well. The argument for them needs to stand up to scrutiny, and if that scrutiny leads to alternative solutions (that, ideally, are not /dev/mem) then that's fine.
+
+Currently I think we need what I've proposed despite it looking like a violation of abstractions, because the hardware itself doesn't have a neat, abstract design. But we could be thinking about it wrong, e.g. maybe what we need instead are no devicetree bindings and simply some in-kernel helpers that allow arbitrary drivers to instantiate the sysfs interface I've proposed for these fields under their control. That removes the need for explicit description in the devicetree, though may lead to the creation of a number of unique drivers (and bindings) that each cover only the functions we're trying to generalise over here.
+
+It would be good to have some feedback on the proposed sysfs interface as well - as explored above we could feasibly live without the bindings in their current form but taking away the sysfs interface would nuke the series.
+
+Cheers,
+
+Andrew
