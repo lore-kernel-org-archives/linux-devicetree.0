@@ -1,99 +1,91 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: Add Mediatek X20 Development Board
- support
-Date: Mon, 16 Jul 2018 15:24:44 +0200
-Message-ID: <d88504b4-409c-c42b-f816-bedefce2a819@gmail.com>
-References: <20180605163442.4812-1-manivannan.sadhasivam@linaro.org>
- <20180605163442.4812-3-manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2 1/6] dt-bindings: gpu: mali-utgard: add
+ mediatek,mt7623-mali compatible
+Date: Mon, 16 Jul 2018 15:33:30 +0200
+Message-ID: <434aae44-d289-6683-9395-cb5711cd4b71@gmail.com>
+References: <cover.1524816502.git.sean.wang@mediatek.com>
+ <7ab060c2e9ef2b220fc62913b8936b706dfaf202.1524816502.git.sean.wang@mediatek.com>
+ <3bd6e509-f99a-1f2d-1b66-65c414bacdbd@gmail.com>
+ <1530089565.29697.35.camel@mtkswgap22>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180605163442.4812-3-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <1530089565.29697.35.camel@mtkswgap22>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, robh+dt@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, taiten.peng@linaro.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, manivannanece23@gmail.com
+To: Sean Wang <sean.wang@mediatek.com>
+Cc: sboyd@codeaurora.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Manivanna,
 
-On 05/06/18 18:34, Manivannan Sadhasivam wrote:
-> Add initial device tree support for Mediatek X20 Development Board
-> based on MT6797 Deca core SoC. This board is one of the 96Boards
-> Consumer Edition platform.
+
+On 27/06/18 10:52, Sean Wang wrote:
+> On Mon, 2018-06-25 at 17:14 +0200, Matthias Brugger wrote:
+>>
+>> On 27/04/18 10:14, sean.wang@mediatek.com wrote:
+>>> From: Sean Wang <sean.wang@mediatek.com>
+>>>
+>>> The MediaTek MT7623 SoC contains a Mali-450, so add a compatible for it
+>>> and define its own vendor-specific properties.
+>>>
+>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+>>> ---
+>>
+>> Hi Rob,
+>>
+>> Any comments regarding this patch?
+>>
+>> Regards,
+>> Matthias
+>>
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  arch/arm64/boot/dts/mediatek/Makefile         |  1 +
->  .../boot/dts/mediatek/mt6797-x20-dev.dts      | 33 +++++++++++++++++++
->  2 files changed, 34 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
+> Hi, Matthias
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-> index ac17f60f998c..5b7fd6ad96e4 100644
-> --- a/arch/arm64/boot/dts/mediatek/Makefile
-> +++ b/arch/arm64/boot/dts/mediatek/Makefile
-> @@ -3,5 +3,6 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
-> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts b/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
-> new file mode 100644
-> index 000000000000..2c09ca95d9e2
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
-> @@ -0,0 +1,33 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree Source for MediaTek X20 Development Board
-> + *
-> + * Copyright (C) 2018, Linaro Ltd.
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "mt6797.dtsi"
-> +
-> +/ {
-> +	model = "Mediatek X20 Development Board";
-> +	compatible = "archermind,mt6797-x20-dev", "mediatek,mt6797";
-> +
-> +	aliases {
-> +		serial0 = &uart1;
-> +	};
+> I've already got a Reviewed-by tag from Rob.
+> 
+> Is it possible that this patch go through your tree ?
+> 
 
-Sorry for the late answer.
-Why did you use uart1 instead of uart0?
-I know that uart0 is used by the bootloader, but because of their exotic flash
-procedure I find it quite useful to see this messages in my serial connection.
-Of course you can only use 921600 baudrate then.
+Basically yes, I just want to get the mmsys problem fixed first.
+Sorry I know it is on my plate. I'll try to send a new version this week.
 
-> +
-> +	memory@40000000 {
-> +		device_type = "memory";
-> +		reg = <0 0x40000000 0 0x1e605000>;
-
-How comes this strange number for the memory size?
-
-BTW do you know the differences between the EVB board and the x20 one?
-I used the evb dts for booting up to now.
-
-Best regards,
+Regards,
 Matthias
 
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +};
-> +
-> +&uart1 {
-> +	status = "okay";
-> +};
+> 	Sean
+> 
+>>>  Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 9 +++++++++
+>>>  1 file changed, 9 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+>>> index 99d1c0a..656068f 100644
+>>> --- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+>>> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+>>> @@ -19,6 +19,7 @@ Required properties:
+>>>        + rockchip,rk3228-mali
+>>>        + rockchip,rk3328-mali
+>>>        + stericsson,db8500-mali
+>>> +      + mediatek,mt7623-mali
+>>>  
+>>>    - reg: Physical base address and length of the GPU registers
+>>>  
+>>> @@ -89,6 +90,14 @@ to specify one more vendor-specific compatible, among:
+>>>        * interrupt-names and interrupts:
+>>>          + combined: combined interrupt of all of the above lines
+>>>  
+>>> +  - mediatek,mt7623-mali
+>>> +     Required properties:
+>>> +      * resets: phandle to the reset line for the GPU
+>>> +      * mediatek,larb: phandle pointed to the local arbiter used to control the
+>>> +	access to external memory on the SoC.
+>>> +	see Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
+>>> +	for details
+>>> +
+>>>  Example:
+>>>  
+>>>  mali: gpu@1c40000 {
+>>>
+> 
 > 
