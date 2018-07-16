@@ -1,50 +1,108 @@
-Return-Path: <SRS0=iRi0=KB=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH] dt-bindings: irqchip: renesas-irqc: Document r8a77470
- support
-Date: Tue, 17 Jul 2018 10:00:03 +0000
-Message-ID: 
- <OSBPR01MB2103E15875336B7DDBBCF616B85C0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1522318628-52821-1-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdUsO_jw5Lb4jDKk6H2Zn=4kJHhFp_fBArnaddkBXDQ24Q@mail.gmail.com>
- <OSBPR01MB2103FF4CF9F5477C8D47720CB8480@OSBPR01MB2103.jpnprd01.prod.outlook.com>
- <a56c23bb-bd53-f387-9d8f-f589e53fa077@arm.com>
-In-Reply-To: <a56c23bb-bd53-f387-9d8f-f589e53fa077@arm.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=5CrG=KA=gmail.com=tmaimon77@kernel.org>
 MIME-Version: 1.0
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
+In-Reply-To: <20180716113357.GA30937@kroah.com>
+References: <20180704091427.409971-1-tmaimon77@gmail.com> <20180704091427.409971-3-tmaimon77@gmail.com>
+ <20180716113357.GA30937@kroah.com>
+From: Tomer Maimon <tmaimon77@gmail.com>
+Date: Mon, 16 Jul 2018 15:31:50 +0300
+Message-ID: <CAP6Zq1hUr_3X-B1wPZpk5o88hibusJ2w04VUeR8Tw+OqftQuZg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] misc: npcm7xx: add NPCM7xx LPC BPC driver
+Content-Type: multipart/alternative; boundary="0000000000008ee45705711d033c"
+To: Greg KH <gregkh@linuxfoundation.org>, benjaminfair@google.com
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, arnd@arnd.de, Avi Fishman <avifishman70@gmail.com>, Nancy Yuen <yuenn@google.com>, Brendan Higgins <brendanhiggins@google.com>, Patrick Venture <venture@google.com>, Joel Stanley <joel@jms.id.au>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux HWMON List <linux-hwmon@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-ID: <devicetree@vger.kernel.org>
 
-SGVsbG8gTWFyYywNCg0KU29ycnkgdG8gYm90aGVyIHlvdS4gIERvIHlvdSBnZXQgYSBjaGFuY2Ug
-dG8gc3luYyB1cCB3aXRoIFRob21hcyBmb3IgdGhpcyBwYXRjaCB0byBtYWtlIGl0IGludG8NCjQu
-MTg/DQoNClJlZ2FyZHMsDQpCaWp1DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
-RnJvbTogTWFyYyBaeW5naWVyIFttYWlsdG86bWFyYy56eW5naWVyQGFybS5jb21dDQo+IFNlbnQ6
-IDI3IEp1bmUgMjAxOCAwOTo1OA0KPiBUbzogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMu
-Y29tPg0KPiBDYzogVGhvbWFzIEdsZWl4bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+OyBKYXNvbiBD
-b29wZXINCj4gPGphc29uQGxha2VkYWVtb24ubmV0PjsgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2Vy
-bmVsLm9yZz47IE1hcmsNCj4gUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBHZWVydCBV
-eXR0ZXJob2V2ZW4NCj4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPjsgU2ltb24gSG9ybWFuIDxo
-b3Jtc0B2ZXJnZS5uZXQuYXU+OyBDaHJpcw0KPiBQYXRlcnNvbiA8Q2hyaXMuUGF0ZXJzb24yQHJl
-bmVzYXMuY29tPjsgRmFicml6aW8gQ2FzdHJvDQo+IDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNh
-cy5jb20+OyBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQNCj4gRkxBVFRFTkVEIERFVklDRSBU
-UkVFIEJJTkRJTkdTIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IExpbnV4LQ0KPiBSZW5l
-c2FzIDxsaW51eC1yZW5lc2FzLXNvY0B2Z2VyLmtlcm5lbC5vcmc+OyBHZWVydCBVeXR0ZXJob2V2
-ZW4NCj4gPGdlZXJ0QGxpbnV4LW02OGsub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBkdC1i
-aW5kaW5nczogaXJxY2hpcDogcmVuZXNhcy1pcnFjOiBEb2N1bWVudCByOGE3NzQ3MA0KPiBzdXBw
-b3J0DQo+DQo+IEhpIEJpanUsDQo+DQo+IE9uIDI3LzA2LzE4IDA5OjQzLCBCaWp1IERhcyB3cm90
-ZToNCj4gPiBIZWxsbyBNYXJjLA0KPiA+DQo+ID4gU29ycnkgdG8gYm90aGVyIHlvdS4gIEFyZSB5
-b3UgaGFwcHkgdG8gbWVyZ2UgdGhlIGJlbG93IHBhdGNoIHdpdGggNC4xOC0NCj4gcmMzPw0KPiA+
-IGh0dHBzOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2xpbnV4LXJlbmVzYXMtc29jL21zZzI1Nzg4
-Lmh0bWwNCj4NCj4gVGhpcyBpcyBvZGQuIEkgcXVldWVkIHRoYXQgaW4gQXByaWwgYXMgcGFydCBv
-ZiBhIHBvdGVudGlhbCBzZWNvbmQgc2V0IG9mIGZpeGVzIGZvcg0KPiA0LjE3LCBidXQgc29tZWhv
-dyBmYWlsZWQgdG8gZXZlciBzZW5kIHRoZSBwdWxsIHJlcXVlc3QgKGFuZCB0aGlzIHdhcyB0aGUg
-b25seQ0KPiBwYXRjaCBJIGhhZCBhdCB0aGF0IHBvaW50KS4NCj4NCj4gQXBvbG9naWVzIGZvciB0
-aGUgZGVsYXksIEknbGwgc3luYyB1cCB3aXRoIFRob21hcyBmb3IgdGhpcyBwYXRjaCB0byBtYWtl
-IGl0IGludG8NCj4gNC4xOC4NCj4NCj4gVGhhbmtzIGZvciB0aGUgaGVhZHMgdXAsDQo+DQo+IE0u
-DQo+IC0tDQo+IEphenogaXMgbm90IGRlYWQuIEl0IGp1c3Qgc21lbGxzIGZ1bm55Li4uDQoNCg0K
-DQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBMdGQsIER1a2VzIE1lYWRvdywgTWlsbGJvYXJk
-IFJvYWQsIEJvdXJuZSBFbmQsIEJ1Y2tpbmdoYW1zaGlyZSwgU0w4IDVGSCwgVUsuIFJlZ2lzdGVy
-ZWQgaW4gRW5nbGFuZCAmIFdhbGVzIHVuZGVyIFJlZ2lzdGVyZWQgTm8uIDA0NTg2NzA5Lg0K
+--0000000000008ee45705711d033c
+Content-Type: text/plain; charset="UTF-8"
+
+[+Benjamin Fair]
+
+Hi Greg,
+
+This hardware is working in the same manner that Aspeed lpc snooping driver
+(/drivers/misc/aspeed-lpc-snoop.c)
+
+On 16 July 2018 at 14:33, Greg KH <gregkh@linuxfoundation.org> wrote:
+
+> On Wed, Jul 04, 2018 at 12:14:27PM +0300, Tomer Maimon wrote:
+> > Add Nuvoton BMC NPCM7xx BIOS post code (BPC) driver.
+> >
+> > The NPCM7xx BPC monitoring two I/O address written by
+> > the host on the Low Pin Count (LPC) bus, the capure
+> > data stored in 128-word FIFO.
+> >
+> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+>
+> It would be great to get someone else who knows that this hardware is
+> supposed to be doing to ack or sign-off on this patch, as I don't know
+> if this really is providing the correct api for it or not.
+>
+
+Joel could you sign-off this patch please.
+
+Right now it's just reading data from the hardware, what good is that?
+> Who uses this?  What userspace tools connect up to it?
+>
+
+BMC is logging a configurable I/O port (for example 0x80 port which is BIOS
+post code) and remote management can get.
+
+about tools, the OpenBMC is using it.
+https://github.com/openbmc/phosphor-host-postd
+
+
+> thanks,
+>
+> greg k-h
+>
+
+thanks,
+
+Tomer
+
+--0000000000008ee45705711d033c
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">[+Benjamin Fair]=C2=A0<div><br></div><div>Hi Greg,</div><d=
+iv><br></div><div>This hardware is working in the same manner that Aspeed l=
+pc snooping driver (/drivers/misc/aspeed-lpc-snoop.c)</div><div><br></div><=
+div class=3D"gmail_extra"><div class=3D"gmail_quote">On 16 July 2018 at 14:=
+33, Greg KH <span dir=3D"ltr">&lt;<a href=3D"mailto:gregkh@linuxfoundation.=
+org" target=3D"_blank">gregkh@linuxfoundation.org</a>&gt;</span> wrote:<br>=
+<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
+left:1px solid rgb(204,204,204);padding-left:1ex"><span class=3D"gmail-">On=
+ Wed, Jul 04, 2018 at 12:14:27PM +0300, Tomer Maimon wrote:<br>
+&gt; Add Nuvoton BMC NPCM7xx BIOS post code (BPC) driver.<br>
+&gt; <br>
+&gt; The NPCM7xx BPC monitoring two I/O address written by<br>
+&gt; the host on the Low Pin Count (LPC) bus, the capure<br>
+&gt; data stored in 128-word FIFO.<br>
+&gt; <br>
+&gt; Signed-off-by: Tomer Maimon &lt;<a href=3D"mailto:tmaimon77@gmail.com"=
+>tmaimon77@gmail.com</a>&gt;<br>
+<br>
+</span>It would be great to get someone else who knows that this hardware i=
+s<br>
+supposed to be doing to ack or sign-off on this patch, as I don&#39;t know<=
+br>
+if this really is providing the correct api for it or not.=C2=A0<br></block=
+quote><div>=C2=A0</div><div>Joel could you sign-off this patch please.</div=
+><div><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0=
+px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
+Right now it&#39;s just reading data from the hardware, what good is that?<=
+br>
+Who uses this?=C2=A0 What userspace tools connect up to it?<br></blockquote=
+><div><br></div><div>BMC is logging a configurable I/O port (for example 0x=
+80 port which is BIOS post code) and remote management can get.=C2=A0</div>=
+<div><br></div><div>about tools, the OpenBMC is using it.</div><div><a href=
+=3D"https://github.com/openbmc/phosphor-host-postd">https://github.com/open=
+bmc/phosphor-host-postd</a><br></div><div>=C2=A0</div><blockquote class=3D"=
+gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(20=
+4,204,204);padding-left:1ex">
+thanks,<br>
+<br>
+greg k-h<br></blockquote><div><br></div><div>thanks,</div><div><br></div><d=
+iv>Tomer=C2=A0</div></div><br></div></div>
+
+--0000000000008ee45705711d033c--
