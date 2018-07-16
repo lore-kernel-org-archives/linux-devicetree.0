@@ -1,17 +1,17 @@
-From: Ulrich Hecht <ulrich.hecht@gmail.com>
-Subject: Re: [PATCH v3 2/2] arm64: dts: renesas: condor/v3hsk: add
- DU/LVDS/HDMI support
-Date: Mon, 16 Jul 2018 11:16:53 +0200
-Message-ID: <CAO3366wzXc+KY2uMVp5FGS9RyGyaFgktWS__kSTdu3AAWVxZKQ@mail.gmail.com>
-References: <95d0db34-713d-8206-00c2-ee9a42aab823@cogentembedded.com>
- <c78f1228-afb0-54cf-5d9e-5c812b678de3@cogentembedded.com>
- <20180614072426.vq42mmb3gsmv6z5k@verge.net.au>
- <20180716075325.y7jtwyqxwerdmfy3@verge.net.au>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [dts] [v2] fix green/blue pio-led on bananapi-r2
+Date: Mon, 16 Jul 2018 11:16:56 +0200
+Message-ID: <13bab02e-0dc7-0ad9-3dde-fa4eef9e4411@gmail.com>
+References: <trinity-ae29ad25-a4fb-47f3-8d68-f6e58c875a0e-1529682447976@3c-app-gmx-bs42>
+ <trinity-0d48bc23-f754-4da3-af01-c3a7abe1d34b-1529682783853@3c-app-gmx-bs42>
+ <1529918263.29697.31.camel@mtkswgap22>
+ <trinity-28694d63-092a-48be-aade-ba680b5c4e70-1529921159405@3c-app-gmx-bs16>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180716075325.y7jtwyqxwerdmfy3@verge.net.au>
+In-Reply-To: <trinity-28694d63-092a-48be-aade-ba680b5c4e70-1529921159405@3c-app-gmx-bs16>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,39 +21,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Frank Wunderlich <frank-w@public-files.de>, Sean Wang <sean.wang@mediatek.com>
+Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 16, 2018 at 9:53 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Thu, Jun 14, 2018 at 09:24:27AM +0200, Simon Horman wrote:
->> On Wed, Jun 13, 2018 at 11:12:40PM +0300, Sergei Shtylyov wrote:
->> > Define the Condor/V3HSK board dependent parts of the DU and  LVDS device
->> > nodes. Also add the device nodes for Thine THC63LVD1024 LVDS decoder and
->> > Analog Devices ADV7511W HDMI transmitter...
->> >
->> > Based on the original (and large) patch by Vladimir Barinov.
->> >
->> > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
->> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->> >
->> > ---
->> > Changes in version 2:
->> > - added the V3HSK DT update, reworded the description, renamed the patch;
->> > - added a space between the HDMI node name and a brace.
->> >
->> >  arch/arm64/boot/dts/renesas/r8a77980-condor.dts |  106 +++++++++++++++++++++
->> >  arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts  |  120 ++++++++++++++++++++++++
->>
->> Laurent, could you review this?
->
-> Ping
-
-For the Condor part:
-
-Reviewed-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-
-Unfortunately, I do not have documentation for the other board.
-
-CU
-Uli
+CgpPbiAyNS8wNi8xOCAxMjowNSwgRnJhbmsgV3VuZGVybGljaCB3cm90ZToKPiAKPiBGcm9tOiBG
+cmFuayBXdW5kZXJsaWNoIDxmcmFuay13QHB1YmxpYy1maWxlcy5kZT4KPiBEYXRlOiBNb24sIDI1
+IEp1biAyMDE4IDExOjU3OjEzICswMjAwCj4gU3ViamVjdDogW1BBVENIXSBbZHRzXSBbdjJdIGZp
+eCBncmVlbi9ibHVlIHBpby1sZWQKPiAgcGlvLWxlZHMgKG5lYXIgR1BJTy1IZWFkZXIpIGFyZSBz
+d2FwcGVkIGFuZCBMT1ctYWN0aXZlIAo+ICBwYXRjaCByZXN0b3JlIHRoaXMgZXhwZWN0ZWQgYmVo
+YXZpb3VyCj4gIHJlZCBjYW5ub3QgYmUgc3dpdGNoZWQgYWZhaWsKPiAKPiB2MjogYWxwaGFiZXRp
+YyBvcmRlcgo+IAoKSSBmaXhlZCB0aGUgY29tbWl0IG1lc3NhZ2UgYW5kIHB1c2hlZCBpdCB0byB2
+NC4xOC1uZXh0L2R0czMyCgo+IFNpZ25lZC1vZmYtYnk6IEZyYW5rIFd1bmRlcmxpY2ggPGZyYW5r
+LXdAcHVibGljLWZpbGVzLmRlPgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9tdDc2MjNuLWJh
+bmFuYXBpLWJwaS1yMi5kdHMgfCA2ICsrKy0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRp
+b25zKCspLCAzIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0
+cy9tdDc2MjNuLWJhbmFuYXBpLWJwaS1yMi5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9tdDc2MjNu
+LWJhbmFuYXBpLWJwaS1yMi5kdHMKPiBpbmRleCA1MzFkOTA1ZDkyNGZmLi4yYjc2MGY5MGYzOGM4
+IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL210NzYyM24tYmFuYW5hcGktYnBpLXIy
+LmR0cwo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL210NzYyM24tYmFuYW5hcGktYnBpLXIyLmR0
+cwo+IEBAIC05MSwxOSArOTEsMTkgQEAKPiAgCj4gIAkJYmx1ZSB7Cj4gIAkJCWxhYmVsID0gImJw
+aS1yMjpwaW86Ymx1ZSI7Cj4gLQkJCWdwaW9zID0gPCZwaW8gMjQxIEdQSU9fQUNUSVZFX0hJR0g+
+Owo+ICsJCQlncGlvcyA9IDwmcGlvIDI0MCBHUElPX0FDVElWRV9MT1c+Owo+ICAJCQlkZWZhdWx0
+LXN0YXRlID0gIm9mZiI7Cj4gIAkJfTsKPiAgCj4gIAkJZ3JlZW4gewo+ICAJCQlsYWJlbCA9ICJi
+cGktcjI6cGlvOmdyZWVuIjsKPiAtCQkJZ3Bpb3MgPSA8JnBpbyAyNDAgR1BJT19BQ1RJVkVfSElH
+SD47Cj4gKwkJCWdwaW9zID0gPCZwaW8gMjQxIEdQSU9fQUNUSVZFX0xPVz47Cj4gIAkJCWRlZmF1
+bHQtc3RhdGUgPSAib2ZmIjsKPiAgCQl9Owo+ICAKPiAgCQlyZWQgewo+ICAJCQlsYWJlbCA9ICJi
+cGktcjI6cGlvOnJlZCI7Cj4gLQkJCWdwaW9zID0gPCZwaW8gMjM5IEdQSU9fQUNUSVZFX0hJR0g+
+Owo+ICsJCQlncGlvcyA9IDwmcGlvIDIzOSBHUElPX0FDVElWRV9MT1c+Owo+ICAJCQlkZWZhdWx0
+LXN0YXRlID0gIm9mZiI7Cj4gIAkJfTsKPiAgCX07Cj4gCj4gwqAKPiAKPiBfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IExpbnV4LW1lZGlhdGVrIG1haWxp
+bmcgbGlzdAo+IExpbnV4LW1lZGlhdGVrQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW1lZGlhdGVrCj4gCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
+bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
+Cg==
