@@ -1,206 +1,220 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-Subject: Re: [PATCH v9 00/12] Sunxi: Add SMP support on A83T
-Date: Mon, 16 Jul 2018 22:08:27 +0200
-Message-ID: <20180716200827.t3qbn5qygi3w6owj@core>
-References: <20180504190545.5114-1-mylene.josserand@bootlin.com>
- <20180626115335.cou6o22lks2stign@core>
- <20180716090538.6097b5d1@dell-desktop.home>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/4 v1] net: dsa: Add bindings for Realtek SMI DSAs
+Date: Mon, 16 Jul 2018 14:45:35 -0600
+Message-ID: <20180716204535.GA22125@rob-hp-laptop>
+References: <20180714094556.30791-1-linus.walleij@linaro.org>
+ <20180714094556.30791-2-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180716090538.6097b5d1@dell-desktop.home>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, opendmb@gmail.com, quentin.schulz@bootlin.com, horms@verge.net.au, maxime.ripard@bootlin.com, magnus.damm@gmail.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, marc.zyngier@arm.com, wens@csie.org, robh+dt@kernel.org, geert@linux-m68k.org, thomas.petazzoni@bootlin.com, clabbe.montjoie@gmail.com, f.fainelli@gmail.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180714094556.30791-2-linus.walleij@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, openwrt-devel@lists.openwrt.org, LEDE Development List <lede-dev@lists.infradead.org>, Antti =?iso-8859-1?Q?Sepp=E4l=E4?= <a.seppala@gmail.com>, Roman Yeryomin <roman@advem.lv>, Colin Leitner <colin.leitner@googlemail.com>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gTXlsw6huZSwKCnRoYW5rcyBmb3IgeW91ciByZXNwb25zZS4KCk9uIE1vbiwgSnVsIDE2
-LCAyMDE4IGF0IDA5OjA1OjM4QU0gKzAyMDAsIE15bMOobmUgSm9zc2VyYW5kIHdyb3RlOgo+IEhl
-bGxvLAo+IAo+IFBsZWFzZSwgZXhjdXNlIG15IGxhdGUgYW5zd2VyLgo+IAo+IE9uIFR1ZSwgMjYg
-SnVuIDIwMTggMTM6NTM6MzUgKzAyMDAKPiBPbmTFmWVqIEppcm1hbiA8ZG91ZGFod2V6b21pZWNo
-YWh0YWhAeGZmLmN6PiB3cm90ZToKPiAKPiA+IEhlbGxvIE15bMOobmUsCj4gPiAKPiA+IE9uIEZy
-aSwgTWF5IDA0LCAyMDE4IGF0IDA5OjA1OjMzUE0gKzAyMDAsIE15bMOobmUgSm9zc2VyYW5kIHdy
-b3RlOgo+ID4gPiBIZWxsbyBldmVyeW9uZSwKPiA+ID4gCj4gPiA+IFRoaXMgaXMgYSBWOSBvZiBt
-eSBzZXJpZXMgdGhhdCBhZGRzIFNNUCBzdXBwb3J0IGZvciBBbGx3aW5uZXIgc3VuOGktYTgzdC4K
-PiA+ID4gQmFzZWQgb24gc3VueGkncyB0cmVlLCBzdW54aS9mb3ItbmV4dCBicmFuY2guCj4gPiA+
-IERlcGVuZHMgb24gYSBwYXRjaCBmcm9tIERvdWcgQmVyZ2VyIHRoYXQgYWxsb3dzIHRvIGluY2x1
-ZGUgdGhlICJjcHUtdHlwZSIKPiA+ID4gaGVhZGVyIG9uIGFzc2VtYmx5IGZpbGVzIHRoYXQgSSBp
-bmNsdWRlZCBpbiBteSBzZXJpZXMgKHBhdGNoIDAxKS4gIAo+ID4gCj4gPiBJJ3ZlIHRlc3RlZCB5
-b3VyIHBhdGNoZXMgYW5kIHRoZSBrZXJuZWwgYWx3YXlzIGxvY2tzIHVwIHdoZW4gZGlzYWJsaW5n
-IHRoZSBmaXJzdAo+ID4gQ1BVIGluIHRoZSBzZWNvbmQgY2x1c3Rlci4gSSBjYW4gZW5hYmxlL2Rp
-c2FibGUgb3RoZXIgQ1BVcyBpbiB0aGUgc2Vjb25kIGNsdXN0ZXIKPiA+IHRob3VnaC4KPiAKPiBU
-aGFuayB5b3UgZm9yIHRlc3RpbmcgaXQuCj4gSW5kZWVkLCBJIHRlc3RlZCBpdCBhbmQgSSBjYW4g
-YWxzbyByZXByb2R1Y2UgdGhlIGlzc3VlIHdpdGggQ1BVNC4gSQo+IHdpbGwgaGF2ZSBhIGxvb2sg
-YnV0IEkgc3VzcGVjdCBpdCBpcyB0aGUgc2FtZSBiZWhhdmlvciB0aGF0IHdlIGhhdmUgd2l0aCBD
-UFUwLgo+IAo+ID4gCj4gPiBPdGhlciB0aGluZyBJIG9ic2VydmVkIHdhcywgdGhhdCB3aGVuIGRp
-c2FibGluZyBjb3JlcyBubyBwb3dlciBpcyBzYXZlZCAobm90Cj4gPiBldmVuIGEgdGlueSBiaXQp
-LCB3aGljaCBpcyBzbGlnaHRseSBzdXJwcmlzaW5nLgo+ID4gCj4gPiBGcm9tIHRoZSBzdGFuZHBv
-aW50IG9mIHRoZSBEVCwgQTgzVCBDUFUgY29uZmlnIHNlZW1zIHRvIGxhY2sgc29tZSBjcHUKPiA+
-IHByb3BlcnRpZXMsIHdoaWNoIG1ha2VzIGl0IG5vdCBjbGFpbSBhIGNsdXN0ZXIgY2xvY2sgd2hl
-biBJIGVuYWJsZSBhbnkgb3RoZXIKPiA+IENQVSB0aGFuIHRoZSBmaXJzdCBDUFUgaW4gdGhlIGNs
-dXN0ZXIuCj4gCj4gSW5kZWVkLiBJZiBJIGhhdmUgdGltZSwgSSB3aWxsIGxvb2sgYXQgaXQgYnV0
-IEkgd291bGQgbGlrZSB0byBmb2N1cyBvbgo+IHRoZSBDUFUwIGhvdHBsdWcuCj4gCj4gPiAKPiA+
-IFRoZSBzYW1lIGdvZXMgZm9yIGNwdS1zdXBwbHkgcmVndWxhdG9yLiBXaGVuIEkgZHVtcCB0aGUg
-c3RhdGUgb2YgcmVndWxhdG9ycwo+ID4gYWZ0ZXIgYm9vdGluZyB3aXRoIG1heGNwdXM9MSBhbmQg
-ZW5hYmxpbmcgY3B1NSwgdGhlIHJlZ3VsYXRvciBvbiB0aGUgc2Vjb25kCj4gPiBjbHVzdGVyIGlz
-IG5vdCBjbGFpbWVkLCBidXQgd2hlbiBJIGFkZCBjcHUtc3VwcGx5IHByb3BlcnR5IG9uIGFsbCBj
-cHUjIG5vZGVzLAo+ID4gSSBnZXQgKHdoZW4gZW5hYmxpbmcgQ1BVNSk6Cj4gPiAKPiA+IFsgIDIw
-MC4wNzI4OTVdIENQVTU6IHVwZGF0ZSBjcHVfY2FwYWNpdHkgMTAyNAo+ID4gWyAgMjAwLjA3Mjkx
-NF0gQ1BVNTogdGhyZWFkIC0xLCBjcHUgMSwgc29ja2V0IDEsIG1waWRyIDgwMDAwMTAxCj4gPiBb
-ICAyMDAuMTUxNDAzXSBjcHUgY3B1NTogb3BwX2xpc3RfZGVidWdfY3JlYXRlX2xpbms6IEZhaWxl
-ZCB0byBjcmVhdGUgbGluawo+ID4gWyAgMjAwLjE1MTQxMV0gY3B1IGNwdTU6IF9hZGRfb3BwX2Rl
-djogRmFpbGVkIHRvIHJlZ2lzdGVyIG9wcCBkZWJ1Z2ZzICgtMTIpCj4gCj4gT2theS4gV2hpY2gg
-Ym9hcmQgYXJlIHlvdSB1c2luZz8gSW4gbXkgY2FzZSwgSSBkaWQgbm90IG5lZWQKPiByZWd1bGF0
-b3JzLiBBbmQsIG1heWJlLCB5b3UgaW52ZXN0aWdhdGVkIG9uIGl0IGFscmVhZHk/CgpJJ20gdGVz
-dGluZyBvbiBUQlMgQTcxMSB0YWJsZXQuIEl0IGhhcyBzZXBhcmF0ZSByZWd1bGF0b3IgZm9yIGVh
-Y2ggb2YgdGhlCmNsdXN0ZXJzLgoKPiA+IAo+ID4gSSdtIG5vdCBoYXZpbmcgbXVjaCBsdWNrIHdp
-dGggdGhpcy4gRG8geW91IGhhdmUgc29tZSBzdWdnZXN0aW9ucywgcGxlYXNlPwo+ID4gSSdsbCBw
-cm9iYWJseSBmaWd1cmUgb3V0IHRoZSBsYXN0IGlzc3VlIHdpdGggdGhlIHJlZ3VsYXRvcnMsIGJ1
-dCBJJ20gYXQgdGhlCj4gPiBsb3NzIGFib3V0IHRoZSBsb2NrdXAgb24gQ1BVNCBkaXNhYmxlLgo+
-IAo+IEkgd2lsbCBoYXZlIGEgbG9vayBpbiBuZXh0IHdlZWtzIG9uIGhvdHBsdWcgb2YgQ1BVMC4g
-SSBndWVzcyAoYW5kCj4gaG9wZSkgdGhhdCBpdCB3aWxsIGZpeCB0aGUgaXNzdWUgd2l0aCBDUFU0
-LgoKVGhhdCdzIGludGVyZXN0aW5nLiBZb3UgbWF5IGZpbmQgaW50ZXJlc3RpbmcgbXkgYXR0ZW1w
-dCBhdCBtYWtpbmcgYSBmaXJtd2FyZQpmb3IgQ1BVUy4gU2VlIGhlcmU6IGh0dHBzOi8vbWVnb3Vz
-LmNvbS9naXQvYXJpc2MtZmlybXdhcmUvCgpJdCBtaWdodCBoZWxwIHdpdGggZGVidWdnaW5nLiBZ
-b3Ugc2hvdWxkIGJlIGFibGUgdG8gcG9rZSByZWdpc3RlcnMgb3ZlciBVQVJUCnJlZ2FyZGxlc3Mg
-b2Ygd2hldGhlciBhbnkgb2YgdGhlIEFSTSBDUFVzIGFyZSBydW5uaW5nLiBJdCdzIHRhcmdldHRl
-ZCBhdCBBODNULApBVE0uIFlvdSBjYW4gZXZlbiBsb2FkIGl0IGFuZCBzdGFydCBpdCBmcm9tIExp
-bnV4IGFuZCBpdCBzb3J0IG9mIHNoYXJlcyB0aGUgc2FtZQpkZWJ1Z2dpbmcgVUFSVCBhcyBMaW51
-eCBjb25zb2xlLiA7LSkKCnJlZ2FyZHMsCiAgby4KCj4gVGhhbmtzLAo+IEJlc3QgcmVnYXJkcywK
-PiAKPiBNeWzDqG5lCj4gCj4gPiAKPiA+IHRoYWtzIGFuZCByZWdhcmRzLAo+ID4gICBPbmRyZWog
-SmlybWFuCj4gPiAKPiA+ID4gVGhlIGRpZmZlcmVuY2Ugd2l0aCB0aGUgdjggaXMganVzdCB0aGF0
-IHRoZSBtYWNoaW5lIGlzIHJlbmFtZWQgaW4gc3VuOGktYTgzdAo+ID4gPiAoc2VlIHBhdGNoIDA3
-KSwgYWNjb3JkaW5nIHRvIE1heGltZSdzIHJldmlldy4KPiA+ID4gCj4gPiA+IFRoYW5rIHlvdSBp
-biBhZHZhbmNlLAo+ID4gPiBCZXN0IHJlZ2FyZHMsCj4gPiA+IE15bMOobmUKPiA+ID4gCj4gPiA+
-IENoYW5nZXMgZnJvbSB2ODoKPiA+ID4gICAgIC0gUmVuYW1lIG1hY2hpbmUgaW50byAic3VuOGkt
-YTgzdCIKPiA+ID4gCj4gPiA+IENoYW5nZXMgZnJvbSB2NzoKPiA+ID4gICAgIC0gQWRkIHRoZSBw
-YXRjaCBvZiBEb3VnIEJlcmdlciBpbiBteSBzZXJpZXMuCj4gPiA+ICAgICAtIFJlbmFtZSB0aGUg
-bWFjaGluZSBuYW1lIHRvIHN0YXJ0IHNlY3VyZV9jbnR2b2ZmIGludG8gInN1bjhpLWE4M3QiLAo+
-ID4gPiAgICAgYWNjb3JkaW5nIHRvIE1heGltZSdzIHJldmlldy4KPiA+ID4gICAgIC0gQ2hhbmdl
-IHRoZSB0eXBlIG9mIGlzX2E4M3QgZmllbGQgZnJvbSBpbnRlZ2VyIGludG8gYm9vbGVhbi4KPiA+
-ID4gCj4gPiA+IENoYW5nZXMgZnJvbSB2NjoKPiA+ID4gICAgIC0gQ29ycmVjdCB0aGUgY29tbWl0
-IGxvZyBvbiBwYXRjaCAwNyBhY2NvcmRpbmcgdG8gU2VyZ2VpIFNodHlseW92J3MKPiA+ID4gICAg
-IHJldmlldy4KPiA+ID4gICAgIC0gUmVuYW1lIHRoZSBmaWVsZCAiaXNfc3VuOGkiIGludG8gImlz
-X2E4M3QiLgo+ID4gPiAgICAgLSBBZGQgYWxsIFRlc3RlZC1ieSBhbmQgUmV2aWV3ZWQtYnkgZnJv
-bSBwcmV2aW91cyB2ZXJzaW9uLgo+ID4gPiAKPiA+ID4gQ2hhbmdlcyBmcm9tIHY1Ogo+ID4gPiAg
-ICAgLSBSZW1vdmUgbXkgcGF0Y2ggMDEgYW5kIHVzZSB0aGUgcGF0Y2ggb2YgRG91ZyBCZXJnZXIg
-dG8gYmUgYWJsZSB0bwo+ID4gPiAgICAgaW5jbHVkZSB0aGUgY3B1LXR5cGUgaGVhZGVyIG9uIGFz
-c2VtYmx5IGZpbGVzLgo+ID4gPiAgICAgLSBSZW5hbWUgc21wX2luaXRfY250dm9mZiBmdW5jdGlv
-biBpbnRvIHNlY3VyZV9jbnR2b2ZmX2luaXQgYWNjb3JkaW5nCj4gPiA+ICAgICB0byBNYXJjIFp5
-bmdpZXIncyByZXZpZXcuCj4gPiA+ICAgICAtIEFjY29yZGluZyB0byBDaGVuLVl1IGFuZCBNYXhp
-bWUncyByZXZpZXdzLCByZW1vdmUgdGhlIHBhdGNoIHRoYXQgd2FzCj4gPiA+ICAgICBtb3Zpbmcg
-c3RydWN0dXJlcy4gSW5zdGVhZCBvZiB1c2luZyBhbiBpbmRleCB0byByZXRyaWV2ZSB3aGljaAo+
-ID4gPiAgICAgYXJjaGl0ZWN0dXJlIHdlIGFyZSBoYXZpbmcsIHVzZSBhIGdsb2JhbCB2YXJpYWJs
-ZS4KPiA+ID4gICAgIC0gTWVyZ2UgdGhlIDIgcGF0Y2hlcyB0aGF0IG1vdmUgYXNzZW1ibHkgY29k
-ZSBmcm9tIEMgdG8gYXNzZW1ibHkgZmlsZS4KPiA+ID4gICAgIC0gVXNlIGEgc3VuOGkgZmllbGQg
-aW5zdGVhZCBvZiBzdW45aSB0byBrbm93IG9uIHdoaWNoIGFyY2hpdGVjdHVyZSB3ZQo+ID4gPiAg
-ICAgYXJlIHVzaW5nIGJlY2F1c2UgbWFueSBtb2RpZmljYXRpb25zL2FkZGl0aW9ucyBvZiB0aGUg
-Y29kZSBhcmUgZm9yCj4gPiA+ICAgICBzdW44aS1hODN0Lgo+ID4gPiAgICAgLSBSZXdvcmsgdGhl
-IHBhdGNoICJhZGQgaXNfc3VuOGkgZmllbGQiIHRvIGFkZCBvbmx5IHRoaXMgZmllbGQgaW4gdGhp
-cwo+ID4gPiAgICAgcGF0Y2guIFRoZSBwYXJ0IG9mIHRoZSBwYXRjaCB0aGF0IHdhcyBzdGFydGlu
-ZyB0byBoYW5kbGUgdGhlIGRpZmZlcmVuY2VzCj4gPiA+ICAgICBiZXR3ZWVuIHN1bjhpLWE4M3Qg
-YW5kIHN1bjlpLWE4MCBpcyBtZXJnZWQgaW4gdGhlIHBhdGNoIHRoYXQgYWRkcyB0aGUKPiA+ID4g
-ICAgIHN1cHBvcnQgb2Ygc3VuOGktYTgzdC4KPiA+ID4gICAgIC0gQWRkIGEgbmV3IHBhdGNoIHRo
-YXQgcmVmYWN0b3IgdGhlIHNobW9iaWxlIGNvZGUgdG8gdXNlIHRoZSBuZXcgZnVuY3Rpb24KPiA+
-ID4gICAgIHNlY3VyZV9jbnR2b2ZmX2luaXQgaW50cm9kdWNlZCBpbiB0aGlzIHNlcmllcy4KPiA+
-ID4gCj4gPiA+IENoYW5nZXMgZnJvbSB2NDoKPiA+ID4gICAgIC0gUmViYXNlZCBteSBzZXJpZXMg
-YWNjb3JkaW5nIHRvIG5ldyBDaGVuLVl1IHNlcmllczoKPiA+ID4gICAgICAgICJBUk06IHN1bnhp
-OiBDbGVhbiBhbmQgaW1wcm92ZW1lbnRzIGZvciBtdWx0aS1jbHVzdGVyIFNNUCIKPiA+ID4gICAg
-ICAgIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE4LzMvOC84ODYKPiA+ID4gICAgIC0gVXBkYXRl
-ZCBteSBzZXJpZXMgYWNjb3JkaW5nIHRvIE1hcmMgWnluZ2llcidzIHJldmlld3MgdG8gYWRkIENO
-VFZPRkYKPiA+ID4gICAgIGluaXRpYWxpemF0aW9uJ3MgZnVuY3Rpb24gaW50byBBUk0ncyBjb21t
-b24gcGFydC4gVGhhbmtzIHRvIHRoYXQsIG90aGVyCj4gPiA+ICAgICBwbGF0Zm9ybXMgc3VjaCBh
-cyBSZW5lc2EgY2FuIHVzZSB0aGlzIGZ1bmN0aW9uLgo+ID4gPiAgICAgLSBGb3IgYm9vdCBDUFUs
-IGNyZWF0ZSBhIG5ldyBtYWNoaW5lIHRvIGhhbmRsZSB0aGUgQ05UVk9GRiBpbml0aWFsaXphdGlv
-bgo+ID4gPiAgICAgdXNpbmcgImluaXRfZWFybHkiIGNhbGxiYWNrLgo+ID4gPiAKPiA+ID4gQ2hh
-bmdlcyBmcm9tIHYzOgo+ID4gPiAgICAgLSBUYWtlIGludG8gYWNjb3VudCBNYXhpbWUncyByZXZp
-ZXdzOgo+ID4gPiAJLSBzcGxpdCB0aGUgZmlyc3QgcGF0Y2ggaW50byA0IG5ldyBwYXRjaGVzOiBh
-ZGQgc3VuOWkgZGV2aWNlIHRyZWUKPiA+ID4gCXBhcnNpbmcsIHJlbmFtZSBzb21lIHZhcmlhYmxl
-cywgYWRkIGE4M3Qgc3VwcG9ydCBhbmQgZmluYWxseSwKPiA+ID4gCWFkZCBob3RwbHVnIHN1cHBv
-cnQuCj4gPiA+IAktIE1vdmUgdGhlIGNvZGUgb2YgcHJldmlvdXMgcGF0Y2ggMDcgKHRvIGRpc2Fi
-bGUgQ1BVMCBkaXNhYmxpbmcpCj4gPiA+IAlpbnRvIGhvdHBsdWcgc3VwcG9ydCBwYXRjaCAoc2Vl
-IHBhdGNoIDA0KQo+ID4gPiAJLSBSZW1vdmUgdGhlIHBhdGNoIHRoYXQgYWRkZWQgUFJDTSByZWdp
-c3RlciBiZWNhdXNlIGl0IGlzIGFscmVhZHkKPiA+ID4gCWF2YWlsYWJsZS4gQmVjYXVzZSBvZiB0
-aGF0LCB1cGRhdGUgdGhlIGRldmljZSB0cmVlIHBhcnNpbmcgdG8gdXNlCj4gPiA+IAkic3VuOGkt
-YTgzdC1yLWNjdSIuCj4gPiA+IAktIFVzZSBhIHZhcmlhYmxlIHRvIGtub3cgd2hpY2ggU29DIHdl
-IGN1cnJlbnRseSBoYXZlCj4gPiA+ICAgICAtIFRha2UgaW50byBhY2NvdW50IENoZW4tWXUncyBy
-ZXZpZXdzOiBjcmVhdGUgdHdvIGlvdW5tYXAgZnVuY3Rpb25zCj4gPiA+ICAgICB0byByZWxlYXNl
-IHRoZSByZXNvdXJjZXMgb2YgdGhlIGRldmljZSB0cmVlIHBhcnNpbmcuCj4gPiA+ICAgICAtIFRh
-a2UgaW50byBhY2NvdW50IE1hcmMncyByZXZpZXc6IFVwZGF0ZSB0aGUgY29kZSB0byBpbml0aWFs
-aXplIENOVFZPRkYKPiA+ID4gICAgIHJlZ2lzdGVyLiBBcyB0aGVyZSBpcyBhbHJlYWR5IGFzc2Vt
-Ymx5IGNvZGUgaW4gdGhlIGRyaXZlciwgSSBkZWNpZGVkCj4gPiA+ICAgICB0byBjcmVhdGUgYW4g
-YXNzZW1ibHkgZmlsZSBub3QgdG8gbWl4IGFzc2VtYmx5IGFuZCBDIGNvZGUuCj4gPiA+ICAgICBG
-b3IgdGhhdCwgSSBjcmVhdGUgMyBuZXcgcGF0Y2hlczogbW92ZSB0aGUgY3VycmVudCBhc3NlbWJs
-eSBjb2RlIHRoYXQKPiA+ID4gICAgIGhhbmRsZXMgdGhlIGNsdXN0ZXIgY2FjaGUgZW5hYmxpbmcg
-aW50byBhIGZpbGUsIG1vdmUgdGhlIGNwdV9yZXN1bWUgZW50cnkKPiA+ID4gICAgIGluIHRoaXMg
-ZmlsZSBhbmQgZmluYWxseSwgYWRkIGEgbmV3IGFzc2VtYmx5IGVudHJ5IHRvIGluaXRpYWxpemUg
-dGhlIHRpbWVyCj4gPiA+ICAgICBvZmZzZXQgZm9yIGJvb3QgQ1BVIGFuZCBzZWNvbmRhcnkgQ1BV
-cy4KPiA+ID4gCj4gPiA+IENoYW5nZXMgZnJvbSB2MjoKPiA+ID4gICAgIC0gUmViYXNlZCBteSBt
-b2RpZmljYXRpb25zIGFjY29yZGluZyB0byBuZXcgQ2hlbiBZdSdzIHBhdGNoIHNlcmllcwo+ID4g
-PiAgICAgdGhhdCBhZGRzIFNNUCBzdXBwb3J0IGZvciBzdW45aS1hODAgKHdpdGhvdXQgTUNQTSku
-Cj4gPiA+ICAgICAtIFNwbGl0IHRoZSBkZXZpY2UtdHJlZSBwYXRjaGVzIGludG8gMyBwYXRjaGVz
-IGZvciBDUFVDRkcsIFJfQ1BVQ0ZHCj4gPiA+ICAgICBhbmQgUFJDTSByZWdpc3RlcnMgZm9yIG1v
-cmUgdmlzaWJpbGl0eS4KPiA+ID4gICAgIC0gVGhlIGhvdHBsdWcgb2YgQ1BVMCBpcyBjdXJyZW50
-bHkgbm90IHdvcmtpbmcgKGV2ZW4gYWZ0ZXIgdHJ5aW5nIHdoYXQKPiA+ID4gICAgIEFsbHdpbm5l
-cidzIGNvZGUgaXMgZG9pbmcpIHNvIHJlbW92ZSB0aGUgcG9zc2liaWxpdHkgb2YgZGlzYWJsaW5n
-Cj4gPiA+ICAgICB0aGlzIENQVS4gQ3JlYXRlZCBhIG5ldyBwYXRjaCBmb3IgaXQuCj4gPiA+IAo+
-ID4gPiBDaGFuZ2VzIGZyb20gdjE6Cj4gPiA+ICAgICAtIEFkZCBDaGVuIFl1J3MgcGF0Y2ggaW4g
-bXkgc2VyaWVzIChzZWUgcGF0aCAwMSkKPiA+ID4gICAgIC0gQWRkIG5ldyBjb21wYXRpYmxlcyBm
-b3IgcHJjbSBhbmQgY3B1Y2ZnIHJlZ2lzdGVycyBmb3Igc3VuOGktYTgzdC4KPiA+ID4gICAgIENy
-ZWF0ZSB0d28gZnVuY3Rpb25zIHRvIHNlcGFyYXRlIHRoZSBEVCBwYXJzaW5nIG9mIHN1bjlpLWE4
-MCBhbmQKPiA+ID4gICAgIHN1bjhpLWE4M3QuCj4gPiA+ICAgICAtIFRoYW5rcyB0byBNYXhpbWUn
-cyByZXZpZXc6IG9yZGVyIGRldmljZSB0cmVlJ3Mgbm9kZXMgYWNjb3JkaW5nCj4gPiA+ICAgICB0
-byBwaHlzaWNhbCBhZGRyZXNzZXMsIHJlbW92ZSB1bnVzZWQgbGFiZWwgYW5kIGZpeCByZWdpc3Rl
-cnMnIHNpemVzLgo+ID4gPiAgICAgVXBkYXRlIHRoZSBjb21taXQgbG9nIGFuZCBjb21taXQgdGl0
-bGUgb2YgbXkgbGFzdCBwYXRjaCAoc2VlCj4gPiA+ICAgICBwYXRjaCAwNSkuCj4gPiA+IAo+ID4g
-PiBEb3VnIEJlcmdlciAoMSk6Cj4gPiA+ICAgQVJNOiBBbGxvdyB0aGlzIGhlYWRlciB0byBiZSBp
-bmNsdWRlZCBieSBhc3NlbWJseSBmaWxlcwo+ID4gPiAKPiA+ID4gTXlsw6huZSBKb3NzZXJhbmQg
-KDExKToKPiA+ID4gICBBUk06IHN1bnhpOiBzbXA6IE1vdmUgYXNzZW1ibHkgY29kZSBpbnRvIGEg
-ZmlsZQo+ID4gPiAgIEFSTTogZHRzOiBzdW44aTogQWRkIENQVUNGRyBkZXZpY2Ugbm9kZSBmb3Ig
-QTgzVCBkdHNpCj4gPiA+ICAgQVJNOiBkdHM6IHN1bjhpOiBBZGQgUl9DUFVDRkcgZGV2aWNlIG5v
-ZGUgZm9yIHRoZSBBODNUIGR0c2kKPiA+ID4gICBBUk06IGR0czogc3VuOGk6IGE4M3Q6IEFkZCBD
-Q0ktNDAwIG5vZGUKPiA+ID4gICBBUk06IHNtcDogQWRkIGluaXRpYWxpemF0aW9uIG9mIENOVFZP
-RkYKPiA+ID4gICBBUk06IHN1bnhpOiBBZGQgaW5pdGlhbGl6YXRpb24gb2YgQ05UVk9GRgo+ID4g
-PiAgIEFSTTogc3VuOWk6IHNtcDogUmVuYW1lIGNsdXN0ZXJzJ3MgcG93ZXItb2ZmCj4gPiA+ICAg
-QVJNOiBzdW45aTogc21wOiBBZGQgaXNfYTgzdCBmaWVsZAo+ID4gPiAgIEFSTTogc3VuOGk6IHNt
-cDogQWRkIHN1cHBvcnQgZm9yIEE4M1QKPiA+ID4gICBBUk06IGR0czogc3VuOGk6IEFkZCBlbmFi
-bGUtbWV0aG9kIGZvciBTTVAgc3VwcG9ydCBmb3IgdGhlIEE4M1QgU29DCj4gPiA+ICAgQVJNOiBz
-aG1vYmlsZTogQ29udmVydCBmaWxlIHRvIHVzZSBjbnR2b2ZmCj4gPiA+IAo+ID4gPiAgYXJjaC9h
-cm0vYm9vdC9kdHMvc3VuOGktYTgzdC5kdHNpICAgICAgICB8ICA1OSArKysrKysrKwo+ID4gPiAg
-YXJjaC9hcm0vY29tbW9uL01ha2VmaWxlICAgICAgICAgICAgICAgICB8ICAgMSArCj4gPiA+ICBh
-cmNoL2FybS9jb21tb24vc2VjdXJlX2NudHZvZmYuUyAgICAgICAgIHwgIDMxICsrKysKPiA+ID4g
-IGFyY2gvYXJtL2luY2x1ZGUvYXNtL2NwdXR5cGUuaCAgICAgICAgICAgfCAgMTAgKy0KPiA+ID4g
-IGFyY2gvYXJtL2luY2x1ZGUvYXNtL3NlY3VyZV9jbnR2b2ZmLmggICAgfCAgIDggKysKPiA+ID4g
-IGFyY2gvYXJtL21hY2gtc2htb2JpbGUvY29tbW9uLmggICAgICAgICAgfCAgIDEgLQo+ID4gPiAg
-YXJjaC9hcm0vbWFjaC1zaG1vYmlsZS9oZWFkc21wLWFwbXUuUyAgICB8ICAyMiArLS0KPiA+ID4g
-IGFyY2gvYXJtL21hY2gtc2htb2JpbGUvc2V0dXAtcmNhci1nZW4yLmMgfCAgIDMgKy0KPiA+ID4g
-IGFyY2gvYXJtL21hY2gtc3VueGkvS2NvbmZpZyAgICAgICAgICAgICAgfCAgIDIgKy0KPiA+ID4g
-IGFyY2gvYXJtL21hY2gtc3VueGkvTWFrZWZpbGUgICAgICAgICAgICAgfCAgIDIgKy0KPiA+ID4g
-IGFyY2gvYXJtL21hY2gtc3VueGkvaGVhZHNtcC5TICAgICAgICAgICAgfCAgODEgKysrKysrKysr
-KysKPiA+ID4gIGFyY2gvYXJtL21hY2gtc3VueGkvbWNfc21wLmMgICAgICAgICAgICAgfCAyMzkg
-KysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLQo+ID4gPiAgYXJjaC9hcm0vbWFjaC1zdW54
-aS9zdW54aS5jICAgICAgICAgICAgICB8ICAyMCArKy0KPiA+ID4gIDEzIGZpbGVzIGNoYW5nZWQs
-IDM1NiBpbnNlcnRpb25zKCspLCAxMjMgZGVsZXRpb25zKC0pCj4gPiA+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgYXJjaC9hcm0vY29tbW9uL3NlY3VyZV9jbnR2b2ZmLlMKPiA+ID4gIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBhcmNoL2FybS9pbmNsdWRlL2FzbS9zZWN1cmVfY250dm9mZi5oCj4gPiA+ICBjcmVh
-dGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vbWFjaC1zdW54aS9oZWFkc21wLlMKPiA+ID4gCj4gPiA+
-IC0tIAo+ID4gPiAyLjExLjAKPiA+ID4gCj4gPiA+IAo+ID4gPiBfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+ID4gPiBsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdAo+ID4gPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKPiA+ID4g
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
-bmVsICAKPiAKPiAKPiAKPiAKPiAtLSAKPiBNeWzDqG5lIEpvc3NlcmFuZCwgQm9vdGxpbiAoZm9y
-bWVybHkgRnJlZSBFbGVjdHJvbnMpCj4gRW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVl
-cmluZwo+IGh0dHBzOi8vYm9vdGxpbi5jb20KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Sat, Jul 14, 2018 at 11:45:54AM +0200, Linus Walleij wrote:
+> The Realtek SMI family is a set of DSA chips that provide
+> switching in routers. This binding just follows the pattern
+> set by other switches but with the introduction of an embedded
+> irqchip to demux and handle the interrupts fired by the single
+> line from the chip.
+> 
+> This interrupt construction is similar to how we handle
+> interrupt controllers inside PCI bridges etc.
+> 
+> Cc: Antti Seppälä <a.seppala@gmail.com>
+> Cc: Roman Yeryomin <roman@advem.lv>
+> Cc: Colin Leitner <colin.leitner@googlemail.com>
+> Cc: Gabor Juhos <juhosg@openwrt.org>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> ChangeLog RFCv2->v1:
+> - No changes, we agree on these bindings.
+> ChangeLog RFCv1->RFCv2:
+> - Switch to Andrew's suggestion to have a local MDIO bus
+>   definition inside of the DSA device node
+> - Add realtek,disabled-leds
+> - Correct WAN IRQ to 12 in the example
+> ---
+>  .../bindings/net/dsa/realtek-smi.txt          | 153 ++++++++++++++++++
+>  1 file changed, 153 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/dsa/realtek-smi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/dsa/realtek-smi.txt b/Documentation/devicetree/bindings/net/dsa/realtek-smi.txt
+> new file mode 100644
+> index 000000000000..b6ae8541bd55
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/dsa/realtek-smi.txt
+> @@ -0,0 +1,153 @@
+> +Realtek SMI-based Switches
+> +==========================
+> +
+> +The SMI "Simple Management Interface" is a two-wire protocol using
+
+At least for some other Realtek chips, the documentation I find says the 
+S stands for Serial. And Wikipedia says SMI is the same thing as MDIO.
+
+Just want to make sure we don't define GPIOs directly when there should 
+be a layer of abstraction like mdio-gpio.
+
+> +bit-banged GPIO that while it reuses the MDIO lines MCK and MDIO does
+> +not use the MDIO protocol. This binding defines how to specify the
+> +SMI-based Realtek devices.
+> +
+> +Required properties:
+> +
+> +- compatible: must be exactly one of:
+> +      "realtek,rtl8366"
+> +      "realtek,rtl8366rb" (4+1 ports)
+> +      "realtek,rtl8366s"  (4+1 ports)
+> +      "realtek,rtl8367"
+> +      "realtek,rtl8367b"
+> +      "realtek,rtl8368s"  (8 port)
+> +      "realtek,rtl8369"
+> +      "realtek,rtl8370"   (8 port)
+> +
+> +Required properties:
+> +- mdc-gpios: GPIO line for the MDC clock line.
+> +- mdio-gpios: GPIO line for the MDIO data line.
+> +- reset-gpios: GPIO line for the reset signal.
+> +
+> +Optional properties:
+> +- realtek,disable-leds: if the LED drivers are not used in the
+> +  hardware design this will disable them so they are not turned on
+> +  and wasting power.
+> +
+> +Required subnodes:
+> +
+> +- interrupt-controller
+> +
+> +  This defines an interrupt controller with an IRQ line (typically
+> +  a GPIO) that will demultiplex and handle the interrupt from the single
+> +  interrupt line coming out of one of the SMI-based chips. It most
+> +  importantly provides link up/down interrupts to the PHY blocks inside
+> +  the ASIC.
+> +
+> +Required properties of interrupt-controller:
+> +
+> +- interrupt: parent interrupt, see interrupt-controller/interrupts.txt
+> +- interrupt-controller: see interrupt-controller/interrupts.txt
+> +- #address-cells: should be <0>
+> +- #interrupt-cells: should be <1>
+> +
+> +- mdio
+> +
+> +  This defines the internal MDIO bus of the SMI device, mostly for the
+> +  purpose of being able to hook the interrupts to the right PHY and
+> +  the right PHY to the corresponding port.
+> +
+> +Required properties of mdio:
+> +
+> +- compatible: should be set to "realtek,smi-mdio" for all SMI devices
+> +
+> +See net/mdio.txt for additional MDIO bus properties.
+> +
+> +See net/dsa/dsa.txt for a list of additional required and optional properties
+> +and subnodes of DSA switches.
+> +
+> +Examples:
+> +
+> +switch {
+> +	compatible = "realtek,rtl8366rb";
+> +	/* 22 = MDIO (has input reads), 21 = MDC (clock, output only) */
+> +	mdc-gpios = <&gpio0 21 GPIO_ACTIVE_HIGH>;
+> +	mdio-gpios = <&gpio0 22 GPIO_ACTIVE_HIGH>;
+> +	reset-gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
+> +
+> +	switch_intc: interrupt-controller {
+> +		/* GPIO 15 provides the interrupt */
+> +		interrupt-parent = <&gpio0>;
+> +		interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-controller;
+> +		#address-cells = <0>;
+> +		#interrupt-cells = <1>;
+> +	};
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0>;
+> +		port@0 {
+> +			reg = <0>;
+> +			label = "lan0";
+> +			phy-handle = <&phy0>;
+> +		};
+> +		port@1 {
+> +			reg = <1>;
+> +			label = "lan1";
+> +			phy-handle = <&phy1>;
+> +		};
+> +		port@2 {
+> +			reg = <2>;
+> +			label = "lan2";
+> +			phy-handle = <&phy2>;
+> +		};
+> +		port@3 {
+> +			reg = <3>;
+> +			label = "lan3";
+> +			phy-handle = <&phy3>;
+> +		};
+> +		port@4 {
+> +			reg = <4>;
+> +			label = "wan";
+> +			phy-handle = <&phy4>;
+> +		};
+> +		port@5 {
+> +			reg = <5>;
+> +			label = "cpu";
+> +			ethernet = <&gmac0>;
+> +			phy-mode = "rgmii";
+> +			fixed-link {
+> +				speed = <1000>;
+> +				full-duplex;
+> +			};
+> +		};
+> +	};
+> +
+> +	mdio {
+> +		compatible = "realtek,smi-mdio", "dsa-mdio";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		phy0: phy@0 {
+> +			reg = <0>;
+> +			interrupt-parent = <&switch_intc>;
+> +			interrupts = <0>;
+> +		};
+> +		phy1: phy@1 {
+> +			reg = <1>;
+> +			interrupt-parent = <&switch_intc>;
+> +			interrupts = <1>;
+> +		};
+> +		phy2: phy@2 {
+> +			reg = <2>;
+> +			interrupt-parent = <&switch_intc>;
+> +			interrupts = <2>;
+> +		};
+> +		phy3: phy@3 {
+> +			reg = <3>;
+> +			interrupt-parent = <&switch_intc>;
+> +			interrupts = <3>;
+> +		};
+> +		phy4: phy@4 {
+> +			reg = <4>;
+> +			interrupt-parent = <&switch_intc>;
+> +			interrupts = <12>;
+> +		};
+> +	};
+> +};
+> -- 
+> 2.17.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
