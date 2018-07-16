@@ -1,85 +1,47 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2] ARM64: dts: meson-axg: add saradc support
-Date: Mon, 16 Jul 2018 08:52:36 -0500
-Message-ID: <7h7elvmgnv.fsf@baylibre.com>
-References: <20180702222515.13924-1-yixun.lan@amlogic.com>
-        <1531326349.2708.136.camel@baylibre.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: mt7622: update a clock property for UART0
+Date: Mon, 16 Jul 2018 15:55:44 +0200
+Message-ID: <a4f0c6db-b88f-4c54-827a-e160bebae62b@gmail.com>
+References: <2ff39c40ef6bc3054667e63c785a1d28527b5ddf.1531209126.git.ryder.lee@mediatek.com>
+ <b96deaa9f54a0ae3f62ec30d858be7abd1ed873f.1531209126.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531326349.2708.136.camel@baylibre.com> (Jerome Brunet's message
-        of "Wed, 11 Jul 2018 18:25:49 +0200")
+In-Reply-To: <b96deaa9f54a0ae3f62ec30d858be7abd1ed873f.1531209126.git.ryder.lee@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Yixun Lan <yixun.lan@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+Hi Ryder,
 
-> On Mon, 2018-07-02 at 22:25 +0000, Yixun Lan wrote:
->> From: Xingyu Chen <xingyu.chen@amlogic.com>
->> 
->> Add the DT info for SAR ADC of the Amlogic's Meson-AXG SoC.
->> 
->> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
->> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
->> ---
->> Hi kevin
->>   I just re-send this patch which rebased to your khilman/v4.18/integ branch
->>   Thanks
->> Yixun
->> 
->> nothing changed since patch v1 [1]:
->>  -
->> 
->> [1] https://lkml.kernel.org/r/20180326092117.208416-1-yixun.lan@amlogic.com
->> 
->> ---
->>  .../arm64/boot/dts/amlogic/meson-axg-s400.dts |  5 +++++
->>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    | 21 +++++++++++++++++++
->>  2 files changed, 26 insertions(+)
->> 
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
->> index 4b3331fbfe39..6041f68b32ae 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
->> @@ -153,3 +153,8 @@
->>  		compatible = "brcm,bcm4329-fmac";
->>  	};
->>  };
->> +
->> +&saradc {
->> +	status = "okay";
->> +	vref-supply = <&vddio_ao18>;
->> +};
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> index 67d7115e4eff..52678a69dbf8 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> @@ -91,6 +91,13 @@
->>  		method = "smc";
->>  	};
->>  
->> +	vddio_ao18: regulator-vddio_ao18 {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "VDDIO_AO18";
->> +		regulator-min-microvolt = <1800000>;
->> +		regulator-max-microvolt = <1800000>;
->> +	};
->
-> Kevin, Yixun,
->
-> I find odd that we are adding a regulator to SoC device tree file.
-> Those regulator are usually part of board file
->
-> Unless the regulator is actually inside the SoC, this is not the place for it.
->
-> Sorry for not catching this earlier.
+On 10/07/18 09:55, Ryder Lee wrote:
+> The input clock of UART0 should be CLK_PERI_UART0_PD.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 
-You're right, I should've noticed this earlier also.
+Can you provide a "Fixes" tag with the commit id of the commit that broke this?
 
-Yixun, can you resend this with the regulators in the board file please?
+Thanks,
+Matthias
 
-In the mean time, I've dropped this from v4.19/dt64 branch,
-
-Kevin
+> ---
+>  arch/arm64/boot/dts/mediatek/mt7622.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> index 8cdec52..4caa9b4 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> @@ -367,7 +367,7 @@
+>  		reg = <0 0x11002000 0 0x400>;
+>  		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
+>  		clocks = <&topckgen CLK_TOP_UART_SEL>,
+> -			 <&pericfg CLK_PERI_UART1_PD>;
+> +			 <&pericfg CLK_PERI_UART0_PD>;
+>  		clock-names = "baud", "bus";
+>  		status = "disabled";
+>  	};
+> 
