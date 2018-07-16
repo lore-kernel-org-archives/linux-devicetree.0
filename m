@@ -1,17 +1,11 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 2/2] arm64: dts: renesas: condor/v3hsk: add
- DU/LVDS/HDMI support
-Date: Mon, 16 Jul 2018 09:53:25 +0200
-Message-ID: <20180716075325.y7jtwyqxwerdmfy3@verge.net.au>
-References: <95d0db34-713d-8206-00c2-ee9a42aab823@cogentembedded.com>
- <c78f1228-afb0-54cf-5d9e-5c812b678de3@cogentembedded.com>
- <20180614072426.vq42mmb3gsmv6z5k@verge.net.au>
+From: Jian Hu <jian.hu@amlogic.com>
+Subject: [RESEND PATCH v2 0/2] clk: meson-g12a: Add EE clock controller driver
+Date: Mon, 16 Jul 2018 16:11:45 +0800
+Message-ID: <1531728707-192230-1-git-send-email-jian.hu@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180614072426.vq42mmb3gsmv6z5k@verge.net.au>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,29 +15,34 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: "Qianggui, song" <qianggui.song@amlogic.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Yixun Lan <yixun.lan@amlogic.com>, linux-kernel@vger.kernel.org, "Bo.yang" <bo.yang@amlogic.com>, Stephen Boyd <sboyd@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-arm-kernel@lists.infradead.org, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, "Sunny.luo" <sunny.luo@amlogic.com>, linux-clk@vger.kernel.org, "Xingyu.chen" <xingyu.chen@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 14, 2018 at 09:24:27AM +0200, Simon Horman wrote:
-> On Wed, Jun 13, 2018 at 11:12:40PM +0300, Sergei Shtylyov wrote:
-> > Define the Condor/V3HSK board dependent parts of the DU and  LVDS device
-> > nodes. Also add the device nodes for Thine THC63LVD1024 LVDS decoder and
-> > Analog Devices ADV7511W HDMI transmitter...
-> > 
-> > Based on the original (and large) patch by Vladimir Barinov.
-> > 
-> > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> > 
-> > ---
-> > Changes in version 2:
-> > - added the V3HSK DT update, reworded the description, renamed the patch;
-> > - added a space between the HDMI node name and a brace.
-> > 
-> >  arch/arm64/boot/dts/renesas/r8a77980-condor.dts |  106 +++++++++++++++++++++
-> >  arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts  |  120 ++++++++++++++++++++++++
-> 
-> Laurent, could you review this?
-
-Ping
+QWRkIGEgQ2xvY2sgZHJpdmVyIGZvciB0aGUgRXZlcnl0aGluZy1FbHNlIHBhcnQgb2YKdGhlIEFt
+bG9naWMgTWVzb24tRzEyQSBTb0MuCgpDaGFuZ2VzIHNpbmNlIHYxIGF0WzFdCi1maXggdHlwbyBv
+ZiAnRXZlcnl0aGluZycuCi1jaGFuZ2UgdGhlIHdvcmQg4oCYQW1Mb2dpY+KAmSB0byAnQW1sb2dp
+YycKLXNxdWFzaCBwYXRjaCAxIGFuZCAyLgotZGVsZXRlIHVzbGVzcyBtZXNzYWdlIG9mICJUcnlp
+bmcgb2Jzb2xldGUgcmVncyIuCi1kZWxldGUgdGhlIGVtcHR5IGxpbmUgaW4gaW5jbHVkZS9kdC1i
+aW5kaW5ncy9jbG9jay9nMTJhLWNsa2MuaC4KLXJlYmFzZSBvbiB0b3Agb2YgdGhlICJuZXh0L2Ry
+aXZlcnMiIGJyYW5jaCwgYW5kIGFkZCBnMTJhIGNsb2NrIHBhdGNoLgotYWRkIENMS19NVVhfUk9V
+TkRfQ0xPU0VTVCBmb3IgZzEyYV9zZF9lbW1jX2JfY2xrMF9zZWwgYW5kCiBnMTJhX3NkX2VtbWNf
+Y19jbGswX3NlbC4KCkkgaGF2ZSBmb3JnZXR0ZW4gYWRkaW5nIHRoZSBQQVRDSCB2ZXJzaW9uIHRh
+Zywgc28gcmVzZW5kIGl0IAoKWzFdaHR0cHM6Ly9sa21sLmtlcm5lbC5vcmcvci8xNTMxMTMzNTQ5
+LTI1ODA2LTItZ2l0LXNlbmQtZW1haWwtamlhbi5odUBhbWxvZ2ljLmNvbQoKSmlhbiBIdSAoMik6
+CiAgZHQtYmluZGluZ3M6IGNsazogbWVzb24tZzEyYTogQWRkIEcxMkEgRUUgQ2xvY2sgQmluZGlu
+Z3MKICBjbGs6IG1lc29uLWcxMmE6IEFkZCBFRSBDbG9jayBjb250cm9sbGVyIGRyaXZlcgoKIC4u
+Li9iaW5kaW5ncy9jbG9jay9hbWxvZ2ljLGd4YmItY2xrYy50eHQgICAgICAgICAgIHwgICAxICsK
+IGRyaXZlcnMvY2xrL21lc29uL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDEw
+ICsKIGRyaXZlcnMvY2xrL21lc29uL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgIHwg
+ICAxICsKIGRyaXZlcnMvY2xrL21lc29uL2cxMmEuYyAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHwgOTk0ICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9jbGsvbWVzb24vZzEyYS5oICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgfCAxMjIgKysrCiBpbmNsdWRlL2R0LWJpbmRpbmdzL2Ns
+b2NrL2cxMmEtY2xrYy5oICAgICAgICAgICAgICB8ICA5MiArKwogNiBmaWxlcyBjaGFuZ2VkLCAx
+MjIwIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Nsay9tZXNvbi9n
+MTJhLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Nsay9tZXNvbi9nMTJhLmgKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL2cxMmEtY2xrYy5oCgotLSAK
+MS45LjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
+aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
+eC1hcm0ta2VybmVsCg==
