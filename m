@@ -1,53 +1,75 @@
-From: Peter Robinson <pbrobinson@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6sx-udoo-neo: enable i2c-2 and i2c-4 for
- onboard sensors
-Date: Mon, 16 Jul 2018 15:43:21 +0100
-Message-ID: <CALeDE9N5AnQba5LirHegWgz2_3Rr6cCT_ttTUtg38OdvdegpFA@mail.gmail.com>
-References: <20180713171151.24699-1-pbrobinson@gmail.com>
- <CAOMZO5B+1atjr3Ur7EGMJSEbqT8zqWdKZWNHrkyCGvgGM4nJFg@mail.gmail.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH v1 1/2] arm64: dts: mt7622: add some misc device nodes
+Date: Mon, 16 Jul 2018 22:59:08 +0800
+Message-ID: <2ff39c40ef6bc3054667e63c785a1d28527b5ddf.1531753039.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOMZO5B+1atjr3Ur7EGMJSEbqT8zqWdKZWNHrkyCGvgGM4nJFg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+Add some misc nodes support - timer and ARM CCI-400.
 
-On Fri, Jul 13, 2018 at 7:08 PM, Fabio Estevam <festevam@gmail.com> wrote:
-> Hi Peter,
->
-> On Fri, Jul 13, 2018 at 2:11 PM, Peter Robinson <pbrobinson@gmail.com> wrote:
->
->> +&i2c4 { /* Onboard Motion sensors */
->> +       pinctrl-names = "default";
->> +       pinctrl-0 = <&pinctrl_i2c4>;
->> +       clock-frequency = <100000>;
->> +       status = "okay";
->> +};
->
-> Would it be possible to add i2c4 to the common dtsi file instead?
->
-> I haven't checked the schematics, but if it is only the
-> imx6sx-udoo-neo-basic.dts that does not have the i2c4 node, then
-> maybe you could add i2c4 to the dtsi and disable it inside
-> imx6sx-udoo-neo-basic.dts?
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi | 36 ++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-Enabling it to turn around and then disable it again seemed counter
-intuitive to me hence the way I did, the WiFi in done that way even
-though it's not on all boards and I would imagine it would cause
-errors on the devices where there isn't wifi although I don't have
-those model(s) to verify.
-
-Peter
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+index 9213c96..8cdec52 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+@@ -217,6 +217,16 @@
+ 		#reset-cells = <1>;
+ 	};
+ 
++	timer: timer@10004000 {
++		compatible = "mediatek,mt7622-timer",
++			     "mediatek,mt6577-timer";
++		reg = <0 0x10004000 0 0x80>;
++		interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&infracfg CLK_INFRA_APXGPT_PD>,
++			 <&topckgen CLK_TOP_RTC>;
++		clock-names = "system-clk", "rtc-clk";
++	};
++
+ 	scpsys: scpsys@10006000 {
+ 		compatible = "mediatek,mt7622-scpsys",
+ 			     "syscon";
+@@ -317,6 +327,32 @@
+ 		      <0 0x10360000 0 0x2000>;
+ 	};
+ 
++	cci: cci@10390000 {
++		compatible = "arm,cci-400";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0 0x10390000 0 0x1000>;
++		ranges = <0 0 0x10390000 0x10000>;
++
++		cci_control0: slave-if@1000 {
++			compatible = "arm,cci-400-ctrl-if";
++			interface-type = "ace-lite";
++			reg = <0x1000 0x1000>;
++		};
++
++		cci_control1: slave-if@4000 {
++			compatible = "arm,cci-400-ctrl-if";
++			interface-type = "ace";
++			reg = <0x4000 0x1000>;
++		};
++
++		cci_control2: slave-if@5000 {
++			compatible = "arm,cci-400-ctrl-if";
++			interface-type = "ace";
++			reg = <0x5000 0x1000>;
++		};
++	};
++
+ 	auxadc: adc@11001000 {
+ 		compatible = "mediatek,mt7622-auxadc";
+ 		reg = <0 0x11001000 0 0x1000>;
+-- 
+1.9.1
