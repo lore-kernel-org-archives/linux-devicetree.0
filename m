@@ -1,25 +1,35 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [RESEND PATCH v2 2/2] clk: meson-g12a: Add EE Clock controller
- driver
-Date: Mon, 16 Jul 2018 13:00:34 +0200
-Message-ID: <1531738834.12853.64.camel@baylibre.com>
-References: <1531728707-192230-1-git-send-email-jian.hu@amlogic.com>
-         <1531728707-192230-3-git-send-email-jian.hu@amlogic.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v1 2/2] misc: npcm7xx: add NPCM7xx LPC BPC driver
+Date: Mon, 16 Jul 2018 13:33:57 +0200
+Message-ID: <20180716113357.GA30937@kroah.com>
+References: <20180704091427.409971-1-tmaimon77@gmail.com>
+ <20180704091427.409971-3-tmaimon77@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531728707-192230-3-git-send-email-jian.hu@amlogic.com>
+Content-Disposition: inline
+In-Reply-To: <20180704091427.409971-3-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jian Hu <jian.hu@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Yixun Lan <yixun.lan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, "Bo.yang" <bo.yang@amlogic.com>, "Xingyu.chen" <xingyu.chen@amlogic.com>, "Qianggui,song" <qianggui.song@amlogic.com>, "Sunny.luo" <sunny.luo@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, arnd@arnd.de, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-07-16 at 16:11 +0800, Jian Hu wrote:
-> Add a Clock driver for the Everything-Else part
-> of the Amlogic Meson-G12A SoC.
+On Wed, Jul 04, 2018 at 12:14:27PM +0300, Tomer Maimon wrote:
+> Add Nuvoton BMC NPCM7xx BIOS post code (BPC) driver.
 > 
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> The NPCM7xx BPC monitoring two I/O address written by
+> the host on the Low Pin Count (LPC) bus, the capure
+> data stored in 128-word FIFO.
+> 
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 
-Point raised about fdiv gates remains un-answered.
-Please address all the point raised before reposting your patches.
+It would be great to get someone else who knows that this hardware is
+supposed to be doing to ack or sign-off on this patch, as I don't know
+if this really is providing the correct api for it or not.
+
+Right now it's just reading data from the hardware, what good is that?
+Who uses this?  What userspace tools connect up to it?
+
+thanks,
+
+greg k-h
