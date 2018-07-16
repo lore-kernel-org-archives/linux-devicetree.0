@@ -1,54 +1,69 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] dt: bindings: lm3692x: Update binding for LED sync
- control
-Date: Mon, 16 Jul 2018 15:08:45 -0600
-Message-ID: <20180716210845.GA26337@rob-hp-laptop>
-References: <20180702181216.19660-1-dmurphy@ti.com>
- <20180702181216.19660-3-dmurphy@ti.com>
+Subject: Re: [PATCH 10/12] dt-bindings: drm/bridge: Document Cadence MHDP
+ bridge bindings
+Date: Mon, 16 Jul 2018 15:14:40 -0600
+Message-ID: <20180716211440.GA29964@rob-hp-laptop>
+References: <1530612152-27555-1-git-send-email-dkos@cadence.com>
+ <1530612152-27555-11-git-send-email-dkos@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20180702181216.19660-3-dmurphy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: mark.rutland@arm.com, jacek.anaszewski@gmail.com, andy.shevchenko@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+In-Reply-To: <1530612152-27555-11-git-send-email-dkos@cadence.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Damian Kos <dkos@cadence.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, pgaj@cadence.com, stelford@cadence.com, ltyrala@cadence.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 02, 2018 at 01:12:15PM -0500, Dan Murphy wrote:
-> Update the binding to be able to configure the LED
-> sync to turn on.
-
-s/sync/sink/ ? As in a current sink.
-
-> 
-> The LM36922 has one output but can sync current to 2 LED
-> strings.  The user may only use one sync so the other
-> syncs need to be disabled.
-> 
-> The LM36923 has 3 LED syncs.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  Documentation/devicetree/bindings/leds/leds-lm3692x.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-> index 6c9074f84a51..08b352840bd7 100644
-> --- a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-> +++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-> @@ -20,7 +20,10 @@ Optional properties:
->  	- vled-supply : LED supply
->  
->  Required child properties:
-> -	- reg : 0
-> +	- reg : 0 - Will enable all LED sync paths
-> +		1 - Will enable the LED1 sync
-> +		2 - Will enable the LED2 sync
-> +		3 - Will enable the LED3 sync (LM36923 only)
->  
->  Optional child properties:
->  	- label : see Documentation/devicetree/bindings/leds/common.txt
-> -- 
-> 2.17.0.582.gccdcbd54c
-> 
+T24gVHVlLCBKdWwgMDMsIDIwMTggYXQgMTE6MDI6MjFBTSArMDEwMCwgRGFtaWFuIEtvcyB3cm90
+ZToKPiBEb2N1bWVudCB0aGUgYmluZGluZ3MgdXNlZCBmb3IgdGhlIENhZGVuY2UgTUhEUCBEUEkv
+RFAgYnJpZGdlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IERhbWlhbiBLb3MgPGRrb3NAY2FkZW5jZS5j
+b20+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9jZG5zLG1oZHAudHh0ICAg
+ICAgICAgIHwgICAzOSArKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGVzIGNoYW5nZWQsIDM5
+IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvY2RucyxtaGRwLnR4
+dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9icmlkZ2UvY2RucyxtaGRwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L2JyaWRnZS9jZG5zLG1oZHAudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQK
+PiBpbmRleCAwMDAwMDAwLi5kODcyZTI2Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9jZG5zLG1oZHAudHh0Cj4g
+QEAgLTAsMCArMSwzOSBAQAo+ICtDYWRlbmNlIE1IRFAgYnJpZGdlCj4gKz09PT09PT09PT09PT09
+PT09PT09PT09PT09Cj4gKwo+ICtUaGUgQ2FkZW5jZSBNSERQIGJyaWRnZSBpcyBhIERQSSB0byBE
+UCBicmlkZ2UuCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICsgLSBjb21wYXRpYmxlOiBz
+aG91bGQgYmUgImNkbnMsbWhkcCIsCgpOb3QgdmVyeSBzcGVjaWZpYy4gT25seSAxIHZlcnNpb24g
+b2YgdGhpcyBibG9jaz8KCj4gKyAtIHJlZzogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5n
+dGggb2YgdGhlIGNvbnRyb2xsZXIncyByZWdpc3RlcnMsCj4gKyAtIGNsb2NrczogRFAgYnJpZGdl
+IGNsb2NrLCBpdCdzIHVzZWQgYnkgdGhlIElQIHRvIGtub3cgaG93IHRvIHRyYW5zbGF0ZQo+ICsJ
+ICAgYSBudW1iZXIgb2YgY2xvY2sgY3ljbGVzIGludG8gYSB0aW1lICh3aGljaCBpcyB1c2VkIHRv
+IGNvbXBseQo+ICsJICAgd2l0aCBEUCBzdGFuZGFyZCB0aW1pbmdzIGFuZCBkZWxheXMpLAo+ICsg
+LSBjbG9jay1uYW1lczogbXVzdCBiZSAiY2xrIiwKCk5vdCBhIHVzZWZ1bCBuYW1lLiBXaXRoIG9u
+bHkgMSBjbG9jaywgeW91IGNhbiBqdXN0IGRyb3AgdGhpcy4KCj4gKwo+ICtSZXF1aXJlZCBzdWJu
+b2RlczoKPiArIC0gcG9ydHM6IFBvcnRzIGFzIGRlc2NyaWJlZCBpbiBEb2N1bWVudGF0aW9uL2Rl
+dmljdHJlZS9iaW5kaW5ncy9ncmFwaC50eHQKPiArICAgQ3VycmVudGx5IGNvbnRhaW5zIGEgc2lu
+Z2xlIGlucHV0IHBvcnQgYXQgYWRkcmVzcyAwIHJlcHJlc2VudGluZyB0aGUgRFBJCj4gKyAgIGlu
+cHV0LgoKQ3VycmVudGx5PyBZb3Ugc2hvdWxkIGhhdmUgYSBwb3J0IGNvbm5lY3RpbmcgdG8gYSBj
+b25uZWN0b3Igbm9kZS4KCj4gKyAgIFBvcnQgMCBzaG91bGQgYmUgY29ubmVjdGVkIHRvIGEgRFBJ
+IGVuY29kZXIgb3V0cHV0Lgo+ICsKPiArRXhhbXBsZToKPiArCj4gKwltaGRwOiBtaGRwQDB4ZjBm
+YjAwMDAwMCB7CgpkcC1icmlkZ2VAZjBmYjAwMDAwMAoKPiArCQljb21wYXRpYmxlID0gImNkbnMs
+bWhkcCI7Cj4gKwkJcmVnID0gPDB4ZjAgMHhmYjAwMDAwMCAweDAgMHgxMDAwMDAwPjsKPiArCQlj
+bG9ja3MgPSA8Jm1oZHBfY2xvY2s+Owo+ICsJCWNsb2NrLW5hbWVzID0gImNsayI7Cj4gKwo+ICsJ
+CXBvcnRzIHsKPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCSNzaXplLWNlbGxzID0g
+PDA+Owo+ICsKPiArCQkJcG9ydEAwIHsKPiArCQkJCXJlZyA9IDwwPjsKPiArCQkJCW1oZHAwX2Rw
+aV9pbnB1dDogZW5kcG9pbnQgewo+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmeHh4X2RwaV9v
+dXRwdXQ+Owo+ICsJCQkJfTsKPiArCQkJfTsKPiArCQl9Owo+ICsJfTsKPiAtLSAKPiAxLjcuMQo+
+IAo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVu
+c3Vic2NyaWJlIGRldmljZXRyZWUiIGluCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9y
+ZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdl
+ci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
