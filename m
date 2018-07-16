@@ -1,339 +1,74 @@
 Return-Path: <SRS0=VNen=KA=huawei.com=jonathan.cameron@kernel.org>
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 3/3] arm64: dts: hisi: add SEC crypto accelerator nodes for hip07 SoC
-Date: Mon, 16 Jul 2018 11:43:42 +0100
-Message-ID: <20180716104342.24192-4-Jonathan.Cameron@huawei.com>
-In-Reply-To: <20180716104342.24192-1-Jonathan.Cameron@huawei.com>
-References: <20180716104342.24192-1-Jonathan.Cameron@huawei.com>
+Subject: [PATCH 0/3] Hisilicon SEC crypto driver (hip06 / hip07)
+Date: Mon, 16 Jul 2018 11:43:39 +0100
+Message-ID: <20180716104342.24192-1-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 To: linux-crypto@vger.kernel.org
 Cc: herbert@gondor.apana.org.au, davem@davemloft.net, smueller@chronox.de, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linuxarm@huawei.com, xuzaibo@huwei.com, fanghao11@huawei.com, liguozhu@hisilicon.com, wangxiongfeng2@huawei.com, Jonathan Cameron <Jonathan.Cameron@huawei.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Enable all 4 SEC units available on d05 boards.
+The driver provides in kernel support for hte Hisilicon SEC accelerator
+found in the hip06 and hip07 SoCs.  There are 4 such units on the D05
+board for which an appropriate DT binding has been provided.  ACPI also
+works with an appropriate UEFI build.
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- arch/arm64/boot/dts/hisilicon/hip07.dtsi | 285 +++++++++++++++++++++++++++++++
- 1 file changed, 285 insertions(+)
+The hardware does not update the IV in chaining or counting modes.
+This is done in the drive ron completion of the cipher operation.
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hip07.dtsi b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-index 0600a6a84ab7..a29c4466af26 100644
---- a/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-@@ -1049,7 +1049,74 @@
- 			num-pins = <2>;
- 		};
- 	};
-+	p0_mbigen_alg_a:interrupt-controller@d0080000 {
-+		compatible = "hisilicon,mbigen-v2";
-+		reg = <0x0 0xd0080000 0x0 0x10000>;
- 
-+		p0_mbigen_sec_a: intc_sec {
-+			msi-parent = <&p0_its_dsa_a 0x40400>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			num-pins = <33>;
-+		};
-+		p0_mbigen_smmu_alg_a: intc_smmu_alg {
-+			msi-parent = <&p0_its_dsa_a 0x40b1b>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			num-pins = <3>;
-+		};
-+	};
-+	p0_mbigen_alg_b:interrupt-controller@8,d0080000 {
-+		compatible = "hisilicon,mbigen-v2";
-+		reg = <0x8 0xd0080000 0x0 0x10000>;
-+
-+		p0_mbigen_sec_b: intc_sec {
-+			msi-parent = <&p0_its_dsa_b 0x42400>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			num-pins = <33>;
-+		};
-+		p0_mbigen_smmu_alg_b: intc_smmu_alg {
-+			msi-parent = <&p0_its_dsa_b 0x42b1b>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			num-pins = <3>;
-+		};
-+	};
-+	p1_mbigen_alg_a:interrupt-controller@400,d0080000 {
-+		compatible = "hisilicon,mbigen-v2";
-+		reg = <0x400 0xd0080000 0x0 0x10000>;
-+
-+		p1_mbigen_sec_a: intc_sec {
-+			msi-parent = <&p1_its_dsa_a 0x44400>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			num-pins = <33>;
-+		};
-+		p1_mbigen_smmu_alg_a: intc_smmu_alg {
-+			msi-parent = <&p1_its_dsa_a 0x44b1b>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			num-pins = <3>;
-+		};
-+	};
-+	p1_mbigen_alg_b:interrupt-controller@408,d0080000 {
-+		compatible = "hisilicon,mbigen-v2";
-+		reg = <0x408 0xd0080000 0x0 0x10000>;
-+
-+		p1_mbigen_sec_b: intc_sec {
-+			msi-parent = <&p1_its_dsa_b 0x46400>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			num-pins = <33>;
-+		};
-+		p1_mbigen_smmu_alg_b: intc_smmu_alg {
-+			msi-parent = <&p1_its_dsa_b 0x46b1b>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			num-pins = <3>;
-+		};
-+	};
- 	p0_mbigen_dsa_a: interrupt-controller@c0080000 {
- 		compatible = "hisilicon,mbigen-v2";
- 		reg = <0x0 0xc0080000 0x0 0x10000>;
-@@ -1107,6 +1174,58 @@
- 		hisilicon,broken-prefetch-cmd;
- 		status = "disabled";
- 	};
-+	p0_smmu_alg_a: smmu_alg@d0040000 {
-+		compatible = "arm,smmu-v3";
-+		reg = <0x0 0xd0040000 0x0 0x20000>;
-+		interrupt-parent = <&p0_mbigen_smmu_alg_a>;
-+		interrupts = <733 1>,
-+		<734 1>,
-+		<735 1>;
-+		interrupt-names = "eventq", "gerror", "priq";
-+		#iommu-cells = <1>;
-+		dma-coherent;
-+		hisilicon,broken-prefetch-cmd;
-+		/* smmu-cb-memtype = <0x0 0x1>;*/
-+	};
-+	p0_smmu_alg_b: smmu_alg@8,d0040000 {
-+		compatible = "arm,smmu-v3";
-+		reg = <0x8 0xd0040000 0x0 0x20000>;
-+		interrupt-parent = <&p0_mbigen_smmu_alg_b>;
-+		interrupts = <733 1>,
-+		<734 1>,
-+		<735 1>;
-+		interrupt-names = "eventq", "gerror", "priq";
-+		#iommu-cells = <1>;
-+		dma-coherent;
-+		hisilicon,broken-prefetch-cmd;
-+		/* smmu-cb-memtype = <0x0 0x1>;*/
-+	};
-+	p1_smmu_alg_a: smmu_alg@400,d0040000 {
-+		compatible = "arm,smmu-v3";
-+		reg = <0x400 0xd0040000 0x0 0x20000>;
-+		interrupt-parent = <&p1_mbigen_smmu_alg_a>;
-+		interrupts = <733 1>,
-+		<734 1>,
-+		<735 1>;
-+		interrupt-names = "eventq", "gerror", "priq";
-+		#iommu-cells = <1>;
-+		dma-coherent;
-+		hisilicon,broken-prefetch-cmd;
-+		/* smmu-cb-memtype = <0x0 0x1>;*/
-+	};
-+	p1_smmu_alg_b: smmu_alg@408,d0040000 {
-+		compatible = "arm,smmu-v3";
-+		reg = <0x408 0xd0040000 0x0 0x20000>;
-+		interrupt-parent = <&p1_mbigen_smmu_alg_b>;
-+		interrupts = <733 1>,
-+		<734 1>,
-+		<735 1>;
-+		interrupt-names = "eventq", "gerror", "priq";
-+		#iommu-cells = <1>;
-+		dma-coherent;
-+		hisilicon,broken-prefetch-cmd;
-+		/* smmu-cb-memtype = <0x0 0x1>;*/
-+	};
- 
- 	soc {
- 		compatible = "simple-bus";
-@@ -1197,6 +1316,7 @@
- 			reg-names = "ppe-base", "dsaf-base";
- 			interrupt-parent = <&mbigen_dsaf0>;
- 			subctrl-syscon = <&dsa_subctrl>;
-+			/*iommus = <&smmu1 0x0>;*/
- 			reset-field-offset = <0>;
- 			interrupts =
- 			<576 1>, <577 1>, <578 1>, <579 1>, <580 1>,
-@@ -1589,5 +1709,170 @@
- 					 0x0 0 0 4 &mbigen_pcie2_a 671 4>;
- 			status = "disabled";
- 		};
-+		p0_sec_a: sec@d2000000 {
-+			compatible = "hisilicon,hip07-sec";
-+			reg = <0x0 0xd0000000 0x0 0x10000
-+			       0x0 0xd2000000 0x0 0x10000
-+			       0x0 0xd2010000 0x0 0x10000
-+			       0x0 0xd2020000 0x0 0x10000
-+			       0x0 0xd2030000 0x0 0x10000
-+			       0x0 0xd2040000 0x0 0x10000
-+			       0x0 0xd2050000 0x0 0x10000
-+			       0x0 0xd2060000 0x0 0x10000
-+			       0x0 0xd2070000 0x0 0x10000
-+			       0x0 0xd2080000 0x0 0x10000
-+			       0x0 0xd2090000 0x0 0x10000
-+			       0x0 0xd20a0000 0x0 0x10000
-+			       0x0 0xd20b0000 0x0 0x10000
-+			       0x0 0xd20c0000 0x0 0x10000
-+			       0x0 0xd20d0000 0x0 0x10000
-+			       0x0 0xd20e0000 0x0 0x10000
-+			       0x0 0xd20f0000 0x0 0x10000
-+			       0x0 0xd2100000 0x0 0x10000>;
-+			interrupt-parent = <&p0_mbigen_sec_a>;
-+			iommus = <&p0_smmu_alg_a 0x600>;
-+			dma-coherent;
-+			interrupts = <576 4>,
-+				     <577 1>,<578 4>,
-+				     <579 1>,<580 4>,
-+				     <581 1>,<582 4>,
-+				     <583 1>,<584 4>,
-+				     <585 1>,<586 4>,
-+				     <587 1>,<588 4>,
-+				     <589 1>,<590 4>,
-+				     <591 1>,<592 4>,
-+				     <593 1>,<594 4>,
-+				     <595 1>,<596 4>,
-+				     <597 1>,<598 4>,
-+				     <599 1>,<600 4>,
-+				     <601 1>,<602 4>,
-+				     <603 1>,<604 4>,
-+				     <605 1>,<606 4>,
-+				     <607 1>,<608 4>;
-+		};
-+		p0_sec_b: sec@8,d2000000 {
-+			compatible = "hisilicon,hip07-sec";
-+			reg = <0x8 0xd0000000 0x0 0x10000
-+			       0x8 0xd2000000 0x0 0x10000
-+			       0x8 0xd2010000 0x0 0x10000
-+			       0x8 0xd2020000 0x0 0x10000
-+			       0x8 0xd2030000 0x0 0x10000
-+			       0x8 0xd2040000 0x0 0x10000
-+			       0x8 0xd2050000 0x0 0x10000
-+			       0x8 0xd2060000 0x0 0x10000
-+			       0x8 0xd2070000 0x0 0x10000
-+			       0x8 0xd2080000 0x0 0x10000
-+			       0x8 0xd2090000 0x0 0x10000
-+			       0x8 0xd20a0000 0x0 0x10000
-+			       0x8 0xd20b0000 0x0 0x10000
-+			       0x8 0xd20c0000 0x0 0x10000
-+			       0x8 0xd20d0000 0x0 0x10000
-+			       0x8 0xd20e0000 0x0 0x10000
-+			       0x8 0xd20f0000 0x0 0x10000
-+			       0x8 0xd2100000 0x0 0x10000>;
-+			interrupt-parent = <&p0_mbigen_sec_b>;
-+			iommus = <&p0_smmu_alg_b 0x600>;
-+			dma-coherent;
-+			interrupts = <576 4>,
-+				     <577 1>,<578 4>,
-+				     <579 1>,<580 4>,
-+				     <581 1>,<582 4>,
-+				     <583 1>,<584 4>,
-+				     <585 1>,<586 4>,
-+				     <587 1>,<588 4>,
-+				     <589 1>,<590 4>,
-+				     <591 1>,<592 4>,
-+				     <593 1>,<594 4>,
-+				     <595 1>,<596 4>,
-+				     <597 1>,<598 4>,
-+				     <599 1>,<600 4>,
-+				     <601 1>,<602 4>,
-+				     <603 1>,<604 4>,
-+				     <605 1>,<606 4>,
-+				     <607 1>,<608 4>;
-+		};
-+		p1_sec_a: sec@400,d2000000 {
-+			compatible = "hisilicon,hip07-sec";
-+			reg = <0x400 0xd0000000 0x0 0x10000
-+			       0x400 0xd2000000 0x0 0x10000
-+			       0x400 0xd2010000 0x0 0x10000
-+			       0x400 0xd2020000 0x0 0x10000
-+			       0x400 0xd2030000 0x0 0x10000
-+			       0x400 0xd2040000 0x0 0x10000
-+			       0x400 0xd2050000 0x0 0x10000
-+			       0x400 0xd2060000 0x0 0x10000
-+			       0x400 0xd2070000 0x0 0x10000
-+			       0x400 0xd2080000 0x0 0x10000
-+			       0x400 0xd2090000 0x0 0x10000
-+			       0x400 0xd20a0000 0x0 0x10000
-+			       0x400 0xd20b0000 0x0 0x10000
-+			       0x400 0xd20c0000 0x0 0x10000
-+			       0x400 0xd20d0000 0x0 0x10000
-+			       0x400 0xd20e0000 0x0 0x10000
-+			       0x400 0xd20f0000 0x0 0x10000
-+			       0x400 0xd2100000 0x0 0x10000>;
-+			interrupt-parent = <&p1_mbigen_sec_a>;
-+			iommus = <&p1_smmu_alg_a 0x600>;
-+			dma-coherent;
-+			interrupts = <576 4>,
-+				     <577 1>,<578 4>,
-+				     <579 1>,<580 4>,
-+				     <581 1>,<582 4>,
-+				     <583 1>,<584 4>,
-+				     <585 1>,<586 4>,
-+				     <587 1>,<588 4>,
-+				     <589 1>,<590 4>,
-+				     <591 1>,<592 4>,
-+				     <593 1>,<594 4>,
-+				     <595 1>,<596 4>,
-+				     <597 1>,<598 4>,
-+				     <599 1>,<600 4>,
-+				     <601 1>,<602 4>,
-+				     <603 1>,<604 4>,
-+				     <605 1>,<606 4>,
-+				     <607 1>,<608 4>;
-+		};
-+		p1_sec_b: sec@408,d2000000 {
-+			compatible = "hisilicon,hip07-sec";
-+			reg = <0x408 0xd0000000 0x0 0x10000
-+			       0x408 0xd2000000 0x0 0x10000
-+			       0x408 0xd2010000 0x0 0x10000
-+			       0x408 0xd2020000 0x0 0x10000
-+			       0x408 0xd2030000 0x0 0x10000
-+			       0x408 0xd2040000 0x0 0x10000
-+			       0x408 0xd2050000 0x0 0x10000
-+			       0x408 0xd2060000 0x0 0x10000
-+			       0x408 0xd2070000 0x0 0x10000
-+			       0x408 0xd2080000 0x0 0x10000
-+			       0x408 0xd2090000 0x0 0x10000
-+			       0x408 0xd20a0000 0x0 0x10000
-+			       0x408 0xd20b0000 0x0 0x10000
-+			       0x408 0xd20c0000 0x0 0x10000
-+			       0x408 0xd20d0000 0x0 0x10000
-+			       0x408 0xd20e0000 0x0 0x10000
-+			       0x408 0xd20f0000 0x0 0x10000
-+			       0x408 0xd2100000 0x0 0x10000>;
-+			interrupt-parent = <&p1_mbigen_sec_b>;
-+			iommus = <&p1_smmu_alg_b 0x600>;
-+			dma-coherent;
-+			interrupts = <576 4>,
-+				     <577 1>,<578 4>,
-+				     <579 1>,<580 4>,
-+				     <581 1>,<582 4>,
-+				     <583 1>,<584 4>,
-+				     <585 1>,<586 4>,
-+				     <587 1>,<588 4>,
-+				     <589 1>,<590 4>,
-+				     <591 1>,<592 4>,
-+				     <593 1>,<594 4>,
-+				     <595 1>,<596 4>,
-+				     <597 1>,<598 4>,
-+				     <599 1>,<600 4>,
-+				     <601 1>,<602 4>,
-+				     <603 1>,<604 4>,
-+				     <605 1>,<606 4>,
-+				     <607 1>,<608 4>;
-+		};
-+
- 	};
- };
+The driver support AES, DES and 3DES block ciphers in a range of
+modes (others to follow). Hash and AAED support to follow.
+
+Sorry for the delay on this one, other priorities and all that...
+
+Changes since RFC.
+1) Addition of backlog queuing as needed to support dm-crypt usecases.
+2) iommu presence tests now done as Robin Murphy suggested.
+3) Hardware limiation to 32MB requests worked aroud in driver so it will
+   now support very large requests (512*32MB).  Larger request handling
+   than this would require a longer queue with the associate overheads and
+   is considered unlikely to be necessary.
+4) The specific handling related to the inline IV patch set from Stephan
+   has been dropped for now.
+5) Interrupt handler was previous more complex than necessary so has been
+   reworked.
+6) Use of the bounce buffer for small packeets is dropped for now.  This is a
+   performance optimization that made the code harder to review and can be
+   reintroduced as necessary at a later date.
+7) Restructuring of some code to simplify hash and aaed (hash implemented
+   but not ready fo upstream at this time)
+8) Various minor fixes and reworks of the code
+   * several off by one errors in the cleanup paths
+   * single template for enc and dec
+   * drop dec_key as not used (enc_key was used in both cases)
+   * drop dma pool for IVs as it breaks chaining.
+   * lots of spinlocks changed to mutexes as not taken in atomic context.
+   * nasty memory leak cleaned up.
+
+Jonathan Cameron (3):
+  dt-bindings: Add bindings for Hisilicon SEC crypto accelerators.
+  crypto: hisilicon SEC security accelerator driver
+  arm64: dts: hisi: add SEC crypto accelerator nodes for hip07 SoC
+
+ .../bindings/crypto/hisilicon,hip07-sec.txt        |   69 +
+ arch/arm64/boot/dts/hisilicon/hip07.dtsi           |  285 +++++
+ drivers/crypto/Kconfig                             |    2 +
+ drivers/crypto/Makefile                            |    1 +
+ drivers/crypto/hisilicon/Kconfig                   |   14 +
+ drivers/crypto/hisilicon/Makefile                  |    2 +
+ drivers/crypto/hisilicon/sec/Makefile              |    3 +
+ drivers/crypto/hisilicon/sec/sec_algs.c            | 1116 +++++++++++++++++
+ drivers/crypto/hisilicon/sec/sec_drv.c             | 1323 ++++++++++++++++++++
+ drivers/crypto/hisilicon/sec/sec_drv.h             |  428 +++++++
+ 10 files changed, 3243 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/hisilicon,hip07-sec.txt
+ create mode 100644 drivers/crypto/hisilicon/Kconfig
+ create mode 100644 drivers/crypto/hisilicon/Makefile
+ create mode 100644 drivers/crypto/hisilicon/sec/Makefile
+ create mode 100644 drivers/crypto/hisilicon/sec/sec_algs.c
+ create mode 100644 drivers/crypto/hisilicon/sec/sec_drv.c
+ create mode 100644 drivers/crypto/hisilicon/sec/sec_drv.h
+
 -- 
 2.16.2
