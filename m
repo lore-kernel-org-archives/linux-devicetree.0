@@ -1,14 +1,15 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 19/23] dt-bindings: thermal: armada: add reference to new
- bindings
-Date: Mon, 16 Jul 2018 16:42:02 +0200
-Message-ID: <20180716144206.30985-20-miquel.raynal@bootlin.com>
-References: <20180716144206.30985-1-miquel.raynal@bootlin.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding doc
+Date: Mon, 16 Jul 2018 09:16:54 -0600
+Message-ID: <20180716151654.GA21819@rob-hp-laptop>
+References: <20180716114209.25242-1-o.rempel@pengutronix.de>
+ <20180716114209.25242-2-o.rempel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180716144206.30985-1-miquel.raynal@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <20180716114209.25242-2-o.rempel@pengutronix.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,34 +19,21 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, dl-linux-imx <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-New bindings (using a syscon) are available for AP806 and CP110
-compatibles. Add a reference to these files from the original
-documentation.
+On Mon, Jul 16, 2018 at 01:42:07PM +0200, Oleksij Rempel wrote:
+> The Messaging Unit module enables two processors within
+> the SoC to communicate and coordinate by passing messages
+> (e.g. data, status and control) through the MU interface.
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- Documentation/devicetree/bindings/thermal/armada-thermal.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+v3? I already gave my R-by on v4 from Dong. Please coordinate your work 
+on this.
 
-diff --git a/Documentation/devicetree/bindings/thermal/armada-thermal.txt b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-index e0d013a2e66d..f3b441100890 100644
---- a/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-@@ -10,6 +10,11 @@ Required properties:
-     * marvell,armada-ap806-thermal
-     * marvell,armada-cp110-thermal
- 
-+Note: these bindings are deprecated for AP806/CP110 and should instead
-+follow the rules described in:
-+Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-+Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt
-+
- - reg: Device's register space.
-   Two entries are expected, see the examples below. The first one points
-   to the status register (4B). The second one points to the control
--- 
-2.14.1
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  .../devicetree/bindings/mailbox/fsl,mu.txt    | 32 +++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/fsl,mu.txt
