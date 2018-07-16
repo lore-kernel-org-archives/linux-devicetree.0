@@ -1,186 +1,93 @@
-From: Todor Tomov <todor.tomov@linaro.org>
-Subject: Re: [PATCH v2 08/34] media: camss: Unify the clock names
-Date: Mon, 16 Jul 2018 11:53:13 +0300
-Message-ID: <CAA3CUABj_udpu1yAGGd070_uLNYLbTYEHb_sbHLheUErkPnYtQ@mail.gmail.com>
-References: <1530797585-8555-1-git-send-email-todor.tomov@linaro.org>
- <1530797585-8555-9-git-send-email-todor.tomov@linaro.org> <20180711160713.GA29354@rob-hp-laptop>
+From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v12 3/4] iommu/arm-smmu: Add the device_link between
+	masters and smmu
+Date: Mon, 16 Jul 2018 10:55:44 +0200
+Message-ID: <CAJZ5v0iQ2wxsXvuaLK2M9a_Jwe_fnwR2Afrq_Oa8h0--Ch7-5g@mail.gmail.com>
+References: <20180708173413.1965-1-vivek.gautam@codeaurora.org>
+	<20180708173413.1965-4-vivek.gautam@codeaurora.org>
+	<5179668.PHK6S3sxLu@aspire.rjw.lan>
+	<741cc78b-59a7-5289-e42f-1511ebedb15d@codeaurora.org>
+	<CAFp+6iFTgEhPLYQEyBX_Fb0k3n0OzGhKuSoBNV5XzpD01+V8qw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180711160713.GA29354@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CAFp+6iFTgEhPLYQEyBX_Fb0k3n0OzGhKuSoBNV5XzpD01+V8qw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thank you for review.
-
-On 11 July 2018 at 19:07, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Jul 05, 2018 at 04:32:39PM +0300, Todor Tomov wrote:
->> Unify the clock names - use names closer to the clock
->> definitions.
+On Thu, Jul 12, 2018 at 2:41 PM, Vivek Gautam
+<vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> Hi Rafael,
 >
-> Why? You can't just change names. You are breaking an ABI.
-
-Main reason is that this change allows more logical names and
-handling in the driver when support for 8996 is added.
-To clarify by example:
-- we used to have "camss_vfe_vfe" in 8916;
-- now we will have "vfe0" in 8916 and "vfe0" and "vfe1" in 8996.
-
-To achieve this I have changed the names to match more closely
-the definitions in the clock driver, which are based on the
-documentation. Yes, I should have done this the first time...
-
-I have used to update the dt and kernel code together. Yes, the
-change breaks the ABI but does this cause difficulties in practice?
-
 >
+> On Wed, Jul 11, 2018 at 4:06 PM, Vivek Gautam
+> <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>> Hi Rafael,
 >>
->> CC: Rob Herring <robh+dt@kernel.org>
->> CC: Mark Rutland <mark.rutland@arm.com>
->> CC: devicetree@vger.kernel.org
->> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
->> ---
->>  .../devicetree/bindings/media/qcom,camss.txt       | 24 +++++++++++-----------
+>>
+>>
+>> On 7/11/2018 3:23 PM, Rafael J. Wysocki wrote:
+>>>
+>>> On Sunday, July 8, 2018 7:34:12 PM CEST Vivek Gautam wrote:
+>>>>
+>>>> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>>
+>>>> Finally add the device link between the master device and
+>>>> smmu, so that the smmu gets runtime enabled/disabled only when the
+>>>> master needs it. This is done from add_device callback which gets
+>>>> called once when the master is added to the smmu.
+>>>>
+>>>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>> Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>>>> Cc: Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+>>>> Cc: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+>>>> ---
+>>>>
+>>>>   - Change since v11
+>>>>     * Replaced DL_FLAG_AUTOREMOVE flag with DL_FLAG_AUTOREMOVE_SUPPLIER.
+>>>>
+>>>>   drivers/iommu/arm-smmu.c | 12 ++++++++++++
+>>>>   1 file changed, 12 insertions(+)
+>>>>
+>>>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>>>> index 09265e206e2d..916cde4954d2 100644
+>>>> --- a/drivers/iommu/arm-smmu.c
+>>>> +++ b/drivers/iommu/arm-smmu.c
+>>>> @@ -1461,8 +1461,20 @@ static int arm_smmu_add_device(struct device *dev)
+>>>>         iommu_device_link(&smmu->iommu, dev);
+>>>>   +     if (pm_runtime_enabled(smmu->dev) &&
+>>>
+>>> Why does the creation of the link depend on whether or not runtime PM
+>>> is enabled for the MMU device?
+>>
+>>
+>> The main purpose of this device link is to handle the runtime PM
+>> synchronization
+>> between the supplier (iommu) and consumer (client devices, such as
+>> GPU/display).
+>> Moreover, the runtime pm is conditionally enabled for smmu devices that
+>> support
+>> such [1].
 >
-> Bindings should be a separate patch.
+> Is there something you would like me to modify in this patch?
 
-I can do that in the next version.
+Not really, as long as you are sure that it is correct. :-)
 
-Best regards,
-Todor
-
->
->>  drivers/media/platform/qcom/camss/camss.c          | 20 ++++++++----------
->>  2 files changed, 20 insertions(+), 24 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
->> index cadeceb..032e8ed 100644
->> --- a/Documentation/devicetree/bindings/media/qcom,camss.txt
->> +++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
->> @@ -53,7 +53,7 @@ Qualcomm Camera Subsystem
->>       Usage: required
->>       Value type: <stringlist>
->>       Definition: Should contain the following entries:
->> -                - "camss_top_ahb"
->> +                - "top_ahb"
->>                  - "ispif_ahb"
->>                  - "csiphy0_timer"
->>                  - "csiphy1_timer"
->> @@ -67,11 +67,11 @@ Qualcomm Camera Subsystem
->>                  - "csi1_phy"
->>                  - "csi1_pix"
->>                  - "csi1_rdi"
->> -                - "camss_ahb"
->> -                - "camss_vfe_vfe"
->> -                - "camss_csi_vfe"
->> -                - "iface"
->> -                - "bus"
->> +                - "ahb"
->> +                - "vfe0"
->> +                - "csi_vfe0"
->> +                - "vfe_ahb"
->> +                - "vfe_axi"
->>  - vdda-supply:
->>       Usage: required
->>       Value type: <phandle>
->> @@ -161,7 +161,7 @@ Qualcomm Camera Subsystem
->>                       <&gcc GCC_CAMSS_CSI_VFE0_CLK>,
->>                       <&gcc GCC_CAMSS_VFE_AHB_CLK>,
->>                       <&gcc GCC_CAMSS_VFE_AXI_CLK>;
->> -                clock-names = "camss_top_ahb",
->> +                clock-names = "top_ahb",
->>                          "ispif_ahb",
->>                          "csiphy0_timer",
->>                          "csiphy1_timer",
->> @@ -175,11 +175,11 @@ Qualcomm Camera Subsystem
->>                          "csi1_phy",
->>                          "csi1_pix",
->>                          "csi1_rdi",
->> -                        "camss_ahb",
->> -                        "camss_vfe_vfe",
->> -                        "camss_csi_vfe",
->> -                        "iface",
->> -                        "bus";
->> +                        "ahb",
->> +                        "vfe0",
->> +                        "csi_vfe0",
->> +                        "vfe_ahb",
->> +                        "vfe_axi";
->>               vdda-supply = <&pm8916_l2>;
->>               iommus = <&apps_iommu 3>;
->>               ports {
->> diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
->> index abf6184..0b663e0 100644
->> --- a/drivers/media/platform/qcom/camss/camss.c
->> +++ b/drivers/media/platform/qcom/camss/camss.c
->> @@ -32,8 +32,7 @@ static const struct resources csiphy_res[] = {
->>       /* CSIPHY0 */
->>       {
->>               .regulator = { NULL },
->> -             .clock = { "camss_top_ahb", "ispif_ahb",
->> -                        "camss_ahb", "csiphy0_timer" },
->> +             .clock = { "top_ahb", "ispif_ahb", "ahb", "csiphy0_timer" },
->>               .clock_rate = { { 0 },
->>                               { 0 },
->>                               { 0 },
->> @@ -45,8 +44,7 @@ static const struct resources csiphy_res[] = {
->>       /* CSIPHY1 */
->>       {
->>               .regulator = { NULL },
->> -             .clock = { "camss_top_ahb", "ispif_ahb",
->> -                        "camss_ahb", "csiphy1_timer" },
->> +             .clock = { "top_ahb", "ispif_ahb", "ahb", "csiphy1_timer" },
->>               .clock_rate = { { 0 },
->>                               { 0 },
->>                               { 0 },
->> @@ -60,8 +58,7 @@ static const struct resources csid_res[] = {
->>       /* CSID0 */
->>       {
->>               .regulator = { "vdda" },
->> -             .clock = { "camss_top_ahb", "ispif_ahb",
->> -                        "csi0_ahb", "camss_ahb",
->> +             .clock = { "top_ahb", "ispif_ahb", "csi0_ahb", "ahb",
->>                          "csi0", "csi0_phy", "csi0_pix", "csi0_rdi" },
->>               .clock_rate = { { 0 },
->>                               { 0 },
->> @@ -78,8 +75,7 @@ static const struct resources csid_res[] = {
->>       /* CSID1 */
->>       {
->>               .regulator = { "vdda" },
->> -             .clock = { "camss_top_ahb", "ispif_ahb",
->> -                        "csi1_ahb", "camss_ahb",
->> +             .clock = { "top_ahb", "ispif_ahb", "csi1_ahb", "ahb",
->>                          "csi1", "csi1_phy", "csi1_pix", "csi1_rdi" },
->>               .clock_rate = { { 0 },
->>                               { 0 },
->> @@ -96,10 +92,10 @@ static const struct resources csid_res[] = {
->>
->>  static const struct resources_ispif ispif_res = {
->>       /* ISPIF */
->> -     .clock = { "camss_top_ahb", "camss_ahb", "ispif_ahb",
->> +     .clock = { "top_ahb", "ahb", "ispif_ahb",
->>                  "csi0", "csi0_pix", "csi0_rdi",
->>                  "csi1", "csi1_pix", "csi1_rdi" },
->> -     .clock_for_reset = { "camss_vfe_vfe", "camss_csi_vfe" },
->> +     .clock_for_reset = { "vfe0", "csi_vfe0" },
->>       .reg = { "ispif", "csi_clk_mux" },
->>       .interrupt = "ispif"
->>
->> @@ -108,8 +104,8 @@ static const struct resources_ispif ispif_res = {
->>  static const struct resources vfe_res = {
->>       /* VFE0 */
->>       .regulator = { NULL },
->> -     .clock = { "camss_top_ahb", "camss_vfe_vfe", "camss_csi_vfe",
->> -                "iface", "bus", "camss_ahb" },
->> +     .clock = { "top_ahb", "vfe0", "csi_vfe0",
->> +                "vfe_ahb", "vfe_axi", "ahb" },
->>       .clock_rate = { { 0 },
->>                       { 50000000, 80000000, 100000000, 160000000,
->>                         177780000, 200000000, 266670000, 320000000,
->> --
->> 2.7.4
->>
+You need to remember, however, that if you add system-wide PM
+callbacks to the driver, the ordering between them and the client
+device callbacks during system-wide suspend matters as well.  Don't
+you need the link the ensure the correct system-wide suspend ordering
+too?
