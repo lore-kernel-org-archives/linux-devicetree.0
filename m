@@ -1,15 +1,18 @@
-From: Ezequiel Garcia <ezequiel@collabora.com>
-Subject: Re: [PATCH v2] arm64: dts: rockchip: add USB 2.0 and 3.0 support on
- Ficus board
-Date: Mon, 16 Jul 2018 14:29:40 -0300
-Message-ID: <68cdc26d1e58797080ce9939c173148eb9f15a52.camel@collabora.com>
-References: <20180714170922.4433-1-ezequiel@collabora.com>
- <2487041.HPaZN1uVBU@phil>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 10/14] dt-bindings/interrupt-controller: update
+ Marvell ICU bindings
+Date: Mon, 16 Jul 2018 11:44:02 -0600
+Message-ID: <20180716174402.GA28988@rob-hp-laptop>
+References: <20180705124011.7661-1-miquel.raynal@bootlin.com>
+ <20180705124011.7661-11-miquel.raynal@bootlin.com>
+ <20180716152734.GA4581@rob-hp-laptop>
+ <20180716183935.36f48f76@xps13>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2487041.HPaZN1uVBU@phil>
+Content-Disposition: inline
+In-Reply-To: <20180716183935.36f48f76@xps13>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,49 +22,75 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, kernel@collabora.com, linux-arm-kernel@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-07-16 at 19:02 +0200, Heiko Stuebner wrote:
-> Hi Enric, Ezequiel,
+On Mon, Jul 16, 2018 at 06:39:35PM +0200, Miquel Raynal wrote:
+> Hi Rob,
 > 
-> Am Samstag, 14. Juli 2018, 19:09:22 CEST schrieb Ezequiel Garcia:
-> > From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > 
-> > The board exposes two types A ports, one is USB 3.0, up to 5.0Gbps and
-> > another one is USB 2.0 up to 480Mbps. Enable the USB PHYs and the USB
-> > controllers to enable theses devices.
-> > 
-> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > ---
-> > Changes from v1:
-> >  * Provide voltage for vcc5v0_host and vcc3v3_pcie regulators
-> >  * Provide vin_supply for vcc5v0_host.
-> > 
-> >  arch/arm64/boot/dts/rockchip/rk3399-ficus.dts | 90 +++++++++++++++++++
-> >  1 file changed, 90 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
-> > index 0d14183dd4a9..6295483b701f 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
-> > @@ -58,9 +58,24 @@
-> >  		pinctrl-0 = <&pcie_drv>;
-> >  		regulator-boot-on;
-> >  		regulator-name = "vcc3v3_pcie";
-> > +		regulator-min-microvolt = <3300000>;
-> > +		regulator-max-microvolt = <3300000>;
-> >  		vin-supply = <&vcc3v3_sys>;
-> >  	};
+> Rob Herring <robh@kernel.org> wrote on Mon, 16 Jul 2018 09:27:34 -0600:
 > 
-> I've split this out into a separate patch, as it isn't part of what
-> the commit message describes and thus should be separate
-> and applied both resulting patches for 4.19.
+> > On Thu, Jul 05, 2018 at 02:40:07PM +0200, Miquel Raynal wrote:
+> > > Change the documentation to reflect the new bindings used for Marvell
+> > > ICU. This involves describing each interrupt group as a subnode of the
+> > > ICU node. Each of them having their own compatible.
+> > > 
+> > > The DT binding documentation still documents the legacy binding, where
+> > > there was a single node with no subnode.
+> > > 
+> > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > > ---
+> > >  .../bindings/interrupt-controller/marvell,icu.txt  | 83 ++++++++++++++++++----
+> > >  1 file changed, 71 insertions(+), 12 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+> > > index 649b7ec9d9b1..83b4fbf8af65 100644
+> > > --- a/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+> > > +++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+> > > @@ -5,6 +5,8 @@ The Marvell ICU (Interrupt Consolidation Unit) controller is
+> > >  responsible for collecting all wired-interrupt sources in the CP and
+> > >  communicating them to the GIC in the AP, the unit translates interrupt
+> > >  requests on input wires to MSG memory mapped transactions to the GIC.
+> > > +These messages will access a different GIC memory area depending on
+> > > +their type (NSR, SR, SEI, REI, etc).
+> > >  
+> > >  Required properties:
+> > >  
+> > > @@ -12,20 +14,19 @@ Required properties:
+> > >  
+> > >  - reg: Should contain ICU registers location and length.
+> > >  
+> > > +Subnodes: Each group of interrupt is declared as a subnode of the ICU,
+> > > +with their own compatible.
+> > > +
+> > > +Required properties for the icu_nsr/icu_sei subnodes:
+> > > +
+> > > +- compatible: Should be "marvell,cp110-icu-nsr" or "marvell,cp110-icu-sei".
+> > > +  
+> > 
+> > I raised this before and still don't understand. You had 4 types before 
+> > and now you only have 2 types? How do you handle SR and REI with the new 
+> > binding?
 > 
-> And also cleaned up a vendor-property that shouldn't be
-> part of mainline.
+> Indeed there are 4 types: NSR, SR, SEI, REI.
 > 
+> Until now only NSR were supported.
 
-Thanks a lot!
+All 4 were supported by the binding and now only 2 though.
+
+> I'm adding SEI support.
+> 
+> In the future, people might want to add support for SR/REI as well but
+> they have never been supported in mainline. When support for these
+> interrupts will have been contributed, I suppose it will easy to add
+> two other compatibles with the same formatting "marvell,cp110-icu-xxx"?
+
+Perhaps, but I have know way to tell.
+
+> I hope the changes in the driver will make such contribution almost
+> trivial.
+
+You can add bindings without adding driver.
+
+Rob
