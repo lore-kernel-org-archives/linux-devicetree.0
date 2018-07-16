@@ -1,126 +1,142 @@
-Return-Path: <mchehab+samsung@kernel.org>
-Date: Mon, 30 Jul 2018 15:00:58 -0300
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: Re: [PATCH 13/22] [media] tvp5150: disable output while signal not
- locked
-Message-ID: <20180730150058.30563d0f@coco.lan>
-In-Reply-To: <20180628162054.25613-14-m.felsch@pengutronix.de>
-References: <20180628162054.25613-1-m.felsch@pengutronix.de>
-	<20180628162054.25613-14-m.felsch@pengutronix.de>
+Return-Path: <SRS0=K2f+=KA=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr690071.outbound.protection.outlook.com ([40.107.69.71]:46586
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726343AbeGPFxs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Jul 2018 01:53:48 -0400
+From: <shubhrajyoti.datta@gmail.com>
+Subject: [PATCHv3 1/4] tty: serial: uartlite: Add structure for private data
+Date: Mon, 16 Jul 2018 10:53:51 +0530
+Message-ID: <1531718634-17939-1-git-send-email-shubhrajyoti.datta@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de, afshin.nasser@gmail.com, javierm@redhat.com, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, jacmet@sunsite.dk, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, Tanvi Desai <tanvi.desai@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Em Thu, 28 Jun 2018 18:20:45 +0200
-Marco Felsch <m.felsch@pengutronix.de> escreveu:
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-> From: Philipp Zabel <p.zabel@pengutronix.de>
-> 
-> To avoid short frames on stream start, keep output pins at high impedance
-> while we are not properly locked onto the input signal.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
->  drivers/media/i2c/tvp5150.c | 39 ++++++++++++++++++++++++++-----------
->  1 file changed, 28 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-> index d8bdbedd8826..27cfd08be3d2 100644
-> --- a/drivers/media/i2c/tvp5150.c
-> +++ b/drivers/media/i2c/tvp5150.c
-> @@ -60,6 +60,7 @@ struct tvp5150 {
->  	v4l2_std_id detected_norm;
->  	u32 input;
->  	u32 output;
-> +	u32 oe;
->  	int enable;
->  	bool lock;
->  
-> @@ -799,14 +800,20 @@ static irqreturn_t tvp5150_isr(int irq, void *dev_id)
->  {
->  	struct tvp5150 *decoder = dev_id;
->  	struct regmap *map = decoder->regmap;
-> -	unsigned int active = 0, status = 0;
-> +	unsigned int mask, active = 0, status = 0;
-> +
-> +	mask = TVP5150_MISC_CTL_YCBCR_OE | TVP5150_MISC_CTL_SYNC_OE |
-> +	       TVP5150_MISC_CTL_CLOCK_OE;
->  
->  	regmap_read(map, TVP5150_INT_STATUS_REG_A, &status);
->  	if (status) {
->  		regmap_write(map, TVP5150_INT_STATUS_REG_A, status);
->  
-> -		if (status & TVP5150_INT_A_LOCK)
-> +		if (status & TVP5150_INT_A_LOCK) {
->  			decoder->lock = !!(status & TVP5150_INT_A_LOCK_STATUS);
-> +			regmap_update_bits(map, TVP5150_MISC_CTL, mask,
-> +					   decoder->lock ? decoder->oe : 0);
-> +		}
->  
->  		return IRQ_HANDLED;
->  	}
-> @@ -872,10 +879,26 @@ static int tvp5150_enable(struct v4l2_subdev *sd)
->  	/* Disable autoswitch mode */
->  	tvp5150_set_std(sd, std);
->  
-> -	if (decoder->mbus_type == V4L2_MBUS_PARALLEL)
-> +	/*
-> +	 * Enable the YCbCr and clock outputs. In discrete sync mode
-> +	 * (non-BT.656) additionally enable the the sync outputs.
-> +	 */
-> +	switch (decoder->mbus_type) {
-> +	case V4L2_MBUS_PARALLEL:
->  		/* 8-bit 4:2:2 YUV with discrete sync output */
->  		regmap_update_bits(decoder->regmap, TVP5150_DATA_RATE_SEL,
->  				   0x7, 0x0);
-> +		decoder->oe = TVP5150_MISC_CTL_YCBCR_OE |
-> +			      TVP5150_MISC_CTL_CLOCK_OE |
-> +			      TVP5150_MISC_CTL_SYNC_OE;
-> +		break;
-> +	case V4L2_MBUS_BT656:
-> +		decoder->oe = TVP5150_MISC_CTL_YCBCR_OE |
-> +			      TVP5150_MISC_CTL_CLOCK_OE;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
->  
->  	return 0;
->  };
-> @@ -1190,14 +1213,8 @@ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
->  	if (enable) {
->  		tvp5150_enable(sd);
->  
-> -		/*
-> -		 * Enable the YCbCr and clock outputs. In discrete sync mode
-> -		 * (non-BT.656) additionally enable the the sync outputs.
-> -		 */
-> -		val = TVP5150_MISC_CTL_YCBCR_OE | TVP5150_MISC_CTL_CLOCK_OE;
-> -		if (decoder->mbus_type == V4L2_MBUS_PARALLEL)
-> -			val |= TVP5150_MISC_CTL_SYNC_OE;
-> -
-> +		/* Enable outputs if decoder is locked */
-> +		val = decoder->lock ? decoder->oe : 0;
+Add struct uartlite_data, to store the private data of the Uartlite
+driver.
 
-Hmm... this only works if the tvp5150 has the interrupts enabled.
+Signed-off-by: Tanvi Desai <tanvi.desai@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+---
+ drivers/tty/serial/uartlite.c | 29 +++++++++++++++++++++--------
+ 1 file changed, 21 insertions(+), 8 deletions(-)
 
-The code should be, instead:
+diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
+index c47db78..0f798f7 100644
+--- a/drivers/tty/serial/uartlite.c
++++ b/drivers/tty/serial/uartlite.c
+@@ -54,6 +54,10 @@
+ #define ULITE_CONTROL_RST_RX	0x02
+ #define ULITE_CONTROL_IE	0x10
+ 
++struct uartlite_data {
++	const struct uartlite_reg_ops *reg_ops;
++};
++
+ struct uartlite_reg_ops {
+ 	u32 (*in)(void __iomem *addr);
+ 	void (*out)(u32 val, void __iomem *addr);
+@@ -91,16 +95,16 @@ static const struct uartlite_reg_ops uartlite_le = {
+ 
+ static inline u32 uart_in32(u32 offset, struct uart_port *port)
+ {
+-	const struct uartlite_reg_ops *reg_ops = port->private_data;
++	struct uartlite_data *pdata = port->private_data;
+ 
+-	return reg_ops->in(port->membase + offset);
++	return pdata->reg_ops->in(port->membase + offset);
+ }
+ 
+ static inline void uart_out32(u32 val, u32 offset, struct uart_port *port)
+ {
+-	const struct uartlite_reg_ops *reg_ops = port->private_data;
++	struct uartlite_data *pdata = port->private_data;
+ 
+-	reg_ops->out(val, port->membase + offset);
++	pdata->reg_ops->out(val, port->membase + offset);
+ }
+ 
+ static struct uart_port ulite_ports[ULITE_NR_UARTS];
+@@ -325,6 +329,7 @@ static void ulite_release_port(struct uart_port *port)
+ 
+ static int ulite_request_port(struct uart_port *port)
+ {
++	struct uartlite_data *pdata = port->private_data;
+ 	int ret;
+ 
+ 	pr_debug("ulite console: port=%p; port->mapbase=%llx\n",
+@@ -342,13 +347,13 @@ static int ulite_request_port(struct uart_port *port)
+ 		return -EBUSY;
+ 	}
+ 
+-	port->private_data = (void *)&uartlite_be;
++	pdata->reg_ops = &uartlite_be;
+ 	ret = uart_in32(ULITE_CONTROL, port);
+ 	uart_out32(ULITE_CONTROL_RST_TX, ULITE_CONTROL, port);
+ 	ret = uart_in32(ULITE_STATUS, port);
+ 	/* Endianess detection */
+ 	if ((ret & ULITE_STATUS_TXEMPTY) != ULITE_STATUS_TXEMPTY)
+-		port->private_data = (void *)&uartlite_le;
++		pdata->reg_ops = &uartlite_le;
+ 
+ 	return 0;
+ }
+@@ -585,10 +590,12 @@ static struct uart_driver ulite_uart_driver = {
+  * @id: requested id number.  Pass -1 for automatic port assignment
+  * @base: base address of uartlite registers
+  * @irq: irq number for uartlite
++ * @pdata: private data for uartlite
+  *
+  * Returns: 0 on success, <0 otherwise
+  */
+-static int ulite_assign(struct device *dev, int id, u32 base, int irq)
++static int ulite_assign(struct device *dev, int id, u32 base, int irq,
++			struct uartlite_data *pdata)
+ {
+ 	struct uart_port *port;
+ 	int rc;
+@@ -625,6 +632,7 @@ static int ulite_assign(struct device *dev, int id, u32 base, int irq)
+ 	port->dev = dev;
+ 	port->type = PORT_UNKNOWN;
+ 	port->line = id;
++	port->private_data = pdata;
+ 
+ 	dev_set_drvdata(dev, port);
+ 
+@@ -675,6 +683,7 @@ MODULE_DEVICE_TABLE(of, ulite_of_match);
+ static int ulite_probe(struct platform_device *pdev)
+ {
+ 	struct resource *res;
++	struct uartlite_data *pdata;
+ 	int irq;
+ 	int id = pdev->id;
+ #ifdef CONFIG_OF
+@@ -684,6 +693,10 @@ static int ulite_probe(struct platform_device *pdev)
+ 	if (prop)
+ 		id = be32_to_cpup(prop);
+ #endif
++	pdata = devm_kzalloc(&pdev->dev, sizeof(struct uartlite_data),
++			     GFP_KERNEL);
++	if (!pdata)
++		return -ENOMEM;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!res)
+@@ -693,7 +706,7 @@ static int ulite_probe(struct platform_device *pdev)
+ 	if (irq <= 0)
+ 		return -ENXIO;
+ 
+-	return ulite_assign(&pdev->dev, id, res->start, irq);
++	return ulite_assign(&pdev->dev, id, res->start, irq, pdata);
+ }
+ 
+ static int ulite_remove(struct platform_device *pdev)
+-- 
+2.7.4
 
-	if (c->irq)
-		val = decoder->lock ? decoder->oe : 0;
-	else
-		val = decoder->oe;
-
-
->  		int_val = TVP5150_INT_A_LOCK;
->  	}
->  
-
-
-
-Thanks,
-Mauro
