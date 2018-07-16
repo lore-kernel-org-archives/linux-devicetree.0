@@ -1,53 +1,65 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v3 0/4] Add basic support for Mediatek MT8183 SoC
-Date: Mon, 16 Jul 2018 11:28:52 +0200
-Message-ID: <9ba45353-a6e1-9a6e-f05b-4b1679ae9e52@gmail.com>
-References: <1526538126-51497-1-git-send-email-erin.lo@mediatek.com>
+From: Claudiu Beznea <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH] ARM: dts: at91: fix typo for PIN_PB22
+Date: Mon, 16 Jul 2018 12:34:03 +0300
+Message-ID: <f5cdc41d-8c6e-0f7f-9fbe-2b4057008720@microchip.com>
+References: <1531326337-15504-1-git-send-email-claudiu.beznea@microchip.com>
+ <20180712063021.h7t424iksdulj74a@M43218.corp.atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526538126-51497-1-git-send-email-erin.lo@mediatek.com>
+In-Reply-To: <20180712063021.h7t424iksdulj74a@M43218.corp.atmel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Erin Lo <erin.lo@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, mars.cheng@mediatek.com
+To: Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Erin,
+Hi Ludovic,
 
-On 17/05/18 08:22, Erin Lo wrote:
-> MT8183 is a SoC based on 64bit ARMv8 architecture.
-> It contains 4 CA53 and 4 CA73 cores.
-> MT8183 share many HW IP with MT65xx series.
-> This patchset was tested on MT8183 evaluation board, and boot to shell ok.
+On 12.07.2018 09:30, Ludovic Desroches wrote:
+> Hi Claudiu,
 > 
-> This series contains document bindings, device tree including interrupt, uart.
+> On Wed, Jul 11, 2018 at 07:25:37PM +0300, Claudiu Beznea wrote:
+>> Fix typo for PIN_PB22 on TD function.
 > 
-> Change in v3:
-> 1. Fill out GICC, GICH, GICV regions
-> 2. Update Copyright to 2018
-> 
-> Change in v2:
-> 1. Split dt-bindings into different patches
-> 2. Correct bindings for supported SoCs (mtk-uart.txt)
-> 
-> Ben Ho (1):
->   arm64: dts: Add Mediatek SoC MT8183 and evaluation board dts and
->     Makefile
-> 
-> Erin Lo (3):
->   dt-bindings: arm: Add bindings for Mediatek MT8183 SoC Platform
->   dt-bindings: mtk-sysirq: Add compatible for Mediatek MT8183
->   dt-bindings: serial: Add compatible for Mediatek MT8183
-> 
+> In fact, this typo is present in several places in this file. It could
+> be worth fixing all those occurences in a single patch.
 
-I'm a bit reluctant to take this series, as it will only enable the EVB board to
-boot into a serial console. Are you planning to add support for other devices of
-this SoC?
+Sure, I will look over all those occurrences.
 
-Apart please take into account that there is an issue with the dts file, as you
-were told by the kbuild test robot.
+Thank you,
+Claudiu
 
-Regards,
-Matthias
+> 
+> Regards
+> 
+> Ludovic
+> 
+>>
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+>> ---
+>>  arch/arm/boot/dts/sama5d2-pinfunc.h | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/sama5d2-pinfunc.h b/arch/arm/boot/dts/sama5d2-pinfunc.h
+>> index e57191fb83de..ac61491c9d7f 100644
+>> --- a/arch/arm/boot/dts/sama5d2-pinfunc.h
+>> +++ b/arch/arm/boot/dts/sama5d2-pinfunc.h
+>> @@ -375,7 +375,7 @@
+>>  #define PIN_PB22__GPIO			PINMUX_PIN(PIN_PB22, 0, 0)
+>>  #define PIN_PB22__LCDDAT11		PINMUX_PIN(PIN_PB22, 1, 1)
+>>  #define PIN_PB22__A11			PINMUX_PIN(PIN_PB22, 2, 1)
+>> -#define PIN_PB22__TDO			PINMUX_PIN(PIN_PB22, 3, 1)
+>> +#define PIN_PB22__TD0			PINMUX_PIN(PIN_PB22, 3, 1)
+>>  #define PIN_PB22__TIOA2			PINMUX_PIN(PIN_PB22, 4, 2)
+>>  #define PIN_PB22__FLEXCOM3_IO1		PINMUX_PIN(PIN_PB22, 5, 3)
+>>  #define PIN_PB22__GMDC			PINMUX_PIN(PIN_PB22, 6, 3)
+>> -- 
+>> 2.7.4
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
