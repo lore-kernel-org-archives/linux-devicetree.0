@@ -1,42 +1,72 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] of/fdt: avoid undefined behaviour in populate_properties()
-Date: Mon, 16 Jul 2018 08:36:34 -0600
-Message-ID: <CAL_JsqJLyf8-szrAQKWSEpy6gG_j0Cyu9miijOQiO_YSPx_dGQ@mail.gmail.com>
-References: <20180706113715.30053-1-mark.rutland@arm.com> <c1f615b6-6e56-414c-b4f8-e75ad4c114e7@gmail.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v3 02/23] thermal: armada: remove useless register accesses
+Date: Mon, 16 Jul 2018 16:41:45 +0200
+Message-ID: <20180716144206.30985-3-miquel.raynal@bootlin.com>
+References: <20180716144206.30985-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c1f615b6-6e56-414c-b4f8-e75ad4c114e7@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180716144206.30985-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 6, 2018 at 10:51 AM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> On 07/06/18 04:37, Mark Rutland wrote:
-> > We unflatten a device tree in two passes: the first calculating the size
-> > of the unflattened tree, and the second performing the actual
-> > unflattening into a suitably-sized buffer.
+Prepare the migration to use regmaps by first simplifying the
+initialization functions: avoid unnecessary write/read cycles on
+configuration registers.
 
-[...]
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/thermal/armada_thermal.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-> > @@ -187,7 +187,9 @@ static void populate_properties(const void *blob,
-> >       int cur;
-> >       bool has_name = false;
-> >
-> > -     pprev = &np->properties;
-> > +     if (!dryrun)
-> > +             pprev = &np->properties;
-> > +
-> >       for (cur = fdt_first_property_offset(blob, offset);
-> >            cur >= 0;
-> >            cur = fdt_next_property_offset(blob, cur)) {
-> >
->
-> Please add a one line comment explaining why "if (!dryrun)" so that no one
-> decides to remove the test in the future as not needed.  Otherwise,
-
-Please re-spin ASAP with the comment if you'd like this in 4.18.
-
-Rob
+diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_thermal.c
+index 077e8e562306..6fdb90b3c001 100644
+--- a/drivers/thermal/armada_thermal.c
++++ b/drivers/thermal/armada_thermal.c
+@@ -103,16 +103,13 @@ static void armadaxp_init_sensor(struct platform_device *pdev,
+ 
+ 	reg = readl_relaxed(priv->control1);
+ 	reg |= PMU_TDC0_OTF_CAL_MASK;
+-	writel(reg, priv->control1);
+ 
+ 	/* Reference calibration value */
+ 	reg &= ~PMU_TDC0_REF_CAL_CNT_MASK;
+ 	reg |= (0xf1 << PMU_TDC0_REF_CAL_CNT_OFFS);
+-	writel(reg, priv->control1);
+ 
+ 	/* Reset the sensor */
+-	reg = readl_relaxed(priv->control1);
+-	writel((reg | PMU_TDC0_SW_RST_MASK), priv->control1);
++	reg |= PMU_TDC0_SW_RST_MASK;
+ 
+ 	writel(reg, priv->control1);
+ 
+@@ -129,14 +126,13 @@ static void armada370_init_sensor(struct platform_device *pdev,
+ 
+ 	reg = readl_relaxed(priv->control1);
+ 	reg |= PMU_TDC0_OTF_CAL_MASK;
+-	writel(reg, priv->control1);
+ 
+ 	/* Reference calibration value */
+ 	reg &= ~PMU_TDC0_REF_CAL_CNT_MASK;
+ 	reg |= (0xf1 << PMU_TDC0_REF_CAL_CNT_OFFS);
+-	writel(reg, priv->control1);
+ 
+ 	reg &= ~PMU_TDC0_START_CAL_MASK;
++
+ 	writel(reg, priv->control1);
+ 
+ 	msleep(10);
+-- 
+2.14.1
