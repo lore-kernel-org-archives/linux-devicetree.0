@@ -1,93 +1,61 @@
-From: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Subject: Re: [PATCH v2 3/3] dt-bindings: mfd: max8998: Add charger subnode binding
-Date: Mon, 16 Jul 2018 20:59:20 +0200
-Message-ID: <2652044.7dgYAUSR2v@acerlaptop>
-References: <1531571213-30593-1-git-send-email-pawel.mikolaj.chmiel@gmail.com> <1531571213-30593-4-git-send-email-pawel.mikolaj.chmiel@gmail.com> <20180716180003.GA16037@rob-hp-laptop>
+From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 10/14] dt-bindings/interrupt-controller: update
+ Marvell ICU bindings
+Date: Mon, 16 Jul 2018 21:30:55 +0200
+Message-ID: <20180716213055.1f9c428e@windsurf>
+References: <20180705124011.7661-1-miquel.raynal@bootlin.com>
+ <20180705124011.7661-11-miquel.raynal@bootlin.com>
+ <20180716152734.GA4581@rob-hp-laptop>
+ <20180716183935.36f48f76@xps13>
+ <20180716174402.GA28988@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180716180003.GA16037@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180716174402.GA28988@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh@kernel.org>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, lee.jones@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, July 16, 2018 12:00:03 PM CEST Rob Herring wrote:
-> On Sat, Jul 14, 2018 at 02:26:53PM +0200, Pawe=C5=82 Chmiel wrote:
-> > This patch adds devicetree bindings documentation for
-> > battery charging controller as the subnode of MAX8998 PMIC.
-> >=20
-> > Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> > ---
-> > Changes from v1:
-> >   - Removed unneeded Fixes tag
-> >   - Correct description of all charger values
-> >   - Added missing property unit
-> > ---
-> >  Documentation/devicetree/bindings/mfd/max8998.txt | 24 +++++++++++++++=
-++++++++
-> >  1 file changed, 24 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Docume=
-ntation/devicetree/bindings/mfd/max8998.txt
-> > index 23a3650ff2a2..196e50097a36 100644
-> > --- a/Documentation/devicetree/bindings/mfd/max8998.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/max8998.txt
-> > @@ -50,6 +50,23 @@ Additional properties required if max8998,pmic-buck2=
-=2Ddvs-gpio is defined:
-> >  - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in micr=
-ovolts
-> >    for buck2 regulator that can be selected using dvs gpio.
-> > =20
-> > +Charger: Configuration for battery charging controller should be added
-> > +inside a child node named 'charger'.
-> > +  Required properties:
-> > +  - max8998,charge-eoc-percent: Setup End of Charge Level.
-> > +    If value equals 0, leave it unchanged.
-> > +    Otherwise it should be value from 10 to 45 by 5 step.
-> > +
-> > +  - max8998,charge-restart-level-microvolt: Setup Charge Restart Level.
-> > +    If value equals 0, leave it unchanged.
-> > +    If value equals -1, it will be disabled.
->=20
-> -1 is a bit strange. Why not 'not present' is disabled?
-I wanted to make it work the same way, as it was in case of using it from p=
-latform_data.=20
-But this is good idea, to change it a bit.
-So we would have:
-=2D 0 -> leave unchanged
-=2D property not present in devicetree -> disabled (and set to -1 - driver =
-is expecting it)
-=2D value from 10-45 or (5,6,7 in case of second property)
-I'll update both documentation and driver parsing code (for both properties=
- - restart level and full timeout) and send v3 version.
+Hello,
 
-Thanks for suggestion.
->=20
-> > +    Otherwise it should be one of following values: 100, 150, 200.
-> > +
-> > +  - max8998,charge-timeout-hours: Setup Charge Full Timeout.
-> > +    If value equals 0, leave it unchanged.
-> > +    If value equals -1, it will be disabled.
-> > +    Otherwise it should be one of following values: 5, 6, 7.
-> > +
-> >  Regulators: All the regulators of MAX8998 to be instantiated shall be
-> >  listed in a child node named 'regulators'. Each regulator is represent=
-ed
-> >  by a child node of the 'regulators' node.
-> > @@ -99,6 +116,13 @@ Example:
-> >  		max8998,pmic-buck2-dvs-gpio =3D <&gpx0 0 3 0 0>; /* SET3 */
-> >  		max8998,pmic-buck2-dvs-voltage =3D <1350000>, <1300000>;
-> > =20
-> > +		/* Charger configuration */
-> > +		charger {
-> > +			max8998,charge-eoc-percent =3D <0>;
-> > +			max8998,charge-restart-level-microvolt =3D <(-1)>;
-> > +			max8998,charge-timeout-hours =3D <7>;
-> > +		};
-> > +
-> >  		/* Regulators to instantiate */
-> >  		regulators {
-> >  			ldo2_reg: LDO2 {
->=20
+On Mon, 16 Jul 2018 11:44:02 -0600, Rob Herring wrote:
+
+> > > I raised this before and still don't understand. You had 4 types before 
+> > > and now you only have 2 types? How do you handle SR and REI with the new 
+> > > binding?  
+> > 
+> > Indeed there are 4 types: NSR, SR, SEI, REI.
+> > 
+> > Until now only NSR were supported.  
+> 
+> All 4 were supported by the binding and now only 2 though.
+
+In fact, no, the old binding was not working for anything but NSR. It
+pretended to support SEI, REI and SR, but because these had never been
+implemented, the binding was not sufficient to over them.
+
+To support SEI or REI, we need to point to a different msi-parent than
+the one used for NSR, which wasn't possible with the previous binding.
+
+So there is no regression of functionality by this binding change,
+quite the contrary, as it really allows to add SEI support, which was
+not possible before. You can consider that the previous binding was
+buggy and dysfunctional.
+
+Best regards,
+
+Thomas Petazzoni
+-- 
+Thomas Petazzoni, CTO, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
