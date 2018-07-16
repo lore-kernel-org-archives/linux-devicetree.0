@@ -1,78 +1,52 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 6/6] ARM64: dts: meson-axg: add the audio clock controller
-Date: Mon, 16 Jul 2018 12:11:51 +0200
-Message-ID: <20180716101151.31109-7-jbrunet@baylibre.com>
+Subject: [PATCH 1/6] ARM64: dts: meson-axg: remove vddio_ao18 from SoC dtsi
+Date: Mon, 16 Jul 2018 12:11:46 +0200
+Message-ID: <20180716101151.31109-2-jbrunet@baylibre.com>
 References: <20180716101151.31109-1-jbrunet@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180716101151.31109-1-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the audio clock controller which is part of the audio bus
-This controller takes 8 input plls, and the usual clock gate, from the
-main clock controller. It provides the clocs for the all the devices of
-the audio subsystem, such as tdms, spdif, pdm, etc.
+Regulator should not be defined inside the SoC dtsi file.
+vddio_ao18 is already defined in the S400 board dts anyway.
 
+Fixes: e1969df34357 ("ARM64: dts: meson-axg: add saradc support")
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 36 ++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 7 -------
+ 1 file changed, 7 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 461be4a35f92..6adc8d3dbf0a 100644
+index c87bafc4b101..08e5f431c025 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -6,6 +6,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/axg-audio-clkc.h>
- #include <dt-bindings/clock/axg-clkc.h>
- #include <dt-bindings/clock/axg-aoclkc.h>
- #include <dt-bindings/gpio/meson-axg-gpio.h>
-@@ -155,6 +156,41 @@
- 			};
- 		};
+@@ -91,13 +91,6 @@
+ 		method = "smc";
+ 	};
  
-+		audio: bus@ff642000 {
-+			compatible = "simple-bus";
-+			reg = <0x0 0xff642000 0x0 0x2000>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x0 0x0 0x0 0xff642000 0x0 0x2000>;
-+
-+			clkc_audio: clock-controller@0 {
-+				compatible = "amlogic,axg-audio-clkc";
-+				reg = <0x0 0x0 0x0 0xb4>;
-+				#clock-cells = <1>;
-+
-+				clocks = <&clkc CLKID_AUDIO>,
-+					 <&clkc CLKID_MPLL0>,
-+					 <&clkc CLKID_MPLL1>,
-+					 <&clkc CLKID_MPLL2>,
-+					 <&clkc CLKID_MPLL3>,
-+					 <&clkc CLKID_HIFI_PLL>,
-+					 <&clkc CLKID_FCLK_DIV3>,
-+					 <&clkc CLKID_FCLK_DIV4>,
-+					 <&clkc CLKID_GP0_PLL>;
-+				clock-names = "pclk",
-+					      "mst_in0",
-+					      "mst_in1",
-+					      "mst_in2",
-+					      "mst_in3",
-+					      "mst_in4",
-+					      "mst_in5",
-+					      "mst_in6",
-+					      "mst_in7";
-+
-+				resets = <&reset RESET_AUDIO>;
-+			};
-+		};
-+
- 		cbus: bus@ffd00000 {
- 			compatible = "simple-bus";
- 			reg = <0x0 0xffd00000 0x0 0x25000>;
+-	vddio_ao18: regulator-vddio_ao18 {
+-		compatible = "regulator-fixed";
+-		regulator-name = "VDDIO_AO18";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <1800000>;
+-	};
+-
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupts = <GIC_PPI 13
 -- 
 2.14.4
