@@ -1,43 +1,89 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 2/4 v1] net: dsa: Add bindings for Realtek SMI DSAs
-Date: Tue, 17 Jul 2018 00:31:02 +0200
-Message-ID: <20180716223102.GB968@lunn.ch>
-References: <20180714094556.30791-1-linus.walleij@linaro.org>
- <20180714094556.30791-2-linus.walleij@linaro.org>
- <20180716204535.GA22125@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] drm/panel: simple: Support simple VGA panels
+Date: Mon, 16 Jul 2018 16:50:47 -0600
+Message-ID: <CAL_JsqLeZX6zJoMYp9drskx-UN8Na2LLhnHjbgZOVgw8D-y9wQ@mail.gmail.com>
+References: <20180716092339.9736-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180716204535.GA22125@rob-hp-laptop>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, openwrt-devel@lists.openwrt.org, LEDE Development List <lede-dev@lists.infradead.org>, Antti =?iso-8859-1?Q?Sepp=E4l=E4?= <a.seppala@gmail.com>, Roman Yeryomin <roman@advem.lv>, Colin Leitner <colin.leitner@googlemail.com>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180716092339.9736-1-linus.walleij@linaro.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-> > +Realtek SMI-based Switches
-> > +==========================
-> > +
-> > +The SMI "Simple Management Interface" is a two-wire protocol using
-> 
-> At least for some other Realtek chips, the documentation I find says the 
-> S stands for Serial. And Wikipedia says SMI is the same thing as MDIO.
-> 
-> Just want to make sure we don't define GPIOs directly when there should 
-> be a layer of abstraction like mdio-gpio.
-
-Hi Rob
-
-There was a bit of discussion about this with the RFC patches. The bit
-stream protocol used here is not that used by SMI in MDIO. It is
-something proprietary to Realtek. I don't expect we will be re-using
-the code with other vendors. The only real reason to abstract this out
-is if there happens to be other Realtek switches which uses the same
-SMI bitstream, but have completely different registers, meaning a
-separate DSA driver would be needed. The SMI code is well structured,
-so it should not be too hard to turn it into a library which drivers
-can share.
-
-So i personally don't see a problem with this.
-
-   Andrew
+T24gTW9uLCBKdWwgMTYsIDIwMTggYXQgMzoyMyBBTSBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxs
+ZWlqQGxpbmFyby5vcmc+IHdyb3RlOgo+Cj4gVGhlIG5lZWQgdG8gc3VwcG9ydCBzb21lIHN0cmFp
+Z2h0LWZvcndhcmQgVkdBIHBhbmVscyB0aGF0IGFyZQo+IG5vdCBhZGhlcmluZyB0byBhbnkgc3Rh
+bmRhcmQgbGlrZSBEUEkgYXJpc2UgaW4gdGhlIEFSTSBSVFNNIFZFCj4gUmVhbC1UaW1lIFN5c3Rl
+bXMgTW9kZWwgVmlydHVhbCBFeGVjdXRpdmUuIFRoaXMgZW11bGF0b3IgKHdoaWNoCj4gaXMgbm90
+IFFFTVUpIGRvZXMgbm90IG1vZGVsIGFueSBicmlkZ2Ugb3IgcGFuZWwgb3RoZXIgdGhhbgo+IGRp
+c3BsYXlpbmcgd2hhdGV2ZXIgdGhlIHVzZXIgZGVmaW5lcyB0aGF0IHRoZXkgaGF2ZS4KPgo+IEN1
+cnJlbnRseSBhIGZha2UgIkRQSSBwYW5lbCIgaXMgdXNlZCBmb3IgdGhpcyB3aXRoIHRoZSBvbGQK
+PiBGQkRFViBkcml2ZXIsIGJ1dCB0aGlzIGlzIHdyb25nIGFzIGl0IGlzIG5vdCBjb25mb3JtaW5n
+IHRvIGFueQo+IE1JUEkgRFBJIHN0YW5kYXJkcy4gSG93ZXZlciB0aGUgcmVzb2x1dGlvbiBjaG9z
+ZW4gdGhlcmUgaXMKPiBzdGFuZGFyZCBWR0EsIGFuZCB3ZSBjYW4gY292ZXIgdGhpcyB3aXRoIHRo
+ZSBzaW1wbGUgcGFuZWwKPiBieSBzaW1wbHkgYWRkaW5nIHRoZSBtb3N0IGNvbW1vbiBWR0EgcmVz
+b2x1dGlvbnMgYXMgYSBraW5kCj4gb2YgInNpbXBsZSBwYW5lbCIuCj4KPiBJbiBkaWZmZXJlbmNl
+IGZyb20gb3RoZXIgY2FzZXMgd2hlcmUgInNpbXBsZSBwYW5lbCIgbWlnaHQgYmUKPiBoaWRpbmcg
+c29tZXRoaW5nIG1vcmUgY29tcGxleCAoc3VjaCBhcyBhIHBhbmVsIGRyaXZlciBvciBicmlkZ2Up
+Cj4gdGhpcyBjYXNlIGlzIGFjdHVhbGx5IGFwcGxpY2FibGUsIHNpbmNlIHdlIGFyZSBydW5uaW5n
+IGluc2lkZQo+IGEgc2ltdWxhdGlvbiB3aXRoIG5vIHJlYWwgaGFyZHdhcmUgb24gdGhlIG91dHB1
+dC4KPgo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+IENjOiBTdWRlZXAgSG9sbGEg
+PHN1ZGVlcC5ob2xsYUBhcm0uY29tPgo+IENjOiBMb3JlbnpvIFBpZXJhbGlzaSA8bG9yZW56by5w
+aWVyYWxpc2lAYXJtLmNvbT4KPiBDYzogTGl2aXUgRHVkYXUgPGxpdml1LmR1ZGF1QGFybS5jb20+
+Cj4gQ2M6IFJvYmluIE11cnBoeSA8cm9iaW4ubXVycGh5QGFybS5jb20+Cj4gU2lnbmVkLW9mZi1i
+eTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPgo+IC0tLQo+ICAuLi4v
+ZGlzcGxheS9wYW5lbC92aWRlby1ncmFwaGljcy1hcnJheS50eHQgICAgfCAyMSArKysrKysKPiAg
+ZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgIHwgNjYgKysrKysr
+KysrKysrKysrKysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDg3IGluc2VydGlvbnMoKykKPiAgY3Jl
+YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3BhbmVsL3ZpZGVvLWdyYXBoaWNzLWFycmF5LnR4dAo+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3ZpZGVvLWdyYXBoaWNzLWFy
+cmF5LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
+L3ZpZGVvLWdyYXBoaWNzLWFycmF5LnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXgg
+MDAwMDAwMDAwMDAwLi4xOTNkMjRlYmUwNTIKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvdmlkZW8tZ3JhcGhpY3Mt
+YXJyYXkudHh0Cj4gQEAgLTAsMCArMSwyMSBAQAo+ICtWaWRlbyBHcmFwaGljcyBBcnJheQoKVkdB
+IGlzIG1vcmUgYSBjb250cm9sbGVyIGludGVyZmFjZSB0aGFuIGEgcGFuZWwuLi4KCj4gKwo+ICtU
+aGlzIGJpbmRpbmcgaXMgZm9yIHNpbXBsZSBwYW5lbHMgdXNpbmcgdGhlIHN0YW5kYXJkaXplZCBW
+R0EgcmVzb2x1dGlvbnMKPiArZGVmaW5lZCBieSBkZSBmYWN0byBzdGFuZGFyZHMgYmVnaW5uaW5n
+IHdpdGggdGhlIElCTSBQUy8yIGluIDE5ODcuCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+
+ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZSAidmlkZW8tZ3JhcGhpY3MtYXJyYXkiCj4gKwo+ICtU
+aGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywg
+d2hpY2ggaXMgc3BlY2lmaWVkCj4gK2luIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3Rv
+cnkuCj4gKwo+ICtFeGFtcGxlOgo+ICsKPiArcGFuZWwgewo+ICsgICAgICAgY29tcGF0aWJsZSA9
+ICJ2aWRlby1ncmFwaGljcy1hcnJheSI7Cj4gKyAgICAgICBwb3J0IHsKPiArICAgICAgICAgICAg
+ICAgdmdhX3BhbmVsX2luOiBlbmRwb2ludCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVt
+b3RlLWVuZHBvaW50ID0gPCZmb28+Owo+ICsgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgfTsK
+PiArfTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5j
+IGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4gaW5kZXggY2JmMWFiNDA0
+ZWU3Li5kYjRkYjVhM2Y3NWUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3Bh
+bmVsLXNpbXBsZS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5j
+Cj4gQEAgLTIwNjksNiArMjA2OSw2OSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2Mg
+d2luc3Rhcl93ZjM1bHRpYWNkID0gewo+ICAgICAgICAgLmJ1c19mb3JtYXQgPSBNRURJQV9CVVNf
+Rk1UX1JHQjg4OF8xWDI0LAo+ICB9Owo+Cj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3Bs
+YXlfbW9kZSB2aWRlb19ncmFwaGljc19hcnJheV9tb2Rlc1tdID0gewo+ICsgICAgICAgewo+ICsg
+ICAgICAgICAgICAgICAvKgo+ICsgICAgICAgICAgICAgICAgKiBUaGlzIGlzIHRoZSBtb3N0IHN0
+YW5kYXJkaXplZCAidmFuaWxsYSIgVkdBIG1vZGUgdGhlcmUgaXM6Cj4gKyAgICAgICAgICAgICAg
+ICAqIDY0MHg0ODAgQCA2MCBIegoKRG9uJ3Qgd2UgaGF2ZSBzdGFuZGFyZCBWRVNBIHRpbWluZ3Mg
+YWxyZWFkeSBkZWZpbmVkIGFzIHdlbGwgYXMgdGltaW5ncwp0aGF0IGNhbiBiZSBjYWxjdWxhdGVk
+IGJhc2VkIG9uIHJlc29sdXRpb24gYW5kIHJlZnJlc2ggcmF0ZSAoY2FsbGVkCkNWVCBJSVJDKS4g
+V2h5IGR1cGxpY2F0ZSBoZXJlPwoKV2h5IGRvbid0IHlvdSBqdXN0IGRlZmluZSBhICd2Z2EtY29u
+bmVjdG9yJyBub2RlIGFuZCBJSVJDLCB5b3UgY2FuCmp1c3QgZm9yY2UgdGhlIHN0YW5kYXJkIG1v
+ZGVzIGZyb20gdXNlcnNwYWNlIHdpdGggRFJNLiBNYXliZSB5b3UgbmVlZApzb21lIGZsYWcgdG8g
+Zm9yY2UgYSBjb25uZWN0aW9uIGluIHRoZSBlbXVsYXRvciBhbmQgcGVyaGFwcyBzb21lIGZha2UK
+RURJRCBkYXRhIHRvIHNldCBhIGRlZmF1bHQgbW9kZS4gVGhlcmUncyBhbHNvIHNvbWUgb3RoZXIg
+Y2FzZXMgb2YKInRyYW5zcGFyZW50IiBicmlkZ2VzIHdoaWNoIGRvbid0IGhhdmUgYW55IGRyaXZl
+ci4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
