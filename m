@@ -1,82 +1,126 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: ufs: Add UFS platform driver for
- Cadence UFS
-Date: Mon, 16 Jul 2018 10:11:12 -0600
-Message-ID: <20180716161112.GA16292@rob-hp-laptop>
-References: <B652B768-D5BC-460F-B0A4-64A2A76064CC@cadence.com>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [SPAM]Re: [PATCH v5 4/7] Bluetooth: Add new quirk for
+ non-persistent setup settings
+Date: Tue, 17 Jul 2018 00:15:38 +0800
+Message-ID: <1531757738.8953.17.camel@mtkswgap22>
+References: <cover.1531150733.git.sean.wang@mediatek.com>
+ <4b188c8a508340598dda233f6d49a16c9ac8784e.1531150733.git.sean.wang@mediatek.com>
+ <2825B722-E75C-4A3C-8110-879205E46C0E@holtmann.org>
+ <1531638169.3955.5.camel@mtkswgap22>
+ <6571C864-B2EC-4806-BC5D-F531792737F6@holtmann.org>
+ <1531757114.8953.12.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <B652B768-D5BC-460F-B0A4-64A2A76064CC@cadence.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Janek Kotas <jank@cadence.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1531757114.8953.12.camel@mtkswgap22>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Johan Hedberg <johan.hedberg@gmail.com>, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 12, 2018 at 11:58:04AM +0000, Janek Kotas wrote:
-> This patch adds a device tree platform
-> driver description for Cadence UFS Controller.
-
-Bindings are not platform drivers...
-
+On Tue, 2018-07-17 at 00:05 +0800, Sean Wang wrote:
+> On Mon, 2018-07-16 at 14:56 +0200, Marcel Holtmann wrote:
+> > Hi Sean,
+> > 
+> > >>> Add a new quirk HCI_QUIRK_NON_PERSISTENT_SETUP allowing that a quirk that
+> > >>> runs setup() after every open() and not just after the first open().
+> > >>> 
+> > >>> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> > >>> ---
+> > >>> include/net/bluetooth/hci.h | 9 +++++++++
+> > >>> net/bluetooth/hci_core.c    | 3 ++-
+> > >>> 2 files changed, 11 insertions(+), 1 deletion(-)
+> > >>> 
+> > >>> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+> > >>> index 73e48be..d3ec5b2a8 100644
+> > >>> --- a/include/net/bluetooth/hci.h
+> > >>> +++ b/include/net/bluetooth/hci.h
+> > >>> @@ -183,6 +183,15 @@ enum {
+> > >>> 	 * during the hdev->setup vendor callback.
+> > >>> 	 */
+> > >>> 	HCI_QUIRK_NON_PERSISTENT_DIAG,
+> > >>> +
+> > >>> +	/* When this quirk is set, setup() would be run after every
+> > >>> +	 * open() and not just after the first open().
+> > >>> +	 *
+> > >>> +	 * This quirk can be set before hci_register_dev is called or
+> > >>> +	 * during the hdev->setup vendor callback.
+> > >>> +	 *
+> > >>> +	 */
+> > >>> +	HCI_QUIRK_NON_PERSISTENT_SETUP,
+> > >>> };
+> > >>> 
+> > >>> /* HCI device flags */
+> > >>> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> > >>> index f5c21004..0111280 100644
+> > >>> --- a/net/bluetooth/hci_core.c
+> > >>> +++ b/net/bluetooth/hci_core.c
+> > >>> @@ -1396,7 +1396,8 @@ static int hci_dev_do_open(struct hci_dev *hdev)
+> > >>> 	atomic_set(&hdev->cmd_cnt, 1);
+> > >>> 	set_bit(HCI_INIT, &hdev->flags);
+> > >>> 
+> > >>> -	if (hci_dev_test_flag(hdev, HCI_SETUP)) {
+> > >>> +	if (hci_dev_test_flag(hdev, HCI_SETUP) ||
+> > >>> +	    test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks)) {
+> > >>> 		hci_sock_dev_event(hdev, HCI_DEV_SETUP);
+> > >> 
+> > >> can you include the extract of btmon on how the HCI_DEV_SETUP event shows up in the traces? I remember that I asked about something like that.
+> > >> 
+> > >> Regards
+> > >> 
+> > >> Marcel
+> > >> 
+> > > 
+> > > No, I cannot see any event about HCI_DEV_SETUP in btmon trace, the trace I posted as below is doing some rounds of power off and then on
+> > 
+> > it will result in this:
+> > 
+> >         case HCI_DEV_SETUP:
+> >                 if (hdev->manufacturer == 0xffff)
+> >                         return NULL;
+> >                                                                                  
+> >         case HCI_DEV_UP:
+> >                 skb = bt_skb_alloc(HCI_MON_INDEX_INFO_SIZE, GFP_ATOMIC);
+> > 
+> > So we will see extra index info events, but I assume that is just fine this we also see them on DEV_UP. They also do not hurt as long as not magically the manufacturer information changes.
+> > 
+> > I do wonder though if this quirk is set, then hdev->manufacturer needs to be reset and allow hdev->setup() to reset it. This goes with a log of other information as well. Maybe just a look if there are no races here.
+> > 
+> > Regards
+> > 
+> > Marcel
+> > 
 > 
-> Signed-off-by: Jan Kotas <jank@cadence.com>
-> ---
->  .../devicetree/bindings/ufs/cdns,ufshc.txt         | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ufs/cdns,ufshc.txt
+> I didn't set a value to hdev->manufacture.
 > 
-> diff --git a/Documentation/devicetree/bindings/ufs/cdns,ufshc.txt b/Documentation/devicetree/bindings/ufs/cdns,ufshc.txt
-> new file mode 100644
-> index 0000000..cb6d62a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ufs/cdns,ufshc.txt
-> @@ -0,0 +1,31 @@
-> +* Cadence Universal Flash Storage (UFS) Controller
-> +
-> +UFS nodes are defined to describe on-chip UFS host controllers.
-> +Each UFS controller instance should have its own node.
-> +
-> +Required properties:
-> +- compatible	: compatible list, contains the following controller:
-> +			"cdns,ufshc"
-> +		  complemented with the JEDEC version:
-> +			"jedec,ufs-2.0"
-> +
-> +- reg		: address and length of the UFS register set
-> +- interrupts	: one interrupt mapping
-> +- clocks	: List of phandle and clock specifier pairs.
-> +- clock-names	: List of clock input name strings sorted in the same
-> +		  order as the clocks property. "core" is mandatory.
+> Should I set it in hdev->setup() ? MediaTek is 0x46 according to [1].
 
-And phy?
+sorry, something needs be corrected.
 
-> +- freq-table-hz	: Array of <min max> operating frequencies stored in the same
-> +		  order as the clocks property. If this property is not
-> +		  defined or a value in the array is "0" then it is assumed
-> +		  that the frequency is set by the parent clock or a
-> +		  fixed rate clock source.
+what I means is that should I set hdev->manufacture as 0x46 at probe ? 
 
-Don't define again here. Just refer to the common definition.
-
-> +
-> +Example:
-> +	ufs@fd030000 {
-> +		compatible = "cdns,ufshc", "jedec,ufs-2.0";
-> +		reg = <0xfd030000 0x10000>;
-> +		interrupts = <0 1 IRQ_TYPE_LEVEL_HIGH>;
-> +		freq-table-hz = <0 0>, <0 0>;
-> +		clocks = <&ufs_core_clk>, <&ufs_phy_clk>;
-> +		clock-names = "core_clk", "phy_clk";
-
-Doesn't match the doc.
-
-> +	};
-> -- 
-> 1.9.0
+> [1]
+> https://www.bluetooth.com/specifications/assigned-numbers/company-identifiers
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> > 
+> > _______________________________________________
+> > Linux-mediatek mailing list
+> > Linux-mediatek@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> 
+> 
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
