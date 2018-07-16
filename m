@@ -1,91 +1,82 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 1/6] dt-bindings: gpu: mali-utgard: add
- mediatek,mt7623-mali compatible
-Date: Mon, 16 Jul 2018 15:33:30 +0200
-Message-ID: <434aae44-d289-6683-9395-cb5711cd4b71@gmail.com>
-References: <cover.1524816502.git.sean.wang@mediatek.com>
- <7ab060c2e9ef2b220fc62913b8936b706dfaf202.1524816502.git.sean.wang@mediatek.com>
- <3bd6e509-f99a-1f2d-1b66-65c414bacdbd@gmail.com>
- <1530089565.29697.35.camel@mtkswgap22>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: REGRESSION: [RESEND PATCH v3 1/4] backlight: pwm_bl: linear
+ interpolation between brightness-levels
+Date: Mon, 16 Jul 2018 14:51:27 +0100
+Message-ID: <20180716135127.2hvlqxi6mibp7yrh@holly.lan>
+References: <20180409083333.1249-1-enric.balletbo@collabora.com>
+ <20180409083333.1249-2-enric.balletbo@collabora.com>
+ <1531580895.7579.7.camel@toradex.com>
+ <20180715075732.GA2989@wychelm.lan>
+ <1531664796.7579.13.camel@toradex.com>
+ <20180716094223.syzwviia4wdx74yh@holly.lan>
+ <1531742247.6547.4.camel@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530089565.29697.35.camel@mtkswgap22>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1531742247.6547.4.camel@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>
-Cc: sboyd@codeaurora.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc: "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dianders@google.com" <dianders@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@collabora.com" <kernel@collabora.com>, "briannorris@google.com" <briannorris@google.com>, "pavel@ucw.cz" <pavel@ucw.cz>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "amstan@google.com" <amstan@google.com>, "groeck@google.com" <groeck@google.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jul 16, 2018 at 11:57:29AM +0000, Marcel Ziswiler wrote:
+> On Mon, 2018-07-16 at 10:42 +0100, Daniel Thompson wrote:
+> > > 
+> > > From dbb31d00c9f2873affedbceae917c9d7fce5f832 Mon Sep 17 00:00:00
+> > > 2001
+> > > Message-Id:
+> > > <dbb31d00c9f2873affedbceae917c9d7fce5f832.1531664663.git.ma
+> > > rcel.ziswiler@toradex.com>
+> > > From: Daniel Thompson <daniel.thompson@linaro.org>
+> > > Date: Sun, 15 Jul 2018 08:49:05 +0100
+> > > Subject: [PATCH] backlight: pwm_bl: Fix uninitialized variable
+> > > 
+> > > Currently, if the DT does not define num-interpolated-steps then
+> > > num_steps is undefined meaning the interpolation code will deploy
+> > > randomly. Fix this.
+> > > 
+> > > Fixes: 573fe6d1c25c ("backlight: pwm_bl: Linear interpolation
+> > > between
+> > > brightness-levels")
+> > > Reported-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> > > Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > > Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> > 
+> > Is it Tested-by: too? It would be good to confirm I was right about
+> > the
+> > cause of the problem.
+> 
+> Yes and I confirm you were right.
+
+Thanks.
 
 
-On 27/06/18 10:52, Sean Wang wrote:
-> On Mon, 2018-06-25 at 17:14 +0200, Matthias Brugger wrote:
->>
->> On 27/04/18 10:14, sean.wang@mediatek.com wrote:
->>> From: Sean Wang <sean.wang@mediatek.com>
->>>
->>> The MediaTek MT7623 SoC contains a Mali-450, so add a compatible for it
->>> and define its own vendor-specific properties.
->>>
->>> Reviewed-by: Rob Herring <robh@kernel.org>
->>> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
->>> ---
->>
->> Hi Rob,
->>
->> Any comments regarding this patch?
->>
->> Regards,
->> Matthias
->>
+> > >  drivers/video/backlight/pwm_bl.c | 18 ++++++++----------
+> > >  1 file changed, 8 insertions(+), 10 deletions(-)
+> > > 
+> > > diff --git a/drivers/video/backlight/pwm_bl.c
+> > > b/drivers/video/backlight/pwm_bl.c
+> > > index 9ee4c1b735b2..e884d589378d 100644
+> > > --- a/drivers/video/backlight/pwm_bl.c
+> > > +++ b/drivers/video/backlight/pwm_bl.c
+> > > @@ -250,7 +250,7 @@ static int pwm_backlight_parse_dt(struct device
+> > > *dev,
+> > >  	struct device_node *node = dev->of_node;
+> > >  	unsigned int num_levels = 0;
+> > >  	unsigned int levels_count;
+> > > -	unsigned int num_steps;
+> > > +	unsigned int num_steps = 0;
+> > 
+> > This can go. If we check the return code them this variable is no
+> > longer
+> > used uninitialized [I'm OK to make the change though... since you've
+> > kept my name at the top ;-) ].
 > 
-> Hi, Matthias
-> 
-> I've already got a Reviewed-by tag from Rob.
-> 
-> Is it possible that this patch go through your tree ?
-> 
+> Yes, I confirm that this works for me. Are you gona send a proper patch
+> out or should I do it?
 
-Basically yes, I just want to get the mmsys problem fixed first.
-Sorry I know it is on my plate. I'll try to send a new version this week.
+I can send it out.
 
-Regards,
-Matthias
 
-> 	Sean
-> 
->>>  Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 9 +++++++++
->>>  1 file changed, 9 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
->>> index 99d1c0a..656068f 100644
->>> --- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
->>> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
->>> @@ -19,6 +19,7 @@ Required properties:
->>>        + rockchip,rk3228-mali
->>>        + rockchip,rk3328-mali
->>>        + stericsson,db8500-mali
->>> +      + mediatek,mt7623-mali
->>>  
->>>    - reg: Physical base address and length of the GPU registers
->>>  
->>> @@ -89,6 +90,14 @@ to specify one more vendor-specific compatible, among:
->>>        * interrupt-names and interrupts:
->>>          + combined: combined interrupt of all of the above lines
->>>  
->>> +  - mediatek,mt7623-mali
->>> +     Required properties:
->>> +      * resets: phandle to the reset line for the GPU
->>> +      * mediatek,larb: phandle pointed to the local arbiter used to control the
->>> +	access to external memory on the SoC.
->>> +	see Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
->>> +	for details
->>> +
->>>  Example:
->>>  
->>>  mali: gpu@1c40000 {
->>>
-> 
-> 
+Daniel.
