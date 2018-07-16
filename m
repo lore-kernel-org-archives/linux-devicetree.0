@@ -1,95 +1,66 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v5 05/12] PM / devfreq: Add support for policy notifiers
-Date: Mon, 16 Jul 2018 10:50:50 -0700
-Message-ID: <20180716175050.GZ129942@google.com>
-References: <20180703234705.227473-1-mka@chromium.org>
- <CGME20180703234900epcas1p1cda806bab6bbe69228ca5ee56bc33f36@epcas1p1.samsung.com>
- <20180703234705.227473-6-mka@chromium.org>
- <5B3C6C2A.1070205@samsung.com>
- <20180706175301.GG129942@google.com>
- <5399c191-e140-e2b8-629b-72ddfbf99b0f@samsung.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pfuze100: add optional disable
+ switch-regulators binding
+Date: Mon, 16 Jul 2018 11:55:35 -0600
+Message-ID: <20180716175535.GA10835@rob-hp-laptop>
+References: <20180713125002.24331-1-m.felsch@pengutronix.de>
+ <20180713125002.24331-2-m.felsch@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5399c191-e140-e2b8-629b-72ddfbf99b0f@samsung.com>
+In-Reply-To: <20180713125002.24331-2-m.felsch@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, mark.rutland@arm.com, fabio.estevam@nxp.com, Anson.Huang@nxp.com, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 12, 2018 at 05:44:33PM +0900, Chanwoo Choi wrote:
-> Hi Matthias,
+On Fri, Jul 13, 2018 at 02:50:01PM +0200, Marco Felsch wrote:
+> This binding is used to keep the backward compatibility with the current
+> dtb's [1]. The binding informs the driver that the unused switch regulators
+> can be disabled.
+> If it is not specified, the driver doesn't disable the switch regulators.
 > 
-> On 2018년 07월 07일 02:53, Matthias Kaehlcke wrote:
-> > Hi Chanwoo,
-> > 
-> > On Wed, Jul 04, 2018 at 03:41:46PM +0900, Chanwoo Choi wrote:
-> > 
-> >> Firstly,
-> >> I'm not sure why devfreq needs the devfreq_verify_within_limits() function.
-> >>
-> >> devfreq already used the OPP interface as default. It means that
-> >> the outside of 'drivers/devfreq' can disable/enable the frequency
-> >> such as drivers/thermal/devfreq_cooling.c. Also, when some device
-> >> drivers disable/enable the specific frequency, the devfreq core
-> >> consider them.
-> >>
-> >> So, devfreq doesn't need to devfreq_verify_within_limits() because
-> >> already support some interface to change the minimum/maximum frequency
-> >> of devfreq device. 
-> >>
-> >> In case of cpufreq subsystem, cpufreq only provides 'cpufreq_verify_with_limits()'
-> >> to change the minimum/maximum frequency of cpu. some device driver cannot
-> >> change the minimum/maximum frequency through OPP interface.
-> >>
-> >> But, in case of devfreq subsystem, as I explained already, devfreq support
-> >> the OPP interface as default way. devfreq subsystem doesn't need to add
-> >> other way to change the minimum/maximum frequency.
-> > 
-> > Using the OPP interface exclusively works as long as a
-> > enabling/disabling of OPPs is limited to a single driver
-> > (drivers/thermal/devfreq_cooling.c). When multiple drivers are
-> > involved you need a way to resolve conflicts, that's the purpose of
-> > devfreq_verify_within_limits(). Please let me know if there are
-> > existing mechanisms for conflict resolution that I overlooked.
-> > 
-> > Possibly drivers/thermal/devfreq_cooling.c could be migrated to use
-> > devfreq_verify_within_limits() instead of the OPP interface if
-> > desired, however this seems beyond the scope of this series.
+> [1] https://patchwork.kernel.org/patch/10490381/
 > 
-> Actually, if we uses this approach, it doesn't support the multiple drivers too.
-> If non throttler drivers uses devfreq_verify_within_limits(), the conflict
-> happen.
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> 
+> ---
+> Changes in V2:
+>   - add more information about the binding
+>   - rename binding and add vendor prefix
+> 
+>  .../devicetree/bindings/regulator/pfuze100.txt        | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/pfuze100.txt b/Documentation/devicetree/bindings/regulator/pfuze100.txt
+> index 672c939045ff..2c46b8d368db 100644
+> --- a/Documentation/devicetree/bindings/regulator/pfuze100.txt
+> +++ b/Documentation/devicetree/bindings/regulator/pfuze100.txt
+> @@ -4,6 +4,17 @@ Required properties:
+>  - compatible: "fsl,pfuze100", "fsl,pfuze200", "fsl,pfuze3000", "fsl,pfuze3001"
+>  - reg: I2C slave address
+>  
+> +Optional properties:
+> +- fsl,pfuze-support-disable: Boolean, if present disable all unused switch
+> +  regulators to save power consumption. Attention, till 4.18 these regulators
 
-As long as drivers limit the max freq there is no conflict, the lowest
-max freq wins. I expect this to be the usual case, apparently it
-worked for cpufreq for 10+ years.
+You shouldn't have kernel version info in bindings.
 
-However it is correct that there would be a conflict if a driver
-requests a min freq that is higher than the max freq requested by
-another. In this case devfreq_verify_within_limits() resolves the
-conflict by raising p->max to the min freq. Not sure if this is
-something that would ever occur in practice though.
+> +  were always on without specifying "regulator-always-on". So be sure to mark
+> +  import regulators as "regulator-always-on" (e.g. DDR ref, DDR supply). If
 
-If we are really concerned about this case it would also be an option
-to limit the adjustment to the max frequency.
+s/import/important/
 
-> To resolve the conflict for multiple device driver, maybe OPP interface
-> have to support 'usage_count' such as clk_enable/disable().
-
-This would require supporting negative usage count values, since a OPP
-should not be enabled if e.g. thermal enables it but the throttler
-disabled it or viceversa.
-
-Theoretically there could also be conflicts, like one driver disabling
-the higher OPPs and another the lower ones, with the outcome of all
-OPPs being disabled, which would be a more drastic conflict resolution
-than that of devfreq_verify_within_limits().
-
-Viresh, what do you think about an OPP usage count?
-
-Thanks
-
-Matthias
+> +  not present, the switched regualtors are always on and can't be disabled.
+> +  This binding is a workaround to keep backward compatibility with old dtb's
+> +  which rely on the fact that the switched regulators are always on and don't
+> +  mark them explicit as "regulator-always-on". On new dtbs this property should
+> +  always be present.
+> +
+>  Required child node:
+>  - regulators: This is the list of child nodes that specify the regulator
+>    initialization data for defined regulators. Please refer to below doc
+> -- 
+> 2.18.0
+> 
