@@ -1,142 +1,339 @@
-Return-Path: <SRS0=K2f+=KA=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr690071.outbound.protection.outlook.com ([40.107.69.71]:46586
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726343AbeGPFxs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Jul 2018 01:53:48 -0400
-From: <shubhrajyoti.datta@gmail.com>
-Subject: [PATCHv3 1/4] tty: serial: uartlite: Add structure for private data
-Date: Mon, 16 Jul 2018 10:53:51 +0530
-Message-ID: <1531718634-17939-1-git-send-email-shubhrajyoti.datta@gmail.com>
+Return-Path: <SRS0=VNen=KA=huawei.com=jonathan.cameron@kernel.org>
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 3/3] arm64: dts: hisi: add SEC crypto accelerator nodes for hip07 SoC
+Date: Mon, 16 Jul 2018 11:43:42 +0100
+Message-ID: <20180716104342.24192-4-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20180716104342.24192-1-Jonathan.Cameron@huawei.com>
+References: <20180716104342.24192-1-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, jacmet@sunsite.dk, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, Tanvi Desai <tanvi.desai@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
+To: linux-crypto@vger.kernel.org
+Cc: herbert@gondor.apana.org.au, davem@davemloft.net, smueller@chronox.de, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linuxarm@huawei.com, xuzaibo@huwei.com, fanghao11@huawei.com, liguozhu@hisilicon.com, wangxiongfeng2@huawei.com, Jonathan Cameron <Jonathan.Cameron@huawei.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Enable all 4 SEC units available on d05 boards.
 
-Add struct uartlite_data, to store the private data of the Uartlite
-driver.
-
-Signed-off-by: Tanvi Desai <tanvi.desai@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/tty/serial/uartlite.c | 29 +++++++++++++++++++++--------
- 1 file changed, 21 insertions(+), 8 deletions(-)
+ arch/arm64/boot/dts/hisilicon/hip07.dtsi | 285 +++++++++++++++++++++++++++++++
+ 1 file changed, 285 insertions(+)
 
-diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
-index c47db78..0f798f7 100644
---- a/drivers/tty/serial/uartlite.c
-+++ b/drivers/tty/serial/uartlite.c
-@@ -54,6 +54,10 @@
- #define ULITE_CONTROL_RST_RX	0x02
- #define ULITE_CONTROL_IE	0x10
+diff --git a/arch/arm64/boot/dts/hisilicon/hip07.dtsi b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
+index 0600a6a84ab7..a29c4466af26 100644
+--- a/arch/arm64/boot/dts/hisilicon/hip07.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
+@@ -1049,7 +1049,74 @@
+ 			num-pins = <2>;
+ 		};
+ 	};
++	p0_mbigen_alg_a:interrupt-controller@d0080000 {
++		compatible = "hisilicon,mbigen-v2";
++		reg = <0x0 0xd0080000 0x0 0x10000>;
  
-+struct uartlite_data {
-+	const struct uartlite_reg_ops *reg_ops;
-+};
++		p0_mbigen_sec_a: intc_sec {
++			msi-parent = <&p0_its_dsa_a 0x40400>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			num-pins = <33>;
++		};
++		p0_mbigen_smmu_alg_a: intc_smmu_alg {
++			msi-parent = <&p0_its_dsa_a 0x40b1b>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			num-pins = <3>;
++		};
++	};
++	p0_mbigen_alg_b:interrupt-controller@8,d0080000 {
++		compatible = "hisilicon,mbigen-v2";
++		reg = <0x8 0xd0080000 0x0 0x10000>;
 +
- struct uartlite_reg_ops {
- 	u32 (*in)(void __iomem *addr);
- 	void (*out)(u32 val, void __iomem *addr);
-@@ -91,16 +95,16 @@ static const struct uartlite_reg_ops uartlite_le = {
++		p0_mbigen_sec_b: intc_sec {
++			msi-parent = <&p0_its_dsa_b 0x42400>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			num-pins = <33>;
++		};
++		p0_mbigen_smmu_alg_b: intc_smmu_alg {
++			msi-parent = <&p0_its_dsa_b 0x42b1b>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			num-pins = <3>;
++		};
++	};
++	p1_mbigen_alg_a:interrupt-controller@400,d0080000 {
++		compatible = "hisilicon,mbigen-v2";
++		reg = <0x400 0xd0080000 0x0 0x10000>;
++
++		p1_mbigen_sec_a: intc_sec {
++			msi-parent = <&p1_its_dsa_a 0x44400>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			num-pins = <33>;
++		};
++		p1_mbigen_smmu_alg_a: intc_smmu_alg {
++			msi-parent = <&p1_its_dsa_a 0x44b1b>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			num-pins = <3>;
++		};
++	};
++	p1_mbigen_alg_b:interrupt-controller@408,d0080000 {
++		compatible = "hisilicon,mbigen-v2";
++		reg = <0x408 0xd0080000 0x0 0x10000>;
++
++		p1_mbigen_sec_b: intc_sec {
++			msi-parent = <&p1_its_dsa_b 0x46400>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			num-pins = <33>;
++		};
++		p1_mbigen_smmu_alg_b: intc_smmu_alg {
++			msi-parent = <&p1_its_dsa_b 0x46b1b>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			num-pins = <3>;
++		};
++	};
+ 	p0_mbigen_dsa_a: interrupt-controller@c0080000 {
+ 		compatible = "hisilicon,mbigen-v2";
+ 		reg = <0x0 0xc0080000 0x0 0x10000>;
+@@ -1107,6 +1174,58 @@
+ 		hisilicon,broken-prefetch-cmd;
+ 		status = "disabled";
+ 	};
++	p0_smmu_alg_a: smmu_alg@d0040000 {
++		compatible = "arm,smmu-v3";
++		reg = <0x0 0xd0040000 0x0 0x20000>;
++		interrupt-parent = <&p0_mbigen_smmu_alg_a>;
++		interrupts = <733 1>,
++		<734 1>,
++		<735 1>;
++		interrupt-names = "eventq", "gerror", "priq";
++		#iommu-cells = <1>;
++		dma-coherent;
++		hisilicon,broken-prefetch-cmd;
++		/* smmu-cb-memtype = <0x0 0x1>;*/
++	};
++	p0_smmu_alg_b: smmu_alg@8,d0040000 {
++		compatible = "arm,smmu-v3";
++		reg = <0x8 0xd0040000 0x0 0x20000>;
++		interrupt-parent = <&p0_mbigen_smmu_alg_b>;
++		interrupts = <733 1>,
++		<734 1>,
++		<735 1>;
++		interrupt-names = "eventq", "gerror", "priq";
++		#iommu-cells = <1>;
++		dma-coherent;
++		hisilicon,broken-prefetch-cmd;
++		/* smmu-cb-memtype = <0x0 0x1>;*/
++	};
++	p1_smmu_alg_a: smmu_alg@400,d0040000 {
++		compatible = "arm,smmu-v3";
++		reg = <0x400 0xd0040000 0x0 0x20000>;
++		interrupt-parent = <&p1_mbigen_smmu_alg_a>;
++		interrupts = <733 1>,
++		<734 1>,
++		<735 1>;
++		interrupt-names = "eventq", "gerror", "priq";
++		#iommu-cells = <1>;
++		dma-coherent;
++		hisilicon,broken-prefetch-cmd;
++		/* smmu-cb-memtype = <0x0 0x1>;*/
++	};
++	p1_smmu_alg_b: smmu_alg@408,d0040000 {
++		compatible = "arm,smmu-v3";
++		reg = <0x408 0xd0040000 0x0 0x20000>;
++		interrupt-parent = <&p1_mbigen_smmu_alg_b>;
++		interrupts = <733 1>,
++		<734 1>,
++		<735 1>;
++		interrupt-names = "eventq", "gerror", "priq";
++		#iommu-cells = <1>;
++		dma-coherent;
++		hisilicon,broken-prefetch-cmd;
++		/* smmu-cb-memtype = <0x0 0x1>;*/
++	};
  
- static inline u32 uart_in32(u32 offset, struct uart_port *port)
- {
--	const struct uartlite_reg_ops *reg_ops = port->private_data;
-+	struct uartlite_data *pdata = port->private_data;
- 
--	return reg_ops->in(port->membase + offset);
-+	return pdata->reg_ops->in(port->membase + offset);
- }
- 
- static inline void uart_out32(u32 val, u32 offset, struct uart_port *port)
- {
--	const struct uartlite_reg_ops *reg_ops = port->private_data;
-+	struct uartlite_data *pdata = port->private_data;
- 
--	reg_ops->out(val, port->membase + offset);
-+	pdata->reg_ops->out(val, port->membase + offset);
- }
- 
- static struct uart_port ulite_ports[ULITE_NR_UARTS];
-@@ -325,6 +329,7 @@ static void ulite_release_port(struct uart_port *port)
- 
- static int ulite_request_port(struct uart_port *port)
- {
-+	struct uartlite_data *pdata = port->private_data;
- 	int ret;
- 
- 	pr_debug("ulite console: port=%p; port->mapbase=%llx\n",
-@@ -342,13 +347,13 @@ static int ulite_request_port(struct uart_port *port)
- 		return -EBUSY;
- 	}
- 
--	port->private_data = (void *)&uartlite_be;
-+	pdata->reg_ops = &uartlite_be;
- 	ret = uart_in32(ULITE_CONTROL, port);
- 	uart_out32(ULITE_CONTROL_RST_TX, ULITE_CONTROL, port);
- 	ret = uart_in32(ULITE_STATUS, port);
- 	/* Endianess detection */
- 	if ((ret & ULITE_STATUS_TXEMPTY) != ULITE_STATUS_TXEMPTY)
--		port->private_data = (void *)&uartlite_le;
-+		pdata->reg_ops = &uartlite_le;
- 
- 	return 0;
- }
-@@ -585,10 +590,12 @@ static struct uart_driver ulite_uart_driver = {
-  * @id: requested id number.  Pass -1 for automatic port assignment
-  * @base: base address of uartlite registers
-  * @irq: irq number for uartlite
-+ * @pdata: private data for uartlite
-  *
-  * Returns: 0 on success, <0 otherwise
-  */
--static int ulite_assign(struct device *dev, int id, u32 base, int irq)
-+static int ulite_assign(struct device *dev, int id, u32 base, int irq,
-+			struct uartlite_data *pdata)
- {
- 	struct uart_port *port;
- 	int rc;
-@@ -625,6 +632,7 @@ static int ulite_assign(struct device *dev, int id, u32 base, int irq)
- 	port->dev = dev;
- 	port->type = PORT_UNKNOWN;
- 	port->line = id;
-+	port->private_data = pdata;
- 
- 	dev_set_drvdata(dev, port);
- 
-@@ -675,6 +683,7 @@ MODULE_DEVICE_TABLE(of, ulite_of_match);
- static int ulite_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
-+	struct uartlite_data *pdata;
- 	int irq;
- 	int id = pdev->id;
- #ifdef CONFIG_OF
-@@ -684,6 +693,10 @@ static int ulite_probe(struct platform_device *pdev)
- 	if (prop)
- 		id = be32_to_cpup(prop);
- #endif
-+	pdata = devm_kzalloc(&pdev->dev, sizeof(struct uartlite_data),
-+			     GFP_KERNEL);
-+	if (!pdata)
-+		return -ENOMEM;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!res)
-@@ -693,7 +706,7 @@ static int ulite_probe(struct platform_device *pdev)
- 	if (irq <= 0)
- 		return -ENXIO;
- 
--	return ulite_assign(&pdev->dev, id, res->start, irq);
-+	return ulite_assign(&pdev->dev, id, res->start, irq, pdata);
- }
- 
- static int ulite_remove(struct platform_device *pdev)
+ 	soc {
+ 		compatible = "simple-bus";
+@@ -1197,6 +1316,7 @@
+ 			reg-names = "ppe-base", "dsaf-base";
+ 			interrupt-parent = <&mbigen_dsaf0>;
+ 			subctrl-syscon = <&dsa_subctrl>;
++			/*iommus = <&smmu1 0x0>;*/
+ 			reset-field-offset = <0>;
+ 			interrupts =
+ 			<576 1>, <577 1>, <578 1>, <579 1>, <580 1>,
+@@ -1589,5 +1709,170 @@
+ 					 0x0 0 0 4 &mbigen_pcie2_a 671 4>;
+ 			status = "disabled";
+ 		};
++		p0_sec_a: sec@d2000000 {
++			compatible = "hisilicon,hip07-sec";
++			reg = <0x0 0xd0000000 0x0 0x10000
++			       0x0 0xd2000000 0x0 0x10000
++			       0x0 0xd2010000 0x0 0x10000
++			       0x0 0xd2020000 0x0 0x10000
++			       0x0 0xd2030000 0x0 0x10000
++			       0x0 0xd2040000 0x0 0x10000
++			       0x0 0xd2050000 0x0 0x10000
++			       0x0 0xd2060000 0x0 0x10000
++			       0x0 0xd2070000 0x0 0x10000
++			       0x0 0xd2080000 0x0 0x10000
++			       0x0 0xd2090000 0x0 0x10000
++			       0x0 0xd20a0000 0x0 0x10000
++			       0x0 0xd20b0000 0x0 0x10000
++			       0x0 0xd20c0000 0x0 0x10000
++			       0x0 0xd20d0000 0x0 0x10000
++			       0x0 0xd20e0000 0x0 0x10000
++			       0x0 0xd20f0000 0x0 0x10000
++			       0x0 0xd2100000 0x0 0x10000>;
++			interrupt-parent = <&p0_mbigen_sec_a>;
++			iommus = <&p0_smmu_alg_a 0x600>;
++			dma-coherent;
++			interrupts = <576 4>,
++				     <577 1>,<578 4>,
++				     <579 1>,<580 4>,
++				     <581 1>,<582 4>,
++				     <583 1>,<584 4>,
++				     <585 1>,<586 4>,
++				     <587 1>,<588 4>,
++				     <589 1>,<590 4>,
++				     <591 1>,<592 4>,
++				     <593 1>,<594 4>,
++				     <595 1>,<596 4>,
++				     <597 1>,<598 4>,
++				     <599 1>,<600 4>,
++				     <601 1>,<602 4>,
++				     <603 1>,<604 4>,
++				     <605 1>,<606 4>,
++				     <607 1>,<608 4>;
++		};
++		p0_sec_b: sec@8,d2000000 {
++			compatible = "hisilicon,hip07-sec";
++			reg = <0x8 0xd0000000 0x0 0x10000
++			       0x8 0xd2000000 0x0 0x10000
++			       0x8 0xd2010000 0x0 0x10000
++			       0x8 0xd2020000 0x0 0x10000
++			       0x8 0xd2030000 0x0 0x10000
++			       0x8 0xd2040000 0x0 0x10000
++			       0x8 0xd2050000 0x0 0x10000
++			       0x8 0xd2060000 0x0 0x10000
++			       0x8 0xd2070000 0x0 0x10000
++			       0x8 0xd2080000 0x0 0x10000
++			       0x8 0xd2090000 0x0 0x10000
++			       0x8 0xd20a0000 0x0 0x10000
++			       0x8 0xd20b0000 0x0 0x10000
++			       0x8 0xd20c0000 0x0 0x10000
++			       0x8 0xd20d0000 0x0 0x10000
++			       0x8 0xd20e0000 0x0 0x10000
++			       0x8 0xd20f0000 0x0 0x10000
++			       0x8 0xd2100000 0x0 0x10000>;
++			interrupt-parent = <&p0_mbigen_sec_b>;
++			iommus = <&p0_smmu_alg_b 0x600>;
++			dma-coherent;
++			interrupts = <576 4>,
++				     <577 1>,<578 4>,
++				     <579 1>,<580 4>,
++				     <581 1>,<582 4>,
++				     <583 1>,<584 4>,
++				     <585 1>,<586 4>,
++				     <587 1>,<588 4>,
++				     <589 1>,<590 4>,
++				     <591 1>,<592 4>,
++				     <593 1>,<594 4>,
++				     <595 1>,<596 4>,
++				     <597 1>,<598 4>,
++				     <599 1>,<600 4>,
++				     <601 1>,<602 4>,
++				     <603 1>,<604 4>,
++				     <605 1>,<606 4>,
++				     <607 1>,<608 4>;
++		};
++		p1_sec_a: sec@400,d2000000 {
++			compatible = "hisilicon,hip07-sec";
++			reg = <0x400 0xd0000000 0x0 0x10000
++			       0x400 0xd2000000 0x0 0x10000
++			       0x400 0xd2010000 0x0 0x10000
++			       0x400 0xd2020000 0x0 0x10000
++			       0x400 0xd2030000 0x0 0x10000
++			       0x400 0xd2040000 0x0 0x10000
++			       0x400 0xd2050000 0x0 0x10000
++			       0x400 0xd2060000 0x0 0x10000
++			       0x400 0xd2070000 0x0 0x10000
++			       0x400 0xd2080000 0x0 0x10000
++			       0x400 0xd2090000 0x0 0x10000
++			       0x400 0xd20a0000 0x0 0x10000
++			       0x400 0xd20b0000 0x0 0x10000
++			       0x400 0xd20c0000 0x0 0x10000
++			       0x400 0xd20d0000 0x0 0x10000
++			       0x400 0xd20e0000 0x0 0x10000
++			       0x400 0xd20f0000 0x0 0x10000
++			       0x400 0xd2100000 0x0 0x10000>;
++			interrupt-parent = <&p1_mbigen_sec_a>;
++			iommus = <&p1_smmu_alg_a 0x600>;
++			dma-coherent;
++			interrupts = <576 4>,
++				     <577 1>,<578 4>,
++				     <579 1>,<580 4>,
++				     <581 1>,<582 4>,
++				     <583 1>,<584 4>,
++				     <585 1>,<586 4>,
++				     <587 1>,<588 4>,
++				     <589 1>,<590 4>,
++				     <591 1>,<592 4>,
++				     <593 1>,<594 4>,
++				     <595 1>,<596 4>,
++				     <597 1>,<598 4>,
++				     <599 1>,<600 4>,
++				     <601 1>,<602 4>,
++				     <603 1>,<604 4>,
++				     <605 1>,<606 4>,
++				     <607 1>,<608 4>;
++		};
++		p1_sec_b: sec@408,d2000000 {
++			compatible = "hisilicon,hip07-sec";
++			reg = <0x408 0xd0000000 0x0 0x10000
++			       0x408 0xd2000000 0x0 0x10000
++			       0x408 0xd2010000 0x0 0x10000
++			       0x408 0xd2020000 0x0 0x10000
++			       0x408 0xd2030000 0x0 0x10000
++			       0x408 0xd2040000 0x0 0x10000
++			       0x408 0xd2050000 0x0 0x10000
++			       0x408 0xd2060000 0x0 0x10000
++			       0x408 0xd2070000 0x0 0x10000
++			       0x408 0xd2080000 0x0 0x10000
++			       0x408 0xd2090000 0x0 0x10000
++			       0x408 0xd20a0000 0x0 0x10000
++			       0x408 0xd20b0000 0x0 0x10000
++			       0x408 0xd20c0000 0x0 0x10000
++			       0x408 0xd20d0000 0x0 0x10000
++			       0x408 0xd20e0000 0x0 0x10000
++			       0x408 0xd20f0000 0x0 0x10000
++			       0x408 0xd2100000 0x0 0x10000>;
++			interrupt-parent = <&p1_mbigen_sec_b>;
++			iommus = <&p1_smmu_alg_b 0x600>;
++			dma-coherent;
++			interrupts = <576 4>,
++				     <577 1>,<578 4>,
++				     <579 1>,<580 4>,
++				     <581 1>,<582 4>,
++				     <583 1>,<584 4>,
++				     <585 1>,<586 4>,
++				     <587 1>,<588 4>,
++				     <589 1>,<590 4>,
++				     <591 1>,<592 4>,
++				     <593 1>,<594 4>,
++				     <595 1>,<596 4>,
++				     <597 1>,<598 4>,
++				     <599 1>,<600 4>,
++				     <601 1>,<602 4>,
++				     <603 1>,<604 4>,
++				     <605 1>,<606 4>,
++				     <607 1>,<608 4>;
++		};
++
+ 	};
+ };
 -- 
-2.7.4
-
+2.16.2
