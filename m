@@ -1,49 +1,41 @@
-Return-Path: <SRS0=MUa+=J2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from inva021.nxp.com ([92.121.34.21]:45104 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S933343AbeGJNp4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Jul 2018 09:45:56 -0400
-From: Fabio Estevam <fabio.estevam@nxp.com>
-Subject: [PATCH v2 4/6] ARM: dts: imx53: Add tigerp support
-Date: Tue, 10 Jul 2018 10:46:35 -0300
-Message-Id: <1531230397-27659-4-git-send-email-fabio.estevam@nxp.com>
-In-Reply-To: <1531230397-27659-1-git-send-email-fabio.estevam@nxp.com>
-References: <1531230397-27659-1-git-send-email-fabio.estevam@nxp.com>
-Sender: devicetree-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: kernel@pengutronix.de, sebastian.reichel@collabora.co.uk, robh+dt@kernel.org, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>
+MIME-Version: 1.0
+Date: Mon, 16 Jul 2018 08:13:10 -0600
+References: <20180622043756.21158-1-benh@kernel.crashing.org>
+	<20180703193017.GA23230@rob-hp-laptop>
+	<23be30ebb2c661ef304c78a85cff591c515ba65b.camel@kernel.crashing.org>
+	<CAL_JsqKZunLyRJQJgQrcBvv2s=HEd=E2ZG1ZgkgwTQkzJ88mcA@mail.gmail.com>
+	<a6331cdbababea893bcde5f8ca9529dd89dafd67.camel@kernel.crashing.org>
+	<c37eeb656151831123ec53bfc4e3c6caf718a060.camel@kernel.crashing.org>
+In-Reply-To: <c37eeb656151831123ec53bfc4e3c6caf718a060.camel@kernel.crashing.org>
+Message-ID: <CAL_JsqJ6rEZzj+CJok1feGEFcM2DUxiYXig=h4hpJgyAOc4X5g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: fsi: Add optional chip-id to CFAMs
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: devicetree@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-aspeed@lists.ozlabs.org
 List-ID: <devicetree@vger.kernel.org>
 
-As per the i.MX53 Reference Manual add an entry for the
-'tigerp' region in the device tree.
+On Wed, Jul 11, 2018 at 8:07 PM Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+>
+> On Fri, 2018-07-06 at 11:48 +1000, Benjamin Herrenschmidt wrote:
+> > > We've generally standardized around "label" for things like slots,
+> > > ports, connectors, etc. that need to be physically identified.
+> >
+> > Yes, label would be an option too, probably a better one that aliases.
+> >
+> > > "slot-names" it seems hasn't gotten used for FDT. Since there aren't
+> > > DT's published for OF based systems nor any documentation, newbies
+> > > like me (that only have 8 years of DT experience) don't have any
+> > > insight into how things used to be done.
+> >
+> > In a pretty much ad-hoc way :-) In this case, though, chip-id is a
+> > simple solution and works well (and I have the code already written and
+> > tested :-)
+>
+> I want to try to get that stuff upstream. Do you still object to the
+> chip-id's after our discussion ? The labels aren't that great really...
 
-This is needed for accessing the ARM_GPC register to set the
-DBGEN bit, so that the debug clocks can be turned on.
+No.
 
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
----
-Changes since v1:
-- Use the term 'tigerp' to follow the MX51 naming scheme
-
- arch/arm/boot/dts/imx53.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index 1a7a7bb..3fd553c 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -672,6 +672,11 @@
- 				status = "disabled";
- 			};
- 
-+			tigerp: tigerp@63fa0000 {
-+				compatible = "fsl,imx53-tigerp", "fsl,imx51-tigerp";
-+				reg = <0x63fa0000 0x28>;
-+			};
-+
- 			owire: owire@63fa4000 {
- 				compatible = "fsl,imx53-owire", "fsl,imx21-owire";
- 				reg = <0x63fa4000 0x4000>;
--- 
-2.7.4
-
+Acked-by: Rob Herring <robh@kernel.org>
