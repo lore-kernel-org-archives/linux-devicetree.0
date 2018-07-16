@@ -1,74 +1,67 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v14 2/2] dt-bindings: drm/bridge: Document sn65dsi86
- bridge bindings
-Date: Mon, 16 Jul 2018 09:10:18 -0600
-Message-ID: <20180716151018.GA19967@rob-hp-laptop>
-References: <20180716084330.26698-1-spanda@codeaurora.org>
- <20180716084330.26698-3-spanda@codeaurora.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v3 11/23] thermal: armada: move validity check out of the read
+ function
+Date: Mon, 16 Jul 2018 16:41:54 +0200
+Message-ID: <20180716144206.30985-12-miquel.raynal@bootlin.com>
+References: <20180716144206.30985-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180716084330.26698-3-spanda@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sandeep Panda <spanda@codeaurora.org>
-Cc: devicetree@vger.kernel.org, ryadav@codeaurora.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, abhinavk@codeaurora.org, hoegsberg@chromium.org, freedreno@lists.freedesktop.org, chandanu@codeaurora.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180716144206.30985-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdWwgMTYsIDIwMTggYXQgMDI6MTM6MzBQTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3
-cm90ZToKPiBEb2N1bWVudCB0aGUgYmluZGluZ3MgdXNlZCBmb3IgdGhlIHNuNjVkc2k4NiBEU0kg
-dG8gZURQIGJyaWRnZS4KPiAKPiBDaGFuZ2VzIGluIHYxOgo+ICAtIFJlcGhyYXNlIHRoZSBkdC1i
-aW5kaW5nIGRlc2NyaXB0aW9ucyB0byBiZSBtb3JlIGlubGluZSB3aXRoIGV4aXN0aW5nCj4gICAg
-YmluZGluZ3MgKEFuZHJ6ZWogSGFqZGEpLgo+ICAtIEFkZCBtaXNzaW5nIGR0LWJpbmRpbmcgdGhh
-dCBhcmUgcGFyc2VkIGJ5IGNvcnJlc3BvbmRpbmcgZHJpdmVyCj4gICAgKEFuZHJ6ZWogSGFqZGEp
-Lgo+IAo+IENoYW5nZXMgaW4gdjI6Cj4gIC0gUmVtb3ZlIGVkcCBwYW5lbCBzcGVjaWZpYyBkdC1i
-aW5kaW5nIGVudHJpZXMuIE9ubHkga2VlcCBicmlkZ2UKPiAgICBzcGVjaWZpYyBlbnRyaWVzIChT
-ZWFuIFBhdWwpLgo+ICAtIFJlbW92ZSBjdXN0b20tbW9kZXMgZHQgZW50cnkgc2luY2UgaXRzIHVz
-YWdlIGlzIHJlbW92ZWQgZnJvbSBkcml2ZXIgYWxzbyAoU2VhbiBQYXVsKS4KPiAgLSBSZW1vdmUg
-aXMtcGx1Z2dhYmxlIGR0IGVudHJ5IHNpbmNlIHRoaXMgd2lsbCBub3QgYmUgbmVlZGVkIGFueW1v
-cmUgKFNlYW4gUGF1bCkuCj4gCj4gQ2hhbmdlcyBpbiB2MzoKPiAgLSBSZW1vdmUgaXJxLWdwaW8g
-ZHQgZW50cnkgYW5kIGluc3RlYWQgcG9wdWxhdGUgaXMgYW4gaW50ZXJydXB0Cj4gICAgcHJvcGVy
-dHkgKFJvYiBIZXJyaW5nKS4KPiAKPiBDaGFuZ2VzIGluIHY0Ogo+ICAtIEFkZCBsaW5rIHRvIGJy
-aWRnZSBjaGlwIGRhdGFzaGVldCAoU3RlcGhlbiBCb3lkKQo+ICAtIEFkZCB2cGxsIGFuZCB2Y2Mg
-cmVndWxhdG9yIHN1cHBseSBiaW5kaW5ncyAoU3RlcGhlbiBCb3lkKQo+ICAtIEFkZCByZWYgY2xr
-IG9wdGlvbmFsIGR0IGJpbmRpbmcgKFN0ZXBoZW4gQm95ZCkKPiAgLSBBZGQgZ3Bpby1jb250cm9s
-bGVyIG9wdGlvbmFsIGR0IGJpbmRpbmcgKFN0ZXBoZW4gQm95ZCkKPiAKPiBDaGFuZ2VzIGluIHY1
-Ogo+ICAtIFVzZSBjbG9jayBwcm9wZXJ0eSB0byBzcGVjaWZ5IHRoZSBpbnB1dCByZWZjbGsgKFN0
-ZXBoZW4gQm95ZCkuCj4gIC0gVXBkYXRlIGdwaW8gY2VsbCBhbmQgcHdtIGNlbGwgbnVtYmVycyAo
-U3RlcGhlbiBCb3lkKS4KPiAKPiBDaGFuZ2VzIGluIHY2Ogo+ICAtIEFkZCBwcm9wZXJ0eSB0byBt
-ZW50aW9uIHRoZSBsYW5lIG1hcHBpbmcgc2NoZW1lIGFuZCBwb2xhcml0eSBpbnZlcnNpb24KPiAg
-ICAoU3RlcGhlbiBCb3lkKS4KPiAKPiBDaGFuZ2VzIGluIHY3Ogo+ICAtIERldGFpbCBkZXNjcmlw
-dGlvbiBvZiBsYW5lIG1hcHBpbmcgc2NoZW1lIGR0IHByb3BlcnR5IChBbmRyemVqCj4gICAgSGFq
-ZGEvIFJvYiBIZXJyaW5nKS4KPiAgLSBSZW1vdmVkIEhEUCBncGlvIGJpbmRpbmcsIHNpbmNlIHRo
-ZSBicmlkZ2UgdXNlcyBJUlEgc2lnbmFsIHRvCj4gICAgZGV0ZXJtaW5lIEhQRCwgYW5kIElSUSBw
-cm9wZXJ0eSBpcyBhbHJlYWR5IGRvY3VtZW50ZWQgaW4gYmluZGluZy4KPiAKPiBDaGFuZ2VzIGlu
-IHY4Ogo+ICAtIFJlbW92ZWQgdW5uZWNlc3NhcnkgZXhwbGFuYXRpb24gb2YgbGFuZSBtYXBwaW5n
-IGFuZCBwb2xhcml0eSBkdAo+ICAgIHByb3BlcnR5LCBzaW5jZSB0aGVzZSBhcmUgYWxyZWFkeSBl
-eHBsYWluZWQgaW4gbWVkaWEvdmlkZW8taW50ZXJmYWNlCj4gICAgZHQgYmluaWRuZyAoUm9iIEhl
-cnJpbmcpLgo+IAo+IENoYW5nZXMgaW4gdjk6Cj4gIC0gQXZvaWQgcHV0dGluZyByZS1kZWZpbml0
-aW9uIG9mIGxhbmUgbWFwcGluZyBhbmQgcG9sYXJpdHkgZHQgYmluZGluZwo+ICAgIChSb2IgSGVy
-cmluZykuCj4gCj4gQ2hhbmdlcyBpbiB2MTA6Cj4gIC0gVXNlIGludGVycnVwdHMtZXh0ZW5kZWQg
-cHJvcGVydHkgaW5zdGVhZCBvZiBpbnRlcnJ1cHRzIHRvIHNwZWNpZnkKPiAgICBpbnRlcnJ1cHQg
-bGluZSAoQW5kcnplaiBIYWpkYSkuCj4gIC0gTW92ZSBkYXRhLWxhbmVzIGFuZCBsYW5lLXBvbGFy
-aXR5IHByb3BlcnR5IGV4YW1wbGUgdG8gcHJvcGVyIHBsYWNlIChBbmRyemVqIEhhamRhKS4KPiAK
-PiBDaGFuZ2VzIGluIHYxMToKPiAgLSBBZGQgYSBwcm9wZXJ0eSBmb3Igc3VzcGVuZCBncGlvIGZ1
-bmN0aW9uIG9mIEdQSU8xIHBpbiBvbiBicmlkZ2UgY2hpcAo+ICAgIChTdGVwaGVuIEJveWQpLgo+
-IAo+IENoYW5nZXMgaW4gdjEyOgo+ICAtIFJlbW92ZSBiaW5kaW5nIGZvciBkZWRpY2F0ZWQgRERD
-IGxpbmUgKEFuZHJ6ZWogSGFqZGEpLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFNhbmRlZXAgUGFuZGEg
-PHNwYW5kYUBjb2RlYXVyb3JhLm9yZz4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
-ZGdlL3RpLHNuNjVkc2k4Ni50eHQgICAgICAgfCA4NyArKysrKysrKysrKysrKysrKysrKysrCj4g
-IDEgZmlsZSBjaGFuZ2VkLCA4NyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRz
-aTg2LnR4dAoKUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Sensor selection when using multiple sensors already checks for the
+sensor validity. Move it to the legacy ->get_temp() hook, where it is
+still needed.
+
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/thermal/armada_thermal.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_thermal.c
+index 7eafc9400fbe..7f8185e5816e 100644
+--- a/drivers/thermal/armada_thermal.c
++++ b/drivers/thermal/armada_thermal.c
+@@ -328,13 +328,6 @@ static int armada_read_sensor(struct armada_thermal_priv *priv, int *temp)
+ 	u32 reg, div;
+ 	s64 sample, b, m;
+ 
+-	/* Valid check */
+-	if (priv->data->is_valid && !priv->data->is_valid(priv)) {
+-		dev_err(priv->dev,
+-			"Temperature sensor reading not valid\n");
+-		return -EIO;
+-	}
+-
+ 	regmap_read(priv->syscon, priv->data->syscon_status_off, &reg);
+ 	reg = (reg >> priv->data->temp_shift) & priv->data->temp_mask;
+ 	if (priv->data->signed_sample)
+@@ -362,6 +355,13 @@ static int armada_get_temp_legacy(struct thermal_zone_device *thermal,
+ 	struct armada_thermal_priv *priv = thermal->devdata;
+ 	int ret;
+ 
++	/* Valid check */
++	if (priv->data->is_valid && !priv->data->is_valid(priv)) {
++		dev_err(priv->dev,
++			"Temperature sensor reading not valid\n");
++		return -EIO;
++	}
++
+ 	/* Do the actual reading */
+ 	ret = armada_read_sensor(priv, temp);
+ 
+-- 
+2.14.1
