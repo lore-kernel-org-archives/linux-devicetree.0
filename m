@@ -1,170 +1,39 @@
-From: Felipe Balbi <balbi@kernel.org>
-Subject: Re: [PATCH] usb: dwc3: of-simple: reset host controller at suspend/resume
-Date: Mon, 16 Jul 2018 10:02:54 +0300
-Message-ID: <87d0vnslwh.fsf@linux.intel.com>
-References: <20180709150844.32505-1-enric.balletbo@collabora.com> <536642654ca55f08877497c86a5cb106d5458384.camel@collabora.com> <d9ea42a39a80c12b9d5730376d2f8e5a953771ef.camel@collabora.com> <CAFqH_51EvuJmU2rxcndWdyYj6CAhzDv_o6YPnUHJb6ctM+k8VQ@mail.gmail.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pfuze100: add optional disable
+ switch-regulators binding
+Date: Mon, 16 Jul 2018 09:25:16 +0200
+Message-ID: <20180716072516.bvsp54yoeqp3ih6s@pengutronix.de>
+References: <20180713125002.24331-1-m.felsch@pengutronix.de>
+ <20180713125002.24331-2-m.felsch@pengutronix.de>
+ <20180713150314.GD16228@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFqH_51EvuJmU2rxcndWdyYj6CAhzDv_o6YPnUHJb6ctM+k8VQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180713150314.GD16228@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo Serra <eballetbo@gmail.com>, ezequiel@collabora.com
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, linux-kernel <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, kernel@collabora.com, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, fabio.estevam@nxp.com, Anson.Huang@nxp.com, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Mark,
 
+thanks for the review.
 
-Hi,
+On 18-07-13 16:03, Mark Brown wrote:
+> On Fri, Jul 13, 2018 at 02:50:01PM +0200, Marco Felsch wrote:
+> 
+> > +Optional properties:
+> > +- fsl,pfuze-support-disable: Boolean, if present disable all unused switch
+> > +  regulators to save power consumption. Attention, till 4.18 these regulators
+> 
+> The property name sounds like it affects all the regulators but really
+> it's just the sw ones - how about adding -sw at the end?  Bit of a
+> bikeshed but it does end up in an ABI.
 
-Enric Balletbo Serra <eballetbo@gmail.com> writes:
-> Hi,
-> Missatge de Ezequiel Garcia <ezequiel@collabora.com> del dia dt., 10
-> de jul. 2018 a les 0:10:
->>
->> Sigh, now actually Cc devicetree folks
->>
->> On Mon, 2018-07-09 at 19:04 -0300, Ezequiel Garcia wrote:
->> > (Cc devicetree folks)
->> >
->> > Hi Enric,
->> >
->> > Thanks for the patch.
->> >
->> > On Mon, 2018-07-09 at 17:08 +0200, Enric Balletbo i Serra wrote:
->> > > If we power off the SoC logic rail in S3, we can find that the
->> > > Type-C
->> > > PHY can't initialize correctly after system resume. We need to
->> > > toggle
->> > > the USB3-OTG reset before trying to initialize the PHY, or else it
->> > > times out.
->> > >
->> > >     phy phy-ff800000.phy.9: phy poweron failed --> -110
->> > >     dwc3 fe900000.dwc3: failed to initialize core
->> > >     dwc3: probe of fe900000.dwc3 failed with error -110
->> > >
->> > > Note that the RK3399 TRM suggests that we should keep the whole
->> > > usb3
->> > > controller in reset for the duration of the Type-C PHY
->> > > initialization.
->> > > However, it's hard to assert the reset in the current framework of
->> > > reset. We're still skeptical about that, and we haven't yet found a
->> > > case where this seems to have mattered. This approach is much
->> > > easier,
->> > > it
->> > > simply holds the USB3-OTG reset while device is supended.
->> > >
->> > > The dwc3 core is going to reinitialize the controller at
->> > > suspend/resume
->> > > anyway (including a "soft reset"), so it should be safe to do this.
->> > >
->> > > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com
->> > > >
->> > > ---
->> > > Dear all,
->> > >
->> > > Now that the usb3-phy otg port support for rk3399 has been merged
->> > > [1]
->> > > we
->> > > found that suspend/resume is broken. The problem is well known for
->> > > ChromeOS kernels, they solved it in a similar way adding a reset
->> > > pulse on
->> > > resume in the specific usb glue layer (dwc3-rockchip). In mainline,
->> > > though, we use the dwc3-of-simple glue layer instead of a specific
->> > > layer
->> > > for rockchip. The patch is based on the Brian Norris work but
->> > > slightly
->> > > different, it holds the reset while device is suspended. It was
->> > > tested
->> > > on a Samsung Chromebook Plus with usbc docking station attached by
->> > > doing
->> > > different suspend/resume cycles and checking no usb devices has
->> > > been
->> > > lost.
->> > >
->> > > I am not sure this is the better way to solve this but I did not
->> > > find
->> > > any other way, and, as I am not sure this can be generic, the reset
->> > > is only
->> > > done on rockchip platforms.
->> > >
->> >
->> > I don't really understand why there are per-platform hacks in glue
->> > drivers, instead of having per-platform glue drivers, or some other
->> > pluggable hooks.
->> >
->> > > Best regards,
->> > >  Enric
->> > >
->> > > [1] bfdca1736ea76345071bbc5607d18928e54909ac ('arm64: dts:
->> > > rockchip:
->> > > add
->> > >     usb3-phy otg-port support for rk3399')
->> > >
->> > >  drivers/usb/dwc3/dwc3-of-simple.c | 21 +++++++++++++++++++++
->> > >  1 file changed, 21 insertions(+)
->> > >
->> > > diff --git a/drivers/usb/dwc3/dwc3-of-simple.c
->> > > b/drivers/usb/dwc3/dwc3-of-simple.c
->> > > index dbeff5e6ad14..1d1ece99ed94 100644
->> > > --- a/drivers/usb/dwc3/dwc3-of-simple.c
->> > > +++ b/drivers/usb/dwc3/dwc3-of-simple.c
->> > > @@ -201,9 +201,30 @@ static int
->> > > dwc3_of_simple_runtime_resume(struct
->> > > device *dev)
->> > >
->> > >     return 0;
->> > >  }
->> > > +
->> > > +static int dwc3_of_simple_suspend(struct device *dev)
->> > > +{
->> > > +   struct dwc3_of_simple *simple =3D dev_get_drvdata(dev);
->> > > +
->> > > +   if (of_device_is_compatible(dev->of_node,
->> > > "rockchip,rk3399-
->> > > dwc3"))
->> > >
->> >
->> > Instead of calling of_device_is_compatible in each suspend/resume,
->> > which seems quite expensive, how about having a per-device boolean
->> > 'needs_reset' or something like that?
->> >
-> Yep, not sure how much, but probably use a boolean will be faster. I
-> am also wondering if we can remove the of_device_is_compatible call
-> and do the reset on all platforms. This will need lots of tests on
-> different platforms, of course. i'd like to hear maintainers feedback
-> here.
+You're right, it sounds better. So the new binding will be
+fsl,pfuze-support-disable-sw. Are there any other comments about the
+implementation?
 
-ideally, the reset would be unconditional, but in practice, probably
-it's handled differently by different implementations.
-
-I'd be fine with a single of_device_is_compatible() call during probe to
-set a driver flag. Another possibility would be to use the data field of
-of_device_id to pass that flag.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAltMQx4ACgkQzL64meEa
-mQZNoQ/9HqRisCYieeLPQQqghb8/BHZweLozYv+K7D39p5n5+FNFv72lW3NAZWji
-sfhmXYOnKlM6HI30b8NC0zb7SioefRhjTxP2sIUg4mYIWnyStHH4Ot46pdsQ4SAm
-7Fd+YalmYh4xaUcJkSFbhY3FyGd1DCTzSti03ndG2vrG5Og9iotb6Ono3eBUIBdu
-cQKRaSyWwneHtrQEyvAQtX1eqyJHsFdt5VTt6ZfhZ6+BF1x4TedUgqGwz60aiyIO
-w1JfOlARvsK1h4/eBQMmDmEj6QcCwhj6urNKImP557sDeJVTng4zg3iKgmUtFsX5
-A4bLG6ZE0Lb73q6MRBZVKi5Lsc6mqIKxe0Q5rron/WljLjB/sqA3hC54fg4xcyY3
-YypEDs5/FdY4MdIrprFDSAAaijjBv7LFNk39l5MgvF8Nn/pvbFwsmfpZt6MlwQG9
-MVGLMiZRwSB+Z8+IP4WL6Vg3h+VnDqL0MkuGgZPyBqFpjwOLUfHpuEY4pDemeqso
-fHxSLISpW6zwYbnnXY5Chf7H/v/1E/AhXNZUUYHNVWegolzvCeIPi5ZWGKPFgB1x
-juCc9NkKhAGxmgixLbbpkCK/wxr+lDHAHXa8msPX00t7j1YfBbcFuUv7zrDbZBP/
-JutuYphkY0qrsUuDBE5KWi7UUWYSj6OyKBVEjkdsYfrYWjre9ls=
-=EHHp
------END PGP SIGNATURE-----
---=-=-=--
+Regards,
+Marco
