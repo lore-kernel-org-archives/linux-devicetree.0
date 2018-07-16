@@ -1,35 +1,66 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v1 2/2] misc: npcm7xx: add NPCM7xx LPC BPC driver
-Date: Mon, 16 Jul 2018 13:33:57 +0200
-Message-ID: <20180716113357.GA30937@kroah.com>
-References: <20180704091427.409971-1-tmaimon77@gmail.com>
- <20180704091427.409971-3-tmaimon77@gmail.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: [PATCH v3 0/3] add mailbox support for i.MX7D
+Date: Mon, 16 Jul 2018 13:42:06 +0200
+Message-ID: <20180716114209.25242-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180704091427.409971-3-tmaimon77@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, arnd@arnd.de, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 04, 2018 at 12:14:27PM +0300, Tomer Maimon wrote:
-> Add Nuvoton BMC NPCM7xx BIOS post code (BPC) driver.
-> 
-> The NPCM7xx BPC monitoring two I/O address written by
-> the host on the Low Pin Count (LPC) bus, the capure
-> data stored in 128-word FIFO.
-> 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+20180615 changes v3:
+- DT: remove prosaic part of documentation. It describes software
+  or firmware specific usage and not relevant for HW description.
+- DT: use <soc>-mu instead of <soc>-mu-<mu side> and add fsl,mu-side-a
+  parameter.
+- DT: add most of know i.MX variants with MU
+- imx-mailbox: use macros instead of precalculated bit index.
+- imx-mailbox: remove warning message for clk.
+- imx-mailbox: use imx_mu_chan[%idx] for devm_request_irq.
+- imx-mailbox: depend on ARCH_MXS instead of SOX_IMX7
 
-It would be great to get someone else who knows that this hardware is
-supposed to be doing to ack or sign-off on this patch, as I don't know
-if this really is providing the correct api for it or not.
+20180615 changes v2:
+- DT: use mailbox@ instead of mu@
+- DT: change interrupts description
+- clk: use imx_clk_gate4 instead of imx_clk_gate2
+- imx-mailbox: remove last_tx_done support
+- imx-mailbox: fix module description 
 
-Right now it's just reading data from the hardware, what good is that?
-Who uses this?  What userspace tools connect up to it?
+This patches are providing support for mailbox (Messaging Unit)
+for i.MX7D.
+Functionality was tested on PHYTEC phyBOARD-Zeta i.MX7D with
+Linux running on all cores: ARM Cortex-A7 and ARM Cortex-M4.
 
-thanks,
+Both parts of i.MX messaging Unit are visible for all CPUs available
+on i.MX7D. Communication worked independent of MU side in combination
+with CPU. For example MU-A used on ARM Cortex-A7 and MU-B used on ARM Cortex-M4
+or other ways around.
 
-greg k-h
+
+Oleksij Rempel (3):
+  dt-bindings: arm: fsl: add mu binding doc
+  ARM: dts: imx7s: add i.MX7 messaging unit support
+  mailbox: Add support for i.MX7D messaging unit
+
+ .../devicetree/bindings/mailbox/fsl,mu.txt    |  32 ++
+ arch/arm/boot/dts/imx7s.dtsi                  |  19 ++
+ drivers/mailbox/Kconfig                       |   6 +
+ drivers/mailbox/Makefile                      |   2 +
+ drivers/mailbox/imx-mailbox.c                 | 294 ++++++++++++++++++
+ 5 files changed, 353 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+ create mode 100644 drivers/mailbox/imx-mailbox.c
+
+-- 
+2.18.0
