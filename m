@@ -1,52 +1,99 @@
 From: Andrew Jeffery <andrew@aj.id.au>
-Subject: Re: [RFC PATCH v2 1/4] dt-bindings: misc: Add bindings for misc. BMC
- control fields
-Date: Mon, 16 Jul 2018 10:27:30 +0930
-Message-ID: <1531702650.981120.1441646240.2E63DD09@webmail.messagingengine.com>
-References: <20180711053122.30773-1-andrew@aj.id.au>
- <20180711053122.30773-2-andrew@aj.id.au>
- <20180711200450.GB17291@rob-hp-laptop>
- <1531356830.3551458.1437853280.551CA8C5@webmail.messagingengine.com>
- <CAL_JsqKpXxR4t_-3BOy-0mFePXkaSck_4PfHRD=OZQ-_-T5P=w@mail.gmail.com>
- <b6ced4cad4d7ff78330181b2c893855c23103953.camel@kernel.crashing.org>
- <1531463489.747186.1439263128.075AECE1@webmail.messagingengine.com>
- <a521b9fc-4c10-06c1-fd73-5c64379538f6@yadro.com>
+Subject: Re: [PATCH v1 1/2] dt-binding: bmc: Add NPCM7xx LPC BPC documentation
+Date: Mon, 16 Jul 2018 12:20:52 +0930
+Message-ID: <1531709452.1037890.1441737864.7E216D02@webmail.messagingengine.com>
+References: <20180704091427.409971-1-tmaimon77@gmail.com>
+ <20180704091427.409971-2-tmaimon77@gmail.com>
+ <20180711202107.GA29980@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a521b9fc-4c10-06c1-fd73-5c64379538f6@yadro.com>
+In-Reply-To: <20180711202107.GA29980@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Amelkin <a.amelkin@yadro.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Eugene.Cho@dell.com, linux-kernel@vger.kernel.org, Joel Stanley <joel@jms.id.au>, stewart@linux.ibm.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, avi.fishman@nuvoton.com
+To: Rob Herring <robh@kernel.org>, Tomer Maimon <tmaimon77@gmail.com>
+Cc: mark.rutland@arm.com, arnd@arnd.de, gregkh@linuxfoundation.org, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexander,
-
-I've rearranged your reply slightly :)
-
-On Sat, 14 Jul 2018, at 00:44, Alexander Amelkin wrote:
-
+On Thu, 12 Jul 2018, at 05:51, Rob Herring wrote:
+> On Wed, Jul 04, 2018 at 12:14:26PM +0300, Tomer Maimon wrote:
+> > Added device tree binding documentation for Nuvoton BMC
+> > NPCM7xx BIOS Post Code (BPC).
+> > The NPCM7xx BPC monitoring two configurable I/O addresses
+> > written by the host on Low Pin Count (LPC) bus.
+> > 
+> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> > ---
+> >  .../devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt    | 26 ++++++++++++++++++++++
+> >  1 file changed, 26 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt b/Documentation/devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt
+> > new file mode 100644
+> > index 000000000000..0832c9cbea32
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/bmc/npcm7xx-lpc-bpc.txt
+> > @@ -0,0 +1,26 @@
+> > +Nuvoton NPCM7xx LPC BPC interface
+> > +
+> > +Nuvoton BMC NPCM7xx BIOS Post Code (BPC) monitoring two
+> > +configurable I/O addresses written by the host on the
+> > +Low Pin Count (LPC) bus, the capure data stored in 128-word FIFO.
 > 
-> So I'm writing this to support your position in this discussion and to
-> let Rob and other reviewers know that this feature is actually needed.
-
-Thanks.
-
-So to summarise some other replies so far, YADRO (Alexander) and Dell (Eugene) - platform vendors integrating BMCs - are interested in a solution, and the patches are seen useful for ASPEED and Nuvoton (Avi) BMCs.
-
+> s/capure/capture/
 > 
-> From the discussion it looks to me like Rob is not familiar with
-> specifics of BMC-managed servers and tries to apply to them the rules
-> that have proven to be good for workstations and laptops.
+> Otherwise,
 > 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Whatever Rob's familiarity with BMCs or other systems, I'm keen to listen to, explore and gain from his experience. I was certainly expecting push back on these patches and in different circumstances I'd probably say no to them as well. The argument for them needs to stand up to scrutiny, and if that scrutiny leads to alternative solutions (that, ideally, are not /dev/mem) then that's fine.
+So uncovering a bit of a dirty secret here, we should probably consider this in the context of the ASPEED snoop function. A driver snuck into the misc tree without an associated bindings document:
 
-Currently I think we need what I've proposed despite it looking like a violation of abstractions, because the hardware itself doesn't have a neat, abstract design. But we could be thinking about it wrong, e.g. maybe what we need instead are no devicetree bindings and simply some in-kernel helpers that allow arbitrary drivers to instantiate the sysfs interface I've proposed for these fields under their control. That removes the need for explicit description in the devicetree, though may lead to the creation of a number of unique drivers (and bindings) that each cover only the functions we're trying to generalise over here.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/misc/aspeed-lpc-snoop.c
 
-It would be good to have some feedback on the proposed sysfs interface as well - as explored above we could feasibly live without the bindings in their current form but taking away the sysfs interface would nuke the series.
+(it wasn't me, I'm happy to discuss my proposed bindings, please don't shoot the messenger :))
 
-Cheers,
+The devicetree node looks something like:
+
+					lpc_snoop: lpc-snoop@0 {
+						compatible = "aspeed,ast2500-lpc-snoop";
+						reg = <0x0 0x80>;
+						interrupts = <8>;
+						status = "disabled";
+					};
+
+and also has a required "snoop-ports" property with at least one and up to two cells that describe the channels to snoop. Channel values are either 0 or 1. It's feasible that the double-word capture could also be supported as both supported channels have their data captured in different fields of the same register.
+
+Do we go with what's already in the tree in supporting 'snoop-ports' or keep 'monitor-ports' as proposed by Tomer?
 
 Andrew
+
+> 
+> 
+> > +
+> > +NPCM7xx BPC supports capture double words, when using capture
+> > +double word only I/O address 1 is monitored.
+> > +
+> > +Required properties for lpc_bpc node
+> > +- compatible	: "nuvoton,npcm750-lpc-bpc" for Poleg NPCM7XX.
+> > +- reg 			: specifies physical base address and size of the registers.
+> > +- interrupts	: contain the LPC BPC with flags for falling edge.
+> > +- monitor-ports : contain monitor I/O addresses, at least one monitor I/O
+> > +				  address required
+> > +
+> > +Optional property for lpc_bpc node
+> > +- bpc-en-dwcapture : enable capture double words support.
+> > +
+> > +Example:
+> > +	lpc_bpc: lpc-bpc@f0007040 {
+> > +		compatible = "nuvoton,npcm7xx-lpc-bpc";
+> > +		reg = <0xf0007040 0x14>;
+> > +		monitor-ports = <0x80>;
+> > +		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> > +	};
+> > -- 
+> > 2.14.1
+> > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-hwmon" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
