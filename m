@@ -1,152 +1,25 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [RESEND PATCH v2 1/2] dt-bindings: clk: meson-g12a: Add G12A EE
- Clock Bindings
-Date: Mon, 16 Jul 2018 12:30:45 +0200
-Message-ID: <1531737045.12853.47.camel@baylibre.com>
+Subject: Re: [RESEND PATCH v2 2/2] clk: meson-g12a: Add EE Clock controller
+ driver
+Date: Mon, 16 Jul 2018 13:00:34 +0200
+Message-ID: <1531738834.12853.64.camel@baylibre.com>
 References: <1531728707-192230-1-git-send-email-jian.hu@amlogic.com>
- <1531728707-192230-2-git-send-email-jian.hu@amlogic.com>
+         <1531728707-192230-3-git-send-email-jian.hu@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1531728707-192230-2-git-send-email-jian.hu@amlogic.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1531728707-192230-3-git-send-email-jian.hu@amlogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Jian Hu <jian.hu@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: "Qianggui, song" <qianggui.song@amlogic.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Yixun Lan <yixun.lan@amlogic.com>, linux-kernel@vger.kernel.org, "Bo.yang" <bo.yang@amlogic.com>, Stephen Boyd <sboyd@kernel.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-arm-kernel@lists.infradead.org, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, "Sunny.luo" <sunny.luo@amlogic.com>, linux-clk@vger.kernel.org, "Xingyu.chen" <xingyu.chen@amlogic.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Yixun Lan <yixun.lan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, "Bo.yang" <bo.yang@amlogic.com>, "Xingyu.chen" <xingyu.chen@amlogic.com>, "Qianggui,song" <qianggui.song@amlogic.com>, "Sunny.luo" <sunny.luo@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On Mon, 2018-07-16 at 16:11 +0800, Jian Hu wrote:
-> Add new clock controller compatible and dt-bingdings headers
-> for the Everything-Else domain of the g12a SoC
-> 
+> Add a Clock driver for the Everything-Else part
+> of the Amlogic Meson-G12A SoC.
 > 
 > Signed-off-by: Jian Hu <jian.hu@amlogic.com>
-> ---
 
-Extra new line above - please fix next time
-Below, comment on alignement on v1 remains un-answered.
-Some goes for patch 2.
-
->  .../bindings/clock/amlogic,gxbb-clkc.txt           |  1 +
->  include/dt-bindings/clock/g12a-clkc.h              | 92 ++++++++++++++++++++++
->  2 files changed, 93 insertions(+)
->  create mode 100644 include/dt-bindings/clock/g12a-clkc.h
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-> index e950599..0833006 100644
-> --- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-> +++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-> @@ -9,6 +9,7 @@ Required Properties:
->  		"amlogic,gxbb-clkc" for GXBB SoC,
->  		"amlogic,gxl-clkc" for GXL and GXM SoC,
->  		"amlogic,axg-clkc" for AXG SoC.
-> +		"amlogic,g12a-clkc" for G12A SoC.
->  
->  - #clock-cells: should be 1.
->  
-> diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
-> new file mode 100644
-> index 0000000..9796720
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/g12a-clkc.h
-> @@ -0,0 +1,92 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-> +/*
-> + * Meson-G12A clock tree IDs
-> + *
-> + * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
-> + */
-> +
-> +#ifndef __G12A_CLKC_H
-> +#define __G12A_CLKC_H
-> +
-> +#define CLKID_SYS_PLL				0
-> +#define CLKID_FIXED_PLL				1
-> +#define CLKID_FCLK_DIV2				2
-> +#define CLKID_FCLK_DIV3				3
-> +#define CLKID_FCLK_DIV4				4
-> +#define CLKID_FCLK_DIV5				5
-> +#define CLKID_FCLK_DIV7				6
-> +#define CLKID_GP0_PLL				7
-> +#define CLKID_CLK81					10
-> +#define CLKID_MPLL0					11
-> +#define CLKID_MPLL1					12
-> +#define CLKID_MPLL2					13
-> +#define CLKID_MPLL3					14
-> +#define CLKID_DDR					15
-> +#define CLKID_DOS					16
-> +#define CLKID_AUDIO_LOCKER			17
-> +#define CLKID_MIPI_DSI_HOST			18
-> +#define CLKID_ETH_PHY				19
-> +#define CLKID_ISA					20
-> +#define CLKID_PL301					21
-> +#define CLKID_PERIPHS				22
-> +#define CLKID_SPICC0				23
-> +#define CLKID_I2C					24
-> +#define CLKID_SANA					25
-> +#define CLKID_SD					26
-> +#define CLKID_RNG0					27
-> +#define CLKID_UART0					28
-> +#define CLKID_SPICC1				29
-> +#define CLKID_HIU_IFACE				30
-> +#define CLKID_MIPI_DSI_PHY			31
-> +#define CLKID_ASSIST_MISC			32
-> +#define CLKID_SD_EMMC_A				33
-> +#define CLKID_SD_EMMC_B				34
-> +#define CLKID_SD_EMMC_C				35
-> +#define CLKID_AUDIO_CODEC			36
-> +#define CLKID_AUDIO					37
-> +#define CLKID_ETH					38
-> +#define CLKID_DEMUX					39
-> +#define CLKID_AUDIO_IFIFO			40
-> +#define CLKID_ADC					41
-> +#define CLKID_UART1					42
-> +#define CLKID_G2D					43
-> +#define CLKID_RESET					44
-> +#define CLKID_PCIE_COMB				45
-> +#define CLKID_PARSER				46
-> +#define CLKID_USB					47
-> +#define CLKID_PCIE_PHY				48
-> +#define CLKID_AHB_ARB0				49
-> +#define CLKID_AHB_DATA_BUS			50
-> +#define CLKID_AHB_CTRL_BUS			51
-> +#define CLKID_HTX_HDCP22			52
-> +#define CLKID_HTX_PCLK				53
-> +#define CLKID_BT656					54
-> +#define CLKID_USB1_DDR_BRIDGE		55
-> +#define CLKID_MMC_PCLK				56
-> +#define CLKID_UART2					57
-> +#define CLKID_VPU_INTR				58
-> +#define CLKID_GIC					59
-> +#define CLKID_SD_EMMC_B_CLK0		60
-> +#define CLKID_SD_EMMC_C_CLK0		61
-> +#define CLKID_HIFI_PLL				71
-> +#define CLKID_VCLK2_VENCI0			77
-> +#define CLKID_VCLK2_VENCI1			78
-> +#define CLKID_VCLK2_VENCP0			79
-> +#define CLKID_VCLK2_VENCP1			80
-> +#define CLKID_VCLK2_VENCT0			81
-> +#define CLKID_VCLK2_VENCT1			82
-> +#define CLKID_VCLK2_OTHER			83
-> +#define CLKID_VCLK2_ENCI			84
-> +#define CLKID_VCLK2_ENCP			85
-> +#define CLKID_DAC_CLK				86
-> +#define CLKID_AOCLK					87
-> +#define CLKID_IEC958				88
-> +#define CLKID_ENC480P				89
-> +#define CLKID_RNG1					90
-> +#define CLKID_VCLK2_ENCT			91
-> +#define CLKID_VCLK2_ENCL			92
-> +#define CLKID_VCLK2_VENCLMMC		93
-> +#define CLKID_VCLK2_VENCL			94
-> +#define CLKID_VCLK2_OTHER1			95
-> +
-> +#endif /* __G12A_CLKC_H */
+Point raised about fdiv gates remains un-answered.
+Please address all the point raised before reposting your patches.
