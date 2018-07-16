@@ -1,79 +1,43 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: Qualcomm Quad SPI(QSPI)
- documentation
-Date: Mon, 16 Jul 2018 16:27:21 -0600
-Message-ID: <20180716222721.GA12854@rob-hp-laptop>
-References: <1530827202-9997-1-git-send-email-girishm@codeaurora.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 2/4 v1] net: dsa: Add bindings for Realtek SMI DSAs
+Date: Tue, 17 Jul 2018 00:31:02 +0200
+Message-ID: <20180716223102.GB968@lunn.ch>
+References: <20180714094556.30791-1-linus.walleij@linaro.org>
+ <20180714094556.30791-2-linus.walleij@linaro.org>
+ <20180716204535.GA22125@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1530827202-9997-1-git-send-email-girishm@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Girish Mahadevan <girishm@codeaurora.org>
-Cc: broonie@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@chromium.org, swboyd@chromium.org, sdharia@codeaurora.org, kramasub@codeaurora.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <20180716204535.GA22125@rob-hp-laptop>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, openwrt-devel@lists.openwrt.org, LEDE Development List <lede-dev@lists.infradead.org>, Antti =?iso-8859-1?Q?Sepp=E4l=E4?= <a.seppala@gmail.com>, Roman Yeryomin <roman@advem.lv>, Colin Leitner <colin.leitner@googlemail.com>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 05, 2018 at 03:46:41PM -0600, Girish Mahadevan wrote:
-> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
-> ---
->  .../devicetree/bindings/spi/qcom,spi-qcom-qspi.txt | 36 ++++++++++++++++++++++
->  err.txt                                            | 27 ----------------
->  2 files changed, 36 insertions(+), 27 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
->  delete mode 100644 err.txt
+> > +Realtek SMI-based Switches
+> > +==========================
+> > +
+> > +The SMI "Simple Management Interface" is a two-wire protocol using
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
-> new file mode 100644
-> index 0000000..3baa893
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
-> @@ -0,0 +1,36 @@
-> +QTI [Qualcomm Technologies Inc] Quad Serial Peripheral Interface (QSPI)
-> +
-> +QSPI [Quad Serial Peripheral Interface] allows single dual and quad read/write
-> +access to slaves. QTI's QSPI controller implements the QSPI protocol to interface
-> +with slaves like NOR Flash devices.
-> +
-> +Required properties:
-> +- compatible:	Should contain:
-> +		"qcom,qspi-v1"
+> At least for some other Realtek chips, the documentation I find says the 
+> S stands for Serial. And Wikipedia says SMI is the same thing as MDIO.
+> 
+> Just want to make sure we don't define GPIOs directly when there should 
+> be a layer of abstraction like mdio-gpio.
 
-Needs an SoC specific compatible string.
+Hi Rob
 
-> +- reg:		Contains the base register location and length
-> +- interrupts:	Interrupt number used by the controller.
-> +- clocks:	Contains the core and AHB clock names.
-> +- clock-names:	"core" for core clock and "iface" for AHB clock.
-> +- spi-max-frequency:	Maximum SPI core clock frequency in Hz.
+There was a bit of discussion about this with the RFC patches. The bit
+stream protocol used here is not that used by SMI in MDIO. It is
+something proprietary to Realtek. I don't expect we will be re-using
+the code with other vendors. The only real reason to abstract this out
+is if there happens to be other Realtek switches which uses the same
+SMI bitstream, but have completely different registers, meaning a
+separate DSA driver would be needed. The SMI code is well structured,
+so it should not be too hard to turn it into a library which drivers
+can share.
 
-This goes in the slave device nodes.
+So i personally don't see a problem with this.
 
-> +
-> +SPI slave nodes must be children of the SPI master node and can contain
-> +properties described in Documentation/devicetree/bindings/spi/spi-bus.txt
-> +
-> +Example:
-> +
-> +	qspi: qspi@7418000 {
-> +		compatible = "qcom,qspi-v1";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x7418000 0x600>;
-> +		interrupts = <0 459 0>;
-> +		clock-names = "iface", "core";
-> +		clocks = <&clock_gcc clk_gcc_qspi_ahb_clk>,
-> +			 <&clock_gcc clk_gcc_qspi_ser_clk>;
-> +
-> +		device@0 {
-> +			compatible = "dummy_device";
-
-Why don't you use an actual NOR flash chip here.
-
-> +			reg = <x>; /* CS for the device */
-
-It's an example, show a CS#.
-
-> +			spi-max-frequency = <f>; /* Max supported frequency of the slave (Hz) */
-> +		};
-> +	};
+   Andrew
