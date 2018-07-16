@@ -1,170 +1,54 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: phy: add DT bindings for UniPhier USB3
- PHY driver
-Date: Mon, 16 Jul 2018 14:50:49 -0600
-Message-ID: <20180716205049.GA3663@rob-hp-laptop>
-References: <1530261541-23104-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1530261541-23104-2-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH 3/4] dt: bindings: lm3692x: Update binding for LED sync
+ control
+Date: Mon, 16 Jul 2018 15:08:45 -0600
+Message-ID: <20180716210845.GA26337@rob-hp-laptop>
+References: <20180702181216.19660-1-dmurphy@ti.com>
+ <20180702181216.19660-3-dmurphy@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1530261541-23104-2-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <20180702181216.19660-3-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+To: Dan Murphy <dmurphy@ti.com>
+Cc: mark.rutland@arm.com, jacek.anaszewski@gmail.com, andy.shevchenko@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 29, 2018 at 05:38:58PM +0900, Kunihiko Hayashi wrote:
-> Add DT bindings for PHY interface built into USB3 controller
-> implemented in UniPhier SoCs.
+On Mon, Jul 02, 2018 at 01:12:15PM -0500, Dan Murphy wrote:
+> Update the binding to be able to configure the LED
+> sync to turn on.
+
+s/sync/sink/ ? As in a current sink.
+
 > 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> The LM36922 has one output but can sync current to 2 LED
+> strings.  The user may only use one sync so the other
+> syncs need to be disabled.
+> 
+> The LM36923 has 3 LED syncs.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
->  .../devicetree/bindings/phy/uniphier-usb3-phy.txt  | 118 +++++++++++++++++++++
->  1 file changed, 118 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/uniphier-usb3-phy.txt
+>  Documentation/devicetree/bindings/leds/leds-lm3692x.txt | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/uniphier-usb3-phy.txt b/Documentation/devicetree/bindings/phy/uniphier-usb3-phy.txt
-> new file mode 100644
-> index 0000000..3df4a486
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/uniphier-usb3-phy.txt
-> @@ -0,0 +1,118 @@
-> +Socionext UniPhier USB3 PHY
-> +
-> +This describes the devicetree bindings for PHY interfaces built into
-> +USB3 controller implemented on Socionext UniPhier SoCs.
-> +The controller includes High-Speed PHY and Super-Speed PHY.
-> +
-> +USB3 High-Speed (HS) PHY
-> +------------------------
-> +
-> +Required properties:
-> +- compatible: Should contain one of the following:
-> +    "socionext,uniphier-pro4-usb3-hsphy" - for Pro4 SoC
-> +    "socionext,uniphier-pxs2-usb3-hsphy" - for PXs2 SoC
-> +    "socionext,uniphier-ld20-usb3-hsphy" - for LD20 SoC
-> +    "socionext,uniphier-pxs3-usb3-hsphy" - for PXs3 SoC
-> +- reg: Specifies offset and length of the register set for the device.
-> +- #phy-cells: Should be 0.
-> +- clocks: A list of phandles to the clock gate for USB3 glue layer.
-> +	According to the clock-names, appropriate clocks are required.
-> +- clock-names: Should contain the following:
-> +    "gio", "link" - for Pro4 SoC
-> +    "link", "phy", "phy-ext" - for PXs3 SoC, "phy-ext" is optional.
-> +    "link", "phy" - for others
-
-Can't you make 'link' always first.
-
-> +- resets: A list of phandles to the reset control for USB3 glue layer.
-> +	According to the reset-names, appropriate resets are required.
-> +- reset-names: Should contain the following:
-> +    "gio", "link" - for Pro4 SoC
-> +    "link", "phy" - for others
-> +
-> +Optional properties:
-> +- phy-supply: A phandle to the regulator for USB VBUS.
-
-The phy actually needs Vbus or you just want to control Vbus from the 
-phy driver?
-
-> +- nvmem-cells: Phandles to nvmem cell that contains the trimming data.
-> +	Available only for HS-PHY implemented on LD20 and PXs3, and
-> +	if unspecified, default value is used.
-> +- nvmem-cell-names: Should be the following names, which correspond to
-> +	each nvmem-cells.
-> +	All of the 3 parameters associated with the following names are
-> +	required for each port, if any one is omitted, the trimming data
-> +	of the port will not be set at all.
-> +    "rterm", "sel_t", "hs_i" - Each cell name for phy parameters
-> +
-> +Refer to phy/phy-bindings.txt for the generic PHY binding properties.
-> +
-> +Example:
-> +
-> +	usb-glue@65b00000 {
-> +		compatible = "socionext,uniphier-ld20-dwc3-glue",
-> +			     "simple-mfd";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0x65b00000 0x400>;
-> +
-> +		usb_hsphy0: hs-phy@200 {
-> +			compatible = "socionext,uniphier-ld20-usb3-hsphy";
-> +			reg = <0x200 0x10>;
-> +			#phy-cells = <0>;
-> +			clock-names = "link", "phy";
-> +			clocks = <&sys_clk 14>, <&sys_clk 16>;
-> +			reset-names = "link", "phy";
-> +			resets = <&sys_rst 14>, <&sys_rst 16>;
-> +			phy-supply = <&usb_vbus0>;
-> +			nvmem-cell-names = "rterm", "sel_t", "hs_i";
-> +			nvmem-cells = <&usb_rterm0>, <&usb_sel_t0>,
-> +				      <&usb_hs_i0>;
-> +		};
-> +	};
-> +
-> +
-> +USB3 Super-Speed (SS) PHY
-> +-------------------------
-
-Nothing seems to be shared here. Make this 2 docs.
-
-> +
-> +Required properties:
-> +- compatible: Should contain one of the following:
-> +    "socionext,uniphier-pro4-usb3-ssphy" - for Pro4 SoC
-> +    "socionext,uniphier-pxs2-usb3-ssphy" - for PXs2 SoC
-> +    "socionext,uniphier-ld20-usb3-ssphy" - for LD20 SoC
-> +    "socionext,uniphier-pxs3-usb3-ssphy" - for PXs3 SoC
-> +- reg: Specifies offset and length of the register set for the device.
-> +- #phy-cells: Should be 0.
-> +- clocks: A list of phandles to the clock gate for USB3 glue layer.
-> +	According to the clock-names, appropriate clocks are required.
-> +- clock-names:
-> +    "gio", "link" - for Pro4 SoC
-> +    "link", "phy", "phy-ext" - for PXs3 SoC, "phy-ext" is optional.
-> +    "link", "phy" - for others
-
-Can't you make 'link' always first.
-
-> +- resets: A list of phandles to the reset control for USB3 glue layer.
-> +	According to the reset-names, appropriate resets are required.
-> +- reset-names:
-> +    "gio", "link" - for Pro4 SoC
-> +    "link", "phy" - for others
-
-And here.
-
-> +
-> +Optional properties:
-> +- phy-supply: A phandle to the regulator for USB VBUS.
-> +
-> +Refer to phy/phy-bindings.txt for the generic PHY binding properties.
-> +
-> +Example:
-> +
-> +	usb-glue@65b00000 {
-> +		compatible = "socionext,uniphier-ld20-dwc3-glue",
-> +			     "simple-mfd";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0x65b00000 0x400>;
-> +
-> +		usb_ssphy0: ss-phy@300 {
-> +			compatible = "socionext,uniphier-ld20-usb3-ssphy";
-> +			reg = <0x300 0x10>;
-> +			#phy-cells = <0>;
-> +			clock-names = "link", "phy";
-> +			clocks = <&sys_clk 14>, <&sys_clk 16>;
-> +			reset-names = "link", "phy";
-> +			resets = <&sys_rst 14>, <&sys_rst 16>;
-> +			phy-supply = <&usb_vbus0>;
-> +		};
-> +
-> +		other nodes ...
-> +	};
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+> index 6c9074f84a51..08b352840bd7 100644
+> --- a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+> +++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+> @@ -20,7 +20,10 @@ Optional properties:
+>  	- vled-supply : LED supply
+>  
+>  Required child properties:
+> -	- reg : 0
+> +	- reg : 0 - Will enable all LED sync paths
+> +		1 - Will enable the LED1 sync
+> +		2 - Will enable the LED2 sync
+> +		3 - Will enable the LED3 sync (LM36923 only)
+>  
+>  Optional child properties:
+>  	- label : see Documentation/devicetree/bindings/leds/common.txt
 > -- 
-> 2.7.4
+> 2.17.0.582.gccdcbd54c
 > 
