@@ -1,76 +1,152 @@
-From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v12 1/4] iommu/arm-smmu: Add
- pm_runtime/sleep ops
-Date: Mon, 16 Jul 2018 12:23:12 +0200
-Message-ID: <CAJZ5v0irayU5cWBHtE=YVVqK_4gnue9bGopLkPY9P7-bEsixCA@mail.gmail.com>
-References: <20180708173413.1965-1-vivek.gautam@codeaurora.org>
- <20180708173413.1965-2-vivek.gautam@codeaurora.org>
- <17407514.unFVTGoGrn@aspire.rjw.lan>
- <CAFp+6iHxJucfzJJeEvSToG4p2zADjDb9F0L8h053x-JKAy55mg@mail.gmail.com>
- <CAJZ5v0gbkdkx_+oHYiPz=SFdFCLm38hsi1TmJ2Jdc7j73TNtzg@mail.gmail.com>
- <CAAFQd5Cqd=J+_nqRc_sx=sq2ayxwSRMgygvffuHH9nC5R_LjdA@mail.gmail.com>
- <CAFp+6iFxiM0DDnRqUameH6XOYjgdAF8ysuXXAjkc8zsod-dVcQ@mail.gmail.com>
- <CAJZ5v0hq3bLUbXNsr_ig7D72td_wqRP063x1AseP85F5UWs8VA@mail.gmail.com>
- <010cb56a-36e8-e729-1fe7-738048eb551d@codeaurora.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [RESEND PATCH v2 1/2] dt-bindings: clk: meson-g12a: Add G12A EE
+ Clock Bindings
+Date: Mon, 16 Jul 2018 12:30:45 +0200
+Message-ID: <1531737045.12853.47.camel@baylibre.com>
+References: <1531728707-192230-1-git-send-email-jian.hu@amlogic.com>
+ <1531728707-192230-2-git-send-email-jian.hu@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <010cb56a-36e8-e729-1fe7-738048eb551d-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1531728707-192230-2-git-send-email-jian.hu@amlogic.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jian Hu <jian.hu@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: "Qianggui, song" <qianggui.song@amlogic.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Yixun Lan <yixun.lan@amlogic.com>, linux-kernel@vger.kernel.org, "Bo.yang" <bo.yang@amlogic.com>, Stephen Boyd <sboyd@kernel.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-arm-kernel@lists.infradead.org, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, "Sunny.luo" <sunny.luo@amlogic.com>, linux-clk@vger.kernel.org, "Xingyu.chen" <xingyu.chen@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBNb24sIEp1bCAxNiwgMjAxOCBhdCAxMjoxMSBQTSwgVml2ZWsgR2F1dGFtCjx2aXZl
-ay5nYXV0YW1AY29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+IEhJIFJhZmFlbCwKPgo+Cj4KPiBPbiA3
-LzE2LzIwMTggMjoyMSBQTSwgUmFmYWVsIEouIFd5c29ja2kgd3JvdGU6Cj4+Cj4+IE9uIFRodSwg
-SnVsIDEyLCAyMDE4IGF0IDEyOjU3IFBNLCBWaXZlayBHYXV0YW0KPj4gPHZpdmVrLmdhdXRhbUBj
-b2RlYXVyb3JhLm9yZz4gd3JvdGU6CgpbY3V0XQoKPj4+PiBBbHRob3VnaCwgZ2l2ZW4gdGhlIFBN
-Cj4+Pj4gc3Vic3lzdGVtIGludGVybmFscywgdGhlIHN1c3BlbmQgZnVuY3Rpb24gd291bGRuJ3Qg
-YmUgY2FsbGVkIG9uIFNNTVUKPj4+PiBpbXBsZW1lbnRhdGlvbiBuZWVkZWQgcG93ZXIgY29udHJv
-bCAoc2luY2UgdGhleSB3b3VsZCBoYXZlIHJ1bnRpbWUgUE0KPj4+PiBlbmFibGVkKSBhbmQgb24g
-b3RoZXJzLCBpdCB3b3VsZCBiZSBjYWxsZWQgYnV0IGRvIG5vdGhpbmcgKHNpbmNlIG5vCj4+Pj4g
-Y2xvY2tzKS4KPj4+Pgo+Pj4+PiBIb25lc3RseSwgSSBqdXN0IGRvbid0IGtub3cuIDotKQo+Pj4+
-Pgo+Pj4+PiBJdCBqdXN0IGxvb2tzIG9kZCB0aGUgd2F5IGl0IGlzIGRvbmUuICBJIHRoaW5rIHRo
-ZSBjbG9jayBzaG91bGQgYmUKPj4+Pj4gZ2F0ZWQgZHVyaW5nIHN5c3RlbS13aWRlIHN1c3BlbmQg
-dG9vLCBiZWNhdXNlIHRoZSBzeXN0ZW0gY2FuIHNwZW5kCj4+Pj4+IG11Y2ggbW9yZSB0aW1lIGlu
-IGEgc2xlZXAgc3RhdGUgdGhhbiBpbiB0aGUgd29ya2luZyBzdGF0ZSwgb24gYXZlcmFnZS4KPj4+
-Pj4KPj4+Pj4gQW5kIG5vdGUgdGhhdCB5b3UgY2Fubm90IHJlbHkgb24gcnVudGltZSBQTSB0byBh
-bHdheXMgZG8gaXQgZm9yIHlvdSwKPj4+Pj4gYmVjYXVzZSBpdCBtYXkgYmUgZGlzYWJsZWQgYXQg
-YSBjbGllbnQgZGV2aWNlIG9yIGV2ZW4gYmxvY2tlZCBieSB1c2VyCj4+Pj4+IHNwYWNlIHZpYSBw
-b3dlci9jb250cm9sIGluIHN5c2ZzIGFuZCB0aGF0IHNob3VsZG4ndCBtYXR0ZXIgZm9yCj4+Pj4+
-IHN5c3RlbS13aWRlIFBNLgo+Pj4+Cj4+Pj4gVXNlciBzcGFjZSBibG9ja2luZyBydW50aW1lIFBN
-IHRocm91Z2ggc3lzZnMgaXMgYSBnb29kIHBvaW50LiBJJ20gbm90Cj4+Pj4gMTAwJSBzdXJlIGhv
-dyB0aGUgUE0gc3Vic3lzdGVtIGRlYWxzIHdpdGggdGhhdCBpbiBjYXNlIG9mIHN5c3RlbS13aWRl
-Cj4+Pj4gc3VzcGVuZC4gSSBndWVzcyBmb3IgY29uc2lzdGVuY3kgYW5kIHNhZmV0eSwgd2Ugc2hv
-dWxkIGhhdmUgdGhlCj4+Pj4gc3VzcGVuZCBjYWxsYmFjay4KPj4+Cj4+PiBXaWxsIGFkZCB0aGUg
-Zm9sbG93aW5nIHN1c3BlbmQgY2FsbGJhY2sgKHNhbWUgYXMKPj4+IGFybV9zbW11X3J1bnRpbWVf
-c3VzcGVuZCk6Cj4+Pgo+Pj4gICBzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGFybV9zbW11X3Bt
-X3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQo+Pj4gICB7Cj4+PiAgICAgICAgICAgc3RydWN0
-IGFybV9zbW11X2RldmljZSAqc21tdSA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOwo+Pj4KPj4+ICAg
-ICAgICAgICBjbGtfYnVsa19kaXNhYmxlKHNtbXUtPm51bV9jbGtzLCBzbW11LT5jbGtzKTsKPj4+
-Cj4+PiAgICAgICAgICAgcmV0dXJuIDA7Cj4+PiAgIH0KPj4KPj4gSSB0aGluayB5b3UgYWxzbyBu
-ZWVkIHRvIGNoZWNrIGlmIHRoZSBjbG9jayBoYXMgYWxyZWFkeSBiZWVuIGRpc2FibGVkCj4+IGJ5
-IHJ1bnRpbWUgUE0uICBPdGhlcndpc2UgeW91IG1heSBlbmQgdXAgZGlzYWJsaW5nIGl0IHR3aWNl
-IGluIGEgcm93Lgo+Cj4KPiBTaG91bGQgSSByYXRoZXIgY2FsbCBhIHBtX3J1bnRpbWVfcHV0KCkg
-aW4gc3VzcGVuZCBjYWxsYmFjaz8KClRoYXQgd291bGRuJ3Qgd29yayBhcyBydW50aW1lIFBNIG1h
-eSBiZSBlZmZlY3RpdmVseSBkaXNhYmxlZCBieSB1c2VyCnNwYWNlIHZpYSBzeXNmcy4gIFRoYXQn
-cyBvbmUgb2YgdGhlIHJlYXNvbnMgd2h5IHlvdSBuZWVkIHRoZSBleHRyYQpzeXN0ZW0td2lkZSBz
-dXNwZW5kIGNhbGxiYWNrIGluIHRoZSBmaXJzdCBwbGFjZS4gOi0pCgo+IE9yIGFuIGV4cGFuZGVk
-IGZvcm0gc29tZXRoaW5nIHNpbWlsYXIgdG86Cj4gaHR0cHM6Ly9lbGl4aXIuYm9vdGxpbi5jb20v
-bGludXgvdjQuMTgtcmM1L3NvdXJjZS9kcml2ZXJzL3NsaW1idXMvcWNvbS1jdHJsLmMjTDY5NQoK
-WWVzLCB5b3UgY2FuIGRvIHNvbWV0aGluZyBsaWtlIHRoYXQsIGJ1dCBiZSBjYXJlZnVsIHRvIG1h
-a2Ugc3VyZSB0aGF0CnRoZSBzdGF0ZSBvZiB0aGUgZGV2aWNlIGFmdGVyIHN5c3RlbS13aWRlIHJl
-c3VtZSBpcyBjb25zaXN0ZW50IHdpdGgKaXRzIHJ1bnRpbWUgUE0gc3RhdHVzIGluIGFsbCBjYXNl
-cy4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRy
-ZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+On Mon, 2018-07-16 at 16:11 +0800, Jian Hu wrote:
+> Add new clock controller compatible and dt-bingdings headers
+> for the Everything-Else domain of the g12a SoC
+> 
+> 
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> ---
+
+Extra new line above - please fix next time
+Below, comment on alignement on v1 remains un-answered.
+Some goes for patch 2.
+
+>  .../bindings/clock/amlogic,gxbb-clkc.txt           |  1 +
+>  include/dt-bindings/clock/g12a-clkc.h              | 92 ++++++++++++++++++++++
+>  2 files changed, 93 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/g12a-clkc.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+> index e950599..0833006 100644
+> --- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+> +++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+> @@ -9,6 +9,7 @@ Required Properties:
+>  		"amlogic,gxbb-clkc" for GXBB SoC,
+>  		"amlogic,gxl-clkc" for GXL and GXM SoC,
+>  		"amlogic,axg-clkc" for AXG SoC.
+> +		"amlogic,g12a-clkc" for G12A SoC.
+>  
+>  - #clock-cells: should be 1.
+>  
+> diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
+> new file mode 100644
+> index 0000000..9796720
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/g12a-clkc.h
+> @@ -0,0 +1,92 @@
+> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+> +/*
+> + * Meson-G12A clock tree IDs
+> + *
+> + * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
+> + */
+> +
+> +#ifndef __G12A_CLKC_H
+> +#define __G12A_CLKC_H
+> +
+> +#define CLKID_SYS_PLL				0
+> +#define CLKID_FIXED_PLL				1
+> +#define CLKID_FCLK_DIV2				2
+> +#define CLKID_FCLK_DIV3				3
+> +#define CLKID_FCLK_DIV4				4
+> +#define CLKID_FCLK_DIV5				5
+> +#define CLKID_FCLK_DIV7				6
+> +#define CLKID_GP0_PLL				7
+> +#define CLKID_CLK81					10
+> +#define CLKID_MPLL0					11
+> +#define CLKID_MPLL1					12
+> +#define CLKID_MPLL2					13
+> +#define CLKID_MPLL3					14
+> +#define CLKID_DDR					15
+> +#define CLKID_DOS					16
+> +#define CLKID_AUDIO_LOCKER			17
+> +#define CLKID_MIPI_DSI_HOST			18
+> +#define CLKID_ETH_PHY				19
+> +#define CLKID_ISA					20
+> +#define CLKID_PL301					21
+> +#define CLKID_PERIPHS				22
+> +#define CLKID_SPICC0				23
+> +#define CLKID_I2C					24
+> +#define CLKID_SANA					25
+> +#define CLKID_SD					26
+> +#define CLKID_RNG0					27
+> +#define CLKID_UART0					28
+> +#define CLKID_SPICC1				29
+> +#define CLKID_HIU_IFACE				30
+> +#define CLKID_MIPI_DSI_PHY			31
+> +#define CLKID_ASSIST_MISC			32
+> +#define CLKID_SD_EMMC_A				33
+> +#define CLKID_SD_EMMC_B				34
+> +#define CLKID_SD_EMMC_C				35
+> +#define CLKID_AUDIO_CODEC			36
+> +#define CLKID_AUDIO					37
+> +#define CLKID_ETH					38
+> +#define CLKID_DEMUX					39
+> +#define CLKID_AUDIO_IFIFO			40
+> +#define CLKID_ADC					41
+> +#define CLKID_UART1					42
+> +#define CLKID_G2D					43
+> +#define CLKID_RESET					44
+> +#define CLKID_PCIE_COMB				45
+> +#define CLKID_PARSER				46
+> +#define CLKID_USB					47
+> +#define CLKID_PCIE_PHY				48
+> +#define CLKID_AHB_ARB0				49
+> +#define CLKID_AHB_DATA_BUS			50
+> +#define CLKID_AHB_CTRL_BUS			51
+> +#define CLKID_HTX_HDCP22			52
+> +#define CLKID_HTX_PCLK				53
+> +#define CLKID_BT656					54
+> +#define CLKID_USB1_DDR_BRIDGE		55
+> +#define CLKID_MMC_PCLK				56
+> +#define CLKID_UART2					57
+> +#define CLKID_VPU_INTR				58
+> +#define CLKID_GIC					59
+> +#define CLKID_SD_EMMC_B_CLK0		60
+> +#define CLKID_SD_EMMC_C_CLK0		61
+> +#define CLKID_HIFI_PLL				71
+> +#define CLKID_VCLK2_VENCI0			77
+> +#define CLKID_VCLK2_VENCI1			78
+> +#define CLKID_VCLK2_VENCP0			79
+> +#define CLKID_VCLK2_VENCP1			80
+> +#define CLKID_VCLK2_VENCT0			81
+> +#define CLKID_VCLK2_VENCT1			82
+> +#define CLKID_VCLK2_OTHER			83
+> +#define CLKID_VCLK2_ENCI			84
+> +#define CLKID_VCLK2_ENCP			85
+> +#define CLKID_DAC_CLK				86
+> +#define CLKID_AOCLK					87
+> +#define CLKID_IEC958				88
+> +#define CLKID_ENC480P				89
+> +#define CLKID_RNG1					90
+> +#define CLKID_VCLK2_ENCT			91
+> +#define CLKID_VCLK2_ENCL			92
+> +#define CLKID_VCLK2_VENCLMMC		93
+> +#define CLKID_VCLK2_VENCL			94
+> +#define CLKID_VCLK2_OTHER1			95
+> +
+> +#endif /* __G12A_CLKC_H */
