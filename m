@@ -1,74 +1,65 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v4 10/14] dt-bindings/interrupt-controller: update
- Marvell ICU bindings
-Date: Mon, 16 Jul 2018 18:39:35 +0200
-Message-ID: <20180716183935.36f48f76@xps13>
-References: <20180705124011.7661-1-miquel.raynal@bootlin.com>
- <20180705124011.7661-11-miquel.raynal@bootlin.com>
- <20180716152734.GA4581@rob-hp-laptop>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: dts: rockchip: add USB 2.0 and 3.0 support on
+ Ficus board
+Date: Mon, 16 Jul 2018 19:02:24 +0200
+Message-ID: <2487041.HPaZN1uVBU@phil>
+References: <20180714170922.4433-1-ezequiel@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180716152734.GA4581@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20180714170922.4433-1-ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGUgb24gTW9uLCAxNiBK
-dWwgMjAxOCAwOToyNzozNCAtMDYwMDoKCj4gT24gVGh1LCBKdWwgMDUsIDIwMTggYXQgMDI6NDA6
-MDdQTSArMDIwMCwgTWlxdWVsIFJheW5hbCB3cm90ZToKPiA+IENoYW5nZSB0aGUgZG9jdW1lbnRh
-dGlvbiB0byByZWZsZWN0IHRoZSBuZXcgYmluZGluZ3MgdXNlZCBmb3IgTWFydmVsbAo+ID4gSUNV
-LiBUaGlzIGludm9sdmVzIGRlc2NyaWJpbmcgZWFjaCBpbnRlcnJ1cHQgZ3JvdXAgYXMgYSBzdWJu
-b2RlIG9mIHRoZQo+ID4gSUNVIG5vZGUuIEVhY2ggb2YgdGhlbSBoYXZpbmcgdGhlaXIgb3duIGNv
-bXBhdGlibGUuCj4gPiAKPiA+IFRoZSBEVCBiaW5kaW5nIGRvY3VtZW50YXRpb24gc3RpbGwgZG9j
-dW1lbnRzIHRoZSBsZWdhY3kgYmluZGluZywgd2hlcmUKPiA+IHRoZXJlIHdhcyBhIHNpbmdsZSBu
-b2RlIHdpdGggbm8gc3Vibm9kZS4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogTWlxdWVsIFJheW5h
-bCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4KPiA+IC0tLQo+ID4gIC4uLi9iaW5kaW5ncy9p
-bnRlcnJ1cHQtY29udHJvbGxlci9tYXJ2ZWxsLGljdS50eHQgIHwgODMgKysrKysrKysrKysrKysr
-KysrLS0tLQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA3MSBpbnNlcnRpb25zKCspLCAxMiBkZWxldGlv
-bnMoLSkKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9tYXJ2ZWxsLGljdS50eHQgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvbWFydmVsbCxpY3UudHh0
-Cj4gPiBpbmRleCA2NDliN2VjOWQ5YjEuLjgzYjRmYmY4YWY2NSAxMDA2NDQKPiA+IC0tLSBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9tYXJ2
-ZWxsLGljdS50eHQKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9p
-bnRlcnJ1cHQtY29udHJvbGxlci9tYXJ2ZWxsLGljdS50eHQKPiA+IEBAIC01LDYgKzUsOCBAQCBU
-aGUgTWFydmVsbCBJQ1UgKEludGVycnVwdCBDb25zb2xpZGF0aW9uIFVuaXQpIGNvbnRyb2xsZXIg
-aXMKPiA+ICByZXNwb25zaWJsZSBmb3IgY29sbGVjdGluZyBhbGwgd2lyZWQtaW50ZXJydXB0IHNv
-dXJjZXMgaW4gdGhlIENQIGFuZAo+ID4gIGNvbW11bmljYXRpbmcgdGhlbSB0byB0aGUgR0lDIGlu
-IHRoZSBBUCwgdGhlIHVuaXQgdHJhbnNsYXRlcyBpbnRlcnJ1cHQKPiA+ICByZXF1ZXN0cyBvbiBp
-bnB1dCB3aXJlcyB0byBNU0cgbWVtb3J5IG1hcHBlZCB0cmFuc2FjdGlvbnMgdG8gdGhlIEdJQy4K
-PiA+ICtUaGVzZSBtZXNzYWdlcyB3aWxsIGFjY2VzcyBhIGRpZmZlcmVudCBHSUMgbWVtb3J5IGFy
-ZWEgZGVwZW5kaW5nIG9uCj4gPiArdGhlaXIgdHlwZSAoTlNSLCBTUiwgU0VJLCBSRUksIGV0Yyku
-Cj4gPiAgCj4gPiAgUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ICAKPiA+IEBAIC0xMiwyMCArMTQs
-MTkgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ICAKPiA+ICAtIHJlZzogU2hvdWxkIGNvbnRh
-aW4gSUNVIHJlZ2lzdGVycyBsb2NhdGlvbiBhbmQgbGVuZ3RoLgo+ID4gIAo+ID4gK1N1Ym5vZGVz
-OiBFYWNoIGdyb3VwIG9mIGludGVycnVwdCBpcyBkZWNsYXJlZCBhcyBhIHN1Ym5vZGUgb2YgdGhl
-IElDVSwKPiA+ICt3aXRoIHRoZWlyIG93biBjb21wYXRpYmxlLgo+ID4gKwo+ID4gK1JlcXVpcmVk
-IHByb3BlcnRpZXMgZm9yIHRoZSBpY3VfbnNyL2ljdV9zZWkgc3Vibm9kZXM6Cj4gPiArCj4gPiAr
-LSBjb21wYXRpYmxlOiBTaG91bGQgYmUgIm1hcnZlbGwsY3AxMTAtaWN1LW5zciIgb3IgIm1hcnZl
-bGwsY3AxMTAtaWN1LXNlaSIuCj4gPiArICAKPiAKPiBJIHJhaXNlZCB0aGlzIGJlZm9yZSBhbmQg
-c3RpbGwgZG9uJ3QgdW5kZXJzdGFuZC4gWW91IGhhZCA0IHR5cGVzIGJlZm9yZSAKPiBhbmQgbm93
-IHlvdSBvbmx5IGhhdmUgMiB0eXBlcz8gSG93IGRvIHlvdSBoYW5kbGUgU1IgYW5kIFJFSSB3aXRo
-IHRoZSBuZXcgCj4gYmluZGluZz8KCkluZGVlZCB0aGVyZSBhcmUgNCB0eXBlczogTlNSLCBTUiwg
-U0VJLCBSRUkuCgpVbnRpbCBub3cgb25seSBOU1Igd2VyZSBzdXBwb3J0ZWQuCgpJJ20gYWRkaW5n
-IFNFSSBzdXBwb3J0LgoKSW4gdGhlIGZ1dHVyZSwgcGVvcGxlIG1pZ2h0IHdhbnQgdG8gYWRkIHN1
-cHBvcnQgZm9yIFNSL1JFSSBhcyB3ZWxsIGJ1dAp0aGV5IGhhdmUgbmV2ZXIgYmVlbiBzdXBwb3J0
-ZWQgaW4gbWFpbmxpbmUuIFdoZW4gc3VwcG9ydCBmb3IgdGhlc2UKaW50ZXJydXB0cyB3aWxsIGhh
-dmUgYmVlbiBjb250cmlidXRlZCwgSSBzdXBwb3NlIGl0IHdpbGwgZWFzeSB0byBhZGQKdHdvIG90
-aGVyIGNvbXBhdGlibGVzIHdpdGggdGhlIHNhbWUgZm9ybWF0dGluZyAibWFydmVsbCxjcDExMC1p
-Y3UteHh4Ij8KCkkgaG9wZSB0aGUgY2hhbmdlcyBpbiB0aGUgZHJpdmVyIHdpbGwgbWFrZSBzdWNo
-IGNvbnRyaWJ1dGlvbiBhbG1vc3QKdHJpdmlhbC4KClRoYW5rcywKTWlxdcOobAoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
-YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi Enric, Ezequiel,
+
+Am Samstag, 14. Juli 2018, 19:09:22 CEST schrieb Ezequiel Garcia:
+> From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> 
+> The board exposes two types A ports, one is USB 3.0, up to 5.0Gbps and
+> another one is USB 2.0 up to 480Mbps. Enable the USB PHYs and the USB
+> controllers to enable theses devices.
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> ---
+> Changes from v1:
+>  * Provide voltage for vcc5v0_host and vcc3v3_pcie regulators
+>  * Provide vin_supply for vcc5v0_host.
+> 
+>  arch/arm64/boot/dts/rockchip/rk3399-ficus.dts | 90 +++++++++++++++++++
+>  1 file changed, 90 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
+> index 0d14183dd4a9..6295483b701f 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
+> @@ -58,9 +58,24 @@
+>  		pinctrl-0 = <&pcie_drv>;
+>  		regulator-boot-on;
+>  		regulator-name = "vcc3v3_pcie";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+>  		vin-supply = <&vcc3v3_sys>;
+>  	};
+
+I've split this out into a separate patch, as it isn't part of what
+the commit message describes and thus should be separate
+and applied both resulting patches for 4.19.
+
+And also cleaned up a vendor-property that shouldn't be
+part of mainline.
+
+
+Heiko
