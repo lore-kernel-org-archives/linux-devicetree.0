@@ -1,63 +1,79 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 12/14] arm64: dts: marvell: add AP806 SEI subnode
-Date: Mon, 16 Jul 2018 09:31:58 -0600
-Message-ID: <20180716153158.GA8527@rob-hp-laptop>
-References: <20180705124011.7661-1-miquel.raynal@bootlin.com>
- <20180705124011.7661-13-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 1/5] dt-bindings: fsi: Document binding for the
+ fsi-master-ast-cf "device"
+Date: Mon, 16 Jul 2018 09:33:08 -0600
+Message-ID: <20180716153308.GA13044@rob-hp-laptop>
+References: <20180712034847.12878-1-benh@kernel.crashing.org>
+ <20180712034847.12878-2-benh@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180705124011.7661-13-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+In-Reply-To: <20180712034847.12878-2-benh@kernel.crashing.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 05, 2018 at 02:40:09PM +0200, Miquel Raynal wrote:
-> Add the System Error Interrupt node, representing an IRQ chip which is
-> part of the GIC. The SEI node has two subnodes, one for each interrupt
-> domain: wired (from the AP) and not-wired (MSIs from the CPs).
-
-Where are the 2 sub-nodes?
-
+On Thu, Jul 12, 2018 at 01:48:43PM +1000, Benjamin Herrenschmidt wrote:
+> This isn't per-se a real device, it's a pseudo-device that
+> represents the use of the Aspeed built-in ColdFire to
+> implement the FSI protocol by bitbanging the GPIOs instead
+> of doing it from the ARM core.
 > 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Thus it's a drop-in replacement for the existing
+> fsi-master-gpio pseudo-device for use on systems based
+> on the Aspeed chips. It has most of the same properties,
+> plus some more needed to operate the coprocessor.
+> 
+> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 > ---
->  arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  .../bindings/fsi/fsi-master-ast-cf.txt        | 36 +++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
 > 
-> diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-> index 176e38d54872..4f2a704615b0 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-> @@ -124,6 +124,17 @@
->  				interrupts = <GIC_PPI 15 IRQ_TYPE_LEVEL_HIGH>;
->  			};
->  
-> +			sei: interrupt-controller@3f0200 {
-> +				compatible = "marvell,armada-8k-sei";
-> +				reg = <0x3f0200 0x40>;
-> +				interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-> +				marvell,sei-ap-ranges = <0 21>;
-> +				marvell,sei-cp-ranges = <21 43>;
-> +				#interrupt-cells = <1>;
-> +				interrupt-controller;
-> +				msi-controller;
-> +			};
+> diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt b/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
+> new file mode 100644
+> index 000000000000..431bf8a423ce
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
+> @@ -0,0 +1,36 @@
+> +Device-tree bindings for ColdFire offloaded gpio-based FSI master driver
+> +------------------------------------------------------------------------
 > +
->  			xor@400000 {
->  				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
->  				reg = <0x400000 0x1000>,
-> -- 
-> 2.14.1
-> 
+> +Required properties:
+> + - compatible =
+> +	"aspeed,ast2400-cf-fsi-master" for an AST2400 based system
+> +   or
+> +	"aspeed,ast2500-cf-fsi-master" for an AST2500 based system
+> +
+> + - clock-gpios = <gpio-descriptor>;	: GPIO for FSI clock
+> + - data-gpios = <gpio-descriptor>;	: GPIO for FSI data signal
+> + - enable-gpios = <gpio-descriptor>;	: GPIO for enable signal
+> + - trans-gpios = <gpio-descriptor>;	: GPIO for voltage translator enable
+> + - mux-gpios = <gpio-descriptor>;	: GPIO for pin multiplexing with other
+> +                                          functions (eg, external FSI masters)
+> + - memory-region = <phandle>;		: Reference to the reserved memory for
+> +                                          the ColdFire. Must be 2M aligned on
+> +					  AST2400 and 1M aligned on AST2500
+> + - aspeed,sram = <phandle>;		: Reference to the SRAM node.
+> + - aspeed,cvic = <phandle>;		: Reference to the CVIC node.
+> +
+> +Examples:
+> +
+> +    fsi-master {
+> +        compatible = "aspeed,ast2500-cf-fsi-master", "fsi-master";
+> +
+> +	clock-gpios = <&gpio 0>;
+> +        data-gpios = <&gpio 1>;
+> +        enable-gpios = <&gpio 2>;
+> +        trans-gpios = <&gpio 3>;
+> +        mux-gpios = <&gpio 4>;
+> +
+> +	memory-region = <&coldfire_memory>;
+> +	sram = <&sram>;
+> +	cvic = <&cvic>;
+
+Need to update the example. With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
