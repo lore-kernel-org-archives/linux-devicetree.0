@@ -1,34 +1,64 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v6 2/4] rtc: ds1307: support m41t11 variant
-Date: Mon, 16 Jul 2018 23:37:07 +0200
-Message-ID: <20180716213707.GC2751@piout.net>
-References: <20180516210842.5874-1-giulio.benetti@micronovasrl.com>
- <20180516210842.5874-2-giulio.benetti@micronovasrl.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: amlogic: Add Internal Clock Measurer
+ bindings
+Date: Mon, 16 Jul 2018 15:45:16 -0600
+Message-ID: <20180716214516.GA31738@rob-hp-laptop>
+References: <1530624110-4687-1-git-send-email-narmstrong@baylibre.com>
+ <1530624110-4687-3-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180516210842.5874-2-giulio.benetti@micronovasrl.com>
+In-Reply-To: <1530624110-4687-3-git-send-email-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Cc: a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: khilman@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 16/05/2018 23:08:40+0200, Giulio Benetti wrote:
-> The m41t11 variant is very similar to the already supported m41t00 and
-> m41t0, but it has also 56 bytes of NVRAM.
+On Tue, Jul 03, 2018 at 03:21:49PM +0200, Neil Armstrong wrote:
+> The Amlogic Meson GX SoCs embeds a clock measurer IP to measure the internal
+> clock paths frequencies.
 > 
-> Add it to driver taking into account NVRAM section.
-> 
-> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  .../devicetree/bindings/rtc/rtc-ds1307.txt         |  1 +
->  drivers/rtc/rtc-ds1307.c                           | 14 ++++++++++++++
->  2 files changed, 15 insertions(+)
+>  .../devicetree/bindings/soc/amlogic/clk-measure.txt       | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
 > 
-Applied, thanks.
+> diff --git a/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt b/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
+> new file mode 100644
+> index 0000000..ba9183a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
+> @@ -0,0 +1,15 @@
+> +Amlogic Internal Clock Measurer
+> +===============================
+> +
+> +The Amlogic SoCs contains an IP to measure the internal clocks.
+> +The precision is multiple of MHz, useful to debug the clock states.
 
--- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+What a simple yet useful debug tool.
+
+> +
+> +Required properties:
+> +- compatible: Shall contain "amlogic,meson-gx-clk-measure"
+> +- reg: base address and size of the Clock Measurer register space.
+> +
+> +Example:
+> +	clock-measure@8758 {
+> +		compatible = "amlogic,meson-gx-clk-measure";
+> +		reg = <0x0 0x8758 0x0 0x10>;
+
+This doesn't really look like its own block though. Can't the parent 
+device instantiate the driver for this?
+
+
+> +	};
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
