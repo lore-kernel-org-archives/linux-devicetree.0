@@ -1,99 +1,48 @@
-Return-Path: <SRS0=Xy3G=KD=analog.com=Mircea.Caprioru@kernel.org>
-From: Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: [PATCH V3 1/2] dt-bindings: mux: add adi,adgs1408
-Date: Thu, 19 Jul 2018 16:43:20 +0300
-Message-ID: <20180719134320.23560-1-mircea.caprioru@analog.com>
+Return-Path: <SRS0=K2f+=KA=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39241 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727618AbeGPTNg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Jul 2018 15:13:36 -0400
+Received: by mail-ed1-f66.google.com with SMTP id w14-v6so30717660eds.6
+        for <devicetree@vger.kernel.org>; Mon, 16 Jul 2018 11:44:54 -0700 (PDT)
+Date: Mon, 16 Jul 2018 20:44:46 +0200
+From: Anthony Brandon <anthony@amarulasolutions.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: sound: wm8994: document
+ wlf,spkmode-pu property
+Message-ID: <20180716184416.GA31282@Fenrir>
+References: <20180709160631.GU18740@imbe.wolfsonmicro.main>
+ <1531158406-18646-1-git-send-email-anthony@amarulasolutions.com>
+ <20180711191346.GA5912@rob-hp-laptop>
+ <20180716154307.GA8613@Fenrir>
+ <CAL_JsqJYG7-S-b177Jy5Er5i8gHeeEum=6qQBEji2aLKtEK0mw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: peda@axentia.se, robh+dt@kernel.org
-Cc: davem@davemloft.net, mchehab+samsung@kernel.org, akpm@linux-foundation.org, rdunlap@infradead.org, devicetree@vger.kernel.org, Mircea Caprioru <mircea.caprioru@analog.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJYG7-S-b177Jy5Er5i8gHeeEum=6qQBEji2aLKtEK0mw@mail.gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, patches@opensource.cirrus.com, Charles Keepax <ckeepax@opensource.cirrus.com>, Alberto Panizzo <alberto@amarulasolutions.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Adding documentation for adgs1408/1409 multiplexer. The bindings
-follow the standard SPI and mux bindings and do not require any
-additional custom properties.
+On Mon, Jul 16, 2018 at 10:27:31AM -0600, Rob Herring wrote:
+> On Mon, Jul 16, 2018 at 9:43 AM Anthony Brandon
+> <anthony@amarulasolutions.com> wrote:
+> >
+> > Hi,
+> >
+> > Is there anything more I can do to get this (and patch 3/4) applied?
+> > Or just wait a bit longer?
+> > I'm asking because I noticed that changes 2 and 4 have been applied but
+> > these have not.
+> 
+> That's probably because you didn't CC Mark and alsa ML on these.
+> Normally a series goes in together.
+> 
+> Anyways, I can apply them if there's no other changes to this file for 4.19.
+> 
+> Rob
 
-Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
----
-Changelog V2 -> V3
-- formated dt-bindings commit message
-- added property for general purpose outputs
+Thanks, I understand. I'll keep that in mind for next time.
 
- .../devicetree/bindings/mux/adi,adgs1408.txt  | 48 +++++++++++++++++++
- MAINTAINERS                                   |  6 +++
- 2 files changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mux/adi,adgs1408.txt
-
-diff --git a/Documentation/devicetree/bindings/mux/adi,adgs1408.txt b/Documentation/devicetree/bindings/mux/adi,adgs1408.txt
-new file mode 100644
-index 000000000000..0a7b67023ef0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mux/adi,adgs1408.txt
-@@ -0,0 +1,48 @@
-+Bindings for Analog Devices ADGS1408/1409 8:1/Dual 4:1 Mux
-+
-+Required properties:
-+- compatible : Should be one of
-+	* "adi,adgs1408"
-+	* "adi,adgs1409"
-+* Standard mux-controller bindings as described in mux-controller.txt
-+
-+Optional properties for ADGS1408/1409:
-+- gpio-controller : if present, #gpio-cells is required.
-+- #gpio-cells : should be <2>
-+			- First cell is the GPO line number, i.e. 0 or 1
-+			- Second cell is used to specify active high (0)
-+			or active low (1)
-+
-+Optional properties:
-+- idle-state : if present, array of states that the mux controllers will have
-+  when idle. The special state MUX_IDLE_AS_IS is the default and
-+  MUX_IDLE_DISCONNECT is also supported.
-+
-+States 0 through 7 correspond to signals S1 through S8 in the datasheet.
-+For ADGS1409 only states 0 to 3 are available.
-+
-+Example:
-+
-+	/*
-+	 * One mux controller.
-+	 * Mux state set to idle as is (no idle-state declared)
-+	 */
-+	&spi0 {
-+		mux: mux-controller@0 {
-+			compatible = "adi,adgs1408";
-+			reg = <0>;
-+			spi-max-frequency = <1000000>;
-+			#mux-control-cells = <0>;
-+		};
-+	}
-+
-+	adc-mux {
-+		compatible = "io-channel-mux";
-+		io-channels = <&adc 1>;
-+		io-channel-names = "parent";
-+		mux-controls = <&mux>;
-+
-+		channels = "out_a0", "out_a1", "test0", "test1",
-+			"out_b0", "out_b1", "testb0", "testb1";
-+
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 192d7f73fd01..55dfdbf835c1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -810,6 +810,12 @@ L:	linux-media@vger.kernel.org
- S:	Maintained
- F:	drivers/media/i2c/ad9389b*
- 
-+ANALOG DEVICES INC ADGS1408 DRIVER
-+M:	Mircea Caprioru <mircea.caprioru@analog.com>
-+S:	Supported
-+F:	drivers/mux/adgs1408.c
-+F:	Documentation/devicetree/bindings/mux/adgs1408.txt
-+
- ANALOG DEVICES INC ADV7180 DRIVER
- M:	Lars-Peter Clausen <lars@metafoo.de>
- L:	linux-media@vger.kernel.org
--- 
-2.17.1
+Regards,
+Anthony
