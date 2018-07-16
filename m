@@ -1,90 +1,99 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v5 5/7] Bluetooth: Extend btuart driver for join more
- vendor devices
-Date: Mon, 16 Jul 2018 14:59:58 +0200
-Message-ID: <6476BE78-3FE5-465F-8060-2215387323AA@holtmann.org>
-References: <cover.1531150733.git.sean.wang@mediatek.com>
- <85d449cdd34bf47d72935a821915e825c64a2145.1531150733.git.sean.wang@mediatek.com>
- <70616B99-5A2D-417A-8815-246700EEF4E2@holtmann.org>
- <1531641134.3955.19.camel@mtkswgap22>
-Mime-Version: 1.0 (Mac OS X Mail 11.4 \(3445.8.2\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: Add Mediatek X20 Development Board
+ support
+Date: Mon, 16 Jul 2018 15:24:44 +0200
+Message-ID: <d88504b4-409c-c42b-f816-bedefce2a819@gmail.com>
+References: <20180605163442.4812-1-manivannan.sadhasivam@linaro.org>
+ <20180605163442.4812-3-manivannan.sadhasivam@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531641134.3955.19.camel@mtkswgap22>
+In-Reply-To: <20180605163442.4812-3-manivannan.sadhasivam@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Johan Hedberg <johan.hedberg@gmail.com>, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, taiten.peng@linaro.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, manivannanece23@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean,
+Hi Manivanna,
 
->>> Adding an independent btuart.h header allows these essential definitions
->>> can be reused in vendor driver. Also, struct btuart_vnd is extended with
->>> additional callbacks such as .init initializing vendor data, .shtudown,
->>> .recv and .send supporting SoC specific framing for that btuart can
->>> simply adapt to various Bluetooth uart-based devices.
->>> 
->>> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
->>> ---
->>> drivers/bluetooth/btuart.c | 73 ++++++++++++++++++++++++----------------------
->>> drivers/bluetooth/btuart.h | 30 +++++++++++++++++++
->>> 2 files changed, 68 insertions(+), 35 deletions(-)
->>> create mode 100644 drivers/bluetooth/btuart.h
->>> 
->>> diff --git a/drivers/bluetooth/btuart.c b/drivers/bluetooth/btuart.c
->>> index a900aac..65d0086 100644
->>> --- a/drivers/bluetooth/btuart.c
->>> +++ b/drivers/bluetooth/btuart.c
->>> @@ -33,35 +33,11 @@
->>> #include <net/bluetooth/hci_core.h>
->>> 
->>> #include "h4_recv.h"
->>> +#include "btuart.h"
->>> #include "btbcm.h"
->>> 
->>> #define VERSION "1.0"
->>> 
->>> -struct btuart_vnd {
->>> -	const struct h4_recv_pkt *recv_pkts;
->>> -	int recv_pkts_cnt;
->>> -	unsigned int manufacturer;
->>> -	int (*open)(struct hci_dev *hdev);
->>> -	int (*close)(struct hci_dev *hdev);
->>> -	int (*setup)(struct hci_dev *hdev);
->>> -};
->>> -
->>> -struct btuart_dev {
->>> -	struct hci_dev *hdev;
->>> -	struct serdev_device *serdev;
->>> -
->>> -	struct work_struct tx_work;
->>> -	unsigned long tx_state;
->>> -	struct sk_buff_head txq;
->>> -
->>> -	struct sk_buff *rx_skb;
->>> -
->>> -	const struct btuart_vnd *vnd;
->>> -};
->> 
->> I really like to avoid this since it is not clean. Frankly I prefer to keep the btuart.c driver for drivers that really just use H:4 as transport protocol. If the protocol is only H:4 alike and has extra headers, then it should be a separate driver.
->> 
+On 05/06/18 18:34, Manivannan Sadhasivam wrote:
+> Add initial device tree support for Mediatek X20 Development Board
+> based on MT6797 Deca core SoC. This board is one of the 96Boards
+> Consumer Edition platform.
 > 
-> thanks for letting me know your concern. I think I'm a little over in reusing these existing methods and break something generic and its beauty.
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  arch/arm64/boot/dts/mediatek/Makefile         |  1 +
+>  .../boot/dts/mediatek/mt6797-x20-dev.dts      | 33 +++++++++++++++++++
+>  2 files changed, 34 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
 > 
-> I'll make the driver be a separate one based on btuart in the next version.
-> 
-> 
->> The common H:4 handling is abstracted in h4_recv.h already anyway and we can add more pieces if needed. However I also wonder since you have extra framing that the complex H:4 state keeping might be not needed at all. So it could be simplified.
->> 
-> 
-> okay, I will get rid of h4_recv.h and consider to use more simplified logic to handle the extra framing and its payload.
+> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> index ac17f60f998c..5b7fd6ad96e4 100644
+> --- a/arch/arm64/boot/dts/mediatek/Makefile
+> +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> @@ -3,5 +3,6 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
+> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
+> diff --git a/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts b/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
+> new file mode 100644
+> index 000000000000..2c09ca95d9e2
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
+> @@ -0,0 +1,33 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Device Tree Source for MediaTek X20 Development Board
+> + *
+> + * Copyright (C) 2018, Linaro Ltd.
+> + *
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "mt6797.dtsi"
+> +
+> +/ {
+> +	model = "Mediatek X20 Development Board";
+> +	compatible = "archermind,mt6797-x20-dev", "mediatek,mt6797";
+> +
+> +	aliases {
+> +		serial0 = &uart1;
+> +	};
 
-only if it is already framed by your extra header, but I seem to recall that it will frame it. For example the bfusb.c old driver does frame H:4 as well and then no extra state keeping for H:4 is needed. Just pass the frames up into the core via hci_recv_frame (or hci_recv_diag for vendor diagnostic) and move on with it.
+Sorry for the late answer.
+Why did you use uart1 instead of uart0?
+I know that uart0 is used by the bootloader, but because of their exotic flash
+procedure I find it quite useful to see this messages in my serial connection.
+Of course you can only use 921600 baudrate then.
 
-You can of course use h4_recv.h if you need to, but only do that if you are true H:4 stream and have no idea where a frame ends and starts.
+> +
+> +	memory@40000000 {
+> +		device_type = "memory";
+> +		reg = <0 0x40000000 0 0x1e605000>;
 
-Regards
+How comes this strange number for the memory size?
 
-Marcel
+BTW do you know the differences between the EVB board and the x20 one?
+I used the evb dts for booting up to now.
+
+Best regards,
+Matthias
+
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +};
+> +
+> +&uart1 {
+> +	status = "okay";
+> +};
+> 
