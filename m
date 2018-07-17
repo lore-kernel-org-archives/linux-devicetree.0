@@ -1,48 +1,38 @@
-From: Tali Perry <tali.perry1@gmail.com>
-Subject: [PATCH v1 0/1] clk: npcm7xx: fix base address and of_clk_get_by_name
-Date: Tue, 17 Jul 2018 14:31:28 +0300
-Message-ID: <20180717113129.25033-1-tali.perry1@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sboyd@kernel.org, brendanhiggins@google.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, weiyongjunl@huawei.com, avifishman70@gmail.com, tmaimon77@gmail.com, raltherr@google.com
-Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>, Wei Yongjun <weiyongjun1@huawei.com>, linux-arm-kernel@lists.infradead.org
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 0/5] Add support for MSCC Ocelot i2c
+Date: Tue, 17 Jul 2018 13:48:32 +0200
+Message-ID: <20180717114837.21839-1-alexandre.belloni@bootlin.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Hogan <jhogan@kernel.org>
+Cc: Paul Burton <paul.burton@mips.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Nuvoton NPCM7XX Clock Controller
-fix base address and of_clk_get_by_name error handling.
-    Also update error messages to be more informative.
-    
-    In case clk_base allocation is erronoeous the return value is null.
-    Also fix handling of of_clk_get_by_name returns an error. 
-    Print a better error message pointing to the dt-binding documention.
+Hi,
 
-This patch is re-submitted since it was already pushed to main 
-(just the diff, without the full driver which is already in 
-master branch.)
+Because the designware IP was not able to the the SDA hold time, MSCC has
+its own implementation. Add support for it and then add i2c on ocelot
+boards.
 
+I would expect patches 1 to 3 to go through the i2c tree and 4-5 through
+the mips tree once patch 3 has been reviewed by the DT maintainers.
 
-Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Alexandre Belloni (5):
+  i2c: designware: factorize setting SDA hold time
+  i2c: designware: allow IP specific sda_hold_time
+  i2c: designware: add MSCC Ocelot support
+  mips: dts: mscc: Add i2c on ocelot
+  mips: dts: mscc: enable i2c on ocelot_pcb123
 
----
-
-Tali Perry (1):
-  clk: npcm7xx: get fixed clocks from DT
-
- drivers/clk/clk-npcm7xx.c | 101 +++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 77 insertions(+), 24 deletions(-)
+ .../bindings/i2c/i2c-designware.txt           |  5 ++-
+ arch/mips/boot/dts/mscc/ocelot.dtsi           | 19 +++++++++++
+ arch/mips/boot/dts/mscc/ocelot_pcb123.dts     |  5 +++
+ drivers/i2c/busses/i2c-designware-common.c    | 33 +++++++++++++++++++
+ drivers/i2c/busses/i2c-designware-core.h      |  3 ++
+ drivers/i2c/busses/i2c-designware-master.c    | 22 +------------
+ drivers/i2c/busses/i2c-designware-platdrv.c   | 20 +++++++++++
+ drivers/i2c/busses/i2c-designware-slave.c     | 22 +------------
+ 8 files changed, 86 insertions(+), 43 deletions(-)
 
 -- 
-2.14.1
+2.18.0
