@@ -1,113 +1,83 @@
-From: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
-Subject: Re: [PATCH] drm/panel: simple: Support simple VGA panels
-Date: Tue, 17 Jul 2018 09:05:55 +0200
-Message-ID: <8de3e6a1-e75c-76fa-a25a-5a1d67515bea@ysoft.com>
-References: <20180716092339.9736-1-linus.walleij@linaro.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: Add vendor prefix for Sancloud
+Date: Tue, 17 Jul 2018 09:36:59 +0200
+Message-ID: <20180717073659.GB3100@piout.net>
+References: <1531808688-9716-1-git-send-email-koen@dominion.thruhere.net>
+ <1531808688-9716-2-git-send-email-koen@dominion.thruhere.net>
+ <20180717072028.GA3100@piout.net>
+ <D3049450-5391-40CB-ADD1-E1330BFE0525@dominion.thruhere.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180716092339.9736-1-linus.walleij@linaro.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Robin Murphy <robin.murphy@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <D3049450-5391-40CB-ADD1-E1330BFE0525@dominion.thruhere.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Koen Kooi <koen@dominion.thruhere.net>
+Cc: linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>, David Lechner <david@lechnology.com>, Shawn Guo <shawnguo@kernel.org>, SZ Lin <sz.lin@moxa.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTYuNy4yMDE4IDExOjIzLCBMaW51cyBXYWxsZWlqIHdyb3RlOgo+IFRoZSBuZWVkIHRvIHN1
-cHBvcnQgc29tZSBzdHJhaWdodC1mb3J3YXJkIFZHQSBwYW5lbHMgdGhhdCBhcmUKPiBub3QgYWRo
-ZXJpbmcgdG8gYW55IHN0YW5kYXJkIGxpa2UgRFBJIGFyaXNlIGluIHRoZSBBUk0gUlRTTSBWRQo+
-IFJlYWwtVGltZSBTeXN0ZW1zIE1vZGVsIFZpcnR1YWwgRXhlY3V0aXZlLiBUaGlzIGVtdWxhdG9y
-ICh3aGljaAo+IGlzIG5vdCBRRU1VKSBkb2VzIG5vdCBtb2RlbCBhbnkgYnJpZGdlIG9yIHBhbmVs
-IG90aGVyIHRoYW4KPiBkaXNwbGF5aW5nIHdoYXRldmVyIHRoZSB1c2VyIGRlZmluZXMgdGhhdCB0
-aGV5IGhhdmUuCj4gCj4gQ3VycmVudGx5IGEgZmFrZSAiRFBJIHBhbmVsIiBpcyB1c2VkIGZvciB0
-aGlzIHdpdGggdGhlIG9sZAo+IEZCREVWIGRyaXZlciwgYnV0IHRoaXMgaXMgd3JvbmcgYXMgaXQg
-aXMgbm90IGNvbmZvcm1pbmcgdG8gYW55Cj4gTUlQSSBEUEkgc3RhbmRhcmRzLiBIb3dldmVyIHRo
-ZSByZXNvbHV0aW9uIGNob3NlbiB0aGVyZSBpcwo+IHN0YW5kYXJkIFZHQSwgYW5kIHdlIGNhbiBj
-b3ZlciB0aGlzIHdpdGggdGhlIHNpbXBsZSBwYW5lbAo+IGJ5IHNpbXBseSBhZGRpbmcgdGhlIG1v
-c3QgY29tbW9uIFZHQSByZXNvbHV0aW9ucyBhcyBhIGtpbmQKPiBvZiAic2ltcGxlIHBhbmVsIi4K
-PiAKPiBJbiBkaWZmZXJlbmNlIGZyb20gb3RoZXIgY2FzZXMgd2hlcmUgInNpbXBsZSBwYW5lbCIg
-bWlnaHQgYmUKPiBoaWRpbmcgc29tZXRoaW5nIG1vcmUgY29tcGxleCAoc3VjaCBhcyBhIHBhbmVs
-IGRyaXZlciBvciBicmlkZ2UpCj4gdGhpcyBjYXNlIGlzIGFjdHVhbGx5IGFwcGxpY2FibGUsIHNp
-bmNlIHdlIGFyZSBydW5uaW5nIGluc2lkZQo+IGEgc2ltdWxhdGlvbiB3aXRoIG5vIHJlYWwgaGFy
-ZHdhcmUgb24gdGhlIG91dHB1dC4KPiAKPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcK
-PiBDYzogU3VkZWVwIEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNvbT4KPiBDYzogTG9yZW56byBQ
-aWVyYWxpc2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+Cj4gQ2M6IExpdml1IER1ZGF1IDxs
-aXZpdS5kdWRhdUBhcm0uY29tPgo+IENjOiBSb2JpbiBNdXJwaHkgPHJvYmluLm11cnBoeUBhcm0u
-Y29tPgo+IFNpZ25lZC1vZmYtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJv
-Lm9yZz4KPiAtLS0KPiAgIC4uLi9kaXNwbGF5L3BhbmVsL3ZpZGVvLWdyYXBoaWNzLWFycmF5LnR4
-dCAgICB8IDIxICsrKysrKwo+ICAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5j
-ICAgICAgICAgIHwgNjYgKysrKysrKysrKysrKysrKysrKwo+ICAgMiBmaWxlcyBjaGFuZ2VkLCA4
-NyBpbnNlcnRpb25zKCspCj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvdmlkZW8tZ3JhcGhpY3MtYXJyYXkudHh0Cj4g
-Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3BhbmVsL3ZpZGVvLWdyYXBoaWNzLWFycmF5LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3ZpZGVvLWdyYXBoaWNzLWFycmF5LnR4dAo+IG5ldyBm
-aWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi4xOTNkMjRlYmUwNTIKPiAtLS0g
-L2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvcGFuZWwvdmlkZW8tZ3JhcGhpY3MtYXJyYXkudHh0Cj4gQEAgLTAsMCArMSwyMSBAQAo+ICtW
-aWRlbyBHcmFwaGljcyBBcnJheQo+ICsKPiArVGhpcyBiaW5kaW5nIGlzIGZvciBzaW1wbGUgcGFu
-ZWxzIHVzaW5nIHRoZSBzdGFuZGFyZGl6ZWQgVkdBIHJlc29sdXRpb25zCj4gK2RlZmluZWQgYnkg
-ZGUgZmFjdG8gc3RhbmRhcmRzIGJlZ2lubmluZyB3aXRoIHRoZSBJQk0gUFMvMiBpbiAxOTg3Lgo+
-ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgInZp
-ZGVvLWdyYXBoaWNzLWFycmF5Igo+ICsKPiArVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0
-aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAo+ICtpbiBzaW1w
-bGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5Lgo+ICsKPiArRXhhbXBsZToKPiArCj4gK3Bh
-bmVsIHsKPiArCWNvbXBhdGlibGUgPSAidmlkZW8tZ3JhcGhpY3MtYXJyYXkiOwo+ICsJcG9ydCB7
-Cj4gKwkJdmdhX3BhbmVsX2luOiBlbmRwb2ludCB7Cj4gKwkJCXJlbW90ZS1lbmRwb2ludCA9IDwm
-Zm9vPjsKPiArCQl9Owo+ICsJfTsKPiArfTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
-L3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
-ZS5jCj4gaW5kZXggY2JmMWFiNDA0ZWU3Li5kYjRkYjVhM2Y3NWUgMTAwNjQ0Cj4gLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJt
-L3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4gQEAgLTIwNjksNiArMjA2OSw2OSBAQCBzdGF0aWMgY29u
-c3Qgc3RydWN0IHBhbmVsX2Rlc2Mgd2luc3Rhcl93ZjM1bHRpYWNkID0gewo+ICAgCS5idXNfZm9y
-bWF0ID0gTUVESUFfQlVTX0ZNVF9SR0I4ODhfMVgyNCwKPiAgIH07Cj4gICAKPiArc3RhdGljIGNv
-bnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIHZpZGVvX2dyYXBoaWNzX2FycmF5X21vZGVzW10g
-PSB7Cj4gKwl7Cj4gKwkJLyoKPiArCQkgKiBUaGlzIGlzIHRoZSBtb3N0IHN0YW5kYXJkaXplZCAi
-dmFuaWxsYSIgVkdBIG1vZGUgdGhlcmUgaXM6Cj4gKwkJICogNjQweDQ4MCBAIDYwIEh6Cj4gKwkJ
-ICovCj4gKwkJLmNsb2NrID0gMjcxNzUsCj4gKwkJLmhkaXNwbGF5ID0gNjQwLAo+ICsJCS5oc3lu
-Y19zdGFydCA9IDY0MCArIDE2LAo+ICsJCS5oc3luY19lbmQgPSA2NDAgKyAxNiArIDk2LAo+ICsJ
-CS5odG90YWwgPSA2NDAgKyAxNiArIDk2ICsgNDgsCj4gKwkJLnZkaXNwbGF5ID0gNDgwLAo+ICsJ
-CS52c3luY19zdGFydCA9IDQ4MCArIDEwLAo+ICsJCS52c3luY19lbmQgPSA0ODAgKyAxMCArIDIs
-Cj4gKwkJLnZ0b3RhbCA9IDQ4MCArIDEwICsgMiArIDMzLAo+ICsJCS52cmVmcmVzaCA9IDYwLAo+
-ICsJCS5mbGFncyA9IERSTV9NT0RFX0ZMQUdfTlZTWU5DIHwgRFJNX01PREVfRkxBR19OSFNZTkMs
-Cj4gKwl9LAo+ICsJewo+ICsJCS8qIFNWR0EgODAweDYwMCBANjAgSHogKi8KPiArCQkuY2xvY2sg
-PSA0MDAwMCwKPiArCQkuaGRpc3BsYXkgPSA4MDAsCj4gKwkJLmhzeW5jX3N0YXJ0ID0gODAwICsg
-NDAsCj4gKwkJLmhzeW5jX2VuZCA9IDgwMCArIDQwICsgMTI4LAo+ICsJCS5odG90YWwgPSA4MDAg
-KyA0MCArIDEyOCArIDg4LAo+ICsJCS52ZGlzcGxheSA9IDYwMCwKPiArCQkudnN5bmNfc3RhcnQg
-PSA2MDAgKyAxLAo+ICsJCS52c3luY19lbmQgPSA2MDAgKyAxICsgNCwKPiArCQkudnRvdGFsID0g
-NjAwICsgMSArIDQgKyAyMywKPiArCQkudnJlZnJlc2ggPSA2MCwKPiArCQkuZmxhZ3MgPSBEUk1f
-TU9ERV9GTEFHX05WU1lOQyB8IERSTV9NT0RFX0ZMQUdfTkhTWU5DLAo+ICsJfSwKPiArCXsKPiAr
-CQkvKiBYR0EgMTAyNHg3NjggQDYwIEh6ICovCj4gKwkJLmNsb2NrID0gNjUwMDAsCj4gKwkJLmhk
-aXNwbGF5ID0gMTAyNCwKPiArCQkuaHN5bmNfc3RhcnQgPSAxMDI0ICsgMjQsCj4gKwkJLmhzeW5j
-X2VuZCA9IDEwMjQgKyAyNCArIDEzNiwKPiArCQkuaHRvdGFsID0gMTAyNCArIDI0ICsgMTM2ICsg
-MTYwLAo+ICsJCS52ZGlzcGxheSA9IDc2OCwKPiArCQkudnN5bmNfc3RhcnQgPSA3NjggKyAzLAo+
-ICsJCS52c3luY19lbmQgPSA3NjggKyAzICsgNiwKPiArCQkudnRvdGFsID0gNzY4ICsgMyArIDYg
-KyAyOSwKPiArCQkudnJlZnJlc2ggPSA2MCwKPiArCQkuZmxhZ3MgPSBEUk1fTU9ERV9GTEFHX05W
-U1lOQyB8IERSTV9NT0RFX0ZMQUdfTkhTWU5DLAo+ICsJfSwKPiArfTsKPiArCj4gK3N0YXRpYyBj
-b25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyB2aWRlb19ncmFwaGljc19hcnJheSA9IHsKPiArCS5tb2Rl
-cyA9IHZpZGVvX2dyYXBoaWNzX2FycmF5X21vZGVzLAo+ICsJLm51bV9tb2RlcyA9IEFSUkFZX1NJ
-WkUodmlkZW9fZ3JhcGhpY3NfYXJyYXlfbW9kZXMpLAo+ICsJLmJwYyA9IDgsCj4gKwkvKgo+ICsJ
-ICogU29tZSB0eXBpY2FsIDQ6MyBhc3BlY3QgcmF0aW8gVkdBIG1vbml0b3Igc3VyZWx5IGhhcyB0
-aGVzZSBkaW1lbnNpb25zCj4gKwkgKiBvZiA0MHgzMCBtbS4KSSBhbSBzdXJlIGl0IGhhcyBub3Qg
-Oikgcy9tbS9jbSBvciBhZGQgYSB6ZXJvLgoKTWljaGFsCgo+ICsJICovCj4gKwkuc2l6ZSA9IHsK
-PiArCQkud2lkdGggPSA0MDAsCj4gKwkJLmhlaWdodCA9IDMwMCwKPiArCX0sCj4gKwkuYnVzX2Zv
-cm1hdCA9IE1FRElBX0JVU19GTVRfUkdCODg4XzFYMjQsCj4gK307Cj4gKwo+ICAgc3RhdGljIGNv
-bnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgcGxhdGZvcm1fb2ZfbWF0Y2hbXSA9IHsKPiAgIAl7Cj4g
-ICAJCS5jb21wYXRpYmxlID0gImFtcGlyZSxhbS00ODAyNzJoM3RtcXctdDAxaCIsCj4gQEAgLTIy
-ODYsNiArMjM0OSw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3Jt
-X29mX21hdGNoW10gPSB7Cj4gICAJfSwgewo+ICAgCQkuY29tcGF0aWJsZSA9ICJ3aW5zdGFyLHdm
-MzVsdGlhY2QiLAo+ICAgCQkuZGF0YSA9ICZ3aW5zdGFyX3dmMzVsdGlhY2QsCj4gKwl9LCB7Cj4g
-KwkJLmNvbXBhdGlibGUgPSAidmlkZW8tZ3JhcGhpY3MtYXJyYXkiLAo+ICsJCS5kYXRhID0gJnZp
-ZGVvX2dyYXBoaWNzX2FycmF5LAo+ICAgCX0sIHsKPiAgIAkJLyogc2VudGluZWwgKi8KPiAgIAl9
-Cj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 17/07/2018 09:31:15+0200, Koen Kooi wrote:
+> 
+> 
+> > Op 17 jul. 2018, om 09:20 heeft Alexandre Belloni <alexandre.belloni@bootlin.com> het volgende geschreven:
+> > 
+> > Hi Koen,
+> > 
+> > I'm not sure how you expect that to be merged but you should probably
+> > send this patch to the TI maintainers along 2/2 because probably no one
+> > in copy of this patch will apply it.
+> 
+> Is that the linux-omap list and Tony? scripts/get_maintainer.pl didn’t pick them up, which is why they are missing.
+> 
+
+Yes, basically the same people that will apply the DT making use of this
+vendor prefix so both patches go in at the same time.
+
+> regards,
+> 
+> Koen
+> 
+> > 
+> > On 17/07/2018 08:24:45+0200, Koen Kooi wrote:
+> >> Add vendor prefix for Sancloud Ltd.
+> >> 
+> >> Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+> >> Acked-by: Rob Herring <robh@kernel.org>
+> >> ---
+> >> 
+> >> v5: No changes
+> >> v4: Add Acked-by
+> >> v3: No changes
+> >> v2: No changes
+> >> v1: Initial submission
+> >> 
+> >> Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+> >> 1 file changed, 1 insertion(+)
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> >> index 7cad066..c7aaa1f 100644
+> >> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> >> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> >> @@ -314,6 +314,7 @@ rohm	ROHM Semiconductor Co., Ltd
+> >> roofull	Shenzhen Roofull Technology Co, Ltd
+> >> samsung	Samsung Semiconductor
+> >> samtec	Samtec/Softing company
+> >> +sancloud	Sancloud Ltd
+> >> sandisk	Sandisk Corporation
+> >> sbs	Smart Battery System
+> >> schindler	Schindler
+> >> -- 
+> >> 2.0.1
+> >> 
+> > 
+> > -- 
+> > Alexandre Belloni, Bootlin (formerly Free Electrons)
+> > Embedded Linux and Kernel engineering
+> > https://bootlin.com
+> 
+
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
