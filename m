@@ -1,36 +1,51 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 0/6] ARM64: dts: meson-axg: updates
-Date: Tue, 17 Jul 2018 10:41:35 -0500
-Message-ID: <7hzhypna34.fsf@baylibre.com>
-References: <20180716101151.31109-1-jbrunet@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH RESEND 01/15] ASoC: meson: add axg fifos DT binding documentation
+Date: Tue, 17 Jul 2018 17:42:50 +0200
+Message-ID: <20180717154304.9973-2-jbrunet@baylibre.com>
+References: <20180717154304.9973-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180716101151.31109-1-jbrunet@baylibre.com> (Jerome Brunet's
-        message of "Mon, 16 Jul 2018 12:11:45 +0200")
+In-Reply-To: <20180717154304.9973-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+Add the DT bindings documentation for axg's FIFOs: TODDR and FRDDR.
 
-> This patchset groups several updates targeted on amlogic's AXG
-> device tree. Patch 1, 2 and 6 had been posted previously but I thought
-> it would be more convenient for Kevin to get them as a single series.
->
-> Jerome Brunet (6):
->   ARM64: dts: meson-axg: remove vddio_ao18 from SoC dtsi
->   ARM64: dts: meson-axg: add adc buttons the S400
->   ARM64: dts: meson-axg: remove spdif out from gpio a7
->   ARM64: dts: meson-axg: add spdif input pins
->   ARM64: dts: meson-axg: add pdm pins
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ .../devicetree/bindings/sound/amlogic,axg-fifo.txt | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
 
-Applied to v4.19/dt64, queued for the first DT64 pull to arm-soc.
-
->   ARM64: dts: meson-axg: add the audio clock controller
-
-I'll queue this for a follow-up pull with the dependency tag from the
-clock tree.
-
-Kevin
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
+new file mode 100644
+index 000000000000..3dfc2515e5c6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
+@@ -0,0 +1,23 @@
++* Amlogic Audio FIFO controllers
++
++Required properties:
++- compatible: 'amlogic,axg-toddr' or
++	      'amlogic,axg-frddr'
++- reg: physical base address of the controller and length of memory
++       mapped region.
++- interrupts: interrupt specifier for the fifo.
++- clocks: phandle to the fifo peripheral clock provided by the audio
++	  clock controller.
++- resets: phandle to memory ARB line provided by the arb reset controller.
++- #sound-dai-cells: must be 0.
++
++Example of FRDDR A on the A113 SoC:
++
++frddr_a: audio-controller@1c0 {
++	compatible = "amlogic,axg-frddr";
++	reg = <0x0 0x1c0 0x0 0x1c>;
++	#sound-dai-cells = <0>;
++	interrupts = <GIC_SPI 88 IRQ_TYPE_EDGE_RISING>;
++	clocks = <&clkc_audio AUD_CLKID_FRDDR_A>;
++	resets = <&arb AXG_ARB_FRDDR_A>;
++};
+-- 
+2.14.4
