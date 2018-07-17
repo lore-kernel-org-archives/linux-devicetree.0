@@ -1,39 +1,36 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 1/5] i2c: designware: factorize setting SDA hold time
-Date: Tue, 17 Jul 2018 15:11:50 +0300
-Message-ID: <5a1846aa7c03cc889f072d1aab6967ff254b49de.camel@linux.intel.com>
-References: <20180717114837.21839-1-alexandre.belloni@bootlin.com>
-         <20180717114837.21839-2-alexandre.belloni@bootlin.com>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH 1/1] irqchip/stm32: add exti0 translation for stm32mp1
+Date: Tue, 17 Jul 2018 14:14:27 +0200
+Message-ID: <1531829667-22928-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180717114837.21839-2-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Hogan <jhogan@kernel.org>
-Cc: Paul Burton <paul.burton@mips.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-07-17 at 13:48 +0200, Alexandre Belloni wrote:
-> Factorize setting the SDA hold time in a new function
-> i2c_dw_set_sda_hold_time() that is used for both master and slave
-> mode.
-> 
-> This conveniently pulls the fix for the spurious warning from commit
-> 7a20e707aae2 ("i2c: designware: suppress unneeded SDA hold time
-> warnings")
-> in slave mode.
+From: Ludovic Barre <ludovic.barre@st.com>
 
-Isn't this a duplication of 
+This patch fixes a datasheet issue, in the draft version the "exti0"
+was not connected whereas is it.
 
-commit 1080ee7e28e1cea86310739e5dd4612868768aed
-Author: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Date:   Tue Jun 19 14:23:22 2018 +0300
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+---
+ drivers/irqchip/irq-stm32-exti.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-    i2c: designware: Move SDA hold time configuration to common code
-
-?
-
+diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
+index 3a7e890..3df527f 100644
+--- a/drivers/irqchip/irq-stm32-exti.c
++++ b/drivers/irqchip/irq-stm32-exti.c
+@@ -159,6 +159,7 @@ static const struct stm32_exti_bank *stm32mp1_exti_banks[] = {
+ };
+ 
+ static const struct stm32_desc_irq stm32mp1_desc_irq[] = {
++	{ .exti = 0, .irq_parent = 6 },
+ 	{ .exti = 1, .irq_parent = 7 },
+ 	{ .exti = 2, .irq_parent = 8 },
+ 	{ .exti = 3, .irq_parent = 9 },
 -- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+2.7.4
