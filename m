@@ -1,35 +1,56 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 1/5] thermal: exynos: enable core tmu clk on exynos platform
-Date: Tue, 17 Jul 2018 14:20:56 +0200
-Message-ID: <CAJKOXPdP78VFQgSQ9z9WsgYY_YhEKPUt=0MOra6Pz6smQeiNGg@mail.gmail.com>
-References: <1531822342-4293-1-git-send-email-linux.amoon@gmail.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 0/5] Add support for MSCC Ocelot i2c
+Date: Tue, 17 Jul 2018 15:21:20 +0300
+Message-ID: <08da5a79982a1ac2a2b6b4931d497edfe8fa6171.camel@linux.intel.com>
+References: <20180717114837.21839-1-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531822342-4293-1-git-send-email-linux.amoon@gmail.com>
+In-Reply-To: <20180717114837.21839-1-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Hogan <jhogan@kernel.org>
+Cc: Paul Burton <paul.burton@mips.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Anand,
+On Tue, 2018-07-17 at 13:48 +0200, Alexandre Belloni wrote:
+> Hi,
+> 
+> Because the designware IP was not able to the the SDA hold time, MSCC
+> has
+> its own implementation. Add support for it and then add i2c on ocelot
+> boards.
+> 
+> I would expect patches 1 to 3 to go through the i2c tree and 4-5
+> through
+> the mips tree once patch 3 has been reviewed by the DT maintainers.
 
-Thanks for patch.
+Without reading datasheet it all feels like a wrong place to put.
 
-On 17 July 2018 at 12:12, Anand Moon <linux.amoon@gmail.com> wrote:
-> clk_summary do not show tmu_apbif clk enable, so replace
-> the clk_prepare with clk_prepare_enables to enable tmu clk.
+But maybe that SoC (SoC family?) has some update to DesignWare IP.
+Btw, what the version of DW IP it's using? 2.00a? More older, more
+recent?
 
-This is not valid reason to do a change. What is clk_summary does not
-really matter. Your change has negative impact on power consumption as
-the clock stays enabled all the time. This is not what we want... so
-please explain it more - why you need the clock to be enabled all the
-time? What is broken (clk_summary is not broken in this case)?
 
-> simplify the enable of tmu_triminfo_apbif clk, also fixed
-> the order of goto error for failed cases.
+> Alexandre Belloni (5):
+>   i2c: designware: factorize setting SDA hold time
+>   i2c: designware: allow IP specific sda_hold_time
+>   i2c: designware: add MSCC Ocelot support
+>   mips: dts: mscc: Add i2c on ocelot
+>   mips: dts: mscc: enable i2c on ocelot_pcb123
+> 
+>  .../bindings/i2c/i2c-designware.txt           |  5 ++-
+>  arch/mips/boot/dts/mscc/ocelot.dtsi           | 19 +++++++++++
+>  arch/mips/boot/dts/mscc/ocelot_pcb123.dts     |  5 +++
+>  drivers/i2c/busses/i2c-designware-common.c    | 33
+> +++++++++++++++++++
+>  drivers/i2c/busses/i2c-designware-core.h      |  3 ++
+>  drivers/i2c/busses/i2c-designware-master.c    | 22 +------------
+>  drivers/i2c/busses/i2c-designware-platdrv.c   | 20 +++++++++++
+>  drivers/i2c/busses/i2c-designware-slave.c     | 22 +------------
+>  8 files changed, 86 insertions(+), 43 deletions(-)
+> 
 
-This has to be split into separate change.
-
-Best regards,
-Krzysztof
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
