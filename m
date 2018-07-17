@@ -1,112 +1,99 @@
 From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH] arm64: zynqmp: Remove #address/#size-cells from gpio-keys
-Date: Tue, 17 Jul 2018 16:42:05 +0200
-Message-ID: <50a270ad-93e6-5be2-ab57-bd4cbd9fe49a@monstr.eu>
-References: <cc96e8372881438fb069d49126ab713fa03fb074.1525260692.git.michal.simek@xilinx.com>
+Subject: Re: [PATCH] arm64: zynqmp: Add support for Avnet Ultra96 rev1 board
+Date: Tue, 17 Jul 2018 16:42:42 +0200
+Message-ID: <c94812e7-b213-2a3a-30c9-c0f88ecbefb1@monstr.eu>
+References: <80d21c84d427cb6b4122efd3dea7f1c4ab4cf2be.1525261987.git.michal.simek@xilinx.com>
 Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
  protocol="application/pgp-signature";
- boundary="rNj6OcjYfbJvEiaEta93scPgEff3uU0w7"
+ boundary="Q4VoWRSlmvPqtZehKNftJlcapFmqIaoIV"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cc96e8372881438fb069d49126ab713fa03fb074.1525260692.git.michal.simek@xilinx.com>
+In-Reply-To: <80d21c84d427cb6b4122efd3dea7f1c4ab4cf2be.1525261987.git.michal.simek@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---rNj6OcjYfbJvEiaEta93scPgEff3uU0w7
-Content-Type: multipart/mixed; boundary="bpAOc0hM4YirHXmYmS6kfcoRqLeshgDHH";
+--Q4VoWRSlmvPqtZehKNftJlcapFmqIaoIV
+Content-Type: multipart/mixed; boundary="fL0VbY7oosjZ8vhlV0HbmmaeaYZUnY7EE";
  protected-headers="v1"
 From: Michal Simek <monstr@monstr.eu>
 Reply-To: monstr@monstr.eu
 To: Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>,
+ linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
  Will Deacon <will.deacon@arm.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>,
- linux-arm-kernel@lists.infradead.org
-Message-ID: <50a270ad-93e6-5be2-ab57-bd4cbd9fe49a@monstr.eu>
-Subject: Re: [PATCH] arm64: zynqmp: Remove #address/#size-cells from gpio-keys
-References: <cc96e8372881438fb069d49126ab713fa03fb074.1525260692.git.michal.simek@xilinx.com>
-In-Reply-To: <cc96e8372881438fb069d49126ab713fa03fb074.1525260692.git.michal.simek@xilinx.com>
+ <catalin.marinas@arm.com>, Rob Herring <robh+dt@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Message-ID: <c94812e7-b213-2a3a-30c9-c0f88ecbefb1@monstr.eu>
+Subject: Re: [PATCH] arm64: zynqmp: Add support for Avnet Ultra96 rev1 board
+References: <80d21c84d427cb6b4122efd3dea7f1c4ab4cf2be.1525261987.git.michal.simek@xilinx.com>
+In-Reply-To: <80d21c84d427cb6b4122efd3dea7f1c4ab4cf2be.1525261987.git.michal.simek@xilinx.com>
 
---bpAOc0hM4YirHXmYmS6kfcoRqLeshgDHH
+--fL0VbY7oosjZ8vhlV0HbmmaeaYZUnY7EE
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-On 2.5.2018 13:34, Michal Simek wrote:
-> dts reports incorrect usage of these properties in gpio-keys node.
-> Warning (avoid_unnecessary_addr_size): /gpio-keys: unnecessary
->=20
-> The patch is removing these useless properties.
+On 2.5.2018 13:53, Michal Simek wrote:
+> Avnet Ultra96 rev1 board is commercialized Xilinx zcu100 revC/D
+> internal board. The patch is reusing zcu100 revC files but changing
+> model description and compatible strings which are used for example by
+> libmraa.
 >=20
 > Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 > ---
 >=20
->  arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts | 2 --
->  arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts | 2 --
->  arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts | 2 --
->  arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts | 2 --
->  4 files changed, 8 deletions(-)
+> I choose this option because there are houndreds of zcu100 boards
+> created and this will enable support both versions.
 >=20
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts b/arch/a=
-rm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> index c7f713c8e69e..eb5e8bddb610 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> @@ -44,8 +44,6 @@
-> =20
->  	gpio-keys {
->  		compatible =3D "gpio-keys";
-> -		#address-cells =3D <1>;
-> -		#size-cells =3D <0>;
->  		autorepeat;
->  		sw4 {
->  			label =3D "sw4";
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/a=
-rm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-> index 5b4ffe646a9b..25dd57485323 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-> @@ -41,8 +41,6 @@
-> =20
->  	gpio-keys {
->  		compatible =3D "gpio-keys";
-> -		#address-cells =3D <1>;
-> -		#size-cells =3D <0>;
->  		autorepeat;
->  		sw19 {
->  			label =3D "sw19";
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts b/arch/a=
-rm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
-> index 668f7f26716a..259f21b0c001 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
-> @@ -41,8 +41,6 @@
-> =20
->  	gpio-keys {
->  		compatible =3D "gpio-keys";
-> -		#address-cells =3D <1>;
-> -		#size-cells =3D <0>;
->  		autorepeat;
->  		sw19 {
->  			label =3D "sw19";
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts b/arch/a=
-rm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
-> index 9a9dd6a0142b..a61b3cc6f4c9 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
-> @@ -41,8 +41,6 @@
-> =20
->  	gpio-keys {
->  		compatible =3D "gpio-keys";
-> -		#address-cells =3D <1>;
-> -		#size-cells =3D <0>;
->  		autorepeat;
->  		sw19 {
->  			label =3D "sw19";
+> Record avnet prefix was sent by separate patch.
+> ---
+>  arch/arm64/boot/dts/xilinx/Makefile           |  1 +
+>  .../boot/dts/xilinx/avnet-ultra96-rev1.dts    | 19 +++++++++++++++++++=
+
+>  2 files changed, 20 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/xilinx/avnet-ultra96-rev1.dts
+>=20
+> diff --git a/arch/arm64/boot/dts/xilinx/Makefile b/arch/arm64/boot/dts/=
+xilinx/Makefile
+> index d452f80e7601..60f5443f3ef4 100644
+> --- a/arch/arm64/boot/dts/xilinx/Makefile
+> +++ b/arch/arm64/boot/dts/xilinx/Makefile
+> @@ -1,4 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> +dtb-$(CONFIG_ARCH_ZYNQMP) +=3D avnet-ultra96-rev1.dtb
+>  dtb-$(CONFIG_ARCH_ZYNQMP) +=3D zynqmp-zc1232-revA.dtb
+>  dtb-$(CONFIG_ARCH_ZYNQMP) +=3D zynqmp-zc1254-revA.dtb
+>  dtb-$(CONFIG_ARCH_ZYNQMP) +=3D zynqmp-zc1275-revA.dtb
+> diff --git a/arch/arm64/boot/dts/xilinx/avnet-ultra96-rev1.dts b/arch/a=
+rm64/boot/dts/xilinx/avnet-ultra96-rev1.dts
+> new file mode 100644
+> index 000000000000..88aa06fa78a8
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/xilinx/avnet-ultra96-rev1.dts
+> @@ -0,0 +1,19 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * dts file for Avnet Ultra96 rev1
+> + *
+> + * (C) Copyright 2018, Xilinx, Inc.
+> + *
+> + * Michal Simek <michal.simek@xilinx.com>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "zynqmp-zcu100-revC.dts"
+> +
+> +/ {
+> +	model =3D "Avnet Ultra96 Rev1";
+> +	compatible =3D "avnet,ultra96-rev1", "avnet,ultra96",
+> +		     "xlnx,zynqmp-zcu100-revC", "xlnx,zynqmp-zcu100",
+> +		     "xlnx,zynqmp";
+> +};
 >=20
 
 Applied.
@@ -123,9 +110,9 @@ U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP SoCs
 
 
 
---bpAOc0hM4YirHXmYmS6kfcoRqLeshgDHH--
+--fL0VbY7oosjZ8vhlV0HbmmaeaYZUnY7EE--
 
---rNj6OcjYfbJvEiaEta93scPgEff3uU0w7
+--Q4VoWRSlmvPqtZehKNftJlcapFmqIaoIV
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -133,9 +120,9 @@ Content-Disposition: attachment; filename="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iEYEARECAAYFAltOAD0ACgkQykllyylKDCFJ9gCfR4xAncQz6PzgQ/+BVn7ZWP3d
-1mgAoIjY4vHuoCrBpcTsKJL1IT5Vbju3
-=dHkX
+iEYEARECAAYFAltOAGIACgkQykllyylKDCFsxQCfYH1+JYQnMNxB4JzugDdMInPa
+bp8AoIe6BsggR0prRIkOpRrQTJnBpySl
+=b6+P
 -----END PGP SIGNATURE-----
 
---rNj6OcjYfbJvEiaEta93scPgEff3uU0w7--
+--Q4VoWRSlmvPqtZehKNftJlcapFmqIaoIV--
