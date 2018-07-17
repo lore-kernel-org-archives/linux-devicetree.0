@@ -1,84 +1,54 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v3 3/3] ARM: dts: i.MX6: imx6dl-mamoj: Add usb host and device support
-Date: Tue, 17 Jul 2018 14:55:26 +0530
-Message-ID: <20180717092526.32215-3-jagan@amarulasolutions.com>
-References: <20180717092526.32215-1-jagan@amarulasolutions.com>
+From: Li Wei <liwei213@huawei.com>
+Subject: [PATCH v11 3/4] [RESEND] arm64: dts: add ufs dts node
+Date: Tue, 17 Jul 2018 17:36:58 +0800
+Message-ID: <20180717093659.103263-4-liwei213@huawei.com>
+References: <20180717093659.103263-1-liwei213@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180717092526.32215-1-jagan@amarulasolutions.com>
+In-Reply-To: <20180717093659.103263-1-liwei213@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio maggi <fabio.mauri@bticino.it>, lamiaposta71@gmail.com, Andrea CORTESE <andrea.cortese@bticino.it>, Davide Bonfanti <davide.bonfanti@bticino.it>, Shyam Saini <shyam.saini@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, Simone CIANNI <simone.cianni@bticino.it>, Raffaele RECALCATI <raffaele.recalcati@bticino.it>, Jagan Teki <jagan@amarulasolutions.com>
+To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, khilman@baylibre.com, arnd@arndb.de, gregory.clement@free-electrons.com, thomas.petazzoni@free-electrons.com, yamada.masahiro@socionext.com, riku.voipio@linaro.org, treding@nvidia.com, krzk@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org
+Cc: zangleigang@hisilicon.com, gengjianfeng@hisilicon.com, sunzhaosheng@hisilicon.com, ian.rickards@arm.com, guodong.xu@linaro.org, puck.chen@hisilicon.com, john.stultz@linaro.org, liwei213@huawei.com, fengbaopeng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-From: Michael Trimarchi <michael@amarulasolutions.com>
+arm64: dts: add ufs node for Hisilicon.
 
-Add USB host and device support for BTicino i.MX6DL Mamoj board.
-
-Signed-off-by: Simone CIANNI <simone.cianni@bticino.it>
-Signed-off-by: Raffaele RECALCATI <raffaele.recalcati@bticino.it>
-Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+Signed-off-by: Li Wei <liwei213@huawei.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Tested-by: John Stultz <john.stultz@linaro.org>
 ---
-Changes for v3:
-- usbhost is replace with usbhostgrp on iomux node
-Changes for v2:
-- collect Fabio r-w-b tag
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
- arch/arm/boot/dts/imx6dl-mamoj.dts | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6dl-mamoj.dts b/arch/arm/boot/dts/imx6dl-mamoj.dts
-index 530cb20ccc86..df8607fe4142 100644
---- a/arch/arm/boot/dts/imx6dl-mamoj.dts
-+++ b/arch/arm/boot/dts/imx6dl-mamoj.dts
-@@ -134,6 +134,17 @@
- 		vin-supply = <&reg_lcd_vgl>;
- 	};
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index 8d477dcbfa58..851190a719ea 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -1000,6 +1000,24 @@
+ 			reset-gpios = <&gpio11 1 0 >;
+ 		};
  
-+	reg_usb_host: regulator-usb-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usbhost-vbus";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usbhost>;
-+		regulator-min-microvolt = <50000000>;
-+		regulator-max-microvolt = <50000000>;
-+		gpio = <&gpio6 6 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
++		/* UFS */
++		ufs: ufs@ff3b0000 {
++			compatible = "hisilicon,hi3660-ufs", "jedec,ufs-1.1";
++			/* 0: HCI standard */
++			/* 1: UFS SYS CTRL */
++			reg = <0x0 0xff3b0000 0x0 0x1000>,
++				<0x0 0xff3b1000 0x0 0x1000>;
++			interrupt-parent = <&gic>;
++			interrupts = <GIC_SPI 278 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&crg_ctrl HI3660_CLK_GATE_UFSIO_REF>,
++				<&crg_ctrl HI3660_CLK_GATE_UFSPHY_CFG>;
++			clock-names = "ref_clk", "phy_clk";
++			freq-table-hz = <0 0>, <0 0>;
++			/* offset: 0x84; bit: 12 */
++			resets = <&crg_rst 0x84 12>;
++			reset-names = "rst";
++		};
 +
- 	reg_wl18xx_vmmc:  regulator-wl18xx-vmcc {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vwl1807";
-@@ -297,6 +308,16 @@
- 	status = "okay";
- };
- 
-+&usbh1 {
-+	vbus-supply = <&reg_usb_host>;
-+	status = "okay";
-+};
-+
-+&usbotg {
-+	dr_mode = "peripheral";
-+	status = "okay";
-+};
-+
- &usdhc1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc1>;
-@@ -428,6 +449,12 @@
- 		>;
- 	};
- 
-+	pinctrl_usbhost: usbhostgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_A23__GPIO6_IO06		0x4001b0b0
-+		>;
-+	};
-+
- 	pinctrl_usdhc1: usdhc1grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_SD1_CMD__SD1_CMD    0x17069
+ 		/* SD */
+ 		dwmmc1: dwmmc1@ff37f000 {
+ 			#address-cells = <1>;
 -- 
-2.17.1
+2.15.0
