@@ -1,392 +1,84 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH] ARM: dts: vf610: Add ZII SSMB SPU3 board
-Date: Mon, 16 Jul 2018 21:06:51 -0700
-Message-ID: <20180717040651.641-1-andrew.smirnov@gmail.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v3 1/5] dt-bindings: fsi: Document binding for the
+ fsi-master-ast-cf "device"
+Date: Tue, 17 Jul 2018 14:12:15 +1000
+Message-ID: <7125cc74b640b941ea6f86e1f719cc25eeae9f78.camel@kernel.crashing.org>
+References: <20180712034847.12878-1-benh@kernel.crashing.org>
+         <20180712034847.12878-2-benh@kernel.crashing.org>
+         <20180716153308.GA13044@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180716153308.GA13044@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, cphealy@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
+To: Rob Herring <robh@kernel.org>
+Cc: linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for Zodiac Inflight Innovations SSMB SPU3
-board (VF610-based).
+On Mon, 2018-07-16 at 09:33 -0600, Rob Herring wrote:
+> On Thu, Jul 12, 2018 at 01:48:43PM +1000, Benjamin Herrenschmidt wrote:
+> > This isn't per-se a real device, it's a pseudo-device that
+> > represents the use of the Aspeed built-in ColdFire to
+> > implement the FSI protocol by bitbanging the GPIOs instead
+> > of doing it from the ARM core.
+> > 
+> > Thus it's a drop-in replacement for the existing
+> > fsi-master-gpio pseudo-device for use on systems based
+> > on the Aspeed chips. It has most of the same properties,
+> > plus some more needed to operate the coprocessor.
+> > 
+> > Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > ---
+> >  .../bindings/fsi/fsi-master-ast-cf.txt        | 36 +++++++++++++++++++
+> >  1 file changed, 36 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt b/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
+> > new file mode 100644
+> > index 000000000000..431bf8a423ce
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
+> > @@ -0,0 +1,36 @@
+> > +Device-tree bindings for ColdFire offloaded gpio-based FSI master driver
+> > +------------------------------------------------------------------------
+> > +
+> > +Required properties:
+> > + - compatible =
+> > +	"aspeed,ast2400-cf-fsi-master" for an AST2400 based system
+> > +   or
+> > +	"aspeed,ast2500-cf-fsi-master" for an AST2500 based system
+> > +
+> > + - clock-gpios = <gpio-descriptor>;	: GPIO for FSI clock
+> > + - data-gpios = <gpio-descriptor>;	: GPIO for FSI data signal
+> > + - enable-gpios = <gpio-descriptor>;	: GPIO for enable signal
+> > + - trans-gpios = <gpio-descriptor>;	: GPIO for voltage translator enable
+> > + - mux-gpios = <gpio-descriptor>;	: GPIO for pin multiplexing with other
+> > +                                          functions (eg, external FSI masters)
+> > + - memory-region = <phandle>;		: Reference to the reserved memory for
+> > +                                          the ColdFire. Must be 2M aligned on
+> > +					  AST2400 and 1M aligned on AST2500
+> > + - aspeed,sram = <phandle>;		: Reference to the SRAM node.
+> > + - aspeed,cvic = <phandle>;		: Reference to the CVIC node.
+> > +
+> > +Examples:
+> > +
+> > +    fsi-master {
+> > +        compatible = "aspeed,ast2500-cf-fsi-master", "fsi-master";
+> > +
+> > +	clock-gpios = <&gpio 0>;
+> > +        data-gpios = <&gpio 1>;
+> > +        enable-gpios = <&gpio 2>;
+> > +        trans-gpios = <&gpio 3>;
+> > +        mux-gpios = <&gpio 4>;
+> > +
+> > +	memory-region = <&coldfire_memory>;
+> > +	sram = <&sram>;
+> > +	cvic = <&cvic>;
+> 
+> Need to update the example. With that
 
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: cphealy@gmail.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- arch/arm/boot/dts/Makefile                |   3 +-
- arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts | 343 ++++++++++++++++++++++
- 2 files changed, 345 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
+Ah right, thanks. The next spin will have that fixed and will go into
+the fsi tree.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index bea41b129493..e331b2c16539 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -570,7 +570,8 @@ dtb-$(CONFIG_SOC_VF610) += \
- 	vf610m4-cosmic.dtb \
- 	vf610-twr.dtb \
- 	vf610-zii-dev-rev-b.dtb \
--	vf610-zii-dev-rev-c.dtb
-+	vf610-zii-dev-rev-c.dtb \
-+	vf610-zii-ssmb-spu3.dtb
- dtb-$(CONFIG_ARCH_MXS) += \
- 	imx23-evk.dtb \
- 	imx23-olinuxino.dtb \
-diff --git a/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts b/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
-new file mode 100644
-index 000000000000..b692117d7839
---- /dev/null
-+++ b/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
-@@ -0,0 +1,343 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+
-+/*
-+ * Device tree file for ZII's SSMB SPU3 board
-+ *
-+ * SSMB - SPU3 Switch Management Board
-+ * SPU - Seat Power Unit
-+ *
-+ * Copyright (C) 2015, 2016 Zodiac Inflight Innovations
-+ *
-+ * Based on an original 'vf610-twr.dts' which is Copyright 2015,
-+ * Freescale Semiconductor, Inc.
-+ */
-+
-+/dts-v1/;
-+#include "vf610.dtsi"
-+
-+/ {
-+	model = "ZII VF610 SSMB SPU3 Board";
-+	compatible = "zii,vf610spu3", "zii,vf610dev", "fsl,vf610";
-+
-+	chosen {
-+		stdout-path = &uart0;
-+	};
-+
-+	memory {
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+		pinctrl-0 = <&pinctrl_leds_debug>;
-+		pinctrl-names = "default";
-+
-+		led-debug {
-+			label = "zii:green:debug1";
-+			gpios = <&gpio2 18 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+			max-brightness = <1>;
-+		};
-+	};
-+
-+	reg_vcc_3v3_mcu: regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_3v3_mcu";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
-+
-+&adc0 {
-+	vref-supply = <&reg_vcc_3v3_mcu>;
-+	status = "okay";
-+};
-+
-+&adc1 {
-+	vref-supply = <&reg_vcc_3v3_mcu>;
-+	status = "okay";
-+};
-+
-+&dspi1 {
-+	bus-num = <1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_dspi1>;
-+	/*
-+	 * Some SPU3s come with SPI-NOR chip DNPed, so we leave this
-+	 * node disabled by default and rely on bootloader to enable
-+	 * it when appropriate.
-+	 */
-+	status = "disabled";
-+
-+	m25p128@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "m25p128", "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <50000000>;
-+
-+		partition@0 {
-+			label = "m25p128-0";
-+			reg = <0x0 0x01000000>;
-+		};
-+	};
-+};
-+
-+&edma0 {
-+	status = "okay";
-+};
-+
-+&edma1 {
-+	status = "okay";
-+};
-+
-+&esdhc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_esdhc0>;
-+	bus-width = <8>;
-+	non-removable;
-+	no-1-8-v;
-+	keep-power-in-suspend;
-+	status = "okay";
-+};
-+
-+&esdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_esdhc1>;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	phy-mode = "rmii";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1>;
-+	status = "okay";
-+
-+	fixed-link {
-+		speed = <100>;
-+		full-duplex;
-+	};
-+
-+	mdio1: mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "okay";
-+
-+		switch0: switch0@0 {
-+			compatible = "marvell,mv88e6190";
-+			pinctrl-0 = <&pinctrl_gpio_switch0>;
-+			pinctrl-names = "default";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+			eeprom-length = <65536>;
-+			reset-gpios = <&gpio3 11 GPIO_ACTIVE_LOW>;
-+			interrupt-parent = <&gpio3>;
-+			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					label = "cpu";
-+					ethernet = <&fec1>;
-+
-+					fixed-link {
-+						speed = <100>;
-+						full-duplex;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					label = "eth_cu_1000_1";
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					label = "eth_cu_1000_2";
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					label = "eth_cu_1000_3";
-+				};
-+
-+				port@4 {
-+					reg = <4>;
-+					label = "eth_cu_1000_4";
-+				};
-+
-+				port@5 {
-+					reg = <5>;
-+					label = "eth_cu_1000_5";
-+				};
-+
-+				port@6 {
-+					reg = <6>;
-+					label = "eth_cu_1000_6";
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&i2c0 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c0>;
-+	status = "okay";
-+
-+	gpio6: pca9505@22 {
-+		compatible = "nxp,pca9554";
-+		reg = <0x22>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	lm75@48 {
-+		compatible = "national,lm75";
-+		reg = <0x48>;
-+	};
-+
-+	at24c04@50 {
-+		compatible = "atmel,24c04";
-+		reg = <0x50>;
-+		label = "nameplate";
-+	};
-+
-+	at24c04@52 {
-+		compatible = "atmel,24c04";
-+		reg = <0x52>;
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart0>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+
-+	rave-sp {
-+		compatible = "zii,rave-sp-rdu2";
-+		current-speed = <1000000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		watchdog {
-+			compatible = "zii,rave-sp-watchdog";
-+		};
-+
-+		eeprom@a3 {
-+			compatible = "zii,rave-sp-eeprom";
-+			reg = <0xa3 0x4000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			zii,eeprom-name = "main-eeprom";
-+		};
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl_dspi1: dspi1grp {
-+		fsl,pins = <
-+			VF610_PAD_PTD5__DSPI1_CS0		0x1182
-+			VF610_PAD_PTD4__DSPI1_CS1		0x1182
-+			VF610_PAD_PTC6__DSPI1_SIN		0x1181
-+			VF610_PAD_PTC7__DSPI1_SOUT		0x1182
-+			VF610_PAD_PTC8__DSPI1_SCK		0x1182
-+		>;
-+	};
-+
-+	pinctrl_esdhc0: esdhc0grp {
-+		fsl,pins = <
-+			VF610_PAD_PTC0__ESDHC0_CLK		0x31ef
-+			VF610_PAD_PTC1__ESDHC0_CMD		0x31ef
-+			VF610_PAD_PTC2__ESDHC0_DAT0		0x31ef
-+			VF610_PAD_PTC3__ESDHC0_DAT1		0x31ef
-+			VF610_PAD_PTC4__ESDHC0_DAT2		0x31ef
-+			VF610_PAD_PTC5__ESDHC0_DAT3		0x31ef
-+			VF610_PAD_PTD23__ESDHC0_DAT4		0x31ef
-+			VF610_PAD_PTD22__ESDHC0_DAT5		0x31ef
-+			VF610_PAD_PTD21__ESDHC0_DAT6		0x31ef
-+			VF610_PAD_PTD20__ESDHC0_DAT7		0x31ef
-+		>;
-+	};
-+
-+	pinctrl_esdhc1: esdhc1grp {
-+		fsl,pins = <
-+			VF610_PAD_PTA24__ESDHC1_CLK		0x31ef
-+			VF610_PAD_PTA25__ESDHC1_CMD		0x31ef
-+			VF610_PAD_PTA26__ESDHC1_DAT0		0x31ef
-+			VF610_PAD_PTA27__ESDHC1_DAT1		0x31ef
-+			VF610_PAD_PTA28__ESDHC1_DATA2		0x31ef
-+			VF610_PAD_PTA29__ESDHC1_DAT3		0x31ef
-+		>;
-+	};
-+
-+	pinctrl_fec1: fec1grp {
-+		fsl,pins = <
-+			VF610_PAD_PTA6__RMII_CLKIN		0x30d1
-+			VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
-+			VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
-+			VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
-+			VF610_PAD_PTC12__ENET_RMII1_RXD1	0x30d1
-+			VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
-+			VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
-+			VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
-+			VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
-+			VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
-+		>;
-+	};
-+
-+	pinctrl_gpio_switch0: pinctrl-gpio-switch0 {
-+		fsl,pins = <
-+			VF610_PAD_PTE2__GPIO_107		0x31c2
-+			VF610_PAD_PTB28__GPIO_98		0x219d
-+		>;
-+	};
-+
-+	pinctrl_i2c0: i2c0grp {
-+		fsl,pins = <
-+			VF610_PAD_PTB14__I2C0_SCL		0x37ff
-+			VF610_PAD_PTB15__I2C0_SDA		0x37ff
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			VF610_PAD_PTB16__I2C1_SCL		0x37ff
-+			VF610_PAD_PTB17__I2C1_SDA		0x37ff
-+		>;
-+	};
-+
-+	pinctrl_leds_debug: pinctrl-leds-debug {
-+		fsl,pins = <
-+			VF610_PAD_PTD3__GPIO_82			0x31c2
-+		>;
-+	};
-+
-+	pinctrl_uart0: uart0grp {
-+		fsl,pins = <
-+			VF610_PAD_PTB10__UART0_TX		0x21a2
-+			VF610_PAD_PTB11__UART0_RX		0x21a1
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			VF610_PAD_PTB23__UART1_TX		0x21a2
-+			VF610_PAD_PTB24__UART1_RX		0x21a1
-+		>;
-+	};
-+};
--- 
-2.17.1
+> Reviewed-by: Rob Herring <robh@kernel.org>
