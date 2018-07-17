@@ -1,31 +1,90 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH V2] ARM: dts: make pfuze switch always-on for imx
- platforms
-Date: Tue, 17 Jul 2018 10:40:28 +0800
-Message-ID: <20180717024027.GA4576@dragon>
-References: <1530063055-25914-1-git-send-email-Anson.Huang@nxp.com>
- <AM3PR04MB1315B66212D928D7EAF27557F5580@AM3PR04MB1315.eurprd04.prod.outlook.com>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v5 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
+ driver
+Date: Tue, 17 Jul 2018 08:20:14 +0530
+Message-ID: <6a75b366-8290-e820-571c-675c060e573e@codeaurora.org>
+References: <1531418745-19742-1-git-send-email-tdas@codeaurora.org>
+ <1531418745-19742-3-git-send-email-tdas@codeaurora.org>
+ <CAE=gft7pVnhbEtOyR7Q8n_WuL_RsttrxN+sp=_EPyR=D3NPv9g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <AM3PR04MB1315B66212D928D7EAF27557F5580@AM3PR04MB1315.eurprd04.prod.outlook.com>
+In-Reply-To: <CAE=gft7pVnhbEtOyR7Q8n_WuL_RsttrxN+sp=_EPyR=D3NPv9g@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Evan Green <evgreen@google.com>
+Cc: rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, sboyd@kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, anischal@codeaurora.org, devicetree@vger.kernel.org, robh@kernel.org, Saravana Kannan <skannan@codeaurora.org>, amit.kucheria@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 13, 2018 at 02:16:55AM +0000, Anson Huang wrote:
-> Hi, Shawn
-> 	Although the commit 5fe156f1cab4 ("regulator: pfuze100: add enable/disable for switch") is reverted to avoid the boot failure on some i.MX platforms, but adding the "regulator-always-on" property for those pfuze's critical switches are the right way and making sense, no matter how the pfuze regulator's switch ON/OFF function will be implemented, below patches should can be applied anyway?
-> 
-> ARM: dts: imx6sll-evk: make pfuze100 sw4 always on
-> ARM: dts: make pfuze switch always-on for imx platforms
-> ARM: dts: imx6sl-evk: keep sw4 always on
-> 
-> 	Let me know your thoughts, thanks!
+Hello Evan,
 
-Okay, resend them as a series with commit log updated, since the commit
-log doesn't reflect the current situation any longer.
+Thank you for testing the patch.
 
-Shawn
+On 7/17/2018 4:32 AM, Evan Green wrote:
+> Hi Taniya,
+> On Thu, Jul 12, 2018 at 11:06 AM Taniya Das <tdas@codeaurora.org> wrote:
+>>
+>> The CPUfreq HW present in some QCOM chipsets offloads the steps necessary
+>> for changing the frequency of CPUs. The driver implements the cpufreq
+>> driver interface for this hardware engine.
+>>
+>> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+>> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+>> ---
+>>   drivers/cpufreq/Kconfig.arm       |  10 ++
+>>   drivers/cpufreq/Makefile          |   1 +
+>>   drivers/cpufreq/qcom-cpufreq-hw.c | 344 ++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 355 insertions(+)
+>>   create mode 100644 drivers/cpufreq/qcom-cpufreq-hw.c
+>>
+> ...
+>> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+>> new file mode 100644
+>> index 0000000..fa25a95
+>> --- /dev/null
+>> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+> ...
+>> +static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
+>> +{
+>> +       struct cpufreq_qcom *c;
+>> +
+>> +       c = qcom_freq_domain_map[policy->cpu];
+>> +       if (!c) {
+>> +               pr_err("No scaling support for CPU%d\n", policy->cpu);
+>> +               return -ENODEV;
+>> +       }
+>> +
+>> +       cpumask_copy(policy->cpus, &c->related_cpus);
+>> +
+>> +       policy->fast_switch_possible = true;
+>> +       policy->freq_table = c->table;
+>> +       policy->driver_data = c;
+>> +
+>> +       return 0;
+> I haven't looked at this driver in detail, but I have tested it.
+> Instead of the line above, I needed:
+> 
+> return cpufreq_table_validate_and_show(policy, c->table);
+> 
+> Without this the framework thinks that the min and max frequencies are
+> zero, and then you get a warning about an invalid table. I also
+> removed "policy->freq_table = c->table", since validate_and_show does
+> this.
+> -Evan
+> 
+
+The API is no longer supported,
+
+https://patchwork.kernel.org/patch/10320897/
+
+If you are using the 4.14 kernel, you do need to replace
+
+-policy->freq_table = c->table;
++cpufreq_table_validate_and_show(policy, c->table);
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
