@@ -1,33 +1,97 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH 4/5] thermal: exynos: fixed the efuse min/max value for exynos5422
-Date: Wed, 18 Jul 2018 01:28:31 +0530
-Message-ID: <CANAwSgSwKBFDSWAF2dox9c7DAKKbHShXBNtSUcea2FdoR=80yg@mail.gmail.com>
-References: <1531822342-4293-1-git-send-email-linux.amoon@gmail.com>
- <1531822342-4293-4-git-send-email-linux.amoon@gmail.com> <CAJKOXPfOiTARmtkcJeC49RicWOt8q98GKPJOQkYmqG_nJtY=aQ@mail.gmail.com>
+From: Jolly Shah <jolly.shah@xilinx.com>
+Subject: [PATCH v10 04/10] firmware: xilinx: Add query data API
+Date: Tue, 17 Jul 2018 12:59:01 -0700
+Message-ID: <1531857547-16652-5-git-send-email-jollys@xilinx.com>
+References: <1531857547-16652-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPfOiTARmtkcJeC49RicWOt8q98GKPJOQkYmqG_nJtY=aQ@mail.gmail.com>
+In-Reply-To: <1531857547-16652-1-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+To: ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
+Cc: rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+From: Rajan Vaja <rajanv@xilinx.com>
 
-On 17 July 2018 at 17:58, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On 17 July 2018 at 12:12, Anand Moon <linux.amoon@gmail.com> wrote:
->> e-fuse range min~max range is 16~76. if e-fuse value is out of
->
-> s/e-fuse/Fuse/
-> s/if/If/
->
-> Can you share the sources confirming that fuse values are between 16 and 76?
->
-Below is my patch :
-https://github.com/hardkernel/linux/commit/52c4c9b295930bc53b215d38e274aeb0780917f1
+Add ZynqMP firmware query data API to query platform
+specific information(clocks, pins) from firmware.
 
-e-Fuse range min/max values are from exynos5422 user manual.
+Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+Signed-off-by: Jolly Shah <jollys@xilinx.com>
+---
+ drivers/firmware/xilinx/zynqmp.c     | 14 ++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h | 20 ++++++++++++++++++++
+ 2 files changed, 34 insertions(+)
 
-Best Regards
--Anand
+diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+index 24cfd9e..8ec5682 100644
+--- a/drivers/firmware/xilinx/zynqmp.c
++++ b/drivers/firmware/xilinx/zynqmp.c
+@@ -260,9 +260,23 @@ static int zynqmp_pm_ioctl(u32 node_id, u32 ioctl_id, u32 arg1, u32 arg2,
+ 				   arg1, arg2, out);
+ }
+ 
++/**
++ * zynqmp_pm_query_data() - Get query data from firmware
++ * @qdata:	Variable to the zynqmp_pm_query_data structure
++ * @out:	Returned output value
++ *
++ * Return: Returns status, either success or error+reason
++ */
++static int zynqmp_pm_query_data(struct zynqmp_pm_query_data qdata, u32 *out)
++{
++	return zynqmp_pm_invoke_fn(PM_QUERY_DATA, qdata.qid, qdata.arg1,
++				   qdata.arg2, qdata.arg3, out);
++}
++
+ static const struct zynqmp_eemi_ops eemi_ops = {
+ 	.get_api_version = zynqmp_pm_get_api_version,
+ 	.ioctl = zynqmp_pm_ioctl,
++	.query_data = zynqmp_pm_query_data,
+ };
+ 
+ /**
+diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+index 2eec6e7..55ed2ba 100644
+--- a/include/linux/firmware/xlnx-zynqmp.h
++++ b/include/linux/firmware/xlnx-zynqmp.h
+@@ -35,6 +35,7 @@
+ enum pm_api_id {
+ 	PM_GET_API_VERSION = 1,
+ 	PM_IOCTL = 34,
++	PM_QUERY_DATA,
+ };
+ 
+ /* PMU-FW return status codes */
+@@ -48,9 +49,28 @@ enum pm_ret_status {
+ 	XST_PM_ABORT_SUSPEND,
+ };
+ 
++enum pm_query_id {
++	PM_QID_INVALID,
++};
++
++/**
++ * struct zynqmp_pm_query_data - PM query data
++ * @qid:	query ID
++ * @arg1:	Argument 1 of query data
++ * @arg2:	Argument 2 of query data
++ * @arg3:	Argument 3 of query data
++ */
++struct zynqmp_pm_query_data {
++	u32 qid;
++	u32 arg1;
++	u32 arg2;
++	u32 arg3;
++};
++
+ struct zynqmp_eemi_ops {
+ 	int (*get_api_version)(u32 *version);
+ 	int (*ioctl)(u32 node_id, u32 ioctl_id, u32 arg1, u32 arg2, u32 *out);
++	int (*query_data)(struct zynqmp_pm_query_data qdata, u32 *out);
+ };
+ 
+ #if IS_REACHABLE(CONFIG_ARCH_ZYNQMP)
+-- 
+2.7.4
