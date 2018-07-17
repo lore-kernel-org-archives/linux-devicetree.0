@@ -1,234 +1,176 @@
-From: Tali Perry <tali.perry1@gmail.com>
-Subject: [PATCH v1 1/1] clk: npcm7xx: get fixed clocks from DT
-Date: Tue, 17 Jul 2018 15:47:42 +0300
-Message-ID: <20180717124742.31099-2-tali.perry1@gmail.com>
-References: <20180717124742.31099-1-tali.perry1@gmail.com>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v5 04/11] soc: mediatek: add MT6765 scpsys support
+Date: Tue, 17 Jul 2018 21:00:13 +0800
+Message-ID: <1531832413.8953.30.camel@mtkswgap22>
+References: <1531817552-17221-1-git-send-email-mars.cheng@mediatek.com>
+         <1531817552-17221-5-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180717124742.31099-1-tali.perry1@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sboyd@kernel.org, brendanhiggins@google.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, weiyongjunl@huawei.com, avifishman70@gmail.com, tmaimon77@gmail.com, raltherr@google.com
-Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>, Wei Yongjun <weiyongjun1@huawei.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1531817552-17221-5-git-send-email-mars.cheng@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mars Cheng <mars.cheng@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Stephen Boyd <sboyd@kernel.org>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Owen Chen <owen.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Nuvoton NPCM7XX Clock Controller
-fix base address and of_clk_get_by_name error handling.
-    Also update error messages to be more informative.
-    
-    In case clk_base allocation is erronoeous the return value is null.
-    Also fix handling of of_clk_get_by_name returns an error. 
-    Print a better error message pointing to the dt-binding documention.
+On Tue, 2018-07-17 at 16:52 +0800, Mars Cheng wrote:
+> This adds scpsys support for MT6765
+> 
 
-This patch is re-submitted since it was already pushed to main 
-(just the diff, without the full driver which is already in 
-master branch.)
+it looks like 4/11 have to depend on 6/11 and 7/11 to get a full function on scpsys for MT6765.
 
+you should keep dependency in order to submit these patches
 
-Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> Signed-off-by: Owen Chen <owen.chen@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-scpsys.c        |   88 ++++++++++++++++++++++++++++++
+>  include/dt-bindings/power/mt6765-power.h |   14 +++++
+>  2 files changed, 102 insertions(+)
+>  create mode 100644 include/dt-bindings/power/mt6765-power.h
+> 
+> diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+> index 5b24bb4..4bb6c7a 100644
+> --- a/drivers/soc/mediatek/mtk-scpsys.c
+> +++ b/drivers/soc/mediatek/mtk-scpsys.c
+> @@ -23,6 +23,7 @@
+>  
+>  #include <dt-bindings/power/mt2701-power.h>
+>  #include <dt-bindings/power/mt2712-power.h>
+> +#include <dt-bindings/power/mt6765-power.h>
+>  #include <dt-bindings/power/mt6797-power.h>
+>  #include <dt-bindings/power/mt7622-power.h>
+>  #include <dt-bindings/power/mt7623a-power.h>
+> @@ -680,6 +681,79 @@ static void mtk_register_power_domains(struct platform_device *pdev,
+>  };
+>  
+>  /*
+> + * MT6765 power domain support
+> + */
+> +#define SPM_PWR_STATUS_MT6765			0x0180
+> +#define SPM_PWR_STATUS_2ND_MT6765		0x0184
+> +
+> +static const struct scp_domain_data scp_domain_data_mt6765[] = {
+> +	[MT6765_POWER_DOMAIN_VCODEC] = {
+> +		.name = "vcodec",
+> +		.sta_mask = BIT(26),
+> +		.ctl_offs = 0x300,
+> +		.sram_pdn_bits = GENMASK(8, 8),
+> +		.sram_pdn_ack_bits = GENMASK(12, 12),
+> +	},
+> +	[MT6765_POWER_DOMAIN_ISP] = {
+> +		.name = "isp",
+> +		.sta_mask = BIT(5),
+> +		.ctl_offs = 0x308,
+> +		.sram_pdn_bits = GENMASK(8, 8),
+> +		.sram_pdn_ack_bits = GENMASK(12, 12),
+> +	},
+> +	[MT6765_POWER_DOMAIN_MM] = {
+> +		.name = "mm",
+> +		.sta_mask = BIT(3),
+> +		.ctl_offs = 0x30C,
+> +		.sram_pdn_bits = GENMASK(8, 8),
+> +		.sram_pdn_ack_bits = GENMASK(12, 12),
+> +	},
+> +	[MT6765_POWER_DOMAIN_CONN] = {
+> +		.name = "conn",
+> +		.sta_mask = BIT(1),
+> +		.ctl_offs = 0x32C,
+> +		.sram_pdn_bits = 0,
+> +		.sram_pdn_ack_bits = 0,
+> +	},
+> +	[MT6765_POWER_DOMAIN_MFG_ASYNC] = {
+> +		.name = "mfg_async",
+> +		.sta_mask = BIT(23),
+> +		.ctl_offs = 0x334,
+> +		.sram_pdn_bits = 0,
+> +		.sram_pdn_ack_bits = 0,
+> +	},
+> +	[MT6765_POWER_DOMAIN_MFG] = {
+> +		.name = "mfg",
+> +		.sta_mask = BIT(4),
+> +		.ctl_offs = 0x338,
+> +		.sram_pdn_bits = GENMASK(8, 8),
+> +		.sram_pdn_ack_bits = GENMASK(12, 12),
+> +	},
+> +	[MT6765_POWER_DOMAIN_CAM] = {
+> +		.name = "cam",
+> +		.sta_mask = BIT(25),
+> +		.ctl_offs = 0x344,
+> +		.sram_pdn_bits = GENMASK(8, 9),
+> +		.sram_pdn_ack_bits = GENMASK(12, 13),
+> +	},
+> +	[MT6765_POWER_DOMAIN_MFG_CORE0] = {
+> +		.name = "mfg_core0",
+> +		.sta_mask = BIT(7),
+> +		.ctl_offs = 0x34C,
+> +		.sram_pdn_bits = GENMASK(8, 8),
+> +		.sram_pdn_ack_bits = GENMASK(12, 12),
+> +	},
 
----
- drivers/clk/clk-npcm7xx.c | 99 +++++++++++++++++++++++++++++++++++------------
- 1 file changed, 75 insertions(+), 24 deletions(-)
+Above power domains really don't require any clock controlled with
+clk_id before any access on them?
 
-diff --git a/drivers/clk/clk-npcm7xx.c b/drivers/clk/clk-npcm7xx.c
-index 740af90a9508..91a937720f4e 100644
---- a/drivers/clk/clk-npcm7xx.c
-+++ b/drivers/clk/clk-npcm7xx.c
-@@ -7,17 +7,26 @@
-  * Copyright (C) 2018 Nuvoton Technologies tali.perry@nuvoton.com
-  */
- 
--#include <linux/module.h>
--#include <linux/clk-provider.h>
--#include <linux/io.h>
--#include <linux/kernel.h>
--#include <linux/of.h>
--#include <linux/of_address.h>
--#include <linux/slab.h>
--#include <linux/err.h>
--#include <linux/bitfield.h>
--
--#include <dt-bindings/clock/nuvoton,npcm7xx-clock.h>
-+
-+
-+
-+ #include <linux/module.h>
-+ #include <linux/clk.h>
-+ #include <linux/clk-provider.h>
-+ #include <linux/device.h>
-+ #include <linux/io.h>
-+ #include <linux/kernel.h>
-+ #include <linux/of.h>
-+ #include <linux/of_device.h>
-+ #include <linux/of_platform.h>
-+ #include <linux/of_address.h>
-+ #include <linux/platform_device.h>
-+ #include <linux/slab.h>
-+ #include <linux/err.h>
-+ #include <linux/rational.h>
-+ #include <linux/bitfield.h>
-+ #include <dt-bindings/clock/nuvoton,npcm7xx-clock.h>
-+
- 
- struct npcm7xx_clk_pll {
- 	struct clk_hw	hw;
-@@ -27,6 +36,9 @@ struct npcm7xx_clk_pll {
- 
- #define to_npcm7xx_clk_pll(_hw) container_of(_hw, struct npcm7xx_clk_pll, hw)
- 
-+static struct clk_hw *npcm7xx_clk_register_pll(void __iomem *pllcon,
-+	const char *name, const char *parent_name, unsigned long flags);
-+
- #define PLLCON_LOKI	BIT(31)
- #define PLLCON_LOKS	BIT(30)
- #define PLLCON_FBDV	GENMASK(27, 16)
-@@ -44,7 +56,8 @@ static unsigned long npcm7xx_clk_pll_recalc_rate(struct clk_hw *hw,
- 	u64 ret;
- 
- 	if (parent_rate == 0) {
--		pr_err("%s: parent rate is zero", __func__);
-+		pr_err("%s: parent rate is zero. reg=%x\n", __func__,
-+			(u32)(pll->pllcon));
- 		return 0;
- 	}
- 
-@@ -61,13 +74,12 @@ static unsigned long npcm7xx_clk_pll_recalc_rate(struct clk_hw *hw,
- 	return ret;
- }
- 
--static const struct clk_ops npcm7xx_clk_pll_ops = {
-+const struct clk_ops npcm7xx_clk_pll_ops = {
- 	.recalc_rate = npcm7xx_clk_pll_recalc_rate,
- };
- 
--static struct clk_hw *
--npcm7xx_clk_register_pll(void __iomem *pllcon, const char *name,
--			 const char *parent_name, unsigned long flags)
-+static struct clk_hw *npcm7xx_clk_register_pll(void __iomem *pllcon,
-+		const char *name, const char *parent_name, unsigned long flags)
- {
- 	struct npcm7xx_clk_pll *pll;
- 	struct clk_init_data init;
-@@ -78,7 +90,8 @@ npcm7xx_clk_register_pll(void __iomem *pllcon, const char *name,
- 	if (!pll)
- 		return ERR_PTR(-ENOMEM);
- 
--	pr_debug("%s reg, name=%s, p=%s\n", __func__, name, parent_name);
-+	pr_debug("%s reg, reg=0x%x, name=%s, p=%s\n",
-+		__func__, (unsigned int)pllcon, name, parent_name);
- 
- 	init.name = name;
- 	init.ops = &npcm7xx_clk_pll_ops;
-@@ -544,9 +557,11 @@ static void __init npcm7xx_clk_init(struct device_node *clk_np)
- 	void __iomem *clk_base;
- 	struct resource res;
- 	struct clk_hw *hw;
-+	struct clk *clk;
- 	int ret;
- 	int i;
- 
-+	clk_base = NULL;
- 	ret = of_address_to_resource(clk_np, 0, &res);
- 	if (ret) {
- 		pr_err("%s: failed to get resource, ret %d\n", clk_np->name,
-@@ -560,14 +575,44 @@ static void __init npcm7xx_clk_init(struct device_node *clk_np)
- 
- 	npcm7xx_clk_data = kzalloc(sizeof(*npcm7xx_clk_data->hws) *
- 		NPCM7XX_NUM_CLOCKS + sizeof(npcm7xx_clk_data), GFP_KERNEL);
--	if (!npcm7xx_clk_data)
-+
-+	npcm7xx_clk_data->num = 0;
-+
-+	if (!npcm7xx_clk_data->hws) {
-+		pr_err("Can't alloc npcm7xx_clk_data\n");
- 		goto npcm7xx_init_np_err;
-+	}
- 
- 	npcm7xx_clk_data->num = NPCM7XX_NUM_CLOCKS;
- 
- 	for (i = 0; i < NPCM7XX_NUM_CLOCKS; i++)
- 		npcm7xx_clk_data->hws[i] = ERR_PTR(-EPROBE_DEFER);
- 
-+	/* Read fixed clocks. These 3 clocks must be defined in DT */
-+	clk = of_clk_get_by_name(clk_np, NPCM7XX_CLK_S_REFCLK);
-+	if (IS_ERR(clk)) {
-+		pr_err("failed to find external REFCLK on device tree, err=%ld\n",
-+			PTR_ERR(clk));
-+		clk_put(clk);
-+		goto npcm7xx_init_fail_no_clk_on_dt;
-+	}
-+
-+	clk = of_clk_get_by_name(clk_np, NPCM7XX_CLK_S_SYSBYPCK);
-+	if (IS_ERR(clk)) {
-+		pr_err("failed to find external SYSBYPCK on device tree, err=%ld\n",
-+			PTR_ERR(clk));
-+		clk_put(clk);
-+		goto npcm7xx_init_fail_no_clk_on_dt;
-+	}
-+
-+	clk = of_clk_get_by_name(clk_np, NPCM7XX_CLK_S_MCBYPCK);
-+	if (IS_ERR(clk)) {
-+		pr_err("failed to find external MCBYPCK on device tree, err=%ld\n",
-+			PTR_ERR(clk));
-+		clk_put(clk);
-+		goto npcm7xx_init_fail_no_clk_on_dt;
-+	}
-+
- 	/* Register plls */
- 	for (i = 0; i < ARRAY_SIZE(npcm7xx_plls); i++) {
- 		const struct npcm7xx_clk_pll_data *pll_data = &npcm7xx_plls[i];
-@@ -584,16 +629,16 @@ static void __init npcm7xx_clk_init(struct device_node *clk_np)
- 	}
- 
- 	/* Register fixed dividers */
--	hw = clk_hw_register_fixed_factor(NULL, NPCM7XX_CLK_S_PLL1_DIV2,
-+	clk = clk_register_fixed_factor(NULL, NPCM7XX_CLK_S_PLL1_DIV2,
- 			NPCM7XX_CLK_S_PLL1, 0, 1, 2);
--	if (IS_ERR(hw)) {
-+	if (IS_ERR(clk)) {
- 		pr_err("npcm7xx_clk: Can't register fixed div\n");
- 		goto npcm7xx_init_fail;
- 	}
- 
--	hw = clk_hw_register_fixed_factor(NULL, NPCM7XX_CLK_S_PLL2_DIV2,
-+	clk = clk_register_fixed_factor(NULL, NPCM7XX_CLK_S_PLL2_DIV2,
- 			NPCM7XX_CLK_S_PLL2, 0, 1, 2);
--	if (IS_ERR(hw)) {
-+	if (IS_ERR(clk)) {
- 		pr_err("npcm7xx_clk: Can't register div2\n");
- 		goto npcm7xx_init_fail;
- 	}
-@@ -646,11 +691,17 @@ static void __init npcm7xx_clk_init(struct device_node *clk_np)
- 
- 	return;
- 
-+npcm7xx_init_fail_no_clk_on_dt:
-+	pr_err("see Documentation/devicetree/bindings/clock/");
-+	pr_err("nuvoton,npcm750-clk.txt  for details\n");
- npcm7xx_init_fail:
--	kfree(npcm7xx_clk_data->hws);
-+	if (npcm7xx_clk_data->num)
-+		kfree(npcm7xx_clk_data->hws);
- npcm7xx_init_np_err:
--	iounmap(clk_base);
-+	if (clk_base != NULL)
-+		iounmap(clk_base);
- npcm7xx_init_error:
- 	of_node_put(clk_np);
-+	pr_err("clk setup fail\n");
- }
- CLK_OF_DECLARE(npcm7xx_clk_init, "nuvoton,npcm750-clk", npcm7xx_clk_init);
--- 
-2.14.1
+> +};
+> +
+> +static const struct scp_subdomain scp_subdomain_mt6765[] = {
+> +	{MT6765_POWER_DOMAIN_MM, MT6765_POWER_DOMAIN_CAM},
+> +	{MT6765_POWER_DOMAIN_MM, MT6765_POWER_DOMAIN_ISP},
+> +	{MT6765_POWER_DOMAIN_MM, MT6765_POWER_DOMAIN_VCODEC},
+> +	{MT6765_POWER_DOMAIN_MFG_ASYNC, MT6765_POWER_DOMAIN_MFG},
+> +	{MT6765_POWER_DOMAIN_MFG, MT6765_POWER_DOMAIN_MFG_CORE0},
+> +};
+> +
+> +/*
+>   * MT6797 power domain support
+>   */
+>  
+> @@ -962,6 +1036,17 @@ static void mtk_register_power_domains(struct platform_device *pdev,
+>  	.bus_prot_reg_update = false,
+>  };
+>  
+> +static const struct scp_soc_data mt6765_data = {
+> +	.domains = scp_domain_data_mt6765,
+> +	.num_domains = ARRAY_SIZE(scp_domain_data_mt6765),
+> +	.subdomains = scp_subdomain_mt6765,
+> +	.num_subdomains = ARRAY_SIZE(scp_subdomain_mt6765),
+> +	.regs = {
+> +		.pwr_sta_offs = SPM_PWR_STATUS_MT6765,
+> +		.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND_MT6765,
+> +	},
+> +};
+> +
+>  static const struct scp_soc_data mt6797_data = {
+>  	.domains = scp_domain_data_mt6797,
+>  	.num_domains = ARRAY_SIZE(scp_domain_data_mt6797),
+> @@ -1018,6 +1103,9 @@ static void mtk_register_power_domains(struct platform_device *pdev,
+>  		.compatible = "mediatek,mt2712-scpsys",
+>  		.data = &mt2712_data,
+>  	}, {
+> +		.compatible = "mediatek,mt6765-scpsys",
+> +		.data = &mt6765_data,
+> +	}, {
+>  		.compatible = "mediatek,mt6797-scpsys",
+>  		.data = &mt6797_data,
+>  	}, {
+> diff --git a/include/dt-bindings/power/mt6765-power.h b/include/dt-bindings/power/mt6765-power.h
+> new file mode 100644
+> index 0000000..d347b4e
+> --- /dev/null
+> +++ b/include/dt-bindings/power/mt6765-power.h
+> @@ -0,0 +1,14 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _DT_BINDINGS_POWER_MT6765_POWER_H
+> +#define _DT_BINDINGS_POWER_MT6765_POWER_H
+> +
+> +#define MT6765_POWER_DOMAIN_CONN		0
+> +#define MT6765_POWER_DOMAIN_MM			1
+> +#define MT6765_POWER_DOMAIN_MFG_ASYNC		2
+> +#define MT6765_POWER_DOMAIN_ISP			3
+> +#define MT6765_POWER_DOMAIN_MFG			4
+> +#define MT6765_POWER_DOMAIN_MFG_CORE0		5
+> +#define MT6765_POWER_DOMAIN_CAM			6
+> +#define MT6765_POWER_DOMAIN_VCODEC		7
+> +
+> +#endif /* _DT_BINDINGS_POWER_MT6765_POWER_H */
