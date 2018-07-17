@@ -1,92 +1,98 @@
-From: Jolly Shah <JOLLYS@xilinx.com>
-Subject: RE: [PATCH v9 10/10] drivers: clk: Add ZynqMP clock driver
-Date: Tue, 17 Jul 2018 20:09:01 +0000
-Message-ID: <SN1PR02MB37589FF7DBAFBD0C070F690EB85C0@SN1PR02MB3758.namprd02.prod.outlook.com>
-References: <1529516435-7315-1-git-send-email-jollys@xilinx.com>
- <1529516435-7315-11-git-send-email-jollys@xilinx.com>
- <153111401693.143105.16925315512459949259@swboyd.mtv.corp.google.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/5] thermal: exynos: cleanup of clk err check for exynos_tmu_work
+Date: Tue, 17 Jul 2018 22:11:21 +0200
+Message-ID: <CAJKOXPdMEp1r_K3Qa_iztfvKg61BEn4TejtoDwpq_Yf1CnyRAg@mail.gmail.com>
+References: <1531822342-4293-1-git-send-email-linux.amoon@gmail.com>
+ <1531822342-4293-2-git-send-email-linux.amoon@gmail.com> <CAJKOXPdtEbaOaqU1uzPLq6-MUANJq+2GCviy47b3zkjmRMcc8A@mail.gmail.com>
+ <CANAwSgTrsOv_cg470tze2vLLNAPEV1oApTEKep6gK8mPzWMiQg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <153111401693.143105.16925315512459949259@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+In-Reply-To: <CANAwSgTrsOv_cg470tze2vLLNAPEV1oApTEKep6gK8mPzWMiQg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, Michal Simek <michals@xilinx.com>, "mingo@kernel.org" <mingo@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>
-Cc: Rajan Vaja <RAJANV@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tejas Patel <TEJASP@xilinx.com>, Shubhrajyoti Datta <shubhraj@xilinx.com>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3RlcGhlbiwNCg0KVGhhbmtzIGZvciB0aGUgcmV2aWV3LA0KDQo+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+IEZyb206IFN0ZXBoZW4gQm95ZCBbbWFpbHRvOnNib3lkQGtlcm5lbC5v
-cmddDQo+IFNlbnQ6IFN1bmRheSwgSnVseSAwOCwgMjAxOCAxMDoyNyBQTQ0KPiBUbzogSm9sbHkg
-U2hhaCA8Sk9MTFlTQHhpbGlueC5jb20+OyBhcmQuYmllc2hldXZlbEBsaW5hcm8ub3JnOw0KPiBk
-bWl0cnkudG9yb2tob3ZAZ21haWwuY29tOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsNCj4g
-aGthbGx3ZWl0MUBnbWFpbC5jb207IGtlZXNjb29rQGNocm9taXVtLm9yZzsgbGludXgtY2xrQHZn
-ZXIua2VybmVsLm9yZzsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IG1hdHRAY29kZWJsdWVwcmlu
-dC5jby51azsgTWljaGFsIFNpbWVrDQo+IDxtaWNoYWxzQHhpbGlueC5jb20+OyBtaW5nb0BrZXJu
-ZWwub3JnOyBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsNCj4gcm9iaCtkdEBrZXJuZWwub3JnOyBz
-Ym95ZEBjb2RlYXVyb3JhLm9yZzsgc3VkZWVwLmhvbGxhQGFybS5jb20NCj4gQ2M6IFJhamFuIFZh
-amEgPFJBSkFOVkB4aWxpbnguY29tPjsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2Vy
-bmVsLm9yZzsgSm9sbHkgU2hhaA0KPiA8Sk9MTFlTQHhpbGlueC5jb20+OyBUZWphcyBQYXRlbCA8
-VEVKQVNQQHhpbGlueC5jb20+OyBTaHViaHJhanlvdGkgRGF0dGENCj4gPHNodWJocmFqQHhpbGlu
-eC5jb20+OyBKb2xseSBTaGFoIDxKT0xMWVNAeGlsaW54LmNvbT4NCj4gU3ViamVjdDogUmU6IFtQ
-QVRDSCB2OSAxMC8xMF0gZHJpdmVyczogY2xrOiBBZGQgWnlucU1QIGNsb2NrIGRyaXZlcg0KPiAN
-Cj4gPiArLyoqDQo+ID4gKyAqIHp5bnFtcF9wbV9jbG9ja19nZXRfcGFyZW50cygpIC0gR2V0IHRo
-ZSBmaXJzdCAzIHBhcmVudHMgb2YgY2xvY2sgZm9yIGdpdmVuDQo+IGlkDQo+ID4gKyAqIEBjbG9j
-a19pZDogIENsb2NrIElEDQo+ID4gKyAqIEBpbmRleDogICAgIFBhcmVudCBpbmRleA0KPiA+ICsg
-KiBAcGFyZW50czogICAzIHBhcmVudHMgb2YgdGhlIGdpdmVuIGNsb2NrDQo+ID4gKyAqDQo+ID4g
-KyAqIFRoaXMgZnVuY3Rpb24gaXMgdXNlZCB0byBnZXQgMyBwYXJlbnRzIGZvciB0aGUgY2xvY2sg
-c3BlY2lmaWVkIGJ5DQo+ID4gKyAqIGdpdmVuIGNsb2NrIElELg0KPiA+ICsgKg0KPiA+ICsgKiBU
-aGlzIEFQSSB3aWxsIHJldHVybiAzIHBhcmVudHMgd2l0aCBhIHNpbmdsZSByZXNwb25zZS4gVG8g
-Z2V0DQo+ID4gKyAqIG90aGVyIHBhcmVudHMsIG1hc3RlciBzaG91bGQgY2FsbCBzYW1lIEFQSSBp
-biBsb29wIHdpdGggbmV3DQo+ID4gKyAqIHBhcmVudCBpbmRleCB0aWxsIGVycm9yIGlzIHJldHVy
-bmVkLiBFLmcgRmlyc3QgY2FsbCBzaG91bGQgaGF2ZQ0KPiA+ICsgKiBpbmRleCAwIHdoaWNoIHdp
-bGwgcmV0dXJuIHBhcmVudHMgMCwxIGFuZCAyLiBOZXh0IGNhbGwsIGluZGV4DQo+ID4gKyAqIHNo
-b3VsZCBiZSAzIHdoaWNoIHdpbGwgcmV0dXJuIHBhcmVudCAzLDQgYW5kIDUgYW5kIHNvIG9uLg0K
-PiA+ICsgKg0KPiA+ICsgKiBSZXR1cm46IFJldHVybnMgc3RhdHVzLCBlaXRoZXIgc3VjY2VzcyBv
-ciBlcnJvcityZWFzb24NCj4gPiArICovDQo+ID4gK3N0YXRpYyBpbnQgenlucW1wX3BtX2Nsb2Nr
-X2dldF9wYXJlbnRzKHUzMiBjbG9ja19pZCwgdTMyIGluZGV4LCB1MzINCj4gKnBhcmVudHMpDQo+
-ID4gK3sNCj4gPiArICAgICAgIHN0cnVjdCB6eW5xbXBfcG1fcXVlcnlfZGF0YSBxZGF0YSA9IHsw
-fTsNCj4gPiArICAgICAgIHUzMiByZXRfcGF5bG9hZFtQQVlMT0FEX0FSR19DTlRdOw0KPiANCj4g
-V2hhdCdzIHRoZSBlbmRpYW5uZXNzIG9mIHRoaXMgcGF5bG9hZD8gSXMgaXQgbGl0dGxlIGVuZGlh
-bj8gT3IgZG8gdGhlDQo+IGVlbWlfb3BzIGNvbnZlcnQgdG8gQ1BVIG5hdGl2ZSBlbmRpYW5uZXNz
-Pw0KDQpJdHMgbGl0dGxlIGVuZGlhbg0KDQo+ID4gKw0KPiA+ICsvKioNCj4gPiArICogenlucW1w
-X2Nsb2NrX2luaXQoKSAtIEluaXRpYWxpemUgenlucW1wIGNsb2Nrcw0KPiA+ICsgKg0KPiA+ICsg
-KiBSZXR1cm46IDAgb24gc3VjY2VzcyBlbHNlIGVycm9yIGNvZGUNCj4gPiArICovDQo+ID4gK3N0
-YXRpYyBpbnQgX19pbml0IHp5bnFtcF9jbG9ja19pbml0KHZvaWQpDQo+ID4gK3sNCj4gPiArICAg
-ICAgIGludCByZXQ7DQo+ID4gKyAgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wOw0KPiA+ICsN
-Cj4gPiArICAgICAgIG5wID0gb2ZfZmluZF9jb21wYXRpYmxlX25vZGUoTlVMTCwgTlVMTCwgInhs
-bngsenlucW1wIik7DQo+ID4gKyAgICAgICBpZiAoIW5wKQ0KPiA+ICsgICAgICAgICAgICAgICBy
-ZXR1cm4gLUVOT0VOVDsNCj4gPiArICAgICAgIG9mX25vZGVfcHV0KG5wKTsNCj4gPiArDQo+ID4g
-KyAgICAgICBucCA9IG9mX2ZpbmRfY29tcGF0aWJsZV9ub2RlKE5VTEwsIE5VTEwsICJ4bG54LHp5
-bnFtcC1jbGsiKTsNCj4gDQo+IFdoeSBjYW4ndCB0aGlzIGJlIGEgcGxhdGZvcm0gZGV2aWNlIGRy
-aXZlcj8NCg0KUGxhdGZvcm0gZHJpdmVyIG1heSBwcm9iZSBsYXRlcihhbiBhY3R1YWxseSBwcm9i
-aW5nIGxhdGVyIGluIG91ciBjYXNlKS4gVGhpcyB3aWxsIHJlc3VsdHMgaW4gY2xvY2sgZ2V0IGZh
-aWx1cmUgaW4gY2xvY2sgY29uc3VtZXIgcGVyaXBoZXJhbHMuIFNvIGNsb2NrIHJlZ2lzdHJhdGlv
-biBuZWVkcyB0byBiZSBkb25lIGVhcmxpZXIuDQoNCj4gDQo+ID4gKyAgICAgICAgICAgICAgIG0g
-PSByYXRlX2RpdiAvIEZSQUNfRElWOw0KPiA+ICsgICAgICAgICAgICAgICBmID0gcmF0ZV9kaXYg
-JSBGUkFDX0RJVjsNCj4gPiArICAgICAgICAgICAgICAgbSA9IGNsYW1wX3QodTMyLCBtLCAoUExM
-X0ZCRElWX01JTiksIChQTExfRkJESVZfTUFYKSk7DQo+ID4gKyAgICAgICAgICAgICAgIHJhdGUg
-PSBwYXJlbnRfcmF0ZSAqIG07DQo+ID4gKyAgICAgICAgICAgICAgIGZyYWMgPSAocGFyZW50X3Jh
-dGUgKiBmKSAvIEZSQUNfRElWOw0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgcmV0ID0gZWVt
-aV9vcHMtPmNsb2NrX3NldGRpdmlkZXIoY2xrX2lkLCBtKTsNCj4gPiArICAgICAgICAgICAgICAg
-aWYgKHJldCkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBwcl93YXJuX29uY2UoIiVzKCkg
-c2V0IGRpdmlkZXIgZmFpbGVkIGZvciAlcywgcmV0ID0gJWRcbiIsDQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIF9fZnVuY19fLCBjbGtfbmFtZSwgcmV0KTsNCj4gPiAr
-DQo+ID4gKyAgICAgICAgICAgICAgIGRhdGEgPSAoRlJBQ19ESVYgKiBmKSAvIEZSQUNfRElWOw0K
-PiANCj4gRmVlbHMgbGlrZSB0aGVyZSBtdXN0IGJlIHNvbWUgbWFjcm8gZm9yIHRoaXMgaWRpb20g
-YnV0IEkgZmFpbGVkIHRvIGZpbmQNCj4gaXQuIHJvdW5kX3NvbWV0aGluZygpPw0KSXQgd2FzIG5v
-dCBuZWVkZWQuIFJlbW92ZWQgaW4gdjEwLg0KDQo+IA0KPiA+ICsgICAgICAgcGxsLT5ody5pbml0
-ID0gJmluaXQ7DQo+ID4gKyAgICAgICBwbGwtPmNsa19pZCA9IGNsa19pZDsNCj4gPiArDQo+ID4g
-KyAgICAgICBodyA9ICZwbGwtPmh3Ow0KPiA+ICsgICAgICAgcmV0ID0gY2xrX2h3X3JlZ2lzdGVy
-KGRldiwgaHcpOw0KPiA+ICsgICAgICAgaWYgKHJldCkgew0KPiA+ICsgICAgICAgICAgICAgICBr
-ZnJlZShwbGwpOw0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gRVJSX1BUUihyZXQpOw0KPiA+
-ICsgICAgICAgfQ0KPiA+ICsNCj4gPiArICAgICAgIGNsa19od19zZXRfcmF0ZV9yYW5nZShodywg
-UFNfUExMX1ZDT19NSU4sIFBTX1BMTF9WQ09fTUFYKTsNCj4gDQo+IFdoeSBpcyB0aGlzIG5lY2Vz
-c2FyeT8NClRoaXMgaXMgcmFuZ2Ugb2YgcmF0ZSBzdXBwb3J0ZWQgYnkgaGFyZHdhcmUgZm9yIFBM
-TC4NCg0KPiANCj4gPiArICAgICAgIGlmIChyZXQgPCAwKQ0KPiA+ICsgICAgICAgICAgICAgICBw
-cl9lcnIoIiVzOkVSUk9SIGNsa19zZXRfcmF0ZV9yYW5nZSBmYWlsZWQgJWRcbiIsIG5hbWUsIHJl
-dCk7DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0dXJuIGh3Ow0KPiA+ICt9DQoNCg0KUmVzdCBhbGwg
-Y29tbWVudHMgdGFrZW4gY2FyZSBpbiB2MTAgc2VyaWVzKHBvc3RlZCB0b2RheSkuIA0KDQpUaGFu
-a3MsDQpKb2xseSBTaGFoDQoNCg==
+On 17 July 2018 at 22:08, Anand Moon <linux.amoon@gmail.com> wrote:
+> Hi Krzysztof,
+>
+> On 17 July 2018 at 17:54, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>> On 17 July 2018 at 12:12, Anand Moon <linux.amoon@gmail.com> wrote:
+>>> cleanup err check in exynos_tmu_work as clk internal
+>>> framework will perform if clk is enable/disable
+>>> so drop the double check of IS_ERR and other such references.
+>>
+>> I do not understand the statement. Clock framework will perform if clk
+>> is enable/disable? How clock can be "enable" or "disable"? You mean
+>> gate clock? you mean clock pointer is an ERR pointer?
+>>
+>
+> if (!IS_ERR(data->clk_sec))
+> check if the pointer is valid or not
+> this check is again performed in
+> clk_enable.
+
+This should be then written in commit msg.
+
+>>> CC: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>>> ---
+>>>  drivers/thermal/samsung/exynos_tmu.c | 19 ++++++-------------
+>>>  1 file changed, 6 insertions(+), 13 deletions(-)
+>>>
+>>> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+>>> index 0164c9e..2dbde97 100644
+>>> --- a/drivers/thermal/samsung/exynos_tmu.c
+>>> +++ b/drivers/thermal/samsung/exynos_tmu.c
+>>> @@ -300,8 +300,7 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
+>>>
+>>>         mutex_lock(&data->lock);
+>>>         clk_enable(data->clk);
+>>> -       if (!IS_ERR(data->clk_sec))
+>>> -               clk_enable(data->clk_sec);
+>>> +       clk_enable(data->clk_sec);
+>>>
+>>>         status = readb(data->base + EXYNOS_TMU_REG_STATUS);
+>>>         if (!status) {
+>>> @@ -334,8 +333,7 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
+>>>  err:
+>>>         clk_disable(data->clk);
+>>>         mutex_unlock(&data->lock);
+>>> -       if (!IS_ERR(data->clk_sec))
+>>> -               clk_disable(data->clk_sec);
+>>> +       clk_disable(data->clk_sec);
+>>>  out:
+>>>         return ret;
+>>>  }
+>>> @@ -789,19 +787,16 @@ static void exynos_tmu_work(struct work_struct *work)
+>>>         struct exynos_tmu_data *data = container_of(work,
+>>>                         struct exynos_tmu_data, irq_work);
+>>>
+>>> -       if (!IS_ERR(data->clk_sec))
+>>> -               clk_enable(data->clk_sec);
+>>> -       if (!IS_ERR(data->clk_sec))
+>>> -               clk_disable(data->clk_sec);
+>>> -
+>>>         thermal_zone_device_update(data->tzd, THERMAL_EVENT_UNSPECIFIED);
+>>>
+>>>         mutex_lock(&data->lock);
+>>>         clk_enable(data->clk);
+>>> +       clk_enable(data->clk_sec);
+>>
+>> You are changing here the logic completely. Before the "enable" was
+>> followed immediately by "disable". Now you are moving disable
+>> somewhere else... All this looks suspicious...
+>
+> I chose to move enable/disable of clk_sec this under the mutex lock for safe
+> which dose the same sequence with different order.
+>
+> Second approach:
+> We should get rid of clk_enable/disable in exynos_tmu_work
+> as this looks unnecessary for toggle clk's on every update.
+
+I already sent a cleanup for this:
+https://patchwork.kernel.org/patch/10529971/
+
+Best regards,
+Krzysztof
