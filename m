@@ -1,42 +1,85 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6sx-udoo-neo: enable i2c-2 and i2c-4 for
- onboard sensors
-Date: Tue, 17 Jul 2018 11:20:21 -0300
-Message-ID: <CAOMZO5BDEnFU__1iSuVpmRKx4SK5F+WFNho-ujTSCobQy-vzSw@mail.gmail.com>
-References: <20180713171151.24699-1-pbrobinson@gmail.com>
- <CAOMZO5B+1atjr3Ur7EGMJSEbqT8zqWdKZWNHrkyCGvgGM4nJFg@mail.gmail.com>
- <CALeDE9N5AnQba5LirHegWgz2_3Rr6cCT_ttTUtg38OdvdegpFA@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 5/7] dt-bindings: Add Tegra PMC pad configuration bindings
+Date: Tue, 17 Jul 2018 08:22:07 -0600
+Message-ID: <CAL_JsqL1F0RF_6=ho0pa7Uh4AUsyvFRDGM50gN4=6_+MwBfGYQ@mail.gmail.com>
+References: <1531396813-6581-1-git-send-email-avienamo@nvidia.com>
+ <1531396813-6581-6-git-send-email-avienamo@nvidia.com> <20180716154309.GA16477@rob-hp-laptop>
+ <20180717152318.3608e3f9@dhcp-10-21-25-168>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CALeDE9N5AnQba5LirHegWgz2_3Rr6cCT_ttTUtg38OdvdegpFA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Robinson <pbrobinson@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180717152318.3608e3f9@dhcp-10-21-25-168>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Aapo Vienamo <avienamo@nvidia.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+On Tue, Jul 17, 2018 at 6:23 AM Aapo Vienamo <avienamo@nvidia.com> wrote:
+>
+> On Mon, 16 Jul 2018 09:43:09 -0600
+> Rob Herring <robh@kernel.org> wrote:
+>
+> > On Thu, Jul 12, 2018 at 03:00:11PM +0300, Aapo Vienamo wrote:
+> > > Document the pinctrl bindings used by the PMC driver for performing pad
+> > > configuration. Both nvidia,tegra186-pmc.txt and nvidia,tegra20-pmc.txt
+> > > are modified as they both cover SoC generations for which these bindings
+> > > apply.
+> > >
+> > > Add a header defining Tegra PMC pad voltage configurations.
+> > >
+> > > Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+> > > Acked-by: Jon Hunter <jonathanh@nvidia.com>
+> > > ---
+> > >  .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     | 84 +++++++++++++++++++
+> > >  .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 95 ++++++++++++++++++++++
+> > >  include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h | 18 ++++
+> > >  3 files changed, 197 insertions(+)
+> > >  create mode 100644 include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
+> > > index 5a3bf7c..9528f41 100644
+> > > --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
+> > > +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
+> > > @@ -34,3 +34,87 @@ Board DTS:
+> > >     pmc@c360000 {
+> > >             nvidia,invert-interrupt;
+> > >     };
+> > > +
+> > > +== Pad Control Nodes ==
+> > > +
+> > > +The PMC can be used to set pad power state and voltage configuration.
+> > > +The pad configuration is done via the pinctrl framework. The driver
+> > > +implements power-source, low-power-enable, and low-power-disable pinconf
+> > > +pin configuration node properties. Each pinctrl pin corresponds to a
+> > > +single Tegra PMC pad. Thus, in the following sections of this document
+> > > +pin refers to the pinctrl frameworks notion of a Tegra PMC pad.
+> >
+> > "pinctrl framework" is Linux specific and doesn't belong in the binding.
+> > Neither does what a driver supports. Describe what the h/w supports.
+> >
+> > > +
+> > > +The pad configuration state nodes are placed under the pmc node and they
+> > > +are referred to by the pinctrl client device properties. For more
+> >
+> > Another driver detail not relevant.
+> >
+> > > +information see the examples presented later and
+> >
+> > examples don't document bindings. The documentation should be complete
+> > without examples.
+> >
+> > > +Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt.
+> > > +
+> > > +The values accepted by power-source property are
+> > > +TEGRA_IO_PAD_VOLTAGE_1V8 and TEGRA_IO_PAD_VOLTAGE_3V3, which are defined
+> > > +in dt-bindings/pinctrl/pinctrl-tegra-io-pad.h.
+> >
+> > You need to list out what properties the child nodes can have.
+> >
+> > power-source needs a vendor prefix.
+>
+> Isn't it a generic pinctrl property?
 
-On Mon, Jul 16, 2018 at 11:43 AM, Peter Robinson <pbrobinson@gmail.com> wrote:
+I don't know offhand. Doesn't look like it if you have custom values.
 
-> Enabling it to turn around and then disable it again seemed counter
-
-Other option would be to put i2c4 with status = "disabled" in the common file
-and enable i2c4 on the two dts files that suport it.
-
-> intuitive to me hence the way I did, the WiFi in done that way even
-> though it's not on all boards and I would imagine it would cause
-> errors on the devices where there isn't wifi although I don't have
-> those model(s) to verify.
-
-If the Wifi is not present, then it will not be probed, so it would
-not cause problems.
+Rob
