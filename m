@@ -1,72 +1,55 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 05/14] dmaengine: dma-jz4780: Add support for the JZ4740
- SoC
-Date: Tue, 17 Jul 2018 13:00:29 +0200
-Message-ID: <1531825229.5992.0@smtp.crapouillou.net>
-References: <20180703123214.23090-1-paul@crapouillou.net>
-        <20180703123214.23090-6-paul@crapouillou.net>
-        <20180709171226.GK22377@vkoul-mobl> <20180716213339.GA19161@rob-hp-laptop>
+From: LABBE Corentin <clabbe@baylibre.com>
+Subject: Re: [PATCH v3 4/9] dt-bindings: ata: ahci-platform: document AHCI
+ reset
+Date: Tue, 17 Jul 2018 13:16:30 +0200
+Message-ID: <20180717111630.GA7900@Red>
+References: <1531479786-4911-1-git-send-email-clabbe@baylibre.com>
+ <1531479786-4911-5-git-send-email-clabbe@baylibre.com>
+ <20180716155416.GA32497@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180716213339.GA19161@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <20180716155416.GA32497@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Vinod <vkoul@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+Cc: hdegoede@redhat.com, linux@armlinux.org.uk, mark.rutland@arm.com, maxime.ripard@free-electrons.com, tj@kernel.org, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, thierry.reding@gmail.com, icenowy@aosc.io
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Jul 16, 2018 at 09:54:16AM -0600, Rob Herring wrote:
+> On Fri, Jul 13, 2018 at 11:03:01AM +0000, Corentin Labbe wrote:
+> > This patch document the new optional resets for ahci node.
+> > 
+> > Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> > ---
+> >  Documentation/devicetree/bindings/ata/ahci-platform.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> > index 5f362af2724c..a5281d7557e3 100644
+> > --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> > +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> > @@ -34,6 +34,8 @@ Optional properties:
+> >  - phys              : reference to the SATA PHY node
+> >  - phy-names         : must be "sata-phy"
+> >  - ahci-supply       : regulator for AHCI controller
+> > +- resets            : phandle to the reset line of AHCI controller
+> > +                      If set, must have a reset-names set as "ahci"
+> 
+> A name is pointless if there is only one. Also, the name should be what 
+> the signal in the block is called which I doubt would be called "ahci". 
+> A likely name is some form of reset, resetn, etc. which again is 
+> pointless to name if there is only 1.
+> 
+> If you do have 'reset-names' then that needs to be listed too like 
+> phy-names.
+> 
 
-Le lun. 16 juil. 2018 =E0 23:33, Rob Herring <robh@kernel.org> a =E9crit :
-> On Mon, Jul 09, 2018 at 10:42:26PM +0530, Vinod wrote:
->>  On 03-07-18, 14:32, Paul Cercueil wrote:
->>=20
->>  >  enum jz_version {
->>  > +	ID_JZ4740,
->>  >  	ID_JZ4770,
->>  >  	ID_JZ4780,
->>  >  };
->>  > @@ -247,6 +248,7 @@ static void jz4780_dma_desc_free(struct=20
->> virt_dma_desc *vdesc)
->>  >  }
->>  >
->>  >  static const unsigned int jz4780_dma_ord_max[] =3D {
->>  > +	[ID_JZ4740] =3D 5,
->>  >  	[ID_JZ4770] =3D 6,
->>  >  	[ID_JZ4780] =3D 7,
->>  >  };
->>  > @@ -801,11 +803,13 @@ static struct dma_chan=20
->> *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
->>  >  }
->>  >
->>  >  static const unsigned int jz4780_dma_nb_channels[] =3D {
->>  > +	[ID_JZ4740] =3D 6,
->>  >  	[ID_JZ4770] =3D 6,
->>  >  	[ID_JZ4780] =3D 32,
->>  >  };
->>=20
->>  I feel these should be done away with if we describe hardware in DT
->=20
-> The compatible property can imply things like this.
->=20
-> But how this is structured is a bit strange. Normally you have a per
-> compatible struct with these as elements and the compatible matching
-> selects the struct.
+Since the ahci-platform code is common to lots of different drivers, I must have a name otherwise I could grab a reset which wasnt for me.
+See the revert of f0f56716fc3e ("ata: ahci-platform: add reset control support") for example.
 
-You're right, I'll change that.
+So the code need to grab a name, and since this name could be used by other people I took the generic "ahci".
 
->>=20
->>  >
->>  >  static const struct of_device_id jz4780_dma_dt_match[] =3D {
->>  > +	{ .compatible =3D "ingenic,jz4740-dma", .data =3D (void *)ID_JZ4740=
-=20
->> },
->>=20
->>  adding .compatible should be the only thing required, if at all for=20
->> this
->>  addition :)
->>=20
->>  --
->>  ~Vinod
-=
+In my case (R40), the reset is called sata, so I will change reset-names to "sata" in my next serie.
+
+Regards
