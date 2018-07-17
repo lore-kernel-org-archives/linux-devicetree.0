@@ -1,52 +1,35 @@
-From: Chris Healy <cphealy@gmail.com>
-Subject: Re: [PATCH] ARM: dts: vf610: Add ZII SSMB SPU3 board
-Date: Tue, 17 Jul 2018 08:22:14 -0700
-Message-ID: <CAFXsbZpS0zs3nihDuaMZaNEwYDyhQQeo_5gz5W-frv0QJFZKPQ@mail.gmail.com>
-References: <20180717040651.641-1-andrew.smirnov@gmail.com>
- <20180717144638.GB16320@lunn.ch> <CAFXsbZpKyLjp0bO7MVR5StKf=3UkXUANydhM+8_13G3itRmE+Q@mail.gmail.com>
- <20180717152035.GD16320@lunn.ch>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 3/5] i2c: designware: add MSCC Ocelot support
+Date: Tue, 17 Jul 2018 18:26:15 +0300
+Message-ID: <c7704b44012f6b743cc3791eab3faf674f988ce9.camel@linux.intel.com>
+References: <20180717114837.21839-1-alexandre.belloni@bootlin.com>
+         <20180717114837.21839-4-alexandre.belloni@bootlin.com>
+         <1886510d2a828d3a246ef1f490c6819f073fbdcb.camel@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180717152035.GD16320@lunn.ch>
+In-Reply-To: <1886510d2a828d3a246ef1f490c6819f073fbdcb.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Hogan <jhogan@kernel.org>
+Cc: Paul Burton <paul.burton@mips.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 17, 2018 at 8:20 AM, Andrew Lunn <andrew@lunn.ch> wrote:
->> >> +++ b/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
->> >> @@ -0,0 +1,343 @@
->> >> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
->> >> +
->> >> +/*
->> >> + * Device tree file for ZII's SSMB SPU3 board
->> >> + *
->> >> + * SSMB - SPU3 Switch Management Board
->> >> + * SPU - Seat Power Unit
->> >
->> > I think this is the first Zodiac board with mutually recursive
->> > acronyms.
->> >
->> > Probably a question for Chris: Does SSMB specifically refer to version
->> > 3 of the SPU?
->> >
->> >    Andrew
->>
->> SPU3 is the third generation of seat power unit.
->> SSMB is the SPU3 Switch Management Board.
->>
->> So, SSMB is a backronym.  This naming scheme breaks down a bit though
->> when follow on designs (that are not the SPU3) also use the SSMB, but
->> that's what it is... ;-)
->
-> O.K, i was just wondering if the 3 was in the wrong place. More
-> logically, it would be
->
-> * SSMB - SPU Switch Management Board
-> * SPU 3 - Seat Power Unit, version 3.
->
-> But you are saying the Marketing guys messed up the naming and
-> engineering is now stuck with it.
->
-Yep
+On Tue, 2018-07-17 at 18:16 +0300, Andy Shevchenko wrote:
+> On Tue, 2018-07-17 at 13:48 +0200, Alexandre Belloni wrote:
+> > The Microsemi Ocelot I2C controller is a designware IP. It also has
+> > a
+> > second set of registers to allow tweaking SDA hold time and spike
+> > filtering.
+
+> What do you think?
+
+You can also split it to 2-3 patches, like:
+- move to device_get_match_data()
+- move OF device table above in the code (no func changes)
+- add support for MSCC
+
+
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
