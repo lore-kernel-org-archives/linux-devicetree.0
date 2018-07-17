@@ -1,44 +1,50 @@
-Return-Path: <SRS0=tHxF=J5=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-co1nam03on0045.outbound.protection.outlook.com ([104.47.40.45]:36160
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727161AbeGMKtY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Jul 2018 06:49:24 -0400
-From: <shubhrajyoti.datta@gmail.com>
-Subject: [PATCHv2 5/5] dt-bindings: serial: Add clock to the binding for uartlite
-Date: Fri, 13 Jul 2018 16:00:10 +0530
-Message-ID: <1531477810-23346-5-git-send-email-shubhrajyoti.datta@gmail.com>
-In-Reply-To: <1531477810-23346-1-git-send-email-shubhrajyoti.datta@gmail.com>
-References: <1531477810-23346-1-git-send-email-shubhrajyoti.datta@gmail.com>
+Return-Path: <SRS0=iRi0=KB=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH] dt-bindings: irqchip: renesas-irqc: Document r8a77470
+ support
+Date: Tue, 17 Jul 2018 10:00:03 +0000
+Message-ID: 
+ <OSBPR01MB2103E15875336B7DDBBCF616B85C0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1522318628-52821-1-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdUsO_jw5Lb4jDKk6H2Zn=4kJHhFp_fBArnaddkBXDQ24Q@mail.gmail.com>
+ <OSBPR01MB2103FF4CF9F5477C8D47720CB8480@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <a56c23bb-bd53-f387-9d8f-f589e53fa077@arm.com>
+In-Reply-To: <a56c23bb-bd53-f387-9d8f-f589e53fa077@arm.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, jacmet@sunsite.dk, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-
-Add clock to the binding for uartlite
-
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
----
- Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt b/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt
-index cae95e6..52719b9 100644
---- a/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt
-+++ b/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt
-@@ -11,6 +11,8 @@ Required properties:
- 
- Optional properties:
- - port-number		: Set Uart port number
-+- clock-names		: Should be "s_axi_aclk"
-+- clocks		: Input clock specifier. Refer to common clock bindings.
- 
- Example:
- serial@800c0000 {
--- 
-2.7.4
-
+SGVsbG8gTWFyYywNCg0KU29ycnkgdG8gYm90aGVyIHlvdS4gIERvIHlvdSBnZXQgYSBjaGFuY2Ug
+dG8gc3luYyB1cCB3aXRoIFRob21hcyBmb3IgdGhpcyBwYXRjaCB0byBtYWtlIGl0IGludG8NCjQu
+MTg/DQoNClJlZ2FyZHMsDQpCaWp1DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
+RnJvbTogTWFyYyBaeW5naWVyIFttYWlsdG86bWFyYy56eW5naWVyQGFybS5jb21dDQo+IFNlbnQ6
+IDI3IEp1bmUgMjAxOCAwOTo1OA0KPiBUbzogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMu
+Y29tPg0KPiBDYzogVGhvbWFzIEdsZWl4bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+OyBKYXNvbiBD
+b29wZXINCj4gPGphc29uQGxha2VkYWVtb24ubmV0PjsgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2Vy
+bmVsLm9yZz47IE1hcmsNCj4gUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBHZWVydCBV
+eXR0ZXJob2V2ZW4NCj4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPjsgU2ltb24gSG9ybWFuIDxo
+b3Jtc0B2ZXJnZS5uZXQuYXU+OyBDaHJpcw0KPiBQYXRlcnNvbiA8Q2hyaXMuUGF0ZXJzb24yQHJl
+bmVzYXMuY29tPjsgRmFicml6aW8gQ2FzdHJvDQo+IDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNh
+cy5jb20+OyBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQNCj4gRkxBVFRFTkVEIERFVklDRSBU
+UkVFIEJJTkRJTkdTIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IExpbnV4LQ0KPiBSZW5l
+c2FzIDxsaW51eC1yZW5lc2FzLXNvY0B2Z2VyLmtlcm5lbC5vcmc+OyBHZWVydCBVeXR0ZXJob2V2
+ZW4NCj4gPGdlZXJ0QGxpbnV4LW02OGsub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBkdC1i
+aW5kaW5nczogaXJxY2hpcDogcmVuZXNhcy1pcnFjOiBEb2N1bWVudCByOGE3NzQ3MA0KPiBzdXBw
+b3J0DQo+DQo+IEhpIEJpanUsDQo+DQo+IE9uIDI3LzA2LzE4IDA5OjQzLCBCaWp1IERhcyB3cm90
+ZToNCj4gPiBIZWxsbyBNYXJjLA0KPiA+DQo+ID4gU29ycnkgdG8gYm90aGVyIHlvdS4gIEFyZSB5
+b3UgaGFwcHkgdG8gbWVyZ2UgdGhlIGJlbG93IHBhdGNoIHdpdGggNC4xOC0NCj4gcmMzPw0KPiA+
+IGh0dHBzOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2xpbnV4LXJlbmVzYXMtc29jL21zZzI1Nzg4
+Lmh0bWwNCj4NCj4gVGhpcyBpcyBvZGQuIEkgcXVldWVkIHRoYXQgaW4gQXByaWwgYXMgcGFydCBv
+ZiBhIHBvdGVudGlhbCBzZWNvbmQgc2V0IG9mIGZpeGVzIGZvcg0KPiA0LjE3LCBidXQgc29tZWhv
+dyBmYWlsZWQgdG8gZXZlciBzZW5kIHRoZSBwdWxsIHJlcXVlc3QgKGFuZCB0aGlzIHdhcyB0aGUg
+b25seQ0KPiBwYXRjaCBJIGhhZCBhdCB0aGF0IHBvaW50KS4NCj4NCj4gQXBvbG9naWVzIGZvciB0
+aGUgZGVsYXksIEknbGwgc3luYyB1cCB3aXRoIFRob21hcyBmb3IgdGhpcyBwYXRjaCB0byBtYWtl
+IGl0IGludG8NCj4gNC4xOC4NCj4NCj4gVGhhbmtzIGZvciB0aGUgaGVhZHMgdXAsDQo+DQo+IE0u
+DQo+IC0tDQo+IEphenogaXMgbm90IGRlYWQuIEl0IGp1c3Qgc21lbGxzIGZ1bm55Li4uDQoNCg0K
+DQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBMdGQsIER1a2VzIE1lYWRvdywgTWlsbGJvYXJk
+IFJvYWQsIEJvdXJuZSBFbmQsIEJ1Y2tpbmdoYW1zaGlyZSwgU0w4IDVGSCwgVUsuIFJlZ2lzdGVy
+ZWQgaW4gRW5nbGFuZCAmIFdhbGVzIHVuZGVyIFJlZ2lzdGVyZWQgTm8uIDA0NTg2NzA5Lg0K
