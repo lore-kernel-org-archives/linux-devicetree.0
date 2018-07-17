@@ -1,34 +1,60 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v2] ARM: dts: at91: fix typos for SSC TD functions
-Date: Tue, 17 Jul 2018 21:16:37 +0200
-Message-ID: <20180717191637.GB3211@piout.net>
-References: <1531836233-31536-1-git-send-email-claudiu.beznea@microchip.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCH 5/5] ARM: dts: exynos: add tmu aliases nodes
+Date: Wed, 18 Jul 2018 01:26:10 +0530
+Message-ID: <CANAwSgSUv9aY6bhMxdnj9yGS8Ds7Bevy09+k=74CwVqiOX2+gA@mail.gmail.com>
+References: <1531822342-4293-1-git-send-email-linux.amoon@gmail.com>
+ <1531822342-4293-5-git-send-email-linux.amoon@gmail.com> <CAJKOXPc256dCWWWaoJBOB9NUc=CUYtqgfeKh=LBOoFAfh_T8Ng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1531836233-31536-1-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <CAJKOXPc256dCWWWaoJBOB9NUc=CUYtqgfeKh=LBOoFAfh_T8Ng@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, ludovic.desroches@microchip.com, nicolas.ferre@microchip.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17/07/2018 17:03:53+0300, Claudiu Beznea wrote:
-> Fix typo for TD function of pins PIN_PB22 and PIN_PC14
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
-> 
-> Changes in v2:
-> - fix typo also for PC14 pin
-> - change patch subject to reflect new changes
-> 
->  arch/arm/boot/dts/sama5d2-pinfunc.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-Applied, thanks.
+Hi
 
--- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+On 17 July 2018 at 17:59, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On 17 July 2018 at 12:12, Anand Moon <linux.amoon@gmail.com> wrote:
+>> add tmuctrl aliases node for exynos542x
+>
+> Please use full sentence, starting with capital letter and ending with
+> a dot. Also please explain why you need tmuctrl aliases.
+>
+
+As per the [0] Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+
+For multi-instance tmu each instance should have an alias correctly
+numbered in "aliases" node.
+
+>>
+>> CC: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>> ---
+>>  arch/arm/boot/dts/exynos5420-peach-pit.dts         |  8 ++++----
+>>  arch/arm/boot/dts/exynos5420.dtsi                  | 20 ++++++++++++--------
+>>  arch/arm/boot/dts/exynos5422-odroid-core.dtsi      |  8 ++++----
+>>  arch/arm/boot/dts/exynos5422-odroidhc1.dts         |  8 ++++----
+>>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |  8 ++++----
+>>  arch/arm/boot/dts/exynos5800-peach-pi.dts          |  8 ++++----
+>>  6 files changed, 32 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> index 57c2332..ff79f0b 100644
+>> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> @@ -1061,19 +1061,19 @@
+>>         status = "okay";
+>>  };
+>>
+>> -&tmu_cpu0 {
+>> +&tmu_cpu_0 {
+>
+> This looks irrelevant to the topic of adding aliases.
+>
+
+correct, I gone through the binding documentation and hence update this patch.
+
+Best Regards
+-Anand
