@@ -1,35 +1,92 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 3/5] i2c: designware: add MSCC Ocelot support
-Date: Tue, 17 Jul 2018 18:26:15 +0300
-Message-ID: <c7704b44012f6b743cc3791eab3faf674f988ce9.camel@linux.intel.com>
-References: <20180717114837.21839-1-alexandre.belloni@bootlin.com>
-         <20180717114837.21839-4-alexandre.belloni@bootlin.com>
-         <1886510d2a828d3a246ef1f490c6819f073fbdcb.camel@linux.intel.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2] ARM64: dts: meson-axg: add saradc support
+Date: Tue, 17 Jul 2018 10:28:11 -0500
+Message-ID: <7h4lgxop9w.fsf@baylibre.com>
+References: <20180702222515.13924-1-yixun.lan@amlogic.com>
+        <1531326349.2708.136.camel@baylibre.com> <7h7elvmgnv.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1886510d2a828d3a246ef1f490c6819f073fbdcb.camel@linux.intel.com>
+In-Reply-To: <7h7elvmgnv.fsf@baylibre.com> (Kevin Hilman's message of "Mon, 16
+        Jul 2018 08:52:36 -0500")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Hogan <jhogan@kernel.org>
-Cc: Paul Burton <paul.burton@mips.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>, Rob Herring <robh+dt@kernel.org>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Yixun Lan <yixun.lan@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-07-17 at 18:16 +0300, Andy Shevchenko wrote:
-> On Tue, 2018-07-17 at 13:48 +0200, Alexandre Belloni wrote:
-> > The Microsemi Ocelot I2C controller is a designware IP. It also has
-> > a
-> > second set of registers to allow tweaking SDA hold time and spike
-> > filtering.
+Kevin Hilman <khilman@baylibre.com> writes:
 
-> What do you think?
+> Jerome Brunet <jbrunet@baylibre.com> writes:
+>
+>> On Mon, 2018-07-02 at 22:25 +0000, Yixun Lan wrote:
+>>> From: Xingyu Chen <xingyu.chen@amlogic.com>
+>>> 
+>>> Add the DT info for SAR ADC of the Amlogic's Meson-AXG SoC.
+>>> 
+>>> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+>>> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+>>> ---
+>>> Hi kevin
+>>>   I just re-send this patch which rebased to your khilman/v4.18/integ branch
+>>>   Thanks
+>>> Yixun
+>>> 
+>>> nothing changed since patch v1 [1]:
+>>>  -
+>>> 
+>>> [1] https://lkml.kernel.org/r/20180326092117.208416-1-yixun.lan@amlogic.com
+>>> 
+>>> ---
+>>>  .../arm64/boot/dts/amlogic/meson-axg-s400.dts |  5 +++++
+>>>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    | 21 +++++++++++++++++++
+>>>  2 files changed, 26 insertions(+)
+>>> 
+>>> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+>>> index 4b3331fbfe39..6041f68b32ae 100644
+>>> --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+>>> +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+>>> @@ -153,3 +153,8 @@
+>>>  		compatible = "brcm,bcm4329-fmac";
+>>>  	};
+>>>  };
+>>> +
+>>> +&saradc {
+>>> +	status = "okay";
+>>> +	vref-supply = <&vddio_ao18>;
+>>> +};
+>>> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+>>> index 67d7115e4eff..52678a69dbf8 100644
+>>> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+>>> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+>>> @@ -91,6 +91,13 @@
+>>>  		method = "smc";
+>>>  	};
+>>>  
+>>> +	vddio_ao18: regulator-vddio_ao18 {
+>>> +		compatible = "regulator-fixed";
+>>> +		regulator-name = "VDDIO_AO18";
+>>> +		regulator-min-microvolt = <1800000>;
+>>> +		regulator-max-microvolt = <1800000>;
+>>> +	};
+>>
+>> Kevin, Yixun,
+>>
+>> I find odd that we are adding a regulator to SoC device tree file.
+>> Those regulator are usually part of board file
+>>
+>> Unless the regulator is actually inside the SoC, this is not the place for it.
+>>
+>> Sorry for not catching this earlier.
+>
+> You're right, I should've noticed this earlier also.
+>
+> Yixun, can you resend this with the regulators in the board file please?
+>
+> In the mean time, I've dropped this from v4.19/dt64 branch,
 
-You can also split it to 2-3 patches, like:
-- move to device_get_match_data()
-- move OF device table above in the code (no func changes)
-- add support for MSCC
+Nevermind, Jerome fixed this up already in a series of DT updates for
+AXG, so I'll keep it as is.
 
+Thanks Jerome!
 
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+Kevin
