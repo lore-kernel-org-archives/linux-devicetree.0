@@ -1,67 +1,37 @@
-From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v10 01/10] dt-bindings: firmware: Add bindings for ZynqMP firmware
-Date: Tue, 17 Jul 2018 12:58:58 -0700
-Message-ID: <1531857547-16652-2-git-send-email-jollys@xilinx.com>
-References: <1531857547-16652-1-git-send-email-jollys@xilinx.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 5/5] ARM: dts: exynos: add tmu aliases nodes
+Date: Tue, 17 Jul 2018 22:01:29 +0200
+Message-ID: <CAJKOXPfSs7rRN9z7oOOX-0O3cC=+jT=WVGvaQ3j+yL=MD_ifUA@mail.gmail.com>
+References: <1531822342-4293-1-git-send-email-linux.amoon@gmail.com>
+ <1531822342-4293-5-git-send-email-linux.amoon@gmail.com> <CAJKOXPc256dCWWWaoJBOB9NUc=CUYtqgfeKh=LBOoFAfh_T8Ng@mail.gmail.com>
+ <CANAwSgSUv9aY6bhMxdnj9yGS8Ds7Bevy09+k=74CwVqiOX2+gA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531857547-16652-1-git-send-email-jollys@xilinx.com>
+In-Reply-To: <CANAwSgSUv9aY6bhMxdnj9yGS8Ds7Bevy09+k=74CwVqiOX2+gA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
-Cc: rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rajan Vaja <rajanv@xilinx.com>
+On 17 July 2018 at 21:56, Anand Moon <linux.amoon@gmail.com> wrote:
+> Hi
+>
+> On 17 July 2018 at 17:59, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>> On 17 July 2018 at 12:12, Anand Moon <linux.amoon@gmail.com> wrote:
+>>> add tmuctrl aliases node for exynos542x
+>>
+>> Please use full sentence, starting with capital letter and ending with
+>> a dot. Also please explain why you need tmuctrl aliases.
+>>
+>
+> As per the [0] Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+>
+> For multi-instance tmu each instance should have an alias correctly
+> numbered in "aliases" node.
 
-Add documentation to describe Xilinx ZynqMP firmware driver
-bindings. Firmware driver provides an interface to firmware
-APIs. Interface APIs can be used by any driver to communicate
-to PMUFW (Platform Management Unit).
+Ah, right. However except reading value of alias and storing it, the
+driver does not use it later. Maybe this should be just removed.
 
-Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
-Signed-off-by: Jolly Shah <jollys@xilinx.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
----
- .../firmware/xilinx/xlnx,zynqmp-firmware.txt       | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-
-diff --git a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-new file mode 100644
-index 0000000..1b431d9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-@@ -0,0 +1,29 @@
-+-----------------------------------------------------------------
-+Device Tree Bindings for the Xilinx Zynq MPSoC Firmware Interface
-+-----------------------------------------------------------------
-+
-+The zynqmp-firmware node describes the interface to platform firmware.
-+ZynqMP has an interface to communicate with secure firmware. Firmware
-+driver provides an interface to firmware APIs. Interface APIs can be
-+used by any driver to communicate to PMUFW(Platform Management Unit).
-+These requests include clock management, pin control, device control,
-+power management service, FPGA service and other platform management
-+services.
-+
-+Required properties:
-+ - compatible:	Must contain:	"xlnx,zynqmp-firmware"
-+ - method:	The method of calling the PM-API firmware layer.
-+		Permitted values are:
-+		  - "smc" : SMC #0, following the SMCCC
-+		  - "hvc" : HVC #0, following the SMCCC
-+
-+-------
-+Example
-+-------
-+
-+firmware {
-+	zynqmp_firmware: zynqmp-firmware {
-+		compatible = "xlnx,zynqmp-firmware";
-+		method = "smc";
-+	};
-+};
--- 
-2.7.4
+Best regards,
+Krzysztof
