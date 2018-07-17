@@ -1,253 +1,95 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding doc
-Date: Tue, 17 Jul 2018 09:52:05 +0200
-Message-ID: <ac4fde9d-5457-48e4-0946-4c5645e0b299@pengutronix.de>
-References: <20180716114209.25242-1-o.rempel@pengutronix.de>
- <20180716114209.25242-2-o.rempel@pengutronix.de>
- <AM0PR04MB4211E30E85E830AA31F998A1805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <7f96a775-661b-86e5-95eb-07017dcec3c5@pengutronix.de>
- <AM0PR04MB42111EDD7771D0FABCEB671B805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <739d382e-b553-107f-3cb7-59b7adf5d16d@pengutronix.de>
- <AM0PR04MB421178C8C0AEC744AB22BE68805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v1 1/2] arm64: dts: mt7622: add some misc device nodes
+Date: Tue, 17 Jul 2018 09:55:43 +0200
+Message-ID: <864955d5-26c4-a5f3-ec1a-420acba50880@gmail.com>
+References: <2ff39c40ef6bc3054667e63c785a1d28527b5ddf.1531753039.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4299687728101552282=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM0PR04MB421178C8C0AEC744AB22BE68805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2ff39c40ef6bc3054667e63c785a1d28527b5ddf.1531753039.git.ryder.lee@mediatek.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ryder Lee <ryder.lee@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>
+Cc: Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============4299687728101552282==
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="tyBI6OJ0jppnuMAWGuhVXMHjFXZ5N7hrb"
+Hi Ryder,
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---tyBI6OJ0jppnuMAWGuhVXMHjFXZ5N7hrb
-Content-Type: multipart/mixed; boundary="Buz6mZWXQx85HxhdmHF6eoorLStSBeLbT";
- protected-headers="v1"
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: "A.s. Dong" <aisheng.dong@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
- Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "kernel@pengutronix.de" <kernel@pengutronix.de>,
- dl-linux-imx <linux-imx@nxp.com>
-Message-ID: <ac4fde9d-5457-48e4-0946-4c5645e0b299@pengutronix.de>
-Subject: Re: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding doc
-References: <20180716114209.25242-1-o.rempel@pengutronix.de>
- <20180716114209.25242-2-o.rempel@pengutronix.de>
- <AM0PR04MB4211E30E85E830AA31F998A1805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <7f96a775-661b-86e5-95eb-07017dcec3c5@pengutronix.de>
- <AM0PR04MB42111EDD7771D0FABCEB671B805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <739d382e-b553-107f-3cb7-59b7adf5d16d@pengutronix.de>
- <AM0PR04MB421178C8C0AEC744AB22BE68805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB421178C8C0AEC744AB22BE68805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+On 16/07/18 16:59, Ryder Lee wrote:
+> Add some misc nodes support - timer and ARM CCI-400.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt7622.dtsi | 36 ++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> index 9213c96..8cdec52 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> @@ -217,6 +217,16 @@
+>  		#reset-cells = <1>;
+>  	};
+>  
+> +	timer: timer@10004000 {
+> +		compatible = "mediatek,mt7622-timer",
+> +			     "mediatek,mt6577-timer";
+> +		reg = <0 0x10004000 0 0x80>;
+> +		interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&infracfg CLK_INFRA_APXGPT_PD>,
+> +			 <&topckgen CLK_TOP_RTC>;
+> +		clock-names = "system-clk", "rtc-clk";
+> +	};
+> +
+>  	scpsys: scpsys@10006000 {
+>  		compatible = "mediatek,mt7622-scpsys",
+>  			     "syscon";
+> @@ -317,6 +327,32 @@
+>  		      <0 0x10360000 0 0x2000>;
+>  	};
+>  
+> +	cci: cci@10390000 {
+> +		compatible = "arm,cci-400";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		reg = <0 0x10390000 0 0x1000>;
+> +		ranges = <0 0 0x10390000 0x10000>;
 
---Buz6mZWXQx85HxhdmHF6eoorLStSBeLbT
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+>From my understanding of the binding description ranges should hold child
+address, parent address and size of the region in the child address space. I can
+see in arch/arm64 two different variants using 4 ranges values (like here) and
+using three values.
 
+@Rob + Will what is the preferred way to describe this?
 
+> +
+> +		cci_control0: slave-if@1000 {
+> +			compatible = "arm,cci-400-ctrl-if";
+> +			interface-type = "ace-lite";
+> +			reg = <0x1000 0x1000>;
+> +		};
 
-On 17.07.2018 08:50, A.s. Dong wrote:
->> -----Original Message-----
->> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
->> Sent: Tuesday, July 17, 2018 2:32 PM
->> To: A.s. Dong <aisheng.dong@nxp.com>; Shawn Guo
->> <shawnguo@kernel.org>; Fabio Estevam <fabio.estevam@nxp.com>; Rob
->> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>
->> Cc: devicetree@vger.kernel.org; kernel@pengutronix.de; linux-arm-
->> kernel@lists.infradead.org; dl-linux-imx <linux-imx@nxp.com>
->> Subject: Re: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding doc
->>
->>
->>
->> On 17.07.2018 08:26, A.s. Dong wrote:
->>>> -----Original Message-----
->>>> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
->>>> Sent: Tuesday, July 17, 2018 1:45 PM
->>>> To: A.s. Dong <aisheng.dong@nxp.com>; Shawn Guo
->>>> <shawnguo@kernel.org>; Fabio Estevam <fabio.estevam@nxp.com>;
->> Rob
->>>> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>
->>>> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org=
-;
->>>> kernel@pengutronix.de; dl-linux-imx <linux-imx@nxp.com>
->>>> Subject: Re: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding do=
-c
->>>>
->>>>
->>>>
->>>> On 17.07.2018 07:00, A.s. Dong wrote:
->>>>>> -----Original Message-----
->>>>>> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
->>>>>> Sent: Monday, July 16, 2018 7:42 PM
->>>>>> To: Shawn Guo <shawnguo@kernel.org>; Fabio Estevam
->>>>>> <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>; Mark
->>>>>> Rutland <mark.rutland@arm.com>; A.s. Dong
->> <aisheng.dong@nxp.com>
->>>>>> Cc: Oleksij Rempel <o.rempel@pengutronix.de>;
->>>>>> kernel@pengutronix.de; linux-arm-kernel@lists.infradead.org;
->>>>>> devicetree@vger.kernel.org;
->>>>>> dl-linux- imx <linux-imx@nxp.com>
->>>>>> Subject: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding doc
->>>>>>
->>>>>> The Messaging Unit module enables two processors within the SoC to=
+Don't we need to add phandles to the cci-control-port property in the cpu nodes?
 
->>>>>> communicate and coordinate by passing messages (e.g. data, status
->>>>>> and
->>>>>> control) through the MU interface.
->>>>>>
->>>>>> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
->>>>>> ---
->>>>>>  .../devicetree/bindings/mailbox/fsl,mu.txt    | 32
->>>> +++++++++++++++++++
->>>>>>  1 file changed, 32 insertions(+)
->>>>>>  create mode 100644
->>>>>> Documentation/devicetree/bindings/mailbox/fsl,mu.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
->>>>>> b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
->>>>>> new file mode 100644
->>>>>> index 000000000000..5d48dd75b98d
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
->>>>>> @@ -0,0 +1,32 @@
->>>>>> +NXP i.MX Messaging Unit (MU)
->>>>>> +-----------------------------------------------------------------=
--
->>>>>> +--
->>>>>> +
->>>>>> +Required properties:
->>>>>> +-------------------
->>>>>> +- compatible :	should be "fsl,<chip>-mu", the supported chips
->>>> include:
->>>>>> +		imx6sx	- i.MX 6SoloX
->>>>>> +		imx7d	- i.MX 7Dual
->>>>>> +		imx7s	- i.MX 7Solo
->>>>>> +		imx7ulp	- i.MX 7ULP
->>>>>> +		imx8qm	- i.MX 8QM
->>>>>> +		imx8qxp	- i.MX 8QXP
->>>>>> +- reg :		Should contain the registers location and length
->>>>>> +- interrupts :	Interrupt number. The interrupt specifier format
->>>> depends
->>>>>> +		on the interrupt controller parent.
->>>>>> +- #mbox-cells:  Must be:
->>>>>> +		0 - for single channel mode. i.MX8* SCU protocol specific.
->>>>>> +		1 - for multichannel (generic) mode.
->>>>>> +
->>>>>> +Optional properties:
->>>>>> +-------------------
->>>>>> +- clocks :	phandle to the input clock.
->>>>>> +- fsl,mu-side-a : Should be set for side A MU.
->>>>>
->>>>> For this property, how about doing like:
->>>>> fsl,mu-side: An Integer represents the MU side.
->>>>
->>>> All this SoCs have MUs with only two sides. Why do we need explicit
->>>> annotation for both parts?
->>>>
->>>>> If missing this property, it's default to Side A
->>>>
->>>> So, why do we need optional integer, which is set by default as side=
- A?
->>>> This is why I made it bool.
->>>
->>> Yes, A bool probably is better.
->>>
->>>>
->>>>> 	       which is mostly used by A core.
->>>>
->>>> And you will need to explicit set side=3DB for SCU. Correct?
->>>
->>> SCU is using side A. AFAIK all SoC A core is using side A by default.=
+Regards,
+Matthias
 
->>> That's why I think it can be default one. User is free to specify bot=
-h
->>> In device tree. Does it make sense to you?
->>
->> Ok.
->=20
-> My original assumption is we can specify the side explicitly in device =
-tree
->  (default to side A if missing) like:
-> mu0a: mailbox@30aa0000 {
->         compatible =3D "fsl,imx7s-mu";
->         ...
->         fsl,mu-side =3D <0>;
-> };
->=20
-> mu0b: mailbox@30ab0000 {
->         compatible =3D "fsl,imx7s-mu";
->         ...
->         fsl,mu-side =3D <1>;
-> };
->=20
-> But you're right it can be simply indicated by a bool as well.
-> mu0a: mailbox@30aa0000 {
->         compatible =3D "fsl,imx7s-mu";
->         ...
-> };
->=20
-> mu0b: mailbox@30ab0000 {
->         compatible =3D "fsl,imx7s-mu";
->         ...
->         fsl,mu-side-b;=20
-> };
->=20
-> I'm okay with both. You can prefer as you wish.
-
-There are advantages and disadvantages in both cases:
-- bool is using less space and limited to only needed part but mistakes
-can happen and some will forget to add this line.
-- int part is good only if it is not optional.
-
-
---Buz6mZWXQx85HxhdmHF6eoorLStSBeLbT--
-
---tyBI6OJ0jppnuMAWGuhVXMHjFXZ5N7hrb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAltNoCUACgkQdQOiSHVI
-77Rqvgf9EALIsZWA7z97c3ccqzufs1pOg389OpqpOJ19ClSC9p7Q9kmraA5OUfVr
-dbU4VcRY9N1A3ip35aDtoa4trBPuME4uI42tC7lB2tZJ65oLujS/TdGehbeMBMh0
-l7vMjtCB7roRcJ113ghkwEYXzzyI1YU1QfkF/YU7tGaeTYwU565CZUzzZyqxxtWq
-QXtx5u3xbG6CWJeRfUqF/NgidD0H5xzXJbXGoNdVRUd4HLBak9/0CyOppoLAk0QY
-EPeMASGbnfEOQZXGlHBv+x9obBEWOWOQB2+7GJnZEYfPjEevpFJWKeLUQ30EjS5K
-FP1nVNw34aFNJa4JeD7vpE2LJPh0gQ==
-=XI6h
------END PGP SIGNATURE-----
-
---tyBI6OJ0jppnuMAWGuhVXMHjFXZ5N7hrb--
-
-
---===============4299687728101552282==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============4299687728101552282==--
+> +
+> +		cci_control1: slave-if@4000 {
+> +			compatible = "arm,cci-400-ctrl-if";
+> +			interface-type = "ace";
+> +			reg = <0x4000 0x1000>;
+> +		};
+> +
+> +		cci_control2: slave-if@5000 {
+> +			compatible = "arm,cci-400-ctrl-if";
+> +			interface-type = "ace";
+> +			reg = <0x5000 0x1000>;
+> +		};
+> +	};
+> +
+>  	auxadc: adc@11001000 {
+>  		compatible = "mediatek,mt7622-auxadc";
+>  		reg = <0 0x11001000 0 0x1000>;
+> 
