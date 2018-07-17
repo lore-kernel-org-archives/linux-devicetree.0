@@ -1,158 +1,71 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v3 3/4] PCI: mediatek: Add system pm support for MT2712
- and MT7622
-Date: Tue, 17 Jul 2018 18:15:43 +0100
-Message-ID: <20180717171543.GA20991@red-moon>
-References: <1530518264-6125-1-git-send-email-honghui.zhang@mediatek.com>
- <1530518264-6125-4-git-send-email-honghui.zhang@mediatek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 05/14] dmaengine: dma-jz4780: Add support for the JZ4740 SoC
+Date: Tue, 17 Jul 2018 11:40:20 -0600
+Message-ID: <CAL_JsqJBw9vBURZQxa4RkDAfiinnNRK6CVTBmpnC3TaSukZLRA@mail.gmail.com>
+References: <20180703123214.23090-1-paul@crapouillou.net> <20180703123214.23090-6-paul@crapouillou.net>
+ <20180709171226.GK22377@vkoul-mobl> <20180716213339.GA19161@rob-hp-laptop> <20180717153407.GF3219@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1530518264-6125-4-git-send-email-honghui.zhang@mediatek.com>
+In-Reply-To: <20180717153407.GF3219@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: honghui.zhang@mediatek.com
-Cc: marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, rjw@rjwysocki.net, khilman@kernel.org, ulf.hansson@linaro.org
+To: Vinod <vkoul@kernel.org>
+Cc: Paul Cercueil <paul@crapouillou.net>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-[+Rafael, Kevin, Ulf]
+On Tue, Jul 17, 2018 at 9:34 AM Vinod <vkoul@kernel.org> wrote:
+>
+> On 16-07-18, 15:33, Rob Herring wrote:
+> > On Mon, Jul 09, 2018 at 10:42:26PM +0530, Vinod wrote:
+> > > On 03-07-18, 14:32, Paul Cercueil wrote:
+> > >
+> > > >  enum jz_version {
+> > > > + ID_JZ4740,
+> > > >   ID_JZ4770,
+> > > >   ID_JZ4780,
+> > > >  };
+> > > > @@ -247,6 +248,7 @@ static void jz4780_dma_desc_free(struct virt_dma_desc *vdesc)
+> > > >  }
+> > > >
+> > > >  static const unsigned int jz4780_dma_ord_max[] = {
+> > > > + [ID_JZ4740] = 5,
+> > > >   [ID_JZ4770] = 6,
+> > > >   [ID_JZ4780] = 7,
+> > > >  };
+> > > > @@ -801,11 +803,13 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
+> > > >  }
+> > > >
+> > > >  static const unsigned int jz4780_dma_nb_channels[] = {
+> > > > + [ID_JZ4740] = 6,
+> > > >   [ID_JZ4770] = 6,
+> > > >   [ID_JZ4780] = 32,
+> > > >  };
+> > >
+> > > I feel these should be done away with if we describe hardware in DT
+> >
+> > The compatible property can imply things like this.
+>
+> So what is the general recommendation, let DT describe hardware
+> including version delta or use compatible to code that in driver?
 
-On Mon, Jul 02, 2018 at 03:57:43PM +0800, honghui.zhang@mediatek.com wrote:
-> From: Honghui Zhang <honghui.zhang@mediatek.com>
-> 
-> The MTCMOS of PCIe Host for MT2712 and MT7622 will be off when system
-> suspend, and all the internal control register will be reset after system
-> resume. The PCIe link should be re-established and the related control
-> register values should be re-set after system resume.
-> 
-> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
->  drivers/pci/controller/pcie-mediatek.c | 67 ++++++++++++++++++++++++++++++++++
->  1 file changed, 67 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> index 86918d4..175d7b6 100644
-> --- a/drivers/pci/controller/pcie-mediatek.c
-> +++ b/drivers/pci/controller/pcie-mediatek.c
-> @@ -134,12 +134,14 @@ struct mtk_pcie_port;
->  /**
->   * struct mtk_pcie_soc - differentiate between host generations
->   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-> + * @pm_support: whether the host's MTCMOS will be off when suspend
->   * @ops: pointer to configuration access functions
->   * @startup: pointer to controller setting functions
->   * @setup_irq: pointer to initialize IRQ functions
->   */
->  struct mtk_pcie_soc {
->  	bool need_fix_class_id;
-> +	bool pm_support;
->  	struct pci_ops *ops;
->  	int (*startup)(struct mtk_pcie_port *port);
->  	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-> @@ -1197,12 +1199,75 @@ static int mtk_pcie_probe(struct platform_device *pdev)
->  	return err;
->  }
->  
-> +static int __maybe_unused mtk_pcie_suspend_noirq(struct device *dev)
-> +{
-> +	struct mtk_pcie *pcie = dev_get_drvdata(dev);
-> +	const struct mtk_pcie_soc *soc = pcie->soc;
-> +	struct mtk_pcie_port *port;
-> +
-> +	if (!soc->pm_support)
-> +		return 0;
-> +
-> +	if (list_empty(&pcie->ports))
-> +		return 0;
-> +
-> +	list_for_each_entry(port, &pcie->ports, list) {
-> +		clk_disable_unprepare(port->pipe_ck);
-> +		clk_disable_unprepare(port->obff_ck);
-> +		clk_disable_unprepare(port->axi_ck);
-> +		clk_disable_unprepare(port->aux_ck);
-> +		clk_disable_unprepare(port->ahb_ck);
-> +		clk_disable_unprepare(port->sys_ck);
-> +		phy_power_off(port->phy);
-> +		phy_exit(port->phy);
-> +	}
-> +
-> +	mtk_pcie_subsys_powerdown(pcie);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused mtk_pcie_resume_noirq(struct device *dev)
-> +{
-> +	struct mtk_pcie *pcie = dev_get_drvdata(dev);
-> +	const struct mtk_pcie_soc *soc = pcie->soc;
-> +	struct mtk_pcie_port *port, *tmp;
-> +
-> +	if (!soc->pm_support)
-> +		return 0;
-> +
-> +	if (list_empty(&pcie->ports))
-> +		return 0;
-> +
-> +	if (dev->pm_domain) {
-> +		pm_runtime_enable(dev);
-> +		pm_runtime_get_sync(dev);
-> +	}
+Compatible is the version. Looking at the above, the version or ID
+isn't even stable.
 
-Are these runtime PM calls needed/abused here ?
+> Is it documented anywhere?
 
-Mind explaining the logic ?
+Not really. It's a judgment call generally. Maybe # of DMA channels
+should be a property because that is something most controllers have.
+But you really have to define the property up front, not when the 2nd
+version of h/w shows up with different properties.
 
-There is certainly an asymmetry with the suspend callback which made me
-suspicious, I am pretty certain Rafael/Kevin/Ulf can help me clarify so
-that we can make progress with this patch.
+To start defining guidelines, a couple of things come to mind:
 
-Lorenzo
+- Define properties for parameters that vary from board to board (for one SoC).
+- You can't add new required properties to existing bindings, so the
+not present default must work for all existing compatibles (or you
+need per compatible driver data).
+- Bugs/quirks/errata should be handled by compatible, not adding a
+property. Because bugs should be fixable without a dtb update and only
+a kernel update.
 
-> +
-> +	clk_prepare_enable(pcie->free_ck);
-> +
-> +	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
-> +		mtk_pcie_enable_port(port);
-> +
-> +	/* In case of EP was removed while system suspend. */
-> +	if (list_empty(&pcie->ports))
-> +		mtk_pcie_subsys_powerdown(pcie);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops mtk_pcie_pm_ops = {
-> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_pcie_suspend_noirq,
-> +				      mtk_pcie_resume_noirq)
-> +};
-> +
->  static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
->  	.ops = &mtk_pcie_ops,
->  	.startup = mtk_pcie_startup_port,
->  };
->  
->  static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
-> +	.pm_support = true,
->  	.ops = &mtk_pcie_ops_v2,
->  	.startup = mtk_pcie_startup_port_v2,
->  	.setup_irq = mtk_pcie_setup_irq,
-> @@ -1210,6 +1275,7 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
->  
->  static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
->  	.need_fix_class_id = true,
-> +	.pm_support = true,
->  	.ops = &mtk_pcie_ops_v2,
->  	.startup = mtk_pcie_startup_port_v2,
->  	.setup_irq = mtk_pcie_setup_irq,
-> @@ -1229,6 +1295,7 @@ static struct platform_driver mtk_pcie_driver = {
->  		.name = "mtk-pcie",
->  		.of_match_table = mtk_pcie_ids,
->  		.suppress_bind_attrs = true,
-> +		.pm = &mtk_pcie_pm_ops,
->  	},
->  };
->  builtin_platform_driver(mtk_pcie_driver);
-> -- 
-> 2.6.4
-> 
+Rob
