@@ -1,71 +1,246 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 05/14] dmaengine: dma-jz4780: Add support for the JZ4740 SoC
-Date: Tue, 17 Jul 2018 11:40:20 -0600
-Message-ID: <CAL_JsqJBw9vBURZQxa4RkDAfiinnNRK6CVTBmpnC3TaSukZLRA@mail.gmail.com>
-References: <20180703123214.23090-1-paul@crapouillou.net> <20180703123214.23090-6-paul@crapouillou.net>
- <20180709171226.GK22377@vkoul-mobl> <20180716213339.GA19161@rob-hp-laptop> <20180717153407.GF3219@vkoul-mobl>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCHv6 6/8] fpga: add intel stratix10 soc fpga manager driver
+Date: Tue, 17 Jul 2018 12:50:34 -0500
+Message-ID: <CANk1AXT5DrJf_-dq1DxrGVB23t74+os_F37GFd_i3yY=TgT6CA@mail.gmail.com>
+References: <1530629215-26990-1-git-send-email-richard.gong@linux.intel.com>
+ <1530629215-26990-7-git-send-email-richard.gong@linux.intel.com> <CAJYdmeNSOydws+a=QBG93FHq+3WFzcBR=R_+dM_0Vb_v2zHCvA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180717153407.GF3219@vkoul-mobl>
+In-Reply-To: <CAJYdmeNSOydws+a=QBG93FHq+3WFzcBR=R_+dM_0Vb_v2zHCvA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>
-Cc: Paul Cercueil <paul@crapouillou.net>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>
+To: Moritz Fischer <moritz.fischer.private@gmail.com>
+Cc: Richard Gong <richard.gong@linux.intel.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Yves Vandervennet <yves.vandervennet@linux.intel.com>, Richard Gong <richard.gong@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 17, 2018 at 9:34 AM Vinod <vkoul@kernel.org> wrote:
+On Mon, Jul 9, 2018 at 6:05 PM, Moritz Fischer
+<moritz.fischer.private@gmail.com> wrote:
+> Hi Richard + Alan,
 >
-> On 16-07-18, 15:33, Rob Herring wrote:
-> > On Mon, Jul 09, 2018 at 10:42:26PM +0530, Vinod wrote:
-> > > On 03-07-18, 14:32, Paul Cercueil wrote:
-> > >
-> > > >  enum jz_version {
-> > > > + ID_JZ4740,
-> > > >   ID_JZ4770,
-> > > >   ID_JZ4780,
-> > > >  };
-> > > > @@ -247,6 +248,7 @@ static void jz4780_dma_desc_free(struct virt_dma_desc *vdesc)
-> > > >  }
-> > > >
-> > > >  static const unsigned int jz4780_dma_ord_max[] = {
-> > > > + [ID_JZ4740] = 5,
-> > > >   [ID_JZ4770] = 6,
-> > > >   [ID_JZ4780] = 7,
-> > > >  };
-> > > > @@ -801,11 +803,13 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
-> > > >  }
-> > > >
-> > > >  static const unsigned int jz4780_dma_nb_channels[] = {
-> > > > + [ID_JZ4740] = 6,
-> > > >   [ID_JZ4770] = 6,
-> > > >   [ID_JZ4780] = 32,
-> > > >  };
-> > >
-> > > I feel these should be done away with if we describe hardware in DT
-> >
-> > The compatible property can imply things like this.
+> couple of small stuff inline. Sorry for the super late reply.
 >
-> So what is the general recommendation, let DT describe hardware
-> including version delta or use compatible to code that in driver?
 
-Compatible is the version. Looking at the above, the version or ID
-isn't even stable.
+Hi Moritz,
 
-> Is it documented anywhere?
+Thanks for the review comments!
 
-Not really. It's a judgment call generally. Maybe # of DMA channels
-should be a property because that is something most controllers have.
-But you really have to define the property up front, not when the 2nd
-version of h/w shows up with different properties.
+> On Tue, Jul 3, 2018 at 7:46 AM,  <richard.gong@linux.intel.com> wrote:
+>> From: Alan Tull <atull@kernel.org>
+>>
+>> Add driver for reconfiguring Intel Stratix10 SoC FPGA devices.
+>> This driver communicates through the Intel Service Driver which
+>> does communication with privileged hardware (that does the
+>> FPGA programming) through a secure mailbox.
+>>
+>> Signed-off-by: Alan Tull <atull@kernel.org>
+>> Signed-off-by: Richard Gong <richard.gong@intel.com>
+...
+>> +static int s10_svc_send_msg(struct s10_priv *priv,
+>> +                           enum stratix10_svc_command_code command,
+>> +                           void *payload, u32 payload_length)
+>> +{
+>> +       struct stratix10_svc_chan *chan = priv->chan;
+>> +       struct stratix10_svc_client_msg msg;
+>> +       int ret;
+>> +
+>> +       pr_debug("%s cmd=%d payload=%p legnth=%d\n",
+>> +                __func__, command, payload, payload_length);
+>
+> Can we make those dev_dbg() ? Or do we not have a device available?
 
-To start defining guidelines, a couple of things come to mind:
+It's easy to get client dev:and it's worth doing by adding:
 
-- Define properties for parameters that vary from board to board (for one SoC).
-- You can't add new required properties to existing bindings, so the
-not present default must work for all existing compatibles (or you
-need per compatible driver data).
-- Bugs/quirks/errata should be handled by compatible, not adding a
-property. Because bugs should be fixable without a dtb update and only
-a kernel update.
+struct device *dev = priv->client.dev;
 
-Rob
+>> +
+>> +       msg.command = command;
+>> +       msg.payload = payload;
+>> +       msg.payload_length = payload_length;
+>> +
+>> +       ret = stratix10_svc_send(chan, &msg);
+>> +       pr_debug("stratix10_svc_send returned status %d\n", ret);
+>> +
+>> +       return ret;
+>> +}
+>> +
+...
+>> +/**
+>> + * s10_ops_write_init
+>> + * Prepare for FPGA reconfiguration by requesting partial reconfig and
+>> + * allocating buffers from the service layer.
+>> + * @mgr: fpga manager
+>> + * @info: fpga image info
+>> + * @buf: fpga image buffer
+>> + * @count: size of buf in bytes
+>> + */
+>> +static int s10_ops_write_init(struct fpga_manager *mgr,
+>> +                             struct fpga_image_info *info,
+>> +                             const char *buf, size_t count)
+>> +{
+>> +       struct s10_priv *priv = mgr->priv;
+>> +       struct device *dev = priv->client.dev;
+>> +       struct stratix10_svc_command_reconfig_payload payload;
+>> +       char *kbuf;
+>> +       uint i;
+>> +       int ret;
+>> +
+>> +       payload.flags = 0;
+>> +       if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
+>> +               dev_info(dev, "Requesting partial reconfiguration.\n");
+> Do we need these to be _info() or can the by _dbg()? The Framework
+> already prints ("Writing blah.foo to ...")
+>> +               payload.flags |= BIT(COMMAND_RECONFIG_FLAG_PARTIAL);
+>> +       } else {
+>> +               dev_info(dev, "Requesting full reconfiguration.\n");
+> Same here.
+
+These can go away or be dgb.  fpga-mgr.c has dev_info(dev, "writing %s
+to %s\n", image_name, mgr->name); in fpga_mgr_firmware_load().
+
+Maybe at some point it would be better to have the "Reauesting
+full/partial reconfiguration" messages as dbg messages in fpga-mgr.c.
+Some of the fpga manager drivers have one message or the other only
+because they only handle full or partial, so it's an error message in
+their case.such as "Partial reconfiguration not supported."
+
+>> +       }
+>> +
+>> +       reinit_completion(&priv->status_return_completion);
+>> +       ret = s10_svc_send_msg(priv, COMMAND_RECONFIG,
+>> +                              &payload, sizeof(payload));
+>> +       if (ret < 0)
+>> +               goto init_done;
+>> +
+>> +       ret = wait_for_completion_interruptible_timeout(
+>> +               &priv->status_return_completion, S10_RECONFIG_TIMEOUT);
+>> +       if (!ret) {
+>> +               dev_err(dev, "timeout waiting for RECONFIG_REQUEST\n");
+>> +               ret = -ETIMEDOUT;
+>> +               goto init_done;
+>> +       }
+>> +       if (ret < 0) {
+>> +               dev_err(dev, "error (%d) waiting for RECONFIG_REQUEST\n", ret);
+>> +               goto init_done;
+>> +       }
+>> +
+>> +       ret = 0;
+>> +       if (!test_and_clear_bit(SVC_STATUS_RECONFIG_REQUEST_OK,
+>> +                               &priv->status)) {
+>> +               ret = -ETIMEDOUT;
+>> +               goto init_done;
+>> +       }
+>> +
+>> +       /* Allocate buffers from the service layer's pool. */
+>> +       for (i = 0; i < NUM_SVC_BUFS; i++) {
+>> +               kbuf = stratix10_svc_allocate_memory(priv->chan, SVC_BUF_SIZE);
+>> +               if (!kbuf) {
+>> +                       s10_free_buffers(mgr);
+>> +                       ret = -ENOMEM;
+>> +                       goto init_done;
+>> +               }
+>> +
+>> +               priv->svc_bufs[i].buf = kbuf;
+>> +               priv->svc_bufs[i].lock = 0;
+>> +       }
+>> +
+>> +init_done:
+>> +       stratix10_svc_done(priv->chan);
+>> +       return ret;
+>> +}
+>> +
+>> +/**
+>> + * s10_send_buf
+>> + * Send a buffer to the service layer queue
+>> + * @mgr: fpga manager struct
+>> + * @buf: fpga image buffer
+>> + * @count: size of buf in bytes
+>> + * Returns # of bytes transferred or -ENOBUFS if the all the buffers are in use
+>> + * or if the service queue is full. Never returns 0.
+>> + */
+>> +static int s10_send_buf(struct fpga_manager *mgr, const char *buf, size_t count)
+>> +{
+>> +       struct s10_priv *priv = mgr->priv;
+>> +       struct device *dev = priv->client.dev;
+>> +       void *svc_buf;
+>> +       size_t xfer_sz;
+>> +       int ret;
+>> +       uint i;
+>> +
+>> +       /* get/lock a buffer that that's not being used */
+>> +       for (i = 0; i < NUM_SVC_BUFS; i++)
+>> +               if (!test_and_set_bit_lock(SVC_BUF_LOCK,
+>> +                                          &priv->svc_bufs[i].lock))
+>> +                       break;
+>> +
+>> +       if (i == NUM_SVC_BUFS)
+>> +               return -ENOBUFS;
+>> +
+>> +       xfer_sz = count < SVC_BUF_SIZE ? count : SVC_BUF_SIZE;
+>> +
+>> +       svc_buf = priv->svc_bufs[i].buf;
+>> +       memcpy(svc_buf, buf, xfer_sz);
+>> +       ret = s10_svc_send_msg(priv, COMMAND_RECONFIG_DATA_SUBMIT,
+>> +                              svc_buf, xfer_sz);
+>> +       if (ret < 0) {
+>> +               dev_err(dev,
+>> +                       "Error while sending data to service layer (%d)", ret);
+>> +               return ret;
+>> +       }
+> Do we need to clean up anything here, or is the buffer unlocked if we fail?
+
+Yes, need to unlock buff if s10_svc_send_msg() fails.
+
+                        clear_bit_unlock(SVC_BUF_LOCK,
+                                         &priv->svc_bufs[i].lock);
+
+>> +
+>> +       return xfer_sz;
+>> +}
+...
+>> +static int s10_probe(struct platform_device *pdev)
+>> +{
+>> +       struct device *dev = &pdev->dev;
+>> +       struct s10_priv *priv;
+>> +       struct fpga_manager *mgr;
+>> +       int ret;
+>> +
+>> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>> +       if (!priv)
+>> +               return -ENOMEM;
+>> +
+>> +       priv->client.dev = dev;
+>> +       priv->client.receive_cb = s10_receive_callback;
+>> +       priv->client.priv = priv;
+>> +
+>> +       priv->chan = stratix10_svc_request_channel_byname(&priv->client,
+>> +                                               SVC_CLIENT_FPGA);
+>> +       if (IS_ERR(priv->chan)) {
+>> +               dev_err(dev, "couldn't get service channel (%s)\n",
+>> +                       SVC_CLIENT_FPGA);
+>> +               return PTR_ERR(priv->chan);
+>> +       }
+>> +
+>> +       init_completion(&priv->status_return_completion);
+>> +
+>> +       mgr = fpga_mgr_create(dev, "Stratix10 SOC FPGA Manager",
+>> +                             &s10_ops, priv);
+>> +       if (!mgr)
+>> +               return -ENOMEM;
+> Does this release the channel above?
+
+We need to call "stratix10_svc_free_channel(priv->chan);" here if
+fpga_mgr_create() fails.
+
+>> +
+>> +       ret = fpga_mgr_register(mgr);
+>> +       if (ret) {
+>> +               dev_err(dev, "unable to register FPGA manager\n");
+>> +               stratix10_svc_free_channel(priv->chan);
+>> +               fpga_mgr_free(mgr);
+>> +               return ret;
+>> +       }
+>> +
+>> +       platform_set_drvdata(pdev, mgr);
+>> +
+>> +       return ret;
+>> +}
