@@ -1,596 +1,236 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v3 3/3] mailbox: Add support for i.MX7D messaging unit
-Date: Tue, 17 Jul 2018 10:12:31 +0000
-Message-ID: <AM0PR04MB42116078DFA1D33E60A60859805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20180716114209.25242-1-o.rempel@pengutronix.de>
- <20180716114209.25242-4-o.rempel@pengutronix.de>
- <AM0PR04MB42117528ACC1D9572C4D5C8A805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <bce150b3-0243-b7f5-f9d7-27c072170687@pengutronix.de>
- <AM0PR04MB42118C7010D2D7F2C0024FE8805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <9154d05a-67df-d45c-f20f-3211865e0fcf@pengutronix.de>
- <AM0PR04MB42115D5822FF7DBD9B349EC2805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <c5bcf1c6-0413-6d7a-eae0-ce0fdb4655b2@pengutronix.de>
+From: Vijay Viswanath <vviswana@codeaurora.org>
+Subject: Re: [PATCH RFC 1/2] mmc: sdhci: Allow platform controlled voltage
+ switching
+Date: Tue, 17 Jul 2018 15:52:00 +0530
+Message-ID: <63819f9c-e4a6-1a71-5cca-3efcfa843206@codeaurora.org>
+References: <1529583826-42020-1-git-send-email-vviswana@codeaurora.org>
+ <1529583826-42020-2-git-send-email-vviswana@codeaurora.org>
+ <53c6d61f-47f5-2e4e-8280-6f76f707799e@intel.com>
+ <0d9b1934-d80d-a726-8094-688c97474afa@codeaurora.org>
+ <78dfa5db-712b-bb0c-ad03-761371beef10@intel.com>
+ <c721395a-0198-d533-5e40-42e4856f34e5@codeaurora.org>
+ <6e8c713f-6569-25f3-dec5-f08001b3c6f3@intel.com>
+ <8c4fb768-3d4f-da45-3115-30bc5c1058a6@codeaurora.org>
+ <82109d4a-6e3c-eb80-6843-75bf7c89c113@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <c5bcf1c6-0413-6d7a-eae0-ce0fdb4655b2@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <82109d4a-6e3c-eb80-6843-75bf7c89c113@intel.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Adrian Hunter <adrian.hunter@intel.com>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, dianders@google.com, sayalil@codeaurora.org, Evan Green <evgreen@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
-> Sent: Tuesday, July 17, 2018 3:49 PM
-> To: A.s. Dong <aisheng.dong@nxp.com>; Shawn Guo
-> <shawnguo@kernel.org>; Fabio Estevam <fabio.estevam@nxp.com>; Rob
-> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> kernel@pengutronix.de; dl-linux-imx <linux-imx@nxp.com>
-> Subject: Re: [PATCH v3 3/3] mailbox: Add support for i.MX7D messaging unit
-> 
-> 
-> 
-> On 17.07.2018 09:26, A.s. Dong wrote:
-> >> -----Original Message-----
-> >> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
-> >> Sent: Tuesday, July 17, 2018 3:14 PM
-> >> To: A.s. Dong <aisheng.dong@nxp.com>; Shawn Guo
-> >> <shawnguo@kernel.org>; Fabio Estevam <fabio.estevam@nxp.com>;
-> Rob
-> >> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>
-> >> Cc: devicetree@vger.kernel.org; kernel@pengutronix.de; linux-arm-
-> >> kernel@lists.infradead.org; dl-linux-imx <linux-imx@nxp.com>
-> >> Subject: Re: [PATCH v3 3/3] mailbox: Add support for i.MX7D messaging
-> >> unit
-> >>
-> >>
-> >>
-> >> On 17.07.2018 09:07, A.s. Dong wrote:
-> >>>> -----Original Message-----
-> >>>> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
-> >>>> Sent: Tuesday, July 17, 2018 2:43 PM
-> >>>> To: A.s. Dong <aisheng.dong@nxp.com>; Shawn Guo
-> >>>> <shawnguo@kernel.org>; Fabio Estevam <fabio.estevam@nxp.com>;
-> >> Rob
-> >>>> Herring <robh+dt@kernel.org>; Mark Rutland
-> <mark.rutland@arm.com>
-> >>>> Cc: devicetree@vger.kernel.org;
-> >>>> linux-arm-kernel@lists.infradead.org;
-> >>>> kernel@pengutronix.de; dl-linux-imx <linux-imx@nxp.com>
-> >>>> Subject: Re: [PATCH v3 3/3] mailbox: Add support for i.MX7D
-> >>>> messaging unit
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 17.07.2018 08:21, A.s. Dong wrote:
-> >>>>>> -----Original Message-----
-> >>>>>> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
-> >>>>>> Sent: Monday, July 16, 2018 7:42 PM
-> >>>>>> To: Shawn Guo <shawnguo@kernel.org>; Fabio Estevam
-> >>>>>> <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>;
-> Mark
-> >>>>>> Rutland <mark.rutland@arm.com>; A.s. Dong
-> >> <aisheng.dong@nxp.com>
-> >>>>>> Cc: Oleksij Rempel <o.rempel@pengutronix.de>;
-> >>>>>> kernel@pengutronix.de; linux-arm-kernel@lists.infradead.org;
-> >>>>>> devicetree@vger.kernel.org;
-> >>>>>> dl-linux- imx <linux-imx@nxp.com>
-> >>>>>> Subject: [PATCH v3 3/3] mailbox: Add support for i.MX7D messaging
-> >>>>>> unit
-> >>>>>>
-> >>>>>> The Mailbox controller is able to send messages (up to 4 32 bit
-> >>>>>> words) between the endpoints.
-> >>>>>>
-> >>>>>> This driver was tested using the mailbox-test driver sending
-> >>>>>> messages between the Cortex-A7 and the Cortex-M4.
-> >>>>>>
-> >>>>>> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> >>>>>> ---
-> >>>>>>  drivers/mailbox/Kconfig       |   6 +
-> >>>>>>  drivers/mailbox/Makefile      |   2 +
-> >>>>>>  drivers/mailbox/imx-mailbox.c | 294
-> >>>>>> ++++++++++++++++++++++++++++++++++
-> >>>>>>  3 files changed, 302 insertions(+)  create mode 100644
-> >>>>>> drivers/mailbox/imx-mailbox.c
-> >>>>>>
-> >>>>>
-> >>>>> Generally it looks good to me, a few minor comments:
-> >>>>>
-> >>>>>> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> >>>>>> index a2bb27446dce..79060ddc380d 100644
-> >>>>>> --- a/drivers/mailbox/Kconfig
-> >>>>>> +++ b/drivers/mailbox/Kconfig
-> >>>>>> @@ -15,6 +15,12 @@ config ARM_MHU
-> >>>>>>  	  The controller has 3 mailbox channels, the last of which can
-> be
-> >>>>>>  	  used in Secure mode only.
-> >>>>>>
-> >>>>>> +config IMX_MBOX
-> >>>>>> +	tristate "i.MX Mailbox"
-> >>>>>> +	depends on ARCH_MXC || COMPILE_TEST
-> >>>>>> +	help
-> >>>>>> +	  Mailbox implementation for i.MX Messaging Unit (MU).
-> >>>>>> +
-> >>>>>>  config PLATFORM_MHU
-> >>>>>>  	tristate "Platform MHU Mailbox"
-> >>>>>>  	depends on OF
-> >>>>>> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-> >>>>>> index
-> >>>>>> cc23c3a43fcd..ba2fe1b6dd62 100644
-> >>>>>> --- a/drivers/mailbox/Makefile
-> >>>>>> +++ b/drivers/mailbox/Makefile
-> >>>>>> @@ -7,6 +7,8 @@ obj-$(CONFIG_MAILBOX_TEST)	+= mailbox-
-> >> test.o
-> >>>>>>
-> >>>>>>  obj-$(CONFIG_ARM_MHU)	+= arm_mhu.o
-> >>>>>>
-> >>>>>> +obj-$(CONFIG_IMX_MBOX)	+= imx-mailbox.o
-> >>>>>> +
-> >>>>>>  obj-$(CONFIG_PLATFORM_MHU)	+= platform_mhu.o
-> >>>>>>
-> >>>>>>  obj-$(CONFIG_PL320_MBOX)	+= pl320-ipc.o
-> >>>>>> diff --git a/drivers/mailbox/imx-mailbox.c
-> >>>>>> b/drivers/mailbox/imx-mailbox.c new file mode 100644 index
-> >>>>>> 000000000000..31353366a007
-> >>>>>> --- /dev/null
-> >>>>>> +++ b/drivers/mailbox/imx-mailbox.c
-> >>>>>> @@ -0,0 +1,294 @@
-> >>>>>> +// SPDX-License-Identifier: GPL-2.0
-> >>>>>> +/*
-> >>>>>> + * Copyright (c) 2018 Pengutronix, Oleksij Rempel
-> >>>>>> +<o.rempel@pengutronix.de>  */
-> >>>>>> +
-> >>>>>> +#include <linux/clk.h>
-> >>>>>> +#include <linux/interrupt.h>
-> >>>>>> +#include <linux/io.h>
-> >>>>>> +#include <linux/kernel.h>
-> >>>>>> +#include <linux/mailbox_controller.h> #include <linux/module.h>
-> >>>>>> +#include <linux/of_device.h>
-> >>>>>> +
-> >>>>>> +/* Transmit Register */
-> >>>>>> +#define IMX_MU_xTRn(x)		(0x00 + 4 * (x))
-> >>>>>> +/* Receive Register */
-> >>>>>> +#define IMX_MU_xRRn(x)		(0x10 + 4 * (x))
-> >>>>>> +/* Status Register */
-> >>>>>> +#define IMX_MU_xSR		0x20
-> >>>>>> +#define IMX_MU_xSR_TEn(x)	BIT(20 + (3 - (x)))
-> >>>>>> +#define IMX_MU_xSR_RFn(x)	BIT(24 + (3 - (x)))
-> >>>>>> +#define IMX_MU_xSR_BRDIP	BIT(9)
-> >>>>>> +
-> >>>>>> +/* Control Register */
-> >>>>>> +#define IMX_MU_xCR		0x24
-> >>>>>> +/* Transmit Interrupt Enable */
-> >>>>>> +#define IMX_MU_xCR_TIEn(x)	BIT(20 + (3 - (x)))
-> >>>>>> +/* Receive Interrupt Enable */
-> >>>>>> +#define IMX_MU_xCR_RIEn(x)	BIT(24 + (3 - (x)))
-> >>>>>> +
-> >>>>>> +#define IMX_MU_MAX_CHANS	4u
-> >>>>>> +
-> >>>>>> +struct imx_mu_priv;
-> >>>>>> +
-> >>>>>> +struct imx_mu_cfg {
-> >>>>>> +	unsigned int		chans;
-> >>>>>> +	void (*init_hw)(struct imx_mu_priv *priv); };
-> >>>>>> +
-> >>>>>> +struct imx_mu_con_priv {
-> >>>>>> +	int			irq;
-> >>>>>> +	unsigned int		idx;
-> >>>>>> +};
-> >>>>>> +
-> >>>>>> +struct imx_mu_priv {
-> >>>>>> +	struct device		*dev;
-> >>>>>> +	const struct imx_mu_cfg	*dcfg;
-> >>>>>> +	void __iomem		*base;
-> >>>>>> +
-> >>>>>> +	struct mbox_controller	mbox;
-> >>>>>> +	struct mbox_chan
-> 	mbox_chans[IMX_MU_MAX_CHANS];
-> >>>>>> +
-> >>>>>> +	struct imx_mu_con_priv  con_priv[IMX_MU_MAX_CHANS];
-> >>>>>> +	struct clk		*clk;
-> >>>>>> +
-> >>>>>> +	bool			side_a;
-> >>>>>> +};
-> >>>>>> +
-> >>>>>> +static struct imx_mu_priv *to_imx_mu_priv(struct
-> mbox_controller
-> >>>>>> +*mbox) {
-> >>>>>> +	return container_of(mbox, struct imx_mu_priv, mbox); }
-> >>>>>> +
-> >>>>>> +static void imx_mu_write(struct imx_mu_priv *priv, u32 val, u32
-> >>>>>> +offs)
-> >> {
-> >>>>>> +	iowrite32(val, priv->base + offs); }
-> >>>>>> +
-> >>>>>> +static u32 imx_mu_read(struct imx_mu_priv *priv, u32 offs) {
-> >>>>>> +	return ioread32(priv->base + offs); }
-> >>>>>> +
-> >>>>>> +static u32 imx_mu_rmw(struct imx_mu_priv *priv, u32 offs, u32
-> >>>>>> +set,
-> >>>>>> +u32
-> >>>>>> +clr) {
-> >>>>>> +	u32 val;
-> >>>>>> +
-> >>>>>> +	val = imx_mu_read(priv, offs);
-> >>>>>> +	val &= ~clr;
-> >>>>>> +	val |= set;
-> >>>>>> +	imx_mu_write(priv, val, offs);
-> >>>>>> +
-> >>>>>> +	return val;
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +static irqreturn_t imx_mu_isr(int irq, void *p) {
-> >>>>>> +	struct mbox_chan *chan = p;
-> >>>>>
-> >>>>> Better re-order from long to short.
-> >>>>
-> >>>> "chis" is used by by following declarations. It make no sense to reorder
-> it.
-> >>>>
-> >>>
-> >>> Yes, you're right.
-> >>>
-> >>>>>
-> >>>>>> +	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
-> >>>>>> +	struct imx_mu_con_priv *cp = chan->con_priv;
-> >>>>>> +
-> >>>>>
-> >>>>> Unnecessary blank line?
-> >>>>
-> >>>> ok,
-> >>>>
-> >>>>>> +	u32 val, ctrl, dat;
-> >>>>>> +
-> >>>>>> +	ctrl = imx_mu_read(priv, IMX_MU_xCR);
-> >>>>>> +	val = imx_mu_read(priv, IMX_MU_xSR);
-> >>>>>> +	val &= IMX_MU_xSR_TEn(cp->idx) | IMX_MU_xSR_RFn(cp-
-> >idx);
-> >>>>>> +	val &= ctrl & (IMX_MU_xCR_TIEn(cp->idx) |
-> IMX_MU_xCR_RIEn(cp-
-> >>>>>>> idx));
-> >>>>>> +	if (!val)
-> >>>>>> +		return IRQ_NONE;
-> >>>>>> +
-> >>>>>> +	if (val & IMX_MU_xSR_TEn(cp->idx)) {
-> >>>>>> +		imx_mu_rmw(priv, IMX_MU_xCR, 0,
-> IMX_MU_xCR_TIEn(cp-
-> >>>>>>> idx));
-> >>>>>> +		mbox_chan_txdone(chan, 0);
-> >>>>>> +	}
-> >>>>>> +
-> >>>>>> +	if (val & IMX_MU_xSR_RFn(cp->idx)) {
-> >>>>>> +		dat = imx_mu_read(priv, IMX_MU_xRRn(cp->idx));
-> >>>>>> +		mbox_chan_received_data(chan, (void *)&dat);
-> >>>>>> +	}
-> >>>>>> +
-> >>>>>> +	return IRQ_HANDLED;
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +static bool imx_mu_last_tx_done(struct mbox_chan *chan) {
-> >>>>>> +	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
-> >>>>>> +	struct imx_mu_con_priv *cp = chan->con_priv;
-> >>>>>> +	u32 val;
-> >>>>>> +
-> >>>>>> +	val = imx_mu_read(priv, IMX_MU_xSR);
-> >>>>>> +	/* test if transmit register is empty */
-> >>>>>> +	return (!!(val & IMX_MU_xSR_TEn(cp->idx))); }
-> >>>>>> +
-> >>>>>> +static int imx_mu_send_data(struct mbox_chan *chan, void *data)
-> {
-> >>>>>> +	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
-> >>>>>> +	struct imx_mu_con_priv *cp = chan->con_priv;
-> >>>>>> +	u32 *arg = data;
-> >>>>>> +
-> >>>>>> +	if (!imx_mu_last_tx_done(chan))
-> >>>>>> +		return -EBUSY;
-> >>>>>> +
-> >>>>>> +	imx_mu_write(priv, *arg, IMX_MU_xTRn(cp->idx));
-> >>>>>> +	imx_mu_rmw(priv, IMX_MU_xCR, IMX_MU_xSR_TEn(cp-
-> >idx), 0);
-> >>>>>> +
-> >>>>>> +	return 0;
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +static int imx_mu_startup(struct mbox_chan *chan) {
-> >>>>>> +	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
-> >>>>>> +	struct imx_mu_con_priv *cp = chan->con_priv;
-> >>>>>> +	char *irq_desc;
-> >>>>>> +	int ret;
-> >>>>>> +
-> >>>>>> +	irq_desc = devm_kasprintf(priv->dev, GFP_KERNEL,
-> >>>>>> "imx_mu_chan[%i]",
-> >>>>>> +				  cp->idx);
-> >>>>>
-> >>>>> I like the name differentiation, just wondering whether this could
-> >>>>> cause memory leak if users repeatly open/close MU channels due to
-> >>>>> I see no free.
-> >>>>
-> >>>> good point.
-> >>>>
-> >>>>>
-> >>>>>> +	if (!irq_desc)
-> >>>>>> +		return -ENOMEM;
-> >>>>>> +
-> >>>>>> +	ret = devm_request_irq(priv->dev, cp->irq, imx_mu_isr,
-> >>>>>> +			       IRQF_SHARED, irq_desc, chan);
-> >>>>>> +	if (ret) {
-> >>>>>> +		dev_err(priv->dev,
-> >>>>>> +			"Unable to acquire IRQ %d\n", cp->irq);
-> >>>>>> +		return ret;
-> >>>>>> +	}
-> >>>>>> +
-> >>>>>> +	imx_mu_rmw(priv, IMX_MU_xCR, IMX_MU_xCR_RIEn(cp-
-> >idx), 0);
-> >>>>>> +
-> >>>>>> +	return 0;
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +static void imx_mu_shutdown(struct mbox_chan *chan) {
-> >>>>>> +	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
-> >>>>>> +	struct imx_mu_con_priv *cp = chan->con_priv;
-> >>>>>> +
-> >>>>>> +	imx_mu_rmw(priv, IMX_MU_xCR, 0,
-> >>>>>> +		   IMX_MU_xCR_TIEn(cp->idx) |
-> IMX_MU_xCR_RIEn(cp-
-> >>>>>>> idx));
-> >>>>>> +
-> >>>>>> +	devm_free_irq(priv->dev, cp->irq, chan); }
-> >>>>>> +
-> >>>>>> +static const struct mbox_chan_ops imx_mu_ops = {
-> >>>>>> +	.send_data = imx_mu_send_data,
-> >>>>>> +	.startup = imx_mu_startup,
-> >>>>>> +	.shutdown = imx_mu_shutdown,
-> >>>>>> +};
-> >>>>>> +
-> >>>>>> +static int imx_mu_probe(struct platform_device *pdev) {
-> >>>>>> +	struct device *dev = &pdev->dev;
-> >>>>>> +	struct device_node *np = dev->of_node;
-> >>>>>> +	struct resource *iomem;
-> >>>>>> +	struct imx_mu_priv *priv;
-> >>>>>> +	const struct imx_mu_cfg *dcfg;
-> >>>>>> +	unsigned int i, chans;
-> >>>>>> +	int irq, ret;
-> >>>>>> +
-> >>>>>> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> >>>>>> +	if (!priv)
-> >>>>>> +		return -ENOMEM;
-> >>>>>> +
-> >>>>>> +	dcfg = of_device_get_match_data(dev);
-> >>>>>> +	if (!dcfg)
-> >>>>>> +		return -EINVAL;
-> >>>>>> +
-> >>>>>> +	priv->dcfg = dcfg;
-> >>>>>> +	priv->dev = dev;
-> >>>>>> +
-> >>>>>> +	iomem = platform_get_resource(pdev, IORESOURCE_MEM,
-> 0);
-> >>>>>> +	priv->base = devm_ioremap_resource(&pdev->dev, iomem);
-> >>>>>> +	if (IS_ERR(priv->base))
-> >>>>>> +		return PTR_ERR(priv->base);
-> >>>>>> +
-> >>>>>> +	irq = platform_get_irq(pdev, 0);
-> >>>>>> +	if (irq <= 0)
-> >>>>>> +		return irq < 0 ? irq : -EINVAL;
-> >>>>>> +
-> >>>>>> +	priv->clk = devm_clk_get(dev, NULL);
-> >>>>>> +	if (IS_ERR(priv->clk)) {
-> >>>>>> +		if (PTR_ERR(priv->clk) != -ENOENT)
-> >>>>>> +			return PTR_ERR(priv->clk);
-> >>>>>> +
-> >>>>>> +		priv->clk = NULL;
-> >>>>>> +	}
-> >>>>>> +
-> >>>>>> +	ret = clk_prepare_enable(priv->clk);
-> >>>>>> +	if (ret) {
-> >>>>>> +		dev_err(dev, "Failed to enable clock\n");
-> >>>>>> +		return ret;
-> >>>>>> +	}
-> >>>>>> +
-> >>>>>> +	chans = min(dcfg->chans, IMX_MU_MAX_CHANS);
-> >>>>>> +	/* Initialize channel identifiers */
-> >>>>>> +	for (i = 0; i < chans; i++) {
-> >>>>>> +		struct imx_mu_con_priv *cp = &priv->con_priv[i];
-> >>>>>> +
-> >>>>>> +		cp->idx = i;
-> >>>>>> +		cp->irq = irq;
-> >>>>>> +		priv->mbox_chans[i].con_priv = cp;
-> >>>>>> +	}
-> >>>>>> +
-> >>>>>> +	if (of_property_read_bool(np, "fsl,mu-side-a"))
-> >>>>>> +		priv->side_a = true;
-> >>>>>
-> >>>>> See property comments in former emails.
-> >>>>
-> >>>> ok.
-> >>>>
-> >>>>>> +
-> >>>>>> +	priv->mbox.dev = dev;
-> >>>>>> +	priv->mbox.ops = &imx_mu_ops;
-> >>>>>> +	priv->mbox.chans = priv->mbox_chans;
-> >>>>>> +	priv->mbox.num_chans = chans;
-> >>>>>> +	priv->mbox.txdone_irq = true;
-> >>>>>> +
-> >>>>>> +	platform_set_drvdata(pdev, priv);
-> >>>>>> +
-> >>>>>> +	if (priv->dcfg->init_hw)
-> >>>>>> +		priv->dcfg->init_hw(priv);
-> >>>>>> +
-> >>>>>> +	return mbox_controller_register(&priv->mbox);
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +static int imx_mu_remove(struct platform_device *pdev) {
-> >>>>>> +	struct imx_mu_priv *priv = platform_get_drvdata(pdev);
-> >>>>>> +
-> >>>>>> +	mbox_controller_unregister(&priv->mbox);
-> >>>>>> +	clk_disable_unprepare(priv->clk);
-> >>>>>> +
-> >>>>>> +	return 0;
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +
-> >>>>>> +static void imx_mu_init_imx7d(struct imx_mu_priv *priv) {
-> >>>>>
-> >>>>> I guess we could remove the soc postfix now.
-> >>>>
-> >>>> ok.
-> >>>>
-> >>>>>
-> >>>>>> +	/* Set default config */
-> >>>>>> +	if (priv->side_a)
-> >>>>>> +		imx_mu_write(priv, 0, IMX_MU_xCR); }
-> >>>>>> +
-> >>>>>> +static const struct imx_mu_cfg imx_mu_cfg_imx7d = {
-> >>>>>> +	.chans = IMX_MU_MAX_CHANS,
-> >>>>>
-> >>>>> What's point of another chans here?
-> >>>>> This can also be controlled by IMX_MU_MAX_CHANS.
-> >>>>
-> >>>> SCU has one channel configuration.
-> >>>
-> >>> I guess the SCU one channel(4 rx/tx register) actually is not the
-> >>> one channel specified here. e.g. For M4 case, users can still
-> >>> specify only using one chan
-> >>> (1 rx/tx register). They're slightly different.
-> >>> So for SCU case, we actually did not use the struct imx_mu_cfg.
-> >>>
-> >>>> It is possible to exctend this driver with existing MU to provide 8
-> >>>> channels: 4 channels with FIFO (can be used stand alone) + 4
-> >>>> channes based on General purpose interrupt and should be used with
-> >>>> shared
-> >> memory.
-> >>>
-> >>> Yes, but that still seems common to me. Not per SoC specific.
-> >>
-> >> Correct, it is not SoC specific, it is end-product specific. All
-> >> depends on what exactly is on opposite side of MU. Currently I don't
-> >> see any other way as providing product specific compatible with
-> >> needed configuration. And current driver version allows it without ugly
-> patching.
-> >>
-> >
-> > I think the point is your current implementation of .hw_init() for
-> > MX7D is quite general to other SoCs as well, not much end-product specific.
-> >
-> > Let's see it's only a simple initialization of MU and reset both side.
-> > +static void imx_mu_init_imx7d(struct imx_mu_priv *priv) {
-> > +	/* Set default config */
-> > +	if (priv->side_a)
-> > +		imx_mu_write(priv, 0, IMX_MU_xCR);
-> > +}
-> > That's why I thought it could be moved into general part instead of
-> > being provided as SoC specific .hw_init() callback.
-> 
-> 
-> Here is probably some misunderstanding. I'm not against
-> imx_mu_cfg_generic. I just prefer to keep "struct imx_mu_cfg", because i
-> already see me patching it back in some months .
 
-My former suggestion is removing "struct imx_mu_cfg" because I did not
-see different requirement.
-But if you insist and you already see real requirement, I'm okay to keep it
-and change later if we face real problems.
 
-Regards
-Dong Aisheng
-
+On 7/17/2018 3:24 PM, Adrian Hunter wrote:
+> On 17/07/18 12:45, Vijay Viswanath wrote:
+>>
+>>
+>> On 7/17/2018 2:12 PM, Adrian Hunter wrote:
+>>> On 17/07/18 11:40, Vijay Viswanath wrote:
+>>>>
+>>>>
+>>>> On 7/17/2018 1:00 PM, Adrian Hunter wrote:
+>>>>> On 17/07/18 08:14, Vijay Viswanath wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 7/10/2018 4:37 PM, Adrian Hunter wrote:
+>>>>>>> On 21/06/18 15:23, Vijay Viswanath wrote:
+>>>>>>>> Some controllers can have internal mechanism to inform the SW that it
+>>>>>>>> is ready for voltage switching. For such controllers, changing voltage
+>>>>>>>> before the HW is ready can result in various issues.
+>>>>>>>>
+>>>>>>>> Add a quirk, which can be used by drivers of such controllers.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
+>>>>>>>> ---
+>>>>>>>>      drivers/mmc/host/sdhci.c | 20 +++++++++++++++-----
+>>>>>>>>      drivers/mmc/host/sdhci.h |  2 ++
+>>>>>>>>      2 files changed, 17 insertions(+), 5 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+>>>>>>>> index 1c828e0..f0346d4 100644
+>>>>>>>> --- a/drivers/mmc/host/sdhci.c
+>>>>>>>> +++ b/drivers/mmc/host/sdhci.c
+>>>>>>>> @@ -1615,7 +1615,8 @@ void sdhci_set_power_noreg(struct sdhci_host
+>>>>>>>> *host,
+>>>>>>>> unsigned char mode,
+>>>>>>>>      void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
+>>>>>>>>                   unsigned short vdd)
+>>>>>>>>      {
+>>>>>>>> -    if (IS_ERR(host->mmc->supply.vmmc))
+>>>>>>>> +    if (IS_ERR(host->mmc->supply.vmmc) ||
+>>>>>>>> +            (host->quirks2 & SDHCI_QUIRK2_INTERNAL_PWR_CTL))
+>>>>>>>
+>>>>>>> I think you should provide your own ->set_power() instead of this
+>>>>>>>
+>>>>>>
+>>>>>> will do
+>>>>>>
+>>>>>>>>              sdhci_set_power_noreg(host, mode, vdd);
+>>>>>>>>          else
+>>>>>>>>              sdhci_set_power_reg(host, mode, vdd);
+>>>>>>>> @@ -2009,7 +2010,9 @@ int sdhci_start_signal_voltage_switch(struct
+>>>>>>>> mmc_host *mmc,
+>>>>>>>>              ctrl &= ~SDHCI_CTRL_VDD_180;
+>>>>>>>>              sdhci_writew(host, ctrl, SDHCI_HOST_CONTROL2);
+>>>>>>>>      -        if (!IS_ERR(mmc->supply.vqmmc)) {
+>>>>>>>> +        if (!IS_ERR(mmc->supply.vqmmc) &&
+>>>>>>>> +                !(host->quirks2 &
+>>>>>>>> +                    SDHCI_QUIRK2_INTERNAL_PWR_CTL)) {
+>>>>>>>
+>>>>>>> And your own ->start_signal_voltage_switch()
+>>>>>>>
+>>>>>>
+>>>>>> sdhci_msm_start_signal_voltage_switch() would be an exact copy of
+>>>>>> sdhci_start_signal_voltage_switch()..... will incorporate this if not
+>>>>>> using
+>>>>>> quirk.
+>>>>>>
+>>>>>>>>                  ret = mmc_regulator_set_vqmmc(mmc, ios);
+>>>>>>>>                  if (ret) {
+>>>>>>>>                      pr_warn("%s: Switching to 3.3V signalling voltage
+>>>>>>>> failed\n",
+>>>>>>>> @@ -2032,7 +2035,8 @@ int sdhci_start_signal_voltage_switch(struct
+>>>>>>>> mmc_host *mmc,
+>>>>>>>>          case MMC_SIGNAL_VOLTAGE_180:
+>>>>>>>>              if (!(host->flags & SDHCI_SIGNALING_180))
+>>>>>>>>                  return -EINVAL;
+>>>>>>>> -        if (!IS_ERR(mmc->supply.vqmmc)) {
+>>>>>>>> +        if (!IS_ERR(mmc->supply.vqmmc) &&
+>>>>>>>> +            !(host->quirks2 & SDHCI_QUIRK2_INTERNAL_PWR_CTL)) {
+>>>>>>>>                  ret = mmc_regulator_set_vqmmc(mmc, ios);
+>>>>>>>>                  if (ret) {
+>>>>>>>>                      pr_warn("%s: Switching to 1.8V signalling voltage
+>>>>>>>> failed\n",
+>>>>>>>> @@ -3485,7 +3489,10 @@ int sdhci_setup_host(struct sdhci_host *host)
+>>>>>>>>           * the host can take the appropriate action if regulators are
+>>>>>>>> not
+>>>>>>>>           * available.
+>>>>>>>>           */
+>>>>>>>> -    ret = mmc_regulator_get_supply(mmc);
+>>>>>>>> +    if (!(host->quirks2 & SDHCI_QUIRK2_INTERNAL_PWR_CTL))
+>>>>>>>
+>>>>>>> Since we expect mmc_regulator_get_supply() to have been called, this
+>>>>>>> could
+>>>>>>> be:
+>>>>>>>
+>>>>>>>        if (!mmc->supply.vmmc) {
+>>>>>>>            ret = mmc_regulator_get_supply(mmc);
+>>>>>>>            enable_vqmmc = true;
+>>>>>>>        } else {
+>>>>>>>            ret = 0;
+>>>>>>>        }
+>>>>>>>>> +        ret = mmc_regulator_get_supply(mmc);
+>>>>>>>> +    else
+>>>>>>>> +        ret = 0;
+>>>>>>>>          if (ret)
+>>>>>>>>              return ret;
+>>>>>>>>      @@ -3736,7 +3743,10 @@ int sdhci_setup_host(struct sdhci_host *host)
+>>>>>>>>            /* If vqmmc regulator and no 1.8V signalling, then there's no
+>>>>>>>> UHS */
+>>>>>>>>          if (!IS_ERR(mmc->supply.vqmmc)) {
+>>>>>>>> -        ret = regulator_enable(mmc->supply.vqmmc);
+>>>>>>>> +        if (!(host->quirks2 & SDHCI_QUIRK2_INTERNAL_PWR_CTL))
+>>>>>>>
+>>>>>>> And this could be:
+>>>>>>>
+>>>>>>>            if (enable_vqmmc)
+>>>>>>>                ret = regulator_enable(mmc->supply.vqmmc);
+>>>>>>>            else
+>>>>>>>                ret = 0;
+>>>>>>>     > However, you still need to ensure
+>>>>>>> regulator_disable(mmc->supply.vqmmc) is
+>>>>>>> only called if regulator_enable() was called.
+>>>>>> I missed this. Will cover it.
+>>>>>>
+>>>>>> Also I missed one more place where we are doing regulator_disable. During
+>>>>>> sdhci-msm unbinding, we would end up doing an extra regulator disable
+>>>>>> (thanks Evan for pointing it out) in sdhci_remove_host.
+>>>>>>
+>>>>>> To avoid the quirk( or having any flag), it would require copying the code
+>>>>>> of sdhci_start_signal_voltage_switch() and sdhci_remove_host() and
+>>>>>> creating
+>>>>>
+>>>>> You do not need to duplicate sdhci_remove_host(), just change it so that it
+>>>>> only  disables what was enabled i.e.
+>>>>>
+>>>>>       if (host->vqmmc_enabled)
+>>>>>           regulator_disable(mmc->supply.vqmmc);
+>>>>>
+>>>>
+>>>> Ok, so we will be adding a new flag "vqmmc_enabled" in sdhci_host, ryt ?
+>>>
+>>> Yes
+>>>
+>>
+>> Ok.
+>> Any particular reason why we are avoiding quirk and instead adding a new flag ?
 > 
-> > Because I'm afraid we may write similar code for other SoCs as well:
-> > e.g.
-> > static const struct imx_mu_cfg imx_mu_cfg_imx6sx = {
-> >         .chans = IMX_MU_MAX_CHANS,
-> >         .init_hw = imx_mu_init_imx7d,
-> > };
-> >
-> > static const struct imx_mu_cfg imx_mu_cfg_imx7d = {
-> >         .chans = IMX_MU_MAX_CHANS,
-> >         .init_hw = imx_mu_init_imx7d,
-> > };
-> >
-> > static const struct imx_mu_cfg imx_mu_cfg_imx7ulp = {
-> >         .chans = IMX_MU_MAX_CHANS,
-> >         .init_hw = imx_mu_init_imx7d,
-> > };
-> >
-> > static const struct imx_mu_cfg imx_mu_cfg_imx8qxp = {
-> >         .chans = IMX_MU_MAX_CHANS,
-> >         .init_hw = imx_mu_init_imx7d,
-> > };
-> >
-> > static const struct imx_mu_cfg imx_mu_cfg_imx8qm = {
-> >         .chans = IMX_MU_MAX_CHANS,
-> >         .init_hw = imx_mu_init_imx7d,
-> > };
-> >
-> > static const struct imx_mu_cfg imx_mu_cfg_imx8mq = {
-> >         .chans = IMX_MU_MAX_CHANS,
-> >         .init_hw = imx_mu_init_imx7d,
-> > };
-> >
-> > Anyway, I'm not strongly against it. Maybe we can also refine it later
-> > when we see the real problem.
-> >
-> > Regards
-> > Dong Aisheng
-> >
-> >>>>
-> >>>>>> +	.init_hw = imx_mu_init_imx7d,
-> >>>>>
-> >>>>> Can we imagine a diferent .init_hw callback for another SoC?
-> >>>>
-> >>>> yes, for example SCU case, or any other case where A side is used
-> >>>> on slave system.
-> >>>>
-> >>>
-> >>> SCU does not use this as we still did not see SoC specific init_hw
-> >> requirement.
-> >>>
-> >>>>> If no, how about make it default as I see the implementation is
-> >>>>> quite simple and seems not SoC specific. Then we probably can
-> >>>>> totally remove struct imx_mu_cfg.
-> >>>>
-> >>>> i prefer not to do it.
-> >>>>
-> >>>>>> +};
-> >>>>>> +
-> >>>>>> +static const struct of_device_id imx_mu_dt_ids[] = {
-> >>>>>> +	{ .compatible = "fsl,imx7s-mu", .data =
-> &imx_mu_cfg_imx7d },
-> >>>>>> +	{ },
-> >>>>>> +};
-> >>>>>> +MODULE_DEVICE_TABLE(of, imx_mu_dt_ids);
-> >>>>>> +
-> >>>>>> +static struct platform_driver imx_mu_driver = {
-> >>>>>> +	.probe		= imx_mu_probe,
-> >>>>>> +	.remove		= imx_mu_remove,
-> >>>>>> +	.driver = {
-> >>>>>> +		.name	= "imx_mu",
-> >>>>>> +		.of_match_table = imx_mu_dt_ids,
-> >>>>>> +	},
-> >>>>>> +};
-> >>>>>> +module_platform_driver(imx_mu_driver);
-> >>>>>
-> >>>>> Do you think if we can escalated it a bit earlier as it's used by SCU?
-> >>>>> e.g. core_initcall ?
-> >>>>
-> >>>> Some more testing shoukld be done. Same MU driver is on master side
-> >>>> a clock consumer on slave side it is clock provider. It is valid
-> >>>> for my R&D project as well.
-> >>>> Let us concentrate on generic part first and then extend it as needed.
-> >>>
-> >>> Okay to me.
-> >>>
-> >>> Regards
-> >>> Dong Aisheng
-> >>>
-> >
+> It moves more in the direction of letting drivers do what they want, rather
+> than trying to make making SDHCI do everything.
+> 
+
+ok will incorporate the changes in next version.
+
+>>
+>>>> Just wanted to clarify
+>>>>
+>>>>>> 2 new functions in sdhci_msm layer which would do the exact same as above,
+>>>>>> with just the regulator parts removed.
+>>>>>>
+>>>>>> This looks messy (considering any future changes to the 2 sdhci API will
+>>>>>> need to be copied to their duplicate sdhci_msm API) and a bit overkill to
+>>>>>> avoid quirk. At the same time, I don't know how useful such a quirk
+>>>>>> would be
+>>>>>> to other platform drivers.
+>>>>>>
+>>>>>> Please let me know your view/suggestions.
+>>>>>
+>>>>> Let's try without the quirk.
+>>>>>
+>>>>>>>
+>>>>>>>> +            ret = regulator_enable(mmc->supply.vqmmc);
+>>>>>>>> +        else
+>>>>>>>> +            ret = 0;
+>>>>>>>>              if (!regulator_is_supported_voltage(mmc->supply.vqmmc,
+>>>>>>>> 1700000,
+>>>>>>>>                                  1950000))
+>>>>>>>>                  host->caps1 &= ~(SDHCI_SUPPORT_SDR104 |
+>>>>>>>> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+>>>>>>>> index 23966f8..3b0c97a 100644
+>>>>>>>> --- a/drivers/mmc/host/sdhci.h
+>>>>>>>> +++ b/drivers/mmc/host/sdhci.h
+>>>>>>>> @@ -450,6 +450,8 @@ struct sdhci_host {
+>>>>>>>>       * obtainable timeout.
+>>>>>>>>       */
+>>>>>>>>      #define SDHCI_QUIRK2_DISABLE_HW_TIMEOUT            (1<<17)
+>>>>>>>> +/* Regulator voltage changes are being done from platform layer */
+>>>>>>>> +#define SDHCI_QUIRK2_INTERNAL_PWR_CTL                (1<<18)
+>>>>>>>
+>>>>>>> So maybe the quirk is not needed.
+>>>>>>>
+>>>>>>>>            int irq;        /* Device IRQ */
+>>>>>>>>          void __iomem *ioaddr;    /* Mapped address */
+>>>>>>>>
+>>>>>>>
+>>>>>>
+>>>>>> Thanks for the review & suggestions!
+>>>>>> Vijay
+>>>>>>
+>>>>>
+>>>>
+>>>
+>>> -- 
+>>> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>
+>>
+> 
+
+Thanks,
+Vijay
