@@ -1,180 +1,113 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH RFC 1/2] mmc: sdhci: Allow platform controlled voltage
- switching
-Date: Tue, 17 Jul 2018 10:30:35 +0300
-Message-ID: <78dfa5db-712b-bb0c-ad03-761371beef10@intel.com>
-References: <1529583826-42020-1-git-send-email-vviswana@codeaurora.org>
- <1529583826-42020-2-git-send-email-vviswana@codeaurora.org>
- <53c6d61f-47f5-2e4e-8280-6f76f707799e@intel.com>
- <0d9b1934-d80d-a726-8094-688c97474afa@codeaurora.org>
+From: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
+Subject: Re: [PATCH] drm/panel: simple: Support simple VGA panels
+Date: Tue, 17 Jul 2018 09:05:55 +0200
+Message-ID: <8de3e6a1-e75c-76fa-a25a-5a1d67515bea@ysoft.com>
+References: <20180716092339.9736-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0d9b1934-d80d-a726-8094-688c97474afa@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180716092339.9736-1-linus.walleij@linaro.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vijay Viswanath <vviswana@codeaurora.org>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, dianders@google.com, sayalil@codeaurora.org, Evan Green <evgreen@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Robin Murphy <robin.murphy@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 17/07/18 08:14, Vijay Viswanath wrote:
-> 
-> 
-> On 7/10/2018 4:37 PM, Adrian Hunter wrote:
->> On 21/06/18 15:23, Vijay Viswanath wrote:
->>> Some controllers can have internal mechanism to inform the SW that it
->>> is ready for voltage switching. For such controllers, changing voltage
->>> before the HW is ready can result in various issues.
->>>
->>> Add a quirk, which can be used by drivers of such controllers.
->>>
->>> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
->>> ---
->>>   drivers/mmc/host/sdhci.c | 20 +++++++++++++++-----
->>>   drivers/mmc/host/sdhci.h |  2 ++
->>>   2 files changed, 17 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->>> index 1c828e0..f0346d4 100644
->>> --- a/drivers/mmc/host/sdhci.c
->>> +++ b/drivers/mmc/host/sdhci.c
->>> @@ -1615,7 +1615,8 @@ void sdhci_set_power_noreg(struct sdhci_host *host,
->>> unsigned char mode,
->>>   void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
->>>                unsigned short vdd)
->>>   {
->>> -    if (IS_ERR(host->mmc->supply.vmmc))
->>> +    if (IS_ERR(host->mmc->supply.vmmc) ||
->>> +            (host->quirks2 & SDHCI_QUIRK2_INTERNAL_PWR_CTL))
->>
->> I think you should provide your own ->set_power() instead of this
->>
-> 
-> will do
-> 
->>>           sdhci_set_power_noreg(host, mode, vdd);
->>>       else
->>>           sdhci_set_power_reg(host, mode, vdd);
->>> @@ -2009,7 +2010,9 @@ int sdhci_start_signal_voltage_switch(struct
->>> mmc_host *mmc,
->>>           ctrl &= ~SDHCI_CTRL_VDD_180;
->>>           sdhci_writew(host, ctrl, SDHCI_HOST_CONTROL2);
->>>   -        if (!IS_ERR(mmc->supply.vqmmc)) {
->>> +        if (!IS_ERR(mmc->supply.vqmmc) &&
->>> +                !(host->quirks2 &
->>> +                    SDHCI_QUIRK2_INTERNAL_PWR_CTL)) {
->>
->> And your own ->start_signal_voltage_switch()
->>
-> 
-> sdhci_msm_start_signal_voltage_switch() would be an exact copy of
-> sdhci_start_signal_voltage_switch()..... will incorporate this if not using
-> quirk.
-> 
->>>               ret = mmc_regulator_set_vqmmc(mmc, ios);
->>>               if (ret) {
->>>                   pr_warn("%s: Switching to 3.3V signalling voltage
->>> failed\n",
->>> @@ -2032,7 +2035,8 @@ int sdhci_start_signal_voltage_switch(struct
->>> mmc_host *mmc,
->>>       case MMC_SIGNAL_VOLTAGE_180:
->>>           if (!(host->flags & SDHCI_SIGNALING_180))
->>>               return -EINVAL;
->>> -        if (!IS_ERR(mmc->supply.vqmmc)) {
->>> +        if (!IS_ERR(mmc->supply.vqmmc) &&
->>> +            !(host->quirks2 & SDHCI_QUIRK2_INTERNAL_PWR_CTL)) {
->>>               ret = mmc_regulator_set_vqmmc(mmc, ios);
->>>               if (ret) {
->>>                   pr_warn("%s: Switching to 1.8V signalling voltage
->>> failed\n",
->>> @@ -3485,7 +3489,10 @@ int sdhci_setup_host(struct sdhci_host *host)
->>>        * the host can take the appropriate action if regulators are not
->>>        * available.
->>>        */
->>> -    ret = mmc_regulator_get_supply(mmc);
->>> +    if (!(host->quirks2 & SDHCI_QUIRK2_INTERNAL_PWR_CTL))
->>
->> Since we expect mmc_regulator_get_supply() to have been called, this could
->> be:
->>
->>     if (!mmc->supply.vmmc) {
->>         ret = mmc_regulator_get_supply(mmc);
->>         enable_vqmmc = true;
->>     } else {
->>         ret = 0;
->>     }
->> >> +        ret = mmc_regulator_get_supply(mmc);
->>> +    else
->>> +        ret = 0;
->>>       if (ret)
->>>           return ret;
->>>   @@ -3736,7 +3743,10 @@ int sdhci_setup_host(struct sdhci_host *host)
->>>         /* If vqmmc regulator and no 1.8V signalling, then there's no UHS */
->>>       if (!IS_ERR(mmc->supply.vqmmc)) {
->>> -        ret = regulator_enable(mmc->supply.vqmmc);
->>> +        if (!(host->quirks2 & SDHCI_QUIRK2_INTERNAL_PWR_CTL))
->>
->> And this could be:
->>
->>         if (enable_vqmmc)
->>             ret = regulator_enable(mmc->supply.vqmmc);
->>         else
->>             ret = 0;
->>  > However, you still need to ensure regulator_disable(mmc->supply.vqmmc) is
->> only called if regulator_enable() was called.
-> I missed this. Will cover it.
-> 
-> Also I missed one more place where we are doing regulator_disable. During
-> sdhci-msm unbinding, we would end up doing an extra regulator disable
-> (thanks Evan for pointing it out) in sdhci_remove_host.
-> 
-> To avoid the quirk( or having any flag), it would require copying the code
-> of sdhci_start_signal_voltage_switch() and sdhci_remove_host() and creating
-
-You do not need to duplicate sdhci_remove_host(), just change it so that it
-only  disables what was enabled i.e.
-
-	if (host->vqmmc_enabled)
-		regulator_disable(mmc->supply.vqmmc);
-
-> 2 new functions in sdhci_msm layer which would do the exact same as above,
-> with just the regulator parts removed.
-> 
-> This looks messy (considering any future changes to the 2 sdhci API will
-> need to be copied to their duplicate sdhci_msm API) and a bit overkill to
-> avoid quirk. At the same time, I don't know how useful such a quirk would be
-> to other platform drivers.
-> 
-> Please let me know your view/suggestions.
-
-Let's try without the quirk.
-
->>
->>> +            ret = regulator_enable(mmc->supply.vqmmc);
->>> +        else
->>> +            ret = 0;
->>>           if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 1700000,
->>>                               1950000))
->>>               host->caps1 &= ~(SDHCI_SUPPORT_SDR104 |
->>> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
->>> index 23966f8..3b0c97a 100644
->>> --- a/drivers/mmc/host/sdhci.h
->>> +++ b/drivers/mmc/host/sdhci.h
->>> @@ -450,6 +450,8 @@ struct sdhci_host {
->>>    * obtainable timeout.
->>>    */
->>>   #define SDHCI_QUIRK2_DISABLE_HW_TIMEOUT            (1<<17)
->>> +/* Regulator voltage changes are being done from platform layer */
->>> +#define SDHCI_QUIRK2_INTERNAL_PWR_CTL                (1<<18)
->>
->> So maybe the quirk is not needed.
->>
->>>         int irq;        /* Device IRQ */
->>>       void __iomem *ioaddr;    /* Mapped address */
->>>
->>
-> 
-> Thanks for the review & suggestions!
-> Vijay
-> 
+T24gMTYuNy4yMDE4IDExOjIzLCBMaW51cyBXYWxsZWlqIHdyb3RlOgo+IFRoZSBuZWVkIHRvIHN1
+cHBvcnQgc29tZSBzdHJhaWdodC1mb3J3YXJkIFZHQSBwYW5lbHMgdGhhdCBhcmUKPiBub3QgYWRo
+ZXJpbmcgdG8gYW55IHN0YW5kYXJkIGxpa2UgRFBJIGFyaXNlIGluIHRoZSBBUk0gUlRTTSBWRQo+
+IFJlYWwtVGltZSBTeXN0ZW1zIE1vZGVsIFZpcnR1YWwgRXhlY3V0aXZlLiBUaGlzIGVtdWxhdG9y
+ICh3aGljaAo+IGlzIG5vdCBRRU1VKSBkb2VzIG5vdCBtb2RlbCBhbnkgYnJpZGdlIG9yIHBhbmVs
+IG90aGVyIHRoYW4KPiBkaXNwbGF5aW5nIHdoYXRldmVyIHRoZSB1c2VyIGRlZmluZXMgdGhhdCB0
+aGV5IGhhdmUuCj4gCj4gQ3VycmVudGx5IGEgZmFrZSAiRFBJIHBhbmVsIiBpcyB1c2VkIGZvciB0
+aGlzIHdpdGggdGhlIG9sZAo+IEZCREVWIGRyaXZlciwgYnV0IHRoaXMgaXMgd3JvbmcgYXMgaXQg
+aXMgbm90IGNvbmZvcm1pbmcgdG8gYW55Cj4gTUlQSSBEUEkgc3RhbmRhcmRzLiBIb3dldmVyIHRo
+ZSByZXNvbHV0aW9uIGNob3NlbiB0aGVyZSBpcwo+IHN0YW5kYXJkIFZHQSwgYW5kIHdlIGNhbiBj
+b3ZlciB0aGlzIHdpdGggdGhlIHNpbXBsZSBwYW5lbAo+IGJ5IHNpbXBseSBhZGRpbmcgdGhlIG1v
+c3QgY29tbW9uIFZHQSByZXNvbHV0aW9ucyBhcyBhIGtpbmQKPiBvZiAic2ltcGxlIHBhbmVsIi4K
+PiAKPiBJbiBkaWZmZXJlbmNlIGZyb20gb3RoZXIgY2FzZXMgd2hlcmUgInNpbXBsZSBwYW5lbCIg
+bWlnaHQgYmUKPiBoaWRpbmcgc29tZXRoaW5nIG1vcmUgY29tcGxleCAoc3VjaCBhcyBhIHBhbmVs
+IGRyaXZlciBvciBicmlkZ2UpCj4gdGhpcyBjYXNlIGlzIGFjdHVhbGx5IGFwcGxpY2FibGUsIHNp
+bmNlIHdlIGFyZSBydW5uaW5nIGluc2lkZQo+IGEgc2ltdWxhdGlvbiB3aXRoIG5vIHJlYWwgaGFy
+ZHdhcmUgb24gdGhlIG91dHB1dC4KPiAKPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcK
+PiBDYzogU3VkZWVwIEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNvbT4KPiBDYzogTG9yZW56byBQ
+aWVyYWxpc2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+Cj4gQ2M6IExpdml1IER1ZGF1IDxs
+aXZpdS5kdWRhdUBhcm0uY29tPgo+IENjOiBSb2JpbiBNdXJwaHkgPHJvYmluLm11cnBoeUBhcm0u
+Y29tPgo+IFNpZ25lZC1vZmYtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJv
+Lm9yZz4KPiAtLS0KPiAgIC4uLi9kaXNwbGF5L3BhbmVsL3ZpZGVvLWdyYXBoaWNzLWFycmF5LnR4
+dCAgICB8IDIxICsrKysrKwo+ICAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5j
+ICAgICAgICAgIHwgNjYgKysrKysrKysrKysrKysrKysrKwo+ICAgMiBmaWxlcyBjaGFuZ2VkLCA4
+NyBpbnNlcnRpb25zKCspCj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvdmlkZW8tZ3JhcGhpY3MtYXJyYXkudHh0Cj4g
+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3BhbmVsL3ZpZGVvLWdyYXBoaWNzLWFycmF5LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3ZpZGVvLWdyYXBoaWNzLWFycmF5LnR4dAo+IG5ldyBm
+aWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi4xOTNkMjRlYmUwNTIKPiAtLS0g
+L2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvcGFuZWwvdmlkZW8tZ3JhcGhpY3MtYXJyYXkudHh0Cj4gQEAgLTAsMCArMSwyMSBAQAo+ICtW
+aWRlbyBHcmFwaGljcyBBcnJheQo+ICsKPiArVGhpcyBiaW5kaW5nIGlzIGZvciBzaW1wbGUgcGFu
+ZWxzIHVzaW5nIHRoZSBzdGFuZGFyZGl6ZWQgVkdBIHJlc29sdXRpb25zCj4gK2RlZmluZWQgYnkg
+ZGUgZmFjdG8gc3RhbmRhcmRzIGJlZ2lubmluZyB3aXRoIHRoZSBJQk0gUFMvMiBpbiAxOTg3Lgo+
+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgInZp
+ZGVvLWdyYXBoaWNzLWFycmF5Igo+ICsKPiArVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0
+aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAo+ICtpbiBzaW1w
+bGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5Lgo+ICsKPiArRXhhbXBsZToKPiArCj4gK3Bh
+bmVsIHsKPiArCWNvbXBhdGlibGUgPSAidmlkZW8tZ3JhcGhpY3MtYXJyYXkiOwo+ICsJcG9ydCB7
+Cj4gKwkJdmdhX3BhbmVsX2luOiBlbmRwb2ludCB7Cj4gKwkJCXJlbW90ZS1lbmRwb2ludCA9IDwm
+Zm9vPjsKPiArCQl9Owo+ICsJfTsKPiArfTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
+L3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
+ZS5jCj4gaW5kZXggY2JmMWFiNDA0ZWU3Li5kYjRkYjVhM2Y3NWUgMTAwNjQ0Cj4gLS0tIGEvZHJp
+dmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJt
+L3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4gQEAgLTIwNjksNiArMjA2OSw2OSBAQCBzdGF0aWMgY29u
+c3Qgc3RydWN0IHBhbmVsX2Rlc2Mgd2luc3Rhcl93ZjM1bHRpYWNkID0gewo+ICAgCS5idXNfZm9y
+bWF0ID0gTUVESUFfQlVTX0ZNVF9SR0I4ODhfMVgyNCwKPiAgIH07Cj4gICAKPiArc3RhdGljIGNv
+bnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIHZpZGVvX2dyYXBoaWNzX2FycmF5X21vZGVzW10g
+PSB7Cj4gKwl7Cj4gKwkJLyoKPiArCQkgKiBUaGlzIGlzIHRoZSBtb3N0IHN0YW5kYXJkaXplZCAi
+dmFuaWxsYSIgVkdBIG1vZGUgdGhlcmUgaXM6Cj4gKwkJICogNjQweDQ4MCBAIDYwIEh6Cj4gKwkJ
+ICovCj4gKwkJLmNsb2NrID0gMjcxNzUsCj4gKwkJLmhkaXNwbGF5ID0gNjQwLAo+ICsJCS5oc3lu
+Y19zdGFydCA9IDY0MCArIDE2LAo+ICsJCS5oc3luY19lbmQgPSA2NDAgKyAxNiArIDk2LAo+ICsJ
+CS5odG90YWwgPSA2NDAgKyAxNiArIDk2ICsgNDgsCj4gKwkJLnZkaXNwbGF5ID0gNDgwLAo+ICsJ
+CS52c3luY19zdGFydCA9IDQ4MCArIDEwLAo+ICsJCS52c3luY19lbmQgPSA0ODAgKyAxMCArIDIs
+Cj4gKwkJLnZ0b3RhbCA9IDQ4MCArIDEwICsgMiArIDMzLAo+ICsJCS52cmVmcmVzaCA9IDYwLAo+
+ICsJCS5mbGFncyA9IERSTV9NT0RFX0ZMQUdfTlZTWU5DIHwgRFJNX01PREVfRkxBR19OSFNZTkMs
+Cj4gKwl9LAo+ICsJewo+ICsJCS8qIFNWR0EgODAweDYwMCBANjAgSHogKi8KPiArCQkuY2xvY2sg
+PSA0MDAwMCwKPiArCQkuaGRpc3BsYXkgPSA4MDAsCj4gKwkJLmhzeW5jX3N0YXJ0ID0gODAwICsg
+NDAsCj4gKwkJLmhzeW5jX2VuZCA9IDgwMCArIDQwICsgMTI4LAo+ICsJCS5odG90YWwgPSA4MDAg
+KyA0MCArIDEyOCArIDg4LAo+ICsJCS52ZGlzcGxheSA9IDYwMCwKPiArCQkudnN5bmNfc3RhcnQg
+PSA2MDAgKyAxLAo+ICsJCS52c3luY19lbmQgPSA2MDAgKyAxICsgNCwKPiArCQkudnRvdGFsID0g
+NjAwICsgMSArIDQgKyAyMywKPiArCQkudnJlZnJlc2ggPSA2MCwKPiArCQkuZmxhZ3MgPSBEUk1f
+TU9ERV9GTEFHX05WU1lOQyB8IERSTV9NT0RFX0ZMQUdfTkhTWU5DLAo+ICsJfSwKPiArCXsKPiAr
+CQkvKiBYR0EgMTAyNHg3NjggQDYwIEh6ICovCj4gKwkJLmNsb2NrID0gNjUwMDAsCj4gKwkJLmhk
+aXNwbGF5ID0gMTAyNCwKPiArCQkuaHN5bmNfc3RhcnQgPSAxMDI0ICsgMjQsCj4gKwkJLmhzeW5j
+X2VuZCA9IDEwMjQgKyAyNCArIDEzNiwKPiArCQkuaHRvdGFsID0gMTAyNCArIDI0ICsgMTM2ICsg
+MTYwLAo+ICsJCS52ZGlzcGxheSA9IDc2OCwKPiArCQkudnN5bmNfc3RhcnQgPSA3NjggKyAzLAo+
+ICsJCS52c3luY19lbmQgPSA3NjggKyAzICsgNiwKPiArCQkudnRvdGFsID0gNzY4ICsgMyArIDYg
+KyAyOSwKPiArCQkudnJlZnJlc2ggPSA2MCwKPiArCQkuZmxhZ3MgPSBEUk1fTU9ERV9GTEFHX05W
+U1lOQyB8IERSTV9NT0RFX0ZMQUdfTkhTWU5DLAo+ICsJfSwKPiArfTsKPiArCj4gK3N0YXRpYyBj
+b25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyB2aWRlb19ncmFwaGljc19hcnJheSA9IHsKPiArCS5tb2Rl
+cyA9IHZpZGVvX2dyYXBoaWNzX2FycmF5X21vZGVzLAo+ICsJLm51bV9tb2RlcyA9IEFSUkFZX1NJ
+WkUodmlkZW9fZ3JhcGhpY3NfYXJyYXlfbW9kZXMpLAo+ICsJLmJwYyA9IDgsCj4gKwkvKgo+ICsJ
+ICogU29tZSB0eXBpY2FsIDQ6MyBhc3BlY3QgcmF0aW8gVkdBIG1vbml0b3Igc3VyZWx5IGhhcyB0
+aGVzZSBkaW1lbnNpb25zCj4gKwkgKiBvZiA0MHgzMCBtbS4KSSBhbSBzdXJlIGl0IGhhcyBub3Qg
+Oikgcy9tbS9jbSBvciBhZGQgYSB6ZXJvLgoKTWljaGFsCgo+ICsJICovCj4gKwkuc2l6ZSA9IHsK
+PiArCQkud2lkdGggPSA0MDAsCj4gKwkJLmhlaWdodCA9IDMwMCwKPiArCX0sCj4gKwkuYnVzX2Zv
+cm1hdCA9IE1FRElBX0JVU19GTVRfUkdCODg4XzFYMjQsCj4gK307Cj4gKwo+ICAgc3RhdGljIGNv
+bnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgcGxhdGZvcm1fb2ZfbWF0Y2hbXSA9IHsKPiAgIAl7Cj4g
+ICAJCS5jb21wYXRpYmxlID0gImFtcGlyZSxhbS00ODAyNzJoM3RtcXctdDAxaCIsCj4gQEAgLTIy
+ODYsNiArMjM0OSw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3Jt
+X29mX21hdGNoW10gPSB7Cj4gICAJfSwgewo+ICAgCQkuY29tcGF0aWJsZSA9ICJ3aW5zdGFyLHdm
+MzVsdGlhY2QiLAo+ICAgCQkuZGF0YSA9ICZ3aW5zdGFyX3dmMzVsdGlhY2QsCj4gKwl9LCB7Cj4g
+KwkJLmNvbXBhdGlibGUgPSAidmlkZW8tZ3JhcGhpY3MtYXJyYXkiLAo+ICsJCS5kYXRhID0gJnZp
+ZGVvX2dyYXBoaWNzX2FycmF5LAo+ICAgCX0sIHsKPiAgIAkJLyogc2VudGluZWwgKi8KPiAgIAl9
+Cj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
