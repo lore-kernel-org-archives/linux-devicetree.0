@@ -1,118 +1,300 @@
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 00/16] clk: at91: Rework DT bindings
-Date: Wed, 18 Jul 2018 00:27:41 +0200
-Message-ID: <20180717222757.10253-1-alexandre.belloni@bootlin.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH 10/16] clk: at91: add sama5d4 pmc driver
+Date: Wed, 18 Jul 2018 00:27:51 +0200
+Message-ID: <20180717222757.10253-11-alexandre.belloni@bootlin.com>
+References: <20180717222757.10253-1-alexandre.belloni@bootlin.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180717222757.10253-1-alexandre.belloni@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Michael Turquette <mturquette@baylibre.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-This is the promised rework of the at91 PMC clocks driver. It is mainly
-necessary to remove the DTC warnings but it also complies with the CCF
-rule that there should be one node per controller instead of one node
-per clock.
+Add a driver for the PMC clocks of the sama5d4
 
-This only handles the PMC, I'm planning to also rework the SCKC bindings
-later (without breaking the DT ABI).
-
-The series is based on top of clk-next plus at91-dt so I don't think it
-is convenient to have it this cycle. However, I would really like to
-ensure we agree on the new bindings this cycle before converting all the
-other platforms as this is a bit tedious.
-
-The first two patches are actually fixes and may be considered for this
-cycle.
-
-One nice note:
-at91-sama5d2_xplained.dtb goes from 29351 bytes to 22082 bytes
-
-drivers/clk/at91/built-in.o changes that way:
-
-   text	   data	    bss	    dec	    hex	
-  34792	     24	    732	  35548	   8adc	before
-  39438	     32	    741	  40211	   9d13	after
-  28300	     32	    741	  29073	   7191	without dt-compat
-
-
-Alexandre Belloni (16):
-  clk: at91: audio-pll: fix audio pmc type
-  clk: at91: generated: SSCs don't have a gclk
-  clk: at91: h32mx: separate registration from DT parsing
-  clk: at91: audio-pll: separate registration from DT parsing
-  clk: at91: generated: set audio_pll_allowed in
-    at91_clk_register_generated()
-  clk: at91: allow clock registration from C code
-  clk: at91: add pmc_data struct and helpers
-  dt-bindings: clk: at91: Document new PMC binding
-  clk: at91: add new DT lookup function
-  clk: at91: add sama5d4 pmc driver
-  clk: at91: add sama5d2 PMC driver
-  clk: at91: add at91sam9x5 PMCs driver
-  clk: at91: move DT compatibility code to its own file
-  ARM: dts: at91: sama5d4: switch to new clock bindings
-  ARM: dts: at91: sama5d2: switch to new binding
-  ARM: dts: at91: at91sam9x5: switch to new clock bindings
-
- .../devicetree/bindings/clock/at91-clock.txt  | 523 +---------
- arch/arm/boot/dts/at91-sama5d27_som1_ek.dts   |  12 +-
- arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts     |   2 +-
- arch/arm/boot/dts/at91-sama5d2_xplained.dts   |   4 +-
- arch/arm/boot/dts/at91-sama5d4ek.dts          |   2 +-
- arch/arm/boot/dts/at91sam9g15.dtsi            |   4 +
- arch/arm/boot/dts/at91sam9g25.dtsi            |   4 +
- arch/arm/boot/dts/at91sam9g25ek.dts           |   4 +-
- arch/arm/boot/dts/at91sam9g35.dtsi            |   4 +
- arch/arm/boot/dts/at91sam9x25.dtsi            |   4 +
- arch/arm/boot/dts/at91sam9x35.dtsi            |   4 +
- arch/arm/boot/dts/at91sam9x5.dtsi             | 326 +-----
- arch/arm/boot/dts/at91sam9x5_can.dtsi         |  18 +-
- arch/arm/boot/dts/at91sam9x5_isi.dtsi         |  11 +-
- arch/arm/boot/dts/at91sam9x5_lcd.dtsi         |  19 +-
- arch/arm/boot/dts/at91sam9x5_macb0.dtsi       |  11 +-
- arch/arm/boot/dts/at91sam9x5_macb1.dtsi       |  11 +-
- arch/arm/boot/dts/at91sam9x5_usart3.dtsi      |  11 +-
- arch/arm/boot/dts/sama5d2.dtsi                | 642 +-----------
- arch/arm/boot/dts/sama5d4.dtsi                | 535 +---------
- drivers/clk/at91/Makefile                     |   5 +-
- drivers/clk/at91/at91sam9x5.c                 | 302 ++++++
- drivers/clk/at91/clk-audio-pll.c              | 107 +-
- drivers/clk/at91/clk-generated.c              |  81 +-
- drivers/clk/at91/clk-h32mx.c                  |  22 +-
- drivers/clk/at91/clk-i2s-mux.c                |  40 +-
- drivers/clk/at91/clk-main.c                   | 112 +-
- drivers/clk/at91/clk-master.c                 |  99 +-
- drivers/clk/at91/clk-peripheral.c             |  81 +-
- drivers/clk/at91/clk-pll.c                    | 187 +---
- drivers/clk/at91/clk-plldiv.c                 |  27 +-
- drivers/clk/at91/clk-programmable.c           |  81 +-
- drivers/clk/at91/clk-slow.c                   |  32 +-
- drivers/clk/at91/clk-smd.c                    |  34 +-
- drivers/clk/at91/clk-system.c                 |  39 +-
- drivers/clk/at91/clk-usb.c                    |  94 +-
- drivers/clk/at91/clk-utmi.c                   |  45 +-
- drivers/clk/at91/dt-compat.c                  | 961 ++++++++++++++++++
- drivers/clk/at91/pmc.c                        |  78 ++
- drivers/clk/at91/pmc.h                        | 157 +++
- drivers/clk/at91/sama5d2.c                    | 333 ++++++
- drivers/clk/at91/sama5d4.c                    | 262 +++++
- include/dt-bindings/clock/at91.h              |  14 +
- 43 files changed, 2398 insertions(+), 2946 deletions(-)
- create mode 100644 drivers/clk/at91/at91sam9x5.c
- create mode 100644 drivers/clk/at91/dt-compat.c
- create mode 100644 drivers/clk/at91/sama5d2.c
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/clk/at91/Makefile  |   1 +
+ drivers/clk/at91/sama5d4.c | 262 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 263 insertions(+)
  create mode 100644 drivers/clk/at91/sama5d4.c
 
+diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
+index facc169ebb68..7cdb762f3e2e 100644
+--- a/drivers/clk/at91/Makefile
++++ b/drivers/clk/at91/Makefile
+@@ -14,3 +14,4 @@ obj-$(CONFIG_HAVE_AT91_SMD)		+= clk-smd.o
+ obj-$(CONFIG_HAVE_AT91_H32MX)		+= clk-h32mx.o
+ obj-$(CONFIG_HAVE_AT91_GENERATED_CLK)	+= clk-generated.o
+ obj-$(CONFIG_HAVE_AT91_I2S_MUX_CLK)	+= clk-i2s-mux.o
++obj-$(CONFIG_SOC_SAMA5D4) += sama5d4.o
+diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
+new file mode 100644
+index 000000000000..b98f14c1e138
+--- /dev/null
++++ b/drivers/clk/at91/sama5d4.c
+@@ -0,0 +1,262 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/clk-provider.h>
++#include <linux/mfd/syscon.h>
++#include <linux/slab.h>
++
++#include <dt-bindings/clock/at91.h>
++
++#include "pmc.h"
++
++static const struct clk_master_characteristics mck_characteristics = {
++	.output = { .min = 125000000, .max = 200000000 },
++	.divisors = { 1, 2, 4, 3 },
++};
++
++static u8 plla_out[] = { 0 };
++
++static u16 plla_icpll[] = { 0 };
++
++static struct clk_range plla_outputs[] = {
++	{ .min = 600000000, .max = 1200000000 },
++};
++
++static const struct clk_pll_characteristics plla_characteristics = {
++	.input = { .min = 12000000, .max = 12000000 },
++	.num_output = ARRAY_SIZE(plla_outputs),
++	.output = plla_outputs,
++	.icpll = plla_icpll,
++	.out = plla_out,
++};
++
++static const struct {
++	char *n;
++	char *p;
++	u8 id;
++} sama5d4_systemck[] = {
++	{ .n = "ddrck", .p = "masterck", .id = 2 },
++	{ .n = "lcdck", .p = "masterck", .id = 3 },
++	{ .n = "smdck", .p = "smdclk",   .id = 4 },
++	{ .n = "uhpck", .p = "usbck",    .id = 6 },
++	{ .n = "udpck", .p = "usbck",    .id = 7 },
++	{ .n = "pck0",  .p = "prog0",    .id = 8 },
++	{ .n = "pck1",  .p = "prog1",    .id = 9 },
++	{ .n = "pck2",  .p = "prog2",    .id = 10 },
++};
++
++static const struct {
++	char *n;
++	u8 id;
++} sama5d4_periph32ck[] = {
++	{ .n = "pioD_clk", .id = 5 },
++	{ .n = "usart0_clk", .id = 6 },
++	{ .n = "usart1_clk", .id = 7 },
++	{ .n = "icm_clk", .id = 9 },
++	{ .n = "aes_clk", .id = 12 },
++	{ .n = "tdes_clk", .id = 14 },
++	{ .n = "sha_clk", .id = 15 },
++	{ .n = "matrix1_clk", .id = 17 },
++	{ .n = "hsmc_clk", .id = 22 },
++	{ .n = "pioA_clk", .id = 23 },
++	{ .n = "pioB_clk", .id = 24 },
++	{ .n = "pioC_clk", .id = 25 },
++	{ .n = "pioE_clk", .id = 26 },
++	{ .n = "uart0_clk", .id = 27 },
++	{ .n = "uart1_clk", .id = 28 },
++	{ .n = "usart2_clk", .id = 29 },
++	{ .n = "usart3_clk", .id = 30 },
++	{ .n = "usart4_clk", .id = 31 },
++	{ .n = "twi0_clk", .id = 32 },
++	{ .n = "twi1_clk", .id = 33 },
++	{ .n = "twi2_clk", .id = 34 },
++	{ .n = "mci0_clk", .id = 35 },
++	{ .n = "mci1_clk", .id = 36 },
++	{ .n = "spi0_clk", .id = 37 },
++	{ .n = "spi1_clk", .id = 38 },
++	{ .n = "spi2_clk", .id = 39 },
++	{ .n = "tcb0_clk", .id = 40 },
++	{ .n = "tcb1_clk", .id = 41 },
++	{ .n = "tcb2_clk", .id = 42 },
++	{ .n = "pwm_clk", .id = 43 },
++	{ .n = "adc_clk", .id = 44 },
++	{ .n = "dbgu_clk", .id = 45 },
++	{ .n = "uhphs_clk", .id = 46 },
++	{ .n = "udphs_clk", .id = 47 },
++	{ .n = "ssc0_clk", .id = 48 },
++	{ .n = "ssc1_clk", .id = 49 },
++	{ .n = "trng_clk", .id = 53 },
++	{ .n = "macb0_clk", .id = 54 },
++	{ .n = "macb1_clk", .id = 55 },
++	{ .n = "fuse_clk", .id = 57 },
++	{ .n = "securam_clk", .id = 59 },
++	{ .n = "smd_clk", .id = 61 },
++	{ .n = "twi3_clk", .id = 62 },
++	{ .n = "catb_clk", .id = 63 },
++};
++
++static const struct {
++	char *n;
++	u8 id;
++} sama5d4_periphck[] = {
++	{ .n = "dma0_clk", .id = 8 },
++	{ .n = "cpkcc_clk", .id = 10 },
++	{ .n = "aesb_clk", .id = 13 },
++	{ .n = "mpddr_clk", .id = 16 },
++	{ .n = "matrix0_clk", .id = 18 },
++	{ .n = "vdec_clk", .id = 19 },
++	{ .n = "dma1_clk", .id = 50 },
++	{ .n = "lcdc_clk", .id = 51 },
++	{ .n = "isi_clk", .id = 52 },
++};
++
++static void __init sama5d4_pmc_setup(struct device_node *np)
++{
++	struct clk_range range = CLK_RANGE(0, 0);
++	const char *slck_name, *mainxtal_name;
++	struct pmc_data *sama5d4_pmc;
++	const char *parent_names[5];
++	struct regmap *regmap;
++	struct clk_hw *hw;
++	unsigned int i;
++	bool bypass;
++
++	i = of_property_match_string(np, "clock-names", "slow_clk");
++	if (i < 0)
++		return;
++
++	slck_name = of_clk_get_parent_name(np, i);
++
++	i = of_property_match_string(np, "clock-names", "main_xtal");
++	if (i < 0)
++		return;
++	mainxtal_name = of_clk_get_parent_name(np, i);
++
++	regmap = syscon_node_to_regmap(np);
++	if (IS_ERR(regmap))
++		return;
++
++	sama5d4_pmc = pmc_data_allocate(3, 11, 64, 0);
++	if (!sama5d4_pmc)
++		return;
++
++	hw = at91_clk_register_main_rc_osc(regmap, "main_rc_osc", 12000000,
++					   100000000);
++	if (IS_ERR(hw))
++		goto err_free;
++
++	bypass = of_property_read_bool(np, "atmel,osc-bypass");
++
++	hw = at91_clk_register_main_osc(regmap, "main_osc", mainxtal_name,
++					bypass);
++	if (IS_ERR(hw))
++		goto err_free;
++
++	parent_names[0] = "main_rc_osc";
++	parent_names[1] = "main_osc";
++	hw = at91_clk_register_sam9x5_main(regmap, "mainck", parent_names, 2);
++	if (IS_ERR(hw))
++		goto err_free;
++
++	hw = at91_clk_register_pll(regmap, "pllack", "mainck", 0,
++				   &sama5d3_pll_layout, &plla_characteristics);
++	if (IS_ERR(hw))
++		goto err_free;
++
++	hw = at91_clk_register_plldiv(regmap, "plladivck", "pllack");
++	if (IS_ERR(hw))
++		goto err_free;
++
++	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
++	if (IS_ERR(hw))
++		goto err_free;
++
++	sama5d4_pmc->chws[PMC_UTMI] = hw;
++
++	parent_names[0] = slck_name;
++	parent_names[1] = "mainck";
++	parent_names[2] = "plladivck";
++	parent_names[3] = "utmick";
++	hw = at91_clk_register_master(regmap, "masterck", 4, parent_names,
++				      &at91sam9x5_master_layout,
++				      &mck_characteristics);
++	if (IS_ERR(hw))
++		goto err_free;
++
++	sama5d4_pmc->chws[PMC_MCK] = hw;
++
++	hw = at91_clk_register_h32mx(regmap, "h32mxck", "masterck");
++	if (IS_ERR(hw))
++		goto err_free;
++
++	sama5d4_pmc->chws[PMC_MCK2] = hw;
++
++	parent_names[0] = "plladivck";
++	parent_names[1] = "utmick";
++	hw = at91sam9x5_clk_register_usb(regmap, "usbck", parent_names, 2);
++	if (IS_ERR(hw))
++		goto err_free;
++
++	parent_names[0] = "plladivck";
++	parent_names[1] = "utmick";
++	hw = at91sam9x5_clk_register_smd(regmap, "smdclk", parent_names, 2);
++	if (IS_ERR(hw))
++		goto err_free;
++
++	parent_names[0] = slck_name;
++	parent_names[1] = "mainck";
++	parent_names[2] = "plladivck";
++	parent_names[3] = "utmick";
++	parent_names[4] = "mck";
++	for (i = 0; i < 3; i++) {
++		char name[6];
++
++		snprintf(name, sizeof(name), "prog%d", i);
++
++		hw = at91_clk_register_programmable(regmap, name,
++						    parent_names, 5, i,
++						    &at91sam9x5_programmable_layout);
++		if (IS_ERR(hw))
++			goto err_free;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(sama5d4_systemck); i++) {
++		hw = at91_clk_register_system(regmap, sama5d4_systemck[i].n,
++					      sama5d4_systemck[i].p,
++					      sama5d4_systemck[i].id);
++		if (IS_ERR(hw))
++			goto err_free;
++
++		sama5d4_pmc->shws[sama5d4_systemck[i].id] = hw;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(sama5d4_periphck); i++) {
++		hw = at91_clk_register_sam9x5_peripheral(regmap, &pmc_pcr_lock,
++							 sama5d4_periphck[i].n,
++							 "masterck",
++							 sama5d4_periphck[i].id,
++							 &range);
++		if (IS_ERR(hw))
++			goto err_free;
++
++		sama5d4_pmc->phws[sama5d4_periphck[i].id] = hw;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(sama5d4_periph32ck); i++) {
++		hw = at91_clk_register_sam9x5_peripheral(regmap, &pmc_pcr_lock,
++							 sama5d4_periph32ck[i].n,
++							 "h32mxck",
++							 sama5d4_periph32ck[i].id,
++							 &range);
++		if (IS_ERR(hw))
++			goto err_free;
++
++		sama5d4_pmc->phws[sama5d4_periph32ck[i].id] = hw;
++	}
++
++	of_clk_add_hw_provider(np, of_clk_hw_pmc_get, sama5d4_pmc);
++
++	return;
++
++err_free:
++	pmc_data_free(sama5d4_pmc);
++}
++CLK_OF_DECLARE(sama5d4_pmc, "atmel,sama5d4-pmc", sama5d4_pmc_setup);
 -- 
 2.18.0
