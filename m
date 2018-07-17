@@ -1,127 +1,158 @@
-From: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
-Subject: [PATCH] clk: actions: Add custom delay option to Actions Semi OWL pll
- clock driver
-Date: Tue, 17 Jul 2018 14:02:00 -0300
-Message-ID: <CADHB5bAztBFgWe-1v5vFfsxJgW1S3OOpV1Jkjrgk2h+pJBFw9w@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v3 3/4] PCI: mediatek: Add system pm support for MT2712
+ and MT7622
+Date: Tue, 17 Jul 2018 18:15:43 +0100
+Message-ID: <20180717171543.GA20991@red-moon>
+References: <1530518264-6125-1-git-send-email-honghui.zhang@mediatek.com>
+ <1530518264-6125-4-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1530518264-6125-4-git-send-email-honghui.zhang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, daniel.lezcano@linaro.org, linux@armlinux.org.uk, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?Q?Guilherme_G=2E_Sim=C3=B5es?= <guilherme.simoes@lsitec.org.br>, Jon maddog Hall <jon.maddog.hall@gmail.com>, mkzuffo@lsi.usp.br, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, sboyd@kernel.org, mark.rutland@arm.com, linux@cubietech.com, support@cubietech.com, catalin.marinas@arm.com, mturquette@baylibre.com, will.deacon@arm.com, thomas liau <thomas.liau@actions-semi.com>, darren@cubietech.com, robh+dt@kernel.org, jeff.chen@actions-semi.com, pn@denx.de, mp-cs@actions-semi.com
+To: honghui.zhang@mediatek.com
+Cc: marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, rjw@rjwysocki.net, khilman@kernel.org, ulf.hansson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds custom delay support to Actions Semi OWL pll clock driver.
-It is required for future Actions Semi Owl series S500 SoC clock support
+[+Rafael, Kevin, Ulf]
 
-Currently, the driver waits a fixed amount of time defined by the
-macro PLL_STABILITY_WAIT_US.
-The default delay (50us) is not enough for Actions Semi Owl S500 SoC.
-It needs up to 150us.
-A new field called "delay" was added to "struct owl_pll_hw". The rest
-of the code was updated accordingly.
-Old macros "OWL_PLL_HW", "OWL_PLL" and "OWL_PLL_NO_PARENT" were kept
-(same usage), but updated to set "delay" value to
-PLL_STABILITY_WAIT_US (50us).
-New macros "OWL_PLL_HW_DELAY", "OWL_PLL_DELAY" and
-"OWL_PLL_NO_PARENT_DELAY" were created with an extra argument to set a
-custom "delay".
-This does not break S700 and S900 code and was tested on S500 based
-Lemaker Guitar Board.
+On Mon, Jul 02, 2018 at 03:57:43PM +0800, honghui.zhang@mediatek.com wrote:
+> From: Honghui Zhang <honghui.zhang@mediatek.com>
+> 
+> The MTCMOS of PCIe Host for MT2712 and MT7622 will be off when system
+> suspend, and all the internal control register will be reset after system
+> resume. The PCIe link should be re-established and the related control
+> register values should be re-set after system resume.
+> 
+> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+>  drivers/pci/controller/pcie-mediatek.c | 67 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index 86918d4..175d7b6 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -134,12 +134,14 @@ struct mtk_pcie_port;
+>  /**
+>   * struct mtk_pcie_soc - differentiate between host generations
+>   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
+> + * @pm_support: whether the host's MTCMOS will be off when suspend
+>   * @ops: pointer to configuration access functions
+>   * @startup: pointer to controller setting functions
+>   * @setup_irq: pointer to initialize IRQ functions
+>   */
+>  struct mtk_pcie_soc {
+>  	bool need_fix_class_id;
+> +	bool pm_support;
+>  	struct pci_ops *ops;
+>  	int (*startup)(struct mtk_pcie_port *port);
+>  	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
+> @@ -1197,12 +1199,75 @@ static int mtk_pcie_probe(struct platform_device *pdev)
+>  	return err;
+>  }
+>  
+> +static int __maybe_unused mtk_pcie_suspend_noirq(struct device *dev)
+> +{
+> +	struct mtk_pcie *pcie = dev_get_drvdata(dev);
+> +	const struct mtk_pcie_soc *soc = pcie->soc;
+> +	struct mtk_pcie_port *port;
+> +
+> +	if (!soc->pm_support)
+> +		return 0;
+> +
+> +	if (list_empty(&pcie->ports))
+> +		return 0;
+> +
+> +	list_for_each_entry(port, &pcie->ports, list) {
+> +		clk_disable_unprepare(port->pipe_ck);
+> +		clk_disable_unprepare(port->obff_ck);
+> +		clk_disable_unprepare(port->axi_ck);
+> +		clk_disable_unprepare(port->aux_ck);
+> +		clk_disable_unprepare(port->ahb_ck);
+> +		clk_disable_unprepare(port->sys_ck);
+> +		phy_power_off(port->phy);
+> +		phy_exit(port->phy);
+> +	}
+> +
+> +	mtk_pcie_subsys_powerdown(pcie);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused mtk_pcie_resume_noirq(struct device *dev)
+> +{
+> +	struct mtk_pcie *pcie = dev_get_drvdata(dev);
+> +	const struct mtk_pcie_soc *soc = pcie->soc;
+> +	struct mtk_pcie_port *port, *tmp;
+> +
+> +	if (!soc->pm_support)
+> +		return 0;
+> +
+> +	if (list_empty(&pcie->ports))
+> +		return 0;
+> +
+> +	if (dev->pm_domain) {
+> +		pm_runtime_enable(dev);
+> +		pm_runtime_get_sync(dev);
+> +	}
 
-Signed-off-by: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
+Are these runtime PM calls needed/abused here ?
 
-diff -uprN -X vanilla/Documentation/dontdiff
-vanilla/drivers/clk/actions/owl-pll.c
-linux/drivers/clk/actions/owl-pll.c
---- vanilla/drivers/clk/actions/owl-pll.c    2018-07-17 13:07:16.667704000 -0300
-+++ linux/drivers/clk/actions/owl-pll.c    2018-07-17 13:42:07.396785603 -0300
-@@ -179,7 +179,7 @@ static int owl_pll_set_rate(struct clk_h
+Mind explaining the logic ?
 
-     regmap_write(common->regmap, pll_hw->reg, reg);
+There is certainly an asymmetry with the suspend callback which made me
+suspicious, I am pretty certain Rafael/Kevin/Ulf can help me clarify so
+that we can make progress with this patch.
 
--    udelay(PLL_STABILITY_WAIT_US);
-+    udelay(pll_hw->delay);
+Lorenzo
 
-     return 0;
- }
-diff -uprN -X vanilla/Documentation/dontdiff
-vanilla/drivers/clk/actions/owl-pll.h
-linux/drivers/clk/actions/owl-pll.h
---- vanilla/drivers/clk/actions/owl-pll.h    2018-07-17 13:07:16.667704000 -0300
-+++ linux/drivers/clk/actions/owl-pll.h    2018-07-17 13:42:11.116765089 -0300
-@@ -27,6 +27,7 @@ struct owl_pll_hw {
-     u8            width;
-     u8            min_mul;
-     u8            max_mul;
-+    u32            delay;
-     const struct clk_pll_table *table;
- };
-
-@@ -35,6 +36,51 @@ struct owl_pll {
-     struct owl_clk_common    common;
- };
-
-+#define PLL_STABILITY_WAIT_US    (50)
-+
-+#define OWL_PLL_HW_DELAY(_reg, _bfreq, _bit_idx, _shift,            \
-+           _width, _min_mul, _max_mul, _table, _delay)            \
-+    {                                \
-+        .reg        = _reg,                    \
-+        .bfreq        = _bfreq,                \
-+        .bit_idx    = _bit_idx,                \
-+        .shift        = _shift,                \
-+        .width        = _width,                \
-+        .min_mul    = _min_mul,                \
-+        .max_mul    = _max_mul,                \
-+        .table        = _table,                \
-+        .delay        = _delay,                \
-+    }
-+
-+#define OWL_PLL_DELAY(_struct, _name, _parent, _reg, _bfreq, _bit_idx,    \
-+        _shift, _width, _min_mul, _max_mul, _table, _flags, _delay)    \
-+    struct owl_pll _struct = {                    \
-+        .pll_hw    = OWL_PLL_HW_DELAY(_reg, _bfreq, _bit_idx, _shift,    \
-+                     _width, _min_mul,            \
-+                     _max_mul, _table, _delay),            \
-+        .common = {                        \
-+            .regmap = NULL,                    \
-+            .hw.init = CLK_HW_INIT(_name,            \
-+                           _parent,            \
-+                           &owl_pll_ops,        \
-+                           _flags),            \
-+        },                            \
-+    }
-+
-+#define OWL_PLL_NO_PARENT_DELAY(_struct, _name, _reg, _bfreq, _bit_idx,    \
-+        _shift, _width, _min_mul, _max_mul, _table, _flags, _delay)    \
-+    struct owl_pll _struct = {                    \
-+        .pll_hw    = OWL_PLL_HW_DELAY(_reg, _bfreq, _bit_idx, _shift,    \
-+                     _width, _min_mul,            \
-+                     _max_mul, _table, _delay),            \
-+        .common = {                        \
-+            .regmap = NULL,                    \
-+            .hw.init = CLK_HW_INIT_NO_PARENT(_name,        \
-+                           &owl_pll_ops,        \
-+                           _flags),            \
-+        },                            \
-+    }
-+
- #define OWL_PLL_HW(_reg, _bfreq, _bit_idx, _shift,            \
-            _width, _min_mul, _max_mul, _table)            \
-     {                                \
-@@ -46,6 +92,7 @@ struct owl_pll {
-         .min_mul    = _min_mul,                \
-         .max_mul    = _max_mul,                \
-         .table        = _table,                \
-+        .delay        = PLL_STABILITY_WAIT_US,\
-     }
-
- #define OWL_PLL(_struct, _name, _parent, _reg, _bfreq, _bit_idx,    \
-@@ -78,7 +125,6 @@ struct owl_pll {
-     }
-
- #define mul_mask(m)        ((1 << ((m)->width)) - 1)
--#define PLL_STABILITY_WAIT_US    (50)
-
- static inline struct owl_pll *hw_to_owl_pll(const struct clk_hw *hw)
- {
+> +
+> +	clk_prepare_enable(pcie->free_ck);
+> +
+> +	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
+> +		mtk_pcie_enable_port(port);
+> +
+> +	/* In case of EP was removed while system suspend. */
+> +	if (list_empty(&pcie->ports))
+> +		mtk_pcie_subsys_powerdown(pcie);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dev_pm_ops mtk_pcie_pm_ops = {
+> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_pcie_suspend_noirq,
+> +				      mtk_pcie_resume_noirq)
+> +};
+> +
+>  static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
+>  	.ops = &mtk_pcie_ops,
+>  	.startup = mtk_pcie_startup_port,
+>  };
+>  
+>  static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
+> +	.pm_support = true,
+>  	.ops = &mtk_pcie_ops_v2,
+>  	.startup = mtk_pcie_startup_port_v2,
+>  	.setup_irq = mtk_pcie_setup_irq,
+> @@ -1210,6 +1275,7 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
+>  
+>  static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
+>  	.need_fix_class_id = true,
+> +	.pm_support = true,
+>  	.ops = &mtk_pcie_ops_v2,
+>  	.startup = mtk_pcie_startup_port_v2,
+>  	.setup_irq = mtk_pcie_setup_irq,
+> @@ -1229,6 +1295,7 @@ static struct platform_driver mtk_pcie_driver = {
+>  		.name = "mtk-pcie",
+>  		.of_match_table = mtk_pcie_ids,
+>  		.suppress_bind_attrs = true,
+> +		.pm = &mtk_pcie_pm_ops,
+>  	},
+>  };
+>  builtin_platform_driver(mtk_pcie_driver);
+> -- 
+> 2.6.4
+> 
