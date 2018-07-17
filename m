@@ -1,84 +1,63 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v3 1/5] dt-bindings: fsi: Document binding for the
- fsi-master-ast-cf "device"
-Date: Tue, 17 Jul 2018 14:12:15 +1000
-Message-ID: <7125cc74b640b941ea6f86e1f719cc25eeae9f78.camel@kernel.crashing.org>
-References: <20180712034847.12878-1-benh@kernel.crashing.org>
-         <20180712034847.12878-2-benh@kernel.crashing.org>
-         <20180716153308.GA13044@rob-hp-laptop>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding doc
+Date: Tue, 17 Jul 2018 04:51:34 +0000
+Message-ID: <AM0PR04MB42115331D2201A6A07D82CEA805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20180716114209.25242-1-o.rempel@pengutronix.de>
+ <20180716114209.25242-2-o.rempel@pengutronix.de>
+ <20180716151654.GA21819@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180716153308.GA13044@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180716151654.GA21819@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-07-16 at 09:33 -0600, Rob Herring wrote:
-> On Thu, Jul 12, 2018 at 01:48:43PM +1000, Benjamin Herrenschmidt wrote:
-> > This isn't per-se a real device, it's a pseudo-device that
-> > represents the use of the Aspeed built-in ColdFire to
-> > implement the FSI protocol by bitbanging the GPIOs instead
-> > of doing it from the ARM core.
-> > 
-> > Thus it's a drop-in replacement for the existing
-> > fsi-master-gpio pseudo-device for use on systems based
-> > on the Aspeed chips. It has most of the same properties,
-> > plus some more needed to operate the coprocessor.
-> > 
-> > Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> > ---
-> >  .../bindings/fsi/fsi-master-ast-cf.txt        | 36 +++++++++++++++++++
-> >  1 file changed, 36 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt b/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
-> > new file mode 100644
-> > index 000000000000..431bf8a423ce
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/fsi/fsi-master-ast-cf.txt
-> > @@ -0,0 +1,36 @@
-> > +Device-tree bindings for ColdFire offloaded gpio-based FSI master driver
-> > +------------------------------------------------------------------------
-> > +
-> > +Required properties:
-> > + - compatible =
-> > +	"aspeed,ast2400-cf-fsi-master" for an AST2400 based system
-> > +   or
-> > +	"aspeed,ast2500-cf-fsi-master" for an AST2500 based system
-> > +
-> > + - clock-gpios = <gpio-descriptor>;	: GPIO for FSI clock
-> > + - data-gpios = <gpio-descriptor>;	: GPIO for FSI data signal
-> > + - enable-gpios = <gpio-descriptor>;	: GPIO for enable signal
-> > + - trans-gpios = <gpio-descriptor>;	: GPIO for voltage translator enable
-> > + - mux-gpios = <gpio-descriptor>;	: GPIO for pin multiplexing with other
-> > +                                          functions (eg, external FSI masters)
-> > + - memory-region = <phandle>;		: Reference to the reserved memory for
-> > +                                          the ColdFire. Must be 2M aligned on
-> > +					  AST2400 and 1M aligned on AST2500
-> > + - aspeed,sram = <phandle>;		: Reference to the SRAM node.
-> > + - aspeed,cvic = <phandle>;		: Reference to the CVIC node.
-> > +
-> > +Examples:
-> > +
-> > +    fsi-master {
-> > +        compatible = "aspeed,ast2500-cf-fsi-master", "fsi-master";
-> > +
-> > +	clock-gpios = <&gpio 0>;
-> > +        data-gpios = <&gpio 1>;
-> > +        enable-gpios = <&gpio 2>;
-> > +        trans-gpios = <&gpio 3>;
-> > +        mux-gpios = <&gpio 4>;
-> > +
-> > +	memory-region = <&coldfire_memory>;
-> > +	sram = <&sram>;
-> > +	cvic = <&cvic>;
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Monday, July 16, 2018 11:17 PM
+> To: Oleksij Rempel <o.rempel@pengutronix.de>
+> Cc: Shawn Guo <shawnguo@kernel.org>; Fabio Estevam
+> <fabio.estevam@nxp.com>; Mark Rutland <mark.rutland@arm.com>; A.s.
+> Dong <aisheng.dong@nxp.com>; kernel@pengutronix.de; linux-arm-
+> kernel@lists.infradead.org; devicetree@vger.kernel.org; dl-linux-imx <linux-
+> imx@nxp.com>
+> Subject: Re: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding doc
 > 
-> Need to update the example. With that
+> On Mon, Jul 16, 2018 at 01:42:07PM +0200, Oleksij Rempel wrote:
+> > The Messaging Unit module enables two processors within the SoC to
+> > communicate and coordinate by passing messages (e.g. data, status and
+> > control) through the MU interface.
+> 
+> v3? I already gave my R-by on v4 from Dong. Please coordinate your work on
+> this.
 
-Ah right, thanks. The next spin will have that fixed and will go into
-the fsi tree.
+Okay.
 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Oleksij, 
+could you re-add the M4 support part in a separate patch based on
+the already acked SCU one?
+I guess you can re-send with the acked one.
+
+Regards
+Dong Aisheng
+
+> 
+> >
+> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > ---
+> >  .../devicetree/bindings/mailbox/fsl,mu.txt    | 32 +++++++++++++++++++
+> >  1 file changed, 32 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/mailbox/fsl,mu.txt
