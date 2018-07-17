@@ -1,169 +1,284 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding doc
-Date: Tue, 17 Jul 2018 07:45:22 +0200
-Message-ID: <7f96a775-661b-86e5-95eb-07017dcec3c5@pengutronix.de>
-References: <20180716114209.25242-1-o.rempel@pengutronix.de>
- <20180716114209.25242-2-o.rempel@pengutronix.de>
- <AM0PR04MB4211E30E85E830AA31F998A1805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v5 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
+ driver
+Date: Tue, 17 Jul 2018 11:27:22 +0530
+Message-ID: <a88dfc5b-49b4-a2ea-d451-368157337ed5@codeaurora.org>
+References: <1531418745-19742-1-git-send-email-tdas@codeaurora.org>
+ <1531418745-19742-3-git-send-email-tdas@codeaurora.org>
+ <20180713001959.GV129942@google.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6741852679398449570=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM0PR04MB4211E30E85E830AA31F998A1805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180713001959.GV129942@google.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, amit.kucheria@linaro.org, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============6741852679398449570==
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="SwRc15dFF6vZx9O87Ct8wvmlJd9iNvo5G"
+Hello Matthias,
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---SwRc15dFF6vZx9O87Ct8wvmlJd9iNvo5G
-Content-Type: multipart/mixed; boundary="Tf2I2bK1eOsSoGFhHtFLkIZkiIruKjl7b";
- protected-headers="v1"
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: "A.s. Dong" <aisheng.dong@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
- Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "kernel@pengutronix.de" <kernel@pengutronix.de>,
- dl-linux-imx <linux-imx@nxp.com>
-Message-ID: <7f96a775-661b-86e5-95eb-07017dcec3c5@pengutronix.de>
-Subject: Re: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding doc
-References: <20180716114209.25242-1-o.rempel@pengutronix.de>
- <20180716114209.25242-2-o.rempel@pengutronix.de>
- <AM0PR04MB4211E30E85E830AA31F998A1805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB4211E30E85E830AA31F998A1805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Thanks for your review comments.
 
---Tf2I2bK1eOsSoGFhHtFLkIZkiIruKjl7b
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-
-
-On 17.07.2018 07:00, A.s. Dong wrote:
->> -----Original Message-----
->> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
->> Sent: Monday, July 16, 2018 7:42 PM
->> To: Shawn Guo <shawnguo@kernel.org>; Fabio Estevam
->> <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>; Mark
->> Rutland <mark.rutland@arm.com>; A.s. Dong <aisheng.dong@nxp.com>
->> Cc: Oleksij Rempel <o.rempel@pengutronix.de>; kernel@pengutronix.de;
->> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; dl-l=
-inux-
->> imx <linux-imx@nxp.com>
->> Subject: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding doc
+On 7/13/2018 5:49 AM, Matthias Kaehlcke wrote:
+> Hi,
+> 
+> On Thu, Jul 12, 2018 at 11:35:45PM +0530, Taniya Das wrote:
+>> The CPUfreq HW present in some QCOM chipsets offloads the steps necessary
+>> for changing the frequency of CPUs. The driver implements the cpufreq
+>> driver interface for this hardware engine.
 >>
->> The Messaging Unit module enables two processors within the SoC to
->> communicate and coordinate by passing messages (e.g. data, status and
->> control) through the MU interface.
->>
->> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+>> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+>> Signed-off-by: Taniya Das <tdas@codeaurora.org>
 >> ---
->>  .../devicetree/bindings/mailbox/fsl,mu.txt    | 32 ++++++++++++++++++=
-+
->>  1 file changed, 32 insertions(+)
->>  create mode 100644
->> Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+>>   drivers/cpufreq/Kconfig.arm       |  10 ++
+>>   drivers/cpufreq/Makefile          |   1 +
+>>   drivers/cpufreq/qcom-cpufreq-hw.c | 344 ++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 355 insertions(+)
+>>   create mode 100644 drivers/cpufreq/qcom-cpufreq-hw.c
 >>
->> diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
->> b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+>> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+>> index 52f5f1a..141ec3e 100644
+>> --- a/drivers/cpufreq/Kconfig.arm
+>> +++ b/drivers/cpufreq/Kconfig.arm
+>> @@ -312,3 +312,13 @@ config ARM_PXA2xx_CPUFREQ
+>>   	  This add the CPUFreq driver support for Intel PXA2xx SOCs.
+>>
+>>   	  If in doubt, say N.
+>> +
+>> +config ARM_QCOM_CPUFREQ_HW
+>> +	bool "QCOM CPUFreq HW driver"
+>> +	help
+>> +	 Support for the CPUFreq HW driver.
+>> +	 Some QCOM chipsets have a HW engine to offload the steps
+>> +	 necessary for changing the frequency of the CPUs. Firmware loaded
+>> +	 in this engine exposes a programming interafce to the High-level OS.
+>> +	 The driver implements the cpufreq driver interface for this HW engine.
+>> +	 Say Y if you want to support CPUFreq HW.
+>> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+>> index fb4a2ec..1226a3e 100644
+>> --- a/drivers/cpufreq/Makefile
+>> +++ b/drivers/cpufreq/Makefile
+>> @@ -86,6 +86,7 @@ obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)	+= tegra124-cpufreq.o
+>>   obj-$(CONFIG_ARM_TEGRA186_CPUFREQ)	+= tegra186-cpufreq.o
+>>   obj-$(CONFIG_ARM_TI_CPUFREQ)		+= ti-cpufreq.o
+>>   obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ)	+= vexpress-spc-cpufreq.o
+>> +obj-$(CONFIG_ARM_QCOM_CPUFREQ_HW)	+= qcom-cpufreq-hw.o
+>>
+>>
+>>   ##################################################################################
+>> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
 >> new file mode 100644
->> index 000000000000..5d48dd75b98d
+>> index 0000000..fa25a95
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
->> @@ -0,0 +1,32 @@
->> +NXP i.MX Messaging Unit (MU)
->> +--------------------------------------------------------------------
+>> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+>> @@ -0,0 +1,344 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+>> + */
 >> +
->> +Required properties:
->> +-------------------
->> +- compatible :	should be "fsl,<chip>-mu", the supported chips include=
-:
->> +		imx6sx	- i.MX 6SoloX
->> +		imx7d	- i.MX 7Dual
->> +		imx7s	- i.MX 7Solo
->> +		imx7ulp	- i.MX 7ULP
->> +		imx8qm	- i.MX 8QM
->> +		imx8qxp	- i.MX 8QXP
->> +- reg :		Should contain the registers location and length
->> +- interrupts :	Interrupt number. The interrupt specifier format depen=
-ds
->> +		on the interrupt controller parent.
->> +- #mbox-cells:  Must be:
->> +		0 - for single channel mode. i.MX8* SCU protocol specific.
->> +		1 - for multichannel (generic) mode.
+>> +#include <linux/cpufreq.h>
+>> +#include <linux/init.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_platform.h>
 >> +
->> +Optional properties:
->> +-------------------
->> +- clocks :	phandle to the input clock.
->> +- fsl,mu-side-a : Should be set for side A MU.
->=20
-> For this property, how about doing like:
-> fsl,mu-side: An Integer represents the MU side.
+>> +#define INIT_RATE			300000000UL
+>> +#define XO_RATE				19200000UL
+>> +#define LUT_MAX_ENTRIES			40U
+>> +#define CORE_COUNT_VAL(val)		(((val) & (GENMASK(18, 16))) >> 16)
+>> +#define LUT_ROW_SIZE			32
+>> +
+>> +enum {
+>> +	REG_ENABLE,
+>> +	REG_LUT_TABLE,
+>> +	REG_PERF_STATE,
+>> +
+>> +	REG_ARRAY_SIZE,
+>> +};
+>> +
+>> +struct cpufreq_qcom {
+>> +	struct cpufreq_frequency_table *table;
+>> +	struct device *dev;
+>> +	const u16 *reg_offset;
+>> +	void __iomem *base;
+>> +	cpumask_t related_cpus;
+>> +	unsigned int max_cores;
+> 
+> Same comment as on v4:
+> 
+> Why *max*_cores? This seems to be the number of CPUs in a cluster and
+> qcom_read_lut() expects the core count read from the LUT to match
+> exactly. Maybe it's the name from the datasheet? Should it still be
+> 'num_cores' or similer?
+>
 
-All this SoCs have MUs with only two sides. Why do we need explicit
-annotation for both parts?
+Your understanding is correct. I would prefer to leave the naming as 
+'max_cores'.
 
-> If missing this property, it's default to Side A
+>> +static struct cpufreq_qcom *qcom_freq_domain_map[NR_CPUS];
+> 
+> It would be an option to limit this to the number of CPU clusters and
+> allocate it dynamically when the driver is initialized (key = first
+> core in the cluster). Probably not worth the hassle with the limited
+> number of cores though.
+> 
+>> +static int qcom_read_lut(struct platform_device *pdev,
+>> +			 struct cpufreq_qcom *c)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	unsigned int offset;
+>> +	u32 data, src, lval, i, core_count, prev_cc, prev_freq, cur_freq;
+>> +
+>> +	c->table = devm_kcalloc(dev, LUT_MAX_ENTRIES + 1,
+>> +				sizeof(*c->table), GFP_KERNEL);
+>> +	if (!c->table)
+>> +		return -ENOMEM;
+>> +
+>> +	offset = c->reg_offset[REG_LUT_TABLE];
+>> +
+>> +	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+>> +		data = readl_relaxed(c->base + offset + i * LUT_ROW_SIZE);
+>> +		src = ((data & GENMASK(31, 30)) >> 30);
+>> +		lval = (data & GENMASK(7, 0));
+>> +		core_count = CORE_COUNT_VAL(data);
+>> +
+>> +		if (src == 0)
+>> +			c->table[i].frequency = INIT_RATE / 1000;
+>> +		else
+>> +			c->table[i].frequency = XO_RATE * lval / 1000;
+> 
+> You changed the condition from '!src' to 'src == 0'. My suggestion on
+> v4 was in part about a negative condition, but also about the
+> order. If it doesn't obstruct the code otherwise I think for an if-else
+> branch it is good practice to handle the more common case first and
+> then the 'exception'. I would expect most entries to have an actual
+> rate. Just a nit in any case, feel free to ignore if you prefer as is.
+> 
 
-So, why do we need optional integer, which is set by default as side A?
-This is why I made it bool.
+Thanks, Sure, I would take care of it in the next series.
 
-> 	       which is mostly used by A core.
+>> +static int qcom_cpu_resources_init(struct platform_device *pdev,
+>> +				   struct device_node *np, unsigned int cpu)
+>> +{
+>> +	struct cpufreq_qcom *c;
+>> +	struct resource res;
+>> +	struct device *dev = &pdev->dev;
+>> +	unsigned int offset, cpu_r;
+>> +	int ret;
+>> +
+>> +	c = devm_kzalloc(dev, sizeof(*c), GFP_KERNEL);
+>> +	if (!c)
+>> +		return -ENOMEM;
+>> +
+>> +	c->reg_offset = of_device_get_match_data(&pdev->dev);
+>> +	if (!c->reg_offset)
+>> +		return -EINVAL;
+>> +
+>> +	if (of_address_to_resource(np, 0, &res))
+>> +		return -ENOMEM;
+>> +
+>> +	c->base = devm_ioremap(dev, res.start, resource_size(&res));
+>> +	if (!c->base) {
+>> +		dev_err(dev, "Unable to map %s base\n", np->name);
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	offset = c->reg_offset[REG_ENABLE];
+>> +
+>> +	/* HW should be in enabled state to proceed */
+>> +	if (!(readl_relaxed(c->base + offset) & 0x1)) {
+>> +		dev_err(dev, "%s cpufreq hardware not enabled\n", np->name);
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	ret = qcom_get_related_cpus(np, &c->related_cpus);
+>> +	if (ret) {
+>> +		dev_err(dev, "%s failed to get related CPUs\n", np->name);
+>> +		return ret;
+>> +	}
+>> +
+>> +	c->max_cores = cpumask_weight(&c->related_cpus);
+>> +	if (!c->max_cores)
+>> +		return -ENOENT;
+>> +
+>> +	ret = qcom_read_lut(pdev, c);
+>> +	if (ret) {
+>> +		dev_err(dev, "%s failed to read LUT\n", np->name);
+>> +		return ret;
+>> +	}
+>> +
+>> +	qcom_freq_domain_map[cpu] = c;
+> 
+> If the general code structure remains as is (see my comment below)
+> the assignment could be done in a 'if (cpu == cpu_r)' branch instead
+> of first assigning and then overwriting it for 'cpu != cpu_r'.
+> 
+>> +
+>> +	/* Related CPUs to keep a single copy */
+>> +	cpu_r = cpumask_first(&c->related_cpus);
+>> +	if (cpu != cpu_r) {
+>> +		qcom_freq_domain_map[cpu] = qcom_freq_domain_map[cpu_r];
+>> +		devm_kfree(dev, c);
+>> +	}
+> 
+> Couldn't we do this at the beginning of the function instead of going
+> through allocation, ioremap, read_lut for every core only to throw the
+> information away later for the 'related' CPUs?
+> 
+> qcom_cpu_resources_init() is called with increasing 'cpu' values, hence the
+> 'first' CPU of the cluster is already initialized when the 'related'
+> ones are processed.
+> 
 
-And you will need to explicit set side=3DB for SCU. Correct?
+I would be moving the code to the beginning of the function.
 
-> 	       0: MU Side A
-> 	       1: MU Side B
+>> +	return 0;
+>> +}
+>> +
+>> +static int qcom_resources_init(struct platform_device *pdev)
+>> +{
+>> +	struct device_node *np, *cpu_np;
+>> +	unsigned int cpu;
+>> +	int ret;
+>> +
+>> +	for_each_possible_cpu(cpu) {
+>> +		cpu_np = of_cpu_device_node_get(cpu);
+>> +		if (!cpu_np) {
+>> +			dev_err(&pdev->dev, "Failed to get cpu %d device\n",
+>> +				cpu);
+>> +			continue;
+>> +		}
+>> +
+>> +		np = of_parse_phandle(cpu_np, "qcom,freq-domain", 0);
+>> +		if (!np) {
+>> +			dev_err(&pdev->dev, "Failed to get freq-domain device\n");
+> 
+> 			of_node_put(cpu_np);
+> 
+>> +			return -EINVAL;
+>> +		}
+>> +
+>> +		of_node_put(cpu_np);
+>> +
+>> +		ret = qcom_cpu_resources_init(pdev, np, cpu);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+> 
+> Thanks
+> 
+> Matthias
+> 
 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
-
---Tf2I2bK1eOsSoGFhHtFLkIZkiIruKjl7b--
-
---SwRc15dFF6vZx9O87Ct8wvmlJd9iNvo5G
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAltNgnIACgkQdQOiSHVI
-77Qo9wgAr4hsRzYCYGdlkcNZerP6okhC8NkeMVyLQybRiCWqRkUdwKh4r7V53ZDu
-OOPTwPg3fHCLvvvY//K6/DJYcB2gupYZhIg3xyw3qc7vK1+J5a/3s1mqwZiaqpKu
-Bq/PSRbRLAZBIZrW3QTecGsD6Irq5Bo4C/FrNF/yrh5u6SpsR5qu1dgKbEVGreUe
-Tb1DbW8bwyC5oAZRJ5aDV+9vQFhJedxxDTH7RO61d9IxyqDmp1FCShvfhH9VfSF3
-+aUGwLCoB79gQNF5MUb2iskcqhNBM+VafpTI+/xEOU9RN8+zXEEdWcXTPzhAr5Ez
-K9F2DCHIfn37wCQXJIbwQtCUsFKzPQ==
-=naRg
------END PGP SIGNATURE-----
-
---SwRc15dFF6vZx9O87Ct8wvmlJd9iNvo5G--
-
-
---===============6741852679398449570==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============6741852679398449570==--
+--
