@@ -1,531 +1,121 @@
-From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Subject: Re: [PATCH v9 7/7] Bluetooth: hci_qca: Add support for Qualcomm
- Bluetooth chip wcn3990
-Date: Tue, 17 Jul 2018 19:16:11 +0530
-Message-ID: <2ccfce245c96b1cac75b2836f6489d9e@codeaurora.org>
-References: <20180705165515.13340-1-bgodavar@codeaurora.org>
- <20180705165515.13340-8-bgodavar@codeaurora.org>
- <20180706222110.GK129942@google.com>
- <ecc9d46aadb05d36f43ca9649cf44bf4@codeaurora.org>
- <20180716160557.GY129942@google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] drm/panel: simple: Support simple VGA panels
+Date: Tue, 17 Jul 2018 08:02:46 -0600
+Message-ID: <CAL_JsqJ312xfrKTS-7RbLc-v_QUZ9-g+8v-EVn2UiwgyOA8ung@mail.gmail.com>
+References: <20180716092339.9736-1-linus.walleij@linaro.org>
+ <CAL_JsqLeZX6zJoMYp9drskx-UN8Na2LLhnHjbgZOVgw8D-y9wQ@mail.gmail.com>
+ <CACRpkdZ=uGDN8i4q1cODoLDibB+B4FqAF1TzsreATJ2wuFz6vQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180716160557.GY129942@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CACRpkdZ=uGDN8i4q1cODoLDibB+B4FqAF1TzsreATJ2wuFz6vQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-
-On 2018-07-16 21:35, Matthias Kaehlcke wrote:
-> On Mon, Jul 16, 2018 at 07:21:56PM +0530, Balakrishna Godavarthi wrote:
->> Hi Matthias,
->> 
->> On 2018-07-07 03:51, Matthias Kaehlcke wrote:
->> > On Thu, Jul 05, 2018 at 10:25:15PM +0530, Balakrishna Godavarthi wrote:
->> > > Add support to set voltage/current of various regulators
->> > > to power up/down Bluetooth chip wcn3990.
->> > >
->> > > Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
->> > > ---
->> > > changes in v9:
->> > >     * moved flow control to vendor and set_baudarte functions.
->> > >     * removed parent regs.
->> > >
->> > > changes in v8:
->> > >     * closing qca buffer, if qca_power_setup fails
->> > >     * chnaged ibs start timer function call location.
->> > >     * updated review comments.
->> > >
->> > > changes in v7:
->> > >     * addressed review comments.
->> > >
->> > > changes in v6:
->> > >     * Hooked up qca_power to qca_serdev.
->> > >     * renamed all the naming inconsistency functions with qca_*
->> > >     * leveraged common code of ROME for wcn3990.
->> > >     * created wrapper functions for re-usable blocks.
->> > >     * updated function of _*regulator_enable and _*regualtor_disable.
->> > >     * removed redundant comments and functions.
->> > >     * addressed review comments.
->> > >
->> > > Changes in v5:
->> > >     * updated regulator vddpa min_uV to 1304000.
->> > >       * addressed review comments.
->> > >
->> > > Changes in v4:
->> > >     * Segregated the changes of btqca from hci_qca
->> > >     * rebased all changes on top of bluetooth-next.
->> > >     * addressed review comments.
->> > >
->> > > ---
->> > >  drivers/bluetooth/btqca.h   |   3 +
->> > >  drivers/bluetooth/hci_qca.c | 387
->> > > +++++++++++++++++++++++++++++++-----
->> > >  2 files changed, 345 insertions(+), 45 deletions(-)
->> > >
->> > > diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
->> > > index a9c2779f3e07..0c01f375fe83 100644
->> > > --- a/drivers/bluetooth/btqca.h
->> > > +++ b/drivers/bluetooth/btqca.h
->> > > @@ -37,6 +37,9 @@
->> > >  #define EDL_TAG_ID_HCI			(17)
->> > >  #define EDL_TAG_ID_DEEP_SLEEP		(27)
->> > >
->> > > +#define QCA_WCN3990_POWERON_PULSE	0xFC
->> > > +#define QCA_WCN3990_POWEROFF_PULSE	0xC0
->> > > +
->> > >  enum qca_bardrate {
->> > >  	QCA_BAUDRATE_115200 	= 0,
->> > >  	QCA_BAUDRATE_57600,
->> > > diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->> > > index 7ebfaa0edf3f..d62c7785a618 100644
->> > > --- a/drivers/bluetooth/hci_qca.c
->> > > +++ b/drivers/bluetooth/hci_qca.c
->> > > @@ -5,7 +5,7 @@
->> > >   *  protocol extension to H4.
->> > >   *
->> > >   *  Copyright (C) 2007 Texas Instruments, Inc.
->> > > - *  Copyright (c) 2010, 2012 The Linux Foundation. All rights
->> > > reserved.
->> > > + *  Copyright (c) 2010, 2012, 2018 The Linux Foundation. All rights
->> > > reserved.
->> > >   *
->> > >   *  Acknowledgements:
->> > >   *  This file is based on hci_ll.c, which was...
->> > > @@ -31,9 +31,14 @@
->> > >  #include <linux/kernel.h>
->> > >  #include <linux/clk.h>
->> > >  #include <linux/debugfs.h>
->> > > +#include <linux/delay.h>
->> > > +#include <linux/device.h>
->> > >  #include <linux/gpio/consumer.h>
->> > >  #include <linux/mod_devicetable.h>
->> > >  #include <linux/module.h>
->> > > +#include <linux/of_device.h>
->> > > +#include <linux/platform_device.h>
->> > > +#include <linux/regulator/consumer.h>
->> > >  #include <linux/serdev.h>
->> > >
->> > >  #include <net/bluetooth/bluetooth.h>
->> > > @@ -124,12 +129,46 @@ enum qca_speed_type {
->> > >  	QCA_OPER_SPEED
->> > >  };
->> > >
->> > > +/*
->> > > + * Voltage regulator information required for configuring the
->> > > + * QCA Bluetooth chipset
->> > > + */
->> > > +struct qca_vreg {
->> > > +	const char *name;
->> > > +	unsigned int min_uV;
->> > > +	unsigned int max_uV;
->> > > +	unsigned int load_uA;
->> > > +};
->> > > +
->> > > +struct qca_vreg_data {
->> > > +	enum qca_btsoc_type soc_type;
->> > > +	struct qca_vreg *vregs;
->> > > +	size_t num_vregs;
->> > > +};
->> > > +
->> > > +/*
->> > > + * Platform data for the QCA Bluetooth power driver.
->> > > + */
->> > > +struct qca_power {
->> > > +	struct device *dev;
->> > > +	const struct qca_vreg_data *vreg_data;
->> > > +	struct regulator_bulk_data *vreg_bulk;
->> > > +	bool vregs_on;
->> > > +};
->> > > +
->> > >  struct qca_serdev {
->> > >  	struct hci_uart	 serdev_hu;
->> > >  	struct gpio_desc *bt_en;
->> > >  	struct clk	 *susclk;
->> > > +	enum qca_btsoc_type btsoc_type;
->> > > +	struct qca_power *bt_power;
->> > > +	u32 init_speed;
->> > > +	u32 oper_speed;
->> > >  };
->> > >
->> > > +static int qca_power_setup(struct hci_uart *hu, bool on);
->> > > +static void qca_power_shutdown(struct hci_uart *hu);
->> > > +
->> > >  static void __serial_clock_on(struct tty_struct *tty)
->> > >  {
->> > >  	/* TODO: Some chipset requires to enable UART clock on client
->> > > @@ -407,6 +446,7 @@ static int qca_open(struct hci_uart *hu)
->> > >  {
->> > >  	struct qca_serdev *qcadev;
->> > >  	struct qca_data *qca;
->> > > +	int ret;
->> > >
->> > >  	BT_DBG("hu %p qca_open", hu);
->> > >
->> > > @@ -458,19 +498,32 @@ static int qca_open(struct hci_uart *hu)
->> > >
->> > >  	hu->priv = qca;
->> > >
->> > > -	timer_setup(&qca->wake_retrans_timer,
->> > > hci_ibs_wake_retrans_timeout, 0);
->> > > -	qca->wake_retrans = IBS_WAKE_RETRANS_TIMEOUT_MS;
->> > > -
->> > > -	timer_setup(&qca->tx_idle_timer, hci_ibs_tx_idle_timeout, 0);
->> > > -	qca->tx_idle_delay = IBS_TX_IDLE_TIMEOUT_MS;
->> > > -
->> > >  	if (hu->serdev) {
->> > >  		serdev_device_open(hu->serdev);
->> > >
->> > >  		qcadev = serdev_device_get_drvdata(hu->serdev);
->> > > -		gpiod_set_value_cansleep(qcadev->bt_en, 1);
->> > > +		if (qcadev->btsoc_type != QCA_WCN3990) {
->> > > +			gpiod_set_value_cansleep(qcadev->bt_en, 1);
->> > > +		} else {
->> > > +			hu->init_speed = qcadev->init_speed;
->> > > +			hu->oper_speed = qcadev->oper_speed;
->> > > +			ret = qca_power_setup(hu, true);
->> > > +			if (ret) {
->> > > +				destroy_workqueue(qca->workqueue);
->> > > +				kfree_skb(qca->rx_skb);
->> > > +				hu->priv = NULL;
->> > > +				kfree(qca);
->> > > +				return ret;
->> > > +			}
->> > > +		}
->> > >  	}
->> > >
->> > > +	timer_setup(&qca->wake_retrans_timer,
->> > > hci_ibs_wake_retrans_timeout, 0);
->> > > +	qca->wake_retrans = IBS_WAKE_RETRANS_TIMEOUT_MS;
->> > > +
->> > > +	timer_setup(&qca->tx_idle_timer, hci_ibs_tx_idle_timeout, 0);
->> > > +	qca->tx_idle_delay = IBS_TX_IDLE_TIMEOUT_MS;
->> > > +
->> > >  	BT_DBG("HCI_UART_QCA open, tx_idle_delay=%u, wake_retrans=%u",
->> > >  	       qca->tx_idle_delay, qca->wake_retrans);
->> > >
->> > > @@ -554,10 +607,13 @@ static int qca_close(struct hci_uart *hu)
->> > >  	qca->hu = NULL;
->> > >
->> > >  	if (hu->serdev) {
->> > > -		serdev_device_close(hu->serdev);
->> > > -
->> > >  		qcadev = serdev_device_get_drvdata(hu->serdev);
->> > > -		gpiod_set_value_cansleep(qcadev->bt_en, 0);
->> > > +		if (qcadev->btsoc_type == QCA_WCN3990)
->> > > +			qca_power_shutdown(hu);
->> > > +		else
->> > > +			gpiod_set_value_cansleep(qcadev->bt_en, 0);
->> > > +
->> > > +		serdev_device_close(hu->serdev);
->> > >  	}
->> > >
->> > >  	kfree_skb(qca->rx_skb);
->> > > @@ -891,6 +947,7 @@ static int qca_set_baudrate(struct hci_dev
->> > > *hdev, uint8_t baudrate)
->> > >  	struct hci_uart *hu = hci_get_drvdata(hdev);
->> > >  	struct qca_data *qca = hu->priv;
->> > >  	struct sk_buff *skb;
->> > > +	struct qca_serdev *qcadev;
->> > >  	u8 cmd[] = { 0x01, 0x48, 0xFC, 0x01, 0x00 };
->> > >
->> > >  	if (baudrate > QCA_BAUDRATE_3200000)
->> > > @@ -904,6 +961,13 @@ static int qca_set_baudrate(struct hci_dev
->> > > *hdev, uint8_t baudrate)
->> > >  		return -ENOMEM;
->> > >  	}
->> > >
->> > > +	/* Disabling hardware flow control is mandate while
->> >
->> > nit: s/mandate/mandatory|required/
->> >
->> > > +	 * sending change baudrate request to wcn3990 SoC.
->> > > +	 */
->> > > +	qcadev = serdev_device_get_drvdata(hu->serdev);
->> > > +	if (qcadev->btsoc_type == QCA_WCN3990)
->> > > +		hci_uart_set_flow_control(hu, true);
->> > > +
->> > >  	/* Assign commands to change baudrate and packet type. */
->> > >  	skb_put_data(skb, cmd, sizeof(cmd));
->> > >  	hci_skb_pkt_type(skb) = HCI_COMMAND_PKT;
->> > > @@ -919,6 +983,9 @@ static int qca_set_baudrate(struct hci_dev
->> > > *hdev, uint8_t baudrate)
->> > >  	schedule_timeout(msecs_to_jiffies(BAUDRATE_SETTLE_TIMEOUT_MS));
->> > >  	set_current_state(TASK_RUNNING);
->> > >
->> > > +	if (qcadev->btsoc_type == QCA_WCN3990)
->> > > +		hci_uart_set_flow_control(hu, false);
->> > > +
->> > >  	return 0;
->> > >  }
->> > >
->> > > @@ -930,6 +997,36 @@ static inline void host_set_baudrate(struct
->> > > hci_uart *hu, unsigned int speed)
->> > >  		hci_uart_set_baudrate(hu, speed);
->> > >  }
->> > >
->> > > +static int qca_send_vendor_cmd(struct hci_dev *hdev, u8 cmd)
->> > > +{
->> > > +	struct hci_uart *hu = hci_get_drvdata(hdev);
->> > > +	struct qca_data *qca = hu->priv;
->> > > +	struct sk_buff *skb;
->> > > +
->> > > +	bt_dev_dbg(hdev, "sending command %02x to SoC", cmd);
->> > > +
->> > > +	skb = bt_skb_alloc(sizeof(cmd), GFP_KERNEL);
->> > > +	if (!skb)
->> > > +		return -ENOMEM;
->> > > +
->> > > +	/* Disabling hardware flow control is mandate while
->> >
->> > Same nit as above
->> >
->> > > +	 * sending vendor power on and off pulse to SoC.
->> > > +	 */
->> >
->> > The function is called qca_send_vendor_cmd(), the comment about power
->> > on/off pulses seems misplaced here. Are there other 'vendor commands'
->> > that require a different flow control behavior?
->> >
->> > Perhaps the function should have a different name or we need another
->> > wrapper.
->> >
->> > > +	hci_uart_set_flow_control(hu, true);
->> >
->> > Should the changing of the flow control be limited to wcn3990? As of
->> > now the function is only called for wcn3990, however this is not
->> > stated as a requirement and might change in the future.
->> >
->> > > +	skb_put_u8(skb, cmd);
->> > > +	hci_skb_pkt_type(skb) = HCI_COMMAND_PKT;
->> > > +
->> > > +	skb_queue_tail(&qca->txq, skb);
->> > > +	hci_uart_tx_wakeup(hu);
->> > > +
->> > > +	/* Wait for 100 uS for SoC to settle down */
->> > > +	usleep_range(100, 200);
->> >
->> > Is this needed for any 'vendor command' or directly related with the
->> > power on/off pulses?
->> >
->> > > +	hci_uart_set_flow_control(hu, false);
->> > > +
->> > > +	return 0;
->> > > +}
->> > > +
->> > >  static unsigned int qca_get_speed(struct hci_uart *hu,
->> > >  				  enum qca_speed_type speed_type)
->> > >  {
->> > > @@ -952,10 +1049,19 @@ static unsigned int qca_get_speed(struct
->> > > hci_uart *hu,
->> > >
->> > >  static int qca_check_speeds(struct hci_uart *hu)
->> > >  {
->> > > -	/* One or the other speeds should be non zero. */
->> > > -	if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
->> > > -	    !qca_get_speed(hu, QCA_OPER_SPEED))
->> > > +	struct qca_serdev *qcadev;
->> > > +
->> > > +	qcadev = serdev_device_get_drvdata(hu->serdev);
->> > > +	if ((qcadev->btsoc_type == QCA_WCN3990 &&
->> > > +	    !qca_get_speed(hu, QCA_INIT_SPEED)) ||
->> > > +	    !qca_get_speed(hu, QCA_OPER_SPEED)) {
->> > > +		/* Both INIT and OPER speed should be non zero. */
->> > >  		return -EINVAL;
->> > > +	} else if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
->> > > +		    !qca_get_speed(hu, QCA_OPER_SPEED)) {
->> > > +		/* One or the other speeds should be non zero. */
->> > > +		return -EINVAL;
->> > > +	}
->> >
->> > It is questionable if the comments are useful, they are basically
->> > stating the same as the conditions.
->> >
->> > if-else statements with a single statement in all branches shouldn't
->> > use curly braces. Personally I don't dislike them in this case with
->> > the multi-line conditions, but in principle they shoulnd't be there.
->> >
->> > nit: this would be easier to read with nested if statements:
->> >
->> > 	if (qcadev->btsoc_type == QCA_WCN3990)
->> > 		if (!qca_get_speed(hu, QCA_INIT_SPEED)) ||
->> > 		    !qca_get_speed(hu, QCA_OPER_SPEED))
->> > 			return -EINVAL;
->> > 	else
->> > 		if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
->> > 		    !qca_get_speed(hu, QCA_OPER_SPEED)) {
->> > 			return -EINVAL;
->> >
->> > >  	return 0;
->> > >  }
->> > > @@ -986,15 +1092,40 @@ static int qca_set_speed(struct hci_uart *hu,
->> > > enum qca_speed_type speed_type)
->> > >  	return 0;
->> > >  }
->> > >
->> > > +static int qca_wcn3990_init(struct hci_uart *hu)
->> > > +{
->> > > +	int ret;
->> > > +
->> > > +	ret = qca_send_vendor_cmd(hu->hdev, QCA_WCN3990_POWERON_PULSE);
->> > > +	if (ret)
->> > > +		return ret;
->> > > +
->> > > +	/* Wait for 100 ms for SoC to boot up */
->> > > +	msleep(100);
->> > > +	serdev_device_close(hu->serdev);
->> > > +	ret = serdev_device_open(hu->serdev);
->> > > +	if (ret) {
->> > > +		bt_dev_err(hu->hdev, "failed to open port");
->> > > +		return ret;
->> > > +	}
->> > > +
->> > > +	/* Setup initial baudrate */
->> > > +	qca_set_speed(hu, QCA_INIT_SPEED);
->> >
->> > The comment is a bit redundant.
->> >
->> > > +	hci_uart_set_flow_control(hu, false);
->> > > +
->> > > +	return 0;
->> > > +}
->> > > +
->> > >  static int qca_setup(struct hci_uart *hu)
->> > >  {
->> > >  	struct hci_dev *hdev = hu->hdev;
->> > >  	struct qca_data *qca = hu->priv;
->> > >  	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
->> > > +	struct qca_serdev *qcadev;
->> > >  	int ret;
->> > >  	int soc_ver = 0;
->> > >
->> > > -	bt_dev_info(hdev, "ROME setup");
->> > > +	qcadev = serdev_device_get_drvdata(hu->serdev);
->> > >
->> > >  	ret = qca_check_speeds(hu);
->> > >  	if (ret)
->> > > @@ -1006,6 +1137,21 @@ static int qca_setup(struct hci_uart *hu)
->> > >  	/* Setup initial baudrate */
->> > >  	qca_set_speed(hu, QCA_INIT_SPEED);
->> > >
->> > > +	if (qcadev->btsoc_type == QCA_WCN3990) {
->> > > +		bt_dev_dbg(hdev, "setting up wcn3990");
->> >
->> > Seems like this should be bt_dev_info() for consistency with Rome.
->> >
->> > > +		ret = qca_wcn3990_init(hu);
->> > > +		if (ret)
->> > > +			return ret;
->> > > +
->> > > +		ret = qca_read_soc_version(hdev, &soc_ver);
->> > > +		if (ret < 0 || soc_ver == 0) {
->> > > +			bt_dev_err(hdev, "Failed to get version %d", ret);
->> > > +			return ret;
->> > > +		}
->> > > +	} else {
->> > > +		bt_dev_info(hdev, "ROME setup");
->> > > +	}
->> > > +
->> > >  	/* Setup user speed if needed */
->> > >  	speed = qca_get_speed(hu, QCA_OPER_SPEED);
->> > >  	if (speed) {
->> > > @@ -1016,16 +1162,18 @@ static int qca_setup(struct hci_uart *hu)
->> > >  		qca_baudrate = qca_get_baudrate_value(speed);
->> > >  	}
->> > >
->> > > -	/* Get QCA version information */
->> > > -	ret = qca_read_soc_version(hdev, &soc_ver);
->> > > -	if (ret < 0 || soc_ver == 0) {
->> > > -		bt_dev_err(hdev, "QCA Failed to get version (%d)", ret);
->> > > -		return ret;
->> > > +	if (!soc_ver) {
->> >
->> >
->> > The following would probably be clearer:
->> >
->> >   	if (qcadev->btsoc_type != QCA_WCN3990) {
->> >
->> > > +		/* Get QCA version information */
->> > > +		ret = qca_read_soc_version(hdev, &soc_ver);
->> > > +		if (ret < 0 || soc_ver == 0) {
->> > > +			bt_dev_err(hdev, "QCA Failed to get version (%d)", ret);
->> > > +			return ret;
->> > > +		}
->> > > +		bt_dev_info(hdev, "QCA controller version 0x%08x", soc_ver);
->> >
->> > Couldn't we hide some of this in qca_read_soc_version()?
->> >
->> > qca_read_soc_version() could at least do the logging in the error case
->> > (the 'soc_ver == 0' case could be handled there as well), which would
->> > leave us with:
->> >
->> >
->> > 	ret = qca_read_soc_version(hdev, &soc_ver);
->> > 	if (ret)
->> > 		return ret;
->> >
->> > And the same above.
->> >
->> > The controller version can be logged outside of the branch for both
->> > wcn3990 and Rome.
->> >
->> > >  	}
->> > > -	bt_dev_info(hdev, "QCA controller version 0x%08x", soc_ver);
->> > >
->> > >  	/* Setup patch / NVM configurations */
->> > > -	ret = qca_uart_setup(hdev, qca_baudrate, QCA_ROME, soc_ver);
->> > > +	ret = qca_uart_setup(hdev, qca_baudrate, qcadev->btsoc_type,
->> > > soc_ver);
->> > >  	if (!ret) {
->> > >  		set_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
->> > >  		qca_debugfs_init(hdev);
->> > > @@ -1061,9 +1209,123 @@ static struct hci_uart_proto qca_proto = {
->> > >  	.dequeue	= qca_dequeue,
->> > >  };
->> > >
->> > > +static const struct qca_vreg_data qca_soc_data = {
->> > > +	.soc_type = QCA_WCN3990,
->> > > +	.vregs = (struct qca_vreg []) {
->> > > +		{ "vddio",   1800000, 1800000,  0 },
->> > > +		{ "vddxo",   1800000, 1800000,  1 },
->> > > +		{ "vddrf",   1304000, 1304000,  1 },
->> > > +		{ "vddch0",  3000000, 3312000,  1 },
->> > > +	},
->> > > +	.num_vregs = 4,
->> > > +};
->> >
->> > I didn't chime in earlier in the discussion with Stephen on the
->> > regulators (https://patchwork.kernel.org/patch/10467911/), however I
->> > agree with him that specifying at load of 1uA doesn't seem to make
->> > much sense. What would happen if the load remained unspecified (or 0)?
->> 
->> [Bala]: On RPMh based designs, calling a regulator_set_load with a 
->> non-zero
->> value moves the regulator to NPM (high power mode) which is required 
->> for BT
->> communication.
->>         and call with 0uA  moves it to low-power-mode (vote from 
->> APPS).
->> Basically whenever BT wants these in NPM  it calls set-load with 1.
-> 
-> This assumes that the chip is powered by RPMh regulators, which
-> depending on the system may or may not be true. On systems with other
-> regulators you are telling the regulator that the max load is 1uA, and
-> the regulator might comply, going in a low power mode that does not
-> provide enough current for the chip to operate properly.
-> 
-> Doesn't the datasheet of the chip specify actual max currents for
-> these consumers that could be used instead of the bogus 1uA? If not
-> you could ask the designers of the chip for an approximate number
-> (preferably erring on the upper side).
-
-[Bala]: will check and update you on this.
-
--- 
-Regards
-Balakrishna.
+T24gVHVlLCBKdWwgMTcsIDIwMTggYXQgMTo0NyBBTSBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxs
+ZWlqQGxpbmFyby5vcmc+IHdyb3RlOgo+Cj4gT24gVHVlLCBKdWwgMTcsIDIwMTggYXQgMTI6NTAg
+QU0gUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6Cj4gPiBPbiBNb24sIEp1bCAx
+NiwgMjAxOCBhdCAzOjIzIEFNIExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9y
+Zz4gd3JvdGU6Cj4KPiA+ID4gK1ZpZGVvIEdyYXBoaWNzIEFycmF5Cj4gPgo+ID4gVkdBIGlzIG1v
+cmUgYSBjb250cm9sbGVyIGludGVyZmFjZSB0aGFuIGEgcGFuZWwuLi4KPgo+IEkgZG9uJ3Qga25v
+dyB3aGF0IGVsc2UgdG8gY2FsbCBpdCB0aG91Z2gsIG90aGVyIHRoYW4gZm9ybXVsYXRpbmcgc29t
+ZXRpbmcKPiBidXJlYXVjcmF0aWMgbGlrZQo+ICJWaWRlbyBHcmFwaGljcyBBcnJheSBEaXNwbGF5
+IFJlc29sdXRpb25zIgo+Cj4gT3Igc2hvdWxkIEkgdXNlIHRoZSBhYmJyZXZpYXRpb246Cj4gIlZH
+QSBEaXNwbGF5IFJlc29sdXRpb25zIiByYXRoZXI/Cj4KPiBUaGUgV2lraXBlZGlhIGFydGljbGUg
+ImRpc3BsYXkgcmVzb2x1dGlvbiIKPiBodHRwczovL2VuLndpa2lwZWRpYS5vcmcvd2lraS9EaXNw
+bGF5X3Jlc29sdXRpb24KPiBqdXN0IGNhbGxzIHRoZXNlIHRocmVlIHJlc29sdXRpb25zICJWR0Ei
+LCAiU1ZHQSAiIGFuZCAiWEdBIi4KPgo+ID4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlz
+cGxheV9tb2RlIHZpZGVvX2dyYXBoaWNzX2FycmF5X21vZGVzW10gPSB7Cj4gPiA+ICsgICAgICAg
+ewo+ID4gPiArICAgICAgICAgICAgICAgLyoKPiA+ID4gKyAgICAgICAgICAgICAgICAqIFRoaXMg
+aXMgdGhlIG1vc3Qgc3RhbmRhcmRpemVkICJ2YW5pbGxhIiBWR0EgbW9kZSB0aGVyZSBpczoKPiA+
+ID4gKyAgICAgICAgICAgICAgICAqIDY0MHg0ODAgQCA2MCBIego+ID4KPiA+IERvbid0IHdlIGhh
+dmUgc3RhbmRhcmQgVkVTQSB0aW1pbmdzIGFscmVhZHkgZGVmaW5lZCBhcyB3ZWxsIGFzIHRpbWlu
+Z3MKPiA+IHRoYXQgY2FuIGJlIGNhbGN1bGF0ZWQgYmFzZWQgb24gcmVzb2x1dGlvbiBhbmQgcmVm
+cmVzaCByYXRlIChjYWxsZWQKPiA+IENWVCBJSVJDKS4gV2h5IGR1cGxpY2F0ZSBoZXJlPwo+Cj4g
+VGhleSBhcmUgaW5zaWRlIGRyaXZlcnMvZ3B1L2RybS9kcm1fZWRpZC5jCj4gYWxsIGluIHN0YXRp
+YyBjb25zdCBhcnJheXMgYW5kIGVudW1lcmF0ZWQgYnkgdGhlIGluZGV4IGluIHRoZQo+IERNVCBz
+cGVjIHRha2VuIG91dCBvZiBYRnJlZTg2LiAoZHJtX2RtdF9tb2Rlc1tdKQo+Cj4gSSBkb24ndCBr
+bm93LiBJdCBpcyBxdWl0ZSBlbmNhcHN1bGF0ZWQgaW50byB0aGF0IEVESUQgZHJpdmVyIGFuZAo+
+IGRvZXNuJ3Qgc2VlbSB2ZXJ5IHJldXNhYmxlLiBUbyBwaWNrIG91dCBhIGZldyBmcm9tIGluc2lk
+ZSBFRElECj4gc2VlbXMgcHJldHR5IGRhdW50aW5nLiBJJ2QgbGlrZSB0byBoZWFyIHdoYXQgdGhl
+IERSTSBmb2xrcyB0aGluawo+IGFib3V0IHRoYXQuCj4KPiA+IFdoeSBkb24ndCB5b3UganVzdCBk
+ZWZpbmUgYSAndmdhLWNvbm5lY3Rvcicgbm9kZQo+Cj4gQmVjYXVzZSB0aGlzIGlzIG5vdCBhIFZH
+QSBjb25uZWN0b3IsIGl0IGlzIGp1c3QgdGhlIFZHQSByZXNvbHV0aW9uLgo+IEluIG90aGVyIGNp
+cmN1bXN0YW5jZXMgSSBkbyB1c2UgaXQuCgpJdCdzIG5vdCBhIHBhbmVsIGVpdGhlci4gQSBjb25u
+ZWN0b3IgaXMgc29tZXRoaW5nIHdpdGggdmFyaWFibGUKcmVzb2x1dGlvbi4gQSBwYW5lbCBpcyBm
+aXhlZCByZXNvbHV0aW9uLiBXaGljaCBkbyB5b3Ugd2FudD8KCj4gSSB0aGluayB5b3UgbW9zdCBv
+ZnRlbiBoYXZlIHRvIHVzZSB0aGF0IGNvbm5lY3RvciB3aXRoIHRoZSBkdW1iCj4gVkdBIERBQyBi
+cmlkZ2UgdGhvdWdoLCBhcyB0aGUgVkdBIGNvbm5lY3RvciBpcyBhbmFsb2cgYW5kCj4gd2hhdCBj
+b21lcyBvdXQgb2YgYSBkaXNwbGF5IGNvbnRyb2xsZXIgaXMgZGlnaXRhbC4gU28gaXQgbmVlZHMg
+dG8KPiBtYWtlIHNvbWUga2luZCBvZiBzZW5zZSBoZXJlLgo+Cj4gSW4gYSB3YXkgKGFzIHdlIGRp
+c2N1c3NlZCBiZWZvcmUpIHRoZSB3aG9sZSBwYW5lbC1zaW1wbGUuYyB0aGluZwo+IGlzIGEgYml0
+IGJvZ3VzLCBhcyBpdCBpcyBwcm9iYWJseSBpbiBtb3N0IGNhc2VzIGhpZGluZyBhIGJyaWRnZSBv
+cgo+IGEgZHVtYiBEQUMgb3IgYXQgbGVhc3QgYSBWR0EgY29ubmVjdG9yIG9yIHNpbWlsYXIgdGhh
+dCBzaG91bGQndmUKPiBiZWVuIHByb3Blcmx5IG1vZGVsZWQsIGJ1dCBpbiB0aGlzIGNhc2UgSSBh
+bSBtb3JlIGNlcnRhaW4gdGhhdCBpdCBpcwo+IGFjdHVhbGx5IHRoZSByaWdodCBjaG9pY2UuCj4K
+PiBJIGd1ZXNzIEkgY291bGQgdHJ5IHRvIHVzZSB0aGUgZHVtYiBWR0EgYnJpZGdlIGFuZCB0aGUg
+VkdBCj4gY29ubmVjdG9yLCBhbmQgaXQgaW5kZWVkIGZhbGxzIGJhY2sgdG8gVkdBIHJlc29sdXRp
+b25zIGlmIG5vIEREQwo+IGNoYW5uZWwgaXMgYXZhaWxhYmxlIGJ1dCBpZiBJIGdvIGluIGFuZCBz
+YXkgdGhlcmUgaXMgYSBEQUMgYnJpZGdlCj4gYW5kIFZHQSBjb25uZWN0b3IgSSBhbSBlc3NlbnRp
+YWxseSBseWluZy4KPgo+ID4gYW5kIElJUkMsIHlvdSBjYW4KPiA+IGp1c3QgZm9yY2UgdGhlIHN0
+YW5kYXJkIG1vZGVzIGZyb20gdXNlcnNwYWNlIHdpdGggRFJNLgo+Cj4gSSBndWVzcyB5b3UgbWVh
+biB0aGUga2VybmVsIGNvbW1hbmQgbGluZSBhcmd1bWVudHMsIGxlc3QKPiB0aGVyZSB3aWxsIGJl
+IG5vIGJvb3QgY29uc29sZS4KClllcywgdGhlIGtlcm5lbCBjb21tYW5kIGxpbmUgaXMgYW5vdGhl
+ciB3YXkuIEJ1dCBpZiB5b3UgYXJlbid0IHVzaW5nCmZiY29uLCB0aGVuIHVzZXJzcGFjZSBpcyB0
+aGUgd2F5LgoKPiBBcGFydCBmcm9tIGJlaW5nIGEgdXNlciBleHBlcmllbmNlIGhvcnJvciBzdG9y
+eSwgdGhhdCByZXF1aXJlcwo+IGEgVkdBIGNvbm5lY3RvciBicmlkZ2UsIGFzIHBlciBhYm92ZS4g
+KEl0J3MgdGhlIEVESUQgY29kZSB0aGF0Cj4gZG9lcyB0aGF0IGNvbW1hbmQgbGluZSBwYXJzaW5n
+LikgQW5kIHRoYXQgcmVxdWlyZXMgbHlpbmcgYWJvdXQKPiBoYXZpbmcgYSBWR0EgY29ubmVjdG9y
+IGJyaWRnZS4KCkJlY2F1c2UgeW91IGhhdmUgdG8gc2V0IHRoZSByZXNvbHV0aW9uIG9uIHRoZSBr
+ZXJuZWwgY29tbWFuZCBsaW5lPyBJJ20Kb3BlbiB0byBoYXZpbmcgYSBkZWZhdWx0IHJlc29sdXRp
+b24gZm9yIHRoZSBjb25uZWN0b3IgaW4gRFQuCgo+IEJ1dCBJIGNhbiBzdXJlbHkgbGllIGlmIGV2
+ZXJ5b25lIHRoaW5rcyB0aGF0IGlzIHRoZSBiZXN0IGlkZWEgOkQKPgo+ID4gTWF5YmUgeW91IG5l
+ZWQKPiA+IHNvbWUgZmxhZyB0byBmb3JjZSBhIGNvbm5lY3Rpb24gaW4gdGhlIGVtdWxhdG9yIGFu
+ZCBwZXJoYXBzIHNvbWUgZmFrZQo+ID4gRURJRCBkYXRhIHRvIHNldCBhIGRlZmF1bHQgbW9kZS4K
+Pgo+IFRoaXMgZGV2aWNlIHRyZWUgSSdtIGNyZWF0aW5nIGlzIGZvciBBUk0gUlRTTSB3aGljaCBp
+cyBhIHByb3ByaWV0YXJ5Cj4gQVJNIHRvb2wuCj4KPiBTdWRlZXAgYXQgQVJNIHNheXMgaXQgZG9l
+cyBub3QgZW11bGF0ZSBhbnkgREFDIGJyaWRnZSBzdWNoCj4gYXMgZm91bmQgaW4gdGhlIFZlcnNh
+dGlsZSBFeHByZXNzIG1hY2hpbmUgZmFtaWx5LiBJdCBqdXN0IGV4cGVjdHMKPiB0byBoYXZlIHRo
+ZSByaWdodCByZXNvbHV0aW9uIHBhcmFtZXRlcnMgd3JpdHRlbiBpbnRvIHRoZSByZWdpc3RlcnMK
+PiBvZiB0aGUgUEwxMTEsIHdoaWNoIGluIHR1cm4gb2YgY291cnNlIGNhbiBvbmx5IGdldCBpdCBm
+cm9tIGEKPiBwYW5lbCBvciBicmlkZ2UgZHJpdmVyIG9mIHNvbWUgc29ydC4KClNvIHB1dHRpbmcg
+KmFueXRoaW5nKiBpbiBEVCBpcyBhIGxpZS4uLgoKPiBUaGUgd2F5IHRob3NlIGVtdWxhdG9ycyB3
+b3JrIChBRkFJQ1QpIGlzIHRoYXQgdGhleSBzaW1wbHkgbW9uaXRvcgo+IHJlZ2lzdGVyIHdyaXRl
+cyB0byB0aGUgcmVzb2x1dGlvbnMgcGFyYW1ldGVycyB0byBzY2FsZSB0aGUgZW11bGF0b3IKPiBk
+aXNwbGF5IHdpbmRvdyBhbmQgdGhlbiB0aGV5IHJlYWQgb3V0IHRoZSBSR0IgZGF0YSBpbnRvIHRo
+YXQKPiB3aW5kb3csIHBpeGVsIGJ5IHBpeGVsLCBmcm9tIHRoZSBpbmRpY2F0ZWQgbWVtb3J5IGFy
+ZWEuCj4gSXQgd29ya3MgZm9yIHRoZW0uCj4KPiBJbiBRRU1VLCB3ZSBoYWQgdGhlIHNhbWUgcHJv
+YmxlbS4gSXQgZGlkbid0IHN1cHBvcnQgcHJvcGVyIHJlcG9ydGluZwo+IG9mIGZha2UgRURJRCBv
+biB0aGVzZSBwbGF0Zm9ybXMgZWl0aGVyLCBiZWNhdXNlIG9mIG5vdCBwcm9wZXJseQo+IG1vZGVs
+aW5nIHRoZSBoYXJkd2FyZSBpdCB3YXMgZW11bGF0aW5nLCBpbnN0ZWFkIHJlbHlpbmcgb24gdGhl
+IHJlZ2lzdGVyCj4gcmVhZHMgYXMgYWJvdmUuIFNpbmNlIGl0IGlzIG9wZW4gc291cmNlIEkgY291
+bGQKPiBzaW1wbHkgZml4IGl0Ogo+IGh0dHBzOi8vbGlzdHMuZ251Lm9yZy9hcmNoaXZlL2h0bWwv
+cWVtdS1kZXZlbC8yMDE4LTAyL21zZzA0NjUxLmh0bWwKPiBodHRwczovL2xpc3RzLmdudS5vcmcv
+YXJjaGl2ZS9odG1sL3FlbXUtZGV2ZWwvMjAxOC0wMi9tc2cwNDY1Mi5odG1sCj4gaHR0cHM6Ly9s
+aXN0cy5nbnUub3JnL2FyY2hpdmUvaHRtbC9xZW11LWRldmVsLzIwMTgtMDIvbXNnMDQ2NTMuaHRt
+bAoKSGF2aW5nIGEgd2F5IHRvIHNldCB0aGUgZGVmYXVsdCBkaXNwbGF5IHJlc29sdXRpb24gaW4g
+UUVNVSB3b3VsZCBiZQpuaWNlLiBJJ3ZlIGhhY2tlZCBhcm91bmQgdGhhdCB3aGVuIHVzaW5nIHZp
+cmdsLgoKPiBBZnRlciB0aGlzLCB0aGUgUUVNVSBmb3IgVmVyc2F0aWxlIEV4cHJlc3MgY2FuIHBy
+b3Blcmx5IHVzZSB0aGUKPiBicmlkZ2UuCj4KPiBJIGRvIHRyeSB0byBiZSBncml0dHkgYW5kIHRo
+b3JvdWdoISA6RAo+Cj4gSSBkb24ndCByZWFsbHkga25vdyB3aGF0IFJUU00gaXMgYW5kIEkgY2Fu
+J3QgcnVuIGl0IG15c2VsZi4gSSBqdXN0Cj4gaGF2ZSB0byBzdXBwb3J0IGl0IGluIHRoZSByZWZh
+Y3RvcmluZyB0byB1c2UgRFJNIGZvciB0aGUgQVJNCj4gVmVyc2F0aWxlIEV4cHJlc3MgbWFjaGlu
+ZXMuIEkgY2Fubm90IGNoYW5nZSBpdHMgc291cmNlIGNvZGUuCj4KPiA+IFRoZXJlJ3MgYWxzbyBz
+b21lIG90aGVyIGNhc2VzIG9mCj4gPiAidHJhbnNwYXJlbnQiIGJyaWRnZXMgd2hpY2ggZG9uJ3Qg
+aGF2ZSBhbnkgZHJpdmVyLgo+Cj4gWWVhaCBJIHRoaW5rIHRoZXkgbW9zdGx5IHVzZSBwYW5lbC1z
+aW1wbGUuYyBpbiB0aGUgRFJNCj4gY2FzZSBkb24ndCB0aGV5PyBXZSBjb21lIGZ1bGwgY2lyY2xl
+LgoKTFZEUyBkb2VzLiBWR0EgZG9lc24ndC4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
