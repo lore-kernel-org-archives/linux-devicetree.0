@@ -1,50 +1,47 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH 0/3] arm: dts: zynq: Improvements to Zybo z7 board
-Date: Tue, 17 Jul 2018 16:59:53 +0200
-Message-ID: <6586da49-6171-b8b0-b6d7-0290b5470930@xilinx.com>
-References: <20180712055049.5098-1-luaraneda@gmail.com>
+From: Chris Healy <cphealy@gmail.com>
+Subject: Re: [PATCH] ARM: dts: vf610: Add ZII SSMB SPU3 board
+Date: Tue, 17 Jul 2018 08:08:55 -0700
+Message-ID: <CAFXsbZpdJvB3OtEnjjx5rNvgutmhFs=VK3uimRJnvQHLwzwYSw@mail.gmail.com>
+References: <20180717040651.641-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180712055049.5098-1-luaraneda@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Luis Araneda <luaraneda@gmail.com>, Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180717040651.641-1-andrew.smirnov@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-On 12.7.2018 07:50, Luis Araneda wrote:
-> This patchset corrects and improves the device-tree
-> of the Zybo Z7 board
-> 
-> The first patch correct the RAM size
-> ( supersedes https://lkml.org/lkml/2018/6/26/965 )
-> 
-> The second patch introduce the use of GPIO constants
-> to replace a literal
-> 
-> Finally, the third patch adds a gpio-leds node with
-> one LED
-> 
-> Luis Araneda (3):
->   arm: dts: zynq: Fix memory size on the Zybo Z7 board
->   arm: dts: zynq: Use gpio constants for the Zybo Z7 board
->   arm: dts: zynq: Add LEDs to the Zybo Z7 board
-> 
->  arch/arm/boot/dts/zynq-zybo-z7.dts | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
+On Mon, Jul 16, 2018 at 9:06 PM, Andrey Smirnov
+<andrew.smirnov@gmail.com> wrote:
+> Add support for Zodiac Inflight Innovations SSMB SPU3
+> board (VF610-based).
+>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: cphealy@gmail.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> ---
+>  arch/arm/boot/dts/Makefile                |   3 +-
+>  arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts | 343 ++++++++++++++++++++++
+>  2 files changed, 345 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index bea41b129493..e331b2c16539 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -570,7 +570,8 @@ dtb-$(CONFIG_SOC_VF610) += \
+>         vf610m4-cosmic.dtb \
+>         vf610-twr.dtb \
+>         vf610-zii-dev-rev-b.dtb \
+> -       vf610-zii-dev-rev-c.dtb
+> +       vf610-zii-dev-rev-c.dtb \
+> +       vf610-zii-ssmb-spu3.dtb
 
-Applied all.
 
-Thanks,
-Michal
+Tested-by: Chris Healy <cphealy@gmail.com>
