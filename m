@@ -1,115 +1,27 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [RESEND PATCH v4 1/2] dt-bindings: at24: Add address-width property
-Date: Tue, 17 Jul 2018 10:01:17 +0200
-Message-ID: <CAMRc=MfNa0OwMbJ6ibbCJJD0pV9tKtyTZ3cQi34ra5oc_-5jYw@mail.gmail.com>
-References: <1530522740-2798-1-git-send-email-alanx.chiang@intel.com>
- <1530522740-2798-2-git-send-email-alanx.chiang@intel.com> <20180705212204.GA10449@rob-hp-laptop>
- <alpine.LFD.2.21.1807051623400.12206@localhost.localdomain>
- <0772C36F3434E145A062D024A4869A09010B1E4D@PGSMSX101.gar.corp.intel.com> <CAMRc=Mc4s6tJw6dAHYCPQdsPox9V8sBTqY3LHi5XMWALwOZdyA@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: Add vendor prefix for Sancloud
+Date: Tue, 17 Jul 2018 01:02:33 -0700
+Message-ID: <20180717080233.GC99251@atomide.com>
+References: <1531808688-9716-1-git-send-email-koen@dominion.thruhere.net>
+ <1531808688-9716-2-git-send-email-koen@dominion.thruhere.net>
+ <20180717072028.GA3100@piout.net>
+ <D3049450-5391-40CB-ADD1-E1330BFE0525@dominion.thruhere.net>
+ <20180717073659.GB3100@piout.net>
+ <8EB8A3A1-EF76-42F8-A7C2-5A4A595C92B8@dominion.thruhere.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMRc=Mc4s6tJw6dAHYCPQdsPox9V8sBTqY3LHi5XMWALwOZdyA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <8EB8A3A1-EF76-42F8-A7C2-5A4A595C92B8@dominion.thruhere.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Chiang, AlanX" <alanx.chiang@intel.com>
-Cc: "Robert P. J. Day" <rpjday@crashcourse.ca>, Rob Herring <robh@kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "Yeh, Andy" <andy.yeh@intel.com>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "Mani, Rajmohan" <rajmohan.mani@intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "tfiga@chromium.org" <tfiga@chromium.org>, "jcliang@chromium.org" <jcliang@chromium.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.ker
+To: Koen Kooi <koen@dominion.thruhere.net>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>, David Lechner <david@lechnology.com>, Shawn Guo <shawnguo@kernel.org>, SZ Lin <sz.lin@moxa.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2018-07-09 10:52 GMT+02:00 Bartosz Golaszewski <brgl@bgdev.pl>:
-> 2018-07-09 5:12 GMT+02:00 Chiang, AlanX <alanx.chiang@intel.com>:
->> Hi Robert,
->>
->>> -----Original Message-----
->>> From: Robert P. J. Day [mailto:rpjday@crashcourse.ca]
->>> Sent: Friday, July 6, 2018 4:24 AM
->>> To: Rob Herring <robh@kernel.org>
->>> Cc: Chiang, AlanX <alanx.chiang@intel.com>; linux-i2c@vger.kernel.org; Yeh,
->>> Andy <andy.yeh@intel.com>; sakari.ailus@linux.intel.com;
->>> andriy.shevchenko@linux.intel.com; Shevchenko, Andriy
->>> <andriy.shevchenko@intel.com>; Mani, Rajmohan
->>> <rajmohan.mani@intel.com>; andy.shevchenko@gmail.com;
->>> tfiga@chromium.org; jcliang@chromium.org; brgl@bgdev.pl;
->>> mark.rutland@arm.com; arnd@arndb.de; gregkh@linuxfoundation.org;
->>> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org
->>> Subject: Re: [RESEND PATCH v4 1/2] dt-bindings: at24: Add address-width
->>> property
->>>
->>> On Thu, 5 Jul 2018, Rob Herring wrote:
->>>
->>> > On Mon, Jul 02, 2018 at 05:12:19PM +0800, alanx.chiang@intel.com wrote:
->>> > > From: Alan Chiang <alanx.chiang@intel.com>
->>> > >
->>> > > The AT24 series chips use 8-bit address by default. If some chips
->>> > > would like to support more than 8 bits, the at24 driver should be
->>> > > added the compatible field for specfic chips.
->>> > >
->>> > > Provide a flexible way to determine the addressing bits through
->>> > > address-width in this patch.
->>> > >
->>> > > Signed-off-by: Alan Chiang <alanx.chiang@intel.com>
->>> > > Signed-off-by: Andy Yeh <andy.yeh@intel.com>
->>> > > Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->>> > >
->>> > > ---
->>> > > since v1:
->>> > > -- Remove the address-width field in the example.
->>> > > since v2:
->>> > > -- Remove redundant space.
->>> > > since v3:
->>> > > -- Add Acked-by.
->>> > >
->>> > > ---
->>> > >  Documentation/devicetree/bindings/eeprom/at24.txt | 2 ++
->>> > >  1 file changed, 2 insertions(+)
->>> >
->>> > Reviewed-by: Rob Herring <robh@kernel.org>
->>>
->>>   "... should be added the compatible field ..."??
->>>
->>> rday
->>
->> Maybe I should modify the sentence as below that makes it clear.
->> "The compatible field should be added in the at24.c for specific chips.".
->>
->> I quote Andy's words in patch v2:
->> "The current at24 driver has no address width support, thus, reusing same
->> (allocated) IDs (non-DT case) is hard."
->>
->> This is the reason that I submitted the patch.
->>
->> Thanks
->>
->
-> Make it something like:
->
-> Currently the only way to use a variant of a supported model with
-> a different address width is to define a new compatible string and the
-> corresponding chip data structure.
->
-> Provide a flexible way to specify the size of the address pointer by
-> defining a new property: address-width.
->
-> Best regards,
-> Bartosz Golaszewski
->
->>>
->>> --
->>>
->>> ==========================================================
->>> ==============
->>> Robert P. J. Day                                 Ottawa, Ontario, CANADA
->>>                   http://crashcourse.ca/dokuwiki
->>>
->>> Twitter:                                       http://twitter.com/rpjday
->>> LinkedIn:                               http://ca.linkedin.com/in/rpjday
->>> ==========================================================
->>> ==============
+* Koen Kooi <koen@dominion.thruhere.net> [180717 07:46]:
+> 
+> Thanks for the explanation! I resent 0001 with linux-omap and Tony explicitly adding using -cc in git-send-email.
 
-Hi,
+Yeah thanks I'll pick up both patches.
 
-I will soon be sending my pull request to Wolfram, so if you still
-want that applied for 4.19 - please resend with the commit message
-fixed.
-
-Thanks,
-Bart
+Tony
