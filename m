@@ -1,47 +1,46 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 5/5] ARM: dts: exynos: add tmu aliases nodes
-Date: Tue, 17 Jul 2018 14:29:45 +0200
-Message-ID: <CAJKOXPc256dCWWWaoJBOB9NUc=CUYtqgfeKh=LBOoFAfh_T8Ng@mail.gmail.com>
-References: <1531822342-4293-1-git-send-email-linux.amoon@gmail.com> <1531822342-4293-5-git-send-email-linux.amoon@gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 1/5] i2c: designware: factorize setting SDA hold time
+Date: Tue, 17 Jul 2018 14:31:08 +0200
+Message-ID: <20180717123108.GA23935@piout.net>
+References: <20180717114837.21839-1-alexandre.belloni@bootlin.com>
+ <20180717114837.21839-2-alexandre.belloni@bootlin.com>
+ <5a1846aa7c03cc889f072d1aab6967ff254b49de.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531822342-4293-5-git-send-email-linux.amoon@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <5a1846aa7c03cc889f072d1aab6967ff254b49de.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Hogan <jhogan@kernel.org>, Paul Burton <paul.burton@mips.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On 17 July 2018 at 12:12, Anand Moon <linux.amoon@gmail.com> wrote:
-> add tmuctrl aliases node for exynos542x
+On 17/07/2018 15:11:50+0300, Andy Shevchenko wrote:
+> On Tue, 2018-07-17 at 13:48 +0200, Alexandre Belloni wrote:
+> > Factorize setting the SDA hold time in a new function
+> > i2c_dw_set_sda_hold_time() that is used for both master and slave
+> > mode.
+> > 
+> > This conveniently pulls the fix for the spurious warning from commit
+> > 7a20e707aae2 ("i2c: designware: suppress unneeded SDA hold time
+> > warnings")
+> > in slave mode.
+> 
+> Isn't this a duplication of 
+> 
+> commit 1080ee7e28e1cea86310739e5dd4612868768aed
+> Author: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+> Date:   Tue Jun 19 14:23:22 2018 +0300
+> 
+>     i2c: designware: Move SDA hold time configuration to common code
+> 
+> ?
+> 
 
-Please use full sentence, starting with capital letter and ending with
-a dot. Also please explain why you need tmuctrl aliases.
+Indeed, I was on 4.18-rc1, not -next.
 
->
-> CC: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
->  arch/arm/boot/dts/exynos5420-peach-pit.dts         |  8 ++++----
->  arch/arm/boot/dts/exynos5420.dtsi                  | 20 ++++++++++++--------
->  arch/arm/boot/dts/exynos5422-odroid-core.dtsi      |  8 ++++----
->  arch/arm/boot/dts/exynos5422-odroidhc1.dts         |  8 ++++----
->  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |  8 ++++----
->  arch/arm/boot/dts/exynos5800-peach-pi.dts          |  8 ++++----
->  6 files changed, 32 insertions(+), 28 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> index 57c2332..ff79f0b 100644
-> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> @@ -1061,19 +1061,19 @@
->         status = "okay";
->  };
->
-> -&tmu_cpu0 {
-> +&tmu_cpu_0 {
 
-This looks irrelevant to the topic of adding aliases.
-
-Best regards,
-Krzysztof
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
