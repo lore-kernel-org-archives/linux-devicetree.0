@@ -1,48 +1,120 @@
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2] ARM: dts: at91: fix typos for SSC TD functions
-Date: Tue, 17 Jul 2018 17:03:53 +0300
-Message-ID: <1531836233-31536-1-git-send-email-claudiu.beznea@microchip.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2 2/2] arm64: dts: Add Mediatek X20 Development Board
+ support
+Date: Tue, 17 Jul 2018 19:34:53 +0530
+Message-ID: <20180717140453.GA19076@mani>
+References: <20180605163442.4812-1-manivannan.sadhasivam@linaro.org>
+ <20180605163442.4812-3-manivannan.sadhasivam@linaro.org>
+ <d88504b4-409c-c42b-f816-bedefce2a819@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <d88504b4-409c-c42b-f816-bedefce2a819@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, ludovic.desroches@microchip.com, nicolas.ferre@microchip.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Claudiu Beznea <claudiu.beznea@microchip.com>
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, taiten.peng@linaro.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, manivannanece23@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Fix typo for TD function of pins PIN_PB22 and PIN_PC14
+Hi Matthias,
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
+On Mon, Jul 16, 2018 at 03:24:44PM +0200, Matthias Brugger wrote:
+> Hi Manivanna,
+> 
+> On 05/06/18 18:34, Manivannan Sadhasivam wrote:
+> > Add initial device tree support for Mediatek X20 Development Board
+> > based on MT6797 Deca core SoC. This board is one of the 96Boards
+> > Consumer Edition platform.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/mediatek/Makefile         |  1 +
+> >  .../boot/dts/mediatek/mt6797-x20-dev.dts      | 33 +++++++++++++++++++
+> >  2 files changed, 34 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
+> > 
+> > diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> > index ac17f60f998c..5b7fd6ad96e4 100644
+> > --- a/arch/arm64/boot/dts/mediatek/Makefile
+> > +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> > @@ -3,5 +3,6 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
+> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
+> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
+> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
+> > +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
+> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
+> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts b/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
+> > new file mode 100644
+> > index 000000000000..2c09ca95d9e2
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
+> > @@ -0,0 +1,33 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Device Tree Source for MediaTek X20 Development Board
+> > + *
+> > + * Copyright (C) 2018, Linaro Ltd.
+> > + *
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "mt6797.dtsi"
+> > +
+> > +/ {
+> > +	model = "Mediatek X20 Development Board";
+> > +	compatible = "archermind,mt6797-x20-dev", "mediatek,mt6797";
+> > +
+> > +	aliases {
+> > +		serial0 = &uart1;
+> > +	};
+> 
+> Sorry for the late answer.
+> Why did you use uart1 instead of uart0?
+> I know that uart0 is used by the bootloader, but because of their exotic flash
+> procedure I find it quite useful to see this messages in my serial connection.
+> Of course you can only use 921600 baudrate then.
+> 
 
-Changes in v2:
-- fix typo also for PC14 pin
-- change patch subject to reflect new changes
+The reason is, most of the Mezzanine boards use USB to UART bridge on the
+UART1 port available on the Low Speed Expansion header. Additionally, the
+convention followed by most of the Consumer Edition 96Boards is to use UART1
+as the debug serial port. That's why eventhough the bootloader is using UART0,
+I forced the kernel to use UART1.
 
- arch/arm/boot/dts/sama5d2-pinfunc.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> > +
+> > +	memory@40000000 {
+> > +		device_type = "memory";
+> > +		reg = <0 0x40000000 0 0x1e605000>;
+> 
+> How comes this strange number for the memory size?
+> 
 
-diff --git a/arch/arm/boot/dts/sama5d2-pinfunc.h b/arch/arm/boot/dts/sama5d2-pinfunc.h
-index e57191fb83de..1c01a6f843d8 100644
---- a/arch/arm/boot/dts/sama5d2-pinfunc.h
-+++ b/arch/arm/boot/dts/sama5d2-pinfunc.h
-@@ -375,7 +375,7 @@
- #define PIN_PB22__GPIO			PINMUX_PIN(PIN_PB22, 0, 0)
- #define PIN_PB22__LCDDAT11		PINMUX_PIN(PIN_PB22, 1, 1)
- #define PIN_PB22__A11			PINMUX_PIN(PIN_PB22, 2, 1)
--#define PIN_PB22__TDO			PINMUX_PIN(PIN_PB22, 3, 1)
-+#define PIN_PB22__TD0			PINMUX_PIN(PIN_PB22, 3, 1)
- #define PIN_PB22__TIOA2			PINMUX_PIN(PIN_PB22, 4, 2)
- #define PIN_PB22__FLEXCOM3_IO1		PINMUX_PIN(PIN_PB22, 5, 3)
- #define PIN_PB22__GMDC			PINMUX_PIN(PIN_PB22, 6, 3)
-@@ -556,7 +556,7 @@
- #define PIN_PC14__LCDDAT6		PINMUX_PIN(PIN_PC14, 1, 2)
- #define PIN_PC14__GRX0			PINMUX_PIN(PIN_PC14, 2, 1)
- #define PIN_PC14__ISC_D5		PINMUX_PIN(PIN_PC14, 3, 1)
--#define PIN_PC14__TDO			PINMUX_PIN(PIN_PC14, 5, 2)
-+#define PIN_PC14__TD0			PINMUX_PIN(PIN_PC14, 5, 2)
- #define PIN_PC14__A3			PINMUX_PIN(PIN_PC14, 6, 2)
- #define PIN_PC15			79
- #define PIN_PC15__GPIO			PINMUX_PIN(PIN_PC15, 0, 0)
--- 
-2.7.4
+Actually, the memory size is extracted from the downstream kernel [1].
+
+> BTW do you know the differences between the EVB board and the x20 one?
+> I used the evb dts for booting up to now.
+> 
+
+Sorry, I don't know the difference between both boards!
+
+Thanks,
+Mani
+
+[1] https://github.com/helio-x20/linux/blob/helio-x20/arch/arm64/boot/dts/amt6797_64_open.dts#L8
+
+> Best regards,
+> Matthias
+> 
+> > +	};
+> > +
+> > +	chosen {
+> > +		stdout-path = "serial0:115200n8";
+> > +	};
+> > +};
+> > +
+> > +&uart1 {
+> > +	status = "okay";
+> > +};
+> > 
