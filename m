@@ -1,57 +1,52 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sunxi: Remove unused
- address-cells/size-cells of dwmac-sun8i
-Date: Tue, 17 Jul 2018 17:19:53 +0200
-Message-ID: <20180717151953.oab5tsurldmz4tjn@flea>
-References: <1531655749-14063-1-git-send-email-clabbe@baylibre.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] ARM: dts: vf610: Add ZII SSMB SPU3 board
+Date: Tue, 17 Jul 2018 17:20:35 +0200
+Message-ID: <20180717152035.GD16320@lunn.ch>
+References: <20180717040651.641-1-andrew.smirnov@gmail.com>
+ <20180717144638.GB16320@lunn.ch>
+ <CAFXsbZpKyLjp0bO7MVR5StKf=3UkXUANydhM+8_13G3itRmE+Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rpucpdbcayeuqohf"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBJESXDNAKGQEJ7MQDRA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1531655749-14063-1-git-send-email-clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Corentin Labbe <clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAFXsbZpKyLjp0bO7MVR5StKf=3UkXUANydhM+8_13G3itRmE+Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Healy <cphealy@gmail.com>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---rpucpdbcayeuqohf
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Sun, Jul 15, 2018 at 11:55:49AM +0000, Corentin Labbe wrote:
-> address-cells/size-cells is unnecessary for dwmac-sun8i node.
-> It was in early days, but since a mdio node is used, it could be
-> removed.
+> >> +++ b/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
+> >> @@ -0,0 +1,343 @@
+> >> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> >> +
+> >> +/*
+> >> + * Device tree file for ZII's SSMB SPU3 board
+> >> + *
+> >> + * SSMB - SPU3 Switch Management Board
+> >> + * SPU - Seat Power Unit
+> >
+> > I think this is the first Zodiac board with mutually recursive
+> > acronyms.
+> >
+> > Probably a question for Chris: Does SSMB specifically refer to version
+> > 3 of the SPU?
+> >
+> >    Andrew
 > 
-> This patch fix the following DT warning:
-> Warning (avoid_unnecessary_addr_size): /soc/ethernet@1c50000: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+> SPU3 is the third generation of seat power unit.
+> SSMB is the SPU3 Switch Management Board.
 > 
-> Signed-off-by: Corentin Labbe <clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/net/dwmac-sun8i.txt | 8 --------
->  arch/arm/boot/dts/sun8i-a83t.dtsi                     | 2 --
->  arch/arm/boot/dts/sun8i-r40.dtsi                      | 2 --
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi                    | 2 --
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi         | 2 --
+> So, SSMB is a backronym.  This naming scheme breaks down a bit though
+> when follow on designs (that are not the SPU3) also use the SSMB, but
+> that's what it is... ;-)
 
-Just saw this, and dropped the patch. Please provide separate patches
-for the h3-h5 DTSI, the arm64 and arm patches.
+O.K, i was just wondering if the 3 was in the wrong place. More
+logically, it would be
 
-And ideally for the binding.
+* SSMB - SPU Switch Management Board
+* SPU 3 - Seat Power Unit, version 3.
 
-Maxime
+But you are saying the Marketing guys messed up the naming and
+engineering is now stuck with it.
 
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---rpucpdbcayeuqohf--
+	    Andrew
