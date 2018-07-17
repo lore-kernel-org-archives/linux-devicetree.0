@@ -1,7 +1,7 @@
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 10/16] clk: at91: add sama5d4 pmc driver
-Date: Wed, 18 Jul 2018 00:27:51 +0200
-Message-ID: <20180717222757.10253-11-alexandre.belloni@bootlin.com>
+Subject: [PATCH 07/16] clk: at91: add pmc_data struct and helpers
+Date: Wed, 18 Jul 2018 00:27:48 +0200
+Message-ID: <20180717222757.10253-8-alexandre.belloni@bootlin.com>
 References: <20180717222757.10253-1-alexandre.belloni@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180717222757.10253-1-alexandre.belloni@bootlin.com>
@@ -10,291 +10,102 @@ To: Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>
 Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Michael Turquette <mturquette@baylibre.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a driver for the PMC clocks of the sama5d4
+Add a new strut to handle references to all the PMC clocks and implement
+allocation/free helpers.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/clk/at91/Makefile  |   1 +
- drivers/clk/at91/sama5d4.c | 262 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 263 insertions(+)
- create mode 100644 drivers/clk/at91/sama5d4.c
+ drivers/clk/at91/pmc.c | 44 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/at91/pmc.h | 15 ++++++++++++++
+ 2 files changed, 59 insertions(+)
 
-diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
-index facc169ebb68..7cdb762f3e2e 100644
---- a/drivers/clk/at91/Makefile
-+++ b/drivers/clk/at91/Makefile
-@@ -14,3 +14,4 @@ obj-$(CONFIG_HAVE_AT91_SMD)		+= clk-smd.o
- obj-$(CONFIG_HAVE_AT91_H32MX)		+= clk-h32mx.o
- obj-$(CONFIG_HAVE_AT91_GENERATED_CLK)	+= clk-generated.o
- obj-$(CONFIG_HAVE_AT91_I2S_MUX_CLK)	+= clk-i2s-mux.o
-+obj-$(CONFIG_SOC_SAMA5D4) += sama5d4.o
-diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
-new file mode 100644
-index 000000000000..b98f14c1e138
---- /dev/null
-+++ b/drivers/clk/at91/sama5d4.c
-@@ -0,0 +1,262 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/clk-provider.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/slab.h>
-+
-+#include <dt-bindings/clock/at91.h>
-+
-+#include "pmc.h"
-+
-+static const struct clk_master_characteristics mck_characteristics = {
-+	.output = { .min = 125000000, .max = 200000000 },
-+	.divisors = { 1, 2, 4, 3 },
-+};
-+
-+static u8 plla_out[] = { 0 };
-+
-+static u16 plla_icpll[] = { 0 };
-+
-+static struct clk_range plla_outputs[] = {
-+	{ .min = 600000000, .max = 1200000000 },
-+};
-+
-+static const struct clk_pll_characteristics plla_characteristics = {
-+	.input = { .min = 12000000, .max = 12000000 },
-+	.num_output = ARRAY_SIZE(plla_outputs),
-+	.output = plla_outputs,
-+	.icpll = plla_icpll,
-+	.out = plla_out,
-+};
-+
-+static const struct {
-+	char *n;
-+	char *p;
-+	u8 id;
-+} sama5d4_systemck[] = {
-+	{ .n = "ddrck", .p = "masterck", .id = 2 },
-+	{ .n = "lcdck", .p = "masterck", .id = 3 },
-+	{ .n = "smdck", .p = "smdclk",   .id = 4 },
-+	{ .n = "uhpck", .p = "usbck",    .id = 6 },
-+	{ .n = "udpck", .p = "usbck",    .id = 7 },
-+	{ .n = "pck0",  .p = "prog0",    .id = 8 },
-+	{ .n = "pck1",  .p = "prog1",    .id = 9 },
-+	{ .n = "pck2",  .p = "prog2",    .id = 10 },
-+};
-+
-+static const struct {
-+	char *n;
-+	u8 id;
-+} sama5d4_periph32ck[] = {
-+	{ .n = "pioD_clk", .id = 5 },
-+	{ .n = "usart0_clk", .id = 6 },
-+	{ .n = "usart1_clk", .id = 7 },
-+	{ .n = "icm_clk", .id = 9 },
-+	{ .n = "aes_clk", .id = 12 },
-+	{ .n = "tdes_clk", .id = 14 },
-+	{ .n = "sha_clk", .id = 15 },
-+	{ .n = "matrix1_clk", .id = 17 },
-+	{ .n = "hsmc_clk", .id = 22 },
-+	{ .n = "pioA_clk", .id = 23 },
-+	{ .n = "pioB_clk", .id = 24 },
-+	{ .n = "pioC_clk", .id = 25 },
-+	{ .n = "pioE_clk", .id = 26 },
-+	{ .n = "uart0_clk", .id = 27 },
-+	{ .n = "uart1_clk", .id = 28 },
-+	{ .n = "usart2_clk", .id = 29 },
-+	{ .n = "usart3_clk", .id = 30 },
-+	{ .n = "usart4_clk", .id = 31 },
-+	{ .n = "twi0_clk", .id = 32 },
-+	{ .n = "twi1_clk", .id = 33 },
-+	{ .n = "twi2_clk", .id = 34 },
-+	{ .n = "mci0_clk", .id = 35 },
-+	{ .n = "mci1_clk", .id = 36 },
-+	{ .n = "spi0_clk", .id = 37 },
-+	{ .n = "spi1_clk", .id = 38 },
-+	{ .n = "spi2_clk", .id = 39 },
-+	{ .n = "tcb0_clk", .id = 40 },
-+	{ .n = "tcb1_clk", .id = 41 },
-+	{ .n = "tcb2_clk", .id = 42 },
-+	{ .n = "pwm_clk", .id = 43 },
-+	{ .n = "adc_clk", .id = 44 },
-+	{ .n = "dbgu_clk", .id = 45 },
-+	{ .n = "uhphs_clk", .id = 46 },
-+	{ .n = "udphs_clk", .id = 47 },
-+	{ .n = "ssc0_clk", .id = 48 },
-+	{ .n = "ssc1_clk", .id = 49 },
-+	{ .n = "trng_clk", .id = 53 },
-+	{ .n = "macb0_clk", .id = 54 },
-+	{ .n = "macb1_clk", .id = 55 },
-+	{ .n = "fuse_clk", .id = 57 },
-+	{ .n = "securam_clk", .id = 59 },
-+	{ .n = "smd_clk", .id = 61 },
-+	{ .n = "twi3_clk", .id = 62 },
-+	{ .n = "catb_clk", .id = 63 },
-+};
-+
-+static const struct {
-+	char *n;
-+	u8 id;
-+} sama5d4_periphck[] = {
-+	{ .n = "dma0_clk", .id = 8 },
-+	{ .n = "cpkcc_clk", .id = 10 },
-+	{ .n = "aesb_clk", .id = 13 },
-+	{ .n = "mpddr_clk", .id = 16 },
-+	{ .n = "matrix0_clk", .id = 18 },
-+	{ .n = "vdec_clk", .id = 19 },
-+	{ .n = "dma1_clk", .id = 50 },
-+	{ .n = "lcdc_clk", .id = 51 },
-+	{ .n = "isi_clk", .id = 52 },
-+};
-+
-+static void __init sama5d4_pmc_setup(struct device_node *np)
+diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
+index 1fa27f4ea538..0f8b3add1b04 100644
+--- a/drivers/clk/at91/pmc.c
++++ b/drivers/clk/at91/pmc.c
+@@ -47,6 +47,50 @@ int of_at91_get_clk_range(struct device_node *np, const char *propname,
+ }
+ EXPORT_SYMBOL_GPL(of_at91_get_clk_range);
+ 
++void pmc_data_free(struct pmc_data *pmc_data)
 +{
-+	struct clk_range range = CLK_RANGE(0, 0);
-+	const char *slck_name, *mainxtal_name;
-+	struct pmc_data *sama5d4_pmc;
-+	const char *parent_names[5];
-+	struct regmap *regmap;
-+	struct clk_hw *hw;
-+	unsigned int i;
-+	bool bypass;
-+
-+	i = of_property_match_string(np, "clock-names", "slow_clk");
-+	if (i < 0)
-+		return;
-+
-+	slck_name = of_clk_get_parent_name(np, i);
-+
-+	i = of_property_match_string(np, "clock-names", "main_xtal");
-+	if (i < 0)
-+		return;
-+	mainxtal_name = of_clk_get_parent_name(np, i);
-+
-+	regmap = syscon_node_to_regmap(np);
-+	if (IS_ERR(regmap))
-+		return;
-+
-+	sama5d4_pmc = pmc_data_allocate(3, 11, 64, 0);
-+	if (!sama5d4_pmc)
-+		return;
-+
-+	hw = at91_clk_register_main_rc_osc(regmap, "main_rc_osc", 12000000,
-+					   100000000);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	bypass = of_property_read_bool(np, "atmel,osc-bypass");
-+
-+	hw = at91_clk_register_main_osc(regmap, "main_osc", mainxtal_name,
-+					bypass);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	parent_names[0] = "main_rc_osc";
-+	parent_names[1] = "main_osc";
-+	hw = at91_clk_register_sam9x5_main(regmap, "mainck", parent_names, 2);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	hw = at91_clk_register_pll(regmap, "pllack", "mainck", 0,
-+				   &sama5d3_pll_layout, &plla_characteristics);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	hw = at91_clk_register_plldiv(regmap, "plladivck", "pllack");
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	sama5d4_pmc->chws[PMC_UTMI] = hw;
-+
-+	parent_names[0] = slck_name;
-+	parent_names[1] = "mainck";
-+	parent_names[2] = "plladivck";
-+	parent_names[3] = "utmick";
-+	hw = at91_clk_register_master(regmap, "masterck", 4, parent_names,
-+				      &at91sam9x5_master_layout,
-+				      &mck_characteristics);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	sama5d4_pmc->chws[PMC_MCK] = hw;
-+
-+	hw = at91_clk_register_h32mx(regmap, "h32mxck", "masterck");
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	sama5d4_pmc->chws[PMC_MCK2] = hw;
-+
-+	parent_names[0] = "plladivck";
-+	parent_names[1] = "utmick";
-+	hw = at91sam9x5_clk_register_usb(regmap, "usbck", parent_names, 2);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	parent_names[0] = "plladivck";
-+	parent_names[1] = "utmick";
-+	hw = at91sam9x5_clk_register_smd(regmap, "smdclk", parent_names, 2);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	parent_names[0] = slck_name;
-+	parent_names[1] = "mainck";
-+	parent_names[2] = "plladivck";
-+	parent_names[3] = "utmick";
-+	parent_names[4] = "mck";
-+	for (i = 0; i < 3; i++) {
-+		char name[6];
-+
-+		snprintf(name, sizeof(name), "prog%d", i);
-+
-+		hw = at91_clk_register_programmable(regmap, name,
-+						    parent_names, 5, i,
-+						    &at91sam9x5_programmable_layout);
-+		if (IS_ERR(hw))
-+			goto err_free;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(sama5d4_systemck); i++) {
-+		hw = at91_clk_register_system(regmap, sama5d4_systemck[i].n,
-+					      sama5d4_systemck[i].p,
-+					      sama5d4_systemck[i].id);
-+		if (IS_ERR(hw))
-+			goto err_free;
-+
-+		sama5d4_pmc->shws[sama5d4_systemck[i].id] = hw;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(sama5d4_periphck); i++) {
-+		hw = at91_clk_register_sam9x5_peripheral(regmap, &pmc_pcr_lock,
-+							 sama5d4_periphck[i].n,
-+							 "masterck",
-+							 sama5d4_periphck[i].id,
-+							 &range);
-+		if (IS_ERR(hw))
-+			goto err_free;
-+
-+		sama5d4_pmc->phws[sama5d4_periphck[i].id] = hw;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(sama5d4_periph32ck); i++) {
-+		hw = at91_clk_register_sam9x5_peripheral(regmap, &pmc_pcr_lock,
-+							 sama5d4_periph32ck[i].n,
-+							 "h32mxck",
-+							 sama5d4_periph32ck[i].id,
-+							 &range);
-+		if (IS_ERR(hw))
-+			goto err_free;
-+
-+		sama5d4_pmc->phws[sama5d4_periph32ck[i].id] = hw;
-+	}
-+
-+	of_clk_add_hw_provider(np, of_clk_hw_pmc_get, sama5d4_pmc);
-+
-+	return;
-+
-+err_free:
-+	pmc_data_free(sama5d4_pmc);
++	kfree(pmc_data->chws);
++	kfree(pmc_data->shws);
++	kfree(pmc_data->phws);
++	kfree(pmc_data->ghws);
 +}
-+CLK_OF_DECLARE(sama5d4_pmc, "atmel,sama5d4-pmc", sama5d4_pmc_setup);
++
++struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
++				   unsigned int nperiph, unsigned int ngck)
++{
++	struct pmc_data *pmc_data = kzalloc(sizeof(*pmc_data), GFP_KERNEL);
++
++	if (!pmc_data)
++		return NULL;
++
++	pmc_data->ncore = ncore;
++	pmc_data->chws = kcalloc(ncore, sizeof(struct clk_hw *), GFP_KERNEL);
++	if (!pmc_data->chws)
++		goto err;
++
++	pmc_data->nsystem = nsystem;
++	pmc_data->shws = kcalloc(nsystem, sizeof(struct clk_hw *), GFP_KERNEL);
++	if (!pmc_data->shws)
++		goto err;
++
++	pmc_data->nperiph = nperiph;
++	pmc_data->phws = kcalloc(nperiph, sizeof(struct clk_hw *), GFP_KERNEL);
++	if (!pmc_data->phws)
++		goto err;
++
++	pmc_data->ngck = ngck;
++	pmc_data->ghws = kcalloc(ngck, sizeof(struct clk_hw *), GFP_KERNEL);
++	if (!pmc_data->ghws)
++		goto err;
++
++	return pmc_data;
++
++err:
++	pmc_data_free(pmc_data);
++
++	return NULL;
++}
++
+ #ifdef CONFIG_PM
+ static struct regmap *pmcreg;
+ 
+diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
+index 3dc50267a458..fa4fd3fc7c32 100644
+--- a/drivers/clk/at91/pmc.h
++++ b/drivers/clk/at91/pmc.h
+@@ -19,6 +19,17 @@
+ 
+ extern spinlock_t pmc_pcr_lock;
+ 
++struct pmc_data {
++	unsigned int ncore;
++	struct clk_hw **chws;
++	unsigned int nsystem;
++	struct clk_hw **shws;
++	unsigned int nperiph;
++	struct clk_hw **phws;
++	unsigned int ngck;
++	struct clk_hw **ghws;
++};
++
+ struct clk_range {
+ 	unsigned long min;
+ 	unsigned long max;
+@@ -69,6 +80,10 @@ extern const struct clk_programmable_layout at91rm9200_programmable_layout;
+ extern const struct clk_programmable_layout at91sam9g45_programmable_layout;
+ extern const struct clk_programmable_layout at91sam9x5_programmable_layout;
+ 
++struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
++				   unsigned int nperiph, unsigned int ngck);
++void pmc_data_free(struct pmc_data *pmc_data);
++
+ int of_at91_get_clk_range(struct device_node *np, const char *propname,
+ 			  struct clk_range *range);
+ 
 -- 
 2.18.0
