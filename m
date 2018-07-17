@@ -1,75 +1,63 @@
-From: Matthias Kaehlcke <mka@chromium.org>
+From: Doug Anderson <dianders@chromium.org>
 Subject: Re: [PATCH v7 3/7] arm64: dts: msm8996: thermal: Initialise via DT
  and add second controller
-Date: Tue, 17 Jul 2018 16:42:13 -0700
-Message-ID: <20180717234213.GD129942@google.com>
+Date: Tue, 17 Jul 2018 16:55:10 -0700
+Message-ID: <CAD=FV=WydRLs1pY_N+whP10qkqmu8tySPictRuxsLvrfdunFcg@mail.gmail.com>
 References: <cover.1531384019.git.amit.kucheria@linaro.org>
  <f6cb99e6b805b0850b039e4f5d469e761d84f6d0.1531384019.git.amit.kucheria@linaro.org>
+ <20180717234213.GD129942@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <f6cb99e6b805b0850b039e4f5d469e761d84f6d0.1531384019.git.amit.kucheria@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dianders@chromium.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, smohanad@codeaurora.org, edubezval@gmail.com, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, vivek.gautam@codeaurora.org, Catalin Marinas <catalin.marinas@arm.com>, andy.gross@linaro.org, bjorn.andersson@linaro.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180717234213.GD129942@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Amit Kucheria <amit.kucheria@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 12, 2018 at 02:09:04PM +0530, Amit Kucheria wrote:
-> We also split up the regmap address space into two, for the TM and SROT
-> registers. This was required to deal with different address offsets for the
-> TM and SROT registers across different SoC families.
-> 
-> 8996 has two TSENS IP blocks, initialise the second one too.
-> 
-> Since tsens-common.c/init_common() currently only registers one address
-> space, the order is important (TM before SROT). This is OK since the code
-> doesn't really use the SROT functionality yet.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Tested-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index 8c7f9ca..688e752 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -459,9 +459,19 @@
->  			status = "disabled";
->  		};
->  
-> -		tsens0: thermal-sensor@4a8000 {
-> +		tsens0: thermal-sensor@4a9000 {
-                                       ~~~~~~
+Hi,
 
-I suppose the address of the TM block is used here instead of the SROT
-address (which is lower) since SROT functionality is currently not
-used. Would/should this change if/when the driver uses SROT?
+On Tue, Jul 17, 2018 at 4:42 PM, Matthias Kaehlcke <mka@chromium.org> wrote:
+> On Thu, Jul 12, 2018 at 02:09:04PM +0530, Amit Kucheria wrote:
+>> We also split up the regmap address space into two, for the TM and SROT
+>> registers. This was required to deal with different address offsets for the
+>> TM and SROT registers across different SoC families.
+>>
+>> 8996 has two TSENS IP blocks, initialise the second one too.
+>>
+>> Since tsens-common.c/init_common() currently only registers one address
+>> space, the order is important (TM before SROT). This is OK since the code
+>> doesn't really use the SROT functionality yet.
+>>
+>> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> Tested-by: Matthias Kaehlcke <mka@chromium.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 14 ++++++++++++--
+>>  1 file changed, 12 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+>> index 8c7f9ca..688e752 100644
+>> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+>> @@ -459,9 +459,19 @@
+>>                       status = "disabled";
+>>               };
+>>
+>> -             tsens0: thermal-sensor@4a8000 {
+>> +             tsens0: thermal-sensor@4a9000 {
+>                                        ~~~~~~
+>
+> I suppose the address of the TM block is used here instead of the SROT
+> address (which is lower) since SROT functionality is currently not
+> used. Would/should this change if/when the driver uses SROT?
 
->  			compatible = "qcom,msm8996-tsens";
-> -			reg = <0x4a8000 0x2000>;
-> +			reg = <0x4a9000 0x1000>, /* TM */
-> +			      <0x4a8000 0x1000>; /* SROT */
-> +			#qcom,sensors = <13>;
-> +			#thermal-sensor-cells = <1>;
-> +		};
-> +
-> +		tsens1: thermal-sensor@4ad000 {
-> +			compatible = "qcom,msm8996-tsens";
-> +			reg = <0x4ad000 0x1000>, /* TM */
-> +			      <0x4ac000 0x1000>; /* SROT */
-> +			#qcom,sensors = <8>;
->  			#thermal-sensor-cells = <1>;
->  		};
+For device tree you're always supposed to use the address of the first
+"reg" listed as the unit address in the node name.  It doesn't matter
+if it's bigger or smaller as long as it's the first one listed.
+
+The bindings indicate that the TM block should be listed as the first
+register.  This won't change even if you start using SROT.
+
+
+-Doug
