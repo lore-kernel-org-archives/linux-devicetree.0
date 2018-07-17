@@ -1,94 +1,65 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 05/16] clk: at91: generated: set audio_pll_allowed in at91_clk_register_generated()
-Date: Wed, 18 Jul 2018 00:27:46 +0200
-Message-ID: <20180717222757.10253-6-alexandre.belloni@bootlin.com>
-References: <20180717222757.10253-1-alexandre.belloni@bootlin.com>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: Re: [RFC PATCH v2 1/4] dt-bindings: misc: Add bindings for misc. BMC
+ control fields
+Date: Wed, 18 Jul 2018 08:58:18 +0930
+Message-ID: <1531870098.3337969.1444201888.2476205D@webmail.messagingengine.com>
+References: <20180711053122.30773-1-andrew@aj.id.au>
+ <20180711053122.30773-2-andrew@aj.id.au>
+ <20180711200450.GB17291@rob-hp-laptop>
+ <1531356830.3551458.1437853280.551CA8C5@webmail.messagingengine.com>
+ <CAL_JsqKpXxR4t_-3BOy-0mFePXkaSck_4PfHRD=OZQ-_-T5P=w@mail.gmail.com>
+ <b6ced4cad4d7ff78330181b2c893855c23103953.camel@kernel.crashing.org>
+ <1531463489.747186.1439263128.075AECE1@webmail.messagingengine.com>
+ <CAL_JsqLZo-=7UkuvvUFYdCR4asBBiWyC=Q1ryH=-HLU6vzf9tA@mail.gmail.com>
+ <ece91112ecfdc7218184c4c4519e455cf9397e11.camel@kernel.crashing.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180717222757.10253-1-alexandre.belloni@bootlin.com>
+In-Reply-To: <ece91112ecfdc7218184c4c4519e455cf9397e11.camel@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Michael Turquette <mturquette@baylibre.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Eugene.Cho@dell.com, a.amelkin@yadro.com, linux-kernel@vger.kernel.org, Joel Stanley <joel@jms.id.au>, stewart@linux.ibm.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Set gck->audio_pll_allowed in at91_clk_register_generated. This makes it
-easier to do it from code that is not parsing device tree.
+On Tue, 17 Jul 2018, at 14:26, Benjamin Herrenschmidt wrote:
+> On Mon, 2018-07-16 at 07:55 -0600, Rob Herring wrote:
+> > If that data is one set per SoC, then i'm not that concerned having
+> > platform-specific data in the driver. That doesn't mean the driver is
+> > not "generic". It's still not clear to me in this thread, how much of
+> > this is board specific, but given that you've placed all the data in
+> > an SoC dtsi file it seems to be all per SoC.
+> 
+> So Rob, I think that's precisely where the disconnect is.
+> 
+> I think we all (well hopefully) agree that those few tunables don't fit
+> in any existing subystem and aren't likely to ever do (famous last
+> words...).
+> 
+> Where we disagree is we want to make this parametrized via the DT, and
+> you want us to hard wire the list in some kind of SoC driver for a
+> given SoC family/version.
+> 
+> The reason I think hard wiring the list in the driver is not a great
+> solution is that that list in itself is prone to variations, possibly
+> fairly often, between boards, vendors, versions of boards, etc...
+> 
+> We can't know for sure every SoC tunable (out of the gazillions in
+> those chips) are going to be needed for a given system. We know which
+> ones we do use for ours, and that's a couple of handfuls, but it could
+> be that Dell need a slightly different set, and so might Yadro, or so
+> might our next board revision for that matter.
+> 
+> Now, updating the device-tree in the board flash with whatever vendor
+> specific information is needed is a LOT easier than getting the kernel
+> driver constantly updated. The device-tree after all is there to
+> reflect among other things system specific ways in which the SoC is
+> wired and configured. This is rather close...
 
-Also, this fixes an issue where the resulting clk_hw can be dereferenced
-before being tested for error.
+Not sure this helps, but I feel that the proposal pretty closely matches what's described in Documentation/devicetree/bindings/mfd/mfd.txt. It's intended that nodes using the bindings I'm proposing are children of a 'compatible = "syscon", "simple-mfd"' node (this is the case with the features we're hoping to describe for our SoC). I should explicitly call that out.
 
-Fixes: 1a1a36d72e3d ("clk: at91: clk-generated: make gclk determine audio_pll rate")
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- drivers/clk/at91/clk-generated.c | 27 ++++++++++-----------------
- 1 file changed, 10 insertions(+), 17 deletions(-)
+But to go on, "simple-mfd" is effectively an alias of "simple-bus", which means its intended to match child node compatibles to drivers provided by the kernel. If we shouldn't be describing minor features of a SoC in the devicetree, doesn't this invalidate the case for simple-mfd? What is the *correct* use of simple-mfd? When is it not used to expose minor features in set of "miscellaneous system registers"? Why doesn't this proposed case fit?
 
-diff --git a/drivers/clk/at91/clk-generated.c b/drivers/clk/at91/clk-generated.c
-index e709a12269c0..6dfee6e588c4 100644
---- a/drivers/clk/at91/clk-generated.c
-+++ b/drivers/clk/at91/clk-generated.c
-@@ -280,7 +280,7 @@ static void clk_generated_startup(struct clk_generated *gck)
- static struct clk_hw * __init
- at91_clk_register_generated(struct regmap *regmap, spinlock_t *lock,
- 			    const char *name, const char **parent_names,
--			    u8 num_parents, u8 id,
-+			    u8 num_parents, u8 id, bool pll_audio,
- 			    const struct clk_range *range)
- {
- 	struct clk_generated *gck;
-@@ -304,6 +304,7 @@ at91_clk_register_generated(struct regmap *regmap, spinlock_t *lock,
- 	gck->regmap = regmap;
- 	gck->lock = lock;
- 	gck->range = *range;
-+	gck->audio_pll_allowed = pll_audio;
- 
- 	clk_generated_startup(gck);
- 	hw = &gck->hw;
-@@ -329,7 +330,6 @@ static void __init of_sama5d2_clk_generated_setup(struct device_node *np)
- 	struct device_node *gcknp;
- 	struct clk_range range = CLK_RANGE(0, 0);
- 	struct regmap *regmap;
--	struct clk_generated *gck;
- 
- 	num_parents = of_clk_get_parent_count(np);
- 	if (num_parents == 0 || num_parents > GENERATED_SOURCE_MAX)
-@@ -346,6 +346,8 @@ static void __init of_sama5d2_clk_generated_setup(struct device_node *np)
- 		return;
- 
- 	for_each_child_of_node(np, gcknp) {
-+		bool pll_audio = false;
-+
- 		if (of_property_read_u32(gcknp, "reg", &id))
- 			continue;
- 
-@@ -358,23 +360,14 @@ static void __init of_sama5d2_clk_generated_setup(struct device_node *np)
- 		of_at91_get_clk_range(gcknp, "atmel,clk-output-range",
- 				      &range);
- 
-+		if (of_device_is_compatible(np, "atmel,sama5d2-clk-generated") &&
-+		    (id == GCK_ID_I2S0 || id == GCK_ID_I2S1 ||
-+		     id == GCK_ID_CLASSD))
-+			pll_audio = true;
-+
- 		hw = at91_clk_register_generated(regmap, &pmc_pcr_lock, name,
- 						  parent_names, num_parents,
--						  id, &range);
--
--		gck = to_clk_generated(hw);
--
--		if (of_device_is_compatible(np,
--					    "atmel,sama5d2-clk-generated")) {
--			if (gck->id == GCK_ID_I2S0 || gck->id == GCK_ID_I2S1 ||
--			    gck->id == GCK_ID_CLASSD)
--				gck->audio_pll_allowed = true;
--			else
--				gck->audio_pll_allowed = false;
--		} else {
--			gck->audio_pll_allowed = false;
--		}
--
-+						  id, pll_audio, &range);
- 		if (IS_ERR(hw))
- 			continue;
- 
--- 
-2.18.0
+Cheers,
+
+Andrew
