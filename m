@@ -1,132 +1,114 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 3/5] i2c: designware: add MSCC Ocelot support
-Date: Tue, 17 Jul 2018 18:16:10 +0300
-Message-ID: <1886510d2a828d3a246ef1f490c6819f073fbdcb.camel@linux.intel.com>
-References: <20180717114837.21839-1-alexandre.belloni@bootlin.com>
-         <20180717114837.21839-4-alexandre.belloni@bootlin.com>
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: Re: [PATCH v9 7/7] Bluetooth: hci_qca: Add support for Qualcomm
+ Bluetooth chip wcn3990
+Date: Tue, 17 Jul 2018 20:48:10 +0530
+Message-ID: <9facaf095d66067eab4bff6722267ba1@codeaurora.org>
+References: <20180705165515.13340-1-bgodavar@codeaurora.org>
+ <20180705165515.13340-8-bgodavar@codeaurora.org>
+ <20180706222110.GK129942@google.com>
+ <a5d87ad5d916df5b5ca7c0c69a786e4a@codeaurora.org>
+ <20180710163909.GQ129942@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180717114837.21839-4-alexandre.belloni@bootlin.com>
+In-Reply-To: <20180710163909.GQ129942@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Hogan <jhogan@kernel.org>
-Cc: Paul Burton <paul.burton@mips.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>, Rob Herring <robh+dt@kernel.org>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-07-17 at 13:48 +0200, Alexandre Belloni wrote:
-> The Microsemi Ocelot I2C controller is a designware IP. It also has a
-> second set of registers to allow tweaking SDA hold time and spike
-> filtering.
+Hi Matthias,
 
-Thanks for information you provided. See my comments below.
+On 2018-07-10 22:09, Matthias Kaehlcke wrote:
+> Hi Bala,
+> 
+> On Tue, Jul 10, 2018 at 06:22:02PM +0530, Balakrishna Godavarthi wrote:
+>> Hi Matthias,
+>> 
+>> On 2018-07-07 03:51, Matthias Kaehlcke wrote:
+>> > On Thu, Jul 05, 2018 at 10:25:15PM +0530, Balakrishna Godavarthi wrote:
+>> > > +	 * sending vendor power on and off pulse to SoC.
+>> > > +	 */
+>> >
+>> > The function is called qca_send_vendor_cmd(), the comment about power
+>> > on/off pulses seems misplaced here. Are there other 'vendor commands'
+>> > that require a different flow control behavior?
+>> >
+>> > Perhaps the function should have a different name or we need another
+>> > wrapper.
+>> >
+>> 
+>> [Bala]: this function is used to send single byte vendor commands. 
+>> like
+>> power on and off pulse.
+>>         and all single byte vendor commands require an flow control 
+>> off and
+>> on.
+>>         so might be function name change is required.
+>>         instead of qca_send_vendor_cmd(). i want to change function 
+>> name to
+>> qca_send_pulse() as this will be generic.
+> 
+> 'pulse' covers power on/off pulses, is it also applicable to other
+> single byte commands? How are these commands named in the QCA
+> documentation?
+> 
+[Bala]: in QCA wcn3990 for these two bytes we will turn off the flow 
+control while sending command and turn on back once it is enabled.
+         in documentation it was mentioned as power on and power off 
+pulse.
+         for all other single bytes we need flow control enable.
 
->  struct dw_i2c_dev {
->  	struct device		*dev;
->  	void __iomem		*base;
-> +	void __iomem		*base_ext;
+> In any case the comment about 'vendor power on and off pulse' should
+> be updated to refer to 'vendor commands'/'pulses' or whatever
+> terminology we decide to use.
 
-Maybe simple "ext"? Up to you.
- 
-> +#define MSCC_ICPU_CFG_TWI_DELAY		0x0
-> +#define MSCC_ICPU_CFG_TWI_DELAY_ENABLE	BIT(0)
-> +#define MSCC_ICPU_CFG_TWI_SPIKE_FILTER	0x4
-> +
-> +static int mscc_twi_set_sda_hold_time(struct dw_i2c_dev *dev)
-> +{
-> +	writel((dev->sda_hold_time << 1) |
-> MSCC_ICPU_CFG_TWI_DELAY_ENABLE,
-> +	       dev->base_ext + MSCC_ICPU_CFG_TWI_DELAY);
-> +
-> +	return 0;
-> +}
+[Bala]: will update the the function name.
 
-(1)
+> 
+>> > > +	hci_uart_set_flow_control(hu, true);
+>> >
+>> > Should the changing of the flow control be limited to wcn3990? As of
+>> > now the function is only called for wcn3990, however this is not
+>> > stated as a requirement and might change in the future.
+>> >
+>> > > +	skb_put_u8(skb, cmd);
+>> > > +	hci_skb_pkt_type(skb) = HCI_COMMAND_PKT;
+>> > > +
+>> > > +	skb_queue_tail(&qca->txq, skb);
+>> > > +	hci_uart_tx_wakeup(hu);
+>> > > +
+>> > > +	/* Wait for 100 uS for SoC to settle down */
+>> > > +	usleep_range(100, 200);
+>> >
+>> > Is this needed for any 'vendor command' or directly related with the
+>> > power on/off pulses?
+>> >
+>> 
+>> [Bala] : flow control  off/on is needed for power on and off pulses 
+>> along
+>> with
+>>          command to set baudrate.. this is common across all the 
+>> present
+>> chips and chips which are in development stages.
+>>          might be function name is confusing will update the function 
+>> name.
+> 
+> The current name *might* be ok, depending on if we come up with
+> something better. If the QCA docs refer to them as 'vendor commands'
+> and there are no other multi-byte 'vendor commands' I'm fine with it.
+> 
+> Is the settling down of 100us specific to the power on/off pulses or
+> also applicable to other commands?
+> 
+[Bala]: 100 us is specific to power on and off pulses.
 
->  
-> +	if (of_device_is_compatible(pdev->dev.of_node, "mscc,ocelot-
-> i2c")) {
-> +		mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +		dev->base_ext = devm_ioremap_resource(&pdev->dev,
-> mem);
-> +		if (!IS_ERR(dev->base_ext))
-> +			dev->set_sda_hold_time =
-> mscc_twi_set_sda_hold_time;
-> +	}
-
-(2)
-
->  static const struct of_device_id dw_i2c_of_match[] = {
->  	{ .compatible = "snps,designware-i2c", },
-> +	{ .compatible = "mscc,ocelot-i2c", },
->  	{},
->  };
-
-(3)
-
-
-I would rather place them in analogue how we do for ACPI, i.e.
-
---- 8< --- 8< ---
-
-...
-#define MODEL_MSCC_OCELOT  0x00000200
-#define MODEL_MASK         0x00000f00
-...
-
-#ifdef CONFIG_OF
--->(1)
-int dw_i2c_of_configure(pdev)
-{
-...
--->(2) (perhaps we don't care if it goes without condition, or move it
-below in the corresponding case?
-...
-
- switch(dev->flags & MODEL_MASK) {
-  case MODEL_MSCC_OCELOT:
-   ...
-   break;
-  default:
-   break;
- }
-
- return 0;
-}
-
--->(3)
-...
-{ .compatible = "mscc,ocelot-i2c", .data = (void *)MODEL_MSCC_OCELOT },
-...
-
-#else
-static inline int dw_i2c_of_configure(pdev) { return -ENODEV; }
-#endif
-
-...
-
-->probe():
-
-...
-
-/* REPLACE THIS in dw_i2c_acpi_configure() by below in ->probe():
- * id = acpi_match_device(pdev->dev.driver->acpi_match_table, &pdev-
->dev);
- * if (id && id->driver_data)
- *   dev->flags |= (u32)id->driver_data;
- */
-
-  dev->flags |= (u32)device_get_match_data(&pdev->dev);
-
-  if (&pdev->dev.of_node)
-    dw_i2c_of_configure(pdev);
-
-...
-
---- 8< --- 8< ---
-
-What do you think?
+> Thanks
+> 
+> Matthias
 
 -- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+Regards
+Balakrishna.
