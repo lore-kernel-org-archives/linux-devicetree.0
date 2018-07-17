@@ -1,65 +1,35 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 3/5] i2c: designware: add MSCC Ocelot support
-Date: Tue, 17 Jul 2018 15:19:08 +0300
-Message-ID: <d64fc362be63bb8540447f7df2c232eedd696edb.camel@linux.intel.com>
-References: <20180717114837.21839-1-alexandre.belloni@bootlin.com>
-         <20180717114837.21839-4-alexandre.belloni@bootlin.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 1/5] thermal: exynos: enable core tmu clk on exynos platform
+Date: Tue, 17 Jul 2018 14:20:56 +0200
+Message-ID: <CAJKOXPdP78VFQgSQ9z9WsgYY_YhEKPUt=0MOra6Pz6smQeiNGg@mail.gmail.com>
+References: <1531822342-4293-1-git-send-email-linux.amoon@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180717114837.21839-4-alexandre.belloni@bootlin.com>
+In-Reply-To: <1531822342-4293-1-git-send-email-linux.amoon@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Hogan <jhogan@kernel.org>
-Cc: Paul Burton <paul.burton@mips.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>, Rob Herring <robh+dt@kernel.org>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-07-17 at 13:48 +0200, Alexandre Belloni wrote:
-> The Microsemi Ocelot I2C controller is a designware IP. It also has a
-> second set of registers to allow tweaking SDA hold time and spike
-> filtering.
+Hi Anand,
 
-Can you elaborate a bit?
+Thanks for patch.
 
-Are they platform specific? Are they shadow registers? Are they
-something else? Datasheet link / excerpt would be also good to read.
- 
->  Optional properties :
-> + - reg : for "mscc,ocelot-i2c", a second register set to configure
-> the SDA hold
-> +   time, named ICPU_CFG:TWI_DELAY in the datasheet.
-> +
+On 17 July 2018 at 12:12, Anand Moon <linux.amoon@gmail.com> wrote:
+> clk_summary do not show tmu_apbif clk enable, so replace
+> the clk_prepare with clk_prepare_enables to enable tmu clk.
 
-Hmm... Is this registers unique to the SoC in question? Is address of
-them fixed or may be configured on RTL level?
+This is not valid reason to do a change. What is clk_summary does not
+really matter. Your change has negative impact on power consumption as
+the clock stays enabled all the time. This is not what we want... so
+please explain it more - why you need the clock to be enabled all the
+time? What is broken (clk_summary is not broken in this case)?
 
-If former is right, why do we need a separate property?
+> simplify the enable of tmu_triminfo_apbif clk, also fixed
+> the order of goto error for failed cases.
 
->  
-> +#define MSCC_ICPU_CFG_TWI_DELAY		0x0
-> +#define MSCC_ICPU_CFG_TWI_DELAY_ENABLE	BIT(0)
-> +#define MSCC_ICPU_CFG_TWI_SPIKE_FILTER	0x4
-> +
-> +static int mscc_twi_set_sda_hold_time(struct dw_i2c_dev *dev)
-> +{
-> +	writel((dev->sda_hold_time << 1) |
-> MSCC_ICPU_CFG_TWI_DELAY_ENABLE,
-> +	       dev->base_ext + MSCC_ICPU_CFG_TWI_DELAY);
-> +
-> +	return 0;
-> +}
+This has to be split into separate change.
 
-Hmm... And does how this make native DesignWare IP's registers obsolete?
-
-
-> +	if (of_device_is_compatible(pdev->dev.of_node, "mscc,ocelot-
-> i2c"))
-
-Can't you just ask for this unconditionally? Why not?
-(It seems I might have known why not, but can we use named resource
-instead in case this is not so SoC specific)
-
-
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+Best regards,
+Krzysztof
