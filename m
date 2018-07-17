@@ -1,91 +1,31 @@
-Return-Path: <SRS0=lWLe=KH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:56342 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388287AbeGWOsc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Jul 2018 10:48:32 -0400
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH 20/21] v4l: fwnode: Update V4L2 fwnode endpoint parsing documentation
-Date: Mon, 23 Jul 2018 16:47:05 +0300
-Message-Id: <20180723134706.15334-21-sakari.ailus@linux.intel.com>
-In-Reply-To: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
-References: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
+Return-Path: <vkoul@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v2 0/2] i2c: Add support for Qualcomm Camera Control Interface
+Date: Tue, 17 Jul 2018 18:27:27 +0530
+Message-Id: <20180717125729.23045-1-vkoul@kernel.org>
+To: linux-i2c@vger.kernel.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, devicetree@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The semantics of v4l2_fwnode_endpoint_parse() and
-v4l2_fwnode_endpoint_alloc_parse() have changed slightly: they now take
-the bus type from the user as well as a default configuration for the bus
-that shall reflect the DT binding defaults. Document this.
+Hi,
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- drivers/media/v4l2-core/v4l2-fwnode.c |  3 ++-
- include/media/v4l2-fwnode.h           | 28 +++++++++++++++++++++++++++-
- 2 files changed, 29 insertions(+), 2 deletions(-)
+This series adds support for Qualcomm Camera Control Interface (CCI). This
+contains two I2C masters and registers two adapters for each of the masters.
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 04ddac86aec2..39491c6435ce 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -484,7 +484,8 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
- 		break;
- 	case V4L2_MBUS_PARALLEL:
- 	case V4L2_MBUS_BT656:
--		v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep, vep->bus_type);
-+		v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep,
-+							vep->bus_type);
- 
- 		break;
- 	default:
-diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index 4cef723a6ad9..7cad3b2756ec 100644
---- a/include/media/v4l2-fwnode.h
-+++ b/include/media/v4l2-fwnode.h
-@@ -139,6 +139,20 @@ struct v4l2_fwnode_link {
-  * set the V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag. The caller should hold a
-  * reference to @fwnode.
-  *
-+ * The caller is responsible for assigning @vep.bus_type to a valid media bus
-+ * type, or alternatively V4L2_MBUS_UNKNOWN. Depending on the hardware, the
-+ * information may also be read from the firmware. As a compatibility means
-+ * guessing the bus type is also supported. Mismatching bus types in the V4L2
-+ * fwnode endpoint and in firmware will also yield an error (-ENXIO).
-+ *
-+ * The user may also set the default parameters for the bus if the bus type is
-+ * explicitly set by the user. In particular, the user may set the default
-+ * number of CSI-2 lanes but without assigning lane mapping, in which case the
-+ * defaults (clock lane 0, data lanes from 1 onwards) will be used. The defaults
-+ * shall reflect the defaults defined in the DT binding documentation.
-+ *
-+ * The function does not change the V4L2 fwnode endpoint state if it fails.
-+ *
-  * NOTE: This function does not parse properties the size of which is variable
-  * without a low fixed limit. Please use v4l2_fwnode_endpoint_alloc_parse() in
-  * new drivers instead.
-@@ -171,7 +185,19 @@ void v4l2_fwnode_endpoint_free(struct v4l2_fwnode_endpoint *vep);
-  * set the V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag. The caller should hold a
-  * reference to @fwnode.
-  *
-- * The caller must set the bus_type field of @vep to zero.
-+ * The caller is responsible for assigning @vep.bus_type to a valid media bus
-+ * type, or alternatively V4L2_MBUS_UNKNOWN. Depending on the hardware, the
-+ * information may also be read from the firmware. As a compatibility means
-+ * guessing the bus type is also supported. Mismatching bus types in the V4L2
-+ * fwnode endpoint and in firmware will also yield an error (-ENXIO).
-+ *
-+ * The user may also set the default parameters for the bus if the bus type is
-+ * explicitly set by the user. In particular, the user may set the default
-+ * number of CSI-2 lanes but without assigning lane mapping, in which case the
-+ * defaults (clock lane 0, data lanes from 1 onwards) will be used. The defaults
-+ * shall reflect the defaults defined in the DT binding documentation.
-+ *
-+ * The function does not change the V4L2 fwnode endpoint state if it fails.
-  *
-  * v4l2_fwnode_endpoint_alloc_parse() has two important differences to
-  * v4l2_fwnode_endpoint_parse():
+Changes in v2:
+ - Add support for two adapters
+
+Todor Tomov (2):
+  dt-bindings: i2c: Add binding document for Qualcomm CCI
+  i2c: Add Qualcomm Camera Control Interface driver
+
+ .../devicetree/bindings/i2c/i2c-qcom-cci.txt       |  46 ++
+ drivers/i2c/busses/Kconfig                         |  10 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-qcom-cci.c                  | 793 +++++++++++++++++++++
+ 4 files changed, 850 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
+ create mode 100644 drivers/i2c/busses/i2c-qcom-cci.c
+
 -- 
-2.11.0
-
+2.14.4
