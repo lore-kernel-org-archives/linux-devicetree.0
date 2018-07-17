@@ -1,55 +1,142 @@
-From: LABBE Corentin <clabbe@baylibre.com>
-Subject: Re: [PATCH v3 4/9] dt-bindings: ata: ahci-platform: document AHCI
- reset
-Date: Tue, 17 Jul 2018 13:16:30 +0200
-Message-ID: <20180717111630.GA7900@Red>
-References: <1531479786-4911-1-git-send-email-clabbe@baylibre.com>
- <1531479786-4911-5-git-send-email-clabbe@baylibre.com>
- <20180716155416.GA32497@rob-hp-laptop>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH 2/4] phy: socionext: add USB3 PHY driver for UniPhier SoC
+Date: Tue, 17 Jul 2018 20:27:57 +0900
+Message-ID: <20180717202757.858B.4A936039@socionext.com>
+References: <20180711210514.BB32.4A936039@socionext.com> <52b96200-2234-9017-a317-f929eac9b266@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180716155416.GA32497@rob-hp-laptop>
+In-Reply-To: <52b96200-2234-9017-a317-f929eac9b266@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: hdegoede@redhat.com, linux@armlinux.org.uk, mark.rutland@arm.com, maxime.ripard@free-electrons.com, tj@kernel.org, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, thierry.reding@gmail.com, icenowy@aosc.io
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 16, 2018 at 09:54:16AM -0600, Rob Herring wrote:
-> On Fri, Jul 13, 2018 at 11:03:01AM +0000, Corentin Labbe wrote:
-> > This patch document the new optional resets for ahci node.
+Hi Kishon,
+
+On Fri, 13 Jul 2018 12:45:06 +0530 <kishon@ti.com> wrote:
+
+> Hi,
+> 
+> On Wednesday 11 July 2018 05:35 PM, Kunihiko Hayashi wrote:
+> > On Mon, 9 Jul 2018 20:23:19 +0900 <hayashi.kunihiko@socionext.com> wrote:
 > > 
-> > Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-> > ---
-> >  Documentation/devicetree/bindings/ata/ahci-platform.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
+> >> Hi Kishon,
+> >> Thank you for your comments.
+> >>
+> >> On Mon, 9 Jul 2018 10:49:50 +0530 <kishon@ti.com> wrote:
+> >>
+> >>> Hi,
+> >>>
+> >>> On Friday 29 June 2018 02:08 PM, Kunihiko Hayashi wrote:
+> >>>> Add a driver for PHY interface built into USB3 controller
+> >>>> implemented in UniPhier SoCs.
+> >>>> This driver supports High-Speed PHY and Super-Speed PHY.
+> >>>>
+> >>>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> >>>> Signed-off-by: Motoya Tanigawa <tanigawa.motoya@socionext.com>
+> >>>> Signed-off-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
+> >>>> ---
+> >>>>  drivers/phy/Kconfig                         |   1 +
+> >>>>  drivers/phy/Makefile                        |   1 +
+> >>>>  drivers/phy/socionext/Kconfig               |  12 +
+> >>>>  drivers/phy/socionext/Makefile              |   6 +
+> >>>>  drivers/phy/socionext/phy-uniphier-usb3hs.c | 422 ++++++++++++++++++++++++++++
+> >>>>  drivers/phy/socionext/phy-uniphier-usb3ss.c | 369 ++++++++++++++++++++++++
+> >>>>  6 files changed, 811 insertions(+)
+> >>>>  create mode 100644 drivers/phy/socionext/Kconfig
+> >>>>  create mode 100644 drivers/phy/socionext/Makefile
+> >>>>  create mode 100644 drivers/phy/socionext/phy-uniphier-usb3hs.c
+> >>>>  create mode 100644 drivers/phy/socionext/phy-uniphier-usb3ss.c
+> >>
+> >> (snip...)
+> >>
+> >>>> --- /dev/null
+> >>>> +++ b/drivers/phy/socionext/phy-uniphier-usb3hs.c
+> >>>> @@ -0,0 +1,422 @@
+> >>>> +// SPDX-License-Identifier: GPL-2.0
+> >>>> +/*
+> >>>> + * phy-uniphier-usb3hs.c - HS-PHY driver for Socionext UniPhier USB3 controller
+> >>>> + * Copyright 2015-2018 Socionext Inc.
+> >>>> + * Author:
+> >>>> + *	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> >>>> + * Contributors:
+> >>>> + *      Motoya Tanigawa <tanigawa.motoya@socionext.com>
+> >>>> + *      Masami Hiramatsu <masami.hiramatsu@linaro.org>
+> >>>> + */
+> >>>> +
+> >>>> +#include <linux/bitfield.h>
+> >>>> +#include <linux/bitops.h>
+> >>>> +#include <linux/clk.h>
+> >>>> +#include <linux/io.h>
+> >>>> +#include <linux/mfd/syscon.h>
+> >>>> +#include <linux/module.h>
+> >>>> +#include <linux/nvmem-consumer.h>
+> >>>> +#include <linux/of.h>
+> >>>> +#include <linux/of_platform.h>
+> >>>> +#include <linux/phy/phy.h>
+> >>>> +#include <linux/platform_device.h>
+> >>>> +#include <linux/reset.h>
+> >>>> +#include <linux/slab.h>
+> >>>> +
+> >>>> +#define HSPHY_CFG0		0x0
+> >>>> +#define HSPHY_CFG0_HS_I_MASK	GENMASK(31, 28)
+> >>>> +#define HSPHY_CFG0_HSDISC_MASK	GENMASK(27, 26)
+> >>>> +#define HSPHY_CFG0_SWING_MASK	GENMASK(17, 16)
+> >>>> +#define HSPHY_CFG0_SEL_T_MASK	GENMASK(15, 12)
+> >>>> +#define HSPHY_CFG0_RTERM_MASK	GENMASK(7, 6)
+> >>>> +#define HSPHY_CFG0_TRIMMASK	(HSPHY_CFG0_HS_I_MASK \
+> >>>> +				 | HSPHY_CFG0_SEL_T_MASK \
+> >>>> +				 | HSPHY_CFG0_RTERM_MASK)
+> >>>> +
+> >>>> +#define HSPHY_CFG1		0x4
+> >>>> +#define HSPHY_CFG1_DAT_EN	BIT(29)
+> >>>> +#define HSPHY_CFG1_ADR_EN	BIT(28)
+> >>>> +#define HSPHY_CFG1_ADR_MASK	GENMASK(27, 16)
+> >>>> +#define HSPHY_CFG1_DAT_MASK	GENMASK(23, 16)
+> >>>> +
+> >>>> +#define MAX_CLKS	3
+> >>>> +#define MAX_RSTS	2
+> >>>> +#define MAX_PHY_PARAMS	1
+> >>>> +
+> >>>> +struct uniphier_u3hsphy_param {
+> >>>> +	u32 addr;
+> >>>> +	u32 mask;
+> >>>> +	u32 val;
+> >>>> +};
+> >>>
+> >>> I'd like to avoid configure the PHY this way, since it's impossible to know
+> >>> which register is being configured.
+> >>
 > > 
-> > diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> > index 5f362af2724c..a5281d7557e3 100644
-> > --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> > +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> > @@ -34,6 +34,8 @@ Optional properties:
-> >  - phys              : reference to the SATA PHY node
-> >  - phy-names         : must be "sata-phy"
-> >  - ahci-supply       : regulator for AHCI controller
-> > +- resets            : phandle to the reset line of AHCI controller
-> > +                      If set, must have a reset-names set as "ahci"
+> > This way might be misunderstood.
+> > These HS-PHY and SS-PHY have "internal" registers, which are not memory-mapped.
+> > 
+> > And to access these internal registers, we need to specify the number
+> > corresponding to the register.
+> > 
+> > The "addr" in "uniphier_u3hsphy_param" is just the number of the register.
+> > The "mask" shows a bitfield of the register, that means one of PHY parameters.
+> > The "value" shows a parameter value to set to the bitfield.
 > 
-> A name is pointless if there is only one. Also, the name should be what 
-> the signal in the block is called which I doubt would be called "ahci". 
-> A likely name is some form of reset, resetn, etc. which again is 
-> pointless to name if there is only 1.
-> 
-> If you do have 'reset-names' then that needs to be listed too like 
-> phy-names.
-> 
+> What does each of these bitfields represent? Which PHY parameter does it
+> configure. Are they really PHY parameters or they also configure clocks/mux
+> etc? I would like the configurations to be more descriptive so that we get to
+> know at least what's getting configured here.
 
-Since the ahci-platform code is common to lots of different drivers, I must have a name otherwise I could grab a reset which wasnt for me.
-See the revert of f0f56716fc3e ("ata: ahci-platform: add reset control support") for example.
+These bitfields represent phy parameters only, not include clocks/mux etc.
+We can express the register (bitfield) name with macros.
 
-So the code need to grab a name, and since this name could be used by other people I took the generic "ahci".
+However, only recommended values are noted for the bitfields in the specsheet,
+because there are the trimmed values that aren't set as power-on values,
+and we should use the values for stable operation.
 
-In my case (R40), the reset is called sata, so I will change reset-names to "sata" in my next serie.
+This driver includes only minimal parameter set, so I think it's difficult
+to express them more configurable.
 
-Regards
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
