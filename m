@@ -1,121 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] drm/panel: simple: Support simple VGA panels
-Date: Tue, 17 Jul 2018 08:02:46 -0600
-Message-ID: <CAL_JsqJ312xfrKTS-7RbLc-v_QUZ9-g+8v-EVn2UiwgyOA8ung@mail.gmail.com>
-References: <20180716092339.9736-1-linus.walleij@linaro.org>
- <CAL_JsqLeZX6zJoMYp9drskx-UN8Na2LLhnHjbgZOVgw8D-y9wQ@mail.gmail.com>
- <CACRpkdZ=uGDN8i4q1cODoLDibB+B4FqAF1TzsreATJ2wuFz6vQ@mail.gmail.com>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH v2] ARM: dts: at91: fix typos for SSC TD functions
+Date: Tue, 17 Jul 2018 17:03:53 +0300
+Message-ID: <1531836233-31536-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CACRpkdZ=uGDN8i4q1cODoLDibB+B4FqAF1TzsreATJ2wuFz6vQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, ludovic.desroches@microchip.com, nicolas.ferre@microchip.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Claudiu Beznea <claudiu.beznea@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdWwgMTcsIDIwMTggYXQgMTo0NyBBTSBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxs
-ZWlqQGxpbmFyby5vcmc+IHdyb3RlOgo+Cj4gT24gVHVlLCBKdWwgMTcsIDIwMTggYXQgMTI6NTAg
-QU0gUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6Cj4gPiBPbiBNb24sIEp1bCAx
-NiwgMjAxOCBhdCAzOjIzIEFNIExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9y
-Zz4gd3JvdGU6Cj4KPiA+ID4gK1ZpZGVvIEdyYXBoaWNzIEFycmF5Cj4gPgo+ID4gVkdBIGlzIG1v
-cmUgYSBjb250cm9sbGVyIGludGVyZmFjZSB0aGFuIGEgcGFuZWwuLi4KPgo+IEkgZG9uJ3Qga25v
-dyB3aGF0IGVsc2UgdG8gY2FsbCBpdCB0aG91Z2gsIG90aGVyIHRoYW4gZm9ybXVsYXRpbmcgc29t
-ZXRpbmcKPiBidXJlYXVjcmF0aWMgbGlrZQo+ICJWaWRlbyBHcmFwaGljcyBBcnJheSBEaXNwbGF5
-IFJlc29sdXRpb25zIgo+Cj4gT3Igc2hvdWxkIEkgdXNlIHRoZSBhYmJyZXZpYXRpb246Cj4gIlZH
-QSBEaXNwbGF5IFJlc29sdXRpb25zIiByYXRoZXI/Cj4KPiBUaGUgV2lraXBlZGlhIGFydGljbGUg
-ImRpc3BsYXkgcmVzb2x1dGlvbiIKPiBodHRwczovL2VuLndpa2lwZWRpYS5vcmcvd2lraS9EaXNw
-bGF5X3Jlc29sdXRpb24KPiBqdXN0IGNhbGxzIHRoZXNlIHRocmVlIHJlc29sdXRpb25zICJWR0Ei
-LCAiU1ZHQSAiIGFuZCAiWEdBIi4KPgo+ID4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlz
-cGxheV9tb2RlIHZpZGVvX2dyYXBoaWNzX2FycmF5X21vZGVzW10gPSB7Cj4gPiA+ICsgICAgICAg
-ewo+ID4gPiArICAgICAgICAgICAgICAgLyoKPiA+ID4gKyAgICAgICAgICAgICAgICAqIFRoaXMg
-aXMgdGhlIG1vc3Qgc3RhbmRhcmRpemVkICJ2YW5pbGxhIiBWR0EgbW9kZSB0aGVyZSBpczoKPiA+
-ID4gKyAgICAgICAgICAgICAgICAqIDY0MHg0ODAgQCA2MCBIego+ID4KPiA+IERvbid0IHdlIGhh
-dmUgc3RhbmRhcmQgVkVTQSB0aW1pbmdzIGFscmVhZHkgZGVmaW5lZCBhcyB3ZWxsIGFzIHRpbWlu
-Z3MKPiA+IHRoYXQgY2FuIGJlIGNhbGN1bGF0ZWQgYmFzZWQgb24gcmVzb2x1dGlvbiBhbmQgcmVm
-cmVzaCByYXRlIChjYWxsZWQKPiA+IENWVCBJSVJDKS4gV2h5IGR1cGxpY2F0ZSBoZXJlPwo+Cj4g
-VGhleSBhcmUgaW5zaWRlIGRyaXZlcnMvZ3B1L2RybS9kcm1fZWRpZC5jCj4gYWxsIGluIHN0YXRp
-YyBjb25zdCBhcnJheXMgYW5kIGVudW1lcmF0ZWQgYnkgdGhlIGluZGV4IGluIHRoZQo+IERNVCBz
-cGVjIHRha2VuIG91dCBvZiBYRnJlZTg2LiAoZHJtX2RtdF9tb2Rlc1tdKQo+Cj4gSSBkb24ndCBr
-bm93LiBJdCBpcyBxdWl0ZSBlbmNhcHN1bGF0ZWQgaW50byB0aGF0IEVESUQgZHJpdmVyIGFuZAo+
-IGRvZXNuJ3Qgc2VlbSB2ZXJ5IHJldXNhYmxlLiBUbyBwaWNrIG91dCBhIGZldyBmcm9tIGluc2lk
-ZSBFRElECj4gc2VlbXMgcHJldHR5IGRhdW50aW5nLiBJJ2QgbGlrZSB0byBoZWFyIHdoYXQgdGhl
-IERSTSBmb2xrcyB0aGluawo+IGFib3V0IHRoYXQuCj4KPiA+IFdoeSBkb24ndCB5b3UganVzdCBk
-ZWZpbmUgYSAndmdhLWNvbm5lY3Rvcicgbm9kZQo+Cj4gQmVjYXVzZSB0aGlzIGlzIG5vdCBhIFZH
-QSBjb25uZWN0b3IsIGl0IGlzIGp1c3QgdGhlIFZHQSByZXNvbHV0aW9uLgo+IEluIG90aGVyIGNp
-cmN1bXN0YW5jZXMgSSBkbyB1c2UgaXQuCgpJdCdzIG5vdCBhIHBhbmVsIGVpdGhlci4gQSBjb25u
-ZWN0b3IgaXMgc29tZXRoaW5nIHdpdGggdmFyaWFibGUKcmVzb2x1dGlvbi4gQSBwYW5lbCBpcyBm
-aXhlZCByZXNvbHV0aW9uLiBXaGljaCBkbyB5b3Ugd2FudD8KCj4gSSB0aGluayB5b3UgbW9zdCBv
-ZnRlbiBoYXZlIHRvIHVzZSB0aGF0IGNvbm5lY3RvciB3aXRoIHRoZSBkdW1iCj4gVkdBIERBQyBi
-cmlkZ2UgdGhvdWdoLCBhcyB0aGUgVkdBIGNvbm5lY3RvciBpcyBhbmFsb2cgYW5kCj4gd2hhdCBj
-b21lcyBvdXQgb2YgYSBkaXNwbGF5IGNvbnRyb2xsZXIgaXMgZGlnaXRhbC4gU28gaXQgbmVlZHMg
-dG8KPiBtYWtlIHNvbWUga2luZCBvZiBzZW5zZSBoZXJlLgo+Cj4gSW4gYSB3YXkgKGFzIHdlIGRp
-c2N1c3NlZCBiZWZvcmUpIHRoZSB3aG9sZSBwYW5lbC1zaW1wbGUuYyB0aGluZwo+IGlzIGEgYml0
-IGJvZ3VzLCBhcyBpdCBpcyBwcm9iYWJseSBpbiBtb3N0IGNhc2VzIGhpZGluZyBhIGJyaWRnZSBv
-cgo+IGEgZHVtYiBEQUMgb3IgYXQgbGVhc3QgYSBWR0EgY29ubmVjdG9yIG9yIHNpbWlsYXIgdGhh
-dCBzaG91bGQndmUKPiBiZWVuIHByb3Blcmx5IG1vZGVsZWQsIGJ1dCBpbiB0aGlzIGNhc2UgSSBh
-bSBtb3JlIGNlcnRhaW4gdGhhdCBpdCBpcwo+IGFjdHVhbGx5IHRoZSByaWdodCBjaG9pY2UuCj4K
-PiBJIGd1ZXNzIEkgY291bGQgdHJ5IHRvIHVzZSB0aGUgZHVtYiBWR0EgYnJpZGdlIGFuZCB0aGUg
-VkdBCj4gY29ubmVjdG9yLCBhbmQgaXQgaW5kZWVkIGZhbGxzIGJhY2sgdG8gVkdBIHJlc29sdXRp
-b25zIGlmIG5vIEREQwo+IGNoYW5uZWwgaXMgYXZhaWxhYmxlIGJ1dCBpZiBJIGdvIGluIGFuZCBz
-YXkgdGhlcmUgaXMgYSBEQUMgYnJpZGdlCj4gYW5kIFZHQSBjb25uZWN0b3IgSSBhbSBlc3NlbnRp
-YWxseSBseWluZy4KPgo+ID4gYW5kIElJUkMsIHlvdSBjYW4KPiA+IGp1c3QgZm9yY2UgdGhlIHN0
-YW5kYXJkIG1vZGVzIGZyb20gdXNlcnNwYWNlIHdpdGggRFJNLgo+Cj4gSSBndWVzcyB5b3UgbWVh
-biB0aGUga2VybmVsIGNvbW1hbmQgbGluZSBhcmd1bWVudHMsIGxlc3QKPiB0aGVyZSB3aWxsIGJl
-IG5vIGJvb3QgY29uc29sZS4KClllcywgdGhlIGtlcm5lbCBjb21tYW5kIGxpbmUgaXMgYW5vdGhl
-ciB3YXkuIEJ1dCBpZiB5b3UgYXJlbid0IHVzaW5nCmZiY29uLCB0aGVuIHVzZXJzcGFjZSBpcyB0
-aGUgd2F5LgoKPiBBcGFydCBmcm9tIGJlaW5nIGEgdXNlciBleHBlcmllbmNlIGhvcnJvciBzdG9y
-eSwgdGhhdCByZXF1aXJlcwo+IGEgVkdBIGNvbm5lY3RvciBicmlkZ2UsIGFzIHBlciBhYm92ZS4g
-KEl0J3MgdGhlIEVESUQgY29kZSB0aGF0Cj4gZG9lcyB0aGF0IGNvbW1hbmQgbGluZSBwYXJzaW5n
-LikgQW5kIHRoYXQgcmVxdWlyZXMgbHlpbmcgYWJvdXQKPiBoYXZpbmcgYSBWR0EgY29ubmVjdG9y
-IGJyaWRnZS4KCkJlY2F1c2UgeW91IGhhdmUgdG8gc2V0IHRoZSByZXNvbHV0aW9uIG9uIHRoZSBr
-ZXJuZWwgY29tbWFuZCBsaW5lPyBJJ20Kb3BlbiB0byBoYXZpbmcgYSBkZWZhdWx0IHJlc29sdXRp
-b24gZm9yIHRoZSBjb25uZWN0b3IgaW4gRFQuCgo+IEJ1dCBJIGNhbiBzdXJlbHkgbGllIGlmIGV2
-ZXJ5b25lIHRoaW5rcyB0aGF0IGlzIHRoZSBiZXN0IGlkZWEgOkQKPgo+ID4gTWF5YmUgeW91IG5l
-ZWQKPiA+IHNvbWUgZmxhZyB0byBmb3JjZSBhIGNvbm5lY3Rpb24gaW4gdGhlIGVtdWxhdG9yIGFu
-ZCBwZXJoYXBzIHNvbWUgZmFrZQo+ID4gRURJRCBkYXRhIHRvIHNldCBhIGRlZmF1bHQgbW9kZS4K
-Pgo+IFRoaXMgZGV2aWNlIHRyZWUgSSdtIGNyZWF0aW5nIGlzIGZvciBBUk0gUlRTTSB3aGljaCBp
-cyBhIHByb3ByaWV0YXJ5Cj4gQVJNIHRvb2wuCj4KPiBTdWRlZXAgYXQgQVJNIHNheXMgaXQgZG9l
-cyBub3QgZW11bGF0ZSBhbnkgREFDIGJyaWRnZSBzdWNoCj4gYXMgZm91bmQgaW4gdGhlIFZlcnNh
-dGlsZSBFeHByZXNzIG1hY2hpbmUgZmFtaWx5LiBJdCBqdXN0IGV4cGVjdHMKPiB0byBoYXZlIHRo
-ZSByaWdodCByZXNvbHV0aW9uIHBhcmFtZXRlcnMgd3JpdHRlbiBpbnRvIHRoZSByZWdpc3RlcnMK
-PiBvZiB0aGUgUEwxMTEsIHdoaWNoIGluIHR1cm4gb2YgY291cnNlIGNhbiBvbmx5IGdldCBpdCBm
-cm9tIGEKPiBwYW5lbCBvciBicmlkZ2UgZHJpdmVyIG9mIHNvbWUgc29ydC4KClNvIHB1dHRpbmcg
-KmFueXRoaW5nKiBpbiBEVCBpcyBhIGxpZS4uLgoKPiBUaGUgd2F5IHRob3NlIGVtdWxhdG9ycyB3
-b3JrIChBRkFJQ1QpIGlzIHRoYXQgdGhleSBzaW1wbHkgbW9uaXRvcgo+IHJlZ2lzdGVyIHdyaXRl
-cyB0byB0aGUgcmVzb2x1dGlvbnMgcGFyYW1ldGVycyB0byBzY2FsZSB0aGUgZW11bGF0b3IKPiBk
-aXNwbGF5IHdpbmRvdyBhbmQgdGhlbiB0aGV5IHJlYWQgb3V0IHRoZSBSR0IgZGF0YSBpbnRvIHRo
-YXQKPiB3aW5kb3csIHBpeGVsIGJ5IHBpeGVsLCBmcm9tIHRoZSBpbmRpY2F0ZWQgbWVtb3J5IGFy
-ZWEuCj4gSXQgd29ya3MgZm9yIHRoZW0uCj4KPiBJbiBRRU1VLCB3ZSBoYWQgdGhlIHNhbWUgcHJv
-YmxlbS4gSXQgZGlkbid0IHN1cHBvcnQgcHJvcGVyIHJlcG9ydGluZwo+IG9mIGZha2UgRURJRCBv
-biB0aGVzZSBwbGF0Zm9ybXMgZWl0aGVyLCBiZWNhdXNlIG9mIG5vdCBwcm9wZXJseQo+IG1vZGVs
-aW5nIHRoZSBoYXJkd2FyZSBpdCB3YXMgZW11bGF0aW5nLCBpbnN0ZWFkIHJlbHlpbmcgb24gdGhl
-IHJlZ2lzdGVyCj4gcmVhZHMgYXMgYWJvdmUuIFNpbmNlIGl0IGlzIG9wZW4gc291cmNlIEkgY291
-bGQKPiBzaW1wbHkgZml4IGl0Ogo+IGh0dHBzOi8vbGlzdHMuZ251Lm9yZy9hcmNoaXZlL2h0bWwv
-cWVtdS1kZXZlbC8yMDE4LTAyL21zZzA0NjUxLmh0bWwKPiBodHRwczovL2xpc3RzLmdudS5vcmcv
-YXJjaGl2ZS9odG1sL3FlbXUtZGV2ZWwvMjAxOC0wMi9tc2cwNDY1Mi5odG1sCj4gaHR0cHM6Ly9s
-aXN0cy5nbnUub3JnL2FyY2hpdmUvaHRtbC9xZW11LWRldmVsLzIwMTgtMDIvbXNnMDQ2NTMuaHRt
-bAoKSGF2aW5nIGEgd2F5IHRvIHNldCB0aGUgZGVmYXVsdCBkaXNwbGF5IHJlc29sdXRpb24gaW4g
-UUVNVSB3b3VsZCBiZQpuaWNlLiBJJ3ZlIGhhY2tlZCBhcm91bmQgdGhhdCB3aGVuIHVzaW5nIHZp
-cmdsLgoKPiBBZnRlciB0aGlzLCB0aGUgUUVNVSBmb3IgVmVyc2F0aWxlIEV4cHJlc3MgY2FuIHBy
-b3Blcmx5IHVzZSB0aGUKPiBicmlkZ2UuCj4KPiBJIGRvIHRyeSB0byBiZSBncml0dHkgYW5kIHRo
-b3JvdWdoISA6RAo+Cj4gSSBkb24ndCByZWFsbHkga25vdyB3aGF0IFJUU00gaXMgYW5kIEkgY2Fu
-J3QgcnVuIGl0IG15c2VsZi4gSSBqdXN0Cj4gaGF2ZSB0byBzdXBwb3J0IGl0IGluIHRoZSByZWZh
-Y3RvcmluZyB0byB1c2UgRFJNIGZvciB0aGUgQVJNCj4gVmVyc2F0aWxlIEV4cHJlc3MgbWFjaGlu
-ZXMuIEkgY2Fubm90IGNoYW5nZSBpdHMgc291cmNlIGNvZGUuCj4KPiA+IFRoZXJlJ3MgYWxzbyBz
-b21lIG90aGVyIGNhc2VzIG9mCj4gPiAidHJhbnNwYXJlbnQiIGJyaWRnZXMgd2hpY2ggZG9uJ3Qg
-aGF2ZSBhbnkgZHJpdmVyLgo+Cj4gWWVhaCBJIHRoaW5rIHRoZXkgbW9zdGx5IHVzZSBwYW5lbC1z
-aW1wbGUuYyBpbiB0aGUgRFJNCj4gY2FzZSBkb24ndCB0aGV5PyBXZSBjb21lIGZ1bGwgY2lyY2xl
-LgoKTFZEUyBkb2VzLiBWR0EgZG9lc24ndC4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWwK
+Fix typo for TD function of pins PIN_PB22 and PIN_PC14
+
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
+
+Changes in v2:
+- fix typo also for PC14 pin
+- change patch subject to reflect new changes
+
+ arch/arm/boot/dts/sama5d2-pinfunc.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sama5d2-pinfunc.h b/arch/arm/boot/dts/sama5d2-pinfunc.h
+index e57191fb83de..1c01a6f843d8 100644
+--- a/arch/arm/boot/dts/sama5d2-pinfunc.h
++++ b/arch/arm/boot/dts/sama5d2-pinfunc.h
+@@ -375,7 +375,7 @@
+ #define PIN_PB22__GPIO			PINMUX_PIN(PIN_PB22, 0, 0)
+ #define PIN_PB22__LCDDAT11		PINMUX_PIN(PIN_PB22, 1, 1)
+ #define PIN_PB22__A11			PINMUX_PIN(PIN_PB22, 2, 1)
+-#define PIN_PB22__TDO			PINMUX_PIN(PIN_PB22, 3, 1)
++#define PIN_PB22__TD0			PINMUX_PIN(PIN_PB22, 3, 1)
+ #define PIN_PB22__TIOA2			PINMUX_PIN(PIN_PB22, 4, 2)
+ #define PIN_PB22__FLEXCOM3_IO1		PINMUX_PIN(PIN_PB22, 5, 3)
+ #define PIN_PB22__GMDC			PINMUX_PIN(PIN_PB22, 6, 3)
+@@ -556,7 +556,7 @@
+ #define PIN_PC14__LCDDAT6		PINMUX_PIN(PIN_PC14, 1, 2)
+ #define PIN_PC14__GRX0			PINMUX_PIN(PIN_PC14, 2, 1)
+ #define PIN_PC14__ISC_D5		PINMUX_PIN(PIN_PC14, 3, 1)
+-#define PIN_PC14__TDO			PINMUX_PIN(PIN_PC14, 5, 2)
++#define PIN_PC14__TD0			PINMUX_PIN(PIN_PC14, 5, 2)
+ #define PIN_PC14__A3			PINMUX_PIN(PIN_PC14, 6, 2)
+ #define PIN_PC15			79
+ #define PIN_PC15__GPIO			PINMUX_PIN(PIN_PC15, 0, 0)
+-- 
+2.7.4
