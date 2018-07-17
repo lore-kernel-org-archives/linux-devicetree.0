@@ -1,195 +1,80 @@
-From: Koen Kooi <koen@dominion.thruhere.net>
-Subject: [PATCH v6 2/2] ARM: dts: am335x: add am335x-sancloud-bbe board support
-Date: Tue, 17 Jul 2018 08:51:49 +0200
-Message-ID: <1531810311-29915-3-git-send-email-koen@dominion.thruhere.net>
-References: <1531810311-29915-1-git-send-email-koen@dominion.thruhere.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531810311-29915-1-git-send-email-koen@dominion.thruhere.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: Koen Kooi <koen@dominion.thruhere.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/4 v1] net: dsa: Add bindings for Realtek SMI DSAs
+Date: Tue, 17 Jul 2018 08:55:51 +0200
+Message-ID: <CACRpkdb1ykS=3kiuQzaa6TpEPNB=C6xuusuez6JOCHb-E27Uqg@mail.gmail.com>
+References: <20180714094556.30791-1-linus.walleij@linaro.org>
+ <20180714094556.30791-2-linus.walleij@linaro.org> <20180716204535.GA22125@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180716204535.GA22125@rob-hp-laptop>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev <netdev@vger.kernel.org>, OpenWrt Development List <openwrt-devel@lists.openwrt.org>, LEDE Development List <lede-dev@lists.infradead.org>, =?UTF-8?B?QW50dGkgU2VwcMOkbMOk?= <a.seppala@gmail.com>, Roman Yeryomin <roman@advem.lv>, Colin Leitner <colin.leitner@googlemail.com>, Gabor Juhos <juhosg@openwrt.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The "Beaglebone Enhanced" by Sancloud is based on the Beaglebone Black,
-but with the following differences:
+On Mon, Jul 16, 2018 at 10:45 PM Rob Herring <robh@kernel.org> wrote:
+> On Sat, Jul 14, 2018 at 11:45:54AM +0200, Linus Walleij wrote:
 
- * Gigabit capable PHY
- * Extra USB hub, optional i2c control
- * lps3331ap barometer connected over i2c
- * MPU6050 6 axis MEMS accelerometer/gyro connected over i2c
- * 1GiB DDR3 RAM
- * RTL8723 Wifi/Bluetooth connected over USB
+> > +The SMI "Simple Management Interface" is a two-wire protocol using
+>
+> At least for some other Realtek chips, the documentation I find says the
+> S stands for Serial. And Wikipedia says SMI is the same thing as MDIO.
 
-Tested on a revision G board.
+The only datasheet we have mentions both:
+http://realtek.info/pdf/rtl8366_8369_datasheet_1-1.pdf
+calling it serial management interface when talking to an EEPROM
+calling it systems management interface when talking to a
+PHY.
 
-Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
----
-v6: Generic nodename for usbhub, was missed in v5
-v5: generic nodenames (e.g. mpu6050 -> accelerometer), lowercase hex numbers
-v4: No changes
-v3: Drop oppnitro-1000000000, not needed on the versions Sancloud is using
-v2: * Add missing #include <dt-bindings/interrupt-controller/irq.h>
-    * Fix Barometer compatible string
-v1: Initial submission
+(BTW that datsheet has no relation to this driver, that is for
+ASICs 8366 and 8369 which of course have nothing to do with
+RTL8366RB "revision B" that we are running here, which adds
+even more to the confusion.)
 
- arch/arm/boot/dts/Makefile                |   1 +
- arch/arm/boot/dts/am335x-sancloud-bbe.dts | 136 ++++++++++++++++++++++++++++++
- 2 files changed, 137 insertions(+)
- create mode 100644 arch/arm/boot/dts/am335x-sancloud-bbe.dts
+Sadly it would not surprise me if Realtek doesn't even know
+which one it is themselves, given the state of the code and
+documentation that came out of the company.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 37a3de7..83a4d61 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -695,6 +695,7 @@ dtb-$(CONFIG_SOC_AM33XX) += \
- 	am335x-pepper.dtb \
- 	am335x-phycore-rdk.dtb \
- 	am335x-pocketbeagle.dtb \
-+	am335x-sancloud-bbe.dtb \
- 	am335x-shc.dtb \
- 	am335x-sbc-t335.dtb \
- 	am335x-sl50.dtb \
-diff --git a/arch/arm/boot/dts/am335x-sancloud-bbe.dts b/arch/arm/boot/dts/am335x-sancloud-bbe.dts
-new file mode 100644
-index 0000000..7f8d068
---- /dev/null
-+++ b/arch/arm/boot/dts/am335x-sancloud-bbe.dts
-@@ -0,0 +1,136 @@
-+/*
-+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+/dts-v1/;
-+
-+#include "am33xx.dtsi"
-+#include "am335x-bone-common.dtsi"
-+#include "am335x-boneblack-common.dtsi"
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+/ {
-+	model = "SanCloud BeagleBone Enhanced";
-+	compatible = "sancloud,am335x-boneenhanced", "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
-+};
-+
-+&am33xx_pinmux {
-+	pinctrl-names = "default";
-+
-+	cpsw_default: cpsw_default {
-+		pinctrl-single,pins = <
-+			/* Slave 1 */
-+			AM33XX_IOPAD(0x914, PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txen.rgmii1_tctl */
-+			AM33XX_IOPAD(0x918, PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxdv.rgmii1_rctl */
-+			AM33XX_IOPAD(0x91c, PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd3.rgmii1_td3 */
-+			AM33XX_IOPAD(0x920, PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd2.rgmii1_td2 */
-+			AM33XX_IOPAD(0x924, PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd1.rgmii1_td1 */
-+			AM33XX_IOPAD(0x928, PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd0.rgmii1_td0 */
-+			AM33XX_IOPAD(0x92c, PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txclk.rgmii1_tclk */
-+			AM33XX_IOPAD(0x930, PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxclk.rgmii1_rclk */
-+			AM33XX_IOPAD(0x934, PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd3.rgmii1_rd3 */
-+			AM33XX_IOPAD(0x938, PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd2.rgmii1_rd2 */
-+			AM33XX_IOPAD(0x93c, PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd1.rgmii1_rd1 */
-+			AM33XX_IOPAD(0x940, PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd0.rgmii1_rd0 */
-+		>;
-+	};
-+
-+	cpsw_sleep: cpsw_sleep {
-+		pinctrl-single,pins = <
-+			/* Slave 1 reset value */
-+			AM33XX_IOPAD(0x914, PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			AM33XX_IOPAD(0x918, PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			AM33XX_IOPAD(0x91c, PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			AM33XX_IOPAD(0x920, PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			AM33XX_IOPAD(0x924, PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			AM33XX_IOPAD(0x928, PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			AM33XX_IOPAD(0x92c, PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			AM33XX_IOPAD(0x930, PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			AM33XX_IOPAD(0x934, PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			AM33XX_IOPAD(0x938, PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			AM33XX_IOPAD(0x93c, PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			AM33XX_IOPAD(0x940, PIN_INPUT_PULLDOWN | MUX_MODE7)
-+		>;
-+	};
-+
-+	davinci_mdio_default: davinci_mdio_default {
-+		pinctrl-single,pins = <
-+			/* MDIO */
-+			AM33XX_IOPAD(0x948, PIN_INPUT_PULLUP | SLEWCTRL_FAST | MUX_MODE0)	/* mdio_data.mdio_data */
-+			AM33XX_IOPAD(0x94c, PIN_OUTPUT_PULLUP | MUX_MODE0)			/* mdio_clk.mdio_clk */
-+		>;
-+	};
-+
-+	davinci_mdio_sleep: davinci_mdio_sleep {
-+		pinctrl-single,pins = <
-+			/* MDIO reset value */
-+			AM33XX_IOPAD(0x948, PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			AM33XX_IOPAD(0x94c, PIN_INPUT_PULLDOWN | MUX_MODE7)
-+		>;
-+	};
-+
-+	usb_hub_ctrl: usb_hub_ctrl {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x944, PIN_OUTPUT_PULLUP | MUX_MODE7)     /* rmii1_refclk.gpio0_29 */
-+		>;
-+	};
-+
-+	mpu6050_pins: pinmux_mpu6050_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x968, PIN_INPUT | MUX_MODE7)    /* uart0_ctsn.gpio1_8 */
-+		>;
-+	};
-+
-+	lps3331ap_pins: pinmux_lps3331ap_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x868, PIN_INPUT | MUX_MODE7)     /* gpmc_a10.gpio1_26 */
-+		>;
-+	};
-+};
-+
-+&mac {
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&cpsw_default>;
-+	pinctrl-1 = <&cpsw_sleep>;
-+	status = "okay";
-+};
-+
-+&davinci_mdio {
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&davinci_mdio_default>;
-+	pinctrl-1 = <&davinci_mdio_sleep>;
-+	status = "okay";
-+};
-+
-+&cpsw_emac0 {
-+	phy_id = <&davinci_mdio>, <0>;
-+	phy-mode = "rgmii-txid";
-+};
-+
-+&i2c0 {
-+	lps331ap: barometer@5c {
-+		compatible = "st,lps331ap-press";
-+		st,drdy-int-pin = <1>;
-+		reg = <0x5c>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <26 IRQ_TYPE_EDGE_RISING>;
-+	};
-+
-+	mpu6050: accelerometer@68 {
-+		compatible = "invensense,mpu6050";
-+		reg = <0x68>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <2 IRQ_TYPE_EDGE_RISING>;
-+		orientation = <0xff 0 0 0 1 0 0 0 0xff>;
-+	};
-+
-+	usb2512b: usb-hub@2c {
-+		compatible = "microchip,usb2512b";
-+		reg = <0x2c>;
-+		reset-gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
-+		/* wifi on port 4 */
-+	};
-+};
--- 
-2.0.1
+I just have to pick something. I can rename it the
+"S Management Interface" if you prefer, OpenWRT called it
+Systems Management Interface.
+
+> Just want to make sure we don't define GPIOs directly when there should
+> be a layer of abstraction like mdio-gpio.
+
+OK let's look at it we read a single register with each protocol:
+
+1. MDIO: drivers/net/phy/mdio-bitbang.c
+  send_bit is setting data and cycling clock 1-0 (falling edge)
+  begins transactions by sending 32 1:s (well 33 for safe measure)
+  then sends a start bit 01
+  then sends the opcode 10 (read)
+  then sends the PHY address (5 bits)
+  then sends the register address (5 bits)
+  turn around (switch MDIO to input)
+  read 16 bit register value
+  read stop bit
+
+2. SMI:
+   sends the sequence "101" to start transactions. (No initial ones)
+   writes a whole byte which is the "command" read is 0xa9
+   on RTL8366RB and apparently something else on other chips
+   writes low byte of 16bit address
+   writes high byte of 16bit address
+   turn around (switch MDIO to input)
+   reads the low byte of the 16bit data
+   reads the high byte of the 16bit data
+   sends the stop sequence 01
+   then an extra clock pulse
+
+As you can see those are pretty different. PHY always being
+addressed in MDIO (the switch chips has PHYs but this
+protocol is not defined exclusively for that) and both phy and
+reg being 5 bits addressing at most 10 address bits is the most
+obvious deviation then 8 bits for command instead of 2 etc.
+
+It's just very different.
+
+Yours,
+Linus Walleij
