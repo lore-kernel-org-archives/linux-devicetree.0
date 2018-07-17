@@ -1,48 +1,253 @@
-From: <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v1 2/7] Documentation: rockchip-dw-mshc: add description for
- px30
-Date: Tue, 17 Jul 2018 15:49:02 +0800
-Message-ID: <1531813747-8804-3-git-send-email-cl@rock-chips.com>
-References: <1531813747-8804-1-git-send-email-cl@rock-chips.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: Re: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding doc
+Date: Tue, 17 Jul 2018 09:52:05 +0200
+Message-ID: <ac4fde9d-5457-48e4-0946-4c5645e0b299@pengutronix.de>
+References: <20180716114209.25242-1-o.rempel@pengutronix.de>
+ <20180716114209.25242-2-o.rempel@pengutronix.de>
+ <AM0PR04MB4211E30E85E830AA31F998A1805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <7f96a775-661b-86e5-95eb-07017dcec3c5@pengutronix.de>
+ <AM0PR04MB42111EDD7771D0FABCEB671B805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <739d382e-b553-107f-3cb7-59b7adf5d16d@pengutronix.de>
+ <AM0PR04MB421178C8C0AEC744AB22BE68805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1531813747-8804-1-git-send-email-cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org, sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org, jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, djw-Efosm3t9Qi2Pt1CcHtbs0g@public.gmane.org, sandy.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============4299687728101552282=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <AM0PR04MB421178C8C0AEC744AB22BE68805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "A.s. Dong" <aisheng.dong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--===============4299687728101552282==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="tyBI6OJ0jppnuMAWGuhVXMHjFXZ5N7hrb"
 
-Add "rockchip,px30-dw-mshc", "rockchip,rk3288-dw-mshc" for
-dwmmc on px30 platform.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--tyBI6OJ0jppnuMAWGuhVXMHjFXZ5N7hrb
+Content-Type: multipart/mixed; boundary="Buz6mZWXQx85HxhdmHF6eoorLStSBeLbT";
+ protected-headers="v1"
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: "A.s. Dong" <aisheng.dong@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+ Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "kernel@pengutronix.de" <kernel@pengutronix.de>,
+ dl-linux-imx <linux-imx@nxp.com>
+Message-ID: <ac4fde9d-5457-48e4-0946-4c5645e0b299@pengutronix.de>
+Subject: Re: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding doc
+References: <20180716114209.25242-1-o.rempel@pengutronix.de>
+ <20180716114209.25242-2-o.rempel@pengutronix.de>
+ <AM0PR04MB4211E30E85E830AA31F998A1805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <7f96a775-661b-86e5-95eb-07017dcec3c5@pengutronix.de>
+ <AM0PR04MB42111EDD7771D0FABCEB671B805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <739d382e-b553-107f-3cb7-59b7adf5d16d@pengutronix.de>
+ <AM0PR04MB421178C8C0AEC744AB22BE68805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB421178C8C0AEC744AB22BE68805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
 
-Signed-off-by: Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt | 1 +
- 1 file changed, 1 insertion(+)
+--Buz6mZWXQx85HxhdmHF6eoorLStSBeLbT
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-index 8ce49b2..6f629b1 100644
---- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-@@ -14,6 +14,7 @@ Required Properties:
- 							before RK3288
- 	- "rockchip,rk3288-dw-mshc": for Rockchip RK3288
- 	- "rockchip,rv1108-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RV1108
-+	- "rockchip,px30-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip PX30
- 	- "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3036
- 	- "rockchip,rk3228-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK322x
- 	- "rockchip,rk3328-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3328
--- 
-1.9.1
+
+
+On 17.07.2018 08:50, A.s. Dong wrote:
+>> -----Original Message-----
+>> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
+>> Sent: Tuesday, July 17, 2018 2:32 PM
+>> To: A.s. Dong <aisheng.dong@nxp.com>; Shawn Guo
+>> <shawnguo@kernel.org>; Fabio Estevam <fabio.estevam@nxp.com>; Rob
+>> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>
+>> Cc: devicetree@vger.kernel.org; kernel@pengutronix.de; linux-arm-
+>> kernel@lists.infradead.org; dl-linux-imx <linux-imx@nxp.com>
+>> Subject: Re: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding doc
+>>
+>>
+>>
+>> On 17.07.2018 08:26, A.s. Dong wrote:
+>>>> -----Original Message-----
+>>>> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
+>>>> Sent: Tuesday, July 17, 2018 1:45 PM
+>>>> To: A.s. Dong <aisheng.dong@nxp.com>; Shawn Guo
+>>>> <shawnguo@kernel.org>; Fabio Estevam <fabio.estevam@nxp.com>;
+>> Rob
+>>>> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>
+>>>> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org=
+;
+>>>> kernel@pengutronix.de; dl-linux-imx <linux-imx@nxp.com>
+>>>> Subject: Re: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding do=
+c
+>>>>
+>>>>
+>>>>
+>>>> On 17.07.2018 07:00, A.s. Dong wrote:
+>>>>>> -----Original Message-----
+>>>>>> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
+>>>>>> Sent: Monday, July 16, 2018 7:42 PM
+>>>>>> To: Shawn Guo <shawnguo@kernel.org>; Fabio Estevam
+>>>>>> <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>; Mark
+>>>>>> Rutland <mark.rutland@arm.com>; A.s. Dong
+>> <aisheng.dong@nxp.com>
+>>>>>> Cc: Oleksij Rempel <o.rempel@pengutronix.de>;
+>>>>>> kernel@pengutronix.de; linux-arm-kernel@lists.infradead.org;
+>>>>>> devicetree@vger.kernel.org;
+>>>>>> dl-linux- imx <linux-imx@nxp.com>
+>>>>>> Subject: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding doc
+>>>>>>
+>>>>>> The Messaging Unit module enables two processors within the SoC to=
+
+>>>>>> communicate and coordinate by passing messages (e.g. data, status
+>>>>>> and
+>>>>>> control) through the MU interface.
+>>>>>>
+>>>>>> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+>>>>>> ---
+>>>>>>  .../devicetree/bindings/mailbox/fsl,mu.txt    | 32
+>>>> +++++++++++++++++++
+>>>>>>  1 file changed, 32 insertions(+)
+>>>>>>  create mode 100644
+>>>>>> Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+>>>>>> b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..5d48dd75b98d
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+>>>>>> @@ -0,0 +1,32 @@
+>>>>>> +NXP i.MX Messaging Unit (MU)
+>>>>>> +-----------------------------------------------------------------=
+-
+>>>>>> +--
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +-------------------
+>>>>>> +- compatible :	should be "fsl,<chip>-mu", the supported chips
+>>>> include:
+>>>>>> +		imx6sx	- i.MX 6SoloX
+>>>>>> +		imx7d	- i.MX 7Dual
+>>>>>> +		imx7s	- i.MX 7Solo
+>>>>>> +		imx7ulp	- i.MX 7ULP
+>>>>>> +		imx8qm	- i.MX 8QM
+>>>>>> +		imx8qxp	- i.MX 8QXP
+>>>>>> +- reg :		Should contain the registers location and length
+>>>>>> +- interrupts :	Interrupt number. The interrupt specifier format
+>>>> depends
+>>>>>> +		on the interrupt controller parent.
+>>>>>> +- #mbox-cells:  Must be:
+>>>>>> +		0 - for single channel mode. i.MX8* SCU protocol specific.
+>>>>>> +		1 - for multichannel (generic) mode.
+>>>>>> +
+>>>>>> +Optional properties:
+>>>>>> +-------------------
+>>>>>> +- clocks :	phandle to the input clock.
+>>>>>> +- fsl,mu-side-a : Should be set for side A MU.
+>>>>>
+>>>>> For this property, how about doing like:
+>>>>> fsl,mu-side: An Integer represents the MU side.
+>>>>
+>>>> All this SoCs have MUs with only two sides. Why do we need explicit
+>>>> annotation for both parts?
+>>>>
+>>>>> If missing this property, it's default to Side A
+>>>>
+>>>> So, why do we need optional integer, which is set by default as side=
+ A?
+>>>> This is why I made it bool.
+>>>
+>>> Yes, A bool probably is better.
+>>>
+>>>>
+>>>>> 	       which is mostly used by A core.
+>>>>
+>>>> And you will need to explicit set side=3DB for SCU. Correct?
+>>>
+>>> SCU is using side A. AFAIK all SoC A core is using side A by default.=
+
+>>> That's why I think it can be default one. User is free to specify bot=
+h
+>>> In device tree. Does it make sense to you?
+>>
+>> Ok.
+>=20
+> My original assumption is we can specify the side explicitly in device =
+tree
+>  (default to side A if missing) like:
+> mu0a: mailbox@30aa0000 {
+>         compatible =3D "fsl,imx7s-mu";
+>         ...
+>         fsl,mu-side =3D <0>;
+> };
+>=20
+> mu0b: mailbox@30ab0000 {
+>         compatible =3D "fsl,imx7s-mu";
+>         ...
+>         fsl,mu-side =3D <1>;
+> };
+>=20
+> But you're right it can be simply indicated by a bool as well.
+> mu0a: mailbox@30aa0000 {
+>         compatible =3D "fsl,imx7s-mu";
+>         ...
+> };
+>=20
+> mu0b: mailbox@30ab0000 {
+>         compatible =3D "fsl,imx7s-mu";
+>         ...
+>         fsl,mu-side-b;=20
+> };
+>=20
+> I'm okay with both. You can prefer as you wish.
+
+There are advantages and disadvantages in both cases:
+- bool is using less space and limited to only needed part but mistakes
+can happen and some will forget to add this line.
+- int part is good only if it is not optional.
+
+
+--Buz6mZWXQx85HxhdmHF6eoorLStSBeLbT--
+
+--tyBI6OJ0jppnuMAWGuhVXMHjFXZ5N7hrb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAltNoCUACgkQdQOiSHVI
+77Rqvgf9EALIsZWA7z97c3ccqzufs1pOg389OpqpOJ19ClSC9p7Q9kmraA5OUfVr
+dbU4VcRY9N1A3ip35aDtoa4trBPuME4uI42tC7lB2tZJ65oLujS/TdGehbeMBMh0
+l7vMjtCB7roRcJ113ghkwEYXzzyI1YU1QfkF/YU7tGaeTYwU565CZUzzZyqxxtWq
+QXtx5u3xbG6CWJeRfUqF/NgidD0H5xzXJbXGoNdVRUd4HLBak9/0CyOppoLAk0QY
+EPeMASGbnfEOQZXGlHBv+x9obBEWOWOQB2+7GJnZEYfPjEevpFJWKeLUQ30EjS5K
+FP1nVNw34aFNJa4JeD7vpE2LJPh0gQ==
+=XI6h
+-----END PGP SIGNATURE-----
+
+--tyBI6OJ0jppnuMAWGuhVXMHjFXZ5N7hrb--
+
+
+--===============4299687728101552282==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============4299687728101552282==--
