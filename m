@@ -1,11 +1,9 @@
 Return-Path: <SRS0=u8po=KB=cogentembedded.com=sergei.shtylyov@kernel.org>
-Subject: Re: [PATCH] DT: irqchip: renesas-irqc: document R8A77980 support
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-References: <71e2be51-5699-1b26-c2a1-fca7897817d1@cogentembedded.com>
-Message-ID: <ffbc81bf-e668-cf82-6fd9-cf4083cf4c0f@cogentembedded.com>
-Date: Tue, 17 Jul 2018 22:29:37 +0300
+Subject: [PATCH] DT: irqchip: renesas-irqc: document R8A77980 support
+Message-ID: <71e2be51-5699-1b26-c2a1-fca7897817d1@cogentembedded.com>
+Date: Tue, 17 Jul 2018 22:23:17 +0300
 MIME-Version: 1.0
-In-Reply-To: <71e2be51-5699-1b26-c2a1-fca7897817d1@cogentembedded.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-MW
 Content-Transfer-Encoding: 7bit
@@ -13,24 +11,23 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devic
 Cc: linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 07/17/2018 10:23 PM, Sergei Shtylyov wrote:
+Document R-Car V3H (AKA R8A77980) SoC bindings.
 
-> Document R-Car V3H (AKA R8A77980) SoC bindings.
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> ---
->  Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt |    1 +
->  1 file changed, 1 insertion(+)
-> 
-> Index: renesas/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-> ===================================================================
-> --- renesas.orig/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-> +++ renesas/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-   Oops, forgot to rebase to tip.git before posting... but the patch does apply
-to its irq/core branch anyway! :-)
+---
+ Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt |    1 +
+ 1 file changed, 1 insertion(+)
 
-[...]
-
-MBR, Sergei
+Index: renesas/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+===================================================================
+--- renesas.orig/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
++++ renesas/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+@@ -16,6 +16,7 @@ Required properties:
+     - "renesas,intc-ex-r8a7796" (R-Car M3-W)
+     - "renesas,intc-ex-r8a77965" (R-Car M3-N)
+     - "renesas,intc-ex-r8a77970" (R-Car V3M)
++    - "renesas,intc-ex-r8a77980" (R-Car V3H)
+     - "renesas,intc-ex-r8a77995" (R-Car D3)
+ - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
+   interrupts.txt in this directory
