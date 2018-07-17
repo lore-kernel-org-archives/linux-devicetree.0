@@ -1,70 +1,90 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v3 0/6] arm: dts: zynq: improvements and cleanup
-Date: Tue, 17 Jul 2018 16:24:50 +0200
-Message-ID: <c4ad9790-c7f6-03e1-84e6-e08782cf332b@xilinx.com>
-References: <20180712041024.20583-1-luaraneda@gmail.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 2/5] i2c: designware: allow IP specific sda_hold_time
+Date: Tue, 17 Jul 2018 17:33:37 +0300
+Message-ID: <1cdb4985f9d5fbd461bacf0e04eb7c10bfb7f6f9.camel@linux.intel.com>
+References: <20180717114837.21839-1-alexandre.belloni@bootlin.com>
+         <20180717114837.21839-3-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180712041024.20583-1-luaraneda@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180717114837.21839-3-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luis Araneda <luaraneda@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Hogan <jhogan@kernel.org>
+Cc: Paul Burton <paul.burton@mips.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12.7.2018 06:10, Luis Araneda wrote:
-> This series attempts to standardize device naming and improve
-> its information for better identification
-> 
-> The values of the "compatible" and "model" device-tree properties
-> are corrected for some devices, adding complementary information
-> when necessary
-> 
-> Changes since v2:
-> - Split dt-bindings patch (too many changes)
-> - Apply dts patches first (reorder)
-> 
-> Changes since v1 (RFC):
-> - Add values to compatible property instead of replacing them
-> - Don't remove "internal" word from Xilinx boards on dt-bindings
-> - Migrate content of adapteva dt-binding file into Xilinx's
-> - Sort additional compatible strings alphabetically
->   by manufacturer
-> - Dropped patch that renamed the zedboard development board
->   (no apparent benefit)
-> - Dropped the patch that removed the "zynq" value from the
->   compatible strings (breaks the ABI)
-> 
-> Luis Araneda (6):
->   arm: dts: zynq: Set correct manufacturer for ZedBoard and MicroZed
->     boards
->   arm: dts: zynq: correct and improve the model property of dt files
->   dt-bindings: xilinx: zynq: Improve boards description
->   dt-bindings: xilinx: zynq: Sort entries alphabetically
->   dt-bindings: Move Paralella board to Xilinx
->   dt-bindings: xilinx: zynq: Add missing boards
-> 
->  .../devicetree/bindings/arm/adapteva.txt      |  7 -----
->  .../devicetree/bindings/arm/xilinx.txt        | 30 +++++++++++++++----
->  arch/arm/boot/dts/zynq-cc108.dts              |  2 +-
->  arch/arm/boot/dts/zynq-microzed.dts           |  4 +--
->  arch/arm/boot/dts/zynq-parallella.dts         |  2 +-
->  arch/arm/boot/dts/zynq-zc702.dts              |  2 +-
->  arch/arm/boot/dts/zynq-zc706.dts              |  2 +-
->  arch/arm/boot/dts/zynq-zc770-xm010.dts        |  2 +-
->  arch/arm/boot/dts/zynq-zc770-xm011.dts        |  2 +-
->  arch/arm/boot/dts/zynq-zc770-xm012.dts        |  2 +-
->  arch/arm/boot/dts/zynq-zc770-xm013.dts        |  2 +-
->  arch/arm/boot/dts/zynq-zed.dts                |  4 +--
->  arch/arm/boot/dts/zynq-zybo-z7.dts            |  2 +-
->  arch/arm/boot/dts/zynq-zybo.dts               |  2 +-
->  14 files changed, 39 insertions(+), 26 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/adapteva.txt
+On Tue, 2018-07-17 at 13:48 +0200, Alexandre Belloni wrote:
+> Because some old designware IPs were not supporting setting an SDA
+> hold
+> time, vendors developed their own solution. Add a way for the final
+> driver
+> to provide its own SDA hold time handling.
 > 
 
-Applied all.
+Thanks for information you provided. See my comment below.
+After addressing it, 
 
-Thanks,
-Michal
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+>  drivers/i2c/busses/i2c-designware-common.c | 6 ++++++
+>  drivers/i2c/busses/i2c-designware-core.h   | 1 +
+>  2 files changed, 7 insertions(+)
+> 
+> diff --git a/drivers/i2c/busses/i2c-designware-common.c
+> b/drivers/i2c/busses/i2c-designware-common.c
+> index 9afc3e075b33..545b69d6be3c 100644
+> --- a/drivers/i2c/busses/i2c-designware-common.c
+> +++ b/drivers/i2c/busses/i2c-designware-common.c
+> @@ -297,6 +297,12 @@ void i2c_dw_set_sda_hold_time(struct dw_i2c_dev
+> *dev)
+>  {
+>  	u32 reg;
+> 
+
+>  
+> +	if (dev->set_sda_hold_time) {
+> +		dev->set_sda_hold_time(dev);
+> +
+> +		return;
+> +	}
+
+I would rather inject this, for now (*), into if-else-if ladder, i.e.
+
+if (reg >= DW_IC_SDA_HOLD_MIN_VERS) {
+ ...
+} else if (dev->set_sda_hold_time) { // <<<
+ ...
+} else if (dev->sda_hold_time) {
+ ...
+
+(*) Since your IP is of v1.10a I don't believe any new version of IP
+would shadow existing DW IP registers, thus version check is okay to
+have first in my opinion.
+
+> +
+>  	/* Configure SDA Hold Time if required. */
+>  	reg = dw_readl(dev, DW_IC_COMP_VERSION);
+>  	if (reg >= DW_IC_SDA_HOLD_MIN_VERS) {
+> diff --git a/drivers/i2c/busses/i2c-designware-core.h
+> b/drivers/i2c/busses/i2c-designware-core.h
+> index bc43fb9ac1cf..b2778b6d8aca 100644
+> --- a/drivers/i2c/busses/i2c-designware-core.h
+> +++ b/drivers/i2c/busses/i2c-designware-core.h
+> @@ -283,6 +283,7 @@ struct dw_i2c_dev {
+>  	void			(*disable)(struct dw_i2c_dev
+> *dev);
+>  	void			(*disable_int)(struct dw_i2c_dev
+> *dev);
+>  	int			(*init)(struct dw_i2c_dev *dev);
+> +	int			(*set_sda_hold_time)(struct
+> dw_i2c_dev *dev);
+>  	int			mode;
+>  	struct i2c_bus_recovery_info rinfo;
+>  };
+
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
