@@ -1,23 +1,23 @@
 From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH] arm64: zynqmp: Use serdev for zcu100 BT
-Date: Tue, 17 Jul 2018 16:40:22 +0200
-Message-ID: <9e8bdff9-8239-56ea-8ede-472bb47baacd@monstr.eu>
-References: <0ce3b4f588f1d9a83cfe99b93af3514f4d893273.1523452571.git.michal.simek@xilinx.com>
+Subject: Re: [PATCH] arm64: zynqmp: Remove #address/#size-cells from gpio-keys
+Date: Tue, 17 Jul 2018 16:42:05 +0200
+Message-ID: <50a270ad-93e6-5be2-ab57-bd4cbd9fe49a@monstr.eu>
+References: <cc96e8372881438fb069d49126ab713fa03fb074.1525260692.git.michal.simek@xilinx.com>
 Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
  protocol="application/pgp-signature";
- boundary="zMmpjYsj3gX0iHWT1XoIteXxD99uthBdL"
+ boundary="rNj6OcjYfbJvEiaEta93scPgEff3uU0w7"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0ce3b4f588f1d9a83cfe99b93af3514f4d893273.1523452571.git.michal.simek@xilinx.com>
+In-Reply-To: <cc96e8372881438fb069d49126ab713fa03fb074.1525260692.git.michal.simek@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---zMmpjYsj3gX0iHWT1XoIteXxD99uthBdL
-Content-Type: multipart/mixed; boundary="wHVQIfImkgc6Tv4iVZTxwbvCmzhAo6xJe";
+--rNj6OcjYfbJvEiaEta93scPgEff3uU0w7
+Content-Type: multipart/mixed; boundary="bpAOc0hM4YirHXmYmS6kfcoRqLeshgDHH";
  protected-headers="v1"
 From: Michal Simek <monstr@monstr.eu>
 Reply-To: monstr@monstr.eu
@@ -26,55 +26,87 @@ Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
  Will Deacon <will.deacon@arm.com>, Catalin Marinas
  <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>,
  linux-arm-kernel@lists.infradead.org
-Message-ID: <9e8bdff9-8239-56ea-8ede-472bb47baacd@monstr.eu>
-Subject: Re: [PATCH] arm64: zynqmp: Use serdev for zcu100 BT
-References: <0ce3b4f588f1d9a83cfe99b93af3514f4d893273.1523452571.git.michal.simek@xilinx.com>
-In-Reply-To: <0ce3b4f588f1d9a83cfe99b93af3514f4d893273.1523452571.git.michal.simek@xilinx.com>
+Message-ID: <50a270ad-93e6-5be2-ab57-bd4cbd9fe49a@monstr.eu>
+Subject: Re: [PATCH] arm64: zynqmp: Remove #address/#size-cells from gpio-keys
+References: <cc96e8372881438fb069d49126ab713fa03fb074.1525260692.git.michal.simek@xilinx.com>
+In-Reply-To: <cc96e8372881438fb069d49126ab713fa03fb074.1525260692.git.michal.simek@xilinx.com>
 
---wHVQIfImkgc6Tv4iVZTxwbvCmzhAo6xJe
+--bpAOc0hM4YirHXmYmS6kfcoRqLeshgDHH
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-On 11.4.2018 15:16, Michal Simek wrote:
-> Mainline started to use serdev interface for uart attached devices.
-> Change description to reflect it.
+On 2.5.2018 13:34, Michal Simek wrote:
+> dts reports incorrect usage of these properties in gpio-keys node.
+> Warning (avoid_unnecessary_addr_size): /gpio-keys: unnecessary
+>=20
+> The patch is removing these useless properties.
 >=20
 > Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 > ---
 >=20
->  arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
+>  arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts | 2 --
+>  arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts | 2 --
+>  arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts | 2 --
+>  arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts | 2 --
+>  4 files changed, 8 deletions(-)
 >=20
 > diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts b/arch/a=
 rm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> index 3e862a9faf26..c7f713c8e69e 100644
+> index c7f713c8e69e..eb5e8bddb610 100644
 > --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
 > +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> @@ -89,12 +89,6 @@
->  			gpios =3D <&gpio 25 GPIO_ACTIVE_HIGH>;
->  			default-state =3D "on";
->  		};
-> -
-> -		bt_power {
-> -			label =3D "bt_power";
-> -			gpios =3D <&gpio 8 GPIO_ACTIVE_HIGH>;
-> -			default-state =3D "on";
-> -		};
->  	};
+> @@ -44,8 +44,6 @@
 > =20
->  	wmmcsdio_fixed: fixedregulator-mmcsdio {
-> @@ -267,6 +261,10 @@
+>  	gpio-keys {
+>  		compatible =3D "gpio-keys";
+> -		#address-cells =3D <1>;
+> -		#size-cells =3D <0>;
+>  		autorepeat;
+>  		sw4 {
+>  			label =3D "sw4";
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/a=
+rm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+> index 5b4ffe646a9b..25dd57485323 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+> @@ -41,8 +41,6 @@
 > =20
->  &uart0 {
->  	status =3D "okay";
-> +	bluetooth {
-> +		compatible =3D "ti,wl1831-st";
-> +		enable-gpios =3D <&gpio 8 GPIO_ACTIVE_HIGH>;
-> +	};
->  };
+>  	gpio-keys {
+>  		compatible =3D "gpio-keys";
+> -		#address-cells =3D <1>;
+> -		#size-cells =3D <0>;
+>  		autorepeat;
+>  		sw19 {
+>  			label =3D "sw19";
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts b/arch/a=
+rm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
+> index 668f7f26716a..259f21b0c001 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
+> @@ -41,8 +41,6 @@
 > =20
->  &uart1 {
+>  	gpio-keys {
+>  		compatible =3D "gpio-keys";
+> -		#address-cells =3D <1>;
+> -		#size-cells =3D <0>;
+>  		autorepeat;
+>  		sw19 {
+>  			label =3D "sw19";
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts b/arch/a=
+rm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
+> index 9a9dd6a0142b..a61b3cc6f4c9 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
+> @@ -41,8 +41,6 @@
+> =20
+>  	gpio-keys {
+>  		compatible =3D "gpio-keys";
+> -		#address-cells =3D <1>;
+> -		#size-cells =3D <0>;
+>  		autorepeat;
+>  		sw19 {
+>  			label =3D "sw19";
 >=20
 
 Applied.
@@ -91,9 +123,9 @@ U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP SoCs
 
 
 
---wHVQIfImkgc6Tv4iVZTxwbvCmzhAo6xJe--
+--bpAOc0hM4YirHXmYmS6kfcoRqLeshgDHH--
 
---zMmpjYsj3gX0iHWT1XoIteXxD99uthBdL
+--rNj6OcjYfbJvEiaEta93scPgEff3uU0w7
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -101,9 +133,9 @@ Content-Disposition: attachment; filename="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iEYEARECAAYFAltN/9YACgkQykllyylKDCGQSgCfQfqmmsBaP7q3On0LJivHZyex
-pNYAn1sGPL1lCMM21pu7/MYWIvP5OTut
-=zWFi
+iEYEARECAAYFAltOAD0ACgkQykllyylKDCFJ9gCfR4xAncQz6PzgQ/+BVn7ZWP3d
+1mgAoIjY4vHuoCrBpcTsKJL1IT5Vbju3
+=dHkX
 -----END PGP SIGNATURE-----
 
---zMmpjYsj3gX0iHWT1XoIteXxD99uthBdL--
+--rNj6OcjYfbJvEiaEta93scPgEff3uU0w7--
