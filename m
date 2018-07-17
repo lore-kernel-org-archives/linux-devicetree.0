@@ -1,59 +1,47 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 1/2] drm/panel: Add support for Armadeus ST0700 Adapt
-Date: Tue, 17 Jul 2018 09:28:31 -0300
-Message-ID: <CAOMZO5Dr0zqy4Sf3s=L4qoqePRhZAXWpDk1oTOUidy4_TUQ=QA@mail.gmail.com>
-References: <20180717072318.18730-1-sebastien.szymanski@armadeus.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 5/5] ARM: dts: exynos: add tmu aliases nodes
+Date: Tue, 17 Jul 2018 14:29:45 +0200
+Message-ID: <CAJKOXPc256dCWWWaoJBOB9NUc=CUYtqgfeKh=LBOoFAfh_T8Ng@mail.gmail.com>
+References: <1531822342-4293-1-git-send-email-linux.amoon@gmail.com> <1531822342-4293-5-git-send-email-linux.amoon@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180717072318.18730-1-sebastien.szymanski@armadeus.com>
+In-Reply-To: <1531822342-4293-5-git-send-email-linux.amoon@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi S=C3=A9bastien,
+On 17 July 2018 at 12:12, Anand Moon <linux.amoon@gmail.com> wrote:
+> add tmuctrl aliases node for exynos542x
 
-On Tue, Jul 17, 2018 at 4:23 AM, S=C3=A9bastien Szymanski
-<sebastien.szymanski@armadeus.com> wrote:
-> This patch adds support for the Armadeus ST0700 Adapt. It comes with a
-> Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT and an adapter board so
-> that it can be connected on the TFT header of Armadeus Dev boards.
+Please use full sentence, starting with capital letter and ending with
+a dot. Also please explain why you need tmuctrl aliases.
+
 >
-> Signed-off-by: S=C3=A9bastien Szymanski <sebastien.szymanski@armadeus.com=
->
+> CC: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 > ---
->  .../display/panel/armadeus,st0700-adapt.txt        |  9 +++++++
->  drivers/gpu/drm/panel/panel-simple.c               | 29 ++++++++++++++++=
-++++++
->  2 files changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/armad=
-eus,st0700-adapt.txt
+>  arch/arm/boot/dts/exynos5420-peach-pit.dts         |  8 ++++----
+>  arch/arm/boot/dts/exynos5420.dtsi                  | 20 ++++++++++++--------
+>  arch/arm/boot/dts/exynos5422-odroid-core.dtsi      |  8 ++++----
+>  arch/arm/boot/dts/exynos5422-odroidhc1.dts         |  8 ++++----
+>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |  8 ++++----
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts          |  8 ++++----
+>  6 files changed, 32 insertions(+), 28 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/display/panel/armadeus,st0=
-700-adapt.txt b/Documentation/devicetree/bindings/display/panel/armadeus,st=
-0700-adapt.txt
-> new file mode 100644
-> index 000000000000..a30d63db3c8f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/armadeus,st0700-ada=
-pt.txt
-> @@ -0,0 +1,9 @@
-> +Armadeus ST0700 Adapt. A Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT =
-with
-> +an adapter board.
-> +
-> +Required properties:
-> +- compatible: "armadeus,st0700-adapt"
+> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+> index 57c2332..ff79f0b 100644
+> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
+> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+> @@ -1061,19 +1061,19 @@
+>         status = "okay";
+>  };
+>
+> -&tmu_cpu0 {
+> +&tmu_cpu_0 {
 
-Shouldn't this be named "santek,st0700i5y" instead?
+This looks irrelevant to the topic of adding aliases.
 
-Santek is the vendor of the panel and st0700i5y is the model.
-
-Then you could add a "santek" entry in
-Documentation/devicetree/bindings/vendor-prefixes.txt.
-
-Regards,
-
-Fabio Estevam
+Best regards,
+Krzysztof
