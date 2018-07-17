@@ -1,90 +1,48 @@
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 03/16] clk: at91: h32mx: separate registration from DT parsing
-Date: Wed, 18 Jul 2018 00:27:44 +0200
-Message-ID: <20180717222757.10253-4-alexandre.belloni@bootlin.com>
+Subject: [PATCH 01/16] clk: at91: audio-pll: fix audio pmc type
+Date: Wed, 18 Jul 2018 00:27:42 +0200
+Message-ID: <20180717222757.10253-2-alexandre.belloni@bootlin.com>
 References: <20180717222757.10253-1-alexandre.belloni@bootlin.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180717222757.10253-1-alexandre.belloni@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Michael Turquette <mturquette@baylibre.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Separate registration out of of_sama5d4_clk_h32mx_setup to allow other code
-to use it.
+The allocation for the audio pmc is using the size of struct clk_audio_pad
+instead of struct clk_audio_pmc. This works fine because the former is
+larger than the latter but it is safer to be correct.
 
+Fixes: ("0865805d82d4 clk: at91: add audio pll clock drivers")
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/clk/at91/clk-h32mx.c | 40 ++++++++++++++++++++++++------------
- 1 file changed, 27 insertions(+), 13 deletions(-)
+ drivers/clk/at91/clk-audio-pll.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/at91/clk-h32mx.c b/drivers/clk/at91/clk-h32mx.c
-index e0daa4a31f88..a3274648b6c0 100644
---- a/drivers/clk/at91/clk-h32mx.c
-+++ b/drivers/clk/at91/clk-h32mx.c
-@@ -86,25 +86,19 @@ static const struct clk_ops h32mx_ops = {
- 	.set_rate = clk_sama5d4_h32mx_set_rate,
- };
+diff --git a/drivers/clk/at91/clk-audio-pll.c b/drivers/clk/at91/clk-audio-pll.c
+index da7bafcfbe70..b3eaf654fac9 100644
+--- a/drivers/clk/at91/clk-audio-pll.c
++++ b/drivers/clk/at91/clk-audio-pll.c
+@@ -509,7 +509,7 @@ static void __init of_sama5d2_clk_audio_pll_pad_setup(struct device_node *np)
  
--static void __init of_sama5d4_clk_h32mx_setup(struct device_node *np)
-+struct clk_hw * __init
-+at91_clk_register_h32mx(struct regmap *regmap, const char *name,
-+			const char *parent_name)
+ static void __init of_sama5d2_clk_audio_pll_pmc_setup(struct device_node *np)
  {
- 	struct clk_sama5d4_h32mx *h32mxclk;
- 	struct clk_init_data init;
--	const char *parent_name;
--	struct regmap *regmap;
- 	int ret;
+-	struct clk_audio_pad *apmc_ck;
++	struct clk_audio_pmc *apmc_ck;
+ 	struct clk_init_data init = {};
  
--	regmap = syscon_node_to_regmap(of_get_parent(np));
--	if (IS_ERR(regmap))
--		return;
--
- 	h32mxclk = kzalloc(sizeof(*h32mxclk), GFP_KERNEL);
- 	if (!h32mxclk)
--		return;
--
--	parent_name = of_clk_get_parent_name(np, 0);
-+		return ERR_PTR(-ENOMEM);
- 
--	init.name = np->name;
-+	init.name = name;
- 	init.ops = &h32mx_ops;
- 	init.parent_names = parent_name ? &parent_name : NULL;
- 	init.num_parents = parent_name ? 1 : 0;
-@@ -116,10 +110,30 @@ static void __init of_sama5d4_clk_h32mx_setup(struct device_node *np)
- 	ret = clk_hw_register(NULL, &h32mxclk->hw);
- 	if (ret) {
- 		kfree(h32mxclk);
--		return;
-+		return ERR_PTR(ret);
- 	}
- 
--	of_clk_add_hw_provider(np, of_clk_hw_simple_get, &h32mxclk->hw);
-+	return &h32mxclk->hw;
-+}
-+
-+static void __init of_sama5d4_clk_h32mx_setup(struct device_node *np)
-+{
-+	struct clk_hw *hw;
-+	const char *name = np->name;
-+	const char *parent_name;
-+	struct regmap *regmap;
-+
-+	regmap = syscon_node_to_regmap(of_get_parent(np));
-+	if (IS_ERR(regmap))
-+		return;
-+
-+	parent_name = of_clk_get_parent_name(np, 0);
-+
-+	hw = at91_clk_register_h32mx(regmap, name, parent_name);
-+	if (IS_ERR(hw))
-+		return;
-+
-+	of_clk_add_hw_provider(np, of_clk_hw_simple_get, hw);
- }
- CLK_OF_DECLARE(of_sama5d4_clk_h32mx_setup, "atmel,sama5d4-clk-h32mx",
- 	       of_sama5d4_clk_h32mx_setup);
+ 	apmc_ck = kzalloc(sizeof(*apmc_ck), GFP_KERNEL);
 -- 
 2.18.0
