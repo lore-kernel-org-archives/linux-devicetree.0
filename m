@@ -1,83 +1,106 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH V3 11/16] cpufreq: dt: Pass regulator name to the OPP core
-Date: Tue, 17 Jul 2018 09:46:23 +0200
-Message-ID: <CAMuHMdXgE3oOVdYFy3kzmOv4FXvjU4rC39gUDUtMNJCdB__2AA@mail.gmail.com>
-References: <cover.1454992186.git.viresh.kumar@linaro.org> <ad55cd1a03e712e2c0c49701e87a37199cb8376e.1454992187.git.viresh.kumar@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] drm/panel: simple: Support simple VGA panels
+Date: Tue, 17 Jul 2018 09:47:35 +0200
+Message-ID: <CACRpkdZ=uGDN8i4q1cODoLDibB+B4FqAF1TzsreATJ2wuFz6vQ@mail.gmail.com>
+References: <20180716092339.9736-1-linus.walleij@linaro.org>
+ <CAL_JsqLeZX6zJoMYp9drskx-UN8Na2LLhnHjbgZOVgw8D-y9wQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ad55cd1a03e712e2c0c49701e87a37199cb8376e.1454992187.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linaro-kernel <linaro-kernel@lists.linaro.org>, Linux PM list <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Nishanth Menon <nm@ti.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqLeZX6zJoMYp9drskx-UN8Na2LLhnHjbgZOVgw8D-y9wQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Viresh,
-
-CC device-tree folks
-
-Replying to an old email, because that's the most accurate reference I
-could find.
-
-On Tue, Feb 9, 2016 at 6:06 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> OPP core can handle the regulators by itself, and but it needs to know
-> the name of the regulator to fetch. Add support for that.
->
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/cpufreq/cpufreq-dt.c | 46 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->
-> diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
-> index 4c9f8a828f6f..2af75f8088bb 100644
-> --- a/drivers/cpufreq/cpufreq-dt.c
-> +++ b/drivers/cpufreq/cpufreq-dt.c
-
-> @@ -119,6 +120,30 @@ static int set_target(struct cpufreq_policy *policy, unsigned int index)
->         return ret;
->  }
->
-> +/*
-> + * An earlier version of opp-v1 bindings used to name the regulator
-> + * "cpu0-supply", we still need to handle that for backwards compatibility.
-> + */
-> +static const char *find_supply_name(struct device *dev, struct device_node *np)
-> +{
-> +       struct property *pp;
-> +       int cpu = dev->id;
-> +
-> +       /* Try "cpu0" for older DTs */
-> +       if (!cpu) {
-> +               pp = of_find_property(np, "cpu0-supply", NULL);
-> +               if (pp)
-> +                       return "cpu0";
-> +       }
-> +
-> +       pp = of_find_property(np, "cpu-supply", NULL);
-> +       if (pp)
-> +               return "cpu";
-
-Despite the existence of lots of users of these properties, I couldn't find
-both the "earlier version" and the "current version" of the opp-v1 bindings
-documenting the "cpu0-supply" and "cpu-supply" properties?
-
-Even for opp-v2, they are not documented in
-Documentation/devicetree/bindings/opp/opp.txt, but cpu-supply is used in
-the examples?
-For v2, I did find "[PATCH 01/16] PM / OPP: Add 'supply-names' binding"
-https://lore.kernel.org/lkml/2b87b162eabd1570ae2311e1ef8655acda72f678.1441972771.git.viresh.kumar@linaro.org/
-but presumably that's an even further evolution?
-
-Can you please document these properties?
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+T24gVHVlLCBKdWwgMTcsIDIwMTggYXQgMTI6NTAgQU0gUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
+Lm9yZz4gd3JvdGU6Cj4gT24gTW9uLCBKdWwgMTYsIDIwMTggYXQgMzoyMyBBTSBMaW51cyBXYWxs
+ZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+IHdyb3RlOgoKPiA+ICtWaWRlbyBHcmFwaGlj
+cyBBcnJheQo+Cj4gVkdBIGlzIG1vcmUgYSBjb250cm9sbGVyIGludGVyZmFjZSB0aGFuIGEgcGFu
+ZWwuLi4KCkkgZG9uJ3Qga25vdyB3aGF0IGVsc2UgdG8gY2FsbCBpdCB0aG91Z2gsIG90aGVyIHRo
+YW4gZm9ybXVsYXRpbmcgc29tZXRpbmcKYnVyZWF1Y3JhdGljIGxpa2UKIlZpZGVvIEdyYXBoaWNz
+IEFycmF5IERpc3BsYXkgUmVzb2x1dGlvbnMiCgpPciBzaG91bGQgSSB1c2UgdGhlIGFiYnJldmlh
+dGlvbjoKIlZHQSBEaXNwbGF5IFJlc29sdXRpb25zIiByYXRoZXI/CgpUaGUgV2lraXBlZGlhIGFy
+dGljbGUgImRpc3BsYXkgcmVzb2x1dGlvbiIKaHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kv
+RGlzcGxheV9yZXNvbHV0aW9uCmp1c3QgY2FsbHMgdGhlc2UgdGhyZWUgcmVzb2x1dGlvbnMgIlZH
+QSIsICJTVkdBICIgYW5kICJYR0EiLgoKPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNw
+bGF5X21vZGUgdmlkZW9fZ3JhcGhpY3NfYXJyYXlfbW9kZXNbXSA9IHsKPiA+ICsgICAgICAgewo+
+ID4gKyAgICAgICAgICAgICAgIC8qCj4gPiArICAgICAgICAgICAgICAgICogVGhpcyBpcyB0aGUg
+bW9zdCBzdGFuZGFyZGl6ZWQgInZhbmlsbGEiIFZHQSBtb2RlIHRoZXJlIGlzOgo+ID4gKyAgICAg
+ICAgICAgICAgICAqIDY0MHg0ODAgQCA2MCBIego+Cj4gRG9uJ3Qgd2UgaGF2ZSBzdGFuZGFyZCBW
+RVNBIHRpbWluZ3MgYWxyZWFkeSBkZWZpbmVkIGFzIHdlbGwgYXMgdGltaW5ncwo+IHRoYXQgY2Fu
+IGJlIGNhbGN1bGF0ZWQgYmFzZWQgb24gcmVzb2x1dGlvbiBhbmQgcmVmcmVzaCByYXRlIChjYWxs
+ZWQKPiBDVlQgSUlSQykuIFdoeSBkdXBsaWNhdGUgaGVyZT8KClRoZXkgYXJlIGluc2lkZSBkcml2
+ZXJzL2dwdS9kcm0vZHJtX2VkaWQuYwphbGwgaW4gc3RhdGljIGNvbnN0IGFycmF5cyBhbmQgZW51
+bWVyYXRlZCBieSB0aGUgaW5kZXggaW4gdGhlCkRNVCBzcGVjIHRha2VuIG91dCBvZiBYRnJlZTg2
+LiAoZHJtX2RtdF9tb2Rlc1tdKQoKSSBkb24ndCBrbm93LiBJdCBpcyBxdWl0ZSBlbmNhcHN1bGF0
+ZWQgaW50byB0aGF0IEVESUQgZHJpdmVyIGFuZApkb2Vzbid0IHNlZW0gdmVyeSByZXVzYWJsZS4g
+VG8gcGljayBvdXQgYSBmZXcgZnJvbSBpbnNpZGUgRURJRApzZWVtcyBwcmV0dHkgZGF1bnRpbmcu
+IEknZCBsaWtlIHRvIGhlYXIgd2hhdCB0aGUgRFJNIGZvbGtzIHRoaW5rCmFib3V0IHRoYXQuCgo+
+IFdoeSBkb24ndCB5b3UganVzdCBkZWZpbmUgYSAndmdhLWNvbm5lY3Rvcicgbm9kZQoKQmVjYXVz
+ZSB0aGlzIGlzIG5vdCBhIFZHQSBjb25uZWN0b3IsIGl0IGlzIGp1c3QgdGhlIFZHQSByZXNvbHV0
+aW9uLgpJbiBvdGhlciBjaXJjdW1zdGFuY2VzIEkgZG8gdXNlIGl0LgoKSSB0aGluayB5b3UgbW9z
+dCBvZnRlbiBoYXZlIHRvIHVzZSB0aGF0IGNvbm5lY3RvciB3aXRoIHRoZSBkdW1iClZHQSBEQUMg
+YnJpZGdlIHRob3VnaCwgYXMgdGhlIFZHQSBjb25uZWN0b3IgaXMgYW5hbG9nIGFuZAp3aGF0IGNv
+bWVzIG91dCBvZiBhIGRpc3BsYXkgY29udHJvbGxlciBpcyBkaWdpdGFsLiBTbyBpdCBuZWVkcyB0
+bwptYWtlIHNvbWUga2luZCBvZiBzZW5zZSBoZXJlLgoKSW4gYSB3YXkgKGFzIHdlIGRpc2N1c3Nl
+ZCBiZWZvcmUpIHRoZSB3aG9sZSBwYW5lbC1zaW1wbGUuYyB0aGluZwppcyBhIGJpdCBib2d1cywg
+YXMgaXQgaXMgcHJvYmFibHkgaW4gbW9zdCBjYXNlcyBoaWRpbmcgYSBicmlkZ2Ugb3IKYSBkdW1i
+IERBQyBvciBhdCBsZWFzdCBhIFZHQSBjb25uZWN0b3Igb3Igc2ltaWxhciB0aGF0IHNob3VsZCd2
+ZQpiZWVuIHByb3Blcmx5IG1vZGVsZWQsIGJ1dCBpbiB0aGlzIGNhc2UgSSBhbSBtb3JlIGNlcnRh
+aW4gdGhhdCBpdCBpcwphY3R1YWxseSB0aGUgcmlnaHQgY2hvaWNlLgoKSSBndWVzcyBJIGNvdWxk
+IHRyeSB0byB1c2UgdGhlIGR1bWIgVkdBIGJyaWRnZSBhbmQgdGhlIFZHQQpjb25uZWN0b3IsIGFu
+ZCBpdCBpbmRlZWQgZmFsbHMgYmFjayB0byBWR0EgcmVzb2x1dGlvbnMgaWYgbm8gRERDCmNoYW5u
+ZWwgaXMgYXZhaWxhYmxlIGJ1dCBpZiBJIGdvIGluIGFuZCBzYXkgdGhlcmUgaXMgYSBEQUMgYnJp
+ZGdlCmFuZCBWR0EgY29ubmVjdG9yIEkgYW0gZXNzZW50aWFsbHkgbHlpbmcuCgo+IGFuZCBJSVJD
+LCB5b3UgY2FuCj4ganVzdCBmb3JjZSB0aGUgc3RhbmRhcmQgbW9kZXMgZnJvbSB1c2Vyc3BhY2Ug
+d2l0aCBEUk0uCgpJIGd1ZXNzIHlvdSBtZWFuIHRoZSBrZXJuZWwgY29tbWFuZCBsaW5lIGFyZ3Vt
+ZW50cywgbGVzdAp0aGVyZSB3aWxsIGJlIG5vIGJvb3QgY29uc29sZS4KCkFwYXJ0IGZyb20gYmVp
+bmcgYSB1c2VyIGV4cGVyaWVuY2UgaG9ycm9yIHN0b3J5LCB0aGF0IHJlcXVpcmVzCmEgVkdBIGNv
+bm5lY3RvciBicmlkZ2UsIGFzIHBlciBhYm92ZS4gKEl0J3MgdGhlIEVESUQgY29kZSB0aGF0CmRv
+ZXMgdGhhdCBjb21tYW5kIGxpbmUgcGFyc2luZy4pIEFuZCB0aGF0IHJlcXVpcmVzIGx5aW5nIGFi
+b3V0CmhhdmluZyBhIFZHQSBjb25uZWN0b3IgYnJpZGdlLgoKQnV0IEkgY2FuIHN1cmVseSBsaWUg
+aWYgZXZlcnlvbmUgdGhpbmtzIHRoYXQgaXMgdGhlIGJlc3QgaWRlYSA6RAoKPiBNYXliZSB5b3Ug
+bmVlZAo+IHNvbWUgZmxhZyB0byBmb3JjZSBhIGNvbm5lY3Rpb24gaW4gdGhlIGVtdWxhdG9yIGFu
+ZCBwZXJoYXBzIHNvbWUgZmFrZQo+IEVESUQgZGF0YSB0byBzZXQgYSBkZWZhdWx0IG1vZGUuCgpU
+aGlzIGRldmljZSB0cmVlIEknbSBjcmVhdGluZyBpcyBmb3IgQVJNIFJUU00gd2hpY2ggaXMgYSBw
+cm9wcmlldGFyeQpBUk0gdG9vbC4KClN1ZGVlcCBhdCBBUk0gc2F5cyBpdCBkb2VzIG5vdCBlbXVs
+YXRlIGFueSBEQUMgYnJpZGdlIHN1Y2gKYXMgZm91bmQgaW4gdGhlIFZlcnNhdGlsZSBFeHByZXNz
+IG1hY2hpbmUgZmFtaWx5LiBJdCBqdXN0IGV4cGVjdHMKdG8gaGF2ZSB0aGUgcmlnaHQgcmVzb2x1
+dGlvbiBwYXJhbWV0ZXJzIHdyaXR0ZW4gaW50byB0aGUgcmVnaXN0ZXJzCm9mIHRoZSBQTDExMSwg
+d2hpY2ggaW4gdHVybiBvZiBjb3Vyc2UgY2FuIG9ubHkgZ2V0IGl0IGZyb20gYQpwYW5lbCBvciBi
+cmlkZ2UgZHJpdmVyIG9mIHNvbWUgc29ydC4KClRoZSB3YXkgdGhvc2UgZW11bGF0b3JzIHdvcmsg
+KEFGQUlDVCkgaXMgdGhhdCB0aGV5IHNpbXBseSBtb25pdG9yCnJlZ2lzdGVyIHdyaXRlcyB0byB0
+aGUgcmVzb2x1dGlvbnMgcGFyYW1ldGVycyB0byBzY2FsZSB0aGUgZW11bGF0b3IKZGlzcGxheSB3
+aW5kb3cgYW5kIHRoZW4gdGhleSByZWFkIG91dCB0aGUgUkdCIGRhdGEgaW50byB0aGF0CndpbmRv
+dywgcGl4ZWwgYnkgcGl4ZWwsIGZyb20gdGhlIGluZGljYXRlZCBtZW1vcnkgYXJlYS4KSXQgd29y
+a3MgZm9yIHRoZW0uCgpJbiBRRU1VLCB3ZSBoYWQgdGhlIHNhbWUgcHJvYmxlbS4gSXQgZGlkbid0
+IHN1cHBvcnQgcHJvcGVyIHJlcG9ydGluZwpvZiBmYWtlIEVESUQgb24gdGhlc2UgcGxhdGZvcm1z
+IGVpdGhlciwgYmVjYXVzZSBvZiBub3QgcHJvcGVybHkKbW9kZWxpbmcgdGhlIGhhcmR3YXJlIGl0
+IHdhcyBlbXVsYXRpbmcsIGluc3RlYWQgcmVseWluZyBvbiB0aGUgcmVnaXN0ZXIKcmVhZHMgYXMg
+YWJvdmUuIFNpbmNlIGl0IGlzIG9wZW4gc291cmNlIEkgY291bGQKc2ltcGx5IGZpeCBpdDoKaHR0
+cHM6Ly9saXN0cy5nbnUub3JnL2FyY2hpdmUvaHRtbC9xZW11LWRldmVsLzIwMTgtMDIvbXNnMDQ2
+NTEuaHRtbApodHRwczovL2xpc3RzLmdudS5vcmcvYXJjaGl2ZS9odG1sL3FlbXUtZGV2ZWwvMjAx
+OC0wMi9tc2cwNDY1Mi5odG1sCmh0dHBzOi8vbGlzdHMuZ251Lm9yZy9hcmNoaXZlL2h0bWwvcWVt
+dS1kZXZlbC8yMDE4LTAyL21zZzA0NjUzLmh0bWwKCkFmdGVyIHRoaXMsIHRoZSBRRU1VIGZvciBW
+ZXJzYXRpbGUgRXhwcmVzcyBjYW4gcHJvcGVybHkgdXNlIHRoZQpicmlkZ2UuCgpJIGRvIHRyeSB0
+byBiZSBncml0dHkgYW5kIHRob3JvdWdoISA6RAoKSSBkb24ndCByZWFsbHkga25vdyB3aGF0IFJU
+U00gaXMgYW5kIEkgY2FuJ3QgcnVuIGl0IG15c2VsZi4gSSBqdXN0CmhhdmUgdG8gc3VwcG9ydCBp
+dCBpbiB0aGUgcmVmYWN0b3JpbmcgdG8gdXNlIERSTSBmb3IgdGhlIEFSTQpWZXJzYXRpbGUgRXhw
+cmVzcyBtYWNoaW5lcy4gSSBjYW5ub3QgY2hhbmdlIGl0cyBzb3VyY2UgY29kZS4KCj4gVGhlcmUn
+cyBhbHNvIHNvbWUgb3RoZXIgY2FzZXMgb2YKPiAidHJhbnNwYXJlbnQiIGJyaWRnZXMgd2hpY2gg
+ZG9uJ3QgaGF2ZSBhbnkgZHJpdmVyLgoKWWVhaCBJIHRoaW5rIHRoZXkgbW9zdGx5IHVzZSBwYW5l
+bC1zaW1wbGUuYyBpbiB0aGUgRFJNCmNhc2UgZG9uJ3QgdGhleT8gV2UgY29tZSBmdWxsIGNpcmNs
+ZS4KCllvdXJzLApMaW51cyBXYWxsZWlqCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
