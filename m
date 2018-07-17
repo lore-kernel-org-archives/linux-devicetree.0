@@ -1,76 +1,47 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v6 4/5] arm64: dts: actions: Add Clock Management Unit
- for S700
-Date: Tue, 17 Jul 2018 19:44:29 +0530
-Message-ID: <20180717141429.GC19076@mani>
+Subject: Re: [PATCH v6 1/5] clk: actions: Add missing REGMAP_MMIO dependency
+Date: Tue, 17 Jul 2018 19:45:42 +0530
+Message-ID: <20180717141542.GD19076@mani>
 References: <20180715203524.11948-1-sravanhome@gmail.com>
- <20180715203524.11948-5-sravanhome@gmail.com>
+ <20180715203524.11948-2-sravanhome@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180715203524.11948-5-sravanhome@gmail.com>
+In-Reply-To: <20180715203524.11948-2-sravanhome@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Saravanan Sekar <sravanhome@gmail.com>
 Cc: afaerber@suse.de, sboyd@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@cubietech.com, support@cubietech.com, catalin.marinas@arm.com, mturquette@baylibre.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, darren@cubietech.com, robh+dt@kernel.org, jeff.chen@actions-semi.com, pn@denx.de, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mp-cs@actions-semi.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Saravanan,
-
-On Sun, Jul 15, 2018 at 10:35:23PM +0200, Saravanan Sekar wrote:
-> Add Clock Management Unit for Actions Semi S700 SoC.
+On Sun, Jul 15, 2018 at 10:35:20PM +0200, Saravanan Sekar wrote:
+> Add REGMAP_MMIO as dependency to avoid undefined
+> reference to regmap symbols.
 > 
-> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+> Fixes: d85d20053e19 ("clk: actions: Add S900 SoC clock support")
 > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> ---
->  arch/arm64/boot/dts/actions/s700.dtsi | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-> index 66dd5309f0a2..4497741d48b2 100644
-> --- a/arch/arm64/boot/dts/actions/s700.dtsi
-> +++ b/arch/arm64/boot/dts/actions/s700.dtsi
-> @@ -4,6 +4,7 @@
->   */
->  
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/actions,s700-cmu.h>
->  
->  / {
->  	compatible = "actions,s700";
-> @@ -44,6 +45,13 @@
->  		};
->  	};
->  
-> +	cmu: clock-controller@e0168000 {
-> +		compatible = "actions,s700-cmu";
-> +		reg = <0x0 0xe0168000 0x0 0x1000>;
-> +		clocks = <&hosc>, <&losc>;
-> +		#clock-cells = <1>;
-> +	};
-> +
 
-CMU node should come under soc, ordered based on the address.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 Thanks,
 Mani
 
->  	reserved-memory {
->  		#address-cells = <2>;
->  		#size-cells = <2>;
-> @@ -87,6 +95,12 @@
->  		#clock-cells = <0>;
->  	};
+> ---
+>  drivers/clk/actions/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/clk/actions/Kconfig b/drivers/clk/actions/Kconfig
+> index 8854adb37847..39491154abbf 100644
+> --- a/drivers/clk/actions/Kconfig
+> +++ b/drivers/clk/actions/Kconfig
+> @@ -1,6 +1,7 @@
+>  config CLK_ACTIONS
+>  	bool "Clock driver for Actions Semi SoCs"
+>  	depends on ARCH_ACTIONS || COMPILE_TEST
+> +	select REGMAP_MMIO
+>  	default ARCH_ACTIONS
 >  
-> +	losc: losc {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <32768>;
-> +		#clock-cells = <0>;
-> +	};
-> +
->  	soc {
->  		compatible = "simple-bus";
->  		#address-cells = <2>;
+>  if CLK_ACTIONS
 > -- 
 > 2.18.0
 > 
