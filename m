@@ -1,192 +1,248 @@
-From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 07/11] soc: mediatek: add MT6765 subdomain support
-Date: Tue, 17 Jul 2018 16:52:28 +0800
-Message-ID: <1531817552-17221-8-git-send-email-mars.cheng@mediatek.com>
-References: <1531817552-17221-1-git-send-email-mars.cheng@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1531817552-17221-1-git-send-email-mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Loda Chou <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Owen Chen <owen.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v3 1/3] ARM: dts: i.MX6: imx6dl-mamoj: Add parallel display support
+Date: Tue, 17 Jul 2018 14:55:24 +0530
+Message-ID: <20180717092526.32215-1-jagan@amarulasolutions.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio maggi <fabio.mauri@bticino.it>, lamiaposta71@gmail.com, Andrea CORTESE <andrea.cortese@bticino.it>, Davide Bonfanti <davide.bonfanti@bticino.it>, Shyam Saini <shyam.saini@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>, Simone CIANNI <simone.cianni@bticino.it>, Raffaele RECALCATI <raffaele.recalcati@bticino.it>
 List-Id: devicetree@vger.kernel.org
 
-add extend data, parent_n for domain-subdomain corresponse.
+This patch adds parallel display support for i.MX6DL Mamoj board
+along with relevant backlight through pwm.
 
-Signed-off-by: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Owen Chen <owen.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+LCD power sequence is added by 'Michael Trimarchi'.
+
+Signed-off-by: Simone CIANNI <simone.cianni@bticino.it>
+Signed-off-by: Raffaele RECALCATI <raffaele.recalcati@bticino.it>
+Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
 ---
- drivers/soc/mediatek/mtk-scpsys-ext.c |  132 ++++++++++++++++++++++++++++++++-
- 1 file changed, 131 insertions(+), 1 deletion(-)
+Changes for v3:
+- update node name lcd_display as display
+- Use proper vlaue with VDOUT_RESET pin 
+- updtae pinctrl_lcd_power iomux label as pinctrl_ipu1_lcdif_pwr
+Changes for v2:
+- collect Fabio r-w-b tag
 
-diff --git a/drivers/soc/mediatek/mtk-scpsys-ext.c b/drivers/soc/mediatek/mtk-scpsys-ext.c
-index 965e64d..e649a06 100644
---- a/drivers/soc/mediatek/mtk-scpsys-ext.c
-+++ b/drivers/soc/mediatek/mtk-scpsys-ext.c
-@@ -13,7 +13,7 @@
- #include <linux/regmap.h>
- #include <linux/soc/mediatek/infracfg.h>
- #include <linux/soc/mediatek/scpsys-ext.h>
--
-+#include <dt-bindings/power/mt6765-power.h>
+ arch/arm/boot/dts/imx6dl-mamoj.dts | 185 +++++++++++++++++++++++++++++
+ 1 file changed, 185 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6dl-mamoj.dts b/arch/arm/boot/dts/imx6dl-mamoj.dts
+index 6b2d29138bed..38e94fd11a3f 100644
+--- a/arch/arm/boot/dts/imx6dl-mamoj.dts
++++ b/arch/arm/boot/dts/imx6dl-mamoj.dts
+@@ -6,11 +6,133 @@
  
- #define MAX_CLKS		10
- #define INFRA			"infracfg"
-@@ -65,6 +65,21 @@ struct bus_mask_ops {
- 			   u32 sta_ofs, u32 mask);
+ /dts-v1/;
+ 
++#include <dt-bindings/gpio/gpio.h>
+ #include "imx6dl.dtsi"
+ 
+ / {
+ 	model = "BTicino i.MX6DL Mamoj board";
+ 	compatible = "bticino,imx6dl-mamoj", "fsl,imx6dl";
++
++	backlight_lcd: backlight-lcd {
++		compatible = "pwm-backlight";
++		pwms = <&pwm3 0 25000>; /* 25000ns -> 40kHz */
++		brightness-levels = <0 4 8 16 32 64 128 160 192 224 255>;
++		default-brightness-level = <7>;
++	};
++
++	display: disp0 {
++		compatible = "fsl,imx-parallel-display";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		interface-pix-fmt = "rgb24";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ipu1_lcdif>;
++		status = "okay";
++
++		port@0 {
++			reg = <0>;
++
++			lcd_display_in: endpoint {
++				remote-endpoint = <&ipu1_di0_disp0>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			lcd_display_out: endpoint {
++				remote-endpoint = <&lcd_panel_in>;
++			};
++		};
++	};
++
++	panel-lcd {
++		compatible = "rocktech,rk070er9427";
++		backlight = <&backlight_lcd>;
++		power-supply = <&reg_lcd_lr>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ipu1_lcdif_pwr>;
++
++		port {
++			lcd_panel_in: endpoint {
++				remote-endpoint = <&lcd_display_out>;
++			};
++		};
++	};
++
++	reg_lcd_3v3: regulator-lcd-dvdd {
++		compatible = "regulator-fixed";
++		regulator-name = "lcd-dvdd";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio3 1 0>;
++		enable-active-high;
++		startup-delay-us = <21000>;
++	};
++
++	reg_lcd_power: regulator-lcd-power {
++		compatible = "regulator-fixed";
++		regulator-name = "lcd-enable";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio3 6 0>;
++		enable-active-high;
++		vin-supply = <&reg_lcd_3v3>;
++	};
++
++	reg_lcd_vgl: regulator-lcd-vgl {
++		compatible = "regulator-fixed";
++		regulator-name = "lcd-vgl";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio2 20 GPIO_ACTIVE_HIGH>;
++		startup-delay-us = <6000>;
++		enable-active-high;
++		vin-supply = <&reg_lcd_power>;
++	};
++
++	reg_lcd_vgh: regulator-lcd-vgh {
++		compatible = "regulator-fixed";
++		regulator-name = "lcd-vgh";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio3 31 GPIO_ACTIVE_HIGH>;
++		startup-delay-us = <6000>;
++		enable-active-high;
++		vin-supply = <&reg_lcd_avdd>;
++	};
++
++	reg_lcd_vcom: regulator-lcd-vcom {
++		compatible = "regulator-fixed";
++		regulator-name = "lcd-vcom";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio4 14 GPIO_ACTIVE_HIGH>;
++		startup-delay-us = <11000>;
++		enable-active-high;
++		vin-supply = <&reg_lcd_vgh>;
++	};
++
++	reg_lcd_lr: regulator-lcd-lr {
++		compatible = "regulator-fixed";
++		regulator-name = "lcd-lr";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio4 15 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		vin-supply = <&reg_lcd_vcom>;
++	};
++
++	reg_lcd_avdd: regulator-lcd-avdd {
++		compatible = "regulator-fixed";
++		regulator-name = "lcd-avdd";
++		regulator-min-microvolt = <10280000>;
++		regulator-max-microvolt = <10280000>;
++		gpio = <&gpio2 13 GPIO_ACTIVE_HIGH>;
++		startup-delay-us = <6000>;
++		enable-active-high;
++		vin-supply = <&reg_lcd_vgl>;
++	};
  };
  
-+static struct scpsys_ext_attr *__get_attr_node(const char *scpd_n)
-+{
-+	struct scpsys_ext_attr *attr;
-+
-+	if (!scpd_n)
-+		return ERR_PTR(-EINVAL);
-+
-+	list_for_each_entry(attr, &ext_attr_map_list, attr_list) {
-+		if (attr->scpd_n && !strcmp(scpd_n, attr->scpd_n))
-+			return attr;
-+	}
-+
-+	return ERR_PTR(-EINVAL);
-+}
-+
- static struct scpsys_ext_attr *__get_attr_parent(const char *parent_n)
- {
- 	struct scpsys_ext_attr *attr;
-@@ -353,8 +368,123 @@ int scpsys_ext_attr_init(const struct scpsys_ext_data *data)
- 	return 0;
- }
- 
-+/*
-+ * MT6765 extend power domain support
-+ */
-+
-+#define INFRA_TOPAXI_PROTECTEN_SET_MT6765	0x02A0
-+#define INFRA_TOPAXI_PROTECTEN_STA1_MT6765	0x0228
-+#define INFRA_TOPAXI_PROTECTEN_CLR_MT6765	0x02A4
-+
-+#define INFRA_TOPAXI_PROTECTEN_1_SET_MT6765	0x02A8
-+#define INFRA_TOPAXI_PROTECTEN_STA1_1_MT6765	0x0258
-+#define INFRA_TOPAXI_PROTECTEN_1_CLR_MT6765	0x02AC
-+
-+#define SMI_COMMON_SMI_CLAMP_MT6765		0x03C0
-+#define SMI_COMMON_SMI_CLAMP_SET_MT6765	0x03C4
-+#define SMI_COMMON_SMI_CLAMP_CLR_MT6765	0x03C8
-+
-+static struct ext_reg_ctrl infra_bus_regs_0_mt6765 = {
-+	.type = IFR_TYPE,
-+	.set_ofs = INFRA_TOPAXI_PROTECTEN_SET_MT6765,
-+	.clr_ofs = INFRA_TOPAXI_PROTECTEN_CLR_MT6765,
-+	.sta_ofs = INFRA_TOPAXI_PROTECTEN_STA1_MT6765,
-+};
-+
-+#define BUS_IFR0_MT6765(_mask) {				\
-+		.regs = &infra_bus_regs_0_mt6765,		\
-+		.mask = _mask,				\
-+		.ops = &bus_mask_set_clr_ctrl,		\
-+	}
-+
-+static struct ext_reg_ctrl infra_bus_regs_1_mt6765 = {
-+	.type = IFR_TYPE,
-+	.set_ofs = INFRA_TOPAXI_PROTECTEN_1_SET_MT6765,
-+	.clr_ofs = INFRA_TOPAXI_PROTECTEN_1_CLR_MT6765,
-+	.sta_ofs = INFRA_TOPAXI_PROTECTEN_STA1_1_MT6765,
-+};
-+
-+#define BUS_IFR1_MT6765(_mask) {				\
-+		.regs = &infra_bus_regs_1_mt6765,		\
-+		.mask = _mask,				\
-+		.ops = &bus_mask_set_clr_ctrl,		\
-+	}
-+
-+static struct ext_reg_ctrl smi_bus_regs_0_mt6765 = {
-+	.type = SMI_TYPE,
-+	.set_ofs = SMI_COMMON_SMI_CLAMP_SET_MT6765,
-+	.clr_ofs = SMI_COMMON_SMI_CLAMP_CLR_MT6765,
-+	.sta_ofs = SMI_COMMON_SMI_CLAMP_MT6765,
-+};
-+
-+#define BUS_SMI0_MT6765(_mask) {				\
-+		.regs = &smi_bus_regs_0_mt6765,		\
-+		.mask = _mask,				\
-+		.ops = &bus_mask_set_clr_ctrl,		\
-+	}
-+
-+static struct scpsys_ext_attr scp_ext_attr_mt6765[] = {
-+	[MT6765_POWER_DOMAIN_ISP] = {
-+		.scpd_n = "isp",
-+		.mask =  {
-+			BUS_IFR1_MT6765(BIT(20)),
-+			BUS_SMI0_MT6765(BIT(2)),
-+		},
-+		.parent_n = "mm",
-+		.bus_ops = &ext_bus_ctrl,
-+		.cg_ops = &ext_cg_ctrl,
-+	},
-+	[MT6765_POWER_DOMAIN_MM] = {
-+		.scpd_n = "mm",
-+		.mask = {
-+			BUS_IFR1_MT6765(BIT(16) | BIT(17)),
-+			BUS_IFR0_MT6765(BIT(10) | BIT(11)),
-+			BUS_IFR0_MT6765(BIT(1) | BIT(2)),
-+		},
-+		.bus_ops = &ext_bus_ctrl,
-+		.cg_ops = &ext_cg_ctrl,
-+	},
-+	[MT6765_POWER_DOMAIN_CONN] = {
-+		.scpd_n = "conn",
-+		.mask = {
-+			BUS_IFR0_MT6765(BIT(13)),
-+			BUS_IFR1_MT6765(BIT(18)),
-+			BUS_IFR0_MT6765(BIT(14) | BIT(16)),
-+		},
-+		.bus_ops = &ext_bus_ctrl,
-+	},
-+	[MT6765_POWER_DOMAIN_MFG] = {
-+		.scpd_n = "mfg",
-+		.mask = {
-+			BUS_IFR0_MT6765(BIT(25)),
-+			BUS_IFR0_MT6765(BIT(21) | BIT(22)),
-+		},
-+		.bus_ops = &ext_bus_ctrl,
-+	},
-+	[MT6765_POWER_DOMAIN_CAM] = {
-+		.scpd_n = "cam",
-+		.mask = {
-+			BUS_IFR1_MT6765(BIT(19) | BIT(21)),
-+			BUS_IFR0_MT6765(BIT(20)),
-+			BUS_SMI0_MT6765(BIT(3)),
-+		},
-+		.parent_n = "mm",
-+		.bus_ops = &ext_bus_ctrl,
-+		.cg_ops = &ext_cg_ctrl,
-+	},
-+};
-+
-+static const struct scpsys_ext_data scp_ext_data_mt6765 = {
-+	.attr = scp_ext_attr_mt6765,
-+	.num_attr = ARRAY_SIZE(scp_ext_attr_mt6765),
-+	.get_attr = __get_attr_node,
-+};
-+
- static const struct of_device_id of_scpsys_ext_match_tbl[] = {
- 	{
-+		.compatible = "mediatek,mt6765-scpsys",
-+		.data = &scp_ext_data_mt6765,
-+	}, {
- 		/* sentinel */
- 	}
+ &fec {
+@@ -147,6 +269,16 @@
+ 	};
  };
+ 
++&ipu1_di0_disp0 {
++	remote-endpoint = <&lcd_display_in>;
++};
++
++&pwm3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm3>;
++	status = "okay";
++};
++
+ &uart3 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart3>;
+@@ -200,6 +332,59 @@
+ 		>;
+ 	};
+ 
++	pinctrl_ipu1_lcdif: pinctrlipu1lcdif { /* parallel port 24-bit */
++		fsl,pins = <
++			MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x10 /* VDOUT_PCLK */
++			MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15       0x10
++			MX6QDL_PAD_DI0_PIN2__IPU1_DI0_PIN02        0x10 /* VDOUT_HSYNC */
++			MX6QDL_PAD_DI0_PIN3__IPU1_DI0_PIN03        0x10 /* VDOUT_VSYNC */
++			MX6QDL_PAD_DI0_PIN4__IPU1_DI0_PIN04	   0x10 /* VDOUT_RESET */
++			MX6QDL_PAD_DISP0_DAT0__IPU1_DISP0_DATA00   0x10
++			MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01   0x10
++			MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02   0x10
++			MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03   0x10
++			MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04   0x10
++			MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05   0x10
++			MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06   0x10
++			MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07   0x10
++			MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08   0x10
++			MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09   0x10
++			MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10  0x10
++			MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11  0x10
++			MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12  0x10
++			MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13  0x10
++			MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14  0x10
++			MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15  0x10
++			MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16  0x10
++			MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17  0x10
++			MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18  0x10
++			MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19  0x10
++			MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20  0x10
++			MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21  0x10
++			MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22  0x10
++			MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23  0x10
++		>;
++	};
++
++	pinctrl_ipu1_lcdif_pwr: ipu1lcdifpwrgrp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_DA1__GPIO3_IO01		0x40013058 /* EN_LCD33V */
++			MX6QDL_PAD_SD4_DAT5__GPIO2_IO13		0x4001b0b0 /* EN_AVDD */
++			MX6QDL_PAD_EIM_D31__GPIO3_IO31		0x40013058 /* ENVGH */
++			MX6QDL_PAD_EIM_A18__GPIO2_IO20		0x40013058 /* ENVGL */
++			MX6QDL_PAD_EIM_DA6__GPIO3_IO06		0x40013058 /* LCD_POWER */
++			MX6QDL_PAD_KEY_COL4__GPIO4_IO14		0x40013058 /* EN_VCOM_LCD */
++			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x40013058 /* LCD_L_R */
++			MX6QDL_PAD_EIM_DA2__GPIO3_IO02		0x40013058 /* LCD_U_D */
++		>;
++	};
++
++	pinctrl_pwm3: pwm3grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD4_DAT1__PWM3_OUT 0x1b0b1
++		>;
++	};
++
+ 	pinctrl_uart3: uart3grp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
 -- 
-1.7.9.5
+2.17.1
