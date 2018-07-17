@@ -1,31 +1,37 @@
-Return-Path: <vkoul@kernel.org>
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v2 0/2] i2c: Add support for Qualcomm Camera Control Interface
-Date: Tue, 17 Jul 2018 18:27:27 +0530
-Message-Id: <20180717125729.23045-1-vkoul@kernel.org>
-To: linux-i2c@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, devicetree@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Return-Path: <SRS0=FQMj=KB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from 107-174-235-236-host.colocrossing.com ([107.174.235.236]:39255
+        "EHLO thedevilsgear.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729728AbeGQUsz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Jul 2018 16:48:55 -0400
+Subject: photoshop work for
+Message-ID: <73aacdec15d5e91e8863c7c4e19dc698@schwinnbikes.com>
+Date: Tue, 17 Jul 2018 10:30:16 +0200
+From: "Ruby" <mijsengi@sanger.net>
+Reply-To: fuyinzanb@sina.com
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+We have got a team of professional to do image editing service for you.
 
-This series adds support for Qualcomm Camera Control Interface (CCI). This
-contains two I2C masters and registers two adapters for each of the masters.
+We have 20 image editors and on daily basis 2000 images can be processed.
 
-Changes in v2:
- - Add support for two adapters
+If you want to check our quality of work please send us a photo with
+instruction and we will work on it.
 
-Todor Tomov (2):
-  dt-bindings: i2c: Add binding document for Qualcomm CCI
-  i2c: Add Qualcomm Camera Control Interface driver
+Our Services:
+Photo cut out, masking, clipping path
+Color, brightness and contrast correction
+Beauty, Model retouching, skin retouching
+Image cropping and resizing
+Correcting the shape and size
 
- .../devicetree/bindings/i2c/i2c-qcom-cci.txt       |  46 ++
- drivers/i2c/busses/Kconfig                         |  10 +
- drivers/i2c/busses/Makefile                        |   1 +
- drivers/i2c/busses/i2c-qcom-cci.c                  | 793 +++++++++++++++++++++
- 4 files changed, 850 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
- create mode 100644 drivers/i2c/busses/i2c-qcom-cci.c
+We do unlimited revisions until you are satisfied with the work.
 
--- 
-2.14.4
+Thanks,
+Ruby Young
+
