@@ -1,36 +1,65 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH 1/1] irqchip/stm32: add exti0 translation for stm32mp1
-Date: Tue, 17 Jul 2018 14:14:27 +0200
-Message-ID: <1531829667-22928-1-git-send-email-ludovic.Barre@st.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 3/5] i2c: designware: add MSCC Ocelot support
+Date: Tue, 17 Jul 2018 15:19:08 +0300
+Message-ID: <d64fc362be63bb8540447f7df2c232eedd696edb.camel@linux.intel.com>
+References: <20180717114837.21839-1-alexandre.belloni@bootlin.com>
+         <20180717114837.21839-4-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180717114837.21839-4-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Hogan <jhogan@kernel.org>
+Cc: Paul Burton <paul.burton@mips.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+On Tue, 2018-07-17 at 13:48 +0200, Alexandre Belloni wrote:
+> The Microsemi Ocelot I2C controller is a designware IP. It also has a
+> second set of registers to allow tweaking SDA hold time and spike
+> filtering.
 
-This patch fixes a datasheet issue, in the draft version the "exti0"
-was not connected whereas is it.
+Can you elaborate a bit?
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- drivers/irqchip/irq-stm32-exti.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
-index 3a7e890..3df527f 100644
---- a/drivers/irqchip/irq-stm32-exti.c
-+++ b/drivers/irqchip/irq-stm32-exti.c
-@@ -159,6 +159,7 @@ static const struct stm32_exti_bank *stm32mp1_exti_banks[] = {
- };
+Are they platform specific? Are they shadow registers? Are they
+something else? Datasheet link / excerpt would be also good to read.
  
- static const struct stm32_desc_irq stm32mp1_desc_irq[] = {
-+	{ .exti = 0, .irq_parent = 6 },
- 	{ .exti = 1, .irq_parent = 7 },
- 	{ .exti = 2, .irq_parent = 8 },
- 	{ .exti = 3, .irq_parent = 9 },
+>  Optional properties :
+> + - reg : for "mscc,ocelot-i2c", a second register set to configure
+> the SDA hold
+> +   time, named ICPU_CFG:TWI_DELAY in the datasheet.
+> +
+
+Hmm... Is this registers unique to the SoC in question? Is address of
+them fixed or may be configured on RTL level?
+
+If former is right, why do we need a separate property?
+
+>  
+> +#define MSCC_ICPU_CFG_TWI_DELAY		0x0
+> +#define MSCC_ICPU_CFG_TWI_DELAY_ENABLE	BIT(0)
+> +#define MSCC_ICPU_CFG_TWI_SPIKE_FILTER	0x4
+> +
+> +static int mscc_twi_set_sda_hold_time(struct dw_i2c_dev *dev)
+> +{
+> +	writel((dev->sda_hold_time << 1) |
+> MSCC_ICPU_CFG_TWI_DELAY_ENABLE,
+> +	       dev->base_ext + MSCC_ICPU_CFG_TWI_DELAY);
+> +
+> +	return 0;
+> +}
+
+Hmm... And does how this make native DesignWare IP's registers obsolete?
+
+
+> +	if (of_device_is_compatible(pdev->dev.of_node, "mscc,ocelot-
+> i2c"))
+
+Can't you just ask for this unconditionally? Why not?
+(It seems I might have known why not, but can we use named resource
+instead in case this is not so SoC specific)
+
+
 -- 
-2.7.4
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
