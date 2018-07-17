@@ -1,58 +1,96 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v4 2/3] arm64: dts: qcom: pm8998: Add spmi-temp-alarm node
-Date: Tue, 17 Jul 2018 14:11:28 -0700
-Message-ID: <20180717211128.GB129942@google.com>
-References: <20180717210815.245639-1-mka@chromium.org>
- <20180717210815.245639-2-mka@chromium.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 1/5] spi: dw: fix possible race condition
+Date: Wed, 18 Jul 2018 00:30:11 +0300
+Message-ID: <CAHp75Vc4SrMXznc6PSrO2Lfrc3gspu_g1QYjuFDWT9-J=C+bjw@mail.gmail.com>
+References: <20180717142314.32337-1-alexandre.belloni@bootlin.com> <20180717142314.32337-2-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180717210815.245639-2-mka@chromium.org>
+In-Reply-To: <20180717142314.32337-2-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: linux-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, David Collins <collinsd@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Mark Brown <broonie@kernel.org>, James Hogan <jhogan@kernel.org>, Paul Burton <paul.burton@mips.com>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 17, 2018 at 02:08:14PM -0700, Matthias Kaehlcke wrote:
-> This adds the spmi-temp-alarm node to pm8998 based on the examples in the
-> bindings.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+On Tue, Jul 17, 2018 at 5:23 PM, Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+> It is possible to get an interrupt as soon as it is requested.  dw_spi_irq
+> does spi_controller_get_devdata(master) and expects it to be different than
+> NULL. However, spi_controller_set_devdata() is called after request_irq(),
+> resulting in the following crash:
+>
+> CPU 0 Unable to handle kernel paging request at virtual address 00000030, epc == 8058e09c, ra == 8018ff90
+> [...]
+> Call Trace:
+> [<8058e09c>] dw_spi_irq+0x8/0x64
+> [<8018ff90>] __handle_irq_event_percpu+0x70/0x1d4
+> [<80190128>] handle_irq_event_percpu+0x34/0x8c
+> [<801901c4>] handle_irq_event+0x44/0x80
+> [<801951a8>] handle_level_irq+0xdc/0x194
+> [<8018f580>] generic_handle_irq+0x38/0x50
+> [<804c6924>] ocelot_irq_handler+0x104/0x1c0
+> [<8018f580>] generic_handle_irq+0x38/0x50
+> [<8075c1d8>] do_IRQ+0x18/0x24
+> [<804c4714>] plat_irq_dispatch+0xa4/0x150
+> [<80106ba8>] except_vec_vi_end+0xb8/0xc4
+> [<8075ba5c>] _raw_spin_unlock_irqrestore+0x14/0x20
+> [<801926c8>] __setup_irq+0x53c/0x8e0
+> [<80192e28>] request_threaded_irq+0xf4/0x1e8
+> [<8058ed18>] dw_spi_add_host+0x264/0x2c4
+> [<8058f2ec>] dw_spi_mmio_probe+0x258/0x27c
+> [<8051f4a4>] platform_drv_probe+0x58/0xbc
+> [<8051daa8>] driver_probe_device+0x308/0x40c
+> [<8051dc9c>] __driver_attach+0xf0/0xf8
+> [<8051b698>] bus_for_each_dev+0x78/0xcc
+> [<8051c2c0>] bus_add_driver+0x1b4/0x228
+> [<8051e840>] driver_register+0x84/0x154
+> [<801001d8>] do_one_initcall+0x54/0x1ac
+> [<80880e90>] kernel_init_freeable+0x1ec/0x2ac
+> [<80755310>] kernel_init+0x14/0x110
+> [<80106698>] ret_from_kernel_thread+0x14/0x1c
+> Code: 00000000  8ca40050  8c820008 <8c420030> 0000000f  3042003f  10400007  00000000  8ca20230
+>
 
-I should have added:
+Good catch!
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 > ---
-> Changes in v4:
-> - none
-> 
-> Changes in v3:
-> - changed node name from 'qcom,temp-alarm@2400' to 'temp-alarm@2400'
-> - removed controller register length value from 'reg'
-> 
-> Changes in v2:
-> - none
-> ---
->  arch/arm64/boot/dts/qcom/pm8998.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
-> index 92bed1e7d4bb..7eea94701b23 100644
-> --- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
-> @@ -11,6 +11,13 @@
->  		#address-cells = <1>;
->  		#size-cells = <0>;
->  
-> +		pm8998_temp: temp-alarm@2400 {
-> +			compatible = "qcom,spmi-temp-alarm";
-> +			reg = <0x2400>;
-> +			interrupts = <0x0 0x24 0x0 IRQ_TYPE_EDGE_RISING>;
-> +			#thermal-sensor-cells = <0>;
-> +		};
+>  drivers/spi/spi-dw.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+> index f693bfe95ab9..a087464efdd7 100644
+> --- a/drivers/spi/spi-dw.c
+> +++ b/drivers/spi/spi-dw.c
+> @@ -485,6 +485,8 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+>         dws->dma_inited = 0;
+>         dws->dma_addr = (dma_addr_t)(dws->paddr + DW_SPI_DR);
+>
+> +       spi_controller_set_devdata(master, dws);
 > +
->  		pm8998_gpio: gpios@c000 {
->  			compatible = "qcom,pm8998-gpio", "qcom,spmi-gpio";
->  			reg = <0xc000>;
+>         ret = request_irq(dws->irq, dw_spi_irq, IRQF_SHARED, dev_name(dev),
+>                           master);
+>         if (ret < 0) {
+> @@ -518,7 +520,6 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+>                 }
+>         }
+>
+> -       spi_controller_set_devdata(master, dws);
+>         ret = devm_spi_register_controller(dev, master);
+>         if (ret) {
+>                 dev_err(&master->dev, "problem registering spi master\n");
+> --
+> 2.18.0
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
