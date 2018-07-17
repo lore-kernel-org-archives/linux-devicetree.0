@@ -1,53 +1,36 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 00/15] ASoC: meson: add axg audio subsystem support
-Date: Tue, 17 Jul 2018 17:38:47 +0200
-Message-ID: <1531841927.26720.18.camel@baylibre.com>
-References: <20180717153643.8806-1-jbrunet@baylibre.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 0/6] ARM64: dts: meson-axg: updates
+Date: Tue, 17 Jul 2018 10:41:35 -0500
+Message-ID: <7hzhypna34.fsf@baylibre.com>
+References: <20180716101151.31109-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180717153643.8806-1-jbrunet@baylibre.com>
+In-Reply-To: <20180716101151.31109-1-jbrunet@baylibre.com> (Jerome Brunet's
+        message of "Mon, 16 Jul 2018 12:11:45 +0200")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-07-17 at 17:36 +0200, Jerome Brunet wrote:
-> This patchset adds support for the audio subsystem found on Amlogic's
-> axg SoC family. The first SoC of this family is the A113D/X targeted
-> at smart speaker application. The G12a SoC family, Amlogic next-gen
-> STB chipset, will reuse this audio subsystem with a few changes.
-> 
-> This patchset implements the DPCM machine driver and the different
-> components it made of. Several components are still missing, such
-> spdif input and pdm, and will submitted later on.
-> 
-> The fancier part of this patchset is probably around the TDM. Properly
-> modeling the SoC architecture and its capatilities made things a little
-> more complex than usual (details in the related commit descriptions)
-> 
-> If necessary, this patchset could broken into smaller series. For the
-> intial submission, I wanted to give a global view of the subsystem.
-> Hopefully, it will make it a bit easier to understand.
-> 
-> Jerome Brunet (15):
->   ASoC: meson: add axg fifos DT binding documentation
->   ASoC: meson: add axg fifo base driver
->   ASoC: meson: add axg frddr driver
->   ASoC: meson: add axg toddr driver
->   ASoC: meson: add axg spdif output DT bindings documentation
->   ASoC: meson: add axg spdif output
->   ASoC: meson: add axg tdm formatters DT bindings documentation
->   ASoC: meson: add axg tdm interface DT bindings documentation
->   ASoC: meson: add tdm formatter base driver
->   ASoC: meson: add tdm interface driver
->   ASoC: meson: add tdm output driver
->   ASoC: meson: add tdm input driver
->   ASoC: export snd_soc_of_get_slot_mask
->   ASoC: meson: add axg sound card DT bindings documentation
->   ASoC: meson: add axg sound card support
-> 
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-Really sorry for the noise, messed up with format-patch.
-Please ignore this series. I will resend it
+> This patchset groups several updates targeted on amlogic's AXG
+> device tree. Patch 1, 2 and 6 had been posted previously but I thought
+> it would be more convenient for Kevin to get them as a single series.
+>
+> Jerome Brunet (6):
+>   ARM64: dts: meson-axg: remove vddio_ao18 from SoC dtsi
+>   ARM64: dts: meson-axg: add adc buttons the S400
+>   ARM64: dts: meson-axg: remove spdif out from gpio a7
+>   ARM64: dts: meson-axg: add spdif input pins
+>   ARM64: dts: meson-axg: add pdm pins
+
+Applied to v4.19/dt64, queued for the first DT64 pull to arm-soc.
+
+>   ARM64: dts: meson-axg: add the audio clock controller
+
+I'll queue this for a follow-up pull with the dependency tag from the
+clock tree.
+
+Kevin
