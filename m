@@ -1,91 +1,49 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ARM: dts: exynos5: add missing interrupts for pwm node
-Date: Wed, 18 Jul 2018 13:55:26 +0200
-Message-ID: <CAJKOXPcwjNoZh+sOooCsUECXVAVraMmj2yHfrg22m=3mbQtVnQ@mail.gmail.com>
-References: <1531906490-1739-1-git-send-email-linux.amoon@gmail.com>
- <CAJKOXPdeRvt4YG9Doziq-_oQ9DeUffvTB53OOaq-q2UpkBGpgQ@mail.gmail.com>
- <CANAwSgS8z-TQ=nK7dy5YeA8QJV+7cCctZKJT7qn8macQQkyKqg@mail.gmail.com>
- <CAJKOXPez6cuLyrxBkAKtyx2xiqG7VLWFCBYXkBX_537A=bDpsg@mail.gmail.com> <CANAwSgSaU1kTW3j0OZGwmOWo=p2uHFP8toLUe9FHYEkCJsuLFg@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pfuze100: add optional disable
+ switch-regulators binding
+Date: Wed, 18 Jul 2018 13:09:40 +0100
+Message-ID: <20180718120940.GJ5700@sirena.org.uk>
+References: <20180713125002.24331-1-m.felsch@pengutronix.de>
+ <20180713125002.24331-2-m.felsch@pengutronix.de>
+ <20180713150314.GD16228@sirena.org.uk>
+ <20180716072516.bvsp54yoeqp3ih6s@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cDtQGJ/EJIRf/Cpq"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgSaU1kTW3j0OZGwmOWo=p2uHFP8toLUe9FHYEkCJsuLFg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180716072516.bvsp54yoeqp3ih6s@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, fabio.estevam@nxp.com, Anson.Huang@nxp.com, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 18 July 2018 at 12:50, Anand Moon <linux.amoon@gmail.com> wrote:
-> Hi Krzysztof,
->
-> On 18 July 2018 at 16:03, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->> On 18 July 2018 at 12:30, Anand Moon <linux.amoon@gmail.com> wrote:
->>> Hi
->>>
->>> On 18 July 2018 at 15:27, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>>> On 18 July 2018 at 11:34, Anand Moon <linux.amoon@gmail.com> wrote:
->>>>> Add missing GIC interrupts property for pwm nodes.
->>>>>
->>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->>>>> ---
->>>>>  arch/arm/boot/dts/exynos5.dtsi | 5 +++++
->>>>>  1 file changed, 5 insertions(+)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
->>>>> index 5d2f0a0..9406108 100644
->>>>> --- a/arch/arm/boot/dts/exynos5.dtsi
->>>>> +++ b/arch/arm/boot/dts/exynos5.dtsi
->>>>> @@ -169,6 +169,11 @@
->>>>>                 pwm: pwm@12dd0000 {
->>>>>                         compatible = "samsung,exynos4210-pwm";
->>>>>                         reg = <0x12DD0000 0x100>;
->>>>> +                       interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
->>>>> +                                  <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
->>>>
->>>> Indentation here looks weird - spaces used after tabs but not aligned
->>>> with first entry. Please indent it properly and align it.
->>>>
->>>> Best regards,
->>>> Krzysztof
->>>
->>> I ram checkpatch before I submit this patch it shown no error.
->>>
->>> # scripts/checkpatch.pl --no-signoff -q
->>> 0001-ARM-dts-exynos5-add-missing-interrupts-for-pwm-node.patch
->>
->> That's good, thank you. Still when I look at it in patchwork the
->> indentation is wrong:
->> https://patchwork.kernel.org/patch/10531753/
->> However it can be patchwork's fault, so are you sure that this is
->> properly indented and aligned?
->>
->> BR,
->> Krzysztof
->
-> I prefer vim and I use following plugin
->
-> https://github.com/vivien/vim-linux-coding-style
->
-> root@odroidxu4:/usr/src/odroidxu4-4kr-devel# wget -nv
-> https://patchwork.kernel.org/patch/10531753/mbox/ -O pwm.patch
-> 2018-07-18 10:48:09
-> URL:https://patchwork.kernel.org/patch/10531753/mbox/ [1460] ->
-> "pwm.patch" [1]
-> root@odroidxu4:/usr/src/odroidxu4-4kr-devel#
-> root@odroidxu4:/usr/src/odroidxu4-4kr-devel# scripts/checkpatch.pl
-> --no-signoff -q pwm.patch
-> root@odroidxu4:/usr/src/odroidxu4-4kr-devel#
->
-> Is their any other way to test checkpatch please let me know.
 
-This is trivial thing and should be fixed after my first reply. But
-clearly we need to waste some more time... so I applied the patch to
-check whether patchwork shows it properly or not... and it is the
-same. Indentation is wrong.
+--cDtQGJ/EJIRf/Cpq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Please fix the weird alignment. You have existing examples in the DTSI
-file (rtc node) how to do it. Current indentation is clearly wrong -
-why using spaces after tab if this is not aligned properly?
+On Mon, Jul 16, 2018 at 09:25:16AM +0200, Marco Felsch wrote:
 
-Best regards,
-Krzysztof
+> You're right, it sounds better. So the new binding will be
+> fsl,pfuze-support-disable-sw. Are there any other comments about the
+> implementation?
+
+Not AFAIR.
+
+--cDtQGJ/EJIRf/Cpq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltPLgQACgkQJNaLcl1U
+h9CNGAf+KyZTRIbtIEJpwP6fpCPerRwJg+kb+qUhwJrfZAl1u1WNNyH0V0wiBxkX
+40DJWlE6BHQ2NFa8myq2UY79lfaVaCRiKBI66mBe6dcRThiBnJemhuaDurdlb72Z
+rgSQHyBqSjpIX9rv086giYGvPohpBl/Q4jptGcU5RwGszgH3gq5ZCcLphAGDKQht
+XRK35Bi/dRHVxd5+QaLLhgNhf6ZI73zblN+5ZAD9TPtP1hDhcGERun9ivvcwzq4+
+8UQl5cj0b9/ALsnUe77NLV/jy9Sq1H6TjbH64IFHyLXJFJJkDhdfO31N2turugX8
+NX2q/58oPXtg1/Ak0s51nkipaLUyeA==
+=7bBP
+-----END PGP SIGNATURE-----
+
+--cDtQGJ/EJIRf/Cpq--
