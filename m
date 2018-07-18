@@ -1,107 +1,135 @@
-From: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
-Subject: [PATCH v1 02/04] dt-bindings: clock: Add Clock Management Unit for
- Actions Semi S500 SoC
-Date: Wed, 18 Jul 2018 12:43:31 -0300
-Message-ID: <CADHB5bAD6A6U1Gk0kzVse1n-g2ONQtoMoOYxpMwGZuExvqsYKA@mail.gmail.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v4 0/6] Add Actions Semiconductor Owl S900 I2C support
+Date: Wed, 18 Jul 2018 21:20:00 +0530
+Message-ID: <20180718155000.GA3061@Mani-XPS-13-9360>
+References: <20180701172305.15663-1-manivannan.sadhasivam@linaro.org>
+ <20180711024502.GA4739@Mani-XPS-13-9360>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180711024502.GA4739@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, linux@armlinux.org.uk, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?Q?Guilherme_G=2E_Sim=C3=B5es?= <guilherme.simoes@lsitec.org.br>, Jon maddog Hall <jon.maddog.hall@gmail.com>, mkzuffo@lsi.usp.br, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, sboyd@kernel.org, mark.rutland@arm.com, linux@cubietech.com, support@cubietech.com, catalin.marinas@arm.com, Michael Turquette <mturquette@baylibre.com>, will.deacon@arm.com, thomas liau <thomas.liau@actions-semi.com>, darren@cubietech.com, robh+dt@kernel.org, jeff.chen@actions-semi.com, pn@denx.de, mp-cs@actions-semi.com, Laisa Costa - LSI-TEC <laisa.costa@lsitec.org.br>
+To: wsa@the-dreams.de, andy.shevchenko@gmail.com, peda@axentia.se
+Cc: linus.walleij@linaro.org, linux-i2c@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, afaerber@suse.de
 List-Id: devicetree@vger.kernel.org
 
-Add Clock Management Unit for Actions Semi S500 SoC. Dt-Bindings
-constants added.
-Tested on a Lemaker Guitar board.
+On Wed, Jul 11, 2018 at 08:15:02AM +0530, Manivannan Sadhasivam wrote:
+> On Sun, Jul 01, 2018 at 10:52:59PM +0530, Manivannan Sadhasivam wrote:
+> > This patchset adds I2C controller support for Actions Semiconductor S900 SoC.
+> > This driver has been structured in a way such that there will be only
+> > one controller driver for the whole Owl family series (S500, S700 and
+> > S900 SoCs).
+> > 
+> > There are 6 I2C controllers with separate memory mapped register space.
+> > The I2C controller can handle atmost two messages concatenated by a
+> > repeated start via its internal address feature. Hence the driver
+> > uses this feature for messages of length greater than 1. In those cases,
+> > the first message of the combined message should be a `write` with maximum
+> > message length 6 and the second message's maximum length should be 240 bytes.
+> > 
+> > As far as the bus speed is concerned, this driver only supports
+> > Standard (100KHz) and High speed (400KHz) for now.
+> > 
+> > The pinctrl definitions are only available for I2C0, I2C1 and I2C2.
+> > With the mux option available only for I2C0.
+> > 
+> > For Bubblegum-96 board utilizing the S900 SoC, only I2C1 and I2C2 which
+> > are exposed on the Low speed expansion connector are enabled.
+> > 
+> > This series depends on the pinctrl patch [1] is still not merged by the
+> > platform maintainer Andreas but it has been reviewed by the pinctrl maintainer
+> > Linus Walleij. For the reference, I have queued up all reviewed dts patches
+> > in my tree [2] from which Andreas is picking them for 4.19.
+> > 
+> > For this series, since the dts patches will go through the ARM SoC tree,
+> > Andreas will pick it up once it is reviewed.
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > [1] https://patchwork.kernel.org/patch/10322937/
+> > [2] https://git.linaro.org/people/manivannan.sadhasivam/linux.git/log/?h=s900-for-next
+> > 
+> 
+> Hi Andy, Peter,
+> 
+> Just a gentle ping on this v4!
+> 
+> Thanks,
+> Mani
+>
 
-File(s) created: "/include/dt-bindings/clock/actions,s500-cmu.h"
+Hi,
 
-Signed-off-by: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
+Any update on this patchset?
 
-diff -uprN -X vanilla/Documentation/dontdiff
-vanilla/include/dt-bindings/clock/actions,s500-cmu.h
-linux/include/dt-bindings/clock/actions,s500-cmu.h
---- vanilla/include/dt-bindings/clock/actions,s500-cmu.h    1969-12-31
-21:00:00.000000000 -0300
-+++ linux/include/dt-bindings/clock/actions,s500-cmu.h    2018-07-18
-12:42:13.002448774 -0300
-@@ -0,0 +1,78 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// Device Tree binding constants for Actions Semi S500 Clock Management Unit
-+//
-+// Copyright (c) 2014 Actions Semi Inc.
-+// Copyright (c) 2018 Linaro Ltd.
-+// Copyright (c) 2018 LSI-TEC - Caninos Loucos
-+
-+#ifndef __DT_BINDINGS_CLOCK_S500_CMU_H
-+#define __DT_BINDINGS_CLOCK_S500_CMU_H
-+
-+#define CLK_NONE            0
-+
-+/* fixed rate clocks */
-+#define CLK_LOSC            1
-+#define CLK_HOSC            2
-+
-+/* pll clocks */
-+#define CLK_CORE_PLL        3
-+#define CLK_DEV_PLL            4
-+#define CLK_DDR_PLL            5
-+#define CLK_NAND_PLL        6
-+#define CLK_DISPLAY_PLL        7
-+#define CLK_ETHERNET_PLL    8
-+#define CLK_AUDIO_PLL        9
-+
-+/* system clock */
-+#define CLK_DEV                10
-+#define CLK_H                11
-+#define CLK_AHBPREDIV        12
-+#define CLK_AHB                13
-+#define CLK_DE                14
-+#define CLK_BISP            15
-+#define CLK_VCE                16
-+#define CLK_VDE                17
-+
-+/* peripheral device clock */
-+#define CLK_TIMER            18
-+#define CLK_I2C0            19
-+#define CLK_I2C1            20
-+#define CLK_I2C2            21
-+#define CLK_I2C3            22
-+#define CLK_PWM0            23
-+#define CLK_PWM1            24
-+#define CLK_PWM2            25
-+#define CLK_PWM3            26
-+#define CLK_PWM4            27
-+#define CLK_PWM5            28
-+#define CLK_SD0                29
-+#define CLK_SD1                30
-+#define CLK_SD2                31
-+#define CLK_SENSOR0            32
-+#define CLK_SENSOR1            33
-+#define CLK_SPI0            34
-+#define CLK_SPI1            35
-+#define CLK_SPI2            36
-+#define CLK_SPI3            37
-+#define CLK_UART0            38
-+#define CLK_UART1            39
-+#define CLK_UART2            40
-+#define CLK_UART3            41
-+#define CLK_UART4            42
-+#define CLK_UART5            43
-+#define CLK_UART6            44
-+#define CLK_DE1                45
-+#define CLK_DE2                46
-+#define CLK_I2SRX            47
-+#define CLK_I2STX            48
-+#define CLK_HDMI_AUDIO        49
-+#define CLK_HDMI            50
-+#define CLK_SPDIF            51
-+#define CLK_NAND            52
-+#define CLK_ECC                53
-+#define CLK_RMII_REF        54
-+
-+#define CLK_NR_CLKS            (CLK_RMII_REF + 1)
-+
-+#endif /* __DT_BINDINGS_CLOCK_S500_CMU_H */
+Thanks,
+Mani
+
+> > Changes in v4:
+> > 
+> > As per Andy and Peter review:
+> > 
+> > * Used spinlock for accessing most of the register access (only parts
+> >   involved sleep/long-busy-wait has been excluded)
+> > * Removed returning 0 and added -ENXIO if the msg_ptr not equals to
+> >   message length
+> > * Added DIV_ROUND_UP for setting clock frequency
+> > * Changed one non-atomic mdelay instance to usleep_range
+> > * Moved pinctrl definition patch before dts patch
+> > * Fixed the driver to support only 100KHz and 400KHz frequencies
+> > 
+> > Changes in v3:
+> > 
+> > As per Peter, Andy and Andreas review:
+> > 
+> > * Removed owl_i2c_reset function from interrupt handler since it
+> >   involves the use of delays.
+> > * Fixed the return path in owl_i2c_master_xfer and added a note
+> > * Changed "base" parameter to "reg" in owl_i2c_update_reg for better
+> >   understandability
+> > * Ordered the includes in alphabetical order
+> > * Small changes to defines and added comma at the end of struct members
+> > * Removed rendundant 0 assignment in owl_i2c_master_xfer
+> > * Changed all OWL naming convention to Owl and also changed Actions Semi
+> >   naming to Actions Semiconductor
+> > 
+> > Changes in v2:
+> > 
+> > As per Andy's review:
+> > * Modified infinite loops to fixed number of retries
+> > * Used i2c_8bit_addr_from_msg for constructing the slave address
+> > * Removed unnecessary parenthesis around defines
+> > * Modified certain dev_warn to dev_dbg
+> > * Modified the error handling to more generic pattern
+> > 
+> > * Fixed the return value in owl_i2c_master_xfer
+> > * Added MAINTAINERS patch for I2C driver and its binding
+> > 
+> > Manivannan Sadhasivam (6):
+> >   dt-bindings: i2c: Add binding for Actions Semiconductor Owl I2C
+> >     controller
+> >   arm64: dts: actions: Add pinctrl definition for S900 I2C controller
+> >   arm64: dts: actions: Add Actions Semiconductor S900 I2C controller
+> >     nodes
+> >   arm64: dts: actions: Enable I2C1 and I2C2 in Bubblegum-96 board
+> >   i2c: Add Actions Semiconductor Owl family S900 I2C driver
+> >   MAINTAINERS: Add entry for Actions Semiconductor Owl I2C driver
+> > 
+> >  .../devicetree/bindings/i2c/i2c-owl.txt       |  27 +
+> >  MAINTAINERS                                   |   2 +
+> >  .../dts/actions/s900-bubblegum-96-pins.dtsi   |  29 +
+> >  .../boot/dts/actions/s900-bubblegum-96.dts    |  11 +
+> >  arch/arm64/boot/dts/actions/s900.dtsi         |  60 +++
+> >  drivers/i2c/busses/Kconfig                    |   7 +
+> >  drivers/i2c/busses/Makefile                   |   1 +
+> >  drivers/i2c/busses/i2c-owl.c                  | 504 ++++++++++++++++++
+> >  8 files changed, 641 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-owl.txt
+> >  create mode 100644 arch/arm64/boot/dts/actions/s900-bubblegum-96-pins.dtsi
+> >  create mode 100644 drivers/i2c/busses/i2c-owl.c
+> > 
+> > -- 
+> > 2.17.1
+> > 
