@@ -1,13 +1,11 @@
 From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: [PATCH 2/4] rtc: ds1307: support m41t11 variant
-Date: Wed, 18 Jul 2018 10:41:15 +0200
-Message-ID: <20180718084118.79540-1-giulio.benetti@micronovasrl.com>
-References: <20180716213302.GA2751@piout.net>
+Subject: [PATCH v7 2/4] rtc: ds1307: support m41t11 variant
+Date: Wed, 18 Jul 2018 10:49:13 +0200
+Message-ID: <20180718084916.79837-1-giulio.benetti@micronovasrl.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180716213302.GA2751@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK RTC SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>, Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK RTC SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
@@ -18,6 +16,8 @@ Add it to driver taking into account NVRAM section.
 
 Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
 ---
+V6 => V7
+* already applied
  .../devicetree/bindings/rtc/rtc-ds1307.txt         |  1 +
  drivers/rtc/rtc-ds1307.c                           | 14 ++++++++++++++
  2 files changed, 15 insertions(+)
