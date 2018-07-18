@@ -1,7 +1,7 @@
 From: Camelia Groza <camelia.groza@nxp.com>
-Subject: [PATCH 1/3] powerpc/configs/dpaa: enable the Cortina PHY driver
-Date: Wed, 18 Jul 2018 14:46:49 +0300
-Message-ID: <d372017b89bd1c5da5d9d3e7e6b3ddce69158181.1531903211.git.camelia.groza@nxp.com>
+Subject: [PATCH 3/3] powerpc/dts/fsl: t2080rdb: use the Cortina PHY driver compatible
+Date: Wed, 18 Jul 2018 14:46:51 +0300
+Message-ID: <1d1d60a461700d02fbb319e0cbdd134c5a107782.1531903211.git.camelia.groza@nxp.com>
 References: <cover.1531903211.git.camelia.groza@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1531903211.git.camelia.groza@nxp.com>
@@ -12,22 +12,32 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, benh@kernel.crashing.org
 Cc: paulus@samba.org, mpe@ellerman.id.au, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Camelia Groza <camelia.groza@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Cortina PHYs are present on T4240RDB and T2080RDB. Enable the driver
-by default.
+The Cortina PHY requires the use of the dedicated Cortina PHY driver
+instead of the generic one.
 
 Signed-off-by: Camelia Groza <camelia.groza@nxp.com>
 ---
- arch/powerpc/configs/dpaa.config | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/boot/dts/fsl/t2080rdb.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/configs/dpaa.config b/arch/powerpc/configs/dpaa.config
-index 2fe76f5..4ffacaf 100644
---- a/arch/powerpc/configs/dpaa.config
-+++ b/arch/powerpc/configs/dpaa.config
-@@ -2,3 +2,4 @@ CONFIG_FSL_DPAA=y
- CONFIG_FSL_PAMU=y
- CONFIG_FSL_FMAN=y
- CONFIG_FSL_DPAA_ETH=y
-+CONFIG_CORTINA_PHY=y
+diff --git a/arch/powerpc/boot/dts/fsl/t2080rdb.dts b/arch/powerpc/boot/dts/fsl/t2080rdb.dts
+index 836e4c9..55c0210 100644
+--- a/arch/powerpc/boot/dts/fsl/t2080rdb.dts
++++ b/arch/powerpc/boot/dts/fsl/t2080rdb.dts
+@@ -97,12 +97,12 @@
+ 
+ 		mdio@fd000 {
+ 			xg_cs4315_phy1: ethernet-phy@c {
+-				compatible = "ethernet-phy-ieee802.3-c45";
++				compatible = "ethernet-phy-id13e5.1002";
+ 				reg = <0xc>;
+ 			};
+ 
+ 			xg_cs4315_phy2: ethernet-phy@d {
+-				compatible = "ethernet-phy-ieee802.3-c45";
++				compatible = "ethernet-phy-id13e5.1002";
+ 				reg = <0xd>;
+ 			};
+ 
 -- 
 1.9.1
