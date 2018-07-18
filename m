@@ -1,17 +1,13 @@
-Return-Path: <SRS0=w+aW=KC=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr700077.outbound.protection.outlook.com ([40.107.70.77]:29312
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725909AbeGRGZa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Jul 2018 02:25:30 -0400
+Return-Path: <SRS0=O5xD=KC=xilinx.com=shubhraj@kernel.org>
 From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: [PATCHv4 4/4] dt-bindings: serial: Add binding for uartlite
-Date: Wed, 18 Jul 2018 11:18:59 +0530
-Message-ID: <1531892939-14419-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+Subject: [PATCHv3 4/4] dt-bindings: serial: Add binding for uartlite
+Date: Wed, 18 Jul 2018 11:11:02 +0530
+Message-ID: <1531892462-11085-4-git-send-email-shubhrajyoti.datta@xilinx.com>
+In-Reply-To: <1531892462-11085-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+References: <1531892462-11085-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
-Sender: devicetree-owner@vger.kernel.org
 To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 Cc: shubhrajyoti.datta@gmail.com, robh+dt@kernel.org, gregkh@linuxfoundation.org, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
