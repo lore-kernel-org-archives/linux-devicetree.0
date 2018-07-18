@@ -1,122 +1,82 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH 3/3] ARM: dts: cubox: add LCD controller and TDA998x
- configuration
-Date: Wed, 18 Jul 2018 16:53:04 +0200
-Message-ID: <87601ca94f.fsf@bootlin.com>
-References: <20180710102344.GH17271@n2100.armlinux.org.uk>
- <E1fcpom-0003ZI-FL@rmk-PC.armlinux.org.uk>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pfuze100: add optional disable
+ switch-regulators binding
+Date: Wed, 18 Jul 2018 16:58:58 +0200
+Message-ID: <20180718145858.7xsyweyohiazrkl2@pengutronix.de>
+References: <20180713125002.24331-1-m.felsch@pengutronix.de>
+ <20180713125002.24331-2-m.felsch@pengutronix.de>
+ <20180716175535.GA10835@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <E1fcpom-0003ZI-FL@rmk-PC.armlinux.org.uk> (Russell King's
- message of "Tue, 10 Jul 2018 11:24:24 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King <rmk+kernel@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180716175535.GA10835@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, mark.rutland@arm.com, fabio.estevam@nxp.com, Anson.Huang@nxp.com, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
- 
- On mar., juil. 10 2018, Russell King <rmk+kernel@arm.linux.org.uk> wrote:
+Hi Rob,
 
-> Add DT configuration for the HDMI display output on the Dove Cubox.
-> This adds support for the LCD0 controller which is connected to a
-> TDA19988 HDMI encoder.
->
-> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
-> ---
->  arch/arm/boot/dts/dove-cubox.dts | 43 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/dove-cubox.dts b/arch/arm/boot/dts/dove-cubox.dts
-> index 580e3cbcfbf7..f6dd56f63d09 100644
-> --- a/arch/arm/boot/dts/dove-cubox.dts
-> +++ b/arch/arm/boot/dts/dove-cubox.dts
-> @@ -67,6 +67,25 @@
->  	gpu-subsystem {
->  		status = "okay";
->  	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		display_reserved: framebuffer {
-> +			compatible = "marvell,dove-framebuffer";
+thanks for the review. I will integrate it in a v3.
 
-I didn't find the binding documentation associated to
-"marvell,dove-framebuffer".
+Regards,
+Marco
 
-Could you point me on the accurate file?
-
-
-> +			size = <0x02000000>;
-> +			alignment = <0x02000000>;
-> +			no-map;
-> +		};
-> +	};
-> +
-> +	display-subsystem {
-> +		compatible = "marvell,dove-display-subsystem";
-
-Same for this one.
-
-Thanks,
-
-Gregory
-
-> +		memory-region = <&display_reserved>;
-> +		ports = <&lcd0_port>;
-> +	};
->  };
->  
->  &uart0 { status = "okay"; };
-> @@ -117,6 +136,30 @@
->  			silabs,pll-master;
->  		};
->  	};
-> +
-> +	tda998x: hdmi-encoder {
-> +		compatible = "nxp,tda998x";
-> +		reg = <0x70>;
-> +		video-ports = <0x234501>;
-> +		interrupts-extended = <&gpio0 27 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +		port {
-> +			tda998x_video: endpoint {
-> +				remote-endpoint = <&lcd0_rgb>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&lcd0 {
-> +	status = "okay";
-> +	clocks = <&si5351 0>;
-> +	clock-names = "ext_ref_clk1";
-> +	lcd0_port: port {
-> +		lcd0_rgb: endpoint {
-> +			remote-endpoint = <&tda998x_video>;
-> +		};
-> +	};
->  };
->  
->  &sdio0 {
-> -- 
-> 2.7.4
->
+On 18-07-16 11:55, Rob Herring wrote:
+> On Fri, Jul 13, 2018 at 02:50:01PM +0200, Marco Felsch wrote:
+> > This binding is used to keep the backward compatibility with the current
+> > dtb's [1]. The binding informs the driver that the unused switch regulators
+> > can be disabled.
+> > If it is not specified, the driver doesn't disable the switch regulators.
+> > 
+> > [1] https://patchwork.kernel.org/patch/10490381/
+> > 
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > 
+> > ---
+> > Changes in V2:
+> >   - add more information about the binding
+> >   - rename binding and add vendor prefix
+> > 
+> >  .../devicetree/bindings/regulator/pfuze100.txt        | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/regulator/pfuze100.txt b/Documentation/devicetree/bindings/regulator/pfuze100.txt
+> > index 672c939045ff..2c46b8d368db 100644
+> > --- a/Documentation/devicetree/bindings/regulator/pfuze100.txt
+> > +++ b/Documentation/devicetree/bindings/regulator/pfuze100.txt
+> > @@ -4,6 +4,17 @@ Required properties:
+> >  - compatible: "fsl,pfuze100", "fsl,pfuze200", "fsl,pfuze3000", "fsl,pfuze3001"
+> >  - reg: I2C slave address
+> >  
+> > +Optional properties:
+> > +- fsl,pfuze-support-disable: Boolean, if present disable all unused switch
+> > +  regulators to save power consumption. Attention, till 4.18 these regulators
+> 
+> You shouldn't have kernel version info in bindings.
+> 
+> > +  were always on without specifying "regulator-always-on". So be sure to mark
+> > +  import regulators as "regulator-always-on" (e.g. DDR ref, DDR supply). If
+> 
+> s/import/important/
+> 
+> > +  not present, the switched regualtors are always on and can't be disabled.
+> > +  This binding is a workaround to keep backward compatibility with old dtb's
+> > +  which rely on the fact that the switched regulators are always on and don't
+> > +  mark them explicit as "regulator-always-on". On new dtbs this property should
+> > +  always be present.
+> > +
+> >  Required child node:
+> >  - regulators: This is the list of child nodes that specify the regulator
+> >    initialization data for defined regulators. Please refer to below doc
+> > -- 
+> > 2.18.0
+> > 
+> 
 
 -- 
-Gregory Clement, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5082 |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
