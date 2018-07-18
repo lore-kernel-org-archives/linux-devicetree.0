@@ -1,119 +1,103 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v4 2/4] dt-bindings: arm: fsl: rework mu doc
-Date: Wed, 18 Jul 2018 09:14:08 +0000
-Message-ID: <AM0PR04MB4211E48ACD3B832236FA228180530@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20180718071251.8857-1-o.rempel@pengutronix.de>
- <20180718071251.8857-3-o.rempel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180718071251.8857-3-o.rempel@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: [PATCH v8 2/4] rtc: ds1307: support m41t11 variant
+Date: Wed, 18 Jul 2018 11:22:13 +0200
+Message-ID: <20180718092216.91053-1-giulio.benetti@micronovasrl.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>, Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK RTC SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
-> Sent: Wednesday, July 18, 2018 3:13 PM
-> To: Shawn Guo <shawnguo@kernel.org>; Fabio Estevam
-> <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>; Mark
-> Rutland <mark.rutland@arm.com>; A.s. Dong <aisheng.dong@nxp.com>
-> Cc: Oleksij Rempel <o.rempel@pengutronix.de>; kernel@pengutronix.de;
-> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; dl-linux-
-> imx <linux-imx@nxp.com>
-> Subject: [PATCH v4 2/4] dt-bindings: arm: fsl: rework mu doc
-> 
+The m41t11 variant is very similar to the already supported m41t00 and
+m41t0, but it has also 56 bytes of NVRAM.
 
-The patch title may be improved like:
-dt-bindings: mailbox: imx-mu: add generic MU channel support
+Add it to driver taking into account NVRAM section.
 
-And explain in commit message:
-Each MU has four pairs of rx/tx data register with four rx/tx interrupts which can also
-be used as a separate channel. This patch intends to .....
+Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+---
+ .../devicetree/bindings/rtc/rtc-ds1307.txt         |  1 +
+ drivers/rtc/rtc-ds1307.c                           | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+)
 
-> - Remove software specific description. MU has many use cases limited only
-> by imagination. So remove this confusing part.
-> - Add all currently known SoCs with MU
-> - Make sure this documentation covers not only Firmware specific use case.
-> Parameters for generic configurations should be described as well.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  .../devicetree/bindings/mailbox/fsl,mu.txt    | 32 +++++++++----------
->  1 file changed, 15 insertions(+), 17 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> index 90e4905dfc69..9d5e6ee61e22 100644
-> --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> @@ -1,28 +1,26 @@
->  NXP i.MX Messaging Unit (MU)
->  --------------------------------------------------------------------
-> 
-> -The Messaging Unit module enables two processors within the SoC to -
-> communicate and coordinate by passing messages (e.g. data, status -and
-> control) through the MU interface. The MU also provides the ability -for one
-> processor to signal the other processor using interrupts.
-> -
-> -Because the MU manages the messaging between processors, the MU uses
-> -different clocks (from each side of the different peripheral buses).
-> -Therefore, the MU must synchronize the accesses from one side to the -
-> other. The MU accomplishes synchronization using two sets of matching -
-> registers (Processor A-facing, Processor B-facing).
-> -
-> -Messaging Unit Device Node:
-> -=============================
-> -
-
-Here you removed all the HW description of MU from the reference manual
-which is a bit strange to me.
-
-The reason you given is "remove software specific description. MU has many use
-cases limited only by imagination. So remove this confusing part" looks not quit
-convince. What confusing did you mean?
-Is it " passing messages (e.g. data, status -and control)"?
-Those are HW capabilities and I'm not sure it's quite necessary to remove them.
-
-Regards
-Dong Aisheng
-
->  Required properties:
->  -------------------
-> -- compatible :	should be "fsl,<chip>-mu", the supported chips include
-> -		imx8qxp, imx8qm.
-> +- compatible :	should be "fsl,<chip>-mu", the supported chips include:
-> +		fsl,imx6sx-mu	- i.MX 6SoloX
-> +		fsl,imx7d-mu	- i.MX 7Dual
-> +		fsl,imx7s-mu	- i.MX 7Solo
-> +		fsl,imx7ulp-mu	- i.MX 7ULP
-> +		fsl,imx8qm-mu	- i.MX 8QM
-> +		fsl,imx8qxp-mu	- i.MX 8QXP
->  - reg :		Should contain the registers location and length
->  - interrupts :	Interrupt number. The interrupt specifier format depends
->  		on the interrupt controller parent.
-> -- #mbox-cells:  Must be 0. Number of cells in a mailbox
-> +- #mbox-cells:  Must be:
-> +		0 - for single channel mode. i.MX8* SCU protocol specific.
-> +		1 - for multichannel (generic) mode.
-> +
-> +Optional properties:
-> +-------------------
-> +- clocks :	phandle to the input clock.
-> +- fsl,mu-side-b : Should be set for side B MU.
-> 
->  Examples:
->  --------
-> --
-> 2.18.0
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+index d28d6e7f6ae8..ce6469c1a516 100644
+--- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
++++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+@@ -13,6 +13,7 @@ Required properties:
+ 	"maxim,ds3231",
+ 	"st,m41t0",
+ 	"st,m41t00",
++	"st,m41t11",
+ 	"microchip,mcp7940x",
+ 	"microchip,mcp7941x",
+ 	"pericom,pt7c4338",
+diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+index aa4a161bae98..0162a600ff1b 100644
+--- a/drivers/rtc/rtc-ds1307.c
++++ b/drivers/rtc/rtc-ds1307.c
+@@ -44,6 +44,7 @@ enum ds_type {
+ 	ds_3231,
+ 	m41t0,
+ 	m41t00,
++	m41t11,
+ 	mcp794xx,
+ 	rx_8025,
+ 	rx_8130,
+@@ -227,6 +228,11 @@ static const struct chip_desc chips[last_ds_type] = {
+ 		.irq_handler = rx8130_irq,
+ 		.rtc_ops = &rx8130_rtc_ops,
+ 	},
++	[m41t11] = {
++		/* this is battery backed SRAM */
++		.nvram_offset	= 8,
++		.nvram_size	= 56,
++	},
+ 	[mcp794xx] = {
+ 		.alarm		= 1,
+ 		/* this is battery backed SRAM */
+@@ -249,6 +255,7 @@ static const struct i2c_device_id ds1307_id[] = {
+ 	{ "ds3231", ds_3231 },
+ 	{ "m41t0", m41t0 },
+ 	{ "m41t00", m41t00 },
++	{ "m41t11", m41t11 },
+ 	{ "mcp7940x", mcp794xx },
+ 	{ "mcp7941x", mcp794xx },
+ 	{ "pt7c4338", ds_1307 },
+@@ -305,6 +312,10 @@ static const struct of_device_id ds1307_of_match[] = {
+ 		.compatible = "st,m41t00",
+ 		.data = (void *)m41t00
+ 	},
++	{
++		.compatible = "st,m41t11",
++		.data = (void *)m41t11
++	},
+ 	{
+ 		.compatible = "microchip,mcp7940x",
+ 		.data = (void *)mcp794xx
+@@ -347,6 +358,7 @@ static const struct acpi_device_id ds1307_acpi_ids[] = {
+ 	{ .id = "DS3231", .driver_data = ds_3231 },
+ 	{ .id = "M41T0", .driver_data = m41t0 },
+ 	{ .id = "M41T00", .driver_data = m41t00 },
++	{ .id = "M41T11", .driver_data = m41t11 },
+ 	{ .id = "MCP7940X", .driver_data = mcp794xx },
+ 	{ .id = "MCP7941X", .driver_data = mcp794xx },
+ 	{ .id = "PT7C4338", .driver_data = ds_1307 },
+@@ -1576,6 +1588,7 @@ static int ds1307_probe(struct i2c_client *client,
+ 	case ds_1307:
+ 	case m41t0:
+ 	case m41t00:
++	case m41t11:
+ 		/* clock halted?  turn it on, so clock can tick. */
+ 		if (tmp & DS1307_BIT_CH) {
+ 			regmap_write(ds1307->regmap, DS1307_REG_SECS, 0);
+@@ -1641,6 +1654,7 @@ static int ds1307_probe(struct i2c_client *client,
+ 	case ds_1340:
+ 	case m41t0:
+ 	case m41t00:
++	case m41t11:
+ 		/*
+ 		 * NOTE: ignores century bits; fix before deploying
+ 		 * systems that will run through year 2100.
+-- 
+2.17.1
