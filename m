@@ -1,93 +1,64 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v4 2/5] rtc: isl1208: add support for isl1219 with tamper
- detection
-Date: Wed, 18 Jul 2018 10:13:13 +0200
-Message-ID: <20180718081313.GI3211@piout.net>
-References: <20180710090710.9066-1-Denis.Osterland@diehl.com>
- <20180710090710.9066-3-Denis.Osterland@diehl.com>
+From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
+Subject: Re: [PATCH v6 0/2] Input: Add Cypress Gen5 Touchscreen driver
+Date: Wed, 18 Jul 2018 10:18:53 +0200
+Message-ID: <20180718101854.31006b81@dell-desktop.home>
+References: <20180703094309.18514-1-mylene.josserand@bootlin.com>
+        <20180704162158.euiw2v3hyv3hzofn@penguin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180710090710.9066-3-Denis.Osterland@diehl.com>
+In-Reply-To: <20180704162158.euiw2v3hyv3hzofn@penguin>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Denis OSTERLAND <denis.osterland@diehl.com>
-Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mylene.josserand@free-electrons.com, thomas.petazzoni@free-electrons.com, maxime.ripard@free-electrons.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/2018 09:44:15+0000, Denis OSTERLAND wrote:
->  static int
->  isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
->  {
-> @@ -642,6 +744,7 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
->  	rtc->ops = &isl1208_rtc_ops;
-> 
->  	i2c_set_clientdata(client, rtc);
-> +	dev_set_drvdata(&rtc->dev, client);
-> 
->  	rc = isl1208_i2c_get_sr(client);
->  	if (rc < 0) {
-> @@ -653,6 +756,18 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
->  		dev_warn(&client->dev, "rtc power failure detected, "
->  			 "please set clock.\n");
-> 
-> +	if (id->driver_data == TYPE_ISL1219) {
-> +		rc = ISL1219_REG_EV_EVEN;
-> +		rc = i2c_smbus_write_byte_data(client, ISL1219_REG_EV, rc);
+Hello Dmitry,
 
-I'd pass ISL1219_REG_EV_EVEN directly instead of assigning it to rc.
+On Wed, 4 Jul 2018 16:21:58 +0000
+Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
 
-> +		if (rc < 0) {
-> +			dev_err(&client->dev, "could not enable tamper detection\n");
-> +			return rc;
-> +		}
-> +		rc = rtc_add_group(rtc, &isl1219_rtc_sysfs_files);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
->  	rc = sysfs_create_group(&client->dev.kobj, &isl1208_rtc_sysfs_files);
->  	if (rc)
->  		return rc;
-> @@ -686,8 +801,9 @@ isl1208_remove(struct i2c_client *client)
->  }
+> Hi Myl√®ne,
 > 
->  static const struct i2c_device_id isl1208_id[] = {
-> -	{ "isl1208", 0 },
-> -	{ "isl1218", 0 },
-> +	{ "isl1208", TYPE_ISL1208 },
-> +	{ "isl1218", TYPE_ISL1218 },
-> +	{ "isl1219", TYPE_ISL1219 },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(i2c, isl1208_id);
-> @@ -695,6 +811,7 @@ MODULE_DEVICE_TABLE(i2c, isl1208_id);
->  static const struct of_device_id isl1208_of_match[] = {
->  	{ .compatible = "isil,isl1208" },
->  	{ .compatible = "isil,isl1218" },
-> +	{ .compatible = "isil,isl1219" },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, isl1208_of_match);
-> --
-> 2.18.0
+> On Tue, Jul 03, 2018 at 11:43:07AM +0200, Myl√®ne Josserand wrote:
+> > Hello,
+> > 
+> > Here is a V6 series to add the driver of the touchscreen Cypress,
+> > TrueTouch Generation 5.
+> > Based on v4.18-rc3.
+> > 
+> > This patch series has already been posted in several iterations:
+> >     - v1: Sent on 2017/05/29
+> >     - v2: Sent on 2017/08/18
+> >     - v3: Sent on 2017/09/27
+> >     - v4: Sent on 2017/12/01
+> >     - v5: Sent on 2017/12/20
+> > 
+> > I did not have any comments the last 4 versions.
+> > And no reviews on my v5 during 6 months. Could I have any updates
+> > or feedback on my series to know why it is not merged (to be able to
+> > correct what is wrong)?  
 > 
+> Sorry, I must have missed the v5, sorry about that.
+
+No problem.
+
 > 
-> 
-> Diehl Connectivity Solutions GmbH
-> Gesch‰ftsf¸hrung: Horst Leonberger
-> Sitz der Gesellschaft: N¸rnberg - Registergericht: Amtsgericht
-> N¸rnberg: HRB 32315
-> ___________________________________________________________________________________________________
-> 
-> Der Inhalt der vorstehenden E-Mail ist nicht rechtlich bindend. Diese E-Mail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen.
-> Informieren Sie uns bitte, wenn Sie diese E-Mail faelschlicherweise erhalten haben. Bitte loeschen Sie in diesem Fall die Nachricht.
-> Jede unerlaubte Form der Reproduktion, Bekanntgabe, Aenderung, Verteilung und/oder Publikation dieser E-Mail ist strengstens untersagt.
-> The contents of the above mentioned e-mail is not legally binding. This e-mail contains confidential and/or legally protected information. Please inform us if you have received this e-mail by
-> mistake and delete it in such a case. Each unauthorized reproduction, disclosure, alteration, distribution and/or publication of this e-mail is strictly prohibited.
+> I probably asked this question before, but just to make sure - I see
+> references to HID in the patch - the device is really not HID
+> compatible? Is there any hope it could be made work with i2c-hid +
+> hid-multitouch?
+
+I do not think it is HID compatible but let me check the i2c-hid and
+hid-multitouch drivers to confirm that (or not).
+
+I will let you know in next few days.
+
+Thank you,
+Best regards,
 
 -- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
+Myl√®ne Josserand, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
