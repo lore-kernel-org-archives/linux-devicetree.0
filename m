@@ -1,69 +1,91 @@
-Return-Path: <SRS0=O5xD=KC=xilinx.com=shubhraj@kernel.org>
+Return-Path: <SRS0=w+aW=KC=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-dm3nam03on0047.outbound.protection.outlook.com ([104.47.41.47]:61026
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726240AbeGRGRh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Jul 2018 02:17:37 -0400
 From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: [PATCHv3 4/4] dt-bindings: serial: Add binding for uartlite
-Date: Wed, 18 Jul 2018 11:11:02 +0530
-Message-ID: <1531892462-11085-4-git-send-email-shubhrajyoti.datta@xilinx.com>
+Subject: [PATCHv4 3/4] tty: serial: uartlite: Add support for suspend and resume
+Date: Wed, 18 Jul 2018 11:11:01 +0530
+Message-ID: <1531892462-11085-3-git-send-email-shubhrajyoti.datta@xilinx.com>
 In-Reply-To: <1531892462-11085-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 References: <1531892462-11085-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
+Sender: devicetree-owner@vger.kernel.org
 To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 Cc: shubhrajyoti.datta@gmail.com, robh+dt@kernel.org, gregkh@linuxfoundation.org, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The uartlite devicetree binding was missed out.
-Add the binding documentation for uartlite that is already in use.
+Add suspend and resume handlers for uartlite
 
 Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 ---
 v2:
-lowercase for hex values
-interrupt description updated
-v3:
-squashed the clock changes
-v4:
-Updated the patch description
-and the interrupt description
+patch added
 
- .../bindings/serial/xlnx,opb-uartlite.txt          | 23 ++++++++++++++++++=
-++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/xlnx,opb-uartl=
-ite.txt
+ drivers/tty/serial/uartlite.c | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt=
- b/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt
-new file mode 100644
-index 0000000..52719b9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/xlnx,opb-uartlite.txt
-@@ -0,0 +1,23 @@
-+Xilinx Axi Uartlite controller Device Tree Bindings
-+---------------------------------------------------------
+diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
+index b3a12be..98d3ead 100644
+--- a/drivers/tty/serial/uartlite.c
++++ b/drivers/tty/serial/uartlite.c
+@@ -690,9 +690,44 @@ static int ulite_release(struct device *dev)
+        return rc;
+ }
+
++/**
++ * ulite_suspend - Stop the device.
++ *
++ * @dev: handle to the device structure.
++ * Return: 0 always.
++ */
++static int __maybe_unused ulite_suspend(struct device *dev)
++{
++       struct uart_port *port =3D dev_get_drvdata(dev);
 +
-+Required properties:
-+- compatible           : Can be either of
-+                               "xlnx,xps-uartlite-1.00.a"
-+                               "xlnx,opb-uartlite-1.00.b"
-+- reg                  : Physical base address and size of the Axi Uartlit=
-e
-+                         registers map.
-+- interrupts           : Should contain the UART controller interrupt.
++       if (port)
++               uart_suspend_port(&ulite_uart_driver, port);
 +
-+Optional properties:
-+- port-number          : Set Uart port number
-+- clock-names          : Should be "s_axi_aclk"
-+- clocks               : Input clock specifier. Refer to common clock bind=
-ings.
++       return 0;
++}
 +
-+Example:
-+serial@800c0000 {
-+       compatible =3D "xlnx,xps-uartlite-1.00.a";
-+       reg =3D <0x0 0x800c0000 0x10000>;
-+       interrupts =3D <0x0 0x6e 0x1>;
-+       port-number =3D <0>;
-+};
++/**
++ * ulite_resume - Resume the device.
++ *
++ * @dev: handle to the device structure.
++ * Return: 0 on success, errno otherwise.
++ */
++static int __maybe_unused ulite_resume(struct device *dev)
++{
++       struct uart_port *port =3D dev_get_drvdata(dev);
++
++       if (port)
++               uart_resume_port(&ulite_uart_driver, port);
++
++       return 0;
++}
++
+ /* ---------------------------------------------------------------------
+  * Platform bus binding
+  */
++
++static SIMPLE_DEV_PM_OPS(ulite_pm_ops, ulite_suspend, ulite_resume);
++
+ #if defined(CONFIG_OF)
+ /* Match table for of_platform binding */
+ static const struct of_device_id ulite_of_match[] =3D {
+@@ -768,6 +803,7 @@ static struct platform_driver ulite_platform_driver =3D=
+ {
+        .driver =3D {
+                .name  =3D "uartlite",
+                .of_match_table =3D of_match_ptr(ulite_of_match),
++               .pm =3D &ulite_pm_ops,
+        },
+ };
+
 --
 2.7.4
 
