@@ -1,194 +1,163 @@
-Return-Path: <SRS0=Hazi=KD=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-by2nam03on0054.outbound.protection.outlook.com ([104.47.42.54]:4096
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727032AbeGSLay (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Jul 2018 07:30:54 -0400
-From: Manish Narani <manish.narani@xilinx.com>
-Subject: [PATCH 1/4] edac: synps: Add platform specific structures for ddrc controller
-Date: Thu, 19 Jul 2018 15:44:47 +0530
-Message-ID: <1531995290-15643-2-git-send-email-manish.narani@xilinx.com>
-In-Reply-To: <1531995290-15643-1-git-send-email-manish.narani@xilinx.com>
-References: <1531995290-15643-1-git-send-email-manish.narani@xilinx.com>
+Return-Path: <SRS0=O5xD=KC=xilinx.com=shubhraj@kernel.org>
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: [PATCHv4 2/4] tty: serial: uartlite: Add clock adaptation
+Date: Wed, 18 Jul 2018 11:11:00 +0530
+Message-ID: <1531892462-11085-2-git-send-email-shubhrajyoti.datta@xilinx.com>
+In-Reply-To: <1531892462-11085-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+References: <1531892462-11085-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, mdf@kernel.org, willw@xilinx.com, naga.sureshkumar.relli@xilinx.com, edgar.iglesias@xilinx.com, bharat.kumar.gogada@xilinx.com, shubhrajyoti.datta@xilinx.com, stefan.krsmanovic@aggios.com
-Cc: anirudh@xilinx.com, sgoud@xilinx.com, Manish Narani <manish.narani@xilinx.com>
+Content-Transfer-Encoding: quoted-printable
+To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Cc: shubhrajyoti.datta@gmail.com, robh+dt@kernel.org, gregkh@linuxfoundation.org, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds platform specific structures, so that we can add
-different IP support later using quirks.
+Add support of Common Clock Framework for Uartlite driver.
 
-Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 ---
- drivers/edac/synopsys_edac.c | 70 ++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 58 insertions(+), 12 deletions(-)
+v2:
+removed the suspend resume changes to separate driver
 
-diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index 0c9c59e..447396e 100644
---- a/drivers/edac/synopsys_edac.c
-+++ b/drivers/edac/synopsys_edac.c
-@@ -22,6 +22,7 @@
- #include <linux/edac.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
- 
- #include "edac_module.h"
- 
-@@ -95,6 +96,9 @@
- #define SCRUB_MODE_MASK		0x7
- #define SCRUB_MODE_SECDED	0x4
- 
-+/* DDR ECC Quirks */
-+#define DDR_ECC_INTR_SUPPORT	BIT(0)
-+
- /**
-  * struct ecc_error_info - ECC error log information
-  * @row:	Row number
-@@ -130,6 +134,7 @@ struct synps_ecc_status {
-  * @baseaddr:	Base address of the DDR controller
-  * @message:	Buffer for framing the event specific info
-  * @stat:	ECC status information
-+ * @p_data:	Pointer to platform data
-  * @ce_cnt:	Correctable Error count
-  * @ue_cnt:	Uncorrectable Error count
-  */
-@@ -137,11 +142,29 @@ struct synps_edac_priv {
- 	void __iomem *baseaddr;
- 	char message[SYNPS_EDAC_MSG_SIZE];
- 	struct synps_ecc_status stat;
-+	const struct synps_platform_data *p_data;
- 	u32 ce_cnt;
- 	u32 ue_cnt;
+ drivers/tty/serial/uartlite.c | 49 +++++++++++++++++++++++++++++++++++++++=
+++--
+ 1 file changed, 47 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
+index 0f798f7..b3a12be 100644
+--- a/drivers/tty/serial/uartlite.c
++++ b/drivers/tty/serial/uartlite.c
+@@ -21,6 +21,7 @@
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
+ #include <linux/of_platform.h>
++#include <linux/clk.h>
+
+ #define ULITE_NAME             "ttyUL"
+ #define ULITE_MAJOR            204
+@@ -56,6 +57,7 @@
+
+ struct uartlite_data {
+        const struct uartlite_reg_ops *reg_ops;
++       struct clk *clk;
  };
- 
- /**
-+ * struct synps_platform_data -  synps platform data structure
-+ * @synps_edac_geterror_info:	function pointer to synps edac error info
-+ * @synps_edac_get_mtype:	function pointer to synps edac mtype
-+ * @synps_edac_get_dtype:	function pointer to synps edac dtype
-+ * @synps_edac_get_eccstate:	function pointer to synps edac eccstate
-+ * @quirks:			to differentiate IPs
-+ */
-+struct synps_platform_data {
-+	int (*synps_edac_geterror_info)(void __iomem *base,
-+					struct synps_ecc_status *p);
-+	enum mem_type (*synps_edac_get_mtype)(const void __iomem *base);
-+	enum dev_type (*synps_edac_get_dtype)(const void __iomem *base);
-+	bool (*synps_edac_get_eccstate)(void __iomem *base);
-+	int quirks;
-+};
-+
-+/**
-  * synps_edac_geterror_info - Get the current ecc error info
-  * @base:	Pointer to the base address of the ddr memory controller
-  * @p:		Pointer to the synopsys ecc status structure
-@@ -242,7 +265,8 @@ static void synps_edac_check(struct mem_ctl_info *mci)
- 	struct synps_edac_priv *priv = mci->pvt_info;
- 	int status;
- 
--	status = synps_edac_geterror_info(priv->baseaddr, &priv->stat);
-+	status = priv->p_data->synps_edac_geterror_info(priv->baseaddr,
-+							&priv->stat);
- 	if (status)
- 		return;
- 
-@@ -372,10 +396,12 @@ static int synps_edac_init_csrows(struct mem_ctl_info *mci)
- 		for (j = 0; j < csi->nr_channels; j++) {
- 			dimm            = csi->channels[j]->dimm;
- 			dimm->edac_mode = EDAC_FLAG_SECDED;
--			dimm->mtype     = synps_edac_get_mtype(priv->baseaddr);
-+			dimm->mtype     = priv->p_data->synps_edac_get_mtype(
-+						priv->baseaddr);
- 			dimm->nr_pages  = (size >> PAGE_SHIFT) / csi->nr_channels;
- 			dimm->grain     = SYNPS_EDAC_ERR_GRAIN;
--			dimm->dtype     = synps_edac_get_dtype(priv->baseaddr);
-+			dimm->dtype     = priv->p_data->synps_edac_get_dtype(
-+						priv->baseaddr);
- 		}
- 	}
- 
-@@ -423,6 +449,21 @@ static int synps_edac_mc_init(struct mem_ctl_info *mci,
- 	return status;
- }
- 
-+static const struct synps_platform_data zynq_edac_def = {
-+	.synps_edac_geterror_info	= synps_edac_geterror_info,
-+	.synps_edac_get_mtype		= synps_edac_get_mtype,
-+	.synps_edac_get_dtype		= synps_edac_get_dtype,
-+	.synps_edac_get_eccstate	= synps_edac_get_eccstate,
-+	.quirks				= 0,
-+};
-+
-+static const struct of_device_id synps_edac_match[] = {
-+	{ .compatible = "xlnx,zynq-ddrc-a05", .data = (void *)&zynq_edac_def },
-+	{ /* end of table */ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, synps_edac_match);
-+
- /**
-  * synps_edac_mc_probe - Check controller and bind driver
-  * @pdev:	Pointer to the platform_device struct
-@@ -440,13 +481,22 @@ static int synps_edac_mc_probe(struct platform_device *pdev)
- 	int rc;
- 	struct resource *res;
- 	void __iomem *baseaddr;
-+	const struct of_device_id *match;
-+	const struct synps_platform_data *p_data;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	baseaddr = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(baseaddr))
- 		return PTR_ERR(baseaddr);
- 
--	if (!synps_edac_get_eccstate(baseaddr)) {
-+	match = of_match_node(synps_edac_match, pdev->dev.of_node);
-+	if (!match && !match->data) {
-+		dev_err(&pdev->dev, "of_match_node() failed\n");
-+		return -EINVAL;
-+	}
-+
-+	p_data = (struct synps_platform_data *)match->data;
-+	if (!(p_data->synps_edac_get_eccstate(baseaddr))) {
- 		edac_printk(KERN_INFO, EDAC_MC, "ECC not enabled\n");
- 		return -ENXIO;
- 	}
-@@ -468,6 +518,8 @@ static int synps_edac_mc_probe(struct platform_device *pdev)
- 
- 	priv = mci->pvt_info;
- 	priv->baseaddr = baseaddr;
-+	priv->p_data = match->data;
-+
- 	rc = synps_edac_mc_init(mci, pdev);
- 	if (rc) {
- 		edac_printk(KERN_ERR, EDAC_MC,
-@@ -486,7 +538,8 @@ static int synps_edac_mc_probe(struct platform_device *pdev)
- 	 * Start capturing the correctable and uncorrectable errors. A write of
- 	 * 0 starts the counters.
- 	 */
--	writel(0x0, baseaddr + ECC_CTRL_OFST);
-+	if (!(priv->p_data->quirks & DDR_ECC_INTR_SUPPORT))
-+		writel(0x0, baseaddr + ECC_CTRL_OFST);
- 	return rc;
- 
- free_edac_mc:
-@@ -511,13 +564,6 @@ static int synps_edac_mc_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id synps_edac_match[] = {
--	{ .compatible = "xlnx,zynq-ddrc-a05", },
--	{ /* end of table */ }
--};
--
--MODULE_DEVICE_TABLE(of, synps_edac_match);
--
- static struct platform_driver synps_edac_mc_driver = {
- 	.driver = {
- 		   .name = "synopsys-edac",
--- 
-2.1.1
 
+ struct uartlite_reg_ops {
+@@ -261,8 +263,15 @@ static void ulite_break_ctl(struct uart_port *port, in=
+t ctl)
+
+ static int ulite_startup(struct uart_port *port)
+ {
++       struct uartlite_data *pdata =3D port->private_data;
+        int ret;
+
++       ret =3D clk_enable(pdata->clk);
++       if (ret) {
++               dev_err(port->dev, "Failed to enable clock\n");
++               return ret;
++       }
++
+        ret =3D request_irq(port->irq, ulite_isr, IRQF_SHARED | IRQF_TRIGGE=
+R_RISING,
+                          "uartlite", port);
+        if (ret)
+@@ -277,9 +286,12 @@ static int ulite_startup(struct uart_port *port)
+
+ static void ulite_shutdown(struct uart_port *port)
+ {
++       struct uartlite_data *pdata =3D port->private_data;
++
+        uart_out32(0, ULITE_CONTROL, port);
+        uart_in32(ULITE_CONTROL, port); /* dummy */
+        free_irq(port->irq, port);
++       clk_disable(pdata->clk);
+ }
+
+ static void ulite_set_termios(struct uart_port *port, struct ktermios *ter=
+mios,
+@@ -370,6 +382,17 @@ static int ulite_verify_port(struct uart_port *port, s=
+truct serial_struct *ser)
+        return -EINVAL;
+ }
+
++static void ulite_pm(struct uart_port *port, unsigned int state,
++                    unsigned int oldstate)
++{
++       struct uartlite_data *pdata =3D port->private_data;
++
++       if (!state)
++               clk_enable(pdata->clk);
++       else
++               clk_disable(pdata->clk);
++}
++
+ #ifdef CONFIG_CONSOLE_POLL
+ static int ulite_get_poll_char(struct uart_port *port)
+ {
+@@ -405,6 +428,7 @@ static const struct uart_ops ulite_ops =3D {
+        .request_port   =3D ulite_request_port,
+        .config_port    =3D ulite_config_port,
+        .verify_port    =3D ulite_verify_port,
++       .pm             =3D ulite_pm,
+ #ifdef CONFIG_CONSOLE_POLL
+        .poll_get_char  =3D ulite_get_poll_char,
+        .poll_put_char  =3D ulite_put_poll_char,
+@@ -669,7 +693,6 @@ static int ulite_release(struct device *dev)
+ /* ---------------------------------------------------------------------
+  * Platform bus binding
+  */
+-
+ #if defined(CONFIG_OF)
+ /* Match table for of_platform binding */
+ static const struct of_device_id ulite_of_match[] =3D {
+@@ -684,7 +707,7 @@ static int ulite_probe(struct platform_device *pdev)
+ {
+        struct resource *res;
+        struct uartlite_data *pdata;
+-       int irq;
++       int irq, ret;
+        int id =3D pdev->id;
+ #ifdef CONFIG_OF
+        const __be32 *prop;
+@@ -706,11 +729,33 @@ static int ulite_probe(struct platform_device *pdev)
+        if (irq <=3D 0)
+                return -ENXIO;
+
++       pdata->clk =3D devm_clk_get(&pdev->dev, "s_axi_aclk");
++       if (IS_ERR(pdata->clk)) {
++               if (PTR_ERR(pdata->clk) !=3D -ENOENT)
++                       return PTR_ERR(pdata->clk);
++
++               /*
++                * Clock framework support is optional, continue on
++                * anyways if we don't find a matching clock.
++                */
++               pdata->clk =3D NULL;
++       }
++
++       ret =3D clk_prepare(pdata->clk);
++       if (ret) {
++               dev_err(&pdev->dev, "Failed to prepare clock\n");
++               return ret;
++       }
++
+        return ulite_assign(&pdev->dev, id, res->start, irq, pdata);
+ }
+
+ static int ulite_remove(struct platform_device *pdev)
+ {
++       struct uart_port *port =3D dev_get_drvdata(&pdev->dev);
++       struct uartlite_data *pdata =3D port->private_data;
++
++       clk_disable_unprepare(pdata->clk);
+        return ulite_release(&pdev->dev);
+ }
+
+--
+2.7.4
+
+This email and any attachments are intended for the sole use of the named r=
+ecipient(s) and contain(s) confidential information that may be proprietary=
+, privileged or copyrighted under applicable law. If you are not the intend=
+ed recipient, do not read, copy, or forward this email message or any attac=
+hments. Delete this email message and any attachments immediately.
