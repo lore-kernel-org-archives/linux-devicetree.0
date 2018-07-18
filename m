@@ -1,64 +1,93 @@
-From: =?UTF-8?Q?S=c3=a9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
-Subject: Re: [PATCH 1/2] drm/panel: Add support for Armadeus ST0700 Adapt
-Date: Wed, 18 Jul 2018 10:19:15 +0200
-Message-ID: <3bfd3bde-55e2-9b68-a8ab-c69dc98097da@armadeus.com>
-References: <20180717072318.18730-1-sebastien.szymanski@armadeus.com>
- <CAOMZO5Dr0zqy4Sf3s=L4qoqePRhZAXWpDk1oTOUidy4_TUQ=QA@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v4 2/5] rtc: isl1208: add support for isl1219 with tamper
+ detection
+Date: Wed, 18 Jul 2018 10:13:13 +0200
+Message-ID: <20180718081313.GI3211@piout.net>
+References: <20180710090710.9066-1-Denis.Osterland@diehl.com>
+ <20180710090710.9066-3-Denis.Osterland@diehl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOMZO5Dr0zqy4Sf3s=L4qoqePRhZAXWpDk1oTOUidy4_TUQ=QA@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180710090710.9066-3-Denis.Osterland@diehl.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Denis OSTERLAND <denis.osterland@diehl.com>
+Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRmFiaW8sCgpPbiAwNy8xNy8yMDE4IDAyOjI4IFBNLCBGYWJpbyBFc3RldmFtIHdyb3RlOgo+
-IEhpIFPDqWJhc3RpZW4sCj4gCj4gT24gVHVlLCBKdWwgMTcsIDIwMTggYXQgNDoyMyBBTSwgU8Op
-YmFzdGllbiBTenltYW5za2kKPiA8c2ViYXN0aWVuLnN6eW1hbnNraUBhcm1hZGV1cy5jb20+IHdy
-b3RlOgo+PiBUaGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBmb3IgdGhlIEFybWFkZXVzIFNUMDcwMCBB
-ZGFwdC4gSXQgY29tZXMgd2l0aCBhCj4+IFNhbnRlayBTVDA3MDBJNVktUkJTTFcgNy4wIiBXVkdB
-ICg4MDB4NDgwKSBURlQgYW5kIGFuIGFkYXB0ZXIgYm9hcmQgc28KPj4gdGhhdCBpdCBjYW4gYmUg
-Y29ubmVjdGVkIG9uIHRoZSBURlQgaGVhZGVyIG9mIEFybWFkZXVzIERldiBib2FyZHMuCj4+Cj4+
-IFNpZ25lZC1vZmYtYnk6IFPDqWJhc3RpZW4gU3p5bWFuc2tpIDxzZWJhc3RpZW4uc3p5bWFuc2tp
-QGFybWFkZXVzLmNvbT4KPj4gLS0tCj4+ICAuLi4vZGlzcGxheS9wYW5lbC9hcm1hZGV1cyxzdDA3
-MDAtYWRhcHQudHh0ICAgICAgICB8ICA5ICsrKysrKysKPj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5l
-bC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICAgICAgIHwgMjkgKysrKysrKysrKysrKysrKysrKysr
-Kwo+PiAgMiBmaWxlcyBjaGFuZ2VkLCAzOCBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYXJt
-YWRldXMsc3QwNzAwLWFkYXB0LnR4dAo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYXJtYWRldXMsc3QwNzAwLWFkYXB0LnR4
-dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2FybWFk
-ZXVzLHN0MDcwMC1hZGFwdC50eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAw
-MDAwMDAwMDAwLi5hMzBkNjNkYjNjOGYKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hcm1hZGV1cyxzdDA3MDAt
-YWRhcHQudHh0Cj4+IEBAIC0wLDAgKzEsOSBAQAo+PiArQXJtYWRldXMgU1QwNzAwIEFkYXB0LiBB
-IFNhbnRlayBTVDA3MDBJNVktUkJTTFcgNy4wIiBXVkdBICg4MDB4NDgwKSBURlQgd2l0aAo+PiAr
-YW4gYWRhcHRlciBib2FyZC4KPj4gKwo+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4gKy0gY29t
-cGF0aWJsZTogImFybWFkZXVzLHN0MDcwMC1hZGFwdCIKPiAKPiBTaG91bGRuJ3QgdGhpcyBiZSBu
-YW1lZCAic2FudGVrLHN0MDcwMGk1eSIgaW5zdGVhZD8KPiAKPiBTYW50ZWsgaXMgdGhlIHZlbmRv
-ciBvZiB0aGUgcGFuZWwgYW5kIHN0MDcwMGk1eSBpcyB0aGUgbW9kZWwuCgpZb3UncmUgcmlnaHQg
-YnV0IEFybWFkZXVzIGRvZXNuJ3QgcHJvdmlkZSB0aGUgcGFuZWwgYXMtaXMuIEFybWFkZXVzIGFk
-ZHMKYW4gYWRhcHRlciBib2FyZCBzbyBpdCBjYW4gYmUgY29ubmVjdGVkIG9uIHRoZSBkZXZlbG9w
-bWVudCBib2FyZHMuIFsxXQpFdmVuIHRob3VnaCB0aGUgcGFuZWwgc3VwcG9ydHMgTUVESUFfQlVT
-X0ZNVF9SR0I4ODhfMVgyNCwgd2l0aCB0aGUKYWRhcHRlciBib2FyZCB0aGUgYnVzIGZvcm1hdCBo
-YXMgdG8gYmUgTUVESUFfQlVTX0ZNVF9SR0I2NjZfMVgxOC4KClsxXSBodHRwOi8vd3d3Lm9wb3Nz
-b20uY29tL2VuZ2xpc2gvcHJvZHVjdHMtcGVyaXBoZXJhbHMtc3QwNzAwX2FkYXB0Lmh0bWwKClJl
-Z2FyZHMsCgo+IAo+IFRoZW4geW91IGNvdWxkIGFkZCBhICJzYW50ZWsiIGVudHJ5IGluCj4gRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQuCj4gCj4g
-UmVnYXJkcywKPiAKPiBGYWJpbyBFc3RldmFtCj4gCgoKLS0gClPDqWJhc3RpZW4gU3p5bWFuc2tp
-ClNvZnR3YXJlIGVuZ2luZWVyLCBBcm1hZGV1cyBTeXN0ZW1zClRlbDogKzMzICgwKTkgNzIgMjkg
-NDEgNDQKRmF4OiArMzMgKDApOSA3MiAyOCA3OSAyNgoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
-dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On 10/07/2018 09:44:15+0000, Denis OSTERLAND wrote:
+>  static int
+>  isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  {
+> @@ -642,6 +744,7 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  	rtc->ops = &isl1208_rtc_ops;
+> 
+>  	i2c_set_clientdata(client, rtc);
+> +	dev_set_drvdata(&rtc->dev, client);
+> 
+>  	rc = isl1208_i2c_get_sr(client);
+>  	if (rc < 0) {
+> @@ -653,6 +756,18 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  		dev_warn(&client->dev, "rtc power failure detected, "
+>  			 "please set clock.\n");
+> 
+> +	if (id->driver_data == TYPE_ISL1219) {
+> +		rc = ISL1219_REG_EV_EVEN;
+> +		rc = i2c_smbus_write_byte_data(client, ISL1219_REG_EV, rc);
+
+I'd pass ISL1219_REG_EV_EVEN directly instead of assigning it to rc.
+
+> +		if (rc < 0) {
+> +			dev_err(&client->dev, "could not enable tamper detection\n");
+> +			return rc;
+> +		}
+> +		rc = rtc_add_group(rtc, &isl1219_rtc_sysfs_files);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+>  	rc = sysfs_create_group(&client->dev.kobj, &isl1208_rtc_sysfs_files);
+>  	if (rc)
+>  		return rc;
+> @@ -686,8 +801,9 @@ isl1208_remove(struct i2c_client *client)
+>  }
+> 
+>  static const struct i2c_device_id isl1208_id[] = {
+> -	{ "isl1208", 0 },
+> -	{ "isl1218", 0 },
+> +	{ "isl1208", TYPE_ISL1208 },
+> +	{ "isl1218", TYPE_ISL1218 },
+> +	{ "isl1219", TYPE_ISL1219 },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(i2c, isl1208_id);
+> @@ -695,6 +811,7 @@ MODULE_DEVICE_TABLE(i2c, isl1208_id);
+>  static const struct of_device_id isl1208_of_match[] = {
+>  	{ .compatible = "isil,isl1208" },
+>  	{ .compatible = "isil,isl1218" },
+> +	{ .compatible = "isil,isl1219" },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, isl1208_of_match);
+> --
+> 2.18.0
+> 
+> 
+> 
+> Diehl Connectivity Solutions GmbH
+> Geschäftsführung: Horst Leonberger
+> Sitz der Gesellschaft: Nürnberg - Registergericht: Amtsgericht
+> Nürnberg: HRB 32315
+> ___________________________________________________________________________________________________
+> 
+> Der Inhalt der vorstehenden E-Mail ist nicht rechtlich bindend. Diese E-Mail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen.
+> Informieren Sie uns bitte, wenn Sie diese E-Mail faelschlicherweise erhalten haben. Bitte loeschen Sie in diesem Fall die Nachricht.
+> Jede unerlaubte Form der Reproduktion, Bekanntgabe, Aenderung, Verteilung und/oder Publikation dieser E-Mail ist strengstens untersagt.
+> The contents of the above mentioned e-mail is not legally binding. This e-mail contains confidential and/or legally protected information. Please inform us if you have received this e-mail by
+> mistake and delete it in such a case. Each unauthorized reproduction, disclosure, alteration, distribution and/or publication of this e-mail is strictly prohibited.
+
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
