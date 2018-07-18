@@ -1,42 +1,150 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 1/4] resource: Move reparent_resources() to
- kernel/resource.c and make it public
-Date: Wed, 18 Jul 2018 19:37:24 +0300
-Message-ID: <CAHp75Vf2yEwHhEhhQH2XN+pOQ=-skiAHZ=FgLnfVV8vcm59qeQ@mail.gmail.com>
-References: <20180718024944.577-1-bhe@redhat.com>
- <20180718024944.577-2-bhe@redhat.com>
- <CAHp75VdO88ydJQ9GHdaDUmAmzL6QHR=US6JiXZ1R_EEA-xWR1Q@mail.gmail.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2 2/2] arm64: dts: Add Mediatek X20 Development Board
+ support
+Date: Wed, 18 Jul 2018 22:13:04 +0530
+Message-ID: <20180718164304.GA4902@Mani-XPS-13-9360>
+References: <20180605163442.4812-1-manivannan.sadhasivam@linaro.org>
+ <20180605163442.4812-3-manivannan.sadhasivam@linaro.org>
+ <d88504b4-409c-c42b-f816-bedefce2a819@gmail.com>
+ <20180717140453.GA19076@mani>
+ <a48b0735-ff75-6228-22ba-c8e868240f0c@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <CAHp75VdO88ydJQ9GHdaDUmAmzL6QHR=US6JiXZ1R_EEA-xWR1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, brijesh.singh-5C7GfCeVMHo@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, KY Srinivasan <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Dave Young <dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Josh Triplett <josh@joshtri>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <a48b0735-ff75-6228-22ba-c8e868240f0c@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, taiten.peng@linaro.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, manivannanece23@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 18, 2018 at 7:36 PM, Andy Shevchenko
-<andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Jul 18, 2018 at 5:49 AM, Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> reparent_resources() is duplicated in arch/microblaze/pci/pci-common.c
->> and arch/powerpc/kernel/pci-common.c, so move it to kernel/resource.c
->> so that it's shared.
+Hi Matthias,
 
->> + * Returns 0 on success, -ENOTSUPP if child resource is not completely
->> + * contained by 'res', -ECANCELED if no any conflicting entry found.
+On Wed, Jul 18, 2018 at 05:07:38PM +0200, Matthias Brugger wrote:
+> 
+> 
+> On 17/07/18 16:04, Manivannan Sadhasivam wrote:
+> > Hi Matthias,
+> > 
+> > On Mon, Jul 16, 2018 at 03:24:44PM +0200, Matthias Brugger wrote:
+> >> Hi Manivanna,
+> >>
+> >> On 05/06/18 18:34, Manivannan Sadhasivam wrote:
+> >>> Add initial device tree support for Mediatek X20 Development Board
+> >>> based on MT6797 Deca core SoC. This board is one of the 96Boards
+> >>> Consumer Edition platform.
+> >>>
+> >>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >>> ---
+> >>>  arch/arm64/boot/dts/mediatek/Makefile         |  1 +
+> >>>  .../boot/dts/mediatek/mt6797-x20-dev.dts      | 33 +++++++++++++++++++
+> >>>  2 files changed, 34 insertions(+)
+> >>>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> >>> index ac17f60f998c..5b7fd6ad96e4 100644
+> >>> --- a/arch/arm64/boot/dts/mediatek/Makefile
+> >>> +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> >>> @@ -3,5 +3,6 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
+> >>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
+> >>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
+> >>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
+> >>> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
+> >>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
+> >>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
+> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts b/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
+> >>> new file mode 100644
+> >>> index 000000000000..2c09ca95d9e2
+> >>> --- /dev/null
+> >>> +++ b/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
+> >>> @@ -0,0 +1,33 @@
+> >>> +// SPDX-License-Identifier: GPL-2.0
+> >>> +/*
+> >>> + * Device Tree Source for MediaTek X20 Development Board
+> >>> + *
+> >>> + * Copyright (C) 2018, Linaro Ltd.
+> >>> + *
+> >>> + */
+> >>> +
+> >>> +/dts-v1/;
+> >>> +
+> >>> +#include "mt6797.dtsi"
+> >>> +
+> >>> +/ {
+> >>> +	model = "Mediatek X20 Development Board";
+> >>> +	compatible = "archermind,mt6797-x20-dev", "mediatek,mt6797";
+> >>> +
+> >>> +	aliases {
+> >>> +		serial0 = &uart1;
+> >>> +	};
+> >>
+> >> Sorry for the late answer.
+> >> Why did you use uart1 instead of uart0?
+> >> I know that uart0 is used by the bootloader, but because of their exotic flash
+> >> procedure I find it quite useful to see this messages in my serial connection.
+> >> Of course you can only use 921600 baudrate then.
+> >>
+> > 
+> > The reason is, most of the Mezzanine boards use USB to UART bridge on the
+> > UART1 port available on the Low Speed Expansion header. Additionally, the
+> > convention followed by most of the Consumer Edition 96Boards is to use UART1
+> > as the debug serial port. That's why eventhough the bootloader is using UART0,
+> > I forced the kernel to use UART1.
+> > 
+> 
+> Sounds reasonable, I don't have this 96 boards adapter and I forgot about it.
+> 
 
-You also can refer to constants by prefixing them with %, e.g. %-ENOTSUPP.
-But this is up to you completely.
+That's fine :)
 
--- 
-With Best Regards,
-Andy Shevchenko
+> >>> +
+> >>> +	memory@40000000 {
+> >>> +		device_type = "memory";
+> >>> +		reg = <0 0x40000000 0 0x1e605000>;
+> >>
+> >> How comes this strange number for the memory size?
+> >>
+> > 
+> > Actually, the memory size is extracted from the downstream kernel [1].
+> > 
+> 
+> Hm, Archermind "Helio X20 Development Board Hardware Manual" talks about 2GB
+> LPDDR3-SDRAM. Would you mind to check if that is actually true?
+> 
+
+Yes, it is 2GB. Shall I change the size to 0x80000000?
+
+Thanks,
+Mani
+
+> >> BTW do you know the differences between the EVB board and the x20 one?
+> >> I used the evb dts for booting up to now.
+> >>
+> > 
+> > Sorry, I don't know the difference between both boards!
+> 
+> Sure, no problem :)
+> 
+> Regards,
+> Matthias
+> 
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > [1] https://github.com/helio-x20/linux/blob/helio-x20/arch/arm64/boot/dts/amt6797_64_open.dts#L8
+> > 
+> >> Best regards,
+> >> Matthias
+> >>
+> >>> +	};
+> >>> +
+> >>> +	chosen {
+> >>> +		stdout-path = "serial0:115200n8";
+> >>> +	};
+> >>> +};
+> >>> +
+> >>> +&uart1 {
+> >>> +	status = "okay";
+> >>> +};
+> >>>
