@@ -1,78 +1,51 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding doc
-Date: Wed, 18 Jul 2018 03:16:50 +0000
-Message-ID: <AM0PR04MB4211F5F21B6E562E36F7123680530@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20180716114209.25242-1-o.rempel@pengutronix.de>
- <20180716114209.25242-2-o.rempel@pengutronix.de>
- <20180716151654.GA21819@rob-hp-laptop>
- <AM0PR04MB42115331D2201A6A07D82CEA805C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <15215da0-2de9-a6a9-0a08-1877e27e0fd7@pengutronix.de>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v7 01/10] counter: Introduce the Generic Counter
+ interface
+Date: Tue, 17 Jul 2018 20:49:54 -0700
+Message-ID: <20180717204954.4b5e371603d0b40b2aaabbb8@linux-foundation.org>
+References: <cover.1529607879.git.vilhelm.gray@gmail.com>
+        <51b75b2b4495d4ad7ed173d91a726379bdae2353.1529607879.git.vilhelm.gray@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <15215da0-2de9-a6a9-0a08-1877e27e0fd7@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51b75b2b4495d4ad7ed173d91a726379bdae2353.1529607879.git.vilhelm.gray@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc: gregkh@linuxfoundation.org, jic23@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, fabrice.gasnier@st.com, benjamin.gaignard@st.com, robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
-> Sent: Tuesday, July 17, 2018 12:56 PM
-> To: A.s. Dong <aisheng.dong@nxp.com>; Rob Herring <robh@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>; devicetree@vger.kernel.org;
-> dl-linux-imx <linux-imx@nxp.com>; kernel@pengutronix.de; Fabio Estevam
-> <fabio.estevam@nxp.com>; Shawn Guo <shawnguo@kernel.org>; linux-
-> arm-kernel@lists.infradead.org
-> Subject: Re: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding doc
-> 
-> Hi,
-> 
-> On 17.07.2018 06:51, A.s. Dong wrote:
-> >> -----Original Message-----
-> >> From: Rob Herring [mailto:robh@kernel.org]
-> >> Sent: Monday, July 16, 2018 11:17 PM
-> >> To: Oleksij Rempel <o.rempel@pengutronix.de>
-> >> Cc: Shawn Guo <shawnguo@kernel.org>; Fabio Estevam
-> >> <fabio.estevam@nxp.com>; Mark Rutland <mark.rutland@arm.com>; A.s.
-> >> Dong <aisheng.dong@nxp.com>; kernel@pengutronix.de; linux-arm-
-> >> kernel@lists.infradead.org; devicetree@vger.kernel.org; dl-linux-imx
-> >> <linux- imx@nxp.com>
-> >> Subject: Re: [PATCH v3 1/3] dt-bindings: arm: fsl: add mu binding doc
-> >>
-> >> On Mon, Jul 16, 2018 at 01:42:07PM +0200, Oleksij Rempel wrote:
-> >>> The Messaging Unit module enables two processors within the SoC to
-> >>> communicate and coordinate by passing messages (e.g. data, status
-> >>> and
-> >>> control) through the MU interface.
-> >>
-> >> v3? I already gave my R-by on v4 from Dong. Please coordinate your
-> >> work on this.
-> >
-> > Okay.
-> >
-> > Oleksij,
-> > could you re-add the M4 support part in a separate patch based on the
-> > already acked SCU one?
-> > I guess you can re-send with the acked one.
-> 
-> Rob, what do you prefer: two patches for one new file or one squashed
-> patch?
+On Thu, 21 Jun 2018 17:07:08 -0400 William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
 
-I guess Rob's meaning is two separate patches as they're two features.
-We probably can send and test in case Rob is missing this mail.
-If any issue, we can simply change later. Anyway, that allow us to
-review a new version of other part instead of pending here.
+> This patch introduces the Generic Counter interface for supporting
+> counter devices.
+> 
 
-Regards
-Dong Aisheng
++EXPORT_SYMBOL(count_direction_str);
++EXPORT_SYMBOL(count_mode_str);
++EXPORT_SYMBOL(counter_signal_enum_read);
++EXPORT_SYMBOL(counter_signal_enum_write);
++EXPORT_SYMBOL(counter_signal_enum_available_read);
++EXPORT_SYMBOL(counter_count_enum_read);
++EXPORT_SYMBOL(counter_count_enum_write);
++EXPORT_SYMBOL(counter_count_enum_available_read);
++EXPORT_SYMBOL(counter_device_enum_read);
++EXPORT_SYMBOL(counter_device_enum_write);
++EXPORT_SYMBOL(counter_device_enum_available_read);
++EXPORT_SYMBOL(signal_read_value_set);
++EXPORT_SYMBOL(count_read_value_set);
++EXPORT_SYMBOL(count_write_value_get);
++EXPORT_SYMBOL(counter_register);
++EXPORT_SYMBOL(counter_unregister);
++EXPORT_SYMBOL(devm_counter_register);
++EXPORT_SYMBOL(devm_counter_unregister);
+
+The naming is a bit chaotic.  Most of the symbols start with counter_,
+which is good.  But a handful do not.
+
+Also, symbols called signal_* make my head spin - Linux already has a
+firmly ingrained notion of what a signal is, and this ain't it ;)
+Although the kernel tends to use sig_ for signals-as-an-IPC-thing.
+
+Also, many many drivers deal with signals-as-an-electrical-thing - is
+it appropriate for this particular driver to take that namespace?
