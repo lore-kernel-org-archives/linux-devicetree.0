@@ -1,7 +1,7 @@
 From: Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH v2 4/5] ARM: dts: sun8i: r40: Remove unused address-cells/size-cells of dwmac-sun8i
-Date: Wed, 18 Jul 2018 11:40:40 +0000
-Message-ID: <1531914041-14751-5-git-send-email-clabbe@baylibre.com>
+Subject: [PATCH v2 5/5] ARM64: dts: sun50i: a64: Remove unused address-cells/size-cells of dwmac-sun8i
+Date: Wed, 18 Jul 2018 11:40:41 +0000
+Message-ID: <1531914041-14751-6-git-send-email-clabbe@baylibre.com>
 References: <1531914041-14751-1-git-send-email-clabbe@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1531914041-14751-1-git-send-email-clabbe@baylibre.com>
@@ -19,21 +19,21 @@ Warning (avoid_unnecessary_addr_size): /soc/ethernet@1c50000: unnecessary #addre
 
 Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 ---
- arch/arm/boot/dts/sun8i-r40.dtsi | 2 --
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 2 --
  1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index 38a3e0dbc824..1e680e4fee60 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -576,8 +576,6 @@
- 			reset-names = "stmmaceth";
- 			clocks = <&ccu CLK_BUS_GMAC>;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 91dd5dd9e205..357f6cba00cd 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -668,8 +668,6 @@
+ 			clocks = <&ccu CLK_BUS_EMAC>;
  			clock-names = "stmmaceth";
+ 			status = "disabled";
 -			#address-cells = <1>;
 -			#size-cells = <0>;
- 			status = "disabled";
  
- 			gmac_mdio: mdio {
+ 			mdio: mdio {
+ 				compatible = "snps,dwmac-mdio";
 -- 
 2.16.4
