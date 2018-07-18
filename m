@@ -1,31 +1,68 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: BPI-M2 Ultra boot hang, with linux-next
-Date: Wed, 18 Jul 2018 13:10:36 +0530
-Message-ID: <CAMty3ZDG5sbM2w+Mymvm8JZ8vgmP-mvtXEzT4j8vqWsap+T4DA@mail.gmail.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Denis OSTERLAND <denis.osterland@diehl.com>
+Subject: Re: [PATCH v4 1/5] rtc: sysfs: facilitate attribute add to rtc device
+Date: Wed, 18 Jul 2018 07:37:47 +0000
+Message-ID: <1531899467.6017.9.camel@diehl.com>
+References: <20180710090710.9066-1-Denis.Osterland@diehl.com>
+         <20180710090710.9066-2-Denis.Osterland@diehl.com>
+         <20180718072508.GG3211@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB5O5XPNAKGQER3FOCFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, inux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180718072508.GG3211@piout.net>
+Content-Language: en-US
+Content-ID: <A1561C653B0AAF40BC0155DDE3A9F19E@diehl.internal>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-I'm observing boot hang 'Starting kernel..." with BPI-M2 Ultra,
-disabling de2 status on dts seems booting.
-
-Was it an existing issue or did I miss anything?
-
-Jagan.
-
--- 
-Jagan Teki
-Senior Linux Kernel Engineer | Amarula Solutions
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
+SGVsbG8sDQoNCnRoYW5rcyBmb3IgeW91ciBjb21tZW50cy4NCg0KQW0gTWl0dHdvY2gsIGRl
+biAxOC4wNy4yMDE4LCAwOToyNSArMDIwMCBzY2hyaWViIEFsZXhhbmRyZSBCZWxsb25pOg0K
+PiBIZWxsbywNCj4gDQo+IE9uIDEwLzA3LzIwMTggMDk6NDQ6MTUrMDAwMCwgRGVuaXMgT1NU
+RVJMQU5EIHdyb3RlOg0KPiA+wqANCj4gPiArDQo+ID4gK3N0YXRpYyBzaXplX3QgcnRjX2dy
+b3VwX2NvdW50KHN0cnVjdCBydGNfZGV2aWNlICpydGMpDQo+ID4gK3sNCj4gSSBkb24ndCBm
+ZWVsIHRoaXMgZnVuY3Rpb24gaXMgbmVjZXNzYXJ5LCB5b3UgY2FuIGluY2x1ZGUgaXQgaW4g
+X19ydGNfYWRkX2dyb3VwDQpJIHRoaW5rIHRoYXQgaXQgaXMgZWFzaWVyIHRvIHJlYWQsIGJ1
+dCBzdXJlIEkgY2FuIGluY2x1ZGUgaXQuDQo+IA0KPiA+IA0KPiA+ICsNCj4gPiArc3RhdGlj
+IGlubGluZSBpbnQNCj4gPiArX19ydGNfYWRkX2dyb3VwKHN0cnVjdCBydGNfZGV2aWNlICpy
+dGMsIGNvbnN0IHN0cnVjdCBhdHRyaWJ1dGVfZ3JvdXAgKmdycCkNCj4gPiArew0KPiA+ICsJ
+c2l6ZV90IGNudCA9IHJ0Y19ncm91cF9jb3VudChydGMpOw0KPiA+ICsJY29uc3Qgc3RydWN0
+IGF0dHJpYnV0ZV9ncm91cCAqKmdyb3VwcywgKipvbGQ7DQo+ID4gKw0KPiA+ICsJZ3JvdXBz
+ID0gZGV2bV9remFsbG9jKCZydGMtPmRldiwgKGNudCsyKSpzaXplb2YoKmdyb3VwcyksIEdG
+UF9LRVJORUwpOw0KPiBQbGVhc2UgdXNlIGRldm1fa2NhbGxvYw0Kb2theQ0KPiANCj4gPiAN
+Cj4gPiArCWlmIChJU19FUlJfT1JfTlVMTChncm91cHMpKQ0KPiA+ICsJCXJldHVybiBQVFJf
+RVJSKGdyb3Vwcyk7DQo+ID4gKwltZW1jcHkoZ3JvdXBzLCBydGMtPmRldi5ncm91cHMsIGNu
+dCpzaXplb2YoKmdyb3VwcykpOw0KPiA+ICsJZ3JvdXBzW2NudF0gPSBncnA7DQo+ID4gKw0K
+PiA+ICsJb2xkID0gcnRjLT5kZXYuZ3JvdXBzOw0KPiA+ICsJcnRjLT5kZXYuZ3JvdXBzID0g
+Z3JvdXBzOw0KPiA+ICsJaWYgKG9sZCAhPSBydGNfYXR0cl9ncm91cHMpDQo+ID4gKwkJZGV2
+bV9rZnJlZSgmcnRjLT5kZXYsIG9sZCk7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4g
+K30NCj4gPiArDQo+ID4gK2ludCBydGNfYWRkX2dyb3VwKHN0cnVjdCBydGNfZGV2aWNlICpy
+dGMsIGNvbnN0IHN0cnVjdCBhdHRyaWJ1dGVfZ3JvdXAgKmdycCkNCj4gPiArew0KPiA+ICsJ
+cmV0dXJuIHJ0Yy0+ZGV2LmtvYmouc3RhdGVfaW5fc3lzZnMgPw0KPiA+ICsJCWRldm1fZGV2
+aWNlX2FkZF9ncm91cCgmcnRjLT5kZXYsIGdycCkgOg0KPiA+ICsJCV9fcnRjX2FkZF9ncm91
+cChydGMsIGdycCk7DQo+IFVzaW5nIGRldm1fZGV2aWNlX2FkZF9ncm91cCBhZnRlciBSVEMg
+cmVnaXN0cmF0aW9uIGlzIHJhY3kgYW5kIHNob3VsZA0KPiBub3QgYmUgYWxsb3dlZC4gSSB3
+b3VsZCBtZXJnZSBfX3J0Y19hZGRfZ3JvdXAgaW4gcnRjX2FkZF9ncm91cCBhbmQNCj4gcmV0
+dXJuIGFuIGVycm9yIGlmIHJ0Yy0+cmVnaXN0ZXJlZCBpcyB0cnVlLg0KWW91IGFyZSByaWdo
+dC4gQW4gZXJyb3IgaW4gdGhpcyBjYXNlIGlzIGJldHRlci4NCj4gDQo+IA0KDQpSZWdhcmRz
+IERlbmlzDQoNCkRpZWhsIENvbm5lY3Rpdml0eSBTb2x1dGlvbnMgR21iSA0KR2VzY2jDpGZ0
+c2bDvGhydW5nOiBIb3JzdCBMZW9uYmVyZ2VyDQpTaXR6IGRlciBHZXNlbGxzY2hhZnQ6IE7D
+vHJuYmVyZyAtIFJlZ2lzdGVyZ2VyaWNodDogQW10c2dlcmljaHQNCk7DvHJuYmVyZzogSFJC
+IDMyMzE1DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18N
+Cg0KRGVyIEluaGFsdCBkZXIgdm9yc3RlaGVuZGVuIEUtTWFpbCBpc3QgbmljaHQgcmVjaHRs
+aWNoIGJpbmRlbmQuIERpZXNlIEUtTWFpbCBlbnRoYWVsdCB2ZXJ0cmF1bGljaGUgdW5kL29k
+ZXIgcmVjaHRsaWNoIGdlc2NodWV0enRlIEluZm9ybWF0aW9uZW4uDQpJbmZvcm1pZXJlbiBT
+aWUgdW5zIGJpdHRlLCB3ZW5uIFNpZSBkaWVzZSBFLU1haWwgZmFlbHNjaGxpY2hlcndlaXNl
+IGVyaGFsdGVuIGhhYmVuLiBCaXR0ZSBsb2VzY2hlbiBTaWUgaW4gZGllc2VtIEZhbGwgZGll
+IE5hY2hyaWNodC4NCkplZGUgdW5lcmxhdWJ0ZSBGb3JtIGRlciBSZXByb2R1a3Rpb24sIEJl
+a2FubnRnYWJlLCBBZW5kZXJ1bmcsIFZlcnRlaWx1bmcgdW5kL29kZXIgUHVibGlrYXRpb24g
+ZGllc2VyIEUtTWFpbCBpc3Qgc3RyZW5nc3RlbnMgdW50ZXJzYWd0Lg0KVGhlIGNvbnRlbnRz
+IG9mIHRoZSBhYm92ZSBtZW50aW9uZWQgZS1tYWlsIGlzIG5vdCBsZWdhbGx5IGJpbmRpbmcu
+IFRoaXMgZS1tYWlsIGNvbnRhaW5zIGNvbmZpZGVudGlhbCBhbmQvb3IgbGVnYWxseSBwcm90
+ZWN0ZWQgaW5mb3JtYXRpb24uIFBsZWFzZSBpbmZvcm0gdXMgaWYgeW91IGhhdmUgcmVjZWl2
+ZWQgdGhpcyBlLW1haWwgYnkNCm1pc3Rha2UgYW5kIGRlbGV0ZSBpdCBpbiBzdWNoIGEgY2Fz
+ZS4gRWFjaCB1bmF1dGhvcml6ZWQgcmVwcm9kdWN0aW9uLCBkaXNjbG9zdXJlLCBhbHRlcmF0
+aW9uLCBkaXN0cmlidXRpb24gYW5kL29yIHB1YmxpY2F0aW9uIG9mIHRoaXMgZS1tYWlsIGlz
+IHN0cmljdGx5IHByb2hpYml0ZWQuIA0K
