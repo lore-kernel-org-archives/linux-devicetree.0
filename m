@@ -1,55 +1,67 @@
-From: Camelia Groza <camelia.groza@nxp.com>
-Subject: [PATCH 2/3] powerpc/dts/fsl: t4240rdb: use the Cortina PHY driver compatible
-Date: Wed, 18 Jul 2018 14:46:50 +0300
-Message-ID: <6fa5aa04d257525c5703b7c8ca833ec0ae0047c7.1531903211.git.camelia.groza@nxp.com>
-References: <cover.1531903211.git.camelia.groza@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1531903211.git.camelia.groza@nxp.com>
-In-Reply-To: <cover.1531903211.git.camelia.groza@nxp.com>
-References: <cover.1531903211.git.camelia.groza@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, benh@kernel.crashing.org
-Cc: paulus@samba.org, mpe@ellerman.id.au, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Camelia Groza <camelia.groza@nxp.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH RESEND 02/15] ASoC: meson: add axg fifo
+	base driver
+Date: Wed, 18 Jul 2018 12:50:54 +0100
+Message-ID: <20180718115054.GI5700@sirena.org.uk>
+References: <20180717154304.9973-1-jbrunet@baylibre.com>
+ <20180717154304.9973-3-jbrunet@baylibre.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============7386913901980755936=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180717154304.9973-3-jbrunet@baylibre.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Cortina PHY requires the use of the dedicated Cortina PHY driver
-instead of the generic one.
 
-Signed-off-by: Camelia Groza <camelia.groza@nxp.com>
----
- arch/powerpc/boot/dts/fsl/t4240rdb.dts | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+--===============7386913901980755936==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="CNK/L7dwKXQ4Ub8J"
+Content-Disposition: inline
 
-diff --git a/arch/powerpc/boot/dts/fsl/t4240rdb.dts b/arch/powerpc/boot/dts/fsl/t4240rdb.dts
-index 15eb0a3..a56a705 100644
---- a/arch/powerpc/boot/dts/fsl/t4240rdb.dts
-+++ b/arch/powerpc/boot/dts/fsl/t4240rdb.dts
-@@ -267,22 +267,22 @@
- 
- 			mdio@fd000 {
- 				xfiphy1: ethernet-phy@10 {
--					compatible = "ethernet-phy-ieee802.3-c45";
-+					compatible = "ethernet-phy-id13e5.1002";
- 					reg = <0x10>;
- 				};
- 
- 				xfiphy2: ethernet-phy@11 {
--					compatible = "ethernet-phy-ieee802.3-c45";
-+					compatible = "ethernet-phy-id13e5.1002";
- 					reg = <0x11>;
- 				};
- 
- 				xfiphy3: ethernet-phy@13 {
--					compatible = "ethernet-phy-ieee802.3-c45";
-+					compatible = "ethernet-phy-id13e5.1002";
- 					reg = <0x13>;
- 				};
- 
- 				xfiphy4: ethernet-phy@12 {
--					compatible = "ethernet-phy-ieee802.3-c45";
-+					compatible = "ethernet-phy-id13e5.1002";
- 					reg = <0x12>;
- 				};
- 			};
--- 
-1.9.1
+
+--CNK/L7dwKXQ4Ub8J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Jul 17, 2018 at 05:42:51PM +0200, Jerome Brunet wrote:
+
+> +	return !status ? IRQ_NONE : IRQ_HANDLED;
+
+Please just write normal conditional statements, it makes things a lot
+easier to read (the ! isn't helping either here).
+
+--CNK/L7dwKXQ4Ub8J
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltPKZ0ACgkQJNaLcl1U
+h9A0+gf/VsQEQ3Eh3LFVvVOE4q/C6dHPik7B1mL+EauJ5ivAVTQbE/MpoHy/rAF0
+sVXGt+XVVsef/OLGmglJ3QM+k3z4QagK7r0eH4S4DjiDsBTW2h8OO1kR/Yrdnwee
+BULhCJqV5IBuTRIIlxAMvSYPe07SEs3KNzPbFjVbfTH6w44XdCDEnR+rKBkAcCOA
+c/NWQke0nlQe5LZC4GVQEPtXD3m4SlHyXyYc6Hiuf9f6+9GWEXMvh6lJU9mvo3VY
+ZUNXZjkzBc20K9ekCWVtOZwPC59rbsgoGYhhkXQhIGi0buyv+EjoYqn4QM/lDcOV
+WfA/uW/+EQukr9SjnXLNlMKcVCeexA==
+=WYYV
+-----END PGP SIGNATURE-----
+
+--CNK/L7dwKXQ4Ub8J--
+
+--===============7386913901980755936==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7386913901980755936==--
