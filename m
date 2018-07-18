@@ -1,189 +1,45 @@
-From: Mars Cheng <mars.cheng@mediatek.com>
-Subject: Re: [PATCH v5 04/11] soc: mediatek: add MT6765 scpsys support
-Date: Wed, 18 Jul 2018 16:54:15 +0800
-Message-ID: <1531904055.4416.2.camel@mtkswgap22>
-References: <1531817552-17221-1-git-send-email-mars.cheng@mediatek.com>
-         <1531817552-17221-5-git-send-email-mars.cheng@mediatek.com>
-         <1531832413.8953.30.camel@mtkswgap22>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a77980: add INTC-EX support
+Date: Wed, 18 Jul 2018 10:55:26 +0200
+Message-ID: <CAMuHMdU6teWir6fHJwC-e6B-TFvFPrwQR336=1jSb04-sqOXZQ@mail.gmail.com>
+References: <2368353.xfo5beGC5E@wasted.cogentembedded.com>
+ <c1e25728-8b86-b896-c097-e9ce2b891951@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531832413.8953.30.camel@mtkswgap22>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Stephen Boyd <sboyd@kernel.org>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Owen Chen <owen.chen@mediatek.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <c1e25728-8b86-b896-c097-e9ce2b891951@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Will Deacon <will.deacon@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean
+On Tue, Jul 17, 2018 at 10:08 PM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Describe the INTC-EX interrupt controller in the R8A77980 device tree.
+>
+> Based on the original (and large) patch by Vladimir Barinov.
+>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-On Tue, 2018-07-17 at 21:00 +0800, Sean Wang wrote:
-> On Tue, 2018-07-17 at 16:52 +0800, Mars Cheng wrote:
-> > This adds scpsys support for MT6765
-> > 
-> 
-> it looks like 4/11 have to depend on 6/11 and 7/11 to get a full function on scpsys for MT6765.
-> 
-> you should keep dependency in order to submit these patches
-> 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Got it, will reorder the sequence.
+Gr{oetje,eeting}s,
 
-> > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> > Signed-off-by: Owen Chen <owen.chen@mediatek.com>
-> > ---
-> >  drivers/soc/mediatek/mtk-scpsys.c        |   88 ++++++++++++++++++++++++++++++
-> >  include/dt-bindings/power/mt6765-power.h |   14 +++++
-> >  2 files changed, 102 insertions(+)
-> >  create mode 100644 include/dt-bindings/power/mt6765-power.h
-> > 
-> > diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-> > index 5b24bb4..4bb6c7a 100644
-> > --- a/drivers/soc/mediatek/mtk-scpsys.c
-> > +++ b/drivers/soc/mediatek/mtk-scpsys.c
-> > @@ -23,6 +23,7 @@
-> >  
-> >  #include <dt-bindings/power/mt2701-power.h>
-> >  #include <dt-bindings/power/mt2712-power.h>
-> > +#include <dt-bindings/power/mt6765-power.h>
-> >  #include <dt-bindings/power/mt6797-power.h>
-> >  #include <dt-bindings/power/mt7622-power.h>
-> >  #include <dt-bindings/power/mt7623a-power.h>
-> > @@ -680,6 +681,79 @@ static void mtk_register_power_domains(struct platform_device *pdev,
-> >  };
-> >  
-> >  /*
-> > + * MT6765 power domain support
-> > + */
-> > +#define SPM_PWR_STATUS_MT6765			0x0180
-> > +#define SPM_PWR_STATUS_2ND_MT6765		0x0184
-> > +
-> > +static const struct scp_domain_data scp_domain_data_mt6765[] = {
-> > +	[MT6765_POWER_DOMAIN_VCODEC] = {
-> > +		.name = "vcodec",
-> > +		.sta_mask = BIT(26),
-> > +		.ctl_offs = 0x300,
-> > +		.sram_pdn_bits = GENMASK(8, 8),
-> > +		.sram_pdn_ack_bits = GENMASK(12, 12),
-> > +	},
-> > +	[MT6765_POWER_DOMAIN_ISP] = {
-> > +		.name = "isp",
-> > +		.sta_mask = BIT(5),
-> > +		.ctl_offs = 0x308,
-> > +		.sram_pdn_bits = GENMASK(8, 8),
-> > +		.sram_pdn_ack_bits = GENMASK(12, 12),
-> > +	},
-> > +	[MT6765_POWER_DOMAIN_MM] = {
-> > +		.name = "mm",
-> > +		.sta_mask = BIT(3),
-> > +		.ctl_offs = 0x30C,
-> > +		.sram_pdn_bits = GENMASK(8, 8),
-> > +		.sram_pdn_ack_bits = GENMASK(12, 12),
-> > +	},
-> > +	[MT6765_POWER_DOMAIN_CONN] = {
-> > +		.name = "conn",
-> > +		.sta_mask = BIT(1),
-> > +		.ctl_offs = 0x32C,
-> > +		.sram_pdn_bits = 0,
-> > +		.sram_pdn_ack_bits = 0,
-> > +	},
-> > +	[MT6765_POWER_DOMAIN_MFG_ASYNC] = {
-> > +		.name = "mfg_async",
-> > +		.sta_mask = BIT(23),
-> > +		.ctl_offs = 0x334,
-> > +		.sram_pdn_bits = 0,
-> > +		.sram_pdn_ack_bits = 0,
-> > +	},
-> > +	[MT6765_POWER_DOMAIN_MFG] = {
-> > +		.name = "mfg",
-> > +		.sta_mask = BIT(4),
-> > +		.ctl_offs = 0x338,
-> > +		.sram_pdn_bits = GENMASK(8, 8),
-> > +		.sram_pdn_ack_bits = GENMASK(12, 12),
-> > +	},
-> > +	[MT6765_POWER_DOMAIN_CAM] = {
-> > +		.name = "cam",
-> > +		.sta_mask = BIT(25),
-> > +		.ctl_offs = 0x344,
-> > +		.sram_pdn_bits = GENMASK(8, 9),
-> > +		.sram_pdn_ack_bits = GENMASK(12, 13),
-> > +	},
-> > +	[MT6765_POWER_DOMAIN_MFG_CORE0] = {
-> > +		.name = "mfg_core0",
-> > +		.sta_mask = BIT(7),
-> > +		.ctl_offs = 0x34C,
-> > +		.sram_pdn_bits = GENMASK(8, 8),
-> > +		.sram_pdn_ack_bits = GENMASK(12, 12),
-> > +	},
-> 
-> Above power domains really don't require any clock controlled with
-> clk_id before any access on them?
-> 
+                        Geert
 
-Yes, already sync with Owen, they are lost. will add them.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Thanks.
-> > +};
-> > +
-> > +static const struct scp_subdomain scp_subdomain_mt6765[] = {
-> > +	{MT6765_POWER_DOMAIN_MM, MT6765_POWER_DOMAIN_CAM},
-> > +	{MT6765_POWER_DOMAIN_MM, MT6765_POWER_DOMAIN_ISP},
-> > +	{MT6765_POWER_DOMAIN_MM, MT6765_POWER_DOMAIN_VCODEC},
-> > +	{MT6765_POWER_DOMAIN_MFG_ASYNC, MT6765_POWER_DOMAIN_MFG},
-> > +	{MT6765_POWER_DOMAIN_MFG, MT6765_POWER_DOMAIN_MFG_CORE0},
-> > +};
-> > +
-> > +/*
-> >   * MT6797 power domain support
-> >   */
-> >  
-> > @@ -962,6 +1036,17 @@ static void mtk_register_power_domains(struct platform_device *pdev,
-> >  	.bus_prot_reg_update = false,
-> >  };
-> >  
-> > +static const struct scp_soc_data mt6765_data = {
-> > +	.domains = scp_domain_data_mt6765,
-> > +	.num_domains = ARRAY_SIZE(scp_domain_data_mt6765),
-> > +	.subdomains = scp_subdomain_mt6765,
-> > +	.num_subdomains = ARRAY_SIZE(scp_subdomain_mt6765),
-> > +	.regs = {
-> > +		.pwr_sta_offs = SPM_PWR_STATUS_MT6765,
-> > +		.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND_MT6765,
-> > +	},
-> > +};
-> > +
-> >  static const struct scp_soc_data mt6797_data = {
-> >  	.domains = scp_domain_data_mt6797,
-> >  	.num_domains = ARRAY_SIZE(scp_domain_data_mt6797),
-> > @@ -1018,6 +1103,9 @@ static void mtk_register_power_domains(struct platform_device *pdev,
-> >  		.compatible = "mediatek,mt2712-scpsys",
-> >  		.data = &mt2712_data,
-> >  	}, {
-> > +		.compatible = "mediatek,mt6765-scpsys",
-> > +		.data = &mt6765_data,
-> > +	}, {
-> >  		.compatible = "mediatek,mt6797-scpsys",
-> >  		.data = &mt6797_data,
-> >  	}, {
-> > diff --git a/include/dt-bindings/power/mt6765-power.h b/include/dt-bindings/power/mt6765-power.h
-> > new file mode 100644
-> > index 0000000..d347b4e
-> > --- /dev/null
-> > +++ b/include/dt-bindings/power/mt6765-power.h
-> > @@ -0,0 +1,14 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef _DT_BINDINGS_POWER_MT6765_POWER_H
-> > +#define _DT_BINDINGS_POWER_MT6765_POWER_H
-> > +
-> > +#define MT6765_POWER_DOMAIN_CONN		0
-> > +#define MT6765_POWER_DOMAIN_MM			1
-> > +#define MT6765_POWER_DOMAIN_MFG_ASYNC		2
-> > +#define MT6765_POWER_DOMAIN_ISP			3
-> > +#define MT6765_POWER_DOMAIN_MFG			4
-> > +#define MT6765_POWER_DOMAIN_MFG_CORE0		5
-> > +#define MT6765_POWER_DOMAIN_CAM			6
-> > +#define MT6765_POWER_DOMAIN_VCODEC		7
-> > +
-> > +#endif /* _DT_BINDINGS_POWER_MT6765_POWER_H */
-> 
-> 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
