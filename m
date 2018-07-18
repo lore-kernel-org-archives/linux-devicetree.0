@@ -1,51 +1,42 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V2 0/5] arm64: Initial support Texas Instrument's AM654
- Platform
-Date: Wed, 18 Jul 2018 13:04:55 -0500
-Message-ID: <20180718180455.gaej4fgf47zytdxk@kahuna>
-References: <20180626162615.19194-1-nm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 02/17] dmaengine: dma-jz4780: Return error if not probed from DT
+Date: Wed, 18 Jul 2018 20:20:08 +0200
+Message-ID: <20180718182023.8182-3-paul@crapouillou.net>
+References: <20180718182023.8182-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180626162615.19194-1-nm@ti.com>
+In-Reply-To: <20180718182023.8182-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Santosh Shilimkar <ssantosh@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Sudeep Holla <sudeep.holla@arm.com>, arm@kernel.org
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, Paul Cercueil <paul@crapouillou.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On 16:26-20180626, Nishanth Menon wrote:
-> Hi,
-> 
-> This is an minor update from V1 posted earlier:
-> 	https://marc.info/?l=linux-kernel&m=152943745424138&w=2
-> 
-> The following series enables support for newest addition in TI's SoC
-> portfolio - AM654 SoC.
-> 
-> The series is based off v4.18-rc1, also available here:
-> https://github.com/nmenon/linux-2.6-playground/tree/upstream/v4.18-rc1/k3-1-am6-base
-> 
-> Key changes since RFC are indicated in respective patches:
-> * Pickedup Tony's Reviewed by
-> * Modified cbass nodes to indicate interconnect (patch #3 in the series)
+The driver calls clk_get() with the clock name set to NULL, which means
+that the driver could only work when probed from devicetree. From now
+on, we explicitly require the driver to be probed from devicetree.
 
-Hi Tony,
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Mathieu Malaterre <malat@debian.org>
+---
+ drivers/dma/dma-jz4780.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Apologies on the off-request. Looks like Tero might be on vacation
-and might not be able to send the Pull request to arm-soc folks on time.
+ v2: New patch
 
-Requesting you to pick them up on our behalf for v4.19 if it that is
-fine with you. We do have Rob's ack on the bindings themselves, and
-the patches also have been reviewed as well.
-
-Patchwork links:
-https://patchwork.kernel.org/patch/10527309/
-https://patchwork.kernel.org/patch/10489509/
-https://patchwork.kernel.org/patch/10489547/
-https://patchwork.kernel.org/patch/10489543/
-https://patchwork.kernel.org/patch/10489513/
-
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index 85820a2d69d4..987899610b46 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -761,6 +761,11 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	int i, ret;
+ 
++	if (!dev->of_node) {
++		dev_err(dev, "This driver must be probed from devicetree\n");
++		return -EINVAL;
++	}
++
+ 	jzdma = devm_kzalloc(dev, sizeof(*jzdma), GFP_KERNEL);
+ 	if (!jzdma)
+ 		return -ENOMEM;
 -- 
-Regards,
-Nishanth Menon
+2.11.0
