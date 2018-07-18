@@ -1,95 +1,122 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: [PATCH] arm64: dts: msm8916: drop legacy suffix for clocks used by MSM DRM driver
-Date: Wed, 18 Jul 2018 16:52:57 +0200
-Message-ID: <20180718145258.15254-1-niklas.cassel@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Niklas Cassel <niklas.cassel@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH 3/3] ARM: dts: cubox: add LCD controller and TDA998x
+ configuration
+Date: Wed, 18 Jul 2018 16:53:04 +0200
+Message-ID: <87601ca94f.fsf@bootlin.com>
+References: <20180710102344.GH17271@n2100.armlinux.org.uk>
+ <E1fcpom-0003ZI-FL@rmk-PC.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <E1fcpom-0003ZI-FL@rmk-PC.armlinux.org.uk> (Russell King's
+ message of "Tue, 10 Jul 2018 11:24:24 +0100")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Drop legacy suffix for clocks used by MSM DRM driver.
-Fixes the following warnings:
+Hi Russell,
+ 
+ On mar., juil. 10 2018, Russell King <rmk+kernel@arm.linux.org.uk> wrote:
 
-msm_dsi_phy 1a98300.dsi-phy: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
-msm 1a00000.mdss: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
-msm 1a00000.mdss: Using legacy clk name binding.  Use "bus" instead of "bus_clk"
-msm 1a00000.mdss: Using legacy clk name binding.  Use "vsync" instead of "vsync_clk"
-msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "bus" instead of "bus_clk"
-msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
-msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "core" instead of "core_clk"
-msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "vsync" instead of "vsync_clk"
-msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "mdp_core" instead of "mdp_core_clk"
-msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
-msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "bus" instead of "bus_clk"
-msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "byte" instead of "byte_clk"
-msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "pixel" instead of "pixel_clk"
-msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "core" instead of "core_clk"
+> Add DT configuration for the HDMI display output on the Dove Cubox.
+> This adds support for the LCD0 controller which is connected to a
+> TDA19988 HDMI encoder.
+>
+> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+> ---
+>  arch/arm/boot/dts/dove-cubox.dts | 43 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/dove-cubox.dts b/arch/arm/boot/dts/dove-cubox.dts
+> index 580e3cbcfbf7..f6dd56f63d09 100644
+> --- a/arch/arm/boot/dts/dove-cubox.dts
+> +++ b/arch/arm/boot/dts/dove-cubox.dts
+> @@ -67,6 +67,25 @@
+>  	gpu-subsystem {
+>  		status = "okay";
+>  	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		display_reserved: framebuffer {
+> +			compatible = "marvell,dove-framebuffer";
 
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 28 +++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+I didn't find the binding documentation associated to
+"marvell,dove-framebuffer".
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index c2625d15a8c0..7b32b8990d62 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -858,9 +858,9 @@
- 			clocks = <&gcc GCC_MDSS_AHB_CLK>,
- 				 <&gcc GCC_MDSS_AXI_CLK>,
- 				 <&gcc GCC_MDSS_VSYNC_CLK>;
--			clock-names = "iface_clk",
--				      "bus_clk",
--				      "vsync_clk";
-+			clock-names = "iface",
-+				      "bus",
-+				      "vsync";
- 
- 			interrupts = <0 72 IRQ_TYPE_LEVEL_HIGH>;
- 
-@@ -883,10 +883,10 @@
- 					 <&gcc GCC_MDSS_AXI_CLK>,
- 					 <&gcc GCC_MDSS_MDP_CLK>,
- 					 <&gcc GCC_MDSS_VSYNC_CLK>;
--				clock-names = "iface_clk",
--					      "bus_clk",
--					      "core_clk",
--					      "vsync_clk";
-+				clock-names = "iface",
-+					      "bus",
-+					      "core",
-+					      "vsync";
- 
- 				iommus = <&apps_iommu 4>;
- 
-@@ -922,12 +922,12 @@
- 					 <&gcc GCC_MDSS_BYTE0_CLK>,
- 					 <&gcc GCC_MDSS_PCLK0_CLK>,
- 					 <&gcc GCC_MDSS_ESC0_CLK>;
--				clock-names = "mdp_core_clk",
--					      "iface_clk",
--					      "bus_clk",
--					      "byte_clk",
--					      "pixel_clk",
--					      "core_clk";
-+				clock-names = "mdp_core",
-+					      "iface",
-+					      "bus",
-+					      "byte",
-+					      "pixel",
-+					      "core";
- 				phys = <&dsi_phy0>;
- 				phy-names = "dsi-phy";
- 
-@@ -963,7 +963,7 @@
- 				#phy-cells = <0>;
- 
- 				clocks = <&gcc GCC_MDSS_AHB_CLK>;
--				clock-names = "iface_clk";
-+				clock-names = "iface";
- 			};
- 		};
- 
+Could you point me on the accurate file?
+
+
+> +			size = <0x02000000>;
+> +			alignment = <0x02000000>;
+> +			no-map;
+> +		};
+> +	};
+> +
+> +	display-subsystem {
+> +		compatible = "marvell,dove-display-subsystem";
+
+Same for this one.
+
+Thanks,
+
+Gregory
+
+> +		memory-region = <&display_reserved>;
+> +		ports = <&lcd0_port>;
+> +	};
+>  };
+>  
+>  &uart0 { status = "okay"; };
+> @@ -117,6 +136,30 @@
+>  			silabs,pll-master;
+>  		};
+>  	};
+> +
+> +	tda998x: hdmi-encoder {
+> +		compatible = "nxp,tda998x";
+> +		reg = <0x70>;
+> +		video-ports = <0x234501>;
+> +		interrupts-extended = <&gpio0 27 IRQ_TYPE_LEVEL_LOW>;
+> +
+> +		port {
+> +			tda998x_video: endpoint {
+> +				remote-endpoint = <&lcd0_rgb>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&lcd0 {
+> +	status = "okay";
+> +	clocks = <&si5351 0>;
+> +	clock-names = "ext_ref_clk1";
+> +	lcd0_port: port {
+> +		lcd0_rgb: endpoint {
+> +			remote-endpoint = <&tda998x_video>;
+> +		};
+> +	};
+>  };
+>  
+>  &sdio0 {
+> -- 
+> 2.7.4
+>
+
 -- 
-2.17.1
+Gregory Clement, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
