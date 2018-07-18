@@ -1,80 +1,65 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH] ARM: dts: exynos5: add missing interrupts for pwm node
-Date: Wed, 18 Jul 2018 16:20:28 +0530
-Message-ID: <CANAwSgSaU1kTW3j0OZGwmOWo=p2uHFP8toLUe9FHYEkCJsuLFg@mail.gmail.com>
-References: <1531906490-1739-1-git-send-email-linux.amoon@gmail.com>
- <CAJKOXPdeRvt4YG9Doziq-_oQ9DeUffvTB53OOaq-q2UpkBGpgQ@mail.gmail.com>
- <CANAwSgS8z-TQ=nK7dy5YeA8QJV+7cCctZKJT7qn8macQQkyKqg@mail.gmail.com> <CAJKOXPez6cuLyrxBkAKtyx2xiqG7VLWFCBYXkBX_537A=bDpsg@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/5] spi: dw: fix possible race condition
+Date: Wed, 18 Jul 2018 11:51:12 +0100
+Message-ID: <20180718105112.GF5700@sirena.org.uk>
+References: <20180717142314.32337-1-alexandre.belloni@bootlin.com>
+ <20180717142314.32337-2-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VuQYccsttdhdIfIP"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPez6cuLyrxBkAKtyx2xiqG7VLWFCBYXkBX_537A=bDpsg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180717142314.32337-2-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: James Hogan <jhogan@kernel.org>, Paul Burton <paul.burton@mips.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
 
-On 18 July 2018 at 16:03, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On 18 July 2018 at 12:30, Anand Moon <linux.amoon@gmail.com> wrote:
->> Hi
->>
->> On 18 July 2018 at 15:27, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>> On 18 July 2018 at 11:34, Anand Moon <linux.amoon@gmail.com> wrote:
->>>> Add missing GIC interrupts property for pwm nodes.
->>>>
->>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->>>> ---
->>>>  arch/arm/boot/dts/exynos5.dtsi | 5 +++++
->>>>  1 file changed, 5 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
->>>> index 5d2f0a0..9406108 100644
->>>> --- a/arch/arm/boot/dts/exynos5.dtsi
->>>> +++ b/arch/arm/boot/dts/exynos5.dtsi
->>>> @@ -169,6 +169,11 @@
->>>>                 pwm: pwm@12dd0000 {
->>>>                         compatible = "samsung,exynos4210-pwm";
->>>>                         reg = <0x12DD0000 0x100>;
->>>> +                       interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
->>>> +                                  <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
->>>
->>> Indentation here looks weird - spaces used after tabs but not aligned
->>> with first entry. Please indent it properly and align it.
->>>
->>> Best regards,
->>> Krzysztof
->>
->> I ram checkpatch before I submit this patch it shown no error.
->>
->> # scripts/checkpatch.pl --no-signoff -q
->> 0001-ARM-dts-exynos5-add-missing-interrupts-for-pwm-node.patch
->
-> That's good, thank you. Still when I look at it in patchwork the
-> indentation is wrong:
-> https://patchwork.kernel.org/patch/10531753/
-> However it can be patchwork's fault, so are you sure that this is
-> properly indented and aligned?
->
-> BR,
-> Krzysztof
+--VuQYccsttdhdIfIP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I prefer vim and I use following plugin
+On Tue, Jul 17, 2018 at 04:23:10PM +0200, Alexandre Belloni wrote:
+> It is possible to get an interrupt as soon as it is requested.  dw_spi_irq
+> does spi_controller_get_devdata(master) and expects it to be different th=
+an
+> NULL. However, spi_controller_set_devdata() is called after request_irq(),
+> resulting in the following crash:
+>=20
+> CPU 0 Unable to handle kernel paging request at virtual address 00000030,=
+ epc =3D=3D 8058e09c, ra =3D=3D 8018ff90
+> [...]
+> Call Trace:
+> [<8058e09c>] dw_spi_irq+0x8/0x64
+> [<8018ff90>] __handle_irq_event_percpu+0x70/0x1d4
+> [<80190128>] handle_irq_event_percpu+0x34/0x8c
+> [<801901c4>] handle_irq_event+0x44/0x80
+> [<801951a8>] handle_level_irq+0xdc/0x194
+> [<8018f580>] generic_handle_irq+0x38/0x50
+> [<804c6924>] ocelot_irq_handler+0x104/0x1c0
+> [<8018f580>] generic_handle_irq+0x38/0x50
 
-https://github.com/vivien/vim-linux-coding-style
+Please think hard before including complete backtraces in upstream
+reports, they are very large and contain almost no useful information
+relative to their size so often obscure the relevant content in your
+message. If part of the backtrace is usefully illustrative then it's
+usually better to pull out the relevant sections.
 
-root@odroidxu4:/usr/src/odroidxu4-4kr-devel# wget -nv
-https://patchwork.kernel.org/patch/10531753/mbox/ -O pwm.patch
-2018-07-18 10:48:09
-URL:https://patchwork.kernel.org/patch/10531753/mbox/ [1460] ->
-"pwm.patch" [1]
-root@odroidxu4:/usr/src/odroidxu4-4kr-devel#
-root@odroidxu4:/usr/src/odroidxu4-4kr-devel# scripts/checkpatch.pl
---no-signoff -q pwm.patch
-root@odroidxu4:/usr/src/odroidxu4-4kr-devel#
+--VuQYccsttdhdIfIP
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Is their any other way to test checkpatch please let me know.
+-----BEGIN PGP SIGNATURE-----
 
-Best Regards
--Anand
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltPG58ACgkQJNaLcl1U
+h9BvoAf/f/6rtJgyme3vvCowQ16IZAJN774h4L9HXBSudyiaol+mrAx4ZlJdHxzB
+OYZwbbqeHHLqr9E9wdQCHDfNz0gAwXzg/kt5BbuNBx5oHLj7JESirezasI5GidMK
+nnW92RtEwrt5ygajIO33E/cWeNwLBo3Au0H2/hJnMA4L6RakTJoRT0h6+80XUkJR
+q5cHWMH8+kcvPk344EvZ/VkN3bNGo3I1jvcFSYYRwmHe42JWiQSYURBbDynJnI3t
+Bx/vo5KR+aA5n3uYfbwMD/Gj9ZbjU3pt/4P4Xhp0u4TkMKZSu3sEuO5EuIbQZ0Fn
+Fcu9kqKRVRq5DMt91jBRMEjjEP7HzQ==
+=nPpa
+-----END PGP SIGNATURE-----
+
+--VuQYccsttdhdIfIP--
