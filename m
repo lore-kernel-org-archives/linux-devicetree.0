@@ -1,76 +1,99 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: [DISCUSSION] spi multi chipselect support
-Date: Wed, 18 Jul 2018 18:35:30 +0200
-Message-ID: <20180718163530.zsa5md3huz3dnotb@earth.universe>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v7 1/4] resource: Move reparent_resources() to
+ kernel/resource.c and make it public
+Date: Wed, 18 Jul 2018 19:36:17 +0300
+Message-ID: <CAHp75VdO88ydJQ9GHdaDUmAmzL6QHR=US6JiXZ1R_EEA-xWR1Q@mail.gmail.com>
+References: <20180718024944.577-1-bhe@redhat.com>
+ <20180718024944.577-2-bhe@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wzbhycylfnbjkxy4"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20180718024944.577-2-bhe@redhat.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, brijesh.singh@amd.com, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, Keith Busch <keith.busch@intel.com>, Max Filippov <jcmvbkbc@gmail.com>, Paul Mackerras <paulus@samba.org>, baiyaowei@cmss.chinamobile.com, Frank Rowand <frowand.list@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stephen Hemminger <sthemmin@microsoft.com>, linux-nvdimm@lists.01.org, Michael Ellerman <mpe@ellerman.id.au>, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, linux-input <linux-input@vger.kernel.org>, Gustavo Padovan <gustavo@padovan.org>, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Tom Lendacky <thomas.lendacky@amd.com>, Haiyang Zhang <haiyangz@microsoft.com>, Maarten
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jul 18, 2018 at 5:49 AM, Baoquan He <bhe@redhat.com> wrote:
+> reparent_resources() is duplicated in arch/microblaze/pci/pci-common.c
+> and arch/powerpc/kernel/pci-common.c, so move it to kernel/resource.c
+> so that it's shared.
 
---wzbhycylfnbjkxy4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Some minor stuff.
 
-Hi Mark,
+> +/**
+> + * reparent_resources - reparent resource children of parent that res covers
+> + * @parent: parent resource descriptor
+> + * @res: resource descriptor desired by caller
+> + *
+> + * Returns 0 on success, -ENOTSUPP if child resource is not completely
+> + * contained by 'res', -ECANCELED if no any conflicting entry found.
 
-Some SPI slave devices have more than one chip select [0]. Rob suggested
-to use the following DT notation for this [1]:
+'res' -> @res
 
-spi-controller {
-    slave@0 {
-        reg = <0>, <1>;
-    };
-};
+> + *
+> + * Reparent resource children of 'parent' that conflict with 'res'
 
-I think this makes sense from a DT point of view, but this needs
-quite some changes in the SPI core. I tried to find out, how to
-implement the suggestion in the last few days and I see two
-possibilities:
+Ditto + 'parent' -> @parent
 
-1. Register two SPI Linux devices from one DT node. This needs the
-   fewest changes in SPI core. But we loose the one-to-one mapping
-   of DT nodes to devices. I have a feeling, that this will backfire.
+> + * under 'res', and make 'res' replace those children.
 
-2. Add support for multiple chip-select to spi_device and modify
-   the transfer functions to make use of this. Unfortunately this
-   would require changing all spi controller as far as I can see?
+Ditto.
 
-Can you please advise me how to proceed?
+> + */
+> +int reparent_resources(struct resource *parent, struct resource *res)
+> +{
+> +       struct resource *p, **pp;
+> +       struct resource **firstpp = NULL;
+> +
+> +       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
+> +               if (p->end < res->start)
+> +                       continue;
+> +               if (res->end < p->start)
+> +                       break;
+> +               if (p->start < res->start || p->end > res->end)
+> +                       return -ENOTSUPP;       /* not completely contained */
+> +               if (firstpp == NULL)
+> +                       firstpp = pp;
+> +       }
+> +       if (firstpp == NULL)
+> +               return -ECANCELED; /* didn't find any conflicting entries? */
+> +       res->parent = parent;
+> +       res->child = *firstpp;
+> +       res->sibling = *pp;
+> +       *firstpp = res;
+> +       *pp = NULL;
+> +       for (p = res->child; p != NULL; p = p->sibling) {
+> +               p->parent = res;
 
-Thanks,
+> +               pr_debug("PCI: Reparented %s %pR under %s\n",
+> +                        p->name, p, res->name);
 
--- Sebastian
+Now, PCI is a bit confusing here.
 
-[0] For example microcontrollers with ISP (in-system programming)
-    interface, like the NXP Kinetis K20 series or the MRF89XA,
-    which has one chip-select for configuration register access
-    and one for FIFO access
-[1] https://patchwork.kernel.org/patch/10310109/
+> +       }
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL(reparent_resources);
+> +
+>  static void __init __reserve_region_with_split(struct resource *root,
+>                 resource_size_t start, resource_size_t end,
+>                 const char *name)
+> --
+> 2.13.6
+>
 
---wzbhycylfnbjkxy4
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAltPbE8ACgkQ2O7X88g7
-+pq66hAAjxSDnlGBPukpVrvdCJ2cKIgQmiZG3Dn+1jfT71uWsk2hiA6Zolsjyhs+
-0KlOT3O4cXQrQvhktLGdCeJZeZpMA/jscZ5PwXefCRN3VngYiWEdlnsMUx8iLYGV
-K4MF8dexwae6aXYP6VxCy//XHEyzNrGaz8OJSdOFe8L6e5h6u9xjDPQh9J6VnAzW
-gOhW23eGT89ofjl/Wb4SmOn+T+g9BOeBDOtAi4ht2B3gSgXVdlYjHC/B/ufolj0A
-f7sfIQ69Bf7ngf71424An6KRsGM+vcvUQwykHgZ2jMRBu5tB+OzyOd5qQNTXUXIu
-ym4sS/+as7+W36gZqTfksgVDKyq12OpiG6B2r/v3m+XvO+q8+aF7FXA5ueSFATaS
-fHUSkOKZu0ny36fq6MpENisUI1ytDskcx+sTe83tgBL1eu0wzbaF4eCHfMcHIloa
-1v5TYuz12NwHhQbX1rnCVWC9l1vkFFL+LVHi8UPuG16sUvpNaGI6V5X1wYAtyQoa
-QJR3wyJOVum+xnoonKAmB+x7CHNF1SqJlV4VAaGAym+L+CuHmrgoGTdZuDMtW64k
-aQ+4G1u90HZrw+WKzVeQWmdgn1pozNzTn7qMhgs0JQsbDJvCxRzsALiotfh+EzE1
-MeM5vCS+UiUvX+Xrp6BbrTtnzXR44ggqlPJpF6yIxZ9zVs/NJGk=
-=tC6i
------END PGP SIGNATURE-----
-
---wzbhycylfnbjkxy4--
+-- 
+With Best Regards,
+Andy Shevchenko
