@@ -1,122 +1,173 @@
-From: richard.gong@linux.intel.com
-Subject: [PATCHv7 0/9] Add Intel Stratix10 FPGA manager and service layer
-Date: Wed, 18 Jul 2018 11:18:35 -0500
-Message-ID: <1531930724-22061-1-git-send-email-richard.gong@linux.intel.com>
+From: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Subject: Re: [PATCH v2 1/2] Input: atmel_mxt_ts: Add support for  optional regulators.
+Date: Wed, 18 Jul 2018 18:21:30 +0200
+Message-ID: <2353752.vfvcsHJLR6@acerlaptop>
+References: <1531851386-17840-1-git-send-email-pawel.mikolaj.chmiel@gmail.com> <1531851386-17840-2-git-send-email-pawel.mikolaj.chmiel@gmail.com> <20180717210005.GA21416@hairyalien>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gregkh@linuxfoundation.org, catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, corbet@lwn.net
-Cc: devicetree@vger.kernel.org, yves.vandervennet@linux.intel.com, richard.gong@intel.com, linux-doc@vger.kernel.org, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180717210005.GA21416@hairyalien>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nick Dyer <nick@shmanahar.org>
+Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUmljaGFyZCBHb25nIDxyaWNoYXJkLmdvbmdAaW50ZWwuY29tPgoKVGhpcyBpcyB0aGUg
-N3RoIHN1Ym1pc3Npb24gb2YgSW50ZWwgc3RyYXRpeDEwIHNlcnZpY2UgbGF5ZXIgcGF0Y2hlcy4g
-VGhpcwpzdWJtaXNzaW9uIGluY2x1ZGVzIG9uZSBhZGRpdGlvbmFsIHBhdGNoIGZvciBzdXBwb3J0
-aW5nIHJlbW90ZSBzdGF0dXMgdXBkYXRlLAp0aGUgc2Vjb25kIFN0cmF0aXgxMCBzZXJ2aWNlIGxh
-eWVyIGNsaWVudC4gSW50ZWwgU3RyYXRpeDEwIEZQR0EgbWFuYWdlciwKd2hpY2ggaXMgMXN0IFN0
-cmF0aXgxMCBzZXJ2aWNlIGxheWVyIGNsaWVudCwgaXMgaW5jbHVkZWQgaW4gdGhpcyBzdWJtaXNz
-aW9uLiAKClN0cmF0aXgxMCBzZXJ2aWNlIGxheWVyIHBhdGNoZXMgaGF2ZSBiZWVuIHJldmlld2Vk
-IGludGVybmFsbHkgYnkgQWxhbiBUdWxsCmFuZCBvdGhlciBjb2xsZWFndWVzIGF0IEludGVsLgoK
-U29tZSBmZWF0dXJlcyBvZiB0aGUgSW50ZWwgU3RyYXRpeDEwIFNvQyByZXF1aXJlIGEgbGV2ZWwg
-b2YgcHJpdmlsZWdlCmhpZ2hlciB0aGFuIHRoZSBrZXJuZWwgaXMgZ3JhbnRlZC4gU3VjaCBzZWN1
-cmUgZmVhdHVyZXMgaW5jbHVkZQpGUEdBIHByb2dyYW1taW5nLiBJbiB0ZXJtcyBvZiB0aGUgQVJN
-djggYXJjaGl0ZWN0dXJlLCB0aGUga2VybmVsIHJ1bnMKYXQgRXhjZXB0aW9uIExldmVsIDEgKEVM
-MSksIGFjY2VzcyB0byB0aGUgZmVhdHVyZXMgcmVxdWlyZXMKRXhjZXB0aW9uIExldmVsIDMgKEVM
-MykuCgpUaGUgSW50ZWwgU3RyYXRpeDEwIHNlcnZpY2UgbGF5ZXIgcHJvdmlkZXMgYW4gaW4ga2Vy
-bmVsIEFQSSBmb3IgZHJpdmVycyB0bwpyZXF1ZXN0IGFjY2VzcyB0byB0aGUgc2VjdXJlIGZlYXR1
-cmVzLiBUaGUgcmVxdWVzdHMgYXJlIHF1ZXVlZCBhbmQKcHJvY2Vzc2VkIG9uZSBieSBvbmUuIEFS
-TeKAmXMgU01DQ0MgaXMgdXNlZCB0byBwYXNzIHRoZSBleGVjdXRpb24gb2YgdGhlCnJlcXVlc3Rz
-IG9uIHRvIGEgc2VjdXJlIG1vbml0b3IgKEVMMykuCgpMYXRlciB0aGUgSW50ZWwgU3RyYXRpeDEw
-IHNlcnZpY2UgbGF5ZXIgZHJpdmVyIHdpbGwgYmUgZXh0ZW5kZWQgdG8gcHJvdmlkZQpzZXJ2aWNl
-cyBmb3IgUVNQSSwgQ3J5cHRvIGFuZCB3YXJtIHJlc2V0LgoKdjI6IGFkZCBwYXRjaGVzIGZvciBG
-UEdBIG1hbmFnZXIsIEZQR0EgbWFuYWdlciBiaW5kaW5nLCBkdHMgYW5kIGRlZmNvbmZpZwogICAg
-cmVtb3ZlIGludGVsLXNlcnZpY2Ugc3ViZGlyZWN0b3J5IGFuZCBpbnRlbC1zZXJ2aWNlLmgsIG1v
-dmUgaW50ZWwtc21jLmgKICAgIGFuZCBpbnRlbC1zZXJ2aWNlLmMgdG8gZHJpdmVyL21pc2Mgc3Vi
-ZGlyZWN0b3J5CiAgICByZW1vdmUgZ2xvYmFsIHZhcmlhYmxlcwogICAgY2hhbmdlIHNlcnZpY2Ug
-bGF5ZXIgZHJpdmVyIGJlICdkZWZhdWx0IG4nCiAgICBjb3JyZWN0IFNQRFggbWFya2VycwogICAg
-YWRkIHRpbWVvdXQgZm9yIGRvLi53aGlsZSgpIGxvb3AKICAgIGFkZCBrZXJuZWwtZG9jIGZvciB0
-aGUgZnVuY3Rpb25zIGFuZCBzdHJ1Y3RzLCBjb3JyZWN0IG11bHRpbGluZSBjb21tZW50cwogICAg
-cmVwbGFjZSBrZmlmb19pbi9rZmlmb19vdXQgd2l0aCBrZmlmb19pbl9zcGlubG9ja2VkL2tmaWZv
-X291dF9zcGlubG9ja2VkCiAgICByZW5hbWUgc3RydWN0IGludGVsX3N2Y19kYXRhIChhdCBjbGll
-bnQgaGVhZGVyKSB0byBpbnRlbF9zdmNfY2xpZW50X21zZwogICAgcmVuYW1lIHN0cnVjdCBpbnRl
-bF9zdmNfcHJpdmF0ZV9tZW0gdG8gaW50ZWxfc3ZjX2RhdGEKICAgIG90aGVyIGNvcnJlY3Rpb25z
-L2NoYW5nZXMgZnJvbSBJbnRlbCBpbnRlcm5hbCBjb2RlIHJldmlld3MKdjM6IGNoYW5nZSBhbGwg
-ZXhwb3J0ZWQgZnVuY3Rpb25zIHdpdGggImludGVsX3N2Y18iIGFzIHRoZSBwcmVmaXgKICAgIGlu
-Y3JlYXNlIHRpbWVvdXQgdmFsdWVzIGZvciBjbGFpbWluZyBiYWNrIHN1Ym1pdHRlZCBidWZmZXIo
-cykKICAgIHJlbmFtZSBzdHJ1Y3QgaW50ZWxfY29tbWFuZF9yZWNvbmZpZ19wYXlsb2FkIHRvCiAg
-ICBzdHJ1Y3QgaW50ZWxfc3ZjX2NvbW1hbmRfcmVjb25maWdfcGF5bG9hZAogICAgYWRkIHByX2Vy
-cigpIHRvIHByb3ZpZGUgdGhlIGVycm9yIHJldHVybiB2YWx1ZQogICAgY2hhbmdlIHRvIHB1dCBm
-cGdhX21nciBub2RlIHVuZGVyIGZpcm13YXJlL3N2YyBub2RlCiAgICBjaGFuZ2UgdG8gRlBHQSBt
-YW5hZ2VyIHRvIGFsaWduIHRoZSB1cGRhdGUgb2Ygc2VydmljZSBjbGllbnQgQVBJcywgYW5kIHRo
-ZQogICAgdXBkYXRlIG9mIGZwZ2FfbWdyIGRldmljZSBub2RlCiAgICBPdGhlciBjb3JyZWN0aW9u
-cy9jaGFuZ2VzCnY0OiBzL2ludGVsL3N0cmF0aXgxMC8gb24gc29tZSB2YXJpYWJsZXMsIHN0cnVj
-dHMsIGZ1bmN0aW9ucywgYW5kIGZpbGUgbmFtZXMKICAgIGludGVsLXNlcnZpY2UuYyAtPiBzdHJh
-dGl4MTAtc3ZjLmMKICAgIGludGVsLXNtYy5oIC0+IHN0cmF0aXgxMC1zbWMuaAogICAgaW50ZWwt
-c2VydmljZS1jbGllbnQuaCAtPiBzdHJhdGl4MTAtc3ZjLWNsaWVudC5oCiAgICByZW1vdmUgbm9u
-LWtlcm5lbC1kb2MgZm9ybWF0dGluZwogICAgcy9mcGdhLW1nckAwL2ZwZ2EtbWdyLyB0byByZW1v
-dmUgdW5pdF9hZGRyZXNzIGF0IGZwZ2FfbWdyIG5vZGUKICAgIGFkZCBSb2IncyBSZXZpZXdlZC1i
-eQogICAgYWRkIFJpY2hhcmQncyBzaWduZWQtb2ZmLWJ5CnY1OiBhZGQgYSBuZXcgQVBJIHN0YXRp
-eDEwX3N2Y19kb25lKCkgd2hpY2ggaXMgY2FsbGVkIGJ5IHNlcnZpY2UgY2xpZW50CiAgICB3aGVu
-IGNsaWVudCByZXF1ZXN0IGlzIGNvbXBsZXRlZCBvciBlcnJvciBvY2N1cnMgZHVyaW5nIHJlcXVl
-c3QKICAgIHByb2Nlc3MuIFdoaWNoIGFsbG93cyBzZXJ2aWNlIGxheWVyIHRvIGZyZWUgaXRzIHJl
-c291cmNlcy4KICAgIHJlbW92ZSBkdW1teSBjbGllbnQgZnJvbSBzZXJ2aWNlIGxheWVyIGNsaWVu
-dCBoZWFkZXIgYW5kIHNlcnZpY2UgbGF5ZXIKICAgIHNvdXJjZSBmaWxlLgogICAgYWRkIFJvYidz
-IFJldmlld2VkLWJ5CiAgICBhZGQgYSBuZXcgZmlsZSBzdHJhdGl4MTAtc3ZjLnJzdCBhbmQgYWRk
-IHRoYXQgdG8gZHJpdmVyLWFwaS9pbmRleC5yc3QKICAgIGtlcm5lbC1kb2MgZml4ZXMKdjY6IHJl
-cGxhY2Uga3RocmVhZF9jcmVhdGVfb25fY3B1KCkgd2l0aCBrdGhyZWFkX2NyZWF0ZV9vbl9ub2Rl
-KCkKICAgIGV4dGVuZCBzdHJhdGl4X3N2Y19zZW5kKCkgdG8gc3VwcG9ydCBzZXJ2aWNlIGNsaWVu
-dCB3aGljaCBkb2Vzbid0IHVzZQogICAgbWVtb3J5IGFsbG9jYXRlZCBieSBzZXJ2aWNlIGxheWVy
-CiAgICBhZGQgUzEwX1JFQ09ORklHX1RJTUVPVVQKICAgIHJlbmFtZSBzL1MxMF9CVUZfVElNRU9V
-VC9TMTBfQlVGRkVSX1RJTUVPVVQvCiAgICBmaXggc2VydmljZSBsYXllciBhbmQgRlBHQSBtYW5h
-Z2VyIEtsb2N3b3JrIGVycm9ycwp2NzogYWRkIHJlbW90ZSBzdGF0dXMgdXBkYXRlIGNsaWVudCBz
-dXBwb3J0CiAgICBzL3ByX2RlYnVnL2Rldl9kYmcsIHMvZGV2X2luZm8vZGV2X2RiZwogICAgYWRk
-IHVubG9jayBidWZmZXIgaWYgczEwX3N2Y19zZW5kX21zZygpIGZhaWxzCiAgICBhZGQgcmVsZWFz
-ZSBjaGFubmVsIGlmIGZwZ2FfbWdyX2NyZWF0ZSgpIGZhaWxzCiAgICBoYW5kbGUgaW52YWxpZCBw
-b2ludGVyIGF0IHN2YyBpZiB0aGUgY2xpZW50IHBhc3NlZCBhbiBpbnZhbGlkIG5hbWUKCkFsYW4g
-VHVsbCAoMyk6CiAgZHQtYmluZGluZ3M6IGZwZ2E6IGFkZCBTdHJhdGl4MTAgU29DIEZQR0EgbWFu
-YWdlciBiaW5kaW5nCiAgYXJtNjQ6IGR0czogc3RyYXRpeDEwOiBhZGQgZnBnYSBtYW5hZ2VyIGFu
-ZCByZWdpb24KICBmcGdhOiBhZGQgaW50ZWwgc3RyYXRpeDEwIHNvYyBmcGdhIG1hbmFnZXIgZHJp
-dmVyCgpSaWNoYXJkIEdvbmcgKDYpOgogIGR0LWJpbmRpbmdzLCBmaXJtd2FyZTogYWRkIEludGVs
-IFN0cmF0aXgxMCBzZXJ2aWNlIGxheWVyIGJpbmRpbmcKICBhcm02NDogZHRzOiBzdHJhdGl4MTA6
-IGFkZCBzdHJhdGl4MTAgc2VydmljZSBkcml2ZXIgYmluZGluZyB0byBiYXNlCiAgICBkdHNpCiAg
-bWlzYzogYWRkIEludGVsIFN0cmF0aXgxMCBzZXJ2aWNlIGxheWVyIGRyaXZlcgogIGRlZmNvbmZp
-ZzogZW5hYmxlIGZwZ2EgYW5kIHNlcnZpY2UgbGF5ZXIKICBEb2N1bWVudGF0aW9uOiBkcml2ZXIt
-YXBpOiBhZGQgc3RyYXRpeDEwIHNlcnZpY2UgbGF5ZXIKICBtaXNjOiBhZGQgcmVtb3RlIHN0YXR1
-cyB1cGRhdGUgY2xpZW50IHN1cHBvcnQKCiAuLi4vYmluZGluZ3MvZmlybXdhcmUvaW50ZWwsc3Ry
-YXRpeDEwLXN2Yy50eHQgICAgICB8ICAgNTcgKysKIC4uLi9iaW5kaW5ncy9mcGdhL2ludGVsLXN0
-cmF0aXgxMC1zb2MtZnBnYS1tZ3IudHh0IHwgICAxNyArCiBEb2N1bWVudGF0aW9uL2RyaXZlci1h
-cGkvaW5kZXgucnN0ICAgICAgICAgICAgICAgICB8ICAgIDEgKwogRG9jdW1lbnRhdGlvbi9kcml2
-ZXItYXBpL3N0cmF0aXgxMC1zdmMucnN0ICAgICAgICAgfCAgIDMyICsKIGFyY2gvYXJtNjQvYm9v
-dC9kdHMvYWx0ZXJhL3NvY2ZwZ2Ffc3RyYXRpeDEwLmR0c2kgIHwgICAzMyArCiBhcmNoL2FybTY0
-L2NvbmZpZ3MvZGVmY29uZmlnICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDcgKwogZHJpdmVy
-cy9mcGdhL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICA2ICsKIGRy
-aXZlcnMvZnBnYS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMSAr
-CiBkcml2ZXJzL2ZwZ2Evc3RyYXRpeDEwLXNvYy5jICAgICAgICAgICAgICAgICAgICAgICB8ICA1
-NTggKysrKysrKysrKwogZHJpdmVycy9taXNjL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgfCAgIDEyICsKIGRyaXZlcnMvbWlzYy9NYWtlZmlsZSAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHwgICAgMSArCiBkcml2ZXJzL21pc2Mvc3RyYXRpeDEwLXNtYy5oICAgICAg
-ICAgICAgICAgICAgICAgICB8ICAzMTMgKysrKysrCiBkcml2ZXJzL21pc2Mvc3RyYXRpeDEwLXN2
-Yy5jICAgICAgICAgICAgICAgICAgICAgICB8IDEwNjcgKysrKysrKysrKysrKysrKysrKysKIGlu
-Y2x1ZGUvbGludXgvc3RyYXRpeDEwLXN2Yy1jbGllbnQuaCAgICAgICAgICAgICAgIHwgIDIxNyAr
-KysrCiAxNCBmaWxlcyBjaGFuZ2VkLCAyMzIyIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZmlybXdhcmUvaW50ZWwsc3Ry
-YXRpeDEwLXN2Yy50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZnBnYS9pbnRlbC1zdHJhdGl4MTAtc29jLWZwZ2EtbWdyLnR4dAogY3JlYXRl
-IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9zdHJhdGl4MTAtc3ZjLnJzdAog
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZnBnYS9zdHJhdGl4MTAtc29jLmMKIGNyZWF0ZSBt
-b2RlIDEwMDY0NCBkcml2ZXJzL21pc2Mvc3RyYXRpeDEwLXNtYy5oCiBjcmVhdGUgbW9kZSAxMDA2
-NDQgZHJpdmVycy9taXNjL3N0cmF0aXgxMC1zdmMuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1
-ZGUvbGludXgvc3RyYXRpeDEwLXN2Yy1jbGllbnQuaAoKLS0gCjIuNy40CgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Tuesday, July 17, 2018 10:00:05 PM CEST Nick Dyer wrote:
+> On Tue, Jul 17, 2018 at 08:16:25PM +0200, Pawe=C5=82 Chmiel wrote:
+> > This patch adds optional regulators, which can be used to power
+> > up touchscreen. After enabling regulators, we need to wait 150msec.
+> > This value is taken from official driver.
+> >=20
+> > It was tested on Samsung Galaxy i9000 (based on Samsung S5PV210 SOC).
+> >=20
+> > Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> > ---
+> > Changes from v1:
+> >   - Enable regulators only if reset_gpio is present.
+> >   - Switch from devm_regulator_get_optional to devm_regulator_get
+> > ---
+> >  drivers/input/touchscreen/atmel_mxt_ts.c | 46 ++++++++++++++++++++++++=
+++++++--
+> >  1 file changed, 44 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/t=
+ouchscreen/atmel_mxt_ts.c
+> > index 54fe190fd4bc..005f0fee9fc8 100644
+> > --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+> > +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+> > @@ -27,6 +27,7 @@
+> >  #include <linux/interrupt.h>
+> >  #include <linux/of.h>
+> >  #include <linux/property.h>
+> > +#include <linux/regulator/consumer.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/gpio/consumer.h>
+> >  #include <linux/property.h>
+> > @@ -194,10 +195,10 @@ enum t100_type {
+> > =20
+> >  /* Delay times */
+> >  #define MXT_BACKUP_TIME		50	/* msec */
+> > -#define MXT_RESET_GPIO_TIME	20	/* msec */
+> >  #define MXT_RESET_INVALID_CHG	100	/* msec */
+> >  #define MXT_RESET_TIME		200	/* msec */
+> >  #define MXT_RESET_TIMEOUT	3000	/* msec */
+> > +#define MXT_REGULATOR_DELAY	150	/* msec */
+> >  #define MXT_CRC_TIMEOUT		1000	/* msec */
+> >  #define MXT_FW_RESET_TIME	3000	/* msec */
+> >  #define MXT_FW_CHG_TIMEOUT	300	/* msec */
+> > @@ -310,6 +311,8 @@ struct mxt_data {
+> >  	struct t7_config t7_cfg;
+> >  	struct mxt_dbg dbg;
+> >  	struct gpio_desc *reset_gpio;
+> > +	struct regulator *vdd_reg;
+> > +	struct regulator *avdd_reg;
+> > =20
+> >  	/* Cached parameters from object table */
+> >  	u16 T5_address;
+> > @@ -3076,6 +3079,22 @@ static int mxt_probe(struct i2c_client *client, =
+const struct i2c_device_id *id)
+> >  		return error;
+> >  	}
+> > =20
+> > +	data->vdd_reg =3D devm_regulator_get(&client->dev, "vdd");
+> > +	if (IS_ERR(data->vdd_reg)) {
+> > +		error =3D PTR_ERR(data->vdd_reg);
+> > +		dev_err(&client->dev, "Failed to get vdd regulator: %d\n",
+> > +			error);
+> > +		return error;
+> > +	}
+> > +
+> > +	data->avdd_reg =3D devm_regulator_get(&client->dev, "avdd");
+> > +	if (IS_ERR(data->avdd_reg)) {
+> > +		error =3D PTR_ERR(data->avdd_reg);
+> > +		dev_err(&client->dev, "Failed to get avdd regulator: %d\n",
+> > +			error);
+> > +		return error;
+> > +	}
+> > +
+> >  	error =3D devm_request_threaded_irq(&client->dev, client->irq,
+> >  					  NULL, mxt_interrupt, IRQF_ONESHOT,
+> >  					  client->name, data);
+> > @@ -3087,7 +3106,26 @@ static int mxt_probe(struct i2c_client *client, =
+const struct i2c_device_id *id)
+> >  	disable_irq(client->irq);
+> > =20
+> >  	if (data->reset_gpio) {
+> > -		msleep(MXT_RESET_GPIO_TIME);
+> > +		error =3D regulator_enable(data->vdd_reg);
+> > +		if (error) {
+> > +			dev_err(&client->dev, "Failed to enable vdd regulator: %d\n",
+> > +				error);
+> > +			return error;
+> > +		}
+> > +
+> > +		error =3D regulator_enable(data->avdd_reg);
+> > +		if (error) {
+> > +			dev_err(&client->dev, "Failed to enable avdd regulator: %d\n",
+> > +				error);
+> > +			return error;
+> > +		}
+> > +
+> > +		/*
+> > +		 * According to maXTouch power sequencing specification, RESET line
+> > +		 * must be kept low until some time after regulators come up to
+> > +		 * voltage
+> > +		 */
+> > +		msleep(MXT_REGULATOR_DELAY);
+> >  		gpiod_set_value(data->reset_gpio, 1);
+> >  		msleep(MXT_RESET_INVALID_CHG);
+>=20
+> Hi Pawel-
+>=20
+> I see you've borrowed some of the logic from the patch I wrote a while
+> back (see https://github.com/ndyer/linux/commit/8e9687e41ed062 )
+Actually, i was looking at https://github.com/atmel-maxtouch/linux/blob/max=
+touch-v3.14/drivers/input/touchscreen/atmel_mxt_ts.c (and didn't saw Your p=
+atch till now).
+Are You going to submit it? (it has more functionalities - for example susp=
+end mode read from device tree).
+>=20
+> The correct behaviour according to Atmel should be:
+>=20
+> * Make RESET zero
+> * Bring up regulators
+> * Wait for a period to settle (150 msec)
+> * Release RESET
+> * Wait for 100 msec whilst device gets through bootloader
+> * Wait for CHG line assert before reading info block
+>=20
+> I can't see the first and last steps in your patch at present.
+About first step - reset_gpio is readed by using devm_gpiod_get_optional wi=
+th GPIOD_OUT_LOW flag, so i think (but might be wrong)  that we don't need =
+to set this gpio value again to 0 before enabling regulators,
+since currently only place where reset_gpio is used is in driver probe (in =
+Your patch it is used in other cases/places - for example in mxt_start/stop=
+, when we enable regulators).
+About missing wait after releasing reset, shouldn't this be separate patch =
+(since currently driver is not doing it)? I can prepare it and send with ot=
+her in next version.
+
+Thanks for feedback
+>=20
+> The only downside with this approach is that there are a lot of
+> delays during driver probe, but I believe the asynchronous probe stuff
+> that's landed since I wrote the original patch should address that.
+>=20
+> cheers
+>=20
+> Nick
+>=20
+> >  	}
+> > @@ -3116,6 +3154,10 @@ static int mxt_remove(struct i2c_client *client)
+> >  	struct mxt_data *data =3D i2c_get_clientdata(client);
+> > =20
+> >  	disable_irq(data->irq);
+> > +	if (data->reset_gpio) {
+> > +		regulator_disable(data->avdd_reg);
+> > +		regulator_disable(data->vdd_reg);
+> > +	}
+> >  	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
+> >  	mxt_free_input_device(data);
+> >  	mxt_free_object_table(data);
+>=20
