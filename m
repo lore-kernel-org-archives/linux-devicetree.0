@@ -1,105 +1,189 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: [PATCH v7 2/4] rtc: ds1307: support m41t11 variant
-Date: Wed, 18 Jul 2018 10:49:13 +0200
-Message-ID: <20180718084916.79837-1-giulio.benetti@micronovasrl.com>
+From: Mars Cheng <mars.cheng@mediatek.com>
+Subject: Re: [PATCH v5 04/11] soc: mediatek: add MT6765 scpsys support
+Date: Wed, 18 Jul 2018 16:54:15 +0800
+Message-ID: <1531904055.4416.2.camel@mtkswgap22>
+References: <1531817552-17221-1-git-send-email-mars.cheng@mediatek.com>
+         <1531817552-17221-5-git-send-email-mars.cheng@mediatek.com>
+         <1531832413.8953.30.camel@mtkswgap22>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1531832413.8953.30.camel@mtkswgap22>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>, Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK RTC SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Sean Wang <sean.wang@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Stephen Boyd <sboyd@kernel.org>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Owen Chen <owen.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-The m41t11 variant is very similar to the already supported m41t00 and
-m41t0, but it has also 56 bytes of NVRAM.
+Hi Sean
 
-Add it to driver taking into account NVRAM section.
+On Tue, 2018-07-17 at 21:00 +0800, Sean Wang wrote:
+> On Tue, 2018-07-17 at 16:52 +0800, Mars Cheng wrote:
+> > This adds scpsys support for MT6765
+> > 
+> 
+> it looks like 4/11 have to depend on 6/11 and 7/11 to get a full function on scpsys for MT6765.
+> 
+> you should keep dependency in order to submit these patches
+> 
 
-Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
----
-V6 => V7
-* already applied
- .../devicetree/bindings/rtc/rtc-ds1307.txt         |  1 +
- drivers/rtc/rtc-ds1307.c                           | 14 ++++++++++++++
- 2 files changed, 15 insertions(+)
+Got it, will reorder the sequence.
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-index d28d6e7f6ae8..ce6469c1a516 100644
---- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-+++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-@@ -13,6 +13,7 @@ Required properties:
- 	"maxim,ds3231",
- 	"st,m41t0",
- 	"st,m41t00",
-+	"st,m41t11",
- 	"microchip,mcp7940x",
- 	"microchip,mcp7941x",
- 	"pericom,pt7c4338",
-diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-index aa4a161bae98..0162a600ff1b 100644
---- a/drivers/rtc/rtc-ds1307.c
-+++ b/drivers/rtc/rtc-ds1307.c
-@@ -44,6 +44,7 @@ enum ds_type {
- 	ds_3231,
- 	m41t0,
- 	m41t00,
-+	m41t11,
- 	mcp794xx,
- 	rx_8025,
- 	rx_8130,
-@@ -227,6 +228,11 @@ static const struct chip_desc chips[last_ds_type] = {
- 		.irq_handler = rx8130_irq,
- 		.rtc_ops = &rx8130_rtc_ops,
- 	},
-+	[m41t11] = {
-+		/* this is battery backed SRAM */
-+		.nvram_offset	= 8,
-+		.nvram_size	= 56,
-+	},
- 	[mcp794xx] = {
- 		.alarm		= 1,
- 		/* this is battery backed SRAM */
-@@ -249,6 +255,7 @@ static const struct i2c_device_id ds1307_id[] = {
- 	{ "ds3231", ds_3231 },
- 	{ "m41t0", m41t0 },
- 	{ "m41t00", m41t00 },
-+	{ "m41t11", m41t11 },
- 	{ "mcp7940x", mcp794xx },
- 	{ "mcp7941x", mcp794xx },
- 	{ "pt7c4338", ds_1307 },
-@@ -305,6 +312,10 @@ static const struct of_device_id ds1307_of_match[] = {
- 		.compatible = "st,m41t00",
- 		.data = (void *)m41t00
- 	},
-+	{
-+		.compatible = "st,m41t11",
-+		.data = (void *)m41t11
-+	},
- 	{
- 		.compatible = "microchip,mcp7940x",
- 		.data = (void *)mcp794xx
-@@ -347,6 +358,7 @@ static const struct acpi_device_id ds1307_acpi_ids[] = {
- 	{ .id = "DS3231", .driver_data = ds_3231 },
- 	{ .id = "M41T0", .driver_data = m41t0 },
- 	{ .id = "M41T00", .driver_data = m41t00 },
-+	{ .id = "M41T11", .driver_data = m41t11 },
- 	{ .id = "MCP7940X", .driver_data = mcp794xx },
- 	{ .id = "MCP7941X", .driver_data = mcp794xx },
- 	{ .id = "PT7C4338", .driver_data = ds_1307 },
-@@ -1576,6 +1588,7 @@ static int ds1307_probe(struct i2c_client *client,
- 	case ds_1307:
- 	case m41t0:
- 	case m41t00:
-+	case m41t11:
- 		/* clock halted?  turn it on, so clock can tick. */
- 		if (tmp & DS1307_BIT_CH) {
- 			regmap_write(ds1307->regmap, DS1307_REG_SECS, 0);
-@@ -1641,6 +1654,7 @@ static int ds1307_probe(struct i2c_client *client,
- 	case ds_1340:
- 	case m41t0:
- 	case m41t00:
-+	case m41t11:
- 		/*
- 		 * NOTE: ignores century bits; fix before deploying
- 		 * systems that will run through year 2100.
--- 
-2.17.1
+> > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> > Signed-off-by: Owen Chen <owen.chen@mediatek.com>
+> > ---
+> >  drivers/soc/mediatek/mtk-scpsys.c        |   88 ++++++++++++++++++++++++++++++
+> >  include/dt-bindings/power/mt6765-power.h |   14 +++++
+> >  2 files changed, 102 insertions(+)
+> >  create mode 100644 include/dt-bindings/power/mt6765-power.h
+> > 
+> > diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+> > index 5b24bb4..4bb6c7a 100644
+> > --- a/drivers/soc/mediatek/mtk-scpsys.c
+> > +++ b/drivers/soc/mediatek/mtk-scpsys.c
+> > @@ -23,6 +23,7 @@
+> >  
+> >  #include <dt-bindings/power/mt2701-power.h>
+> >  #include <dt-bindings/power/mt2712-power.h>
+> > +#include <dt-bindings/power/mt6765-power.h>
+> >  #include <dt-bindings/power/mt6797-power.h>
+> >  #include <dt-bindings/power/mt7622-power.h>
+> >  #include <dt-bindings/power/mt7623a-power.h>
+> > @@ -680,6 +681,79 @@ static void mtk_register_power_domains(struct platform_device *pdev,
+> >  };
+> >  
+> >  /*
+> > + * MT6765 power domain support
+> > + */
+> > +#define SPM_PWR_STATUS_MT6765			0x0180
+> > +#define SPM_PWR_STATUS_2ND_MT6765		0x0184
+> > +
+> > +static const struct scp_domain_data scp_domain_data_mt6765[] = {
+> > +	[MT6765_POWER_DOMAIN_VCODEC] = {
+> > +		.name = "vcodec",
+> > +		.sta_mask = BIT(26),
+> > +		.ctl_offs = 0x300,
+> > +		.sram_pdn_bits = GENMASK(8, 8),
+> > +		.sram_pdn_ack_bits = GENMASK(12, 12),
+> > +	},
+> > +	[MT6765_POWER_DOMAIN_ISP] = {
+> > +		.name = "isp",
+> > +		.sta_mask = BIT(5),
+> > +		.ctl_offs = 0x308,
+> > +		.sram_pdn_bits = GENMASK(8, 8),
+> > +		.sram_pdn_ack_bits = GENMASK(12, 12),
+> > +	},
+> > +	[MT6765_POWER_DOMAIN_MM] = {
+> > +		.name = "mm",
+> > +		.sta_mask = BIT(3),
+> > +		.ctl_offs = 0x30C,
+> > +		.sram_pdn_bits = GENMASK(8, 8),
+> > +		.sram_pdn_ack_bits = GENMASK(12, 12),
+> > +	},
+> > +	[MT6765_POWER_DOMAIN_CONN] = {
+> > +		.name = "conn",
+> > +		.sta_mask = BIT(1),
+> > +		.ctl_offs = 0x32C,
+> > +		.sram_pdn_bits = 0,
+> > +		.sram_pdn_ack_bits = 0,
+> > +	},
+> > +	[MT6765_POWER_DOMAIN_MFG_ASYNC] = {
+> > +		.name = "mfg_async",
+> > +		.sta_mask = BIT(23),
+> > +		.ctl_offs = 0x334,
+> > +		.sram_pdn_bits = 0,
+> > +		.sram_pdn_ack_bits = 0,
+> > +	},
+> > +	[MT6765_POWER_DOMAIN_MFG] = {
+> > +		.name = "mfg",
+> > +		.sta_mask = BIT(4),
+> > +		.ctl_offs = 0x338,
+> > +		.sram_pdn_bits = GENMASK(8, 8),
+> > +		.sram_pdn_ack_bits = GENMASK(12, 12),
+> > +	},
+> > +	[MT6765_POWER_DOMAIN_CAM] = {
+> > +		.name = "cam",
+> > +		.sta_mask = BIT(25),
+> > +		.ctl_offs = 0x344,
+> > +		.sram_pdn_bits = GENMASK(8, 9),
+> > +		.sram_pdn_ack_bits = GENMASK(12, 13),
+> > +	},
+> > +	[MT6765_POWER_DOMAIN_MFG_CORE0] = {
+> > +		.name = "mfg_core0",
+> > +		.sta_mask = BIT(7),
+> > +		.ctl_offs = 0x34C,
+> > +		.sram_pdn_bits = GENMASK(8, 8),
+> > +		.sram_pdn_ack_bits = GENMASK(12, 12),
+> > +	},
+> 
+> Above power domains really don't require any clock controlled with
+> clk_id before any access on them?
+> 
+
+Yes, already sync with Owen, they are lost. will add them.
+
+Thanks.
+> > +};
+> > +
+> > +static const struct scp_subdomain scp_subdomain_mt6765[] = {
+> > +	{MT6765_POWER_DOMAIN_MM, MT6765_POWER_DOMAIN_CAM},
+> > +	{MT6765_POWER_DOMAIN_MM, MT6765_POWER_DOMAIN_ISP},
+> > +	{MT6765_POWER_DOMAIN_MM, MT6765_POWER_DOMAIN_VCODEC},
+> > +	{MT6765_POWER_DOMAIN_MFG_ASYNC, MT6765_POWER_DOMAIN_MFG},
+> > +	{MT6765_POWER_DOMAIN_MFG, MT6765_POWER_DOMAIN_MFG_CORE0},
+> > +};
+> > +
+> > +/*
+> >   * MT6797 power domain support
+> >   */
+> >  
+> > @@ -962,6 +1036,17 @@ static void mtk_register_power_domains(struct platform_device *pdev,
+> >  	.bus_prot_reg_update = false,
+> >  };
+> >  
+> > +static const struct scp_soc_data mt6765_data = {
+> > +	.domains = scp_domain_data_mt6765,
+> > +	.num_domains = ARRAY_SIZE(scp_domain_data_mt6765),
+> > +	.subdomains = scp_subdomain_mt6765,
+> > +	.num_subdomains = ARRAY_SIZE(scp_subdomain_mt6765),
+> > +	.regs = {
+> > +		.pwr_sta_offs = SPM_PWR_STATUS_MT6765,
+> > +		.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND_MT6765,
+> > +	},
+> > +};
+> > +
+> >  static const struct scp_soc_data mt6797_data = {
+> >  	.domains = scp_domain_data_mt6797,
+> >  	.num_domains = ARRAY_SIZE(scp_domain_data_mt6797),
+> > @@ -1018,6 +1103,9 @@ static void mtk_register_power_domains(struct platform_device *pdev,
+> >  		.compatible = "mediatek,mt2712-scpsys",
+> >  		.data = &mt2712_data,
+> >  	}, {
+> > +		.compatible = "mediatek,mt6765-scpsys",
+> > +		.data = &mt6765_data,
+> > +	}, {
+> >  		.compatible = "mediatek,mt6797-scpsys",
+> >  		.data = &mt6797_data,
+> >  	}, {
+> > diff --git a/include/dt-bindings/power/mt6765-power.h b/include/dt-bindings/power/mt6765-power.h
+> > new file mode 100644
+> > index 0000000..d347b4e
+> > --- /dev/null
+> > +++ b/include/dt-bindings/power/mt6765-power.h
+> > @@ -0,0 +1,14 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _DT_BINDINGS_POWER_MT6765_POWER_H
+> > +#define _DT_BINDINGS_POWER_MT6765_POWER_H
+> > +
+> > +#define MT6765_POWER_DOMAIN_CONN		0
+> > +#define MT6765_POWER_DOMAIN_MM			1
+> > +#define MT6765_POWER_DOMAIN_MFG_ASYNC		2
+> > +#define MT6765_POWER_DOMAIN_ISP			3
+> > +#define MT6765_POWER_DOMAIN_MFG			4
+> > +#define MT6765_POWER_DOMAIN_MFG_CORE0		5
+> > +#define MT6765_POWER_DOMAIN_CAM			6
+> > +#define MT6765_POWER_DOMAIN_VCODEC		7
+> > +
+> > +#endif /* _DT_BINDINGS_POWER_MT6765_POWER_H */
+> 
+> 
