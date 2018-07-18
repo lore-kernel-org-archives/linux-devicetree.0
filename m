@@ -1,56 +1,80 @@
-From: Denis OSTERLAND <denis.osterland@diehl.com>
-Subject: Re: [PATCH v4 2/5] rtc: isl1208: add support for isl1219 with tamper
- detection
-Date: Wed, 18 Jul 2018 10:44:52 +0000
-Message-ID: <1531910692.6017.18.camel@diehl.com>
-References: <20180710090710.9066-1-Denis.Osterland@diehl.com>
-         <20180710090710.9066-3-Denis.Osterland@diehl.com>
-         <20180718081313.GI3211@piout.net>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCH] ARM: dts: exynos5: add missing interrupts for pwm node
+Date: Wed, 18 Jul 2018 16:20:28 +0530
+Message-ID: <CANAwSgSaU1kTW3j0OZGwmOWo=p2uHFP8toLUe9FHYEkCJsuLFg@mail.gmail.com>
+References: <1531906490-1739-1-git-send-email-linux.amoon@gmail.com>
+ <CAJKOXPdeRvt4YG9Doziq-_oQ9DeUffvTB53OOaq-q2UpkBGpgQ@mail.gmail.com>
+ <CANAwSgS8z-TQ=nK7dy5YeA8QJV+7cCctZKJT7qn8macQQkyKqg@mail.gmail.com> <CAJKOXPez6cuLyrxBkAKtyx2xiqG7VLWFCBYXkBX_537A=bDpsg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180718081313.GI3211@piout.net>
-Content-Language: en-US
-Content-ID: <ED44C69EC80A27448F3F68A28901759B@diehl.internal>
+In-Reply-To: <CAJKOXPez6cuLyrxBkAKtyx2xiqG7VLWFCBYXkBX_537A=bDpsg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCkFtIE1pdHR3b2NoLCBkZW4gMTguMDcuMjAxOCwgMTA6MTMgKzAyMDAgc2Nocmll
-YiBBbGV4YW5kcmUgQmVsbG9uaToNCj4gT24gMTAvMDcvMjAxOCAwOTo0NDoxNSswMDAwLCBE
-ZW5pcyBPU1RFUkxBTkQgd3JvdGU6DQo+ID7CoA0KPiA+ICsJaWYgKGlkLT5kcml2ZXJfZGF0
-YSA9PSBUWVBFX0lTTDEyMTkpIHsNCj4gPiArCQlyYyA9IElTTDEyMTlfUkVHX0VWX0VWRU47
-DQo+ID4gKwkJcmMgPSBpMmNfc21idXNfd3JpdGVfYnl0ZV9kYXRhKGNsaWVudCwgSVNMMTIx
-OV9SRUdfRVYsIHJjKTsNCj4gSSdkIHBhc3MgSVNMMTIxOV9SRUdfRVZfRVZFTiBkaXJlY3Rs
-eSBpbnN0ZWFkIG9mIGFzc2lnbmluZyBpdCB0byByYy4NCj4gDQpCZWNhdXNlIG9mIHRoZSA4
-MCBjaGFyYWN0ZXIgbGltaXQgcGVyIHJvdywgSSB0aG91Z2h0IHRoaXM6DQrCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJjID0gSVNMMTIxOV9SRUdfRVZfRVZFTjsNCsKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmMgPSBpMmNfc21idXNfd3JpdGVfYnl0ZV9k
-YXRhKGNsaWVudCwgSVNMMTIxOV9SRUdfRVYsIHJjKTsNCndvdWxkIGxvb2sgbmljZXIgdGhh
-biB0aGF0Og0KwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByYyA9IGkyY19zbWJ1
-c193cml0ZV9ieXRlX2RhdGEoY2xpZW50LCBJU0wxMjE5X1JFR19FViwNCsKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBJU0wxMjE5
-X1JFR19FVl9FVkVOKTsNCkFyZSB0aGVyZSBhbnkgcmVhc29ucyB3aHkgSSBzaG91bGQgcHJl
-ZmVyIHRoZSBzZWNvbmQgb25lPw0KDQpSZWdhcmRzIERlbmlzDQoNCkRpZWhsIENvbm5lY3Rp
-dml0eSBTb2x1dGlvbnMgR21iSA0KR2VzY2jDpGZ0c2bDvGhydW5nOiBIb3JzdCBMZW9uYmVy
-Z2VyDQpTaXR6IGRlciBHZXNlbGxzY2hhZnQ6IE7DvHJuYmVyZyAtIFJlZ2lzdGVyZ2VyaWNo
-dDogQW10c2dlcmljaHQNCk7DvHJuYmVyZzogSFJCIDMyMzE1DQpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCg0KRGVyIEluaGFsdCBkZXIgdm9yc3Rl
-aGVuZGVuIEUtTWFpbCBpc3QgbmljaHQgcmVjaHRsaWNoIGJpbmRlbmQuIERpZXNlIEUtTWFp
-bCBlbnRoYWVsdCB2ZXJ0cmF1bGljaGUgdW5kL29kZXIgcmVjaHRsaWNoIGdlc2NodWV0enRl
-IEluZm9ybWF0aW9uZW4uDQpJbmZvcm1pZXJlbiBTaWUgdW5zIGJpdHRlLCB3ZW5uIFNpZSBk
-aWVzZSBFLU1haWwgZmFlbHNjaGxpY2hlcndlaXNlIGVyaGFsdGVuIGhhYmVuLiBCaXR0ZSBs
-b2VzY2hlbiBTaWUgaW4gZGllc2VtIEZhbGwgZGllIE5hY2hyaWNodC4NCkplZGUgdW5lcmxh
-dWJ0ZSBGb3JtIGRlciBSZXByb2R1a3Rpb24sIEJla2FubnRnYWJlLCBBZW5kZXJ1bmcsIFZl
-cnRlaWx1bmcgdW5kL29kZXIgUHVibGlrYXRpb24gZGllc2VyIEUtTWFpbCBpc3Qgc3RyZW5n
-c3RlbnMgdW50ZXJzYWd0Lg0KVGhlIGNvbnRlbnRzIG9mIHRoZSBhYm92ZSBtZW50aW9uZWQg
-ZS1tYWlsIGlzIG5vdCBsZWdhbGx5IGJpbmRpbmcuIFRoaXMgZS1tYWlsIGNvbnRhaW5zIGNv
-bmZpZGVudGlhbCBhbmQvb3IgbGVnYWxseSBwcm90ZWN0ZWQgaW5mb3JtYXRpb24uIFBsZWFz
-ZSBpbmZvcm0gdXMgaWYgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1haWwgYnkNCm1pc3Rh
-a2UgYW5kIGRlbGV0ZSBpdCBpbiBzdWNoIGEgY2FzZS4gRWFjaCB1bmF1dGhvcml6ZWQgcmVw
-cm9kdWN0aW9uLCBkaXNjbG9zdXJlLCBhbHRlcmF0aW9uLCBkaXN0cmlidXRpb24gYW5kL29y
-IHB1YmxpY2F0aW9uIG9mIHRoaXMgZS1tYWlsIGlzIHN0cmljdGx5IHByb2hpYml0ZWQuIA0K
+Hi Krzysztof,
+
+On 18 July 2018 at 16:03, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On 18 July 2018 at 12:30, Anand Moon <linux.amoon@gmail.com> wrote:
+>> Hi
+>>
+>> On 18 July 2018 at 15:27, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>> On 18 July 2018 at 11:34, Anand Moon <linux.amoon@gmail.com> wrote:
+>>>> Add missing GIC interrupts property for pwm nodes.
+>>>>
+>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>>>> ---
+>>>>  arch/arm/boot/dts/exynos5.dtsi | 5 +++++
+>>>>  1 file changed, 5 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
+>>>> index 5d2f0a0..9406108 100644
+>>>> --- a/arch/arm/boot/dts/exynos5.dtsi
+>>>> +++ b/arch/arm/boot/dts/exynos5.dtsi
+>>>> @@ -169,6 +169,11 @@
+>>>>                 pwm: pwm@12dd0000 {
+>>>>                         compatible = "samsung,exynos4210-pwm";
+>>>>                         reg = <0x12DD0000 0x100>;
+>>>> +                       interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
+>>>> +                                  <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
+>>>
+>>> Indentation here looks weird - spaces used after tabs but not aligned
+>>> with first entry. Please indent it properly and align it.
+>>>
+>>> Best regards,
+>>> Krzysztof
+>>
+>> I ram checkpatch before I submit this patch it shown no error.
+>>
+>> # scripts/checkpatch.pl --no-signoff -q
+>> 0001-ARM-dts-exynos5-add-missing-interrupts-for-pwm-node.patch
+>
+> That's good, thank you. Still when I look at it in patchwork the
+> indentation is wrong:
+> https://patchwork.kernel.org/patch/10531753/
+> However it can be patchwork's fault, so are you sure that this is
+> properly indented and aligned?
+>
+> BR,
+> Krzysztof
+
+I prefer vim and I use following plugin
+
+https://github.com/vivien/vim-linux-coding-style
+
+root@odroidxu4:/usr/src/odroidxu4-4kr-devel# wget -nv
+https://patchwork.kernel.org/patch/10531753/mbox/ -O pwm.patch
+2018-07-18 10:48:09
+URL:https://patchwork.kernel.org/patch/10531753/mbox/ [1460] ->
+"pwm.patch" [1]
+root@odroidxu4:/usr/src/odroidxu4-4kr-devel#
+root@odroidxu4:/usr/src/odroidxu4-4kr-devel# scripts/checkpatch.pl
+--no-signoff -q pwm.patch
+root@odroidxu4:/usr/src/odroidxu4-4kr-devel#
+
+Is their any other way to test checkpatch please let me know.
+
+Best Regards
+-Anand
