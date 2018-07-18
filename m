@@ -1,103 +1,82 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: [PATCH v9 2/4] rtc: ds1307: support m41t11 variant
-Date: Wed, 18 Jul 2018 11:40:03 +0200
-Message-ID: <20180718094006.105675-1-giulio.benetti@micronovasrl.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v3 3/4] PCI: mediatek: Add system pm support for MT2712
+ and MT7622
+Date: Wed, 18 Jul 2018 10:49:24 +0100
+Message-ID: <20180718094924.GA21463@red-moon>
+References: <1530518264-6125-1-git-send-email-honghui.zhang@mediatek.com>
+ <1530518264-6125-4-git-send-email-honghui.zhang@mediatek.com>
+ <20180717171543.GA20991@red-moon>
+ <1531893761.31406.15.camel@mhfsdcap03>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1531893761.31406.15.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>, Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK RTC SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Honghui Zhang <honghui.zhang@mediatek.com>
+Cc: marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, rjw@rjwysocki.net, khilman@kernel.org, ulf.hansson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-The m41t11 variant is very similar to the already supported m41t00 and
-m41t0, but it has also 56 bytes of NVRAM.
+On Wed, Jul 18, 2018 at 02:02:41PM +0800, Honghui Zhang wrote:
 
-Add it to driver taking into account NVRAM section.
+<snip>
 
-Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
----
- .../devicetree/bindings/rtc/rtc-ds1307.txt         |  1 +
- drivers/rtc/rtc-ds1307.c                           | 14 ++++++++++++++
- 2 files changed, 15 insertions(+)
+> > > +static int __maybe_unused mtk_pcie_resume_noirq(struct device *dev)
+> > > +{
+> > > +	struct mtk_pcie *pcie = dev_get_drvdata(dev);
+> > > +	const struct mtk_pcie_soc *soc = pcie->soc;
+> > > +	struct mtk_pcie_port *port, *tmp;
+> > > +
+> > > +	if (!soc->pm_support)
+> > > +		return 0;
+> > > +
+> > > +	if (list_empty(&pcie->ports))
+> > > +		return 0;
+> > > +
+> > > +	if (dev->pm_domain) {
+> > > +		pm_runtime_enable(dev);
+> > > +		pm_runtime_get_sync(dev);
+> > > +	}
+> > 
+> > Are these runtime PM calls needed/abused here ?
+> > 
+> > Mind explaining the logic ?
+> > 
+> > There is certainly an asymmetry with the suspend callback which made me
+> > suspicious, I am pretty certain Rafael/Kevin/Ulf can help me clarify so
+> > that we can make progress with this patch.
+> > 
+> > Lorenzo
+> > 
+> Hi Lorenzo, thanks for your comments.
+> Sorry I don't get you.
+> I believe that in suspend callbacks the pm_runtime_put_sync and
+> pm_runtime_disable should be called to gated the CMOS for this module,
+> while the pm_rumtime_enable and pm_rumtime_get_sync should be called
+> in resume callback.
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-index d28d6e7f6ae8..ce6469c1a516 100644
---- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-+++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-@@ -13,6 +13,7 @@ Required properties:
- 	"maxim,ds3231",
- 	"st,m41t0",
- 	"st,m41t00",
-+	"st,m41t11",
- 	"microchip,mcp7940x",
- 	"microchip,mcp7941x",
- 	"pericom,pt7c4338",
-diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-index aa4a161bae98..0162a600ff1b 100644
---- a/drivers/rtc/rtc-ds1307.c
-+++ b/drivers/rtc/rtc-ds1307.c
-@@ -44,6 +44,7 @@ enum ds_type {
- 	ds_3231,
- 	m41t0,
- 	m41t00,
-+	m41t11,
- 	mcp794xx,
- 	rx_8025,
- 	rx_8130,
-@@ -227,6 +228,11 @@ static const struct chip_desc chips[last_ds_type] = {
- 		.irq_handler = rx8130_irq,
- 		.rtc_ops = &rx8130_rtc_ops,
- 	},
-+	[m41t11] = {
-+		/* this is battery backed SRAM */
-+		.nvram_offset	= 8,
-+		.nvram_size	= 56,
-+	},
- 	[mcp794xx] = {
- 		.alarm		= 1,
- 		/* this is battery backed SRAM */
-@@ -249,6 +255,7 @@ static const struct i2c_device_id ds1307_id[] = {
- 	{ "ds3231", ds_3231 },
- 	{ "m41t0", m41t0 },
- 	{ "m41t00", m41t00 },
-+	{ "m41t11", m41t11 },
- 	{ "mcp7940x", mcp794xx },
- 	{ "mcp7941x", mcp794xx },
- 	{ "pt7c4338", ds_1307 },
-@@ -305,6 +312,10 @@ static const struct of_device_id ds1307_of_match[] = {
- 		.compatible = "st,m41t00",
- 		.data = (void *)m41t00
- 	},
-+	{
-+		.compatible = "st,m41t11",
-+		.data = (void *)m41t11
-+	},
- 	{
- 		.compatible = "microchip,mcp7940x",
- 		.data = (void *)mcp794xx
-@@ -347,6 +358,7 @@ static const struct acpi_device_id ds1307_acpi_ids[] = {
- 	{ .id = "DS3231", .driver_data = ds_3231 },
- 	{ .id = "M41T0", .driver_data = m41t0 },
- 	{ .id = "M41T00", .driver_data = m41t00 },
-+	{ .id = "M41T11", .driver_data = m41t11 },
- 	{ .id = "MCP7940X", .driver_data = mcp794xx },
- 	{ .id = "MCP7941X", .driver_data = mcp794xx },
- 	{ .id = "PT7C4338", .driver_data = ds_1307 },
-@@ -1576,6 +1588,7 @@ static int ds1307_probe(struct i2c_client *client,
- 	case ds_1307:
- 	case m41t0:
- 	case m41t00:
-+	case m41t11:
- 		/* clock halted?  turn it on, so clock can tick. */
- 		if (tmp & DS1307_BIT_CH) {
- 			regmap_write(ds1307->regmap, DS1307_REG_SECS, 0);
-@@ -1641,6 +1654,7 @@ static int ds1307_probe(struct i2c_client *client,
- 	case ds_1340:
- 	case m41t0:
- 	case m41t00:
-+	case m41t11:
- 		/*
- 		 * NOTE: ignores century bits; fix before deploying
- 		 * systems that will run through year 2100.
--- 
-2.17.1
+That's why I CC'ed Rafael, Kevin and Ulf, to answer this question
+thoroughly, I am not sure it is needed and that's the right way
+of doing it in system suspend callbacks.
+
+> That's exactly this patch doing.
+> But the pm_rumtime_put_sync and pm_runtime_disable functions was wrapped
+> in the mtk_pcie_subsys_powerdown.
+
+Ah, sorry, I missed that.
+
+> I did not call mtk_pcie_subsys_powerup since it does not just wrapped
+> pm_rumtime related functions but also do the platform_resource_get,
+> devm_ioremap, and free_ck clock get which I do not needed in resume
+> callback.
+> 
+> Do you think it will be much clear if I abstract the
+> platform_resource_get, devm_ioremap functions from
+> mtk_pcie_subsys_powerup and put it to a new functions like
+> mtk_pcie_subsys_resource_get, and then we may call the
+> mtk_pcie_subsys_powerup in the resume function?
+
+I think so but let's wait first for feedback on whether those
+runtime PM calls are needed in the first place.
+
+Lorenzo
