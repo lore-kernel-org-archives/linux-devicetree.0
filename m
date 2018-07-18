@@ -1,58 +1,56 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [DISCUSSION] spi multi chipselect support
-Date: Wed, 18 Jul 2018 19:19:19 +0200
-Message-ID: <c497b0e2-c663-fa29-dabc-6dd5ca26e0a4@metafoo.de>
-References: <20180718163530.zsa5md3huz3dnotb@earth.universe>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCHv2] ARM: dts: exynos5: add missing interrupts for pwm node
+Date: Wed, 18 Jul 2018 23:18:45 +0530
+Message-ID: <CANAwSgQTJE4hRFEWhKQ3zbbnxUarxx=ieLHtn5qODUYyMj1O3A@mail.gmail.com>
+References: <1531918767-7177-1-git-send-email-linux.amoon@gmail.com> <CAJKOXPdAEp-7jw-AqPfmqq+ygY_p4BGt92voCNRc3z57KU_-ZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180718163530.zsa5md3huz3dnotb@earth.universe>
-Content-Language: en-US
+In-Reply-To: <CAJKOXPdAEp-7jw-AqPfmqq+ygY_p4BGt92voCNRc3z57KU_-ZA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/18/2018 06:35 PM, Sebastian Reichel wrote:
-> Hi Mark,
-> 
-> Some SPI slave devices have more than one chip select [0]. Rob suggested
-> to use the following DT notation for this [1]:
-> 
-> spi-controller {
->     slave@0 {
->         reg = <0>, <1>;
->     };
-> };
-> 
-> I think this makes sense from a DT point of view, but this needs
-> quite some changes in the SPI core. I tried to find out, how to
-> implement the suggestion in the last few days and I see two
-> possibilities:
-> 
-> 1. Register two SPI Linux devices from one DT node. This needs the
->    fewest changes in SPI core. But we loose the one-to-one mapping
->    of DT nodes to devices. I have a feeling, that this will backfire.
-> 
-> 2. Add support for multiple chip-select to spi_device and modify
->    the transfer functions to make use of this. Unfortunately this
->    would require changing all spi controller as far as I can see?
-> 
+Hi Krzysztof,
 
-Hi,
+On 18 July 2018 at 19:25, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On 18 July 2018 at 14:59, Anand Moon <linux.amoon@gmail.com> wrote:
+>> Add missing GIC interrupts property for pwm nodes.
+>>
+>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>> ---
+>> Fixed the patch indentation issue with all tabs.
+>> sorry checkpatch could not figure out the error.
+>> ---
+>>  arch/arm/boot/dts/exynos5.dtsi | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
+>> index 5d2f0a0..f48fb9b 100644
+>> --- a/arch/arm/boot/dts/exynos5.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5.dtsi
+>> @@ -169,6 +169,11 @@
+>>                 pwm: pwm@12dd0000 {
+>>                         compatible = "samsung,exynos4210-pwm";
+>>                         reg = <0x12DD0000 0x100>;
+>> +                       interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
+>> +                                       <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
+>> +                                       <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
+>> +                                       <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
+>> +                                       <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+>
+> OK, thanks for v2. Now only tabs are used but in previous mail I
+> mentioned which example to use - the rtc node which nicely aligns
+> continued lines. Why you did not follow this alignment?
+>
+> I'll fix it when applying, no need to resend.
+>
+> Best regards,
+> Krzysztof
 
-I believe that has been discussed before recently, but I can't find it in
-the archives.
+Thanks, I follow the tab protocol otherwise checkpatch would have
+complained of tab/space issue.
 
-My preferred solution would to have something like
-i2c_new_secondary_device(), but for SPI. This way the driver that binds to
-the compatible string can allocate devices for additional chip selects as
-necessary. Also make use of the reg-names property the same way as in I2C.
-
-The only catch here is that locking in the SPI core needs to be re-worked,
-since you can't allocate SPI devices from within another SPI device's probe
-function. Something like
-https://github.com/analogdevicesinc/linux/commit/b5cc8460b959e530413ffbf9b93d8012c80d05df
-
-- Lars
+Best Regards
+-Anand
