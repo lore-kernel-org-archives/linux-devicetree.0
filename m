@@ -1,65 +1,54 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v4 5/5] rtc: isl1219: add device tree docu
-Date: Wed, 18 Jul 2018 09:38:50 +0200
-Message-ID: <20180718073850.GH3211@piout.net>
-References: <20180710090710.9066-1-Denis.Osterland@diehl.com>
- <20180710090710.9066-6-Denis.Osterland@diehl.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH] arm: dts: zynq: Fix memory size on the Zybo Z7 board
+Date: Wed, 18 Jul 2018 09:38:56 +0200
+Message-ID: <2a551619-63ad-253b-33ae-e3d538aeed9a@xilinx.com>
+References: <20180626232025.14003-1-luaraneda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180710090710.9066-6-Denis.Osterland@diehl.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Denis OSTERLAND <denis.osterland@diehl.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180626232025.14003-1-luaraneda@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Luis Araneda <luaraneda@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 10/07/2018 09:44:15+0000, Denis OSTERLAND wrote:
-> From: Denis Osterland <Denis.Osterland@diehl.com>
+On 27.6.2018 01:20, Luis Araneda wrote:
+> According to the reference manual, the board has two Micron
+> MT41K256M16HA-125 DDR3L memory ICs, which have 512 MiB each
 > 
-> The devicetree documentation for the ISL1219 device tree
-> binding is added with an short example. It is not a trivial
-> device, because it supports two interrupt souces.
+> Tested on a ZYBO-Z7-20 board
 > 
-> Signed-off-by: Denis Osterland <Denis.Osterland@diehl.com>
+> Signed-off-by: Luis Araneda <luaraneda@gmail.com>
 > ---
->  .../devicetree/bindings/rtc/isil,isl1219.txt  | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/isil,isl1219.txt
+>  arch/arm/boot/dts/zynq-zybo-z7.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/rtc/isil,isl1219.txt b/Documentation/devicetree/bindings/rtc/isil,isl1219.txt
-> new file mode 100644
-> index 000000000000..f26f1e9d4bde
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/isil,isl1219.txt
-> @@ -0,0 +1,29 @@
-> +Intersil ISL1219 I2C RTC/Alarm chip with event in
-> +
-> +ISL1219 has additional pins EVIN and #EVDET for tamper detection.
-> +
-> +Required properties supported by the device:
-> +
-> + - "compatible": must be "isil,isl1219"
-> + - "reg": I2C bus address of the device
-> +
-> +Optional properties:
-> +
-> + - "interrupt-names": list which may contains "irq" and "evdet"
-> + - "interrupt-parent", "interrupts", "interrupts-extended":
-> +   for passing the interrupt line of the SoC connected to #IRQ pin
-> +   and #EVDET pin of the RTC chip.
-> + - "isil,ev-evienb": if present bit can be set to disable event input pull-up
+> diff --git a/arch/arm/boot/dts/zynq-zybo-z7.dts b/arch/arm/boot/dts/zynq-zybo-z7.dts
+> index 1e713dc98..bc81ebee5 100644
+> --- a/arch/arm/boot/dts/zynq-zybo-z7.dts
+> +++ b/arch/arm/boot/dts/zynq-zybo-z7.dts
+> @@ -13,7 +13,7 @@
+>  
+>  	memory@0 {
+>  		device_type = "memory";
+> -		reg = <0x0 0x20000000>;
+> +		reg = <0x0 0x40000000>;
+>  	};
+>  
+>  	chosen {
+> 
 
-I would use a clearer name for that property like isil,ev-pull-up-enabled.
+This was already applied through different series.
 
-Also make it an int so 0 is disabling the pull-up (EVIENB set to 1) 1 is
-enabling the pull-up (EVIENB set to 0) and do nothing when the property
-is not present.
-
-
--- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks,
+Michal
