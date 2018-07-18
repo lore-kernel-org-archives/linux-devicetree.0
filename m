@@ -1,26 +1,29 @@
 From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH] arm64: dts: hikey960: Clean up MMC properties and move to
- proper file
-Date: Wed, 18 Jul 2018 16:35:12 +0100
-Message-ID: <5B4F5E30.1080208@hisilicon.com>
-References: <20180618181008.21831-1-ryan@edited.us>
+Subject: Re: [PATCH] arm64: dts: hikey960: Remove deprecated MMC properties
+Date: Wed, 18 Jul 2018 16:34:48 +0100
+Message-ID: <5B4F5E18.60703@hisilicon.com>
+References: <20180618180825.21497-1-ryan@edited.us>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180618181008.21831-1-ryan@edited.us>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180618180825.21497-1-ryan@edited.us>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Ryan Grachek <ryan@edited.us>
-Cc: john.stultz@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, john.stultz@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Ryan,
 
-On 2018/6/18 19:10, Ryan Grachek wrote:
-> Certain properties should be moved to the board file to reflect
-> the specific properties of the board, and not the SoC. Move these
-> properties to proper location and organize properties in both files.
-> 
+On 2018/6/18 19:08, Ryan Grachek wrote:
 > Signed-off-by: Ryan Grachek <ryan@edited.us>
 
 Thanks!
@@ -30,117 +33,53 @@ Best Regards,
 Wei
 
 > ---
->  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 27 ++++++++++++++++++-----
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 27 +++++------------------
->  2 files changed, 27 insertions(+), 27 deletions(-)
+>  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 1 -
+>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 8 --------
+>  2 files changed, 9 deletions(-)
 > 
 > diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> index abc991619c75..1c2a9a5d0477 100644
+> index c706f70ce9f2..abc991619c75 100644
 > --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
 > +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> @@ -602,20 +602,37 @@
->  };
->  
->  &dwmmc1 {
-> +	bus-width = <0x4>;
-> +	cap-sd-highspeed;
-> +	sd-uhs-sdr12;
-> +	sd-uhs-sdr25;
-> +	sd-uhs-sdr50;
-> +	sd-uhs-sdr104;
-> +	disable-wp;
-> +	cd-inverted;
-> +	cd-gpios = <&gpio25 3 0>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sd_pmx_func
-> +		&sd_clk_cfg_func
-> +		&sd_cfg_func>;
->  	vmmc-supply = <&ldo16>;
->  	vqmmc-supply = <&ldo9>;
->  	status = "okay";
->  };
->  
->  &dwmmc2 { /* WIFI */
-> -	broken-cd;
-> -	/* WL_EN */
-> -	vmmc-supply = <&wlan_en>;
-> +	bus-width = <0x4>;
+> @@ -611,7 +611,6 @@
+>  	broken-cd;
+>  	/* WL_EN */
+>  	vmmc-supply = <&wlan_en>;
+> -	ti,non-removable;
 >  	non-removable;
-> +	broken-cd;
-> +	cap-sd-highspeed;
 >  	cap-power-off-card;
 >  	keep-power-in-suspend;
-> -	#address-cells = <0x1>;
-> -	#size-cells = <0x0>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sdio_pmx_func
-> +		&sdio_clk_cfg_func
-> +		&sdio_cfg_func>;
-> +	/* WL_EN */
-> +	vmmc-supply = <&wlan_en>;
->  	status = "ok";
->  
->  	wlcore: wlcore@2 {
 > diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> index 74c0509f99e9..fe4c9f321b70 100644
+> index 484b837757f3..74c0509f99e9 100644
 > --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
 > +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> @@ -1114,15 +1114,10 @@
->  
->  		/* SD */
->  		dwmmc1: dwmmc1@ff37f000 {
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -			cd-inverted;
->  			compatible = "hisilicon,hi3660-dw-mshc";
-> -			bus-width = <0x4>;
-> -			disable-wp;
-> -			cap-sd-highspeed;
-> -			card-detect-delay = <200>;
+> @@ -1121,7 +1121,6 @@
+>  			bus-width = <0x4>;
+>  			disable-wp;
+>  			cap-sd-highspeed;
+> -			supports-highspeed;
+>  			card-detect-delay = <200>;
 >  			reg = <0x0 0xff37f000 0x0 0x1000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
 >  			interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks = <&crg_ctrl HI3660_CLK_GATE_SD>,
->  				<&crg_ctrl HI3660_HCLK_GATE_SD>;
-> @@ -1130,16 +1125,8 @@
->  			clock-frequency = <3200000>;
->  			resets = <&crg_rst 0x94 18>;
->  			reset-names = "reset";
-> -			cd-gpios = <&gpio25 3 0>;
->  			hisilicon,peripheral-syscon = <&sctrl>;
-> -			pinctrl-names = "default";
-> -			pinctrl-0 = <&sd_pmx_func
-> -				     &sd_clk_cfg_func
-> -				     &sd_cfg_func>;
-> -			sd-uhs-sdr12;
-> -			sd-uhs-sdr25;
-> -			sd-uhs-sdr50;
-> -			sd-uhs-sdr104;
-> +			card-detect-delay = <200>;
+> @@ -1142,12 +1141,6 @@
+>  			sd-uhs-sdr50;
+>  			sd-uhs-sdr104;
 >  			status = "disabled";
+> -
+> -			slot@0 {
+> -				reg = <0x0>;
+> -				bus-width = <4>;
+> -				disable-wp;
+> -			};
 >  		};
 >  
-> @@ -1147,6 +1134,8 @@
->  		dwmmc2: dwmmc2@ff3ff000 {
->  			compatible = "hisilicon,hi3660-dw-mshc";
->  			reg = <0x0 0xff3ff000 0x0 0x1000>;
-> +			#address-cells = <0x1>;
-> +			#size-cells = <0x0>;
->  			interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks = <&crg_ctrl HI3660_CLK_GATE_SDIO0>,
->  				 <&crg_ctrl HI3660_HCLK_GATE_SDIO0>;
-> @@ -1154,12 +1143,6 @@
->  			resets = <&crg_rst 0x94 20>;
+>  		/* SDIO */
+> @@ -1162,7 +1155,6 @@
 >  			reset-names = "reset";
 >  			card-detect-delay = <200>;
-> -			cap-sd-highspeed;
-> -			keep-power-in-suspend;
-> -			pinctrl-names = "default";
-> -			pinctrl-0 = <&sdio_pmx_func
-> -				     &sdio_clk_cfg_func
-> -				     &sdio_cfg_func>;
->  			status = "disabled";
->  		};
->  
+>  			cap-sd-highspeed;
+> -			supports-highspeed;
+>  			keep-power-in-suspend;
+>  			pinctrl-names = "default";
+>  			pinctrl-0 = <&sdio_pmx_func
 > 
