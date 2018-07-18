@@ -1,65 +1,104 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/5] spi: dw: fix possible race condition
-Date: Wed, 18 Jul 2018 11:51:12 +0100
-Message-ID: <20180718105112.GF5700@sirena.org.uk>
-References: <20180717142314.32337-1-alexandre.belloni@bootlin.com>
- <20180717142314.32337-2-alexandre.belloni@bootlin.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v3 00/18] arm64: allwinner: Add A64 DE2 HDMI support
+Date: Wed, 18 Jul 2018 16:24:40 +0530
+Message-ID: <20180718105458.22304-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="VuQYccsttdhdIfIP"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180717142314.32337-2-alexandre.belloni@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: James Hogan <jhogan@kernel.org>, Paul Burton <paul.burton@mips.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBF5ZXTNAKGQE5IYPD6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Allwinner A64 has display engine pipeline like other Allwinner SOC's A83T/H3/H5.
 
---VuQYccsttdhdIfIP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+A64 behaviour similar to Allwinner A83T where
+Mixer0 => TCON0 => LVDS/RGB/MIPI-DSI
+Mixer1 => TCON1 => HDMI
+as per Display System Block Diagram from Allwinner_A64_User_Manual_V1.1.pdf
 
-On Tue, Jul 17, 2018 at 04:23:10PM +0200, Alexandre Belloni wrote:
-> It is possible to get an interrupt as soon as it is requested.  dw_spi_irq
-> does spi_controller_get_devdata(master) and expects it to be different th=
-an
-> NULL. However, spi_controller_set_devdata() is called after request_irq(),
-> resulting in the following crash:
->=20
-> CPU 0 Unable to handle kernel paging request at virtual address 00000030,=
- epc =3D=3D 8058e09c, ra =3D=3D 8018ff90
-> [...]
-> Call Trace:
-> [<8058e09c>] dw_spi_irq+0x8/0x64
-> [<8018ff90>] __handle_irq_event_percpu+0x70/0x1d4
-> [<80190128>] handle_irq_event_percpu+0x34/0x8c
-> [<801901c4>] handle_irq_event+0x44/0x80
-> [<801951a8>] handle_level_irq+0xdc/0x194
-> [<8018f580>] generic_handle_irq+0x38/0x50
-> [<804c6924>] ocelot_irq_handler+0x104/0x1c0
-> [<8018f580>] generic_handle_irq+0x38/0x50
+This is third patch-set followed with previous RFC[1], first and second
+series[2][3] and merely concentrated on HDMI pipeline through TCON1 and
+rest will add eventually.
 
-Please think hard before including complete backtraces in upstream
-reports, they are very large and contain almost no useful information
-relative to their size so often obscure the relevant content in your
-message. If part of the backtrace is usefully illustrative then it's
-usually better to pull out the relevant sections.
+This series fixed previous version comments
+- Rebasing on linux-next
+- sqash all pipeline components in one patch
+- Enable all pipeline components in board dts
+- about documenting fallback compatibles
+- adding new compatible for mixer1
 
---VuQYccsttdhdIfIP
-Content-Type: application/pgp-signature; name="signature.asc"
+Log:
+[    1.450984] Jagan: sun8i_mixer_probe
+[    1.464981] sun4i-drm display-engine: bound 1200000.mixer (ops sun8i_mixer_ops)
+[    1.472572] sun4i-drm display-engine: bound 1c0d000.lcd-controller (ops sun4i_tcon_ops)
+[    1.480676] sun8i-dw-hdmi 1ee0000.hdmi: Linked as a consumer to regulator.10
+[    1.488738] sun8i-dw-hdmi 1ee0000.hdmi: Detected HDMI TX controller v1.32a with HDCP (sun8i_dw_hdmi_phy)
+[    1.498879] sun8i-dw-hdmi 1ee0000.hdmi: registered DesignWare HDMI I2C bus driver
+[    1.507372] sun4i-drm display-engine: bound 1ee0000.hdmi (ops sun8i_dw_hdmi_ops)
+[    1.514778] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+[    1.521398] [drm] No driver support for vblank timestamp query.
+[    1.684611] random: fast init done
+[    2.011575] Console: switching to colour frame buffer device 180x56
+[    2.049858] sun4i-drm display-engine: fb0: DRM emulated frame buffer device
+[    2.057268] [drm] Initialized sun4i-drm 1.0.0 20150629 for display-engine on minor 0
 
------BEGIN PGP SIGNATURE-----
+Note:
+Pine64 boards are unable to get edid by default like other A64 boards,
+but forcing 'video=HDMI-A-1:1920x1080@60D' kernel command line can
+create edid with display on penel
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltPG58ACgkQJNaLcl1U
-h9BvoAf/f/6rtJgyme3vvCowQ16IZAJN774h4L9HXBSudyiaol+mrAx4ZlJdHxzB
-OYZwbbqeHHLqr9E9wdQCHDfNz0gAwXzg/kt5BbuNBx5oHLj7JESirezasI5GidMK
-nnW92RtEwrt5ygajIO33E/cWeNwLBo3Au0H2/hJnMA4L6RakTJoRT0h6+80XUkJR
-q5cHWMH8+kcvPk344EvZ/VkN3bNGo3I1jvcFSYYRwmHe42JWiQSYURBbDynJnI3t
-Bx/vo5KR+aA5n3uYfbwMD/Gj9ZbjU3pt/4P4Xhp0u4TkMKZSu3sEuO5EuIbQZ0Fn
-Fcu9kqKRVRq5DMt91jBRMEjjEP7HzQ==
-=nPpa
------END PGP SIGNATURE-----
+[3] https://lkml.org/lkml/2018/5/18/461
+[2] https://lkml.org/lkml/2018/4/30/288
+[1] https://lkml.org/lkml/2018/4/24/547
 
---VuQYccsttdhdIfIP--
+Icenowy Zheng (1):
+  drm: sun4i: add support for HVCC regulator for DWC HDMI glue
+
+Jagan Teki (17):
+  clk: sunxi-ng: a64: Add minimal rate for video PLLs
+  drm/sun4i: Add support for A64 mixer1
+  dt-bindings: display: Add compatible for A64 DE2 tcon1 blocks
+  drm/sun4i: Add support for A64 display engine
+  dt-bindings: display: Add compatible for A64 HDMI
+  dt-bindings: clock: sun50i-a64-ccu: Add PLL_VIDEO[0-1] macros
+  arm64: dts: allwinner: a64: Add tcon1 HDMI pipeline
+  clk: sunxi-ng: Enable DE2_CCU for SUN8I and SUN50I
+  arm64: defconfig: Enable CONFIG_DRM_SUN4I
+  drm/sun4i: Enable DE2 Mixer for SUN8I and SUN50I
+  drm/sun4i: Enable DesignWare HDMI for SUN50I
+  arm64: dts: allwinner: a64: bananapi-m64: Enable HDMI output
+  arm64: dts: allwinner: a64: nanopi-a64: Enable HDMI output
+  arm64: dts: allwinner: a64: orangepi-win: Enable HDMI output
+  arm64: dts: allwinner: a64: a64-olinuxino: Enable HDMI output
+  arm64: dts: allwinner: a64: pine64: Enable HDMI output
+  arm64: dts: allwinner: a64: sopine: Enable HDMI output
+
+ .../bindings/display/sunxi/sun4i-drm.txt      |   4 +
+ .../dts/allwinner/sun50i-a64-bananapi-m64.dts |  34 ++++++
+ .../dts/allwinner/sun50i-a64-nanopi-a64.dts   |  34 ++++++
+ .../dts/allwinner/sun50i-a64-olinuxino.dts    |  34 ++++++
+ .../dts/allwinner/sun50i-a64-orangepi-win.dts |  34 ++++++
+ .../boot/dts/allwinner/sun50i-a64-pine64.dts  |  34 ++++++
+ .../allwinner/sun50i-a64-sopine-baseboard.dts |  34 ++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 110 ++++++++++++++++++
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/clk/sunxi-ng/Kconfig                  |   2 +
+ drivers/clk/sunxi-ng/ccu-sun50i-a64.c         |  46 ++++----
+ drivers/gpu/drm/sun4i/Kconfig                 |   3 +-
+ drivers/gpu/drm/sun4i/sun4i_drv.c             |   1 +
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         |  14 +++
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |   2 +
+ drivers/gpu/drm/sun4i/sun8i_mixer.c           |  12 ++
+ include/dt-bindings/clock/sun50i-a64-ccu.h    |   2 +
+ 17 files changed, 378 insertions(+), 23 deletions(-)
+
+-- 
+2.17.1
