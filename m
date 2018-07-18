@@ -1,22 +1,22 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: meson: add axg fifos DT binding documentation" to the asoc tree
-Date: Wed, 18 Jul 2018 13:27:06 +0100
-Message-ID: <E1fflXu-0007H0-JJ@debutante>
-References: <20180717153643.8806-2-jbrunet@baylibre.com>
+Subject: Applied "spi: dw: allow providing own set_cs callback" to the spi tree
+Date: Wed, 18 Jul 2018 13:29:50 +0100
+Message-ID: <E1fflaY-0007Wj-SM@debutante>
+References: <20180717142314.32337-3-alexandre.belloni@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180717153643.8806-2-jbrunet@baylibre.com>
+In-Reply-To: <20180717142314.32337-3-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.orgalsa-devel@alsa-project.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, James Hogan <jhogan@kernel.org>, Paul Burton <paul.burton@mips.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: meson: add axg fifos DT binding documentation
+   spi: dw: allow providing own set_cs callback
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -37,48 +37,46 @@ to this mail.
 Thanks,
 Mark
 
->From e32d99af6830c9a8f37b4f2637ef0cdc60fa79fb Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Tue, 17 Jul 2018 17:42:50 +0200
-Subject: [PATCH] ASoC: meson: add axg fifos DT binding documentation
+>From 62dbbae483b6452e688b8e26c4d024d484117697 Mon Sep 17 00:00:00 2001
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Date: Tue, 17 Jul 2018 16:23:11 +0200
+Subject: [PATCH] spi: dw: allow providing own set_cs callback
 
-Add the DT bindings documentation for axg's FIFOs: TODDR and FRDDR.
+Allow platform specific drivers to provide their own set_cs callback when
+the IP integration requires it.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../bindings/sound/amlogic,axg-fifo.txt       | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
+ drivers/spi/spi-dw.c | 3 +++
+ drivers/spi/spi-dw.h | 1 +
+ 2 files changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
-new file mode 100644
-index 000000000000..3dfc2515e5c6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
-@@ -0,0 +1,23 @@
-+* Amlogic Audio FIFO controllers
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index f693bfe95ab9..0d8ccb8be5ec 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -505,6 +505,9 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+ 	master->dev.of_node = dev->of_node;
+ 	master->flags = SPI_MASTER_GPIO_SS;
+ 
++	if (dws->set_cs)
++		master->set_cs = dws->set_cs;
 +
-+Required properties:
-+- compatible: 'amlogic,axg-toddr' or
-+	      'amlogic,axg-frddr'
-+- reg: physical base address of the controller and length of memory
-+       mapped region.
-+- interrupts: interrupt specifier for the fifo.
-+- clocks: phandle to the fifo peripheral clock provided by the audio
-+	  clock controller.
-+- resets: phandle to memory ARB line provided by the arb reset controller.
-+- #sound-dai-cells: must be 0.
-+
-+Example of FRDDR A on the A113 SoC:
-+
-+frddr_a: audio-controller@1c0 {
-+	compatible = "amlogic,axg-frddr";
-+	reg = <0x0 0x1c0 0x0 0x1c>;
-+	#sound-dai-cells = <0>;
-+	interrupts = <GIC_SPI 88 IRQ_TYPE_EDGE_RISING>;
-+	clocks = <&clkc_audio AUD_CLKID_FRDDR_A>;
-+	resets = <&arb AXG_ARB_FRDDR_A>;
-+};
+ 	/* Basic HW init */
+ 	spi_hw_init(dev, dws);
+ 
+diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
+index 2cde2473b3e9..446013022849 100644
+--- a/drivers/spi/spi-dw.h
++++ b/drivers/spi/spi-dw.h
+@@ -112,6 +112,7 @@ struct dw_spi {
+ 	u32			reg_io_width;	/* DR I/O width in bytes */
+ 	u16			bus_num;
+ 	u16			num_cs;		/* supported slave numbers */
++	void (*set_cs)(struct spi_device *spi, bool enable);
+ 
+ 	/* Current message transfer state info */
+ 	size_t			len;
 -- 
 2.18.0
