@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 10/17] dmaengine: dma-jz4780: Add missing residue DTC mask
-Date: Wed, 18 Jul 2018 20:20:16 +0200
-Message-ID: <20180718182023.8182-11-paul@crapouillou.net>
+Subject: [PATCH v2 12/17] dmaengine: dma-jz4780: Set DTCn register explicitly
+Date: Wed, 18 Jul 2018 20:20:18 +0200
+Message-ID: <20180718182023.8182-13-paul@crapouillou.net>
 References: <20180718182023.8182-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180718182023.8182-1-paul@crapouillou.net>
@@ -12,33 +12,38 @@ List-Id: devicetree@vger.kernel.org
 
 From: Daniel Silsby <dansilsby@gmail.com>
 
-The 'dtc' word in jz DMA descriptors contains two fields: The
-lowest 24 bits are the transfer count, and upper 8 bits are the DOA
-offset to next descriptor. The upper 8 bits are now correctly masked
-off when computing residue in jz4780_dma_desc_residue(). Note that
-reads of the DTCn hardware reg are automatically masked this way.
+Normally, we wouldn't set the channel transfer count register directly
+when using descriptor-driven transfers. However, there is no harm in
+doing so, and it allows jz4780_dma_desc_residue() to report the correct
+residue of an ongoing transfer, no matter when it is called.
 
 Signed-off-by: Daniel Silsby <dansilsby@gmail.com>
 Tested-by: Mathieu Malaterre <malat@debian.org>
 ---
- drivers/dma/dma-jz4780.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/dma/dma-jz4780.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
  v2: No change
 
 diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 3c9d3952e23a..fa926de082ba 100644
+index cc2a86844db4..78849131c81d 100644
 --- a/drivers/dma/dma-jz4780.c
 +++ b/drivers/dma/dma-jz4780.c
-@@ -614,7 +614,8 @@ static size_t jz4780_dma_desc_residue(struct jz4780_dma_chan *jzchan,
- 	residue = 0;
+@@ -530,6 +530,15 @@ static void jz4780_dma_begin(struct jz4780_dma_chan *jzchan)
+ 	jz4780_dma_chn_writel(jzdma, jzchan->id, JZ_DMA_REG_DRT,
+ 			      jzchan->transfer_type);
  
- 	for (i = next_sg; i < desc->count; i++)
--		residue += desc->desc[i].dtc << jzchan->transfer_shift;
-+		residue += (desc->desc[i].dtc & 0xffffff) <<
-+			jzchan->transfer_shift;
- 
- 	if (next_sg != 0) {
- 		count = jz4780_dma_chn_readl(jzdma, jzchan->id,
++	/*
++	 * Set the transfer count. This is redundant for a descriptor-driven
++	 * transfer. However, there can be a delay between the transfer start
++	 * time and when DTCn reg contains the new transfer count. Setting
++	 * it explicitly ensures residue is computed correctly at all times.
++	 */
++	jz4780_dma_chn_writel(jzdma, jzchan->id, JZ_DMA_REG_DTC,
++				jzchan->desc->desc[jzchan->curr_hwdesc].dtc);
++
+ 	/* Write descriptor address and initiate descriptor fetch. */
+ 	desc_phys = jzchan->desc->desc_phys +
+ 		    (jzchan->curr_hwdesc * sizeof(*jzchan->desc->desc));
 -- 
 2.11.0
