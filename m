@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 16/17] MIPS: JZ4770: DTS: Add DMA nodes
-Date: Wed, 18 Jul 2018 20:20:22 +0200
-Message-ID: <20180718182023.8182-17-paul@crapouillou.net>
+Subject: [PATCH v2 17/17] MIPS: JZ4740: DTS: Add DMA nodes
+Date: Wed, 18 Jul 2018 20:20:23 +0200
+Message-ID: <20180718182023.8182-18-paul@crapouillou.net>
 References: <20180718182023.8182-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180718182023.8182-1-paul@crapouillou.net>
@@ -10,58 +10,43 @@ To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutlan
 Cc: Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, Paul Cercueil <paul@crapouillou.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-Add the two devicetree nodes for the two DMA cores of the JZ4770 SoC,
-disabled by default, as currently there are no clients for the DMA
-driver (until the MMC driver and/or others get a devicetree node).
+Add the devicetree nodes for the DMA core of the JZ4740 SoC, disabled
+by default, as currently there are no clients for the DMA driver
+(until the MMC driver and/or others get a devicetree node).
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Tested-by: Mathieu Malaterre <malat@debian.org>
 ---
- arch/mips/boot/dts/ingenic/jz4770.dtsi | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ arch/mips/boot/dts/ingenic/jz4740.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
- v2: No change
+ v2: New patch in this series
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-index 7c2804f3f5f1..fda17beeb08b 100644
---- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-@@ -196,6 +196,36 @@
- 		status = "disabled";
+diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+index 26c6b561d6f7..47d93f2597af 100644
+--- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+@@ -154,6 +154,21 @@
+ 		clock-names = "baud", "module";
  	};
  
-+	dmac0: jz4770-dma@13420000 {
-+		compatible = "ingenic,jz4770-dma";
-+		reg = <0x13420000 0xC0
-+		       0x13420300 0x20>;
++	dmac: dma@13020000 {
++		compatible = "ingenic,jz4740-dma";
++		reg = <0x13020000 0xbc
++		       0x13020300 0x14>;
++		#dma-cells = <2>;
 +
-+		#dma-cells = <1>;
-+
-+		clocks = <&cgu JZ4770_CLK_DMA>;
 +		interrupt-parent = <&intc>;
-+		interrupts = <24>;
++		interrupts = <29>;
 +
-+		/* Disable dmac0 until we have something that uses it */
++		clocks = <&cgu JZ4740_CLK_DMA>;
++
++		/* Disable dmac until we have something that uses it */
 +		status = "disabled";
 +	};
 +
-+	dmac1: jz4770-dma@13420100 {
-+		compatible = "ingenic,jz4770-dma";
-+		reg = <0x13420100 0xC0
-+		       0x13420400 0x20>;
-+
-+		#dma-cells = <1>;
-+
-+		clocks = <&cgu JZ4770_CLK_DMA>;
-+		interrupt-parent = <&intc>;
-+		interrupts = <23>;
-+
-+		/* Disable dmac1 until we have something that uses it */
-+		status = "disabled";
-+	};
-+
- 	uhc: uhc@13430000 {
- 		compatible = "generic-ohci";
- 		reg = <0x13430000 0x1000>;
+ 	uhc: uhc@13030000 {
+ 		compatible = "ingenic,jz4740-ohci", "generic-ohci";
+ 		reg = <0x13030000 0x1000>;
 -- 
 2.11.0
