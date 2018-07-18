@@ -1,32 +1,39 @@
 From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Subject: [PATCH v2 0/2] pinctrl: berlin: add as370 SoC support
-Date: Wed, 18 Jul 2018 13:56:13 +0800
-Message-ID: <20180718135613.1c559b9c@xhacker.debian>
+Subject: [PATCH v2 1/2] dt-binding: pinctrl: berlin: document AS370 SoC
+ pinctrl
+Date: Wed, 18 Jul 2018 13:57:09 +0800
+Message-ID: <20180718135709.35128a54@xhacker.debian>
+References: <20180718135613.1c559b9c@xhacker.debian>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180718135613.1c559b9c@xhacker.debian>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This series is to add the Synaptics AS370 SoC pinctrl driver.
+Add as370 to existing berlin pinctrl device tree binding.
 
-since v1:
- - remove MODULE_DEVICE_TABLE since the driver is non-modular. Thank
-   kbuild test robot to report this issue.
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+---
+ Documentation/devicetree/bindings/pinctrl/berlin,pinctrl.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Jisheng Zhang (2):
-  dt-binding: pinctrl: berlin: document AS370 SoC pinctrl
-  pinctrl: berlin: add the as370 SoC pinctrl driver
-
- .../bindings/pinctrl/berlin,pinctrl.txt       |   3 +-
- drivers/pinctrl/berlin/Kconfig                |   5 +
- drivers/pinctrl/berlin/Makefile               |   1 +
- drivers/pinctrl/berlin/pinctrl-as370.c        | 368 ++++++++++++++++++
- 4 files changed, 376 insertions(+), 1 deletion(-)
- create mode 100644 drivers/pinctrl/berlin/pinctrl-as370.c
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/berlin,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/berlin,pinctrl.txt
+index f8fa28ce163e..0a2d5516e1f3 100644
+--- a/Documentation/devicetree/bindings/pinctrl/berlin,pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/berlin,pinctrl.txt
+@@ -23,7 +23,8 @@ Required properties:
+ 	"marvell,berlin2q-system-pinctrl",
+ 	"marvell,berlin4ct-avio-pinctrl",
+ 	"marvell,berlin4ct-soc-pinctrl",
+-	"marvell,berlin4ct-system-pinctrl"
++	"marvell,berlin4ct-system-pinctrl",
++	"syna,as370-soc-pinctrl"
+ 
+ Required subnode-properties:
+ - groups: a list of strings describing the group names.
 -- 
 2.18.0
