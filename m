@@ -1,21 +1,42 @@
-From: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
-Subject: [PATCH v1 00/04] Add clock driver for Actions Semi S500 SoC
-Date: Wed, 18 Jul 2018 12:27:56 -0300
-Message-ID: <CADHB5bA2KiPSN32+G-Oyf9AfOkFrOB48sc54K5rFem9+xyWtAQ@mail.gmail.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 00/23] Add multi-channel support to Armada thermal
+ driver
+Date: Wed, 18 Jul 2018 17:28:49 +0200
+Message-ID: <20180718172849.30b7cec0@xps13>
+References: <20180716144206.30985-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, linux@armlinux.org.uk, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?Q?Guilherme_G=2E_Sim=C3=B5es?= <guilherme.simoes@lsitec.org.br>, Jon maddog Hall <jon.maddog.hall@gmail.com>, mkzuffo@lsi.usp.br, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, sboyd@kernel.org, mark.rutland@arm.com, linux@cubietech.com, support@cubietech.com, catalin.marinas@arm.com, Michael Turquette <mturquette@baylibre.com>, will.deacon@arm.com, thomas liau <thomas.liau@actions-semi.com>, darren@cubietech.com, robh+dt@kernel.org, jeff.chen@actions-semi.com, pn@denx.de, mp-cs@actions-semi.com, Laisa Costa - LSI-TEC <laisa.costa@lsitec.org.br>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180716144206.30985-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-pm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds clock support for Actions Semi Owl series S500 SoC
-with relevant clock bindings and device tree info.
-
-This patchset depends on patch "[PATCH v6 1/5] clk: actions: Add
-missing REGMAP_MMIO dependency" by Saravanan Sekar.
-This patchset depends on patch "[PATCH] clk: actions: Add custom delay
-option to Actions Semi OWL pll clock driver" by Edgar Bernardi Righi.
-
-Signed-off-by: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
+SGkgRWR1YXJkbywKCk1pcXVlbCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9vdGxpbi5jb20+IHdy
+b3RlIG9uIE1vbiwgMTYgSnVsIDIwMTgKMTY6NDE6NDMgKzAyMDA6Cgo+IFRoZSBvbmx5IGNhcGFi
+aWxpdHkgb2YgdGhlIEFybWFkYSB0aGVybWFsIGRyaXZlciBpcyBjdXJyZW50bHkganVzdCB0bwo+
+IHJlYWQgb25lIHNlbnNvciAodGhlIGRlZmF1bHQgb25lKSBwZXIgQVAgYW5kIG9uZSBwZXIgQ1Au
+IEFjdHVhbGx5LAo+IHRoZXJlIGlzIG9uZSBzZW5zb3IgcGVyIGNvcmUgaW4gdGhlIEFQODA2IHBs
+dXMgb25lIHNlbnNvciBpbiB0aGUKPiB0aGVybWFsIElQIGl0c2VsZi4gVGhlIENQMTEwIGp1c3Qg
+ZmVhdHVyZXMgb25lIHRoZXJtYWwgc2Vuc29yIGluIGl0cwo+IG93biB0aGVybWFsIElQLgo+IAo+
+IFRoaXMgc2VyaWVzIGZpcnN0IGltcHJvdmVzIHRoZSByZWFkYWJpbGl0eSBvZiB0aGlzIGRyaXZl
+ciwgdGhlbiBhZGRzCj4gc3VwcG9ydCBmb3IgbXVsdGktY2hhbm5lbCB0aGVybWFsIElQcy4gVGhl
+IGJpbmRpbmdzIGFuZCB0aGUKPiBkZXZpY2UtdHJlZXMgYXJlIHVwZGF0ZWQgYWNjb3JkaW5nbHku
+Cj4gCj4gVGhhbmsgeW91LAo+IE1pcXXDqGwKCkkga25vdyBJIHNlbnQgdGhpcyBzZXJpZXMgb24g
+bW9uZGF5IGJ1dCB0aGVyZSB3YXMgYWxtb3N0IG5vIGNoYW5nZSBvbgppdCAoc2VlIGJlbG93KSwg
+ZG8geW91IHRoaW5rIHlvdSB3aWxsIGhhdmUgdGhlIHRpbWUgdG8gbG9vayBhdCBpdApiZWZvcmUg
+aXQncyB0b28gbGF0ZSBmb3IgdGhlIG1lcmdlIHdpbmRvdz8KClRoYW5rIHlvdSwKTWlxdcOobAoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
+LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
+cm5lbAo=
