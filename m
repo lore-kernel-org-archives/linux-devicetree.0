@@ -1,68 +1,90 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/5] spi: dw: allow providing own set_cs callback
-Date: Wed, 18 Jul 2018 13:24:21 +0100
-Message-ID: <20180718122421.GK5700@sirena.org.uk>
-References: <20180717142314.32337-1-alexandre.belloni@bootlin.com>
- <20180717142314.32337-3-alexandre.belloni@bootlin.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="M9kwpIYUMbI/2cCx"
+Subject: Applied "ASoC: meson: add axg tdm formatters DT bindings documentation" to the asoc tree
+Date: Wed, 18 Jul 2018 13:25:10 +0100
+Message-ID: <E1fflW2-000788-CV@debutante>
+References: <20180717153643.8806-9-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180717142314.32337-3-alexandre.belloni@bootlin.com>
+In-Reply-To: <20180717153643.8806-9-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: James Hogan <jhogan@kernel.org>, Paul Burton <paul.burton@mips.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.orgalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---M9kwpIYUMbI/2cCx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+   ASoC: meson: add axg tdm formatters DT bindings documentation
 
-On Tue, Jul 17, 2018 at 04:23:11PM +0200, Alexandre Belloni wrote:
-> Allow platform specific drivers to provide their own set_cs callback when
-> the IP integration requires it.
+has been applied to the asoc tree at
 
-The following changes since commit ce397d215ccd07b8ae3f71db689aedb85d56ab40:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-  Linux 4.18-rc1 (2018-06-17 08:04:49 +0900)
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-are available in the Git repository at:
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-dw-set-cs
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-for you to fetch changes up to 62dbbae483b6452e688b8e26c4d024d484117697:
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-  spi: dw: allow providing own set_cs callback (2018-07-18 13:22:37 +0100)
+Thanks,
+Mark
 
-----------------------------------------------------------------
-spi: dw: Allow custom set_cs_callback
+>From 7713a70034f2cb54168d134ac523fdfcdda92a13 Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Tue, 17 Jul 2018 17:42:56 +0200
+Subject: [PATCH] ASoC: meson: add axg tdm formatters DT bindings documentation
 
-Allow platform specific drivers to provide their own set_cs callback when
-the IP integration requires it.
+Add the DT bindings documentation for axg's TDM formatters: TDMIN
+and TDMOUT.
 
-----------------------------------------------------------------
-Alexandre Belloni (1):
-      spi: dw: allow providing own set_cs callback
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../sound/amlogic,axg-tdm-formatters.txt      | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
 
- drivers/spi/spi-dw.c | 3 +++
- drivers/spi/spi-dw.h | 1 +
- 2 files changed, 4 insertions(+)
-
---M9kwpIYUMbI/2cCx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltPMXUACgkQJNaLcl1U
-h9BWsgf9FOP0W6xbxEz+Z9Vym3Fbf6vuznYgCsxHhqV79EP6lRLrdJOllZTSXOSy
-dkYUwpR0MlLDukWBvPPwmDM2m/BR6rHfzMWXqyWh4+wj6CD9KZlm7hMqauANfSoC
-6zV2IdBSVw3d0QHfiMRB2WuVBAnTlTFaPPik66NJo/VngEEvBrnsV3KjuECtdeKZ
-KgHtmh0O/D674R8OdfKJ4BjpHAl2BCHJnyjr0fm1X/doqci62vM2Oq6WQWSA6Z2w
-W9BgQzxMgFEiXNVAikwYAT2g/wos85wiqRFPMqUQDC0I0KTxZJjsL4yogxSiIEVZ
-WUMcnYQ6Qzbwj83eD7krc7hVaCVYLw==
-=I9ay
------END PGP SIGNATURE-----
-
---M9kwpIYUMbI/2cCx--
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
+new file mode 100644
+index 000000000000..1c1b7490554e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
+@@ -0,0 +1,28 @@
++* Amlogic Audio TDM formatters
++
++Required properties:
++- compatible: 'amlogic,axg-tdmin' or
++	      'amlogic,axg-tdmout'
++- reg: physical base address of the controller and length of memory
++       mapped region.
++- clocks: list of clock phandle, one for each entry clock-names.
++- clock-names: should contain the following:
++  * "pclk"     : peripheral clock.
++  * "sclk"     : bit clock.
++  * "sclk_sel" : bit clock input multiplexer.
++  * "lrclk"    : sample clock
++  * "lrclk_sel": sample clock input multiplexer
++
++Example of TDMOUT_A on the A113 SoC:
++
++tdmout_a: audio-controller@500 {
++	compatible = "amlogic,axg-tdmout";
++	reg = <0x0 0x500 0x0 0x40>;
++	clocks = <&clkc_audio AUD_CLKID_TDMOUT_A>,
++		 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK>,
++		 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK_SEL>,
++		 <&clkc_audio AUD_CLKID_TDMOUT_A_LRCLK>,
++		 <&clkc_audio AUD_CLKID_TDMOUT_A_LRCLK>;
++	clock-names = "pclk", "sclk", "sclk_sel",
++		      "lrclk", "lrclk_sel";
++};
+-- 
+2.18.0
