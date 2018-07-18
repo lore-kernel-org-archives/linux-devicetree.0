@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 17/17] MIPS: JZ4740: DTS: Add DMA nodes
-Date: Wed, 18 Jul 2018 20:20:23 +0200
-Message-ID: <20180718182023.8182-18-paul@crapouillou.net>
+Subject: [PATCH v2 14/17] dmaengine: dma-jz4780: Use dma_set_residue()
+Date: Wed, 18 Jul 2018 20:20:20 +0200
+Message-ID: <20180718182023.8182-15-paul@crapouillou.net>
 References: <20180718182023.8182-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180718182023.8182-1-paul@crapouillou.net>
@@ -10,43 +10,47 @@ To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutlan
 Cc: Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, Paul Cercueil <paul@crapouillou.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-Add the devicetree nodes for the DMA core of the JZ4740 SoC, disabled
-by default, as currently there are no clients for the DMA driver
-(until the MMC driver and/or others get a devicetree node).
+From: Daniel Silsby <dansilsby@gmail.com>
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+This is the standard method provided by dmaengine header.
+
+Signed-off-by: Daniel Silsby <dansilsby@gmail.com>
 Tested-by: Mathieu Malaterre <malat@debian.org>
 ---
- arch/mips/boot/dts/ingenic/jz4740.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/dma/dma-jz4780.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
- v2: New patch in this series
+ v2: No change
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index 26c6b561d6f7..47d93f2597af 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -154,6 +154,21 @@
- 		clock-names = "baud", "module";
- 	};
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index b9db539a5b34..ea17886031fa 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -637,6 +637,7 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
+ 	struct virt_dma_desc *vdesc;
+ 	enum dma_status status;
+ 	unsigned long flags;
++	unsigned long residue = 0;
  
-+	dmac: dma@13020000 {
-+		compatible = "ingenic,jz4740-dma";
-+		reg = <0x13020000 0xbc
-+		       0x13020300 0x14>;
-+		#dma-cells = <2>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <29>;
-+
-+		clocks = <&cgu JZ4740_CLK_DMA>;
-+
-+		/* Disable dmac until we have something that uses it */
-+		status = "disabled";
-+	};
-+
- 	uhc: uhc@13030000 {
- 		compatible = "ingenic,jz4740-ohci", "generic-ohci";
- 		reg = <0x13030000 0x1000>;
+ 	status = dma_cookie_status(chan, cookie, txstate);
+ 	if ((status == DMA_COMPLETE) || (txstate == NULL))
+@@ -647,13 +648,13 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
+ 	vdesc = vchan_find_desc(&jzchan->vchan, cookie);
+ 	if (vdesc) {
+ 		/* On the issued list, so hasn't been processed yet */
+-		txstate->residue = jz4780_dma_desc_residue(jzchan,
++		residue = jz4780_dma_desc_residue(jzchan,
+ 					to_jz4780_dma_desc(vdesc), 0);
+ 	} else if (cookie == jzchan->desc->vdesc.tx.cookie) {
+-		txstate->residue = jz4780_dma_desc_residue(jzchan, jzchan->desc,
++		residue = jz4780_dma_desc_residue(jzchan, jzchan->desc,
+ 					jzchan->curr_hwdesc + 1);
+-	} else
+-		txstate->residue = 0;
++	}
++	dma_set_residue(txstate, residue);
+ 
+ 	if (vdesc && jzchan->desc && vdesc == &jzchan->desc->vdesc
+ 	    && jzchan->desc->status & (JZ_DMA_DCS_AR | JZ_DMA_DCS_HLT))
 -- 
 2.11.0
