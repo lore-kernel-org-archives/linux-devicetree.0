@@ -1,47 +1,105 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCHv2] ARM: dts: exynos5: add missing interrupts for pwm node
-Date: Wed, 18 Jul 2018 15:55:57 +0200
-Message-ID: <CAJKOXPdAEp-7jw-AqPfmqq+ygY_p4BGt92voCNRc3z57KU_-ZA@mail.gmail.com>
-References: <1531918767-7177-1-git-send-email-linux.amoon@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: [PATCH v10 2/4] rtc: ds1307: support m41t11 variant
+Date: Wed, 18 Jul 2018 16:09:43 +0200
+Message-ID: <20180718140946.115093-1-giulio.benetti@micronovasrl.com>
+References: <CAHp75VcaALb8fYJExnZ=Ye=GcNHc3aPXgFihVK+rAu_a1A01Sg@mail.gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531918767-7177-1-git-send-email-linux.amoon@gmail.com>
+In-Reply-To: <CAHp75VcaALb8fYJExnZ=Ye=GcNHc3aPXgFihVK+rAu_a1A01Sg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>, Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK RTC SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18 July 2018 at 14:59, Anand Moon <linux.amoon@gmail.com> wrote:
-> Add missing GIC interrupts property for pwm nodes.
->
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> Fixed the patch indentation issue with all tabs.
-> sorry checkpatch could not figure out the error.
-> ---
->  arch/arm/boot/dts/exynos5.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
-> index 5d2f0a0..f48fb9b 100644
-> --- a/arch/arm/boot/dts/exynos5.dtsi
-> +++ b/arch/arm/boot/dts/exynos5.dtsi
-> @@ -169,6 +169,11 @@
->                 pwm: pwm@12dd0000 {
->                         compatible = "samsung,exynos4210-pwm";
->                         reg = <0x12DD0000 0x100>;
-> +                       interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
-> +                                       <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+The m41t11 variant is very similar to the already supported m41t00 and
+m41t0, but it has also 56 bytes of NVRAM.
 
-OK, thanks for v2. Now only tabs are used but in previous mail I
-mentioned which example to use - the rtc node which nicely aligns
-continued lines. Why you did not follow this alignment?
+Add it to driver taking into account NVRAM section.
 
-I'll fix it when applying, no need to resend.
+Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+---
+ .../devicetree/bindings/rtc/rtc-ds1307.txt         |  1 +
+ drivers/rtc/rtc-ds1307.c                           | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+)
 
-Best regards,
-Krzysztof
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+index d28d6e7f6ae8..ce6469c1a516 100644
+--- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
++++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+@@ -13,6 +13,7 @@ Required properties:
+ 	"maxim,ds3231",
+ 	"st,m41t0",
+ 	"st,m41t00",
++	"st,m41t11",
+ 	"microchip,mcp7940x",
+ 	"microchip,mcp7941x",
+ 	"pericom,pt7c4338",
+diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+index aa4a161bae98..0162a600ff1b 100644
+--- a/drivers/rtc/rtc-ds1307.c
++++ b/drivers/rtc/rtc-ds1307.c
+@@ -44,6 +44,7 @@ enum ds_type {
+ 	ds_3231,
+ 	m41t0,
+ 	m41t00,
++	m41t11,
+ 	mcp794xx,
+ 	rx_8025,
+ 	rx_8130,
+@@ -227,6 +228,11 @@ static const struct chip_desc chips[last_ds_type] = {
+ 		.irq_handler = rx8130_irq,
+ 		.rtc_ops = &rx8130_rtc_ops,
+ 	},
++	[m41t11] = {
++		/* this is battery backed SRAM */
++		.nvram_offset	= 8,
++		.nvram_size	= 56,
++	},
+ 	[mcp794xx] = {
+ 		.alarm		= 1,
+ 		/* this is battery backed SRAM */
+@@ -249,6 +255,7 @@ static const struct i2c_device_id ds1307_id[] = {
+ 	{ "ds3231", ds_3231 },
+ 	{ "m41t0", m41t0 },
+ 	{ "m41t00", m41t00 },
++	{ "m41t11", m41t11 },
+ 	{ "mcp7940x", mcp794xx },
+ 	{ "mcp7941x", mcp794xx },
+ 	{ "pt7c4338", ds_1307 },
+@@ -305,6 +312,10 @@ static const struct of_device_id ds1307_of_match[] = {
+ 		.compatible = "st,m41t00",
+ 		.data = (void *)m41t00
+ 	},
++	{
++		.compatible = "st,m41t11",
++		.data = (void *)m41t11
++	},
+ 	{
+ 		.compatible = "microchip,mcp7940x",
+ 		.data = (void *)mcp794xx
+@@ -347,6 +358,7 @@ static const struct acpi_device_id ds1307_acpi_ids[] = {
+ 	{ .id = "DS3231", .driver_data = ds_3231 },
+ 	{ .id = "M41T0", .driver_data = m41t0 },
+ 	{ .id = "M41T00", .driver_data = m41t00 },
++	{ .id = "M41T11", .driver_data = m41t11 },
+ 	{ .id = "MCP7940X", .driver_data = mcp794xx },
+ 	{ .id = "MCP7941X", .driver_data = mcp794xx },
+ 	{ .id = "PT7C4338", .driver_data = ds_1307 },
+@@ -1576,6 +1588,7 @@ static int ds1307_probe(struct i2c_client *client,
+ 	case ds_1307:
+ 	case m41t0:
+ 	case m41t00:
++	case m41t11:
+ 		/* clock halted?  turn it on, so clock can tick. */
+ 		if (tmp & DS1307_BIT_CH) {
+ 			regmap_write(ds1307->regmap, DS1307_REG_SECS, 0);
+@@ -1641,6 +1654,7 @@ static int ds1307_probe(struct i2c_client *client,
+ 	case ds_1340:
+ 	case m41t0:
+ 	case m41t00:
++	case m41t11:
+ 		/*
+ 		 * NOTE: ignores century bits; fix before deploying
+ 		 * systems that will run through year 2100.
+-- 
+2.17.1
