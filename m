@@ -1,13 +1,12 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v3 10/18] drm/sun4i: Enable DE2 Mixer for SUN8I
- and SUN50I
-Date: Wed, 18 Jul 2018 16:24:50 +0530
-Message-ID: <20180718105458.22304-11-jagan@amarulasolutions.com>
+Subject: [PATCH v3 11/18] drm/sun4i: Enable DesignWare HDMI for SUN50I
+Date: Wed, 18 Jul 2018 16:24:51 +0530
+Message-ID: <20180718105458.22304-12-jagan@amarulasolutions.com>
 References: <20180718105458.22304-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBTFZXTNAKGQEPUNDUYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBY5ZXTNAKGQE5UD5LTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180718105458.22304-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,31 +19,34 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner SoC like SUN8I and SUN50I are now using DE2 Mixer
-so enable them as default.
+Allwinner SUN50I are now using DesignWare HDMI so enable
+them as default. This can build DRM_SUN8I_DW_HDMI as module
+since DRM in arm64 has module.
+
+Making this as defult to SUN8I, may cause an issue while
+loading since arm32 DRM built as static.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
 Changes for v3:
-- none
+- skip SUN8I enablement, since it built statically for arm32
 Changes for v2:
 - Enable for SUN8I
 
- drivers/gpu/drm/sun4i/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/gpu/drm/sun4i/Kconfig b/drivers/gpu/drm/sun4i/Kconfig
-index c2c042287c19..cfa8b96273fb 100644
+index cfa8b96273fb..5d0c450db148 100644
 --- a/drivers/gpu/drm/sun4i/Kconfig
 +++ b/drivers/gpu/drm/sun4i/Kconfig
-@@ -61,7 +61,7 @@ config DRM_SUN8I_DW_HDMI
+@@ -52,6 +52,7 @@ config DRM_SUN6I_DSI
  
- config DRM_SUN8I_MIXER
- 	tristate "Support for Allwinner Display Engine 2.0 Mixer"
--	default MACH_SUN8I
-+	default MACH_SUN8I || (ARM64 && ARCH_SUNXI)
+ config DRM_SUN8I_DW_HDMI
+ 	tristate "Support for Allwinner version of DesignWare HDMI"
++	default ARM64 && ARCH_SUNXI
+ 	depends on DRM_SUN4I
+ 	select DRM_DW_HDMI
  	help
- 	  Choose this option if you have an Allwinner SoC with the
- 	  Allwinner Display Engine 2.0, which has a mixer to do some
 -- 
 2.17.1
