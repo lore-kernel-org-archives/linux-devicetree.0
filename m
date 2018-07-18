@@ -1,7 +1,7 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v8 2/7] dt: thermal: tsens: Document the fallback DT property for v2 of TSENS IP
-Date: Wed, 18 Jul 2018 12:13:08 +0530
-Message-ID: <842b6fb711b9be401a0b3fdb2827dcb8980699b2.1531895128.git.amit.kucheria@linaro.org>
+Subject: [PATCH v8 4/7] arm64: dts: msm8996: thermal: Initialise via DT and add second controller
+Date: Wed, 18 Jul 2018 12:13:10 +0530
+Message-ID: <540bcdb06d3e032de903748545076327ebc04026.1531895128.git.amit.kucheria@linaro.org>
 References: <cover.1531895128.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1531895128.git.amit.kucheria@linaro.org>
@@ -9,77 +9,53 @@ In-Reply-To: <cover.1531895128.git.amit.kucheria@linaro.org>
 References: <cover.1531895128.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, smohanad@codeaurora.org, vivek.gautam@codeaurora.org, andy.gross@linaro.org, dianders@chromium.org, mka@chromium.org, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, smohanad@codeaurora.org, vivek.gautam@codeaurora.org, andy.gross@linaro.org, dianders@chromium.org, mka@chromium.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-We want to create common code for v2 of the TSENS IP block that is used in
-a large number of Qualcomm SoCs. "qcom,tsens-v2" should be able to handle
-most of the common functionality start with a common get_temp() function.
+We also split up the regmap address space into two, for the TM and SROT
+registers. This was required to deal with different address offsets for the
+TM and SROT registers across different SoC families.
 
-It is also necessary to split out the memory regions for the TM and SROT
-register banks because their offsets are not constant across SoC families.
+8996 has two TSENS IP blocks, initialise the second one too.
+
+Since tsens-common.c/init_common() currently only registers one address
+space, the order is important (TM before SROT). This is OK since the code
+doesn't really use the SROT functionality yet.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Tested-by: Matthias Kaehlcke <mka@chromium.org>
 Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 Reviewed-by: Douglas Anderson <dianders@chromium.org>
 ---
- .../devicetree/bindings/thermal/qcom-tsens.txt     | 31 +++++++++++++++++-----
- 1 file changed, 25 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-index 06195e8..1d9e8cf 100644
---- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-+++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-@@ -1,18 +1,28 @@
- * QCOM SoC Temperature Sensor (TSENS)
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 8c7f9ca..688e752 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -459,9 +459,19 @@
+ 			status = "disabled";
+ 		};
  
- Required properties:
--- compatible :
-- - "qcom,msm8916-tsens" : For 8916 Family of SoCs
-- - "qcom,msm8974-tsens" : For 8974 Family of SoCs
-- - "qcom,msm8996-tsens" : For 8996 Family of SoCs
-+- compatible:
-+  Must be one of the following:
-+    - "qcom,msm8916-tsens" (MSM8916)
-+    - "qcom,msm8974-tsens" (MSM8974)
-+    - "qcom,msm8996-tsens" (MSM8996)
-+    - "qcom,msm8998-tsens", "qcom,tsens-v2" (MSM8998)
-+    - "qcom,sdm845-tsens", "qcom,tsens-v2" (SDM845)
-+  The generic "qcom,tsens-v2" property must be used as a fallback for any SoC
-+  with version 2 of the TSENS IP. MSM8996 is the only exception because the
-+  generic property did not exist when support was added.
+-		tsens0: thermal-sensor@4a8000 {
++		tsens0: thermal-sensor@4a9000 {
+ 			compatible = "qcom,msm8996-tsens";
+-			reg = <0x4a8000 0x2000>;
++			reg = <0x4a9000 0x1000>, /* TM */
++			      <0x4a8000 0x1000>; /* SROT */
++			#qcom,sensors = <13>;
++			#thermal-sensor-cells = <1>;
++		};
 +
-+- reg: Address range of the thermal registers.
-+  New platforms containing v2.x.y of the TSENS IP must specify the SROT and TM
-+  register spaces separately, with order being TM before SROT.
-+  See Example 2, below.
++		tsens1: thermal-sensor@4ad000 {
++			compatible = "qcom,msm8996-tsens";
++			reg = <0x4ad000 0x1000>, /* TM */
++			      <0x4ac000 0x1000>; /* SROT */
++			#qcom,sensors = <8>;
+ 			#thermal-sensor-cells = <1>;
+ 		};
  
--- reg: Address range of the thermal registers
- - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
- - #qcom,sensors: Number of sensors in tsens block
- - Refer to Documentation/devicetree/bindings/nvmem/nvmem.txt to know how to specify
- nvmem cells
- 
--Example:
-+Example 1 (legacy support before a fallback tsens-v2 property was introduced):
- tsens: thermal-sensor@900000 {
- 		compatible = "qcom,msm8916-tsens";
- 		reg = <0x4a8000 0x2000>;
-@@ -20,3 +30,12 @@ tsens: thermal-sensor@900000 {
- 		nvmem-cell-names = "caldata", "calsel";
- 		#thermal-sensor-cells = <1>;
- 	};
-+
-+Example 2 (for any platform containing v2 of the TSENS IP):
-+tsens0: thermal-sensor@c263000 {
-+		compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
-+		reg = <0xc263000 0x1ff>, /* TM */
-+			<0xc222000 0x1ff>; /* SROT */
-+		#qcom,sensors = <13>;
-+		#thermal-sensor-cells = <1>;
-+	};
 -- 
 2.7.4
