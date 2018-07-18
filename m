@@ -1,37 +1,51 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [RFC PATCH 1/2] clk: qcom: Add qspi (Quad SPI) clock defines for sdm845 to header
-Date: Wed, 18 Jul 2018 11:04:29 -0700
-Message-ID: <20180718180431.48580-2-dianders@chromium.org>
-References: <20180718180431.48580-1-dianders@chromium.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH V2 0/5] arm64: Initial support Texas Instrument's AM654
+ Platform
+Date: Wed, 18 Jul 2018 13:04:55 -0500
+Message-ID: <20180718180455.gaej4fgf47zytdxk@kahuna>
+References: <20180626162615.19194-1-nm@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180718180431.48580-1-dianders@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <20180626162615.19194-1-nm@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sboyd@kernel.org, andy.gross@linaro.org
-Cc: tdas@codeaurora.org, girishm@codeaurora.org, anischal@codeaurora.org, bjorn.andersson@linaro.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Santosh Shilimkar <ssantosh@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Sudeep Holla <sudeep.holla@arm.com>, arm@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-These clocks will need to be defined in the clock driver and
-referenced in device tree files.
+On 16:26-20180626, Nishanth Menon wrote:
+> Hi,
+> 
+> This is an minor update from V1 posted earlier:
+> 	https://marc.info/?l=linux-kernel&m=152943745424138&w=2
+> 
+> The following series enables support for newest addition in TI's SoC
+> portfolio - AM654 SoC.
+> 
+> The series is based off v4.18-rc1, also available here:
+> https://github.com/nmenon/linux-2.6-playground/tree/upstream/v4.18-rc1/k3-1-am6-base
+> 
+> Key changes since RFC are indicated in respective patches:
+> * Pickedup Tony's Reviewed by
+> * Modified cbass nodes to indicate interconnect (patch #3 in the series)
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+Hi Tony,
 
- include/dt-bindings/clock/qcom,gcc-sdm845.h | 3 +++
- 1 file changed, 3 insertions(+)
+Apologies on the off-request. Looks like Tero might be on vacation
+and might not be able to send the Pull request to arm-soc folks on time.
 
-diff --git a/include/dt-bindings/clock/qcom,gcc-sdm845.h b/include/dt-bindings/clock/qcom,gcc-sdm845.h
-index f96fc2dbf60e..b8eae5a76503 100644
---- a/include/dt-bindings/clock/qcom,gcc-sdm845.h
-+++ b/include/dt-bindings/clock/qcom,gcc-sdm845.h
-@@ -194,6 +194,9 @@
- #define GPLL4							184
- #define GCC_CPUSS_DVM_BUS_CLK					185
- #define GCC_CPUSS_GNOC_CLK					186
-+#define GCC_QSPI_CORE_CLK_SRC					187
-+#define GCC_QSPI_CORE_CLK					188
-+#define GCC_QSPI_CNOC_PERIPH_AHB_CLK				189
- 
- /* GCC Resets */
- #define GCC_MMSS_BCR						0
+Requesting you to pick them up on our behalf for v4.19 if it that is
+fine with you. We do have Rob's ack on the bindings themselves, and
+the patches also have been reviewed as well.
+
+Patchwork links:
+https://patchwork.kernel.org/patch/10527309/
+https://patchwork.kernel.org/patch/10489509/
+https://patchwork.kernel.org/patch/10489547/
+https://patchwork.kernel.org/patch/10489543/
+https://patchwork.kernel.org/patch/10489513/
+
 -- 
-2.18.0.233.g985f88cf7e-goog
+Regards,
+Nishanth Menon
