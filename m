@@ -1,7 +1,7 @@
 From: Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH v2 1/5] dt-bindings: net: dwmac-sun8i: Remove unused address-cells/size-cells
-Date: Wed, 18 Jul 2018 11:40:37 +0000
-Message-ID: <1531914041-14751-2-git-send-email-clabbe@baylibre.com>
+Subject: [PATCH v2 4/5] ARM: dts: sun8i: r40: Remove unused address-cells/size-cells of dwmac-sun8i
+Date: Wed, 18 Jul 2018 11:40:40 +0000
+Message-ID: <1531914041-14751-5-git-send-email-clabbe@baylibre.com>
 References: <1531914041-14751-1-git-send-email-clabbe@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1531914041-14751-1-git-send-email-clabbe@baylibre.com>
@@ -14,50 +14,26 @@ address-cells/size-cells is unnecessary for dwmac-sun8i node.
 It was in early days, but since a mdio node is used, it could be
 removed.
 
+This patch fix the following DT warning:
+Warning (avoid_unnecessary_addr_size): /soc/ethernet@1c50000: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+
 Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 ---
- Documentation/devicetree/bindings/net/dwmac-sun8i.txt | 8 --------
- 1 file changed, 8 deletions(-)
+ arch/arm/boot/dts/sun8i-r40.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-index cfe724398a12..5bb3a18cc38d 100644
---- a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-+++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-@@ -19,8 +19,6 @@ Required properties:
- - reset-names: must be "stmmaceth"
- - phy-mode: See ethernet.txt
- - phy-handle: See ethernet.txt
--- #address-cells: shall be 1
--- #size-cells: shall be 0
- - syscon: A phandle to the device containing the EMAC or GMAC clock register
+diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+index 38a3e0dbc824..1e680e4fee60 100644
+--- a/arch/arm/boot/dts/sun8i-r40.dtsi
++++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+@@ -576,8 +576,6 @@
+ 			reset-names = "stmmaceth";
+ 			clocks = <&ccu CLK_BUS_GMAC>;
+ 			clock-names = "stmmaceth";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+ 			status = "disabled";
  
- Optional properties:
-@@ -86,8 +84,6 @@ emac: ethernet@1c0b000 {
- 	reset-names = "stmmaceth";
- 	clocks = <&ccu CLK_BUS_EMAC>;
- 	clock-names = "stmmaceth";
--	#address-cells = <1>;
--	#size-cells = <0>;
- 
- 	phy-handle = <&int_mii_phy>;
- 	phy-mode = "mii";
-@@ -137,8 +133,6 @@ emac: ethernet@1c0b000 {
- 	reset-names = "stmmaceth";
- 	clocks = <&ccu CLK_BUS_EMAC>;
- 	clock-names = "stmmaceth";
--	#address-cells = <1>;
--	#size-cells = <0>;
- 
- 	phy-handle = <&ext_rgmii_phy>;
- 	phy-mode = "rgmii";
-@@ -191,8 +185,6 @@ emac: ethernet@1c0b000 {
- 	reset-names = "stmmaceth";
- 	clocks = <&ccu CLK_BUS_EMAC>;
- 	clock-names = "stmmaceth";
--	#address-cells = <1>;
--	#size-cells = <0>;
- 
- 	phy-handle = <&ext_rgmii_phy>;
- 	phy-mode = "rgmii";
+ 			gmac_mdio: mdio {
 -- 
 2.16.4
