@@ -1,44 +1,47 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: sun8i: h3: enable HDMI output on
- Banana Pi M2 Zero
-Date: Thu, 19 Jul 2018 08:13:08 +1000
-Message-ID: <CAGRGNgUpLpvDcJPWXw2chcWNhvbrDkc99RwDbpzGGoNJf2ORYQ@mail.gmail.com>
-References: <20180711132233.42301-1-icenowy@aosc.io> <20180711132233.42301-2-icenowy@aosc.io>
-Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v7 4/4] kexec_file: Load kernel at top of system RAM if
+ required
+Date: Wed, 18 Jul 2018 15:33:26 -0700
+Message-ID: <20180718153326.b795e9ea7835432a56cd7011@linux-foundation.org>
+References: <20180718024944.577-1-bhe@redhat.com>
+        <20180718024944.577-5-bhe@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQIP76OUQLBBAXXX3NAKGQEKPKZROY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180711132233.42301-2-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180718024944.577-5-bhe@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, dan.j.williams@intel.com, nicolas.pitre@linaro.org, josh@joshtriplett.org, fengguang.wu@intel.com, bp@suse.de, andy.shevchenko@gmail.com, patrik.r.jakobsson@gmail.com, airlied@linux.ie, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, dmitry.torokhov@gmail.com, frowand.list@gmail.com, keith.busch@intel.com, jonathan.derrick@intel.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, tglx@linutronix.de, brijesh.singh@amd.com, jglisse@redhat.com, thomas.lendacky@amd.com, gregkh@linuxfoundation.org, baiyaowei@cmss.chinamobile.com, richard.weiyang@gmail.com, devel@linuxdriverproject.org, linux-input@vger.kernel.org, linux-nvdimm@lists.01.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, ebiederm@xmissi
 List-Id: devicetree@vger.kernel.org
 
-Hi Icenowy,
+On Wed, 18 Jul 2018 10:49:44 +0800 Baoquan He <bhe@redhat.com> wrote:
 
-On Wed, Jul 11, 2018 at 11:25 PM Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
->
-> Banana Pi M2 Zero board has a miniHDMI port connected to the HDMI
-> controller of Allwinner H3 SoC.
->
-> Enable the HDMI output in Banana Pi M2 Zero device tree.
->
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> For kexec_file loading, if kexec_buf.top_down is 'true', the memory which
+> is used to load kernel/initrd/purgatory is supposed to be allocated from
+> top to down. This is what we have been doing all along in the old kexec
+> loading interface and the kexec loading is still default setting in some
+> distributions. However, the current kexec_file loading interface doesn't
+> do like this. The function arch_kexec_walk_mem() it calls ignores checking
+> kexec_buf.top_down, but calls walk_system_ram_res() directly to go through
+> all resources of System RAM from bottom to up, to try to find memory region
+> which can contain the specific kexec buffer, then call locate_mem_hole_callback()
+> to allocate memory in that found memory region from top to down. This brings
+> confusion especially when KASLR is widely supported , users have to make clear
+> why kexec/kdump kernel loading position is different between these two
+> interfaces in order to exclude unnecessary noises. Hence these two interfaces
+> need be unified on behaviour.
 
-This is identical to the patch I'd cooked up to do this, so this is:
+As far as I can tell, the above is the whole reason for the patchset,
+yes?  To avoid confusing users.
 
-Tested-by: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Is that sufficient?  Can we instead simplify their lives by providing
+better documentation or informative printks or better Kconfig text,
+etc?
 
-Thanks,
+And who *are* the people who are performing this configuration?  Random
+system administrators?  Linux distro engineers?  If the latter then
+they presumably aren't easily confused!
 
--- 
-Julian Calaby
-
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
+In other words, I'm trying to understand how much benefit this patchset
+will provide to our users as a whole.
