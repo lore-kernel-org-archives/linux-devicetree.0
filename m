@@ -1,115 +1,47 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v5 4/7] Bluetooth: Add new quirk for non-persistent
- setup settings
-Date: Wed, 18 Jul 2018 21:33:20 +0800
-Message-ID: <1531920800.8953.151.camel@mtkswgap22>
-References: <cover.1531150733.git.sean.wang@mediatek.com>
-         <4b188c8a508340598dda233f6d49a16c9ac8784e.1531150733.git.sean.wang@mediatek.com>
-         <2825B722-E75C-4A3C-8110-879205E46C0E@holtmann.org>
-         <1531638169.3955.5.camel@mtkswgap22>
-         <6571C864-B2EC-4806-BC5D-F531792737F6@holtmann.org>
-         <1531757114.8953.12.camel@mtkswgap22>
-         <E05CD0A8-B820-4900-970D-57F71E8E5583@holtmann.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCHv2] ARM: dts: exynos5: add missing interrupts for pwm node
+Date: Wed, 18 Jul 2018 15:55:57 +0200
+Message-ID: <CAJKOXPdAEp-7jw-AqPfmqq+ygY_p4BGt92voCNRc3z57KU_-ZA@mail.gmail.com>
+References: <1531918767-7177-1-git-send-email-linux.amoon@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <E05CD0A8-B820-4900-970D-57F71E8E5583@holtmann.org>
+In-Reply-To: <1531918767-7177-1-git-send-email-linux.amoon@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Johan Hedberg <johan.hedberg@gmail.com>, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-07-18 at 14:14 +0200, Marcel Holtmann wrote:
-> Hi Sean,
-> 
-> >>>>> Add a new quirk HCI_QUIRK_NON_PERSISTENT_SETUP allowing that a quirk that
-> >>>>> runs setup() after every open() and not just after the first open().
-> >>>>> 
-> >>>>> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> >>>>> ---
-> >>>>> include/net/bluetooth/hci.h | 9 +++++++++
-> >>>>> net/bluetooth/hci_core.c    | 3 ++-
-> >>>>> 2 files changed, 11 insertions(+), 1 deletion(-)
-> >>>>> 
-> >>>>> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-> >>>>> index 73e48be..d3ec5b2a8 100644
-> >>>>> --- a/include/net/bluetooth/hci.h
-> >>>>> +++ b/include/net/bluetooth/hci.h
-> >>>>> @@ -183,6 +183,15 @@ enum {
-> >>>>> 	 * during the hdev->setup vendor callback.
-> >>>>> 	 */
-> >>>>> 	HCI_QUIRK_NON_PERSISTENT_DIAG,
-> >>>>> +
-> >>>>> +	/* When this quirk is set, setup() would be run after every
-> >>>>> +	 * open() and not just after the first open().
-> >>>>> +	 *
-> >>>>> +	 * This quirk can be set before hci_register_dev is called or
-> >>>>> +	 * during the hdev->setup vendor callback.
-> >>>>> +	 *
-> >>>>> +	 */
-> >>>>> +	HCI_QUIRK_NON_PERSISTENT_SETUP,
-> >>>>> };
-> >>>>> 
-> >>>>> /* HCI device flags */
-> >>>>> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> >>>>> index f5c21004..0111280 100644
-> >>>>> --- a/net/bluetooth/hci_core.c
-> >>>>> +++ b/net/bluetooth/hci_core.c
-> >>>>> @@ -1396,7 +1396,8 @@ static int hci_dev_do_open(struct hci_dev *hdev)
-> >>>>> 	atomic_set(&hdev->cmd_cnt, 1);
-> >>>>> 	set_bit(HCI_INIT, &hdev->flags);
-> >>>>> 
-> >>>>> -	if (hci_dev_test_flag(hdev, HCI_SETUP)) {
-> >>>>> +	if (hci_dev_test_flag(hdev, HCI_SETUP) ||
-> >>>>> +	    test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks)) {
-> >>>>> 		hci_sock_dev_event(hdev, HCI_DEV_SETUP);
-> >>>> 
-> >>>> can you include the extract of btmon on how the HCI_DEV_SETUP event shows up in the traces? I remember that I asked about something like that.
-> >>>> 
-> >>>> Regards
-> >>>> 
-> >>>> Marcel
-> >>>> 
-> >>> 
-> >>> No, I cannot see any event about HCI_DEV_SETUP in btmon trace, the trace I posted as below is doing some rounds of power off and then on
-> >> 
-> >> it will result in this:
-> >> 
-> >>        case HCI_DEV_SETUP:
-> >>                if (hdev->manufacturer == 0xffff)
-> >>                        return NULL;
-> >> 
-> >>        case HCI_DEV_UP:
-> >>                skb = bt_skb_alloc(HCI_MON_INDEX_INFO_SIZE, GFP_ATOMIC);
-> >> 
-> >> So we will see extra index info events, but I assume that is just fine this we also see them on DEV_UP. They also do not hurt as long as not magically the manufacturer information changes.
-> >> 
-> >> I do wonder though if this quirk is set, then hdev->manufacturer needs to be reset and allow hdev->setup() to reset it. This goes with a log of other information as well. Maybe just a look if there are no races here.
-> >> 
-> >> Regards
-> >> 
-> >> Marcel
-> >> 
-> > 
-> > I didn't set a value to hdev->manufacture.
-> > 
-> > Should I set it in hdev->setup() ? MediaTek is 0x46 according to [1].
-> 
-> it is generally useful so that it gets reported out in btmon and thus it can assign the correct vendor specific decoder. However you better set hdev->manufacturer = 70 in the probe() routine before calling hci_register_dev. You have a dedicated driver and thus will always know it.
-> 
-> The core tries to figure this out at some point, but then you are missing btmon decoding for the earlier messages. See btusb.c and how other drivers set it early on.
-> 
+On 18 July 2018 at 14:59, Anand Moon <linux.amoon@gmail.com> wrote:
+> Add missing GIC interrupts property for pwm nodes.
+>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+> Fixed the patch indentation issue with all tabs.
+> sorry checkpatch could not figure out the error.
+> ---
+>  arch/arm/boot/dts/exynos5.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
+> index 5d2f0a0..f48fb9b 100644
+> --- a/arch/arm/boot/dts/exynos5.dtsi
+> +++ b/arch/arm/boot/dts/exynos5.dtsi
+> @@ -169,6 +169,11 @@
+>                 pwm: pwm@12dd0000 {
+>                         compatible = "samsung,exynos4210-pwm";
+>                         reg = <0x12DD0000 0x100>;
+> +                       interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
+> +                                       <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
+> +                                       <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
+> +                                       <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
+> +                                       <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
 
-thank for the point up, I will set hdev->manufacturer as 70 in probe
-routine before calling hci_register_dev in the next version.
+OK, thanks for v2. Now only tabs are used but in previous mail I
+mentioned which example to use - the rtc node which nicely aligns
+continued lines. Why you did not follow this alignment?
 
-> Regards
-> 
-> Marcel
-> 
-> 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+I'll fix it when applying, no need to resend.
+
+Best regards,
+Krzysztof
