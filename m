@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 05/17] dmaengine: dma-jz4780: Use 4-word descriptors
-Date: Wed, 18 Jul 2018 20:20:11 +0200
-Message-ID: <20180718182023.8182-6-paul@crapouillou.net>
+Subject: [PATCH v2 07/17] dmaengine: dma-jz4780: Add support for the JZ4740 SoC
+Date: Wed, 18 Jul 2018 20:20:13 +0200
+Message-ID: <20180718182023.8182-8-paul@crapouillou.net>
 References: <20180718182023.8182-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180718182023.8182-1-paul@crapouillou.net>
@@ -10,107 +10,56 @@ To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutlan
 Cc: Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, Paul Cercueil <paul@crapouillou.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-The only information we use in the 8-word version of the hardware DMA
-descriptor that is not present in the 4-word version is the transfer
-type, aka. the ID of the source or recipient device.
-
-Since the transfer type will never change for a DMA channel in use,
-we can just set it once for all in the corresponding DMA register
-before starting any transfer.
-
-This has several benefits:
-
-* the driver will handle twice as many hardware DMA descriptors;
-
-* the driver is closer to support the JZ4740, which only supports 4-word
-  hardware DMA descriptors;
-
-* the JZ4770 SoC needs the transfer type to be set in the corresponding
-  DMA register anyway, even if 8-word descriptors are in use.
+The JZ4740 SoC has a single DMA core starring six DMA channels.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Tested-by: Mathieu Malaterre <malat@debian.org>
 Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 ---
- drivers/dma/dma-jz4780.c | 21 +++++++++------------
- 1 file changed, 9 insertions(+), 12 deletions(-)
+ drivers/dma/Kconfig      | 2 +-
+ drivers/dma/dma-jz4780.c | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
- v2: No change
+ v2: The documentation update is now in patch 01/17
 
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 48d25dccedb7..a935d15ec581 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -143,7 +143,7 @@ config DMA_JZ4740
+ 
+ config DMA_JZ4780
+ 	tristate "JZ4780 DMA support"
+-	depends on MACH_JZ4780 || MACH_JZ4770 || COMPILE_TEST
++	depends on MACH_INGENIC || COMPILE_TEST
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
 diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 2f17a0fb1e5c..23e92d153919 100644
+index a5f4a8d54516..084d4023637e 100644
 --- a/drivers/dma/dma-jz4780.c
 +++ b/drivers/dma/dma-jz4780.c
-@@ -95,17 +95,12 @@
-  * @dtc: transfer count (number of blocks of the transfer size specified in DCM
-  * to transfer) in the low 24 bits, offset of the next descriptor from the
-  * descriptor base address in the upper 8 bits.
-- * @sd: target/source stride difference (in stride transfer mode).
-- * @drt: request type
-  */
- struct jz4780_dma_hwdesc {
- 	uint32_t dcm;
- 	uint32_t dsa;
- 	uint32_t dta;
- 	uint32_t dtc;
--	uint32_t sd;
--	uint32_t drt;
--	uint32_t reserved[2];
+@@ -135,6 +135,7 @@ struct jz4780_dma_chan {
  };
  
- /* Size of allocations for hardware descriptor blocks. */
-@@ -286,7 +281,6 @@ static int jz4780_dma_setup_hwdesc(struct jz4780_dma_chan *jzchan,
- 		desc->dcm = JZ_DMA_DCM_SAI;
- 		desc->dsa = addr;
- 		desc->dta = config->dst_addr;
--		desc->drt = jzchan->transfer_type;
- 
- 		width = config->dst_addr_width;
- 		maxburst = config->dst_maxburst;
-@@ -294,7 +288,6 @@ static int jz4780_dma_setup_hwdesc(struct jz4780_dma_chan *jzchan,
- 		desc->dcm = JZ_DMA_DCM_DAI;
- 		desc->dsa = config->src_addr;
- 		desc->dta = addr;
--		desc->drt = jzchan->transfer_type;
- 
- 		width = config->src_addr_width;
- 		maxburst = config->src_maxburst;
-@@ -439,9 +432,10 @@ static struct dma_async_tx_descriptor *jz4780_dma_prep_dma_memcpy(
- 	tsz = jz4780_dma_transfer_size(dest | src | len,
- 				       &jzchan->transfer_shift);
- 
-+	jzchan->transfer_type = JZ_DMA_DRT_AUTO;
-+
- 	desc->desc[0].dsa = src;
- 	desc->desc[0].dta = dest;
--	desc->desc[0].drt = JZ_DMA_DRT_AUTO;
- 	desc->desc[0].dcm = JZ_DMA_DCM_TIE | JZ_DMA_DCM_SAI | JZ_DMA_DCM_DAI |
- 			    tsz << JZ_DMA_DCM_TSZ_SHIFT |
- 			    JZ_DMA_WIDTH_32_BIT << JZ_DMA_DCM_SP_SHIFT |
-@@ -496,9 +490,12 @@ static void jz4780_dma_begin(struct jz4780_dma_chan *jzchan)
- 			(jzchan->curr_hwdesc + 1) % jzchan->desc->count;
- 	}
- 
--	/* Use 8-word descriptors. */
--	jz4780_dma_chn_writel(jzdma, jzchan->id,
--			      JZ_DMA_REG_DCS, JZ_DMA_DCS_DES8);
-+	/* Use 4-word descriptors. */
-+	jz4780_dma_chn_writel(jzdma, jzchan->id, JZ_DMA_REG_DCS, 0);
-+
-+	/* Set transfer type. */
-+	jz4780_dma_chn_writel(jzdma, jzchan->id, JZ_DMA_REG_DRT,
-+			      jzchan->transfer_type);
- 
- 	/* Write descriptor address and initiate descriptor fetch. */
- 	desc_phys = jzchan->desc->desc_phys +
-@@ -508,7 +505,7 @@ static void jz4780_dma_begin(struct jz4780_dma_chan *jzchan)
- 
- 	/* Enable the channel. */
- 	jz4780_dma_chn_writel(jzdma, jzchan->id, JZ_DMA_REG_DCS,
--			      JZ_DMA_DCS_DES8 | JZ_DMA_DCS_CTE);
-+			      JZ_DMA_DCS_CTE);
+ enum jz_version {
++	ID_JZ4740,
+ 	ID_JZ4770,
+ 	ID_JZ4780,
+ };
+@@ -803,11 +804,13 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
  }
  
- static void jz4780_dma_issue_pending(struct dma_chan *chan)
+ static const struct jz4780_dma_soc_data jz4780_dma_soc_data[] = {
++	[ID_JZ4740] = { .nb_channels = 6, .transfer_ord_max = 5, },
+ 	[ID_JZ4770] = { .nb_channels = 6, .transfer_ord_max = 6, },
+ 	[ID_JZ4780] = { .nb_channels = 32, .transfer_ord_max = 7, },
+ };
+ 
+ static const struct of_device_id jz4780_dma_dt_match[] = {
++	{ .compatible = "ingenic,jz4740-dma", .data = (void *)ID_JZ4740 },
+ 	{ .compatible = "ingenic,jz4770-dma", .data = (void *)ID_JZ4770 },
+ 	{ .compatible = "ingenic,jz4780-dma", .data = (void *)ID_JZ4780 },
+ 	{},
 -- 
 2.11.0
