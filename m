@@ -1,103 +1,144 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH] ARM: dts: exynos5: add missing interrupts for pwm node
-Date: Wed, 18 Jul 2018 18:34:46 +0530
-Message-ID: <CANAwSgTCcKyVaE_HoKMP8hN_iQacZMtWZgWyjR8=mkwVZyEzaw@mail.gmail.com>
-References: <1531906490-1739-1-git-send-email-linux.amoon@gmail.com>
- <CAJKOXPdeRvt4YG9Doziq-_oQ9DeUffvTB53OOaq-q2UpkBGpgQ@mail.gmail.com>
- <CANAwSgS8z-TQ=nK7dy5YeA8QJV+7cCctZKJT7qn8macQQkyKqg@mail.gmail.com>
- <CAJKOXPez6cuLyrxBkAKtyx2xiqG7VLWFCBYXkBX_537A=bDpsg@mail.gmail.com>
- <CANAwSgSaU1kTW3j0OZGwmOWo=p2uHFP8toLUe9FHYEkCJsuLFg@mail.gmail.com> <CAJKOXPcwjNoZh+sOooCsUECXVAVraMmj2yHfrg22m=3mbQtVnQ@mail.gmail.com>
+From: Liviu Dudau <liviu.dudau@arm.com>
+Subject: Re: [PATCH] drm/panel: simple: Support simple VGA panels
+Date: Wed, 18 Jul 2018 14:21:46 +0100
+Message-ID: <20180718132146.GA15941@e110455-lin.cambridge.arm.com>
+References: <20180716092339.9736-1-linus.walleij@linaro.org>
+ <CAL_JsqLeZX6zJoMYp9drskx-UN8Na2LLhnHjbgZOVgw8D-y9wQ@mail.gmail.com>
+ <CACRpkdZ=uGDN8i4q1cODoLDibB+B4FqAF1TzsreATJ2wuFz6vQ@mail.gmail.com>
+ <CAL_JsqJ312xfrKTS-7RbLc-v_QUZ9-g+8v-EVn2UiwgyOA8ung@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPcwjNoZh+sOooCsUECXVAVraMmj2yHfrg22m=3mbQtVnQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJ312xfrKTS-7RbLc-v_QUZ9-g+8v-EVn2UiwgyOA8ung@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof
-
-On 18 July 2018 at 17:25, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On 18 July 2018 at 12:50, Anand Moon <linux.amoon@gmail.com> wrote:
->> Hi Krzysztof,
->>
->> On 18 July 2018 at 16:03, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>> On 18 July 2018 at 12:30, Anand Moon <linux.amoon@gmail.com> wrote:
->>>> Hi
->>>>
->>>> On 18 July 2018 at 15:27, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>>>> On 18 July 2018 at 11:34, Anand Moon <linux.amoon@gmail.com> wrote:
->>>>>> Add missing GIC interrupts property for pwm nodes.
->>>>>>
->>>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->>>>>> ---
->>>>>>  arch/arm/boot/dts/exynos5.dtsi | 5 +++++
->>>>>>  1 file changed, 5 insertions(+)
->>>>>>
->>>>>> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
->>>>>> index 5d2f0a0..9406108 100644
->>>>>> --- a/arch/arm/boot/dts/exynos5.dtsi
->>>>>> +++ b/arch/arm/boot/dts/exynos5.dtsi
->>>>>> @@ -169,6 +169,11 @@
->>>>>>                 pwm: pwm@12dd0000 {
->>>>>>                         compatible = "samsung,exynos4210-pwm";
->>>>>>                         reg = <0x12DD0000 0x100>;
->>>>>> +                       interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
->>>>>> +                                  <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
->>>>>
->>>>> Indentation here looks weird - spaces used after tabs but not aligned
->>>>> with first entry. Please indent it properly and align it.
->>>>>
->>>>> Best regards,
->>>>> Krzysztof
->>>>
->>>> I ram checkpatch before I submit this patch it shown no error.
->>>>
->>>> # scripts/checkpatch.pl --no-signoff -q
->>>> 0001-ARM-dts-exynos5-add-missing-interrupts-for-pwm-node.patch
->>>
->>> That's good, thank you. Still when I look at it in patchwork the
->>> indentation is wrong:
->>> https://patchwork.kernel.org/patch/10531753/
->>> However it can be patchwork's fault, so are you sure that this is
->>> properly indented and aligned?
->>>
->>> BR,
->>> Krzysztof
->>
->> I prefer vim and I use following plugin
->>
->> https://github.com/vivien/vim-linux-coding-style
->>
->> root@odroidxu4:/usr/src/odroidxu4-4kr-devel# wget -nv
->> https://patchwork.kernel.org/patch/10531753/mbox/ -O pwm.patch
->> 2018-07-18 10:48:09
->> URL:https://patchwork.kernel.org/patch/10531753/mbox/ [1460] ->
->> "pwm.patch" [1]
->> root@odroidxu4:/usr/src/odroidxu4-4kr-devel#
->> root@odroidxu4:/usr/src/odroidxu4-4kr-devel# scripts/checkpatch.pl
->> --no-signoff -q pwm.patch
->> root@odroidxu4:/usr/src/odroidxu4-4kr-devel#
->>
->> Is their any other way to test checkpatch please let me know.
->
-> This is trivial thing and should be fixed after my first reply. But
-> clearly we need to waste some more time... so I applied the patch to
-> check whether patchwork shows it properly or not... and it is the
-> same. Indentation is wrong.
->
-> Please fix the weird alignment. You have existing examples in the DTSI
-> file (rtc node) how to do it. Current indentation is clearly wrong -
-> why using spaces after tab if this is not aligned properly?
->
-> Best regards,
-> Krzysztof
-
-Opps sorry I have send v2 patch
-https://patchwork.kernel.org/patch/10532443/ with proper fix.
-
-I will do strict check next time before sending the patch.
-
-Best Regards
--Anand
+T24gVHVlLCBKdWwgMTcsIDIwMTggYXQgMDg6MDI6NDZBTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3Jv
+dGU6Cj4gT24gVHVlLCBKdWwgMTcsIDIwMTggYXQgMTo0NyBBTSBMaW51cyBXYWxsZWlqIDxsaW51
+cy53YWxsZWlqQGxpbmFyby5vcmc+IHdyb3RlOgo+ID4KPiA+IE9uIFR1ZSwgSnVsIDE3LCAyMDE4
+IGF0IDEyOjUwIEFNIFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+IHdyb3RlOgo+ID4gPiBP
+biBNb24sIEp1bCAxNiwgMjAxOCBhdCAzOjIzIEFNIExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxl
+aWpAbGluYXJvLm9yZz4gd3JvdGU6Cj4gPgo+ID4gPiA+ICtWaWRlbyBHcmFwaGljcyBBcnJheQo+
+ID4gPgo+ID4gPiBWR0EgaXMgbW9yZSBhIGNvbnRyb2xsZXIgaW50ZXJmYWNlIHRoYW4gYSBwYW5l
+bC4uLgo+ID4KPiA+IEkgZG9uJ3Qga25vdyB3aGF0IGVsc2UgdG8gY2FsbCBpdCB0aG91Z2gsIG90
+aGVyIHRoYW4gZm9ybXVsYXRpbmcgc29tZXRpbmcKPiA+IGJ1cmVhdWNyYXRpYyBsaWtlCj4gPiAi
+VmlkZW8gR3JhcGhpY3MgQXJyYXkgRGlzcGxheSBSZXNvbHV0aW9ucyIKPiA+Cj4gPiBPciBzaG91
+bGQgSSB1c2UgdGhlIGFiYnJldmlhdGlvbjoKPiA+ICJWR0EgRGlzcGxheSBSZXNvbHV0aW9ucyIg
+cmF0aGVyPwo+ID4KPiA+IFRoZSBXaWtpcGVkaWEgYXJ0aWNsZSAiZGlzcGxheSByZXNvbHV0aW9u
+Igo+ID4gaHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvRGlzcGxheV9yZXNvbHV0aW9uCj4g
+PiBqdXN0IGNhbGxzIHRoZXNlIHRocmVlIHJlc29sdXRpb25zICJWR0EiLCAiU1ZHQSAiIGFuZCAi
+WEdBIi4KPiA+Cj4gPiA+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSB2
+aWRlb19ncmFwaGljc19hcnJheV9tb2Rlc1tdID0gewo+ID4gPiA+ICsgICAgICAgewo+ID4gPiA+
+ICsgICAgICAgICAgICAgICAvKgo+ID4gPiA+ICsgICAgICAgICAgICAgICAgKiBUaGlzIGlzIHRo
+ZSBtb3N0IHN0YW5kYXJkaXplZCAidmFuaWxsYSIgVkdBIG1vZGUgdGhlcmUgaXM6Cj4gPiA+ID4g
+KyAgICAgICAgICAgICAgICAqIDY0MHg0ODAgQCA2MCBIego+ID4gPgo+ID4gPiBEb24ndCB3ZSBo
+YXZlIHN0YW5kYXJkIFZFU0EgdGltaW5ncyBhbHJlYWR5IGRlZmluZWQgYXMgd2VsbCBhcyB0aW1p
+bmdzCj4gPiA+IHRoYXQgY2FuIGJlIGNhbGN1bGF0ZWQgYmFzZWQgb24gcmVzb2x1dGlvbiBhbmQg
+cmVmcmVzaCByYXRlIChjYWxsZWQKPiA+ID4gQ1ZUIElJUkMpLiBXaHkgZHVwbGljYXRlIGhlcmU/
+Cj4gPgo+ID4gVGhleSBhcmUgaW5zaWRlIGRyaXZlcnMvZ3B1L2RybS9kcm1fZWRpZC5jCj4gPiBh
+bGwgaW4gc3RhdGljIGNvbnN0IGFycmF5cyBhbmQgZW51bWVyYXRlZCBieSB0aGUgaW5kZXggaW4g
+dGhlCj4gPiBETVQgc3BlYyB0YWtlbiBvdXQgb2YgWEZyZWU4Ni4gKGRybV9kbXRfbW9kZXNbXSkK
+PiA+Cj4gPiBJIGRvbid0IGtub3cuIEl0IGlzIHF1aXRlIGVuY2Fwc3VsYXRlZCBpbnRvIHRoYXQg
+RURJRCBkcml2ZXIgYW5kCj4gPiBkb2Vzbid0IHNlZW0gdmVyeSByZXVzYWJsZS4gVG8gcGljayBv
+dXQgYSBmZXcgZnJvbSBpbnNpZGUgRURJRAo+ID4gc2VlbXMgcHJldHR5IGRhdW50aW5nLiBJJ2Qg
+bGlrZSB0byBoZWFyIHdoYXQgdGhlIERSTSBmb2xrcyB0aGluawo+ID4gYWJvdXQgdGhhdC4KPiA+
+Cj4gPiA+IFdoeSBkb24ndCB5b3UganVzdCBkZWZpbmUgYSAndmdhLWNvbm5lY3Rvcicgbm9kZQo+
+ID4KPiA+IEJlY2F1c2UgdGhpcyBpcyBub3QgYSBWR0EgY29ubmVjdG9yLCBpdCBpcyBqdXN0IHRo
+ZSBWR0EgcmVzb2x1dGlvbi4KPiA+IEluIG90aGVyIGNpcmN1bXN0YW5jZXMgSSBkbyB1c2UgaXQu
+Cj4gCj4gSXQncyBub3QgYSBwYW5lbCBlaXRoZXIuIEEgY29ubmVjdG9yIGlzIHNvbWV0aGluZyB3
+aXRoIHZhcmlhYmxlCj4gcmVzb2x1dGlvbi4gQSBwYW5lbCBpcyBmaXhlZCByZXNvbHV0aW9uLiBX
+aGljaCBkbyB5b3Ugd2FudD8KPiAKPiA+IEkgdGhpbmsgeW91IG1vc3Qgb2Z0ZW4gaGF2ZSB0byB1
+c2UgdGhhdCBjb25uZWN0b3Igd2l0aCB0aGUgZHVtYgo+ID4gVkdBIERBQyBicmlkZ2UgdGhvdWdo
+LCBhcyB0aGUgVkdBIGNvbm5lY3RvciBpcyBhbmFsb2cgYW5kCj4gPiB3aGF0IGNvbWVzIG91dCBv
+ZiBhIGRpc3BsYXkgY29udHJvbGxlciBpcyBkaWdpdGFsLiBTbyBpdCBuZWVkcyB0bwo+ID4gbWFr
+ZSBzb21lIGtpbmQgb2Ygc2Vuc2UgaGVyZS4KPiA+Cj4gPiBJbiBhIHdheSAoYXMgd2UgZGlzY3Vz
+c2VkIGJlZm9yZSkgdGhlIHdob2xlIHBhbmVsLXNpbXBsZS5jIHRoaW5nCj4gPiBpcyBhIGJpdCBi
+b2d1cywgYXMgaXQgaXMgcHJvYmFibHkgaW4gbW9zdCBjYXNlcyBoaWRpbmcgYSBicmlkZ2Ugb3IK
+PiA+IGEgZHVtYiBEQUMgb3IgYXQgbGVhc3QgYSBWR0EgY29ubmVjdG9yIG9yIHNpbWlsYXIgdGhh
+dCBzaG91bGQndmUKPiA+IGJlZW4gcHJvcGVybHkgbW9kZWxlZCwgYnV0IGluIHRoaXMgY2FzZSBJ
+IGFtIG1vcmUgY2VydGFpbiB0aGF0IGl0IGlzCj4gPiBhY3R1YWxseSB0aGUgcmlnaHQgY2hvaWNl
+Lgo+ID4KPiA+IEkgZ3Vlc3MgSSBjb3VsZCB0cnkgdG8gdXNlIHRoZSBkdW1iIFZHQSBicmlkZ2Ug
+YW5kIHRoZSBWR0EKPiA+IGNvbm5lY3RvciwgYW5kIGl0IGluZGVlZCBmYWxscyBiYWNrIHRvIFZH
+QSByZXNvbHV0aW9ucyBpZiBubyBEREMKPiA+IGNoYW5uZWwgaXMgYXZhaWxhYmxlIGJ1dCBpZiBJ
+IGdvIGluIGFuZCBzYXkgdGhlcmUgaXMgYSBEQUMgYnJpZGdlCj4gPiBhbmQgVkdBIGNvbm5lY3Rv
+ciBJIGFtIGVzc2VudGlhbGx5IGx5aW5nLgo+ID4KPiA+ID4gYW5kIElJUkMsIHlvdSBjYW4KPiA+
+ID4ganVzdCBmb3JjZSB0aGUgc3RhbmRhcmQgbW9kZXMgZnJvbSB1c2Vyc3BhY2Ugd2l0aCBEUk0u
+Cj4gPgo+ID4gSSBndWVzcyB5b3UgbWVhbiB0aGUga2VybmVsIGNvbW1hbmQgbGluZSBhcmd1bWVu
+dHMsIGxlc3QKPiA+IHRoZXJlIHdpbGwgYmUgbm8gYm9vdCBjb25zb2xlLgo+IAo+IFllcywgdGhl
+IGtlcm5lbCBjb21tYW5kIGxpbmUgaXMgYW5vdGhlciB3YXkuIEJ1dCBpZiB5b3UgYXJlbid0IHVz
+aW5nCj4gZmJjb24sIHRoZW4gdXNlcnNwYWNlIGlzIHRoZSB3YXkuCj4gCj4gPiBBcGFydCBmcm9t
+IGJlaW5nIGEgdXNlciBleHBlcmllbmNlIGhvcnJvciBzdG9yeSwgdGhhdCByZXF1aXJlcwo+ID4g
+YSBWR0EgY29ubmVjdG9yIGJyaWRnZSwgYXMgcGVyIGFib3ZlLiAoSXQncyB0aGUgRURJRCBjb2Rl
+IHRoYXQKPiA+IGRvZXMgdGhhdCBjb21tYW5kIGxpbmUgcGFyc2luZy4pIEFuZCB0aGF0IHJlcXVp
+cmVzIGx5aW5nIGFib3V0Cj4gPiBoYXZpbmcgYSBWR0EgY29ubmVjdG9yIGJyaWRnZS4KPiAKPiBC
+ZWNhdXNlIHlvdSBoYXZlIHRvIHNldCB0aGUgcmVzb2x1dGlvbiBvbiB0aGUga2VybmVsIGNvbW1h
+bmQgbGluZT8gSSdtCj4gb3BlbiB0byBoYXZpbmcgYSBkZWZhdWx0IHJlc29sdXRpb24gZm9yIHRo
+ZSBjb25uZWN0b3IgaW4gRFQuCj4gCj4gPiBCdXQgSSBjYW4gc3VyZWx5IGxpZSBpZiBldmVyeW9u
+ZSB0aGlua3MgdGhhdCBpcyB0aGUgYmVzdCBpZGVhIDpECj4gPgo+ID4gPiBNYXliZSB5b3UgbmVl
+ZAo+ID4gPiBzb21lIGZsYWcgdG8gZm9yY2UgYSBjb25uZWN0aW9uIGluIHRoZSBlbXVsYXRvciBh
+bmQgcGVyaGFwcyBzb21lIGZha2UKPiA+ID4gRURJRCBkYXRhIHRvIHNldCBhIGRlZmF1bHQgbW9k
+ZS4KPiA+Cj4gPiBUaGlzIGRldmljZSB0cmVlIEknbSBjcmVhdGluZyBpcyBmb3IgQVJNIFJUU00g
+d2hpY2ggaXMgYSBwcm9wcmlldGFyeQo+ID4gQVJNIHRvb2wuCj4gPgo+ID4gU3VkZWVwIGF0IEFS
+TSBzYXlzIGl0IGRvZXMgbm90IGVtdWxhdGUgYW55IERBQyBicmlkZ2Ugc3VjaAo+ID4gYXMgZm91
+bmQgaW4gdGhlIFZlcnNhdGlsZSBFeHByZXNzIG1hY2hpbmUgZmFtaWx5LiBJdCBqdXN0IGV4cGVj
+dHMKPiA+IHRvIGhhdmUgdGhlIHJpZ2h0IHJlc29sdXRpb24gcGFyYW1ldGVycyB3cml0dGVuIGlu
+dG8gdGhlIHJlZ2lzdGVycwo+ID4gb2YgdGhlIFBMMTExLCB3aGljaCBpbiB0dXJuIG9mIGNvdXJz
+ZSBjYW4gb25seSBnZXQgaXQgZnJvbSBhCj4gPiBwYW5lbCBvciBicmlkZ2UgZHJpdmVyIG9mIHNv
+bWUgc29ydC4KPiAKPiBTbyBwdXR0aW5nICphbnl0aGluZyogaW4gRFQgaXMgYSBsaWUuLi4KCkEg
+bG9uZyB0aW1lIGFnbyBJJ3ZlIHRyaWVkIHRvIHNvcnRlZCB0aGlzIHByb2JsZW0gYnkgY3JlYXRp
+bmcgYSB2aXJ0dWFsCkRSTSBlbmNvZGVyL2Nvbm5lY3RvciB0aGF0IHJlYWQgdGhlIE9GIGRhdGEg
+dG8gcHJvdmlkZSB0aGUgRURJRCBpbmZvLgpMaW5hcm8gaGFzIGFkb3B0ZWQgdGhlIHBhdGNoZXMg
+Zm9yIGEgd2hpbGUsIGJ1dCBpdCBoYXMgbmV2ZXIgbWFkZSBpdAppbnRvIG1haW5saW5lIGJlY2F1
+c2UgdGhlcmUgd2FzIG5vdCBlbm91Z2ggaW50ZXJlc3QgZm9yIHRoaXMgImZha2UiCmVuY29kZXIv
+Y29ubmVjdG9yLgoKSWYgaW50ZXJlc3RlZCBpbiB0aGlzIHNvbHV0aW9uIEkgY2FuIHRyeSB0byBy
+ZXZpdmUgdGhlIHBhdGNoZXMgYW5kIG1ha2UKYW5vdGhlciBhdHRlbXB0IGF0IHVwc3RyZWFtaW5n
+IHRoZW0KCmh0dHBzOi8vZ2l0LmxpbmFyby5vcmcvbGFuZGluZy10ZWFtcy93b3JraW5nL2FybS9r
+ZXJuZWwtcmVsZWFzZS5naXQvY29tbWl0Lz9oPWxhdGVzdC1hcm1sdCZpZD05YTkzZGYxNzJiMjk4
+N2M1YThlMGVmY2VmYjJhYmRmZWJkMWEzZDY4Cmh0dHBzOi8vZ2l0LmxpbmFyby5vcmcvbGFuZGlu
+Zy10ZWFtcy93b3JraW5nL2FybS9rZXJuZWwtcmVsZWFzZS5naXQvY29tbWl0Lz9oPWxhdGVzdC1h
+cm1sdCZpZD0xNTI4M2Y3YmU0YjFlNTg2NzAyNTUxZTg1YjRjYWYwNjUzMWFjMmZjCgpCZXN0IHJl
+Z2FyZHMsCkxpdml1Cgo+IAo+ID4gVGhlIHdheSB0aG9zZSBlbXVsYXRvcnMgd29yayAoQUZBSUNU
+KSBpcyB0aGF0IHRoZXkgc2ltcGx5IG1vbml0b3IKPiA+IHJlZ2lzdGVyIHdyaXRlcyB0byB0aGUg
+cmVzb2x1dGlvbnMgcGFyYW1ldGVycyB0byBzY2FsZSB0aGUgZW11bGF0b3IKPiA+IGRpc3BsYXkg
+d2luZG93IGFuZCB0aGVuIHRoZXkgcmVhZCBvdXQgdGhlIFJHQiBkYXRhIGludG8gdGhhdAo+ID4g
+d2luZG93LCBwaXhlbCBieSBwaXhlbCwgZnJvbSB0aGUgaW5kaWNhdGVkIG1lbW9yeSBhcmVhLgo+
+ID4gSXQgd29ya3MgZm9yIHRoZW0uCj4gPgo+ID4gSW4gUUVNVSwgd2UgaGFkIHRoZSBzYW1lIHBy
+b2JsZW0uIEl0IGRpZG4ndCBzdXBwb3J0IHByb3BlciByZXBvcnRpbmcKPiA+IG9mIGZha2UgRURJ
+RCBvbiB0aGVzZSBwbGF0Zm9ybXMgZWl0aGVyLCBiZWNhdXNlIG9mIG5vdCBwcm9wZXJseQo+ID4g
+bW9kZWxpbmcgdGhlIGhhcmR3YXJlIGl0IHdhcyBlbXVsYXRpbmcsIGluc3RlYWQgcmVseWluZyBv
+biB0aGUgcmVnaXN0ZXIKPiA+IHJlYWRzIGFzIGFib3ZlLiBTaW5jZSBpdCBpcyBvcGVuIHNvdXJj
+ZSBJIGNvdWxkCj4gPiBzaW1wbHkgZml4IGl0Ogo+ID4gaHR0cHM6Ly9saXN0cy5nbnUub3JnL2Fy
+Y2hpdmUvaHRtbC9xZW11LWRldmVsLzIwMTgtMDIvbXNnMDQ2NTEuaHRtbAo+ID4gaHR0cHM6Ly9s
+aXN0cy5nbnUub3JnL2FyY2hpdmUvaHRtbC9xZW11LWRldmVsLzIwMTgtMDIvbXNnMDQ2NTIuaHRt
+bAo+ID4gaHR0cHM6Ly9saXN0cy5nbnUub3JnL2FyY2hpdmUvaHRtbC9xZW11LWRldmVsLzIwMTgt
+MDIvbXNnMDQ2NTMuaHRtbAo+IAo+IEhhdmluZyBhIHdheSB0byBzZXQgdGhlIGRlZmF1bHQgZGlz
+cGxheSByZXNvbHV0aW9uIGluIFFFTVUgd291bGQgYmUKPiBuaWNlLiBJJ3ZlIGhhY2tlZCBhcm91
+bmQgdGhhdCB3aGVuIHVzaW5nIHZpcmdsLgo+IAo+ID4gQWZ0ZXIgdGhpcywgdGhlIFFFTVUgZm9y
+IFZlcnNhdGlsZSBFeHByZXNzIGNhbiBwcm9wZXJseSB1c2UgdGhlCj4gPiBicmlkZ2UuCj4gPgo+
+ID4gSSBkbyB0cnkgdG8gYmUgZ3JpdHR5IGFuZCB0aG9yb3VnaCEgOkQKPiA+Cj4gPiBJIGRvbid0
+IHJlYWxseSBrbm93IHdoYXQgUlRTTSBpcyBhbmQgSSBjYW4ndCBydW4gaXQgbXlzZWxmLiBJIGp1
+c3QKPiA+IGhhdmUgdG8gc3VwcG9ydCBpdCBpbiB0aGUgcmVmYWN0b3JpbmcgdG8gdXNlIERSTSBm
+b3IgdGhlIEFSTQo+ID4gVmVyc2F0aWxlIEV4cHJlc3MgbWFjaGluZXMuIEkgY2Fubm90IGNoYW5n
+ZSBpdHMgc291cmNlIGNvZGUuCj4gPgo+ID4gPiBUaGVyZSdzIGFsc28gc29tZSBvdGhlciBjYXNl
+cyBvZgo+ID4gPiAidHJhbnNwYXJlbnQiIGJyaWRnZXMgd2hpY2ggZG9uJ3QgaGF2ZSBhbnkgZHJp
+dmVyLgo+ID4KPiA+IFllYWggSSB0aGluayB0aGV5IG1vc3RseSB1c2UgcGFuZWwtc2ltcGxlLmMg
+aW4gdGhlIERSTQo+ID4gY2FzZSBkb24ndCB0aGV5PyBXZSBjb21lIGZ1bGwgY2lyY2xlLgo+IAo+
+IExWRFMgZG9lcy4gVkdBIGRvZXNuJ3QuCj4gCj4gUm9iCgotLSAKPT09PT09PT09PT09PT09PT09
+PT0KfCBJIHdvdWxkIGxpa2UgdG8gfAp8IGZpeCB0aGUgd29ybGQsICB8CnwgYnV0IHRoZXkncmUg
+bm90IHwKfCBnaXZpbmcgbWUgdGhlICAgfAogXCBzb3VyY2UgY29kZSEgIC8KICAtLS0tLS0tLS0t
+LS0tLS0KICAgIMKvXF8o44OEKV8vwq8KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVsCg==
