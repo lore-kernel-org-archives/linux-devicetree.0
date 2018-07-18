@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 11/17] dmaengine: dma-jz4780: Simplify jz4780_dma_desc_residue()
-Date: Wed, 18 Jul 2018 20:20:17 +0200
-Message-ID: <20180718182023.8182-12-paul@crapouillou.net>
+Subject: [PATCH v2 09/17] dmaengine: dma-jz4780: Enable Fast DMA to the AIC
+Date: Wed, 18 Jul 2018 20:20:15 +0200
+Message-ID: <20180718182023.8182-10-paul@crapouillou.net>
 References: <20180718182023.8182-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180718182023.8182-1-paul@crapouillou.net>
@@ -10,49 +10,40 @@ To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutlan
 Cc: Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, Paul Cercueil <paul@crapouillou.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-From: Daniel Silsby <dansilsby@gmail.com>
+With the fast DMA bit set, the DMA will transfer twice as much data
+per clock period to the AIC, so there is little point not to set it.
 
-Simple cleanup, no changes to actual logic here.
-
-Signed-off-by: Daniel Silsby <dansilsby@gmail.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Tested-by: Mathieu Malaterre <malat@debian.org>
+Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 ---
- drivers/dma/dma-jz4780.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ drivers/dma/dma-jz4780.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
  v2: No change
 
 diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index fa926de082ba..cc2a86844db4 100644
+index 88ce3f0157f6..3c9d3952e23a 100644
 --- a/drivers/dma/dma-jz4780.c
 +++ b/drivers/dma/dma-jz4780.c
-@@ -608,22 +608,17 @@ static size_t jz4780_dma_desc_residue(struct jz4780_dma_chan *jzchan,
- 	struct jz4780_dma_desc *desc, unsigned int next_sg)
- {
- 	struct jz4780_dma_dev *jzdma = jz4780_dma_chan_parent(jzchan);
--	unsigned int residue, count;
-+	unsigned int count = 0;
- 	unsigned int i;
+@@ -52,6 +52,7 @@
+ #define JZ_DMA_DMAC_DMAE	BIT(0)
+ #define JZ_DMA_DMAC_AR		BIT(2)
+ #define JZ_DMA_DMAC_HLT		BIT(3)
++#define JZ_DMA_DMAC_FAIC	BIT(27)
+ #define JZ_DMA_DMAC_FMSC	BIT(31)
  
--	residue = 0;
--
- 	for (i = next_sg; i < desc->count; i++)
--		residue += (desc->desc[i].dtc & 0xffffff) <<
--			jzchan->transfer_shift;
-+		count += desc->desc[i].dtc & 0xffffff;
+ #define JZ_DMA_DRT_AUTO		0x8
+@@ -941,8 +942,8 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 	 * Also set the FMSC bit - it increases MSC performance, so it makes
+ 	 * little sense not to enable it.
+ 	 */
+-	jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DMAC,
+-			  JZ_DMA_DMAC_DMAE | JZ_DMA_DMAC_FMSC);
++	jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DMAC, JZ_DMA_DMAC_DMAE |
++			       JZ_DMA_DMAC_FAIC | JZ_DMA_DMAC_FMSC);
  
--	if (next_sg != 0) {
--		count = jz4780_dma_chn_readl(jzdma, jzchan->id,
-+	if (next_sg != 0)
-+		count += jz4780_dma_chn_readl(jzdma, jzchan->id,
- 					 JZ_DMA_REG_DTC);
--		residue += count << jzchan->transfer_shift;
--	}
- 
--	return residue;
-+	return count << jzchan->transfer_shift;
- }
- 
- static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
+ 	if (jzdma->version == ID_JZ4780)
+ 		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DMACP, 0);
 -- 
 2.11.0
