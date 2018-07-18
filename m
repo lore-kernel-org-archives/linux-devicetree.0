@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 12/17] dmaengine: dma-jz4780: Set DTCn register explicitly
-Date: Wed, 18 Jul 2018 20:20:18 +0200
-Message-ID: <20180718182023.8182-13-paul@crapouillou.net>
+Subject: [PATCH v2 13/17] dmaengine: dma-jz4780: Further residue status fix
+Date: Wed, 18 Jul 2018 20:20:19 +0200
+Message-ID: <20180718182023.8182-14-paul@crapouillou.net>
 References: <20180718182023.8182-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180718182023.8182-1-paul@crapouillou.net>
@@ -12,38 +12,38 @@ List-Id: devicetree@vger.kernel.org
 
 From: Daniel Silsby <dansilsby@gmail.com>
 
-Normally, we wouldn't set the channel transfer count register directly
-when using descriptor-driven transfers. However, there is no harm in
-doing so, and it allows jz4780_dma_desc_residue() to report the correct
-residue of an ongoing transfer, no matter when it is called.
+Func jz4780_dma_desc_residue() expects the index to the next hw
+descriptor as its last parameter. Caller func jz4780_dma_tx_status(),
+however, applied modulus before passing it. When the current hw
+descriptor was last in the list, the index passed became zero.
+
+The resulting excess of reported residue especially caused problems
+with cyclic DMA transfer clients, i.e. ALSA AIC audio output, which
+rely on this for determining current DMA location within buffer.
+
+Combined with the recent and related residue-reporting fixes, spurious
+ALSA audio underruns on jz4770 hardware are now fixed.
 
 Signed-off-by: Daniel Silsby <dansilsby@gmail.com>
 Tested-by: Mathieu Malaterre <malat@debian.org>
 ---
- drivers/dma/dma-jz4780.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/dma/dma-jz4780.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
  v2: No change
 
 diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index cc2a86844db4..78849131c81d 100644
+index 78849131c81d..b9db539a5b34 100644
 --- a/drivers/dma/dma-jz4780.c
 +++ b/drivers/dma/dma-jz4780.c
-@@ -530,6 +530,15 @@ static void jz4780_dma_begin(struct jz4780_dma_chan *jzchan)
- 	jz4780_dma_chn_writel(jzdma, jzchan->id, JZ_DMA_REG_DRT,
- 			      jzchan->transfer_type);
+@@ -651,7 +651,7 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
+ 					to_jz4780_dma_desc(vdesc), 0);
+ 	} else if (cookie == jzchan->desc->vdesc.tx.cookie) {
+ 		txstate->residue = jz4780_dma_desc_residue(jzchan, jzchan->desc,
+-			  (jzchan->curr_hwdesc + 1) % jzchan->desc->count);
++					jzchan->curr_hwdesc + 1);
+ 	} else
+ 		txstate->residue = 0;
  
-+	/*
-+	 * Set the transfer count. This is redundant for a descriptor-driven
-+	 * transfer. However, there can be a delay between the transfer start
-+	 * time and when DTCn reg contains the new transfer count. Setting
-+	 * it explicitly ensures residue is computed correctly at all times.
-+	 */
-+	jz4780_dma_chn_writel(jzdma, jzchan->id, JZ_DMA_REG_DTC,
-+				jzchan->desc->desc[jzchan->curr_hwdesc].dtc);
-+
- 	/* Write descriptor address and initiate descriptor fetch. */
- 	desc_phys = jzchan->desc->desc_phys +
- 		    (jzchan->curr_hwdesc * sizeof(*jzchan->desc->desc));
 -- 
 2.11.0
