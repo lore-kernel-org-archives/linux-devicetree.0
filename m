@@ -1,173 +1,181 @@
-From: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Subject: Re: [PATCH v2 1/2] Input: atmel_mxt_ts: Add support for  optional regulators.
-Date: Wed, 18 Jul 2018 18:21:30 +0200
-Message-ID: <2353752.vfvcsHJLR6@acerlaptop>
-References: <1531851386-17840-1-git-send-email-pawel.mikolaj.chmiel@gmail.com> <1531851386-17840-2-git-send-email-pawel.mikolaj.chmiel@gmail.com> <20180717210005.GA21416@hairyalien>
+From: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
+Subject: [PATCH v1 04/04] arm: dts: actions: Set UART clock reference from CMU
+ for Actions Semi S500 SoC
+Date: Wed, 18 Jul 2018 13:22:05 -0300
+Message-ID: <CADHB5bBARxb2ob4pg1sKxJsUf4eRhJThB=OuBkmHq-fSoD7f4A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180717210005.GA21416@hairyalien>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nick Dyer <nick@shmanahar.org>
-Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, linux@armlinux.org.uk, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?Q?Guilherme_G=2E_Sim=C3=B5es?= <guilherme.simoes@lsitec.org.br>, Jon maddog Hall <jon.maddog.hall@gmail.com>, mkzuffo@lsi.usp.br, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, sboyd@kernel.org, mark.rutland@arm.com, linux@cubietech.com, support@cubietech.com, catalin.marinas@arm.com, Michael Turquette <mturquette@baylibre.com>, will.deacon@arm.com, thomas liau <thomas.liau@actions-semi.com>, darren@cubietech.com, robh+dt@kernel.org, jeff.chen@actions-semi.com, pn@denx.de, mp-cs@actions-semi.com, Laisa Costa - LSI-TEC <laisa.costa@lsitec.org.br>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, July 17, 2018 10:00:05 PM CEST Nick Dyer wrote:
-> On Tue, Jul 17, 2018 at 08:16:25PM +0200, Pawe=C5=82 Chmiel wrote:
-> > This patch adds optional regulators, which can be used to power
-> > up touchscreen. After enabling regulators, we need to wait 150msec.
-> > This value is taken from official driver.
-> >=20
-> > It was tested on Samsung Galaxy i9000 (based on Samsung S5PV210 SOC).
-> >=20
-> > Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> > ---
-> > Changes from v1:
-> >   - Enable regulators only if reset_gpio is present.
-> >   - Switch from devm_regulator_get_optional to devm_regulator_get
-> > ---
-> >  drivers/input/touchscreen/atmel_mxt_ts.c | 46 ++++++++++++++++++++++++=
-++++++--
-> >  1 file changed, 44 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/t=
-ouchscreen/atmel_mxt_ts.c
-> > index 54fe190fd4bc..005f0fee9fc8 100644
-> > --- a/drivers/input/touchscreen/atmel_mxt_ts.c
-> > +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-> > @@ -27,6 +27,7 @@
-> >  #include <linux/interrupt.h>
-> >  #include <linux/of.h>
-> >  #include <linux/property.h>
-> > +#include <linux/regulator/consumer.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/gpio/consumer.h>
-> >  #include <linux/property.h>
-> > @@ -194,10 +195,10 @@ enum t100_type {
-> > =20
-> >  /* Delay times */
-> >  #define MXT_BACKUP_TIME		50	/* msec */
-> > -#define MXT_RESET_GPIO_TIME	20	/* msec */
-> >  #define MXT_RESET_INVALID_CHG	100	/* msec */
-> >  #define MXT_RESET_TIME		200	/* msec */
-> >  #define MXT_RESET_TIMEOUT	3000	/* msec */
-> > +#define MXT_REGULATOR_DELAY	150	/* msec */
-> >  #define MXT_CRC_TIMEOUT		1000	/* msec */
-> >  #define MXT_FW_RESET_TIME	3000	/* msec */
-> >  #define MXT_FW_CHG_TIMEOUT	300	/* msec */
-> > @@ -310,6 +311,8 @@ struct mxt_data {
-> >  	struct t7_config t7_cfg;
-> >  	struct mxt_dbg dbg;
-> >  	struct gpio_desc *reset_gpio;
-> > +	struct regulator *vdd_reg;
-> > +	struct regulator *avdd_reg;
-> > =20
-> >  	/* Cached parameters from object table */
-> >  	u16 T5_address;
-> > @@ -3076,6 +3079,22 @@ static int mxt_probe(struct i2c_client *client, =
-const struct i2c_device_id *id)
-> >  		return error;
-> >  	}
-> > =20
-> > +	data->vdd_reg =3D devm_regulator_get(&client->dev, "vdd");
-> > +	if (IS_ERR(data->vdd_reg)) {
-> > +		error =3D PTR_ERR(data->vdd_reg);
-> > +		dev_err(&client->dev, "Failed to get vdd regulator: %d\n",
-> > +			error);
-> > +		return error;
-> > +	}
-> > +
-> > +	data->avdd_reg =3D devm_regulator_get(&client->dev, "avdd");
-> > +	if (IS_ERR(data->avdd_reg)) {
-> > +		error =3D PTR_ERR(data->avdd_reg);
-> > +		dev_err(&client->dev, "Failed to get avdd regulator: %d\n",
-> > +			error);
-> > +		return error;
-> > +	}
-> > +
-> >  	error =3D devm_request_threaded_irq(&client->dev, client->irq,
-> >  					  NULL, mxt_interrupt, IRQF_ONESHOT,
-> >  					  client->name, data);
-> > @@ -3087,7 +3106,26 @@ static int mxt_probe(struct i2c_client *client, =
-const struct i2c_device_id *id)
-> >  	disable_irq(client->irq);
-> > =20
-> >  	if (data->reset_gpio) {
-> > -		msleep(MXT_RESET_GPIO_TIME);
-> > +		error =3D regulator_enable(data->vdd_reg);
-> > +		if (error) {
-> > +			dev_err(&client->dev, "Failed to enable vdd regulator: %d\n",
-> > +				error);
-> > +			return error;
-> > +		}
-> > +
-> > +		error =3D regulator_enable(data->avdd_reg);
-> > +		if (error) {
-> > +			dev_err(&client->dev, "Failed to enable avdd regulator: %d\n",
-> > +				error);
-> > +			return error;
-> > +		}
-> > +
-> > +		/*
-> > +		 * According to maXTouch power sequencing specification, RESET line
-> > +		 * must be kept low until some time after regulators come up to
-> > +		 * voltage
-> > +		 */
-> > +		msleep(MXT_REGULATOR_DELAY);
-> >  		gpiod_set_value(data->reset_gpio, 1);
-> >  		msleep(MXT_RESET_INVALID_CHG);
->=20
-> Hi Pawel-
->=20
-> I see you've borrowed some of the logic from the patch I wrote a while
-> back (see https://github.com/ndyer/linux/commit/8e9687e41ed062 )
-Actually, i was looking at https://github.com/atmel-maxtouch/linux/blob/max=
-touch-v3.14/drivers/input/touchscreen/atmel_mxt_ts.c (and didn't saw Your p=
-atch till now).
-Are You going to submit it? (it has more functionalities - for example susp=
-end mode read from device tree).
->=20
-> The correct behaviour according to Atmel should be:
->=20
-> * Make RESET zero
-> * Bring up regulators
-> * Wait for a period to settle (150 msec)
-> * Release RESET
-> * Wait for 100 msec whilst device gets through bootloader
-> * Wait for CHG line assert before reading info block
->=20
-> I can't see the first and last steps in your patch at present.
-About first step - reset_gpio is readed by using devm_gpiod_get_optional wi=
-th GPIOD_OUT_LOW flag, so i think (but might be wrong)  that we don't need =
-to set this gpio value again to 0 before enabling regulators,
-since currently only place where reset_gpio is used is in driver probe (in =
-Your patch it is used in other cases/places - for example in mxt_start/stop=
-, when we enable regulators).
-About missing wait after releasing reset, shouldn't this be separate patch =
-(since currently driver is not doing it)? I can prepare it and send with ot=
-her in next version.
+Set UART clock reference from CMU for Actions Semi S500 SoC.
+Tested on a Lemaker Guitar board.
 
-Thanks for feedback
->=20
-> The only downside with this approach is that there are a lot of
-> delays during driver probe, but I believe the asynchronous probe stuff
-> that's landed since I wrote the original patch should address that.
->=20
-> cheers
->=20
-> Nick
->=20
-> >  	}
-> > @@ -3116,6 +3154,10 @@ static int mxt_remove(struct i2c_client *client)
-> >  	struct mxt_data *data =3D i2c_get_clientdata(client);
-> > =20
-> >  	disable_irq(data->irq);
-> > +	if (data->reset_gpio) {
-> > +		regulator_disable(data->avdd_reg);
-> > +		regulator_disable(data->vdd_reg);
-> > +	}
-> >  	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
-> >  	mxt_free_input_device(data);
-> >  	mxt_free_object_table(data);
->=20
+File(s) updated: "/arch/arm/boot/dts/owl-s500.dtsi",
+"/arch/arm/boot/dts/owl-s500-cubieboard6.dts",
+"/arch/arm/boot/dts/owl-s500-guitar-bb-rev-b.dts",
+"/arch/arm/boot/dts/owl-s500-sparky.dts"
+
+Signed-off-by: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
+
+diff -uprN -X vanilla/Documentation/dontdiff
+vanilla/arch/arm/boot/dts/owl-s500-cubieboard6.dts
+linux/arch/arm/boot/dts/owl-s500-cubieboard6.dts
+--- vanilla/arch/arm/boot/dts/owl-s500-cubieboard6.dts    2018-07-17
+13:07:15.675710511 -0300
++++ linux/arch/arm/boot/dts/owl-s500-cubieboard6.dts    2018-07-17
+16:42:53.202336000 -0300
+@@ -26,12 +26,6 @@
+         device_type =3D "memory";
+         reg =3D <0x0 0x80000000>;
+     };
+-
+-    uart3_clk: uart3-clk {
+-        compatible =3D "fixed-clock";
+-        clock-frequency =3D <921600>;
+-        #clock-cells =3D <0>;
+-    };
+ };
+
+ &timer {
+@@ -40,5 +34,5 @@
+
+ &uart3 {
+     status =3D "okay";
+-    clocks =3D <&uart3_clk>;
+ };
++
+diff -uprN -X vanilla/Documentation/dontdiff
+vanilla/arch/arm/boot/dts/owl-s500.dtsi
+linux/arch/arm/boot/dts/owl-s500.dtsi
+--- vanilla/arch/arm/boot/dts/owl-s500.dtsi    2018-07-18
+12:51:07.875364441 -0300
++++ linux/arch/arm/boot/dts/owl-s500.dtsi    2018-07-17 16:43:47.786063000 =
+-0300
+@@ -133,6 +133,7 @@
+             compatible =3D "actions,s500-uart", "actions,owl-uart";
+             reg =3D <0xb0120000 0x2000>;
+             interrupts =3D <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
++            clocks =3D <&cmu CLK_UART0>;
+             status =3D "disabled";
+         };
+
+@@ -140,6 +141,7 @@
+             compatible =3D "actions,s500-uart", "actions,owl-uart";
+             reg =3D <0xb0122000 0x2000>;
+             interrupts =3D <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
++            clocks =3D <&cmu CLK_UART1>;
+             status =3D "disabled";
+         };
+
+@@ -147,6 +149,7 @@
+             compatible =3D "actions,s500-uart", "actions,owl-uart";
+             reg =3D <0xb0124000 0x2000>;
+             interrupts =3D <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++            clocks =3D <&cmu CLK_UART2>;
+             status =3D "disabled";
+         };
+
+@@ -154,6 +157,7 @@
+             compatible =3D "actions,s500-uart", "actions,owl-uart";
+             reg =3D <0xb0126000 0x2000>;
+             interrupts =3D <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++            clocks =3D <&cmu CLK_UART3>;
+             status =3D "disabled";
+         };
+
+@@ -161,6 +165,7 @@
+             compatible =3D "actions,s500-uart", "actions,owl-uart";
+             reg =3D <0xb0128000 0x2000>;
+             interrupts =3D <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
++            clocks =3D <&cmu CLK_UART4>;
+             status =3D "disabled";
+         };
+
+@@ -168,6 +173,7 @@
+             compatible =3D "actions,s500-uart", "actions,owl-uart";
+             reg =3D <0xb012a000 0x2000>;
+             interrupts =3D <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
++            clocks =3D <&cmu CLK_UART5>;
+             status =3D "disabled";
+         };
+
+@@ -175,6 +181,7 @@
+             compatible =3D "actions,s500-uart", "actions,owl-uart";
+             reg =3D <0xb012c000 0x2000>;
+             interrupts =3D <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
++            clocks =3D <&cmu CLK_UART6>;
+             status =3D "disabled";
+         };
+
+@@ -182,6 +189,8 @@
+             compatible =3D "actions,s500-cmu";
+             reg =3D <0xb0160000 0x8000>;
+             clocks =3D <&hosc>, <&losc>;
++            clock-indices =3D <CLK_UART0>, <CLK_UART1>, <CLK_UART2>,
++                            <CLK_UART3>, <CLK_UART4>, <CLK_UART5>, <CLK_UA=
+RT6>;
+             #clock-cells =3D <1>;
+         };
+
+diff -uprN -X vanilla/Documentation/dontdiff
+vanilla/arch/arm/boot/dts/owl-s500-guitar-bb-rev-b.dts
+linux/arch/arm/boot/dts/owl-s500-guitar-bb-rev-b.dts
+--- vanilla/arch/arm/boot/dts/owl-s500-guitar-bb-rev-b.dts
+2018-07-17 13:07:15.675710511 -0300
++++ linux/arch/arm/boot/dts/owl-s500-guitar-bb-rev-b.dts    2018-07-18
+13:15:24.956371706 -0300
+@@ -1,5 +1,6 @@
+ /*
+  * Copyright (c) 2016-2017 Andreas F=C3=A4rber
++ * Copyright (c) 2018-2018 Edgar Bernardi Righi
+  *
+  * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+  */
+@@ -19,15 +20,9 @@
+     chosen {
+         stdout-path =3D "serial3:115200n8";
+     };
+-
+-    uart3_clk: uart3-clk {
+-        compatible =3D "fixed-clock";
+-        clock-frequency =3D <921600>;
+-        #clock-cells =3D <0>;
+-    };
+ };
+
+ &uart3 {
+     status =3D "okay";
+-    clocks =3D <&uart3_clk>;
+ };
++
+diff -uprN -X vanilla/Documentation/dontdiff
+vanilla/arch/arm/boot/dts/owl-s500-sparky.dts
+linux/arch/arm/boot/dts/owl-s500-sparky.dts
+--- vanilla/arch/arm/boot/dts/owl-s500-sparky.dts    2018-07-17
+13:07:15.675710511 -0300
++++ linux/arch/arm/boot/dts/owl-s500-sparky.dts    2018-07-16
+11:53:58.799410000 -0300
+@@ -25,12 +25,6 @@
+         device_type =3D "memory";
+         reg =3D <0x0 0x40000000>; /* 1 or 2 GiB */
+     };
+-
+-    uart3_clk: uart3-clk {
+-        compatible =3D "fixed-clock";
+-        clock-frequency =3D <921600>;
+-        #clock-cells =3D <0>;
+-    };
+ };
+
+ &timer {
+@@ -39,5 +33,4 @@
+
+ &uart3 {
+     status =3D "okay";
+-    clocks =3D <&uart3_clk>;
+ };
