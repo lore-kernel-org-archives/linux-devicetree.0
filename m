@@ -1,47 +1,51 @@
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v7 4/4] kexec_file: Load kernel at top of system RAM if
- required
-Date: Wed, 18 Jul 2018 15:33:26 -0700
-Message-ID: <20180718153326.b795e9ea7835432a56cd7011@linux-foundation.org>
-References: <20180718024944.577-1-bhe@redhat.com>
-        <20180718024944.577-5-bhe@redhat.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH V2 0/5] arm64: Initial support Texas Instrument's AM654
+ Platform
+Date: Wed, 18 Jul 2018 17:38:00 -0500
+Message-ID: <20180718223800.kfxo2syhubksd76x@kahuna>
+References: <20180626162615.19194-1-nm@ti.com>
+ <20180718180455.gaej4fgf47zytdxk@kahuna>
+ <20180718185715.GG99251@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180718024944.577-5-bhe@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20180718185715.GG99251@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, dan.j.williams@intel.com, nicolas.pitre@linaro.org, josh@joshtriplett.org, fengguang.wu@intel.com, bp@suse.de, andy.shevchenko@gmail.com, patrik.r.jakobsson@gmail.com, airlied@linux.ie, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, dmitry.torokhov@gmail.com, frowand.list@gmail.com, keith.busch@intel.com, jonathan.derrick@intel.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, tglx@linutronix.de, brijesh.singh@amd.com, jglisse@redhat.com, thomas.lendacky@amd.com, gregkh@linuxfoundation.org, baiyaowei@cmss.chinamobile.com, richard.weiyang@gmail.com, devel@linuxdriverproject.org, linux-input@vger.kernel.org, linux-nvdimm@lists.01.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, ebiederm@xmissi
+To: Tony Lindgren <tony@atomide.com>
+Cc: Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Santosh Shilimkar <ssantosh@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Sudeep Holla <sudeep.holla@arm.com>, arm@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Jul 2018 10:49:44 +0800 Baoquan He <bhe@redhat.com> wrote:
+On 18:57-20180718, Tony Lindgren wrote:
+> * Nishanth Menon <nm@ti.com> [180718 18:08]:
+> > On 16:26-20180626, Nishanth Menon wrote:
+> > > Hi,
+> > > 
+> > > This is an minor update from V1 posted earlier:
+> > > 	https://marc.info/?l=linux-kernel&m=152943745424138&w=2
+> > > 
+> > > The following series enables support for newest addition in TI's SoC
+> > > portfolio - AM654 SoC.
+> > > 
+> > > The series is based off v4.18-rc1, also available here:
+> > > https://github.com/nmenon/linux-2.6-playground/tree/upstream/v4.18-rc1/k3-1-am6-base
+> > > 
+> > > Key changes since RFC are indicated in respective patches:
+> > > * Pickedup Tony's Reviewed by
+> > > * Modified cbass nodes to indicate interconnect (patch #3 in the series)
+> > 
+> > Hi Tony,
+> > 
+> > Apologies on the off-request. Looks like Tero might be on vacation
+> > and might not be able to send the Pull request to arm-soc folks on time.
+> > 
+> > Requesting you to pick them up on our behalf for v4.19 if it that is
+> > fine with you. We do have Rob's ack on the bindings themselves, and
+> > the patches also have been reviewed as well.
+> 
+> Sure applying the whole series into am654-for-v4.19 branch.
 
-> For kexec_file loading, if kexec_buf.top_down is 'true', the memory which
-> is used to load kernel/initrd/purgatory is supposed to be allocated from
-> top to down. This is what we have been doing all along in the old kexec
-> loading interface and the kexec loading is still default setting in some
-> distributions. However, the current kexec_file loading interface doesn't
-> do like this. The function arch_kexec_walk_mem() it calls ignores checking
-> kexec_buf.top_down, but calls walk_system_ram_res() directly to go through
-> all resources of System RAM from bottom to up, to try to find memory region
-> which can contain the specific kexec buffer, then call locate_mem_hole_callback()
-> to allocate memory in that found memory region from top to down. This brings
-> confusion especially when KASLR is widely supported , users have to make clear
-> why kexec/kdump kernel loading position is different between these two
-> interfaces in order to exclude unnecessary noises. Hence these two interfaces
-> need be unified on behaviour.
-
-As far as I can tell, the above is the whole reason for the patchset,
-yes?  To avoid confusing users.
-
-Is that sufficient?  Can we instead simplify their lives by providing
-better documentation or informative printks or better Kconfig text,
-etc?
-
-And who *are* the people who are performing this configuration?  Random
-system administrators?  Linux distro engineers?  If the latter then
-they presumably aren't easily confused!
-
-In other words, I'm trying to understand how much benefit this patchset
-will provide to our users as a whole.
+Thanks a bunch Tony.
+-- 
+Regards,
+Nishanth Menon
