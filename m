@@ -1,64 +1,105 @@
-From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
-Subject: Re: [PATCH v6 0/2] Input: Add Cypress Gen5 Touchscreen driver
-Date: Wed, 18 Jul 2018 10:18:53 +0200
-Message-ID: <20180718101854.31006b81@dell-desktop.home>
-References: <20180703094309.18514-1-mylene.josserand@bootlin.com>
-        <20180704162158.euiw2v3hyv3hzofn@penguin>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: [PATCH 2/4] rtc: ds1307: support m41t11 variant
+Date: Wed, 18 Jul 2018 10:41:15 +0200
+Message-ID: <20180718084118.79540-1-giulio.benetti@micronovasrl.com>
+References: <20180716213302.GA2751@piout.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180704162158.euiw2v3hyv3hzofn@penguin>
+In-Reply-To: <20180716213302.GA2751@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mylene.josserand@free-electrons.com, thomas.petazzoni@free-electrons.com, maxime.ripard@free-electrons.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK RTC SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Dmitry,
+The m41t11 variant is very similar to the already supported m41t00 and
+m41t0, but it has also 56 bytes of NVRAM.
 
-On Wed, 4 Jul 2018 16:21:58 +0000
-Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
+Add it to driver taking into account NVRAM section.
 
-> Hi Mylène,
-> 
-> On Tue, Jul 03, 2018 at 11:43:07AM +0200, Mylène Josserand wrote:
-> > Hello,
-> > 
-> > Here is a V6 series to add the driver of the touchscreen Cypress,
-> > TrueTouch Generation 5.
-> > Based on v4.18-rc3.
-> > 
-> > This patch series has already been posted in several iterations:
-> >     - v1: Sent on 2017/05/29
-> >     - v2: Sent on 2017/08/18
-> >     - v3: Sent on 2017/09/27
-> >     - v4: Sent on 2017/12/01
-> >     - v5: Sent on 2017/12/20
-> > 
-> > I did not have any comments the last 4 versions.
-> > And no reviews on my v5 during 6 months. Could I have any updates
-> > or feedback on my series to know why it is not merged (to be able to
-> > correct what is wrong)?  
-> 
-> Sorry, I must have missed the v5, sorry about that.
+Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+---
+ .../devicetree/bindings/rtc/rtc-ds1307.txt         |  1 +
+ drivers/rtc/rtc-ds1307.c                           | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+)
 
-No problem.
-
-> 
-> I probably asked this question before, but just to make sure - I see
-> references to HID in the patch - the device is really not HID
-> compatible? Is there any hope it could be made work with i2c-hid +
-> hid-multitouch?
-
-I do not think it is HID compatible but let me check the i2c-hid and
-hid-multitouch drivers to confirm that (or not).
-
-I will let you know in next few days.
-
-Thank you,
-Best regards,
-
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+index d28d6e7f6ae8..ce6469c1a516 100644
+--- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
++++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+@@ -13,6 +13,7 @@ Required properties:
+ 	"maxim,ds3231",
+ 	"st,m41t0",
+ 	"st,m41t00",
++	"st,m41t11",
+ 	"microchip,mcp7940x",
+ 	"microchip,mcp7941x",
+ 	"pericom,pt7c4338",
+diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+index aa4a161bae98..0162a600ff1b 100644
+--- a/drivers/rtc/rtc-ds1307.c
++++ b/drivers/rtc/rtc-ds1307.c
+@@ -44,6 +44,7 @@ enum ds_type {
+ 	ds_3231,
+ 	m41t0,
+ 	m41t00,
++	m41t11,
+ 	mcp794xx,
+ 	rx_8025,
+ 	rx_8130,
+@@ -227,6 +228,11 @@ static const struct chip_desc chips[last_ds_type] = {
+ 		.irq_handler = rx8130_irq,
+ 		.rtc_ops = &rx8130_rtc_ops,
+ 	},
++	[m41t11] = {
++		/* this is battery backed SRAM */
++		.nvram_offset	= 8,
++		.nvram_size	= 56,
++	},
+ 	[mcp794xx] = {
+ 		.alarm		= 1,
+ 		/* this is battery backed SRAM */
+@@ -249,6 +255,7 @@ static const struct i2c_device_id ds1307_id[] = {
+ 	{ "ds3231", ds_3231 },
+ 	{ "m41t0", m41t0 },
+ 	{ "m41t00", m41t00 },
++	{ "m41t11", m41t11 },
+ 	{ "mcp7940x", mcp794xx },
+ 	{ "mcp7941x", mcp794xx },
+ 	{ "pt7c4338", ds_1307 },
+@@ -305,6 +312,10 @@ static const struct of_device_id ds1307_of_match[] = {
+ 		.compatible = "st,m41t00",
+ 		.data = (void *)m41t00
+ 	},
++	{
++		.compatible = "st,m41t11",
++		.data = (void *)m41t11
++	},
+ 	{
+ 		.compatible = "microchip,mcp7940x",
+ 		.data = (void *)mcp794xx
+@@ -347,6 +358,7 @@ static const struct acpi_device_id ds1307_acpi_ids[] = {
+ 	{ .id = "DS3231", .driver_data = ds_3231 },
+ 	{ .id = "M41T0", .driver_data = m41t0 },
+ 	{ .id = "M41T00", .driver_data = m41t00 },
++	{ .id = "M41T11", .driver_data = m41t11 },
+ 	{ .id = "MCP7940X", .driver_data = mcp794xx },
+ 	{ .id = "MCP7941X", .driver_data = mcp794xx },
+ 	{ .id = "PT7C4338", .driver_data = ds_1307 },
+@@ -1576,6 +1588,7 @@ static int ds1307_probe(struct i2c_client *client,
+ 	case ds_1307:
+ 	case m41t0:
+ 	case m41t00:
++	case m41t11:
+ 		/* clock halted?  turn it on, so clock can tick. */
+ 		if (tmp & DS1307_BIT_CH) {
+ 			regmap_write(ds1307->regmap, DS1307_REG_SECS, 0);
+@@ -1641,6 +1654,7 @@ static int ds1307_probe(struct i2c_client *client,
+ 	case ds_1340:
+ 	case m41t0:
+ 	case m41t00:
++	case m41t11:
+ 		/*
+ 		 * NOTE: ignores century bits; fix before deploying
+ 		 * systems that will run through year 2100.
 -- 
-Mylène Josserand, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.17.1
