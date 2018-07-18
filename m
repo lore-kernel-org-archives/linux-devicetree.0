@@ -1,121 +1,56 @@
-Return-Path: <SRS0=8tzP=KD=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
+Return-Path: <SRS0=kUi2=KC=renesas.com=Chris.Brandt@kernel.org>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 2/2] serial: sh-sci: Document r7s9210 bindings
+Date: Wed, 18 Jul 2018 22:23:26 +0000
+Message-ID: 
+ <TY1PR01MB1562B58322D08B16123BB1CA8A530@TY1PR01MB1562.jpnprd01.prod.outlook.com>
 References: <20180711144131.73552-1-chris.brandt@renesas.com>
- <20180711144131.73552-3-chris.brandt@renesas.com> <CAMuHMdVCA0MrD4QRZb7VPR_Dqmghfd83j4WY_oZnfqVyx++rEw@mail.gmail.com>
- <CAMuHMdWdOoEbwPOzOfEAHH0MXNr-Wf_-37i8Qj6WdphgyKLe7g@mail.gmail.com> <TY1PR01MB1562A582DB067740B7D012ED8A530@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY1PR01MB1562A582DB067740B7D012ED8A530@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 19 Jul 2018 10:13:06 +0200
-Message-ID: <CAMuHMdVKcGhDwdp3=+JFLONThnBpp7yT9DProNmzNp0V7fN8pQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] serial: sh-sci: Document r7s9210 bindings
-Content-Type: text/plain; charset="UTF-8"
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+ <20180711144131.73552-3-chris.brandt@renesas.com>
+ <CAMuHMdVCA0MrD4QRZb7VPR_Dqmghfd83j4WY_oZnfqVyx++rEw@mail.gmail.com>
+ <CAMuHMdWdOoEbwPOzOfEAHH0MXNr-Wf_-37i8Qj6WdphgyKLe7g@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdWdOoEbwPOzOfEAHH0MXNr-Wf_-37i8Qj6WdphgyKLe7g@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Chris,
-
-On Thu, Jul 19, 2018 at 12:19 AM Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> On Tuesday, July 17, 2018, Geert Uytterhoeven wrote:
-> > On Fri, Jul 13, 2018 at 5:50 PM Geert Uytterhoeven <geert@linux-m68k.org>
-> > wrote:
-> > > On Wed, Jul 11, 2018 at 4:42 PM Chris Brandt <chris.brandt@renesas.com>
-> > wrote:
-> > > > Add R7S9210 (RZ/A2) support
-> > > >
-> > > > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> > >
-> > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > Sorry, I spoke too soon.
-> > It seems the bindings were never updated for the use of multiple
-> > interrupts
-> > on RZ/A1.  As RZ/A2 adds one new interrupt, can you please document which
-> > interrupts are required?
-> > Thanks!
->
-> The issue that I ran into was the device driver assumed some signals
-> were muxed together (TXI and DRI), and that other signals were individual.
->
-> The existing driver wanted interrupts to be specified in this order:
->   1. Error
->   2. RX
->   3. TX (assumes DRI)
->   4. Break
-
-Yes, that matches the RZ/A1 SCIFA and interrupt controller docs.
-
-> However, for the SCIF that is present in the RZ/A2M, Error and Break are
-> muxed together, and then DRI is not muxed with TX. This is different
-> than any other SCIF supported by the driver.
-
-Right, the RZ/A2 SCIFA variant is documented to provide 6 interrupt sources:
-  1. TEI,
-  2. TXI,
-  3. RXI,
-  4. DRI,
-  5. ERI,
-  6. BRI.
-
-> My solution was to list the Error/Break twice, and then add a new
-> interrupt for DRI.
->
-> As reference, here is what the DT node would look like:
->
->         scif0: serial@e8007000 {
->                 compatible = "renesas,scif-r7s9210", "renesas,scif";
->                 reg = <0xe8007000 18>;
->                 interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>, /* ERI0/BRI0 */
->                              <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>,   /* RXI0 */
->                              <GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>,   /* TXI0 */
->                              <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>,   /* ERI0/BRI0 */
->                              <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;   /* TEI/DRI0 */
->                 clocks = <&mstp4_clks R7S9210_CLK_SCIF0>;
->                 clock-names = "fck";
->                 power-domains = <&cpg_clocks>;
->                 status = "disabled";
->         };
->
-> Of course I have no problem documenting all this, but I first I just
-> wanted to make sure I was not going to get push back when I submit a DT
-> later that lists the same interrupt twice.
-
-Listing them twice does make sense to me, as the interrupt controller
-source list in the RZ/A2 docs has only four, and explicitly lists how they are
-multiplexed:
-  base + 0 = ERI/BRI,
-  base + 1 = RXI,
-  base + 2 = TXI,
-  base + 3 = TEI/DRI.
-But future SoCS with the same SCIFA variant may wire them differently?
-
-For DT backwards compatibility, we have to keep support for the following
-2 schemes:
-  1. Single "interrupts" value, no "interrupt-names", for fully multiplexed
-     interrupts (SH/R-Mobile, R-Car).
-  2. Four "interrupts" values, no "interrupt-names", for ERI/RXI/TXI/TEI
-     (RZ/A1, H8/300).
-
-For RZ/A2, I suggest extending the bindings with interrupt-names,
-documenting all 6 interrupt sources, and let the driver handle that.
-That means there should be 6, not 5, "interrupts" values.
-Whether the driver implements all possible combinations, or only what you
-need for RZ/A2, is up to you. I agree the interrupt handling in the driver
-is already sufficiently complex.
-Ideally, you would document support for RZ/A1 with interrupt-names too,
-and handle that as well.
-
-Does this make sense?
-Thanks!
-
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgR2VlcnQsDQoNCk9uIFR1ZXNkYXksIEp1bHkgMTcsIDIwMTgsIEdlZXJ0IFV5dHRlcmhvZXZl
+biB3cm90ZToNCj4gT24gRnJpLCBKdWwgMTMsIDIwMTggYXQgNTo1MCBQTSBHZWVydCBVeXR0ZXJo
+b2V2ZW4gPGdlZXJ0QGxpbnV4LW02OGsub3JnPg0KPiB3cm90ZToNCj4gPiBPbiBXZWQsIEp1bCAx
+MSwgMjAxOCBhdCA0OjQyIFBNIENocmlzIEJyYW5kdCA8Y2hyaXMuYnJhbmR0QHJlbmVzYXMuY29t
+Pg0KPiB3cm90ZToNCj4gPiA+IEFkZCBSN1M5MjEwIChSWi9BMikgc3VwcG9ydA0KPiA+ID4NCj4g
+PiA+IFNpZ25lZC1vZmYtYnk6IENocmlzIEJyYW5kdCA8Y2hyaXMuYnJhbmR0QHJlbmVzYXMuY29t
+Pg0KPiA+DQo+ID4gUmV2aWV3ZWQtYnk6IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNh
+c0BnbGlkZXIuYmU+DQo+IA0KPiBTb3JyeSwgSSBzcG9rZSB0b28gc29vbi4NCj4gSXQgc2VlbXMg
+dGhlIGJpbmRpbmdzIHdlcmUgbmV2ZXIgdXBkYXRlZCBmb3IgdGhlIHVzZSBvZiBtdWx0aXBsZQ0K
+PiBpbnRlcnJ1cHRzDQo+IG9uIFJaL0ExLiAgQXMgUlovQTIgYWRkcyBvbmUgbmV3IGludGVycnVw
+dCwgY2FuIHlvdSBwbGVhc2UgZG9jdW1lbnQgd2hpY2gNCj4gaW50ZXJydXB0cyBhcmUgcmVxdWly
+ZWQ/DQo+IFRoYW5rcyENCg0KVGhlIGlzc3VlIHRoYXQgSSByYW4gaW50byB3YXMgdGhlIGRldmlj
+ZSBkcml2ZXIgYXNzdW1lZCBzb21lIHNpZ25hbHMgDQp3ZXJlIG11eGVkIHRvZ2V0aGVyIChUWEkg
+YW5kIERSSSksIGFuZCB0aGF0IG90aGVyIHNpZ25hbHMgd2VyZSBpbmRpdmlkdWFsLg0KDQpUaGUg
+ZXhpc3RpbmcgZHJpdmVyIHdhbnRlZCBpbnRlcnJ1cHRzIHRvIGJlIHNwZWNpZmllZCBpbiB0aGlz
+IG9yZGVyOg0KICAxLiBFcnJvcg0KICAyLiBSWA0KICAzLiBUWCAoYXNzdW1lcyBEUkkpDQogIDQu
+IEJyZWFrDQoNCkhvd2V2ZXIsIGZvciB0aGUgU0NJRiB0aGF0IGlzIHByZXNlbnQgaW4gdGhlIFJa
+L0EyTSwgRXJyb3IgYW5kIEJyZWFrIGFyZQ0KbXV4ZWQgdG9nZXRoZXIsIGFuZCB0aGVuIERSSSBp
+cyBub3QgbXV4ZWQgd2l0aCBUWC4gVGhpcyBpcyBkaWZmZXJlbnQgDQp0aGFuIGFueSBvdGhlciBT
+Q0lGIHN1cHBvcnRlZCBieSB0aGUgZHJpdmVyLg0KDQpNeSBzb2x1dGlvbiB3YXMgdG8gbGlzdCB0
+aGUgRXJyb3IvQnJlYWsgdHdpY2UsIGFuZCB0aGVuIGFkZCBhIG5ldyANCmludGVycnVwdCBmb3Ig
+RFJJLg0KDQpBcyByZWZlcmVuY2UsIGhlcmUgaXMgd2hhdCB0aGUgRFQgbm9kZSB3b3VsZCBsb29r
+IGxpa2U6DQoNCglzY2lmMDogc2VyaWFsQGU4MDA3MDAwIHsNCgkJY29tcGF0aWJsZSA9ICJyZW5l
+c2FzLHNjaWYtcjdzOTIxMCIsICJyZW5lc2FzLHNjaWYiOw0KCQlyZWcgPSA8MHhlODAwNzAwMCAx
+OD47DQoJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyNjUgSVJRX1RZUEVfTEVWRUxfSElHSD4sIC8q
+IEVSSTAvQlJJMCAqLw0KCQkJICAgICA8R0lDX1NQSSAyNjYgSVJRX1RZUEVfTEVWRUxfSElHSD4s
+ICAgLyogUlhJMCAqLw0KCQkJICAgICA8R0lDX1NQSSAyNjcgSVJRX1RZUEVfTEVWRUxfSElHSD4s
+ICAgLyogVFhJMCAqLw0KCQkJICAgICA8R0lDX1NQSSAyNjUgSVJRX1RZUEVfTEVWRUxfSElHSD4s
+ICAgLyogRVJJMC9CUkkwICovDQoJCQkgICAgIDxHSUNfU1BJIDI2OCBJUlFfVFlQRV9MRVZFTF9I
+SUdIPjsgICAvKiBURUkvRFJJMCAqLw0KCQljbG9ja3MgPSA8Jm1zdHA0X2Nsa3MgUjdTOTIxMF9D
+TEtfU0NJRjA+Ow0KCQljbG9jay1uYW1lcyA9ICJmY2siOw0KCQlwb3dlci1kb21haW5zID0gPCZj
+cGdfY2xvY2tzPjsNCgkJc3RhdHVzID0gImRpc2FibGVkIjsNCgl9Ow0KDQpPZiBjb3Vyc2UgSSBo
+YXZlIG5vIHByb2JsZW0gZG9jdW1lbnRpbmcgYWxsIHRoaXMsIGJ1dCBJIGZpcnN0IEkganVzdCAN
+CndhbnRlZCB0byBtYWtlIHN1cmUgSSB3YXMgbm90IGdvaW5nIHRvIGdldCBwdXNoIGJhY2sgd2hl
+biBJIHN1Ym1pdCBhIERUIA0KbGF0ZXIgdGhhdCBsaXN0cyB0aGUgc2FtZSBpbnRlcnJ1cHQgdHdp
+Y2UuDQoNClRoYW5rcywNCkNocmlzDQoNCg0KDQo=
