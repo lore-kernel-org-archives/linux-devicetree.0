@@ -1,150 +1,91 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v2 2/2] arm64: dts: Add Mediatek X20 Development Board
- support
-Date: Wed, 18 Jul 2018 22:13:04 +0530
-Message-ID: <20180718164304.GA4902@Mani-XPS-13-9360>
-References: <20180605163442.4812-1-manivannan.sadhasivam@linaro.org>
- <20180605163442.4812-3-manivannan.sadhasivam@linaro.org>
- <d88504b4-409c-c42b-f816-bedefce2a819@gmail.com>
- <20180717140453.GA19076@mani>
- <a48b0735-ff75-6228-22ba-c8e868240f0c@gmail.com>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [SPAM]Re: [PATCH v5 5/7] Bluetooth: Extend btuart driver for
+ join more vendor devices
+Date: Thu, 19 Jul 2018 00:56:04 +0800
+Message-ID: <1531932964.8953.201.camel@mtkswgap22>
+References: <cover.1531150733.git.sean.wang@mediatek.com>
+ <85d449cdd34bf47d72935a821915e825c64a2145.1531150733.git.sean.wang@mediatek.com>
+ <70616B99-5A2D-417A-8815-246700EEF4E2@holtmann.org>
+ <1531641134.3955.19.camel@mtkswgap22>
+ <6476BE78-3FE5-465F-8060-2215387323AA@holtmann.org>
+ <1531754965.8953.3.camel@mtkswgap22>
+ <BB53539F-C053-4DCD-A748-B75B995E1179@holtmann.org>
+ <1531923968.8953.197.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a48b0735-ff75-6228-22ba-c8e868240f0c@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, taiten.peng@linaro.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, manivannanece23@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1531923968.8953.197.camel@mtkswgap22>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Johan Hedberg <johan.hedberg@gmail.com>, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
+On Wed, 2018-07-18 at 22:26 +0800, Sean Wang wrote:
+> On Wed, 2018-07-18 at 14:23 +0200, Marcel Holtmann wrote:
+> > Hi Sean,
+> > 
 
-On Wed, Jul 18, 2018 at 05:07:38PM +0200, Matthias Brugger wrote:
-> 
-> 
-> On 17/07/18 16:04, Manivannan Sadhasivam wrote:
-> > Hi Matthias,
-> > 
-> > On Mon, Jul 16, 2018 at 03:24:44PM +0200, Matthias Brugger wrote:
-> >> Hi Manivanna,
-> >>
-> >> On 05/06/18 18:34, Manivannan Sadhasivam wrote:
-> >>> Add initial device tree support for Mediatek X20 Development Board
-> >>> based on MT6797 Deca core SoC. This board is one of the 96Boards
-> >>> Consumer Edition platform.
-> >>>
-> >>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> >>> ---
-> >>>  arch/arm64/boot/dts/mediatek/Makefile         |  1 +
-> >>>  .../boot/dts/mediatek/mt6797-x20-dev.dts      | 33 +++++++++++++++++++
-> >>>  2 files changed, 34 insertions(+)
-> >>>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
-> >>>
-> >>> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-> >>> index ac17f60f998c..5b7fd6ad96e4 100644
-> >>> --- a/arch/arm64/boot/dts/mediatek/Makefile
-> >>> +++ b/arch/arm64/boot/dts/mediatek/Makefile
-> >>> @@ -3,5 +3,6 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
-> >>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
-> >>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
-> >>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
-> >>> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
-> >>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
-> >>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
-> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts b/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
-> >>> new file mode 100644
-> >>> index 000000000000..2c09ca95d9e2
-> >>> --- /dev/null
-> >>> +++ b/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
-> >>> @@ -0,0 +1,33 @@
-> >>> +// SPDX-License-Identifier: GPL-2.0
-> >>> +/*
-> >>> + * Device Tree Source for MediaTek X20 Development Board
-> >>> + *
-> >>> + * Copyright (C) 2018, Linaro Ltd.
-> >>> + *
-> >>> + */
-> >>> +
-> >>> +/dts-v1/;
-> >>> +
-> >>> +#include "mt6797.dtsi"
-> >>> +
-> >>> +/ {
-> >>> +	model = "Mediatek X20 Development Board";
-> >>> +	compatible = "archermind,mt6797-x20-dev", "mediatek,mt6797";
-> >>> +
-> >>> +	aliases {
-> >>> +		serial0 = &uart1;
-> >>> +	};
-> >>
-> >> Sorry for the late answer.
-> >> Why did you use uart1 instead of uart0?
-> >> I know that uart0 is used by the bootloader, but because of their exotic flash
-> >> procedure I find it quite useful to see this messages in my serial connection.
-> >> Of course you can only use 921600 baudrate then.
-> >>
-> > 
-> > The reason is, most of the Mezzanine boards use USB to UART bridge on the
-> > UART1 port available on the Low Speed Expansion header. Additionally, the
-> > convention followed by most of the Consumer Edition 96Boards is to use UART1
-> > as the debug serial port. That's why eventhough the bootloader is using UART0,
-> > I forced the kernel to use UART1.
-> > 
-> 
-> Sounds reasonable, I don't have this 96 boards adapter and I forgot about it.
-> 
+[ ... ]
 
-That's fine :)
+> > > Because the extra header doesn't provide any details about this stream and each radio stack still needs to be in charge of their stream
+> > > parsing. That is why I still want to use recv_h4.h instead of coding my own parser.
+> > 
+> > As I said above, if the header + length always indicates a full H:4 frame, then you do not need h4_recv.h since you know the packet size. If it doesn't (and it means things can fragment), then you do.
+> > 
+> 
+> My case is the extra header + length doesn't indicate a full H:4 frame,
+> things can fragment
+> 
+> > However I have to note that a serial stream from your multiplexer protocol also needs some state handling since it can be interrupted at any point. If you want this clean, then you actually do that anyway. Essentially you have two protocols layered and want to process the independently.
+> 
+> Yes, I also agree that it makes better and cleaner if there is another
+> driver in charge of the multiplexer protocol and the framing.
+> 
+> But, could you accept that I postpone the target into the next stage,
+> I just like to consider BT single device, not for multiplexer protocol
+> case, in the current stage.
+> 
+> To be honest, my next step is to add mt7688 btusb and then want to have
+> an integration with btmtkuart. mt7688 btusb doesn't have extra framing
 
-> >>> +
-> >>> +	memory@40000000 {
-> >>> +		device_type = "memory";
-> >>> +		reg = <0 0x40000000 0 0x1e605000>;
-> >>
-> >> How comes this strange number for the memory size?
-> >>
-> > 
-> > Actually, the memory size is extracted from the downstream kernel [1].
-> > 
-> 
-> Hm, Archermind "Helio X20 Development Board Hardware Manual" talks about 2GB
-> LPDDR3-SDRAM. Would you mind to check if that is actually true?
-> 
+something needs to be fixed, I mean mt7668 instead of mt7688
 
-Yes, it is 2GB. Shall I change the size to 0x80000000?
-
-Thanks,
-Mani
-
-> >> BTW do you know the differences between the EVB board and the x20 one?
-> >> I used the evb dts for booting up to now.
-> >>
-> > 
-> > Sorry, I don't know the difference between both boards!
+> for multiplexer protocol, so it can allow me to make the concentration
+> more on pure bt protocol and pushing the latest mtk bluetooth devices
+> being supported on the bluez driver.
 > 
-> Sure, no problem :)
+> > If you post details about the multiplexing protocol for your serial stream, then I can help you design a driver for it. With serdev that is actually simple. And then you could hook up GPS etc. at some point once you want to run this on hardware that has the combo chip.
+> > 
 > 
-> Regards,
-> Matthias
+> okay, really thanks for your help. I also have an interest on this part.
+> now how does bluez receive and sent packet from/to a virtual device ( a
+> serdev handling multiplexer protocol)? It seems current bluez device all
+> handling packet from/to physical bus device. or I was missing something?
 > 
+> > Having a Linux Bluetooth driver is useful for Android as well btw. We have HCI_CHANNEL_USER and a generic Android driver for using it. So enabling the chip in Linux upstream will enable it for Android as well.
 > > 
-> > Thanks,
-> > Mani
+> it really save more time as I knew many vendors do two driver separately
+> for bluez and bluedroid. where could I find the resource for
+> HCI_CHANNEL_USER and generic android driver ? Is it still the part of
+> bluez or run by another project ?
+> 
+> > Regards
 > > 
-> > [1] https://github.com/helio-x20/linux/blob/helio-x20/arch/arm64/boot/dts/amt6797_64_open.dts#L8
+> > Marcel
 > > 
-> >> Best regards,
-> >> Matthias
-> >>
-> >>> +	};
-> >>> +
-> >>> +	chosen {
-> >>> +		stdout-path = "serial0:115200n8";
-> >>> +	};
-> >>> +};
-> >>> +
-> >>> +&uart1 {
-> >>> +	status = "okay";
-> >>> +};
-> >>>
+> 
+> 
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
