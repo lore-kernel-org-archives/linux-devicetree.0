@@ -1,40 +1,46 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 4/4] MAINTAINERS: Add entry for Actions Semi Owl SoCs DMA driver
-Date: Thu, 19 Jul 2018 01:37:09 +0530
-Message-ID: <20180718200709.27102-5-manivannan.sadhasivam@linaro.org>
-References: <20180718200709.27102-1-manivannan.sadhasivam@linaro.org>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH 1/3] ARM: tegra: apalis-tk1: Fix SPDX license identifier
+ format
+Date: Wed, 18 Jul 2018 20:37:27 +0000
+Message-ID: <1531946245.26473.2.camel@toradex.com>
+References: <20180718194824.3704-1-krzk@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180718200709.27102-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20180718194824.3704-1-krzk@kernel.org>
+Content-Language: en-US
+Content-ID: <E8BE378C082095478660DD1C9143EA8B@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vkoul@kernel.org, dan.j.williams@intel.com, afaerber@suse.de, robh+dt@kernel.org
-Cc: dmaengine@vger.kernel.org, liuwei@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "stefan@agner.ch" <stefan@agner.ch>, "krzk@kernel.org" <krzk@kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dev@lynxeye.de" <dev@lynxeye.de>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Cc: "pombredanne@nexb.com" <pombredanne@nexb.com>
 List-Id: devicetree@vger.kernel.org
 
-Add entry for Actions Semi Owl SoCs DMA driver under ARM/ACTIONS.
-
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 09b54e9ebc6f..56d9c7715c2a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1145,12 +1145,14 @@ F:	arch/arm/boot/dts/owl-*
- F:	arch/arm64/boot/dts/actions/
- F:	drivers/clk/actions/
- F:	drivers/clocksource/owl-*
-+F:	drivers/dma/owl-dma.c
- F:	drivers/pinctrl/actions/*
- F:	drivers/soc/actions/
- F:	include/dt-bindings/power/owl-*
- F:	include/linux/soc/actions/
- F:	Documentation/devicetree/bindings/arm/actions.txt
- F:	Documentation/devicetree/bindings/clock/actions,s900-cmu.txt
-+F:	Documentation/devicetree/bindings/dma/owl-dma.txt
- F:	Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt
- F:	Documentation/devicetree/bindings/power/actions,owl-sps.txt
- F:	Documentation/devicetree/bindings/timer/actions,owl-timer.txt
--- 
-2.17.1
+T24gV2VkLCAyMDE4LTA3LTE4IGF0IDIxOjQ4ICswMjAwLCBLcnp5c3p0b2YgS296bG93c2tpIHdy
+b3RlOg0KPiBGaXggaW5jb3JyZWN0IGZvcm1hdCB1c2VkIGZvciBPUiBjbGF1c2UgaW4gU1BEWCBs
+aWNlbnNlIGlkZW50aWZpZXIuDQoNCkNhbiB5b3UgcGxlYXNlIGVsYWJvcmF0ZSBob3cgeW91IGdv
+dCB0byB0aGF0IGNvbmNsdXNpb24gYXMgdGhlcmUgYXJlDQp2YXJpb3VzIG90aGVyIGRldmljZSB0
+cmVlcyBoYXZpbmcgaXQgc3BlY2lmaWVkIHRoZSBleGFjdCBzYW1lIHdheS4gUGx1cw0KSSB3YXMg
+YWN0dWFsbHkgZXZlbiBpbiBkaXNjdXNzaW9uIHdpdGggUGhpbGlwcGUgb24gdGhhdCBwYXRjaCBz
+ZXQgYmFjaw0Kd2hlbiBJIGludHJvZHVjZWQgdGhvc2UuDQoNCj4gU2lnbmVkLW9mZi1ieTogS3J6
+eXN6dG9mIEtvemxvd3NraSA8a3J6a0BrZXJuZWwub3JnPg0KPiAtLS0NCj4gIGFyY2gvYXJtL2Jv
+b3QvZHRzL3RlZ3JhMTI0LWFwYWxpcy12MS4yLWV2YWwuZHRzIHwgMiArLQ0KPiAgYXJjaC9hcm0v
+Ym9vdC9kdHMvdGVncmExMjQtYXBhbGlzLXYxLjIuZHRzaSAgICAgfCAyICstDQo+ICAyIGZpbGVz
+IGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1n
+aXQgYS9hcmNoL2FybS9ib290L2R0cy90ZWdyYTEyNC1hcGFsaXMtdjEuMi1ldmFsLmR0cw0KPiBi
+L2FyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMTI0LWFwYWxpcy12MS4yLWV2YWwuZHRzDQo+IGluZGV4
+IDhhOGQ1ZmEwZWNkMS4uZTJjMGQ4ZWZiMzU4IDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290
+L2R0cy90ZWdyYTEyNC1hcGFsaXMtdjEuMi1ldmFsLmR0cw0KPiArKysgYi9hcmNoL2FybS9ib290
+L2R0cy90ZWdyYTEyNC1hcGFsaXMtdjEuMi1ldmFsLmR0cw0KPiBAQCAtMSw0ICsxLDQgQEANCj4g
+LS8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIuMCBPUiBNSVQpDQo+ICsvLyBTUERY
+LUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMCBPUiBNSVQNCj4gIC8qDQo+ICAgKiBDb3B5cmln
+aHQgMjAxNi0yMDE4IFRvcmFkZXggQUcNCj4gICAqLw0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
+Ym9vdC9kdHMvdGVncmExMjQtYXBhbGlzLXYxLjIuZHRzaQ0KPiBiL2FyY2gvYXJtL2Jvb3QvZHRz
+L3RlZ3JhMTI0LWFwYWxpcy12MS4yLmR0c2kNCj4gaW5kZXggNTczYWFhNTBmZmYxLi41ZWY4NGI2
+YjMzNTYgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMTI0LWFwYWxpcy12
+MS4yLmR0c2kNCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvdGVncmExMjQtYXBhbGlzLXYxLjIu
+ZHRzaQ0KPiBAQCAtMSw0ICsxLDQgQEANCj4gLS8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAo
+R1BMLTIuMCBPUiBNSVQpDQo+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMCBP
+UiBNSVQNCj4gIC8qDQo+ICAgKiBDb3B5cmlnaHQgMjAxNi0yMDE4IFRvcmFkZXggQUcNCj4gICAq
+Lw0KDQpbMV0gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC9DNjUxQzY3Ny1EMTU3LTQxQTMt
+QjIwNi1DQjAyQjk4NkFEMTlAeg0KaXN3aWxlci5jb20v
