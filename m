@@ -1,40 +1,56 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/5] spi: dw: fix possible race condition
-Date: Wed, 18 Jul 2018 13:33:39 +0300
-Message-ID: <CAHp75VfvP7s-ud0XRUfESjTNRdbaZH_qKRpXbkCzKqp8j5e6kg@mail.gmail.com>
-References: <20180717142314.32337-1-alexandre.belloni@bootlin.com>
- <20180717142314.32337-2-alexandre.belloni@bootlin.com> <CAHp75Vc4SrMXznc6PSrO2Lfrc3gspu_g1QYjuFDWT9-J=C+bjw@mail.gmail.com>
- <CAHp75VfRS_gSv6x22M1TiTariUftF04sLyd84dQpxudOmT0s7w@mail.gmail.com>
- <20180717214212.GE3211@piout.net> <CAHp75VdEkQ=AC8xUBno7qp0E+cXqwq03WOtVB3sX+Z6zthDJSw@mail.gmail.com>
- <20180717221301.GF3211@piout.net>
+From: Denis OSTERLAND <denis.osterland@diehl.com>
+Subject: Re: [PATCH v4 2/5] rtc: isl1208: add support for isl1219 with tamper
+ detection
+Date: Wed, 18 Jul 2018 10:44:52 +0000
+Message-ID: <1531910692.6017.18.camel@diehl.com>
+References: <20180710090710.9066-1-Denis.Osterland@diehl.com>
+         <20180710090710.9066-3-Denis.Osterland@diehl.com>
+         <20180718081313.GI3211@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180717221301.GF3211@piout.net>
+In-Reply-To: <20180718081313.GI3211@piout.net>
+Content-Language: en-US
+Content-ID: <ED44C69EC80A27448F3F68A28901759B@diehl.internal>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Mark Brown <broonie@kernel.org>, James Hogan <jhogan@kernel.org>, Paul Burton <paul.burton@mips.com>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>
+To: "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 18, 2018 at 1:13 AM, Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
-> On 18/07/2018 00:54:21+0300, Andy Shevchenko wrote:
->> On Wed, Jul 18, 2018 at 12:42 AM, Alexandre Belloni
->> <alexandre.belloni@bootlin.com> wrote:
->> > On 18/07/2018 00:30:49+0300, Andy Shevchenko wrote:
-
->> > Well, I'm not sure how far this can be backported. It also seems nobody
->> > ever hit that while our hardware will hit it at every boot.
-
->> No-one enabled CONFIG_DEBUG_SHIRQ?
-
-> Nope, this is a real HW IRQ. I meant find out up to when it can be
-> sanely backported.
-
-I meant that before your case no-one tested with that option enabled
-which will behave like you describe (IRQ gets fired as soon as being
-registered).
-
--- 
-With Best Regards,
-Andy Shevchenko
+SGksDQoNCkFtIE1pdHR3b2NoLCBkZW4gMTguMDcuMjAxOCwgMTA6MTMgKzAyMDAgc2Nocmll
+YiBBbGV4YW5kcmUgQmVsbG9uaToNCj4gT24gMTAvMDcvMjAxOCAwOTo0NDoxNSswMDAwLCBE
+ZW5pcyBPU1RFUkxBTkQgd3JvdGU6DQo+ID7CoA0KPiA+ICsJaWYgKGlkLT5kcml2ZXJfZGF0
+YSA9PSBUWVBFX0lTTDEyMTkpIHsNCj4gPiArCQlyYyA9IElTTDEyMTlfUkVHX0VWX0VWRU47
+DQo+ID4gKwkJcmMgPSBpMmNfc21idXNfd3JpdGVfYnl0ZV9kYXRhKGNsaWVudCwgSVNMMTIx
+OV9SRUdfRVYsIHJjKTsNCj4gSSdkIHBhc3MgSVNMMTIxOV9SRUdfRVZfRVZFTiBkaXJlY3Rs
+eSBpbnN0ZWFkIG9mIGFzc2lnbmluZyBpdCB0byByYy4NCj4gDQpCZWNhdXNlIG9mIHRoZSA4
+MCBjaGFyYWN0ZXIgbGltaXQgcGVyIHJvdywgSSB0aG91Z2h0IHRoaXM6DQrCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJjID0gSVNMMTIxOV9SRUdfRVZfRVZFTjsNCsKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmMgPSBpMmNfc21idXNfd3JpdGVfYnl0ZV9k
+YXRhKGNsaWVudCwgSVNMMTIxOV9SRUdfRVYsIHJjKTsNCndvdWxkIGxvb2sgbmljZXIgdGhh
+biB0aGF0Og0KwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByYyA9IGkyY19zbWJ1
+c193cml0ZV9ieXRlX2RhdGEoY2xpZW50LCBJU0wxMjE5X1JFR19FViwNCsKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBJU0wxMjE5
+X1JFR19FVl9FVkVOKTsNCkFyZSB0aGVyZSBhbnkgcmVhc29ucyB3aHkgSSBzaG91bGQgcHJl
+ZmVyIHRoZSBzZWNvbmQgb25lPw0KDQpSZWdhcmRzIERlbmlzDQoNCkRpZWhsIENvbm5lY3Rp
+dml0eSBTb2x1dGlvbnMgR21iSA0KR2VzY2jDpGZ0c2bDvGhydW5nOiBIb3JzdCBMZW9uYmVy
+Z2VyDQpTaXR6IGRlciBHZXNlbGxzY2hhZnQ6IE7DvHJuYmVyZyAtIFJlZ2lzdGVyZ2VyaWNo
+dDogQW10c2dlcmljaHQNCk7DvHJuYmVyZzogSFJCIDMyMzE1DQpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCg0KRGVyIEluaGFsdCBkZXIgdm9yc3Rl
+aGVuZGVuIEUtTWFpbCBpc3QgbmljaHQgcmVjaHRsaWNoIGJpbmRlbmQuIERpZXNlIEUtTWFp
+bCBlbnRoYWVsdCB2ZXJ0cmF1bGljaGUgdW5kL29kZXIgcmVjaHRsaWNoIGdlc2NodWV0enRl
+IEluZm9ybWF0aW9uZW4uDQpJbmZvcm1pZXJlbiBTaWUgdW5zIGJpdHRlLCB3ZW5uIFNpZSBk
+aWVzZSBFLU1haWwgZmFlbHNjaGxpY2hlcndlaXNlIGVyaGFsdGVuIGhhYmVuLiBCaXR0ZSBs
+b2VzY2hlbiBTaWUgaW4gZGllc2VtIEZhbGwgZGllIE5hY2hyaWNodC4NCkplZGUgdW5lcmxh
+dWJ0ZSBGb3JtIGRlciBSZXByb2R1a3Rpb24sIEJla2FubnRnYWJlLCBBZW5kZXJ1bmcsIFZl
+cnRlaWx1bmcgdW5kL29kZXIgUHVibGlrYXRpb24gZGllc2VyIEUtTWFpbCBpc3Qgc3RyZW5n
+c3RlbnMgdW50ZXJzYWd0Lg0KVGhlIGNvbnRlbnRzIG9mIHRoZSBhYm92ZSBtZW50aW9uZWQg
+ZS1tYWlsIGlzIG5vdCBsZWdhbGx5IGJpbmRpbmcuIFRoaXMgZS1tYWlsIGNvbnRhaW5zIGNv
+bmZpZGVudGlhbCBhbmQvb3IgbGVnYWxseSBwcm90ZWN0ZWQgaW5mb3JtYXRpb24uIFBsZWFz
+ZSBpbmZvcm0gdXMgaWYgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1haWwgYnkNCm1pc3Rh
+a2UgYW5kIGRlbGV0ZSBpdCBpbiBzdWNoIGEgY2FzZS4gRWFjaCB1bmF1dGhvcml6ZWQgcmVw
+cm9kdWN0aW9uLCBkaXNjbG9zdXJlLCBhbHRlcmF0aW9uLCBkaXN0cmlidXRpb24gYW5kL29y
+IHB1YmxpY2F0aW9uIG9mIHRoaXMgZS1tYWlsIGlzIHN0cmljdGx5IHByb2hpYml0ZWQuIA0K
