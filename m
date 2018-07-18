@@ -1,9 +1,9 @@
 Return-Path: <SRS0=kUi2=KC=renesas.com=Chris.Brandt@kernel.org>
 From: Chris Brandt <Chris.Brandt@renesas.com>
 Subject: RE: [PATCH 2/2] serial: sh-sci: Document r7s9210 bindings
-Date: Wed, 18 Jul 2018 22:23:26 +0000
+Date: Wed, 18 Jul 2018 22:19:22 +0000
 Message-ID: 
- <TY1PR01MB1562B58322D08B16123BB1CA8A530@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <TY1PR01MB1562A582DB067740B7D012ED8A530@TY1PR01MB1562.jpnprd01.prod.outlook.com>
 References: <20180711144131.73552-1-chris.brandt@renesas.com>
  <20180711144131.73552-3-chris.brandt@renesas.com>
  <CAMuHMdVCA0MrD4QRZb7VPR_Dqmghfd83j4WY_oZnfqVyx++rEw@mail.gmail.com>
