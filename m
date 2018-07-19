@@ -1,55 +1,43 @@
-From: Chris Healy <cphealy@gmail.com>
-Subject: Re: [PATCH] ARM: dts: vf610: Add ZII CFU1 board
-Date: Wed, 18 Jul 2018 20:43:23 -0700
-Message-ID: <CAFXsbZrb6_EmkMEhCT064LgjdWPq4t7hBYGg_UM9WLXW2WbZaA@mail.gmail.com>
-References: <20180719005941.10458-1-andrew.smirnov@gmail.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH v2 00/17] JZ4780 DMA patchset v2
+Date: Thu, 19 Jul 2018 09:26:49 +0530
+Message-ID: <20180719035649.GI3219@vkoul-mobl>
+References: <20180718182023.8182-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180719005941.10458-1-andrew.smirnov@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180718182023.8182-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-> Add support for the Zodiac Inflight Innovations CFU1
-> board (VF610-based).
->
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: cphealy@gmail.com
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> ---
->
-> Shawn:
->
-> Currently this patch is rebase on top of [spu3], if that is
-> problematic, let me know and I'll update it accordingly
->
-> Thanks,
-> Andrey Smirnov
->
-> [spu3] lkml.kernel.org/r/20180717040651.641-1-andrew.smirnov@gmail.com
->
->  arch/arm/boot/dts/Makefile           |   1 +
->  arch/arm/boot/dts/vf610-zii-cfu1.dts | 307 +++++++++++++++++++++++++++
->  2 files changed, 308 insertions(+)
->  create mode 100644 arch/arm/boot/dts/vf610-zii-cfu1.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index e331b2c16539..85797819fdd9 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -569,6 +569,7 @@ dtb-$(CONFIG_SOC_VF610) += \
->         vf610-cosmic.dtb \
->         vf610m4-cosmic.dtb \
->         vf610-twr.dtb \
-> +       vf610-zii-cfu1.dtb \
->         vf610-zii-dev-rev-b.dtb \
+On 18-07-18, 20:20, Paul Cercueil wrote:
+> Hi,
+> 
+> This is the version 2 of my jz4780-dma driver update patchset.
 
+why is this not send to dmaengine mailing list? Please post on that as
+well
 
-Tested-by: Chris Healy <cphealy@gmail.com>
+> 
+> Changelog:
+> 
+> - All documentation changes have been moved to one single patch [01/17].
+> 
+> - The new patch [02/17] enforces that we're probed from devicetree.
+> 
+> - The driver will not fail if only one memory resource has been supplied
+>   in the devicetree, to keep compatibility with old devicetree files.
+> 
+> - A new patch [17/17] adds a devicetree node for the DMA driver in the
+>   JZ4740 DTS file.
+> 
+> - Some other small changes; see per-file changelog.
+> 
+> Regards,
+> -Paul
+
+-- 
+~Vinod
