@@ -1,7 +1,7 @@
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v2 10/10] dts: juno: Update coresight bindings for hw port
-Date: Thu, 19 Jul 2018 11:55:14 +0100
-Message-ID: <1531997715-6767-11-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH v2 10/10] dts: juno: Update coresight bindings
+Date: Thu, 19 Jul 2018 11:55:15 +0100
+Message-ID: <1531997715-6767-12-git-send-email-suzuki.poulose@arm.com>
 References: <1531997715-6767-1-git-send-email-suzuki.poulose@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1531997715-6767-1-git-send-email-suzuki.poulose@arm.com>
@@ -10,7 +10,7 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org, robh@kernel.org, mathieu.poirier@linaro.org, sudeep.holla@arm.com, frowand.list@gmail.com, devicetree@vger.kernel.org, mark.rutland@arm.com, matt.sealey@arm.com, charles.garcia-tobin@arm.com, coresight@lists.linaro.org, john.horley@arm.com, mike.leach@linaro.org, Suzuki K Poulose <suzuki.poulose@arm.com>, Liviu Dudau <liviu.dudau@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Switch to updated coresight bindings for hw ports.
+Switch to updated coresight bindings for Juno platforms.
 
 Cc: Sudeep Holla <sudeep.holla@arm.com>
 Cc: Liviu Dudau <liviu.dudau@arm.com>
