@@ -1,36 +1,46 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: vf610: Add ZII CFU1 board
-Date: Thu, 19 Jul 2018 09:45:56 -0300
-Message-ID: <CAOMZO5D1rKH+_wuJrhD6Cr4psQwnk7CHVWm6qi0Jv7vnTiazUQ@mail.gmail.com>
-References: <20180719005941.10458-1-andrew.smirnov@gmail.com>
+From: <patrice.chotard@st.com>
+Subject: [U-BOOT internal] ARM: dts: stm32: Add clk-lse node's label on
+ stm32f429
+Date: Thu, 19 Jul 2018 15:10:42 +0200
+Message-ID: <1532005842-3264-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180719005941.10458-1-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, linux-kernel <linux-kernel@vger.kernel.org>, Chris Healy <cphealy@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alexandre.torgue@st.com
+Cc: Patrice Chotard <patrice.chotard@st.com>, mcoquelin.stm32@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrey,
+From: Patrice Chotard <patrice.chotard@st.com>
 
-On Wed, Jul 18, 2018 at 9:59 PM, Andrey Smirnov
-<andrew.smirnov@gmail.com> wrote:
+Add missing clk_lse label for node clk-lse.
 
-> +/ {
-> +       model = "ZII VF610 CFU1 Board";
-> +       compatible = "zii,vf610cfu1", "zii,vf610dev", "fsl,vf610";
-> +
-> +       chosen {
-> +               stdout-path = &uart0;
-> +       };
-> +
-> +       memory {
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+---
+ arch/arm/boot/dts/stm32f429.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-memory@80000000 to avoid dtc warnings with W=1, please.
-
-Please make sure that this patch does not introduce any W=1 warning.
-
-With this fixed:
-
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index ede77e0f1c41..64278e81bc08 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -58,7 +58,7 @@
+ 			clock-frequency = <0>;
+ 		};
+ 
+-		clk-lse {
++		clk_lse: clk-lse {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <32768>;
+-- 
+1.9.1
