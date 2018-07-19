@@ -1,47 +1,46 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH RESEND 02/15] ASoC: meson: add axg
-	fifo	base driver
-Date: Thu, 19 Jul 2018 09:55:53 +0200
-Message-ID: <1531986953.26720.21.camel@baylibre.com>
-References: <20180717154304.9973-1-jbrunet@baylibre.com>
- <20180717154304.9973-3-jbrunet@baylibre.com>
- <20180718115054.GI5700@sirena.org.uk> <s5ha7qoblk0.wl-tiwai@suse.de>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 17/17] MIPS: JZ4740: DTS: Add DMA nodes
+Date: Thu, 19 Jul 2018 11:03:10 +0300
+Message-ID: <d4a95b78-0fdf-a341-3fe9-91cb94ab164b@cogentembedded.com>
+References: <20180718182023.8182-1-paul@crapouillou.net>
+ <20180718182023.8182-18-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <s5ha7qoblk0.wl-tiwai@suse.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180718182023.8182-18-paul@crapouillou.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-07-18 at 17:39 +0200, Takashi Iwai wrote:
-> On Wed, 18 Jul 2018 13:50:54 +0200,
-> Mark Brown wrote:
-> > 
-> > On Tue, Jul 17, 2018 at 05:42:51PM +0200, Jerome Brunet wrote:
-> > 
-> > > +	return !status ? IRQ_NONE : IRQ_HANDLED;
-> > 
-> > Please just write normal conditional statements, it makes things a lot
-> > easier to read (the ! isn't helping either here).
+On 7/18/2018 9:20 PM, Paul Cercueil wrote:
 
-Indeed. I'll correct this in a follow up patch
-
+> Add the devicetree nodes for the DMA core of the JZ4740 SoC, disabled
+> by default, as currently there are no clients for the DMA driver
+> (until the MMC driver and/or others get a devicetree node).
 > 
-> ... and there is the standard IRQ_RETVAL() macro for this purpose.
-
-I was not aware of it. Thanks for the tip Takashi
-
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Tested-by: Mathieu Malaterre <malat@debian.org>
+> ---
+>   arch/mips/boot/dts/ingenic/jz4740.dtsi | 15 +++++++++++++++
+>   1 file changed, 15 insertions(+)
 > 
+>   v2: New patch in this series
 > 
-> Takashi
+> diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+> index 26c6b561d6f7..47d93f2597af 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+> @@ -154,6 +154,21 @@
+>   		clock-names = "baud", "module";
+>   	};
+>   
+> +	dmac: dma@13020000 {
+
+    The node must be named "dma-controller@13020000" according to the DT spec.
+
+[...]
+
+MBR, Sergei
