@@ -1,48 +1,33 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [DISCUSSION] spi multi chipselect support
-Date: Thu, 19 Jul 2018 14:25:12 +0100
-Message-ID: <20180719132512.GA27938@sirena.org.uk>
-References: <20180718163530.zsa5md3huz3dnotb@earth.universe>
- <c497b0e2-c663-fa29-dabc-6dd5ca26e0a4@metafoo.de>
+From: Patrice CHOTARD <patrice.chotard@st.com>
+Subject: Re: [U-BOOT internal] ARM: dts: stm32: Add clk-lse node's label on
+ stm32f429
+Date: Thu, 19 Jul 2018 13:27:56 +0000
+Message-ID: <a4472301-1394-3680-079d-b7eab8a6a917@st.com>
+References: <1532005842-3264-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c497b0e2-c663-fa29-dabc-6dd5ca26e0a4@metafoo.de>
+In-Reply-To: <1532005842-3264-1-git-send-email-patrice.chotard@st.com>
+Content-Language: en-US
+Content-ID: <BA478747DF938A42BFA53932E3DBD9CE@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>
+Cc: "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
---liOOAslEiF7prFVr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Jul 18, 2018 at 07:19:19PM +0200, Lars-Peter Clausen wrote:
-
-> My preferred solution would to have something like
-> i2c_new_secondary_device(), but for SPI. This way the driver that binds to
-> the compatible string can allocate devices for additional chip selects as
-> necessary. Also make use of the reg-names property the same way as in I2C.
-
-Yes, that's at least the most consistent way forwards if nothing else.
-I don't really have any more appealing ideas anyway.
-
---liOOAslEiF7prFVr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltQkTUACgkQJNaLcl1U
-h9BUkAf/YnEw9f7VUM63wKafD/gmY55xm7M0gWEZi4Mm18LD1AfLpyNVO3YWB1Vq
-G+GPeacLi0g6Mb1Vu7kkAV67Ox3IjATYxADuxhGksQvSTszyCV8v0DY2nTlozSb+
-Z20YGSnh8zjFCPENA3tBAsj56HghEumfXlWmFL06/XNpmxcG7UrVMtkLmeglavNf
-GZh+sNKlC363Obm8eOWVkXLuSB+JeHHexyN6q40tvT1BrFbDkYktGNJJ93F7cM07
-nq5uluV/EhPnJCcSo0zoqj3gtwpDGfJpYEe9b4t63qoMaB6wAhG+dR3mYmm2fZd8
-IONpmBEc0tP8PQHrh9jTQwy59lRDAQ==
-=YmQv
------END PGP SIGNATURE-----
-
---liOOAslEiF7prFVr--
+U29ycnksIGRvbid0IHRha2UgY2FyZSBhYm91dCB0aGlzIHBhdGNoLCBpdCB3YXMgc2VuZCB1c2lu
+ZyB0aGUgd3Jvbmcgc2NyaXB0DQoNClBhdHJpY2UNCg0KT24gMDcvMTkvMjAxOCAwMzoxMCBQTSwg
+cGF0cmljZS5jaG90YXJkQHN0LmNvbSB3cm90ZToNCj4gRnJvbTogUGF0cmljZSBDaG90YXJkIDxw
+YXRyaWNlLmNob3RhcmRAc3QuY29tPg0KPiANCj4gQWRkIG1pc3NpbmcgY2xrX2xzZSBsYWJlbCBm
+b3Igbm9kZSBjbGstbHNlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogUGF0cmljZSBDaG90YXJkIDxw
+YXRyaWNlLmNob3RhcmRAc3QuY29tPg0KPiAtLS0NCj4gICBhcmNoL2FybS9ib290L2R0cy9zdG0z
+MmY0MjkuZHRzaSB8IDIgKy0NCj4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEg
+ZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdG0zMmY0
+MjkuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyZjQyOS5kdHNpDQo+IGluZGV4IGVkZTc3
+ZTBmMWM0MS4uNjQyNzhlODFiYzA4IDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9z
+dG0zMmY0MjkuZHRzaQ0KPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zdG0zMmY0MjkuZHRzaQ0K
+PiBAQCAtNTgsNyArNTgsNyBAQA0KPiAgIAkJCWNsb2NrLWZyZXF1ZW5jeSA9IDwwPjsNCj4gICAJ
+CX07DQo+ICAgDQo+IC0JCWNsay1sc2Ugew0KPiArCQljbGtfbHNlOiBjbGstbHNlIHsNCj4gICAJ
+CQkjY2xvY2stY2VsbHMgPSA8MD47DQo+ICAgCQkJY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7
+DQo+ICAgCQkJY2xvY2stZnJlcXVlbmN5ID0gPDMyNzY4PjsNCj4g
