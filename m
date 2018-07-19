@@ -1,113 +1,90 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v2 2/4] pci: dwc: pci-dra7xx: Enable errata i870 for both
- EP and RC mode
-Date: Thu, 19 Jul 2018 21:29:02 +0530
-Message-ID: <c9d953f8-bc60-5243-bd11-a3a053c08340@ti.com>
-References: <20180627122919.23926-1-vigneshr@ti.com>
- <20180627122919.23926-3-vigneshr@ti.com> <20180718110250.GA21589@red-moon>
- <b7f1cef7-b0d8-733a-c450-163299d281d0@ti.com>
- <20180719111556.GB9213@e107981-ln.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [RFT 00/10] pinctrl: samsung: Remove ugly hack for sharing eint_wakeup_mask
+Date: Thu, 19 Jul 2018 18:00:40 +0200
+Message-ID: <20180719160050.22566-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180719111556.GB9213@e107981-ln.cambridge.arm.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh+dt@kernel.org>, KISHON VIJAY ABRAHAM <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+To: Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Alim Akhtar <alim.akhtar@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi All,
+
+Tests
+=====
+This is both request for comments and requests for tests. Only basic
+tests were done, including suspend to RAM on Odroid U3 (Exynos4412)
+with max7768 RTC wakeup. Please kindly test it with devices capable of
+suspending and resuming. I am mostly thinking about S5Pv210-based (Aria),
+Trats, Trats2 and TM2 (Exynos5433). Existing platforms should not be
+broken however changing external interrupt wakeup mask was not done
+on Exynos5433.
 
 
-On Thursday 19 July 2018 04:45 PM, Lorenzo Pieralisi wrote:
-> On Thu, Jul 19, 2018 at 04:04:34PM +0530, Vignesh R wrote:
->> Hi Lorenzo,
->>
-[...]
->>>> +	ret = dra7xx_pcie_unaligned_memaccess(dev);
->>>> +	if (ret)
->>>> +		dev_err(dev, "WA for Errata i870 not appplied. Update DT\n");
->>>
->>> Hi Vignesh,
->>>
->>> Nit: s/appplied/applied
->>>
->>
->> Oops, let me know if you want me to resend with this fixed.
-> 
-> I can fix it, no problem but see below.
-> 
->>> Two questions:
->>>
->>> - Current code applies the unaligned_memaccess() workaround for all
->>>   compatible variants. This is fine for current controllers (since
->>>   they are all affected), the code path above will have to be
->>>   reworked if there is any other compatible IP re-using the driver
->>>   that does not require the workaround.
->>
->> There are no compatible IPs that don't require this workaround. Also, I
->> don't see this IP being re-used in future. If you insist, I can add a
->> errata flag
-> 
-> I do not insist, I just pointed this out ;-)
-> 
->>> - How do you want this series to go upstream ? If it goes via arm-soc,
->>>   which I think it should, here is my ACK on this patch:
->>>
->> Patch 1 and 2(dt bindings update and driver patch) can go in via PCI
->> tree. And DT changes(patch 3 and 4) can be picked up by Tony via
->> omap/arm-soc tree. They are mostly independent and should not cause any
->> problems. Does that sound good?
-> 
-> It should be fine but technically as soon as patch (2) is applied we
-> would have a regression if patches (3) and (4) are applied separately.
-> 
+Description
+===========
+The Exynos/S5Pv210 machine suspend code needs to write the external
+interrupt mask during suspend.  The mask is controlled by pin controller
+driver: the exynos_wkup_irq_set_wake() in IRQ chip for these wakeup
+interrupts.
 
-Right, although not a regression, I see your point. It would be good to
-merge patch 3 and 4 before patch 2.
+Therefore pinctrl driver code exposed an exynos_get_eint_wake_mask()
+function which was later used as an extern in machine code.
 
-Tony,
-Let me know if you are okay with taking this series via omap tree. I can
-resend re-ordering patch 2 to come at the end of the series.
+This is quite ugly way of combining driver and machine code,
+not portable triggering Sparse and GCC warnings.
 
-Regards
-Vignesh
 
-> 
->>> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
->>>
->>
->> Thanks!
->>
->>> Please let me know if I can drop this series from the PCI patchwork.
->>>
->>> Thanks,
->>> Lorenzo
->>>
->>>> +
->>>>  	switch (mode) {
->>>>  	case DW_PCIE_RC_TYPE:
->>>>  		if (!IS_ENABLED(CONFIG_PCI_DRA7XX_HOST)) {
->>>> @@ -717,10 +721,6 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
->>>>  		dra7xx_pcie_writel(dra7xx, PCIECTRL_TI_CONF_DEVICE_TYPE,
->>>>  				   DEVICE_TYPE_EP);
->>>>  
->>>> -		ret = dra7xx_pcie_ep_unaligned_memaccess(dev);
->>>> -		if (ret)
->>>> -			goto err_gpio;
->>>> -
->>>>  		ret = dra7xx_add_pcie_ep(dra7xx, pdev);
->>>>  		if (ret < 0)
->>>>  			goto err_gpio;
->>>> -- 
->>>> 2.18.0
->>>>
->>
->> -- 
->> Regards
->> Vignesh
+This might break suspend capability S5Pv210 on with older DTBs (thus
+breaks DTB compatibility), however:
+1. just "might" because in case of using older DTB, the wakeup mask
+   will not be changed during suspend and default reset value (all
+   interrupts non-masked) should work,
+2. mainline support for S5Pv210 with DTB is limited and suspend
+   to RAM already might be broken.
+
+
+Dependencies
+============
+1. The first seven patches should be taken through one tree,
+   preferably samsung-pinctrl,
+2. The DTS patch (7/10) for S5Pv210 should go into next cycle,
+3. The remaining patches (8-10) should go after all previous,
+   so probably another release cycle.
+
+
+Best regards,
+Krzysztof
+
+
+Krzysztof Kozlowski (10):
+  pinctrl: samsung: Define suspend and resume callbacks for all banks
+    and SoCs
+  pinctrl: samsung: Document suspend and resume members
+  pinctrl: samsung: Document hidden requirement about one external
+    wakeup
+  pinctrl: samsung: Add dedicated compatible for S5Pv210 wakeup
+    interrupts
+  ARM: exynos: Define EINT_WAKEUP_MASK registers for S5Pv210 and
+    Exynos5433
+  pinctrl: samsung: Write external interrupt mask
+  ARM: dts: s5pv210: Switch to S5Pv210 specific pinctrl wakeup
+    compatible
+  ARM: s5pv210: Remove legacy setting of external wakeup interrupts
+  ARM: exynos: Remove legacy setting of external wakeup interrupts
+  pinctrl: samsung: Remove legacy API for handling external wakeup
+    interrupts mask
+
+ .../bindings/pinctrl/samsung-pinctrl.txt           | 11 ++-
+ arch/arm/boot/dts/s5pv210.dtsi                     |  2 +-
+ arch/arm/mach-exynos/common.h                      |  2 -
+ arch/arm/mach-exynos/suspend.c                     | 16 +++--
+ arch/arm/mach-s5pv210/common.h                     |  1 -
+ arch/arm/mach-s5pv210/pm.c                         | 16 +++--
+ drivers/pinctrl/samsung/pinctrl-exynos-arm.c       | 16 +++++
+ drivers/pinctrl/samsung/pinctrl-exynos.c           | 78 +++++++++++++++++++---
+ drivers/pinctrl/samsung/pinctrl-samsung.h          | 11 +++
+ include/linux/soc/samsung/exynos-regs-pmu.h        |  8 ++-
+ 10 files changed, 136 insertions(+), 25 deletions(-)
 
 -- 
-Regards
-Vignesh
+2.14.1
