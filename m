@@ -1,15 +1,15 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v10 00/10] drivers: Introduce firmware dnd clock river for
- ZynqMP core
-Date: Thu, 19 Jul 2018 12:33:29 +0200
-Message-ID: <2c3aad45-37ce-2446-4b90-bddb477286ed@xilinx.com>
-References: <1531857547-16652-1-git-send-email-jollys@xilinx.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v2] dt-bindings: marvell: Add documentation for the Armada
+ 3700 AVS binding
+Date: Thu, 19 Jul 2018 12:47:10 +0200
+Message-ID: <2240650.k8NjxS09G1@aspire.rjw.lan>
+References: <20180704132524.23640-1-gregory.clement@bootlin.com>
+ <20180711155153.GA13702@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1531857547-16652-1-git-send-email-jollys@xilinx.com>
-Content-Language: en-US
+In-Reply-To: <20180711155153.GA13702@rob-hp-laptop>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,127 +19,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jolly Shah <jolly.shah@xilinx.com>, ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
-Cc: devicetree@vger.kernel.org, rajanv@xilinx.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jolly Shah <jollys@xilinx.com>
+To: Rob Herring <robh@kernel.org>, Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Viresh Kumar <viresh.kumar@linaro.org>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Ken Ma <make@marvell.com>, Victor Gu <xigu@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?ISO-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>, Neta Zur Hershkovits <neta@marvell.com>, Hua Jing <jinghua@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 17.7.2018 21:58, Jolly Shah wrote:
-> This patchset is adding communication layer with firmware and clock driver who uses 
-> those APIs to communicate with PMU.
-> Firmware driver provides an interface to firmware APIs.Interface APIs can be used by any driver to communicate to
-> PMUFW(Platform Management Unit). All requests go through ATF.
-> This patchset adds CCF compliant clock driver for ZynqMP.Clock driver queries supported clock information from 
-> firmware and regiters pll and output clocks with CCF.
-> v10:
->  - Incorporated code review comments from v9 patch series. Discussed below:
-> 	https://patchwork.kernel.org/patch/10478575/
-> 	https://patchwork.kernel.org/patch/10478457/
-> 	https://patchwork.kernel.org/patch/10478461/
-> 	https://patchwork.kernel.org/patch/10478463/
-> 	
-> v9:
->  - Fixed minor typo comments
+On Wednesday, July 11, 2018 5:51:53 PM CEST Rob Herring wrote:
+> On Wed, Jul 04, 2018 at 03:25:24PM +0200, Gregory CLEMENT wrote:
+> > Extend the documentation of the Armada 37xx SoC with the Adaptive Voltage
+> > Scaling (AVS) registers.
+> > 
+> > Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > ---
+> > Changelog:
+> > v1 -> v2:
+> >  - Add Acked-by: from Viresh Kumar
+> >  - Add the dt mailing list in copy
+> > 
+> >  .../bindings/arm/marvell/armada-37xx.txt         | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
 > 
-> v8:
->  - Corrected typo in clk Kconfig
->  
-> v7:
->  - Removed xilinx specific clock debugfs API support
->  - Added reviewed-by tags for FW and clock bindings
->  - Updated clock node name to clock-controller
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > 
-> v6:
->  - Broke patch series to have base FW driver and Clock driver user
->  - Incorporated code review comments from last FW and Clock driver patch series. Discussed below:
-> 	https://patchwork.kernel.org/patch/10230759/
-> 	https://patchwork.kernel.org/patch/10250047/
-> 
-> v5:
->  - Added ATF version check support
->  - Updated some functions to be static 
->  - Minor function name corrections
-> 
-> v4:
->  - Changed clock setrate/getrate API prototype to support 64 bit rate
->  - Defined macros for get_node_status return values
->  - Moved DT node as a child of firmware
->  - Changed debugfs APIs to return data to debugfs buffer instead of dumping to kernel log
->  - Minor changes to incorporate other review comments from v3 patch series
-> 
-> v3:
->  - added some fixes to firmware-ggs.c
->  - updated pinmux get/set function argument names to specify function id instead of node id
->  - added new pinctrl query macros
->  - incorporated review comments from v2 patch series
-> 
-> v2:
->  - change SPDX-License-Identifier license text style
->  - split patch into multiple patches
->  - Updated copyrights
->  - Added ABI documentation
->  - incorporated logical review comments from previuos patch. Discussed below:
-> 	https://patchwork.kernel.org/patch/10150665/
-> 	
-> Jolly Shah (1):
->   drivers: clk: Add ZynqMP clock driver
-> 
-> Rajan Vaja (9):
->   dt-bindings: firmware: Add bindings for ZynqMP firmware
->   firmware: xilinx: Add Zynqmp firmware driver
->   firmware: xilinx: Add zynqmp IOCTL API for device control
->   firmware: xilinx: Add query data API
->   firmware: xilinx: Add clock APIs
->   firmware: xilinx: Add debugfs interface
->   firmware: xilinx: Add debugfs for IOCTL API
->   firmware: xilinx: Add debugfs for query data API
->   dt-bindings: clock: Add bindings for ZynqMP clock driver
-> 
->  .../firmware/xilinx/xlnx,zynqmp-firmware.txt       |  82 +++
->  arch/arm64/Kconfig.platforms                       |   1 +
->  drivers/clk/Kconfig                                |   1 +
->  drivers/clk/Makefile                               |   1 +
->  drivers/clk/zynqmp/Kconfig                         |  10 +
->  drivers/clk/zynqmp/Makefile                        |   4 +
->  drivers/clk/zynqmp/clk-gate-zynqmp.c               | 144 +++++
->  drivers/clk/zynqmp/clk-mux-zynqmp.c                | 141 ++++
->  drivers/clk/zynqmp/clk-zynqmp.h                    |  68 ++
->  drivers/clk/zynqmp/clkc.c                          | 719 +++++++++++++++++++++
->  drivers/clk/zynqmp/divider.c                       | 217 +++++++
->  drivers/clk/zynqmp/pll.c                           | 335 ++++++++++
->  drivers/firmware/Kconfig                           |   1 +
->  drivers/firmware/Makefile                          |   1 +
->  drivers/firmware/xilinx/Kconfig                    |  23 +
->  drivers/firmware/xilinx/Makefile                   |   5 +
->  drivers/firmware/xilinx/zynqmp-debug.c             | 249 +++++++
->  drivers/firmware/xilinx/zynqmp-debug.h             |  22 +
->  drivers/firmware/xilinx/zynqmp.c                   | 562 ++++++++++++++++
->  include/dt-bindings/clock/xlnx,zynqmp-clk.h        | 116 ++++
->  include/linux/firmware/xlnx-zynqmp.h               | 116 ++++
->  21 files changed, 2818 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
->  create mode 100644 drivers/clk/zynqmp/Kconfig
->  create mode 100644 drivers/clk/zynqmp/Makefile
->  create mode 100644 drivers/clk/zynqmp/clk-gate-zynqmp.c
->  create mode 100644 drivers/clk/zynqmp/clk-mux-zynqmp.c
->  create mode 100644 drivers/clk/zynqmp/clk-zynqmp.h
->  create mode 100644 drivers/clk/zynqmp/clkc.c
->  create mode 100644 drivers/clk/zynqmp/divider.c
->  create mode 100644 drivers/clk/zynqmp/pll.c
->  create mode 100644 drivers/firmware/xilinx/Kconfig
->  create mode 100644 drivers/firmware/xilinx/Makefile
->  create mode 100644 drivers/firmware/xilinx/zynqmp-debug.c
->  create mode 100644 drivers/firmware/xilinx/zynqmp-debug.h
->  create mode 100644 drivers/firmware/xilinx/zynqmp.c
->  create mode 100644 include/dt-bindings/clock/xlnx,zynqmp-clk.h
->  create mode 100644 include/linux/firmware/xlnx-zynqmp.h
 > 
 
-It looks pretty calm over the last several series that's why when I get
-an answer from Stephen or Mike I will take this series via my tree and
-arm-soc tree.
-
-I have applied 01-08 here
- https://github.com/Xilinx/linux-xlnx/commits/zynqmp/soc
-
-Thanks,
-Michal
+Patch applied, thanks!
