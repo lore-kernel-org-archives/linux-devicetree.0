@@ -1,43 +1,36 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH v2 00/17] JZ4780 DMA patchset v2
-Date: Thu, 19 Jul 2018 09:26:49 +0530
-Message-ID: <20180719035649.GI3219@vkoul-mobl>
-References: <20180718182023.8182-1-paul@crapouillou.net>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v2 0/3] Allwinner H6 MMC support
+Date: Thu, 19 Jul 2018 12:28:07 +0800
+Message-ID: <20180719042810.6546-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180718182023.8182-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBDFHYDNAKGQEIQPO3NA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18-07-18, 20:20, Paul Cercueil wrote:
-> Hi,
-> 
-> This is the version 2 of my jz4780-dma driver update patchset.
+This patchset adds support for MMC controller in the Allwinner H6 SoC.
 
-why is this not send to dmaengine mailing list? Please post on that as
-well
+Its function is a superset of the A64 MMC controller's, so it currently
+use A64 compatible as a fallback.
 
-> 
-> Changelog:
-> 
-> - All documentation changes have been moved to one single patch [01/17].
-> 
-> - The new patch [02/17] enforces that we're probed from devicetree.
-> 
-> - The driver will not fail if only one memory resource has been supplied
->   in the devicetree, to keep compatibility with old devicetree files.
-> 
-> - A new patch [17/17] adds a devicetree node for the DMA driver in the
->   JZ4740 DTS file.
-> 
-> - Some other small changes; see per-file changelog.
-> 
-> Regards,
-> -Paul
+Icenowy Zheng (3):
+  dt-binding: mmc: sunxi: add H6 compatible (with A64 fallback)
+  arm64: allwinner: h6: add device tree nodes for MMC controllers
+  arm64: allwinner: h6: enable MMC0/2 on Pine H64
+
+ .../devicetree/bindings/mmc/sunxi-mmc.txt     |  2 +
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts | 18 ++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 59 +++++++++++++++++++
+ 3 files changed, 79 insertions(+)
 
 -- 
-~Vinod
+2.17.1
