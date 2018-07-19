@@ -1,103 +1,139 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: [PATCH v2] arm64: dts: msm8916: drop legacy suffix for clocks used by MSM DRM driver
-Date: Thu, 19 Jul 2018 13:12:34 +0200
-Message-ID: <20180719111235.22421-1-niklas.cassel@linaro.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v2 2/4] pci: dwc: pci-dra7xx: Enable errata i870 for both
+ EP and RC mode
+Date: Thu, 19 Jul 2018 12:15:56 +0100
+Message-ID: <20180719111556.GB9213@e107981-ln.cambridge.arm.com>
+References: <20180627122919.23926-1-vigneshr@ti.com>
+ <20180627122919.23926-3-vigneshr@ti.com>
+ <20180718110250.GA21589@red-moon>
+ <b7f1cef7-b0d8-733a-c450-163299d281d0@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <b7f1cef7-b0d8-733a-c450-163299d281d0@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, KISHON VIJAY ABRAHAM <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Drop legacy suffix for clocks used by MSM DRM driver.
+On Thu, Jul 19, 2018 at 04:04:34PM +0530, Vignesh R wrote:
+> Hi Lorenzo,
+> 
+> On Wednesday 18 July 2018 04:32 PM, Lorenzo Pieralisi wrote:
+> > On Wed, Jun 27, 2018 at 05:59:17PM +0530, Vignesh R wrote:
+> >> Errata i870 is applicable in both EP and RC mode. Therefore rename
+> >> function dra7xx_pcie_ep_unaligned_memaccess(), that implements errata
+> >> workaround, to dra7xx_pcie_unaligned_memaccess() and call it from a
+> >> common place. So, that errata workaround is applied for both modes of
+> >> operation.
+> >>
+> >> Reported-by: Chris Welch <Chris.Welch@viavisolutions.com>
+> >> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> >> ---
+> >>  drivers/pci/controller/dwc/pci-dra7xx.c | 12 ++++++------
+> >>  1 file changed, 6 insertions(+), 6 deletions(-)
+> >>
+> >> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> >> index 345aab56ce8b..95d9076e3fde 100644
+> >> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> >> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> >> @@ -542,7 +542,7 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
+> >>  };
+> >>  
+> >>  /*
+> >> - * dra7xx_pcie_ep_unaligned_memaccess: workaround for AM572x/AM571x Errata i870
+> >> + * dra7xx_pcie_unaligned_memaccess: workaround for AM572x/AM571x Errata i870
+> >>   * @dra7xx: the dra7xx device where the workaround should be applied
+> >>   *
+> >>   * Access to the PCIe slave port that are not 32-bit aligned will result
+> >> @@ -552,7 +552,7 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
+> >>   *
+> >>   * To avoid this issue set PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE to 1.
+> >>   */
+> >> -static int dra7xx_pcie_ep_unaligned_memaccess(struct device *dev)
+> >> +static int dra7xx_pcie_unaligned_memaccess(struct device *dev)
+> >>  {
+> >>  	int ret;
+> >>  	struct device_node *np = dev->of_node;
+> >> @@ -695,6 +695,10 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+> >>  	if (dra7xx->link_gen < 0 || dra7xx->link_gen > 2)
+> >>  		dra7xx->link_gen = 2;
+> >>  
+> >> +	ret = dra7xx_pcie_unaligned_memaccess(dev);
+> >> +	if (ret)
+> >> +		dev_err(dev, "WA for Errata i870 not appplied. Update DT\n");
+> > 
+> > Hi Vignesh,
+> > 
+> > Nit: s/appplied/applied
+> > 
+> 
+> Oops, let me know if you want me to resend with this fixed.
 
-The _clk suffix has been deprecated since commit 20c3bb80235 ("drm/msm:
-drop _clk suffix from clk names").
+I can fix it, no problem but see below.
 
-Fixes the following warnings during boot:
+> > Two questions:
+> > 
+> > - Current code applies the unaligned_memaccess() workaround for all
+> >   compatible variants. This is fine for current controllers (since
+> >   they are all affected), the code path above will have to be
+> >   reworked if there is any other compatible IP re-using the driver
+> >   that does not require the workaround.
+> 
+> There are no compatible IPs that don't require this workaround. Also, I
+> don't see this IP being re-used in future. If you insist, I can add a
+> errata flag
 
-msm_dsi_phy 1a98300.dsi-phy: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
-msm 1a00000.mdss: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
-msm 1a00000.mdss: Using legacy clk name binding.  Use "bus" instead of "bus_clk"
-msm 1a00000.mdss: Using legacy clk name binding.  Use "vsync" instead of "vsync_clk"
-msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "bus" instead of "bus_clk"
-msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
-msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "core" instead of "core_clk"
-msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "vsync" instead of "vsync_clk"
-msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "mdp_core" instead of "mdp_core_clk"
-msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
-msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "bus" instead of "bus_clk"
-msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "byte" instead of "byte_clk"
-msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "pixel" instead of "pixel_clk"
-msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "core" instead of "core_clk"
+I do not insist, I just pointed this out ;-)
 
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Reviewed-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
----
-Changes since v1:
--Improved commit message.
+> > - How do you want this series to go upstream ? If it goes via arm-soc,
+> >   which I think it should, here is my ACK on this patch:
+> > 
+> Patch 1 and 2(dt bindings update and driver patch) can go in via PCI
+> tree. And DT changes(patch 3 and 4) can be picked up by Tony via
+> omap/arm-soc tree. They are mostly independent and should not cause any
+> problems. Does that sound good?
 
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 28 +++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+It should be fine but technically as soon as patch (2) is applied we
+would have a regression if patches (3) and (4) are applied separately.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index c2625d15a8c0..7b32b8990d62 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -858,9 +858,9 @@
- 			clocks = <&gcc GCC_MDSS_AHB_CLK>,
- 				 <&gcc GCC_MDSS_AXI_CLK>,
- 				 <&gcc GCC_MDSS_VSYNC_CLK>;
--			clock-names = "iface_clk",
--				      "bus_clk",
--				      "vsync_clk";
-+			clock-names = "iface",
-+				      "bus",
-+				      "vsync";
- 
- 			interrupts = <0 72 IRQ_TYPE_LEVEL_HIGH>;
- 
-@@ -883,10 +883,10 @@
- 					 <&gcc GCC_MDSS_AXI_CLK>,
- 					 <&gcc GCC_MDSS_MDP_CLK>,
- 					 <&gcc GCC_MDSS_VSYNC_CLK>;
--				clock-names = "iface_clk",
--					      "bus_clk",
--					      "core_clk",
--					      "vsync_clk";
-+				clock-names = "iface",
-+					      "bus",
-+					      "core",
-+					      "vsync";
- 
- 				iommus = <&apps_iommu 4>;
- 
-@@ -922,12 +922,12 @@
- 					 <&gcc GCC_MDSS_BYTE0_CLK>,
- 					 <&gcc GCC_MDSS_PCLK0_CLK>,
- 					 <&gcc GCC_MDSS_ESC0_CLK>;
--				clock-names = "mdp_core_clk",
--					      "iface_clk",
--					      "bus_clk",
--					      "byte_clk",
--					      "pixel_clk",
--					      "core_clk";
-+				clock-names = "mdp_core",
-+					      "iface",
-+					      "bus",
-+					      "byte",
-+					      "pixel",
-+					      "core";
- 				phys = <&dsi_phy0>;
- 				phy-names = "dsi-phy";
- 
-@@ -963,7 +963,7 @@
- 				#phy-cells = <0>;
- 
- 				clocks = <&gcc GCC_MDSS_AHB_CLK>;
--				clock-names = "iface_clk";
-+				clock-names = "iface";
- 			};
- 		};
- 
--- 
-2.17.1
+You could re-order the series and send everything via arm-soc.
+
+It is not such a big deal, your choice, please let me know.
+
+Thanks,
+Lorenzo
+
+> > Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > 
+> 
+> Thanks!
+> 
+> > Please let me know if I can drop this series from the PCI patchwork.
+> > 
+> > Thanks,
+> > Lorenzo
+> > 
+> >> +
+> >>  	switch (mode) {
+> >>  	case DW_PCIE_RC_TYPE:
+> >>  		if (!IS_ENABLED(CONFIG_PCI_DRA7XX_HOST)) {
+> >> @@ -717,10 +721,6 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+> >>  		dra7xx_pcie_writel(dra7xx, PCIECTRL_TI_CONF_DEVICE_TYPE,
+> >>  				   DEVICE_TYPE_EP);
+> >>  
+> >> -		ret = dra7xx_pcie_ep_unaligned_memaccess(dev);
+> >> -		if (ret)
+> >> -			goto err_gpio;
+> >> -
+> >>  		ret = dra7xx_add_pcie_ep(dra7xx, pdev);
+> >>  		if (ret < 0)
+> >>  			goto err_gpio;
+> >> -- 
+> >> 2.18.0
+> >>
+> 
+> -- 
+> Regards
+> Vignesh
