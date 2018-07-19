@@ -1,93 +1,84 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH] ARM: dts: imx7d: add missing OPP property for cpu0
-Date: Thu, 19 Jul 2018 08:29:58 +0000
-Message-ID: <AM3PR04MB1315A99663BCB53A09733015F5520@AM3PR04MB1315.eurprd04.prod.outlook.com>
-References: <1531896889-21377-1-git-send-email-Anson.Huang@nxp.com>
- <20180719032002.GT4576@dragon>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 2/5] dt-bindings: arm: amlogic: Add support for GXL
+ S905W and the P281 board
+Date: Thu, 19 Jul 2018 10:21:21 +0200
+Message-ID: <d265652f-2d49-35af-1ac8-ff9231dcf332@baylibre.com>
+References: <20180714193725.17837-1-martin.blumenstingl@googlemail.com>
+ <20180714193725.17837-3-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180719032002.GT4576@dragon>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180714193725.17837-3-martin.blumenstingl@googlemail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com
+Cc: mark.rutland@arm.com, yixun.lan@amlogic.com, robh+dt@kernel.org, carlo@caione.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-Hi, Shawn
+Hi Martin,
 
-Anson Huang
-Best Regards!
+On 14/07/2018 21:37, Martin Blumenstingl wrote:
+> S905W SoC is another SoC from the GXL family. It is a cost-reduced
+> version of the S905X SoC. The following differences are known:
+> - S905W supports HDMI resolutions up to 4k@30fps (while S905X support
+>   resolutions up to 4k@60fps)
+> - the built-in video decoders of S905W decode up to 4k@30fps (while
+>   S905X supports decoding up to 4k@60fps)
+> - CPU speed on S905W is limited to 1.2GHz (compared to 1.5GHz on S905X,
+>   this is handled in the SCPI firmware)
+> - the DRAM interface on S905W is limited to 16-bit (GXL supports both,
+>   16-bit and 32-bit)
+> 
+> Notes based on Amlogic's GPL kernel sources:
+> - the P281 is a development board from Amlogic which uses the S905W SoC.
+>   Amlogic's GPL kernel sources indicate that it uses the same PCB layout
+>   as the "P231" board (and simply replaces the S905D from the original
+>   P231 board with a S905W SoC).
+> - it is assumed that the S905W SoC is pin-compatible with the S905X SoC
+>   since Amlogic's GPL kernel sources use the same driver for both SoCs.
+> - gxl_p281_1g.dts contains a comment which mentions that "max gp pll for
+>   gpu is 650M, temporarily disabled". However, it seems to boot fine
+>   with 744MHz (as used on GXBB and the other GXL SoCs).
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/arm/amlogic.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+> index 849834cb1766..8178da8742c3 100644
+> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
+> +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+> @@ -45,6 +45,10 @@ Boards with the Amlogic Meson GXL S805X SoC shall have the following properties:
+>    Required root node property:
+>      compatible: "amlogic,s805x", "amlogic,meson-gxl";
+>  
+> +Boards with the Amlogic Meson GXL S905W SoC shall have the following properties:
+> +  Required root node property:
+> +    compatible: "amlogic,s905w", "amlogic,meson-gxl";
+> +
+>  Boards with the Amlogic Meson GXM S912 SoC shall have the following properties:
+>    Required root node property:
+>      compatible: "amlogic,s912", "amlogic,meson-gxm";
+> @@ -85,6 +89,8 @@ Board compatible values (alphabetically, grouped by SoC):
+>  
+>    - "amlogic,p241" (Meson gxl s805x)
+>  
+> +  - "amlogic,p281" (Meson gxl s905w)
+> +
+>    - "amlogic,q200" (Meson gxm s912)
+>    - "amlogic,q201" (Meson gxm s912)
+>    - "khadas,vim2" (Meson gxm s912)
+> 
 
-
-> -----Original Message-----
-> From: Shawn Guo [mailto:shawnguo@kernel.org]
-> Sent: Thursday, July 19, 2018 11:20 AM
-> To: Anson Huang <anson.huang@nxp.com>; Viresh Kumar
-> <viresh.kumar@linaro.org>
-> Cc: s.hauer@pengutronix.de; kernel@pengutronix.de; Fabio Estevam
-> <fabio.estevam@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com;
-> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> linux-kernel@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>
-> Subject: Re: [PATCH] ARM: dts: imx7d: add missing OPP property for cpu0
->=20
-> On Wed, Jul 18, 2018 at 02:54:49PM +0800, Anson Huang wrote:
-> > Commit b97872d4eb22 ("ARM: dts: imx: Add missing OPP properties for
-> > CPUs") added "operating-points" property for all CPUs, but missed
-> > i.MX7D's cpu0, this patch adds it.
-> >
-> > Fixes: b97872d4eb22 ("ARM: dts: imx: Add missing OPP properties for
-> > CPUs")
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
->=20
-> In general, when you send a patch fixing a commit, you should have the au=
-thor
-> of that commit copied.  I added Viresh here.
-
-Thanks, I missed it.
-
->=20
-> It looks like a wrong fix to me.  It seems that commit b97872d4eb22 shoul=
-dn't
-> change imx7d.dtsi at all.  So the correct fix would be reverting the chan=
-ge on
-> imx7d.dtsi, @Viresh?
-
-Agreed, I think the arch/arm/boot/dts/imx7d.dtsi should NOT be changed, as =
-it already
-had operating-points-v2 on both CPUs, I sent out another new patch with cor=
-rect fix,
-please review it.
-
-Thanks.
-
-Anson.
-
-
->=20
-> Shawn
->=20
-> > ---
-> >  arch/arm/boot/dts/imx7d.dtsi | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/imx7d.dtsi
-> > b/arch/arm/boot/dts/imx7d.dtsi index 9a772fc..30a1a73 100644
-> > --- a/arch/arm/boot/dts/imx7d.dtsi
-> > +++ b/arch/arm/boot/dts/imx7d.dtsi
-> > @@ -9,6 +9,11 @@
-> >  / {
-> >  	cpus {
-> >  		cpu0: cpu@0 {
-> > +			operating-points =3D <
-> > +				/* KHz	uV */
-> > +				996000	1075000
-> > +				792000	975000
-> > +			>;
-> >  			clock-frequency =3D <996000000>;
-> >  			operating-points-v2 =3D <&cpu0_opp_table>;
-> >  			#cooling-cells =3D <2>;
-> > --
-> > 2.7.4
-> >
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
