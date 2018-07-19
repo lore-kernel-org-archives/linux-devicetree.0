@@ -1,608 +1,362 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v5 5/6] i2c: Add Actions Semiconductor Owl family S900 I2C
- driver
-Date: Thu, 19 Jul 2018 21:47:01 +0200
-Message-ID: <d945bfe1-5f6c-4949-5098-4861f9664d02@axentia.se>
-References: <20180719174405.7210-1-manivannan.sadhasivam@linaro.org>
- <20180719174405.7210-6-manivannan.sadhasivam@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v2] ARM: dts: vf610: Add ZII CFU1 board
+Date: Thu, 19 Jul 2018 12:57:24 -0700
+Message-ID: <20180719195724.15563-1-andrew.smirnov@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180719174405.7210-6-manivannan.sadhasivam@linaro.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, wsa@the-dreams.de, robh+dt@kernel.org, afaerber@suse.de
-Cc: linus.walleij@linaro.org, linux-i2c@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, cphealy@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-07-19 19:44, Manivannan Sadhasivam wrote:
-> Add Actions Semiconductor Owl family S900 I2C driver.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Acked-by: Peter Rosin <peda@axentia.se>
+Add support for the Zodiac Inflight Innovations CFU1
+board (VF610-based).
 
-Ooops, now I noticed some missing newlines in your dbg_* prints. That
-may produce garbled output, which is unnecessary. While at it, I also
-spotted a few more white-space nits...
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: cphealy@gmail.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+---
 
-Have you tried the --strict option to checkpatch?
+Changes since [v1]:
 
-Cheers,
-Peter
+    - Fixed DT warning when compiling with W=1
 
-> ---
->  drivers/i2c/busses/Kconfig   |   7 +
->  drivers/i2c/busses/Makefile  |   1 +
->  drivers/i2c/busses/i2c-owl.c | 495 +++++++++++++++++++++++++++++++++++
->  3 files changed, 503 insertions(+)
->  create mode 100644 drivers/i2c/busses/i2c-owl.c
-> 
-> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-> index 4f8df2ec87b1..8c8025f87ce4 100644
-> --- a/drivers/i2c/busses/Kconfig
-> +++ b/drivers/i2c/busses/Kconfig
-> @@ -762,6 +762,13 @@ config I2C_OMAP
->  	  Like OMAP1510/1610/1710/5912 and OMAP242x.
->  	  For details see http://www.ti.com/omap.
->  
-> +config I2C_OWL
-> +	tristate "Actions Semiconductor Owl I2C Controller"
-> +	depends on ARCH_ACTIONS || COMPILE_TEST
-> +	help
-> +	  Say Y here if you want to use the I2C bus controller on
-> +	  the Actions Semiconductor Owl SoC's.
-> +
->  config I2C_PASEMI
->  	tristate "PA Semi SMBus interface"
->  	depends on PPC_PASEMI && PCI
-> diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
-> index 5a869144a0c5..b71618f77880 100644
-> --- a/drivers/i2c/busses/Makefile
-> +++ b/drivers/i2c/busses/Makefile
-> @@ -76,6 +76,7 @@ obj-$(CONFIG_I2C_MXS)		+= i2c-mxs.o
->  obj-$(CONFIG_I2C_NOMADIK)	+= i2c-nomadik.o
->  obj-$(CONFIG_I2C_OCORES)	+= i2c-ocores.o
->  obj-$(CONFIG_I2C_OMAP)		+= i2c-omap.o
-> +obj-$(CONFIG_I2C_OWL)		+= i2c-owl.o
->  obj-$(CONFIG_I2C_PASEMI)	+= i2c-pasemi.o
->  obj-$(CONFIG_I2C_PCA_PLATFORM)	+= i2c-pca-platform.o
->  obj-$(CONFIG_I2C_PMCMSP)	+= i2c-pmcmsp.o
-> diff --git a/drivers/i2c/busses/i2c-owl.c b/drivers/i2c/busses/i2c-owl.c
-> new file mode 100644
-> index 000000000000..4f5836fa5022
-> --- /dev/null
-> +++ b/drivers/i2c/busses/i2c-owl.c
-> @@ -0,0 +1,495 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Actions Semiconductor Owl SoC's I2C driver
-> + *
-> + * Copyright (c) 2014 Actions Semi Inc.
-> + * Author: David Liu <liuwei@actions-semi.com>
-> + *
-> + * Copyright (c) 2018 Linaro Ltd.
-> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/i2c.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +
-> +/* I2C registers */
-> +#define OWL_I2C_REG_CTL		0x0000
-> +#define OWL_I2C_REG_CLKDIV	0x0004
-> +#define OWL_I2C_REG_STAT	0x0008
-> +#define OWL_I2C_REG_ADDR	0x000C
-> +#define OWL_I2C_REG_TXDAT	0x0010
-> +#define OWL_I2C_REG_RXDAT	0x0014
-> +#define OWL_I2C_REG_CMD		0x0018
-> +#define OWL_I2C_REG_FIFOCTL	0x001C
-> +#define OWL_I2C_REG_FIFOSTAT	0x0020
-> +#define OWL_I2C_REG_DATCNT	0x0024
-> +#define OWL_I2C_REG_RCNT	0x0028
-> +
-> +/* I2Cx_CTL Bit Mask */
-> +#define OWL_I2C_CTL_RB		BIT(1)
-> +#define OWL_I2C_CTL_GBCC(x)	(((x) & 0x3) << 2)
-> +#define	OWL_I2C_CTL_GBCC_NONE	OWL_I2C_CTL_GBCC(0)
-> +#define	OWL_I2C_CTL_GBCC_START	OWL_I2C_CTL_GBCC(1)
-> +#define	OWL_I2C_CTL_GBCC_STOP	OWL_I2C_CTL_GBCC(2)
-> +#define	OWL_I2C_CTL_GBCC_RSTART	OWL_I2C_CTL_GBCC(3)
-> +#define OWL_I2C_CTL_IRQE	BIT(5)
-> +#define OWL_I2C_CTL_EN		BIT(7)
-> +#define OWL_I2C_CTL_AE		BIT(8)
-> +#define OWL_I2C_CTL_SHSM	BIT(10)
-> +
-> +#define OWL_I2C_DIV_FACTOR(x)	((x) & 0xff)
-> +
-> +/* I2Cx_STAT Bit Mask */
-> +#define OWL_I2C_STAT_RACK	BIT(0)
-> +#define OWL_I2C_STAT_BEB	BIT(1)
-> +#define OWL_I2C_STAT_IRQP	BIT(2)
-> +#define OWL_I2C_STAT_LAB	BIT(3)
-> +#define OWL_I2C_STAT_STPD	BIT(4)
-> +#define OWL_I2C_STAT_STAD	BIT(5)
-> +#define OWL_I2C_STAT_BBB	BIT(6)
-> +#define OWL_I2C_STAT_TCB	BIT(7)
-> +#define OWL_I2C_STAT_LBST	BIT(8)
-> +#define OWL_I2C_STAT_SAMB	BIT(9)
-> +#define OWL_I2C_STAT_SRGC	BIT(10)
-> +
-> +/* I2Cx_CMD Bit Mask */
-> +#define OWL_I2C_CMD_SBE		BIT(0)
-> +#define OWL_I2C_CMD_RBE		BIT(4)
-> +#define OWL_I2C_CMD_DE		BIT(8)
-> +#define OWL_I2C_CMD_NS		BIT(9)
-> +#define OWL_I2C_CMD_SE		BIT(10)
-> +#define OWL_I2C_CMD_MSS		BIT(11)
-> +#define OWL_I2C_CMD_WRS		BIT(12)
-> +#define OWL_I2C_CMD_SECL	BIT(15)
-> +
-> +#define OWL_I2C_CMD_AS(x)	(((x) & 0x7) << 1)
-> +#define OWL_I2C_CMD_SAS(x)	(((x) & 0x7) << 5)
-> +
-> +/* I2Cx_FIFOCTL Bit Mask */
-> +#define OWL_I2C_FIFOCTL_NIB	BIT(0)
-> +#define OWL_I2C_FIFOCTL_RFR	BIT(1)
-> +#define OWL_I2C_FIFOCTL_TFR	BIT(2)
-> +
-> +/* I2Cc_FIFOSTAT Bit Mask */
-> +#define OWL_I2C_FIFOSTAT_RNB	BIT(1)
-> +#define OWL_I2C_FIFOSTAT_RFE	BIT(2)
-> +#define OWL_I2C_FIFOSTAT_TFF	BIT(5)
-> +#define OWL_I2C_FIFOSTAT_TFD	GENMASK(23, 16)
-> +#define OWL_I2C_FIFOSTAT_RFD	GENMASK(15, 8)
-> +
-> +/* I2C bus timeout */
-> +#define OWL_I2C_TIMEOUT		msecs_to_jiffies(4 * 1000)
-> +
-> +#define OWL_I2C_MAX_RETRIES	50
-> +
-> +#define OWL_I2C_DEF_SPEED_HZ	100000
-> +#define OWL_I2C_MAX_SPEED_HZ	400000
-> +
-> +struct owl_i2c_dev {
-> +	struct i2c_adapter	adap;
-> +	struct i2c_msg		*msg;
-> +	struct completion	msg_complete;
-> +	struct clk		*clk;
-> +	spinlock_t		lock;
-> +	void __iomem		*base;
-> +	unsigned long		clk_rate;
-> +	u32			bus_freq;
-> +	u32			msg_ptr;
-> +};
-> +
-> +static void owl_i2c_update_reg(void __iomem *reg, unsigned int val, bool state)
-> +{
-> +	unsigned int regval;
-> +
-> +	regval = readl(reg);
-> +
-> +	if (state)
-> +		regval |= val;
-> +	else
-> +		regval &= ~val;
-> +
-> +	writel(regval, reg);
-> +}
-> +
-> +static void owl_i2c_reset(struct owl_i2c_dev *i2c_dev)
-> +{
-> +	owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_CTL,
-> +			   OWL_I2C_CTL_EN, false);
-> +	mdelay(1);
-> +	owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_CTL,
-> +			   OWL_I2C_CTL_EN, true);
-> +
-> +	/* Clear status registers */
-> +	writel(0, i2c_dev->base + OWL_I2C_REG_STAT);
-> +}
-> +
-> +static int owl_i2c_reset_fifo(struct owl_i2c_dev *i2c_dev)
-> +{
-> +	unsigned int val, timeout = 0;
-> +
-> +	/* Reset FIFO */
-> +	owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_FIFOCTL,
-> +			   OWL_I2C_FIFOCTL_RFR | OWL_I2C_FIFOCTL_TFR,
-> +			   true);
-> +
-> +	/* Wait 50ms for FIFO reset complete */
-> +	do {
-> +		val = readl(i2c_dev->base + OWL_I2C_REG_FIFOCTL);
-> +		if (!(val & (OWL_I2C_FIFOCTL_RFR | OWL_I2C_FIFOCTL_TFR)))
-> +			break;
-> +		usleep_range(500, 1000);
-> +	} while (timeout++ < OWL_I2C_MAX_RETRIES);
-> +
-> +	if (timeout > OWL_I2C_MAX_RETRIES) {
-> +		dev_err(&i2c_dev->adap.dev, "FIFO reset timeout");
+    - Collected Reviewed-by from Fabio
 
-End with a newline.
+[v1] lkml.kernel.org/r/20180719005941.10458-1-andrew.smirnov@gmail.com
 
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void owl_i2c_set_freq(struct owl_i2c_dev *i2c_dev)
-> +{
-> +	unsigned int val;
-> +
-> +	val = DIV_ROUND_UP(i2c_dev->clk_rate, i2c_dev->bus_freq * 16);
-> +
-> +	/* Set clock divider factor */
-> +	writel(OWL_I2C_DIV_FACTOR(val), i2c_dev->base + OWL_I2C_REG_CLKDIV);
-> +}
-> +
-> +static irqreturn_t owl_i2c_interrupt(int irq, void *_dev)
-> +{
-> +	struct owl_i2c_dev *i2c_dev = _dev;
-> +	struct i2c_msg *msg = i2c_dev->msg;
-> +	unsigned long flags;
-> +	unsigned int stat, fifostat;
-> +
-> +	spin_lock_irqsave(&i2c_dev->lock, flags);
-> +
-> +	fifostat = readl(i2c_dev->base + OWL_I2C_REG_FIFOSTAT);
-> +	if (fifostat & OWL_I2C_FIFOSTAT_RNB) {
-> +		dev_dbg(&i2c_dev->adap.dev, "received NACK from device");
+ arch/arm/boot/dts/Makefile           |   1 +
+ arch/arm/boot/dts/vf610-zii-cfu1.dts | 305 +++++++++++++++++++++++++++
+ 2 files changed, 306 insertions(+)
+ create mode 100644 arch/arm/boot/dts/vf610-zii-cfu1.dts
 
-End with a newline.
-
-> +		goto stop;
-> +	}
-> +
-> +	stat = readl(i2c_dev->base + OWL_I2C_REG_STAT);
-> +	if (stat & OWL_I2C_STAT_BEB) {
-> +		dev_dbg(&i2c_dev->adap.dev, "bus error");
-
-End with a newline.
-
-> +		goto stop;
-> +	}
-> +
-> +	/* Handle FIFO read */
-> +	if (msg->flags & I2C_M_RD) {
-> +		while ((readl(i2c_dev->base + OWL_I2C_REG_FIFOSTAT) &
-> +			OWL_I2C_FIFOSTAT_RFE) && i2c_dev->msg_ptr < msg->len) {
-> +			msg->buf[i2c_dev->msg_ptr++] = readl(i2c_dev->base +
-> +							     OWL_I2C_REG_RXDAT);
-> +		}
-> +	} else {
-> +		/* Handle the remaining bytes which were not sent */
-> +		while (!(readl(i2c_dev->base + OWL_I2C_REG_FIFOSTAT) &
-> +			OWL_I2C_FIFOSTAT_TFF) && i2c_dev->msg_ptr < msg->len) {
-
-Misaligned.
-
-> +			writel(msg->buf[i2c_dev->msg_ptr++],
-> +			       i2c_dev->base + OWL_I2C_REG_TXDAT);
-> +		}
-> +	}
-> +
-> +stop:
-> +	/* Clear pending interrupts */
-> +	owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_STAT,
-> +			   OWL_I2C_STAT_IRQP, true);
-> +
-> +	complete_all(&i2c_dev->msg_complete);
-> +	spin_unlock_irqrestore(&i2c_dev->lock, flags);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static u32 owl_i2c_func(struct i2c_adapter *adap)
-> +{
-> +	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
-> +}
-> +
-> +static int owl_i2c_check_bus_busy(struct i2c_adapter *adap)
-> +{
-> +	struct owl_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
-> +	unsigned long timeout;
-> +
-> +	/* Check for Bus busy */
-> +	timeout = jiffies + OWL_I2C_TIMEOUT;
-> +	while (readl(i2c_dev->base + OWL_I2C_REG_STAT) & OWL_I2C_STAT_BBB) {
-> +		if (time_after(jiffies, timeout)) {
-> +			dev_err(&adap->dev, "Bus busy timeout");
-
-End with a newline.
-
-> +			return -ETIMEDOUT;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int owl_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
-> +				int num)
-> +{
-> +	struct owl_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
-> +	struct i2c_msg *msg;
-> +	unsigned long time_left, flags;
-> +	unsigned int i2c_cmd, val;
-> +	unsigned int addr;
-> +	int ret, idx;
-> +
-> +	spin_lock_irqsave(&i2c_dev->lock, flags);
-> +
-> +	/* Reset I2C controller */
-> +	owl_i2c_reset(i2c_dev);
-> +
-> +	/* Set bus frequency */
-> +	owl_i2c_set_freq(i2c_dev);
-> +
-> +	/*
-> +	 * Spinlock should be released before calling reset FIFO and
-> +	 * bus busy check since those functions may sleep
-> +	 */
-> +	spin_unlock_irqrestore(&i2c_dev->lock, flags);
-> +
-> +	/* Reset FIFO */
-> +	ret = owl_i2c_reset_fifo(i2c_dev);
-> +	if (ret)
-> +		goto unlocked_err_exit;
-> +
-> +	/* Check for bus busy */
-> +	ret = owl_i2c_check_bus_busy(adap);
-> +	if (ret)
-> +		goto unlocked_err_exit;
-> +
-> +	spin_lock_irqsave(&i2c_dev->lock, flags);
-> +
-> +	/* Check for Arbitration lost */
-> +	val = readl(i2c_dev->base + OWL_I2C_REG_STAT);
-> +	if (val & OWL_I2C_STAT_LAB) {
-> +		val &= ~OWL_I2C_STAT_LAB;
-> +		writel(val, i2c_dev->base + OWL_I2C_REG_STAT);
-> +		ret = -EAGAIN;
-> +		goto err_exit;
-> +	}
-> +
-> +	reinit_completion(&i2c_dev->msg_complete);
-> +
-> +	/* Enable I2C controller interrupt */
-> +	owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_CTL,
-> +			   OWL_I2C_CTL_IRQE, true);
-> +
-> +	/*
-> +	 * Select: FIFO enable, Master mode, Stop enable, Data count enable,
-> +	 * Send start bit
-> +	 */
-> +	i2c_cmd = OWL_I2C_CMD_SECL | OWL_I2C_CMD_MSS | OWL_I2C_CMD_SE |
-> +		  OWL_I2C_CMD_NS | OWL_I2C_CMD_DE | OWL_I2C_CMD_SBE;
-> +
-> +	/* Handle repeated start condition */
-> +	if (num > 1) {
-> +		/* Set internal address length and enable repeated start */
-> +		i2c_cmd |= OWL_I2C_CMD_AS(msgs[0].len + 1) |
-> +			   OWL_I2C_CMD_SAS(1) | OWL_I2C_CMD_RBE;
-> +
-> +		/* Write slave address */
-> +		addr = i2c_8bit_addr_from_msg(&msgs[0]);
-> +		writel(addr, i2c_dev->base + OWL_I2C_REG_TXDAT);
-> +
-> +		/* Write internal register address */
-> +		for (idx = 0; idx < msgs[0].len; idx++)
-> +			writel(msgs[0].buf[idx], i2c_dev->base +
-> +			       OWL_I2C_REG_TXDAT);
-
-It's better to split bwtween arguments than in the middle of one.
-
-> +
-> +		msg = &msgs[1];
-> +	} else {
-> +		/* Set address length */
-> +		i2c_cmd |= OWL_I2C_CMD_AS(1);
-> +		msg = &msgs[0];
-> +	}
-> +
-> +	i2c_dev->msg = msg;
-> +	i2c_dev->msg_ptr = 0;
-> +
-> +	/* Set data count for the message */
-> +	writel(msg->len, i2c_dev->base + OWL_I2C_REG_DATCNT);
-> +
-> +	addr = i2c_8bit_addr_from_msg(msg);
-> +	writel(addr, i2c_dev->base + OWL_I2C_REG_TXDAT);
-> +
-> +	if (!(msg->flags & I2C_M_RD)) {
-> +		/* Write data to FIFO */
-> +		for (idx = 0; idx < msg->len; idx++) {
-> +			/* Check for FIFO full */
-> +			if (readl(i2c_dev->base + OWL_I2C_REG_FIFOSTAT) &
-> +				  OWL_I2C_FIFOSTAT_TFF)
-
-Misaligned.
-
-> +				break;
-> +
-> +			writel(msg->buf[idx], i2c_dev->base +
-> +			       OWL_I2C_REG_TXDAT);
-
-Prefer splitting between arguments.
-
-> +		}
-> +
-> +		i2c_dev->msg_ptr = idx;
-> +	}
-> +
-> +	/* Ignore the NACK if needed */
-> +	if (msg->flags & I2C_M_IGNORE_NAK)
-> +		owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_FIFOCTL,
-> +				   OWL_I2C_FIFOCTL_NIB, true);
-> +	else
-> +		owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_FIFOCTL,
-> +				   OWL_I2C_FIFOCTL_NIB, false);
-> +
-> +	/* Start the transfer */
-> +	writel(i2c_cmd, i2c_dev->base + OWL_I2C_REG_CMD);
-> +
-> +	spin_unlock_irqrestore(&i2c_dev->lock, flags);
-> +
-> +	time_left = wait_for_completion_timeout(&i2c_dev->msg_complete,
-> +						adap->timeout);
-> +
-> +	spin_lock_irqsave(&i2c_dev->lock, flags);
-> +	if (time_left == 0) {
-> +		dev_err(&adap->dev, "Transaction timed out");
-
-End with a newline.
-
-> +		/* Send stop condition and release the bus */
-> +		owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_CTL,
-> +				   OWL_I2C_CTL_GBCC_STOP |
-> +				   OWL_I2C_CTL_RB, true);
-
-Prefer splitting between arguments.
-
-> +		ret = -ETIMEDOUT;
-> +		goto err_exit;
-> +	}
-> +
-> +	/*
-> +	 * Here, -ENXIO will be returned if interrupt occurred but no
-> +	 * read or write happened. Else if msg_ptr equals to message length,
-> +	 * message count will be returned.
-> +	 */
-> +	ret = i2c_dev->msg_ptr == msg->len ? num : -ENXIO;
-> +
-> +err_exit:
-> +	spin_unlock_irqrestore(&i2c_dev->lock, flags);
-> +
-> +unlocked_err_exit:
-> +	/* Disable I2C controller */
-> +	owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_CTL,
-> +			   OWL_I2C_CTL_EN, false);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct i2c_algorithm owl_i2c_algorithm = {
-> +	.master_xfer    = owl_i2c_master_xfer,
-> +	.functionality  = owl_i2c_func,
-> +};
-> +
-> +static const struct i2c_adapter_quirks owl_i2c_quirks = {
-> +	.flags		= I2C_AQ_COMB | I2C_AQ_COMB_WRITE_FIRST,
-> +	.max_read_len   = 240,
-> +	.max_write_len  = 240,
-> +	.max_comb_1st_msg_len = 6,
-> +	.max_comb_2nd_msg_len = 240,
-> +};
-> +
-> +static int owl_i2c_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct owl_i2c_dev *i2c_dev;
-> +	struct resource *res;
-> +	int ret, irq;
-> +
-> +	i2c_dev = devm_kzalloc(dev, sizeof(*i2c_dev), GFP_KERNEL);
-> +	if (!i2c_dev)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	i2c_dev->base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(i2c_dev->base))
-> +		return PTR_ERR(i2c_dev->base);
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(dev, "failed to get IRQ number\n");
-> +		return irq;
-> +	}
-> +
-> +	if (of_property_read_u32(dev->of_node, "clock-frequency",
-> +				 &i2c_dev->bus_freq))
-> +		i2c_dev->bus_freq = OWL_I2C_DEF_SPEED_HZ;
-> +
-> +	/* We support only frequencies of 100k and 400k for now */
-> +	if (i2c_dev->bus_freq != OWL_I2C_DEF_SPEED_HZ &&
-> +			i2c_dev->bus_freq != OWL_I2C_MAX_SPEED_HZ) {
-
-Misaligned.
-
-> +		dev_err(dev, "invalid clock-frequency %d\n", i2c_dev->bus_freq);
-> +		return -EINVAL;
-> +	}
-> +
-> +	i2c_dev->clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(i2c_dev->clk)) {
-> +		dev_err(dev, "failed to get clock\n");
-> +		return PTR_ERR(i2c_dev->clk);
-> +	}
-> +
-> +	ret = clk_prepare_enable(i2c_dev->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	i2c_dev->clk_rate = clk_get_rate(i2c_dev->clk);
-> +	if (!i2c_dev->clk_rate) {
-> +		dev_err(dev, "input clock rate should not be zero\n");
-> +		ret = -EINVAL;
-> +		goto disable_clk;
-> +	}
-> +
-> +	init_completion(&i2c_dev->msg_complete);
-> +	spin_lock_init(&i2c_dev->lock);
-> +	i2c_dev->adap.owner = THIS_MODULE;
-> +	i2c_dev->adap.algo = &owl_i2c_algorithm;
-> +	i2c_dev->adap.timeout = OWL_I2C_TIMEOUT;
-> +	i2c_dev->adap.quirks = &owl_i2c_quirks;
-> +	i2c_dev->adap.dev.parent = dev;
-> +	i2c_dev->adap.dev.of_node = dev->of_node;
-> +	snprintf(i2c_dev->adap.name, sizeof(i2c_dev->adap.name),
-> +			"%s", "OWL I2C adapter");
-
-Misaligned.
-
-> +	i2c_set_adapdata(&i2c_dev->adap, i2c_dev);
-> +
-> +	platform_set_drvdata(pdev, i2c_dev);
-> +
-> +	ret = devm_request_irq(dev, irq, owl_i2c_interrupt, 0, pdev->name,
-> +			       i2c_dev);
-> +	if (ret) {
-> +		dev_err(dev, "failed to request irq %d\n", irq);
-> +		goto disable_clk;
-> +	}
-> +
-> +	return i2c_add_adapter(&i2c_dev->adap);
-> +
-> +disable_clk:
-> +	clk_disable_unprepare(i2c_dev->clk);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct of_device_id owl_i2c_of_match[] = {
-> +	{.compatible = "actions,s900-i2c"},
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, owl_i2c_of_match);
-> +
-> +static struct platform_driver owl_i2c_driver = {
-> +	.probe		= owl_i2c_probe,
-> +	.driver		= {
-> +		.name	= "owl-i2c",
-> +		.of_match_table = of_match_ptr(owl_i2c_of_match),
-> +	},
-> +};
-> +module_platform_driver(owl_i2c_driver);
-> +
-> +MODULE_AUTHOR("David Liu <liuwei@actions-semi.com>");
-> +MODULE_AUTHOR("Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>");
-> +MODULE_DESCRIPTION("Actions Semiconductor Owl SoC's I2C driver");
-> +MODULE_LICENSE("GPL");
-> 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e331b2c16539..85797819fdd9 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -569,6 +569,7 @@ dtb-$(CONFIG_SOC_VF610) += \
+ 	vf610-cosmic.dtb \
+ 	vf610m4-cosmic.dtb \
+ 	vf610-twr.dtb \
++	vf610-zii-cfu1.dtb \
+ 	vf610-zii-dev-rev-b.dtb \
+ 	vf610-zii-dev-rev-c.dtb \
+ 	vf610-zii-ssmb-spu3.dtb
+diff --git a/arch/arm/boot/dts/vf610-zii-cfu1.dts b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+new file mode 100644
+index 000000000000..37777cf22e67
+--- /dev/null
++++ b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+@@ -0,0 +1,305 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++
++/*
++ * Copyright (C) 2018 Zodiac Inflight Innovations
++ */
++
++/dts-v1/;
++#include "vf610.dtsi"
++
++/ {
++	model = "ZII VF610 CFU1 Board";
++	compatible = "zii,vf610cfu1", "zii,vf610dev", "fsl,vf610";
++
++	chosen {
++		stdout-path = &uart0;
++	};
++
++	memory@80000000 {
++		reg = <0x80000000 0x20000000>;
++	};
++
++	gpio-leds {
++		compatible = "gpio-leds";
++		pinctrl-0 = <&pinctrl_leds_debug>;
++		pinctrl-names = "default";
++
++		led-debug {
++			label = "zii:green:debug1";
++			gpios = <&gpio2 18 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++			max-brightness = <1>;
++		};
++
++		led-fail {
++			label = "zii:red:fail";
++			gpios = <&gpio3 12 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++			max-brightness = <1>;
++		};
++
++		led-status {
++			label = "zii:green:status";
++			gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++			max-brightness = <1>;
++		};
++
++		led-debug-a {
++			label = "zii:green:debug_a";
++			gpios = <&gpio3 14 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++			max-brightness = <1>;
++		};
++
++		led-debug-b {
++			label = "zii:green:debug_b";
++			gpios = <&gpio3 15 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++			max-brightness = <1>;
++		};
++	};
++
++	reg_vcc_3v3_mcu: regulator-vcc-3v3-mcu {
++		 compatible = "regulator-fixed";
++		 regulator-name = "vcc_3v3_mcu";
++		 regulator-min-microvolt = <3300000>;
++		 regulator-max-microvolt = <3300000>;
++	};
++};
++
++&adc0 {
++	vref-supply = <&reg_vcc_3v3_mcu>;
++	status = "okay";
++};
++
++&adc1 {
++	vref-supply = <&reg_vcc_3v3_mcu>;
++	status = "okay";
++};
++
++&dspi1 {
++	bus-num = <1>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_dspi1>;
++	status = "okay";
++
++	m25p128@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "m25p128", "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <50000000>;
++
++		partition@0 {
++			label = "m25p128-0";
++			reg = <0x0 0x01000000>;
++		};
++	};
++};
++
++&edma0 {
++	status = "okay";
++};
++
++&edma1 {
++	status = "okay";
++};
++
++&esdhc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_esdhc0>;
++	bus-width = <8>;
++	non-removable;
++	no-1-8-v;
++	keep-power-in-suspend;
++	status = "okay";
++};
++
++&esdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_esdhc1>;
++	bus-width = <4>;
++	status = "okay";
++};
++
++&fec1 {
++	phy-mode = "rmii";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec1>;
++	status = "okay";
++
++	fixed-link {
++		speed = <100>;
++		full-duplex;
++	};
++
++	mdio1: mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "okay";
++
++		switch0: switch0@0 {
++			compatible = "marvell,mv88e6085";
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_switch>;
++			reg = <0>;
++			eeprom-length = <512>;
++			interrupt-parent = <&gpio3>;
++			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			reset-gpios = <&gpio3 11 GPIO_ACTIVE_LOW>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					label = "eth_cu_1000_1";
++				};
++
++				port@1 {
++					reg = <1>;
++					label = "eth_cu_1000_2";
++				};
++
++				port@2 {
++					reg = <2>;
++					label = "eth_cu_1000_3";
++				};
++
++				port@6 {
++					reg = <6>;
++					label = "cpu";
++					ethernet = <&fec1>;
++
++					fixed-link {
++						speed = <100>;
++						full-duplex;
++					};
++				};
++			};
++		};
++	};
++};
++
++&i2c0 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c0>;
++	status = "okay";
++
++	pca9554@22 {
++		compatible = "nxp,pca9554";
++		reg = <0x22>;
++		gpio-controller;
++	};
++
++	lm75@48 {
++		compatible = "national,lm75";
++		reg = <0x48>;
++	};
++
++	at24c04@52 {
++		compatible = "atmel,24c04";
++		reg = <0x52>;
++		label = "nvm";
++	};
++
++	at24c04@54 {
++		compatible = "atmel,24c04";
++		reg = <0x54>;
++		label = "nameplate";
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart0>;
++	status = "okay";
++};
++
++&iomuxc {
++	pinctrl_dspi1: dspi1grp {
++		fsl,pins = <
++			VF610_PAD_PTD5__DSPI1_CS0		0x1182
++			VF610_PAD_PTC6__DSPI1_SIN		0x1181
++			VF610_PAD_PTC7__DSPI1_SOUT		0x1182
++			VF610_PAD_PTC8__DSPI1_SCK		0x1182
++		>;
++	};
++
++	pinctrl_esdhc0: esdhc0grp {
++		fsl,pins = <
++			VF610_PAD_PTC0__ESDHC0_CLK		0x31ef
++			VF610_PAD_PTC1__ESDHC0_CMD		0x31ef
++			VF610_PAD_PTC2__ESDHC0_DAT0		0x31ef
++			VF610_PAD_PTC3__ESDHC0_DAT1		0x31ef
++			VF610_PAD_PTC4__ESDHC0_DAT2		0x31ef
++			VF610_PAD_PTC5__ESDHC0_DAT3		0x31ef
++			VF610_PAD_PTD23__ESDHC0_DAT4		0x31ef
++			VF610_PAD_PTD22__ESDHC0_DAT5		0x31ef
++			VF610_PAD_PTD21__ESDHC0_DAT6		0x31ef
++			VF610_PAD_PTD20__ESDHC0_DAT7		0x31ef
++		>;
++	};
++
++	pinctrl_esdhc1: esdhc1grp {
++		fsl,pins = <
++			VF610_PAD_PTA24__ESDHC1_CLK		0x31ef
++			VF610_PAD_PTA25__ESDHC1_CMD		0x31ef
++			VF610_PAD_PTA26__ESDHC1_DAT0		0x31ef
++			VF610_PAD_PTA27__ESDHC1_DAT1		0x31ef
++			VF610_PAD_PTA28__ESDHC1_DATA2		0x31ef
++			VF610_PAD_PTA29__ESDHC1_DAT3		0x31ef
++		>;
++	};
++
++	pinctrl_fec1: fec1grp {
++		fsl,pins = <
++			VF610_PAD_PTA6__RMII_CLKIN		0x30d1
++			VF610_PAD_PTC9__ENET_RMII1_MDC		0x30fe
++			VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
++			VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
++			VF610_PAD_PTC12__ENET_RMII1_RXD1	0x30d1
++			VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
++			VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
++			VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
++			VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
++			VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
++		>;
++	};
++
++	pinctrl_i2c0: i2c0grp {
++		fsl,pins = <
++			VF610_PAD_PTB14__I2C0_SCL		0x37ff
++			VF610_PAD_PTB15__I2C0_SDA		0x37ff
++		>;
++	};
++
++	pinctrl_leds_debug: pinctrl-leds-debug {
++		fsl,pins = <
++			VF610_PAD_PTD3__GPIO_82			0x31c2
++			VF610_PAD_PTE3__GPIO_108		0x31c2
++			VF610_PAD_PTE4__GPIO_109		0x31c2
++			VF610_PAD_PTE5__GPIO_110		0x31c2
++			VF610_PAD_PTE6__GPIO_111		0x31c2
++		>;
++	};
++
++	pinctrl_switch: switch-grp {
++		fsl,pins = <
++			VF610_PAD_PTB28__GPIO_98		0x3061
++			VF610_PAD_PTE2__GPIO_107		0x1042
++		>;
++	};
++
++	pinctrl_uart0: uart0grp {
++		fsl,pins = <
++			VF610_PAD_PTB10__UART0_TX		0x21a2
++			VF610_PAD_PTB11__UART0_RX		0x21a1
++		>;
++	};
++};
+-- 
+2.17.1
