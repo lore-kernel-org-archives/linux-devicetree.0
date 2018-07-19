@@ -1,65 +1,43 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v2 4/4] ARM: dts: dra7: Fix up unaligned access setting
- for PCIe EP
-Date: Thu, 19 Jul 2018 16:24:26 +0530
-Message-ID: <9bdf39d4-d9db-b80f-e3f4-88c3e068c306@ti.com>
-References: <20180627122919.23926-1-vigneshr@ti.com>
- <20180627122919.23926-5-vigneshr@ti.com>
- <92691b59-1952-b00f-da5b-f308f94aa2b7@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 0/2] Add Mediatek X20 Development Board support
+Date: Thu, 19 Jul 2018 16:24:48 +0530
+Message-ID: <1531997690-6040-1-git-send-email-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <92691b59-1952-b00f-da5b-f308f94aa2b7@ti.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+To: matthias.bgg@gmail.com, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, taiten.peng@linaro.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, manivannanece23@gmail.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+Add devicetree support for Mediatek X20 Development Board by Archermind.
+This board is based on the Deca-Core MT6797 SoC from Mediatek and is
+one of the 96Boards Consumer Edition platform.
 
-On Tuesday 17 July 2018 03:25 PM, Kishon Vijay Abraham I wrote:
-> 
-> 
-> On Wednesday 27 June 2018 05:59 PM, Vignesh R wrote:
->> Bit positions of PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE and
->> PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE in CTRL_CORE_SMA_SW_7 are
->> incorrectly documented in the TRM. In fact, the bit positions are
->> swapped. Update the DT bindings for PCIe EP to reflect the same.
->>
->> Signed-off-by: Vignesh R <vigneshr@ti.com>
-> 
-> Shouldn't this be sent to stable fixes?
+With this devicetree change, board can boot into initramfs.
 
-This patch fixes:
+More information about this board can be found in 96Boards product page:
+https://www.96boards.org/product/mediatek-x20/
 
-Fixes: d23f3839fe97 ("ARM: dts: DRA7: Add pcie1 dt node for EP mode")
-Cc: stable@vger.kernel.org
+Thanks,
+Mani
 
-let me know if this needs to be resent with Fixes tag.
+Changes in v3:
 
-Regards
-Vignesh
+* Modified the memory size to 2GB (0x80000000) in board DTS
 
-> 
-> Thanks
-> Kishon
->> ---
->>  arch/arm/boot/dts/dra7.dtsi | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
->> index 7bfe7f28e3bd..27ad193e1a87 100644
->> --- a/arch/arm/boot/dts/dra7.dtsi
->> +++ b/arch/arm/boot/dts/dra7.dtsi
->> @@ -355,7 +355,7 @@
->>  				ti,hwmods = "pcie1";
->>  				phys = <&pcie1_phy>;
->>  				phy-names = "pcie-phy0";
->> -				ti,syscon-unaligned-access = <&scm_conf1 0x14 2>;
->> +				ti,syscon-unaligned-access = <&scm_conf1 0x14 1>;
->>  				status = "disabled";
->>  			};
->>  		};
->>
+Changes in v2:
+
+* Added documentation for board compatible
+* Dropped vendor documetation patch since it got applied
+
+Manivannan Sadhasivam (2):
+  dt-bindings: arm: mediatek: Document Mediatek X20 Development Board
+  arm64: dts: Add Mediatek X20 Development Board support
+
+ Documentation/devicetree/bindings/arm/mediatek.txt |  3 ++
+ arch/arm64/boot/dts/mediatek/Makefile              |  1 +
+ arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts    | 33 ++++++++++++++++++++++
+ 3 files changed, 37 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
+
+-- 
+2.7.4
