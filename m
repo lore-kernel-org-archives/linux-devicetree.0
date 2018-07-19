@@ -1,115 +1,163 @@
 Return-Path: <SRS0=Hazi=KD=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-bn3nam01on0082.outbound.protection.outlook.com ([104.47.33.82]:31632
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+Received: from mail-eopbgr40128.outbound.protection.outlook.com ([40.107.4.128]:14057
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731154AbeGSLr6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Jul 2018 07:47:58 -0400
-From: "Caprioru, Mircea" <Mircea.Caprioru@analog.com>
+        id S1726338AbeGSJvo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Jul 2018 05:51:44 -0400
 Subject: Re: [PATCH V2 2/2] Documentation: dt-bindings: add adi,adgs1408 doc
-Date: Thu, 19 Jul 2018 11:05:15 +0000
-Message-ID: <e29eef87fae74581785eb653ae9424712fa1a824.camel@analog.com>
 References: <20180717134416.5865-1-mircea.caprioru@analog.com>
-         <e33b328f-8cd7-6bd5-bd01-9033e0b91cd3@axentia.se>
-         <afe3957216c82e7d7514d52530e3ae87f987924f.camel@analog.com>
-         <95c37d42-6172-1c17-5843-8aaa919941d8@axentia.se>
-In-Reply-To: <95c37d42-6172-1c17-5843-8aaa919941d8@axentia.se>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2CBA0FBF6D2E8548919EEFDC0B103E86@analog.com>
-Content-Transfer-Encoding: base64
+ <e33b328f-8cd7-6bd5-bd01-9033e0b91cd3@axentia.se>
+ <afe3957216c82e7d7514d52530e3ae87f987924f.camel@analog.com>
+From: Peter Rosin <peda@axentia.se>
+Message-ID: <95c37d42-6172-1c17-5843-8aaa919941d8@axentia.se>
+Date: Thu, 19 Jul 2018 11:09:22 +0200
 MIME-Version: 1.0
+In-Reply-To: <afe3957216c82e7d7514d52530e3ae87f987924f.camel@analog.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: "peda@axentia.se" <peda@axentia.se>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: "Caprioru, Mircea" <Mircea.Caprioru@analog.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 Cc: "davem@davemloft.net" <davem@davemloft.net>, "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-T24gVGh1LCAyMDE4LTA3LTE5IGF0IDExOjA5ICswMjAwLCBQZXRlciBSb3NpbiB3cm90ZToNCj4g
-T24gMjAxOC0wNy0xOSAwOToyNiwgQ2FwcmlvcnUsIE1pcmNlYSB3cm90ZToNCj4gPiBPbiBXZWQs
-IDIwMTgtMDctMTggYXQgMTU6MDkgKzAyMDAsIFBldGVyIFJvc2luIHdyb3RlOg0KPiA+ID4gT24g
-MjAxOC0wNy0xNyAxNTo0NCwgTWlyY2VhIENhcHJpb3J1IHdyb3RlOg0KPiA+ID4gPiBBZGRpbmcg
-ZHQtYmluZGluZ3MgZG9jdW1lbnRhdGlvbiBmb3IgYWRnczE0MDgvMTQwOSBtdWx0aXBsZXhlci4N
-Cj4gPiA+ID4gVGhlDQo+ID4gPiA+IGJpbmRpbmdzIGZvbGxvdyB0aGUgc3RhbmRhcmQgU1BJIGFu
-ZCBtdXggYmluZGluZ3MgYW5kIGRvIG5vdA0KPiA+ID4gPiByZXF1aXJlIGFueQ0KPiA+ID4gPiBh
-ZGRpdGlvbmFsIGN1c3RvbSBwcm9wZXJ0aWVzLg0KPiA+ID4gDQo+ID4gPiBIb3dldmVyLCBib3Ro
-IGNoaXBzIGhhdmUgZ2VuZXJhbCBwdXJwb3NlIG91dHB1dCBwaW5zLiBJIHRoaW5rIGl0DQo+ID4g
-PiBpcw0KPiA+ID4gY3VzdG9tYXJ5IHRvIGRvY3VtZW50IHRoZSBiaW5kaW5ncyBmb3Igc3VjaCB0
-aGluZ3Mgd2hpbGUgYXQgaXQ/DQo+ID4gDQo+ID4gVGhpcyBmdW5jdGlvbmFsaXR5IGlzIG5vdCB5
-ZXQgaW1wbGVtZW50ZWQgaW4gdGhlIGRyaXZlci4gSXQgZG9lcw0KPiA+IG5vdA0KPiA+IG1ha2Ug
-c2Vuc2UgdG8gZG9jdW1lbnQgaXQganVzdCB5ZXQuIFdpbGwgYWRkIGl0IHdoZW4gdGhlIGRyaXZl
-cg0KPiA+IGltcGxlbWVudHMgaXQuDQo+IA0KPiBJIGRpc2FncmVlLCBhbmQgSSBhbHNvIHRoaW5r
-IDIvMiBzaG91bGQgY29tZSBiZWZvcmUgMS8yLCBqdXN0IHRvIHNob3cNCj4gdGhhdCB0aGluZ3Mg
-YXJlIGRvbmUgaW4gdGhlIHByb3BlciBvcmRlci4gVGhhdCBtYWtlcyBpdCBjbGVhciB0aGF0DQo+
-IHRoZQ0KPiBkcml2ZXIgZG9lcyBub3QgaW1wbGVtZW50IHJhbmRvbSAob3Igbm90IHlldCBleGlz
-dGluZykgZGV2aWNlLXRyZWUNCj4gYmluZGluZ3MuDQo+IA0KPiBUaGUgYmluZGluZ3Mgc2hvdWxk
-IG5vdCBkb2N1bWVudCB0aGUgZHJpdmVyLCB0aGV5IHNob3VsZCBkb2N1bWVudA0KPiB0aGUgaGFy
-ZHdhcmUvaW50ZXJmYWNlcy4NCg0KSSB3YXMgdGhpbmtpbmcgb2YgYWRkaW5nIGEgY3VzdG9tIHBy
-b3BlcnR5IGFkaSxncG9zID0gPDAgMCAwIDA+OyB0bw0KY29uZmlndXJlIHRoZSBnZW5lcmFsIHB1
-cnBvc2Ugb3V0cHV0cyBidXQgaSBhbSBvcGVuIHRvIGFueSBzdWdlc3Rpb25zLg0KV2hhdCBkbyB5
-b3UgdGhpbmsgb2YgdGhpcyBhcHByb2FjaCA/DQoNClJlZ2FyZHMsDQpNaXJjZWENCj4gDQo+ID4g
-PiANCj4gPiA+IEFub3RoZXIgdGhpbmcgdGhhdCBJJ20gd29uZGVyaW5nIGFib3V0IGlzIGlmIGl0
-IGlzIGF0IGFsbA0KPiA+ID4gcG9zc2libGUNCj4gPiA+IHRvIGRlc2NyaWJlIGRhaXN5LWNoYWlu
-ZWQgZGV2aWNlcyBvbiBhbiBzcGkgYnVzIGluIHRoZSBkZXZpY2UNCj4gPiA+IHRyZWU/DQo+ID4g
-PiANCj4gPiANCj4gPiBJJ20gbm90IHN1cmUgYWJvdXQgdGhpcyBlaXRoZXIuIEkgd2lsbCBoYXZl
-IHRvIGFsc28gbG9vayBpbnRvIHRoaXMuDQo+IA0KPiBJdCB3YXMgbW9yZSBvZiBhIGdlbmVyYWwg
-cXVlc3Rpb24gZm9yIGRldmljZXRyZWUvc3BpIGV4cGVydHMsIGJ1dCBJDQo+IGRvDQo+IG5vdCBl
-eHBlY3QgYW55IGdlbmVyaWMgc29sdXRpb25zIGluIHRoaXMgcHJvYmxlbSBzcGFjZS4uLg0KPiAN
-Cj4gQ2hlZXJzLA0KPiBQZXRlcg0KPiANCj4gPiA+ID4gDQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6
-IE1pcmNlYSBDYXByaW9ydSA8bWlyY2VhLmNhcHJpb3J1QGFuYWxvZy5jb20+DQo+ID4gPiA+IC0t
-LQ0KPiA+ID4gPiBDaGFuZ2Vsb2cgVjEgLT4gVjINCj4gPiA+ID4gLSByZW1vdmVkIHdpbGRjYXJk
-IGFkZ3MxNDB4DQo+ID4gPiA+IC0gcmVtb3ZlZCByZW1vdmVkIHJlcXVpcmVkIGNlbGxzIHByb3Bl
-cnR5DQo+ID4gPiA+IA0KPiA+ID4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbXV4L2FkaSxh
-ZGdzMTQwOC50eHQgIHwgMzkNCj4gPiA+ID4gKysrKysrKysrKysrKysrKysrKw0KPiA+ID4gPiAg
-TUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDEgKw0KPiA+
-ID4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA0MCBpbnNlcnRpb25zKCspDQo+ID4gPiA+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQNCj4gPiA+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL211
-eC9hZGksYWRnczE0MDgudHh0DQo+ID4gPiA+IA0KPiA+ID4gPiBkaWZmIC0tZ2l0DQo+ID4gPiA+
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL211eC9hZGksYWRnczE0MDgudHh0
-DQo+ID4gPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL211eC9hZGksYWRn
-czE0MDgudHh0DQo+ID4gPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gPiA+IGluZGV4IDAw
-MDAwMDAwMDAwMC4uNmIxY2JlMzI2Nzg2DQo+ID4gPiA+IC0tLSAvZGV2L251bGwNCj4gPiA+ID4g
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL211eC9hZGksYWRnczE0MDgu
-dHh0DQo+ID4gPiA+IEBAIC0wLDAgKzEsMzkgQEANCj4gPiA+ID4gK0JpbmRpbmdzIGZvciBBbmFs
-b2cgRGV2aWNlcyBBREdTMTQwOC8xNDA5IDg6MS9EdWFsIDQ6MSBNdXgNCj4gPiA+ID4gKw0KPiA+
-ID4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiA+ID4gKy0gY29tcGF0aWJsZSA6ICJhZGks
-YWRnczE0MDgiIG9yICJhZGksYWRnczE0MDkiDQo+ID4gPiANCj4gPiA+IEkgdGhpbmsgaXQgaXMg
-cHJlZmVycmVkIHRvIGhhdmUgb25lIGNvbXBhdGlibGUgcGVyIGxpbmUuDQo+ID4gDQo+ID4gQWNr
-Lg0KPiA+ID4gDQo+ID4gPiA+ICsqIFN0YW5kYXJkIG11eC1jb250cm9sbGVyIGJpbmRpbmdzIGFz
-IGRlc2NyaWJlZCBpbiBtdXgtDQo+ID4gPiA+IGNvbnRyb2xsZXIudHh0DQo+ID4gPiA+ICsNCj4g
-PiA+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gPiA+ICstIGlkbGUtc3RhdGUgOiBpZiBw
-cmVzZW50LCBhcnJheSBvZiBzdGF0ZXMgdGhhdCB0aGUgbXV4DQo+ID4gPiA+IGNvbnRyb2xsZXJz
-IHdpbGwgaGF2ZQ0KPiA+ID4gPiArICB3aGVuIGlkbGUuIFRoZSBzcGVjaWFsIHN0YXRlIE1VWF9J
-RExFX0FTX0lTIGlzIHRoZSBkZWZhdWx0DQo+ID4gPiA+IGFuZA0KPiA+ID4gPiArICBNVVhfSURM
-RV9ESVNDT05ORUNUIGlzIGFsc28gc3VwcG9ydGVkLg0KPiA+ID4gPiArDQo+ID4gPiA+ICtTdGF0
-ZXMgMCB0aHJvdWdoIDcgY29ycmVzcG9uZCB0byBzaWduYWxzIFMxIHRocm91Z2ggUzggaW4gdGhl
-DQo+ID4gPiA+IGRhdGFzaGVldC4NCj4gPiA+ID4gK0ZvciBBREdTMTQwOSBvbmx5IHN0YXRlcyAw
-IHRvIDMgYXJlIGF2YWlsYWJsZS4NCj4gPiA+ID4gKw0KPiA+ID4gPiArRXhhbXBsZToNCj4gPiA+
-ID4gKw0KPiA+ID4gPiArCS8qDQo+ID4gPiA+ICsJICogT25lIG11eCBjb250cm9sbGVyLg0KPiA+
-ID4gPiArCSAqIE11eCAxIHRvIDggc2V0IHRvIGlkbGUgYXMgaXMgKG5vIGlkbGUtc3RhdGUNCj4g
-PiA+ID4gZGVjbGFyZWQpDQo+ID4gPiANCj4gPiA+IFdoYXQgZG8geW91IG1lYW4gIk11eCAxIHRv
-IDgiPyBUaGVyZSBpcyBvbmx5IG9uZSBtdXguLi4NCj4gPiANCj4gPiBJIHdhcyByZWZmZXJpbmcg
-dG8gdGhlIG11eCBpbnB1dHMsIHdpbGwgcmVwaHJhc2UgdGhpcy4NCj4gPiA+IA0KPiA+ID4gPiAr
-CSAqLw0KPiA+ID4gPiArCSZzcGkwIHsNCj4gPiA+ID4gKwkJbXV4OiBtdXgtY29udHJvbGxlckAy
-IHsNCj4gPiA+ID4gKwkJCWNvbXBhdGlibGUgPSAiYWRpLGFkZ3MxNDA4IjsNCj4gPiA+ID4gKwkJ
-CXJlZyA9IDwwPjsNCj4gPiA+IA0KPiA+ID4gcmVnID0gPDA+IGRvZXMgbm90IG1hdGNoIEAyIGFi
-b3ZlLg0KPiA+IA0KPiA+IEFjay4NCj4gPiA+IA0KPiA+ID4gPiArCQkJc3BpLW1heC1mcmVxdWVu
-Y3kgPSA8MTAwMDAwMD47DQo+ID4gPiA+ICsJCQkjbXV4LWNvbnRyb2wtY2VsbHMgPSA8MD47DQo+
-ID4gPiA+ICsJCX07DQo+ID4gPiA+ICsJfQ0KPiA+ID4gPiArDQo+ID4gPiA+ICsJYWRjLW11eEAz
-IHsNCj4gPiA+IA0KPiA+ID4gVGhlcmUgaXMgbm8gcmVnIHByb3BlcnR5IGluIHRoaXMgbm9kZS4g
-SSB0aGluayB5b3Ugc2hvdWxkIHNpbXBseQ0KPiA+ID4gZHJvcCB0aGUgQDMuDQo+ID4gDQo+ID4g
-QWNrLg0KPiA+ID4gDQo+ID4gPiBDaGVlcnMsDQo+ID4gPiBQZXRlcg0KPiA+IA0KPiA+IFRoYW5r
-cywNCj4gPiBNaXJjZWENCj4gPiA+IA0KPiA+ID4gPiArCQljb21wYXRpYmxlID0gImlvLWNoYW5u
-ZWwtbXV4IjsNCj4gPiA+ID4gKwkJaW8tY2hhbm5lbHMgPSA8JmFkYyAxPjsNCj4gPiA+ID4gKwkJ
-aW8tY2hhbm5lbC1uYW1lcyA9ICJwYXJlbnQiOw0KPiA+ID4gPiArCQltdXgtY29udHJvbHMgPSA8
-Jm11eD47DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwkJY2hhbm5lbHMgPSAib3V0X2EwIiwgIm91dF9h
-MSIsICJ0ZXN0MCIsDQo+ID4gPiA+ICJ0ZXN0MSIsDQo+ID4gPiA+ICsJCQkib3V0X2IwIiwgIm91
-dF9iMSIsICJ0ZXN0YjAiLA0KPiA+ID4gPiAidGVzdGIxIjsNCj4gPiA+ID4gKw0KPiA+ID4gPiAr
-CX07DQo+ID4gPiA+IGRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTDQo+ID4g
-PiA+IGluZGV4IDQ1OGQ0MmQ2ZjRmMy4uYWY4ZWEyNjM4NjQxIDEwMDY0NA0KPiA+ID4gPiAtLS0g
-YS9NQUlOVEFJTkVSUw0KPiA+ID4gPiArKysgYi9NQUlOVEFJTkVSUw0KPiA+ID4gPiBAQCAtODE0
-LDYgKzgxNCw3IEBAIEFOQUxPRyBERVZJQ0VTIElOQyBBREdTMTQwOCBEUklWRVINCj4gPiA+ID4g
-IE06CU1pcmNlYSBDYXByaW9ydSA8bWlyY2VhLmNhcHJpb3J1QGFuYWxvZy5jb20+DQo+ID4gPiA+
-ICBTOglTdXBwb3J0ZWQNCj4gPiA+ID4gIEY6CWRyaXZlcnMvbXV4L2FkZ3MxNDA4LmMNCj4gPiA+
-ID4gK0Y6CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdXgvYWRpLGFkZ3MxNDA4
-LnQNCj4gPiA+ID4geHQNCj4gPiA+ID4gIA0KPiA+ID4gPiAgQU5BTE9HIERFVklDRVMgSU5DIEFE
-VjcxODAgRFJJVkVSDQo+ID4gPiA+ICBNOglMYXJzLVBldGVyIENsYXVzZW4gPGxhcnNAbWV0YWZv
-by5kZT4NCj4gPiA+ID4gDQo+IA0KPiA=
+On 2018-07-19 09:26, Caprioru, Mircea wrote:
+> On Wed, 2018-07-18 at 15:09 +0200, Peter Rosin wrote:
+>> On 2018-07-17 15:44, Mircea Caprioru wrote:
+>>> Adding dt-bindings documentation for adgs1408/1409 multiplexer. The
+>>> bindings follow the standard SPI and mux bindings and do not
+>>> require any
+>>> additional custom properties.
+>>
+>> However, both chips have general purpose output pins. I think it is
+>> customary to document the bindings for such things while at it?
+> 
+> This functionality is not yet implemented in the driver. It does not
+> make sense to document it just yet. Will add it when the driver
+> implements it.
+
+I disagree, and I also think 2/2 should come before 1/2, just to show
+that things are done in the proper order. That makes it clear that the
+driver does not implement random (or not yet existing) device-tree
+bindings.
+
+The bindings should not document the driver, they should document
+the hardware/interfaces.
+
+>>
+>> Another thing that I'm wondering about is if it is at all possible
+>> to describe daisy-chained devices on an spi bus in the device tree?
+>>
+> I'm not sure about this either. I will have to also look into this.
+
+It was more of a general question for devicetree/spi experts, but I do
+not expect any generic solutions in this problem space...
+
+Cheers,
+Peter
+
+>>>
+>>> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+>>> ---
+>>> Changelog V1 -> V2
+>>> - removed wildcard adgs140x
+>>> - removed removed required cells property
+>>>
+>>>  .../devicetree/bindings/mux/adi,adgs1408.txt  | 39
+>>> +++++++++++++++++++
+>>>  MAINTAINERS                                   |  1 +
+>>>  2 files changed, 40 insertions(+)
+>>>  create mode 100644
+>>> Documentation/devicetree/bindings/mux/adi,adgs1408.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mux/adi,adgs1408.txt
+>>> b/Documentation/devicetree/bindings/mux/adi,adgs1408.txt
+>>> new file mode 100644
+>>> index 000000000000..6b1cbe326786
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mux/adi,adgs1408.txt
+>>> @@ -0,0 +1,39 @@
+>>> +Bindings for Analog Devices ADGS1408/1409 8:1/Dual 4:1 Mux
+>>> +
+>>> +Required properties:
+>>> +- compatible : "adi,adgs1408" or "adi,adgs1409"
+>>
+>> I think it is preferred to have one compatible per line.
+> 
+> Ack.
+>>
+>>> +* Standard mux-controller bindings as described in mux-
+>>> controller.txt
+>>> +
+>>> +Optional properties:
+>>> +- idle-state : if present, array of states that the mux
+>>> controllers will have
+>>> +  when idle. The special state MUX_IDLE_AS_IS is the default and
+>>> +  MUX_IDLE_DISCONNECT is also supported.
+>>> +
+>>> +States 0 through 7 correspond to signals S1 through S8 in the
+>>> datasheet.
+>>> +For ADGS1409 only states 0 to 3 are available.
+>>> +
+>>> +Example:
+>>> +
+>>> +	/*
+>>> +	 * One mux controller.
+>>> +	 * Mux 1 to 8 set to idle as is (no idle-state declared)
+>>
+>> What do you mean "Mux 1 to 8"? There is only one mux...
+> 
+> I was reffering to the mux inputs, will rephrase this.
+>>
+>>> +	 */
+>>> +	&spi0 {
+>>> +		mux: mux-controller@2 {
+>>> +			compatible = "adi,adgs1408";
+>>> +			reg = <0>;
+>>
+>> reg = <0> does not match @2 above.
+> 
+> Ack.
+>>
+>>> +			spi-max-frequency = <1000000>;
+>>> +			#mux-control-cells = <0>;
+>>> +		};
+>>> +	}
+>>> +
+>>> +	adc-mux@3 {
+>>
+>> There is no reg property in this node. I think you should simply
+>> drop the @3.
+> 
+> Ack.
+>>
+>> Cheers,
+>> Peter
+> 
+> Thanks,
+> Mircea
+>>
+>>> +		compatible = "io-channel-mux";
+>>> +		io-channels = <&adc 1>;
+>>> +		io-channel-names = "parent";
+>>> +		mux-controls = <&mux>;
+>>> +
+>>> +		channels = "out_a0", "out_a1", "test0", "test1",
+>>> +			"out_b0", "out_b1", "testb0", "testb1";
+>>> +
+>>> +	};
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index 458d42d6f4f3..af8ea2638641 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -814,6 +814,7 @@ ANALOG DEVICES INC ADGS1408 DRIVER
+>>>  M:	Mircea Caprioru <mircea.caprioru@analog.com>
+>>>  S:	Supported
+>>>  F:	drivers/mux/adgs1408.c
+>>> +F:	Documentation/devicetree/bindings/mux/adi,adgs1408.txt
+>>>  
+>>>  ANALOG DEVICES INC ADV7180 DRIVER
+>>>  M:	Lars-Peter Clausen <lars@metafoo.de>
+>>>
+>>
+
