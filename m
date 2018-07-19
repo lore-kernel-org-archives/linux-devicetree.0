@@ -1,154 +1,117 @@
-Return-Path: <SRS0=lWLe=KH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:56342 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388293AbeGWOsa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Jul 2018 10:48:30 -0400
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH 09/21] v4l: fwnode: Read lane inversion information despite lane numbering
-Date: Mon, 23 Jul 2018 16:46:54 +0300
-Message-Id: <20180723134706.15334-10-sakari.ailus@linux.intel.com>
-In-Reply-To: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
-References: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
+Return-Path: <SRS0=Hazi=KD=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr20131.outbound.protection.outlook.com ([40.107.2.131]:18242
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730521AbeGSPtM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Jul 2018 11:49:12 -0400
+Subject: Re: [PATCH V3 1/2] dt-bindings: mux: add adi,adgs1408
+References: <20180719134320.23560-1-mircea.caprioru@analog.com>
+From: Peter Rosin <peda@axentia.se>
+Message-ID: <4b4fb70f-edb8-f7d3-a6f9-8adf31424030@axentia.se>
+Date: Thu, 19 Jul 2018 17:05:28 +0200
+MIME-Version: 1.0
+In-Reply-To: <20180719134320.23560-1-mircea.caprioru@analog.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
+To: Mircea Caprioru <mircea.caprioru@analog.com>, robh+dt@kernel.org
+Cc: davem@davemloft.net, mchehab+samsung@kernel.org, akpm@linux-foundation.org, rdunlap@infradead.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Read the lane inversion independently of whether the "data-lanes" property
-exists. This makes sense since the caller may pass the number of lanes as
-the default configuration while the lane inversion configuration may still
-be available in firmware.
+On 2018-07-19 15:43, Mircea Caprioru wrote:
+> Adding documentation for adgs1408/1409 multiplexer. The bindings
+> follow the standard SPI and mux bindings and do not require any
+> additional custom properties.
+> 
+> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+> ---
+> Changelog V2 -> V3
+> - formated dt-bindings commit message
+> - added property for general purpose outputs
+> 
+>  .../devicetree/bindings/mux/adi,adgs1408.txt  | 48 +++++++++++++++++++
+>  MAINTAINERS                                   |  6 +++
+>  2 files changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mux/adi,adgs1408.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mux/adi,adgs1408.txt b/Documentation/devicetree/bindings/mux/adi,adgs1408.txt
+> new file mode 100644
+> index 000000000000..0a7b67023ef0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mux/adi,adgs1408.txt
+> @@ -0,0 +1,48 @@
+> +Bindings for Analog Devices ADGS1408/1409 8:1/Dual 4:1 Mux
+> +
+> +Required properties:
+> +- compatible : Should be one of
+> +	* "adi,adgs1408"
+> +	* "adi,adgs1409"
+> +* Standard mux-controller bindings as described in mux-controller.txt
+> +
+> +Optional properties for ADGS1408/1409:
+> +- gpio-controller : if present, #gpio-cells is required.
+> +- #gpio-cells : should be <2>
+> +			- First cell is the GPO line number, i.e. 0 or 1
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- drivers/media/v4l2-core/v4l2-fwnode.c | 65 +++++++++++++++++++----------------
- 1 file changed, 35 insertions(+), 30 deletions(-)
+ADGS1408 has four GPOs, and it's five for 1409. So, you should adjust
+the "0 or 1" copy-paste from the adg792a origin (which has two GPOs).
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index e62a1fcabd8f..3f30904c158c 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -43,26 +43,31 @@ enum v4l2_fwnode_bus_type {
- };
- 
- static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
--					       struct v4l2_fwnode_endpoint *vep)
-+					       struct v4l2_fwnode_endpoint *vep,
-+					       enum v4l2_fwnode_bus_type bus_type)
- {
- 	struct v4l2_fwnode_bus_mipi_csi2 *bus = &vep->bus.mipi_csi2;
- 	bool have_clk_lane = false;
- 	unsigned int flags = 0, lanes_used = 0;
-+	u32 array[1 + V4L2_FWNODE_CSI2_MAX_DATA_LANES];
-+	unsigned int num_data_lanes = 0;
- 	unsigned int i;
- 	u32 v;
- 	int rval;
- 
-+	if (bus_type == V4L2_FWNODE_BUS_TYPE_CSI2_DPHY)
-+		num_data_lanes = min_t(u32, bus->num_data_lanes,
-+				       V4L2_FWNODE_CSI2_MAX_DATA_LANES);
-+
- 	rval = fwnode_property_read_u32_array(fwnode, "data-lanes", NULL, 0);
- 	if (rval > 0) {
--		u32 array[1 + V4L2_FWNODE_CSI2_MAX_DATA_LANES];
--
--		bus->num_data_lanes =
-+		num_data_lanes =
- 			min_t(int, V4L2_FWNODE_CSI2_MAX_DATA_LANES, rval);
- 
- 		fwnode_property_read_u32_array(fwnode, "data-lanes", array,
--					       bus->num_data_lanes);
-+					       num_data_lanes);
- 
--		for (i = 0; i < bus->num_data_lanes; i++) {
-+		for (i = 0; i < num_data_lanes; i++) {
- 			if (lanes_used & BIT(array[i]))
- 				pr_warn("duplicated lane %u in data-lanes\n",
- 					array[i]);
-@@ -71,30 +76,27 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
- 			bus->data_lanes[i] = array[i];
- 			pr_debug("lane %u position %u\n", i, array[i]);
- 		}
-+	}
- 
--		rval = fwnode_property_read_u32_array(fwnode,
--						      "lane-polarities", NULL,
--						      0);
--		if (rval > 0) {
--			if (rval != 1 + bus->num_data_lanes /* clock+data */) {
--				pr_warn("invalid number of lane-polarities entries (need %u, got %u)\n",
--					1 + bus->num_data_lanes, rval);
--				return -EINVAL;
--			}
-+	rval = fwnode_property_read_u32_array(fwnode, "lane-polarities", NULL,
-+					      0);
-+	if (rval > 0) {
-+		if (rval != 1 + num_data_lanes /* clock+data */) {
-+			pr_warn("invalid number of lane-polarities entries (need %u, got %u)\n",
-+				1 + num_data_lanes, rval);
-+			return -EINVAL;
-+		}
- 
--			fwnode_property_read_u32_array(fwnode,
--						       "lane-polarities", array,
--						       1 + bus->num_data_lanes);
-+		fwnode_property_read_u32_array(fwnode, "lane-polarities", array,
-+					       1 + num_data_lanes);
- 
--			for (i = 0; i < 1 + bus->num_data_lanes; i++) {
--				bus->lane_polarities[i] = array[i];
--				pr_debug("lane %u polarity %sinverted",
--					 i, array[i] ? "" : "not ");
--			}
--		} else {
--			pr_debug("no lane polarities defined, assuming not inverted\n");
-+		for (i = 0; i < 1 + num_data_lanes; i++) {
-+			bus->lane_polarities[i] = array[i];
-+			pr_debug("lane %u polarity %sinverted",
-+				 i, array[i] ? "" : "not ");
- 		}
--
-+	} else {
-+		pr_debug("no lane polarities defined, assuming not inverted\n");
- 	}
- 
- 	if (!fwnode_property_read_u32(fwnode, "clock-lanes", &v)) {
-@@ -114,10 +116,11 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
- 		flags |= V4L2_MBUS_CSI2_CONTINUOUS_CLOCK;
- 	}
- 
--	if (lanes_used || have_clk_lane ||
--	    (flags & ~V4L2_MBUS_CSI2_CONTINUOUS_CLOCK)) {
-+	if (bus_type == V4L2_FWNODE_BUS_TYPE_CSI2_DPHY || lanes_used ||
-+	    have_clk_lane || (flags & ~V4L2_MBUS_CSI2_CONTINUOUS_CLOCK)) {
- 		bus->flags = flags;
- 		vep->bus_type = V4L2_MBUS_CSI2_DPHY;
-+		bus->num_data_lanes = num_data_lanes;
- 	}
- 
- 	return 0;
-@@ -273,7 +276,8 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
- 
- 	switch (bus_type) {
- 	case V4L2_FWNODE_BUS_TYPE_GUESS:
--		rval = v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep);
-+		rval = v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep,
-+							   bus_type);
- 		if (rval)
- 			return rval;
- 
-@@ -289,7 +293,8 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
- 		return 0;
- 	case V4L2_FWNODE_BUS_TYPE_CSI2_DPHY:
- 		vep->bus_type = V4L2_MBUS_CSI2_DPHY;
--		return v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep);
-+		return v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep,
-+							   bus_type);
- 	case V4L2_FWNODE_BUS_TYPE_PARALLEL:
- 	case V4L2_FWNODE_BUS_TYPE_BT656:
- 		v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep, bus_type);
--- 
-2.11.0
+Cheers,
+Peter
+
+> +			- Second cell is used to specify active high (0)
+> +			or active low (1)
+> +
+> +Optional properties:
+> +- idle-state : if present, array of states that the mux controllers will have
+> +  when idle. The special state MUX_IDLE_AS_IS is the default and
+> +  MUX_IDLE_DISCONNECT is also supported.
+> +
+> +States 0 through 7 correspond to signals S1 through S8 in the datasheet.
+> +For ADGS1409 only states 0 to 3 are available.
+> +
+> +Example:
+> +
+> +	/*
+> +	 * One mux controller.
+> +	 * Mux state set to idle as is (no idle-state declared)
+> +	 */
+> +	&spi0 {
+> +		mux: mux-controller@0 {
+> +			compatible = "adi,adgs1408";
+> +			reg = <0>;
+> +			spi-max-frequency = <1000000>;
+> +			#mux-control-cells = <0>;
+> +		};
+> +	}
+> +
+> +	adc-mux {
+> +		compatible = "io-channel-mux";
+> +		io-channels = <&adc 1>;
+> +		io-channel-names = "parent";
+> +		mux-controls = <&mux>;
+> +
+> +		channels = "out_a0", "out_a1", "test0", "test1",
+> +			"out_b0", "out_b1", "testb0", "testb1";
+> +
+> +	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 192d7f73fd01..55dfdbf835c1 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -810,6 +810,12 @@ L:	linux-media@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/media/i2c/ad9389b*
+>  
+> +ANALOG DEVICES INC ADGS1408 DRIVER
+> +M:	Mircea Caprioru <mircea.caprioru@analog.com>
+> +S:	Supported
+> +F:	drivers/mux/adgs1408.c
+> +F:	Documentation/devicetree/bindings/mux/adgs1408.txt
+> +
+>  ANALOG DEVICES INC ADV7180 DRIVER
+>  M:	Lars-Peter Clausen <lars@metafoo.de>
+>  L:	linux-media@vger.kernel.org
+> 
 
