@@ -1,28 +1,103 @@
-From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Subject: Re: [PATCH v2 10/10] dts: juno: Update coresight bindings for hw port
-Date: Thu, 19 Jul 2018 12:01:13 +0100
-Message-ID: <ff65a34b-c6ac-b3c3-3aed-cbab95f1e612@arm.com>
-References: <1531997715-6767-1-git-send-email-suzuki.poulose@arm.com>
- <1531997715-6767-11-git-send-email-suzuki.poulose@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: [PATCH v2] arm64: dts: msm8916: drop legacy suffix for clocks used by MSM DRM driver
+Date: Thu, 19 Jul 2018 13:12:34 +0200
+Message-ID: <20180719111235.22421-1-niklas.cassel@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531997715-6767-11-git-send-email-suzuki.poulose@arm.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, robh@kernel.org, mathieu.poirier@linaro.org, sudeep.holla@arm.com, frowand.list@gmail.com, devicetree@vger.kernel.org, mark.rutland@arm.com, matt.sealey@arm.com, charles.garcia-tobin@arm.com, coresight@lists.linaro.org, john.horley@arm.com, mike.leach@linaro.org, Liviu Dudau <liviu.dudau@arm.com>
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/07/18 11:55, Suzuki K Poulose wrote:
-> Switch to updated coresight bindings for hw ports.
-> 
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: Liviu Dudau <liviu.dudau@arm.com>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Drop legacy suffix for clocks used by MSM DRM driver.
 
-Please ignore this patch, this is indeed a duplicate of the real patch 10/10
-in the series.
+The _clk suffix has been deprecated since commit 20c3bb80235 ("drm/msm:
+drop _clk suffix from clk names").
 
-Suzuki
+Fixes the following warnings during boot:
+
+msm_dsi_phy 1a98300.dsi-phy: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
+msm 1a00000.mdss: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
+msm 1a00000.mdss: Using legacy clk name binding.  Use "bus" instead of "bus_clk"
+msm 1a00000.mdss: Using legacy clk name binding.  Use "vsync" instead of "vsync_clk"
+msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "bus" instead of "bus_clk"
+msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
+msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "core" instead of "core_clk"
+msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "vsync" instead of "vsync_clk"
+msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "mdp_core" instead of "mdp_core_clk"
+msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
+msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "bus" instead of "bus_clk"
+msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "byte" instead of "byte_clk"
+msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "pixel" instead of "pixel_clk"
+msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "core" instead of "core_clk"
+
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Reviewed-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+---
+Changes since v1:
+-Improved commit message.
+
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 28 +++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index c2625d15a8c0..7b32b8990d62 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -858,9 +858,9 @@
+ 			clocks = <&gcc GCC_MDSS_AHB_CLK>,
+ 				 <&gcc GCC_MDSS_AXI_CLK>,
+ 				 <&gcc GCC_MDSS_VSYNC_CLK>;
+-			clock-names = "iface_clk",
+-				      "bus_clk",
+-				      "vsync_clk";
++			clock-names = "iface",
++				      "bus",
++				      "vsync";
+ 
+ 			interrupts = <0 72 IRQ_TYPE_LEVEL_HIGH>;
+ 
+@@ -883,10 +883,10 @@
+ 					 <&gcc GCC_MDSS_AXI_CLK>,
+ 					 <&gcc GCC_MDSS_MDP_CLK>,
+ 					 <&gcc GCC_MDSS_VSYNC_CLK>;
+-				clock-names = "iface_clk",
+-					      "bus_clk",
+-					      "core_clk",
+-					      "vsync_clk";
++				clock-names = "iface",
++					      "bus",
++					      "core",
++					      "vsync";
+ 
+ 				iommus = <&apps_iommu 4>;
+ 
+@@ -922,12 +922,12 @@
+ 					 <&gcc GCC_MDSS_BYTE0_CLK>,
+ 					 <&gcc GCC_MDSS_PCLK0_CLK>,
+ 					 <&gcc GCC_MDSS_ESC0_CLK>;
+-				clock-names = "mdp_core_clk",
+-					      "iface_clk",
+-					      "bus_clk",
+-					      "byte_clk",
+-					      "pixel_clk",
+-					      "core_clk";
++				clock-names = "mdp_core",
++					      "iface",
++					      "bus",
++					      "byte",
++					      "pixel",
++					      "core";
+ 				phys = <&dsi_phy0>;
+ 				phy-names = "dsi-phy";
+ 
+@@ -963,7 +963,7 @@
+ 				#phy-cells = <0>;
+ 
+ 				clocks = <&gcc GCC_MDSS_AHB_CLK>;
+-				clock-names = "iface_clk";
++				clock-names = "iface";
+ 			};
+ 		};
+ 
+-- 
+2.17.1
