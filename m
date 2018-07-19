@@ -1,104 +1,70 @@
-Return-Path: <SRS0=7tr2=KE=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
+Return-Path: <SRS0=GGEp=KD=renesas.com=Chris.Brandt@kernel.org>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 2/2] serial: sh-sci: Document r7s9210 bindings
+Date: Thu, 19 Jul 2018 12:58:58 +0000
+Message-ID: 
+ <TY1PR01MB156281CF1C2EF61F9823BBA58A520@TY1PR01MB1562.jpnprd01.prod.outlook.com>
 References: <20180711144131.73552-1-chris.brandt@renesas.com>
- <20180711144131.73552-3-chris.brandt@renesas.com> <CAMuHMdVCA0MrD4QRZb7VPR_Dqmghfd83j4WY_oZnfqVyx++rEw@mail.gmail.com>
+ <20180711144131.73552-3-chris.brandt@renesas.com>
+ <CAMuHMdVCA0MrD4QRZb7VPR_Dqmghfd83j4WY_oZnfqVyx++rEw@mail.gmail.com>
  <CAMuHMdWdOoEbwPOzOfEAHH0MXNr-Wf_-37i8Qj6WdphgyKLe7g@mail.gmail.com>
  <TY1PR01MB1562A582DB067740B7D012ED8A530@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <CAMuHMdVKcGhDwdp3=+JFLONThnBpp7yT9DProNmzNp0V7fN8pQ@mail.gmail.com> <TY1PR01MB156281CF1C2EF61F9823BBA58A520@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY1PR01MB156281CF1C2EF61F9823BBA58A520@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 20 Jul 2018 10:16:51 +0200
-Message-ID: <CAMuHMdWwZsQ2sovgYpeCsHBs=KYTm0AO3tOf4VKeZCXz+OXQAA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] serial: sh-sci: Document r7s9210 bindings
-Content-Type: text/plain; charset="UTF-8"
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+ <CAMuHMdVKcGhDwdp3=+JFLONThnBpp7yT9DProNmzNp0V7fN8pQ@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdVKcGhDwdp3=+JFLONThnBpp7yT9DProNmzNp0V7fN8pQ@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Chris,
-
-On Thu, Jul 19, 2018 at 2:59 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> On Thursday, July 19, 2018, Geert Uytterhoeven wrote:
-> > > The issue that I ran into was the device driver assumed some signals
-> > > were muxed together (TXI and DRI), and that other signals were
-> > individual.
-> > >
-> > > The existing driver wanted interrupts to be specified in this order:
-> > >   1. Error
-> > >   2. RX
-> > >   3. TX (assumes DRI)
-> > >   4. Break
->
-> First, sorry for my mis-type.
-> DRI mean 'Data Ready Interrupt' and for SCIF it is normally muxed with RX (not TX).
-
-OK.
-
-> > > Of course I have no problem documenting all this, but I first I just
-> > > wanted to make sure I was not going to get push back when I submit a DT
-> > > later that lists the same interrupt twice.
-> >
-> > Listing them twice does make sense to me, as the interrupt controller
-> > source list in the RZ/A2 docs has only four, and explicitly lists how they
-> > are
-> > multiplexed:
-> >   base + 0 = ERI/BRI,
-> >   base + 1 = RXI,
-> >   base + 2 = TXI,
-> >   base + 3 = TEI/DRI.
-> > But future SoCS with the same SCIFA variant may wire them differently?
->
-> This SCIF seems to be related to ones used in H8S devices. It's also been
-> used in RX and RZ/T devices. So I think the order seems to be stable.
->
->
-> > For DT backwards compatibility, we have to keep support for the following
-> > 2 schemes:
-> >   1. Single "interrupts" value, no "interrupt-names", for fully
-> > multiplexed
-> >      interrupts (SH/R-Mobile, R-Car).
-> >   2. Four "interrupts" values, no "interrupt-names", for ERI/RXI/TXI/TEI
-> >      (RZ/A1, H8/300).
-> >
-> > For RZ/A2, I suggest extending the bindings with interrupt-names,
-> > documenting all 6 interrupt sources, and let the driver handle that.
-> > That means there should be 6, not 5, "interrupts" values.
-> > Whether the driver implements all possible combinations, or only what you
-> > need for RZ/A2, is up to you. I agree the interrupt handling in the driver
-> > is already sufficiently complex.
-> > Ideally, you would document support for RZ/A1 with interrupt-names too,
-> > and handle that as well.
-> >
-> > Does this make sense?
->
-> What about this idea:
-> Since we can't break any old DTs, what if we just say that you simply
-> list all the interrupts in DT, and the driver just registers all those
-> vectors with the same ISR function (sci_mpxed_interrupt) and process
-> everything the same way R-Car devices do with their single interrupt.
->
-> For this class of device, having separate interrupt vectors probably
-> doesn't buy you that much extra performance.
->
-> The driver could also check to see if "interrupt-names" was specified,
-> and if it was, the driver could simply use those names when registering
-> the interrupts so everything shows up nicely in /proc/interrupts.
->
-> What's your thoughts on that idea?
-
-I don't know if using the same handler for all separate interrupts won't cause
-problems. What if two interrupts fire, the first one calls the common handler,
-handles both, and the second one returns IRQ_NONE? Spurious interrupts
-detected by the core interrupt, leading to "Disabling IRQ #n" once it has seen
-too many of them?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgR2VlcnQsDQoNCk9uIFRodXJzZGF5LCBKdWx5IDE5LCAyMDE4LCBHZWVydCBVeXR0ZXJob2V2
+ZW4gd3JvdGU6DQo+ID4gVGhlIGlzc3VlIHRoYXQgSSByYW4gaW50byB3YXMgdGhlIGRldmljZSBk
+cml2ZXIgYXNzdW1lZCBzb21lIHNpZ25hbHMNCj4gPiB3ZXJlIG11eGVkIHRvZ2V0aGVyIChUWEkg
+YW5kIERSSSksIGFuZCB0aGF0IG90aGVyIHNpZ25hbHMgd2VyZQ0KPiBpbmRpdmlkdWFsLg0KPiA+
+DQo+ID4gVGhlIGV4aXN0aW5nIGRyaXZlciB3YW50ZWQgaW50ZXJydXB0cyB0byBiZSBzcGVjaWZp
+ZWQgaW4gdGhpcyBvcmRlcjoNCj4gPiAgIDEuIEVycm9yDQo+ID4gICAyLiBSWA0KPiA+ICAgMy4g
+VFggKGFzc3VtZXMgRFJJKQ0KPiA+ICAgNC4gQnJlYWsNCg0KRmlyc3QsIHNvcnJ5IGZvciBteSBt
+aXMtdHlwZS4NCkRSSSBtZWFuICdEYXRhIFJlYWR5IEludGVycnVwdCcgYW5kIGZvciBTQ0lGIGl0
+IGlzIG5vcm1hbGx5IG11eGVkIHdpdGggUlggKG5vdCBUWCkuDQoNCg0KPiA+IE9mIGNvdXJzZSBJ
+IGhhdmUgbm8gcHJvYmxlbSBkb2N1bWVudGluZyBhbGwgdGhpcywgYnV0IEkgZmlyc3QgSSBqdXN0
+DQo+ID4gd2FudGVkIHRvIG1ha2Ugc3VyZSBJIHdhcyBub3QgZ29pbmcgdG8gZ2V0IHB1c2ggYmFj
+ayB3aGVuIEkgc3VibWl0IGEgRFQNCj4gPiBsYXRlciB0aGF0IGxpc3RzIHRoZSBzYW1lIGludGVy
+cnVwdCB0d2ljZS4NCj4gDQo+IExpc3RpbmcgdGhlbSB0d2ljZSBkb2VzIG1ha2Ugc2Vuc2UgdG8g
+bWUsIGFzIHRoZSBpbnRlcnJ1cHQgY29udHJvbGxlcg0KPiBzb3VyY2UgbGlzdCBpbiB0aGUgUlov
+QTIgZG9jcyBoYXMgb25seSBmb3VyLCBhbmQgZXhwbGljaXRseSBsaXN0cyBob3cgdGhleQ0KPiBh
+cmUNCj4gbXVsdGlwbGV4ZWQ6DQo+ICAgYmFzZSArIDAgPSBFUkkvQlJJLA0KPiAgIGJhc2UgKyAx
+ID0gUlhJLA0KPiAgIGJhc2UgKyAyID0gVFhJLA0KPiAgIGJhc2UgKyAzID0gVEVJL0RSSS4NCj4g
+QnV0IGZ1dHVyZSBTb0NTIHdpdGggdGhlIHNhbWUgU0NJRkEgdmFyaWFudCBtYXkgd2lyZSB0aGVt
+IGRpZmZlcmVudGx5Pw0KDQpUaGlzIFNDSUYgc2VlbXMgdG8gYmUgcmVsYXRlZCB0byBvbmVzIHVz
+ZWQgaW4gSDhTIGRldmljZXMuIEl0J3MgYWxzbyBiZWVuDQp1c2VkIGluIFJYIGFuZCBSWi9UIGRl
+dmljZXMuIFNvIEkgdGhpbmsgdGhlIG9yZGVyIHNlZW1zIHRvIGJlIHN0YWJsZS4NCg0KDQo+IEZv
+ciBEVCBiYWNrd2FyZHMgY29tcGF0aWJpbGl0eSwgd2UgaGF2ZSB0byBrZWVwIHN1cHBvcnQgZm9y
+IHRoZSBmb2xsb3dpbmcNCj4gMiBzY2hlbWVzOg0KPiAgIDEuIFNpbmdsZSAiaW50ZXJydXB0cyIg
+dmFsdWUsIG5vICJpbnRlcnJ1cHQtbmFtZXMiLCBmb3IgZnVsbHkNCj4gbXVsdGlwbGV4ZWQNCj4g
+ICAgICBpbnRlcnJ1cHRzIChTSC9SLU1vYmlsZSwgUi1DYXIpLg0KPiAgIDIuIEZvdXIgImludGVy
+cnVwdHMiIHZhbHVlcywgbm8gImludGVycnVwdC1uYW1lcyIsIGZvciBFUkkvUlhJL1RYSS9URUkN
+Cj4gICAgICAoUlovQTEsIEg4LzMwMCkuDQo+IA0KPiBGb3IgUlovQTIsIEkgc3VnZ2VzdCBleHRl
+bmRpbmcgdGhlIGJpbmRpbmdzIHdpdGggaW50ZXJydXB0LW5hbWVzLA0KPiBkb2N1bWVudGluZyBh
+bGwgNiBpbnRlcnJ1cHQgc291cmNlcywgYW5kIGxldCB0aGUgZHJpdmVyIGhhbmRsZSB0aGF0Lg0K
+PiBUaGF0IG1lYW5zIHRoZXJlIHNob3VsZCBiZSA2LCBub3QgNSwgImludGVycnVwdHMiIHZhbHVl
+cy4NCj4gV2hldGhlciB0aGUgZHJpdmVyIGltcGxlbWVudHMgYWxsIHBvc3NpYmxlIGNvbWJpbmF0
+aW9ucywgb3Igb25seSB3aGF0IHlvdQ0KPiBuZWVkIGZvciBSWi9BMiwgaXMgdXAgdG8geW91LiBJ
+IGFncmVlIHRoZSBpbnRlcnJ1cHQgaGFuZGxpbmcgaW4gdGhlIGRyaXZlcg0KPiBpcyBhbHJlYWR5
+IHN1ZmZpY2llbnRseSBjb21wbGV4Lg0KPiBJZGVhbGx5LCB5b3Ugd291bGQgZG9jdW1lbnQgc3Vw
+cG9ydCBmb3IgUlovQTEgd2l0aCBpbnRlcnJ1cHQtbmFtZXMgdG9vLA0KPiBhbmQgaGFuZGxlIHRo
+YXQgYXMgd2VsbC4NCj4gDQo+IERvZXMgdGhpcyBtYWtlIHNlbnNlPw0KDQpXaGF0IGFib3V0IHRo
+aXMgaWRlYToNClNpbmNlIHdlIGNhbid0IGJyZWFrIGFueSBvbGQgRFRzLCB3aGF0IGlmIHdlIGp1
+c3Qgc2F5IHRoYXQgeW91IHNpbXBseSANCmxpc3QgYWxsIHRoZSBpbnRlcnJ1cHRzIGluIERULCBh
+bmQgdGhlIGRyaXZlciBqdXN0IHJlZ2lzdGVycyBhbGwgdGhvc2UgDQp2ZWN0b3JzIHdpdGggdGhl
+IHNhbWUgSVNSIGZ1bmN0aW9uIChzY2lfbXB4ZWRfaW50ZXJydXB0KSBhbmQgcHJvY2VzcyANCmV2
+ZXJ5dGhpbmcgdGhlIHNhbWUgd2F5IFItQ2FyIGRldmljZXMgZG8gd2l0aCB0aGVpciBzaW5nbGUg
+aW50ZXJydXB0Lg0KDQpGb3IgdGhpcyBjbGFzcyBvZiBkZXZpY2UsIGhhdmluZyBzZXBhcmF0ZSBp
+bnRlcnJ1cHQgdmVjdG9ycyBwcm9iYWJseSANCmRvZXNuJ3QgYnV5IHlvdSB0aGF0IG11Y2ggZXh0
+cmEgcGVyZm9ybWFuY2UuDQoNClRoZSBkcml2ZXIgY291bGQgYWxzbyBjaGVjayB0byBzZWUgaWYg
+ImludGVycnVwdC1uYW1lcyIgd2FzIHNwZWNpZmllZCwgDQphbmQgaWYgaXQgd2FzLCB0aGUgZHJp
+dmVyIGNvdWxkIHNpbXBseSB1c2UgdGhvc2UgbmFtZXMgd2hlbiByZWdpc3RlcmluZyANCnRoZSBp
+bnRlcnJ1cHRzIHNvIGV2ZXJ5dGhpbmcgc2hvd3MgdXAgbmljZWx5IGluIC9wcm9jL2ludGVycnVw
+dHMuDQoNCldoYXQncyB5b3VyIHRob3VnaHRzIG9uIHRoYXQgaWRlYT8NCg0KQ2hyaXMNCg0K
