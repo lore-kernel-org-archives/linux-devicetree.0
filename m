@@ -1,136 +1,113 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: [PATCH v6 03/10] i3c: Add sysfs ABI spec
-Date: Thu, 19 Jul 2018 17:29:23 +0200
-Message-ID: <20180719152930.3715-4-boris.brezillon@bootlin.com>
-References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v2 2/4] pci: dwc: pci-dra7xx: Enable errata i870 for both
+ EP and RC mode
+Date: Thu, 19 Jul 2018 21:29:02 +0530
+Message-ID: <c9d953f8-bc60-5243-bd11-a3a053c08340@ti.com>
+References: <20180627122919.23926-1-vigneshr@ti.com>
+ <20180627122919.23926-3-vigneshr@ti.com> <20180718110250.GA21589@red-moon>
+ <b7f1cef7-b0d8-733a-c450-163299d281d0@ti.com>
+ <20180719111556.GB9213@e107981-ln.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180719152930.3715-1-boris.brezillon@bootlin.com>
+In-Reply-To: <20180719111556.GB9213@e107981-ln.cambridge.arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus
+To: Tony Lindgren <tony@atomide.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh+dt@kernel.org>, KISHON VIJAY ABRAHAM <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document sysfs files/directories/symlinks exposed by the I3C subsystem.
 
-Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
----
-Changes in v5:
-- Fix the kernel version
-- Rename address into dynamic_address to match changes done in the code
 
-Changes in v4:
-- none
+On Thursday 19 July 2018 04:45 PM, Lorenzo Pieralisi wrote:
+> On Thu, Jul 19, 2018 at 04:04:34PM +0530, Vignesh R wrote:
+>> Hi Lorenzo,
+>>
+[...]
+>>>> +	ret = dra7xx_pcie_unaligned_memaccess(dev);
+>>>> +	if (ret)
+>>>> +		dev_err(dev, "WA for Errata i870 not appplied. Update DT\n");
+>>>
+>>> Hi Vignesh,
+>>>
+>>> Nit: s/appplied/applied
+>>>
+>>
+>> Oops, let me know if you want me to resend with this fixed.
+> 
+> I can fix it, no problem but see below.
+> 
+>>> Two questions:
+>>>
+>>> - Current code applies the unaligned_memaccess() workaround for all
+>>>   compatible variants. This is fine for current controllers (since
+>>>   they are all affected), the code path above will have to be
+>>>   reworked if there is any other compatible IP re-using the driver
+>>>   that does not require the workaround.
+>>
+>> There are no compatible IPs that don't require this workaround. Also, I
+>> don't see this IP being re-used in future. If you insist, I can add a
+>> errata flag
+> 
+> I do not insist, I just pointed this out ;-)
+> 
+>>> - How do you want this series to go upstream ? If it goes via arm-soc,
+>>>   which I think it should, here is my ACK on this patch:
+>>>
+>> Patch 1 and 2(dt bindings update and driver patch) can go in via PCI
+>> tree. And DT changes(patch 3 and 4) can be picked up by Tony via
+>> omap/arm-soc tree. They are mostly independent and should not cause any
+>> problems. Does that sound good?
+> 
+> It should be fine but technically as soon as patch (2) is applied we
+> would have a regression if patches (3) and (4) are applied separately.
+> 
 
-Changes in v3:
-- none
+Right, although not a regression, I see your point. It would be good to
+merge patch 3 and 4 before patch 2.
 
-Changes in v2:
-- new patch
----
- Documentation/ABI/testing/sysfs-bus-i3c | 95 +++++++++++++++++++++++++++++++++
- 1 file changed, 95 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-i3c
+Tony,
+Let me know if you are okay with taking this series via omap tree. I can
+resend re-ordering patch 2 to come at the end of the series.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-i3c b/Documentation/ABI/testing/sysfs-bus-i3c
-new file mode 100644
-index 000000000000..068fd1e97c01
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-i3c
-@@ -0,0 +1,95 @@
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>
-+KernelVersion:  4.19
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		An I3C bus. This directory will contain one sub-directory per
-+		I3C device present on the bus.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/current_master
-+KernelVersion:  4.19
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		Expose the master that owns the bus (<bus-id>-<master-pid>) at
-+		the time this file is read. Note that bus ownership can change
-+		overtime, so there's no guarantee that when the read() call
-+		returns, the value returned is still valid.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/mode
-+KernelVersion:  4.19
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		I3C bus mode. Can be "pure", "mixed-fast" or "mixed-slow". See
-+		the I3C specification for a detailed description of what each
-+		of these modes implies.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/i3c_scl_frequency
-+KernelVersion:  4.19
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		The frequency (expressed in Hz) of the SCL signal when
-+		operating in I3C SDR mode.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/i2c_scl_frequency
-+KernelVersion:  4.19
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		The frequency (expressed in Hz) of the SCL signal when
-+		operating in I2C mode.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/<bus-id>-<device-pid>
-+KernelVersion:  4.19
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		An I3C device present on I3C bus identified by <bus-id>. Note
-+		that all devices are represented including the master driving
-+		the bus.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/<bus-id>-<device-pid>/dynamic_address
-+KernelVersion:  4.19
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		Dynamic address assigned to device <bus-id>-<device-pid>. This
-+		address may change if the bus is re-initialized.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/<bus-id>-<device-pid>/bcr
-+KernelVersion:  4.19
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		BCR stands for Bus Characteristics Register and express the
-+		device capabilities in term of speed, maximum read/write
-+		length, etc. See the I3C specification for more details.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/<bus-id>-<device-pid>/dcr
-+KernelVersion:  4.19
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		DCR stands for Device Characteristics Register and express the
-+		device capabilities in term of exposed features. See the I3C
-+		specification for more details.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/<bus-id>-<device-pid>/pid
-+KernelVersion:  4.19
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		PID stands for Provisional ID and is used to uniquely identify
-+		a device on a bus. This PID contains information about the
-+		vendor, the part and an instance ID so that several devices of
-+		the same type can be connected on the same bus.
-+		See the I3C specification for more details.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/<bus-id>-<device-pid>/hdrcap
-+KernelVersion:  4.19
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		Expose the HDR (High Data Rate) capabilities of a device.
-+		Returns a list of supported HDR mode, each element is separated
-+		by space. Modes can be "hdr-ddr", "hdr-tsp" and "hdr-tsl".
-+		See the I3C specification for more details about these HDR
-+		modes.
-+
-+What:		/sys/bus/i3c/devices/<bus-id>-<device-pid>
-+KernelVersion:  4.19
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		These directories are just symbolic links to
-+		/sys/bus/i3c/devices/i3c-<bus-id>/<bus-id>-<device-pid>.
+Regards
+Vignesh
+
+> 
+>>> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+>>>
+>>
+>> Thanks!
+>>
+>>> Please let me know if I can drop this series from the PCI patchwork.
+>>>
+>>> Thanks,
+>>> Lorenzo
+>>>
+>>>> +
+>>>>  	switch (mode) {
+>>>>  	case DW_PCIE_RC_TYPE:
+>>>>  		if (!IS_ENABLED(CONFIG_PCI_DRA7XX_HOST)) {
+>>>> @@ -717,10 +721,6 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+>>>>  		dra7xx_pcie_writel(dra7xx, PCIECTRL_TI_CONF_DEVICE_TYPE,
+>>>>  				   DEVICE_TYPE_EP);
+>>>>  
+>>>> -		ret = dra7xx_pcie_ep_unaligned_memaccess(dev);
+>>>> -		if (ret)
+>>>> -			goto err_gpio;
+>>>> -
+>>>>  		ret = dra7xx_add_pcie_ep(dra7xx, pdev);
+>>>>  		if (ret < 0)
+>>>>  			goto err_gpio;
+>>>> -- 
+>>>> 2.18.0
+>>>>
+>>
+>> -- 
+>> Regards
+>> Vignesh
+
 -- 
-2.14.1
+Regards
+Vignesh
