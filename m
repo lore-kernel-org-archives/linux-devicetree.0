@@ -1,66 +1,123 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v10 10/10] drivers: clk: Add ZynqMP clock driver
-Date: Thu, 19 Jul 2018 12:30:30 +0200
-Message-ID: <6dadc5a6-7bc1-0e37-4df6-0278d9046c96@xilinx.com>
-References: <1531857547-16652-1-git-send-email-jollys@xilinx.com>
- <1531857547-16652-11-git-send-email-jollys@xilinx.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v2 2/4] pci: dwc: pci-dra7xx: Enable errata i870 for both
+ EP and RC mode
+Date: Thu, 19 Jul 2018 16:04:34 +0530
+Message-ID: <b7f1cef7-b0d8-733a-c450-163299d281d0@ti.com>
+References: <20180627122919.23926-1-vigneshr@ti.com>
+ <20180627122919.23926-3-vigneshr@ti.com> <20180718110250.GA21589@red-moon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1531857547-16652-11-git-send-email-jollys@xilinx.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180718110250.GA21589@red-moon>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jolly Shah <jolly.shah@xilinx.com>, ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Tejas Patel <tejasp@xilinx.com>, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, linux-kernel@vger.kernel.org, Jolly Shah <jollys@xilinx.com>, rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, KISHON VIJAY ABRAHAM <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen and Mike,
+Hi Lorenzo,
 
-On 17.7.2018 21:59, Jolly Shah wrote:
-> From: Jolly Shah <jolly.shah@xilinx.com>
+On Wednesday 18 July 2018 04:32 PM, Lorenzo Pieralisi wrote:
+> On Wed, Jun 27, 2018 at 05:59:17PM +0530, Vignesh R wrote:
+>> Errata i870 is applicable in both EP and RC mode. Therefore rename
+>> function dra7xx_pcie_ep_unaligned_memaccess(), that implements errata
+>> workaround, to dra7xx_pcie_unaligned_memaccess() and call it from a
+>> common place. So, that errata workaround is applied for both modes of
+>> operation.
+>>
+>> Reported-by: Chris Welch <Chris.Welch@viavisolutions.com>
+>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>> ---
+>>  drivers/pci/controller/dwc/pci-dra7xx.c | 12 ++++++------
+>>  1 file changed, 6 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+>> index 345aab56ce8b..95d9076e3fde 100644
+>> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+>> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+>> @@ -542,7 +542,7 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
+>>  };
+>>  
+>>  /*
+>> - * dra7xx_pcie_ep_unaligned_memaccess: workaround for AM572x/AM571x Errata i870
+>> + * dra7xx_pcie_unaligned_memaccess: workaround for AM572x/AM571x Errata i870
+>>   * @dra7xx: the dra7xx device where the workaround should be applied
+>>   *
+>>   * Access to the PCIe slave port that are not 32-bit aligned will result
+>> @@ -552,7 +552,7 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
+>>   *
+>>   * To avoid this issue set PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE to 1.
+>>   */
+>> -static int dra7xx_pcie_ep_unaligned_memaccess(struct device *dev)
+>> +static int dra7xx_pcie_unaligned_memaccess(struct device *dev)
+>>  {
+>>  	int ret;
+>>  	struct device_node *np = dev->of_node;
+>> @@ -695,6 +695,10 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+>>  	if (dra7xx->link_gen < 0 || dra7xx->link_gen > 2)
+>>  		dra7xx->link_gen = 2;
+>>  
+>> +	ret = dra7xx_pcie_unaligned_memaccess(dev);
+>> +	if (ret)
+>> +		dev_err(dev, "WA for Errata i870 not appplied. Update DT\n");
 > 
-> This patch adds CCF compliant clock driver for ZynqMP.
-> Clock driver queries supported clock information from
-> firmware and regiters pll and output clocks with CCF.
+> Hi Vignesh,
 > 
-> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
-> Signed-off-by: Tejas Patel <tejasp@xilinx.com>
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> Signed-off-by: Jolly Shah <jollys@xilinx.com>
-> ---
->  drivers/clk/Kconfig                  |   1 +
->  drivers/clk/Makefile                 |   1 +
->  drivers/clk/zynqmp/Kconfig           |  10 +
->  drivers/clk/zynqmp/Makefile          |   4 +
->  drivers/clk/zynqmp/clk-gate-zynqmp.c | 144 +++++++
->  drivers/clk/zynqmp/clk-mux-zynqmp.c  | 141 +++++++
->  drivers/clk/zynqmp/clk-zynqmp.h      |  68 ++++
->  drivers/clk/zynqmp/clkc.c            | 719 +++++++++++++++++++++++++++++++++++
->  drivers/clk/zynqmp/divider.c         | 217 +++++++++++
->  drivers/clk/zynqmp/pll.c             | 335 ++++++++++++++++
->  include/linux/firmware/xlnx-zynqmp.h |   1 +
->  11 files changed, 1641 insertions(+)
->  create mode 100644 drivers/clk/zynqmp/Kconfig
->  create mode 100644 drivers/clk/zynqmp/Makefile
->  create mode 100644 drivers/clk/zynqmp/clk-gate-zynqmp.c
->  create mode 100644 drivers/clk/zynqmp/clk-mux-zynqmp.c
->  create mode 100644 drivers/clk/zynqmp/clk-zynqmp.h
->  create mode 100644 drivers/clk/zynqmp/clkc.c
->  create mode 100644 drivers/clk/zynqmp/divider.c
->  create mode 100644 drivers/clk/zynqmp/pll.c
+> Nit: s/appplied/applied
+> 
 
-DT binding was reviewed by Stephen but I can't see any review for the
-driver itself. Should I wait for your review or do you want to take
-binding doc 09/10 and 10/10 separately or this can go via arm-soc tree?
+Oops, let me know if you want me to resend with this fixed.
 
-Thanks,
-Michal
+> Two questions:
+> 
+> - Current code applies the unaligned_memaccess() workaround for all
+>   compatible variants. This is fine for current controllers (since
+>   they are all affected), the code path above will have to be
+>   reworked if there is any other compatible IP re-using the driver
+>   that does not require the workaround.
+
+There are no compatible IPs that don't require this workaround. Also, I
+don't see this IP being re-used in future. If you insist, I can add a
+errata flag
+
+> - How do you want this series to go upstream ? If it goes via arm-soc,
+>   which I think it should, here is my ACK on this patch:
+> 
+Patch 1 and 2(dt bindings update and driver patch) can go in via PCI
+tree. And DT changes(patch 3 and 4) can be picked up by Tony via
+omap/arm-soc tree. They are mostly independent and should not cause any
+problems. Does that sound good?
+
+> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> 
+
+Thanks!
+
+> Please let me know if I can drop this series from the PCI patchwork.
+> 
+> Thanks,
+> Lorenzo
+> 
+>> +
+>>  	switch (mode) {
+>>  	case DW_PCIE_RC_TYPE:
+>>  		if (!IS_ENABLED(CONFIG_PCI_DRA7XX_HOST)) {
+>> @@ -717,10 +721,6 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+>>  		dra7xx_pcie_writel(dra7xx, PCIECTRL_TI_CONF_DEVICE_TYPE,
+>>  				   DEVICE_TYPE_EP);
+>>  
+>> -		ret = dra7xx_pcie_ep_unaligned_memaccess(dev);
+>> -		if (ret)
+>> -			goto err_gpio;
+>> -
+>>  		ret = dra7xx_add_pcie_ep(dra7xx, pdev);
+>>  		if (ret < 0)
+>>  			goto err_gpio;
+>> -- 
+>> 2.18.0
+>>
+
+-- 
+Regards
+Vignesh
