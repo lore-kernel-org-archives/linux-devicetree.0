@@ -1,123 +1,145 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v2 2/4] pci: dwc: pci-dra7xx: Enable errata i870 for both
- EP and RC mode
-Date: Thu, 19 Jul 2018 16:04:34 +0530
-Message-ID: <b7f1cef7-b0d8-733a-c450-163299d281d0@ti.com>
-References: <20180627122919.23926-1-vigneshr@ti.com>
- <20180627122919.23926-3-vigneshr@ti.com> <20180718110250.GA21589@red-moon>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v10 00/10] drivers: Introduce firmware dnd clock river for
+ ZynqMP core
+Date: Thu, 19 Jul 2018 12:33:29 +0200
+Message-ID: <2c3aad45-37ce-2446-4b90-bddb477286ed@xilinx.com>
+References: <1531857547-16652-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180718110250.GA21589@red-moon>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1531857547-16652-1-git-send-email-jollys@xilinx.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, KISHON VIJAY ABRAHAM <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jolly Shah <jolly.shah@xilinx.com>, ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
+Cc: devicetree@vger.kernel.org, rajanv@xilinx.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
-
-On Wednesday 18 July 2018 04:32 PM, Lorenzo Pieralisi wrote:
-> On Wed, Jun 27, 2018 at 05:59:17PM +0530, Vignesh R wrote:
->> Errata i870 is applicable in both EP and RC mode. Therefore rename
->> function dra7xx_pcie_ep_unaligned_memaccess(), that implements errata
->> workaround, to dra7xx_pcie_unaligned_memaccess() and call it from a
->> common place. So, that errata workaround is applied for both modes of
->> operation.
->>
->> Reported-by: Chris Welch <Chris.Welch@viavisolutions.com>
->> Signed-off-by: Vignesh R <vigneshr@ti.com>
->> ---
->>  drivers/pci/controller/dwc/pci-dra7xx.c | 12 ++++++------
->>  1 file changed, 6 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
->> index 345aab56ce8b..95d9076e3fde 100644
->> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
->> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
->> @@ -542,7 +542,7 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
->>  };
->>  
->>  /*
->> - * dra7xx_pcie_ep_unaligned_memaccess: workaround for AM572x/AM571x Errata i870
->> + * dra7xx_pcie_unaligned_memaccess: workaround for AM572x/AM571x Errata i870
->>   * @dra7xx: the dra7xx device where the workaround should be applied
->>   *
->>   * Access to the PCIe slave port that are not 32-bit aligned will result
->> @@ -552,7 +552,7 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
->>   *
->>   * To avoid this issue set PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE to 1.
->>   */
->> -static int dra7xx_pcie_ep_unaligned_memaccess(struct device *dev)
->> +static int dra7xx_pcie_unaligned_memaccess(struct device *dev)
->>  {
->>  	int ret;
->>  	struct device_node *np = dev->of_node;
->> @@ -695,6 +695,10 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
->>  	if (dra7xx->link_gen < 0 || dra7xx->link_gen > 2)
->>  		dra7xx->link_gen = 2;
->>  
->> +	ret = dra7xx_pcie_unaligned_memaccess(dev);
->> +	if (ret)
->> +		dev_err(dev, "WA for Errata i870 not appplied. Update DT\n");
+On 17.7.2018 21:58, Jolly Shah wrote:
+> This patchset is adding communication layer with firmware and clock driver who uses 
+> those APIs to communicate with PMU.
+> Firmware driver provides an interface to firmware APIs.Interface APIs can be used by any driver to communicate to
+> PMUFW(Platform Management Unit). All requests go through ATF.
+> This patchset adds CCF compliant clock driver for ZynqMP.Clock driver queries supported clock information from 
+> firmware and regiters pll and output clocks with CCF.
+> v10:
+>  - Incorporated code review comments from v9 patch series. Discussed below:
+> 	https://patchwork.kernel.org/patch/10478575/
+> 	https://patchwork.kernel.org/patch/10478457/
+> 	https://patchwork.kernel.org/patch/10478461/
+> 	https://patchwork.kernel.org/patch/10478463/
+> 	
+> v9:
+>  - Fixed minor typo comments
 > 
-> Hi Vignesh,
+> v8:
+>  - Corrected typo in clk Kconfig
+>  
+> v7:
+>  - Removed xilinx specific clock debugfs API support
+>  - Added reviewed-by tags for FW and clock bindings
+>  - Updated clock node name to clock-controller
 > 
-> Nit: s/appplied/applied
+> v6:
+>  - Broke patch series to have base FW driver and Clock driver user
+>  - Incorporated code review comments from last FW and Clock driver patch series. Discussed below:
+> 	https://patchwork.kernel.org/patch/10230759/
+> 	https://patchwork.kernel.org/patch/10250047/
+> 
+> v5:
+>  - Added ATF version check support
+>  - Updated some functions to be static 
+>  - Minor function name corrections
+> 
+> v4:
+>  - Changed clock setrate/getrate API prototype to support 64 bit rate
+>  - Defined macros for get_node_status return values
+>  - Moved DT node as a child of firmware
+>  - Changed debugfs APIs to return data to debugfs buffer instead of dumping to kernel log
+>  - Minor changes to incorporate other review comments from v3 patch series
+> 
+> v3:
+>  - added some fixes to firmware-ggs.c
+>  - updated pinmux get/set function argument names to specify function id instead of node id
+>  - added new pinctrl query macros
+>  - incorporated review comments from v2 patch series
+> 
+> v2:
+>  - change SPDX-License-Identifier license text style
+>  - split patch into multiple patches
+>  - Updated copyrights
+>  - Added ABI documentation
+>  - incorporated logical review comments from previuos patch. Discussed below:
+> 	https://patchwork.kernel.org/patch/10150665/
+> 	
+> Jolly Shah (1):
+>   drivers: clk: Add ZynqMP clock driver
+> 
+> Rajan Vaja (9):
+>   dt-bindings: firmware: Add bindings for ZynqMP firmware
+>   firmware: xilinx: Add Zynqmp firmware driver
+>   firmware: xilinx: Add zynqmp IOCTL API for device control
+>   firmware: xilinx: Add query data API
+>   firmware: xilinx: Add clock APIs
+>   firmware: xilinx: Add debugfs interface
+>   firmware: xilinx: Add debugfs for IOCTL API
+>   firmware: xilinx: Add debugfs for query data API
+>   dt-bindings: clock: Add bindings for ZynqMP clock driver
+> 
+>  .../firmware/xilinx/xlnx,zynqmp-firmware.txt       |  82 +++
+>  arch/arm64/Kconfig.platforms                       |   1 +
+>  drivers/clk/Kconfig                                |   1 +
+>  drivers/clk/Makefile                               |   1 +
+>  drivers/clk/zynqmp/Kconfig                         |  10 +
+>  drivers/clk/zynqmp/Makefile                        |   4 +
+>  drivers/clk/zynqmp/clk-gate-zynqmp.c               | 144 +++++
+>  drivers/clk/zynqmp/clk-mux-zynqmp.c                | 141 ++++
+>  drivers/clk/zynqmp/clk-zynqmp.h                    |  68 ++
+>  drivers/clk/zynqmp/clkc.c                          | 719 +++++++++++++++++++++
+>  drivers/clk/zynqmp/divider.c                       | 217 +++++++
+>  drivers/clk/zynqmp/pll.c                           | 335 ++++++++++
+>  drivers/firmware/Kconfig                           |   1 +
+>  drivers/firmware/Makefile                          |   1 +
+>  drivers/firmware/xilinx/Kconfig                    |  23 +
+>  drivers/firmware/xilinx/Makefile                   |   5 +
+>  drivers/firmware/xilinx/zynqmp-debug.c             | 249 +++++++
+>  drivers/firmware/xilinx/zynqmp-debug.h             |  22 +
+>  drivers/firmware/xilinx/zynqmp.c                   | 562 ++++++++++++++++
+>  include/dt-bindings/clock/xlnx,zynqmp-clk.h        | 116 ++++
+>  include/linux/firmware/xlnx-zynqmp.h               | 116 ++++
+>  21 files changed, 2818 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+>  create mode 100644 drivers/clk/zynqmp/Kconfig
+>  create mode 100644 drivers/clk/zynqmp/Makefile
+>  create mode 100644 drivers/clk/zynqmp/clk-gate-zynqmp.c
+>  create mode 100644 drivers/clk/zynqmp/clk-mux-zynqmp.c
+>  create mode 100644 drivers/clk/zynqmp/clk-zynqmp.h
+>  create mode 100644 drivers/clk/zynqmp/clkc.c
+>  create mode 100644 drivers/clk/zynqmp/divider.c
+>  create mode 100644 drivers/clk/zynqmp/pll.c
+>  create mode 100644 drivers/firmware/xilinx/Kconfig
+>  create mode 100644 drivers/firmware/xilinx/Makefile
+>  create mode 100644 drivers/firmware/xilinx/zynqmp-debug.c
+>  create mode 100644 drivers/firmware/xilinx/zynqmp-debug.h
+>  create mode 100644 drivers/firmware/xilinx/zynqmp.c
+>  create mode 100644 include/dt-bindings/clock/xlnx,zynqmp-clk.h
+>  create mode 100644 include/linux/firmware/xlnx-zynqmp.h
 > 
 
-Oops, let me know if you want me to resend with this fixed.
+It looks pretty calm over the last several series that's why when I get
+an answer from Stephen or Mike I will take this series via my tree and
+arm-soc tree.
 
-> Two questions:
-> 
-> - Current code applies the unaligned_memaccess() workaround for all
->   compatible variants. This is fine for current controllers (since
->   they are all affected), the code path above will have to be
->   reworked if there is any other compatible IP re-using the driver
->   that does not require the workaround.
+I have applied 01-08 here
+ https://github.com/Xilinx/linux-xlnx/commits/zynqmp/soc
 
-There are no compatible IPs that don't require this workaround. Also, I
-don't see this IP being re-used in future. If you insist, I can add a
-errata flag
-
-> - How do you want this series to go upstream ? If it goes via arm-soc,
->   which I think it should, here is my ACK on this patch:
-> 
-Patch 1 and 2(dt bindings update and driver patch) can go in via PCI
-tree. And DT changes(patch 3 and 4) can be picked up by Tony via
-omap/arm-soc tree. They are mostly independent and should not cause any
-problems. Does that sound good?
-
-> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> 
-
-Thanks!
-
-> Please let me know if I can drop this series from the PCI patchwork.
-> 
-> Thanks,
-> Lorenzo
-> 
->> +
->>  	switch (mode) {
->>  	case DW_PCIE_RC_TYPE:
->>  		if (!IS_ENABLED(CONFIG_PCI_DRA7XX_HOST)) {
->> @@ -717,10 +721,6 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
->>  		dra7xx_pcie_writel(dra7xx, PCIECTRL_TI_CONF_DEVICE_TYPE,
->>  				   DEVICE_TYPE_EP);
->>  
->> -		ret = dra7xx_pcie_ep_unaligned_memaccess(dev);
->> -		if (ret)
->> -			goto err_gpio;
->> -
->>  		ret = dra7xx_add_pcie_ep(dra7xx, pdev);
->>  		if (ret < 0)
->>  			goto err_gpio;
->> -- 
->> 2.18.0
->>
-
--- 
-Regards
-Vignesh
+Thanks,
+Michal
