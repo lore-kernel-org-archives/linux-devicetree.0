@@ -1,61 +1,32 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 0/2] dt: thermal: Fix broken cooling-maps
-Date: Thu, 19 Jul 2018 08:10:28 +0530
-Message-ID: <20180719024028.vudrlpgxiz6accky@vireshk-i7>
-References: <cover.1530766981.git.viresh.kumar@linaro.org>
- <5B4F5E00.5050800@hisilicon.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3 1/3] ARM: dts: i.MX6: imx6dl-mamoj: Add parallel
+ display support
+Date: Thu, 19 Jul 2018 10:46:10 +0800
+Message-ID: <20180719024608.GR4576@dragon>
+References: <20180717092526.32215-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5B4F5E00.5050800@hisilicon.com>
+In-Reply-To: <20180717092526.32215-1-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Xu <xuwei5@hisilicon.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, robh@kernel.org, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, olof@lixom.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio maggi <fabio.mauri@bticino.it>, lamiaposta71@gmail.com, Andrea CORTESE <andrea.cortese@bticino.it>, Davide Bonfanti <davide.bonfanti@bticino.it>, Shyam Saini <shyam.saini@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, Simone CIANNI <simone.cianni@bticino.it>, Raffaele RECALCATI <raffaele.recalcati@bticino.it>
 List-Id: devicetree@vger.kernel.org
 
-On 18-07-18, 16:34, Wei Xu wrote:
-> Hi Viresh,
+On Tue, Jul 17, 2018 at 02:55:24PM +0530, Jagan Teki wrote:
+> This patch adds parallel display support for i.MX6DL Mamoj board
+> along with relevant backlight through pwm.
 > 
-> On 2018/7/5 6:09, Viresh Kumar wrote:
-> > Hi,
-> > 
-> > This is an attempt to fix the broken or partially defined DT bindings
-> > for cooling-maps. We should list every device that participates in
-> > cooling down at a certain trip point, instead of just the first in the
-> > list as that depends on certain ordering of events to work properly.
-> > 
-> > The first patch extends the binding to allow a list of phandles in
-> > "cooling-device" property and the second patch fixes one of the
-> > platform's DT.
-> > 
-> > This will be followed up by fixing all platform DT bindings that have
-> > these issues after this set is accepted.
-> > 
-> > The kernel also requires some changes to handle the phandle list, but
-> > wouldn't break with these changes as it reads the first phandle in the
-> > list for now. We can update that separately.
-> > 
-> > --
-> > viresh
-> > 
-> > Viresh Kumar (2):
-> >   dt-bindings: thermal: Allow multiple devices to share cooling map
-> >   arm64: dts: hi6220: Add all CPUs in cooling maps
-> > 
-> >  Documentation/devicetree/bindings/thermal/thermal.txt | 11 +++--------
-> >  arch/arm64/boot/dts/hisilicon/hi6220.dtsi             |  9 ++++++++-
-> >  2 files changed, 11 insertions(+), 9 deletions(-)
-> > 
+> LCD power sequence is added by 'Michael Trimarchi'.
 > 
-> Thanks!
-> Applied both to the hisilicon dt tree.
+> Signed-off-by: Simone CIANNI <simone.cianni@bticino.it>
+> Signed-off-by: Raffaele RECALCATI <raffaele.recalcati@bticino.it>
+> Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
 
-Hi Wei,
+'ARM: dts: imx6dl-mamoj: ...' being prefix is good enough.  I fixed it
+up and applied all.
 
-I expected the first patch to go via the thermal tree as it is for the
-thermal core maintainers. Second patch can very well go from your
-tree, but only after the 1st one is applied by thermal maintainers.
-
--- 
-viresh
+Shawn
