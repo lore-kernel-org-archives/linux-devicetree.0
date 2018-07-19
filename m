@@ -1,116 +1,66 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v13 4/4] iommu/arm-smmu: Add support for qcom,
- smmu-v2 variant
-Date: Thu, 19 Jul 2018 15:45:39 +0530
-Message-ID: <20180719101539.6104-5-vivek.gautam@codeaurora.org>
-References: <20180719101539.6104-1-vivek.gautam@codeaurora.org>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v10 10/10] drivers: clk: Add ZynqMP clock driver
+Date: Thu, 19 Jul 2018 12:30:30 +0200
+Message-ID: <6dadc5a6-7bc1-0e37-4df6-0278d9046c96@xilinx.com>
+References: <1531857547-16652-1-git-send-email-jollys@xilinx.com>
+ <1531857547-16652-11-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180719101539.6104-1-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1531857547-16652-11-git-send-email-jollys@xilinx.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jolly Shah <jolly.shah@xilinx.com>, ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Tejas Patel <tejasp@xilinx.com>, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, linux-kernel@vger.kernel.org, Jolly Shah <jollys@xilinx.com>, rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-cWNvbSxzbW11LXYyIGlzIGFuIGFybSxzbW11LXYyIGltcGxlbWVudGF0aW9uIHdpdGggc3BlY2lm
-aWMKY2xvY2sgYW5kIHBvd2VyIHJlcXVpcmVtZW50cy4gVGhpcyBzbW11IGNvcmUgaXMgdXNlZCB3
-aXRoCm11bHRpcGxlIG1hc3RlcnMgb24gbXNtODk5Niwgdml6LiBtZHNzLCB2aWRlbywgZXRjLgpB
-ZGQgYmluZGluZ3MgZm9yIHRoZSBzYW1lLgoKU2lnbmVkLW9mZi1ieTogVml2ZWsgR2F1dGFtIDx2
-aXZlay5nYXV0YW1AY29kZWF1cm9yYS5vcmc+ClJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9i
-aEBrZXJuZWwub3JnPgpSZXZpZXdlZC1ieTogVG9tYXN6IEZpZ2EgPHRmaWdhQGNocm9taXVtLm9y
-Zz4KLS0tCgpDaGFuZ2Ugc2luY2UgdjEyOgogLSBSZW1vdmVkIElPTU1VX09GX0RFQ0xBUkUoKSBk
-ZWZpbml0aW9uIGFmdGVyIFJvYiBIJ3MgcGF0Y2ggdGhhdCBpcyBtZXJnZWQKICAgaW4gZHJpdmVy
-LWNvcmUtbmV4dC4KCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9pb21tdS9hcm0sc21tdS50eHQg
-ICAgICAgICB8IDQyICsrKysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvaW9tbXUvYXJtLXNt
-bXUuYyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMTMgKysrKysrKwogMiBmaWxlcyBjaGFu
-Z2VkLCA1NSBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2lvbW11L2FybSxzbW11LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9pb21tdS9hcm0sc21tdS50eHQKaW5kZXggOGE2ZmZjZTEyYWY1Li43YzcxYTZl
-ZDQ2NWEgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pb21t
-dS9hcm0sc21tdS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lv
-bW11L2FybSxzbW11LnR4dApAQCAtMTcsMTAgKzE3LDE5IEBAIGNvbmRpdGlvbnMuCiAgICAgICAg
-ICAgICAgICAgICAgICAgICAiYXJtLG1tdS00MDEiCiAgICAgICAgICAgICAgICAgICAgICAgICAi
-YXJtLG1tdS01MDAiCiAgICAgICAgICAgICAgICAgICAgICAgICAiY2F2aXVtLHNtbXUtdjIiCisg
-ICAgICAgICAgICAgICAgICAgICAgICAicWNvbSw8c29jPi1zbW11LXYyIiwgInFjb20sc21tdS12
-MiIKIAogICAgICAgICAgICAgICAgICAgZGVwZW5kaW5nIG9uIHRoZSBwYXJ0aWN1bGFyIGltcGxl
-bWVudGF0aW9uIGFuZC9vciB0aGUKICAgICAgICAgICAgICAgICAgIHZlcnNpb24gb2YgdGhlIGFy
-Y2hpdGVjdHVyZSBpbXBsZW1lbnRlZC4KIAorICAgICAgICAgICAgICAgICAgQSBudW1iZXIgb2Yg
-UWNvbSBTb0NzIHVzZSBxY29tLHNtbXUtdjIgdmVyc2lvbiBvZiB0aGUgSVAuCisgICAgICAgICAg
-ICAgICAgICAicWNvbSw8c29jPi1zbW11LXYyIiByZXByZXNlbnRzIGEgc29jIHNwZWNpZmljIGNv
-bXBhdGlibGUKKyAgICAgICAgICAgICAgICAgIHN0cmluZyB0aGF0IHNob3VsZCBiZSBwcmVzZW50
-IGFsb25nIHdpdGggdGhlICJxY29tLHNtbXUtdjIiCisgICAgICAgICAgICAgICAgICB0byBmYWNp
-bGl0YXRlIFNvQyBzcGVjaWZpYyBjbG9ja3MvcG93ZXIgY29ubmVjdGlvbnMgYW5kIHRvCisgICAg
-ICAgICAgICAgICAgICBhZGRyZXNzIHNwZWNpZmljIGJ1ZyBmaXhlcy4KKyAgICAgICAgICAgICAg
-ICAgIEFuIGV4YW1wbGUgc3RyaW5nIHdvdWxkIGJlIC0KKyAgICAgICAgICAgICAgICAgICJxY29t
-LG1zbTg5OTYtc21tdS12MiIsICJxY29tLHNtbXUtdjIiLgorCiAtIHJlZyAgICAgICAgICAgOiBC
-YXNlIGFkZHJlc3MgYW5kIHNpemUgb2YgdGhlIFNNTVUuCiAKIC0gI2dsb2JhbC1pbnRlcnJ1cHRz
-IDogVGhlIG51bWJlciBvZiBnbG9iYWwgaW50ZXJydXB0cyBleHBvc2VkIGJ5IHRoZQpAQCAtNzEs
-NiArODAsMjIgQEAgY29uZGl0aW9ucy4KICAgICAgICAgICAgICAgICAgIG9yIHVzaW5nIHN0cmVh
-bSBtYXRjaGluZyB3aXRoICNpb21tdS1jZWxscyA9IDwyPiwgYW5kCiAgICAgICAgICAgICAgICAg
-ICBtYXkgYmUgaWdub3JlZCBpZiBwcmVzZW50IGluIHN1Y2ggY2FzZXMuCiAKKy0gY2xvY2stbmFt
-ZXM6ICAgIExpc3Qgb2YgdGhlIG5hbWVzIG9mIGNsb2NrcyBpbnB1dCB0byB0aGUgZGV2aWNlLiBU
-aGUKKyAgICAgICAgICAgICAgICAgIHJlcXVpcmVkIGxpc3QgZGVwZW5kcyBvbiBwYXJ0aWN1bGFy
-IGltcGxlbWVudGF0aW9uIGFuZAorICAgICAgICAgICAgICAgICAgaXMgYXMgZm9sbG93czoKKyAg
-ICAgICAgICAgICAgICAgIC0gZm9yICJxY29tLHNtbXUtdjIiOgorICAgICAgICAgICAgICAgICAg
-ICAtICJidXMiOiBjbG9jayByZXF1aXJlZCBmb3IgZG93bnN0cmVhbSBidXMgYWNjZXNzIGFuZAor
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3IgdGhlIHNtbXUgcHR3LAorICAgICAgICAg
-ICAgICAgICAgICAtICJpZmFjZSI6IGNsb2NrIHJlcXVpcmVkIHRvIGFjY2VzcyBzbW11J3MgcmVn
-aXN0ZXJzCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGhyb3VnaCB0aGUgVENVJ3Mg
-cHJvZ3JhbW1pbmcgaW50ZXJmYWNlLgorICAgICAgICAgICAgICAgICAgLSB1bnNwZWNpZmllZCBm
-b3Igb3RoZXIgaW1wbGVtZW50YXRpb25zLgorCistIGNsb2NrczogICAgICAgICBTcGVjaWZpZXJz
-IGZvciBhbGwgY2xvY2tzIGxpc3RlZCBpbiB0aGUgY2xvY2stbmFtZXMgcHJvcGVydHksCisgICAg
-ICAgICAgICAgICAgICBhcyBwZXIgZ2VuZXJpYyBjbG9jayBiaW5kaW5ncy4KKworLSBwb3dlci1k
-b21haW5zOiAgU3BlY2lmaWVycyBmb3IgcG93ZXIgZG9tYWlucyByZXF1aXJlZCB0byBiZSBwb3dl
-cmVkIG9uIGZvcgorICAgICAgICAgICAgICAgICAgdGhlIFNNTVUgdG8gb3BlcmF0ZSwgYXMgcGVy
-IGdlbmVyaWMgcG93ZXIgZG9tYWluIGJpbmRpbmdzLgorCiAqKiBEZXByZWNhdGVkIHByb3BlcnRp
-ZXM6CiAKIC0gbW11LW1hc3RlcnMgKGRlcHJlY2F0ZWQgaW4gZmF2b3VyIG9mIHRoZSBnZW5lcmlj
-ICJpb21tdXMiIGJpbmRpbmcpIDoKQEAgLTEzNywzICsxNjIsMjAgQEAgY29uZGl0aW9ucy4KICAg
-ICAgICAgICAgICAgICBpb21tdS1tYXAgPSA8MCAmc21tdTMgMCAweDQwMD47CiAgICAgICAgICAg
-ICAgICAgLi4uCiAgICAgICAgIH07CisKKwkvKiBRY29tJ3MgYXJtLHNtbXUtdjIgaW1wbGVtZW50
-YXRpb24gKi8KKwlzbW11NDogaW9tbXUgeworCQljb21wYXRpYmxlID0gInFjb20sbXNtODk5Ni1z
-bW11LXYyIiwgInFjb20sc21tdS12MiI7CisJCXJlZyA9IDwweGQwMDAwMCAweDEwMDAwPjsKKwor
-CQkjZ2xvYmFsLWludGVycnVwdHMgPSA8MT47CisJCWludGVycnVwdHMgPSA8R0lDX1NQSSA3MyBJ
-UlFfVFlQRV9MRVZFTF9ISUdIPiwKKwkJCSAgICAgPEdJQ19TUEkgMzIwIElSUV9UWVBFX0xFVkVM
-X0hJR0g+LAorCQkJICAgICA8R0lDX1NQSSAzMjEgSVJRX1RZUEVfTEVWRUxfSElHSD47CisJCSNp
-b21tdS1jZWxscyA9IDwxPjsKKwkJcG93ZXItZG9tYWlucyA9IDwmbW1jYyBNRFNTX0dEU0M+Owor
-CisJCWNsb2NrcyA9IDwmbW1jYyBTTU1VX01EUF9BWElfQ0xLPiwKKwkJCSA8Jm1tY2MgU01NVV9N
-RFBfQUhCX0NMSz47CisJCWNsb2NrLW5hbWVzID0gImJ1cyIsICJpZmFjZSI7CisJfTsKZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvaW9tbXUvYXJtLXNtbXUuYyBiL2RyaXZlcnMvaW9tbXUvYXJtLXNtbXUu
-YwppbmRleCAyNWZmM2JkYmY3YTMuLjdjNjk3MzZhMzBmOCAxMDA2NDQKLS0tIGEvZHJpdmVycy9p
-b21tdS9hcm0tc21tdS5jCisrKyBiL2RyaXZlcnMvaW9tbXUvYXJtLXNtbXUuYwpAQCAtMTE5LDYg
-KzExOSw3IEBAIGVudW0gYXJtX3NtbXVfaW1wbGVtZW50YXRpb24gewogCUdFTkVSSUNfU01NVSwK
-IAlBUk1fTU1VNTAwLAogCUNBVklVTV9TTU1VVjIsCisJUUNPTV9TTU1VVjIsCiB9OwogCiBzdHJ1
-Y3QgYXJtX3NtbXVfczJjciB7CkBAIC0xOTcxLDYgKzE5NzIsMTcgQEAgQVJNX1NNTVVfTUFUQ0hf
-REFUQShhcm1fbW11NDAxLCBBUk1fU01NVV9WMV82NEssIEdFTkVSSUNfU01NVSk7CiBBUk1fU01N
-VV9NQVRDSF9EQVRBKGFybV9tbXU1MDAsIEFSTV9TTU1VX1YyLCBBUk1fTU1VNTAwKTsKIEFSTV9T
-TU1VX01BVENIX0RBVEEoY2F2aXVtX3NtbXV2MiwgQVJNX1NNTVVfVjIsIENBVklVTV9TTU1VVjIp
-OwogCitzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IHFjb21fc21tdXYyX2Nsa3NbXSA9IHsKKwki
-YnVzIiwgImlmYWNlIiwKK307CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgYXJtX3NtbXVfbWF0Y2hf
-ZGF0YSBxY29tX3NtbXV2MiA9IHsKKwkudmVyc2lvbiA9IEFSTV9TTU1VX1YyLAorCS5tb2RlbCA9
-IFFDT01fU01NVVYyLAorCS5jbGtzID0gcWNvbV9zbW11djJfY2xrcywKKwkubnVtX2Nsa3MgPSBB
-UlJBWV9TSVpFKHFjb21fc21tdXYyX2Nsa3MpLAorfTsKKwogc3RhdGljIGNvbnN0IHN0cnVjdCBv
-Zl9kZXZpY2VfaWQgYXJtX3NtbXVfb2ZfbWF0Y2hbXSA9IHsKIAl7IC5jb21wYXRpYmxlID0gImFy
-bSxzbW11LXYxIiwgLmRhdGEgPSAmc21tdV9nZW5lcmljX3YxIH0sCiAJeyAuY29tcGF0aWJsZSA9
-ICJhcm0sc21tdS12MiIsIC5kYXRhID0gJnNtbXVfZ2VuZXJpY192MiB9LApAQCAtMTk3OCw2ICsx
-OTkwLDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYXJtX3NtbXVfb2ZfbWF0
-Y2hbXSA9IHsKIAl7IC5jb21wYXRpYmxlID0gImFybSxtbXUtNDAxIiwgLmRhdGEgPSAmYXJtX21t
-dTQwMSB9LAogCXsgLmNvbXBhdGlibGUgPSAiYXJtLG1tdS01MDAiLCAuZGF0YSA9ICZhcm1fbW11
-NTAwIH0sCiAJeyAuY29tcGF0aWJsZSA9ICJjYXZpdW0sc21tdS12MiIsIC5kYXRhID0gJmNhdml1
-bV9zbW11djIgfSwKKwl7IC5jb21wYXRpYmxlID0gInFjb20sc21tdS12MiIsIC5kYXRhID0gJnFj
-b21fc21tdXYyIH0sCiAJeyB9LAogfTsKIE1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGFybV9zbW11
-X29mX21hdGNoKTsKLS0gClFVQUxDT01NIElORElBLCBvbiBiZWhhbGYgb2YgUXVhbGNvbW0gSW5u
-b3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIKb2YgQ29kZSBBdXJvcmEgRm9ydW0sIGhv
-c3RlZCBieSBUaGUgTGludXggRm91bmRhdGlvbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZnJlZWRyZW5vCg==
+Hi Stephen and Mike,
+
+On 17.7.2018 21:59, Jolly Shah wrote:
+> From: Jolly Shah <jolly.shah@xilinx.com>
+> 
+> This patch adds CCF compliant clock driver for ZynqMP.
+> Clock driver queries supported clock information from
+> firmware and regiters pll and output clocks with CCF.
+> 
+> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+> Signed-off-by: Tejas Patel <tejasp@xilinx.com>
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> Signed-off-by: Jolly Shah <jollys@xilinx.com>
+> ---
+>  drivers/clk/Kconfig                  |   1 +
+>  drivers/clk/Makefile                 |   1 +
+>  drivers/clk/zynqmp/Kconfig           |  10 +
+>  drivers/clk/zynqmp/Makefile          |   4 +
+>  drivers/clk/zynqmp/clk-gate-zynqmp.c | 144 +++++++
+>  drivers/clk/zynqmp/clk-mux-zynqmp.c  | 141 +++++++
+>  drivers/clk/zynqmp/clk-zynqmp.h      |  68 ++++
+>  drivers/clk/zynqmp/clkc.c            | 719 +++++++++++++++++++++++++++++++++++
+>  drivers/clk/zynqmp/divider.c         | 217 +++++++++++
+>  drivers/clk/zynqmp/pll.c             | 335 ++++++++++++++++
+>  include/linux/firmware/xlnx-zynqmp.h |   1 +
+>  11 files changed, 1641 insertions(+)
+>  create mode 100644 drivers/clk/zynqmp/Kconfig
+>  create mode 100644 drivers/clk/zynqmp/Makefile
+>  create mode 100644 drivers/clk/zynqmp/clk-gate-zynqmp.c
+>  create mode 100644 drivers/clk/zynqmp/clk-mux-zynqmp.c
+>  create mode 100644 drivers/clk/zynqmp/clk-zynqmp.h
+>  create mode 100644 drivers/clk/zynqmp/clkc.c
+>  create mode 100644 drivers/clk/zynqmp/divider.c
+>  create mode 100644 drivers/clk/zynqmp/pll.c
+
+DT binding was reviewed by Stephen but I can't see any review for the
+driver itself. Should I wait for your review or do you want to take
+binding doc 09/10 and 10/10 separately or this can go via arm-soc tree?
+
+Thanks,
+Michal
