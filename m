@@ -1,139 +1,53 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v2 2/4] pci: dwc: pci-dra7xx: Enable errata i870 for both
- EP and RC mode
-Date: Thu, 19 Jul 2018 12:15:56 +0100
-Message-ID: <20180719111556.GB9213@e107981-ln.cambridge.arm.com>
-References: <20180627122919.23926-1-vigneshr@ti.com>
- <20180627122919.23926-3-vigneshr@ti.com>
- <20180718110250.GA21589@red-moon>
- <b7f1cef7-b0d8-733a-c450-163299d281d0@ti.com>
+From: Aapo Vienamo <avienamo@nvidia.com>
+Subject: [PATCH v4 0/7] Tegra PMC pinctrl pad configuration
+Date: Thu, 19 Jul 2018 15:30:27 +0300
+Message-ID: <1532003434-8844-1-git-send-email-avienamo@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b7f1cef7-b0d8-733a-c450-163299d281d0@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, KISHON VIJAY ABRAHAM <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Aapo Vienamo <avienamo@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 19, 2018 at 04:04:34PM +0530, Vignesh R wrote:
-> Hi Lorenzo,
-> 
-> On Wednesday 18 July 2018 04:32 PM, Lorenzo Pieralisi wrote:
-> > On Wed, Jun 27, 2018 at 05:59:17PM +0530, Vignesh R wrote:
-> >> Errata i870 is applicable in both EP and RC mode. Therefore rename
-> >> function dra7xx_pcie_ep_unaligned_memaccess(), that implements errata
-> >> workaround, to dra7xx_pcie_unaligned_memaccess() and call it from a
-> >> common place. So, that errata workaround is applied for both modes of
-> >> operation.
-> >>
-> >> Reported-by: Chris Welch <Chris.Welch@viavisolutions.com>
-> >> Signed-off-by: Vignesh R <vigneshr@ti.com>
-> >> ---
-> >>  drivers/pci/controller/dwc/pci-dra7xx.c | 12 ++++++------
-> >>  1 file changed, 6 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-> >> index 345aab56ce8b..95d9076e3fde 100644
-> >> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
-> >> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-> >> @@ -542,7 +542,7 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
-> >>  };
-> >>  
-> >>  /*
-> >> - * dra7xx_pcie_ep_unaligned_memaccess: workaround for AM572x/AM571x Errata i870
-> >> + * dra7xx_pcie_unaligned_memaccess: workaround for AM572x/AM571x Errata i870
-> >>   * @dra7xx: the dra7xx device where the workaround should be applied
-> >>   *
-> >>   * Access to the PCIe slave port that are not 32-bit aligned will result
-> >> @@ -552,7 +552,7 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
-> >>   *
-> >>   * To avoid this issue set PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE to 1.
-> >>   */
-> >> -static int dra7xx_pcie_ep_unaligned_memaccess(struct device *dev)
-> >> +static int dra7xx_pcie_unaligned_memaccess(struct device *dev)
-> >>  {
-> >>  	int ret;
-> >>  	struct device_node *np = dev->of_node;
-> >> @@ -695,6 +695,10 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
-> >>  	if (dra7xx->link_gen < 0 || dra7xx->link_gen > 2)
-> >>  		dra7xx->link_gen = 2;
-> >>  
-> >> +	ret = dra7xx_pcie_unaligned_memaccess(dev);
-> >> +	if (ret)
-> >> +		dev_err(dev, "WA for Errata i870 not appplied. Update DT\n");
-> > 
-> > Hi Vignesh,
-> > 
-> > Nit: s/appplied/applied
-> > 
-> 
-> Oops, let me know if you want me to resend with this fixed.
+Hi all,
 
-I can fix it, no problem but see below.
+The Tegra Power Management Controller (PMC) can set pad power states
+and voltage configuration. This series implements pinctrl interfaces
+for configuring said pad properties.
 
-> > Two questions:
-> > 
-> > - Current code applies the unaligned_memaccess() workaround for all
-> >   compatible variants. This is fine for current controllers (since
-> >   they are all affected), the code path above will have to be
-> >   reworked if there is any other compatible IP re-using the driver
-> >   that does not require the workaround.
-> 
-> There are no compatible IPs that don't require this workaround. Also, I
-> don't see this IP being re-used in future. If you insist, I can add a
-> errata flag
+Changelog
+v4:
+	- Revise the dt-bindings docs
+v3:
+	- Don't expose tegra_io_pad_is_powered()
+	- Remove tegra_io_pad_set_voltage() stub from pmc.h
+		- Fixes i386 build failure reported by kbuild test robot
+v2:
+	- Add Tegra186 AO_HV pad
+	- Make the IO pad tables narrower
+	- Add parens to TEGRA_IO_PAD() and TEGRA_IO_PIN_DESC()
+	- Fix a typo in the dt-bindings docs
+	- Remove old pmc pad voltage configuration APIs
+	- Check return value of tegra_io_pad_find() in
+	  tegra_io_pad_pinconf_get()/_set()
 
-I do not insist, I just pointed this out ;-)
+Aapo Vienamo (7):
+  soc/tegra: pmc: Fix pad voltage configuration for Tegra186
+  soc/tegra: pmc: Factor out DPD register bit calculation
+  soc/tegra: pmc: Implement tegra_io_pad_is_powered()
+  soc/tegra: pmc: Use X macro to generate IO pad tables
+  dt-bindings: Add Tegra PMC pad configuration bindings
+  soc/tegra: pmc: Remove public pad voltage APIs
+  soc/tegra: pmc: Implement pad configuration via pinctrl
 
-> > - How do you want this series to go upstream ? If it goes via arm-soc,
-> >   which I think it should, here is my ACK on this patch:
-> > 
-> Patch 1 and 2(dt bindings update and driver patch) can go in via PCI
-> tree. And DT changes(patch 3 and 4) can be picked up by Tony via
-> omap/arm-soc tree. They are mostly independent and should not cause any
-> problems. Does that sound good?
+ .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     |  92 ++++
+ .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 103 +++++
+ drivers/soc/tegra/pmc.c                            | 512 +++++++++++++++------
+ include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h |  18 +
+ include/soc/tegra/pmc.h                            |  20 +-
+ 5 files changed, 597 insertions(+), 148 deletions(-)
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h
 
-It should be fine but technically as soon as patch (2) is applied we
-would have a regression if patches (3) and (4) are applied separately.
-
-You could re-order the series and send everything via arm-soc.
-
-It is not such a big deal, your choice, please let me know.
-
-Thanks,
-Lorenzo
-
-> > Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > 
-> 
-> Thanks!
-> 
-> > Please let me know if I can drop this series from the PCI patchwork.
-> > 
-> > Thanks,
-> > Lorenzo
-> > 
-> >> +
-> >>  	switch (mode) {
-> >>  	case DW_PCIE_RC_TYPE:
-> >>  		if (!IS_ENABLED(CONFIG_PCI_DRA7XX_HOST)) {
-> >> @@ -717,10 +721,6 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
-> >>  		dra7xx_pcie_writel(dra7xx, PCIECTRL_TI_CONF_DEVICE_TYPE,
-> >>  				   DEVICE_TYPE_EP);
-> >>  
-> >> -		ret = dra7xx_pcie_ep_unaligned_memaccess(dev);
-> >> -		if (ret)
-> >> -			goto err_gpio;
-> >> -
-> >>  		ret = dra7xx_add_pcie_ep(dra7xx, pdev);
-> >>  		if (ret < 0)
-> >>  			goto err_gpio;
-> >> -- 
-> >> 2.18.0
-> >>
-> 
-> -- 
-> Regards
-> Vignesh
+-- 
+2.7.4
