@@ -1,46 +1,122 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v2] dt-bindings: marvell: Add documentation for the Armada
- 3700 AVS binding
-Date: Thu, 19 Jul 2018 12:47:10 +0200
-Message-ID: <2240650.k8NjxS09G1@aspire.rjw.lan>
-References: <20180704132524.23640-1-gregory.clement@bootlin.com>
- <20180711155153.GA13702@rob-hp-laptop>
+From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Subject: Re: [PATCH] arm64: dts: msm8916: drop legacy suffix for clocks used
+ by MSM DRM driver
+Date: Thu, 19 Jul 2018 12:53:04 +0200
+Message-ID: <CAP71WjzPxxwNp-FkUsRAP4e_+Z_q12wcLeXryk-eYdLi-WJexg@mail.gmail.com>
+References: <20180718145258.15254-1-niklas.cassel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180711155153.GA13702@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Viresh Kumar <viresh.kumar@linaro.org>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Ken Ma <make@marvell.com>, Victor Gu <xigu@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?ISO-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>, Neta Zur Hershkovits <neta@marvell.com>, Hua Jing <jinghua@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180718145258.15254-1-niklas.cassel@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, July 11, 2018 5:51:53 PM CEST Rob Herring wrote:
-> On Wed, Jul 04, 2018 at 03:25:24PM +0200, Gregory CLEMENT wrote:
-> > Extend the documentation of the Armada 37xx SoC with the Adaptive Voltage
-> > Scaling (AVS) registers.
-> > 
-> > Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > ---
-> > Changelog:
-> > v1 -> v2:
-> >  - Add Acked-by: from Viresh Kumar
-> >  - Add the dt mailing list in copy
-> > 
-> >  .../bindings/arm/marvell/armada-37xx.txt         | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> 
+hi Niklas,
 
-Patch applied, thanks!
+On Wed, Jul 18, 2018 at 4:53 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
+>
+> Drop legacy suffix for clocks used by MSM DRM driver.
+
+I had the same patch locally, which I forgot to send.. so thanks for
+sending it ;)
+
+you might want to add in the commit log:
+
+    Since "720c3bb80235 (drm/msm: drop _clk suffix from clk names)",
+we can see such
+    messages when booting:
+
+> Fixes the following warnings:
+>
+> msm_dsi_phy 1a98300.dsi-phy: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
+> msm 1a00000.mdss: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
+> msm 1a00000.mdss: Using legacy clk name binding.  Use "bus" instead of "bus_clk"
+> msm 1a00000.mdss: Using legacy clk name binding.  Use "vsync" instead of "vsync_clk"
+> msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "bus" instead of "bus_clk"
+> msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
+> msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "core" instead of "core_clk"
+> msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "vsync" instead of "vsync_clk"
+> msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "mdp_core" instead of "mdp_core_clk"
+> msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
+> msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "bus" instead of "bus_clk"
+> msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "byte" instead of "byte_clk"
+> msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "pixel" instead of "pixel_clk"
+> msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "core" instead of "core_clk"
+>
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+
+Reviewed-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+
+> ---
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi | 28 +++++++++++++--------------
+>  1 file changed, 14 insertions(+), 14 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> index c2625d15a8c0..7b32b8990d62 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> @@ -858,9 +858,9 @@
+>                         clocks = <&gcc GCC_MDSS_AHB_CLK>,
+>                                  <&gcc GCC_MDSS_AXI_CLK>,
+>                                  <&gcc GCC_MDSS_VSYNC_CLK>;
+> -                       clock-names = "iface_clk",
+> -                                     "bus_clk",
+> -                                     "vsync_clk";
+> +                       clock-names = "iface",
+> +                                     "bus",
+> +                                     "vsync";
+>
+>                         interrupts = <0 72 IRQ_TYPE_LEVEL_HIGH>;
+>
+> @@ -883,10 +883,10 @@
+>                                          <&gcc GCC_MDSS_AXI_CLK>,
+>                                          <&gcc GCC_MDSS_MDP_CLK>,
+>                                          <&gcc GCC_MDSS_VSYNC_CLK>;
+> -                               clock-names = "iface_clk",
+> -                                             "bus_clk",
+> -                                             "core_clk",
+> -                                             "vsync_clk";
+> +                               clock-names = "iface",
+> +                                             "bus",
+> +                                             "core",
+> +                                             "vsync";
+>
+>                                 iommus = <&apps_iommu 4>;
+>
+> @@ -922,12 +922,12 @@
+>                                          <&gcc GCC_MDSS_BYTE0_CLK>,
+>                                          <&gcc GCC_MDSS_PCLK0_CLK>,
+>                                          <&gcc GCC_MDSS_ESC0_CLK>;
+> -                               clock-names = "mdp_core_clk",
+> -                                             "iface_clk",
+> -                                             "bus_clk",
+> -                                             "byte_clk",
+> -                                             "pixel_clk",
+> -                                             "core_clk";
+> +                               clock-names = "mdp_core",
+> +                                             "iface",
+> +                                             "bus",
+> +                                             "byte",
+> +                                             "pixel",
+> +                                             "core";
+>                                 phys = <&dsi_phy0>;
+>                                 phy-names = "dsi-phy";
+>
+> @@ -963,7 +963,7 @@
+>                                 #phy-cells = <0>;
+>
+>                                 clocks = <&gcc GCC_MDSS_AHB_CLK>;
+> -                               clock-names = "iface_clk";
+> +                               clock-names = "iface";
+>                         };
+>                 };
+>
+> --
+> 2.17.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
