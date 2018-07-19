@@ -1,122 +1,65 @@
-From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Subject: Re: [PATCH] arm64: dts: msm8916: drop legacy suffix for clocks used
- by MSM DRM driver
-Date: Thu, 19 Jul 2018 12:53:04 +0200
-Message-ID: <CAP71WjzPxxwNp-FkUsRAP4e_+Z_q12wcLeXryk-eYdLi-WJexg@mail.gmail.com>
-References: <20180718145258.15254-1-niklas.cassel@linaro.org>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v2 4/4] ARM: dts: dra7: Fix up unaligned access setting
+ for PCIe EP
+Date: Thu, 19 Jul 2018 16:24:26 +0530
+Message-ID: <9bdf39d4-d9db-b80f-e3f4-88c3e068c306@ti.com>
+References: <20180627122919.23926-1-vigneshr@ti.com>
+ <20180627122919.23926-5-vigneshr@ti.com>
+ <92691b59-1952-b00f-da5b-f308f94aa2b7@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180718145258.15254-1-niklas.cassel@linaro.org>
+In-Reply-To: <92691b59-1952-b00f-da5b-f308f94aa2b7@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+To: Kishon Vijay Abraham I <kishon@ti.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-hi Niklas,
+Hi Tony,
 
-On Wed, Jul 18, 2018 at 4:53 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
->
-> Drop legacy suffix for clocks used by MSM DRM driver.
+On Tuesday 17 July 2018 03:25 PM, Kishon Vijay Abraham I wrote:
+> 
+> 
+> On Wednesday 27 June 2018 05:59 PM, Vignesh R wrote:
+>> Bit positions of PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE and
+>> PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE in CTRL_CORE_SMA_SW_7 are
+>> incorrectly documented in the TRM. In fact, the bit positions are
+>> swapped. Update the DT bindings for PCIe EP to reflect the same.
+>>
+>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> 
+> Shouldn't this be sent to stable fixes?
 
-I had the same patch locally, which I forgot to send.. so thanks for
-sending it ;)
+This patch fixes:
 
-you might want to add in the commit log:
+Fixes: d23f3839fe97 ("ARM: dts: DRA7: Add pcie1 dt node for EP mode")
+Cc: stable@vger.kernel.org
 
-    Since "720c3bb80235 (drm/msm: drop _clk suffix from clk names)",
-we can see such
-    messages when booting:
+let me know if this needs to be resent with Fixes tag.
 
-> Fixes the following warnings:
->
-> msm_dsi_phy 1a98300.dsi-phy: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
-> msm 1a00000.mdss: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
-> msm 1a00000.mdss: Using legacy clk name binding.  Use "bus" instead of "bus_clk"
-> msm 1a00000.mdss: Using legacy clk name binding.  Use "vsync" instead of "vsync_clk"
-> msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "bus" instead of "bus_clk"
-> msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
-> msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "core" instead of "core_clk"
-> msm_mdp 1a01000.mdp: Using legacy clk name binding.  Use "vsync" instead of "vsync_clk"
-> msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "mdp_core" instead of "mdp_core_clk"
-> msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "iface" instead of "iface_clk"
-> msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "bus" instead of "bus_clk"
-> msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "byte" instead of "byte_clk"
-> msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "pixel" instead of "pixel_clk"
-> msm_dsi 1a98000.dsi: Using legacy clk name binding.  Use "core" instead of "core_clk"
->
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Regards
+Vignesh
 
-Reviewed-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-
-> ---
->  arch/arm64/boot/dts/qcom/msm8916.dtsi | 28 +++++++++++++--------------
->  1 file changed, 14 insertions(+), 14 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> index c2625d15a8c0..7b32b8990d62 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> @@ -858,9 +858,9 @@
->                         clocks = <&gcc GCC_MDSS_AHB_CLK>,
->                                  <&gcc GCC_MDSS_AXI_CLK>,
->                                  <&gcc GCC_MDSS_VSYNC_CLK>;
-> -                       clock-names = "iface_clk",
-> -                                     "bus_clk",
-> -                                     "vsync_clk";
-> +                       clock-names = "iface",
-> +                                     "bus",
-> +                                     "vsync";
->
->                         interrupts = <0 72 IRQ_TYPE_LEVEL_HIGH>;
->
-> @@ -883,10 +883,10 @@
->                                          <&gcc GCC_MDSS_AXI_CLK>,
->                                          <&gcc GCC_MDSS_MDP_CLK>,
->                                          <&gcc GCC_MDSS_VSYNC_CLK>;
-> -                               clock-names = "iface_clk",
-> -                                             "bus_clk",
-> -                                             "core_clk",
-> -                                             "vsync_clk";
-> +                               clock-names = "iface",
-> +                                             "bus",
-> +                                             "core",
-> +                                             "vsync";
->
->                                 iommus = <&apps_iommu 4>;
->
-> @@ -922,12 +922,12 @@
->                                          <&gcc GCC_MDSS_BYTE0_CLK>,
->                                          <&gcc GCC_MDSS_PCLK0_CLK>,
->                                          <&gcc GCC_MDSS_ESC0_CLK>;
-> -                               clock-names = "mdp_core_clk",
-> -                                             "iface_clk",
-> -                                             "bus_clk",
-> -                                             "byte_clk",
-> -                                             "pixel_clk",
-> -                                             "core_clk";
-> +                               clock-names = "mdp_core",
-> +                                             "iface",
-> +                                             "bus",
-> +                                             "byte",
-> +                                             "pixel",
-> +                                             "core";
->                                 phys = <&dsi_phy0>;
->                                 phy-names = "dsi-phy";
->
-> @@ -963,7 +963,7 @@
->                                 #phy-cells = <0>;
->
->                                 clocks = <&gcc GCC_MDSS_AHB_CLK>;
-> -                               clock-names = "iface_clk";
-> +                               clock-names = "iface";
->                         };
->                 };
->
-> --
-> 2.17.1
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Thanks
+> Kishon
+>> ---
+>>  arch/arm/boot/dts/dra7.dtsi | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+>> index 7bfe7f28e3bd..27ad193e1a87 100644
+>> --- a/arch/arm/boot/dts/dra7.dtsi
+>> +++ b/arch/arm/boot/dts/dra7.dtsi
+>> @@ -355,7 +355,7 @@
+>>  				ti,hwmods = "pcie1";
+>>  				phys = <&pcie1_phy>;
+>>  				phy-names = "pcie-phy0";
+>> -				ti,syscon-unaligned-access = <&scm_conf1 0x14 2>;
+>> +				ti,syscon-unaligned-access = <&scm_conf1 0x14 1>;
+>>  				status = "disabled";
+>>  			};
+>>  		};
+>>
