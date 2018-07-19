@@ -1,52 +1,78 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 16/17] MIPS: JZ4770: DTS: Add DMA nodes
-Date: Thu, 19 Jul 2018 11:06:57 +0300
-Message-ID: <b25df80b-2314-8ed1-6fdf-5bb9b49ec994@cogentembedded.com>
-References: <20180718182023.8182-1-paul@crapouillou.net>
- <20180718182023.8182-17-paul@crapouillou.net>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 3/5] dt-bindings: arm: amlogic: Add support for the
+ Oranth Tanix TX3 Mini
+Date: Thu, 19 Jul 2018 10:23:05 +0200
+Message-ID: <3c199d65-17d7-480f-1306-a578a7de3d5d@baylibre.com>
+References: <20180714193725.17837-1-martin.blumenstingl@googlemail.com>
+ <20180714193725.17837-4-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180718182023.8182-17-paul@crapouillou.net>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180714193725.17837-4-martin.blumenstingl@googlemail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com
+Cc: mark.rutland@arm.com, yixun.lan@amlogic.com, robh+dt@kernel.org, carlo@caione.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On 7/18/2018 9:20 PM, Paul Cercueil wrote:
+Hi Martin,
 
-> Add the two devicetree nodes for the two DMA cores of the JZ4770 SoC,
-> disabled by default, as currently there are no clients for the DMA
-> driver (until the MMC driver and/or others get a devicetree node).
+On 14/07/2018 21:37, Martin Blumenstingl wrote:
+> The Tanix TX3 Mini is a TV box based on the Amlogic S905W chipset. It
+> comes with:
+> - 1 GiB or 2 GiB of DDR3 memory depending on the model
+> - 8 GB or 16 GB eMMC flash depending on the model
+> - 802.11 b/g/n wifi (Silicon Valley Microelectronics SSV6051, does not
+>   support Bluetooth, not supported by any mailine driver)
+> - an LED 7 segment display with an FD628 controller (not supported by
+>   any mainline driver)
+
+Because all the 7segments drivers were rejected since forever !
+Some google guys tried once to push a sort of framework, but they lacked
+multiple drivers using their framework...
+
+> - HDMI and AV (CVBS) output
+> - 2x USB (utilizing both USB ports provided by the SoC)
+> - micro SD card slot
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Tested-by: Mathieu Malaterre <malat@debian.org>
+> The board seems to be very similar to the P23x and Q20x reference
+> boards:
+> - eMMC reset routed to BOOT_9
+> - the SDIO wifi chip's reset line is routed to GPIOX_6 and the reference
+>   clock is 32.768KHz on PWM_E
+> - SD card detection is routed to CARD_6
+> - vqmmc of all MMC controllers is hard-wired to 1.8V (VDDIO_BOOT)
+> - uart_AO can be accessed after opening the case and soldering RX, TX
+>   and GND lines onto the exposed solder points (marked with RX, TX and
+>   GND)
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
->   arch/mips/boot/dts/ingenic/jz4770.dtsi | 30 ++++++++++++++++++++++++++++++
->   1 file changed, 30 insertions(+)
+>  Documentation/devicetree/bindings/arm/amlogic.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
->   v2: No change
+> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+> index 8178da8742c3..b5c2b5c35766 100644
+> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
+> +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+> @@ -90,6 +90,7 @@ Board compatible values (alphabetically, grouped by SoC):
+>    - "amlogic,p241" (Meson gxl s805x)
+>  
+>    - "amlogic,p281" (Meson gxl s905w)
+> +  - "oranth,tx3-mini" (Meson gxl s905w)
+>  
+>    - "amlogic,q200" (Meson gxm s912)
+>    - "amlogic,q201" (Meson gxm s912)
 > 
-> diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-> index 7c2804f3f5f1..fda17beeb08b 100644
-> --- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
-> +++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-> @@ -196,6 +196,36 @@
->   		status = "disabled";
->   	};
->   
-> +	dmac0: jz4770-dma@13420000 {
 
-	dmac0: dma-controller@13420000 {
-
-[...]
-
-> +	dmac1: jz4770-dma@13420100 {
-
-	dmac1: dma-controller@13420100 {
-
-[...]
-
-MBR, Sergei
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
