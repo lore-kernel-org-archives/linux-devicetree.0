@@ -1,84 +1,166 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 2/5] dt-bindings: arm: amlogic: Add support for GXL
- S905W and the P281 board
-Date: Thu, 19 Jul 2018 10:21:21 +0200
-Message-ID: <d265652f-2d49-35af-1ac8-ff9231dcf332@baylibre.com>
-References: <20180714193725.17837-1-martin.blumenstingl@googlemail.com>
- <20180714193725.17837-3-martin.blumenstingl@googlemail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: Add Mediatek X20 Development Board
+ support
+Date: Thu, 19 Jul 2018 11:03:54 +0200
+Message-ID: <e60134a3-0bd6-fadb-3ed4-1db28d6543cc@gmail.com>
+References: <20180605163442.4812-1-manivannan.sadhasivam@linaro.org>
+ <20180605163442.4812-3-manivannan.sadhasivam@linaro.org>
+ <d88504b4-409c-c42b-f816-bedefce2a819@gmail.com>
+ <20180717140453.GA19076@mani>
+ <a48b0735-ff75-6228-22ba-c8e868240f0c@gmail.com>
+ <20180718164304.GA4902@Mani-XPS-13-9360>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180714193725.17837-3-martin.blumenstingl@googlemail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180718164304.GA4902@Mani-XPS-13-9360>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com
-Cc: mark.rutland@arm.com, yixun.lan@amlogic.com, robh+dt@kernel.org, carlo@caione.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, taiten.peng@linaro.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, manivannanece23@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
 
-On 14/07/2018 21:37, Martin Blumenstingl wrote:
-> S905W SoC is another SoC from the GXL family. It is a cost-reduced
-> version of the S905X SoC. The following differences are known:
-> - S905W supports HDMI resolutions up to 4k@30fps (while S905X support
->   resolutions up to 4k@60fps)
-> - the built-in video decoders of S905W decode up to 4k@30fps (while
->   S905X supports decoding up to 4k@60fps)
-> - CPU speed on S905W is limited to 1.2GHz (compared to 1.5GHz on S905X,
->   this is handled in the SCPI firmware)
-> - the DRAM interface on S905W is limited to 16-bit (GXL supports both,
->   16-bit and 32-bit)
+
+On 18/07/18 18:43, Manivannan Sadhasivam wrote:
+> Hi Matthias,
 > 
-> Notes based on Amlogic's GPL kernel sources:
-> - the P281 is a development board from Amlogic which uses the S905W SoC.
->   Amlogic's GPL kernel sources indicate that it uses the same PCB layout
->   as the "P231" board (and simply replaces the S905D from the original
->   P231 board with a S905W SoC).
-> - it is assumed that the S905W SoC is pin-compatible with the S905X SoC
->   since Amlogic's GPL kernel sources use the same driver for both SoCs.
-> - gxl_p281_1g.dts contains a comment which mentions that "max gp pll for
->   gpu is 650M, temporarily disabled". However, it seems to boot fine
->   with 744MHz (as used on GXBB and the other GXL SoCs).
+> On Wed, Jul 18, 2018 at 05:07:38PM +0200, Matthias Brugger wrote:
+>>
+>>
+>> On 17/07/18 16:04, Manivannan Sadhasivam wrote:
+>>> Hi Matthias,
+>>>
+>>> On Mon, Jul 16, 2018 at 03:24:44PM +0200, Matthias Brugger wrote:
+>>>> Hi Manivanna,
+>>>>
+>>>> On 05/06/18 18:34, Manivannan Sadhasivam wrote:
+>>>>> Add initial device tree support for Mediatek X20 Development Board
+>>>>> based on MT6797 Deca core SoC. This board is one of the 96Boards
+>>>>> Consumer Edition platform.
+>>>>>
+>>>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>>>>> ---
+>>>>>  arch/arm64/boot/dts/mediatek/Makefile         |  1 +
+>>>>>  .../boot/dts/mediatek/mt6797-x20-dev.dts      | 33 +++++++++++++++++++
+>>>>>  2 files changed, 34 insertions(+)
+>>>>>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
+>>>>>
+>>>>> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+>>>>> index ac17f60f998c..5b7fd6ad96e4 100644
+>>>>> --- a/arch/arm64/boot/dts/mediatek/Makefile
+>>>>> +++ b/arch/arm64/boot/dts/mediatek/Makefile
+>>>>> @@ -3,5 +3,6 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
+>>>>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
+>>>>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
+>>>>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
+>>>>> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
+>>>>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
+>>>>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
+>>>>> diff --git a/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts b/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
+>>>>> new file mode 100644
+>>>>> index 000000000000..2c09ca95d9e2
+>>>>> --- /dev/null
+>>>>> +++ b/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
+>>>>> @@ -0,0 +1,33 @@
+>>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>>> +/*
+>>>>> + * Device Tree Source for MediaTek X20 Development Board
+>>>>> + *
+>>>>> + * Copyright (C) 2018, Linaro Ltd.
+>>>>> + *
+>>>>> + */
+>>>>> +
+>>>>> +/dts-v1/;
+>>>>> +
+>>>>> +#include "mt6797.dtsi"
+>>>>> +
+>>>>> +/ {
+>>>>> +	model = "Mediatek X20 Development Board";
+>>>>> +	compatible = "archermind,mt6797-x20-dev", "mediatek,mt6797";
+>>>>> +
+>>>>> +	aliases {
+>>>>> +		serial0 = &uart1;
+>>>>> +	};
+>>>>
+>>>> Sorry for the late answer.
+>>>> Why did you use uart1 instead of uart0?
+>>>> I know that uart0 is used by the bootloader, but because of their exotic flash
+>>>> procedure I find it quite useful to see this messages in my serial connection.
+>>>> Of course you can only use 921600 baudrate then.
+>>>>
+>>>
+>>> The reason is, most of the Mezzanine boards use USB to UART bridge on the
+>>> UART1 port available on the Low Speed Expansion header. Additionally, the
+>>> convention followed by most of the Consumer Edition 96Boards is to use UART1
+>>> as the debug serial port. That's why eventhough the bootloader is using UART0,
+>>> I forced the kernel to use UART1.
+>>>
+>>
+>> Sounds reasonable, I don't have this 96 boards adapter and I forgot about it.
+>>
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/arm/amlogic.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+> That's fine :)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
-> index 849834cb1766..8178da8742c3 100644
-> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
-> +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
-> @@ -45,6 +45,10 @@ Boards with the Amlogic Meson GXL S805X SoC shall have the following properties:
->    Required root node property:
->      compatible: "amlogic,s805x", "amlogic,meson-gxl";
->  
-> +Boards with the Amlogic Meson GXL S905W SoC shall have the following properties:
-> +  Required root node property:
-> +    compatible: "amlogic,s905w", "amlogic,meson-gxl";
-> +
->  Boards with the Amlogic Meson GXM S912 SoC shall have the following properties:
->    Required root node property:
->      compatible: "amlogic,s912", "amlogic,meson-gxm";
-> @@ -85,6 +89,8 @@ Board compatible values (alphabetically, grouped by SoC):
->  
->    - "amlogic,p241" (Meson gxl s805x)
->  
-> +  - "amlogic,p281" (Meson gxl s905w)
-> +
->    - "amlogic,q200" (Meson gxm s912)
->    - "amlogic,q201" (Meson gxm s912)
->    - "khadas,vim2" (Meson gxm s912)
+>>>>> +
+>>>>> +	memory@40000000 {
+>>>>> +		device_type = "memory";
+>>>>> +		reg = <0 0x40000000 0 0x1e605000>;
+>>>>
+>>>> How comes this strange number for the memory size?
+>>>>
+>>>
+>>> Actually, the memory size is extracted from the downstream kernel [1].
+>>>
+>>
+>> Hm, Archermind "Helio X20 Development Board Hardware Manual" talks about 2GB
+>> LPDDR3-SDRAM. Would you mind to check if that is actually true?
+>>
+> 
+> Yes, it is 2GB. Shall I change the size to 0x80000000?
 > 
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Best would be if you boot the machine with this value and see if things look
+sane. Then resubmit. The other option is to resubmit and I'll check it tomorrow :)
+
+Let me know if you can't do it for tomorrow morning. I plan to submit the pull
+requests tomorrow as I'm through nearly all open patches (yes, two days earlier
+\o/ )
+
+Best regards,
+Matthias
+
+> Thanks,
+> Mani
+> 
+>>>> BTW do you know the differences between the EVB board and the x20 one?
+>>>> I used the evb dts for booting up to now.
+>>>>
+>>>
+>>> Sorry, I don't know the difference between both boards!
+>>
+>> Sure, no problem :)
+>>
+>> Regards,
+>> Matthias
+>>
+>>>
+>>> Thanks,
+>>> Mani
+>>>
+>>> [1] https://github.com/helio-x20/linux/blob/helio-x20/arch/arm64/boot/dts/amt6797_64_open.dts#L8
+>>>
+>>>> Best regards,
+>>>> Matthias
+>>>>
+>>>>> +	};
+>>>>> +
+>>>>> +	chosen {
+>>>>> +		stdout-path = "serial0:115200n8";
+>>>>> +	};
+>>>>> +};
+>>>>> +
+>>>>> +&uart1 {
+>>>>> +	status = "okay";
+>>>>> +};
+>>>>>
