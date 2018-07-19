@@ -1,91 +1,123 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: Re: [RFC PATCH v2 1/4] dt-bindings: misc: Add bindings for misc. BMC
- control fields
-Date: Thu, 19 Jul 2018 11:27:13 +0930
-Message-ID: <1531965433.2133841.1445577960.5C709A63@webmail.messagingengine.com>
-References: <20180711053122.30773-1-andrew@aj.id.au>
- <20180711053122.30773-2-andrew@aj.id.au>
- <20180711200450.GB17291@rob-hp-laptop>
- <1531356830.3551458.1437853280.551CA8C5@webmail.messagingengine.com>
- <CAL_JsqKpXxR4t_-3BOy-0mFePXkaSck_4PfHRD=OZQ-_-T5P=w@mail.gmail.com>
- <b6ced4cad4d7ff78330181b2c893855c23103953.camel@kernel.crashing.org>
- <1531463489.747186.1439263128.075AECE1@webmail.messagingengine.com>
- <CAL_JsqLZo-=7UkuvvUFYdCR4asBBiWyC=Q1ryH=-HLU6vzf9tA@mail.gmail.com>
- <ece91112ecfdc7218184c4c4519e455cf9397e11.camel@kernel.crashing.org>
- <1531870098.3337969.1444201888.2476205D@webmail.messagingengine.com>
- <CAL_Jsq+YdcBe+VYBAZPvK-X9gwJyhzP4m6hAx59+2Nz0JzsKug@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 1/2] ARM: dts: arria10: update NAND clocking
+Date: Thu, 19 Jul 2018 11:22:22 +0900
+Message-ID: <CAK7LNASpfX8-F9+K_9mvCsafDYPV03NhcA41cdWPZ2HQTqPT1Q@mail.gmail.com>
+References: <1531176063-30140-1-git-send-email-dinguyen@kernel.org>
+ <CAK7LNARAVSK5VY=_RfO2PXJCAnXJN3sXoAY=ijSwVojeo=c66w@mail.gmail.com>
+ <b33d18b2-1956-50a4-9a3f-6d2a0abd4b81@kernel.org>
+ <CAK7LNATNjPuGmzA_mS+yvVC8TpPsvQNvKedJ6emt114xGy7m3Q@mail.gmail.com>
+ <CADhT+wfJ2Kq9Lq4_eA9uDgmRLoS8hHaWsr8cskUxWC5xh=vdRw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+YdcBe+VYBAZPvK-X9gwJyhzP4m6hAx59+2Nz0JzsKug@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Eugene.Cho@dell.com, a.amelkin@yadro.com, linux-kernel@vger.kernel.org, Joel Stanley <joel@jms.id.au>, stewart@linux.ibm.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CADhT+wfJ2Kq9Lq4_eA9uDgmRLoS8hHaWsr8cskUxWC5xh=vdRw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dinh Nguyen <dinh.linux@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Marek Vasut <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 19 Jul 2018, at 04:37, Rob Herring wrote:
-> On Tue, Jul 17, 2018 at 5:28 PM Andrew Jeffery <andrew@aj.id.au> wrote:
-> >
-> > On Tue, 17 Jul 2018, at 14:26, Benjamin Herrenschmidt wrote:
-> > > On Mon, 2018-07-16 at 07:55 -0600, Rob Herring wrote:
-> > > > If that data is one set per SoC, then i'm not that concerned having
-> > > > platform-specific data in the driver. That doesn't mean the driver is
-> > > > not "generic". It's still not clear to me in this thread, how much of
-> > > > this is board specific, but given that you've placed all the data in
-> > > > an SoC dtsi file it seems to be all per SoC.
-> > >
-> > > So Rob, I think that's precisely where the disconnect is.
-> > >
-> > > I think we all (well hopefully) agree that those few tunables don't fit
-> > > in any existing subystem and aren't likely to ever do (famous last
-> > > words...).
-> > >
-> > > Where we disagree is we want to make this parametrized via the DT, and
-> > > you want us to hard wire the list in some kind of SoC driver for a
-> > > given SoC family/version.
-> > >
-> > > The reason I think hard wiring the list in the driver is not a great
-> > > solution is that that list in itself is prone to variations, possibly
-> > > fairly often, between boards, vendors, versions of boards, etc...
-> > >
-> > > We can't know for sure every SoC tunable (out of the gazillions in
-> > > those chips) are going to be needed for a given system. We know which
-> > > ones we do use for ours, and that's a couple of handfuls, but it could
-> > > be that Dell need a slightly different set, and so might Yadro, or so
-> > > might our next board revision for that matter.
-> > >
-> > > Now, updating the device-tree in the board flash with whatever vendor
-> > > specific information is needed is a LOT easier than getting the kernel
-> > > driver constantly updated. The device-tree after all is there to
-> > > reflect among other things system specific ways in which the SoC is
-> > > wired and configured. This is rather close...
-> >
-> > Not sure this helps, but I feel that the proposal pretty closely matches what's described in Documentation/devicetree/bindings/mfd/mfd.txt. It's intended that nodes using the bindings I'm proposing are children of a 'compatible = "syscon", "simple-mfd"' node (this is the case with the features we're hoping to describe for our SoC). I should explicitly call that out.
-> 
-> IMO, any binding that has only those compatibles is not correct and a
-> specific compatible is needed. We should be able identify a specific
-> h/w block.
-
-I didn't intend for that to get interpreted quite as literally, so apologies for that. We do have h/w-block-specific compatibles in there too. The point was to demonstrate that we're dealing (at this point, only) with mfds/syscons.
-
-> 
-> > But to go on, "simple-mfd" is effectively an alias of "simple-bus", which means its intended to match child node compatibles to drivers provided by the kernel. If we shouldn't be describing minor features of a SoC in the devicetree, doesn't this invalidate the case for simple-mfd? What is the *correct* use of simple-mfd? When is it not used to expose minor features in set of "miscellaneous system registers"? Why doesn't this proposed case fit?
-> 
-> I'm no fan of simple-mfd either. I think it is abused and often a sign
-> of bad binding design.
-
-Ah, yes, this is a familiar feeling when reflecting on things I've done in the past. Hence trying to understand how to use it right.
-
-> The general problem with MFD bindings is people
-> define child nodes based on what drivers they happen to have for some
-> OS. DT is not the only way to instantiate drivers. Child nodes are
-> really only needed when you have resources per child that need to be
-> defined. For example, if the MFD has an interrupt controller and
-> interrupts to sub-blocks or sub-blocks have their own clocks.
-> "simple-mfd" was for when the parent node has no driver or the child
-> nodes have no dependency on the parent.
-
-Thanks for the clarification, I'll keep that in mind going forward.
-
-Andrew
+MjAxOC0wNy0xMSAyMzo1MSBHTVQrMDk6MDAgRGluaCBOZ3V5ZW4gPGRpbmgubGludXhAZ21haWwu
+Y29tPjoKPiBIaSBNYXNhaGlybywKPgo+IE9uIFR1ZSwgSnVsIDEwLCAyMDE4IGF0IDk6NDUgUE0g
+TWFzYWhpcm8gWWFtYWRhCj4gPHlhbWFkYS5tYXNhaGlyb0Bzb2Npb25leHQuY29tPiB3cm90ZToK
+Pj4KPj4gMjAxOC0wNy0xMCAyMjozNSBHTVQrMDk6MDAgRGluaCBOZ3V5ZW4gPGRpbmd1eWVuQGtl
+cm5lbC5vcmc+Ogo+PiA+Cj4+ID4KPj4gPiBPbiAwNy8wOS8yMDE4IDA4OjMxIFBNLCBNYXNhaGly
+byBZYW1hZGEgd3JvdGU6Cj4+ID4+IDIwMTgtMDctMTAgNzo0MSBHTVQrMDk6MDAgRGluaCBOZ3V5
+ZW4gPGRpbmd1eWVuQGtlcm5lbC5vcmc+Ogo+PiA+Pj4gVGhlIE5BTkQgSVAgbmVlZHMgMiBjbG9j
+a3MobmFuZF94X2NsayBhbmQgbmFuZF9jbGspLiBUaGlzIHBhdGNoIGFkZHMgYQo+PiA+Pj4gbmFu
+ZF94X2Nsaywgd2hpY2ggaXMgZGVyaXZlZCBmcm9tIHRoZSBuYW5kX2NsaywgYnV0IGhhcyBhIGZp
+eGVkIGRpdmlkZXIKPj4gPj4+IG9mIDQuCj4+ID4+Pgo+PiA+Pj4gVXBkYXRlIHRoZSBOQU5EIG5v
+ZGUgdG8gdXNlIHRoZSBhZGRpdGlvbmFsIGNsb2NrLgo+PiA+Pj4KPj4gPj4+IFNpZ25lZC1vZmYt
+Ynk6IERpbmggTmd1eWVuIDxkaW5ndXllbkBrZXJuZWwub3JnPgo+PiA+Pj4gLS0tCj4+ID4+PiAg
+YXJjaC9hcm0vYm9vdC9kdHMvc29jZnBnYV9hcnJpYTEwLmR0c2kgfCAxMyArKysrKysrKysrKy0t
+Cj4+ID4+PiAgMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
+Cj4+ID4+Pgo+PiA+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3NvY2ZwZ2FfYXJy
+aWExMC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvc29jZnBnYV9hcnJpYTEwLmR0c2kKPj4gPj4+
+IGluZGV4IGE0ZGNiNjguLjU1OGI1ZWEgMTAwNjQ0Cj4+ID4+PiAtLS0gYS9hcmNoL2FybS9ib290
+L2R0cy9zb2NmcGdhX2FycmlhMTAuZHRzaQo+PiA+Pj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
+c29jZnBnYV9hcnJpYTEwLmR0c2kKPj4gPj4+IEBAIC0zNzcsMTMgKzM3NywyMSBAQAo+PiA+Pj4g
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xrLWdhdGUg
+PSA8MHhDOCAxMT47Cj4+ID4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfTsKPj4gPj4+Cj4+ID4+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgbmFuZF9jbGs6IG5hbmRfY2xrIHsKPj4gPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBuYW5kX3hfY2xrOiBuYW5kX3hfY2xrIHsKPj4gPj4+ICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNjbG9jay1jZWxscyA9IDwwPjsK
+Pj4gPj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNv
+bXBhdGlibGUgPSAiYWx0cixzb2NmcGdhLWExMC1nYXRlLWNsayI7Cj4+ID4+PiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8Jmw0X21wX2Ns
+az47Cj4+ID4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBjbGstZ2F0ZSA9IDwweEM4IDEwPjsKPj4gPj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICB9Owo+PiA+Pj4KPj4gPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBuYW5kX2NsazogbmFuZF9jbGsgewo+PiA+Pj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI2Nsb2NrLWNlbGxzID0gPDA+Owo+PiA+
+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0
+aWJsZSA9ICJhbHRyLHNvY2ZwZ2EtYTEwLWdhdGUtY2xrIjsKPj4gPj4+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmbmFuZF94X2Nsaz47
+Cj4+ID4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBm
+aXhlZC1kaXZpZGVyID0gPDQ+Owo+PiA+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgY2xrLWdhdGUgPSA8MHhDOCAxMD47Cj4+ID4+PiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPj4gPj4+ICsKPj4gPj4+ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzcGlfbV9jbGs6IHNwaV9tX2NsayB7Cj4+
+ID4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjY2xv
+Y2stY2VsbHMgPSA8MD47Cj4+ID4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImFsdHIsc29jZnBnYS1hMTAtZ2F0ZS1jbGsiOwo+
+PiA+Pj4gQEAgLTY1MCw3ICs2NTgsOCBAQAo+PiA+Pj4gICAgICAgICAgICAgICAgICAgICAgICAg
+cmVnLW5hbWVzID0gIm5hbmRfZGF0YSIsICJkZW5hbGlfcmVnIjsKPj4gPj4+ICAgICAgICAgICAg
+ICAgICAgICAgICAgIGludGVycnVwdHMgPSA8MCA5OSA0PjsKPj4gPj4+ICAgICAgICAgICAgICAg
+ICAgICAgICAgIGRtYS1tYXNrID0gPDB4ZmZmZmZmZmY+Owo+PiA+Pj4gLSAgICAgICAgICAgICAg
+ICAgICAgICAgY2xvY2tzID0gPCZuYW5kX2Nsaz47Cj4+ID4+PiArICAgICAgICAgICAgICAgICAg
+ICAgICBjbG9ja3MgPSA8Jm5hbmRfY2xrPiwgPCZuYW5kX3hfY2xrPjsKPj4gPj4+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gIm5hbmQiLCAibmFuZF94IjsKPj4gPj4KPj4g
+Pj4KPj4gPj4gRG9lc24ndCBTT0NGUEdBIHJlYWxseSBuZWVkIHRoZSBFQ0MgY2xvY2s/Cj4+ID4+
+Cj4+ID4KPj4gPiBJIGRvbid0IHNlZSBhbnkgbWVudGlvbnMgb2YgYW4gRUNDIGNsb2NrIGluIGFu
+eSBvZiB0aGUgU29DRlBHQQo+PiA+IGRvY3VtZW50YXRpb24gZm9yIHRoZSBOQU5EIElQLgo+Pgo+
+Pgo+PiBJJ2QgbGlrZSB5b3UgdG8gY2hlY2sgdGhlIElQIGRvY3VtZW50YXRpb24KPj4gcHVibGlz
+aGVkIGJ5IERlbmFsaSAob3IgQ2FkZW5jZSksCj4+IG5vdCBwdWJsaXNoZWQgYnkgQWx0ZXJhLgo+
+Pgo+PiBJcyBpdCBhdmFpbGFibGUgZm9yIHlvdT8KPj4KPj4KPj4KPj4gSW4gbXkgU29DcywgdGhl
+IHNhbWUgY2xvY2sgc2lnbmFsIChuYW5kLWNsay0yMDBtKQo+PiBpcyBjb25uZWN0ZWQgdG8gY2xr
+X3ggYW5kIGVjY19jbGssIGxpa2UgdGhpczoKPj4KPj4gICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAtLS0tLS0tLS0tLS0tCj4+IC0tLS0tLS0tLS0tLS0tICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgfCBERU5BTEkgSVAgfAo+PiB8ICAgICAgICAgICAgfCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAgIHwKPj4gfCBjbGsgICAgICAgIHwtLS0obmFu
+ZC1jbGstNTBtKS0tLS0tLS0tLT58IGNsayAgICAgICB8Cj4+IHwgY29udHJvbGxlciB8ICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgICAgICAgICAgfAo+PiB8ICAgICAgICAgICAgfC0tLShu
+YW5kLWNsay0yMDBtKS0tLS0tLS0tPnwgY2xrX3ggICAgIHwKPj4gLS0tLS0tLS0tLS0tLS3jgIAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgIHwgICAgICAgICAgIHwKPj4gICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIC0tLT58IGVjY19jbGsgICB8Cj4+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAgICAgICAgfAo+PiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0tLS0KPj4KPj4KPj4gU29tZSBj
+bG9jayBsaW5lcyBhcmUgb2Z0ZW4gdGllZC11cCwKPj4gYnV0IHN1Y2ggbG93LWxldmVsIGluZm9y
+bWF0aW9uIGRvZXMgbm90IGFwcGVhciBpbgo+PiB1c2VyIGRvY3VtZW50cy4KPj4gSSB0YWxrZWQg
+dG8gYSBoYXJkd2FyZSBlbmdpbmVlciB0byBnZXQgdGhpcyBpbmZvcm1hdGlvbi4KPj4KPj4KPj4K
+Pj4gSSBndWVzcyB0aGUgc2l0dWF0aW9uIGlzIHNpbWlsYXIgZm9yIHlvdXIgY2FzZSwKPj4gYnV0
+IEkgZG8gbm90IGhhdmUgaW5mb3JtYXRpb24gZW5vdWdoIHRvIGFyZ3VlIHRoaXMuCj4+Cj4KPiBJ
+IGRvbid0IGRpc2FncmVlIHdpdGggdGhpcyByZXByZXNlbnRhdGlvbi4gQnV0IGFmdGVyIGFza2lu
+ZyBhcm91bmQsCj4gSSdtIGdldHRpbmcgdGhlIGltcHJlc3Npb24gdGhhdCB0aGUgRUNDIGNsb2Nr
+IGlzIG5vdCBleHBvc2VkIHRvIHRoZQo+IGNsb2NrIG1hbmFnZXIuIFRoaXMgaW1wbGllcyB0aGF0
+IHRoZSBjbG9jayBpcyBhbHdheXMgdHVybmVkIG9uIGFuZAo+IHRoZXJlIGRvZXNuJ3Qgc2VlbSB0
+byBiZSBhbnkgc29mdHdhcmUgY29udHJvbCBmb3IgaXQuIEkgdGVzdGVkIEVDQwo+IHdpdGggdGhp
+cyBwYXRjaCBhbmQgaXQgbG9va3MgdG8gYmUgd29ya2luZyBjb3JyZWN0bHksIHdpdGhvdXQgYW55
+IGVjYwo+IGNsb2NrIHJlcHJlc2VudGF0aW9uLgo+Cj4gSSdtIG5vdCBzdXJlIGlmIEkgc2hvdWxk
+IGV4cG9zZSBhIGR1bW15IGVjY19jbGsgdG8gc2F0aXNmeSB0aGUgYmluZGluZz8KCgpEVCBzaG91
+bGQgcmVwcmVzZW50IHRoZSByZWFsIEhXLgpJZiB0aGUgRGVuYWxpIElQIGluIFNPQ0ZQR0EgbmVl
+ZHMgZWNjX2NsayBpbnB1dCwKRFQgc2hvdWxkIGRlc2NyaWJlIGl0LgoKCkkgZG8gbm90IGhhdmUg
+a25vd2xlZGdlIGFib3V0IHRoZSBTT0NGUEdBIGludGVybmFscy4KSSBkbyBub3Qga25vdyB3aGlj
+aCBpcyBjb3JyZWN0OgoKICAtIFRoZSBEZW5hbGkgSVAgaW4gU09DRlBHQSBuZWVkcyBlY2NfY2xr
+LAogICAgYnV0IHRoZXJlIGlzIG5vIHNvZnR3YXJlIGNvbnRyb2wgZm9yIGl0LgoKICAtIFRoZSBE
+ZW5hbGkgSVAgaW4gU09DRlBHQSBkb2VzIG5vdCBuZWVkIGVjY19jbGsuCgoKCgoKPiBEaW5oCj4g
+LS0KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJz
+Y3JpYmUgZGV2aWNldHJlZSIgaW4KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21v
+QHZnZXIua2VybmVsLm9yZwo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtl
+cm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbAoKCgotLSAKQmVzdCBSZWdhcmRzCk1hc2FoaXJv
+IFlhbWFkYQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
