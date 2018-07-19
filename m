@@ -1,29 +1,61 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: vf610: Add ZII SSMB SPU3 board
-Date: Thu, 19 Jul 2018 10:40:04 +0800
-Message-ID: <20180719024002.GQ4576@dragon>
-References: <20180717040651.641-1-andrew.smirnov@gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 0/2] dt: thermal: Fix broken cooling-maps
+Date: Thu, 19 Jul 2018 08:10:28 +0530
+Message-ID: <20180719024028.vudrlpgxiz6accky@vireshk-i7>
+References: <cover.1530766981.git.viresh.kumar@linaro.org>
+ <5B4F5E00.5050800@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180717040651.641-1-andrew.smirnov@gmail.com>
+In-Reply-To: <5B4F5E00.5050800@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, cphealy@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
+To: Wei Xu <xuwei5@hisilicon.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, robh@kernel.org, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, olof@lixom.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 16, 2018 at 09:06:51PM -0700, Andrey Smirnov wrote:
-> Add support for Zodiac Inflight Innovations SSMB SPU3
-> board (VF610-based).
+On 18-07-18, 16:34, Wei Xu wrote:
+> Hi Viresh,
 > 
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: cphealy@gmail.com
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> On 2018/7/5 6:09, Viresh Kumar wrote:
+> > Hi,
+> > 
+> > This is an attempt to fix the broken or partially defined DT bindings
+> > for cooling-maps. We should list every device that participates in
+> > cooling down at a certain trip point, instead of just the first in the
+> > list as that depends on certain ordering of events to work properly.
+> > 
+> > The first patch extends the binding to allow a list of phandles in
+> > "cooling-device" property and the second patch fixes one of the
+> > platform's DT.
+> > 
+> > This will be followed up by fixing all platform DT bindings that have
+> > these issues after this set is accepted.
+> > 
+> > The kernel also requires some changes to handle the phandle list, but
+> > wouldn't break with these changes as it reads the first phandle in the
+> > list for now. We can update that separately.
+> > 
+> > --
+> > viresh
+> > 
+> > Viresh Kumar (2):
+> >   dt-bindings: thermal: Allow multiple devices to share cooling map
+> >   arm64: dts: hi6220: Add all CPUs in cooling maps
+> > 
+> >  Documentation/devicetree/bindings/thermal/thermal.txt | 11 +++--------
+> >  arch/arm64/boot/dts/hisilicon/hi6220.dtsi             |  9 ++++++++-
+> >  2 files changed, 11 insertions(+), 9 deletions(-)
+> > 
+> 
+> Thanks!
+> Applied both to the hisilicon dt tree.
 
-Applied, thanks.
+Hi Wei,
+
+I expected the first patch to go via the thermal tree as it is for the
+thermal core maintainers. Second patch can very well go from your
+tree, but only after the 1st one is applied by thermal maintainers.
+
+-- 
+viresh
