@@ -1,101 +1,107 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH 2/3] ARM: tegra: apalis-tk1: Add SPDX license (GPL-2.0 OR
- X11) identifiers
-Date: Thu, 19 Jul 2018 18:44:11 +0200
-Message-ID: <CAOFm3uFPGDKBjr2TKmsqZKdCLSU8YY+mprNe0ozGzkORXbHYSg@mail.gmail.com>
-References: <20180718194824.3704-1-krzk@kernel.org> <20180718194824.3704-2-krzk@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] spi: add SPI controller driver for UniPhier SoC
+Date: Thu, 19 Jul 2018 17:51:50 +0100
+Message-ID: <20180719165150.GI27938@sirena.org.uk>
+References: <1531983117-9443-1-git-send-email-hayashibara.keiji@socionext.com>
+ <1531983117-9443-3-git-send-email-hayashibara.keiji@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nOM8ykUjac0mNN89"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180718194824.3704-2-krzk@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1531983117-9443-3-git-send-email-hayashibara.keiji@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-tegra@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, yamada.masahiro@socionext.com, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, linux-kernel@vger.kernel.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
 
-On Wed, Jul 18, 2018 at 9:48 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> Three files dual-licensed were missing the SPDX license identifiers.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm/boot/dts/tegra124-apalis-emc.dtsi | 38 +-----------------------------
->  arch/arm/boot/dts/tegra124-apalis-eval.dts | 38 +-----------------------------
->  arch/arm/boot/dts/tegra124-apalis.dtsi     | 38 +-----------------------------
->  3 files changed, 3 insertions(+), 111 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/tegra124-apalis-emc.dtsi b/arch/arm/boot/dts/tegra124-apalis-emc.dtsi
-> index ca2c3a557895..cdbbb3562fb9 100644
-> --- a/arch/arm/boot/dts/tegra124-apalis-emc.dtsi
-> +++ b/arch/arm/boot/dts/tegra124-apalis-emc.dtsi
-> @@ -1,42 +1,6 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR X11
->  /*
->   * Copyright 2016 Toradex AG
-> - *
-> - * This file is dual-licensed: you can use it either under the terms
-> - * of the GPL or the X11 license, at your option. Note that this dual
-> - * licensing only applies to this file, and not this project as a
-> - * whole.
+--nOM8ykUjac0mNN89
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This is weirdly enough not what is called an X11 license [1] even
-though it is named this way here... but this is an  MIT license [2]
-with a small variation. (See below)
+On Thu, Jul 19, 2018 at 03:51:57PM +0900, Keiji Hayashibara wrote:
 
-> - *
-> - *  a) This file is free software; you can redistribute it and/or
-> - *     modify it under the terms of the GNU General Public License
-> - *     version 2 as published by the Free Software Foundation.
-> - *
-> - *     This file is distributed in the hope that it will be useful
-> - *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - *     GNU General Public License for more details.
-> - *
-> - * Or, alternatively
-> - *
-> - *  b) Permission is hereby granted, free of charge, to any person
-> - *     obtaining a copy of this software and associated documentation
-> - *     files (the "Software"), to deal in the Software without
-> - *     restriction, including without limitation the rights to use
-> - *     copy, modify, merge, publish, distribute, sublicense, and/or
-> - *     sell copies of the Software, and to permit persons to whom the
-> - *     Software is furnished to do so, subject to the following
-> - *     conditions:
-> - *
-> - *     The above copyright notice and this permission notice shall be
-> - *     included in all copies or substantial portions of the Software.
-> - *
-> - *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+This all looks good, just a small number of fairly minor things - mostly
+style points.
 
-The MIT standard text [2] has a few extra commas and states instead:
+> @@ -0,0 +1,532 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * spi-uniphier.c - Socionext UniPhier SPI controller driver
+> + *
+> + * Copyright 2012      Panasonic Corporation
+> + * Copyright 2016-2018 Socionext Inc.
+> + */
 
-THE SOFTWARE IS PROVIDED "AS IS",
+Please make the entire comment a C++ one, it makes things look a bit
+more joined up/intentional.
 
-Here "AS IS" is omitted. I am not sure this is material but IMHO it
-would be good to get Toradex signoff on this.
+> +#define BYTES_PER_WORD(x)			\
+> +({						\
+> +	int __x;				\
+> +	__x = (x <= 8)  ? 1 :			\
+> +	      (x <= 16) ? 2 : 4;		\
+> +	__x;					\
+> +})
 
-> - *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> - *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> - *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> - *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-> - *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> - *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> - *     OTHER DEALINGS IN THE SOFTWARE.
->   */
+Could this be replaced with an inline function?  The usage seems fine
+but it's a bit big for a macro.  The end result should be similar.
 
-<snip>
+> +static irqreturn_t uniphier_spi_handler(int irq, void *dev_id)
+> +{
+> +	struct uniphier_spi_priv *priv = dev_id;
+> +	u32 val, stat;
+> +
+> +	stat = readl(priv->base + SSI_IS);
+> +	val = SSI_IC_TCIC | SSI_IC_RCIC | SSI_IC_RORIC;
+> +	writel(val, priv->base + SSI_IC);
+> +
+> +	/* rx fifo overrun */
+> +	if (stat & SSI_IS_RORID) {
+> +		priv->error = -EIO;
+> +		goto done;
+> +	}
+> +
+> +	/* rx complete */
+> +	if ((stat & SSI_IS_RCID) && (stat & SSI_IS_RXRS)) {
 
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +
+> +done:
+> +	complete(&priv->xfer_done);
+> +	return IRQ_HANDLED;
 
-With all this said, I think that your expression should be this
-instead (and this applies to other places too):
+This will unconditionally report IRQ_HANDLED even if none of the flags
+were set by the hardware which will cause problems if something goes
+wrong - the interrupt will continually be serviced and the interrupt
+framework won't be able to mitigate or provide diagnostics.  It's better
+to return IRQ_NONE if nothing is detected from the hardware.
 
-SPDX-License-Identifier: GPL-2.0 OR MIT
+> +static const struct of_device_id uniphier_spi_match[] = {
+> +	{ .compatible = "socionext,uniphier-scssi", },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, uniphier_spi_match);
 
-[1]  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/LICENSES/other/X11?h=v4.18-rc5
-[2]  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/LICENSES/preferred/MIT?h=v4.18-rc5
+The binding document also listed socionext,uniphier-mcssi as a
+compatible but this driver doesn't match that.
 
--- 
-Cordially
-Philippe Ombredanne
+--nOM8ykUjac0mNN89
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltQwaUACgkQJNaLcl1U
+h9D+vwf/QB0hDRvgpwKmsrintp5L0X9C5QHXOlJY9upI8zLuckq/za5oagV+3isN
+/jUpnSHwOHpitUVQGu+oYEA5cSsDAzlht+PPS2MlA1ApnxcDvYA9sBpqceuSkS/d
+iFxYiLKJc0ayZvwnWEbhUWHPMeTnLtLZBYKRp5RjYYozFY7Gz1ggESNZx6pvtq6u
+aAsYSFDBeXfAtFtC7GRVVxMu3t1XPLy5KHkWrfLEW5Rgs6B/w4qVUq76BoiujmKn
+NDmjrD8JVZaasa86k+WkhNAHXVmy6S9158TFRQnfJ8KaqqUqHlctZ/WEQEiDxBxK
+ELZDhU7KwTsn18UcFNOZqMWNZiIIwQ==
+=QLcy
+-----END PGP SIGNATURE-----
+
+--nOM8ykUjac0mNN89--
