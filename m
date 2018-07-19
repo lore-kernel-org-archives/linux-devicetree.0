@@ -1,49 +1,148 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH v12 8/8] MAINTAINERS: Add Eddie as the maintainer for the
- FSI-attached I2C driver
-Date: Thu, 19 Jul 2018 14:15:25 +0930
-Message-ID: <CACPK8Xfa5Q7EiU65fhZn1Lnghq+j+kc+-_+ejheSjF-OzyKNrw@mail.gmail.com>
-References: <1531841466-9833-1-git-send-email-eajames@linux.vnet.ibm.com> <1531841466-9833-9-git-send-email-eajames@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH] power: reset: msm: Add support for download-mode control
+Date: Thu, 19 Jul 2018 10:48:49 +0530
+Message-ID: <1531977529-23304-1-git-send-email-rnayak@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531841466-9833-9-git-send-email-eajames@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.vnet.ibm.com>
-Cc: linux-i2c@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Peter Rosin <peda@axentia.se>
+To: sre@kernel.org, bjorn.andersson@linaro.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18 July 2018 at 01:01, Eddie James <eajames@linux.vnet.ibm.com> wrote:
-> From: "eajames@linux.vnet.ibm.com" <eajames@linux.vnet.ibm.com>
->
-> Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
+commit '8c1b7dc9b: firmware: qcom: scm: Expose download-mode control'
+added support for download-mode control using the scm firmware
+driver for platforms which require a secure call to write the magic
+cookie into the tcsr location.
 
-Acked-by: Joel Stanley <joel@jms.id.au>
+For platforms which *do not* need an scm call and where the kernel can
+write the cookie by a direct read/write, add similar support in the
+msm-poweroff driver.
+Similar to the scm driver, the msm-poweroff driver clears the cookie
+during a clean reboot.
 
+Download mode using msm-poweroff driver can be enabled by including
+msm-poweroff.download_mode=1 on the command line.
 
-> ---
->  MAINTAINERS | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index fcefb7a..613fd52 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5917,6 +5917,14 @@ F:       fs/crypto/
->  F:     include/linux/fscrypt*.h
->  F:     Documentation/filesystems/fscrypt.rst
->
-> +FSI-ATTACHED I2C DRIVER
-> +M:     Eddie James <eajames@linux.vnet.ibm.com>
-> +L:     linux-i2c@vger.kernel.org
-> +L:     openbmc@lists.ozlabs.org (moderated for non-subscribers)
-> +S:     Maintained
-> +F:     drivers/i2c/busses/i2c-fsi.c
-> +F:     Documentation/devicetree/bindings/i2c/i2c-fsi.txt
-> +
->  FSNOTIFY: FILESYSTEM NOTIFICATION INFRASTRUCTURE
->  M:     Jan Kara <jack@suse.cz>
->  R:     Amir Goldstein <amir73il@gmail.com>
-> --
-> 1.8.3.1
->
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+---
+ .../bindings/power/reset/msm-poweroff.txt          |  3 ++
+ drivers/power/reset/Kconfig                        | 11 +++++++
+ drivers/power/reset/msm-poweroff.c                 | 38 ++++++++++++++++++++++
+ 3 files changed, 52 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/power/reset/msm-poweroff.txt b/Documentation/devicetree/bindings/power/reset/msm-poweroff.txt
+index ce44ad3..9dd489f 100644
+--- a/Documentation/devicetree/bindings/power/reset/msm-poweroff.txt
++++ b/Documentation/devicetree/bindings/power/reset/msm-poweroff.txt
+@@ -8,6 +8,9 @@ settings.
+ Required Properties:
+ -compatible: "qcom,pshold"
+ -reg: Specifies the physical address of the ps-hold register
++Optional Properties:
++-qcom,dload-mode: phandle to the TCSR hardware block and offset of the
++		 download mode control register
+ 
+ Example:
+ 
+diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+index df58fc8..0c97e34 100644
+--- a/drivers/power/reset/Kconfig
++++ b/drivers/power/reset/Kconfig
+@@ -104,6 +104,17 @@ config POWER_RESET_MSM
+ 	help
+ 	  Power off and restart support for Qualcomm boards.
+ 
++config POWER_RESET_MSM_DOWNLOAD_MODE
++	bool "Qualcomm download mode enabled by default"
++	depends on POWER_RESET_MSM
++	help
++	  A device with "download mode" enabled will upon an unexpected
++	  warm-restart enter a special debug mode that allows the user to
++	  "download" memory content over USB for offline postmortem analysis.
++	  The feature can be enabled/disabled on the kernel command line.
++
++	  Say Y here to enable "download mode" by default.
++
+ config POWER_RESET_OCELOT_RESET
+ 	bool "Microsemi Ocelot reset driver"
+ 	depends on MSCC_OCELOT || COMPILE_TEST
+diff --git a/drivers/power/reset/msm-poweroff.c b/drivers/power/reset/msm-poweroff.c
+index 01b8c71..c33eac5 100644
+--- a/drivers/power/reset/msm-poweroff.c
++++ b/drivers/power/reset/msm-poweroff.c
+@@ -18,11 +18,20 @@
+ #include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
++#include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+ #include <linux/reboot.h>
++#include <linux/regmap.h>
+ #include <linux/pm.h>
+ 
++static bool download_mode = IS_ENABLED(CONFIG_POWER_RESET_MSM_DOWNLOAD_MODE);
++module_param(download_mode, bool, 0);
++
++#define QCOM_SET_DLOAD_MODE 0x10
+ static void __iomem *msm_ps_hold;
++static struct regmap *tcsr_regmap;
++static unsigned int dload_mode_offset;
++
+ static int deassert_pshold(struct notifier_block *nb, unsigned long action,
+ 			   void *data)
+ {
+@@ -44,9 +53,30 @@ static void do_msm_poweroff(void)
+ 
+ static int msm_restart_probe(struct platform_device *pdev)
+ {
++	int ret;
++	struct of_phandle_args args;
+ 	struct device *dev = &pdev->dev;
+ 	struct resource *mem;
+ 
++	if (download_mode) {
++		ret = of_parse_phandle_with_fixed_args(dev->of_node,
++						       "qcom,dload-mode", 1, 0,
++						       &args);
++		if (ret < 0)
++			return ret;
++
++		tcsr_regmap = syscon_node_to_regmap(args.np);
++		of_node_put(args.np);
++		if (IS_ERR(tcsr_regmap))
++			return PTR_ERR(tcsr_regmap);
++
++		dload_mode_offset = args.args[0];
++
++		/* Enable download mode by writing the cookie */
++		regmap_write(tcsr_regmap, dload_mode_offset,
++			     QCOM_SET_DLOAD_MODE);
++	}
++
+ 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	msm_ps_hold = devm_ioremap_resource(dev, mem);
+ 	if (IS_ERR(msm_ps_hold))
+@@ -59,6 +89,13 @@ static int msm_restart_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static void msm_restart_shutdown(struct platform_device *pdev)
++{
++	/* Clean shutdown, disable download mode to allow normal restart */
++	if (download_mode)
++		regmap_write(tcsr_regmap, dload_mode_offset, 0x0);
++}
++
+ static const struct of_device_id of_msm_restart_match[] = {
+ 	{ .compatible = "qcom,pshold", },
+ 	{},
+@@ -71,6 +108,7 @@ static int msm_restart_probe(struct platform_device *pdev)
+ 		.name = "msm-restart",
+ 		.of_match_table = of_match_ptr(of_msm_restart_match),
+ 	},
++	.shutdown = msm_restart_shutdown,
+ };
+ 
+ static int __init msm_restart_init(void)
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
