@@ -1,40 +1,32 @@
-From: Saravanan Sekar <sravanhome@gmail.com>
-Subject: [PATCH v7 1/5] clk: actions: Add missing REGMAP_MMIO dependency
-Date: Thu, 19 Jul 2018 11:06:45 +0200
-Message-ID: <20180719090649.12460-2-sravanhome@gmail.com>
-References: <20180719090649.12460-1-sravanhome@gmail.com>
+From: x00249684 <xuwei5@huawei.com>
+Subject: Re: [PATCH v11 3/4] [RESEND] arm64: dts: add ufs dts node
+Date: Thu, 19 Jul 2018 17:40:41 +0800
+Message-ID: <1531993241-173790-1-git-send-email-xuwei5@huawei.com>
+References: <20180717093659.103263-4-liwei213@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180719090649.12460-1-sravanhome@gmail.com>
+In-Reply-To: <20180717093659.103263-4-liwei213@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: afaerber@suse.de, manivannan.sadhasivam@linaro.org, sboyd@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@cubietech.com, sravanhome@gmail.com, support@cubietech.com, catalin.marinas@arm.com, mturquette@baylibre.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, darren@cubietech.com, robh+dt@kernel.org, jeff.chen@actions-semi.com, pn@denx.de, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mp-cs@actions-semi.com
+To: liwei213@huawei.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, khilman@baylibre.com, arnd@arndb.de, gregory.clement@free-electrons.com, thomas.petazzoni@free-electrons.com, yamada.masahiro@socionext.com, riku.voipio@linaro.org, treding@nvidia.com, krzk@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org, zangleigang@hisilicon.com, gengjianfeng@hisilicon.com, sunzhaosheng@hisilicon.com, ian.rickards@arm.com, guodong.xu@linaro.org, puck.chen@hisilicon.com, john.stultz@linaro.org, fengbaopeng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-Add REGMAP_MMIO as dependency to avoid undefined
-reference to regmap symbols.
+>From: Li Wei <liwei213@huawei.com>
+>
+>arm64: dts: add ufs node for Hisilicon.
+>
+>Signed-off-by: Li Wei <liwei213@huawei.com>
+>Reviewed-by: Rob Herring <robh@kernel.org>
+>Tested-by: John Stultz <john.stultz@linaro.org>
 
-Fixes: d85d20053e19 ("clk: actions: Add S900 SoC clock support")
-Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-Reviewed-by: Andreas Färber <afaerber@suse.de>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/clk/actions/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Fine to me. Thanks!
+Acked-by: Wei Xu <xuwei5@hisilicon.com>
 
-diff --git a/drivers/clk/actions/Kconfig b/drivers/clk/actions/Kconfig
-index 8854adb37847..39491154abbf 100644
---- a/drivers/clk/actions/Kconfig
-+++ b/drivers/clk/actions/Kconfig
-@@ -1,6 +1,7 @@
- config CLK_ACTIONS
- 	bool "Clock driver for Actions Semi SoCs"
- 	depends on ARCH_ACTIONS || COMPILE_TEST
-+	select REGMAP_MMIO
- 	default ARCH_ACTIONS
- 
- if CLK_ACTIONS
--- 
-2.14.4
+But it will not be so staightforward when applying the patch
+since in the recent pull request the hi3660.dtsi has been tidied up.
+If it makes inconvenient, I can apply it once the binding is merged.
+Thanks!
+
+Best Regards,
+Wei
