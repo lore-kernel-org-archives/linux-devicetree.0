@@ -1,118 +1,275 @@
-From: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Subject: Re: [PATCH v7 4/4] kexec_file: Load kernel at top of system RAM if
- required
-Date: Thu, 19 Jul 2018 12:44:44 -0700
-Message-ID: <20180719124444.c893712cca2e6f2649d1bc0d@linux-foundation.org>
-References: <20180718024944.577-1-bhe@redhat.com>
- <20180718024944.577-5-bhe@redhat.com>
- <20180718153326.b795e9ea7835432a56cd7011@linux-foundation.org>
- <20180719151753.GB7147@localhost.localdomain>
+From: Trent Piepho <tpiepho@impinj.com>
+Subject: Re: [PATCH 2/2] spi: add SPI controller driver for UniPhier SoC
+Date: Thu, 19 Jul 2018 19:45:43 +0000
+Message-ID: <1532029542.2283.157.camel@impinj.com>
+References: <1531983117-9443-1-git-send-email-hayashibara.keiji@socionext.com>
+ <1531983117-9443-3-git-send-email-hayashibara.keiji@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <20180719151753.GB7147-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, brijesh.singh-5C7GfCeVMHo@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org, jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, linux-parisc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel@vge
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1531983117-9443-3-git-send-email-hayashibara.keiji@socionext.com>
+Content-Language: en-US
+Content-ID: <6FCCB6CBC67CC84FAF8320B6962F4146@namprd06.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "hayashibara.keiji@socionext.com" <hayashibara.keiji@socionext.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>, "hayashi.kunihiko@socionext.com" <hayashi.kunihiko@socionext.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "masami.hiramatsu@linaro.org" <masami.hiramatsu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 19 Jul 2018 23:17:53 +0800 Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+On Thu, 2018-07-19 at 15:51 +0900, Keiji Hayashibara wrote:
+> 
+> +config SPI_UNIPHIER
+> +	tristate "Socionext UniPhier SPI Controller"
+> +	depends on (ARCH_UNIPHIER || COMPILE_TEST) && OF
+> +	help
+> +	  This driver supports the SPI controller on Socionext
+> +	  UniPhier SoCs.
 
-> Hi Andrew,
-> 
-> On 07/18/18 at 03:33pm, Andrew Morton wrote:
-> > On Wed, 18 Jul 2018 10:49:44 +0800 Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> > 
-> > > For kexec_file loading, if kexec_buf.top_down is 'true', the memory which
-> > > is used to load kernel/initrd/purgatory is supposed to be allocated from
-> > > top to down. This is what we have been doing all along in the old kexec
-> > > loading interface and the kexec loading is still default setting in some
-> > > distributions. However, the current kexec_file loading interface doesn't
-> > > do like this. The function arch_kexec_walk_mem() it calls ignores checking
-> > > kexec_buf.top_down, but calls walk_system_ram_res() directly to go through
-> > > all resources of System RAM from bottom to up, to try to find memory region
-> > > which can contain the specific kexec buffer, then call locate_mem_hole_callback()
-> > > to allocate memory in that found memory region from top to down. This brings
-> > > confusion especially when KASLR is widely supported , users have to make clear
-> > > why kexec/kdump kernel loading position is different between these two
-> > > interfaces in order to exclude unnecessary noises. Hence these two interfaces
-> > > need be unified on behaviour.
-> > 
-> > As far as I can tell, the above is the whole reason for the patchset,
-> > yes?  To avoid confusing users.
-> 
-> 
-> In fact, it's not just trying to avoid confusing users. Kexec loading
-> and kexec_file loading are just do the same thing in essence. Just we
-> need do kernel image verification on uefi system, have to port kexec
-> loading code to kernel. 
-> 
-> Kexec has been a formal feature in our distro, and customers owning
-> those kind of very large machine can make use of this feature to speed
-> up the reboot process. On uefi machine, the kexec_file loading will
-> search place to put kernel under 4G from top to down. As we know, the
-> 1st 4G space is DMA32 ZONE, dma, pci mmcfg, bios etc all try to consume
-> it. It may have possibility to not be able to find a usable space for
-> kernel/initrd. From the top down of the whole memory space, we don't
-> have this worry. 
-> 
-> And at the first post, I just posted below with AKASHI's
-> walk_system_ram_res_rev() version. Later you suggested to use
-> list_head to link child sibling of resource, see what the code change
-> looks like.
-> http://lkml.kernel.org/r/20180322033722.9279-1-bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
-> 
-> Then I posted v2
-> http://lkml.kernel.org/r/20180408024724.16812-1-bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
-> Rob Herring mentioned that other components which has this tree struct
-> have planned to do the same thing, replacing the singly linked list with
-> list_head to link resource child sibling. Just quote Rob's words as
-> below. I think this could be another reason.
-> 
-> ~~~~~ From Rob
-> The DT struct device_node also has the same tree structure with
-> parent, child, sibling pointers and converting to list_head had been
-> on the todo list for a while. ACPI also has some tree walking
-> functions (drivers/acpi/acpica/pstree.c). Perhaps there should be a
-> common tree struct and helpers defined either on top of list_head or a
-> ~~~~~
-> new struct if that saves some size.
+Perhaps add the bit that this is for the SCSSI and not MCSSI here?
 
-Please let's get all this into the changelogs?
+> 
+> +
+> +#define BYTES_PER_WORD(x)			\
+> +({						\
+> +	int __x;				\
+> +	__x = (x <= 8)  ? 1 :			\
+> +	      (x <= 16) ? 2 : 4;		\
+> +	__x;					\
+> +})
 
-> > 
-> > Is that sufficient?  Can we instead simplify their lives by providing
-> > better documentation or informative printks or better Kconfig text,
-> > etc?
-> > 
-> > And who *are* the people who are performing this configuration?  Random
-> > system administrators?  Linux distro engineers?  If the latter then
-> > they presumably aren't easily confused!
-> 
-> Kexec was invented for kernel developer to speed up their kernel
-> rebooting. Now high end sever admin, kernel developer and QE are also
-> keen to use it to reboot large box for faster feature testing, bug
-> debugging. Kernel dev could know this well, about kernel loading
-> position, admin or QE might not be aware of it very well. 
-> 
-> > 
-> > In other words, I'm trying to understand how much benefit this patchset
-> > will provide to our users as a whole.
-> 
-> Understood. The list_head replacing patch truly involes too many code
-> changes, it's risky. I am willing to try any idea from reviewers, won't
-> persuit they have to be accepted finally. If don't have a try, we don't
-> know what it looks like, and what impact it may have. I am fine to take
-> AKASHI's simple version of walk_system_ram_res_rev() to lower risk, even
-> though it could be a little bit low efficient.
+Or:
 
-The larger patch produces a better result.  We can handle it ;)
+static inline bytes_per_word(unsigned int bits) {
+   return bits <= 8 ? 1 : (bits <= 16 ? 2 : 4);
+}
+
+
+
+> +
+> +static inline void uniphier_spi_irq_enable(struct spi_device *spi, u32 mask)
+> +{
+> +	struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
+> +	u32 val;
+> +
+> +	val = readl(priv->base + SSI_IE);
+> +	val |= mask;
+> +	writel(val, priv->base + SSI_IE);
+> +}
+> +
+> +static inline void uniphier_spi_irq_disable(struct spi_device *spi, u32 mask)
+> +{
+> +	struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
+> +	u32 val;
+> +
+> +	val = readl(priv->base + SSI_IE);
+> +	val &= ~mask;
+> +	writel(val, priv->base + SSI_IE);
+> +}
+> +
+> +static void uniphier_spi_set_transfer_size(struct spi_device *spi, int size)
+> +{
+> +	struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
+> +	u32 val;
+> +
+> +	val = readl(priv->base + SSI_TXWDS);
+> +	val &= ~(SSI_TXWDS_WDLEN_MASK | SSI_TXWDS_DTLEN_MASK);
+> +	val |= FIELD_PREP(SSI_TXWDS_WDLEN_MASK, size);
+> +	val |= FIELD_PREP(SSI_TXWDS_DTLEN_MASK, size);
+> +	writel(val, priv->base + SSI_TXWDS);
+> +
+> +	val = readl(priv->base + SSI_RXWDS);
+> +	val &= ~SSI_RXWDS_DTLEN_MASK;
+> +	val |= FIELD_PREP(SSI_RXWDS_DTLEN_MASK, size);
+> +	writel(val, priv->base + SSI_RXWDS);
+> +}
+> +
+> +static int uniphier_spi_set_baudrate(struct spi_device *spi, unsigned int speed)
+> +{
+> +	struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
+> +	u32 val, ckrat;
+> +
+> +	/*
+> +	 * the supported rates are even numbers from 4 to 254. (4,6,8...254)
+> +	 * round up as we look for equal or less speed
+> +	 */
+> +	ckrat = DIV_ROUND_UP(clk_get_rate(priv->clk), speed);
+> +	ckrat = roundup(ckrat, 2);
+> +
+> +	/* check if requested speed is too small */
+> +	if (ckrat > SSI_MAX_CLK_DIVIDER)
+> +		return -EINVAL;
+> +
+> +	if (ckrat < SSI_MIN_CLK_DIVIDER)
+> +		ckrat = SSI_MIN_CLK_DIVIDER;
+> +
+> +	val = readl(priv->base + SSI_CKS);
+> +	val &= ~SSI_CKS_CKRAT_MASK;
+> +	val |= ckrat & SSI_CKS_CKRAT_MASK;
+> +	writel(val, priv->base + SSI_CKS);
+> +
+> +	return 0;
+> +}
+> +
+> +static int uniphier_spi_setup_transfer(struct spi_device *spi,
+> +				       struct spi_transfer *t)
+> +{
+> +	struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
+> +	u32 val;
+> +	int ret;
+> +
+> +	priv->error = 0;
+> +	priv->tx_buf = t->tx_buf;
+> +	priv->rx_buf = t->rx_buf;
+> +	priv->tx_bytes = priv->rx_bytes = t->len;
+> +
+> +	if (priv->bits_per_word != t->bits_per_word) {
+> +		uniphier_spi_set_transfer_size(spi, t->bits_per_word);
+> +		priv->bits_per_word = t->bits_per_word;
+> +	}
+> +
+> +	if (priv->speed_hz != t->speed_hz) {
+> +		ret = uniphier_spi_set_baudrate(spi, t->speed_hz);
+> +		if (ret)
+> +			return ret;
+> +		priv->speed_hz = t->speed_hz;
+> +	}
+> +
+> +	/* reset FIFOs */
+> +	val = SSI_FC_TXFFL | SSI_FC_RXFFL;
+> +	writel(val, priv->base + SSI_FC);
+> +
+> +	return 0;
+> +}
+> +
+> +static void uniphier_spi_send(struct uniphier_spi_priv *priv)
+> +{
+> +	int i, loop;
+> +	u32 val = 0;
+> +
+> +	loop = BYTES_PER_WORD(priv->bits_per_word);
+> +	if (priv->tx_bytes < loop)
+> +		loop = priv->tx_bytes;
+> +
+> +	priv->tx_bytes -= loop;
+> +
+> +	if (priv->tx_buf)
+> +		for (i = 0; i < loop; i++) {
+> +			val |= (*(const u8 *)priv->tx_buf)
+> +						<< (BITS_PER_BYTE * i);
+
+priv->tx_buf is already a const u8*, no need to cast it.  Also in recv,
+no need to cast the pointer.  It'll just hide errors if someone changes
+the type of the field.
+
+> +			(const u8 *)priv->tx_buf++;
+> +		}
+> +
+> +	writel(val, priv->base + SSI_TXDR);
+> +}
+
+The loop to read the data will likely be somewhat slow.  It might be
+faster to use:
+
+    val = get_unaligned_le32(priv->tx_buf);
+
+To support different sizes a switch can be used:
+
+    switch (MIN(BYTES_PER_WORD(priv->bits_per_word), priv->tx_bytes)) {
+    case 1:
+         val = *priv->tx_buf; break;
+    case 2:
+         val = get_unaligned_le16(priv->tx_buf); break;
+    case 4:
+         val = get_unaligned_le32(priv->tx_buf); break;
+    }
+
+However, I don't think either the existing code or this code is
+correctly handling word sizes that are not an even number of bytes.  I
+think it needs to left shift the data, but of course it also depends on
+what the uniphier hardware expected in the TXDR register.
+
+
+> +static void uniphier_spi_recv(struct uniphier_spi_priv *priv)
+> +{
+> +	int i, loop;
+> +	u32 val;
+> +
+> +	loop = BYTES_PER_WORD(priv->bits_per_word);
+> +	if (priv->rx_bytes < loop)
+> +		loop = priv->rx_bytes;
+> +
+> +	priv->rx_bytes -= loop;
+> +
+> +	val = readl(priv->base + SSI_RXDR);
+> +
+> +	if (priv->rx_buf)
+> +		for (i = 0; i < loop; i++) {
+> +			val = val >> (BITS_PER_BYTE * i);
+> +			*(u8 *)priv->rx_buf = val & GENMASK(7, 0);
+> +			(u8 *)priv->rx_buf++;
+> +		}
+
+
+
+> +}+static void uniphier_spi_fill_tx_fifo(struct uniphier_spi_priv *priv)
+> +{
+> +	unsigned int tx_count;
+> +	int bytes_per_word = BYTES_PER_WORD(priv->bits_per_word);
+> +	u32 val;
+> +
+> +	tx_count = priv->tx_bytes / bytes_per_word;
+> +	if (tx_count > SSI_FIFO_DEPTH)
+> +		tx_count = SSI_FIFO_DEPTH;
+> +
+> +	/* set fifo threthold */
+> +	val = readl(priv->base + SSI_FC);
+> +	val &= ~(SSI_FC_TXFTH_MASK | SSI_FC_RXFTH_MASK);
+> +	val |= FIELD_PREP(SSI_FC_TXFTH_MASK, tx_count);
+> +	val |= FIELD_PREP(SSI_FC_RXFTH_MASK, tx_count);
+> +	writel(val, priv->base + SSI_FC);
+> +
+> +	while (tx_count--)
+> +		uniphier_spi_send(priv);
+> +}
+
+If you have 24 bits per word, 3 words, that's 9 bytes. 
+BYTES_PER_WORD(24) is 4.  tx_count = 9/4 = 2.  Looks like your tx_count
+rounds incorrectly, as it will only send 8 of the 9 bytes.
+
+> +static int uniphier_spi_setup(struct spi_device *spi)
+> +{
+
+> +
+> +	writel(val1, priv->base + SSI_CKS);
+> +	writel(val2, priv->base + SSI_FPS);
+> +
+> +	val1 = 0;
+> +	if (spi->mode & SPI_LSB_FIRST)
+> +		val1 |= FIELD_PREP(SSI_TXWDS_TDTF_MASK, 1);
+> +	writel(val1, priv->base + SSI_TXWDS);
+> +	writel(val1, priv->base + SSI_RXWDS);
+
+Did you see this in the spi docs?
+
+        Unless each SPI slave has its own configuration registers, don't
+        change them right away ... otherwise drivers could corrupt I/O
+        that's in progress for other SPI devices.
+
+                ** BUG ALERT:  for some reason the first version of
+                ** many spi_master drivers seems to get this wrong.
+                ** When you code setup(), ASSUME that the controller
+                ** is actively processing transfers for another device.
+
+You have one chipselect, so maybe this is ok.  Until you want to
+support more than one chipselect.
+
+With gpio lines as chip selects, there's really no reason any spi
+master can't support multiple slaves.
