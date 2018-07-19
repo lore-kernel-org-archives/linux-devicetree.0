@@ -1,87 +1,41 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 4/5] ARM64: dts: meson-gxl: add support for the S905W
- SoC and the P281 board
-Date: Thu, 19 Jul 2018 10:28:09 +0200
-Message-ID: <93f01d5b-b827-9e11-3505-7b304a37436f@baylibre.com>
-References: <20180714193725.17837-1-martin.blumenstingl@googlemail.com>
- <20180714193725.17837-5-martin.blumenstingl@googlemail.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx7d: remove "operating-points" property for cpu1
+Date: Thu, 19 Jul 2018 16:24:19 +0800
+Message-ID: <1531988659-9466-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180714193725.17837-5-martin.blumenstingl@googlemail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com
-Cc: mark.rutland@arm.com, yixun.lan@amlogic.com, robh+dt@kernel.org, carlo@caione.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, viresh.kumar@linaro.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On 14/07/2018 21:37, Martin Blumenstingl wrote:
-> S905W is a new SoC from the GXL series. It is a cost-reduced version of
-> the S905X.
+Commit b97872d4eb22 ("ARM: dts: imx: Add missing OPP properties for CPUs")
+added "operating-points" property for all CPUs, but i.MX7D already has
+"operating-points-v2" property on both CPUs, so no need to add
+"operating-points" property again, this patch removes it.
 
-I'd say it's a variant of the already-cost-reduced S905X with the S905D package,
-but seems your description is still valid !
+Fixes: b97872d4eb22 ("ARM: dts: imx: Add missing OPP properties for CPUs")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx7d.dtsi | 5 -----
+ 1 file changed, 5 deletions(-)
 
-> The P281 development board from Amlogic uses the same layout as the P231
-> (S905D development board). Thus the new P281 board inherits
-> meson-gx-p23x-q20x.dtsi to avoid code-duplication.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  arch/arm64/boot/dts/amlogic/Makefile          |  1 +
->  .../boot/dts/amlogic/meson-gxl-s905w-p281.dts | 22 +++++++++++++++++++
->  2 files changed, 23 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905w-p281.dts
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-> index 4dcffb0e3536..e55156dec237 100644
-> --- a/arch/arm64/boot/dts/amlogic/Makefile
-> +++ b/arch/arm64/boot/dts/amlogic/Makefile
-> @@ -18,6 +18,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s805x-p241.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-p281.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-khadas-vim2.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-nexbox-a1.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q200.dtb
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905w-p281.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905w-p281.dts
-> new file mode 100644
-> index 000000000000..6509c4950950
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905w-p281.dts
-> @@ -0,0 +1,22 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2018 Martin Blumenstingl <martin.blumenstingl@googlemail.com>.
-> + * Based on meson-gxl-s905d-p231.dts:
-> + * - Copyright (c) 2016 Endless Computers, Inc.
-> + *   Author: Carlo Caione <carlo@endlessm.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "meson-gxl-s905x.dtsi"
-> +#include "meson-gx-p23x-q20x.dtsi"
-> +
-> +/ {
-> +	compatible = "amlogic,p281", "amlogic,s905w", "amlogic,meson-gxl";
-> +	model = "Amlogic Meson GXL (S905W) P281 Development Board";
-> +
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x0 0x0 0x40000000>;
-> +	};
-> +};
-> 
-
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
+index 9a772fc..7cbc2ff 100644
+--- a/arch/arm/boot/dts/imx7d.dtsi
++++ b/arch/arm/boot/dts/imx7d.dtsi
+@@ -18,11 +18,6 @@
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <1>;
+-			operating-points = <
+-				/* KHz	uV */
+-				996000	1075000
+-				792000	975000
+-			>;
+ 			clock-frequency = <996000000>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
+ 		};
+-- 
+2.7.4
