@@ -1,43 +1,48 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v4 2/8] dt: bindings: tegra20-emc: Document clock property
-Date: Thu, 19 Jul 2018 16:21:26 +0300
-Message-ID: <20180719132132.16153-3-digetx@gmail.com>
-References: <20180719132132.16153-1-digetx@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [DISCUSSION] spi multi chipselect support
+Date: Thu, 19 Jul 2018 14:25:12 +0100
+Message-ID: <20180719132512.GA27938@sirena.org.uk>
+References: <20180718163530.zsa5md3huz3dnotb@earth.universe>
+ <c497b0e2-c663-fa29-dabc-6dd5ca26e0a4@metafoo.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180719132132.16153-1-digetx@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <c497b0e2-c663-fa29-dabc-6dd5ca26e0a4@metafoo.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-Embedded memory controller has a corresponding clock, document the clock
-property.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt        | 2 ++
- 1 file changed, 2 insertions(+)
+--liOOAslEiF7prFVr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt
-index a6fe401d0d48..add95367640b 100644
---- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt
-+++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt
-@@ -11,6 +11,7 @@ Properties:
-   set of tables can be present and said tables will be used
-   irrespective of ram-code configuration.
- - interrupts : Should contain EMC General interrupt.
-+- clocks : Should contain EMC clock.
- 
- Child device nodes describe the memory settings for different configurations and clock rates.
- 
-@@ -22,6 +23,7 @@ Example:
- 		compatible = "nvidia,tegra20-emc";
- 		reg = <0x7000f4000 0x200>;
- 		interrupts = <0 78 0x04>;
-+		clocks = <&tegra_car TEGRA20_CLK_EMC>;
- 	}
- 
- 
--- 
-2.18.0
+On Wed, Jul 18, 2018 at 07:19:19PM +0200, Lars-Peter Clausen wrote:
+
+> My preferred solution would to have something like
+> i2c_new_secondary_device(), but for SPI. This way the driver that binds to
+> the compatible string can allocate devices for additional chip selects as
+> necessary. Also make use of the reg-names property the same way as in I2C.
+
+Yes, that's at least the most consistent way forwards if nothing else.
+I don't really have any more appealing ideas anyway.
+
+--liOOAslEiF7prFVr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltQkTUACgkQJNaLcl1U
+h9BUkAf/YnEw9f7VUM63wKafD/gmY55xm7M0gWEZi4Mm18LD1AfLpyNVO3YWB1Vq
+G+GPeacLi0g6Mb1Vu7kkAV67Ox3IjATYxADuxhGksQvSTszyCV8v0DY2nTlozSb+
+Z20YGSnh8zjFCPENA3tBAsj56HghEumfXlWmFL06/XNpmxcG7UrVMtkLmeglavNf
+GZh+sNKlC363Obm8eOWVkXLuSB+JeHHexyN6q40tvT1BrFbDkYktGNJJ93F7cM07
+nq5uluV/EhPnJCcSo0zoqj3gtwpDGfJpYEe9b4t63qoMaB6wAhG+dR3mYmm2fZd8
+IONpmBEc0tP8PQHrh9jTQwy59lRDAQ==
+=YmQv
+-----END PGP SIGNATURE-----
+
+--liOOAslEiF7prFVr--
