@@ -1,54 +1,28 @@
 From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Subject: [PATCH 1/3] ARM: dts: uniphier: add SPI pin-mux node
-Date: Thu, 19 Jul 2018 15:23:27 +0900
-Message-ID: <1531981409-28396-2-git-send-email-hayashibara.keiji@socionext.com>
-References: <1531981409-28396-1-git-send-email-hayashibara.keiji@socionext.com>
+Subject: [PATCH 0/2] add SPI controller driver for UniPhier SoCs
+Date: Thu, 19 Jul 2018 15:51:55 +0900
+Message-ID: <1531983117-9443-1-git-send-email-hayashibara.keiji@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531981409-28396-1-git-send-email-hayashibara.keiji@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, yamada.masahiro@socionext.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, linux-kernel@vger.kernel.org, hayashibara.keiji@socionext.com, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, yamada.masahiro@socionext.com, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, linux-kernel@vger.kernel.org, hayashibara.keiji@socionext.com
 List-Id: devicetree@vger.kernel.org
 
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+This series adds support for SPI controller driver implemented on UniPhier SoCs.
 
-This commit adds pin-mux nodes for SPI controller.
+Keiji Hayashibara (1):
+  spi: add SPI controller driver for UniPhier SoC
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- arch/arm/boot/dts/uniphier-pinctrl.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Kunihiko Hayashi (1):
+  dt-bindings: spi: add DT bindings for UniPhier SPI controller
 
-diff --git a/arch/arm/boot/dts/uniphier-pinctrl.dtsi b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
-index 51f0e69..5dc4cf7 100644
---- a/arch/arm/boot/dts/uniphier-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
-@@ -126,6 +126,26 @@
- 		function = "sd1";
- 	};
- 
-+	pinctrl_spi0: spi0 {
-+		groups = "spi0";
-+		function = "spi0";
-+	};
-+
-+	pinctrl_spi1: spi1 {
-+		groups = "spi1";
-+		function = "spi1";
-+	};
-+
-+	pinctrl_spi2: spi2 {
-+		groups = "spi2";
-+		function = "spi2";
-+	};
-+
-+	pinctrl_spi3: spi3 {
-+		groups = "spi3";
-+		function = "spi3";
-+	};
-+
- 	pinctrl_system_bus: system-bus {
- 		groups = "system_bus", "system_bus_cs1";
- 		function = "system_bus";
+ .../devicetree/bindings/spi/spi-uniphier.txt       |  26 +
+ drivers/spi/Kconfig                                |   7 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-uniphier.c                         | 532 +++++++++++++++++++++
+ 4 files changed, 566 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-uniphier.txt
+ create mode 100644 drivers/spi/spi-uniphier.c
+
 -- 
 2.7.4
