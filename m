@@ -1,35 +1,76 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 0/2] reset: meson: add audio arb controller
-Date: Fri, 20 Jul 2018 17:26:31 +0200
-Message-ID: <20180720152633.6227-1-jbrunet@baylibre.com>
+Subject: [PATCH v2 1/2] reset: meson: add dt-bindings for meson-axg audio arb
+Date: Fri, 20 Jul 2018 17:26:32 +0200
+Message-ID: <20180720152633.6227-2-jbrunet@baylibre.com>
+References: <20180720152633.6227-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180720152633.6227-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds the audio ARB controller which is necessary to
-enable or disable the DDR access for the FIFOs of the audio subsystem.
+Add dt-bindings for the audio memory arbiter found on Amlogic's
+A113 based SoCs
 
-Changes since v1 [0]:
- * Fix typo s/arbitror/arbiter
- * Collect Rob's tag
-
-[0]: https://lkml.kernel.org/r/20180706143122.7612-1-jbrunet@baylibre.com
-
-Jerome Brunet (2):
-  reset: meson: add dt-bindings for meson-axg audio arb
-  reset: meson: add meson audio arb driver
-
- .../bindings/reset/amlogic,meson-axg-audio-arb.txt |  21 +++
- drivers/reset/Kconfig                              |   7 +
- drivers/reset/Makefile                             |   1 +
- drivers/reset/reset-meson-audio-arb.c              | 168 +++++++++++++++++++++
- .../reset/amlogic,meson-axg-audio-arb.h            |  17 +++
- 5 files changed, 214 insertions(+)
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ .../bindings/reset/amlogic,meson-axg-audio-arb.txt  | 21 +++++++++++++++++++++
+ .../dt-bindings/reset/amlogic,meson-axg-audio-arb.h | 17 +++++++++++++++++
+ 2 files changed, 38 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt
- create mode 100644 drivers/reset/reset-meson-audio-arb.c
  create mode 100644 include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h
 
+diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt b/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt
+new file mode 100644
+index 000000000000..26e542eb96df
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt
+@@ -0,0 +1,21 @@
++* Amlogic audio memory arbiter controller
++
++The Amlogic Audio ARB is a simple device which enables or
++disables the access of Audio FIFOs to DDR on AXG based SoC.
++
++Required properties:
++- compatible: 'amlogic,meson-axg-audio-arb'
++- reg: physical base address of the controller and length of memory
++       mapped region.
++- clocks: phandle to the fifo peripheral clock provided by the audio
++	  clock controller.
++- #reset-cells: must be 1.
++
++Example on the A113 SoC:
++
++arb: reset-controller@280 {
++	compatible = "amlogic,meson-axg-audio-arb";
++	reg = <0x0 0x280 0x0 0x4>;
++	#reset-cells = <1>;
++	clocks = <&clkc_audio AUD_CLKID_DDR_ARB>;
++};
+diff --git a/include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h b/include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h
+new file mode 100644
+index 000000000000..05c36367875c
+--- /dev/null
++++ b/include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: (GPL-2.0 OR MIT)
++ *
++ * Copyright (c) 2018 Baylibre SAS.
++ * Author: Jerome Brunet <jbrunet@baylibre.com>
++ */
++
++#ifndef _DT_BINDINGS_AMLOGIC_MESON_AXG_AUDIO_ARB_H
++#define _DT_BINDINGS_AMLOGIC_MESON_AXG_AUDIO_ARB_H
++
++#define AXG_ARB_TODDR_A	0
++#define AXG_ARB_TODDR_B	1
++#define AXG_ARB_TODDR_C	2
++#define AXG_ARB_FRDDR_A	3
++#define AXG_ARB_FRDDR_B	4
++#define AXG_ARB_FRDDR_C	5
++
++#endif /* _DT_BINDINGS_AMLOGIC_MESON_AXG_AUDIO_ARB_H */
 -- 
 2.14.4
