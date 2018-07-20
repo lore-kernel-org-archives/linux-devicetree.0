@@ -1,88 +1,87 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH] ARM: dts: imx6sll: add gpio-ranges property
-Date: Fri, 20 Jul 2018 18:06:57 +0800
-Message-ID: <1532081217-17538-1-git-send-email-Anson.Huang@nxp.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v6 00/10] Add the I3C subsystem
+Date: Fri, 20 Jul 2018 12:12:06 +0200
+Message-ID: <20180720101206.tv7nsoanwo5ftnia@ninjato>
+References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
+ <CAK8P3a2MP5+oFz--e+BM24D8Ahw7H_RKgN1S6wY1nQE6JL0dmw@mail.gmail.com>
+ <2ab0ab75-2df0-2714-f007-c33b25481016@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="buglsqpmzc2gtcib"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2ab0ab75-2df0-2714-f007-c33b25481016@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+To: Peter Rosin <peda@axentia.se>
+Cc: Arnd Bergmann <arnd@arndb.de>, Boris Brezillon <boris.brezillon@bootlin.com>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.c>
 List-Id: devicetree@vger.kernel.org
 
-Add "gpio-ranges" property to establish connections between GPIOs
-and PINs on i.MX6SLL pinctrl driver, for details, please refer to
-Documentation/devicetree/bindings/gpio/gpio.txt of "gpio-ranges"
-property.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6sll.dtsi | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+--buglsqpmzc2gtcib
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
-index 000e613..a3cf282 100644
---- a/arch/arm/boot/dts/imx6sll.dtsi
-+++ b/arch/arm/boot/dts/imx6sll.dtsi
-@@ -379,6 +379,7 @@
- 				#gpio-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
-+				gpio-ranges = <&iomuxc 0 94 7>, <&iomuxc 7 25 25>;
- 			};
- 
- 			gpio2: gpio@20a0000 {
-@@ -390,6 +391,7 @@
- 				#gpio-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
-+				gpio-ranges = <&iomuxc 0 50 32>;
- 			};
- 
- 			gpio3: gpio@20a4000 {
-@@ -401,6 +403,9 @@
- 				#gpio-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
-+				gpio-ranges = <&iomuxc 0 82 12>, <&iomuxc 12 103 4>,
-+					      <&iomuxc 16 101 2>, <&iomuxc 18 5 1>,
-+					      <&iomuxc 21 6 11>;
- 			};
- 
- 			gpio4: gpio@20a8000 {
-@@ -412,6 +417,15 @@
- 				#gpio-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
-+				gpio-ranges = <&iomuxc 0 17 8>, <&iomuxc 8 107 8>,
-+					      <&iomuxc 16 151 1>, <&iomuxc 17 149 1>,
-+					      <&iomuxc 18 146 1>, <&iomuxc 19 144 1>,
-+					      <&iomuxc 20 142 1>, <&iomuxc 21 143 1>,
-+					      <&iomuxc 22 150 1>, <&iomuxc 23 148 1>,
-+					      <&iomuxc 24 147 1>, <&iomuxc 25 145 1>,
-+					      <&iomuxc 26 152 1>, <&iomuxc 27 125 1>,
-+					      <&iomuxc 28 131 1>, <&iomuxc 29 134 1>,
-+					      <&iomuxc 30 129 1>, <&iomuxc 31 133 1>;
- 			};
- 
- 			gpio5: gpio@20ac000 {
-@@ -423,6 +437,17 @@
- 				#gpio-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
-+				gpio-ranges = <&iomuxc 0 135 1>, <&iomuxc 1 128 1>,
-+					      <&iomuxc 2 132 1>, <&iomuxc 3 130 1>,
-+					      <&iomuxc 4 127 1>, <&iomuxc 5 126 1>,
-+					      <&iomuxc 6 120 1>, <&iomuxc 7 123 1>,
-+					      <&iomuxc 8 118 1>, <&iomuxc 9 122 1>,
-+					      <&iomuxc 10 124 1>, <&iomuxc 11 117 1>,
-+					      <&iomuxc 12 121 1>, <&iomuxc 13 119 1>,
-+					      <&iomuxc 14 116 1>, <&iomuxc 15 115 1>,
-+					      <&iomuxc 16 140 2>, <&iomuxc 18 136 1>,
-+					      <&iomuxc 19 138 1>, <&iomuxc 20 139 1>,
-+					      <&iomuxc 21 137 1>;
- 			};
- 
- 			gpio6: gpio@20b0000 {
--- 
-2.7.4
+
+> I have not read much of the I3C spec. I'm just coming from the
+> current situation with I2C and the i2c-demux-pinctrl driver which
+> tries to retrofit this into the I2C world and is not doing a grand
+> job. And how could it?
+>=20
+> If you can acknowledge that i2c-demux-pinctrl is needed for I2C
+> but for some reason is not needed for I3C because of something
+> that differs between I2C and I3C, then fine, by all means ditch
+> the explicit bus object.
+>=20
+> But in my mind splitting up the devices on the same bus between
+> several of our own masters and then not have a single object for
+> the bus is going to cause headaches down the line. Be it address
+> clashes or trouble with master ping-pong or whatever.
+>=20
+> I think the reason for i2c-demux-pinctrl is that some (most?) I2C
+> hardware suffers from quirks and one way to work around it is to
+> make selected accesses from a different master. I expect I3C HW
+> to also suffer from quirks...
+>=20
+> Maybe a bit-bang I3C master isn't feasible for some fundamental
+> reason? But if it is, then I'd say that it's just a matter of time
+> until someone finds a situation where such a thing could be used to
+> work around some I3C quirk. And then it might be too expensive to
+> always use the bit-bang master for the affected device.
+>=20
+> But what do I know? Don't let me hold this series back...
+
+Thanks, Peter. You nailed it, the I2C use case (and its limits). From
+what I know about I3C, bit-banging doesn't sound very feasible to me, so
+the situation might be a bit different. Still, no one knows about future
+I3C use cases and HW quirks. This is why I encouraged the seperate bus
+object because back then it was said it was easy to do and implement. If
+this now becomes a show-stopper, we can surely re-decide. I am not
+strong on this point, it was just something which would have helped I2C.
+(And for that matter, we (=3D the Renesas Upstream Kernel Team) was
+discussing something similar to the i2c demuxer for SPI, too. We have
+multiple IP cores which can do SPI on R-Car, all with their pros and
+cons)
+
+
+--buglsqpmzc2gtcib
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAltRtXYACgkQFA3kzBSg
+KbbC3g//Qw+XT9Q0C+cSSYBwENIyyKVec3nsbrnekmC6VqMsApKNsdiQQUhkS7pe
+VFvc/3SOfmOhL791jwZ63MPvhhG00mGs1xL1jsoDql0xNcnodTbOFM61iIhJQQs2
+uCr1xqHtQotCuUm3B1wcd4a1+adZePRwmT7o5jQL8jbPQBMZJDea/NphOEq5ewAI
+rN6/P+CynS3NL1QaHV3fZKTSzd/vkWjDRXj19maT0FLyGfOvA5/hMtj0XQzfgJI+
+iArvUIX8fZ7lkCPia/3tjsMkwpgCMHlbdWKsysbFl/Zr1ocVT5IappqbolvfZTwX
+4QXnOtjEDY+AOfjrSXXlsjaFgnVqX+wFWk9MSpQmL95Yy2JImdjt50wUam3FPHFJ
+sjCDfyu2ueefmzichetpDG0gu++kJSIRis0jOgsB2BVQ0Ak0Z6yvFK7rzHNssB8U
+EXdS302fj+HV75O7H6ynN1dmBk4f5Xpw+X/3i6IQ3QUIAReVgc7s6JRq+3/Z0Npb
+tNXjYUROJN4PZr1XqOC/8nMzEe3A2s+q5EkjBHUko1rfyq7vo1KqN5HkEjNlYwbR
+Cf6ksivMfiWHHts94f6EhDTxMnWbkKdCR3ZfxSKQtXcVnh4MyZNAQggcszNmHhXz
+iMymQYq7uYzAq1McBTP7vpBGzOK+kzwHZzcWl4y84AlaVP1oRbI=
+=o7ro
+-----END PGP SIGNATURE-----
+
+--buglsqpmzc2gtcib--
