@@ -1,116 +1,141 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v6 00/10] Add the I3C subsystem
-Date: Fri, 20 Jul 2018 15:17:51 +0200
-Message-ID: <20180720151751.242d4809@bbrezillon>
-References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
-        <CAK8P3a2MP5+oFz--e+BM24D8Ahw7H_RKgN1S6wY1nQE6JL0dmw@mail.gmail.com>
-        <2ab0ab75-2df0-2714-f007-c33b25481016@axentia.se>
-        <20180720101206.tv7nsoanwo5ftnia@ninjato>
-        <CAK8P3a2Pqo5DuYBb09+w4nGWGOw+e_tZPxnA06qjNO_6Hw6NvQ@mail.gmail.com>
-        <21b269c5-a3a7-c5de-c81e-c9c9301ae13e@axentia.se>
-        <CAK8P3a1t2fhdw7HwxNkOs9o2pBECZ0ZdOysA=r2SPTWEvx76kw@mail.gmail.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH V4 4/8] backlight: qcom-wled: Rename PM8941* to WLED3
+Date: Fri, 20 Jul 2018 14:23:17 +0100
+Message-ID: <9aff8c23-7c72-eaee-9d59-424cd34be4ac@linaro.org>
+References: <1531131741-19971-1-git-send-email-kgunda@codeaurora.org>
+ <1531131741-19971-5-git-send-email-kgunda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a1t2fhdw7HwxNkOs9o2pBECZ0ZdOysA=r2SPTWEvx76kw@mail.gmail.com>
+In-Reply-To: <1531131741-19971-5-git-send-email-kgunda@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian
+To: Kiran Gunda <kgunda@codeaurora.org>, bjorn.andersson@linaro.org, jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 20 Jul 2018 13:28:10 +0200
-Arnd Bergmann <arnd@arndb.de> wrote:
-
-> On Fri, Jul 20, 2018 at 1:13 PM, Peter Rosin <peda@axentia.se> wrote:
-> > On 2018-07-20 12:57, Arnd Bergmann wrote:  
-> >> * What I understand from reading i2c-demux-pinctrl.c, a slave device
-> >>   will only ever be observable from one master at a time, when you
-> >>   switch over, all children get removed on one master and added to
-> >>   the other one, to be probed again by their respective drivers.
-> >>   I can see this as a useful feature on i3c as well, in particular to
-> >>   deal with the situation where we have i2c slaves connected to a
-> >>   pinmux that can switch them between an i3c master and an
-> >>   i2c-only master (possibly a gpio based one). That particular use
-> >>   case however doesn't seem to fix well in the current code, which
-> >>   is structure around i3c buses.  
-> >
-> > It's pretty easy to come up with examples where this reprobing is
-> > not desirable at all. E.g. if one of the involved I2C devices is
-> > a HDMI encoder (I have a TDA19988 here) sitting in the middle of the
-> > graphics pipeline. Blink-blink on the screen because some *other*
-> > unrelated device needed to be accessed by an alternative master. Not
-> > pretty.  
+On 09/07/18 11:22, Kiran Gunda wrote:
+> Rename the PM8941* references as WLED3 to make the
+> driver generic and have WLED support for other PMICs.
 > 
-> Agreed, we definitely don't want to reprobe all devices during normal
-> operation for i3c master handover.
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> ---
+> Changes from V3:
+> 	- Changed the MODULE_DESCRIPTION
+> 	
+>   drivers/video/backlight/qcom-wled.c | 248 ++++++++++++++++++------------------
+>   1 file changed, 125 insertions(+), 123 deletions(-)
 > 
+> diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
+> index 0b6d219..3cd6e75 100644
+> --- a/drivers/video/backlight/qcom-wled.c
+> +++ b/drivers/video/backlight/qcom-wled.c
+> @@ -18,77 +18,79 @@
+>   #include <linux/regmap.h>
+>   
+>   /* From DT binding */
+> -#define PM8941_WLED_DEFAULT_BRIGHTNESS		2048
+> +#define WLED_DEFAULT_BRIGHTNESS				2048
+>   
+> -#define PM8941_WLED_REG_VAL_BASE		0x40
+> -#define  PM8941_WLED_REG_VAL_MAX		0xFFF
+> +#define WLED3_SINK_REG_BRIGHT_MAX			0xFFF
+> +#define WLED3_CTRL_REG_VAL_BASE				0x40
+>   
+> -#define PM8941_WLED_REG_MOD_EN			0x46
+> -#define  PM8941_WLED_REG_MOD_EN_BIT		BIT(7)
+> -#define  PM8941_WLED_REG_MOD_EN_MASK		BIT(7)
+> +/* WLED3 control registers */
+> +#define WLED3_CTRL_REG_MOD_EN				0x46
+> +#define  WLED3_CTRL_REG_MOD_EN_BIT			BIT(7)
+> +#define  WLED3_CTRL_REG_MOD_EN_MASK			BIT(7)
+>   
+> -#define PM8941_WLED_REG_SYNC			0x47
+> -#define  PM8941_WLED_REG_SYNC_MASK		0x07
+> -#define  PM8941_WLED_REG_SYNC_LED1		BIT(0)
+> -#define  PM8941_WLED_REG_SYNC_LED2		BIT(1)
+> -#define  PM8941_WLED_REG_SYNC_LED3		BIT(2)
+> -#define  PM8941_WLED_REG_SYNC_ALL		0x07
+> -#define  PM8941_WLED_REG_SYNC_CLEAR		0x00
+> +#define WLED3_CTRL_REG_FREQ				0x4c
+> +#define  WLED3_CTRL_REG_FREQ_MASK			0x0f
+>   
+> -#define PM8941_WLED_REG_FREQ			0x4c
+> -#define  PM8941_WLED_REG_FREQ_MASK		0x0f
+> +#define WLED3_CTRL_REG_OVP				0x4d
+> +#define  WLED3_CTRL_REG_OVP_MASK			0x03
+>   
+> -#define PM8941_WLED_REG_OVP			0x4d
+> -#define  PM8941_WLED_REG_OVP_MASK		0x03
+> +#define WLED3_CTRL_REG_ILIMIT				0x4e
+> +#define  WLED3_CTRL_REG_ILIMIT_MASK			0x07
+>   
+> -#define PM8941_WLED_REG_BOOST			0x4e
+> -#define  PM8941_WLED_REG_BOOST_MASK		0x07
+> +/* WLED3 sink registers */
+> +#define WLED3_SINK_REG_SYNC				0x47
+> +#define  WLED3_SINK_REG_SYNC_MASK			0x07
+> +#define  WLED3_SINK_REG_SYNC_LED1			BIT(0)
+> +#define  WLED3_SINK_REG_SYNC_LED2			BIT(1)
+> +#define  WLED3_SINK_REG_SYNC_LED3			BIT(2)
+> +#define  WLED3_SINK_REG_SYNC_ALL			0x07
+> +#define  WLED3_SINK_REG_SYNC_CLEAR			0x00
+>   
+> -#define PM8941_WLED_REG_SINK			0x4f
+> -#define  PM8941_WLED_REG_SINK_MASK		0xe0
+> -#define  PM8941_WLED_REG_SINK_SHFT		0x05
+> +#define WLED3_SINK_REG_CURR_SINK			0x4f
+> +#define  WLED3_SINK_REG_CURR_SINK_MASK			0xe0
+> +#define  WLED3_SINK_REG_CURR_SINK_SHFT			0x05
+>   
+> -/* Per-'string' registers below */
+> -#define PM8941_WLED_REG_STR_OFFSET		0x10
+> +/* WLED3 per-'string' registers below */
+> +#define WLED3_SINK_REG_STR_OFFSET			0x10
+>   
+> -#define PM8941_WLED_REG_STR_MOD_EN_BASE		0x60
+> -#define  PM8941_WLED_REG_STR_MOD_MASK		BIT(7)
+> -#define  PM8941_WLED_REG_STR_MOD_EN		BIT(7)
+> +#define WLED3_SINK_REG_STR_MOD_EN_BASE			0x60
+> +#define  WLED3_SINK_REG_STR_MOD_MASK			BIT(7)
+> +#define  WLED3_SINK_REG_STR_MOD_EN			BIT(7)
+>   
+> -#define PM8941_WLED_REG_STR_SCALE_BASE		0x62
+> -#define  PM8941_WLED_REG_STR_SCALE_MASK		0x1f
+> +#define WLED3_SINK_REG_STR_FULL_SCALE_CURR		0x62
+> +#define  WLED3_SINK_REG_STR_FULL_SCALE_CURR_MASK	0x1f
+>   
+> -#define PM8941_WLED_REG_STR_MOD_SRC_BASE	0x63
+> -#define  PM8941_WLED_REG_STR_MOD_SRC_MASK	0x01
+> -#define  PM8941_WLED_REG_STR_MOD_SRC_INT	0x00
+> -#define  PM8941_WLED_REG_STR_MOD_SRC_EXT	0x01
+> +#define WLED3_SINK_REG_STR_MOD_SRC_BASE			0x63
+> +#define  WLED3_SINK_REG_STR_MOD_SRC_MASK		0x01
+> +#define  WLED3_SINK_REG_STR_MOD_SRC_INT			0x00
+> +#define  WLED3_SINK_REG_STR_MOD_SRC_EXT			0x01
+>   
+> -#define PM8941_WLED_REG_STR_CABC_BASE		0x66
+> -#define  PM8941_WLED_REG_STR_CABC_MASK		BIT(7)
+> -#define  PM8941_WLED_REG_STR_CABC_EN		BIT(7)
+> +#define WLED3_SINK_REG_STR_CABC_BASE			0x66
+> +#define  WLED3_SINK_REG_STR_CABC_MASK			BIT(7)
+> +#define  WLED3_SINK_REG_STR_CABC_EN			BIT(7)
+>   
+> -struct pm8941_wled_config {
+> -	u32 i_boost_limit;
+> +struct wled_config {
+> +	u32 boost_i_limit;
+>   	u32 ovp;
+>   	u32 switch_freq;
+>   	u32 num_strings;
+> -	u32 i_limit;
+> +	u32 string_i_limit;
 
-Re-probing would not happen, no matter the solution we choose. It's
-that, in one case, you would have X virtual/linux devices representing
-the same physical device and in the other case, you would just have
-one, and everytime a transfer is requested by the driver, the core
-would pick the appropriate master to do it (most likely the one in
-control of the bus at that time)
+This patch implements a grand renaming and I have no objections to 
+including change for boost_i_limit and string_i_limit in it. I'd prefer 
+it to be mentioned in the patch header though.
 
-> What is the least contrived use case that you can think of where we
-> would want to use one master to talk to one device on the bus,
-> but another master to talk to another device on the same bus?
+Once that is done:
 
-The only reason I see for this use case is when you have 2 masters,
-each of them having different capabilities:
-
-device A needs cap X
-device B need cap Y
-master N provides cap X but not cap Y
-master M provides cap Y but not cap X
-
-In this case you'd want device A to use master M and device B to use
-master N.
-
-> I still hope that we can decide that this is not a useful scenario
-> at all.
-
-I'm not saying this scenario is about to happen IRL, just describing
-one potential reason for having 2 different masters connected to the
-same bus and both exposed to Linux.
-
-> 
-> If we find a case in which it is needed, we could still deal with it
-> like this:
-> - enumerate all slaves connected to the bus for each of the
->   two masters
-
-That's what will happen if you don't share the same bus representation.
-
-> - mark each slave as status="enabled" in at most one of the
->   buses, and as disabled everywhere else
-
-We shouldn't need to do that. We can just let the driver check whether
-the master provides the necessary capabilities to efficiently
-communicate with the device, and if it does not just return -ENOTSUPP
-in the ->probe() function. This way you'll have a device, but not
-driver controlling it on one bus, and on the other bus, you'll have
-another device (which points to the same physical device) this time
-with a driver attached to it.
-
-> - Use dynamic handover according to the bus protocol to
->   switch masters without having Linux even know that the
->   two buses are shared.
-
-Yep.
-
-> 
-> That scenario would then fall completely into the "secondary
-> master handover" category but require no special handling
-> in the i3c layer beyond what we need for secondary masters
-> that are managed by something outside of the kernel's
-> score (a microcontroller, firmware, ...).
-
-I definitely agree that both options should work. It's just that having
-X times the same physical device represented in Linux seemed like a bad
-thing to me, but it's also not something I'm strongly opposed to.
-
-Regards,
-
-Boris
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
