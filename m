@@ -1,141 +1,119 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH V4 4/8] backlight: qcom-wled: Rename PM8941* to WLED3
-Date: Fri, 20 Jul 2018 14:23:17 +0100
-Message-ID: <9aff8c23-7c72-eaee-9d59-424cd34be4ac@linaro.org>
-References: <1531131741-19971-1-git-send-email-kgunda@codeaurora.org>
- <1531131741-19971-5-git-send-email-kgunda@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: [PATCH v10 0/7] Enable Bluetooth functionality for WCN3990
+Date: Fri, 20 Jul 2018 19:02:36 +0530
+Message-ID: <20180720133243.6851-1-bgodavar@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1531131741-19971-5-git-send-email-kgunda@codeaurora.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kiran Gunda <kgunda@codeaurora.org>, bjorn.andersson@linaro.org, jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org
+To: marcel@holtmann.org, johan.hedberg@gmail.com, mka@chromium.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, Balakrishna Godavarthi <bgodavar@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/07/18 11:22, Kiran Gunda wrote:
-> Rename the PM8941* references as WLED3 to make the
-> driver generic and have WLED support for other PMICs.
-> 
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> ---
-> Changes from V3:
-> 	- Changed the MODULE_DESCRIPTION
-> 	
->   drivers/video/backlight/qcom-wled.c | 248 ++++++++++++++++++------------------
->   1 file changed, 125 insertions(+), 123 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
-> index 0b6d219..3cd6e75 100644
-> --- a/drivers/video/backlight/qcom-wled.c
-> +++ b/drivers/video/backlight/qcom-wled.c
-> @@ -18,77 +18,79 @@
->   #include <linux/regmap.h>
->   
->   /* From DT binding */
-> -#define PM8941_WLED_DEFAULT_BRIGHTNESS		2048
-> +#define WLED_DEFAULT_BRIGHTNESS				2048
->   
-> -#define PM8941_WLED_REG_VAL_BASE		0x40
-> -#define  PM8941_WLED_REG_VAL_MAX		0xFFF
-> +#define WLED3_SINK_REG_BRIGHT_MAX			0xFFF
-> +#define WLED3_CTRL_REG_VAL_BASE				0x40
->   
-> -#define PM8941_WLED_REG_MOD_EN			0x46
-> -#define  PM8941_WLED_REG_MOD_EN_BIT		BIT(7)
-> -#define  PM8941_WLED_REG_MOD_EN_MASK		BIT(7)
-> +/* WLED3 control registers */
-> +#define WLED3_CTRL_REG_MOD_EN				0x46
-> +#define  WLED3_CTRL_REG_MOD_EN_BIT			BIT(7)
-> +#define  WLED3_CTRL_REG_MOD_EN_MASK			BIT(7)
->   
-> -#define PM8941_WLED_REG_SYNC			0x47
-> -#define  PM8941_WLED_REG_SYNC_MASK		0x07
-> -#define  PM8941_WLED_REG_SYNC_LED1		BIT(0)
-> -#define  PM8941_WLED_REG_SYNC_LED2		BIT(1)
-> -#define  PM8941_WLED_REG_SYNC_LED3		BIT(2)
-> -#define  PM8941_WLED_REG_SYNC_ALL		0x07
-> -#define  PM8941_WLED_REG_SYNC_CLEAR		0x00
-> +#define WLED3_CTRL_REG_FREQ				0x4c
-> +#define  WLED3_CTRL_REG_FREQ_MASK			0x0f
->   
-> -#define PM8941_WLED_REG_FREQ			0x4c
-> -#define  PM8941_WLED_REG_FREQ_MASK		0x0f
-> +#define WLED3_CTRL_REG_OVP				0x4d
-> +#define  WLED3_CTRL_REG_OVP_MASK			0x03
->   
-> -#define PM8941_WLED_REG_OVP			0x4d
-> -#define  PM8941_WLED_REG_OVP_MASK		0x03
-> +#define WLED3_CTRL_REG_ILIMIT				0x4e
-> +#define  WLED3_CTRL_REG_ILIMIT_MASK			0x07
->   
-> -#define PM8941_WLED_REG_BOOST			0x4e
-> -#define  PM8941_WLED_REG_BOOST_MASK		0x07
-> +/* WLED3 sink registers */
-> +#define WLED3_SINK_REG_SYNC				0x47
-> +#define  WLED3_SINK_REG_SYNC_MASK			0x07
-> +#define  WLED3_SINK_REG_SYNC_LED1			BIT(0)
-> +#define  WLED3_SINK_REG_SYNC_LED2			BIT(1)
-> +#define  WLED3_SINK_REG_SYNC_LED3			BIT(2)
-> +#define  WLED3_SINK_REG_SYNC_ALL			0x07
-> +#define  WLED3_SINK_REG_SYNC_CLEAR			0x00
->   
-> -#define PM8941_WLED_REG_SINK			0x4f
-> -#define  PM8941_WLED_REG_SINK_MASK		0xe0
-> -#define  PM8941_WLED_REG_SINK_SHFT		0x05
-> +#define WLED3_SINK_REG_CURR_SINK			0x4f
-> +#define  WLED3_SINK_REG_CURR_SINK_MASK			0xe0
-> +#define  WLED3_SINK_REG_CURR_SINK_SHFT			0x05
->   
-> -/* Per-'string' registers below */
-> -#define PM8941_WLED_REG_STR_OFFSET		0x10
-> +/* WLED3 per-'string' registers below */
-> +#define WLED3_SINK_REG_STR_OFFSET			0x10
->   
-> -#define PM8941_WLED_REG_STR_MOD_EN_BASE		0x60
-> -#define  PM8941_WLED_REG_STR_MOD_MASK		BIT(7)
-> -#define  PM8941_WLED_REG_STR_MOD_EN		BIT(7)
-> +#define WLED3_SINK_REG_STR_MOD_EN_BASE			0x60
-> +#define  WLED3_SINK_REG_STR_MOD_MASK			BIT(7)
-> +#define  WLED3_SINK_REG_STR_MOD_EN			BIT(7)
->   
-> -#define PM8941_WLED_REG_STR_SCALE_BASE		0x62
-> -#define  PM8941_WLED_REG_STR_SCALE_MASK		0x1f
-> +#define WLED3_SINK_REG_STR_FULL_SCALE_CURR		0x62
-> +#define  WLED3_SINK_REG_STR_FULL_SCALE_CURR_MASK	0x1f
->   
-> -#define PM8941_WLED_REG_STR_MOD_SRC_BASE	0x63
-> -#define  PM8941_WLED_REG_STR_MOD_SRC_MASK	0x01
-> -#define  PM8941_WLED_REG_STR_MOD_SRC_INT	0x00
-> -#define  PM8941_WLED_REG_STR_MOD_SRC_EXT	0x01
-> +#define WLED3_SINK_REG_STR_MOD_SRC_BASE			0x63
-> +#define  WLED3_SINK_REG_STR_MOD_SRC_MASK		0x01
-> +#define  WLED3_SINK_REG_STR_MOD_SRC_INT			0x00
-> +#define  WLED3_SINK_REG_STR_MOD_SRC_EXT			0x01
->   
-> -#define PM8941_WLED_REG_STR_CABC_BASE		0x66
-> -#define  PM8941_WLED_REG_STR_CABC_MASK		BIT(7)
-> -#define  PM8941_WLED_REG_STR_CABC_EN		BIT(7)
-> +#define WLED3_SINK_REG_STR_CABC_BASE			0x66
-> +#define  WLED3_SINK_REG_STR_CABC_MASK			BIT(7)
-> +#define  WLED3_SINK_REG_STR_CABC_EN			BIT(7)
->   
-> -struct pm8941_wled_config {
-> -	u32 i_boost_limit;
-> +struct wled_config {
-> +	u32 boost_i_limit;
->   	u32 ovp;
->   	u32 switch_freq;
->   	u32 num_strings;
-> -	u32 i_limit;
-> +	u32 string_i_limit;
+These patches enables Bluetooth functinalties for new Qualcomm
+Bluetooth chip wnc3990. As this is latest chip with new features, 
+along with some common features to old chip "qcom,qca6174-bt".
+we have updated names of functions that are used for both the chips 
+to keep this generic and would help in future when we would have new 
+BT SoC.
 
-This patch implements a grand renaming and I have no objections to 
-including change for boost_i_limit and string_i_limit in it. I'd prefer 
-it to be mentioned in the patch header though.
+The below are difference between new and old chips.
 
-Once that is done:
+*Power:
+ *New chip: we use voltage regulators to turn on/off the chip and we 
+  must send a command on Tx line to turn on/off the chip completely.
+ *Old chip: We turn on/off by setting a GPIO.
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+ *Note: Turning on sequence differs between two chips.
+
+*Firmware download:
+  Only firmware file name differ from New and Old chip.
+  
+  So we reused some functions/structure/variables which are used for old 
+  chip to New chip by generic naming (may be future chips may use same functions).
+
+ * As we have multiple changes for functions names,we have tested these patches 
+   on both chips.
+
+v10:
+ * update current load with actual values of WCN3990.
+ * added support  for itterative connect with BT chip if it fails to respond to the HOST.
+ * Added regulator current dtbindings.
+ * addressed review comments.
+
+v9:
+ * removed smps regs.
+ * hidded flow control in respective functions.
+ * moved qca_soc_ver to qca_setup
+ * addressed review comments.
+ 
+v8:
+  * Squashed [v7 2/8] and [v7 3/8] to one patch.
+  * updated functions to set and get the UART speeds.
+  * addressed review comments.
+
+v7:
+  * Renamed all the possible function of ROME to generic.
+  * updated with review comments for hci_qca and btqca
+  * fixed kbuild errors.
+  * created wrapper functions for re-usable blocks.
+ 
+v6:
+  * Hooked up qca_power to qca_serdev.
+  * renamed all the naming inconsistency functions with qca_*
+  * leveraged common code of ROME for wcn3990.
+  * created wrapper functions for re-usable blocks.
+  * updated function of _*regulator_enable and _*regualtor_disable.  
+  * removed redundant comments and functions.
+  * add code to derive the firmware files based on ROM Version.
+  * created new patch for common function of ROME and wcn3990.
+  * enables Qualcomm chip to operate at 3.2Mbps.
+  * updated names of functions that are used for both the chips to keep this generic. 
+
+v5:
+  * updated with review comments for hci_qca and btqca
+ 
+v4:
+  * rebased all changes on top of bluetooth-next.
+  * addressed review comments.
+  * New patch created for firmware download.
+
+v3:
+  * Rebased all changes on top of bluetooth-next.
+  * dt-bindings: net: bluetooth: Add device tree bindings for QTI chip wcn3990
+    - added dt-binding snippet for bluetooth chip wcn3990.
+  * Bluetooth: Add support for wcn3990 soc.
+    - updated BT_INFO with bt_dev_info, where ever necessary.
+
+v2:
+   * Add support for wcn3990:
+    These changes are aligned as per serdev frame work.
+          We implemented these changes on top of https://patchwork.kernel.org/patch/10316093/
+        As this patch enable serdev for one of the Qualcomm BT chip.
+
+        The changes in the patch include.
+        - Adding support to voting up/down regulators for WCN3990.
+           - Bluetooth firmware download for wcn3990.
+
+  * Add device tree bindings for Atheros chips:
+          These changes are on top of https://patchwork.kernel.org/patch/10316097/.
+          - Description of device tree bindings.
+
+
+Balakrishna Godavarthi (7):
+  dt-bindings: net: bluetooth: Add device tree bindings for QTI chip
+    wcn3990
+  Bluetooth: btqca: Rename ROME specific functions to generic functions
+  Bluetooth: btqca: Redefine qca_uart_setup() to generic function.
+  Bluetooth: hci_qca: Add wrapper functions for setting UART speed
+  Bluetooth: hci_qca: Enable 3.2 Mbps operating speed.
+  Bluetooth: btqca: Add wcn3990 firmware download support.
+  Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990
+
+ .../bindings/net/qualcomm-bluetooth.txt       |  42 +-
+ drivers/bluetooth/btqca.c                     | 116 ++--
+ drivers/bluetooth/btqca.h                     |  23 +-
+ drivers/bluetooth/hci_qca.c                   | 564 ++++++++++++++++--
+ 4 files changed, 629 insertions(+), 116 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
