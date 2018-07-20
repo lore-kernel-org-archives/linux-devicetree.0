@@ -1,32 +1,43 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/4 v1] net: dsa: Add bindings for Realtek SMI DSAs
-Date: Fri, 20 Jul 2018 22:26:26 +0200
-Message-ID: <CACRpkdZuu-eaMDTanR1FAVVwyHOb0Gv9NEzx+7Z9fNVuJYnDow@mail.gmail.com>
-References: <20180714094556.30791-1-linus.walleij@linaro.org>
- <20180714094556.30791-2-linus.walleij@linaro.org> <20180716204535.GA22125@rob-hp-laptop>
- <CACRpkdb1ykS=3kiuQzaa6TpEPNB=C6xuusuez6JOCHb-E27Uqg@mail.gmail.com> <20180720161756.GA32587@rob-hp-laptop>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH V2] dt-bindings: soc: qcom: Add device tree binding for
+ GENI SE
+Date: Fri, 20 Jul 2018 13:35:04 -0700
+Message-ID: <CAD=FV=W+UOeK0p_QAg=bSZxxBXq_2whGKC9H6kgYNS1dy0qLvA@mail.gmail.com>
+References: <1532087461-3474-1-git-send-email-dkota@codeaurora.org> <1532087461-3474-3-git-send-email-dkota@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180720161756.GA32587@rob-hp-laptop>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev <netdev@vger.kernel.org>, OpenWrt Development List <openwrt-devel@lists.openwrt.org>, LEDE Development List <lede-dev@lists.infradead.org>, =?UTF-8?B?QW50dGkgU2VwcMOkbMOk?= <a.seppala@gmail.com>, Roman Yeryomin <roman@advem.lv>, Colin Leitner <colin.leitner@googlemail.com>, Gabor Juhos <juhosg@openwrt.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1532087461-3474-3-git-send-email-dkota@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dilip Kota <dkota@codeaurora.org>
+Cc: timur@codeaurora.org, Stephen Boyd <swboyd@chromium.org>, Mark Brown <broonie@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, LKML <linux-kernel@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Girish Mahadevan <girishm@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 20, 2018 at 6:17 PM Rob Herring <robh@kernel.org> wrote:
-> On Tue, Jul 17, 2018 at 08:55:51AM +0200, Linus Walleij wrote:
+Hi,
 
-> > It's just very different.
+On Fri, Jul 20, 2018 at 4:51 AM, Dilip Kota <dkota@codeaurora.org> wrote:
+> From: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
 >
-> Okay. Just wanted to make sure.
+> Add device tree binding support for the QCOM GENI SE driver.
 >
+> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
+> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
 > Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Andy Gross <andy.gross@linaro.org>
+> ---
+>  .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  | 119 +++++++++++++++++++++
+>  1 file changed, 119 insertions(+)
 
-Thanks Rob! And thanks for asking the critical questions, more
-often than not I am wrong (like that TPO screen with "custom"
-wire protocol that turned out to be an SPI dialect), so it's good
-to take this time to go back and check things over.
+Just a note to mention that this patch landed two months ago and can
+already be found in mainline Linux.  See commit e9b02415565b
+("dt-bindings: soc: qcom: Add device tree binding for GENI SE").
 
-Yours,
-Linus Walleij
+...I think Mark Brown made comments on v1 of the SPI driver that he
+was surprised about how the bindings landed, but that doesn't mean you
+should re-post a patch that is already in mainline--just point to the
+patch that landed by git hash.  If something about the bindings needs
+to change then post a patch that changes them.
+
+-Doug
