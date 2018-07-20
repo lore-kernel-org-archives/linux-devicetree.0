@@ -1,29 +1,160 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 04/11] soc: mediatek: add MT6765 scpsys support
-Date: Fri, 20 Jul 2018 11:46:09 -0600
-Message-ID: <20180720174609.GA679@rob-hp-laptop>
-References: <1531817552-17221-1-git-send-email-mars.cheng@mediatek.com>
- <1531817552-17221-5-git-send-email-mars.cheng@mediatek.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] phy: qcom-qmp: Fix dts bindings to reflect reality
+Date: Fri, 20 Jul 2018 10:54:55 -0700
+Message-ID: <CAD=FV=XBCeKUrfMCppfhetWNWLJWzsbiBkQnTugoXDff-0SD5w@mail.gmail.com>
+References: <20180706233142.166296-1-dianders@chromium.org>
+ <20180720141059.GA3064@rob-hp-laptop> <CAD=FV=WzjZBYV+yjekC-GGgjyWNbdGX=ZwesQMQhiYHZLyzhzA@mail.gmail.com>
+ <CAL_JsqKZUB3P_Z_pRG-Udx0wgWtSjzgF=Rc3t8Xf2n2uZkV3Qw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1531817552-17221-5-git-send-email-mars.cheng@mediatek.com>
+In-Reply-To: <CAL_JsqKZUB3P_Z_pRG-Udx0wgWtSjzgF=Rc3t8Xf2n2uZkV3Qw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mars Cheng <mars.cheng@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Stephen Boyd <sboyd@kernel.org>, Sean Wang <sean.wang@mediatek.com>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Owen Chen <owen.chen@mediatek.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Manu Gautam <mgautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 17, 2018 at 04:52:25PM +0800, Mars Cheng wrote:
-> This adds scpsys support for MT6765
-> 
-> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> Signed-off-by: Owen Chen <owen.chen@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-scpsys.c        |   88 ++++++++++++++++++++++++++++++
->  include/dt-bindings/power/mt6765-power.h |   14 +++++
+Hi,
 
-This file goes in the binding patch.
+On Fri, Jul 20, 2018 at 10:26 AM, Rob Herring <robh@kernel.org> wrote:
+> On Fri, Jul 20, 2018 at 9:13 AM Doug Anderson <dianders@chromium.org> wrote:
+>>
+>> Rob,
+>>
+>> On Fri, Jul 20, 2018 at 7:10 AM, Rob Herring <robh@kernel.org> wrote:
+>> > On Fri, Jul 06, 2018 at 04:31:42PM -0700, Douglas Anderson wrote:
+>> >> A few patches have landed for the qcom-qmp PHY that affect how you
+>> >> would write a device tree node.  ...yet the bindings weren't updated.
+>> >> Let's remedy the situation and make the bindings refelect reality.
+>> >
+>> > "dt-bindings: phy: ..." for the subject.
+>>
+>> Sorry.  Every subsystem has different conventions for this so I
+>> usually just do a "git log" on the file and make my best guess.  I'll
+>> try to remember this for next time though.
+>
+> NP. I'd like to add this info to MAINTAINERS or maybe a git commit
+> hook could figure this out automagically.
+>
+>> In this case, though, it looks like this already landed.  I see this
+>> patch in Kishon's next branch.
+>>
+>>
+>> >> Fixes: efb05a50c956 ("phy: qcom-qmp: Add support for QMP V3 USB3 PHY")
+>> >> Fixes: ac0d239936bd ("phy: qcom-qmp: Add support for runtime PM")
+>> >> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>> >> ---
+>> >>
+>> >>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 14 ++++++++++++--
+>> >>  1 file changed, 12 insertions(+), 2 deletions(-)
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>> >> index 266a1bb8bb6e..0c7629e88bf3 100644
+>> >> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>> >> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>> >> @@ -12,7 +12,14 @@ Required properties:
+>> >>              "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
+>> >>              "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845.
+>> >>
+>> >> - - reg: offset and length of register set for PHY's common serdes block.
+>> >> + - reg:
+>> >> +   - For "qcom,sdm845-qmp-usb3-phy":
+>> >> +     - index 0: address and length of register set for PHY's common serdes
+>> >> +       block.
+>> >> +     - named register "dp_com" (using reg-names): address and length of the
+>> >> +       DP_COM control block.
+>> >
+>> > You need to list reg-names and what are the names for the other 2
+>> > regions?
+>>
+>> Here's the code works.  You can tell me how you want this expressed in
+>> the bindings:
+>>
+>> * In all cases the driver maps its main memory range (for the common
+>> serdes block) without specifying any name.  This is equivalent to
+>> asking for index 0.
+>>
+>> * For "qcom,sdm845-qmp-usb3-phy" the driver requests a second memory
+>> range by name using the name "dp_com".
+>>
+>> ...basically the driver is inconsistent between using names and
+>> indices and I was trying to document that fact.
+>
+> That's fine as long as the indices are fixed.
+>
+>>
+>> I guess options:
+>>
+>> 1. I could reword this so it's clearer (open to suggestions)
+>>
+>> 2. I could add something to the bindings saying that the first reg
+>> name should be "reg-base" or something.  Then the question is whether
+>> we should go to the code and start enforcing that.  If we do choose to
+>> enforce it then it's technically breaking compatibility (though I
+>> doubt there is any real dts in the wild).  If we don't choose to
+>> enforce it then why did we bother saying what it should be named?
+>
+> I think you need to state index 1 is dp_com (and only for
+> "qcom,sdm845-qmp-usb3-phy") and a name for index 0. 'reg-base' doesn't
+> seem great, but I don't have another suggestion.
 
->  2 files changed, 102 insertions(+)
->  create mode 100644 include/dt-bindings/power/mt6765-power.h
+...but why do we bother giving "dp_com" a name if we're saying it has
+to be index 1?  It feels like the author of the driver was trying to
+transition from specifying to specifying registers by index to
+specifying them by name, but left the first register specified by
+index for compatibility (or code simplicity?).  It seems like the
+whole point of referring to things by name is to _not_ force the index
+number.
+
+I'm imagining a future compatible string that adds yet another address
+range.  Presumably we'd refer to this by name too.  In that case both
+of these would be fine:
+
+reg = <0xa x>, <0xb x>, <0xc x>;
+reg-names = "reg-base", "dp_com", "new_range"
+
+reg = <0xa x>, <0xc x>, <0xb x>;
+reg-names = "reg-base", "new_range", "dp_com"
+
+
+> For the driver, it's not the driver's job to enforce any of this.
+
+Sure, but anything that the driver doesn't enforce people will get
+wrong.  In other words if we say that the name of the first register
+ought to be "reg-base" but don't enforce it then someone will later
+come in and say it's stupid that one of the names uses a dash and the
+other an underscore.  They'll change "reg-base" and it will work.
+Someone else will decide that "reg-base" is a dumb name and will
+change it to "serdes".  It will still work.  Now we have a bindings
+that claims "reg-base" and lots of different device trees in practice.
+
+If the whole "keep things compatible" is important then what matters
+more is what's happening in practice, not what's should happen in
+theory.
+
+IMO if the driver isn't enforcing that the first field be called
+"reg-base" then it shouldn't be in the bindings doc.
+
+
+BTW: I use the name "reg-base" in my example because that's what the
+register was named in downstream device trees that I found.  Even if
+the name isn't terribly appealing, if it's not terribly objectionable
+I'd rather pick something that's closer to what people used in
+practice.
+
+---
+
+How about this?
+
+- reg:
+  - For "qcom,sdm845-qmp-usb3-phy" (names mapped by reg-names):
+    - "reg-base": address and length of register set for PHY's common serdes
+      block.  MUST BE THE FIRST RANGE LISTED IN THE LIST (AKA index 0).  Note
+      that the name of "reg-base" is suggested but not enforced.
+    - "dp-com": address and length of the DP_COM control block.
+  - For all others (only one range--don't use reg-names)
+    - offset and length of register set for PHY's common serdes block.
+
+
+
+-Doug
