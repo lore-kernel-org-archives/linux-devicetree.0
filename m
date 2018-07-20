@@ -1,69 +1,40 @@
-From: Marcel Ziswiler <marcel@ziswiler.com>
-Subject: [PATCH 1/2] ARM: dts: tegra20: restore address order
-Date: Fri, 20 Jul 2018 18:34:25 +0200
-Message-ID: <20180720163426.4410-1-marcel@ziswiler.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] pinctrl: stm32: fix bank io port number
+Date: Fri, 20 Jul 2018 10:35:15 -0600
+Message-ID: <20180720163515.GA16515@rob-hp-laptop>
+References: <1531745857-5561-1-git-send-email-alexandre.torgue@st.com>
+ <1531745857-5561-2-git-send-email-alexandre.torgue@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1531745857-5561-2-git-send-email-alexandre.torgue@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, amelie.delaunay@st.com
 List-Id: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+On Mon, Jul 16, 2018 at 02:57:36PM +0200, Alexandre Torgue wrote:
+> In case the exti line is not in line with the bank number (that is the case
+> when there is an hole between two banks, for example GPIOK and then GPIOZ),
+> use "st,bank-ioport" DT property to get the right exti line.
+> 
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+> index 9a06e1f..60c678a 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+> @@ -55,6 +55,8 @@ Optional properties:
+>     NOTE: If "gpio-ranges" is used for a gpio controller, all gpio-controller
+>     have to use a "gpio-ranges" entry.
+>     More details in Documentation/devicetree/bindings/gpio/gpio.txt.
+> + - st,bank-ioport: should correspond to the EXTI IOport selection (EXTI line
+> +   used to select GPIOs as interrupts).
 
-Commit 6c468f109884 ("ARM: dts: tegra: add Tegra20 NAND flash
-controller node") introduced the nand-controller node. However, it got
-added at the wrong spot not honoring the address order. Fix this.
+ioport sounds like something else. Perhaps '-exti-line'?
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-
----
-
- arch/arm/boot/dts/tegra20.dtsi | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
-
-diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-index 979f38293fe5..a22c6a8f8f83 100644
---- a/arch/arm/boot/dts/tegra20.dtsi
-+++ b/arch/arm/boot/dts/tegra20.dtsi
-@@ -419,19 +419,6 @@
- 		status = "disabled";
- 	};
- 
--	gmi@70009000 {
--		compatible = "nvidia,tegra20-gmi";
--		reg = <0x70009000 0x1000>;
--		#address-cells = <2>;
--		#size-cells = <1>;
--		ranges = <0 0 0xd0000000 0xfffffff>;
--		clocks = <&tegra_car TEGRA20_CLK_NOR>;
--		clock-names = "gmi";
--		resets = <&tegra_car 42>;
--		reset-names = "gmi";
--		status = "disabled";
--	};
--
- 	nand-controller@70008000 {
- 		compatible = "nvidia,tegra20-nand";
- 		reg = <0x70008000 0x100>;
-@@ -447,6 +434,19 @@
- 		status = "disabled";
- 	};
- 
-+	gmi@70009000 {
-+		compatible = "nvidia,tegra20-gmi";
-+		reg = <0x70009000 0x1000>;
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges = <0 0 0xd0000000 0xfffffff>;
-+		clocks = <&tegra_car TEGRA20_CLK_NOR>;
-+		clock-names = "gmi";
-+		resets = <&tegra_car 42>;
-+		reset-names = "gmi";
-+		status = "disabled";
-+	};
-+
- 	pwm: pwm@7000a000 {
- 		compatible = "nvidia,tegra20-pwm";
- 		reg = <0x7000a000 0x100>;
--- 
-2.14.4
+>  
+>  Example 1:
+>  #include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
