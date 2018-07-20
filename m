@@ -1,90 +1,60 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] phy: qcom-qmp: Fix dts bindings to reflect reality
-Date: Fri, 20 Jul 2018 08:13:44 -0700
-Message-ID: <CAD=FV=WzjZBYV+yjekC-GGgjyWNbdGX=ZwesQMQhiYHZLyzhzA@mail.gmail.com>
-References: <20180706233142.166296-1-dianders@chromium.org> <20180720141059.GA3064@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: arm: syna: add support for the AS370 SoC
+Date: Fri, 20 Jul 2018 09:15:29 -0600
+Message-ID: <20180720151529.GA26487@rob-hp-laptop>
+References: <20180713171712.05f58a74@xhacker.debian>
+ <20180713172457.6193a92f@xhacker.debian>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180720141059.GA3064@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <20180713172457.6193a92f@xhacker.debian>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Manu Gautam <mgautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>
+To: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Rob,
+On Fri, Jul 13, 2018 at 05:24:57PM +0800, Jisheng Zhang wrote:
+> The AS370 SoC is a new derivative of the berlin family. The only
+> difference is the SoC isn't named as berlin*.
 
-On Fri, Jul 20, 2018 at 7:10 AM, Rob Herring <robh@kernel.org> wrote:
-> On Fri, Jul 06, 2018 at 04:31:42PM -0700, Douglas Anderson wrote:
->> A few patches have landed for the qcom-qmp PHY that affect how you
->> would write a device tree node.  ...yet the bindings weren't updated.
->> Let's remedy the situation and make the bindings refelect reality.
->
-> "dt-bindings: phy: ..." for the subject.
+So is it a derivative or just rebranded?
 
-Sorry.  Every subsystem has different conventions for this so I
-usually just do a "git log" on the file and make my best guess.  I'll
-try to remember this for next time though.
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> ---
+>  Documentation/devicetree/bindings/arm/syna.txt | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/syna.txt b/Documentation/devicetree/bindings/arm/syna.txt
+> index 3bab18409b7a..3ba1d7b5ee74 100644
+> --- a/Documentation/devicetree/bindings/arm/syna.txt
+> +++ b/Documentation/devicetree/bindings/arm/syna.txt
+> @@ -1,4 +1,4 @@
+> -Marvell Berlin SoC Family Device Tree Bindings
+> +Synaptics SoC Device Tree Bindings
 
-In this case, though, it looks like this already landed.  I see this
-patch in Kishon's next branch.
+Perhaps some note about what has happened here. Otherwise it looks 
+strange having "Marvell Berlin" in the document when the title says 
+Synaptics SoC.
 
-
->> Fixes: efb05a50c956 ("phy: qcom-qmp: Add support for QMP V3 USB3 PHY")
->> Fixes: ac0d239936bd ("phy: qcom-qmp: Add support for runtime PM")
->> Signed-off-by: Douglas Anderson <dianders@chromium.org>
->> ---
->>
->>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 14 ++++++++++++--
->>  1 file changed, 12 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->> index 266a1bb8bb6e..0c7629e88bf3 100644
->> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->> @@ -12,7 +12,14 @@ Required properties:
->>              "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
->>              "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845.
->>
->> - - reg: offset and length of register set for PHY's common serdes block.
->> + - reg:
->> +   - For "qcom,sdm845-qmp-usb3-phy":
->> +     - index 0: address and length of register set for PHY's common serdes
->> +       block.
->> +     - named register "dp_com" (using reg-names): address and length of the
->> +       DP_COM control block.
->
-> You need to list reg-names and what are the names for the other 2
-> regions?
-
-Here's the code works.  You can tell me how you want this expressed in
-the bindings:
-
-* In all cases the driver maps its main memory range (for the common
-serdes block) without specifying any name.  This is equivalent to
-asking for index 0.
-
-* For "qcom,sdm845-qmp-usb3-phy" the driver requests a second memory
-range by name using the name "dp_com".
-
-...basically the driver is inconsistent between using names and
-indices and I was trying to document that fact.
-
-
-I guess options:
-
-1. I could reword this so it's clearer (open to suggestions)
-
-2. I could add something to the bindings saying that the first reg
-name should be "reg-base" or something.  Then the question is whether
-we should go to the code and start enforcing that.  If we do choose to
-enforce it then it's technically breaking compatibility (though I
-doubt there is any real dts in the wild).  If we don't choose to
-enforce it then why did we bother saying what it should be named?
-
-
-Anyway, let me know.  As I said above, Kishon already applied this
-change but I'm happy to post a followup.
-
-
--Doug
+>  ---------------------------------------------------------------
+>  
+>  Work in progress statement:
+> @@ -13,6 +13,10 @@ stable binding/ABI.
+>  
+>  ---------------------------------------------------------------
+>  
+> +Boards with the Synaptics AS370 SoC shall have the following properties:
+> +  Required root node property:
+> +    compatible: "syna,as370"
+> +
+>  Boards with a SoC of the Marvell Berlin family, e.g. Armada 1500
+>  shall have the following properties:
+>  
+> -- 
+> 2.18.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
