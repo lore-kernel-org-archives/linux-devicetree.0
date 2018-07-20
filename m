@@ -1,11 +1,10 @@
-From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
-Subject: [PATCH 1/1] ARM: dts: imx6ull: keep IMX6UL_ prefix for signals on
- both i.MX6UL and i.MX6ULL
-Date: Fri, 20 Jul 2018 12:23:21 +0200
-Message-ID: <20180720102321.23291-1-sebastien.szymanski@armadeus.com>
+From: Jacopo Mondi <jacopo@jmondi.org>
+Subject: [PATCH 0/2] ARM: dts: imx: Add Engicam 1.5 MX6 support
+Date: Fri, 20 Jul 2018 12:16:03 +0200
+Message-ID: <1532081765-29910-1-git-send-email-jacopo@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -16,73 +15,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, jagan@amarulasolutions.com
+Cc: devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmFscyBhdmFpbGFibGUgb24gYm90aCBpLk1YNlVMIGFuZCBpLk1YNlVMTCBzaG91bGQgaGF2
-ZSB0aGUgc2FtZSBuYW1lCmJlY2F1c2UgaXQgaXMgdGhlIGNhc2Ugb2YgYWxsIG90aGVycyBjb21t
-b24gc2lnbmFscywgaXQgYXZvaWRzIHRvIG1ha2UKbWlzdGFrZXMgKHVzZSB0aGUgd3Jvbmcgb25l
-cykgYW5kIGl0IG1ha2VzIHdyaXRpbmcgZGV2aWNlIHRyZWUgZmlsZXMKbGVzcyBjb21wbGljYXRl
-ZC4gRm9yIGV4YW1wbGU6CgppbXg2dWwtaW14NnVsbC1ib2FyZC5kdHNpOgogLi4uCiBwaW5jdHJs
-X3VhcnQ1OiB1YXJ0NWdycCB7Cglmc2wscGlucyA9IDwKCQlNWDZVTF9QQURfVUFSVDVfVFhfREFU
-QV9fVUFSVDVfRENFX1RYICAgMHgxYjBiMQoJIAlNWDZVTF9QQURfVUFSVDVfUlhfREFUQV9fVUFS
-VDVfRENFX1JYICAgMHgxYjBiMQogCSA+OwogfTsKCmlteDZ1bC1ib2FyZC5kdHM6CiAjaW5jbHVk
-ZSA8aW14NnVsLmR0c2k+CiAjaW5jbHVkZSA8aW14NnVsLWlteDZ1bGwtYm9hcmQuZHRzaT4KIC4u
-LgoKaW14NnVsbC1ib2FyZC5kdHM6CiAjaW5jbHVkZSA8aW14NnVsbC5kdHNpPgogI2luY2x1ZGUg
-PGlteDZ1bC1pbXg2dWxsLWJvYXJkLmR0c2k+CiAuLi4KCldpdGhvdXQgdGhpcyBwYXRjaCwgdGhl
-IGlteDZ1bGwtYm9hcmQuZHRiIHdpbGwgdXNlCk1YNlVMX1BBRF9VQVJUNV9SWF9EQVRBX19VQVJU
-NV9EQ0VfUlggaW5zdGVhZCBvZgpNWDZVTExfUEFEX1VBUlQ1X1JYX0RBVEFfX1VBUlQ1X0RDRV9S
-WCBhbmQgdGhlIHVhcnQ1IHdpbGwgYmUKbWlzY29uZmlndXJlZC4KClNpZ25lZC1vZmYtYnk6IFPD
-qWJhc3RpZW4gU3p5bWFuc2tpIDxzZWJhc3RpZW4uc3p5bWFuc2tpQGFybWFkZXVzLmNvbT4KLS0t
-CiBhcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLXBpbmZ1bmMuaCB8IDI3ICsrKysrKysrKysrKysr
-KysrKystLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKyksIDggZGVsZXRp
-b25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1waW5mdW5jLmgg
-Yi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLXBpbmZ1bmMuaAppbmRleCBmZGM0NmJiMDljYzEu
-LjdkN2YwNWY3ZWE3NyAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1waW5m
-dW5jLmgKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1waW5mdW5jLmgKQEAgLTE0LDE0
-ICsxNCwyNSBAQAogICogVGhlIHBpbiBmdW5jdGlvbiBJRCBpcyBhIHR1cGxlIG9mCiAgKiA8bXV4
-X3JlZyBjb25mX3JlZyBpbnB1dF9yZWcgbXV4X21vZGUgaW5wdXRfdmFsPgogICovCi0jZGVmaW5l
-IE1YNlVMTF9QQURfVUFSVDFfVFhfREFUQV9fVUFSVDVfRFRFX1JYICAgICAgICAgICAgICAgICAg
-ICAweDAwODQgMHgwMzEwIDB4MDY0NCAweDkgMHg0Ci0jZGVmaW5lIE1YNlVMTF9QQURfVUFSVDFf
-UlhfREFUQV9fVUFSVDVfRENFX1JYICAgICAgICAgICAgICAgICAgICAweDAwODggMHgwMzE0IDB4
-MDY0NCAweDkgMHg1Ci0jZGVmaW5lIE1YNlVMTF9QQURfVUFSVDFfQ1RTX0JfX1VBUlQ1X0RDRV9S
-VFMgICAgICAgICAgICAgICAgICAgICAweDAwOEMgMHgwMzE4IDB4MDY0MCAweDkgMHgzCi0jZGVm
-aW5lIE1YNlVMTF9QQURfVUFSVDFfUlRTX0JfX1VBUlQ1X0RURV9SVFMgICAgICAgICAgICAgICAg
-ICAgICAweDAwOTAgMHgwMzFDIDB4MDY0MCAweDkgMHg0Ci0jZGVmaW5lIE1YNlVMTF9QQURfVUFS
-VDVfVFhfREFUQV9fVUFSVDVfRFRFX1JYICAgICAgICAgICAgICAgICAgICAweDAwQkMgMHgwMzQ4
-IDB4MDY0NCAweDAgMHg2Ci0jZGVmaW5lIE1YNlVMTF9QQURfVUFSVDVfUlhfREFUQV9fVUFSVDVf
-RENFX1JYICAgICAgICAgICAgICAgICAgICAweDAwQzAgMHgwMzRDIDB4MDY0NCAweDAgMHg3Ci0j
-ZGVmaW5lIE1YNlVMTF9QQURfRU5FVDFfUlhfRU5fX1VBUlQ1X0RDRV9SVFMgICAgICAgICAgICAg
-ICAgICAgICAweDAwQ0MgMHgwMzU4IDB4MDY0MCAweDEgMHg1Ci0jZGVmaW5lIE1YNlVMTF9QQURf
-RU5FVDFfVFhfREFUQTBfX1VBUlQ1X0RURV9SVFMgICAgICAgICAgICAgICAgICAweDAwRDAgMHgw
-MzVDIDB4MDY0MCAweDEgMHg2CisvKiBzaWduYWxzIGNvbW1vbiBmb3IgaS5NWDZVTCBhbmQgaS5N
-WDZVTEwgKi8KKyN1bmRlZiBNWDZVTF9QQURfVUFSVDFfVFhfREFUQV9fVUFSVDVfRFRFX1JYCisj
-ZGVmaW5lIE1YNlVMX1BBRF9VQVJUMV9UWF9EQVRBX19VQVJUNV9EVEVfUlggICAgICAgICAgICAg
-ICAgICAgIDB4MDA4NCAweDAzMTAgMHgwNjQ0IDB4OSAweDQKKyN1bmRlZiBNWDZVTF9QQURfVUFS
-VDFfUlhfREFUQV9fVUFSVDVfRENFX1JYCisjZGVmaW5lIE1YNlVMX1BBRF9VQVJUMV9SWF9EQVRB
-X19VQVJUNV9EQ0VfUlggICAgICAgICAgICAgICAgICAgIDB4MDA4OCAweDAzMTQgMHgwNjQ0IDB4
-OSAweDUKKyN1bmRlZiBNWDZVTF9QQURfVUFSVDFfQ1RTX0JfX1VBUlQ1X0RDRV9SVFMKKyNkZWZp
-bmUgTVg2VUxfUEFEX1VBUlQxX0NUU19CX19VQVJUNV9EQ0VfUlRTICAgICAgICAgICAgICAgICAg
-ICAgMHgwMDhDIDB4MDMxOCAweDA2NDAgMHg5IDB4MworI3VuZGVmIE1YNlVMX1BBRF9VQVJUMV9S
-VFNfQl9fVUFSVDVfRFRFX1JUUworI2RlZmluZSBNWDZVTF9QQURfVUFSVDFfUlRTX0JfX1VBUlQ1
-X0RURV9SVFMgICAgICAgICAgICAgICAgICAgICAweDAwOTAgMHgwMzFDIDB4MDY0MCAweDkgMHg0
-CisjdW5kZWYgTVg2VUxfUEFEX1VBUlQ1X1RYX0RBVEFfX1VBUlQ1X0RURV9SWAorI2RlZmluZSBN
-WDZVTF9QQURfVUFSVDVfVFhfREFUQV9fVUFSVDVfRFRFX1JYICAgICAgICAgICAgICAgICAgICAw
-eDAwQkMgMHgwMzQ4IDB4MDY0NCAweDAgMHg2CisjdW5kZWYgTVg2VUxfUEFEX1VBUlQ1X1JYX0RB
-VEFfX1VBUlQ1X0RDRV9SWAorI2RlZmluZSBNWDZVTF9QQURfVUFSVDVfUlhfREFUQV9fVUFSVDVf
-RENFX1JYICAgICAgICAgICAgICAgICAgICAweDAwQzAgMHgwMzRDIDB4MDY0NCAweDAgMHg3Cisj
-dW5kZWYgTVg2VUxfUEFEX0VORVQxX1JYX0VOX19VQVJUNV9EQ0VfUlRTCisjZGVmaW5lIE1YNlVM
-X1BBRF9FTkVUMV9SWF9FTl9fVUFSVDVfRENFX1JUUyAgICAgICAgICAgICAgICAgICAgIDB4MDBD
-QyAweDAzNTggMHgwNjQwIDB4MSAweDUKKyN1bmRlZiBNWDZVTF9QQURfRU5FVDFfVFhfREFUQTBf
-X1VBUlQ1X0RURV9SVFMKKyNkZWZpbmUgTVg2VUxfUEFEX0VORVQxX1RYX0RBVEEwX19VQVJUNV9E
-VEVfUlRTICAgICAgICAgICAgICAgICAgMHgwMEQwIDB4MDM1QyAweDA2NDAgMHgxIDB4NgorCisv
-KiBzaWduYWxzIGZvciBpLk1YNlVMTCBvbmx5ICovCiAjZGVmaW5lIE1YNlVMTF9QQURfRU5FVDJf
-UlhfREFUQTBfX0VQRENfU0RETzA4ICAgICAgICAgICAgICAgICAgICAweDAwRTQgMHgwMzcwIDB4
-MDAwMCAweDkgMHgwCiAjZGVmaW5lIE1YNlVMTF9QQURfRU5FVDJfUlhfREFUQTFfX0VQRENfU0RE
-TzA5ICAgICAgICAgICAgICAgICAgICAweDAwRTggMHgwMzc0IDB4MDAwMCAweDkgMHgwCiAjZGVm
-aW5lIE1YNlVMTF9QQURfRU5FVDJfUlhfRU5fX0VQRENfU0RETzEwICAgICAgICAgICAgICAgICAg
-ICAgICAweDAwRUMgMHgwMzc4IDB4MDAwMCAweDkgMHgwCi0tIAoyLjE2LjQKCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hello,
+   the 'EDIMM Starter Kit 1.5 MIPI Evaluation" board, whose support has been
+introduced by commit:
+commit 3fe08835773121870b1de7d0cac9a4ade796661e ("ARM: dts: imx6q: Add Engicam
+i.CoreM6 1.5 Quad/Dual MIPI starter kit support")
+
+is actually based on 1.5 version of the "i.Core 1.5 MX6" CPU module which
+differs from the original "i.Core MX6" for a few details, including the one that
+has sparkled this activity: the ethernet PHY interface clock provider.
+
+Instead of fixing the PHY clock provider in the imx6q-icore-mipi.dts file, I
+preferred adding a new .dtsi for the 1.5 version of the module, to gather
+differences between version in a single place. Then I've referenced the new one
+in the dts file.
+
+As a result, the ethernet interface is now working on the EDIMM 1.5 MIPI
+evaluation kit.
+
+Thanks
+   j
+
+Jacopo Mondi (2):
+  ARM: dts: imx6qdl: Add Engicam i.Core 1.5 MX6
+  ARM: dts: imx6q-icore-mipi: Use 1.5 version of i.Core MX6
+
+ arch/arm/boot/dts/imx6q-icore-mipi.dts   |  4 ++--
+ arch/arm/boot/dts/imx6qdl-icore-1.5.dtsi | 34 ++++++++++++++++++++++++++++++++
+ 2 files changed, 36 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6qdl-icore-1.5.dtsi
+
+--
+2.7.4
