@@ -1,59 +1,66 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/5] iio:adxl372: Add FIFO and interrupts support
-Date: Fri, 20 Jul 2018 08:46:34 -0600
-Message-ID: <20180720144634.GB25713@rob-hp-laptop>
-References: <1531409760-20070-1-git-send-email-stefan.popa@analog.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH RESEND 1/7] dt-bindings: Add a dma-parent property
+Date: Fri, 20 Jul 2018 16:56:04 +0200
+Message-ID: <50441bfc16c0b78fed4f07c8e6b3b6d1c6b4dff6.1532098561.git-series.maxime.ripard@bootlin.com>
+References: <cover.d2aafc48da035aed80793da89079e5da269b45b4.1532098561.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1531409760-20070-1-git-send-email-stefan.popa@analog.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Popa <stefan.popa@analog.com>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.d2aafc48da035aed80793da89079e5da269b45b4.1532098561.git-series.maxime.ripard@bootlin.com>
+In-Reply-To: <cover.d2aafc48da035aed80793da89079e5da269b45b4.1532098561.git-series.maxime.ripard@bootlin.com>
+References: <cover.d2aafc48da035aed80793da89079e5da269b45b4.1532098561.git-series.maxime.ripard@bootlin.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Robin Murphy <robin.murphy@arm.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 12, 2018 at 06:36:00PM +0300, Stefan Popa wrote:
-> This patch adds support for the adxl372 FIFO. In order to accomplish this,
-> triggered buffers were used.
-> 
-> The number of FIFO samples which trigger the watermark interrupt can be
-> configured by using the buffer watermark, while the format depends on the
-> selected channels.The FIFO data along with the timestamp is pushed to the
-> IIO device's buffer.
-> 
-> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-> ---
->  .../devicetree/bindings/iio/accel/adxl372.txt      |   7 +
-
-This belongs in patch 2. Bindings should reflect the h/w, not driver 
-features.
-
->  drivers/iio/accel/adxl372.c                        | 346 ++++++++++++++++++++-
->  2 files changed, 352 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/adxl372.txt b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-> index fea4baf..73d7e03 100644
-> --- a/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-> +++ b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-> @@ -7,10 +7,17 @@ Required properties:
->   - reg: SPI chip select number for the device
->   - spi-max-frequency: Max SPI frequency to use
->  
-> +Optional properties:
-> + - interrupt-parent: phandle to the parent interrupt controller
-
-Don't need to put this in the binding. 
-
-> + - interrupts: interrupt mapping for GPIO IRQ, it should by configured with
-> + 		flag IRQ_TYPE_EDGE_FALLING
-> +
->  Example:
->  
->  	accelerometer@0 {
->  		compatible = "adi,adxl372";
->  		reg = <0>;
->  		spi-max-frequency = <1000000>;
-> +		interrupt-parent = <&gpio>;
-> +		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
->  	};
+VGhlIGN1cnJlbnQgRFQgYmluZGluZ3MgYXNzdW1lIHRoYXQgdGhlIERNQSB3aWxsIGJlIHBlcmZv
+cm1lZCBieSB0aGUKZGV2aWNlcyB0aHJvdWdoIHRoZWlyIHBhcmVudCBEVCBub2RlLCBhbmQgcmVs
+eSBvbiB0aGF0IGFzc3VtcHRpb24gZm9yIHRoZQphZGRyZXNzIHRyYW5zbGF0aW9uIHVzaW5nIGRt
+YS1yYW5nZXMuCgpIb3dldmVyLCBzb21lIFNvQ3MgaGF2ZSBkZXZpY2VzIHRoYXQgd2lsbCBwZXJm
+b3JtIERNQSB0aHJvdWdoIGFub3RoZXIgYnVzLAp3aXRoIHNlcGFyYXRlIGFkZHJlc3MgdHJhbnNs
+YXRpb24gcnVsZXMuIFdlIHRoZXJlZm9yZSBuZWVkIHRvIGV4cHJlc3MgdGhhdApyZWxhdGlvbnNo
+aXAsIHRocm91Z2ggdGhlIGRtYS1wYXJlbnQgcHJvcGVydHkuCgpTaWduZWQtb2ZmLWJ5OiBNYXhp
+bWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGJvb3RsaW4uY29tPgotLS0KIERvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9ib290aW5nLXdpdGhvdXQtb2YudHh0IHwgMTAgKysrKysrKysrKwogMSBmaWxl
+IGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYm9vdGluZy13aXRob3V0LW9mLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9ib290aW5nLXdpdGhvdXQtb2YudHh0CmluZGV4IGU4NmJkMmY2NDExNy4uNGE2NWM5NDNjMDJk
+IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYm9vdGluZy13aXRob3V0LW9m
+LnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYm9vdGluZy13aXRob3V0LW9mLnR4
+dApAQCAtMTQwMyw4ICsxNDAzLDE1IEBAIEluIGFkZGl0aW9uLCBlYWNoIERNQSBtYXN0ZXIgZGV2
+aWNlIG9uIHRoZSBETUEgYnVzIG1heSBvciBtYXkgbm90IHN1cHBvcnQKIGNvaGVyZW50IERNQSBv
+cGVyYXRpb25zLiBUaGUgImRtYS1jb2hlcmVudCIgcHJvcGVydHkgaXMgaW50ZW5kZWQgdG8gYmUg
+dXNlZAogZm9yIGlkZW50aWZ5aW5nIGRldmljZXMgc3VwcG9ydGVkIGNvaGVyZW50IERNQSBvcGVy
+YXRpb25zIGluIERULgogCitTb21lIGRldmljZXMgd2lsbCBhbHNvIHBlcmZvcm0gRE1BIHRocm91
+Z2ggYW5vdGhlciBidXMgdGhhbiB0aGVpciBwYXJlbnQKK2NvbnRyb2wgYnVzLiBJbiBzdWNoIGEg
+Y2FzZSwgdGhlICJkbWEtcGFyZW50IiBwcm9wZXJ0eSBpcyBpbnRlbmRlZCB0byBleHByZXNzCit0
+aGF0IHJlbGF0aW9uc2hpcCB0byBhbm90aGVyIGRldmljZSBpbiBEVCB0aGF0IHdpbGwgYmUgdGhl
+IERNQSBwYXJlbnQgYnVzLgorCiAqIERNQSBCdXMgbWFzdGVyCiBPcHRpb25hbCBwcm9wZXJ0eToK
+Ky0gI2RtYS1wYXJlbnQtY2VsbHM6IDxpbnRlZ2VyPgorCVRoZSAjZG1hLXBhcmVudC1jZWxscyBw
+cm9wZXJ0eSBkZWZpbmVzIHRoZSB3aWR0aCBvZiB0aGUgY2VsbHMgdXNlZCB0bworCXJlcHJlc2Vu
+dCB0aGUgRE1BIHBhcmVudC4KIC0gZG1hLXJhbmdlczogPHByb3AtZW5jb2RlZC1hcnJheT4gZW5j
+b2RlZCBhcyBhcmJpdHJhcnkgbnVtYmVyIG9mIHRyaXBsZXRzIG9mCiAJKGNoaWxkLWJ1cy1hZGRy
+ZXNzLCBwYXJlbnQtYnVzLWFkZHJlc3MsIGxlbmd0aCkuIEVhY2ggdHJpcGxldCBzcGVjaWZpZWQK
+IAlkZXNjcmliZXMgYSBjb250aWd1b3VzIERNQSBhZGRyZXNzIHJhbmdlLgpAQCAtMTQyMCw2ICsx
+NDI3LDkgQEAgT3B0aW9uYWwgcHJvcGVydHk6CiAtIGRtYS1yYW5nZXM6IDxlbXB0eT4gdmFsdWUu
+IGlmIHByZXNlbnQgLSBJdCBtZWFucyB0aGF0IERNQSBhZGRyZXNzZXMKIAl0cmFuc2xhdGlvbiBo
+YXMgdG8gYmUgZW5hYmxlZCBmb3IgdGhpcyBkZXZpY2UuCiAtIGRtYS1jb2hlcmVudDogUHJlc2Vu
+dCBpZiBkbWEgb3BlcmF0aW9ucyBhcmUgY29oZXJlbnQKKy0gZG1hLXBhcmVudDogTGlzdCBvZiBw
+aGFuZGxlcyBhbmQgdGhlaXIgb3B0aW9uYWwgYXJndW1lbnRzIGFjY29yZGluZyB0byB0aGUKKwkj
+ZG1hLXBhcmVudC1jZWxscyBmcm9tIHRoZSBwcm92aWRlci4gRXhwcmVzc2VzIHRoZSByb3V0aW5n
+IG9mIERNQSBpZiBpdAorCWRvZXNuJ3QgZ28gdGhyb3VnaCB0aGUgcGFyZW50IG5vZGUsIGJ1dCBz
+b21lIG90aGVyIG5vZGUgaW4gdGhlIGRldmljZSB0cmVlLgogCiBFeGFtcGxlOgogc29jIHsKLS0g
+CmdpdC1zZXJpZXMgMC45LjEKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
