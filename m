@@ -1,44 +1,107 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] reset: meson: add dt-bindings for meson-axg audio arb
-Date: Fri, 20 Jul 2018 07:52:15 -0600
-Message-ID: <20180720135215.GA31492@rob-hp-laptop>
-References: <20180706143122.7612-1-jbrunet@baylibre.com>
- <20180706143122.7612-2-jbrunet@baylibre.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH V4 7/8] backlight: qcom-wled: add support for short
+ circuit handling
+Date: Fri, 20 Jul 2018 15:07:17 +0100
+Message-ID: <1a708fea-0759-fcd0-d169-a36e21c31c28@linaro.org>
+References: <1531131741-19971-1-git-send-email-kgunda@codeaurora.org>
+ <1531131741-19971-8-git-send-email-kgunda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180706143122.7612-2-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1531131741-19971-8-git-send-email-kgunda@codeaurora.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kiran Gunda <kgunda@codeaurora.org>, bjorn.andersson@linaro.org, jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 06, 2018 at 04:31:21PM +0200, Jerome Brunet wrote:
-> Add dt-bindings for the audio memory arbitror found on Amlogic's
-> A113 based SoCs
-
-s/arbitror/arbiter/
-
-> 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  .../bindings/reset/amlogic,meson-axg-audio-arb.txt  | 21 +++++++++++++++++++++
->  .../dt-bindings/reset/amlogic,meson-axg-audio-arb.h | 17 +++++++++++++++++
->  2 files changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt
->  create mode 100644 include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt b/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt
-> new file mode 100644
-> index 000000000000..e29b3463f2e1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt
-> @@ -0,0 +1,21 @@
-> +* Amlogic audio memory arbitror controller
-
-s/arbitror/arbiter/
-
-With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+T24gMDkvMDcvMTggMTE6MjIsIEtpcmFuIEd1bmRhIHdyb3RlOgo+IEhhbmRsZSB0aGUgc2hvcnQg
+Y2lyY3VpdCBpbnRlcnJ1cHQgYW5kIGNoZWNrIGlmIHRoZSBzaG9ydCBjaXJjdWl0Cj4gaW50ZXJy
+dXB0IGlzIHZhbGlkLiBSZS1lbmFibGUgdGhlIG1vZHVsZSB0byBjaGVjayBpZiBpdCBnb2VzCj4g
+YXdheS4gRGlzYWJsZSB0aGUgbW9kdWxlIGFsdG9nZXRoZXIgaWYgdGhlIHNob3J0IGNpcmN1aXQg
+ZXZlbnQKPiBwZXJzaXN0cy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBLaXJhbiBHdW5kYSA8a2d1bmRh
+QGNvZGVhdXJvcmEub3JnPgo+IFJldmlld2VkLWJ5OiBCam9ybiBBbmRlcnNzb24gPGJqb3JuLmFu
+ZGVyc3NvbkBsaW5hcm8ub3JnPgo+IC0tLQo+IENoYW5nZXMgZnJvbSBWMzoKPiAJLSBBZGRlZCBS
+ZXZpZXdlZCBieSB0YWcuCj4gCS0gQWRkcmVzc2VkIG1pbm9yIGNvbW1lbnRzIGZyb20gVmlub2QK
+PiAKPiAgIGRyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L3Fjb20td2xlZC5jIHwgMTMyICsrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKystLQo+ICAgMSBmaWxlIGNoYW5nZWQsIDEyOCBpbnNl
+cnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3ZpZGVv
+L2JhY2tsaWdodC9xY29tLXdsZWQuYyBiL2RyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L3Fjb20td2xl
+ZC5jCj4gaW5kZXggMzYyZDI1NC4uYTE0ZjFhNiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL3ZpZGVv
+L2JhY2tsaWdodC9xY29tLXdsZWQuYwo+ICsrKyBiL2RyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L3Fj
+b20td2xlZC5jCj4gQEAgLTEwLDYgKzEwLDkgQEAKPiAgICAqIEdOVSBHZW5lcmFsIFB1YmxpYyBM
+aWNlbnNlIGZvciBtb3JlIGRldGFpbHMuCj4gICAgKi8KPiAgIAo+ICsjaW5jbHVkZSA8bGludXgv
+ZGVsYXkuaD4KPiArI2luY2x1ZGUgPGxpbnV4L2ludGVycnVwdC5oPgo+ICsjaW5jbHVkZSA8bGlu
+dXgva3RpbWUuaD4KPiAgICNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4KPiAgICNpbmNsdWRlIDxs
+aW51eC9iYWNrbGlnaHQuaD4KPiAgICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPiBAQCAtNjQs
+NiArNjcsMTYgQEAKPiAgICNkZWZpbmUgV0xFRDNfU0lOS19SRUdfU1RSX0NBQkMobikJCQkoMHg2
+NiArIChuICogMHgxMCkpCj4gICAjZGVmaW5lICBXTEVEM19TSU5LX1JFR19TVFJfQ0FCQ19NQVNL
+CQkJQklUKDcpCj4gICAKPiArLyogV0xFRDQgc3BlY2lmaWMgY29udHJvbCByZWdpc3RlcnMgKi8K
+PiArI2RlZmluZSBXTEVENF9DVFJMX1JFR19TSE9SVF9QUk9URUNUCQkJMHg1ZQo+ICsjZGVmaW5l
+ICBXTEVENF9DVFJMX1JFR19TSE9SVF9FTl9NQVNLCQkJQklUKDcpCj4gKwo+ICsjZGVmaW5lIFdM
+RUQ0X0NUUkxfUkVHX1NFQ19BQ0NFU1MJCQkweGQwCj4gKyNkZWZpbmUgIFdMRUQ0X0NUUkxfUkVH
+X1NFQ19VTkxPQ0sJCQkweGE1Cj4gKwo+ICsjZGVmaW5lIFdMRUQ0X0NUUkxfUkVHX1RFU1QxCQkJ
+CTB4ZTIKPiArI2RlZmluZSAgV0xFRDRfQ1RSTF9SRUdfVEVTVDFfRVhUX0ZFVF9EVEVTVDIJCTB4
+MDkKPiArCj4gICAvKiBXTEVENCBzcGVjaWZpYyBzaW5rIHJlZ2lzdGVycyAqLwo+ICAgI2RlZmlu
+ZSBXTEVENF9TSU5LX1JFR19DVVJSX1NJTksJCQkweDQ2Cj4gICAjZGVmaW5lICBXTEVENF9TSU5L
+X1JFR19DVVJSX1NJTktfTUFTSwkJCUdFTk1BU0soNywgNCkKPiBAQCAtMTEzLDE3ICsxMjYsMjMg
+QEAgc3RydWN0IHdsZWRfY29uZmlnIHsKPiAgIAlib29sIGNzX291dF9lbjsKPiAgIAlib29sIGV4
+dF9nZW47Cj4gICAJYm9vbCBjYWJjOwo+ICsJYm9vbCBleHRlcm5hbF9wZmV0Owo+ICAgfTsKPiAg
+IAo+ICAgc3RydWN0IHdsZWQgewo+ICAgCWNvbnN0IGNoYXIgKm5hbWU7Cj4gICAJc3RydWN0IGRl
+dmljZSAqZGV2Owo+ICAgCXN0cnVjdCByZWdtYXAgKnJlZ21hcDsKPiArCXN0cnVjdCBtdXRleCBs
+b2NrOwkvKiBMb2NrIHRvIGF2b2lkIHJhY2UgZnJvbSB0aHJlYWQgaXJxIGhhbmRsZXIgKi8KPiAr
+CWt0aW1lX3QgbGFzdF9zaG9ydF9ldmVudDsKPiAgIAl1MTYgY3RybF9hZGRyOwo+ICAgCXUxNiBz
+aW5rX2FkZHI7Cj4gICAJdTE2IG1heF9zdHJpbmdfY291bnQ7Cj4gICAJdTMyIGJyaWdodG5lc3M7
+Cj4gICAJdTMyIG1heF9icmlnaHRuZXNzOwo+ICsJdTMyIHNob3J0X2NvdW50Owo+ICsJYm9vbCBk
+aXNhYmxlZF9ieV9zaG9ydDsKPiArCWJvb2wgaGFzX3Nob3J0X2RldGVjdDsKPiAgIAo+ICAgCXN0
+cnVjdCB3bGVkX2NvbmZpZyBjZmc7Cj4gICAJaW50ICgqd2xlZF9zZXRfYnJpZ2h0bmVzcykoc3Ry
+dWN0IHdsZWQgKndsZWQsIHUxNiBicmlnaHRuZXNzKTsKPiBAQCAtMTc0LDYgKzE5Myw5IEBAIHN0
+YXRpYyBpbnQgd2xlZF9tb2R1bGVfZW5hYmxlKHN0cnVjdCB3bGVkICp3bGVkLCBpbnQgdmFsKQo+
+ICAgewo+ICAgCWludCByYzsKPiAgIAo+ICsJaWYgKHdsZWQtPmRpc2FibGVkX2J5X3Nob3J0KQo+
+ICsJCXJldHVybiAtRUZBVUxUOwoKRUZBVUxUIG1lYW5zIGJhZCBhZGRyZXNzIChtZW1vcnkgZmF1
+bHQpLiBQZXJoYXBzIEVJTyBvciBtYXliZSBldmVuIApzb21ldGhpbmcgbW9yZSBleG90aWMgbGlr
+ZSBFTlhJTyBtaWdodCBiZSBtb3JlIGFwcHJvcHJpYXRlPwoKCj4gKwo+ICAgCXJjID0gcmVnbWFw
+X3VwZGF0ZV9iaXRzKHdsZWQtPnJlZ21hcCwgd2xlZC0+Y3RybF9hZGRyICsKPiAgIAkJCQlXTEVE
+X0NUUkxfUkVHX01PRF9FTiwKPiAgIAkJCQlXTEVEX0NUUkxfUkVHX01PRF9FTl9NQVNLLAo+IEBA
+IC0yMTAsMTggKzIzMiwxOSBAQCBzdGF0aWMgaW50IHdsZWRfdXBkYXRlX3N0YXR1cyhzdHJ1Y3Qg
+YmFja2xpZ2h0X2RldmljZSAqYmwpCj4gICAJICAgIGJsLT5wcm9wcy5zdGF0ZSAmIEJMX0NPUkVf
+RkJCTEFOSykKPiAgIAkJYnJpZ2h0bmVzcyA9IDA7Cj4gICAKPiArCW11dGV4X2xvY2soJndsZWQt
+PmxvY2spOwo+ICAgCWlmIChicmlnaHRuZXNzKSB7Cj4gICAJCXJjID0gd2xlZC0+d2xlZF9zZXRf
+YnJpZ2h0bmVzcyh3bGVkLCBicmlnaHRuZXNzKTsKPiAgIAkJaWYgKHJjIDwgMCkgewo+ICAgCQkJ
+ZGV2X2Vycih3bGVkLT5kZXYsICJ3bGVkIGZhaWxlZCB0byBzZXQgYnJpZ2h0bmVzcyByYzolZFxu
+IiwKPiAgIAkJCQlyYyk7Cj4gLQkJCXJldHVybiByYzsKPiArCQkJZ290byB1bmxvY2tfbXV0ZXg7
+Cj4gICAJCX0KPiAgIAo+ICAgCQlyYyA9IHdsZWRfc3luY190b2dnbGUod2xlZCk7Cj4gICAJCWlm
+IChyYyA8IDApIHsKPiAgIAkJCWRldl9lcnIod2xlZC0+ZGV2LCAid2xlZCBzeW5jIGZhaWxlZCBy
+YzolZFxuIiwgcmMpOwo+IC0JCQlyZXR1cm4gcmM7Cj4gKwkJCWdvdG8gdW5sb2NrX211dGV4Owo+
+ICAgCQl9Cj4gICAJfQo+ICAgCj4gQEAgLTIyOSwxNSArMjUyLDYxIEBAIHN0YXRpYyBpbnQgd2xl
+ZF91cGRhdGVfc3RhdHVzKHN0cnVjdCBiYWNrbGlnaHRfZGV2aWNlICpibCkKPiAgIAkJcmMgPSB3
+bGVkX21vZHVsZV9lbmFibGUod2xlZCwgISFicmlnaHRuZXNzKTsKPiAgIAkJaWYgKHJjIDwgMCkg
+ewo+ICAgCQkJZGV2X2Vycih3bGVkLT5kZXYsICJ3bGVkIGVuYWJsZSBmYWlsZWQgcmM6JWRcbiIs
+IHJjKTsKPiAtCQkJcmV0dXJuIHJjOwo+ICsJCQlnb3RvIHVubG9ja19tdXRleDsKPiAgIAkJfQo+
+ICAgCX0KPiAgIAo+ICAgCXdsZWQtPmJyaWdodG5lc3MgPSBicmlnaHRuZXNzOwo+ICAgCj4gK3Vu
+bG9ja19tdXRleDoKPiArCW11dGV4X3VubG9jaygmd2xlZC0+bG9jayk7Cj4gKwo+ICAgCXJldHVy
+biByYzsKPiAgIH0KPiAgIAo+ICsjZGVmaW5lIFdMRURfU0hPUlRfRExZX01TCQkJMjAKPiArI2Rl
+ZmluZSBXTEVEX1NIT1JUX0NOVF9NQVgJCQk1Cj4gKyNkZWZpbmUgV0xFRF9TSE9SVF9SRVNFVF9D
+TlRfRExZX1VTCQlVU0VDX1BFUl9TRUMKPiArCj4gK3N0YXRpYyBpcnFyZXR1cm5fdCB3bGVkX3No
+b3J0X2lycV9oYW5kbGVyKGludCBpcnEsIHZvaWQgKl93bGVkKQo+ICt7Cj4gKwlzdHJ1Y3Qgd2xl
+ZCAqd2xlZCA9IF93bGVkOwo+ICsJaW50IHJjOwo+ICsJczY0IGVsYXBzZWRfdGltZTsKPiArCj4g
+Kwl3bGVkLT5zaG9ydF9jb3VudCsrOwo+ICsJbXV0ZXhfbG9jaygmd2xlZC0+bG9jayk7Cj4gKwly
+YyA9IHdsZWRfbW9kdWxlX2VuYWJsZSh3bGVkLCBmYWxzZSk7Cj4gKwlpZiAocmMgPCAwKSB7Cj4g
+KwkJZGV2X2Vycih3bGVkLT5kZXYsICJ3bGVkIGRpc2FibGUgZmFpbGVkIHJjOiVkXG4iLCByYyk7
+Cj4gKwkJZ290byB1bmxvY2tfbXV0ZXg7Cj4gKwl9Cj4gKwo+ICsJZWxhcHNlZF90aW1lID0ga3Rp
+bWVfdXNfZGVsdGEoa3RpbWVfZ2V0KCksCj4gKwkJCQkgICAgICB3bGVkLT5sYXN0X3Nob3J0X2V2
+ZW50KTsKPiArCWlmIChlbGFwc2VkX3RpbWUgPiBXTEVEX1NIT1JUX1JFU0VUX0NOVF9ETFlfVVMp
+Cj4gKwkJd2xlZC0+c2hvcnRfY291bnQgPSAwOwoKU2hvdWxkbid0IHRoaXMgcmVzZXQgdG8gMSAo
+ZS5nLiB3ZSBoYXZlIGp1c3Qgc2VlbiBhIHNob3J0KS4KCgpEYW5pZWwuCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
