@@ -1,51 +1,113 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/7] iio: imu: mpu6050: add support for regulator
- framework
-Date: Fri, 20 Jul 2018 11:02:42 -0600
-Message-ID: <20180720170242.GA18120@rob-hp-laptop>
-References: <20180717084158.23532-1-masneyb@onstation.org>
- <20180717084158.23532-2-masneyb@onstation.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 5/5] ARM64: dts: meson-gxl: add support for the Oranth
+ Tanix TX3 Mini
+Date: Fri, 20 Jul 2018 19:19:30 +0200
+Message-ID: <CAFBinCBfXvSVkt7k-hxwaHhjDo0jdsVWFvqhBDWkwrKjfZ94pA@mail.gmail.com>
+References: <20180714193725.17837-1-martin.blumenstingl@googlemail.com>
+ <20180714193725.17837-6-martin.blumenstingl@googlemail.com>
+ <0c92a375-d764-2fcc-c339-7bf33534b9f1@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180717084158.23532-2-masneyb@onstation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: jic23@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, jonathan@marek.ca, jmaneyrol@invensense.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mkelly@xevo.com, fischerdouglasc@gmail.com, bshah@kde.org, ctatlor97@gmail.com, drew.paterson@ams.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <0c92a375-d764-2fcc-c339-7bf33534b9f1@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@baylibre.com, yixun.lan@amlogic.com, robh+dt@kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 17, 2018 at 04:41:52AM -0400, Brian Masney wrote:
-> This patch adds support for the regulator framework to the mpu6050
-> driver.
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
-> Changes since v1:
-> - Use devm_regulator_get() instead of devm_regulator_get_optional()
-> - Use devm_add_action() for cleaning up the regulator.
-> - Correct ordering of resume code.
-> - Add regulator_enabled flag to ensure regulator is not disabled twice,
->   specifically the case where the device is suspended and then the
->   driver is removed.
-> 
-> Original extra changelog from v1:
-> 
-> This is a variation of Jonathan Marek's patch from postmarketOS
-> https://gitlab.com/postmarketOS/linux-postmarketos/commit/b8ad1ec1859c8bbcbce94944b3f4dd68f8f9fc37
-> with the following changes:
-> 
-> - Stripped out 6515 variant code.
-> - Add the regulator to the mpu core instead of only the i2c variant.
-> - Add error handling.
-> - Release the regulator on suspend, device remove, etc.
-> - Device tree documentation.
-> 
->  .../bindings/iio/imu/inv_mpu6050.txt          |  1 +
+On Thu, Jul 19, 2018 at 10:29 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> On 14/07/2018 21:37, Martin Blumenstingl wrote:
+> > The Tanix TX3 Mini is a TV box based on the Amlogic S905W chipset.
+> > There are two variants:
+> > - 1 GiB or 2 GiB of DDR3 memory
+> > - 8 GB or 16 GB eMMC flash
+> >
+> > Both variants come with:
+> > - 802.11 b/g/n wifi (Silicon Valley Microelectronics SSV6051, does not
+> >   support Bluetooth)
+> > - an LED 7 segment display with an FD628 controller
+> > - HDMI and AV (CVBS) output
+> > - 2x USB (utilizing both USB ports provided by the SoC)
+> > - micro SD card slot
+> > - serial console (uart_AO) has to be soldered after opening the case
+>
+> So it's 10/100 ethernet ? Only to confirm !
+yes, 10/100 Ethernet (using the internal PHY) is available as well
 
-Acked-by: Rob Herring <robh@kernel.org>
+> >
+> > The board seems to be very similar to the P23x and Q20x reference
+> > boards, which is why it includes meson-gx-p23x-q20x.dtsi:
+> > - eMMC reset routed to BOOT_9
+> > - the SDIO wifi chip's reset line is routed to GPIOX_6 and the reference
+> >   clock is 32.768KHz on PWM_E
+> > - SD card detection is routed to CARD_6
+> > - vqmmc of all MMC controllers is hard-wired to 1.8V (VDDIO_BOOT)
+> > - uart_AO can be accessed after opening the case and soldering RX, TX
+> >   and GND lines onto the exposed solder points (marked with RX, TX and
+> >   GND)
+> >
+> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > ---
+> >  arch/arm64/boot/dts/amlogic/Makefile          |  1 +
+> >  .../dts/amlogic/meson-gxl-s905w-tx3-mini.dts  | 22 +++++++++++++++++++
+> >  2 files changed, 23 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dts
+> >
+> > diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+> > index e55156dec237..a97c0e2d7bc6 100644
+> > --- a/arch/arm64/boot/dts/amlogic/Makefile
+> > +++ b/arch/arm64/boot/dts/amlogic/Makefile
+> > @@ -19,6 +19,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
+> >  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
+> >  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s805x-p241.dtb
+> >  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-p281.dtb
+> > +dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-tx3-mini.dtb
+> >  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-khadas-vim2.dtb
+> >  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-nexbox-a1.dtb
+> >  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q200.dtb
+> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dts
+> > new file mode 100644
+> > index 000000000000..789c819c99c4
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dts
+> > @@ -0,0 +1,22 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +/*
+> > + * Copyright (c) 2018 Martin Blumenstingl <martin.blumenstingl@googlemail.com>.
+> > + * Based on meson-gxl-s905d-p231.dts:
+> > + * - Copyright (c) 2016 Endless Computers, Inc.
+> > + *   Author: Carlo Caione <carlo@endlessm.com>
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "meson-gxl-s905x.dtsi"
+> > +#include "meson-gx-p23x-q20x.dtsi"
+> > +
+> > +/ {
+> > +     compatible = "oranth,tx3-mini", "amlogic,s905w", "amlogic,meson-gxl";
+> > +     model = "Oranth Tanix TX3 Mini";
+> > +
+> > +     memory@0 {
+> > +             device_type = "memory";
+> > +             reg = <0x0 0x0 0x0 0x40000000>; /* 1 GiB or 2 GiB */
+> > +     };
+> > +};
+> >
+>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+thank you for reviewing the whole series!
 
->  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c    | 73 +++++++++++++++++++
->  drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h     |  3 +
->  3 files changed, 77 insertions(+)
+
+Regards
+Martin
