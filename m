@@ -1,113 +1,99 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v2 5/5] ARM64: dts: meson-gxl: add support for the Oranth
- Tanix TX3 Mini
-Date: Fri, 20 Jul 2018 19:19:30 +0200
-Message-ID: <CAFBinCBfXvSVkt7k-hxwaHhjDo0jdsVWFvqhBDWkwrKjfZ94pA@mail.gmail.com>
-References: <20180714193725.17837-1-martin.blumenstingl@googlemail.com>
- <20180714193725.17837-6-martin.blumenstingl@googlemail.com>
- <0c92a375-d764-2fcc-c339-7bf33534b9f1@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] phy: qcom-qmp: Fix dts bindings to reflect reality
+Date: Fri, 20 Jul 2018 11:26:55 -0600
+Message-ID: <CAL_JsqKZUB3P_Z_pRG-Udx0wgWtSjzgF=Rc3t8Xf2n2uZkV3Qw@mail.gmail.com>
+References: <20180706233142.166296-1-dianders@chromium.org>
+ <20180720141059.GA3064@rob-hp-laptop> <CAD=FV=WzjZBYV+yjekC-GGgjyWNbdGX=ZwesQMQhiYHZLyzhzA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <0c92a375-d764-2fcc-c339-7bf33534b9f1@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@baylibre.com, yixun.lan@amlogic.com, robh+dt@kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=WzjZBYV+yjekC-GGgjyWNbdGX=ZwesQMQhiYHZLyzhzA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Manu Gautam <mgautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 19, 2018 at 10:29 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Fri, Jul 20, 2018 at 9:13 AM Doug Anderson <dianders@chromium.org> wrote:
 >
-> On 14/07/2018 21:37, Martin Blumenstingl wrote:
-> > The Tanix TX3 Mini is a TV box based on the Amlogic S905W chipset.
-> > There are two variants:
-> > - 1 GiB or 2 GiB of DDR3 memory
-> > - 8 GB or 16 GB eMMC flash
-> >
-> > Both variants come with:
-> > - 802.11 b/g/n wifi (Silicon Valley Microelectronics SSV6051, does not
-> >   support Bluetooth)
-> > - an LED 7 segment display with an FD628 controller
-> > - HDMI and AV (CVBS) output
-> > - 2x USB (utilizing both USB ports provided by the SoC)
-> > - micro SD card slot
-> > - serial console (uart_AO) has to be soldered after opening the case
+> Rob,
 >
-> So it's 10/100 ethernet ? Only to confirm !
-yes, 10/100 Ethernet (using the internal PHY) is available as well
-
+> On Fri, Jul 20, 2018 at 7:10 AM, Rob Herring <robh@kernel.org> wrote:
+> > On Fri, Jul 06, 2018 at 04:31:42PM -0700, Douglas Anderson wrote:
+> >> A few patches have landed for the qcom-qmp PHY that affect how you
+> >> would write a device tree node.  ...yet the bindings weren't updated.
+> >> Let's remedy the situation and make the bindings refelect reality.
 > >
-> > The board seems to be very similar to the P23x and Q20x reference
-> > boards, which is why it includes meson-gx-p23x-q20x.dtsi:
-> > - eMMC reset routed to BOOT_9
-> > - the SDIO wifi chip's reset line is routed to GPIOX_6 and the reference
-> >   clock is 32.768KHz on PWM_E
-> > - SD card detection is routed to CARD_6
-> > - vqmmc of all MMC controllers is hard-wired to 1.8V (VDDIO_BOOT)
-> > - uart_AO can be accessed after opening the case and soldering RX, TX
-> >   and GND lines onto the exposed solder points (marked with RX, TX and
-> >   GND)
-> >
-> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > ---
-> >  arch/arm64/boot/dts/amlogic/Makefile          |  1 +
-> >  .../dts/amlogic/meson-gxl-s905w-tx3-mini.dts  | 22 +++++++++++++++++++
-> >  2 files changed, 23 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dts
-> >
-> > diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-> > index e55156dec237..a97c0e2d7bc6 100644
-> > --- a/arch/arm64/boot/dts/amlogic/Makefile
-> > +++ b/arch/arm64/boot/dts/amlogic/Makefile
-> > @@ -19,6 +19,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
-> >  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
-> >  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s805x-p241.dtb
-> >  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-p281.dtb
-> > +dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-tx3-mini.dtb
-> >  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-khadas-vim2.dtb
-> >  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-nexbox-a1.dtb
-> >  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q200.dtb
-> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dts
-> > new file mode 100644
-> > index 000000000000..789c819c99c4
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dts
-> > @@ -0,0 +1,22 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > +/*
-> > + * Copyright (c) 2018 Martin Blumenstingl <martin.blumenstingl@googlemail.com>.
-> > + * Based on meson-gxl-s905d-p231.dts:
-> > + * - Copyright (c) 2016 Endless Computers, Inc.
-> > + *   Author: Carlo Caione <carlo@endlessm.com>
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "meson-gxl-s905x.dtsi"
-> > +#include "meson-gx-p23x-q20x.dtsi"
-> > +
-> > +/ {
-> > +     compatible = "oranth,tx3-mini", "amlogic,s905w", "amlogic,meson-gxl";
-> > +     model = "Oranth Tanix TX3 Mini";
-> > +
-> > +     memory@0 {
-> > +             device_type = "memory";
-> > +             reg = <0x0 0x0 0x0 0x40000000>; /* 1 GiB or 2 GiB */
-> > +     };
-> > +};
-> >
+> > "dt-bindings: phy: ..." for the subject.
 >
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-thank you for reviewing the whole series!
+> Sorry.  Every subsystem has different conventions for this so I
+> usually just do a "git log" on the file and make my best guess.  I'll
+> try to remember this for next time though.
 
+NP. I'd like to add this info to MAINTAINERS or maybe a git commit
+hook could figure this out automagically.
 
-Regards
-Martin
+> In this case, though, it looks like this already landed.  I see this
+> patch in Kishon's next branch.
+>
+>
+> >> Fixes: efb05a50c956 ("phy: qcom-qmp: Add support for QMP V3 USB3 PHY")
+> >> Fixes: ac0d239936bd ("phy: qcom-qmp: Add support for runtime PM")
+> >> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> >> ---
+> >>
+> >>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 14 ++++++++++++--
+> >>  1 file changed, 12 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> >> index 266a1bb8bb6e..0c7629e88bf3 100644
+> >> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> >> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> >> @@ -12,7 +12,14 @@ Required properties:
+> >>              "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
+> >>              "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845.
+> >>
+> >> - - reg: offset and length of register set for PHY's common serdes block.
+> >> + - reg:
+> >> +   - For "qcom,sdm845-qmp-usb3-phy":
+> >> +     - index 0: address and length of register set for PHY's common serdes
+> >> +       block.
+> >> +     - named register "dp_com" (using reg-names): address and length of the
+> >> +       DP_COM control block.
+> >
+> > You need to list reg-names and what are the names for the other 2
+> > regions?
+>
+> Here's the code works.  You can tell me how you want this expressed in
+> the bindings:
+>
+> * In all cases the driver maps its main memory range (for the common
+> serdes block) without specifying any name.  This is equivalent to
+> asking for index 0.
+>
+> * For "qcom,sdm845-qmp-usb3-phy" the driver requests a second memory
+> range by name using the name "dp_com".
+>
+> ...basically the driver is inconsistent between using names and
+> indices and I was trying to document that fact.
+
+That's fine as long as the indices are fixed.
+
+>
+> I guess options:
+>
+> 1. I could reword this so it's clearer (open to suggestions)
+>
+> 2. I could add something to the bindings saying that the first reg
+> name should be "reg-base" or something.  Then the question is whether
+> we should go to the code and start enforcing that.  If we do choose to
+> enforce it then it's technically breaking compatibility (though I
+> doubt there is any real dts in the wild).  If we don't choose to
+> enforce it then why did we bother saying what it should be named?
+
+I think you need to state index 1 is dp_com (and only for
+"qcom,sdm845-qmp-usb3-phy") and a name for index 0. 'reg-base' doesn't
+seem great, but I don't have another suggestion.
+
+For the driver, it's not the driver's job to enforce any of this.
+
+Rob
