@@ -1,124 +1,39 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 18/19] dt-bindings: msm/disp: Add bindings
- for Snapdragon 845 DPU
-Date: Fri, 20 Jul 2018 16:43:09 -0400
-Message-ID: <20180720204315.19054-19-seanpaul@chromium.org>
-References: <20180720204315.19054-1-seanpaul@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180720204315.19054-1-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dovizu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Vitor soares <Vitor.Soares@synopsys.com>
+Subject: [PATCH 0/3] Add driver for Synopsys DesignWare I3C master IP
+Date: Fri, 20 Jul 2018 21:57:49 +0100
+Message-ID: <1532120272-17157-1-git-send-email-soares@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: boris.brezillon@bootlin.com, wsa@the-dreams.de, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de
+Cc: psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, Joao.Pinto@synopsys.com, Vitor.Soares@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSmV5a3VtYXIgU2Fua2FyYW4gPGpzYW5rYUBjb2RlYXVyb3JhLm9yZz4KCkFkZHMgYmlu
-ZGluZ3MgZm9yIFNuYXBkcmFnb24gODQ1IGRpc3BsYXkgcHJvY2Vzc2luZyB1bml0CgpDaGFuZ2Vz
-IGluIHYyOgotIFVzZSBTb0Mgc3BlY2lmaWMgY29tcGF0aWJsZXMgZm9yIG1kc3MgYW5kIGRwdSAo
-Um9iIEhlcnJpbmcpCi0gVXNlIGFzc2lnbmVkLWNsb2NrcyB0byBzZXQgaW5pdGlhbCBjbG9jayBm
-cmVxdWVuY3kgKFJvYiBIZXJyaW5nKQoKQ2hhbmdlcyBpbiB2MyAoYWxsIHN1Z2dlc3RlZCBieSBS
-b2IgSGVycmluZyk6Ci0gUmVuYW1lIG1kc3NfcGh5cyB0byBtZHNzCi0gQ29ycmVjdCBkZXNjcmlw
-dGlvbiBmb3IgY2xvY2tzL2Fzc2lnbmVkLWNsb2NrcwotIFJlbmFtZSBtZHBfcGh5cyB0byBtZHAK
-LSBSZW5hbWUgdmJpZl9waHlzIHRvIHZiaWYKLSBSZW1vdmUgcmVkdW5kYW50IGludGVycnVwdC1w
-YXJlbnQgZnJvbSBtZHNzX21kcAotIEZ1bGx5IHNwZWNpZnkgJ3JhbmdlcycgYW5kIHVzZSByZWxh
-dGl2ZSByZWcgYWRkcmVzcyBpbiBtZHNzX21kcAoKQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtl
-cm5lbC5vcmc+ClNpZ25lZC1vZmYtYnk6IEpleWt1bWFyIFNhbmthcmFuIDxqc2Fua2FAY29kZWF1
-cm9yYS5vcmc+ClNpZ25lZC1vZmYtYnk6IFJhamVzaCBZYWRhdiA8cnlhZGF2QGNvZGVhdXJvcmEu
-b3JnPgpTaWduZWQtb2ZmLWJ5OiBTZWFuIFBhdWwgPHNlYW5wYXVsQGNocm9taXVtLm9yZz4KLS0t
-CiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kcHUudHh0ICAgfCAxMzEgKysr
-KysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMTMxIGluc2VydGlvbnMoKykKIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9t
-c20vZHB1LnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L21zbS9kcHUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvbXNtL2RwdS50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAw
-MDAwLi5hZDJlODgzMDMyNGUKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZHB1LnR4dApAQCAtMCwwICsxLDEzMSBAQAorUXVh
-bGNvbW0gVGVjaG5vbG9naWVzLCBJbmMuIERQVSBLTVMKKworRGVzY3JpcHRpb246CisKK0Rldmlj
-ZSB0cmVlIGJpbmRpbmdzIGZvciBNU00gTW9iaWxlIERpc3BsYXkgU3Vic3l0ZW0oTURTUykgdGhh
-dCBlbmNhcHN1bGF0ZXMKK3N1Yi1ibG9ja3MgbGlrZSBEUFUgZGlzcGxheSBjb250cm9sbGVyLCBE
-U0kgYW5kIERQIGludGVyZmFjZXMgZXRjLgorVGhlIERQVSBkaXNwbGF5IGNvbnRyb2xsZXIgaXMg
-Zm91bmQgaW4gU0RNODQ1IFNvQy4KKworTURTUzoKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNv
-bXBhdGlibGU6ICJxY29tLHNkbTg0NS1tZHNzIgorLSByZWc6IHBoeXNpY2FsIGJhc2UgYWRkcmVz
-cyBhbmQgbGVuZ3RoIG9mIGNvbnRvbGxlcidzIHJlZ2lzdGVycy4KKy0gcmVnLW5hbWVzOiByZWdp
-c3RlciByZWdpb24gbmFtZXMuIFRoZSBmb2xsb3dpbmcgcmVnaW9uIGlzIHJlcXVpcmVkOgorICAq
-ICJtZHNzIgorLSBwb3dlci1kb21haW5zOiBhIHBvd2VyIGRvbWFpbiBjb25zdW1lciBzcGVjaWZp
-ZXIgYWNjb3JkaW5nIHRvCisgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dl
-ci9wb3dlcl9kb21haW4udHh0CistIGNsb2NrczogbGlzdCBvZiBjbG9jayBzcGVjaWZpZXJzIGZv
-ciBjbG9ja3MgbmVlZGVkIGJ5IHRoZSBkZXZpY2UuCistIGNsb2NrLW5hbWVzOiBkZXZpY2UgY2xv
-Y2sgbmFtZXMsIG11c3QgYmUgaW4gc2FtZSBvcmRlciBhcyBjbG9ja3MgcHJvcGVydHkuCisgIFRo
-ZSBmb2xsb3dpbmcgY2xvY2tzIGFyZSByZXF1aXJlZDoKKyAgKiAiaWZhY2UiCisgICogImJ1cyIK
-KyAgKiAiY29yZSIKKy0gaW50ZXJydXB0czogaW50ZXJydXB0IHNpZ25hbCBmcm9tIE1EU1MuCist
-IGludGVycnVwdC1jb250cm9sbGVyOiBpZGVudGlmaWVzIHRoZSBub2RlIGFzIGFuIGludGVycnVw
-dCBjb250cm9sbGVyLgorLSAjaW50ZXJydXB0LWNlbGxzOiBzcGVjaWZpZXMgdGhlIG51bWJlciBv
-ZiBjZWxscyBuZWVkZWQgdG8gZW5jb2RlIGFuIGludGVycnVwdAorICBzb3VyY2UsIHNob3VsZCBi
-ZSAxLgorLSBpb21tdXM6IHBoYW5kbGUgb2YgaW9tbXUgZGV2aWNlIG5vZGUuCistICNhZGRyZXNz
-LWNlbGxzOiBudW1iZXIgb2YgYWRkcmVzcyBjZWxscyBmb3IgdGhlIE1EU1MgY2hpbGRyZW4uIFNo
-b3VsZCBiZSAxLgorLSAjc2l6ZS1jZWxsczogU2hvdWxkIGJlIDEuCistIHJhbmdlczogcGFyZW50
-IGJ1cyBhZGRyZXNzIHNwYWNlIGlzIHRoZSBzYW1lIGFzIHRoZSBjaGlsZCBidXMgYWRkcmVzcyBz
-cGFjZS4KKworT3B0aW9uYWwgcHJvcGVydGllczoKKy0gYXNzaWduZWQtY2xvY2tzOiBsaXN0IG9m
-IGNsb2NrIHNwZWNpZmllcnMgZm9yIGNsb2NrcyBuZWVkaW5nIHJhdGUgYXNzaWdubWVudAorLSBh
-c3NpZ25lZC1jbG9jay1yYXRlczogbGlzdCBvZiBjbG9jayBmcmVxdWVuY2llcyBzb3J0ZWQgaW4g
-dGhlIHNhbWUgb3JkZXIgYXMKKyAgdGhlIGFzc2lnbmVkLWNsb2NrcyBwcm9wZXJ0eS4KKworTURQ
-OgorUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZTogInFjb20sc2RtODQ1LWRwdSIK
-Ky0gcmVnOiBwaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiBjb250cm9sbGVyJ3Mg
-cmVnaXN0ZXJzLgorLSByZWctbmFtZXMgOiByZWdpc3RlciByZWdpb24gbmFtZXMuIFRoZSBmb2xs
-b3dpbmcgcmVnaW9uIGlzIHJlcXVpcmVkOgorICAqICJtZHAiCisgICogInZiaWYiCistIGNsb2Nr
-czogbGlzdCBvZiBjbG9jayBzcGVjaWZpZXJzIGZvciBjbG9ja3MgbmVlZGVkIGJ5IHRoZSBkZXZp
-Y2UuCistIGNsb2NrLW5hbWVzOiBkZXZpY2UgY2xvY2sgbmFtZXMsIG11c3QgYmUgaW4gc2FtZSBv
-cmRlciBhcyBjbG9ja3MgcHJvcGVydHkuCisgIFRoZSBmb2xsb3dpbmcgY2xvY2tzIGFyZSByZXF1
-aXJlZC4KKyAgKiAiYnVzIgorICAqICJpZmFjZSIKKyAgKiAiY29yZSIKKyAgKiAidnN5bmMiCist
-IGludGVycnVwdHM6IGludGVycnVwdCBsaW5lIGZyb20gRFBVIHRvIE1EU1MuCistIHBvcnRzOiBj
-b250YWlucyB0aGUgbGlzdCBvZiBvdXRwdXQgcG9ydHMgZnJvbSBEUFUgZGV2aWNlLiBUaGVzZSBw
-b3J0cyBjb25uZWN0CisgIHRvIGludGVyZmFjZXMgdGhhdCBhcmUgZXh0ZXJuYWwgdG8gdGhlIERQ
-VSBoYXJkd2FyZSwgc3VjaCBhcyBEU0ksIERQIGV0Yy4KKworICBFYWNoIG91dHB1dCBwb3J0IGNv
-bnRhaW5zIGFuIGVuZHBvaW50IHRoYXQgZGVzY3JpYmVzIGhvdyBpdCBpcyBjb25uZWN0ZWQgdG8g
-YW4KKyAgZXh0ZXJuYWwgaW50ZXJmYWNlLiBUaGVzZSBhcmUgZGVzY3JpYmVkIGJ5IHRoZSBzdGFu
-ZGFyZCBwcm9wZXJ0aWVzIGRvY3VtZW50ZWQKKyAgaGVyZToKKwlEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0CisJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0CisKKwlQb3J0IDAgLT4gRFBVX0lOVEYxIChE
-U0kxKQorCVBvcnQgMSAtPiBEUFVfSU5URjIgKERTSTIpCisKK09wdGlvbmFsIHByb3BlcnRpZXM6
-CistIGFzc2lnbmVkLWNsb2NrczogbGlzdCBvZiBjbG9jayBzcGVjaWZpZXJzIGZvciBjbG9ja3Mg
-bmVlZGluZyByYXRlIGFzc2lnbm1lbnQKKy0gYXNzaWduZWQtY2xvY2stcmF0ZXM6IGxpc3Qgb2Yg
-Y2xvY2sgZnJlcXVlbmNpZXMgc29ydGVkIGluIHRoZSBzYW1lIG9yZGVyIGFzCisgIHRoZSBhc3Np
-Z25lZC1jbG9ja3MgcHJvcGVydHkuCisKK0V4YW1wbGU6CisKKwltZHNzOiBtZHNzQGFlMDAwMDAg
-eworCQljb21wYXRpYmxlID0gInFjb20sc2RtODQ1LW1kc3MiOworCQlyZWcgPSA8MHhhZTAwMDAw
-IDB4MTAwMD47CisJCXJlZy1uYW1lcyA9ICJtZHNzIjsKKworCQlwb3dlci1kb21haW5zID0gPCZj
-bG9ja19kaXNwY2MgMD47CisKKwkJY2xvY2tzID0gPCZnY2MgR0NDX0RJU1BfQUhCX0NMSz4sIDwm
-Z2NjIEdDQ19ESVNQX0FYSV9DTEs+LAorCQkJIDwmY2xvY2tfZGlzcGNjIERJU1BfQ0NfTURTU19N
-RFBfQ0xLPjsKKwkJY2xvY2stbmFtZXMgPSAiaWZhY2UiLCAiYnVzIiwgImNvcmUiOworCisJCWFz
-c2lnbmVkLWNsb2NrcyA9IDwmY2xvY2tfZGlzcGNjIERJU1BfQ0NfTURTU19NRFBfQ0xLPjsKKwkJ
-YXNzaWduZWQtY2xvY2stcmF0ZXMgPSA8MzAwMDAwMDAwPjsKKworCQlpbnRlcnJ1cHRzID0gPEdJ
-Q19TUEkgODMgSVJRX1RZUEVfTEVWRUxfSElHSD47CisJCWludGVycnVwdC1jb250cm9sbGVyOwor
-CQkjaW50ZXJydXB0LWNlbGxzID0gPDE+OworCisJCWlvbW11cyA9IDwmYXBwc19pb21tdSAwPjsK
-KworCQkjYWRkcmVzcy1jZWxscyA9IDwyPjsKKwkJI3NpemUtY2VsbHMgPSA8MT47CisJCXJhbmdl
-cyA9IDwwIDAgMHhhZTAwMDAwIDB4YjIwMDg+OworCisJCW1kc3NfbWRwOiBtZHBAYWUwMTAwMCB7
-CisJCQljb21wYXRpYmxlID0gInFjb20sc2RtODQ1LWRwdSI7CisJCQlyZWcgPSA8MCAweDEwMDAg
-MHg4ZjAwMD4sIDwwIDB4YjAwMDAgMHgyMDA4PjsKKwkJCXJlZy1uYW1lcyA9ICJtZHAiLCAidmJp
-ZiI7CisKKwkJCWNsb2NrcyA9IDwmY2xvY2tfZGlzcGNjIERJU1BfQ0NfTURTU19BSEJfQ0xLPiwK
-KwkJCQkgPCZjbG9ja19kaXNwY2MgRElTUF9DQ19NRFNTX0FYSV9DTEs+LAorCQkJCSA8JmNsb2Nr
-X2Rpc3BjYyBESVNQX0NDX01EU1NfTURQX0NMSz4sCisJCQkJIDwmY2xvY2tfZGlzcGNjIERJU1Bf
-Q0NfTURTU19WU1lOQ19DTEs+OworCQkJY2xvY2stbmFtZXMgPSAiaWZhY2UiLCAiYnVzIiwgImNv
-cmUiLCAidnN5bmMiOworCisJCQlhc3NpZ25lZC1jbG9ja3MgPSA8JmNsb2NrX2Rpc3BjYyBESVNQ
-X0NDX01EU1NfTURQX0NMSz4sCisJCQkJCSAgPCZjbG9ja19kaXNwY2MgRElTUF9DQ19NRFNTX1ZT
-WU5DX0NMSz47CisJCQlhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDwwIDAgMzAwMDAwMDAwIDE5MjAw
-MDAwPjsKKworCQkJaW50ZXJydXB0cyA9IDwwIElSUV9UWVBFX0xFVkVMX0hJR0g+OworCisJCQlw
-b3J0cyB7CisJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCQkJI3NpemUtY2VsbHMgPSA8MD47
-CisKKwkJCQlwb3J0QDAgeworCQkJCQlyZWcgPSA8MD47CisJCQkJCWRwdV9pbnRmMV9vdXQ6IGVu
-ZHBvaW50IHsKKwkJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHNpMF9pbj47CisJCQkJCX07CisJ
-CQkJfTsKKworCQkJCXBvcnRAMSB7CisJCQkJCXJlZyA9IDwxPjsKKwkJCQkJZHB1X2ludGYyX291
-dDogZW5kcG9pbnQgeworCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2kxX2luPjsKKwkJCQkJ
-fTsKKwkJCQl9OworCQkJfTsKKwkJfTsKKwl9OwotLSAKU2VhbiBQYXVsLCBTb2Z0d2FyZSBFbmdp
-bmVlciwgR29vZ2xlIC8gQ2hyb21pdW0gT1MKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2ZyZWVkcmVubwo=
+This patch series is a proposal for the I3C master driver for Synopsys IP.
+This patch is to be applied on top of I3C subsystem RFC V6 submitted
+by Boris Brezillon.
+
+Supported features:
+  Regular CCC commands.
+  I3C private transfers.
+  I2C transfers.
+
+Missing functionalities:
+  Hot-join.
+  IBI.
+
+Vitor soares (3):
+  i3c: master: Add driver for Synopsys DesignWare IP
+  dt-bindings: i3c: Document Synopsys DesignWare I3C master bindings
+  MAINTAINERS: Add myself as the dw-i3c-master module maintainer
+
+ .../devicetree/bindings/i3c/snps,dw-i3c-master.txt |   43 +
+ MAINTAINERS                                        |    6 +
+ drivers/i3c/master/Kconfig                         |   10 +
+ drivers/i3c/master/Makefile                        |    1 +
+ drivers/i3c/master/dw-i3c-master.c                 | 1255 ++++++++++++++++++++
+ 5 files changed, 1315 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
+ create mode 100644 drivers/i3c/master/dw-i3c-master.c
+
+-- 
+2.7.4
