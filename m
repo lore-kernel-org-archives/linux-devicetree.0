@@ -1,26 +1,79 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx7d: remove "operating-points" property for
- cpu1
-Date: Fri, 20 Jul 2018 10:48:09 +0800
-Message-ID: <20180720024808.GZ4576@dragon>
-References: <1531988659-9466-1-git-send-email-Anson.Huang@nxp.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [RFC PATCH v2 1/4] dt-bindings: misc: Add bindings for misc.
+ BMC control fields
+Date: Fri, 20 Jul 2018 14:56:13 +1000
+Message-ID: <483b76bac7cb8043d9d780d5ffa5e43438279887.camel@kernel.crashing.org>
+References: <20180711053122.30773-1-andrew@aj.id.au>
+         <20180711053122.30773-2-andrew@aj.id.au>
+         <20180711200450.GB17291@rob-hp-laptop>
+         <1531356830.3551458.1437853280.551CA8C5@webmail.messagingengine.com>
+         <CAL_JsqKpXxR4t_-3BOy-0mFePXkaSck_4PfHRD=OZQ-_-T5P=w@mail.gmail.com>
+         <b6ced4cad4d7ff78330181b2c893855c23103953.camel@kernel.crashing.org>
+         <1531463489.747186.1439263128.075AECE1@webmail.messagingengine.com>
+         <CAL_JsqLZo-=7UkuvvUFYdCR4asBBiWyC=Q1ryH=-HLU6vzf9tA@mail.gmail.com>
+         <ece91112ecfdc7218184c4c4519e455cf9397e11.camel@kernel.crashing.org>
+         <CAL_JsqL_bMXLAA0091-g8PmhXR5g5Pf2y2=ey7Ss5ofHm46sWw@mail.gmail.com>
+         <c69d0e7c3a95d83da87b566a62619462671a233b.camel@kernel.crashing.org>
+         <1531967302.2140539.1445583600.0F5ED287@webmail.messagingengine.com>
+         <9787b471abc49c0b3db60e3471473a7a5b45ade7.camel@kernel.crashing.org>
+         <1532045276.1219110.1446722072.546C1F9D@webmail.messagingengine.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1531988659-9466-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1532045276.1219110.1446722072.546C1F9D@webmail.messagingengine.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, viresh.kumar@linaro.org, Linux-imx@nxp.com
+To: Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh@kernel.org>, Eugene.Cho@dell.com, a.amelkin@yadro.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Joel Stanley <joel@jms.id.au>, stewart@linux.ibm.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 19, 2018 at 04:24:19PM +0800, Anson Huang wrote:
-> Commit b97872d4eb22 ("ARM: dts: imx: Add missing OPP properties for CPUs")
-> added "operating-points" property for all CPUs, but i.MX7D already has
-> "operating-points-v2" property on both CPUs, so no need to add
-> "operating-points" property again, this patch removes it.
+On Fri, 2018-07-20 at 09:37 +0930, Andrew Jeffery wrote:
+> > 
+> > Andrew, can you start with a list that shows what you expect us to need
+> > on our systems ?
+> > 
 > 
-> Fixes: b97872d4eb22 ("ARM: dts: imx: Add missing OPP properties for CPUs")
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Okay, our Witherspoon and Romulus platforms containing the ASPEED AST2500 currently need the following tuneables exposed:
+> 
+> > From the SCU:
+> 
+> - Debug UART enable
+> - VGA DAC mux
+> - VGA scratch registers 0-7
+> - LPC SuperIO decode enable
+> - VGA MMIO decode enable
+> 
+> > From the LPC controller:
+> 
+> - iLPC2AHB enable
+> - SuperIO scratch registers 0x20-0x2f
+> 
+> (The LPC controller is just as much of a collection of random bits as the SCU)
+> 
+> Lastly, our Palmetto platform uses an AST2400 which has fewer features compared to the AST2500. Its tuneable list is the same as the above with the exception of "Debug UART enable".
+> 
+> Tuneables that we may need to expose in the future include:
+> 
+> > From the SCU:
+> 
+> - PCI VID/DID for the BMC PCIe device
+> - VGA device enable (may need to be disabled if the platform contains a discrete graphics processor)
 
-Applied, thanks.
+Additionally there's a bunch of resigters controlling the mapping of
+various MMIO regions of the BMC PCIe device to portions of the BMC
+address space. I'm not sure what's the best way to handle that.
+
+This specific set might require a dedicated device as a subnode of
+the SCU in the DT that contains all the mappings as properties... 
+
+That or we consider them static enough and just whack it in u-boot.
+
+> > From the LPC controller:
+> 
+> - UART mux
+> 
+> Alexander, Eugene, can you chime in with your platforms' needs?
+> 
+> Cheers,
+> 
+> Andrew
