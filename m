@@ -1,19 +1,21 @@
-Return-Path: <robherring2@gmail.com>
-Date: Wed, 25 Jul 2018 11:34:34 -0600
-From: Rob Herring <robh@kernel.org>
+Return-Path: <SRS0=xiHA=KE=cogentembedded.com=sergei.shtylyov@kernel.org>
 Subject: Re: [PATCH V2 11/25] dt-bindings: PCI: qcom,ar7240: adds binding doc
-Message-ID: <20180725173434.GA17215@rob-hp-laptop>
 References: <20180720115842.8406-1-john@phrozen.org>
  <20180720115842.8406-12-john@phrozen.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <dddf28c5-f70f-871f-0072-ea9e09f3a410@cogentembedded.com>
+Date: Fri, 20 Jul 2018 19:11:05 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 In-Reply-To: <20180720115842.8406-12-john@phrozen.org>
-To: John Crispin <john@phrozen.org>
-Cc: James Hogan <jhogan@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
+To: John Crispin <john@phrozen.org>, James Hogan <jhogan@kernel.org>, Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Jul 20, 2018 at 01:58:28PM +0200, John Crispin wrote:
+On 07/20/2018 02:58 PM, John Crispin wrote:
+
 > With the driver being converted from platform_data to pure OF, we need to
 > also add some docs.
 > 
@@ -40,12 +42,6 @@ On Fri, Jul 20, 2018 at 01:58:28PM +0200, John Crispin wrote:
 > +	- "crp_base"	Configuration registers
 > +	- "ctrl_base"	Control registers
 > +	- "cfg_base"	IO Memory
-
-'_base' is redundant.
-
-Same question as v1 remains: IO or config space? IO space goes in ranges 
-and config space goes in reg.
-
 > +- #address-cells: set to <3>
 > +- #size-cells: set to <2>
 > +- ranges: ranges for the PCI memory and I/O regions
@@ -54,10 +50,6 @@ and config space goes in reg.
 > +	numbers.
 > +- #interrupt-cells: set to <1>
 > +- interrupt-parent: phandle to the MIPS IRQ controller
-
-This property is implied (and could be in a parent node). Sergei pointed 
-this out in v1 for the 7100.
-
 > +
 > +Optional properties:
 > +- interrupt-controller: define to enable the builtin IRQ cascade.
@@ -65,14 +57,15 @@ this out in v1 for the 7100.
 > +* Example for qca9557
 > +	pcie-controller@180c0000 {
 
-pcie@...
-
-Also pointed out in v1...
+   Just "pcie@180c0000".
 
 > +		compatible = "qcom,ar7240-pci";
 > +		#address-cells = <3>;
 > +		#size-cells = <2>;
 > +		bus-range = <0x0 0x0>;
+
+   Not described above.
+
 > +		reg = <0x180c0000 0x1000>,
 > +		      <0x180f0000 0x100>,
 > +		      <0x14000000 0x1000>;
@@ -81,13 +74,9 @@ Also pointed out in v1...
 > +			  0x1000000 0 0x00000000 0x00000000 0 0x00000001>;
 > +		interrupt-parent = <&intc2>;
 > +		interrupts = <1>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-> +
-> +		interrupt-map-mask = <0 0 0 1>;
-> +		interrupt-map = <0 0 0 0 &pcie0 0>;
-> +	};
-> -- 
-> 2.11.0
-> 
+
+   Not described also.
+
+[...]
+
+MBR, Sergei
