@@ -1,62 +1,46 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH RESEND 2/7] dt-bindings: bus: Add binding for the Allwinner
- MBUS controller
-Date: Fri, 20 Jul 2018 16:56:05 +0200
-Message-ID: <0dc202cef44d5b63505e11c979148c4ab80cff81.1532098561.git-series.maxime.ripard@bootlin.com>
-References: <cover.d2aafc48da035aed80793da89079e5da269b45b4.1532098561.git-series.maxime.ripard@bootlin.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] of: overlay: update phandle cache on overlay apply and
+ remove
+Date: Fri, 20 Jul 2018 09:06:50 -0600
+Message-ID: <20180720150650.GA32296@rob-hp-laptop>
+References: <1531429207-3245-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.d2aafc48da035aed80793da89079e5da269b45b4.1532098561.git-series.maxime.ripard@bootlin.com>
-In-Reply-To: <cover.d2aafc48da035aed80793da89079e5da269b45b4.1532098561.git-series.maxime.ripard@bootlin.com>
-References: <cover.d2aafc48da035aed80793da89079e5da269b45b4.1532098561.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Yong Deng <yong.deng@magewell.com>, Robin Murphy <robin.murphy@arm.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1531429207-3245-1-git-send-email-frowand.list@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: frowand.list@gmail.com
+Cc: Alan Tull <atull@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIE1CVVMgY29udHJvbGxlciBkcml2ZXMgdGhlIE1CVVMgdGhhdCBvdGhlciBkZXZpY2VzIGlu
-IHRoZSBTb0Mgd2lsbAp1c2UgdG8gcGVyZm9ybSBETUEuIEl0IGFsc28gaGFzIGEgcmVnaXN0ZXIg
-aW50ZXJmYWNlIHRoYXQgYWxsb3dzIHRvCm1vbml0b3IgYW5kIGNvbnRyb2wgdGhlIGJhbmR3aWR0
-aCBhbmQgcHJpb3JpdGllcyBmb3IgbWFzdGVycyBvbiB0aGF0CmJ1cy4KClNpZ25lZC1vZmYtYnk6
-IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAYm9vdGxpbi5jb20+Ci0tLQogRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3N1bnhpLW1idXMudHh0IHwgMzUgKysrKysrKysrKysr
-KysrKystCiAxIGZpbGUgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAw
-NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zdW54aS1tYnVzLnR4dAoKZGlm
-ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zdW54aS1tYnVzLnR4
-dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zdW54aS1tYnVzLnR4dApuZXcg
-ZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLjQzNmRmMGNhYzlkMAotLS0gL2Rl
-di9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zdW54aS1tYnVz
-LnR4dApAQCAtMCwwICsxLDM1IEBACitBbGx3aW5uZXIgTWVtb3J5IEJ1cyAoTUJVUykgY29udHJv
-bGxlcgorCitUaGUgTUJVUyBjb250cm9sbGVyIGRyaXZlcyB0aGUgTUJVUyB0aGF0IG90aGVyIGRl
-dmljZXMgaW4gdGhlIFNvQyB3aWxsCit1c2UgdG8gcGVyZm9ybSBETUEuIEl0IGFsc28gaGFzIGEg
-cmVnaXN0ZXIgaW50ZXJmYWNlIHRoYXQgYWxsb3dzIHRvCittb25pdG9yIGFuZCBjb250cm9sIHRo
-ZSBiYW5kd2lkdGggYW5kIHByaW9yaXRpZXMgZm9yIG1hc3RlcnMgb24gdGhhdAorYnVzLgorCitS
-ZXF1aXJlZCBwcm9wZXJ0aWVzOgorIC0gY29tcGF0aWJsZTogTXVzdCBiZSBvbmUgb2Y6CisJLSBh
-bGx3aW5uZXIsc3VuNWktYTEzLW1idXMKKyAtIHJlZzogT2Zmc2V0IGFuZCBsZW5ndGggb2YgdGhl
-IHJlZ2lzdGVyIHNldCBmb3IgdGhlIGNvbnRyb2xsZXIKKyAtIGNsb2NrczogcGhhbmRsZSB0byB0
-aGUgY2xvY2sgZHJpdmluZyB0aGUgY29udHJvbGxlcgorIC0gZG1hLXJhbmdlczogc2VlIGJvb3Rp
-bmctd2l0aG91dC1vZi50eHQKKyAtICNkbWEtcGFyZW50LWNlbGxzOiBNdXN0IGJlIG9uZSwgd2l0
-aCB0aGUgYXJndW1lbnQgYmVpbmcgdGhlIE1CVVMgcG9ydAorICAgSUQKKworRWFjaCBkZXZpY2Ug
-aGF2aW5nIHRvIHBlcmZvcm0gdGhlaXIgRE1BIHRocm91Z2ggdGhlIE1CVVMgbXVzdCBoYXZlIHRo
-ZQorZG1hLXBhcmVudCBwcm9wZXJ0eSBzZXQgdG8gdGhlIE1CVVMgY29udHJvbGxlciwgYXMgZG9j
-dW1lbnRlZCBpbgorYm9vdGluZy13aXRob3V0LW9mLnR4dC4KKworRXhhbXBsZToKKworbWJ1czog
-ZHJhbS1jb250cm9sbGVyQDFjMDEwMDAgeworCWNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjVp
-LWExMy1tYnVzIjsKKwlyZWcgPSA8MHgwMWMwMTAwMCAweDEwMDA+OworCWNsb2NrcyA9IDwmY2N1
-IENMS19NQlVTPjsKKwlkbWEtcmFuZ2VzID0gPDB4MDAwMDAwMDAgMHg0MDAwMDAwMCAweDIwMDAw
-MDAwPjsKKwkjZG1hLXBhcmVudC1jZWxscyA9IDwxPjsKK307CisKK2ZlMDogZGlzcGxheS1mcm9u
-dGVuZEAxZTAwMDAwIHsKKwljb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW41aS1hMTMtZGlzcGxh
-eS1mcm9udGVuZCI7CisJLi4uCisJZG1hLXBhcmVudCA9IDwmbWJ1cyAxOT47Cit9OwotLSAKZ2l0
-LXNlcmllcyAwLjkuMQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWwK
+On Thu, Jul 12, 2018 at 02:00:07PM -0700, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+> 
+> A comment in the review of the patch adding the phandle cache said that
+> the cache would have to be updated when modules are applied and removed.
+> This patch implements the cache updates.
+> 
+> Fixes: 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of of_find_node_by_phandle()")
+> Reported-by: Alan Tull <atull@kernel.org>
+> Suggested-by: Alan Tull <atull@kernel.org>
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> ---
+> 
+> Changes since RFC:
+>   - update code comment to mention race condition avoidance
+> 
+> For the RFC version of this patch, the 0day test reported a general
+> protection fault from the KASAN runtime memory debugger on x86_64
+> in qemu.  The GPF was in a devicetree unittest.
+> 
+> 0day tested the patch on v4.17-rc1, with some other patches applied.
+> I was unable to replicate the GPF on v4.18-rc1 with just this patch
+> applied.  I was also unable to replicate the GPF on a clone of the
+> v4.17-rc1 0day repository, using the 0day kernel config.  I will
+> reply to this email with the 0day GPF report.
+
+Didn't see any 0-day issues, so I've applied and it is in Linus' tree 
+now.
+
+Rob
