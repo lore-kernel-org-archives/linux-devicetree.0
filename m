@@ -1,53 +1,99 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v6 4/4] MAINTAINERS: add an entry for MediaTek Bluetooth driver
-Date: Fri, 20 Jul 2018 13:12:30 +0800
-Message-ID: <28888e6b95eb1dee15d9b841714a6eafcabe5252.1532060309.git.sean.wang@mediatek.com>
-References: <cover.1532060309.git.sean.wang@mediatek.com>
+From: Manish Narani <MNARANI@xilinx.com>
+Subject: RE: [RFC PATCH 3/3] sdhci: arasan: Add support to read Tap Delay
+ values from DT
+Date: Fri, 20 Jul 2018 06:23:16 +0000
+Message-ID: <SN6PR02MB4959F4BE25593EC7589DC34AC1510@SN6PR02MB4959.namprd02.prod.outlook.com>
+References: <1528373500-24663-1-git-send-email-manish.narani@xilinx.com>
+ <1528373500-24663-3-git-send-email-manish.narani@xilinx.com>
+ <CAPDyKFoGJOE-h4rLqzMO=wzNjkfcuU_oQ3NLK5=OQfSMj3dDHg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <cover.1532060309.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFoGJOE-h4rLqzMO=wzNjkfcuU_oQ3NLK5=OQfSMj3dDHg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Moritz Fischer <mdf@kernel.org>, "stefan.krsmanovic@aggios.com" <stefan.krsmanovic@aggios.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Michal Simek <michals@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-
-Add an entry for the MediaTek Bluetooth driver.
-
-Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 20de9a5..5d81cc1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8780,6 +8780,14 @@ F:	include/uapi/linux/meye.h
- F:	include/uapi/linux/ivtv*
- F:	include/uapi/linux/uvcvideo.h
- 
-+MEDIATEK BLUETOOTH DRIVER
-+M:	Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+L:	linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+L:	linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
-+F:	drivers/bluetooth/btmtkuart.c
-+
- MEDIATEK CIR DRIVER
- M:	Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
- S:	Maintained
--- 
-2.7.4
+SGkgVWZmZSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBVbGYgSGFu
+c3NvbiBbbWFpbHRvOnVsZi5oYW5zc29uQGxpbmFyby5vcmddDQo+IFNlbnQ6IFR1ZXNkYXksIEp1
+bHkgMTAsIDIwMTggMjowMiBQTQ0KPiBUbzogTWFuaXNoIE5hcmFuaSA8TU5BUkFOSUB4aWxpbngu
+Y29tPg0KPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFu
+ZA0KPiA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBDYXRhbGluIE1hcmluYXMgPGNhdGFsaW4ubWFy
+aW5hc0Bhcm0uY29tPjsgV2lsbA0KPiBEZWFjb24gPHdpbGwuZGVhY29uQGFybS5jb20+OyBNb3Jp
+dHogRmlzY2hlciA8bWRmQGtlcm5lbC5vcmc+Ow0KPiBzdGVmYW4ua3JzbWFub3ZpY0BhZ2dpb3Mu
+Y29tOyBMaW51eCBBUk0gPGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+
+OyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVs
+Lm9yZz47IGxpbnV4LW1tY0B2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJu
+ZWwub3JnOyBBZHJpYW4gSHVudGVyIDxhZHJpYW4uaHVudGVyQGludGVsLmNvbT47DQo+IE1pY2hh
+bCBTaW1layA8bWljaGFsc0B4aWxpbnguY29tPg0KPiBTdWJqZWN0OiBSZTogW1JGQyBQQVRDSCAz
+LzNdIHNkaGNpOiBhcmFzYW46IEFkZCBzdXBwb3J0IHRvIHJlYWQgVGFwIERlbGF5DQo+IHZhbHVl
+cyBmcm9tIERUDQo+IA0KPiBPbiA3IEp1bmUgMjAxOCBhdCAxNDoxMSwgTWFuaXNoIE5hcmFuaSA8
+bWFuaXNoLm5hcmFuaUB4aWxpbnguY29tPiB3cm90ZToNCj4gPiBUaGlzIHBhdGNoIGFkZHMgc3Vw
+cG9ydCBmb3IgcmVhZGluZyBUYXAgRGVsYXkgdmFsdWVzIGZyb20gRGV2aWNlIFRyZWUNCj4gPiBh
+bmQgd3JpdGUgdGhlbSB2aWEgZWVtaSBjYWxscy4gVGhlIG1hY3JvcyBjb250YWluaW5nIHRoZXNl
+IHRhcCBkZWxheQ0KPiA+IHZhbHVlcyBhcmUgcmVtb3ZlZCBmcm9tIHRoZSBkcml2ZXIuDQo+ID4N
+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBNYW5pc2ggTmFyYW5pIDxtYW5pc2gubmFyYW5pQHhpbGlueC5j
+b20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvbW1jL2hvc3Qvc2RoY2ktb2YtYXJhc2FuLmMgfCAx
+MzENCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmls
+ZSBjaGFuZ2VkLCAxMzEgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvbW1jL2hvc3Qvc2RoY2ktb2YtYXJhc2FuLmMNCj4gPiBiL2RyaXZlcnMvbW1jL2hvc3Qvc2Ro
+Y2ktb2YtYXJhc2FuLmMNCj4gPiBpbmRleCBlMzMzMmE1Li5mYzBmZDAxIDEwMDY0NA0KPiA+IC0t
+LSBhL2RyaXZlcnMvbW1jL2hvc3Qvc2RoY2ktb2YtYXJhc2FuLmMNCj4gPiArKysgYi9kcml2ZXJz
+L21tYy9ob3N0L3NkaGNpLW9mLWFyYXNhbi5jDQo+ID4gQEAgLTM2LDYgKzM2LDggQEANCj4gPg0K
+PiA+ICAjZGVmaW5lIFBIWV9DTEtfVE9PX1NMT1dfSFogICAgICAgICAgICA0MDAwMDANCj4gPg0K
+PiA+ICsjZGVmaW5lIE1NQ19CQU5LMiAgICAgICAgICAgICAgMHgyDQo+ID4gKw0KPiA+ICAvKg0K
+PiA+ICAgKiBPbiBzb21lIFNvQ3MgdGhlIHN5c2NvbiBhcmVhIGhhcyBhIGZlYXR1cmUgd2hlcmUg
+dGhlIHVwcGVyIDE2LWJpdHMgb2YNCj4gPiAgICogZWFjaCAzMi1iaXQgcmVnaXN0ZXIgYWN0IGFz
+IGEgd3JpdGUgbWFzayBmb3IgdGhlIGxvd2VyIDE2LWJpdHMuDQo+ID4gVGhpcyBhbGxvd3MgQEAg
+LTkwLDYgKzkyLDEwIEBAIHN0cnVjdCBzZGhjaV9hcmFzYW5fZGF0YSB7DQo+ID4gICAgICAgICBz
+dHJ1Y3Qgc2RoY2lfaG9zdCAqaG9zdDsNCj4gPiAgICAgICAgIHN0cnVjdCBjbGsgICAgICAqY2xr
+X2FoYjsNCj4gPiAgICAgICAgIHN0cnVjdCBwaHkgICAgICAqcGh5Ow0KPiA+ICsgICAgICAgdTMy
+IG1pb19iYW5rOw0KPiA+ICsgICAgICAgdTMyIGRldmljZV9pZDsNCj4gPiArICAgICAgIHUzMiBp
+dGFwZGx5W01NQ19USU1JTkdfTU1DX0hTNDAwICsgMV07DQo+ID4gKyAgICAgICB1MzIgb3RhcGRs
+eVtNTUNfVElNSU5HX01NQ19IUzQwMCArIDFdOw0KPiA+ICAgICAgICAgYm9vbCAgICAgICAgICAg
+IGlzX3BoeV9vbjsNCj4gPg0KPiA+ICAgICAgICAgYm9vbCAgICAgICAgICAgIGhhc19jcWU7DQo+
+ID4gQEAgLTE2MCwxMSArMTY2LDM2IEBAIHN0YXRpYyBpbnQgc2RoY2lfYXJhc2FuX3N5c2Nvbl93
+cml0ZShzdHJ1Y3QNCj4gc2RoY2lfaG9zdCAqaG9zdCwNCj4gPiAgICAgICAgIHJldHVybiByZXQ7
+DQo+ID4gIH0NCj4gPg0KPiA+ICsvKioNCj4gPiArICogYXJhc2FuX3p5bnFtcF9zZXRfdGFwX2Rl
+bGF5IC0gUHJvZ3JhbSB0aGUgdGFwIGRlbGF5cy4NCj4gPiArICogQGRldmljZWlkOiAgICAgICAg
+ICBVbmlxdWUgSWQgb2YgZGV2aWNlDQo+ID4gKyAqIEBpdGFwX2RlbGF5OiAgICAgICAgICAgICAg
+ICBJbnB1dCBUYXAgRGVsYXkNCj4gPiArICogQG9pdGFwX2RlbGF5OiAgICAgICBPdXRwdXQgVGFw
+IERlbGF5DQo+ID4gKyAqLw0KPiA+ICtzdGF0aWMgdm9pZCBhcmFzYW5fenlucW1wX3NldF90YXBf
+ZGVsYXkodTggZGV2aWNlaWQsIHU4IGl0YXBfZGVsYXksDQo+ID4gK3U4IG90YXBfZGVsYXkpIHsN
+Cj4gPiArICAgICAgIGNvbnN0IHN0cnVjdCB6eW5xbXBfZWVtaV9vcHMgKmVlbWlfb3BzID0NCj4g
+PiArenlucW1wX3BtX2dldF9lZW1pX29wcygpOw0KPiANCj4gTm8gdGhhbmtzIQ0KPiANCj4gSXNu
+J3QgdGhlcmUgYSBtb3JlIGdlbmVyaWMgZnJhbWV3b3JrIHdlIGNhbiB1c2UgdG8gY2hhbmdlIHRo
+ZSB0YXAgdmFsdWVzLA0KPiByYXRoZXIgdGhhbiBjYWxsaW5nIFNvQyBzcGVjaWZpYyBmdW5jdGlv
+bnMgZnJvbSB0aGUgZHJpdmVyPw0KWWVzLCBUaGFua3MgZm9yIHlvdXIgc3VnZ2VzdGlvbi4gSSB3
+aWxsIHdvcmsgb24gdGhlIGdlbmVyaWMgZnJhbWV3b3JrIHdoaWNoIHdpbGwgYmUgdXNlZCB0byBj
+aGFuZ2UgdGFwIHZhbHVlcw0KVmlhIFNvQyBkcml2ZXJzLg0KPiANCj4gQlRXLCB3aGF0IGlzIGEg
+dGFwIHZhbHVlLCBtb3JlIGV4YWN0bHk/DQo+IFdoYXQgZG9lcyBjaGFuZ2luZyBhIHRhcCB2YWx1
+ZSBtZWFuIGFuZCB3aGVyZSBkb2VzIHRoZSBwcm9wZXJ0eSBiZWxvbmcsDQo+IHJlYWxseT8NClRh
+cCBWYWx1ZSBpcyB0aGUgZGVsYXkgb2YgY2xvY2sgcGhhc2Ugd2hpY2ggaXMgdXNlZCB0byBhZGp1
+c3QgcGhhc2UgdG8gdGhlIHdvcmtpbmcgdmFsdWUuIFRoZSBhdXRvIHR1bmluZw0KcHJvY2VzcyBn
+ZW5lcmFsbHkgc2V0cyB0YXAgdmFsdWVzIGludGVybmFsbHkgaW4gY29udHJvbGxlciBpbiBTRCBV
+SFMgbW9kZXMuIEJ1dCBmb3Igb3RoZXIgbW9kZXMgd2hlcmUNCmF1dG8gdHVuaW5nIGlzIGFwcGxp
+Y2FibGUsIHdlIGFyZSBkZXRlcm1pbmluZyB0YXAgdmFsdWVzIHZpYSB0cmlhbCAmIGVycm9yIG1l
+dGhvZCBmb3Igc3BlY2lmaWMgU29DLg0KPiA+IA0KPiBPZiBjb3Vyc2UgdGhpcyBkb2Vzbid0IGV2
+ZW4gY29tcGlsZSwgYXMgeW91IGhhdmUgYSBkZXBlbmRlbmN5IHRvIGFub3RoZXINCj4gc2VyaWVz
+LiBOZXh0IHRpbWUsIHBsZWFzZSBjbGFyaWZ5IHRoYXQgaW4gYSBjb3Zlci1sZXR0ZXIgKG1heWJl
+IHlvdSBkaWQsIGJ1dCBJDQo+IGNhbid0IGZpbmQgaXQpLg0KPiANCj4gPiArICAgICAgIHUzMiBu
+b2RlX2lkID0gKGRldmljZWlkID09IDApID8gTk9ERV9TRF8wIDogTk9ERV9TRF8xOw0KPiA+ICsN
+Cj4gPiArICAgICAgIGlmICghZWVtaV9vcHMgfHwgIWVlbWlfb3BzLT5pb2N0bCkNCj4gPiArICAg
+ICAgICAgICAgICAgcmV0dXJuOw0KPiA+ICsNCj4gPiArICAgICAgIGlmIChpdGFwX2RlbGF5KQ0K
+PiA+ICsgICAgICAgICAgICAgICBlZW1pX29wcy0+aW9jdGwobm9kZV9pZCwgSU9DVExfU0VUX1NE
+X1RBUERFTEFZLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgUE1fVEFQREVM
+QVlfSU5QVVQsIGl0YXBfZGVsYXksIE5VTEwpOw0KPiA+ICsNCj4gPiArICAgICAgIGlmIChvdGFw
+X2RlbGF5KQ0KPiA+ICsgICAgICAgICAgICAgICBlZW1pX29wcy0+aW9jdGwobm9kZV9pZCwgSU9D
+VExfU0VUX1NEX1RBUERFTEFZLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+UE1fVEFQREVMQVlfT1VUUFVULCBvdGFwX2RlbGF5LCBOVUxMKTsNCj4gPiArfQ0KPiANCj4gQW5v
+dGhlciBvdmVyYWxsIGNvbW1lbnQgZm9yIHRoZSBzZXJpZXMuDQo+IA0KPiBJIHdvdWxkIHJlY29t
+bWVuZCB0byBjaGFuZ2UgdGhlIG9yZGVyIG9mIHRoZSBwYXRjaGVzIGluIHRoZSBzZXJpZXMuDQo+
+IExldCB0aGUgRFQgZG9jIGNoYW5nZSBjb21lIGZpcnN0LCBuZXh0IHRoZSBkcml2ZXIgY2hhbmdl
+IGFuZCBmaW5hbGx5IHRoZSBjaGFuZ2UNCj4gdG8gdGhlIERUUyBmaWxlKHMpLiBUaGlzIG1ha2Vz
+IGl0IGVhc2llciB0byBmb2xsb3cgYW5kIHJldmlldy4NClN1cmUsIEkgd2lsbCBkbyB0aGF0Lg0K
+DQpUaGFua3MgJiBSZWdhcmRzLA0KTWFuaXNoDQoNCj4gDQo+IFsuLi5dDQo+IA0KPiBLaW5kIHJl
+Z2FyZHMNCj4gVWZmZQ0K
