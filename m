@@ -1,67 +1,39 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: sgtl5000: fix spelling in devicetree binding document" to the asoc tree
-Date: Fri, 20 Jul 2018 13:20:01 +0100
-Message-ID: <E1fgUO9-0006FG-HW@debutante>
-References: <20180720075302.21079-1-marcel@ziswiler.com>
+From: Aapo Vienamo <avienamo@nvidia.com>
+Subject: [PATCH 0/7] Tegra SDHCI enable 1.8 V signaling on Tegar210 and Tegra186
+Date: Fri, 20 Jul 2018 15:45:39 +0300
+Message-ID: <1532090746-15863-1-git-send-email-avienamo@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180720075302.21079-1-marcel@ziswiler.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc: Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>alsa-devel@alsa-project.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Aapo Vienamo <avienamo@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Reconfigure pad voltages as part of mmc voltage switching on
+controllers with adjustable voltages. Allow for reconfiguration of the
+signaling voltage of SDMMC1 on Tegra210 P2597 and fix SDMMC4 signaling
+voltage regulator configuration on Tegra210 P2180.
 
-   ASoC: sgtl5000: fix spelling in devicetree binding document
+This series depends on the "Tegra PMC pinctrl pad configuration" series posted
+earlier.
 
-has been applied to the asoc tree at
+Aapo Vienamo (7):
+  dt-bindings: Document Tegra SDHCI pinctrl bindings
+  mmc: tegra: Reconfigure pad voltages during voltage switching
+  arm64: dts: Add Tegra210 sdmmc pinctrl voltage states
+  arm64: dts: Add Tegra186 sdmmc pinctrl voltage states
+  arm64: dts: tegra210-p2180: Allow ldo2 to go down to 1.8 V
+  arm64: dts: tegra210-p2180: Correct sdmmc4 vqmmc-supply
+  arm64: dts: tegra210-p2597: Remove no-1-8-v from sdmmc1
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+ .../bindings/mmc/nvidia,tegra20-sdhci.txt          | 22 ++++++
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi           | 40 ++++++++++
+ arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi     | 12 +--
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |  1 -
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           | 27 +++++++
+ drivers/mmc/host/sdhci-tegra.c                     | 91 ++++++++++++++++++++--
+ 6 files changed, 176 insertions(+), 17 deletions(-)
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 486c16f2b5d1eb12339fb7a020961ea1c40e619f Mon Sep 17 00:00:00 2001
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Date: Fri, 20 Jul 2018 09:53:02 +0200
-Subject: [PATCH] ASoC: sgtl5000: fix spelling in devicetree binding document
-
-This fixes a spelling mistake.
-
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/sound/sgtl5000.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/sgtl5000.txt b/Documentation/devicetree/bindings/sound/sgtl5000.txt
-index 0f214457476f..9c58f724396a 100644
---- a/Documentation/devicetree/bindings/sound/sgtl5000.txt
-+++ b/Documentation/devicetree/bindings/sound/sgtl5000.txt
-@@ -17,7 +17,7 @@ Optional properties:
- 
- - VDDD-supply : the regulator provider of VDDD
- 
--- micbias-resistor-k-ohms : the bias resistor to be used in kOmhs
-+- micbias-resistor-k-ohms : the bias resistor to be used in kOhms
- 	The resistor can take values of 2k, 4k or 8k.
- 	If set to 0 it will be off.
- 	If this node is not mentioned or if the value is unknown, then
 -- 
-2.18.0
+2.7.4
