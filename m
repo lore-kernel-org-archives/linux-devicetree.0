@@ -1,58 +1,63 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v3 5/7] dt-bindings: Add Tegra PMC pad configuration
- bindings
-Date: Fri, 20 Jul 2018 12:16:04 +0100
-Message-ID: <cb67ced4-eef8-abb5-5706-3282a55edbb2@nvidia.com>
-References: <1531396813-6581-1-git-send-email-avienamo@nvidia.com>
- <1531396813-6581-6-git-send-email-avienamo@nvidia.com>
- <20180716154309.GA16477@rob-hp-laptop>
- <20180717152318.3608e3f9@dhcp-10-21-25-168>
- <CAL_JsqL1F0RF_6=ho0pa7Uh4AUsyvFRDGM50gN4=6_+MwBfGYQ@mail.gmail.com>
- <20180717183020.5ab9bfa6@dhcp-10-21-25-168>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 00/10] Add the I3C subsystem
+Date: Fri, 20 Jul 2018 13:28:10 +0200
+Message-ID: <CAK8P3a1t2fhdw7HwxNkOs9o2pBECZ0ZdOysA=r2SPTWEvx76kw@mail.gmail.com>
+References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
+ <CAK8P3a2MP5+oFz--e+BM24D8Ahw7H_RKgN1S6wY1nQE6JL0dmw@mail.gmail.com>
+ <2ab0ab75-2df0-2714-f007-c33b25481016@axentia.se> <20180720101206.tv7nsoanwo5ftnia@ninjato>
+ <CAK8P3a2Pqo5DuYBb09+w4nGWGOw+e_tZPxnA06qjNO_6Hw6NvQ@mail.gmail.com> <21b269c5-a3a7-c5de-c81e-c9c9301ae13e@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180717183020.5ab9bfa6@dhcp-10-21-25-168>
-Content-Language: en-US
+In-Reply-To: <21b269c5-a3a7-c5de-c81e-c9c9301ae13e@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Aapo Vienamo <avienamo@nvidia.com>, Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Mikko Perttunen <mperttunen@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Boris Brezillon <boris.brezillon@bootlin.com>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@ar>
 List-Id: devicetree@vger.kernel.org
 
-Adding Linus ...
+On Fri, Jul 20, 2018 at 1:13 PM, Peter Rosin <peda@axentia.se> wrote:
+> On 2018-07-20 12:57, Arnd Bergmann wrote:
+>> * What I understand from reading i2c-demux-pinctrl.c, a slave device
+>>   will only ever be observable from one master at a time, when you
+>>   switch over, all children get removed on one master and added to
+>>   the other one, to be probed again by their respective drivers.
+>>   I can see this as a useful feature on i3c as well, in particular to
+>>   deal with the situation where we have i2c slaves connected to a
+>>   pinmux that can switch them between an i3c master and an
+>>   i2c-only master (possibly a gpio based one). That particular use
+>>   case however doesn't seem to fix well in the current code, which
+>>   is structure around i3c buses.
+>
+> It's pretty easy to come up with examples where this reprobing is
+> not desirable at all. E.g. if one of the involved I2C devices is
+> a HDMI encoder (I have a TDA19988 here) sitting in the middle of the
+> graphics pipeline. Blink-blink on the screen because some *other*
+> unrelated device needed to be accessed by an alternative master. Not
+> pretty.
 
-On 17/07/18 16:30, Aapo Vienamo wrote:
+Agreed, we definitely don't want to reprobe all devices during normal
+operation for i3c master handover.
 
-...
+What is the least contrived use case that you can think of where we
+would want to use one master to talk to one device on the bus,
+but another master to talk to another device on the same bus?
+I still hope that we can decide that this is not a useful scenario
+at all.
 
->>>>> +Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt.
->>>>> +
->>>>> +The values accepted by power-source property are
->>>>> +TEGRA_IO_PAD_VOLTAGE_1V8 and TEGRA_IO_PAD_VOLTAGE_3V3, which are defined
->>>>> +in dt-bindings/pinctrl/pinctrl-tegra-io-pad.h.  
->>>>
->>>> You need to list out what properties the child nodes can have.
->>>>
->>>> power-source needs a vendor prefix.  
->>>
->>> Isn't it a generic pinctrl property?  
->>
->> I don't know offhand. Doesn't look like it if you have custom values.
-> 
-> It's listed under "Supported generic properties" in
-> pinctrl-bindings.txt. The convention seems to be not to add a vendor
-> prefix even though such custom macro values are used. The property is
-> currently used by qcom,pmic-gpio, qcom,pmic-mpp, and renesas,pfc-pinctrl.
-> I could not find a bindings document describing it with a vendor prefix.
-Looking at other users of the 'power-source' property it is not clear to
-me if the values should/can be vendor specific or not. I see cases where
-some people use definitions and others use actual voltages. 
+If we find a case in which it is needed, we could still deal with it
+like this:
+- enumerate all slaves connected to the bus for each of the
+  two masters
+- mark each slave as status="enabled" in at most one of the
+  buses, and as disabled everywhere else
+- Use dynamic handover according to the bus protocol to
+  switch masters without having Linux even know that the
+  two buses are shared.
 
-Linus, any recommendations here?
+That scenario would then fall completely into the "secondary
+master handover" category but require no special handling
+in the i3c layer beyond what we need for secondary masters
+that are managed by something outside of the kernel's
+score (a microcontroller, firmware, ...).
 
-Cheers
-Jon	
-
--- 
-nvpublic
+       Arnd
