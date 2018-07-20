@@ -1,28 +1,102 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 5/7] Documentation: rockchip: grf: add grf and pmugrf
- description for px30
-Date: Fri, 20 Jul 2018 10:56:55 -0600
-Message-ID: <20180720165655.GA12289@rob-hp-laptop>
-References: <1531813747-8804-1-git-send-email-cl@rock-chips.com>
- <1531814161-8940-1-git-send-email-cl@rock-chips.com>
+From: Jolly Shah <JOLLYS@xilinx.com>
+Subject: RE: [PATCH 1/2] dt-bindings: power: Add ZynqMP power domain bindings
+Date: Fri, 20 Jul 2018 16:57:55 +0000
+Message-ID: <SN1PR02MB37582A80B36517973F287F82B8510@SN1PR02MB3758.namprd02.prod.outlook.com>
+References: <1519775750-21297-1-git-send-email-jollys@xilinx.com>
+        <1519775750-21297-2-git-send-email-jollys@xilinx.com>
+        <20180305223905.65nnunv63fyg7bye@rob-hp-laptop>
+        <CGME20180306075954epcas5p2bbfb21f146ab879b60d004b73187a5e5@epcas5p2.samsung.com>
+        <CAMuHMdVpWciek2xow1Y1W7jga6BEbAZ7OhnyviRsXK39vYGyXw@mail.gmail.com>
+        <d47ed37f-057f-b510-de70-1140dad1b7ad@samsung.com>
+        <DM2PR0201MB07670C06F504F97EF4E4BAD4B8D00@DM2PR0201MB0767.namprd02.prod.outlook.com>
+        <SN1PR02MB37588BFF357865F4C9628D99B8910@SN1PR02MB3758.namprd02.prod.outlook.com>
+ <be5cecb2-3d0d-22f8-48a2-f94ed9546e04@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1531814161-8940-1-git-send-email-cl@rock-chips.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: cl@rock-chips.com
-Cc: heiko@sntech.de, mark.rutland@arm.com, klaus.goger@theobroma-systems.com, jagan@amarulasolutions.com, djw@t-chip.com.cn, jacob-chen@iotwrt.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, frank.wang@rock-chips.com, lgirdwood@gmail.com, broonie@kernel.org, alsa-devel@alsa-project.org, gregkh@linuxfoundation.org, catalin.marinas@arm.com, will.deacon@arm.com, yamada.masahiro@socionext.com, arnd@arndb.de, zhangqing@rock-chips.com, shawn.lin@rock-chips.com, kever.yang@rock-chips.com, david.wu@rock-chips.com, huangtao@rock-chips.com, tony.xie@rock-chips.com, sugar.zhang@rock-chips.com, huibin.hong@rock-chips.com, william.wu@rock-chips.com, san
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Andy Gross <andy.gross@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, =?utf-8?B?QmrDtnJuIEFuZGVyc3Nvbg==?= <bjorn.andersson@linaro.org>, "sean.wang@mediatek.com" <sean.wang@mediatek.com>, Michal Simek <michals@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 17, 2018 at 03:56:01PM +0800, cl@rock-chips.com wrote:
-> From: Liang Chen <cl@rock-chips.com>
-> 
-> This patch adds the compatible of GRF and PMUGRF for PX30 SoCs.
-> 
-> Signed-off-by: Liang Chen <cl@rock-chips.com>
-> ---
->  Documentation/devicetree/bindings/soc/rockchip/grf.txt | 2 ++
->  1 file changed, 2 insertions(+)
-
-Acked-by: Rob Herring <robh@kernel.org>
+SGkgTWFyZWssDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSm9sbHkg
+U2hhaA0KPiBTZW50OiBGcmlkYXksIE1heSAxOCwgMjAxOCAyOjE5IFBNDQo+IFRvOiAnTWFyZWsg
+U3p5cHJvd3NraScgPG0uc3p5cHJvd3NraUBzYW1zdW5nLmNvbT4NCj4gQ2M6IE1hdHRoaWFzIEJy
+dWdnZXIgPG1hdHRoaWFzLmJnZ0BnbWFpbC5jb20+OyBBbmR5IEdyb3NzDQo+IDxhbmR5Lmdyb3Nz
+QGxpbmFyby5vcmc+OyBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5lbC5vcmc+OyBHZWVydA0KPiBV
+eXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPjsgQmrDtnJuIEFuZGVyc3Nvbg0K
+PiA8Ympvcm4uYW5kZXJzc29uQGxpbmFyby5vcmc+OyBzZWFuLndhbmdAbWVkaWF0ZWsuY29tOyBN
+aWNoYWwgU2ltZWsNCj4gPG1pY2hhbC5zaW1la0B4aWxpbnguY29tPjsgTWFyayBSdXRsYW5kIDxt
+YXJrLnJ1dGxhbmRAYXJtLmNvbT47IFJhamFuDQo+IFZhamEgPFJBSkFOVkB4aWxpbnguY29tPjsg
+b3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUgQU5EIEZMQVRURU5FRA0KPiBERVZJQ0UgVFJFRSBCSU5E
+SU5HUyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBMaW51eCBBUk0gPGxpbnV4LWFybS0N
+Cj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0
+IDxsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZz47IEdlZXJ0IFV5dHRlcmhvZXZlbiA8
+Z2VlcnRAbGludXgtbTY4ay5vcmc+OyBSb2INCj4gSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0K
+PiBTdWJqZWN0OiBSRTogW1BBVENIIDEvMl0gZHQtYmluZGluZ3M6IHBvd2VyOiBBZGQgWnlucU1Q
+IHBvd2VyIGRvbWFpbg0KPiBiaW5kaW5ncw0KPiANCj4gSGkgTWFyZWssDQo+IA0KPiA+IC0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTogTWFyZWsgU3p5cHJvd3NraSBbbWFpbHRv
+Om0uc3p5cHJvd3NraUBzYW1zdW5nLmNvbV0NCj4gPiBTZW50OiBUaHVyc2RheSwgTWF5IDE3LCAy
+MDE4IDExOjMxIFBNDQo+ID4gVG86IEpvbGx5IFNoYWggPEpPTExZU0B4aWxpbnguY29tPjsgR2Vl
+cnQgVXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC0NCj4gPiBtNjhrLm9yZz47IFJvYiBIZXJyaW5n
+IDxyb2JoQGtlcm5lbC5vcmc+DQo+ID4gQ2M6IE1hdHRoaWFzIEJydWdnZXIgPG1hdHRoaWFzLmJn
+Z0BnbWFpbC5jb20+OyBBbmR5IEdyb3NzDQo+ID4gPGFuZHkuZ3Jvc3NAbGluYXJvLm9yZz47IFNo
+YXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47IEdlZXJ0DQo+ID4gVXl0dGVyaG9ldmVuIDxn
+ZWVydCtyZW5lc2FzQGdsaWRlci5iZT47IEJqw7ZybiBBbmRlcnNzb24NCj4gPiA8Ympvcm4uYW5k
+ZXJzc29uQGxpbmFyby5vcmc+OyBzZWFuLndhbmdAbWVkaWF0ZWsuY29tOyBNaWNoYWwgU2ltZWsN
+Cj4gPiA8bWljaGFsLnNpbWVrQHhpbGlueC5jb20+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFu
+ZEBhcm0uY29tPjsgUmFqYW4NCj4gPiBWYWphIDxSQUpBTlZAeGlsaW54LmNvbT47IG9wZW4gbGlz
+dDpPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVORUQNCj4gREVWSUNFDQo+ID4gVFJFRSBCSU5ESU5H
+UyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBMaW51eCBBUk0gPGxpbnV4LWFybS0NCj4g
+PiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz47IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3Qg
+PGxpbnV4LQ0KPiA+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+DQo+ID4gU3ViamVjdDogUmU6IFtQ
+QVRDSCAxLzJdIGR0LWJpbmRpbmdzOiBwb3dlcjogQWRkIFp5bnFNUCBwb3dlciBkb21haW4NCj4g
+PiBiaW5kaW5ncw0KPiA+DQo+ID4gSGkgSm9sbHksDQo+ID4NCj4gPiBPbiAyMDE4LTA1LTE3IDIz
+OjEwLCBKb2xseSBTaGFoIHdyb3RlOg0KPiA+DQo+ID4gPj4+Pj4+ICtFeGFtcGxlOg0KPiA+ID4+
+Pj4+PiArICAgICB6eW5xbXAtZ2VucGQgew0KPiA+ID4+Pj4+PiArICAgICAgICAgICAgIGNvbXBh
+dGlibGUgPSAieGxueCx6eW5xbXAtZ2VucGQiOw0KPiA+ID4+Pj4+IFdoYXQncyB0aGUgY29udHJv
+bCBpbnRlcmZhY2UgZm9yIGNvbnRyb2xsaW5nIHRoZSBkb21haW5zPw0KPiA+ID4+Pj4+PiArDQo+
+ID4gPj4+Pj4+ICsgICAgICAgICAgICAgcGRfdXNiMDogcGQtdXNiMCB7DQo+ID4gPj4+Pj4+ICsg
+ICAgICAgICAgICAgICAgICAgICBwZC1pZCA9IDwyMj47DQo+ID4gPj4+Pj4+ICsgICAgICAgICAg
+ICAgICAgICAgICAjcG93ZXItZG9tYWluLWNlbGxzID0gPDA+Ow0KPiA+ID4+Pj4+IFRoZXJlJ3Mg
+bm8gbmVlZCBmb3IgYWxsIHRoZXNlIHN1YiBub2Rlcy4gTWFrZQ0KPiA+ID4+Pj4+ICNwb3dlci1k
+b21haW4tY2VsbHMNCj4gPiA+Pj4+PiAxIGFuZCBwdXQgdGhlIGlkIGluIHRoZSBjZWxsIHZhbHVl
+Lg0KPiA+ID4+Pj4gVGhhdCB3YXMgbXkgZmlyc3QgcmVhY3Rpb24sIHRvby4uLg0KPiA+ID4+Pj4+
+PiArICAgICAgICAgICAgIH07DQo+ID4gPj4+Pj4+ICsNCj4gPiA+Pj4+Pj4gKyAgICAgICAgICAg
+ICBwZF9zYXRhOiBwZC1zYXRhIHsNCj4gPiA+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgIHBk
+LWlkID0gPDI4PjsNCj4gPiA+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICNwb3dlci1kb21h
+aW4tY2VsbHMgPSA8MD47DQo+ID4gPj4+Pj4+ICsgICAgICAgICAgICAgfTsNCj4gPiA+Pj4+Pj4g
+Kw0KPiA+ID4+Pj4+PiArICAgICAgICAgICAgIHBkX2dwdTogcGQtZ3B1IHsNCj4gPiA+Pj4+Pj4g
+KyAgICAgICAgICAgICAgICAgICAgIHBkLWlkID0gPDU4IDIwIDIxPjsNCj4gPiA+Pj4+IC4uLiB1
+bnRpbCBJIHNhdyB0aGUgYWJvdmUuDQo+ID4gPj4+PiBDb250cm9sbGluZyB0aGUgR1BVIHBvd2Vy
+IGFyZWEgcmVxdWlyZXMgY29udHJvbGxpbmcgMyBwaHlzaWNhbCBhcmVhcz8NCj4gPiA+Pj4+DQo+
+ID4gPj4+PiBIb3dldmVyLCBkb2luZyBpdCB0aGlzIHdheSBtYXkgYml0ZSB5b3UgaW4gdGhlIGZ1
+dHVyZSwgaWYgYSBuZWVkDQo+ID4gPj4+PiBhcmlzZXMgdG8gY29udHJvbCBhIHN1YnNldC4gQW5k
+IHdoYXQgYWJvdXQgcG93ZXIgdXAvZG93biBvcmRlcj8NCj4gPiA+Pj4gV2hhdCBhYm91dCBkZWZp
+bmluZyAzIHNlcGFyYXRlIGRvbWFpbnMgYW5kIGFycmFuZ2luZyB0aGVtIGluDQo+ID4gPj4+IHBh
+cmVudC1jaGlsZCByZWxhdGlvbnNoaXA/IGdlbmVyaWMgcG93ZXIgZG9tYWlucyBhbHJlYWR5IHN1
+cHBvcnRzDQo+ID4gPj4+IHRoYXQgYW5kIHRoaXMgYWxsb3dzIHRvIG5pY2VseSBkZWZpbmUgdGhl
+IHBvd2VyIG9uL29mZiBvcmRlci4NCj4gPiA+Pj4NCj4gPiA+Pj4+Pj4gKyAgICAgICAgICAgICAg
+ICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8MHgwPjsNCj4gPiA+Pj4+Pj4gKyAgICAgICAg
+ICAgICB9Ow0KPiA+ID4+Pj4+PiArICAgICB9Ow0KPiA+ID4+IEkgYWdyZWUgaXQgc2hvdWxkIGJl
+IGFycmFuZ2VkIGluIGFzIHBhcmVudCBjaGlsZCBvcmRlciB0byBjb250cm9sDQo+ID4gPj4gc3Vi
+c2V0IG9yIGNvbnRyb2wgb3JkZXIuIFdpbGwgaW5jb3Jwb3JhdGUgdGhvc2UgY2hhbmdlcyBpbiBu
+ZXh0IHZlcnNpb24uDQo+ID4gPg0KPiA+ID4gQXMgc3VnZ2VzdGVkLCBJIHRyaWVkIG91dCBwYXJl
+bnQsIGNoaWxkIGFwcHJvYWNoLiBIb3dldmVyIHdoYXQgSQ0KPiA+ID4gZm91bmQgaXMNCj4gPiBH
+ZW5wZCBjb3JlIHRha2VzIGNhcmUgb2YgcGFyZW50IGNoaWxkIGRlcGVuZGVuY2llcyBmb3IgcG93
+ZXIgb24gb2ZmDQo+ID4gcm91dGluZXMgb25seS4gSW4gb3VyIGNhc2UsIFdlIG5lZWQgdGhlbSBp
+biBhdHRhY2gtZGV0YWNoIHJvdXRpbmVzDQo+ID4gdG9vLiBJbiB0aGF0IGNhc2UsIHdlIG5lZWQg
+dG8gaGFuZGxlIGRlcGVuZGVuY2llcyBtYW51YWxseSBmb3IgdGhvc2UNCj4gPiByb3V0aW5lcy4g
+UGxlYXNlIHN1Z2dlc3QgYmV0dGVyIGFwcHJvYWNoLCBpZiBhbnkuDQo+ID4NCj4gPiBXaGF0IGRv
+IHlvdSBtZWFuIHRvIGhhbmRsZSBhdHRhY2gtZGV0YWNoPw0KPiA+DQo+ID4gQmVzdCByZWdhcmRz
+DQo+ID4gLS0NCj4gPiBNYXJlayBTenlwcm93c2tpLCBQaEQNCj4gPiBTYW1zdW5nIFImRCBJbnN0
+aXR1dGUgUG9sYW5kDQo+IA0KPiBGb3Igb3VyIHBvd2VyIGRvbWFpbiBkcml2ZXIsICB3ZSByZXF1
+ZXN0IHVzYWdlIG9mIHRoZXNlIG5vZGVzIGluIGF0dGFjaA0KPiByb3V0aW5lcyBhbmQgcG93ZXIg
+dGhlbSBvbiBpbiBwb3dlciBvbiByb3V0aW5lLiBTbyBmb3IgYmVsb3cgc3BlY2lmaWMgY2FzZSwN
+Cj4gd2hlbiBhdHRhY2hfZGV2IGlzIGNhbGxlZCwgYWxsIDMgbm9kZXMgbmVlZCB0byBiZSByZXF1
+ZXN0ZWQuDQo+IA0KPiA+ID4+Pj4+PiArICAgICAgICAgICAgIHBkX2dwdTogcGQtZ3B1IHsNCj4g
+PiA+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgIHBkLWlkID0gPDU4IDIwIDIxPjsNCj4gDQo+
+IFRoYW5rcywNCj4gSm9sbHkgU2hhaA0KPiANCg0KUGxlYXNlIGxldCBtZSBrbm93IHlvdXIgb3Bp
+bmlvbi4NCg0KVGhhbmtzLA0KSm9sbHkgU2hhaA0KDQoNCg==
