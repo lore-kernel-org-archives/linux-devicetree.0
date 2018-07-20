@@ -1,43 +1,64 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH V2] dt-bindings: soc: qcom: Add device tree binding for
- GENI SE
-Date: Fri, 20 Jul 2018 13:35:04 -0700
-Message-ID: <CAD=FV=W+UOeK0p_QAg=bSZxxBXq_2whGKC9H6kgYNS1dy0qLvA@mail.gmail.com>
-References: <1532087461-3474-1-git-send-email-dkota@codeaurora.org> <1532087461-3474-3-git-send-email-dkota@codeaurora.org>
+From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v3 01/19] dt-bindings: msm/dsi: Add mdp transfer
+ time to msm dsi binding
+Date: Fri, 20 Jul 2018 16:42:52 -0400
+Message-ID: <20180720204315.19054-2-seanpaul@chromium.org>
+References: <20180720204315.19054-1-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532087461-3474-3-git-send-email-dkota@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dilip Kota <dkota@codeaurora.org>
-Cc: timur@codeaurora.org, Stephen Boyd <swboyd@chromium.org>, Mark Brown <broonie@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, LKML <linux-kernel@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Girish Mahadevan <girishm@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180720204315.19054-1-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dovizu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, Jul 20, 2018 at 4:51 AM, Dilip Kota <dkota@codeaurora.org> wrote:
-> From: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
->
-> Add device tree binding support for the QCOM GENI SE driver.
->
-> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
-> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Andy Gross <andy.gross@linaro.org>
-> ---
->  .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  | 119 +++++++++++++++++++++
->  1 file changed, 119 insertions(+)
-
-Just a note to mention that this patch landed two months ago and can
-already be found in mainline Linux.  See commit e9b02415565b
-("dt-bindings: soc: qcom: Add device tree binding for GENI SE").
-
-...I think Mark Brown made comments on v1 of the SPI driver that he
-was surprised about how the bindings landed, but that doesn't mean you
-should re-post a patch that is already in mainline--just point to the
-patch that landed by git hash.  If something about the bindings needs
-to change then post a patch that changes them.
-
--Doug
+RnJvbTogSmV5a3VtYXIgU2Fua2FyYW4gPGpzYW5rYUBjb2RlYXVyb3JhLm9yZz4KCkFkZHMgbWRw
+IHRyYW5zZmVyIHRpbWUgdG8gbXNtIGRzaSBiaW5kaW5nCgpDaGFuZ2VzIGluIHYzOgotIEFkZGVk
+IFJvYidzIFItYgoKUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+ClNp
+Z25lZC1vZmYtYnk6IEpleWt1bWFyIFNhbmthcmFuIDxqc2Fua2FAY29kZWF1cm9yYS5vcmc+ClNp
+Z25lZC1vZmYtYnk6IFJhamVzaCBZYWRhdiA8cnlhZGF2QGNvZGVhdXJvcmEub3JnPgpTaWduZWQt
+b2ZmLWJ5OiBTZWFuIFBhdWwgPHNlYW5wYXVsQGNocm9taXVtLm9yZz4KLS0tCiAuLi4vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0ICAgICAgfCAxNiArKysrKysrKysrKysr
+KysrCiAxIGZpbGUgY2hhbmdlZCwgMTYgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0IGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQKaW5kZXggNTE4
+ZTljZGYwZDRiLi5kMjIyMzdhODhlYWUgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0CkBAIC0xMjEsNiArMTIxLDIwIEBA
+IFJlcXVpcmVkIHByb3BlcnRpZXM6CiBPcHRpb25hbCBwcm9wZXJ0aWVzOgogLSBxY29tLGRzaS1w
+aHktcmVndWxhdG9yLWxkby1tb2RlOiBCb29sZWFuIHZhbHVlIGluZGljYXRpbmcgaWYgdGhlIExE
+TyBtb2RlIFBIWQogICByZWd1bGF0b3IgaXMgd2FudGVkLgorLSBxY29tLG1kc3MtbWRwLXRyYW5z
+ZmVyLXRpbWUtdXM6CVNwZWNpZmllcyB0aGUgZHNpIHRyYW5zZmVyIHRpbWUgZm9yIGNvbW1hbmQg
+bW9kZQorCQkJCQlwYW5lbHMgaW4gbWljcm9zZWNvbmRzLiBEcml2ZXIgdXNlcyB0aGlzIG51bWJl
+ciB0byBhZGp1c3QKKwkJCQkJdGhlIGNsb2NrIHJhdGUgYWNjb3JkaW5nIHRvIHRoZSBleHBlY3Rl
+ZCB0cmFuc2ZlciB0aW1lLgorCQkJCQlJbmNyZWFzaW5nIHRoaXMgdmFsdWUgd291bGQgc2xvdyBk
+b3duIHRoZSBtZHAgcHJvY2Vzc2luZworCQkJCQlhbmQgY2FuIHJlc3VsdCBpbiBzbG93ZXIgcGVy
+Zm9ybWFuY2UuCisJCQkJCURlY3JlYXNpbmcgdGhpcyB2YWx1ZSBjYW4gc3BlZWQgdXAgdGhlIG1k
+cCBwcm9jZXNzaW5nLAorCQkJCQlidXQgdGhpcyBjYW4gYWxzbyBpbXBhY3QgcG93ZXIgY29uc3Vt
+cHRpb24uCisJCQkJCUFzIGEgcnVsZSB0aGlzIHRpbWUgc2hvdWxkIG5vdCBiZSBoaWdoZXIgdGhh
+biB0aGUgdGltZQorCQkJCQl0aGF0IHdvdWxkIGJlIGV4cGVjdGVkIHdpdGggdGhlIHByb2Nlc3Np
+bmcgYXQgdGhlCisJCQkJCWRzaSBsaW5rIHJhdGUgc2luY2UgYW55d2F5cyB0aGlzIHdvdWxkIGJl
+IHRoZSBtYXhpbXVtCisJCQkJCXRyYW5zZmVyIHRpbWUgdGhhdCBjb3VsZCBiZSBhY2hpZXZlZC4K
+KwkJCQkJSWYgcGluZyBwb25nIHNwbGl0IGlzIGVuYWJsZWQsIHRoaXMgdGltZSBzaG91bGQgbm90
+IGJlIGhpZ2hlcgorCQkJCQl0aGFuIHR3byB0aW1lcyB0aGUgZHNpIGxpbmsgcmF0ZSB0aW1lLgor
+CQkJCQlJZiB0aGUgcHJvcGVydHkgaXMgbm90IHNwZWNpZmllZCwgdGhlbiB0aGUgZGVmYXVsdCB2
+YWx1ZSBpcyAxNDAwMCB1cy4KIAogWzFdIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9jbG9jay9jbG9jay1iaW5kaW5ncy50eHQKIFsyXSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZ3JhcGgudHh0CkBAIC0xNzEsNiArMTg1LDggQEAgRXhhbXBsZToKIAkJcWNvbSxt
+YXN0ZXItZHNpOwogCQlxY29tLHN5bmMtZHVhbC1kc2k7CiAKKwkJcWNvbSxtZHNzLW1kcC10cmFu
+c2Zlci10aW1lLXVzID0gPDEyMDAwPjsKKwogCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiLCAi
+c2xlZXAiOwogCQlwaW5jdHJsLTAgPSA8JmRzaV9hY3RpdmU+OwogCQlwaW5jdHJsLTEgPSA8JmRz
+aV9zdXNwZW5kPjsKLS0gClNlYW4gUGF1bCwgU29mdHdhcmUgRW5naW5lZXIsIEdvb2dsZSAvIENo
+cm9taXVtIE9TCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
