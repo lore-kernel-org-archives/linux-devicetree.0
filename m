@@ -1,68 +1,122 @@
-Return-Path: <SRS0=YJH+=KE=phrozen.org=john@kernel.org>
-From: John Crispin <john@phrozen.org>
-Subject: [PATCH V2 09/25] dt-bindings: PCI: qcom,ar7100: adds binding doc
-Date: Fri, 20 Jul 2018 13:58:26 +0200
-Message-Id: <20180720115842.8406-10-john@phrozen.org>
-In-Reply-To: <20180720115842.8406-1-john@phrozen.org>
-References: <20180720115842.8406-1-john@phrozen.org>
-To: James Hogan <jhogan@kernel.org>, Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org, John Crispin <john@phrozen.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Return-Path: <SRS0=7tr2=KE=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <20180711144131.73552-1-chris.brandt@renesas.com> <20180711144131.73552-2-chris.brandt@renesas.com>
+In-Reply-To: <20180711144131.73552-2-chris.brandt@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 20 Jul 2018 10:09:39 +0200
+Message-ID: <CAMuHMdXpLvz3zD3=ji-ro0R6C-OUyBv6bgY2a3Hp85wYYAav5A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] serial: sh-sci: Add support for R7S9210
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-With the driver being converted from platform_data to pure OF, we need to
-also add some docs.
+Hi Chris,
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: John Crispin <john@phrozen.org>
----
- .../devicetree/bindings/pci/qcom,ar7100-pci.txt    | 38 ++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/qcom,ar7100-pci.txt
+On Wed, Jul 11, 2018 at 4:42 PM Chris Brandt <chris.brandt@renesas.com> wrote:
+> Add support for a "RZ_SCIFA" which is different than a traditional
+> SCIFA. It looks like a normal SCIF with FIFO data, but with a
+> compressed address space. Also, the break out of interrupts
+> are different then traditinal SCIF: ERI/BRI, RXI, TXI, TEI, DRI.
+> The R7S9210 (RZ/A2) contains this type of SCIF.
+>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,ar7100-pci.txt b/Documentation/devicetree/bindings/pci/qcom,ar7100-pci.txt
-new file mode 100644
-index 000000000000..10085dd1cd11
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/qcom,ar7100-pci.txt
-@@ -0,0 +1,38 @@
-+* Qualcomm Atheros AR7100 PCI express root complex
-+
-+Required properties:
-+- compatible: should contain "qcom,ar7100-pci" to identify the core.
-+- reg: Should contain the register ranges as listed in the reg-names property.
-+- reg-names: Definition: Must include the following entries
-+	- "cfg_base"	IO Memory
-+- #address-cells: set to <3>
-+- #size-cells: set to <2>
-+- ranges: ranges for the PCI memory and I/O regions
-+- interrupt-map-mask and interrupt-map: standard PCI
-+	properties to define the mapping of the PCIe interface to interrupt
-+	numbers.
-+- #interrupt-cells: set to <1>
-+- interrupt-controller: define to enable the builtin IRQ cascade.
-+
-+Optional properties:
-+- interrupt-parent: phandle to the MIPS IRQ controller
-+
-+* Example for ar7100
-+	pcie-controller@180c0000 {
-+		compatible = "qca,ar7100-pci";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		bus-range = <0x0 0x0>;
-+		reg = <0x17010000 0x100>;
-+		reg-names = "cfg_base";
-+		ranges = <0x2000000 0 0x10000000 0x10000000 0 0x07000000
-+			  0x1000000 0 0x00000000 0x00000000 0 0x00000001>;
-+		interrupt-parent = <&cpuintc>;
-+		interrupts = <2>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-map-mask = <0 0 0 1>;
-+		interrupt-map = <0 0 0 0 &pcie0 0>;
-+	};
+Thanks for your patch!
+
+> --- a/drivers/tty/serial/sh-sci.c
+> +++ b/drivers/tty/serial/sh-sci.c
+> @@ -65,6 +65,7 @@ enum {
+>         SCIx_RXI_IRQ,
+>         SCIx_TXI_IRQ,
+>         SCIx_BRI_IRQ,
+> +       SCIx_TEIDRI_IRQ,
+
+Why not separate enum values for TEI and DRI? According to the RZ/A2 docs,
+there are 6 separate interrupts, but they are multiplexed at the interrupt
+controller level.
+
+>         SCIx_NR_IRQS,
+
+If you add interrupt value heres, you have to update the comment in
+sci_init_single(), which talks about "three or four" interrupts.
+
+sci_init_single() also fills in all unused sci_port->irqs[], so that code
+must be updated for the new interrupts.
+
+>
+>         SCIx_MUX_IRQ = SCIx_NR_IRQS,    /* special case */
+> @@ -76,6 +77,9 @@ enum {
+>         ((port)->irqs[SCIx_ERI_IRQ] &&  \
+>          ((port)->irqs[SCIx_RXI_IRQ] < 0))
+>
+> +#define SCIx_TEIDRI_IRQ_EXISTS(port)           \
+> +       ((port)->irqs[SCIx_TEIDRI_IRQ] > 0)
+> +
+>  enum SCI_CLKS {
+>         SCI_FCK,                /* Functional Clock */
+>         SCI_SCK,                /* Optional External Clock */
+> @@ -287,6 +291,33 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
+>                 .error_clear = SCIF_ERROR_CLEAR,
+>         },
+>
+> +       /*
+> +        * The "SCIFA" that is in RZ/T and RZ/A2.
+> +        * It looks like a normal SCIF with FIFO data, but with a
+> +        * compressed address space. Also, the break out of interrupts
+> +        * are different: ERI/BRI, RXI, TXI, TEI, DRI.
+> +        */
+> +       [SCIx_RZ_SCIFA_REGTYPE] = {
+> +               .regs = {
+> +                       [SCSMR]         = { 0x00, 16 },
+> +                       [SCBRR]         = { 0x02,  8 },
+> +                       [SCSCR]         = { 0x04, 16 },
+> +                       [SCxTDR]        = { 0x06,  8 },
+> +                       [SCxSR]         = { 0x08, 16 },
+> +                       [SCxRDR]        = { 0x0A,  8 },
+> +                       [SCFCR]         = { 0x0C, 16 },
+> +                       [SCFDR]         = { 0x0E, 16 },
+> +                       [SCSPTR]        = { 0x10, 16 },
+> +                       [SCLSR]         = { 0x12, 16 },
+> +               },
+> +               .fifosize = 16,
+> +               .overrun_reg = SCLSR,
+> +               .overrun_mask = SCLSR_ORER,
+> +               .sampling_rate_mask = SCI_SR(32),
+> +               .error_mask = SCIF_DEFAULT_ERROR_MASK,
+> +               .error_clear = SCIF_ERROR_CLEAR,
+> +       },
+
+
+"Compressed addres space", like SCIx_SH4_SCIF_REGTYPE with regshift -1? ;-)
+Perhaps we should adjust all offsets in SCIx_SH4_SCIF_REGTYPE and let the
+current parts use regshift 1, so RZ/A2 can use the same definition with
+regshift 0?
+
+For DT systems, the regshift value could be stored in of_device_id.data
+by adjusting the SCI_OF_DATA() macro.
+For legacy SH, probably lots of platform data must be updated.
+
+> +
+>         /*
+>          * Common SH-3 SCIF definitions.
+>          */
+> @@ -1683,11 +1714,26 @@ static irqreturn_t sci_tx_interrupt(int irq, void *ptr)
+>         return IRQ_HANDLED;
+>  }
+>
+> +static irqreturn_t sci_br_interrupt(int irq, void *ptr);
+> +
+
+For interrupts, please see my response to the DT binding patch.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.11.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
