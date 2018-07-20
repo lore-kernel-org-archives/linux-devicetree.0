@@ -1,21 +1,21 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2] ARM: dts: vf610: Add ZII CFU1 board
-Date: Fri, 20 Jul 2018 10:46:37 +0800
-Message-ID: <20180720024636.GX4576@dragon>
-References: <20180719195724.15563-1-andrew.smirnov@gmail.com>
+Subject: Re: [PATCH] ARM: dts: vf610-zii-ssmb-spu3: Fix W=1 level warnings
+Date: Fri, 20 Jul 2018 10:46:58 +0800
+Message-ID: <20180720024657.GY4576@dragon>
+References: <20180719200002.15857-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180719195724.15563-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20180719200002.15857-1-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, cphealy@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, cphealy@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 19, 2018 at 12:57:24PM -0700, Andrey Smirnov wrote:
-> Add support for the Zodiac Inflight Innovations CFU1
-> board (VF610-based).
+On Thu, Jul 19, 2018 at 01:00:02PM -0700, Andrey Smirnov wrote:
+> Fix a couple of things that were causing warning when building DTB
+> with W=1.
 > 
 > Cc: Shawn Guo <shawnguo@kernel.org>
 > Cc: Fabio Estevam <fabio.estevam@nxp.com>
@@ -23,8 +23,6 @@ On Thu, Jul 19, 2018 at 12:57:24PM -0700, Andrey Smirnov wrote:
 > Cc: linux-arm-kernel@lists.infradead.org
 > Cc: devicetree@vger.kernel.org
 > Cc: linux-kernel@vger.kernel.org
-> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
-> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
 > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 
 Applied, thanks.
