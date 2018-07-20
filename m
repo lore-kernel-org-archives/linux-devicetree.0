@@ -1,87 +1,88 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v6 00/10] Add the I3C subsystem
-Date: Fri, 20 Jul 2018 12:12:06 +0200
-Message-ID: <20180720101206.tv7nsoanwo5ftnia@ninjato>
-References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
- <CAK8P3a2MP5+oFz--e+BM24D8Ahw7H_RKgN1S6wY1nQE6JL0dmw@mail.gmail.com>
- <2ab0ab75-2df0-2714-f007-c33b25481016@axentia.se>
+From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
+Subject: [PATCH 1/1] ARM: dts: imx6ull: keep IMX6UL_ prefix for signals on
+ both i.MX6UL and i.MX6ULL
+Date: Fri, 20 Jul 2018 12:23:21 +0200
+Message-ID: <20180720102321.23291-1-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="buglsqpmzc2gtcib"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2ab0ab75-2df0-2714-f007-c33b25481016@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Arnd Bergmann <arnd@arndb.de>, Boris Brezillon <boris.brezillon@bootlin.com>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.c>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---buglsqpmzc2gtcib
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> I have not read much of the I3C spec. I'm just coming from the
-> current situation with I2C and the i2c-demux-pinctrl driver which
-> tries to retrofit this into the I2C world and is not doing a grand
-> job. And how could it?
->=20
-> If you can acknowledge that i2c-demux-pinctrl is needed for I2C
-> but for some reason is not needed for I3C because of something
-> that differs between I2C and I3C, then fine, by all means ditch
-> the explicit bus object.
->=20
-> But in my mind splitting up the devices on the same bus between
-> several of our own masters and then not have a single object for
-> the bus is going to cause headaches down the line. Be it address
-> clashes or trouble with master ping-pong or whatever.
->=20
-> I think the reason for i2c-demux-pinctrl is that some (most?) I2C
-> hardware suffers from quirks and one way to work around it is to
-> make selected accesses from a different master. I expect I3C HW
-> to also suffer from quirks...
->=20
-> Maybe a bit-bang I3C master isn't feasible for some fundamental
-> reason? But if it is, then I'd say that it's just a matter of time
-> until someone finds a situation where such a thing could be used to
-> work around some I3C quirk. And then it might be too expensive to
-> always use the bit-bang master for the affected device.
->=20
-> But what do I know? Don't let me hold this series back...
-
-Thanks, Peter. You nailed it, the I2C use case (and its limits). From
-what I know about I3C, bit-banging doesn't sound very feasible to me, so
-the situation might be a bit different. Still, no one knows about future
-I3C use cases and HW quirks. This is why I encouraged the seperate bus
-object because back then it was said it was easy to do and implement. If
-this now becomes a show-stopper, we can surely re-decide. I am not
-strong on this point, it was just something which would have helped I2C.
-(And for that matter, we (=3D the Renesas Upstream Kernel Team) was
-discussing something similar to the i2c demuxer for SPI, too. We have
-multiple IP cores which can do SPI on R-Car, all with their pros and
-cons)
-
-
---buglsqpmzc2gtcib
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAltRtXYACgkQFA3kzBSg
-KbbC3g//Qw+XT9Q0C+cSSYBwENIyyKVec3nsbrnekmC6VqMsApKNsdiQQUhkS7pe
-VFvc/3SOfmOhL791jwZ63MPvhhG00mGs1xL1jsoDql0xNcnodTbOFM61iIhJQQs2
-uCr1xqHtQotCuUm3B1wcd4a1+adZePRwmT7o5jQL8jbPQBMZJDea/NphOEq5ewAI
-rN6/P+CynS3NL1QaHV3fZKTSzd/vkWjDRXj19maT0FLyGfOvA5/hMtj0XQzfgJI+
-iArvUIX8fZ7lkCPia/3tjsMkwpgCMHlbdWKsysbFl/Zr1ocVT5IappqbolvfZTwX
-4QXnOtjEDY+AOfjrSXXlsjaFgnVqX+wFWk9MSpQmL95Yy2JImdjt50wUam3FPHFJ
-sjCDfyu2ueefmzichetpDG0gu++kJSIRis0jOgsB2BVQ0Ak0Z6yvFK7rzHNssB8U
-EXdS302fj+HV75O7H6ynN1dmBk4f5Xpw+X/3i6IQ3QUIAReVgc7s6JRq+3/Z0Npb
-tNXjYUROJN4PZr1XqOC/8nMzEe3A2s+q5EkjBHUko1rfyq7vo1KqN5HkEjNlYwbR
-Cf6ksivMfiWHHts94f6EhDTxMnWbkKdCR3ZfxSKQtXcVnh4MyZNAQggcszNmHhXz
-iMymQYq7uYzAq1McBTP7vpBGzOK+kzwHZzcWl4y84AlaVP1oRbI=
-=o7ro
------END PGP SIGNATURE-----
-
---buglsqpmzc2gtcib--
+U2lnbmFscyBhdmFpbGFibGUgb24gYm90aCBpLk1YNlVMIGFuZCBpLk1YNlVMTCBzaG91bGQgaGF2
+ZSB0aGUgc2FtZSBuYW1lCmJlY2F1c2UgaXQgaXMgdGhlIGNhc2Ugb2YgYWxsIG90aGVycyBjb21t
+b24gc2lnbmFscywgaXQgYXZvaWRzIHRvIG1ha2UKbWlzdGFrZXMgKHVzZSB0aGUgd3Jvbmcgb25l
+cykgYW5kIGl0IG1ha2VzIHdyaXRpbmcgZGV2aWNlIHRyZWUgZmlsZXMKbGVzcyBjb21wbGljYXRl
+ZC4gRm9yIGV4YW1wbGU6CgppbXg2dWwtaW14NnVsbC1ib2FyZC5kdHNpOgogLi4uCiBwaW5jdHJs
+X3VhcnQ1OiB1YXJ0NWdycCB7Cglmc2wscGlucyA9IDwKCQlNWDZVTF9QQURfVUFSVDVfVFhfREFU
+QV9fVUFSVDVfRENFX1RYICAgMHgxYjBiMQoJIAlNWDZVTF9QQURfVUFSVDVfUlhfREFUQV9fVUFS
+VDVfRENFX1JYICAgMHgxYjBiMQogCSA+OwogfTsKCmlteDZ1bC1ib2FyZC5kdHM6CiAjaW5jbHVk
+ZSA8aW14NnVsLmR0c2k+CiAjaW5jbHVkZSA8aW14NnVsLWlteDZ1bGwtYm9hcmQuZHRzaT4KIC4u
+LgoKaW14NnVsbC1ib2FyZC5kdHM6CiAjaW5jbHVkZSA8aW14NnVsbC5kdHNpPgogI2luY2x1ZGUg
+PGlteDZ1bC1pbXg2dWxsLWJvYXJkLmR0c2k+CiAuLi4KCldpdGhvdXQgdGhpcyBwYXRjaCwgdGhl
+IGlteDZ1bGwtYm9hcmQuZHRiIHdpbGwgdXNlCk1YNlVMX1BBRF9VQVJUNV9SWF9EQVRBX19VQVJU
+NV9EQ0VfUlggaW5zdGVhZCBvZgpNWDZVTExfUEFEX1VBUlQ1X1JYX0RBVEFfX1VBUlQ1X0RDRV9S
+WCBhbmQgdGhlIHVhcnQ1IHdpbGwgYmUKbWlzY29uZmlndXJlZC4KClNpZ25lZC1vZmYtYnk6IFPD
+qWJhc3RpZW4gU3p5bWFuc2tpIDxzZWJhc3RpZW4uc3p5bWFuc2tpQGFybWFkZXVzLmNvbT4KLS0t
+CiBhcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLXBpbmZ1bmMuaCB8IDI3ICsrKysrKysrKysrKysr
+KysrKystLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKyksIDggZGVsZXRp
+b25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1waW5mdW5jLmgg
+Yi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLXBpbmZ1bmMuaAppbmRleCBmZGM0NmJiMDljYzEu
+LjdkN2YwNWY3ZWE3NyAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1waW5m
+dW5jLmgKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1waW5mdW5jLmgKQEAgLTE0LDE0
+ICsxNCwyNSBAQAogICogVGhlIHBpbiBmdW5jdGlvbiBJRCBpcyBhIHR1cGxlIG9mCiAgKiA8bXV4
+X3JlZyBjb25mX3JlZyBpbnB1dF9yZWcgbXV4X21vZGUgaW5wdXRfdmFsPgogICovCi0jZGVmaW5l
+IE1YNlVMTF9QQURfVUFSVDFfVFhfREFUQV9fVUFSVDVfRFRFX1JYICAgICAgICAgICAgICAgICAg
+ICAweDAwODQgMHgwMzEwIDB4MDY0NCAweDkgMHg0Ci0jZGVmaW5lIE1YNlVMTF9QQURfVUFSVDFf
+UlhfREFUQV9fVUFSVDVfRENFX1JYICAgICAgICAgICAgICAgICAgICAweDAwODggMHgwMzE0IDB4
+MDY0NCAweDkgMHg1Ci0jZGVmaW5lIE1YNlVMTF9QQURfVUFSVDFfQ1RTX0JfX1VBUlQ1X0RDRV9S
+VFMgICAgICAgICAgICAgICAgICAgICAweDAwOEMgMHgwMzE4IDB4MDY0MCAweDkgMHgzCi0jZGVm
+aW5lIE1YNlVMTF9QQURfVUFSVDFfUlRTX0JfX1VBUlQ1X0RURV9SVFMgICAgICAgICAgICAgICAg
+ICAgICAweDAwOTAgMHgwMzFDIDB4MDY0MCAweDkgMHg0Ci0jZGVmaW5lIE1YNlVMTF9QQURfVUFS
+VDVfVFhfREFUQV9fVUFSVDVfRFRFX1JYICAgICAgICAgICAgICAgICAgICAweDAwQkMgMHgwMzQ4
+IDB4MDY0NCAweDAgMHg2Ci0jZGVmaW5lIE1YNlVMTF9QQURfVUFSVDVfUlhfREFUQV9fVUFSVDVf
+RENFX1JYICAgICAgICAgICAgICAgICAgICAweDAwQzAgMHgwMzRDIDB4MDY0NCAweDAgMHg3Ci0j
+ZGVmaW5lIE1YNlVMTF9QQURfRU5FVDFfUlhfRU5fX1VBUlQ1X0RDRV9SVFMgICAgICAgICAgICAg
+ICAgICAgICAweDAwQ0MgMHgwMzU4IDB4MDY0MCAweDEgMHg1Ci0jZGVmaW5lIE1YNlVMTF9QQURf
+RU5FVDFfVFhfREFUQTBfX1VBUlQ1X0RURV9SVFMgICAgICAgICAgICAgICAgICAweDAwRDAgMHgw
+MzVDIDB4MDY0MCAweDEgMHg2CisvKiBzaWduYWxzIGNvbW1vbiBmb3IgaS5NWDZVTCBhbmQgaS5N
+WDZVTEwgKi8KKyN1bmRlZiBNWDZVTF9QQURfVUFSVDFfVFhfREFUQV9fVUFSVDVfRFRFX1JYCisj
+ZGVmaW5lIE1YNlVMX1BBRF9VQVJUMV9UWF9EQVRBX19VQVJUNV9EVEVfUlggICAgICAgICAgICAg
+ICAgICAgIDB4MDA4NCAweDAzMTAgMHgwNjQ0IDB4OSAweDQKKyN1bmRlZiBNWDZVTF9QQURfVUFS
+VDFfUlhfREFUQV9fVUFSVDVfRENFX1JYCisjZGVmaW5lIE1YNlVMX1BBRF9VQVJUMV9SWF9EQVRB
+X19VQVJUNV9EQ0VfUlggICAgICAgICAgICAgICAgICAgIDB4MDA4OCAweDAzMTQgMHgwNjQ0IDB4
+OSAweDUKKyN1bmRlZiBNWDZVTF9QQURfVUFSVDFfQ1RTX0JfX1VBUlQ1X0RDRV9SVFMKKyNkZWZp
+bmUgTVg2VUxfUEFEX1VBUlQxX0NUU19CX19VQVJUNV9EQ0VfUlRTICAgICAgICAgICAgICAgICAg
+ICAgMHgwMDhDIDB4MDMxOCAweDA2NDAgMHg5IDB4MworI3VuZGVmIE1YNlVMX1BBRF9VQVJUMV9S
+VFNfQl9fVUFSVDVfRFRFX1JUUworI2RlZmluZSBNWDZVTF9QQURfVUFSVDFfUlRTX0JfX1VBUlQ1
+X0RURV9SVFMgICAgICAgICAgICAgICAgICAgICAweDAwOTAgMHgwMzFDIDB4MDY0MCAweDkgMHg0
+CisjdW5kZWYgTVg2VUxfUEFEX1VBUlQ1X1RYX0RBVEFfX1VBUlQ1X0RURV9SWAorI2RlZmluZSBN
+WDZVTF9QQURfVUFSVDVfVFhfREFUQV9fVUFSVDVfRFRFX1JYICAgICAgICAgICAgICAgICAgICAw
+eDAwQkMgMHgwMzQ4IDB4MDY0NCAweDAgMHg2CisjdW5kZWYgTVg2VUxfUEFEX1VBUlQ1X1JYX0RB
+VEFfX1VBUlQ1X0RDRV9SWAorI2RlZmluZSBNWDZVTF9QQURfVUFSVDVfUlhfREFUQV9fVUFSVDVf
+RENFX1JYICAgICAgICAgICAgICAgICAgICAweDAwQzAgMHgwMzRDIDB4MDY0NCAweDAgMHg3Cisj
+dW5kZWYgTVg2VUxfUEFEX0VORVQxX1JYX0VOX19VQVJUNV9EQ0VfUlRTCisjZGVmaW5lIE1YNlVM
+X1BBRF9FTkVUMV9SWF9FTl9fVUFSVDVfRENFX1JUUyAgICAgICAgICAgICAgICAgICAgIDB4MDBD
+QyAweDAzNTggMHgwNjQwIDB4MSAweDUKKyN1bmRlZiBNWDZVTF9QQURfRU5FVDFfVFhfREFUQTBf
+X1VBUlQ1X0RURV9SVFMKKyNkZWZpbmUgTVg2VUxfUEFEX0VORVQxX1RYX0RBVEEwX19VQVJUNV9E
+VEVfUlRTICAgICAgICAgICAgICAgICAgMHgwMEQwIDB4MDM1QyAweDA2NDAgMHgxIDB4NgorCisv
+KiBzaWduYWxzIGZvciBpLk1YNlVMTCBvbmx5ICovCiAjZGVmaW5lIE1YNlVMTF9QQURfRU5FVDJf
+UlhfREFUQTBfX0VQRENfU0RETzA4ICAgICAgICAgICAgICAgICAgICAweDAwRTQgMHgwMzcwIDB4
+MDAwMCAweDkgMHgwCiAjZGVmaW5lIE1YNlVMTF9QQURfRU5FVDJfUlhfREFUQTFfX0VQRENfU0RE
+TzA5ICAgICAgICAgICAgICAgICAgICAweDAwRTggMHgwMzc0IDB4MDAwMCAweDkgMHgwCiAjZGVm
+aW5lIE1YNlVMTF9QQURfRU5FVDJfUlhfRU5fX0VQRENfU0RETzEwICAgICAgICAgICAgICAgICAg
+ICAgICAweDAwRUMgMHgwMzc4IDB4MDAwMCAweDkgMHgwCi0tIAoyLjE2LjQKCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
