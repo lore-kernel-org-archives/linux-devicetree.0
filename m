@@ -1,56 +1,64 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/3] dts: arm64/sdm845: Add node for arm,mmu-500
-Date: Thu, 19 Jul 2018 17:08:31 -0600
-Message-ID: <CAL_JsqKQgZq23F7gqNoEDzpWj3zVR7Tsok3cZZCpCL=Br_+BeA@mail.gmail.com>
-References: <20180719175356.14753-1-vivek.gautam@codeaurora.org> <20180719175356.14753-2-vivek.gautam@codeaurora.org>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: Re: [RFC PATCH v2 1/4] dt-bindings: misc: Add bindings for misc. BMC
+ control fields
+Date: Fri, 20 Jul 2018 09:37:56 +0930
+Message-ID: <1532045276.1219110.1446722072.546C1F9D@webmail.messagingengine.com>
+References: <20180711053122.30773-1-andrew@aj.id.au>
+ <20180711053122.30773-2-andrew@aj.id.au>
+ <20180711200450.GB17291@rob-hp-laptop>
+ <1531356830.3551458.1437853280.551CA8C5@webmail.messagingengine.com>
+ <CAL_JsqKpXxR4t_-3BOy-0mFePXkaSck_4PfHRD=OZQ-_-T5P=w@mail.gmail.com>
+ <b6ced4cad4d7ff78330181b2c893855c23103953.camel@kernel.crashing.org>
+ <1531463489.747186.1439263128.075AECE1@webmail.messagingengine.com>
+ <CAL_JsqLZo-=7UkuvvUFYdCR4asBBiWyC=Q1ryH=-HLU6vzf9tA@mail.gmail.com>
+ <ece91112ecfdc7218184c4c4519e455cf9397e11.camel@kernel.crashing.org>
+ <CAL_JsqL_bMXLAA0091-g8PmhXR5g5Pf2y2=ey7Ss5ofHm46sWw@mail.gmail.com>
+ <c69d0e7c3a95d83da87b566a62619462671a233b.camel@kernel.crashing.org>
+ <1531967302.2140539.1445583600.0F5ED287@webmail.messagingengine.com>
+ <9787b471abc49c0b3db60e3471473a7a5b45ade7.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180719175356.14753-2-vivek.gautam@codeaurora.org>
+In-Reply-To: <9787b471abc49c0b3db60e3471473a7a5b45ade7.camel@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Linux IOMMU <iommu@lists.linux-foundation.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tomasz Figa <tfiga@chromium.org>, Sricharan <sricharan@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, David Brown <david.brown@linaro.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robh@kernel.org>, Eugene.Cho@dell.com, a.amelkin@yadro.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Joel Stanley <joel@jms.id.au>, stewart@linux.ibm.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 19, 2018 at 11:54 AM Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
->
-> Add device node for arm,mmu-500 available on sdm845.
-> This MMU-500 with single TCU and multiple TBU architecture
-> is shared among all the peripherals except gpu on sdm845.
->
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts |  4 ++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi    | 73 +++++++++++++++++++++++++++++++++
->  2 files changed, 77 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> index 6d651f314193..13b50dff440f 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> @@ -58,3 +58,7 @@
->                 bias-pull-up;
->         };
->  };
-> +
-> +&apps_smmu {
-> +       status = "okay";
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 00722b533a92..70ca18ae6cb3 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -980,6 +980,79 @@
->                         cell-index = <0>;
->                 };
->
-> +               apps_smmu: arm,smmu@15000000 {
+> 
+> Andrew, can you start with a list that shows what you expect us to need
+> on our systems ?
+> 
 
-iommu@...
+Okay, our Witherspoon and Romulus platforms containing the ASPEED AST2500 currently need the following tuneables exposed:
 
-> +                       compatible = "arm,mmu-500";
+>From the SCU:
+- Debug UART enable
+- VGA DAC mux
+- VGA scratch registers 0-7
+- LPC SuperIO decode enable
+- VGA MMIO decode enable
 
-Really unmodified by QCom? Would be better to have SoC specific compatible.
+>From the LPC controller:
+- iLPC2AHB enable
+- SuperIO scratch registers 0x20-0x2f
 
-Rob
+(The LPC controller is just as much of a collection of random bits as the SCU)
+
+Lastly, our Palmetto platform uses an AST2400 which has fewer features compared to the AST2500. Its tuneable list is the same as the above with the exception of "Debug UART enable".
+
+Tuneables that we may need to expose in the future include:
+
+>From the SCU:
+- PCI VID/DID for the BMC PCIe device
+- VGA device enable (may need to be disabled if the platform contains a discrete graphics processor)
+
+>From the LPC controller:
+- UART mux
+
+Alexander, Eugene, can you chime in with your platforms' needs?
+
+Cheers,
+
+Andrew
