@@ -1,38 +1,44 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: Re: [PATCH v10 2/4] rtc: ds1307: support m41t11 variant
-Date: Fri, 20 Jul 2018 15:49:59 +0200
-Message-ID: <a5dd8289-9d87-252c-e2a6-3af7237f165e@micronovasrl.com>
-References: <CAHp75VcaALb8fYJExnZ=Ye=GcNHc3aPXgFihVK+rAu_a1A01Sg@mail.gmail.com>
- <20180718140946.115093-1-giulio.benetti@micronovasrl.com>
- <20180720134301.GA23613@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] reset: meson: add dt-bindings for meson-axg audio arb
+Date: Fri, 20 Jul 2018 07:52:15 -0600
+Message-ID: <20180720135215.GA31492@rob-hp-laptop>
+References: <20180706143122.7612-1-jbrunet@baylibre.com>
+ <20180706143122.7612-2-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180720134301.GA23613@rob-hp-laptop>
-Content-Language: it
+Content-Disposition: inline
+In-Reply-To: <20180706143122.7612-2-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Il 20/07/2018 15:43, Rob Herring ha scritto:
-> On Wed, Jul 18, 2018 at 04:09:43PM +0200, Giulio Benetti wrote:
->> The m41t11 variant is very similar to the already supported m41t00 and
->> m41t0, but it has also 56 bytes of NVRAM.
->>
->> Add it to driver taking into account NVRAM section.
->>
->> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
->> ---
->>   .../devicetree/bindings/rtc/rtc-ds1307.txt         |  1 +
-> 
-> Please add acks when posting new versions.
-> 
->>   drivers/rtc/rtc-ds1307.c                           | 14 ++++++++++++++
->>   2 files changed, 15 insertions(+)
+On Fri, Jul 06, 2018 at 04:31:21PM +0200, Jerome Brunet wrote:
+> Add dt-bindings for the audio memory arbitror found on Amlogic's
+> A113 based SoCs
 
-Thank you for pointing me that.
-v11 patchset will include them all.
+s/arbitror/arbiter/
 
-Giulio
+> 
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  .../bindings/reset/amlogic,meson-axg-audio-arb.txt  | 21 +++++++++++++++++++++
+>  .../dt-bindings/reset/amlogic,meson-axg-audio-arb.h | 17 +++++++++++++++++
+>  2 files changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt
+>  create mode 100644 include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt b/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt
+> new file mode 100644
+> index 000000000000..e29b3463f2e1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt
+> @@ -0,0 +1,21 @@
+> +* Amlogic audio memory arbitror controller
+
+s/arbitror/arbiter/
+
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
