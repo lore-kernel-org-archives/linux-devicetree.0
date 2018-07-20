@@ -1,137 +1,79 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] rtc: jz4740: Add support for the JZ4725B, JZ4760, JZ4770
-Date: Fri, 20 Jul 2018 09:39:56 -0600
-Message-ID: <20180720153956.GA18135@rob-hp-laptop>
-References: <20180713151424.13000-1-paul@crapouillou.net>
- <20180714131920.GU16084@piout.net>
- <1531574734.2831.0@smtp.crapouillou.net>
- <20180714133250.GW16084@piout.net>
- <1531576208.2831.1@smtp.crapouillou.net>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v6 00/10] Add the I3C subsystem
+Date: Fri, 20 Jul 2018 17:41:32 +0200
+Message-ID: <20180720154132.2fwmwpiwtxa73ljf@ninjato>
+References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
+ <CAK8P3a2MP5+oFz--e+BM24D8Ahw7H_RKgN1S6wY1nQE6JL0dmw@mail.gmail.com>
+ <2ab0ab75-2df0-2714-f007-c33b25481016@axentia.se>
+ <20180720101206.tv7nsoanwo5ftnia@ninjato>
+ <CAK8P3a2Pqo5DuYBb09+w4nGWGOw+e_tZPxnA06qjNO_6Hw6NvQ@mail.gmail.com>
+ <21b269c5-a3a7-c5de-c81e-c9c9301ae13e@axentia.se>
+ <CAK8P3a1t2fhdw7HwxNkOs9o2pBECZ0ZdOysA=r2SPTWEvx76kw@mail.gmail.com>
+ <a74a7472-e900-d031-d10b-b12f03ea9ff1@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5qjmuivse67kaw4q"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1531576208.2831.1@smtp.crapouillou.net>
+In-Reply-To: <a74a7472-e900-d031-d10b-b12f03ea9ff1@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Arnd Bergmann <arnd@arndb.de>, Boris Brezillon <boris.brezillon@bootlin.com>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.c>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 14, 2018 at 03:50:08PM +0200, Paul Cercueil wrote:
-> 
-> 
-> Le sam. 14 juil. 2018 à 15:32, Alexandre Belloni
-> <alexandre.belloni@bootlin.com> a écrit :
-> > On 14/07/2018 15:25:33+0200, Paul Cercueil wrote:
-> > >  Hi Alexandre,
-> > > 
-> > >  Le sam. 14 juil. 2018 à 15:19, Alexandre Belloni
-> > >  <alexandre.belloni@bootlin.com> a écrit :
-> > >  > Hello,
-> > >  >
-> > >  > On 13/07/2018 17:14:24+0200, Paul Cercueil wrote:
-> > >  > >  The RTC in the JZ4725B works just like the one in the JZ4740.
-> > >  > >
-> > >  > >  The RTC in the JZ4760 and JZ4770 work just like the one in the
-> > >  > > JZ4780.
-> > >  > >
-> > >  > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > >  > >  ---
-> > >  > >   Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
-> > > |  3
-> > >  > > +++
-> > >  > >   drivers/rtc/rtc-jz4740.c
-> > > | 11
-> > >  > > ++++++++++-
-> > >  > >   2 files changed, 13 insertions(+), 1 deletion(-)
-> > >  > >
-> > >  > >  diff --git
-> > >  > > a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
-> > >  > > b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
-> > >  > >  index 41c7ae18fd7b..a9e821de84f2 100644
-> > >  > >  ---
-> > > a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
-> > >  > >  +++
-> > > b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
-> > >  > >  @@ -4,6 +4,9 @@ Required properties:
-> > >  > >
-> > >  > >   - compatible: One of:
-> > >  > >     - "ingenic,jz4740-rtc" - for use with the JZ4740 SoC
-> > >  > >  +  - "ingenic,jz4725b-rtc" - for use with the JZ4725B SoC
-> > >  > >  +  - "ingenic,jz4760-rtc" - for use with the JZ4760 SoC
-> > >  > >  +  - "ingenic,jz4770-rtc" - for use with the JZ4770 SoC
-> > >  > >     - "ingenic,jz4780-rtc" - for use with the JZ4780 SoC
-> > >  > >   - reg: Address range of rtc register set
-> > >  > >   - interrupts: IRQ number for the alarm interrupt
-> > >  > >  diff --git a/drivers/rtc/rtc-jz4740.c
-> > > b/drivers/rtc/rtc-jz4740.c
-> > >  > >  index d0a891777f44..1c867e3a0ea5 100644
-> > >  > >  --- a/drivers/rtc/rtc-jz4740.c
-> > >  > >  +++ b/drivers/rtc/rtc-jz4740.c
-> > >  > >  @@ -54,6 +54,9 @@
-> > >  > >
-> > >  > >   enum jz4740_rtc_type {
-> > >  > >   	ID_JZ4740,
-> > >  > >  +	ID_JZ4725B,
-> > >  > >  +	ID_JZ4760,
-> > >  > >  +	ID_JZ4770,
-> > >  >
-> > >  > I wouldn't introduce those ids unless there are handling
-> > > differences at
-> > >  > some point.
-> > > 
-> > >  Well there are handling differences, see below.
-> > > 
-> > >  > >   	ID_JZ4780,
-> > >  > >   };
-> > >  > >
-> > >  > >  @@ -114,7 +117,7 @@ static inline int
-> > > jz4740_rtc_reg_write(struct
-> > >  > > jz4740_rtc *rtc, size_t reg,
-> > >  > >   {
-> > >  > >   	int ret = 0;
-> > >  > >
-> > >  > >  -	if (rtc->type >= ID_JZ4780)
-> > >  > >  +	if (rtc->type >= ID_JZ4760)
-> > >  >
-> > >  > This would avoid that change (and the test would preferably be
-> > >  > (rtc->type == ID_JZ4780))
-> > > 
-> > >  That branch should be taken if the SoC is JZ4760, JZ4770 or JZ4780.
-> > >  It should not be taken if the SoC is JZ4740 or JZ4725B.
-> > 
-> > Sure but you can achieve that with only 2 ids...
-> > 
-> > > 
-> > >  > >   		ret = jz4780_rtc_enable_write(rtc);
-> > >  > >   	if (ret == 0)
-> > >  > >   		ret = jz4740_rtc_wait_write_ready(rtc);
-> > >  > >  @@ -300,6 +303,9 @@ static void jz4740_rtc_power_off(void)
-> > >  > >
-> > >  > >   static const struct of_device_id jz4740_rtc_of_match[] = {
-> > >  > >   	{ .compatible = "ingenic,jz4740-rtc", .data = (void
-> > > *)ID_JZ4740 },
-> > >  > >  +	{ .compatible = "ingenic,jz4725b-rtc", .data = (void
-> > > *)ID_JZ4725B
-> > >  > > },
-> > >  > >  +	{ .compatible = "ingenic,jz4760-rtc", .data = (void
-> > > *)ID_JZ4760 },
-> > >  > >  +	{ .compatible = "ingenic,jz4770-rtc", .data = (void
-> > > *)ID_JZ4770 },
-> > 
-> > By doing the correct mapping here e.g:
-> > 
-> > { .compatible = "ingenic,jz4725b-rtc", .data = (void *)ID_JZ4740 },
-> 
-> Not very pretty and future-proof if you ask me...
 
-Looks to me like this can be handled entirely in DT without driver 
-changes like the other patches. Correct usage of compatible strings is 
-what gives you future-proofing. And no driver change is better than 
-needless changing.
+--5qjmuivse67kaw4q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-It may look a bit wierd if 4780 is the fallback for 4770, but if the 
-4780 is older, then that actually makes sense.
 
-Rob
+> I don't have an actual example for I2C, maybe Wolfram does? But I can
+> invent a case. E.g. the speedy DMA-enabled master cannot generate
+> RESTART, which is a must for (re-)configuration, but not for passing
+> data to the device.
+
+DMA capable controllers may also not react adequate to the slave doing
+clock stretching (which is forbidden in I3C).
+
+Renesas R-Car Gen2 has two I2C IP cores. One can do DMA and automatic
+transfers to the PMIC, the other has I2C slave functionality. One cannot
+do I2C_SMBUS_QUICK, the other can. And some more kind of quirks.
+Sometimes you can mux the pins to GPIO, so you have a third option.
+
+This setup is the reason the demux driver exists.
+
+> Also consider some future HW that has several I3C blocks, but they
+> are not identical. There's one beefy kind and one slim kind (I'm sure
+> you can find HW with different flavors of I2C blocks). Even if the
+> HW designers intended for one type of block to be superior in every
+> aspect, they might have made a mistake? This HW also has a pinmux, so
+> the SW is free to route different I3C blocks to the actual I3C bus.
+
+So, basically this is what happened with R-Car. Now, I tend to think
+that I3C is much more complex and noone would put two I3C IP cores into
+on SoC. But it was not too long ago that I wouldn't believe someone put
+two different I2C IP cores into a SoC. Then again, it happened when I2C
+was around for 35 years...
+
+
+--5qjmuivse67kaw4q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAltSAqgACgkQFA3kzBSg
+KbbN1g//WcDSNStRmr0iBDO0XSjnWhcI+kcUTf8ETxISUPklVAzkORin4E42FKXC
+soxRpX/m7z5tU5QjHJRq5MFXFp3JShO3kUpofLAhC6eQt60C75Unk48QP7Doktmg
+Rx4OoWOkNwykZEYglRN1pSjdCzu0kRboRsxpAuUD41YVSRebRdzxwXpgVEUeA9pG
+W4apNVpmjn1CBxDP9UmM7rE+6hJIUS5tzA0KtRHaF3QoAn2kH1F/c+lHFYaTqSUR
+WZw7hcyIOky6ylSQShY2OTV4xurZm8Qx84QE0i+DJ9VENTMuhvZisEKlxm5pSelL
+TGWqDNHe16kxNMaheRP/rZVMlbLosbtlhvRrrYwfoH+1M2tl50nk7rDCqd/EBgv/
+KIrCprk6tZeSITJUd+GO5Srx3JYD1Cwj0L9wbt0IEHHj+ZamisgO5VhqqqcXcp0e
+NXPsp1vcbnoUTNqk7P8yK6UDlhSRoCbcMlQ0BE6hm6qvwYfwLHnLlVnDi9fShsnd
+m4ielcyEKVvj8VSufzYNuRy3G0FZmujMJJlnaMa/ZqESjfaRquWlhKvpwDyvghdC
+5i0VNH1dAJoCyMejMlMFTLc/4+Gew1I6p0pCmfI5NJDLmyTuQQpRk4lA57qHueY4
+4hkWptnUuKNTE1+C7xXKj25gm/lnr4HoF+4aT1H6vI6FNT1y8OI=
+=nV3b
+-----END PGP SIGNATURE-----
+
+--5qjmuivse67kaw4q--
