@@ -1,68 +1,82 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v2] pinctrl: tegra: fix spelling in devicetree binding
- document
-Date: Fri, 20 Jul 2018 09:46:12 +0100
-Message-ID: <90b69bd2-e514-5b08-4b75-74e5085ec94a@nvidia.com>
-References: <20180720082258.1590-1-marcel@ziswiler.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH 2/2] arm64: uniphier: dts: add more clocks to Denali NAND
+ controller node
+Date: Fri, 20 Jul 2018 17:50:45 +0900
+Message-ID: <1532076645-10769-2-git-send-email-yamada.masahiro@socionext.com>
+References: <1532076645-10769-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180720082258.1590-1-marcel@ziswiler.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel@ziswiler.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1532076645-10769-1-git-send-email-yamada.masahiro@socionext.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Catch up with the new binding of the Denali IP where three clocks,
+"nand", "nand_x", "ecc" are required.
 
-On 20/07/18 09:22, Marcel Ziswiler wrote:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> This fixes a spelling mistake.
-> 
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> ---
-> 
-> Changes in v2:
-> - Also fix up the one in nvidia,tegra210-pinmux.txt as suggested by Jon.
-> 
->  Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt | 2 +-
->  Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-pinmux.txt | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt
-> index ecb5c0d25218..f4d06bb0b55a 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt
-> @@ -17,7 +17,7 @@ Tegra124 adds the following optional properties for pin configuration subnodes.
->  The macros for options are defined in the
->  	include/dt-binding/pinctrl/pinctrl-tegra.h.
->  - nvidia,enable-input: Integer. Enable the pin's input path.
-> -		enable :TEGRA_PIN_ENABLE0 and
-> +		enable :TEGRA_PIN_ENABLE and
->  		disable or output only: TEGRA_PIN_DISABLE.
->  - nvidia,open-drain: Integer.
->  		enable: TEGRA_PIN_ENABLE.
-> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-pinmux.txt
-> index a62d82d5fbe9..85f211436b8e 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-pinmux.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-pinmux.txt
-> @@ -44,7 +44,7 @@ Optional subnode-properties:
->  - nvidia,tristate: Integer.
->      0: drive, 1: tristate.
->  - nvidia,enable-input: Integer. Enable the pin's input path.
-> -    enable :TEGRA_PIN_ENABLE0 and
-> +    enable :TEGRA_PIN_ENABLE and
->      disable or output only: TEGRA_PIN_DISABLE.
->  - nvidia,open-drain: Integer.
->      enable: TEGRA_PIN_ENABLE.
+For UniPhier SoCs, the "nand_x" and "ecc" are tied up because they
+are both 200MHz.
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Thanks!
-Jon
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 3 ++-
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 3 ++-
+ arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi | 3 ++-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+index d63b56e..5640dac 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+@@ -571,7 +571,8 @@
+ 			interrupts = <0 65 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_nand>;
+-			clocks = <&sys_clk 2>;
++			clock-names = "nand", "nand_x", "ecc";
++			clocks = <&sys_clk 2>, <&sys_clk 3>, <&sys_clk 3>;
+ 			resets = <&sys_rst 2>;
+ 		};
+ 	};
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+index 0298bd0..a8964c0 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+@@ -626,7 +626,8 @@
+ 			interrupts = <0 65 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_nand>;
+-			clocks = <&sys_clk 2>;
++			clock-names = "nand", "nand_x", "ecc";
++			clocks = <&sys_clk 2>, <&sys_clk 3>, <&sys_clk 3>;
+ 			resets = <&sys_rst 2>;
+ 		};
+ 	};
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
+index 2a4cf42..fd2bcd4 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
+@@ -455,7 +455,8 @@
+ 			interrupts = <0 65 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_nand>;
+-			clocks = <&sys_clk 2>;
++			clock-names = "nand", "nand_x", "ecc";
++			clocks = <&sys_clk 2>, <&sys_clk 3>, <&sys_clk 3>;
+ 			resets = <&sys_rst 2>;
+ 		};
+ 	};
 -- 
-nvpublic
+2.7.4
