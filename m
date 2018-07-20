@@ -1,720 +1,340 @@
-From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Subject: [PATCH v10 7/7] Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990
-Date: Fri, 20 Jul 2018 19:02:43 +0530
-Message-ID: <20180720133243.6851-8-bgodavar@codeaurora.org>
-References: <20180720133243.6851-1-bgodavar@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180720133243.6851-1-bgodavar@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: marcel@holtmann.org, johan.hedberg@gmail.com, mka@chromium.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, Balakrishna Godavarthi <bgodavar@codeaurora.org>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH V4 5/8] backlight: qcom-wled: Restructure the driver for
+ WLED3
+Date: Fri, 20 Jul 2018 14:40:40 +0100
+Message-ID: <68673142-1496-de1b-55cc-78a3dd2256bd@linaro.org>
+References: <1531131741-19971-1-git-send-email-kgunda@codeaurora.org>
+ <1531131741-19971-6-git-send-email-kgunda@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1531131741-19971-6-git-send-email-kgunda@codeaurora.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kiran Gunda <kgunda@codeaurora.org>, bjorn.andersson@linaro.org, jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support to set voltage/current of various regulators
-to power up/down Bluetooth chip wcn3990.
-
-Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
----
-changes in v10:
-    * added support to read regulator currents from dts.
-    * added support to try to connect with chip if it fails to respond to initial commands
-    * updated review comments.
-
-changes in v9:
-    * moved flow control to vendor and set_baudarte functions.
-    * removed parent regs.
-
-changes in v8:
-    * closing qca buffer, if qca_power_setup fails
-    * chnaged ibs start timer function call location.
-    * updated review comments.
-  
-changes in v7:
-    * addressed review comments.
-
-changes in v6:
-    * Hooked up qca_power to qca_serdev.
-    * renamed all the naming inconsistency functions with qca_*
-    * leveraged common code of ROME for wcn3990.
-    * created wrapper functions for re-usable blocks.
-    * updated function of _*regulator_enable and _*regualtor_disable.  
-    * removed redundant comments and functions.
-    * addressed review comments.
-
-Changes in v5:
-    * updated regulator vddpa min_uV to 1304000.
-      * addressed review comments.
- 
-Changes in v4:
-    * Segregated the changes of btqca from hci_qca
-    * rebased all changes on top of bluetooth-next.
-    * addressed review comments.
-
----
- drivers/bluetooth/btqca.h   |   4 +
- drivers/bluetooth/hci_qca.c | 481 ++++++++++++++++++++++++++++++++----
- 2 files changed, 439 insertions(+), 46 deletions(-)
-
-diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
-index a9c2779f3e07..9e2bbcf5c002 100644
---- a/drivers/bluetooth/btqca.h
-+++ b/drivers/bluetooth/btqca.h
-@@ -37,6 +37,10 @@
- #define EDL_TAG_ID_HCI			(17)
- #define EDL_TAG_ID_DEEP_SLEEP		(27)
- 
-+#define QCA_WCN3990_POWERON_PULSE	0xFC
-+#define QCA_WCN3990_POWEROFF_PULSE	0xC0
-+#define QCA_WCN3990_FORCE_BOOT_PULSE	0xC0
-+
- enum qca_bardrate {
- 	QCA_BAUDRATE_115200 	= 0,
- 	QCA_BAUDRATE_57600,
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index a6e7d38ef931..7ed35eb3f480 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -5,7 +5,7 @@
-  *  protocol extension to H4.
-  *
-  *  Copyright (C) 2007 Texas Instruments, Inc.
-- *  Copyright (c) 2010, 2012 The Linux Foundation. All rights reserved.
-+ *  Copyright (c) 2010, 2012, 2018 The Linux Foundation. All rights reserved.
-  *
-  *  Acknowledgements:
-  *  This file is based on hci_ll.c, which was...
-@@ -31,9 +31,14 @@
- #include <linux/kernel.h>
- #include <linux/clk.h>
- #include <linux/debugfs.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
- #include <linux/gpio/consumer.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/serdev.h>
- 
- #include <net/bluetooth/bluetooth.h>
-@@ -124,12 +129,46 @@ enum qca_speed_type {
- 	QCA_OPER_SPEED
- };
- 
-+/*
-+ * Voltage regulator information required for configuring the
-+ * QCA Bluetooth chipset
-+ */
-+struct qca_vreg {
-+	const char *name;
-+	unsigned int min_uV;
-+	unsigned int max_uV;
-+	unsigned int load_uA;
-+};
-+
-+struct qca_vreg_data {
-+	enum qca_btsoc_type soc_type;
-+	struct qca_vreg *vregs;
-+	size_t num_vregs;
-+};
-+
-+/*
-+ * Platform data for the QCA Bluetooth power driver.
-+ */
-+struct qca_power {
-+	struct device *dev;
-+	struct qca_vreg_data *vreg_data;
-+	struct regulator_bulk_data *vreg_bulk;
-+	bool vregs_on;
-+};
-+
- struct qca_serdev {
- 	struct hci_uart	 serdev_hu;
- 	struct gpio_desc *bt_en;
- 	struct clk	 *susclk;
-+	enum qca_btsoc_type btsoc_type;
-+	struct qca_power *bt_power;
-+	u32 init_speed;
-+	u32 oper_speed;
- };
- 
-+static int qca_power_setup(struct hci_uart *hu, bool on);
-+static int qca_power_shutdown(struct hci_dev *hdev);
-+
- static void __serial_clock_on(struct tty_struct *tty)
- {
- 	/* TODO: Some chipset requires to enable UART clock on client
-@@ -407,6 +446,7 @@ static int qca_open(struct hci_uart *hu)
- {
- 	struct qca_serdev *qcadev;
- 	struct qca_data *qca;
-+	int ret;
- 
- 	BT_DBG("hu %p qca_open", hu);
- 
-@@ -458,19 +498,32 @@ static int qca_open(struct hci_uart *hu)
- 
- 	hu->priv = qca;
- 
--	timer_setup(&qca->wake_retrans_timer, hci_ibs_wake_retrans_timeout, 0);
--	qca->wake_retrans = IBS_WAKE_RETRANS_TIMEOUT_MS;
--
--	timer_setup(&qca->tx_idle_timer, hci_ibs_tx_idle_timeout, 0);
--	qca->tx_idle_delay = IBS_TX_IDLE_TIMEOUT_MS;
--
- 	if (hu->serdev) {
- 		serdev_device_open(hu->serdev);
- 
- 		qcadev = serdev_device_get_drvdata(hu->serdev);
--		gpiod_set_value_cansleep(qcadev->bt_en, 1);
-+		if (qcadev->btsoc_type != QCA_WCN3990) {
-+			gpiod_set_value_cansleep(qcadev->bt_en, 1);
-+		} else {
-+			hu->init_speed = qcadev->init_speed;
-+			hu->oper_speed = qcadev->oper_speed;
-+			ret = qca_power_setup(hu, true);
-+			if (ret) {
-+				destroy_workqueue(qca->workqueue);
-+				kfree_skb(qca->rx_skb);
-+				hu->priv = NULL;
-+				kfree(qca);
-+				return ret;
-+			}
-+		}
- 	}
- 
-+	timer_setup(&qca->wake_retrans_timer, hci_ibs_wake_retrans_timeout, 0);
-+	qca->wake_retrans = IBS_WAKE_RETRANS_TIMEOUT_MS;
-+
-+	timer_setup(&qca->tx_idle_timer, hci_ibs_tx_idle_timeout, 0);
-+	qca->tx_idle_delay = IBS_TX_IDLE_TIMEOUT_MS;
-+
- 	BT_DBG("HCI_UART_QCA open, tx_idle_delay=%u, wake_retrans=%u",
- 	       qca->tx_idle_delay, qca->wake_retrans);
- 
-@@ -554,10 +607,13 @@ static int qca_close(struct hci_uart *hu)
- 	qca->hu = NULL;
- 
- 	if (hu->serdev) {
--		serdev_device_close(hu->serdev);
--
- 		qcadev = serdev_device_get_drvdata(hu->serdev);
--		gpiod_set_value_cansleep(qcadev->bt_en, 0);
-+		if (qcadev->btsoc_type == QCA_WCN3990)
-+			qca_power_shutdown(hu->hdev);
-+		else
-+			gpiod_set_value_cansleep(qcadev->bt_en, 0);
-+
-+		serdev_device_close(hu->serdev);
- 	}
- 
- 	kfree_skb(qca->rx_skb);
-@@ -891,6 +947,7 @@ static int qca_set_baudrate(struct hci_dev *hdev, uint8_t baudrate)
- 	struct hci_uart *hu = hci_get_drvdata(hdev);
- 	struct qca_data *qca = hu->priv;
- 	struct sk_buff *skb;
-+	struct qca_serdev *qcadev;
- 	u8 cmd[] = { 0x01, 0x48, 0xFC, 0x01, 0x00 };
- 
- 	if (baudrate > QCA_BAUDRATE_3200000)
-@@ -904,6 +961,13 @@ static int qca_set_baudrate(struct hci_dev *hdev, uint8_t baudrate)
- 		return -ENOMEM;
- 	}
- 
-+	/* Disabling hardware flow control is mandatory while
-+	 * sending change baudrate request to wcn3990 SoC.
-+	 */
-+	qcadev = serdev_device_get_drvdata(hu->serdev);
-+	if (qcadev->btsoc_type == QCA_WCN3990)
-+		hci_uart_set_flow_control(hu, true);
-+
- 	/* Assign commands to change baudrate and packet type. */
- 	skb_put_data(skb, cmd, sizeof(cmd));
- 	hci_skb_pkt_type(skb) = HCI_COMMAND_PKT;
-@@ -919,6 +983,9 @@ static int qca_set_baudrate(struct hci_dev *hdev, uint8_t baudrate)
- 	schedule_timeout(msecs_to_jiffies(BAUDRATE_SETTLE_TIMEOUT_MS));
- 	set_current_state(TASK_RUNNING);
- 
-+	if (qcadev->btsoc_type == QCA_WCN3990)
-+		hci_uart_set_flow_control(hu, false);
-+
- 	return 0;
- }
- 
-@@ -930,6 +997,43 @@ static inline void host_set_baudrate(struct hci_uart *hu, unsigned int speed)
- 		hci_uart_set_baudrate(hu, speed);
- }
- 
-+static int qca_send_vendor_pulse(struct hci_dev *hdev, u8 cmd)
-+{
-+	struct hci_uart *hu = hci_get_drvdata(hdev);
-+	struct qca_data *qca = hu->priv;
-+	struct sk_buff *skb;
-+
-+	/* These vendor pulses are single byte command which are sent
-+	 * at required baudrate to WCN3990. on WCN3990, we have an external
-+	 * circuit at Tx pin which decodes the pulse sent at specific baudrate.
-+	 * For example, as WCN3990 supports RF COEX frequency for both Wi-Fi/BT
-+	 * and also, we use the same power inputs to turn ON and OFF for
-+	 * Wi-Fi/BT. Powering up the power sources will not enable BT, until
-+	 * we send a POWER ON pulse at 115200. This algorithm will help to
-+	 * save power. Disabling hardware flow control is mandatory while
-+	 * sending vendor pulses to SoC.
-+	 */
-+	bt_dev_dbg(hdev, "sending vendor pulse %02x to SoC", cmd);
-+
-+	skb = bt_skb_alloc(sizeof(cmd), GFP_KERNEL);
-+	if (!skb)
-+		return -ENOMEM;
-+
-+	hci_uart_set_flow_control(hu, true);
-+
-+	skb_put_u8(skb, cmd);
-+	hci_skb_pkt_type(skb) = HCI_COMMAND_PKT;
-+
-+	skb_queue_tail(&qca->txq, skb);
-+	hci_uart_tx_wakeup(hu);
-+
-+	/* Wait for 100 uS for SoC to settle down */
-+	usleep_range(100, 200);
-+	hci_uart_set_flow_control(hu, false);
-+
-+	return 0;
-+}
-+
- static unsigned int qca_get_speed(struct hci_uart *hu,
- 				  enum qca_speed_type speed_type)
- {
-@@ -952,9 +1056,18 @@ static unsigned int qca_get_speed(struct hci_uart *hu,
- 
- static int qca_check_speeds(struct hci_uart *hu)
- {
--	if (!qca_get_speed(hu, QCA_INIT_SPEED) ||
--	    !qca_get_speed(hu, QCA_OPER_SPEED))
--		return -EINVAL;
-+	struct qca_serdev *qcadev;
-+
-+	qcadev = serdev_device_get_drvdata(hu->serdev);
-+	if (qcadev->btsoc_type == QCA_WCN3990) {
-+		if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
-+		    !qca_get_speed(hu, QCA_OPER_SPEED))
-+			return -EINVAL;
-+	} else {
-+		if (!qca_get_speed(hu, QCA_INIT_SPEED) ||
-+		    !qca_get_speed(hu, QCA_OPER_SPEED))
-+			return -EINVAL;
-+	}
- 
- 	return 0;
- }
-@@ -985,15 +1098,78 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
- 	return 0;
- }
- 
-+static int qca_wcn3990_init(struct hci_uart *hu, u32 *soc_ver)
-+{
-+	struct hci_dev *hdev = hu->hdev;
-+	int i, ret = 1;
-+
-+	/* WCN3990 is a discrete Bluetooth chip connected to APPS processor.
-+	 * sometimes we will face communication synchronization issues,
-+	 * like reading version command timeouts. In which HCI_SETUP fails,
-+	 * to overcome these issues, we try to communicate by performing an
-+	 * COLD power OFF and ON.
-+	 */
-+	for (i = 1; i <= 10 && ret; i++) {
-+		/* This helper will turn ON chip if it is powered off.
-+		 * if the chip is already powered ON, function call will
-+		 * return zero.
-+		 */
-+		ret = qca_power_setup(hu, true);
-+		if (ret)
-+			goto regs_off;
-+
-+		/* Forcefully enable wcn3990 to enter in to boot mode. */
-+		host_set_baudrate(hu, 2400);
-+		ret = qca_send_vendor_pulse(hdev, QCA_WCN3990_FORCE_BOOT_PULSE);
-+		if (ret)
-+			goto regs_off;
-+
-+		qca_set_speed(hu, QCA_INIT_SPEED);
-+		ret = qca_send_vendor_pulse(hdev, QCA_WCN3990_POWERON_PULSE);
-+		if (ret)
-+			goto regs_off;
-+
-+		/* Wait for 100 ms for SoC to boot */
-+		msleep(100);
-+
-+		/* Now the device is in ready state to communicate with host.
-+		 * To sync HOST with device we need to reopen port.
-+		 * Without this, we will have RTS and CTS synchronization
-+		 * issues.
-+		 */
-+		serdev_device_close(hu->serdev);
-+		ret = serdev_device_open(hu->serdev);
-+		if (ret) {
-+			bt_dev_err(hu->hdev, "failed to open port");
-+			break;
-+		}
-+
-+		hci_uart_set_flow_control(hu, false);
-+		ret = qca_read_soc_version(hdev, soc_ver);
-+		if (ret < 0 || soc_ver == 0)
-+			bt_dev_err(hdev, "Failed to get version:%d", ret);
-+
-+		if (!ret)
-+			break;
-+
-+regs_off:
-+		bt_dev_err(hdev, "retrying to establish communication: %d", i);
-+		qca_power_shutdown(hdev);
-+	}
-+
-+	return ret;
-+}
-+
- static int qca_setup(struct hci_uart *hu)
- {
- 	struct hci_dev *hdev = hu->hdev;
- 	struct qca_data *qca = hu->priv;
- 	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
-+	struct qca_serdev *qcadev;
- 	int ret;
- 	int soc_ver = 0;
- 
--	bt_dev_info(hdev, "ROME setup");
-+	qcadev = serdev_device_get_drvdata(hu->serdev);
- 
- 	ret = qca_check_speeds(hu);
- 	if (ret)
-@@ -1002,8 +1178,15 @@ static int qca_setup(struct hci_uart *hu)
- 	/* Patch downloading has to be done without IBS mode */
- 	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
- 
--	/* Setup initial baudrate */
--	qca_set_speed(hu, QCA_INIT_SPEED);
-+	if (qcadev->btsoc_type == QCA_WCN3990) {
-+		bt_dev_info(hdev, "setting up wcn3990");
-+		ret = qca_wcn3990_init(hu, &soc_ver);
-+		if (ret)
-+			return ret;
-+	} else {
-+		bt_dev_info(hdev, "ROME setup");
-+		qca_set_speed(hu, QCA_INIT_SPEED);
-+	}
- 
- 	/* Setup user speed if needed */
- 	speed = qca_get_speed(hu, QCA_OPER_SPEED);
-@@ -1015,15 +1198,16 @@ static int qca_setup(struct hci_uart *hu)
- 		qca_baudrate = qca_get_baudrate_value(speed);
- 	}
- 
--	/* Get QCA version information */
--	ret = qca_read_soc_version(hdev, &soc_ver);
--	if (ret)
--		return ret;
-+	if (qcadev->btsoc_type != QCA_WCN3990) {
-+		/* Get QCA version information */
-+		ret = qca_read_soc_version(hdev, &soc_ver);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	bt_dev_info(hdev, "QCA controller version 0x%08x", soc_ver);
--
- 	/* Setup patch / NVM configurations */
--	ret = qca_uart_setup(hdev, qca_baudrate, QCA_ROME, soc_ver);
-+	ret = qca_uart_setup(hdev, qca_baudrate, qcadev->btsoc_type, soc_ver);
- 	if (!ret) {
- 		set_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
- 		qca_debugfs_init(hdev);
-@@ -1059,9 +1243,174 @@ static struct hci_uart_proto qca_proto = {
- 	.dequeue	= qca_dequeue,
- };
- 
-+static const struct qca_vreg_data qca_soc_data = {
-+	.soc_type = QCA_WCN3990,
-+	.vregs = (struct qca_vreg []) {
-+		{ "vddio",   1800000, 1800000,  15000  },
-+		{ "vddxo",   1800000, 1800000,  80000  },
-+		{ "vddrf",   1304000, 1304000,  300000 },
-+		{ "vddch0",  3000000, 3312000,  450000 },
-+	},
-+	.num_vregs = 4,
-+};
-+
-+static int qca_power_shutdown(struct hci_dev *hdev)
-+{
-+	struct hci_uart *hu = hci_get_drvdata(hdev);
-+
-+	host_set_baudrate(hu, 2400);
-+	qca_send_vendor_pulse(hdev, QCA_WCN3990_POWEROFF_PULSE);
-+	return qca_power_setup(hu, false);
-+}
-+
-+static int qca_enable_regulator(struct qca_vreg vregs,
-+				struct regulator *regulator)
-+{
-+	int ret;
-+
-+	ret = regulator_set_voltage(regulator, vregs.min_uV,
-+				    vregs.max_uV);
-+	if (ret)
-+		return ret;
-+
-+	if (vregs.load_uA)
-+		ret = regulator_set_load(regulator,
-+					 vregs.load_uA);
-+
-+	if (ret)
-+		return ret;
-+
-+	return regulator_enable(regulator);
-+
-+}
-+
-+static void qca_disable_regulator(struct qca_vreg vregs,
-+				  struct regulator *regulator)
-+{
-+	regulator_disable(regulator);
-+	regulator_set_voltage(regulator, 0, vregs.max_uV);
-+	if (vregs.load_uA)
-+		regulator_set_load(regulator, 0);
-+
-+}
-+
-+static int qca_power_setup(struct hci_uart *hu, bool on)
-+{
-+	struct qca_vreg *vregs;
-+	struct regulator_bulk_data *vreg_bulk;
-+	struct qca_serdev *qcadev;
-+	int i, num_vregs, ret = 0;
-+
-+	qcadev = serdev_device_get_drvdata(hu->serdev);
-+	if (!qcadev || !qcadev->bt_power || !qcadev->bt_power->vreg_data ||
-+	    !qcadev->bt_power->vreg_bulk)
-+		return -EINVAL;
-+
-+	vregs = qcadev->bt_power->vreg_data->vregs;
-+	vreg_bulk = qcadev->bt_power->vreg_bulk;
-+	num_vregs = qcadev->bt_power->vreg_data->num_vregs;
-+	BT_DBG("on: %d", on);
-+	if (on  && !qcadev->bt_power->vregs_on) {
-+		for (i = 0; i < num_vregs; i++) {
-+			ret = qca_enable_regulator(vregs[i],
-+						   vreg_bulk[i].consumer);
-+			if (ret)
-+				break;
-+		}
-+
-+		if (ret) {
-+			BT_ERR("failed to enable regulator:%s", vregs[i].name);
-+			/* turn off regulators which are enabled */
-+			for (i = i - 1; i >= 0; i--)
-+				qca_disable_regulator(vregs[i],
-+						      vreg_bulk[i].consumer);
-+		} else {
-+			qcadev->bt_power->vregs_on = true;
-+		}
-+	} else if (!on && qcadev->bt_power->vregs_on) {
-+		/* turn off regulator in reverse order */
-+		i = qcadev->bt_power->vreg_data->num_vregs - 1;
-+		for ( ; i >= 0; i--)
-+			qca_disable_regulator(vregs[i], vreg_bulk[i].consumer);
-+
-+		qcadev->bt_power->vregs_on = false;
-+	}
-+
-+	return ret;
-+}
-+
-+static void qca_regulator_get_current(struct device *dev,
-+				      struct qca_vreg *vregs)
-+{
-+	char prop_name[32]; /* 32 is max size of property name */
-+
-+	/* We have different platforms where the load value is controlled
-+	 * via PMIC controllers. In such cases load required to power ON
-+	 * Bluetooth chips are defined in the PMIC. We have option to set
-+	 * operation mode like high or low power modes.
-+	 * We do have some platforms where driver need to enable the load for
-+	 * WCN3990. Based on the current property value defined for the
-+	 * regulators, driver will decide the regulator output load.
-+	 * If the current property for the regulator is defined in the dts
-+	 * we will read from dts tree, else from the default load values.
-+	 */
-+	snprintf(prop_name, 32, "%s-current", vregs->name);
-+	BT_DBG("Looking up %s from device tree\n", prop_name);
-+
-+	if (device_property_read_bool(dev, prop_name))
-+		device_property_read_u32(dev, prop_name, &vregs->load_uA);
-+
-+	BT_DBG("current %duA selected for regulator %s", vregs->load_uA,
-+		vregs->name);
-+}
-+
-+static int qca_init_regulators(struct qca_power *qca,
-+				const struct qca_vreg_data *data)
-+{
-+	int i, num_vregs;
-+	int load_uA;
-+
-+	num_vregs = data->num_vregs;
-+	qca->vreg_bulk = devm_kzalloc(qca->dev, num_vregs *
-+				      sizeof(struct regulator_bulk_data),
-+				      GFP_KERNEL);
-+	if (!qca->vreg_bulk)
-+		return -ENOMEM;
-+
-+	qca->vreg_data = devm_kzalloc(qca->dev, sizeof(struct qca_vreg_data),
-+				      GFP_KERNEL);
-+	if (!qca->vreg_data)
-+		return -ENOMEM;
-+
-+	qca->vreg_data->num_vregs = data->num_vregs;
-+	qca->vreg_data->soc_type = data->soc_type;
-+
-+	qca->vreg_data->vregs = devm_kzalloc(qca->dev, num_vregs *
-+				      sizeof(struct qca_vreg_data),
-+				      GFP_KERNEL);
-+
-+	if (!qca->vreg_data->vregs)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < num_vregs; i++) {
-+		/* copy regulator name, min voltage, max voltage */
-+		qca->vreg_data->vregs[i].name = data->vregs[i].name;
-+		qca->vreg_data->vregs[i].min_uV = data->vregs[i].min_uV;
-+		qca->vreg_data->vregs[i].max_uV = data->vregs[i].max_uV;
-+		load_uA = data->vregs[i].load_uA;
-+		qca->vreg_data->vregs[i].load_uA = load_uA;
-+		qca_regulator_get_current(qca->dev, &qca->vreg_data->vregs[i]);
-+
-+		qca->vreg_bulk[i].supply = qca->vreg_data->vregs[i].name;
-+	}
-+
-+	return devm_regulator_bulk_get(qca->dev, num_vregs, qca->vreg_bulk);
-+}
-+
- static int qca_serdev_probe(struct serdev_device *serdev)
- {
- 	struct qca_serdev *qcadev;
-+	const struct qca_vreg_data *data;
- 	int err;
- 
- 	qcadev = devm_kzalloc(&serdev->dev, sizeof(*qcadev), GFP_KERNEL);
-@@ -1069,47 +1418,87 @@ static int qca_serdev_probe(struct serdev_device *serdev)
- 		return -ENOMEM;
- 
- 	qcadev->serdev_hu.serdev = serdev;
-+	data = of_device_get_match_data(&serdev->dev);
- 	serdev_device_set_drvdata(serdev, qcadev);
-+	if (data && data->soc_type == QCA_WCN3990) {
-+		qcadev->btsoc_type = QCA_WCN3990;
-+		qcadev->bt_power = devm_kzalloc(&serdev->dev,
-+						sizeof(struct qca_power),
-+						GFP_KERNEL);
-+		if (!qcadev->bt_power)
-+			return -ENOMEM;
-+
-+		qcadev->bt_power->dev = &serdev->dev;
-+		err = qca_init_regulators(qcadev->bt_power, data);
-+		if (err) {
-+			BT_ERR("Failed to init regulators:%d", err);
-+			goto out;
-+		}
- 
--	qcadev->bt_en = devm_gpiod_get(&serdev->dev, "enable",
--				       GPIOD_OUT_LOW);
--	if (IS_ERR(qcadev->bt_en)) {
--		dev_err(&serdev->dev, "failed to acquire enable gpio\n");
--		return PTR_ERR(qcadev->bt_en);
--	}
-+		qcadev->bt_power->vregs_on = false;
- 
--	qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
--	if (IS_ERR(qcadev->susclk)) {
--		dev_err(&serdev->dev, "failed to acquire clk\n");
--		return PTR_ERR(qcadev->susclk);
--	}
-+		/* Read max speed supported by wcn3990 from dts
-+		 * tree. if max-speed property is not enabled in
-+		 * dts, QCA driver will use default operating speed
-+		 * from proto structure.
-+		 */
-+		device_property_read_u32(&serdev->dev, "max-speed",
-+					 &qcadev->oper_speed);
-+		if (!qcadev->oper_speed)
-+			BT_INFO("UART will pick default operating speed");
-+
-+		err = hci_uart_register_device(&qcadev->serdev_hu, &qca_proto);
-+		if (err) {
-+			BT_ERR("wcn3990 serdev registration failed");
-+			goto out;
-+		}
-+	} else {
-+		qcadev->btsoc_type = QCA_ROME;
-+		qcadev->bt_en = devm_gpiod_get(&serdev->dev, "enable",
-+					       GPIOD_OUT_LOW);
-+		if (IS_ERR(qcadev->bt_en)) {
-+			dev_err(&serdev->dev, "failed to acquire enable gpio\n");
-+			return PTR_ERR(qcadev->bt_en);
-+		}
- 
--	err = clk_set_rate(qcadev->susclk, SUSCLK_RATE_32KHZ);
--	if (err)
--		return err;
-+		qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
-+		if (IS_ERR(qcadev->susclk)) {
-+			dev_err(&serdev->dev, "failed to acquire clk\n");
-+			return PTR_ERR(qcadev->susclk);
-+		}
- 
--	err = clk_prepare_enable(qcadev->susclk);
--	if (err)
--		return err;
-+		err = clk_set_rate(qcadev->susclk, SUSCLK_RATE_32KHZ);
-+		if (err)
-+			return err;
- 
--	err = hci_uart_register_device(&qcadev->serdev_hu, &qca_proto);
--	if (err)
--		clk_disable_unprepare(qcadev->susclk);
-+		err = clk_prepare_enable(qcadev->susclk);
-+		if (err)
-+			return err;
-+
-+		err = hci_uart_register_device(&qcadev->serdev_hu, &qca_proto);
-+		if (err)
-+			clk_disable_unprepare(qcadev->susclk);
-+	}
-+
-+out:	return err;
- 
--	return err;
- }
- 
- static void qca_serdev_remove(struct serdev_device *serdev)
- {
- 	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
- 
--	hci_uart_unregister_device(&qcadev->serdev_hu);
-+	if (qcadev->btsoc_type == QCA_WCN3990)
-+		qca_power_shutdown(qcadev->serdev_hu.hdev);
-+	else
-+		clk_disable_unprepare(qcadev->susclk);
- 
--	clk_disable_unprepare(qcadev->susclk);
-+	hci_uart_unregister_device(&qcadev->serdev_hu);
- }
- 
- static const struct of_device_id qca_bluetooth_of_match[] = {
- 	{ .compatible = "qcom,qca6174-bt" },
-+	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, qca_bluetooth_of_match);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+T24gMDkvMDcvMTggMTE6MjIsIEtpcmFuIEd1bmRhIHdyb3RlOgo+IFJlc3RydWN0dXJlIHRoZSBk
+cml2ZXIgdG8gYWRkIHRoZSBzdXBwb3J0IGZvciBuZXcgV0xFRAo+IHBlcmlwaGVyYWxzLgo+IAo+
+IFNpZ25lZC1vZmYtYnk6IEtpcmFuIEd1bmRhIDxrZ3VuZGFAY29kZWF1cm9yYS5vcmc+CgpBY2tl
+ZC1ieTogRGFuaWVsIFRob21wc29uIDxkYW5pZWwudGhvbXBzb25AbGluYXJvLm9yZz4KCgo+IC0t
+LQo+IENoYW5nZXMgZnJvbSBWMzoKPiAJLSBUaGlzIGlzIHRoZSBuZXcgcGF0Y2ggYWZ0ZXIgc3Bs
+aXR0aW5nIHRoZQo+IAkgICJiYWNrbGlnaHQ6IHFjb20td2xlZDogQWRkIHN1cHBvcnQgZm9yIFdM
+RUQ0IHBlcmlwaGVyYWwiIHBhdGNoCj4gCSAgdG8gc2VwZXJhdGUgdGhlIFdMRUQzIHNwZWNpZmlj
+IHJlc3RydWN0dXJlLgo+IAkJCj4gICBkcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9xY29tLXdsZWQu
+YyB8IDM5NiArKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0KPiAgIDEgZmlsZSBj
+aGFuZ2VkLCAyNDYgaW5zZXJ0aW9ucygrKSwgMTUwIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9xY29tLXdsZWQuYyBiL2RyaXZlcnMvdmlkZW8v
+YmFja2xpZ2h0L3Fjb20td2xlZC5jCj4gaW5kZXggM2NkNmU3NS4uODdmYzFkMCAxMDA2NDQKPiAt
+LS0gYS9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9xY29tLXdsZWQuYwo+ICsrKyBiL2RyaXZlcnMv
+dmlkZW8vYmFja2xpZ2h0L3Fjb20td2xlZC5jCj4gQEAgLTE1LDU5ICsxNSw3MSBAQAo+ICAgI2lu
+Y2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+ICAgI2luY2x1ZGUgPGxpbnV4L29mLmg+Cj4gICAjaW5j
+bHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+
+Cj4gICAjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+Cj4gICAKPiAgIC8qIEZyb20gRFQgYmluZGlu
+ZyAqLwo+ICsjZGVmaW5lIFdMRURfTUFYX1NUUklOR1MJCQkJNAo+ICsKPiAgICNkZWZpbmUgV0xF
+RF9ERUZBVUxUX0JSSUdIVE5FU1MJCQkJMjA0OAo+ICAgCj4gLSNkZWZpbmUgV0xFRDNfU0lOS19S
+RUdfQlJJR0hUX01BWAkJCTB4RkZGCj4gLSNkZWZpbmUgV0xFRDNfQ1RSTF9SRUdfVkFMX0JBU0UJ
+CQkJMHg0MAo+ICsjZGVmaW5lIFdMRURfU0lOS19SRUdfQlJJR0hUX01BWAkJCTB4RkZGCj4gICAK
+PiAtLyogV0xFRDMgY29udHJvbCByZWdpc3RlcnMgKi8KPiAtI2RlZmluZSBXTEVEM19DVFJMX1JF
+R19NT0RfRU4JCQkJMHg0Ngo+IC0jZGVmaW5lICBXTEVEM19DVFJMX1JFR19NT0RfRU5fQklUCQkJ
+QklUKDcpCj4gLSNkZWZpbmUgIFdMRUQzX0NUUkxfUkVHX01PRF9FTl9NQVNLCQkJQklUKDcpCj4g
+Ky8qIFdMRUQgY29udHJvbCByZWdpc3RlcnMgKi8KPiArI2RlZmluZSBXTEVEX0NUUkxfUkVHX01P
+RF9FTgkJCQkweDQ2Cj4gKyNkZWZpbmUgIFdMRURfQ1RSTF9SRUdfTU9EX0VOX01BU0sJCQlCSVQo
+NykKPiArI2RlZmluZSAgV0xFRF9DVFJMX1JFR19NT0RfRU5fU0hJRlQJCQk3Cj4gICAKPiAtI2Rl
+ZmluZSBXTEVEM19DVFJMX1JFR19GUkVRCQkJCTB4NGMKPiAtI2RlZmluZSAgV0xFRDNfQ1RSTF9S
+RUdfRlJFUV9NQVNLCQkJMHgwZgo+ICsjZGVmaW5lIFdMRURfQ1RSTF9SRUdfRlJFUQkJCQkweDRj
+Cj4gKyNkZWZpbmUgIFdMRURfQ1RSTF9SRUdfRlJFUV9NQVNLCQkJR0VOTUFTSygzLCAwKQo+ICAg
+Cj4gLSNkZWZpbmUgV0xFRDNfQ1RSTF9SRUdfT1ZQCQkJCTB4NGQKPiAtI2RlZmluZSAgV0xFRDNf
+Q1RSTF9SRUdfT1ZQX01BU0sJCQkweDAzCj4gKyNkZWZpbmUgV0xFRF9DVFJMX1JFR19PVlAJCQkJ
+MHg0ZAo+ICsjZGVmaW5lICBXTEVEX0NUUkxfUkVHX09WUF9NQVNLCQkJCUdFTk1BU0soMSwgMCkK
+PiAgIAo+IC0jZGVmaW5lIFdMRUQzX0NUUkxfUkVHX0lMSU1JVAkJCQkweDRlCj4gLSNkZWZpbmUg
+IFdMRUQzX0NUUkxfUkVHX0lMSU1JVF9NQVNLCQkJMHgwNwo+ICsjZGVmaW5lIFdMRURfQ1RSTF9S
+RUdfSUxJTUlUCQkJCTB4NGUKPiArI2RlZmluZSAgV0xFRF9DVFJMX1JFR19JTElNSVRfTUFTSwkJ
+CUdFTk1BU0soMiwgMCkKPiAgIAo+IC0vKiBXTEVEMyBzaW5rIHJlZ2lzdGVycyAqLwo+IC0jZGVm
+aW5lIFdMRUQzX1NJTktfUkVHX1NZTkMJCQkJMHg0Nwo+IC0jZGVmaW5lICBXTEVEM19TSU5LX1JF
+R19TWU5DX01BU0sJCQkweDA3Cj4gLSNkZWZpbmUgIFdMRUQzX1NJTktfUkVHX1NZTkNfTEVEMQkJ
+CUJJVCgwKQo+IC0jZGVmaW5lICBXTEVEM19TSU5LX1JFR19TWU5DX0xFRDIJCQlCSVQoMSkKPiAt
+I2RlZmluZSAgV0xFRDNfU0lOS19SRUdfU1lOQ19MRUQzCQkJQklUKDIpCj4gLSNkZWZpbmUgIFdM
+RUQzX1NJTktfUkVHX1NZTkNfQUxMCQkJMHgwNwo+IC0jZGVmaW5lICBXTEVEM19TSU5LX1JFR19T
+WU5DX0NMRUFSCQkJMHgwMAo+ICsvKiBXTEVEIHNpbmsgcmVnaXN0ZXJzICovCj4gKyNkZWZpbmUg
+V0xFRF9TSU5LX1JFR19TWU5DCQkJCTB4NDcKPiArI2RlZmluZSAgV0xFRF9TSU5LX1JFR19TWU5D
+X0NMRUFSCQkJMHgwMAo+ICAgCj4gICAjZGVmaW5lIFdMRUQzX1NJTktfUkVHX0NVUlJfU0lOSwkJ
+CTB4NGYKPiAtI2RlZmluZSAgV0xFRDNfU0lOS19SRUdfQ1VSUl9TSU5LX01BU0sJCQkweGUwCj4g
+LSNkZWZpbmUgIFdMRUQzX1NJTktfUkVHX0NVUlJfU0lOS19TSEZUCQkJMHgwNQo+ICsjZGVmaW5l
+ICBXTEVEM19TSU5LX1JFR19DVVJSX1NJTktfTUFTSwkJCUdFTk1BU0soNywgNSkKPiArI2RlZmlu
+ZSAgV0xFRDNfU0lOS19SRUdfQ1VSUl9TSU5LX1NIRlQJCQk1Cj4gICAKPiAtLyogV0xFRDMgcGVy
+LSdzdHJpbmcnIHJlZ2lzdGVycyBiZWxvdyAqLwo+IC0jZGVmaW5lIFdMRUQzX1NJTktfUkVHX1NU
+Ul9PRkZTRVQJCQkweDEwCj4gKy8qIFdMRUQzIHNwZWNpZmljIHBlci0nc3RyaW5nJyByZWdpc3Rl
+cnMgYmVsb3cgKi8KPiArI2RlZmluZSBXTEVEM19TSU5LX1JFR19CUklHSFQobikJCQkoMHg0MCAr
+IG4pCj4gICAKPiAtI2RlZmluZSBXTEVEM19TSU5LX1JFR19TVFJfTU9EX0VOX0JBU0UJCQkweDYw
+Cj4gKyNkZWZpbmUgV0xFRDNfU0lOS19SRUdfU1RSX01PRF9FTihuKQkJCSgweDYwICsgKG4gKiAw
+eDEwKSkKPiAgICNkZWZpbmUgIFdMRUQzX1NJTktfUkVHX1NUUl9NT0RfTUFTSwkJCUJJVCg3KQo+
+IC0jZGVmaW5lICBXTEVEM19TSU5LX1JFR19TVFJfTU9EX0VOCQkJQklUKDcpCj4gICAKPiAtI2Rl
+ZmluZSBXTEVEM19TSU5LX1JFR19TVFJfRlVMTF9TQ0FMRV9DVVJSCQkweDYyCj4gLSNkZWZpbmUg
+IFdMRUQzX1NJTktfUkVHX1NUUl9GVUxMX1NDQUxFX0NVUlJfTUFTSwkweDFmCj4gKyNkZWZpbmUg
+V0xFRDNfU0lOS19SRUdfU1RSX0ZVTExfU0NBTEVfQ1VSUihuKQkJKDB4NjIgKyAobiAqIDB4MTAp
+KQo+ICsjZGVmaW5lICBXTEVEM19TSU5LX1JFR19TVFJfRlVMTF9TQ0FMRV9DVVJSX01BU0sJR0VO
+TUFTSyg0LCAwKQo+ICAgCj4gLSNkZWZpbmUgV0xFRDNfU0lOS19SRUdfU1RSX01PRF9TUkNfQkFT
+RQkJCTB4NjMKPiAtI2RlZmluZSAgV0xFRDNfU0lOS19SRUdfU1RSX01PRF9TUkNfTUFTSwkJMHgw
+MQo+ICsjZGVmaW5lIFdMRUQzX1NJTktfUkVHX1NUUl9NT0RfU1JDKG4pCQkJKDB4NjMgKyAobiAq
+IDB4MTApKQo+ICsjZGVmaW5lICBXTEVEM19TSU5LX1JFR19TVFJfTU9EX1NSQ19NQVNLCQlCSVQo
+MCkKPiAgICNkZWZpbmUgIFdMRUQzX1NJTktfUkVHX1NUUl9NT0RfU1JDX0lOVAkJCTB4MDAKPiAg
+ICNkZWZpbmUgIFdMRUQzX1NJTktfUkVHX1NUUl9NT0RfU1JDX0VYVAkJCTB4MDEKPiAgIAo+IC0j
+ZGVmaW5lIFdMRUQzX1NJTktfUkVHX1NUUl9DQUJDX0JBU0UJCQkweDY2Cj4gKyNkZWZpbmUgV0xF
+RDNfU0lOS19SRUdfU1RSX0NBQkMobikJCQkoMHg2NiArIChuICogMHgxMCkpCj4gICAjZGVmaW5l
+ICBXTEVEM19TSU5LX1JFR19TVFJfQ0FCQ19NQVNLCQkJQklUKDcpCj4gLSNkZWZpbmUgIFdMRUQz
+X1NJTktfUkVHX1NUUl9DQUJDX0VOCQkJQklUKDcpCj4gKwo+ICtzdHJ1Y3Qgd2xlZF92YXJfY2Zn
+IHsKPiArCWNvbnN0IHUzMiAqdmFsdWVzOwo+ICsJdTMyICgqZm4pKHUzMik7Cj4gKwlpbnQgc2l6
+ZTsKPiArfTsKPiArCj4gK3N0cnVjdCB3bGVkX3UzMl9vcHRzIHsKPiArCWNvbnN0IGNoYXIgKm5h
+bWU7Cj4gKwl1MzIgKnZhbF9wdHI7Cj4gKwljb25zdCBzdHJ1Y3Qgd2xlZF92YXJfY2ZnICpjZmc7
+Cj4gK307Cj4gKwo+ICtzdHJ1Y3Qgd2xlZF9ib29sX29wdHMgewo+ICsJY29uc3QgY2hhciAqbmFt
+ZTsKPiArCWJvb2wgKnZhbF9wdHI7Cj4gK307Cj4gICAKPiAgIHN0cnVjdCB3bGVkX2NvbmZpZyB7
+Cj4gICAJdTMyIGJvb3N0X2lfbGltaXQ7Cj4gQEAgLTc1LDEzMiArODcsMTc5IEBAIHN0cnVjdCB3
+bGVkX2NvbmZpZyB7Cj4gICAJdTMyIHN3aXRjaF9mcmVxOwo+ICAgCXUzMiBudW1fc3RyaW5nczsK
+PiAgIAl1MzIgc3RyaW5nX2lfbGltaXQ7Cj4gKwl1MzIgZW5hYmxlZF9zdHJpbmdzW1dMRURfTUFY
+X1NUUklOR1NdOwo+ICAgCWJvb2wgY3Nfb3V0X2VuOwo+ICAgCWJvb2wgZXh0X2dlbjsKPiAtCWJv
+b2wgY2FiY19lbjsKPiArCWJvb2wgY2FiYzsKPiAgIH07Cj4gICAKPiAgIHN0cnVjdCB3bGVkIHsK
+PiAgIAljb25zdCBjaGFyICpuYW1lOwo+ICsJc3RydWN0IGRldmljZSAqZGV2Owo+ICAgCXN0cnVj
+dCByZWdtYXAgKnJlZ21hcDsKPiAtCXUxNiBhZGRyOwo+ICsJdTE2IGN0cmxfYWRkcjsKPiArCXUx
+NiBtYXhfc3RyaW5nX2NvdW50Owo+ICsJdTMyIGJyaWdodG5lc3M7Cj4gKwl1MzIgbWF4X2JyaWdo
+dG5lc3M7Cj4gICAKPiAgIAlzdHJ1Y3Qgd2xlZF9jb25maWcgY2ZnOwo+ICsJaW50ICgqd2xlZF9z
+ZXRfYnJpZ2h0bmVzcykoc3RydWN0IHdsZWQgKndsZWQsIHUxNiBicmlnaHRuZXNzKTsKPiAgIH07
+Cj4gICAKPiArc3RhdGljIGludCB3bGVkM19zZXRfYnJpZ2h0bmVzcyhzdHJ1Y3Qgd2xlZCAqd2xl
+ZCwgdTE2IGJyaWdodG5lc3MpCj4gK3sKPiArCWludCByYywgaTsKPiArCXU4IHZbMl07Cj4gKwo+
+ICsJdlswXSA9IGJyaWdodG5lc3MgJiAweGZmOwo+ICsJdlsxXSA9IChicmlnaHRuZXNzID4+IDgp
+ICYgMHhmOwo+ICsKPiArCWZvciAoaSA9IDA7ICBpIDwgd2xlZC0+Y2ZnLm51bV9zdHJpbmdzOyAr
+K2kpIHsKPiArCQlyYyA9IHJlZ21hcF9idWxrX3dyaXRlKHdsZWQtPnJlZ21hcCwgd2xlZC0+Y3Ry
+bF9hZGRyICsKPiArCQkJCSAgICAgICBXTEVEM19TSU5LX1JFR19CUklHSFQoaSksIHYsIDIpOwo+
+ICsJCWlmIChyYyA8IDApCj4gKwkJCXJldHVybiByYzsKPiArCX0KPiArCj4gKwlyZXR1cm4gMDsK
+PiArfQo+ICsKPiArc3RhdGljIGludCB3bGVkX21vZHVsZV9lbmFibGUoc3RydWN0IHdsZWQgKnds
+ZWQsIGludCB2YWwpCj4gK3sKPiArCWludCByYzsKPiArCj4gKwlyYyA9IHJlZ21hcF91cGRhdGVf
+Yml0cyh3bGVkLT5yZWdtYXAsIHdsZWQtPmN0cmxfYWRkciArCj4gKwkJCQlXTEVEX0NUUkxfUkVH
+X01PRF9FTiwKPiArCQkJCVdMRURfQ1RSTF9SRUdfTU9EX0VOX01BU0ssCj4gKwkJCQl2YWwgPDwg
+V0xFRF9DVFJMX1JFR19NT0RfRU5fU0hJRlQpOwo+ICsJcmV0dXJuIHJjOwo+ICt9Cj4gKwo+ICtz
+dGF0aWMgaW50IHdsZWRfc3luY190b2dnbGUoc3RydWN0IHdsZWQgKndsZWQpCj4gK3sKPiArCWlu
+dCByYzsKPiArCXVuc2lnbmVkIGludCBtYXNrID0gR0VOTUFTSyh3bGVkLT5tYXhfc3RyaW5nX2Nv
+dW50IC0gMSwgMCk7Cj4gKwo+ICsJcmMgPSByZWdtYXBfdXBkYXRlX2JpdHMod2xlZC0+cmVnbWFw
+LAo+ICsJCQkJd2xlZC0+Y3RybF9hZGRyICsgV0xFRF9TSU5LX1JFR19TWU5DLAo+ICsJCQkJbWFz
+aywgbWFzayk7Cj4gKwlpZiAocmMgPCAwKQo+ICsJCXJldHVybiByYzsKPiArCj4gKwlyYyA9IHJl
+Z21hcF91cGRhdGVfYml0cyh3bGVkLT5yZWdtYXAsCj4gKwkJCQl3bGVkLT5jdHJsX2FkZHIgKyBX
+TEVEX1NJTktfUkVHX1NZTkMsCj4gKwkJCQltYXNrLCBXTEVEX1NJTktfUkVHX1NZTkNfQ0xFQVIp
+Owo+ICsKPiArCXJldHVybiByYzsKPiArfQo+ICsKPiAgIHN0YXRpYyBpbnQgd2xlZF91cGRhdGVf
+c3RhdHVzKHN0cnVjdCBiYWNrbGlnaHRfZGV2aWNlICpibCkKPiAgIHsKPiAgIAlzdHJ1Y3Qgd2xl
+ZCAqd2xlZCA9IGJsX2dldF9kYXRhKGJsKTsKPiAtCXUxNiB2YWwgPSBibC0+cHJvcHMuYnJpZ2h0
+bmVzczsKPiAtCXU4IGN0cmwgPSAwOwo+IC0JaW50IHJjOwo+IC0JaW50IGk7Cj4gKwl1MTYgYnJp
+Z2h0bmVzcyA9IGJsLT5wcm9wcy5icmlnaHRuZXNzOwo+ICsJaW50IHJjID0gMDsKPiAgIAo+ICAg
+CWlmIChibC0+cHJvcHMucG93ZXIgIT0gRkJfQkxBTktfVU5CTEFOSyB8fAo+ICAgCSAgICBibC0+
+cHJvcHMuZmJfYmxhbmsgIT0gRkJfQkxBTktfVU5CTEFOSyB8fAo+ICAgCSAgICBibC0+cHJvcHMu
+c3RhdGUgJiBCTF9DT1JFX0ZCQkxBTkspCj4gLQkJdmFsID0gMDsKPiAtCj4gLQlpZiAodmFsICE9
+IDApCj4gLQkJY3RybCA9IFdMRUQzX0NUUkxfUkVHX01PRF9FTl9CSVQ7Cj4gKwkJYnJpZ2h0bmVz
+cyA9IDA7Cj4gICAKPiAtCXJjID0gcmVnbWFwX3VwZGF0ZV9iaXRzKHdsZWQtPnJlZ21hcCwKPiAt
+CQkJd2xlZC0+YWRkciArIFdMRUQzX0NUUkxfUkVHX01PRF9FTiwKPiAtCQkJV0xFRDNfQ1RSTF9S
+RUdfTU9EX0VOX01BU0ssIGN0cmwpOwo+IC0JaWYgKHJjKQo+IC0JCXJldHVybiByYzsKPiArCWlm
+IChicmlnaHRuZXNzKSB7Cj4gKwkJcmMgPSB3bGVkLT53bGVkX3NldF9icmlnaHRuZXNzKHdsZWQs
+IGJyaWdodG5lc3MpOwo+ICsJCWlmIChyYyA8IDApIHsKPiArCQkJZGV2X2Vycih3bGVkLT5kZXYs
+ICJ3bGVkIGZhaWxlZCB0byBzZXQgYnJpZ2h0bmVzcyByYzolZFxuIiwKPiArCQkJCXJjKTsKPiAr
+CQkJcmV0dXJuIHJjOwo+ICsJCX0KPiAgIAo+IC0JZm9yIChpID0gMDsgaSA8IHdsZWQtPmNmZy5u
+dW1fc3RyaW5nczsgKytpKSB7Cj4gLQkJdTggdlsyXSA9IHsgdmFsICYgMHhmZiwgKHZhbCA+PiA4
+KSAmIDB4ZiB9Owo+ICsJCXJjID0gd2xlZF9zeW5jX3RvZ2dsZSh3bGVkKTsKPiArCQlpZiAocmMg
+PCAwKSB7Cj4gKwkJCWRldl9lcnIod2xlZC0+ZGV2LCAid2xlZCBzeW5jIGZhaWxlZCByYzolZFxu
+IiwgcmMpOwo+ICsJCQlyZXR1cm4gcmM7Cj4gKwkJfQo+ICsJfQo+ICAgCj4gLQkJcmMgPSByZWdt
+YXBfYnVsa193cml0ZSh3bGVkLT5yZWdtYXAsCj4gLQkJCQl3bGVkLT5hZGRyICsgV0xFRDNfQ1RS
+TF9SRUdfVkFMX0JBU0UgKyAyICogaSwKPiAtCQkJCXYsIDIpOwo+IC0JCWlmIChyYykKPiArCWlm
+ICghIWJyaWdodG5lc3MgIT0gISF3bGVkLT5icmlnaHRuZXNzKSB7Cj4gKwkJcmMgPSB3bGVkX21v
+ZHVsZV9lbmFibGUod2xlZCwgISFicmlnaHRuZXNzKTsKPiArCQlpZiAocmMgPCAwKSB7Cj4gKwkJ
+CWRldl9lcnIod2xlZC0+ZGV2LCAid2xlZCBlbmFibGUgZmFpbGVkIHJjOiVkXG4iLCByYyk7Cj4g
+ICAJCQlyZXR1cm4gcmM7Cj4gKwkJfQo+ICAgCX0KPiAgIAo+IC0JcmMgPSByZWdtYXBfdXBkYXRl
+X2JpdHMod2xlZC0+cmVnbWFwLAo+IC0JCQl3bGVkLT5hZGRyICsgV0xFRDNfU0lOS19SRUdfU1lO
+QywKPiAtCQkJV0xFRDNfU0lOS19SRUdfU1lOQ19NQVNLLCBXTEVEM19TSU5LX1JFR19TWU5DX0FM
+TCk7Cj4gLQlpZiAocmMpCj4gLQkJcmV0dXJuIHJjOwo+ICsJd2xlZC0+YnJpZ2h0bmVzcyA9IGJy
+aWdodG5lc3M7Cj4gICAKPiAtCXJjID0gcmVnbWFwX3VwZGF0ZV9iaXRzKHdsZWQtPnJlZ21hcCwK
+PiAtCQkJd2xlZC0+YWRkciArIFdMRUQzX1NJTktfUkVHX1NZTkMsCj4gLQkJCVdMRUQzX1NJTktf
+UkVHX1NZTkNfTUFTSywgV0xFRDNfU0lOS19SRUdfU1lOQ19DTEVBUik7Cj4gICAJcmV0dXJuIHJj
+Owo+ICAgfQo+ICAgCj4gLXN0YXRpYyBpbnQgd2xlZF9zZXR1cChzdHJ1Y3Qgd2xlZCAqd2xlZCkK
+PiArc3RhdGljIGludCB3bGVkM19zZXR1cChzdHJ1Y3Qgd2xlZCAqd2xlZCkKPiAgIHsKPiAtCWlu
+dCByYzsKPiAtCWludCBpOwo+ICsJdTE2IGFkZHI7Cj4gKwl1OCBzaW5rX2VuID0gMDsKPiArCWlu
+dCByYywgaSwgajsKPiAgIAo+ICAgCXJjID0gcmVnbWFwX3VwZGF0ZV9iaXRzKHdsZWQtPnJlZ21h
+cCwKPiAtCQkJd2xlZC0+YWRkciArIFdMRUQzX0NUUkxfUkVHX09WUCwKPiAtCQkJV0xFRDNfQ1RS
+TF9SRUdfT1ZQX01BU0ssIHdsZWQtPmNmZy5vdnApOwo+ICsJCQkJd2xlZC0+Y3RybF9hZGRyICsg
+V0xFRF9DVFJMX1JFR19PVlAsCj4gKwkJCQlXTEVEX0NUUkxfUkVHX09WUF9NQVNLLCB3bGVkLT5j
+Zmcub3ZwKTsKPiAgIAlpZiAocmMpCj4gICAJCXJldHVybiByYzsKPiAgIAo+ICAgCXJjID0gcmVn
+bWFwX3VwZGF0ZV9iaXRzKHdsZWQtPnJlZ21hcCwKPiAtCQkJd2xlZC0+YWRkciArIFdMRUQzX0NU
+UkxfUkVHX0lMSU1JVCwKPiAtCQkJV0xFRDNfQ1RSTF9SRUdfSUxJTUlUX01BU0ssIHdsZWQtPmNm
+Zy5ib29zdF9pX2xpbWl0KTsKPiArCQkJCXdsZWQtPmN0cmxfYWRkciArIFdMRURfQ1RSTF9SRUdf
+SUxJTUlULAo+ICsJCQkJV0xFRF9DVFJMX1JFR19JTElNSVRfTUFTSywKPiArCQkJCXdsZWQtPmNm
+Zy5ib29zdF9pX2xpbWl0KTsKPiAgIAlpZiAocmMpCj4gICAJCXJldHVybiByYzsKPiAgIAo+ICAg
+CXJjID0gcmVnbWFwX3VwZGF0ZV9iaXRzKHdsZWQtPnJlZ21hcCwKPiAtCQkJd2xlZC0+YWRkciAr
+IFdMRUQzX0NUUkxfUkVHX0ZSRVEsCj4gLQkJCVdMRUQzX0NUUkxfUkVHX0ZSRVFfTUFTSywgd2xl
+ZC0+Y2ZnLnN3aXRjaF9mcmVxKTsKPiArCQkJCXdsZWQtPmN0cmxfYWRkciArIFdMRURfQ1RSTF9S
+RUdfRlJFUSwKPiArCQkJCVdMRURfQ1RSTF9SRUdfRlJFUV9NQVNLLAo+ICsJCQkJd2xlZC0+Y2Zn
+LnN3aXRjaF9mcmVxKTsKPiAgIAlpZiAocmMpCj4gICAJCXJldHVybiByYzsKPiAgIAo+IC0JaWYg
+KHdsZWQtPmNmZy5jc19vdXRfZW4pIHsKPiAtCQl1OCBhbGwgPSAoQklUKHdsZWQtPmNmZy5udW1f
+c3RyaW5ncykgLSAxKQo+IC0JCQkJPDwgV0xFRDNfU0lOS19SRUdfQ1VSUl9TSU5LX1NIRlQ7Cj4g
+LQo+IC0JCXJjID0gcmVnbWFwX3VwZGF0ZV9iaXRzKHdsZWQtPnJlZ21hcCwKPiAtCQkJCXdsZWQt
+PmFkZHIgKyBXTEVEM19TSU5LX1JFR19DVVJSX1NJTkssCj4gLQkJCQlXTEVEM19TSU5LX1JFR19D
+VVJSX1NJTktfTUFTSywgYWxsKTsKPiAtCQlpZiAocmMpCj4gLQkJCXJldHVybiByYzsKPiAtCX0K
+PiAtCj4gICAJZm9yIChpID0gMDsgaSA8IHdsZWQtPmNmZy5udW1fc3RyaW5nczsgKytpKSB7Cj4g
+LQkJdTE2IGFkZHIgPSB3bGVkLT5hZGRyICsgV0xFRDNfU0lOS19SRUdfU1RSX09GRlNFVCAqIGk7
+Cj4gLQo+IC0JCXJjID0gcmVnbWFwX3VwZGF0ZV9iaXRzKHdsZWQtPnJlZ21hcCwKPiAtCQkJCWFk
+ZHIgKyBXTEVEM19TSU5LX1JFR19TVFJfTU9EX0VOX0JBU0UsCj4gLQkJCQlXTEVEM19TSU5LX1JF
+R19TVFJfTU9EX01BU0ssCj4gLQkJCQlXTEVEM19TSU5LX1JFR19TVFJfTU9EX0VOKTsKPiArCQlq
+ID0gd2xlZC0+Y2ZnLmVuYWJsZWRfc3RyaW5nc1tpXTsKPiArCQlhZGRyID0gd2xlZC0+Y3RybF9h
+ZGRyICsgV0xFRDNfU0lOS19SRUdfU1RSX01PRF9FTihqKTsKPiArCQlyYyA9IHJlZ21hcF91cGRh
+dGVfYml0cyh3bGVkLT5yZWdtYXAsIGFkZHIsCj4gKwkJCQkJV0xFRDNfU0lOS19SRUdfU1RSX01P
+RF9NQVNLLAo+ICsJCQkJCVdMRUQzX1NJTktfUkVHX1NUUl9NT0RfTUFTSyk7Cj4gICAJCWlmIChy
+YykKPiAgIAkJCXJldHVybiByYzsKPiAgIAo+ICAgCQlpZiAod2xlZC0+Y2ZnLmV4dF9nZW4pIHsK
+PiAtCQkJcmMgPSByZWdtYXBfdXBkYXRlX2JpdHMod2xlZC0+cmVnbWFwLAo+IC0JCQkJCWFkZHIg
+KyBXTEVEM19TSU5LX1JFR19TVFJfTU9EX1NSQ19CQVNFLAo+IC0JCQkJCVdMRUQzX1NJTktfUkVH
+X1NUUl9NT0RfU1JDX01BU0ssCj4gLQkJCQkJV0xFRDNfU0lOS19SRUdfU1RSX01PRF9TUkNfRVhU
+KTsKPiArCQkJYWRkciA9IHdsZWQtPmN0cmxfYWRkciArIFdMRUQzX1NJTktfUkVHX1NUUl9NT0Rf
+U1JDKGopOwo+ICsJCQlyYyA9IHJlZ21hcF91cGRhdGVfYml0cyh3bGVkLT5yZWdtYXAsIGFkZHIs
+Cj4gKwkJCQkJCVdMRUQzX1NJTktfUkVHX1NUUl9NT0RfU1JDX01BU0ssCj4gKwkJCQkJCVdMRUQz
+X1NJTktfUkVHX1NUUl9NT0RfU1JDX0VYVCk7Cj4gICAJCQlpZiAocmMpCj4gICAJCQkJcmV0dXJu
+IHJjOwo+ICAgCQl9Cj4gICAKPiAtCQlyYyA9IHJlZ21hcF91cGRhdGVfYml0cyh3bGVkLT5yZWdt
+YXAsCj4gLQkJCQlhZGRyICsgV0xFRDNfU0lOS19SRUdfU1RSX0ZVTExfU0NBTEVfQ1VSUiwKPiAt
+CQkJCVdMRUQzX1NJTktfUkVHX1NUUl9GVUxMX1NDQUxFX0NVUlJfTUFTSywKPiAtCQkJCXdsZWQt
+PmNmZy5zdHJpbmdfaV9saW1pdCk7Cj4gKwkJYWRkciA9IHdsZWQtPmN0cmxfYWRkciArIFdMRUQz
+X1NJTktfUkVHX1NUUl9GVUxMX1NDQUxFX0NVUlIoaik7Cj4gKwkJcmMgPSByZWdtYXBfdXBkYXRl
+X2JpdHMod2xlZC0+cmVnbWFwLCBhZGRyLAo+ICsJCQkJCVdMRUQzX1NJTktfUkVHX1NUUl9GVUxM
+X1NDQUxFX0NVUlJfTUFTSywKPiArCQkJCQl3bGVkLT5jZmcuc3RyaW5nX2lfbGltaXQpOwo+ICAg
+CQlpZiAocmMpCj4gICAJCQlyZXR1cm4gcmM7Cj4gICAKPiAtCQlyYyA9IHJlZ21hcF91cGRhdGVf
+Yml0cyh3bGVkLT5yZWdtYXAsCj4gLQkJCQlhZGRyICsgV0xFRDNfU0lOS19SRUdfU1RSX0NBQkNf
+QkFTRSwKPiAtCQkJCVdMRUQzX1NJTktfUkVHX1NUUl9DQUJDX01BU0ssCj4gLQkJCQl3bGVkLT5j
+ZmcuY2FiY19lbiA/Cj4gLQkJCQkJV0xFRDNfU0lOS19SRUdfU1RSX0NBQkNfRU4gOiAwKTsKPiAr
+CQlhZGRyID0gd2xlZC0+Y3RybF9hZGRyICsgV0xFRDNfU0lOS19SRUdfU1RSX0NBQkMoaik7Cj4g
+KwkJcmMgPSByZWdtYXBfdXBkYXRlX2JpdHMod2xlZC0+cmVnbWFwLCBhZGRyLAo+ICsJCQkJCVdM
+RUQzX1NJTktfUkVHX1NUUl9DQUJDX01BU0ssCj4gKwkJCQkJd2xlZC0+Y2ZnLmNhYmMgPwo+ICsJ
+CQkJCVdMRUQzX1NJTktfUkVHX1NUUl9DQUJDX01BU0sgOiAwKTsKPiAgIAkJaWYgKHJjKQo+ICAg
+CQkJcmV0dXJuIHJjOwo+ICsKPiArCQlzaW5rX2VuIHw9IEJJVChqICsgV0xFRDNfU0lOS19SRUdf
+Q1VSUl9TSU5LX1NIRlQpOwo+ICAgCX0KPiAgIAo+ICsJcmMgPSByZWdtYXBfdXBkYXRlX2JpdHMo
+d2xlZC0+cmVnbWFwLAo+ICsJCQkJd2xlZC0+Y3RybF9hZGRyICsgV0xFRDNfU0lOS19SRUdfQ1VS
+Ul9TSU5LLAo+ICsJCQkJV0xFRDNfU0lOS19SRUdfQ1VSUl9TSU5LX01BU0ssIHNpbmtfZW4pOwo+
+ICsJaWYgKHJjKQo+ICsJCXJldHVybiByYzsKPiArCj4gICAJcmV0dXJuIDA7Cj4gICB9Cj4gICAK
+PiBAQCAtMjA4LDE3ICsyNjcsMTEgQEAgc3RhdGljIGludCB3bGVkX3NldHVwKHN0cnVjdCB3bGVk
+ICp3bGVkKQo+ICAgCS5ib29zdF9pX2xpbWl0ID0gMywKPiAgIAkuc3RyaW5nX2lfbGltaXQgPSAy
+MCwKPiAgIAkub3ZwID0gMiwKPiArCS5udW1fc3RyaW5ncyA9IDMsCj4gICAJLnN3aXRjaF9mcmVx
+ID0gNSwKPiAtCS5udW1fc3RyaW5ncyA9IDAsCj4gICAJLmNzX291dF9lbiA9IGZhbHNlLAo+ICAg
+CS5leHRfZ2VuID0gZmFsc2UsCj4gLQkuY2FiY19lbiA9IGZhbHNlLAo+IC19Owo+IC0KPiAtc3Ry
+dWN0IHdsZWRfdmFyX2NmZyB7Cj4gLQljb25zdCB1MzIgKnZhbHVlczsKPiAtCXUzMiAoKmZuKSh1
+MzIpOwo+IC0JaW50IHNpemU7Cj4gKwkuY2FiYyA9IGZhbHNlLAo+ICAgfTsKPiAgIAo+ICAgc3Rh
+dGljIGNvbnN0IHUzMiB3bGVkM19ib29zdF9pX2xpbWl0X3ZhbHVlc1tdID0gewo+IEBAIC0yNjMs
+NyArMzE2LDExIEBAIHN0YXRpYyB1MzIgd2xlZDNfc3dpdGNoX2ZyZXFfdmFsdWVzX2ZuKHUzMiBp
+ZHgpCj4gICAJLnNpemUgPSAyNiwKPiAgIH07Cj4gICAKPiAtc3RhdGljIHUzMiB3bGVkM192YWx1
+ZXMoY29uc3Qgc3RydWN0IHdsZWRfdmFyX2NmZyAqY2ZnLCB1MzIgaWR4KQo+ICtzdGF0aWMgY29u
+c3Qgc3RydWN0IHdsZWRfdmFyX2NmZyB3bGVkM19zdHJpbmdfY2ZnID0gewo+ICsJLnNpemUgPSA4
+LAo+ICt9Owo+ICsKPiArc3RhdGljIHUzMiB3bGVkX3ZhbHVlcyhjb25zdCBzdHJ1Y3Qgd2xlZF92
+YXJfY2ZnICpjZmcsIHUzMiBpZHgpCj4gICB7Cj4gICAJaWYgKGlkeCA+PSBjZmctPnNpemUpCj4g
+ICAJCXJldHVybiBVSU5UX01BWDsKPiBAQCAtMjc0LDY4ICszMzEsNzcgQEAgc3RhdGljIHUzMiB3
+bGVkM192YWx1ZXMoY29uc3Qgc3RydWN0IHdsZWRfdmFyX2NmZyAqY2ZnLCB1MzIgaWR4KQo+ICAg
+CXJldHVybiBpZHg7Cj4gICB9Cj4gICAKPiAtc3RhdGljIGludCB3bGVkX2NvbmZpZ3VyZShzdHJ1
+Y3Qgd2xlZCAqd2xlZCwgc3RydWN0IGRldmljZSAqZGV2KQo+ICsjZGVmaW5lCVdMRUQzCTMKPiAr
+Cj4gK3N0YXRpYyBpbnQgd2xlZF9jb25maWd1cmUoc3RydWN0IHdsZWQgKndsZWQsIGludCB2ZXJz
+aW9uKQo+ICAgewo+ICAgCXN0cnVjdCB3bGVkX2NvbmZpZyAqY2ZnID0gJndsZWQtPmNmZzsKPiAt
+CXUzMiB2YWw7Cj4gLQlpbnQgcmM7Cj4gLQl1MzIgYzsKPiAtCWludCBpOwo+IC0JaW50IGo7Cj4g
+LQo+IC0JY29uc3Qgc3RydWN0IHsKPiAtCQljb25zdCBjaGFyICpuYW1lOwo+IC0JCXUzMiAqdmFs
+X3B0cjsKPiAtCQljb25zdCBzdHJ1Y3Qgd2xlZF92YXJfY2ZnICpjZmc7Cj4gLQl9IHUzMl9vcHRz
+W10gPSB7Cj4gKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSB3bGVkLT5kZXY7Cj4gKwljb25zdCBfX2Jl
+MzIgKnByb3BfYWRkcjsKPiArCXUzMiBzaXplLCB2YWwsIGMsIHN0cmluZ19sZW47Cj4gKwlpbnQg
+cmMsIGksIGo7Cj4gKwo+ICsJY29uc3Qgc3RydWN0IHdsZWRfdTMyX29wdHMgKnUzMl9vcHRzID0g
+TlVMTDsKPiArCWNvbnN0IHN0cnVjdCB3bGVkX3UzMl9vcHRzIHdsZWQzX29wdHNbXSA9IHsKPiAg
+IAkJewo+IC0JCQkicWNvbSxjdXJyZW50LWJvb3N0LWxpbWl0IiwKPiAtCQkJJmNmZy0+Ym9vc3Rf
+aV9saW1pdCwKPiArCQkJLm5hbWUgPSAicWNvbSxjdXJyZW50LWJvb3N0LWxpbWl0IiwKPiArCQkJ
+LnZhbF9wdHIgPSAmY2ZnLT5ib29zdF9pX2xpbWl0LAo+ICAgCQkJLmNmZyA9ICZ3bGVkM19ib29z
+dF9pX2xpbWl0X2NmZywKPiAgIAkJfSwKPiAgIAkJewo+IC0JCQkicWNvbSxjdXJyZW50LWxpbWl0
+IiwKPiAtCQkJJmNmZy0+c3RyaW5nX2lfbGltaXQsCj4gKwkJCS5uYW1lID0gInFjb20sY3VycmVu
+dC1saW1pdCIsCj4gKwkJCS52YWxfcHRyID0gJmNmZy0+c3RyaW5nX2lfbGltaXQsCj4gICAJCQku
+Y2ZnID0gJndsZWQzX3N0cmluZ19pX2xpbWl0X2NmZywKPiAgIAkJfSwKPiAgIAkJewo+IC0JCQki
+cWNvbSxvdnAiLAo+IC0JCQkmY2ZnLT5vdnAsCj4gKwkJCS5uYW1lID0gInFjb20sb3ZwIiwKPiAr
+CQkJLnZhbF9wdHIgPSAmY2ZnLT5vdnAsCj4gICAJCQkuY2ZnID0gJndsZWQzX292cF9jZmcsCj4g
+ICAJCX0sCj4gICAJCXsKPiAtCQkJInFjb20sc3dpdGNoaW5nLWZyZXEiLAo+IC0JCQkmY2ZnLT5z
+d2l0Y2hfZnJlcSwKPiArCQkJLm5hbWUgPSAicWNvbSxzd2l0Y2hpbmctZnJlcSIsCj4gKwkJCS52
+YWxfcHRyID0gJmNmZy0+c3dpdGNoX2ZyZXEsCj4gICAJCQkuY2ZnID0gJndsZWQzX3N3aXRjaF9m
+cmVxX2NmZywKPiAgIAkJfSwKPiAgIAkJewo+IC0JCQkicWNvbSxudW0tc3RyaW5ncyIsCj4gLQkJ
+CSZjZmctPm51bV9zdHJpbmdzLAo+ICsJCQkubmFtZSA9ICJxY29tLG51bS1zdHJpbmdzIiwKPiAr
+CQkJLnZhbF9wdHIgPSAmY2ZnLT5udW1fc3RyaW5ncywKPiAgIAkJCS5jZmcgPSAmd2xlZDNfbnVt
+X3N0cmluZ3NfY2ZnLAo+ICAgCQl9LAo+ICAgCX07Cj4gLQljb25zdCBzdHJ1Y3Qgewo+IC0JCWNv
+bnN0IGNoYXIgKm5hbWU7Cj4gLQkJYm9vbCAqdmFsX3B0cjsKPiAtCX0gYm9vbF9vcHRzW10gPSB7
+Cj4gKwo+ICsJY29uc3Qgc3RydWN0IHdsZWRfYm9vbF9vcHRzIGJvb2xfb3B0c1tdID0gewo+ICAg
+CQl7ICJxY29tLGNzLW91dCIsICZjZmctPmNzX291dF9lbiwgfSwKPiAgIAkJeyAicWNvbSxleHQt
+Z2VuIiwgJmNmZy0+ZXh0X2dlbiwgfSwKPiAtCQl7ICJxY29tLGNhYmMiLCAmY2ZnLT5jYWJjX2Vu
+LCB9LAo+ICsJCXsgInFjb20sY2FiYyIsICZjZmctPmNhYmMsIH0sCj4gICAJfTsKPiAgIAo+IC0J
+cmMgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihkZXYtPm9mX25vZGUsICJyZWciLCAmdmFsKTsKPiAt
+CWlmIChyYyB8fCB2YWwgPiAweGZmZmYpIHsKPiAtCQlkZXZfZXJyKGRldiwgImludmFsaWQgSU8g
+cmVzb3VyY2VzXG4iKTsKPiAtCQlyZXR1cm4gcmMgPyByYyA6IC1FSU5WQUw7Cj4gKwlwcm9wX2Fk
+ZHIgPSBvZl9nZXRfYWRkcmVzcyhkZXYtPm9mX25vZGUsIDAsIE5VTEwsIE5VTEwpOwo+ICsJaWYg
+KCFwcm9wX2FkZHIpIHsKPiArCQlkZXZfZXJyKHdsZWQtPmRldiwgImludmFsaWQgSU8gcmVzb3Vy
+Y2VzXG4iKTsKPiArCQlyZXR1cm4gLUVJTlZBTDsKPiAgIAl9Cj4gLQl3bGVkLT5hZGRyID0gdmFs
+Owo+ICsJd2xlZC0+Y3RybF9hZGRyID0gYmUzMl90b19jcHUoKnByb3BfYWRkcik7Cj4gICAKPiAg
+IAlyYyA9IG9mX3Byb3BlcnR5X3JlYWRfc3RyaW5nKGRldi0+b2Zfbm9kZSwgImxhYmVsIiwgJnds
+ZWQtPm5hbWUpOwo+ICAgCWlmIChyYykKPiAgIAkJd2xlZC0+bmFtZSA9IGRldi0+b2Zfbm9kZS0+
+bmFtZTsKPiAgIAo+IC0JKmNmZyA9IHdsZWQzX2NvbmZpZ19kZWZhdWx0czsKPiAtCWZvciAoaSA9
+IDA7IGkgPCBBUlJBWV9TSVpFKHUzMl9vcHRzKTsgKytpKSB7Cj4gKwlzd2l0Y2ggKHZlcnNpb24p
+IHsKPiArCWNhc2UgV0xFRDM6Cj4gKwkJdTMyX29wdHMgPSB3bGVkM19vcHRzOwo+ICsJCXNpemUg
+PSBBUlJBWV9TSVpFKHdsZWQzX29wdHMpOwo+ICsJCSpjZmcgPSB3bGVkM19jb25maWdfZGVmYXVs
+dHM7Cj4gKwkJd2xlZC0+d2xlZF9zZXRfYnJpZ2h0bmVzcyA9IHdsZWQzX3NldF9icmlnaHRuZXNz
+Owo+ICsJCXdsZWQtPm1heF9zdHJpbmdfY291bnQgPSAzOwo+ICsJCWJyZWFrOwo+ICsKPiArCWRl
+ZmF1bHQ6Cj4gKwkJZGV2X2Vycih3bGVkLT5kZXYsICJJbnZhbGlkIFdMRUQgdmVyc2lvblxuIik7
+Cj4gKwkJYnJlYWs7Cj4gKwl9Cj4gKwo+ICsJZm9yIChpID0gMDsgaSA8IHNpemU7ICsraSkgewo+
+ICAgCQlyYyA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKGRldi0+b2Zfbm9kZSwgdTMyX29wdHNbaV0u
+bmFtZSwgJnZhbCk7Cj4gICAJCWlmIChyYyA9PSAtRUlOVkFMKSB7Cj4gICAJCQljb250aW51ZTsK
+PiBAQCAtMzQ2LDEyICs0MTIsMTUgQEAgc3RhdGljIGludCB3bGVkX2NvbmZpZ3VyZShzdHJ1Y3Qg
+d2xlZCAqd2xlZCwgc3RydWN0IGRldmljZSAqZGV2KQo+ICAgCj4gICAJCWMgPSBVSU5UX01BWDsK
+PiAgIAkJZm9yIChqID0gMDsgYyAhPSB2YWw7IGorKykgewo+IC0JCQljID0gd2xlZDNfdmFsdWVz
+KHUzMl9vcHRzW2ldLmNmZywgaik7Cj4gKwkJCWMgPSB3bGVkX3ZhbHVlcyh1MzJfb3B0c1tpXS5j
+ZmcsIGopOwo+ICAgCQkJaWYgKGMgPT0gVUlOVF9NQVgpIHsKPiAgIAkJCQlkZXZfZXJyKGRldiwg
+ImludmFsaWQgdmFsdWUgZm9yICclcydcbiIsCj4gICAJCQkJCXUzMl9vcHRzW2ldLm5hbWUpOwo+
+ICAgCQkJCXJldHVybiAtRUlOVkFMOwo+ICAgCQkJfQo+ICsKPiArCQkJaWYgKGMgPT0gdmFsKQo+
+ICsJCQkJYnJlYWs7Cj4gICAJCX0KPiAgIAo+ICAgCQlkZXZfZGJnKGRldiwgIiclcycgPSAldVxu
+IiwgdTMyX29wdHNbaV0ubmFtZSwgYyk7Cj4gQEAgLTM2NSw2ICs0MzQsMTUgQEAgc3RhdGljIGlu
+dCB3bGVkX2NvbmZpZ3VyZShzdHJ1Y3Qgd2xlZCAqd2xlZCwgc3RydWN0IGRldmljZSAqZGV2KQo+
+ICAgCj4gICAJY2ZnLT5udW1fc3RyaW5ncyA9IGNmZy0+bnVtX3N0cmluZ3MgKyAxOwo+ICAgCj4g
+KwlzdHJpbmdfbGVuID0gb2ZfcHJvcGVydHlfY291bnRfZWxlbXNfb2Zfc2l6ZShkZXYtPm9mX25v
+ZGUsCj4gKwkJCQkJCSAgICAgInFjb20sZW5hYmxlZC1zdHJpbmdzIiwKPiArCQkJCQkJICAgICBz
+aXplb2YodTMyKSk7Cj4gKwlpZiAoc3RyaW5nX2xlbiA+IDApCj4gKwkJcmMgPSBvZl9wcm9wZXJ0
+eV9yZWFkX3UzMl9hcnJheShkZXYtPm9mX25vZGUsCj4gKwkJCQkJCSJxY29tLGVuYWJsZWQtc3Ry
+aW5ncyIsCj4gKwkJCQkJCXdsZWQtPmNmZy5lbmFibGVkX3N0cmluZ3MsCj4gKwkJCQkJCXNpemVv
+Zih1MzIpKTsKPiArCj4gICAJcmV0dXJuIDA7Cj4gICB9Cj4gICAKPiBAQCAtMzc4LDYgKzQ1Niw3
+IEBAIHN0YXRpYyBpbnQgd2xlZF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+
+ICAgCXN0cnVjdCBiYWNrbGlnaHRfZGV2aWNlICpibDsKPiAgIAlzdHJ1Y3Qgd2xlZCAqd2xlZDsK
+PiAgIAlzdHJ1Y3QgcmVnbWFwICpyZWdtYXA7Cj4gKwlpbnQgdmVyc2lvbjsKPiAgIAl1MzIgdmFs
+Owo+ICAgCWludCByYzsKPiAgIAo+IEBAIC0zOTIsMjIgKzQ3MSwzOSBAQCBzdGF0aWMgaW50IHds
+ZWRfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgIAkJcmV0dXJuIC1FTk9N
+RU07Cj4gICAKPiAgIAl3bGVkLT5yZWdtYXAgPSByZWdtYXA7Cj4gKwl3bGVkLT5kZXYgPSAmcGRl
+di0+ZGV2Owo+ICAgCj4gLQlyYyA9IHdsZWRfY29uZmlndXJlKHdsZWQsICZwZGV2LT5kZXYpOwo+
+IC0JaWYgKHJjKQo+IC0JCXJldHVybiByYzsKPiArCXZlcnNpb24gPSAodWludHB0cl90KW9mX2Rl
+dmljZV9nZXRfbWF0Y2hfZGF0YSgmcGRldi0+ZGV2KTsKPiArCWlmICghdmVyc2lvbikgewo+ICsJ
+CWRldl9lcnIoJnBkZXYtPmRldiwgIlVua25vd24gZGV2aWNlIHZlcnNpb25cbiIpOwo+ICsJCXJl
+dHVybiAtRU5PREVWOwo+ICsJfQo+ICAgCj4gLQlyYyA9IHdsZWRfc2V0dXAod2xlZCk7Cj4gKwly
+YyA9IHdsZWRfY29uZmlndXJlKHdsZWQsIHZlcnNpb24pOwo+ICAgCWlmIChyYykKPiAgIAkJcmV0
+dXJuIHJjOwo+ICAgCj4gKwlzd2l0Y2ggKHZlcnNpb24pIHsKPiArCWNhc2UgV0xFRDM6Cj4gKwkJ
+cmMgPSB3bGVkM19zZXR1cCh3bGVkKTsKPiArCQlpZiAocmMpIHsKPiArCQkJZGV2X2VycigmcGRl
+di0+ZGV2LCAid2xlZDNfc2V0dXAgZmFpbGVkXG4iKTsKPiArCQkJcmV0dXJuIHJjOwo+ICsJCX0K
+PiArCQlicmVhazsKPiArCj4gKwlkZWZhdWx0Ogo+ICsJCWRldl9lcnIod2xlZC0+ZGV2LCAiSW52
+YWxpZCBXTEVEIHZlcnNpb25cbiIpOwo+ICsJCWJyZWFrOwo+ICsJfQo+ICsKPiAgIAl2YWwgPSBX
+TEVEX0RFRkFVTFRfQlJJR0hUTkVTUzsKPiAgIAlvZl9wcm9wZXJ0eV9yZWFkX3UzMihwZGV2LT5k
+ZXYub2Zfbm9kZSwgImRlZmF1bHQtYnJpZ2h0bmVzcyIsICZ2YWwpOwo+ICAgCj4gICAJbWVtc2V0
+KCZwcm9wcywgMCwgc2l6ZW9mKHN0cnVjdCBiYWNrbGlnaHRfcHJvcGVydGllcykpOwo+ICAgCXBy
+b3BzLnR5cGUgPSBCQUNLTElHSFRfUkFXOwo+ICAgCXByb3BzLmJyaWdodG5lc3MgPSB2YWw7Cj4g
+LQlwcm9wcy5tYXhfYnJpZ2h0bmVzcyA9IFdMRUQzX1NJTktfUkVHX0JSSUdIVF9NQVg7Cj4gKwlw
+cm9wcy5tYXhfYnJpZ2h0bmVzcyA9IFdMRURfU0lOS19SRUdfQlJJR0hUX01BWDsKPiAgIAlibCA9
+IGRldm1fYmFja2xpZ2h0X2RldmljZV9yZWdpc3RlcigmcGRldi0+ZGV2LCB3bGVkLT5uYW1lLAo+
+ICAgCQkJCQkgICAgJnBkZXYtPmRldiwgd2xlZCwKPiAgIAkJCQkJICAgICZ3bGVkX29wcywgJnBy
+b3BzKTsKPiBAQCAtNDE1LDcgKzUxMSw3IEBAIHN0YXRpYyBpbnQgd2xlZF9wcm9iZShzdHJ1Y3Qg
+cGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICAgfTsKPiAgIAo+ICAgc3RhdGljIGNvbnN0IHN0cnVj
+dCBvZl9kZXZpY2VfaWQgd2xlZF9tYXRjaF90YWJsZVtdID0gewo+IC0JeyAuY29tcGF0aWJsZSA9
+ICJxY29tLHBtODk0MS13bGVkIiB9LAo+ICsJeyAuY29tcGF0aWJsZSA9ICJxY29tLHBtODk0MS13
+bGVkIiwgLmRhdGEgPSAodm9pZCAqKTMgfSwKPiAgIAl7fQo+ICAgfTsKPiAgIE1PRFVMRV9ERVZJ
+Q0VfVEFCTEUob2YsIHdsZWRfbWF0Y2hfdGFibGUpOwo+IAoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
