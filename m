@@ -1,149 +1,90 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 1/3] thermal: qcom-spmi: Allow to disable stage 2 shutdown
-Date: Fri, 20 Jul 2018 11:42:40 -0700
-Message-ID: <CAD=FV=V1=P-Vq-VFXDfZGPMTVFvZK5cwaK_-Kxf8MwATJNwQSg@mail.gmail.com>
-References: <20180717210815.245639-1-mka@chromium.org>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] serial: 8250_ingenic: Add support for the JZ4725B SoC
+Date: Fri, 20 Jul 2018 20:58:08 +0200
+Message-ID: <1532113088.2309.0@smtp.crapouillou.net>
+References: <20180713143840.9721-1-paul@crapouillou.net>
+        <20180720153027.GA11978@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180717210815.245639-1-mka@chromium.org>
+In-Reply-To: <20180720153027.GA11978@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, David Collins <collinsd@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Rob,
 
-On Tue, Jul 17, 2018 at 2:08 PM, Matthias Kaehlcke <mka@chromium.org> wrote:
-> When the temperature reaches stage 2 the PMIC performs by default a
-> 'partial shutdown', unless software override is enabled. It is not well
-> defined which peripherals are affected by a 'partial shutdown'. Drivers
-> might be unhappy when their devices suddenly disappear and prevent an
-> orderly shutdown.
->
-> Add an optional device tree property that allows to disable stage 2
-> shutdown.
->
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> Changes in v4:
-> - patch added to the series
-> ---
->  .../bindings/thermal/qcom-spmi-temp-alarm.txt |  3 ++
->  drivers/thermal/qcom-spmi-temp-alarm.c        | 28 +++++++++++++------
->  2 files changed, 23 insertions(+), 8 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt b/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt
-> index 290ec06fa33a..377c94fa1821 100644
-> --- a/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt
-> +++ b/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt
-> @@ -15,6 +15,8 @@ Optional properties:
->  - io-channels:     Should contain IIO channel specifier for the ADC channel,
->                     which report chip die temperature.
->  - io-channel-names: Should contain "thermal".
-> +- stage2-shutdown-disabled: boolean to disable a partial shutdown of the PMIC
-> +                            when the temperature reaches stage 2
+Le ven. 20 juil. 2018 =E0 17:30, Rob Herring <robh@kernel.org> a =E9crit :
+> On Fri, Jul 13, 2018 at 04:38:40PM +0200, Paul Cercueil wrote:
+>>  The UART in the jz4725b works just like in the other JZ SoCs, so=20
+>> this
+>>  commit simply adds a new compatible string.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>   Documentation/devicetree/bindings/serial/ingenic,uart.txt | 1 +
+>>   drivers/tty/serial/8250/8250_ingenic.c                    | 5 +++++
+>>   2 files changed, 6 insertions(+)
+>>=20
+>>  diff --git=20
+>> a/Documentation/devicetree/bindings/serial/ingenic,uart.txt=20
+>> b/Documentation/devicetree/bindings/serial/ingenic,uart.txt
+>>  index c3c6406d5cfe..a0b34fd3b602 100644
+>>  --- a/Documentation/devicetree/bindings/serial/ingenic,uart.txt
+>>  +++ b/Documentation/devicetree/bindings/serial/ingenic,uart.txt
+>>  @@ -3,6 +3,7 @@
+>>   Required properties:
+>>   - compatible : One of:
+>>     - "ingenic,jz4740-uart",
+>>  +  - "ingenic,jz4725b-uart",
+>>     - "ingenic,jz4760-uart",
+>>     - "ingenic,jz4770-uart",
+>>     - "ingenic,jz4775-uart",
+>>  diff --git a/drivers/tty/serial/8250/8250_ingenic.c=20
+>> b/drivers/tty/serial/8250/8250_ingenic.c
+>>  index 15a8c8dfa92b..760266559a5a 100644
+>>  --- a/drivers/tty/serial/8250/8250_ingenic.c
+>>  +++ b/drivers/tty/serial/8250/8250_ingenic.c
+>>  @@ -133,6 +133,10 @@ EARLYCON_DECLARE(jz4740_uart,=20
+>> ingenic_early_console_setup);
+>>   OF_EARLYCON_DECLARE(jz4740_uart, "ingenic,jz4740-uart",
+>>   		    ingenic_early_console_setup);
+>>=20
+>>  +EARLYCON_DECLARE(jz4725b_uart, ingenic_early_console_setup);
+>>  +OF_EARLYCON_DECLARE(jz4725b_uart, "ingenic,jz4725b-uart",
+>>  +		    ingenic_early_console_setup);
+>>  +
+>=20
+> This shouldn't be necessary. Looks like it should be compatible with
+> ingenic,jz4740-uart.
+>=20
+>>   EARLYCON_DECLARE(jz4770_uart, ingenic_early_console_setup);
+>>   OF_EARLYCON_DECLARE(jz4770_uart, "ingenic,jz4770-uart",
+>>   		    ingenic_early_console_setup);
+>>  @@ -330,6 +334,7 @@ static const struct ingenic_uart_config=20
+>> jz4780_uart_config =3D {
+>>=20
+>>   static const struct of_device_id of_match[] =3D {
+>>   	{ .compatible =3D "ingenic,jz4740-uart", .data =3D=20
+>> &jz4740_uart_config },
+>>  +	{ .compatible =3D "ingenic,jz4725b-uart", .data =3D=20
+>> &jz4740_uart_config },
+>=20
+> And this too.
 
-With my understanding of device tree I believe that this should be
-"qcom,stage2-shutdown-disabled".  If something isn't a generic
-property affecting a whole group of bindings I believe it's supposed
-to have a company prefix.
+Well, I'm confused, the driver already uses multiple compatible strings=20
+for SoCs that
+work the exact same, so that was wrong?
 
->From the device tree specification (wow, this exists now?  ...and is public?)
-
-https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.2
-
-I find:
-
-> Nonstandard property names should specify a unique string prefix, such
-> as a stock ticker symbol, identifying the name of the company or
-> organization that defined the property. Examples:
-  fsl,channel-fifo-len
-  ibm,ppc-interrupt-server#s
-  linux,network-index
-
-=====
-
-I would also perhaps add a bit more verbose justification to your
-description of this property.  Specifically there should be some
-indication in the bindings doc of when you'd want this property.  From
-what David Collins said, I'd maybe write something like:
-
----
-
-You want to disable the partial "stage 2" shutdown any time you've
-properly defined thermal zones in such a way that the OS will try to
-shut down at that stage anyway.  Said another way, there are three
-thermal stages defined in the PMIC:
-
-stage 1: warning
-stage 2: system should shut down
-stage 3: emergency shut down
-
-By default the PMIC assumes that the OS isn't doing anything and thus
-at stage 2 it does the partial PMIC shutdown and at stage 3 it kills
-all power.  If we have thermal zones defined such that the OS will
-initiate the shutdown at stage 2 then we want to disable the PMIC's
-automatic mode for stage 2.  That still leaves us with the emergency
-at stage 3.
-
-===
-
-Actually, after writing all the above I wonder if perhaps there's a
-way to do this all automatically.  AKA: if someone has specified a
-"critical" level can we automatically disable the partial PMIC
-shutdown and we don't need the extra property?  Bonus points if we can
-check to see if the thermal zones defined actually match reality and
-even more bonus points if you can automatically adjust the settings in
-the PMIC based on the thermal zones...
-
-I did find that in "struct thermal_zone_of_device_ops" there appears
-to be a "set_trip_temp" function you can fill in.  When I tried that
-quickly I saw that I got called when I echoed into
-"/sys/class/thermal/thermal_zone0/trip_point_1_temp" but not at
-bootup, but I didn't debug more than that...
-
-
->  Example:
->
-> @@ -23,6 +25,7 @@ Example:
->                 reg = <0x2400 0x100>;
->                 interrupts = <0 0x24 0 IRQ_TYPE_EDGE_RISING>;
->                 #thermal-sensor-cells = <0>;
-> +               stage2-shutdown-disabled;
->
->                 io-channels = <&pm8941_vadc VADC_DIE_TEMP>;
->                 io-channel-names = "thermal";
-
-BTW: can you update the "example" in this file?  Based on the PMIC
-docs I saw it's likely that it should be:
-
-stage1 {
-  temperature = <1050000>;
-  hysteresis = <2000>;
-  type = "passive";
-};
-stage2 {
-  temperature = <125000>;
-  hysteresis = <2000>;
-  type = "critical";
-};
-
-...and I guess we don't specify the final one because by that time
-Linux is kaput.
-
-
-> diff --git a/drivers/thermal/qcom-spmi-temp-alarm.c b/drivers/thermal/qcom-spmi-temp-alarm.c
-> index ad4f3a8d6560..acbb0dbec79e 100644
-> --- a/drivers/thermal/qcom-spmi-temp-alarm.c
-> +++ b/drivers/thermal/qcom-spmi-temp-alarm.c
-
-Sometimes people like bindings and code change to be separate patches.
-Maintainer can specify what's desired in this case, but I find it
-generally pleases more people to make them separate.
-
-...though I guess if we can figure out how to do this automatically we
-will have no bindings change...
-
-
--Doug
+>>   	{ .compatible =3D "ingenic,jz4760-uart", .data =3D=20
+>> &jz4760_uart_config },
+>>   	{ .compatible =3D "ingenic,jz4770-uart", .data =3D=20
+>> &jz4760_uart_config },
+>>   	{ .compatible =3D "ingenic,jz4775-uart", .data =3D=20
+>> &jz4760_uart_config },
+>>  --
+>>  2.11.0
+>>=20
+=
