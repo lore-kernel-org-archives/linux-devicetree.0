@@ -1,36 +1,59 @@
-From: Vitor soares <Vitor.Soares@synopsys.com>
-Subject: [PATCH 3/3] MAINTAINERS: Add myself as the dw-i3c-master module maintainer
-Date: Fri, 20 Jul 2018 21:57:52 +0100
-Message-ID: <1532120272-17157-4-git-send-email-soares@synopsys.com>
-References: <1532120272-17157-1-git-send-email-soares@synopsys.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH V4 6/8] backlight: qcom-wled: Add support for WLED4
+ peripheral
+Date: Fri, 20 Jul 2018 23:21:29 +0200
+Message-ID: <20180720212128.GA13883@amd>
+References: <1531131741-19971-1-git-send-email-kgunda@codeaurora.org>
+ <1531131741-19971-7-git-send-email-kgunda@codeaurora.org>
+ <e5bdf2fe-321a-f2e5-22f5-c886f019ac1a@linaro.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532120272-17157-1-git-send-email-soares@synopsys.com>
+Content-Disposition: inline
+In-Reply-To: <e5bdf2fe-321a-f2e5-22f5-c886f019ac1a@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: boris.brezillon@bootlin.com, wsa@the-dreams.de, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de
-Cc: psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, Joao.Pinto@synopsys.com, Vitor.Soares@synopsys.com
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Kiran Gunda <kgunda@codeaurora.org>, bjorn.andersson@linaro.org, jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Vitor soares <soares@synopsys.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f3e3cb2..d284ba3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6773,6 +6773,12 @@ F:	drivers/i3c/
- F:	include/linux/i3c/
- F:	include/dt-bindings/i3c/
- 
-+I3C DRIVER FOR SYNOPSYS DESIGNWARE
-+M:	Vitor Soares <soares@synopsys.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
-+F:	drivers/i3c/master/dw*
-+
- IA64 (Itanium) PLATFORM
- M:	Tony Luck <tony.luck@intel.com>
- M:	Fenghua Yu <fenghua.yu@intel.com>
--- 
-2.7.4
+--EeQfGwPcQSOJBaQU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> >@@ -332,6 +529,7 @@ static u32 wled_values(const struct wled_var_cfg *cf=
+g, u32 idx)
+> >  }
+> >  #define	WLED3	3
+> >+#define	WLED4	4
+>=20
+> Are these macros always going to define 3 to be 3 and 4 to be 4. If so we
+> probably don't need them (and they should be removed from patch 5/8 too).
+>=20
+> There is a degree of nitpicking here however. The rest looks OK to me.
+
+Really nitpicking, and I don't care much either way, but as natural
+numbering would be 0-based, I'd keep the defines.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--EeQfGwPcQSOJBaQU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAltSUlgACgkQMOfwapXb+vKc9wCgl+DW32Mu1D+P2T/k85doKKNP
+auoAn2rci/ZciPj1uUoVBrhTrw4JuCcw
+=H4GY
+-----END PGP SIGNATURE-----
+
+--EeQfGwPcQSOJBaQU--
