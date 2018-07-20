@@ -1,31 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] usb: dwc3: rockchip: Fix PHY documentation links.
-Date: Fri, 20 Jul 2018 08:17:05 -0600
-Message-ID: <20180720141705.GA30482@rob-hp-laptop>
-References: <20180710125848.15915-1-enric.balletbo@collabora.com>
+Subject: Re: [PATCH 2/5] dt-bindings: iio: accel: Add docs for ADXL372
+Date: Fri, 20 Jul 2018 08:43:16 -0600
+Message-ID: <20180720144316.GA25713@rob-hp-laptop>
+References: <1531409697-19957-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180710125848.15915-1-enric.balletbo@collabora.com>
+In-Reply-To: <1531409697-19957-1-git-send-email-stefan.popa@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, kernel@collabora.com, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Stefan Popa <stefan.popa@analog.com>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, rdunlap@infradead.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 10, 2018 at 02:58:48PM +0200, Enric Balletbo i Serra wrote:
-> Commit 34962fb8070c ("docs: Fix more broken references") replaced the
-> broken reference to rockchip,dwc3-usb-phy.txt binding for the Qualcomm
-> DWC3 binding (qcom-dwc3-usb-phy.txt). That's wrong, so replace that
-> reference for the correct ones.
+On Thu, Jul 12, 2018 at 06:34:57PM +0300, Stefan Popa wrote:
+> Add the device tree binding documentation for the ADXL372 3-axis digital
+> accelerometer.
 > 
-> Fixes: 34962fb8070c ("docs: Fix more broken references")
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
 > ---
-> 
->  Documentation/devicetree/bindings/usb/rockchip,dwc3.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/iio/accel/adxl372.txt | 16 ++++++++++++++++
+>  MAINTAINERS                                             |  1 +
+>  2 files changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/adxl372.txt
 
-Applied.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
