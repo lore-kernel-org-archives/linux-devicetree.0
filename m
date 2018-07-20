@@ -1,79 +1,44 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v3 0/4] Add basic support for Mediatek MT8183 SoC
-Date: Fri, 20 Jul 2018 12:44:33 +0200
-Message-ID: <2ca76468-198b-b764-c974-374e567e0c93@gmail.com>
-References: <1526538126-51497-1-git-send-email-erin.lo@mediatek.com>
- <9ba45353-a6e1-9a6e-f05b-4b1679ae9e52@gmail.com>
- <1532074769.19148.2.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Vijay Viswanath <vviswana@codeaurora.org>
+Subject: [PATCH V1 0/3] Internal voltage control for platform drivers
+Date: Fri, 20 Jul 2018 16:16:03 +0530
+Message-ID: <1532083566-43215-1-git-send-email-vviswana@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532074769.19148.2.camel@mtksdaap41>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Erin Lo <erin.lo@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, mars.cheng@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
+To: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, vviswana@codeaurora.org, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, evgreen@chromium.org, dianders@google.com, sayalil@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
+Certain SDHC controllers may require that voltage switching happen after
+sepcial conditions. Added a QUIRK for such controllers to use.
 
+For SDHCI-MSM controllers, power irq is a signal from controller to SW
+that it is ready for voltage switch. So added support to register
+voltage regulators from the msm driver and use them.
+Voltage switching from core layer is causing CRC/cmd timeout errors in
+some chipsets.
 
-On 20/07/18 10:19, Erin Lo wrote:
-> On Mon, 2018-07-16 at 11:28 +0200, Matthias Brugger wrote:
->> Hi Erin,
->>
->> On 17/05/18 08:22, Erin Lo wrote:
->>> MT8183 is a SoC based on 64bit ARMv8 architecture.
->>> It contains 4 CA53 and 4 CA73 cores.
->>> MT8183 share many HW IP with MT65xx series.
->>> This patchset was tested on MT8183 evaluation board, and boot to shell ok.
->>>
->>> This series contains document bindings, device tree including interrupt, uart.
->>>
->>> Change in v3:
->>> 1. Fill out GICC, GICH, GICV regions
->>> 2. Update Copyright to 2018
->>>
->>> Change in v2:
->>> 1. Split dt-bindings into different patches
->>> 2. Correct bindings for supported SoCs (mtk-uart.txt)
->>>
->>> Ben Ho (1):
->>>   arm64: dts: Add Mediatek SoC MT8183 and evaluation board dts and
->>>     Makefile
->>>
->>> Erin Lo (3):
->>>   dt-bindings: arm: Add bindings for Mediatek MT8183 SoC Platform
->>>   dt-bindings: mtk-sysirq: Add compatible for Mediatek MT8183
->>>   dt-bindings: serial: Add compatible for Mediatek MT8183
->>>
->>
->> I'm a bit reluctant to take this series, as it will only enable the EVB board to
->> boot into a serial console. Are you planning to add support for other devices of
->> this SoC?
->>
->> Apart please take into account that there is an issue with the dts file, as you
->> were told by the kbuild test robot.
->>
->> Regards,
->> Matthias
->>
-> 
-> Hi, Matthias
-> Sorry for missing this letter...since mail proxy server.
-> We plan to add support all the devices of MT8183 in serious.
-> We have implemented the clock and pinctrl driver for upstream and they
-> are in internal review right now.
-> 
+Changes since RFC:
+	- Added DT option to pass regulator load values the sdhci-msm driver
+	should vote during BUS_ON and BUS_OFF power irq.
+	- Removed quirk and used local flags in sdhci_add_host to to avoid
+	scenario of both sdhci & sdhci-msm layer controlling the regulators.
+	- Introduced two sdhci msm layer APIs to replace the respective
+	sdhci layer APIs. This is again to stop sdhci layer from
+	controlling regulators if sdhci_msm layer is present.
 
-Nice to hear that :)
+Tested on: sdm845
+Requies patch series:"[PATCH V3 0/4] Changes for SDCC5 version"
 
-> About the dts issue... do you suggest me to send new patch right now or
-> wait for clock and pinctrl driver ready then send them together?
-> 
+Vijay Viswanath (3):
+  mmc: sdhci: Allow platform controlled voltage switching
+  Documentation: sdhci-msm: Add entries for passing load values
+  mmc: sdhci-msm: Use internal voltage control
 
-I would prefer that you send at least the clock controller together, so that we
-don't have any dummy clocks in the basic device tree.
+ .../devicetree/bindings/mmc/sdhci-msm.txt          |   6 +
+ drivers/mmc/host/sdhci-msm.c                       | 220 +++++++++++++++++++--
+ drivers/mmc/host/sdhci.c                           |  21 +-
+ 3 files changed, 231 insertions(+), 16 deletions(-)
 
-Regards,
-Matthias
+-- 
+ Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
