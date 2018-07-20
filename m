@@ -3,8 +3,8 @@ Subject: Re: [PATCH V2 09/25] dt-bindings: PCI: qcom,ar7100: adds binding doc
 References: <20180720115842.8406-1-john@phrozen.org>
  <20180720115842.8406-10-john@phrozen.org>
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <36726687-6e6b-18d7-a930-829910f8eb4f@cogentembedded.com>
-Date: Fri, 20 Jul 2018 18:58:31 +0300
+Message-ID: <f09ceb04-be84-a9ee-b383-d4314e4662d5@cogentembedded.com>
+Date: Fri, 20 Jul 2018 18:51:40 +0300
 MIME-Version: 1.0
 In-Reply-To: <20180720115842.8406-10-john@phrozen.org>
 Content-Type: text/plain; charset=utf-8
@@ -54,23 +54,22 @@ On 07/20/2018 02:58 PM, John Crispin wrote:
 > +
 > +* Example for ar7100
 > +	pcie-controller@180c0000 {
-
-    Overlooked it -- should be just "pcie@180c0000".
-
 > +		compatible = "qca,ar7100-pci";
 > +		#address-cells = <3>;
 > +		#size-cells = <2>;
 > +		bus-range = <0x0 0x0>;
+
+   Not documented above.
+
 > +		reg = <0x17010000 0x100>;
-
-   Doesn't match the <unit-address> part of the node name above.
-
 > +		reg-names = "cfg_base";
 > +		ranges = <0x2000000 0 0x10000000 0x10000000 0 0x07000000
 > +			  0x1000000 0 0x00000000 0x00000000 0 0x00000001>;
+> +		interrupt-parent = <&cpuintc>;
+> +		interrupts = <2>;
 
-   1 byte?!
+   Not documented above.
 
 [...]
 
-MNR, Sergei
+MBR, Sergei
