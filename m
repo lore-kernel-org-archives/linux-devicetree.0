@@ -1,99 +1,97 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] phy: qcom-qmp: Fix dts bindings to reflect reality
-Date: Fri, 20 Jul 2018 11:26:55 -0600
-Message-ID: <CAL_JsqKZUB3P_Z_pRG-Udx0wgWtSjzgF=Rc3t8Xf2n2uZkV3Qw@mail.gmail.com>
-References: <20180706233142.166296-1-dianders@chromium.org>
- <20180720141059.GA3064@rob-hp-laptop> <CAD=FV=WzjZBYV+yjekC-GGgjyWNbdGX=ZwesQMQhiYHZLyzhzA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/7] iio: tsl2772: add support for reading power
+ settings from device tree
+Date: Fri, 20 Jul 2018 11:36:35 -0600
+Message-ID: <20180720173635.GA21241@rob-hp-laptop>
+References: <20180717084158.23532-1-masneyb@onstation.org>
+ <20180717084158.23532-4-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=WzjZBYV+yjekC-GGgjyWNbdGX=ZwesQMQhiYHZLyzhzA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180717084158.23532-4-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Manu Gautam <mgautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>
+To: Brian Masney <masneyb@onstation.org>
+Cc: jic23@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, jonathan@marek.ca, jmaneyrol@invensense.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mkelly@xevo.com, fischerdouglasc@gmail.com, bshah@kde.org, ctatlor97@gmail.com, drew.paterson@ams.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 20, 2018 at 9:13 AM Doug Anderson <dianders@chromium.org> wrote:
->
-> Rob,
->
-> On Fri, Jul 20, 2018 at 7:10 AM, Rob Herring <robh@kernel.org> wrote:
-> > On Fri, Jul 06, 2018 at 04:31:42PM -0700, Douglas Anderson wrote:
-> >> A few patches have landed for the qcom-qmp PHY that affect how you
-> >> would write a device tree node.  ...yet the bindings weren't updated.
-> >> Let's remedy the situation and make the bindings refelect reality.
-> >
-> > "dt-bindings: phy: ..." for the subject.
->
-> Sorry.  Every subsystem has different conventions for this so I
-> usually just do a "git log" on the file and make my best guess.  I'll
-> try to remember this for next time though.
+On Tue, Jul 17, 2018 at 04:41:54AM -0400, Brian Masney wrote:
+> This patch adds support for optionally reading the prox_diode and
+> prox_power settings from device tree. This was tested using a LG
+> Nexus 5 (hammerhead) which requires a different diode than the driver
+> default for the IR LED.
+> 
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+> The next patch in the series removes the tsl2772 driver from the
+> trivial-devices.txt file. I separated it out so that change can go
+> through device tree.
+> 
+>  .../devicetree/bindings/iio/light/tsl2772.txt | 39 +++++++++++++++++++
 
-NP. I'd like to add this info to MAINTAINERS or maybe a git commit
-hook could figure this out automagically.
+Please split DT bindings to separate patch.
 
-> In this case, though, it looks like this already landed.  I see this
-> patch in Kishon's next branch.
->
->
-> >> Fixes: efb05a50c956 ("phy: qcom-qmp: Add support for QMP V3 USB3 PHY")
-> >> Fixes: ac0d239936bd ("phy: qcom-qmp: Add support for runtime PM")
-> >> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> >> ---
-> >>
-> >>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 14 ++++++++++++--
-> >>  1 file changed, 12 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> >> index 266a1bb8bb6e..0c7629e88bf3 100644
-> >> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> >> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> >> @@ -12,7 +12,14 @@ Required properties:
-> >>              "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
-> >>              "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845.
-> >>
-> >> - - reg: offset and length of register set for PHY's common serdes block.
-> >> + - reg:
-> >> +   - For "qcom,sdm845-qmp-usb3-phy":
-> >> +     - index 0: address and length of register set for PHY's common serdes
-> >> +       block.
-> >> +     - named register "dp_com" (using reg-names): address and length of the
-> >> +       DP_COM control block.
-> >
-> > You need to list reg-names and what are the names for the other 2
-> > regions?
->
-> Here's the code works.  You can tell me how you want this expressed in
-> the bindings:
->
-> * In all cases the driver maps its main memory range (for the common
-> serdes block) without specifying any name.  This is equivalent to
-> asking for index 0.
->
-> * For "qcom,sdm845-qmp-usb3-phy" the driver requests a second memory
-> range by name using the name "dp_com".
->
-> ...basically the driver is inconsistent between using names and
-> indices and I was trying to document that fact.
+>  drivers/iio/light/tsl2772.c                   | 16 ++++++++
+>  include/dt-bindings/iio/amstaos,tsl2772.h     | 24 ++++++++++++
+>  3 files changed, 79 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2772.txt
+>  create mode 100644 include/dt-bindings/iio/amstaos,tsl2772.h
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2772.txt b/Documentation/devicetree/bindings/iio/light/tsl2772.txt
+> new file mode 100644
+> index 000000000000..ab553d52b9fc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/tsl2772.txt
+> @@ -0,0 +1,39 @@
+> +* AMS/TAOS ALS and proximity sensor
+> +
+> +Required properties:
+> +
+> +  - compatible: Should be one of
+> +		"amstaos,tsl2571"
+> +		"amstaos,tsl2671"
+> +		"amstaos,tmd2671"
+> +		"amstaos,tsl2771"
+> +		"amstaos,tmd2771"
+> +		"amstaos,tsl2572"
+> +		"amstaos,tsl2672"
+> +		"amstaos,tmd2672"
+> +		"amstaos,tsl2772"
+> +		"amstaos,tmd2772"
+> +  - reg: the I2C address of the device
+> +
+> +Optional properties:
+> +
+> +  - amstaos,prox_diode - must be TSL2772_DIODE0, TSL2772_DIODE1, or
+> +                         TSL2772_DIODE_BOTH.
 
-That's fine as long as the indices are fixed.
+s/_/-/
 
->
-> I guess options:
->
-> 1. I could reword this so it's clearer (open to suggestions)
->
-> 2. I could add something to the bindings saying that the first reg
-> name should be "reg-base" or something.  Then the question is whether
-> we should go to the code and start enforcing that.  If we do choose to
-> enforce it then it's technically breaking compatibility (though I
-> doubt there is any real dts in the wild).  If we don't choose to
-> enforce it then why did we bother saying what it should be named?
+> +  - amstaos,prox_power - must be TSL2772_100_mA, TSL2772_50_mA, TSL2772_25_mA,
+> +                         or TSL2772_13_mA.
 
-I think you need to state index 1 is dp_com (and only for
-"qcom,sdm845-qmp-usb3-phy") and a name for index 0. 'reg-base' doesn't
-seem great, but I don't have another suggestion.
+I wonder if this should be common. Perhaps we should use the existing 
+'led-max-microamp' as this is setting the current for an IR LED.
 
-For the driver, it's not the driver's job to enforce any of this.
+And while called 'power' this setting is current.
 
-Rob
+> +  - interrupt-parent: should be the phandle for the interrupt controller
+
+Don't need to document this. It's implied by interrupts (and could be in 
+a parent node).
+
+> +  - interrupts: the sole interrupt generated by the device
+> +
+> +  Refer to interrupt-controller/interrupts.txt for generic interrupt client
+> +  node bindings.
+> +
+> +Example:
+> +
+> +#include <dt-bindings/iio/amstaos,tsl2772.h>
+> +
+> +tsl2772@39 {
+> +	compatible = "amstaos,tsl2772";
+> +	reg = <0x39>;
+> +	interrupts-extended = <&msmgpio 61 IRQ_TYPE_EDGE_FALLING>;
+> +	amstaos,prox_diode = <TSL2772_DIODE0>;
+> +};
