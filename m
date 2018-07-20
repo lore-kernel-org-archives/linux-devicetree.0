@@ -1,16 +1,10 @@
-Return-Path: <SRS0=Niv/=KE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr690054.outbound.protection.outlook.com ([40.107.69.54]:64144
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731731AbeGTPw6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Jul 2018 11:52:58 -0400
+Return-Path: <SRS0=//bg=KE=analog.com=Mircea.Caprioru@kernel.org>
 From: Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: [PATCH V5 1/2] dt-bindings: mux: add adi,adgs1408
-Date: Fri, 20 Jul 2018 18:03:55 +0300
-Message-ID: <20180720150355.2871-1-mircea.caprioru@analog.com>
+Subject: [PATCH V4 1/2] dt-bindings: mux: add adi,adgs1408
+Date: Fri, 20 Jul 2018 11:10:27 +0300
+Message-ID: <20180720081027.27182-1-mircea.caprioru@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
 To: peda@axentia.se, robh+dt@kernel.org
 Cc: davem@davemloft.net, mchehab+samsung@kernel.org, akpm@linux-foundation.org, rdunlap@infradead.org, devicetree@vger.kernel.org, Mircea Caprioru <mircea.caprioru@analog.com>
 List-ID: <devicetree@vger.kernel.org>
@@ -21,8 +15,8 @@ additional custom properties.
 
 Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
 ---
-Changelog V4 -> V5
-- no modifications here
+Changelog V3 -> V4
+- fixed number of GPOs for ADGS1408 and ADGS1409
 
  .../devicetree/bindings/mux/adi,adgs1408.txt  | 49 +++++++++++++++++++
  MAINTAINERS                                   |  6 +++
@@ -103,4 +97,3 @@ index 192d7f73fd01..55dfdbf835c1 100644
  L:	linux-media@vger.kernel.org
 -- 
 2.17.1
-
