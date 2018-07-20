@@ -1,28 +1,88 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v6 00/10] Add the I3C subsystem
-Date: Fri, 20 Jul 2018 12:05:18 +0200
-Message-ID: <20180720120518.445b947b@bbrezillon>
-References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
-        <CAK8P3a2MP5+oFz--e+BM24D8Ahw7H_RKgN1S6wY1nQE6JL0dmw@mail.gmail.com>
-        <2ab0ab75-2df0-2714-f007-c33b25481016@axentia.se>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx6sll: add gpio-ranges property
+Date: Fri, 20 Jul 2018 18:06:57 +0800
+Message-ID: <1532081217-17538-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2ab0ab75-2df0-2714-f007-c33b25481016@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Arnd Bergmann <arnd@arndb.de>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 20 Jul 2018 11:57:56 +0200
-Peter Rosin <peda@axentia.se> wrote:
+Add "gpio-ranges" property to establish connections between GPIOs
+and PINs on i.MX6SLL pinctrl driver, for details, please refer to
+Documentation/devicetree/bindings/gpio/gpio.txt of "gpio-ranges"
+property.
 
-> 
-> Maybe a bit-bang I3C master isn't feasible for some fundamental
-> reason?
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6sll.dtsi | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-No, it's clearly not. The way an I3C master is supposed to switch from
-open-drain to push-pull during a transaction or the concept of IBIs
-are the first things that come to mind, but I guess you have plenty of
-other reasons preventing you from implementing a i3c-bit-bang master.
+diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
+index 000e613..a3cf282 100644
+--- a/arch/arm/boot/dts/imx6sll.dtsi
++++ b/arch/arm/boot/dts/imx6sll.dtsi
+@@ -379,6 +379,7 @@
+ 				#gpio-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
++				gpio-ranges = <&iomuxc 0 94 7>, <&iomuxc 7 25 25>;
+ 			};
+ 
+ 			gpio2: gpio@20a0000 {
+@@ -390,6 +391,7 @@
+ 				#gpio-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
++				gpio-ranges = <&iomuxc 0 50 32>;
+ 			};
+ 
+ 			gpio3: gpio@20a4000 {
+@@ -401,6 +403,9 @@
+ 				#gpio-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
++				gpio-ranges = <&iomuxc 0 82 12>, <&iomuxc 12 103 4>,
++					      <&iomuxc 16 101 2>, <&iomuxc 18 5 1>,
++					      <&iomuxc 21 6 11>;
+ 			};
+ 
+ 			gpio4: gpio@20a8000 {
+@@ -412,6 +417,15 @@
+ 				#gpio-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
++				gpio-ranges = <&iomuxc 0 17 8>, <&iomuxc 8 107 8>,
++					      <&iomuxc 16 151 1>, <&iomuxc 17 149 1>,
++					      <&iomuxc 18 146 1>, <&iomuxc 19 144 1>,
++					      <&iomuxc 20 142 1>, <&iomuxc 21 143 1>,
++					      <&iomuxc 22 150 1>, <&iomuxc 23 148 1>,
++					      <&iomuxc 24 147 1>, <&iomuxc 25 145 1>,
++					      <&iomuxc 26 152 1>, <&iomuxc 27 125 1>,
++					      <&iomuxc 28 131 1>, <&iomuxc 29 134 1>,
++					      <&iomuxc 30 129 1>, <&iomuxc 31 133 1>;
+ 			};
+ 
+ 			gpio5: gpio@20ac000 {
+@@ -423,6 +437,17 @@
+ 				#gpio-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
++				gpio-ranges = <&iomuxc 0 135 1>, <&iomuxc 1 128 1>,
++					      <&iomuxc 2 132 1>, <&iomuxc 3 130 1>,
++					      <&iomuxc 4 127 1>, <&iomuxc 5 126 1>,
++					      <&iomuxc 6 120 1>, <&iomuxc 7 123 1>,
++					      <&iomuxc 8 118 1>, <&iomuxc 9 122 1>,
++					      <&iomuxc 10 124 1>, <&iomuxc 11 117 1>,
++					      <&iomuxc 12 121 1>, <&iomuxc 13 119 1>,
++					      <&iomuxc 14 116 1>, <&iomuxc 15 115 1>,
++					      <&iomuxc 16 140 2>, <&iomuxc 18 136 1>,
++					      <&iomuxc 19 138 1>, <&iomuxc 20 139 1>,
++					      <&iomuxc 21 137 1>;
+ 			};
+ 
+ 			gpio6: gpio@20b0000 {
+-- 
+2.7.4
