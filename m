@@ -1,79 +1,61 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [RFC PATCH v2 1/4] dt-bindings: misc: Add bindings for misc.
- BMC control fields
-Date: Fri, 20 Jul 2018 14:56:13 +1000
-Message-ID: <483b76bac7cb8043d9d780d5ffa5e43438279887.camel@kernel.crashing.org>
-References: <20180711053122.30773-1-andrew@aj.id.au>
-         <20180711053122.30773-2-andrew@aj.id.au>
-         <20180711200450.GB17291@rob-hp-laptop>
-         <1531356830.3551458.1437853280.551CA8C5@webmail.messagingengine.com>
-         <CAL_JsqKpXxR4t_-3BOy-0mFePXkaSck_4PfHRD=OZQ-_-T5P=w@mail.gmail.com>
-         <b6ced4cad4d7ff78330181b2c893855c23103953.camel@kernel.crashing.org>
-         <1531463489.747186.1439263128.075AECE1@webmail.messagingengine.com>
-         <CAL_JsqLZo-=7UkuvvUFYdCR4asBBiWyC=Q1ryH=-HLU6vzf9tA@mail.gmail.com>
-         <ece91112ecfdc7218184c4c4519e455cf9397e11.camel@kernel.crashing.org>
-         <CAL_JsqL_bMXLAA0091-g8PmhXR5g5Pf2y2=ey7Ss5ofHm46sWw@mail.gmail.com>
-         <c69d0e7c3a95d83da87b566a62619462671a233b.camel@kernel.crashing.org>
-         <1531967302.2140539.1445583600.0F5ED287@webmail.messagingengine.com>
-         <9787b471abc49c0b3db60e3471473a7a5b45ade7.camel@kernel.crashing.org>
-         <1532045276.1219110.1446722072.546C1F9D@webmail.messagingengine.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v6 2/4] Bluetooth: Add new quirk for non-persistent setup settings
+Date: Fri, 20 Jul 2018 13:12:28 +0800
+Message-ID: <d20e070679bb40bff011f5a74f531e1b662d08a5.1532060309.git.sean.wang@mediatek.com>
+References: <cover.1532060309.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532045276.1219110.1446722072.546C1F9D@webmail.messagingengine.com>
+In-Reply-To: <cover.1532060309.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh@kernel.org>, Eugene.Cho@dell.com, a.amelkin@yadro.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Joel Stanley <joel@jms.id.au>, stewart@linux.ibm.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-arm-kernel@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com
+Cc: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-07-20 at 09:37 +0930, Andrew Jeffery wrote:
-> > 
-> > Andrew, can you start with a list that shows what you expect us to need
-> > on our systems ?
-> > 
-> 
-> Okay, our Witherspoon and Romulus platforms containing the ASPEED AST2500 currently need the following tuneables exposed:
-> 
-> > From the SCU:
-> 
-> - Debug UART enable
-> - VGA DAC mux
-> - VGA scratch registers 0-7
-> - LPC SuperIO decode enable
-> - VGA MMIO decode enable
-> 
-> > From the LPC controller:
-> 
-> - iLPC2AHB enable
-> - SuperIO scratch registers 0x20-0x2f
-> 
-> (The LPC controller is just as much of a collection of random bits as the SCU)
-> 
-> Lastly, our Palmetto platform uses an AST2400 which has fewer features compared to the AST2500. Its tuneable list is the same as the above with the exception of "Debug UART enable".
-> 
-> Tuneables that we may need to expose in the future include:
-> 
-> > From the SCU:
-> 
-> - PCI VID/DID for the BMC PCIe device
-> - VGA device enable (may need to be disabled if the platform contains a discrete graphics processor)
+From: Sean Wang <sean.wang@mediatek.com>
 
-Additionally there's a bunch of resigters controlling the mapping of
-various MMIO regions of the BMC PCIe device to portions of the BMC
-address space. I'm not sure what's the best way to handle that.
+Add a new quirk HCI_QUIRK_NON_PERSISTENT_SETUP allowing that a quirk that
+runs setup() after every open() and not just after the first open().
 
-This specific set might require a dedicated device as a subnode of
-the SCU in the DT that contains all the mappings as properties... 
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ include/net/bluetooth/hci.h | 9 +++++++++
+ net/bluetooth/hci_core.c    | 3 ++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-That or we consider them static enough and just whack it in u-boot.
-
-> > From the LPC controller:
-> 
-> - UART mux
-> 
-> Alexander, Eugene, can you chime in with your platforms' needs?
-> 
-> Cheers,
-> 
-> Andrew
+diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+index 1668211..b37d973 100644
+--- a/include/net/bluetooth/hci.h
++++ b/include/net/bluetooth/hci.h
+@@ -183,6 +183,15 @@ enum {
+ 	 * during the hdev->setup vendor callback.
+ 	 */
+ 	HCI_QUIRK_NON_PERSISTENT_DIAG,
++
++	/* When this quirk is set, setup() would be run after every
++	 * open() and not just after the first open().
++	 *
++	 * This quirk can be set before hci_register_dev is called or
++	 * during the hdev->setup vendor callback.
++	 *
++	 */
++	HCI_QUIRK_NON_PERSISTENT_SETUP,
+ };
+ 
+ /* HCI device flags */
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 40d260f..7de712e2 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -1377,7 +1377,8 @@ static int hci_dev_do_open(struct hci_dev *hdev)
+ 	atomic_set(&hdev->cmd_cnt, 1);
+ 	set_bit(HCI_INIT, &hdev->flags);
+ 
+-	if (hci_dev_test_flag(hdev, HCI_SETUP)) {
++	if (hci_dev_test_flag(hdev, HCI_SETUP) ||
++	    test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks)) {
+ 		hci_sock_dev_event(hdev, HCI_DEV_SETUP);
+ 
+ 		if (hdev->setup)
+-- 
+2.7.4
