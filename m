@@ -1,40 +1,111 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: Re: [PATCH 14/15] arm: dts: qcom: Add missing OPP properties for CPUs
-Date: Sat, 21 Jul 2018 13:56:04 -0500
-Message-ID: <20180721185604.GI7404@hector.attlocal.net>
-References: <cover.1527244200.git.viresh.kumar@linaro.org>
- <9f9cc23d1fd17503c9056d62f7757fb9c412d1f9.1527244201.git.viresh.kumar@linaro.org>
- <CAHLCerN1Oxz3t53gxvK83A8jQswsPitgm_NjQ4CWB8V02R_LnQ@mail.gmail.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v8 0/7] thermal: tsens: Refactoring for TSENSv2 IP
+Date: Sun, 22 Jul 2018 00:46:00 +0530
+Message-ID: <CAHLCerNubEr0bV8a4pyTQ6cQcKjR5wRq34Vgoe=eagi1L0EmPQ@mail.gmail.com>
+References: <cover.1531895128.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHLCerN1Oxz3t53gxvK83A8jQswsPitgm_NjQ4CWB8V02R_LnQ@mail.gmail.com>
+In-Reply-To: <cover.1531895128.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@verdurent.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, arm@kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, Kees Cook <keescook@chromium.org>, Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 18, 2018 at 03:52:26PM +0530, Amit Kucheria wrote:
-> On Fri, May 25, 2018 at 4:02 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > The OPP properties, like "operating-points", should either be present
-> > for all the CPUs of a cluster or none. If these are present only for a
-> > subset of CPUs of a cluster then things will start falling apart as soon
-> > as the CPUs are brought online in a different order. For example, this
-> > will happen because the operating system looks for such properties in
-> > the CPU node it is trying to bring up, so that it can create an OPP
-> > table.
-> >
-> > Add such missing properties.
-> >
-> > Fix other missing property (clock latency) as well to make it all
-> > work.
-> >
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> 
-> FWIW,
-> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Andy, Eduardo: Please consider this a gentle ping to understand how
+this will get merged.
 
-Picking this up for 4.19.  thanks.
+Andy, I guess you'll take the DT patches 2,4 and 7 and the rest will
+go through Eduardo's thermal tree?
 
-Andy
+Regards,
+Amit
+
+On Wed, Jul 18, 2018 at 12:13 PM, Amit Kucheria
+<amit.kucheria@linaro.org> wrote:
+> Here is a repost of the series. There have been no code changes since v6,
+> just improving comments, patch descriptions, documentation. The series does
+> the following:
+> - Some code moves to allow code sharing between different SoCs with v2 of
+>   the TSENS IP,
+> - a generic qcom,tsens-v2 property as a fallback compatible for all v2.x.y
+>   platforms,
+> - new platform support (sdm845)
+> - a cleanup patch and
+> - a DT change to have a common way to deal with the SROT and TM registers
+>   despite slightly different features across the IP family and different
+>   register offsets.
+>
+> Changes since v7:
+> - Fix couple of typos in spelling
+> - Add review tags
+> - Move the DT documentation patch before the code changes
+>
+> Changes since v6:
+> - Fix comments and patch descriptions as per Doug's review
+> - Rename tsens to thermal-sensor in DT
+> - Add various review tags
+>
+> Changes since v5:
+> - Actually fix unit addressses for the two tsens blocks as per Stephen's
+>   comment.
+>
+> Changes since v4:
+> - Revert back to a single fallback bindind qcom,tsens-v2 as per Rob's
+>   suggestion.
+> - Rework how old (unsplit SROT and TM address space) DTs are handled by
+>   needing a 0x1000 offset but still sharing common code in tsens-v2.c
+> - Remove the patch to added TRDY checks while we investigate Matthias'
+>   reports
+> - Fix unit addressses for the two tsens blocks as per Stephen's comment.
+>
+> Changes since v3:
+> - Introduce qcom,tsens-v2.4.0 property and make qcom,tsens-v2 a
+>   fallback, compatible property.
+> - Rename ops_v2 to ops_generic_v2
+>
+> Changes since v2:
+>
+> - Based on review, moved tsens-8996.c to tsens-v2.c and changed
+>   corresponding function names, struct names to allow for generic tsensv2
+>   platforms
+> - All v2 platforms will now only need to use the qcom,tsen-v2
+>   property
+> - Added a DT patch to initialize tsens driver on sdm845, now that
+>   4.18-rc1 will contain an sdm845.dtsi
+>
+> Changes since v1:
+> - Move get_temp() from tsens-8996 to tsens-common and rename
+> - Change 8996 DT entry to allow init_common() to work across
+>   sdm845 and 8996 due to different offsets
+>
+> Amit Kucheria (7):
+>   thermal: tsens: Get rid of unused fields in structure
+>   dt: thermal: tsens: Document the fallback DT property for v2 of TSENS
+>     IP
+>   thermal: tsens: Add support to split up register address space into
+>     two
+>   arm64: dts: msm8996: thermal: Initialise via DT and add second
+>     controller
+>   thermal: tsens: Rename tsens-8996 to tsens-v2 for reuse
+>   thermal: tsens: Add generic support for TSENS v2 IP
+>   arm64: dts: sdm845: Add tsens nodes
+>
+>  .../devicetree/bindings/thermal/qcom-tsens.txt     | 31 +++++++++++++++++----
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi              | 14 ++++++++--
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi               | 16 +++++++++++
+>  drivers/thermal/qcom/Makefile                      |  2 +-
+>  drivers/thermal/qcom/tsens-common.c                | 12 ++++++++
+>  drivers/thermal/qcom/{tsens-8996.c => tsens-v2.c}  | 32 ++++++++++------------
+>  drivers/thermal/qcom/tsens.c                       |  3 ++
+>  drivers/thermal/qcom/tsens.h                       |  8 ++++--
+>  8 files changed, 88 insertions(+), 30 deletions(-)
+>  rename drivers/thermal/qcom/{tsens-8996.c => tsens-v2.c} (64%)
+>
+> --
+> 2.7.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
