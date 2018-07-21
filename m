@@ -1,110 +1,66 @@
-From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-Subject: [PATCH] usb: dwc3: core: Add quirk for enabling AutoRetry feature in the controller
-Date: Sat, 21 Jul 2018 15:58:40 +0530
-Message-ID: <1532168920-3269-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v3 01/18] doc: dt-bindings: jz4780-dma: Update bindings to reflect driver changes
+Date: Sat, 21 Jul 2018 13:06:26 +0200
+Message-ID: <20180721110643.19624-2-paul@crapouillou.net>
+References: <20180721110643.19624-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180721110643.19624-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, balbi@kernel.org
-Cc: v.anuragkumar@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, Paul Cercueil <paul@crapouillou.net>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-By default when core sees any transaction error(CRC or overflow)
-it replies with terminating retry ACK (Retry=1 and Nump == 0).
-Enabling this Auto Retry feature in controller, on seeing any
-transaction errors makes the core to send an non-terminating ACK
-transaction packet (that is, ACK TP with Retry=1 and Nump != 0).
-Doing so will give controller a chance to recover from the error
-condition.
+The driver is now compatible with four SoCs: JZ4780, JZ4770, JZ4725B and
+JZ4740.
 
-Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Besides, it now expects the devicetree to supply a second memory
+resource. This resource is mandatory on the newly supported SoCs.
+For the JZ4780, new devicetree code must also provide it, although the
+driver is still compatible with older devicetree binaries.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Mathieu Malaterre <malat@debian.org>
 ---
- Documentation/devicetree/bindings/usb/dwc3.txt |  5 +++++
- drivers/usb/dwc3/core.c                        | 16 ++++++++++++++++
- drivers/usb/dwc3/core.h                        |  6 ++++++
- 3 files changed, 27 insertions(+)
+ Documentation/devicetree/bindings/dma/jz4780-dma.txt | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 7f13ebe..2ba2bc2 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -94,6 +94,11 @@ Optional properties:
- 			this and tx-thr-num-pkt-prd to a valid, non-zero value
- 			1-16 (DWC_usb31 programming guide section 1.2.3) to
- 			enable periodic ESS TX threshold.
-+ - snps,enable_auto_retry: Set to enable Auto retry Feature to make the
-+			controller operating in Host mode on seeing transaction
-+			errors(CRC errors or internal overrun scenerios) on IN
-+			transfers to reply to the device with a non-terminating
-+			retry ACK (i.e, an ACK TP with Retry=1 & Nump != 0)
+ v2: New patch in this series; regroups the changes made to the
+ jz4780-dma.txt doc file in the previous version of the patchset.
+
+ v3: Updated example to comply with devicetree specification
+
+diff --git a/Documentation/devicetree/bindings/dma/jz4780-dma.txt b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
+index f25feee62b15..14f33305e194 100644
+--- a/Documentation/devicetree/bindings/dma/jz4780-dma.txt
++++ b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
+@@ -2,8 +2,13 @@
  
-  - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+ Required properties:
  
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 1038075..1c1ab93 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -883,6 +883,20 @@ static int dwc3_core_init(struct dwc3 *dwc)
- 		dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
- 	}
+-- compatible: Should be "ingenic,jz4780-dma"
+-- reg: Should contain the DMA controller registers location and length.
++- compatible: Should be one of:
++  * ingenic,jz4740-dma
++  * ingenic,jz4725b-dma
++  * ingenic,jz4770-dma
++  * ingenic,jz4780-dma
++- reg: Should contain the DMA channel registers location and length, followed
++  by the DMA controller registers location and length.
+ - interrupts: Should contain the interrupt specifier of the DMA controller.
+ - interrupt-parent: Should be the phandle of the interrupt controller that
+ - clocks: Should contain a clock specifier for the JZ4780 PDMA clock.
+@@ -20,9 +25,10 @@ Optional properties:
  
-+	if (dwc->autoretry_enable) {
-+		reg = dwc3_readl(dwc->regs, DWC3_GUCTL);
-+
-+		/* Enable Auto retry Feature to make the controller operating in
-+		 * Host mode on seeing transaction errors(CRC errors or internal
-+		 * overrun scenerios) on IN transfers to reply to the device
-+		 * with a non-terminating retry ACK (i.e, an ACK transcation
-+		 * packet with Retry=1 & Nump != 0)
-+		 */
-+		reg |= DWC3_GUCTL_HSTINAUTORETRY;
-+
-+		dwc3_writel(dwc->regs, DWC3_GUCTL, reg);
-+	}
-+
- 	/*
- 	 * Must config both number of packets and max burst settings to enable
- 	 * RX and/or TX threshold.
-@@ -1179,6 +1193,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+ Example:
  
- 	dwc->dis_metastability_quirk = device_property_read_bool(dev,
- 				"snps,dis_metastability_quirk");
-+	dwc->autoretry_enable = device_property_read_bool(dev,
-+				"snps,enable_auto_retry");
+-dma: dma@13420000 {
++dma: dma-controller@13420000 {
+ 	compatible = "ingenic,jz4780-dma";
+-	reg = <0x13420000 0x10000>;
++	reg = <0x13420000 0x400
++	       0x13421000 0x40>;
  
- 	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
- 	dwc->tx_de_emphasis = tx_de_emphasis;
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 285ce0e..558dfda 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -227,6 +227,9 @@
- #define DWC3_GCTL_GBLHIBERNATIONEN	BIT(1)
- #define DWC3_GCTL_DSBLCLKGTNG		BIT(0)
- 
-+/* Global User Control Register */
-+#define DWC3_GUCTL_HSTINAUTORETRY	BIT(14)
-+
- /* Global User Control 1 Register */
- #define DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS	BIT(28)
- #define DWC3_GUCTL1_DEV_L1_EXIT_BY_HW	BIT(24)
-@@ -984,6 +987,8 @@ struct dwc3_scratchpad_array {
-  * 	2	- No de-emphasis
-  * 	3	- Reserved
-  * @dis_metastability_quirk: set to disable metastability quirk.
-+ * @autoretry_enable: set to enable AutoRetry feature in controller to
-+ *		      give an non terminating retry ACK (Retry=1 & Nump != 0)
-  * @imod_interval: set the interrupt moderation interval in 250ns
-  *                 increments or 0 to disable.
-  */
-@@ -1153,6 +1158,7 @@ struct dwc3 {
- 	unsigned		tx_de_emphasis:2;
- 
- 	unsigned		dis_metastability_quirk:1;
-+	unsigned		autoretry_enable:1;
- 
- 	u16			imod_interval;
- };
+ 	interrupt-parent = <&intc>;
+ 	interrupts = <10>;
 -- 
-2.1.1
+2.11.0
