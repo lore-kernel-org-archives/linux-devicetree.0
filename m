@@ -1,114 +1,122 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [RFT 00/10] pinctrl: samsung: Remove ugly hack for sharing eint_wakeup_mask
-Date: Sat, 21 Jul 2018 11:37:49 +0900
-Message-ID: <CA+Ln22HdeSTqZSfh18rewK_w-q7Xhx6r_5djkuAkbXV=pT8rgw@mail.gmail.com>
-References: <20180719160050.22566-1-krzk@kernel.org>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH RESEND 3/7] of: address: Add parent pointer to the
+ __of_translate_address args
+Date: Sat, 21 Jul 2018 12:21:35 +0800
+Message-ID: <201807211245.PUl1H0mX%fengguang.wu@intel.com>
+References: <2f1db1ad423dcc845cab311432826da4976d2363.1532098561.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180719160050.22566-1-krzk@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Alim Akhtar <alim.akhtar@samsung.com>, PANKAJ KUMAR DUBEY <pankaj.dubey@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "moderated list:SAMSUNG SOC CLOCK DRIVERS" <linux-samsung-soc@vger.kernel.org>, linux-gpio@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <2f1db1ad423dcc845cab311432826da4976d2363.1532098561.git-series.maxime.ripard@bootlin.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yong Deng <yong.deng@magewell.com>, Arnd Bergmann <arnd@arndb.de>, Maxime Ripard <maxime.ripard@bootlin.com>, Robin Murphy <robin.murphy@arm.com>, dri-devel@lists.freedesktop.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, kbuild-all@01.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
-
-2018=E5=B9=B47=E6=9C=8820=E6=97=A5(=E9=87=91) 1:01 Krzysztof Kozlowski <krz=
-k@kernel.org>:
->
-> Hi All,
->
-> Tests
-> =3D=3D=3D=3D=3D
-> This is both request for comments and requests for tests. Only basic
-> tests were done, including suspend to RAM on Odroid U3 (Exynos4412)
-> with max7768 RTC wakeup. Please kindly test it with devices capable of
-> suspending and resuming. I am mostly thinking about S5Pv210-based (Aria),
-> Trats, Trats2 and TM2 (Exynos5433). Existing platforms should not be
-> broken however changing external interrupt wakeup mask was not done
-> on Exynos5433.
->
->
-> Description
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> The Exynos/S5Pv210 machine suspend code needs to write the external
-> interrupt mask during suspend.  The mask is controlled by pin controller
-> driver: the exynos_wkup_irq_set_wake() in IRQ chip for these wakeup
-> interrupts.
->
-> Therefore pinctrl driver code exposed an exynos_get_eint_wake_mask()
-> function which was later used as an extern in machine code.
->
-> This is quite ugly way of combining driver and machine code,
-> not portable triggering Sparse and GCC warnings.
->
->
-> This might break suspend capability S5Pv210 on with older DTBs (thus
-> breaks DTB compatibility), however:
-> 1. just "might" because in case of using older DTB, the wakeup mask
->    will not be changed during suspend and default reset value (all
->    interrupts non-masked) should work,
-> 2. mainline support for S5Pv210 with DTB is limited and suspend
->    to RAM already might be broken.
-
-We probably should also add that it's highly unlikely that anyone
-using S5PV210 actually uses a standalone DTB, since those systems
-normally predated DT support in bootloaders and workarounds such as
-chainloading or appended DTB are normally used.
-
->
->
-> Dependencies
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> 1. The first seven patches should be taken through one tree,
->    preferably samsung-pinctrl,
-> 2. The DTS patch (7/10) for S5Pv210 should go into next cycle,
-> 3. The remaining patches (8-10) should go after all previous,
->    so probably another release cycle.
->
->
-> Best regards,
-> Krzysztof
->
->
-> Krzysztof Kozlowski (10):
->   pinctrl: samsung: Define suspend and resume callbacks for all banks
->     and SoCs
->   pinctrl: samsung: Document suspend and resume members
->   pinctrl: samsung: Document hidden requirement about one external
->     wakeup
->   pinctrl: samsung: Add dedicated compatible for S5Pv210 wakeup
->     interrupts
->   ARM: exynos: Define EINT_WAKEUP_MASK registers for S5Pv210 and
->     Exynos5433
->   pinctrl: samsung: Write external interrupt mask
->   ARM: dts: s5pv210: Switch to S5Pv210 specific pinctrl wakeup
->     compatible
->   ARM: s5pv210: Remove legacy setting of external wakeup interrupts
->   ARM: exynos: Remove legacy setting of external wakeup interrupts
->   pinctrl: samsung: Remove legacy API for handling external wakeup
->     interrupts mask
->
->  .../bindings/pinctrl/samsung-pinctrl.txt           | 11 ++-
->  arch/arm/boot/dts/s5pv210.dtsi                     |  2 +-
->  arch/arm/mach-exynos/common.h                      |  2 -
->  arch/arm/mach-exynos/suspend.c                     | 16 +++--
->  arch/arm/mach-s5pv210/common.h                     |  1 -
->  arch/arm/mach-s5pv210/pm.c                         | 16 +++--
->  drivers/pinctrl/samsung/pinctrl-exynos-arm.c       | 16 +++++
->  drivers/pinctrl/samsung/pinctrl-exynos.c           | 78 ++++++++++++++++=
-+++---
->  drivers/pinctrl/samsung/pinctrl-samsung.h          | 11 +++
->  include/linux/soc/samsung/exynos-regs-pmu.h        |  8 ++-
->  10 files changed, 136 insertions(+), 25 deletions(-)
-
-Looking through the series, the idea seems to be very reasonable, so:
-
-Acked-by: Tomasz Figa <tomasz.figa@gmail.com>
-
-Thanks for cleaning this up!
-
-Best regards,
-Tomasz
+SGkgTWF4aW1lLAoKSSBsb3ZlIHlvdXIgcGF0Y2ghIFBlcmhhcHMgc29tZXRoaW5nIHRvIGltcHJv
+dmU6CgpbYXV0byBidWlsZCB0ZXN0IFdBUk5JTkcgb24gXQoKdXJsOiAgICBodHRwczovL2dpdGh1
+Yi5jb20vMGRheS1jaS9saW51eC9jb21taXRzL01heGltZS1SaXBhcmQvc3VueGktQWRkLURULXJl
+cHJlc2VudGF0aW9uLWZvci10aGUtTUJVUy1jb250cm9sbGVyLzIwMTgwNzIxLTA1MjY1MgpiYXNl
+OiAgICAKcmVwcm9kdWNlOgogICAgICAgICMgYXB0LWdldCBpbnN0YWxsIHNwYXJzZQogICAgICAg
+IG1ha2UgQVJDSD14ODZfNjQgYWxsbW9kY29uZmlnCiAgICAgICAgbWFrZSBDPTEgQ0Y9LURfX0NI
+RUNLX0VORElBTl9fCgoKc3BhcnNlIHdhcm5pbmdzOiAobmV3IG9uZXMgcHJlZml4ZWQgYnkgPj4p
+Cgo+PiBkcml2ZXJzL29mL2FkZHJlc3MuYzo3NDI6NDU6IHNwYXJzZTogaW5jb3JyZWN0IHR5cGUg
+aW4gYXJndW1lbnQgMiAoZGlmZmVyZW50IGJhc2UgdHlwZXMpIEBAICAgIGV4cGVjdGVkIHN0cnVj
+dCBkZXZpY2Vfbm9kZSAqW2Fzc2lnbmVkXSBwYXJlbnQgQEAgICAgZ290IHJlc3Ryc3RydWN0IGRl
+dmljZV9ub2RlICpbYXNzaWduZWRdIHBhcmVudCBAQAogICBkcml2ZXJzL29mL2FkZHJlc3MuYzo3
+NDI6NDU6ICAgIGV4cGVjdGVkIHN0cnVjdCBkZXZpY2Vfbm9kZSAqW2Fzc2lnbmVkXSBwYXJlbnQK
+ICAgZHJpdmVycy9vZi9hZGRyZXNzLmM6NzQyOjQ1OiAgICBnb3QgcmVzdHJpY3RlZCBfX2JlMzIg
+Y29uc3QgW3VzZXJ0eXBlXSAqaW5fYWRkcgo+PiBkcml2ZXJzL29mL2FkZHJlc3MuYzo3NDI6NTQ6
+IHNwYXJzZTogaW5jb3JyZWN0IHR5cGUgaW4gYXJndW1lbnQgMyAoZGlmZmVyZW50IGJhc2UgdHlw
+ZXMpIEBAICAgIGV4cGVjdGVkIHJlc3RyaWN0ZWQgX19iZTMyIGNvbnN0IFt1c2VydHlwZV0gKmlu
+X2FkZHIgQEAgICAgZ290IHlwZV0gKmluX2FkZHIgQEAKICAgZHJpdmVycy9vZi9hZGRyZXNzLmM6
+NzQyOjU0OiAgICBleHBlY3RlZCByZXN0cmljdGVkIF9fYmUzMiBjb25zdCBbdXNlcnR5cGVdICpp
+bl9hZGRyCiAgIGRyaXZlcnMvb2YvYWRkcmVzcy5jOjc0Mjo1NDogICAgZ290IGNoYXIgKjxub2lk
+ZW50Pgo+PiBkcml2ZXJzL29mL2FkZHJlc3MuYzo3NDI6NjU6IHNwYXJzZTogaW5jb3JyZWN0IHR5
+cGUgaW4gYXJndW1lbnQgNCAoZGlmZmVyZW50IGJhc2UgdHlwZXMpIEBAICAgIGV4cGVjdGVkIGNo
+YXIgY29uc3QgKnJwcm9wIEBAICAgIGdvdCBzdHJ1Y3QgZGVjaGFyIGNvbnN0ICpycHJvcCBAQAog
+ICBkcml2ZXJzL29mL2FkZHJlc3MuYzo3NDI6NjU6ICAgIGV4cGVjdGVkIGNoYXIgY29uc3QgKnJw
+cm9wCiAgIGRyaXZlcnMvb2YvYWRkcmVzcy5jOjc0Mjo2NTogICAgZ290IHN0cnVjdCBkZXZpY2Vf
+bm9kZSAqKjxub2lkZW50Pgo+PiBkcml2ZXJzL29mL2FkZHJlc3MuYzo3NDI6Mzk6IHNwYXJzZTog
+bm90IGVub3VnaCBhcmd1bWVudHMgZm9yIGZ1bmN0aW9uIF9fb2ZfdHJhbnNsYXRlX2FkZHJlc3MK
+ICAgZHJpdmVycy9vZi9hZGRyZXNzLmM6IEluIGZ1bmN0aW9uICdvZl90cmFuc2xhdGVfaW9wb3J0
+JzoKICAgZHJpdmVycy9vZi9hZGRyZXNzLmM6NzQyOjM4OiBlcnJvcjogcGFzc2luZyBhcmd1bWVu
+dCAyIG9mICdfX29mX3RyYW5zbGF0ZV9hZGRyZXNzJyBmcm9tIGluY29tcGF0aWJsZSBwb2ludGVy
+IHR5cGUgWy1XZXJyb3I9aW5jb21wYXRpYmxlLXBvaW50ZXItdHlwZXNdCiAgICAgdGFkZHIgPSBf
+X29mX3RyYW5zbGF0ZV9hZGRyZXNzKGRldiwgaW5fYWRkciwgInJhbmdlcyIsICZob3N0KTsKICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBefn5+fn5+CiAgIGRyaXZlcnMv
+b2YvYWRkcmVzcy5jOjU3MToxMjogbm90ZTogZXhwZWN0ZWQgJ3N0cnVjdCBkZXZpY2Vfbm9kZSAq
+JyBidXQgYXJndW1lbnQgaXMgb2YgdHlwZSAnY29uc3QgX19iZTMyICoge2FrYSBjb25zdCB1bnNp
+Z25lZCBpbnQgKn0nCiAgICBzdGF0aWMgdTY0IF9fb2ZfdHJhbnNsYXRlX2FkZHJlc3Moc3RydWN0
+IGRldmljZV9ub2RlICpkZXYsCiAgICAgICAgICAgICAgIF5+fn5+fn5+fn5+fn5+fn5+fn5+fn4K
+ICAgZHJpdmVycy9vZi9hZGRyZXNzLmM6NzQyOjQ3OiBlcnJvcjogcGFzc2luZyBhcmd1bWVudCAz
+IG9mICdfX29mX3RyYW5zbGF0ZV9hZGRyZXNzJyBmcm9tIGluY29tcGF0aWJsZSBwb2ludGVyIHR5
+cGUgWy1XZXJyb3I9aW5jb21wYXRpYmxlLXBvaW50ZXItdHlwZXNdCiAgICAgdGFkZHIgPSBfX29m
+X3RyYW5zbGF0ZV9hZGRyZXNzKGRldiwgaW5fYWRkciwgInJhbmdlcyIsICZob3N0KTsKICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBefn5+fn5+fgogICBk
+cml2ZXJzL29mL2FkZHJlc3MuYzo1NzE6MTI6IG5vdGU6IGV4cGVjdGVkICdjb25zdCBfX2JlMzIg
+KiB7YWthIGNvbnN0IHVuc2lnbmVkIGludCAqfScgYnV0IGFyZ3VtZW50IGlzIG9mIHR5cGUgJ2No
+YXIgKicKICAgIHN0YXRpYyB1NjQgX19vZl90cmFuc2xhdGVfYWRkcmVzcyhzdHJ1Y3QgZGV2aWNl
+X25vZGUgKmRldiwKICAgICAgICAgICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fgogICBkcml2
+ZXJzL29mL2FkZHJlc3MuYzo3NDI6NTc6IGVycm9yOiBwYXNzaW5nIGFyZ3VtZW50IDQgb2YgJ19f
+b2ZfdHJhbnNsYXRlX2FkZHJlc3MnIGZyb20gaW5jb21wYXRpYmxlIHBvaW50ZXIgdHlwZSBbLVdl
+cnJvcj1pbmNvbXBhdGlibGUtcG9pbnRlci10eXBlc10KICAgICB0YWRkciA9IF9fb2ZfdHJhbnNs
+YXRlX2FkZHJlc3MoZGV2LCBpbl9hZGRyLCAicmFuZ2VzIiwgJmhvc3QpOwogICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBeCiAgIGRyaXZl
+cnMvb2YvYWRkcmVzcy5jOjU3MToxMjogbm90ZTogZXhwZWN0ZWQgJ2NvbnN0IGNoYXIgKicgYnV0
+IGFyZ3VtZW50IGlzIG9mIHR5cGUgJ3N0cnVjdCBkZXZpY2Vfbm9kZSAqKicKICAgIHN0YXRpYyB1
+NjQgX19vZl90cmFuc2xhdGVfYWRkcmVzcyhzdHJ1Y3QgZGV2aWNlX25vZGUgKmRldiwKICAgICAg
+ICAgICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fgogICBkcml2ZXJzL29mL2FkZHJlc3MuYzo3
+NDI6MTA6IGVycm9yOiB0b28gZmV3IGFyZ3VtZW50cyB0byBmdW5jdGlvbiAnX19vZl90cmFuc2xh
+dGVfYWRkcmVzcycKICAgICB0YWRkciA9IF9fb2ZfdHJhbnNsYXRlX2FkZHJlc3MoZGV2LCBpbl9h
+ZGRyLCAicmFuZ2VzIiwgJmhvc3QpOwogICAgICAgICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+
+fgogICBkcml2ZXJzL29mL2FkZHJlc3MuYzo1NzE6MTI6IG5vdGU6IGRlY2xhcmVkIGhlcmUKICAg
+IHN0YXRpYyB1NjQgX19vZl90cmFuc2xhdGVfYWRkcmVzcyhzdHJ1Y3QgZGV2aWNlX25vZGUgKmRl
+diwKICAgICAgICAgICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fgogICBjYzE6IHNvbWUgd2Fy
+bmluZ3MgYmVpbmcgdHJlYXRlZCBhcyBlcnJvcnMKCnZpbSArNzQyIGRyaXZlcnMvb2YvYWRkcmVz
+cy5jCgpkYmJkZWU5NCBHcmFudCBMaWtlbHkgIDIwMTAtMDYtMDggIDczNCAgCjY1YWY2MThkIFpo
+aWNoYW5nIFl1YW4gMjAxOC0wMy0xNSAgNzM1ICBzdGF0aWMgdTY0IG9mX3RyYW5zbGF0ZV9pb3Bv
+cnQoc3RydWN0IGRldmljZV9ub2RlICpkZXYsIGNvbnN0IF9fYmUzMiAqaW5fYWRkciwKNjVhZjYx
+OGQgWmhpY2hhbmcgWXVhbiAyMDE4LTAzLTE1ICA3MzYgIAkJCXU2NCBzaXplKQo2NWFmNjE4ZCBa
+aGljaGFuZyBZdWFuIDIwMTgtMDMtMTUgIDczNyAgewo2NWFmNjE4ZCBaaGljaGFuZyBZdWFuIDIw
+MTgtMDMtMTUgIDczOCAgCXU2NCB0YWRkcjsKNjVhZjYxOGQgWmhpY2hhbmcgWXVhbiAyMDE4LTAz
+LTE1ICA3MzkgIAl1bnNpZ25lZCBsb25nIHBvcnQ7CjY1YWY2MThkIFpoaWNoYW5nIFl1YW4gMjAx
+OC0wMy0xNSAgNzQwICAJc3RydWN0IGRldmljZV9ub2RlICpob3N0Owo2NWFmNjE4ZCBaaGljaGFu
+ZyBZdWFuIDIwMTgtMDMtMTUgIDc0MSAgCjY1YWY2MThkIFpoaWNoYW5nIFl1YW4gMjAxOC0wMy0x
+NSBANzQyICAJdGFkZHIgPSBfX29mX3RyYW5zbGF0ZV9hZGRyZXNzKGRldiwgaW5fYWRkciwgInJh
+bmdlcyIsICZob3N0KTsKNjVhZjYxOGQgWmhpY2hhbmcgWXVhbiAyMDE4LTAzLTE1ICA3NDMgIAlp
+ZiAoaG9zdCkgewo2NWFmNjE4ZCBaaGljaGFuZyBZdWFuIDIwMTgtMDMtMTUgIDc0NCAgCQkvKiBo
+b3N0LXNwZWNpZmljIHBvcnQgYWNjZXNzICovCjY1YWY2MThkIFpoaWNoYW5nIFl1YW4gMjAxOC0w
+My0xNSAgNzQ1ICAJCXBvcnQgPSBsb2dpY19waW9fdHJhbnNfaHdhZGRyKCZob3N0LT5md25vZGUs
+IHRhZGRyLCBzaXplKTsKNjVhZjYxOGQgWmhpY2hhbmcgWXVhbiAyMDE4LTAzLTE1ICA3NDYgIAkJ
+b2Zfbm9kZV9wdXQoaG9zdCk7CjY1YWY2MThkIFpoaWNoYW5nIFl1YW4gMjAxOC0wMy0xNSAgNzQ3
+ICAJfSBlbHNlIHsKNjVhZjYxOGQgWmhpY2hhbmcgWXVhbiAyMDE4LTAzLTE1ICA3NDggIAkJLyog
+bWVtb3J5LW1hcHBlZCBJL08gcmFuZ2UgKi8KNjVhZjYxOGQgWmhpY2hhbmcgWXVhbiAyMDE4LTAz
+LTE1ICA3NDkgIAkJcG9ydCA9IHBjaV9hZGRyZXNzX3RvX3Bpbyh0YWRkcik7CjY1YWY2MThkIFpo
+aWNoYW5nIFl1YW4gMjAxOC0wMy0xNSAgNzUwICAJfQo2NWFmNjE4ZCBaaGljaGFuZyBZdWFuIDIw
+MTgtMDMtMTUgIDc1MSAgCjY1YWY2MThkIFpoaWNoYW5nIFl1YW4gMjAxOC0wMy0xNSAgNzUyICAJ
+aWYgKHBvcnQgPT0gKHVuc2lnbmVkIGxvbmcpLTEpCjY1YWY2MThkIFpoaWNoYW5nIFl1YW4gMjAx
+OC0wMy0xNSAgNzUzICAJCXJldHVybiBPRl9CQURfQUREUjsKNjVhZjYxOGQgWmhpY2hhbmcgWXVh
+biAyMDE4LTAzLTE1ICA3NTQgIAo2NWFmNjE4ZCBaaGljaGFuZyBZdWFuIDIwMTgtMDMtMTUgIDc1
+NSAgCXJldHVybiBwb3J0Owo2NWFmNjE4ZCBaaGljaGFuZyBZdWFuIDIwMTgtMDMtMTUgIDc1NiAg
+fQo2NWFmNjE4ZCBaaGljaGFuZyBZdWFuIDIwMTgtMDMtMTUgIDc1NyAgCgo6Ojo6OjogVGhlIGNv
+ZGUgYXQgbGluZSA3NDIgd2FzIGZpcnN0IGludHJvZHVjZWQgYnkgY29tbWl0Cjo6Ojo6OiA2NWFm
+NjE4ZDJjNTU5ZjhlYjE5ZDgwZDAzYTIzMDI5NjUxYTU5ZGU0IG9mOiBBZGQgbWlzc2luZyBJL08g
+cmFuZ2UgZXhjZXB0aW9uIGZvciBpbmRpcmVjdC1JTyBkZXZpY2VzCgo6Ojo6OjogVE86IFpoaWNo
+YW5nIFl1YW4gPHl1YW56aGljaGFuZ0BoaXNpbGljb24uY29tPgo6Ojo6OjogQ0M6IEJqb3JuIEhl
+bGdhYXMgPGhlbGdhYXNAa2VybmVsLm9yZz4KCi0tLQowLURBWSBrZXJuZWwgdGVzdCBpbmZyYXN0
+cnVjdHVyZSAgICAgICAgICAgICAgICBPcGVuIFNvdXJjZSBUZWNobm9sb2d5IENlbnRlcgpodHRw
+czovL2xpc3RzLjAxLm9yZy9waXBlcm1haWwva2J1aWxkLWFsbCAgICAgICAgICAgICAgICAgICBJ
+bnRlbCBDb3Jwb3JhdGlvbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
