@@ -1,112 +1,74 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v5 1/4] dt-bindings: arm: fsl: add mu binding doc
-Date: Sat, 21 Jul 2018 13:35:51 +0000
-Message-ID: <AM0PR04MB42114C9A500D344FB9D66A1E80500@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20180721130827.944-1-o.rempel@pengutronix.de>
- <20180721130827.944-2-o.rempel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180721130827.944-2-o.rempel@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>
+From: Simon Shields <simon@lineageos.org>
+Subject: [PATCH v3 0/2] Panasonic AN30259A support
+Date: Sun, 22 Jul 2018 00:12:25 +1000
+Message-ID: <20180721141228.2283-1-simon@lineageos.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org
+Cc: Simon Shields <simon@lineageos.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Oleksij,
+Hi,
 
-> -----Original Message-----
-> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
-> Sent: Saturday, July 21, 2018 9:08 PM
-> To: Shawn Guo <shawnguo@kernel.org>; Fabio Estevam
-> <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>; Mark
-> Rutland <mark.rutland@arm.com>; A.s. Dong <aisheng.dong@nxp.com>;
-> Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-> Cc: Sascha Hauer <kernel@pengutronix.de>; devicetree@vger.kernel.org;
-> linux-arm-kernel@lists.infradead.org; dl-linux-imx <linux-imx@nxp.com>
-> Subject: [PATCH v5 1/4] dt-bindings: arm: fsl: add mu binding doc
-> 
-> From: Dong Aisheng <aisheng.dong@nxp.com>
-> 
-> The Messaging Unit module enables two processors within the SoC to
-> communicate and coordinate by passing messages (e.g. data, status and
-> control) through the MU interface.
-> 
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+This patch series adds DT bindings (patch #1) and the corresponding driver
+(patch #2) for the Panasonic AN30259A 3-channel LED driver. AN30259A
+uses an internal clock for controlling brightness/on-off cycles, but
+also supports using an external PWM/clock input. This patch series only
+implements support for the former.
 
-Just let you know this patch also depends on another one which is already
-Acked by Rob.
-If you resend, would you please help pick that one in this series as well?
+The AN30259A is connected using I2C, and the datasheet is freely
+available[0].
 
- [V4,1/5] dt-bindings: mailbox: allow mbox-cells to be equal to 0
-https://patchwork.kernel.org/patch/10513197/
+Changes since v3:
+* Rebased on v4.18-rc3.
+* Drop unnecessary DUTYMAX/MID calculations when blinking:
+ previously I'd thought that the PWM duty values were expressed
+ as a percentage of the maximum current output, but in reality
+ they're a percentage of the current set in the LEDxCC registers. 
+This simplifies the code quite a bit.
+* Corrected MODULE_LICENSE declaration.
+* Return -EINVAL from set_blink if the blink rate is unsupported in
+ hardware.
+* Fix more checkpatch --strict issues.
 
-Regards
-Dong Aisheng
+Changes since v2:
+* Drop "an30259a:" prefix from bindings and add it in the device driver
+ instead.
+* Use led-controller instead of leds for sample DT binding.
+* Use ":indicator" instead of ":notification" in sample DT binding.
+* Merge an30259a_led_set and an30259a_brightness to
+ an30259a_brightness_set (and same for blink functions).
+* Explain the range limitations of the AN30259A's sloping mode
+ in the code - the AN30259A only has a 7-bit PWM range in slope mode,
+ and the bottom 3 bits are always set.
 
-> ---
->  .../devicetree/bindings/mailbox/fsl,mu.txt    | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> new file mode 100644
-> index 000000000000..90e4905dfc69
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> @@ -0,0 +1,34 @@
-> +NXP i.MX Messaging Unit (MU)
-> +--------------------------------------------------------------------
-> +
-> +The Messaging Unit module enables two processors within the SoC to
-> +communicate and coordinate by passing messages (e.g. data, status and
-> +control) through the MU interface. The MU also provides the ability for
-> +one processor to signal the other processor using interrupts.
-> +
-> +Because the MU manages the messaging between processors, the MU
-> uses
-> +different clocks (from each side of the different peripheral buses).
-> +Therefore, the MU must synchronize the accesses from one side to the
-> +other. The MU accomplishes synchronization using two sets of matching
-> +registers (Processor A-facing, Processor B-facing).
-> +
-> +Messaging Unit Device Node:
-> +=============================
-> +
-> +Required properties:
-> +-------------------
-> +- compatible :	should be "fsl,<chip>-mu", the supported chips include
-> +		imx8qxp, imx8qm.
-> +- reg :		Should contain the registers location and length
-> +- interrupts :	Interrupt number. The interrupt specifier format depends
-> +		on the interrupt controller parent.
-> +- #mbox-cells:  Must be 0. Number of cells in a mailbox
-> +
-> +Examples:
-> +--------
-> +lsio_mu0: mailbox@5d1b0000 {
-> +	compatible = "fsl,imx8qxp-mu";
-> +	reg = <0x0 0x5d1b0000 0x0 0x10000>;
-> +	interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
-> +	#mbox-cells = <0>;
-> +};
-> --
-> 2.18.0
+Changes since v1:
+* Documentation formatting/grammar fixes.
+* Use reg property instead of led-sources for leds.
+* Add default-state support.
+* Fix auto-probing when built as a module.
+* Simplified DT parsing code.
+* Use devm version of led_class_register().
+* Fix LED naming scheme.
+* Fixed checkpatch --strict issues.
+
+Cheers,
+Simon
+
+[0]: https://www.alliedelec.com/m/d/a9d2b3ee87c2d1a535a41dd747b1c247.pdf
+
+Simon Shields (2):
+  dt-bindings: leds: document Panasonic AN30259A bindings
+  leds: add Panasonic AN30259A support
+
+ .../bindings/leds/leds-an30259a.txt           |  43 +++
+ drivers/leds/Kconfig                          |  11 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-an30259a.c                  | 365 ++++++++++++++++++
+ 4 files changed, 420 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-an30259a.txt
+ create mode 100644 drivers/leds/leds-an30259a.c
+
+-- 
+2.18.0
