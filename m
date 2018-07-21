@@ -1,201 +1,126 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 5/7] iio: tsl2772: add support for regulator
- framework
-Date: Sat, 21 Jul 2018 18:45:38 +0100
-Message-ID: <20180721184538.158c57d9@archlinux>
-References: <20180717084158.23532-1-masneyb@onstation.org>
-        <20180717084158.23532-6-masneyb@onstation.org>
+Subject: Re: [PATCH v8 00/11] Introduce the Counter subsystem
+Date: Sat, 21 Jul 2018 19:01:34 +0100
+Message-ID: <20180721190134.166e50ab@archlinux>
+References: <cover.1531685024.git.vilhelm.gray@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180717084158.23532-6-masneyb@onstation.org>
+In-Reply-To: <cover.1531685024.git.vilhelm.gray@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, jonathan@marek.ca, jmaneyrol@invensense.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mkelly@xevo.com, fischerdouglasc@gmail.com, bshah@kde.org, ctatlor97@gmail.com, drew.paterson@ams.com
+To: William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc: gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, fabrice.gasnier@st.com, benjamin.gaignard@st.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Jul 2018 04:41:56 -0400
-Brian Masney <masneyb@onstation.org> wrote:
+On Sun, 15 Jul 2018 16:44:24 -0400
+William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
 
-> This patch adds support for the regulator framework to the tsl2772
-> driver. Driver was tested using a LG Nexus 5 (hammerhead) phone with
-> the two regulators and on a Raspberry Pi 2 without any regulators
-> controlling the power to the sensor.
+> Changes in v8:
+>  - Add counter_enum.h file
+>  - Simplify COUNTER Kconfig option help text
+>  - Rename generic-counter.c to the more straightforward counter.c
+>  - Update copyright and license boilerplate (use recommended SPDX line)
+>  - Replace EXPORT_SYMBOL lines with respective EXPORT_SYMBOL_GPL lines
+>  - Replace scnprintf lines with sprintf since we're dealing with sysfs files
+>  - Add struct counter_attr_parm to simplify counter_attribute_create parameters
+>  - Rename *_comp_t suffixes to *_unit in order to avoid *_t suffix implications
+>  - List sysfs attribute values verbatim in sysfs documentation files
+>  - Reorganize 104-QUAD-8 driver license boilerplate update to dedicated patch
 > 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-There is an ordering issue in probe and hence the tear down.  Fixing
-it is unfortunately going to make the rest of the handling more complex...
+> This revision is functionally identical to the last; changes in this version
+> were made to improve clarity, formatting and whitespace, and organization. I
+> also took this opportunity to record some of the new ACKs from the last
+> submission.
+> 
+> The counter_enum.h file was created to hold the Generic Counter enum helper
+> functions required by the Generic Counter enum macros (i.e. COUNTER_SIGNAL_ENUM,
+> COUNTER_COUNT_ENUM, etc.). These helper functions are not intended to be used
+> directly by driver authors, so I thought it best to keep them separated. Now the
+> counter.h file contains only macro, functions, and data structures that are
+> expected to possibly appear in a counter device driver.
+> 
+> The counter_attribute_create function parameter list was large so I reorganized
+> the parameters into the counter_attr_parm structure, which may be set and passed
+> by reference to the counter_attribute_create function. Since the show and store
+> function pointers match with the struct device_attribute show and store function
+> pointers, I decided to keep them declared as there are here without a typedef --
+> however, I can typedef them in a future revision if it will improve clarity to
+> do so.
+> 
+> Heads-up for Jonathan Cameron: you may pick-up the "iio: 104-quad-8: Update
+> license boilerplate" patch independent of this series; it's the SPDX license
+> boilerplate update for the 104-QUAD-8 IIO driver.
+> 
+> Sincerely,
+> 
+> William Breathitt Gray
+> 
+This crossed with Andrew Morton's good points on this occupying
+namespace that is rather too generically named.  Hence I'll assume
+we'll see a v9 with a solution to that (and personally ignore v8
+to save time ;)
+
+Ah I see you just replied to Andrew. Great!
+
 
 Jonathan
 
-> ---
->  .../devicetree/bindings/iio/light/tsl2772.txt |  4 +
->  drivers/iio/light/tsl2772.c                   | 82 ++++++++++++++++++-
->  2 files changed, 85 insertions(+), 1 deletion(-)
+> Benjamin Gaignard (2):
+>   counter: Add STM32 Timer quadrature encoder
+>   dt-bindings: counter: Document stm32 quadrature encoder
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2772.txt b/Documentation/devicetree/bindings/iio/light/tsl2772.txt
-> index ab553d52b9fc..bfde8b2c8790 100644
-> --- a/Documentation/devicetree/bindings/iio/light/tsl2772.txt
-> +++ b/Documentation/devicetree/bindings/iio/light/tsl2772.txt
-> @@ -21,6 +21,8 @@ Optional properties:
->                           TSL2772_DIODE_BOTH.
->    - amstaos,prox_power - must be TSL2772_100_mA, TSL2772_50_mA, TSL2772_25_mA,
->                           or TSL2772_13_mA.
-> +  - vdd-supply: phandle to the regulator that provides power to the sensor.
-> +  - vddio-supply: phandle to the regulator that provides power to the bus.
->    - interrupt-parent: should be the phandle for the interrupt controller
->    - interrupts: the sole interrupt generated by the device
->  
-> @@ -35,5 +37,7 @@ tsl2772@39 {
->  	compatible = "amstaos,tsl2772";
->  	reg = <0x39>;
->  	interrupts-extended = <&msmgpio 61 IRQ_TYPE_EDGE_FALLING>;
-> +	vdd-supply = <&pm8941_l17>;
-> +	vddio-supply = <&pm8941_lvs1>;
->  	amstaos,prox_diode = <TSL2772_DIODE0>;
->  };
-> diff --git a/drivers/iio/light/tsl2772.c b/drivers/iio/light/tsl2772.c
-> index 0be57f2ecb02..f6a27f8b3ca7 100644
-> --- a/drivers/iio/light/tsl2772.c
-> +++ b/drivers/iio/light/tsl2772.c
-> @@ -20,6 +20,7 @@
->  #include <linux/iio/iio.h>
->  #include <linux/iio/sysfs.h>
->  #include <linux/platform_data/tsl2772.h>
-> +#include <linux/regulator/consumer.h>
->  
->  /* Cal defs */
->  #define PROX_STAT_CAL			0
-> @@ -146,6 +147,9 @@ struct tsl2772_chip {
->  	struct mutex prox_mutex;
->  	struct mutex als_mutex;
->  	struct i2c_client *client;
-> +	struct regulator *vdd_supply;
-> +	struct regulator *vddio_supply;
-> +	bool regulators_enabled;
->  	u16 prox_data;
->  	struct tsl2772_als_info als_cur_info;
->  	struct tsl2772_settings settings;
-> @@ -609,6 +613,46 @@ static int tsl2772_als_calibrate(struct iio_dev *indio_dev)
->  	return ret;
->  }
->  
-> +static int tsl2772_enable_regulators(struct tsl2772_chip *chip)
-> +{
-> +	int ret;
-> +
-> +	ret = regulator_enable(chip->vddio_supply);
-> +	if (ret < 0) {
-> +		dev_err(&chip->client->dev, "Failed to enable regulator: %d\n",
-> +			ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = regulator_enable(chip->vdd_supply);
-> +	if (ret < 0) {
-> +		regulator_disable(chip->vddio_supply);
-> +		dev_err(&chip->client->dev, "Failed to enable regulator: %d\n",
-> +			ret);
-> +		return ret;
-> +	}
-> +
-> +	chip->regulators_enabled = true;
-> +
-> +	return 0;
-> +}
-> +
-> +static void tsl2772_disable_regulators(struct tsl2772_chip *chip)
-> +{
-> +	if (!chip->regulators_enabled)
-> +		return;
-> +
-> +	regulator_disable(chip->vdd_supply);
-> +	regulator_disable(chip->vddio_supply);
-> +
-> +	chip->regulators_enabled = false;
-
-hmm. this gets fiddly so I can see why you are using
-this flag to avoid missbalanced enables / disables.
-
-> +}
-> +
-> +static void tsl2772_disable_regulators_action(void *_data)
-> +{
-> +	tsl2772_disable_regulators(_data);
-> +}
-> +
->  static int tsl2772_chip_on(struct iio_dev *indio_dev)
->  {
->  	struct tsl2772_chip *chip = iio_priv(indio_dev);
-> @@ -666,6 +710,10 @@ static int tsl2772_chip_on(struct iio_dev *indio_dev)
->  	chip->als_gain_time_scale = als_time_us *
->  		tsl2772_als_gain[chip->settings.als_gain];
->  
-> +	ret = tsl2772_enable_regulators(chip);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	/*
->  	 * TSL2772 Specific power-on / adc enable sequence
->  	 * Power on the device 1st.
-> @@ -724,10 +772,13 @@ static int tsl2772_chip_on(struct iio_dev *indio_dev)
->  static int tsl2772_chip_off(struct iio_dev *indio_dev)
->  {
->  	struct tsl2772_chip *chip = iio_priv(indio_dev);
-> +	int ret;
->  
->  	/* turn device off */
->  	chip->tsl2772_chip_status = TSL2772_CHIP_SUSPENDED;
-> -	return tsl2772_write_control_reg(chip, 0x00);
-> +	ret = tsl2772_write_control_reg(chip, 0x00);
-> +	tsl2772_disable_regulators(chip);
-
-Blank line here would be nice.
-
-> +	return ret;
->  }
->  
->  /**
-> @@ -1666,6 +1717,35 @@ static int tsl2772_probe(struct i2c_client *clientp,
->  	chip->client = clientp;
->  	i2c_set_clientdata(clientp, indio_dev);
->  
-> +	chip->vddio_supply = devm_regulator_get(&clientp->dev, "vddio");
-> +	if (IS_ERR(chip->vddio_supply)) {
-> +		if (PTR_ERR(chip->vddio_supply) != -EPROBE_DEFER)
-> +			dev_err(&clientp->dev,
-> +				"Failed to get vddio regulator %d\n",
-> +				(int)PTR_ERR(chip->vddio_supply));
-> +
-> +		return PTR_ERR(chip->vddio_supply);
-> +	}
-> +
-> +	chip->vdd_supply = devm_regulator_get(&clientp->dev, "vdd");
-> +	if (IS_ERR(chip->vdd_supply)) {
-> +		if (PTR_ERR(chip->vdd_supply) != -EPROBE_DEFER)
-> +			dev_err(&clientp->dev,
-> +				"Failed to get vdd regulator %d\n",
-> +				(int)PTR_ERR(chip->vdd_supply));
-> +
-> +		return PTR_ERR(chip->vdd_supply);
-> +	}
-> +
-> +	ret = devm_add_action(&clientp->dev, tsl2772_disable_regulators_action,
-> +			      chip);
-
-Can't do them together. you need to think about where you might
-get a failure.  What if it is after the first enable but before the
-second?  In that case you've just left a regulator on as we haven't done this
-setup yet.
-
-> +	if (ret < 0) {
-> +		tsl2772_disable_regulators_action(chip);
-> +		dev_err(&clientp->dev, "Failed to setup regulator cleanup action %d\n",
-> +			ret);
-> +		return ret;
-> +	}
-> +
->  	ret = i2c_smbus_read_byte_data(chip->client,
->  				       TSL2772_CMD_REG | TSL2772_CHIPID);
->  	if (ret < 0)
+> Fabrice Gasnier (2):
+>   counter: stm32-lptimer: add counter device
+>   dt-bindings: counter: Adjust dt-bindings for STM32 lptimer move
+> 
+> William Breathitt Gray (7):
+>   counter: Introduce the Generic Counter interface
+>   counter: Documentation: Add Generic Counter sysfs documentation
+>   docs: Add Generic Counter interface documentation
+>   iio: 104-quad-8: Update license boilerplate
+>   counter: 104-quad-8: Add Generic Counter interface support
+>   counter: 104-quad-8: Documentation: Add Generic Counter sysfs
+>     documentation
+>   iio: counter: Add deprecation markings for IIO Counter attributes
+> 
+>  Documentation/ABI/testing/sysfs-bus-counter   |  230 +++
+>  .../ABI/testing/sysfs-bus-counter-104-quad-8  |   36 +
+>  Documentation/ABI/testing/sysfs-bus-iio       |    8 +
+>  .../testing/sysfs-bus-iio-counter-104-quad-8  |   16 +
+>  .../{iio => }/counter/stm32-lptimer-cnt.txt   |    0
+>  .../bindings/counter/stm32-timer-cnt.txt      |   31 +
+>  .../devicetree/bindings/mfd/stm32-lptimer.txt |    2 +-
+>  .../devicetree/bindings/mfd/stm32-timers.txt  |    7 +
+>  Documentation/driver-api/generic-counter.rst  |  342 ++++
+>  Documentation/driver-api/index.rst            |    1 +
+>  MAINTAINERS                                   |   15 +-
+>  drivers/Kconfig                               |    2 +
+>  drivers/Makefile                              |    1 +
+>  drivers/{iio => }/counter/104-quad-8.c        |  782 ++++++++-
+>  drivers/counter/Kconfig                       |   51 +
+>  drivers/{iio => }/counter/Makefile            |    5 +-
+>  drivers/counter/counter.c                     | 1561 +++++++++++++++++
+>  drivers/{iio => }/counter/stm32-lptimer-cnt.c |  361 +++-
+>  drivers/counter/stm32-timer-cnt.c             |  390 ++++
+>  drivers/iio/Kconfig                           |    1 -
+>  drivers/iio/Makefile                          |    1 -
+>  drivers/iio/counter/Kconfig                   |   34 -
+>  include/linux/counter.h                       |  505 ++++++
+>  include/linux/counter_enum.h                  |   45 +
+>  24 files changed, 4341 insertions(+), 86 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-counter
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
+>  rename Documentation/devicetree/bindings/{iio => }/counter/stm32-lptimer-cnt.txt (100%)
+>  create mode 100644 Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+>  create mode 100644 Documentation/driver-api/generic-counter.rst
+>  rename drivers/{iio => }/counter/104-quad-8.c (44%)
+>  create mode 100644 drivers/counter/Kconfig
+>  rename drivers/{iio => }/counter/Makefile (46%)
+>  create mode 100644 drivers/counter/counter.c
+>  rename drivers/{iio => }/counter/stm32-lptimer-cnt.c (48%)
+>  create mode 100644 drivers/counter/stm32-timer-cnt.c
+>  delete mode 100644 drivers/iio/counter/Kconfig
+>  create mode 100644 include/linux/counter.h
+>  create mode 100644 include/linux/counter_enum.h
+> 
