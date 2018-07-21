@@ -1,163 +1,143 @@
-Return-Path: <SRS0=O5xD=KC=xilinx.com=shubhraj@kernel.org>
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: [PATCHv4 2/4] tty: serial: uartlite: Add clock adaptation
-Date: Wed, 18 Jul 2018 11:11:00 +0530
-Message-ID: <1531892462-11085-2-git-send-email-shubhrajyoti.datta@xilinx.com>
-In-Reply-To: <1531892462-11085-1-git-send-email-shubhrajyoti.datta@xilinx.com>
-References: <1531892462-11085-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+Return-Path: <SRS0=HrxS=KF=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-sn1nam02on0044.outbound.protection.outlook.com ([104.47.36.44]:56351
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727546AbeGUMmh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 21 Jul 2018 08:42:37 -0400
+From: <shubhrajyoti.datta@gmail.com>
+Subject: [PATCHv5 1/4] tty: serial: uartlite: Add structure for private data
+Date: Sat, 21 Jul 2018 17:19:04 +0530
+Message-ID: <1532173747-19115-2-git-send-email-shubhrajyoti.datta@gmail.com>
+In-Reply-To: <1532173747-19115-1-git-send-email-shubhrajyoti.datta@gmail.com>
+References: <1532173747-19115-1-git-send-email-shubhrajyoti.datta@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-Cc: shubhrajyoti.datta@gmail.com, robh+dt@kernel.org, gregkh@linuxfoundation.org, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-serial@vger.kernel.org
+Cc: devicetree@vger.kernel.org, shubhrajyoti.datta@gmail.com, robh+dt@kernel.org, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, Tanvi Desai <tanvi.desai@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support of Common Clock Framework for Uartlite driver.
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
+Add struct uartlite_data, to store the private data of the Uartlite
+driver.
+
+Signed-off-by: Tanvi Desai <tanvi.desai@xilinx.com>
 Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 ---
-v2:
-removed the suspend resume changes to separate driver
-
- drivers/tty/serial/uartlite.c | 49 +++++++++++++++++++++++++++++++++++++++=
-++--
- 1 file changed, 47 insertions(+), 2 deletions(-)
+ drivers/tty/serial/uartlite.c | 29 +++++++++++++++++++++--------
+ 1 file changed, 21 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
-index 0f798f7..b3a12be 100644
+index c47db78..0f798f7 100644
 --- a/drivers/tty/serial/uartlite.c
 +++ b/drivers/tty/serial/uartlite.c
-@@ -21,6 +21,7 @@
- #include <linux/of_address.h>
- #include <linux/of_device.h>
- #include <linux/of_platform.h>
-+#include <linux/clk.h>
-
- #define ULITE_NAME             "ttyUL"
- #define ULITE_MAJOR            204
-@@ -56,6 +57,7 @@
-
- struct uartlite_data {
-        const struct uartlite_reg_ops *reg_ops;
-+       struct clk *clk;
- };
-
+@@ -54,6 +54,10 @@
+ #define ULITE_CONTROL_RST_RX	0x02
+ #define ULITE_CONTROL_IE	0x10
+ 
++struct uartlite_data {
++	const struct uartlite_reg_ops *reg_ops;
++};
++
  struct uartlite_reg_ops {
-@@ -261,8 +263,15 @@ static void ulite_break_ctl(struct uart_port *port, in=
-t ctl)
-
- static int ulite_startup(struct uart_port *port)
+ 	u32 (*in)(void __iomem *addr);
+ 	void (*out)(u32 val, void __iomem *addr);
+@@ -91,16 +95,16 @@ static const struct uartlite_reg_ops uartlite_le = {
+ 
+ static inline u32 uart_in32(u32 offset, struct uart_port *port)
  {
-+       struct uartlite_data *pdata =3D port->private_data;
-        int ret;
-
-+       ret =3D clk_enable(pdata->clk);
-+       if (ret) {
-+               dev_err(port->dev, "Failed to enable clock\n");
-+               return ret;
-+       }
-+
-        ret =3D request_irq(port->irq, ulite_isr, IRQF_SHARED | IRQF_TRIGGE=
-R_RISING,
-                          "uartlite", port);
-        if (ret)
-@@ -277,9 +286,12 @@ static int ulite_startup(struct uart_port *port)
-
- static void ulite_shutdown(struct uart_port *port)
- {
-+       struct uartlite_data *pdata =3D port->private_data;
-+
-        uart_out32(0, ULITE_CONTROL, port);
-        uart_in32(ULITE_CONTROL, port); /* dummy */
-        free_irq(port->irq, port);
-+       clk_disable(pdata->clk);
+-	const struct uartlite_reg_ops *reg_ops = port->private_data;
++	struct uartlite_data *pdata = port->private_data;
+ 
+-	return reg_ops->in(port->membase + offset);
++	return pdata->reg_ops->in(port->membase + offset);
  }
-
- static void ulite_set_termios(struct uart_port *port, struct ktermios *ter=
-mios,
-@@ -370,6 +382,17 @@ static int ulite_verify_port(struct uart_port *port, s=
-truct serial_struct *ser)
-        return -EINVAL;
- }
-
-+static void ulite_pm(struct uart_port *port, unsigned int state,
-+                    unsigned int oldstate)
-+{
-+       struct uartlite_data *pdata =3D port->private_data;
-+
-+       if (!state)
-+               clk_enable(pdata->clk);
-+       else
-+               clk_disable(pdata->clk);
-+}
-+
- #ifdef CONFIG_CONSOLE_POLL
- static int ulite_get_poll_char(struct uart_port *port)
+ 
+ static inline void uart_out32(u32 val, u32 offset, struct uart_port *port)
  {
-@@ -405,6 +428,7 @@ static const struct uart_ops ulite_ops =3D {
-        .request_port   =3D ulite_request_port,
-        .config_port    =3D ulite_config_port,
-        .verify_port    =3D ulite_verify_port,
-+       .pm             =3D ulite_pm,
- #ifdef CONFIG_CONSOLE_POLL
-        .poll_get_char  =3D ulite_get_poll_char,
-        .poll_put_char  =3D ulite_put_poll_char,
-@@ -669,7 +693,6 @@ static int ulite_release(struct device *dev)
- /* ---------------------------------------------------------------------
-  * Platform bus binding
+-	const struct uartlite_reg_ops *reg_ops = port->private_data;
++	struct uartlite_data *pdata = port->private_data;
+ 
+-	reg_ops->out(val, port->membase + offset);
++	pdata->reg_ops->out(val, port->membase + offset);
+ }
+ 
+ static struct uart_port ulite_ports[ULITE_NR_UARTS];
+@@ -325,6 +329,7 @@ static void ulite_release_port(struct uart_port *port)
+ 
+ static int ulite_request_port(struct uart_port *port)
+ {
++	struct uartlite_data *pdata = port->private_data;
+ 	int ret;
+ 
+ 	pr_debug("ulite console: port=%p; port->mapbase=%llx\n",
+@@ -342,13 +347,13 @@ static int ulite_request_port(struct uart_port *port)
+ 		return -EBUSY;
+ 	}
+ 
+-	port->private_data = (void *)&uartlite_be;
++	pdata->reg_ops = &uartlite_be;
+ 	ret = uart_in32(ULITE_CONTROL, port);
+ 	uart_out32(ULITE_CONTROL_RST_TX, ULITE_CONTROL, port);
+ 	ret = uart_in32(ULITE_STATUS, port);
+ 	/* Endianess detection */
+ 	if ((ret & ULITE_STATUS_TXEMPTY) != ULITE_STATUS_TXEMPTY)
+-		port->private_data = (void *)&uartlite_le;
++		pdata->reg_ops = &uartlite_le;
+ 
+ 	return 0;
+ }
+@@ -585,10 +590,12 @@ static struct uart_driver ulite_uart_driver = {
+  * @id: requested id number.  Pass -1 for automatic port assignment
+  * @base: base address of uartlite registers
+  * @irq: irq number for uartlite
++ * @pdata: private data for uartlite
+  *
+  * Returns: 0 on success, <0 otherwise
   */
--
- #if defined(CONFIG_OF)
- /* Match table for of_platform binding */
- static const struct of_device_id ulite_of_match[] =3D {
-@@ -684,7 +707,7 @@ static int ulite_probe(struct platform_device *pdev)
+-static int ulite_assign(struct device *dev, int id, u32 base, int irq)
++static int ulite_assign(struct device *dev, int id, u32 base, int irq,
++			struct uartlite_data *pdata)
  {
-        struct resource *res;
-        struct uartlite_data *pdata;
--       int irq;
-+       int irq, ret;
-        int id =3D pdev->id;
+ 	struct uart_port *port;
+ 	int rc;
+@@ -625,6 +632,7 @@ static int ulite_assign(struct device *dev, int id, u32 base, int irq)
+ 	port->dev = dev;
+ 	port->type = PORT_UNKNOWN;
+ 	port->line = id;
++	port->private_data = pdata;
+ 
+ 	dev_set_drvdata(dev, port);
+ 
+@@ -675,6 +683,7 @@ MODULE_DEVICE_TABLE(of, ulite_of_match);
+ static int ulite_probe(struct platform_device *pdev)
+ {
+ 	struct resource *res;
++	struct uartlite_data *pdata;
+ 	int irq;
+ 	int id = pdev->id;
  #ifdef CONFIG_OF
-        const __be32 *prop;
-@@ -706,11 +729,33 @@ static int ulite_probe(struct platform_device *pdev)
-        if (irq <=3D 0)
-                return -ENXIO;
-
-+       pdata->clk =3D devm_clk_get(&pdev->dev, "s_axi_aclk");
-+       if (IS_ERR(pdata->clk)) {
-+               if (PTR_ERR(pdata->clk) !=3D -ENOENT)
-+                       return PTR_ERR(pdata->clk);
-+
-+               /*
-+                * Clock framework support is optional, continue on
-+                * anyways if we don't find a matching clock.
-+                */
-+               pdata->clk =3D NULL;
-+       }
-+
-+       ret =3D clk_prepare(pdata->clk);
-+       if (ret) {
-+               dev_err(&pdev->dev, "Failed to prepare clock\n");
-+               return ret;
-+       }
-+
-        return ulite_assign(&pdev->dev, id, res->start, irq, pdata);
+@@ -684,6 +693,10 @@ static int ulite_probe(struct platform_device *pdev)
+ 	if (prop)
+ 		id = be32_to_cpup(prop);
+ #endif
++	pdata = devm_kzalloc(&pdev->dev, sizeof(struct uartlite_data),
++			     GFP_KERNEL);
++	if (!pdata)
++		return -ENOMEM;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!res)
+@@ -693,7 +706,7 @@ static int ulite_probe(struct platform_device *pdev)
+ 	if (irq <= 0)
+ 		return -ENXIO;
+ 
+-	return ulite_assign(&pdev->dev, id, res->start, irq);
++	return ulite_assign(&pdev->dev, id, res->start, irq, pdata);
  }
-
+ 
  static int ulite_remove(struct platform_device *pdev)
- {
-+       struct uart_port *port =3D dev_get_drvdata(&pdev->dev);
-+       struct uartlite_data *pdata =3D port->private_data;
-+
-+       clk_disable_unprepare(pdata->clk);
-        return ulite_release(&pdev->dev);
- }
-
---
+-- 
 2.7.4
 
-This email and any attachments are intended for the sole use of the named r=
-ecipient(s) and contain(s) confidential information that may be proprietary=
-, privileged or copyrighted under applicable law. If you are not the intend=
-ed recipient, do not read, copy, or forward this email message or any attac=
-hments. Delete this email message and any attachments immediately.
