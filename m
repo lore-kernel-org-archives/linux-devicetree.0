@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 06/18] dmaengine: dma-jz4780: Don't depend on MACH_JZ4780
-Date: Sat, 21 Jul 2018 13:06:31 +0200
-Message-ID: <20180721110643.19624-7-paul@crapouillou.net>
+Subject: [PATCH v3 08/18] dmaengine: dma-jz4780: Add support for the JZ4740 SoC
+Date: Sat, 21 Jul 2018 13:06:33 +0200
+Message-ID: <20180721110643.19624-9-paul@crapouillou.net>
 References: <20180721110643.19624-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180721110643.19624-1-paul@crapouillou.net>
@@ -10,30 +10,44 @@ To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutlan
 Cc: Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, Paul Cercueil <paul@crapouillou.net>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-If we make this driver depend on MACH_JZ4780, that means it can be
-enabled only if we're building a kernel specially crafted for a
-JZ4780-based board, while most GNU/Linux distributions will want one
-generic MIPS kernel that works on multiple boards.
+The JZ4740 SoC has a single DMA core starring six DMA channels.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Mathieu Malaterre <malat@debian.org>
+Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 ---
- drivers/dma/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/dma-jz4780.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-v3: New patch
+ v2: The documentation update is now in patch 01/17
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index ca1680afa20a..0680e1eb0d73 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -143,7 +143,7 @@ config DMA_JZ4740
+ v3: The Kconfig update was dropped thanks to patch 06/18
+
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index a5f4a8d54516..084d4023637e 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -135,6 +135,7 @@ struct jz4780_dma_chan {
+ };
  
- config DMA_JZ4780
- 	tristate "JZ4780 DMA support"
--	depends on MACH_JZ4780 || COMPILE_TEST
-+	depends on MIPS || COMPILE_TEST
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
+ enum jz_version {
++	ID_JZ4740,
+ 	ID_JZ4770,
+ 	ID_JZ4780,
+ };
+@@ -803,11 +804,13 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
+ }
+ 
+ static const struct jz4780_dma_soc_data jz4780_dma_soc_data[] = {
++	[ID_JZ4740] = { .nb_channels = 6, .transfer_ord_max = 5, },
+ 	[ID_JZ4770] = { .nb_channels = 6, .transfer_ord_max = 6, },
+ 	[ID_JZ4780] = { .nb_channels = 32, .transfer_ord_max = 7, },
+ };
+ 
+ static const struct of_device_id jz4780_dma_dt_match[] = {
++	{ .compatible = "ingenic,jz4740-dma", .data = (void *)ID_JZ4740 },
+ 	{ .compatible = "ingenic,jz4770-dma", .data = (void *)ID_JZ4770 },
+ 	{ .compatible = "ingenic,jz4780-dma", .data = (void *)ID_JZ4780 },
+ 	{},
 -- 
 2.11.0
