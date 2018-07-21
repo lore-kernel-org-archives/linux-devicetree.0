@@ -1,49 +1,93 @@
-Return-Path: <SRS0=Pf9O=KL=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 1/4] serial: sh-sci: Improve interrupts description
-Date: Fri, 27 Jul 2018 16:09:13 -0500
-Message-Id: <20180727210916.66642-2-chris.brandt@renesas.com>
-In-Reply-To: <20180727210916.66642-1-chris.brandt@renesas.com>
-References: <20180727210916.66642-1-chris.brandt@renesas.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=4zTT=KF=tom.com=liuxiang_1999@kernel.org>
+From: Liu Xiang <liu.xiang6@zte.com.cn>
+Subject: [PATCH] of: irq: Add a helper function for irq_of_parse_and_map
+Date: Sat, 21 Jul 2018 23:38:14 +0800
+Message-Id: <1532187494-2704-1-git-send-email-liu.xiang6@zte.com.cn>
+To: robh+dt@kernel.org
+Cc: frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, liuxiang_1999@126.com, Liu Xiang <liu.xiang6@zte.com.cn>
 List-ID: <devicetree@vger.kernel.org>
 
-Describe interrupts property in more detail, especially when there are
-more than one interrupt.
+Implement a resource managed irq_of_parse_and_map function.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Liu Xiang <liu.xiang6@zte.com.cn>
 ---
- .../devicetree/bindings/serial/renesas,sci-serial.txt    | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/of/irq.c       | 38 ++++++++++++++++++++++++++++++++++++++
+ include/linux/of_irq.h |  7 +++++++
+ 2 files changed, 45 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-index a7cda6550100..eaca9da79d83 100644
---- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-+++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-@@ -73,7 +73,21 @@ Required properties:
-     family-specific and/or generic versions.
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 02ad93a..947fe41 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -45,6 +45,44 @@ unsigned int irq_of_parse_and_map(struct device_node *dev, int index)
+ }
+ EXPORT_SYMBOL_GPL(irq_of_parse_and_map);
  
-   - reg: Base address and length of the I/O registers used by the UART.
--  - interrupts: Must contain an interrupt-specifier for the SCIx interrupt.
-+  - interrupts: Must contain one or more interrupt-specifiers for the SCIx.
-+                If a single interrupt is expressed, then all events are
-+                multiplexed into this single interrupt.
++static void devm_irq_dispose_mapping(struct device *dev, void *res)
++{
++	irq_dispose_mapping(*(unsigned int *)res);
++}
 +
-+                If multiple interrupts are provided by the hardware, the order
-+                in which the interrupts are listed must match order below. Note
-+                that some HW interrupt events may be muxed together resulting
-+                in duplicate entries.
-+                The interrupt order is as follows:
-+                  1. Error (ERI)
-+                  2. Receive buffer full (RXI)
-+                  3. Transmit buffer empty (TXI)
-+                  4. Break (BRI)
-+                  5. Data Ready (DRI)
-+                  6. Transmit End (TEI)
++/**
++ * devm_irq_of_parse_and_map - Resource-managed irq_of_parse_and_map
++ * @dev: Device whose interrupt is to be mapped
++ * @index: Index of the interrupt to map
++ *
++ * Managed irq_of_parse_and_map. Irq mapping created by this function is
++ * automatically disposed on driver detach.
++ *
++ * RETURNS:
++ * Returns a linux irq number on success, 0 on failure.
++ */
++unsigned int devm_irq_of_parse_and_map(struct device *dev, int index)
++{
++	struct device_node *np = dev->of_node;
++	unsigned int *dr = NULL;
++	unsigned int rc = 0;
++
++	dr = devres_alloc(devm_irq_dispose_mapping, sizeof(unsigned int),
++			  GFP_KERNEL);
++	if (!dr)
++		return 0;
++
++	rc = irq_of_parse_and_map(np, index);
++	if (rc > 0) {
++		*dr = rc;
++		devres_add(dev, dr);
++	} else
++		devres_free(dr);
++
++	return rc;
++}
++EXPORT_SYMBOL_GPL(devm_irq_of_parse_and_map);
++
+ /**
+  * of_irq_find_parent - Given a device node, find its interrupt parent node
+  * @child: pointer to device node
+diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+index 1214cab..1ac26ff 100644
+--- a/include/linux/of_irq.h
++++ b/include/linux/of_irq.h
+@@ -55,6 +55,7 @@ extern struct irq_domain *of_msi_map_get_device_domain(struct device *dev,
+ 						       u32 rid);
+ extern void of_msi_configure(struct device *dev, struct device_node *np);
+ u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in);
++extern unsigned int devm_irq_of_parse_and_map(struct device *dev, int index);
+ #else
+ static inline int of_irq_count(struct device_node *dev)
+ {
+@@ -97,6 +98,12 @@ static inline u32 of_msi_map_rid(struct device *dev,
+ {
+ 	return rid_in;
+ }
++
++static inline unsigned int devm_irq_of_parse_and_map(struct device *dev,
++						     int index)
++{
++	return 0;
++}
+ #endif
  
-   - clocks: Must contain a phandle and clock-specifier pair for each entry
-     in clock-names.
+ #if defined(CONFIG_OF_IRQ) || defined(CONFIG_SPARC)
 -- 
-2.16.1
+1.9.1
