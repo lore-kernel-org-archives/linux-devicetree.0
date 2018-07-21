@@ -1,114 +1,201 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 3/7] iio: tsl2772: add support for reading power
- settings from device tree
-Date: Sat, 21 Jul 2018 18:37:16 +0100
-Message-ID: <20180721183716.524632f1@archlinux>
+Subject: Re: [PATCH v2 5/7] iio: tsl2772: add support for regulator
+ framework
+Date: Sat, 21 Jul 2018 18:45:38 +0100
+Message-ID: <20180721184538.158c57d9@archlinux>
 References: <20180717084158.23532-1-masneyb@onstation.org>
-        <20180717084158.23532-4-masneyb@onstation.org>
-        <20180720173635.GA21241@rob-hp-laptop>
+        <20180717084158.23532-6-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180720173635.GA21241@rob-hp-laptop>
+In-Reply-To: <20180717084158.23532-6-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Brian Masney <masneyb@onstation.org>, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, jonathan@marek.ca, jmaneyrol@invensense.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mkelly@xevo.com, fischerdouglasc@gmail.com, bshah@kde.org, ctatlor97@gmail.com, drew.paterson@ams.com
+To: Brian Masney <masneyb@onstation.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, jonathan@marek.ca, jmaneyrol@invensense.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mkelly@xevo.com, fischerdouglasc@gmail.com, bshah@kde.org, ctatlor97@gmail.com, drew.paterson@ams.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 20 Jul 2018 11:36:35 -0600
-Rob Herring <robh@kernel.org> wrote:
+On Tue, 17 Jul 2018 04:41:56 -0400
+Brian Masney <masneyb@onstation.org> wrote:
 
-> On Tue, Jul 17, 2018 at 04:41:54AM -0400, Brian Masney wrote:
-> > This patch adds support for optionally reading the prox_diode and
-> > prox_power settings from device tree. This was tested using a LG
-> > Nexus 5 (hammerhead) which requires a different diode than the driver
-> > default for the IR LED.
-> > 
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > ---
-> > The next patch in the series removes the tsl2772 driver from the
-> > trivial-devices.txt file. I separated it out so that change can go
-> > through device tree.
-> > 
-> >  .../devicetree/bindings/iio/light/tsl2772.txt | 39 +++++++++++++++++++  
+> This patch adds support for the regulator framework to the tsl2772
+> driver. Driver was tested using a LG Nexus 5 (hammerhead) phone with
+> the two regulators and on a Raspberry Pi 2 without any regulators
+> controlling the power to the sensor.
 > 
-> Please split DT bindings to separate patch.
-> 
-> >  drivers/iio/light/tsl2772.c                   | 16 ++++++++
-> >  include/dt-bindings/iio/amstaos,tsl2772.h     | 24 ++++++++++++
-> >  3 files changed, 79 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2772.txt
-> >  create mode 100644 include/dt-bindings/iio/amstaos,tsl2772.h
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/light/tsl2772.txt b/Documentation/devicetree/bindings/iio/light/tsl2772.txt
-> > new file mode 100644
-> > index 000000000000..ab553d52b9fc
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/light/tsl2772.txt
-> > @@ -0,0 +1,39 @@
-> > +* AMS/TAOS ALS and proximity sensor
-> > +
-> > +Required properties:
-> > +
-> > +  - compatible: Should be one of
-> > +		"amstaos,tsl2571"
-> > +		"amstaos,tsl2671"
-> > +		"amstaos,tmd2671"
-> > +		"amstaos,tsl2771"
-> > +		"amstaos,tmd2771"
-> > +		"amstaos,tsl2572"
-> > +		"amstaos,tsl2672"
-> > +		"amstaos,tmd2672"
-> > +		"amstaos,tsl2772"
-> > +		"amstaos,tmd2772"
-> > +  - reg: the I2C address of the device
-> > +
-> > +Optional properties:
-> > +
-> > +  - amstaos,prox_diode - must be TSL2772_DIODE0, TSL2772_DIODE1, or
-> > +                         TSL2772_DIODE_BOTH.  
-> 
-> s/_/-/
-> 
-> > +  - amstaos,prox_power - must be TSL2772_100_mA, TSL2772_50_mA, TSL2772_25_mA,
-> > +                         or TSL2772_13_mA.  
-> 
-> I wonder if this should be common. Perhaps we should use the existing 
-> 'led-max-microamp' as this is setting the current for an IR LED.
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+There is an ordering issue in probe and hence the tear down.  Fixing
+it is unfortunately going to make the rest of the handling more complex...
 
-Seems reasonable, then perhaps have two controls to turn on the diodes
-above.
+Jonathan
 
+> ---
+>  .../devicetree/bindings/iio/light/tsl2772.txt |  4 +
+>  drivers/iio/light/tsl2772.c                   | 82 ++++++++++++++++++-
+>  2 files changed, 85 insertions(+), 1 deletion(-)
 > 
-> And while called 'power' this setting is current.
+> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2772.txt b/Documentation/devicetree/bindings/iio/light/tsl2772.txt
+> index ab553d52b9fc..bfde8b2c8790 100644
+> --- a/Documentation/devicetree/bindings/iio/light/tsl2772.txt
+> +++ b/Documentation/devicetree/bindings/iio/light/tsl2772.txt
+> @@ -21,6 +21,8 @@ Optional properties:
+>                           TSL2772_DIODE_BOTH.
+>    - amstaos,prox_power - must be TSL2772_100_mA, TSL2772_50_mA, TSL2772_25_mA,
+>                           or TSL2772_13_mA.
+> +  - vdd-supply: phandle to the regulator that provides power to the sensor.
+> +  - vddio-supply: phandle to the regulator that provides power to the bus.
+>    - interrupt-parent: should be the phandle for the interrupt controller
+>    - interrupts: the sole interrupt generated by the device
+>  
+> @@ -35,5 +37,7 @@ tsl2772@39 {
+>  	compatible = "amstaos,tsl2772";
+>  	reg = <0x39>;
+>  	interrupts-extended = <&msmgpio 61 IRQ_TYPE_EDGE_FALLING>;
+> +	vdd-supply = <&pm8941_l17>;
+> +	vddio-supply = <&pm8941_lvs1>;
+>  	amstaos,prox_diode = <TSL2772_DIODE0>;
+>  };
+> diff --git a/drivers/iio/light/tsl2772.c b/drivers/iio/light/tsl2772.c
+> index 0be57f2ecb02..f6a27f8b3ca7 100644
+> --- a/drivers/iio/light/tsl2772.c
+> +++ b/drivers/iio/light/tsl2772.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/sysfs.h>
+>  #include <linux/platform_data/tsl2772.h>
+> +#include <linux/regulator/consumer.h>
+>  
+>  /* Cal defs */
+>  #define PROX_STAT_CAL			0
+> @@ -146,6 +147,9 @@ struct tsl2772_chip {
+>  	struct mutex prox_mutex;
+>  	struct mutex als_mutex;
+>  	struct i2c_client *client;
+> +	struct regulator *vdd_supply;
+> +	struct regulator *vddio_supply;
+> +	bool regulators_enabled;
+>  	u16 prox_data;
+>  	struct tsl2772_als_info als_cur_info;
+>  	struct tsl2772_settings settings;
+> @@ -609,6 +613,46 @@ static int tsl2772_als_calibrate(struct iio_dev *indio_dev)
+>  	return ret;
+>  }
+>  
+> +static int tsl2772_enable_regulators(struct tsl2772_chip *chip)
+> +{
+> +	int ret;
+> +
+> +	ret = regulator_enable(chip->vddio_supply);
+> +	if (ret < 0) {
+> +		dev_err(&chip->client->dev, "Failed to enable regulator: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = regulator_enable(chip->vdd_supply);
+> +	if (ret < 0) {
+> +		regulator_disable(chip->vddio_supply);
+> +		dev_err(&chip->client->dev, "Failed to enable regulator: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	chip->regulators_enabled = true;
+> +
+> +	return 0;
+> +}
+> +
+> +static void tsl2772_disable_regulators(struct tsl2772_chip *chip)
+> +{
+> +	if (!chip->regulators_enabled)
+> +		return;
+> +
+> +	regulator_disable(chip->vdd_supply);
+> +	regulator_disable(chip->vddio_supply);
+> +
+> +	chip->regulators_enabled = false;
 
-Also can we have real values?  I really don't like defines if they
-aren't absolutely necessary - particularly when there is a nice real
-unit to be used.
+hmm. this gets fiddly so I can see why you are using
+this flag to avoid missbalanced enables / disables.
 
-> 
-> > +  - interrupt-parent: should be the phandle for the interrupt controller  
-> 
-> Don't need to document this. It's implied by interrupts (and could be in 
-> a parent node).
-> 
-> > +  - interrupts: the sole interrupt generated by the device
-> > +
-> > +  Refer to interrupt-controller/interrupts.txt for generic interrupt client
-> > +  node bindings.
-> > +
-> > +Example:
-> > +
-> > +#include <dt-bindings/iio/amstaos,tsl2772.h>
-> > +
-> > +tsl2772@39 {
-> > +	compatible = "amstaos,tsl2772";
-> > +	reg = <0x39>;
-> > +	interrupts-extended = <&msmgpio 61 IRQ_TYPE_EDGE_FALLING>;
-> > +	amstaos,prox_diode = <TSL2772_DIODE0>;
-> > +};  
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +}
+> +
+> +static void tsl2772_disable_regulators_action(void *_data)
+> +{
+> +	tsl2772_disable_regulators(_data);
+> +}
+> +
+>  static int tsl2772_chip_on(struct iio_dev *indio_dev)
+>  {
+>  	struct tsl2772_chip *chip = iio_priv(indio_dev);
+> @@ -666,6 +710,10 @@ static int tsl2772_chip_on(struct iio_dev *indio_dev)
+>  	chip->als_gain_time_scale = als_time_us *
+>  		tsl2772_als_gain[chip->settings.als_gain];
+>  
+> +	ret = tsl2772_enable_regulators(chip);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	/*
+>  	 * TSL2772 Specific power-on / adc enable sequence
+>  	 * Power on the device 1st.
+> @@ -724,10 +772,13 @@ static int tsl2772_chip_on(struct iio_dev *indio_dev)
+>  static int tsl2772_chip_off(struct iio_dev *indio_dev)
+>  {
+>  	struct tsl2772_chip *chip = iio_priv(indio_dev);
+> +	int ret;
+>  
+>  	/* turn device off */
+>  	chip->tsl2772_chip_status = TSL2772_CHIP_SUSPENDED;
+> -	return tsl2772_write_control_reg(chip, 0x00);
+> +	ret = tsl2772_write_control_reg(chip, 0x00);
+> +	tsl2772_disable_regulators(chip);
+
+Blank line here would be nice.
+
+> +	return ret;
+>  }
+>  
+>  /**
+> @@ -1666,6 +1717,35 @@ static int tsl2772_probe(struct i2c_client *clientp,
+>  	chip->client = clientp;
+>  	i2c_set_clientdata(clientp, indio_dev);
+>  
+> +	chip->vddio_supply = devm_regulator_get(&clientp->dev, "vddio");
+> +	if (IS_ERR(chip->vddio_supply)) {
+> +		if (PTR_ERR(chip->vddio_supply) != -EPROBE_DEFER)
+> +			dev_err(&clientp->dev,
+> +				"Failed to get vddio regulator %d\n",
+> +				(int)PTR_ERR(chip->vddio_supply));
+> +
+> +		return PTR_ERR(chip->vddio_supply);
+> +	}
+> +
+> +	chip->vdd_supply = devm_regulator_get(&clientp->dev, "vdd");
+> +	if (IS_ERR(chip->vdd_supply)) {
+> +		if (PTR_ERR(chip->vdd_supply) != -EPROBE_DEFER)
+> +			dev_err(&clientp->dev,
+> +				"Failed to get vdd regulator %d\n",
+> +				(int)PTR_ERR(chip->vdd_supply));
+> +
+> +		return PTR_ERR(chip->vdd_supply);
+> +	}
+> +
+> +	ret = devm_add_action(&clientp->dev, tsl2772_disable_regulators_action,
+> +			      chip);
+
+Can't do them together. you need to think about where you might
+get a failure.  What if it is after the first enable but before the
+second?  In that case you've just left a regulator on as we haven't done this
+setup yet.
+
+> +	if (ret < 0) {
+> +		tsl2772_disable_regulators_action(chip);
+> +		dev_err(&clientp->dev, "Failed to setup regulator cleanup action %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+>  	ret = i2c_smbus_read_byte_data(chip->client,
+>  				       TSL2772_CMD_REG | TSL2772_CHIPID);
+>  	if (ret < 0)
