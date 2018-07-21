@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 11/18] dmaengine: dma-jz4780: Add missing residue DTC mask
-Date: Sat, 21 Jul 2018 13:06:36 +0200
-Message-ID: <20180721110643.19624-12-paul@crapouillou.net>
+Subject: [PATCH v3 09/18] dmaengine: dma-jz4780: Add support for the JZ4725B SoC
+Date: Sat, 21 Jul 2018 13:06:34 +0200
+Message-ID: <20180721110643.19624-10-paul@crapouillou.net>
 References: <20180721110643.19624-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180721110643.19624-1-paul@crapouillou.net>
@@ -10,37 +10,72 @@ To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutlan
 Cc: Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, Paul Cercueil <paul@crapouillou.net>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-From: Daniel Silsby <dansilsby@gmail.com>
+The JZ4725B has one DMA core starring six DMA channels.
+As for the JZ4770, each DMA channel's clock can be enabled with
+a register write, the difference here being that once started, it
+is not possible to turn it off.
 
-The 'dtc' word in jz DMA descriptors contains two fields: The
-lowest 24 bits are the transfer count, and upper 8 bits are the DOA
-offset to next descriptor. The upper 8 bits are now correctly masked
-off when computing residue in jz4780_dma_desc_residue(). Note that
-reads of the DTCn hardware reg are automatically masked this way.
-
-Signed-off-by: Daniel Silsby <dansilsby@gmail.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Tested-by: Mathieu Malaterre <malat@debian.org>
+Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 ---
- drivers/dma/dma-jz4780.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/dma/dma-jz4780.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
- v2: No change
+ v2: - Add comments about channel enabling/disabling
+     - The documentation update is now in patch 01/17
 
  v3: No change
 
 diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 3c9d3952e23a..fa926de082ba 100644
+index 084d4023637e..88ce3f0157f6 100644
 --- a/drivers/dma/dma-jz4780.c
 +++ b/drivers/dma/dma-jz4780.c
-@@ -614,7 +614,8 @@ static size_t jz4780_dma_desc_residue(struct jz4780_dma_chan *jzchan,
- 	residue = 0;
+@@ -136,6 +136,7 @@ struct jz4780_dma_chan {
  
- 	for (i = next_sg; i < desc->count; i++)
--		residue += desc->desc[i].dtc << jzchan->transfer_shift;
-+		residue += (desc->desc[i].dtc & 0xffffff) <<
-+			jzchan->transfer_shift;
+ enum jz_version {
+ 	ID_JZ4740,
++	ID_JZ4725B,
+ 	ID_JZ4770,
+ 	ID_JZ4780,
+ };
+@@ -209,8 +210,12 @@ static inline void jz4780_dma_ctrl_writel(struct jz4780_dma_dev *jzdma,
+ static inline void jz4780_dma_chan_enable(struct jz4780_dma_dev *jzdma,
+ 	unsigned int chn)
+ {
+-	if (jzdma->version == ID_JZ4770)
++	if (jzdma->version == ID_JZ4770) {
+ 		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKES, BIT(chn));
++	} else if (jzdma->version == ID_JZ4725B) {
++		/* JZ4725B has no DCKES, it uses DCKE to enable channels */
++		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKE, BIT(chn));
++	}
+ }
  
- 	if (next_sg != 0) {
- 		count = jz4780_dma_chn_readl(jzdma, jzchan->id,
+ static inline void jz4780_dma_chan_disable(struct jz4780_dma_dev *jzdma,
+@@ -218,6 +223,8 @@ static inline void jz4780_dma_chan_disable(struct jz4780_dma_dev *jzdma,
+ {
+ 	if (jzdma->version == ID_JZ4770)
+ 		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKEC, BIT(chn));
++
++	/* On JZ4725B it is not possible to stop a DMA channel once enabled */
+ }
+ 
+ static struct jz4780_dma_desc *jz4780_dma_desc_alloc(
+@@ -805,12 +812,14 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
+ 
+ static const struct jz4780_dma_soc_data jz4780_dma_soc_data[] = {
+ 	[ID_JZ4740] = { .nb_channels = 6, .transfer_ord_max = 5, },
++	[ID_JZ4725B] = { .nb_channels = 6, .transfer_ord_max = 5, },
+ 	[ID_JZ4770] = { .nb_channels = 6, .transfer_ord_max = 6, },
+ 	[ID_JZ4780] = { .nb_channels = 32, .transfer_ord_max = 7, },
+ };
+ 
+ static const struct of_device_id jz4780_dma_dt_match[] = {
+ 	{ .compatible = "ingenic,jz4740-dma", .data = (void *)ID_JZ4740 },
++	{ .compatible = "ingenic,jz4725b-dma", .data = (void *)ID_JZ4725B },
+ 	{ .compatible = "ingenic,jz4770-dma", .data = (void *)ID_JZ4770 },
+ 	{ .compatible = "ingenic,jz4780-dma", .data = (void *)ID_JZ4780 },
+ 	{},
 -- 
 2.11.0
