@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 02/18] dmaengine: dma-jz4780: Return error if not probed from DT
-Date: Sat, 21 Jul 2018 13:06:27 +0200
-Message-ID: <20180721110643.19624-3-paul@crapouillou.net>
+Subject: [PATCH v3 06/18] dmaengine: dma-jz4780: Don't depend on MACH_JZ4780
+Date: Sat, 21 Jul 2018 13:06:31 +0200
+Message-ID: <20180721110643.19624-7-paul@crapouillou.net>
 References: <20180721110643.19624-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180721110643.19624-1-paul@crapouillou.net>
@@ -10,34 +10,30 @@ To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutlan
 Cc: Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, Paul Cercueil <paul@crapouillou.net>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-The driver calls clk_get() with the clock name set to NULL, which means
-that the driver could only work when probed from devicetree. From now
-on, we explicitly require the driver to be probed from devicetree.
+If we make this driver depend on MACH_JZ4780, that means it can be
+enabled only if we're building a kernel specially crafted for a
+JZ4780-based board, while most GNU/Linux distributions will want one
+generic MIPS kernel that works on multiple boards.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Mathieu Malaterre <malat@debian.org>
 ---
- drivers/dma/dma-jz4780.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/dma/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- v2: New patch
- v3: No change
+v3: New patch
 
-diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 85820a2d69d4..987899610b46 100644
---- a/drivers/dma/dma-jz4780.c
-+++ b/drivers/dma/dma-jz4780.c
-@@ -761,6 +761,11 @@ static int jz4780_dma_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	int i, ret;
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index ca1680afa20a..0680e1eb0d73 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -143,7 +143,7 @@ config DMA_JZ4740
  
-+	if (!dev->of_node) {
-+		dev_err(dev, "This driver must be probed from devicetree\n");
-+		return -EINVAL;
-+	}
-+
- 	jzdma = devm_kzalloc(dev, sizeof(*jzdma), GFP_KERNEL);
- 	if (!jzdma)
- 		return -ENOMEM;
+ config DMA_JZ4780
+ 	tristate "JZ4780 DMA support"
+-	depends on MACH_JZ4780 || COMPILE_TEST
++	depends on MIPS || COMPILE_TEST
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
 -- 
 2.11.0
