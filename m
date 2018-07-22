@@ -1,146 +1,89 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH 01/15] MIPS: dts: img: pistachio_marduk: Reorder nodes
-Date: Sun, 22 Jul 2018 23:19:56 +0200
-Message-ID: <20180722212010.3979-2-afaerber@suse.de>
-References: <20180722212010.3979-1-afaerber@suse.de>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCH v4 1/5] dt-bindings: w1: document generic onewire bindings
+Date: Mon, 23 Jul 2018 00:01:05 +0200
+Message-ID: <20180722220105.hl6lwfyueyojfxmt@earth.universe>
+References: <20180706053552.11438-1-daniel@zonque.org>
+ <20180706053552.11438-2-daniel@zonque.org>
+ <20180711150157.GA18150@rob-hp-laptop>
+ <5070717c-4c9f-c580-8f50-2369dcd74aef@zonque.org>
+ <CAL_JsqL10WT5AK37_8o3M_=UiLx_thcm1W3UNz2qBaB5dRo8XA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="44vn7kto76qqzxm3"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180722212010.3979-1-afaerber@suse.de>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqL10WT5AK37_8o3M_=UiLx_thcm1W3UNz2qBaB5dRo8XA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org
-Cc: Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, James Hartley <james.hartley@sondrel.com>, Rahul Bedarkar <rahulbedarkar89@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Daniel Mack <daniel@zonque.org>, zbr@ioremap.net, Mark Rutland <mark.rutland@arm.com>, szabolcs.gyurko@tlt.hu, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, Robert Jarzmik <robert.jarzmik@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-Consistently order nodes referenced by label alphabetically.
-No functional changes. This prepares for adding nodes.
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- arch/mips/boot/dts/img/pistachio_marduk.dts | 76 ++++++++++++++---------------
- 1 file changed, 38 insertions(+), 38 deletions(-)
+--44vn7kto76qqzxm3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/mips/boot/dts/img/pistachio_marduk.dts b/arch/mips/boot/dts/img/pistachio_marduk.dts
-index cf9cebd52294..f03f4114e645 100644
---- a/arch/mips/boot/dts/img/pistachio_marduk.dts
-+++ b/arch/mips/boot/dts/img/pistachio_marduk.dts
-@@ -74,40 +74,34 @@
- 	};
- };
- 
--&internal_dac {
--	VDD-supply = <&internal_dac_supply>;
--};
--
--&spfi1 {
-+&adc {
- 	status = "okay";
--
--	pinctrl-0 = <&spim1_pins>, <&spim1_quad_pins>, <&spim1_cs0_pin>,
--		    <&spim1_cs1_pin>;
--	pinctrl-names = "default";
--	cs-gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>, <&gpio0 1 GPIO_ACTIVE_HIGH>;
--
--	flash@0 {
--		compatible = "spansion,s25fl016k", "jedec,spi-nor";
--		reg = <0>;
--		spi-max-frequency = <50000000>;
--	};
-+	vref-supply = <&reg_1v8>;
-+	adc-reserved-channels = <0x10>;
- };
- 
--&uart0 {
-+&enet {
- 	status = "okay";
--	assigned-clock-rates = <114278400>, <1843200>;
- };
- 
--&uart1 {
-+&i2c2 {
- 	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	tpm@20 {
-+		compatible = "infineon,slb9645tt";
-+		reg = <0x20>;
-+	};
-+
- };
- 
--&usb {
-+&i2c3 {
- 	status = "okay";
-+	clock-frequency = <400000>;
- };
- 
--&enet {
--	status = "okay";
-+&internal_dac {
-+	VDD-supply = <&internal_dac_supply>;
- };
- 
- &pin_enet {
-@@ -118,12 +112,6 @@
- 	drive-strength = <2>;
- };
- 
--&sdhost {
--	status = "okay";
--	bus-width = <4>;
--	disable-wp;
--};
--
- &pin_sdhost_cmd {
- 	drive-strength = <2>;
- };
-@@ -140,24 +128,36 @@
- 	pinctrl-names = "default";
- };
- 
--&adc {
-+&sdhost {
- 	status = "okay";
--	vref-supply = <&reg_1v8>;
--	adc-reserved-channels = <0x10>;
-+	bus-width = <4>;
-+	disable-wp;
- };
- 
--&i2c2 {
-+&spfi1 {
- 	status = "okay";
--	clock-frequency = <400000>;
- 
--	tpm@20 {
--		compatible = "infineon,slb9645tt";
--		reg = <0x20>;
-+	pinctrl-0 = <&spim1_pins>, <&spim1_quad_pins>, <&spim1_cs0_pin>,
-+		    <&spim1_cs1_pin>;
-+	pinctrl-names = "default";
-+	cs-gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>, <&gpio0 1 GPIO_ACTIVE_HIGH>;
-+
-+	flash@0 {
-+		compatible = "spansion,s25fl016k", "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <50000000>;
- 	};
-+};
- 
-+&uart0 {
-+	status = "okay";
-+	assigned-clock-rates = <114278400>, <1843200>;
- };
- 
--&i2c3 {
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&usb {
- 	status = "okay";
--	clock-frequency = <400000>;
- };
--- 
-2.16.4
+Hi,
+
+On Fri, Jul 20, 2018 at 09:10:36AM -0600, Rob Herring wrote:
+> On Wed, Jul 18, 2018 at 6:40 AM Daniel Mack <daniel@zonque.org> wrote:
+> >
+> > On Wednesday, July 11, 2018 05:01 PM, Rob Herring wrote:
+> > > On Fri, Jul 06, 2018 at 07:35:48AM +0200, Daniel Mack wrote:
+> > >> This patch adds a generic w1 bindings document that describes how w1
+> > >> slave deviceses are grouped under master nodes. It also augments the
+> > >> existing w1-gpio.txt document a bit.
+> > >>
+> > >> Signed-off-by: Daniel Mack <daniel@zonque.org>
+> > >> ---
+> > >>   .../devicetree/bindings/w1/w1-gpio.txt        | 11 +++++---
+> > >>   Documentation/devicetree/bindings/w1/w1.txt   | 25 +++++++++++++++=
+++++
+> > >>   2 files changed, 33 insertions(+), 3 deletions(-)
+> > >>   create mode 100644 Documentation/devicetree/bindings/w1/w1.txt
+> > >
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > >
+> > > Note that this will conflict with a unit-address fix that I have queu=
+ed
+> > > up for 4.18 (will send this week).
+> >
+> > How would we best handle this? Sebastian, are you going to apply this
+> > series, and add a note to the PR for 4.19 on how to resolve the conflic=
+t?
+>=20
+> Either 4.18-rc6 or my devicetree-fixes-for-4.18 tag (based on rc1) can
+> be pulled in. Or just note the conflict. It is trivial enough.
+
+This looks simple enough to just add a note to my pull request. I
+prepared a immutable branch based on 4.18-rc1, which contains this
+series and merged it into the power supply subsystem. You can get
+it here:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git/=
+tag/?h=3Dds2760-for-v4.19-signed
+
+-- Sebastian
+
+--44vn7kto76qqzxm3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAltU/p8ACgkQ2O7X88g7
++pokHw//doIU3Uznm8L8X4Z1wKHojcwlgpmTrzd9xNyZDG38xhfERI2HNwyQ6XJv
+xnro4DcD7hhln3nYyXFuEAQln9E8qcbzEd9NvqFgX2WFZ9QPTmdaFdCN8wDjh8eW
+HKwkZU5iVv6mpGxAcgK5NSvhtq1iBMSfFjFOF9PQ6XpjkQ9KLtTIvEW/jgKdJafh
+GDQJKBXLUKruBTLoXHVWi7YPqgixEUAVYOHMjQBT7V9mIbyww+BRBHN3EMSAfgQe
+SAdalRQ9ShKWscO6LtHeuIV2AdfKdjASZl85xE+YaIZrD6mq3kIzO/YibTXQU/7l
+1NUTrzVnxw6cxgt//27ps2D+Cnx9zIhwZsuw2zoxWhRFCO+W8cggwIB5+7PtIM5H
+LXhy+f3cH8xYueyCEgwT6a49gzPt+tYOv7pSF58qCevaBqTA96+ncYGH326Am4Eh
+xT1kTyeqkOOYZJB7as7P+NNFsG680Tgf9YXPuqBkyWFvSrPZz0u38wYaUM7dF218
+uBSAhO0arV/6KLZCd15/S+Dy3rKMtkr84fleBunryW8odkx8903ZJ30BtdAyodJO
+yOp7yvccsfSINijrdqBpIU4tjlA82ABHRCN413Whrv4s8pMdSgeXZE3qiq8LltKD
+7ZruogJ3cF4z0MGZihKYUm4J/Fumg5Bi6+qOYltIbprUgL/2y4k=
+=Fyiq
+-----END PGP SIGNATURE-----
+
+--44vn7kto76qqzxm3--
