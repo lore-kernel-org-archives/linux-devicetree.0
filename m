@@ -1,46 +1,106 @@
-From: Marcel Ziswiler <marcel@ziswiler.com>
-Subject: [PATCH 01/28] ARM: tegra: apalis_t30: enable broken-hpi on emmc
-Date: Sun, 22 Jul 2018 18:49:09 +0200
-Message-ID: <20180722164936.20581-2-marcel@ziswiler.com>
-References: <20180722164936.20581-1-marcel@ziswiler.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 3/7] iio: tsl2772: add support for reading power
+ settings from device tree
+Date: Sun, 22 Jul 2018 18:17:48 +0100
+Message-ID: <20180722181748.24bc47d8@archlinux>
+References: <20180717084158.23532-1-masneyb@onstation.org>
+        <20180717084158.23532-4-masneyb@onstation.org>
+        <20180720173635.GA21241@rob-hp-laptop>
+        <20180721183716.524632f1@archlinux>
+        <20180722123720.GB20029@onstation.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180722164936.20581-1-marcel@ziswiler.com>
+In-Reply-To: <20180722123720.GB20029@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Brian Masney <masneyb@onstation.org>
+Cc: Rob Herring <robh@kernel.org>, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, jonathan@marek.ca, jmaneyrol@invensense.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mkelly@xevo.com, fischerdouglasc@gmail.com, bshah@kde.org, ctatlor97@gmail.com, drew.paterson@ams.com
 List-Id: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+On Sun, 22 Jul 2018 12:37:20 +0000
+Brian Masney <masneyb@onstation.org> wrote:
 
-Avoid eMMC issues by specifying broken-hpi.
+> On Sat, Jul 21, 2018 at 06:37:16PM +0100, Jonathan Cameron wrote:
+> > On Fri, 20 Jul 2018 11:36:35 -0600
+> > Rob Herring <robh@kernel.org> wrote:
+> >   
+> > > On Tue, Jul 17, 2018 at 04:41:54AM -0400, Brian Masney wrote:  
+> > > > This patch adds support for optionally reading the prox_diode and
+> > > > prox_power settings from device tree. This was tested using a LG
+> > > > Nexus 5 (hammerhead) which requires a different diode than the driver
+> > > > default for the IR LED.
+> > > > 
+> > > > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > > > ---
+> > > > The next patch in the series removes the tsl2772 driver from the
+> > > > trivial-devices.txt file. I separated it out so that change can go
+> > > > through device tree.
+> > > > 
+> > > >  .../devicetree/bindings/iio/light/tsl2772.txt | 39 +++++++++++++++++++    
+> > > 
+> > > Please split DT bindings to separate patch.
+> > >   
+> > > >  drivers/iio/light/tsl2772.c                   | 16 ++++++++
+> > > >  include/dt-bindings/iio/amstaos,tsl2772.h     | 24 ++++++++++++
+> > > >  3 files changed, 79 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2772.txt
+> > > >  create mode 100644 include/dt-bindings/iio/amstaos,tsl2772.h
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/iio/light/tsl2772.txt b/Documentation/devicetree/bindings/iio/light/tsl2772.txt
+> > > > new file mode 100644
+> > > > index 000000000000..ab553d52b9fc
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/iio/light/tsl2772.txt
+> > > > @@ -0,0 +1,39 @@
+> > > > +* AMS/TAOS ALS and proximity sensor
+> > > > +
+> > > > +Required properties:
+> > > > +
+> > > > +  - compatible: Should be one of
+> > > > +		"amstaos,tsl2571"
+> > > > +		"amstaos,tsl2671"
+> > > > +		"amstaos,tmd2671"
+> > > > +		"amstaos,tsl2771"
+> > > > +		"amstaos,tmd2771"
+> > > > +		"amstaos,tsl2572"
+> > > > +		"amstaos,tsl2672"
+> > > > +		"amstaos,tmd2672"
+> > > > +		"amstaos,tsl2772"
+> > > > +		"amstaos,tmd2772"
+> > > > +  - reg: the I2C address of the device
+> > > > +
+> > > > +Optional properties:
+> > > > +
+> > > > +  - amstaos,prox_diode - must be TSL2772_DIODE0, TSL2772_DIODE1, or
+> > > > +                         TSL2772_DIODE_BOTH.    
+> > > 
+> > > s/_/-/
+> > >   
+> > > > +  - amstaos,prox_power - must be TSL2772_100_mA, TSL2772_50_mA, TSL2772_25_mA,
+> > > > +                         or TSL2772_13_mA.    
+> > > 
+> > > I wonder if this should be common. Perhaps we should use the existing 
+> > > 'led-max-microamp' as this is setting the current for an IR LED.  
+> > 
+> > Seems reasonable, then perhaps have two controls to turn on the diodes
+> > above.
+> >   
+> > > 
+> > > And while called 'power' this setting is current.  
+> > 
+> > Also can we have real values?  I really don't like defines if they
+> > aren't absolutely necessary - particularly when there is a nice real
+> > unit to be used.  
+> 
+> How about these options then?
+> 
+> amstaos,proximity-diode-0-enabled;
+> amstaos,proximity-diode-1-enabled;
+> led-max-microamp = <100000>;
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Works for me.  Rob?
 
----
-
- arch/arm/boot/dts/tegra30-apalis.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
-index 2f807d40c1b7..23ffe6a3bc2d 100644
---- a/arch/arm/boot/dts/tegra30-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
-@@ -699,8 +699,16 @@
- 	/* eMMC */
- 	sdhci@78000600 {
- 		status = "okay";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
- 		bus-width = <8>;
- 		non-removable;
-+
-+		emmc: emmc@0 {
-+			reg = <0>;
-+			compatible = "mmc-card";
-+			broken-hpi;
-+		};
- 	};
- 
- 	clocks {
--- 
-2.14.4
+J
+> 
+> Brian
