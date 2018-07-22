@@ -1,80 +1,112 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: iio: adc: add bindings for mcp3911
-Date: Sun, 22 Jul 2018 09:11:11 +0100
-Message-ID: <20180722091111.6c55602f@archlinux>
-References: <20180721195923.7610-1-marcus.folkesson@gmail.com>
-        <20180721195923.7610-2-marcus.folkesson@gmail.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v6 0/5] add mailbox support for i.MX7D
+Date: Sun, 22 Jul 2018 10:44:31 +0000
+Message-ID: <AM0PR04MB4211B82FD69B41B27465F5E580570@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20180722063923.30222-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180721195923.7610-2-marcus.folkesson@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcus Folkesson <marcus.folkesson@gmail.com>
-Cc: Kent Gustavsson <kent@minoris.se>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180722063923.30222-1-o.rempel@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 21 Jul 2018 21:59:22 +0200
-Marcus Folkesson <marcus.folkesson@gmail.com> wrote:
+Hi Oleksij,
 
-> MCP3911 is a dual channel Analog Front End (AFE) containing two
-> synchronous sampling delta-sigma Analog-to-Digital Converters (ADC).
+Thanks for the work.
+
+Hi Jassi,
+Do you think if we can have your tag and let those patches go through
+Shawn's tree as the later QXP support patches depends on them?
+
+Regards
+Dong Aisheng
+
+> -----Original Message-----
+> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
+> Sent: Sunday, July 22, 2018 2:39 PM
+> To: Shawn Guo <shawnguo@kernel.org>; Fabio Estevam
+> <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>; Mark
+> Rutland <mark.rutland@arm.com>; A.s. Dong <aisheng.dong@nxp.com>;
+> Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+> Cc: Oleksij Rempel <o.rempel@pengutronix.de>; kernel@pengutronix.de;
+> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; dl-linux-
+> imx <linux-imx@nxp.com>
+> Subject: [PATCH v6 0/5] add mailbox support for i.MX7D
 > 
-> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
-> Signed-off-by: Kent Gustavsson <kent@minoris.se>
-> ---
->  .../devicetree/bindings/iio/adc/mcp3911.txt        | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+> 20180622 changes v6:
+> - include one more patch provided by Aisheng
+> - DT: add fall back compatible fsl,imx6sx-mu
+> - imx-mailbox: for now, use only fsl,imx6sx-mu
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/mcp3911.txt b/Documentation/devicetree/bindings/iio/adc/mcp3911.txt
-> new file mode 100644
-> index 000000000000..e233ee94ad96
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/mcp3911.txt
-> @@ -0,0 +1,33 @@
-> +* Microchip MCP3911 Dual channel analog front end (ADC)
-> +
-> +Required properties:
-> + - compatible: Should be "microchip,mcp3911"
-> + - reg: SPI chip select number for the device
-> +
-> +Recommended properties:
-> + - spi-max-frequency: Definition as per
-> +	 Documentation/devicetree/bindings/spi/spi-bus.txt.
-> +	 Max frequency for this chip is 20MHz.
-> +
-> +Optional properties:
-> + - device-addr: Device address when multiple MCP3911 chips are present on the
-> +	same SPI bus. Valid values are 0-3. Defaults to 0.
-> + - external-clock: Use external clock instead of crystal oscillator.
-As mentioned, in the code, can we use the standard fixed clock bindings here.
-We don't actually care what the value is, but it might be nice to be able to
-power down the clock if we are suspending or something..
-
-> + - external-vref: Use external voltage reference
-> + - vref-supply:	Phandle to the external reference voltage supply. (only valid in combination with `external-vref`)
-
-Just use the optional regulator stuff and get rid of the bool.
-
-> + - ch0-width: width for channel0. Valid widths are 16 and 24bits.
-> + - ch1-width: width for channel1. Valid widths are 16 and 24bits.
-
-As I asked in the code, are these a function of the wiring etc or are
-they something we should really be leaving up to userspace (with a sensible
-default).
-
-> +
-> +
-> +Example:
-> +adc@0 {
-> +	compatible = "microchip,mcp3911";
-> +	reg = <0>;
-> +	spi-max-frequency = <20000000>;
-> +	device-addr = <0>;
-> +	ch0-width = <16>;
-> +	ch1-width = <24>;
-> +	external-clock;
-> +	external-vref;
-> +	vref-supply = <&vref_reg>;
-> +};
+> 20180621 changes v5:
+> - DT: revert most of the changes from previous version
+> - imx-mailbox: remove struct imx_mu_cfg
+> - imx-mailbox: remove !! from imx_mu_last_tx_done()
+> 
+> 20180618 changes v4:
+> - DT: change fsl,mu-side-a to fsl,mu-side-b
+> - DT: split the patches.
+> - DT: add all currently known SoCs.
+> - imx-mailbox: free allocated irq name on channel shutdown
+> - imx-mailbox: rename *_imx7 functions to *_generic
+> 
+> 20180615 changes v3:
+> - DT: remove prosaic part of documentation. It describes software
+>   or firmware specific usage and not relevant for HW description.
+> - DT: use <soc>-mu instead of <soc>-mu-<mu side> and add fsl,mu-side-a
+>   parameter.
+> - DT: add most of know i.MX variants with MU
+> - imx-mailbox: use macros instead of precalculated bit index.
+> - imx-mailbox: remove warning message for clk.
+> - imx-mailbox: use imx_mu_chan[%idx] for devm_request_irq.
+> - imx-mailbox: depend on ARCH_MXC instead of SOX_IMX7
+> 
+> 20180615 changes v2:
+> - DT: use mailbox@ instead of mu@
+> - DT: change interrupts description
+> - clk: use imx_clk_gate4 instead of imx_clk_gate2
+> - imx-mailbox: remove last_tx_done support
+> - imx-mailbox: fix module description
+> 
+> This patches are providing support for mailbox (Messaging Unit) for i.MX7D.
+> Functionality was tested on PHYTEC phyBOARD-Zeta i.MX7D with Linux
+> running on all cores: ARM Cortex-A7 and ARM Cortex-M4.
+> 
+> Both parts of i.MX messaging Unit are visible for all CPUs available on i.MX7D.
+> Communication worked independent of MU side in combination with CPU.
+> For example MU-A used on ARM Cortex-A7 and MU-B used on ARM Cortex-
+> M4 or other ways around.
+> 
+> Dong Aisheng (2):
+>   dt-bindings: mailbox: allow mbox-cells to be equal to 0
+>   dt-bindings: arm: fsl: add mu binding doc
+> 
+> Oleksij Rempel (3):
+>   dt-bindings: mailbox: imx-mu: add generic MU channel support
+>   ARM: dts: imx7s: add i.MX7 messaging unit support
+>   mailbox: Add support for i.MX7D messaging unit
+> 
+>  .../devicetree/bindings/mailbox/fsl,mu.txt    |  41 +++
+>  .../devicetree/bindings/mailbox/mailbox.txt   |   3 +-
+>  arch/arm/boot/dts/imx7s.dtsi                  |  19 ++
+>  drivers/mailbox/Kconfig                       |   6 +
+>  drivers/mailbox/Makefile                      |   2 +
+>  drivers/mailbox/imx-mailbox.c                 | 273 ++++++++++++++++++
+>  6 files changed, 342 insertions(+), 2 deletions(-)  create mode 100644
+> Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+>  create mode 100644 drivers/mailbox/imx-mailbox.c
+> 
+> --
+> 2.18.0
