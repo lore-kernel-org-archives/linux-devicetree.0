@@ -1,11 +1,13 @@
 From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v6 0/5] add mailbox support for i.MX7D
-Date: Sun, 22 Jul 2018 08:39:18 +0200
-Message-ID: <20180722063923.30222-1-o.rempel@pengutronix.de>
+Subject: [PATCH v6 4/5] ARM: dts: imx7s: add i.MX7 messaging unit support
+Date: Sun, 22 Jul 2018 08:39:22 +0200
+Message-ID: <20180722063923.30222-5-o.rempel@pengutronix.de>
+References: <20180722063923.30222-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180722063923.30222-1-o.rempel@pengutronix.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,69 +21,44 @@ To: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob 
 Cc: Oleksij Rempel <o.rempel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-20180622 changes v6:
-- include one more patch provided by Aisheng
-- DT: add fall back compatible fsl,imx6sx-mu
-- imx-mailbox: for now, use only fsl,imx6sx-mu
+Define the Messaging Unit (MU) for i.MX7 in the processor's dtsi.
+The respective driver is added in the next commit.
 
-20180621 changes v5:
-- DT: revert most of the changes from previous version
-- imx-mailbox: remove struct imx_mu_cfg
-- imx-mailbox: remove !! from imx_mu_last_tx_done()
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ arch/arm/boot/dts/imx7s.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-20180618 changes v4:
-- DT: change fsl,mu-side-a to fsl,mu-side-b
-- DT: split the patches.
-- DT: add all currently known SoCs.
-- imx-mailbox: free allocated irq name on channel shutdown
-- imx-mailbox: rename *_imx7 functions to *_generic
-
-20180615 changes v3:
-- DT: remove prosaic part of documentation. It describes software
-  or firmware specific usage and not relevant for HW description.
-- DT: use <soc>-mu instead of <soc>-mu-<mu side> and add fsl,mu-side-a
-  parameter.
-- DT: add most of know i.MX variants with MU
-- imx-mailbox: use macros instead of precalculated bit index.
-- imx-mailbox: remove warning message for clk.
-- imx-mailbox: use imx_mu_chan[%idx] for devm_request_irq.
-- imx-mailbox: depend on ARCH_MXC instead of SOX_IMX7
-
-20180615 changes v2:
-- DT: use mailbox@ instead of mu@
-- DT: change interrupts description
-- clk: use imx_clk_gate4 instead of imx_clk_gate2
-- imx-mailbox: remove last_tx_done support
-- imx-mailbox: fix module description 
-
-This patches are providing support for mailbox (Messaging Unit)
-for i.MX7D.
-Functionality was tested on PHYTEC phyBOARD-Zeta i.MX7D with
-Linux running on all cores: ARM Cortex-A7 and ARM Cortex-M4.
-
-Both parts of i.MX messaging Unit are visible for all CPUs available
-on i.MX7D. Communication worked independent of MU side in combination
-with CPU. For example MU-A used on ARM Cortex-A7 and MU-B used on ARM Cortex-M4
-or other ways around.
-
-Dong Aisheng (2):
-  dt-bindings: mailbox: allow mbox-cells to be equal to 0
-  dt-bindings: arm: fsl: add mu binding doc
-
-Oleksij Rempel (3):
-  dt-bindings: mailbox: imx-mu: add generic MU channel support
-  ARM: dts: imx7s: add i.MX7 messaging unit support
-  mailbox: Add support for i.MX7D messaging unit
-
- .../devicetree/bindings/mailbox/fsl,mu.txt    |  41 +++
- .../devicetree/bindings/mailbox/mailbox.txt   |   3 +-
- arch/arm/boot/dts/imx7s.dtsi                  |  19 ++
- drivers/mailbox/Kconfig                       |   6 +
- drivers/mailbox/Makefile                      |   2 +
- drivers/mailbox/imx-mailbox.c                 | 273 ++++++++++++++++++
- 6 files changed, 342 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mailbox/fsl,mu.txt
- create mode 100644 drivers/mailbox/imx-mailbox.c
-
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index ce85b3ca1a55..191a0286fa3b 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -1001,6 +1001,25 @@
+ 				status = "disabled";
+ 			};
+ 
++			mu0a: mailbox@30aa0000 {
++				compatible = "fsl,imx7s-mu", "fsl,imx6sx-mu";
++				reg = <0x30aa0000 0x10000>;
++				interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clks IMX7D_MU_ROOT_CLK>;
++				#mbox-cells = <1>;
++				status = "disabled";
++			};
++
++			mu0b: mailbox@30ab0000 {
++				compatible = "fsl,imx7s-mu", "fsl,imx6sx-mu";
++				reg = <0x30ab0000 0x10000>;
++				interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clks IMX7D_MU_ROOT_CLK>;
++				#mbox-cells = <1>;
++				fsl,mu-side-b;
++				status = "disabled";
++			};
++
+ 			usbotg1: usb@30b10000 {
+ 				compatible = "fsl,imx7d-usb", "fsl,imx27-usb";
+ 				reg = <0x30b10000 0x200>;
 -- 
 2.18.0
