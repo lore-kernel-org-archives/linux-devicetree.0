@@ -1,13 +1,12 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 3/5] arm64: allwinner: h6: add system controller
- device tree node
-Date: Sun, 22 Jul 2018 13:39:53 +0800
-Message-ID: <20180722053955.25266-4-icenowy@aosc.io>
+Subject: [PATCH 4/5] arm64: allwinner: h6: add EMAC device nodes
+Date: Sun, 22 Jul 2018 13:39:54 +0800
+Message-ID: <20180722053955.25266-5-icenowy@aosc.io>
 References: <20180722053955.25266-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBCVS2DNAKGQE6LAF6SA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBFVS2DNAKGQERDVQWWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180722053955.25266-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,47 +19,62 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-As we have already binding for the H6 system controller, add its node
-to the device tree.
+Allwinner H6 SoC has an EMAC like the one in A64.
+
+Add device tree nodes for the H6 DTSI file.
 
 Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 23 ++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 30 ++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index cfa5fffcf62b..3ab6cf0256ca 100644
+index 3ab6cf0256ca..c65311de301a 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -92,6 +92,29 @@
- 		#size-cells = <1>;
- 		ranges;
+@@ -149,6 +149,14 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
  
-+		syscon: syscon@3000000 {
-+			compatible = "allwinner.sun50i-h6-system-control",
-+				     "allwinner,sun50i-a64-system-control";
-+			reg = <0x03000000 0x1000>;
++			ext_rgmii_pins: rgmii_pins {
++				pins = "PD0", "PD1", "PD2", "PD3", "PD4",
++				       "PD5", "PD7", "PD8", "PD9", "PD10",
++				       "PD11", "PD12", "PD13", "PD19", "PD20";
++				function = "emac";
++				drive-strength = <40>;
++			};
++
+ 			mmc0_pins: mmc0-pins {
+ 				pins = "PF0", "PF1", "PF2", "PF3",
+ 				       "PF4", "PF5";
+@@ -258,6 +266,28 @@
+ 			status = "disabled";
+ 		};
+ 
++		emac: ethernet@5020000 {
++			compatible = "allwinner,sun50i-a64-emac",
++				     "allwinner,sun50i-h6-emac";
++			syscon = <&syscon>;
++			reg = <0x05020000 0x10000>;
++			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq";
++			resets = <&ccu RST_BUS_EMAC>;
++			reset-names = "stmmaceth";
++			clocks = <&ccu CLK_BUS_EMAC>;
++			clock-names = "stmmaceth";
++			status = "disabled";
 +			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
++			#size-cells = <0>;
 +
-+			sram_c: sram@28000 {
-+				compatible = "mmio-sram";
-+				reg = <0x00028000 0x1e000>;
++			mdio: mdio {
++				compatible = "snps,dwmac-mdio";
 +				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0 0x00028000 0x1e000>;
-+
-+				de2_sram: sram-section@0 {
-+					compatible = "allwinner,sun50i-h6-sram-c",
-+						     "allwinner,sun50i-a64-sram-c";
-+					reg = <0x0000 0x1e000>;
-+				};
++				#size-cells = <0>;
 +			};
 +		};
 +
- 		ccu: clock@3001000 {
- 			compatible = "allwinner,sun50i-h6-ccu";
- 			reg = <0x03001000 0x1000>;
+ 		r_ccu: clock@7010000 {
+ 			compatible = "allwinner,sun50i-h6-r-ccu";
+ 			reg = <0x07010000 0x400>;
 -- 
 2.18.0
