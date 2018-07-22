@@ -1,91 +1,116 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 6/9] dt-bindings: phy: add binding for
- Allwinner USB3 PHY
-Date: Sun, 22 Jul 2018 14:10:33 +0800
-Message-ID: <CAGb2v65m6AEW=DO-cqLMyjfnaiZudm38hXufJL6LXdOrJqir_g@mail.gmail.com>
-References: <20180722055739.26464-1-icenowy@aosc.io> <20180722055739.26464-7-icenowy@aosc.io>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH] drivers/memory/Kconfig: Add CONFIG_OF dependency
+Date: Sun, 22 Jul 2018 08:29:39 +0200
+Message-ID: <20180722082939.2de739f1@bbrezillon>
+References: <20180721200049.7553-1-anders.roxell@linaro.org>
+        <a83ff193-be57-f566-cafb-132075025b56@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB4F72DNAKGQEHRK7TPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180722055739.26464-7-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a83ff193-be57-f566-cafb-132075025b56@infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Anders Roxell <anders.roxell@linaro.org>, miquel.raynal@bootlin.com, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 22, 2018 at 1:57 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
-> external USB3 pins of the SoC.
->
-> Add a device tree binding for the PHY.
->
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
-> Changes in v3:
-> - Added Chen-Yu's Review tag.
->
-> Rob,
-> Although you mentioned that the supply is for the port, not the phy;
-> currently in USB situation "powering on the PHY" also indicates
-> "powering on the port" and nearly all usages of phy-supply is for Vbus.
->
-> Maybe we should change the overall phy-supply to satisfy this.
++Arnd, Rob and the DT ML.
 
-Or maybe change it to vbus-supply, like we have for phy-sun4i-usb,
-until USB port power sequencing is added. (I remember there were
-patches for this. What happened?)
+On Sat, 21 Jul 2018 14:53:47 -0700
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-ChenYu
+> On 07/21/2018 01:00 PM, Anders Roxell wrote:
+> > JZ4780_NEMC doesn't depend on OF, and if OF isn't enabled we get this
+> > error:
+> > drivers/memory/jz4780-nemc.c: In function ‘jz4780_nemc_num_banks’:
+> > drivers/memory/jz4780-nemc.c:72:10: error: implicit declaration of
+> >  function ‘of_read_number’; did you mean ‘down_read_nested’?
+> >  [-Werror=implicit-function-declaration]
+> >    bank = of_read_number(prop, 1);
+> >           ^~~~~~~~~~~~~~
+> >           down_read_nested
 
-> Thanks,
-> Icenowy
->
->  .../bindings/phy/sun50i-usb3-phy.txt          | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
->
-> diff --git a/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt b/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
-> new file mode 100644
-> index 000000000000..912d55f9f69d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
-> @@ -0,0 +1,24 @@
-> +Allwinner sun50i USB3 PHY
-> +-----------------------
-> +
-> +Required properties:
-> +- compatible : should be one of
-> +  * allwinner,sun60i-h6-usb3-phy
-> +- reg : a list of offset + length pairs
-> +- #phy-cells : from the generic phy bindings, must be 0
-> +- clocks : phandle + clock specifier for the phy clock
-> +- resets : phandle + reset specifier for the phy reset
-> +
-> +Optional Properties:
-> +- phy-supply : from the generic phy bindings, a phandle to a regulator that
-> +              provides power to VBUS.
-> +
-> +Example:
-> +       usb3phy: phy@5210000 {
-> +               compatible = "allwinner,sun50i-h6-usb3-phy";
-> +               reg = <0x5210000 0x10000>;
-> +               clocks = <&ccu CLK_USB_PHY1>;
-> +               resets = <&ccu RST_USB_PHY1>;
-> +               #phy-cells = <0>;
-> +               status = "disabled";
-> +       };
-> --
-> 2.18.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+Looks like of.h defines stubs so that people can compile-test without
+CONFIG_OF selected. Maybe we should move of_read_number() and
+of_read_ulong() out of the #ifdef CONFIG_OF section.
+
+Alternatively, we could patch jz4780-nemc.c to not use of_read_number
+and instead rely on of_read_property_u32_index() +
+of_property_count_elems_of_size() + of_n_{addr,size}_cells():
+
+--->8---
+diff --git a/drivers/memory/jz4780-nemc.c b/drivers/memory/jz4780-nemc.c
+index bcf06adefc96..9ad7abc6983a 100644
+--- a/drivers/memory/jz4780-nemc.c
++++ b/drivers/memory/jz4780-nemc.c
+@@ -63,14 +63,21 @@ struct jz4780_nemc {
+  */
+ unsigned int jz4780_nemc_num_banks(struct device *dev)
+ {
+-       const __be32 *prop;
+-       unsigned int bank, count = 0;
+        unsigned long referenced = 0;
+-       int i = 0;
+-
+-       while ((prop = of_get_address(dev->of_node, i++, NULL, NULL))) {
+-               bank = of_read_number(prop, 1);
+-               if (!(referenced & BIT(bank))) {
++       int nelems, elemsize, i = 0;
++       unsigned int count = 0;
++
++       /* #address-cells = 2 and #size-cells = 1, hence  */
++       elemsize = of_n_addr_cells(dev->of_node) +
++                  of_n_size_cells(dev->of_node);
++       nelems = of_property_count_elems_of_size(dev->of_node, "reg", elemsize);
++       for (i = 0; i < nelems; i++) {
++               u32 bank;
++
++               if (!of_property_read_u32_index(dev->of_node, "reg",
++                                               i * elemsize, &bank) &&
++                   bank >= 1 && bank < JZ4780_NEMC_NUM_BANKS &&
++                   !(referenced & BIT(bank))) {
+                        referenced |= BIT(bank);
+                        count++;
+                }
+@@ -269,10 +276,9 @@ static int jz4780_nemc_probe(struct platform_device *pdev)
+        struct jz4780_nemc *nemc;
+        struct resource *res;
+        struct device_node *child;
+-       const __be32 *prop;
+-       unsigned int bank;
+        unsigned long referenced;
+        int i, ret;
++       u32 bank;
+ 
+        nemc = devm_kzalloc(dev, sizeof(*nemc), GFP_KERNEL);
+        if (!nemc)
+@@ -316,10 +322,27 @@ static int jz4780_nemc_probe(struct platform_device *pdev)
+         * registered for it.
+         */
+        for_each_child_of_node(nemc->dev->of_node, child) {
++               int nelems, elemsize;
++
+                referenced = 0;
+                i = 0;
+-               while ((prop = of_get_address(child, i++, NULL, NULL))) {
+-                       bank = of_read_number(prop, 1);
++               elemsize = of_n_addr_cells(dev->of_node) +
++                          of_n_size_cells(dev->of_node);
++               nelems = of_property_count_elems_of_size(dev->of_node, "reg",
++                                                        elemsize);
++               for (i = 0; i < nelems; i++) {
++                       u32 bank;
++
++                       ret = of_property_read_u32_index(dev->of_node, "reg",
++                                                        i * elemsize, &bank);
++                       if (ret) {
++                               dev_err(nemc->dev,
++                                       "failed to read bank %d of %pOF (err = %d)\n",
++                                       i, child, ret);
++                               referenced = 0;
++                               break;
++                       }
++
+                        if (bank < 1 || bank >= JZ4780_NEMC_NUM_BANKS) {
+                                dev_err(nemc->dev,
+                                        "%pOF requests invalid bank %u\n",
