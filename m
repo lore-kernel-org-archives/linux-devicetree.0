@@ -1,112 +1,68 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v6 0/5] add mailbox support for i.MX7D
-Date: Sun, 22 Jul 2018 10:44:31 +0000
-Message-ID: <AM0PR04MB4211B82FD69B41B27465F5E580570@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20180722063923.30222-1-o.rempel@pengutronix.de>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v4 6/8] clk: tegra20: Turn EMC clock gate into divider
+Date: Sun, 22 Jul 2018 14:39:37 +0300
+Message-ID: <1555597.AMQUAZZLsZ@dimapc>
+References: <20180719132132.16153-1-digetx@gmail.com> <20180719132132.16153-7-digetx@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180722063923.30222-1-o.rempel@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180719132132.16153-7-digetx@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Oleksij,
+On Thursday, 19 July 2018 16:21:30 MSK Dmitry Osipenko wrote:
+> Kernel should never gate the EMC clock as it causes immediate lockup, so
+> removing clk-gate functionality doesn't affect anything. Turning EMC clk
+> gate into divider allows to implement glitch-less EMC scaling, avoiding
+> reparenting to a backup clock.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> ---
+>  drivers/clk/tegra/clk-tegra20.c | 36 ++++++++++++++++++++++++---------
+>  1 file changed, 26 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/clk/tegra/clk-tegra20.c
+> b/drivers/clk/tegra/clk-tegra20.c index cc857d4d4a86..ebea97016d58 100644
+> --- a/drivers/clk/tegra/clk-tegra20.c
+> +++ b/drivers/clk/tegra/clk-tegra20.c
+> @@ -578,7 +578,6 @@ static struct tegra_clk tegra20_clks[tegra_clk_max]
+> __initdata = { [tegra_clk_afi] = { .dt_id = TEGRA20_CLK_AFI, .present =
+> true }, [tegra_clk_fuse] = { .dt_id = TEGRA20_CLK_FUSE, .present = true },
+> [tegra_clk_kfuse] = { .dt_id = TEGRA20_CLK_KFUSE, .present = true },
+> -	[tegra_clk_emc] = { .dt_id = TEGRA20_CLK_EMC, .present = true }, };
+> 
+>  static unsigned long tegra20_clk_measure_input_freq(void)
+> @@ -799,6 +798,31 @@ static struct tegra_periph_init_data
+> tegra_periph_nodiv_clk_list[] = {
+> TEGRA_INIT_DATA_NODIV("disp2",	mux_pllpdc_clkm, CLK_SOURCE_DISP2, 30, 2,
+> 26,  0, TEGRA20_CLK_DISP2), };
+> 
+> +static void __init tegra20_emc_clk_init(void)
+> +{
+> +	struct clk *clk;
+> +
+> +	clk = clk_register_mux(NULL, "emc_mux", mux_pllmcp_clkm,
+> +			       ARRAY_SIZE(mux_pllmcp_clkm),
+> +			       CLK_SET_RATE_NO_REPARENT,
+> +			       clk_base + CLK_SOURCE_EMC,
+> +			       30, 2, 0, &emc_lock);
+> +
+> +	clk = tegra_clk_register_mc("mc", "emc_mux", clk_base + CLK_SOURCE_EMC,
+> +				    &emc_lock);
+> +	clks[TEGRA20_CLK_MC] = clk;
+> +
+> +	/*
+> +	 * Note that 'emc_mux' source and 'emc' rate shouldn't be changed at
+> +	 * the same time due to a HW bug, this won't happen because we're
+> +	 * defining 'emc_mux' and 'emc' as distinct clocks.
+> +	 */
+> +	clk = clk_register_divider(NULL, "emc", "emc_mux", CLK_IS_CRITICAL,
+> +				   clk_base + CLK_SOURCE_EMC, 0, 7,
+> +				   0, &emc_lock);
 
-Thanks for the work.
-
-Hi Jassi,
-Do you think if we can have your tag and let those patches go through
-Shawn's tree as the later QXP support patches depends on them?
-
-Regards
-Dong Aisheng
-
-> -----Original Message-----
-> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
-> Sent: Sunday, July 22, 2018 2:39 PM
-> To: Shawn Guo <shawnguo@kernel.org>; Fabio Estevam
-> <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>; Mark
-> Rutland <mark.rutland@arm.com>; A.s. Dong <aisheng.dong@nxp.com>;
-> Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-> Cc: Oleksij Rempel <o.rempel@pengutronix.de>; kernel@pengutronix.de;
-> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; dl-linux-
-> imx <linux-imx@nxp.com>
-> Subject: [PATCH v6 0/5] add mailbox support for i.MX7D
-> 
-> 20180622 changes v6:
-> - include one more patch provided by Aisheng
-> - DT: add fall back compatible fsl,imx6sx-mu
-> - imx-mailbox: for now, use only fsl,imx6sx-mu
-> 
-> 20180621 changes v5:
-> - DT: revert most of the changes from previous version
-> - imx-mailbox: remove struct imx_mu_cfg
-> - imx-mailbox: remove !! from imx_mu_last_tx_done()
-> 
-> 20180618 changes v4:
-> - DT: change fsl,mu-side-a to fsl,mu-side-b
-> - DT: split the patches.
-> - DT: add all currently known SoCs.
-> - imx-mailbox: free allocated irq name on channel shutdown
-> - imx-mailbox: rename *_imx7 functions to *_generic
-> 
-> 20180615 changes v3:
-> - DT: remove prosaic part of documentation. It describes software
->   or firmware specific usage and not relevant for HW description.
-> - DT: use <soc>-mu instead of <soc>-mu-<mu side> and add fsl,mu-side-a
->   parameter.
-> - DT: add most of know i.MX variants with MU
-> - imx-mailbox: use macros instead of precalculated bit index.
-> - imx-mailbox: remove warning message for clk.
-> - imx-mailbox: use imx_mu_chan[%idx] for devm_request_irq.
-> - imx-mailbox: depend on ARCH_MXC instead of SOX_IMX7
-> 
-> 20180615 changes v2:
-> - DT: use mailbox@ instead of mu@
-> - DT: change interrupts description
-> - clk: use imx_clk_gate4 instead of imx_clk_gate2
-> - imx-mailbox: remove last_tx_done support
-> - imx-mailbox: fix module description
-> 
-> This patches are providing support for mailbox (Messaging Unit) for i.MX7D.
-> Functionality was tested on PHYTEC phyBOARD-Zeta i.MX7D with Linux
-> running on all cores: ARM Cortex-A7 and ARM Cortex-M4.
-> 
-> Both parts of i.MX messaging Unit are visible for all CPUs available on i.MX7D.
-> Communication worked independent of MU side in combination with CPU.
-> For example MU-A used on ARM Cortex-A7 and MU-B used on ARM Cortex-
-> M4 or other ways around.
-> 
-> Dong Aisheng (2):
->   dt-bindings: mailbox: allow mbox-cells to be equal to 0
->   dt-bindings: arm: fsl: add mu binding doc
-> 
-> Oleksij Rempel (3):
->   dt-bindings: mailbox: imx-mu: add generic MU channel support
->   ARM: dts: imx7s: add i.MX7 messaging unit support
->   mailbox: Add support for i.MX7D messaging unit
-> 
->  .../devicetree/bindings/mailbox/fsl,mu.txt    |  41 +++
->  .../devicetree/bindings/mailbox/mailbox.txt   |   3 +-
->  arch/arm/boot/dts/imx7s.dtsi                  |  19 ++
->  drivers/mailbox/Kconfig                       |   6 +
->  drivers/mailbox/Makefile                      |   2 +
->  drivers/mailbox/imx-mailbox.c                 | 273 ++++++++++++++++++
->  6 files changed, 342 insertions(+), 2 deletions(-)  create mode 100644
-> Documentation/devicetree/bindings/mailbox/fsl,mu.txt
->  create mode 100644 drivers/mailbox/imx-mailbox.c
-> 
-> --
-> 2.18.0
+Actually this is wrong. The divisor is 8 bits-wide and "lsb denote 0.5x", so 
+this is a 7.1 divider. I'll prepare v5.
