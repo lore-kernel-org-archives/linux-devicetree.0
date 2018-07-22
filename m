@@ -1,13 +1,13 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 1/5] dt-binding: dwmac-sun8i: add H6 compatible
- string (w/ A64 fallback)
-Date: Sun, 22 Jul 2018 13:39:51 +0800
-Message-ID: <20180722053955.25266-2-icenowy@aosc.io>
+Subject: [PATCH 2/5] dt-bindings: sunxi-sram: add binding for
+ Allwinner H6 SRAM C
+Date: Sun, 22 Jul 2018 13:39:52 +0800
+Message-ID: <20180722053955.25266-3-icenowy@aosc.io>
 References: <20180722053955.25266-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB45R2DNAKGQEGQYH6PA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRB75R2DNAKGQEH6ADGNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180722053955.25266-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,33 +20,39 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Allwinner H6 SoC features a Ethernet MAC that is similar to the one
-in A64.
+The Allwinner H6 SoC's DE3 needs the SRAM C section being claimed in the
+system controller to work, like A64 DE2.
 
-Add a compatible string for it with A64 fallback compatible string, in
-this case the A64 driver can be used.
-
-The "internal" PHY is not internal from the perspective of the H6 main
-die, instead it's on the co-packaged AC200 chip, and connected to the
-main die with RMII at the in-package Port A PIO bank. So from the SoC
-driver side it needs no special treatment.
+As H6 and A64 system controller are quite similar, code is reused now,
+and the A64 fallback compatible string is added after the H6 compatible
+string.
 
 Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
- Documentation/devicetree/bindings/net/dwmac-sun8i.txt | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/sram/sunxi-sram.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-index 5bb3a18cc38d..54c66d0611cb 100644
---- a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-+++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-@@ -10,6 +10,7 @@ Required properties:
- 		"allwinner,sun8i-r40-gmac"
- 		"allwinner,sun8i-v3s-emac"
- 		"allwinner,sun50i-a64-emac"
-+		"allwinner,sun50i-h6-emac", "allwinner-sun50i-a64-emac"
- - reg: address and length of the register for the device.
- - interrupts: interrupt for the device
- - interrupt-names: must be "macirq"
+diff --git a/Documentation/devicetree/bindings/sram/sunxi-sram.txt b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
+index c51ade86578c..6527a1a535a3 100644
+--- a/Documentation/devicetree/bindings/sram/sunxi-sram.txt
++++ b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
+@@ -18,6 +18,7 @@ Required properties:
+     - "allwinner,sun8i-h3-system-control"
+     - "allwinner,sun50i-a64-sram-controller" (deprecated)
+     - "allwinner,sun50i-a64-system-control"
++    - "allwinner,sun50i-h6-system-contorl", "allwinner,sun50i-a64-system-control"
+ - reg : sram controller register offset + length
+ 
+ SRAM nodes
+@@ -54,6 +55,9 @@ The valid sections compatible for H3 are:
+ The valid sections compatible for A64 are:
+     - allwinner,sun50i-a64-sram-c
+ 
++The valid sections compatible for H6 are:
++    - allwinner,sun50i-h6-sram-c, allwinner,sun50i-a64-sram-c
++
+ Devices using SRAM sections
+ ---------------------------
+ 
 -- 
 2.18.0
