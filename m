@@ -1,89 +1,105 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCH v4 1/5] dt-bindings: w1: document generic onewire bindings
-Date: Mon, 23 Jul 2018 00:01:05 +0200
-Message-ID: <20180722220105.hl6lwfyueyojfxmt@earth.universe>
-References: <20180706053552.11438-1-daniel@zonque.org>
- <20180706053552.11438-2-daniel@zonque.org>
- <20180711150157.GA18150@rob-hp-laptop>
- <5070717c-4c9f-c580-8f50-2369dcd74aef@zonque.org>
- <CAL_JsqL10WT5AK37_8o3M_=UiLx_thcm1W3UNz2qBaB5dRo8XA@mail.gmail.com>
+From: William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [PATCH v9 00/11] Introduce the Counter subsystem
+Date: Sun, 22 Jul 2018 18:49:49 -0400
+Message-ID: <cover.1532298882.git.vilhelm.gray@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="44vn7kto76qqzxm3"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqL10WT5AK37_8o3M_=UiLx_thcm1W3UNz2qBaB5dRo8XA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Daniel Mack <daniel@zonque.org>, zbr@ioremap.net, Mark Rutland <mark.rutland@arm.com>, szabolcs.gyurko@tlt.hu, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, Robert Jarzmik <robert.jarzmik@free.fr>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: gregkh@linuxfoundation.org
+Cc: devicetree@vger.kernel.org, lars@metafoo.de, benjamin.gaignard@st.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, William Breathitt Gray <vilhelm.gray@gmail.com>, jic23@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, akpm@linux-foundation.org, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Changes in v9:
+ - Prefix exported symbols with "counter_" to make counter namespace
+   explicit and clear
+ - Replace scnprintf and snprintf lines with sprintf in 104-quad-8.c
+   since we're dealing with sysfs files
 
---44vn7kto76qqzxm3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This revision is functionally identical to the last; changes in this
+version were made to improve code clarity. Andrew Morton suggested
+improving the names of the exported symbols to clean up the Counter
+subsytem namespace. This revision adds a "counter_" prefix to the
+exported symbols to keep the namespace tidy and these symbols as
+clearly part of the Counter subsystem.
 
-Hi,
+Andrew Morton also brought up a good point that the Generic Counter
+"signal" terminology could conflict with the existing established use of
+the term in other areas of the Linux kernel. I've changed the major
+exported symbols in counter.h that used the "signal_" naming covention
+to now use a "counter_signal_" naming convention in order to help
+prevent this confusion; I've made similar changes to symbols in
+counter.c as well. If this naming still causes trouble, we can consider
+alternative names for this component.
 
-On Fri, Jul 20, 2018 at 09:10:36AM -0600, Rob Herring wrote:
-> On Wed, Jul 18, 2018 at 6:40 AM Daniel Mack <daniel@zonque.org> wrote:
-> >
-> > On Wednesday, July 11, 2018 05:01 PM, Rob Herring wrote:
-> > > On Fri, Jul 06, 2018 at 07:35:48AM +0200, Daniel Mack wrote:
-> > >> This patch adds a generic w1 bindings document that describes how w1
-> > >> slave deviceses are grouped under master nodes. It also augments the
-> > >> existing w1-gpio.txt document a bit.
-> > >>
-> > >> Signed-off-by: Daniel Mack <daniel@zonque.org>
-> > >> ---
-> > >>   .../devicetree/bindings/w1/w1-gpio.txt        | 11 +++++---
-> > >>   Documentation/devicetree/bindings/w1/w1.txt   | 25 +++++++++++++++=
-++++
-> > >>   2 files changed, 33 insertions(+), 3 deletions(-)
-> > >>   create mode 100644 Documentation/devicetree/bindings/w1/w1.txt
-> > >
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > >
-> > > Note that this will conflict with a unit-address fix that I have queu=
-ed
-> > > up for 4.18 (will send this week).
-> >
-> > How would we best handle this? Sebastian, are you going to apply this
-> > series, and add a note to the PR for 4.19 on how to resolve the conflic=
-t?
->=20
-> Either 4.18-rc6 or my devicetree-fixes-for-4.18 tag (based on rc1) can
-> be pulled in. Or just note the conflict. It is trivial enough.
+William Breathitt Gray
 
-This looks simple enough to just add a note to my pull request. I
-prepared a immutable branch based on 4.18-rc1, which contains this
-series and merged it into the power supply subsystem. You can get
-it here:
+Benjamin Gaignard (2):
+  counter: Add STM32 Timer quadrature encoder
+  dt-bindings: counter: Document stm32 quadrature encoder
 
-https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git/=
-tag/?h=3Dds2760-for-v4.19-signed
+Fabrice Gasnier (2):
+  counter: stm32-lptimer: add counter device
+  dt-bindings: counter: Adjust dt-bindings for STM32 lptimer move
 
--- Sebastian
+William Breathitt Gray (7):
+  counter: Introduce the Generic Counter interface
+  counter: Documentation: Add Generic Counter sysfs documentation
+  docs: Add Generic Counter interface documentation
+  iio: 104-quad-8: Update license boilerplate
+  counter: 104-quad-8: Add Generic Counter interface support
+  counter: 104-quad-8: Documentation: Add Generic Counter sysfs
+    documentation
+  iio: counter: Add deprecation markings for IIO Counter attributes
 
---44vn7kto76qqzxm3
-Content-Type: application/pgp-signature; name="signature.asc"
+ Documentation/ABI/testing/sysfs-bus-counter   |  230 +++
+ .../ABI/testing/sysfs-bus-counter-104-quad-8  |   36 +
+ Documentation/ABI/testing/sysfs-bus-iio       |    8 +
+ .../testing/sysfs-bus-iio-counter-104-quad-8  |   16 +
+ .../{iio => }/counter/stm32-lptimer-cnt.txt   |    0
+ .../bindings/counter/stm32-timer-cnt.txt      |   31 +
+ .../devicetree/bindings/mfd/stm32-lptimer.txt |    2 +-
+ .../devicetree/bindings/mfd/stm32-timers.txt  |    7 +
+ Documentation/driver-api/generic-counter.rst  |  342 ++++
+ Documentation/driver-api/index.rst            |    1 +
+ MAINTAINERS                                   |   15 +-
+ drivers/Kconfig                               |    2 +
+ drivers/Makefile                              |    1 +
+ drivers/{iio => }/counter/104-quad-8.c        |  782 +++++++-
+ drivers/counter/Kconfig                       |   51 +
+ drivers/{iio => }/counter/Makefile            |    5 +-
+ drivers/counter/counter.c                     | 1567 +++++++++++++++++
+ drivers/{iio => }/counter/stm32-lptimer-cnt.c |  361 +++-
+ drivers/counter/stm32-timer-cnt.c             |  390 ++++
+ drivers/iio/Kconfig                           |    1 -
+ drivers/iio/Makefile                          |    1 -
+ drivers/iio/counter/Kconfig                   |   34 -
+ include/linux/counter.h                       |  510 ++++++
+ include/linux/counter_enum.h                  |   45 +
+ 24 files changed, 4352 insertions(+), 86 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-counter
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
+ rename Documentation/devicetree/bindings/{iio => }/counter/stm32-lptimer-cnt.txt (100%)
+ create mode 100644 Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+ create mode 100644 Documentation/driver-api/generic-counter.rst
+ rename drivers/{iio => }/counter/104-quad-8.c (44%)
+ create mode 100644 drivers/counter/Kconfig
+ rename drivers/{iio => }/counter/Makefile (46%)
+ create mode 100644 drivers/counter/counter.c
+ rename drivers/{iio => }/counter/stm32-lptimer-cnt.c (48%)
+ create mode 100644 drivers/counter/stm32-timer-cnt.c
+ delete mode 100644 drivers/iio/counter/Kconfig
+ create mode 100644 include/linux/counter.h
+ create mode 100644 include/linux/counter_enum.h
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAltU/p8ACgkQ2O7X88g7
-+pokHw//doIU3Uznm8L8X4Z1wKHojcwlgpmTrzd9xNyZDG38xhfERI2HNwyQ6XJv
-xnro4DcD7hhln3nYyXFuEAQln9E8qcbzEd9NvqFgX2WFZ9QPTmdaFdCN8wDjh8eW
-HKwkZU5iVv6mpGxAcgK5NSvhtq1iBMSfFjFOF9PQ6XpjkQ9KLtTIvEW/jgKdJafh
-GDQJKBXLUKruBTLoXHVWi7YPqgixEUAVYOHMjQBT7V9mIbyww+BRBHN3EMSAfgQe
-SAdalRQ9ShKWscO6LtHeuIV2AdfKdjASZl85xE+YaIZrD6mq3kIzO/YibTXQU/7l
-1NUTrzVnxw6cxgt//27ps2D+Cnx9zIhwZsuw2zoxWhRFCO+W8cggwIB5+7PtIM5H
-LXhy+f3cH8xYueyCEgwT6a49gzPt+tYOv7pSF58qCevaBqTA96+ncYGH326Am4Eh
-xT1kTyeqkOOYZJB7as7P+NNFsG680Tgf9YXPuqBkyWFvSrPZz0u38wYaUM7dF218
-uBSAhO0arV/6KLZCd15/S+Dy3rKMtkr84fleBunryW8odkx8903ZJ30BtdAyodJO
-yOp7yvccsfSINijrdqBpIU4tjlA82ABHRCN413Whrv4s8pMdSgeXZE3qiq8LltKD
-7ZruogJ3cF4z0MGZihKYUm4J/Fumg5Bi6+qOYltIbprUgL/2y4k=
-=Fyiq
------END PGP SIGNATURE-----
-
---44vn7kto76qqzxm3--
+-- 
+2.18.0
