@@ -1,58 +1,45 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 2/5] dt-bindings: sunxi-sram: add binding for
- Allwinner H6 SRAM C
-Date: Sun, 22 Jul 2018 13:39:52 +0800
-Message-ID: <20180722053955.25266-3-icenowy@aosc.io>
-References: <20180722053955.25266-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v7 01/10] counter: Introduce the Generic Counter
+ interface
+Date: Sat, 21 Jul 2018 22:41:18 -0700
+Message-ID: <20180721224118.ff26734be0f5db552afcbe7c@linux-foundation.org>
+References: <cover.1529607879.git.vilhelm.gray@gmail.com>
+        <51b75b2b4495d4ad7ed173d91a726379bdae2353.1529607879.git.vilhelm.gray@gmail.com>
+        <20180717204954.4b5e371603d0b40b2aaabbb8@linux-foundation.org>
+        <20180721162610.GA15622@sophia>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB75R2DNAKGQEH6ADGNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180722053955.25266-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Corentin Labbe <clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180721162610.GA15622@sophia>
+Sender: linux-kernel-owner@vger.kernel.org
+To: William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc: gregkh@linuxfoundation.org, jic23@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, fabrice.gasnier@st.com, benjamin.gaignard@st.com, robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-The Allwinner H6 SoC's DE3 needs the SRAM C section being claimed in the
-system controller to work, like A64 DE2.
+On Sat, 21 Jul 2018 12:26:10 -0400 William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
 
-As H6 and A64 system controller are quite similar, code is reused now,
-and the A64 fallback compatible string is added after the H6 compatible
-string.
+> >Also, many many drivers deal with signals-as-an-electrical-thing - is
+> >it appropriate for this particular driver to take that namespace?
+> 
+> In the context of the Generic Counter paradigm, a "Signal" is an
+> abstraction for the stream of data that is fed to the counter device for
+> evaluation (triggering updates for the readable "Count"). In many cases
+> a "Signal" correlates with a physical electrical line (for example the A
+> and B electrical lines for a quadrature encoder), but this isn't a hard
+> requirement as the paradigm permits more abstract data streams.
+> 
+> I decided on "Signal" to match the naming convention that appears in the
+> datasheets of many counter devices, but "Line" may be a decent
+> alternative name we could use to indicate a counter device input data
+> stream.
+> 
+> I'd like to get some other opinions as well before I make a naming
+> change to "Signal" -- whether to stay with "Signal," switch to "Line," or
+> rename to something else. For what it's worth, I think it's unlikely for
+> a counter device driver author to confuse a Counter Signal with the
+> Linux OS signal within the context of the Generic Counter paradigm and
+> their respective counter device datasheet.
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- Documentation/devicetree/bindings/sram/sunxi-sram.txt | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/sram/sunxi-sram.txt b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-index c51ade86578c..6527a1a535a3 100644
---- a/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-+++ b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-@@ -18,6 +18,7 @@ Required properties:
-     - "allwinner,sun8i-h3-system-control"
-     - "allwinner,sun50i-a64-sram-controller" (deprecated)
-     - "allwinner,sun50i-a64-system-control"
-+    - "allwinner,sun50i-h6-system-contorl", "allwinner,sun50i-a64-system-control"
- - reg : sram controller register offset + length
- 
- SRAM nodes
-@@ -54,6 +55,9 @@ The valid sections compatible for H3 are:
- The valid sections compatible for A64 are:
-     - allwinner,sun50i-a64-sram-c
- 
-+The valid sections compatible for H6 are:
-+    - allwinner,sun50i-h6-sram-c, allwinner,sun50i-a64-sram-c
-+
- Devices using SRAM sections
- ---------------------------
- 
--- 
-2.18.0
+gc_signal_* would be better.  That retains "signal", but makes
+it clear that the symbols belong to generic counter.
