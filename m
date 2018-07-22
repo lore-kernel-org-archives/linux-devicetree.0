@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH 04/15] MIPS: dts: img: pistachio_marduk: Switch mmc to 1 bit mode
-Date: Sun, 22 Jul 2018 23:19:59 +0200
-Message-ID: <20180722212010.3979-5-afaerber@suse.de>
+Subject: [PATCH 15/15] clk: pistachio: Fix wrong SDHost card speed
+Date: Sun, 22 Jul 2018 23:20:10 +0200
+Message-ID: <20180722212010.3979-16-afaerber@suse.de>
 References: <20180722212010.3979-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -10,55 +10,59 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180722212010.3979-1-afaerber@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-mips@linux-mips.org
-Cc: Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, linux-kernel@vger.kernel.org, Ian Pozella <Ian.Pozella@imgtec.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, James Hartley <james.hartley@sondrel.com>, Rahul Bedarkar <rahulbedarkar89@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, linux-kernel@vger.kernel.org, Govindraj Raja <Govindraj.Raja@imgtec.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ian Pozella <Ian.Pozella@imgtec.com>
+From: Govindraj Raja <Govindraj.Raja@imgtec.com>
 
-The mmc block in Pistachio allows 1 to 8 data bits to be used.
-Marduk uses 4 bits allowing the upper 4 bits to be allocated
-to the Mikrobus ports. However these bits are still connected
-internally meaning the mmc block recieves signals on all data lines
-and seems the internal HW CRC checks get corrupted by this erroneous
-data.
+The SDHost currently clocks the card 4x slower than it
+should do, because there is a fixed divide by 4 in the
+sdhost wrapper that is not present in the clock tree.
+To model this, add a fixed divide by 4 clock node in
+the SDHost clock path.
 
-We cannot control what data is sent on these lines because they go
-to external ports. 1 bit mode does not exhibit the issue hence the
-safe default is to use this. If a user knows that in their use case
-they will not use the upper bits then they can set to 4 bit mode in
-order to improve performance.
+This will ensure the right clock frequency is selected when
+the mmc driver tries to configure frequency on card insert.
 
-Also make sure that the upper 4 bits don't get allocated to the mmc
-driver (the default is to assign all 8 pins) so they can be allocated
-to other drivers. Allocating all 4 despite setting 1 bit mode as this
-matches what is there in hardware.
-
-Signed-off-by: Ian Pozella <Ian.Pozella@imgtec.com>
+Signed-off-by: Govindraj Raja <Govindraj.Raja@imgtec.com>
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- arch/mips/boot/dts/img/pistachio_marduk.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/pistachio/clk-pistachio.c     | 3 ++-
+ include/dt-bindings/clock/pistachio-clk.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/boot/dts/img/pistachio_marduk.dts b/arch/mips/boot/dts/img/pistachio_marduk.dts
-index 29358d1f7027..5557a6ad61c3 100644
---- a/arch/mips/boot/dts/img/pistachio_marduk.dts
-+++ b/arch/mips/boot/dts/img/pistachio_marduk.dts
-@@ -120,6 +120,7 @@
- 
- &pin_sdhost_data {
- 	drive-strength = <2>;
-+	pins = "mfio17", "mfio18", "mfio19", "mfio20";
+diff --git a/drivers/clk/pistachio/clk-pistachio.c b/drivers/clk/pistachio/clk-pistachio.c
+index c4ceb5eaf46c..1c968d9a6e17 100644
+--- a/drivers/clk/pistachio/clk-pistachio.c
++++ b/drivers/clk/pistachio/clk-pistachio.c
+@@ -44,7 +44,7 @@ static struct pistachio_gate pistachio_gates[] __initdata = {
+ 	GATE(CLK_AUX_ADC_INTERNAL, "aux_adc_internal", "sys_internal_div",
+ 	     0x104, 22),
+ 	GATE(CLK_AUX_ADC, "aux_adc", "aux_adc_div", 0x104, 23),
+-	GATE(CLK_SD_HOST, "sd_host", "sd_host_div", 0x104, 24),
++	GATE(CLK_SD_HOST, "sd_host", "sd_host_div4", 0x104, 24),
+ 	GATE(CLK_BT, "bt", "bt_div", 0x104, 25),
+ 	GATE(CLK_BT_DIV4, "bt_div4", "bt_div4_div", 0x104, 26),
+ 	GATE(CLK_BT_DIV8, "bt_div8", "bt_div8_div", 0x104, 27),
+@@ -54,6 +54,7 @@ static struct pistachio_gate pistachio_gates[] __initdata = {
+ static struct pistachio_fixed_factor pistachio_ffs[] __initdata = {
+ 	FIXED_FACTOR(CLK_WIFI_DIV4, "wifi_div4", "wifi_pll", 4),
+ 	FIXED_FACTOR(CLK_WIFI_DIV8, "wifi_div8", "wifi_pll", 8),
++	FIXED_FACTOR(CLK_SDHOST_DIV4, "sd_host_div4", "sd_host_div", 4),
  };
  
- &pwm {
-@@ -132,7 +133,7 @@
+ static struct pistachio_div pistachio_divs[] __initdata = {
+diff --git a/include/dt-bindings/clock/pistachio-clk.h b/include/dt-bindings/clock/pistachio-clk.h
+index 039f83facb68..77b92aed241d 100644
+--- a/include/dt-bindings/clock/pistachio-clk.h
++++ b/include/dt-bindings/clock/pistachio-clk.h
+@@ -21,6 +21,7 @@
+ /* Fixed-factor clocks */
+ #define CLK_WIFI_DIV4			16
+ #define CLK_WIFI_DIV8			17
++#define CLK_SDHOST_DIV4			18
  
- &sdhost {
- 	status = "okay";
--	bus-width = <4>;
-+	bus-width = <1>;
- 	disable-wp;
- };
- 
+ /* Gate clocks */
+ #define CLK_MIPS			32
 -- 
 2.16.4
