@@ -1,98 +1,56 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH v2 3/7] iio: tsl2772: add support for reading power
- settings from device tree
-Date: Sun, 22 Jul 2018 12:37:20 +0000
-Message-ID: <20180722123720.GB20029@onstation.org>
-References: <20180717084158.23532-1-masneyb@onstation.org>
- <20180717084158.23532-4-masneyb@onstation.org>
- <20180720173635.GA21241@rob-hp-laptop>
- <20180721183716.524632f1@archlinux>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH v2 00/18] Allwinner R40 HDMI refactoring
+Date: Sun, 22 Jul 2018 16:43:56 +0200
+Message-ID: <2309112.TTVI9Fv1ar@jernej-laptop>
+References: <20180710203511.18454-1-jernej.skrabec@siol.net> <20180711083036.7attjq4hm5ay5gmn@flea>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180721183716.524632f1@archlinux>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, jonathan@marek.ca, jmaneyrol@invensense.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mkelly@xevo.com, fischerdouglasc@gmail.com, bshah@kde.org, ctatlor97@gmail.com, drew.paterson@ams.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBMFQ2LNAKGQEM6PRXUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180711083036.7attjq4hm5ay5gmn@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 21, 2018 at 06:37:16PM +0100, Jonathan Cameron wrote:
-> On Fri, 20 Jul 2018 11:36:35 -0600
-> Rob Herring <robh@kernel.org> wrote:
-> 
-> > On Tue, Jul 17, 2018 at 04:41:54AM -0400, Brian Masney wrote:
-> > > This patch adds support for optionally reading the prox_diode and
-> > > prox_power settings from device tree. This was tested using a LG
-> > > Nexus 5 (hammerhead) which requires a different diode than the driver
-> > > default for the IR LED.
-> > > 
-> > > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > > ---
-> > > The next patch in the series removes the tsl2772 driver from the
-> > > trivial-devices.txt file. I separated it out so that change can go
-> > > through device tree.
-> > > 
-> > >  .../devicetree/bindings/iio/light/tsl2772.txt | 39 +++++++++++++++++++  
-> > 
-> > Please split DT bindings to separate patch.
-> > 
-> > >  drivers/iio/light/tsl2772.c                   | 16 ++++++++
-> > >  include/dt-bindings/iio/amstaos,tsl2772.h     | 24 ++++++++++++
-> > >  3 files changed, 79 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2772.txt
-> > >  create mode 100644 include/dt-bindings/iio/amstaos,tsl2772.h
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/iio/light/tsl2772.txt b/Documentation/devicetree/bindings/iio/light/tsl2772.txt
-> > > new file mode 100644
-> > > index 000000000000..ab553d52b9fc
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/iio/light/tsl2772.txt
-> > > @@ -0,0 +1,39 @@
-> > > +* AMS/TAOS ALS and proximity sensor
-> > > +
-> > > +Required properties:
-> > > +
-> > > +  - compatible: Should be one of
-> > > +		"amstaos,tsl2571"
-> > > +		"amstaos,tsl2671"
-> > > +		"amstaos,tmd2671"
-> > > +		"amstaos,tsl2771"
-> > > +		"amstaos,tmd2771"
-> > > +		"amstaos,tsl2572"
-> > > +		"amstaos,tsl2672"
-> > > +		"amstaos,tmd2672"
-> > > +		"amstaos,tsl2772"
-> > > +		"amstaos,tmd2772"
-> > > +  - reg: the I2C address of the device
-> > > +
-> > > +Optional properties:
-> > > +
-> > > +  - amstaos,prox_diode - must be TSL2772_DIODE0, TSL2772_DIODE1, or
-> > > +                         TSL2772_DIODE_BOTH.  
-> > 
-> > s/_/-/
-> > 
-> > > +  - amstaos,prox_power - must be TSL2772_100_mA, TSL2772_50_mA, TSL2772_25_mA,
-> > > +                         or TSL2772_13_mA.  
-> > 
-> > I wonder if this should be common. Perhaps we should use the existing 
-> > 'led-max-microamp' as this is setting the current for an IR LED.
-> 
-> Seems reasonable, then perhaps have two controls to turn on the diodes
-> above.
-> 
-> > 
-> > And while called 'power' this setting is current.
-> 
-> Also can we have real values?  I really don't like defines if they
-> aren't absolutely necessary - particularly when there is a nice real
-> unit to be used.
+Hi Maxime,
 
-How about these options then?
+Dne sreda, 11. julij 2018 ob 10:30:36 CEST je Maxime Ripard napisal(a):
+> On Tue, Jul 10, 2018 at 10:34:53PM +0200, Jernej Skrabec wrote:
+> > This series fixes several issues found in R40 HDMI patch series after
+> > it was applied. Conversation can be found here:
+> > http://lists.infradead.org/pipermail/linux-arm-kernel/2018-June/586011.htm
+> > l
+> > 
+> > Patches are based on latest linux-next (next-20180710) and are ordered
+> > in such way that they don't break R40 HDMI at any time. Because of that
+> > I suggest that whole series goes through drm-misc to preserve that order.
+> > 
+> > I also tested those patches on H3 to make sure it doesn't break other
+> > platforms. However, it would be nice to test for regressions also on
+> > older SoCs (with DE1).
+> > 
+> > Best regards,
+> > Jernej
+> 
+> Applied all patches but the patch 10, thanks!
+> Maxime
 
-amstaos,proximity-diode-0-enabled;
-amstaos,proximity-diode-1-enabled;
-led-max-microamp = <100000>;
+It seems that you forgot to merge some patches:
 
-Brian
+[PATCH v2 12/18] drm/sun4i: tcon: Add another way for matching mixers with 
+tcon
+[PATCH v2 13/18] drm/sun4i: tcon: Add support for R40 TCON
+
+Without them, R40 display pipeline can't work.
+
+Maybe they are in your spam folder?
+
+Best regards,
+Jernej
