@@ -1,52 +1,172 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V2 0/6] mailbox: ti-msgmgr: Add support for AM654 Secure
- Proxy
-Date: Mon, 23 Jul 2018 09:14:12 -0500
-Message-ID: <20180723141412.7zd6wp6y6pql7bm7@kahuna>
-References: <20180716180607.16526-1-nm@ti.com>
- <20180723132956.tcsuxychhlhiwz6v@kahuna>
- <CABb+yY1_SBTDPyUNGSr8=tpU4oObz060nJ3NrgR8JyQye23cfg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] rtc: jz4740: Add support for the JZ4725B, JZ4760, JZ4770
+Date: Mon, 23 Jul 2018 08:18:55 -0600
+Message-ID: <CAL_JsqKrJC7v79L89PCP-hihYLSNjp05xMxQQaVZPLPk26MuHw@mail.gmail.com>
+References: <20180713151424.13000-1-paul@crapouillou.net> <20180714131920.GU16084@piout.net>
+ <1531574734.2831.0@smtp.crapouillou.net> <20180714133250.GW16084@piout.net>
+ <1531576208.2831.1@smtp.crapouillou.net> <20180720153956.GA18135@rob-hp-laptop>
+ <1532113439.2309.1@smtp.crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABb+yY1_SBTDPyUNGSr8=tpU4oObz060nJ3NrgR8JyQye23cfg@mail.gmail.com>
+In-Reply-To: <1532113439.2309.1@smtp.crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, ", linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream" <linux-arm-kernel@lists.infradead.org>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13:56-20180723, Jassi Brar wrote:
-> On Mon, Jul 23, 2018 at 6:59 PM, Nishanth Menon <nm@ti.com> wrote:
-[...]
-> >>  .../bindings/mailbox/ti,secure-proxy.txt           |  50 +++
-> >>  drivers/mailbox/ti-msgmgr.c                        | 353 +++++++++++++++++----
-> >>  2 files changed, 336 insertions(+), 67 deletions(-)
-> >>  create mode 100644 Documentation/devicetree/bindings/mailbox/ti,secure-proxy.txt
+On Fri, Jul 20, 2018 at 1:04 PM Paul Cercueil <paul@crapouillou.net> wrote:
+>
+> Hi,
+>
+> Le ven. 20 juil. 2018 =C3=A0 17:39, Rob Herring <robh@kernel.org> a =C3=
+=A9crit :
+> > On Sat, Jul 14, 2018 at 03:50:08PM +0200, Paul Cercueil wrote:
+> >>
+> >>
+> >>  Le sam. 14 juil. 2018 =C3=A0 15:32, Alexandre Belloni
+> >>  <alexandre.belloni@bootlin.com> a =C3=A9crit :
+> >>  > On 14/07/2018 15:25:33+0200, Paul Cercueil wrote:
+> >>  > >  Hi Alexandre,
+> >>  > >
+> >>  > >  Le sam. 14 juil. 2018 =C3=A0 15:19, Alexandre Belloni
+> >>  > >  <alexandre.belloni@bootlin.com> a =C3=A9crit :
+> >>  > >  > Hello,
+> >>  > >  >
+> >>  > >  > On 13/07/2018 17:14:24+0200, Paul Cercueil wrote:
+> >>  > >  > >  The RTC in the JZ4725B works just like the one in the
+> >> JZ4740.
+> >>  > >  > >
+> >>  > >  > >  The RTC in the JZ4760 and JZ4770 work just like the one
+> >> in the
+> >>  > >  > > JZ4780.
+> >>  > >  > >
+> >>  > >  > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> >>  > >  > >  ---
+> >>  > >  > >
+> >> Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+> >>  > > |  3
+> >>  > >  > > +++
+> >>  > >  > >   drivers/rtc/rtc-jz4740.c
+> >>  > > | 11
+> >>  > >  > > ++++++++++-
+> >>  > >  > >   2 files changed, 13 insertions(+), 1 deletion(-)
+> >>  > >  > >
+> >>  > >  > >  diff --git
+> >>  > >  > >
+> >> a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+> >>  > >  > >
+> >> b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+> >>  > >  > >  index 41c7ae18fd7b..a9e821de84f2 100644
+> >>  > >  > >  ---
+> >>  > > a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+> >>  > >  > >  +++
+> >>  > > b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+> >>  > >  > >  @@ -4,6 +4,9 @@ Required properties:
+> >>  > >  > >
+> >>  > >  > >   - compatible: One of:
+> >>  > >  > >     - "ingenic,jz4740-rtc" - for use with the JZ4740 SoC
+> >>  > >  > >  +  - "ingenic,jz4725b-rtc" - for use with the JZ4725B SoC
+> >>  > >  > >  +  - "ingenic,jz4760-rtc" - for use with the JZ4760 SoC
+> >>  > >  > >  +  - "ingenic,jz4770-rtc" - for use with the JZ4770 SoC
+> >>  > >  > >     - "ingenic,jz4780-rtc" - for use with the JZ4780 SoC
+> >>  > >  > >   - reg: Address range of rtc register set
+> >>  > >  > >   - interrupts: IRQ number for the alarm interrupt
+> >>  > >  > >  diff --git a/drivers/rtc/rtc-jz4740.c
+> >>  > > b/drivers/rtc/rtc-jz4740.c
+> >>  > >  > >  index d0a891777f44..1c867e3a0ea5 100644
+> >>  > >  > >  --- a/drivers/rtc/rtc-jz4740.c
+> >>  > >  > >  +++ b/drivers/rtc/rtc-jz4740.c
+> >>  > >  > >  @@ -54,6 +54,9 @@
+> >>  > >  > >
+> >>  > >  > >   enum jz4740_rtc_type {
+> >>  > >  > >    ID_JZ4740,
+> >>  > >  > >  + ID_JZ4725B,
+> >>  > >  > >  + ID_JZ4760,
+> >>  > >  > >  + ID_JZ4770,
+> >>  > >  >
+> >>  > >  > I wouldn't introduce those ids unless there are handling
+> >>  > > differences at
+> >>  > >  > some point.
+> >>  > >
+> >>  > >  Well there are handling differences, see below.
+> >>  > >
+> >>  > >  > >    ID_JZ4780,
+> >>  > >  > >   };
+> >>  > >  > >
+> >>  > >  > >  @@ -114,7 +117,7 @@ static inline int
+> >>  > > jz4740_rtc_reg_write(struct
+> >>  > >  > > jz4740_rtc *rtc, size_t reg,
+> >>  > >  > >   {
+> >>  > >  > >    int ret =3D 0;
+> >>  > >  > >
+> >>  > >  > >  - if (rtc->type >=3D ID_JZ4780)
+> >>  > >  > >  + if (rtc->type >=3D ID_JZ4760)
+> >>  > >  >
+> >>  > >  > This would avoid that change (and the test would preferably
+> >> be
+> >>  > >  > (rtc->type =3D=3D ID_JZ4780))
+> >>  > >
+> >>  > >  That branch should be taken if the SoC is JZ4760, JZ4770 or
+> >> JZ4780.
+> >>  > >  It should not be taken if the SoC is JZ4740 or JZ4725B.
+> >>  >
+> >>  > Sure but you can achieve that with only 2 ids...
+> >>  >
+> >>  > >
+> >>  > >  > >            ret =3D jz4780_rtc_enable_write(rtc);
+> >>  > >  > >    if (ret =3D=3D 0)
+> >>  > >  > >            ret =3D jz4740_rtc_wait_write_ready(rtc);
+> >>  > >  > >  @@ -300,6 +303,9 @@ static void jz4740_rtc_power_off(void)
+> >>  > >  > >
+> >>  > >  > >   static const struct of_device_id jz4740_rtc_of_match[] =3D
+> >> {
+> >>  > >  > >    { .compatible =3D "ingenic,jz4740-rtc", .data =3D (void
+> >>  > > *)ID_JZ4740 },
+> >>  > >  > >  + { .compatible =3D "ingenic,jz4725b-rtc", .data =3D (void
+> >>  > > *)ID_JZ4725B
+> >>  > >  > > },
+> >>  > >  > >  + { .compatible =3D "ingenic,jz4760-rtc", .data =3D (void
+> >>  > > *)ID_JZ4760 },
+> >>  > >  > >  + { .compatible =3D "ingenic,jz4770-rtc", .data =3D (void
+> >>  > > *)ID_JZ4770 },
+> >>  >
+> >>  > By doing the correct mapping here e.g:
+> >>  >
+> >>  > { .compatible =3D "ingenic,jz4725b-rtc", .data =3D (void *)ID_JZ474=
+0
+> >> },
+> >>
+> >>  Not very pretty and future-proof if you ask me...
 > >
-> >
-> > Jassi,
-> >
-> > I dont see this in next-20180723. You'd asked me to hold off on pings
-> > https://lkml.org/lkml/2017/12/16/353 -> so, held off as much as I could
-> > before wondering on the status.
-> >
-> I didn't ask you to not ping me. I said I didn't miss your patchset. I
-> still didn't.
-> 
-> Especially for purely platform specific changes, that I don't have
-> knowledge about, I leave them to cook in public as long as possible,
-> before pulling them in around rc7.
+> > Looks to me like this can be handled entirely in DT without driver
+> > changes like the other patches. Correct usage of compatible strings is
+> > what gives you future-proofing. And no driver change is better than
+> > needless changing.
+>
+> If I make e.g. the jz4760 and jz4770 use the jz4780 compatible string,
+> but
+> then I want to implement a new feature that only exists on the jz4780,
+> how
+> can I do it without breaking everything?
 
-Understood. Thanks.
+You specify both:
 
-> You submitted V2, 7days ago only and we are at rc6 today. So chill.
+compatible =3D "ingenic,jz4760-rtc", "ingenic,jz4780-rtc";
 
-v2 is just wording of mailbox node example change recommended by Rob.
-I was hoping to get any further changes prior to reposting a v2.. but
-anyways.. Looks all good..
+You match on the less specific compatible until you have features or
+bugs to handle for the more specific compatible. In your case, you
+would have to start matching on the 4760 and 4770 and not support the
+feature for those. A bit backwards from normal, but would still work.
 
--- 
-Regards,
-Nishanth Menon
+> > It may look a bit wierd if 4780 is the fallback for 4770, but if the
+> > 4780 is older, then that actually makes sense.
+>
+> The 4770 is older than the 4780.
+
+As I said, it's weird, but it will all still work. You could fix this
+if you want. It would only matter if you had a old dtb with a new
+kernel and care about that case working.
+
+Rob
