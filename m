@@ -1,45 +1,68 @@
-From: Marcel Ziswiler <marcel@ziswiler.com>
-Subject: [PATCH 03/26] ARM: tegra: colibri_t30: reorder host1x/hdmi properties
-Date: Mon, 23 Jul 2018 14:36:34 +0200
-Message-ID: <20180723123658.980-4-marcel@ziswiler.com>
-References: <20180723123658.980-1-marcel@ziswiler.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/7] iio: tsl2772: add support for reading power
+ settings from device tree
+Date: Mon, 23 Jul 2018 07:28:49 -0600
+Message-ID: <CAL_JsqLCQG_CNppd9f7xtwYkruvU4=3PziPOPCTt1P4phg5iLg@mail.gmail.com>
+References: <20180717084158.23532-1-masneyb@onstation.org> <20180717084158.23532-4-masneyb@onstation.org>
+ <20180720173635.GA21241@rob-hp-laptop> <20180721183716.524632f1@archlinux>
+ <20180722123720.GB20029@onstation.org> <20180722181748.24bc47d8@archlinux>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180723123658.980-1-marcel@ziswiler.com>
+In-Reply-To: <20180722181748.24bc47d8@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Brian Masney <masneyb@onstation.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Jonathan Marek <jonathan@marek.ca>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Martin Kelly <mkelly@xevo.com>, fischerdouglasc@gmail.com, bshah@kde.org, Craig Tatlor <ctatlor97@gmail.com>, drew.paterson@ams.com
 List-Id: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+On Sun, Jul 22, 2018 at 11:17 AM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Sun, 22 Jul 2018 12:37:20 +0000
+> Brian Masney <masneyb@onstation.org> wrote:
+>
+> > On Sat, Jul 21, 2018 at 06:37:16PM +0100, Jonathan Cameron wrote:
+> > > On Fri, 20 Jul 2018 11:36:35 -0600
+> > > Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > > On Tue, Jul 17, 2018 at 04:41:54AM -0400, Brian Masney wrote:
+> > > > > This patch adds support for optionally reading the prox_diode and
+> > > > > prox_power settings from device tree. This was tested using a LG
+> > > > > Nexus 5 (hammerhead) which requires a different diode than the driver
+> > > > > default for the IR LED.
+> > > > >
+> > > > > Signed-off-by: Brian Masney <masneyb@onstation.org>
 
-Reorder Host1x/HDMI properties.
+> > > > > +  - amstaos,prox_diode - must be TSL2772_DIODE0, TSL2772_DIODE1, or
+> > > > > +                         TSL2772_DIODE_BOTH.
+> > > >
+> > > > s/_/-/
+> > > >
+> > > > > +  - amstaos,prox_power - must be TSL2772_100_mA, TSL2772_50_mA, TSL2772_25_mA,
+> > > > > +                         or TSL2772_13_mA.
+> > > >
+> > > > I wonder if this should be common. Perhaps we should use the existing
+> > > > 'led-max-microamp' as this is setting the current for an IR LED.
+> > >
+> > > Seems reasonable, then perhaps have two controls to turn on the diodes
+> > > above.
+> > >
+> > > >
+> > > > And while called 'power' this setting is current.
+> > >
+> > > Also can we have real values?  I really don't like defines if they
+> > > aren't absolutely necessary - particularly when there is a nice real
+> > > unit to be used.
+> >
+> > How about these options then?
+> >
+> > amstaos,proximity-diode-0-enabled;
+> > amstaos,proximity-diode-1-enabled;
+> > led-max-microamp = <100000>;
+>
+> Works for me.  Rob?
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+I think we're bikeshedding, but I'd prefer a single property though
+perhaps as a list (0, 1, or <0 1>) or mask. A list would be similar to
+the "led-sources" property format.
 
----
-
- arch/arm/boot/dts/tegra30-colibri.dtsi | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/tegra30-colibri.dtsi b/arch/arm/boot/dts/tegra30-colibri.dtsi
-index 5cceb69743bc..a4c2fbf270ff 100644
---- a/arch/arm/boot/dts/tegra30-colibri.dtsi
-+++ b/arch/arm/boot/dts/tegra30-colibri.dtsi
-@@ -16,12 +16,11 @@
- 
- 	host1x@50000000 {
- 		hdmi@54280000 {
--			vdd-supply = <&avdd_hdmi_3v3_reg>;
--			pll-supply = <&avdd_hdmi_pll_1v8_reg>;
--
-+			nvidia,ddc-i2c-bus = <&hdmiddc>;
- 			nvidia,hpd-gpio =
- 				<&gpio TEGRA_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
--			nvidia,ddc-i2c-bus = <&hdmiddc>;
-+			pll-supply = <&avdd_hdmi_pll_1v8_reg>;
-+			vdd-supply = <&avdd_hdmi_3v3_reg>;
- 		};
- 	};
- 
--- 
-2.14.4
+Rob
