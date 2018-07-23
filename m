@@ -1,143 +1,160 @@
-Return-Path: <SRS0=HrxS=KF=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-sn1nam02on0044.outbound.protection.outlook.com ([104.47.36.44]:56351
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727546AbeGUMmh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 21 Jul 2018 08:42:37 -0400
-From: <shubhrajyoti.datta@gmail.com>
-Subject: [PATCHv5 1/4] tty: serial: uartlite: Add structure for private data
-Date: Sat, 21 Jul 2018 17:19:04 +0530
-Message-ID: <1532173747-19115-2-git-send-email-shubhrajyoti.datta@gmail.com>
-In-Reply-To: <1532173747-19115-1-git-send-email-shubhrajyoti.datta@gmail.com>
-References: <1532173747-19115-1-git-send-email-shubhrajyoti.datta@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Return-Path: <SRS0=lWLe=KH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:56306 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388129AbeGWOs2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Jul 2018 10:48:28 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 03/21] v4l: fwnode: Detect bus type correctly
+Date: Mon, 23 Jul 2018 16:46:48 +0300
+Message-Id: <20180723134706.15334-4-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
+References: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-serial@vger.kernel.org
-Cc: devicetree@vger.kernel.org, shubhrajyoti.datta@gmail.com, robh+dt@kernel.org, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, Tanvi Desai <tanvi.desai@xilinx.com>
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
 List-ID: <devicetree@vger.kernel.org>
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+In case the device supports multiple video bus types on an endpoint, the
+V4L2 fwnode framework attempts to detect the type based on the available
+information. This wasn't working really well, and sometimes could lead to
+the V4L2 fwnode endpoint struct as being mishandled between the bus types.
 
-Add struct uartlite_data, to store the private data of the Uartlite
-driver.
-
-Signed-off-by: Tanvi Desai <tanvi.desai@xilinx.com>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/tty/serial/uartlite.c | 29 +++++++++++++++++++++--------
- 1 file changed, 21 insertions(+), 8 deletions(-)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 43 +++++++++++++++++++----------------
+ include/media/v4l2-mediabus.h         |  2 ++
+ 2 files changed, 26 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
-index c47db78..0f798f7 100644
---- a/drivers/tty/serial/uartlite.c
-+++ b/drivers/tty/serial/uartlite.c
-@@ -54,6 +54,10 @@
- #define ULITE_CONTROL_RST_RX	0x02
- #define ULITE_CONTROL_IE	0x10
- 
-+struct uartlite_data {
-+	const struct uartlite_reg_ops *reg_ops;
-+};
-+
- struct uartlite_reg_ops {
- 	u32 (*in)(void __iomem *addr);
- 	void (*out)(u32 val, void __iomem *addr);
-@@ -91,16 +95,16 @@ static const struct uartlite_reg_ops uartlite_le = {
- 
- static inline u32 uart_in32(u32 offset, struct uart_port *port)
- {
--	const struct uartlite_reg_ops *reg_ops = port->private_data;
-+	struct uartlite_data *pdata = port->private_data;
- 
--	return reg_ops->in(port->membase + offset);
-+	return pdata->reg_ops->in(port->membase + offset);
- }
- 
- static inline void uart_out32(u32 val, u32 offset, struct uart_port *port)
- {
--	const struct uartlite_reg_ops *reg_ops = port->private_data;
-+	struct uartlite_data *pdata = port->private_data;
- 
--	reg_ops->out(val, port->membase + offset);
-+	pdata->reg_ops->out(val, port->membase + offset);
- }
- 
- static struct uart_port ulite_ports[ULITE_NR_UARTS];
-@@ -325,6 +329,7 @@ static void ulite_release_port(struct uart_port *port)
- 
- static int ulite_request_port(struct uart_port *port)
- {
-+	struct uartlite_data *pdata = port->private_data;
- 	int ret;
- 
- 	pr_debug("ulite console: port=%p; port->mapbase=%llx\n",
-@@ -342,13 +347,13 @@ static int ulite_request_port(struct uart_port *port)
- 		return -EBUSY;
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index da13348b1f4a..55214ff5a616 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -111,8 +111,10 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 		flags |= V4L2_MBUS_CSI2_CONTINUOUS_CLOCK;
  	}
  
--	port->private_data = (void *)&uartlite_be;
-+	pdata->reg_ops = &uartlite_be;
- 	ret = uart_in32(ULITE_CONTROL, port);
- 	uart_out32(ULITE_CONTROL_RST_TX, ULITE_CONTROL, port);
- 	ret = uart_in32(ULITE_STATUS, port);
- 	/* Endianess detection */
- 	if ((ret & ULITE_STATUS_TXEMPTY) != ULITE_STATUS_TXEMPTY)
--		port->private_data = (void *)&uartlite_le;
-+		pdata->reg_ops = &uartlite_le;
+-	bus->flags = flags;
+-	vep->bus_type = V4L2_MBUS_CSI2;
++	if (lanes_used || have_clk_lane || flags) {
++		bus->flags = flags;
++		vep->bus_type = V4L2_MBUS_CSI2;
++	}
  
  	return 0;
  }
-@@ -585,10 +590,12 @@ static struct uart_driver ulite_uart_driver = {
-  * @id: requested id number.  Pass -1 for automatic port assignment
-  * @base: base address of uartlite registers
-  * @irq: irq number for uartlite
-+ * @pdata: private data for uartlite
-  *
-  * Returns: 0 on success, <0 otherwise
-  */
--static int ulite_assign(struct device *dev, int id, u32 base, int irq)
-+static int ulite_assign(struct device *dev, int id, u32 base, int irq,
-+			struct uartlite_data *pdata)
+@@ -122,6 +124,7 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
  {
- 	struct uart_port *port;
- 	int rc;
-@@ -625,6 +632,7 @@ static int ulite_assign(struct device *dev, int id, u32 base, int irq)
- 	port->dev = dev;
- 	port->type = PORT_UNKNOWN;
- 	port->line = id;
-+	port->private_data = pdata;
+ 	struct v4l2_fwnode_bus_parallel *bus = &vep->bus.parallel;
+ 	unsigned int flags = 0;
++	bool is_parallel = false;
+ 	u32 v;
  
- 	dev_set_drvdata(dev, port);
+ 	if (!fwnode_property_read_u32(fwnode, "hsync-active", &v)) {
+@@ -142,11 +145,6 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
+ 		pr_debug("field-even-active %s\n", v ? "high" : "low");
+ 	}
  
-@@ -675,6 +683,7 @@ MODULE_DEVICE_TABLE(of, ulite_of_match);
- static int ulite_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
-+	struct uartlite_data *pdata;
- 	int irq;
- 	int id = pdev->id;
- #ifdef CONFIG_OF
-@@ -684,6 +693,10 @@ static int ulite_probe(struct platform_device *pdev)
- 	if (prop)
- 		id = be32_to_cpup(prop);
- #endif
-+	pdata = devm_kzalloc(&pdev->dev, sizeof(struct uartlite_data),
-+			     GFP_KERNEL);
-+	if (!pdata)
-+		return -ENOMEM;
+-	if (flags)
+-		vep->bus_type = V4L2_MBUS_PARALLEL;
+-	else
+-		vep->bus_type = V4L2_MBUS_BT656;
+-
+ 	if (!fwnode_property_read_u32(fwnode, "pclk-sample", &v)) {
+ 		flags |= v ? V4L2_MBUS_PCLK_SAMPLE_RISING :
+ 			V4L2_MBUS_PCLK_SAMPLE_FALLING;
+@@ -168,11 +166,13 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!res)
-@@ -693,7 +706,7 @@ static int ulite_probe(struct platform_device *pdev)
- 	if (irq <= 0)
- 		return -ENXIO;
+ 	if (!fwnode_property_read_u32(fwnode, "bus-width", &v)) {
+ 		bus->bus_width = v;
++		is_parallel = true;
+ 		pr_debug("bus-width %u\n", v);
+ 	}
  
--	return ulite_assign(&pdev->dev, id, res->start, irq);
-+	return ulite_assign(&pdev->dev, id, res->start, irq, pdata);
+ 	if (!fwnode_property_read_u32(fwnode, "data-shift", &v)) {
+ 		bus->data_shift = v;
++		is_parallel = true;
+ 		pr_debug("data-shift %u\n", v);
+ 	}
+ 
+@@ -188,14 +188,24 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
+ 		pr_debug("data-enable-active %s\n", v ? "high" : "low");
+ 	}
+ 
+-	bus->flags = flags;
+-
++	if (flags || is_parallel) {
++		bus->flags = flags;
++		if (flags & (V4L2_MBUS_HSYNC_ACTIVE_HIGH |
++			     V4L2_MBUS_HSYNC_ACTIVE_LOW |
++			     V4L2_MBUS_VSYNC_ACTIVE_HIGH |
++			     V4L2_MBUS_VSYNC_ACTIVE_LOW |
++			     V4L2_MBUS_FIELD_EVEN_HIGH |
++			     V4L2_MBUS_FIELD_EVEN_LOW))
++			vep->bus_type = V4L2_MBUS_PARALLEL;
++		else
++			vep->bus_type = V4L2_MBUS_BT656;
++	}
  }
  
- static int ulite_remove(struct platform_device *pdev)
+ static void
+ v4l2_fwnode_endpoint_parse_csi1_bus(struct fwnode_handle *fwnode,
+ 				    struct v4l2_fwnode_endpoint *vep,
+-				    u32 bus_type)
++				    enum v4l2_fwnode_bus_type bus_type)
+ {
+ 	struct v4l2_fwnode_bus_mipi_csi1 *bus = &vep->bus.mipi_csi1;
+ 	u32 v;
+@@ -247,25 +257,20 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 		rval = v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep);
+ 		if (rval)
+ 			return rval;
+-		/*
+-		 * Parse the parallel video bus properties only if none
+-		 * of the MIPI CSI-2 specific properties were found.
+-		 */
+-		if (vep->bus.mipi_csi2.flags == 0)
++
++		if (vep->bus_type == V4L2_MBUS_UNKNOWN)
+ 			v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep);
+ 
+-		break;
++		return vep->bus_type == V4L2_MBUS_UNKNOWN ? -EINVAL : 0;
+ 	case V4L2_FWNODE_BUS_TYPE_CCP2:
+ 	case V4L2_FWNODE_BUS_TYPE_CSI1:
+ 		v4l2_fwnode_endpoint_parse_csi1_bus(fwnode, vep, bus_type);
+ 
+-		break;
++		return 0;
+ 	default:
+ 		pr_warn("unsupported bus type %u\n", bus_type);
+ 		return -EINVAL;
+ 	}
+-
+-	return 0;
+ }
+ 
+ int v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+diff --git a/include/media/v4l2-mediabus.h b/include/media/v4l2-mediabus.h
+index 4bbb5f3d2b02..66d74c813f53 100644
+--- a/include/media/v4l2-mediabus.h
++++ b/include/media/v4l2-mediabus.h
+@@ -70,6 +70,7 @@
+ 
+ /**
+  * enum v4l2_mbus_type - media bus type
++ * @V4L2_MBUS_UNKNOWN:	unknown bus type, no V4L2 mediabus configuration
+  * @V4L2_MBUS_PARALLEL:	parallel interface with hsync and vsync
+  * @V4L2_MBUS_BT656:	parallel interface with embedded synchronisation, can
+  *			also be used for BT.1120
+@@ -78,6 +79,7 @@
+  * @V4L2_MBUS_CSI2:	MIPI CSI-2 serial interface
+  */
+ enum v4l2_mbus_type {
++	V4L2_MBUS_UNKNOWN,
+ 	V4L2_MBUS_PARALLEL,
+ 	V4L2_MBUS_BT656,
+ 	V4L2_MBUS_CSI1,
 -- 
-2.7.4
+2.11.0
 
