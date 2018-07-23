@@ -1,259 +1,71 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] phy: qcom-qmp: Fix dts bindings to reflect reality
-Date: Mon, 23 Jul 2018 10:37:25 -0700
-Message-ID: <CAD=FV=UDq8oq+nKsa2mZWvAUueUFxEUSYz2JoZ=E7e131SOR=g@mail.gmail.com>
-References: <20180706233142.166296-1-dianders@chromium.org>
- <20180720141059.GA3064@rob-hp-laptop> <CAD=FV=WzjZBYV+yjekC-GGgjyWNbdGX=ZwesQMQhiYHZLyzhzA@mail.gmail.com>
- <CAL_JsqKZUB3P_Z_pRG-Udx0wgWtSjzgF=Rc3t8Xf2n2uZkV3Qw@mail.gmail.com>
- <CAD=FV=XBCeKUrfMCppfhetWNWLJWzsbiBkQnTugoXDff-0SD5w@mail.gmail.com> <CAL_Jsq+X=RZK-GU+9LqK-0O1A=cYeudhHvvnrXm6xv=j1Ck4_w@mail.gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v10 3/7] Bluetooth: btqca: Redefine qca_uart_setup() to
+ generic function.
+Date: Mon, 23 Jul 2018 10:40:18 -0700
+Message-ID: <20180723174018.GK129942@google.com>
+References: <20180720133243.6851-1-bgodavar@codeaurora.org>
+ <20180720133243.6851-4-bgodavar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+X=RZK-GU+9LqK-0O1A=cYeudhHvvnrXm6xv=j1Ck4_w@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180720133243.6851-4-bgodavar@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Manu Gautam <mgautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>
+To: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Jul 20, 2018 at 07:02:39PM +0530, Balakrishna Godavarthi wrote:
+> Redefinition of qca_uart_setup will help future Qualcomm Bluetooth
+> SoC, to use the same function instead of duplicating the function.
+> Added new arguments soc_type and soc_ver to the functions.
+> 
+> These arguments will help to decide type of firmware files
+> to be loaded into Bluetooth chip.
+> soc_type holds the Bluetooth chip connected to APPS processor.
+> soc_ver holds the Bluetooth chip version.
+> 
+> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>  drivers/bluetooth/btqca.c   | 20 +++++++-------------
+>  drivers/bluetooth/btqca.h   | 13 +++++++++++--
+>  drivers/bluetooth/hci_qca.c | 10 +++++++++-
+>  3 files changed, 27 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+> index c5cf9cab438a..b556710ee1bd 100644
+> --- a/drivers/bluetooth/btqca.c
+> +++ b/drivers/bluetooth/btqca.c
+> @@ -85,6 +85,9 @@ int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version)
+>  out:
+>  	kfree_skb(skb);
+>  
+> +	if (err < 0 || *soc_version == 0)
+> +		bt_dev_err(hdev, "QCA Failed to get version (%d)", err);
 
-On Mon, Jul 23, 2018 at 7:04 AM, Rob Herring <robh@kernel.org> wrote:
-> On Fri, Jul 20, 2018 at 11:54 AM Doug Anderson <dianders@chromium.org> wrote:
->>
->> Hi,
->>
->> On Fri, Jul 20, 2018 at 10:26 AM, Rob Herring <robh@kernel.org> wrote:
->> > On Fri, Jul 20, 2018 at 9:13 AM Doug Anderson <dianders@chromium.org> wrote:
->> >>
->> >> Rob,
->> >>
->> >> On Fri, Jul 20, 2018 at 7:10 AM, Rob Herring <robh@kernel.org> wrote:
->> >> > On Fri, Jul 06, 2018 at 04:31:42PM -0700, Douglas Anderson wrote:
->> >> >> A few patches have landed for the qcom-qmp PHY that affect how you
->> >> >> would write a device tree node.  ...yet the bindings weren't updated.
->> >> >> Let's remedy the situation and make the bindings refelect reality.
->> >> >
->> >> > "dt-bindings: phy: ..." for the subject.
->> >>
->> >> Sorry.  Every subsystem has different conventions for this so I
->> >> usually just do a "git log" on the file and make my best guess.  I'll
->> >> try to remember this for next time though.
->> >
->> > NP. I'd like to add this info to MAINTAINERS or maybe a git commit
->> > hook could figure this out automagically.
->> >
->> >> In this case, though, it looks like this already landed.  I see this
->> >> patch in Kishon's next branch.
->> >>
->> >>
->> >> >> Fixes: efb05a50c956 ("phy: qcom-qmp: Add support for QMP V3 USB3 PHY")
->> >> >> Fixes: ac0d239936bd ("phy: qcom-qmp: Add support for runtime PM")
->> >> >> Signed-off-by: Douglas Anderson <dianders@chromium.org>
->> >> >> ---
->> >> >>
->> >> >>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 14 ++++++++++++--
->> >> >>  1 file changed, 12 insertions(+), 2 deletions(-)
->> >> >>
->> >> >> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->> >> >> index 266a1bb8bb6e..0c7629e88bf3 100644
->> >> >> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->> >> >> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->> >> >> @@ -12,7 +12,14 @@ Required properties:
->> >> >>              "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
->> >> >>              "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845.
->> >> >>
->> >> >> - - reg: offset and length of register set for PHY's common serdes block.
->> >> >> + - reg:
->> >> >> +   - For "qcom,sdm845-qmp-usb3-phy":
->> >> >> +     - index 0: address and length of register set for PHY's common serdes
->> >> >> +       block.
->> >> >> +     - named register "dp_com" (using reg-names): address and length of the
->> >> >> +       DP_COM control block.
->> >> >
->> >> > You need to list reg-names and what are the names for the other 2
->> >> > regions?
->> >>
->> >> Here's the code works.  You can tell me how you want this expressed in
->> >> the bindings:
->> >>
->> >> * In all cases the driver maps its main memory range (for the common
->> >> serdes block) without specifying any name.  This is equivalent to
->> >> asking for index 0.
->> >>
->> >> * For "qcom,sdm845-qmp-usb3-phy" the driver requests a second memory
->> >> range by name using the name "dp_com".
->> >>
->> >> ...basically the driver is inconsistent between using names and
->> >> indices and I was trying to document that fact.
->> >
->> > That's fine as long as the indices are fixed.
->> >
->> >>
->> >> I guess options:
->> >>
->> >> 1. I could reword this so it's clearer (open to suggestions)
->> >>
->> >> 2. I could add something to the bindings saying that the first reg
->> >> name should be "reg-base" or something.  Then the question is whether
->> >> we should go to the code and start enforcing that.  If we do choose to
->> >> enforce it then it's technically breaking compatibility (though I
->> >> doubt there is any real dts in the wild).  If we don't choose to
->> >> enforce it then why did we bother saying what it should be named?
->> >
->> > I think you need to state index 1 is dp_com (and only for
->> > "qcom,sdm845-qmp-usb3-phy") and a name for index 0. 'reg-base' doesn't
->> > seem great, but I don't have another suggestion.
->>
->> ...but why do we bother giving "dp_com" a name if we're saying it has
->> to be index 1?  It feels like the author of the driver was trying to
->> transition from specifying to specifying registers by index to
->> specifying them by name, but left the first register specified by
->> index for compatibility (or code simplicity?).  It seems like the
->> whole point of referring to things by name is to _not_ force the index
->> number.
->
-> No. Specifying the order and indexes is how bindings are done.
-> "-names" is extra information, not a license to change the rules.
+You also have to set 'err' if soc_version is 0, so the caller can skip
+the check for soc_version == 0
 
-OK.
+I'd suggest:
 
-Just for context: I'm not trying to be argumentative or anything--I
-just seem to be lacking a fundamental understanding of why reg-names
-exists and when it should be used.  I'm trying to ask questions so I
-can have a better intuition here and submit better patches / do better
-reviews.  I'm sorry if I'm coming off as a jerk.  :(  I'm not trying
-to be.
+  // directly after setting soc_version
+  if (*soc_version == 0)
+    err = -EILSEQ; // or should it be a different error code?
 
-Do you happen to know if there's anything written up that explains all
-the conventions around reg-names and I can just read that?
+  ...
 
+  if (err)
+    bt_dev_err(hdev, "QCA Failed to get version (%d)", err);
 
-For context, it seems to me that clocks and registers have different
-conventions, but I certainly could be wrong.  From what I've seen
-clocks are often specified in bindings by name and referred to in code
-by name.  Conversely reg-names seems to be highly discouraged and
-people are told to just refer to them by index.  The difference
-between the two always seemed strange to me, though I always assumed
-it was because it was more common to just have one or two register
-ranges but a whole chunk of clocks (and more get added over time as
-the driver matures).
+You could also limit the error log to the 'if (*soc_version == 0)'
+branch, for all other errors there will already be a more specific log
+entry.
 
+> +
+>  	return err;
+>  }
 
->> I'm imagining a future compatible string that adds yet another address
->> range.  Presumably we'd refer to this by name too.  In that case both
->> of these would be fine:
->>
->> reg = <0xa x>, <0xb x>, <0xc x>;
->> reg-names = "reg-base", "dp_com", "new_range"
->>
->> reg = <0xa x>, <0xc x>, <0xb x>;
->> reg-names = "reg-base", "new_range", "dp_com"
->
-> But why. There is absolutely no need to support both of these.
+Cheers
 
-I guess I'm trying to understand the motivation for reg-names.  If you
-say that something must be index 1 and also have reg-name of "dp_com"
-then the reg-name isn't buying us anything and maybe the more proper
-fix is to change the driver to work by index and drop the whole name
-thing here?  Should I do that?
-
-
-> What you could need to support is this:
->
-> reg-names = "reg-base", "new_range";
->
-> The order is still fixed, but we have optional entries in the middle.
-> And that is the case when using -names is helpful. Otherwise, "-names"
-> is just unnecessary bloat to DT.
-
->From what you're saying the _only_ reason you'd ever want to use
-reg-names is if there is an optional register range.  Is that right?
-
-
-I think for me intuitively I expect that drivers will change and
-expand over time and I'd expect more / different (and maybe optional)
-ranges to be added.  In general I feel like named registers scales
-better with less complexity.
-
-
->> > For the driver, it's not the driver's job to enforce any of this.
->>
->> Sure, but anything that the driver doesn't enforce people will get
->> wrong.  In other words if we say that the name of the first register
->> ought to be "reg-base" but don't enforce it then someone will later
->> come in and say it's stupid that one of the names uses a dash and the
->> other an underscore.  They'll change "reg-base" and it will work.
->> Someone else will decide that "reg-base" is a dumb name and will
->> change it to "serdes".  It will still work.  Now we have a bindings
->> that claims "reg-base" and lots of different device trees in practice.
->
-> You are arguing against making the binding stricter and then worrying
-> about the driver getting things wrong. Stricter bindings leave less to
-> interpretation by the driver and less chance to get things wrong.
-> Unless "anything goes" and then the binding can never be "wrong".
-
-I guess I'm saying that my intuition says that over-specifying things
-seems bad to me.  The driver will either ask for a register by name or
-by index and not both.  In my mind either is a fine way to do it so as
-long as the driver and the binding is consistent then we have a
-functioning system.  Specifying that people have to do get both the
-index and name right basically gives people twice as many places to do
-things wrong.
-
-
-> Again, it is not the kernel's job to validate bindings even though we
-> have little else right now. That will change soon hopefully.
->
->> If the whole "keep things compatible" is important then what matters
->> more is what's happening in practice, not what's should happen in
->> theory.
->>
->> IMO if the driver isn't enforcing that the first field be called
->> "reg-base" then it shouldn't be in the bindings doc.
->>
->>
->> BTW: I use the name "reg-base" in my example because that's what the
->> register was named in downstream device trees that I found.  Even if
->> the name isn't terribly appealing, if it's not terribly objectionable
->> I'd rather pick something that's closer to what people used in
->> practice.
->
-> I don't really care. People just make shit up anyway.
->
->>
->> ---
->>
->> How about this?
->
-> No.
->
->>
->> - reg:
->>   - For "qcom,sdm845-qmp-usb3-phy" (names mapped by reg-names):
->>     - "reg-base": address and length of register set for PHY's common serdes
->>       block.  MUST BE THE FIRST RANGE LISTED IN THE LIST (AKA index 0).  Note
->>       that the name of "reg-base" is suggested but not enforced.
->>     - "dp-com": address and length of the DP_COM control block.
->>   - For all others (only one range--don't use reg-names)
->>     - offset and length of register set for PHY's common serdes block.
-
-OK, I guess I will try again then and you can tell me when I get it
-right (unless you tell me I should just change the driver to not use
-named registers at all).  How about:
-
-- reg:
-  - For "qcom,sdm845-qmp-usb3-phy":
-    - index 0: address and length of register set for PHY's common serdes
-               block.
-    - index 1: address and length of the DP_COM control block.
-  - For all others:
-    - index 0: address and length of register set for PHY's common serdes
-               block.
-- reg-names:
-  - For "qcom,sdm845-qmp-usb3-phy":
-    - Should be: "reg-base", "dp_com"
-  - For all others:
-    - The reg-names property shouldn't be defined.
-
-
--Doug
+Matthias
