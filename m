@@ -1,48 +1,56 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] Add sw2_sw4 voltage table to cpcap regulator.
-Date: Mon, 23 Jul 2018 11:25:55 +0100
-Message-ID: <20180723102555.GB13981@sirena.org.uk>
-References: <17c10727-cab3-4736-281a-d4ace1cdbb82@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="NDin8bjvE/0mNLFQ"
+From: Pengbo Mu <pengbo.mu@nxp.com>
+Subject: [PATCH v6 1/4] usb: dwc3: add global soc bus configuration reg0
+Date: Mon, 23 Jul 2018 18:32:36 +0800
+Message-ID: <1532341959-3478-1-git-send-email-pengbo.mu@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <17c10727-cab3-4736-281a-d4ace1cdbb82@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Geis <pgwipeout@gmail.com>
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
+To: Felipe Balbi <balbi@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ran.wang_1@nxp.com, pengbo.mu@nxp.com
 List-Id: devicetree@vger.kernel.org
 
+Add the macro definition for global soc bus configuration
+register 0
 
---NDin8bjvE/0mNLFQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Changming Huang <jerry.huang@nxp.com>
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+Signed-off-by: Pengbo Mu <pengbo.mu@nxp.com>
+---
+Changes in v6:
+ - delete some register unrelated
+Changes in v5:
+ - no change
+Changes in v4:
+ - no change
+Changes in v3:
+ - no change
+Changes in v2:
+ - split the patch
+ - add more macro definition for soc bus configuration register
+---
+ drivers/usb/dwc3/core.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-On Sat, Jul 21, 2018 at 07:23:31AM -0400, Peter Geis wrote:
-> Re-sending due to email address typo.
->=20
-> SW2 and SW4 use a shared table to provide voltage to the cpu core and
-> devices on Tegra hardware.
-> Added this table to the cpcap regulator driver as the first step to
-> supporting this device on Tegra.
-
-I'm missing patch 2 here, what's going on?
-
---NDin8bjvE/0mNLFQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltVrTIACgkQJNaLcl1U
-h9DhkQf/alsJh+YMHB+9qoz+MsbIQ+p8iq2xCD8FGkvxPA9Mu3B9QjaWJxflqDq5
-EJPP+WN1nwIpnso6A1hWe4q2wuj3tPwiE7WOQEHowwYX3xAXQ17/P+kKUTA/9iy/
-FLhalC0SqOtAw7qjt8syt9kOMqZeZ9LggAI2VX5T8VQVDzUcBTpn82W0eqlcDO6T
-MpH0U4PKqsdjV6tOmrv9XZjDC4oRueJMQqdjueaDfrqjdqbIzfkP93p58kMqWCz/
-FF/ZostvRGDZ5bpUUOhP4akmn6HDPbA0VJM2M9bw9sZRVSGGkCNlV5bdwsKEaGAJ
-JEH+20nCypHzvvuQMma7mTwOMr89Ig==
-=47xC
------END PGP SIGNATURE-----
-
---NDin8bjvE/0mNLFQ--
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 285ce0e..213b939 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -163,6 +163,17 @@
+ 
+ /* Bit fields */
+ 
++/* Global SoC Bus Configuration INCRx Register 0 */
++#define DWC3_GSBUSCFG0_INCR256BRSTENA	(1 << 7) /* INCR256 burst */
++#define DWC3_GSBUSCFG0_INCR128BRSTENA	(1 << 6) /* INCR128 burst */
++#define DWC3_GSBUSCFG0_INCR64BRSTENA	(1 << 5) /* INCR64 burst */
++#define DWC3_GSBUSCFG0_INCR32BRSTENA	(1 << 4) /* INCR32 burst */
++#define DWC3_GSBUSCFG0_INCR16BRSTENA	(1 << 3) /* INCR16 burst */
++#define DWC3_GSBUSCFG0_INCR8BRSTENA	(1 << 2) /* INCR8 burst */
++#define DWC3_GSBUSCFG0_INCR4BRSTENA	(1 << 1) /* INCR4 burst */
++#define DWC3_GSBUSCFG0_INCRBRSTENA	(1 << 0) /* undefined length enable */
++#define DWC3_GSBUSCFG0_INCRBRST_MASK	0xff
++
+ /* Global Debug Queue/FIFO Space Available Register */
+ #define DWC3_GDBGFIFOSPACE_NUM(n)	((n) & 0x1f)
+ #define DWC3_GDBGFIFOSPACE_TYPE(n)	(((n) << 5) & 0x1e0)
+-- 
+2.7.4
