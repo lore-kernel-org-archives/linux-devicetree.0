@@ -1,104 +1,139 @@
-From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v12 1/4] iommu/arm-smmu: Add pm_runtime/sleep ops
-Date: Mon, 23 Jul 2018 13:05:22 +0200
-Message-ID: <CAJZ5v0h4FLhMJY0fg5q0vBewnNssmpvXHzADg=iDFSfq6Dg=rw@mail.gmail.com>
-References: <20180708173413.1965-1-vivek.gautam@codeaurora.org>
-	<20180708173413.1965-2-vivek.gautam@codeaurora.org>
-	<17407514.unFVTGoGrn@aspire.rjw.lan>
-	<CAFp+6iHxJucfzJJeEvSToG4p2zADjDb9F0L8h053x-JKAy55mg@mail.gmail.com>
-	<CAJZ5v0gbkdkx_+oHYiPz=SFdFCLm38hsi1TmJ2Jdc7j73TNtzg@mail.gmail.com>
-	<CGME20180711125157epcas1p3712f4a02f4442287c18e470d0a8d516f@epcas1p3.samsung.com>
-	<CAAFQd5Cqd=J+_nqRc_sx=sq2ayxwSRMgygvffuHH9nC5R_LjdA@mail.gmail.com>
-	<20180711134054eucas1p208566383b25dd74787034929b3081901~AVDO-rPhL2314323143eucas1p2n@eucas1p2.samsung.com>
-	<CAJZ5v0g0NwkLmd=tJ0sT4pc8FJSRE8sEu5GRQ7KUUd+YedzjMg@mail.gmail.com>
-	<20180723055959eucas1p15a381f2a1287a28e4f78f1fb5fc8e37d~D6gOgxXLK0412704127eucas1p1R@eucas1p1.samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180723055959eucas1p15a381f2a1287a28e4f78f1fb5fc8e37d~D6gOgxXLK0412704127eucas1p1R-MHMrYXj8g+pqW5MlFJXMulaTQe2KTcn/@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+From: Todor Tomov <todor.tomov@linaro.org>
+Subject: [PATCH v3 16/35] media: dt-bindings: media: qcom,camss: Add 8996 bindings
+Date: Mon, 23 Jul 2018 14:02:33 +0300
+Message-ID: <1532343772-27382-17-git-send-email-todor.tomov@linaro.org>
+References: <1532343772-27382-1-git-send-email-todor.tomov@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1532343772-27382-1-git-send-email-todor.tomov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, linux-media@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 23, 2018 at 7:59 AM, Marek Szyprowski
-<m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Hi Rafael,
->
-> On 2018-07-11 22:36, Rafael J. Wysocki wrote:
->> On Wed, Jul 11, 2018 at 3:40 PM, Marek Szyprowski
->> <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+Update binding document for MSM8996.
 
-[cut]
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: devicetree@vger.kernel.org
+Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/media/qcom,camss.txt       | 44 +++++++++++++++++++---
+ 1 file changed, 38 insertions(+), 6 deletions(-)
 
->>> Frankly, if there are no other reasons I suggest to wire system
->>> suspend/resume to pm_runtime_force_* helpers:
->>> SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
->>>                           pm_runtime_force_resume).
->> Not a good idea at all IMO.
->>
->> Use PM driver flags rather I'd say.
->
-> Frankly, till now I wasn't aware of the DPM_FLAG_* in struct dev_pm_info
-> 'driver_flags'.
-
-They are a relatively recent addition.
-
-> I've briefly checked them but I don't see the equivalent
-> of using SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> pm_runtime_force_resume): keep device suspend if it was runtime suspended
-> AND really call pm_runtime_suspend if it was not runtime suspended on
-> system suspend.
-
-DPM_FLAG_SMART_SUSPEND is expected to cause that to happen.  If you
-want the device to remain in suspend after the system-wide resume from
-sleep (if possible), you can set DPM_FLAG_LEAVE_SUSPENDED for it too.
-
-Currently a caveat is that genpd still doesn't support the flags.  I
-have patches for that, but I haven't got to posting them yet.  If you
-are interested, I can push this work forward relatively quickly, so
-please let me know.
-
->>> This way you will have everything related to suspending and resuming in
->>> one place and you would not need to bother about all possible cases (like
->>> suspending from runtime pm active and suspending from runtime pm suspended
->>> cases as well as restoring proper device state on resume). This is
->>> especially important in recent kernel releases, where devices are
->>> system-suspended regardless their runtime pm states (in older kernels
->>> devices were first runtime resumed for system suspend, what made code
->>> simpler, but wasn't best from power consumption perspective).
->>>
->>> If you go this way, You only need to ensure that runtime resume will also
->>> restore proper device state besides enabling all the clocks. This will
->>> also prepare your driver to properly operate inside power domain, where it
->>> is possible for device to loose its internal state after runtime suspend
->>> when respective power domain has been turned off.
->> I'm not sure if you are aware of the pm_runtime_force_* limitations, though.
->
-> What are those limitations?
-
-First off, they don't work with middle-layer code implementing its own
-PM callbacks that actually operate on devices (like the PCI bus type
-or the generic ACPI PM domain).  This means that drivers using them
-may not work on systems with ACPI, for example.
-
-Second, pm_runtime_force_resume() will always try to leave the device
-in suspend during system-wide resume from sleep which may not be
-desirable.
-
-Finally, they expect the runtime PM status to be updated by
-system-wide PM callbacks of devices below the one using them (eg. its
-children and their children etc) which generally is not required and
-may not take place unless the drivers of those devices use
-pm_runtime_force_* themselves.
-
-So careful there.
+diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
+index e938eb0..09eb6ed 100644
+--- a/Documentation/devicetree/bindings/media/qcom,camss.txt
++++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
+@@ -5,8 +5,9 @@ Qualcomm Camera Subsystem
+ - compatible:
+ 	Usage: required
+ 	Value type: <stringlist>
+-	Definition: Should contain:
++	Definition: Should contain one of:
+ 		- "qcom,msm8916-camss"
++		- "qcom,msm8996-camss"
+ - reg:
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+@@ -19,11 +20,16 @@ Qualcomm Camera Subsystem
+ 		- "csiphy0_clk_mux"
+ 		- "csiphy1"
+ 		- "csiphy1_clk_mux"
++		- "csiphy2"		(8996 only)
++		- "csiphy2_clk_mux"	(8996 only)
+ 		- "csid0"
+ 		- "csid1"
++		- "csid2"		(8996 only)
++		- "csid3"		(8996 only)
+ 		- "ispif"
+ 		- "csi_clk_mux"
+ 		- "vfe0"
++		- "vfe1"		(8996 only)
+ - interrupts:
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+@@ -34,10 +40,14 @@ Qualcomm Camera Subsystem
+ 	Definition: Should contain the following entries:
+ 		- "csiphy0"
+ 		- "csiphy1"
++		- "csiphy2"		(8996 only)
+ 		- "csid0"
+ 		- "csid1"
++		- "csid2"		(8996 only)
++		- "csid3"		(8996 only)
+ 		- "ispif"
+ 		- "vfe0"
++		- "vfe1"		(8996 only)
+ - power-domains:
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+@@ -57,6 +67,7 @@ Qualcomm Camera Subsystem
+ 		- "ispif_ahb"
+ 		- "csiphy0_timer"
+ 		- "csiphy1_timer"
++		- "csiphy2_timer"	(8996 only)
+ 		- "csi0_ahb"
+ 		- "csi0"
+ 		- "csi0_phy"
+@@ -67,9 +78,25 @@ Qualcomm Camera Subsystem
+ 		- "csi1_phy"
+ 		- "csi1_pix"
+ 		- "csi1_rdi"
++		- "csi2_ahb"		(8996 only)
++		- "csi2"		(8996 only)
++		- "csi2_phy"		(8996 only)
++		- "csi2_pix"		(8996 only)
++		- "csi2_rdi"		(8996 only)
++		- "csi3_ahb"		(8996 only)
++		- "csi3"		(8996 only)
++		- "csi3_phy"		(8996 only)
++		- "csi3_pix"		(8996 only)
++		- "csi3_rdi"		(8996 only)
+ 		- "ahb"
+ 		- "vfe0"
+ 		- "csi_vfe0"
++		- "vfe0_ahb",		(8996 only)
++		- "vfe0_stream",	(8996 only)
++		- "vfe1",		(8996 only)
++		- "csi_vfe1",		(8996 only)
++		- "vfe1_ahb",		(8996 only)
++		- "vfe1_stream",	(8996 only)
+ 		- "vfe_ahb"
+ 		- "vfe_axi"
+ - vdda-supply:
+@@ -90,14 +117,18 @@ Qualcomm Camera Subsystem
+ 		- reg:
+ 			Usage: required
+ 			Value type: <u32>
+-			Definition: Selects CSI2 PHY interface - PHY0 or PHY1.
++			Definition: Selects CSI2 PHY interface - PHY0, PHY1
++				    or PHY2 (8996 only)
+ 	Endpoint node properties:
+ 		- clock-lanes:
+ 			Usage: required
+ 			Value type: <u32>
+-			Definition: The physical clock lane index. The value
+-				    must always be <1> as the physical clock
+-				    lane is lane 1.
++			Definition: The physical clock lane index. On 8916
++				    the value must always be <1> as the physical
++				    clock lane is lane 1. On 8996 the value must
++				    always be <7> as the hardware supports D-PHY
++				    and C-PHY, indexes are in a common set and
++				    D-PHY physical clock lane is labeled as 7.
+ 		- data-lanes:
+ 			Usage: required
+ 			Value type: <prop-encoded-array>
+@@ -105,7 +136,8 @@ Qualcomm Camera Subsystem
+ 				    Position of an entry determines the logical
+ 				    lane number, while the value of an entry
+ 				    indicates physical lane index. Lane swapping
+-				    is supported.
++				    is supported. Physical lane indexes for
++				    8916: 0, 2, 3, 4; for 8996: 0, 1, 2, 3.
+ 
+ * An Example
+ 
+-- 
+2.7.4
