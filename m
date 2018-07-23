@@ -1,93 +1,98 @@
-Return-Path: <SRS0=HrxS=KF=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-sn1nam01on0049.outbound.protection.outlook.com ([104.47.32.49]:4730
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727678AbeGUMmi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 21 Jul 2018 08:42:38 -0400
-From: <shubhrajyoti.datta@gmail.com>
-Subject: [PATCHv5 3/4] tty: serial: uartlite: Add support for suspend and resume
-Date: Sat, 21 Jul 2018 17:19:06 +0530
-Message-ID: <1532173747-19115-4-git-send-email-shubhrajyoti.datta@gmail.com>
-In-Reply-To: <1532173747-19115-1-git-send-email-shubhrajyoti.datta@gmail.com>
-References: <1532173747-19115-1-git-send-email-shubhrajyoti.datta@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Return-Path: <SRS0=lWLe=KH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:56344 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388299AbeGWOsc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Jul 2018 10:48:32 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 18/21] v4l: fwnode: Use V4L2 fwnode endpoint media bus type if set
+Date: Mon, 23 Jul 2018 16:47:03 +0300
+Message-Id: <20180723134706.15334-19-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
+References: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-serial@vger.kernel.org
-Cc: devicetree@vger.kernel.org, shubhrajyoti.datta@gmail.com, robh+dt@kernel.org, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
 List-ID: <devicetree@vger.kernel.org>
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Use the given media bus type set by the caller. If none is given (i.e. the
+mbus type is V4L2_MBUS_UNKNOWN, or 0), fall back to the old behaviour.
+This is to obtain the information from the DT or try to guess the bus
+type.
 
-Add suspend and resume handlers for uartlite
+-ENXIO is returned if the caller sets the bus type but that does not match
+with what's in DT.
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
-v2:
-patch added
-v3- v5:
-No change
+ drivers/media/v4l2-core/v4l2-fwnode.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
- drivers/tty/serial/uartlite.c | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
-index b3a12be..98d3ead 100644
---- a/drivers/tty/serial/uartlite.c
-+++ b/drivers/tty/serial/uartlite.c
-@@ -690,9 +690,44 @@ static int ulite_release(struct device *dev)
- 	return rc;
- }
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index 8914abd20ee8..56e3b6395171 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -409,7 +409,7 @@ v4l2_fwnode_endpoint_parse_csi1_bus(struct fwnode_handle *fwnode,
+ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 					struct v4l2_fwnode_endpoint *vep)
+ {
+-	u32 bus_type = 0;
++	u32 bus_type = V4L2_FWNODE_BUS_TYPE_GUESS;
+ 	enum v4l2_mbus_type mbus_type;
+ 	int rval;
  
-+/**
-+ * ulite_suspend - Stop the device.
-+ *
-+ * @dev: handle to the device structure.
-+ * Return: 0 always.
-+ */
-+static int __maybe_unused ulite_suspend(struct device *dev)
-+{
-+	struct uart_port *port = dev_get_drvdata(dev);
-+
-+	if (port)
-+		uart_suspend_port(&ulite_uart_driver, port);
-+
-+	return 0;
-+}
-+
-+/**
-+ * ulite_resume - Resume the device.
-+ *
-+ * @dev: handle to the device structure.
-+ * Return: 0 on success, errno otherwise.
-+ */
-+static int __maybe_unused ulite_resume(struct device *dev)
-+{
-+	struct uart_port *port = dev_get_drvdata(dev);
-+
-+	if (port)
-+		uart_resume_port(&ulite_uart_driver, port);
-+
-+	return 0;
-+}
-+
- /* ---------------------------------------------------------------------
-  * Platform bus binding
-  */
-+
-+static SIMPLE_DEV_PM_OPS(ulite_pm_ops, ulite_suspend, ulite_resume);
-+
- #if defined(CONFIG_OF)
- /* Match table for of_platform binding */
- static const struct of_device_id ulite_of_match[] = {
-@@ -768,6 +803,7 @@ static struct platform_driver ulite_platform_driver = {
- 	.driver = {
- 		.name  = "uartlite",
- 		.of_match_table = of_match_ptr(ulite_of_match),
-+		.pm = &ulite_pm_ops,
- 	},
- };
+@@ -432,13 +432,24 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 		 v4l2_fwnode_bus_type_to_string(bus_type), bus_type,
+ 		 v4l2_fwnode_mbus_type_to_string(vep->bus_type),
+ 		 vep->bus_type);
+-
+ 	mbus_type = v4l2_fwnode_bus_type_to_mbus(bus_type);
  
+-	switch (mbus_type) {
++	if (vep->bus_type != V4L2_MBUS_UNKNOWN) {
++		if (mbus_type != V4L2_MBUS_UNKNOWN &&
++		    vep->bus_type != mbus_type) {
++			pr_debug("expecting bus type %s\n",
++				 v4l2_fwnode_mbus_type_to_string(
++					 vep->bus_type));
++			return -ENXIO;
++		}
++	} else {
++		vep->bus_type = mbus_type;
++	}
++
++	switch (vep->bus_type) {
+ 	case V4L2_MBUS_UNKNOWN:
+ 		rval = v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep,
+-							   mbus_type);
++							   V4L2_MBUS_UNKNOWN);
+ 		if (rval)
+ 			return rval;
+ 
+@@ -457,20 +468,19 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 
+ 	case V4L2_MBUS_CCP2:
+ 	case V4L2_MBUS_CSI1:
+-		v4l2_fwnode_endpoint_parse_csi1_bus(fwnode, vep, mbus_type);
++		v4l2_fwnode_endpoint_parse_csi1_bus(fwnode, vep, vep->bus_type);
+ 		break;
+ 
+ 	case V4L2_MBUS_CSI2_DPHY:
+-		vep->bus_type = V4L2_MBUS_CSI2_DPHY;
+ 		rval = v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep,
+-							   mbus_type);
++							   vep->bus_type);
+ 		if (rval)
+ 			return rval;
+ 
+ 		break;
+ 	case V4L2_MBUS_PARALLEL:
+ 	case V4L2_MBUS_BT656:
+-		v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep, mbus_type);
++		v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep, vep->bus_type);
+ 
+ 		break;
+ 	default:
 -- 
-2.7.4
+2.11.0
 
