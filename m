@@ -1,243 +1,109 @@
-From: Tony Xie <tony.xie@rock-chips.com>
-Subject: [PATCH 4/5] RTC: RK808: add RTC driver for RK809 and RK817.
-Date: Mon, 23 Jul 2018 11:19:04 +0800
-Message-ID: <1532315945-1094-5-git-send-email-tony.xie@rock-chips.com>
-References: <1532315945-1094-1-git-send-email-tony.xie@rock-chips.com>
+From: "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Subject: Re: [PATCH v1 4/9] scsi: ufs: add option to change default UFS power
+ management level
+Date: Mon, 23 Jul 2018 08:50:40 +0530
+Message-ID: <4b85de8b-d03e-da93-704b-e70922a9fbea@codeaurora.org>
+References: <cover.1530880006.git.asutoshd@codeaurora.org>
+ <ff2b648007a400c60ba804a0c5cab0166bd268e7.1530880006.git.asutoshd@codeaurora.org>
+ <20180711203317.GA14983@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1532315945-1094-1-git-send-email-tony.xie@rock-chips.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: heiko@sntech.de
-Cc: linux-rtc@vger.kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, tony.xie@rock-chips.com, huangtao@rock-chips.com, devicetree@vger.kernel.org, sboyd@kernel.org, zhangqing@rock-chips.com, linux-kernel@vger.kernel.org, xsf@rock-chips.com, linux-rockchip@lists.infradead.org, broonie@kernel.org, lee.jones@linaro.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, chenjh@rock-chips.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180711203317.GA14983@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: subhashj@codeaurora.org, cang@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-RK809 and RK817 are power management IC chips for multimedia products.
-Most of their functions and registers are same, including the rtc.
+On 7/12/2018 2:03 AM, Rob Herring wrote:
+> On Fri, Jul 06, 2018 at 06:00:31PM +0530, Asutosh Das wrote:
+>> From: Subhash Jadavani <subhashj@codeaurora.org>
+>>
+>> UFS device and link can be put in multiple different low power modes hence
+>> UFS driver supports multiple different low power modes. By default UFS
+>> driver selects the default (optimal) low power mode (which gives moderate
+>> power savings and have relatively less enter and exit latencies) but
+>> we might have to tune this default power mode for different chipset
+>> platforms to meet the low power requirements/goals. Hence this patch
+>> adds option to change default UFS low power mode (level).
+>>
+>> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+>> Signed-off-by: Venkat Gopalakrishnan <venkatg@codeaurora.org>
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      | 11 ++++++++
+>>   drivers/scsi/ufs/ufshcd-pltfrm.c                   | 14 +++++++++++
+>>   drivers/scsi/ufs/ufshcd.c                          | 29 +++++++++++++++-------
+>>   drivers/scsi/ufs/ufshcd.h                          |  4 +--
+>>   4 files changed, 47 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> index c39dfef..f564d9a 100644
+>> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> @@ -38,6 +38,15 @@ Optional properties:
+>>   			  defined or a value in the array is "0" then it is assumed
+>>   			  that the frequency is set by the parent clock or a
+>>   			  fixed rate clock source.
+>> +- rpm-level		: UFS Runtime power management level. Following PM levels are supported:
+>> +			  0 - Both UFS device and Link in active state (Highest power consumption)
+>> +			  1 - UFS device in active state but Link in Hibern8 state
+>> +			  2 - UFS device in Sleep state but Link in active state
+>> +			  3 - UFS device in Sleep state and Link in hibern8 state (default PM level)
+>> +			  4 - UFS device in Power-down state and Link in Hibern8 state
+>> +			  5 - UFS device in Power-down state and Link in OFF state (Lowest power consumption)
+>> +- spm-level		: UFS System power management level. Allowed PM levels are same as rpm-level.
+> 
+> What's the default?
+> 
+> I assume these are minimums? The OS can pick higher power states. This
+> seems to be a bit Linux specific (as 'runtime PM' could be considered
+> Linux specific). For every other device, we don't put this type of
+> information in DT, but is user controlled.
+I didn't completely understand your comment.
+Do you not want these properties to be in DT file?
+When you say user-controlled, do you mean control it through sysfs entries?
 
-Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
----
- drivers/rtc/Kconfig     |  4 +--
- drivers/rtc/rtc-rk808.c | 68 +++++++++++++++++++++++++++++++++++++++----------
- 2 files changed, 56 insertions(+), 16 deletions(-)
+> So really, wouldn't 1
+> property be sufficient for cases where a mode doesn't work due to
+> some h/w limitation. Otherwise, it is an OS or user decision.
+I didn't completely understand this. Could you please elaborate on your 
+intent here?
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index a2ba5db..1aaf935 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -371,11 +371,11 @@ config RTC_DRV_MAX77686
- 	  will be called rtc-max77686.
- 
- config RTC_DRV_RK808
--	tristate "Rockchip RK805/RK808/RK818 RTC"
-+	tristate "Rockchip RK805/RK808/RK809/RK817/RK818 RTC"
- 	depends on MFD_RK808
- 	help
- 	  If you say yes here you will get support for the
--	  RTC of RK805, RK808 and RK818 PMIC.
-+	  RTC of RK805, RK809 and RK817, RK808 and RK818 PMIC.
- 
- 	  This driver can also be built as a module. If so, the module
- 	  will be called rk808-rtc.
-diff --git a/drivers/rtc/rtc-rk808.c b/drivers/rtc/rtc-rk808.c
-index 739c0d4..5bacdaf 100644
---- a/drivers/rtc/rtc-rk808.c
-+++ b/drivers/rtc/rtc-rk808.c
-@@ -50,9 +50,18 @@
- #define NUM_TIME_REGS	(RK808_WEEKS_REG - RK808_SECONDS_REG + 1)
- #define NUM_ALARM_REGS	(RK808_ALARM_YEARS_REG - RK808_ALARM_SECONDS_REG + 1)
- 
-+struct rk_rtc_compat_reg {
-+	unsigned int ctrl_reg;
-+	unsigned int status_reg;
-+	unsigned int alarm_seconds_reg;
-+	unsigned int int_reg;
-+	unsigned int seconds_reg;
-+};
-+
- struct rk808_rtc {
- 	struct rk808 *rk808;
- 	struct rtc_device *rtc;
-+	struct rk_rtc_compat_reg *creg;
- 	int irq;
- };
- 
-@@ -101,7 +110,7 @@ static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
- 	int ret;
- 
- 	/* Force an update of the shadowed registers right now */
--	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
- 				 BIT_RTC_CTRL_REG_RTC_GET_TIME,
- 				 BIT_RTC_CTRL_REG_RTC_GET_TIME);
- 	if (ret) {
-@@ -115,7 +124,7 @@ static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
- 	 * 32khz. If we clear the GET_TIME bit here, the time of i2c transfer
- 	 * certainly more than 31.25us: 16 * 2.5us at 400kHz bus frequency.
- 	 */
--	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
- 				 BIT_RTC_CTRL_REG_RTC_GET_TIME,
- 				 0);
- 	if (ret) {
-@@ -123,7 +132,7 @@ static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
- 		return ret;
- 	}
- 
--	ret = regmap_bulk_read(rk808->regmap, RK808_SECONDS_REG,
-+	ret = regmap_bulk_read(rk808->regmap, rk808_rtc->creg->seconds_reg,
- 			       rtc_data, NUM_TIME_REGS);
- 	if (ret) {
- 		dev_err(dev, "Failed to bulk read rtc_data: %d\n", ret);
-@@ -166,7 +175,7 @@ static int rk808_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 	rtc_data[6] = bin2bcd(tm->tm_wday);
- 
- 	/* Stop RTC while updating the RTC registers */
--	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
- 				 BIT_RTC_CTRL_REG_STOP_RTC_M,
- 				 BIT_RTC_CTRL_REG_STOP_RTC_M);
- 	if (ret) {
-@@ -174,14 +183,14 @@ static int rk808_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 		return ret;
- 	}
- 
--	ret = regmap_bulk_write(rk808->regmap, RK808_SECONDS_REG,
-+	ret = regmap_bulk_write(rk808->regmap, rk808_rtc->creg->seconds_reg,
- 				rtc_data, NUM_TIME_REGS);
- 	if (ret) {
- 		dev_err(dev, "Failed to bull write rtc_data: %d\n", ret);
- 		return ret;
- 	}
- 	/* Start RTC again */
--	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
- 				 BIT_RTC_CTRL_REG_STOP_RTC_M, 0);
- 	if (ret) {
- 		dev_err(dev, "Failed to update RTC control: %d\n", ret);
-@@ -199,8 +208,13 @@ static int rk808_rtc_readalarm(struct device *dev, struct rtc_wkalrm *alrm)
- 	uint32_t int_reg;
- 	int ret;
- 
--	ret = regmap_bulk_read(rk808->regmap, RK808_ALARM_SECONDS_REG,
-+	ret = regmap_bulk_read(rk808->regmap,
-+			       rk808_rtc->creg->alarm_seconds_reg,
- 			       alrm_data, NUM_ALARM_REGS);
-+	if (ret) {
-+		dev_err(dev, "Failed to read RTC alarm date REG: %d\n", ret);
-+		return ret;
-+	}
- 
- 	alrm->time.tm_sec = bcd2bin(alrm_data[0] & SECONDS_REG_MSK);
- 	alrm->time.tm_min = bcd2bin(alrm_data[1] & MINUTES_REG_MAK);
-@@ -210,7 +224,7 @@ static int rk808_rtc_readalarm(struct device *dev, struct rtc_wkalrm *alrm)
- 	alrm->time.tm_year = (bcd2bin(alrm_data[5] & YEARS_REG_MSK)) + 100;
- 	rockchip_to_gregorian(&alrm->time);
- 
--	ret = regmap_read(rk808->regmap, RK808_RTC_INT_REG, &int_reg);
-+	ret = regmap_read(rk808->regmap, rk808_rtc->creg->int_reg, &int_reg);
- 	if (ret) {
- 		dev_err(dev, "Failed to read RTC INT REG: %d\n", ret);
- 		return ret;
-@@ -231,7 +245,7 @@ static int rk808_rtc_stop_alarm(struct rk808_rtc *rk808_rtc)
- 	struct rk808 *rk808 = rk808_rtc->rk808;
- 	int ret;
- 
--	ret = regmap_update_bits(rk808->regmap, RK808_RTC_INT_REG,
-+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->int_reg,
- 				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M, 0);
- 
- 	return ret;
-@@ -242,7 +256,7 @@ static int rk808_rtc_start_alarm(struct rk808_rtc *rk808_rtc)
- 	struct rk808 *rk808 = rk808_rtc->rk808;
- 	int ret;
- 
--	ret = regmap_update_bits(rk808->regmap, RK808_RTC_INT_REG,
-+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->int_reg,
- 				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M,
- 				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M);
- 
-@@ -274,7 +288,8 @@ static int rk808_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
- 	alrm_data[4] = bin2bcd(alrm->time.tm_mon + 1);
- 	alrm_data[5] = bin2bcd(alrm->time.tm_year - 100);
- 
--	ret = regmap_bulk_write(rk808->regmap, RK808_ALARM_SECONDS_REG,
-+	ret = regmap_bulk_write(rk808->regmap,
-+				rk808_rtc->creg->alarm_seconds_reg,
- 				alrm_data, NUM_ALARM_REGS);
- 	if (ret) {
- 		dev_err(dev, "Failed to bulk write: %d\n", ret);
-@@ -318,7 +333,7 @@ static irqreturn_t rk808_alarm_irq(int irq, void *data)
- 	struct i2c_client *client = rk808->i2c;
- 	int ret;
- 
--	ret = regmap_write(rk808->regmap, RK808_RTC_STATUS_REG,
-+	ret = regmap_write(rk808->regmap, rk808_rtc->creg->status_reg,
- 			   RTC_STATUS_MASK);
- 	if (ret) {
- 		dev_err(&client->dev,
-@@ -371,6 +386,22 @@ static int rk808_rtc_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(rk808_rtc_pm_ops,
- 	rk808_rtc_suspend, rk808_rtc_resume);
- 
-+static struct rk_rtc_compat_reg rk808_creg = {
-+	.ctrl_reg = RK808_RTC_CTRL_REG,
-+	.status_reg = RK808_RTC_STATUS_REG,
-+	.alarm_seconds_reg = RK808_ALARM_SECONDS_REG,
-+	.int_reg = RK808_RTC_INT_REG,
-+	.seconds_reg = RK808_SECONDS_REG,
-+};
-+
-+static struct rk_rtc_compat_reg rk817_creg = {
-+	.ctrl_reg = RK817_RTC_CTRL_REG,
-+	.status_reg = RK817_RTC_STATUS_REG,
-+	.alarm_seconds_reg = RK817_ALARM_SECONDS_REG,
-+	.int_reg = RK817_RTC_INT_REG,
-+	.seconds_reg = RK817_SECONDS_REG,
-+};
-+
- static int rk808_rtc_probe(struct platform_device *pdev)
- {
- 	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
-@@ -381,11 +412,20 @@ static int rk808_rtc_probe(struct platform_device *pdev)
- 	if (rk808_rtc == NULL)
- 		return -ENOMEM;
- 
-+	switch (rk808->variant) {
-+	case RK809_ID:
-+	case RK817_ID:
-+		rk808_rtc->creg = &rk817_creg;
-+		break;
-+	default:
-+		rk808_rtc->creg = &rk808_creg;
-+		break;
-+	}
- 	platform_set_drvdata(pdev, rk808_rtc);
- 	rk808_rtc->rk808 = rk808;
- 
- 	/* start rtc running by default, and use shadowed timer. */
--	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-+	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
- 				 BIT_RTC_CTRL_REG_STOP_RTC_M |
- 				 BIT_RTC_CTRL_REG_RTC_READSEL_M,
- 				 BIT_RTC_CTRL_REG_RTC_READSEL_M);
-@@ -395,7 +435,7 @@ static int rk808_rtc_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	ret = regmap_write(rk808->regmap, RK808_RTC_STATUS_REG,
-+	ret = regmap_write(rk808->regmap, rk808_rtc->creg->status_reg,
- 			   RTC_STATUS_MASK);
- 	if (ret) {
- 		dev_err(&pdev->dev,
+> 
+>> +
+>>   -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
+>>   			  Note that it is assume same number of lanes is used both
+>>   			  directions at once. If not specified, default is 2 lanes per direction.
+>> @@ -66,4 +75,6 @@ Example:
+>>   		freq-table-hz = <100000000 200000000>, <0 0>, <0 0>;
+>>   		phys = <&ufsphy1>;
+>>   		phy-names = "ufsphy";
+>> +		rpm-level = <3>;
+> 
+> Why specified if 3 is the default?
+Ah yes - that should be removed.
+I'll remove it in v2.
+
+> 
+>> +		spm-level = <5>;
+> 
+> These seem like sane defaults. When and why would you use some
+> different?
+I think each of the deeper sleep modes are associated with an increasing 
+wakeup latency. For e.g. '0' would have the highest power-consumption 
+and no resume latency at all as compared to '5'.
+So depending on use-cases other modes may be chosen.
+
+> 
+> Rob
+> 
+
+-asd
+
 -- 
-1.9.1
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
+Linux Foundation Collaborative Project
