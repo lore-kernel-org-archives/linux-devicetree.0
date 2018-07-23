@@ -1,34 +1,42 @@
-Return-Path: <SRS0=JVBZ=KI=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 1/3] dt-bindings: arm: Document RZ/G2M SoC DT bindings
-Date: Tue, 24 Jul 2018 16:47:16 +0100
-Message-Id: <1532447238-13486-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1532447238-13486-1-git-send-email-biju.das@bp.renesas.com>
-References: <1532447238-13486-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=lWLe=KH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:56330 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388280AbeGWOsa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Jul 2018 10:48:30 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 06/21] v4l: fwnode: Add definitions for CSI-2 D-PHY, parallel and Bt.656 busses
+Date: Mon, 23 Jul 2018 16:46:51 +0300
+Message-Id: <20180723134706.15334-7-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
+References: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree bindings documentation for Renesas RZ/G2M (r8a774a1) SoC.
+Add definitions corresponding to DT bindings to the CSI-2 D-PHY, parallel
+and Bt.656 busses.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-index 89b4a38..8acd3cd 100644
---- a/Documentation/devicetree/bindings/arm/shmobile.txt
-+++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-@@ -23,6 +23,8 @@ SoCs:
-     compatible = "renesas,r8a7745"
-   - RZ/G1C (R8A77470)
-     compatible = "renesas,r8a77470"
-+  - RZ/G2M (R8A774A1)
-+    compatible = "renesas,r8a774a1"
-   - R-Car M1A (R8A77781)
-     compatible = "renesas,r8a7778"
-   - R-Car H1 (R8A77790)
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index 291b3dcc19f3..4c98d17ab124 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -36,6 +36,9 @@ enum v4l2_fwnode_bus_type {
+ 	V4L2_FWNODE_BUS_TYPE_CSI2_CPHY,
+ 	V4L2_FWNODE_BUS_TYPE_CSI1,
+ 	V4L2_FWNODE_BUS_TYPE_CCP2,
++	V4L2_FWNODE_BUS_TYPE_CSI2_DPHY,
++	V4L2_FWNODE_BUS_TYPE_PARALLEL,
++	V4L2_FWNODE_BUS_TYPE_BT656,
+ 	NR_OF_V4L2_FWNODE_BUS_TYPE,
+ };
+ 
 -- 
-2.7.4
+2.11.0
+
