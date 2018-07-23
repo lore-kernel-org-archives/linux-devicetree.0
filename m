@@ -1,61 +1,53 @@
-From: Marcel Ziswiler <marcel@ziswiler.com>
-Subject: Re: [PATCH] ARM: dts: spear: fix stmpe811 interrupt properties
-Date: Mon, 23 Jul 2018 06:34:31 +0200
-Message-ID: <883F78E9-45F8-4AA7-9702-330027ADD741@ziswiler.com>
-References: <20180720075356.26156-1-marcel@ziswiler.com>
- <20180723025747.ykxeqogyfn6wskvo@vireshk-i7>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180723025747.ykxeqogyfn6wskvo@vireshk-i7>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Viresh Kumar <vireshk@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH 4/4] power: supply: max17040: Send uevent in SOC changes
+Date: Mon, 23 Jul 2018 00:08:16 -0400
+Message-ID: <20180723040816.19455-5-matheus@castello.eng.br>
+References: <20180723040816.19455-1-matheus@castello.eng.br>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180723040816.19455-1-matheus@castello.eng.br>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sre@kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matheus Castello <matheus@castello.eng.br>
 List-Id: devicetree@vger.kernel.org
 
+Add check for changes in state of charge from delayed work, so
+in case of changes we call power_supply_changed to send an uevent.
 
+power_supply_changed send an uevent for alert user space about
+changes, is useful for example to user space apps made changes in
+UI battery level or made other decisions.
 
-On July 23, 2018 4:57:47 AM GMT+02:00, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->On 20-07-18, 09:53, Marcel Ziswiler wrote:
->> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
->> 
->> The property "irq-over-gpio" simply does not exist (this is nowadays
->> actually auto detected) and the property "irq-gpios" is actually
->called
->> "irq-gpios".
->
->  "irq-gpio" ?
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+---
+ drivers/power/supply/max17040_battery.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Yes, of course. Too many s' (;-p).
-
->> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
->> 
->> ---
->> 
->>  arch/arm/boot/dts/spear320-hmi.dts | 3 +--
->>  1 file changed, 1 insertion(+), 2 deletions(-)
->> 
->> diff --git a/arch/arm/boot/dts/spear320-hmi.dts
->b/arch/arm/boot/dts/spear320-hmi.dts
->> index 0d0da1f65f0e..d2d1fe944407 100644
->> --- a/arch/arm/boot/dts/spear320-hmi.dts
->> +++ b/arch/arm/boot/dts/spear320-hmi.dts
->> @@ -241,8 +241,7 @@
->>  					#address-cells = <1>;
->>  					#size-cells = <0>;
->>  					reg = <0x41>;
->> -					irq-over-gpio;
->> -					irq-gpios = <&gpiopinctrl 29 0x4>;
->> +					irq-gpio = <&gpiopinctrl 29 0x4>;
->>  					id = <0>;
->>  					blocks = <0x5>;
->>  					irq-trigger = <0x1>;
+diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+index 3efa52d32b44..72915ac9e13b 100644
+--- a/drivers/power/supply/max17040_battery.c
++++ b/drivers/power/supply/max17040_battery.c
+@@ -202,14 +202,22 @@ static void max17040_get_of_data(struct max17040_chip *chip)
+ static void max17040_work(struct work_struct *work)
+ {
+ 	struct max17040_chip *chip;
++	u16 last_soc;
+ 
+ 	chip = container_of(work, struct max17040_chip, work.work);
+ 
++	/* store SOC for check change */
++	last_soc = chip->soc;
++
+ 	max17040_get_vcell(chip->client);
+ 	max17040_get_soc(chip->client);
+ 	max17040_get_online(chip->client);
+ 	max17040_get_status(chip->client);
+ 
++	/* check changes and send uevent */
++	if (last_soc != chip->soc)
++		power_supply_changed(chip->battery);
++
+ 	queue_delayed_work(system_power_efficient_wq, &chip->work,
+ 			   MAX17040_DELAY);
+ }
+-- 
+2.13.3
