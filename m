@@ -1,88 +1,80 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] serial: 8250_ingenic: Add support for the JZ4725B SoC
-Date: Mon, 23 Jul 2018 08:22:08 -0600
-Message-ID: <CAL_Jsq+=sSHSeCBQPjiEe5UH2RYyNnck-Q+rDq--iphhnYS=Mg@mail.gmail.com>
-References: <20180713143840.9721-1-paul@crapouillou.net> <20180720153027.GA11978@rob-hp-laptop>
- <1532113088.2309.0@smtp.crapouillou.net>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: Re: [PATCH v2 1/3] clk: meson: add DT documentation for emmc clock
+ controller
+Date: Mon, 23 Jul 2018 22:28:36 +0800
+Message-ID: <405ff057-a14e-f9eb-19e0-8d467dda35a1@amlogic.com>
+References: <20180710163658.6175-1-yixun.lan@amlogic.com>
+ <20180710163658.6175-2-yixun.lan@amlogic.com>
+ <20180711194346.GA32414@rob-hp-laptop>
+ <f2eb8632-1113-3bb8-506f-ac0d4e838fd4@amlogic.com>
+ <CABGGisw64MpYx7Pvp+XGt6gfZzie6EKeHdchqS6CPDjmAHBuVA@mail.gmail.com>
+ <5442a2e8-eb49-2aa8-e53e-8db88cd0bd58@amlogic.com>
+ <CAL_Jsq+r+7BaJAPBn3L26sdxATVyDiuC=V3xE+yz0-27q0RJhA@mail.gmail.com>
+ <8bf565d3-dbfd-e06d-7076-ba78d7a2e766@amlogic.com>
+ <7hbmay3ut6.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532113088.2309.0@smtp.crapouillou.net>
+In-Reply-To: <7hbmay3ut6.fsf@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jslaby@suse.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: yixun.lan@amlogic.com, Rob Herring <robh@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, =?UTF-8?Q?Miqu=c3=a8l_Raynal?= <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-clk <linux-clk@vger.kernel.org>, linux-amlogic@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 20, 2018 at 12:58 PM Paul Cercueil <paul@crapouillou.net> wrote=
-:
->
-> Hi Rob,
->
-> Le ven. 20 juil. 2018 =C3=A0 17:30, Rob Herring <robh@kernel.org> a =C3=
-=A9crit :
-> > On Fri, Jul 13, 2018 at 04:38:40PM +0200, Paul Cercueil wrote:
-> >>  The UART in the jz4725b works just like in the other JZ SoCs, so
-> >> this
-> >>  commit simply adds a new compatible string.
-> >>
-> >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> >>  ---
-> >>   Documentation/devicetree/bindings/serial/ingenic,uart.txt | 1 +
-> >>   drivers/tty/serial/8250/8250_ingenic.c                    | 5 +++++
-> >>   2 files changed, 6 insertions(+)
-> >>
-> >>  diff --git
-> >> a/Documentation/devicetree/bindings/serial/ingenic,uart.txt
-> >> b/Documentation/devicetree/bindings/serial/ingenic,uart.txt
-> >>  index c3c6406d5cfe..a0b34fd3b602 100644
-> >>  --- a/Documentation/devicetree/bindings/serial/ingenic,uart.txt
-> >>  +++ b/Documentation/devicetree/bindings/serial/ingenic,uart.txt
-> >>  @@ -3,6 +3,7 @@
-> >>   Required properties:
-> >>   - compatible : One of:
-> >>     - "ingenic,jz4740-uart",
-> >>  +  - "ingenic,jz4725b-uart",
-> >>     - "ingenic,jz4760-uart",
-> >>     - "ingenic,jz4770-uart",
-> >>     - "ingenic,jz4775-uart",
-> >>  diff --git a/drivers/tty/serial/8250/8250_ingenic.c
-> >> b/drivers/tty/serial/8250/8250_ingenic.c
-> >>  index 15a8c8dfa92b..760266559a5a 100644
-> >>  --- a/drivers/tty/serial/8250/8250_ingenic.c
-> >>  +++ b/drivers/tty/serial/8250/8250_ingenic.c
-> >>  @@ -133,6 +133,10 @@ EARLYCON_DECLARE(jz4740_uart,
-> >> ingenic_early_console_setup);
-> >>   OF_EARLYCON_DECLARE(jz4740_uart, "ingenic,jz4740-uart",
-> >>                  ingenic_early_console_setup);
-> >>
-> >>  +EARLYCON_DECLARE(jz4725b_uart, ingenic_early_console_setup);
-> >>  +OF_EARLYCON_DECLARE(jz4725b_uart, "ingenic,jz4725b-uart",
-> >>  +               ingenic_early_console_setup);
-> >>  +
-> >
-> > This shouldn't be necessary. Looks like it should be compatible with
-> > ingenic,jz4740-uart.
-> >
-> >>   EARLYCON_DECLARE(jz4770_uart, ingenic_early_console_setup);
-> >>   OF_EARLYCON_DECLARE(jz4770_uart, "ingenic,jz4770-uart",
-> >>                  ingenic_early_console_setup);
-> >>  @@ -330,6 +334,7 @@ static const struct ingenic_uart_config
-> >> jz4780_uart_config =3D {
-> >>
-> >>   static const struct of_device_id of_match[] =3D {
-> >>      { .compatible =3D "ingenic,jz4740-uart", .data =3D
-> >> &jz4740_uart_config },
-> >>  +   { .compatible =3D "ingenic,jz4725b-uart", .data =3D
-> >> &jz4740_uart_config },
-> >
-> > And this too.
->
-> Well, I'm confused, the driver already uses multiple compatible strings
-> for SoCs that
-> work the exact same, so that was wrong?
+HI Kevin
 
-Not wrong, but not necessary. Given that the data was the same was the
-clue telling me that they should be compatible.
+On 07/23/2018 10:12 PM, Kevin Hilman wrote:
+> Yixun Lan <yixun.lan@amlogic.com> writes:
+> 
+> [...]
+> 
+>>>
+>>>> Second, we might like to convert eMMC driver to also use mmc-clkc model.
+>>>
+>>> IMO, this should be done as part of merging this series. Otherwise, we
+>>> have duplicated code for the same thing.
+>>
+>> IMO, I'd leave this out of this series, since this patch series is quite
+>> complete as itself. Although, the downside is code duplication.
+>>
+>> Still, I need to hear Jerome, or Kevin's option, to see if or how we
+>> should proceed the eMMC's clock conversion.
+>>
+>> I could think of three option myself
+>> 1) don't do the conversion, downside is code duplication, upside is NO
+>> DT change, no compatibility issue
+>> 2) add a syscon node into eMMC DT node, then only convert clock part
+>> into this mmc-clkc model, while still leave other eMMC register access
+>> as the usual iomap way (still no race condition)
+>> 3) convert all eMMC register access by using regmap interface.
+>>
+>> both 2) and 3) need to update the DT.
+>>
+>> and probably 2) is a compromise way, and 1) is also OK, 3) is probably
+>> the worst way due to dramatically change (I think this was already
+>> rejected in the previous discussion)
+> 
+> Because the devices (NAND and eMMC_C) are mutually exclusive, taking the
+> step-by-step approach is fine (and preferred) by me.
+> 
+> Phase 1:
+> - add new mmc-clk provider
+> - add NAND driver using new mmc-clk provider
+> - boards using NAND should ensure emmc_c is disabled in DT
+> 
+> This allows us to not touch the MMC driver or existing upstream
+> bindings.  Yes, this means there is duplicate code in the MMC driver and
+> the new mmc-clk provider, but that can be removed in the next phase.
+> 
+Great, the approach to address this issue is reasonable.
+We'd like to focus on phase 1 first, thanks
 
-Rob
+> Phase 2:
+> - convert MMC driver to use new mmc-clk provider
+> - update MMC users in DT and bindings
+> 
+Ok.
+
+
+Yixun
