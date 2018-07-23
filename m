@@ -1,52 +1,47 @@
-From: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 3/6] dt: bindings: add bindings for msa memory region
-Date: Mon, 23 Jul 2018 18:06:58 +0530
-Message-ID: <5ba59b76dfcc8ba997ce7b0ea880329c@codeaurora.org>
-References: <20180706090043.28363-1-govinds@codeaurora.org>
- <20180711152718.GA18470@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180711152718.GA18470@rob-hp-laptop>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Marcel Ziswiler <marcel@ziswiler.com>
+Subject: [PATCH 00/26] ARM: dts: tegra: colibri_t30: major revamp
+Date: Mon, 23 Jul 2018 14:36:31 +0200
+Message-ID: <20180723123658.980-1-marcel@ziswiler.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Marcel Ziswiler <marcel@ziswiler.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+This series is a major overhaul for the Toradex Colibri T30 system on
+module.
 
-On 2018-07-11 20:57, Rob Herring wrote:
-> On Fri, Jul 06, 2018 at 02:30:43PM +0530, Govind Singh wrote:
->> Add device tree binding documentation details of msa
->> memory region for ath10k qmi client for SDM845/APQ8098
->> SoC into "qcom,ath10k.txt".
->> 
->> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>  .../bindings/net/wireless/qcom,ath10k.txt           | 13 
->> +++++++++++++
->>  1 file changed, 13 insertions(+)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt 
->> b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> index 7fd4e8ce4149..87489054aea5 100644
->> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> @@ -57,6 +57,16 @@ Optional properties:
->>  - <supply-name>-supply: handle to the regulator device tree node
->>  			   optional "supply-name" is "vdd-0.8-cx-mx".
->> 
->> += SUBNODES:
->> +wcn3990-wifi node may contain one subnode, named "msa" representing
->> +the fixed msa memory regions used by the wifi firmware running in Q6.
->> +This sub-node must contain:
-> 
-> Why do you need a sub-node? Just add memory-region property.
-> 
-Fixed in v4 version.
+Marcel Ziswiler (26):
+  ARM: tegra: colibri_t30: enable broken-hpi on emmc
+  ARM: tegra: colibri_t30: add local-mac-address property
+  ARM: tegra: colibri_t30: reorder host1x/hdmi properties
+  ARM: tegra: colibri_t30: regulator clean-up
+  ARM: tegra: colibri_t30: add missing regulators
+  ARM: tegra: colibri_t30: annotate uarts
+  ARM: tegra: colibri_t30: white-space clean-up
+  ARM: tegra: colibri_t30: move dr_mode property from phy to controller
+  ARM: tegra: colibri_t30: reorder backlight properties
+  ARM: tegra: colibri_t30: drop pwmleds
+  ARM: tegra: colibri_t30: pinmux clean-up
+  ARM: tegra: colibri_t30: add missing pinmux
+  ARM: tegra: colibri_t30: use proper irq-gpio for stmpe811
+  ARM: tegra: colibri_t30: further lm95245 temperature sensor annotation
+  ARM: tegra: colibri_t30: add i2c-thermtrip
+  ARM: tegra: colibri_t30: add proper emmc vmmc and vqmmc supplies
+  ARM: tegra: colibri_t30: enable emmc ddr52 mode
+  ARM: tegra: colibri_t30: rename clk to clock
+  ARM: tegra: colibri_t30: line break long compatible property line
+  ARM: tegra: colibri_t30: move input include to carrier board
+  ARM: tegra: colibri_t30: remove unused nvidia,is-wired property
+  ARM: tegra: colibri_t30: add gpio hog to unreset usb ethernet chip
+  ARM: tegra: colibri_t30: enable hda over hdmi
+  ARM: tegra: colibri_t30: annotate sd card detect
+  ARM: tegra: colibri_t30: annotate ehci instance 1
+  ARM: tegra: colibri_t30: update compatibility comment
 
-Thanks,
-Govind
+ arch/arm/boot/dts/tegra30-colibri-eval-v3.dts |  99 ++--
+ arch/arm/boot/dts/tegra30-colibri.dtsi        | 716 ++++++++++++++++++++++----
+ 2 files changed, 666 insertions(+), 149 deletions(-)
+
+-- 
+2.14.4
