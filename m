@@ -1,68 +1,65 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/7] iio: tsl2772: add support for reading power
- settings from device tree
-Date: Mon, 23 Jul 2018 07:28:49 -0600
-Message-ID: <CAL_JsqLCQG_CNppd9f7xtwYkruvU4=3PziPOPCTt1P4phg5iLg@mail.gmail.com>
-References: <20180717084158.23532-1-masneyb@onstation.org> <20180717084158.23532-4-masneyb@onstation.org>
- <20180720173635.GA21241@rob-hp-laptop> <20180721183716.524632f1@archlinux>
- <20180722123720.GB20029@onstation.org> <20180722181748.24bc47d8@archlinux>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH V2 0/6] mailbox: ti-msgmgr: Add support for AM654 Secure
+ Proxy
+Date: Mon, 23 Jul 2018 08:29:56 -0500
+Message-ID: <20180723132956.tcsuxychhlhiwz6v@kahuna>
+References: <20180716180607.16526-1-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180722181748.24bc47d8@archlinux>
+Content-Disposition: inline
+In-Reply-To: <20180716180607.16526-1-nm@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Brian Masney <masneyb@onstation.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Jonathan Marek <jonathan@marek.ca>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Martin Kelly <mkelly@xevo.com>, fischerdouglasc@gmail.com, bshah@kde.org, Craig Tatlor <ctatlor97@gmail.com>, drew.paterson@ams.com
+To: Jassi Brar <jassisinghbrar@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 22, 2018 at 11:17 AM Jonathan Cameron <jic23@kernel.org> wrote:
->
-> On Sun, 22 Jul 2018 12:37:20 +0000
-> Brian Masney <masneyb@onstation.org> wrote:
->
-> > On Sat, Jul 21, 2018 at 06:37:16PM +0100, Jonathan Cameron wrote:
-> > > On Fri, 20 Jul 2018 11:36:35 -0600
-> > > Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > > On Tue, Jul 17, 2018 at 04:41:54AM -0400, Brian Masney wrote:
-> > > > > This patch adds support for optionally reading the prox_diode and
-> > > > > prox_power settings from device tree. This was tested using a LG
-> > > > > Nexus 5 (hammerhead) which requires a different diode than the driver
-> > > > > default for the IR LED.
-> > > > >
-> > > > > Signed-off-by: Brian Masney <masneyb@onstation.org>
+On 18:06-20180716, Nishanth Menon wrote:
+> The V2 of the series updates a minor comment in binding and picks up Rob's Reviewed-by
+> 
+> Since I have'nt seen additional comments, I am assuming things are fine for v4.19.
+> 
+> The following series enables support for Secure Proxy in newest addition in TI's SoC
+> portfolio - AM654 SoC (posted previously as RFC).
+> 
+> The series is based on v4.18-rc1 and is available here:
+> https://github.com/nmenon/linux-2.6-playground/commits/upstream/v4.18-rc1/k3-1-am6-sproxy
+> 
+> There are a couple of follow on patches to be posted as well (Kconfig changes
+> for K3_ARCH and actual dts node changes).
+> 
+> Changes since RFC are highlighted in each of the patches, but overall:
+> * The K3 dependency has been broken out into a seperate series independent of
+>   this.
+> * Binding has been seperated out as it's own file (even though the driver is
+>   reused).
+> 
+> Consolidated all patches (including all series) are available here:
+> https://github.com/nmenon/linux-2.6-playground/commits/upstream/v4.18-rc1/k3-am6-integ
+> 
+> Full Boot log  on AM654 (integrated with all patch series) is available here:
+>    https://pastebin.ubuntu.com/p/bBFmnzYtCd/
+> 
+> Nishanth Menon (6):
+>   mailbox: ti-msgmgr: Get rid of unused structure members
+>   mailbox: ti-msgmgr: Allocate Rx channel resources only on request
+>   mailbox: ti-msgmgr: Change message count mask to be descriptor based
+>   mailbox: ti-msgmgr: Move the memory region name to descriptor
+>   dt-bindings: mailbox: Add support for secure proxy threads
+>   mailbox: ti-msgmgr: Add support for Secure Proxy
+> 
+>  .../bindings/mailbox/ti,secure-proxy.txt           |  50 +++
+>  drivers/mailbox/ti-msgmgr.c                        | 353 +++++++++++++++++----
+>  2 files changed, 336 insertions(+), 67 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/ti,secure-proxy.txt
 
-> > > > > +  - amstaos,prox_diode - must be TSL2772_DIODE0, TSL2772_DIODE1, or
-> > > > > +                         TSL2772_DIODE_BOTH.
-> > > >
-> > > > s/_/-/
-> > > >
-> > > > > +  - amstaos,prox_power - must be TSL2772_100_mA, TSL2772_50_mA, TSL2772_25_mA,
-> > > > > +                         or TSL2772_13_mA.
-> > > >
-> > > > I wonder if this should be common. Perhaps we should use the existing
-> > > > 'led-max-microamp' as this is setting the current for an IR LED.
-> > >
-> > > Seems reasonable, then perhaps have two controls to turn on the diodes
-> > > above.
-> > >
-> > > >
-> > > > And while called 'power' this setting is current.
-> > >
-> > > Also can we have real values?  I really don't like defines if they
-> > > aren't absolutely necessary - particularly when there is a nice real
-> > > unit to be used.
-> >
-> > How about these options then?
-> >
-> > amstaos,proximity-diode-0-enabled;
-> > amstaos,proximity-diode-1-enabled;
-> > led-max-microamp = <100000>;
->
-> Works for me.  Rob?
 
-I think we're bikeshedding, but I'd prefer a single property though
-perhaps as a list (0, 1, or <0 1>) or mask. A list would be similar to
-the "led-sources" property format.
+Jassi,
 
-Rob
+I dont see this in next-20180723. You'd asked me to hold off on pings
+https://lkml.org/lkml/2017/12/16/353 -> so, held off as much as I could
+before wondering on the status.
+
+-- 
+Regards,
+Nishanth Menon
