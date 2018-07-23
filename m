@@ -1,57 +1,96 @@
-From: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH V2 0/2] firmware: ti_sci: Add host-id as an optional
- parameter
-Date: Mon, 23 Jul 2018 10:42:47 -0700
-Message-ID: <ea7691ab-db22-bea0-9753-b7a2765a22b8@oracle.com>
-References: <20180716171328.11674-1-nm@ti.com>
- <20180723133303.ijekyffgnmesrhhv@kahuna>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [RFT v2 00/10] pinctrl: samsung: Remove ugly hack for sharing eint_wakeup_mask
+Date: Mon, 23 Jul 2018 19:52:52 +0200
+Message-ID: <20180723175302.22535-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180723133303.ijekyffgnmesrhhv@kahuna>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, geert@linux-m68k.org
+To: Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, Sylwester Nawrocki <snawrocki@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 7/23/2018 6:33 AM, Nishanth Menon wrote:
-> On 17:13-20180716, Nishanth Menon wrote:
->> Please find attached series to enable host-id as an optional dt property.
->>
->> This is a minor update to V1 -> Mostly to pick up Greet's feedback and Rob's Ack.
->>
->> V1: https://patchwork.ozlabs.org/cover/931822/
->>
->> The series is based on v4.18-rc1 and is available here:
->> https://github.com/nmenon/linux-2.6-playground/commits/upstream/v4.18-rc1/k3-1-am6-tisci
->>
->> Consolidated all patches (including all series) are available here:
->> https://github.com/nmenon/linux-2.6-playground/commits/upstream/v4.18-rc1/k3-am6-integ
->>
->> Full Boot log (integrated of all series for AM654) is available here:
->>     https://pastebin.ubuntu.com/p/bBFmnzYtCd/
->>
->> Nishanth Menon (2):
->>    Documentation: dt: keystone: ti-sci: Add optional host-id parameter
->>    firmware: ti_sci: Provide host-id as an optional dt parameter
->>
->>   .../devicetree/bindings/arm/keystone/ti,sci.txt    |  4 ++++
->>   drivers/firmware/ti_sci.c                          | 24 ++++++++++++++++++----
->>   2 files changed, 24 insertions(+), 4 deletions(-)
-> 
-> Santosh,
-> 
-> Apologies, I see you have already send your PR for v4.19. Was
-> just wondering if this is something we can consider for rc
-> cycle OR if you'd consider a followup PR for the same.
-> 
-NP. Patch(s) doesn't look RC material so don't plan to send
-it as part of RC. Please let me know if its o.w
+Hi All,
 
-This will have to wait for next cycle. Will merge this
-early once v4.19-rc1 comes out.
+Changes since v1
+================
+1. Add Tomasz's ack.
+2. Reword description in patch 6/10.
 
-Regards,
-Santosh
+
+Tests
+=====
+This is both request for comments and requests for tests. Only basic
+tests were done, including suspend to RAM on Odroid U3 (Exynos4412)
+with max7768 RTC wakeup. Please kindly test it with devices capable of
+suspending and resuming. I am mostly thinking about S5Pv210-based (Aria),
+Trats, Trats2 and TM2 (Exynos5433). Existing platforms should not be
+broken however changing external interrupt wakeup mask was not done
+on Exynos5433.
+
+
+Description
+===========
+The Exynos/S5Pv210 machine suspend code needs to write the external
+interrupt mask during suspend.  The mask is controlled by pin controller
+driver: the exynos_wkup_irq_set_wake() in IRQ chip for these wakeup
+interrupts.
+
+Therefore pinctrl driver code exposed an exynos_get_eint_wake_mask()
+function which was later used as an extern in machine code.
+
+This is quite ugly way of combining driver and machine code,
+not portable triggering Sparse and GCC warnings.
+
+
+This might break suspend capability S5Pv210 on with older DTBs (thus
+breaks DTB compatibility), however:
+1. just "might" because in case of using older DTB, the wakeup mask
+   will not be changed during suspend and default reset value (all
+   interrupts non-masked) should work,
+2. mainline support for S5Pv210 with DTB is limited and suspend
+   to RAM already might be broken.
+
+
+Dependencies
+============
+1. The first seven patches should be taken through one tree,
+   preferably samsung-pinctrl,
+2. The DTS patch (7/10) for S5Pv210 should go into next cycle,
+3. The remaining patches (8-10) should go after all previous,
+   so probably another release cycle.
+
+
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (10):
+  pinctrl: samsung: Define suspend and resume callbacks for all banks
+    and SoCs
+  pinctrl: samsung: Document suspend and resume members
+  pinctrl: samsung: Document hidden requirement about one external
+    wakeup
+  pinctrl: samsung: Add dedicated compatible for S5Pv210 wakeup
+    interrupts
+  ARM: exynos: Define EINT_WAKEUP_MASK registers for S5Pv210 and
+    Exynos5433
+  pinctrl: samsung: Write external wakeup interrupt mask
+  ARM: dts: s5pv210: Switch to S5Pv210 specific pinctrl wakeup
+    compatible
+  ARM: s5pv210: Remove legacy setting of external wakeup interrupts
+  ARM: exynos: Remove legacy setting of external wakeup interrupts
+  pinctrl: samsung: Remove legacy API for handling external wakeup
+    interrupts mask
+
+ .../bindings/pinctrl/samsung-pinctrl.txt           | 11 ++-
+ arch/arm/boot/dts/s5pv210.dtsi                     |  2 +-
+ arch/arm/mach-exynos/common.h                      |  2 -
+ arch/arm/mach-exynos/suspend.c                     | 16 +++--
+ arch/arm/mach-s5pv210/common.h                     |  1 -
+ arch/arm/mach-s5pv210/pm.c                         | 16 +++--
+ drivers/pinctrl/samsung/pinctrl-exynos-arm.c       | 16 +++++
+ drivers/pinctrl/samsung/pinctrl-exynos.c           | 78 +++++++++++++++++++---
+ drivers/pinctrl/samsung/pinctrl-samsung.h          | 11 +++
+ include/linux/soc/samsung/exynos-regs-pmu.h        |  8 ++-
+ 10 files changed, 136 insertions(+), 25 deletions(-)
+
+-- 
+2.14.1
