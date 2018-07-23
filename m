@@ -1,64 +1,40 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 0/4] Add Actions Semi Owl family S900 DMA Controller support
-Date: Mon, 23 Jul 2018 09:47:39 +0530
-Message-ID: <20180723041743.32024-1-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 4/4] MAINTAINERS: Add entry for Actions Semi Owl SoCs DMA driver
+Date: Mon, 23 Jul 2018 09:47:43 +0530
+Message-ID: <20180723041743.32024-5-manivannan.sadhasivam@linaro.org>
+References: <20180723041743.32024-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180723041743.32024-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: vkoul@kernel.org, dan.j.williams@intel.com, afaerber@suse.de, robh+dt@kernel.org
 Cc: dmaengine@vger.kernel.org, liuwei@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds DMA controller support for Actions Semi Owl family
-S900 SoC. This driver has been structured in a way such that there will be only
-one controller driver for the whole Owl family series (S500, S700 and
-S900 SoCs).
+Add entry for Actions Semi Owl SoCs DMA driver under ARM/ACTIONS.
 
-There are 12 physical channels and 46 logical channels supported by the
-DMA controller.
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The DMA controller also supports 4 software configurable interrupt lines for
-the priority based DMA usecase. But the DMA driver supports only 1 interrupt
-for simplification. By default, the driver uses Linked list mode for all
-transfers. Right now only MEMCPY support has been added and the rest
-(SLAVE, CYCLIC) will be added in upcoming patches.
-
-The driver has been tested using dmatest utility on the Bubblegum-96
-board.
-
-The DTS patches in this series depends on the pinctrl DTS patches
-submitted [1], which is yet to be merged by the platform maintainer
-Andreas. Since the DMA driver goes through DMA tree and the relevant
-DTS patches goes through ARM-SoC tree, Andreas will pick it up once
-it has been reviewed.
-
-For the reference, I have queued up all reviewed dts patches so far
-in my repo [2] from which Andreas is picking them for 4.19.
-
-Thanks,
-Mani
-
-[1] https://patchwork.kernel.org/patch/10322937/
-[2] https://git.linaro.org/people/manivannan.sadhasivam/linux.git/log/?h=s900-for-next
-
-Changes in v2:
-
-* Fixed up the multi-line alignments according to `checkpatch --strict`
-
-Manivannan Sadhasivam (4):
-  dt-bindings: dma: Add binding for Actions Semi Owl SoCs
-  arm64: dts: actions: Add Actions Semi S900 DMA Controller
-  dma: Add Actions Semi Owl family S900 DMA driver
-  MAINTAINERS: Add entry for Actions Semi Owl SoCs DMA driver
-
- .../devicetree/bindings/dma/owl-dma.txt       |   46 +
- MAINTAINERS                                   |    2 +
- arch/arm64/boot/dts/actions/s900.dtsi         |   13 +
- drivers/dma/Kconfig                           |    8 +
- drivers/dma/Makefile                          |    1 +
- drivers/dma/owl-dma.c                         | 1023 +++++++++++++++++
- 6 files changed, 1093 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
- create mode 100644 drivers/dma/owl-dma.c
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 09b54e9ebc6f..56d9c7715c2a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1145,12 +1145,14 @@ F:	arch/arm/boot/dts/owl-*
+ F:	arch/arm64/boot/dts/actions/
+ F:	drivers/clk/actions/
+ F:	drivers/clocksource/owl-*
++F:	drivers/dma/owl-dma.c
+ F:	drivers/pinctrl/actions/*
+ F:	drivers/soc/actions/
+ F:	include/dt-bindings/power/owl-*
+ F:	include/linux/soc/actions/
+ F:	Documentation/devicetree/bindings/arm/actions.txt
+ F:	Documentation/devicetree/bindings/clock/actions,s900-cmu.txt
++F:	Documentation/devicetree/bindings/dma/owl-dma.txt
+ F:	Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt
+ F:	Documentation/devicetree/bindings/power/actions,owl-sps.txt
+ F:	Documentation/devicetree/bindings/timer/actions,owl-timer.txt
 -- 
 2.17.1
