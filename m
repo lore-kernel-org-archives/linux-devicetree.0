@@ -1,7 +1,7 @@
 From: Pengbo Mu <pengbo.mu@nxp.com>
-Subject: [PATCH v6 3/4] arm64: dts: dwc3: description of incr burst type
-Date: Mon, 23 Jul 2018 11:11:26 +0800
-Message-ID: <1532315487-23137-3-git-send-email-pengbo.mu@nxp.com>
+Subject: [PATCH v6 4/4] arm: arm64: dts: add property snps incr burst type adjustment
+Date: Mon, 23 Jul 2018 11:11:27 +0800
+Message-ID: <1532315487-23137-4-git-send-email-pengbo.mu@nxp.com>
 References: <1532315487-23137-1-git-send-email-pengbo.mu@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1532315487-23137-1-git-send-email-pengbo.mu@nxp.com>
@@ -10,38 +10,156 @@ To: Felipe Balbi <balbi@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutl
 Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ran.wang_1@nxp.com, pengbo.mu@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Add description of 'snps,incr-burst-type-adjustment'
+Property "snps,incr-burst-type-adjustment = <x>, <y>..." for USB3.0
+DWC3.When only one value means INCRx mode with fix burst type.
+When more than one value, means undefined length burst mode, USB
+controller can use the length less than or equal to the largest
+enabled burst length.
+
+While enabling undefined length INCR burst type and INCR16 burst type,
+get better write performance on NXP Layerscape platforms: around 3%
+improvement (from 364MB/s to 375MB/s).
 
 Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 Signed-off-by: Pengbo Mu <pengbo.mu@nxp.com>
 ---
-Changes in v1:
- - add description of 'snps,incr-burst-type-adjustment' property
+Changes in v6:
+ - delete snps,incr-burst-type-adjustment = <1>
+Changes in v5:
+ - add support for ls1021a, ls1012a, ls1046a, ls1088a, ls1021a
+ - update ls208xa support according to code base change
+Changes in v4:
+ - change definition for this property.
+Changes in v3:
+ - add new property for INCR burst in usb node.
 ---
- Documentation/devicetree/bindings/usb/dwc3.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/ls1021a.dtsi                 | 1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 3 +++
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 3 +++
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 2 ++
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 2 ++
+ 6 files changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 7f13ebe..3e4c38b 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -96,6 +96,11 @@ Optional properties:
- 			enable periodic ESS TX threshold.
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index c55d479..7c328f3 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -706,6 +706,7 @@
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
++			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+ 		};
  
-  - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
-+ - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
-+			register, undefined length INCR burst type enable and INCRx type.
-+			When just one value, which means INCRX burst mode enabled. When
-+			more than one value, which means undefined length INCR burst type
-+			enabled. The values can be 1, 4, 8, 16, 32, 64, 128 and 256.
+ 		pcie@3400000 {
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+index 205f0f4..8e3d66f 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+@@ -482,6 +482,7 @@
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
++			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+ 		};
  
-  - in addition all properties from usb-xhci.txt from the current directory are
-    supported as well
-@@ -108,4 +113,5 @@ dwc3@4a030000 {
- 	reg = <0x4a030000 0xcfff>;
- 	interrupts = <0 92 4>
- 	usb-phy = <&usb2_phy>, <&usb3,phy>;
-+	snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- };
+ 		sata: sata@3200000 {
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 1109f22..f826d20 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -643,6 +643,7 @@
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
++			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+ 		};
+ 
+ 		usb1: usb3@3000000 {
+@@ -652,6 +653,7 @@
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
++			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+ 		};
+ 
+ 		usb2: usb3@3100000 {
+@@ -661,6 +663,7 @@
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
++			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+ 		};
+ 
+ 		sata: sata@3200000 {
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+index 136ebfa..9226be8 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+@@ -604,6 +604,7 @@
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
++			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+ 		};
+ 
+ 		usb1: usb@3000000 {
+@@ -613,6 +614,7 @@
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
++			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+ 		};
+ 
+ 		usb2: usb@3100000 {
+@@ -622,6 +624,7 @@
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
++			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+ 		};
+ 
+ 		sata: sata@3200000 {
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index 1c6556b..34671ee0 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -479,6 +479,7 @@
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
+ 			status = "disabled";
++			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+ 		};
+ 
+ 		usb1: usb3@3110000 {
+@@ -489,6 +490,7 @@
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
+ 			status = "disabled";
++			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+ 		};
+ 
+ 		sata: sata@3200000 {
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+index 137ef4d..c0762cc 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+@@ -754,6 +754,7 @@
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
++			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+ 		};
+ 
+ 		usb1: usb3@3110000 {
+@@ -764,6 +765,7 @@
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
++			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+ 		};
+ 
+ 		ccn@4000000 {
 -- 
 2.7.4
