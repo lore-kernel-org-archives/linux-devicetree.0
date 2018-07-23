@@ -1,109 +1,66 @@
-Return-Path: <SRS0=lWLe=KH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:56338 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388287AbeGWOsa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Jul 2018 10:48:30 -0400
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH 08/21] v4l: fwnode: Make use of newly specified bus types
-Date: Mon, 23 Jul 2018 16:46:53 +0300
-Message-Id: <20180723134706.15334-9-sakari.ailus@linux.intel.com>
-In-Reply-To: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
-References: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
+Return-Path: <SRS0=VfE6=KH=baylibre.com=narmstrong@kernel.org>
+Subject: Re: [PATCH 0/3] Meson8/Meson8b: introduce a HHI syscon node
+References: <20180721192846.18811-1-martin.blumenstingl@googlemail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Message-ID: <833b569b-3e25-feac-6110-a837c0b13bfa@baylibre.com>
+Date: Mon, 23 Jul 2018 09:55:25 +0200
+MIME-Version: 1.0
+In-Reply-To: <20180721192846.18811-1-martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, jbrunet@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+Cc: mturquette@baylibre.com, sboyd@kernel.org, carlo@caione.org, khilman@baylibre.com, linux-clk@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Make use of bus type specified for an endpoint.
+On 21/07/2018 21:28, Martin Blumenstingl wrote:
+> The Meson8/Meson8b/Meson8m2 SoCs are suffering from a similar problem
+> as the GXBB/GXL/GXM SoCs (see the GX series from Jerome: [0]):
+> There is a register area called "HHI" which is used for multiple IP
+> blocks of the SoC:
+> - the system clock controller
+> - a few reset lines (there is a separate reset controller, these reset
+>   lines are not part of the other reset controller). this reset
+>   controller is currently implemented in the clock controller driver
+> - a HDMI controller
+> - temperature sensor calibration data (by "data" I really mean data,
+>   the ADC driver has four bits for the TSC data in it's own register
+>   space, however on Meson8b and Meson8m2 there is a fifth TSC bit which
+>   is stored in the HHI register area)
+> 
+> The first three could be implemented with a single node (either in one
+> big driver, or using a MFD driver which would register function-
+> specific drivers).
+> However, the TSC data is a big problem, because the ADC has it's own
+> set of registers but needs to write one bit in the HHI register area.
+> 
+> NOTE: this series has multiple dependencies:
+> - the clock controller changes depend "meson8b: add the CPU_DIV16 clock
+>   for the ARM TWD" as well as "meson8b: register the clock controller
+>   early" [2]
+> - the dts changes depend on "fix clock controller register size on
+>   Meson8/Meson8b" [3]
+> 
+> 
+> [0] http://lists.infradead.org/pipermail/linux-amlogic/2018-March/006733.html
+> [1] http://lists.infradead.org/pipermail/linux-amlogic/2018-July/007890.html
+> [2] http://lists.infradead.org/pipermail/linux-amlogic/2018-July/007900.html
+> [3] http://lists.infradead.org/pipermail/linux-amlogic/2018-July/007897.html
+> 
+> 
+> Martin Blumenstingl (3):
+>   dt-bindings: clock: meson8b: use the registers from the HHI syscon
+>   clk: meson: meson8b: use the HHI syscon if available
+>   ARM: dts: meson: switch the clock controller to the HHI register area
+> 
+>  .../bindings/clock/amlogic,meson8b-clkc.txt   | 13 ++++------
+>  arch/arm/boot/dts/meson.dtsi                  |  5 ++++
+>  arch/arm/boot/dts/meson8.dtsi                 | 15 ++++++------
+>  arch/arm/boot/dts/meson8b.dtsi                | 15 ++++++------
+>  drivers/clk/meson/meson8b.c                   | 24 ++++++++++++-------
+>  5 files changed, 41 insertions(+), 31 deletions(-)
+> 
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- drivers/media/v4l2-core/v4l2-fwnode.c | 48 ++++++++++++++++++++++++++---------
- 1 file changed, 36 insertions(+), 12 deletions(-)
+For the whole serie, it follow the same switch as GX so :
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 85f409808042..e62a1fcabd8f 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -123,8 +123,16 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
- 	return 0;
- }
- 
-+#define PARALLEL_MBUS_FLAGS (V4L2_MBUS_HSYNC_ACTIVE_HIGH |	\
-+			     V4L2_MBUS_HSYNC_ACTIVE_LOW |	\
-+			     V4L2_MBUS_VSYNC_ACTIVE_HIGH |	\
-+			     V4L2_MBUS_VSYNC_ACTIVE_LOW |	\
-+			     V4L2_MBUS_FIELD_EVEN_HIGH |	\
-+			     V4L2_MBUS_FIELD_EVEN_LOW)
-+
- static void v4l2_fwnode_endpoint_parse_parallel_bus(
--	struct fwnode_handle *fwnode, struct v4l2_fwnode_endpoint *vep)
-+	struct fwnode_handle *fwnode, struct v4l2_fwnode_endpoint *vep,
-+	enum v4l2_fwnode_bus_type bus_type)
- {
- 	struct v4l2_fwnode_bus_parallel *bus = &vep->bus.parallel;
- 	unsigned int flags = 0;
-@@ -192,17 +200,24 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
- 		pr_debug("data-enable-active %s\n", v ? "high" : "low");
- 	}
- 
--	if (flags || is_parallel) {
-+	switch (bus_type) {
-+	default:
- 		bus->flags = flags;
--		if (flags & (V4L2_MBUS_HSYNC_ACTIVE_HIGH |
--			     V4L2_MBUS_HSYNC_ACTIVE_LOW |
--			     V4L2_MBUS_VSYNC_ACTIVE_HIGH |
--			     V4L2_MBUS_VSYNC_ACTIVE_LOW |
--			     V4L2_MBUS_FIELD_EVEN_HIGH |
--			     V4L2_MBUS_FIELD_EVEN_LOW))
--			vep->bus_type = V4L2_MBUS_PARALLEL;
--		else
--			vep->bus_type = V4L2_MBUS_BT656;
-+		if (flags || is_parallel) {
-+			if (flags & PARALLEL_MBUS_FLAGS)
-+				vep->bus_type = V4L2_MBUS_PARALLEL;
-+			else
-+				vep->bus_type = V4L2_MBUS_BT656;
-+		}
-+		break;
-+	case V4L2_FWNODE_BUS_TYPE_PARALLEL:
-+		vep->bus_type = V4L2_MBUS_PARALLEL;
-+		bus->flags = flags;
-+		break;
-+	case V4L2_FWNODE_BUS_TYPE_BT656:
-+		vep->bus_type = V4L2_MBUS_BT656;
-+		bus->flags = flags & ~PARALLEL_MBUS_FLAGS;
-+		break;
- 	}
- }
- 
-@@ -263,7 +278,8 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
- 			return rval;
- 
- 		if (vep->bus_type == V4L2_MBUS_UNKNOWN)
--			v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep);
-+			v4l2_fwnode_endpoint_parse_parallel_bus(
-+				fwnode, vep, V4L2_MBUS_UNKNOWN);
- 
- 		return vep->bus_type == V4L2_MBUS_UNKNOWN ? -EINVAL : 0;
- 	case V4L2_FWNODE_BUS_TYPE_CCP2:
-@@ -271,6 +287,14 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
- 		v4l2_fwnode_endpoint_parse_csi1_bus(fwnode, vep, bus_type);
- 
- 		return 0;
-+	case V4L2_FWNODE_BUS_TYPE_CSI2_DPHY:
-+		vep->bus_type = V4L2_MBUS_CSI2_DPHY;
-+		return v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep);
-+	case V4L2_FWNODE_BUS_TYPE_PARALLEL:
-+	case V4L2_FWNODE_BUS_TYPE_BT656:
-+		v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep, bus_type);
-+
-+		return 0;
- 	default:
- 		pr_warn("unsupported bus type %u\n", bus_type);
- 		return -EINVAL;
--- 
-2.11.0
-
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
