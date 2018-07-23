@@ -1,120 +1,59 @@
 From: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v4 0/6] *** Add support for wifi QMI client handshakes ***
-Date: Mon, 23 Jul 2018 18:04:22 +0530
-Message-ID: <20180723123428.12993-1-govinds@codeaurora.org>
+Subject: [PATCH v4 2/6] ath10k: Add support to create boardname for non-bmi target
+Date: Mon, 23 Jul 2018 18:04:24 +0530
+Message-ID: <20180723123428.12993-3-govinds@codeaurora.org>
+References: <20180723123428.12993-1-govinds@codeaurora.org>
 Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180723123428.12993-1-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rakesh Pillai <pillair-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add QMI client handshakes for Q6 integrated WLAN connectivity subsystem.
-This module is responsible for communicating WLAN control messages to FW
-over QMI interface. This patch series enables the qmi handshakes required for
-WCN3990 chipset.
+From: Rakesh Pillai <pillair-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-QUALCOMM MSM Interface(QMI) provides the control interface between
-components running b/w remote processors with underlying transport layer
-based on integrated chipset(shared memory) or discrete chipset(PCI/USB/SDIO/UART).
+Add support to create the boardname for non-bmi targets
+like WCN3990, which uses qmi for bdf download. This
+boardname is used to parse the board data from board-2.bin.
 
-QMI client driver implementation is based on qmi framework https://lwn.net/Articles/729924/.
+Signed-off-by: Rakesh Pillai <pillair-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ drivers/net/wireless/ath/ath10k/core.c | 8 ++++++++
+ drivers/net/wireless/ath/ath10k/core.h | 2 ++
+ 2 files changed, 10 insertions(+)
 
-Below is the sequence of qmi handshake.
-
-       QMI CLIENT(APPS)                                         QMI SERVER(FW in Q6)
-
-                         <------wlan service discoverd----
-
-                       -----connect to wlam qmi service----->
-
-                       ------------wlan info request----->
-
-                       <------------wlan info resp------------
-
-                       ------------msa info req-------->
-
-                     <------------msa info resp------------
-
-                     ------------msa ready req-------->
-
-                     <------------msa ready resp------------
-
-                     <------------msa ready indication-------
-
-                     ------------capability req------->
-
-                    <------------capability resp------------
-
-                    ------------qmi bdf req--------->
-
-                     <------------qmi bdf resp------------
-
-                      ------------qmi cal trigger------->
-
-                  <------------ QMI FW ready indication-------
-
-WLAN fw is running in modem Q6 dsp as user PD(protection domain).
-Sequence of user PD loading is as following.
-
-1) Remote proc PIL driver loads the modem fw/ROOT PD.
-2) As part of ROOT pd boot-up it queries to a daemon(pd_mapper) running in apps
-processor to determine how many usre pd's to be loaded by the remote processor(Q6).
-3) Once user pd info is known to remote processor it loads the user pd via tftp
-protocol.
-
-https://github.com/andersson/pd-mapper
-https://github.com/andersson/tqftpserv
-
-
-Changes since V3:
-	Removed msa memory child node and used only memory-region property.
-	Fixed sparse warning reported in v3 change.
-	Changed qmi board id data type to u32 to align with fw defined value.
-
-Changes since V2:
-	Addressed review comments from v2 version.
-	Removed msa-size from dt binding and added reference to reserved-memory/reserved-memory.txt.
-
-Changes since V1:
-	Removed qmi client driver and integrated qmi client handshakes in snoc platform driver.
-	Addressed comments on v1 version.
-	Switched to ath10k bdf download infra(board-2.bin)
-	Added MSA fixed region support to support unload use-case.
-	Unified logging.
-
-Testing:
-	Tested all qmi handshakes, driver load/unload and STA/SAP sanity testing.
-	Tested HW: SDM845(WCN3990)
-	Tested FW: WLAN.HL.2.0-01192-QCAHLSWMTPLZ-1
-
-Govind Singh (5):
-  ath10k: Add qmi service helpers for wcn3990 qmi client
-  dt: bindings: add bindings for msa memory region
-  firmware: qcom: scm: Add WLAN VMID for Qualcomm SCM interface
-  ath10k: Add debug mask for QMI layer
-  ath10k: Add QMI message handshake for wcn3990 client
-
-Rakesh Pillai (1):
-  ath10k: Add support to create boardname for non-bmi target
-
- .../bindings/net/wireless/qcom,ath10k.txt     |    6 +
- drivers/net/wireless/ath/ath10k/Kconfig       |    1 +
- drivers/net/wireless/ath/ath10k/Makefile      |    4 +-
- drivers/net/wireless/ath/ath10k/core.c        |   14 +-
- drivers/net/wireless/ath/ath10k/core.h        |    4 +
- drivers/net/wireless/ath/ath10k/debug.h       |    1 +
- drivers/net/wireless/ath/ath10k/qmi.c         | 1019 ++++++++
- drivers/net/wireless/ath/ath10k/qmi.h         |  129 +
- .../net/wireless/ath/ath10k/qmi_wlfw_v01.c    | 2072 +++++++++++++++++
- .../net/wireless/ath/ath10k/qmi_wlfw_v01.h    |  677 ++++++
- drivers/net/wireless/ath/ath10k/snoc.c        |  262 ++-
- drivers/net/wireless/ath/ath10k/snoc.h        |    4 +
- include/linux/qcom_scm.h                      |    4 +-
- 13 files changed, 4186 insertions(+), 11 deletions(-)
- create mode 100644 drivers/net/wireless/ath/ath10k/qmi.c
- create mode 100644 drivers/net/wireless/ath/ath10k/qmi.h
- create mode 100644 drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.c
- create mode 100644 drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.h
-
+diff --git a/drivers/net/wireless/ath/ath10k/core.c b/drivers/net/wireless/ath/ath10k/core.c
+index 85c58ebbfb26..840e301b6a6e 100644
+--- a/drivers/net/wireless/ath/ath10k/core.c
++++ b/drivers/net/wireless/ath/ath10k/core.c
+@@ -1440,6 +1440,14 @@ static int ath10k_core_create_board_name(struct ath10k *ar, char *name,
+ 		goto out;
+ 	}
+ 
++	if (ar->id.qmi_ids_valid) {
++		scnprintf(name, name_len,
++			  "bus=%s,qmi-board-id=%x",
++			  ath10k_bus_str(ar->hif.bus),
++			  ar->id.qmi_board_id);
++		goto out;
++	}
++
+ 	scnprintf(name, name_len,
+ 		  "bus=%s,vendor=%04x,device=%04x,subsystem-vendor=%04x,subsystem-device=%04x%s",
+ 		  ath10k_bus_str(ar->hif.bus),
+diff --git a/drivers/net/wireless/ath/ath10k/core.h b/drivers/net/wireless/ath/ath10k/core.h
+index 427ee5752bb0..3a4ac3c0d5a6 100644
+--- a/drivers/net/wireless/ath/ath10k/core.h
++++ b/drivers/net/wireless/ath/ath10k/core.h
+@@ -941,6 +941,8 @@ struct ath10k {
+ 		u32 subsystem_device;
+ 
+ 		bool bmi_ids_valid;
++		bool qmi_ids_valid;
++		u32 qmi_board_id;
+ 		u8 bmi_board_id;
+ 		u8 bmi_chip_id;
+ 
 -- 
 2.17.0
