@@ -1,151 +1,123 @@
-Return-Path: <SRS0=J41Z=KE=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH] ARM: dts: r8a77470: Use r8a77470-sysc binding definitions
-Date: Fri, 20 Jul 2018 14:07:02 +0100
-Message-Id: <1532092022-64918-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
+Return-Path: <SRS0=lWLe=KH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:56290 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388058AbeGWOs2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Jul 2018 10:48:28 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 00/21] V4L2 fwnode rework; support for default configuration
+Date: Mon, 23 Jul 2018 16:46:45 +0300
+Message-Id: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
 List-ID: <devicetree@vger.kernel.org>
 
-Replace the hardcoded power domain indices by R8A77470_PD_* symbols.
+Hello everyone,
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
----
-Commit 964f7c0dd23de68c0 ("soc: renesas: rcar-sysc: Add r8a77470 support") 
-is in Linus' tree
----
- arch/arm/boot/dts/r8a77470.dtsi | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+I've long thought the V4L2 fwnode framework requires some work (it's buggy
+and it does not adequately serve common needs). This set should address in
+particular these matters:
 
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index 87d32d3..9b218c3 100644
---- a/arch/arm/boot/dts/r8a77470.dtsi
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/r8a77470-cpg-mssr.h>
-+#include <dt-bindings/power/r8a77470-sysc.h>
- / {
- 	compatible = "renesas,r8a77470";
- 	#address-cells = <2>;
-@@ -23,7 +24,7 @@
- 			reg = <0>;
- 			clock-frequency = <1000000000>;
- 			clocks = <&cpg CPG_CORE R8A77470_CLK_Z2>;
--			power-domains = <&sysc 5>;
-+			power-domains = <&sysc R8A77470_PD_CA7_CPU0>;
- 			next-level-cache = <&L2_CA7>;
- 		};
- 
-@@ -32,7 +33,7 @@
- 			compatible = "cache";
- 			cache-unified;
- 			cache-level = <2>;
--			power-domains = <&sysc 21>;
-+			power-domains = <&sysc R8A77470_PD_CA7_SCU>;
- 		};
- 	};
- 
-@@ -97,7 +98,7 @@
- 				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 407>;
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
- 			resets = <&cpg 407>;
- 		};
- 
-@@ -151,7 +152,7 @@
- 					  "ch12", "ch13", "ch14";
- 			clocks = <&cpg CPG_MOD 219>;
- 			clock-names = "fck";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
- 			resets = <&cpg 219>;
- 			#dma-cells = <1>;
- 			dma-channels = <15>;
-@@ -184,7 +185,7 @@
- 					  "ch12", "ch13", "ch14";
- 			clocks = <&cpg CPG_MOD 218>;
- 			clock-names = "fck";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
- 			resets = <&cpg 218>;
- 			#dma-cells = <1>;
- 			dma-channels = <15>;
-@@ -196,7 +197,7 @@
- 			reg = <0 0xe6800000 0 0x800>, <0 0xee0e8000 0 0x4000>;
- 			interrupts = <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 812>;
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
- 			resets = <&cpg 812>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -214,7 +215,7 @@
- 			dmas = <&dmac0 0x29>, <&dmac0 0x2a>,
- 			       <&dmac1 0x29>, <&dmac1 0x2a>;
- 			dma-names = "tx", "rx", "tx", "rx";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
- 			resets = <&cpg 721>;
- 			status = "disabled";
- 		};
-@@ -230,7 +231,7 @@
- 			dmas = <&dmac0 0x2d>, <&dmac0 0x2e>,
- 			       <&dmac1 0x2d>, <&dmac1 0x2e>;
- 			dma-names = "tx", "rx", "tx", "rx";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
- 			resets = <&cpg 720>;
- 			status = "disabled";
- 		};
-@@ -246,7 +247,7 @@
- 			dmas = <&dmac0 0x2b>, <&dmac0 0x2c>,
- 			       <&dmac1 0x2b>, <&dmac1 0x2c>;
- 			dma-names = "tx", "rx", "tx", "rx";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
- 			resets = <&cpg 719>;
- 			status = "disabled";
- 		};
-@@ -262,7 +263,7 @@
- 			dmas = <&dmac0 0x2f>, <&dmac0 0x30>,
- 			       <&dmac1 0x2f>, <&dmac1 0x30>;
- 			dma-names = "tx", "rx", "tx", "rx";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
- 			resets = <&cpg 718>;
- 			status = "disabled";
- 		};
-@@ -278,7 +279,7 @@
- 			dmas = <&dmac0 0xfb>, <&dmac0 0xfc>,
- 			       <&dmac1 0xfb>, <&dmac1 0xfc>;
- 			dma-names = "tx", "rx", "tx", "rx";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
- 			resets = <&cpg 715>;
- 			status = "disabled";
- 		};
-@@ -294,7 +295,7 @@
- 			dmas = <&dmac0 0xfd>, <&dmac0 0xfe>,
- 			       <&dmac1 0xfd>, <&dmac1 0xfe>;
- 			dma-names = "tx", "rx", "tx", "rx";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
- 			resets = <&cpg 714>;
- 			status = "disabled";
- 		};
-@@ -309,7 +310,7 @@
- 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
- 			clocks = <&cpg CPG_MOD 408>;
- 			clock-names = "clk";
--			power-domains = <&sysc 32>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
- 			resets = <&cpg 408>;
- 		};
- 
+- Most devices support a particular media bus type but the V4L2 fwnode
+  framework was not able to use such information, but instead tried to
+  guess the bus type with varying levels of success while drivers
+  generally ignored the results. This patchset makes that possible ---
+  setting a bus type enables parsing configuration for only that bus.
+  Failing that check results in returning -ENXIO to be returned.
+
+- Support specifying default configuration. If the endpoint has no
+  configuration, the defaults set by the driver (as documented in DT
+  bindings) will prevail. Any available configuration will still be read
+  from the endpoint as one could expect. A common use case for this is
+  e.g. the number of CSI-2 lanes. Few devices support lane mapping, and
+  default 1:1 mapping is provided in absence of a valid default or
+  configuration read OF.
+
+- Debugging information is greatly improved.
+
+- Recognition of the differences between CSI-2 D-PHY and C-PHY. All
+  currently supported hardware (or at least drivers) is D-PHY only, so
+  this change is still easy.
+
+The smiapp driver is converted to use the new functionality. This patchset
+does not address remaining issues such as supporting setting defaults for
+e.g. bridge drivers with multiple ports, but with Steve Longerbeam's
+patchset we're much closer with that goal. I've rebased this set on top of
+Steve's. Albeit the two deal with the same files, there were only a few
+trivial conflicts.
+
+Note that I've only tested parsing endpoints for the CSI-2 bus (no
+parallel IF hardware). Testing in general would be beneficial: the code
+flows are rather convoluted and different hardware tends to excercise
+different flows while the use of the use of defaults has a similar
+effect.
+
+Comments are welcome.
+
+I've pushed the patches (including Steve's) here:
+
+<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=v4l2-fwnode>
+
+Sakari Ailus (21):
+  v4l: fwnode: Add debug prints for V4L2 endpoint property parsing
+  v4l: fwnode: Use fwnode_graph_for_each_endpoint
+  v4l: fwnode: Detect bus type correctly
+  v4l: fwnode: The CSI-2 clock is continuous if it's not non-continuous
+  dt-bindings: media: Specify bus type for MIPI D-PHY, others,
+    explicitly
+  v4l: fwnode: Add definitions for CSI-2 D-PHY, parallel and Bt.656
+    busses
+  v4l: mediabus: Recognise CSI-2 D-PHY and C-PHY
+  v4l: fwnode: Make use of newly specified bus types
+  v4l: fwnode: Read lane inversion information despite lane numbering
+  v4l: fwnode: Only assign configuration if there is no error
+  v4l: fwnode: Support driver-defined lane mapping defaults
+  v4l: fwnode: Support default CSI-2 lane mapping for drivers
+  v4l: fwnode: Parse the graph endpoint as last
+  v4l: fwnode: Use default parallel flags
+  v4l: fwnode: Allow setting default parameters
+  v4l: fwnode: Use media bus type for bus parser selection
+  v4l: fwnode: Print bus type
+  v4l: fwnode: Use V4L2 fwnode endpoint media bus type if set
+  v4l: fwnode: Support parsing of CSI-2 C-PHY endpoints
+  v4l: fwnode: Update V4L2 fwnode endpoint parsing documentation
+  smiapp: Query the V4L2 endpoint for a specific bus type
+
+ .../devicetree/bindings/media/video-interfaces.txt |   4 +-
+ drivers/gpu/ipu-v3/ipu-csi.c                       |   2 +-
+ drivers/media/i2c/adv7180.c                        |   2 +-
+ drivers/media/i2c/ov2659.c                         |  14 +-
+ drivers/media/i2c/ov5640.c                         |   4 +-
+ drivers/media/i2c/ov5645.c                         |   2 +-
+ drivers/media/i2c/ov7251.c                         |   4 +-
+ drivers/media/i2c/s5c73m3/s5c73m3-core.c           |   2 +-
+ drivers/media/i2c/s5k5baf.c                        |   4 +-
+ drivers/media/i2c/s5k6aa.c                         |   2 +-
+ drivers/media/i2c/smiapp/smiapp-core.c             |  34 +-
+ drivers/media/i2c/soc_camera/ov5642.c              |   2 +-
+ drivers/media/i2c/tc358743.c                       |  28 +-
+ drivers/media/pci/intel/ipu3/ipu3-cio2.c           |   2 +-
+ drivers/media/platform/cadence/cdns-csi2rx.c       |   2 +-
+ drivers/media/platform/cadence/cdns-csi2tx.c       |   2 +-
+ drivers/media/platform/marvell-ccic/mcam-core.c    |   4 +-
+ drivers/media/platform/marvell-ccic/mmp-driver.c   |   2 +-
+ drivers/media/platform/omap3isp/isp.c              |   2 +-
+ drivers/media/platform/pxa_camera.c                |   2 +-
+ drivers/media/platform/rcar-vin/rcar-csi2.c        |   2 +-
+ drivers/media/platform/soc_camera/soc_mediabus.c   |   2 +-
+ drivers/media/platform/stm32/stm32-dcmi.c          |   2 +-
+ drivers/media/platform/ti-vpe/cal.c                |   2 +-
+ drivers/media/v4l2-core/v4l2-fwnode.c              | 510 ++++++++++++++++-----
+ drivers/staging/media/imx/imx-media-csi.c          |   2 +-
+ drivers/staging/media/imx/imx6-mipi-csi2.c         |   2 +-
+ drivers/staging/media/imx074/imx074.c              |   2 +-
+ include/media/v4l2-fwnode.h                        |  33 +-
+ include/media/v4l2-mediabus.h                      |   8 +-
+ 30 files changed, 505 insertions(+), 180 deletions(-)
+
 -- 
-2.7.4
+2.11.0
