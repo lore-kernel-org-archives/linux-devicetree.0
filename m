@@ -1,58 +1,56 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH] ARM: dts: spear: fix stmpe811 interrupt properties
-Date: Mon, 23 Jul 2018 08:27:47 +0530
-Message-ID: <20180723025747.ykxeqogyfn6wskvo@vireshk-i7>
-References: <20180720075356.26156-1-marcel@ziswiler.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180720075356.26156-1-marcel@ziswiler.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marcel Ziswiler <marcel@ziswiler.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Viresh Kumar <vireshk@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: Pengbo Mu <pengbo.mu@nxp.com>
+Subject: [PATCH v6 1/4] usb: dwc3: add global soc bus configuration reg0
+Date: Mon, 23 Jul 2018 11:06:21 +0800
+Message-ID: <1532315184-22985-1-git-send-email-pengbo.mu@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradeadorg, ran.wang_1@nxp.com, pengbo.mu@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On 20-07-18, 09:53, Marcel Ziswiler wrote:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> The property "irq-over-gpio" simply does not exist (this is nowadays
-> actually auto detected) and the property "irq-gpios" is actually called
-> "irq-gpios".
+Add the macro definition for global soc bus configuration
+register 0
 
-  "irq-gpio" ?
+Signed-off-by: Changming Huang <jerry.huang@nxp.com>
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+Signed-off-by: Pengbo Mu <pengbo.mu@nxp.com>
+---
+Changes in v6:
+ - delete some register unrelated
+Changes in v5:
+ - no change
+Changes in v4:
+ - no change
+Changes in v3:
+ - no change
+Changes in v2:
+ - split the patch
+ - add more macro definition for soc bus configuration register
+---
+ drivers/usb/dwc3/core.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-> 
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> ---
-> 
->  arch/arm/boot/dts/spear320-hmi.dts | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/spear320-hmi.dts b/arch/arm/boot/dts/spear320-hmi.dts
-> index 0d0da1f65f0e..d2d1fe944407 100644
-> --- a/arch/arm/boot/dts/spear320-hmi.dts
-> +++ b/arch/arm/boot/dts/spear320-hmi.dts
-> @@ -241,8 +241,7 @@
->  					#address-cells = <1>;
->  					#size-cells = <0>;
->  					reg = <0x41>;
-> -					irq-over-gpio;
-> -					irq-gpios = <&gpiopinctrl 29 0x4>;
-> +					irq-gpio = <&gpiopinctrl 29 0x4>;
->  					id = <0>;
->  					blocks = <0x5>;
->  					irq-trigger = <0x1>;
-
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 285ce0e..213b939 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -163,6 +163,17 @@
+ 
+ /* Bit fields */
+ 
++/* Global SoC Bus Configuration INCRx Register 0 */
++#define DWC3_GSBUSCFG0_INCR256BRSTENA	(1 << 7) /* INCR256 burst */
++#define DWC3_GSBUSCFG0_INCR128BRSTENA	(1 << 6) /* INCR128 burst */
++#define DWC3_GSBUSCFG0_INCR64BRSTENA	(1 << 5) /* INCR64 burst */
++#define DWC3_GSBUSCFG0_INCR32BRSTENA	(1 << 4) /* INCR32 burst */
++#define DWC3_GSBUSCFG0_INCR16BRSTENA	(1 << 3) /* INCR16 burst */
++#define DWC3_GSBUSCFG0_INCR8BRSTENA	(1 << 2) /* INCR8 burst */
++#define DWC3_GSBUSCFG0_INCR4BRSTENA	(1 << 1) /* INCR4 burst */
++#define DWC3_GSBUSCFG0_INCRBRSTENA	(1 << 0) /* undefined length enable */
++#define DWC3_GSBUSCFG0_INCRBRST_MASK	0xff
++
+ /* Global Debug Queue/FIFO Space Available Register */
+ #define DWC3_GDBGFIFOSPACE_NUM(n)	((n) & 0x1f)
+ #define DWC3_GDBGFIFOSPACE_TYPE(n)	(((n) << 5) & 0x1e0)
 -- 
-viresh
+2.7.4
