@@ -1,86 +1,36 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH 1/2] dt-bindings: media: i2c: Document MT9V111 bindings
-Date: Mon, 23 Jul 2018 17:29:55 +0300
-Message-ID: <20180723142955.fdbeenlz6fltww46@valkosipuli.retiisi.org.uk>
-References: <1528730253-25135-1-git-send-email-jacopo+renesas@jmondi.org>
- <1528730253-25135-2-git-send-email-jacopo+renesas@jmondi.org>
+From: Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH v7 4/4] kexec_file: Load kernel at top of system RAM if
+ required
+Date: Mon, 23 Jul 2018 16:34:43 +0200
+Message-ID: <20180723143443.GD18181@dhcp22.suse.cz>
+References: <20180718024944.577-1-bhe@redhat.com>
+ <20180718024944.577-5-bhe@redhat.com>
+ <20180718153326.b795e9ea7835432a56cd7011@linux-foundation.org>
+ <20180719151753.GB7147@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1528730253-25135-2-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <20180719151753.GB7147@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: mchehab@kernel.org, robh@kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+To: Baoquan He <bhe@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, dan.j.williams@intel.com, nicolas.pitre@linaro.org, josh@joshtriplett.org, fengguang.wu@intel.com, bp@suse.de, andy.shevchenko@gmail.com, patrik.r.jakobsson@gmail.com, airlied@linux.ie, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, dmitry.torokhov@gmail.com, frowand.list@gmail.com, keith.busch@intel.com, jonathan.derrick@intel.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com, tglx@linutronix.de, brijesh.singh@amd.com, jglisse@redhat.com, thomas.lendacky@amd.com, gregkh@linuxfoundation.org, baiyaowei@cmss.chinamobile.com, richard.weiyang@gmail.com, devel@linuxdriverproject.org, linux-input@vger.kernel.org, linux-nvdimm@lists.01.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+On Thu 19-07-18 23:17:53, Baoquan He wrote:
+> Kexec has been a formal feature in our distro, and customers owning
+> those kind of very large machine can make use of this feature to speed
+> up the reboot process. On uefi machine, the kexec_file loading will
+> search place to put kernel under 4G from top to down. As we know, the
+> 1st 4G space is DMA32 ZONE, dma, pci mmcfg, bios etc all try to consume
+> it. It may have possibility to not be able to find a usable space for
+> kernel/initrd. From the top down of the whole memory space, we don't
+> have this worry. 
 
-On Mon, Jun 11, 2018 at 05:17:32PM +0200, Jacopo Mondi wrote:
-> Add documentation for Aptina MT9V111 image sensor.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  .../bindings/media/i2c/aptina,mt9v111.txt          | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt b/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
-> new file mode 100644
-> index 0000000..bac4bf0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
-> @@ -0,0 +1,46 @@
-> +* Aptina MT9V111 CMOS sensor
-> +----------------------------
-> +
-> +The Aptina MT9V111 is a 1/4-Inch VGA-format digital image sensor with a core
-> +based on Aptina MT9V011 sensor and an integrated Image Flow Processor (IFP).
-> +
-> +The sensor has an active pixel array of 649x489 pixels and can output a number
-
-640x480 ?
-
-> +of image resolution and formats controllable through a simple two-wires
-> +interface.
-> +
-> +Required properties:
-> +--------------------
-> +
-> +- compatible: shall be "aptina,mt9v111".
-> +- clocks: reference to the system clock input provider.
-> +
-> +Optional properties:
-> +--------------------
-> +
-> +- enable-gpios: output enable signal, pin name "OE#". Active low.
-> +- standby-gpios: low power state control signal, pin name "STANDBY".
-> +  Active high.
-> +- reset-gpios: chip reset signal, pin name "RESET#". Active low.
-> +
-> +The device node must contain one 'port' child node with one 'endpoint' child
-> +sub-node for its digital output video port, in accordance with the video
-> +interface bindings defined in:
-> +Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +Example:
-> +--------
-> +
-> +        &i2c1 {
-> +                camera@48 {
-> +                        compatible = "aptina,mt9v111";
-> +                        reg = <0x48>;
-> +
-> +                        clocks = <&camera_clk>;
-> +
-> +                        port {
-> +                                mt9v111_out: endpoint {
-> +                                        remote-endpoint = <&ceu_in>;
-> +                                };
-> +                        };
-> +                };
-> +        };
-
+I do not have the full context here but let me note that you should be
+careful when doing top-down reservation because you can easily get into
+hotplugable memory and break the hotremove usecase. We even warn when
+this is done. See memblock_find_in_range_node
 -- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+Michal Hocko
+SUSE Labs
