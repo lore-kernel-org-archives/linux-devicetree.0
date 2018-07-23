@@ -1,62 +1,51 @@
-Return-Path: <SRS0=P2HZ=KB=xs4all.nl=hverkuil@kernel.org>
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCH 1/5] cec-gpio.txt: add v5-gpios for testing the 5V line
-Date: Tue, 17 Jul 2018 15:29:05 +0200
-Message-Id: <20180717132909.92158-2-hverkuil@xs4all.nl>
-In-Reply-To: <20180717132909.92158-1-hverkuil@xs4all.nl>
-References: <20180717132909.92158-1-hverkuil@xs4all.nl>
+Return-Path: <SRS0=lWLe=KH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:56312 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388132AbeGWOs2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Jul 2018 10:48:28 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 04/21] v4l: fwnode: The CSI-2 clock is continuous if it's not non-continuous
+Date: Mon, 23 Jul 2018 16:46:49 +0300
+Message-Id: <20180723134706.15334-5-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
+References: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
+Sender: devicetree-owner@vger.kernel.org
 To: linux-media@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
+Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
 List-ID: <devicetree@vger.kernel.org>
 
-From: Hans Verkuil <hans.verkuil@cisco.com>
+The continuous clock flag was only set if there was a clock or data lanes.
+This isn't needed as such a configuration is invalid to begin with. Always
+set the continuous clock flag if the non-continuous property is not found.
 
-In order to debug the HDMI 5V line we need to add a new v5-gpios
-property.
+Still don't consider the continuous clock flag as an indication that this
+is CSI-2 as it's set in the absence of the property.
 
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- .../devicetree/bindings/media/cec-gpio.txt      | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/cec-gpio.txt b/Documentation/devicetree/bindings/media/cec-gpio.txt
-index 12fcd55ed153..1d53ce89da74 100644
---- a/Documentation/devicetree/bindings/media/cec-gpio.txt
-+++ b/Documentation/devicetree/bindings/media/cec-gpio.txt
-@@ -4,8 +4,8 @@ The HDMI CEC GPIO module supports CEC implementations where the CEC line
- is hooked up to a pull-up GPIO line and - optionally - the HPD line is
- hooked up to another GPIO line.
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index 55214ff5a616..291b3dcc19f3 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -107,11 +107,12 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 	if (fwnode_property_present(fwnode, "clock-noncontinuous")) {
+ 		flags |= V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK;
+ 		pr_debug("non-continuous clock\n");
+-	} else if (have_clk_lane || bus->num_data_lanes > 0) {
++	} else {
+ 		flags |= V4L2_MBUS_CSI2_CONTINUOUS_CLOCK;
+ 	}
  
--Please note: the maximum voltage for the CEC line is 3.63V, for the HPD
--line it is 5.3V. So you may need some sort of level conversion circuitry
-+Please note: the maximum voltage for the CEC line is 3.63V, for the HPD and
-+5V lines it is 5.3V. So you may need some sort of level conversion circuitry
- when connecting them to a GPIO line.
- 
- Required properties:
-@@ -22,15 +22,18 @@ If the CEC line is not associated with an HDMI receiver/transmitter, then
- the following property is optional:
- 
-   - hpd-gpios: gpio that the HPD line is connected to.
-+  - v5-gpios: gpio that the 5V line is connected to.
- 
- Example for the Raspberry Pi 3 where the CEC line is connected to
--pin 26 aka BCM7 aka CE1 on the GPIO pin header and the HPD line is
--connected to pin 11 aka BCM17 (some level shifter is needed for this!):
-+pin 26 aka BCM7 aka CE1 on the GPIO pin header, the HPD line is
-+connected to pin 11 aka BCM17 and the 5V line is connected to pin
-+15 aka BCM22 (some level shifter is needed for the HPD and 5V lines!):
- 
- #include <dt-bindings/gpio/gpio.h>
- 
- cec-gpio {
--       compatible = "cec-gpio";
--       cec-gpios = <&gpio 7 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
--       hpd-gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
-+	compatible = "cec-gpio";
-+	cec-gpios = <&gpio 7 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-+	hpd-gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
-+	v5-gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
- };
+-	if (lanes_used || have_clk_lane || flags) {
++	if (lanes_used || have_clk_lane ||
++	    (flags & ~V4L2_MBUS_CSI2_CONTINUOUS_CLOCK)) {
+ 		bus->flags = flags;
+ 		vep->bus_type = V4L2_MBUS_CSI2;
+ 	}
 -- 
-2.18.0
+2.11.0
+
