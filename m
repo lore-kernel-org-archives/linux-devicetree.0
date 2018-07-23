@@ -1,146 +1,66 @@
-Return-Path: <SRS0=w+aW=KC=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-sn1nam01on0059.outbound.protection.outlook.com ([104.47.32.59]:23712
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726166AbeGRGRY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Jul 2018 02:17:24 -0400
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: [PATCHv4 1/4] tty: serial: uartlite: Add structure for private data
-Date: Wed, 18 Jul 2018 11:10:59 +0530
-Message-ID: <1531892462-11085-1-git-send-email-shubhrajyoti.datta@xilinx.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=lWLe=KH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:56340 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388334AbeGWOsc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Jul 2018 10:48:32 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 19/21] v4l: fwnode: Support parsing of CSI-2 C-PHY endpoints
+Date: Mon, 23 Jul 2018 16:47:04 +0300
+Message-Id: <20180723134706.15334-20-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
+References: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-Cc: shubhrajyoti.datta@gmail.com, robh+dt@kernel.org, gregkh@linuxfoundation.org, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, Tanvi Desai <tanvi.desai@xilinx.com>
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
 List-ID: <devicetree@vger.kernel.org>
 
-Add struct uartlite_data, to store the private data of the Uartlite
-driver.
+The V4L2 fwnode framework only parsed CSI-2 D-PHY endpoints while C-PHY
+support wasn't there. Also parse endpoints for media bus type
+V4L2_MBUS_CSI2_CPHY.
 
-Signed-off-by: Tanvi Desai <tanvi.desai@xilinx.com>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/tty/serial/uartlite.c | 29 +++++++++++++++++++++--------
- 1 file changed, 21 insertions(+), 8 deletions(-)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
-index c47db78..0f798f7 100644
---- a/drivers/tty/serial/uartlite.c
-+++ b/drivers/tty/serial/uartlite.c
-@@ -54,6 +54,10 @@
- #define ULITE_CONTROL_RST_RX   0x02
- #define ULITE_CONTROL_IE       0x10
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index 56e3b6395171..04ddac86aec2 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -145,7 +145,8 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 	u32 v;
+ 	int rval;
+ 
+-	if (bus_type == V4L2_MBUS_CSI2_DPHY) {
++	if (bus_type == V4L2_MBUS_CSI2_DPHY ||
++	    bus_type == V4L2_MBUS_CSI2_CPHY) {
+ 		use_default_lane_mapping = true;
+ 
+ 		num_data_lanes = min_t(u32, bus->num_data_lanes,
+@@ -221,10 +222,12 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 		flags |= V4L2_MBUS_CSI2_CONTINUOUS_CLOCK;
+ 	}
+ 
+-	if (bus_type == V4L2_MBUS_CSI2_DPHY || lanes_used ||
++	if (bus_type == V4L2_MBUS_CSI2_DPHY ||
++	    bus_type == V4L2_MBUS_CSI2_CPHY || lanes_used ||
+ 	    have_clk_lane || (flags & ~V4L2_MBUS_CSI2_CONTINUOUS_CLOCK)) {
+ 		bus->flags = flags;
+-		vep->bus_type = V4L2_MBUS_CSI2_DPHY;
++		if (bus_type == V4L2_MBUS_UNKNOWN)
++			vep->bus_type = V4L2_MBUS_CSI2_DPHY;
+ 		bus->num_data_lanes = num_data_lanes;
+ 
+ 		if (use_default_lane_mapping) {
+@@ -472,6 +475,7 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 		break;
+ 
+ 	case V4L2_MBUS_CSI2_DPHY:
++	case V4L2_MBUS_CSI2_CPHY:
+ 		rval = v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep,
+ 							   vep->bus_type);
+ 		if (rval)
+-- 
+2.11.0
 
-+struct uartlite_data {
-+       const struct uartlite_reg_ops *reg_ops;
-+};
-+
- struct uartlite_reg_ops {
-        u32 (*in)(void __iomem *addr);
-        void (*out)(u32 val, void __iomem *addr);
-@@ -91,16 +95,16 @@ static const struct uartlite_reg_ops uartlite_le =3D {
-
- static inline u32 uart_in32(u32 offset, struct uart_port *port)
- {
--       const struct uartlite_reg_ops *reg_ops =3D port->private_data;
-+       struct uartlite_data *pdata =3D port->private_data;
-
--       return reg_ops->in(port->membase + offset);
-+       return pdata->reg_ops->in(port->membase + offset);
- }
-
- static inline void uart_out32(u32 val, u32 offset, struct uart_port *port)
- {
--       const struct uartlite_reg_ops *reg_ops =3D port->private_data;
-+       struct uartlite_data *pdata =3D port->private_data;
-
--       reg_ops->out(val, port->membase + offset);
-+       pdata->reg_ops->out(val, port->membase + offset);
- }
-
- static struct uart_port ulite_ports[ULITE_NR_UARTS];
-@@ -325,6 +329,7 @@ static void ulite_release_port(struct uart_port *port)
-
- static int ulite_request_port(struct uart_port *port)
- {
-+       struct uartlite_data *pdata =3D port->private_data;
-        int ret;
-
-        pr_debug("ulite console: port=3D%p; port->mapbase=3D%llx\n",
-@@ -342,13 +347,13 @@ static int ulite_request_port(struct uart_port *port)
-                return -EBUSY;
-        }
-
--       port->private_data =3D (void *)&uartlite_be;
-+       pdata->reg_ops =3D &uartlite_be;
-        ret =3D uart_in32(ULITE_CONTROL, port);
-        uart_out32(ULITE_CONTROL_RST_TX, ULITE_CONTROL, port);
-        ret =3D uart_in32(ULITE_STATUS, port);
-        /* Endianess detection */
-        if ((ret & ULITE_STATUS_TXEMPTY) !=3D ULITE_STATUS_TXEMPTY)
--               port->private_data =3D (void *)&uartlite_le;
-+               pdata->reg_ops =3D &uartlite_le;
-
-        return 0;
- }
-@@ -585,10 +590,12 @@ static struct uart_driver ulite_uart_driver =3D {
-  * @id: requested id number.  Pass -1 for automatic port assignment
-  * @base: base address of uartlite registers
-  * @irq: irq number for uartlite
-+ * @pdata: private data for uartlite
-  *
-  * Returns: 0 on success, <0 otherwise
-  */
--static int ulite_assign(struct device *dev, int id, u32 base, int irq)
-+static int ulite_assign(struct device *dev, int id, u32 base, int irq,
-+                       struct uartlite_data *pdata)
- {
-        struct uart_port *port;
-        int rc;
-@@ -625,6 +632,7 @@ static int ulite_assign(struct device *dev, int id, u32=
- base, int irq)
-        port->dev =3D dev;
-        port->type =3D PORT_UNKNOWN;
-        port->line =3D id;
-+       port->private_data =3D pdata;
-
-        dev_set_drvdata(dev, port);
-
-@@ -675,6 +683,7 @@ MODULE_DEVICE_TABLE(of, ulite_of_match);
- static int ulite_probe(struct platform_device *pdev)
- {
-        struct resource *res;
-+       struct uartlite_data *pdata;
-        int irq;
-        int id =3D pdev->id;
- #ifdef CONFIG_OF
-@@ -684,6 +693,10 @@ static int ulite_probe(struct platform_device *pdev)
-        if (prop)
-                id =3D be32_to_cpup(prop);
- #endif
-+       pdata =3D devm_kzalloc(&pdev->dev, sizeof(struct uartlite_data),
-+                            GFP_KERNEL);
-+       if (!pdata)
-+               return -ENOMEM;
-
-        res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-        if (!res)
-@@ -693,7 +706,7 @@ static int ulite_probe(struct platform_device *pdev)
-        if (irq <=3D 0)
-                return -ENXIO;
-
--       return ulite_assign(&pdev->dev, id, res->start, irq);
-+       return ulite_assign(&pdev->dev, id, res->start, irq, pdata);
- }
-
- static int ulite_remove(struct platform_device *pdev)
---
-2.7.4
-
-This email and any attachments are intended for the sole use of the named r=
-ecipient(s) and contain(s) confidential information that may be proprietary=
-, privileged or copyrighted under applicable law. If you are not the intend=
-ed recipient, do not read, copy, or forward this email message or any attac=
-hments. Delete this email message and any attachments immediately.
