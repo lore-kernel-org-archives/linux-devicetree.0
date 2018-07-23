@@ -1,87 +1,156 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] drivers/memory/Kconfig: Add CONFIG_OF dependency
-Date: Mon, 23 Jul 2018 17:40:29 +0200
-Message-ID: <CAK8P3a10SsWuPXzOyRcNKa+ukvj_Gq13JyDTngoU8DJu6_MR0Q@mail.gmail.com>
-References: <20180721200049.7553-1-anders.roxell@linaro.org>
- <a83ff193-be57-f566-cafb-132075025b56@infradead.org> <20180722082939.2de739f1@bbrezillon>
- <CAK8P3a1_8OSqyKsbw+m3ZzLWfPqDK4ynG3WoPTk+K2uJJsiq5A@mail.gmail.com> <20180723114107.664164d2@bbrezillon>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v4 1/3] thermal: qcom-spmi: Allow to disable stage 2
+ shutdown
+Date: Mon, 23 Jul 2018 08:49:53 -0700
+Message-ID: <20180723154953.GJ129942@google.com>
+References: <20180717210815.245639-1-mka@chromium.org>
+ <CAD=FV=V1=P-Vq-VFXDfZGPMTVFvZK5cwaK_-Kxf8MwATJNwQSg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180723114107.664164d2@bbrezillon>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=V1=P-Vq-VFXDfZGPMTVFvZK5cwaK_-Kxf8MwATJNwQSg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Anders Roxell <anders.roxell@linaro.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, DTML <devicetree@vger.kernel.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, David Collins <collinsd@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 23, 2018 at 11:41 AM, Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
-> On Mon, 23 Jul 2018 11:34:43 +0200
-> Arnd Bergmann <arnd@arndb.de> wrote:
->
->> On Sun, Jul 22, 2018 at 8:29 AM, Boris Brezillon
->> <boris.brezillon@bootlin.com> wrote:
->> > +Arnd, Rob and the DT ML.
->> >
->> > On Sat, 21 Jul 2018 14:53:47 -0700
->> > Randy Dunlap <rdunlap@infradead.org> wrote:
->> >
->> >> On 07/21/2018 01:00 PM, Anders Roxell wrote:
->> >> > JZ4780_NEMC doesn't depend on OF, and if OF isn't enabled we get th=
-is
->> >> > error:
->> >> > drivers/memory/jz4780-nemc.c: In function =E2=80=98jz4780_nemc_num_=
-banks=E2=80=99:
->> >> > drivers/memory/jz4780-nemc.c:72:10: error: implicit declaration of
->> >> >  function =E2=80=98of_read_number=E2=80=99; did you mean =E2=80=98d=
-own_read_nested=E2=80=99?
->> >> >  [-Werror=3Dimplicit-function-declaration]
->> >> >    bank =3D of_read_number(prop, 1);
->> >> >           ^~~~~~~~~~~~~~
->> >> >           down_read_nested
->> >
->> > Looks like of.h defines stubs so that people can compile-test without
->> > CONFIG_OF selected. Maybe we should move of_read_number() and
->> > of_read_ulong() out of the #ifdef CONFIG_OF section.
->>
->> That seems fine, though the added dependency seems appropriate
->> here as well. of_read_number() is rarely used, and for the most part in
->> powerpc specific code that is guaranteed to have CONFIG_OF enabled,
->> so it's not that likely to cause many more problems.
->
-> Ok, then I'll let Miquel apply Anders' patch to the NAND tree.
->
-> Thanks for your feedback.
+On Fri, Jul 20, 2018 at 11:42:40AM -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Tue, Jul 17, 2018 at 2:08 PM, Matthias Kaehlcke <mka@chromium.org> wrote:
+> > When the temperature reaches stage 2 the PMIC performs by default a
+> > 'partial shutdown', unless software override is enabled. It is not well
+> > defined which peripherals are affected by a 'partial shutdown'. Drivers
+> > might be unhappy when their devices suddenly disappear and prevent an
+> > orderly shutdown.
+> >
+> > Add an optional device tree property that allows to disable stage 2
+> > shutdown.
+> >
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> > Changes in v4:
+> > - patch added to the series
+> > ---
+> >  .../bindings/thermal/qcom-spmi-temp-alarm.txt |  3 ++
+> >  drivers/thermal/qcom-spmi-temp-alarm.c        | 28 +++++++++++++------
+> >  2 files changed, 23 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt b/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt
+> > index 290ec06fa33a..377c94fa1821 100644
+> > --- a/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt
+> > +++ b/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt
+> > @@ -15,6 +15,8 @@ Optional properties:
+> >  - io-channels:     Should contain IIO channel specifier for the ADC channel,
+> >                     which report chip die temperature.
+> >  - io-channel-names: Should contain "thermal".
+> > +- stage2-shutdown-disabled: boolean to disable a partial shutdown of the PMIC
+> > +                            when the temperature reaches stage 2
+> 
+> With my understanding of device tree I believe that this should be
+> "qcom,stage2-shutdown-disabled".  If something isn't a generic
+> property affecting a whole group of bindings I believe it's supposed
+> to have a company prefix.
+> 
+> From the device tree specification (wow, this exists now?  ...and is public?)
+> 
+> https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.2
+> 
+> I find:
+> 
+> > Nonstandard property names should specify a unique string prefix, such
+> > as a stock ticker symbol, identifying the name of the company or
+> > organization that defined the property. Examples:
+>   fsl,channel-fifo-len
+>   ibm,ppc-interrupt-server#s
+>   linux,network-index
 
-My randconfig build bot just ran into a second problem with this driver
-with CONFIG_GPIOLIB disabled:
+Ok, I'll update the property name in case we keep using one.
 
-drivers/mtd/nand/raw/jz4740_nand.c: In function 'jz_nand_dev_ready':
-drivers/mtd/nand/raw/jz4740_nand.c:133:9: error: implicit declaration
-of function 'gpiod_get_value_cansleep'; did you mean
-'gpio_get_value_cansleep'? [-Werror=3Dimplicit-function-declaration]
-  return gpiod_get_value_cansleep(nand->busy_gpio);
-         ^~~~~~~~~~~~~~~~~~~~~~~~
-         gpio_get_value_cansleep
-drivers/mtd/nand/raw/jz4740_nand.c: In function 'jz_nand_probe':
-drivers/mtd/nand/raw/jz4740_nand.c:388:20: error: implicit declaration
-of function 'devm_gpiod_get_optional'; did you mean
-'devm_gpio_request_one'? [-Werror=3Dimplicit-function-declaration]
-  nand->busy_gpio =3D devm_gpiod_get_optional(&pdev->dev, "busy", GPIOD_IN)=
-;
-                    ^~~~~~~~~~~~~~~~~~~~~~~
-                    devm_gpio_request_one
-drivers/mtd/nand/raw/jz4740_nand.c:388:64: error: 'GPIOD_IN'
-undeclared (first use in this function); did you mean 'GPIOF_IN'?
-  nand->busy_gpio =3D devm_gpiod_get_optional(&pdev->dev, "busy", GPIOD_IN)=
-;
-                                                                ^~~~~~~~
-                                                                GPIOF_IN
+> =====
+> 
+> I would also perhaps add a bit more verbose justification to your
+> description of this property.  Specifically there should be some
+> indication in the bindings doc of when you'd want this property.  From
+> what David Collins said, I'd maybe write something like:
+> 
+> ---
+> 
+> You want to disable the partial "stage 2" shutdown any time you've
+> properly defined thermal zones in such a way that the OS will try to
+> shut down at that stage anyway.  Said another way, there are three
+> thermal stages defined in the PMIC:
+> 
+> stage 1: warning
+> stage 2: system should shut down
+> stage 3: emergency shut down
+> 
+> By default the PMIC assumes that the OS isn't doing anything and thus
+> at stage 2 it does the partial PMIC shutdown and at stage 3 it kills
+> all power.  If we have thermal zones defined such that the OS will
+> initiate the shutdown at stage 2 then we want to disable the PMIC's
+> automatic mode for stage 2.  That still leaves us with the emergency
+> at stage 3.
 
+Thanks, I'll add something along these lines (or bluntly copy them ;-)
 
-We could add another dependency here or (my preference) include
-linux/gpio/consumer.h to fix that. Do you want a separate patch for
-it, or should Anders send a combined patch?
+> ===
+> 
+> Actually, after writing all the above I wonder if perhaps there's a
+> way to do this all automatically.  AKA: if someone has specified a
+> "critical" level can we automatically disable the partial PMIC
+> shutdown and we don't need the extra property?  Bonus points if we can
+> check to see if the thermal zones defined actually match reality and
+> even more bonus points if you can automatically adjust the settings in
+> the PMIC based on the thermal zones...
+> 
+> I did find that in "struct thermal_zone_of_device_ops" there appears
+> to be a "set_trip_temp" function you can fill in.  When I tried that
+> quickly I saw that I got called when I echoed into
+> "/sys/class/thermal/thermal_zone0/trip_point_1_temp" but not at
+> bootup, but I didn't debug more than that...
+> 
+> 
+> >  Example:
+> >
+> > @@ -23,6 +25,7 @@ Example:
+> >                 reg = <0x2400 0x100>;
+> >                 interrupts = <0 0x24 0 IRQ_TYPE_EDGE_RISING>;
+> >                 #thermal-sensor-cells = <0>;
+> > +               stage2-shutdown-disabled;
+> >
+> >                 io-channels = <&pm8941_vadc VADC_DIE_TEMP>;
+> >                 io-channel-names = "thermal";
+> 
+> BTW: can you update the "example" in this file?  Based on the PMIC
+> docs I saw it's likely that it should be:
+> 
+> stage1 {
+>   temperature = <1050000>;
+>   hysteresis = <2000>;
+>   type = "passive";
+> };
+> stage2 {
+>   temperature = <125000>;
+>   hysteresis = <2000>;
+>   type = "critical";
+> };
+> 
+> ...and I guess we don't specify the final one because by that time
+> Linux is kaput.
+> 
+> 
+> > diff --git a/drivers/thermal/qcom-spmi-temp-alarm.c b/drivers/thermal/qcom-spmi-temp-alarm.c
+> > index ad4f3a8d6560..acbb0dbec79e 100644
+> > --- a/drivers/thermal/qcom-spmi-temp-alarm.c
+> > +++ b/drivers/thermal/qcom-spmi-temp-alarm.c
+> 
+> Sometimes people like bindings and code change to be separate patches.
+> Maintainer can specify what's desired in this case, but I find it
+> generally pleases more people to make them separate.
+> 
+> ...though I guess if we can figure out how to do this automatically we
+> will have no bindings change...
 
-      Arnd
+Thanks for the suggestions, I'll look into them for the next version!
