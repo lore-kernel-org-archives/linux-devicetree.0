@@ -1,76 +1,71 @@
-Return-Path: <vkoul@kernel.org>
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v2 1/2] dt-bindings: i2c: Add binding document for Qualcomm CCI
-Date: Tue, 17 Jul 2018 18:27:28 +0530
-Message-Id: <20180717125729.23045-2-vkoul@kernel.org>
-In-Reply-To: <20180717125729.23045-1-vkoul@kernel.org>
-References: <20180717125729.23045-1-vkoul@kernel.org>
-To: linux-i2c@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, devicetree@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Vinod Koul <vkoul@kernel.org>
+Return-Path: <SRS0=lWLe=KH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:56350 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388300AbeGWOsa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Jul 2018 10:48:30 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 11/21] v4l: fwnode: Support driver-defined lane mapping defaults
+Date: Mon, 23 Jul 2018 16:46:56 +0300
+Message-Id: <20180723134706.15334-12-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
+References: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
 List-ID: <devicetree@vger.kernel.org>
 
-From: Todor Tomov <todor.tomov@linaro.org>
+Make use of the default CSI-2 lane mapping from caller-passed
+configuration.
 
-Add DT binding document for Qualcomm Camera Control Interface device
-
-Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- .../devicetree/bindings/i2c/i2c-qcom-cci.txt       | 46 ++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
+ drivers/media/v4l2-core/v4l2-fwnode.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt b/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
-new file mode 100644
-index 000000000000..cb1fe158fba3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
-@@ -0,0 +1,46 @@
-+Qualcomm Camera Control Interface controller
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index 7c6513625f13..ed147b6fd315 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -55,10 +55,14 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 	u32 v;
+ 	int rval;
+ 
+-	if (bus_type == V4L2_FWNODE_BUS_TYPE_CSI2_DPHY)
++	if (bus_type == V4L2_FWNODE_BUS_TYPE_CSI2_DPHY) {
+ 		num_data_lanes = min_t(u32, bus->num_data_lanes,
+ 				       V4L2_FWNODE_CSI2_MAX_DATA_LANES);
+ 
++		for (i = 0; i < num_data_lanes; i++)
++			array[i] = bus->data_lanes[i];
++	}
 +
-+Required properties:
-+ - compatible: Should be one of:
-+   - "qcom,cci-v1.0.8" for 8916;
-+   - "qcom,cci-v1.4.0" for 8996.
-+ - #address-cells: Should be <1>.
-+ - #size-cells: Should be <0>.
-+ - reg: Base address of the controller and length of memory mapped region.
-+ - interrupts: Specifier for CCI interrupt.
-+ - clocks: List of clock specifiers, one for each entry in clock-names.
-+ - clock-names: Should contain:
-+   - "mmss_mmagic_ahb" - on 8996 only;
-+   - "camss_top_ahb";
-+   - "cci_ahb";
-+   - "cci";
-+   - "camss_ahb".
-+
-+Required properties on 8996:
-+ - power-domains: Power domain specifier.
-+
-+Optional:
-+ - clock-frequency: Desired I2C bus clock frequency in Hz, defaults to 100 kHz
-+   if omitted.
-+
-+Example:
-+
-+                cci@a0c000 {
-+                        compatible = "qcom,cci-v1.4.0";
-+                        #address-cells = <1>;
-+                        #size-cells = <0>;
-+                        reg = <0xa0c000 0x1000>;
-+                        interrupts = <GIC_SPI 295 IRQ_TYPE_EDGE_RISING>;
-+                        power-domains = <&mmcc CAMSS_GDSC>;
-+                        clocks = <&mmcc MMSS_MMAGIC_AHB_CLK>,
-+                                        <&mmcc CAMSS_TOP_AHB_CLK>,
-+                                        <&mmcc CAMSS_CCI_AHB_CLK>,
-+                                        <&mmcc CAMSS_CCI_CLK>,
-+                                        <&mmcc CAMSS_AHB_CLK>;
-+                        clock-names = "mmss_mmagic_ahb",
-+                                        "camss_top_ahb",
-+                                        "cci_ahb",
-+                                        "cci",
-+                                        "camss_ahb";
-+                        clock-frequency = <400000>;
-+                };
+ 	rval = fwnode_property_read_u32_array(fwnode, "data-lanes", NULL, 0);
+ 	if (rval > 0) {
+ 		num_data_lanes =
+@@ -66,15 +70,15 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 
+ 		fwnode_property_read_u32_array(fwnode, "data-lanes", array,
+ 					       num_data_lanes);
++	}
+ 
+-		for (i = 0; i < num_data_lanes; i++) {
+-			if (lanes_used & BIT(array[i]))
+-				pr_warn("duplicated lane %u in data-lanes\n",
+-					array[i]);
+-			lanes_used |= BIT(array[i]);
++	for (i = 0; i < num_data_lanes; i++) {
++		if (lanes_used & BIT(array[i]))
++			pr_warn("duplicated lane %u in data-lanes\n",
++				array[i]);
++		lanes_used |= BIT(array[i]);
+ 
+-			pr_debug("lane %u position %u\n", i, array[i]);
+-		}
++		pr_debug("lane %u position %u\n", i, array[i]);
+ 	}
+ 
+ 	rval = fwnode_property_read_u32_array(fwnode, "lane-polarities", NULL,
 -- 
-2.14.4
+2.11.0
+
