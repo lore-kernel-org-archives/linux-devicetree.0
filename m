@@ -1,93 +1,109 @@
-Return-Path: <SRS0=4zTT=KF=tom.com=liuxiang_1999@kernel.org>
-From: Liu Xiang <liu.xiang6@zte.com.cn>
-Subject: [PATCH] of: irq: Add a helper function for irq_of_parse_and_map
-Date: Sat, 21 Jul 2018 23:38:14 +0800
-Message-Id: <1532187494-2704-1-git-send-email-liu.xiang6@zte.com.cn>
-To: robh+dt@kernel.org
-Cc: frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, liuxiang_1999@126.com, Liu Xiang <liu.xiang6@zte.com.cn>
+Return-Path: <SRS0=lWLe=KH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:56338 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388287AbeGWOsa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Jul 2018 10:48:30 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 08/21] v4l: fwnode: Make use of newly specified bus types
+Date: Mon, 23 Jul 2018 16:46:53 +0300
+Message-Id: <20180723134706.15334-9-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
+References: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
 List-ID: <devicetree@vger.kernel.org>
 
-Implement a resource managed irq_of_parse_and_map function.
+Make use of bus type specified for an endpoint.
 
-Signed-off-by: Liu Xiang <liu.xiang6@zte.com.cn>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/of/irq.c       | 38 ++++++++++++++++++++++++++++++++++++++
- include/linux/of_irq.h |  7 +++++++
- 2 files changed, 45 insertions(+)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 48 ++++++++++++++++++++++++++---------
+ 1 file changed, 36 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 02ad93a..947fe41 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -45,6 +45,44 @@ unsigned int irq_of_parse_and_map(struct device_node *dev, int index)
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index 85f409808042..e62a1fcabd8f 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -123,8 +123,16 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(irq_of_parse_and_map);
  
-+static void devm_irq_dispose_mapping(struct device *dev, void *res)
-+{
-+	irq_dispose_mapping(*(unsigned int *)res);
-+}
++#define PARALLEL_MBUS_FLAGS (V4L2_MBUS_HSYNC_ACTIVE_HIGH |	\
++			     V4L2_MBUS_HSYNC_ACTIVE_LOW |	\
++			     V4L2_MBUS_VSYNC_ACTIVE_HIGH |	\
++			     V4L2_MBUS_VSYNC_ACTIVE_LOW |	\
++			     V4L2_MBUS_FIELD_EVEN_HIGH |	\
++			     V4L2_MBUS_FIELD_EVEN_LOW)
 +
-+/**
-+ * devm_irq_of_parse_and_map - Resource-managed irq_of_parse_and_map
-+ * @dev: Device whose interrupt is to be mapped
-+ * @index: Index of the interrupt to map
-+ *
-+ * Managed irq_of_parse_and_map. Irq mapping created by this function is
-+ * automatically disposed on driver detach.
-+ *
-+ * RETURNS:
-+ * Returns a linux irq number on success, 0 on failure.
-+ */
-+unsigned int devm_irq_of_parse_and_map(struct device *dev, int index)
-+{
-+	struct device_node *np = dev->of_node;
-+	unsigned int *dr = NULL;
-+	unsigned int rc = 0;
+ static void v4l2_fwnode_endpoint_parse_parallel_bus(
+-	struct fwnode_handle *fwnode, struct v4l2_fwnode_endpoint *vep)
++	struct fwnode_handle *fwnode, struct v4l2_fwnode_endpoint *vep,
++	enum v4l2_fwnode_bus_type bus_type)
+ {
+ 	struct v4l2_fwnode_bus_parallel *bus = &vep->bus.parallel;
+ 	unsigned int flags = 0;
+@@ -192,17 +200,24 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
+ 		pr_debug("data-enable-active %s\n", v ? "high" : "low");
+ 	}
+ 
+-	if (flags || is_parallel) {
++	switch (bus_type) {
++	default:
+ 		bus->flags = flags;
+-		if (flags & (V4L2_MBUS_HSYNC_ACTIVE_HIGH |
+-			     V4L2_MBUS_HSYNC_ACTIVE_LOW |
+-			     V4L2_MBUS_VSYNC_ACTIVE_HIGH |
+-			     V4L2_MBUS_VSYNC_ACTIVE_LOW |
+-			     V4L2_MBUS_FIELD_EVEN_HIGH |
+-			     V4L2_MBUS_FIELD_EVEN_LOW))
+-			vep->bus_type = V4L2_MBUS_PARALLEL;
+-		else
+-			vep->bus_type = V4L2_MBUS_BT656;
++		if (flags || is_parallel) {
++			if (flags & PARALLEL_MBUS_FLAGS)
++				vep->bus_type = V4L2_MBUS_PARALLEL;
++			else
++				vep->bus_type = V4L2_MBUS_BT656;
++		}
++		break;
++	case V4L2_FWNODE_BUS_TYPE_PARALLEL:
++		vep->bus_type = V4L2_MBUS_PARALLEL;
++		bus->flags = flags;
++		break;
++	case V4L2_FWNODE_BUS_TYPE_BT656:
++		vep->bus_type = V4L2_MBUS_BT656;
++		bus->flags = flags & ~PARALLEL_MBUS_FLAGS;
++		break;
+ 	}
+ }
+ 
+@@ -263,7 +278,8 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 			return rval;
+ 
+ 		if (vep->bus_type == V4L2_MBUS_UNKNOWN)
+-			v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep);
++			v4l2_fwnode_endpoint_parse_parallel_bus(
++				fwnode, vep, V4L2_MBUS_UNKNOWN);
+ 
+ 		return vep->bus_type == V4L2_MBUS_UNKNOWN ? -EINVAL : 0;
+ 	case V4L2_FWNODE_BUS_TYPE_CCP2:
+@@ -271,6 +287,14 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 		v4l2_fwnode_endpoint_parse_csi1_bus(fwnode, vep, bus_type);
+ 
+ 		return 0;
++	case V4L2_FWNODE_BUS_TYPE_CSI2_DPHY:
++		vep->bus_type = V4L2_MBUS_CSI2_DPHY;
++		return v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep);
++	case V4L2_FWNODE_BUS_TYPE_PARALLEL:
++	case V4L2_FWNODE_BUS_TYPE_BT656:
++		v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep, bus_type);
 +
-+	dr = devres_alloc(devm_irq_dispose_mapping, sizeof(unsigned int),
-+			  GFP_KERNEL);
-+	if (!dr)
 +		return 0;
-+
-+	rc = irq_of_parse_and_map(np, index);
-+	if (rc > 0) {
-+		*dr = rc;
-+		devres_add(dev, dr);
-+	} else
-+		devres_free(dr);
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(devm_irq_of_parse_and_map);
-+
- /**
-  * of_irq_find_parent - Given a device node, find its interrupt parent node
-  * @child: pointer to device node
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index 1214cab..1ac26ff 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -55,6 +55,7 @@ extern struct irq_domain *of_msi_map_get_device_domain(struct device *dev,
- 						       u32 rid);
- extern void of_msi_configure(struct device *dev, struct device_node *np);
- u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in);
-+extern unsigned int devm_irq_of_parse_and_map(struct device *dev, int index);
- #else
- static inline int of_irq_count(struct device_node *dev)
- {
-@@ -97,6 +98,12 @@ static inline u32 of_msi_map_rid(struct device *dev,
- {
- 	return rid_in;
- }
-+
-+static inline unsigned int devm_irq_of_parse_and_map(struct device *dev,
-+						     int index)
-+{
-+	return 0;
-+}
- #endif
- 
- #if defined(CONFIG_OF_IRQ) || defined(CONFIG_SPARC)
+ 	default:
+ 		pr_warn("unsupported bus type %u\n", bus_type);
+ 		return -EINVAL;
 -- 
-1.9.1
+2.11.0
+
