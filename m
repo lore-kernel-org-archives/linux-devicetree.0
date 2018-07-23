@@ -1,78 +1,107 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v7 08/12] mfd: intel-peci-client: Add PECI client MFD
- driver
-Date: Mon, 23 Jul 2018 15:21:46 -0700
-Message-ID: <c1abe3ec-fc26-d8b0-c769-e9295577ac05@infradead.org>
-References: <20180723214751.1733-1-jae.hyun.yoo@linux.intel.com>
- <20180723214751.1733-9-jae.hyun.yoo@linux.intel.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v10 1/7] dt-bindings: net: bluetooth: Add device tree
+ bindings for QTI chip wcn3990
+Date: Mon, 23 Jul 2018 15:32:36 -0700
+Message-ID: <20180723223236.GN129942@google.com>
+References: <20180720133243.6851-1-bgodavar@codeaurora.org>
+ <20180720133243.6851-2-bgodavar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180723214751.1733-9-jae.hyun.yoo@linux.intel.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Darrick J . Wong" <darrick.wong@oracle.com>, Eric Sandeen <sandeen@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, Tomohiro Kusumi <kusumi.tomohiro@gmail.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, "David S . Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>Andr
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-doc@vger.kernel.org, Vernon Mauery <vernon.mauery@linux.intel.com>, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180720133243.6851-2-bgodavar@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/23/2018 02:47 PM, Jae Hyun Yoo wrote:
-> This commit adds PECI client MFD driver.
+On Fri, Jul 20, 2018 at 07:02:37PM +0530, Balakrishna Godavarthi wrote:
+> This patch enables regulators for the Qualcomm Bluetooth wcn3990
+> controller.
 > 
-> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Andrew Jeffery <andrew@aj.id.au>
-> Cc: James Feist <james.feist@linux.intel.com>
-> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
-> Cc: Joel Stanley <joel@jms.id.au>
-> Cc: Vernon Mauery <vernon.mauery@linux.intel.com>
+> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
->  drivers/mfd/Kconfig                   |  14 ++
->  drivers/mfd/Makefile                  |   1 +
->  drivers/mfd/intel-peci-client.c       | 182 ++++++++++++++++++++++++++
->  include/linux/mfd/intel-peci-client.h |  81 ++++++++++++
->  4 files changed, 278 insertions(+)
->  create mode 100644 drivers/mfd/intel-peci-client.c
->  create mode 100644 include/linux/mfd/intel-peci-client.h
+> Changes in v10:
+>     * added entry for regulator currents
 > 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index f3fa516011ec..e38b591479d4 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -595,6 +595,20 @@ config MFD_INTEL_MSIC
->  	  Passage) chip. This chip embeds audio, battery, GPIO, etc.
->  	  devices used in Intel Medfield platforms.
+> Changes in v9:
+>     * updated with latest reg handle and names.
+>     * updated max-speed definition. 
+> 
+> Changes in v8:
+>     * Separated the optional entries between two chips
+> 
+> Changes in v7:
+>     * no change.
+> 
+> Changes in v6:
+> 
+>     * Changed the oper-speed to max-speed.
+> 
+> Changes in v5:
+> 
+>     * Added entry for oper-speed and init-speed.
+> 
+> ---
+>  .../bindings/net/qualcomm-bluetooth.txt       | 42 ++++++++++++++++++-
+>  1 file changed, 40 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> index 0ea18a53cc29..ca04c4981048 100644
+> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> @@ -10,12 +10,34 @@ device the slave device is attached to.
+>  Required properties:
+>   - compatible: should contain one of the following:
+>     * "qcom,qca6174-bt"
+> +   * "qcom,wcn3990-bt"
+> +
+> +Optional properties for compatible string qcom,qca6174-bt:
 >  
-> +config MFD_INTEL_PECI_CLIENT
-> +	bool "Intel PECI client"
-> +	depends on (PECI || COMPILE_TEST)
-> +	select MFD_CORE
-> +	help
-> +	  If you say yes to this option, support will be included for the
-> +	  multi-funtional Intel PECI (Platform Environment Control Interface)
-
-	  multi-functional
-
-> +	  client. PECI is a one-wire bus interface that provides a communication
-> +	  channel from PECI clients in Intel processors and chipset components
-> +	  to external monitoring or control devices.
+> -Optional properties:
+>   - enable-gpios: gpio specifier used to enable chip
+>   - clocks: clock provided to the controller (SUSCLK_32KHZ)
+>  
+> -Example:
+> +Optional properties for compatible string qcom,wcn3990-bt:
 > +
-> +	  Additional drivers must be enabled in order to use the functionality
-> +	  of the device.
+> + - vddio-supply: Bluetooth wcn3990 VDD_IO supply regulator handle.
+> + - vddxo-supply: Bluetooth wcn3990 VDD_XO supply regulator handle.
+> + - vddrf-supply: Bluetooth wcn3990 VDD_RF supply regulator handle.
+> + - vddch0-supply: Bluetooth wcn3990 VDD_CH0 supply regulator handle.
 > +
->  config MFD_IPAQ_MICRO
->  	bool "Atmel Micro ASIC (iPAQ h3100/h3600/h3700) Support"
->  	depends on SA1100_H3100 || SA1100_H3600
+> + - If WCN3990 is connected to platform where RPMH PMIC processor is used
+> +   then the load values will be 1uA. if it is connected to platform where RPM
+> +   PMIC processor is used then load value will be 10000 uA.
+> +   if it is connected to different platform, where current values are fixed
+> +   as in data sheet then below property are not required.
 
+Please provide details why these magic values are needed for RPMh and
+RPM PMICs.
 
--- 
-~Randy
+For RPMh it looks like a value of 1uA would cause the regulator to
+enter idle mode:
+
+static int rpmh_regulator_vrm_set_load(struct regulator_dev *rdev, int load_uA)
+{
+	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
+	unsigned int mode;
+
+	if (load_uA >= vreg->hw_data->hpm_min_load_uA)
+		mode = REGULATOR_MODE_NORMAL;
+	else
+		mode = REGULATOR_MODE_IDLE;
+
+	return rpmh_regulator_vrm_set_mode(rdev, mode);
+}
+
+https://patchwork.kernel.org/patch/10524299/
+
+Is that really intended and if so why? It might make sense to save
+power when really in idle mode, but I assume you somehow have to tell
+the regulator to switch to normal mode when BT is used.
+
+I also commented about this on patch "[7/7] Bluetooth: hci_qca: Add
+support for Qualcomm Bluetooth chip wcn3990". I suggest to center the
+discussion here and reply with a link to the other patch.
