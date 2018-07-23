@@ -1,208 +1,259 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v6 5/5] mailbox: Add support for i.MX7D messaging unit
-Date: Mon, 23 Jul 2018 19:19:40 +0200
-Message-ID: <1532366380.3163.109.camel@pengutronix.de>
-References: <20180722063923.30222-1-o.rempel@pengutronix.de>
- <20180722063923.30222-6-o.rempel@pengutronix.de>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] phy: qcom-qmp: Fix dts bindings to reflect reality
+Date: Mon, 23 Jul 2018 10:37:25 -0700
+Message-ID: <CAD=FV=UDq8oq+nKsa2mZWvAUueUFxEUSYz2JoZ=E7e131SOR=g@mail.gmail.com>
+References: <20180706233142.166296-1-dianders@chromium.org>
+ <20180720141059.GA3064@rob-hp-laptop> <CAD=FV=WzjZBYV+yjekC-GGgjyWNbdGX=ZwesQMQhiYHZLyzhzA@mail.gmail.com>
+ <CAL_JsqKZUB3P_Z_pRG-Udx0wgWtSjzgF=Rc3t8Xf2n2uZkV3Qw@mail.gmail.com>
+ <CAD=FV=XBCeKUrfMCppfhetWNWLJWzsbiBkQnTugoXDff-0SD5w@mail.gmail.com> <CAL_Jsq+X=RZK-GU+9LqK-0O1A=cYeudhHvvnrXm6xv=j1Ck4_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180722063923.30222-6-o.rempel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, dl-linux-imx <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+X=RZK-GU+9LqK-0O1A=cYeudhHvvnrXm6xv=j1Ck4_w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Manu Gautam <mgautam@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gU29ubnRhZywgZGVuIDIyLjA3LjIwMTgsIDA4OjM5ICswMjAwIHNjaHJpZWIgT2xla3NpaiBS
-ZW1wZWw6Cj4gVGhlIE1haWxib3ggY29udHJvbGxlciBpcyBhYmxlIHRvIHNlbmQgbWVzc2FnZXMg
-KHVwIHRvIDQgMzIgYml0IHdvcmRzKQo+IGJldHdlZW4gdGhlIGVuZHBvaW50cy4KPiAKPiBUaGlz
-IGRyaXZlciB3YXMgdGVzdGVkIHVzaW5nIHRoZSBtYWlsYm94LXRlc3QgZHJpdmVyIHNlbmRpbmcg
-bWVzc2FnZXMKPiBiZXR3ZWVuIHRoZSBDb3J0ZXgtQTcgYW5kIHRoZSBDb3J0ZXgtTTQuCj4gCj4g
-PiBSZXZpZXdlZC1ieTogRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4KPiA+IFNp
-Z25lZC1vZmYtYnk6IE9sZWtzaWogUmVtcGVsIDxvLnJlbXBlbEBwZW5ndXRyb25peC5kZT4KPiAt
-LS0KPiDCoGRyaXZlcnMvbWFpbGJveC9LY29uZmlnwqDCoMKgwqDCoMKgwqB8wqDCoMKgNiArCj4g
-wqBkcml2ZXJzL21haWxib3gvTWFrZWZpbGXCoMKgwqDCoMKgwqB8wqDCoMKgMiArCj4gwqBkcml2
-ZXJzL21haWxib3gvaW14LW1haWxib3guYyB8IDI3MyArKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrCj4gwqAzIGZpbGVzIGNoYW5nZWQsIDI4MSBpbnNlcnRpb25zKCspCj4gwqBjcmVh
-dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tYWlsYm94L2lteC1tYWlsYm94LmMKPiAKPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9tYWlsYm94L0tjb25maWcgYi9kcml2ZXJzL21haWxib3gvS2NvbmZpZwo+
-IGluZGV4IGEyYmIyNzQ0NmRjZS4uNzkwNjBkZGMzODBkIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMv
-bWFpbGJveC9LY29uZmlnCj4gKysrIGIvZHJpdmVycy9tYWlsYm94L0tjb25maWcKPiBAQCAtMTUs
-NiArMTUsMTIgQEAgY29uZmlnIEFSTV9NSFUKPiA+IMKgCcKgwqBUaGUgY29udHJvbGxlciBoYXMg
-MyBtYWlsYm94IGNoYW5uZWxzLCB0aGUgbGFzdCBvZiB3aGljaCBjYW4gYmUKPiA+IMKgCcKgwqB1
-c2VkIGluIFNlY3VyZSBtb2RlIG9ubHkuCj4gwqAKPiArY29uZmlnIElNWF9NQk9YCj4gPiArCXRy
-aXN0YXRlICJpLk1YIE1haWxib3giCj4gPiArCWRlcGVuZHMgb24gQVJDSF9NWEMgfHwgQ09NUElM
-RV9URVNUCj4gPiArCWhlbHAKPiA+ICsJwqDCoE1haWxib3ggaW1wbGVtZW50YXRpb24gZm9yIGku
-TVggTWVzc2FnaW5nIFVuaXQgKE1VKS4KPiArCj4gwqBjb25maWcgUExBVEZPUk1fTUhVCj4gPiDC
-oAl0cmlzdGF0ZSAiUGxhdGZvcm0gTUhVIE1haWxib3giCj4gPiDCoAlkZXBlbmRzIG9uIE9GCj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWFpbGJveC9NYWtlZmlsZSBiL2RyaXZlcnMvbWFpbGJveC9N
-YWtlZmlsZQo+IGluZGV4IGNjMjNjM2E0M2ZjZC4uYmEyZmUxYjZkZDYyIDEwMDY0NAo+IC0tLSBh
-L2RyaXZlcnMvbWFpbGJveC9NYWtlZmlsZQo+ICsrKyBiL2RyaXZlcnMvbWFpbGJveC9NYWtlZmls
-ZQo+ID4gQEAgLTcsNiArNyw4IEBAIG9iai0kKENPTkZJR19NQUlMQk9YX1RFU1QpCSs9IG1haWxi
-b3gtdGVzdC5vCj4gwqAKPiA+IMKgb2JqLSQoQ09ORklHX0FSTV9NSFUpCSs9IGFybV9taHUubwo+
-IMKgCj4gPiArb2JqLSQoQ09ORklHX0lNWF9NQk9YKQkrPSBpbXgtbWFpbGJveC5vCj4gKwo+ID4g
-wqBvYmotJChDT05GSUdfUExBVEZPUk1fTUhVKQkrPSBwbGF0Zm9ybV9taHUubwo+IMKgCj4gPiDC
-oG9iai0kKENPTkZJR19QTDMyMF9NQk9YKQkrPSBwbDMyMC1pcGMubwo+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL21haWxib3gvaW14LW1haWxib3guYyBiL2RyaXZlcnMvbWFpbGJveC9pbXgtbWFpbGJv
-eC5jCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjI5Y2YyODc2
-ZGIwMQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL21haWxib3gvaW14LW1haWxib3gu
-Ywo+IEBAIC0wLDAgKzEsMjczIEBACj4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwt
-Mi4wCj4gKy8qCj4gKyAqIENvcHlyaWdodCAoYykgMjAxOCBQZW5ndXRyb25peCwgT2xla3NpaiBS
-ZW1wZWwgPG8ucmVtcGVsQHBlbmd1dHJvbml4LmRlPgo+ICsgKi8KPiArCj4gKyNpbmNsdWRlIDxs
-aW51eC9jbGsuaD4KPiArI2luY2x1ZGUgPGxpbnV4L2ludGVycnVwdC5oPgo+ICsjaW5jbHVkZSA8
-bGludXgvaW8uaD4KPiArI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPgo+ICsjaW5jbHVkZSA8bGlu
-dXgvbWFpbGJveF9jb250cm9sbGVyLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPiAr
-I2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5oPgo+ICsKPiArLyogVHJhbnNtaXQgUmVnaXN0ZXIg
-Ki8KPiA+ICsjZGVmaW5lIElNWF9NVV94VFJuKHgpCQkoMHgwMCArIDQgKiAoeCkpCj4gKy8qIFJl
-Y2VpdmUgUmVnaXN0ZXIgKi8KPiA+ICsjZGVmaW5lIElNWF9NVV94UlJuKHgpCQkoMHgxMCArIDQg
-KiAoeCkpCj4gKy8qIFN0YXR1cyBSZWdpc3RlciAqLwo+ID4gKyNkZWZpbmUgSU1YX01VX3hTUgkJ
-MHgyMAo+ID4gKyNkZWZpbmUgSU1YX01VX3hTUl9URW4oeCkJQklUKDIwICsgKDMgLSAoeCkpKQo+
-ID4gKyNkZWZpbmUgSU1YX01VX3hTUl9SRm4oeCkJQklUKDI0ICsgKDMgLSAoeCkpKQo+ID4gKyNk
-ZWZpbmUgSU1YX01VX3hTUl9CUkRJUAlCSVQoOSkKPiArCj4gKy8qIENvbnRyb2wgUmVnaXN0ZXIg
-Ki8KPiA+ICsjZGVmaW5lIElNWF9NVV94Q1IJCTB4MjQKPiArLyogVHJhbnNtaXQgSW50ZXJydXB0
-IEVuYWJsZSAqLwo+ID4gKyNkZWZpbmUgSU1YX01VX3hDUl9USUVuKHgpCUJJVCgyMCArICgzIC0g
-KHgpKSkKPiArLyogUmVjZWl2ZSBJbnRlcnJ1cHQgRW5hYmxlICovCj4gPiArI2RlZmluZSBJTVhf
-TVVfeENSX1JJRW4oeCkJQklUKDI0ICsgKDMgLSAoeCkpKQo+ICsKPiA+ICsjZGVmaW5lIElNWF9N
-VV9DSEFOUwk0dQo+ICsKPiArc3RydWN0IGlteF9tdV9jb25fcHJpdiB7Cj4gPiA+ICsJaW50CQkJ
-aXJxOwo+ID4gPiArCXVuc2lnbmVkIGludAkJaWR4Owo+ID4gPiArCWNoYXIJCQkqaXJxX2Rlc2M7
-Cj4gK307Cj4gKwo+ICtzdHJ1Y3QgaW14X211X3ByaXYgewo+ID4gPiArCXN0cnVjdCBkZXZpY2UJ
-CSpkZXY7Cj4gPiA+ICsJdm9pZCBfX2lvbWVtCQkqYmFzZTsKPiArCj4gPiA+ICsJc3RydWN0IG1i
-b3hfY29udHJvbGxlcgltYm94Owo+ID4gPiArCXN0cnVjdCBtYm94X2NoYW4JbWJveF9jaGFuc1tJ
-TVhfTVVfQ0hBTlNdOwo+ICsKPiA+ICsJc3RydWN0IGlteF9tdV9jb25fcHJpdsKgwqBjb25fcHJp
-dltJTVhfTVVfQ0hBTlNdOwo+ID4gPiArCXN0cnVjdCBjbGsJCSpjbGs7Cj4gKwo+ID4gPiArCWJv
-b2wJCQlzaWRlX2I7Cj4gK307Cj4gKwo+ICtzdGF0aWMgc3RydWN0IGlteF9tdV9wcml2ICp0b19p
-bXhfbXVfcHJpdihzdHJ1Y3QgbWJveF9jb250cm9sbGVyICptYm94KQo+ICt7Cj4gPiArCXJldHVy
-biBjb250YWluZXJfb2YobWJveCwgc3RydWN0IGlteF9tdV9wcml2LCBtYm94KTsKPiArfQo+ICsK
-PiArc3RhdGljIHZvaWQgaW14X211X3dyaXRlKHN0cnVjdCBpbXhfbXVfcHJpdiAqcHJpdiwgdTMy
-IHZhbCwgdTMyIG9mZnMpCj4gK3sKPiArCWlvd3JpdGUzMih2YWwsIHByaXYtPmJhc2UgKyBvZmZz
-KTsKClRoaXMgZHJpdmVyIGlzIG5ldmVyIGdvaW5nIHRvIGJlIHVzZWQgb24gYSBkZXZpY2Ugd2l0
-aCBwb3J0IGJhc2VkIElPLApzbyBpb3dyaXRlIGRvZXNuJ3QgbWFrZSBtdWNoIHNlbnNlIGhlcmUs
-IGp1c3QgdXNlIHdyaXRlbC4gU2FtZSBjb21tZW50CmFwcGxpZXMgdG8gdGhlIGJlbG93IHJlYWQg
-ZnVuY3Rpb24uCgpBbHNvLCBnaXZlbiB0aGF0IHRob3NlIGZ1bmN0aW9ucyBhcmUgbm90IHJlYWxs
-eSBzaG9ydGVuaW5nIHRoZSBjb2RlIGluCnRoZSB1c2VyIHRoZXkgbWF5IGFsc28gYmUgcmVtb3Zl
-ZCBjb21wbGV0ZWx5IElNSE8uCiAgCj4gK30KPiArCj4gK3N0YXRpYyB1MzIgaW14X211X3JlYWQo
-c3RydWN0IGlteF9tdV9wcml2ICpwcml2LCB1MzIgb2ZmcykKPiArewo+ID4gKwlyZXR1cm4gaW9y
-ZWFkMzIocHJpdi0+YmFzZSArIG9mZnMpOwo+ICt9Cj4gKwo+ICtzdGF0aWMgdTMyIGlteF9tdV9y
-bXcoc3RydWN0IGlteF9tdV9wcml2ICpwcml2LCB1MzIgb2ZmcywgdTMyIHNldCwgdTMyIGNscikK
-PiArewo+ID4gKwl1MzIgdmFsOwo+ICsKPiA+ICsJdmFsID0gaW14X211X3JlYWQocHJpdiwgb2Zm
-cyk7Cj4gPiArCXZhbCAmPSB+Y2xyOwo+ID4gKwl2YWwgfD0gc2V0Owo+ID4gKwlpbXhfbXVfd3Jp
-dGUocHJpdiwgdmFsLCBvZmZzKTsKPiArCj4gPiArCXJldHVybiB2YWw7Cj4gK30KPiArCj4gK3N0
-YXRpYyBpcnFyZXR1cm5fdCBpbXhfbXVfaXNyKGludCBpcnEsIHZvaWQgKnApCj4gK3sKPiA+ICsJ
-c3RydWN0IG1ib3hfY2hhbiAqY2hhbiA9IHA7Cj4gPiArCXN0cnVjdCBpbXhfbXVfcHJpdiAqcHJp
-diA9IHRvX2lteF9tdV9wcml2KGNoYW4tPm1ib3gpOwo+ID4gKwlzdHJ1Y3QgaW14X211X2Nvbl9w
-cml2ICpjcCA9IGNoYW4tPmNvbl9wcml2Owo+ID4gKwl1MzIgdmFsLCBjdHJsLCBkYXQ7Cj4gKwo+
-ID4gKwljdHJsID0gaW14X211X3JlYWQocHJpdiwgSU1YX01VX3hDUik7Cj4gPiArCXZhbCA9IGlt
-eF9tdV9yZWFkKHByaXYsIElNWF9NVV94U1IpOwo+ID4gKwl2YWwgJj0gSU1YX01VX3hTUl9URW4o
-Y3AtPmlkeCkgfCBJTVhfTVVfeFNSX1JGbihjcC0+aWR4KTsKPiA+ICsJdmFsICY9IGN0cmwgJiAo
-SU1YX01VX3hDUl9USUVuKGNwLT5pZHgpIHwgSU1YX01VX3hDUl9SSUVuKGNwLT5pZHgpKTsKPiA+
-ICsJaWYgKCF2YWwpCj4gPiArCQlyZXR1cm4gSVJRX05PTkU7Cj4gKwo+ID4gKwlpZiAodmFsICYg
-SU1YX01VX3hTUl9URW4oY3AtPmlkeCkpIHsKPiA+ICsJCWlteF9tdV9ybXcocHJpdiwgSU1YX01V
-X3hDUiwgMCwgSU1YX01VX3hDUl9USUVuKGNwLT5pZHgpKTsKPiA+ICsJCW1ib3hfY2hhbl90eGRv
-bmUoY2hhbiwgMCk7Cj4gPiArCX0KPiArCj4gPiArCWlmICh2YWwgJiBJTVhfTVVfeFNSX1JGbihj
-cC0+aWR4KSkgewo+ID4gKwkJZGF0ID0gaW14X211X3JlYWQocHJpdiwgSU1YX01VX3hSUm4oY3At
-PmlkeCkpOwo+ID4gKwkJbWJveF9jaGFuX3JlY2VpdmVkX2RhdGEoY2hhbiwgKHZvaWQgKikmZGF0
-KTsKPiA+ICsJfQo+ICsKPiA+ICsJcmV0dXJuIElSUV9IQU5ETEVEOwo+ICt9Cj4gKwo+ICtzdGF0
-aWMgYm9vbCBpbXhfbXVfbGFzdF90eF9kb25lKHN0cnVjdCBtYm94X2NoYW4gKmNoYW4pCj4gK3sK
-PiA+ICsJc3RydWN0IGlteF9tdV9wcml2ICpwcml2ID0gdG9faW14X211X3ByaXYoY2hhbi0+bWJv
-eCk7Cj4gPiArCXN0cnVjdCBpbXhfbXVfY29uX3ByaXYgKmNwID0gY2hhbi0+Y29uX3ByaXY7Cj4g
-PiArCXUzMiB2YWw7Cj4gKwo+ID4gKwl2YWwgPSBpbXhfbXVfcmVhZChwcml2LCBJTVhfTVVfeFNS
-KTsKPiA+ICsJLyogdGVzdCBpZiB0cmFuc21pdCByZWdpc3RlciBpcyBlbXB0eSAqLwo+ICsJcmV0
-dXJuIHZhbCAmIElNWF9NVV94U1JfVEVuKGNwLT5pZHgpOwoKSSBndWVzcwoicmV0dXJuIGlteF9t
-dV9yZWFkKHByaXYsIElNWF9NVV94U1IpICYgSU1YX01VX3hTUl9URW4oY3AtPmlkeCk7IiBpcwpz
-aG9ydGVyIGFuZCBlcXVhbGx5IHdlbGwgdW5kZXJzdG9vZC4KCj4gK30KPiArCj4gK3N0YXRpYyBp
-bnQgaW14X211X3NlbmRfZGF0YShzdHJ1Y3QgbWJveF9jaGFuICpjaGFuLCB2b2lkICpkYXRhKQo+
-ICt7Cj4gPiArCXN0cnVjdCBpbXhfbXVfcHJpdiAqcHJpdiA9IHRvX2lteF9tdV9wcml2KGNoYW4t
-Pm1ib3gpOwo+ID4gKwlzdHJ1Y3QgaW14X211X2Nvbl9wcml2ICpjcCA9IGNoYW4tPmNvbl9wcml2
-Owo+ID4gKwl1MzIgKmFyZyA9IGRhdGE7Cj4gKwo+ID4gKwlpZiAoIWlteF9tdV9sYXN0X3R4X2Rv
-bmUoY2hhbikpCj4gPiArCQlyZXR1cm4gLUVCVVNZOwo+ICsKPiA+ICsJaW14X211X3dyaXRlKHBy
-aXYsICphcmcsIElNWF9NVV94VFJuKGNwLT5pZHgpKTsKPiArCWlteF9tdV9ybXcocHJpdiwgSU1Y
-X01VX3hDUiwgSU1YX01VX3hTUl9URW4oY3AtPmlkeCksIDApOwoKSW4gbXVsdGktY2hhbm5lbCBt
-b2RlIHRoaXMgUk1XIGN5Y2xlIG5lZWRzIHNvbWUga2luZCBvZiBsb2NraW5nLiBBcwp0aGlzIHJl
-Z2lzdGVyIGlzIGFsc28gY2hhbmdlZCBmcm9tIHRoZSBpcnEgaGFuZGxlciwgdGhpcyBwcm9iYWJs
-eSBuZWVkcwp0byBiZSBhIGlycXNhdmUgc3BpbmxvY2suCgo+ICsKPiA+ICsJcmV0dXJuIDA7Cj4g
-K30KPiArCj4gK3N0YXRpYyBpbnQgaW14X211X3N0YXJ0dXAoc3RydWN0IG1ib3hfY2hhbiAqY2hh
-bikKPiArewo+ID4gKwlzdHJ1Y3QgaW14X211X3ByaXYgKnByaXYgPSB0b19pbXhfbXVfcHJpdihj
-aGFuLT5tYm94KTsKPiA+ICsJc3RydWN0IGlteF9tdV9jb25fcHJpdiAqY3AgPSBjaGFuLT5jb25f
-cHJpdjsKPiA+ICsJaW50IHJldDsKPiArCj4gPiArCWNwLT5pcnFfZGVzYyA9IGRldm1fa2FzcHJp
-bnRmKHByaXYtPmRldiwgR0ZQX0tFUk5FTCwgImlteF9tdV9jaGFuWyVpXSIsCj4gPiArCQkJCcKg
-wqDCoMKgwqDCoGNwLT5pZHgpOwo+ID4gKwlpZiAoIWNwLT5pcnFfZGVzYykKPiA+ICsJCXJldHVy
-biAtRU5PTUVNOwo+ICsKPiA+ICsJcmV0ID0gZGV2bV9yZXF1ZXN0X2lycShwcml2LT5kZXYsIGNw
-LT5pcnEsIGlteF9tdV9pc3IsCj4gKwkJCcKgwqDCoMKgwqDCoMKgSVJRRl9TSEFSRUQsIGNwLT5p
-cnFfZGVzYywgY2hhbik7CgpVc2luZyB0aGUgZGV2bV8gdmFyaWFudHMgb2YgdGhvc2UgZnVuY3Rp
-b25zIGRvZXNuJ3QgbWFrZSBzZW5zZSB3aGVuIHRoZQpyZXNvdXJjZXMgYXJlbid0IHRpZWQgdG8g
-dGhlIGRldmljZSBsaWZldGltZS4gQXMgeW91IGFyZSB0ZWFyaW5nIHRoZW0KZG93biBtYW51YWxs
-eSBpbiBpbXhfbXVfc2h1dGRvd24gYW55d2F5cywganVzdCB1c2UgdGhlIHJhdyB2YXJpYW50cyBv
-Zgp0aG9zZSBmdW5jdGlvbnMuCgo+ICsJaWYgKHJldCkgewo+ID4gKwkJZGV2X2Vycihwcml2LT5k
-ZXYsCj4gPiArCQkJIlVuYWJsZSB0byBhY3F1aXJlIElSUSAlZFxuIiwgY3AtPmlycSk7Cj4gPiAr
-CQlyZXR1cm4gcmV0Owo+ID4gKwl9Cj4gKwo+ID4gKwlpbXhfbXVfcm13KHByaXYsIElNWF9NVV94
-Q1IsIElNWF9NVV94Q1JfUklFbihjcC0+aWR4KSwgMCk7Cj4gKwo+ID4gKwlyZXR1cm4gMDsKPiAr
-fQo+ICsKPiArc3RhdGljIHZvaWQgaW14X211X3NodXRkb3duKHN0cnVjdCBtYm94X2NoYW4gKmNo
-YW4pCj4gK3sKPiA+ICsJc3RydWN0IGlteF9tdV9wcml2ICpwcml2ID0gdG9faW14X211X3ByaXYo
-Y2hhbi0+bWJveCk7Cj4gPiArCXN0cnVjdCBpbXhfbXVfY29uX3ByaXYgKmNwID0gY2hhbi0+Y29u
-X3ByaXY7Cj4gKwo+ID4gKwlpbXhfbXVfcm13KHByaXYsIElNWF9NVV94Q1IsIDAsCj4gPiArCQnC
-oMKgwqBJTVhfTVVfeENSX1RJRW4oY3AtPmlkeCkgfCBJTVhfTVVfeENSX1JJRW4oY3AtPmlkeCkp
-Owo+ICsKPiA+ICsJZGV2bV9mcmVlX2lycShwcml2LT5kZXYsIGNwLT5pcnEsIGNoYW4pOwo+ID4g
-KwlkZXZtX2tmcmVlKHByaXYtPmRldiwgY3AtPmlycV9kZXNjKTsKPiArfQo+ICsKPiArc3RhdGlj
-IGNvbnN0IHN0cnVjdCBtYm94X2NoYW5fb3BzIGlteF9tdV9vcHMgPSB7Cj4gPiArCS5zZW5kX2Rh
-dGEgPSBpbXhfbXVfc2VuZF9kYXRhLAo+ID4gKwkuc3RhcnR1cCA9IGlteF9tdV9zdGFydHVwLAo+
-ID4gKwkuc2h1dGRvd24gPSBpbXhfbXVfc2h1dGRvd24sCj4gK307Cj4gKwo+ICtzdGF0aWMgdm9p
-ZCBpbXhfbXVfaW5pdF9nZW5lcmljKHN0cnVjdCBpbXhfbXVfcHJpdiAqcHJpdikKPiArewo+ID4g
-KwlpZiAocHJpdi0+c2lkZV9iKQo+ID4gKwkJcmV0dXJuOwo+ICsKPiA+ICsJLyogU2V0IGRlZmF1
-bHQgTVUgY29uZmlndXJhdGlvbiAqLwo+ID4gKwlpbXhfbXVfd3JpdGUocHJpdiwgMCwgSU1YX01V
-X3hDUik7Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgaW14X211X3Byb2JlKHN0cnVjdCBwbGF0Zm9y
-bV9kZXZpY2UgKnBkZXYpCj4gK3sKPiA+ICsJc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRl
-djsKPiA+ICsJc3RydWN0IGRldmljZV9ub2RlICpucCA9IGRldi0+b2Zfbm9kZTsKPiA+ICsJc3Ry
-dWN0IHJlc291cmNlICppb21lbTsKPiA+ICsJc3RydWN0IGlteF9tdV9wcml2ICpwcml2Owo+ID4g
-Kwl1bnNpZ25lZCBpbnQgaTsKPiA+ICsJaW50IGlycSwgcmV0Owo+ICsKPiA+ICsJcHJpdiA9IGRl
-dm1fa3phbGxvYyhkZXYsIHNpemVvZigqcHJpdiksIEdGUF9LRVJORUwpOwo+ID4gKwlpZiAoIXBy
-aXYpCj4gPiArCQlyZXR1cm4gLUVOT01FTTsKPiArCj4gPiArCXByaXYtPmRldiA9IGRldjsKPiAr
-Cj4gPiArCWlvbWVtID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVN
-LCAwKTsKPiA+ICsJcHJpdi0+YmFzZSA9IGRldm1faW9yZW1hcF9yZXNvdXJjZSgmcGRldi0+ZGV2
-LCBpb21lbSk7Cj4gPiArCWlmIChJU19FUlIocHJpdi0+YmFzZSkpCj4gPiArCQlyZXR1cm4gUFRS
-X0VSUihwcml2LT5iYXNlKTsKPiArCj4gPiArCWlycSA9IHBsYXRmb3JtX2dldF9pcnEocGRldiwg
-MCk7Cj4gPiArCWlmIChpcnEgPCAwKQo+ID4gKwkJcmV0dXJuIGlycTsKPiArCj4gPiArCXByaXYt
-PmNsayA9IGRldm1fY2xrX2dldChkZXYsIE5VTEwpOwo+ID4gKwlpZiAoSVNfRVJSKHByaXYtPmNs
-aykpIHsKPiA+ICsJCWlmIChQVFJfRVJSKHByaXYtPmNsaykgIT0gLUVOT0VOVCkKPiA+ICsJCQly
-ZXR1cm4gUFRSX0VSUihwcml2LT5jbGspOwo+ICsKPiA+ICsJCXByaXYtPmNsayA9IE5VTEw7Cj4g
-PiArCX0KPiArCj4gPiArCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZShwcml2LT5jbGspOwo+ID4g
-KwlpZiAocmV0KSB7Cj4gPiArCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBlbmFibGUgY2xvY2tc
-biIpOwo+ID4gKwkJcmV0dXJuIHJldDsKPiA+ICsJfQo+ICsKPiA+ICsJZm9yIChpID0gMDsgaSA8
-IElNWF9NVV9DSEFOUzsgaSsrKSB7Cj4gPiArCQlzdHJ1Y3QgaW14X211X2Nvbl9wcml2ICpjcCA9
-ICZwcml2LT5jb25fcHJpdltpXTsKPiArCj4gPiArCQljcC0+aWR4ID0gaTsKPiA+ICsJCWNwLT5p
-cnEgPSBpcnE7Cj4gPiArCQlwcml2LT5tYm94X2NoYW5zW2ldLmNvbl9wcml2ID0gY3A7Cj4gPiAr
-CX0KPiArCj4gPiArCWlmIChvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobnAsICJmc2wsbXUtc2lkZS1i
-IikpCj4gKwkJcHJpdi0+c2lkZV9iID0gdHJ1ZTsKCk5vIG5lZWQgZm9yIHRoZSBpZiBjbGF1c2Ug
-aGVyZS4gSnVzdCBhc3NpZ24gdGhlIHJldHVybiB2YWx1ZSBmcm9tCm9mX3Byb3BlcnR5X3JlYWRf
-Ym9vbCB0byBwcml2LT5zaWRlX2IuCgo+ICsKPiA+ICsJcHJpdi0+bWJveC5kZXYgPSBkZXY7Cj4g
-PiArCXByaXYtPm1ib3gub3BzID0gJmlteF9tdV9vcHM7Cj4gPiArCXByaXYtPm1ib3guY2hhbnMg
-PSBwcml2LT5tYm94X2NoYW5zOwo+ID4gKwlwcml2LT5tYm94Lm51bV9jaGFucyA9IElNWF9NVV9D
-SEFOUzsKPiA+ICsJcHJpdi0+bWJveC50eGRvbmVfaXJxID0gdHJ1ZTsKPiArCj4gPiArCXBsYXRm
-b3JtX3NldF9kcnZkYXRhKHBkZXYsIHByaXYpOwo+ICsKPiA+ICsJaW14X211X2luaXRfZ2VuZXJp
-Yyhwcml2KTsKPiArCj4gPiArCXJldHVybiBtYm94X2NvbnRyb2xsZXJfcmVnaXN0ZXIoJnByaXYt
-Pm1ib3gpOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGlteF9tdV9yZW1vdmUoc3RydWN0IHBsYXRm
-b3JtX2RldmljZSAqcGRldikKPiArewo+ID4gKwlzdHJ1Y3QgaW14X211X3ByaXYgKnByaXYgPSBw
-bGF0Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2KTsKPiArCj4gPiArCW1ib3hfY29udHJvbGxlcl91bnJl
-Z2lzdGVyKCZwcml2LT5tYm94KTsKPiA+ICsJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHByaXYtPmNs
-ayk7Cj4gKwo+ID4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBv
-Zl9kZXZpY2VfaWQgaW14X211X2R0X2lkc1tdID0gewo+ID4gKwl7IC5jb21wYXRpYmxlID0gImZz
-bCxpbXg2c3gtbXUiIH0sCj4gPiArCXsgfSwKPiArfTsKPiArTU9EVUxFX0RFVklDRV9UQUJMRShv
-ZiwgaW14X211X2R0X2lkcyk7Cj4gKwo+ICtzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBp
-bXhfbXVfZHJpdmVyID0gewo+ID4gPiArCS5wcm9iZQkJPSBpbXhfbXVfcHJvYmUsCj4gPiA+ICsJ
-LnJlbW92ZQkJPSBpbXhfbXVfcmVtb3ZlLAo+ID4gKwkuZHJpdmVyID0gewo+ID4gPiArCQkubmFt
-ZQk9ICJpbXhfbXUiLAo+ID4gKwkJLm9mX21hdGNoX3RhYmxlID0gaW14X211X2R0X2lkcywKPiA+
-ICsJfSwKPiArfTsKPiArbW9kdWxlX3BsYXRmb3JtX2RyaXZlcihpbXhfbXVfZHJpdmVyKTsKPiAr
-Cj4gPiArTU9EVUxFX0FVVEhPUigiT2xla3NpaiBSZW1wZWwgPG8ucmVtcGVsQHBlbmd1dHJvbml4
-LmRlPiIpOwo+ICtNT0RVTEVfREVTQ1JJUFRJT04oIk1lc3NhZ2UgVW5pdCBkcml2ZXIgZm9yIGku
-TVgiKTsKPiArTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIpOwoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi,
+
+On Mon, Jul 23, 2018 at 7:04 AM, Rob Herring <robh@kernel.org> wrote:
+> On Fri, Jul 20, 2018 at 11:54 AM Doug Anderson <dianders@chromium.org> wrote:
+>>
+>> Hi,
+>>
+>> On Fri, Jul 20, 2018 at 10:26 AM, Rob Herring <robh@kernel.org> wrote:
+>> > On Fri, Jul 20, 2018 at 9:13 AM Doug Anderson <dianders@chromium.org> wrote:
+>> >>
+>> >> Rob,
+>> >>
+>> >> On Fri, Jul 20, 2018 at 7:10 AM, Rob Herring <robh@kernel.org> wrote:
+>> >> > On Fri, Jul 06, 2018 at 04:31:42PM -0700, Douglas Anderson wrote:
+>> >> >> A few patches have landed for the qcom-qmp PHY that affect how you
+>> >> >> would write a device tree node.  ...yet the bindings weren't updated.
+>> >> >> Let's remedy the situation and make the bindings refelect reality.
+>> >> >
+>> >> > "dt-bindings: phy: ..." for the subject.
+>> >>
+>> >> Sorry.  Every subsystem has different conventions for this so I
+>> >> usually just do a "git log" on the file and make my best guess.  I'll
+>> >> try to remember this for next time though.
+>> >
+>> > NP. I'd like to add this info to MAINTAINERS or maybe a git commit
+>> > hook could figure this out automagically.
+>> >
+>> >> In this case, though, it looks like this already landed.  I see this
+>> >> patch in Kishon's next branch.
+>> >>
+>> >>
+>> >> >> Fixes: efb05a50c956 ("phy: qcom-qmp: Add support for QMP V3 USB3 PHY")
+>> >> >> Fixes: ac0d239936bd ("phy: qcom-qmp: Add support for runtime PM")
+>> >> >> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>> >> >> ---
+>> >> >>
+>> >> >>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 14 ++++++++++++--
+>> >> >>  1 file changed, 12 insertions(+), 2 deletions(-)
+>> >> >>
+>> >> >> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>> >> >> index 266a1bb8bb6e..0c7629e88bf3 100644
+>> >> >> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>> >> >> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>> >> >> @@ -12,7 +12,14 @@ Required properties:
+>> >> >>              "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
+>> >> >>              "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845.
+>> >> >>
+>> >> >> - - reg: offset and length of register set for PHY's common serdes block.
+>> >> >> + - reg:
+>> >> >> +   - For "qcom,sdm845-qmp-usb3-phy":
+>> >> >> +     - index 0: address and length of register set for PHY's common serdes
+>> >> >> +       block.
+>> >> >> +     - named register "dp_com" (using reg-names): address and length of the
+>> >> >> +       DP_COM control block.
+>> >> >
+>> >> > You need to list reg-names and what are the names for the other 2
+>> >> > regions?
+>> >>
+>> >> Here's the code works.  You can tell me how you want this expressed in
+>> >> the bindings:
+>> >>
+>> >> * In all cases the driver maps its main memory range (for the common
+>> >> serdes block) without specifying any name.  This is equivalent to
+>> >> asking for index 0.
+>> >>
+>> >> * For "qcom,sdm845-qmp-usb3-phy" the driver requests a second memory
+>> >> range by name using the name "dp_com".
+>> >>
+>> >> ...basically the driver is inconsistent between using names and
+>> >> indices and I was trying to document that fact.
+>> >
+>> > That's fine as long as the indices are fixed.
+>> >
+>> >>
+>> >> I guess options:
+>> >>
+>> >> 1. I could reword this so it's clearer (open to suggestions)
+>> >>
+>> >> 2. I could add something to the bindings saying that the first reg
+>> >> name should be "reg-base" or something.  Then the question is whether
+>> >> we should go to the code and start enforcing that.  If we do choose to
+>> >> enforce it then it's technically breaking compatibility (though I
+>> >> doubt there is any real dts in the wild).  If we don't choose to
+>> >> enforce it then why did we bother saying what it should be named?
+>> >
+>> > I think you need to state index 1 is dp_com (and only for
+>> > "qcom,sdm845-qmp-usb3-phy") and a name for index 0. 'reg-base' doesn't
+>> > seem great, but I don't have another suggestion.
+>>
+>> ...but why do we bother giving "dp_com" a name if we're saying it has
+>> to be index 1?  It feels like the author of the driver was trying to
+>> transition from specifying to specifying registers by index to
+>> specifying them by name, but left the first register specified by
+>> index for compatibility (or code simplicity?).  It seems like the
+>> whole point of referring to things by name is to _not_ force the index
+>> number.
+>
+> No. Specifying the order and indexes is how bindings are done.
+> "-names" is extra information, not a license to change the rules.
+
+OK.
+
+Just for context: I'm not trying to be argumentative or anything--I
+just seem to be lacking a fundamental understanding of why reg-names
+exists and when it should be used.  I'm trying to ask questions so I
+can have a better intuition here and submit better patches / do better
+reviews.  I'm sorry if I'm coming off as a jerk.  :(  I'm not trying
+to be.
+
+Do you happen to know if there's anything written up that explains all
+the conventions around reg-names and I can just read that?
+
+
+For context, it seems to me that clocks and registers have different
+conventions, but I certainly could be wrong.  From what I've seen
+clocks are often specified in bindings by name and referred to in code
+by name.  Conversely reg-names seems to be highly discouraged and
+people are told to just refer to them by index.  The difference
+between the two always seemed strange to me, though I always assumed
+it was because it was more common to just have one or two register
+ranges but a whole chunk of clocks (and more get added over time as
+the driver matures).
+
+
+>> I'm imagining a future compatible string that adds yet another address
+>> range.  Presumably we'd refer to this by name too.  In that case both
+>> of these would be fine:
+>>
+>> reg = <0xa x>, <0xb x>, <0xc x>;
+>> reg-names = "reg-base", "dp_com", "new_range"
+>>
+>> reg = <0xa x>, <0xc x>, <0xb x>;
+>> reg-names = "reg-base", "new_range", "dp_com"
+>
+> But why. There is absolutely no need to support both of these.
+
+I guess I'm trying to understand the motivation for reg-names.  If you
+say that something must be index 1 and also have reg-name of "dp_com"
+then the reg-name isn't buying us anything and maybe the more proper
+fix is to change the driver to work by index and drop the whole name
+thing here?  Should I do that?
+
+
+> What you could need to support is this:
+>
+> reg-names = "reg-base", "new_range";
+>
+> The order is still fixed, but we have optional entries in the middle.
+> And that is the case when using -names is helpful. Otherwise, "-names"
+> is just unnecessary bloat to DT.
+
+>From what you're saying the _only_ reason you'd ever want to use
+reg-names is if there is an optional register range.  Is that right?
+
+
+I think for me intuitively I expect that drivers will change and
+expand over time and I'd expect more / different (and maybe optional)
+ranges to be added.  In general I feel like named registers scales
+better with less complexity.
+
+
+>> > For the driver, it's not the driver's job to enforce any of this.
+>>
+>> Sure, but anything that the driver doesn't enforce people will get
+>> wrong.  In other words if we say that the name of the first register
+>> ought to be "reg-base" but don't enforce it then someone will later
+>> come in and say it's stupid that one of the names uses a dash and the
+>> other an underscore.  They'll change "reg-base" and it will work.
+>> Someone else will decide that "reg-base" is a dumb name and will
+>> change it to "serdes".  It will still work.  Now we have a bindings
+>> that claims "reg-base" and lots of different device trees in practice.
+>
+> You are arguing against making the binding stricter and then worrying
+> about the driver getting things wrong. Stricter bindings leave less to
+> interpretation by the driver and less chance to get things wrong.
+> Unless "anything goes" and then the binding can never be "wrong".
+
+I guess I'm saying that my intuition says that over-specifying things
+seems bad to me.  The driver will either ask for a register by name or
+by index and not both.  In my mind either is a fine way to do it so as
+long as the driver and the binding is consistent then we have a
+functioning system.  Specifying that people have to do get both the
+index and name right basically gives people twice as many places to do
+things wrong.
+
+
+> Again, it is not the kernel's job to validate bindings even though we
+> have little else right now. That will change soon hopefully.
+>
+>> If the whole "keep things compatible" is important then what matters
+>> more is what's happening in practice, not what's should happen in
+>> theory.
+>>
+>> IMO if the driver isn't enforcing that the first field be called
+>> "reg-base" then it shouldn't be in the bindings doc.
+>>
+>>
+>> BTW: I use the name "reg-base" in my example because that's what the
+>> register was named in downstream device trees that I found.  Even if
+>> the name isn't terribly appealing, if it's not terribly objectionable
+>> I'd rather pick something that's closer to what people used in
+>> practice.
+>
+> I don't really care. People just make shit up anyway.
+>
+>>
+>> ---
+>>
+>> How about this?
+>
+> No.
+>
+>>
+>> - reg:
+>>   - For "qcom,sdm845-qmp-usb3-phy" (names mapped by reg-names):
+>>     - "reg-base": address and length of register set for PHY's common serdes
+>>       block.  MUST BE THE FIRST RANGE LISTED IN THE LIST (AKA index 0).  Note
+>>       that the name of "reg-base" is suggested but not enforced.
+>>     - "dp-com": address and length of the DP_COM control block.
+>>   - For all others (only one range--don't use reg-names)
+>>     - offset and length of register set for PHY's common serdes block.
+
+OK, I guess I will try again then and you can tell me when I get it
+right (unless you tell me I should just change the driver to not use
+named registers at all).  How about:
+
+- reg:
+  - For "qcom,sdm845-qmp-usb3-phy":
+    - index 0: address and length of register set for PHY's common serdes
+               block.
+    - index 1: address and length of the DP_COM control block.
+  - For all others:
+    - index 0: address and length of register set for PHY's common serdes
+               block.
+- reg-names:
+  - For "qcom,sdm845-qmp-usb3-phy":
+    - Should be: "reg-base", "dp_com"
+  - For all others:
+    - The reg-names property shouldn't be defined.
+
+
+-Doug
