@@ -1,112 +1,44 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v3 00/18] arm64: allwinner: Add A64 DE2 HDMI support
-Date: Mon, 23 Jul 2018 14:32:43 +0800
-Message-ID: <f1e7e44df225728bd966dfc4034c57de67470ebe.camel@aosc.io>
-References: <20180718105458.22304-1-jagan@amarulasolutions.com>
-	 <20180718124448.2s2b3jxbsqt46cgu@flea>
-	 <CAD6G_RQQyS=zeqvhBP8vVf5sHZgLwqX1SP0SKLHea_L4Od3woQ@mail.gmail.com>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v6 5/6] i2c: Add Actions Semiconductor Owl family S900 I2C driver
+Date: Mon, 23 Jul 2018 10:24:58 +0300
+Message-ID: <CAHp75Vf+SLQERDhDGRE-J_hmWwniiHN0FALbaBQjBY4GRNV_Fw@mail.gmail.com>
+References: <20180723034025.5763-1-manivannan.sadhasivam@linaro.org>
+ <20180723034025.5763-6-manivannan.sadhasivam@linaro.org> <911dc259-7b30-9c6e-2c82-2f4c032b9d73@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBPXN2XNAKGQE53JMADQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAD6G_RQQyS=zeqvhBP8vVf5sHZgLwqX1SP0SKLHea_L4Od3woQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <911dc259-7b30-9c6e-2c82-2f4c032b9d73@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Linus Walleij <linus.walleij@linaro.org>, linux-i2c <linux-i2c@vger.kernel.org>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, amit.kucheria@linaro.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>, Thomas Liau <thomas.liau@action>
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2018-07-18=E4=B8=89=E7=9A=84 18:26 +0530=EF=BC=8CJagan Teki=E5=86=
-=99=E9=81=93=EF=BC=9A
-> On Wed, Jul 18, 2018 at 6:14 PM, Maxime Ripard
-> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > On Wed, Jul 18, 2018 at 04:24:40PM +0530, Jagan Teki wrote:
-> > > Allwinner A64 has display engine pipeline like other Allwinner
-> > > SOC's A83T/H3/H5.
-> > >=20
-> > > A64 behaviour similar to Allwinner A83T where
-> > > Mixer0 =3D> TCON0 =3D> LVDS/RGB/MIPI-DSI
-> > > Mixer1 =3D> TCON1 =3D> HDMI
-> > > as per Display System Block Diagram from
-> > > Allwinner_A64_User_Manual_V1.1.pdf
-> > >=20
-> > > This is third patch-set followed with previous RFC[1], first and
-> > > second
-> > > series[2][3] and merely concentrated on HDMI pipeline through
-> > > TCON1 and
-> > > rest will add eventually.
-> > >=20
-> > > This series fixed previous version comments
-> > > - Rebasing on linux-next
-> > > - sqash all pipeline components in one patch
-> > > - Enable all pipeline components in board dts
-> > > - about documenting fallback compatibles
-> > > - adding new compatible for mixer1
-> >=20
-> > You still haven't figured out the SRAM parts. We asked you to fix
-> > this
-> > in the v1 and the v2 already, and we're not going to merge this
-> > without those bits figured out properly.
->=20
-> Sorry I'm not sure what I'm trying to do on SRAM here because the
-> last
-> mail, I have waited for Icenowy changes about simple_fb with sram_c
-> on
-> ccu node and those are merged. can you elaborate please.
+On Mon, Jul 23, 2018 at 9:12 AM, Peter Rosin <peda@axentia.se> wrote:
+> On 2018-07-23 05:40, Manivannan Sadhasivam wrote:
+>> +             /* Handle the remaining bytes which were not sent */
+>> +             while (!(readl(i2c_dev->base + OWL_I2C_REG_FIFOSTAT) &
+>> +                    OWL_I2C_FIFOSTAT_TFF) && i2c_dev->msg_ptr < msg->len) {
+>
+> You moved the OWL_ line to the left instead of right, so this is still
+> misaligned and thus not helping the reader.
 
-Would you mind me advance the patchset a bit and send a PATCH v3.1?
+Guys, wouldn't be better to
 
-I won't finally take the maintainership of the patchset.
 
->=20
-> >=20
-> > > Log:
-> > > [    1.450984] Jagan: sun8i_mixer_probe
-> > > [    1.464981] sun4i-drm display-engine: bound 1200000.mixer (ops
-> > > sun8i_mixer_ops)
-> > > [    1.472572] sun4i-drm display-engine: bound 1c0d000.lcd-
-> > > controller (ops sun4i_tcon_ops)
-> > > [    1.480676] sun8i-dw-hdmi 1ee0000.hdmi: Linked as a consumer
-> > > to regulator.10
-> > > [    1.488738] sun8i-dw-hdmi 1ee0000.hdmi: Detected HDMI TX
-> > > controller v1.32a with HDCP (sun8i_dw_hdmi_phy)
-> > > [    1.498879] sun8i-dw-hdmi 1ee0000.hdmi: registered DesignWare
-> > > HDMI I2C bus driver
-> > > [    1.507372] sun4i-drm display-engine: bound 1ee0000.hdmi (ops
-> > > sun8i_dw_hdmi_ops)
-> > > [    1.514778] [drm] Supports vblank timestamp caching Rev 2
-> > > (21.10.2013).
-> > > [    1.521398] [drm] No driver support for vblank timestamp
-> > > query.
-> > > [    1.684611] random: fast init done
-> > > [    2.011575] Console: switching to colour frame buffer device
-> > > 180x56
-> > > [    2.049858] sun4i-drm display-engine: fb0: DRM emulated frame
-> > > buffer device
-> > > [    2.057268] [drm] Initialized sun4i-drm 1.0.0 20150629 for
-> > > display-engine on minor 0
-> > >=20
-> > > Note:
-> > > Pine64 boards are unable to get edid by default like other A64
-> > > boards,
-> > > but forcing 'video=3DHDMI-A-1:1920x1080@60D' kernel command line
-> > > can
-> > > create edid with display on penel
-> >=20
-> > Then that needs to be figured out before it's enabled, instead of
-> > having a hack that barely works.
->=20
-> Any suggestion to work.
+while (i2c_dev->msg_ptr < msg->len) {
+ u32 fifostat = readl();
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+ if (!(fifostat & ...))
+ break;
+...
+}
+
+?
+
+Same for the other branch.
+
+Yes, it's more LOCs, but less bikeshedding,
+
+-- 
+With Best Regards,
+Andy Shevchenko
