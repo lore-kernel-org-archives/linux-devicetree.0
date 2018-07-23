@@ -1,62 +1,48 @@
-Return-Path: <SRS0=8mma=KP=redhat.com=hdegoede@kernel.org>
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH resend v2 1/2] Input: touchscreen DT binding - add touchscreen-min-x and -min-y properties
-Date: Tue, 31 Jul 2018 13:19:57 +0200
-Message-Id: <20180731111958.20043-2-hdegoede@redhat.com>
-In-Reply-To: <20180731111958.20043-1-hdegoede@redhat.com>
-References: <20180731111958.20043-1-hdegoede@redhat.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, robh@kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, linux-input@vger.kernel.org
+Return-Path: <SRS0=jXTi=KH=linux.intel.com=sakari.ailus@kernel.org>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 1/2] dt-bindings: dw9714, dw9807-vcm: Add files to MAINTAINERS, rename files
+Date: Mon, 23 Jul 2018 13:50:38 +0300
+Message-Id: <20180723105039.20110-2-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180723105039.20110-1-sakari.ailus@linux.intel.com>
+References: <20180723105039.20110-1-sakari.ailus@linux.intel.com>
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, robh@kernel.org, alanx.chiang@intel.com, andy.yeh@intel.com
 List-ID: <devicetree@vger.kernel.org>
 
-Some touchscreens, depending on the firmware and/or the digitizer report
-coordinates which never reach 0 along one or both of their axis.
+Add the DT binding documentation for dw9714 and dw9807-vcm to the
+MAINTAINERS file. The dw9807-vcm binding documentation file is renamed to
+match the dw9807's VCM bit's compatible string.
 
-This has been seen for example on the Silead touchscreens on a Onda V891w
-and a Point of View mobii TAB-P800w(v2.0).
-
-This commits documents 2 new touchscreen properties for communicating
-the minimum reported values to the OS: touchscreen-min-x and -min-y.
-
-This commit also drop the (in pixels) comment from the documentation
-of the touchscreen-size-x and touchscreen-size-y properties. This comment
-suggests that there is a relation between the range of reported
-coordinates and the display resolution, which is only true for some
-devices. The (in pixels) comment is replaced with "(maximum x coordinate
-reported + 1)" to mirror the language describing the new touchscreen-min-x
-and -min-y properties.
-
-Cc: robh@kernel.org
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
-Changes in v2:
--Split out from the patch implementing support for the properties
--Describe the changes to the touchscreen-size-x / -size-y description in
- the commit message
----
- .../devicetree/bindings/input/touchscreen/touchscreen.txt   | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ .../bindings/media/i2c/{dongwoon,dw9807.txt => dongwoon,dw9807-vcm.txt} | 0
+ MAINTAINERS                                                             | 2 ++
+ 2 files changed, 2 insertions(+)
+ rename Documentation/devicetree/bindings/media/i2c/{dongwoon,dw9807.txt => dongwoon,dw9807-vcm.txt} (100%)
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-index 537643e86f61..8aff9551259f 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-@@ -1,10 +1,12 @@
- General Touchscreen Properties:
+diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807-vcm.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
+rename to Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807-vcm.txt
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bbd9b9b3d74f..44e917de2c8c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4410,6 +4410,7 @@ L:	linux-media@vger.kernel.org
+ T:	git git://linuxtv.org/media_tree.git
+ S:	Maintained
+ F:	drivers/media/i2c/dw9714.c
++F:	Documentation/devicetree/bindings/media/i2c/dongwoon,dw9714.txt
  
- Optional properties for Touchscreens:
-+ - touchscreen-min-x		: minimum x coordinate reported (0 if not set)
-+ - touchscreen-min-y		: minimum y coordinate reported (0 if not set)
-  - touchscreen-size-x		: horizontal resolution of touchscreen
--				  (in pixels)
-+				  (maximum x coordinate reported + 1)
-  - touchscreen-size-y		: vertical resolution of touchscreen
--				  (in pixels)
-+				  (maximum y coordinate reported + 1)
-  - touchscreen-max-pressure	: maximum reported pressure (arbitrary range
- 				  dependent on the controller)
-  - touchscreen-fuzz-x		: horizontal noise value of the absolute input
+ DONGWOON DW9807 LENS VOICE COIL DRIVER
+ M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+@@ -4417,6 +4418,7 @@ L:	linux-media@vger.kernel.org
+ T:	git git://linuxtv.org/media_tree.git
+ S:	Maintained
+ F:	drivers/media/i2c/dw9807.c
++F:	Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807-vcm.txt
+ 
+ DOUBLETALK DRIVER
+ M:	"James R. Van Zandt" <jrv@vanzandt.mv.com>
 -- 
-2.18.0
+2.11.0
