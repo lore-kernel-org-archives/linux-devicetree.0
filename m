@@ -1,57 +1,85 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RFT v2 10/10] pinctrl: samsung: Remove legacy API for handling external wakeup interrupts mask
-Date: Mon, 23 Jul 2018 19:53:02 +0200
-Message-ID: <20180723175302.22535-11-krzk@kernel.org>
-References: <20180723175302.22535-1-krzk@kernel.org>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v10 4/7] Bluetooth: hci_qca: Add wrapper functions for
+ setting UART speed
+Date: Mon, 23 Jul 2018 10:56:11 -0700
+Message-ID: <20180723175611.GL129942@google.com>
+References: <20180720133243.6851-1-bgodavar@codeaurora.org>
+ <20180720133243.6851-5-bgodavar@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180723175302.22535-1-krzk@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180720133243.6851-5-bgodavar@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, Sylwester Nawrocki <snawrocki@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
+To: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Remove the legacy, ugly API of exposing the static value of external
-wakeup interrupts mask, because all arch-machine users where converted
-to use generic implementation from pinctrl driver.
+On Fri, Jul 20, 2018 at 07:02:40PM +0530, Balakrishna Godavarthi wrote:
+> In function qca_setup, we set initial and operating speeds for Qualcomm
+> Bluetooth SoC's. This block of code is common across different
+> Qualcomm Bluetooth SoC's. Instead of duplicating the code, created
+> a wrapper function to set the speeds. So that future coming SoC's
+> can use these wrapper functions to set speeds.
+> 
+> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>  drivers/bluetooth/hci_qca.c | 93 ++++++++++++++++++++++++++++---------
+>  1 file changed, 70 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 5f1c0a8fd5cd..5f8a74d65bec 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -119,6 +119,11 @@ struct qca_data {
+>  	u64 votes_off;
+>  };
+>  
+> +enum qca_speed_type {
+> +	QCA_INIT_SPEED = 1,
+> +	QCA_OPER_SPEED
+> +};
+> +
+>  struct qca_serdev {
+>  	struct hci_uart	 serdev_hu;
+>  	struct gpio_desc *bt_en;
+> @@ -923,6 +928,61 @@ static inline void host_set_baudrate(struct hci_uart *hu, unsigned int speed)
+>  		hci_uart_set_baudrate(hu, speed);
+>  }
+>  
+> +static unsigned int qca_get_speed(struct hci_uart *hu,
+> +				  enum qca_speed_type speed_type)
+> +{
+> +	unsigned int speed = 0;
+> +
+> +	if (speed_type == QCA_INIT_SPEED) {
+> +		if (hu->init_speed)
+> +			speed = hu->init_speed;
+> +		else if (hu->proto->init_speed)
+> +			speed = hu->proto->init_speed;
+> +	} else {
+> +		if (hu->oper_speed)
+> +			speed = hu->oper_speed;
+> +		else if (hu->proto->oper_speed)
+> +			speed = hu->proto->oper_speed;
+> +	}
+> +
+> +	return speed;
+> +}
+> +
+> +static int qca_check_speeds(struct hci_uart *hu)
+> +{
+> +	if (!qca_get_speed(hu, QCA_INIT_SPEED) ||
+> +	    !qca_get_speed(hu, QCA_OPER_SPEED))
+> +		return -EINVAL;
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Sylwester Nawrocki <snawrocki@kernel.org>
-Acked-by: Tomasz Figa <tomasz.figa@gmail.com>
----
- drivers/pinctrl/samsung/pinctrl-exynos.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+You changed this from:
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
-index 40ef14956876..eec174a65c6f 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -325,13 +325,6 @@ int exynos_eint_gpio_init(struct samsung_pinctrl_drv_data *d)
- 	return ret;
- }
- 
--static u32 exynos_eint_wake_mask = 0xffffffff;
--
--u32 exynos_get_eint_wake_mask(void)
--{
--	return exynos_eint_wake_mask;
--}
--
- static int exynos_wkup_irq_set_wake(struct irq_data *irqd, unsigned int on)
- {
- 	struct irq_chip *chip = irq_data_get_irq_chip(irqd);
-@@ -342,10 +335,9 @@ static int exynos_wkup_irq_set_wake(struct irq_data *irqd, unsigned int on)
- 	pr_info("wake %s for irq %d\n", on ? "enabled" : "disabled", irqd->irq);
- 
- 	if (!on)
--		exynos_eint_wake_mask |= bit;
-+		our_chip->eint_wake_mask_value |= bit;
- 	else
--		exynos_eint_wake_mask &= ~bit;
--	our_chip->eint_wake_mask_value = exynos_eint_wake_mask;
-+		our_chip->eint_wake_mask_value &= ~bit;
- 
- 	return 0;
- }
--- 
-2.14.1
+	/* One or the other speeds should be non zero. */
+	if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
+	    !qca_get_speed(hu, QCA_OPER_SPEED))
+		return -EINVAL;
+
+There is no entry in the change log. What is the reason for this
+change?
